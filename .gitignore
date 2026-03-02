@@ -1,0 +1,4 @@
+# Build artifacts
+epi-logos
+test_runner
+*.o
