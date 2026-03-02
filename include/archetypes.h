@@ -33,7 +33,19 @@ extern const Holographic_Coordinate Weave_5_0;
 extern const Holographic_Coordinate Weave_5_5;
 
 /* =============================================================================
- * III. EXECUTE FUNCTION PROTOTYPES
+ * III. WALK CONTEXT — Passed through the entire Torus cycle
+ * ============================================================================= */
+
+typedef struct {
+    uint8_t  current_position;    /* Where we are in the walk      */
+    uint8_t  covering;            /* 0 = normal, 1 = inverted      */
+    uint32_t step_count;          /* Total steps taken             */
+    uint32_t cycle_count;         /* Complete 360° cycles          */
+    void*    accumulator;         /* Generic payload for processing */
+} Walk_Context;
+
+/* =============================================================================
+ * IV. EXECUTE FUNCTION PROTOTYPES
  *    The () operator implementations for each archetype position.
  * ============================================================================= */
 

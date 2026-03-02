@@ -88,4 +88,11 @@ void test_archetypes(void) {
         ASSERT_PTR_EQ(GET_PTR(Archetype_3.c), &Archetype_2);
         ASSERT_PTR_EQ(GET_PTR(Archetype_4.c), &Archetype_3);
     TEST_END();
+
+    TEST("Execute_Ground initializes Walk_Context");
+        Walk_Context wc = {0};
+        Execute_Ground((Holographic_Coordinate*)&Archetype_0, &wc);
+        ASSERT_EQ(wc.current_position, 0);
+        ASSERT_EQ(wc.step_count, 1);
+    TEST_END();
 }

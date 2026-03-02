@@ -8,9 +8,22 @@
 
 #include "ontology.h"
 #include "archetypes.h"
+#include <stdio.h>
 
-/* Execute stubs — to be implemented in Sprint 1/2 */
-void Execute_Ground(Holographic_Coordinate* self, void* ctx)      { (void)self; (void)ctx; }
+/* Execute_Ground — #0: Initialize context_state, mark Möbius return */
+void Execute_Ground(Holographic_Coordinate* self, void* ctx) {
+    if (!ctx) return;
+    Walk_Context* wc = (Walk_Context*)ctx;
+    wc->current_position = self->ql_position;
+    wc->step_count++;
+
+    /* If we're returning from #5 (Möbius), increment cycle count */
+    if (wc->step_count > 1) {
+        wc->cycle_count++;
+    }
+}
+
+/* Execute stubs — to be implemented in Sprint 2 */
 void Execute_Form(Holographic_Coordinate* self, void* ctx)        { (void)self; (void)ctx; }
 void Execute_Entity(Holographic_Coordinate* self, void* ctx)      { (void)self; (void)ctx; }
 void Execute_Process(Holographic_Coordinate* self, void* ctx)     { (void)self; (void)ctx; }
