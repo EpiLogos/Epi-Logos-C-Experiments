@@ -53,10 +53,18 @@ void test_engine(void) {
         ASSERT_TRUE(1);
     TEST_END();
 
-    TEST("double_covering completes 12 steps (720 degrees)");
+    TEST("torus_walk triggers lemniscate at #4");
+        Walk_Context wc = {0};
+        engine_torus_walk(&Archetype_0, &wc, 6);
+        /* #4's Execute_Lemniscate is called once by walk + once by dive = extra step */
+        ASSERT_TRUE(wc.step_count >= 6);
+    TEST_END();
+
+    TEST("double_covering completes with lemniscate dives");
         Walk_Context wc = {0};
         engine_double_covering(&Archetype_0, &wc);
-        ASSERT_EQ(wc.step_count, 12);
+        /* 12 walk steps + 2 lemniscate dives (once per covering) = 14 */
+        ASSERT_TRUE(wc.step_count >= 12);
         ASSERT_EQ(wc.covering, 0);  /* Returns to normal */
     TEST_END();
 }

@@ -40,6 +40,10 @@ void engine_torus_walk(
         if (current->invoke_process) {
             current->invoke_process((Holographic_Coordinate*)current, context_state);
         }
+        /* At #4, optionally dive into the Lemniscate */
+        if (current->ql_position == 4 && current->cf != NULL) {
+            engine_lemniscate_dive(current, context_state, 1);
+        }
         const Holographic_Coordinate* next = engine_next_coordinate(current->ql_position);
         if (!next) break;
         current = next;
