@@ -52,4 +52,11 @@ void test_engine(void) {
         /* #0 has NULL cf, should return immediately */
         ASSERT_TRUE(1);
     TEST_END();
+
+    TEST("double_covering completes 12 steps (720 degrees)");
+        Walk_Context wc = {0};
+        engine_double_covering(&Archetype_0, &wc);
+        ASSERT_EQ(wc.step_count, 12);
+        ASSERT_EQ(wc.covering, 0);  /* Returns to normal */
+    TEST_END();
 }

@@ -63,6 +63,23 @@ void engine_double_covering(
     const Holographic_Coordinate* start,
     void* context_state
 ) {
-    /* TODO: Sprint 2 — cs-directed 720° traversal */
-    (void)start; (void)context_state;
+    if (!start) return;
+
+    /* First 360°: normal covering */
+    engine_torus_walk(start, context_state, 6);
+
+    /* Phase transition: if context_state has Walk_Context, flip covering */
+    if (context_state) {
+        Walk_Context* wc = (Walk_Context*)context_state;
+        wc->covering = 1;  /* Inverted phase */
+    }
+
+    /* Second 360°: inverted covering */
+    engine_torus_walk(start, context_state, 6);
+
+    /* Return to normal */
+    if (context_state) {
+        Walk_Context* wc = (Walk_Context*)context_state;
+        wc->covering = 0;
+    }
 }
