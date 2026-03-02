@@ -107,4 +107,28 @@ void test_arena(void) {
         ASSERT_PTR_EQ(GET_PTR(mirror_0->c), mirror_0);
         arena_destroy(&arena);
     TEST_END();
+
+    TEST("Instantiate C0 in arena, linked to #0 mirror");
+        Coordinate_Arena arena;
+        arena_init(&arena, 16);
+        /* Create #0 mirror */
+        Holographic_Coordinate* mirror_0 = arena_alloc(&arena);
+        mirror_0->ql_position = 0;
+        mirror_0->family = FAMILY_NONE;
+        mirror_0->weave_state = 0.0f;
+        mirror_0->invoke_process = Archetype_0.invoke_process;
+        mirror_0->c = mirror_0;
+        /* Create C0 */
+        Holographic_Coordinate* c0 = arena_alloc(&arena);
+        c0->ql_position = 0;
+        c0->family = FAMILY_C;
+        c0->weave_state = 0.0f;
+        c0->invoke_process = Archetype_0.invoke_process;
+        c0->c = mirror_0;
+        /* mirror_0 already has .c = self, now we can verify the cross-link */
+        ASSERT_EQ(c0->family, FAMILY_C);
+        ASSERT_PTR_EQ(GET_PTR(c0->c), mirror_0);
+        ASSERT_EQ(GET_PTR(c0->c)->family, FAMILY_NONE);
+        arena_destroy(&arena);
+    TEST_END();
 }
