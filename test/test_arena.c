@@ -4,6 +4,7 @@
 
 #include "test_framework.h"
 #include "ontology.h"
+#include "archetypes.h"
 #include "arena.h"
 
 void test_arena(void) {
@@ -88,5 +89,22 @@ void test_arena(void) {
         float* overflow = tensor_arena_alloc(&ta, 1);
         ASSERT_NULL(overflow);
         tensor_arena_destroy(&ta);
+    TEST_END();
+
+    TEST("Create mutable mirror of #0 in arena");
+        Coordinate_Arena arena;
+        arena_init(&arena, 16);
+        Holographic_Coordinate* mirror_0 = arena_alloc(&arena);
+        ASSERT_NOT_NULL(mirror_0);
+        mirror_0->ql_position = Archetype_0.ql_position;
+        mirror_0->family = Archetype_0.family;
+        mirror_0->inversion_state = Archetype_0.inversion_state;
+        mirror_0->weave_state = Archetype_0.weave_state;
+        mirror_0->invoke_process = Archetype_0.invoke_process;
+        mirror_0->c = mirror_0;
+        ASSERT_EQ(mirror_0->ql_position, 0);
+        ASSERT_EQ(mirror_0->family, FAMILY_NONE);
+        ASSERT_PTR_EQ(GET_PTR(mirror_0->c), mirror_0);
+        arena_destroy(&arena);
     TEST_END();
 }
