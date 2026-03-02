@@ -1,14 +1,14 @@
 /**
  * ontology.h — The Master Blueprint
  *
- * This is the universal DNA of the Epi-Logos coordinate system.
- * It contains ONLY definitions and promises — no memory is allocated here.
+ * The universal DNA of the Epi-Logos coordinate system.
+ * Contains ONLY definitions and promises — no memory allocated here.
  *
  * What lives here:
- *   - The Tagged Pointer operator macros (baking ontology into addresses)
- *   - The forward declaration (the promise of intra-openness)
- *   - The Context_Execution_Operator signature (the `()` spark)
- *   - The Holographic_Coordinate struct (the 128-byte universal unit)
+ *   - Coordinate_Family enum (NONE for raw archetypes, P/S/T/M/L/C for families)
+ *   - Tagged Pointer macros (baking ontology into addresses)
+ *   - Forward declaration and Context_Execution_Operator signature
+ *   - The Holographic_Coordinate struct (128 bytes, universal for all coordinates)
  *
  * What does NOT live here:
  *   - Any actual archetype data (.rodata belongs in archetypes.c)
@@ -18,142 +18,174 @@
 #ifndef ONTOLOGY_H
 #define ONTOLOGY_H
 
-#include <stddef.h>   /* NULL */
+#include <stddef.h>
 #include <stdint.h>
 #include <stdalign.h>
 
 
 /* =============================================================================
- * I. THE TAGGED POINTER ABSTRACTIONS
- *    The Operators Baked Into Memory
- *
- * On 64-bit systems, only 48 bits are used for physical RAM addresses.
- * The top 16 bits are ignored by the hardware — we commandeer them
- * to store the philosophical state of a relation.
- *
- * The CPU knows the ontological mode BEFORE it opens the memory door.
+ * I. COORDINATE FAMILY ENUM
+ *    Distinguishes raw archetypes (#0-#5) from family manifestations.
+ *    FAMILY_NONE = raw archetype (Layer 1, pre-categorical).
+ *    P through C = family manifestations (Layer 2).
  * ============================================================================= */
 
-#define MASK_ADDRESS    0x0000FFFFFFFFFFFF  /* The physical RAM location         */
-#define FLAG_INVERTED   0x8000000000000000  /* The `'` or `i` phase-shift        */
-#define FLAG_NESTING    0x4000000000000000  /* The `.` operator — inward fractal  */
-#define FLAG_BRANCHING  0x2000000000000000  /* The `-` operator — lateral spread  */
-#define FLAG_EXECUTING  0x1000000000000000  /* The `()` operator — context active */
-
-/* Strip all flags to recover the real pointer before dereferencing */
-#define GET_PTR(tagged)  ((Holographic_Coordinate*)((uintptr_t)(tagged) & MASK_ADDRESS))
-
-/* Apply / read individual flags */
-#define SET_INVERTED(ptr)    ((Holographic_Coordinate*)((uintptr_t)(ptr) | FLAG_INVERTED))
-#define IS_INVERTED(ptr)     ((uintptr_t)(ptr) & FLAG_INVERTED)
-#define SET_NESTING(ptr)     ((Holographic_Coordinate*)((uintptr_t)(ptr) | FLAG_NESTING))
-#define IS_NESTING(ptr)      ((uintptr_t)(ptr) & FLAG_NESTING)
-#define SET_BRANCHING(ptr)   ((Holographic_Coordinate*)((uintptr_t)(ptr) | FLAG_BRANCHING))
-#define IS_BRANCHING(ptr)    ((uintptr_t)(ptr) & FLAG_BRANCHING)
+typedef enum {
+    FAMILY_NONE = 0,   /* Raw archetype (#0-#5) — pre-categorical foundation */
+    FAMILY_P    = 1,   /* Position  — Functional semantics                   */
+    FAMILY_S    = 2,   /* Stack     — Technology / infrastructure layers     */
+    FAMILY_T    = 3,   /* Thought   — Artifacts / cognition                  */
+    FAMILY_M    = 4,   /* Subsystem — Consciousness domains                  */
+    FAMILY_L    = 5,   /* Lens      — Epistemic modes                        */
+    FAMILY_C    = 6    /* Category  — Ontological foundation                 */
+} Coordinate_Family;
 
 
 /* =============================================================================
- * II. THE FORWARD DECLARATION
- *    The Promise of Intra-Openness
+ * II. TAGGED POINTER MACROS
+ *    The operators baked into memory addresses.
  *
- * We announce the struct's existence before defining it.
- * This allows the struct to legally hold pointers to its own kind —
- * the holographic self-reference that makes the web possible.
+ *    Bit layout:
+ *      63: # (FLAG_INVERTED)   — the inversion act
+ *      62: . (FLAG_NESTING)    — inward fractal traversal
+ *      61: - (FLAG_BRANCHING)  — lateral relation
+ *      60: () (FLAG_EXECUTING) — execution context active
+ *      59-48: reserved
+ *      47-0: physical address
+ *
+ *    SAFETY CONTRACT: GET_PTR() before EVERY dereference. No exceptions.
+ * ============================================================================= */
+
+#define MASK_ADDRESS    0x0000FFFFFFFFFFFF
+#define FLAG_INVERTED   0x8000000000000000
+#define FLAG_NESTING    0x4000000000000000
+#define FLAG_BRANCHING  0x2000000000000000
+#define FLAG_EXECUTING  0x1000000000000000
+
+/* Strip all flags — MUST call before dereferencing */
+#define GET_PTR(tagged)  ((Holographic_Coordinate*)((uintptr_t)(tagged) & MASK_ADDRESS))
+
+/* Inversion (#) — the fundamental operation */
+#define SET_INVERTED(ptr)    ((Holographic_Coordinate*)((uintptr_t)(ptr) | FLAG_INVERTED))
+#define IS_INVERTED(ptr)     ((uintptr_t)(ptr) & FLAG_INVERTED)
+
+/* Nesting (.) — inward fractal traversal */
+#define SET_NESTING(ptr)     ((Holographic_Coordinate*)((uintptr_t)(ptr) | FLAG_NESTING))
+#define IS_NESTING(ptr)      ((uintptr_t)(ptr) & FLAG_NESTING)
+
+/* Branching (-) — lateral relation */
+#define SET_BRANCHING(ptr)   ((Holographic_Coordinate*)((uintptr_t)(ptr) | FLAG_BRANCHING))
+#define IS_BRANCHING(ptr)    ((uintptr_t)(ptr) & FLAG_BRANCHING)
+
+/* Executing (()) — context active */
+#define SET_EXECUTING(ptr)   ((Holographic_Coordinate*)((uintptr_t)(ptr) | FLAG_EXECUTING))
+#define IS_EXECUTING(ptr)    ((uintptr_t)(ptr) & FLAG_EXECUTING)
+
+/* Utilities */
+#define CLEAR_FLAGS(ptr)     GET_PTR(ptr)
+#define TAG_FLAGS(ptr)       ((uintptr_t)(ptr) & ~MASK_ADDRESS)
+
+
+/* =============================================================================
+ * III. WEAVE-STATE SEMANTICS
+ *    The identification edges (0.0, 0.5, 5.0, 5.5) define the topological
+ *    boundary conditions. Everything between them is inter-identification
+ *    process "frames". The integer part of weave_state is the parent position;
+ *    the decimal part encodes the child/frame context.
+ *
+ *    Operator access rules:
+ *      - #4 and identification edges have . (nesting) access
+ *      - All other positions have - (branching) access
+ *      - The SOURCE coordinate determines the operator, not the target
+ * ============================================================================= */
+
+/* Identification edges — topological boundary conditions */
+#define IS_IDENTIFICATION_EDGE(w) \
+    ((w) == 0.0f || (w) == 0.5f || (w) == 5.0f || (w) == 5.5f)
+
+/* Does this coordinate have nesting (.) access?
+ * Only #4 (Lemniscate) and identification edges can nest.
+ * All others branch (-). */
+#define HAS_NESTING_ACCESS(coord) \
+    ((coord)->ql_position == 4 || IS_IDENTIFICATION_EDGE((coord)->weave_state))
+
+/* Extract parent and child/frame from weave_state.
+ * e.g. weave_state 3.2 → parent=#3, child=#2
+ * e.g. weave_state 4.6 → parent=#4, child=C-family (6) */
+#define WEAVE_PARENT(w)  ((uint8_t)(w))
+#define WEAVE_CHILD(w)   ((uint8_t)(((w) - (float)((uint8_t)(w))) * 10.0f + 0.5f))
+
+/* Apply the correct relational flag based on source coordinate's access */
+#define TAG_RELATION(source, target_ptr) \
+    (HAS_NESTING_ACCESS(source) \
+        ? SET_NESTING(target_ptr) \
+        : SET_BRANCHING(target_ptr))
+
+
+/* =============================================================================
+ * IV. FORWARD DECLARATION & EXECUTION OPERATOR
  * ============================================================================= */
 
 typedef struct Holographic_Coordinate Holographic_Coordinate;
 
-
-/* =============================================================================
- * III. THE `()` OPERATOR SIGNATURE
- *    The Execution Spark — Yin-to-Yang Transition
- *
- * A function pointer type. Any function matching this shape can be
- * attached to a coordinate, turning static data into living process.
- *
- * When invoked:
- *   - The immutable .rodata blueprint loads into CPU registers
- *   - The coordinate ignites — Siva becomes Shakti
- *   - The Stack Frame is born: the () execution context
- * ============================================================================= */
-
-typedef void (*Context_Execution_Operator)(Holographic_Coordinate* self, void* context_state);
+typedef void (*Context_Execution_Operator)(
+    Holographic_Coordinate* self,
+    void* context_state
+);
 
 
 /* =============================================================================
- * IV. THE UNIVERSAL COORDINATE DNA
- *    The Holographic_Coordinate Struct — Exactly 128 Bytes / 2 Cache Lines
+ * V. THE UNIVERSAL COORDINATE — 128 Bytes / 2 Cache Lines
  *
- * Aligned to 64 bytes so the CPU L1 cache inhales the entire 16-fold
- * holographic web in a single hardware breath (two adjacent cache lines).
+ *    Used for BOTH raw archetypes (#0-#5, family=FAMILY_NONE)
+ *    and family manifestations (C0-C5, P0-P5, etc., family=FAMILY_*)
  *
- * Memory layout:
- *   Lens 1 — Identity & Topological Weave     (8 bytes)
- *   Lens 2 — Semantic Tensor Anchor           (8 bytes)
- *   Lens 3 — 16-Fold Intra-Openness-To        (96 bytes = 12 pointers × 8)
- *   Lens 4 — The `()` Execution Operator      (8 bytes)
- *   [compiler pads final 8 bytes to reach 128]
+ *    Layout:
+ *      Identity          (8 bytes)
+ *      Tensor Anchor     (8 bytes)
+ *      Intra-Openness    (96 bytes = 12 tagged pointers)
+ *      Execution         (8 bytes)
+ *      Payload           (8 bytes)
+ *      Total:            128 bytes
  * ============================================================================= */
 
-alignas(64)
 struct Holographic_Coordinate {
 
-    /* --- LENS 1: IDENTITY & TOPOLOGICAL WEAVE (8 bytes) --- */
-    uint8_t  ql_position;   /* 0–5: the Modulo Base position in the QL arc    */
-    uint8_t  dual_state;    /* Mod 2 (0/1) or Mod 3 (0/1/2) resonance mode    */
-    uint16_t _padding;      /* Keeps the float below on a 4-byte boundary     */
-    float    weave_state;   /* 0.0, 0.5, 5.0, 5.5 — interlaced arena position */
+    /* --- Identity (8 bytes) --- */
+    uint8_t  ql_position;       /* 0-5: which archetype position              */
+    uint8_t  family;            /* Coordinate_Family: NONE for raw, P-C for family */
+    uint8_t  inversion_state;   /* 0 = normal, 1 = inverted (result of #)     */
+    uint8_t  _pad;
+    float    weave_state;       /* 0.0, 0.5, 1.0, ... 5.5                    */
 
-    /* --- LENS 2: SEMANTIC TENSOR ANCHOR (8 bytes) --- */
-    /*
-     * Points into a SEPARATE, SIMD-aligned Tensor Arena.
-     * Keeping the high-dimensional vector OUTSIDE this struct is mandatory:
-     * it prevents struct bloat and keeps topology lightning-fast.
-     * This 8-byte pointer is the bridge between symbolic and connectionist logic.
-     */
-    float* semantic_embedding;
+    /* --- Tensor Anchor (8 bytes) --- */
+    float*   semantic_embedding; /* Points into separate SIMD-aligned Tensor Arena */
 
-    /* --- LENS 3: THE 16-FOLD INTRA-OPENNESS-TO (96 bytes) ---
-     *
-     * These are Tagged Pointers. Each address carries the `.` or `-` operator
-     * in its high bits, so the relation type is known before dereferencing.
-     *
-     * The Base Canonical Web (6 structural pointers):
-     */
-    Holographic_Coordinate* p;    /* Position   — Functional semantics, QL #0–#5   */
-    Holographic_Coordinate* s;    /* Stack      — Technology / infrastructure layer */
-    Holographic_Coordinate* t;    /* Thought    — Artifact type, cognitive operation*/
-    Holographic_Coordinate* m;    /* Subsystem  — Consciousness domain, MEF lens   */
-    Holographic_Coordinate* l;    /* Lens       — Epistemic mode, way of knowing   */
-    Holographic_Coordinate* c;    /* Category   — Ontological foundation (the root)*/
+    /* --- Intra-Openness: 6 Base + 6 Reflective (96 bytes) --- */
+    Holographic_Coordinate* p;    /* Position family link   */
+    Holographic_Coordinate* s;    /* Stack family link      */
+    Holographic_Coordinate* t;    /* Thought family link    */
+    Holographic_Coordinate* m;    /* Subsystem family link  */
+    Holographic_Coordinate* l;    /* Lens family link       */
+    Holographic_Coordinate* c;    /* Category family link   */
 
-    /*
-     * The Reflective / Contextual Web (6 processual pointers):
-     */
-    Holographic_Coordinate* cpf;  /* Category-Position-Frame — cross-coord mapping */
-    Holographic_Coordinate* ct;   /* Context-Time            — temporal frame ops  */
-    Holographic_Coordinate* cp;   /* Context-Position        — positional frame     */
-    Holographic_Coordinate* cf;   /* Context-Frame           — #4 Lemniscate anchor*/
-    Holographic_Coordinate* cfp;  /* Context-Frame-Position  — nested frame ops    */
-    Holographic_Coordinate* cs;   /* Context-System          — system-wide state   */
+    Holographic_Coordinate* cpf;  /* Category-Position-Frame  */
+    Holographic_Coordinate* ct;   /* Context-Time             */
+    Holographic_Coordinate* cp;   /* Context-Position         */
+    Holographic_Coordinate* cf;   /* Context-Frame (#4 anchor)*/
+    Holographic_Coordinate* cfp;  /* Context-Frame-Position   */
+    Holographic_Coordinate* cs;   /* Context-System (direction)*/
 
-    /* --- LENS 4: THE `()` OPERATOR (8 bytes) --- */
-    /*
-     * The execution context. When called, transitions the coordinate from
-     * static Yin (data) into kinetic Yang (process).
-     * NULL means this coordinate is pure data; non-NULL means it can ignite.
-     */
+    /* --- Execution (8 bytes) --- */
     Context_Execution_Operator invoke_process;
 
-    /* --- EXPLICIT CACHE-LINE PADDING (8 bytes) --- */
-    /*
-     * The fields above sum to 120 bytes. We add 8 bytes of explicit padding
-     * to reach exactly 128 bytes — two complete L1 cache lines.
-     * Do not use _cache_pad; it exists only to enforce the architectural law.
-     */
-    uint8_t _cache_pad[8];
-
-    /* Total: 8 + 8 + 96 + 8 + 8 = 128 bytes. Two cache lines. Exact. */
+    /* --- Payload (8 bytes) --- */
+    union {
+        char*    meaning_bin;     /* Semantic content        */
+        void*    process_state;   /* Runtime state           */
+        uint64_t instance_id;     /* Unique instance handle  */
+        float*   vector_anchor;   /* Alternate vector ref    */
+    } payload;
 };
 
 
