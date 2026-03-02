@@ -95,4 +95,33 @@ void test_archetypes(void) {
         ASSERT_EQ(wc.current_position, 0);
         ASSERT_EQ(wc.step_count, 1);
     TEST_END();
+
+    TEST("Execute functions update Walk_Context correctly");
+        Walk_Context wc = {0};
+        Execute_Ground((Holographic_Coordinate*)&Archetype_0, &wc);
+        ASSERT_EQ(wc.current_position, 0);
+        ASSERT_EQ(wc.step_count, 1);
+        Execute_Form((Holographic_Coordinate*)&Archetype_1, &wc);
+        ASSERT_EQ(wc.current_position, 1);
+        ASSERT_EQ(wc.step_count, 2);
+        Execute_Entity((Holographic_Coordinate*)&Archetype_2, &wc);
+        ASSERT_EQ(wc.current_position, 2);
+        Execute_Process((Holographic_Coordinate*)&Archetype_3, &wc);
+        ASSERT_EQ(wc.current_position, 3);
+        Execute_Lemniscate((Holographic_Coordinate*)&Archetype_4, &wc);
+        ASSERT_EQ(wc.current_position, 4);
+        Execute_Integration((Holographic_Coordinate*)&Archetype_5, &wc);
+        ASSERT_EQ(wc.current_position, 5);
+        ASSERT_EQ(wc.step_count, 6);
+    TEST_END();
+
+    TEST("Execute functions handle NULL context gracefully");
+        Execute_Ground((Holographic_Coordinate*)&Archetype_0, NULL);
+        Execute_Form((Holographic_Coordinate*)&Archetype_1, NULL);
+        Execute_Entity((Holographic_Coordinate*)&Archetype_2, NULL);
+        Execute_Process((Holographic_Coordinate*)&Archetype_3, NULL);
+        Execute_Lemniscate((Holographic_Coordinate*)&Archetype_4, NULL);
+        Execute_Integration((Holographic_Coordinate*)&Archetype_5, NULL);
+        ASSERT_TRUE(1);  /* No crash = pass */
+    TEST_END();
 }
