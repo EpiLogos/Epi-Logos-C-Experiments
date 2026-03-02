@@ -51,5 +51,13 @@ float* tensor_arena_alloc(Tensor_Arena* arena, uint32_t count);
 void tensor_arena_reset(Tensor_Arena* arena);
 void tensor_arena_destroy(Tensor_Arena* arena);
 
+/* =============================================================================
+ * IV. FAMILY OPERATIONS
+ * ============================================================================= */
+
+int families_init(Coordinate_Arena* arena, Holographic_Coordinate* mirrors[6]);
+int families_crosslink(Coordinate_Arena* arena);
+int families_wire_reflective(Coordinate_Arena* arena);
+
 
 #endif /* ARENA_H */
