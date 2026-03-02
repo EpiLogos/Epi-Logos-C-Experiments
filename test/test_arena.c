@@ -108,6 +108,31 @@ void test_arena(void) {
         arena_destroy(&arena);
     TEST_END();
 
+    TEST("Wire semantic_embedding from tensor arena to coordinate");
+        Coordinate_Arena ca;
+        arena_init(&ca, 4);
+        Tensor_Arena ta;
+        tensor_arena_init(&ta, 256);
+
+        Holographic_Coordinate* coord = arena_alloc(&ca);
+        coord->ql_position = 0;
+        coord->family = FAMILY_NONE;
+
+        /* Allocate an embedding vector */
+        float* embed = tensor_arena_alloc(&ta, 64);
+        ASSERT_NOT_NULL(embed);
+        embed[0] = 1.0f;
+        embed[63] = -1.0f;
+
+        /* Wire it */
+        coord->semantic_embedding = embed;
+        ASSERT_FLOAT_EQ(coord->semantic_embedding[0], 1.0f);
+        ASSERT_FLOAT_EQ(coord->semantic_embedding[63], -1.0f);
+
+        tensor_arena_destroy(&ta);
+        arena_destroy(&ca);
+    TEST_END();
+
     TEST("Instantiate C0 in arena, linked to #0 mirror");
         Coordinate_Arena arena;
         arena_init(&arena, 16);
