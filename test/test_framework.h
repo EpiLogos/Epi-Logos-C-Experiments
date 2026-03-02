@@ -11,10 +11,10 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Global counters */
-static int _tf_pass = 0;
-static int _tf_fail = 0;
-static int _tf_current_failed = 0;
+/* Global counters — defined in test_all.c, shared across all test TUs */
+extern int _tf_pass;
+extern int _tf_fail;
+extern int _tf_current_failed;
 
 /* Begin a test */
 #define TEST(name) \
@@ -77,7 +77,6 @@ static int _tf_current_failed = 0;
     do { \
         if ((ptr) != NULL) { \
             printf("    ASSERTION FAILED: %s is NULL\n", #ptr); \
-            printf("      got %p\n", (const void*)(ptr)); \
             printf("      at %s:%d\n", __FILE__, __LINE__); \
             _tf_current_failed = 1; \
         } \
