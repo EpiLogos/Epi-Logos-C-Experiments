@@ -1,0 +1,12 @@
+# Build artifacts
+epi-logos
+test_runner
+*.o
+libepilogos.so
+libepilogos.dylib
+
+# Rust
+epi-cli/target/
+
+# macOS
+.DS_Store

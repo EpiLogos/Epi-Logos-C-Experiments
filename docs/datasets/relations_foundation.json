@@ -1,0 +1,87 @@
+[
+  {
+    "source": "#0",
+    "type": "SUCCEEDED_BY_AND_MANIFESTS_THROUGH",
+    "target": "#1"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "REALIZES_HOLOGRAPHIC_COMPLETION",
+    "target": "#0"
+  },
+  {
+    "source": "#1",
+    "type": "SUCCEEDED_BY_AND_MANIFESTS_THROUGH",
+    "target": "#2"
+  },
+  {
+    "source": "#2",
+    "type": "INTEGRATES_WITH",
+    "target": "#3"
+  },
+  {
+    "source": "#2",
+    "type": "SUCCEEDED_BY_AND_MANIFESTS_THROUGH",
+    "target": "#3"
+  },
+  {
+    "source": "#2",
+    "type": "TRANSMITS_VIBRATIONAL_KNOWLEDGE",
+    "target": "#3"
+  },
+  {
+    "source": "#2",
+    "type": "RESONATES_OCTAVE_STRUCTURE",
+    "target": "#3"
+  },
+  {
+    "source": "#3",
+    "type": "SUCCEEDED_BY_AND_MANIFESTS_THROUGH",
+    "target": "#4"
+  },
+  {
+    "source": "#3",
+    "type": "ENABLES_UNIVERSAL_TRANSCRIPTION",
+    "target": "#2"
+  },
+  {
+    "source": "#4",
+    "type": "SUCCEEDED_BY_AND_MANIFESTS_THROUGH",
+    "target": "#5"
+  },
+  {
+    "source": "#5",
+    "type": "COMPLETES_CYCLE_INTO",
+    "target": "#0"
+  }
+]

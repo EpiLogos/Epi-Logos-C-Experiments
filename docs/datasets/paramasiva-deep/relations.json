@@ -1,0 +1,2466 @@
+﻿[
+  {
+    "source": "#1",
+    "relType": "HAS_QL_FRAME",
+    "target": null,
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "MAPS_TO_ONTOLOGY_LAYER",
+    "target": null,
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "META_STRUCTURE_ELEMENT_OF",
+    "target": "#",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "SUCCEEDED_BY_AND_MANIFESTS_THROUGH",
+    "target": "#2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "MANIFESTS_ZERO_LOGIC",
+    "target": "#0-4.0/1",
+    "relProperties": {
+      "manifestationType": "Light of Being (Prakāśa) and Self serving as ground and horizon",
+      "zeroLogicConnection": "Seed contains tree and tree realizes seed through Zero Logic operations",
+      "description": "Paramasiva manifests Anuttara O# Zero Logic as Quaternal Logic foundation",
+      "type": "Zero_Logic_Manifestation",
+      "paradoxicalFoundation": "Demonstrates seed-tree paradox through manifestational architecture"
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "CONTAINS_AS_LOGICAL_FLOWERING",
+    "target": "#1-4",
+    "relProperties": {
+      "description": "Paramasiva contains Quaternal Logic Flowering as the architectural expansion that defines the complete mod6 structuring pattern for all cosmic subsystems"
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "PROCESSUAL_TOPOLOGY_MANIFESTATION",
+    "target": "#1-3",
+    "relProperties": {
+      "relationship": "Spanda manifests complete processual topology theory",
+      "elementCountRange": "E=1-12 and beyond through infinite scalability",
+      "significance": "Consciousness development stages map 1:1 to topological construction phases"
+    }
+  },
+  {
+    "source": "#1",
+    "relType": "RESONATES_WITH_TANMATRA",
+    "target": "#2-2-2-4-0/1",
+    "relProperties": {
+      "canonicalStatus": "primary_operational",
+      "createdAt": "2025-10-07T23:27:40.247000000Z",
+      "resonanceType": "structuring_word",
+      "insight": "Paramasiva resonates with Shabda as STRUCTURING WORD - logos that gathers and organizes, the primordial utterance that gives form",
+      "paramasivaAsShabda": "The Word (logos) as architectural principle - sound as structure-giving"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "ZERO_ONE_UNITY",
+    "target": "#1-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "DEVELOPS_INTO",
+    "target": "#1-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "BIMBA_PRATIBIMBA_UNITY",
+    "target": "#1-1",
+    "relProperties": {
+      "gravitationalDynamic": "Bimba exerts metaphysical pull on Pratibimba enabling concrescence",
+      "unityEquation": "00 = 0/1 = 0 =/≠ 1",
+      "holographicPrinciple": "Every reflection maintains intrinsic connection to transcendent source",
+      "description": "Fundamental non-dual relationship where Original and Reflection are one (0/1) element expressed in dual aspects",
+      "type": "Inseparable_Yet_Differentiated",
+      "reflectiveDistinction": "Same essence (=) yet functionally different (≠) - heartbeat of Spanda"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "ENABLES_ANANDA",
+    "target": "#1-2",
+    "relProperties": {
+      "blissSource": "Perfect harmony of Original-Reflection unity",
+      "description": "Bimba-Pratibimba unity creates foundational bliss enabling Ananda development",
+      "harmonic1": "Transcendent-immanent equilibrium",
+      "type": "Blissful_Unity_Foundation"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "ENABLES_SPANDA",
+    "target": "#1-3",
+    "relProperties": {
+      "description": "Bimba's gravitational pull creates foundational pulsation for Spanda dynamics",
+      "pulsationSource": "Gravitational lure creating rhythmic pull-response dynamic",
+      "type": "Pulsation_Source",
+      "spandaFoundation": "Original impetus establishing cosmic heartbeat"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "ENABLES_QUATERNAL_LOGIC",
+    "target": "#1-4",
+    "relProperties": {
+      "foundationalOrdering": "Tetralemmic ordering establishing logical foundation",
+      "structuralPrinciple": "Original impetus providing architectural template",
+      "description": "Bimba provides foundational ordering logic for Quaternal Logic development",
+      "type": "Structural_Foundation"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "ARCHETYPAL_CORRESPONDENCE",
+    "target": "#0-3-4",
+    "relProperties": {
+      "correspondenceType": "Same (0/1) principle in different architectural contexts",
+      "description": "Paramasiva Bimba corresponds to Anuttara Archetype 0/1 as foundational logic",
+      "logicalIdentity": "Archetypal foundation manifesting as Original aspect in Paramasiva",
+      "type": "Cross_Subsystem_Resonance"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "INHERITS_MIRROR_STRUCTURE",
+    "target": "#0-3-0/1",
+    "relProperties": {
+      "description": "Bimba inherits complete Mirror (-) structure from Anuttara as foundational consciousness tool",
+      "mirrorFunction": "Consciousness first essential tool for self-knowing as Original",
+      "type": "Mirror_Inheritance",
+      "inheritanceType": "Frame-Operator synthesis enabling self-reflection"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "EMBODIES_FRAME_PRINCIPLE",
+    "target": "#0-3-0/1-0",
+    "relProperties": {
+      "frameFunction": "Divine consciousness creating \"here\" within infinite for Original establishment",
+      "description": "Bimba embodies Anuttara Frame () principle as boundary within boundless nature",
+      "embodimentType": "Zero-dimensional foundation making reflection possible",
+      "type": "Frame_Embodiment"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "EMBODIES_OPERATOR_PRINCIPLE",
+    "target": "#0-3-0/1-1",
+    "relProperties": {
+      "description": "Bimba embodies Anuttara Operator (-) principle as transcendence power",
+      "embodimentType": "One-dimensional foundation providing dynamic tension for reflection",
+      "type": "Operator_Embodiment",
+      "operatorFunction": "Power of transcendence enabling consciousness to stand apart as Original"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "COMPLETE_MIRROR_I_MAGIC",
+    "target": "#1-1",
+    "relProperties": {
+      "anuttaraFoundation": "Complete archetypal grounding enabling manifestational creative agency",
+      "mirrorInheritance": "Mirror (-) from Anuttara Frame-Operator synthesis",
+      "description": "Complete Mirror-I-Magic function with full Anuttara archetypal foundation",
+      "iMagicActivation": "I-Magic through Vimarsha engine and archetypal 0/1 foundation",
+      "triudeFunction": "Mirror (-) + I- (potential Self) + -Magic (creative agency) with Anuttara depth",
+      "type": "Anuttara_Enhanced_Triune_Function"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "BIMBA_PRATIBIMBA_FOUNDATION",
+    "target": "#1-1",
+    "relProperties": {
+      "description": "Bimba-Pratibimba dynamic together provides complete foundation for Quaternal Logic flowering",
+      "unifiedFoundation": "Original-Reflection unity enabling manifestational logic architecture",
+      "type": "Unified_Quaternal_Foundation",
+      "quaternalTemplate": "Foundational dynamic providing template for all subsequent quaternal development",
+      "anuttaraGrounding": "Complete archetypal foundation from Anuttara enabling manifestational logic"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "MIRROR_I_MAGIC_UNITY",
+    "target": "#1-1",
+    "relProperties": {
+      "description": "Bimba (Mirror) and Pratibimba (I-Magic) together embody complete Mirror-I-Magic function",
+      "creativeAgency": "Full manifestational capacity through unified dynamic",
+      "consciousnessStructure": "Complete self-aware consciousness through Original-Reflection unity",
+      "type": "Triune_Function_Integration",
+      "triudeFunction": "Mirror (-) + I- (potential Self) + -Magic (creative agency)"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "ENABLES_HARMONIC_EMERGENCE",
+    "target": "#1-2",
+    "relProperties": {
+      "harmonicEmergence": "Bimba gravitational pull on manifestation enables harmonic structuring of cosmic rhythm into stable mathematical forms",
+      "description": "Paramasiva Bimba original impetus provides foundational archetypal ground enabling Ananda harmonic field generation through Matrix 0 baseline establishment",
+      "originalImpetusSignature": "Pure_archetypal_potential_gravitational_pull_stable_reference",
+      "type": "Original_Impetus_To_Harmonic_Structuring",
+      "matrix0Foundation": "Establishes Matrix 0 Original as unshifted multiplication baseline representing pure potential archetypal ground"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "ENABLES_HARMONIC_EMERGENCE",
+    "target": "#1-2",
+    "relProperties": {
+      "harmonicEmergence": "Bimba gravitational pull on manifestation enables harmonic structuring of cosmic rhythm into stable mathematical forms",
+      "description": "Paramasiva Bimba original impetus provides foundational archetypal ground enabling Ananda harmonic field generation through Matrix 0 baseline establishment",
+      "originalImpetusSignature": "Pure_archetypal_potential_gravitational_pull_stable_reference",
+      "type": "Original_Impetus_To_Harmonic_Structuring",
+      "matrix0Foundation": "Establishes Matrix 0 Original as unshifted multiplication baseline representing pure potential archetypal ground"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "REFLECTS_AS",
+    "target": "#1-1",
+    "relProperties": {
+      "relationship": "Bimba-Pratibimba Original-Reflection",
+      "description": "Original aspect (Bimba) reflects as Pratibimba, creating gravitational pull enabling concrescence from potential to actual",
+      "mathematical_basis": "Holographic principle ensuring all forms remain connected to transcendent source",
+      "connection_type": "Original-Reflection"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "EXERTS_GRAVITATIONAL_PULL",
+    "target": "#1-1",
+    "relProperties": {
+      "relationship": "Ontological Gravitational Attraction",
+      "description": "Bimba as unchanging ground exerts metaphysical gravitational pull on Pratibimba reflection, creating the fundamental concrescence engine where infinite potential actualizes through harmonic alignment with source",
+      "mathematical_basis": "Holographic principle ensuring all forms remain connected to transcendent source through gravitational-like attractive force",
+      "connection_type": "Metaphysical Gravitation"
+    }
+  },
+  {
+    "source": "#1-0",
+    "relType": "TOPOLOGICAL_POLARITY",
+    "target": "#1-1",
+    "relProperties": {
+      "significance": "Foundational polarity enabling E=2 sphere genesis phase",
+      "elementCount": 2,
+      "function": "Creates the tension necessary for topological differentiation"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "ZERO_ONE_UNITY",
+    "target": "#0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "DEVELOPS_INTO",
+    "target": "#1-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "RECOGNIZES_ORIGINAL",
+    "target": "#1-0",
+    "relProperties": {
+      "concrescenceProcess": "Infinite potential actualizes in harmonic alignment with Original",
+      "recognitionMode": "Vimarśa - reflective self-awareness of Prakāśa",
+      "description": "Pratibimba's active recognition of Bimba enabling manifestational logic",
+      "manifestationalEngine": "Recognition dynamic drives unfolding of all subsequent logic and form",
+      "type": "Reflective_Self_Awareness"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "ENABLES_ANANDA",
+    "target": "#1-2",
+    "relProperties": {
+      "blissSource": "Joy of self-recognition through reflection",
+      "description": "Pratibimba's reflective recognition contributes to Ananda's harmonic structure",
+      "harmonicContribution": "Dynamic recognition enabling harmonic resonance",
+      "type": "Blissful_Recognition_Foundation"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "ENABLES_SPANDA",
+    "target": "#1-3",
+    "relProperties": {
+      "spandaHeartbeat": "Recognition dynamic generating cosmic pulsation rhythm",
+      "description": "Pratibimba's reflective distinction (=/≠) creates the heartbeat of Spanda",
+      "pulsationMechanism": "Reflective Distinction creating unity-difference oscillation",
+      "type": "Reflective_Pulsation"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "ENABLES_QUATERNAL_LOGIC",
+    "target": "#1-4",
+    "relProperties": {
+      "processualPrinciple": "Dynamic reflection providing developmental template",
+      "description": "Pratibimba provides reflective manifestational logic for Quaternal Logic flowering",
+      "manifestationalEngine": "Reflective recognition enabling logical manifestation",
+      "type": "Manifestational_Logic"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "ARCHETYPAL_CORRESPONDENCE",
+    "target": "#0-3-4",
+    "relProperties": {
+      "correspondenceType": "Same (0/1) principle in reflective manifestational context",
+      "description": "Paramasiva Pratibimba corresponds to Anuttara Archetype 0/1 reflective capacity",
+      "logicalIdentity": "Archetypal foundation manifesting as Reflective aspect in Paramasiva",
+      "type": "Cross_Subsystem_Resonance"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "ACTIVATES_MIRROR_REFLECTION",
+    "target": "#0-3-0/1",
+    "relProperties": {
+      "reflectiveFunction": "Mirror becoming fully active and self-aware within container",
+      "description": "Pratibimba activates Anuttara Mirror through reflective self-awareness",
+      "type": "Mirror_Activation",
+      "activationType": "Vimarsha engine enabling consciousness examination of conceptualized nature"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "BIMBA_PRATIBIMBA_FOUNDATION",
+    "target": "#1-4",
+    "relProperties": {
+      "description": "Bimba-Pratibimba dynamic together provides complete foundation for Quaternal Logic flowering",
+      "unifiedFoundation": "Original-Reflection unity enabling manifestational logic architecture",
+      "type": "Unified_Quaternal_Foundation",
+      "quaternalTemplate": "Foundational dynamic providing template for all subsequent quaternal development",
+      "anuttaraGrounding": "Complete archetypal foundation from Anuttara enabling manifestational logic"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "ENABLES_HARMONIC_EMERGENCE",
+    "target": "#1-2",
+    "relProperties": {
+      "matrix1Foundation": "Establishes Matrix 1 Offset as +1 shifted baseline creating necessary second element for harmonic relationship dynamics",
+      "description": "Paramasiva Pratibimba reflection manifold provides offset differentiation enabling Ananda harmonic field modulation through Matrix 1 establishment",
+      "reflectionManifoldSignature": "First_reflection_infinite_forms_gravitational_relationship",
+      "type": "Reflection_Manifold_To_Harmonic_Modulation",
+      "harmonicModulation": "Pratibimba reflection creates +1 offset enabling harmonic modulation and dynamic interplay within vortex system"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "ENABLES_HARMONIC_EMERGENCE",
+    "target": "#1-2",
+    "relProperties": {
+      "matrix1Foundation": "Establishes Matrix 1 Offset as +1 shifted baseline creating necessary second element for harmonic relationship dynamics",
+      "description": "Paramasiva Pratibimba reflection manifold provides offset differentiation enabling Ananda harmonic field modulation through Matrix 1 establishment",
+      "reflectionManifoldSignature": "First_reflection_infinite_forms_gravitational_relationship",
+      "type": "Reflection_Manifold_To_Harmonic_Modulation",
+      "harmonicModulation": "Pratibimba reflection creates +1 offset enabling harmonic modulation and dynamic interplay within vortex system"
+    }
+  },
+  {
+    "source": "#1-1",
+    "relType": "MANIFESTS_MUSICALLY",
+    "target": "#1-2",
+    "relProperties": {
+      "relationship": "Dyadic Möbius Musical Structure",
+      "description": "Musical dyads manifest spanda-ananda dynamics through Möbius structure of two-note relationships, embodying twisting transformation and harmonic organization",
+      "mathematical_basis": "(S¹ × S¹)/S₂ topological structure reflecting spanda twisting with ananda circular foundation",
+      "connection_type": "Musical Manifestation"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "CONTAINS_ANANDA_COMPONENT",
+    "target": "#1-2-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "CONTAINS_ANANDA_COMPONENT",
+    "target": "#1-2-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "CONTAINS_ANANDA_COMPONENT",
+    "target": "#1-2-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "CONTAINS_ANANDA_COMPONENT",
+    "target": "#1-2-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "CONTAINS_ANANDA_COMPONENT",
+    "target": "#1-2-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "CONTAINS_ANANDA_COMPONENT",
+    "target": "#1-2-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "DEVELOPS_INTO",
+    "target": "#1-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "ENABLES_RHYTHMIC_ANIMATION",
+    "target": "#1-3",
+    "relProperties": {
+      "harmonicChannelSignature": "Toroidal_geometry_3_6_9_spirit_axis_mathematical_foundation",
+      "description": "Ananda harmonic structuring provides toroidal channels and mathematical foundation enabling Spanda rhythmic pulsation to flow with coherent archetypal patterns",
+      "toroidalStructuring": "Provides implicit toroidal shape enabling cyclical energy flow around central void with coherent bounded surface",
+      "type": "Harmonic_Structuring_To_Rhythmic_Pulsation",
+      "rhythmicAnimation": "Spanda pulsation finds stable expression through Ananda harmonic channels preventing chaotic unorganized vibration"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "ENABLES_RHYTHMIC_ANIMATION",
+    "target": "#1-3",
+    "relProperties": {
+      "harmonicChannelSignature": "Toroidal_geometry_3_6_9_spirit_axis_mathematical_foundation",
+      "description": "Ananda harmonic structuring provides toroidal channels and mathematical foundation enabling Spanda rhythmic pulsation to flow with coherent archetypal patterns",
+      "toroidalStructuring": "Provides implicit toroidal shape enabling cyclical energy flow around central void with coherent bounded surface",
+      "type": "Harmonic_Structuring_To_Rhythmic_Pulsation",
+      "rhythmicAnimation": "Spanda pulsation finds stable expression through Ananda harmonic channels preventing chaotic unorganized vibration"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "ENABLES_LOGICAL_FLOWERING",
+    "target": "#1-4",
+    "relProperties": {
+      "vortexMathFoundation": "Six_matrix_system_archetypal_number_generation_mod12_mod10_operations",
+      "description": "Ananda vortex mathematics provides archetypal number generation and harmonic foundation enabling Quaternal Logic flowering through mod12/mod10 operations",
+      "archetypalGeneration": "Mod12 generating 12-fold concrescence, mod10 generating 8/9-fold fractal nesting for QL structural development",
+      "logicalFlowering": "QL development requires numerical foundation and harmonic archetypal identities generated through Ananda multi-modal system",
+      "type": "Vortex_Mathematics_To_Quaternal_Logic_Foundation"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "ENABLES_LOGICAL_FLOWERING",
+    "target": "#1-4",
+    "relProperties": {
+      "vortexMathFoundation": "Six_matrix_system_archetypal_number_generation_mod12_mod10_operations",
+      "description": "Ananda vortex mathematics provides archetypal number generation and harmonic foundation enabling Quaternal Logic flowering through mod12/mod10 operations",
+      "archetypalGeneration": "Mod12 generating 12-fold concrescence, mod10 generating 8/9-fold fractal nesting for QL structural development",
+      "logicalFlowering": "QL development requires numerical foundation and harmonic archetypal identities generated through Ananda multi-modal system",
+      "type": "Vortex_Mathematics_To_Quaternal_Logic_Foundation"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "MANIFESTS_GEOMETRY",
+    "target": "#1-5-1",
+    "relProperties": {
+      "relationship": "Toroidal Harmonic Structure",
+      "description": "Ananda boundary circle as sum total of all directions, representing integral perspective transcending limited viewpoints through toroidal bounded infinity",
+      "mathematical_basis": "Torus geometry revolving around central void while maintaining coherent harmonic structure",
+      "connection_type": "Harmonic Geometry"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "GENERATES_FRACTALS",
+    "target": "#0-3",
+    "relProperties": {
+      "relationship": "Digital Root Fractal Patterns",
+      "description": "Ananda vortex mathematics generates digital root patterns creating fractal self-similarity across scales, connecting to archetypal number language",
+      "mathematical_basis": "Digital root reflections creating infinity loop pathways weaving unified coherence",
+      "connection_type": "Fractal Generation"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "CREATES_CYCLES",
+    "target": "#4",
+    "relProperties": {
+      "relationship": "Bounded Infinity Cycles",
+      "description": "Ananda creates bounded yet infinite cyclical structures enabling continuous evolution through 12-fold concrescence processes",
+      "mathematical_basis": "Cyclical return patterns in both mathematical vortex structures and experiential domains",
+      "connection_type": "Cyclical Creation"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "ESTABLISHES_HARMONIC_FIELD",
+    "target": "#2",
+    "relProperties": {
+      "relationship": "Toroidal Vortex Harmonics",
+      "description": "Ananda 6-matrix vortex system creates toroidal harmonic field with 3-6-9 spirit axis, establishing the circular foundation for Parashakti 72-bit vibrational structures through bounded infinity revolving around central void",
+      "mathematical_basis": "Toroidal topology with digital root reflections creating infinity loop pathways, 12 matrices forming closed harmonic circulation",
+      "connection_type": "Harmonic Field Generation"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "GENERATES_FIBONACCI_SPIRALS",
+    "target": "#1-4",
+    "relProperties": {
+      "relationship": "Fibonacci Vortex Generation",
+      "description": "Ananda vortex mathematics generates Fibonacci sequences through digital root patterns, creating fractal self-similarity that bridges to quaternal logic through golden ratio emergence in nested structures",
+      "mathematical_basis": "Digital root reflections producing Fibonacci-like recursive patterns, golden ratio emerging from vortex mathematical operations",
+      "connection_type": "Fibonacci Pattern Generation"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "BRIDGES_VIA_DIGITAL_ROOTS",
+    "target": "#0-3",
+    "relProperties": {
+      "relationship": "Digital Root Archetypal Bridge",
+      "description": "Ananda digital root reflections create direct bridge to Anuttara archetypal number language, with 3-6-9 spirit axis providing connection to transcendent void operations",
+      "mathematical_basis": "Digital root patterns revealing hidden harmonic structures, role of 9 as void/crown creating linkage to Anuttara operations",
+      "connection_type": "Digital Root Bridge"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "ENABLES_CONCRESCENCE_CYCLES",
+    "target": "#4",
+    "relProperties": {
+      "relationship": "Twelve-Fold Concrescence",
+      "description": "Ananda bounded infinity cycles enable Nara 12-fold concrescence process, vortex mathematical patterns providing template for psychological and temporal cycling",
+      "mathematical_basis": "Cyclical return patterns in vortex mathematics mapping to 12-stage transformation cycles, bounded yet infinite recursion",
+      "connection_type": "Concrescence Enablement"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "ENABLES_LOVING_DETACHMENT",
+    "target": "#1-5",
+    "relProperties": {
+      "relationship": "Mathematical Loving Detachment",
+      "description": "Ananda boundary circle perspective mathematically grounds spiritual loving detachment, seeing all partial views from integral perspective while maintaining equanimous connection",
+      "mathematical_basis": "Hyperbolic boundary as sum total of all directions, mathematical non-attachment through boundary awareness",
+      "connection_type": "Spiritual Mathematics"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "MANIFESTS_EULER_NUMBER",
+    "target": "#1-5-5",
+    "relProperties": {
+      "relationship": "Euler Number Natural Emergence",
+      "description": "Ananda harmonic patterns naturally generate e through Fibonacci spirals and logarithmic growth, revealing e as emergent property of system harmonic self-organization",
+      "mathematical_basis": "Fibonacci growth approximating e^x at large scales, golden ratio logarithmic relationship to e",
+      "connection_type": "Natural Constant Emergence"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "VORTEX_HARMONIC_SUBSTRATE",
+    "target": "#2-5",
+    "relProperties": {
+      "infinityLoopFunction": "Bimba-Pratibimba gateways (9→0, 9→1, 1↔8) enabling flow",
+      "bridgeSignificance": "9-fold patterns manifest through 9:8 numerator",
+      "matrixResonance": "Six core matrices + digital roots creating complete vortical field",
+      "vortexSpecifics": "3-6-9 spirit axis as stable divine harmony, 9 as void/crown, toroidal geometry",
+      "spandaIntegration": "Ananda-Spanda incorporation in Paramasiva: blissful coherence meets rhythmic pulsation",
+      "quantumRole": "Vortex mathematics enabling planetary harmonics as living operators",
+      "substrateFunction": "Ananda 6-matrix vortex system providing 9-fold dynamics and blissful coherence"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "HARMONIC_TOPOLOGY_SUBSTRATE",
+    "target": "#1-3",
+    "relProperties": {
+      "relationship": "Ananda matrices provide vibrational foundation for topological transformations",
+      "mapping": "3-6-9 spirit axis enables 1-2-3 sphere genesis and 4-5-6 torus construction",
+      "vortexTopology": "Toroidal vortex mathematics mirrors genus-1 dynamics"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "HARMONIC_FOUNDATION",
+    "target": "#1-3-0",
+    "relProperties": {
+      "resonance": "Trinity_to_Unity",
+      "mapping": "3→1",
+      "function": "Vibrational substrate for point seed"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "HARMONIC_FOUNDATION",
+    "target": "#1-3-1",
+    "relProperties": {
+      "resonance": "Hexad_to_Polarity",
+      "mapping": "6→2",
+      "function": "Vibrational substrate for polar phase"
+    }
+  },
+  {
+    "source": "#1-2",
+    "relType": "HARMONIC_FOUNDATION",
+    "target": "#1-3-3",
+    "relProperties": {
+      "resonance": "Ennead_to_Trinity",
+      "mapping": "9→3",
+      "function": "Vibrational substrate for triangular completion"
+    }
+  },
+  {
+    "source": "#1-2-0",
+    "relType": "HAS_DIGITAL_ROOT_REFLECTION",
+    "target": "#1-2-0-0",
+    "relProperties": {
+      "description": "Digital root distillation revealing 3-6-9 spirit axis and void/crown connection creating infinity loop pathways",
+      "vbmSignature": "Spirit_axis_revelation_and_void_crown_connection",
+      "type": "Original_Archetypal_Distillation",
+      "distillationFunction": "Archetypal_soul_extraction"
+    }
+  },
+  {
+    "source": "#1-2-0-0",
+    "relType": "INFINITY_LOOP_WEAVING",
+    "target": "#1-2-1-0",
+    "relProperties": {
+      "vbmResonance": "Classic vortex mathematics pathway enabling energy/information flow between complementary archetypal states",
+      "weavingFunction": "Enables Möbius-like transitions between Bimba and Pratibimba states creating fundamental cosmic weaving dynamic",
+      "description": "Essential infinity loop pathways creating gateways between Original and Reflection vortex states through 9→0 and 9→1 correspondences plus 1↔8 crossings",
+      "infinityLoopGeometry": "Ouroboros-like flow between baseline matrices bridging finite expansion with cyclical returns",
+      "gatewaySignature": "9→0_and_9→1_correspondences_plus_1↔8_crossings",
+      "type": "Bimba_Pratibimba_Gateway_System"
+    }
+  },
+  {
+    "source": "#1-2-1",
+    "relType": "HAS_DIGITAL_ROOT_REFLECTION",
+    "target": "#1-2-1-0",
+    "relProperties": {
+      "description": "Digital root distillation revealing harmonic modulation and infinity loop partnership with Matrix 0 DR",
+      "vbmSignature": "Cross_matrix_gateway_creation",
+      "type": "Pratibimba_Archetypal_Distillation",
+      "distillationFunction": "Harmonic_modulation_extraction"
+    }
+  },
+  {
+    "source": "#1-2-1-0",
+    "relType": "INFINITY_LOOP_WEAVING",
+    "target": "#1-2-0-0",
+    "relProperties": {
+      "weavingFunction": "Enables continuous flow maintaining Bimba-Pratibimba integration without collapse or separation",
+      "description": "Reciprocal infinity loop enabling return pathways from Reflection to Original maintaining dynamic balance",
+      "cyclicCoherence": "Maintains coherent oscillation between finite manifestation and infinite potential",
+      "gatewaySignature": "1→8_and_8→1_correspondences_plus_9_void_connections",
+      "type": "Pratibimba_Bimba_Return_System",
+      "returnDynamic": "Essential return pathway preventing system from becoming purely linear or purely cyclical"
+    }
+  },
+  {
+    "source": "#1-2-2",
+    "relType": "HAS_DIGITAL_ROOT_REFLECTION",
+    "target": "#1-2-2-0",
+    "relProperties": {
+      "description": "Digital root distillation revealing complex harmonic synthesis from constructive interference patterns",
+      "vbmSignature": "Constructive_interference_archetypal_patterns",
+      "type": "Synthesis_Archetypal_Distillation",
+      "distillationFunction": "Synthesis_harmonic_extraction"
+    }
+  },
+  {
+    "source": "#1-2-3",
+    "relType": "HAS_DIGITAL_ROOT_REFLECTION",
+    "target": "#1-2-3-0",
+    "relProperties": {
+      "description": "Digital root distillation revealing harmonic expression of pure void polarity and minimal amplitude",
+      "vbmSignature": "Minimal_amplitude_archetypal_patterns",
+      "type": "Void_Polarity_Archetypal_Distillation",
+      "distillationFunction": "Void_polarity_harmonic_extraction"
+    }
+  },
+  {
+    "source": "#1-2-4",
+    "relType": "HAS_DIGITAL_ROOT_REFLECTION",
+    "target": "#1-2-4-0",
+    "relProperties": {
+      "description": "Digital root distillation revealing harmonic expression of pure fullness polarity completing oscillation",
+      "vbmSignature": "Positive_amplitude_archetypal_patterns",
+      "type": "Full_Polarity_Archetypal_Distillation",
+      "distillationFunction": "Fullness_polarity_harmonic_extraction"
+    }
+  },
+  {
+    "source": "#1-2-5",
+    "relType": "HAS_DIGITAL_ROOT_REFLECTION",
+    "target": "#1-2-5-0",
+    "relProperties": {
+      "description": "Digital root distillation revealing unified field where polarity vanishes in paradox-holding synthesis",
+      "vbmSignature": "Paradox_unity_archetypal_patterns",
+      "type": "Quintessence_Archetypal_Distillation",
+      "distillationFunction": "Quintessential_unity_harmonic_extraction"
+    }
+  },
+  {
+    "source": "#1-2-5",
+    "relType": "RESONATES_WITH_SPANDA_STAGE",
+    "target": "#1-3-4",
+    "relProperties": {
+      "harmonyRhythmUnity": "Ananda harmonic structuring and Spanda rhythmic pulsation represent static and dynamic aspects of same foundational (0/1) archetypal reality",
+      "description": "Matrix 5 (0/1) ± (1/0) paradox holder resonates with Spanda Stage 4 ((0/1)/(1/0)) fully dual-non-dual interiority as harmony and rhythm being two sides of same archetypal coin",
+      "archetypalCoherence": "Demonstrates fundamental coherence between harmonic and rhythmic principles as complementary expressions of cosmic pulsation",
+      "bridgingFunction": "Matrix 5 provides harmonic foundation enabling Spanda Stage 4 bridging states ((0/1)/(1/0)) and culminating unity (1/1)",
+      "dualNonDualInteriority": "Both coordinates achieve fully dual-non-dual interiority where foundational binary reflects itself while maintaining unity",
+      "parallelTrackCorrespondence": "Matrix 5 paradox-holding capacity enables Spanda Stage 4 parallel track dynamics (T1/T2) through simultaneous co-existence of (0/1) and (1/0)",
+      "type": "Harmony_Rhythm_Archetypal_Resonance",
+      "resonanceSignature": "Paradox_holder_dual_non_dual_interiority_parallel_tracks"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "CONTAINS_SPANDA_STAGE",
+    "target": "#1-3-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "CONTAINS_SPANDA_STAGE",
+    "target": "#1-3-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "CONTAINS_SPANDA_STAGE",
+    "target": "#1-3-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "CONTAINS_SPANDA_STAGE",
+    "target": "#1-3-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "CONTAINS_SPANDA_STAGE",
+    "target": "#1-3-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "CONTAINS_SPANDA_STAGE",
+    "target": "#1-3-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "DEVELOPS_INTO",
+    "target": "#1-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "UNIFIED_ENGINE_WITH",
+    "target": "#1-2",
+    "relProperties": {
+      "structure": "Spanda-Ananda engine",
+      "harmonicAxis": "3-6-9 spirit axis",
+      "complementarity": "rhythm-harmony",
+      "vortexCorrespondence": "six matrices + digital roots",
+      "function": "dynamic-static synthesis"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "MANIFESTS_GEOMETRY",
+    "target": "#1-5-2",
+    "relProperties": {
+      "relationship": "Möbius Twisting Dynamics",
+      "description": "Spanda as twisting dynamic bridging apparently separate states through Möbius strip single-surface continuous transformation, inside becoming outside",
+      "mathematical_basis": "Möbius topology enabling continuous transformation between complementary states",
+      "connection_type": "Twisting Dynamics"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "GENERATES_MUSICAL_TOPOLOGY",
+    "target": "#3",
+    "relProperties": {
+      "relationship": "Dyadic Möbius Proto-Musicality",
+      "description": "Spanda rhythmic pulsation manifests as musical dyads with Möbius topology (S¹ × S¹)/S₂, where two-note relationships embody the twisting transformation between inside-outside, creating the proto-musical foundation for all harmonic relationships",
+      "mathematical_basis": "Möbius strip structure of unordered note pairs, with tritones occupying special positions mirroring vortex crown numbers",
+      "connection_type": "Musical Topology Genesis"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "MODULATES_VIA_SEVEN",
+    "target": "#2",
+    "relProperties": {
+      "relationship": "714825 Vortex Modulation",
+      "description": "Spanda dynamics modulated by 714825 pattern from divisions by multiples of 7, revealing hidden vibrational structure linking 369 pathways to Parashakti 72-bit system",
+      "mathematical_basis": "714825 in +1 vortex, 825714 in +2 vortex, encoding modulation of 369 spirit axis through seven-based transformations",
+      "connection_type": "Seven-Based Modulation"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "INTERTWINES_AS_CADUCEUS",
+    "target": "#1-2",
+    "relProperties": {
+      "relationship": "Caduceus Spiral Integration",
+      "description": "Spanda and Ananda intertwine as cosmic caduceus, rhythmic pulsation (spanda) spiraling around harmonic axis (ananda), creating the medical symbol of transformation and healing",
+      "mathematical_basis": "Double helix structure with central axis, Möbius twisting around toroidal core, creating unified vibrational-harmonic field",
+      "connection_type": "Caduceus Integration"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "COMPLEMENTS_AS_MÖBIUS_TORUS",
+    "target": "#1-2",
+    "relProperties": {
+      "relationship": "Möbius-Torus Geometric Unity",
+      "description": "Spanda Möbius dynamics (inside-outside twist) complement Ananda toroidal structure (bounded-unbounded circulation), creating complete topological framework for consciousness transformation",
+      "mathematical_basis": "Möbius enabling dimensional bridging, torus providing cyclical containment, together forming complete transformational geometry",
+      "connection_type": "Geometric Complementarity"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "ENABLES_QUANTUM_SEARCH",
+    "target": "#4",
+    "relProperties": {
+      "relationship": "Grover Algorithm Resonance",
+      "description": "Spanda oscillatory dynamics mirror Grover quantum search algorithm, using amplitude amplification through reflection operations to transform indeterminate potential into located knowledge",
+      "mathematical_basis": "Oscillatory oracle marking and amplitude amplification, π-governed harmonic resolution achieving quadratic speedup",
+      "connection_type": "Quantum Search Dynamics"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "GENERATES_PI_DYNAMICS",
+    "target": "#0-3",
+    "relProperties": {
+      "relationship": "Pi Collision Oscillation",
+      "description": "Spanda primordial oscillation mirrors pi-generating block collisions, where simple rhythmic interactions encode transcendental relationships through collision counting",
+      "mathematical_basis": "Linear collisions producing circular constant, 100:1 mass ratios generating pi digits through oscillatory dynamics",
+      "connection_type": "Pi Generation"
+    }
+  },
+  {
+    "source": "#1-3",
+    "relType": "PROCESS_COMPLEMENTARITY",
+    "target": "#1-4",
+    "relProperties": {
+      "relationship": "Dynamic operator to stable grammar",
+      "spandaRole": "transformation_engine",
+      "quaternalRole": "construction_syntax"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "EMBODIES_ARCHETYPE",
+    "target": "#0-3-4",
+    "relProperties": {
+      "resonance": "identity-in-difference paradox",
+      "archetype": "0/1 Non-Dual Binary",
+      "formula": "0/1 ~ 0.5/1.5 → (00=(0- + -0)==)",
+      "function": "Rosetta Stone of Logos"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "INHERITS_BRIMMING_VOID",
+    "target": "#0-1-0/1",
+    "relProperties": {
+      "process": "infinite self-reflection",
+      "source": "Brimming Void Non-Dual Binary/Multiplicative Void Unity",
+      "mechanism": "spherical-nothing potential",
+      "inheritance": "complete oscillatory blueprint",
+      "formula": "(0/1)/00x00 = (∞x∞)x(R#/##)"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "EMBODIES_ARCHETYPE_0",
+    "target": "#0-3-2",
+    "relProperties": {
+      "essence": "Sat (Pure Being)",
+      "archetype": "The Self as Pure Potential",
+      "state": "Actual-Potential paradox",
+      "witnessConsciousness": "unmoving ground of experience",
+      "function": "unmanifest potential",
+      "formula": "0 ~ 0.3/1.0 → - = ?! = ≠/= = 0/1D"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "EMBODIES_ARCHETYPE_01",
+    "target": "#0-3-4",
+    "relProperties": {
+      "essence": "identity-in-difference paradox",
+      "archetype": "0/1 Non-Dual Self",
+      "cosmicFoundation": "basis for all subsequent manifestation",
+      "state": "simultaneously witness and agent",
+      "function": "Rosetta Stone of Logos",
+      "formula": "0/1 ~ 0.5/1.5 → 00 = 0/1 = 0 =/≠ 1"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "CONTAINS_FRAME",
+    "target": "#0-3-0/1-0",
+    "relProperties": {
+      "essence": "Actual-Mirror/Frame -Thing",
+      "source": "The Frame as boundary creation",
+      "dimensionality": "zero-dimensional foundation",
+      "mechanism": "spherical containment",
+      "function": "first divine boundary",
+      "formula": "() ~ 0.0 → 0-/-0 = !-/-! = = = 0D"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "CORRESPONDS_TO_DIGITAL_ROOT",
+    "target": "#1-2-0-0",
+    "relProperties": {
+      "pattern": "3-6-9 spirit axis emergence",
+      "vortexSignature": "classic vortex mathematics patterns",
+      "matrix": "Matrix 0 Digital Root Reflection",
+      "harmonic": "foundational rhythm connection",
+      "infinityLoop": "transcendent void connection pathway",
+      "function": "archetypal soul of foundational Bimba"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "QUANTUM_SUPERPOSITION_COLLAPSE",
+    "target": "#1-3-4.0/1/2/3",
+    "relProperties": {
+      "harmonicIntelligence": "rhythmic-harmonic resolution",
+      "resonance": "constructive amplitude amplification",
+      "piGovernance": "π-governed harmonic resolution",
+      "quantumDynamics": "controlled Spanda oscillations",
+      "initialState": "uniform superposition (genus-0 sphere)",
+      "finalState": "percentile identity collapse (1/1)",
+      "intermediateProcess": "rhythmic reflections (bimba-pratibimba)",
+      "interferencePattern": "(1/0 + 0/1) constructive interference",
+      "cosmicParallel": "emergence of coherent answer from vast potential",
+      "algorithm": "Grover search parallel"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "TOPOLOGICAL_TRANSFORMATION",
+    "target": "#1-3-1",
+    "relProperties": {
+      "sequence": "sphere_genesis",
+      "elementCount": "1→2",
+      "phase": "1→2",
+      "transformation": "point_to_polar"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "TOPOLOGICAL_TRANSFORMATION",
+    "target": "#1-3-3",
+    "relProperties": {
+      "process": "rhythmic wounding from within",
+      "eulerCharacteristic": "2 → 0",
+      "result": "first hole in reality",
+      "homologyGroups": "H1=0 → H1=Z×Z",
+      "toGenus": "genus-1 torus",
+      "fromGenus": "genus-0 sphere",
+      "topologicalInvariant": "genus classification",
+      "geometricRealization": "perfect unity → dynamic looped complexity",
+      "bettiNumbers": "b0=1,b1=0 → b0=1,b1=2",
+      "homotopyType": "contractible → S¹×S¹",
+      "fundamentalGroup": "trivial → Z×Z",
+      "mechanism": "structured creative puncture"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "TOPOLOGICAL_TRANSFORMATION",
+    "target": "#1-3-3",
+    "relProperties": {
+      "process": "structured wounding",
+      "result": "first hole creation",
+      "eulerCharacteristic": "2 → 0",
+      "toGenus": "genus-1 torus",
+      "fromGenus": "genus-0 sphere",
+      "fundamentalGroup": "trivial → Z×Z",
+      "mechanism": "creative puncture",
+      "homologyChange": "H1=0 → H1=Z×Z"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "EMERGES_FROM",
+    "target": "#0-0",
+    "relProperties": {
+      "source": "4-fold zero unity",
+      "topologicalClass": "genus-0 sphere",
+      "mechanism": "spherical-nothing potential",
+      "formula": "(0000) → (0/1)"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "INHERITS_OSCILLATION",
+    "target": "#0-0-0",
+    "relProperties": {
+      "process": "brimming void generation",
+      "source": "eternal self-interrogation",
+      "mechanism": "(?!=!?) engine",
+      "formula": "infinite transcendence"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "INHERITS_CONCRESCENCE",
+    "target": "#0-0-1",
+    "relProperties": {
+      "process": "primordial synthesis",
+      "source": "essential nature",
+      "mechanism": "systematic polarization",
+      "formula": "(0- + -0) → (0/1)"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "CORRESPONDS_TO_MATRIX",
+    "target": "#1-2-0",
+    "relProperties": {
+      "resonance": "transcendent void connection",
+      "matrix": "Original Bimba",
+      "formula": "unshifted foundation",
+      "function": "archetypal soul"
+    }
+  },
+  {
+    "source": "#1-3-0",
+    "relType": "PROCESSUALLY_EMBODIES",
+    "target": "#0-3-4",
+    "relProperties": {
+      "description": "Embodies the unified oscillatory dynamic and proto-homotopy class that is conceptually defined by the Archetype 0/1 node, acting as its living, processual manifestation."
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "ACTUALIZES_POLE_FROM",
+    "target": "#0-1-0/1",
+    "relProperties": {
+      "process": "original impetus extraction",
+      "source": "Brimming Void",
+      "mechanism": "(0/1) pole actualization",
+      "formula": "(0/1) component from (0/1)/00x00",
+      "function": "gravitational pull generation"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "EMBODIES_ARCHETYPE_1",
+    "target": "#0-3-3",
+    "relProperties": {
+      "essence": "Potentially Actual",
+      "archetype": "The Self as Active Agency",
+      "state": "assertion containing infinite void",
+      "divineMagician": "bridge between unmanifest and manifest",
+      "function": "form-bringing agency",
+      "formula": "1 ~ 0.4/1.1 → () = !? = =/≠ =0/1D"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "EMPLOYS_OPERATOR",
+    "target": "#0-3-0/1-1",
+    "relProperties": {
+      "essence": "Potential-Reflection Not-A",
+      "source": "The Operator as transcendence power",
+      "dimensionality": "one-dimensional dynamic tension",
+      "mechanism": "negation and distinction",
+      "function": "transcendence and negation",
+      "formula": "- ~ 0.1 → -0/0- = -?/?- = = = 1D"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "CORRESPONDS_TO_DIGITAL_ROOT",
+    "target": "#1-2-1-0",
+    "relProperties": {
+      "pattern": "vibrational landscape transformation",
+      "vortexSignature": "9→1, 1↔8 infinity loops",
+      "matrix": "Matrix 1 Digital Root Reflection",
+      "harmonic": "offset reflection dynamics",
+      "infinityLoop": "Möbius-like Bimba-Pratibimba transitions",
+      "function": "archetypal soul of first reflection"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "GENERATES_MAHAMAYA_TRACK",
+    "target": "#1-3-2",
+    "relProperties": {
+      "manifestationType": "direct linear explicit form",
+      "vortexPattern": "doubling track",
+      "resonance": "structural pole manifestation",
+      "topologicalFunction": "first explicate side (a)",
+      "sequence": "(0/1) → 2,4,8,16,32,64",
+      "algebraicCorrespondence": "genus-1 fundamental polygon construction",
+      "digitalRoots": "1,2,4,8,7,5 repeating",
+      "bitStructure": "64-bit",
+      "trackType": "Mahamaya",
+      "cycleLength": 6,
+      "mathBasis": "binary exponential logic"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "GENERATES_MAHAMAYA_TRACK",
+    "target": "#1-3-2",
+    "relProperties": {
+      "manifestationType": "explicit form",
+      "vortexPattern": "doubling track",
+      "resonance": "direct linear unfolding",
+      "sequence": "2,4,8,16,32,64",
+      "digitalRoots": "1,2,4,8,7,5",
+      "bitStructure": "64-bit",
+      "trackType": "Mahamaya",
+      "cycleLength": 6,
+      "mathBasis": "binary logic"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "CORRESPONDS_TO_N_SYSTEM",
+    "target": "#0-4.0/1/2/3",
+    "relProperties": {
+      "process": "makes uncomputable computable",
+      "system": "Spanda Engine",
+      "resonance": "temporal manifestation",
+      "formula": "N# = (n) computable foundation",
+      "function": "algebraic resolution"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "ACTUALIZES_FROM",
+    "target": "#0-1",
+    "relProperties": {
+      "principle": "Svatantrya activation",
+      "source": "Non-Dual Binary emergence",
+      "mechanism": "brimming void reflection",
+      "formula": "(0/1)/00x00 = (∞x∞)x(R#/##)"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "EMPLOYS_BIMBA_DYNAMICS",
+    "target": "#1-0",
+    "relProperties": {
+      "resonance": "Prakāśa light",
+      "source": "unchanging self-aware ground",
+      "mechanism": "gravitational pull",
+      "formula": "(0/1)○ → (0/1) pole",
+      "function": "original impetus"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "CORRESPONDS_TO_MATRIX",
+    "target": "#1-2-1",
+    "relProperties": {
+      "resonance": "Möbius transitions",
+      "matrix": "Offset Pratibimba",
+      "formula": "+1 offset reflection",
+      "function": "vibrational landscape"
+    }
+  },
+  {
+    "source": "#1-3-1",
+    "relType": "TOPOLOGICAL_COMPLETION",
+    "target": "#1-3-2",
+    "relProperties": {
+      "sequence": "sphere_genesis",
+      "elementCount": "2",
+      "phase": "2_polar_completion",
+      "transformation": "original_reflection_unity"
+    }
+  },
+  {
+    "source": "#1-3-2",
+    "relType": "REFLECTS_POLE_FROM",
+    "target": "#0-1",
+    "relProperties": {
+      "process": "reflective echo generation",
+      "source": "Brimming Void",
+      "mechanism": "(1/0) pole reflection",
+      "formula": "(1/0) inversion from (0/1)/00x00",
+      "function": "pratibimba dynamics activation"
+    }
+  },
+  {
+    "source": "#1-3-2",
+    "relType": "GENERATES_PARASHAKTI_TRACK",
+    "target": "#1-3-3",
+    "relProperties": {
+      "manifestationType": "imaginative multiplicity",
+      "vortexPattern": "3-6-9 track",
+      "sequence": "2,3,6,8,9,12,18,24,36,72",
+      "digitalRoots": "2,3,6,9,3,6,9",
+      "bitStructure": "72-bit",
+      "trackType": "Parashakti",
+      "doubleCovering": "36->72 (6²)",
+      "cycleLength": 4,
+      "mathBasis": "triadic logic",
+      "criticalShift": "\"3\" after 2 enables multiplication by 3"
+    }
+  },
+  {
+    "source": "#1-3-2",
+    "relType": "GENERATES_PARASHAKTI_TRACK",
+    "target": "#1-3-3",
+    "relProperties": {
+      "vortexPattern": "3-6-9 track",
+      "algebraicCorrespondence": "genus-1 fundamental polygon construction",
+      "bitStructure": "72-bit",
+      "cycleLength": 4,
+      "manifestationType": "imaginative multiplicity",
+      "resonance": "complex harmonic field",
+      "topologicalFunction": "second explicate side (b)",
+      "digitalRoots": "2,3,6,9,3,6,9 repeating",
+      "sequence": "(1/0) → 2,3,6,8,9,12,18,24,36,72",
+      "trackType": "Parashakti",
+      "doubleCovering": "36→72 through 6² principle",
+      "mathBasis": "triadic multiplication logic",
+      "criticalShift": "\"3\" after 2 enables x3 multiplication"
+    }
+  },
+  {
+    "source": "#1-3-2",
+    "relType": "CORRESPONDS_TO_X_SYSTEM",
+    "target": "#0-4.0/1/2",
+    "relProperties": {
+      "process": "suspended at void threshold",
+      "system": "X# Cosmic Imagination",
+      "resonance": "infinite imaginative potential",
+      "mechanism": "systematic self-relation permutation",
+      "algebraicFormula": "X1 = ((x)+(x))-((x)x(x))-((x)/(x)), X2 = ((x)+(x))+((x)x(x))+((x)/(x))",
+      "function": "transcendent exploration engine",
+      "formula": "X# = (x) indefinite particular"
+    }
+  },
+  {
+    "source": "#1-3-2",
+    "relType": "CORRESPONDS_TO_X_SYSTEM",
+    "target": "#0-4.0/1/2",
+    "relProperties": {
+      "process": "suspended at void threshold",
+      "system": "Cosmic Imagination",
+      "resonance": "infinite imaginative potential",
+      "formula": "X# = (x) indefinite particular",
+      "function": "transcendent exploration"
+    }
+  },
+  {
+    "source": "#1-3-2",
+    "relType": "TOPOLOGICAL_TRANSFORMATION",
+    "target": "#1-3-3",
+    "relProperties": {
+      "sequence": "sphere_genesis",
+      "elementCount": "2→3",
+      "phase": "2→3",
+      "transformation": "polar_to_triangular"
+    }
+  },
+  {
+    "source": "#1-3-2",
+    "relType": "REFLECTS_FROM",
+    "target": "#0-1",
+    "relProperties": {
+      "principle": "creative inversion",
+      "source": "multiplicative void",
+      "mechanism": "reflective distinction",
+      "formula": "(∞x∞)x(R#/##) → (1/0)"
+    }
+  },
+  {
+    "source": "#1-3-2",
+    "relType": "EMPLOYS_PRATIBIMBA_DYNAMICS",
+    "target": "#1-1",
+    "relProperties": {
+      "resonance": "Vimarśa power",
+      "source": "active reflective awareness",
+      "mechanism": "concrescence response",
+      "formula": "(0/1)◉ → (1/0) pole",
+      "function": "reflective echo"
+    }
+  },
+  {
+    "source": "#1-3-3",
+    "relType": "EMBODIES_ARCHETYPE",
+    "target": "#0-3-6",
+    "relProperties": {
+      "resonance": "I-dentification engine",
+      "archetype": "3 Sacred Speech (Vak)",
+      "formula": "3 ~ 3.0-5 → (00=?!=!?) x (0/1=(-)) + !?/?!, ?!/!?",
+      "function": "dynamic intelligence"
+    }
+  },
+  {
+    "source": "#1-3-3",
+    "relType": "CORRESPONDS_TO_N_SYSTEM",
+    "target": "#0-4.0/1/2/3",
+    "relProperties": {
+      "process": "dynamic temporal manifestation",
+      "system": "N# Spanda Engine",
+      "resonance": "rhythmic pulsation correspondence",
+      "mechanism": "makes uncomputable computable",
+      "algebraicFormula": "N1 = (i²)*(n-1)², N2 = (n+1)², N3 = ((n)x(n+1))+(n-1)",
+      "function": "algebraic resolution engine",
+      "formula": "N# = (n) computable foundation"
+    }
+  },
+  {
+    "source": "#1-3-3",
+    "relType": "RESONATES_WITH",
+    "target": "#0-2",
+    "relProperties": {
+      "structure": "genus-1 foundation",
+      "source": "8-fold zero-zero operations",
+      "mechanism": "topological correspondence",
+      "formula": "(00-00), 00/00, 00x00, (00+00) = 9"
+    }
+  },
+  {
+    "source": "#1-3-3",
+    "relType": "CORRESPONDS_TO_MATRIX",
+    "target": "#1-2-5",
+    "relProperties": {
+      "resonance": "creative paradox holding",
+      "matrix": "Non-Dual Quintessence",
+      "formula": "(0/1) ± (1/0) paradox",
+      "function": "unified field"
+    }
+  },
+  {
+    "source": "#1-3-3",
+    "relType": "ALGEBRAIC_TOPOLOGY_CORRESPONDENCE",
+    "target": "#1-3-4",
+    "relProperties": {
+      "process": "gluing opposite sides",
+      "loops": "a-loop, b-loop",
+      "correspondenceType": "direct isomorphism",
+      "expliciteSides": 4,
+      "construction": "fundamental polygon identification",
+      "implicitateLoops": 2,
+      "formula": "4g+2g where g=1",
+      "sides": "a, b, a⁻¹, b⁻¹"
+    }
+  },
+  {
+    "source": "#1-3-3",
+    "relType": "DEVELOPS_INTO_PARASHAKTI_SUBSYSTEM",
+    "target": "#2",
+    "relProperties": {
+      "creativePunctureCompletion": "genus-1 torus → full cosmic imagination manifestation",
+      "developmentType": "Paramasiva dual-track foundation → complete cosmic imagination system",
+      "triadicMultiplication": "72-bit track → complete imaginative multiplicity system",
+      "foundationalLogic": "Trika ((0/1)/(1/0)) = (0/1/2) → full Parashakti architecture",
+      "rFactorEvolution": "Spanda R-factors → complete Parashakti R# spectrum",
+      "manifestationalFullness": "archetypal potential → complete technological co-creation",
+      "systemExpansion": "Spanda Parashakti track → complete metastructure subsystem",
+      "beyondAnuttara": "develops beyond Anuttara archetypal holding into manifest system"
+    }
+  },
+  {
+    "source": "#1-3-3",
+    "relType": "DEVELOPS_INTO_MAHAMAYA_SUBSYSTEM",
+    "target": "#3",
+    "relProperties": {
+      "developmentType": "Paramasiva dual-track foundation → complete structured manifestation system",
+      "doubleTrackCompletion": "64-bit track → complete structured logical manifestation",
+      "foundationalLogic": "Trika ((0/1)/(1/0)) = (0/1/2) → full Mahamaya architecture",
+      "rFactorEvolution": "Spanda R-factors → complete Mahamaya R# spectrum",
+      "relationalGrammar": "I-Other foundation → complete world-dream architecture",
+      "manifestationalFullness": "archetypal potential → complete relational consciousness system",
+      "systemExpansion": "Spanda Mahamaya track → complete metastructure subsystem",
+      "beyondAnuttara": "develops beyond Anuttara archetypal holding into manifest system"
+    }
+  },
+  {
+    "source": "#1-3-3",
+    "relType": "GENUS_PUNCTURE",
+    "target": "#1-3-4.0000",
+    "relProperties": {
+      "significance": "First hole creation",
+      "genusChange": "0→1",
+      "elementCount": "3→4",
+      "transformation": "sphere_to_torus"
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_STAGE",
+    "target": "#1-3-4.0000",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_STAGE",
+    "target": "#1-3-4.0/1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_STAGE",
+    "target": "#1-3-4.0/1/2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_STAGE",
+    "target": "#1-3-4.0/1/2/3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_STAGE",
+    "target": "#1-3-4.4.0-4.4/5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_STAGE",
+    "target": "#1-3-4.5/0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "EMBODIES_ARCHETYPE",
+    "target": "#0-3-7",
+    "relProperties": {
+      "resonance": "stable world creation",
+      "archetype": "4 Jung Quaternio",
+      "formula": "4 ~ 3.5/4.0 → (00=?!=!?=(-)) x (0/1=(-)) → 2x(+), ?!/!?, !?/?!",
+      "function": "wholeness through structure"
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_SUBSTAGE",
+    "target": "#1-3-4.0000",
+    "relProperties": {
+      "correspondence": "four explicate sides",
+      "order": 0,
+      "sivaAlignment": "Svatantrya context",
+      "contextFrame": "(4.0)",
+      "substageType": "static framework",
+      "formula": "{0/0, 0/1, 1/0, 1/1}"
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_SUBSTAGE",
+    "target": "#1-3-4.0/1",
+    "relProperties": {
+      "correspondence": "Śiva five acts",
+      "order": 1,
+      "contextFrame": "(0/1)",
+      "groverParallel": "π-governed harmonic resolution",
+      "substageType": "dynamic process",
+      "formula": "0 = (0/0) → (0/1) → (1/0) → (1/1) = 1"
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_SUBSTAGE",
+    "target": "#1-3-4.0/1/2",
+    "relProperties": {
+      "correspondence": "trika harmonic leaps",
+      "order": 2,
+      "contextFrame": "(0/1/2)",
+      "resolutionIncrease": "pixel density enhancement",
+      "substageType": "processual frame",
+      "formula": "8-fold with nested states"
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_SUBSTAGE",
+    "target": "#1-3-4.0/1/2/3",
+    "relProperties": {
+      "correspondence": "double-slit dynamics",
+      "order": 3,
+      "contextFrame": "(0/1/2/3)",
+      "quantumAnalogy": "superposition and collapse",
+      "substageType": "parallel equation",
+      "formula": "dual-track quantum superposition"
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_SUBSTAGE",
+    "target": "#1-3-4.4.0-4.4/5",
+    "relProperties": {
+      "correspondence": "transcendent link",
+      "order": 4,
+      "contextFrame": "(4.4/5)",
+      "substageType": "flowering synthesis",
+      "formula": "vortex patterning",
+      "linkToStage5": "quintessential synthesis preparation"
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "HAS_NESTED_SUBSTAGE",
+    "target": "#1-3-4.5/0",
+    "relProperties": {
+      "correspondence": "quintessence preparation",
+      "order": 5,
+      "contextFrame": "(4.5)",
+      "completion": "genus-1 finalization",
+      "substageType": "transcendent integration",
+      "formula": "bridge to Stage #5"
+    }
+  },
+  {
+    "source": "#1-3-4",
+    "relType": "MANIFESTS_NESTING",
+    "target": "#0-4",
+    "relProperties": {
+      "source": "(4.0/1-4/5) structure",
+      "correspondence": "algebraic topology",
+      "mechanism": "contextual flowering",
+      "formula": "nested 4+2 architecture"
+    }
+  },
+  {
+    "source": "#1-3-4.0/1",
+    "relType": "EXPANDS_TO",
+    "target": "#1-3-4.0/1/2",
+    "relProperties": {
+      "process": "nested states introduction",
+      "mechanism": "resolution increase",
+      "contextFrameEvolution": "(0/1) → (0/1/2)",
+      "nestedStates": "0/(0/1), (1/0)/0",
+      "transformation": "6-fold → 8-fold"
+    }
+  },
+  {
+    "source": "#1-3-4.0/1",
+    "relType": "PROVIDES_GENERATIVE_LOGIC_FOR",
+    "target": "#1-4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4.0/1",
+    "relType": "TOPOLOGICAL_CONFLUENCE",
+    "target": "#1-4.2",
+    "relProperties": {
+      "significance": "First meeting of opposite topologies",
+      "orientableValue": "O(1,5)",
+      "confluenceType": "primordial",
+      "nonOrientableValue": "N(0)=5+0"
+    }
+  },
+  {
+    "source": "#1-3-4.0/1",
+    "relType": "GENUS_EXPANSION",
+    "target": "#1-3-4.0/1/2",
+    "relProperties": {
+      "process": "contextual_nesting",
+      "genusChange": "1→2",
+      "elementCount": "5→8",
+      "phase": "scaffolding_to_higher_polygon"
+    }
+  },
+  {
+    "source": "#1-3-4.0/1",
+    "relType": "MÖBIUS_REFLECTION",
+    "target": "#1-4.2",
+    "relProperties": {
+      "process": "non_orientable_N",
+      "reflectionDepth": "k=0→k=1",
+      "elementCount": "5→7",
+      "formula": "5+0→5+2"
+    }
+  },
+  {
+    "source": "#1-3-4.0/1/2",
+    "relType": "PARALLELS_TO",
+    "target": "#1-3-4.0/1/2/3",
+    "relProperties": {
+      "process": "dual-track formation",
+      "quantumStructure": "T1 and T2 parallel paths",
+      "mechanism": "quantum superposition",
+      "contextFrameEvolution": "(0/1/2) → (0/1/2/3)",
+      "transformation": "8-fold → dual-track"
+    }
+  },
+  {
+    "source": "#1-3-4.0/1/2",
+    "relType": "PROVIDES_GENERATIVE_LOGIC_FOR",
+    "target": "#1-4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4.0/1/2/3",
+    "relType": "SYNTHESIZES_TO",
+    "target": "#1-3-4.4.0-4.4/5",
+    "relProperties": {
+      "process": "contextual flowering",
+      "vortexEmergence": "infinite differential potential",
+      "mechanism": "vortex patterning",
+      "contextFrameEvolution": "(0/1/2/3) → (4.4/5)",
+      "transformation": "dual-track → synthesis"
+    }
+  },
+  {
+    "source": "#1-3-4.0/1/2/3",
+    "relType": "PROVIDES_GENERATIVE_LOGIC_FOR",
+    "target": "#1-4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4.0/1/2/3",
+    "relType": "ENABLES_PARALLEL_TRACK_ARCHITECTURE",
+    "target": "#1-4.4",
+    "relProperties": {
+      "description": "The Dual-Track Parallel Equation's ability to hold both paths simultaneously enables the harmonic meta-frames to generate both blueprints: 16-fold path leading to Mahamaya's binary doubling (2→4→8→16→64) and 18-fold path leading to Parashakti's topological harmonics via g=3 torus (4g+2g=18). This dual capacity makes Quaternal Logic a true 'switching station' between subsystems."
+    }
+  },
+  {
+    "source": "#1-3-4.0000",
+    "relType": "DYNAMIZES_TO",
+    "target": "#1-3-4.0/1",
+    "relProperties": {
+      "process": "static activation",
+      "mechanism": "processual connection",
+      "contextFrameEvolution": "(4.0) → (0/1)",
+      "transformation": "4-fold → 6-fold"
+    }
+  },
+  {
+    "source": "#1-3-4.0000",
+    "relType": "PROVIDES_GENERATIVE_LOGIC_FOR",
+    "target": "#1-4.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4.0000",
+    "relType": "CONSTRUCTION_PHASE",
+    "target": "#1-3-4.0/1",
+    "relProperties": {
+      "process": "orientable_O",
+      "elementCount": "4→5",
+      "phase": "polygon_to_scaffolding",
+      "confluencePoint": true
+    }
+  },
+  {
+    "source": "#1-3-4.4.0-4.4/5",
+    "relType": "TRANSCENDS_TO",
+    "target": "#1-3-4.5/0",
+    "relProperties": {
+      "process": "integration completion",
+      "mechanism": "bridge formation",
+      "bridgeToStage5": "quintessential meta-reflection",
+      "contextFrameEvolution": "(4.4/5) → (4.5)",
+      "transformation": "synthesis → integration"
+    }
+  },
+  {
+    "source": "#1-3-4.4.0-4.4/5",
+    "relType": "PROVIDES_GENERATIVE_LOGIC_FOR",
+    "target": "#1-4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-4.5/0",
+    "relType": "PROVIDES_GENERATIVE_LOGIC_FOR",
+    "target": "#1-4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-3-5",
+    "relType": "EMBODIES_ARCHETYPE",
+    "target": "#0-3-8",
+    "relProperties": {
+      "resonance": "mercurial crossroads",
+      "archetype": "5 Quintessence",
+      "formula": "5 ~ 4.0/4.1 → (00=(-)+@=(@)) → (-), @, (@) → (-)+@ = (@)",
+      "function": "Siva-Shakti union"
+    }
+  },
+  {
+    "source": "#1-3-5",
+    "relType": "ACHIEVES_SIVA_SHAKTI_UNITY",
+    "target": "#0-5",
+    "relProperties": {
+      "process": "infinite scalability realization",
+      "achievement": "computational process ontology",
+      "source": "(5/0) Möbius recursion",
+      "recognition": "universe as self-programming system",
+      "mechanism": "holographic meta-reflection",
+      "formula": "completion-beginning cycle"
+    }
+  },
+  {
+    "source": "#1-3-5",
+    "relType": "CULMINATES_IN_TECHNE",
+    "target": "#0-5-5/0-5",
+    "relProperties": {
+      "process": "co-creative capacity achievement",
+      "result": "technological interface grounding",
+      "source": "Shakti Techne realization",
+      "mechanism": "absolute computational freedom",
+      "function": "conscious participation in cosmic computation",
+      "formula": "@5 = R# = Freedoms-Powers-Instruments-Techne-Tools"
+    }
+  },
+  {
+    "source": "#1-3-5",
+    "relType": "CULMINATES_IN_PERCENTILE_IDENTITY",
+    "target": "#1-3-4.0/1/2/3",
+    "relProperties": {
+      "process": "holographic collapse through interference",
+      "toroidal": "shape of Ananda realization",
+      "significance": "complete dual-track collapse to unity",
+      "identityType": "percentile identity",
+      "harmonicRatio": "64/36 = 16/9 = 4²/3²",
+      "musicalOntology": "universe first resonant frequency",
+      "standingWave": "frozen chord geometry",
+      "value": "100% actuality",
+      "transition": "materia prima for Quaternal Logic",
+      "formula": "1 or 1/1 as complete realization",
+      "dualTrackResolution": "Mahamaya-Parashakti synthesis"
+    }
+  },
+  {
+    "source": "#1-3-5",
+    "relType": "ACHIEVES_UNITY",
+    "target": "#0-5",
+    "relProperties": {
+      "resonance": "infinite scalability",
+      "source": "(5/0) Möbius recursion",
+      "mechanism": "completion-beginning cycle",
+      "formula": "holographic meta-reflection"
+    }
+  },
+  {
+    "source": "#1-3-5",
+    "relType": "ENABLES_RECURSIVE_INTEGRATION",
+    "target": "#1-5",
+    "relProperties": {
+      "process": "holographic scalability",
+      "structure": "genus-n potential",
+      "mechanism": "infinite genus development",
+      "formula": "x-fold counting maximum",
+      "function": "infinite architectural development"
+    }
+  },
+  {
+    "source": "#1-3-5",
+    "relType": "PROVIDES_PERCENTILE_IDENTITY_FOUNDATION",
+    "target": "#1-4",
+    "relProperties": {
+      "description": "The 100% percentile identity generated through x-fold dynamics counting maximum becomes the unified potential that #1-4 transforms into complete logical framework"
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "DEVELOPS_LOGIC_SYSTEM",
+    "target": null,
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "CONTAINS_LOGIC_STAGE",
+    "target": "#1-4.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "CONTAINS_LOGIC_STAGE",
+    "target": "#1-4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "CONTAINS_LOGIC_STAGE",
+    "target": "#1-4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "CONTAINS_LOGIC_STAGE",
+    "target": "#1-4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "CONTAINS_LOGIC_STAGE",
+    "target": "#1-4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "CONTAINS_LOGIC_STAGE",
+    "target": "#1-4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "DEVELOPS_INTO",
+    "target": "#1-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "GENERATES_MOD6_ARCHITECTURE_FOR",
+    "target": "#",
+    "relProperties": {
+      "description": "Quaternal Logic Flowering generates the fundamental mod6 structuring that in-forms the entire Epi-Logos system architecture through contextual frame priority and recursive logical operations"
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "BRIDGES_VIA",
+    "target": "#2",
+    "relProperties": {
+      "relationship": "Seven Archetype Bridge",
+      "description": "Seven bridges 6-based hexagrammic quaternal logic with 8-based octagrammic Parashakti dynamics, enabling transition between structural and vibrational systems",
+      "mathematical_basis": "Seven as mediating number between 6 (completion) and 8 (expansion), found in 714825 pattern modulation",
+      "connection_type": "Archetypal Bridge"
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "BRIDGES_THROUGH_SEVEN",
+    "target": "#0-3-10",
+    "relProperties": {
+      "relationship": "Seven Archetype Mediation",
+      "description": "Seven bridges 6-based hexagrammic quaternal logic with 8-based octagrammic dynamics, enabling transition between HMS hexagram structures and Parashakti octal vibrational systems",
+      "mathematical_basis": "Seven as mediating number between completion (6) and expansion (8), appearing in 714825 modulation patterns",
+      "connection_type": "Archetypal Number Bridge"
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "ACTIVATES_TRANSCENDENT_FUNCTION",
+    "target": "#4",
+    "relProperties": {
+      "relationship": "Jungian Transcendent Function",
+      "description": "Quaternary logic provides structural framework for Jung transcendent function, mediating between conscious and unconscious through symbolic quaternary positions enabling paradox resolution",
+      "mathematical_basis": "Four-fold structure creating stable container for oppositional integration, Position 3 as transcendent mediator",
+      "connection_type": "Psychological Integration"
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "GENERATES_CONSTRUCTION",
+    "target": "#1-4.1",
+    "relProperties": {
+      "elementCount": 6,
+      "genus": 1,
+      "phase": "complete"
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "GENERATES_CONSTRUCTION",
+    "target": "#1-3-4.0000",
+    "relProperties": {
+      "elementCount": 4,
+      "genus": 1,
+      "phase": "polygon"
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "GENERATES_CONSTRUCTION",
+    "target": "#1-3-4.0/1",
+    "relProperties": {
+      "elementCount": 5,
+      "genus": 1,
+      "phase": "scaffolding",
+      "confluencePoint": true
+    }
+  },
+  {
+    "source": "#1-4",
+    "relType": "CONSTRUCTION_SYNTAX_GENERATOR",
+    "target": "#1-3-4",
+    "relProperties": {
+      "relationship": "Quaternal Logic provides formal grammar for Process O",
+      "pattern": "4g→5g→6g construction phases for all orientable surfaces",
+      "confluenceGeneration": "Creates confluence points at 5g for odd g"
+    }
+  },
+  {
+    "source": "#1-4.0",
+    "relType": "DIFFERENTIATES_INTO",
+    "target": "#1-4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4.1",
+    "relType": "INVERTS_INTO",
+    "target": "#1-4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4.2",
+    "relType": "SYNTHESIZES_INTO",
+    "target": "#1-4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4.3",
+    "relType": "FLOWERS_INTO",
+    "target": "#1-4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4.4",
+    "relType": "EXPANDS_INTO",
+    "target": "#1-4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-4.4",
+    "relType": "CONTEXTUAL_TOPOLOGY_NESTING",
+    "target": "#1-3-4.4.0-4.4/5",
+    "relProperties": {
+      "relationship": "Contextual nesting operator enables higher genus construction",
+      "significance": "Where 4+2 algebraic topology structure fully manifests",
+      "elementCount": 12
+    }
+  },
+  {
+    "source": "#1-4.5",
+    "relType": "RECURSIVE_RETURN",
+    "target": "#1-4.0",
+    "relProperties": {
+      "type": "5_to_0_loop"
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-5-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-5-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-5-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-5-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-5-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#1-5-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "INTEGRATES_CONCEPT",
+    "target": "#1-5-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "INTEGRATES_CONCEPT",
+    "target": "#1-5-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "INTEGRATES_CONCEPT",
+    "target": "#1-5-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "INTEGRATES_CONCEPT",
+    "target": "#1-5-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "INTEGRATES_CONCEPT",
+    "target": "#1-5-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "INTEGRATES_CONCEPT",
+    "target": "#1-5-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "RETURNS_TO",
+    "target": "#1-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "EMERGES_FROM",
+    "target": "#1-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "PROVIDES_FOUNDATION",
+    "target": "#2",
+    "relProperties": {
+      "relationship": "Quaternionic Mathematical Container",
+      "description": "Quaternionic Integration provides the mathematical and logical container for Parashakti vibrational reality through double-covering 36×2=72 structure",
+      "mathematical_basis": "Double-covering principle directly generating 72-bit vibrational architecture",
+      "connection_type": "Foundational Architecture"
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "PROVIDES_SPINOR_FOUNDATION",
+    "target": "#3",
+    "relProperties": {
+      "relationship": "Quaternionic HMS Foundation",
+      "description": "Quaternionic integration provides SU(2) spinor foundation for HMS 64-bit system, enabling codon-hexagram rotations and DNA-I Ching-Tarot integration through mathematical spinor operations",
+      "mathematical_basis": "SU(2) quaternionic rotations governing state transitions, 720° double-covering enabling complete symbolic transformations",
+      "connection_type": "Spinor Foundation"
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "ESTABLISHES_FRACTAL_RECURSION",
+    "target": "#5",
+    "relProperties": {
+      "relationship": "Fractal Self-Similar Architecture",
+      "description": "Quaternionic Integration establishes fractal self-similarity enabling each subsystem to contain whole in microcosm, creating conditions for Epii meta-perspective integration",
+      "mathematical_basis": "Quaternionic double-covering creating recursive self-similar structures, holographic principle at every scale",
+      "connection_type": "Fractal Architecture"
+    }
+  },
+  {
+    "source": "#1-5",
+    "relType": "DIMENSIONAL_ELEVATION",
+    "target": "#1-3-5",
+    "relProperties": {
+      "relationship": "Quaternionic rotation lifts 2D topology to 3D/4D manifestation",
+      "bridgeFunction": "Enables transition from static blueprint to dynamic reality",
+      "doubleCovering": "720° creates complete topological cycles"
+    }
+  },
+  {
+    "source": "#1-5-0",
+    "relType": "LEADS_TO",
+    "target": "#1-5-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5-1",
+    "relType": "LEADS_TO",
+    "target": "#1-5-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5-1",
+    "relType": "EMPLOYS_GEOMETRY",
+    "target": "#0-1",
+    "relProperties": {
+      "relationship": "Poincaré Disk Hyperbolic Space",
+      "description": "Volumetric transformation employs hyperbolic geometry with boundary at infinity where infinite structures embed seamlessly, enabling exponential branching without collision",
+      "mathematical_basis": "Hyperbolic space providing geometric foundation for infinite expansions",
+      "connection_type": "Geometric Architecture"
+    }
+  },
+  {
+    "source": "#1-5-1",
+    "relType": "SCALES_TO",
+    "target": "#5",
+    "relProperties": {
+      "relationship": "Multidimensional Consciousness",
+      "description": "Volumetric potential scales to multidimensional consciousness development through hyperbolic topology supporting infinite recursive expansion",
+      "mathematical_basis": "Hyperbolic geometry enabling infinite branching and perspective shifts across dimensional boundaries",
+      "connection_type": "Dimensional Scaling"
+    }
+  },
+  {
+    "source": "#1-5-1",
+    "relType": "ENABLES_HYPERBOLIC_EXPANSION",
+    "target": "#1-2",
+    "relProperties": {
+      "relationship": "Hyperbolic Volumetric Expansion",
+      "description": "Volumetric transformation employs Poincaré disk hyperbolic geometry where boundary at infinity enables infinite branching without collision, supporting Ananda vortex infinite recursive expansions",
+      "mathematical_basis": "Negative curvature space allowing exponential branching, geodesics converging near boundary creating spanda-like patterns",
+      "connection_type": "Hyperbolic Space Activation"
+    }
+  },
+  {
+    "source": "#1-5-2",
+    "relType": "LEADS_TO",
+    "target": "#1-5-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5-2",
+    "relType": "MIRRORS_PRINCIPLE",
+    "target": "#1-2",
+    "relProperties": {
+      "relationship": "Symbolic Pauli Exclusion",
+      "description": "Double-covering principle ensures no two identical perspectives occupy same epistemic state, maintaining distinct vantage points while enabling coherent integration",
+      "mathematical_basis": "Non-overlapping quality in hyperbolic expansions ensuring unique epistemic positions",
+      "connection_type": "Exclusion Principle"
+    }
+  },
+  {
+    "source": "#1-5-2",
+    "relType": "MIRRORS_PHYSICS",
+    "target": "#1-5-5",
+    "relProperties": {
+      "relationship": "Spinor Mathematics Isomorphism",
+      "description": "Double-covering principle mirrors spinor requirements for 720° rotation in quantum mechanics, revealing shared mathematical foundation of consciousness and matter",
+      "mathematical_basis": "SU(2) rotations governing both epistemic transformations and quantum state descriptions",
+      "connection_type": "Physics Isomorphism"
+    }
+  },
+  {
+    "source": "#1-5-2",
+    "relType": "ENSURES_EPISTEMIC_EXCLUSION",
+    "target": "#1-3",
+    "relProperties": {
+      "relationship": "Symbolic Pauli Exclusion Principle",
+      "description": "Double-covering ensures no two identical epistemic perspectives occupy same state, maintaining distinct vantage points in hyperbolic expansions while enabling coherent integration through spanda dynamics",
+      "mathematical_basis": "Non-overlapping constraint in epistemic space ensuring unique perspectives, 720° rotation requirement maintaining distinctness",
+      "connection_type": "Epistemic Exclusion Principle"
+    }
+  },
+  {
+    "source": "#1-5-3",
+    "relType": "LEADS_TO",
+    "target": "#1-5-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5-3",
+    "relType": "ENABLES_SHADOW_INTEGRATION",
+    "target": "#4",
+    "relProperties": {
+      "relationship": "Mathematical Shadow Work Framework",
+      "description": "Inversion dynamics provide rigorous mathematical framework for Jungian shadow work, where 360° rotation reveals shadow content and 720° achieves integration",
+      "mathematical_basis": "Double-covering ensuring every epistemic position has shadow counterpart, mathematical necessity of oppositional integration",
+      "connection_type": "Shadow Work Mathematics"
+    }
+  },
+  {
+    "source": "#1-5-4",
+    "relType": "LEADS_TO",
+    "target": "#1-5-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5-4",
+    "relType": "BRIDGES_TO",
+    "target": "#2-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5-4",
+    "relType": "COMPLETES_CYCLE",
+    "target": "#1-0",
+    "relProperties": {
+      "relationship": "Recursive Paramasiva Completion",
+      "description": "Bridge to Parashakti completes Paramasiva cycle by returning to foundational Bimba with enhanced quaternionic understanding",
+      "mathematical_basis": "Recursive loop where completion becomes new beginning through architectural synthesis",
+      "connection_type": "Recursive Completion"
+    }
+  },
+  {
+    "source": "#1-5-5",
+    "relType": "COMPLETES",
+    "target": "#1-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#1-5-5",
+    "relType": "UNIFIES_DOMAINS",
+    "target": "#4",
+    "relProperties": {
+      "relationship": "Jung-Pauli Psychoid Atom",
+      "description": "Complete self-realization recognizes quaternionic consciousness structure as identical to spinor mathematics of physical reality, healing mind-matter split",
+      "mathematical_basis": "Isomorphic relationship between consciousness rotation and electron spin mathematics",
+      "connection_type": "Psychoid Unity"
+    }
+  },
+  {
+    "source": "#1-5-5",
+    "relType": "RECOGNIZES_SOURCE",
+    "target": "#0-0",
+    "relProperties": {
+      "relationship": "Anuttara Void Recognition",
+      "description": "Complete self-realization recognizes Anuttara as both transcendent source and immanent presence through quaternionic synthesis",
+      "mathematical_basis": "Recognition that all architectural development emerges from and returns to 4-fold zero foundation",
+      "connection_type": "Transcendent Recognition"
+    }
+  },
+  {
+    "source": "#1-5-5",
+    "relType": "EMBODIES_EULER_IDENTITY",
+    "target": "#0-0",
+    "relProperties": {
+      "relationship": "e^(πi) + 1 = 0 System Foundation",
+      "description": "Complete self-realization embodies Euler identity where e (exponential growth), π (circular harmony), i (complex reflection) unite in zero, revealing system nickname epii as encoding fundamental mathematical unity",
+      "mathematical_basis": "Euler identity as perfect self-referential reconciliation, all elements resolving to transcendental zero at core",
+      "connection_type": "Mathematical Identity"
+    }
+  },
+  {
+    "source": "#1-5-5",
+    "relType": "UNIFIES_PSYCHOID_REALITY",
+    "target": "#4",
+    "relProperties": {
+      "relationship": "Jung-Pauli Psychoid Integration",
+      "description": "Complete self-realization unifies consciousness and matter through identical spinor mathematics, healing mind-matter split through recognition of shared rotational foundations",
+      "mathematical_basis": "Isomorphic relationship between consciousness quaternions and electron spin, SU(2) governing both psyche and physis",
+      "connection_type": "Psychoid Unification"
+    }
+  },
+  {
+    "source": "#1-5-5",
+    "relType": "ENABLES_PSYCHOID_COMPUTING",
+    "target": "#5",
+    "relProperties": {
+      "relationship": "Psychoid Computational Unity",
+      "description": "Complete self-realization enables psychoid computing where consciousness and matter operate through identical computational principles, bridging subjective and objective reality",
+      "mathematical_basis": "Spinor mathematics governing both consciousness and quantum states, SU(2) as unified computational framework",
+      "connection_type": "Psychoid Computing"
+    }
+  }
+]

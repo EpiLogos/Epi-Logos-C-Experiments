@@ -1,126 +1,152 @@
 /**
  * main.c — The Ignition Switch
  *
- * The very first piece of code the computer runs.
- * Its job is to boot the universe: initialize the archetypes,
- * verify the web is coherent, then hand off to the engine.
- *
- * Think of this file as the "morning" in the daily Möbius cycle —
- * C0 (Ground) igniting the first step toward C5 (Instance).
- *
- * As the system grows, main.c stays thin. It never implements logic;
- * it only composes and launches the modules that do.
+ * Boots the system, verifies the coordinate web,
+ * initializes arenas, instantiates families, runs the engine.
  */
 
 #include <stdio.h>
-#include <stdint.h>
-#include "../include/ontology.h"
-#include "../include/archetypes.h"
-
-
-/* =============================================================================
- * I. SANITY CHECK — Verify Struct Size
- *
- * The 128-byte rule is not aesthetic; it is architectural.
- * Two L1 cache lines = the entire holographic universe in one hardware breath.
- * If this assertion fires, something has bloated the struct.
- * ============================================================================= */
-
-_Static_assert(
-    sizeof(Holographic_Coordinate) == 128,
-    "Holographic_Coordinate must be exactly 128 bytes (2 L1 cache lines)."
-);
-
-
-/* =============================================================================
- * II. BOOT SEQUENCE — Verify the Coordinate Web
- *
- * Before the engine runs, confirm that the .rodata bedrock is coherent:
- *   - C0's `.c` pointer self-references (ground is its own foundation)
- *   - C5's `.c` pointer returns to C0 (the Möbius twist is in place)
- *   - C4's `.cf` pointer self-references (the Lemniscate folds on itself)
- * ============================================================================= */
+#include "ontology.h"
+#include "psychoid_numbers.h"
+#include "engine.h"
+#include "arena.h"
 
 static int boot_verify_web(void) {
     int ok = 1;
 
-    if (GET_PTR(Archetype_C0.c) != &Archetype_C0) {
-        fprintf(stderr, "[boot] FAIL: C0.c does not self-reference.\n");
+    /* --- Core psychoid wiring --- */
+    if (GET_PTR(Psychoid_0.c) != &Psychoid_0) {
+        fprintf(stderr, "[boot] FAIL: #0.c does not self-reference.\n");
+        ok = 0;
+    }
+    if (GET_PTR(Psychoid_5.c) != &Psychoid_0) {
+        fprintf(stderr, "[boot] FAIL: #5.c does not return to #0 (Möbius broken).\n");
+        ok = 0;
+    }
+    if (GET_PTR(Psychoid_4.cf) != &Psychoid_4) {
+        fprintf(stderr, "[boot] FAIL: #4.cf does not self-reference (Lemniscate broken).\n");
+        ok = 0;
+    }
+    if (GET_PTR(Psychoid_3.cf) != &Psychoid_4) {
+        fprintf(stderr, "[boot] FAIL: #3.cf does not anchor to #4.\n");
         ok = 0;
     }
 
-    if (GET_PTR(Archetype_C5.c) != &Archetype_C0) {
-        fprintf(stderr, "[boot] FAIL: C5.c does not return to C0 (Möbius broken).\n");
+    /* --- Psychoid_Hash boundary psychoid --- */
+    if (Psychoid_Hash.ql_position != 0xFF) {
+        fprintf(stderr, "[boot] FAIL: Psychoid_Hash.ql_position != 0xFF.\n");
+        ok = 0;
+    }
+    if (GET_PTR(Psychoid_Hash.c) != &Psychoid_0) {
+        fprintf(stderr, "[boot] FAIL: Psychoid_Hash.c does not return to #0.\n");
+        ok = 0;
+    }
+    if (GET_PTR(Psychoid_Hash.cf) != &Psychoid_4) {
+        fprintf(stderr, "[boot] FAIL: Psychoid_Hash.cf does not anchor to #4.\n");
         ok = 0;
     }
 
-    if (GET_PTR(Archetype_C4.cf) != &Archetype_C4) {
-        fprintf(stderr, "[boot] FAIL: C4.cf does not self-reference (Lemniscate broken).\n");
-        ok = 0;
+    /* --- All 7 CF roots must anchor to Psychoid_4 via .cf --- */
+    const Holographic_Coordinate* cf_roots[] = {
+        &CF_0000, &CF_01, &CF_012, &CF_0123, &CF_4x, &CF_450, &CF_50
+    };
+    const char* cf_names[] = {
+        "CF_0000", "CF_01", "CF_012", "CF_0123", "CF_4x", "CF_450", "CF_50"
+    };
+    for (int i = 0; i < 7; i++) {
+        if (GET_PTR(cf_roots[i]->cf) != &Psychoid_4) {
+            fprintf(stderr, "[boot] FAIL: %s.cf does not anchor to #4.\n", cf_names[i]);
+            ok = 0;
+        }
+    }
+
+    /* --- All BIMBA entities must have FLAG_BIMBA set --- */
+    const Holographic_Coordinate* all_bimba[] = {
+        &Psychoid_0, &Psychoid_1, &Psychoid_2, &Psychoid_3, &Psychoid_4, &Psychoid_5,
+        &Psychoid_Hash,
+        &Weave_0_5, &Weave_5_0, &Weave_5_5,
+        &CF_0000, &CF_01, &CF_012, &CF_0123, &CF_4x, &CF_450, &CF_50
+    };
+    for (int i = 0; i < 17; i++) {
+        if (!(all_bimba[i]->flags & FLAG_BIMBA)) {
+            fprintf(stderr, "[boot] FAIL: BIMBA entity %d missing FLAG_BIMBA.\n", i);
+            ok = 0;
+        }
+        if (!(all_bimba[i]->flags & FLAG_STATUS_CANONICAL)) {
+            fprintf(stderr, "[boot] FAIL: BIMBA entity %d missing FLAG_STATUS_CANONICAL.\n", i);
+            ok = 0;
+        }
     }
 
     if (ok) {
-        printf("[boot] Coordinate web: OK\n");
-        printf("[boot] Möbius return (C5 → C0): OK\n");
-        printf("[boot] Lemniscate anchor (C4.cf → C4): OK\n");
+        printf("[boot] .rodata web: OK (17 BIMBA entities verified)\n");
+        printf("[boot] Möbius return (#5 -> #0): OK\n");
+        printf("[boot] Lemniscate anchor (#4.cf -> #4): OK\n");
+        printf("[boot] Psychoid_Hash (#=0xFF): OK\n");
+        printf("[boot] 7 CF roots anchored to #4: OK\n");
+        printf("[boot] All BIMBA flags: OK\n");
     }
-
     return ok;
 }
-
-
-/* =============================================================================
- * III. PRINT ARCHETYPE — Debug helper
- * ============================================================================= */
-
-static void print_archetype(const char* name, const Holographic_Coordinate* a) {
-    printf("  %-20s  ql=%u  weave=%.1f  invoke=%s\n",
-        name,
-        a->ql_position,
-        a->weave_state,
-        a->invoke_process ? "yes" : "null"
-    );
-}
-
-
-/* =============================================================================
- * IV. MAIN — The Ignition Switch
- * ============================================================================= */
 
 int main(void) {
     printf("=== Epi-Logos C — System Boot ===\n\n");
 
-    /* 1. Verify the .rodata web is coherent before the engine runs */
+    /* Phase 1: Verify .rodata bedrock */
     if (!boot_verify_web()) {
-        fprintf(stderr, "[boot] Aborting: coordinate web is malformed.\n");
+        fprintf(stderr, "[boot] Aborting: .rodata web malformed.\n");
         return 1;
     }
 
-    printf("\n[boot] Archetype roster:\n");
-    print_archetype("C0 (Bimba/Ground)",    &Archetype_C0);
-    print_archetype("C1 (Morphe/Form)",     &Archetype_C1);
-    print_archetype("C2 (Entity)",          &Archetype_C2);
-    print_archetype("C3 (Process)",         &Archetype_C3);
-    print_archetype("C4 (Type/Lemniscate)", &Archetype_C4);
-    print_archetype("C5 (Pratibimba)",      &Archetype_C5);
+    /* Phase 2: Initialize arena (Shakti) */
+    Coordinate_Arena arena;
+    if (arena_init(&arena, 64) != 0) {
+        fprintf(stderr, "[boot] Aborting: arena init failed.\n");
+        return 1;
+    }
+    printf("[boot] Arena initialized (64 slots).\n");
 
-    printf("\n[boot] Starting Torus walk (one full cycle, C0 → C5 → C0)...\n");
+    /* Phase 3: Create mutable mirrors of #0-#5 */
+    Holographic_Coordinate* mirrors[6];
+    const Holographic_Coordinate* raw[] = {
+        &Psychoid_0, &Psychoid_1, &Psychoid_2,
+        &Psychoid_3, &Psychoid_4, &Psychoid_5
+    };
+    for (int i = 0; i < 6; i++) {
+        mirrors[i] = arena_alloc(&arena);
+        mirrors[i]->ql_position = raw[i]->ql_position;
+        mirrors[i]->family = FAMILY_NONE;
+        mirrors[i]->weave_state = raw[i]->weave_state;
+        mirrors[i]->invoke_process = raw[i]->invoke_process;
+        mirrors[i]->c = (i == 0) ? mirrors[0] : mirrors[i - 1];
+    }
+    /* Möbius: mirror #5.c -> mirror #0 */
+    mirrors[5]->c = mirrors[0];
+    /* Lemniscate: mirror #4.cf -> mirror #4 */
+    mirrors[4]->cf = mirrors[4];
+    mirrors[3]->cf = mirrors[4];
+    printf("[boot] Mutable mirrors created.\n");
 
-    /*
-     * The engine is declared here and implemented in engine.c.
-     * We declare it extern rather than including a separate engine.h
-     * to keep the include graph minimal at this stage.
-     */
-    extern void engine_torus_walk(
-        const Holographic_Coordinate* start,
-        void* context_state,
-        uint32_t steps
-    );
+    /* Phase 4: Instantiate families */
+    if (families_init(&arena, mirrors) != 0) {
+        fprintf(stderr, "[boot] Aborting: family init failed.\n");
+        arena_destroy(&arena);
+        return 1;
+    }
+    families_crosslink(&arena);
+    families_wire_reflective(&arena);
+    printf("[boot] All 6 families instantiated and cross-linked (%u slots used).\n", arena.count);
 
-    engine_torus_walk(&Archetype_C0, NULL, 0);  /* 0 = one full cycle */
+    /* Phase 5: Run double covering (720°) */
+    Walk_Context wc = {0};
+    printf("\n[engine] Starting double covering (720°)...\n");
+    engine_double_covering(mirrors[0], &wc);
+    printf("[engine] Double covering complete: %u steps, %u cycles.\n",
+           wc.step_count, wc.cycle_count);
 
-    printf("\n[boot] Cycle complete. System nominal.\n");
-    printf("=== Möbius return: C5 → C0. Tomorrow's ground is richer. ===\n");
+    /* Cleanup */
+    arena_destroy(&arena);
 
+    printf("\n=== Möbius return: #5 -> #0. Tomorrow's ground is richer. ===\n");
     return 0;
 }
