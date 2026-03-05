@@ -10,3 +10,6 @@ epi-cli/target/
 
 # macOS
 .DS_Store
+
+# Git worktrees
+.worktrees/
