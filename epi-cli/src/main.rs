@@ -135,10 +135,25 @@ fn main() -> color_eyre::Result<()> {
             let epi = ffi::EpiLib::load(&lib_path)?;
             core::dispatch(cmd, &epi, cli.json)?;
         }
-        Commands::Vault { cmd } => vault::dispatch(cmd),
-        Commands::Graph { cmd } => graph::dispatch(cmd),
+        Commands::Vault { cmd } => {
+            match vault::dispatch(cmd) {
+                Ok(out) => println!("{}", out),
+                Err(e) => eprintln!("vault error: {}", e),
+            }
+        }
+        Commands::Graph { cmd } => {
+            match graph::dispatch(cmd) {
+                Ok(out) => println!("{}", out),
+                Err(e) => eprintln!("graph error: {}", e),
+            }
+        }
         Commands::Gate { cmd } => gate::dispatch(cmd),
-        Commands::Agent { cmd } => agent::dispatch(cmd),
+        Commands::Agent { cmd } => {
+            match agent::dispatch(cmd) {
+                Ok(out) => println!("{}", out),
+                Err(e) => eprintln!("agent error: {}", e),
+            }
+        }
         Commands::Sync { cmd } => sync::dispatch(cmd),
 
         // Tooling layer
