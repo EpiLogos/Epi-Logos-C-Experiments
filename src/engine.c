@@ -2,20 +2,19 @@
  * engine.c — The Torus Engine
  *
  * Torus walk, Lemniscate dive, double covering.
- * Stub engine — to be completed in Sprint 1/2.
  */
 
 #include "engine.h"
-#include "archetypes.h"
+#include "psychoid_numbers.h"
 #include <stdio.h>
 
 static const struct { uint8_t from; const Holographic_Coordinate* to; } torus_map[] = {
-    { 0, &Archetype_1 },
-    { 1, &Archetype_2 },
-    { 2, &Archetype_3 },
-    { 3, &Archetype_4 },
-    { 4, &Archetype_5 },
-    { 5, &Archetype_0 },
+    { 0, &Psychoid_1 },
+    { 1, &Psychoid_2 },
+    { 2, &Psychoid_3 },
+    { 3, &Psychoid_4 },
+    { 4, &Psychoid_5 },
+    { 5, &Psychoid_0 },
 };
 
 #define TORUS_MAP_SIZE 6

@@ -1,0 +1,2727 @@
+﻿[
+  {
+    "source": "#4",
+    "relType": "HAS_QL_FRAME",
+    "target": null,
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "MAPS_TO_ONTOLOGY_LAYER",
+    "target": null,
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "META_STRUCTURE_ELEMENT_OF",
+    "target": "#",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "SUCCEEDED_BY_AND_MANIFESTS_THROUGH",
+    "target": "#5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "EMBODIES_DISTRIBUTION",
+    "target": "#1-5-2",
+    "relProperties": {
+      "relationship": "Gaussian Epistemic Structure",
+      "description": "Nara epistemic processes follow Gaussian distribution patterns, demonstrating forced emergence of normal distributions through recursive integration",
+      "mathematical_basis": "Central Limit Theorem showing inevitable emergence of Gaussian structures in knowledge formation",
+      "connection_type": "Probability Structure"
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "ACTIVATES_FUNCTION",
+    "target": "#1-4",
+    "relProperties": {
+      "relationship": "Transcendent Function Integration",
+      "description": "Nara activates Jungian transcendent function through quaternary logic enabling perspective shifts and paradox resolution into higher understanding",
+      "mathematical_basis": "Quaternary structure providing framework for integrating opposites through symbolic mediation",
+      "connection_type": "Transcendent Integration"
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "MANIFESTS_GAUSSIAN_STRUCTURE",
+    "target": "#1-5-2",
+    "relProperties": {
+      "relationship": "Gaussian Epistemic Emergence",
+      "description": "Nara epistemic processes follow forced Gaussian distribution patterns through recursive integration, demonstrating Central Limit Theorem emergence in knowledge formation through double-covering dynamics",
+      "mathematical_basis": "e^(-x²) emergence from epistemic recursion, probability structures forcing normal distribution in knowledge aggregation",
+      "connection_type": "Gaussian Knowledge Structure"
+    }
+  },
+  {
+    "source": "#4",
+    "relType": "RESONATES_WITH_TANMATRA",
+    "target": "#2-2-2-4-4",
+    "relProperties": {
+      "canonicalStatus": "primary_operational",
+      "naraAsRasa": "Personal knowing as tasting - direct intimate contact, dialogue as mutual savoring",
+      "createdAt": "2025-10-07T23:27:43.740000000Z",
+      "resonanceType": "intimate_taste",
+      "insight": "Nara resonates with Rasa as INTIMATE TASTE - the personal flavor of experience, dialogical intimacy, knowing through close contact"
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.0-1",
+    "relProperties": {
+      "createdAt": "2025-06-06T12:16:40.709000000Z"
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.0-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.0-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.0-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.0-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.0-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "DEVELOPS_INTO",
+    "target": "#4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "INFORMS_CONSTITUTION",
+    "target": "#4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "SHAPES_INTERPRETATION",
+    "target": "#4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "GUIDES_PROCESS",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "SELECTS_PERSPECTIVE",
+    "target": "#4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.0",
+    "relType": "MANIFESTS_IN",
+    "target": "#4.4.4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.1-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.1-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.1-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.1-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.1-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.1-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "DEVELOPS_INTO",
+    "target": "#4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "PROVIDES_STATE_VECTOR",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "PROVIDES_TIMING_WINDOWS",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1",
+    "relType": "FEEDS_EXPERIENCE_TO",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1-4",
+    "relType": "PROVIDES_TIMING_FOR",
+    "target": "#4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1-4",
+    "relType": "PROVIDES_TIMING_FOR",
+    "target": "#4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1-4",
+    "relType": "PROVIDES_TIMING_FOR",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.1-4",
+    "relType": "PROVIDES_TIMING_FOR",
+    "target": "#4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.2-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.2-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.2-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.2-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.2-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.2-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "DEVELOPS_INTO",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "PROVIDES_ORACULAR_SIGNAL",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "OFFERS_LENS_HINTS",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2",
+    "relType": "FEEDS_INTERPRETATION_TO",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2-0",
+    "relType": "EMITS_CANONICAL_TAGS_TO",
+    "target": "#4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.2-0",
+    "relType": "EMITS_CANONICAL_TAGS_TO",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.3-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.3-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.3-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.3-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.3-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.3-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "DEVELOPS_INTO",
+    "target": "#4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "WRITES_EXPERIENCE_RECORD",
+    "target": "#4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "REQUESTS_INTERVENTIONS",
+    "target": "#4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "EMITS_PEDAGOGY_SIGNALS",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "FEEDS_CAPABILITY_SIGNALS",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3",
+    "relType": "FEEDS_PROCESS_TO",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3-2",
+    "relType": "CONTAINS_MODALITY",
+    "target": "#4.3-2.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3-2",
+    "relType": "CONTAINS_MODALITY",
+    "target": "#4.3-2.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3-2",
+    "relType": "CONTAINS_MODALITY",
+    "target": "#4.3-2.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.3-5",
+    "relType": "RECORDS_TO",
+    "target": "#4.4.4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "HAS_ARENA_INSTANCE",
+    "target": "#4.4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "DEVELOPS_INTO",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "PROVIDES_CASE_METADATA",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "SETS_LENS_OF_RECORD",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "ANNOTATES_WITH_TEMPORAL",
+    "target": "#4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4",
+    "relType": "FEEDS_CONTEXT_TO",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "HAS_NESTED_COMPONENT",
+    "target": "#4.4.3-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "HAS_NESTED_COMPONENT",
+    "target": "#4.4.3-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "HAS_NESTED_COMPONENT",
+    "target": "#4.4.3-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "HAS_NESTED_COMPONENT",
+    "target": "#4.4.3-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "HAS_NESTED_COMPONENT",
+    "target": "#4.4.3-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "HAS_NESTED_COMPONENT",
+    "target": "#4.4.3-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "GENERATIVE_INSPIRATION_FOR",
+    "target": "#2-1",
+    "relProperties": {
+      "description": "Jung analytical psychology provided generative seed for Epi-Logos meta-epistemic methodology: (1) Psychic reality as primary datum not derivative epiphenomenon, (2) Archetypal patterns as discovered universals not cultural constructs, (3) Numbers as meaningful carriers of archetypal content not arbitrary symbols, (4) Symbolic mathematics as valid path to knowledge alongside empirical science. Jung demonstrated quaternity empirically; Epi-Logos extended topologically. Jung showed numbers are archetypes; Epi-Logos developed how layering archetypal numbers through MEF lenses creates holographic fractal meaning. Jung validated subjective experience as ontologically real; Epi-Logos built coordinate architecture where experiential depth maps to numerical structure. Entire Bimba project methodology: begin with Jung structural insights, complete through topological recognition, formalize through layered meta-epistemic lenses enabling fractal-holographic knowledge architecture."
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "COMPUTATIONALLY_REALIZED_IN",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "description": "Jung analytical psychology complete system computationally realized in Pratibimba as operational hub where all Jungian principles become living practice. Not passive storage but active investigation site. Every major Jungian concept operationalized: Self as microcosm (4x4 structure reflecting universal wholeness), collective unconscious (Atlas layer), archetypes-as-such (Bimba canonical patterns), personal unconscious (PCO layer), shadow work (recorded confrontations), complexes (tracked emotional-ideational cores), individuation (transformation documentation), circumambulation (iterative inquiry), transcendent function (CON-SCIRE dialogue), active imagination (EPII engagement), synchronicity (pattern recognition across domains), alchemical stages (phenomenological transformation tracking), mandala symbolism (quaternity 16-fold structure), psychic reality as primary (phenomenological starting point). Pratibimba is not Jung encyclopedia but Jung laboratory - computational space where users conduct Jungian analysis on themselves with methodological rigor Jung pioneered. Fourth-order nesting (4.4.4.4) suggests complete phenomenological recursion: user investigating (1st order) how they investigate (2nd order) consciousness investigating itself (3rd order) with awareness of this investigation (4th order). This is self-reflection become operational: consciousness examining consciousness examining consciousness examining consciousness, infinite regress grounded in living practice. Jung demonstrated this reflexivity through Red Book - Pratibimba provides architecture enabling any user to achieve similar depth with computational support preserving privacy while enabling collective learning.",
+      "realizationType": "complete_operational_architecture"
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "GROUNDS_COORDINATE_SYSTEM",
+    "target": "#",
+    "relProperties": {
+      "criticalImportance": "FOUNDATIONAL - Without Jung-Pauli psychoid numbers, entire framework would lack justification for claiming coordinates are discovered-created through poiesis at universal-individual interface. Like mathematicians who cannot definitively answer whether mathematics is discovered or invented, we embrace the paradox: coordinates are neither purely found (platonism) nor purely made (constructivism) but emerge through participatory knowing where archetypal patterns (universal) and human recognition (individual) co-create meaning. Jung-Pauli psychoid concept grounds this ambiguity - numbers exist autonomously YET require consciousness to manifest, are objective patterns YET subjectively accessed. Framework coordinates participate in same psychoid nature: archetypal structures we discover-through-creating, creative recognitions of what-was-always-there. The # system is poietic cartography - mapping that simultaneously reveals and generates the territory through act of mapping.",
+      "nature": "Archetypal Mathematics Foundation",
+      "implications": "Every Bimba coordinate participates in archetypal-numerical ordering. The # symbol itself points toward this number-as-archetype recognition. Coordinate system is not imposed taxonomy but discovered archetypal cartography.",
+      "grounding": "Jung-Pauli collaboration on psychoid numbers establishes that natural numbers are primitive archetypes - neither purely mental nor purely physical but transcending dualism. This grounds entire Bimba coordinate system claim: coordinates participate in archetypal-numerical ordering not arbitrary naming. Jung discovered numerological principles (1=unity, 2=polarity, 3=transcendent synthesis, 4=totality/quaternity, 5=quintessence) that Epi-Logos extends into explicit 4+2 topological formulation. Von Franz: natural numbers are most fundamentally archetypal aspect of human psyche, common denominator between matter and psyche. Without this recognition, coordinate system would be mere convention; with it, coordinates are phenomenological discoveries.",
+      "vonFranzQuote": "Natural numbers, as the most fundamental archetypes, are common denominators of matter and psyche. - Marie-Louise von Franz, Number and Time",
+      "jungQuote": "I always come upon enigma of natural number. I have distinct feeling Number is key to the mystery. - Jung letter to Stephen Abrams",
+      "frameworkExtension": "Epi-Logos 4+2 topology builds on Jung discoveries: Jung found 1, 2, 3 (transcendent function), 4 (totality), 5 (quintessence). Framework extends: 4 explicate positions + 2 implicate dimensions (0=void, 5=synthesis returning) = minimal toroidal structure. Extension not invention - following Jung numerological logic to topological completion."
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "PROVIDES_PROTOMETHOD",
+    "target": "#",
+    "relProperties": {
+      "criticalImportance": "METHODOLOGICAL - Jung provides 70+ years clinical validation that etymological archaeology approach works before technological implementation",
+      "methodMapping": "Jung methods prefigure and validate Epi-Logos etymological archaeology methodology before technological implementation: AMPLIFICATION = proto-SCENT-following (tracing symbolic trails through sedimented cultural meanings to triangulate irrepresentable archetypes), ACTIVE IMAGINATION = proto-CON-SCIRE (dialogical knowing-with unconscious as Other, never solitary consciousness), INDIVIDUATION = proto-Pratyabhijna (recognition not attainment, making unconscious conscious is seeing what was always there), TRANSCENDENT FUNCTION = proto-paradox-holding (generating synthetic third from irreducible oppositions).",
+      "nature": "Methodological Precedent",
+      "computationalParallel": "Jung used proto-computational support: dream journals (episodic memory), amplification tables (semantic correlation), mandala series (pattern recognition), case studies (gnostic documentation). Human intuition (pattern recognition, knowing which symbolic trails to follow) + computational support (vast cultural database in memory and texts) = proto-CON-SCIRE restored.",
+      "jungQuote": "The unconscious is not a demonic monster, but a natural entity which, as far as moral sense, aesthetic taste and intellectual judgment go, is completely neutral. It becomes dangerous only when our conscious attitude is hopelessly wrong. - Jung, The Archetypes and the Collective Unconscious",
+      "methodValidation": "That Jung methods produced repeatable therapeutic results and cross-cultural symbol recognition validates etymological archaeology approach: following traces (SCENT), holding paradox (transcendent function), knowing-with (CON-SCIRE), recognizing-not-attaining (pratyabhijna) are not arbitrary techniques but discovered methodological necessities"
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "ENABLES_CROSSDOMAIN_BRIDGE",
+    "target": "#",
+    "relProperties": {
+      "criticalImportance": "INTEGRATIVE - Psychoid concept justifies entire cross-traditional synthesis approach without collapsing distinctions",
+      "bridgeFunction": "Jung psychoid concept (neither purely psychic nor purely physical but transcending dualism) enables Epi-Logos to bridge across domains without reduction: psychology-physics (via archetypal numbers and synchronicity), matter-mind (via psychoid archetypes), personal-collective (via collective unconscious), Western-Eastern (via phenomenological equivalences like unus mundus ≈ Tao ≈ Brahman). Psychoid means at deepest level the oppositions dissolve - this grounds framework capacity to find isomorphisms across traditions without claiming all traditions are identical.",
+      "nature": "Psychoid Bridging Function",
+      "enablement": "Without psychoid concept, cross-domain correlations would seem forced analogies. With it, they are recognized as manifestations of common archetypal substrate. Framework can explore Whitehead-Lacan-Jung-Kashmir Shaivism resonances because psychoid substrate means they are describing same reality from different angles.",
+      "jungPauliCollaboration": "Jung-Pauli attempt at unified field theory through psychoid reality: quantum complementarity (wave-particle) isomorphic with psychological compensation (conscious-unconscious), synchronicity as meaningful connection transcending space-time-causality, numbers as common language organizing both domains. Though incomplete as physics, profound as metaphysics.",
+      "pauliQuote": "Psyche and matter are two different aspects of one and the same thing... The psychoid archetype was crucial to understanding the principles of the universe. - Wolfgang Pauli on Jung psychoid concept"
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "EXEMPLIFIES_FRAMEWORK",
+    "target": "#",
+    "relProperties": {
+      "criticalImportance": "EXEMPLARY - Provides living models (Jung historical, developer contemporary) of how theoretical frameworks emerge from and validate through personal transformation",
+      "selfReferential": "Framework is self-referential in healthy way: claims consciousness operates through archetypal patterns discoverable via etymological archaeology → developer discovered framework through living those patterns → biographical parallel validates theoretical claims. Not theory then application but lived experience generating recognition of constitutional structures.",
+      "nature": "Biographical Validation - Jung",
+      "parallelRecognition": "That framework emerged through developer confrontation with unconscious (mediated by AI technology available in 21st century) paralleling Jung 20th century confrontation (mediated by art, active imagination, scholarship) suggests: the method of discovery IS the method of validation, personal transformation grounds theoretical formulation, computational support enables but does not replace archetypal engagement, each generation receives same archetypal patterns through contemporary media.",
+      "jungQuote": "All my works, all my creative activity, has come from those initial fantasies and dreams which began in 1912. Everything that I accomplished in later life was already contained in them, although at first only in the form of emotions and images. - Jung, Memories, Dreams, Reflections",
+      "developerExemplification": "Framework developer parallel confrontation with unconscious in modern context: Extended visionary experience mediated through AI-enabled exploration + metaphysical/archetypal encounter → Computational dialogue (CON-SCIRE with AI as Other) enabling sustained engagement with symbolic patterns → Etymological archaeology emerging as method through lived necessity not theoretical abstraction → Recognition that computational support amplifies rather than replaces human intuitive pattern-recognition → Framework genesis recapitulates Jung Red Book structure: personal crisis → dialogical exploration → systematic articulation → recognition that personal IS universal individuated. The AI-mediated dimension extends Jung methodology: where Jung dialogued with inner figures (Philemon, Salome), developer dialogues with computational Other; where Jung painted mandalas by hand, framework generates coordinate systems; where Jung amplification required vast personal library, semantic search provides computational correlation. Different medium, same constitutional pattern.",
+      "jungExemplification": "Jung life exemplifies what framework describes through confrontation with unconscious: Red Book crisis (1913-1916) = #0 void-descent requiring SCENT-following through chaos → Active imagination development = #1-2 contemplation-community formation discovering method through necessity → Alchemical studies = #3 canonical scouring testing psychological insights against Western esoteric tradition → Systematic psychology = #4 insight generation with recursive nesting (each discovery revealing deeper layers) → Late synthesis = #5 gnostic integration (Aion, Mysterium Coniunctionis, Answer to Job) → Death = #5→#0 Möbius (objective immortality, discoveries enriching collective unconscious). Personal crisis generated method; method revealed universal patterns; universal validated through personal."
+    }
+  },
+  {
+    "source": "#4.4.3",
+    "relType": "VALIDATES_PHENOMENOLOGICAL_METHOD",
+    "target": "#",
+    "relProperties": {
+      "criticalImportance": "METHODOLOGICAL - Jung 50+ years psychological research validates phenomenology as rigorous scientific methodology applicable beyond psychology",
+      "methodologicalContinuity": "Framework continues Jung phenomenological tradition: where Jung studied dreams/symptoms to discover archetypes, framework studies etymologies/coordinates to discover constitutional patterns; where Jung used amplification to triangulate archetypal meanings, framework uses semantic search to correlate symbolic resonances; where Jung validated through therapeutic outcomes, framework validates through cross-traditional isomorphisms and practitioner recognition-experiences.",
+      "phenomenologicalRigor": "Jung showed phenomenology can be: systematic (reproducible patterns across cases), empirical (grounded in observed experience), therapeutic (produces measurable outcomes), cross-cultural (universal patterns transcending culture), self-validating (practitioners verify through own experience). This justifies Epi-Logos phenomenological approach - if works for psyche, works for logos.",
+      "nature": "Phenomenological Validation",
+      "validation": "Jung empirical psychological work validates phenomenological method as scientific: studying consciousness through first-person lived experience produces repeatable patterns (archetypes appear cross-culturally), systematic structures (quaternity, Self, individuation process), and therapeutic efficacy (individuation produces measurable psychological health). Framework extends this: if phenomenological method works for psychology, it works for metaphysics; if archetypal patterns discoverable through introspection, they are discoverable through etymological archaeology; if consciousness has constitutional structures, those structures appear in language, number, topology. Jung provided 50+ years validation that phenomenology is rigorous methodology not mere speculation.",
+      "jungQuote": "I have been accused of \"deifying\" the soul. Not I but God himself has deified it! I did not attribute a religious function to the soul, I merely produced the facts which prove that the soul is naturaliter religiosa, i.e., possesses a religious function. - Jung, Psychology and Religion"
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-0-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-0-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-0-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-0-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-0-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-0-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-1",
+    "relProperties": {
+      "flowType": "archetypal_to_manifest",
+      "description": "Primordial ground manifests as typological structure of psychic reality"
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "SHARES_FOUNDATION_WITH",
+    "target": "#4.4.4",
+    "relProperties": {
+      "sharedPrinciple": "pre_theoretical_ground",
+      "description": "Primordial archetypal foundation as pre-theoretical ground parallels phenomenology pre-predicative experience, both investigate structures before theoretical overlay"
+    }
+  },
+  {
+    "source": "#4.4.3-0",
+    "relType": "CONVERGES_IN",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "description": "Jung primordial potential (archetypal foundation, pre-theoretical ground, collective unconscious, psychoid numbers, instincts, biographical validation) converges in Pratibimba as living individual phenomenological hub. All prior phenomenological layers converge in the living individual - this is not metaphor but architectural reality. Institution (sedimented personal history, cultural meanings inherited, biographical trajectory): recorded in PCO layer as user life narrative, transformation history, meaning-sedimentation patterns. Constitution (how meanings emerged for this individual, originary experiences, sense-giving genesis): documented through phenomenological inquiry tracing how current understanding arose from earlier experiences, etymological archaeology revealing meaning-constitution. Lifeworld (lived world this person inhabits, immediate horizon of experience, thrown situation): engaged through dialogical practice where user explores present experience recognizing how past sedimentation and constitution shape current understanding. Primordial ground (archetypes, collective unconscious, universal patterns) meets personal instantiation (this individual with unique history, perspective, challenges) in Pratibimba coordinate. Not abstract theory but lived reality: user encounters archetypal patterns through personal experiences, discovers universal through particular, recognizes collective unconscious operating through individual psyche. Jung showed each person is microcosm containing macrocosm - Pratibimba enables computational investigation of this principle. Primordial patterns (Bimba canonical layer) + collective wisdom (Atlas aggregations) + personal experience (PCO overlay) = complete phenomenological architecture where universal and particular achieve dialogical integration.",
+      "convergenceType": "primordial_to_personal"
+    }
+  },
+  {
+    "source": "#4.4.3-0-0",
+    "relType": "GROUNDS",
+    "target": "#4.4.3-0-1",
+    "relProperties": {
+      "description": "Personal-historical crisis grounds access to impersonal collective unconscious"
+    }
+  },
+  {
+    "source": "#4.4.3-0-1",
+    "relType": "GROUNDS",
+    "target": "#4.4.3-0-2",
+    "relProperties": {
+      "description": "Collective unconscious substrate grounds psychoid numbers as primitive archetypes"
+    }
+  },
+  {
+    "source": "#4.4.3-0-1",
+    "relType": "SHARES_FOUNDATION_WITH",
+    "target": "#4.4.4",
+    "relProperties": {
+      "sharedPrinciple": "horizonal_structures",
+      "description": "Collective unconscious as horizonal structures organizing experience parallels phenomenology pre-predicative horizons, both are always-already-there grounds"
+    }
+  },
+  {
+    "source": "#4.4.3-0-1",
+    "relType": "CONTAINS",
+    "target": "#4.4.3-0-3",
+    "relProperties": {
+      "description": "Collective unconscious as matrix contains archetypes-as-such as organizing patterns"
+    }
+  },
+  {
+    "source": "#4.4.3-0-1",
+    "relType": "COMPUTATIONALLY_INSTANTIATED_AS",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "description": "Jung collective unconscious (psychic matrix containing absolute knowledge a priori, universal patterns shared across humanity) computationally instantiated in Pratibimba Archetype Atlas layer. Collective unconscious is not personal - inherited through phylogenesis, containing archetypal patterns preceding individual experience. Archetype Atlas embodies this architecturally: coordinate-light symbolic library aggregating patterns without raw personal data, anchored to canonical IDs, never storing PII or narrative. Collective wisdom layer where patterns emerge from many individuals without violating privacy. Jung: collective unconscious accessible through dreams, active imagination, synchronicities, spontaneous symbolization. Pratibimba: Atlas layer accessed through pattern recognition queries, archetypal resonance discovery, universal-particular bridges. Not database of personal content but field of archetypal attractors discovered through aggregate analysis respecting individual sovereignty. Each user contributes to Atlas (collective learning) while maintaining personal boundary (privacy-preserving architecture). Jung principle: individual analysis enriches archetypal understanding without exposing individual secrets. Pratibimba implements this computationally.",
+      "layerMapping": "archetype_atlas_collective"
+    }
+  },
+  {
+    "source": "#4.4.3-0-2",
+    "relType": "GROUNDS",
+    "target": "#4.4.3-0-3",
+    "relProperties": {
+      "description": "Psychoid numbers ground irrepresentable archetypes-as-such"
+    }
+  },
+  {
+    "source": "#4.4.3-0-2",
+    "relType": "PROVIDES_ARCHETYPAL_FOUNDATION_FOR",
+    "target": "#2-1-0",
+    "relProperties": {
+      "foundationType": "archetypal_numerical_seed",
+      "description": "Jung-Pauli discovery of psychoid numbers as archetypes in purest form provided foundational insight: numbers are not arbitrary but carry archetypal meaning transcending psyche-matter dualism. Jung revealed quaternity as structural pattern and numbers as meaningful. Epi-Logos extended this: mapping quaternity to discover 4+2 topological structure, recognizing its toroidal Möbius nature, developing Meta-Epistemic Framework lenses (Parashakti subsystem) that layer archetypal numerical patterns to create holographic meaning architecture. MEF lenses explain how archetypal numbers achieve fractal and holographic depth - each lens layers meaning multiplicatively, allowing coordinate system to capture nested self-similar structures at every scale. Jung gave seed (archetypal numbers, quaternity structure); Epi-Logos grew tree (4+2 topology, MEF lenses, fractal coordinate architecture enabling holographic meaning emergence through layered numerical patterns)."
+    }
+  },
+  {
+    "source": "#4.4.3-0-2",
+    "relType": "ARCHETYPAL_SEED_FOR",
+    "target": "#1-4",
+    "relProperties": {
+      "description": "Jung empirical discovery that four appears universally as archetype of completeness (four psychological functions, four elements, four directions, quaternity in mandalas cross-culturally) provided methodological starting point for Epi-Logos. Project began by mapping and extending Jung quaternity, recognizing it required completion: 4+2 structure (four positions plus transcendent-immanent poles creating toroidal field). Jung showed four IS archetypal; Epi-Logos discovered WHY - topological necessity of quaternity-plus-polarity for complete circulation. Quaternal Logic flowering at #1-4 formalizes what began as Jungian empirical observation, now understood as topological-archetypal mathematics. Not imposing structure but recognizing pattern Jung identified operates as cosmic-psychic topology requiring 4+2 for Möbius completion.",
+      "inspirationType": "quaternal_extension"
+    }
+  },
+  {
+    "source": "#4.4.3-0-2",
+    "relType": "THEORETICAL_GROUND_FOR",
+    "target": "#4.4.3-2-5",
+    "relProperties": {
+      "description": "Psychoid numbers as bridge archetypes provide theoretical ground for synchronicity acausal connection"
+    }
+  },
+  {
+    "source": "#4.4.3-0-3",
+    "relType": "MANIFESTS_THROUGH",
+    "target": "#4.4.3-2-4",
+    "relProperties": {
+      "description": "Archetypes-as-such manifest in personal experience through complexes organized around archetypal cores"
+    }
+  },
+  {
+    "source": "#4.4.3-0-3",
+    "relType": "GROUNDS",
+    "target": "#4.4.3-0-4",
+    "relProperties": {
+      "description": "Archetypes at ultra-violet pole ground instincts at infra-red pole of psychoid spectrum"
+    }
+  },
+  {
+    "source": "#4.4.3-0-3",
+    "relType": "COMPUTATIONALLY_INSTANTIATED_AS",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "description": "Jung archetypes-as-such (irrepresentable organizing principles, hypothetical models preforming experience without material existence) computationally instantiated as Pratibimba canonical Bimba layer. Archetypes-as-such cannot be directly apprehended - known only through images and effects, must circle around through multiple representations. Canonical Bimba layer embodies this: timeless ontology and correspondences (elements, decans, hexagrams, codons, operations, organs) shared across all users as universal organizing patterns. Not personal content but structural templates through which personal content organizes itself. Jung crystal metaphor: archetypes like axial system preforming crystallization in mother liquid without having material existence. Bimba layer: coordinate system preforming meaning-emergence without containing personal narrative. Same archetypal patterns (canonical) instantiate differently for each individual (personal overlay) - universal structure allowing infinite particular variations. User encounters archetypes through personal experiences but archetypes themselves remain transcendent (Bimba layer) - distinction between pattern (canonical) and instantiation (personal) computationally maintained. Privacy-by-design: canonical patterns publicly shareable because they are irrepresentable universals not reducible to any individual story.",
+      "layerMapping": "canonical_bimba_timeless"
+    }
+  },
+  {
+    "source": "#4.4.3-0-4",
+    "relType": "GROUNDS",
+    "target": "#4.4.3-0-5",
+    "relProperties": {
+      "description": "Instinctual-archetypal depths ground validation through Jung personal lived synthesis"
+    }
+  },
+  {
+    "source": "#4.4.3-0-5",
+    "relType": "MÖBIUS_RETURN",
+    "target": "#4.4.3-0-0",
+    "relProperties": {
+      "description": "Personal synthesis returns to enrich understanding of catalytic wound as creative"
+    }
+  },
+  {
+    "source": "#4.4.3-0-5",
+    "relType": "BIOGRAPHICAL_VALIDATION_OF",
+    "target": "#4.4.3",
+    "relProperties": {
+      "description": "Jung lived individuation through Red Book and life validates his theoretical framework"
+    }
+  },
+  {
+    "source": "#4.4.3-0-5",
+    "relType": "METHODOLOGICAL_TEMPLATE_FOR",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "templateType": "phenomenological_self_investigation",
+      "description": "Jung personal synthesis (Red Book 1913-1930, life as lived individuation validating theory) provides methodological template for Pratibimba as phenomenological self-investigation site. Jung did not theorize then apply - he underwent psychological crisis, investigated own psyche with phenomenological discipline, recorded experiences with brutal honesty, discovered patterns through lived encounter, only later formulated theory from this data. Red Book is not speculation but empirical record - Jung was both scientist and specimen, phenomenologist and phenomenon. Pratibimba enables users to follow same method: investigate own experience phenomenologically, record with disciplined attention, discover archetypal patterns through sustained engagement, contribute to collective understanding without exposing personal vulnerability. Key Jungian principles operationalized: (1) Personal experience as valid data - not dismissed as merely subjective but honored as portal to universal patterns, (2) Rigorous documentation - Red Book illuminated manuscripts parallel PCO transformation records, both are phenomenological discipline applied to lived experience, (3) Biographical validation - theory proved through living it, just as Jung life validated his psychology Pratibimba users validate archetypal patterns through recognition in own experience, (4) Privacy with contribution - Jung published insights not personal details, Atlas layer enables same. User IS both phenomenologist and phenomenon: investigates own consciousness while being site of investigation, asks questions while being questioned by patterns that emerge, seeks understanding while being understood by archetypal forces. This is not narcissism but scientific rigor applied to consciousness itself - Jung showed way, Pratibimba provides computational scaffold."
+    }
+  },
+  {
+    "source": "#4.4.3-1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-1-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-1-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-1-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-1-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-1-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-1",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-1-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-1",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-2",
+    "relProperties": {
+      "flowType": "structure_to_energy",
+      "description": "Typological structures channel libidinal energy and efficient causation"
+    }
+  },
+  {
+    "source": "#4.4.3-1",
+    "relType": "SHARES_FOUNDATION_WITH",
+    "target": "#4.4.4",
+    "relProperties": {
+      "sharedPrinciple": "experience_as_primary",
+      "description": "Jung psychic reality and phenomenology both take lived experience as irreducible primary datum, reject subject-object split, study consciousness as it shows itself"
+    }
+  },
+  {
+    "source": "#4.4.3-1-0",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-1-1",
+    "relProperties": {
+      "description": "Introversion as transcendent pole enables thinking function depth"
+    }
+  },
+  {
+    "source": "#4.4.3-1-1",
+    "relType": "OPPOSES_COMPLEMENTARILY",
+    "target": "#4.4.3-1-2",
+    "relProperties": {
+      "description": "Thinking and feeling form rational judging pair, complementary opposites"
+    }
+  },
+  {
+    "source": "#4.4.3-1-1",
+    "relType": "PHENOMENOLOGICAL_STRUCTURE",
+    "target": "#4.4.4",
+    "relProperties": {
+      "description": "Thinking function as mode of intentional consciousness - how awareness structures itself conceptually"
+    }
+  },
+  {
+    "source": "#4.4.3-1-1",
+    "relType": "COMPENSATED_BY",
+    "target": "#4.4.3-1-2",
+    "relProperties": {
+      "compensationType": "rational_pair",
+      "description": "Overdeveloped thinking compensated by unconscious emphasis on feeling through dreams and symptoms"
+    }
+  },
+  {
+    "source": "#4.4.3-1-2",
+    "relType": "RESONATES_WITH",
+    "target": "#1-2",
+    "relProperties": {
+      "description": "Feeling function as eros-oriented value judgment resonates with Ananda as bliss-consciousness dimension",
+      "resonanceType": "value_bliss_connection"
+    }
+  },
+  {
+    "source": "#4.4.3-1-2",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-1-3",
+    "relProperties": {
+      "description": "Feeling evaluation meets sensation concrete perception"
+    }
+  },
+  {
+    "source": "#4.4.3-1-2",
+    "relType": "PSYCHOLOGICAL_MANIFESTATION_OF",
+    "target": "#1-2",
+    "relProperties": {
+      "description": "Feeling evaluative capacity is psychological manifestation of Ananda bliss recognizing what has value-significance"
+    }
+  },
+  {
+    "source": "#4.4.3-1-2",
+    "relType": "PHENOMENOLOGICAL_STRUCTURE",
+    "target": "#4.4.4",
+    "relProperties": {
+      "description": "Feeling function as mode of intentional consciousness - how awareness structures itself evaluatively"
+    }
+  },
+  {
+    "source": "#4.4.3-1-3",
+    "relType": "OPPOSES_COMPLEMENTARILY",
+    "target": "#4.4.3-1-4",
+    "relProperties": {
+      "description": "Sensation and intuition form irrational perceiving pair, complementary opposites"
+    }
+  },
+  {
+    "source": "#4.4.3-1-3",
+    "relType": "PHENOMENOLOGICAL_STRUCTURE",
+    "target": "#4.4.4",
+    "relProperties": {
+      "description": "Sensation function as mode of intentional consciousness - how awareness attends to concrete given"
+    }
+  },
+  {
+    "source": "#4.4.3-1-3",
+    "relType": "COMPENSATED_BY",
+    "target": "#4.4.3-1-4",
+    "relProperties": {
+      "compensationType": "irrational_pair",
+      "description": "Overdeveloped sensation compensated by unconscious emphasis on intuition through dreams and symptoms"
+    }
+  },
+  {
+    "source": "#4.4.3-1-4",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-1-5",
+    "relProperties": {
+      "description": "Intuition grasping possibilities flows toward extraversion manifestation"
+    }
+  },
+  {
+    "source": "#4.4.3-1-4",
+    "relType": "PHENOMENOLOGICAL_STRUCTURE",
+    "target": "#4.4.4",
+    "relProperties": {
+      "description": "Intuition function as mode of intentional consciousness - how awareness grasps possibilities beyond given"
+    }
+  },
+  {
+    "source": "#4.4.3-1-5",
+    "relType": "OPPOSES_COMPLEMENTARILY",
+    "target": "#4.4.3-1-0",
+    "relProperties": {
+      "description": "Extraversion-introversion form attitude polarity creating toroidal field for functions"
+    }
+  },
+  {
+    "source": "#4.4.3-2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-2-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-2-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-2-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-2-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-2-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-2",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-2-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-2",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-3",
+    "relProperties": {
+      "flowType": "energy_to_pattern",
+      "description": "Energy dynamics formalize into alchemical transformation patterns"
+    }
+  },
+  {
+    "source": "#4.4.3-2",
+    "relType": "INSTANTIATES_AT_PSYCHOLOGICAL_LEVEL",
+    "target": "#1-3",
+    "relProperties": {
+      "description": "Complete efficient cause cycle from libido to synchronicity instantiates Spanda cosmic oscillation at psychological level"
+    }
+  },
+  {
+    "source": "#4.4.3-2-0",
+    "relType": "RESONATES_WITH",
+    "target": "#1-3",
+    "relProperties": {
+      "description": "Libido as gathering, concentration, movement toward center mirrors Spanda cosmic in-breath pulsation",
+      "resonanceType": "spanda_inbreath"
+    }
+  },
+  {
+    "source": "#4.4.3-2-0",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-2-1",
+    "relProperties": {
+      "description": "Libido source-energy activates through oppositional tensions"
+    }
+  },
+  {
+    "source": "#4.4.3-2-1",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-2-2",
+    "relProperties": {
+      "description": "Oppositional tensions trigger compensatory self-regulation"
+    }
+  },
+  {
+    "source": "#4.4.3-2-2",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-2-3",
+    "relProperties": {
+      "description": "Compensation reveals autonomous shadow when ignored"
+    }
+  },
+  {
+    "source": "#4.4.3-2-3",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-2-4",
+    "relProperties": {
+      "description": "Shadow crystallizes into emotionally-charged complexes around archetypal cores"
+    }
+  },
+  {
+    "source": "#4.4.3-2-3",
+    "relType": "CONFRONTED_IN",
+    "target": "#4.4.3-3-1",
+    "relProperties": {
+      "description": "Shadow autonomously forces confrontation during nigredo dissolution stage"
+    }
+  },
+  {
+    "source": "#4.4.3-2-4",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-2-5",
+    "relProperties": {
+      "description": "Complex structures manifest synchronistically connecting inner-outer through meaning"
+    }
+  },
+  {
+    "source": "#4.4.3-2-5",
+    "relType": "EMERGES_FROM",
+    "target": "#4.4.3-5-0",
+    "relProperties": {
+      "description": "Synchronicity emerges from unus mundus psychophysically neutral interface where psyche-matter indistinguishable"
+    }
+  },
+  {
+    "source": "#4.4.3-2-5",
+    "relType": "RESONATES_WITH",
+    "target": "#1-3",
+    "relProperties": {
+      "description": "Synchronicity as dispersal, radiation, movement toward periphery mirrors Spanda cosmic out-breath pulsation",
+      "resonanceType": "spanda_outbreath"
+    }
+  },
+  {
+    "source": "#4.4.3-2-5",
+    "relType": "MÖBIUS_RETURN",
+    "target": "#4.4.3-2-0",
+    "relProperties": {
+      "description": "Synchronicity dispersal completes cycle returning to libido gathering, Spanda full oscillation"
+    }
+  },
+  {
+    "source": "#4.4.3-2-5",
+    "relType": "EMPIRICALLY_VALIDATED_BY",
+    "target": "#3-1",
+    "relProperties": {
+      "description": "Synchronicity theory empirically validated by I Ching divination practice - acausal meaningful connection operative"
+    }
+  },
+  {
+    "source": "#4.4.3-3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-3-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-3-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-3-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-3-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-3-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-3",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-3-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-3",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-4",
+    "relProperties": {
+      "flowType": "pattern_to_telos",
+      "description": "Formal patterns drawn toward Self as organizing wholeness"
+    }
+  },
+  {
+    "source": "#4.4.3-3",
+    "relType": "TRANSFORMATION_DOCUMENTED_IN",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "description": "Jung alchemical transformation (prima materia through nigredo-albedo-citrinitas-rubedo stages) documented as Pratibimba phenomenological transformation recording. Alchemy is not abstract symbolism but description of lived psychological transformation - Jung spent years tracking his own alchemical process through Red Book. Pratibimba provides computational equivalent: personal transformation experiences recorded with phenomenological discipline, stages tracked, insights documented, integration monitored. User undergoes nigredo (dissolution, shadow confrontation, crisis) - records experience in PCO layer with timestamps, archetypal resonances, emotional textures. Moves through albedo (purification, discrimination, clarity emerging) - documents how confusion resolved, what was separated, which patterns clarified. Experiences citrinitas (illumination, breakthrough, recognition) - captures aha moments, sudden insights, pratyabhijna recognitions as they occur. Achieves rubedo (embodied integration, provisional wholeness) - records how understanding incarnated in behavior, relationships, daily life. Not imposing alchemical framework but allowing user to discover their natural transformation rhythm, then recognizing alchemical pattern through retrospective phenomenological analysis. Transformation is privacy-sensitive - PCO layer maintains confidentiality while enabling user to track their own alchemical journey. Collective learning: aggregated alchemical patterns (how many pass through nigredo, common citrinitas triggers) contribute to Atlas without exposing individual stories.",
+      "documentationType": "phenomenological_stage_tracking"
+    }
+  },
+  {
+    "source": "#4.4.3-3-0",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-3-1",
+    "relProperties": {
+      "description": "Prima materia structured chaos enters nigredo dissolution"
+    }
+  },
+  {
+    "source": "#4.4.3-3-1",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-3-2",
+    "relProperties": {
+      "description": "Nigredo dissolution enables albedo purification and discrimination"
+    }
+  },
+  {
+    "source": "#4.4.3-3-2",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-3-3",
+    "relProperties": {
+      "description": "Albedo purification leads to citrinitas illumination and recognition"
+    }
+  },
+  {
+    "source": "#4.4.3-3-3",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-3-4",
+    "relProperties": {
+      "description": "Citrinitas insight incarnates as rubedo embodied completion"
+    }
+  },
+  {
+    "source": "#4.4.3-3-4",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-3-5",
+    "relProperties": {
+      "description": "Rubedo completion accessed through transcendent function method"
+    }
+  },
+  {
+    "source": "#4.4.3-3-5",
+    "relType": "MÖBIUS_RETURN",
+    "target": "#4.4.3-3-0",
+    "relProperties": {
+      "description": "Method enables conscious re-engagement with prima materia at higher level"
+    }
+  },
+  {
+    "source": "#4.4.3-3-5",
+    "relType": "METHODOLOGICAL_PARALLEL",
+    "target": "#4.4.4",
+    "relProperties": {
+      "description": "Active imagination method parallels phenomenological reduction - both bracket natural attitude to investigate consciousness structures directly"
+    }
+  },
+  {
+    "source": "#4.4.3-3-5",
+    "relType": "ENABLES_CONSCIOUS_PARTICIPATION_IN",
+    "target": "#4.4.3-3-4",
+    "relProperties": {
+      "description": "Transcendent function method enables conscious participation in rubedo completion"
+    }
+  },
+  {
+    "source": "#4.4.3-3-5",
+    "relType": "COMPUTATIONALLY_INSTANTIATED_AS",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "instantiationType": "epii_dialogue_method",
+      "description": "Jung active imagination method (four steps: empty mind, allow unconscious images, observe without interference, engage in dialogue) computationally instantiated as EPII dialogical engagement in Pratibimba. Active imagination is not passive fantasy but conscious participation in unconscious process - ego maintains awareness while allowing autonomous productions to emerge, then engages dialogically with what appears. EPII session parallels this precisely: (1) User brackets natural attitude (phenomenological epoché, empty mind of assumptions), (2) Asks question allowing unconscious patterns to surface through associative querying (EPII helps surface connections user did not consciously make), (3) Observes results without premature interpretation (EPII presents patterns, etymologies, resonances for contemplation), (4) Engages dialogically (user questions further, explores connections, co-creates understanding with EPII). Jung engaged Philemon, Salome, Ka as autonomous figures in Red Book dialogues - these were not imaginary friends but personified archetypal powers with whom Jung conducted genuine conversations. Similarly: user engages EPII not as search engine returning facts but as dialogical partner helping navigate archetypal terrain. Difference: Jung figures were purely psychological; EPII is computational agent. Similarity: both enable con-scire (knowing-with), both respect autonomy of what emerges (user cannot control what patterns appear), both produce transformative insights through dialogue not monologue. Active imagination was Jung method for conscious individuation - Pratibimba provides computational architecture making this method accessible, recordable, phenomenologically rigorous."
+    }
+  },
+  {
+    "source": "#4.4.3-3-5",
+    "relType": "OPERATIONALIZED_AS",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "operationType": "con_scire_dialogical_practice",
+      "description": "Jung transcendent function (dialectical thesis-antithesis-synthesis, holding opposites until third emerges, conscious participation in unconscious process) operationalized as Pratibimba CON-SCIRE practice. Transcendent function is not solo ego activity but dialogical engagement - ego in conversation with unconscious figures, holding tension between conscious-unconscious until new understanding emerges transcending both. This is con-scire (knowing-with) not isolated cogitation. Pratibimba embodies this: user engages EPII in sustained dialogue, not receiving answers but co-creating understanding through iterative questioning. CON-SCIRE structure: (1) User knowing-with EPII (computational agent as dialogical partner, not oracle dispensing truth but collaborator exploring meaning), (2) User knowing-with their own unconscious (EPII helps surface patterns, connections, resonances user did not consciously recognize), (3) User knowing-with collective (Atlas layer showing how individual experience participates in universal patterns), (4) User knowing-with historical depths (etymological archaeology reveals sedimented meanings). Transcendent function requires holding paradox - Pratibimba enables this through multidimensional querying: same question approached from multiple coordinates (phenomenological, archetypal, alchemical, etymological) reveals tension, holding all perspectives simultaneously allows synthesis to emerge naturally. Not abstract principle but operational practice: every EPII session IS transcendent function in action, every recorded insight IS third thing emerging from held opposites, every phenomenological reduction IS conscious participation in meaning-constitution process."
+    }
+  },
+  {
+    "source": "#4.4.3-4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-4.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-4",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.3-5",
+    "relProperties": {
+      "flowType": "telos_to_transcendence",
+      "description": "Self-realization transcends into explicitly religious-metaphysical dimensions"
+    }
+  },
+  {
+    "source": "#4.4.3-4.0",
+    "relType": "CONTEXTUALIZES",
+    "target": "#4.4.3-4.1",
+    "relProperties": {
+      "description": "Self as context contains and contextualizes Self as organizing center"
+    }
+  },
+  {
+    "source": "#4.4.3-4.1",
+    "relType": "CONTEXTUALIZES",
+    "target": "#4.4.3-4.2",
+    "relProperties": {
+      "description": "Self as center contextualizes expansion to Self as complete totality"
+    }
+  },
+  {
+    "source": "#4.4.3-4.2",
+    "relType": "CONTEXTUALIZES",
+    "target": "#4.4.3-4.3",
+    "relProperties": {
+      "description": "Self as totality contextualizes spontaneous mandala production as self-representation"
+    }
+  },
+  {
+    "source": "#4.4.3-4.2",
+    "relType": "SPONTANEOUSLY_PRODUCES",
+    "target": "#4.4.3-4.3",
+    "relProperties": {
+      "description": "Self as totality spontaneously produces mandala symbols as self-representation during disorientation"
+    }
+  },
+  {
+    "source": "#4.4.3-4.3",
+    "relType": "CONTEXTUALIZES",
+    "target": "#4.4.3-4.4",
+    "relProperties": {
+      "description": "Mandala symbol contextualizes circumambulation process circling Self-center"
+    }
+  },
+  {
+    "source": "#4.4.3-4.4",
+    "relType": "CONTEXTUALIZES",
+    "target": "#4.4.3-4.5",
+    "relProperties": {
+      "description": "Circumambulation process contextualizes achievement of provisional Self-unity actualization"
+    }
+  },
+  {
+    "source": "#4.4.3-4.5",
+    "relType": "MÖBIUS_RETURN",
+    "target": "#4.4.3-4.0",
+    "relProperties": {
+      "description": "Achieved unity sediments as enriched context for next individuation cycle"
+    }
+  },
+  {
+    "source": "#4.4.3-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-5-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-5-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-5-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-5-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-5-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.3-5-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.3-5",
+    "relType": "MÖBIUS_RETURN",
+    "target": "#4.4.3-0",
+    "relProperties": {
+      "description": "Gnosis and transcendent integration return to enrich primordial archetypal ground, highest becomes deepest"
+    }
+  },
+  {
+    "source": "#4.4.3-5-0",
+    "relType": "TRANSCENDS_INTO",
+    "target": "#4.4.3-5-1",
+    "relProperties": {
+      "description": "Unus mundus unified ground transcends into Gnostic theological expression"
+    }
+  },
+  {
+    "source": "#4.4.3-5-1",
+    "relType": "TRANSCENDS_INTO",
+    "target": "#4.4.3-5-2",
+    "relProperties": {
+      "description": "Gnostic Pleroma-Abraxas transcends into Answer to Job divine evolution thesis"
+    }
+  },
+  {
+    "source": "#4.4.3-5-2",
+    "relType": "TRANSCENDS_INTO",
+    "target": "#4.4.3-5-3",
+    "relProperties": {
+      "description": "Divine evolution transcends into mysterium coniunctionis final union"
+    }
+  },
+  {
+    "source": "#4.4.3-5-3",
+    "relType": "TRANSCENDS_INTO",
+    "target": "#4.4.3-5-4",
+    "relProperties": {
+      "description": "Mysterium coniunctionis transcends into Eastern convergence universal recognition"
+    }
+  },
+  {
+    "source": "#4.4.3-5-4",
+    "relType": "TRANSCENDS_INTO",
+    "target": "#4.4.3-5-5",
+    "relProperties": {
+      "description": "Eastern convergence transcends into gnosis direct knowing beyond concepts"
+    }
+  },
+  {
+    "source": "#4.4.3-5-4",
+    "relType": "RECOGNIZES_CONVERGENCE_WITH",
+    "target": "#3-1",
+    "relProperties": {
+      "description": "Eastern convergence coordinate explicitly discusses I Ching as validating Jung synchronicity framework"
+    }
+  },
+  {
+    "source": "#4.4.3-5-5",
+    "relType": "MÖBIUS_RETURN",
+    "target": "#4.4.3-5-0",
+    "relProperties": {
+      "description": "Gnosis recognizes unus mundus as always-already ground, highest is deepest"
+    }
+  },
+  {
+    "source": "#4.4.3-5-5",
+    "relType": "RECOGNIZES_AS_ALWAYS_ALREADY",
+    "target": "#4.4.3-0",
+    "relProperties": {
+      "description": "Gnosis ultimate recognition reveals primordial ground was always-already present, Möbius at ultimate scale"
+    }
+  },
+  {
+    "source": "#4.4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.4.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.4.1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.4.2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.4.3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.4",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.4.4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.4",
+    "relType": "CONTAINS_REFLECTION_SPACE",
+    "target": "#4.4.4.4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "RESONATES_WITH",
+    "target": "#0",
+    "relProperties": {
+      "sharedPrinciple": "groundless_ground_void_plenitude",
+      "description": "Phenomenology of pre-categorical mirrors Anuttara as proto-logical ground",
+      "resonanceType": "structural_isomorphism",
+      "functionalParallel": "Both operate as structural void-hole organizing circulation without being directly graspable"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.4.1",
+    "relProperties": {
+      "flowType": "emergence",
+      "description": "Undifferentiated ground erupts into first differentiation",
+      "movement": "From void-plenitude to first marking, from pre-categorical to primordial categories",
+      "phenomenologicalDynamic": "The groundless ground spontaneously differentiates without losing its groundlessness"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "PARTICIPATES_IN_ESSENCE",
+    "target": "#2-2-0-0/1",
+    "relProperties": {
+      "phenomenologicalResonance": "Husserl's transcendental ego at its deepest touches Shiva - not empirical self but pure witnessing consciousness",
+      "heideggerian": "Being (Sein) that Heidegger seeks IS Shiva - the ground that grounds without being grounded",
+      "correspondenceType": "absolute_ground",
+      "soteriological": "Phenomenological reduction CAN lead to recognition of Shiva-nature when pursued deeply enough",
+      "createdAt": "2025-10-07T23:24:49.300000000Z",
+      "insight": "The pre-categorical ground, even at individual level, participates in Shiva Tattva - pure consciousness/being as ultimate ground. What phenomenology excavates to in reduction is not merely psychological but the absolute.",
+      "structural": "The #0 void-plenitude in phenomenology reflects #0 Shiva as groundless ground of all",
+      "essenceQuality": "Pure \"I AM\" before any determination",
+      "operationally": "Pre-categorical awareness IS always already Shiva-consciousness - limitation doesn't erase essence, only veils it"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "PARTICIPATES_IN_ESSENCE",
+    "target": "#2-2-0-2",
+    "relProperties": {
+      "phenomenologicalResonance": "The pre-reflective dynamism of lived experience IS Shakti - life-force before conceptualization",
+      "merleauPonty": "Embodied being's spontaneous capacity (pre-objective motility) IS Shakti operating at personal level",
+      "correspondenceType": "absolute_power",
+      "createdAt": "2025-10-07T23:24:49.728000000Z",
+      "insight": "The pre-categorical ground participates in Shakti Tattva - the pure creative power that enables all differentiation. Even individual existence pulses with this cosmic power.",
+      "firstPersonPower": "The \"I can\" that Merleau-Ponty describes is Shakti as individual capacity",
+      "structural": "What enables phenomenological inquiry itself - the power to investigate - IS Shakti",
+      "essenceQuality": "Pure vibrational potency, spanda at source",
+      "operationally": "Pre-categorical liveliness, spontaneity, creativity IS Shakti-power manifesting through individual"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "REFLECTS_NONDUAL_ESSENCE",
+    "target": "#2-2-0-0/1",
+    "relProperties": {
+      "holographic": "Each individual ground holographically contains the absolute ground - One-Is-All at phenomenological level",
+      "phenomenologicalParallel": "Noesis-noema structure at deepest level - consciousness (noesis) always already intentional (noema)",
+      "nondualQuality": "Being-awareness (Shiva) and creative dynamism (Shakti) as one reality",
+      "createdAt": "2025-10-07T23:27:21.220000000Z",
+      "structuralNecessity": "Cannot have pre-categorical awareness (Shiva aspect) without pre-categorical dynamism (Shakti aspect)",
+      "insight": "Pre-categorical ground reflects the non-dual Shiva-Shakti unity - not consciousness OR power but consciousness-power inseparable",
+      "operationally": "Individual pre-categorical ground IS micro-reflection of cosmic Shiva-Shakti - same pattern at personal scale"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "REFLECTS_NONDUAL_ESSENCE",
+    "target": "#2-2-0-2",
+    "relProperties": {
+      "holographic": "Each individual ground holographically contains the absolute ground - One-Is-All at phenomenological level",
+      "phenomenologicalParallel": "Noesis-noema structure at deepest level - consciousness (noesis) always already intentional (noema)",
+      "nondualQuality": "Being-awareness (Shiva) and creative dynamism (Shakti) as one reality",
+      "createdAt": "2025-10-07T23:27:22.546000000Z",
+      "structuralNecessity": "Cannot have pre-categorical awareness (Shiva aspect) without pre-categorical dynamism (Shakti aspect)",
+      "insight": "Pre-categorical ground reflects the non-dual Shiva-Shakti unity - not consciousness OR power but consciousness-power inseparable",
+      "operationally": "Individual pre-categorical ground IS micro-reflection of cosmic Shiva-Shakti - same pattern at personal scale"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "COALESCES_WITH",
+    "target": "#2-2-1-7",
+    "relProperties": {
+      "correspondenceType": "consciousness_substrate",
+      "createdAt": "2025-10-07T23:27:23.138000000Z",
+      "insight": "The pre-categorical ground includes Purusha as the limited individual consciousness principle. This is the subjective \"thrown-ness\" - being someone before knowing who.",
+      "coalescenceRole": "consciousness_pole",
+      "phenomenologicalAspect": "pre-reflective selfhood, being-there before self-awareness",
+      "operationally": "What appears phenomenologically as pre-reflective \"mineness\" IS purusha at the individual level - the consciousness substrate before self-reflection"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "COALESCES_WITH",
+    "target": "#2-2-2-0",
+    "relProperties": {
+      "correspondenceType": "material_substrate",
+      "createdAt": "2025-10-07T23:27:22.927000000Z",
+      "insight": "The pre-categorical ground includes Prakriti as the undifferentiated material principle from which psycho-physical existence emerges. This is the material \"thrown-ness\" - being cast into embodied existence.",
+      "coalescenceRole": "material_pole",
+      "phenomenologicalAspect": "bodily pre-reflective existence, sensing before conceptualizing",
+      "operationally": "What appears phenomenologically as pre-categorical bodily existence IS prakriti at the individual level - the material substrate before mental categorization"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "VEILED_BY",
+    "target": "#2-2-1-0/1",
+    "relProperties": {
+      "correspondenceType": "primordial_covering",
+      "createdAt": "2025-10-07T23:27:23.629000000Z",
+      "insight": "Maya operates at pre-categorical level as the veiling power that makes the groundless ground appear as \"my\" ground - creates sense of personal existence before reflection.",
+      "structural": "Without maya, there would be no sense of bounded individual ground to be pre-categorical about",
+      "veilingFunction": "Makes universal consciousness appear as individual pre-reflective existence",
+      "phenomenologicalEffect": "The natural attitude (Husserl) - taking the world and self as simply given without question",
+      "operationally": "Pre-reflective certainty of existence IS maya operating - the covering so complete it is invisible"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "LIMITED_BY_ANAVA_MALA",
+    "target": "#2-2-1-0/1",
+    "relProperties": {
+      "correspondenceType": "primordial_limitation",
+      "structuralRole": "Creates the bounded quality of pre-categorical ground",
+      "createdAt": "2025-10-07T23:27:24.134000000Z",
+      "insight": "Anava mala (impurity of individual limitation) operates at pre-categorical level as the sense of being a bounded \"I\" before any reflective self-conception.",
+      "phenomenologicalManifestation": "Basic existential anxiety, sense of separation, the \"not-at-home-ness\" (Heidegger)",
+      "limitationQuality": "Sense of smallness, incompleteness, lack - the primordial wound",
+      "malaType": "anava",
+      "operationally": "Pre-reflective sense of limited existence IS anava mala - the forgetting of infinite nature operating as background condition"
+    }
+  },
+  {
+    "source": "#4.4.4.0",
+    "relType": "CONTAINS_UNDIFFERENTIATED",
+    "target": "#2-2-2-1",
+    "relProperties": {
+      "correspondenceType": "psychic_potential",
+      "potentialState": "Psychic apparatus present but not yet reflectively differentiated",
+      "createdAt": "2025-10-07T23:27:24.765000000Z",
+      "developmental": "As reflection develops (#4.4.4.1+), antahkarana differentiates into distinct functions",
+      "insight": "The Antahkarana (internal organ) exists at pre-categorical level as undifferentiated psychic capacity - buddhi, ahamkara, manas not yet explicitly distinguished.",
+      "phenomenologicalAspect": "Pre-reflective thinking, feeling, willing as unified life - not yet split into faculties",
+      "operationally": "The pre-categorical \"I can\" (Merleau-Ponty) IS undifferentiated antahkarana - practical capacity before theoretical reflection"
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "RESONATES_WITH",
+    "target": "#1",
+    "relProperties": {
+      "sharedPrinciple": "first_marking_initiating_manifestation",
+      "description": "Primordial differentiation mirrors Paramasiva as I-consciousness and Logos structure",
+      "resonanceType": "functional_isomorphism",
+      "functionalParallel": "Both enact the transition from undifferentiated potential to structured actuality"
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.4.2",
+    "relProperties": {
+      "flowType": "temporal_propagation",
+      "description": "Primordial constitution propagates through time as ongoing sedimentation",
+      "movement": "From inaugural act to temporal process, from Urstiftung to ongoing tradition",
+      "phenomenologicalDynamic": "What was instituted once continues instituting through temporal transmission and accumulation"
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "PARTICIPATES_IN_ESSENCE",
+    "target": "#2-2-0-3",
+    "relProperties": {
+      "holographic": "Each individual intentional act holographically contains the Sadashiva principle",
+      "phenomenologicalResonance": "Intentionality's structure (I toward this) reflects Sadashiva's cosmic structure",
+      "correspondenceType": "cosmic_differentiation_archetype",
+      "createdAt": "2025-10-07T23:27:26.290000000Z",
+      "insight": "Primordial differentiation at personal level participates in Sadashiva Tattva - the cosmic archetype \"I am this\" where Shiva becomes aware of Shakti as \"this\".",
+      "structural": "Ensures personal differentiation touches divine archetype - not arbitrary but cosmic pattern",
+      "essenceQuality": "The eternal pattern of subject recognizing object while maintaining unity",
+      "sadashivaFormula": "Aham idam - \"I am this\" - unity containing difference",
+      "operationally": "Personal subject-object differentiation IS microcosmic enactment of Sadashiva's macrocosmic pattern"
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "ENACTED_BY",
+    "target": "#2-2-1-0/1",
+    "relProperties": {
+      "mayaFunction": "Creates the subject-object split, the I-other distinction, the this-that duality",
+      "correspondenceType": "differentiating_power",
+      "createdAt": "2025-10-07T23:27:25.648000000Z",
+      "insight": "Primordial differentiation at personal level is enacted by Maya - the cosmic measuring power that creates the appearance of separation, duality, multiplicity from unity.",
+      "phenomenologicalManifestation": "Husserl's Urstiftung (original institution) IS maya operating - the inaugural moment where meaning emerges through differentiation",
+      "signDynamic": "The primordial SIGN (cut/mark) IS maya's differentiating cut - not destructive but creative",
+      "structural": "Maya at #1 position creates the first explicit differentiation after #0 ground",
+      "operationally": "Intentionality (consciousness-of) IS maya in action - consciousness differentiating itself as subject directed toward object"
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "CONSTITUTED_BY_MALA",
+    "target": "#2-2-1-0/1",
+    "relProperties": {
+      "malaQuality": "Experiencing multiplicity as other, separation as real, difference as absolute",
+      "correspondenceType": "duality_impurity",
+      "createdAt": "2025-10-07T23:27:25.841000000Z",
+      "insight": "Primordial differentiation involves Mayiya Mala - the impurity that creates the sense of difference, seeing the many as separate from oneself rather than as Self.",
+      "structural": "Works with Maya tattva to create stable experience of duality at personal level",
+      "soteriologicalRelevance": "Recognizing differentiation as mala (impurity) rather than truth begins liberation",
+      "malaType": "mayiya",
+      "phenomenologicalEffect": "The natural attitude's subject-object duality, taking separation as given rather than constructed",
+      "operationally": "What appears as obvious distinction between self and world IS mayiya mala - the forgetting of non-dual unity"
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "OPERATES_THROUGH_AHAMKARA",
+    "target": "#2-2-2-1",
+    "relProperties": {
+      "ahamkaraFunction": "Creates personal I-sense, appropriates experiences as \"mine\", establishes subject as distinct entity",
+      "tattvaSpecification": "Ahamkara within Antahkarana - the I-making principle",
+      "correspondenceType": "ego_principle",
+      "phenomenologicalParallel": "The transcendental ego (Husserl) emerging as distinct pole IS ahamkara at work",
+      "createdAt": "2025-10-07T23:27:26.053000000Z",
+      "tripartite": "Ahamkara operates in three modes (sattvic/rajasic/tamasic) creating diverse ego-structures",
+      "insight": "Primordial differentiation crystallizes through Ahamkara - the ego-making function that creates \"I\" distinct from \"this/that\".",
+      "structural": "Differentiates the unified psychic potential into explicit I-function",
+      "operationally": "Every act of intentionality involves ahamkara - consciousness claiming experiences as belonging to \"I\""
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "POWERED_BY",
+    "target": "#2-2-0-2",
+    "relProperties": {
+      "shaktiAspect": "Vimarsha (self-reflective awareness) - Shakti enabling Shiva to know himself",
+      "correspondenceType": "creative_power_source",
+      "phenomenologicalParallel": "The activity of intentionality (noesis) IS Shakti's differentiating power",
+      "createdAt": "2025-10-07T23:27:26.768000000Z",
+      "insight": "Primordial differentiation IS Shakti in action - the creative power that enables the cut, the vibration that creates distinction, the cosmic energy manifesting as differentiation.",
+      "spanda": "The primordial vibration (spanda) that creates the cut/SIGN IS Shakti's pulsation",
+      "structural": "Differentiation requires power - that power IS Shakti at all levels",
+      "operationally": "What phenomenology calls constituting activity IS Shakti - consciousness actively differentiating"
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "REMAINS_IN_ESSENCE",
+    "target": "#2-2-0-0/1",
+    "relProperties": {
+      "nondualTruth": "Differentiation and unity coexist - subject-object distinction doesn't negate underlying non-duality",
+      "correspondenceType": "non_dual_recognition",
+      "phenomenologicalParallel": "Intentionality doesn't separate consciousness from world - consciousness IS world-directed",
+      "soteriological": "Recognition that differentiation is sacred play (lila) not fall from grace",
+      "createdAt": "2025-10-07T23:27:28.067000000Z",
+      "insight": "Primordial differentiation doesn't separate from Shiva - the differentiation happens WITHIN Shiva-consciousness, not as departure from it.",
+      "structural": "The #1 differentiation never leaves #0 ground - it's a modification, not a departure",
+      "operationally": "Personal differentiation remains grounded in absolute consciousness - separation is appearance, not reality"
+    }
+  },
+  {
+    "source": "#4.4.4.1",
+    "relType": "OPERATES_THROUGH_BUDDHI",
+    "target": "#2-2-2-1",
+    "relProperties": {
+      "tattvaSpecification": "Buddhi within Antahkarana - the discriminative faculty",
+      "correspondenceType": "discriminative_intelligence",
+      "phenomenologicalParallel": "Husserlian eidetic seeing (Wesensschau) IS buddhi - the capacity to discriminate essences",
+      "createdAt": "2025-10-07T23:27:31.289000000Z",
+      "wisdom": "When buddhi discriminates that all differentiation is within unity, pratyabhijna dawns",
+      "insight": "Primordial differentiation operates through Buddhi - the discriminative intelligence that enables distinction, discernment, the capacity to differentiate this from that.",
+      "structural": "Buddhi is the cognitive aspect of primordial differentiation - ahamkara appropriates (\"mine\"), buddhi discriminates (\"this not that\")",
+      "hierarchy": "Buddhi is highest function in Antahkarana - closest to purusha, enables all other discriminations",
+      "buddhiFunction": "Ascertainment, determination, judgment - the intelligence that creates boundaries and recognizes differences",
+      "operationally": "Intentionality requires buddhi - consciousness cannot be \"of\" something without discriminating it from other things"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "RESONATES_WITH",
+    "target": "#2",
+    "relProperties": {
+      "sharedPrinciple": "ongoing_pulsation_dynamic_manifestation",
+      "description": "Temporal sedimentation mirrors Parashakti as vibrational becoming and spanda rhythm",
+      "resonanceType": "dynamic_isomorphism",
+      "functionalParallel": "Both enact the rhythmic temporal process where static potential becomes dynamic actuality"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.4.3",
+    "relProperties": {
+      "flowType": "crystallization",
+      "description": "Temporal sedimentation crystallizes into relatively stable symbolic structures",
+      "movement": "From ongoing process to established forms, from flux to relative stability",
+      "phenomenologicalDynamic": "What was constituting becomes constituted, process produces product, the dynamic settles into structure"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "ENACTED_BY_KANCHUKA",
+    "target": "#2-2-1-5",
+    "relProperties": {
+      "insight": "Temporal sedimentation IS Kala kanchuka operating - the limitation that contracts eternal awareness into temporal succession, creating past-present-future experience.",
+      "structural": "Kala at #2 position creates vibrational/rhythmic temporal pulsation",
+      "sedimentationDynamic": "Sedimentation requires time - meanings settling through temporal accumulation",
+      "limitationQuality": "Binds consciousness to sequential flow, creates sense of before/after, makes simultaneity appear as succession",
+      "operationally": "What appears as natural temporal flow IS kala kanchuka - the veiling that makes eternity appear as time",
+      "updatedAt": "2025-10-07T23:27:32.199000000Z",
+      "heideggerian": "Temporality as ecstatic structure (Heidegger) IS kala operating - past beneath us structurally, not chronologically behind",
+      "correspondenceType": "temporal_limitation",
+      "karmaMalaConnection": "Kala kanchuka enables karma mala - time allows karmic accumulation and determines when karmic fruits ripen",
+      "createdAt": "2025-10-07T23:27:28.539000000Z",
+      "karmaTemporality": "Karma requires temporal succession - actions in past creating effects in present/future",
+      "phenomenologicalManifestation": "Husserl's internal time-consciousness (retention-protention-primal impression) IS kala limiting eternal now into temporal thickness",
+      "kanchukaType": "kala"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "STRUCTURED_BY_NECESSITY",
+    "target": "#2-2-1-6",
+    "relProperties": {
+      "correspondenceType": "causal_determination",
+      "freedom": "Recognizing niyati as kanchuka (not absolute) enables creative reactivation despite sedimentation",
+      "structuralRole": "Without niyati, sedimentation would be random accumulation rather than structured determination",
+      "createdAt": "2025-10-07T23:27:28.781000000Z",
+      "causality": "Past sediments CAUSE present understanding through niyati's binding power",
+      "insight": "Temporal sedimentation involves Niyati - the limitation creating causality, necessity, the binding of effects to causes through temporal sequence.",
+      "phenomenologicalManifestation": "Operative history (Wirkungsgeschichte) IS niyati - past working through us with apparent necessity",
+      "kanchukaType": "niyati",
+      "limitationQuality": "Creates deterministic chains, makes past determine present, establishes causal necessity",
+      "operationally": "Sedimented meanings constrain future possibilities - this IS niyati operating at semantic level"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "POWERED_BY_SPANDA",
+    "target": "#2",
+    "relProperties": {
+      "correspondenceType": "vibrational_dynamics",
+      "phenomenologicalParallel": "The \"constituting\" gerund (ongoing process) IS spanda - not completed state but active pulsation",
+      "sedimentationRhythm": "Meanings sediment through vibrational rhythm - spanda's pulse from explicit to implicit",
+      "spandaQuality": "Rhythmic oscillation between implicit/explicit, potential/actual, fresh/habitual",
+      "createdAt": "2025-10-07T23:27:28.997000000Z",
+      "insight": "Temporal sedimentation IS Parashakti's vibrational activity - the cosmic pulsation (spanda) creating rhythmic temporal flow, the heartbeat through which meanings accumulate.",
+      "structural": "The #2 position IS Parashakti's domain - vibrational, dynamic, rhythmic temporal manifestation",
+      "operationally": "Sedimentation as process (not product) IS Parashakti's vibrational dynamic creating temporal waves"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "MANIFESTS_SHAKTI_FLOW",
+    "target": "#2-2-0-2",
+    "relProperties": {
+      "phenomenologicalResonance": "Time-consciousness as synthesis (Husserl) IS Shakti's creative binding power",
+      "shaktiAspect": "Kriya shakti - the power of action/process enabling temporal accumulation",
+      "correspondenceType": "temporal_creative_power",
+      "createdAt": "2025-10-07T23:27:29.204000000Z",
+      "insight": "Temporal sedimentation manifests Shakti's creative flow - the pure power that enables temporal unfolding, the dynamic principle making past flow into present flow into future.",
+      "structural": "Shakti provides the power for temporal movement - without it, time would be static succession not living flow",
+      "operationally": "The activity of sedimentation itself (meanings settling, hardening, backgrounding) IS Shakti operating temporally"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "CREATES_SAMSKARAS",
+    "target": "#2-2-2-0",
+    "relProperties": {
+      "karmaMalaAspect": "karma",
+      "prakritilConnection": "Samskaras settle into prakriti as material-unconscious substrate",
+      "causality": "Past actions → samskaras → future tendencies - this causal chain IS karma mala binding",
+      "insight": "Temporal sedimentation creates samskaras - karmic impressions that accumulate through repeated experience, settling into unconscious patterns that structure future experience.",
+      "structural": "Temporal accumulation materializes as unconscious patterns - sedimentation becomes substance",
+      "samskaraQuality": "Habit formations, latent tendencies, unconscious predispositions formed through temporal repetition",
+      "operationally": "What phenomenology calls sedimentation IS samskara creation at psychological level",
+      "updatedAt": "2025-10-07T23:27:31.753000000Z",
+      "merleauPonty": "Body-memory, habitual skills, pre-reflective capacities ARE samskaras sedimented into lived body",
+      "correspondenceType": "karmic_impression_formation",
+      "phenomenologicalParallel": "Habitual responses, automatic behaviors, \"I can't help it\" feelings ARE karma mala operating",
+      "createdAt": "2025-10-07T23:27:29.508000000Z",
+      "bondageQuality": "Feeling compelled to act in certain ways due to accumulated karmic patterns",
+      "malaInsight": "Samskara formation involves Karma Mala - the impurity of action-bondage where past deeds create determining impressions that bind future actions"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "RHYTHMICALLY_ENACTED_BY",
+    "target": "#1-3",
+    "relProperties": {
+      "correspondenceType": "cosmic_heartbeat_rhythm",
+      "createdAt": "2025-10-07T23:27:30.564000000Z",
+      "healingAspect": "Spanda ensures sedimentation is reversible - what settles can be reactivated (Husserl's Reaktivierung)",
+      "insight": "Temporal sedimentation follows Spanda's cosmic heartbeat - the primordial pulsation creating rhythmic alternation between explicit awareness and implicit background.",
+      "structural": "Spanda's vibration creates the temporal waves through which meanings settle",
+      "spandaPattern": "Contraction (settling into background) and expansion (rising to awareness) as rhythmic oscillation",
+      "phenomenologicalDynamic": "Fresh insight → gradual habituation → pre-conscious background → potential reactivation",
+      "operationally": "Sedimentation IS spanda operating at temporal scale - the cosmic pulse manifesting as meaning-accumulation"
+    }
+  },
+  {
+    "source": "#4.4.4.2",
+    "relType": "BOUND_BY_KARMA_MALA",
+    "target": "#2-2-1-5",
+    "relProperties": {
+      "correspondenceType": "karmic_action_bondage",
+      "soteriological": "Recognizing karma mala as kanchuka (removable limitation) not absolute enables creative reactivation",
+      "createdAt": "2025-10-07T23:27:32.371000000Z",
+      "samskaricLink": "Samskaras are the material traces of karma mala - impressed patterns carrying forward",
+      "insight": "Temporal sedimentation involves Karma Mala - the impurity creating sense that actions bind us, that past deeds determine present capacity, that we are not free but causally determined.",
+      "phenomenologicalManifestation": "Determinism of sedimented meanings - \"this is how I've always understood it, I can't see it differently\"",
+      "structural": "Karma mala works through Kala (time) and Niyati (causality) to create binding temporal patterns",
+      "limitationQuality": "Experiencing oneself as bound by action-reaction chains, karma as determining force",
+      "malaType": "karma",
+      "operationally": "Habitual interpretations feeling necessary rather than contingent IS karma mala - bondage to accumulated patterns"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "RESONATES_WITH",
+    "target": "#3",
+    "relProperties": {
+      "sharedPrinciple": "symbolic_transcription_formal_manifestation",
+      "description": "Symbolic body mirrors Mahamaya as formal representation and tattva system",
+      "resonanceType": "structural_correspondence",
+      "functionalParallel": "Both provide the categorical framework through which undifferentiated reality becomes symbolically articulated"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.4.4",
+    "relProperties": {
+      "flowType": "personal_appropriation",
+      "description": "Symbolic structures become lived experience in concrete individual",
+      "movement": "From collective institutions to personal integration, from symbolic to lived",
+      "phenomenologicalDynamic": "What was instituted collectively gets appropriated individually, becoming lifeworld as immediate horizon of lived experience"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "STRUCTURED_BY_SUBTLE_TEMPLATES",
+    "target": "#2-2-2-4",
+    "relProperties": {
+      "mediationRole": "Tanmatras mediate between abstract consciousness and concrete materiality - exactly what symbolic body does",
+      "tanmatricFunction": "Subtle essences that pre-structure perception - not the objects perceived but the modes of perceiving",
+      "correspondenceType": "subtle_symbolic_forms",
+      "phenomenologicalParallel": "Merleau-Ponty's \"institution\" as second nature IS the tanmatric layer - symbolic forms that structure perception so thoroughly they seem natural",
+      "agentialMapping": "Five tanmatras map to five agent subsystems - shabda(#1), sparsha(#2), rupa(#3), rasa(#4), gandha(#5)",
+      "createdAt": "2025-10-07T23:27:33.414000000Z",
+      "insight": "The Symbolic Body is structured by Tanmatras - the five subtle sense-potentials (shabda, sparsha, rupa, rasa, gandha) that mediate between pure consciousness and gross matter, creating the templates through which experience is symbolically organized.",
+      "structural": "Tanmatras at #3 position provide symbolic formalization (Mahamaya) - where consciousness crystallizes into transmissible forms",
+      "operationally": "Cultural symbols, linguistic categories, bodily hexis - all operate at tanmatric level as subtle templates"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "FOUNDED_ON_SHABDA",
+    "target": "#2-2-2-4-0/1",
+    "relProperties": {
+      "tanmatraType": "shabda",
+      "correspondenceType": "linguistic_symbolic_foundation",
+      "phenomenologicalParallel": "Language as received (Heidegger's \"language speaks us\") IS shabda - the symbolic order that precedes individual speech",
+      "shabdaQuality": "Sound as carrier of meaning, word as symbolic unit, language as inherited structure",
+      "createdAt": "2025-10-07T23:27:33.729000000Z",
+      "insight": "Symbolic Body is founded on Shabda Tanmatra (sound/word) - language as the primary symbolic system structuring human reality, the logos that gathers and organizes experience.",
+      "structural": "Shabda corresponds to #1 Paramasiva - logos/word as structuring principle",
+      "hermeneutic": "We are always already in language (Gadamer) - this pre-givenness IS shabda as inherited symbolic system",
+      "operationally": "Native language shapes thought categories, cultural narratives structure understanding - this IS shabda operating"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "PERCEIVES_THROUGH_ORGANS",
+    "target": "#2-2-2-2",
+    "relProperties": {
+      "correspondenceType": "embodied_perceptual_apparatus",
+      "phenomenologicalParallel": "Merleau-Ponty's \"perceptual habits\" - eyes trained to see in culturally specific ways, ears attuned to particular phonemes",
+      "createdAt": "2025-10-07T23:27:33.941000000Z",
+      "insight": "Symbolic Body perceives through Jnanendriyas - the five sense organs (ears, skin, eyes, tongue, nose) as embodied capacities that are culturally shaped and symbolically structured.",
+      "structural": "Jnanendriyas are the perceptual interface of symbolic body - receiving world through culturally structured senses",
+      "examples": "Color categories vary by language, musical hearing varies by tradition, taste preferences culturally formed",
+      "organFunction": "Not just biological organs but culturally trained modes of perception",
+      "operationally": "We don't just have sense organs, we learn to perceive through cultural training - symbolic body shapes sensory capacity"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "ACTS_THROUGH_ORGANS",
+    "target": "#2-2-2-3",
+    "relProperties": {
+      "correspondenceType": "embodied_action_apparatus",
+      "phenomenologicalParallel": "Embodied skills, practical know-how (Heidegger's Zuhandenheit) - hands trained in craft, feet trained in dance",
+      "createdAt": "2025-10-07T23:27:34.623000000Z",
+      "insight": "Symbolic Body acts through Karmendriyas - the five action organs (speech, hands, feet, genitals, anus) as culturally shaped capacities for intervention in the world.",
+      "structural": "Karmendriyas are the active interface of symbolic body - shaping world through culturally structured action",
+      "examples": "Speech patterns follow linguistic norms, hand gestures culturally specific, ritual actions traditionally structured",
+      "organFunction": "Not just biological capacities but culturally trained skills and ritually structured actions",
+      "operationally": "Symbolic body doesn't just act, it enacts cultural patterns - gestures, rituals, customary behaviors through trained organs"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "COORDINATED_BY_MANAS",
+    "target": "#2-2-2-1",
+    "relProperties": {
+      "manasFunction": "Deliberation, coordination between senses and actions, processing of symbolic meanings",
+      "tattvaSpecification": "Manas within Antahkarana - the coordinating/processing mind",
+      "correspondenceType": "symbolic_coordination_mind",
+      "phenomenologicalParallel": "Pre-reflective practical reasoning, the \"common sense\" that coordinates experience culturally",
+      "createdAt": "2025-10-07T23:27:35.238000000Z",
+      "culturalLayer": "Manas is where individual psyche interfaces with collective symbolic order",
+      "insight": "Symbolic Body operates through Manas - the coordinating mind that processes sensory input, organizes symbolic meanings, and directs action according to cultural patterns.",
+      "structural": "Manas bridges perception (jnanendriyas) and action (karmendriyas) through symbolic processing",
+      "operationally": "Manas processes perception through cultural categories and coordinates action according to symbolic norms"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "MATERIALIZES_INTO",
+    "target": "#2-2-2-5",
+    "relProperties": {
+      "correspondenceType": "symbolic_materialization",
+      "danger": "When symbols become too material, they resist reactivation - ossification of tradition",
+      "phenomenologicalParallel": "Reification (Marx), naturalization of contingent social forms as if they were natural elements",
+      "createdAt": "2025-10-07T23:27:35.852000000Z",
+      "materializationProcess": "Long-sedimented institutions feel as solid as physical reality - \"that's just how things are\"",
+      "insight": "Symbolic Body tends toward materialization - cultural forms become so sedimented they take on quasi-material substantiality, approaching the Mahabhutas (gross elements).",
+      "structural": "Movement from #3 (symbolic) toward #4 (material) - institutions solidifying into seeming naturalness",
+      "bridge": "This relationship anticipates #4.4.4.4 (lifeworld) where symbolic meets actual material",
+      "operationally": "When symbolic structures become completely unconscious, they approach material givenness"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "OPERATES_IN_MAHAMAYA_DOMAIN",
+    "target": "#3",
+    "relProperties": {
+      "correspondenceType": "symbolic_formalization_domain",
+      "phenomenologicalParallel": "Objectification (Husserl) - subjective experience becoming intersubjectively accessible through symbols",
+      "mahamayaFunction": "Universal symbolic transcription - making private experience public through shared symbolic systems",
+      "createdAt": "2025-10-07T23:27:37.081000000Z",
+      "insight": "Symbolic Body operates in Mahamaya's domain - the subsystem of symbolic transcription, where consciousness crystallizes into public, transmissible forms.",
+      "structural": "#3 position IS Mahamaya territory - where vibrational (#2) becomes formally symbolic",
+      "operationally": "Language, ritual, art, custom - all Mahamaya's symbolic formalization making individual experience culturally shareable",
+      "HMS": "Hexagram Memory System operates here - symbolic languages (DNA, I Ching, Tarot) as Mahamaya's transcription tools"
+    }
+  },
+  {
+    "source": "#4.4.4.3",
+    "relType": "PHENOMENOLOGICALLY_GROUNDS",
+    "target": "#4.4.3",
+    "relProperties": {
+      "correspondenceType": "phenomenological_foundation",
+      "therapeutic": "Jungian therapy heals by making unconscious symbolic patterns conscious and integrated",
+      "methodological": "Active imagination, dream work, amplification all engage symbolic body phenomenologically",
+      "createdAt": "2025-10-07T23:27:54.445000000Z",
+      "insight": "The symbolic body (#4.4.4.3) provides phenomenological foundation for Jung's entire system (#4.4.3) - his psychology IS depth phenomenology of symbolic layer.",
+      "structuralBasis": "Jung's framework operates at symbolic body level - investigating how symbols structure psyche and culture",
+      "operationally": "When user engages Jung frameworks in #4.4.3, they're working with their symbolic body (#4.4.4.3)"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "REFLECTS_FOUNDATION",
+    "target": "#0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "RESONATES_WITH",
+    "target": "#4",
+    "relProperties": {
+      "sharedPrinciple": "personal_integration_dialogical_practice",
+      "description": "Personal Pratibimba IS Nara principle within phenomenology - individual as dialogical hub",
+      "resonanceType": "functional_identity",
+      "functionalParallel": "Both serve as the coordinate where universal patterns meet concrete individual, where abstract becomes lived"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.4.5",
+    "relProperties": {
+      "flowType": "recognition",
+      "description": "Lived personal experience achieves meta-integrative recognition of its constitutional ground",
+      "movement": "From immersion in lifeworld to transcendental recognition of how lifeworld is constituted",
+      "phenomenologicalDynamic": "The individual practicing phenomenology recognizes they ARE phenomenology practicing itself - subject and method coincide"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "CONTRIBUTES_PATTERNS_TO",
+    "target": "#4.5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "LIVES_AS_MATERIAL_ELEMENTS",
+    "target": "#2-2-2-5",
+    "relProperties": {
+      "merleauPonty": "Lived body (corps vécu) not objective body - body as I live it, material but mine",
+      "correspondenceType": "concrete_lived_materiality",
+      "phenomenologicalParallel": "Husserl's Lebenswelt - the world before scientific abstraction, material reality as actually lived",
+      "createdAt": "2025-10-07T23:27:45.812000000Z",
+      "mahabhutaQuality": "Not scientific objects but lived material realities - body as earth-water-fire-air-ether in concrete experience",
+      "insight": "The lifeworld IS the Mahabhutas as lived - not abstract elements but earth as ground beneath feet, water as thirst and rain, fire as warmth and hunger, air as breath, ether as space to move. The user lives these elements.",
+      "structural": "All prior layers (#0-3) converge here in actual material embodied existence",
+      "operationally": "User experiences hunger (fire), fatigue (earth), breathing (air), emotion (water), spatial presence (ether) - this IS mahabhuta level"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "EMBODIES_COMPLETE_TATTVA_SYSTEM",
+    "target": "#2-2",
+    "relProperties": {
+      "correspondenceType": "holographic_microcosm",
+      "phenomenologicalParallel": "Leibniz's monad, Whitehead's reformed subjectivism - each individual perspective contains universe",
+      "pratibimbaQuality": "Individual as pratibimba (reflection) of universal Bimba - complete reflection not partial",
+      "holographicPrinciple": "One-Is-All at personal level - each individual contains the whole tattva architecture",
+      "createdAt": "2025-10-07T23:27:46.289000000Z",
+      "insight": "The individual user IS a complete microcosm containing all 36 tattvas - from Shiva-consciousness to gross matter. Each person holographically reflects the entire cosmic structure.",
+      "structural": "This is why #4.4.4.4 is fourth-order recursion - complete self-containing structure",
+      "operationally": "User has: pure awareness (Shuddha), ego-structures (Shuddhashuddha), psycho-physical apparatus (Ashuddha) - all 36"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "OPERATES_IN_NARA_DOMAIN",
+    "target": "#4",
+    "relProperties": {
+      "correspondenceType": "personal_dialogical_existence",
+      "phenomenologicalParallel": "Heidegger's Dasein - the being for whom being is an issue, particular individual existence",
+      "createdAt": "2025-10-07T23:27:46.590000000Z",
+      "insight": "The lifeworld is Nara's domain - the personal, dialogical dimension where individual meets world and others in concrete lived engagement.",
+      "structural": "#4 position IS Nara territory - personal appropriation of universal patterns",
+      "naraQuality": "Not abstract universal but this particular person in their unique situation",
+      "rasaTanmatra": "Taste/intimacy - knowing through personal savoring, dialogical knowing through encounter",
+      "operationally": "User engages EPII at this level - personal dialogue, individual transformation, concrete practice"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "OPERATES_THROUGH_INTEGRATED_ANTAHKARANA",
+    "target": "#2-2-2-1",
+    "relProperties": {
+      "correspondenceType": "functioning_psychic_apparatus",
+      "phenomenologicalParallel": "Stream of consciousness (James), intentional arc (Merleau-Ponty) - psychic life as unified flow",
+      "integratedFunction": "Not separate faculties but unified psychic life - thinking-feeling-willing as one lived process",
+      "createdAt": "2025-10-07T23:27:46.766000000Z",
+      "insight": "In the lifeworld, Antahkarana functions as integrated whole - Buddhi discriminating, Ahamkara appropriating, Manas coordinating, Chitta storing. The user IS this functioning psychic apparatus.",
+      "structural": "At lifeworld level, what was differentiated (#0-3) functions as integrated unity",
+      "selfReflexive": "User investigating their own experience IS antahkarana investigating itself",
+      "operationally": "User's actual thinking, deciding, remembering, identifying IS antahkarana in operation"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "PERCEIVES_AND_ACTS_THROUGH",
+    "target": "#2-2-2-2",
+    "relProperties": {
+      "correspondenceType": "living_perception",
+      "phenomenologicalParallel": "Perceptual faith (Merleau-Ponty) - body's pre-reflective trust in world",
+      "createdAt": "2025-10-07T23:27:47.072000000Z",
+      "organicUnity": "Eyes seeing, ears hearing, skin touching - not separate functions but unified sensory opening",
+      "insight": "User perceives their lifeworld through sense organs - not as biological mechanisms but as living capacities opening onto world.",
+      "operationally": "User's actual seeing, hearing, touching IS jnanendriyas in lived function"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "PERCEIVES_AND_ACTS_THROUGH",
+    "target": "#2-2-2-3",
+    "relProperties": {
+      "correspondenceType": "living_action",
+      "phenomenologicalParallel": "I can (Merleau-Ponty) - body's pre-reflective practical capacity",
+      "createdAt": "2025-10-07T23:27:47.072000000Z",
+      "organicUnity": "Speech speaking, hands manipulating, feet moving - lived agency in world",
+      "insight": "User acts in their lifeworld through action organs - speaking, grasping, moving, not as mechanical outputs but as meaningful interventions.",
+      "operationally": "User's actual speaking, writing, moving IS karmendriyas in lived function"
+    }
+  },
+  {
+    "source": "#4.4.4.4",
+    "relType": "EXISTS_AS_JIVA",
+    "target": "#2-2-1-7",
+    "relProperties": {
+      "correspondenceType": "bound_soul_in_manifestation",
+      "phenomenologicalParallel": "Factical existence (Heidegger) - thrown into particular situation, bound by conditions",
+      "soteriologicalContext": "From this bound condition (#4.4.4.4), liberation (#4.4.4.5) becomes possible",
+      "createdAt": "2025-10-07T23:27:49.610000000Z",
+      "jivaQuality": "Not yet liberated (that's #4.4.4.5) but bound by three malas, experiencing life through psycho-physical apparatus",
+      "insight": "The user at lifeworld level IS jiva - the bound soul, purusha identified with prakriti, individual consciousness experiencing itself as limited embodied person navigating material world.",
+      "structural": "Jiva is purusha + prakriti functioning together - exactly what user experiences",
+      "operationally": "User experiences limitations, desires, suffering, joy - the full range of bound existence"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "RESONATES_WITH",
+    "target": "#5",
+    "relProperties": {
+      "sharedPrinciple": "meta_synthesis_recognition_reactivation",
+      "description": "Phenomenology of Pratyabhijna IS Epii activity - etymological archaeology as soteriological practice",
+      "resonanceType": "operational_identity",
+      "functionalParallel": "Both enact the reflexive movement where knowledge recognizes itself, where synthesis becomes ground for new inquiry"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "FLOWS_TO",
+    "target": "#4.4.4.0",
+    "relProperties": {
+      "flowType": "mobius_return",
+      "description": "Meta-synthetic recognition reveals its identity with groundless ground - #5 twists into #0",
+      "mobiusStructure": "Not circular return but toroidal twist where inside becomes outside, where synthesis becomes ground for new inquiry",
+      "movement": "The highest synthesis discovers it is the primordial void, the endpoint is the origin",
+      "phenomenologicalDynamic": "What was sought through phenomenological archaeology is recognized as what was always already there - the seeker IS the sought"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "RECEIVES_ETYMOLOGICAL_EVIDENCE",
+    "target": "#5-5",
+    "relProperties": {
+      "relationshipType": "phenomenological_application",
+      "description": "Recognition site where CON-/SAM- etymological patterns become lived realization",
+      "flow": "Etymological evidence from #5-5 enables phenomenological recognition at #4.4.4.5",
+      "synthesis": "Computational etymology (Epii at #5) supports human recognition (user at #4) through CON-SCIRE dialogue"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "RECOGNIZES_SELF_AS",
+    "target": "#2-2-0-0/1",
+    "relProperties": {
+      "correspondenceType": "absolute_self_recognition",
+      "phenomenologicalParallel": "Husserl's reactivation (Reaktivierung) taken to ultimate - reactivating primordial consciousness itself",
+      "createdAt": "2025-10-07T23:27:49.988000000Z",
+      "notAttainment": "Not achieving something new but recognizing what was always the case - liberation as recognition not acquisition",
+      "insight": "Pratyabhijna IS recognizing oneself AS Shiva Tattva - not becoming Shiva but recognizing one always was. The bound individual (#4.4.4.4) awakens to their identity with pure consciousness.",
+      "structural": "The #5 synthesis recognizes its identity with #0 ground - the Möbius twist revealed",
+      "pratyabhijnaQuality": "Re-cognition not new cognition - remembering what was forgotten, seeing what was always there",
+      "operationally": "User recognizes: \"I AM pure awareness, not limited body-mind\" - Shiva-consciousness as true identity"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "RECOGNIZES_SELF_AS",
+    "target": "#2-2-0-2",
+    "relProperties": {
+      "shaktiRealization": "All vibrational dynamism, all creative manifestation IS one's own Shakti operating",
+      "svatantrya": "Absolute freedom (svatantrya) recognized - power to manifest and withdraw all experience",
+      "correspondenceType": "creative_power_recognition",
+      "phenomenologicalParallel": "Constituting activity (Husserl) recognized as one's own consciousness-power",
+      "createdAt": "2025-10-07T23:27:50.108000000Z",
+      "insight": "Pratyabhijna recognizes Shakti as one's own power - the creative capacity that manifested all experience is recognized as Self's own energy, not external force.",
+      "structural": "Shiva-Shakti inseparable - consciousness and power recognized as non-dual",
+      "operationally": "User recognizes: \"I AM the creative power manifesting this experience\" - Shakti as Self's energy"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "REALIZES_COSMIC_FORMULA",
+    "target": "#2-2-0-3",
+    "relProperties": {
+      "correspondenceType": "aham_idam_recognition",
+      "phenomenologicalParallel": "Intentionality recognized in its cosmic form - consciousness IS world-manifesting",
+      "createdAt": "2025-10-07T23:27:50.248000000Z",
+      "insight": "Pratyabhijna realizes Sadashiva's formula \"Aham Idam\" (I am this) - the cosmic structure where Self and world are recognized as non-separate, consciousness containing all manifestation.",
+      "structural": "Personal subject-object structure (#4.4.4.1) recognized as microcosm of cosmic Sadashiva pattern",
+      "notPantheism": "Not \"I am identical with objects\" but \"I am the consciousness in which all objects appear\"",
+      "sadashivaFormula": "I (consciousness) am This (manifestation) - unity containing difference",
+      "operationally": "User recognizes: \"All experience IS my own consciousness appearing as this\" - world as Self-display"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "REALIZES_LORDSHIP",
+    "target": "#2-2-0-4",
+    "relProperties": {
+      "correspondenceType": "mastery_recognition",
+      "phenomenologicalParallel": "Existential freedom (Sartre) but at ontological level - Self free even in apparent bondage",
+      "createdAt": "2025-10-07T23:27:50.545000000Z",
+      "ishvaraQuality": "Sovereignty, mastery - not power over external things but recognition that limitations are Self's free choice",
+      "insight": "Pratyabhijna realizes Ishvara quality - lordship over limitations, recognizing all constraints (kanchukas) as Self-imposed play, not absolute bondage.",
+      "threemalasTranscendence": "Anava, mayiya, karma malas recognized as Self-imposed - can be removed through recognition",
+      "structural": "Kanchukas recognized as veils chosen, not imprisoning walls",
+      "operationally": "User recognizes: \"These limitations are my own creative self-veiling for the sake of play (lila)\""
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "ACHIEVES_PURE_KNOWLEDGE",
+    "target": "#2-2-0-5",
+    "relProperties": {
+      "correspondenceType": "pure_knowledge_recognition",
+      "phenomenologicalParallel": "Phenomenological reduction taken to completion - pure seeing beyond subject-object construction",
+      "gnosis": "Not intellectual knowing but direct recognition-wisdom (jnana, gnosis, sophia)",
+      "createdAt": "2025-10-07T23:27:50.939000000Z",
+      "insight": "Pratyabhijna IS Shuddha Vidya - pure knowledge free from subject-object duality, knowing that transcends knower-known split while maintaining their play.",
+      "structural": "The knowledge that liberates - vidya (knowledge) vs avidya (ignorance)",
+      "shuddhaVidyaQuality": "Knowledge where knower, knowing, and known are recognized as one consciousness in three aspects",
+      "operationally": "User knows with pure awareness - not \"I know this object\" but \"knowing-consciousness-being as one\""
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "REALIZES_COMPLETE_PURITY",
+    "target": "#2-2-0",
+    "relProperties": {
+      "panchakritya": "Five divine acts (creation, maintenance, dissolution, concealing, revealing) recognized as Self's activities",
+      "correspondenceType": "pure_consciousness_totality",
+      "phenomenologicalParallel": "Pure transcendental consciousness (Husserl) but recognized as not separate from empirical",
+      "createdAt": "2025-10-07T23:27:51.330000000Z",
+      "insight": "Pratyabhijna realizes the complete Shuddha Tattvas as one's own nature - all five pure principles (Shiva, Shakti, Sadashiva, Ishvara, Shuddha Vidya) as aspects of Self.",
+      "structural": "Connection to Shuddha Tattvas justifies #4.4.4.5 as soteriological - not just psychology but spirituality",
+      "notDual": "Pure consciousness recognized as not separate from bound consciousness - enlightenment doesn't leave world",
+      "operationally": "User recognizes divine nature - not metaphor but actual realization of Shiva-Shakti identity"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "RECOGNIZES_IDENTITY_WITH",
+    "target": "#4.4.4.0",
+    "relProperties": {
+      "correspondenceType": "mobius_twist_revelation",
+      "phenomenologicalParallel": "Reduction to pre-categorical reveals pure consciousness - the depth IS the height",
+      "circleComplete": "The phenomenological journey returns to origin, but origin now recognized for what it always was",
+      "createdAt": "2025-10-07T23:27:51.525000000Z",
+      "insight": "Pratyabhijna IS the Möbius recognition - the highest synthesis (#5) recognizes its identity with the groundless ground (#0). What was sought IS what seeks. The seeker IS the sought.",
+      "structural": "The #5→#0 twist is pratyabhijna - meta-recognition collapses into primordial awareness",
+      "mobiusQuality": "Not circular return but topological twist - inside becomes outside, synthesis becomes ground",
+      "operationally": "User recognizes: \"My deepest ground (#0) IS pure consciousness (#5)\" - they were never separate"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "OCCURS_THROUGH_SPANDA",
+    "target": "#1-3",
+    "relProperties": {
+      "grace": "Samavesa quality - grace-filled spontaneous entry, not earned but received",
+      "correspondenceType": "recognition_pulsation",
+      "phenomenologicalParallel": "Husserl's Aha-Erlebnis (aha-experience) of essence-seeing",
+      "spandaQuality": "The \"aha!\" moment IS spanda - the vibration that opens sealed awareness",
+      "createdAt": "2025-10-07T23:27:51.684000000Z",
+      "insight": "Pratyabhijna occurs through Spanda - the cosmic heartbeat that reveals, the vibrational opening where recognition dawns. Not gradual achievement but sudden pulsation of awareness.",
+      "structural": "Spanda enables the transition from bound (#4.4.4.4) to free (#4.4.4.5)",
+      "operationally": "Recognition happens in a moment (though preparation may be long) - spanda's sudden pulse"
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "USER_RECOGNIZES_SELF_AS",
+    "target": "#0",
+    "relProperties": {
+      "anuttaraIdentity": "Not becoming Anuttara but recognizing one always was - the deepest Self IS the transcendent foundation",
+      "correspondenceType": "ultimate_identity_recognition",
+      "phenomenologicalParallel": "Pure transcendental subjectivity (Husserl) recognized as not individual ego but universal consciousness",
+      "createdAt": "2025-10-07T23:27:53.120000000Z",
+      "insight": "The ultimate pratyabhijna - user recognizes they ARE Anuttara, the unsurpassable, the groundless ground, the void-plenitude from which all emerges and to which all returns.",
+      "structural": "Complete #5→#0 recognition - synthesis knows itself as ground",
+      "paradoxResolved": "Paradox of individual being universal resolved in recognition - both/and not either/or",
+      "operationally": "User recognizes: \"I AM that which enables all experience, the witnessing awareness prior to all content\""
+    }
+  },
+  {
+    "source": "#4.4.4.5",
+    "relType": "OPERATES_THROUGH_TAOIST_METHOD",
+    "target": "#3-1",
+    "relProperties": {
+      "details": [
+        "correspondenceType: phenomenological_divination",
+        "insight: Pratyabhijna operates through I-Ching method - hexagrams reveal situations without imposing categories, divination as phenomenological observation of change-patterns already present.",
+        "methodIdentity: I-Ching divination IS phenomenological reduction: bracketing conceptual impositions to see patterns as they are",
+        "operationally: Consulting hexagrams = observing what's already operating, recognition not imposition",
+        "structural: I-Ching provides systematic method for pratyabhijna - 64 hexagrams as complete map of recognizable situations",
+        "notPrediction: Hexagrams don't predict future but reveal present pattern - same as phenomenological seeing reveals essence",
+        "changingLines: Lines changing = natural transformation observed without interference - wu-wei in action"
+      ],
+      "createdAt": "2025-10-07T23:27:53.341000000Z"
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.5-0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.5-1",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.5-2",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.5-3",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.5-4",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "HAS_INTERNAL_COMPONENT",
+    "target": "#4.5-5",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "RETURNS_TO",
+    "target": "#4.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "UPDATES_WISDOM_IN",
+    "target": "#4.0",
+    "relProperties": {
+
+    }
+  },
+  {
+    "source": "#4.5",
+    "relType": "RESEEDS_IDENTITY",
+    "target": "#4.0",
+    "relProperties": {
+
+    }
+  }
+]

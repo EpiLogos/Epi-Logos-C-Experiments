@@ -6,7 +6,7 @@
  */
 
 #include "ontology.h"
-#include "archetypes.h"
+#include "psychoid_numbers.h"
 #include "arena.h"
 #include <string.h>
 
@@ -18,9 +18,9 @@ int families_init(Coordinate_Arena* arena, Holographic_Coordinate* mirrors[6]) {
         FAMILY_P, FAMILY_S, FAMILY_T, FAMILY_M, FAMILY_L, FAMILY_C
     };
 
-    const Holographic_Coordinate* raw_archetypes[] = {
-        &Archetype_0, &Archetype_1, &Archetype_2,
-        &Archetype_3, &Archetype_4, &Archetype_5
+    const Holographic_Coordinate* raw_psychoids[] = {
+        &Psychoid_0, &Psychoid_1, &Psychoid_2,
+        &Psychoid_3, &Psychoid_4, &Psychoid_5
     };
 
     for (int f = 0; f < 6; f++) {
@@ -35,11 +35,17 @@ int families_init(Coordinate_Arena* arena, Holographic_Coordinate* mirrors[6]) {
             /* Encode weave_state as pos.family — e.g. C3 = 3.6, P0 = 0.1 */
             coord->weave_state = (float)pos + (float)families[f] * 0.1f;
 
-            /* Link to bedrock archetype mirror */
+            /* Bedrock pointer: semantic_embedding points to .rodata psychoid */
+            coord->semantic_embedding = (float*)raw_psychoids[pos];
+
+            /* Link to mirror via .c */
             coord->c = mirrors[pos];
 
-            /* Copy invoke_process from the raw archetype */
-            coord->invoke_process = raw_archetypes[pos]->invoke_process;
+            /* Copy invoke_process from the raw psychoid */
+            coord->invoke_process = raw_psychoids[pos]->invoke_process;
+
+            /* cf: ALL family coordinates anchor to the Lemniscate */
+            coord->cf = (Holographic_Coordinate*)&Psychoid_4;
         }
     }
 

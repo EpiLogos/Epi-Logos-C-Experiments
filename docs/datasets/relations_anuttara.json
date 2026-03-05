@@ -1,0 +1,5122 @@
+[
+  {
+    "source": "#0",
+    "type": "HAS_QL_FRAME",
+    "target": null
+  },
+  {
+    "source": "#0",
+    "type": "MAPS_TO_ONTOLOGY_LAYER",
+    "target": null
+  },
+  {
+    "source": "#0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-0"
+  },
+  {
+    "source": "#0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4"
+  },
+  {
+    "source": "#0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5"
+  },
+  {
+    "source": "#0",
+    "type": "META_STRUCTURE_ELEMENT_OF",
+    "target": "#"
+  },
+  {
+    "source": "#0",
+    "type": "ZERO_ONE_UNITY",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0",
+    "type": "SUCCEEDED_BY_AND_MANIFESTS_THROUGH",
+    "target": "#1"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "EXHIBITS_META_PATTERN",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "COMPLETE_HOLOGRAPHIC_INTEGRATION",
+    "target": "#0-5"
+  },
+  {
+    "source": "#0",
+    "type": "REALIZES_HOLOGRAPHIC_COMPLETION",
+    "target": "#0"
+  },
+  {
+    "source": "#0",
+    "type": "GENERATES_BIMBA_PRATIBIMBA_DYNAMIC",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0",
+    "type": "GENERATES_BIMBA_PRATIBIMBA_DYNAMIC",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0",
+    "type": "PROVIDES_ABSOLUTE_GROUND",
+    "target": "#1-4"
+  },
+  {
+    "source": "#0-0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-0",
+    "type": "DEVELOPS_INTO",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-0",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0"
+  },
+  {
+    "source": "#0-0",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-0",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-2"
+  },
+  {
+    "source": "#0-0",
+    "type": "PROVIDES_FOUNDATIONAL_CONTEXT_FRAME",
+    "target": "#1-3-4.0000"
+  },
+  {
+    "source": "#0-0",
+    "type": "ABSOLUTE_GENDER_TRANSCENDENCE",
+    "target": "#2-5-0/1"
+  },
+  {
+    "source": "#0-0",
+    "type": "MATHEMATICAL_MYSTICAL_CORRESPONDENCE",
+    "target": "#2-4.0"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "COMPLEMENTARY_POLE",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "TRIKA_PRAKASA_VIMARSA",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "TRIKA_PRAKASA_SPANDA",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "QUATERNAL_POLAR_COMPLEMENT",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "QUATERNAL_TRANSCENDENT_GENERATION",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "QUATERNAL_TRANSCENDENT_SOURCE",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "QUATERNAL_DIAGONAL_SYNTHESIS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "ABHINAVAGUPTA_RESONANCE_01",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "FOUNDATIONAL_EQUATION_SOURCE",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "REFLECTIVE_DISTINCTION_SOURCE",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "PROVIDES_EXPLICATE_FOUNDATION",
+    "target": "#1-2-3"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "ARCHETYPAL_RESONANCE_VOID_NEGATION",
+    "target": "#1-2-3"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "FATHER_MOTHER_TRANSCENDENT_UNITY",
+    "target": "#2-5-0/1"
+  },
+  {
+    "source": "#0-0-0",
+    "type": "TRIADIC_PRINCIPLE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "COMPLEMENTARY_POLE",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "TRIKA_VIMARSA_SPANDA",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "TRIKA_VIMARSA_PRAKASA",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "QUATERNAL_POLAR_COMPLEMENT",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "QUATERNAL_IMMANENT_MANIFESTATION",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "QUATERNAL_IMMANENT_SOURCE",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "QUATERNAL_DIAGONAL_BRIDGE",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "ABHINAVAGUPTA_RESONANCE_02",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "PROVIDES_TETRALEMMIC_MATERIA_PRIMA",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "PROVIDES_IMPLICATE_FOUNDATION",
+    "target": "#1-2-0"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "PROVIDES_EXPLICATE_FOUNDATION",
+    "target": "#1-2-1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "ARCHETYPAL_RESONANCE_POSITIVE_SYNTHESIS",
+    "target": "#1-2-4"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "SON_DAUGHTER_NASCENT_UNITY",
+    "target": "#2-5-0/1"
+  },
+  {
+    "source": "#0-0-1",
+    "type": "TRIADIC_PRINCIPLE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2"
+  },
+  {
+    "source": "#0-1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-1",
+    "type": "DEVELOPS_INTO",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-3-6-4"
+  },
+  {
+    "source": "#0-1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-4.5/0-0"
+  },
+  {
+    "source": "#0-1",
+    "type": "SYMBOL_INTERACTION",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-1",
+    "type": "R_FACTOR_SUBSYSTEM_WEAVING",
+    "target": "#0-0"
+  },
+  {
+    "source": "#0-1",
+    "type": "R_FACTOR_SUBSYSTEM_WEAVING",
+    "target": "#0-5"
+  },
+  {
+    "source": "#0-1",
+    "type": "R_FACTOR_SUBSYSTEM_WEAVING",
+    "target": "#0-4.0/1"
+  },
+  {
+    "source": "#0-1",
+    "type": "R_FACTOR_SUBSYSTEM_WEAVING",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-1",
+    "type": "R_FACTOR_SUBSYSTEM_WEAVING",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-1",
+    "type": "R_FACTOR_SUBSYSTEM_WEAVING",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-1",
+    "type": "R_FACTOR_SUBSYSTEM_WEAVING",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-1",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-1",
+    "type": "CROSS_LEVEL_SYNTAX_CORRESPONDENCE",
+    "target": "#0-5"
+  },
+  {
+    "source": "#0-1",
+    "type": "MANIFESTS_AS",
+    "target": "#1-5-2"
+  },
+  {
+    "source": "#0-1",
+    "type": "MANIFESTS_BOUNDARY_DYNAMICS",
+    "target": "#1-5-1"
+  },
+  {
+    "source": "#0-1",
+    "type": "CHRIST_SOPHIA_BRIDGE_UNITY",
+    "target": "#2-5-0/1"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-2-9-0"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-2-9-1"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-2-9-2"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-2"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-3"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1-5"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-0"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-5"
+  },
+  {
+    "source": "#0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0-0"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "TRIKA_SPANDA_PRAKASA",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "TRIKA_SPANDA_VIMARSA",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "QUATERNAL_SPANDA_BRIDGE",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "QUATERNAL_CREATIVE_SYNTHESIS",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "QUATERNAL_SPANDA_SOURCE",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "QUATERNAL_DIAGONAL_TRANSCENDENCE",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "ABHINAVAGUPTA_RESONANCE_03",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "FIRST_CRYSTALLIZATION_ORIGINAL",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "FIRST_CRYSTALLIZATION_REFLECTION",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "PROVIDES_IMPLICATE_FOUNDATION",
+    "target": "#1-2-0"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "PROVIDES_EXPLICATE_FOUNDATION",
+    "target": "#1-2-4"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "HOLY_SPIRIT_SPANDA_GENDER_UNITY",
+    "target": "#2-5-0/1"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "HOLY_SPIRIT_SPANDA_GENDER_UNITY",
+    "target": "#2-5-4"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "SYNTHESIS_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1"
+  },
+  {
+    "source": "#0-1-0/1",
+    "type": "TRIADIC_PRINCIPLE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1"
+  },
+  {
+    "source": "#0-2",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-2",
+    "type": "DEVELOPS_INTO",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-2",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-2",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-2",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-2",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-2",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-9"
+  },
+  {
+    "source": "#0-2",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-2",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-3-11"
+  },
+  {
+    "source": "#0-2",
+    "type": "PROVIDES_VOID_OPERATIONAL_FOUNDATION",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-2",
+    "type": "PROVIDES_VOID_OPERATIONAL_FOUNDATION",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "QUATERNAL_SUPREME_INTEGRATION",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "QUATERNAL_SUPREME_INTEGRATION",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "QUATERNAL_SUPREME_INTEGRATION",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "QUATERNAL_DIAGONAL_FOUNDATION",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-0"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-1"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-3"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-4"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-5"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-6"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-7"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HAS_VIRTUE_COMPONENT",
+    "target": "#0-2-9-8"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "ABHINAVAGUPTA_RESONANCE_04",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "NESTS_COMPLETE_NUMBER_LANGUAGE",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "NESTS_ARCHETYPE_8",
+    "target": "#0-3-11"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "FORMULATION_SYNTAX_CORRESPONDENCE",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "ARCHETYPAL_RESONANCE_VOID_CROWN_COMPLETION",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "ARCHETYPAL_RESONANCE_VOID_CROWN_COMPLETION",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "PROVIDES_WHOLENESS_COMPLETION_FOR",
+    "target": "#1-4.5"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CROWNS_VORTEX_SYSTEM",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "VIBRATIONAL_SUBTRACTION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "EVE_CHARGE",
+    "target": "#2-1-1"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "ADAM_EVE_UNION",
+    "target": "#2-1-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "ADAM_EVE_UNION",
+    "target": "#2-1-4"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "ARCHETYPAL_WHOLENESS_BRIDGE",
+    "target": "#2-5"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-10"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-3"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-9"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "CONTAINS_ARCHETYPAL_NUMBER",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-0"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-1"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-2"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-3"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-4"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-5"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-6"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-7"
+  },
+  {
+    "source": "#0-2-9",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-2-9-8"
+  },
+  {
+    "source": "#0-2-9-0",
+    "type": "VIRTUE_FOUNDATION",
+    "target": "#0-2-9-1"
+  },
+  {
+    "source": "#0-2-9-0",
+    "type": "VIRTUE_R_FACTOR_CORRESPONDENCE",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-2-9-0",
+    "type": "DIVINE_LOVE_SOURCE",
+    "target": "#2-5-0/1"
+  },
+  {
+    "source": "#0-2-9-0",
+    "type": "VOID_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-0"
+  },
+  {
+    "source": "#0-2-9-0",
+    "type": "VOID_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-17"
+  },
+  {
+    "source": "#0-2-9-0",
+    "type": "META_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-0"
+  },
+  {
+    "source": "#0-2-9-0",
+    "type": "META_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-1"
+  },
+  {
+    "source": "#0-2-9-0",
+    "type": "META_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-17"
+  },
+  {
+    "source": "#0-2-9-1",
+    "type": "VIRTUE_STRUCTURAL_BASIS",
+    "target": "#0-2-9-2"
+  },
+  {
+    "source": "#0-2-9-1",
+    "type": "VIRTUE_SYNTHESIS_BRIDGE",
+    "target": "#0-2-9-3"
+  },
+  {
+    "source": "#0-2-9-1",
+    "type": "PRIMORDIAL_MATRIX_FOUNDATION",
+    "target": "#2-5-0/1"
+  },
+  {
+    "source": "#0-2-9-1",
+    "type": "VOID_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-11"
+  },
+  {
+    "source": "#0-2-9-1",
+    "type": "VIRTUE_ATTRIBUTE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-10"
+  },
+  {
+    "source": "#0-2-9-1",
+    "type": "VIRTUE_ATTRIBUTE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-11"
+  },
+  {
+    "source": "#0-2-9-1",
+    "type": "TRUTH_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-10"
+  },
+  {
+    "source": "#0-2-9-1",
+    "type": "TRUTH_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-11"
+  },
+  {
+    "source": "#0-2-9-2",
+    "type": "VIRTUE_SYNTHESIS_MEDIATION",
+    "target": "#0-2-9-3"
+  },
+  {
+    "source": "#0-2-9-2",
+    "type": "VIRTUE_SYNTHESIS_MEDIATION",
+    "target": "#0-2-9-4"
+  },
+  {
+    "source": "#0-2-9-2",
+    "type": "VIRTUE_SYNTHESIS_MEDIATION",
+    "target": "#0-2-9-5"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "DIVINE_ACT_PROGRESSION",
+    "target": "#0-2-9-4"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "VIRTUE_R_FACTOR_CORRESPONDENCE",
+    "target": "#0-3-10-2"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "VOID_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-21"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "VIRTUE_ATTRIBUTE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-21"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "VIRTUE_ATTRIBUTE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-22"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "VIRTUE_ATTRIBUTE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-23"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "JOY_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-21"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "JOY_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-22"
+  },
+  {
+    "source": "#0-2-9-3",
+    "type": "JOY_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-23"
+  },
+  {
+    "source": "#0-2-9-4",
+    "type": "DIVINE_ACT_PROGRESSION",
+    "target": "#0-2-9-5"
+  },
+  {
+    "source": "#0-2-9-4",
+    "type": "VIRTUE_R_FACTOR_CORRESPONDENCE",
+    "target": "#0-3-10-3"
+  },
+  {
+    "source": "#0-2-9-4",
+    "type": "GOODNESS_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-5"
+  },
+  {
+    "source": "#0-2-9-4",
+    "type": "GOODNESS_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-27"
+  },
+  {
+    "source": "#0-2-9-4",
+    "type": "GOODNESS_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-28"
+  },
+  {
+    "source": "#0-2-9-5",
+    "type": "DIVINE_ACT_PROGRESSION",
+    "target": "#0-2-9-6"
+  },
+  {
+    "source": "#0-2-9-5",
+    "type": "VIRTUE_R_FACTOR_CORRESPONDENCE",
+    "target": "#0-3-10-4"
+  },
+  {
+    "source": "#0-2-9-5",
+    "type": "VOID_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-16"
+  },
+  {
+    "source": "#0-2-9-5",
+    "type": "BEAUTY_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-8"
+  },
+  {
+    "source": "#0-2-9-5",
+    "type": "BEAUTY_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-16"
+  },
+  {
+    "source": "#0-2-9-5",
+    "type": "BEAUTY_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-12"
+  },
+  {
+    "source": "#0-2-9-6",
+    "type": "DIVINE_ACT_PROGRESSION",
+    "target": "#0-2-9-7"
+  },
+  {
+    "source": "#0-2-9-6",
+    "type": "VIRTUE_R_FACTOR_CORRESPONDENCE",
+    "target": "#0-3-10-5"
+  },
+  {
+    "source": "#0-2-9-7",
+    "type": "DIVINE_ACT_PROGRESSION",
+    "target": "#0-2-9-8"
+  },
+  {
+    "source": "#0-2-9-7",
+    "type": "VIRTUE_R_FACTOR_CORRESPONDENCE",
+    "target": "#0-3-10-6"
+  },
+  {
+    "source": "#0-2-9-7",
+    "type": "DIVINE_WISDOM_SOURCE",
+    "target": "#2-5-0/1"
+  },
+  {
+    "source": "#0-2-9-7",
+    "type": "WISDOM_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-26"
+  },
+  {
+    "source": "#0-2-9-7",
+    "type": "WISDOM_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-12"
+  },
+  {
+    "source": "#0-2-9-7",
+    "type": "WISDOM_VIRTUE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-3"
+  },
+  {
+    "source": "#0-2-9-8",
+    "type": "VIRTUE_RETURN_TO_SOURCE",
+    "target": "#0-2-9-1"
+  },
+  {
+    "source": "#0-2-9-8",
+    "type": "VIRTUE_R_FACTOR_CORRESPONDENCE",
+    "target": "#0-3-10-7"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-2"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-3"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-9"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-3-11"
+  },
+  {
+    "source": "#0-3",
+    "type": "DEVELOPS_INTO",
+    "target": "#0-4"
+  },
+  {
+    "source": "#0-3",
+    "type": "EMERGES_FROM_VOID_FOUNDATION",
+    "target": "#0-0"
+  },
+  {
+    "source": "#0-3",
+    "type": "PROVIDES_ARCHETYPAL_NUMBER_FOUNDATION",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-3",
+    "type": "PROVIDES_ARCHETYPAL_NUMBER_FOUNDATION",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-3",
+    "type": "SEEDS_HARMONIC_EXPANSION",
+    "target": "#1-4.4"
+  },
+  {
+    "source": "#0-3",
+    "type": "PROVIDES_TOPOLOGICAL_EXTENSION",
+    "target": "#1-4.4"
+  },
+  {
+    "source": "#0-3",
+    "type": "ACHIEVES_FAMILY_HARMONY",
+    "target": "#0-4.5/0-5"
+  },
+  {
+    "source": "#0-3",
+    "type": "EXPRESSES_AS_FATHER",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-3",
+    "type": "EXPRESSES_AS_SON",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-3",
+    "type": "EXPRESSES_AS_MOTHER",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-3",
+    "type": "EXPRESSES_AS_DAUGHTER",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-3",
+    "type": "BUILDS_UPON_BINARY_DYNAMICS",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-3",
+    "type": "COMPLETES_QUATERNAL_STRUCTURE",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HAS_CONSTITUENT",
+    "target": "#0-3-0/1-0"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HAS_CONSTITUENT",
+    "target": "#0-3-0/1-1"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "ABHINAVAGUPTA_RESONANCE_05",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "GROUNDS_PRINCIPLE",
+    "target": "#0-3-8-0/1"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-3-6-2"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-3-8-0/1"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "ARCHETYPAL_MANIFESTATION",
+    "target": "#2-4.0-0/1-1"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "ENABLES_INFINITE_MIRRORING",
+    "target": "#2-4.0"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-2"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-3"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-9"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-11"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-5/0"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1-1"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1-2"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-3-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-3-0/1-0",
+    "type": "SYNTHESIZES_WITH",
+    "target": "#0-3-0/1-1"
+  },
+  {
+    "source": "#0-3-0/1-0",
+    "type": "G3_TOPOLOGY_CONSTITUENT_17",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-0/1-0",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-3-0/1-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-0/1-0"
+  },
+  {
+    "source": "#0-3-0/1-0",
+    "type": "SYMBOL_INTERPENETRATION",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-3-0/1-1",
+    "type": "SYNTHESIZES_WITH",
+    "target": "#0-3-0/1-0"
+  },
+  {
+    "source": "#0-3-0/1-1",
+    "type": "G3_TOPOLOGY_CONSTITUENT_18",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-0/1-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-0/1-1"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "HAS_DIVINE_ACT",
+    "target": "#0-3-10-0/1"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "HAS_DIVINE_ACT",
+    "target": "#0-3-10-2"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "HAS_DIVINE_ACT",
+    "target": "#0-3-10-3"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "HAS_DIVINE_ACT",
+    "target": "#0-3-10-4"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "HAS_DIVINE_ACT",
+    "target": "#0-3-10-5"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "HAS_DIVINE_ACT",
+    "target": "#0-3-10-6"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "HAS_DIVINE_ACT",
+    "target": "#0-3-10-7"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ABHINAVAGUPTA_RESONANCE_14",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "PROVIDES_DIVINE_ACTION_FRAMEWORK",
+    "target": "#1-4"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "SYNTHESIZES_INTO",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "EVE_CHARGE",
+    "target": "#2-1-5"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "FORMS_EVE_TRINITY",
+    "target": null
+  },
+  {
+    "source": "#0-3-10",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ARCHETYPAL_RESONANCE_BLISSFUL_DANCE",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ARCHETYPAL_RESONANCE_BLISSFUL_DANCE",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-0"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-2"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-4"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-5"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-6"
+  },
+  {
+    "source": "#0-3-10",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-7"
+  },
+  {
+    "source": "#0-3-10-0/1",
+    "type": "ENABLES_DIVINE_ACT",
+    "target": "#0-3-10-2"
+  },
+  {
+    "source": "#0-3-10-0/1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-3-10-0/1"
+  },
+  {
+    "source": "#0-3-10-0/1",
+    "type": "DIVINE_ACT_FOUNDATION",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-3-10-0/1",
+    "type": "CROSS_LEVEL_SYNTAX_CORRESPONDENCE",
+    "target": "#0-2-9-0"
+  },
+  {
+    "source": "#0-3-10-2",
+    "type": "ENABLES_DIVINE_ACT",
+    "target": "#0-3-10-3"
+  },
+  {
+    "source": "#0-3-10-2",
+    "type": "DIVINE_ACT_MANIFESTATION",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-3-10-2",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-21"
+  },
+  {
+    "source": "#0-3-10-2",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-22"
+  },
+  {
+    "source": "#0-3-10-2",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-23"
+  },
+  {
+    "source": "#0-3-10-3",
+    "type": "ENABLES_DIVINE_ACT",
+    "target": "#0-3-10-4"
+  },
+  {
+    "source": "#0-3-10-3",
+    "type": "DIVINE_ACT_MANIFESTATION",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-3-10-3",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-5"
+  },
+  {
+    "source": "#0-3-10-3",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-27"
+  },
+  {
+    "source": "#0-3-10-3",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-28"
+  },
+  {
+    "source": "#0-3-10-4",
+    "type": "ENABLES_DIVINE_ACT",
+    "target": "#0-3-10-5"
+  },
+  {
+    "source": "#0-3-10-4",
+    "type": "DIVINE_ACT_MANIFESTATION",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-3-10-4",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-8"
+  },
+  {
+    "source": "#0-3-10-4",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-20"
+  },
+  {
+    "source": "#0-3-10-4",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-24"
+  },
+  {
+    "source": "#0-3-10-5",
+    "type": "ENABLES_DIVINE_ACT",
+    "target": "#0-3-10-6"
+  },
+  {
+    "source": "#0-3-10-5",
+    "type": "DIVINE_ACT_MANIFESTATION",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-3-10-5",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-8"
+  },
+  {
+    "source": "#0-3-10-5",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-23"
+  },
+  {
+    "source": "#0-3-10-6",
+    "type": "ENABLES_DIVINE_ACT",
+    "target": "#0-3-10-7"
+  },
+  {
+    "source": "#0-3-10-6",
+    "type": "DIVINE_ACT_MANIFESTATION",
+    "target": "#0-3-9"
+  },
+  {
+    "source": "#0-3-10-6",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-0"
+  },
+  {
+    "source": "#0-3-10-6",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-2"
+  },
+  {
+    "source": "#0-3-10-6",
+    "type": "DIVINE_ACT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-27"
+  },
+  {
+    "source": "#0-3-10-7",
+    "type": "COMPLETES_CYCLE_TO",
+    "target": "#0-3-10-0/1"
+  },
+  {
+    "source": "#0-3-10-7",
+    "type": "DIVINE_ACT_MANIFESTATION",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "CONTAINS_FIRST_WORLD",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "CONTAINS_HIGHER_DYNAMICS",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "CONTAINS_HIGHER_DYNAMICS",
+    "target": "#0-3-9"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "CONTAINS_HIGHER_DYNAMICS",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "ABHINAVAGUPTA_RESONANCE_15",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-11"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "PROVIDES_STRUCTURAL_REFLECTION_FOR",
+    "target": "#1-4.4"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "ADAM_CHARGE",
+    "target": "#2-1-0"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "ARCHETYPAL_STRUCTURE_BRIDGE",
+    "target": "#2-5"
+  },
+  {
+    "source": "#0-3-11",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-12"
+  },
+  {
+    "source": "#0-3-2",
+    "type": "ABHINAVAGUPTA_RESONANCE_06",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-2",
+    "type": "PURE_POTENTIAL_MANIFESTATION",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-3-2",
+    "type": "ARCHETYPAL_RESONANCE_PURE_POTENTIAL",
+    "target": "#1-2-0"
+  },
+  {
+    "source": "#0-3-2",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-0"
+  },
+  {
+    "source": "#0-3-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-2"
+  },
+  {
+    "source": "#0-3-3",
+    "type": "ABHINAVAGUPTA_RESONANCE_07",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-3",
+    "type": "ACTIVE_AGENCY_MANIFESTATION",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-3-3",
+    "type": "ARCHETYPAL_RESONANCE_ACTIVE_AGENCY",
+    "target": "#1-2-1"
+  },
+  {
+    "source": "#0-3-3",
+    "type": "HIDDEN_AGENCY_AWAKENS",
+    "target": "#0-3-3"
+  },
+  {
+    "source": "#0-3-3",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-3"
+  },
+  {
+    "source": "#0-3-3",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-3"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "CONTAINS_AS_CONSTITUENT",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "CONTAINS_AS_CONSTITUENT",
+    "target": "#0-3-2"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "CONTAINS_AS_CONSTITUENT",
+    "target": "#0-3-3"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "ABHINAVAGUPTA_RESONANCE_08",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "ARCHETYPAL_NUMBER_FOUNDATION_ORIGINAL",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "ARCHETYPAL_NUMBER_FOUNDATION_REFLECTION",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "ARCHETYPAL_RESONANCE_FOUNDATIONAL_LOGIC",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "ARCHETYPAL_RESONANCE_FOUNDATIONAL_LOGIC",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "PROVIDES_IMPLICATE_FOUNDATION",
+    "target": "#1-2-5"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "CONCEPTUALLY_DEFINES",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "CONCEPTUALLY_DEFINES",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "ARCHETYPAL_IDENTITY",
+    "target": "#2-4.0-0/1"
+  },
+  {
+    "source": "#0-3-4",
+    "type": "POWERS_NONDUAL_MANIFESTATION",
+    "target": "#2-4.0"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "ADAM_EVE_COMPLEMENT",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "ABHINAVAGUPTA_RESONANCE_09",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "PROVIDES_EXPLICATE_FOUNDATION",
+    "target": "#1-2-2"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "ARCHETYPAL_RESONANCE_RELATIONAL_EMPTINESS",
+    "target": "#1-2-2"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "ADAM_CHARGE",
+    "target": "#2-1-0"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-18"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-5",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-0"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-1"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-2"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-3"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-4"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-5"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-6"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-7"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-8"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-9"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-10"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HAS_ZODIACAL_COMPONENT",
+    "target": "#0-3-6-11"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "ABHINAVAGUPTA_RESONANCE_10",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "CROSS_LEVEL_SYNTAX_CORRESPONDENCE",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "PROVIDES_ZODIACAL_GRAMMATICAL_FOUNDATION",
+    "target": "#1-4"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "ENABLES_TRINITARIAN_MEDIATION_FOR",
+    "target": "#1-4.3"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "MEDIATING_INTELLIGENCE",
+    "target": "#2-1-0-3"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "EVE_CHARGE",
+    "target": "#2-1-1"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "FORMS_EVE_TRINITY",
+    "target": null
+  },
+  {
+    "source": "#0-3-6",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-7"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-0"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-1"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-2"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-3"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-4"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-5"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-6"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-7"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-8"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-9"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-10"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-11"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-12"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-13"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-14"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-15"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-16"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-17"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-18"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-19"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-20"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-21"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-22"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-23"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-24"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-25"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-26"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-27"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-28"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-29"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-30"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-31"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-32"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-0"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-1"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-2"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-3"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-4"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-5"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-6"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-7"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-8"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-9"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-10"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-11"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-12"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-13"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-14"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-15"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-16"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-17"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-18"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-19"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-20"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-21"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-22"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-23"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-24"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-25"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-26"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-27"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-28"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-29"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-30"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-31"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-32"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-0"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-1"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-2"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-3"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-4"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-5"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-6"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-7"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-8"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-9"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-10"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-11"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-12"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-13"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-14"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-15"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-16"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-17"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-18"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-19"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-20"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-21"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-22"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-23"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-24"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-25"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-26"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-27"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-28"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-29"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-30"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-31"
+  },
+  {
+    "source": "#0-3-6",
+    "type": "LINGUISTIC_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-32"
+  },
+  {
+    "source": "#0-3-6-0",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-1"
+  },
+  {
+    "source": "#0-3-6-0",
+    "type": "SYMBOL_INTERACTION",
+    "target": "#0-3-6-4"
+  },
+  {
+    "source": "#0-3-6-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-6-0"
+  },
+  {
+    "source": "#0-3-6-0",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-3-6-0",
+    "type": "MODULATES_AS",
+    "target": "#2-3-1-0"
+  },
+  {
+    "source": "#0-3-6-1",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-2"
+  },
+  {
+    "source": "#0-3-6-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-6-1"
+  },
+  {
+    "source": "#0-3-6-1",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-3-6-1",
+    "type": "SYMBOL_INTERPENETRATION",
+    "target": "#0-3-6-0"
+  },
+  {
+    "source": "#0-3-6-1",
+    "type": "MODULATES_AS",
+    "target": "#2-3-2-0"
+  },
+  {
+    "source": "#0-3-6-10",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-11"
+  },
+  {
+    "source": "#0-3-6-10",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-3-6-10",
+    "type": "MODULATES_AS",
+    "target": "#2-3-3-2"
+  },
+  {
+    "source": "#0-3-6-11",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-0"
+  },
+  {
+    "source": "#0-3-6-11",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-3-6-11",
+    "type": "MODULATES_AS",
+    "target": "#2-3-4-2"
+  },
+  {
+    "source": "#0-3-6-2",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-3"
+  },
+  {
+    "source": "#0-3-6-2",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-3-6-2",
+    "type": "MODULATES_AS",
+    "target": "#2-3-3-0"
+  },
+  {
+    "source": "#0-3-6-3",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-4"
+  },
+  {
+    "source": "#0-3-6-3",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-3-0/1-1"
+  },
+  {
+    "source": "#0-3-6-3",
+    "type": "MODULATES_AS",
+    "target": "#2-3-4-0"
+  },
+  {
+    "source": "#0-3-6-4",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-5"
+  },
+  {
+    "source": "#0-3-6-4",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-3-6-4",
+    "type": "MODULATES_AS",
+    "target": "#2-3-1-1"
+  },
+  {
+    "source": "#0-3-6-5",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-6"
+  },
+  {
+    "source": "#0-3-6-5",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-3-0/1-0"
+  },
+  {
+    "source": "#0-3-6-5",
+    "type": "MODULATES_AS",
+    "target": "#2-3-2-1"
+  },
+  {
+    "source": "#0-3-6-6",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-7"
+  },
+  {
+    "source": "#0-3-6-6",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-6-6",
+    "type": "MODULATES_AS",
+    "target": "#2-3-3-1"
+  },
+  {
+    "source": "#0-3-6-7",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-8"
+  },
+  {
+    "source": "#0-3-6-7",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-3-6-7",
+    "type": "MODULATES_AS",
+    "target": "#2-3-4-1"
+  },
+  {
+    "source": "#0-3-6-8",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-9"
+  },
+  {
+    "source": "#0-3-6-8",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-3-6-8",
+    "type": "MODULATES_AS",
+    "target": "#2-3-1-2"
+  },
+  {
+    "source": "#0-3-6-9",
+    "type": "SEASONAL_SUCCESSOR",
+    "target": "#0-3-6-10"
+  },
+  {
+    "source": "#0-3-6-9",
+    "type": "ZODIACAL_SEASONAL_RESONANCE",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-6-9",
+    "type": "MODULATES_AS",
+    "target": "#2-3-2-2"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "CONTAINS_ARCHETYPAL_FOUNDATION",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "CONTAINS_ARCHETYPAL_FOUNDATION",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "CONTAINS_ARCHETYPAL_FOUNDATION",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "ADAM_EVE_COMPLEMENT",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "ABHINAVAGUPTA_RESONANCE_11",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "PROVIDES_QUATERNARY_WHOLENESS_FOUNDATION",
+    "target": "#1-4"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "ADAM_CHARGE",
+    "target": "#2-1-2"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-23"
+  },
+  {
+    "source": "#0-3-7",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "HAS_MONO_POLY_COMPONENT",
+    "target": "#0-3-8-0/1"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "HAS_MONO_POLY_COMPONENT",
+    "target": "#0-3-8-2"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "HAS_MONO_POLY_COMPONENT",
+    "target": "#0-3-8-3"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "HAS_MONO_POLY_COMPONENT",
+    "target": "#0-3-8-4"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "HAS_MONO_POLY_COMPONENT",
+    "target": "#0-3-8-5"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "HAS_MONO_POLY_COMPONENT",
+    "target": "#0-3-8-6"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "HAS_MONO_POLY_COMPONENT",
+    "target": "#0-3-8-7"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "ABHINAVAGUPTA_RESONANCE_12",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "SYNTHESIZES_INTO",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "ENABLES_QUINTESSENTIAL_SYNTHESIS_THROUGH",
+    "target": "#1-4.5"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "EVE_CHARGE",
+    "target": "#2-1-3"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "FORMS_EVE_TRINITY",
+    "target": null
+  },
+  {
+    "source": "#0-3-8",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-8"
+  },
+  {
+    "source": "#0-3-8",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-3-8-0/1",
+    "type": "SYMBOL_INTERACTION",
+    "target": "#0-3-8-7"
+  },
+  {
+    "source": "#0-3-8-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-8-0/1"
+  },
+  {
+    "source": "#0-3-8-0/1",
+    "type": "NEOPLATONIC_VOID_OPERATION",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-8-0/1",
+    "type": "MONO_COMPONENT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-8"
+  },
+  {
+    "source": "#0-3-8-0/1",
+    "type": "MONO_COMPONENT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-9"
+  },
+  {
+    "source": "#0-3-8-2",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-3-8-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-8-2"
+  },
+  {
+    "source": "#0-3-8-2",
+    "type": "NEOPLATONIC_VOID_OPERATION",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-8-2",
+    "type": "POLY_COMPONENT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-0"
+  },
+  {
+    "source": "#0-3-8-2",
+    "type": "POLY_COMPONENT_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-1"
+  },
+  {
+    "source": "#0-3-8-3",
+    "type": "NEOPLATONIC_VOID_OPERATION",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-8-4",
+    "type": "NEOPLATONIC_VOID_OPERATION",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-8-5",
+    "type": "SHADOW_OPPOSITE",
+    "target": "#0-3-8-7"
+  },
+  {
+    "source": "#0-3-8-5",
+    "type": "NEOPLATONIC_VOID_OPERATION",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-8-6",
+    "type": "NEOPLATONIC_VOID_OPERATION",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-3-8-7",
+    "type": "LIGHT_OPPOSITE",
+    "target": "#0-3-8-5"
+  },
+  {
+    "source": "#0-3-8-7",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-3-8-7",
+    "type": "NEOPLATONIC_VOID_OPERATION",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-3-8-7",
+    "type": "CROSS_LEVEL_SYNTAX_CORRESPONDENCE",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-3-8-7",
+    "type": "MONOPOLY_SYNTHESIS_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-1"
+  },
+  {
+    "source": "#0-3-8-7",
+    "type": "MONOPOLY_SYNTHESIS_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-10"
+  },
+  {
+    "source": "#0-3-9",
+    "type": "ADAM_EVE_COMPLEMENT",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-3-9",
+    "type": "ABHINAVAGUPTA_RESONANCE_13",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-3-9",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-9",
+    "type": "VIBRATIONAL_MULTIPLICATION",
+    "target": "#2-0"
+  },
+  {
+    "source": "#0-3-9",
+    "type": "ADAM_CHARGE",
+    "target": "#2-1-4"
+  },
+  {
+    "source": "#0-3-9",
+    "type": "ARCHETYPAL_DIVINE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-30"
+  },
+  {
+    "source": "#0-3-9",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-3-9"
+  },
+  {
+    "source": "#0-4",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1"
+  },
+  {
+    "source": "#0-4",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-4",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-4",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-4",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-4",
+    "type": "DEVELOPS_INTO",
+    "target": "#0-5"
+  },
+  {
+    "source": "#0-4",
+    "type": "PROVIDES_CONTEXTUAL_FOUNDATION_FOR",
+    "target": "#1-3-4"
+  },
+  {
+    "source": "#0-4",
+    "type": "ENABLES_QL_FLOWERING_THROUGH",
+    "target": "#1-4"
+  },
+  {
+    "source": "#0-4",
+    "type": "SOURCES_HARMONIC_VORTEX_THROUGH",
+    "target": "#1-2"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1-0"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1-1"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1-2"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1-3"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1-4"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1-5"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "PROVIDES_ZERO_LOGIC_FOUNDATION",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "PROVIDES_ZERO_LOGIC_FOUNDATION",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "CONTEXT_FRAME_GENERATES",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-4.0/1"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "PROVIDES_PROCESSUAL_CONTEXT_FOR",
+    "target": "#1-3-4.0/1"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "PROVIDES_EQUIVALENCE_FOR_GENESIS",
+    "target": "#1-4.0"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "ENABLES_DIFFERENTIATION_IN",
+    "target": "#1-4.1"
+  },
+  {
+    "source": "#0-4.0/1",
+    "type": "ENABLES_SHADOW_REFLECTION_IN",
+    "target": "#1-4.2"
+  },
+  {
+    "source": "#0-4.0/1-0",
+    "type": "QL_POTENTIAL_TO_DEFINITION",
+    "target": "#0-4.0/1-1"
+  },
+  {
+    "source": "#0-4.0/1-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1-0"
+  },
+  {
+    "source": "#0-4.0/1-0",
+    "type": "SEED_POTENTIAL_FOUNDATION",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-4.0/1-1",
+    "type": "QL_DEFINITION_TO_PROCESS",
+    "target": "#0-4.0/1-2"
+  },
+  {
+    "source": "#0-4.0/1-1",
+    "type": "INSTANTIATES_VOID_OPERATION",
+    "target": "#0-0-0"
+  },
+  {
+    "source": "#0-4.0/1-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1-1"
+  },
+  {
+    "source": "#0-4.0/1-1",
+    "type": "DEFINING_NEGATION_OPERATION",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-4.0/1-2",
+    "type": "QL_PROCESS_TO_MEDIATION",
+    "target": "#0-4.0/1-3"
+  },
+  {
+    "source": "#0-4.0/1-2",
+    "type": "INSTANTIATES_VOID_OPERATION",
+    "target": "#0-0-1"
+  },
+  {
+    "source": "#0-4.0/1-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1-2"
+  },
+  {
+    "source": "#0-4.0/1-2",
+    "type": "PROCESS_AFFIRMATION_OPERATION",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-4.0/1-3",
+    "type": "QL_MEDIATION_TO_CONTEXT",
+    "target": "#0-4.0/1-4"
+  },
+  {
+    "source": "#0-4.0/1-3",
+    "type": "INSTANTIATES_VOID_OPERATION",
+    "target": "#0-1-0/1"
+  },
+  {
+    "source": "#0-4.0/1-3",
+    "type": "SELF_REFLECTION_MEDIATION",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-4.0/1-3",
+    "type": "ENABLES_REFLECTIVE_AWARENESS",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-4.0/1-4",
+    "type": "QL_CONTEXT_TO_INTEGRATION",
+    "target": "#0-4.0/1-5"
+  },
+  {
+    "source": "#0-4.0/1-4",
+    "type": "INSTANTIATES_VOID_OPERATION",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-4.0/1-4",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1-4"
+  },
+  {
+    "source": "#0-4.0/1-4",
+    "type": "CONTEXTUAL_INDETERMINACY_FIELD",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-4.0/1-4",
+    "type": "ENABLES_RELATIONAL_ACTUALIZATION",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-4.0/1-4",
+    "type": "PERCENTILE_OPERATOR_GENESIS",
+    "target": "#1-3-5"
+  },
+  {
+    "source": "#0-4.0/1-5",
+    "type": "QL_MOBIUS_RETURN",
+    "target": "#0-4.0/1-0"
+  },
+  {
+    "source": "#0-4.0/1-5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1-5"
+  },
+  {
+    "source": "#0-4.0/1-5",
+    "type": "NON_DUAL_SYNTHESIS_COMPLETION",
+    "target": "#1-0"
+  },
+  {
+    "source": "#0-4.0/1-5",
+    "type": "QUADRATIC_UNDERSTANDING_INTEGRATION",
+    "target": "#1-1"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2-0"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2-1"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2-2"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2-3"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2-4"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2-5"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "CONTEXT_FRAME_GENERATES",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "RETRIEVES_FOUNDATIONAL_ELEMENT",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "POTENTIATES_PARASHAKTI_TRACK",
+    "target": "#1-3-2"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "HOLOGRAPHIC_CORRESPONDENCE_WITH",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-4.0/1/2",
+    "type": "PROVIDES_DUAL_NON_DUAL_CONTEXT_FOR",
+    "target": "#1-3-4.0/1/2"
+  },
+  {
+    "source": "#0-4.0/1/2-0",
+    "type": "QL_POTENTIAL_TO_DEFINITION",
+    "target": "#0-4.0/1/2-1"
+  },
+  {
+    "source": "#0-4.0/1/2-0",
+    "type": "IMAGINATIVE_POTENTIAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-8"
+  },
+  {
+    "source": "#0-4.0/1/2-0",
+    "type": "IMAGINATIVE_POTENTIAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-3"
+  },
+  {
+    "source": "#0-4.0/1/2-0",
+    "type": "IMAGINATIVE_POTENTIAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-23"
+  },
+  {
+    "source": "#0-4.0/1/2-1",
+    "type": "QL_DEFINITION_TO_PROCESS",
+    "target": "#0-4.0/1/2-2"
+  },
+  {
+    "source": "#0-4.0/1/2-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2-1"
+  },
+  {
+    "source": "#0-4.0/1/2-1",
+    "type": "CREATIVE_PERMUTATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-21"
+  },
+  {
+    "source": "#0-4.0/1/2-2",
+    "type": "QL_PROCESS_TO_MEDIATION",
+    "target": "#0-4.0/1/2-3"
+  },
+  {
+    "source": "#0-4.0/1/2-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2-2"
+  },
+  {
+    "source": "#0-4.0/1/2-2",
+    "type": "CREATIVE_PERMUTATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-22"
+  },
+  {
+    "source": "#0-4.0/1/2-3",
+    "type": "QL_MEDIATION_TO_CONTEXT",
+    "target": "#0-4.0/1/2-4"
+  },
+  {
+    "source": "#0-4.0/1/2-3",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2-3"
+  },
+  {
+    "source": "#0-4.0/1/2-4",
+    "type": "QL_CONTEXT_TO_INTEGRATION",
+    "target": "#0-4.0/1/2-5"
+  },
+  {
+    "source": "#0-4.0/1/2-4",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2-4"
+  },
+  {
+    "source": "#0-4.0/1/2-5",
+    "type": "QL_MOBIUS_RETURN",
+    "target": "#0-4.0/1/2-0"
+  },
+  {
+    "source": "#0-4.0/1/2-5",
+    "type": "CULMINATES_IN_WHOLENESS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-4.0/1/2-5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2-5"
+  },
+  {
+    "source": "#0-4.0/1/2-5",
+    "type": "CREATIVE_PERMUTATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-23"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2/3-0"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2/3-1"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2/3-2"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2/3-3"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2/3-4"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.0/1/2/3-5"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "CONTEXT_FRAME_GENERATES",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "RETRIEVES_FOUNDATIONAL_ELEMENT",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "PROVIDES_TEMPORAL_MANIFESTATION_ELEMENTS",
+    "target": "#1-2-3"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "PROVIDES_TEMPORAL_MANIFESTATION_ELEMENTS",
+    "target": "#1-2-4"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "POTENTIATES_SPANDA_MANIFESTATION",
+    "target": "#1-3"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "POTENTIATES_SPANDA_MANIFESTATION",
+    "target": "#1-3"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "PROVIDES_MEDIATING_CONTEXT_FOR",
+    "target": "#1-3-4.0/1/2/3"
+  },
+  {
+    "source": "#0-4.0/1/2/3",
+    "type": "MANIFESTATION_ENGINE_BRIDGE",
+    "target": "#2-5"
+  },
+  {
+    "source": "#0-4.0/1/2/3-0",
+    "type": "QL_POTENTIAL_TO_DEFINITION",
+    "target": "#0-4.0/1/2/3-1"
+  },
+  {
+    "source": "#0-4.0/1/2/3-0",
+    "type": "COMPUTABLE_RESOLUTION_OF",
+    "target": "#0-4.0/1/2-0"
+  },
+  {
+    "source": "#0-4.0/1/2/3-1",
+    "type": "QL_DEFINITION_TO_PROCESS",
+    "target": "#0-4.0/1/2/3-2"
+  },
+  {
+    "source": "#0-4.0/1/2/3-1",
+    "type": "COMPUTABLE_RESOLUTION_OF",
+    "target": "#0-4.0/1/2-1"
+  },
+  {
+    "source": "#0-4.0/1/2/3-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2/3-1"
+  },
+  {
+    "source": "#0-4.0/1/2/3-1",
+    "type": "TEMPORAL_POLE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-32"
+  },
+  {
+    "source": "#0-4.0/1/2/3-2",
+    "type": "QL_PROCESS_TO_MEDIATION",
+    "target": "#0-4.0/1/2/3-3"
+  },
+  {
+    "source": "#0-4.0/1/2/3-2",
+    "type": "COMPUTABLE_RESOLUTION_OF",
+    "target": "#0-4.0/1/2-2"
+  },
+  {
+    "source": "#0-4.0/1/2/3-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2/3-2"
+  },
+  {
+    "source": "#0-4.0/1/2/3-2",
+    "type": "TEMPORAL_POLE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-21"
+  },
+  {
+    "source": "#0-4.0/1/2/3-3",
+    "type": "QL_MEDIATION_TO_CONTEXT",
+    "target": "#0-4.0/1/2/3-4"
+  },
+  {
+    "source": "#0-4.0/1/2/3-3",
+    "type": "COMPUTABLE_RESOLUTION_OF",
+    "target": "#0-4.0/1/2-3"
+  },
+  {
+    "source": "#0-4.0/1/2/3-3",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2/3-3"
+  },
+  {
+    "source": "#0-4.0/1/2/3-3",
+    "type": "TEMPORAL_POLE_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-22"
+  },
+  {
+    "source": "#0-4.0/1/2/3-4",
+    "type": "QL_CONTEXT_TO_INTEGRATION",
+    "target": "#0-4.0/1/2/3-5"
+  },
+  {
+    "source": "#0-4.0/1/2/3-4",
+    "type": "COMPUTABLE_RESOLUTION_OF",
+    "target": "#0-4.0/1/2-4"
+  },
+  {
+    "source": "#0-4.0/1/2/3-4",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2/3-4"
+  },
+  {
+    "source": "#0-4.0/1/2/3-5",
+    "type": "QL_MOBIUS_RETURN",
+    "target": "#0-4.0/1/2/3-0"
+  },
+  {
+    "source": "#0-4.0/1/2/3-5",
+    "type": "COMPUTABLE_RESOLUTION_OF",
+    "target": "#0-4.0/1/2-5"
+  },
+  {
+    "source": "#0-4.0/1/2/3-5",
+    "type": "CULMINATES_IN_WHOLENESS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-4.0/1/2/3-5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.0/1/2/3-5"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.4.0-4.4/5-0"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.4.0-4.4/5-1"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.4.0-4.4/5-2"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.4.0-4.4/5-3"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.4.0-4.4/5-4"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.4.0-4.4/5-5"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "CONTEXT_FRAME_GENERATES",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "POTENTIATES_MAHAMAYA_TRACK",
+    "target": "#1-3-1"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "POTENTIATES_MAHAMAYA_TRACK",
+    "target": "#1-3-1"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5",
+    "type": "PROVIDES_NESTED_CONTEXT_FOR",
+    "target": "#1-3-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-0",
+    "type": "QL_POTENTIAL_TO_DEFINITION",
+    "target": "#0-4.4.0-4.4/5-1"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-0"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-0"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-1",
+    "type": "QL_DEFINITION_TO_PROCESS",
+    "target": "#0-4.4.0-4.4/5-2"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-1"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-2",
+    "type": "QL_PROCESS_TO_MEDIATION",
+    "target": "#0-4.4.0-4.4/5-3"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-2"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-3",
+    "type": "QL_MEDIATION_TO_CONTEXT",
+    "target": "#0-4.4.0-4.4/5-4"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-3",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-3"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-4",
+    "type": "QL_CONTEXT_TO_INTEGRATION",
+    "target": "#0-4.4.0-4.4/5-5"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-4",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-4"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-5",
+    "type": "QL_MOBIUS_RETURN",
+    "target": "#0-4.4.0-4.4/5-0"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-5",
+    "type": "CULMINATES_IN_WHOLENESS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-4.4.0-4.4/5-5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.4.0-4.4/5-5"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.5/0-5"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-4.5/0-0"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "CONTEXT_FRAME_GENERATES",
+    "target": "#0-4.5/0-0"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-4.5/0",
+    "type": "PROVIDES_RECURSIVE_CONTEXT_FOR",
+    "target": "#1-3-4.5/0"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "GENERATES_ARCHETYPE",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "GENERATES_ARCHETYPE",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "GENERATES_ARCHETYPE",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "GENERATES_ARCHETYPE",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "UNIFIED_FIELD_INTERPENETRATION",
+    "target": "#0-4.0/1"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "UNIFIED_FIELD_INTERPENETRATION",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "UNIFIED_FIELD_INTERPENETRATION",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "UNIFIED_FIELD_INTERPENETRATION",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "CULMINATES_IN_WHOLENESS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0-0"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0-0"
+  },
+  {
+    "source": "#0-4.5/0-0",
+    "type": "PRIMORDIAL_YIN_YANG",
+    "target": "#2-1-0-0"
+  },
+  {
+    "source": "#0-4.5/0-1",
+    "type": "DAUGHTER_OF",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-4.5/0-1",
+    "type": "FEMININE_POLARITY",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-4.5/0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-4.5/0-1",
+    "type": "SUBDOMINANT_YIN_GROUNDING",
+    "target": "#2-1-0-1"
+  },
+  {
+    "source": "#0-4.5/0-1",
+    "type": "EVE_AS_DAUGHTER",
+    "target": "#0-3-6"
+  },
+  {
+    "source": "#0-4.5/0-1",
+    "type": "EVE_AS_DAUGHTER",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-4.5/0-1",
+    "type": "EVE_AS_DAUGHTER",
+    "target": "#0-3-10"
+  },
+  {
+    "source": "#0-4.5/0-1",
+    "type": "BECOMES_AND_CONTAINS",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "FATHER_TO",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "MASCULINE_POLARITY",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "DOMINANT_YANG_ACTIVATION",
+    "target": "#2-1-0-2"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "EMBODIES_FOUNDATIONAL_ELEMENT",
+    "target": "#0-3-2"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "BEGETS_THROUGH",
+    "target": "#0-3-3"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "RELATES_THROUGH",
+    "target": "#0-3-4"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "WITNESSES_THROUGH",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-4.5/0-2",
+    "type": "BEGETS_AND_RECOGNIZES",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-4.5/0-3",
+    "type": "SON_OF",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-4.5/0-3",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-4.5/0-3",
+    "type": "SUBDOMINANT_YANG_MEDIATION",
+    "target": "#2-1-0-3"
+  },
+  {
+    "source": "#0-4.5/0-3",
+    "type": "ADAM_AS_SON",
+    "target": "#0-3-5"
+  },
+  {
+    "source": "#0-4.5/0-3",
+    "type": "ADAM_AS_SON",
+    "target": "#0-3-7"
+  },
+  {
+    "source": "#0-4.5/0-3",
+    "type": "ADAM_AS_SON",
+    "target": "#0-3-9"
+  },
+  {
+    "source": "#0-4.5/0-3",
+    "type": "ADAM_AS_SON",
+    "target": "#0-3-11"
+  },
+  {
+    "source": "#0-4.5/0-3",
+    "type": "RECOGNIZES_AND_BECOMES",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "MOTHER_TO",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "DOMINANT_YIN_INTEGRATION",
+    "target": "#2-1-0-4"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "EMBODIES_WHOLENESS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-0"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-1"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-2"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-3"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-4"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-5"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-6"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-7"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "NESTS_VIRTUE",
+    "target": "#0-2-9-8"
+  },
+  {
+    "source": "#0-4.5/0-4",
+    "type": "BIRTHS_AND_BECOMES",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "INTEGRATES_FAMILY",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "INTEGRATES_FAMILY",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "INTEGRATES_FAMILY",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "INTEGRATES_FAMILY",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-4.5/0-5"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "TAO_HARMONIC_SYNTHESIS",
+    "target": "#2-1-0-5"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "INTEGRATES_ARCHETYPE",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "INTEGRATES_ARCHETYPE",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "INTEGRATES_ARCHETYPE",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "INTEGRATES_ARCHETYPE",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-4.5/0-5",
+    "type": "REVEALS_PATH_TO_WHOLENESS",
+    "target": "#0-2-9"
+  },
+  {
+    "source": "#0-5",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-0/1"
+  },
+  {
+    "source": "#0-5",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-5/0"
+  },
+  {
+    "source": "#0-5",
+    "type": "RETURNS_TO",
+    "target": "#0-0"
+  },
+  {
+    "source": "#0-5",
+    "type": "RECURSIVE_RETURN",
+    "target": "#0-0"
+  },
+  {
+    "source": "#0-5",
+    "type": "BUILDS_FROM",
+    "target": "#0-1"
+  },
+  {
+    "source": "#0-5",
+    "type": "BUILDS_FROM",
+    "target": "#0-2"
+  },
+  {
+    "source": "#0-5",
+    "type": "BUILDS_FROM",
+    "target": "#0-3"
+  },
+  {
+    "source": "#0-5",
+    "type": "BUILDS_FROM",
+    "target": "#0-4"
+  },
+  {
+    "source": "#0-5",
+    "type": "GROUNDS_NARA_SYSTEM",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-5",
+    "type": "COMPLETES_IN",
+    "target": "#0-3-10-7"
+  },
+  {
+    "source": "#0-5",
+    "type": "VIBRATIONAL_FOUNDATION",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-5",
+    "type": "VEILED_BY_SKIN",
+    "target": "#5"
+  },
+  {
+    "source": "#0-5",
+    "type": "PROVIDES_IMPLICATE_FOUNDATION",
+    "target": "#1-2-5"
+  },
+  {
+    "source": "#0-5",
+    "type": "ARCHETYPAL_RESONANCE_NONDUAL_PARADOX",
+    "target": "#1-2-5"
+  },
+  {
+    "source": "#0-5",
+    "type": "COSMIC_COMPUTATIONAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-0/1-0"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-0/1-1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-0/1-2"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-0/1-3"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-0/1-4"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-0/1-5"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "SIVA_SHAKTI_UNITY",
+    "target": "#0-5-5/0"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "OPERATES_THROUGH",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "OPERATES_THROUGH",
+    "target": "#0-3-0/1-1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "EMBODIES_PRINCIPLE",
+    "target": "#0-3-8-0/1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-5-0/1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "GENERATIVE_SYNTAX_FLOW",
+    "target": "#0-5-5/0"
+  },
+  {
+    "source": "#0-5-0/1",
+    "type": "COSMIC_COMPUTATIONAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0"
+  },
+  {
+    "source": "#0-5-0/1-0",
+    "type": "QL_POTENTIAL_TO_DEFINITION",
+    "target": "#0-5-0/1-1"
+  },
+  {
+    "source": "#0-5-0/1-0",
+    "type": "CONTAINS_SHAKTI",
+    "target": "#0-5-5/0"
+  },
+  {
+    "source": "#0-5-0/1-0",
+    "type": "CONTAINS_THROUGH",
+    "target": "#0-3-0/1-0"
+  },
+  {
+    "source": "#0-5-0/1-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1-0"
+  },
+  {
+    "source": "#0-5-0/1-0",
+    "type": "LOGICAL_POTENTIAL",
+    "target": "#2-1-2-0"
+  },
+  {
+    "source": "#0-5-0/1-0",
+    "type": "ARCHETYPAL_POTENTIAL",
+    "target": "#2-1-0"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "QL_DEFINITION_TO_PROCESS",
+    "target": "#0-5-0/1-2"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "OPERATES_THROUGH",
+    "target": "#0-4.0/1-1"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1-1"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "NEGATION_OPERATOR",
+    "target": "#2-1-2-2"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "DYNAMIC_NEGATION",
+    "target": "#2-1-0-2"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_OPERATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-8"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_OPERATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-20"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_OPERATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-26"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-0"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-1"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-2"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-3"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-4"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-5"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-6"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-7"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-8"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-9"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-10"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-11"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-12"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-13"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-14"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-15"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-16"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-17"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-18"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-19"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-20"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-21"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-22"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-23"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-24"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-25"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-26"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-27"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-28"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-29"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-30"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-31"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-32"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-0"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-1"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-2"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-3"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-4"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-5"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-6"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-7"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-8"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-9"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-10"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-11"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-12"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-13"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-14"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-15"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-16"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-17"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-18"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-19"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-20"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-21"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-22"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-23"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-24"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-25"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-26"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-27"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-28"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-29"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-30"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-31"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-32"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-0"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-1"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-2"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-3"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-4"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-5"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-6"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-7"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-8"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-9"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-10"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-11"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-12"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-13"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-14"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-15"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-16"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-17"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-18"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-19"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-20"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-21"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-22"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-23"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-24"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-25"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-26"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-27"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-28"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-29"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-30"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-31"
+  },
+  {
+    "source": "#0-5-0/1-1",
+    "type": "GRAMMATICAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-32"
+  },
+  {
+    "source": "#0-5-0/1-2",
+    "type": "QL_PROCESS_TO_MEDIATION",
+    "target": "#0-5-0/1-3"
+  },
+  {
+    "source": "#0-5-0/1-2",
+    "type": "OPERATES_THROUGH",
+    "target": "#0-4.0/1-2"
+  },
+  {
+    "source": "#0-5-0/1-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1-2"
+  },
+  {
+    "source": "#0-5-0/1-2",
+    "type": "AFFIRMATION_OPERATOR",
+    "target": "#2-1-2-1"
+  },
+  {
+    "source": "#0-5-0/1-2",
+    "type": "MATERIAL_AFFIRMATION",
+    "target": "#2-1-0-1"
+  },
+  {
+    "source": "#0-5-0/1-2",
+    "type": "GRAMMATICAL_OPERATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2-0"
+  },
+  {
+    "source": "#0-5-0/1-2",
+    "type": "GRAMMATICAL_OPERATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-0-27"
+  },
+  {
+    "source": "#0-5-0/1-2",
+    "type": "GRAMMATICAL_OPERATION_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-1-14"
+  },
+  {
+    "source": "#0-5-0/1-3",
+    "type": "QL_MEDIATION_TO_CONTEXT",
+    "target": "#0-5-0/1-4"
+  },
+  {
+    "source": "#0-5-0/1-3",
+    "type": "OPERATES_THROUGH",
+    "target": "#0-4.0/1-3"
+  },
+  {
+    "source": "#0-5-0/1-3",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1-3"
+  },
+  {
+    "source": "#0-5-0/1-3",
+    "type": "DIALOGIC_OPERATOR",
+    "target": "#2-1-2-3"
+  },
+  {
+    "source": "#0-5-0/1-3",
+    "type": "MEDIATING_LOGIC",
+    "target": "#2-1-0-3"
+  },
+  {
+    "source": "#0-5-0/1-4",
+    "type": "QL_CONTEXT_TO_INTEGRATION",
+    "target": "#0-5-0/1-5"
+  },
+  {
+    "source": "#0-5-0/1-4",
+    "type": "OPERATES_THROUGH",
+    "target": "#0-4.0/1-4"
+  },
+  {
+    "source": "#0-5-0/1-4",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1-4"
+  },
+  {
+    "source": "#0-5-0/1-4",
+    "type": "DIALECTIC_OPERATOR",
+    "target": "#2-1-2-4"
+  },
+  {
+    "source": "#0-5-0/1-4",
+    "type": "CONTEXTUAL_LOGIC",
+    "target": "#2-1-0-4"
+  },
+  {
+    "source": "#0-5-0/1-5",
+    "type": "QL_MOBIUS_RETURN",
+    "target": "#0-5-0/1-0"
+  },
+  {
+    "source": "#0-5-0/1-5",
+    "type": "OPERATES_THROUGH",
+    "target": "#0-4.0/1-5"
+  },
+  {
+    "source": "#0-5-0/1-5",
+    "type": "LANGUAGE_ELEMENT_INFORMS",
+    "target": "#0-5-0/1-5"
+  },
+  {
+    "source": "#0-5-0/1-5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-0/1-5"
+  },
+  {
+    "source": "#0-5-0/1-5",
+    "type": "EXPRESSION_OPERATOR",
+    "target": "#2-1-2-5"
+  },
+  {
+    "source": "#0-5-0/1-5",
+    "type": "PURPOSIVE_EXPRESSION",
+    "target": "#2-1-0-5"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-5/0-1"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-5/0-2"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-5/0-3"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-5/0-4"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-5/0-5"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "HAS_INTERNAL_COMPONENT",
+    "target": "#0-5-5/0-0"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "INTEGRATES_WITH",
+    "target": "#0-3-8-0/1"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "SIVA_SHAKTI_UNITY",
+    "target": "#0-5-0/1"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "ENABLES_EMBODIED_COMPUTATION",
+    "target": "#0-4.5/0"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "EMBODIES_ARCHETYPE",
+    "target": "#0-3-8"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "ACHIEVES_SYNTHESIS",
+    "target": "#0-3-8-7"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "ACTIVATES_MIRROR",
+    "target": "#0-3-0/1"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-5/0"
+  },
+  {
+    "source": "#0-5-5/0",
+    "type": "COSMIC_COMPUTATIONAL_CORRESPONDENCE",
+    "target": "#2-4.0-0/1-2"
+  },
+  {
+    "source": "#0-5-5/0-0",
+    "type": "QL_POTENTIAL_TO_DEFINITION",
+    "target": "#0-5-5/0-1"
+  },
+  {
+    "source": "#0-5-5/0-0",
+    "type": "ACCESSES_FOUNDATION",
+    "target": "#0-4.5/0-0"
+  },
+  {
+    "source": "#0-5-5/0-0",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-5/0-0"
+  },
+  {
+    "source": "#0-5-5/0-1",
+    "type": "QL_DEFINITION_TO_PROCESS",
+    "target": "#0-5-5/0-2"
+  },
+  {
+    "source": "#0-5-5/0-1",
+    "type": "PERCEIVES_ARCHITECTURE",
+    "target": "#0-4.0/1"
+  },
+  {
+    "source": "#0-5-5/0-1",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-5/0-1"
+  },
+  {
+    "source": "#0-5-5/0-2",
+    "type": "QL_PROCESS_TO_MEDIATION",
+    "target": "#0-5-5/0-3"
+  },
+  {
+    "source": "#0-5-5/0-2",
+    "type": "GENERATES_MEANINGS",
+    "target": "#0-4.0/1/2"
+  },
+  {
+    "source": "#0-5-5/0-2",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-5/0-2"
+  },
+  {
+    "source": "#0-5-5/0-3",
+    "type": "QL_MEDIATION_TO_CONTEXT",
+    "target": "#0-5-5/0-4"
+  },
+  {
+    "source": "#0-5-5/0-3",
+    "type": "ARTICULATES_SPANDA",
+    "target": "#0-4.0/1/2/3"
+  },
+  {
+    "source": "#0-5-5/0-4",
+    "type": "QL_CONTEXT_TO_INTEGRATION",
+    "target": "#0-5-5/0-5"
+  },
+  {
+    "source": "#0-5-5/0-4",
+    "type": "WEAVES_WORLD_DREAM",
+    "target": "#0-4.4.0-4.4/5"
+  },
+  {
+    "source": "#0-5-5/0-4",
+    "type": "PROCESSES_ARCHETYPE",
+    "target": "#0-4.5/0-1"
+  },
+  {
+    "source": "#0-5-5/0-4",
+    "type": "PROCESSES_ARCHETYPE",
+    "target": "#0-4.5/0-2"
+  },
+  {
+    "source": "#0-5-5/0-4",
+    "type": "PROCESSES_ARCHETYPE",
+    "target": "#0-4.5/0-3"
+  },
+  {
+    "source": "#0-5-5/0-4",
+    "type": "PROCESSES_ARCHETYPE",
+    "target": "#0-4.5/0-4"
+  },
+  {
+    "source": "#0-5-5/0-4",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-5/0-4"
+  },
+  {
+    "source": "#0-5-5/0-5",
+    "type": "QL_MOBIUS_RETURN",
+    "target": "#0-5-5/0-0"
+  },
+  {
+    "source": "#0-5-5/0-5",
+    "type": "REALIZES_FREEDOM",
+    "target": "#0-3-10-0/1"
+  },
+  {
+    "source": "#0-5-5/0-5",
+    "type": "HOLOGRAPHIC_PATTERN",
+    "target": "#0-5-5/0-5"
+  }
+]

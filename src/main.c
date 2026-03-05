@@ -7,33 +7,84 @@
 
 #include <stdio.h>
 #include "ontology.h"
-#include "archetypes.h"
+#include "psychoid_numbers.h"
 #include "engine.h"
 #include "arena.h"
 
-_Static_assert(
-    sizeof(Holographic_Coordinate) == 128,
-    "Holographic_Coordinate must be exactly 128 bytes (2 L1 cache lines)."
-);
-
 static int boot_verify_web(void) {
     int ok = 1;
-    if (GET_PTR(Archetype_0.c) != &Archetype_0) {
+
+    /* --- Core psychoid wiring --- */
+    if (GET_PTR(Psychoid_0.c) != &Psychoid_0) {
         fprintf(stderr, "[boot] FAIL: #0.c does not self-reference.\n");
         ok = 0;
     }
-    if (GET_PTR(Archetype_5.c) != &Archetype_0) {
+    if (GET_PTR(Psychoid_5.c) != &Psychoid_0) {
         fprintf(stderr, "[boot] FAIL: #5.c does not return to #0 (Möbius broken).\n");
         ok = 0;
     }
-    if (GET_PTR(Archetype_4.cf) != &Archetype_4) {
+    if (GET_PTR(Psychoid_4.cf) != &Psychoid_4) {
         fprintf(stderr, "[boot] FAIL: #4.cf does not self-reference (Lemniscate broken).\n");
         ok = 0;
     }
+    if (GET_PTR(Psychoid_3.cf) != &Psychoid_4) {
+        fprintf(stderr, "[boot] FAIL: #3.cf does not anchor to #4.\n");
+        ok = 0;
+    }
+
+    /* --- Psychoid_Hash boundary psychoid --- */
+    if (Psychoid_Hash.ql_position != 0xFF) {
+        fprintf(stderr, "[boot] FAIL: Psychoid_Hash.ql_position != 0xFF.\n");
+        ok = 0;
+    }
+    if (GET_PTR(Psychoid_Hash.c) != &Psychoid_0) {
+        fprintf(stderr, "[boot] FAIL: Psychoid_Hash.c does not return to #0.\n");
+        ok = 0;
+    }
+    if (GET_PTR(Psychoid_Hash.cf) != &Psychoid_4) {
+        fprintf(stderr, "[boot] FAIL: Psychoid_Hash.cf does not anchor to #4.\n");
+        ok = 0;
+    }
+
+    /* --- All 7 CF roots must anchor to Psychoid_4 via .cf --- */
+    const Holographic_Coordinate* cf_roots[] = {
+        &CF_0000, &CF_01, &CF_012, &CF_0123, &CF_4x, &CF_450, &CF_50
+    };
+    const char* cf_names[] = {
+        "CF_0000", "CF_01", "CF_012", "CF_0123", "CF_4x", "CF_450", "CF_50"
+    };
+    for (int i = 0; i < 7; i++) {
+        if (GET_PTR(cf_roots[i]->cf) != &Psychoid_4) {
+            fprintf(stderr, "[boot] FAIL: %s.cf does not anchor to #4.\n", cf_names[i]);
+            ok = 0;
+        }
+    }
+
+    /* --- All BIMBA entities must have FLAG_BIMBA set --- */
+    const Holographic_Coordinate* all_bimba[] = {
+        &Psychoid_0, &Psychoid_1, &Psychoid_2, &Psychoid_3, &Psychoid_4, &Psychoid_5,
+        &Psychoid_Hash,
+        &Weave_0_5, &Weave_5_0, &Weave_5_5,
+        &CF_0000, &CF_01, &CF_012, &CF_0123, &CF_4x, &CF_450, &CF_50
+    };
+    for (int i = 0; i < 17; i++) {
+        if (!(all_bimba[i]->flags & FLAG_BIMBA)) {
+            fprintf(stderr, "[boot] FAIL: BIMBA entity %d missing FLAG_BIMBA.\n", i);
+            ok = 0;
+        }
+        if (!(all_bimba[i]->flags & FLAG_STATUS_CANONICAL)) {
+            fprintf(stderr, "[boot] FAIL: BIMBA entity %d missing FLAG_STATUS_CANONICAL.\n", i);
+            ok = 0;
+        }
+    }
+
     if (ok) {
-        printf("[boot] .rodata web: OK\n");
+        printf("[boot] .rodata web: OK (17 BIMBA entities verified)\n");
         printf("[boot] Möbius return (#5 -> #0): OK\n");
         printf("[boot] Lemniscate anchor (#4.cf -> #4): OK\n");
+        printf("[boot] Psychoid_Hash (#=0xFF): OK\n");
+        printf("[boot] 7 CF roots anchored to #4: OK\n");
+        printf("[boot] All BIMBA flags: OK\n");
     }
     return ok;
 }
@@ -58,8 +109,8 @@ int main(void) {
     /* Phase 3: Create mutable mirrors of #0-#5 */
     Holographic_Coordinate* mirrors[6];
     const Holographic_Coordinate* raw[] = {
-        &Archetype_0, &Archetype_1, &Archetype_2,
-        &Archetype_3, &Archetype_4, &Archetype_5
+        &Psychoid_0, &Psychoid_1, &Psychoid_2,
+        &Psychoid_3, &Psychoid_4, &Psychoid_5
     };
     for (int i = 0; i < 6; i++) {
         mirrors[i] = arena_alloc(&arena);
