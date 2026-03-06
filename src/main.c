@@ -6,10 +6,13 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include "ontology.h"
 #include "psychoid_numbers.h"
 #include "engine.h"
 #include "arena.h"
+#include "m0.h"
+#include "m1.h"
 
 static int boot_verify_web(void) {
     int ok = 1;
@@ -64,10 +67,10 @@ static int boot_verify_web(void) {
     const Holographic_Coordinate* all_bimba[] = {
         &Psychoid_0, &Psychoid_1, &Psychoid_2, &Psychoid_3, &Psychoid_4, &Psychoid_5,
         &Psychoid_Hash,
-        &Weave_0_5, &Weave_5_0, &Weave_5_5,
+        &Weave_0_0, &Weave_0_5, &Weave_5_0, &Weave_5_5,
         &CF_0000, &CF_01, &CF_012, &CF_0123, &CF_4x, &CF_450, &CF_50
     };
-    for (int i = 0; i < 17; i++) {
+    for (int i = 0; i < 18; i++) {
         if (!(all_bimba[i]->flags & FLAG_BIMBA)) {
             fprintf(stderr, "[boot] FAIL: BIMBA entity %d missing FLAG_BIMBA.\n", i);
             ok = 0;
@@ -79,7 +82,7 @@ static int boot_verify_web(void) {
     }
 
     if (ok) {
-        printf("[boot] .rodata web: OK (17 BIMBA entities verified)\n");
+        printf("[boot] .rodata web: OK (18 BIMBA entities verified)\n");
         printf("[boot] Möbius return (#5 -> #0): OK\n");
         printf("[boot] Lemniscate anchor (#4.cf -> #4): OK\n");
         printf("[boot] Psychoid_Hash (#=0xFF): OK\n");
@@ -89,7 +92,7 @@ static int boot_verify_web(void) {
     return ok;
 }
 
-int main(void) {
+int main(int argc, char** argv) {
     printf("=== Epi-Logos C — System Boot ===\n\n");
 
     /* Phase 1: Verify .rodata bedrock */
@@ -137,6 +140,53 @@ int main(void) {
     families_wire_reflective(&arena);
     printf("[boot] All 6 families instantiated and cross-linked (%u slots used).\n", arena.count);
 
+    /* Phase 4.5: Initialize M0 (Anuttara) */
+    M0_Root* m0 = m0_init(&arena, mirrors[0]);
+    if (!m0) {
+        fprintf(stderr, "[boot] Aborting: M0 init failed.\n");
+        arena_destroy(&arena);
+        return 1;
+    }
+    if (!m0_verify_holographic_registry()) {
+        fprintf(stderr, "[boot] FAIL: M0 holographic registry broken.\n");
+        arena_destroy(&arena);
+        return 1;
+    }
+    printf("[boot] M0 (Anuttara) initialized. CF=VOID. 12-fold archetypes loaded.\n");
+
+    /* Phase 4.6: Initialize M1 (Paramasiva) */
+    M1_Root* m1 = m1_init(&arena, mirrors[1]);
+    if (!m1) {
+        fprintf(stderr, "[boot] Aborting: M1 init failed.\n");
+        m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    if (!m1_verify()) {
+        fprintf(stderr, "[boot] FAIL: M1 verification failed.\n");
+        m1_teardown(m1);
+        m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    printf("[boot] M1 (Paramasiva) initialized. CF=BINARY. Ananda+Spanda+QL loaded.\n");
+
+    /* CLI dispatch */
+    if (argc > 1 && strcmp(argv[1], "m0") == 0) {
+        int rc = m0_cli_dispatch(argc - 1, argv + 1, m0);
+        m1_teardown(m1);
+        m0_teardown(m0);
+        arena_destroy(&arena);
+        return rc;
+    }
+    if (argc > 1 && strcmp(argv[1], "m1") == 0) {
+        int rc = m1_cli_dispatch(argc - 1, argv + 1, m1);
+        m1_teardown(m1);
+        m0_teardown(m0);
+        arena_destroy(&arena);
+        return rc;
+    }
+
     /* Phase 5: Run double covering (720°) */
     Walk_Context wc = {0};
     printf("\n[engine] Starting double covering (720°)...\n");
@@ -145,6 +195,8 @@ int main(void) {
            wc.step_count, wc.cycle_count);
 
     /* Cleanup */
+    m1_teardown(m1);
+    m0_teardown(m0);
     arena_destroy(&arena);
 
     printf("\n=== Möbius return: #5 -> #0. Tomorrow's ground is richer. ===\n");

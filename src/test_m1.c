@@ -48,8 +48,7 @@ int main(void) {
             uint8_t p = get_ananda_harmonic(&ANANDA_PRATIBIMBA, (uint8_t)r, (uint8_t)c);
             uint8_t s = get_ananda_harmonic(&ANANDA_SUM, (uint8_t)r, (uint8_t)c);
             uint8_t expected = (uint8_t)((b + p) % 9u);
-            if (expected == 0u && (b + p) > 0) expected = 9u;
-            if (b == 0 && p == 0) expected = 0u;
+            if (expected == 0u && (b + p) > 0u) expected = 9u;
             if (s != expected) {
                 fprintf(stderr, "FAIL: SUM[%d][%d]: got %u, expected %u (b=%u p=%u)\n",
                         r, c, s, expected, b, p);
