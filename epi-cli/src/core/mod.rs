@@ -1,5 +1,5 @@
-use crate::ffi::{self, EpiLib};
 use crate::ffi::tagged;
+use crate::ffi::{self, EpiLib};
 use clap::Subcommand;
 
 #[derive(Subcommand)]
@@ -104,13 +104,34 @@ fn inspect(epi: &EpiLib, coord: &str, json: bool) -> color_eyre::Result<()> {
     }
 
     println!("┌─ {} ─────────────────────────────────────┐", name);
-    println!("│ ql_position:    0x{:02X} ({})", snap.ql_position,
-        position_name(snap.ql_position));
-    println!("│ family:         {} ({})", snap.family as u8, snap.family.name());
-    println!("│ inversion:      {}", if snap.inversion_state == 0 { "normal" } else { "inverted ('" });
-    println!("│ flags:          0x{:02X} [{}]", snap.flags, tagged::flags_description(snap.flags));
+    println!(
+        "│ ql_position:    0x{:02X} ({})",
+        snap.ql_position,
+        position_name(snap.ql_position)
+    );
+    println!(
+        "│ family:         {} ({})",
+        snap.family as u8,
+        snap.family.name()
+    );
+    println!(
+        "│ inversion:      {}",
+        if snap.inversion_state == 0 {
+            "normal"
+        } else {
+            "inverted ('"
+        }
+    );
+    println!(
+        "│ flags:          0x{:02X} [{}]",
+        snap.flags,
+        tagged::flags_description(snap.flags)
+    );
     println!("│ weave_state:    {:.2}", snap.weave_state);
-    println!("│ invoke_process: {}", if snap.has_invoke { "yes" } else { "none" });
+    println!(
+        "│ invoke_process: {}",
+        if snap.has_invoke { "yes" } else { "none" }
+    );
     println!("│");
     println!("│ ── Pointer Web (12-fold Intra-Openness) ──");
     println!("│  Base:");
@@ -136,17 +157,39 @@ fn verify(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
 
     // Core wiring
     unsafe {
-        checks.push(("#0.c == &Psychoid_0 (self-ref)", tagged::get_ptr((*epi.psychoid_0).c as *const _) == epi.psychoid_0));
-        checks.push(("#5.c == &Psychoid_0 (Möbius)", tagged::get_ptr((*epi.psychoid_5).c as *const _) == epi.psychoid_0));
-        checks.push(("#4.cf == &Psychoid_4 (Lemniscate)", tagged::get_ptr((*epi.psychoid_4).cf as *const _) == epi.psychoid_4));
-        checks.push(("#3.cf == &Psychoid_4", tagged::get_ptr((*epi.psychoid_3).cf as *const _) == epi.psychoid_4));
-        checks.push(("Psychoid_Hash.ql_position == 0xFF", (*epi.psychoid_hash).ql_position == 0xFF));
-        checks.push(("Psychoid_Hash.cf == &Psychoid_4", tagged::get_ptr((*epi.psychoid_hash).cf as *const _) == epi.psychoid_4));
+        checks.push((
+            "#0.c == &Psychoid_0 (self-ref)",
+            tagged::get_ptr((*epi.psychoid_0).c as *const _) == epi.psychoid_0,
+        ));
+        checks.push((
+            "#5.c == &Psychoid_0 (Möbius)",
+            tagged::get_ptr((*epi.psychoid_5).c as *const _) == epi.psychoid_0,
+        ));
+        checks.push((
+            "#4.cf == &Psychoid_4 (Lemniscate)",
+            tagged::get_ptr((*epi.psychoid_4).cf as *const _) == epi.psychoid_4,
+        ));
+        checks.push((
+            "#3.cf == &Psychoid_4",
+            tagged::get_ptr((*epi.psychoid_3).cf as *const _) == epi.psychoid_4,
+        ));
+        checks.push((
+            "Psychoid_Hash.ql_position == 0xFF",
+            (*epi.psychoid_hash).ql_position == 0xFF,
+        ));
+        checks.push((
+            "Psychoid_Hash.cf == &Psychoid_4",
+            tagged::get_ptr((*epi.psychoid_hash).cf as *const _) == epi.psychoid_4,
+        ));
 
         // CF roots
         let cf_roots: &[(&str, *const ffi::HolographicCoordinate)] = &[
-            ("CF_0000", epi.cf_0000), ("CF_01", epi.cf_01), ("CF_012", epi.cf_012),
-            ("CF_0123", epi.cf_0123), ("CF_4x", epi.cf_4x), ("CF_450", epi.cf_450),
+            ("CF_0000", epi.cf_0000),
+            ("CF_01", epi.cf_01),
+            ("CF_012", epi.cf_012),
+            ("CF_0123", epi.cf_0123),
+            ("CF_4x", epi.cf_4x),
+            ("CF_450", epi.cf_450),
             ("CF_50", epi.cf_50),
         ];
         for (name, ptr) in cf_roots {
@@ -168,10 +211,19 @@ fn verify(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
 
     if json {
         #[derive(serde::Serialize)]
-        struct VerifyResult { passed: usize, total: usize, all_ok: bool }
-        println!("{}", serde_json::to_string_pretty(&VerifyResult {
-            passed, total, all_ok: passed == total
-        })?);
+        struct VerifyResult {
+            passed: usize,
+            total: usize,
+            all_ok: bool,
+        }
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&VerifyResult {
+                passed,
+                total,
+                all_ok: passed == total
+            })?
+        );
         return Ok(());
     }
 
@@ -190,10 +242,32 @@ fn verify(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
         println!("  {} {}", if ok { "✓" } else { "✗" }, label);
     }
     println!();
-    println!("  7 CF roots anchored to #4: {}", if checks[6..13].iter().all(|c| c.1) { "✓ all OK" } else { "✗ FAILED" });
-    println!("  17 BIMBA flags:            {}", if checks[13..].iter().all(|c| c.1) { "✓ all OK" } else { "✗ FAILED" });
-    println!("\n  Result: {}/{} checks passed {}", passed, total,
-        if passed == total { "— ALL OK" } else { "— FAILURES DETECTED" });
+    println!(
+        "  7 CF roots anchored to #4: {}",
+        if checks[6..13].iter().all(|c| c.1) {
+            "✓ all OK"
+        } else {
+            "✗ FAILED"
+        }
+    );
+    println!(
+        "  17 BIMBA flags:            {}",
+        if checks[13..].iter().all(|c| c.1) {
+            "✓ all OK"
+        } else {
+            "✗ FAILED"
+        }
+    );
+    println!(
+        "\n  Result: {}/{} checks passed {}",
+        passed,
+        total,
+        if passed == total {
+            "— ALL OK"
+        } else {
+            "— FAILURES DETECTED"
+        }
+    );
     Ok(())
 }
 
@@ -201,7 +275,8 @@ fn dump(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
     let entities = epi.all_bimba();
 
     if json {
-        let snaps: Vec<_> = entities.iter()
+        let snaps: Vec<_> = entities
+            .iter()
             .filter_map(|(name, ptr)| {
                 ffi::read_coord(*ptr).map(|s| serde_json::json!({ "name": name, "data": s }))
             })
@@ -211,12 +286,15 @@ fn dump(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
     }
 
     println!("=== epi core dump — 17 BIMBA Entities ===\n");
-    println!("{:<20} {:>4} {:>8} {:>6} {:>8} {:>6}",
-        "Name", "Pos", "Family", "Flags", "Weave", "Inv");
+    println!(
+        "{:<20} {:>4} {:>8} {:>6} {:>8} {:>6}",
+        "Name", "Pos", "Family", "Flags", "Weave", "Inv"
+    );
     println!("{}", "─".repeat(60));
     for (name, ptr) in &entities {
         if let Some(s) = ffi::read_coord(*ptr) {
-            println!("{:<20} 0x{:02X} {:>8} 0x{:02X}   {:>6.2} {:>5}",
+            println!(
+                "{:<20} 0x{:02X} {:>8} 0x{:02X}   {:>6.2} {:>5}",
                 name,
                 s.ql_position,
                 s.family.letter(),
@@ -231,21 +309,34 @@ fn dump(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
 
 fn cf_roots(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
     let roots = [
-        ("CF(0000)", "Receptive Dynamism", "(00/00) Mod%", epi.cf_0000),
+        (
+            "CF(0000)",
+            "Receptive Dynamism",
+            "(00/00) Mod%",
+            epi.cf_0000,
+        ),
         ("CF(01)", "Non-Dual Binary", "(0/1) Mod 2", epi.cf_01),
         ("CF(012)", "The Trika", "(0/1/2) Mod 3", epi.cf_012),
         ("CF(0123)", "Three-Plus-One", "(0/1/2/3) Mod 4", epi.cf_0123),
-        ("CF(4x)", "Fractal Doubling", "(4.0/1-4.4/5) Mod 4/6", epi.cf_4x),
+        (
+            "CF(4x)",
+            "Fractal Doubling",
+            "(4.0/1-4.4/5) Mod 4/6",
+            epi.cf_4x,
+        ),
         ("CF(450)", "Möbius Synthesis", "(4/5/0)", epi.cf_450),
         ("CF(50)", "Total Synthesis", "(5/0) Mod 6", epi.cf_50),
     ];
 
     if json {
-        let data: Vec<_> = roots.iter()
+        let data: Vec<_> = roots
+            .iter()
             .filter_map(|(name, desc, mode, ptr)| {
-                ffi::read_coord(*ptr).map(|s| serde_json::json!({
-                    "name": name, "description": desc, "mode": mode, "data": s
-                }))
+                ffi::read_coord(*ptr).map(|s| {
+                    serde_json::json!({
+                        "name": name, "description": desc, "mode": mode, "data": s
+                    })
+                })
             })
             .collect();
         println!("{}", serde_json::to_string_pretty(&data)?);
@@ -253,12 +344,17 @@ fn cf_roots(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
     }
 
     println!("=== Context Frame Roots — 7 Processual Execution Contexts ===\n");
-    println!("{:<12} {:<22} {:<24} {:>6}",
-        "Name", "Description", "Mode", "Weave");
+    println!(
+        "{:<12} {:<22} {:<24} {:>6}",
+        "Name", "Description", "Mode", "Weave"
+    );
     println!("{}", "─".repeat(68));
     for (name, desc, mode, ptr) in &roots {
         if let Some(s) = ffi::read_coord(*ptr) {
-            println!("{:<12} {:<22} {:<24} {:>6.3}", name, desc, mode, s.weave_state);
+            println!(
+                "{:<12} {:<22} {:<24} {:>6.3}",
+                name, desc, mode, s.weave_state
+            );
         }
     }
     println!("\nInvariant: ALL .cf → &Psychoid_4 (Lemniscate anchor)");
@@ -267,15 +363,50 @@ fn cf_roots(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
 
 fn operators(json: bool) -> color_eyre::Result<()> {
     #[derive(serde::Serialize)]
-    struct Op { symbol: &'static str, name: &'static str, bit: &'static str, function: &'static str }
+    struct Op {
+        symbol: &'static str,
+        name: &'static str,
+        bit: &'static str,
+        function: &'static str,
+    }
 
     let ops = vec![
-        Op { symbol: "#", name: "Inversion", bit: "63 FLAG_INVERTED", function: "X → X' (phase shift)" },
-        Op { symbol: "' / i", name: "Phase Marker", bit: "inversion_state field", function: "Denotes result of # applied" },
-        Op { symbol: ".", name: "Nesting", bit: "62 FLAG_NESTING", function: "Fractal descent via cf" },
-        Op { symbol: "-", name: "Branching", bit: "61 FLAG_BRANCHING", function: "Lateral relation" },
-        Op { symbol: "()", name: "Invocation", bit: "60 FLAG_EXECUTING", function: "Fires invoke_process" },
-        Op { symbol: "/", name: "Path Separator", bit: "N/A (notation)", function: "Separates CF mode components" },
+        Op {
+            symbol: "#",
+            name: "Inversion",
+            bit: "63 FLAG_INVERTED",
+            function: "X → X' (phase shift)",
+        },
+        Op {
+            symbol: "' / i",
+            name: "Phase Marker",
+            bit: "inversion_state field",
+            function: "Denotes result of # applied",
+        },
+        Op {
+            symbol: ".",
+            name: "Nesting",
+            bit: "62 FLAG_NESTING",
+            function: "Fractal descent via cf",
+        },
+        Op {
+            symbol: "-",
+            name: "Branching",
+            bit: "61 FLAG_BRANCHING",
+            function: "Lateral relation",
+        },
+        Op {
+            symbol: "()",
+            name: "Invocation",
+            bit: "60 FLAG_EXECUTING",
+            function: "Fires invoke_process",
+        },
+        Op {
+            symbol: "/",
+            name: "Path Separator",
+            bit: "N/A (notation)",
+            function: "Separates CF mode components",
+        },
     ];
 
     if json {
@@ -284,11 +415,16 @@ fn operators(json: bool) -> color_eyre::Result<()> {
     }
 
     println!("=== Coordinate Operators ===\n");
-    println!("{:<8} {:<16} {:<28} {}",
-        "Symbol", "Name", "Tagged Pointer Bit", "Function");
+    println!(
+        "{:<8} {:<16} {:<28} {}",
+        "Symbol", "Name", "Tagged Pointer Bit", "Function"
+    );
     println!("{}", "─".repeat(76));
     for op in &ops {
-        println!("{:<8} {:<16} {:<28} {}", op.symbol, op.name, op.bit, op.function);
+        println!(
+            "{:<8} {:<16} {:<28} {}",
+            op.symbol, op.name, op.bit, op.function
+        );
     }
     Ok(())
 }
@@ -310,7 +446,14 @@ fn walk(epi: &EpiLib, steps: u32, json: bool) -> color_eyre::Result<()> {
     println!("  Final position: #{}", ctx.current_position);
     println!("  Steps taken:    {}", ctx.step_count);
     println!("  Cycles:         {}", ctx.cycle_count);
-    println!("  Covering:       {}", if ctx.covering == 0 { "Normal" } else { "Inverted" });
+    println!(
+        "  Covering:       {}",
+        if ctx.covering == 0 {
+            "Normal"
+        } else {
+            "Inverted"
+        }
+    );
     Ok(())
 }
 
@@ -326,19 +469,28 @@ fn hash(epi: &EpiLib, coord: &str, json: bool) -> color_eyre::Result<()> {
     let after = copy.inversion_state;
 
     if json {
-        println!("{}", serde_json::to_string_pretty(&serde_json::json!({
-            "coordinate": name,
-            "before": before,
-            "after": after,
-        }))?);
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({
+                "coordinate": name,
+                "before": before,
+                "after": after,
+            }))?
+        );
         return Ok(());
     }
 
     println!("=== # Inversion Applied to {} ===\n", name);
-    println!("  Before: inversion_state = {} ({})", before,
-        if before == 0 { "normal" } else { "inverted" });
-    println!("  After:  inversion_state = {} ({})", after,
-        if after == 0 { "normal" } else { "inverted" });
+    println!(
+        "  Before: inversion_state = {} ({})",
+        before,
+        if before == 0 { "normal" } else { "inverted" }
+    );
+    println!(
+        "  After:  inversion_state = {} ({})",
+        after,
+        if after == 0 { "normal" } else { "inverted" }
+    );
     println!("  ## = identity: applying # twice returns to original state");
     Ok(())
 }

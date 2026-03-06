@@ -1,5 +1,5 @@
-use crate::graph::types::GraphResult;
 use crate::graph::api::GraphAPI;
+use crate::graph::types::GraphResult;
 
 pub struct CoordinateRetrieval {
     api: GraphAPI,

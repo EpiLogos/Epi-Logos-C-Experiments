@@ -23,9 +23,7 @@ pub fn dispatch(cmd: &SeshCmd) {
         SeshCmd::Banner => "banner",
     };
 
-    let status = Command::new(SESSION_SCRIPT)
-        .arg(arg)
-        .status();
+    let status = Command::new(SESSION_SCRIPT).arg(arg).status();
 
     match status {
         Ok(s) if !s.success() => {

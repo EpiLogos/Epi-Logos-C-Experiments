@@ -8,6 +8,9 @@ impl BidirectionalSync {
     }
 
     pub fn sync_bidirectional(&self) -> Result<String, String> {
-        Ok(format!("Bidirectional sync complete for {}", self.vault_path))
+        Ok(format!(
+            "Bidirectional sync complete for {}",
+            self.vault_path
+        ))
     }
 }
