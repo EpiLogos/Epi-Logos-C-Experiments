@@ -1596,3 +1596,186 @@ The Logos Cycle belongs to M5 (#5-5). M4 **borrows** the Logos Cycle as its oper
 *Patch Version:* 1.0
 *Applied:* 2026-03-05 by Cross-M Harmonisation Agent
 *Addresses:* FR 2.4.8, FR 2.4.9, FR 2.4.10, Logos Cycle Naming Correction
+
+---
+
+## SPEC PATCH — Temporal Now, BLAKE3 Quintessence, Oracle Primitives (2026-03-06)
+
+**Source:** M4 Design Session — Deep dataset analysis + architectural integration
+**Design Doc:** `docs/plans/2026-03-06-m4-nara-design.md`
+
+---
+
+### FR 2.4.11: M4_Temporal_Now — The Lived Moment
+
+**Requirement:** The C engine MUST provide an `M4_Temporal_Now` struct that composes the `Unified_Clock_State` (M1/M2/M3 concentric rings) with the source degree, a chronological timestamp, and 7 planetary operator slots preempting real-time astrological data from the S4' agent layer (Kerykeion). The struct MUST function in three temporal modes: natal (birth moment), real-time (current moment), and kairotic (oracle consultation moment). All M4 operations that require temporal context MUST use `m4_snapshot_now()` rather than ad-hoc degree arithmetic.
+
+**Gap addressed:** `read_cosmic_clock(degree)` is defined but the degree source, planetary operator preemption, and temporal mode semantics are unspecified.
+
+```c
+// ==============================================================================
+// FR 2.4.11: M4_Temporal_Now — The Lived Moment
+// ==============================================================================
+//
+// The "Now" integrates:
+//   M1 heartbeat (12 Torus stages, 30 deg each) — the PULSE
+//   M2 body (36 Decans + planets + chakras + elements) — the ORGANS
+//   M3 face (64 Hexagrams around 360 deg) — the DISPLAY
+//   M4 lived synthesis — the person experiencing all three
+//
+// Kerykeion (Python astrological library) is NOT a C dependency.
+// It populates planet_degrees[] via S4' agent layer when available.
+// planet_valid bitmask tracks which planets have real data.
+// All operations work at 0 planets (degree-only mode).
+
+typedef struct {
+    Unified_Clock_State clock;          // M1/M2/M3 concentric state (from m0.h)
+    uint16_t            degree;         // 0-719 (SU(2) double cover)
+    uint32_t            chronos_epoch;  // Unix seconds — sequential time (Chronos)
+                                        // Kairos = the degree itself: qualitative
+                                        // temporal opening, not "what second" but
+                                        // "what cosmic position"
+
+    // Planetary operator slots — preempting Kerykeion at S4'
+    // When S4' agent fills these, planets become live operators
+    // acting on the M3 wheel as the clock's "bodies" (solar system clock)
+    uint16_t planet_degrees[7];         // Sun/Moon/Merc/Venus/Mars/Jup/Sat
+                                        // Each 0-719 (SU(2) double cover)
+    uint8_t  planet_valid;              // Bitmask: bit N = planet N has real data
+                                        // 0x00 = stub mode (degree-only clock)
+                                        // 0x7F = all 7 populated by Kerykeion
+} M4_Temporal_Now;
+
+// Three temporal modes (same struct, different degree source):
+//   Natal:     degree = user's sun_degree_anchor from birth data
+//   Real-time: degree from current time → wheel position mapping
+//   Kairotic:  degree at moment of oracle consultation (the pregnant moment)
+
+static inline M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
+    M4_Temporal_Now now;
+    now.clock = m0_read_cosmic_clock(degree);
+    now.degree = degree;
+    now.chronos_epoch = epoch;
+    memset(now.planet_degrees, 0, sizeof(now.planet_degrees));
+    now.planet_valid = 0x00;  // Stub until S4' populates
+    return now;
+}
+```
+
+---
+
+### FR 2.4.12: BLAKE3 Quintessence as Archetypal Synthesis
+
+**Requirement:** The BLAKE3 hash in `m4_identity_compute()` MUST be understood and implemented as the **archetypal coordinate address** — the #4.0-5 (Integration/Quintessence) position that synthesizes the 5 prior identity layers into a single operable position in universal space. It is not merely a privacy mechanism. The hash participates in the Mobius return (`quintessence_hash ^= wisdom_delta`) and feeds into `M4_Personal_Pratibimba.synthesizedSignature`. BLAKE3 MUST be vendored as a single-file C dependency.
+
+**Gap addressed:** Spec frames BLAKE3 as privacy hashing. Dataset `f_stateProperties` reveals `synthesizedSignature` as operational field in the Pratibimba, and the quintessence hash is the user's position in universal space.
+
+```c
+// ==============================================================================
+// FR 2.4.12: BLAKE3 Quintessence — Archetypal Synthesis Hash
+// ==============================================================================
+//
+// Vendored dependency: vendor/blake3/ (blake3.h, blake3.c, blake3_dispatch.c,
+//   blake3_portable.c) from https://github.com/BLAKE3-team/BLAKE3/tree/master/c
+//
+// The quintessence hash IS the user's archetypal address:
+//   #4.0-0 Birthdate      → numerological_key
+//   #4.0-1 Natal Chart    → sun/moon_degree_anchor (0-719)
+//   #4.0-2 Jungian Type   → nucleotide_balance (A/T/C/G weights)
+//   #4.0-3 Gene Keys      → M3 bitboard mask (uint64_t)
+//   #4.0-4 Human Design   → stub
+//          ↓ ALL bytes fed to BLAKE3
+//   #4.0-5 → blake3_hasher_finalize(8 bytes) → uint64_t quintessence_hash
+//          ↓ memset(input, 0) — raw data destroyed immediately
+//
+// The hash then:
+//   1. Becomes the user's "coordinate" in M3's universal space
+//   2. Feeds into M4_Personal_Pratibimba.synthesizedSignature
+//   3. Participates in Mobius return: quintessence_hash ^= wisdom_delta
+//   4. Never leaves the C engine — compute-once, never transmitted
+//
+// ARCHITECTURAL NOTE: The hash is NOT a lookup key. It is the SYNTHESIS
+// of the identity — the #5-position (Integration) of the #4.0 sub-branch.
+// Just as Psychoid_5.c points back to Psychoid_0 (Mobius return), the
+// quintessence hash cycles back into identity via wisdom_delta XOR.
+```
+
+---
+
+### FR 2.4.13: Oracle Casting Primitives
+
+**Requirement:** The C engine MUST provide leaf-level casting functions for I-Ching and Tarot oracles using true random generation (`arc4random_buf()` on macOS, `getrandom()` on Linux). Each casting operation MUST be consent-gated (one consent per invocation, auto-reset after use). Every oracle emission MUST produce an `M4_Canonical_Tag` containing the nucleotide correspondence (via Elemental Throughline FR 2.4.7) and the degree at the moment of casting (the Kairotic moment, captured via `m4_snapshot_now()`).
+
+**Gap addressed:** Spec defines vtable dispatch and magic-number type safety but lacks the leaf casting functions, true random source, and canonical tag emission format that bridges oracle output to medicine (#4.1) and transformation (#4.3).
+
+```c
+// ==============================================================================
+// FR 2.4.13: Oracle Casting Primitives
+// ==============================================================================
+
+// ─── TRUE RANDOM SOURCE ─────────────────────────────────────────────────
+// arc4random_buf() on macOS/BSD — cryptographic quality, no seeding,
+// no PRNG state to manage. Sacred randomness as portal, not noise.
+
+typedef struct {
+    bool     consent_granted;   // User MUST consent per invocation
+    uint64_t session_nonce;     // Unique per-session (prevents replay)
+} M4_Sacred_Random;
+
+// Consent-gated random fill. Returns false if consent not granted.
+// Consent auto-resets after each successful invocation.
+static inline bool m4_sacred_random(M4_Sacred_Random* rng,
+                                     void* buf, size_t len) {
+    if (!rng->consent_granted) return false;
+    arc4random_buf(buf, len);
+    rng->consent_granted = false;  // Must re-consent for next invocation
+    return true;
+}
+
+// ─── I-CHING CASTING ────────────────────────────────────────────────────
+// Three-coin method: 3 coins per line, 6 lines per hexagram.
+// Line values: 6 (old yin), 7 (young yin), 8 (young yang), 9 (old yang)
+// These ARE M3's NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8}:
+//   6 = A (Yin Moving),  9 = T (Yang Moving)
+//   7 = C (Yin Resting), 8 = G (Yang Resting)
+
+typedef struct {
+    uint8_t  lines[6];          // Line values (6/7/8/9), bottom to top
+    uint8_t  hexagram_id;       // 6-bit: resulting hexagram (0-63)
+    uint8_t  changing_mask;     // 6-bit: which lines are changing (6 or 9)
+    uint8_t  result_hexagram;   // Hexagram after changes applied
+    uint16_t cast_degree;       // Kairotic moment via m4_snapshot_now()
+} M4_IChing_Cast;
+
+// ─── TAROT DRAW ─────────────────────────────────────────────────────────
+// Fisher-Yates shuffle on 78-card deck, draw top N.
+// 22 Major Arcana + 56 Minor Arcana (mapped to M3 codons via FR 2.3.16)
+
+typedef struct {
+    uint8_t  cards[78];         // Full deck (Fisher-Yates shuffled)
+    uint8_t  drawn[12];         // Drawn cards (max spread size)
+    uint8_t  draw_count;        // How many drawn
+    uint8_t  spread_type;       // Spread ID (0=3-card, 1=Celtic Cross, etc.)
+    uint16_t cast_degree;       // Kairotic moment
+} M4_Tarot_Draw;
+
+// ─── CANONICAL TAG ──────────────────────────────────────────────────────
+// Universal emission format. Every oracle output produces one or more tags.
+// Tags bridge: oracle (#4.2) → medicine (#4.1) → transformation (#4.3)
+// Nucleotide assignment follows Elemental Throughline (FR 2.4.7).
+
+typedef struct {
+    uint16_t tag_id;            // Universal symbol identifier
+    uint8_t  tradition;         // 0=Tarot, 1=I-Ching, 2=custom
+    uint8_t  nucleotide;        // M3_NUC_A/T/C/G via Elemental Throughline
+    uint8_t  element;           // Element_Id (Fire/Earth/Air/Water/Akasha)
+    uint16_t degree;            // Position on M3 wheel (0-719)
+} M4_Canonical_Tag;
+```
+
+---
+
+*Patch Version:* 2.0
+*Applied:* 2026-03-06 by M4 Design Session
+*Addresses:* FR 2.4.11 (Temporal Now), FR 2.4.12 (BLAKE3 Quintessence), FR 2.4.13 (Oracle Primitives)
+*Design Doc:* `docs/plans/2026-03-06-m4-nara-design.md`
