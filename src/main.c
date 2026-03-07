@@ -13,6 +13,9 @@
 #include "arena.h"
 #include "m0.h"
 #include "m1.h"
+#include "m2.h"
+#include "m3.h"
+#include "m4.h"
 
 static int boot_verify_web(void) {
     int ok = 1;
@@ -171,19 +174,91 @@ int main(int argc, char** argv) {
     }
     printf("[boot] M1 (Paramasiva) initialized. CF=BINARY. Ananda+Spanda+QL loaded.\n");
 
-    /* CLI dispatch */
-    if (argc > 1 && strcmp(argv[1], "m0") == 0) {
-        int rc = m0_cli_dispatch(argc - 1, argv + 1, m0);
+    /* Phase 4.7: Initialize M2 (Parashakti) */
+    M2_Root* m2 = m2_init(&arena, mirrors[2]);
+    if (!m2) {
+        fprintf(stderr, "[boot] Aborting: M2 init failed.\n");
         m1_teardown(m1);
         m0_teardown(m0);
         arena_destroy(&arena);
+        return 1;
+    }
+    if (!m2_verify()) {
+        fprintf(stderr, "[boot] FAIL: M2 verification failed.\n");
+        m2_teardown(m2);
+        m1_teardown(m1);
+        m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    printf("[boot] M2 (Parashakti) initialized. CF=TRIKA. 72-space loaded.\n");
+
+    /* Phase 4.8: Initialize M3 (Mahamaya) */
+    M3_Root* m3 = m3_init(&arena, mirrors[3]);
+    if (!m3) {
+        fprintf(stderr, "[boot] Aborting: M3 init failed.\n");
+        m2_teardown(m2);
+        m1_teardown(m1);
+        m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    if (!m3_verify()) {
+        fprintf(stderr, "[boot] FAIL: M3 verification failed.\n");
+        m3_teardown(m3);
+        m2_teardown(m2);
+        m1_teardown(m1);
+        m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    printf("[boot] M3 (Mahamaya) initialized. CF=QUATERNAL. 64-fold transcription loaded.\n");
+
+    /* Phase 4.9: Initialize M4 (Nara) */
+    M4_Root* m4 = m4_init(&arena, mirrors[4]);
+    if (!m4) {
+        fprintf(stderr, "[boot] Aborting: M4 init failed.\n");
+        m3_teardown(m3); m2_teardown(m2); m1_teardown(m1); m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    if (!m4_verify()) {
+        fprintf(stderr, "[boot] FAIL: M4 verification failed.\n");
+        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2); m1_teardown(m1); m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    printf("[boot] M4 (Nara) initialized. CF=FRACTAL. Vtable[6] + PCO loaded.\n");
+
+    /* CLI dispatch */
+    if (argc > 1 && strcmp(argv[1], "m0") == 0) {
+        int rc = m0_cli_dispatch(argc - 1, argv + 1, m0);
+        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
         return rc;
     }
     if (argc > 1 && strcmp(argv[1], "m1") == 0) {
         int rc = m1_cli_dispatch(argc - 1, argv + 1, m1);
-        m1_teardown(m1);
-        m0_teardown(m0);
-        arena_destroy(&arena);
+        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
+        return rc;
+    }
+    if (argc > 1 && strcmp(argv[1], "m2") == 0) {
+        int rc = m2_cli_dispatch(argc - 1, argv + 1, m2);
+        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
+        return rc;
+    }
+    if (argc > 1 && strcmp(argv[1], "m3") == 0) {
+        int rc = m3_cli_dispatch(argc - 1, argv + 1, m3);
+        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
+        return rc;
+    }
+    if (argc > 1 && strcmp(argv[1], "m4") == 0) {
+        int rc = m4_cli_dispatch(argc - 1, argv + 1, m4);
+        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
         return rc;
     }
 
@@ -195,6 +270,9 @@ int main(int argc, char** argv) {
            wc.step_count, wc.cycle_count);
 
     /* Cleanup */
+    m4_teardown(m4);
+    m3_teardown(m3);
+    m2_teardown(m2);
     m1_teardown(m1);
     m0_teardown(m0);
     arena_destroy(&arena);
