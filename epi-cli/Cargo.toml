@@ -1,8 +1,15 @@
 [package]
-name = "epi"
+name = "epi-logos"
 version = "0.1.0"
 edition = "2021"
-description = "The Master CLI for the Epi-Logos coordinate system"
+description = "The Master CLI for the Epi-Logos coordinate system — ontology-is-code"
+license = "MIT OR Apache-2.0"
+keywords = ["philosophy", "coordinate-system", "cli", "tui"]
+categories = ["command-line-utilities"]
+
+[[bin]]
+name = "epi"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
