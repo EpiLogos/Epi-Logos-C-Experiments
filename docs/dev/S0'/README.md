@@ -38,6 +38,11 @@ Plus tooling namespaces: `epi sesh`, `epi kbase`, `epi book`, `epi techne`, `epi
   - Sub-branch explorer (#5-0 through #5-5)
   - Logos FSM live state with stage names (A-logos → Ana-logos)
   - Quintessential View lookup per coordinate
+- `epi core knowing` — non-interactive coordinate self-knowledge CLI
+  - CT5 5/0 output: quintessence + cross-family relational tree
+  - `--family <FAM>` lists available coordinates for discovery
+  - `--json` for agent/pipeline consumption
+  - Global Claude Code skill at `~/.claude/skills/epi-knowing.md`
 - `epi agent chat` — interactive TUI chat with PI agent
   - Scrollable conversation history, input line
   - Spawns `pi` subprocess with stdin/stdout piped
@@ -135,6 +140,9 @@ epi core dashboard                      # Interactive dashboard TUI
 epi core operators                      # Operator table + tagged pointer bits
 epi core cf                             # List 7 CF roots
 epi core m5                             # M5 holographic integration TUI
+epi core knowing <coord>                # Coordinate self-knowledge (CT5 5/0)
+epi core knowing <coord> --json         # JSON output for agents
+epi core knowing --family <FAM>         # List coordinates in a family
 ```
 
 **Coordinate syntax:**
@@ -263,6 +271,7 @@ epi (Rust binary — ~/.cargo/bin/epi, 2.8 MB)
 |---------|-------|-------|
 | `epi core` — all subcommands | **Live** | Statically linked, no runtime deps |
 | `epi core m5` — M5 TUI | **Live** | Logos FSM + sub-branch explorer |
+| `epi core knowing` — coordinate self-knowledge | **Live** | M5 self-API, all 36 coords, --json |
 | `epi vault` — all 12 subcommands | **Live** | Needs `obsidian-cli` installed |
 | `epi graph status` | **Live** | — |
 | `epi graph query/retrieve/graphrag/hybrid` | Stub | Needs `NEO4J_URI` + connection |
