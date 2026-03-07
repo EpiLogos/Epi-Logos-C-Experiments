@@ -545,28 +545,110 @@ pub fn position_name(pos: u8) -> &'static str {
     }
 }
 
-/// Parse a coordinate string like "M0", "S3", "C4" into (family_enum_value, position)
-fn parse_coord_id(coord: &str) -> Option<(u8, u8)> {
-    let coord = coord.trim();
-    if coord.len() < 2 || coord.len() > 3 {
+/// Parsed coordinate — covers all types in the system
+enum ParsedCoord {
+    /// Family coordinate: C0, M5, S3', P2i, etc.
+    Family { family: u8, pos: u8, inverted: bool },
+    /// Raw psychoid: #0 through #5
+    Psychoid { pos: u8 },
+    /// The # inversion operator itself
+    Hash,
+    /// Context frame root: CF(012), CF(50), etc.
+    ContextFrame { label: String },
+    /// Weave interleave: W0.0, W0.5, W5.0, W5.5
+    Weave { label: String },
+}
+
+const FAMILY_LETTERS: [&str; 6] = ["C", "P", "L", "S", "T", "M"];
+const FAMILY_NAMES: [&str; 6] = ["Category", "Position", "Lens", "Stack", "Thought", "Map/Subsystem"];
+
+const PSYCHOID_NAMES: [&str; 6] = ["Ground", "Definition", "Operation", "Pattern", "Context", "Integration"];
+
+const CF_DATA: [(&str, &str, &str); 7] = [
+    ("CF(0000)", "Receptive Dynamism", "(00/00) Mod %"),
+    ("CF(01)",   "Non-Dual Binary",   "(0/1) Mod 2"),
+    ("CF(012)",  "The Trika",         "(0/1/2) Mod 3"),
+    ("CF(0123)", "Three-Plus-One",    "(0/1/2/3) Mod 4"),
+    ("CF(4x)",   "Fractal Doubling",  "(4.0/1-4.4/5) Mod 4/6"),
+    ("CF(450)",  "Mobius Synthesis",   "(4/5/0)"),
+    ("CF(50)",   "Total Synthesis",   "(5/0) Mod 6"),
+];
+
+const WEAVE_DATA: [(&str, &str); 4] = [
+    ("W0.0", "Pure Ground — #0 implicate"),
+    ("W0.5", "Ground reaching Instance"),
+    ("W5.0", "Instance reaching Ground"),
+    ("W5.5", "Pure Instance — #5 implicate"),
+];
+
+const RELATION_PITHYS: [[&str; 6]; 6] = [
+    ["Bimba", "Form", "Entity", "Process", "Type", "Pratibimba"],
+    ["Ground", "Definition", "Operation", "Pattern", "Context", "Integration"],
+    ["Literal", "Functional", "Structural", "Archetypal", "Paradigmatic", "Integral"],
+    ["Terminal", "Obsidian", "Neo4j", "PAI Gateway", "Claude/PI", "Notion/n8n"],
+    ["Seed", "Spec", "Form", "Process", "Pattern", "Insight"],
+    ["Anuttara", "Paramasiva", "Parashakti", "Mahamaya", "Nara", "Epii"],
+];
+
+fn family_char_to_id(c: char) -> Option<u8> {
+    match c.to_ascii_uppercase() {
+        'C' => Some(0), 'P' => Some(1), 'L' => Some(2),
+        'S' => Some(3), 'T' => Some(4), 'M' => Some(5),
+        _ => None,
+    }
+}
+
+/// Parse any coordinate string into a ParsedCoord
+fn parse_coordinate(input: &str) -> Option<ParsedCoord> {
+    let s = input.trim();
+    if s.is_empty() { return None; }
+
+    // # operator
+    if s == "#" { return Some(ParsedCoord::Hash); }
+
+    // Psychoids: #0..#5
+    if let Some(rest) = s.strip_prefix('#') {
+        if let Ok(n) = rest.parse::<u8>() {
+            if n <= 5 { return Some(ParsedCoord::Psychoid { pos: n }); }
+        }
         return None;
     }
-    let family_char = coord.chars().next()?.to_ascii_uppercase();
-    let pos_str = &coord[1..];
-    let pos: u8 = pos_str.parse().ok()?;
-    if pos > 5 {
+
+    // Context frames: CF(...)
+    if let Some(inner) = s.strip_prefix("CF(").and_then(|r| r.strip_suffix(')')) {
+        let valid = ["0000", "01", "012", "0123", "4x", "450", "50"];
+        if valid.contains(&inner) {
+            return Some(ParsedCoord::ContextFrame { label: format!("CF({})", inner) });
+        }
         return None;
     }
-    let family = match family_char {
-        'C' => 0u8,
-        'P' => 1,
-        'L' => 2,
-        'S' => 3,
-        'T' => 4,
-        'M' => 5,
-        _ => return None,
+
+    // Weaves: W0.0, W0.5, W5.0, W5.5
+    if s.starts_with('W') || s.starts_with('w') {
+        let rest = &s[1..];
+        let valid = ["0.0", "0.5", "5.0", "5.5"];
+        if valid.contains(&rest) {
+            return Some(ParsedCoord::Weave { label: format!("W{}", rest) });
+        }
+        return None;
+    }
+
+    // Family coordinates: M0, S3, C4', P2i, etc.
+    let first = s.chars().next()?;
+    let family = family_char_to_id(first)?;
+    let rest = &s[1..];
+
+    // Check for inversion suffix: ' or i
+    let (pos_str, inverted) = if rest.ends_with('\'') || rest.ends_with('i') || rest.ends_with('I') {
+        (&rest[..rest.len()-1], true)
+    } else {
+        (rest, false)
     };
-    Some((family, pos))
+
+    let pos: u8 = pos_str.parse().ok()?;
+    if pos > 5 { return None; }
+
+    Some(ParsedCoord::Family { family, pos, inverted })
 }
 
 fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>,
@@ -603,124 +685,213 @@ fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>,
 
     let coord_str = coordinate
         .ok_or_else(|| color_eyre::eyre::eyre!(
-            "Provide a coordinate (e.g. M0, S3, C4) or use --family <FAMILY> to list available coords"
+            "Provide a coordinate (e.g. M0, S3', #4, CF(012), W0.5) or use --family <FAMILY>"
         ))?;
 
-    let (fam, pos) = parse_coord_id(coord_str)
+    let parsed = parse_coordinate(coord_str)
         .ok_or_else(|| color_eyre::eyre::eyre!(
-            "Invalid coordinate '{}'. Use format: <FAMILY><POS> where FAMILY=C|P|L|S|T|M, POS=0-5",
+            "Invalid coordinate '{}'. Examples: M0, S3', #4, CF(012), W0.5",
             coord_str
         ))?;
 
-    let family_letter = ["C", "P", "L", "S", "T", "M"][fam as usize];
-    let family_name = ["Category", "Position", "Lens", "Stack", "Thought", "Map/Subsystem"][fam as usize];
+    match parsed {
+        ParsedCoord::Family { family, pos, inverted } =>
+            knowing_family_coord(epi, family, pos, inverted, coord_str, json),
+        ParsedCoord::Psychoid { pos } =>
+            knowing_psychoid(pos, json),
+        ParsedCoord::Hash =>
+            knowing_hash_op(json),
+        ParsedCoord::ContextFrame { ref label } =>
+            knowing_cf(label, json),
+        ParsedCoord::Weave { ref label } =>
+            knowing_weave(label, json),
+    }
+}
 
-    // Cross-coordinate relation names (same position across all families)
-    let relation_pithys: [&[&str; 6]; 6] = [
-        &["Bimba", "Form", "Entity", "Process", "Type", "Pratibimba"],
-        &["Ground", "Definition", "Operation", "Pattern", "Context", "Integration"],
-        &["Literal", "Functional", "Structural", "Archetypal", "Paradigmatic", "Integral"],
-        &["Terminal", "Obsidian", "Neo4j", "PAI Gateway", "Claude/PI", "Notion/n8n"],
-        &["Seed", "Spec", "Form", "Process", "Pattern", "Insight"],
-        &["Anuttara", "Paramasiva", "Parashakti", "Mahamaya", "Nara", "Epii"],
-    ];
-    let family_letters = ["C", "P", "L", "S", "T", "M"];
-    let family_names = ["Category", "Position", "Lens", "Stack", "Thought", "Subsystem"];
-
-    // === THREE-TIER QV RESOLUTION ===
-    // Tier 1: JSON overlay
-    let overlay_result = overlay::overlay_pithy(coord_str);
-
-    // Tier 2: C library m5_lookup
-    let c_result: Option<String> = {
-        let mut arena = ffi::CoordinateArena {
-            slots: std::ptr::null_mut(),
-            capacity: 0,
-            count: 0,
-        };
-        epi.arena_init(&mut arena, 64);
-        let hc = epi.arena_alloc(&mut arena);
-        unsafe {
-            (*hc).ql_position = 5;
-            (*hc).family = 7; // NONE (raw psychoid)
-        }
-        let m5_root = unsafe { ffi::m5_init(&mut arena as *mut _, hc) };
-
-        let result = if !m5_root.is_null() {
-            // Pack coord_id: family(3 bits @ 13) | position(3 bits @ 10)
-            let coord_id = ((fam as u16 & 0x7) << 13) | ((pos as u16 & 0x7) << 10);
-            unsafe {
-                let ptr = ffi::m5_lookup(m5_root, coord_id, 0);
-                if !ptr.is_null() {
-                    let s = std::ffi::CStr::from_ptr(ptr).to_str().unwrap_or("").to_string();
-                    if s.is_empty() { None } else { Some(s) }
-                } else {
-                    None
-                }
-            }
-        } else {
-            None
-        };
-
-        // Cleanup
-        unsafe {
-            if !m5_root.is_null() {
-                ffi::m5_teardown(m5_root);
-            }
-            ffi::arena_destroy(&mut arena as *mut _);
-        }
-
-        result
-    };
-
-    // Tier 3: Static Rust tables (fallback)
-    let pithy = overlay_result
-        .or(c_result)
-        .unwrap_or_else(|| format!("{} -- {}",
-            relation_pithys[fam as usize][pos as usize],
-            family_name));
-
-    // Determine which M5 sub-branch owns this family
-    let (branch_id, branch_name) = match fam {
-        5 => ("5-0", "M+M' integral identity"),
-        2 | 1 => ("5-1", "L+P+L'+P' theory topology"),
-        3 => ("5-2", "S+S' full stack"),
-        4 | 0 => ("5-5", "T+C+T'+C' Logos cycle"),
+fn branch_for_family(family: u8, inverted: bool) -> (&'static str, &'static str) {
+    match (family, inverted) {
+        (5, false) => ("5-0", "M+M' integral identity"),
+        (5, true)  => ("5-0", "M+M' integral identity"),
+        (2, _) | (1, _) => ("5-1", "L+P+L'+P' theory topology"),
+        (3, false) => ("5-2", "S+S' full stack"),
+        (3, true)  => ("5-2", "S+S' full stack"),
+        (4, _) | (0, _) => ("5-5", "T+C+T'+C' Logos cycle"),
         _ => ("?", "unknown"),
-    };
+    }
+}
+
+fn knowing_family_coord(_epi: &EpiLib, family: u8, pos: u8, inverted: bool,
+                         coord_str: &str, json: bool) -> color_eyre::Result<()> {
+    let family_letter = FAMILY_LETTERS[family as usize];
+    let family_name = FAMILY_NAMES[family as usize];
+    let inv_suffix = if inverted { "'" } else { "" };
+    let display_coord = format!("{}{}{}", family_letter, pos, inv_suffix);
+
+    // Overlay lookup uses the canonical key form
+    let overlay_key = display_coord.clone();
+    let pithy = overlay::overlay_pithy(&overlay_key)
+        .unwrap_or_else(|| {
+            let base = RELATION_PITHYS[family as usize][pos as usize];
+            if inverted {
+                format!("{} (inverted) -- {}", base, family_name)
+            } else {
+                format!("{} -- {}", base, family_name)
+            }
+        });
+
+    let (branch_id, branch_name) = branch_for_family(family, inverted);
 
     if json {
         let mut relations = serde_json::Map::new();
-        for (i, letter) in family_letters.iter().enumerate() {
+        for (i, letter) in FAMILY_LETTERS.iter().enumerate() {
             relations.insert(
                 letter.to_string(),
                 serde_json::json!({
                     "coord": format!("{}{}", letter, pos),
-                    "family": family_names[i],
-                    "pithy": relation_pithys[i][pos as usize],
+                    "family": FAMILY_NAMES[i],
+                    "pithy": RELATION_PITHYS[i][pos as usize],
                 }),
             );
         }
         let output = serde_json::json!({
-            "coord": format!("{}{}", family_letter, pos),
+            "coord": display_coord,
             "family": family_name,
             "position": pos,
+            "inverted": inverted,
             "quintessence": pithy,
             "branch": { "id": branch_id, "name": branch_name },
             "relations": relations,
         });
         println!("{}", serde_json::to_string_pretty(&output)?);
     } else {
-        println!("{}{} — {}", family_letter, pos, family_name);
+        println!("{} — {}{}", display_coord, family_name,
+            if inverted { " (inverted phase)" } else { "" });
         println!("  Quintessence: {}", pithy);
         println!("  Branch: #{} ({})", branch_id, branch_name);
+        if inverted {
+            println!("  Phase: ' (result of # inversion applied to {}{})", family_letter, pos);
+        }
         println!("  Relations:");
-        for (i, letter) in family_letters.iter().enumerate() {
+        for (i, letter) in FAMILY_LETTERS.iter().enumerate() {
             let marker = if *letter == family_letter { ">" } else { " " };
-            println!("   {} {}{:<2} {}", marker, letter, pos, relation_pithys[i][pos as usize]);
+            println!("   {} {}{:<2} {}", marker, letter, pos, RELATION_PITHYS[i][pos as usize]);
         }
     }
+    Ok(())
+}
 
+fn knowing_psychoid(pos: u8, json: bool) -> color_eyre::Result<()> {
+    let key = format!("#{}", pos);
+    let pithy = overlay::overlay_pithy(&key)
+        .unwrap_or_else(|| format!("{} -- raw archetype (Layer 1 .rodata)", PSYCHOID_NAMES[pos as usize]));
+
+    if json {
+        let mut manifests = serde_json::Map::new();
+        for (i, letter) in FAMILY_LETTERS.iter().enumerate() {
+            manifests.insert(
+                letter.to_string(),
+                serde_json::json!({
+                    "coord": format!("{}{}", letter, pos),
+                    "family": FAMILY_NAMES[i],
+                    "pithy": RELATION_PITHYS[i][pos as usize],
+                }),
+            );
+        }
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            "coord": key,
+            "type": "psychoid",
+            "position": pos,
+            "quintessence": pithy,
+            "manifests_as": manifests,
+        }))?);
+    } else {
+        println!("#{} — Raw Archetype (Layer 1 .rodata)", pos);
+        println!("  Quintessence: {}", pithy);
+        println!("  Manifests as:");
+        for (i, letter) in FAMILY_LETTERS.iter().enumerate() {
+            println!("    {}{} {}", letter, pos, RELATION_PITHYS[i][pos as usize]);
+        }
+        if pos == 4 {
+            println!("  Invariant: #4.cf == &Psychoid_4 (Lemniscate self-fold)");
+        }
+        if pos == 0 {
+            println!("  Invariant: #0.c == &Psychoid_0 (self-reference)");
+        }
+        if pos == 5 {
+            println!("  Invariant: #5.c == &Psychoid_0 (Mobius return)");
+        }
+    }
+    Ok(())
+}
+
+fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            "coord": "#",
+            "type": "operator",
+            "quintessence": "The Inversion Act -- transforms X into X', the fundamental non-dual operation",
+            "tagged_pointer_bit": 63,
+            "flag": "FLAG_INVERTED",
+        }))?);
+    } else {
+        println!("# — The Inversion Operation");
+        println!("  Quintessence: The fundamental mechanism of non-duality");
+        println!("  Function: X -> X' (phase shift into complement)");
+        println!("  Tagged pointer: bit 63 (FLAG_INVERTED)");
+        println!("  Property: ## = identity (applying # twice returns to original)");
+    }
+    Ok(())
+}
+
+fn knowing_cf(label: &str, json: bool) -> color_eyre::Result<()> {
+    let pithy = overlay::overlay_pithy(label);
+    let data = CF_DATA.iter().find(|(l, _, _)| *l == label);
+
+    let (name, mode) = match data {
+        Some((_, n, m)) => (*n, *m),
+        None => ("Unknown CF", ""),
+    };
+
+    let display_pithy = pithy.unwrap_or_else(|| format!("{} -- {}", name, mode));
+
+    if json {
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            "coord": label,
+            "type": "context_frame",
+            "name": name,
+            "mode": mode,
+            "quintessence": display_pithy,
+        }))?);
+    } else {
+        println!("{} — Context Frame Root", label);
+        println!("  Quintessence: {}", display_pithy);
+        println!("  Mode: {}", mode);
+        println!("  Invariant: .cf -> &Psychoid_4 (Lemniscate anchor)");
+    }
+    Ok(())
+}
+
+fn knowing_weave(label: &str, json: bool) -> color_eyre::Result<()> {
+    let pithy = overlay::overlay_pithy(label);
+    let data = WEAVE_DATA.iter().find(|(l, _)| *l == label);
+
+    let desc = match data {
+        Some((_, d)) => *d,
+        None => "Unknown weave",
+    };
+
+    let display_pithy = pithy.unwrap_or_else(|| desc.to_string());
+
+    if json {
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            "coord": label,
+            "type": "weave",
+            "quintessence": display_pithy,
+        }))?);
+    } else {
+        println!("{} — Weave Interleave", label);
+        println!("  Quintessence: {}", display_pithy);
+    }
     Ok(())
 }
 
@@ -778,26 +949,97 @@ fn knowing_family(fam_str: &str, json: bool) -> color_eyre::Result<()> {
             ("M4", "Nara — personal dialogical interface, oracle"),
             ("M5", "Epii — holographic integration, Logos FSM"),
         ]),
+        '#' => {
+            // Pseudo-family: raw psychoids
+            let mut items: Vec<(String, String)> = Vec::new();
+            items.push(("#".into(), "The Inversion Operation — X -> X'".into()));
+            for i in 0..6 {
+                let key = format!("#{}", i);
+                let pithy = overlay::overlay_pithy(&key)
+                    .unwrap_or_else(|| PSYCHOID_NAMES[i].to_string());
+                items.push((key, pithy));
+            }
+            if json {
+                let jitems: Vec<_> = items.iter().map(|(c, d)| {
+                    serde_json::json!({ "coord": c, "description": d })
+                }).collect();
+                println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    "family": "Raw Psychoids",
+                    "letter": "#",
+                    "coordinates": jitems,
+                }))?);
+            } else {
+                println!("Raw Psychoids (#) — 7 coordinates:\n");
+                for (c, d) in &items { println!("  {:<8} {}", c, d); }
+            }
+            return Ok(());
+        }
+        _ if fam_str.eq_ignore_ascii_case("CF") => {
+            if json {
+                let items: Vec<_> = CF_DATA.iter().map(|(l, n, m)| {
+                    serde_json::json!({ "coord": l, "name": n, "mode": m })
+                }).collect();
+                println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    "family": "Context Frames",
+                    "coordinates": items,
+                }))?);
+            } else {
+                println!("Context Frames (CF) — 7 roots:\n");
+                for (l, n, m) in &CF_DATA { println!("  {:<12} {:<22} {}", l, n, m); }
+            }
+            return Ok(());
+        }
+        _ if fam_str.eq_ignore_ascii_case("W") => {
+            if json {
+                let items: Vec<_> = WEAVE_DATA.iter().map(|(l, d)| {
+                    serde_json::json!({ "coord": l, "description": d })
+                }).collect();
+                println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+                    "family": "Weave Interleaves",
+                    "coordinates": items,
+                }))?);
+            } else {
+                println!("Weave Interleaves (W) — 4 coordinates:\n");
+                for (l, d) in &WEAVE_DATA { println!("  {:<6} {}", l, d); }
+            }
+            return Ok(());
+        }
         _ => return Err(color_eyre::eyre::eyre!(
-            "Unknown family '{}'. Available: C, P, L, S, T, M", fam_str
+            "Unknown family '{}'. Available: C, P, L, S, T, M, #, CF, W", fam_str
         )),
     };
 
+    // For standard families, also list inverted coords
     if json {
-        let items: Vec<_> = coords.iter().map(|(c, d)| {
+        let mut items: Vec<_> = coords.iter().map(|(c, d)| {
             serde_json::json!({ "coord": c, "description": d })
         }).collect();
+        // Add inverted
+        for i in 0..6 {
+            let inv_key = format!("{}{}'", fam_char, i);
+            let inv_pithy = overlay::overlay_pithy(&inv_key)
+                .unwrap_or_else(|| format!("{} (inverted)", coords[i].1));
+            items.push(serde_json::json!({ "coord": inv_key, "description": inv_pithy }));
+        }
         println!("{}", serde_json::to_string_pretty(&serde_json::json!({
             "family": family_name,
             "letter": fam_char.to_string(),
             "coordinates": items,
         }))?);
     } else {
-        println!("{} ({}) — 6 coordinates:\n", family_name, fam_char);
+        println!("{} ({}) — 12 coordinates (6 base + 6 inverted):\n", family_name, fam_char);
+        println!("  Base:");
         for (coord, desc) in &coords {
-            println!("  {:<4} {}", coord, desc);
+            println!("    {:<4} {}", coord, desc);
         }
-        println!("\nUsage: epi core knowing <COORD>   (e.g. epi core knowing {}0)", fam_char);
+        println!("  Inverted:");
+        for i in 0..6 {
+            let inv_key = format!("{}{}'", fam_char, i);
+            let inv_pithy = overlay::overlay_pithy(&inv_key)
+                .unwrap_or_else(|| format!("{} (inverted)", coords[i].1));
+            println!("    {:<4} {}", inv_key, inv_pithy);
+        }
+        println!("\nUsage: epi core knowing <COORD>   (e.g. epi core knowing {}0 or {}0')", fam_char, fam_char);
     }
 
     Ok(())
