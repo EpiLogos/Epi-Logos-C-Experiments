@@ -1,6 +1,7 @@
 mod agent_dirs;
 mod agents;
 mod auth;
+pub mod chat;
 mod doctor;
 mod extensions;
 mod install;
@@ -67,6 +68,14 @@ pub enum AgentCmd {
         agent: Option<String>,
         args: Vec<String>,
     },
+    /// Interactive chat with managed PI agent
+    Chat {
+        /// Resolve layout for a named agent
+        #[arg(long)]
+        agent: Option<String>,
+        /// Initial prompt (optional)
+        prompt: Option<String>,
+    },
 }
 
 pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
@@ -82,6 +91,11 @@ pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
         }
         AgentCmd::Attach { agent, session_id } => spawn::attach(agent.as_deref(), session_id, json),
         AgentCmd::Run { agent, args } => spawn::run_pi(agent.as_deref(), args, json),
+        AgentCmd::Chat { agent, prompt } => {
+            chat::run(agent.as_deref(), prompt.as_deref())
+                .map_err(|e| e.to_string())?;
+            Ok(String::new())
+        }
     }
 }
 
