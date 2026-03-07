@@ -34,6 +34,8 @@ pub enum CoreCmd {
     WalkTui,
     /// Family explorer — browse all 36 family coordinates (6 families × 6 positions)
     Families,
+    /// M5 (Epii) holographic integration — Logos FSM, QV lookup
+    M5,
 }
 
 pub fn dispatch(cmd: &CoreCmd, epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
@@ -48,6 +50,7 @@ pub fn dispatch(cmd: &CoreCmd, epi: &EpiLib, json: bool) -> color_eyre::Result<(
         CoreCmd::Hash { coordinate } => hash(epi, coordinate, json),
         CoreCmd::WalkTui => crate::tui::run_walk(epi),
         CoreCmd::Families => crate::tui::run_families(epi),
+        CoreCmd::M5 => crate::tui::run_m5(epi),
     }
 }
 

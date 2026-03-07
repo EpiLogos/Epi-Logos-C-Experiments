@@ -1,5 +1,5 @@
 use crate::ffi::tagged;
-use crate::ffi::{self, EpiLib};
+use crate::ffi::{self, EpiLib, M5LogosState};
 use crossterm::{
     event::{self, Event, KeyCode, KeyEventKind},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
@@ -811,4 +811,344 @@ fn draw_families(frame: &mut Frame, app: &FamilyApp) {
         );
         frame.render_widget(para, outer[1]);
     }
+}
+
+// ─── M5 Holographic Integration TUI ───
+
+const M5_SUB_BRANCHES: [(&str, &str); 6] = [
+    ("#5-0  M+M'", "Integral Identity — M0-M5 mirror"),
+    ("#5-1  L+P+L'+P'", "Theory Topology — accumulated understanding"),
+    ("#5-2  S+S'", "Full Stack — objective + project-specific"),
+    ("#5-3  M' UI", "Electron App — WebMCP protocol hooks"),
+    ("#5-4  S4/S4'", "Agent Rosters — Anima + Aletheia"),
+    ("#5-5  T+C+T'+C'", "Logos Cycle — cadence of immanence"),
+];
+
+struct M5App {
+    m5_root: *mut libc::c_void,
+    arena: ffi::CoordinateArena,
+    logos_state: M5LogosState,
+    selected: usize,
+    should_quit: bool,
+}
+
+impl M5App {
+    fn new(epi: &EpiLib) -> Self {
+        let mut arena = ffi::CoordinateArena {
+            slots: std::ptr::null_mut(),
+            capacity: 0,
+            count: 0,
+        };
+        epi.arena_init(&mut arena, 64);
+
+        // Allocate an HC for M5 at position #5
+        let hc = epi.arena_alloc(&mut arena);
+        unsafe {
+            (*hc).ql_position = 5;
+            (*hc).family = 7; // NONE (raw psychoid)
+        }
+
+        let m5_root = unsafe { ffi::m5_init(&mut arena as *mut _, hc) };
+        let logos_state = M5LogosState {
+            pipeline_tick: 0,
+            current_stage: 0,
+            active_divine_act: 0,
+            is_implicate: false,
+            active_r_factor: 0,
+        };
+
+        Self {
+            m5_root,
+            arena,
+            logos_state,
+            selected: 0,
+            should_quit: false,
+        }
+    }
+
+    fn advance_logos(&mut self) {
+        if !self.m5_root.is_null() {
+            self.logos_state = unsafe { ffi::m5_advance_logos(self.m5_root) };
+        }
+    }
+
+    fn stage_name(&self) -> &'static str {
+        let idx = self.logos_state.current_stage as usize;
+        if idx < 6 {
+            unsafe {
+                let ptr = ffi::M5_LOGOS_STAGE_NAMES[idx];
+                if !ptr.is_null() {
+                    let cstr = std::ffi::CStr::from_ptr(ptr);
+                    cstr.to_str().unwrap_or("?")
+                } else {
+                    "?"
+                }
+            }
+        } else {
+            "?"
+        }
+    }
+
+    fn lookup(&self, family: u8, pos: u8) -> String {
+        if self.m5_root.is_null() {
+            return "(no root)".to_string();
+        }
+        // Pack coord_id: family(3 bits @ 13) | position(3 bits @ 10)
+        let coord_id = ((family as u16 & 0x7) << 13) | ((pos as u16 & 0x7) << 10);
+        unsafe {
+            let ptr = ffi::m5_lookup(self.m5_root, coord_id, 0); // granularity 0 = pithy
+            if !ptr.is_null() {
+                let cstr = std::ffi::CStr::from_ptr(ptr);
+                cstr.to_str().unwrap_or("(invalid)").to_string()
+            } else {
+                "(no view)".to_string()
+            }
+        }
+    }
+}
+
+impl Drop for M5App {
+    fn drop(&mut self) {
+        if !self.m5_root.is_null() {
+            unsafe { ffi::m5_teardown(self.m5_root) };
+        }
+        unsafe { ffi::arena_destroy(&mut self.arena as *mut _) };
+    }
+}
+
+pub fn run_m5(epi: &EpiLib) -> color_eyre::Result<()> {
+    enable_raw_mode()?;
+    stdout().execute(EnterAlternateScreen)?;
+    let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
+
+    let mut app = M5App::new(epi);
+
+    while !app.should_quit {
+        terminal.draw(|frame| draw_m5(frame, &app))?;
+
+        if event::poll(std::time::Duration::from_millis(50))? {
+            if let Event::Key(key) = event::read()? {
+                if key.kind == KeyEventKind::Press {
+                    match key.code {
+                        KeyCode::Char('q') | KeyCode::Esc => app.should_quit = true,
+                        KeyCode::Up | KeyCode::Char('k') => {
+                            if app.selected > 0 {
+                                app.selected -= 1;
+                            }
+                        }
+                        KeyCode::Down | KeyCode::Char('j') => {
+                            if app.selected + 1 < 6 {
+                                app.selected += 1;
+                            }
+                        }
+                        KeyCode::Right | KeyCode::Char('l') => app.advance_logos(),
+                        _ => {}
+                    }
+                }
+            }
+        }
+    }
+
+    disable_raw_mode()?;
+    stdout().execute(LeaveAlternateScreen)?;
+    Ok(())
+}
+
+fn draw_m5(frame: &mut Frame, app: &M5App) {
+    let outer = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(3),  // header
+            Constraint::Min(10),   // main
+            Constraint::Length(3), // logos strip
+            Constraint::Length(3), // footer
+        ])
+        .split(frame.area());
+
+    // Header
+    let phase = if app.logos_state.is_implicate {
+        "descending"
+    } else {
+        "ascending"
+    };
+    let header = Paragraph::new(Line::from(vec![
+        Span::styled(
+            " M5 (Epii) — Holographic Integration Layer ",
+            Style::default()
+                .fg(Color::White)
+                .add_modifier(Modifier::BOLD),
+        ),
+        Span::styled(
+            format!("  CF_MOBIUS (5/0)  tick {}/11 {} ",
+                app.logos_state.pipeline_tick, phase),
+            Style::default().fg(Color::Magenta),
+        ),
+    ]))
+    .block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(Color::Magenta)),
+    );
+    frame.render_widget(header, outer[0]);
+
+    // Main: left = sub-branches, right = detail
+    let main_area = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(40), Constraint::Percentage(60)])
+        .split(outer[1]);
+
+    // Left: sub-branch list
+    let items: Vec<ListItem> = M5_SUB_BRANCHES
+        .iter()
+        .enumerate()
+        .map(|(i, (name, _desc))| {
+            let style = if i == app.selected {
+                Style::default().fg(Color::Black).bg(Color::Magenta)
+            } else {
+                Style::default().fg(Color::White)
+            };
+            ListItem::new(format!(" {}", name)).style(style)
+        })
+        .collect();
+
+    let list = List::new(items).block(
+        Block::default()
+            .title(" Sub-Branches ")
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(Color::Cyan)),
+    );
+    frame.render_widget(list, main_area[0]);
+
+    // Right: detail for selected sub-branch
+    let (branch_name, branch_desc) = M5_SUB_BRANCHES[app.selected];
+    let families_for_branch: &[(u8, &str)] = match app.selected {
+        0 => &[(5, "M0"), (5, "M1"), (5, "M2"), (5, "M3"), (5, "M4"), (5, "M5")],
+        1 => &[(2, "L0"), (2, "L1"), (2, "L2"), (2, "L3"), (2, "L4"), (2, "L5"),
+               (1, "P0"), (1, "P1"), (1, "P2"), (1, "P3"), (1, "P4"), (1, "P5")],
+        2 => &[(3, "S0"), (3, "S1"), (3, "S2"), (3, "S3"), (3, "S4"), (3, "S5")],
+        3 => &[(5, "M'")],
+        4 => &[(3, "S4"), (3, "S4'")],
+        5 => &[(4, "T0"), (4, "T1"), (4, "T2"), (4, "T3"), (4, "T4"), (4, "T5"),
+               (0, "C0"), (0, "C1"), (0, "C2"), (0, "C3"), (0, "C4"), (0, "C5")],
+        _ => &[],
+    };
+
+    let mut lines = vec![
+        Line::from(vec![
+            Span::styled("Branch:  ", Style::default().fg(Color::DarkGray)),
+            Span::styled(
+                branch_name,
+                Style::default()
+                    .fg(Color::Magenta)
+                    .add_modifier(Modifier::BOLD),
+            ),
+        ]),
+        Line::from(vec![
+            Span::styled("Domain:  ", Style::default().fg(Color::DarkGray)),
+            Span::raw(branch_desc),
+        ]),
+        Line::from(""),
+        Line::from(Span::styled(
+            "── QV Lookups ──",
+            Style::default().fg(Color::Yellow),
+        )),
+    ];
+
+    for (fam, label) in families_for_branch {
+        let pos = label
+            .chars()
+            .last()
+            .and_then(|c| c.to_digit(10))
+            .unwrap_or(0) as u8;
+        let qv = app.lookup(*fam, pos);
+        lines.push(Line::from(vec![
+            Span::styled(
+                format!("  {:<4} ", label),
+                Style::default().fg(Color::Cyan),
+            ),
+            Span::raw(qv),
+        ]));
+    }
+
+    let detail = Paragraph::new(lines)
+        .block(
+            Block::default()
+                .title(format!(" {} ", branch_name))
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(Color::Green)),
+        )
+        .wrap(Wrap { trim: false });
+    frame.render_widget(detail, main_area[1]);
+
+    // Logos strip
+    let stage_name = app.stage_name();
+    let logos_spans: Vec<Span> = (0u8..6)
+        .map(|i| {
+            let active = i == app.logos_state.current_stage;
+            let name = match i {
+                0 => "A-logos",
+                1 => "Pro-logos",
+                2 => "Dia-logos",
+                3 => "Logos",
+                4 => "Epi-logos",
+                5 => "Ana-logos",
+                _ => "?",
+            };
+            let style = if active {
+                Style::default()
+                    .fg(Color::Black)
+                    .bg(Color::Magenta)
+                    .add_modifier(Modifier::BOLD)
+            } else {
+                Style::default().fg(Color::DarkGray)
+            };
+            Span::styled(format!(" {} ", name), style)
+        })
+        .collect();
+
+    let mut all_spans = vec![Span::styled(" Logos FSM: ", Style::default().fg(Color::DarkGray))];
+    all_spans.extend(logos_spans);
+    all_spans.push(Span::styled(
+        format!("  [{}]", stage_name),
+        Style::default().fg(Color::Magenta),
+    ));
+
+    let logos_bar = Paragraph::new(Line::from(all_spans)).block(
+        Block::default()
+            .title(" Logos Cycle ")
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(Color::Magenta)),
+    );
+    frame.render_widget(logos_bar, outer[2]);
+
+    // Footer
+    let footer = Paragraph::new(Line::from(vec![
+        Span::styled(
+            " [↑↓]",
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::BOLD),
+        ),
+        Span::raw(" navigate  "),
+        Span::styled(
+            "[→/l]",
+            Style::default()
+                .fg(Color::Magenta)
+                .add_modifier(Modifier::BOLD),
+        ),
+        Span::raw(" advance logos  "),
+        Span::styled(
+            "[q]",
+            Style::default()
+                .fg(Color::DarkGray)
+                .add_modifier(Modifier::BOLD),
+        ),
+        Span::raw(" quit"),
+    ]))
+    .block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(Color::DarkGray)),
+    );
+    frame.render_widget(footer, outer[3]);
 }
