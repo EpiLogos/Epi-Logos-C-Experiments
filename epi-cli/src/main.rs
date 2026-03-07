@@ -18,7 +18,6 @@ mod sesh;
 mod techne;
 
 use clap::{Parser, Subcommand};
-use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(
@@ -32,10 +31,6 @@ struct Cli {
     /// Output structured JSON instead of TUI
     #[arg(long, global = true)]
     json: bool,
-
-    /// Path to libepilogos.so (default: searches common locations)
-    #[arg(long, global = true)]
-    lib: Option<PathBuf>,
 }
 
 #[derive(Subcommand)]
@@ -105,26 +100,6 @@ enum Commands {
     },
 }
 
-fn find_lib(cli_lib: &Option<PathBuf>) -> color_eyre::Result<PathBuf> {
-    if let Some(p) = cli_lib {
-        return Ok(p.clone());
-    }
-    let candidates = [
-        PathBuf::from("./libepilogos.so"),
-        PathBuf::from("../libepilogos.so"),
-        PathBuf::from("./libepilogos.dylib"),
-        PathBuf::from("../libepilogos.dylib"),
-    ];
-    for c in &candidates {
-        if c.exists() {
-            return Ok(c.clone());
-        }
-    }
-    color_eyre::eyre::bail!(
-        "Could not find libepilogos.so/dylib. Use --lib <path> or place it in the current directory."
-    )
-}
-
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
     let cli = Cli::parse();
@@ -132,8 +107,7 @@ fn main() -> color_eyre::Result<()> {
     match &cli.command {
         // System layer
         Commands::Core { cmd } => {
-            let lib_path = find_lib(&cli.lib)?;
-            let epi = ffi::EpiLib::load(&lib_path)?;
+            let epi = ffi::EpiLib::new();
             core::dispatch(cmd, &epi, cli.json)?;
         }
         Commands::Vault { cmd } => match vault::dispatch(cmd) {

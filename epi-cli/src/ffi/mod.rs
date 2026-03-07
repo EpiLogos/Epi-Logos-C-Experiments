@@ -1,10 +1,8 @@
-//! FFI bindings to libepilogos.so — the C shared library
+//! FFI bindings to libepilogos — statically linked C library
 
 pub mod tagged;
 
 use libc::c_void;
-use libloading::{Library, Symbol};
-use std::path::Path;
 
 /// Mirror of C Holographic_Coordinate — 128 bytes, repr(C)
 #[repr(C)]
@@ -127,10 +125,81 @@ impl CoordinateFamily {
     }
 }
 
-/// Safe wrapper around the loaded C library
+// ─── Static extern C declarations ───────────────────────────────────────────
+
+extern "C" {
+    // .rodata psychoids
+    pub static Psychoid_0: HolographicCoordinate;
+    pub static Psychoid_1: HolographicCoordinate;
+    pub static Psychoid_2: HolographicCoordinate;
+    pub static Psychoid_3: HolographicCoordinate;
+    pub static Psychoid_4: HolographicCoordinate;
+    pub static Psychoid_5: HolographicCoordinate;
+    pub static Psychoid_Hash: HolographicCoordinate;
+    // .rodata weaves
+    pub static Weave_0_0: HolographicCoordinate;
+    pub static Weave_0_5: HolographicCoordinate;
+    pub static Weave_5_0: HolographicCoordinate;
+    pub static Weave_5_5: HolographicCoordinate;
+    // .rodata CF roots
+    pub static CF_0000: HolographicCoordinate;
+    pub static CF_01: HolographicCoordinate;
+    pub static CF_012: HolographicCoordinate;
+    pub static CF_0123: HolographicCoordinate;
+    pub static CF_4x: HolographicCoordinate;
+    pub static CF_450: HolographicCoordinate;
+    pub static CF_50: HolographicCoordinate;
+
+    // Pillar I functions
+    pub fn arena_init(arena: *mut CoordinateArena, cap: u32) -> i32;
+    pub fn arena_alloc(arena: *mut CoordinateArena) -> *mut HolographicCoordinate;
+    pub fn arena_destroy(arena: *mut CoordinateArena);
+    pub fn families_init(
+        arena: *mut CoordinateArena,
+        mirrors: *mut *mut HolographicCoordinate,
+    ) -> i32;
+    pub fn families_crosslink(arena: *mut CoordinateArena) -> i32;
+    pub fn families_wire_reflective(arena: *mut CoordinateArena) -> i32;
+    pub fn engine_torus_walk(
+        start: *const HolographicCoordinate,
+        ctx: *mut c_void,
+        steps: u32,
+    );
+    pub fn engine_double_covering(start: *const HolographicCoordinate, ctx: *mut c_void);
+    pub fn Execute_Hash(hc: *mut HolographicCoordinate, target: *mut c_void);
+
+    // M5 API
+    pub fn m5_init(
+        arena: *mut CoordinateArena,
+        hc: *mut HolographicCoordinate,
+    ) -> *mut c_void;
+    pub fn m5_advance_logos(root: *mut c_void) -> M5LogosState;
+    pub fn m5_lookup(
+        root: *const c_void,
+        coord_id: u16,
+        granularity: u8,
+    ) -> *const libc::c_char;
+    pub fn m5_teardown(root: *mut c_void);
+    pub fn m5_verify() -> bool;
+
+    // M5 Logos stage names
+    pub static M5_LOGOS_STAGE_NAMES: [*const libc::c_char; 6];
+}
+
+/// Mirror of C Unified_Logos_State
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct M5LogosState {
+    pub pipeline_tick: u8,
+    pub current_stage: u8,
+    pub active_divine_act: u8,
+    pub is_implicate: bool,
+    pub active_r_factor: u8,
+}
+
+/// Zero-cost wrapper — provides safe access to statically linked C symbols
 pub struct EpiLib {
-    _lib: Library,
-    // .rodata pointers (static lifetime from the shared lib)
+    // Accessors as public fields for backwards compat with call sites
     pub psychoid_0: *const HolographicCoordinate,
     pub psychoid_1: *const HolographicCoordinate,
     pub psychoid_2: *const HolographicCoordinate,
@@ -149,154 +218,88 @@ pub struct EpiLib {
     pub cf_4x: *const HolographicCoordinate,
     pub cf_450: *const HolographicCoordinate,
     pub cf_50: *const HolographicCoordinate,
-    // Function pointers
-    arena_init_fn: unsafe extern "C" fn(*mut CoordinateArena, u32) -> i32,
-    arena_alloc_fn: unsafe extern "C" fn(*mut CoordinateArena) -> *mut HolographicCoordinate,
-    arena_destroy_fn: unsafe extern "C" fn(*mut CoordinateArena),
-    families_init_fn:
-        unsafe extern "C" fn(*mut CoordinateArena, *mut *mut HolographicCoordinate) -> i32,
-    families_crosslink_fn: unsafe extern "C" fn(*mut CoordinateArena) -> i32,
-    families_wire_reflective_fn: unsafe extern "C" fn(*mut CoordinateArena) -> i32,
-    engine_torus_walk_fn: unsafe extern "C" fn(*const HolographicCoordinate, *mut c_void, u32),
-    engine_double_covering_fn: unsafe extern "C" fn(*const HolographicCoordinate, *mut c_void),
-    execute_hash_fn: unsafe extern "C" fn(*mut HolographicCoordinate, *mut c_void),
 }
 
 impl EpiLib {
-    /// Load libepilogos.so and resolve all symbols
-    pub fn load(lib_path: &Path) -> color_eyre::Result<Self> {
+    pub fn new() -> Self {
         unsafe {
-            let lib = Library::new(lib_path)?;
-
-            // Resolve .rodata symbols
-            let psychoid_0: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_0")?;
-            let psychoid_1: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_1")?;
-            let psychoid_2: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_2")?;
-            let psychoid_3: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_3")?;
-            let psychoid_4: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_4")?;
-            let psychoid_5: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_5")?;
-            let psychoid_hash: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_Hash")?;
-            let weave_0_0: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_0_0")?;
-            let weave_0_5: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_0_5")?;
-            let weave_5_0: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_5_0")?;
-            let weave_5_5: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_5_5")?;
-            let cf_0000: Symbol<*const HolographicCoordinate> = lib.get(b"CF_0000")?;
-            let cf_01: Symbol<*const HolographicCoordinate> = lib.get(b"CF_01")?;
-            let cf_012: Symbol<*const HolographicCoordinate> = lib.get(b"CF_012")?;
-            let cf_0123: Symbol<*const HolographicCoordinate> = lib.get(b"CF_0123")?;
-            let cf_4x: Symbol<*const HolographicCoordinate> = lib.get(b"CF_4x")?;
-            let cf_450: Symbol<*const HolographicCoordinate> = lib.get(b"CF_450")?;
-            let cf_50: Symbol<*const HolographicCoordinate> = lib.get(b"CF_50")?;
-
-            // Resolve function symbols
-            let arena_init_fn: Symbol<unsafe extern "C" fn(*mut CoordinateArena, u32) -> i32> =
-                lib.get(b"arena_init")?;
-            let arena_alloc_fn: Symbol<
-                unsafe extern "C" fn(*mut CoordinateArena) -> *mut HolographicCoordinate,
-            > = lib.get(b"arena_alloc")?;
-            let arena_destroy_fn: Symbol<unsafe extern "C" fn(*mut CoordinateArena)> =
-                lib.get(b"arena_destroy")?;
-            let families_init_fn: Symbol<
-                unsafe extern "C" fn(*mut CoordinateArena, *mut *mut HolographicCoordinate) -> i32,
-            > = lib.get(b"families_init")?;
-            let families_crosslink_fn: Symbol<unsafe extern "C" fn(*mut CoordinateArena) -> i32> =
-                lib.get(b"families_crosslink")?;
-            let families_wire_reflective_fn: Symbol<
-                unsafe extern "C" fn(*mut CoordinateArena) -> i32,
-            > = lib.get(b"families_wire_reflective")?;
-            let engine_torus_walk_fn: Symbol<
-                unsafe extern "C" fn(*const HolographicCoordinate, *mut c_void, u32),
-            > = lib.get(b"engine_torus_walk")?;
-            let engine_double_covering_fn: Symbol<
-                unsafe extern "C" fn(*const HolographicCoordinate, *mut c_void),
-            > = lib.get(b"engine_double_covering")?;
-            let execute_hash_fn: Symbol<
-                unsafe extern "C" fn(*mut HolographicCoordinate, *mut c_void),
-            > = lib.get(b"Execute_Hash")?;
-
-            Ok(Self {
-                psychoid_0: *psychoid_0,
-                psychoid_1: *psychoid_1,
-                psychoid_2: *psychoid_2,
-                psychoid_3: *psychoid_3,
-                psychoid_4: *psychoid_4,
-                psychoid_5: *psychoid_5,
-                psychoid_hash: *psychoid_hash,
-                weave_0_0: *weave_0_0,
-                weave_0_5: *weave_0_5,
-                weave_5_0: *weave_5_0,
-                weave_5_5: *weave_5_5,
-                cf_0000: *cf_0000,
-                cf_01: *cf_01,
-                cf_012: *cf_012,
-                cf_0123: *cf_0123,
-                cf_4x: *cf_4x,
-                cf_450: *cf_450,
-                cf_50: *cf_50,
-                arena_init_fn: *arena_init_fn,
-                arena_alloc_fn: *arena_alloc_fn,
-                arena_destroy_fn: *arena_destroy_fn,
-                families_init_fn: *families_init_fn,
-                families_crosslink_fn: *families_crosslink_fn,
-                families_wire_reflective_fn: *families_wire_reflective_fn,
-                engine_torus_walk_fn: *engine_torus_walk_fn,
-                engine_double_covering_fn: *engine_double_covering_fn,
-                execute_hash_fn: *execute_hash_fn,
-                _lib: lib,
-            })
+            EpiLib {
+                psychoid_0: &Psychoid_0,
+                psychoid_1: &Psychoid_1,
+                psychoid_2: &Psychoid_2,
+                psychoid_3: &Psychoid_3,
+                psychoid_4: &Psychoid_4,
+                psychoid_5: &Psychoid_5,
+                psychoid_hash: &Psychoid_Hash,
+                weave_0_0: &Weave_0_0,
+                weave_0_5: &Weave_0_5,
+                weave_5_0: &Weave_5_0,
+                weave_5_5: &Weave_5_5,
+                cf_0000: &CF_0000,
+                cf_01: &CF_01,
+                cf_012: &CF_012,
+                cf_0123: &CF_0123,
+                cf_4x: &CF_4x,
+                cf_450: &CF_450,
+                cf_50: &CF_50,
+            }
         }
     }
 
     /// Get all 18 BIMBA entities as (name, pointer) pairs
     pub fn all_bimba(&self) -> Vec<(&'static str, *const HolographicCoordinate)> {
-        vec![
-            ("#0 Ground", self.psychoid_0),
-            ("#1 Form", self.psychoid_1),
-            ("#2 Operation", self.psychoid_2),
-            ("#3 Pattern", self.psychoid_3),
-            ("#4 Context", self.psychoid_4),
-            ("#5 Integration", self.psychoid_5),
-            ("# Hash", self.psychoid_hash),
-            ("Weave 0.0", self.weave_0_0),
-            ("Weave 0.5", self.weave_0_5),
-            ("Weave 5.0", self.weave_5_0),
-            ("Weave 5.5", self.weave_5_5),
-            ("CF(0000)", self.cf_0000),
-            ("CF(01)", self.cf_01),
-            ("CF(012)", self.cf_012),
-            ("CF(0123)", self.cf_0123),
-            ("CF(4x)", self.cf_4x),
-            ("CF(450)", self.cf_450),
-            ("CF(50)", self.cf_50),
-        ]
+        unsafe {
+            vec![
+                ("#0 Ground", &Psychoid_0),
+                ("#1 Form", &Psychoid_1),
+                ("#2 Operation", &Psychoid_2),
+                ("#3 Pattern", &Psychoid_3),
+                ("#4 Context", &Psychoid_4),
+                ("#5 Integration", &Psychoid_5),
+                ("# Hash", &Psychoid_Hash),
+                ("Weave 0.0", &Weave_0_0),
+                ("Weave 0.5", &Weave_0_5),
+                ("Weave 5.0", &Weave_5_0),
+                ("Weave 5.5", &Weave_5_5),
+                ("CF(0000)", &CF_0000),
+                ("CF(01)", &CF_01),
+                ("CF(012)", &CF_012),
+                ("CF(0123)", &CF_0123),
+                ("CF(4x)", &CF_4x),
+                ("CF(450)", &CF_450),
+                ("CF(50)", &CF_50),
+            ]
+        }
     }
 
     /// Get psychoid by position (0-5), or Hash (0xFF)
     pub fn psychoid(&self, pos: u8) -> Option<*const HolographicCoordinate> {
-        match pos {
-            0 => Some(self.psychoid_0),
-            1 => Some(self.psychoid_1),
-            2 => Some(self.psychoid_2),
-            3 => Some(self.psychoid_3),
-            4 => Some(self.psychoid_4),
-            5 => Some(self.psychoid_5),
-            0xFF => Some(self.psychoid_hash),
-            _ => None,
+        unsafe {
+            match pos {
+                0 => Some(&Psychoid_0),
+                1 => Some(&Psychoid_1),
+                2 => Some(&Psychoid_2),
+                3 => Some(&Psychoid_3),
+                4 => Some(&Psychoid_4),
+                5 => Some(&Psychoid_5),
+                0xFF => Some(&Psychoid_Hash),
+                _ => None,
+            }
         }
     }
 
     // Safe wrappers for C functions
 
     pub fn arena_init(&self, arena: &mut CoordinateArena, capacity: u32) -> i32 {
-        unsafe { (self.arena_init_fn)(arena as *mut _, capacity) }
+        unsafe { crate::ffi::arena_init(arena as *mut _, capacity) }
     }
 
     pub fn arena_alloc(&self, arena: &mut CoordinateArena) -> *mut HolographicCoordinate {
-        unsafe { (self.arena_alloc_fn)(arena as *mut _) }
+        unsafe { crate::ffi::arena_alloc(arena as *mut _) }
     }
 
     pub fn arena_destroy(&self, arena: &mut CoordinateArena) {
-        unsafe { (self.arena_destroy_fn)(arena as *mut _) }
+        unsafe { crate::ffi::arena_destroy(arena as *mut _) }
     }
 
     pub fn families_init(
@@ -304,15 +307,15 @@ impl EpiLib {
         arena: &mut CoordinateArena,
         mirrors: &mut [*mut HolographicCoordinate; 6],
     ) -> i32 {
-        unsafe { (self.families_init_fn)(arena as *mut _, mirrors.as_mut_ptr()) }
+        unsafe { crate::ffi::families_init(arena as *mut _, mirrors.as_mut_ptr()) }
     }
 
     pub fn families_crosslink(&self, arena: &mut CoordinateArena) -> i32 {
-        unsafe { (self.families_crosslink_fn)(arena as *mut _) }
+        unsafe { crate::ffi::families_crosslink(arena as *mut _) }
     }
 
     pub fn families_wire_reflective(&self, arena: &mut CoordinateArena) -> i32 {
-        unsafe { (self.families_wire_reflective_fn)(arena as *mut _) }
+        unsafe { crate::ffi::families_wire_reflective(arena as *mut _) }
     }
 
     pub fn torus_walk(
@@ -321,17 +324,21 @@ impl EpiLib {
         ctx: &mut WalkContext,
         steps: u32,
     ) {
-        unsafe { (self.engine_torus_walk_fn)(start, ctx as *mut WalkContext as *mut c_void, steps) }
+        unsafe {
+            engine_torus_walk(start, ctx as *mut WalkContext as *mut c_void, steps)
+        }
     }
 
     pub fn double_covering(&self, start: *const HolographicCoordinate, ctx: &mut WalkContext) {
-        unsafe { (self.engine_double_covering_fn)(start, ctx as *mut WalkContext as *mut c_void) }
+        unsafe {
+            engine_double_covering(start, ctx as *mut WalkContext as *mut c_void)
+        }
     }
 
     pub fn execute_hash(&self, target: &mut HolographicCoordinate) {
         unsafe {
-            (self.execute_hash_fn)(
-                self.psychoid_hash as *mut HolographicCoordinate,
+            Execute_Hash(
+                &Psychoid_Hash as *const _ as *mut HolographicCoordinate,
                 target as *mut HolographicCoordinate as *mut c_void,
             )
         }
