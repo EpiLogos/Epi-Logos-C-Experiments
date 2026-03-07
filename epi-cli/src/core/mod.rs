@@ -47,6 +47,18 @@ pub enum CoreCmd {
         /// List all available coordinates in a family (C, P, L, S, T, M)
         #[arg(long)]
         family: Option<String>,
+
+        /// Update a coordinate's pithy in the JSON overlay (write-gated)
+        #[arg(long)]
+        update: Option<String>,
+
+        /// Show QV coverage report
+        #[arg(long)]
+        coverage: bool,
+
+        /// Export all QV data as JSON
+        #[arg(long)]
+        export: bool,
     },
 }
 
@@ -63,7 +75,9 @@ pub fn dispatch(cmd: &CoreCmd, epi: &EpiLib, json: bool) -> color_eyre::Result<(
         CoreCmd::WalkTui => crate::tui::run_walk(epi),
         CoreCmd::Families => crate::tui::run_families(epi),
         CoreCmd::M5 => crate::tui::run_m5(epi),
-        CoreCmd::Knowing { coordinate, family } => knowing(epi, coordinate.as_deref(), family.as_deref(), json),
+        CoreCmd::Knowing { coordinate, family, update, coverage, export } =>
+            knowing(epi, coordinate.as_deref(), family.as_deref(),
+                    update.as_deref(), *coverage, *export, json),
     }
 }
 
@@ -551,9 +565,30 @@ fn parse_coord_id(coord: &str) -> Option<(u8, u8)> {
     Some((family, pos))
 }
 
-fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>, json: bool) -> color_eyre::Result<()> {
+fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>,
+           update: Option<&str>, coverage: bool, export: bool, json: bool) -> color_eyre::Result<()> {
+    // Coverage report (no coordinate needed)
+    if coverage {
+        return knowing_coverage(json);
+    }
+
+    // Export (no coordinate needed)
+    if export {
+        return knowing_export(json);
+    }
+
+    // Family listing
     if let Some(fam_str) = family {
         return knowing_family(fam_str, json);
+    }
+
+    // Update (write-gated, needs coordinate)
+    if let Some(new_pithy) = update {
+        let coord = coordinate.ok_or_else(|| {
+            color_eyre::eyre::eyre!("Provide a coordinate to update: epi core knowing M0 --update \"pithy text\"")
+        })?;
+        write_gate::require_auth().map_err(|e| color_eyre::eyre::eyre!(e))?;
+        return knowing_update(coord, new_pithy, json);
     }
 
     let coord_str = coordinate
@@ -567,48 +602,8 @@ fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>, json: b
             coord_str
         ))?;
 
-    // Initialize M5 for lookup
-    let mut arena = ffi::CoordinateArena {
-        slots: std::ptr::null_mut(),
-        capacity: 0,
-        count: 0,
-    };
-    epi.arena_init(&mut arena, 64);
-    let hc = epi.arena_alloc(&mut arena);
-    unsafe {
-        (*hc).ql_position = 5;
-        (*hc).family = 7; // NONE (raw psychoid)
-    }
-    let m5_root = unsafe { ffi::m5_init(&mut arena as *mut _, hc) };
-
-    if m5_root.is_null() {
-        unsafe { ffi::arena_destroy(&mut arena as *mut _) };
-        return Err(color_eyre::eyre::eyre!("Failed to initialize M5 root"));
-    }
-
-    // Pack coord_id: family(3 bits @ 13) | position(3 bits @ 10)
-    let coord_id = ((fam as u16 & 0x7) << 13) | ((pos as u16 & 0x7) << 10);
-
-    let pithy = unsafe {
-        let ptr = ffi::m5_lookup(m5_root, coord_id, 0);
-        if !ptr.is_null() {
-            std::ffi::CStr::from_ptr(ptr).to_str().unwrap_or("(invalid)").to_string()
-        } else {
-            "(no quintessential view)".to_string()
-        }
-    };
-
     let family_letter = ["C", "P", "L", "S", "T", "M"][fam as usize];
     let family_name = ["Category", "Position", "Lens", "Stack", "Thought", "Map/Subsystem"][fam as usize];
-
-    // Determine which M5 sub-branch owns this family
-    let (branch_id, branch_name) = match fam {
-        5 => ("5-0", "M+M' integral identity"),
-        2 | 1 => ("5-1", "L+P+L'+P' theory topology"),
-        3 => ("5-2", "S+S' full stack"),
-        4 | 0 => ("5-5", "T+C+T'+C' Logos cycle"),
-        _ => ("?", "unknown"),
-    };
 
     // Cross-coordinate relation names (same position across all families)
     let relation_pithys: [&[&str; 6]; 6] = [
@@ -621,6 +616,68 @@ fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>, json: b
     ];
     let family_letters = ["C", "P", "L", "S", "T", "M"];
     let family_names = ["Category", "Position", "Lens", "Stack", "Thought", "Subsystem"];
+
+    // === THREE-TIER QV RESOLUTION ===
+    // Tier 1: JSON overlay
+    let overlay_result = overlay::overlay_pithy(coord_str);
+
+    // Tier 2: C library m5_lookup
+    let c_result: Option<String> = {
+        let mut arena = ffi::CoordinateArena {
+            slots: std::ptr::null_mut(),
+            capacity: 0,
+            count: 0,
+        };
+        epi.arena_init(&mut arena, 64);
+        let hc = epi.arena_alloc(&mut arena);
+        unsafe {
+            (*hc).ql_position = 5;
+            (*hc).family = 7; // NONE (raw psychoid)
+        }
+        let m5_root = unsafe { ffi::m5_init(&mut arena as *mut _, hc) };
+
+        let result = if !m5_root.is_null() {
+            // Pack coord_id: family(3 bits @ 13) | position(3 bits @ 10)
+            let coord_id = ((fam as u16 & 0x7) << 13) | ((pos as u16 & 0x7) << 10);
+            unsafe {
+                let ptr = ffi::m5_lookup(m5_root, coord_id, 0);
+                if !ptr.is_null() {
+                    let s = std::ffi::CStr::from_ptr(ptr).to_str().unwrap_or("").to_string();
+                    if s.is_empty() { None } else { Some(s) }
+                } else {
+                    None
+                }
+            }
+        } else {
+            None
+        };
+
+        // Cleanup
+        unsafe {
+            if !m5_root.is_null() {
+                ffi::m5_teardown(m5_root);
+            }
+            ffi::arena_destroy(&mut arena as *mut _);
+        }
+
+        result
+    };
+
+    // Tier 3: Static Rust tables (fallback)
+    let pithy = overlay_result
+        .or(c_result)
+        .unwrap_or_else(|| format!("{} -- {}",
+            relation_pithys[fam as usize][pos as usize],
+            family_name));
+
+    // Determine which M5 sub-branch owns this family
+    let (branch_id, branch_name) = match fam {
+        5 => ("5-0", "M+M' integral identity"),
+        2 | 1 => ("5-1", "L+P+L'+P' theory topology"),
+        3 => ("5-2", "S+S' full stack"),
+        4 | 0 => ("5-5", "T+C+T'+C' Logos cycle"),
+        _ => ("?", "unknown"),
+    };
 
     if json {
         let mut relations = serde_json::Map::new();
@@ -652,12 +709,6 @@ fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>, json: b
             let marker = if *letter == family_letter { ">" } else { " " };
             println!("   {} {}{:<2} {}", marker, letter, pos, relation_pithys[i][pos as usize]);
         }
-    }
-
-    // Cleanup
-    unsafe {
-        ffi::m5_teardown(m5_root);
-        ffi::arena_destroy(&mut arena as *mut _);
     }
 
     Ok(())
@@ -739,5 +790,104 @@ fn knowing_family(fam_str: &str, json: bool) -> color_eyre::Result<()> {
         println!("\nUsage: epi core knowing <COORD>   (e.g. epi core knowing {}0)", fam_char);
     }
 
+    Ok(())
+}
+
+fn knowing_update(coord: &str, pithy: &str, json: bool) -> color_eyre::Result<()> {
+    let mut ov = overlay::load_overlay();
+    let entry = ov.coordinates.entry(coord.to_string()).or_default();
+    entry.pithy = Some(pithy.to_string());
+    ov.updated_at = chrono::Utc::now().to_rfc3339();
+    overlay::save_overlay(&ov).map_err(|e| color_eyre::eyre::eyre!(e))?;
+
+    if json {
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            "action": "update",
+            "coord": coord,
+            "pithy": pithy,
+            "overlay_path": overlay::overlay_path().display().to_string(),
+        }))?);
+    } else {
+        println!("Updated {}: \"{}\"", coord, pithy);
+        println!("Overlay: {}", overlay::overlay_path().display());
+    }
+    Ok(())
+}
+
+fn knowing_coverage(json: bool) -> color_eyre::Result<()> {
+    let ov = overlay::load_overlay();
+    let families = ["C", "P", "L", "S", "T", "M"];
+
+    let mut family_stats: Vec<(&str, usize, usize)> = Vec::new();
+    for fam in &families {
+        let mut base_count = 0usize;
+        let mut inv_count = 0usize;
+        for pos in 0..6 {
+            let base_key = format!("{}{}", fam, pos);
+            let inv_key = format!("{}{}'", fam, pos);
+            if ov.coordinates.get(&base_key).and_then(|e| e.pithy.as_ref()).is_some() {
+                base_count += 1;
+            }
+            if ov.coordinates.get(&inv_key).and_then(|e| e.pithy.as_ref()).is_some() {
+                inv_count += 1;
+            }
+        }
+        family_stats.push((fam, base_count, inv_count));
+    }
+
+    let mut psychoid_count = 0usize;
+    for i in 0..6 {
+        if ov.coordinates.get(&format!("#{}", i)).and_then(|e| e.pithy.as_ref()).is_some() {
+            psychoid_count += 1;
+        }
+    }
+
+    let cf_labels = ["CF(0000)", "CF(01)", "CF(012)", "CF(0123)", "CF(4x)", "CF(450)", "CF(50)"];
+    let cf_count = cf_labels.iter()
+        .filter(|k| ov.coordinates.get(**k).and_then(|e| e.pithy.as_ref()).is_some())
+        .count();
+
+    let w_labels = ["W0.0", "W0.5", "W5.0", "W5.5"];
+    let w_count = w_labels.iter()
+        .filter(|k| ov.coordinates.get(**k).and_then(|e| e.pithy.as_ref()).is_some())
+        .count();
+
+    let total_filled: usize = family_stats.iter().map(|(_, b, i)| b + i).sum::<usize>()
+        + psychoid_count + cf_count + w_count;
+    let total_possible = 72 + 6 + 7 + 4; // 89
+
+    if json {
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({
+            "families": family_stats.iter().map(|(f, b, i)| {
+                serde_json::json!({"family": f, "base": b, "inverted": i, "total": 12})
+            }).collect::<Vec<_>>(),
+            "psychoids": {"filled": psychoid_count, "total": 6},
+            "context_frames": {"filled": cf_count, "total": 7},
+            "weaves": {"filled": w_count, "total": 4},
+            "overall": {"filled": total_filled, "total": total_possible},
+        }))?);
+    } else {
+        println!("QV Coverage Report");
+        println!("==================");
+        println!("Family Coordinates (72 total):");
+        for (fam, base, inv) in &family_stats {
+            let pct = ((*base + *inv) as f64 / 12.0 * 100.0) as u32;
+            println!("  {}:  {}/6  base  +  {}/6  inverted  = {}%", fam, base, inv, pct);
+        }
+        println!();
+        println!("Raw Psychoids (#0-#5):  {}/6", psychoid_count);
+        println!("Context Frames (7):     {}/7", cf_count);
+        println!("Weaves (4):             {}/4", w_count);
+        println!();
+        println!("Overall: {}/{} coordinates populated ({}%)",
+            total_filled, total_possible,
+            (total_filled as f64 / total_possible as f64 * 100.0) as u32);
+    }
+    Ok(())
+}
+
+fn knowing_export(_json: bool) -> color_eyre::Result<()> {
+    let ov = overlay::load_overlay();
+    println!("{}", serde_json::to_string_pretty(&ov)?);
     Ok(())
 }
