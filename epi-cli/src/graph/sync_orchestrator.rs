@@ -6,7 +6,9 @@ pub struct SyncOrchestrator {
 
 impl SyncOrchestrator {
     pub fn new(vault_path: String) -> Self {
-        Self { coordinator: SyncCoordinator::new(vault_path) }
+        Self {
+            coordinator: SyncCoordinator::new(vault_path),
+        }
     }
 
     pub fn orchestrate(&self, paths: &[String]) -> Result<String, String> {

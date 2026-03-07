@@ -16,7 +16,14 @@ impl Neo4jClient {
         Ok(Self { uri: config.uri })
     }
 
-    pub fn run(&self, query: &str, _params: HashMap<String, String>) -> Result<Vec<HashMap<String, serde_json::Value>>, String> {
-        Err(format!("Neo4j stub: cannot execute '{}' — connect to {}", query, self.uri))
+    pub fn run(
+        &self,
+        query: &str,
+        _params: HashMap<String, String>,
+    ) -> Result<Vec<HashMap<String, serde_json::Value>>, String> {
+        Err(format!(
+            "Neo4j stub: cannot execute '{}' — connect to {}",
+            query, self.uri
+        ))
     }
 }

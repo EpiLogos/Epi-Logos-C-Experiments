@@ -46,7 +46,9 @@ pub fn dispatch(cmd: &TechneCmd) {
         TechneCmd::Ctlg { url, prompt } => {
             let mut c = Command::new(CTLG_SCRIPT);
             c.arg(url);
-            if let Some(p) = prompt { c.arg(p); }
+            if let Some(p) = prompt {
+                c.arg(p);
+            }
             run(c, "ctlg", CTLG_SCRIPT);
         }
         TechneCmd::Notebook { args } => {

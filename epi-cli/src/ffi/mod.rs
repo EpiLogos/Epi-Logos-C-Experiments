@@ -79,12 +79,12 @@ unsafe impl Send for WalkContext {}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 #[repr(u8)]
 pub enum CoordinateFamily {
-    C = 0, // Category  — #0
-    P = 1, // Position  — #1
-    L = 2, // Lens      — #2
-    S = 3, // Stack     — #3
-    T = 4, // Thought   — #4
-    M = 5, // Map (Bimba) — #5
+    C = 0,    // Category  — #0
+    P = 1,    // Position  — #1
+    L = 2,    // Lens      — #2
+    S = 3,    // Stack     — #3
+    T = 4,    // Thought   — #4
+    M = 5,    // Map (Bimba) — #5
     None = 7, // Raw psychoid — pre-categorical
 }
 
@@ -157,10 +157,8 @@ pub struct EpiLib {
         unsafe extern "C" fn(*mut CoordinateArena, *mut *mut HolographicCoordinate) -> i32,
     families_crosslink_fn: unsafe extern "C" fn(*mut CoordinateArena) -> i32,
     families_wire_reflective_fn: unsafe extern "C" fn(*mut CoordinateArena) -> i32,
-    engine_torus_walk_fn:
-        unsafe extern "C" fn(*const HolographicCoordinate, *mut c_void, u32),
-    engine_double_covering_fn:
-        unsafe extern "C" fn(*const HolographicCoordinate, *mut c_void),
+    engine_torus_walk_fn: unsafe extern "C" fn(*const HolographicCoordinate, *mut c_void, u32),
+    engine_double_covering_fn: unsafe extern "C" fn(*const HolographicCoordinate, *mut c_void),
     execute_hash_fn: unsafe extern "C" fn(*mut HolographicCoordinate, *mut c_void),
 }
 
@@ -177,8 +175,7 @@ impl EpiLib {
             let psychoid_3: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_3")?;
             let psychoid_4: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_4")?;
             let psychoid_5: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_5")?;
-            let psychoid_hash: Symbol<*const HolographicCoordinate> =
-                lib.get(b"Psychoid_Hash")?;
+            let psychoid_hash: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_Hash")?;
             let weave_0_0: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_0_0")?;
             let weave_0_5: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_0_5")?;
             let weave_5_0: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_5_0")?;
@@ -200,14 +197,10 @@ impl EpiLib {
             let arena_destroy_fn: Symbol<unsafe extern "C" fn(*mut CoordinateArena)> =
                 lib.get(b"arena_destroy")?;
             let families_init_fn: Symbol<
-                unsafe extern "C" fn(
-                    *mut CoordinateArena,
-                    *mut *mut HolographicCoordinate,
-                ) -> i32,
+                unsafe extern "C" fn(*mut CoordinateArena, *mut *mut HolographicCoordinate) -> i32,
             > = lib.get(b"families_init")?;
-            let families_crosslink_fn: Symbol<
-                unsafe extern "C" fn(*mut CoordinateArena) -> i32,
-            > = lib.get(b"families_crosslink")?;
+            let families_crosslink_fn: Symbol<unsafe extern "C" fn(*mut CoordinateArena) -> i32> =
+                lib.get(b"families_crosslink")?;
             let families_wire_reflective_fn: Symbol<
                 unsafe extern "C" fn(*mut CoordinateArena) -> i32,
             > = lib.get(b"families_wire_reflective")?;
@@ -328,19 +321,11 @@ impl EpiLib {
         ctx: &mut WalkContext,
         steps: u32,
     ) {
-        unsafe {
-            (self.engine_torus_walk_fn)(start, ctx as *mut WalkContext as *mut c_void, steps)
-        }
+        unsafe { (self.engine_torus_walk_fn)(start, ctx as *mut WalkContext as *mut c_void, steps) }
     }
 
-    pub fn double_covering(
-        &self,
-        start: *const HolographicCoordinate,
-        ctx: &mut WalkContext,
-    ) {
-        unsafe {
-            (self.engine_double_covering_fn)(start, ctx as *mut WalkContext as *mut c_void)
-        }
+    pub fn double_covering(&self, start: *const HolographicCoordinate, ctx: &mut WalkContext) {
+        unsafe { (self.engine_double_covering_fn)(start, ctx as *mut WalkContext as *mut c_void) }
     }
 
     pub fn execute_hash(&self, target: &mut HolographicCoordinate) {

@@ -1,5 +1,5 @@
-use super::types::*;
 use super::client::Neo4jClient;
+use super::types::*;
 
 pub struct GraphAPI {
     neo4j: Option<Neo4jClient>,
@@ -41,40 +41,45 @@ impl GraphAPI {
         let query = format!("MATCH (n:{}) RETURN n", labels.join(":"));
 
         match &self.neo4j {
-            Some(client) => {
-                match client.run(&query, std::collections::HashMap::new()) {
-                    Ok(rows) => {
-                        let nodes: Vec<NodeRef> = rows.into_iter().map(|row| NodeRef {
-                            uuid: row.get("uuid")
+            Some(client) => match client.run(&query, std::collections::HashMap::new()) {
+                Ok(rows) => {
+                    let nodes: Vec<NodeRef> = rows
+                        .into_iter()
+                        .map(|row| NodeRef {
+                            uuid: row
+                                .get("uuid")
                                 .and_then(|v| v.as_str())
                                 .unwrap_or("unknown")
                                 .to_string(),
                             labels: labels.clone(),
                             properties: serde_json::Value::Object(
-                                row.into_iter().map(|(k, v)| (k, v)).collect()
+                                row.into_iter().map(|(k, v)| (k, v)).collect(),
                             ),
                             file_path: None,
-                        }).collect();
+                        })
+                        .collect();
 
-                        GraphResult {
-                            nodes,
-                            query: Some(query),
-                            execution_time_ms: Some(start.elapsed().as_secs_f64() * 1000.0),
-                            ..Default::default()
-                        }
-                    }
-                    Err(e) => GraphResult {
+                    GraphResult {
+                        nodes,
                         query: Some(query),
                         execution_time_ms: Some(start.elapsed().as_secs_f64() * 1000.0),
-                        error: Some(e),
                         ..Default::default()
                     }
                 }
-            }
+                Err(e) => GraphResult {
+                    query: Some(query),
+                    execution_time_ms: Some(start.elapsed().as_secs_f64() * 1000.0),
+                    error: Some(e),
+                    ..Default::default()
+                },
+            },
             None => GraphResult {
-                error: Some("Neo4j client not initialized — use `epi graph` with NEO4J_URI env var".to_string()),
+                error: Some(
+                    "Neo4j client not initialized — use `epi graph` with NEO4J_URI env var"
+                        .to_string(),
+                ),
                 ..Default::default()
-            }
+            },
         }
     }
 

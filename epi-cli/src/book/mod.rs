@@ -23,15 +23,15 @@ pub fn dispatch(cmd: &BookCmd) {
         BookCmd::Open { file } => {
             let mut c = Command::new(BOOKOKRAT);
             c.current_dir(BOOKS_DIR);
-            if let Some(f) = file { c.arg(f); }
+            if let Some(f) = file {
+                c.arg(f);
+            }
             c.status()
         }
-        BookCmd::Zen { file } => {
-            Command::new(BOOKOKRAT)
-                .current_dir(BOOKS_DIR)
-                .args(["--zen-mode", file])
-                .status()
-        }
+        BookCmd::Zen { file } => Command::new(BOOKOKRAT)
+            .current_dir(BOOKS_DIR)
+            .args(["--zen-mode", file])
+            .status(),
     };
 
     match status {

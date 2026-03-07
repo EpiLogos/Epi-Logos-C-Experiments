@@ -1,33 +1,29 @@
 use clap::Subcommand;
 
-pub mod types;
-pub mod client;
+pub mod alignment_validator;
 pub mod api;
+pub mod bidirectional_sync;
+pub mod client;
+pub mod coordinate_array_parser;
+pub mod embeddings;
+pub mod link_enforcement;
 pub mod mapper;
+pub mod redis_cache;
+pub mod relationship_manager;
+pub mod retrieval;
 pub mod sync;
 pub mod sync_coordinator;
 pub mod sync_orchestrator;
-pub mod bidirectional_sync;
-pub mod embeddings;
-pub mod redis_cache;
-pub mod retrieval;
-pub mod alignment_validator;
-pub mod coordinate_array_parser;
-pub mod link_enforcement;
-pub mod relationship_manager;
+pub mod types;
 
 #[derive(Subcommand)]
 pub enum GraphCmd {
     /// Show Neo4j/Redis connection status
     Status,
     /// Query by QL coordinate (#0-#5, P0-P5, etc.)
-    Query {
-        coordinate: String,
-    },
+    Query { coordinate: String },
     /// Sync vault to graph
-    Sync {
-        path: Option<String>,
-    },
+    Sync { path: Option<String> },
     /// Coordinate-based retrieval
     Retrieve {
         coordinate: String,
@@ -59,20 +55,29 @@ pub fn dispatch(cmd: &GraphCmd) -> Result<String, String> {
             let result = graph_api.query_by_coordinate(coordinate);
             match result.error {
                 Some(e) => Err(e),
-                None => Ok(format!("Coordinate {}: {} nodes found", coordinate, result.nodes.len())),
+                None => Ok(format!(
+                    "Coordinate {}: {} nodes found",
+                    coordinate,
+                    result.nodes.len()
+                )),
             }
         }
-        GraphCmd::Sync { path } => {
-            Ok(format!("Sync initiated for path: {}", path.as_deref().unwrap_or("vault root")))
-        }
+        GraphCmd::Sync { path } => Ok(format!(
+            "Sync initiated for path: {}",
+            path.as_deref().unwrap_or("vault root")
+        )),
         GraphCmd::Retrieve { coordinate, nested } => {
             Ok(format!("Retrieving {} (nested: {})", coordinate, nested))
         }
-        GraphCmd::GraphRAG { query, depth } => {
-            Ok(format!("GraphRAG query: '{}' (depth: {})", query, depth.unwrap_or(3)))
-        }
-        GraphCmd::Hybrid { query, top_k } => {
-            Ok(format!("Hybrid query: '{}' (top_k: {})", query, top_k.unwrap_or(10)))
-        }
+        GraphCmd::GraphRAG { query, depth } => Ok(format!(
+            "GraphRAG query: '{}' (depth: {})",
+            query,
+            depth.unwrap_or(3)
+        )),
+        GraphCmd::Hybrid { query, top_k } => Ok(format!(
+            "Hybrid query: '{}' (top_k: {})",
+            query,
+            top_k.unwrap_or(10)
+        )),
     }
 }

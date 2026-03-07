@@ -73,15 +73,11 @@ pub enum VaultCmd {
     NowRead,
     /// Epi-Logos: Write NOW.md
     #[command(name = "now-write")]
-    NowWrite {
-        content: String,
-    },
+    NowWrite { content: String },
 }
 
 fn obsidian_cli(args: &[&str]) -> Result<String, String> {
-    let output = Command::new("obsidian-cli")
-        .args(args)
-        .output();
+    let output = Command::new("obsidian-cli").args(args).output();
 
     match output {
         Ok(out) => {
@@ -97,66 +93,107 @@ fn obsidian_cli(args: &[&str]) -> Result<String, String> {
 
 pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
     match cmd {
-        VaultCmd::Status => {
-            match obsidian_cli(&["print-default"]) {
-                Ok(vault) => Ok(format!("Default vault: {}", vault.trim())),
-                Err(e) => Err(e),
-            }
-        }
+        VaultCmd::Status => match obsidian_cli(&["print-default"]) {
+            Ok(vault) => Ok(format!("Default vault: {}", vault.trim())),
+            Err(e) => Err(e),
+        },
 
-        VaultCmd::Create { note, content, vault } => {
+        VaultCmd::Create {
+            note,
+            content,
+            vault,
+        } => {
             let mut args = vec!["create", note.as_str()];
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
-            if let Some(c) = content { args.extend(&["-c", c.as_str()]); }
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
+            if let Some(c) = content {
+                args.extend(&["-c", c.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
         VaultCmd::Read { note, vault } => {
             let mut args = vec!["print", note.as_str()];
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
         VaultCmd::Search { query, vault } => {
             let mut args = vec!["search", query.as_str()];
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
         VaultCmd::SearchContent { query, vault } => {
             let mut args = vec!["search-content", query.as_str()];
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
         VaultCmd::Daily { vault } => {
             let mut args = vec!["daily"];
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
         VaultCmd::FrontmatterGet { note, key, vault } => {
             let mut args = vec!["frontmatter", note.as_str(), "--print"];
-            if let Some(k) = key { args.extend(&["--key", k.as_str()]); }
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
+            if let Some(k) = key {
+                args.extend(&["--key", k.as_str()]);
+            }
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
-        VaultCmd::FrontmatterSet { note, key, value, vault } => {
-            let mut args = vec!["frontmatter", note.as_str(), "--edit", "--key", key.as_str(), "--value", value.as_str()];
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
+        VaultCmd::FrontmatterSet {
+            note,
+            key,
+            value,
+            vault,
+        } => {
+            let mut args = vec![
+                "frontmatter",
+                note.as_str(),
+                "--edit",
+                "--key",
+                key.as_str(),
+                "--value",
+                value.as_str(),
+            ];
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
-        VaultCmd::Move { note, new_path, vault } => {
+        VaultCmd::Move {
+            note,
+            new_path,
+            vault,
+        } => {
             let mut args = vec!["move", note.as_str(), new_path.as_str()];
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
         VaultCmd::Delete { note, vault } => {
             let mut args = vec!["delete", note.as_str()];
-            if let Some(v) = vault { args.extend(&["-v", v.as_str()]); }
+            if let Some(v) = vault {
+                args.extend(&["-v", v.as_str()]);
+            }
             obsidian_cli(&args)
         }
 
@@ -183,9 +220,7 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
 
             let vault_root = std::env::var("EPILOGOS_VAULT")
                 .unwrap_or_else(|_| "/Users/admin/Documents/Epi-Logos/Idea".to_string());
-            let present_dir = PathBuf::from(vault_root)
-                .join("Empty")
-                .join("Present");
+            let present_dir = PathBuf::from(vault_root).join("Empty").join("Present");
             let now_path = present_dir.join("NOW.md");
 
             fs::create_dir_all(&present_dir)

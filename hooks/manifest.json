@@ -1,0 +1,8 @@
+{
+  "hooks": [
+    "pre-agent-run",
+    "post-agent-run",
+    "pre-epi-command",
+    "post-epi-command"
+  ]
+}

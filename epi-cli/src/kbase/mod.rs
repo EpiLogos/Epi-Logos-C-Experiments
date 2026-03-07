@@ -53,42 +53,42 @@ pub fn dispatch(cmd: &KbaseCmd) {
         KbaseCmd::Search { query } => {
             let mut c = Command::new(BKMR);
             c.arg("search");
-            if let Some(q) = query { c.arg(q); }
+            if let Some(q) = query {
+                c.arg(q);
+            }
             c.status()
         }
-        KbaseCmd::SemSearch { query } => {
-            Command::new(BKMR)
-                .args(["sem-search", query])
-                .status()
-        }
+        KbaseCmd::SemSearch { query } => Command::new(BKMR).args(["sem-search", query]).status(),
         KbaseCmd::Open { target } => {
             let mut c = Command::new(BKMR);
             c.arg("open");
-            if let Some(t) = target { c.arg(t); }
+            if let Some(t) = target {
+                c.arg(t);
+            }
             c.status()
         }
         KbaseCmd::Add { url, tags, desc } => {
             let mut c = Command::new(BKMR);
             c.args(["add", url]);
-            if let Some(t) = tags { c.args(["--tag", t]); }
-            if let Some(d) = desc { c.args(["--desc", d]); }
+            if let Some(t) = tags {
+                c.args(["--tag", t]);
+            }
+            if let Some(d) = desc {
+                c.args(["--desc", d]);
+            }
             c.status()
         }
-        KbaseCmd::Tags => {
-            Command::new(BKMR).arg("tags").status()
-        }
+        KbaseCmd::Tags => Command::new(BKMR).arg("tags").status(),
         KbaseCmd::Show { filter } => {
             let mut c = Command::new(BKMR);
             c.arg("show");
-            if let Some(f) = filter { c.arg(f); }
+            if let Some(f) = filter {
+                c.arg(f);
+            }
             c.status()
         }
-        KbaseCmd::Info => {
-            Command::new(BKMR).arg("info").status()
-        }
-        KbaseCmd::Raw { args } => {
-            Command::new(BKMR).args(args).status()
-        }
+        KbaseCmd::Info => Command::new(BKMR).arg("info").status(),
+        KbaseCmd::Raw { args } => Command::new(BKMR).args(args).status(),
     };
 
     match status {

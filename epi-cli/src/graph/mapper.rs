@@ -3,7 +3,9 @@ use super::types::NodeRef;
 pub struct EntityMapper;
 
 impl EntityMapper {
-    pub fn new() -> Self { Self }
+    pub fn new() -> Self {
+        Self
+    }
 
     pub fn path_to_labels(&self, path: &str) -> Vec<String> {
         // Derive Neo4j labels from file path
