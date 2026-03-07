@@ -1,6 +1,6 @@
 # ARCHETYPE_LUT Ordering Fix
 
-**Status:** Bug — Pre-existing in M0
+**Status:** FIXED (2026-03-07)
 **Severity:** Moderate — affects M4 oracle interpretation via `m0_resolve_archetypal_number()`
 **File:** `src/m0.c` lines 119-252
 **Discovered:** 2026-03-07, during M4 Nara design research

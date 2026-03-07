@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "bimba-mcp": {
+      "command": "bash",
+      "args": ["/Users/admin/Documents/bimba-portable/mcp-server/run-stdio.sh"]
+    }
+  }
+}

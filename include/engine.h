@@ -35,4 +35,6 @@ void engine_double_covering(
 const Holographic_Coordinate* engine_next_coordinate(uint8_t current_position);
 
 
+#include "vak.h"  /* VAK instruction dispatch */
+
 #endif /* ENGINE_H */

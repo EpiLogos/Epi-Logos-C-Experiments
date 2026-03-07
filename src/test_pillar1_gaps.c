@@ -28,7 +28,7 @@ _Static_assert(sizeof(Holographic_Coordinate) == 128,
     "Holographic_Coordinate must be exactly 128 bytes");
 _Static_assert(offsetof(Holographic_Coordinate, semantic_embedding) == 8,
     "Tensor Anchor must begin at byte 8");
-_Static_assert(offsetof(Holographic_Coordinate, p) == 16,
+_Static_assert(offsetof(Holographic_Coordinate, c) == 16,
     "Intra-Openness must begin at byte 16");
 _Static_assert(offsetof(Holographic_Coordinate, invoke_process) == 112,
     "Execution zone must begin at byte 112");
@@ -163,8 +163,10 @@ static void test_gap3_family_arch_bits(void) {
     Holographic_Coordinate dummy = {0};
     Holographic_Coordinate* ptr = &dummy;
 
-    /* FAMILY_BITS: set and get each family value */
-    for (int fam = 0; fam <= 6; fam++) {
+    /* FAMILY_BITS: set and get each family value (0-5 = families, 7 = FAMILY_NONE) */
+    int fam_values[] = {0, 1, 2, 3, 4, 5, 7};
+    for (int fi = 0; fi < 7; fi++) {
+        int fam = fam_values[fi];
         Holographic_Coordinate* tagged = SET_FAMILY_BITS(ptr, fam);
         Coordinate_Family got = GET_FAMILY_BITS(tagged);
         char buf[128];
@@ -270,6 +272,7 @@ static void test_gap4_bedrock_and_flags(void) {
         CHECK(psychoids[i]->flags == BIMBA_FLAGS, buf);
     }
 
+    CHECK(Weave_0_0.flags == BIMBA_FLAGS, "Weave_0_0.flags == BIMBA_FLAGS");
     CHECK(Weave_0_5.flags == BIMBA_FLAGS, "Weave_0_5.flags == BIMBA_FLAGS");
     CHECK(Weave_5_0.flags == BIMBA_FLAGS, "Weave_5_0.flags == BIMBA_FLAGS");
     CHECK(Weave_5_5.flags == BIMBA_FLAGS, "Weave_5_5.flags == BIMBA_FLAGS");

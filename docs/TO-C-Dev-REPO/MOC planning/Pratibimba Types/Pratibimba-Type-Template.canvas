@@ -1,0 +1,23 @@
+{
+	"nodes":[
+		{"id":"hub-center","type":"text","text":"# Patibimba-{Instance}\n\n> Category hub for `{Category}` entity type\n\n**Instances link via:** `bimba: [[{Category}]]`","x":-180,"y":-100,"width":360,"height":180},
+		{"id":"open-space","type":"text","text":"## Open Space\n\n> Freeform workspace for notes, connections, emerging thoughts\n\n---\n\n\n\n\n\n","x":-180,"y":120,"width":360,"height":280,"color":"5"},
+		{"id":"p0-queue","type":"text","text":"## #0 Queue\n\n> Quick capture - items to be sorted into positions\n\n---\n\n- [ ] \n- [ ] \n- [ ] \n\n","x":1000,"y":-890,"width":560,"height":350,"color":"5"},
+		{"id":"pos0-ground","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/MOC planning/Pratibimba Types/Position-0-Ground.md","x":-720,"y":-600,"width":480,"height":400},
+		{"id":"pos1-definition","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/MOC planning/Pratibimba Types/Position-1-Definition.md","x":240,"y":-600,"width":480,"height":400},
+		{"id":"pos2-operation","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/MOC planning/Pratibimba Types/Position-2-Operation.md","x":-720,"y":500,"width":480,"height":400},
+		{"id":"pos3-pattern","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/MOC planning/Pratibimba Types/Position-3-Pattern.md","x":240,"y":500,"width":480,"height":400},
+		{"id":"pos4-context","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/MOC planning/Pratibimba Types/Position-4-Context.md","x":-1260,"y":-150,"width":480,"height":400},
+		{"id":"pos5-synthesis","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/MOC planning/Pratibimba Types/Position-5-Synthesis.md","x":780,"y":-150,"width":480,"height":400},
+		{"id":"pratibimba-template","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/MOC planning/Pratibimba Types/Pratibimba-Form-Template.md","x":-180,"y":1000,"width":360,"height":440}
+	],
+	"edges":[
+		{"id":"edge-hub-p0","fromNode":"hub-center","fromSide":"left","toNode":"pos0-ground","toSide":"bottom","color":"#ffffff","label":"#0"},
+		{"id":"edge-hub-p1","fromNode":"hub-center","fromSide":"right","toNode":"pos1-definition","toSide":"bottom","color":"#248bf9","label":"#1"},
+		{"id":"edge-hub-p2","fromNode":"hub-center","fromSide":"left","toNode":"pos2-operation","toSide":"top","color":"1","label":"#2"},
+		{"id":"edge-hub-p3","fromNode":"hub-center","fromSide":"right","toNode":"pos3-pattern","toSide":"top","color":"4","label":"#3"},
+		{"id":"edge-hub-p4","fromNode":"hub-center","fromSide":"left","toNode":"pos4-context","toSide":"right","color":"3","label":"#4"},
+		{"id":"edge-hub-p5","fromNode":"hub-center","fromSide":"right","toNode":"pos5-synthesis","toSide":"left","color":"#7d25ad","label":"#5"},
+		{"id":"edge-hub-pratibimba","fromNode":"open-space","fromSide":"bottom","toNode":"pratibimba-template","toSide":"top","label":"Template"}
+	]
+}

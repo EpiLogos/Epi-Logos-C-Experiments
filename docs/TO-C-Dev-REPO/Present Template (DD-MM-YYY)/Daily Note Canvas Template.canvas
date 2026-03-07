@@ -1,0 +1,19 @@
+{
+	"nodes":[
+		{"id":"06ad58fd3814ba27","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/Present Template (DD-MM-YYY)/p0-idx Template/Entryid-CONTEXT.md Template.md","x":440,"y":-880,"width":400,"height":400},
+		{"id":"23eb14180d355823","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/Present Template (DD-MM-YYY)/p0-idx Template/T00x Template/Taskid-CONTEXT.json Template 1.md","x":920,"y":-1520,"width":400,"height":400},
+		{"id":"7337eddab0367655","x":1520,"y":-680,"width":440,"height":276,"type":"text","text":"## Pratibimba (Menitons/Links)\n\n### /Thought Artifacts (via date-time)"},
+		{"id":"bd350dab78c98d2a","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/Present Template (DD-MM-YYY)/Daily Note Template.md","x":-960,"y":-480,"width":780,"height":880},
+		{"id":"a642925029b96285","type":"text","text":"## Post-Evening Reflections; \n\n### Tomorrows  Note Embedded","x":390,"y":218,"width":250,"height":182},
+		{"id":"b2e9c8283a72c296","x":-1760,"y":127,"width":250,"height":182,"type":"text","text":"## Pre-Evening Reflections; \n\n### Yesterday's Daily Note Embedded"},
+		{"id":"a165072f1375c56d","x":-1200,"y":-1400,"width":490,"height":220,"type":"text","text":"## Lives in /Empty/Present/{DD-MM-YYYY}\n\n"}
+	],
+	"edges":[
+		{"id":"76fa691e731941dc","fromNode":"bd350dab78c98d2a","fromSide":"right","toNode":"06ad58fd3814ba27","toSide":"left"},
+		{"id":"0cba83c283831058","fromNode":"06ad58fd3814ba27","fromSide":"top","toNode":"23eb14180d355823","toSide":"bottom"},
+		{"id":"fe90c862b8e36501","fromNode":"7337eddab0367655","fromSide":"left","toNode":"23eb14180d355823","toSide":"bottom"},
+		{"id":"1e96d149b597abac","fromNode":"7337eddab0367655","fromSide":"left","toNode":"06ad58fd3814ba27","toSide":"right"},
+		{"id":"0b41b2bd5f87babd","fromNode":"b2e9c8283a72c296","fromSide":"right","toNode":"bd350dab78c98d2a","toSide":"left"},
+		{"id":"18dec9a300259ca3","fromNode":"bd350dab78c98d2a","fromSide":"right","toNode":"a642925029b96285","toSide":"left"}
+	]
+}

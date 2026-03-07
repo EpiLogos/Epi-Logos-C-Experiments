@@ -9,7 +9,7 @@ pub enum CoreCmd {
         /// Coordinate to inspect (e.g. #0, P3, CF(012), W0.5)
         coordinate: String,
     },
-    /// Verify all 17 BIMBA entities — boot check
+    /// Verify all 18 BIMBA entities — boot check
     Verify,
     /// Dump all .rodata bedrock
     Dump,
@@ -65,7 +65,10 @@ fn resolve_coord(epi: &EpiLib, query: &str) -> Option<(*const ffi::HolographicCo
             }
         }
     }
-    // Weaves: W0.5, W5.0, W5.5
+    // Weaves: W0.0, W0.5, W5.0, W5.5
+    if q.eq_ignore_ascii_case("W0.0") {
+        return Some((epi.weave_0_0, "Weave_0_0".into()));
+    }
     if q.eq_ignore_ascii_case("W0.5") {
         return Some((epi.weave_0_5, "Weave_0_5".into()));
     }
@@ -114,12 +117,12 @@ fn inspect(epi: &EpiLib, coord: &str, json: bool) -> color_eyre::Result<()> {
     println!("│");
     println!("│ ── Pointer Web (12-fold Intra-Openness) ──");
     println!("│  Base:");
+    println!("│   .c   = {}", snap.c.display());
     println!("│   .p   = {}", snap.p.display());
+    println!("│   .l   = {}", snap.l.display());
     println!("│   .s   = {}", snap.s.display());
     println!("│   .t   = {}", snap.t.display());
     println!("│   .m   = {}", snap.m.display());
-    println!("│   .l   = {}", snap.l.display());
-    println!("│   .c   = {}", snap.c.display());
     println!("│  Reflective:");
     println!("│   .cpf = {}", snap.cpf.display());
     println!("│   .ct  = {}", snap.ct.display());
@@ -191,7 +194,7 @@ fn verify(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
     }
     println!();
     println!("  7 CF roots anchored to #4: {}", if checks[6..13].iter().all(|c| c.1) { "✓ all OK" } else { "✗ FAILED" });
-    println!("  17 BIMBA flags:            {}", if checks[13..].iter().all(|c| c.1) { "✓ all OK" } else { "✗ FAILED" });
+    println!("  18 BIMBA flags:            {}", if checks[13..].iter().all(|c| c.1) { "✓ all OK" } else { "✗ FAILED" });
     println!("\n  Result: {}/{} checks passed {}", passed, total,
         if passed == total { "— ALL OK" } else { "— FAILURES DETECTED" });
     Ok(())
@@ -210,7 +213,7 @@ fn dump(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
         return Ok(());
     }
 
-    println!("=== epi core dump — 17 BIMBA Entities ===\n");
+    println!("=== epi core dump — 18 BIMBA Entities ===\n");
     println!("{:<20} {:>4} {:>8} {:>6} {:>8} {:>6}",
         "Name", "Pos", "Family", "Flags", "Weave", "Inv");
     println!("{}", "─".repeat(60));

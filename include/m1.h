@@ -153,12 +153,74 @@ typedef enum {
     SPANDA_META      = 5,    /* Meta-Reflection — fold-count sieve              */
 } Spanda_Stage;
 
+/* -------------------------------------------------------------------
+ * SPANDA_SEED_TOTALIZATION_INVARIANT
+ *
+ * The six coordinates forming the complete boundary of the QL field:
+ *
+ *   P0  — Position ground (Torus outward start)    TOPO_TORUS
+ *   P5  — Position synthesis (Torus return point)  TOPO_TORUS
+ *   P0' — Position ground inverted (Klein start)   TOPO_KLEIN
+ *   P5' — Position synthesis inverted (Klein end)  TOPO_KLEIN
+ *   C0  — Bimba (categorical ground / source)      TOPO_ZERO_SPHERE
+ *   C5  — Pratibimba (categorical synthesis/refl.) TOPO_ZERO_SPHERE
+ *
+ * Invariant: (0/1) seed = P0 ↔ P5 = C0 ↔ C5
+ *   The binary poles (0 and 1) ARE the ground and synthesis of the Torus
+ *   (P0 and P5), which ARE the Bimba and Pratibimba (C0 and C5).
+ *   "0 and 1 are equal to 5 and 0" — they are the same oscillation at
+ *   different ontological registers. The Spanda seed totalizes the system
+ *   by simultaneously encapsulating both registers.
+ *
+ * These six coordinates are the only ones that can validly claim
+ * TOPO_ZERO_SPHERE (C0/C5) or serve as the seed boundary (P0/P5/P0'/P5').
+ * All other coordinates are TOPO_TORUS (P normal), TOPO_KLEIN (P'),
+ * or TOPO_LEMNISCATE (P4 specifically).
+ * ------------------------------------------------------------------- */
+
 /* The Trika (#1-3-3) — odd-cardinality singularity */
 typedef enum {
     TRIKA_GROUND   = 0,  /* Fused (0/1)/(1/0) — the non-dual synthesis itself  */
     TRIKA_FORM     = 1,  /* First differentiated position                       */
     TRIKA_MEDIATOR = 2,  /* Relational bridge                                   */
 } Trika_Position;
+
+/* -------------------------------------------------------------------
+ * SPANDA CHAIN — how binary non-dual generates the 6-state system
+ * and the complete 36+64=100% QL field:
+ *
+ * STEP 0 — S⁰ Seed (SPANDA_SEED_BITS = 0x03, TOPO_ZERO_SPHERE):
+ *   The (0/1) binary as two disconnected poles, not yet connected.
+ *   Both SPANDA_BIT_POLE_A and SPANDA_BIT_POLE_B are simultaneously
+ *   active. This is the non-dual ground — "0 and 1 are equal to 5 and 0."
+ *   Maps to: P0/P5 (ground and synthesis of the Torus) and
+ *             C0/C5 (Bimba/Pratibimba — source and reflection).
+ *   See SPANDA_SEED_TOTALIZATION_INVARIANT below.
+ *
+ * STEP 1 — Differentiation (SPANDA_POLE_A / SPANDA_POLE_B):
+ *   Pole A (0x01): (0/1) outward = Mahamaya track {1,2,4,8,7,5}, 64-bit
+ *   Pole B (0x02): (1/0) return  = Parashakti track {3,6,9,3,6,9}, 72-bit
+ *   Pole A → P (Torus outward). Pole B → P' (Klein return).
+ *
+ * STEP 2 — Trika (SPANDA_TRIKA):
+ *   (0/1)+(1/0) = (0/1/2) — the first stable genus-1 torus.
+ *   The two punctures = the two generators of π₁(T²) = Z⊕Z.
+ *
+ * STEP 3 — Torus arithmetic (4g+2g = 6 positions, QL_POSITIONS):
+ *   4g = 4 edges of the fundamental polygon (positions 1-4: the explicates)
+ *   2g = 2 identification vertices (positions 0 and 5: ground and synthesis)
+ *   Total: 4(1) + 2(1) = 6 [QL_POSITIONS]
+ *
+ * STEP 4 — Complete QL field:
+ *   P × P' = 6 × 6 = 36 [M2_TATTVA]  — all position-inversion combinations
+ *   P / P' = 2^6    = 64 [M3_WORD]   — all 6-bit binary sequences
+ *   36 + 64 = 100% — the complete QL field
+ *
+ * STEP 5 — Klein double-cover:
+ *   P (outward 0-5) + P' (return 0'-5') = 12 positions [RING_SIZE]
+ *   Klein bottle needs 6 colours (Heawood) = the 6 QL positions.
+ *   P alone IS the Torus. P + P' IS the Klein. P' COMPLETES the Klein.
+ * ------------------------------------------------------------------- */
 
 /* Spanda state_bits bitmask — 2-bit field encoding active poles */
 #define SPANDA_BIT_POLE_A  (1u << 0u)   /* bit 0: Mahamaya pole active   */

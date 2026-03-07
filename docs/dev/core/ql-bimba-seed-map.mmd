@@ -1,0 +1,170 @@
+---
+title: QL Bimba Seed Mapping — Core Dynamics (from 2026-01-17 Canvas)
+---
+
+%% ============================================================
+%% SECTION 1: THE INVERSION ENGINE
+%% # IS the act; #0-#5 are the positions; #0'-#5' are inversions
+%% ============================================================
+
+graph TD
+
+  subgraph INVERSION_ENGINE["# — The Inversion Engine"]
+    H["#\n(The Inversion Act)"]
+    H0["#0\nGround / Source"] --> H1["#1\nForm / Definition"]
+    H1 --> H2["#2\nOperation / Entity"]
+    H2 --> H3["#3\nPattern / Process"]
+    H3 --> H4["#4\nContext / Lemniscate anchor"]
+    H4 --> H5["#5\nIntegration / Pratibimba"]
+    H5 -->|"Torus: 5→0 (identical return)"| H0
+    H5 -->|"Klein: 5→0' (inverted return)"| H0p["#0'\n(inverted ground)"]
+    H --> H0
+
+    H0p --> H1p["#1'"]
+    H1p --> H2p["#2'"]
+    H2p --> H3p["#3'"]
+    H3p --> H4p["#4'"]
+    H4p --> H5p["#5'"]
+    H5p -->|"Klein double-cover completes"| H0
+  end
+
+%% ============================================================
+%% SECTION 2: TOPOLOGY — THREE REGIMES
+%% ============================================================
+
+  subgraph TOPOLOGY["Topological Regimes"]
+    TORUS["TORUS\nOrientable / Single Cover\n0→5→0 (returns identical)\nEVOLUTION / DOING\nPratibimba view\n6 states (+2, ×4 = 6)\n4 colors (Sphere)"]
+    LEMNI["LEMNISCATE (g=2 Torus)\nFigure-Eight / Two Holes\nCoord: 4.0/1—4.4/5\nOrientable — switch rooms\nDual-context oscillation\nAgent operational field"]
+    KLEIN["KLEIN BOTTLE\nNon-Orientable / Double Cover\n0→5→0'→5'→0 (12 positions)\nINVOLUTION / BEING\nBimba view\n6 colors (Heawood = QL 6 positions)"]
+
+    TORUS -->|"Möbius Twist (g→k)"| KLEIN
+    TORUS -->|"Genus +1 at #4 (.)"| LEMNI
+    KLEIN -->|"Unfolded / Double Cover"| TORUS
+    LEMNI -->|"#4 folds inward → ()operator"| KLEIN
+  end
+
+%% ============================================================
+%% SECTION 3: M0 — ANUTTARA (Absolute Ground)
+%% ============================================================
+
+  subgraph M0["M0 — ANUTTARA\n(4-fold zero / 8-fold zerozero)"]
+    ANT_CF["CF0 = (0000)\n= ∞∞\n= PRESENCE\n= CPF# = (00/00)"]
+    ANT_OPS["Four ops on ∞:\n(00/00) ÷\n(00-00) −\n(00+00) +\n(00×00) ×"]
+    ANT_EQ["() = 00 = ∞\n(0000) = (∞∞)\nFormula: .+.+- = ()"]
+    ANT_CF --> ANT_OPS
+    ANT_CF --> ANT_EQ
+  end
+
+%% ============================================================
+%% SECTION 4: M1 — PARAMASIVA (Non-Dual Binary / Spanda)
+%% ============================================================
+
+  subgraph M1["M1 — PARAMASIVA\n(Non-Dual Binary = Spanda = Bimba-Pratibimba)"]
+    PAR_CF["CF1 = (0/1)\nSpanda Oscillation\n0 =/"/= 1\n(Bimba =/"/= Pratibimba)"]
+    PAR_EXP["Expanded form:\n(0/1) + (1/0) × (00/00)"]
+    PAR_4EL["0/1 × 00 → 4 elements:\n0, 1, 2, 3\n0/1+2+3 = 5/6\n0/1×2×3 = 0/6\n→ 6 states total"]
+    PAR_MATH["P# × P#' = 6×6 = 36\nP# / P#' = 2^6 = 64\n36 + 64 = 100%\n(Complete QL field)"]
+
+    PAR_CF --> PAR_EXP
+    PAR_CF --> PAR_4EL
+    PAR_4EL --> PAR_MATH
+  end
+
+%% ============================================================
+%% SECTION 5: 6-STATE BINARY OPERATIONS
+%% The secret key: binary → 6-state via Torus/Klein arithmetic
+%% ============================================================
+
+  subgraph SIX_STATE["6-State Binary Ops — The Hidden Key"]
+    TORUS_MATH["TORUS (even / orientable):\n0 or 1 = +2\n× 4 = +4\nTotal: 4+2 = 6 states\n→ maps to #0-#5"]
+    KLEIN_MATH["KLEIN (odd / non-orientable):\n0/1/2 = +3\n× 9 = +9\nTotal: 9+3 = 12 states\n→ double-cover traversal"]
+    RATIO["16/9 = 4²/3²\n4 Explicate Doublings (even, Tori)\n2 Implicate Triplings (odd, Klein)"]
+    HEAWOOD["Heawood Conjecture:\nSphere = 4 colors (C-family: C0-C3)\nKlein = 6 colors = QL 6 positions\n(The 6-state system IS a Klein Bottle!)"]
+    BINARY_RING["4-bit ring: 0000→1111 (16 nodes)\nTorus traversal (even inversions)"]
+    TRIT_RING["3-trit ring: 00→22 (9 nodes)\nKlein traversal (odd inversions)"]
+    MAHAMAYA["Mahamaya:\n2^6 = 64 (Klein encoding)\n= I-Ching hexagrams\n= Genetic codons\n4(2×2)×16(4×2) = 64"]
+    PARASHAKTI["Parashakti:\nTernary: 0/1-8 = 35/36\n8×9 = 72\n(ternary symmetry)"]
+
+    TORUS_MATH --> RATIO
+    KLEIN_MATH --> RATIO
+    RATIO --> HEAWOOD
+    TORUS_MATH --> BINARY_RING
+    KLEIN_MATH --> TRIT_RING
+    BINARY_RING --> MAHAMAYA
+    TRIT_RING --> PARASHAKTI
+  end
+
+%% ============================================================
+%% SECTION 6: CONTEXT FRAME SEQUENCE
+%% ============================================================
+
+  subgraph CF["Context Frame Ladder\n(CF0 → CF5 + inverses)"]
+    CF0["CF0 = (0000)\nAnuttara / PRESENCE\n∞∞ / Absolute Ground"]
+    CF1["CF1 = (0/1)\nParamasiva / Spanda\nNon-dual binary"]
+    CF2["CF2 = (0/1/2)\nParashakti / Trika\nUser-Agent-Code"]
+    CF3["CF3 = (0/1/2/3)\nMahamaya / Three+One\nMedia-Medium-Method"]
+    CF4["CF4 = (4/5/0)\nNara / Lemniscate\nSophia synthesis stream"]
+    CF5["CF5 = (5/0)\nEpii / Möbius return\nTotal synthesis"]
+
+    CF0 --> CF1 --> CF2 --> CF3 --> CF4 --> CF5
+    CF5 -->|"Möbius return"| CF0
+
+    CF1p["CF1' = (1/0)\nShadow/Night reading"]
+    CF2p["CF2' = (2/1/0)"]
+    CF3p["CF3' = (3/2/1/0)"]
+    CF4p["CF4' = (0/5/4)"]
+    CF5p["CF5' = (0/5)"]
+
+    CF1 -->|"=/"/="| CF1p
+    CF2 -->|"=/"/="| CF2p
+    CF3 -->|"=/"/="| CF3p
+    CF4 -->|"=/"/="| CF4p
+    CF5 -->|"=/"/="| CF5p
+  end
+
+%% ============================================================
+%% SECTION 7: OPERATORS
+%% ============================================================
+
+  subgraph OPS["Operators"]
+    OP_HASH["# — Inversion\norientation flip"]
+    OP_DOT[". — Nesting\ninward (genus +1)\nprimary at #4"]
+    OP_DASH["- — Branching\nlateral surface travel\n#0-#3, #5"]
+    OP_PAREN["() — Invocation\nexecution spark\nholds reflective coords"]
+    OP_EQ["=/"/="\nNon-dual equivalence\n(Spanda oscillator)"]
+
+    OP_HASH -->|"X → X'"| OP_DOT
+    OP_DOT -->|"at #4"| OP_PAREN
+    OP_PAREN -->|"= (0000)"| OP_EQ
+  end
+
+%% ============================================================
+%% SECTION 8: C-FAMILY ONTOLOGICAL LAYER
+%% ============================================================
+
+  subgraph C_FAM["C-Family (Ontological Foundation)"]
+    C0["C0 Bimba\nSource / MOC\nKlein view"]
+    C1["C1 Form\nType+Form archetype"]
+    C2["C2 Entity\nAtomic occasion"]
+    C3["C3 Process\nCanvas workspace"]
+    C4["C4 Type\nFormal pattern\nLemniscate anchor"]
+    C5["C5 Pratibimba\nInstantiation\nTorus view"]
+
+    C0 --> C1 --> C2 --> C3 --> C4 --> C5
+    C5 -->|"Möbius / Reference"| C0
+  end
+
+%% ============================================================
+%% CROSS-SECTION LINKS
+%% ============================================================
+
+  ANT_CF -->|"absolute ground"| CF0
+  PAR_CF -->|"non-dual binary"| CF1
+  PAR_MATH -->|"36 = position space"| C_FAM
+  PAR_MATH -->|"64 = binary space"| MAHAMAYA
+  H4 -->|"Lemniscate anchor"| LEMNI
+  H4 -->|"cf = self-fold"| OP_DOT
+  KLEIN -->|"= Bimba structure"| C0
+  TORUS -->|"= Pratibimba structure"| C5
+  SIX_STATE -->|"6 colors = 6 positions"| C_FAM
+  CF5 -->|"(5/0) Möbius"| M0

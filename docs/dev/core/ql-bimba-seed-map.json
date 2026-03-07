@@ -1,0 +1,351 @@
+{
+  "meta": {
+    "source": "QL Bimba Seed Mapping Planning - 2026-01-17.canvas",
+    "extracted": "2026-03-06",
+    "purpose": "Structured extraction for M0/M1 implementation insights"
+  },
+
+  "inversion_engine": {
+    "symbol": "#",
+    "role": "The Inversion Act — not a root but the OPERATION that generates X → X'",
+    "positions": {
+      "#0": "Ground / Source / Bimba-implicate",
+      "#1": "Form / Definition",
+      "#2": "Operation / Entity",
+      "#3": "Pattern / Process",
+      "#4": "Context / Lemniscate anchor (cf self-folds here)",
+      "#5": "Integration / Pratibimba / Telos"
+    },
+    "inversions": {
+      "#0'": "inverted ground (returned-to after Klein double-cover)",
+      "#1'": "inverted form",
+      "#2'": "inverted operation",
+      "#3'": "inverted pattern",
+      "#4'": "inverted context",
+      "#5'": "inverted integration"
+    },
+    "non_dual_operator": "=/\"/=\" — Spanda oscillation; X =/\"/= X' at ground level"
+  },
+
+  "topology": {
+    "torus": {
+      "orientable": true,
+      "covering": "single",
+      "cycle": "0→5→0 (returns identical)",
+      "mode": "Evolution / Maintenance / DOING",
+      "view": "Pratibimba (the Reflection / explicate world)",
+      "states": 6,
+      "formula": "0 or 1 = +2; ×4 = +4; total = 6",
+      "colors": 4,
+      "operator": "./?  (superposition)",
+      "use": "Linear tasks, stable objects, standard causal chains"
+    },
+    "klein_bottle": {
+      "orientable": false,
+      "covering": "double (must traverse twice to restore orientation)",
+      "cycle": "0→5→0'→5'→0 (12 positions)",
+      "mode": "Involution / Shadow Integration / BEING",
+      "view": "Bimba (the Source / implicate world)",
+      "states": 12,
+      "formula": "0/1/2 = +3; ×9 = +9; total = 12",
+      "colors": 6,
+      "note": "Heawood Conjecture: Klein Bottle needs 6 colors = QL 6 positions. THE 6-STATE SYSTEM IS A KLEIN BOTTLE.",
+      "note_correction": "Klein = P + P' combined (NOT P' alone). P alone IS the Torus. P' COMPLETES the Klein.",
+      "p_prime_role": "Each P' coordinate IS in Klein mode (TOPO_KLEIN) — it is the return/inward phase that, together with P, forms the non-orientable double-cover surface.",
+      "operator": "? then . (analysis phase then synthesis phase)",
+      "use": "Shadow integration, transformation, paradox, learning"
+    },
+    "spanda_seed_totalization": {
+      "six_boundary_coords": ["P0", "P5", "P0'", "P5'", "C0", "C5"],
+      "invariant": "(0/1) seed = P0 ↔ P5 = C0 ↔ C5: the binary poles ARE the torus boundary AND the Bimba/Pratibimba pair",
+      "topo_modes": {
+        "P0":  "TOPO_TORUS (boundary: outward ground)",
+        "P5":  "TOPO_TORUS (boundary: outward synthesis / Möbius return)",
+        "P0'": "TOPO_KLEIN (boundary: inward ground)",
+        "P5'": "TOPO_KLEIN (boundary: inward synthesis — the Klein twist)",
+        "C0":  "TOPO_ZERO_SPHERE (Bimba: categorical source)",
+        "C5":  "TOPO_ZERO_SPHERE (Pratibimba: categorical reflection)"
+      }
+    },
+    "lemniscate": {
+      "genus": 2,
+      "shape": "figure-eight / two holes",
+      "coordinate": "4.0/1—4.4/5",
+      "orientable": true,
+      "note": "Orientable but complex: you switch rooms, not flip upside down",
+      "mode": "Complex oscillation between two distinct contexts",
+      "anchor": "#4 (cf node self-folds here, creating the second hole)",
+      "use": "Multi-agent operations, dual-context feedback loops, agent operational field",
+      "agent_role": "CPF#' = EROS = bridge/handoff context"
+    },
+    "double_covering_insight": "The Torus IS the Klein Bottle unfolded. The Toroidal (stable) world is the Klein (paradox) world seen from the outside. M0=Klein=Bimba; M1=Torus=Pratibimba."
+  },
+
+  "six_state_binary_key": {
+    "description": "The secret translation: binary (0/1) → 6-state QL system",
+    "torus_arithmetic": {
+      "base": "0 or 1 (+2 states)",
+      "multiplier": "×4 (+4 states)",
+      "total": 6,
+      "type": "even / explicate / doublings"
+    },
+    "klein_arithmetic": {
+      "base": "0/1/2 (+3 states)",
+      "multiplier": "×9 (+9 states)",
+      "total": 12,
+      "type": "odd / implicate / triplings"
+    },
+    "ratio": {
+      "formula": "16/9 = 4²/3²",
+      "meaning": "4 Explicate Doublings (even, Tori) : 2 Implicate Triplings (odd, Klein)"
+    },
+    "complete_field": {
+      "P_cross_P_prime": "6×6 = 36 (all position-inversion combinations)",
+      "P_over_P_prime": "2^6 = 64 (all 6-bit binary sequences)",
+      "total": "36 + 64 = 100% (the complete QL field)"
+    },
+    "combinatorial_rings": {
+      "four_bit_ring": {
+        "nodes": 16,
+        "values": ["0000","0001","0010","0011","0100","0101","0110","0111","1000","1001","1010","1011","1100","1101","1110","1111"],
+        "traversal": "Torus mode (even number of inversions = orientable)"
+      },
+      "three_trit_ring": {
+        "nodes": 9,
+        "values": ["00","01","02","10","11","12","20","21","22"],
+        "traversal": "Klein mode (odd number of inversions = non-orientable)"
+      }
+    },
+    "subsystem_encodings": {
+      "Mahamaya_M3": {
+        "formula": "2^6 = 64",
+        "equivalents": ["I-Ching 64 hexagrams", "Genetic 64 codons", "4(2×2) × 16(4×2) = 64"],
+        "type": "Klein bottle encoding (6-bit binary space)"
+      },
+      "Parashakti_M2": {
+        "formula": "0/1-8 value = 35/36; 8×9 = 72",
+        "type": "Ternary symmetry / Klein inversion"
+      }
+    }
+  },
+
+  "spanda_sequence": {
+    "description": "The non-dual binary oscillation that IS M1/Paramasiva",
+    "root_formula": "() = 00 = ∞",
+    "ground_formula": "(0000) = (∞∞) = 4-fold zero = 8-fold zerozero",
+    "construction": ".+.+- = () → (0000) [two nesting ops + one branch op = invocation = absolute ground]",
+    "four_ops_on_infinity": {
+      "(00/00)": "division — Anuttara ground receptive",
+      "(00-00)": "subtraction",
+      "(00+00)": "addition",
+      "(00×00)": "multiplication"
+    },
+    "spanda_oscillator": {
+      "formula": "0/1 × 00",
+      "expansion": "4 elements: 0, 1, 2, 3",
+      "additive": "0/1 + 2 + 3 = 5/6",
+      "multiplicative": "0/1 × 2 × 3 = 0/6",
+      "result": "4 values → 6 states total",
+      "note": "This is HOW binary non-dual generates the 6-position system"
+    },
+    "full_paramasiva_formula": "(0/1) + (1/0) × (00/00)",
+    "entity_process_modes": {
+      "Entity-Entity (Ee)": {"topology": "Static Torus", "QL": "Analysis (?): dissection of the static"},
+      "Entity-Process (Ep)": {"topology": "Dynamic Torus", "QL": "Monitoring (.): observing the operation"},
+      "Process-Entity (Pe)": {"topology": "Frozen Klein", "QL": "Synthesis (=): naming the unnamable; template IS frozen process"},
+      "Process-Process (Pp)": {"topology": "Fluid Klein", "QL": "Superposition (./?): becoming the flow; actual agentic activity"}
+    }
+  },
+
+  "context_frames": {
+    "ladder": [
+      {
+        "id": "CF0",
+        "notation": "(0000)",
+        "subsystem": "M0 Anuttara",
+        "role": "Absolute Ground / PRESENCE / CPF# / ∞∞",
+        "agent": "PRESENCE (Unconditional Orchestrator)",
+        "inverse": "(0000) [self-inverse at ground]"
+      },
+      {
+        "id": "CF1",
+        "notation": "(0/1)",
+        "subsystem": "M1 Paramasiva",
+        "role": "Non-dual binary / Spanda / Bimba-Pratibimba oscillation",
+        "agent": "LOGOS analytical base",
+        "inverse": "(1/0)"
+      },
+      {
+        "id": "CF2",
+        "notation": "(0/1/2)",
+        "subsystem": "M2 Parashakti",
+        "role": "The Trika — User / Agent / Code",
+        "agent": "Three-way trika operation",
+        "inverse": "(2/1/0)"
+      },
+      {
+        "id": "CF3",
+        "notation": "(0/1/2/3)",
+        "subsystem": "M3 Mahamaya",
+        "role": "Three Plus One — Media / Medium / Method",
+        "agent": "Four-fold structure",
+        "inverse": "(3/2/1/0)"
+      },
+      {
+        "id": "CF4",
+        "notation": "(4/5/0)",
+        "subsystem": "M4 Nara",
+        "role": "Lemniscate field / SOPHIA synthesis stream",
+        "agent": "SOPHIA (Right Brain / Creative Synthesis 4-5-0)",
+        "inverse": "(0/5/4)",
+        "note": "CPF#' = EROS = (4.0/1-4.4/5) — the full Lemniscate operational field"
+      },
+      {
+        "id": "CF5",
+        "notation": "(5/0)",
+        "subsystem": "M5 Epii",
+        "role": "Möbius return / Total synthesis / Klein double-cover complete",
+        "agent": "Full integration",
+        "inverse": "(0/5)"
+      }
+    ],
+    "lemniscate_subframe": {
+      "notation": "(4.0/1-4.4/5)",
+      "description": "The Lemniscate operational coordinate — agent context frame",
+      "pairs": [
+        {"forward": "4.0/4.5", "inverse": "4.0'/4.5'"},
+        {"forward": "4.1/4.4", "inverse": "4.1'/4.4'"},
+        {"forward": "4.2/4.3", "inverse": "4.2'/4.3'"},
+        {"forward": "4.3/4.2", "inverse": "4.3'/4.2'"},
+        {"forward": "4.4/4.1", "inverse": "4.4'/4.1'"},
+        {"forward": "4.5/4.0", "inverse": "4.5'/4.0'"}
+      ],
+      "cfp_variants": [
+        "4.(0000)", "4.(0/1)", "4.(0/1/2)", "4.(0/1/2/3)", "4.(4/5/0)", "4.(5/0)"
+      ]
+    }
+  },
+
+  "m0_anuttara": {
+    "formal_name": "Anuttara",
+    "position": "#0 / M0 / B0",
+    "context_frame": "CF0 = (0000)",
+    "formula": "() = 00 = ∞; (0000) = (∞∞)",
+    "description": "4-fold zero / 8-fold zerozero — the Absolute Ground",
+    "construction": ".+.+- = () → (0000)",
+    "four_arithmetic_modes": ["(00/00)", "(00-00)", "(00+00)", "(00×00)"],
+    "agent_role": "PRESENCE — Transcendent Orchestrator / User interface",
+    "topology": "Klein Bottle ground (non-orientable, the implicit twist is HERE)",
+    "c_family": "C0 Bimba — the canonical source/MOC",
+    "implementation_hints": {
+      "in_c": "Psychoid_0 in .rodata; Psychoid_0.c → &Psychoid_0 (self-reference)",
+      "key_invariant": "The absolute ground is its own foundation",
+      "context_frame_root": "ALL CF roots have .cf → &Psychoid_4 (Lemniscate anchor invariant)",
+      "spanda_from_zero": "The (0000) context frame generates Spanda via the four arithmetic modes on ∞"
+    }
+  },
+
+  "m1_paramasiva": {
+    "formal_name": "Paramasiva",
+    "position": "#1 / M1 / B1",
+    "context_frame": "CF1 = (0/1)",
+    "formula": "P# = Non-Dual Binary = Spanda = Bimba-Pratibimba",
+    "description": "The non-dual binary ground — the primary oscillation that generates the 6-state system",
+    "spanda_formula": "(0/1) + (1/0) × (00/00)",
+    "six_state_generation": "0/1 × 00 → {0,1,2,3} → additive: 5/6; multiplicative: 0/6 → 6 states",
+    "complete_field": "P# × P#' = 36; 2^6 = 64; total = 100%",
+    "agent_role": "Base of LOGOS analytical stream (0/1-2-3)",
+    "topology": "Torus surface (the orientable, explicate face of M0's Klein ground)",
+    "c_family": "C1 Form — the essential nature/archetype",
+    "torus_klein_relation": "M1 Torus is the Double Cover of M0 Klein. M0 is the non-orientable source; M1 is the orientable reflection.",
+    "implementation_hints": {
+      "in_c": "Psychoid_1 in .rodata; represents the first differentiation from #0",
+      "key_property": "The (0/1) context frame IS the binary non-dual base — the CPU's own binary logic as metaphysics",
+      "double_covering": "M0 Klein → M1 Torus via double-cover; two traversals of #0-#5 restore orientation",
+      "spanda_as_pointer_flip": "The 0↔1 Spanda oscillation = the tagged pointer inversion bit (bit 63 in HC struct)"
+    }
+  },
+
+  "operators": {
+    "#": {
+      "name": "Inversion",
+      "function": "X → X' (orientation flip)",
+      "c_analogue": "tagged pointer bit flip (bit 63)",
+      "topological": "Möbius Twist; even inversions → Torus; odd inversions → Klein"
+    },
+    ".": {
+      "name": "Nesting",
+      "function": "Inward fractal traversal (genus +1)",
+      "primary_at": "#4 (Lemniscate anchor)",
+      "c_analogue": "struct member access",
+      "formula": ".+.+- = () [two nesting ops + one branch = invocation]"
+    },
+    "-": {
+      "name": "Branching",
+      "function": "Lateral relation (surface travel across manifold)",
+      "active_at": "#0-#3 and #5",
+      "c_analogue": "pointer arithmetic"
+    },
+    "()": {
+      "name": "Invocation",
+      "function": "Execution spark; holds all reflective coordinates",
+      "c_analogue": "function pointer call / stack frame creation",
+      "formula": "() = 00 = ∞"
+    },
+    "=/\"/=\"": {
+      "name": "Non-dual equivalence",
+      "function": "Spanda oscillator — X =/\"/= X' at ground level",
+      "use": "Bimba =/\"/= Pratibimba; 0 =/\"/= 1; CF =/\"/= CF'"
+    }
+  },
+
+  "agent_roles": {
+    "PRESENCE": {"position": "0", "frame": "CPF# = (00/00) = ∞", "role": "Transcendent Orchestrator / User interface"},
+    "LOGOS": {"position": "0/1-2-3", "frame": "(0/1) analysis stream", "role": "Left Brain / Processing / Analysis"},
+    "SOPHIA": {"position": "4-5-0", "frame": "(4/5/0) synthesis stream", "role": "Right Brain / Creative Wisdom"},
+    "EROS": {"position": "bridge", "frame": "CPF#' = (4.0/1-4.4/5)", "role": "Handoffs / Bridge between LOGOS and SOPHIA"},
+    "CHRONOS": {"position": "meta", "role": "Daytime Manager / Temporal coordination"}
+  },
+
+  "c_family": {
+    "C0": {"name": "Bimba", "topology": "Klein (non-orientable source)", "role": "Canonical MOC / stable source of truth"},
+    "C1": {"name": "Form", "role": "Essential nature / Archetype/Eidos"},
+    "C2": {"name": "Entity", "role": "Atomic occasion / Actual entity"},
+    "C3": {"name": "Process", "role": "Canvas workspace / Transformation"},
+    "C4": {"name": "Type", "role": "Formal pattern / Lemniscate anchor"},
+    "C5": {"name": "Pratibimba", "topology": "Torus (orientable reflection)", "role": "Instantiation via [[]] / any linked artifact"}
+  },
+
+  "key_insights_for_implementation": [
+    {
+      "insight": "The Klein Bottle IS the 6-state system",
+      "detail": "Heawood Conjecture: Klein Bottle needs exactly 6 colors. The QL 6-position coordinate system is not arbitrary — it is the minimum coloring of a Klein manifold. M0's non-orientable structure mandates 6 states.",
+      "c_implication": "Psychoid_0 through Psychoid_5 are not chosen arbitrarily — they are the 6-coloring of the Klein manifold that IS M0."
+    },
+    {
+      "insight": "The Torus is the double cover of the Klein Bottle",
+      "detail": "M1 (Paramasiva/Torus) is M0 (Anuttara/Klein) unfolded. Two traversals of the M1 (0/1) oscillation restores the Klein orientation. This is why the HC struct has both a forward and inverse pointer for every coordinate.",
+      "c_implication": "Psychoid_5.c → &Psychoid_0 (Torus return) AND the inversion chain #0' back to #0 (Klein double-cover). Both paths exist simultaneously."
+    },
+    {
+      "insight": "Binary → 6-state via Torus arithmetic: 0or1(+2) × 4(+4) = 6",
+      "detail": "The 6 positions are not a magical six — they emerge from: the binary base (0/1 = 2 states) plus the fourfold context (×4 adds 4 more). Torus: 2+4=6. This is the structural derivation of the 6-position system from binary non-dual (M1).",
+      "c_implication": "The six Coordinate_Family enum values (C=0,P=1,L=2,S=3,T=4,M=5) and the six archetype positions (0-5) are both expressions of this same Torus-arithmetic 6."
+    },
+    {
+      "insight": "36+64=100: the complete field",
+      "detail": "P# × P#' = 6×6 = 36 (position space); 2^6 = 64 (binary encoding space). Together = 100%. The 36-coordinate family space (6 families × 6 positions) and the 64-hexagram/codon encoding space are COMPLEMENTARY and together complete the QL field.",
+      "c_implication": "36 = the HC crosslink table (6 families × 6 positions each family must point to). 64 = the 6-bit tagged pointer encoding space for all coordinate addresses."
+    },
+    {
+      "insight": "(0000) = .+.+- = () — the Anuttara construction",
+      "detail": "The absolute ground (0000) is not a primitive — it is constructed from: two nesting operations (.) plus one branching operation (-) which together produce the invocation operator (). This is the formal derivation of M0 from the operators.",
+      "c_implication": "M0's init function should mirror this: two pointer nesting operations (self-reference chain) plus one branching setup = the () invocation that boots the engine."
+    },
+    {
+      "insight": "Spanda as pointer inversion bit",
+      "detail": "The Spanda oscillation (0↔1, Bimba↔Pratibimba, M0↔M1) maps directly to the tagged pointer inversion bit (bit 63 of the HC pointer). This is not metaphor — the hardware binary IS the Spanda.",
+      "c_implication": "The # (inversion) operation IS bit 63 flip in the tagged pointer. GET_PTR() strips it. The Spanda sequence is traversing a linked structure while flipping bit 63 at each step."
+    }
+  ]
+}

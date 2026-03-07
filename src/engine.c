@@ -86,3 +86,34 @@ void engine_double_covering(
         wc->covering = 0;
     }
 }
+
+
+/* =============================================================================
+ * VAK INSTRUCTION DISPATCH — operates on the 6 reflective coordinates
+ * ============================================================================= */
+
+#include "vak.h"
+
+/* Default handler table — all return VAK_ERR_FAMILY until M-branches register */
+static int vak_default_handler(Holographic_Coordinate* s, VAK_Instruction i) {
+    (void)s; (void)i;
+    return VAK_ERR_FAMILY;
+}
+
+static VAK_Handler vak_handlers[VAK_FAMILY_COUNT] = {
+    vak_default_handler, vak_default_handler, vak_default_handler,
+    vak_default_handler, vak_default_handler, vak_default_handler
+};
+
+void vak_register_handler(uint8_t family, VAK_Handler handler) {
+    if (family < VAK_FAMILY_COUNT && handler) {
+        vak_handlers[family] = handler;
+    }
+}
+
+int execute_vak_instruction(Holographic_Coordinate* session,
+                            VAK_Instruction instr) {
+    if (instr.vak_family >= VAK_FAMILY_COUNT) return VAK_ERR_FAMILY;
+    if (!session) return VAK_ERR_SESSION;
+    return vak_handlers[instr.vak_family](session, instr);
+}

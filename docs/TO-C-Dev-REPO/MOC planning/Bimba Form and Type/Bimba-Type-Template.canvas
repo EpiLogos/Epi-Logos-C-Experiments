@@ -1,0 +1,12 @@
+{
+	"nodes":[
+		{"id":"title","type":"text","text":"# Bimba-{Topic/Typic}\n\n**Attributive Hub** for [[{Topic}]] Bimba Form\n\n> Canvas as implicate backend MOC - collecting related entities","x":-50,"y":-480,"width":500,"height":200},
+		{"id":"notes","type":"text","text":"## Notes & Additions\n\nAdd new {Topic}-related links here:\n\n---\n\n### To Add\n- [ ] \n\n### Integration Notes\n- Related packs/skills\n- System connections\n\n### Research Areas\n- Future exploration topics","x":520,"y":-480,"width":400,"height":500},
+		{"id":"links","type":"text","text":"## Related Entities\n\n### Primary\n- [[Entity 1]]\n- [[Entity 2]]\n\n### Secondary\n- [[Related Concept]]\n- [[Adjacent Topic]]\n\n### Resources\n- [[Documentation]]\n- [[Tutorial]]","x":1040,"y":200,"width":400,"height":450},
+		{"id":"pratibimba","type":"file","file":"Idea/Empty/Present/quaternal_logic_seed_planning/TO-C-Dev-REPO/MOC planning/Bimba Form and Type/Bimba-Form-Template.md","x":-520,"y":200,"width":1280,"height":700},
+		{"id":"open-space","type":"text","text":"## Open Space\n\n> Freeform workspace for notes, associations, emerging connections\n\n---\n\n\n\n\n\n","x":-580,"y":-480,"width":400,"height":350,"color":"5"}
+	],
+	"edges":[
+		{"id":"edge-synth","fromNode":"pratibimba","fromSide":"right","toNode":"links","toSide":"left","label":"Synthesizes"}
+	]
+}

@@ -1,6 +1,7 @@
 # Build artifacts
 epi-logos
 test_runner
+/test_*
 *.o
 libepilogos.so
 libepilogos.dylib
@@ -13,3 +14,6 @@ epi-cli/target/
 
 # Git worktrees
 .worktrees/
+
+# Local agent settings
+.claude/settings.local.json

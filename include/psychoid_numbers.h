@@ -2,7 +2,7 @@
  * psychoid_numbers.h — The Promises of the Bedrock
  *
  * Extern declarations for the seven psychoid-numbers (#0-#5 + Hash),
- * three weave interleaves, and seven context frame roots.
+ * four weave interleaves, and seven context frame roots.
  * These are the pre-categorical foundation — FAMILY_NONE.
  * C0-C5 are C-family MANIFESTATIONS, not these.
  */
@@ -27,9 +27,10 @@ extern BIMBA Psychoid_5;     /* Integration — #5 (Möbius) */
 extern BIMBA Psychoid_Hash;  /* The # Inversion Act — boundary psychoid */
 
 /* =============================================================================
- * II. THE INTERLACED WEAVE STATES
+ * II. THE FOUR INTERLACED WEAVE STATES
  * ============================================================================= */
 
+extern BIMBA Weave_0_0;    /* Pure Ground implicate (0.0) */
 extern BIMBA Weave_0_5;
 extern BIMBA Weave_5_0;
 extern BIMBA Weave_5_5;

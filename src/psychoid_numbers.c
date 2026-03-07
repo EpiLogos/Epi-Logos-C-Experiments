@@ -1,7 +1,7 @@
 /**
  * psychoid_numbers.c — The .rodata Bedrock
  *
- * The seven psychoid-numbers (#0-#5 + Hash), three weave interleaves,
+ * The seven psychoid-numbers (#0-#5 + Hash), four weave interleaves,
  * and seven context frame roots — all physically woven into .rodata.
  * family = FAMILY_NONE — these are pre-categorical foundation.
  */
@@ -116,6 +116,19 @@ void Execute_CF_Mobius(Holographic_Coordinate* self, void* ctx) {
 /* =============================================================================
  * THE SEVEN PSYCHOID-NUMBERS (#0-#5 + Hash) — .rodata Bedrock
  * ============================================================================= */
+
+/* --- Weave 0.0: Pure Ground Implicate --- */
+BIMBA Weave_0_0 = {
+    .ql_position      = 0,
+    .family           = FAMILY_NONE,
+    .inversion_state  = 1,
+    .flags            = BIMBA_FLAGS,
+    .weave_state      = 0.0f,
+    .c                = (Holographic_Coordinate*)&Psychoid_0,
+    .cf               = (Holographic_Coordinate*)&Psychoid_4,
+    .invoke_process   = Execute_Ground,
+    .payload          = { .process_state = NULL }
+};
 
 /* --- #0: Ground (weave 0.0) --- */
 BIMBA Psychoid_0 = {

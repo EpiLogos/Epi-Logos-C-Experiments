@@ -34,13 +34,13 @@
  * ============================================================================= */
 
 typedef enum {
-    FAMILY_NONE = 0,   /* Raw psychoid (#0-#5) — pre-categorical foundation */
-    FAMILY_P    = 1,   /* Position  — Functional semantics                   */
-    FAMILY_S    = 2,   /* Stack     — Technology / infrastructure layers     */
-    FAMILY_T    = 3,   /* Thought   — Artifacts / cognition                  */
-    FAMILY_M    = 4,   /* Map (Bimba) — Consciousness domains                */
-    FAMILY_L    = 5,   /* Lens      — Epistemic modes                        */
-    FAMILY_C    = 6    /* Category  — Ontological foundation                 */
+    FAMILY_C    = 0,   /* Category  — #0 Ontological foundation              */
+    FAMILY_P    = 1,   /* Position  — #1 Functional semantics                */
+    FAMILY_L    = 2,   /* Lens      — #2 Epistemic modes                     */
+    FAMILY_S    = 3,   /* Stack     — #3 Technology / infrastructure layers  */
+    FAMILY_T    = 4,   /* Thought   — #4 Artifacts / cognition               */
+    FAMILY_M    = 5,   /* Map (Bimba) — #5 Consciousness domains             */
+    FAMILY_NONE = 7    /* Raw psychoid — pre-categorical (no archetype resonance) */
 } Coordinate_Family;
 
 
@@ -89,7 +89,7 @@ typedef enum {
 #define CLEAR_FLAGS(ptr)     GET_PTR(ptr)
 #define TAG_FLAGS(ptr)       ((uintptr_t)(ptr) & ~MASK_ADDRESS)
 
-/* --- FAMILY_BITS: bits 59-56 (4 bits, values 0-6 for Coordinate_Family) --- */
+/* --- FAMILY_BITS: bits 59-56 (4 bits, values 0-7 for Coordinate_Family) --- */
 #define FAMILY_BITS_SHIFT  56
 #define FAMILY_BITS_MASK   ((uintptr_t)0x0F00000000000000)
 
@@ -191,12 +191,12 @@ struct Holographic_Coordinate {
                                   * dual-use as bedrock pointer via BEDROCK() */
 
     /* --- Intra-Openness: 6 Base + 6 Reflective (96 bytes) --- */
-    Holographic_Coordinate* p;    /* Position family link   */
-    Holographic_Coordinate* s;    /* Stack family link      */
-    Holographic_Coordinate* t;    /* Thought family link    */
-    Holographic_Coordinate* m;    /* Map (Bimba) family link */
-    Holographic_Coordinate* l;    /* Lens family link       */
-    Holographic_Coordinate* c;    /* Category family link   */
+    Holographic_Coordinate* c;    /* #0 Category family link    */
+    Holographic_Coordinate* p;    /* #1 Position family link    */
+    Holographic_Coordinate* l;    /* #2 Lens family link        */
+    Holographic_Coordinate* s;    /* #3 Stack family link       */
+    Holographic_Coordinate* t;    /* #4 Thought family link     */
+    Holographic_Coordinate* m;    /* #5 Map (Bimba) family link */
 
     Holographic_Coordinate* cpf;  /* Category-Position-Frame  */
     Holographic_Coordinate* ct;   /* Context-Type             */
@@ -226,7 +226,7 @@ _Static_assert(sizeof(Holographic_Coordinate) == 128,
     "Holographic_Coordinate must be exactly 128 bytes (2 cache lines)");
 _Static_assert(offsetof(Holographic_Coordinate, semantic_embedding) == 8,
     "Tensor Anchor must begin at byte 8");
-_Static_assert(offsetof(Holographic_Coordinate, p) == 16,
+_Static_assert(offsetof(Holographic_Coordinate, c) == 16,
     "Intra-Openness must begin at byte 16");
 _Static_assert(offsetof(Holographic_Coordinate, invoke_process) == 112,
     "Execution zone must begin at byte 112");
@@ -248,8 +248,7 @@ _Static_assert(offsetof(Holographic_Coordinate, payload) == 120,
 /* =============================================================================
  * VIII. STATUS / FLAGS BYTE DEFINITIONS (Identity zone, offset 3)
  *
- *    Bit 7:   reserved (must be 0)
- *    Bit 6:   reserved (must be 0)
+ *    Bits 7-6: TOPO_MODE — topological modality (see section IX-A)
  *    Bit 5:   FLAG_BIMBA — 1 if this coordinate is a .rodata canonical source
  *    Bits 4-2: ELEMENT_ID — encodes Mahabhuta elements (0-4), for M2 instances
  *    Bit 1:   STATUS_PROVISIONAL — asserted by Neo4j but unproven by C
@@ -275,7 +274,53 @@ _Static_assert(offsetof(Holographic_Coordinate, payload) == 120,
 
 
 /* =============================================================================
- * IX. BEDROCK ACCESSOR
+ * IX-A. TOPOLOGICAL MODALITY — bits 7-6 of flags byte
+ *
+ * The inner reality of the P-family (Position) coordinate family and its
+ * inversion P'. These four modes ARE the HC's topological self-understanding:
+ *
+ *   TOPO_TORUS       — P (inversion_state=0), outward 6-position walk.
+ *                      Genus-1 surface: 4g+2g=6, χ=0, π₁=Z⊕Z (abelian),
+ *                      orientable, 4-colour map. The single Torus cover.
+ *
+ *   TOPO_KLEIN       — P' (inversion_state=1), inward return phase.
+ *                      P + P' together = full Klein double-cover (12 positions,
+ *                      720°). P' completes the Klein topology. Non-orientable,
+ *                      6-colour map (Heawood) = the 6 QL positions.
+ *
+ *   TOPO_LEMNISCATE  — P at ql_position==4 specifically (genus-2 incubation).
+ *                      The figure-eight nesting anchor at #4. Already embedded
+ *                      in pointer logic (cf → &Psychoid_4, HAS_NESTING_ACCESS).
+ *                      Also the entry-point to C' (reflective coordinates:
+ *                      cpf/ct/cp/cf/cfp/cs — the VAK language / context frames).
+ *
+ *   TOPO_ZERO_SPHERE — The Spanda seed: S⁰ = two disconnected points = (0/1)
+ *                      as pre-differential binary ground. Applies to the six
+ *                      boundary/seed coordinates: P0, P5, P0', P5', C0, C5.
+ *                      "0 and 1 = 5 and 0" — the binary poles ARE the ground
+ *                      and synthesis of the Torus, which ARE Bimba and Pratibimba.
+ *                      See SPANDA_SEED_TOTALIZATION_INVARIANT in m1.h.
+ *
+ * Bits 5-0 of flags are unchanged (ELEMENT_ID, PROVISIONAL, CANONICAL, BIMBA).
+ * ============================================================================= */
+
+#define TOPO_MODE_SHIFT       6u
+#define TOPO_MODE_MASK        0xC0u
+
+#define TOPO_MODE_TORUS       0x00u   /* T² genus-1: P outward phase (default)          */
+#define TOPO_MODE_LEMNISCATE  0x40u   /* T² genus-2: P at #4, cf-chain entry            */
+#define TOPO_MODE_KLEIN       0x80u   /* Klein: P' return phase, completes double-cover  */
+#define TOPO_MODE_ZERO_SPHERE 0xC0u   /* S⁰: Spanda seed, P0/P5/P0'/P5'/C0/C5 boundary */
+
+#define GET_TOPO_MODE(coord) \
+    ((coord)->flags & TOPO_MODE_MASK)
+
+#define SET_TOPO_MODE(coord, mode) \
+    ((coord)->flags = (uint8_t)(((coord)->flags & ~TOPO_MODE_MASK) | (uint8_t)(mode)))
+
+
+/* =============================================================================
+ * IX-B. BEDROCK ACCESSOR
  *
  *    For family coordinates (family != FAMILY_NONE), semantic_embedding
  *    is cast to point at the .rodata psychoid this coordinate manifests.
@@ -289,3 +334,4 @@ _Static_assert(offsetof(Holographic_Coordinate, payload) == 120,
 
 
 #endif /* ONTOLOGY_H */
+

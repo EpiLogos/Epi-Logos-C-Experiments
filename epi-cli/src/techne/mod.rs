@@ -27,6 +27,18 @@ pub enum TechneCmd {
         /// The quote text to research
         text: String,
     },
+    /// cmux — Ghostty-based terminal with vertical tabs and notifications for AI coding agents
+    Cmux {
+        /// Arguments passed to cmux CLI (e.g. "notify", "identify", "list-workspaces")
+        #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
+        args: Vec<String>,
+    },
+    /// worktrunk (wt) — Git worktree management for parallel AI agent workflows
+    Wt {
+        /// Arguments passed to wt CLI (e.g. "switch", "list", "merge", "remove")
+        #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
+        args: Vec<String>,
+    },
 }
 
 pub fn dispatch(cmd: &TechneCmd) {
@@ -67,6 +79,21 @@ pub fn dispatch(cmd: &TechneCmd) {
                 ),
             ]);
             run(c, "quote", "claude (glm profile)");
+        }
+        TechneCmd::Cmux { args } => {
+            let mut c = Command::new("cmux");
+            c.args(args);
+            // Set working directory to current project when cmux needs context
+            if !args.is_empty() && args.first().map(|a| a.starts_with('-')).unwrap_or(false) {
+                // Flags only - stay in current directory
+            }
+            run(c, "cmux", "cmux");
+        }
+        TechneCmd::Wt { args } => {
+            let mut c = Command::new("wt");
+            c.args(args);
+            // Always run wt from the current working directory
+            run(c, "wt", "wt (worktrunk)");
         }
     }
 }

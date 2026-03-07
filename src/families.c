@@ -13,9 +13,9 @@
 int families_init(Coordinate_Arena* arena, Holographic_Coordinate* mirrors[6]) {
     if (!arena || !mirrors) return -1;
 
-    /* For each family (P through C), create 6 coordinates */
+    /* For each family (C,P,L,S,T,M — archetype resonance order), create 6 coordinates */
     Coordinate_Family families[] = {
-        FAMILY_P, FAMILY_S, FAMILY_T, FAMILY_M, FAMILY_L, FAMILY_C
+        FAMILY_C, FAMILY_P, FAMILY_L, FAMILY_S, FAMILY_T, FAMILY_M
     };
 
     const Holographic_Coordinate* raw_psychoids[] = {
@@ -46,6 +46,35 @@ int families_init(Coordinate_Arena* arena, Holographic_Coordinate* mirrors[6]) {
 
             /* cf: ALL family coordinates anchor to the Lemniscate */
             coord->cf = (Holographic_Coordinate*)&Psychoid_4;
+
+            /* Set topological modality — inner reality of P/P' families.
+             * For now, inversion_state is always 0 at init (PRATIBIMBA copies;
+             * P' coordinates are created separately when # is applied).
+             * P-family gets the canonical topological modes; all others TOPO_TORUS
+             * by default (inherit by resonance through the P crosslink). */
+            if (families[f] == FAMILY_P) {
+                if (pos == 4) {
+                    /* #4 is the Lemniscate anchor: genus-2 nesting, cf-chain entry,
+                     * C' (reflective coords: cpf/ct/cp/cf/cfp/cs) gateway.
+                     * Already embedded in pointer logic — made explicit here. */
+                    SET_TOPO_MODE(coord, TOPO_MODE_LEMNISCATE);
+                } else {
+                    /* P outward phase = Torus single-cover */
+                    SET_TOPO_MODE(coord, TOPO_MODE_TORUS);
+                }
+            } else if (families[f] == FAMILY_C && (pos == 0 || pos == 5)) {
+                /* C0 (Bimba) and C5 (Pratibimba): the Spanda seed boundary poles.
+                 * These are the categorical registration of the (0/1) seed:
+                 * C0 = source ground, C5 = reflection synthesis.
+                 * P0/P5 are their positional counterparts. Together: the totalizing
+                 * encapsulation of the Spanda oscillation across both registers. */
+                SET_TOPO_MODE(coord, TOPO_MODE_ZERO_SPHERE);
+            } else {
+                /* All other coordinates default to Torus modality.
+                 * When # (inversion) is applied to create P' coordinates,
+                 * SET_TOPO_MODE(coord, TOPO_MODE_KLEIN) must be called there. */
+                SET_TOPO_MODE(coord, TOPO_MODE_TORUS);
+            }
         }
     }
 
@@ -54,13 +83,13 @@ int families_init(Coordinate_Arena* arena, Holographic_Coordinate* mirrors[6]) {
 
 /* Cross-link base pointers between families.
  * arena must already have mirrors at [0..5] and families at [6..41].
- * Family layout: P=[6..11], S=[12..17], T=[18..23], M=[24..29], L=[30..35], C=[36..41] */
+ * Family layout: C=[6..11], P=[12..17], L=[18..23], S=[24..29], T=[30..35], M=[36..41] */
 int families_crosslink(Coordinate_Arena* arena) {
     if (!arena || arena->count < 42) return -1;
 
     Holographic_Coordinate* base = arena->slots;
-    int p_offset = 6, s_offset = 12, t_offset = 18;
-    int m_offset = 24, l_offset = 30, c_offset = 36;
+    int c_offset = 6, p_offset = 12, l_offset = 18;
+    int s_offset = 24, t_offset = 30, m_offset = 36;
 
     /* Link every coord (mirrors + families) to its same-position peer in each family.
      * Apply TAG_RELATION: source determines the operator flag.
@@ -68,18 +97,14 @@ int families_crosslink(Coordinate_Arena* arena) {
     for (uint32_t i = 0; i < arena->count; i++) {
         uint8_t pos = base[i].ql_position;
         if (pos > 5) continue;
+        base[i].c = TAG_RELATION(&base[i], &base[c_offset + pos]);
         base[i].p = TAG_RELATION(&base[i], &base[p_offset + pos]);
+        base[i].l = TAG_RELATION(&base[i], &base[l_offset + pos]);
         base[i].s = TAG_RELATION(&base[i], &base[s_offset + pos]);
         base[i].t = TAG_RELATION(&base[i], &base[t_offset + pos]);
         base[i].m = TAG_RELATION(&base[i], &base[m_offset + pos]);
-        base[i].l = TAG_RELATION(&base[i], &base[l_offset + pos]);
-        /* .c already set by families_init — re-tag it too */
-        if (base[i].c) {
-            base[i].c = TAG_RELATION(&base[i], GET_PTR(base[i].c));
-        }
     }
 
-    (void)c_offset;
     return 0;
 }
 

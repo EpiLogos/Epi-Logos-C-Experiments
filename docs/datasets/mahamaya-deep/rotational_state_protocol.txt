@@ -1,0 +1,216 @@
+// ================================================
+// 8-FOLD ROTATIONAL STATE GENERATION PROTOCOL
+// Formulaic Discovery of Codon Pair Combinations
+// ================================================
+
+// Step 1: Create the rotational state calculation function
+// This generates all 8 rotational states for a given codon
+
+// Example for codon AAA - finding all possible pair combinations
+MATCH (codon {sequence: 'AAA'})
+WITH codon, 
+     substring(codon.sequence, 0, 2) AS first_two,   // AA
+     substring(codon.sequence, 1, 2) AS last_two,    // AA  
+     substring(codon.sequence, 0, 1) AS first_one,   // A
+     substring(codon.sequence, 2, 1) AS last_one     // A
+
+// Find negative rotational states (first pair wins, second pair sacrifices first letter)
+MATCH (pair1:NucleotidePair {sequence: first_two})  // Find pair matching first two letters
+MATCH (pair2:NucleotidePair) 
+WHERE substring(pair2.sequence, 1, 1) = last_one    // Find pairs whose second letter matches codon's last letter
+WITH codon, pair1, pair2,
+     'negative' AS polarity,
+     pair1.positiveValue + pair2.negativeValue AS rotational_value,
+     pair1.sequence + '+' + pair2.sequence AS pair_combination
+
+UNION
+
+// Find positive rotational states (second pair wins, first pair sacrifices second letter)  
+MATCH (codon {sequence: 'AAA'})
+WITH codon,
+     substring(codon.sequence, 0, 2) AS first_two,   // AA
+     substring(codon.sequence, 1, 2) AS last_two,    // AA
+     substring(codon.sequence, 0, 1) AS first_one,   // A
+     substring(codon.sequence, 2, 1) AS last_one     // A
+
+MATCH (pair1:NucleotidePair)
+WHERE substring(pair1.sequence, 0, 1) = first_one   // Find pairs whose first letter matches codon's first letter
+MATCH (pair2:NucleotidePair {sequence: last_two})   // Find pair matching last two letters
+WITH codon, pair1, pair2,
+     'positive' AS polarity,
+     pair1.negativeValue + pair2.positiveValue AS rotational_value,
+     pair1.sequence + '+' + pair2.sequence AS pair_combination
+
+// Detect non-dual states (where pair1 = pair2)
+WITH codon, pair1, pair2, polarity, rotational_value, pair_combination,
+     CASE WHEN pair1.sequence = pair2.sequence THEN true ELSE false END AS is_non_dual
+
+RETURN codon.sequence, 
+       pair_combination,
+       polarity,
+       rotational_value,
+       is_non_dual
+ORDER BY rotational_value;
+
+// ================================================
+// COMPLETE PROTOCOL FOR ALL 64 CODONS
+// ================================================
+
+// Main protocol to generate all rotational states for all codons
+MATCH (codon) WHERE codon.sequence IS NOT NULL AND length(codon.sequence) = 3
+
+// Extract codon components
+WITH codon,
+     substring(codon.sequence, 0, 1) AS n1,  // First nucleotide
+     substring(codon.sequence, 1, 1) AS n2,  // Second nucleotide  
+     substring(codon.sequence, 2, 1) AS n3,  // Third nucleotide
+     substring(codon.sequence, 0, 2) AS first_pair_target,  // First two letters
+     substring(codon.sequence, 1, 2) AS second_pair_target  // Last two letters
+
+// Generate negative rotational states
+MATCH (pair1:NucleotidePair {sequence: first_pair_target})
+MATCH (pair2:NucleotidePair) 
+WHERE right(pair2.sequence, 1) = n3
+
+WITH codon, pair1, pair2, 'negative' AS polarity,
+     pair1.positiveValue + pair2.negativeValue AS total_value,
+     pair1.sequence + '+' + pair2.sequence AS combination,
+     CASE WHEN pair1.sequence = pair2.sequence THEN 'non_dual' ELSE 'dual' END AS state_type
+
+UNION ALL
+
+// Generate positive rotational states  
+MATCH (codon) WHERE codon.sequence IS NOT NULL AND length(codon.sequence) = 3
+WITH codon,
+     substring(codon.sequence, 0, 1) AS n1,
+     substring(codon.sequence, 1, 1) AS n2, 
+     substring(codon.sequence, 2, 1) AS n3,
+     substring(codon.sequence, 0, 2) AS first_pair_target,
+     substring(codon.sequence, 1, 2) AS second_pair_target
+
+MATCH (pair1:NucleotidePair)
+WHERE left(pair1.sequence, 1) = n1
+MATCH (pair2:NucleotidePair {sequence: second_pair_target})
+
+WITH codon, pair1, pair2, 'positive' AS polarity,
+     pair1.negativeValue + pair2.positiveValue AS total_value,
+     pair1.sequence + '+' + pair2.sequence AS combination,
+     CASE WHEN pair1.sequence = pair2.sequence THEN 'non_dual' ELSE 'dual' END AS state_type
+
+// Aggregate and create rotational state relationships
+WITH codon, combination, polarity, total_value, state_type,
+     pair1, pair2,
+     row_number() OVER (PARTITION BY codon.sequence ORDER BY total_value, polarity) AS rotation_index
+
+// Create rotational state relationships
+CREATE (rotState:RotationalState {
+    codon_sequence: codon.sequence,
+    pair_combination: combination,
+    polarity: polarity,
+    rotational_value: total_value,
+    state_type: state_type,
+    rotation_index: rotation_index,
+    rotation_degrees: rotation_index * 45  // 0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°
+})
+
+// Create relationships
+CREATE (codon)-[:HAS_ROTATIONAL_STATE {
+    degrees: rotation_index * 45,
+    polarity: polarity,
+    value: total_value,
+    is_non_dual: (state_type = 'non_dual')
+}]->(rotState)
+
+CREATE (rotState)-[:COMPOSED_OF_PAIR {
+    role: 'first_pair',
+    polarity: polarity,
+    contributes_value: CASE WHEN polarity = 'negative' THEN pair1.positiveValue ELSE pair1.negativeValue END
+}]->(pair1)
+
+CREATE (rotState)-[:COMPOSED_OF_PAIR {
+    role: 'second_pair', 
+    polarity: polarity,
+    contributes_value: CASE WHEN polarity = 'negative' THEN pair2.negativeValue ELSE pair2.positiveValue END
+}]->(pair2);
+
+// ================================================
+// RNA ENHANCEMENT PROTOCOL (37x8 Additional States)
+// ================================================
+
+// Generate RNA rotational states for T-containing codons
+MATCH (dna_codon) 
+WHERE dna_codon.sequence CONTAINS 'T'
+WITH dna_codon, replace(dna_codon.sequence, 'T', 'U') AS rna_sequence
+
+// Find or create corresponding RNA codon
+MERGE (rna_codon:RNACodon {sequence: rna_sequence})
+
+// Generate RNA rotational states by converting T→U in the pair combinations
+MATCH (dna_codon)-[r:HAS_ROTATIONAL_STATE]->(dna_rot_state:RotationalState)
+WITH dna_codon, rna_codon, dna_rot_state, r,
+     replace(dna_rot_state.pair_combination, 'T', 'U') AS rna_combination
+
+// Create RNA rotational state
+CREATE (rna_rot_state:RNARotationalState {
+    rna_sequence: rna_codon.sequence,
+    dna_source: dna_codon.sequence,
+    pair_combination: rna_combination,
+    polarity: dna_rot_state.polarity,
+    rotational_value: dna_rot_state.rotational_value,  // Same value logic applies
+    state_type: dna_rot_state.state_type,
+    rotation_index: dna_rot_state.rotation_index,
+    rotation_degrees: dna_rot_state.rotation_degrees
+})
+
+// Create relationships
+CREATE (rna_codon)-[:HAS_RNA_ROTATIONAL_STATE {
+    degrees: r.degrees,
+    polarity: r.polarity,
+    value: r.value,
+    is_non_dual: r.is_non_dual,
+    transcribed_from: dna_codon.sequence
+}]->(rna_rot_state)
+
+CREATE (dna_rot_state)-[:TRANSCRIBES_TO]->(rna_rot_state);
+
+// ================================================
+// VERIFICATION QUERIES
+// ================================================
+
+// Count rotational states per codon (should be 8 each)
+MATCH (codon)-[:HAS_ROTATIONAL_STATE]->(rotState)
+WITH codon.sequence AS codon_seq, count(rotState) AS state_count
+WHERE state_count <> 8
+RETURN codon_seq, state_count AS incorrect_count;
+
+// Find non-dual rotational states (should be fewer due to concatenation)
+MATCH (codon)-[r:HAS_ROTATIONAL_STATE WHERE r.is_non_dual = true]->(rotState)
+RETURN codon.sequence, rotState.pair_combination, rotState.rotational_value
+ORDER BY codon.sequence;
+
+// Count total rotational states (should be 512 total, 472 after non-dual handling)
+MATCH ()-[:HAS_ROTATIONAL_STATE]->()
+RETURN count(*) AS total_rotational_states;
+
+// Verify RNA enhancements (should be 37 codons × 8 states = 296)
+MATCH ()-[:HAS_RNA_ROTATIONAL_STATE]->()
+RETURN count(*) AS total_rna_rotational_states;
+
+// ================================================
+// SUMMARY STATISTICS
+// ================================================
+
+// Generate summary of the complete rotational architecture
+MATCH (codon)-[:HAS_ROTATIONAL_STATE]->(rotState)
+WITH codon.sequence AS codon_seq,
+     collect(rotState.rotational_value) AS values,
+     collect(rotState.polarity) AS polarities,
+     sum(CASE WHEN rotState.state_type = 'non_dual' THEN 1 ELSE 0 END) AS non_dual_count
+
+RETURN codon_seq,
+       size(values) AS total_states,
+       min(values) AS min_value,
+       max(values) AS max_value,
+       non_dual_count,
+       CASE WHEN non_dual_count > 0 THEN 'has_non_dual' ELSE 'all_dual' END AS state_nature
+ORDER BY codon_seq;

@@ -21,12 +21,12 @@ pub struct HolographicCoordinate {
     pub semantic_embedding: *mut f32,
 
     // Intra-Openness: 6 Base + 6 Reflective (96 bytes)
+    pub c: *mut HolographicCoordinate,
     pub p: *mut HolographicCoordinate,
+    pub l: *mut HolographicCoordinate,
     pub s: *mut HolographicCoordinate,
     pub t: *mut HolographicCoordinate,
     pub m: *mut HolographicCoordinate,
-    pub l: *mut HolographicCoordinate,
-    pub c: *mut HolographicCoordinate,
     pub cpf: *mut HolographicCoordinate,
     pub ct: *mut HolographicCoordinate,
     pub cp: *mut HolographicCoordinate,
@@ -79,50 +79,50 @@ unsafe impl Send for WalkContext {}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 #[repr(u8)]
 pub enum CoordinateFamily {
-    None = 0,
-    P = 1, // Position
-    S = 2, // Stack
-    T = 3, // Thought
-    M = 4, // Map (Bimba)
-    L = 5, // Lens
-    C = 6, // Category
+    C = 0, // Category  — #0
+    P = 1, // Position  — #1
+    L = 2, // Lens      — #2
+    S = 3, // Stack     — #3
+    T = 4, // Thought   — #4
+    M = 5, // Map (Bimba) — #5
+    None = 7, // Raw psychoid — pre-categorical
 }
 
 impl CoordinateFamily {
     pub fn from_u8(v: u8) -> Self {
         match v {
-            0 => Self::None,
+            0 => Self::C,
             1 => Self::P,
-            2 => Self::S,
-            3 => Self::T,
-            4 => Self::M,
-            5 => Self::L,
-            6 => Self::C,
+            2 => Self::L,
+            3 => Self::S,
+            4 => Self::T,
+            5 => Self::M,
+            7 => Self::None,
             _ => Self::None,
         }
     }
 
     pub fn name(&self) -> &'static str {
         match self {
-            Self::None => "None (Raw Psychoid)",
+            Self::C => "C (Category)",
             Self::P => "P (Position)",
+            Self::L => "L (Lens)",
             Self::S => "S (Stack)",
             Self::T => "T (Thought)",
             Self::M => "M (Map/Bimba)",
-            Self::L => "L (Lens)",
-            Self::C => "C (Category)",
+            Self::None => "None (Raw Psychoid)",
         }
     }
 
     pub fn letter(&self) -> &'static str {
         match self {
-            Self::None => "#",
+            Self::C => "C",
             Self::P => "P",
+            Self::L => "L",
             Self::S => "S",
             Self::T => "T",
             Self::M => "M",
-            Self::L => "L",
-            Self::C => "C",
+            Self::None => "#",
         }
     }
 }
@@ -138,6 +138,7 @@ pub struct EpiLib {
     pub psychoid_4: *const HolographicCoordinate,
     pub psychoid_5: *const HolographicCoordinate,
     pub psychoid_hash: *const HolographicCoordinate,
+    pub weave_0_0: *const HolographicCoordinate,
     pub weave_0_5: *const HolographicCoordinate,
     pub weave_5_0: *const HolographicCoordinate,
     pub weave_5_5: *const HolographicCoordinate,
@@ -178,6 +179,7 @@ impl EpiLib {
             let psychoid_5: Symbol<*const HolographicCoordinate> = lib.get(b"Psychoid_5")?;
             let psychoid_hash: Symbol<*const HolographicCoordinate> =
                 lib.get(b"Psychoid_Hash")?;
+            let weave_0_0: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_0_0")?;
             let weave_0_5: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_0_5")?;
             let weave_5_0: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_5_0")?;
             let weave_5_5: Symbol<*const HolographicCoordinate> = lib.get(b"Weave_5_5")?;
@@ -227,6 +229,7 @@ impl EpiLib {
                 psychoid_4: *psychoid_4,
                 psychoid_5: *psychoid_5,
                 psychoid_hash: *psychoid_hash,
+                weave_0_0: *weave_0_0,
                 weave_0_5: *weave_0_5,
                 weave_5_0: *weave_5_0,
                 weave_5_5: *weave_5_5,
@@ -251,7 +254,7 @@ impl EpiLib {
         }
     }
 
-    /// Get all 17 BIMBA entities as (name, pointer) pairs
+    /// Get all 18 BIMBA entities as (name, pointer) pairs
     pub fn all_bimba(&self) -> Vec<(&'static str, *const HolographicCoordinate)> {
         vec![
             ("#0 Ground", self.psychoid_0),
@@ -261,6 +264,7 @@ impl EpiLib {
             ("#4 Context", self.psychoid_4),
             ("#5 Integration", self.psychoid_5),
             ("# Hash", self.psychoid_hash),
+            ("Weave 0.0", self.weave_0_0),
             ("Weave 0.5", self.weave_0_5),
             ("Weave 5.0", self.weave_5_0),
             ("Weave 5.5", self.weave_5_5),
@@ -364,12 +368,12 @@ pub fn read_coord(ptr: *const HolographicCoordinate) -> Option<CoordSnapshot> {
             weave_state: hc.weave_state,
             has_invoke: hc.invoke_process.is_some(),
             // Pointer web
+            c: ptr_info(hc.c),
             p: ptr_info(hc.p),
+            l: ptr_info(hc.l),
             s: ptr_info(hc.s),
             t: ptr_info(hc.t),
             m: ptr_info(hc.m),
-            l: ptr_info(hc.l),
-            c: ptr_info(hc.c),
             cpf: ptr_info(hc.cpf),
             ct: ptr_info(hc.ct),
             cp: ptr_info(hc.cp),
@@ -420,12 +424,12 @@ pub struct CoordSnapshot {
     pub flags: u8,
     pub weave_state: f32,
     pub has_invoke: bool,
+    pub c: PtrInfo,
     pub p: PtrInfo,
+    pub l: PtrInfo,
     pub s: PtrInfo,
     pub t: PtrInfo,
     pub m: PtrInfo,
-    pub l: PtrInfo,
-    pub c: PtrInfo,
     pub cpf: PtrInfo,
     pub ct: PtrInfo,
     pub cp: PtrInfo,
