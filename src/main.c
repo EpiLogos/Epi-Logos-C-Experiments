@@ -16,6 +16,7 @@
 #include "m2.h"
 #include "m3.h"
 #include "m4.h"
+#include "m5.h"
 
 static int boot_verify_web(void) {
     int ok = 1;
@@ -230,39 +231,61 @@ int main(int argc, char** argv) {
     }
     printf("[boot] M4 (Nara) initialized. CF=FRACTAL. Vtable[6] + PCO loaded.\n");
 
+    /* Phase 5.0: Initialize M5 (Epii) */
+    M5_Root* m5 = m5_init(&arena, mirrors[5]);
+    if (!m5) {
+        fprintf(stderr, "[boot] Aborting: M5 init failed.\n");
+        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2); m1_teardown(m1); m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    if (!m5_verify()) {
+        fprintf(stderr, "[boot] FAIL: M5 verification failed.\n");
+        m5_teardown(m5); m4_teardown(m4); m3_teardown(m3); m2_teardown(m2); m1_teardown(m1); m0_teardown(m0);
+        arena_destroy(&arena);
+        return 1;
+    }
+    printf("[boot] M5 (Epii) initialized. CF=MOBIUS. Logos FSM + QV self-API loaded.\n");
+
     /* CLI dispatch */
     if (argc > 1 && strcmp(argv[1], "m0") == 0) {
         int rc = m0_cli_dispatch(argc - 1, argv + 1, m0);
-        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m5_teardown(m5); m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
         m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
         return rc;
     }
     if (argc > 1 && strcmp(argv[1], "m1") == 0) {
         int rc = m1_cli_dispatch(argc - 1, argv + 1, m1);
-        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m5_teardown(m5); m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
         m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
         return rc;
     }
     if (argc > 1 && strcmp(argv[1], "m2") == 0) {
         int rc = m2_cli_dispatch(argc - 1, argv + 1, m2);
-        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m5_teardown(m5); m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
         m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
         return rc;
     }
     if (argc > 1 && strcmp(argv[1], "m3") == 0) {
         int rc = m3_cli_dispatch(argc - 1, argv + 1, m3);
-        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m5_teardown(m5); m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
         m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
         return rc;
     }
     if (argc > 1 && strcmp(argv[1], "m4") == 0) {
         int rc = m4_cli_dispatch(argc - 1, argv + 1, m4);
-        m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m5_teardown(m5); m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
+        m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
+        return rc;
+    }
+    if (argc > 1 && strcmp(argv[1], "m5") == 0) {
+        int rc = m5_cli_dispatch(argc - 1, argv + 1, m5);
+        m5_teardown(m5); m4_teardown(m4); m3_teardown(m3); m2_teardown(m2);
         m1_teardown(m1); m0_teardown(m0); arena_destroy(&arena);
         return rc;
     }
 
-    /* Phase 5: Run double covering (720°) */
+    /* Phase 6: Run double covering (720°) */
     Walk_Context wc = {0};
     printf("\n[engine] Starting double covering (720°)...\n");
     engine_double_covering(mirrors[0], &wc);
@@ -270,6 +293,7 @@ int main(int argc, char** argv) {
            wc.step_count, wc.cycle_count);
 
     /* Cleanup */
+    m5_teardown(m5);
     m4_teardown(m4);
     m3_teardown(m3);
     m2_teardown(m2);
