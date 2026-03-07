@@ -44,3 +44,14 @@ epi (Rust CLI router)
 - Wire `epi vault` to actual obsidian-cli (requires S1 setup)
 - Implement `epi graph` client (requires S2 setup)
 - TUI dashboard (`ratatui`) for live system visualization
+
+### QV Pipeline (v0.2.0)
+
+The Quintessential View pipeline manages self-knowledge data:
+- **Overlay** (`~/.epi-logos/qv/overlay.json`) — staging tier for fast iteration
+- **Bake** (`epi core knowing --bake`) — generates `src/qv_data.c` with static strings
+- **Three-tier resolution** — overlay -> C library -> static Rust tables
+- **Write gate** — session passphrase protects overlay modifications
+- **Coverage** — `epi core knowing --coverage` reports population across 89 coordinate slots
+
+See `docs/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` for full architecture.

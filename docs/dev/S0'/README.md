@@ -27,6 +27,20 @@ Plus tooling namespaces: `epi sesh`, `epi kbase`, `epi book`, `epi techne`, `epi
 
 ## Changelog
 
+### v0.2.0 — 2026-03-07
+
+**QV Pipeline, Admin CLI, Plugin Package**
+
+- **Three-tier QV resolution** — JSON overlay -> C library -> static Rust tables
+- `epi core knowing <coord> --update "pithy"` — write-gated overlay updates
+- `epi core knowing --coverage` — QV population coverage report
+- `epi core knowing --bake` — generates `src/qv_data.c` from overlay
+- `epi core knowing --export` — export all QV data as JSON
+- **Write gate** — session-level passphrase for write operations
+- **JSON overlay** at `~/.epi-logos/qv/overlay.json` — fast iteration without recompile
+- **Plugin package** — `epi-logos-plugin/` with skills, resources, scripts
+- **Initial data** — 59/89 coordinates populated (M, S, S', C, P, L, T, psychoids, CF, weaves)
+
 ### v0.1.0 — 2026-03-07
 
 **Static C compilation, M5 TUI, agent chat, distribution**
@@ -143,6 +157,10 @@ epi core m5                             # M5 holographic integration TUI
 epi core knowing <coord>                # Coordinate self-knowledge (CT5 5/0)
 epi core knowing <coord> --json         # JSON output for agents
 epi core knowing --family <FAM>         # List coordinates in a family
+epi core knowing <coord> --update "text"   # Update pithy in overlay (write-gated)
+epi core knowing --coverage                # QV coverage report
+epi core knowing --bake                    # Bake overlay -> src/qv_data.c
+epi core knowing --export                  # Export all QV data as JSON
 ```
 
 **Coordinate syntax:**
@@ -272,6 +290,7 @@ epi (Rust binary — ~/.cargo/bin/epi, 2.8 MB)
 | `epi core` — all subcommands | **Live** | Statically linked, no runtime deps |
 | `epi core m5` — M5 TUI | **Live** | Logos FSM + sub-branch explorer |
 | `epi core knowing` — coordinate self-knowledge | **Live** | M5 self-API, all 36 coords, --json |
+| `epi core knowing` — QV admin (--update, --coverage, --bake, --export) | **Live** | Write-gated overlay, 3-tier resolution |
 | `epi vault` — all 12 subcommands | **Live** | Needs `obsidian-cli` installed |
 | `epi graph status` | **Live** | — |
 | `epi graph query/retrieve/graphrag/hybrid` | Stub | Needs `NEO4J_URI` + connection |
