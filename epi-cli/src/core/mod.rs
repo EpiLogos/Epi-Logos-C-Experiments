@@ -2,6 +2,9 @@ use crate::ffi::tagged;
 use crate::ffi::{self, EpiLib};
 use clap::Subcommand;
 
+pub mod overlay;
+pub mod write_gate;
+
 #[derive(Subcommand)]
 pub enum CoreCmd {
     /// Inspect a coordinate (psychoid, family, CF root, weave)
