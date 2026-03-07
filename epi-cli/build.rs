@@ -23,6 +23,8 @@ fn main() {
         .file("../src/m3.c")
         .file("../src/m4.c")
         .file("../src/m5.c")
+        // QV data (generated)
+        .file("../src/qv_data.c")
         // BLAKE3
         .file("../vendor/blake3/blake3.c")
         .file("../vendor/blake3/blake3_dispatch.c")
