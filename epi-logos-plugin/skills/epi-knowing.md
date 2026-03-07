@@ -100,6 +100,25 @@ Example (raw psychoid):
 
 The `>` marker shows which family you queried. All 6 relation lines share the same position — this IS the holographic structure: every coordinate contains the whole, viewed through its family's lens.
 
+## Admin Commands (write-gated)
+
+```bash
+# Update a coordinate's pithy (prompts for passphrase on first write)
+epi core knowing M0 --update "Anuttara -- absolute ground, vimarsa engine"
+
+# Check what coordinates have QV data populated
+epi core knowing --coverage
+
+# Bake overlay data into C source for binary distribution
+epi core knowing --bake
+
+# Export all QV data as JSON
+epi core knowing --export
+```
+
+The write gate prompts once per CLI session for write operations (--update, --bake).
+Read operations (knowing, --coverage, --export) are always ungated.
+
 ## When to Use
 
 ### Before modifying code

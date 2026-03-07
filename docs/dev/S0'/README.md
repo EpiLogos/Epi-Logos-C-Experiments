@@ -39,7 +39,7 @@ Plus tooling namespaces: `epi sesh`, `epi kbase`, `epi book`, `epi techne`, `epi
 - **Write gate** — session-level passphrase for write operations
 - **JSON overlay** at `~/.epi-logos/qv/overlay.json` — fast iteration without recompile
 - **Plugin package** — `epi-logos-plugin/` with skills, resources, scripts
-- **Initial data** — 59/89 coordinates populated (M, S, S', C, P, L, T, psychoids, CF, weaves)
+- **Initial data** — 89/89 coordinates populated (100% coverage across all families, inversions, psychoids, CF, weaves)
 
 ### v0.1.0 — 2026-03-07
 
@@ -166,10 +166,11 @@ epi core knowing --export                  # Export all QV data as JSON
 **Coordinate syntax:**
 ```
 #0 #1 #2 #3 #4 #5 #        <- psychoids + hash operator
-P0 S3 M2 C5 L4 T1          <- family coordinates
+P0 S3 M2 C5 L4 T1          <- family coordinates (base)
+M0' S3' C4' P2i L5i T1'    <- inverted coordinates (' or i suffix)
 CF(0000) CF(01) CF(012)     <- context frame roots
 CF(0123) CF(4x) CF(450) CF(50)
-W0.5 W5.0 W5.5             <- weave interleaves
+W0.0 W0.5 W5.0 W5.5        <- weave interleaves
 ```
 
 ### `epi vault` — Obsidian (S1')
