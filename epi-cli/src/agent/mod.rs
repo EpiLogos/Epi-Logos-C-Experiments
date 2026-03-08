@@ -1,12 +1,18 @@
 mod agent_dirs;
 mod agents;
 mod auth;
+pub mod capabilities;
 pub mod chat;
 mod doctor;
 mod extensions;
+pub mod hooks;
 mod install;
 mod models;
+pub mod plugin_manifest;
+pub mod plugins;
+pub mod skills;
 mod spawn;
+pub mod subagents;
 
 use clap::{Args, Subcommand};
 
@@ -76,6 +82,16 @@ pub enum AgentCmd {
         /// Initial prompt (optional)
         prompt: Option<String>,
     },
+    /// Plugin management — validate, install, list, uninstall
+    Plugin {
+        #[command(subcommand)]
+        cmd: PluginCmd,
+    },
+    /// Skill discovery and eval suite management
+    Skills {
+        #[command(subcommand)]
+        cmd: SkillsCmd,
+    },
 }
 
 pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
@@ -96,6 +112,8 @@ pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
                 .map_err(|e| e.to_string())?;
             Ok(String::new())
         }
+        AgentCmd::Plugin { cmd } => plugins::dispatch_plugin(cmd, json),
+        AgentCmd::Skills { cmd } => plugins::dispatch_skills(cmd, json),
     }
 }
 
@@ -160,4 +178,39 @@ pub enum AuthCmd {
     },
     /// Show redacted auth profile status
     Status(AgentSelection),
+}
+
+#[derive(Subcommand)]
+pub enum PluginCmd {
+    /// Validate a plugin root directory
+    Validate {
+        /// Path to the plugin root directory
+        path: String,
+    },
+    /// Install a plugin from source directory to the local cache
+    Install {
+        /// Path to the plugin source directory
+        source: String,
+    },
+    /// List all installed plugins
+    List,
+    /// Uninstall a plugin by name
+    Uninstall {
+        /// Plugin name to uninstall
+        name: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum SkillsCmd {
+    /// List skills from a plugin root
+    List {
+        /// Path to the plugin root directory
+        plugin: String,
+    },
+    /// Discover and list eval suites
+    Eval {
+        /// Path to the eval suites directory
+        suite: String,
+    },
 }
