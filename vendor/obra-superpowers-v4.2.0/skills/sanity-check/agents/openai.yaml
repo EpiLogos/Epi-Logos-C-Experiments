@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sanity Check"
+  short_description: "Final guardrail check for planning and implementation scope"
+  default_prompt: "Run the sanity check before implementation or plan handoff."
