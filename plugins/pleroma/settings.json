@@ -1,0 +1,11 @@
+{
+  "namespace": "pleroma",
+  "displayName": "Pleroma — S4' Executive Layer",
+  "loadPriority": "early",
+  "capabilities": {
+    "skills": true,
+    "agents": true,
+    "hooks": true,
+    "evals": true
+  }
+}

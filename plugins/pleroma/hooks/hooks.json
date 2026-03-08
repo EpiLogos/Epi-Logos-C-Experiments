@@ -1,0 +1,24 @@
+{
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "script": "hooks/scripts/preflight-validate.sh",
+      "description": "Validate plugin and runtime state before agent tool use"
+    },
+    {
+      "event": "PostToolUse",
+      "script": "hooks/scripts/postflight-verify.sh",
+      "description": "Verify work completeness after agent tool use"
+    },
+    {
+      "event": "Stop",
+      "script": "hooks/scripts/subagent-discharge.sh",
+      "description": "Structured discharge on agent stop — emit metadata, capture summary"
+    },
+    {
+      "event": "Stop",
+      "script": "hooks/scripts/worktree-cleanup.sh",
+      "description": "Clean up worktrees and workshop windows on agent stop"
+    }
+  ]
+}

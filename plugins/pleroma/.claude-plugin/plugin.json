@@ -1,0 +1,9 @@
+{
+  "name": "pleroma",
+  "version": "0.1.0",
+  "description": "The S4' executive layer — VAK typed transition calculus, constitutional agent routing, Day/Night' topology, Technē workshop lifecycle",
+  "skills": "skills/",
+  "agents": "agents/",
+  "hooks": "hooks/hooks.json",
+  "evals": "evals/"
+}

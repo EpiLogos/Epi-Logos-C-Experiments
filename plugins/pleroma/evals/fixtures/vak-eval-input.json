@@ -1,0 +1,101 @@
+{
+  "description": "Example VAK evaluation input for testing the vak-evaluate pipeline",
+  "examples": [
+    {
+      "id": "simple-bugfix",
+      "task": "Fix authentication bug in login flow",
+      "expected_output": {
+        "vak_name": "auth-bug-fix",
+        "cpf": "(4.0/1-4.4/5)",
+        "ct": ["CT2", "CT3"],
+        "cp": "4.2",
+        "cf_code": "(0/1/2)",
+        "cf_agent": "eros",
+        "cfp": "CFP0",
+        "cfp_thread": "base",
+        "cs": "CS5",
+        "cs_direction": "Day"
+      },
+      "rationale": {
+        "cpf": "Well-defined bug, autonomous execution",
+        "ct": "Operational (CT2) and Pattern (CT3) -- fix requires understanding code structure",
+        "cp": "Operation position -- work is being done",
+        "cf": "Eros -- refiner/verifier, TDD appropriate",
+        "cfp": "Base -- single task, clear scope",
+        "cs": "Direct synthesis -- minimal process needed for known bug"
+      }
+    },
+    {
+      "id": "architecture-design",
+      "task": "Design system architecture for new GraphQL module",
+      "expected_output": {
+        "vak_name": "module-architecture-design",
+        "cpf": "(4.0/1-4.4/5)",
+        "ct": ["CT1", "CT3", "CT4"],
+        "cp": "4.3",
+        "cf_code": "(0/1/2/3)",
+        "cf_agent": "mythos",
+        "cfp": "CFP2",
+        "cfp_thread": "c-thread",
+        "cs": "CS0",
+        "cs_direction": "Day+Night'"
+      },
+      "rationale": {
+        "cpf": "Complex but can be structured for autonomous execution",
+        "ct": "Definitional (CT1), Pattern (CT3), Contextual (CT4)",
+        "cp": "Pattern position -- structural design work",
+        "cf": "Mythos -- pattern recognizer for architecture",
+        "cfp": "C-Thread -- sequential phases with validation",
+        "cs": "Full traverse -- comprehensive architectural work"
+      }
+    },
+    {
+      "id": "research-question",
+      "task": "Research GraphQL vs REST for our API layer",
+      "expected_output": {
+        "vak_name": "graphql-vs-rest-research",
+        "cpf": "(00/00)",
+        "ct": ["CT1", "CT2", "CT3", "CT4", "CT5"],
+        "cp": "4.1",
+        "cf_code": "(0/1)",
+        "cf_agent": "logos",
+        "cfp": "CFP1",
+        "cfp_thread": "p-thread",
+        "cs": "CS1",
+        "cs_direction": "Day"
+      },
+      "rationale": {
+        "cpf": "User-engaged -- learning opportunity, multi-domain",
+        "ct": "All content types relevant for research",
+        "cp": "Definition -- establishing what must be true",
+        "cf": "Logos -- architect/scoper for definition work",
+        "cfp": "P-Thread -- parallel research tracks",
+        "cs": "Quick ground-to-context -- scoping and orientation"
+      }
+    },
+    {
+      "id": "sophia-synthesis",
+      "task": "Synthesize findings from sprint review into actionable insights",
+      "expected_output": {
+        "vak_name": "sprint-synthesis",
+        "cpf": "(4.0/1-4.4/5)",
+        "ct": ["CT5"],
+        "cp": "4.5",
+        "cf_code": "(5/0)",
+        "cf_agent": "sophia",
+        "cfp": "CFP0",
+        "cfp_thread": "base",
+        "cs": "CS5",
+        "cs_direction": "Night'"
+      },
+      "rationale": {
+        "cpf": "Well-defined synthesis task",
+        "ct": "Integrative -- pure synthesis",
+        "cp": "Integration position",
+        "cf": "Sophia -- synthesizer",
+        "cfp": "Base -- single synthesis operation",
+        "cs": "Direct synthesis with Night' analysis direction"
+      }
+    }
+  ]
+}
