@@ -10,4 +10,5 @@ export async function main(_api: ExtensionAPI) {
   await import("./extensions/prompt-url-widget.ts");
   await import("./extensions/redraws.ts");
   await import("./extensions/themeMap.ts");
+  await import("./extensions/pleroma-primitives.ts");
 }
