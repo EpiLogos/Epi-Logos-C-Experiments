@@ -33,12 +33,12 @@
     { "name": "psyche", "path": "agents/constitutional/psyche.md", "cluster": "constitutional" },
     { "name": "sophia", "path": "agents/constitutional/sophia.md", "cluster": "constitutional" },
     { "name": "techne-helper", "path": "agents/constitutional/techne-helper.md", "cluster": "constitutional" },
-    { "name": "anansi", "path": "agents/aletheia/anansi.md", "cluster": "aletheia" },
-    { "name": "janus", "path": "agents/aletheia/janus.md", "cluster": "aletheia" },
-    { "name": "moirai", "path": "agents/aletheia/moirai.md", "cluster": "aletheia" },
-    { "name": "mercurius", "path": "agents/aletheia/mercurius.md", "cluster": "aletheia" },
-    { "name": "agora", "path": "agents/aletheia/agora.md", "cluster": "aletheia" },
-    { "name": "zeithoven", "path": "agents/aletheia/zeithoven.md", "cluster": "aletheia" }
+    { "name": "anansi", "path": "agents/aletheia/anansi.md", "cluster": "aletheia-mode" },
+    { "name": "janus", "path": "agents/aletheia/janus.md", "cluster": "aletheia-mode" },
+    { "name": "moirai", "path": "agents/aletheia/moirai.md", "cluster": "aletheia-mode" },
+    { "name": "mercurius", "path": "agents/aletheia/mercurius.md", "cluster": "aletheia-mode" },
+    { "name": "agora", "path": "agents/aletheia/agora.md", "cluster": "aletheia-mode" },
+    { "name": "zeithoven", "path": "agents/aletheia/zeithoven.md", "cluster": "aletheia-mode" }
   ],
   "hooks": {
     "hooks": [

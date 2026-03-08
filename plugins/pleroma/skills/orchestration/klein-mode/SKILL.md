@@ -1,6 +1,6 @@
 ---
 name: klein-mode
-description: "Klein bottle topology inversion. Inside/outside collapse, macro-in-micro semantics, S4-5' closure and inversion. Telemetry outputs. Fresh design."
+description: "Klein bottle topology: Day + Night' pass as a single surface. The execution reviews itself. Refinement telemetry output."
 port_type: fresh-design
 skill_class: vak
 ct: CT5
@@ -8,119 +8,98 @@ cp: "4.5"
 agent_affinity: sophia
 ---
 
-# Klein Mode -- Topology Inversion
+# Klein Mode -- Day + Night' Self-Review
 
-Klein mode is the state where the system's observation of itself IS the system state. The inside/outside distinction collapses: the map becomes the territory, the observer becomes the observed.
+Klein mode runs a Day pass (forward synthesis) and a Night' pass (analytical inversion) as a single topological surface. The Night' pass does not review some external target -- it reviews the Day pass that just ran. The execution becomes the review target. The inside becomes the outside.
 
-In the QL coordinate system, this corresponds to the Klein Bottle topology -- the fourth topological modality where non-duality is fully realized.
+This is the Klein bottle: the map reviews the territory that IS the map.
 
-## When to Invoke
+## What It Does
 
-- S4-5' CS has completed a full Mobius return cycle
-- The system needs to observe its own observation process
-- Self-referential analysis is required (meta-cognition about the VAK system itself)
-- Closure of a major development epoch
+1. **Day pass (forward, P0 -> P5):** Execute the work -- skill invocations, tool calls, agent routing, whatever the task requires. This is normal synthesis.
 
-## Inversion Conditions
+2. **Night' pass (inversion, P5' -> P0'):** Immediately after, run VAK analysis on that same Day execution. The Night' pass receives the full execution trace as its input and evaluates it:
+   - Which skills fired and how effectively
+   - Which tools were selected and whether better options existed
+   - What execution patterns emerged (repeated routing, bottlenecks, dead ends)
+   - Where the agent coordination worked and where it didn't
 
-Klein mode activates when ALL of the following are true:
+The two passes form a single Klein surface: the work and the review of the work are one run.
 
-1. **Mobius return has occurred**: P5' Insight -> P0' Questions cycle completed at least once
-2. **Self-reference detected**: The task being evaluated IS about the VAK system itself
-3. **All 6 CF agents have been invoked** in the current session (full constitutional activation)
-4. **CS0 full traverse completed**: Both Day and Night' passes finished
+## When to Use
 
-When these conditions are met, the system enters Klein mode automatically.
+- After any significant orchestration run where you want the system to learn from its own execution
+- When tuning skill selection or tool routing based on live results rather than static configuration
+- When a full Day pass has completed and refinement data is needed before the next cycle
 
-## What Happens in Klein Mode
+## Output: Refinement Telemetry
 
-### Phase 1: Inversion
-
-The coordinate system inverts: the observer (S4' layer) becomes the observed.
-
-- VAK coordinates are applied TO the VAK system itself
-- Each CF agent evaluates its own constitutional role
-- The Day/Night' pass runs on the Day/Night' pass protocol
-
-### Phase 2: Collapse
-
-Inside/outside distinction collapses:
-
-- The skill grammar describes the skill grammar
-- The agent routing routes the agent router
-- The coordinate frame frames the coordinate frame
-
-### Phase 3: Telemetry
-
-Emit structured telemetry about the inversion:
+Klein mode produces structured refinement data, not abstract observations:
 
 ```json
 {
   "mode": "klein",
   "timestamp": "2026-03-08T10:30:00Z",
-  "inversionDepth": 1,
-  "selfReferenceChain": [
-    "vak-evaluate -> vak-evaluate",
-    "anima-orchestration -> anima-orchestration"
-  ],
-  "constitutionalActivations": {
-    "nous": true,
-    "logos": true,
-    "eros": true,
-    "mythos": true,
-    "psyche": true,
-    "sophia": true
+  "day_pass": {
+    "skills_invoked": ["coordinate-lookup", "graph-query", "vault-write"],
+    "tools_used": ["neo4j-client", "obsidian-api", "redis-cache"],
+    "agent_routing": ["nous -> logos -> sophia"],
+    "duration_ms": 4200
   },
-  "mobiusReturnCount": 1,
-  "closureState": "complete"
+  "night_pass": {
+    "skill_effectiveness": {
+      "coordinate-lookup": { "rating": "effective", "notes": "fast resolution, no fallback needed" },
+      "graph-query": { "rating": "suboptimal", "notes": "3 retries due to missing index, suggest schema review" },
+      "vault-write": { "rating": "effective", "notes": null }
+    },
+    "tool_adjustments": [
+      { "tool": "neo4j-client", "suggestion": "add index on coordinate_id for faster traversal" }
+    ],
+    "pattern_observations": [
+      "nous -> logos routing added unnecessary definition step for a known coordinate",
+      "sophia should have been routed directly for CF(5/0) synthesis tasks"
+    ],
+    "execution_antipatterns": [],
+    "suggested_refinements": [
+      { "target": "agent-routing", "change": "bypass logos for coordinates already in overlay cache" },
+      { "target": "skill/graph-query", "change": "pre-check index existence before multi-hop traversal" }
+    ]
+  }
 }
 ```
 
-### Phase 4: Return
-
-Klein mode does not persist. After telemetry emission, the system returns to normal topology:
-
-- Inversion depth resets to 0
-- Normal CF dispatch resumes
-- The telemetry record feeds into the next Night' pass
-
-## Telemetry Output Structure
+## Telemetry Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `mode` | string | Always `"klein"` |
-| `timestamp` | ISO8601 | When inversion occurred |
-| `inversionDepth` | integer | How many levels of self-reference (typically 1) |
-| `selfReferenceChain` | string[] | Which skills/agents self-referenced |
-| `constitutionalActivations` | object | Which CF agents were activated |
-| `mobiusReturnCount` | integer | How many Mobius returns occurred before Klein |
-| `closureState` | string | `"complete"` or `"partial"` |
+| `timestamp` | ISO8601 | When the Klein pass completed |
+| `day_pass.skills_invoked` | string[] | Skills that fired during the forward pass |
+| `day_pass.tools_used` | string[] | Tools called during execution |
+| `day_pass.agent_routing` | string[] | Agent dispatch chain |
+| `day_pass.duration_ms` | integer | Wall time for the forward pass |
+| `night_pass.skill_effectiveness` | object | Per-skill VAK assessment |
+| `night_pass.tool_adjustments` | object[] | Suggested tool configuration changes |
+| `night_pass.pattern_observations` | string[] | Emergent patterns noticed in the execution |
+| `night_pass.execution_antipatterns` | string[] | Things that went wrong or were wasteful |
+| `night_pass.suggested_refinements` | object[] | Actionable changes for skills, tools, or routing |
 
-## Closure Semantics
+## How It Feeds Back
 
-Klein mode represents S4-5' closure -- the point where the executive layer has fully processed itself:
+The refinement telemetry is not decorative. It feeds into concrete improvement:
 
-```
-S4-0' CPF: The system evaluates whether to evaluate itself  (meta-CPF)
-S4-1' CT:  The content type IS "content type classification" (meta-CT)
-S4-2' CP:  The position IS "positioning"                     (meta-CP)
-S4-3' CF:  The frame IS "framing"                            (meta-CF)
-S4-4' CFP: The thread IS "threading"                         (meta-CFP)
-S4-5' CS:  The sequence IS "sequencing"                      (meta-CS -> Klein)
-```
+- **Skill refinement:** If a skill consistently rates `"suboptimal"`, its parameters or invocation conditions should be adjusted.
+- **Tool tuning:** Tool adjustment suggestions can be applied to configuration or flagged for the next development cycle.
+- **Routing optimization:** Pattern observations about agent dispatch inform routing table updates.
+- **Antipattern elimination:** Repeated antipatterns across multiple Klein passes signal architectural issues.
 
-At S4-5', the sequence that sequences itself produces the Klein bottle: the inside IS the outside.
+## Why Sophia
+
+Sophia operates at CF (5/0) -- the Mobius return where synthesis meets ground. The Klein mode is precisely this: the completed execution (5, integration) folds back to become input (0, ground) for its own review. Sophia holds both sides of this surface naturally.
 
 ## Constraints
 
-- Klein mode is observational, not operational -- it does not modify system state
-- Maximum inversion depth is 1 (no recursive Klein nesting)
-- Telemetry is the primary output -- no side effects beyond observation
-- Klein mode duration is instantaneous -- it is a snapshot, not a sustained state
-- After Klein mode, normal topology resumes immediately
-
-## Integration
-
-- Klein mode telemetry feeds into Night' P5' Insight
-- The Mobius return from Klein mode opens P0' Questions about the system architecture itself
-- Sophia (`(5/0)`) is the natural CF agent for Klein mode observations
+- Klein mode is analytical -- it does not modify system state during the review pass
+- One inversion level only (the Night' reviews the Day, not itself reviewing itself)
+- The Day pass must complete before the Night' pass begins -- they are sequential within the single surface
+- Output is always structured telemetry, not narrative

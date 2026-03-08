@@ -1,157 +1,145 @@
 ---
 name: ouroboros
-description: "Protocol for consensual self-surgery. Workflow pipeline from Origin through Pre-flight, Design, Execute, Verify, Merge. Three modes: Checkpoint Surgery, Collaborative Design, Full Pipeline. Port-and-refine from upstream."
+description: "Lemniscate incubation of an external coding agent. Spawns an isolated agent instance (via pleroma-skill-proxy) into a worktrunk worktree, establishing a surgeon-patient relation where the external agent operates on the parent agent's codebase. Ralph manages deterministic task looping."
 port_type: port-and-refine
 skill_class: vak
 ct: CT2, CT3
 cp: "4.3"
-agent_affinity: psyche, mythos
+agent_affinity: psyche, anima
 ---
 
-# Ouroboros -- Protocol for Consensual Self-Surgery
+# Ouroboros -- Lemniscate Incubation of an External Coding Agent
 
-Ouroboros is the structured protocol for modifying the system's own skills, agents, and configuration. It ensures all self-modification follows a disciplined pipeline with verification gates and human consent at critical junctures.
+Ouroboros is the #4 self-fold made operational. The parent agent incubates within itself an external coding agent that operates *on* the parent's own codebase. This is the Lemniscate topology: the inside loop (parent agent context) contains the outside loop (external agent working on it). Rather than modifying itself directly, the system delegates modification to a spawned instance with fresh context and bounded scope.
+
+## Topology
+
+The figure-eight structure of the Lemniscate (#4, cf):
+
+```
+        Parent Agent (Patient)
+       /                       \
+      /   context, constraints   \
+     |                           |
+     |     +-----------------+   |
+     |     | External Agent  |   |
+     |     | (Surgeon)       |   |
+     |     | via worktrunk   |   |
+     |     +-----------------+   |
+      \                         /
+       \   modifications flow  /
+        \_____________________/
+```
+
+- **Inside loop**: The parent agent's full coordinate context, skill registry, and codebase state.
+- **Outside loop**: The external agent (claude, aider, cursor, or other CLI tool) operating within an isolated worktree, making bounded modifications that flow back.
+- **Crossing point**: The `pleroma-skill-proxy` bridge -- skills and context pass outward; commits and diffs pass inward.
 
 ## When to Invoke
 
-- System needs to modify its own skills or agent definitions
-- Architecture changes that affect the VAK coordinate system
-- New skill integration or existing skill refactoring
-- Agent capability extension or constraint modification
+- Development tasks requiring fresh agent context (token budget, clean state)
+- Multi-file refactors where bounded scope prevents drift
+- Self-modification that benefits from surgeon-patient separation
+- Parallelized development across multiple worktrees
+- Tasks where ralph deterministic looping provides structure
 
-## Workflow Pipeline
+## Mechanism
 
-### Phase 0: Origin
+### 1. Spawn External Agent
 
-**Question**: What triggered this self-modification need?
+The parent agent spawns an external coding CLI tool using `pleroma-skill-proxy`:
 
-- Identify the source: Night' P5' Insight, user request, bug discovery, pattern recognition
-- Document the origin coordinate (CP, CF, CS that surfaced the need)
-- Validate that modification is within scope
+```
+techne-spawn --tool claude --worktree <branch-name> --proxy-skills [skill-list]
+```
 
-### Phase 1: Pre-flight
+Supported tools: `claude` (Claude Code), `aider`, `cursor`, or any CLI that accepts file paths and instructions. The `pleroma-skill-proxy` exposes the parent's skill registry to the child instance.
 
-**Question**: Is modification safe and necessary?
+### 2. Worktrunk Integration
 
-- Check current state of target files
-- Verify no concurrent modifications in progress
-- Assess blast radius: which other skills/agents are affected?
-- Document rollback strategy
+The `worktrunk` skill creates an isolated git worktree for the external agent:
 
-**Gate**: Pre-flight passes only if blast radius is understood and rollback is possible.
+- New worktree branched from the current HEAD
+- External agent receives the worktree path as its working directory
+- Isolation guarantees: no concurrent modification of the parent's working tree
+- On completion, changes merge back through standard git flow
 
-### Phase 2: Design
+### 3. Surgeon-Patient Relation
 
-**Question**: What exactly will change?
+| Role | Entity | Responsibility |
+|------|--------|----------------|
+| **Patient** | Parent agent | Provides context, constraints, acceptance criteria. Its codebase IS the thing being modified. |
+| **Surgeon** | External agent | Receives bounded task scope, operates within worktree, produces commits. Fresh context, no accumulated token debt. |
 
-- Draft the modification as a structured diff
-- Identify all affected files and their current state
-- Design verification criteria (what must pass after modification)
-- Document expected behavior changes
+The parent does not modify itself. It delegates, observes, and accepts or rejects the surgeon's work.
 
-**Collaboration primitive**: `design-start` -- begins collaborative design with user/Patient.
+### 4. Ralph Execution Mode
 
-**Gate**: Design must be reviewed and approved before execution.
+Ralph manages the deterministic task loop:
 
-### Phase 3: Execute
+- Tasks are structured as beads on a ralph loop
+- Each bead = one bounded unit of work for the external agent
+- The loop progresses deterministically: spawn, execute, verify, advance
+- `ralph-tui` provides visibility into bead progress and agent state
 
-**Question**: Apply the changes.
+### 5. Inter-Instance Communication
 
-- Create checkpoint (snapshot current state)
-- Apply modifications in order
-- Run immediate smoke tests
-- Log all changes with timestamps
+The `techne-*` hooks manage the external agent lifecycle:
 
-**Collaboration primitive**: `design-query` -- allows mid-execution questions to user/Patient.
+| Hook | Function |
+|------|----------|
+| `techne-spawn` | Launch external agent with worktree path, skill proxy config, and task scope |
+| `techne-relay` | Send structured messages between parent and child (instructions, queries, status) |
+| `techne-list` | List active child agent instances and their states |
+| `techne-close` | Terminate child instance, collect results, trigger merge evaluation |
 
-### Phase 4: Verify
+### 6. Verification Gates
 
-**Question**: Did it work?
+Shell hooks provide structured validation at lifecycle boundaries:
 
-- Run full verification suite against modification criteria
-- Check for regressions in adjacent skills/agents
-- Validate VAK coordinate consistency
-- Confirm no broken references
+| Hook | Trigger | Purpose |
+|------|---------|---------|
+| `preflight-validate.sh` | Before `techne-spawn` | Validates task scope, checks worktree readiness, confirms no conflicts |
+| `postflight-verify.sh` | After `techne-close` | Runs tests against modified worktree, validates coordinate consistency, checks regressions |
 
-**Collaboration primitive**: `verify-start` -- begins verification with user/Patient.
+## Integration Points
 
-**Gate**: Verification must pass. If it fails, trigger rollback to Phase 3 checkpoint.
-
-### Phase 5: Merge
-
-**Question**: Commit the change.
-
-- Commit changes with structured commit message
-- Update any affected documentation
-- Emit discharge summary
-- Archive the Ouroboros session for Night' extraction
-
-**Collaboration primitive**: `discharge` -- structured closure of the surgery session.
-
-## Three Modes
-
-### Checkpoint Surgery
-
-Fast-path for small, well-understood changes:
-- Skip Phase 2 (Design) detailed review
-- Execute -> Verify -> Merge
-- Use when: single-file changes, typo fixes, configuration updates
-
-### Collaborative Design
-
-Full human-in-the-loop design process:
-- Full Phase 2 with design-start, design-query
-- Multiple design iterations before execution
-- Use when: new skill creation, architecture changes, multi-file modifications
-
-### Full Pipeline
-
-Complete Phase 0 through Phase 5:
-- All gates enforced
-- All collaboration primitives available
-- Use when: significant system changes, first-time modifications to a subsystem
-
-## Collaboration Primitives
-
-| Primitive | Phase | Description |
-|-----------|-------|-------------|
-| `design-start` | 2 | Open collaborative design session |
-| `design-query` | 2-3 | Mid-process question to user/Patient |
-| `verify-start` | 4 | Open verification session |
-| `discharge` | 5 | Structured closure and summary |
-
-## Git Integration
-
-Ouroboros integrates with git at each phase:
-
-- **Phase 1**: `git stash` current changes if needed
-- **Phase 3**: Create checkpoint branch before modifications
-- **Phase 4**: Verify on checkpoint branch
-- **Phase 5**: Merge checkpoint branch, clean up
-
-## Rollback Protocol
-
-If any phase fails:
-1. Restore from Phase 3 checkpoint
-2. Document failure reason
-3. Return to Phase 2 for redesign
-4. Log rollback event for Night' analysis
+| Component | Role in Ouroboros |
+|-----------|-------------------|
+| `worktrunk` | Creates and manages the isolated worktree for the external agent |
+| `pleroma-skill-proxy` | Proxies parent skill registry to child agent instance |
+| `techne-spawn` | Spawns external coding agent with configuration |
+| `techne-relay` | Structured parent-child communication channel |
+| `techne-list` | Enumerates active child instances |
+| `techne-close` | Terminates child, collects output, triggers merge path |
+| `ralph-tui` | Deterministic bead/task loop management and visibility |
+| `preflight-validate.sh` | Pre-spawn validation gate |
+| `postflight-verify.sh` | Post-close verification gate |
 
 ## Output Format
 
 ```
-OUROBOROS: [modification-name]
-Phase: [0-5]
-Mode: [checkpoint | collaborative | full]
-Status: [in-progress | gate-passed | gate-failed | complete | rolled-back]
-Affected: [list of affected files/skills]
-Verification: [pass | fail | pending]
+OUROBOROS: [task-name]
+Agent: [claude | aider | cursor | custom]
+Worktree: [branch-name]
+Bead: [n/total]
+Status: [spawning | active | relay | verifying | merging | complete | failed]
+Surgeon: [child-instance-id]
+Patient: [parent-context-summary]
 ```
+
+## Coordinate Semantics
+
+- **CP 4.3**: Position 4 (Context/Lemniscate), sub-position 3 (Pattern). The self-fold that reveals processual pattern through delegation.
+- **CT2**: The operational frame -- the Trika of User (architect), Agent (parent), Code (external agent as processor).
+- **CT3**: The pattern frame -- the recurring loop structure of ralph bead iteration.
+- **CF**: The Lemniscate anchor. Ouroboros IS cf made executable -- the system nesting within itself an agent that operates on itself.
 
 ## Constraints
 
-- Never modify skills that are currently being executed
-- Always create a checkpoint before execution
-- Verification must pass before merge
-- All self-modifications are logged for Night' extraction
-- Human consent required for Phase 2 gate in Collaborative and Full modes
+- The parent agent never directly modifies files during an ouroboros session -- all modification flows through the surgeon
+- Each external agent instance operates in exactly one worktree
+- `techne-relay` is the only communication channel between parent and child (no shared mutable state)
+- `postflight-verify.sh` must pass before merge is permitted
+- Ralph bead progression is deterministic -- no skipping, no reordering
+- Worktree cleanup is mandatory on `techne-close` (success or failure)
