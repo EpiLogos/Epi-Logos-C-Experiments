@@ -38,6 +38,12 @@ epi core knowing 'CF(50)'        # Mobius return — total synthesis
 # Weave interleaves
 epi core knowing W0.5            # Ground reaching toward Instance
 
+# Sub-branch coordinates (any depth, from datasets)
+epi core knowing M2-1            # #2-1 MEF Meta-Logikon (shows children)
+epi core knowing '#4.4.3'        # Jungian Depth Psychology (Lemniscate nesting)
+epi core knowing '#0-4.0/1'      # Non-dual fusion within Anuttara
+epi core knowing '#1-3-4.(0000)' # CF void frame nesting (normalized)
+
 # Discovery — list all coords in a family
 epi core knowing --family M      # Lists M0-M5 + M0'-M5' (12 coords)
 epi core knowing --family '#'    # Lists #0-#5 + # operator
@@ -61,6 +67,13 @@ epi core knowing S3 --json       # Structured JSON output
 **Context frames:** `CF(0000)`, `CF(01)`, `CF(012)`, `CF(0123)`, `CF(4x)`, `CF(450)`, `CF(50)`
 
 **Weaves:** `W0.0`, `W0.5`, `W5.0`, `W5.5` — the 10-fold interlaced arena
+
+**Sub-branches:** `#<ROOT>-<path>` or `<FAMILY><ROOT>-<path>` — ~1873 dataset coordinates
+- `M2-1` = `#2-1` (family prefix maps to raw psychoid)
+- Arbitrary depth: `#2-1-0`, `#0-3-0/1-0`, `#4.4.3-4.0`
+- `.` (Lemniscate nesting) valid only after position `4`: `#4.0`, `#4.4.3`, `#1-3-4.0/1`
+- `/` = non-dual fusion: `0/1`, `0/1/2`, `5/0`
+- `()` CF nesting normalized: `#1-3-4.(0000)` → `#1-3-4.0000`
 
 ## CT5 5/0 Output Format
 
