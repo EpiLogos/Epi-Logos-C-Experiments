@@ -557,6 +557,8 @@ enum ParsedCoord {
     ContextFrame { label: String },
     /// Weave interleave: W0.0, W0.5, W5.0, W5.5
     Weave { label: String },
+    /// Sub-branch coordinate: #2-1, #0-3-2, M2-1 (= #2-1), etc.
+    SubBranch { raw: String },
 }
 
 const FAMILY_LETTERS: [&str; 6] = ["C", "P", "L", "S", "T", "M"];
@@ -606,10 +608,24 @@ fn parse_coordinate(input: &str) -> Option<ParsedCoord> {
     // # operator
     if s == "#" { return Some(ParsedCoord::Hash); }
 
-    // Psychoids: #0..#5
+    // Psychoids: #0..#5, or sub-branches: #2-1, #0-3-0/1, etc.
     if let Some(rest) = s.strip_prefix('#') {
         if let Ok(n) = rest.parse::<u8>() {
             if n <= 5 { return Some(ParsedCoord::Psychoid { pos: n }); }
+        }
+        // Sub-branch: #N-... where N is 0-5 and there's more after it
+        if rest.len() >= 2 {
+            let first_char = rest.chars().next()?;
+            if first_char.is_ascii_digit() {
+                let root = first_char.to_digit(10)? as u8;
+                if root <= 5 {
+                    // Must have a separator after the root digit
+                    let after = &rest[1..];
+                    if after.starts_with('-') || after.starts_with('.') {
+                        return Some(ParsedCoord::SubBranch { raw: format!("#{}", rest) });
+                    }
+                }
+            }
         }
         return None;
     }
@@ -634,9 +650,26 @@ fn parse_coordinate(input: &str) -> Option<ParsedCoord> {
     }
 
     // Family coordinates: M0, S3, C4', P2i, etc.
+    // Also sub-branches: M2-1 (= #2-1), S3-2 (= #3-2), etc.
     let first = s.chars().next()?;
     let family = family_char_to_id(first)?;
     let rest = &s[1..];
+
+    // Check for sub-branch: <FAM><N>-<rest> or <FAM><N>.<rest>
+    // e.g. M2-1, M0-3-2, M4.1-0
+    if rest.len() >= 3 {
+        let first_digit = rest.chars().next()?;
+        if first_digit.is_ascii_digit() {
+            let root = first_digit.to_digit(10)? as u8;
+            if root <= 5 {
+                let after = &rest[1..];
+                if after.starts_with('-') || after.starts_with('.') {
+                    // Map family coordinate to raw psychoid: M2-1 -> #2-1
+                    return Some(ParsedCoord::SubBranch { raw: format!("#{}{}", root, after) });
+                }
+            }
+        }
+    }
 
     // Check for inversion suffix: ' or i
     let (pos_str, inverted) = if rest.ends_with('\'') || rest.ends_with('i') || rest.ends_with('I') {
@@ -690,7 +723,7 @@ fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>,
 
     let parsed = parse_coordinate(coord_str)
         .ok_or_else(|| color_eyre::eyre::eyre!(
-            "Invalid coordinate '{}'. Examples: M0, S3', #4, CF(012), W0.5",
+            "Invalid coordinate '{}'. Examples: M0, S3', #4, CF(012), W0.5, M2-1, #2-1-0",
             coord_str
         ))?;
 
@@ -705,6 +738,8 @@ fn knowing(epi: &EpiLib, coordinate: Option<&str>, family: Option<&str>,
             knowing_cf(label, json),
         ParsedCoord::Weave { ref label } =>
             knowing_weave(label, json),
+        ParsedCoord::SubBranch { ref raw } =>
+            knowing_subbranch(raw, json),
     }
 }
 
@@ -891,6 +926,157 @@ fn knowing_weave(label: &str, json: bool) -> color_eyre::Result<()> {
     } else {
         println!("{} — Weave Interleave", label);
         println!("  Quintessence: {}", display_pithy);
+    }
+    Ok(())
+}
+
+/// Map a root psychoid position (0-5) to its dataset filename
+fn dataset_filename(root: u8) -> &'static str {
+    match root {
+        0 => "nodes_anuttara.json",
+        1 => "nodes_paramasiva.json",
+        2 => "nodes_parashakti.json",
+        3 => "nodes_mahamaya.json",
+        4 => "nodes_nara.json",
+        5 => "nodes_epii.json",
+        _ => "",
+    }
+}
+
+/// M-branch name for a root position
+fn mbranch_name(root: u8) -> &'static str {
+    match root {
+        0 => "Anuttara",
+        1 => "Paramasiva",
+        2 => "Parashakti",
+        3 => "Mahamaya",
+        4 => "Nara",
+        5 => "Epii",
+        _ => "Unknown",
+    }
+}
+
+fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
+    // raw is like "#2-1", "#0-3-0/1", "#4.1-0"
+    // First check overlay for a pithy
+    let pithy = overlay::overlay_pithy(raw);
+
+    // Extract root position from raw (always #N where N is first digit after #)
+    let root: u8 = raw.chars().nth(1)
+        .and_then(|c| c.to_digit(10))
+        .ok_or_else(|| color_eyre::eyre::eyre!("Invalid sub-branch: {}", raw))? as u8;
+
+    // Try to load from dataset
+    let dataset_path = project_root()
+        .map(|p| p.join("docs/datasets").join(dataset_filename(root)));
+
+    let mut node_name: Option<String> = None;
+    let mut node_essence: Option<String> = None;
+    let mut node_core_nature: Option<String> = None;
+    let mut node_description: Option<String> = None;
+    let mut children: Vec<(String, String)> = Vec::new();
+
+    if let Some(ref dp) = dataset_path {
+        if dp.exists() {
+            if let Ok(contents) = std::fs::read_to_string(dp) {
+                if let Ok(nodes) = serde_json::from_str::<Vec<serde_json::Value>>(&contents) {
+                    // Find this exact coordinate
+                    for node in &nodes {
+                        let coord = node.get("coordinate")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("");
+                        if coord == raw {
+                            node_name = node.get("name").and_then(|v| v.as_str()).map(|s| s.to_string());
+                            node_essence = node.get("essence").and_then(|v| v.as_str()).map(|s| s.to_string());
+                            node_core_nature = node.get("coreNature").and_then(|v| v.as_str()).map(|s| s.to_string());
+                            node_description = node.get("description").and_then(|v| v.as_str()).map(|s| s.to_string());
+                        }
+                    }
+                    // Find direct children (coordinates that are raw + separator + more)
+                    let prefix_dash = format!("{}-", raw);
+                    let prefix_dot = format!("{}.", raw);
+                    for node in &nodes {
+                        let coord = node.get("coordinate")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or("");
+                        let is_child = coord.starts_with(&prefix_dash) || coord.starts_with(&prefix_dot);
+                        if is_child {
+                            // Only direct children: no further separators after the prefix
+                            let suffix = if coord.starts_with(&prefix_dash) {
+                                &coord[prefix_dash.len()..]
+                            } else {
+                                &coord[prefix_dot.len()..]
+                            };
+                            // Direct child if suffix has no more dashes (allow dots, slashes within)
+                            if !suffix.contains('-') {
+                                let name = node.get("name")
+                                    .and_then(|v| v.as_str())
+                                    .unwrap_or("?")
+                                    .to_string();
+                                children.push((coord.to_string(), name));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    let display_name = node_name.as_deref().unwrap_or("(unknown)");
+    let branch_label = format!("M{} {}", root, mbranch_name(root));
+
+    if json {
+        let mut obj = serde_json::json!({
+            "coord": raw,
+            "type": "sub_branch",
+            "root": root,
+            "branch": branch_label,
+            "name": display_name,
+        });
+        if let Some(ref p) = pithy {
+            obj["quintessence"] = serde_json::Value::String(p.clone());
+        }
+        if let Some(ref e) = node_essence {
+            obj["essence"] = serde_json::Value::String(e.clone());
+        }
+        if let Some(ref cn) = node_core_nature {
+            obj["coreNature"] = serde_json::Value::String(cn.clone());
+        }
+        if !children.is_empty() {
+            obj["children"] = serde_json::json!(
+                children.iter().map(|(c, n)| serde_json::json!({"coord": c, "name": n}))
+                    .collect::<Vec<_>>()
+            );
+        }
+        println!("{}", serde_json::to_string_pretty(&obj)?);
+    } else {
+        println!("{} — {} sub-branch", raw, display_name);
+        println!("  Root: {} ({})", branch_label, PSYCHOID_NAMES[root as usize]);
+        if let Some(ref p) = pithy {
+            println!("  Quintessence: {}", p);
+        }
+        if let Some(ref cn) = node_core_nature {
+            // Truncate long core nature
+            let truncated = if cn.len() > 120 { format!("{}...", &cn[..117]) } else { cn.clone() };
+            println!("  Core Nature: {}", truncated);
+        }
+        if let Some(ref e) = node_essence {
+            let truncated = if e.len() > 120 { format!("{}...", &e[..117]) } else { e.clone() };
+            println!("  Essence: {}", truncated);
+        }
+        if node_name.is_none() {
+            println!("  (no dataset entry found — coordinate may be invalid)");
+        } else if pithy.is_none() {
+            println!("  (no quintessence yet — use --update to add)");
+        }
+        if !children.is_empty() {
+            println!("  Children ({}):", children.len());
+            for (coord, name) in &children {
+                let child_pithy = overlay::overlay_pithy(coord);
+                let marker = if child_pithy.is_some() { "+" } else { " " };
+                println!("    {} {} {}", marker, coord, name);
+            }
+        }
     }
     Ok(())
 }
