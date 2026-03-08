@@ -2,8 +2,57 @@
   "name": "pleroma",
   "version": "0.1.0",
   "description": "The S4' executive layer — VAK typed transition calculus, constitutional agent routing, Day/Night' topology, Technē workshop lifecycle",
-  "skills": "skills/",
-  "agents": "agents/",
-  "hooks": "hooks/hooks.json",
-  "evals": "evals/"
+  "skills": [
+    { "name": "tmux", "path": "skills/atomic/tmux", "category": "atomic" },
+    { "name": "cmux", "path": "skills/atomic/cmux", "category": "atomic" },
+    { "name": "mprocs", "path": "skills/atomic/mprocs", "category": "atomic" },
+    { "name": "worktrunk", "path": "skills/atomic/worktrunk", "category": "atomic" },
+    { "name": "ralph-tui", "path": "skills/atomic/ralph-tui", "category": "atomic" },
+    { "name": "repl", "path": "skills/atomic/repl", "category": "atomic" },
+    { "name": "notebooklm", "path": "skills/atomic/notebooklm", "category": "atomic" },
+    { "name": "chatlog-fetcher", "path": "skills/atomic/chatlog-fetcher", "category": "atomic" },
+    { "name": "youtube-transcript", "path": "skills/atomic/youtube-transcript", "category": "atomic" },
+    { "name": "gitbutler", "path": "skills/atomic/gitbutler", "category": "atomic" },
+    { "name": "pleroma-skill-proxy", "path": "skills/atomic/pleroma-skill-proxy", "category": "atomic" },
+    { "name": "technē-spawn", "path": "skills/atomic/technē-spawn", "category": "atomic" },
+    { "name": "technē-relay", "path": "skills/atomic/technē-relay", "category": "atomic" },
+    { "name": "technē-list", "path": "skills/atomic/technē-list", "category": "atomic" },
+    { "name": "technē-close", "path": "skills/atomic/technē-close", "category": "atomic" },
+    { "name": "vak-coordinate-frame", "path": "skills/orchestration/vak-coordinate-frame", "category": "orchestration" },
+    { "name": "vak-evaluate", "path": "skills/orchestration/vak-evaluate", "category": "orchestration" },
+    { "name": "anima-orchestration", "path": "skills/orchestration/anima-orchestration", "category": "orchestration" },
+    { "name": "day-night-pass", "path": "skills/orchestration/day-night-pass", "category": "orchestration" },
+    { "name": "ouroboros", "path": "skills/orchestration/ouroboros", "category": "orchestration" },
+    { "name": "klein-mode", "path": "skills/orchestration/klein-mode", "category": "orchestration" }
+  ],
+  "agents": [
+    { "name": "nous", "path": "agents/constitutional/nous.md", "cluster": "constitutional" },
+    { "name": "logos", "path": "agents/constitutional/logos.md", "cluster": "constitutional" },
+    { "name": "eros", "path": "agents/constitutional/eros.md", "cluster": "constitutional" },
+    { "name": "mythos", "path": "agents/constitutional/mythos.md", "cluster": "constitutional" },
+    { "name": "psyche", "path": "agents/constitutional/psyche.md", "cluster": "constitutional" },
+    { "name": "sophia", "path": "agents/constitutional/sophia.md", "cluster": "constitutional" },
+    { "name": "techne-helper", "path": "agents/constitutional/techne-helper.md", "cluster": "constitutional" },
+    { "name": "anansi", "path": "agents/aletheia/anansi.md", "cluster": "aletheia" },
+    { "name": "janus", "path": "agents/aletheia/janus.md", "cluster": "aletheia" },
+    { "name": "moirai", "path": "agents/aletheia/moirai.md", "cluster": "aletheia" },
+    { "name": "mercurius", "path": "agents/aletheia/mercurius.md", "cluster": "aletheia" },
+    { "name": "agora", "path": "agents/aletheia/agora.md", "cluster": "aletheia" },
+    { "name": "zeithoven", "path": "agents/aletheia/zeithoven.md", "cluster": "aletheia" }
+  ],
+  "hooks": {
+    "hooks": [
+      { "event": "PreToolUse", "script": "hooks/scripts/preflight-validate.sh" },
+      { "event": "PostToolUse", "script": "hooks/scripts/postflight-verify.sh" },
+      { "event": "Stop", "script": "hooks/scripts/subagent-discharge.sh" },
+      { "event": "Stop", "script": "hooks/scripts/worktree-cleanup.sh" }
+    ]
+  },
+  "eval_suites": [
+    "evals/suites/topology-routing.yaml",
+    "evals/suites/atomic-tools.yaml",
+    "evals/suites/ouroboros.yaml",
+    "evals/suites/klein.yaml",
+    "evals/suites/discharge.yaml"
+  ]
 }
