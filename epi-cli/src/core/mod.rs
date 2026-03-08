@@ -608,21 +608,25 @@ fn parse_coordinate(input: &str) -> Option<ParsedCoord> {
     // # operator
     if s == "#" { return Some(ParsedCoord::Hash); }
 
-    // Psychoids: #0..#5, or sub-branches: #2-1, #0-3-0/1, etc.
+    // Psychoids: #0..#5, or sub-branches: #2-1, #0-3-0/1, #1-3-4.(0000), etc.
     if let Some(rest) = s.strip_prefix('#') {
         if let Ok(n) = rest.parse::<u8>() {
             if n <= 5 { return Some(ParsedCoord::Psychoid { pos: n }); }
         }
-        // Sub-branch: #N-... where N is 0-5 and there's more after it
+        // Sub-branch: #N-... or #N.… where N is 0-5
         if rest.len() >= 2 {
             let first_char = rest.chars().next()?;
             if first_char.is_ascii_digit() {
                 let root = first_char.to_digit(10)? as u8;
                 if root <= 5 {
-                    // Must have a separator after the root digit
                     let after = &rest[1..];
                     if after.starts_with('-') || after.starts_with('.') {
-                        return Some(ParsedCoord::SubBranch { raw: format!("#{}", rest) });
+                        // Normalize () nesting: #1-3-4.(0000) -> #1-3-4.0000
+                        let normalized = format!("#{}", rest)
+                            .replace(".(", ".")
+                            .replace("-(", "-")
+                            .replace(')', "");
+                        return Some(ParsedCoord::SubBranch { raw: normalized });
                     }
                 }
             }
@@ -665,7 +669,12 @@ fn parse_coordinate(input: &str) -> Option<ParsedCoord> {
                 let after = &rest[1..];
                 if after.starts_with('-') || after.starts_with('.') {
                     // Map family coordinate to raw psychoid: M2-1 -> #2-1
-                    return Some(ParsedCoord::SubBranch { raw: format!("#{}{}", root, after) });
+                    // Normalize () nesting: M1-3-4.(0000) -> #1-3-4.0000
+                    let normalized = format!("#{}{}", root, after)
+                        .replace(".(", ".")
+                        .replace("-(", "-")
+                        .replace(')', "");
+                    return Some(ParsedCoord::SubBranch { raw: normalized });
                 }
             }
         }
@@ -956,6 +965,16 @@ fn mbranch_name(root: u8) -> &'static str {
     }
 }
 
+/// Truncate a string to max_chars, safe for multi-byte UTF-8
+fn truncate_safe(s: &str, max_chars: usize) -> String {
+    let truncated: String = s.chars().take(max_chars).collect();
+    if truncated.len() < s.len() {
+        format!("{}...", truncated)
+    } else {
+        truncated
+    }
+}
+
 fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
     // raw is like "#2-1", "#0-3-0/1", "#4.1-0"
     // First check overlay for a pithy
@@ -1056,13 +1075,10 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
             println!("  Quintessence: {}", p);
         }
         if let Some(ref cn) = node_core_nature {
-            // Truncate long core nature
-            let truncated = if cn.len() > 120 { format!("{}...", &cn[..117]) } else { cn.clone() };
-            println!("  Core Nature: {}", truncated);
+            println!("  Core Nature: {}", truncate_safe(cn, 120));
         }
         if let Some(ref e) = node_essence {
-            let truncated = if e.len() > 120 { format!("{}...", &e[..117]) } else { e.clone() };
-            println!("  Essence: {}", truncated);
+            println!("  Essence: {}", truncate_safe(e, 120));
         }
         if node_name.is_none() {
             println!("  (no dataset entry found — coordinate may be invalid)");
