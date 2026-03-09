@@ -13,6 +13,7 @@ use epi_logos::vault;
 mod app;
 mod book;
 mod code;
+mod notebook;
 mod sesh;
 mod techne;
 mod vimarsa;
@@ -87,6 +88,11 @@ enum Commands {
         #[command(subcommand)]
         cmd: Option<book::BookCmd>,
     },
+    /// NotebookLM — query and manage Google NotebookLM notebooks
+    Notebook {
+        #[command(subcommand)]
+        cmd: notebook::NotebookCmd,
+    },
     /// Research tools — chat log capture, NotebookLM, quote research
     Techne {
         #[command(subcommand)]
@@ -144,6 +150,7 @@ async fn main() -> color_eyre::Result<()> {
             Some(sub) => book::dispatch(&sub),
             None => book::open_default(file.clone()),
         },
+        Commands::Notebook { cmd } => notebook::dispatch(cmd),
         Commands::Techne { cmd } => techne::dispatch(cmd),
         Commands::App { cmd } => app::dispatch(cmd),
         Commands::Code { cmd } => code::dispatch(cmd),

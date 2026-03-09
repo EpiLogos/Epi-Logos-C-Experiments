@@ -1,3 +1,4 @@
+use self::title::{draw_title, title_block_height};
 use crate::ffi::tagged;
 use crate::ffi::{self, EpiLib, M5LogosState};
 use crossterm::{
@@ -8,20 +9,21 @@ use crossterm::{
 use ratatui::{prelude::*, widgets::*};
 use std::io::stdout;
 
+pub mod knowing;
+mod title;
+
 // ─── Dashboard App ───
 
-struct App<'a> {
-    epi: &'a EpiLib,
+struct App {
     selected: usize,
     entries: Vec<(&'static str, *const ffi::HolographicCoordinate)>,
     should_quit: bool,
 }
 
-impl<'a> App<'a> {
-    fn new(epi: &'a EpiLib) -> Self {
+impl App {
+    fn new(epi: &EpiLib) -> Self {
         Self {
             entries: epi.all_bimba(),
-            epi,
             selected: 0,
             should_quit: false,
         }
@@ -81,10 +83,18 @@ fn draw(frame: &mut Frame, app: &App) {
         ])
         .split(frame.area());
 
+    let title_height = title_block_height(frame.area()).min(outer[0].height.saturating_sub(6));
+    let title_and_main = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Length(title_height.max(1)), Constraint::Min(6)])
+        .split(outer[0]);
+
+    draw_title(frame, title_and_main[0]);
+
     let main_area = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Percentage(35), Constraint::Percentage(65)])
-        .split(outer[0]);
+        .split(title_and_main[1]);
 
     // Left panel: entity list
     draw_entity_list(frame, main_area[0], app);

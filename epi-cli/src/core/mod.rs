@@ -85,6 +85,10 @@ pub enum CoreCmd {
         #[arg(long)]
         refresh: bool,
 
+        /// Quick mode: skip notebook and vimarsa, only fetch graph + local facets
+        #[arg(long)]
+        quick: bool,
+
         /// Open the knowing dossier in a ratatui browser
         #[arg(long)]
         tui: bool,
@@ -116,6 +120,7 @@ pub fn dispatch(cmd: &CoreCmd, epi: &EpiLib, json: bool) -> color_eyre::Result<(
             project,
             limit,
             refresh,
+            quick,
             tui,
         } => knowing(
             epi,
@@ -130,6 +135,7 @@ pub fn dispatch(cmd: &CoreCmd, epi: &EpiLib, json: bool) -> color_eyre::Result<(
             project.as_deref(),
             *limit,
             *refresh,
+            *quick,
             *tui,
             json,
         ),
@@ -841,6 +847,7 @@ fn knowing(
     project: Option<&str>,
     limit: usize,
     refresh: bool,
+    quick: bool,
     tui: bool,
     json: bool,
 ) -> color_eyre::Result<()> {
@@ -900,7 +907,8 @@ fn knowing(
             pos,
             inverted,
         } => knowing_family_coord(
-            epi, family, pos, inverted, coord_str, open, glow, project, limit, refresh, tui, json,
+            epi, family, pos, inverted, coord_str, open, glow, project, limit, refresh, quick, tui,
+            json,
         ),
         ParsedCoord::Psychoid { pos } => knowing_psychoid(pos, json),
         ParsedCoord::Hash => knowing_hash_op(json),
@@ -933,10 +941,16 @@ fn knowing_family_coord(
     project: Option<&str>,
     limit: usize,
     refresh: bool,
+    quick: bool,
     tui: bool,
     json: bool,
 ) -> color_eyre::Result<()> {
-    let dossier = knowing::build_family_dossier(family, pos, inverted, project, limit);
+    let mode = if quick {
+        knowing::DossierMode::Quick
+    } else {
+        knowing::DossierMode::Full
+    };
+    let dossier = knowing::build_family_dossier_with_mode(family, pos, inverted, project, limit, mode);
 
     if refresh {
         knowing::persist_dossier_snapshot(&dossier, project)?;
