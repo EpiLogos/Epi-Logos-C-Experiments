@@ -53,5 +53,7 @@ The Quintessential View pipeline manages self-knowledge data:
 - **Three-tier resolution** — overlay -> C library -> static Rust tables
 - **Write gate** — session passphrase protects overlay modifications
 - **Coverage** — `epi core knowing --coverage` reports population across 89 coordinate slots
+- **Knowing dossier** — `epi core knowing <coord>` resolves essence, structural correspondences, relational field, KBase field, notebook pulse, and latest snapshot
+- **Knowing actions** — `--project`, `--refresh`, `--open`, `--glow`, and `--tui` turn the command into a lightweight knowledge portal surface
 
 See `docs/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` for full architecture.

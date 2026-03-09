@@ -1,9 +1,10 @@
 # S2/S2' — Neo4j + Redis (Relational / Lens)
 
-**Status:** STUB — CLI module exists, no backend connected
+**Status:** PLANNED — Docker infrastructure + Rust clients next
 **Coordinate:** S2 (raw graph/cache access), S2' (coordinate-aware GraphRAG)
 **Implementation:** `epi-cli/src/graph/` (Rust)
 **CLI Namespace:** `epi graph`
+**Docker:** `docker-compose.epi-s2.yml` (Neo4j 5.x + Redis 7.x)
 
 ---
 
@@ -12,136 +13,560 @@
 S2 is the **Vector Arena** — the relational substrate where all coordinate entities exist as graph nodes with semantic embeddings. Neo4j manages persistent graph relations and high-dimensional vector storage. Redis handles high-speed ephemeral caching and pub/sub for live sessions.
 
 ### The Non-Negotiable Requirement
+
 Every semantic vector in S2' MUST be anchored to a valid S0' C-engine coordinate primitive. Semantic vectors cannot structurally exist without a topological identity.
 
+### S2 in the Tiered Granularity Model
+
+The same coordinate exists at every S-level at different detail:
+
+| Level | What it holds | Property name |
+|-------|--------------|---------------|
+| **S0** | 128-byte HC struct (`.rodata` / heap) | C struct fields |
+| **S1** | Markdown + frontmatter (`{family}_{n}_{semantic}`) | YAML keys |
+| **S2** | Neo4j node + vector embedding + Redis cache | `bimbaCoordinate` |
+| **S3** | Live state subscription (SpacetimeDB row) | Real-time delta |
+| **S4** | Agent context window (prompt-compressed) | Tool output |
+| **S5** | Published artifact (Notion page) | External form |
+
+S2 holds the **maximum relational detail** — the full graph of cross-coordinate relationships, position-based edges, and vector embeddings that S0 and S1 cannot express.
+
 ### S2 (Explicit) — Raw Database Access
-- Neo4j: driver connection, session/transaction management, Cypher execution
+
+- Neo4j: driver connection (bolt), session/transaction management, Cypher execution
 - Redis: connection, key-value, pub/sub operations
 - Health/retry primitives for both backends
+- Docker lifecycle management (`epi graph up`, `epi graph down`)
 - No coordinate semantics — just database access
 
 ### S2' (Implicate) — Coordinate-Aware GraphRAG
-- **QL Schema**: Neo4j node/relationship types mapped to coordinate families
-- **Redis cache tiering**: session-scoped caching with CF signature isolation
+
+- **QL Schema**: Neo4j node/relationship types grounded in the HC struct
+- **Redis cache tiering**: HOT/WARM/COLD based on artifact role + volatility
 - **NOW dynamics**: temporal graph state tracking per session
 - **Vector similarity search**: coordinate-anchored semantic lookup
 - **Graph-driven compilation trigger**: S0' <-> S2' evolutionary recompile
+- **Context Frame isolation**: CF-signature scoped Redis namespaces for parallel agents
 
 ---
 
 ## Current State in This Repo
 
-### What Exists
-`epi-cli/src/graph/mod.rs` — stub only (`epi graph: not yet implemented`)
+### What Exists (Rust stubs)
 
-### What's Missing
-1. **No Neo4j driver** — need Rust Neo4j client (bolt protocol)
-2. **No Redis client** — need async Redis with pub/sub
-3. **No QL graph schema** — node types, relationship types undefined
-4. **No vector storage** — no embedding pipeline
-5. **No cache tier model** — no Redis key strategy
+`epi-cli/src/graph/` — 18 files, mostly stubs:
+- **Complete:** `types.rs` (NodeRef, EdgeRef, GraphResult, RelationshipType), `alignment_validator.rs` (36 valid coordinates), `coordinate_array_parser.rs` (comma-separated parsing)
+- **Stub:** everything else (client, api, mapper, embeddings, redis_cache, all sync files, all retrieval files)
+- **No Cargo.toml deps:** `neo4rs`, `redis`, `tokio`, `reqwest` all missing
+
+### Python Source (Port Target)
+
+`/Epi-Logos/Idea/Pratibimba/System/Subsystems/Parashakti/graph/` — 30 files, ~28K LOC:
+- 17 production files (~14K LOC), 11 test files (~14K LOC)
+- Fully functional against Neo4j 5.x + Redis 7.x with Gemini embeddings
+- Key modules: coordinate_retrieval (2143), redis_cache (1810), sync_coordinator (1451), graphrag_retriever (1293)
 
 ---
 
-## Graph Schema (from Authority Docs)
+## Neo4j Schema — Grounded in the HC Struct
 
-### Node Types (Coordinate-Mapped)
+### The Holographic Coordinate as Node Schema
+
+The Neo4j node schema mirrors the C `Holographic_Coordinate` struct (128 bytes, `include/ontology.h`):
+
+```cypher
+// BimbaCoordinate — the universal node type
+// Every node in the graph IS a coordinate
+(:BimbaCoordinate {
+  // === Identity (mirrors HC bytes 0-7) ===
+  ql_position: INTEGER,          // 0-5 (or 255 for Hash)
+  family: STRING,                // "NONE"|"C"|"P"|"L"|"S"|"T"|"M"
+  inversion_state: BOOLEAN,      // false=normal, true=inverted (')
+  flags: INTEGER,                // status byte (CANONICAL|PROVISIONAL|BIMBA)
+  weave_state: FLOAT,            // 0.0, 0.5, 1.0 ... 5.5
+  topo_mode: STRING,             // "TORUS"|"LEMNISCATE"|"KLEIN"|"ZERO_SPHERE"
+
+  // === Tensor Anchor (mirrors HC bytes 8-15) ===
+  semantic_embedding: LIST<FLOAT>,  // vector embedding (768/1536/3072 dims)
+
+  // === Identity metadata ===
+  bimbaCoordinate: STRING,       // canonical coordinate string: "#0", "P3", "M4'", "CF_TRIKA"
+  name: STRING,                  // human-readable name
+  uuid: STRING,                  // deterministic UUID from coordinate
+  layer: STRING,                 // "PSYCHOID"|"FAMILY"|"CONTEXT_FRAME"|"WEAVE"|"VAK"
+
+  // === Vault anchor (S1 link) ===
+  vault_path: STRING,            // Obsidian file path (if materialized)
+
+  // === S0 pithy (compression trika) ===
+  s0_pithy: STRING,              // 1-liner <=128 chars from C memory
+
+  // === Temporal ===
+  created_at: DATETIME,
+  updated_at: DATETIME
+})
 ```
-(:Coordinate {id, family, position, prime, weave_state})
-(:Artifact {id, type, path, coordinate_id})
-(:Session {id, day_id, now_id, started_at})
-(:Day {id, date, status})
-(:NOW {id, session_id, day_id, created_at})
+
+### Seed Data: The Full Coordinate Space
+
+`epi graph init` seeds the complete holographic coordinate space:
+
+#### Layer 0: The # Inversion Act (1 node)
+
+```cypher
+CREATE (:BimbaCoordinate {
+  bimbaCoordinate: "#",
+  name: "The Inversion Act",
+  ql_position: 255,
+  family: "NONE",
+  layer: "PSYCHOID",
+  flags: 33  // BIMBA_FLAGS = 0x21
+})
 ```
+
+#### Layer 1: Raw Psychoids #0-#5 (6 nodes)
+
+```cypher
+// #0 Ground, #1 Form, #2 Operation, #3 Pattern, #4 Context (Lemniscate), #5 Integration (Mobius)
+UNWIND [
+  {pos: 0, name: "Ground",      weave: 0.0,  topo: "ZERO_SPHERE"},
+  {pos: 1, name: "Form",        weave: 1.0,  topo: "TORUS"},
+  {pos: 2, name: "Operation",   weave: 2.0,  topo: "TORUS"},
+  {pos: 3, name: "Pattern",     weave: 3.0,  topo: "TORUS"},
+  {pos: 4, name: "Context",     weave: 4.0,  topo: "LEMNISCATE"},
+  {pos: 5, name: "Integration", weave: 5.0,  topo: "ZERO_SPHERE"}
+] AS p
+CREATE (:BimbaCoordinate {
+  bimbaCoordinate: "#" + p.pos,
+  name: p.name,
+  ql_position: p.pos,
+  family: "NONE",
+  layer: "PSYCHOID",
+  weave_state: p.weave,
+  topo_mode: p.topo,
+  flags: 33
+})
+```
+
+#### Layer 1b: 4 Weave Interleaves (4 nodes)
+
+```cypher
+// Weave_0_0 (Pure Ground implicate), Weave_0_5, Weave_5_0, Weave_5_5
+UNWIND [
+  {weave: 0.0, name: "Pure Ground Implicate"},
+  {weave: 0.5, name: "Ground-Instance Bridge"},
+  {weave: 5.0, name: "Instance-Ground Return"},
+  {weave: 5.5, name: "Pure Instance Implicate"}
+] AS w
+CREATE (:BimbaCoordinate {
+  bimbaCoordinate: "Weave_" + replace(toString(w.weave), ".", "_"),
+  name: w.name,
+  family: "NONE",
+  layer: "WEAVE",
+  weave_state: w.weave,
+  flags: 33
+})
+```
+
+#### Layer 1c: 7 Context Frame Roots (7 nodes)
+
+```cypher
+UNWIND [
+  {id: 0, coord: "CF_VOID",       name: "Receptive Dynamism",  sig: "(00/00)", mod: "Mod%"},
+  {id: 1, coord: "CF_BINARY",     name: "Non-Dual Binary",     sig: "(0/1)",   mod: "Mod2"},
+  {id: 2, coord: "CF_TRIKA",      name: "The Trika",           sig: "(0/1/2)", mod: "Mod3"},
+  {id: 3, coord: "CF_QUATERNAL",  name: "Three-Plus-One",      sig: "(0/1/2/3)", mod: "Mod4"},
+  {id: 4, coord: "CF_FRACTAL",    name: "Fractal Doubling",    sig: "(4.0/1-4.4/5)", mod: "Mod4/6"},
+  {id: 5, coord: "CF_SYNTHESIS",  name: "Mobius Synthesis",     sig: "(4/5/0)", mod: "Mod6"},
+  {id: 6, coord: "CF_MOBIUS",     name: "Total Synthesis",      sig: "(5/0)",   mod: "Mod6"}
+] AS cf
+CREATE (:BimbaCoordinate {
+  bimbaCoordinate: cf.coord,
+  name: cf.name,
+  ql_position: cf.id,
+  family: "NONE",
+  layer: "CONTEXT_FRAME",
+  flags: 33
+})
+```
+
+#### Layer 2: Six Coordinate Families (72 nodes: 6 families x 6 positions x 2 phases)
+
+Each family manifests #0-#5 in its domain. Both normal and inverted (') forms:
+
+```cypher
+// Family definitions
+UNWIND [
+  {fam: "C", names: ["Bimba","Form","Entity","Process","Type","Pratibimba"]},
+  {fam: "P", names: ["Ground","Definition","Operation","Pattern","Context","Integration"]},
+  {fam: "L", names: ["Literal","Functional","Structural","Archetypal","Paradigmatic","Integral"]},
+  {fam: "S", names: ["Terminal","Obsidian","Neo4j","Gateway","PiAgent","Sync"]},
+  {fam: "T", names: ["Questions","Traces","Challenges","Patterns","Discovery","Insight"]},
+  {fam: "M", names: ["Anuttara","Paramasiva","Parashakti","Mahamaya","Nara","Epii"]}
+] AS f
+UNWIND range(0, 5) AS pos
+UNWIND [false, true] AS inv
+CREATE (:BimbaCoordinate {
+  bimbaCoordinate: f.fam + pos + CASE WHEN inv THEN "'" ELSE "" END,
+  name: f.names[pos] + CASE WHEN inv THEN " (Inverted)" ELSE "" END,
+  ql_position: pos,
+  family: f.fam,
+  inversion_state: inv,
+  layer: "FAMILY",
+  topo_mode: CASE
+    WHEN inv THEN "KLEIN"
+    WHEN pos = 4 THEN "LEMNISCATE"
+    WHEN pos IN [0,5] THEN "ZERO_SPHERE"
+    ELSE "TORUS"
+  END,
+  flags: CASE WHEN inv THEN 1 ELSE 33 END
+})
+```
+
+#### Layer 3: VAK Reflective Coordinates (6 nodes)
+
+```cypher
+UNWIND [
+  {idx: 0, coord: "CPF", name: "Category-Position-Frame"},
+  {idx: 1, coord: "CT",  name: "Context-Time / Content Types"},
+  {idx: 2, coord: "CP",  name: "Context-Position"},
+  {idx: 3, coord: "CF",  name: "Context-Frame"},
+  {idx: 4, coord: "CFP", name: "Context-Frame-Position / Paths"},
+  {idx: 5, coord: "CS",  name: "Context-Sequence"}
+] AS v
+CREATE (:BimbaCoordinate {
+  bimbaCoordinate: v.coord,
+  name: v.name,
+  ql_position: v.idx,
+  family: "NONE",
+  layer: "VAK",
+  flags: 33
+})
+```
+
+**Total seed: ~96 nodes** (1 Hash + 6 psychoids + 4 weaves + 7 CFs + 72 family coords + 6 VAK)
 
 ### Relationship Types
-```
--[:MANIFESTS {family}]->        // Archetype -> Coordinate
--[:LINKS_TO {weight}]->         // Coordinate -> Coordinate
--[:GROUNDS]->                   // p_0 relation
--[:DEFINES]->                   // p_1 relation
--[:OPERATES_ON]->               // p_2 relation
--[:PATTERNS]->                  // p_3 relation
--[:CONTEXTUALIZES]->            // p_4 relation
--[:INTEGRATES]->                // p_5 relation
--[:RESIDES_IN]->                // Artifact -> vault path
--[:PRODUCED_IN]->               // Artifact -> Session
+
+#### The 16-Fold Intra-Openness (HC Struct Pointer Web)
+
+Each HC has 12 tagged pointers (6 base + 6 reflective). These become Neo4j relationships:
+
+```cypher
+// Base family links (from the c,p,l,s,t,m pointer fields)
+-[:FAMILY_LINK {family: "C"}]->    // coordinate.c pointer
+-[:FAMILY_LINK {family: "P"}]->    // coordinate.p pointer
+-[:FAMILY_LINK {family: "L"}]->    // coordinate.l pointer
+-[:FAMILY_LINK {family: "S"}]->    // coordinate.s pointer
+-[:FAMILY_LINK {family: "T"}]->    // coordinate.t pointer
+-[:FAMILY_LINK {family: "M"}]->    // coordinate.m pointer
+
+// Reflective coordinate links (from the cpf,ct,cp,cf,cfp,cs pointer fields)
+-[:REFLECTS_VIA {vak: "CPF"}]->    // coordinate.cpf pointer
+-[:REFLECTS_VIA {vak: "CT"}]->     // coordinate.ct pointer
+-[:REFLECTS_VIA {vak: "CP"}]->     // coordinate.cp pointer
+-[:REFLECTS_VIA {vak: "CF"}]->     // coordinate.cf pointer (-> #4 anchor)
+-[:REFLECTS_VIA {vak: "CFP"}]->    // coordinate.cfp pointer
+-[:REFLECTS_VIA {vak: "CS"}]->     // coordinate.cs pointer
 ```
 
-### Redis Key Strategy
+#### Context Frame Relationships (CF as relational reality of # and #0-#5)
+
+Context frames express HOW psychoids relate, not just THAT they relate:
+
+```cypher
+// Each CF captures a specific modality of relation among the psychoids
+-[:FRAMES {cf: "CF_VOID"}]->         // (00/00) — pre-differential ground
+-[:FRAMES {cf: "CF_BINARY"}]->       // (0/1) — non-dual binary
+-[:FRAMES {cf: "CF_TRIKA"}]->        // (0/1/2) — User-Agent-Code
+-[:FRAMES {cf: "CF_QUATERNAL"}]->    // (0/1/2/3) — Media-Medium-Method
+-[:FRAMES {cf: "CF_FRACTAL"}]->      // (4.0/1-4.4/5) — fractal doubling
+-[:FRAMES {cf: "CF_SYNTHESIS"}]->    // (4/5/0) — Mobius synthesis
+-[:FRAMES {cf: "CF_MOBIUS"}]->       // (5/0) — total return
+
+// The invariant: ALL CFs anchor to #4 via their .cf field
+MATCH (cf:BimbaCoordinate {layer: "CONTEXT_FRAME"})
+MATCH (p4:BimbaCoordinate {bimbaCoordinate: "#4"})
+CREATE (cf)-[:ANCHORED_TO]->(p4)
 ```
-coord:{coordinate_id}                    // Coordinate cache
-session:{session_id}:coord:{id}          // Session-scoped coordinate state
-cf:{cf_signature}:coord:{id}             // CF-isolated parallel exploration
-vec:{coordinate_id}                      // Vector embedding cache
+
+#### Position-Based Relationships (P-family semantic edges)
+
+```cypher
+-[:POS0_LINKS_TO]->         // P0 Ground: raw connections
+-[:POS1_DEFINES]->           // P1 Definition: formal definition
+-[:POS2_OPERATES_VIA]->      // P2 Operation: method/process
+-[:POS3_INSTANTIATES]->      // P3 Pattern: template/archetype
+-[:POS4_SITUATED_IN]->       // P4 Context: contextual placement
+-[:POS5_INTEGRATES_INTO]->   // P5 Integration: synthesis
+
+// Bidirectional inverses
+-[:POS0_LINKED_FROM]->
+-[:POS1_DEFINED_BY]->
+-[:POS2_OPERATED_BY]->
+-[:POS3_INSTANTIATED_BY]->
+-[:POS4_SITUATES]->
+-[:POS5_INTEGRATED_FROM]->
+```
+
+#### Structural Relationships
+
+```cypher
+-[:MANIFESTS]->              // Psychoid -> Family coordinate (#0 -> C0, P0, L0...)
+-[:INVERTS_TO]->             // Normal -> Inverted (P3 -> P3')
+-[:BEDROCK]->                // Family coord -> its raw psychoid source
+-[:RESIDES_IN]->             // Coordinate -> vault path (S1 link)
+-[:PRODUCED_IN]->            // Artifact -> Session
+```
+
+### Constraints and Indexes
+
+```cypher
+// Uniqueness
+CREATE CONSTRAINT bimba_coord_unique FOR (n:BimbaCoordinate) REQUIRE n.bimbaCoordinate IS UNIQUE;
+CREATE CONSTRAINT bimba_uuid_unique FOR (n:BimbaCoordinate) REQUIRE n.uuid IS UNIQUE;
+
+// Indexes for coordinate retrieval
+CREATE INDEX coord_family FOR (n:BimbaCoordinate) ON (n.family);
+CREATE INDEX coord_position FOR (n:BimbaCoordinate) ON (n.ql_position);
+CREATE INDEX coord_layer FOR (n:BimbaCoordinate) ON (n.layer);
+CREATE INDEX coord_topo FOR (n:BimbaCoordinate) ON (n.topo_mode);
+CREATE INDEX coord_vault_path FOR (n:BimbaCoordinate) ON (n.vault_path);
+
+// Vector index for semantic search
+CREATE VECTOR INDEX coord_embedding FOR (n:BimbaCoordinate) ON (n.semantic_embedding)
+OPTIONS {indexConfig: {
+  `vector.dimensions`: 768,
+  `vector.similarity_function`: 'cosine'
+}};
 ```
 
 ---
 
-## Integration Architecture
+## Redis Schema — Cache Tiers + Session Scoping
+
+### Cache Temperature Model
+
+Tiering is by **artifact role + volatility**, not path alone:
+
+| Tier | TTL | Scope | Key Pattern | Contents |
+|------|-----|-------|-------------|----------|
+| **HOT** | 300s | Active session | `cache:hot:{path}` | Active Day/NOW, session metadata |
+| **WARM** | 3600s | Recent ops | `cache:warm:thought:T{0-5}/*` | Thought artifacts, recent extractions |
+| **COLD** | 86400s | Canonical | `cache:cold:bimba:{path}` | Bimba/World canonical forms |
+
+### Session-Scoped Keys
 
 ```
-epi graph <cmd>
-    |
-    v
-graph/mod.rs (Rust)
-    |
-    +-- Neo4j (bolt://localhost:7687)
-    |       |
-    |       +-- Cypher queries
-    |       +-- Vector similarity (native Neo4j vector index)
-    |
-    +-- Redis (redis://localhost:6379)
-    |       |
-    |       +-- Key-value cache
-    |       +-- Pub/sub for live updates -> S3'
-    |
-    +-- <- S0' (coordinate validation before graph writes)
-    +-- <- S1' (vault mutations trigger graph upserts)
-    +-- -> S3' (pub/sub events for live visualization)
-    +-- -> S4' (agent context queries)
+session:{session_id}:now:md              // Session NOW content
+session:{session_id}:now:meta            // Session metadata (coordinates, day link)
+session:{session_id}:coord:{bimbaCoord}  // Per-coordinate session state
 ```
 
-### Dependencies
-- Neo4j 5.x (with vector index support)
-- Redis 7.x
-- Rust crates: `neo4rs` (async Neo4j), `redis` (async Redis)
-- Vector embeddings from external model (initially via S4' agent)
+### CF-Signature Isolation (Parallel Agent Support)
+
+```
+cf:{cf_signature}:coord:{bimbaCoord}     // CF-isolated coordinate exploration
+cf:{cf_signature}:query:{hash}           // CF-isolated query cache
+```
+
+This enables parallel agents (15-agent swarm) to explore different semantic trajectories simultaneously without polluting each other's state.
+
+### Coordinate Cache Keys
+
+```
+coord:{bimbaCoordinate}                  // Direct coordinate lookup cache
+vec:{bimbaCoordinate}                    // Vector embedding cache
+```
+
+---
+
+## Docker Infrastructure
+
+### `docker-compose.epi-s2.yml`
+
+```yaml
+version: "3.9"
+services:
+  neo4j:
+    image: neo4j:5-community
+    container_name: epi-neo4j
+    ports:
+      - "7474:7474"   # HTTP browser
+      - "7687:7687"   # Bolt protocol
+    environment:
+      NEO4J_AUTH: neo4j/epi-logos-dev
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+
+  redis:
+    image: redis:7-alpine
+    container_name: epi-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+
+volumes:
+  neo4j-data:
+  neo4j-logs:
+  redis-data:
+```
+
+### Environment Variables
+
+```
+EPILOGOS_NEO4J_URI=bolt://localhost:7687
+EPILOGOS_NEO4J_USER=neo4j
+EPILOGOS_NEO4J_PASSWORD=epi-logos-dev
+EPILOGOS_NEO4J_DATABASE=neo4j
+EPILOGOS_REDIS_URI=redis://localhost:6379
+```
+
+---
+
+## Coordinate Retrieval — Full System Awareness
+
+The retrieval engine must understand and parse the complete coordinate space:
+
+### Coordinate Notation Parser
+
+```
+#              -> layer=PSYCHOID, the Hash (inversion act)
+#0-#5          -> layer=PSYCHOID, position 0-5
+Weave_0_0      -> layer=WEAVE
+CF_VOID..CF_MOBIUS -> layer=CONTEXT_FRAME, id 0-6
+C0-C5, P0-P5, L0-L5, S0-S5, T0-T5, M0-M5 -> layer=FAMILY, normal
+C0'-C5', P0'-P5'... -> layer=FAMILY, inverted
+CPF,CT,CP,CF,CFP,CS -> layer=VAK
+```
+
+### Query Types
+
+```
+epi graph query "#4"                   -- single coordinate lookup
+epi graph query "P3,M4'"              -- multi-coordinate (AND)
+epi graph query --family T             -- all T-family coordinates
+epi graph query --cf CF_TRIKA          -- all coordinates in CF(0/1/2) frame
+epi graph query-context "M2.4'" --depth 2  -- 2-hop neighborhood
+epi graph search-semantic "career decision" -- vector similarity
+epi graph traverse --from "#0" --via POS0_LINKS_TO --depth 3  -- relationship traversal
+```
+
+### Progressive Disclosure (6 Levels)
+
+| Level | Fields Returned |
+|-------|----------------|
+| 0 | `bimbaCoordinate`, `uuid` only |
+| 1 | + `name`, `family`, `ql_position`, `vault_path` |
+| 2 | + `s0_pithy`, position arrays |
+| 3 | + content summary, frontmatter |
+| 4 | + connected entities (1-hop) |
+| 5 | Complete: all properties, all relationships, embedding |
+
+### Hybrid Retrieval (RRF Fusion)
+
+```
+Mode: VECTOR_ONLY | GRAPH_ONLY | HYBRID_RRF | HYBRID_WEIGHTED
+
+RRF formula: RRF(d) = SUM(1 / (k + rank(d)))
+Default k=60, coordinate_boost=1.5x
+```
+
+---
+
+## Python -> Rust Port Map
+
+| Python File | LOC | Rust Target | Status |
+|-------------|-----|-------------|--------|
+| `client.py` | 349 | `client.rs` | STUB -> real neo4rs |
+| `mapper.py` | 303 | `mapper.rs` | MINIMAL -> full vault ontology |
+| `coordinate_array_parser.py` | 652 | `coordinate_array_parser.rs` | DONE (basic), extend for full notation |
+| `alignment_validator.py` | 1033 | `alignment_validator.rs` | DONE (basic), extend for reconciliation |
+| `relationship_manager.py` | 1134 | `relationship_manager.rs` | STUB -> POS0-POS5 + bidirectional |
+| `coordinate_retrieval.py` | 2143 | `retrieval/coordinate.rs` | STUB -> full multi-coordinate |
+| `hybrid_retrieval.py` | 874 | `retrieval/hybrid.rs` | STUB -> RRF fusion |
+| `graphrag_retriever.py` | 1293 | `retrieval/graphrag.rs` | STUB -> progressive disclosure |
+| `embeddings.py` | 598 | `embeddings.rs` | STUB -> Gemini API |
+| `redis_cache.py` | 1810 | `redis_cache.rs` | STUB -> real redis + tier model |
+| `link_enforcement.py` | 1117 | `link_enforcement.rs` | STUB -> wiki-link validation |
+| `sync.py` | 391 | `sync.rs` | STUB -> file event handlers |
+| `sync_coordinator.py` | 1451 | `sync_coordinator.rs` | STUB -> hash-based change detection |
+| `sync_orchestrator.py` | 474 | `sync_orchestrator.rs` | STUB -> full workflow |
+| `bidirectional_sync.py` | 1105 | `bidirectional_sync.rs` | STUB -> 6 conflict strategies |
 
 ---
 
 ## Implementation Plan
 
-### Phase 1: Infrastructure Setup
-- Install Neo4j + Redis locally
-- Add Rust driver dependencies to Cargo.toml
-- Implement connection management with health checks
-- `epi graph status` — show connection status for both backends
+### Phase 1: Docker + Rust Clients
 
-### Phase 2: Schema Bootstrap
-- Implement `epi graph init` — create Neo4j constraints, indexes, vector indexes
-- Define canonical node/relationship types
-- Seed archetype nodes (#0-#5) from C library .rodata
+- Create `docker-compose.epi-s2.yml` (Neo4j 5.x + Redis 7.x)
+- Add `neo4rs`, `redis`, `tokio`, `reqwest` to Cargo.toml
+- Implement real `client.rs` (connection pool, health check, Cypher execution)
+- Implement real `redis_cache.rs` (connection, get/set, TTLs, tier keys)
+- `epi graph status` — live health check for both backends
+- `epi graph up` / `epi graph down` — Docker lifecycle
 
-### Phase 3: Coordinate CRUD
-- `epi graph upsert` — create/update coordinate nodes with validation
-- `epi graph query` — Cypher query execution
-- `epi graph query-context` — depth-N context retrieval around a coordinate
+### Phase 2: Schema Bootstrap + Seed
+
+- `epi graph init` — create constraints, indexes, vector index
+- Seed full coordinate space (~96 nodes): #, #0-#5, weaves, CFs, all families + inversions, VAK
+- Create structural relationships: MANIFESTS, BEDROCK, INVERTS_TO, ANCHORED_TO
+- Wire 16-fold intra-openness as FAMILY_LINK and REFLECTS_VIA edges
+- Validate: every seeded node matches its HC struct counterpart
+
+### Phase 3: Coordinate CRUD + Parser
+
+- Extend coordinate parser for full notation (#, #0-#5, families, inversions, CFs, VAK)
+- `epi graph upsert` — coordinate-validated node creation (S0' validation gate)
+- `epi graph query` — single/multi-coordinate lookup
+- `epi graph query-context` — depth-N neighborhood retrieval
 - `epi graph translate` — bidirectional coordinate <-> semantic translation
 
-### Phase 4: Cache + Pub/Sub
-- Redis caching layer with TTL and CF-signature isolation
-- Pub/sub channel for S3' gateway live updates
-- Session-scoped cache management
+### Phase 4: Relationship Manager + Link Enforcement
 
-### Phase 5: Vector Arena
-- Embedding storage in Neo4j vector index
+- Port POS0-POS5 relationship types with bidirectional inverses
+- Port wiki-link validation and sunya candidate detection
+- Port alignment validator (property <-> relationship reconciliation)
+- `epi graph relate` — create position-based relationships
+
+### Phase 5: Retrieval Engine
+
+- Port coordinate retrieval (multi-coordinate filtering, traversal, scoring)
+- Port hybrid retrieval (RRF fusion, vector + graph parallel queries)
+- Port progressive disclosure (6-level depth control)
+- Port GraphRAG retriever (NL query classification, context modes)
+
+### Phase 6: Embeddings + Vector Arena
+
+- Gemini API client (768/1536/3072 dims, task-aware)
+- Vector storage in Neo4j vector index
 - Similarity search via `epi graph search-semantic`
-- Coordinate anchoring enforcement
+- Coordinate anchoring enforcement (every vector -> valid coordinate)
+
+### Phase 7: Sync Engine
+
+- Port file event handlers (created/modified/deleted/renamed)
+- Port sync coordinator (hash-based change detection)
+- Port bidirectional sync (6 conflict strategies)
+- Wire S1 vault mutations -> S2 graph upserts
+- Wire Redis pub/sub for S3' gateway events
 
 ---
 
 ## Authority Documents
+
 - `docs/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` (GraphRAG combined substrate)
-- `docs/resources/S/2026-02-21-epii-corpus-ingestion-design.md` (Corpus pipeline)
+- `docs/resources/S/2026-02-21-epii-corpus-ingestion-design.md` (Corpus pipeline, T-coordinate chunking)
 - `docs/resources/S/2026-02-26-epi-logos-canonical-system-plan.md` (S2/S2' module definition)
+- `docs/resources/S/2026-02-27-fr-layer-assignment-full.md` (Cache tier ownership, FR-12)
+- `docs/resources/S/2026-02-28-coordinate-type-system-and-reflection-families.md` (Coordinate type system)
+- `docs/plans/2026-02-28-t-coordinate-paradigmatic-conception.md` (T-family canonical names + Deleuze grounding)
+- `include/ontology.h` (HC struct — the canonical schema source)
+- `include/psychoid_numbers.h` (Psychoid + CF + Weave declarations)
+- `include/vak.h` (VAK instruction set — reflective coordinate operations)

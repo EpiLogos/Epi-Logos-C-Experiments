@@ -173,10 +173,15 @@ epi core dashboard                      # Interactive dashboard TUI
 epi core operators                      # Operator table + tagged pointer bits
 epi core cf                             # List 7 CF roots
 epi core m5                             # M5 holographic integration TUI
-epi core knowing <coord>                # Coordinate self-knowledge (CT5 5/0)
+epi core knowing <coord>                # Coordinate dossier (CT5 5/0 + live facets)
 epi core knowing <coord> --json         # JSON output for agents
+epi core knowing <coord> --tui          # Dossier browser in ratatui
 epi core knowing --family <FAM>         # List coordinates in a family
 epi core knowing <coord> --update "text"   # Update pithy in overlay (write-gated)
+epi core knowing <coord> --project early-epi  # Scope KBase lookup
+epi core knowing <coord> --refresh      # Refresh live snapshot cache
+epi core knowing <coord> --glow 1       # Preview selected markdown KBase hit
+epi core knowing <coord> --open 1       # Open selected KBase hit
 epi core knowing --coverage                # QV coverage report
 epi core knowing --bake                    # Bake overlay -> src/qv_data.c
 epi core knowing --export                  # Export all QV data as JSON
@@ -325,7 +330,7 @@ epi (Rust binary — ~/.cargo/bin/epi, 2.8 MB)
 |---------|-------|-------|
 | `epi core` — all subcommands | **Live** | Statically linked, no runtime deps |
 | `epi core m5` — M5 TUI | **Live** | Logos FSM + sub-branch explorer |
-| `epi core knowing` — coordinate self-knowledge | **Live** | M5 self-API, all 36 coords, --json |
+| `epi core knowing` — coordinate dossier | **Live** | Essence + structural + graph + KBase + notebook + snapshot, --json, --tui |
 | `epi core knowing` — QV admin (--update, --coverage, --bake, --export) | **Live** | Write-gated overlay, 3-tier resolution |
 | `epi vault` — all 12 subcommands | **Live** | Needs `obsidian-cli` installed |
 | `epi graph init/status/up/down` | **Live** | Seeds 96 nodes + 187 rels |

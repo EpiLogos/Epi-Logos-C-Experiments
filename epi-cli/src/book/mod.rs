@@ -18,6 +18,29 @@ pub enum BookCmd {
     },
 }
 
+/// Default open behavior when no subcommand provided
+pub fn open_default(file: Option<String>) {
+    let status = {
+        let mut c = Command::new(BOOKOKRAT);
+        c.current_dir(BOOKS_DIR);
+        if let Some(f) = file {
+            c.arg(f);
+        }
+        c.status()
+    };
+
+    match status {
+        Ok(s) if !s.success() => std::process::exit(s.code().unwrap_or(1)),
+        Err(e) => {
+            eprintln!("epi book: failed to run bookokrat: {}", e);
+            eprintln!("  expected: {}", BOOKOKRAT);
+            eprintln!("  books dir: {}", BOOKS_DIR);
+            std::process::exit(1);
+        }
+        _ => {}
+    }
+}
+
 pub fn dispatch(cmd: &BookCmd) {
     let status = match cmd {
         BookCmd::Open { file } => {
