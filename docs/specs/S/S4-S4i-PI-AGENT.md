@@ -58,7 +58,7 @@ The ta-onta plugin system from the Epi-Logos repo is not a separate system — i
 9. Auth profile management
 10. Managed spawn/run with agent-aware env
 11. Skills/commands/hooks scaffold
-12. Skills system design doc
+12. Skills system design doc (`docs/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md`)
 
 ---
 
@@ -183,6 +183,7 @@ epi-cli/src/agent/ (Rust)
 ---
 
 ## Authority Documents
+- `docs/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md` (Claude-compatible skills/plugin system plan)
 - `docs/plans/2026-03-06-s4-pi-agent-foundation.md` (12-task implementation plan)
 - `docs/resources/S/2026-02-25-ta-onta-full-architecture-conformance-remediation-plan.md` (Ta-onta conformance)
 - `docs/resources/S/2026-02-24-pleroma-pi-primitives-extension-port-plan.md` (Pleroma primitives)

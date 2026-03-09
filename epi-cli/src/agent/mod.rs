@@ -1,25 +1,51 @@
 mod agent_dirs;
 mod agents;
 mod auth;
-pub mod capabilities;
+mod capabilities;
 pub mod chat;
 mod doctor;
 mod extensions;
-pub mod hooks;
+mod hooks;
 mod install;
 mod models;
-pub mod plugin_manifest;
-pub mod plugins;
-pub mod skills;
+mod plugin_manifest;
+mod plugins;
+mod skills;
 mod spawn;
-pub mod subagents;
+mod subagents;
 
 use clap::{Args, Subcommand};
+use std::path::PathBuf;
 
 pub use agent_dirs::AgentLayout;
 
 #[derive(Subcommand)]
 pub enum AgentCmd {
+    /// Validate and inspect a single plugin bundle
+    Plugin {
+        #[command(subcommand)]
+        cmd: PluginCmd,
+    },
+    /// Discover plugin bundles available to the current repo
+    Plugins {
+        #[command(subcommand)]
+        cmd: PluginsCmd,
+    },
+    /// Validate a single skill definition
+    Skill {
+        #[command(subcommand)]
+        cmd: SkillCmd,
+    },
+    /// Validate a single subagent definition
+    Subagent {
+        #[command(subcommand)]
+        cmd: SubagentCmd,
+    },
+    /// Validate or execute hook configurations
+    Hooks {
+        #[command(subcommand)]
+        cmd: HooksCmd,
+    },
     /// Prepare the managed PI agent directory layout for this repo
     Install {
         /// Prepare a named agent instead of the default `main`
@@ -57,6 +83,9 @@ pub enum AgentCmd {
         /// Resolve layout for a named agent
         #[arg(long)]
         agent: Option<String>,
+        /// Load one or more plugin bundles in-place for this session
+        #[arg(long = "plugin-dir")]
+        plugin_dirs: Vec<PathBuf>,
         /// Optional prompt to pass into PI
         prompt: Option<String>,
     },
@@ -72,6 +101,9 @@ pub enum AgentCmd {
         /// Resolve layout for a named agent
         #[arg(long)]
         agent: Option<String>,
+        /// Load one or more plugin bundles in-place for this session
+        #[arg(long = "plugin-dir")]
+        plugin_dirs: Vec<PathBuf>,
         args: Vec<String>,
     },
     /// Interactive chat with managed PI agent
@@ -82,38 +114,39 @@ pub enum AgentCmd {
         /// Initial prompt (optional)
         prompt: Option<String>,
     },
-    /// Plugin management — validate, install, list, uninstall
-    Plugin {
-        #[command(subcommand)]
-        cmd: PluginCmd,
-    },
-    /// Skill discovery and eval suite management
-    Skills {
-        #[command(subcommand)]
-        cmd: SkillsCmd,
-    },
 }
 
 pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
     match cmd {
+        AgentCmd::Plugin { cmd } => plugins::run_plugin(cmd, json),
+        AgentCmd::Plugins { cmd } => plugins::run_plugins(cmd, json),
+        AgentCmd::Skill { cmd } => skills::run(cmd, json),
+        AgentCmd::Subagent { cmd } => subagents::run(cmd, json),
+        AgentCmd::Hooks { cmd } => hooks::run(cmd, json),
         AgentCmd::Install { agent } => install::run(agent.as_deref(), json),
         AgentCmd::Doctor { agent } => doctor::run(agent.as_deref(), json),
         AgentCmd::Extensions { cmd } => extensions::run(cmd, json),
         AgentCmd::Agents { cmd } => agents::run(cmd, json),
         AgentCmd::Models { cmd } => models::run(cmd, json),
         AgentCmd::Auth { cmd } => auth::run(cmd, json),
-        AgentCmd::Spawn { agent, prompt } => {
-            spawn::spawn(agent.as_deref(), prompt.as_deref(), json)
+        AgentCmd::Spawn {
+            agent,
+            plugin_dirs,
+            prompt,
+        } => {
+            spawn::spawn(agent.as_deref(), plugin_dirs, prompt.as_deref(), json)
         }
         AgentCmd::Attach { agent, session_id } => spawn::attach(agent.as_deref(), session_id, json),
-        AgentCmd::Run { agent, args } => spawn::run_pi(agent.as_deref(), args, json),
+        AgentCmd::Run {
+            agent,
+            plugin_dirs,
+            args,
+        } => spawn::run_pi(agent.as_deref(), plugin_dirs, args, json),
         AgentCmd::Chat { agent, prompt } => {
             chat::run(agent.as_deref(), prompt.as_deref())
                 .map_err(|e| e.to_string())?;
             Ok(String::new())
         }
-        AgentCmd::Plugin { cmd } => plugins::dispatch_plugin(cmd, json),
-        AgentCmd::Skills { cmd } => plugins::dispatch_skills(cmd, json),
     }
 }
 
@@ -125,6 +158,44 @@ pub enum ExtensionsCmd {
     Status(AgentSelection),
     /// List synced extension assets for the selected managed agent dir
     List(AgentSelection),
+}
+
+#[derive(Subcommand)]
+pub enum PluginCmd {
+    /// Validate a single plugin bundle rooted at the provided directory
+    Validate { path: PathBuf },
+}
+
+#[derive(Subcommand)]
+pub enum PluginsCmd {
+    /// Discover repo-local plugins under `plugins/`
+    List,
+}
+
+#[derive(Subcommand)]
+pub enum SkillCmd {
+    /// Validate a single skill file
+    Validate { path: PathBuf },
+}
+
+#[derive(Subcommand)]
+pub enum SubagentCmd {
+    /// Validate a single subagent file
+    Validate { path: PathBuf },
+}
+
+#[derive(Subcommand)]
+pub enum HooksCmd {
+    /// Validate a hooks config file or plugin root
+    Validate { path: PathBuf },
+    /// Execute matching command hooks with a JSON fixture on stdin
+    Test {
+        #[arg(long)]
+        event: String,
+        #[arg(long)]
+        fixture: PathBuf,
+        path: PathBuf,
+    },
 }
 
 #[derive(Args, Clone)]
@@ -178,39 +249,4 @@ pub enum AuthCmd {
     },
     /// Show redacted auth profile status
     Status(AgentSelection),
-}
-
-#[derive(Subcommand)]
-pub enum PluginCmd {
-    /// Validate a plugin root directory
-    Validate {
-        /// Path to the plugin root directory
-        path: String,
-    },
-    /// Install a plugin from source directory to the local cache
-    Install {
-        /// Path to the plugin source directory
-        source: String,
-    },
-    /// List all installed plugins
-    List,
-    /// Uninstall a plugin by name
-    Uninstall {
-        /// Plugin name to uninstall
-        name: String,
-    },
-}
-
-#[derive(Subcommand)]
-pub enum SkillsCmd {
-    /// List skills from a plugin root
-    List {
-        /// Path to the plugin root directory
-        plugin: String,
-    },
-    /// Discover and list eval suites
-    Eval {
-        /// Path to the eval suites directory
-        suite: String,
-    },
 }

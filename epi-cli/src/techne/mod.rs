@@ -1,11 +1,9 @@
 use clap::Subcommand;
+use std::env;
+use std::path::PathBuf;
 use std::process::Command;
 
 const CTLG_SCRIPT: &str = concat!(env!("HOME"), "/.config/epi/epi-ctlg");
-const NOTEBOOKLM: &str = concat!(
-    env!("HOME"),
-    "/.epi-claw/workspace/skills/notebooklm/.venv/bin/notebooklm"
-);
 
 #[derive(Subcommand)]
 pub enum TechneCmd {
@@ -52,9 +50,11 @@ pub fn dispatch(cmd: &TechneCmd) {
             run(c, "ctlg", CTLG_SCRIPT);
         }
         TechneCmd::Notebook { args } => {
-            let mut c = Command::new(NOTEBOOKLM);
+            let bin = resolve_notebooklm_bin();
+            let bin_display = bin.display().to_string();
+            let mut c = Command::new(&bin);
             c.args(args);
-            run(c, "notebook", NOTEBOOKLM);
+            run(c, "notebook", &bin_display);
         }
         TechneCmd::Quote { text } => {
             // Quote research: source the GLM profile and run claude with a research prompt
@@ -114,4 +114,84 @@ fn run(mut cmd: Command, name: &str, binary: &str) {
 
 fn shell_escape(s: &str) -> String {
     format!("'{}'", s.replace('\'', "'\\''"))
+}
+
+/// Resolve the notebooklm venv binary (shared with notebook subcommand).
+///
+/// Search order:
+///   1. `$EPI_NOTEBOOKLM_BIN`
+///   2. `<exe_dir>/../scripts/notebooklm/.venv/bin/notebooklm`
+///   3. `CARGO_MANIFEST_DIR/scripts/notebooklm/.venv/bin/notebooklm`
+///   4. `~/.epi-claw/workspace/skills/notebooklm/.venv/bin/notebooklm`
+pub fn resolve_notebooklm_bin() -> PathBuf {
+    if let Ok(p) = env::var("EPI_NOTEBOOKLM_BIN") {
+        let pb = PathBuf::from(p);
+        if pb.exists() {
+            return pb;
+        }
+    }
+
+    let venv_rel = std::path::Path::new("scripts")
+        .join("notebooklm")
+        .join(".venv")
+        .join("bin")
+        .join("notebooklm");
+
+    if let Ok(exe) = env::current_exe() {
+        if let Some(bin_dir) = exe.parent() {
+            let candidate = bin_dir.join("..").join(&venv_rel);
+            if candidate.exists() {
+                return candidate;
+            }
+        }
+    }
+
+    let manifest_candidate = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(&venv_rel);
+    if manifest_candidate.exists() {
+        return manifest_candidate;
+    }
+
+    let home = dirs::home_dir().unwrap_or_else(|| PathBuf::from("."));
+    home.join(".epi-claw")
+        .join("workspace")
+        .join("skills")
+        .join("notebooklm")
+        .join(".venv")
+        .join("bin")
+        .join("notebooklm")
+}
+
+/// Resolve the bundled setup.sh script for notebooklm.
+///
+/// Search order:
+///   1. `<exe_dir>/../scripts/notebooklm/setup.sh`
+///   2. `CARGO_MANIFEST_DIR/scripts/notebooklm/setup.sh`
+///   3. `~/.epi-claw/workspace/skills/notebooklm/scripts/setup.sh`
+pub fn resolve_notebooklm_setup() -> Option<PathBuf> {
+    let setup_rel = std::path::Path::new("scripts")
+        .join("notebooklm")
+        .join("setup.sh");
+
+    if let Ok(exe) = env::current_exe() {
+        if let Some(bin_dir) = exe.parent() {
+            let candidate = bin_dir.join("..").join(&setup_rel);
+            if candidate.exists() {
+                return Some(candidate);
+            }
+        }
+    }
+
+    let manifest_candidate = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(&setup_rel);
+    if manifest_candidate.exists() {
+        return Some(manifest_candidate);
+    }
+
+    if let Some(home) = dirs::home_dir() {
+        let epi_claw = home.join(".epi-claw/workspace/skills/notebooklm/scripts/setup.sh");
+        if epi_claw.exists() {
+            return Some(epi_claw);
+        }
+    }
+
+    None
 }

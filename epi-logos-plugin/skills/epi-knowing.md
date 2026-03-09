@@ -17,7 +17,7 @@ triggers:
 
 # epi core knowing — Coordinate Self-Knowledge
 
-> The system knows itself. Every coordinate has a quintessential view — a pithy self-description plus its full relational context across all 6 families. Use this before, during, and after development work to ground actions in the coordinate system.
+> The system knows itself. Every coordinate resolves as a lightweight dossier: canonical quintessence plus live graph, KBase, notebook, and snapshot facets. Use this before, during, and after development work to ground actions in the coordinate system.
 
 ## Quick Reference
 
@@ -38,6 +38,12 @@ epi core knowing 'CF(50)'        # Mobius return — total synthesis
 # Weave interleaves
 epi core knowing W0.5            # Ground reaching toward Instance
 
+# Sub-branch coordinates (any depth, from datasets)
+epi core knowing M2-1            # #2-1 MEF Meta-Logikon (shows children)
+epi core knowing '#4.4.3'        # Jungian Depth Psychology (Lemniscate nesting)
+epi core knowing '#0-4.0/1'      # Non-dual fusion within Anuttara
+epi core knowing '#1-3-4.(0000)' # CF void frame nesting (normalized)
+
 # Discovery — list all coords in a family
 epi core knowing --family M      # Lists M0-M5 + M0'-M5' (12 coords)
 epi core knowing --family '#'    # Lists #0-#5 + # operator
@@ -46,6 +52,13 @@ epi core knowing --family W      # Lists all 4 weave interleaves
 
 # JSON for agents
 epi core knowing S3 --json       # Structured JSON output
+
+# Dossier actions
+epi core knowing M4 --project early-epi   # Scope KBase lookup to a project
+epi core knowing M4 --refresh             # Refresh live snapshot cache
+epi core knowing M4 --glow 1              # Preview first markdown KBase hit
+epi core knowing M4 --open 1              # Open first KBase hit
+epi core knowing M4 --tui                 # Open ratatui dossier browser
 ```
 
 ## Coordinate Syntax
@@ -62,19 +75,46 @@ epi core knowing S3 --json       # Structured JSON output
 
 **Weaves:** `W0.0`, `W0.5`, `W5.0`, `W5.5` — the 10-fold interlaced arena
 
-## CT5 5/0 Output Format
+**Sub-branches:** `#<ROOT>-<path>` or `<FAMILY><ROOT>-<path>` — ~1873 dataset coordinates
+- `M2-1` = `#2-1` (family prefix maps to raw psychoid)
+- Arbitrary depth: `#2-1-0`, `#0-3-0/1-0`, `#4.4.3-4.0`
+- `.` (Lemniscate nesting) valid only after position `4`: `#4.0`, `#4.4.3`, `#1-3-4.0/1`
+- `/` = non-dual fusion: `0/1`, `0/1/2`, `5/0`
+- `()` CF nesting normalized: `#1-3-4.(0000)` → `#1-3-4.0000`
 
-Every `epi core knowing` response has two layers:
+## Dossier Format
 
-1. **Quintessence (5):** Pithy one-liner — what this coordinate IS
-2. **Ground (0):** Relational tree — the same position across all 6 families
+Every `epi core knowing` response now centers the CT5 5/0 essence inside a dossier with six facets:
+
+1. **Essence** — canonical quintessence text and branch identity
+2. **Structural Correspondences** — same-position cross-family mirrors, clearly structural not discovered relations
+3. **Relational Field** — graph-backed constellation and chain data when S2 is available
+4. **KBase Field** — project-scoped file/bookmark connector layer
+5. **Notebook Pulse** — one compact NotebookLM extract
+6. **Latest Snapshot** — synthesized live summary from graph, KBase, and notebook
 
 Example (family coordinate):
 ```
-M0 — Map/Subsystem
-  Quintessence: Anuttara — absolute ground, vimarsa engine
-  Branch: #5-0 (M+M' integral identity)
-  Relations:
+C1 — Category
+Essence:
+  Form -- essential nature, boundary
+  Branch: #5-5 (T+C+T'+C' Logos cycle)
+Structural Correspondences:
+  > C1  Form
+    P1  Definition
+    L1  Functional
+Relational Field:
+  Graph connected: 3 constellation hits, 2 chain links.
+KBase Field:
+  1. /path/to/note.md
+Notebook Pulse:
+  Tight notebook summary...
+Latest Snapshot:
+  Graph: ... | KBase: ... | Notebook: ...
+Actions:
+  refresh  Refresh dossier facets
+  glow     Preview selected markdown with glow
+```
      C0  Bimba
      P0  Ground
      L0  Literal
@@ -143,26 +183,39 @@ The `epi core knowing` command gives S0' (pithy C-level) output. For deeper laye
 ### Verification after changes
 ```bash
 epi core verify    # Boot-check all 18 BIMBA entities
-epi core knowing M0 --json | jq .quintessence  # Confirm self-knowledge intact
+epi core knowing M0 --json | jq .essence.text  # Confirm self-knowledge intact
 ```
 
 ## JSON Schema (--json)
 
 ```json
 {
-  "coord": "M0",
-  "family": "Map/Subsystem",
-  "position": 0,
-  "quintessence": "Anuttara — absolute ground, vimarsa engine",
-  "branch": { "id": "5-0", "name": "M+M' integral identity" },
-  "relations": {
-    "C": { "coord": "C0", "family": "Category", "pithy": "Bimba" },
-    "P": { "coord": "P0", "family": "Position", "pithy": "Ground" },
-    "L": { "coord": "L0", "family": "Lens", "pithy": "Literal" },
-    "S": { "coord": "S0", "family": "Stack", "pithy": "Terminal" },
-    "T": { "coord": "T0", "family": "Thought", "pithy": "Seed" },
-    "M": { "coord": "M0", "family": "Subsystem", "pithy": "Anuttara" }
-  }
+  "coordinate": "M0",
+  "title": "Map/Subsystem",
+  "essence": {
+    "text": "Anuttara -- absolute ground, vimarsa engine",
+    "branch_id": "5-0",
+    "branch_name": "M+M' integral identity"
+  },
+  "structural_correspondences": [],
+  "relational_field": {
+    "source": "graph",
+    "summary": "Graph connected: 3 constellation hits, 2 chain links."
+  },
+  "kbase_field": {
+    "source": "kbase",
+    "project_scope": "early-epi",
+    "items": []
+  },
+  "notebook_pulse": {
+    "source": "notebook",
+    "text": "Tight notebook summary"
+  },
+  "latest_snapshot": {
+    "source": "synthesized",
+    "text": "Graph: ... | KBase: ... | Notebook: ..."
+  },
+  "actions": []
 }
 ```
 

@@ -1,95 +1,189 @@
-//! Skill discovery: parse SKILL.md frontmatter, enumerate skills from plugin roots.
-
+use crate::agent::capabilities::CapabilityRegistry;
+use crate::agent::SkillCmd;
+use epi_logos::graph::parse_yaml_frontmatter;
+use serde::{Deserialize, Serialize};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
-use crate::agent::plugin_manifest::{SkillCategory, SkillEntry};
-
-/// Metadata extracted from a SKILL.md frontmatter block.
-#[derive(Debug, Clone)]
-pub struct SkillMeta {
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillDefinition {
+    pub path: String,
     pub name: String,
-    pub category: SkillCategory,
     pub description: String,
+    pub allowed_tools: Vec<String>,
+    pub user_invocable: Option<bool>,
+    pub body: String,
 }
 
-/// Discover skills under a plugin root by walking `skills/atomic/` and
-/// `skills/orchestration/` subdirectories for SKILL.md files.
-pub fn discover_skills(plugin_root: &Path) -> Vec<SkillEntry> {
-    let mut results = Vec::new();
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillValidationReport {
+    pub valid: bool,
+    pub path: String,
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub allowed_tools: Vec<String>,
+    pub errors: Vec<String>,
+}
 
-    for (subdir, category) in [
-        ("atomic", SkillCategory::Atomic),
-        ("orchestration", SkillCategory::Orchestration),
-        ("constitutional", SkillCategory::Constitutional),
-    ] {
-        let dir = plugin_root.join("skills").join(subdir);
-        if !dir.is_dir() {
-            continue;
-        }
-        if let Ok(entries) = fs::read_dir(&dir) {
-            for entry in entries.flatten() {
-                let path = entry.path();
-                if path.is_dir() {
-                    let skill_md = path.join("SKILL.md");
-                    if skill_md.exists() {
-                        if let Some(meta) = parse_skill_frontmatter(&skill_md) {
-                            results.push(SkillEntry {
-                                name: meta.name,
-                                path: path.display().to_string(),
-                                category: category.clone(),
-                            });
-                        }
-                    }
-                }
+#[derive(Debug, Deserialize)]
+struct SkillFrontmatter {
+    name: String,
+    description: String,
+    #[serde(rename = "allowed-tools", default)]
+    allowed_tools: Vec<String>,
+    #[serde(rename = "user-invocable")]
+    user_invocable: Option<bool>,
+}
+
+pub fn validate_path(path: &Path, registry: &CapabilityRegistry) -> SkillValidationReport {
+    match parse_skill(path, registry) {
+        Ok(skill) => SkillValidationReport {
+            valid: true,
+            path: skill.path.clone(),
+            name: Some(skill.name.clone()),
+            description: Some(skill.description.clone()),
+            allowed_tools: skill.allowed_tools.clone(),
+            errors: Vec::new(),
+        },
+        Err(errors) => SkillValidationReport {
+            valid: false,
+            path: display_path(path),
+            name: None,
+            description: None,
+            allowed_tools: Vec::new(),
+            errors,
+        },
+    }
+}
+
+pub fn run(cmd: &SkillCmd, json: bool) -> Result<String, String> {
+    match cmd {
+        SkillCmd::Validate { path } => {
+            let report = validate_path(path, &CapabilityRegistry::default());
+            if json {
+                serde_json::to_string_pretty(&report).map_err(|err| err.to_string())
+            } else {
+                Ok(format!(
+                    "{} {}",
+                    if report.valid { "valid" } else { "invalid" },
+                    report.path
+                ))
             }
         }
     }
-
-    results
 }
 
-/// Parse YAML frontmatter from a SKILL.md file.
-///
-/// Expected format:
-/// ```markdown
-/// ---
-/// name: skill-name
-/// category: atomic
-/// description: A brief description
-/// ---
-/// # Skill body...
-/// ```
-pub fn parse_skill_frontmatter(path: &Path) -> Option<SkillMeta> {
-    let content = fs::read_to_string(path).ok()?;
-    let trimmed = content.trim();
+pub fn discover_under(plugin_root: &Path, registry: &CapabilityRegistry) -> (Vec<SkillDefinition>, Vec<String>) {
+    let skills_dir = plugin_root.join("skills");
+    let mut skill_files = Vec::new();
+    collect_skill_files(&skills_dir, &mut skill_files);
+    skill_files.sort();
 
-    if !trimmed.starts_with("---") {
-        return None;
+    let mut definitions = Vec::new();
+    let mut errors = Vec::new();
+    for skill_path in skill_files {
+        match parse_skill(&skill_path, registry) {
+            Ok(skill) => definitions.push(skill),
+            Err(mut path_errors) => errors.append(&mut path_errors),
+        }
     }
 
-    let after_first = &trimmed[3..];
-    let end_idx = after_first.find("---")?;
-    let frontmatter = &after_first[..end_idx];
+    (definitions, errors)
+}
 
-    let yaml: serde_yaml::Value = serde_yaml::from_str(frontmatter).ok()?;
+pub fn parse_skill(path: &Path, registry: &CapabilityRegistry) -> Result<SkillDefinition, Vec<String>> {
+    let contents = fs::read_to_string(path)
+        .map_err(|err| vec![format!("{}: unable to read skill file: {err}", path.display())])?;
+    let (frontmatter, body) = parse_markdown_frontmatter(&contents, path)?;
+    let metadata = serde_yaml::from_value::<SkillFrontmatter>(frontmatter).map_err(|err| {
+        vec![format!(
+            "{}: invalid skill frontmatter: {err}",
+            display_path(path)
+        )]
+    })?;
 
-    let name = yaml.get("name")?.as_str()?.to_owned();
-    let description = yaml
-        .get("description")
-        .and_then(|v| v.as_str())
-        .unwrap_or("")
-        .to_owned();
+    let mut errors = Vec::new();
+    if metadata.name.trim().is_empty() {
+        errors.push(format!("{}: skill `name` must not be empty", display_path(path)));
+    }
+    if metadata.description.trim().is_empty() {
+        errors.push(format!(
+            "{}: skill `description` must not be empty",
+            display_path(path)
+        ));
+    }
+    if body.trim().is_empty() {
+        errors.push(format!("{}: skill body must not be empty", display_path(path)));
+    }
+    errors.extend(
+        registry
+            .validate_tools(&metadata.allowed_tools)
+            .into_iter()
+            .map(|err| format!("{}: {err}", display_path(path))),
+    );
 
-    let category = match yaml.get("category").and_then(|v| v.as_str()) {
-        Some("orchestration") => SkillCategory::Orchestration,
-        Some("constitutional") => SkillCategory::Constitutional,
-        _ => SkillCategory::Atomic,
+    if errors.is_empty() {
+        Ok(SkillDefinition {
+            path: display_path(path),
+            name: metadata.name,
+            description: metadata.description,
+            allowed_tools: metadata.allowed_tools,
+            user_invocable: metadata.user_invocable,
+            body,
+        })
+    } else {
+        Err(errors)
+    }
+}
+
+pub(crate) fn parse_markdown_frontmatter(
+    contents: &str,
+    path: &Path,
+) -> Result<(serde_yaml::Value, String), Vec<String>> {
+    let normalized = contents.replace("\r\n", "\n");
+    let body = extract_body(&normalized).ok_or_else(|| {
+        vec![format!(
+            "{}: expected YAML frontmatter delimited by ---",
+            display_path(path)
+        )]
+    })?;
+    let frontmatter = parse_yaml_frontmatter(&normalized).ok_or_else(|| {
+        vec![format!(
+            "{}: unable to parse YAML frontmatter",
+            display_path(path)
+        )]
+    })?;
+
+    Ok((frontmatter, body))
+}
+
+fn extract_body(contents: &str) -> Option<String> {
+    let stripped = contents.strip_prefix("---\n")?;
+    let end = stripped.find("\n---\n")?;
+    Some(stripped[end + 5..].trim_start().to_owned())
+}
+
+fn collect_skill_files(root: &Path, output: &mut Vec<PathBuf>) {
+    let entries = match fs::read_dir(root) {
+        Ok(entries) => entries,
+        Err(_) => return,
     };
 
-    Some(SkillMeta {
-        name,
-        category,
-        description,
-    })
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            collect_skill_files(&path, output);
+        } else if path.file_name().and_then(|name| name.to_str()) == Some("SKILL.md") {
+            output.push(path);
+        }
+    }
+}
+
+fn display_path(path: &Path) -> String {
+    path.canonicalize()
+        .unwrap_or_else(|_| path.to_path_buf())
+        .display()
+        .to_string()
 }

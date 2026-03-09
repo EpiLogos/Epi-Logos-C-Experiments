@@ -1,0 +1,30 @@
+{
+  "name": "@epi-logos/ql-schema",
+  "version": "0.1.0",
+  "description": "Holographic Coordinate Zod schemas — canonical TS types for the Epi-Logos coordinate system",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "validate": "bun run validate-datasets.ts",
+    "validate:npx": "npx tsx validate-datasets.ts"
+  },
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "MIT"
+}

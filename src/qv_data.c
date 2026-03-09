@@ -133,3 +133,14 @@ const char* QV_PITHY_WEAVE[4] = {
     "Instance reaching Ground -- return",
     "Pure Instance -- #5 implicate, integration"
 };
+
+/* Help sub-branches of # */
+const char* QV_HASH_PITHY = "Epi-Logos -- the inversion act, root of the Bimba map, project self-documentation";
+const char* QV_HELP_PITHY[6] = {
+    "Mission -- consciousness recognizes itself through technological mirror",
+    "Architecture -- 128-byte HC struct, 6 families, 3-layer coordinate system",
+    "Install -- cargo install epi-logos, from source, prebuilt binaries",
+    "CLI -- epi core/vault/graph/gate/agent/sync command namespaces",
+    "Coordinates -- 89 top-level + ~1873 sub-branch, 6 operators",
+    "Plugin -- Claude Code epi-knowing skill, QV resources, agentic integration",
+};

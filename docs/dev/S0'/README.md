@@ -27,6 +27,25 @@ Plus tooling namespaces: `epi sesh`, `epi kbase`, `epi book`, `epi techne`, `epi
 
 ## Changelog
 
+### v0.3.0 — 2026-03-07
+
+**S1-S2 Live Stack + HC Zod Schema Package**
+
+- **S2' Neo4j + Redis live** — `epi graph init` seeds 96 BimbaCoordinate nodes + 187 relationships. Real `neo4rs` 0.9 client, `redis` 0.25 async client. Docker Compose for dev (`docker-compose.epi-s2.yml`).
+- **`epi graph` commands live** — `init`, `status`, `up`, `down`, `query`, `sync`, `import` all wired to real Neo4j/Redis.
+- **GraphRAG retrieval** — coordinate retrieval, N-hop context, family queries, hybrid RRF fusion, progressive disclosure (6 levels: UuidOnly → Complete).
+- **S1-S2 sync bridge** — vault-to-graph sync coordinator, bidirectional conflict resolution (6 strategies), link enforcement, Gemini embedding client.
+- **Dataset import** — M0-M5 branch JSON datasets from `docs/datasets/`.
+- **`@epi-logos/ql-schema`** — TypeScript Zod schema package (`epi-cli/schemas/`). Propagates the C HC struct (128 bytes) to TS as four concentric rings:
+  - Ring 1: `HCIdentity` — 8-byte kernel (qlPosition, family, inversionState, flags, weaveState)
+  - Ring 2: `HCCoordinate` — + 12-fold pointer web (c/p/l/s/t/m + cpf/ct/cp/cf/cfp/cs)
+  - Ring 3: `HCNode` — + storage properties (uuid, name, layer, topoMode, essence, vaultPath, embedding)
+  - Ring 4: `HCRuntime` — + execution context (contextFrame, disclosureLevel, mode, payload)
+  - Coordinate validator (port of Rust parser), 68 canonical frontmatter keys, 34 Neo4j relation types
+  - Foundation for Pi agent extensions, Obsidian frontmatter, and Neo4j node typing
+  - 69 tests, builds to `dist/` with `.d.ts` declarations
+- **Dual crate** — `[lib]` (epi_logos) + `[[bin]]` (epi) for integration test support. 87+ Rust tests.
+
 ### v0.2.0 — 2026-03-07
 
 **QV Pipeline, Admin CLI, Plugin Package**
@@ -154,10 +173,15 @@ epi core dashboard                      # Interactive dashboard TUI
 epi core operators                      # Operator table + tagged pointer bits
 epi core cf                             # List 7 CF roots
 epi core m5                             # M5 holographic integration TUI
-epi core knowing <coord>                # Coordinate self-knowledge (CT5 5/0)
+epi core knowing <coord>                # Coordinate dossier (CT5 5/0 + live facets)
 epi core knowing <coord> --json         # JSON output for agents
+epi core knowing <coord> --tui          # Dossier browser in ratatui
 epi core knowing --family <FAM>         # List coordinates in a family
 epi core knowing <coord> --update "text"   # Update pithy in overlay (write-gated)
+epi core knowing <coord> --project early-epi  # Scope KBase lookup
+epi core knowing <coord> --refresh      # Refresh live snapshot cache
+epi core knowing <coord> --glow 1       # Preview selected markdown KBase hit
+epi core knowing <coord> --open 1       # Open selected KBase hit
 epi core knowing --coverage                # QV coverage report
 epi core knowing --bake                    # Bake overlay -> src/qv_data.c
 epi core knowing --export                  # Export all QV data as JSON
@@ -171,6 +195,11 @@ M0' S3' C4' P2i L5i T1'    <- inverted coordinates (' or i suffix)
 CF(0000) CF(01) CF(012)     <- context frame roots
 CF(0123) CF(4x) CF(450) CF(50)
 W0.0 W0.5 W5.0 W5.5        <- weave interleaves
+M2-1 #2-1-0 #0-3-2         <- sub-branch coordinates (any depth)
+#4.0 #4.4.3 M4.1-0         <- Lemniscate nesting (. after 4)
+#0-4.0/1 #0-4.0/1/2/3      <- non-dual fusion (/ operator)
+#0-4.4.0-4.4/5             <- fractal doubling
+#1-3-4.(0000)              <- CF nesting (normalized to #1-3-4.0000)
 ```
 
 ### `epi vault` — Obsidian (S1')
@@ -269,17 +298,28 @@ epi (Rust binary — ~/.cargo/bin/epi, 2.8 MB)
 │         ├── torus engine + double covering
 │         └── M0-M5 subsystem implementations + BLAKE3
 │
-└── src/
-    ├── main.rs          — CLI entry point, dispatch
-    ├── ffi/             — extern "C" bindings + tagged pointer helpers
-    ├── core/            — epi core (statically linked to C engine)
-    ├── tui/             — ratatui dashboard, walk, families, M5 viewer
-    ├── vault/mod.rs     — epi vault (obsidian-cli wrapper)
-    ├── graph/           — epi graph (16 modules, GraphRAG port)
-    ├── agent/           — epi agent (pi wrapper + interactive chat)
-    ├── gate/            — epi gate (stub)
-    ├── sync/            — epi sync (stub)
-    └── {sesh,kbase,book,techne,app,code}/  — tooling wrappers
+├── src/
+│   ├── main.rs          — CLI entry point, dispatch
+│   ├── lib.rs           — library crate (epi_logos) for integration tests
+│   ├── ffi/             — extern "C" bindings + tagged pointer helpers
+│   ├── core/            — epi core (statically linked to C engine)
+│   ├── tui/             — ratatui dashboard, walk, families, M5 viewer
+│   ├── vault/           — epi vault (obsidian-cli wrapper + frontmatter validation)
+│   ├── graph/           — epi graph (20+ modules, live Neo4j/Redis GraphRAG)
+│   │   ├── client.rs, redis_cache.rs  — real async clients
+│   │   ├── schema.rs, seed.rs         — DDL + 96-node seeder
+│   │   ├── retrieval/                 — coordinate, hybrid RRF, progressive disclosure
+│   │   ├── sync_coordinator.rs        — vault → graph sync
+│   │   └── embeddings.rs              — Gemini embedding client
+│   ├── agent/           — epi agent (pi wrapper + interactive chat)
+│   ├── gate/            — epi gate (stub)
+│   ├── sync/            — epi sync (stub)
+│   └── {sesh,kbase,book,techne,app,code}/  — tooling wrappers
+│
+└── schemas/             — @epi-logos/ql-schema (TypeScript Zod package)
+    ├── src/             — 4 concentric ring schemas + enums + validator
+    ├── tests/           — 69 vitest tests (cross-check against 96 seed coords)
+    └── dist/            — compiled .js + .d.ts (npm-publishable)
 ```
 
 ---
@@ -290,11 +330,13 @@ epi (Rust binary — ~/.cargo/bin/epi, 2.8 MB)
 |---------|-------|-------|
 | `epi core` — all subcommands | **Live** | Statically linked, no runtime deps |
 | `epi core m5` — M5 TUI | **Live** | Logos FSM + sub-branch explorer |
-| `epi core knowing` — coordinate self-knowledge | **Live** | M5 self-API, all 36 coords, --json |
+| `epi core knowing` — coordinate dossier | **Live** | Essence + structural + graph + KBase + notebook + snapshot, --json, --tui |
 | `epi core knowing` — QV admin (--update, --coverage, --bake, --export) | **Live** | Write-gated overlay, 3-tier resolution |
 | `epi vault` — all 12 subcommands | **Live** | Needs `obsidian-cli` installed |
-| `epi graph status` | **Live** | — |
-| `epi graph query/retrieve/graphrag/hybrid` | Stub | Needs `NEO4J_URI` + connection |
+| `epi graph init/status/up/down` | **Live** | Seeds 96 nodes + 187 rels |
+| `epi graph query/sync/import` | **Live** | Needs Neo4j + Redis (docker compose) |
+| `epi graph retrieve/graphrag/hybrid` | **Live** | Coordinate, RRF, progressive disclosure |
+| `@epi-logos/ql-schema` (TS) | **Live** | 4-ring Zod schemas, 69 tests |
 | `epi agent install/doctor/spawn/run` | **Live** | Needs `pi` or `npm` |
 | `epi agent chat` | **Live** | Needs `pi` installed |
 | `epi gate` | Stub | WebSocket server TBD |
@@ -317,4 +359,6 @@ epi (Rust binary — ~/.cargo/bin/epi, 2.8 MB)
 - [`docs/specs/S/S_Series_Master_CLI_Architecture.md`](../../specs/S/S_Series_Master_CLI_Architecture.md) — Canonical S' stack spec
 - [`docs/plans/2026-03-07-epi-logos-lib-packaging.md`](../../plans/2026-03-07-epi-logos-lib-packaging.md) — This implementation plan
 - [`docs/specs/PILLAR-I-CANONICAL.md`](../../specs/PILLAR-I-CANONICAL.md) — Pillar I canonical spec (18 BIMBA entities, 128-byte struct)
+- [`epi-cli/schemas/README.md`](../../../epi-cli/schemas/README.md) — @epi-logos/ql-schema: HC Zod schemas for Pi/Obsidian/Neo4j
+- [`docs/plans/2026-03-07-hc-zod-schema-design.md`](../../plans/2026-03-07-hc-zod-schema-design.md) — HC Zod schema design doc
 - [`CLAUDE.md`](../../../CLAUDE.md) — Full onto-code architecture blueprint

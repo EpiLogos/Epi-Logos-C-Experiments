@@ -1,88 +1,193 @@
-//! Subagent discovery and validation from plugin agent directories.
-
+use crate::agent::capabilities::CapabilityRegistry;
+use crate::agent::skills::parse_markdown_frontmatter;
+use crate::agent::SubagentCmd;
+use serde::{Deserialize, Serialize};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
-use crate::agent::plugin_manifest::AgentEntry;
-
-/// Metadata extracted from an agent's AGENT.md frontmatter.
-#[derive(Debug, Clone)]
-pub struct AgentMeta {
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SubagentDefinition {
+    pub path: String,
     pub name: String,
-    pub cluster: String,
     pub description: String,
+    pub tools: Vec<String>,
+    pub skills: Vec<String>,
+    pub model: Option<String>,
+    pub permission_mode: Option<String>,
+    pub body: String,
 }
 
-/// Discover agents under a plugin root by walking the `agents/` directory.
-/// Each subdirectory should contain an AGENT.md with frontmatter.
-pub fn discover_agents(plugin_root: &Path) -> Vec<AgentEntry> {
-    let agents_dir = plugin_root.join("agents");
-    if !agents_dir.is_dir() {
-        return Vec::new();
-    }
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SubagentValidationReport {
+    pub valid: bool,
+    pub path: String,
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub tools: Vec<String>,
+    pub skills: Vec<String>,
+    pub errors: Vec<String>,
+}
 
-    let mut results = Vec::new();
-    if let Ok(entries) = fs::read_dir(&agents_dir) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.is_dir() {
-                let agent_md = path.join("AGENT.md");
-                if agent_md.exists() {
-                    if let Some(meta) = parse_agent_frontmatter(&agent_md) {
-                        results.push(AgentEntry {
-                            name: meta.name,
-                            path: path.display().to_string(),
-                            cluster: meta.cluster,
-                        });
-                    }
-                }
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct SubagentFrontmatter {
+    name: String,
+    description: String,
+    #[serde(default)]
+    tools: Vec<String>,
+    #[serde(default)]
+    disallowed_tools: Vec<String>,
+    model: Option<String>,
+    permission_mode: Option<String>,
+    #[serde(default)]
+    skills: Vec<String>,
+}
+
+pub fn validate_path(path: &Path, registry: &CapabilityRegistry) -> SubagentValidationReport {
+    match parse_subagent(path, registry) {
+        Ok(subagent) => SubagentValidationReport {
+            valid: true,
+            path: subagent.path.clone(),
+            name: Some(subagent.name.clone()),
+            description: Some(subagent.description.clone()),
+            tools: subagent.tools.clone(),
+            skills: subagent.skills.clone(),
+            errors: Vec::new(),
+        },
+        Err(errors) => SubagentValidationReport {
+            valid: false,
+            path: display_path(path),
+            name: None,
+            description: None,
+            tools: Vec::new(),
+            skills: Vec::new(),
+            errors,
+        },
+    }
+}
+
+pub fn run(cmd: &SubagentCmd, json: bool) -> Result<String, String> {
+    match cmd {
+        SubagentCmd::Validate { path } => {
+            let report = validate_path(path, &CapabilityRegistry::default());
+            if json {
+                serde_json::to_string_pretty(&report).map_err(|err| err.to_string())
+            } else {
+                Ok(format!(
+                    "{} {}",
+                    if report.valid { "valid" } else { "invalid" },
+                    report.path
+                ))
             }
         }
     }
-
-    results
 }
 
-/// Parse YAML frontmatter from an AGENT.md file.
-///
-/// Expected format:
-/// ```markdown
-/// ---
-/// name: agent-name
-/// cluster: cluster-name
-/// description: A brief description
-/// ---
-/// # Agent body...
-/// ```
-pub fn parse_agent_frontmatter(path: &Path) -> Option<AgentMeta> {
-    let content = fs::read_to_string(path).ok()?;
-    let trimmed = content.trim();
+pub fn discover_under(
+    plugin_root: &Path,
+    registry: &CapabilityRegistry,
+) -> (Vec<SubagentDefinition>, Vec<String>) {
+    let agents_dir = plugin_root.join("agents");
+    let mut files = Vec::new();
+    collect_markdown_files(&agents_dir, &mut files);
+    files.sort();
 
-    if !trimmed.starts_with("---") {
-        return None;
+    let mut definitions = Vec::new();
+    let mut errors = Vec::new();
+    for path in files {
+        match parse_subagent(&path, registry) {
+            Ok(subagent) => definitions.push(subagent),
+            Err(mut path_errors) => errors.append(&mut path_errors),
+        }
     }
 
-    let after_first = &trimmed[3..];
-    let end_idx = after_first.find("---")?;
-    let frontmatter = &after_first[..end_idx];
+    (definitions, errors)
+}
 
-    let yaml: serde_yaml::Value = serde_yaml::from_str(frontmatter).ok()?;
+pub fn parse_subagent(
+    path: &Path,
+    registry: &CapabilityRegistry,
+) -> Result<SubagentDefinition, Vec<String>> {
+    let contents = fs::read_to_string(path).map_err(|err| {
+        vec![format!(
+            "{}: unable to read subagent definition: {err}",
+            display_path(path)
+        )]
+    })?;
+    let (frontmatter, body) = parse_markdown_frontmatter(&contents, path)?;
+    let metadata = serde_yaml::from_value::<SubagentFrontmatter>(frontmatter).map_err(|err| {
+        vec![format!(
+            "{}: invalid subagent frontmatter: {err}",
+            display_path(path)
+        )]
+    })?;
 
-    let name = yaml.get("name")?.as_str()?.to_owned();
-    let cluster = yaml
-        .get("cluster")
-        .and_then(|v| v.as_str())
-        .unwrap_or("default")
-        .to_owned();
-    let description = yaml
-        .get("description")
-        .and_then(|v| v.as_str())
-        .unwrap_or("")
-        .to_owned();
+    let mut errors = Vec::new();
+    if metadata.name.trim().is_empty() {
+        errors.push(format!(
+            "{}: subagent `name` must not be empty",
+            display_path(path)
+        ));
+    }
+    if metadata.description.trim().is_empty() {
+        errors.push(format!(
+            "{}: subagent `description` must not be empty",
+            display_path(path)
+        ));
+    }
+    if body.trim().is_empty() {
+        errors.push(format!("{}: subagent body must not be empty", display_path(path)));
+    }
+    errors.extend(
+        registry
+            .validate_tools(&metadata.tools)
+            .into_iter()
+            .map(|err| format!("{}: {err}", display_path(path))),
+    );
+    errors.extend(
+        registry
+            .validate_tools(&metadata.disallowed_tools)
+            .into_iter()
+            .map(|err| format!("{}: {err}", display_path(path))),
+    );
 
-    Some(AgentMeta {
-        name,
-        cluster,
-        description,
-    })
+    if errors.is_empty() {
+        Ok(SubagentDefinition {
+            path: display_path(path),
+            name: metadata.name,
+            description: metadata.description,
+            tools: metadata.tools,
+            skills: metadata.skills,
+            model: metadata.model,
+            permission_mode: metadata.permission_mode,
+            body,
+        })
+    } else {
+        Err(errors)
+    }
+}
+
+fn collect_markdown_files(root: &Path, output: &mut Vec<PathBuf>) {
+    let entries = match fs::read_dir(root) {
+        Ok(entries) => entries,
+        Err(_) => return,
+    };
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            collect_markdown_files(&path, output);
+        } else if path.extension().and_then(|ext| ext.to_str()) == Some("md") {
+            output.push(path);
+        }
+    }
+}
+
+fn display_path(path: &Path) -> String {
+    path.canonicalize()
+        .unwrap_or_else(|_| path.to_path_buf())
+        .display()
+        .to_string()
 }

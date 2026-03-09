@@ -1,5 +1,6 @@
-use crate::agent::{extensions, AgentLayout};
+use crate::agent::{extensions, plugins, AgentLayout};
 use serde::Serialize;
+use std::path::PathBuf;
 use std::process::Command;
 
 #[derive(Serialize)]
@@ -10,9 +11,15 @@ struct SpawnReport {
     command: String,
 }
 
-pub fn spawn(agent: Option<&str>, prompt: Option<&str>, json: bool) -> Result<String, String> {
+pub fn spawn(
+    agent: Option<&str>,
+    plugin_dirs: &[PathBuf],
+    prompt: Option<&str>,
+    json: bool,
+) -> Result<String, String> {
     let layout = AgentLayout::resolve(agent)?;
     extensions::sync_layout(&layout)?;
+    plugins::prepare_runtime(&layout, plugin_dirs)?;
 
     let mut args = vec![
         "spawn".to_owned(),
@@ -55,9 +62,15 @@ pub fn attach(agent: Option<&str>, session_id: &str, json: bool) -> Result<Strin
     )
 }
 
-pub fn run_pi(agent: Option<&str>, args: &[String], json: bool) -> Result<String, String> {
+pub fn run_pi(
+    agent: Option<&str>,
+    plugin_dirs: &[PathBuf],
+    args: &[String],
+    json: bool,
+) -> Result<String, String> {
     let layout = AgentLayout::resolve(agent)?;
     extensions::sync_layout(&layout)?;
+    plugins::prepare_runtime(&layout, plugin_dirs)?;
 
     let mut pi_args = vec![
         "run".to_owned(),
@@ -74,6 +87,10 @@ fn invoke_pi(layout: &AgentLayout, args: &[String], json: bool) -> Result<String
         .env("PI_CODING_AGENT_DIR", &layout.agent_dir)
         .env("EPI_AGENT_DIR", &layout.agent_dir)
         .env("EPI_AGENT_PROMPTS_DIR", &layout.prompts_dir)
+        .env(
+            "EPI_AGENT_PLUGIN_RUNTIME_PATH",
+            plugins::runtime_path(layout),
+        )
         .output()
         .map_err(|err| format!("failed to launch pi: {err}"))?;
 

@@ -211,6 +211,111 @@ pub fn read_to_string(path: impl AsRef<Path>) -> String {
     fs::read_to_string(path).unwrap()
 }
 
+pub fn write_file(path: impl AsRef<Path>, contents: &str) -> PathBuf {
+    let path = path.as_ref().to_path_buf();
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent).unwrap();
+    }
+    fs::write(&path, contents).unwrap();
+    path
+}
+
+pub fn write_executable(path: impl AsRef<Path>, contents: &str) -> PathBuf {
+    let path = write_file(path, contents);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+
+        let mut perms = fs::metadata(&path).unwrap().permissions();
+        perms.set_mode(0o755);
+        fs::set_permissions(&path, perms).unwrap();
+    }
+    path
+}
+
+#[derive(Debug, Clone)]
+pub struct PluginFixture {
+    pub root: PathBuf,
+    pub skill_path: PathBuf,
+    pub subagent_path: PathBuf,
+    pub hooks_path: PathBuf,
+    pub hook_script_path: PathBuf,
+}
+
+pub fn create_plugin_bundle(base_dir: impl AsRef<Path>, name: &str) -> PluginFixture {
+    let root = base_dir.as_ref().join(name);
+    let skill_path = write_file(
+        root.join("skills/review/SKILL.md"),
+        r#"---
+name: review
+description: Review code for correctness
+allowed-tools:
+  - Read
+  - Bash
+user-invocable: true
+---
+
+# Review
+
+Inspect the codebase and report risks first.
+"#,
+    );
+    let subagent_path = write_file(
+        root.join("agents/reviewer.md"),
+        r#"---
+name: reviewer
+description: Focused verification subagent
+tools:
+  - Read
+  - Bash
+model: sonnet
+permissionMode: default
+skills:
+  - review
+---
+
+# Reviewer
+
+Verify the requested change before completion.
+"#,
+    );
+    let hook_script_path = write_executable(
+        root.join("hooks/scripts/pre_tool_use.sh"),
+        "#!/bin/sh\ncat > \"$HOOK_CAPTURE_PATH\"\nprintf '{\"continue\":true,\"decision\":\"allow\"}\\n'\n",
+    );
+    let hooks_path = write_file(
+        root.join("hooks/hooks.json"),
+        r#"{
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "./scripts/pre_tool_use.sh"
+        }
+      ]
+    }
+  ]
+}
+"#,
+    );
+    write_file(
+        root.join(".claude-plugin/plugin.json"),
+        &format!(
+            "{{\n  \"name\": \"{name}\",\n  \"version\": \"0.1.0\",\n  \"description\": \"{name} plugin\"\n}}\n"
+        ),
+    );
+
+    PluginFixture {
+        root,
+        skill_path,
+        subagent_path,
+        hooks_path,
+        hook_script_path,
+    }
+}
+
 pub struct TestOutput {
     pub status: std::process::ExitStatus,
     pub stdout: String,

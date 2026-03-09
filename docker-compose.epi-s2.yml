@@ -1,0 +1,29 @@
+services:
+  neo4j:
+    image: neo4j:5-community
+    container_name: epi-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      # neo4rs 0.9 has auth protocol issues with Neo4j 5.26 — use none for dev
+      NEO4J_AUTH: none
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+
+  redis:
+    image: redis:7-alpine
+    container_name: epi-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+
+volumes:
+  neo4j-data:
+  neo4j-logs:
+  redis-data:

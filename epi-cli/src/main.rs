@@ -2,27 +2,29 @@ mod core;
 mod ffi;
 mod tui;
 
-// System layer (stub until wired)
+// System layer — graph + vault from lib.rs, rest local
 mod agent;
 mod gate;
-mod graph;
 mod sync;
-mod vault;
+use epi_logos::graph;
+use epi_logos::vault;
 
 // Tooling layer (live wrappers)
 mod app;
 mod book;
 mod code;
-mod kbase;
+mod notebook;
 mod sesh;
 mod techne;
+mod vimarsa;
 
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(
     name = "epi",
-    about = "The Master CLI for the Epi-Logos coordinate system"
+    about = "The Master CLI for the Epi-Logos coordinate system",
+    disable_help_subcommand = true
 )]
 struct Cli {
     #[command(subcommand)]
@@ -73,15 +75,23 @@ enum Commands {
         #[command(subcommand)]
         cmd: sesh::SeshCmd,
     },
-    /// Knowledge base — bkmr bookmark manager
-    Kbase {
+    /// Vimarsa -- curiosity-driven coordinate exploration
+    Vimarsa {
         #[command(subcommand)]
-        cmd: kbase::KbaseCmd,
+        cmd: vimarsa::VimarsaCmd,
     },
-    /// Book reader — bookokrat TUI
+    /// Book reader — bookokrat TUI (runs 'open' by default)
     Book {
+        /// .epub file to open (opens TUI browser if omitted)
+        #[arg(value_name = "FILE")]
+        file: Option<String>,
         #[command(subcommand)]
-        cmd: book::BookCmd,
+        cmd: Option<book::BookCmd>,
+    },
+    /// NotebookLM — query and manage Google NotebookLM notebooks
+    Notebook {
+        #[command(subcommand)]
+        cmd: notebook::NotebookCmd,
     },
     /// Research tools — chat log capture, NotebookLM, quote research
     Techne {
@@ -98,9 +108,17 @@ enum Commands {
         #[command(subcommand)]
         cmd: code::CodeCmd,
     },
+
+    // ── Help ──
+    /// Project help — rooted in the # coordinate
+    Help {
+        /// Help topic: mission, architecture, install, cli, coordinates, plugin
+        topic: Option<String>,
+    },
 }
 
-fn main() -> color_eyre::Result<()> {
+#[tokio::main]
+async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
     let cli = Cli::parse();
 
@@ -114,7 +132,7 @@ fn main() -> color_eyre::Result<()> {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("vault error: {}", e),
         },
-        Commands::Graph { cmd } => match graph::dispatch(cmd) {
+        Commands::Graph { cmd } => match graph::dispatch(cmd).await {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("graph error: {}", e),
         },
@@ -127,11 +145,18 @@ fn main() -> color_eyre::Result<()> {
 
         // Tooling layer
         Commands::Sesh { cmd } => sesh::dispatch(cmd),
-        Commands::Kbase { cmd } => kbase::dispatch(cmd),
-        Commands::Book { cmd } => book::dispatch(cmd),
+        Commands::Vimarsa { cmd } => vimarsa::dispatch(cmd),
+        Commands::Book { file, cmd } => match cmd {
+            Some(sub) => book::dispatch(&sub),
+            None => book::open_default(file.clone()),
+        },
+        Commands::Notebook { cmd } => notebook::dispatch(cmd),
         Commands::Techne { cmd } => techne::dispatch(cmd),
         Commands::App { cmd } => app::dispatch(cmd),
         Commands::Code { cmd } => code::dispatch(cmd),
+        Commands::Help { topic } => {
+            core::help_dispatch(topic.as_deref(), cli.json)?;
+        }
     }
 
     Ok(())

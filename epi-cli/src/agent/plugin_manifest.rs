@@ -1,74 +1,53 @@
 use serde::{Deserialize, Serialize};
+use std::fs;
+use std::path::{Path, PathBuf};
 
-/// A validated plugin manifest parsed from `.claude-plugin/plugin.json`.
+pub const MANIFEST_RELATIVE_PATH: &str = ".claude-plugin/plugin.json";
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PluginManifest {
     pub name: String,
     pub version: String,
-    pub description: String,
-    #[serde(default)]
-    pub skills: Vec<SkillEntry>,
-    #[serde(default)]
-    pub agents: Vec<AgentEntry>,
-    #[serde(default)]
-    pub hooks: Option<HooksManifest>,
-    #[serde(default)]
-    pub eval_suites: Vec<String>,
+    pub description: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SkillEntry {
-    pub name: String,
-    pub path: String,
-    pub category: SkillCategory,
+pub fn load_from_root(root: &Path) -> Result<PluginManifest, Vec<String>> {
+    let manifest_path = manifest_path(root);
+    let contents = fs::read_to_string(&manifest_path).map_err(|err| {
+        vec![format!(
+            "{}: unable to read plugin manifest: {err}",
+            manifest_path.display()
+        )]
+    })?;
+
+    let manifest = serde_json::from_str::<PluginManifest>(&contents).map_err(|err| {
+        vec![format!(
+            "{}: invalid plugin manifest JSON: {err}",
+            manifest_path.display()
+        )]
+    })?;
+
+    let mut errors = Vec::new();
+    if manifest.name.trim().is_empty() {
+        errors.push(format!(
+            "{}: manifest field `name` must not be empty",
+            manifest_path.display()
+        ));
+    }
+    if manifest.version.trim().is_empty() {
+        errors.push(format!(
+            "{}: manifest field `version` must not be empty",
+            manifest_path.display()
+        ));
+    }
+
+    if errors.is_empty() {
+        Ok(manifest)
+    } else {
+        Err(errors)
+    }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum SkillCategory {
-    Atomic,
-    Orchestration,
-    Constitutional,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AgentEntry {
-    pub name: String,
-    pub path: String,
-    pub cluster: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct HooksManifest {
-    pub hooks: Vec<HookEntry>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct HookEntry {
-    pub event: String,
-    pub script: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EvalSuite {
-    pub name: String,
-    pub path: String,
-    pub cases: Vec<EvalCase>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EvalCase {
-    pub name: String,
-    pub description: String,
-    #[serde(default)]
-    pub fixture: Option<String>,
-    pub expected: String,
-}
-
-/// Metadata about an installed plugin in the cache.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InstalledPlugin {
-    pub name: String,
-    pub version: String,
-    pub install_path: String,
+pub fn manifest_path(root: &Path) -> PathBuf {
+    root.join(MANIFEST_RELATIVE_PATH)
 }

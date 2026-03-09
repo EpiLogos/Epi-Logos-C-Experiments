@@ -27,6 +27,7 @@ pub struct AgentLayout {
     pub extensions_dir: PathBuf,
     pub prompts_dir: PathBuf,
     pub composite_entry_path: PathBuf,
+    pub plugin_runtime_path: PathBuf,
     pub agents_registry_path: PathBuf,
     pub extension_sync_state_path: PathBuf,
 }
@@ -79,6 +80,7 @@ impl AgentLayout {
             extensions_dir: agent_dir.join("extensions"),
             prompts_dir: agent_dir.join("prompts"),
             composite_entry_path: agent_dir.join("composite-entry.ts"),
+            plugin_runtime_path: agent_dir.join("plugin-runtime.json"),
             agents_registry_path: epi_home.join("agents").join("registry.json"),
             extension_sync_state_path: agent_dir.join("extensions-sync-state.json"),
             epi_home,

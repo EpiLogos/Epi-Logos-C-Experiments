@@ -1,332 +1,216 @@
-//! Plugin system for discovering, validating, installing, and caching Claude-compatible plugins.
-//!
-//! A plugin root is a directory with `.claude-plugin/plugin.json` containing:
-//! - name, version, description
-//! - Optional: skills/, agents/, hooks/, evals/, scripts/
-
+use crate::agent::capabilities::CapabilityRegistry;
+use crate::agent::hooks;
+use crate::agent::plugin_manifest;
+use crate::agent::skills;
+use crate::agent::subagents;
+use crate::agent::{AgentLayout, PluginCmd, PluginsCmd};
+use serde::Serialize;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use crate::agent::plugin_manifest::{EvalCase, EvalSuite, InstalledPlugin, PluginManifest};
-
-const PLUGIN_DIR_NAME: &str = ".claude-plugin";
-const MANIFEST_FILE: &str = "plugin.json";
-
-/// Validate a plugin root directory and return its parsed manifest.
-pub fn validate_plugin_root(path: &Path) -> Result<PluginManifest, String> {
-    let manifest_path = path.join(PLUGIN_DIR_NAME).join(MANIFEST_FILE);
-    if !manifest_path.exists() {
-        return Err(format!(
-            "no plugin manifest at {}",
-            manifest_path.display()
-        ));
-    }
-
-    let content = fs::read_to_string(&manifest_path)
-        .map_err(|e| format!("failed to read {}: {e}", manifest_path.display()))?;
-
-    let manifest: PluginManifest = serde_json::from_str(&content)
-        .map_err(|e| format!("invalid plugin manifest: {e}"))?;
-
-    if manifest.name.is_empty() {
-        return Err("plugin name must not be empty".to_owned());
-    }
-    if manifest.version.is_empty() {
-        return Err("plugin version must not be empty".to_owned());
-    }
-
-    Ok(manifest)
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PluginValidationReport {
+    pub valid: bool,
+    pub path: String,
+    pub name: Option<String>,
+    pub version: Option<String>,
+    pub description: Option<String>,
+    pub skill_count: usize,
+    pub subagent_count: usize,
+    pub hook_event_count: usize,
+    pub errors: Vec<String>,
 }
 
-/// Discover plugins under a `plugins/` directory in a repo root.
-/// Each subdirectory of `plugins/` is checked for a `.claude-plugin/plugin.json`.
-pub fn discover_plugins(repo_root: &Path) -> Vec<PluginManifest> {
-    let plugins_dir = repo_root.join("plugins");
-    if !plugins_dir.is_dir() {
-        return Vec::new();
-    }
-
-    let mut results = Vec::new();
-    if let Ok(entries) = fs::read_dir(&plugins_dir) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.is_dir() {
-                if let Ok(manifest) = validate_plugin_root(&path) {
-                    results.push(manifest);
-                }
-            }
-        }
-    }
-    results
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PluginRuntimeIndex {
+    pub plugins: Vec<PluginRuntimeEntry>,
 }
 
-/// Install a plugin from `source` directory into the cache at `cache_dir`.
-/// Copies the entire plugin tree to `<cache_dir>/<name>/<version>/`.
-pub fn install_plugin(source: &Path, cache_dir: &Path) -> Result<InstalledPlugin, String> {
-    let manifest = validate_plugin_root(source)?;
-    let dest = cache_dir
-        .join(&manifest.name)
-        .join(&manifest.version);
-
-    if dest.exists() {
-        fs::remove_dir_all(&dest)
-            .map_err(|e| format!("failed to remove existing install: {e}"))?;
-    }
-
-    copy_dir_recursive(source, &dest)?;
-
-    Ok(InstalledPlugin {
-        name: manifest.name,
-        version: manifest.version,
-        install_path: dest.display().to_string(),
-    })
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PluginRuntimeEntry {
+    pub name: String,
+    pub version: String,
+    pub root: String,
+    pub skill_count: usize,
+    pub subagent_count: usize,
+    pub hook_event_count: usize,
 }
 
-/// List all installed plugins under a cache directory.
-/// Expected layout: `<cache_dir>/<name>/<version>/.claude-plugin/plugin.json`
-pub fn list_installed(cache_dir: &Path) -> Vec<InstalledPlugin> {
-    let mut results = Vec::new();
-    if !cache_dir.is_dir() {
-        return results;
-    }
-
-    if let Ok(names) = fs::read_dir(cache_dir) {
-        for name_entry in names.flatten() {
-            let name_path = name_entry.path();
-            if !name_path.is_dir() {
-                continue;
-            }
-            if let Ok(versions) = fs::read_dir(&name_path) {
-                for ver_entry in versions.flatten() {
-                    let ver_path = ver_entry.path();
-                    if ver_path.is_dir() {
-                        if let Ok(manifest) = validate_plugin_root(&ver_path) {
-                            results.push(InstalledPlugin {
-                                name: manifest.name,
-                                version: manifest.version,
-                                install_path: ver_path.display().to_string(),
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    }
-    results
-}
-
-/// Uninstall a plugin by name from the cache directory.
-/// Removes `<cache_dir>/<name>/` entirely.
-pub fn uninstall_plugin(name: &str, cache_dir: &Path) -> Result<(), String> {
-    let plugin_dir = cache_dir.join(name);
-    if !plugin_dir.exists() {
-        return Err(format!("plugin '{}' is not installed", name));
-    }
-    fs::remove_dir_all(&plugin_dir)
-        .map_err(|e| format!("failed to remove plugin: {e}"))?;
-    Ok(())
-}
-
-/// Discover eval suite YAML files under a plugin root's `evals/suites/` directory.
-pub fn discover_eval_suites(plugin_root: &Path) -> Vec<EvalSuite> {
-    let suites_dir = plugin_root.join("evals").join("suites");
-    if !suites_dir.is_dir() {
-        return Vec::new();
-    }
-
-    let mut results = Vec::new();
-    if let Ok(entries) = fs::read_dir(&suites_dir) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.extension().and_then(|e| e.to_str()) == Some("yaml")
-                || path.extension().and_then(|e| e.to_str()) == Some("yml")
-            {
-                if let Ok(suite) = parse_eval_suite(&path) {
-                    results.push(suite);
-                }
-            }
-        }
-    }
-    results
-}
-
-fn parse_eval_suite(path: &Path) -> Result<EvalSuite, String> {
-    let content = fs::read_to_string(path)
-        .map_err(|e| format!("failed to read eval suite: {e}"))?;
-
-    // Parse YAML eval suite format:
-    // name: suite-name
-    // cases:
-    //   - name: case1
-    //     description: ...
-    //     expected: ...
-    let raw: serde_yaml::Value = serde_yaml::from_str(&content)
-        .map_err(|e| format!("invalid eval suite YAML: {e}"))?;
-
-    let name = raw
-        .get("name")
-        .and_then(|v| v.as_str())
-        .unwrap_or("unnamed")
-        .to_owned();
-
-    let mut cases = Vec::new();
-    if let Some(cases_val) = raw.get("cases").and_then(|v| v.as_sequence()) {
-        for case_val in cases_val {
-            let case_name = case_val
-                .get("name")
-                .and_then(|v| v.as_str())
-                .unwrap_or("unnamed")
-                .to_owned();
-            let description = case_val
-                .get("description")
-                .and_then(|v| v.as_str())
-                .unwrap_or("")
-                .to_owned();
-            let fixture = case_val
-                .get("fixture")
-                .and_then(|v| v.as_str())
-                .map(str::to_owned);
-            let expected = case_val
-                .get("expected")
-                .and_then(|v| v.as_str())
-                .unwrap_or("")
-                .to_owned();
-
-            cases.push(EvalCase {
-                name: case_name,
-                description,
-                fixture,
-                expected,
-            });
-        }
-    }
-
-    Ok(EvalSuite {
-        name,
-        path: path.display().to_string(),
-        cases,
-    })
-}
-
-fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), String> {
-    fs::create_dir_all(dst)
-        .map_err(|e| format!("failed to create {}: {e}", dst.display()))?;
-
-    for entry in fs::read_dir(src)
-        .map_err(|e| format!("failed to read {}: {e}", src.display()))?
-    {
-        let entry = entry.map_err(|e| format!("dir entry error: {e}"))?;
-        let src_path = entry.path();
-        let dst_path = dst.join(entry.file_name());
-
-        if src_path.is_dir() {
-            copy_dir_recursive(&src_path, &dst_path)?;
-        } else {
-            fs::copy(&src_path, &dst_path)
-                .map_err(|e| format!("failed to copy {}: {e}", src_path.display()))?;
-        }
-    }
-    Ok(())
-}
-
-/// CLI dispatch for the `epi agent plugin` subcommand.
-pub fn dispatch_plugin(cmd: &super::PluginCmd, json: bool) -> Result<String, String> {
+pub fn run_plugin(cmd: &PluginCmd, json: bool) -> Result<String, String> {
     match cmd {
-        super::PluginCmd::Validate { path } => {
-            let p = PathBuf::from(path);
-            let manifest = validate_plugin_root(&p)?;
-            if json {
-                serde_json::to_string_pretty(&manifest).map_err(|e| e.to_string())
-            } else {
-                Ok(format!(
-                    "valid plugin: {} v{}\n  {}\n  skills: {}\n  agents: {}\n  eval_suites: {}",
-                    manifest.name,
-                    manifest.version,
-                    manifest.description,
-                    manifest.skills.len(),
-                    manifest.agents.len(),
-                    manifest.eval_suites.len(),
-                ))
-            }
-        }
-        super::PluginCmd::Install { source } => {
-            let src = PathBuf::from(source);
-            let cache = default_plugin_cache()?;
-            let installed = install_plugin(&src, &cache)?;
-            if json {
-                serde_json::to_string_pretty(&installed).map_err(|e| e.to_string())
-            } else {
-                Ok(format!(
-                    "installed {} v{} to {}",
-                    installed.name, installed.version, installed.install_path
-                ))
-            }
-        }
-        super::PluginCmd::List => {
-            let cache = default_plugin_cache()?;
-            let installed = list_installed(&cache);
-            if json {
-                serde_json::to_string_pretty(&installed).map_err(|e| e.to_string())
-            } else if installed.is_empty() {
-                Ok("no plugins installed".to_owned())
-            } else {
-                let lines: Vec<String> = installed
-                    .iter()
-                    .map(|p| format!("  {} v{} ({})", p.name, p.version, p.install_path))
-                    .collect();
-                Ok(format!("installed plugins:\n{}", lines.join("\n")))
-            }
-        }
-        super::PluginCmd::Uninstall { name } => {
-            let cache = default_plugin_cache()?;
-            uninstall_plugin(name, &cache)?;
-            if json {
-                Ok(format!("{{\"uninstalled\": \"{name}\"}}"))
-            } else {
-                Ok(format!("uninstalled plugin: {name}"))
-            }
-        }
+        PluginCmd::Validate { path } => render(validate_plugin(path), json),
     }
 }
 
-/// CLI dispatch for the `epi agent skills` subcommand.
-pub fn dispatch_skills(cmd: &super::SkillsCmd, json: bool) -> Result<String, String> {
+pub fn run_plugins(cmd: &PluginsCmd, json: bool) -> Result<String, String> {
     match cmd {
-        super::SkillsCmd::List { plugin } => {
-            let p = PathBuf::from(plugin);
-            let skills = super::skills::discover_skills(&p);
+        PluginsCmd::List => {
+            let layout = AgentLayout::resolve(None)?;
+            let reports = discover_repo_plugins(&layout.repo_root);
             if json {
-                serde_json::to_string_pretty(&skills).map_err(|e| e.to_string())
-            } else if skills.is_empty() {
-                Ok("no skills found".to_owned())
+                serde_json::to_string_pretty(&reports).map_err(|err| err.to_string())
             } else {
-                let lines: Vec<String> = skills
-                    .iter()
-                    .map(|s| format!("  {} ({:?}) — {}", s.name, s.category, s.path))
-                    .collect();
-                Ok(format!("skills:\n{}", lines.join("\n")))
-            }
-        }
-        super::SkillsCmd::Eval { suite } => {
-            let p = PathBuf::from(suite);
-            let parent = p.parent().and_then(|p| p.parent()).unwrap_or(&p);
-            let suites = discover_eval_suites(parent);
-            if json {
-                serde_json::to_string_pretty(&suites).map_err(|e| e.to_string())
-            } else if suites.is_empty() {
-                Ok("no eval suites found".to_owned())
-            } else {
-                let lines: Vec<String> = suites
-                    .iter()
-                    .map(|s| format!("  {} ({} cases)", s.name, s.cases.len()))
-                    .collect();
-                Ok(format!("eval suites:\n{}", lines.join("\n")))
+                Ok(reports
+                    .into_iter()
+                    .filter_map(|report| report.name)
+                    .collect::<Vec<_>>()
+                    .join("\n"))
             }
         }
     }
 }
 
-fn default_plugin_cache() -> Result<PathBuf, String> {
-    let home = std::env::var("HOME").map_err(|_| "HOME is not set".to_owned())?;
-    Ok(PathBuf::from(home).join(".epi").join("plugins"))
+pub fn validate_plugin(path: &Path) -> PluginValidationReport {
+    let root = path.to_path_buf();
+    let registry = CapabilityRegistry::default();
+    let mut errors = Vec::new();
+
+    let manifest = match plugin_manifest::load_from_root(&root) {
+        Ok(manifest) => Some(manifest),
+        Err(mut manifest_errors) => {
+            errors.append(&mut manifest_errors);
+            None
+        }
+    };
+
+    let (skills, mut skill_errors) = skills::discover_under(&root, &registry);
+    let (subagents, mut subagent_errors) = subagents::discover_under(&root, &registry);
+    errors.append(&mut skill_errors);
+    errors.append(&mut subagent_errors);
+
+    let hook_report = hooks::validate_path(&root);
+    errors.extend(hook_report.errors.clone());
+    errors.extend(duplicate_name_errors(
+        "skill",
+        skills
+            .iter()
+            .map(|skill| (skill.name.as_str(), skill.path.as_str())),
+    ));
+    errors.extend(duplicate_name_errors(
+        "subagent",
+        subagents
+            .iter()
+            .map(|subagent| (subagent.name.as_str(), subagent.path.as_str())),
+    ));
+
+    PluginValidationReport {
+        valid: errors.is_empty() && manifest.is_some(),
+        path: display_path(&root),
+        name: manifest.as_ref().map(|item| item.name.clone()),
+        version: manifest.as_ref().map(|item| item.version.clone()),
+        description: manifest.and_then(|item| item.description),
+        skill_count: skills.len(),
+        subagent_count: subagents.len(),
+        hook_event_count: hook_report.events.len(),
+        errors,
+    }
+}
+
+pub fn prepare_runtime(
+    layout: &AgentLayout,
+    plugin_dirs: &[PathBuf],
+) -> Result<Option<PluginRuntimeIndex>, String> {
+    if plugin_dirs.is_empty() {
+        return Ok(None);
+    }
+
+    let mut entries = Vec::new();
+    for plugin_dir in plugin_dirs {
+        let report = validate_plugin(plugin_dir);
+        if !report.valid {
+            return Err(format!(
+                "invalid plugin bundle at {}: {}",
+                plugin_dir.display(),
+                report.errors.join("; ")
+            ));
+        }
+
+        entries.push(PluginRuntimeEntry {
+            name: report.name.unwrap_or_default(),
+            version: report.version.unwrap_or_default(),
+            root: display_path(plugin_dir),
+            skill_count: report.skill_count,
+            subagent_count: report.subagent_count,
+            hook_event_count: report.hook_event_count,
+        });
+    }
+
+    let runtime = PluginRuntimeIndex { plugins: entries };
+    fs::write(
+        &layout.plugin_runtime_path,
+        serde_json::to_string_pretty(&runtime).map_err(|err| err.to_string())?,
+    )
+    .map_err(|err| err.to_string())?;
+    Ok(Some(runtime))
+}
+
+pub fn runtime_path(layout: &AgentLayout) -> &Path {
+    &layout.plugin_runtime_path
+}
+
+fn discover_repo_plugins(repo_root: &Path) -> Vec<PluginValidationReport> {
+    let plugins_root = repo_root.join("plugins");
+    let mut reports = Vec::new();
+    let entries = match fs::read_dir(&plugins_root) {
+        Ok(entries) => entries,
+        Err(_) => return reports,
+    };
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() && plugin_manifest::manifest_path(&path).exists() {
+            reports.push(validate_plugin(&path));
+        }
+    }
+
+    reports.sort_by(|left, right| {
+        left.name
+            .as_deref()
+            .unwrap_or("")
+            .cmp(right.name.as_deref().unwrap_or(""))
+            .then_with(|| left.path.cmp(&right.path))
+    });
+    reports
+}
+
+fn duplicate_name_errors<'a>(
+    noun: &str,
+    items: impl Iterator<Item = (&'a str, &'a str)>,
+) -> Vec<String> {
+    let mut seen: BTreeMap<&str, Vec<&str>> = BTreeMap::new();
+    for (name, path) in items {
+        seen.entry(name).or_default().push(path);
+    }
+
+    seen.into_iter()
+        .filter(|(_, paths)| paths.len() > 1)
+        .flat_map(|(name, paths)| {
+            paths.into_iter().map(move |path| {
+                format!("{path}: duplicate {noun} name `{name}` in plugin bundle")
+            })
+        })
+        .collect()
+}
+
+fn render(report: PluginValidationReport, json: bool) -> Result<String, String> {
+    if json {
+        serde_json::to_string_pretty(&report).map_err(|err| err.to_string())
+    } else {
+        Ok(format!(
+            "{} {}",
+            if report.valid { "valid" } else { "invalid" },
+            report.path
+        ))
+    }
+}
+
+fn display_path(path: &Path) -> String {
+    path.canonicalize()
+        .unwrap_or_else(|_| path.to_path_buf())
+        .display()
+        .to_string()
 }
