@@ -1,4 +1,5 @@
 fn main() {
+    let out_dir = std::env::var("OUT_DIR").expect("OUT_DIR must be set");
     let mut build = cc::Build::new();
 
     build
@@ -35,6 +36,8 @@ fn main() {
 
     build.compile("epilogos");
 
+    println!("cargo:rustc-link-search=native={out_dir}");
+    println!("cargo:rustc-link-lib=static=epilogos");
     println!("cargo:rerun-if-changed=../src/");
     println!("cargo:rerun-if-changed=../include/");
     println!("cargo:rerun-if-changed=../vendor/blake3/");

@@ -1,24 +1,5 @@
-mod core;
-mod ffi;
-mod tui;
-
-// System layer — graph + vault from lib.rs, rest local
-mod agent;
-mod gate;
-mod sync;
-use epi_logos::graph;
-use epi_logos::vault;
-
-// Tooling layer (live wrappers)
-mod app;
-mod book;
-mod code;
-mod notebook;
-mod sesh;
-mod techne;
-mod vimarsa;
-
 use clap::{Parser, Subcommand};
+use epi_logos::{agent, app, book, code, core, ffi, gate, graph, notebook, sesh, sync, techne, vault, vimarsa};
 
 #[derive(Parser)]
 #[command(
@@ -37,7 +18,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    // ── System Layer ──
+    // System Layer
     /// Bare-metal Quaternal Logic — inspect, walk, verify the coordinate system
     Core {
         #[command(subcommand)]
@@ -69,7 +50,7 @@ enum Commands {
         cmd: sync::SyncCmd,
     },
 
-    // ── Tooling Layer ──
+    // Tooling Layer
     /// Tmux session lifecycle — launch, kill, banner
     Sesh {
         #[command(subcommand)]
@@ -109,7 +90,7 @@ enum Commands {
         cmd: code::CodeCmd,
     },
 
-    // ── Help ──
+    // Help
     /// Project help — rooted in the # coordinate
     Help {
         /// Help topic: mission, architecture, install, cli, coordinates, plugin
@@ -123,7 +104,6 @@ async fn main() -> color_eyre::Result<()> {
     let cli = Cli::parse();
 
     match &cli.command {
-        // System layer
         Commands::Core { cmd } => {
             let epi = ffi::EpiLib::new();
             core::dispatch(cmd, &epi, cli.json)?;
@@ -136,27 +116,27 @@ async fn main() -> color_eyre::Result<()> {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("graph error: {}", e),
         },
-        Commands::Gate { cmd } => gate::dispatch(cmd),
+        Commands::Gate { cmd } => match gate::dispatch(cmd, cli.json).await {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => eprintln!("gate error: {}", e),
+        },
         Commands::Agent { cmd } => match agent::dispatch(cmd, cli.json) {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("agent error: {}", e),
         },
         Commands::Sync { cmd } => sync::dispatch(cmd),
-
-        // Tooling layer
         Commands::Sesh { cmd } => sesh::dispatch(cmd),
         Commands::Vimarsa { cmd } => vimarsa::dispatch(cmd),
         Commands::Book { file, cmd } => match cmd {
-            Some(sub) => book::dispatch(&sub),
+            Some(sub) => book::dispatch(sub),
             None => book::open_default(file.clone()),
         },
         Commands::Notebook { cmd } => notebook::dispatch(cmd),
         Commands::Techne { cmd } => techne::dispatch(cmd),
         Commands::App { cmd } => app::dispatch(cmd),
         Commands::Code { cmd } => code::dispatch(cmd),
-        Commands::Help { topic } => {
-            core::help_dispatch(topic.as_deref(), cli.json)?;
-        }
+        Commands::Help { topic } => core::help_dispatch(topic.as_deref(), cli.json)?,
     }
 
     Ok(())

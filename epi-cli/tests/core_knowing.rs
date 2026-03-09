@@ -26,8 +26,8 @@ fn knowing_json_outputs_dossier_facets() {
     );
     assert!(json["relational_field"].is_object());
     assert_ne!(json["relational_field"]["source"], "structural-placeholder");
-    assert!(json["kbase_field"].is_object());
-    assert_ne!(json["kbase_field"]["source"], "structural-placeholder");
+    assert!(json["vimarsa_field"].is_object());
+    assert_ne!(json["vimarsa_field"]["source"], "structural-placeholder");
     assert!(json["notebook_pulse"].is_object());
     assert!(json["latest_snapshot"].is_object());
     assert_ne!(json["notebook_pulse"]["source"], "structural-placeholder");
@@ -55,7 +55,7 @@ fn knowing_text_outputs_named_dossier_sections() {
         "Essence:",
         "Structural Correspondences:",
         "Relational Field:",
-        "KBase Field:",
+        "Vimarsa Field:",
         "Notebook Pulse:",
         "Latest Snapshot:",
         "Actions:",

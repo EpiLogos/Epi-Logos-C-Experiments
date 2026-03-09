@@ -1,2 +1,15 @@
+pub mod agent;
+pub mod app;
+pub mod book;
+pub mod code;
+pub mod core;
+pub mod ffi;
+pub mod gate;
 pub mod graph;
+pub mod notebook;
+pub mod sesh;
+pub mod sync;
+pub mod techne;
+pub mod tui;
 pub mod vault;
+pub mod vimarsa;

@@ -1,6 +1,6 @@
 use crate::agent::capabilities::CapabilityRegistry;
 use crate::agent::SkillCmd;
-use epi_logos::graph::parse_yaml_frontmatter;
+use crate::graph::parse_yaml_frontmatter;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};

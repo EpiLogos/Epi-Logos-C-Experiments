@@ -1,5 +1,5 @@
 use color_eyre::eyre::Result;
-use epi_logos::graph::client::{Neo4jClient, Neo4jConfig};
+use crate::graph::client::{Neo4jClient, Neo4jConfig};
 use neo4rs::query;
 use std::time::Duration;
 
