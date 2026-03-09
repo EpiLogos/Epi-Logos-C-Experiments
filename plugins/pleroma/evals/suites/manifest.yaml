@@ -1,0 +1,13 @@
+name: pleroma-eval-manifest
+version: 0.1.0
+suites:
+  - name: topology-routing
+    path: topology-routing.yaml
+  - name: atomic-tools
+    path: atomic-tools.yaml
+  - name: ouroboros
+    path: ouroboros.yaml
+  - name: klein
+    path: klein.yaml
+  - name: discharge
+    path: discharge.yaml

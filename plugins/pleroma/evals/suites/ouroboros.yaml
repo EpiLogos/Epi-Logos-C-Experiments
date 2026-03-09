@@ -1,0 +1,90 @@
+name: ouroboros
+description: Ouroboros protocol validation -- verify workflow pipeline phases, collaboration primitive dispatch, and git integration hooks.
+version: 0.1.0
+
+tests:
+  - name: pipeline-phase-order
+    description: Verify the 6 phases execute in correct order
+    assertions:
+      - phases:
+          - name: "Phase 0: Origin"
+            required: true
+            gate: false
+          - name: "Phase 1: Pre-flight"
+            required: true
+            gate: true
+            gate_condition: "blast radius understood and rollback possible"
+          - name: "Phase 2: Design"
+            required: true
+            gate: true
+            gate_condition: "design reviewed and approved"
+          - name: "Phase 3: Execute"
+            required: true
+            gate: false
+            creates_checkpoint: true
+          - name: "Phase 4: Verify"
+            required: true
+            gate: true
+            gate_condition: "verification passes"
+            rollback_target: "Phase 3 checkpoint"
+          - name: "Phase 5: Merge"
+            required: true
+            gate: false
+            emits: "discharge summary"
+
+  - name: mode-phase-mapping
+    description: Verify each mode activates correct phases
+    assertions:
+      - mode: "checkpoint-surgery"
+        phases: ["Phase 3", "Phase 4", "Phase 5"]
+        skip: ["Phase 2"]
+
+      - mode: "collaborative-design"
+        phases: ["Phase 0", "Phase 1", "Phase 2", "Phase 3", "Phase 4", "Phase 5"]
+        collaboration_primitives: ["design-start", "design-query", "verify-start", "discharge"]
+
+      - mode: "full-pipeline"
+        phases: ["Phase 0", "Phase 1", "Phase 2", "Phase 3", "Phase 4", "Phase 5"]
+        all_gates_enforced: true
+
+  - name: collaboration-primitives
+    description: Verify collaboration primitives dispatch correctly
+    assertions:
+      - primitive: "design-start"
+        phase: 2
+        action: "open collaborative design session"
+
+      - primitive: "design-query"
+        phases: [2, 3]
+        action: "mid-process question to user"
+
+      - primitive: "verify-start"
+        phase: 4
+        action: "open verification session"
+
+      - primitive: "discharge"
+        phase: 5
+        action: "structured closure and summary"
+
+  - name: git-integration
+    description: Verify git operations at each phase
+    assertions:
+      - phase: 1
+        git_action: "stash current changes if needed"
+
+      - phase: 3
+        git_action: "create checkpoint branch"
+
+      - phase: 4
+        git_action: "verify on checkpoint branch"
+
+      - phase: 5
+        git_action: "merge checkpoint branch, clean up"
+
+  - name: rollback-protocol
+    description: Verify rollback behavior on failure
+    assertions:
+      - trigger: "phase 4 verification failure"
+        action: "restore from Phase 3 checkpoint"
+        next: "return to Phase 2 for redesign"
+        logged: true

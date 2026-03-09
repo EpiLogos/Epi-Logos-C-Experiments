@@ -1,0 +1,81 @@
+name: klein
+description: Klein-mode validation -- verify inversion conditions, telemetry output structure, and closure semantics.
+version: 0.1.0
+
+tests:
+  - name: inversion-conditions
+    description: Verify all four conditions must be true for Klein mode activation
+    assertions:
+      - condition: "mobius_return_completed"
+        required: true
+        description: "P5' Insight -> P0' Questions cycle completed at least once"
+
+      - condition: "self_reference_detected"
+        required: true
+        description: "Task being evaluated IS about the VAK system itself"
+
+      - condition: "all_cf_agents_invoked"
+        required: true
+        description: "All 6 CF agents (nous, logos, eros, mythos, psyche, sophia) activated in session"
+
+      - condition: "cs0_full_traverse_completed"
+        required: true
+        description: "Both Day and Night' passes finished"
+
+  - name: partial-conditions-no-activation
+    description: Verify Klein mode does NOT activate with partial conditions
+    assertions:
+      - conditions_met: ["mobius_return_completed", "self_reference_detected"]
+        conditions_missing: ["all_cf_agents_invoked", "cs0_full_traverse_completed"]
+        expected_activation: false
+
+      - conditions_met: ["mobius_return_completed", "self_reference_detected", "all_cf_agents_invoked"]
+        conditions_missing: ["cs0_full_traverse_completed"]
+        expected_activation: false
+
+  - name: telemetry-output-structure
+    description: Verify telemetry JSON contains all required fields
+    expected_fields:
+      - field: "mode"
+        type: "string"
+        value: "klein"
+
+      - field: "timestamp"
+        type: "ISO8601"
+
+      - field: "inversionDepth"
+        type: "integer"
+        max: 1
+
+      - field: "selfReferenceChain"
+        type: "string[]"
+
+      - field: "constitutionalActivations"
+        type: "object"
+        keys: ["nous", "logos", "eros", "mythos", "psyche", "sophia"]
+
+      - field: "mobiusReturnCount"
+        type: "integer"
+        min: 1
+
+      - field: "closureState"
+        type: "string"
+        values: ["complete", "partial"]
+
+  - name: closure-semantics
+    description: Verify Klein mode is observational and non-persistent
+    assertions:
+      - property: "no_state_modification"
+        description: "Klein mode does not modify system state"
+
+      - property: "max_inversion_depth_1"
+        description: "No recursive Klein nesting"
+
+      - property: "instantaneous_duration"
+        description: "Klein mode is a snapshot, not sustained"
+
+      - property: "normal_topology_resumes"
+        description: "After Klein mode, normal CF dispatch resumes"
+
+      - property: "telemetry_feeds_night"
+        description: "Klein telemetry feeds into Night' P5' Insight"

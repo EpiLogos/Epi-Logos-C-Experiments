@@ -1,0 +1,145 @@
+name: topology-routing
+description: VAK routing validation -- verify CF codes map to correct agents, CFP modes map to correct execution methods, CS sequences produce correct traversal paths.
+version: 0.1.0
+
+tests:
+  - name: cf-to-agent-mapping
+    description: Verify each CF code maps to the correct constitutional agent
+    assertions:
+      - input:
+          cf_code: "(0000)"
+        expected:
+          agent: "nous"
+          ql_level: "L0"
+          role: "impartial-perspective"
+
+      - input:
+          cf_code: "(0/1)"
+        expected:
+          agent: "logos"
+          ql_level: "L1"
+          role: "architect-scoper"
+
+      - input:
+          cf_code: "(0/1/2)"
+        expected:
+          agent: "eros"
+          ql_level: "L2"
+          role: "refiner-verifier"
+
+      - input:
+          cf_code: "(0/1/2/3)"
+        expected:
+          agent: "mythos"
+          ql_level: "L3"
+          role: "pattern-recognizer"
+
+      - input:
+          cf_code: "(4.0-4.4/5)"
+        expected:
+          agent: "psyche"
+          ql_level: "L4"
+          role: "coordinator"
+
+      - input:
+          cf_code: "(5/0)"
+        expected:
+          agent: "sophia"
+          ql_level: "L5"
+          role: "synthesizer"
+
+  - name: cfp-to-execution-method
+    description: Verify CFP thread types map to correct execution methods
+    assertions:
+      - input:
+          cfp: "CFP0"
+        expected:
+          method: "spawn"
+          thread_type: "base"
+
+      - input:
+          cfp: "CFP1"
+        expected:
+          method: "spawnParallelChord"
+          thread_type: "p-thread"
+
+      - input:
+          cfp: "CFP2"
+        expected:
+          method: "spawnSequentialChain"
+          thread_type: "c-thread"
+
+      - input:
+          cfp: "CFP3"
+        expected:
+          method: "spawnParallelChord+aggregate"
+          thread_type: "f-thread"
+
+      - input:
+          cfp: "CFP4"
+        expected:
+          method: "spawn+stop-hooks"
+          thread_type: "l-thread"
+
+  - name: cs-traversal-paths
+    description: Verify CS sequences produce correct position traversal
+    assertions:
+      - input:
+          cs: "CS0"
+          direction: "Day"
+        expected:
+          steps: 6
+          path: ["4.0", "4.1", "4.2", "4.3", "4.4", "4.5"]
+
+      - input:
+          cs: "CS1"
+          direction: "Day"
+        expected:
+          steps: 2
+          path: ["4.0", "4.1"]
+
+      - input:
+          cs: "CS5"
+          direction: "Day"
+        expected:
+          steps: 2
+          path: ["4.0", "4.5"]
+
+  - name: night-moirai-routing
+    description: Verify Night' positions map to correct Moirai
+    assertions:
+      - input:
+          position: "P1'"
+        expected:
+          moira: "klotho"
+          operation: "assert"
+          cf_alignment: "(0/1/2)"
+
+      - input:
+          position: "P4'"
+        expected:
+          moira: "lachesis"
+          operation: "query"
+          cf_alignment: "(4.0-4.4/5)"
+
+      - input:
+          position: "P5'"
+        expected:
+          moira: "atropos"
+          operation: "reflect"
+          cf_alignment: "(5/0)"
+
+  - name: cpf-routing-logic
+    description: Verify CPF polarity routes correctly
+    assertions:
+      - input:
+          cpf: "(00/00)"
+        expected:
+          mode: "user-instance"
+          action: "invoke-brainstorming"
+
+      - input:
+          cpf: "(4.0/1-4.4/5)"
+        expected:
+          mode: "subagent-instance"
+          action: "proceed-to-pipeline"
