@@ -1,0 +1,14 @@
+[
+  { "source": "#", "type": "CONTAINS", "target": "#0" },
+  { "source": "#", "type": "CONTAINS", "target": "#1" },
+  { "source": "#", "type": "CONTAINS", "target": "#2" },
+  { "source": "#", "type": "CONTAINS", "target": "#3" },
+  { "source": "#", "type": "CONTAINS", "target": "#4" },
+  { "source": "#", "type": "CONTAINS", "target": "#5" },
+  { "source": "#", "type": "HAS_LENS", "target": "#-0" },
+  { "source": "#", "type": "HAS_LENS", "target": "#-1" },
+  { "source": "#", "type": "HAS_LENS", "target": "#-2" },
+  { "source": "#", "type": "HAS_LENS", "target": "#-3" },
+  { "source": "#", "type": "HAS_LENS", "target": "#-4" },
+  { "source": "#", "type": "HAS_LENS", "target": "#-5" }
+]
