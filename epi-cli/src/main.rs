@@ -1,23 +1,5 @@
-mod core;
-mod ffi;
-mod tui;
-
-// System layer (stub until wired)
-mod agent;
-mod gate;
-mod graph;
-mod sync;
-mod vault;
-
-// Tooling layer (live wrappers)
-mod app;
-mod book;
-mod code;
-mod kbase;
-mod sesh;
-mod techne;
-
 use clap::{Parser, Subcommand};
+use epi::{agent, app, book, code, core, ffi, gate, graph, kbase, sesh, sync, techne, vault};
 
 #[derive(Parser)]
 #[command(
@@ -118,7 +100,11 @@ fn main() -> color_eyre::Result<()> {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("graph error: {}", e),
         },
-        Commands::Gate { cmd } => gate::dispatch(cmd),
+        Commands::Gate { cmd } => match gate::dispatch(cmd, cli.json) {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => eprintln!("gate error: {}", e),
+        },
         Commands::Agent { cmd } => match agent::dispatch(cmd, cli.json) {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("agent error: {}", e),
