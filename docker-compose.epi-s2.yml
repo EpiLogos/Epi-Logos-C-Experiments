@@ -15,13 +15,22 @@ services:
       - neo4j-logs:/logs
 
   redis:
-    image: redis:7-alpine
+    image: redis/redis-stack-server:latest
     container_name: epi-redis
     ports:
       - "6379:6379"
-    command: redis-server --appendonly yes
+    environment:
+      REDIS_ARGS: --appendonly yes
     volumes:
       - redis-data:/data
+
+  docling-serve:
+    image: quay.io/docling-project/docling-serve:latest
+    container_name: epi-docling
+    ports:
+      - "5001:5001"
+    environment:
+      DOCLING_SERVE_CONCURRENCY: 2
 
 volumes:
   neo4j-data:

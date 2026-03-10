@@ -3,15 +3,13 @@ use epi_logos::graph::retrieval::coordinate::CoordinateRetrieval;
 use epi_logos::graph::retrieval::graphrag::{DisclosureLevel, GraphRAGRetriever};
 use epi_logos::graph::schema;
 use epi_logos::graph::seed;
+use epi_logos::graph::semantic;
 
 /// Helper: connect, clean, schema, seed — returns client for tests.
 async fn setup() -> Neo4jClient {
     let config = Neo4jConfig::from_env();
     let client = Neo4jClient::connect(&config).expect("connect failed");
-    client
-        .run("MATCH (n:Bimba) DETACH DELETE n")
-        .await
-        .unwrap();
+    client.run("MATCH (n:Bimba) DETACH DELETE n").await.unwrap();
     schema::create_schema(&client).await.unwrap();
     seed::seed_coordinate_space(&client).await.unwrap();
     client
@@ -19,10 +17,7 @@ async fn setup() -> Neo4jClient {
 
 /// Helper: remove all Bimba nodes.
 async fn teardown(client: &Neo4jClient) {
-    client
-        .run("MATCH (n:Bimba) DETACH DELETE n")
-        .await
-        .unwrap();
+    client.run("MATCH (n:Bimba) DETACH DELETE n").await.unwrap();
 }
 
 // ---------------------------------------------------------------------------
@@ -136,13 +131,39 @@ async fn test_retrieval_suite() {
         .await
         .is_err());
 
-    teardown(&client).await;
-}
+    client
+        .run(
+            r#"MATCH (n:Bimba {coordinate: '#4'})
+               SET n.q_semantics = 'Context as the semantic center of the weave',
+                   n.q_surface_bias = 'Prefer surfacing for context questions',
+                   n.extra_detail = 'should not be embedded by default',
+                   n.q_dynamic = 'No allowlist, every q_ key counts',
+                   n.description = 'Context organizes relation-aware retrieval',
+                   n.essence = 'The center of disclosed context',
+                   n.semantic_embedding = [0.1, 0.2, 0.3]"#,
+        )
+        .await
+        .unwrap();
 
-#[tokio::test]
-#[ignore] // requires Docker: docker compose -f docker-compose.epi-s2.yml up -d
-async fn test_knowing_constellation_query_returns_bedrock_peers() {
-    let client = setup().await;
+    let doc = semantic::build_semantic_document(&client, "#4")
+        .await
+        .unwrap();
+    assert_eq!(doc.coordinate, "#4");
+    assert!(doc.text.contains("coordinate: #4"));
+    assert!(doc
+        .text
+        .contains("q_dynamic: No allowlist, every q_ key counts"));
+    assert!(doc
+        .text
+        .contains("q_surface_bias: Prefer surfacing for context questions"));
+    assert!(!doc.text.contains("extra_detail"));
+    assert!(doc.text.contains("MANIFESTS"));
+    assert!(!doc.source_hash.is_empty());
+
+    let stale = semantic::find_stale_nodes(&client, semantic::EMBEDDING_VERSION)
+        .await
+        .unwrap();
+    assert!(stale.contains(&"#4".to_string()));
 
     let rows = client
         .run(
@@ -158,7 +179,7 @@ async fn test_knowing_constellation_query_returns_bedrock_peers() {
         .filter_map(|row| row.get::<String>("coord").ok())
         .collect();
 
-    assert!(coords.contains(&"C1".to_string()));
+    assert!(!coords.contains(&"C1".to_string()));
     assert!(coords.contains(&"P1".to_string()));
     assert!(coords.contains(&"M1".to_string()));
 

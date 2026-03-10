@@ -1,4 +1,4 @@
-use redis::{AsyncCommands, Client, aio::MultiplexedConnection};
+use redis::{aio::MultiplexedConnection, AsyncCommands, Client};
 
 #[derive(Clone, Copy, Debug)]
 pub enum CacheTier {
@@ -52,6 +52,10 @@ impl RedisCache {
     pub async fn health_check(&mut self) -> Result<bool, redis::RedisError> {
         let pong: String = redis::cmd("PING").query_async(&mut self.conn).await?;
         Ok(pong == "PONG")
+    }
+
+    pub async fn search_indexes(&mut self) -> Result<Vec<String>, redis::RedisError> {
+        redis::cmd("FT._LIST").query_async(&mut self.conn).await
     }
 
     pub async fn get(&mut self, key: &str) -> Result<Option<String>, redis::RedisError> {

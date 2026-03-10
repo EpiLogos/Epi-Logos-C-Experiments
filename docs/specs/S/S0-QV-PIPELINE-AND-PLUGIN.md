@@ -96,7 +96,7 @@ The overlay supports multiple `q_` prefixed property types for quintessential da
 | `q_formulation` | Formal expression | Dataset `formulation` field |
 | `q_structure` | Structural summary | Dataset `structure` field |
 
-These `q_` properties model what becomes the Neo4j write-back protocol: each maps to a `q_` prefixed property on graph nodes, enabling targeted semantic embedding and meaning compression at the quintessential level. The root data is extensible in principle — new `q_` types can be added without schema changes.
+These `q_` properties model what becomes the Neo4j write-back protocol: each maps to a `q_` prefixed property on graph nodes, enabling targeted semantic embedding and meaning compression at the quintessential level. The root data is extensible in principle — new `q_` types can be added without schema changes. The operational rule is simple: every property whose key begins with `q_` is part of the node's semantic surface for embedding and retrieval.
 
 ### 3.5 Neo4j Write-Back Protocol (Future CI/CD)
 
@@ -109,9 +109,24 @@ S2' (Neo4j) ──compress──> JSON overlay ──bake──> C library
 ```
 
 - Graph nodes gain `q_pithy`, `q_nature`, `q_essence`, etc. as first-class properties
-- These are the target properties for semantic embedding quality — high-level meaning compression
+- Every `q_*` property participates in the semantic document used for embedding and retrieval; no fixed allowlist is required
+- Core graph properties plus compact typed relation summaries are included alongside `q_*` properties when building the semantic document
 - `epi graph sync-qv` writes overlay data back to Neo4j as `q_*` properties
 - `epi graph compress` pulls verbose node data and runs Haiku compression -> overlay
+
+### 3.6 Semantic Cache + Re-Embedding Policy
+
+- Neo4j is the source of truth for canonical nodes, relationships, semantic documents, source hashes, and embeddings
+- Redis provides semantic query caching via a small Python service built on RedisVL against the local Redis Stack / Query Engine deployment
+- The Rust CLI talks to that service through a narrow semantic-cache abstraction rather than embedding Python directly into retrieval code
+- Cache entries are scoped by retrieval mode plus graph metadata such as `graph_revision`, `embedding_version`, and `q_schema_version`
+- `epi graph bootstrap-dev` is the canonical local setup path for the semantic stack: it starts Docker services, prepares the RedisVL Python environment, and reports the environment contract needed for live semantic-cache use
+- `epi graph doctor` is the canonical deep health surface: it verifies Neo4j, Redis, Redis Stack search capability, RedisVL bridge readiness, graph metadata alignment, indexed-node counts, and stale semantic counts
+- Re-embedding is drift-driven, not full-refresh-driven:
+  - a node is stale if its semantic document hash changes
+  - a node is stale if its embedding version changes
+  - a node is stale if a relation-summary dependency changes because a neighboring node or typed edge changed
+- `epi graph reconcile` should therefore compute the stale set and re-embed only that dependency-expanded subset
 
 ---
 

@@ -25,6 +25,15 @@ cargo install --path .
 epi core verify    # boots 18 BIMBA entities, confirms topology
 ```
 
+**Local graph stack** (Neo4j + Redis Stack + RedisVL bridge):
+
+```bash
+cd epi-logos/epi-cli
+cargo run -- graph bootstrap-dev
+source ../.env.graph-dev
+epi --json graph doctor
+```
+
 **Cargo install** (after crates.io publish):
 
 ```bash
@@ -35,14 +44,14 @@ cargo install epi-logos
 
 ## The Coordinate System
 
-89 top-level coordinates organized in four groups, plus ~1873 sub-branches reaching into recursive depth:
+96 top-level coordinates organized in four groups, plus ~1873 sub-branches reaching into recursive depth:
 
-| Group | Count | Examples | What They Are |
-|-------|-------|----------|---------------|
-| **Family** | 72 | `M0`, `S3`, `C4'`, `P2`, `L5'`, `T1` | 6 families × 6 positions × 2 phases |
-| **Psychoid** | 7 | `#0`, `#3`, `#5`, `#` | Raw archetypes + the inversion operator |
-| **Context Frame** | 7 | `CF(012)`, `CF(50)` | Composable execution contexts |
-| **Weave** | 4 | `W0.0`, `W5.5` | Interlaced memory positions |
+| Group             | Count  | Examples                             | What They Are                           |
+| ----------------- | ------ | ------------------------------------ | --------------------------------------- |
+| **Family**        | 6 + 72 | `M0`, `S3`, `C4'`, `P2`, `L5'`, `T1` | 6 families × 6 positions × 2 phases     |
+| **Psychoid**      | 7      | `#0`, `#3`, `#5`, `#`                | Raw archetypes + the inversion operator |
+| **Context Frame** | 7      | `CF(012)`, `CF(50)`                  | Composable execution contexts           |
+| **Weave**         | 4      | `W0.0`, `W5.5`                       | Interlaced memory positions             |
 
 The six families, each manifesting the `#0`–`#5` archetypes through a specific domain:
 
@@ -105,7 +114,7 @@ Each subsystem implements one of the six consciousness domains:
 
 ### Where It's Going
 
-The coordinate system is designed not just for solo exploration but as a **shared symbolic field**. The planned SpacetimeDB integration creates a Universal NOW plane where multiple participants — human and agent — inhabit the same archetypal coordinate space. Each person's `#4.4.4.4` (the Lemniscate's recursive self-fold) represents their individual node in the collective topology. The Electron app (`#5-3`) becomes both sovereign personal shell and portal into this shared universe.
+The coordinate system is designed not just for solo exploration but as a **shared symbolic field**. The planned SpacetimeDB integration creates a Universal NOW plane where multiple participants — human and agent — inhabit the same archetypal coordinate space. Each person's `#4.4.4.4` (the Lemniscate's recursive self-fold) represents their individual node in the collective topology. The Electron app (`M' branch`) becomes both sovereign personal shell and portal into this shared universe.
 
 This is multiplayer ontology, not social media — shared symbolic state, not feeds. The gateway preserves sovereign agency; the Universal NOW enables shared inhabitation. The full vision: M0-M5 surfaces rendering as a live, synchronized, inhabitable collective field.
 
@@ -131,6 +140,8 @@ epi help plugin                  # Claude Code integration
 # Vault, Graph, Agent
 epi vault search "query"         # search Obsidian notes
 epi graph query M0               # Neo4j coordinate lookup
+epi graph bootstrap-dev          # local Neo4j/Redis Stack + RedisVL setup
+epi graph doctor                 # deep graph/cache health report
 epi agent chat                   # interactive PI agent session
 
 # Flags
@@ -181,14 +192,14 @@ epi-logos/
 
 - **Rust** toolchain via [rustup](https://rustup.rs)
 - **C compiler** — clang recommended (used by `cc` crate at build time)
-- Optional: `obsidian-cli`, `pi` (npm), Neo4j 5.x, Redis 7.x
+- Optional: `obsidian-cli`, `pi` (npm), Neo4j 5.x, Redis Stack
 
 ### Build
 
 ```bash
 # Rust CLI (includes statically linked C library)
 cd epi-cli && cargo build
-cargo test                # Rust integration tests
+make rust-test            # Rust tests via external target dir (keeps repo slim)
 
 # C library only
 make                      # build epi-logos binary
@@ -197,6 +208,14 @@ make debug                # AddressSanitizer + UBSan
 ```
 
 The C sources compile automatically via `build.rs` — no separate build step needed. The resulting `epi` binary is ~2.8 MB, fully self-contained with no runtime dependencies.
+
+Rust test hygiene:
+
+```bash
+make rust-test                           # uses /tmp/epi-logos-cargo-target by default
+make rust-target-size                    # inspect local + external Rust artifact weight
+make rust-clean                          # remove both external test artifacts and legacy epi-cli/target
+```
 
 ## License
 

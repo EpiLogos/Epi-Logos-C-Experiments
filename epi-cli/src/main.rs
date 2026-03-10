@@ -1,5 +1,7 @@
 use clap::{Parser, Subcommand};
-use epi_logos::{agent, app, book, code, core, ffi, gate, graph, notebook, sesh, sync, techne, vault, vimarsa};
+use epi_logos::{
+    agent, app, book, code, core, ffi, gate, graph, notebook, sesh, sync, techne, vault, vimarsa,
+};
 
 #[derive(Parser)]
 #[command(
@@ -63,11 +65,11 @@ enum Commands {
     },
     /// Book reader — bookokrat TUI (runs 'open' by default)
     Book {
+        #[command(subcommand)]
+        cmd: Option<book::BookCmd>,
         /// .epub file to open (opens TUI browser if omitted)
         #[arg(value_name = "FILE")]
         file: Option<String>,
-        #[command(subcommand)]
-        cmd: Option<book::BookCmd>,
     },
     /// NotebookLM — query and manage Google NotebookLM notebooks
     Notebook {
@@ -112,7 +114,7 @@ async fn main() -> color_eyre::Result<()> {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("vault error: {}", e),
         },
-        Commands::Graph { cmd } => match graph::dispatch(cmd).await {
+        Commands::Graph { cmd } => match graph::dispatch_with_format(cmd, cli.json).await {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("graph error: {}", e),
         },

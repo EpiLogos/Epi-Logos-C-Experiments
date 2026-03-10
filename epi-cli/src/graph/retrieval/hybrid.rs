@@ -1,7 +1,15 @@
 use std::cmp::Ordering;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+
+use neo4rs::query;
+use serde::{Deserialize, Serialize};
 
 use crate::graph::client::Neo4jClient;
+use crate::graph::embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
+use crate::graph::meta;
+use crate::graph::semantic_cache::{
+    SemanticCacheClient, SemanticCacheConfig, SemanticCacheMatchStrategy,
+};
 
 /// Which retrieval strategy to use.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -13,7 +21,7 @@ pub enum RetrievalMode {
 }
 
 /// A single scored result from any retrieval pipeline.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RetrievalResult {
     pub coordinate: String,
     pub score: f64,
@@ -24,7 +32,6 @@ pub struct RetrievalResult {
 /// Hybrid retriever that fuses vector and graph results using RRF or weighted
 /// scoring.
 pub struct HybridRetriever<'a> {
-    #[allow(dead_code)]
     client: &'a Neo4jClient,
     k: u32,
     coordinate_boost: f64,
@@ -45,6 +52,256 @@ impl<'a> HybridRetriever<'a> {
             k,
             coordinate_boost: boost,
         }
+    }
+
+    pub async fn retrieve(
+        &self,
+        query_text: &str,
+        mode: RetrievalMode,
+        top_k: Option<usize>,
+    ) -> Result<Vec<RetrievalResult>, String> {
+        let top_k = top_k.unwrap_or(10).clamp(1, 50);
+
+        if let Some(cache) = self.semantic_cache().await? {
+            let attributes = self.cache_attributes(mode, top_k).await?;
+            if let Some(cached) = cache
+                .search(
+                    query_text,
+                    attributes.clone(),
+                    vec![
+                        SemanticCacheMatchStrategy::Exact,
+                        SemanticCacheMatchStrategy::Semantic,
+                    ],
+                )
+                .await?
+            {
+                if let Some(response) = cached.response.as_deref() {
+                    if let Ok(results) = serde_json::from_str::<Vec<RetrievalResult>>(response) {
+                        return Ok(results);
+                    }
+                }
+            }
+
+            let results = self.retrieve_uncached(query_text, mode, top_k).await?;
+            cache
+                .store(
+                    query_text,
+                    &serde_json::to_string(&results).map_err(|e| e.to_string())?,
+                    attributes,
+                )
+                .await?;
+            return Ok(results);
+        }
+
+        self.retrieve_uncached(query_text, mode, top_k).await
+    }
+
+    async fn retrieve_uncached(
+        &self,
+        query_text: &str,
+        mode: RetrievalMode,
+        top_k: usize,
+    ) -> Result<Vec<RetrievalResult>, String> {
+        match mode {
+            RetrievalMode::GraphOnly => self.graph_search(query_text, top_k).await,
+            RetrievalMode::VectorOnly => self.vector_search(query_text, top_k).await,
+            RetrievalMode::HybridRrf => {
+                let graph_results = self.graph_search(query_text, top_k).await?;
+                let vector_results = self.vector_search_optional(query_text, top_k).await?;
+                if vector_results.is_empty() {
+                    return Ok(graph_results);
+                }
+                Ok(self.fusion_rrf(&vector_results, &graph_results))
+            }
+            RetrievalMode::HybridWeighted => {
+                let graph_results = self.graph_search(query_text, top_k).await?;
+                let vector_results = self.vector_search_optional(query_text, top_k).await?;
+                if vector_results.is_empty() {
+                    return Ok(graph_results);
+                }
+                Ok(self.fusion_weighted(&vector_results, &graph_results, 0.5))
+            }
+        }
+    }
+
+    async fn semantic_cache(&self) -> Result<Option<SemanticCacheClient>, String> {
+        Ok(SemanticCacheConfig::from_env_optional()?.map(SemanticCacheClient::new))
+    }
+
+    async fn cache_attributes(
+        &self,
+        mode: RetrievalMode,
+        top_k: usize,
+    ) -> Result<std::collections::BTreeMap<String, String>, String> {
+        let meta = meta::read_graph_meta(self.client).await?;
+        let mut attributes = std::collections::BTreeMap::new();
+        attributes.insert("mode".into(), retrieval_mode_name(mode).into());
+        attributes.insert("top_k".into(), top_k.to_string());
+        attributes.insert(
+            "graph_revision".into(),
+            meta.as_ref()
+                .map(|item| item.graph_revision.to_string())
+                .unwrap_or_else(|| "0".into()),
+        );
+        attributes.insert(
+            "embedding_version".into(),
+            meta.as_ref()
+                .map(|item| item.embedding_version.clone())
+                .unwrap_or_else(|| meta::EMBEDDING_VERSION.into()),
+        );
+        attributes.insert(
+            "q_schema_version".into(),
+            meta.as_ref()
+                .map(|item| item.q_schema_version.clone())
+                .unwrap_or_else(|| meta::Q_SCHEMA_VERSION.into()),
+        );
+        Ok(attributes)
+    }
+
+    async fn graph_search(
+        &self,
+        query_text: &str,
+        top_k: usize,
+    ) -> Result<Vec<RetrievalResult>, String> {
+        let tokens = tokenize_query(query_text);
+        let position_hints = infer_positions(query_text);
+        let lower_query = query_text.trim().to_lowercase();
+
+        let q = query(
+            "MATCH (n:Bimba)
+             WITH n,
+                  size([token IN $tokens WHERE token <> '' AND toLower(n.coordinate) CONTAINS token]) AS coord_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.name, '')) CONTAINS token]) AS name_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.family, '')) CONTAINS token]) AS family_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.layer, '')) CONTAINS token]) AS layer_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.essence, '')) CONTAINS token]) AS essence_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.description, '')) CONTAINS token]) AS desc_hits,
+                  CASE
+                      WHEN $raw_query = '' THEN 0
+                      WHEN toLower(n.coordinate) = $raw_query THEN 12
+                      WHEN toLower(coalesce(n.name, '')) = $raw_query THEN 10
+                      ELSE 0
+                  END AS exact_hits
+             WITH n,
+                  (coord_hits * 8 + name_hits * 6 + family_hits * 3 + layer_hits * 2 +
+                   essence_hits * 3 + desc_hits * 2 + exact_hits +
+                   CASE
+                       WHEN size($positions) = 0 THEN 0
+                       WHEN n.ql_position IN $positions THEN 2
+                       ELSE 0
+                   END) AS score
+             WHERE score > 0
+             RETURN n.coordinate AS coordinate,
+                    n.uuid AS uuid,
+                    n.name AS name,
+                    n.family AS family,
+                    n.layer AS layer,
+                    n.ql_position AS ql_position,
+                    score AS score
+             ORDER BY score DESC, coordinate ASC
+             LIMIT $top_k",
+        )
+        .param("tokens", tokens.clone())
+        .param("positions", position_hints)
+        .param("raw_query", lower_query)
+        .param("top_k", top_k as i64);
+
+        let rows = self
+            .client
+            .run_query(q)
+            .await
+            .map_err(|e| format!("graph retrieval error: {}", e))?;
+
+        Ok(rows
+            .iter()
+            .map(|row| RetrievalResult {
+                coordinate: row.get("coordinate").unwrap_or_default(),
+                score: read_score(row, "score"),
+                source: "graph".into(),
+                data: serde_json::json!({
+                    "coordinate": row.get::<String>("coordinate").unwrap_or_default(),
+                    "uuid": row.get::<String>("uuid").unwrap_or_default(),
+                    "name": row.get::<String>("name").unwrap_or_default(),
+                    "family": row.get::<String>("family").unwrap_or_default(),
+                    "layer": row.get::<String>("layer").unwrap_or_default(),
+                    "ql_position": row.get::<i64>("ql_position").unwrap_or(-1),
+                }),
+            })
+            .collect())
+    }
+
+    async fn vector_search_optional(
+        &self,
+        query_text: &str,
+        top_k: usize,
+    ) -> Result<Vec<RetrievalResult>, String> {
+        match EmbeddingConfig::from_env() {
+            Ok(config) => {
+                let client = GeminiEmbeddingClient::new(config);
+                self.vector_search_with_client(query_text, top_k, &client)
+                    .await
+            }
+            Err(_) => Ok(Vec::new()),
+        }
+    }
+
+    async fn vector_search(
+        &self,
+        query_text: &str,
+        top_k: usize,
+    ) -> Result<Vec<RetrievalResult>, String> {
+        let config = EmbeddingConfig::from_env()?;
+        let client = GeminiEmbeddingClient::new(config);
+        self.vector_search_with_client(query_text, top_k, &client)
+            .await
+    }
+
+    async fn vector_search_with_client(
+        &self,
+        query_text: &str,
+        top_k: usize,
+        embedder: &GeminiEmbeddingClient,
+    ) -> Result<Vec<RetrievalResult>, String> {
+        let embedding = embedder.embed(query_text).await?;
+        let embedding: Vec<f64> = embedding.into_iter().map(f64::from).collect();
+        let q = query(
+            "CALL db.index.vector.queryNodes('coord_embedding', $top_k, $embedding)
+             YIELD node, score
+             RETURN node.coordinate AS coordinate,
+                    node.uuid AS uuid,
+                    node.name AS name,
+                    node.family AS family,
+                    node.layer AS layer,
+                    node.ql_position AS ql_position,
+                    score AS score
+             ORDER BY score DESC",
+        )
+        .param("top_k", top_k as i64)
+        .param("embedding", embedding);
+
+        let rows = match self.client.run_query(q).await {
+            Ok(rows) => rows,
+            Err(err) => {
+                return Err(format!("vector retrieval error: {}", err));
+            }
+        };
+
+        Ok(rows
+            .iter()
+            .map(|row| RetrievalResult {
+                coordinate: row.get("coordinate").unwrap_or_default(),
+                score: read_score(row, "score"),
+                source: "vector".into(),
+                data: serde_json::json!({
+                    "coordinate": row.get::<String>("coordinate").unwrap_or_default(),
+                    "uuid": row.get::<String>("uuid").unwrap_or_default(),
+                    "name": row.get::<String>("name").unwrap_or_default(),
+                    "family": row.get::<String>("family").unwrap_or_default(),
+                    "layer": row.get::<String>("layer").unwrap_or_default(),
+                    "ql_position": row.get::<i64>("ql_position").unwrap_or(-1),
+                }),
+            })
+            .collect())
     }
 
     // -----------------------------------------------------------------------
@@ -73,8 +330,7 @@ impl<'a> HybridRetriever<'a> {
 
         for (rank, r) in graph_results.iter().enumerate() {
             let rrf = 1.0 / (self.k as f64 + rank as f64 + 1.0);
-            *scores.entry(r.coordinate.clone()).or_default() +=
-                rrf * self.coordinate_boost;
+            *scores.entry(r.coordinate.clone()).or_default() += rrf * self.coordinate_boost;
             data_map
                 .entry(r.coordinate.clone())
                 .or_insert_with(|| r.data.clone());
@@ -137,6 +393,91 @@ impl<'a> HybridRetriever<'a> {
     }
 }
 
+fn tokenize_query(query_text: &str) -> Vec<String> {
+    let mut tokens = Vec::new();
+    let mut seen = HashSet::new();
+
+    for token in query_text.split_whitespace() {
+        let cleaned = token
+            .trim_matches(|c: char| !c.is_alphanumeric() && c != '#' && c != '_' && c != '\'')
+            .to_lowercase();
+        if cleaned.len() < 2 {
+            continue;
+        }
+        if matches!(
+            cleaned.as_str(),
+            "how"
+                | "does"
+                | "what"
+                | "where"
+                | "show"
+                | "list"
+                | "all"
+                | "the"
+                | "and"
+                | "for"
+                | "with"
+                | "from"
+                | "into"
+                | "work"
+                | "works"
+        ) {
+            continue;
+        }
+        if seen.insert(cleaned.clone()) {
+            tokens.push(cleaned);
+        }
+    }
+
+    if tokens.is_empty() {
+        let fallback = query_text.trim().to_lowercase();
+        if !fallback.is_empty() {
+            tokens.push(fallback);
+        }
+    }
+
+    tokens
+}
+
+fn infer_positions(query_text: &str) -> Vec<i64> {
+    let lower = query_text.to_lowercase();
+    let semantics: &[(i64, &[&str])] = &[
+        (0, &["ground", "foundation", "base", "core", "fundamental"]),
+        (1, &["definition", "concept", "meaning", "form"]),
+        (2, &["operation", "process", "method", "function"]),
+        (3, &["pattern", "structure", "archetype", "template"]),
+        (4, &["context", "situation", "environment"]),
+        (
+            5,
+            &["integration", "integrate", "synthesis", "whole", "meta"],
+        ),
+    ];
+
+    semantics
+        .iter()
+        .filter_map(|(position, words)| {
+            words
+                .iter()
+                .any(|word| lower.contains(word))
+                .then_some(*position)
+        })
+        .collect()
+}
+
+fn retrieval_mode_name(mode: RetrievalMode) -> &'static str {
+    match mode {
+        RetrievalMode::VectorOnly => "vector_only",
+        RetrievalMode::GraphOnly => "graph_only",
+        RetrievalMode::HybridRrf => "hybrid_rrf",
+        RetrievalMode::HybridWeighted => "hybrid_weighted",
+    }
+}
+
+fn read_score(row: &neo4rs::Row, key: &str) -> f64 {
+    row.get::<f64>(key)
+        .unwrap_or_else(|_| row.get::<i64>(key).unwrap_or(0) as f64)
+}
+
 // ===========================================================================
 // Unit tests — pure functions, no DB required
 // ===========================================================================
@@ -154,9 +495,8 @@ mod tests {
             password: "".into(),
         };
         // This may fail in CI without Neo4j — wrap in a fallback.
-        Neo4jClient::connect(&config).expect(
-            "dummy client failed — Neo4j driver creation should not need a live server",
-        )
+        Neo4jClient::connect(&config)
+            .expect("dummy client failed — Neo4j driver creation should not need a live server")
     }
 
     fn make_result(coord: &str, score: f64, source: &str) -> RetrievalResult {

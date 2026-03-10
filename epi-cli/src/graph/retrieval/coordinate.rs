@@ -25,17 +25,12 @@ impl<'a> CoordinateRetrieval<'a> {
     // -----------------------------------------------------------------------
 
     /// Single coordinate lookup — validates via CoordinateArrayParser first.
-    pub async fn query_by_coordinate(
-        &self,
-        coord: &str,
-    ) -> Result<Vec<serde_json::Value>, String> {
+    pub async fn query_by_coordinate(&self, coord: &str) -> Result<Vec<serde_json::Value>, String> {
         let _parsed = CoordinateArrayParser::parse_one(coord)?;
-        let q = query(
-            &format!(
-                "MATCH (n:Bimba {{coordinate: $coord}}) RETURN {}",
-                BASE_RETURN
-            ),
-        )
+        let q = query(&format!(
+            "MATCH (n:Bimba {{coordinate: $coord}}) RETURN {}",
+            BASE_RETURN
+        ))
         .param("coord", coord.to_owned());
         let rows = self
             .client
@@ -46,22 +41,20 @@ impl<'a> CoordinateRetrieval<'a> {
     }
 
     /// Multi-coordinate lookup.
-    pub async fn query_multi(
-        &self,
-        coords: &[&str],
-    ) -> Result<Vec<serde_json::Value>, String> {
+    pub async fn query_multi(&self, coords: &[&str]) -> Result<Vec<serde_json::Value>, String> {
         // Validate every coordinate
         for c in coords {
             CoordinateArrayParser::parse_one(c)?;
         }
-        // neo4rs supports list params — build a Vec<String> and bind as $coords
+        // Match each requested coordinate explicitly; this avoids the flaky
+        // `IN $coords` behavior we observed against the live Neo4j driver.
         let coord_list: Vec<String> = coords.iter().map(|c| c.to_string()).collect();
-        let q = query(
-            &format!(
-                "MATCH (n:Bimba) WHERE n.coordinate IN $coords RETURN {}",
-                BASE_RETURN
-            ),
-        )
+        let q = query(&format!(
+            "UNWIND $coords AS coord \
+             MATCH (n:Bimba {{coordinate: coord}}) \
+             RETURN {}",
+            BASE_RETURN
+        ))
         .param("coords", coord_list);
         let rows = self
             .client
@@ -107,20 +100,15 @@ impl<'a> CoordinateRetrieval<'a> {
     }
 
     /// All coordinates in a coordinate family.
-    pub async fn query_by_family(
-        &self,
-        family: &str,
-    ) -> Result<Vec<serde_json::Value>, String> {
+    pub async fn query_by_family(&self, family: &str) -> Result<Vec<serde_json::Value>, String> {
         const VALID: &[&str] = &["C", "P", "L", "S", "T", "M", "NONE"];
         if !VALID.contains(&family) {
             return Err(format!("invalid family: {}", family));
         }
-        let q = query(
-            &format!(
-                "MATCH (n:Bimba {{family: $fam}}) RETURN {} ORDER BY n.ql_position",
-                BASE_RETURN
-            ),
-        )
+        let q = query(&format!(
+            "MATCH (n:Bimba {{family: $fam}}) RETURN {} ORDER BY n.ql_position",
+            BASE_RETURN
+        ))
         .param("fam", family.to_owned());
         let rows = self
             .client
@@ -131,16 +119,11 @@ impl<'a> CoordinateRetrieval<'a> {
     }
 
     /// Coordinates framed by a context-frame node (via FRAMES relationship).
-    pub async fn query_by_cf(
-        &self,
-        cf_name: &str,
-    ) -> Result<Vec<serde_json::Value>, String> {
-        let q = query(
-            &format!(
-                "MATCH (cf:Bimba {{coordinate: $cf}})-[:FRAMES]->(n) RETURN {}",
-                BASE_RETURN
-            ),
-        )
+    pub async fn query_by_cf(&self, cf_name: &str) -> Result<Vec<serde_json::Value>, String> {
+        let q = query(&format!(
+            "MATCH (cf:Bimba {{coordinate: $cf}})-[:FRAMES]->(n) RETURN {}",
+            BASE_RETURN
+        ))
         .param("cf", cf_name.to_owned());
         let rows = self
             .client

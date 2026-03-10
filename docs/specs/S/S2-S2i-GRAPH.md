@@ -511,6 +511,8 @@ Default k=60, coordinate_boost=1.5x
 - Implement real `redis_cache.rs` (connection, get/set, TTLs, tier keys)
 - `epi graph status` — live health check for both backends
 - `epi graph up` / `epi graph down` — Docker lifecycle
+- `epi graph bootstrap-dev` — one-command local bootstrap for Docker services plus RedisVL Python service setup
+- `epi graph doctor` — deeper health report covering Neo4j, Redis Stack, RedisVL bridge readiness, graph metadata, and semantic index drift
 
 ### Phase 2: Schema Bootstrap + Seed
 
@@ -548,6 +550,8 @@ Default k=60, coordinate_boost=1.5x
 - Vector storage in Neo4j vector index
 - Similarity search via `epi graph search-semantic`
 - Coordinate anchoring enforcement (every vector -> valid coordinate)
+- Drift-aware indexing: only changed nodes and relation-dependent neighbors are re-embedded
+- `epi graph doctor` surfaces stale semantic counts, indexed-node counts, and metadata/version alignment
 
 ### Phase 7: Sync Engine
 

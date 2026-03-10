@@ -223,10 +223,12 @@ epi vault now-write "<content>"             # Write NOW.md
 
 ### `epi graph` — Neo4j + Redis (S2')
 
-GraphRAG retrieval. Requires `NEO4J_URI` for live queries; returns stubs without it.
+GraphRAG retrieval over live Neo4j + Redis Stack backends, with RedisVL-backed semantic-cache health and local bootstrap support.
 
 ```bash
-epi graph status                       # Connection health check
+epi graph bootstrap-dev                # Start local stack + prepare RedisVL bridge
+epi graph status                       # Lightweight connection/status glance
+epi graph doctor                       # Deep health + stale semantic report
 epi graph query <coordinate>           # Nodes for QL coordinate
 epi graph sync [path]                  # Sync vault to graph
 epi graph retrieve <coord> [--nested]  # Coordinate-based retrieval
