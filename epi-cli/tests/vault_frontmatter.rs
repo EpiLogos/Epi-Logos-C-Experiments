@@ -1,4 +1,4 @@
-use epi_logos::vault::frontmatter::{is_valid_coordinate, validate_frontmatter};
+use epi_logos::vault::frontmatter::{is_valid_coordinate, validate_frontmatter, ValidationResult};
 use serde_yaml::Value;
 
 #[test]
@@ -69,15 +69,15 @@ fn integration_invalid_coordinates() {
 fn integration_validate_frontmatter_clean() {
     let yaml: Value = serde_yaml::from_str(
         r#"
-bimbaCoordinate: "C0"
-ql_position: 0
+coordinate: "C0"
 family: "C"
-C_0_bimba: "ground"
+artifact_role: "seed"
+c_0_links_to: "[[Bimba/Seeds/C/C0]]"
 "#,
     )
     .unwrap();
-    let errors = validate_frontmatter(&yaml);
-    assert!(errors.is_empty(), "Expected no errors, got: {:?}", errors);
+    let result = validate_frontmatter(&yaml);
+    assert!(result.errors.is_empty(), "Expected no errors, got: {:?}", result.errors);
 }
 
 #[test]
@@ -86,26 +86,34 @@ fn integration_validate_frontmatter_errors() {
         r#"
 bimbaCoordinate: "BOGUS"
 ql_position: 42
+coordinate: "M2"
 family: "Z"
 S_8_bad: "out of range"
 "#,
     )
     .unwrap();
-    let errors = validate_frontmatter(&yaml);
+    let result = validate_frontmatter(&yaml);
+    // bimbaCoordinate is deprecated — should be a warning
     assert!(
-        errors.iter().any(|e| e.contains("bimbaCoordinate")),
-        "Should flag bad bimbaCoordinate"
+        result.warnings.iter().any(|w| w.contains("bimbaCoordinate")),
+        "Should warn about deprecated bimbaCoordinate, got warnings: {:?}",
+        result.warnings
     );
     assert!(
-        errors.iter().any(|e| e.contains("ql_position")),
-        "Should flag bad ql_position"
+        result.warnings.iter().any(|w| w.contains("ql_position")),
+        "Should warn about deprecated ql_position"
+    );
+    // coordinate is now canonical — should NOT be flagged
+    assert!(
+        !result.errors.iter().any(|e| e.contains("coordinate") && e.contains("deprecated")),
+        "coordinate is canonical, should not be deprecated"
     );
     assert!(
-        errors.iter().any(|e| e.contains("family")),
+        result.errors.iter().any(|e| e.contains("family")),
         "Should flag bad family"
     );
     assert!(
-        errors.iter().any(|e| e.contains("S_8_bad")),
+        result.errors.iter().any(|e| e.contains("S_8_bad")),
         "Should flag coordinate key with position > 5"
     );
 }
@@ -118,20 +126,67 @@ ql_position: 255
 "#,
     )
     .unwrap();
-    let errors = validate_frontmatter(&yaml);
+    let result = validate_frontmatter(&yaml);
     assert!(
-        errors.is_empty(),
-        "ql_position 255 (NONE) should be valid, got: {:?}",
-        errors
+        result.warnings.iter().any(|w| w.contains("ql_position")),
+        "ql_position should be flagged as deprecated warning, got: {:?}",
+        result.warnings
     );
 }
 
 #[test]
 fn integration_validate_frontmatter_not_a_mapping() {
     let yaml: Value = serde_yaml::from_str("42").unwrap();
-    let errors = validate_frontmatter(&yaml);
+    let result = validate_frontmatter(&yaml);
     assert!(
-        errors.iter().any(|e| e.contains("not a YAML mapping")),
+        result.errors.iter().any(|e| e.contains("not a YAML mapping")),
         "Should flag non-mapping YAML"
     );
+}
+
+#[test]
+fn integration_validate_temporal_and_thought_invariants() {
+    let yaml: Value = serde_yaml::from_str(
+        r#"
+coordinate: "T4"
+family: "T"
+artifact_role: "thought"
+t_4_kairos_context: "[[Kairos]]"
+"#,
+    )
+    .unwrap();
+    let result = validate_frontmatter(&yaml);
+    assert!(result.errors.iter().any(|e| e.contains("session_id")));
+    assert!(result.errors.iter().any(|e| e.contains("day_id")));
+    assert!(result.errors.iter().any(|e| e.contains("thought_type")));
+}
+
+#[test]
+fn coordinate_field_is_canonical_not_deprecated() {
+    // `coordinate` is the canonical node identifier per Hen CONTRACT
+    assert!(is_valid_coordinate("M2"));
+    // validate_frontmatter should ACCEPT `coordinate:` field
+    let mut fm = serde_yaml::Mapping::new();
+    fm.insert(
+        serde_yaml::Value::String("coordinate".into()),
+        serde_yaml::Value::String("M2".into()),
+    );
+    let result = validate_frontmatter(&serde_yaml::Value::Mapping(fm));
+    // `coordinate` must not appear in errors or warnings as deprecated
+    assert!(!result.errors.iter().any(|e| e.contains("coordinate") && e.contains("deprecated")),
+        "coordinate should be canonical, not deprecated");
+    assert!(!result.warnings.iter().any(|w| w.contains("coordinate")),
+        "coordinate should not trigger any warning");
+}
+
+#[test]
+fn bimba_coordinate_field_is_deprecated() {
+    let mut fm = serde_yaml::Mapping::new();
+    fm.insert(
+        serde_yaml::Value::String("bimbaCoordinate".into()),
+        serde_yaml::Value::String("M2".into()),
+    );
+    let result = validate_frontmatter(&serde_yaml::Value::Mapping(fm));
+    assert!(result.warnings.iter().any(|w| w.contains("bimbaCoordinate")),
+        "bimbaCoordinate should be deprecated warning, got: {:?}", result.warnings);
 }

@@ -1,6 +1,11 @@
-use serde_yaml::Value;
+use serde_yaml::{Mapping, Value};
 
-/// Valid context frame names.
+#[derive(Debug, Default)]
+pub struct ValidationResult {
+    pub errors: Vec<String>,
+    pub warnings: Vec<String>,
+}
+
 const CF_NAMES: &[&str] = &[
     "CF_VOID",
     "CF_BINARY",
@@ -11,28 +16,36 @@ const CF_NAMES: &[&str] = &[
     "CF_MOBIUS",
 ];
 
-/// Valid VAK reflective coordinate names.
 const VAK_NAMES: &[&str] = &["CPF", "CT", "CP", "CF", "CFP", "CS"];
-
-/// Valid family letters.
 const FAMILIES: &[&str] = &["C", "P", "L", "S", "T", "M"];
+const CANONICAL_METADATA_KEYS: &[&str] = &[
+    "coordinate",
+    "family",
+    "artifact_role",
+    "aletheia_verifies",
+    "ctx_type",
+    "invocation_profile",
+    "source_coordinate",
+    "parent_day_id",
+    "now_id",
+    "day_id",
+    "session_id",
+    "parent_session_id",
+    "created_at",
+    "updated_at",
+    "merged_at",
+    "merge_reason",
+    "provenance_refs",
+    "invocation_kind",
+    "thought_type",
+];
+const DEPRECATED_PATTERNS: &[&str] = &["bimbaCoordinate", "ql_position"];
 
-/// Validates whether a string is a valid Epi-Logos coordinate notation.
-///
-/// Accepted forms:
-/// - `#` (the inversion act)
-/// - `#0` through `#5` (psychoid archetypes)
-/// - `Weave_*` (weave states)
-/// - `CF_*` (context frames)
-/// - `CPF`, `CT`, `CP`, `CF`, `CFP`, `CS` (VAK reflective coordinates)
-/// - Family coordinates: `{F}{N}` or `{F}{N}'` where F in {C,P,L,S,T,M} and N in 0..=5
 pub fn is_valid_coordinate(coord: &str) -> bool {
-    // Bare hash
     if coord == "#" {
         return true;
     }
 
-    // Psychoid archetypes #0-#5
     if coord.starts_with('#') {
         if let Some(rest) = coord.strip_prefix('#') {
             if let Ok(n) = rest.parse::<u8>() {
@@ -42,22 +55,18 @@ pub fn is_valid_coordinate(coord: &str) -> bool {
         return false;
     }
 
-    // Weave states
     if coord.starts_with("Weave_") {
         return true;
     }
 
-    // Context frames
     if coord.starts_with("CF_") {
         return CF_NAMES.contains(&coord);
     }
 
-    // VAK reflective coordinates (must check before family coords since CF overlaps)
     if VAK_NAMES.contains(&coord) {
         return true;
     }
 
-    // Family coordinates: C0-M5 with optional ' suffix
     let base = coord.strip_suffix('\'').unwrap_or(coord);
     if base.len() == 2 {
         let family = &base[..1];
@@ -72,93 +81,142 @@ pub fn is_valid_coordinate(coord: &str) -> bool {
     false
 }
 
-/// Validates a frontmatter YAML value and returns a list of error messages.
-/// An empty vector means the frontmatter is valid.
-pub fn validate_frontmatter(yaml: &Value) -> Vec<String> {
-    let mut errors = Vec::new();
+pub fn validate_frontmatter(yaml: &Value) -> ValidationResult {
+    let mut result = ValidationResult::default();
 
     let map = match yaml.as_mapping() {
         Some(m) => m,
         None => {
-            errors.push("Frontmatter is not a YAML mapping".to_string());
-            return errors;
+            result.errors.push("Frontmatter is not a YAML mapping".to_string());
+            return result;
         }
     };
 
-    // Validate bimbaCoordinate
-    if let Some(val) = map.get(Value::String("bimbaCoordinate".to_string())) {
-        if let Some(s) = val.as_str() {
-            if !is_valid_coordinate(s) {
-                errors.push(format!("Invalid bimbaCoordinate: '{}'", s));
-            }
-        } else {
-            errors.push("bimbaCoordinate must be a string".to_string());
-        }
-    }
+    validate_identity(map, &mut result);
+    validate_keys(map, &mut result);
+    validate_temporal_requirements(map, &mut result.errors);
 
-    // Validate ql_position
-    if let Some(val) = map.get(Value::String("ql_position".to_string())) {
-        if let Some(n) = val.as_u64() {
-            if n > 5 && n != 255 {
-                errors.push(format!("ql_position must be 0-5 or 255, got {}", n));
-            }
-        } else {
-            errors.push("ql_position must be an integer".to_string());
-        }
-    }
-
-    // Validate family
-    if let Some(val) = map.get(Value::String("family".to_string())) {
-        if let Some(s) = val.as_str() {
-            let valid_families = ["C", "P", "L", "S", "T", "M", "NONE"];
-            if !valid_families.contains(&s) {
-                errors.push(format!(
-                    "Invalid family '{}', expected one of: C, P, L, S, T, M, NONE",
-                    s
-                ));
-            }
-        } else {
-            errors.push("family must be a string".to_string());
-        }
-    }
-
-    // Validate {family}_{n}_{semantic} keys
-    for (key, _val) in map.iter() {
-        if let Some(k) = key.as_str() {
-            if let Some(err) = validate_coordinate_key(k) {
-                errors.push(err);
-            }
-        }
-    }
-
-    errors
+    result
 }
 
-/// Validates a frontmatter key that matches the `{family}_{n}_{semantic}` pattern.
-/// Returns `Some(error_message)` if the key matches the pattern but has an invalid position,
-/// or `None` if the key is valid or does not match the pattern.
-fn validate_coordinate_key(key: &str) -> Option<String> {
+fn validate_identity(map: &Mapping, result: &mut ValidationResult) {
+    // `coordinate` is canonical; validate its value
+    if let Some(val) = map.get(Value::String("coordinate".to_string())) {
+        match val.as_str() {
+            Some(s) if is_valid_coordinate(s) => {}
+            Some(s) => result.errors.push(format!("Invalid coordinate: '{s}'")),
+            None => result.errors.push("coordinate must be a string".to_string()),
+        }
+    }
+
+    // `bimbaCoordinate` is deprecated but still validate value if present
+    if let Some(val) = map.get(Value::String("bimbaCoordinate".to_string())) {
+        match val.as_str() {
+            Some(s) if is_valid_coordinate(s) => {}
+            Some(s) => result.errors.push(format!("Invalid bimbaCoordinate: '{s}'")),
+            None => result.errors.push("bimbaCoordinate must be a string".to_string()),
+        }
+    }
+
+    if let Some(val) = map.get(Value::String("family".to_string())) {
+        match val.as_str() {
+            Some(s) if FAMILIES.contains(&s) || s == "NONE" => {}
+            Some(s) => result.errors.push(format!(
+                "Invalid family '{s}', expected one of: C, P, L, S, T, M, NONE"
+            )),
+            None => result.errors.push("family must be a string".to_string()),
+        }
+    }
+}
+
+fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
+    for (key, value) in map {
+        let Some(key_str) = key.as_str() else {
+            result.errors.push("Frontmatter keys must be strings".to_string());
+            continue;
+        };
+
+        if is_deprecated_key(key_str) {
+            result.warnings.push(format!("Deprecated frontmatter key '{key_str}'"));
+            continue;
+        }
+
+        if is_coordinate_key(key_str) {
+            if let Some(err) = validate_coordinate_key(key_str, value) {
+                result.errors.push(err);
+            }
+            continue;
+        }
+
+        if CANONICAL_METADATA_KEYS.contains(&key_str) {
+            continue;
+        }
+
+        if key_str.starts_with("pos_") || key_str.starts_with("pos") {
+            result.warnings.push(format!("Deprecated frontmatter key '{key_str}'"));
+            continue;
+        }
+
+        result.errors.push(format!("Unknown frontmatter key '{key_str}'"));
+    }
+}
+
+fn validate_temporal_requirements(map: &Mapping, errors: &mut Vec<String>) {
+    let artifact_role = map
+        .get(Value::String("artifact_role".to_string()))
+        .and_then(Value::as_str);
+
+    if matches!(artifact_role, Some("now") | Some("thought")) {
+        for required in ["session_id", "day_id"] {
+            if !map.contains_key(Value::String(required.to_string())) {
+                errors.push(format!("Missing required temporal key '{required}'"));
+            }
+        }
+    }
+
+    if artifact_role == Some("thought") {
+        if !map.contains_key(Value::String("thought_type".to_string())) {
+            errors.push("Missing required thought_type for thought artifact".to_string());
+        }
+    }
+}
+
+fn is_deprecated_key(key: &str) -> bool {
+    DEPRECATED_PATTERNS.contains(&key) || key.starts_with("pos_")
+}
+
+fn is_coordinate_key(key: &str) -> bool {
+    let parts: Vec<&str> = key.splitn(3, '_').collect();
+    parts.len() == 3 && matches!(parts[0], "c" | "p" | "l" | "s" | "t" | "m")
+}
+
+fn validate_coordinate_key(key: &str, value: &Value) -> Option<String> {
     let parts: Vec<&str> = key.splitn(3, '_').collect();
     if parts.len() != 3 {
         return None;
     }
 
     let family = parts[0];
-    if !FAMILIES.contains(&family) {
-        return None; // Not a coordinate key pattern
+    if !matches!(family, "c" | "p" | "l" | "s" | "t" | "m") {
+        return None;
     }
 
     let n_str = parts[1];
-    match n_str.parse::<u8>() {
-        Ok(n) if n > 5 => Some(format!(
-            "Coordinate key '{}': position {} must be 0-5",
-            key, n
-        )),
-        Ok(_) => None,
+    let n = match n_str.parse::<u8>() {
+        Ok(value) => value,
         Err(_) => {
-            // Could be a non-coordinate key that happens to start with a family letter
-            None
+            return Some(format!(
+                "Coordinate key '{key}' has invalid position segment"
+            ))
         }
+    };
+    if n > 5 {
+        return Some(format!("Coordinate key '{key}': position {n} must be 0-5"));
+    }
+
+    match value {
+        Value::String(_) => None,
+        _ => Some(format!("Coordinate key '{key}' must have a string value")),
     }
 }
 
@@ -167,117 +225,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_valid_coordinates() {
-        // Hash
-        assert!(is_valid_coordinate("#"));
-
-        // Psychoids
-        for i in 0..=5 {
-            assert!(is_valid_coordinate(&format!("#{}", i)));
-        }
-
-        // Weave states
-        assert!(is_valid_coordinate("Weave_0_0"));
-        assert!(is_valid_coordinate("Weave_5_5"));
-        assert!(is_valid_coordinate("Weave_anything"));
-
-        // Context frames
-        for cf in CF_NAMES {
-            assert!(is_valid_coordinate(cf), "CF {} should be valid", cf);
-        }
-
-        // VAK reflective coordinates
-        for vak in VAK_NAMES {
-            assert!(is_valid_coordinate(vak), "VAK {} should be valid", vak);
-        }
-
-        // Family coordinates (all 6 families x 6 positions)
-        for fam in FAMILIES {
-            for pos in 0..=5u8 {
-                let coord = format!("{}{}", fam, pos);
-                assert!(is_valid_coordinate(&coord), "{} should be valid", coord);
-
-                // Inverted form
-                let inverted = format!("{}{}'", fam, pos);
-                assert!(
-                    is_valid_coordinate(&inverted),
-                    "{} should be valid",
-                    inverted
-                );
-            }
-        }
-    }
-
-    #[test]
-    fn test_invalid_coordinates() {
-        assert!(!is_valid_coordinate(""));
-        assert!(!is_valid_coordinate("#6"));
-        assert!(!is_valid_coordinate("#99"));
-        assert!(!is_valid_coordinate("X0"));
-        assert!(!is_valid_coordinate("C7"));
-        assert!(!is_valid_coordinate("CF_INVALID"));
-        assert!(!is_valid_coordinate("hello"));
-        assert!(!is_valid_coordinate("CC"));
-        assert!(!is_valid_coordinate("C"));
-        assert!(!is_valid_coordinate("0C"));
-    }
-
-    #[test]
-    fn test_validate_coordinate_key() {
-        // Valid coordinate keys
-        assert!(validate_coordinate_key("C_0_bimba").is_none());
-        assert!(validate_coordinate_key("P_5_integration").is_none());
-        assert!(validate_coordinate_key("M_3_mahamaya").is_none());
-
-        // Invalid position in coordinate key
-        assert!(validate_coordinate_key("C_6_invalid").is_some());
-        assert!(validate_coordinate_key("S_9_bad").is_some());
-
-        // Non-coordinate keys (should return None — not an error)
-        assert!(validate_coordinate_key("title").is_none());
-        assert!(validate_coordinate_key("bimbaCoordinate").is_none());
-        assert!(validate_coordinate_key("X_0_unknown").is_none());
-    }
-
-    #[test]
-    fn test_validate_frontmatter_valid() {
+    fn coordinate_keys_are_lowercase() {
         let yaml: Value = serde_yaml::from_str(
             r#"
-bimbaCoordinate: "M5"
-ql_position: 5
+coordinate: "M5"
 family: "M"
-M_5_epii: "holographic integration"
+M_5_epii: "wrong"
 "#,
         )
         .unwrap();
-        let errors = validate_frontmatter(&yaml);
-        assert!(errors.is_empty(), "Expected no errors, got: {:?}", errors);
-    }
-
-    #[test]
-    fn test_validate_frontmatter_invalid() {
-        let yaml: Value = serde_yaml::from_str(
-            r#"
-bimbaCoordinate: "INVALID"
-ql_position: 99
-family: "Z"
-C_7_bad: "out of range"
-"#,
-        )
-        .unwrap();
-        let errors = validate_frontmatter(&yaml);
-        assert!(errors.len() >= 3, "Expected at least 3 errors, got: {:?}", errors);
-    }
-
-    #[test]
-    fn test_validate_frontmatter_ql_position_255() {
-        let yaml: Value = serde_yaml::from_str(
-            r#"
-ql_position: 255
-"#,
-        )
-        .unwrap();
-        let errors = validate_frontmatter(&yaml);
-        assert!(errors.is_empty(), "255 should be valid for ql_position");
+        let result = validate_frontmatter(&yaml);
+        assert!(result.errors
+            .iter()
+            .any(|error| error.contains("Unknown frontmatter key 'M_5_epii'")));
     }
 }
