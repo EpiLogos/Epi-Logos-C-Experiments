@@ -1,14 +1,18 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
-export async function main(_api: ExtensionAPI) {
-  await import("./extensions/epi-citta.ts");
-  await import("./extensions/cross-agent.ts");
-  await import("./extensions/subagent-widget.ts");
-  await import("./extensions/agent-team.ts");
-  await import("./extensions/agent-chain.ts");
-  await import("./extensions/child-extension-propagation.ts");
-  await import("./extensions/prompt-url-widget.ts");
-  await import("./extensions/redraws.ts");
-  await import("./extensions/themeMap.ts");
-  await import("./extensions/pleroma-primitives.ts");
+export async function main(api: ExtensionAPI) {
+  // Load 6 S4-X' extensions in dependency order
+  const { khoraExtension } = await import("./khora/extension.ts");
+  const { henExtension } = await import("./hen/extension.ts");
+  const { pleromaExtension } = await import("./pleroma/extension.ts");
+  const { chronosExtension } = await import("./chronos/extension.ts");
+  const { animaExtension } = await import("./anima/extension.ts");
+  const { aletheiaExtension } = await import("./aletheia/extension.ts");
+
+  await khoraExtension(api);
+  await henExtension(api);
+  await pleromaExtension(api);
+  await chronosExtension(api);
+  await animaExtension(api);
+  await aletheiaExtension(api);
 }
