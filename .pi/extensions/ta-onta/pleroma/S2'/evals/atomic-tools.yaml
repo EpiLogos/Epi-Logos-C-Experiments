@@ -1,0 +1,100 @@
+name: atomic-tools
+description: Atomic skill validation -- verify each skill has valid frontmatter, correct category, and declared dependencies.
+version: 0.1.0
+
+tests:
+  - name: skill-frontmatter-validation
+    description: Every atomic skill SKILL.md must have valid YAML frontmatter with name and description
+    check: frontmatter
+    skills:
+      - path: skills/atomic/tmux/SKILL.md
+        expected_name: tmux
+        expected_port_type: port-and-refine
+
+      - path: skills/atomic/cmux/SKILL.md
+        expected_name: cmux
+        expected_port_type: fresh-design
+
+      - path: skills/atomic/mprocs/SKILL.md
+        expected_name: mprocs
+        expected_port_type: port-and-refine
+
+      - path: skills/atomic/worktrunk/SKILL.md
+        expected_name: worktrunk
+        expected_port_type: fresh-design
+
+      - path: skills/atomic/ralph-tui/SKILL.md
+        expected_name: ralph-tui
+        expected_port_type: port-and-refine
+
+      - path: skills/atomic/repl/SKILL.md
+        expected_name: repl
+        expected_port_type: true-port
+
+      - path: skills/atomic/notebooklm/SKILL.md
+        expected_name: notebooklm
+        expected_port_type: port-and-refine
+
+      - path: skills/atomic/chatlog-fetcher/SKILL.md
+        expected_name: chatlog-fetcher
+        expected_port_type: fresh-design
+
+      - path: skills/atomic/youtube-transcript/SKILL.md
+        expected_name: youtube-transcript
+        expected_port_type: fresh-design
+
+      - path: skills/atomic/gitbutler/SKILL.md
+        expected_name: gitbutler
+        expected_port_type: port-and-refine
+
+      - path: skills/atomic/pleroma-skill-proxy/SKILL.md
+        expected_name: pleroma-skill-proxy
+        expected_port_type: true-port
+
+  - name: techne-skill-cluster-validation
+    description: All techne skills must have CT2 and CP 4.2
+    check: frontmatter_fields
+    skills:
+      - path: skills/atomic/technē-spawn/SKILL.md
+        expected_ct: CT2
+        expected_cp: "4.2"
+
+      - path: skills/atomic/technē-relay/SKILL.md
+        expected_ct: CT2
+        expected_cp: "4.2"
+
+      - path: skills/atomic/technē-list/SKILL.md
+        expected_ct: CT2
+        expected_cp: "4.2"
+
+      - path: skills/atomic/technē-close/SKILL.md
+        expected_ct: CT2
+        expected_cp: "4.2"
+
+  - name: orchestration-skill-validation
+    description: All orchestration skills must have valid frontmatter and skill_class vak
+    check: frontmatter
+    skills:
+      - path: skills/orchestration/vak-coordinate-frame/SKILL.md
+        expected_name: vak-coordinate-frame
+        expected_skill_class: vak
+
+      - path: skills/orchestration/vak-evaluate/SKILL.md
+        expected_name: vak-evaluate
+        expected_skill_class: vak
+
+      - path: skills/orchestration/anima-orchestration/SKILL.md
+        expected_name: anima-orchestration
+        expected_skill_class: vak
+
+      - path: skills/orchestration/day-night-pass/SKILL.md
+        expected_name: day-night-pass
+        expected_skill_class: vak
+
+      - path: skills/orchestration/ouroboros/SKILL.md
+        expected_name: ouroboros
+        expected_port_type: port-and-refine
+
+      - path: skills/orchestration/klein-mode/SKILL.md
+        expected_name: klein-mode
+        expected_port_type: fresh-design

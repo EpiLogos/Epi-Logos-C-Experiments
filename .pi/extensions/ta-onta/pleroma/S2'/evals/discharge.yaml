@@ -1,0 +1,100 @@
+name: discharge
+description: Discharge validation -- verify subagent-discharge hook contract, structured metadata format, and Mobius return signal format.
+version: 0.1.0
+
+tests:
+  - name: discharge-metadata-structure
+    description: Verify subagent-discharge hook emits correct JSON structure
+    expected_fields:
+      - field: "hook"
+        value: "subagent-discharge"
+
+      - field: "event"
+        value: "Stop"
+
+      - field: "timestamp"
+        type: "ISO8601"
+
+      - field: "session.id"
+        type: "string"
+
+      - field: "session.agentType"
+        type: "string"
+
+      - field: "session.cfIdentity"
+        type: "string"
+
+      - field: "summary.status"
+        value: "discharged"
+
+      - field: "summary.coordinatesUsed"
+        type: "object"
+
+      - field: "summary.completionType"
+        type: "string"
+        values: ["graceful", "forced", "timeout"]
+
+  - name: mobius-return-signal-format
+    description: Verify Mobius return signal is correctly structured when emitted
+    assertions:
+      - when: "cf_identity is (5/0)"
+        expected:
+          mobiusReturn.emitted: true
+          mobiusReturn.signal: "m_5_mobius_return"
+          mobiusReturn.insight: "non-null string"
+          mobiusReturn.questions: "non-null string"
+
+      - when: "cf_identity is not (5/0)"
+        expected:
+          mobiusReturn.emitted: false
+          mobiusReturn.signal: null
+          mobiusReturn.insight: null
+          mobiusReturn.questions: null
+
+  - name: night-extraction-availability
+    description: Verify Night' extraction paths are provided
+    expected_fields:
+      - field: "nightExtraction.available"
+        type: "boolean"
+
+      - field: "nightExtraction.sessionLog"
+        type: "string"
+        pattern: ".*log\\.md$"
+
+      - field: "nightExtraction.commitLog"
+        type: "string"
+        pattern: ".*commit\\.md$"
+
+  - name: discharge-handles-missing-fields
+    description: Verify discharge handles missing input fields gracefully
+    assertions:
+      - input: {}
+        expected:
+          session.id: "unknown"
+          session.agentType: "unknown"
+          session.cfIdentity: "unset"
+          summary.status: "discharged"
+
+      - input:
+          session_id: "test-123"
+        expected:
+          session.id: "test-123"
+          session.agentType: "unknown"
+
+  - name: worktree-cleanup-structure
+    description: Verify worktree-cleanup hook emits correct JSON structure
+    expected_fields:
+      - field: "hook"
+        value: "worktree-cleanup"
+
+      - field: "event"
+        value: "Stop"
+
+      - field: "cleanup.worktreesPruned"
+        type: "integer"
+
+      - field: "cleanup.windowsClosed"
+        type: "integer"
+
+      - field: "cleanup.status"
+        value: "clean"
