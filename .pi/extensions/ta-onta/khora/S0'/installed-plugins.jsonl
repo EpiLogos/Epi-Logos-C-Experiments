@@ -1,0 +1,1 @@
+{"plugin":"claude-mem","version":"latest","harnesses":["claude-code","openclaw"],"port":37777}
