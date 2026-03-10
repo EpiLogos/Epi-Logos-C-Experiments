@@ -1,4 +1,5 @@
 pub mod frontmatter;
+pub mod pasu;
 pub mod paths;
 pub mod templates;
 
@@ -149,6 +150,19 @@ pub enum VaultCmd {
     /// Archive a day folder into History
     #[command(name = "archive-day")]
     ArchiveDay { date: String },
+    /// Interact with PASU.md (non-dual agent-user field)
+    #[command(subcommand)]
+    Pasu(PasuCmd),
+}
+
+#[derive(Subcommand)]
+pub enum PasuCmd {
+    /// Show full PASU.md content
+    Show,
+    /// Get a PASU field value (birth-date, birth-location, natal-chart-path)
+    Get { field: String },
+    /// Set a PASU field value
+    Set { field: String, value: String },
 }
 
 pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
@@ -339,6 +353,14 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
         VaultCmd::DayInit { now } => day_init(now.as_deref()),
         VaultCmd::NowInit { session_id, now } => now_init(session_id, now.as_deref()),
         VaultCmd::ArchiveDay { date } => archive_day(date),
+        VaultCmd::Pasu(sub) => {
+            let vr = vault_root();
+            match sub {
+                PasuCmd::Show => pasu::pasu_show(&vr),
+                PasuCmd::Get { field } => pasu::pasu_get(&vr, field),
+                PasuCmd::Set { field, value } => pasu::pasu_set(&vr, field, value),
+            }
+        }
     }
 }
 
