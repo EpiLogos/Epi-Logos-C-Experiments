@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "purpose": "agent-facing command preferences for Khora S0 primitives",
+  "capabilities": {
+    "read": {
+      "preferred": ["bat"],
+      "fallback": ["cat"],
+      "notes": "Prefer bat for readable file inspection with plain-style output."
+    },
+    "search": {
+      "preferred": ["rg"],
+      "fallback": ["grep"],
+      "notes": "Prefer ripgrep for recursive search and file listing."
+    },
+    "listing": {
+      "preferred": ["eza"],
+      "fallback": ["ls"],
+      "notes": "Prefer eza for readable directory listings."
+    },
+    "tree": {
+      "preferred": ["eza"],
+      "fallback": ["find"],
+      "notes": "Prefer eza --tree when available."
+    },
+    "navigation": {
+      "preferred": ["zoxide"],
+      "fallback": [],
+      "notes": "Use zoxide query primitives to resolve fast navigation targets; this resolves paths rather than mutating parent shell state."
+    },
+    "json": {
+      "preferred": ["jq"],
+      "fallback": [],
+      "notes": "Use jq for JSON selection, transformation, and validation."
+    },
+    "select_interactive": {
+      "preferred": ["fzf"],
+      "fallback": [],
+      "notes": "Interactive-only fuzzy selection helper for human-in-the-loop terminal flows."
+    },
+    "git_host": {
+      "preferred": ["gh"],
+      "fallback": [],
+      "notes": "GitHub host operations for PR, issue, and repository workflows."
+    },
+    "task_runner": {
+      "preferred": ["just"],
+      "fallback": [],
+      "notes": "Repository task runner for stable local workflow entrypoints."
+    }
+  }
+}

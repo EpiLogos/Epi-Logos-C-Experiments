@@ -1,0 +1,20 @@
+{
+  "tools": [
+    {
+      "name": "epi_core_knowing",
+      "command": "epi core knowing"
+    },
+    {
+      "name": "epi_vault",
+      "command": "epi vault"
+    },
+    {
+      "name": "epi_vimarsa",
+      "command": "epi vimarsa"
+    },
+    {
+      "name": "epi_book",
+      "command": "epi book"
+    }
+  ]
+}
