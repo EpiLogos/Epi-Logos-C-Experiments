@@ -1,10 +1,6 @@
 mod support;
 
-use epi_logos::gate::{
-    bootstrap,
-    sessions::SessionStore,
-    workspace,
-};
+use epi_logos::gate::{bootstrap, sessions::SessionStore, workspace};
 use support::temp_env;
 
 #[test]

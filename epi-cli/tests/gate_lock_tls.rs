@@ -2,12 +2,7 @@ mod support;
 
 use std::fs;
 
-use epi_logos::gate::{
-    config::GatewayConfig,
-    lock::GatewayLock,
-    server,
-    tls::GatewayTlsRuntime,
-};
+use epi_logos::gate::{config::GatewayConfig, lock::GatewayLock, server, tls::GatewayTlsRuntime};
 use support::temp_env;
 
 #[test]
@@ -15,13 +10,10 @@ fn acquires_lock_on_config_hash_path() {
     let env = temp_env();
     let gate_root = env.home.join(".epi").join("gate");
 
-    let lock = GatewayLock::acquire(&gate_root, "cfg-8421").unwrap();
+    let lock = GatewayLock::acquire(&gate_root, "cfg-18794").unwrap();
 
     assert!(lock.path().exists());
-    assert_eq!(
-        lock.path(),
-        GatewayLock::path_for(&gate_root, "cfg-8421")
-    );
+    assert_eq!(lock.path(), GatewayLock::path_for(&gate_root, "cfg-18794"));
 }
 
 #[test]
@@ -57,7 +49,7 @@ fn generates_self_signed_gateway_cert_and_fingerprint() {
 #[test]
 fn status_from_config_surfaces_tls_fingerprint() {
     let env = temp_env();
-    let mut config = GatewayConfig::with_port(8421);
+    let mut config = GatewayConfig::with_port(18794);
     config.tls_enabled = true;
     config.state_root = Some(env.home.join(".epi").join("gate").display().to_string());
 

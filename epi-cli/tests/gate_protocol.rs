@@ -9,38 +9,45 @@ use tokio_tungstenite::connect_async;
 
 #[tokio::test]
 async fn gate_status_reports_explicit_test_port() {
-    let handle = spawn_epi_background(&["gate", "start", "--port", "8421"], temp_env());
-    let hello = wait_for_hello(8421)
+    let handle = spawn_epi_background(&["gate", "start", "--port", "18794"], temp_env());
+    let hello = wait_for_hello(18794)
         .await
         .expect("gateway should accept websocket clients");
 
     let out = run_epi(&["--json", "gate", "status"], handle.env());
-    assert!(
-        out.status.success(),
-        "status failed: {}",
-        out.stderr
-    );
+    assert!(out.status.success(), "status failed: {}", out.stderr);
     assert_eq!(hello["type"], "hello-ok");
-    assert!(out.stdout.contains("\"port\":8421"), "stdout: {}", out.stdout);
-    assert!(out.stdout.contains("\"running\":true"), "stdout: {}", out.stdout);
+    assert!(
+        out.stdout.contains("\"port\":18794"),
+        "stdout: {}",
+        out.stdout
+    );
+    assert!(
+        out.stdout.contains("\"running\":true"),
+        "stdout: {}",
+        out.stdout
+    );
 }
 
 #[tokio::test]
 async fn gate_start_accepts_real_websocket_connections() {
-    let port = 18421;
-    let handle = spawn_epi_background(
-        &["gate", "start", "--port", &port.to_string()],
-        temp_env(),
-    );
+    let port = 28794;
+    let handle = spawn_epi_background(&["gate", "start", "--port", &port.to_string()], temp_env());
 
-    let hello = wait_for_hello(port).await.expect("gateway should accept websocket clients");
+    let hello = wait_for_hello(port)
+        .await
+        .expect("gateway should accept websocket clients");
 
     assert_eq!(hello["type"], "hello-ok");
     assert_eq!(hello["protocol"], 3);
 
     let status = run_epi(&["--json", "gate", "status"], handle.env());
     assert!(status.status.success(), "status failed: {}", status.stderr);
-    assert!(status.stdout.contains(&format!("\"port\":{port}")), "stdout: {}", status.stdout);
+    assert!(
+        status.stdout.contains(&format!("\"port\":{port}")),
+        "stdout: {}",
+        status.stdout
+    );
 }
 
 async fn wait_for_hello(port: u16) -> Result<Value, String> {

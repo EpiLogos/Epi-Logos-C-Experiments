@@ -8,7 +8,7 @@ use support::TestGatewayClient;
 
 #[tokio::test]
 async fn chat_send_inject_abort_and_history_use_real_transcript() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let send = client
         .request(
@@ -27,7 +27,10 @@ async fn chat_send_inject_abort_and_history_use_real_transcript() {
         .await
         .unwrap();
     client
-        .request("chat.abort", json!({"sessionKey":"agent:main:main","runId": run_id}))
+        .request(
+            "chat.abort",
+            json!({"sessionKey":"agent:main:main","runId": run_id}),
+        )
         .await
         .unwrap();
 
@@ -45,7 +48,7 @@ async fn chat_send_inject_abort_and_history_use_real_transcript() {
 
 #[tokio::test]
 async fn sessions_rpc_lifecycle_mutates_real_store() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     client
         .request(

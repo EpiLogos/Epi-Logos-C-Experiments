@@ -1,10 +1,6 @@
 mod support;
 
-use epi_logos::gate::{
-    sessions::SessionStore,
-    spacetimedb_bridge::SpacetimeBridge,
-    system,
-};
+use epi_logos::gate::{sessions::SessionStore, spacetimedb_bridge::SpacetimeBridge, system};
 use serde_json::json;
 use support::{temp_env, TestGatewayClient};
 
@@ -48,14 +44,14 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
     assert!(events.iter().any(|event| {
         event.kind == "activity_event" && event.payload["kind"] == "gateway.tick"
     }));
-    assert!(events.iter().any(|event| {
-        event.kind == "m_clock_state" && event.payload["clock"] == "M0"
-    }));
+    assert!(events
+        .iter()
+        .any(|event| { event.kind == "m_clock_state" && event.payload["clock"] == "M0" }));
 }
 
 #[tokio::test]
 async fn gateway_rpc_publishes_bridge_events_for_real_state_changes() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     client
         .request(

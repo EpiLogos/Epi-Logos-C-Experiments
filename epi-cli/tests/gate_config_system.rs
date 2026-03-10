@@ -5,15 +5,12 @@ use support::TestGatewayClient;
 
 #[tokio::test]
 async fn config_apply_persists_and_reports_new_version() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let default_config = client.request("config.get", json!({})).await.unwrap();
     let schema = client.request("config.schema", json!({})).await.unwrap();
     let set = client
-        .request(
-            "config.set",
-            json!({"key":"gateway.port","value":8421}),
-        )
+        .request("config.set", json!({"key":"gateway.port","value":18794}))
         .await
         .unwrap();
     let patch = client
@@ -32,9 +29,9 @@ async fn config_apply_persists_and_reports_new_version() {
         .unwrap();
     let persisted = client.request("config.get", json!({})).await.unwrap();
 
-    assert_eq!(default_config["gateway"]["port"], 8420);
+    assert_eq!(default_config["gateway"]["port"], 18794);
     assert_eq!(schema["domains"][0]["key"], "gateway");
-    assert_eq!(set["gateway"]["port"], 8421);
+    assert_eq!(set["gateway"]["port"], 18794);
     assert_eq!(patch["gateway"]["tlsEnabled"], true);
     assert_eq!(apply["ok"], true);
     assert!(apply["version"].as_str().unwrap().starts_with("v"));
@@ -44,7 +41,7 @@ async fn config_apply_persists_and_reports_new_version() {
 
 #[tokio::test]
 async fn system_models_logs_usage_update_and_wizard_methods_persist_state() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     client
         .request(
@@ -56,7 +53,7 @@ async fn system_models_logs_usage_update_and_wizard_methods_persist_state() {
     client
         .request(
             "system-event",
-            json!({"kind":"gateway.booted","payload":{"port":8421}}),
+            json!({"kind":"gateway.booted","payload":{"port":18794}}),
         )
         .await
         .unwrap();

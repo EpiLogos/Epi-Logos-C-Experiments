@@ -5,7 +5,7 @@ use support::TestGatewayClient;
 
 #[tokio::test]
 async fn channel_and_cron_surfaces_persist_real_state() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let channels_before = client.request("channels.status", json!({})).await.unwrap();
     let login_start = client
@@ -60,8 +60,14 @@ async fn channel_and_cron_surfaces_persist_real_state() {
         .await
         .unwrap();
 
-    assert_eq!(channels_before["channelsSnapshot"]["channelOrder"][0], "telegram");
-    assert_eq!(channels_after["channelsSnapshot"]["channels"]["telegram"]["connected"], true);
+    assert_eq!(
+        channels_before["channelsSnapshot"]["channelOrder"][0],
+        "telegram"
+    );
+    assert_eq!(
+        channels_after["channelsSnapshot"]["channels"]["telegram"]["connected"],
+        true
+    );
     assert_eq!(logout["ok"], true);
     assert_eq!(cron_status["enabled"], true);
     assert_eq!(cron_list["jobs"].as_array().unwrap().len(), 1);
@@ -73,7 +79,7 @@ async fn channel_and_cron_surfaces_persist_real_state() {
 
 #[tokio::test]
 async fn talk_tts_voicewake_and_skills_propagate_into_channel_surface() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let talk_mode = client
         .request("talk.mode", json!({"mode":"voice"}))
@@ -113,14 +119,25 @@ async fn talk_tts_voicewake_and_skills_propagate_into_channel_surface() {
     assert_eq!(tts_provider["provider"], "local");
     assert_eq!(tts_status["enabled"], true);
     assert!(tts_providers["providers"].as_array().unwrap().len() >= 1);
-    assert!(tts_convert["artifactPath"].as_str().unwrap().ends_with(".txt"));
+    assert!(tts_convert["artifactPath"]
+        .as_str()
+        .unwrap()
+        .ends_with(".txt"));
     assert_eq!(voicewake_set["phrase"], "hey epi");
     assert_eq!(voicewake_get["enabled"], true);
     assert_eq!(install["installed"], true);
     assert_eq!(update["updated"], true);
     assert!(status["skills"].to_string().contains("telegram-squad"));
     assert!(bins["bins"].as_array().unwrap().len() >= 1);
-    assert!(channels["invocationSurface"]["skills"].to_string().contains("telegram-squad"));
-    assert!(channels["invocationSurface"]["bins"].as_array().unwrap().len() >= 1);
+    assert!(channels["invocationSurface"]["skills"]
+        .to_string()
+        .contains("telegram-squad"));
+    assert!(
+        channels["invocationSurface"]["bins"]
+            .as_array()
+            .unwrap()
+            .len()
+            >= 1
+    );
     assert_eq!(tts_disable["enabled"], false);
 }

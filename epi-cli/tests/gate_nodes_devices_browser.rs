@@ -5,7 +5,7 @@ use support::TestGatewayClient;
 
 #[tokio::test]
 async fn node_invoke_records_result_for_later_lookup() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let pair_request = client
         .request("node.pair.request", json!({"node":"alpha"}))
@@ -35,7 +35,10 @@ async fn node_invoke_records_result_for_later_lookup() {
         .await
         .unwrap();
     let rename = client
-        .request("node.rename", json!({"node":"alpha","name":"alpha-renamed"}))
+        .request(
+            "node.rename",
+            json!({"node":"alpha","name":"alpha-renamed"}),
+        )
         .await
         .unwrap();
     let event = client
@@ -59,7 +62,7 @@ async fn node_invoke_records_result_for_later_lookup() {
 
 #[tokio::test]
 async fn browser_device_and_approval_state_round_trip() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let browser = client
         .request(
@@ -76,16 +79,10 @@ async fn browser_device_and_approval_state_round_trip() {
         .await
         .unwrap();
     let login_wait = client
-        .request(
-            "web.login.wait",
-            json!({"loginId": login_start["loginId"]}),
-        )
+        .request("web.login.wait", json!({"loginId": login_start["loginId"]}))
         .await
         .unwrap();
-    let device_list = client
-        .request("device.pair.list", json!({}))
-        .await
-        .unwrap();
+    let device_list = client.request("device.pair.list", json!({})).await.unwrap();
     let device_approve = client
         .request("device.pair.approve", json!({"device":"ios-main"}))
         .await
@@ -129,10 +126,7 @@ async fn browser_device_and_approval_state_round_trip() {
         .await
         .unwrap();
     let node_get = client
-        .request(
-            "exec.approvals.node.get",
-            json!({"node":"alpha"}),
-        )
+        .request("exec.approvals.node.get", json!({"node":"alpha"}))
         .await
         .unwrap();
     let resolve = client

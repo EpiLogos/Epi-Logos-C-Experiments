@@ -17,12 +17,17 @@ fn omnipanel_contract_surfaces_alias_and_active_agent_metadata() {
 #[test]
 fn rust_manifest_covers_required_methods_declared_by_electron_panel_parity() {
     let parity_path = "/Users/admin/Documents/Epi-Logos/Idea/Pratibimba/System/src/renderer/components/omni/contracts/panelRpcParity.ts";
-    let content = fs::read_to_string(parity_path).expect("panel parity contract should be readable");
+    let content =
+        fs::read_to_string(parity_path).expect("panel parity contract should be readable");
     let methods = parity::method_names();
 
     for method in extract_methods(&content) {
         assert!(
-            methods.contains(&method.as_str()) || matches!(method.as_str(), "status.summary" | "health.snapshot" | "presence.list"),
+            methods.contains(&method.as_str())
+                || matches!(
+                    method.as_str(),
+                    "status.summary" | "health.snapshot" | "presence.list"
+                ),
             "missing rust gateway method for omnipanel contract: {method}"
         );
     }

@@ -1,5 +1,5 @@
-pub const DEFAULT_GATEWAY_PORT: u16 = 8420;
-pub const TEST_GATEWAY_PORT: u16 = 8421;
+pub const DEFAULT_GATEWAY_PORT: u16 = 18794;
+pub const TEST_GATEWAY_PORT: u16 = 18794;
 pub const OMNIPANEL_SESSION_METADATA: &[&str] = &[
     "canonicalKey",
     "alias",

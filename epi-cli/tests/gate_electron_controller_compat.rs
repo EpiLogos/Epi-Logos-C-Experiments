@@ -5,7 +5,7 @@ use support::TestGatewayClient;
 
 #[tokio::test]
 async fn debug_and_presence_methods_match_electron_controller_contract() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     client
         .request(
@@ -28,7 +28,7 @@ async fn debug_and_presence_methods_match_electron_controller_contract() {
 
 #[tokio::test]
 async fn chat_and_session_methods_match_electron_controller_contract() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     client
         .request(
@@ -44,7 +44,10 @@ async fn chat_and_session_methods_match_electron_controller_contract() {
         .unwrap();
 
     let history = client
-        .request("chat.history", json!({ "sessionKey": "agent:main:main", "limit": 200 }))
+        .request(
+            "chat.history",
+            json!({ "sessionKey": "agent:main:main", "limit": 200 }),
+        )
         .await
         .unwrap();
     assert!(history["messages"].is_array());
@@ -105,15 +108,21 @@ async fn chat_and_session_methods_match_electron_controller_contract() {
         .request("sessions.list", json!({ "includeGlobal": true }))
         .await
         .unwrap();
-    assert_eq!(sessions_after_delete["sessions"].as_array().unwrap().len(), 0);
+    assert_eq!(
+        sessions_after_delete["sessions"].as_array().unwrap().len(),
+        0
+    );
 }
 
 #[tokio::test]
 async fn channels_skills_and_cron_methods_match_electron_controller_contract() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let channels = client
-        .request("channels.status", json!({ "probe": true, "timeoutMs": 8000 }))
+        .request(
+            "channels.status",
+            json!({ "probe": true, "timeoutMs": 8000 }),
+        )
         .await
         .unwrap();
     assert!(channels["channelOrder"].is_array());
@@ -181,7 +190,10 @@ async fn channels_skills_and_cron_methods_match_electron_controller_contract() {
     assert!(cron_status["nextWakeAtMs"].is_number() || cron_status["nextWakeAtMs"].is_null());
 
     client
-        .request("cron.update", json!({ "id": cron_id, "patch": { "enabled": false } }))
+        .request(
+            "cron.update",
+            json!({ "id": cron_id, "patch": { "enabled": false } }),
+        )
         .await
         .unwrap();
 
@@ -198,7 +210,7 @@ async fn channels_skills_and_cron_methods_match_electron_controller_contract() {
 
 #[tokio::test]
 async fn config_devices_nodes_and_logs_methods_match_electron_controller_contract() {
-    let mut client = TestGatewayClient::connected_with_temp_store(8421).await;
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let config = client.request("config.get", json!({})).await.unwrap();
     assert!(config["raw"].is_string());
@@ -240,7 +252,10 @@ async fn config_devices_nodes_and_logs_methods_match_electron_controller_contrac
     assert!(nodes["nodes"].is_array());
 
     client
-        .request("system-event", json!({ "kind": "gateway.tick", "payload": { "phase": "heartbeat" } }))
+        .request(
+            "system-event",
+            json!({ "kind": "gateway.tick", "payload": { "phase": "heartbeat" } }),
+        )
         .await
         .unwrap();
     let logs = client
