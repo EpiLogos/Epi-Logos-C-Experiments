@@ -124,6 +124,44 @@ fn template_and_day_now_commands_write_real_files() {
 }
 
 #[test]
+fn flow_init_creates_flow_md_in_day_folder() {
+    let base_env = env_with_fake_obsidian();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    let result = run_epi(
+        ["vault", "flow-init", "--now", "2026-03-10T09:08:07Z"].as_slice(),
+        &env,
+    );
+    assert!(
+        result.stdout.contains("FLOW.md"),
+        "flow-init output: {}",
+        result.stdout
+    );
+
+    let flow = vault_root.join("Empty/Present/10-03-2026/FLOW.md");
+    assert!(flow.exists(), "FLOW.md not created at {}", flow.display());
+    let content = fs::read_to_string(&flow).unwrap();
+    assert!(content.contains("c_4_artifact_role: \"flow\""), "missing artifact_role in:\n{content}");
+    assert!(content.contains("m_4_nara_domain: \"journal\""), "missing nara_domain in:\n{content}");
+
+    // Idempotency: second call must not fail
+    let r2 = run_epi(
+        ["vault", "flow-init", "--now", "2026-03-10T09:08:07Z"].as_slice(),
+        &env,
+    );
+    assert!(
+        r2.stdout.contains("FLOW.md"),
+        "flow-init not idempotent: {}",
+        r2.stdout
+    );
+    // Content must not change
+    let content2 = fs::read_to_string(&flow).unwrap();
+    assert_eq!(content, content2, "flow-init must not modify on second call");
+}
+
+#[test]
 fn now_init_creates_thinking_and_thoughts_dirs() {
     let base_env = env_with_fake_obsidian();
     let vault_root = base_env.root.join("vault");

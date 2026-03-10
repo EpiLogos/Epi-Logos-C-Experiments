@@ -150,6 +150,12 @@ pub enum VaultCmd {
     /// Archive a day folder into History
     #[command(name = "archive-day")]
     ArchiveDay { date: String },
+    /// Initialize FLOW.md (CT0 daily journal) in today's Day folder
+    #[command(name = "flow-init")]
+    FlowInit {
+        #[arg(long)]
+        now: Option<String>,
+    },
     /// Interact with PASU.md (non-dual agent-user field)
     #[command(subcommand)]
     Pasu(PasuCmd),
@@ -353,6 +359,7 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
         VaultCmd::DayInit { now } => day_init(now.as_deref()),
         VaultCmd::NowInit { session_id, now } => now_init(session_id, now.as_deref()),
         VaultCmd::ArchiveDay { date } => archive_day(date),
+        VaultCmd::FlowInit { now } => flow_init(now.as_deref()),
         VaultCmd::Pasu(sub) => {
             let vr = vault_root();
             match sub {
@@ -494,6 +501,26 @@ fn route_thought(
     body.push('\n');
     write_rendered_template(&path, &body)?;
     Ok(format!("routed {}", path.display()))
+}
+
+fn flow_init(now_override: Option<&str>) -> Result<String, String> {
+    let now = parse_now(now_override)?;
+    let vr = vault_root();
+    let day_dir = day_folder(&vr, now);
+    let flow_path = day_dir.join("FLOW.md");
+    if flow_path.exists() {
+        return Ok(format!("flow-init: FLOW.md already exists (noop) {}", flow_path.display()));
+    }
+    fs::create_dir_all(&day_dir).map_err(|e| format!("create day dir: {e}"))?;
+    let context = TemplateRenderContext {
+        template_type: "flow".to_string(),
+        coordinate: None,
+        session_id: None,
+        now,
+    };
+    let body = render_template(&context, &repo_root(), &home_root())?;
+    fs::write(&flow_path, &body).map_err(|e| format!("write FLOW.md: {e}"))?;
+    Ok(format!("flow-init: created FLOW.md at {}", flow_path.display()))
 }
 
 fn archive_day(date: &str) -> Result<String, String> {
