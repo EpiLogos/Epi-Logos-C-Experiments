@@ -3,7 +3,7 @@ pub mod pasu;
 pub mod paths;
 pub mod templates;
 
-use crate::vault::paths::{archive_day_path, day_note_path, now_note_path, thought_note_path};
+use crate::vault::paths::{archive_day_path, day_folder, day_note_path, now_note_path, thought_note_path};
 use crate::vault::templates::{render_template, TemplateRenderContext};
 use chrono::{DateTime, NaiveDate, Utc};
 use clap::Subcommand;
@@ -449,7 +449,16 @@ fn day_init(now_override: Option<&str>) -> Result<String, String> {
 
 fn now_init(session_id: &str, now_override: Option<&str>) -> Result<String, String> {
     let now = parse_now(now_override)?;
-    let path = now_note_path(&vault_root(), now, session_id);
+    let vr = vault_root();
+    let now_dir = day_folder(&vr, now).join(session_id);
+
+    // Create NOW subdirectories per Hen CONTRACT
+    for subdir in &["thinking", "thoughts", "tasks", "patterns"] {
+        fs::create_dir_all(now_dir.join(subdir))
+            .map_err(|e| format!("create {subdir}/: {e}"))?;
+    }
+
+    let path = now_note_path(&vr, now, session_id);
     let context = TemplateRenderContext {
         template_type: "now".to_string(),
         coordinate: None,

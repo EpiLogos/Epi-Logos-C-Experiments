@@ -124,6 +124,38 @@ fn template_and_day_now_commands_write_real_files() {
 }
 
 #[test]
+fn now_init_creates_thinking_and_thoughts_dirs() {
+    let base_env = env_with_fake_obsidian();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    let now_result = run_epi(
+        [
+            "vault",
+            "now-init",
+            "--session-id",
+            "20260310-090807-abc123",
+            "--now",
+            "2026-03-10T09:08:07Z",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        now_result.stdout.contains("20260310-090807-abc123"),
+        "now-init output: {}",
+        now_result.stdout
+    );
+
+    let now_dir = vault_root.join("Empty/Present/10-03-2026/20260310-090807-abc123");
+    assert!(now_dir.join("thinking").exists(), "thinking/ must exist");
+    assert!(now_dir.join("thoughts").exists(), "thoughts/ must exist");
+    assert!(now_dir.join("tasks").exists(), "tasks/ must exist");
+    assert!(now_dir.join("patterns").exists(), "patterns/ must exist");
+}
+
+#[test]
 fn pasu_set_and_get_roundtrip() {
     let base_env = env_with_fake_obsidian();
     let vault_root = base_env.root.join("vault");
