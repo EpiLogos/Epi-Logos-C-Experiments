@@ -99,6 +99,19 @@ fn ct4a_and_ct4b_are_distinct_frames() {
 }
 
 #[test]
+fn builtin_template_emits_coordinate_not_bimba_coordinate() {
+    let ctx = TemplateRenderContext {
+        template_type: "now".to_string(),
+        coordinate: Some("M2".to_string()),
+        session_id: Some("20260310-090807-abc123".to_string()),
+        now: Utc.with_ymd_and_hms(2026, 3, 10, 9, 8, 7).unwrap(),
+    };
+    let rendered = render_template(&ctx, &PathBuf::from("/nonexistent"), &PathBuf::from("/home")).unwrap();
+    assert!(rendered.contains("coordinate: \"M2\""), "must emit coordinate: field, got:\n{rendered}");
+    assert!(!rendered.contains("bimbaCoordinate"), "must NOT emit bimbaCoordinate, got:\n{rendered}");
+}
+
+#[test]
 fn archive_day_path_includes_weekly_dir() {
     // 2026-03-10 is in ISO week 11
     let day = NaiveDate::from_ymd_opt(2026, 3, 10).unwrap();
