@@ -165,10 +165,7 @@ mod tests {
     async fn test_embed_batch_real() {
         let config = EmbeddingConfig::from_env().unwrap();
         let client = GeminiEmbeddingClient::new(config);
-        let results = client
-            .embed_batch(&["Hello", "World"])
-            .await
-            .unwrap();
+        let results = client.embed_batch(&["Hello", "World"]).await.unwrap();
         assert_eq!(results.len(), 2);
     }
 }

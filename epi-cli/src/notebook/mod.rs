@@ -29,7 +29,10 @@ pub fn dispatch(cmd: &NotebookCmd) {
         NotebookCmd::Ask { question } => {
             let bin = resolve_notebooklm_bin();
             if !bin.exists() {
-                eprintln!("epi notebook: notebooklm binary not found at {}", bin.display());
+                eprintln!(
+                    "epi notebook: notebooklm binary not found at {}",
+                    bin.display()
+                );
                 eprintln!("  run `epi notebook setup` to install the Python venv");
                 std::process::exit(1);
             }
@@ -41,7 +44,10 @@ pub fn dispatch(cmd: &NotebookCmd) {
         NotebookCmd::List => {
             let bin = resolve_notebooklm_bin();
             if !bin.exists() {
-                eprintln!("epi notebook: notebooklm binary not found at {}", bin.display());
+                eprintln!(
+                    "epi notebook: notebooklm binary not found at {}",
+                    bin.display()
+                );
                 eprintln!("  run `epi notebook setup` to install the Python venv");
                 std::process::exit(1);
             }
@@ -65,7 +71,10 @@ pub fn dispatch(cmd: &NotebookCmd) {
         NotebookCmd::Raw { args } => {
             let bin = resolve_notebooklm_bin();
             if !bin.exists() {
-                eprintln!("epi notebook: notebooklm binary not found at {}", bin.display());
+                eprintln!(
+                    "epi notebook: notebooklm binary not found at {}",
+                    bin.display()
+                );
                 eprintln!("  run `epi notebook setup` to install the Python venv");
                 std::process::exit(1);
             }

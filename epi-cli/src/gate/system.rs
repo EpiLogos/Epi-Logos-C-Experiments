@@ -117,11 +117,7 @@ pub fn health_snapshot(state_root: impl AsRef<Path>) -> Result<Value, String> {
     }))
 }
 
-pub fn event(
-    state_root: impl AsRef<Path>,
-    kind: &str,
-    payload: Value,
-) -> Result<Value, String> {
+pub fn event(state_root: impl AsRef<Path>, kind: &str, payload: Value) -> Result<Value, String> {
     let mut state = load_state(&state_root)?;
     let event = SystemEvent {
         kind: kind.to_owned(),
@@ -129,7 +125,10 @@ pub fn event(
     };
     state.events.push(event.clone());
     save_state(&state_root, &state)?;
-    logs::append_line(state_root, &serde_json::to_string(&event).map_err(|err| err.to_string())?)?;
+    logs::append_line(
+        state_root,
+        &serde_json::to_string(&event).map_err(|err| err.to_string())?,
+    )?;
     Ok(json!({ "ok": true, "kind": event.kind }))
 }
 

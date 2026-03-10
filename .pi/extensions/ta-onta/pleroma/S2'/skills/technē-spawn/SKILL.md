@@ -16,7 +16,7 @@ agent_affinity: eros
 
 The `techne-spawn` skill launches external CLI coding agents (gemini-cli, claude-code, codex) in the aletheia-workshop tmux session. Each spawned agent becomes a **constitutional progeny** -- sharing canonical SKILL.md files, carrying CF identity, and captured by OneContext for Night' extraction.
 
-**Spawn sequence:** pleroma-skill-proxy -> OneContext context -> mprocs window launch -> return window handle
+**Spawn sequence:** pleroma-skill-proxy -> OneContext context -> tmux window launch -> return window handle
 
 ## Invocation
 

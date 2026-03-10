@@ -1,0 +1,12 @@
+{
+  "tools": [
+    {
+      "name": "epi_techne_gnosis",
+      "command": "epi techne gnosis"
+    },
+    {
+      "name": "epi_book_gnosis",
+      "command": "epi book"
+    }
+  ]
+}

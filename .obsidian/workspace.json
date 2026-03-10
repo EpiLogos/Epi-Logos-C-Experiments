@@ -1,0 +1,295 @@
+{
+  "main": {
+    "id": "3c4438b1c77c4d37",
+    "type": "split",
+    "children": [
+      {
+        "id": "5f77150036cae568",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fef6f84f253da435",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CONTRIBUTING.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "CONTRIBUTING"
+            }
+          },
+          {
+            "id": "8fdcaa7af8ead2e8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CLAUDE.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "CLAUDE"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "504846da2d1c596f",
+    "type": "split",
+    "children": [
+      {
+        "id": "837e0ba42c20a128",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "71804f64b4afeacf",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "84e7587c4a7dc5ef",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": true,
+                "extraContext": true,
+                "sortOrder": "byModifiedTime"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "c84748ac2ea36190",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 344.5
+  },
+  "right": {
+    "id": "12dca7c8af75488e",
+    "type": "split",
+    "children": [
+      {
+        "id": "f96f0e1d01107928",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a8c49866af09c532",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Idea/Empty/Present/2026-01-15.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for 2026-01-15"
+            }
+          },
+          {
+            "id": "216ac8693c2374cb",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Idea/Empty/Present/Thread-Based-Engineering-QL-Alignment.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Thread-Based-Engineering-QL-Alignment"
+            }
+          },
+          {
+            "id": "3b7d90d6eff493bd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "eab9cb9b2e106144",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "5e5723c30337f71a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Idea/Empty/Present/Thread-Based-Engineering-QL-Alignment.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Thread-Based-Engineering-QL-Alignment"
+            }
+          },
+          {
+            "id": "23f9d97a8ff517b5",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "lucide-ghost",
+              "title": "calendar"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "audio-recorder:Start/stop recording": false,
+      "obsidian-kanban:Create new board": false,
+      "terminal:Open terminal": false,
+      "obsidian-shellcommands:Shell commands: Custom variables": false,
+      "obsidian-advanced-slides:Show Slide Preview": false
+    }
+  },
+  "active": "71804f64b4afeacf",
+  "lastOpenFiles": [
+    "epi-cli/target/debug/deps/graph_retrieval-259ff0edb04487b0.graph_retrieval.5f66c408ac63052e-cgu.2.rcgu.o",
+    "epi-cli/target/debug/deps/gate_protocol-ebfa93b33e2dd38e",
+    "epi-cli/target/debug/deps/graph_sync-179d4d0da82accab.graph_sync.11458392d67df412-cgu.0.rcgu.o",
+    "epi-cli/target/debug/deps/graph_retrieval-259ff0edb04487b0.graph_retrieval.5f66c408ac63052e-cgu.4.rcgu.o",
+    "epi-cli/target/debug/deps/graph_retrieval-259ff0edb04487b0.graph_retrieval.5f66c408ac63052e-cgu.1.rcgu.o",
+    "epi-cli/target/debug/deps/agent_hooks-311667793d15559b.d",
+    "epi-cli/target/debug/deps/agent_vak-eedb7a79b856db64.agent_vak.6278e54a17e778ae-cgu.0.rcgu.o",
+    "epi-cli/target/debug/deps/agent_plugins-3cc3eb110691e360.640jr391zdnkfq7124hcebawv.rcgu.o",
+    "epi-cli/target/debug/deps/vault_commands-b60656145274d434",
+    "epi-cli/target/debug/deps/graph_retrieval-259ff0edb04487b0.graph_retrieval.5f66c408ac63052e-cgu.5.rcgu.o",
+    "epi-cli/target/debug/deps/graph_sync-179d4d0da82accab.c6lw7r6y2e2ypaxxkw0wos994.rcgu.o",
+    "docs/prompts/nara-subtle-body-impl.md",
+    "docs/prompts/nara-runtime-impl.md",
+    "docs/specs/M/M4-nara-subtle-body-map.md",
+    "docs/plans/2026-03-10-nara-runtime-full-plan.md",
+    "Idea/Pratibimba/Self/PASU.md",
+    "_staging/retired/notebooklm/SKILL.md",
+    "docs/The_Doctrine_of_Vibration_Pages_60-85.md",
+    "Idea/Empty/Present/FLOW-2026-03-10.md",
+    "docs/prompts/ta-onta-dev-session.md",
+    "Idea/Bimba/World/FLOW.md",
+    "Idea/Pratibimba/System/README.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/README.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/LICENSE.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/CHANGELOG.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/date-fns/SECURITY.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/date-fns/README.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/date-fns/LICENSE.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/date-fns/CHANGELOG.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/lucide-react/README.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/docs/webpack.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/docs/upgradeGuide.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/docs/unicodeTokens.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/docs/logo.svg",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/docs/timeZones.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/docs/logotype.svg",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/docs/release.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/concurrently/node_modules/date-fns/docs/i18nContributionGuide.md",
+    "Idea/Pratibimba/System/epi-app/node_modules/date-fns/docs/logo.svg",
+    "Idea/Pratibimba/System/epi-app/node_modules/date-fns/docs/logotype.svg",
+    "Idea/Pratibimba/System/epi-app/node_modules/force-graph/example/img-nodes/imgs/tiger.jpg",
+    "Idea/Pratibimba/System/epi-app/node_modules/force-graph/example/img-nodes/imgs/whale.jpg",
+    "Idea/Pratibimba/System/epi-app/node_modules/force-graph/example/img-nodes/imgs/squirrel.jpg",
+    "Idea/Pratibimba/System/epi-app/node_modules/force-graph/example/img-nodes/imgs/panda.jpg",
+    "Idea/Pratibimba/System/epi-app/node_modules/force-graph/example/img-nodes/imgs/owl.jpg",
+    "Idea/Pratibimba/System/epi-app/node_modules/force-graph/example/img-nodes/imgs/octopus.jpg",
+    "Idea/Pratibimba/Self/Action/History/2026/01/W04/23/2026-01-23.canvas",
+    "Idea/Pratibimba/Self/Action/History/2026/01/W02/12/p0-id1/Bimba-2026-01-12-dev-planning.canvas",
+    "Idea/Pratibimba/Self/Action/History/2026/02/05/ARCHIVED-2026-02-05/OPENCLAW_INTEGRATION/OPENCLAW_CORRECT_COMPARISON.canvas",
+    "Idea/Pratibimba/Self/Action/History/2026/02/05/ARCHIVED-2026-02-05/OPENCLAW_INTEGRATION.canvas",
+    "Idea/Empty/Present/OPENCLAW_INTEGRATION/OPENCLAW_CORRECT_COMPARISON.canvas",
+    "Idea/Present/ARCHIVED-2026-02-05/OPENCLAW_INTEGRATION.canvas",
+    "Idea/Empty/Present/OPENCLAW_INTEGRATION.canvas",
+    "Idea/Pratibimba/Self/Thought/OPENCLAW_COMPARISON.canvas",
+    "Idea/Bimba/World/Types/Coordinates/C/C0/C0.canvas",
+    "Idea/Bimba/World/Types/Coordinates/L/L5/L5'/L5'.canvas"
+  ]
+}

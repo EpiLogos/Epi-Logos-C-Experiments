@@ -75,7 +75,10 @@ pub fn run(cmd: &SkillCmd, json: bool) -> Result<String, String> {
     }
 }
 
-pub fn discover_under(plugin_root: &Path, registry: &CapabilityRegistry) -> (Vec<SkillDefinition>, Vec<String>) {
+pub fn discover_under(
+    plugin_root: &Path,
+    registry: &CapabilityRegistry,
+) -> (Vec<SkillDefinition>, Vec<String>) {
     let skills_dir = plugin_root.join("skills");
     let mut skill_files = Vec::new();
     collect_skill_files(&skills_dir, &mut skill_files);
@@ -93,9 +96,16 @@ pub fn discover_under(plugin_root: &Path, registry: &CapabilityRegistry) -> (Vec
     (definitions, errors)
 }
 
-pub fn parse_skill(path: &Path, registry: &CapabilityRegistry) -> Result<SkillDefinition, Vec<String>> {
-    let contents = fs::read_to_string(path)
-        .map_err(|err| vec![format!("{}: unable to read skill file: {err}", path.display())])?;
+pub fn parse_skill(
+    path: &Path,
+    registry: &CapabilityRegistry,
+) -> Result<SkillDefinition, Vec<String>> {
+    let contents = fs::read_to_string(path).map_err(|err| {
+        vec![format!(
+            "{}: unable to read skill file: {err}",
+            path.display()
+        )]
+    })?;
     let (frontmatter, body) = parse_markdown_frontmatter(&contents, path)?;
     let metadata = serde_yaml::from_value::<SkillFrontmatter>(frontmatter).map_err(|err| {
         vec![format!(
@@ -106,7 +116,10 @@ pub fn parse_skill(path: &Path, registry: &CapabilityRegistry) -> Result<SkillDe
 
     let mut errors = Vec::new();
     if metadata.name.trim().is_empty() {
-        errors.push(format!("{}: skill `name` must not be empty", display_path(path)));
+        errors.push(format!(
+            "{}: skill `name` must not be empty",
+            display_path(path)
+        ));
     }
     if metadata.description.trim().is_empty() {
         errors.push(format!(
@@ -115,7 +128,10 @@ pub fn parse_skill(path: &Path, registry: &CapabilityRegistry) -> Result<SkillDe
         ));
     }
     if body.trim().is_empty() {
-        errors.push(format!("{}: skill body must not be empty", display_path(path)));
+        errors.push(format!(
+            "{}: skill body must not be empty",
+            display_path(path)
+        ));
     }
     errors.extend(
         registry

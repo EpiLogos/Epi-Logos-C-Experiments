@@ -189,9 +189,9 @@ fn duplicate_name_errors<'a>(
     seen.into_iter()
         .filter(|(_, paths)| paths.len() > 1)
         .flat_map(|(name, paths)| {
-            paths.into_iter().map(move |path| {
-                format!("{path}: duplicate {noun} name `{name}` in plugin bundle")
-            })
+            paths
+                .into_iter()
+                .map(move |path| format!("{path}: duplicate {noun} name `{name}` in plugin bundle"))
         })
         .collect()
 }

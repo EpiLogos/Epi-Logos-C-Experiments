@@ -72,10 +72,7 @@ impl<'a> SyncCoordinator<'a> {
         for (key, links) in &arrays {
             let targets: Vec<String> = links.iter().map(|l| l.target.clone()).collect();
             let kv = vec![(key.clone(), targets)];
-            rel_count += self
-                .rel_manager
-                .create_from_frontmatter(coord, &kv)
-                .await?;
+            rel_count += self.rel_manager.create_from_frontmatter(coord, &kv).await?;
         }
 
         Ok(SyncResult {
@@ -104,23 +101,15 @@ mod tests {
     #[test]
     fn test_invalid_coordinate_rejected() {
         // We can test the validation logic without Neo4j
-        let yaml: serde_yaml::Value =
-            serde_yaml::from_str("coordinate: \"INVALID\"").unwrap();
-        let coord = yaml
-            .get("coordinate")
-            .and_then(|v| v.as_str())
-            .unwrap();
+        let yaml: serde_yaml::Value = serde_yaml::from_str("coordinate: \"INVALID\"").unwrap();
+        let coord = yaml.get("coordinate").and_then(|v| v.as_str()).unwrap();
         assert!(!crate::vault::frontmatter::is_valid_coordinate(coord));
     }
 
     #[test]
     fn test_valid_coordinate_accepted() {
-        let yaml: serde_yaml::Value =
-            serde_yaml::from_str("coordinate: \"M5\"").unwrap();
-        let coord = yaml
-            .get("coordinate")
-            .and_then(|v| v.as_str())
-            .unwrap();
+        let yaml: serde_yaml::Value = serde_yaml::from_str("coordinate: \"M5\"").unwrap();
+        let coord = yaml.get("coordinate").and_then(|v| v.as_str()).unwrap();
         assert!(crate::vault::frontmatter::is_valid_coordinate(coord));
     }
 }

@@ -60,7 +60,9 @@ pub fn spawn_epi_background(args: &[&str], env: TestEnv) -> BackgroundEpiProcess
     command.env_remove("EPI_AGENT_DIR");
     command.env_remove("PI_CODING_AGENT_DIR");
 
-    let child = command.spawn().expect("background epi process should start");
+    let child = command
+        .spawn()
+        .expect("background epi process should start");
     BackgroundEpiProcess { env, child }
 }
 
@@ -140,12 +142,9 @@ impl TestGatewayClient {
                 continue;
             }
 
-            let response: ResponseFrame = serde_json::from_str(
-                message
-                    .to_text()
-                    .expect("response should be text"),
-            )
-            .expect("response should match protocol shape");
+            let response: ResponseFrame =
+                serde_json::from_str(message.to_text().expect("response should be text"))
+                    .expect("response should match protocol shape");
 
             if response.id != id {
                 continue;

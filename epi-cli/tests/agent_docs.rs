@@ -23,6 +23,10 @@ fn pleroma_port_matrix_lists_all_capability_families() {
         "repl",
         "notebooklm",
     ] {
-        assert!(text.contains(needle), "missing {needle} in {}", matrix.display());
+        assert!(
+            text.contains(needle),
+            "missing {needle} in {}",
+            matrix.display()
+        );
     }
 }

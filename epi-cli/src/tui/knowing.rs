@@ -556,8 +556,8 @@ fn exit_terminal() -> color_eyre::Result<()> {
 mod tests {
     use super::*;
     use crate::core::knowing::types::{
-        EssenceFacet, VimarsaFieldFacet, KnowingAction, LatestSnapshotFacet, NotebookPulseFacet,
-        RelationalFieldFacet, StructuralCorrespondence,
+        EssenceFacet, KnowingAction, LatestSnapshotFacet, NotebookPulseFacet, RelationalFieldFacet,
+        StructuralCorrespondence, VimarsaFieldFacet,
     };
     use std::collections::BTreeMap;
     use std::path::PathBuf;

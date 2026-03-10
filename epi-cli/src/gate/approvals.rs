@@ -34,11 +34,7 @@ impl Default for ApprovalState {
     }
 }
 
-pub fn request(
-    state_root: impl AsRef<Path>,
-    command: &str,
-    node: &str,
-) -> Result<Value, String> {
+pub fn request(state_root: impl AsRef<Path>, command: &str, node: &str) -> Result<Value, String> {
     let mut state = load_state(&state_root)?;
     let approval_id = Uuid::new_v4().to_string();
     state.approvals.push(ApprovalRecord {

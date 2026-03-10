@@ -83,11 +83,7 @@ fn aperture_project_for_coord(coord: &str) -> &'static str {
     }
 }
 
-pub fn build_vimarsa_field(
-    coord: &str,
-    project: Option<&str>,
-    limit: usize,
-) -> VimarsaFieldFacet {
+pub fn build_vimarsa_field(coord: &str, project: Option<&str>, limit: usize) -> VimarsaFieldFacet {
     let project_scope = project.map(str::to_string);
 
     let script = match resolve_vimarsa_script() {

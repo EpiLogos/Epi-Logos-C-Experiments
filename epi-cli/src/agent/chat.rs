@@ -7,8 +7,7 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 
 pub fn run(agent: Option<&str>, initial_prompt: Option<&str>) -> color_eyre::Result<()> {
-    let layout = AgentLayout::resolve(agent)
-        .map_err(|e| color_eyre::eyre::eyre!(e))?;
+    let layout = AgentLayout::resolve(agent).map_err(|e| color_eyre::eyre::eyre!(e))?;
 
     // Check if pi is available
     let pi_check = Command::new("pi").arg("--version").output();
@@ -60,9 +59,8 @@ pub fn run(agent: Option<&str>, initial_prompt: Option<&str>) -> color_eyre::Res
 
     // TUI event loop
     crossterm::terminal::enable_raw_mode()?;
-    let mut terminal = ratatui::Terminal::new(
-        ratatui::backend::CrosstermBackend::new(std::io::stderr()),
-    )?;
+    let mut terminal =
+        ratatui::Terminal::new(ratatui::backend::CrosstermBackend::new(std::io::stderr()))?;
     crossterm::execute!(std::io::stderr(), crossterm::terminal::EnterAlternateScreen)?;
 
     let mut input = String::new();
@@ -98,11 +96,7 @@ pub fn run(agent: Option<&str>, initial_prompt: Option<&str>) -> color_eyre::Res
                 })
                 .collect();
             let para = Paragraph::new(text)
-                .block(
-                    Block::default()
-                        .borders(Borders::ALL)
-                        .title("Conversation"),
-                )
+                .block(Block::default().borders(Borders::ALL).title("Conversation"))
                 .scroll((scroll, 0))
                 .wrap(Wrap { trim: false });
             f.render_widget(para, chunks[1]);
@@ -121,18 +115,13 @@ pub fn run(agent: Option<&str>, initial_prompt: Option<&str>) -> color_eyre::Res
                 if key.kind == KeyEventKind::Press {
                     match key.code {
                         KeyCode::Esc => break,
-                        KeyCode::Char('c')
-                            if key.modifiers.contains(KeyModifiers::CONTROL) =>
-                        {
+                        KeyCode::Char('c') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             break
                         }
                         KeyCode::Enter => {
                             if !input.is_empty() {
                                 let msg = input.clone();
-                                messages
-                                    .lock()
-                                    .unwrap()
-                                    .push((format!("> {}", msg), true));
+                                messages.lock().unwrap().push((format!("> {}", msg), true));
                                 let _ = writeln!(stdin, "{}", msg);
                                 input.clear();
                             }
@@ -151,10 +140,7 @@ pub fn run(agent: Option<&str>, initial_prompt: Option<&str>) -> color_eyre::Res
     }
 
     // Cleanup
-    crossterm::execute!(
-        std::io::stderr(),
-        crossterm::terminal::LeaveAlternateScreen
-    )?;
+    crossterm::execute!(std::io::stderr(), crossterm::terminal::LeaveAlternateScreen)?;
     crossterm::terminal::disable_raw_mode()?;
     let _ = child.kill();
 

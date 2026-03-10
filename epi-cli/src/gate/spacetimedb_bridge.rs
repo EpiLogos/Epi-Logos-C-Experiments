@@ -40,11 +40,7 @@ impl SpacetimeBridge {
         )
     }
 
-    pub fn publish_session(
-        &self,
-        identifier: &str,
-        now_alias: Option<&str>,
-    ) -> Result<(), String> {
+    pub fn publish_session(&self, identifier: &str, now_alias: Option<&str>) -> Result<(), String> {
         let store = SessionStore::new(&self.state_root)?;
         let record = store.resolve(identifier)?;
         let mut payload = json!({

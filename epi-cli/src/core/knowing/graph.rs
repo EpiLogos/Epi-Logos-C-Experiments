@@ -1,5 +1,5 @@
-use color_eyre::eyre::Result;
 use crate::graph::client::{Neo4jClient, Neo4jConfig};
+use color_eyre::eyre::Result;
 use neo4rs::query;
 use std::time::Duration;
 
@@ -35,17 +35,17 @@ fn try_build_relational_field(coord: &str) -> Result<RelationalFieldFacet> {
                 .await?;
 
         let chain_rows = client
-                .run_query(
-                    query(
-                        "MATCH (n:Bimba {coordinate: $coord})-[r]->(m:Bimba) \
+            .run_query(
+                query(
+                    "MATCH (n:Bimba {coordinate: $coord})-[r]->(m:Bimba) \
                          RETURN type(r) AS rel_type, m.coordinate AS coord \
                          UNION \
                          MATCH (m:Bimba)-[r]->(n:Bimba {coordinate: $coord}) \
                          RETURN type(r) AS rel_type, m.coordinate AS coord",
-                    )
-                    .param("coord", coord.to_owned()),
                 )
-                .await?;
+                .param("coord", coord.to_owned()),
+            )
+            .await?;
 
         let constellation: Vec<FacetItem> = constellation_rows
             .iter()

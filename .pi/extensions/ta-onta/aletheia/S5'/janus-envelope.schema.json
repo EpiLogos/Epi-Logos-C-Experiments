@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JanusEnvelope",
+  "description": "Handoff schema from Chronos (evening trigger) to Aletheia (Möbius crystallisation pass)",
+  "type": "object",
+  "required": ["day_id", "session_ids", "thought_count_by_bucket", "archive_path", "trigger_type"],
+  "properties": {
+    "day_id": {
+      "type": "string",
+      "description": "Day being crystallised (DD-MM-YYYY format)",
+      "pattern": "^\\d{2}-\\d{2}-\\d{4}$"
+    },
+    "session_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All session IDs active on this day"
+    },
+    "thought_count_by_bucket": {
+      "type": "object",
+      "description": "Count of thought artifacts per T-bucket",
+      "properties": {
+        "T0": { "type": "integer", "minimum": 0 },
+        "T1": { "type": "integer", "minimum": 0 },
+        "T2": { "type": "integer", "minimum": 0 },
+        "T3": { "type": "integer", "minimum": 0 },
+        "T4": { "type": "integer", "minimum": 0 },
+        "T5": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "archive_path": {
+      "type": "string",
+      "description": "Path where the Day folder was archived (must contain W{WW})"
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": ["cron_evening", "manual", "klein_mode"],
+      "description": "What triggered the Möbius crystallisation pass"
+    },
+    "seed_md_path": {
+      "type": "string",
+      "description": "Path to write SEED.md morning-context package"
+    },
+    "claude_mem_session_ids": {
+      "type": "object",
+      "description": "Map of session_id → claude-mem session_id for night' promotion pass",
+      "additionalProperties": { "type": "string" }
+    },
+    "child_session_map": {
+      "type": "object",
+      "description": "Map of parent_session_id → [child_session_ids]. Used to batch subagent sessions with their parent in the Gnosis promotion pass.",
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    }
+  }
+}

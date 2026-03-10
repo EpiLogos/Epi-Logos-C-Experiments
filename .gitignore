@@ -3,11 +3,27 @@ epi-logos
 test_runner
 /test_*
 *.o
+*.a
+*.dSYM/
 libepilogos.so
 libepilogos.dylib
+libepilogos.a
 
 # Rust
 epi-cli/target/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node / Electron
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo
 
 # macOS
 .DS_Store
@@ -17,3 +33,8 @@ epi-cli/target/
 
 # Local agent settings
 .claude/settings.local.json
+
+# Secrets (never commit)
+*.env
+!*.env.template
+secrets.env

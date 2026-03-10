@@ -1,5 +1,7 @@
 use crate::graph::client::Neo4jClient;
 
+pub const SCHEMA_VERSION: &str = "2026-03-10";
+
 /// Unique constraints on Bimba nodes.
 const CONSTRAINTS: &[&str] = &[
     "CREATE CONSTRAINT bimba_coord_unique IF NOT EXISTS FOR (n:Bimba) REQUIRE n.coordinate IS UNIQUE",
@@ -72,14 +74,28 @@ mod tests {
     #[test]
     fn test_constraints_use_bimba_label() {
         for c in CONSTRAINTS {
-            assert!(c.contains("(n:Bimba)"), "constraint should use Bimba label: {}", c);
-            assert!(!c.contains("BimbaCoordinate"), "constraint should not use old label: {}", c);
+            assert!(
+                c.contains("(n:Bimba)"),
+                "constraint should use Bimba label: {}",
+                c
+            );
+            assert!(
+                !c.contains("BimbaCoordinate"),
+                "constraint should not use old label: {}",
+                c
+            );
         }
     }
 
     #[test]
     fn test_constraints_use_coordinate_property() {
-        assert!(CONSTRAINTS[0].contains("n.coordinate"), "first constraint should use coordinate property");
-        assert!(!CONSTRAINTS[0].contains("bimbaCoordinate"), "should not use old property name");
+        assert!(
+            CONSTRAINTS[0].contains("n.coordinate"),
+            "first constraint should use coordinate property"
+        );
+        assert!(
+            !CONSTRAINTS[0].contains("bimbaCoordinate"),
+            "should not use old property name"
+        );
     }
 }

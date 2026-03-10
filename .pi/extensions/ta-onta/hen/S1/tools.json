@@ -1,0 +1,16 @@
+{
+  "tools": [
+    {
+      "name": "epi_vault_read_write",
+      "command": "epi vault"
+    },
+    {
+      "name": "epi_vault_template_invoke",
+      "command": "epi vault template-invoke"
+    },
+    {
+      "name": "epi_vault_thought_route",
+      "command": "epi vault thought-route"
+    }
+  ]
+}

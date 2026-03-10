@@ -29,7 +29,11 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
     let state = load_state(&state_root)?;
     let invocation_surface = skills::invocation_surface(&state_root)?;
 
-    let mut channel_order = vec!["telegram".to_owned(), "slack".to_owned(), "whatsapp".to_owned()];
+    let mut channel_order = vec![
+        "telegram".to_owned(),
+        "slack".to_owned(),
+        "whatsapp".to_owned(),
+    ];
     for key in state.channels.keys() {
         if !channel_order.contains(key) {
             channel_order.push(key.clone());
@@ -39,7 +43,11 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
     let channels = channel_order
         .iter()
         .map(|id| {
-            let record = state.channels.get(id).cloned().unwrap_or_else(default_channel_record);
+            let record = state
+                .channels
+                .get(id)
+                .cloned()
+                .unwrap_or_else(default_channel_record);
             (
                 id.clone(),
                 json!({
@@ -59,7 +67,11 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
     let channel_accounts = channel_order
         .iter()
         .map(|id| {
-            let record = state.channels.get(id).cloned().unwrap_or_else(default_channel_record);
+            let record = state
+                .channels
+                .get(id)
+                .cloned()
+                .unwrap_or_else(default_channel_record);
             (
                 id.clone(),
                 json!([{

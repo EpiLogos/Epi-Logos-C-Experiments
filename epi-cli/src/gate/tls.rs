@@ -28,8 +28,7 @@ impl GatewayTlsRuntime {
             .map_err(|err| err.to_string())?;
 
             fs::write(&cert_path, cert.cert.pem()).map_err(|err| err.to_string())?;
-            fs::write(&key_path, cert.key_pair.serialize_pem())
-                .map_err(|err| err.to_string())?;
+            fs::write(&key_path, cert.key_pair.serialize_pem()).map_err(|err| err.to_string())?;
         }
 
         let cert_bytes = fs::read(&cert_path).map_err(|err| err.to_string())?;

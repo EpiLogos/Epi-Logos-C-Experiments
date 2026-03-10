@@ -950,7 +950,8 @@ fn knowing_family_coord(
     } else {
         knowing::DossierMode::Full
     };
-    let dossier = knowing::build_family_dossier_with_mode(family, pos, inverted, project, limit, mode);
+    let dossier =
+        knowing::build_family_dossier_with_mode(family, pos, inverted, project, limit, mode);
 
     if refresh {
         knowing::persist_dossier_snapshot(&dossier, project)?;
@@ -1167,9 +1168,7 @@ fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
         println!("# — Epi-Logos Project");
         println!("Essence:");
         println!("  {}", pithy);
-        println!(
-            "  Type: RootProject | Layer: 0 (The Inversion Act)"
-        );
+        println!("  Type: RootProject | Layer: 0 (The Inversion Act)");
         println!(
             "  Subtitle: A living mandala where consciousness recognizes itself through technological mirror"
         );
@@ -1183,12 +1182,7 @@ fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
             println!();
             println!("Help Topics (epi help <topic>):");
             for (coord, name, cn) in &help_topics {
-                println!(
-                    "  {}  {:<14} {}",
-                    coord,
-                    name.to_lowercase(),
-                    cn
-                );
+                println!("  {}  {:<14} {}", coord, name.to_lowercase(), cn);
             }
         }
 
@@ -1437,10 +1431,7 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
             println!("{} — {} sub-branch", raw, display_name);
         }
         if let Some(r) = root {
-            println!(
-                "  Root: {} ({})",
-                branch_label, PSYCHOID_NAMES[r as usize]
-            );
+            println!("  Root: {} ({})", branch_label, PSYCHOID_NAMES[r as usize]);
         } else {
             println!("  Root: # (Epi-Logos Project)");
         }
@@ -1607,10 +1598,16 @@ fn knowing_family(fam_str: &str, json: bool) -> color_eyre::Result<()> {
         }
         _ if fam_str.eq_ignore_ascii_case("VAK") || fam_str.eq_ignore_ascii_case("R") => {
             let vak_data: [(&str, &str); 6] = [
-                ("CPF", "Category-Position-Frame — cross-coordinate context mapping"),
+                (
+                    "CPF",
+                    "Category-Position-Frame — cross-coordinate context mapping",
+                ),
                 ("CT", "Context-Time — temporal frame operations"),
                 ("CP", "Context-Position — positional frame instantiation"),
-                ("CF_R", "Context-Frame — #4 Lemniscate anchor, primary nesting"),
+                (
+                    "CF_R",
+                    "Context-Frame — #4 Lemniscate anchor, primary nesting",
+                ),
                 ("CFP", "Context-Frame-Position — nested frame operations"),
                 ("CS", "Context-System — system-wide contextual state"),
             ];

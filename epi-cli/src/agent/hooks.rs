@@ -196,14 +196,14 @@ pub fn load_inventory(path: &Path) -> Result<Vec<HookAction>, Vec<String>> {
 }
 
 fn load_hooks_file(path: &Path) -> Result<HooksFile, Vec<String>> {
-    let contents = fs::read_to_string(path)
-        .map_err(|err| vec![format!("{}: unable to read hooks file: {err}", display_path(path))])?;
-    serde_json::from_str::<HooksFile>(&contents).map_err(|err| {
+    let contents = fs::read_to_string(path).map_err(|err| {
         vec![format!(
-            "{}: invalid hooks JSON: {err}",
+            "{}: unable to read hooks file: {err}",
             display_path(path)
         )]
-    })
+    })?;
+    serde_json::from_str::<HooksFile>(&contents)
+        .map_err(|err| vec![format!("{}: invalid hooks JSON: {err}", display_path(path))])
 }
 
 fn validate_hooks(path: &Path, file: HooksFile) -> (Vec<HookAction>, Vec<String>) {
@@ -247,7 +247,8 @@ fn validate_hooks(path: &Path, file: HooksFile) -> (Vec<HookAction>, Vec<String>
                 None
             };
 
-            if hook.hook_type == "prompt" && hook.prompt.as_deref().unwrap_or("").trim().is_empty() {
+            if hook.hook_type == "prompt" && hook.prompt.as_deref().unwrap_or("").trim().is_empty()
+            {
                 errors.push(format!(
                     "{}: hook event `{}` is missing `prompt`",
                     display_path(path),
@@ -283,13 +284,21 @@ fn validate_hooks(path: &Path, file: HooksFile) -> (Vec<HookAction>, Vec<String>
     (events, errors)
 }
 
-fn run_command_hook(command_path: &Path, fixture: &[u8]) -> Result<(Option<Value>, String), String> {
+fn run_command_hook(
+    command_path: &Path,
+    fixture: &[u8],
+) -> Result<(Option<Value>, String), String> {
     let mut child = Command::new(command_path)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .map_err(|err| format!("{}: failed to spawn hook command: {err}", command_path.display()))?;
+        .map_err(|err| {
+            format!(
+                "{}: failed to spawn hook command: {err}",
+                command_path.display()
+            )
+        })?;
 
     if let Some(stdin) = child.stdin.as_mut() {
         stdin.write_all(fixture).map_err(|err| {

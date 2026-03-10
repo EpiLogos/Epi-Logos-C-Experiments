@@ -10,9 +10,11 @@ mod install;
 mod models;
 mod plugin_manifest;
 mod plugins;
+mod session;
 mod skills;
 mod spawn;
 mod subagents;
+pub mod vak;
 
 use clap::{Args, Subcommand};
 use std::path::PathBuf;
@@ -114,6 +116,29 @@ pub enum AgentCmd {
         /// Initial prompt (optional)
         prompt: Option<String>,
     },
+    /// Manage workspace-bound Khora session lifecycle
+    Session {
+        #[command(subcommand)]
+        cmd: session::SessionCmd,
+    },
+    /// Evaluate VAK coordinates for a task
+    #[command(name = "vak")]
+    Vak {
+        #[command(subcommand)]
+        cmd: VakCmd,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum VakCmd {
+    /// Assign 6-layer coordinates (CPF/CT/CP/CF/CFP/CS) to a task
+    Evaluate {
+        /// Task description to evaluate
+        task: String,
+        /// Output as JSON
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
@@ -133,9 +158,7 @@ pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
             agent,
             plugin_dirs,
             prompt,
-        } => {
-            spawn::spawn(agent.as_deref(), plugin_dirs, prompt.as_deref(), json)
-        }
+        } => spawn::spawn(agent.as_deref(), plugin_dirs, prompt.as_deref(), json),
         AgentCmd::Attach { agent, session_id } => spawn::attach(agent.as_deref(), session_id, json),
         AgentCmd::Run {
             agent,
@@ -143,10 +166,31 @@ pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
             args,
         } => spawn::run_pi(agent.as_deref(), plugin_dirs, args, json),
         AgentCmd::Chat { agent, prompt } => {
-            chat::run(agent.as_deref(), prompt.as_deref())
-                .map_err(|e| e.to_string())?;
+            chat::run(agent.as_deref(), prompt.as_deref()).map_err(|e| e.to_string())?;
             Ok(String::new())
         }
+        AgentCmd::Session { cmd } => session::run(cmd, json),
+        AgentCmd::Vak { cmd } => match cmd {
+            VakCmd::Evaluate { task, json: as_json } => {
+                let result = vak::evaluate_vak(task);
+                if *as_json || json {
+                    Ok(serde_json::to_string_pretty(&result).unwrap_or_default())
+                } else {
+                    let agent = vak::cf_to_agent(result.cf.as_deref().unwrap_or(""));
+                    Ok(format!(
+                        "CPF: {}\nCT:  {}\nCP:  {}\nCF:  {} → agent: {}\nCFP: {}\nCS:  {}\n{}",
+                        result.cpf.as_deref().unwrap_or("-"),
+                        result.ct.as_deref().unwrap_or("-"),
+                        result.cp.as_deref().unwrap_or("-"),
+                        result.cf.as_deref().unwrap_or("-"),
+                        agent,
+                        result.cfp.as_deref().unwrap_or("-"),
+                        result.cs.as_deref().unwrap_or("-"),
+                        result.rationale.as_deref().unwrap_or(""),
+                    ))
+                }
+            }
+        },
     }
 }
 

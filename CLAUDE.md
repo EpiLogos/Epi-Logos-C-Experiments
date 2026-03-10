@@ -13,9 +13,9 @@ This document emerges from a rigorous **"ur-process"** that rejects "vibe coding
 
 1. **You (The Architect)** provide "onto-code" — rational-architectural-intuition expressed in philosophical language
 2. **Claude (The Translator)** converts onto-code into structured pseudocode with hardware-level pedagogy
-3. **You (The Implementer)** write the actual C code, understanding every layer from silicon to symbol
+3. **Claude (The Implementer)** write the actual C code, guiding understanding of every layer from silicon to symbol
 
-This protocol ensures roles are well-defined: Human = Ontological Vision + Final Implementation; AI = Technical Translation + Educational Guidance.
+This protocol ensures roles are well-defined: Human = Ontological Vision + Final Validation; AI = Technical Translation + Implementation + Educational Guidance.
 
 ---
 
@@ -150,7 +150,7 @@ Each family manifests the #0-#5 archetypes:
 | Coordinate | Full Composition | Function | Context Frame |
 |------------|------------------|----------|---------------|
 | **cpf** | **C**ategory-**P**osition-**F**rame | Cross-coordinate context mapping; bridges C and P families | `(0/1)` — Non-dual binary |
-| **ct** | **C**ontext-**T**ime | Temporal frame operations; manages processual flow | `(0/1/2)` — The Trika |
+| **ct** | **C**ontent-**T**ype | Temporal frame of operations, frozen process; manages processual flow in artifacts | `(0/1/2)` — The Trika |
 | **cp** | **C**ontext-**P**osition | Positional frame instantiation; locates in semantic space | `(4.0/1-4.4/5)` — Fractal doubling |
 | **cf** | **C**ontext-**F**rame | **The #4 Lemniscate anchor**; primary nesting operator | `(5/0)` — Möbius return |
 | **cfp** | **C**ontext-**F**rame-**P**osition | Nested frame operations; compositional weaving | Custom frames |

@@ -115,11 +115,7 @@ pub fn rename(state_root: impl AsRef<Path>, node: &str, name: &str) -> Result<Va
     Ok(json!({ "node": name }))
 }
 
-pub fn invoke(
-    state_root: impl AsRef<Path>,
-    node: &str,
-    command: &str,
-) -> Result<Value, String> {
+pub fn invoke(state_root: impl AsRef<Path>, node: &str, command: &str) -> Result<Value, String> {
     let mut state = load_state(&state_root)?;
     if !state.nodes.contains_key(node) {
         state.nodes.insert(

@@ -53,11 +53,7 @@ impl<'a> DatasetImporter<'a> {
                 set_parts.push(format!("n.essence = '{}'", escape_cypher(truncated)));
             }
             if let Some(cn) = node.get("coreNature").and_then(|v| v.as_str()) {
-                let truncated = if cn.len() > 1000 {
-                    &cn[..1000]
-                } else {
-                    cn
-                };
+                let truncated = if cn.len() > 1000 { &cn[..1000] } else { cn };
                 set_parts.push(format!("n.core_nature = '{}'", escape_cypher(truncated)));
             }
 
@@ -118,7 +114,10 @@ impl<'a> DatasetImporter<'a> {
             match self.client.run(&cypher).await {
                 Ok(_) => count += 1,
                 Err(e) => {
-                    eprintln!("  warn: skip rel {} -[{}]-> {}: {}", source, rel_type, target, e);
+                    eprintln!(
+                        "  warn: skip rel {} -[{}]-> {}: {}",
+                        source, rel_type, target, e
+                    );
                 }
             }
         }
@@ -140,10 +139,26 @@ impl<'a> DatasetImporter<'a> {
 
         // M-branches in order
         let branches = [
-            ("M0 Anuttara", "nodes_anuttara.json", "relations_anuttara.json"),
-            ("M1 Paramasiva", "nodes_paramasiva.json", "relations_paramasiva.json"),
-            ("M2 Parashakti", "nodes_parashakti.json", "relations_parashakti.json"),
-            ("M3 Mahamaya", "nodes_mahamaya.json", "relations_mahamaya.json"),
+            (
+                "M0 Anuttara",
+                "nodes_anuttara.json",
+                "relations_anuttara.json",
+            ),
+            (
+                "M1 Paramasiva",
+                "nodes_paramasiva.json",
+                "relations_paramasiva.json",
+            ),
+            (
+                "M2 Parashakti",
+                "nodes_parashakti.json",
+                "relations_parashakti.json",
+            ),
+            (
+                "M3 Mahamaya",
+                "nodes_mahamaya.json",
+                "relations_mahamaya.json",
+            ),
             ("M4 Nara", "nodes_nara.json", "relations_nara.json"),
             ("M5 Epii", "nodes_epii.json", "relations_epii.json"),
         ];
@@ -163,10 +178,7 @@ impl<'a> DatasetImporter<'a> {
             }
         }
 
-        Ok(format!(
-            "Dataset import complete:\n{}",
-            report.join("\n")
-        ))
+        Ok(format!("Dataset import complete:\n{}", report.join("\n")))
     }
 }
 

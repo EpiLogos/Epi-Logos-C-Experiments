@@ -1,4 +1,4 @@
-use neo4rs::{Graph, Query, query};
+use neo4rs::{query, Graph, Query};
 use std::sync::Arc;
 
 pub struct Neo4jConfig {
@@ -12,10 +12,8 @@ impl Neo4jConfig {
         Self {
             uri: std::env::var("EPILOGOS_NEO4J_URI")
                 .unwrap_or_else(|_| "bolt://localhost:7687".into()),
-            user: std::env::var("EPILOGOS_NEO4J_USER")
-                .unwrap_or_else(|_| "neo4j".into()),
-            password: std::env::var("EPILOGOS_NEO4J_PASSWORD")
-                .unwrap_or_else(|_| String::new()),
+            user: std::env::var("EPILOGOS_NEO4J_USER").unwrap_or_else(|_| "neo4j".into()),
+            password: std::env::var("EPILOGOS_NEO4J_PASSWORD").unwrap_or_else(|_| String::new()),
         }
     }
 }
@@ -68,8 +66,7 @@ mod tests {
     #[ignore] // requires Docker: docker compose -f docker-compose.epi-s2.yml up -d
     async fn test_neo4j_connect_and_health() {
         let config = Neo4jConfig::from_env();
-        let client = Neo4jClient::connect(&config)
-            .expect("Failed to create Neo4j client");
+        let client = Neo4jClient::connect(&config).expect("Failed to create Neo4j client");
         assert!(client.health_check().await.unwrap());
     }
 

@@ -150,7 +150,10 @@ fn discover_skill(skill: &str) -> Result<(String, String, String, Option<String>
                 skill.to_owned(),
                 description,
                 path.display().to_string(),
-                Some(format!("{}_API_KEY", skill.to_ascii_uppercase().replace('-', "_"))),
+                Some(format!(
+                    "{}_API_KEY",
+                    skill.to_ascii_uppercase().replace('-', "_")
+                )),
             ));
         }
     }

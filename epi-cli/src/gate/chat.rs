@@ -86,10 +86,7 @@ pub fn history(gate_root: impl AsRef<Path>, session_key: &str) -> Result<Vec<Cha
     read_entries(gate_root, session_key)
 }
 
-pub fn history_response(
-    gate_root: impl AsRef<Path>,
-    session_key: &str,
-) -> Result<Value, String> {
+pub fn history_response(gate_root: impl AsRef<Path>, session_key: &str) -> Result<Value, String> {
     let items = read_entries(gate_root, session_key)?;
     let messages = items
         .iter()

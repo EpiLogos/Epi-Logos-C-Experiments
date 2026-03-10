@@ -9,8 +9,8 @@ use neo4rs::query;
 pub fn coord_uuid(bimba_coordinate: &str) -> String {
     use uuid::Uuid;
     const EPILOGOS_NS: Uuid = Uuid::from_bytes([
-        0xE9, 0x11, 0x06, 0x05, 0x00, 0x00, 0x40, 0x00,
-        0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+        0xE9, 0x11, 0x06, 0x05, 0x00, 0x00, 0x40, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x01,
     ]);
     Uuid::new_v5(&EPILOGOS_NS, bimba_coordinate.as_bytes()).to_string()
 }
@@ -23,15 +23,50 @@ const FAMILIES: &[&str] = &["C", "P", "L", "S", "T", "M"];
 
 const FAMILY_NAMES: &[&[&str]; 6] = &[
     &["Bimba", "Form", "Entity", "Process", "Type", "Pratibimba"],
-    &["Ground", "Definition", "Operation", "Pattern", "Context", "Integration"],
-    &["Literal", "Functional", "Structural", "Archetypal", "Paradigmatic", "Integral"],
-    &["Terminal", "Obsidian", "Neo4j", "Gateway", "PiAgent", "Sync"],
-    &["Questions", "Traces", "Challenges", "Patterns", "Discovery", "Insight"],
-    &["Anuttara", "Paramasiva", "Parashakti", "Mahamaya", "Nara", "Epii"],
+    &[
+        "Ground",
+        "Definition",
+        "Operation",
+        "Pattern",
+        "Context",
+        "Integration",
+    ],
+    &[
+        "Literal",
+        "Functional",
+        "Structural",
+        "Archetypal",
+        "Paradigmatic",
+        "Integral",
+    ],
+    &[
+        "Terminal", "Obsidian", "Neo4j", "Gateway", "PiAgent", "Sync",
+    ],
+    &[
+        "Questions",
+        "Traces",
+        "Challenges",
+        "Patterns",
+        "Discovery",
+        "Insight",
+    ],
+    &[
+        "Anuttara",
+        "Paramasiva",
+        "Parashakti",
+        "Mahamaya",
+        "Nara",
+        "Epii",
+    ],
 ];
 
 const FAMILY_FULL_NAMES: &[&str] = &[
-    "Category", "Position", "Lens", "Stack", "Thought", "Subsystem",
+    "Category",
+    "Position",
+    "Lens",
+    "Stack",
+    "Thought",
+    "Subsystem",
 ];
 
 const FAMILY_DOMAINS: &[&str] = &[
@@ -44,11 +79,21 @@ const FAMILY_DOMAINS: &[&str] = &[
 ];
 
 const PSYCHOID_NAMES: &[&str] = &[
-    "Ground", "Form", "Operation", "Pattern", "Context", "Integration",
+    "Ground",
+    "Form",
+    "Operation",
+    "Pattern",
+    "Context",
+    "Integration",
 ];
 
 const PSYCHOID_TOPO: &[&str] = &[
-    "ZERO_SPHERE", "TORUS", "TORUS", "TORUS", "LEMNISCATE", "ZERO_SPHERE",
+    "ZERO_SPHERE",
+    "TORUS",
+    "TORUS",
+    "TORUS",
+    "LEMNISCATE",
+    "ZERO_SPHERE",
 ];
 
 const WEAVE_COORDS: &[(&str, f64)] = &[
@@ -59,8 +104,13 @@ const WEAVE_COORDS: &[(&str, f64)] = &[
 ];
 
 const CF_NAMES: &[&str] = &[
-    "CF_VOID", "CF_BINARY", "CF_TRIKA", "CF_QUATERNAL",
-    "CF_FRACTAL", "CF_SYNTHESIS", "CF_MOBIUS",
+    "CF_VOID",
+    "CF_BINARY",
+    "CF_TRIKA",
+    "CF_QUATERNAL",
+    "CF_FRACTAL",
+    "CF_SYNTHESIS",
+    "CF_MOBIUS",
 ];
 
 const VAK_NAMES: &[&str] = &["CPF", "CT", "CP", "CF", "CFP", "CS"];
@@ -171,10 +221,12 @@ async fn create_rel(
     let q = query(&cypher)
         .param("from", from_coord)
         .param("to", to_coord);
-    client
-        .run_query(q)
-        .await
-        .map_err(|e| format!("rel {}->{}[{}] failed: {}", from_coord, to_coord, rel_type, e))?;
+    client.run_query(q).await.map_err(|e| {
+        format!(
+            "rel {}->{}[{}] failed: {}",
+            from_coord, to_coord, rel_type, e
+        )
+    })?;
     Ok(())
 }
 
@@ -207,9 +259,19 @@ pub async fn seed_coordinate_space(client: &Neo4jClient) -> Result<String, Strin
     // Layer 0: The # node (Inversion Act) — Bimba:Root
     // ------------------------------------------------------------------
     merge_node(
-        client, "#", "Root", "Non-Dual Self-Inversion",
-        "NONE", "PSYCHOID", -1, "KLEIN", 0.0, 0, 0x00,
-    ).await?;
+        client,
+        "#",
+        "Root",
+        "Non-Dual Self-Inversion",
+        "NONE",
+        "PSYCHOID",
+        -1,
+        "KLEIN",
+        0.0,
+        0,
+        0x00,
+    )
+    .await?;
     // # is not merely an operation but the non-dual essence: Prakasa-Vimarsa-Maya as one unity,
     // the Kashmir Shaivite principle that everything is everything — the Real self-inverted in principle.
     let q = query(
@@ -217,14 +279,23 @@ pub async fn seed_coordinate_space(client: &Neo4jClient) -> Result<String, Strin
          SET n.essence = $essence, \
              n.description = $desc",
     )
-    .param("essence", "Prakasa-Vimarsa-Maya: luminosity, self-awareness, and creative power as indivisible unity")
-    .param("desc", "The non-dual ground in which the Real is self-inverted in principle. \
+    .param(
+        "essence",
+        "Prakasa-Vimarsa-Maya: luminosity, self-awareness, and creative power as indivisible unity",
+    )
+    .param(
+        "desc",
+        "The non-dual ground in which the Real is self-inverted in principle. \
 Not merely an operation but the Kashmir Shaivite recognition that everything is everything — \
 Prakasa (luminous self-evidence) and Vimarsa (reflective self-awareness) are not two, \
 and their apparent separation through Maya is itself the creative act of non-duality. \
 # is Svatantrya — absolute freedom — the capacity of consciousness to appear as its own other \
-while never ceasing to be itself.");
-    client.run_query(q).await.map_err(|e| format!("# essence failed: {}", e))?;
+while never ceasing to be itself.",
+    );
+    client
+        .run_query(q)
+        .await
+        .map_err(|e| format!("# essence failed: {}", e))?;
     node_count += 1;
 
     // ------------------------------------------------------------------
@@ -254,9 +325,9 @@ while never ceasing to be itself.");
     // ------------------------------------------------------------------
     for (name, weave) in WEAVE_COORDS {
         merge_node(
-            client, name, "Weave", name,
-            "NONE", "WEAVE", -1, "TORUS", *weave, 0, 0x00,
-        ).await?;
+            client, name, "Weave", name, "NONE", "WEAVE", -1, "TORUS", *weave, 0, 0x00,
+        )
+        .await?;
         node_count += 1;
     }
 
@@ -265,9 +336,17 @@ while never ceasing to be itself.");
     // ------------------------------------------------------------------
     for (idx, name) in CF_NAMES.iter().enumerate() {
         merge_node(
-            client, name, "ContextFrame", name,
-            "NONE", "CONTEXT_FRAME",
-            idx as i64, "LEMNISCATE", 0.0, 0, 0x00,
+            client,
+            name,
+            "ContextFrame",
+            name,
+            "NONE",
+            "CONTEXT_FRAME",
+            idx as i64,
+            "LEMNISCATE",
+            0.0,
+            0,
+            0x00,
         )
         .await?;
         node_count += 1;
@@ -340,9 +419,17 @@ while never ceasing to be itself.");
     // ------------------------------------------------------------------
     for (idx, name) in VAK_NAMES.iter().enumerate() {
         merge_node(
-            client, name, "Vak", name,
-            "NONE", "VAK",
-            idx as i64, "LEMNISCATE", 0.0, 0, 0x00,
+            client,
+            name,
+            "Vak",
+            name,
+            "NONE",
+            "VAK",
+            idx as i64,
+            "LEMNISCATE",
+            0.0,
+            0,
+            0x00,
         )
         .await?;
         node_count += 1;
@@ -481,12 +568,12 @@ while never ceasing to be itself.");
     // OPERATES_IN: VAK -> Context Frame operational binding (6 rels)
     // ------------------------------------------------------------------
     let vak_to_cf: &[(&str, &str)] = &[
-        ("CPF", "CF_BINARY"),    // (0/1)
-        ("CT",  "CF_TRIKA"),     // (0/1/2)
-        ("CP",  "CF_FRACTAL"),   // (4.0/1-4.4/5)
-        ("CF",  "CF_MOBIUS"),    // (5/0)
-        ("CFP", "CF_FRACTAL"),   // custom/nested via #4
-        ("CS",  "CF_VOID"),      // system-wide ground
+        ("CPF", "CF_BINARY"),  // (0/1)
+        ("CT", "CF_TRIKA"),    // (0/1/2)
+        ("CP", "CF_FRACTAL"),  // (4.0/1-4.4/5)
+        ("CF", "CF_MOBIUS"),   // (5/0)
+        ("CFP", "CF_FRACTAL"), // custom/nested via #4
+        ("CS", "CF_VOID"),     // system-wide ground
     ];
     for (vak, cf) in vak_to_cf {
         create_rel(client, vak, cf, "OPERATES_IN").await?;

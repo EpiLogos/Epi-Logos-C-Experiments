@@ -120,11 +120,7 @@ pub fn schema_value() -> Value {
     })
 }
 
-pub fn set_value(
-    state_root: impl AsRef<Path>,
-    key: &str,
-    value: &Value,
-) -> Result<Value, String> {
+pub fn set_value(state_root: impl AsRef<Path>, key: &str, value: &Value) -> Result<Value, String> {
     let mut doc = load_document(&state_root)?;
     apply_field(&mut doc.gateway, key, value)?;
     bump_version(&mut doc);
@@ -132,10 +128,7 @@ pub fn set_value(
     config_snapshot_from_doc(doc)
 }
 
-pub fn patch_value(
-    state_root: impl AsRef<Path>,
-    patch: &Value,
-) -> Result<Value, String> {
+pub fn patch_value(state_root: impl AsRef<Path>, patch: &Value) -> Result<Value, String> {
     let mut doc = load_document(&state_root)?;
     apply_patch_to_doc(&mut doc, patch)?;
     bump_version(&mut doc);
@@ -143,10 +136,7 @@ pub fn patch_value(
     config_snapshot_from_doc(doc)
 }
 
-pub fn apply_value(
-    state_root: impl AsRef<Path>,
-    patch: &Value,
-) -> Result<Value, String> {
+pub fn apply_value(state_root: impl AsRef<Path>, patch: &Value) -> Result<Value, String> {
     let mut doc = load_document(&state_root)?;
     apply_patch_to_doc(&mut doc, patch)?;
     bump_version(&mut doc);

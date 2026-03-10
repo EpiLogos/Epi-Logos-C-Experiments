@@ -92,8 +92,7 @@ impl<'a> RelationshipManager<'a> {
                 if let Ok(pos) = parts[1].parse::<u8>() {
                     if pos <= 5 {
                         for target in targets {
-                            self.create_position_rel(source_coord, target, pos)
-                                .await?;
+                            self.create_position_rel(source_coord, target, pos).await?;
                             count += 1;
                         }
                     }

@@ -29,11 +29,7 @@ struct LoginFlow {
     status: String,
 }
 
-pub fn request(
-    state_root: impl AsRef<Path>,
-    url: &str,
-    method: &str,
-) -> Result<Value, String> {
+pub fn request(state_root: impl AsRef<Path>, url: &str, method: &str) -> Result<Value, String> {
     let mut state = load_state(&state_root)?;
     let request_id = Uuid::new_v4().to_string();
     state.requests.push(BrowserRequest {

@@ -29,12 +29,6 @@ export const PRIMITIVE_REGISTRY: PrimitiveDef[] = [
     executionMode: "interactive",
   },
   {
-    name: "mprocs",
-    description: "Multi-process workshop manager — agent workshop lifecycle",
-    allowChildExtension: true,
-    executionMode: "background",
-  },
-  {
     name: "bkmr_kbase",
     description: "Knowledge base retrieval — bookmark and knowledge search",
     allowChildExtension: false,
@@ -53,20 +47,14 @@ export const PRIMITIVE_REGISTRY: PrimitiveDef[] = [
     executionMode: "interactive",
   },
   {
-    name: "gitbutler",
-    description: "Virtual branch management — lane creation, branch operations",
-    allowChildExtension: false,
-    executionMode: "bounded",
-  },
-  {
     name: "worktrunk",
     description: "Worktree lifecycle management — create, verify, cleanup isolated worktrees",
     allowChildExtension: true,
     executionMode: "bounded",
   },
   {
-    name: "notebooklm",
-    description: "Notebook query and source management — list, query, add/remove sources",
+    name: "epi_cli",
+    description: "Epi CLI pullthrough — all epi subcommands available as bounded primitive",
     allowChildExtension: false,
     executionMode: "bounded",
   },

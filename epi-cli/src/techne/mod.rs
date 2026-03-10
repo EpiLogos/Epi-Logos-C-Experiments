@@ -1,3 +1,5 @@
+pub mod gnosis;
+
 use clap::Subcommand;
 use std::env;
 use std::path::PathBuf;
@@ -36,6 +38,11 @@ pub enum TechneCmd {
         /// Arguments passed to wt CLI (e.g. "switch", "list", "merge", "remove")
         #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
         args: Vec<String>,
+    },
+    /// Gnosis local knowledge ingestion and retrieval
+    Gnosis {
+        #[command(subcommand)]
+        cmd: gnosis::GnosisCmd,
     },
 }
 
@@ -97,6 +104,13 @@ pub fn dispatch(cmd: &TechneCmd) {
             // Always run wt from the current working directory
             run(c, "wt", "wt (worktrunk)");
         }
+        TechneCmd::Gnosis { cmd } => match gnosis::dispatch(cmd) {
+            Ok(out) => println!("{out}"),
+            Err(err) => {
+                eprintln!("epi techne gnosis: {err}");
+                std::process::exit(1);
+            }
+        },
     }
 }
 

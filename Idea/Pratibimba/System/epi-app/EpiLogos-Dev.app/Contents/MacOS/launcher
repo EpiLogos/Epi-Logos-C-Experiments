@@ -1,0 +1,12 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Navigate to the repository root from the nested app bundle
+PROJECT_ROOT="$(cd "$DIR/../../../../../../.." && pwd)"
+TARGET_DIR="$PROJECT_ROOT/Idea/Pratibimba/System/epi-app"
+
+echo "Starting Development Server..."
+cd "$TARGET_DIR"
+unset ELECTRON_RUN_AS_NODE
+npm run dev
+

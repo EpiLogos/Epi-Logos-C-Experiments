@@ -176,9 +176,7 @@ impl CoordinateArrayParser {
     }
 
     /// Parse frontmatter coordinate arrays from {family}_{n}_{semantic} keys
-    pub fn parse_frontmatter_arrays(
-        yaml: &serde_yaml::Value,
-    ) -> Vec<(String, Vec<WikiLink>)> {
+    pub fn parse_frontmatter_arrays(yaml: &serde_yaml::Value) -> Vec<(String, Vec<WikiLink>)> {
         let mut arrays = Vec::new();
         let families_lower = ["c", "p", "l", "s", "t", "m"];
         if let Some(map) = yaml.as_mapping() {

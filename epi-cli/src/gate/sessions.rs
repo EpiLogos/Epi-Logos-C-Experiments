@@ -57,20 +57,12 @@ impl SessionStore {
             label: None,
             active_agent_id: canonical_key.to_owned(),
             subagent_lineage: Vec::new(),
-            workspace_root: workspace::derive_workspace_root(
-                &self.gate_root,
-                canonical_key,
-                &[],
-            )
-            .display()
-            .to_string(),
-            bootstrap_scope: bootstrap::derive_bootstrap_scope(
-                &self.gate_root,
-                canonical_key,
-                &[],
-            )
-            .display()
-            .to_string(),
+            workspace_root: workspace::derive_workspace_root(&self.gate_root, canonical_key, &[])
+                .display()
+                .to_string(),
+            bootstrap_scope: bootstrap::derive_bootstrap_scope(&self.gate_root, canonical_key, &[])
+                .display()
+                .to_string(),
             thinking_level: None,
             verbose_level: None,
             reasoning_level: None,

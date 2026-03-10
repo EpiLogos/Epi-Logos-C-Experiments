@@ -6,26 +6,26 @@ fn main() {
         .std("c11")
         .warnings(true)
         .extra_warnings(true)
-        .include("../include")
+        .include("../epi-lib/include")
         .include("../vendor/blake3")
         .define("BLAKE3_NO_SSE2", None)
         .define("BLAKE3_NO_SSE41", None)
         .define("BLAKE3_NO_AVX2", None)
         .define("BLAKE3_NO_AVX512", None)
         // Pillar I
-        .file("../src/psychoid_numbers.c")
-        .file("../src/engine.c")
-        .file("../src/arena.c")
-        .file("../src/families.c")
+        .file("../epi-lib/src/psychoid_numbers.c")
+        .file("../epi-lib/src/engine.c")
+        .file("../epi-lib/src/arena.c")
+        .file("../epi-lib/src/families.c")
         // M-branches
-        .file("../src/m0.c")
-        .file("../src/m1.c")
-        .file("../src/m2.c")
-        .file("../src/m3.c")
-        .file("../src/m4.c")
-        .file("../src/m5.c")
+        .file("../epi-lib/src/m0.c")
+        .file("../epi-lib/src/m1.c")
+        .file("../epi-lib/src/m2.c")
+        .file("../epi-lib/src/m3.c")
+        .file("../epi-lib/src/m4.c")
+        .file("../epi-lib/src/m5.c")
         // QV data (generated)
-        .file("../src/qv_data.c")
+        .file("../epi-lib/src/qv_data.c")
         // BLAKE3
         .file("../vendor/blake3/blake3.c")
         .file("../vendor/blake3/blake3_dispatch.c")
@@ -38,7 +38,7 @@ fn main() {
 
     println!("cargo:rustc-link-search=native={out_dir}");
     println!("cargo:rustc-link-lib=static=epilogos");
-    println!("cargo:rerun-if-changed=../src/");
-    println!("cargo:rerun-if-changed=../include/");
+    println!("cargo:rerun-if-changed=../epi-lib/src/");
+    println!("cargo:rerun-if-changed=../epi-lib/include/");
     println!("cargo:rerun-if-changed=../vendor/blake3/");
 }

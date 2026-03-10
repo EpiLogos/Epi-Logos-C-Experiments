@@ -1,4 +1,5 @@
 pub mod frontmatter;
+pub mod kairos;
 pub mod pasu;
 pub mod paths;
 pub mod templates;
@@ -149,7 +150,15 @@ pub enum VaultCmd {
     },
     /// Archive a day folder into History
     #[command(name = "archive-day")]
-    ArchiveDay { date: String },
+    ArchiveDay {
+        date: String,
+        /// Print SOURCE → DEST paths without moving (for obsidian move)
+        #[arg(long)]
+        plan: bool,
+        /// Skip c_5_reflection_complete check
+        #[arg(long)]
+        force: bool,
+    },
     /// Initialize FLOW.md (CT0 daily journal) in today's Day folder
     #[command(name = "flow-init")]
     FlowInit {
@@ -159,6 +168,9 @@ pub enum VaultCmd {
     /// Interact with PASU.md (non-dual agent-user field)
     #[command(subcommand)]
     Pasu(PasuCmd),
+    /// Kairos temporal enrichment (kerykeion natal chart)
+    #[command(subcommand)]
+    Kairos(KairosCmd),
 }
 
 #[derive(Subcommand)]
@@ -169,6 +181,20 @@ pub enum PasuCmd {
     Get { field: String },
     /// Set a PASU field value
     Set { field: String, value: String },
+}
+
+#[derive(Subcommand)]
+pub enum KairosCmd {
+    /// Show kairos status (mode, planet_valid bitmask)
+    Status,
+    /// Fetch natal chart from kerykeion (requires PASU birth data)
+    Fetch {
+        /// Recompute even if chart already exists
+        #[arg(long)]
+        force: bool,
+    },
+    /// Print current natal chart JSON
+    Show,
 }
 
 pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
@@ -358,7 +384,7 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
         }
         VaultCmd::DayInit { now } => day_init(now.as_deref()),
         VaultCmd::NowInit { session_id, now } => now_init(session_id, now.as_deref()),
-        VaultCmd::ArchiveDay { date } => archive_day(date),
+        VaultCmd::ArchiveDay { date, plan, force } => archive_day(date, *plan, *force),
         VaultCmd::FlowInit { now } => flow_init(now.as_deref()),
         VaultCmd::Pasu(sub) => {
             let vr = vault_root();
@@ -366,6 +392,14 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
                 PasuCmd::Show => pasu::pasu_show(&vr),
                 PasuCmd::Get { field } => pasu::pasu_get(&vr, field),
                 PasuCmd::Set { field, value } => pasu::pasu_set(&vr, field, value),
+            }
+        }
+        VaultCmd::Kairos(sub) => {
+            let vr = vault_root();
+            match sub {
+                KairosCmd::Status => kairos::kairos_status(&vr),
+                KairosCmd::Fetch { force } => kairos::kairos_fetch(&vr, *force),
+                KairosCmd::Show => kairos::kairos_show(&vr),
             }
         }
     }
@@ -523,17 +557,37 @@ fn flow_init(now_override: Option<&str>) -> Result<String, String> {
     Ok(format!("flow-init: created FLOW.md at {}", flow_path.display()))
 }
 
-fn archive_day(date: &str) -> Result<String, String> {
+fn archive_day(date: &str, plan: bool, force: bool) -> Result<String, String> {
     let day = NaiveDate::parse_from_str(date, "%d-%m-%Y")
         .map_err(|err| format!("invalid archive date {date:?}: {err}"))?;
-    let source = vault_root()
+    let vr = vault_root();
+    let source = vr
         .join("Empty")
         .join("Present")
         .join(day.format("%d-%m-%Y").to_string());
-    let target = archive_day_path(&vault_root(), day);
+    let target = archive_day_path(&vr, day);
     if !source.exists() {
         return Err(format!("day folder not found: {}", source.display()));
     }
+
+    // Reflection guard: require c_5_reflection_complete: true in daily-note
+    if !force {
+        let daily_note = source.join("daily-note.md");
+        let content = fs::read_to_string(&daily_note)
+            .map_err(|_| format!("cannot read {}", daily_note.display()))?;
+        if !content.contains("c_5_reflection_complete: true") {
+            return Err(
+                "c_5_reflection_complete not set — use --force to override".into(),
+            );
+        }
+    }
+
+    if plan {
+        // Print paths for obsidian move — do NOT touch filesystem
+        return Ok(format!("{} → {}", source.display(), target.display()));
+    }
+
+    // Direct archive (fallback when obsidian CLI not available)
     if let Some(parent) = target.parent() {
         fs::create_dir_all(parent)
             .map_err(|err| format!("failed to create {}: {err}", parent.display()))?;

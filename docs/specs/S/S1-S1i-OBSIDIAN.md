@@ -92,8 +92,9 @@ The vault directory tree maps directly to the coordinate system:
   |     |     +-- Psychoids/         #0-#5 canonical docs
   |     |     +-- ContextFrames/     CF_VOID..CF_MOBIUS canonical docs
   |     |
-  |     +-- World/                   Canonical external knowledge
-  |           +-- {domain}/          Subject-matter directories
+  |     +-- World/                   Canonical form/artifact library
+  |           +-- *.md               Flat reusable forms and CT5 syntheses
+  |           +-- Types/             Ordered ontology mirror for type authorities
   |
   +-- Empty/                         C3 — Process Canvas
   |     +-- Present/                 Temporal workspace
@@ -123,11 +124,58 @@ The vault directory tree maps directly to the coordinate system:
 | Psychoid (#, #0-#5) | `Bimba/Seeds/Psychoids/` | CANONICAL |
 | Context Frame (CF_*) | `Bimba/Seeds/ContextFrames/` | CANONICAL |
 | Family seed (C0-M5) | `Bimba/Seeds/{family}/` | CANONICAL |
-| World knowledge | `Bimba/World/{domain}/` | CANONICAL |
+| World forms / artifact library | `Bimba/World/*.md` | CANONICAL |
+| World ontology mirror | `Bimba/World/Types/` | CANONICAL |
 | Day note | `Empty/Present/{DD-MM-YYYY}/daily-note.md` | TEMPORAL |
 | NOW session | `Empty/Present/{DD-MM-YYYY}/{YYYYMMDD-HHmmss-sessionId}/now.md` | TEMPORAL |
 | Thought artifact | `Pratibimba/Self/Thought/T{0-5}/` | ARCHIVED |
 | Session archive | `Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/` | ARCHIVED |
+
+### World Forms vs World Types
+
+Hen/S1' treats `Bimba/World` and `Bimba/World/Types` as two distinct but linked authorities:
+
+- `Bimba/World/*.md` is the flat **artifact library**. These markdown files are reusable forms, CT syntheses, and template blueprints that can be invoked in any context.
+- `Bimba/World/Types/` is the **ordered ontology mirror**. It exists to mirror the core coordinate bedrock and the Neo4j seed ordering, not to hold the rendered forms themselves.
+- The reflective/context-frame language is housed specifically under the `C'` branch: `Bimba/World/Types/Coordinates/C/C'/`.
+
+The `Types` ordering is canonical:
+
+```text
+Bimba/World/Types/
+  Root/#/
+  Psychoids/#0 ... #5/
+  Coordinates/
+    C/C0 ... C5/
+    C/C'/
+      C0' ... C5'/
+      CPF/
+      CT/
+        CT0 ... CT5/
+      CP/
+      CF/
+        CF_VOID ... CF_MOBIUS/
+      CFP/
+      CS/
+    P/P0 ... P5/
+    P/P'/P0' ... P5'/
+    L/L0 ... L5/
+    L/L'/L0' ... L5'/
+    S/S0 ... S5/
+    S/S'/S0' ... S5'/
+    T/T0 ... T5/
+    T/T'/T0' ... T5'/
+    M/M0 ... M5/
+    M/M'/M0' ... M5'/
+  CT/
+    CT0 ... CT5/
+```
+
+This is intentionally a filesystem analogue of the graph seed law:
+
+`# -> #0-#5 -> C..M + inversions -> C' reflective language -> CT / CF authorities`
+
+In other words, `World/Types` is the ordered type space, while `World/*.md` is the reusable instantiated form space. The context-frame language is not top-level; it is explicitly rooted in `C'`.
 
 ---
 

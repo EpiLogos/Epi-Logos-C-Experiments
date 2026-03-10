@@ -69,7 +69,11 @@ async fn test_redis_coordinate_cache() {
     let mut cache = RedisCache::connect(&config).await.unwrap();
 
     cache
-        .cache_coordinate("#4", r#"{"name":"Context","family":"NONE"}"#, CacheTier::Warm)
+        .cache_coordinate(
+            "#4",
+            r#"{"name":"Context","family":"NONE"}"#,
+            CacheTier::Warm,
+        )
         .await
         .unwrap();
 

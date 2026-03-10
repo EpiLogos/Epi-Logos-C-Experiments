@@ -30,7 +30,7 @@ pleroma-skill-proxy --agent-type <type> [--cf-identity <CF-code>] [--window-name
 |-----------|----------|-------------|
 | `--agent-type` | Yes | Provider: `claude-code`, `gemini-cli`, or `codex` |
 | `--cf-identity` | No | CF code for constitutional role (e.g., `(0/1/2)` for Eros) |
-| `--window-name` | No | Window name for mprocs session registration |
+| `--window-name` | No | Window name for cmux session registration |
 
 ## Provider-Specific Configuration Forks
 

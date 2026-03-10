@@ -1,13 +1,12 @@
 use clap::Subcommand;
 
-pub mod config;
-pub mod parity;
 pub mod approvals;
 pub mod auth;
 pub mod bootstrap;
 pub mod browser;
-pub mod chat;
 pub mod channels;
+pub mod chat;
+pub mod config;
 pub mod config_tui;
 pub mod cron;
 pub mod devices;
@@ -16,16 +15,17 @@ pub mod logs;
 pub mod models;
 pub mod nodes;
 pub mod omnipanel;
+pub mod parity;
 pub mod protocol;
-pub mod sessions;
 pub mod server;
+pub mod sessions;
 pub mod skills;
 pub mod spacetimedb_bridge;
 pub mod system;
 pub mod tls;
 pub mod update;
-pub mod workspace;
 pub mod wizard;
+pub mod workspace;
 
 #[derive(Subcommand)]
 pub enum GateCmd {
@@ -61,16 +61,9 @@ pub enum GateCmd {
 pub enum GateConfigCmd {
     Show,
     Schema,
-    Set {
-        key: String,
-        value: String,
-    },
-    Patch {
-        patch: String,
-    },
-    Apply {
-        patch: Option<String>,
-    },
+    Set { key: String, value: String },
+    Patch { patch: String },
+    Apply { patch: Option<String> },
     Tui,
 }
 
@@ -86,15 +79,16 @@ pub async fn dispatch(cmd: &GateCmd, json: bool) -> Result<String, String> {
             Some(GateConfigCmd::Show) | None => config::render_default(json),
             Some(GateConfigCmd::Schema) => {
                 if json {
-                    serde_json::to_string_pretty(&config::schema_value()).map_err(|err| err.to_string())
+                    serde_json::to_string_pretty(&config::schema_value())
+                        .map_err(|err| err.to_string())
                 } else {
                     Ok(config::schema_value().to_string())
                 }
             }
             Some(GateConfigCmd::Set { key, value }) => {
                 let state_root = config::gate_root_from_env()?;
-                let value: serde_json::Value =
-                    serde_json::from_str(value).unwrap_or_else(|_| serde_json::Value::String(value.clone()));
+                let value: serde_json::Value = serde_json::from_str(value)
+                    .unwrap_or_else(|_| serde_json::Value::String(value.clone()));
                 let rendered = config::set_value(state_root, key, &value)?;
                 if json {
                     serde_json::to_string_pretty(&rendered).map_err(|err| err.to_string())

@@ -1,0 +1,91 @@
+.ProseMirror {
+  min-height: 100%;
+  cursor: text;
+}
+
+.ProseMirror p {
+  min-height: 1.8em;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3 {
+  line-height: 1.25;
+  margin: 0.8em 0 0.35em;
+  color: var(--text-primary);
+}
+
+.ProseMirror h1 {
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+.ProseMirror h2 {
+  font-size: 1.25rem;
+  font-weight: 650;
+}
+
+.ProseMirror h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  margin: 0.5em 0 0.5em 1.25rem;
+  padding-left: 0.75rem;
+}
+
+.ProseMirror ul {
+  list-style: disc;
+}
+
+.ProseMirror ol {
+  list-style: decimal;
+}
+
+.ProseMirror li {
+  margin: 0.2em 0;
+}
+
+.ProseMirror li::marker {
+  color: var(--text-secondary);
+}
+
+.highlight {
+  --highlight-accent: var(--text-primary);
+  border-left: 3px solid var(--highlight-accent);
+  padding-left: 4px;
+  margin-left: -7px;
+  border-radius: 0 3px 3px 0;
+  background-color: color-mix(in srgb, var(--highlight-accent) 12%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.highlight:hover {
+  filter: brightness(1.1);
+}
+
+.highlight-daily-note {
+  --highlight-accent: #fbbf24;
+}
+
+.highlight-oracle {
+  --highlight-accent: #a78bfa;
+}
+
+.highlight-dream {
+  --highlight-accent: #60a5fa;
+}
+
+.highlight-expand {
+  --highlight-accent: #34d399;
+}
+
+.is-editor-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--text-tertiary);
+  pointer-events: none;
+  height: 0;
+}

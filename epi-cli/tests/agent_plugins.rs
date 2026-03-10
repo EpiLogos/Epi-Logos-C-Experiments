@@ -104,7 +104,9 @@ fn hooks_validate_reports_supported_event_inventory() {
 
     assert!(out.stdout.contains("\"valid\": true"));
     assert!(out.stdout.contains("\"event\": \"PreToolUse\""));
-    assert!(out.stdout.contains(plugin.hook_script_path.to_str().unwrap()));
+    assert!(out
+        .stdout
+        .contains(plugin.hook_script_path.to_str().unwrap()));
 }
 
 #[test]

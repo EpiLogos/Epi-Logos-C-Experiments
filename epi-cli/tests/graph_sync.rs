@@ -1,14 +1,11 @@
-use epi_logos::graph::parse_yaml_frontmatter;
 use epi_logos::graph::bidirectional_sync::ConflictResolution;
+use epi_logos::graph::parse_yaml_frontmatter;
 
 #[test]
 fn test_parse_yaml_frontmatter_basic() {
     let content = "---\ncoordinate: \"M5\"\nname: \"Epii\"\n---\n\n# Body\n";
     let fm = parse_yaml_frontmatter(content).unwrap();
-    assert_eq!(
-        fm.get("coordinate").and_then(|v| v.as_str()),
-        Some("M5")
-    );
+    assert_eq!(fm.get("coordinate").and_then(|v| v.as_str()), Some("M5"));
 }
 
 #[test]
@@ -68,8 +65,7 @@ async fn test_sync_from_frontmatter() {
     let frontmatter = parse_yaml_frontmatter(&content).expect("parse frontmatter");
 
     let config = epi_logos::graph::client::Neo4jConfig::from_env();
-    let neo4j = epi_logos::graph::client::Neo4jClient::connect(&config)
-        .expect("connect to Neo4j");
+    let neo4j = epi_logos::graph::client::Neo4jClient::connect(&config).expect("connect to Neo4j");
 
     let coordinator = epi_logos::graph::sync_coordinator::SyncCoordinator::new(&neo4j);
     let result = coordinator

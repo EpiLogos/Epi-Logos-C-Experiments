@@ -160,25 +160,14 @@ extern "C" {
     ) -> i32;
     pub fn families_crosslink(arena: *mut CoordinateArena) -> i32;
     pub fn families_wire_reflective(arena: *mut CoordinateArena) -> i32;
-    pub fn engine_torus_walk(
-        start: *const HolographicCoordinate,
-        ctx: *mut c_void,
-        steps: u32,
-    );
+    pub fn engine_torus_walk(start: *const HolographicCoordinate, ctx: *mut c_void, steps: u32);
     pub fn engine_double_covering(start: *const HolographicCoordinate, ctx: *mut c_void);
     pub fn Execute_Hash(hc: *mut HolographicCoordinate, target: *mut c_void);
 
     // M5 API
-    pub fn m5_init(
-        arena: *mut CoordinateArena,
-        hc: *mut HolographicCoordinate,
-    ) -> *mut c_void;
+    pub fn m5_init(arena: *mut CoordinateArena, hc: *mut HolographicCoordinate) -> *mut c_void;
     pub fn m5_advance_logos(root: *mut c_void) -> M5LogosState;
-    pub fn m5_lookup(
-        root: *const c_void,
-        coord_id: u16,
-        granularity: u8,
-    ) -> *const libc::c_char;
+    pub fn m5_lookup(root: *const c_void, coord_id: u16, granularity: u8) -> *const libc::c_char;
     pub fn m5_teardown(root: *mut c_void);
     pub fn m5_verify() -> bool;
 
@@ -324,15 +313,11 @@ impl EpiLib {
         ctx: &mut WalkContext,
         steps: u32,
     ) {
-        unsafe {
-            engine_torus_walk(start, ctx as *mut WalkContext as *mut c_void, steps)
-        }
+        unsafe { engine_torus_walk(start, ctx as *mut WalkContext as *mut c_void, steps) }
     }
 
     pub fn double_covering(&self, start: *const HolographicCoordinate, ctx: &mut WalkContext) {
-        unsafe {
-            engine_double_covering(start, ctx as *mut WalkContext as *mut c_void)
-        }
+        unsafe { engine_double_covering(start, ctx as *mut WalkContext as *mut c_void) }
     }
 
     pub fn execute_hash(&self, target: &mut HolographicCoordinate) {

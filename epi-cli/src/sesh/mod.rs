@@ -1,3 +1,5 @@
+pub mod session;
+
 use clap::Subcommand;
 use std::process::Command;
 

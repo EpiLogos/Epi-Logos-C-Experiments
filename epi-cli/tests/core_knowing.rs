@@ -32,11 +32,9 @@ fn knowing_json_outputs_dossier_facets() {
     assert!(json["latest_snapshot"].is_object());
     assert_ne!(json["notebook_pulse"]["source"], "structural-placeholder");
     assert_ne!(json["latest_snapshot"]["source"], "structural-placeholder");
-    assert!(
-        json["actions"]
-            .as_array()
-            .is_some_and(|actions| actions.iter().any(|action| action["id"] == "refresh"))
-    );
+    assert!(json["actions"]
+        .as_array()
+        .is_some_and(|actions| actions.iter().any(|action| action["id"] == "refresh")));
 }
 
 #[test]
@@ -80,7 +78,14 @@ fn knowing_help_mentions_dossier_flags() {
         output.stderr
     );
 
-    for flag in ["--open", "--glow", "--project", "--limit", "--refresh", "--tui"] {
+    for flag in [
+        "--open",
+        "--glow",
+        "--project",
+        "--limit",
+        "--refresh",
+        "--tui",
+    ] {
         assert!(
             output.stdout.contains(flag),
             "expected help text to contain {flag:?}, got:\n{}",

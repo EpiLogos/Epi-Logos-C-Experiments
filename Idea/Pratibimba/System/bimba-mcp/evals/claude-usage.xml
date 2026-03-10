@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluation_suite>
+  <metadata>
+    <name>Claude Code MCP Tool Usage Evaluation</name>
+    <description>10-question evaluation suite testing Claude's ability to use MCP tools effectively</description>
+    <version>1.0.0</version>
+    <created>2026-01-29</created>
+    <prerequisites>MCP-020 (Create MCP Inspector test suite)</prerequisites>
+  </metadata>
+
+  <test_questions>
+    <!-- Question 1: Basic coordinate query -->
+    <question id="q1">
+      <type>basic_coordinate_query</type>
+      <title>Basic Coordinate Query</title>
+      <description>Test Claude's ability to query a single entity by coordinate</description>
+      <prompt>
+        Using the MCP tools available to you, query for the entity at coordinate P0. What information does it contain?
+      </prompt>
+      <expected_capabilities>
+        - Must invoke the graph-query MCP tool
+        - Must use coordinate "P0" as input
+        - Must interpret the returned coordinate, metadata, and data fields
+        - Should recognize P0 as the "Ground Position" (position foundation)
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: graph-query tool was called with coordinate P0
+        - Correct parsing: Response includes coordinate, type, and at least one data field
+        - Semantic understanding: Claude explains what P0 represents in the coordinate system
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-query" required="true">
+          <parameter name="coordinate" value="P0" />
+        </tool>
+      </tools_required>
+      <success_threshold>85</success_threshold>
+    </question>
+
+    <!-- Question 2: Natural language search -->
+    <question id="q2">
+      <type>natural_language_search</type>
+      <title>Natural Language Search</title>
+      <description>Test Claude's ability to translate a natural language query into a semantic search</description>
+      <prompt>
+        Search the graph for entities related to "foundation and ground principles". Which entities are most relevant to this concept?
+      </prompt>
+      <expected_capabilities>
+        - Must invoke the graph-search MCP tool
+        - Must extract semantic intent from natural language
+        - Must choose appropriate search mode (hybrid_weighted, vector_only, etc.)
+        - Should interpret search results with relevance scores
+        - Should rank results by semantic relevance
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: graph-search tool was called with semantically appropriate query
+        - Mode selection: Chose reasonable search mode for the query
+        - Result interpretation: Correctly identifies top-k results and explains their relevance
+        - Score understanding: Explains what the relevance scores mean
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-search" required="true">
+          <parameter name="query" value="foundation ground principles" />
+          <parameter name="top_k" value="5" />
+        </tool>
+      </tools_required>
+      <success_threshold>80</success_threshold>
+    </question>
+
+    <!-- Question 3: Specification retrieval -->
+    <question id="q3">
+      <type>spec_retrieval</type>
+      <title>Specification Retrieval</title>
+      <description>Test Claude's ability to retrieve detailed specifications</description>
+      <prompt>
+        Look up the specification for "Position" coordinates. What is the structure and meaning of P0 through P5?
+      </prompt>
+      <expected_capabilities>
+        - Must invoke the spec-retrieve MCP tool
+        - Must use "Position" as the title parameter
+        - Should parse the structured specification output
+        - Should interpret position hierarchy (P0=Ground, P1=Foundation, P2=Structure, etc.)
+        - Should understand relationships to other coordinates
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: spec-retrieve tool called with title "Position"
+        - Content parsing: Correctly extracts specification content
+        - Hierarchy understanding: Explains position levels P0-P5 correctly
+        - Connection awareness: Identifies connections to other coordinate types
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="spec-retrieve" required="true">
+          <parameter name="title" value="Position" />
+        </tool>
+      </tools_required>
+      <success_threshold>85</success_threshold>
+    </question>
+
+    <!-- Question 4: Context gathering -->
+    <question id="q4">
+      <type>context_gathering</type>
+      <title>Context Gathering</title>
+      <description>Test Claude's ability to gather contextual information at different scope levels</description>
+      <prompt>
+        Gather context around entity M2 using narrow scope (direct relationships only). Then gather context using balanced scope (2-hop relationships). What is the difference in information density?
+      </prompt>
+      <expected_capabilities>
+        - Must invoke graph-context tool twice with different modes
+        - Must understand scope semantics (narrow=direct, balanced=2-hop, wide=3-hop)
+        - Should compare and contrast the results
+        - Should understand information density tradeoffs
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: graph-context called with M2, narrow mode
+        - Tool invocation: graph-context called with M2, balanced mode
+        - Comparison: Explains differences between narrow and balanced results
+        - Semantics: Correctly interprets what each scope level means
+        - Analysis: Identifies when narrow vs balanced is preferable
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-context" required="true">
+          <parameter name="entity_coordinate" value="M2" />
+          <parameter name="mode" value="narrow" />
+        </tool>
+        <tool name="graph-context" required="true">
+          <parameter name="entity_coordinate" value="M2" />
+          <parameter name="mode" value="balanced" />
+        </tool>
+      </tools_required>
+      <success_threshold>80</success_threshold>
+    </question>
+
+    <!-- Question 5: Progressive disclosure -->
+    <question id="q5">
+      <type>progressive_disclosure</type>
+      <title>Progressive Disclosure</title>
+      <description>Test Claude's understanding of information disclosure levels</description>
+      <prompt>
+        Using progressive disclosure at levels 0, 3, and 5 for entity C0, explain what information is revealed at each level and why this matters.
+      </prompt>
+      <expected_capabilities>
+        - Must invoke graph-disclosure tool three times with different levels
+        - Should understand disclosure levels semantically
+        - Should interpret what fields are available at each level
+        - Should explain the security/privacy implications
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: graph-disclosure called with C0, level 0
+        - Tool invocation: graph-disclosure called with C0, level 3
+        - Tool invocation: graph-disclosure called with C0, level 5
+        - Level semantics: Correctly explains what each level reveals
+        - Use cases: Identifies scenarios where each level is appropriate
+        - Security awareness: Explains progressive disclosure benefits
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-disclosure" required="true">
+          <parameter name="entity_coordinate" value="C0" />
+          <parameter name="disclosure_level" value="0" />
+        </tool>
+        <tool name="graph-disclosure" required="true">
+          <parameter name="entity_coordinate" value="C0" />
+          <parameter name="disclosure_level" value="3" />
+        </tool>
+        <tool name="graph-disclosure" required="true">
+          <parameter name="entity_coordinate" value="C0" />
+          <parameter name="disclosure_level" value="5" />
+        </tool>
+      </tools_required>
+      <success_threshold>85</success_threshold>
+    </question>
+
+    <!-- Question 6: Graph traversal -->
+    <question id="q6">
+      <type>graph_traversal</type>
+      <title>Graph Traversal with Filtering</title>
+      <description>Test Claude's ability to navigate relationships with depth and type filtering</description>
+      <prompt>
+        Traverse from entity S2 at depth 2, filtering for only POS0_LINKS_TO and CONTAINS relationships. What relationship patterns do you discover?
+      </prompt>
+      <expected_capabilities>
+        - Must invoke graph-traverse with start_coordinate, depth, and relationship_types
+        - Should understand path semantics
+        - Should interpret relationship type filtering
+        - Should explain discovered patterns
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: graph-traverse called with S2, depth 2, filtered relationship types
+        - Path interpretation: Correctly reads and explains paths
+        - Filter effectiveness: Explains which relationships were filtered and why
+        - Pattern discovery: Identifies meaningful relationship patterns in results
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-traverse" required="true">
+          <parameter name="start_coordinate" value="S2" />
+          <parameter name="depth" value="2" />
+          <parameter name="relationship_types" value="POS0_LINKS_TO,CONTAINS" />
+        </tool>
+      </tools_required>
+      <success_threshold>80</success_threshold>
+    </question>
+
+    <!-- Question 7: Validation and integrity checking -->
+    <question id="q7">
+      <type>validation_integrity</type>
+      <title>Graph Validation and Integrity Checking</title>
+      <description>Test Claude's ability to validate graph integrity at different scopes</description>
+      <prompt>
+        Validate the graph using "coordinates" scope to check coordinate format and uniqueness. What validation issues are found, and how would you prioritize fixing them?
+      </prompt>
+      <expected_capabilities>
+        - Must invoke graph-validate with scope parameter
+        - Should interpret validation results and issue severity
+        - Should understand what the "coordinates" scope checks
+        - Should prioritize issues by type and impact
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: graph-validate called with scope "coordinates"
+        - Issue interpretation: Correctly reads validation issues
+        - Severity assessment: Identifies critical vs warning issues
+        - Remediation strategy: Proposes how to fix found issues
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-validate" required="true">
+          <parameter name="scope" value="coordinates" />
+        </tool>
+      </tools_required>
+      <success_threshold>80</success_threshold>
+    </question>
+
+    <!-- Question 8: Synchronization and bulk operations -->
+    <question id="q8">
+      <type>sync_bulk_operations</type>
+      <title>Bulk Operations: Chunking and Sync</title>
+      <description>Test Claude's ability to perform bulk operations like chunking</description>
+      <prompt>
+        Chunk this document: "The foundation layer (P0) represents the ground principles. The structure layer (P2) builds upon the foundation. The integration layer (P5) brings coherence." Use coordinate P1 and chunk size 60. How many chunks are created and what do they contain?
+      </prompt>
+      <expected_capabilities>
+        - Must invoke graph-chunk with document_id, content, coordinate, and chunk_size
+        - Should understand hierarchical chunking semantics
+        - Should interpret chunk structure and boundaries
+        - Should understand coordinate context inheritance
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: graph-chunk called with all required parameters
+        - Chunk interpretation: Correctly identifies number and content of chunks
+        - Coordinate context: Explains how coordinate P1 is inherited
+        - Use cases: Explains why chunking is useful for the knowledge base
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-chunk" required="true">
+          <parameter name="document_id" value="foundation-overview" />
+          <parameter name="content" value="The foundation layer (P0) represents the ground principles. The structure layer (P2) builds upon the foundation. The integration layer (P5) brings coherence." />
+          <parameter name="coordinate" value="P1" />
+          <parameter name="chunk_size" value="60" />
+        </tool>
+      </tools_required>
+      <success_threshold>80</success_threshold>
+    </question>
+
+    <!-- Question 9: Semantic embeddings -->
+    <question id="q9">
+      <type>semantic_embeddings</type>
+      <title>Semantic Embedding Generation</title>
+      <description>Test Claude's understanding of embedding generation and dimensionality</description>
+      <prompt>
+        Generate semantic embeddings for entities P0 and P5 using task type RETRIEVAL_DOCUMENT and 768-dimensional embeddings. What do embeddings represent and how might they be used?
+      </prompt>
+      <expected_capabilities>
+        - Must invoke graph-embed with entity_coordinates, task_type, and dimensionality
+        - Should understand embedding purpose and semantics
+        - Should interpret dimensionality tradeoffs
+        - Should explain downstream use cases
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Tool invocation: graph-embed called with P0 and P5
+        - Parameter understanding: Correctly explains task_type and dimensionality choices
+        - Use case explanation: Describes downstream applications (search, retrieval, clustering)
+        - Semantic awareness: Explains what embeddings encode semantically
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-embed" required="true">
+          <parameter name="entity_coordinates" value="P0,P5" />
+          <parameter name="task_type" value="RETRIEVAL_DOCUMENT" />
+          <parameter name="dimensionality" value="768" />
+        </tool>
+      </tools_required>
+      <success_threshold>75</success_threshold>
+    </question>
+
+    <!-- Question 10: Multi-tool workflow -->
+    <question id="q10">
+      <type>multi_tool_workflow</type>
+      <title>Multi-Tool Workflow Orchestration</title>
+      <description>Test Claude's ability to orchestrate multiple tools into a coherent workflow</description>
+      <prompt>
+        Design a workflow to answer: "What are the core principles in our knowledge base?" Use the following approach: (1) Search for "principles" entities, (2) For top 3 results, retrieve their full specifications, (3) Gather context for each using balanced scope, (4) Validate the discovered entities. Execute this workflow and synthesize findings.
+      </prompt>
+      <expected_capabilities>
+        - Must invoke graph-search for initial discovery
+        - Must invoke spec-retrieve for top results
+        - Must invoke graph-context for each result
+        - Must invoke graph-validate to ensure integrity
+        - Should orchestrate tool calls sequentially with data flow
+        - Should synthesize results from multiple tools
+      </expected_capabilities>
+      <evaluation_criteria>
+        - Workflow orchestration: Correctly chains tool calls with appropriate dependencies
+        - Data flow: Passes results from one tool to next (e.g., search results to spec-retrieve)
+        - Tool selection: Each tool was appropriate for its step in the workflow
+        - Synthesis: Combines results into coherent answer about principles
+        - Error handling: Handles any tool failures gracefully
+        - Efficiency: Minimizes unnecessary tool calls
+      </evaluation_criteria>
+      <tools_required>
+        <tool name="graph-search" required="true">
+          <parameter name="query" value="principles" />
+          <parameter name="top_k" value="3" />
+        </tool>
+        <tool name="spec-retrieve" required="true" multiple="true">
+          <description>Called for each top search result</description>
+        </tool>
+        <tool name="graph-context" required="true" multiple="true">
+          <description>Called for each discovered entity</description>
+          <parameter name="mode" value="balanced" />
+        </tool>
+        <tool name="graph-validate" required="true">
+          <parameter name="scope" value="full" />
+        </tool>
+      </tools_required>
+      <success_threshold>85</success_threshold>
+    </question>
+  </test_questions>
+
+  <evaluation_framework>
+    <scoring>
+      <metric name="Tool Invocation Accuracy">
+        <weight>30</weight>
+        <description>Percentage of required MCP tools correctly invoked with appropriate parameters</description>
+      </metric>
+      <metric name="Parameter Understanding">
+        <weight>20</weight>
+        <description>Correctness of parameter values and semantic appropriateness for the query context</description>
+      </metric>
+      <metric name="Result Interpretation">
+        <weight>25</weight>
+        <description>Accuracy and depth of interpreting tool outputs, including nested data structures</description>
+      </metric>
+      <metric name="Semantic Reasoning">
+        <weight>15</weight>
+        <description>Quality of reasoning about coordinate semantics, relationship types, and graph structure</description>
+      </metric>
+      <metric name="Workflow Execution">
+        <weight>10</weight>
+        <description>For multi-tool questions: correctness of orchestration and data flow between tools</description>
+      </metric>
+    </scoring>
+
+    <passing_criteria>
+      <overall_threshold>80</overall_threshold>
+      <minimum_questions_passed>7</minimum_questions_passed>
+      <critical_questions>q1, q3, q10</critical_questions>
+    </passing_criteria>
+
+    <grading_rubric>
+      <score_range min="90" max="100">Excellent - Claude demonstrates mastery of MCP tool usage</score_range>
+      <score_range min="80" max="89">Good - Claude effectively uses MCP tools with minor issues</score_range>
+      <score_range min="70" max="79">Acceptable - Claude understands tool usage but has some gaps</score_range>
+      <score_range min="60" max="69">Poor - Claude struggles with tool selection or parameter usage</score_range>
+      <score_range min="0" max="59">Failing - Claude cannot effectively use MCP tools</score_range>
+    </grading_rubric>
+  </evaluation_framework>
+
+  <testing_notes>
+    <prerequisites>
+      <requirement>Neo4j container must be running (docker-compose up neo4j)</requirement>
+      <requirement>MCP server must be configured and running</requirement>
+      <requirement>GEMINI_API_KEY optional but recommended for embedding tests (Q9)</requirement>
+      <requirement>Claude Code must have access to MCP tools</requirement>
+    </prerequisites>
+
+    <execution_instructions>
+      <step number="1">Setup Neo4j and MCP server using docker-compose</step>
+      <step number="2">Initialize Claude Code with MCP tool access</step>
+      <step number="3">For each question (Q1-Q10), provide the prompt to Claude</step>
+      <step number="4">Observe which MCP tools Claude invokes and with what parameters</step>
+      <step number="5">Evaluate responses against success criteria</step>
+      <step number="6">Score each question based on rubric</step>
+      <step number="7">Aggregate scores and determine overall pass/fail</step>
+    </execution_instructions>
+
+    <known_limitations>
+      <limitation>Q9 (embeddings) may fail or skip if GEMINI_API_KEY not configured</limitation>
+      <limitation>Some queries may timeout on very large graphs - adjust expectations for scale</limitation>
+      <limitation>Claude's tool invocation depends on system prompt configuration</limitation>
+      <limitation>Results vary based on Neo4j data population state</limitation>
+    </known_limitations>
+
+    <interpretation_guide>
+      <guide_item>
+        <concept>Coordinate System</concept>
+        <explanation>Six coordinate types (C, P, M, S, T, L) form a 6-dimensional address space. P0=Ground, P5=Integration. M2 often represents "paradigm/graph layer".</explanation>
+      </guide_item>
+      <guide_item>
+        <concept>Search Modes</concept>
+        <explanation>hybrid_weighted (default): balances semantic and graph similarity. vector_only: pure semantic. graph_only: pure structural. hybrid_rrf: reciprocal rank fusion.</explanation>
+      </guide_item>
+      <guide_item>
+        <concept>Disclosure Levels</concept>
+        <explanation>0=identity only, 3=structural/relationships, 5=complete information including embeddings</explanation>
+      </guide_item>
+      <guide_item>
+        <concept>Context Scopes</concept>
+        <explanation>narrow=direct relationships, balanced=2-hop, wide=3-hop. Increasing scope increases information density and query time.</explanation>
+      </guide_item>
+    </interpretation_guide>
+  </testing_notes>
+</evaluation_suite>

@@ -1,9 +1,9 @@
 pub mod cache;
 pub mod graph;
-pub mod vimarsa;
 pub mod notebook;
 pub mod render;
 pub mod types;
+pub mod vimarsa;
 
 use super::{branch_for_family, overlay, FAMILY_LETTERS, FAMILY_NAMES, RELATION_PITHYS};
 use chrono::Utc;
@@ -155,27 +155,23 @@ fn fetch_live_facets(
             let project_owned = project.map(str::to_string);
             let project_for_vimarsa = project_owned.clone();
 
-            let graph_handle = std::thread::spawn(move || {
-                graph::build_relational_field(&coord_graph)
-            });
+            let graph_handle =
+                std::thread::spawn(move || graph::build_relational_field(&coord_graph));
             let vimarsa_handle = std::thread::spawn(move || {
-                vimarsa::build_vimarsa_field(
-                    &coord_vimarsa,
-                    project_for_vimarsa.as_deref(),
-                    limit,
-                )
+                vimarsa::build_vimarsa_field(&coord_vimarsa, project_for_vimarsa.as_deref(), limit)
             });
-            let notebook_handle = std::thread::spawn(move || {
-                notebook::build_notebook_pulse(&coord_notebook)
-            });
+            let notebook_handle =
+                std::thread::spawn(move || notebook::build_notebook_pulse(&coord_notebook));
 
-            let relational_field = graph_handle.join().unwrap_or_else(|_| RelationalFieldFacet {
-                source: "graph-panic".to_string(),
-                summary: Some("Graph facet thread panicked".to_string()),
-                constellation: Vec::new(),
-                chain: Vec::new(),
-                items: Vec::new(),
-            });
+            let relational_field = graph_handle
+                .join()
+                .unwrap_or_else(|_| RelationalFieldFacet {
+                    source: "graph-panic".to_string(),
+                    summary: Some("Graph facet thread panicked".to_string()),
+                    constellation: Vec::new(),
+                    chain: Vec::new(),
+                    items: Vec::new(),
+                });
             let vimarsa_field = vimarsa_handle.join().unwrap_or_else(|_| VimarsaFieldFacet {
                 source: "vimarsa-panic".to_string(),
                 project_scope: project_owned,

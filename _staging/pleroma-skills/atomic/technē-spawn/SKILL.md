@@ -1,6 +1,6 @@
 ---
 name: "techn\u0113-spawn"
-description: "Launch external CLI coding agent in aletheia-workshop tmux session. Invokes pleroma-skill-proxy first, then sets OneContext context, then launches agent via mprocs. Returns window handle for relay/close. True port from upstream."
+description: "Launch external CLI coding agent in aletheia-workshop tmux session. Invokes pleroma-skill-proxy first, then sets OneContext context, then opens tmux window via tmux new-window. Returns window handle for relay/close. True port from upstream."
 port_type: true-port
 ct: CT2
 cp: "4.2"
@@ -129,7 +129,7 @@ Examples:
 
 | Error | Condition | Action |
 |-------|-----------|--------|
-| `workshop_not_running` | `tmux has-session -t aletheia-workshop` fails | Start workshop first (see mprocs skill) |
+| `workshop_not_running` | `tmux has-session -t aletheia-workshop` fails | Start workshop: `tmux new-session -d -s aletheia-workshop` |
 | `skill_proxy_failed` | pleroma-skill-proxy returns non-zero | Abort spawn -- agent not properly configured |
 | `budget-ceiling-reached` | Window count >= MAX_WINDOWS | Return status; queue work or request budget extension |
 | `invalid_window_name` | Name doesn't match convention | Reject and require valid name |

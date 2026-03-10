@@ -112,7 +112,10 @@ async fn main() -> color_eyre::Result<()> {
         }
         Commands::Vault { cmd } => match vault::dispatch(cmd) {
             Ok(out) => println!("{}", out),
-            Err(e) => eprintln!("vault error: {}", e),
+            Err(e) => {
+                eprintln!("{}", e);
+                std::process::exit(1);
+            }
         },
         Commands::Graph { cmd } => match graph::dispatch_with_format(cmd, cli.json).await {
             Ok(out) => println!("{}", out),

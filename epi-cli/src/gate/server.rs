@@ -12,8 +12,8 @@ use tokio_tungstenite::{accept_async, tungstenite::Message};
 use super::approvals;
 use super::auth;
 use super::browser;
-use super::chat;
 use super::channels;
+use super::chat;
 use super::config;
 use super::config::{BindMode, GatewayConfig};
 use super::cron;
@@ -98,7 +98,9 @@ pub fn render_status(json: bool) -> Result<String, String> {
 
 pub fn status_from_config(config: &GatewayConfig) -> Result<GatewayStatus, String> {
     let tls_runtime = if config.tls_enabled {
-        Some(GatewayTlsRuntime::load_or_generate(gate_root(config.state_root.as_deref())?)?)
+        Some(GatewayTlsRuntime::load_or_generate(gate_root(
+            config.state_root.as_deref(),
+        )?)?)
     } else {
         None
     };
@@ -250,7 +252,11 @@ async fn handle_connection(stream: TcpStream, state_root: PathBuf) -> Result<(),
                 .map_err(|err| err.to_string())?;
 
         let response = if !connected && frame.method != "connect" {
-            protocol::error(frame.id, "connect-required", "connect must be the first request")
+            protocol::error(
+                frame.id,
+                "connect-required",
+                "connect must be the first request",
+            )
         } else if frame.method == "connect" {
             match auth::validate_connect(&frame.params) {
                 Ok(()) => {
@@ -361,8 +367,7 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
             let record = store.delete(&identifier).map_err(not_found_error)?;
             let transcript_path = chat::transcript_path(state_root, &record.canonical_key);
             if transcript_path.exists() {
-                fs::remove_file(transcript_path)
-                    .map_err(|err| internal_error(err.to_string()))?;
+                fs::remove_file(transcript_path).map_err(|err| internal_error(err.to_string()))?;
             }
             Ok(json!({ "ok": true, "canonicalKey": record.canonical_key }))
         }
@@ -408,8 +413,8 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
         "chat.history" => {
             let session_key = required_str(&frame.params, "sessionKey")?;
             let record = store.resolve(&session_key).map_err(not_found_error)?;
-            let mut result =
-                chat::history_response(state_root, &record.canonical_key).map_err(internal_error)?;
+            let mut result = chat::history_response(state_root, &record.canonical_key)
+                .map_err(internal_error)?;
             result["canonicalKey"] = json!(record.canonical_key);
             Ok(result)
         }
@@ -417,15 +422,17 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
         "config.schema" => Ok(config::schema_value()),
         "config.set" => {
             if let Some(raw) = frame.params.get("raw").and_then(|value| value.as_str()) {
-                let base_hash = frame.params.get("baseHash").and_then(|value| value.as_str());
+                let base_hash = frame
+                    .params
+                    .get("baseHash")
+                    .and_then(|value| value.as_str());
                 config::set_raw_value(state_root, raw, base_hash).map_err(internal_error)
             } else {
                 let key = required_str(&frame.params, "key")?;
-                let value = frame
-                    .params
-                    .get("value")
-                    .cloned()
-                    .ok_or_else(|| ("invalid-params".to_owned(), "value is required".to_owned()))?;
+                let value =
+                    frame.params.get("value").cloned().ok_or_else(|| {
+                        ("invalid-params".to_owned(), "value is required".to_owned())
+                    })?;
                 config::set_value(state_root, &key, &value).map_err(internal_error)
             }
         }
@@ -439,7 +446,10 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
         }
         "config.apply" => {
             if let Some(raw) = frame.params.get("raw").and_then(|value| value.as_str()) {
-                let base_hash = frame.params.get("baseHash").and_then(|value| value.as_str());
+                let base_hash = frame
+                    .params
+                    .get("baseHash")
+                    .and_then(|value| value.as_str());
                 config::apply_raw_value(state_root, raw, base_hash).map_err(internal_error)
             } else {
                 let patch = frame
@@ -467,7 +477,11 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
         "health.snapshot" => system::health_snapshot(state_root).map_err(internal_error),
         "system-event" => {
             let kind = required_str(&frame.params, "kind")?;
-            let payload = frame.params.get("payload").cloned().unwrap_or_else(|| json!({}));
+            let payload = frame
+                .params
+                .get("payload")
+                .cloned()
+                .unwrap_or_else(|| json!({}));
             let result =
                 system::event(state_root, &kind, payload.clone()).map_err(internal_error)?;
             publish_activity_surface(state_root, &kind, payload)?;
@@ -531,7 +545,11 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
         "node.event" => {
             let node = required_str(&frame.params, "node")?;
             let kind = required_str(&frame.params, "kind")?;
-            let payload = frame.params.get("payload").cloned().unwrap_or_else(|| json!({}));
+            let payload = frame
+                .params
+                .get("payload")
+                .cloned()
+                .unwrap_or_else(|| json!({}));
             nodes::event(state_root, &node, &kind, payload).map_err(internal_error)
         }
         "browser.request" => {
@@ -545,10 +563,10 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
             browser::request(state_root, &url, &method).map_err(internal_error)
         }
         "web.login.start" => {
-            let channel = optional_str(&frame.params, "channel")
-                .unwrap_or_else(|| "whatsapp".to_owned());
-            let workspace = optional_str(&frame.params, "workspace")
-                .unwrap_or_else(|| "main".to_owned());
+            let channel =
+                optional_str(&frame.params, "channel").unwrap_or_else(|| "whatsapp".to_owned());
+            let workspace =
+                optional_str(&frame.params, "workspace").unwrap_or_else(|| "main".to_owned());
             channels::mark_login_start(state_root, &channel).map_err(internal_error)?;
             browser::login_start(state_root, &channel, &workspace).map_err(internal_error)
         }
@@ -618,9 +636,21 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
                 .unwrap_or_default()
                 .to_owned();
             let agent_id = frame.params.get("agentId").and_then(|value| value.as_str());
-            let enabled = frame.params.get("enabled").and_then(|value| value.as_bool()).unwrap_or(true);
-            let schedule = frame.params.get("schedule").cloned().unwrap_or_else(|| json!({}));
-            let payload = frame.params.get("payload").cloned().unwrap_or_else(|| json!({}));
+            let enabled = frame
+                .params
+                .get("enabled")
+                .and_then(|value| value.as_bool())
+                .unwrap_or(true);
+            let schedule = frame
+                .params
+                .get("schedule")
+                .cloned()
+                .unwrap_or_else(|| json!({}));
+            let payload = frame
+                .params
+                .get("payload")
+                .cloned()
+                .unwrap_or_else(|| json!({}));
             let session_target = frame
                 .params
                 .get("sessionTarget")
@@ -648,15 +678,29 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
         }
         "cron.update" => {
             let id = required_str(&frame.params, "id")?;
-            let patch = frame.params.get("patch").cloned().unwrap_or_else(|| json!({}));
+            let patch = frame
+                .params
+                .get("patch")
+                .cloned()
+                .unwrap_or_else(|| json!({}));
             let enabled = patch
                 .get("enabled")
                 .and_then(|value| value.as_bool())
-                .or_else(|| frame.params.get("enabled").and_then(|value| value.as_bool()));
+                .or_else(|| {
+                    frame
+                        .params
+                        .get("enabled")
+                        .and_then(|value| value.as_bool())
+                });
             let description = patch
                 .get("description")
                 .and_then(|value| value.as_str())
-                .or_else(|| frame.params.get("description").and_then(|value| value.as_str()));
+                .or_else(|| {
+                    frame
+                        .params
+                        .get("description")
+                        .and_then(|value| value.as_str())
+                });
             cron::update(state_root, &id, enabled, description).map_err(internal_error)
         }
         "cron.run" => {
@@ -710,7 +754,10 @@ fn dispatch_rpc(state_root: &PathBuf, frame: &RequestFrame) -> Result<Value, (St
         }
         "skills.update" => {
             let skill = required_str_alias(&frame.params, &["skill", "skillKey", "name"])?;
-            let enabled = frame.params.get("enabled").and_then(|value| value.as_bool());
+            let enabled = frame
+                .params
+                .get("enabled")
+                .and_then(|value| value.as_bool());
             let api_key = frame.params.get("apiKey").and_then(|value| value.as_str());
             skills::update(state_root, &skill, enabled, api_key).map_err(internal_error)
         }
@@ -782,14 +829,14 @@ fn publish_session_surface(
 ) -> Result<(), (String, String)> {
     let bridge = SpacetimeBridge::new(state_root).map_err(internal_error)?;
     bridge
-        .publish_session(&record.canonical_key, record.aliases.first().map(String::as_str))
+        .publish_session(
+            &record.canonical_key,
+            record.aliases.first().map(String::as_str),
+        )
         .map_err(internal_error)
 }
 
-fn publish_presence_surfaces(
-    state_root: &PathBuf,
-    result: &Value,
-) -> Result<(), (String, String)> {
+fn publish_presence_surfaces(state_root: &PathBuf, result: &Value) -> Result<(), (String, String)> {
     let bridge = SpacetimeBridge::new(state_root).map_err(internal_error)?;
     let Some(heartbeats) = result.get("heartbeats").and_then(|value| value.as_object()) else {
         return Ok(());
@@ -800,7 +847,9 @@ fn publish_presence_surfaces(
     }
 
     for operator_id in heartbeats.keys() {
-        bridge.publish_presence(operator_id).map_err(internal_error)?;
+        bridge
+            .publish_presence(operator_id)
+            .map_err(internal_error)?;
     }
 
     Ok(())

@@ -827,7 +827,10 @@ fn draw_families(frame: &mut Frame, app: &FamilyApp) {
 
 const M5_SUB_BRANCHES: [(&str, &str); 6] = [
     ("#5-0  M+M'", "Integral Identity — M0-M5 mirror"),
-    ("#5-1  L+P+L'+P'", "Theory Topology — accumulated understanding"),
+    (
+        "#5-1  L+P+L'+P'",
+        "Theory Topology — accumulated understanding",
+    ),
     ("#5-2  S+S'", "Full Stack — objective + project-specific"),
     ("#5-3  M' UI", "Electron App — WebMCP protocol hooks"),
     ("#5-4  S4/S4'", "Agent Rosters — Anima + Aletheia"),
@@ -968,7 +971,7 @@ fn draw_m5(frame: &mut Frame, app: &M5App) {
     let outer = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),  // header
+            Constraint::Length(3), // header
             Constraint::Min(10),   // main
             Constraint::Length(3), // logos strip
             Constraint::Length(3), // footer
@@ -989,8 +992,10 @@ fn draw_m5(frame: &mut Frame, app: &M5App) {
                 .add_modifier(Modifier::BOLD),
         ),
         Span::styled(
-            format!("  CF_MOBIUS (5/0)  tick {}/11 {} ",
-                app.logos_state.pipeline_tick, phase),
+            format!(
+                "  CF_MOBIUS (5/0)  tick {}/11 {} ",
+                app.logos_state.pipeline_tick, phase
+            ),
             Style::default().fg(Color::Magenta),
         ),
     ]))
@@ -1032,14 +1037,52 @@ fn draw_m5(frame: &mut Frame, app: &M5App) {
     // Right: detail for selected sub-branch
     let (branch_name, branch_desc) = M5_SUB_BRANCHES[app.selected];
     let families_for_branch: &[(u8, &str)] = match app.selected {
-        0 => &[(5, "M0"), (5, "M1"), (5, "M2"), (5, "M3"), (5, "M4"), (5, "M5")],
-        1 => &[(2, "L0"), (2, "L1"), (2, "L2"), (2, "L3"), (2, "L4"), (2, "L5"),
-               (1, "P0"), (1, "P1"), (1, "P2"), (1, "P3"), (1, "P4"), (1, "P5")],
-        2 => &[(3, "S0"), (3, "S1"), (3, "S2"), (3, "S3"), (3, "S4"), (3, "S5")],
+        0 => &[
+            (5, "M0"),
+            (5, "M1"),
+            (5, "M2"),
+            (5, "M3"),
+            (5, "M4"),
+            (5, "M5"),
+        ],
+        1 => &[
+            (2, "L0"),
+            (2, "L1"),
+            (2, "L2"),
+            (2, "L3"),
+            (2, "L4"),
+            (2, "L5"),
+            (1, "P0"),
+            (1, "P1"),
+            (1, "P2"),
+            (1, "P3"),
+            (1, "P4"),
+            (1, "P5"),
+        ],
+        2 => &[
+            (3, "S0"),
+            (3, "S1"),
+            (3, "S2"),
+            (3, "S3"),
+            (3, "S4"),
+            (3, "S5"),
+        ],
         3 => &[(5, "M'")],
         4 => &[(3, "S4"), (3, "S4'")],
-        5 => &[(4, "T0"), (4, "T1"), (4, "T2"), (4, "T3"), (4, "T4"), (4, "T5"),
-               (0, "C0"), (0, "C1"), (0, "C2"), (0, "C3"), (0, "C4"), (0, "C5")],
+        5 => &[
+            (4, "T0"),
+            (4, "T1"),
+            (4, "T2"),
+            (4, "T3"),
+            (4, "T4"),
+            (4, "T5"),
+            (0, "C0"),
+            (0, "C1"),
+            (0, "C2"),
+            (0, "C3"),
+            (0, "C4"),
+            (0, "C5"),
+        ],
         _ => &[],
     };
 
@@ -1072,10 +1115,7 @@ fn draw_m5(frame: &mut Frame, app: &M5App) {
             .unwrap_or(0) as u8;
         let qv = app.lookup(*fam, pos);
         lines.push(Line::from(vec![
-            Span::styled(
-                format!("  {:<4} ", label),
-                Style::default().fg(Color::Cyan),
-            ),
+            Span::styled(format!("  {:<4} ", label), Style::default().fg(Color::Cyan)),
             Span::raw(qv),
         ]));
     }
@@ -1116,7 +1156,10 @@ fn draw_m5(frame: &mut Frame, app: &M5App) {
         })
         .collect();
 
-    let mut all_spans = vec![Span::styled(" Logos FSM: ", Style::default().fg(Color::DarkGray))];
+    let mut all_spans = vec![Span::styled(
+        " Logos FSM: ",
+        Style::default().fg(Color::DarkGray),
+    )];
     all_spans.extend(logos_spans);
     all_spans.push(Span::styled(
         format!("  [{}]", stage_name),

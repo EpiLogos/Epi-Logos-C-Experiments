@@ -138,7 +138,10 @@ pub fn parse_subagent(
         ));
     }
     if body.trim().is_empty() {
-        errors.push(format!("{}: subagent body must not be empty", display_path(path)));
+        errors.push(format!(
+            "{}: subagent body must not be empty",
+            display_path(path)
+        ));
     }
     errors.extend(
         registry

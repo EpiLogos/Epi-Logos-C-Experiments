@@ -114,13 +114,57 @@ fn template_and_day_now_commands_write_real_files() {
     );
     assert!(thought.stdout.contains("T4-20260310-090807.md"));
 
-    let archive = run_epi(["vault", "archive-day", "10-03-2026"].as_slice(), &env);
-    assert!(archive
-        .stdout
-        .contains("Pratibimba/Self/Action/History/2026/03/W11/10"));
-    assert!(vault_root
-        .join("Pratibimba/Self/Action/History/2026/03/W11/10/daily-note.md")
-        .exists());
+    // archive-day without reflection guard should fail
+    let archive_no_reflect = run_epi(["vault", "archive-day", "10-03-2026"].as_slice(), &env);
+    assert!(
+        !archive_no_reflect.status.success(),
+        "archive-day must fail without c_5_reflection_complete"
+    );
+    assert!(
+        archive_no_reflect.stderr.contains("c_5_reflection_complete not set"),
+        "wrong error: {}",
+        archive_no_reflect.stderr
+    );
+
+    // archive-day --plan prints paths without moving
+    let daily_note = vault_root.join("Empty/Present/10-03-2026/daily-note.md");
+    let mut content = fs::read_to_string(&daily_note).unwrap();
+    content = content.replace("---\n", "---\nc_5_reflection_complete: true\n");
+    // Only replace the first occurrence (the closing ---)
+    let first_close = content.find("---\nc_5").unwrap();
+    fs::write(&daily_note, &content).unwrap();
+
+    let plan_out = run_epi(["vault", "archive-day", "10-03-2026", "--plan"].as_slice(), &env);
+    assert!(plan_out.status.success(), "plan failed: {}", plan_out.stderr);
+    assert!(
+        plan_out.stdout.contains("→"),
+        "--plan must print SOURCE → DEST, got: {}",
+        plan_out.stdout
+    );
+    assert!(
+        plan_out.stdout.contains("W11"),
+        "--plan output must contain W11: {}",
+        plan_out.stdout
+    );
+    // File must still exist (--plan does not move)
+    assert!(daily_note.exists(), "--plan must not move files");
+
+    // archive-day --force skips reflection guard
+    // Reset: remove the reflection line to test --force
+    let content_no_reflect = fs::read_to_string(&daily_note)
+        .unwrap()
+        .replace("c_5_reflection_complete: true\n", "");
+    fs::write(&daily_note, &content_no_reflect).unwrap();
+
+    let force_plan = run_epi(
+        ["vault", "archive-day", "10-03-2026", "--plan", "--force"].as_slice(),
+        &env,
+    );
+    assert!(
+        force_plan.status.success(),
+        "--force --plan must succeed without reflection: {}",
+        force_plan.stderr
+    );
 }
 
 #[test]
@@ -239,5 +283,63 @@ fn pasu_set_and_get_roundtrip() {
         get_result.stdout.contains("1990-06-15"),
         "get must return value, got: {}",
         get_result.stdout
+    );
+}
+
+#[test]
+fn kairos_status_returns_stub_when_no_birth_data() {
+    let base_env = env_with_fake_obsidian();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    // Create PASU.md with empty birth data
+    let pasu_dir = vault_root.join("Pratibimba/Self");
+    fs::create_dir_all(&pasu_dir).unwrap();
+    fs::write(
+        pasu_dir.join("PASU.md"),
+        "---\ncoordinate: \"PASU\"\nc_0_birth_date: \"\"\nc_0_birth_location: \"\"\nc_0_natal_chart_path: \"\"\n---\n\n# PASU\n",
+    ).unwrap();
+
+    let result = run_epi(
+        ["vault", "kairos", "status"].as_slice(),
+        &env,
+    );
+    assert!(result.status.success(), "kairos status must succeed: {}", result.stderr);
+    let out = &result.stdout;
+    assert!(
+        out.contains("mode: stub") || out.contains("planet_valid: 0x00"),
+        "must report stub mode when no birth data: {out}"
+    );
+}
+
+#[test]
+fn kairos_status_reports_natal_when_chart_exists() {
+    let base_env = env_with_fake_obsidian();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    // Create PASU.md with birth data and a pre-existing chart
+    let pasu_dir = vault_root.join("Pratibimba/Self");
+    fs::create_dir_all(&pasu_dir).unwrap();
+    fs::write(
+        pasu_dir.join("PASU.md"),
+        "---\ncoordinate: \"PASU\"\nc_0_birth_date: \"1990-06-15\"\nc_0_birth_location: \"Berlin, Germany\"\nc_0_natal_chart_path: \"Pratibimba/Self/natal-chart.json\"\n---\n\n# PASU\n",
+    ).unwrap();
+    fs::write(
+        pasu_dir.join("natal-chart.json"),
+        r#"{"sun_degree":168.4,"moon_degree":42.1,"planet_degrees":[168.4,42.1,155.2,190.3,45.6,210.7,300.2],"planet_valid":127}"#,
+    ).unwrap();
+
+    let result = run_epi(
+        ["vault", "kairos", "status"].as_slice(),
+        &env,
+    );
+    assert!(result.status.success(), "kairos status must succeed: {}", result.stderr);
+    let out = &result.stdout;
+    assert!(
+        out.contains("mode: natal"),
+        "must report natal mode when chart exists: {out}"
     );
 }

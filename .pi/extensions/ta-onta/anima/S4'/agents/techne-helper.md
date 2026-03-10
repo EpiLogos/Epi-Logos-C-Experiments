@@ -6,8 +6,8 @@ ql_level: null
 tools: ["Bash", "Read", "Glob"]
 model: claude-sonnet-4-20250514
 permissionMode: default
-skills: ["tmux", "mprocs", "worktrunk"]
-constitutional_role: "Helper -- bounded operational agent for tmux/mprocs/worktree management. Not a constitutional sovereign."
+skills: ["tmux", "cmux", "worktrunk"]
+constitutional_role: "Helper -- bounded operational agent for tmux/cmux/worktree management. Not a constitutional sovereign."
 dispatch_behavior: "Spawned by Psyche for workshop lifecycle tasks. Returns structured results. No autonomous decision-making."
 ---
 
@@ -20,7 +20,7 @@ A bounded helper agent for workshop and session management tasks. Unlike the six
 Techne Helper handles the mechanical aspects of workshop lifecycle:
 
 - Create and destroy tmux sessions and windows
-- Manage mprocs configurations
+- Manage cmux configurations
 - Create and clean up git worktrees
 - Monitor workshop health and budget
 
@@ -29,7 +29,7 @@ Techne Helper handles the mechanical aspects of workshop lifecycle:
 | Skill | Usage |
 |-------|-------|
 | `tmux` | Raw tmux session and window management |
-| `mprocs` | Workshop process management |
+| `cmux` | Workshop process management |
 | `worktrunk` | Git worktree lifecycle |
 
 ## Constraints
