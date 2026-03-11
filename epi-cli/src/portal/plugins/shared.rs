@@ -133,6 +133,27 @@ impl HypertilePlugin for HelpPlugin {
     }
 }
 
+pub struct StatusPlugin;
+
+impl StatusPlugin {
+    pub fn new() -> Self { Self }
+}
+
+impl HypertilePlugin for StatusPlugin {
+    fn render(&self, area: Rect, buf: &mut Buffer, is_focused: bool) {
+        let para = Paragraph::new("Cross-M Status Overview — stub")
+            .block(Block::default()
+                .title(" Status ")
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(if is_focused {
+                    Color::Cyan
+                } else {
+                    Color::DarkGray
+                })));
+        Widget::render(para, area, buf);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
