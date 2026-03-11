@@ -1,6 +1,6 @@
 use clap::Subcommand;
-use std::process::Command;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 #[derive(Subcommand)]
 pub enum AppCmd {
@@ -14,18 +14,14 @@ pub enum AppCmd {
 
 pub fn dispatch(cmd: &AppCmd) {
     let repo_root = repo_root();
-    let app_source = app_source_dir(&repo_root);
-    let app_bundle = app_bundle_path(&repo_root);
-    let app_launcher = app_launcher_path(&repo_root);
-    let wrap_arm64 = should_wrap_node_commands_for_arm64();
 
     match cmd {
         AppCmd::Launch => {
-            let status = launcher_command(&app_launcher, wrap_arm64).status();
+            let app_bundle = app_bundle_path(&repo_root);
+            let app_launcher = app_launcher_path(&repo_root);
+            let status = launch_command_for_repo(&repo_root).status();
             match status {
-                Ok(s) if !s.success() => {
-                    std::process::exit(s.code().unwrap_or(1))
-                }
+                Ok(s) if !s.success() => std::process::exit(s.code().unwrap_or(1)),
                 Err(e) => {
                     eprintln!("epi app: failed to launch: {}", e);
                     eprintln!("  expected bundle: {}", app_bundle.display());
@@ -36,7 +32,8 @@ pub fn dispatch(cmd: &AppCmd) {
             }
         }
         AppCmd::Dev => {
-            let status = shell_command_in_dir(&app_source, "npm run dev", wrap_arm64).status();
+            let app_source = app_source_dir(&repo_root);
+            let status = dev_command_for_repo(&repo_root).status();
             match status {
                 Ok(s) if !s.success() => std::process::exit(s.code().unwrap_or(1)),
                 Err(e) => {
@@ -48,7 +45,8 @@ pub fn dispatch(cmd: &AppCmd) {
             }
         }
         AppCmd::Build => {
-            let status = shell_command_in_dir(&app_source, "npm run build", wrap_arm64).status();
+            let app_source = app_source_dir(&repo_root);
+            let status = build_command_for_repo(&repo_root).status();
             match status {
                 Ok(s) if !s.success() => std::process::exit(s.code().unwrap_or(1)),
                 Err(e) => {
@@ -74,6 +72,9 @@ fn repo_root() -> PathBuf {
 }
 
 fn app_source_dir(repo_root: &Path) -> PathBuf {
+    if let Some(path) = std::env::var_os("EPI_APP_SOURCE_DIR") {
+        return PathBuf::from(path);
+    }
     repo_root.join("Idea/Pratibimba/System/epi-app")
 }
 
@@ -82,6 +83,12 @@ fn app_bundle_path(repo_root: &Path) -> PathBuf {
 }
 
 fn app_launcher_path(repo_root: &Path) -> PathBuf {
+    if let Some(path) = std::env::var_os("EPI_UP_APP_LAUNCHER") {
+        return PathBuf::from(path);
+    }
+    if let Some(path) = std::env::var_os("EPI_APP_LAUNCHER_PATH") {
+        return PathBuf::from(path);
+    }
     app_bundle_path(repo_root).join("Contents/MacOS/launcher")
 }
 
@@ -127,6 +134,29 @@ fn launcher_command(path: &Path, wrap_arm64: bool) -> Command {
         command.arg(path);
         command
     }
+}
+
+pub fn launch_command_for_repo(repo_root: &Path) -> Command {
+    launcher_command(
+        &app_launcher_path(repo_root),
+        should_wrap_node_commands_for_arm64(),
+    )
+}
+
+pub fn dev_command_for_repo(repo_root: &Path) -> Command {
+    shell_command_in_dir(
+        &app_source_dir(repo_root),
+        "npm run dev",
+        should_wrap_node_commands_for_arm64(),
+    )
+}
+
+pub fn build_command_for_repo(repo_root: &Path) -> Command {
+    shell_command_in_dir(
+        &app_source_dir(repo_root),
+        "npm run build",
+        should_wrap_node_commands_for_arm64(),
+    )
 }
 
 #[cfg(test)]

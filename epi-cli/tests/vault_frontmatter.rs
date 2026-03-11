@@ -77,7 +77,11 @@ c_0_links_to: "[[Bimba/Seeds/C/C0]]"
     )
     .unwrap();
     let result = validate_frontmatter(&yaml);
-    assert!(result.errors.is_empty(), "Expected no errors, got: {:?}", result.errors);
+    assert!(
+        result.errors.is_empty(),
+        "Expected no errors, got: {:?}",
+        result.errors
+    );
 }
 
 #[test]
@@ -95,7 +99,10 @@ S_8_bad: "out of range"
     let result = validate_frontmatter(&yaml);
     // bimbaCoordinate is deprecated — should be a warning
     assert!(
-        result.warnings.iter().any(|w| w.contains("bimbaCoordinate")),
+        result
+            .warnings
+            .iter()
+            .any(|w| w.contains("bimbaCoordinate")),
         "Should warn about deprecated bimbaCoordinate, got warnings: {:?}",
         result.warnings
     );
@@ -105,7 +112,10 @@ S_8_bad: "out of range"
     );
     // coordinate is now canonical — should NOT be flagged
     assert!(
-        !result.errors.iter().any(|e| e.contains("coordinate") && e.contains("deprecated")),
+        !result
+            .errors
+            .iter()
+            .any(|e| e.contains("coordinate") && e.contains("deprecated")),
         "coordinate is canonical, should not be deprecated"
     );
     assert!(
@@ -139,7 +149,10 @@ fn integration_validate_frontmatter_not_a_mapping() {
     let yaml: Value = serde_yaml::from_str("42").unwrap();
     let result = validate_frontmatter(&yaml);
     assert!(
-        result.errors.iter().any(|e| e.contains("not a YAML mapping")),
+        result
+            .errors
+            .iter()
+            .any(|e| e.contains("not a YAML mapping")),
         "Should flag non-mapping YAML"
     );
 }
@@ -173,10 +186,17 @@ fn coordinate_field_is_canonical_not_deprecated() {
     );
     let result = validate_frontmatter(&serde_yaml::Value::Mapping(fm));
     // `coordinate` must not appear in errors or warnings as deprecated
-    assert!(!result.errors.iter().any(|e| e.contains("coordinate") && e.contains("deprecated")),
-        "coordinate should be canonical, not deprecated");
-    assert!(!result.warnings.iter().any(|w| w.contains("coordinate")),
-        "coordinate should not trigger any warning");
+    assert!(
+        !result
+            .errors
+            .iter()
+            .any(|e| e.contains("coordinate") && e.contains("deprecated")),
+        "coordinate should be canonical, not deprecated"
+    );
+    assert!(
+        !result.warnings.iter().any(|w| w.contains("coordinate")),
+        "coordinate should not trigger any warning"
+    );
 }
 
 #[test]
@@ -187,6 +207,12 @@ fn bimba_coordinate_field_is_deprecated() {
         serde_yaml::Value::String("M2".into()),
     );
     let result = validate_frontmatter(&serde_yaml::Value::Mapping(fm));
-    assert!(result.warnings.iter().any(|w| w.contains("bimbaCoordinate")),
-        "bimbaCoordinate should be deprecated warning, got: {:?}", result.warnings);
+    assert!(
+        result
+            .warnings
+            .iter()
+            .any(|w| w.contains("bimbaCoordinate")),
+        "bimbaCoordinate should be deprecated warning, got: {:?}",
+        result.warnings
+    );
 }

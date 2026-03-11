@@ -123,8 +123,10 @@ fn canonical_idea_tree_and_template_authority_exist() {
             "missing family directory {family}"
         );
         assert!(
-            root.join(format!("Idea/Bimba/World/Types/Coordinates/{family}/{family}'"))
-                .is_dir(),
+            root.join(format!(
+                "Idea/Bimba/World/Types/Coordinates/{family}/{family}'"
+            ))
+            .is_dir(),
             "missing inversion directory {family}'"
         );
 
@@ -146,12 +148,24 @@ fn canonical_idea_tree_and_template_authority_exist() {
         }
     }
 
-    assert!(root.join("Idea/Bimba/World/Types/Coordinates/C/C0/C0'/CPF").is_dir());
-    assert!(root.join("Idea/Bimba/World/Types/Coordinates/C/C1/C1'/CT").is_dir());
-    assert!(root.join("Idea/Bimba/World/Types/Coordinates/C/C2/C2'/CFP").is_dir());
-    assert!(root.join("Idea/Bimba/World/Types/Coordinates/C/C3/C3'/CF").is_dir());
-    assert!(root.join("Idea/Bimba/World/Types/Coordinates/C/C4/C4'/CP").is_dir());
-    assert!(root.join("Idea/Bimba/World/Types/Coordinates/C/C5/C5'/CS").is_dir());
+    assert!(root
+        .join("Idea/Bimba/World/Types/Coordinates/C/C0/C0'/CPF")
+        .is_dir());
+    assert!(root
+        .join("Idea/Bimba/World/Types/Coordinates/C/C1/C1'/CT")
+        .is_dir());
+    assert!(root
+        .join("Idea/Bimba/World/Types/Coordinates/C/C2/C2'/CFP")
+        .is_dir());
+    assert!(root
+        .join("Idea/Bimba/World/Types/Coordinates/C/C3/C3'/CF")
+        .is_dir());
+    assert!(root
+        .join("Idea/Bimba/World/Types/Coordinates/C/C4/C4'/CP")
+        .is_dir());
+    assert!(root
+        .join("Idea/Bimba/World/Types/Coordinates/C/C5/C5'/CS")
+        .is_dir());
 
     for frame in [
         "CF_VOID",
@@ -163,8 +177,10 @@ fn canonical_idea_tree_and_template_authority_exist() {
         "CF_MOBIUS",
     ] {
         assert!(
-            root.join(format!("Idea/Bimba/World/Types/Coordinates/C/C3/C3'/CF/{frame}"))
-                .is_dir(),
+            root.join(format!(
+                "Idea/Bimba/World/Types/Coordinates/C/C3/C3'/CF/{frame}"
+            ))
+            .is_dir(),
             "missing context frame directory {frame}"
         );
     }

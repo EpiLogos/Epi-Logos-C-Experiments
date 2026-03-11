@@ -4,7 +4,9 @@ pub mod pasu;
 pub mod paths;
 pub mod templates;
 
-use crate::vault::paths::{archive_day_path, day_folder, day_note_path, now_note_path, thought_note_path};
+use crate::vault::paths::{
+    archive_day_path, day_folder, day_note_path, now_note_path, thought_note_path,
+};
 use crate::vault::templates::{render_template, TemplateRenderContext};
 use chrono::{DateTime, NaiveDate, Utc};
 use clap::Subcommand;
@@ -495,8 +497,7 @@ fn now_init(session_id: &str, now_override: Option<&str>) -> Result<String, Stri
 
     // Create NOW subdirectories per Hen CONTRACT
     for subdir in &["thinking", "thoughts", "tasks", "patterns"] {
-        fs::create_dir_all(now_dir.join(subdir))
-            .map_err(|e| format!("create {subdir}/: {e}"))?;
+        fs::create_dir_all(now_dir.join(subdir)).map_err(|e| format!("create {subdir}/: {e}"))?;
     }
 
     let path = now_note_path(&vr, now, session_id);
@@ -543,7 +544,10 @@ fn flow_init(now_override: Option<&str>) -> Result<String, String> {
     let day_dir = day_folder(&vr, now);
     let flow_path = day_dir.join("FLOW.md");
     if flow_path.exists() {
-        return Ok(format!("flow-init: FLOW.md already exists (noop) {}", flow_path.display()));
+        return Ok(format!(
+            "flow-init: FLOW.md already exists (noop) {}",
+            flow_path.display()
+        ));
     }
     fs::create_dir_all(&day_dir).map_err(|e| format!("create day dir: {e}"))?;
     let context = TemplateRenderContext {
@@ -554,7 +558,10 @@ fn flow_init(now_override: Option<&str>) -> Result<String, String> {
     };
     let body = render_template(&context, &repo_root(), &home_root())?;
     fs::write(&flow_path, &body).map_err(|e| format!("write FLOW.md: {e}"))?;
-    Ok(format!("flow-init: created FLOW.md at {}", flow_path.display()))
+    Ok(format!(
+        "flow-init: created FLOW.md at {}",
+        flow_path.display()
+    ))
 }
 
 fn archive_day(date: &str, plan: bool, force: bool) -> Result<String, String> {
@@ -576,9 +583,7 @@ fn archive_day(date: &str, plan: bool, force: bool) -> Result<String, String> {
         let content = fs::read_to_string(&daily_note)
             .map_err(|_| format!("cannot read {}", daily_note.display()))?;
         if !content.contains("c_5_reflection_complete: true") {
-            return Err(
-                "c_5_reflection_complete not set — use --force to override".into(),
-            );
+            return Err("c_5_reflection_complete not set — use --force to override".into());
         }
     }
 

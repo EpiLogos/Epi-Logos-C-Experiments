@@ -87,7 +87,9 @@ pub fn validate_frontmatter(yaml: &Value) -> ValidationResult {
     let map = match yaml.as_mapping() {
         Some(m) => m,
         None => {
-            result.errors.push("Frontmatter is not a YAML mapping".to_string());
+            result
+                .errors
+                .push("Frontmatter is not a YAML mapping".to_string());
             return result;
         }
     };
@@ -105,7 +107,9 @@ fn validate_identity(map: &Mapping, result: &mut ValidationResult) {
         match val.as_str() {
             Some(s) if is_valid_coordinate(s) => {}
             Some(s) => result.errors.push(format!("Invalid coordinate: '{s}'")),
-            None => result.errors.push("coordinate must be a string".to_string()),
+            None => result
+                .errors
+                .push("coordinate must be a string".to_string()),
         }
     }
 
@@ -113,8 +117,12 @@ fn validate_identity(map: &Mapping, result: &mut ValidationResult) {
     if let Some(val) = map.get(Value::String("bimbaCoordinate".to_string())) {
         match val.as_str() {
             Some(s) if is_valid_coordinate(s) => {}
-            Some(s) => result.errors.push(format!("Invalid bimbaCoordinate: '{s}'")),
-            None => result.errors.push("bimbaCoordinate must be a string".to_string()),
+            Some(s) => result
+                .errors
+                .push(format!("Invalid bimbaCoordinate: '{s}'")),
+            None => result
+                .errors
+                .push("bimbaCoordinate must be a string".to_string()),
         }
     }
 
@@ -132,12 +140,16 @@ fn validate_identity(map: &Mapping, result: &mut ValidationResult) {
 fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
     for (key, value) in map {
         let Some(key_str) = key.as_str() else {
-            result.errors.push("Frontmatter keys must be strings".to_string());
+            result
+                .errors
+                .push("Frontmatter keys must be strings".to_string());
             continue;
         };
 
         if is_deprecated_key(key_str) {
-            result.warnings.push(format!("Deprecated frontmatter key '{key_str}'"));
+            result
+                .warnings
+                .push(format!("Deprecated frontmatter key '{key_str}'"));
             continue;
         }
 
@@ -153,11 +165,15 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
         }
 
         if key_str.starts_with("pos_") || key_str.starts_with("pos") {
-            result.warnings.push(format!("Deprecated frontmatter key '{key_str}'"));
+            result
+                .warnings
+                .push(format!("Deprecated frontmatter key '{key_str}'"));
             continue;
         }
 
-        result.errors.push(format!("Unknown frontmatter key '{key_str}'"));
+        result
+            .errors
+            .push(format!("Unknown frontmatter key '{key_str}'"));
     }
 }
 
@@ -235,7 +251,8 @@ M_5_epii: "wrong"
         )
         .unwrap();
         let result = validate_frontmatter(&yaml);
-        assert!(result.errors
+        assert!(result
+            .errors
             .iter()
             .any(|error| error.contains("Unknown frontmatter key 'M_5_epii'")));
     }

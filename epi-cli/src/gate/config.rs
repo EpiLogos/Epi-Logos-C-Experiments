@@ -40,7 +40,7 @@ impl Default for GatewayConfig {
         Self {
             port: DEFAULT_GATEWAY_PORT,
             bind_mode: BindMode::Loopback,
-            auth_mode: "placeholder".to_owned(),
+            auth_mode: "local".to_owned(),
             tls_enabled: false,
             state_root: None,
             bootstrap_root: None,

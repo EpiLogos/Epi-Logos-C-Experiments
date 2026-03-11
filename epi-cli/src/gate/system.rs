@@ -6,6 +6,9 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
+use crate::graph::doctor;
+use crate::sesh::session::{read_session_state, repo_root_from_env};
+
 use super::logs;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -96,9 +99,16 @@ pub fn status_summary(state_root: impl AsRef<Path>) -> Result<Value, String> {
 }
 
 pub fn health_snapshot(state_root: impl AsRef<Path>) -> Result<Value, String> {
+    let state_root = state_root.as_ref();
     let state = load_state(state_root)?;
+    let session = session_health();
+    let vault = vault_health(&session);
+    let graph = graph_health(state_root)?;
+    let ok = session["ok"] == Value::Bool(true)
+        && vault["ok"] == Value::Bool(true)
+        && graph["ok"] == Value::Bool(true);
     Ok(json!({
-        "ok": true,
+        "ok": ok,
         "checks": {
             "heartbeats": {
                 "ok": true,
@@ -112,7 +122,10 @@ pub fn health_snapshot(state_root: impl AsRef<Path>) -> Result<Value, String> {
             "voicewake": {
                 "ok": true,
                 "enabled": state.voicewake_enabled,
-            }
+            },
+            "session": session,
+            "vault": vault,
+            "graph": graph,
         }
     }))
 }
@@ -229,6 +242,113 @@ fn state_path(state_root: impl AsRef<Path>) -> PathBuf {
 
 fn default_tts_provider() -> String {
     "system".to_owned()
+}
+
+fn session_health() -> Value {
+    let repo_root = repo_root_from_env();
+    match read_session_state(&repo_root) {
+        Ok(state) => json!({
+            "ok": true,
+            "workspaceRoot": repo_root.display().to_string(),
+            "sessionId": state.context.session_id,
+            "dayId": state.context.day_id,
+            "nowPath": state.context.now_path.display().to_string(),
+            "startedAt": state.context.started_at,
+        }),
+        Err(error) => json!({
+            "ok": false,
+            "workspaceRoot": repo_root.display().to_string(),
+            "error": error,
+        }),
+    }
+}
+
+fn vault_health(session: &Value) -> Value {
+    let now_path = session
+        .get("nowPath")
+        .and_then(Value::as_str)
+        .map(PathBuf::from);
+    match now_path {
+        Some(now_path) => json!({
+            "ok": now_path.exists(),
+            "nowPath": now_path.display().to_string(),
+            "present": now_path.exists(),
+        }),
+        None => json!({
+            "ok": false,
+            "error": "no active session now path",
+        }),
+    }
+}
+
+fn graph_health(state_root: &Path) -> Result<Value, String> {
+    const GRAPH_CACHE_TTL_MS: u128 = 5_000;
+
+    let cache_path = state_root.join("graph-health.json");
+    if let Ok(cached) = load_graph_cache(&cache_path) {
+        let age_ms = now_ms()?.saturating_sub(cached.checked_at_ms);
+        if age_ms <= GRAPH_CACHE_TTL_MS {
+            return Ok(json!({
+                "ok": cached.report["ok"].as_bool().unwrap_or(false),
+                "cachedAtMs": cached.checked_at_ms as u64,
+                "source": "cache",
+                "report": cached.report,
+            }));
+        }
+    }
+
+    let repo_root = repo_root_from_env();
+    let report = collect_graph_report(repo_root)?;
+    let checked_at_ms = now_ms()?;
+    save_graph_cache(
+        &cache_path,
+        &CachedGraphHealth {
+            checked_at_ms,
+            report: report.clone(),
+        },
+    )?;
+    Ok(json!({
+        "ok": report["ok"].as_bool().unwrap_or(false),
+        "cachedAtMs": checked_at_ms as u64,
+        "source": "fresh",
+        "report": report,
+    }))
+}
+
+fn collect_graph_report(repo_root: PathBuf) -> Result<Value, String> {
+    let join_result = std::thread::spawn(move || -> Result<Value, String> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|err| err.to_string())?;
+        let report = runtime.block_on(doctor::collect_report(&repo_root));
+        serde_json::to_value(report).map_err(|err| err.to_string())
+    })
+    .join();
+
+    match join_result {
+        Ok(result) => result,
+        Err(_) => Err("graph doctor thread panicked".to_owned()),
+    }
+}
+
+fn load_graph_cache(path: &Path) -> Result<CachedGraphHealth, String> {
+    let body = fs::read_to_string(path).map_err(|err| err.to_string())?;
+    serde_json::from_str(&body).map_err(|err| err.to_string())
+}
+
+fn save_graph_cache(path: &Path, cached: &CachedGraphHealth) -> Result<(), String> {
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent).map_err(|err| err.to_string())?;
+    }
+    let body = serde_json::to_string_pretty(cached).map_err(|err| err.to_string())?;
+    fs::write(path, body).map_err(|err| err.to_string())
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct CachedGraphHealth {
+    checked_at_ms: u128,
+    report: Value,
 }
 
 fn now_ms() -> Result<u128, String> {

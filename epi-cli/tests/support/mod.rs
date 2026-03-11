@@ -9,7 +9,7 @@ use futures_util::{SinkExt, StreamExt};
 use serde_json::{json, Value};
 use tokio_tungstenite::{connect_async, tungstenite::Message, MaybeTlsStream, WebSocketStream};
 
-pub use common::{run_epi, TestEnv, TestOutput};
+pub use common::{run_epi, ProcessEnvGuard, TestEnv, TestOutput};
 
 pub struct EpiProcess {
     env: TestEnv,
@@ -69,9 +69,17 @@ pub fn spawn_epi_background(args: &[&str], env: TestEnv) -> BackgroundEpiProcess
 pub struct TestGatewayClient {
     env: TestEnv,
     _server_lock: MutexGuard<'static, ()>,
+    _env_guard: ProcessEnvGuard,
     _server: TestServerHandle,
     socket: WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>,
     next_id: u64,
+}
+
+pub struct TestServerFixture {
+    pub env: TestEnv,
+    _server_lock: MutexGuard<'static, ()>,
+    _env_guard: ProcessEnvGuard,
+    pub server: TestServerHandle,
 }
 
 #[derive(Debug)]
@@ -81,7 +89,7 @@ pub struct TestGatewayError {
 
 impl TestGatewayClient {
     pub async fn connected_with_temp_store(port: u16) -> Self {
-        let env = temp_env();
+        let env = TestEnv::with_fake_pi();
         let mut client = Self::connect(env, port).await;
         client
             .request("connect", json!({}))
@@ -94,6 +102,7 @@ impl TestGatewayClient {
         let server_lock = test_server_lock()
             .lock()
             .unwrap_or_else(|poisoned| poisoned.into_inner());
+        let env_guard = env.apply_to_process();
         let gate_root = env.home.join(".epi").join("gate");
         let server = epi_logos::gate::server::spawn_test_server_with_state_root(gate_root, port)
             .await
@@ -110,6 +119,7 @@ impl TestGatewayClient {
         Self {
             env,
             _server_lock: server_lock,
+            _env_guard: env_guard,
             _server: server,
             socket,
             next_id: 1,
@@ -142,9 +152,15 @@ impl TestGatewayClient {
                 continue;
             }
 
+            let raw = message.to_text().expect("response should be text");
+            let frame: Value =
+                serde_json::from_str(raw).expect("gateway frame should be valid json");
+            if frame.get("type").and_then(Value::as_str) != Some("res") {
+                continue;
+            }
+
             let response: ResponseFrame =
-                serde_json::from_str(message.to_text().expect("response should be text"))
-                    .expect("response should match protocol shape");
+                serde_json::from_value(frame).expect("response should match protocol shape");
 
             if response.id != id {
                 continue;
@@ -170,6 +186,27 @@ impl TestGatewayClient {
 
     pub fn transcript_path(&self, session_key: &str) -> std::path::PathBuf {
         chat::transcript_path(self.gate_root(), session_key)
+    }
+}
+
+impl TestServerFixture {
+    pub async fn start(env: TestEnv, port: u16) -> Self {
+        let server_lock = test_server_lock()
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
+        let env_guard = env.apply_to_process();
+        let gate_root = env.home.join(".epi").join("gate");
+        let server = epi_logos::gate::server::spawn_test_server_with_state_root(gate_root, port)
+            .await
+            .expect("test gateway server should start");
+        tokio::time::sleep(Duration::from_millis(50)).await;
+
+        Self {
+            env,
+            _server_lock: server_lock,
+            _env_guard: env_guard,
+            server,
+        }
     }
 }
 

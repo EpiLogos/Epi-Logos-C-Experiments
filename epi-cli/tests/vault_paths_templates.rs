@@ -106,9 +106,20 @@ fn builtin_template_emits_coordinate_not_bimba_coordinate() {
         session_id: Some("20260310-090807-abc123".to_string()),
         now: Utc.with_ymd_and_hms(2026, 3, 10, 9, 8, 7).unwrap(),
     };
-    let rendered = render_template(&ctx, &PathBuf::from("/nonexistent"), &PathBuf::from("/home")).unwrap();
-    assert!(rendered.contains("coordinate: \"M2\""), "must emit coordinate: field, got:\n{rendered}");
-    assert!(!rendered.contains("bimbaCoordinate"), "must NOT emit bimbaCoordinate, got:\n{rendered}");
+    let rendered = render_template(
+        &ctx,
+        &PathBuf::from("/nonexistent"),
+        &PathBuf::from("/home"),
+    )
+    .unwrap();
+    assert!(
+        rendered.contains("coordinate: \"M2\""),
+        "must emit coordinate: field, got:\n{rendered}"
+    );
+    assert!(
+        !rendered.contains("bimbaCoordinate"),
+        "must NOT emit bimbaCoordinate, got:\n{rendered}"
+    );
 }
 
 #[test]

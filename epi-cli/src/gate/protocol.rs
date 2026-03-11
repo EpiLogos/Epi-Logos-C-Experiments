@@ -42,6 +42,7 @@ pub struct HelloOkFrame {
 #[derive(Debug, Clone, Serialize)]
 pub struct HelloFeatures {
     pub methods: Vec<&'static str>,
+    pub events: Vec<&'static str>,
 }
 
 pub fn hello_ok() -> HelloOkFrame {
@@ -51,6 +52,7 @@ pub fn hello_ok() -> HelloOkFrame {
         version: "s3-gateway-dev",
         features: HelloFeatures {
             methods: parity::method_names().to_vec(),
+            events: parity::event_names().to_vec(),
         },
     }
 }
@@ -83,6 +85,7 @@ pub fn connect_result() -> Value {
         "version": "s3-gateway-dev",
         "features": {
             "methods": parity::method_names(),
+            "events": parity::event_names(),
         }
     })
 }

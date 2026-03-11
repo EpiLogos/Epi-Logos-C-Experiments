@@ -1,4 +1,4 @@
-use epi_logos::agent::vak::{evaluate_vak, cf_to_agent};
+use epi_logos::agent::vak::{cf_to_agent, evaluate_vak};
 
 #[test]
 fn vak_evaluation_assigns_six_layers() {
@@ -47,11 +47,19 @@ fn cf_to_agent_maps_all_codes() {
 #[test]
 fn vak_test_tasks_route_to_eros() {
     let result = evaluate_vak("Write tests for the archive_day function");
-    assert_eq!(result.cf.as_deref(), Some("(0/1/2)"), "test tasks should route to eros");
+    assert_eq!(
+        result.cf.as_deref(),
+        Some("(0/1/2)"),
+        "test tasks should route to eros"
+    );
 }
 
 #[test]
 fn vak_review_tasks_route_to_sophia() {
     let result = evaluate_vak("Review and summarize today's work");
-    assert_eq!(result.cf.as_deref(), Some("(5/0)"), "review tasks should route to sophia");
+    assert_eq!(
+        result.cf.as_deref(),
+        Some("(5/0)"),
+        "review tasks should route to sophia"
+    );
 }

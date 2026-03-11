@@ -48,10 +48,9 @@ fn khora_and_hen_extension_scaffolds_exist() {
     assert!(khora_tools.contains("epi core knowing"));
     assert!(khora_tools.contains("epi vault"));
 
-    let khora_cli_manifest = fs::read_to_string(
-        root.join(".pi/extensions/ta-onta/khora/S0/cli/preferred-tools.json"),
-    )
-    .unwrap();
+    let khora_cli_manifest =
+        fs::read_to_string(root.join(".pi/extensions/ta-onta/khora/S0/cli/preferred-tools.json"))
+            .unwrap();
     assert!(khora_cli_manifest.contains("\"search\""));
     assert!(khora_cli_manifest.contains("\"rg\""));
     assert!(khora_cli_manifest.contains("\"grep\""));
@@ -88,8 +87,8 @@ fn khora_and_hen_extension_scaffolds_exist() {
     assert!(hen_tools.contains("epi vault template-invoke"));
     assert!(hen_tools.contains("epi vault thought-route"));
 
-    let khora_contract = fs::read_to_string(root.join(".pi/extensions/ta-onta/khora/CONTRACT.md"))
-        .unwrap();
+    let khora_contract =
+        fs::read_to_string(root.join(".pi/extensions/ta-onta/khora/CONTRACT.md")).unwrap();
     assert!(khora_contract.contains("S0/cli"));
     assert!(khora_contract.contains("agent-facing command preferences"));
     assert!(khora_contract.contains("PI-visible tool"));

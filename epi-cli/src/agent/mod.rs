@@ -10,9 +10,9 @@ mod install;
 mod models;
 mod plugin_manifest;
 mod plugins;
-mod session;
+pub mod session;
 mod skills;
-mod spawn;
+pub mod spawn;
 mod subagents;
 pub mod vak;
 
@@ -171,7 +171,10 @@ pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
         }
         AgentCmd::Session { cmd } => session::run(cmd, json),
         AgentCmd::Vak { cmd } => match cmd {
-            VakCmd::Evaluate { task, json: as_json } => {
+            VakCmd::Evaluate {
+                task,
+                json: as_json,
+            } => {
                 let result = vak::evaluate_vak(task);
                 if *as_json || json {
                     Ok(serde_json::to_string_pretty(&result).unwrap_or_default())

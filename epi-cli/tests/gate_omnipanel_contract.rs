@@ -7,6 +7,10 @@ fn omnipanel_contract_surfaces_alias_and_active_agent_metadata() {
     let hello = omnipanel::hello_contract();
 
     assert!(hello.features.methods.contains(&"sessions.resolve"));
+    assert!(hello.features.methods.contains(&"agent"));
+    assert!(hello.features.methods.contains(&"health"));
+    assert!(hello.features.methods.contains(&"status"));
+    assert!(hello.features.methods.contains(&"wake"));
     assert!(hello.session_metadata.contains(&"alias"));
     assert!(hello.session_metadata.contains(&"activeAgentId"));
     assert!(hello.session_metadata.contains(&"subagentLineage"));
