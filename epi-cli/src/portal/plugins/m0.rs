@@ -235,20 +235,216 @@ fn ptr_line<'a>(label: &'a str, info: &ffi::PtrInfo) -> Line<'a> {
     ])
 }
 
-pub struct M0FamiliesPlugin;
+// ═══════════════════════════════════════════════════════════════════════════
+// M0FamiliesPlugin — 36-coordinate explorer
+// ═══════════════════════════════════════════════════════════════════════════
+
+pub struct M0FamiliesPlugin {
+    epi: ffi::EpiLib,
+    arena: ffi::CoordinateArena,
+    family_coords: Vec<(String, ffi::CoordSnapshot)>,
+    selected: usize,
+}
+
+// EpiLib holds raw pointers to .rodata (static lifetime), safe to send
+unsafe impl Send for M0FamiliesPlugin {}
 
 impl M0FamiliesPlugin {
-    pub fn new() -> Self { Self }
+    pub fn new() -> Self {
+        let epi = ffi::EpiLib::new();
+        let mut arena = ffi::CoordinateArena {
+            slots: std::ptr::null_mut(),
+            capacity: 0,
+            count: 0,
+        };
+        epi.arena_init(&mut arena, 64);
+
+        let mut mirrors: [*mut ffi::HolographicCoordinate; 6] = [std::ptr::null_mut(); 6];
+        epi.families_init(&mut arena, &mut mirrors);
+        epi.families_crosslink(&mut arena);
+        epi.families_wire_reflective(&mut arena);
+
+        // Read all allocated coordinates
+        let families = ["P", "S", "T", "M", "L", "C"];
+        let positions = ["0", "1", "2", "3", "4", "5"];
+        let mut family_coords = Vec::new();
+
+        for slot_idx in 0..arena.count {
+            let ptr = unsafe { arena.slots.add(slot_idx as usize) };
+            if let Some(snap) = ffi::read_coord(ptr) {
+                let fam_idx = snap.family as u8;
+                let fam_letter = if (fam_idx as usize) >= 1 && (fam_idx as usize) <= 6 {
+                    families[fam_idx as usize - 1]
+                } else {
+                    "?"
+                };
+                let pos_label = if (snap.ql_position as usize) < 6 {
+                    positions[snap.ql_position as usize]
+                } else {
+                    "?"
+                };
+                let name = format!("{}{}", fam_letter, pos_label);
+                family_coords.push((name, snap));
+            }
+        }
+
+        Self {
+            epi,
+            arena,
+            family_coords,
+            selected: 0,
+        }
+    }
+
+    fn family_color(family: ffi::CoordinateFamily) -> Color {
+        match family {
+            ffi::CoordinateFamily::P => Color::Green,
+            ffi::CoordinateFamily::S => Color::Blue,
+            ffi::CoordinateFamily::T => Color::Yellow,
+            ffi::CoordinateFamily::M => Color::Red,
+            ffi::CoordinateFamily::L => Color::Magenta,
+            ffi::CoordinateFamily::C => Color::Cyan,
+            _ => Color::White,
+        }
+    }
+}
+
+impl Drop for M0FamiliesPlugin {
+    fn drop(&mut self) {
+        self.epi.arena_destroy(&mut self.arena);
+    }
 }
 
 impl HypertilePlugin for M0FamiliesPlugin {
     fn render(&self, area: Rect, buf: &mut Buffer, is_focused: bool) {
-        let para = Paragraph::new("M0' Families Explorer — stub")
-            .block(Block::default()
-                .title(" M0' Families ")
+        let accent = theme::m_level_color(0);
+
+        if self.family_coords.is_empty() {
+            let para = Paragraph::new("M0' Families — no coordinates loaded")
+                .block(Block::default()
+                    .title(" M0' Families ")
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(theme::pane_border(is_focused))));
+            Widget::render(para, area, buf);
+            return;
+        }
+
+        let chunks = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints([Constraint::Percentage(30), Constraint::Percentage(70)])
+            .split(area);
+
+        // Left: family coordinate list (6x6 = 36 coords)
+        let items: Vec<ListItem> = self.family_coords.iter().enumerate().map(|(i, (name, snap))| {
+            let inv = if snap.inversion_state != 0 { "'" } else { " " };
+            let line = format!(" {}{}  pos={}", name, inv, snap.ql_position);
+            let style = if i == self.selected {
+                Style::default().fg(Color::Black).bg(Color::Cyan)
+            } else {
+                Style::default().fg(Self::family_color(snap.family))
+            };
+            ListItem::new(line).style(style)
+        }).collect();
+
+        let list = List::new(items).block(
+            Block::default()
+                .title(Span::styled(
+                    " 36 Family Coordinates ",
+                    Style::default().fg(accent).add_modifier(Modifier::BOLD),
+                ))
                 .borders(Borders::ALL)
-                .border_style(Style::default().fg(theme::pane_border(is_focused))));
-        Widget::render(para, area, buf);
+                .border_style(Style::default().fg(theme::pane_border(is_focused))),
+        );
+        Widget::render(list, chunks[0], buf);
+
+        // Right: detail for selected
+        if let Some((name, snap)) = self.family_coords.get(self.selected) {
+            let flags_desc = tagged::flags_description(snap.flags);
+            let lines = vec![
+                Line::from(vec![
+                    Span::styled("name:         ", Style::default().fg(Color::DarkGray)),
+                    Span::styled(
+                        name.clone(),
+                        Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+                    ),
+                ]),
+                Line::from(vec![
+                    Span::styled("family:       ", Style::default().fg(Color::DarkGray)),
+                    Span::raw(snap.family.name()),
+                ]),
+                Line::from(vec![
+                    Span::styled("ql_position:  ", Style::default().fg(Color::DarkGray)),
+                    Span::raw(format!("0x{:02X} ({})", snap.ql_position, crate::core::position_name(snap.ql_position))),
+                ]),
+                Line::from(vec![
+                    Span::styled("flags:        ", Style::default().fg(Color::DarkGray)),
+                    Span::raw(format!("0x{:02X} [{}]", snap.flags, flags_desc)),
+                ]),
+                Line::from(vec![
+                    Span::styled("weave_state:  ", Style::default().fg(Color::DarkGray)),
+                    Span::raw(format!("{:.2}", snap.weave_state)),
+                ]),
+                Line::from(vec![
+                    Span::styled("inversion:    ", Style::default().fg(Color::DarkGray)),
+                    Span::styled(
+                        if snap.inversion_state == 0 { "normal" } else { "inverted (')" },
+                        if snap.inversion_state != 0 {
+                            Style::default().fg(Color::Red)
+                        } else {
+                            Style::default()
+                        },
+                    ),
+                ]),
+                Line::from(""),
+                Line::from(Span::styled("── Base Pointers ──", Style::default().fg(Color::Cyan))),
+                ptr_line(".p  ", &snap.p),
+                ptr_line(".s  ", &snap.s),
+                ptr_line(".t  ", &snap.t),
+                ptr_line(".m  ", &snap.m),
+                ptr_line(".l  ", &snap.l),
+                ptr_line(".c  ", &snap.c),
+                Line::from(""),
+                Line::from(Span::styled("── Reflective ──", Style::default().fg(Color::Yellow))),
+                ptr_line(".cpf", &snap.cpf),
+                ptr_line(".ct ", &snap.ct),
+                ptr_line(".cp ", &snap.cp),
+                ptr_line(".cf ", &snap.cf),
+                ptr_line(".cfp", &snap.cfp),
+                ptr_line(".cs ", &snap.cs),
+            ];
+
+            let para = Paragraph::new(lines).block(
+                Block::default()
+                    .title(format!(" {} -- Detail ", name))
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(Color::Green)),
+            );
+            Widget::render(para, chunks[1], buf);
+        }
+    }
+
+    fn on_event(&mut self, event: &HypertileEvent) -> EventOutcome {
+        if self.family_coords.is_empty() {
+            return EventOutcome::Ignored;
+        }
+        if let HypertileEvent::Key(chord) = event {
+            match chord.code {
+                KeyCode::Down | KeyCode::Char('j') => {
+                    if self.selected + 1 < self.family_coords.len() {
+                        self.selected += 1;
+                    }
+                    return EventOutcome::Consumed;
+                }
+                KeyCode::Up | KeyCode::Char('k') => {
+                    if self.selected > 0 {
+                        self.selected -= 1;
+                    }
+                    return EventOutcome::Consumed;
+                }
+                _ => {}
+            }
+        }
+        EventOutcome::Ignored
     }
 }
 
@@ -318,5 +514,47 @@ mod tests {
         let result = plugin.on_event(&up);
         assert!(matches!(result, EventOutcome::Consumed));
         assert_eq!(plugin.selected, 0);
+    }
+
+    // ── M0FamiliesPlugin ──
+
+    #[test]
+    fn m0_families_renders_title() {
+        let plugin = M0FamiliesPlugin::new();
+        let area = Rect::new(0, 0, 80, 24);
+        let mut buf = Buffer::empty(area);
+        plugin.render(area, &mut buf, true);
+        let content = buffer_to_string(&buf, area);
+        assert!(content.contains("36 Family") || content.contains("Families"),
+            "Should show families title");
+    }
+
+    #[test]
+    fn m0_families_navigation() {
+        let mut plugin = M0FamiliesPlugin::new();
+        assert_eq!(plugin.selected, 0);
+
+        let down = HypertileEvent::Key(ratatui_hypertile::KeyChord {
+            code: KeyCode::Char('j'),
+            modifiers: ratatui_hypertile::Modifiers::NONE,
+        });
+        let result = plugin.on_event(&down);
+        assert!(matches!(result, EventOutcome::Consumed));
+        assert_eq!(plugin.selected, 1);
+
+        let up = HypertileEvent::Key(ratatui_hypertile::KeyChord {
+            code: KeyCode::Char('k'),
+            modifiers: ratatui_hypertile::Modifiers::NONE,
+        });
+        let result = plugin.on_event(&up);
+        assert!(matches!(result, EventOutcome::Consumed));
+        assert_eq!(plugin.selected, 0);
+    }
+
+    #[test]
+    fn m0_families_has_coordinates() {
+        let plugin = M0FamiliesPlugin::new();
+        assert!(!plugin.family_coords.is_empty(),
+            "Should have loaded family coordinates from arena");
     }
 }
