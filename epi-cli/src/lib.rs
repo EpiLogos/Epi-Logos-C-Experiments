@@ -8,6 +8,7 @@ pub mod gate;
 pub mod graph;
 pub mod nara;
 pub mod notebook;
+pub mod portal;
 pub mod sesh;
 pub mod sync;
 pub mod techne;

@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use epi_logos::{
-    agent, app, book, code, core, ffi, gate, graph, nara, notebook, sesh, sync, techne, up, vault,
-    vimarsa,
+    agent, app, book, code, core, ffi, gate, graph, nara, notebook, portal, sesh, sync, techne,
+    up, vault, vimarsa,
 };
 
 #[derive(Parser)]
@@ -99,6 +99,18 @@ enum Commands {
         #[command(subcommand)]
         cmd: nara::NaraCmd,
     },
+    /// M' experiential TUI portal
+    Portal {
+        /// Force factory default layout
+        #[arg(long)]
+        reset: bool,
+        /// Launch directly into a tab (personal, structural)
+        #[arg(long)]
+        tab: Option<String>,
+        /// Load a named saved layout
+        #[arg(long)]
+        layout: Option<String>,
+    },
 
     // Help
     /// Project help — rooted in the # coordinate
@@ -161,6 +173,14 @@ async fn main() -> color_eyre::Result<()> {
                 std::process::exit(1);
             }
         },
+        Commands::Portal {
+            reset,
+            tab,
+            layout,
+        } => {
+            let epi = ffi::EpiLib::new();
+            portal::launch(&epi, *reset, tab.as_deref(), layout.as_deref())?;
+        }
         Commands::Help { topic } => core::help_dispatch(topic.as_deref(), cli.json)?,
     }
 
