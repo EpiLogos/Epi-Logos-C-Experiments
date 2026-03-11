@@ -2,6 +2,8 @@ use crate::agent::AgentLayout;
 use serde::Serialize;
 use std::process::Command;
 
+const PI_PACKAGE: &str = "@mariozechner/pi-coding-agent";
+
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct InstallReport {
@@ -16,7 +18,27 @@ pub fn run(agent: Option<&str>, json: bool) -> Result<String, String> {
     let layout = AgentLayout::resolve(agent)?;
     layout.ensure_managed_layout()?;
 
-    let pi_present = pi_binary_present();
+    let mut next_action = "Run `epi agent doctor --json` to confirm sync and provider status."
+        .to_owned();
+
+    let pi_present = if pi_binary_present() {
+        true
+    } else {
+        match install_pi_binary() {
+            Ok(()) if pi_binary_present() => true,
+            Ok(()) => {
+                next_action = format!(
+                    "Installed `{PI_PACKAGE}` but `pi` is still not on PATH. Add your npm global bin to PATH, then rerun `epi agent install --json`."
+                );
+                false
+            }
+            Err(err) => {
+                next_action = err;
+                false
+            }
+        }
+    };
+
     let report = InstallReport {
         status: if pi_present {
             "ready".to_owned()
@@ -26,11 +48,7 @@ pub fn run(agent: Option<&str>, json: bool) -> Result<String, String> {
         agent_id: layout.agent_id,
         agent_dir: layout.agent_dir.display().to_string(),
         pi_binary_present: pi_present,
-        next_action: if pi_present {
-            "Run `epi agent doctor --json` to confirm sync and provider status.".to_owned()
-        } else {
-            "Install the `pi` binary locally, then rerun `epi agent install --json`.".to_owned()
-        },
+        next_action,
     };
 
     if json {
@@ -46,4 +64,29 @@ fn pi_binary_present() -> bool {
         .output()
         .map(|output| output.status.success())
         .unwrap_or(false)
+}
+
+fn install_pi_binary() -> Result<(), String> {
+    let output = Command::new("npm")
+        .args(["install", "-g", PI_PACKAGE])
+        .output()
+        .map_err(|err| {
+            format!(
+                "Failed to install `{PI_PACKAGE}` automatically: {err}. Install npm, or install the package manually and rerun `epi agent install --json`."
+            )
+        })?;
+
+    if output.status.success() {
+        Ok(())
+    } else {
+        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_owned();
+        let detail = if stderr.is_empty() {
+            format!("npm exited with status {}", output.status)
+        } else {
+            stderr
+        };
+        Err(format!(
+            "Automatic install of `{PI_PACKAGE}` failed: {detail}. Fix npm/global install settings, then rerun `epi agent install --json`."
+        ))
+    }
 }
