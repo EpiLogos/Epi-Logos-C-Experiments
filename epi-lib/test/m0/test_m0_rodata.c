@@ -161,6 +161,22 @@ int main(void) {
         assert(ARCHETYPE_LUT[0].formulation.signature & (1u << (OP_WITHHOLD - 1)));
     } PASS;
 
+    /* T15: Quaternionic Purnata seed is canonical zero */
+    TEST(purnata_quaternion_seed) {
+        assert(PURNATA_QUATERNION_SEED.w == 0.0f);
+        assert(PURNATA_QUATERNION_SEED.x == 0.0f);
+        assert(PURNATA_QUATERNION_SEED.y == 0.0f);
+        assert(PURNATA_QUATERNION_SEED.z == 0.0f);
+    } PASS;
+
+    /* T16: Concrescence helix matches the 12-step SU(2) ring */
+    TEST(concrescence_helix_shape) {
+        Concrescence_Trace trace = {0};
+        assert(CONCRESCENCE_STEPS == 12);
+        assert(sizeof(trace.states) / sizeof(trace.states[0]) == CONCRESCENCE_STEPS);
+        assert(trace.is_descending == 0);
+    } PASS;
+
     printf("\n=== M0 .rodata: %d/%d passed ===\n", tp, tr);
     return (tp == tr) ? 0 : 1;
 }

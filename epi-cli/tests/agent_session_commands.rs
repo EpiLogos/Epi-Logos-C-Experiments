@@ -48,7 +48,7 @@ fn init_status_continuation_and_close_manage_session_state() {
     let status = run_epi(["agent", "session", "status"].as_slice(), &env);
     assert!(status.stdout.contains("20260310-090807-abc123"));
     assert!(status.stdout.contains(
-        "bootstrap: CONTINUATION.md -> ANIMA.md -> PARADIGM.md -> MEMORY.md -> NOW.md -> TOOLS.md"
+        "bootstrap: CONTINUATION.md -> ANIMA.md -> PARADIGM.md -> PASU -> NOW.md -> TOOLS.md"
     ));
 
     let continuation = run_epi(

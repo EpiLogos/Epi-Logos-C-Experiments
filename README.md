@@ -169,7 +169,7 @@ epi-logos-plugin/scripts/install.sh
 epi-logos/
 ├── include/           C headers (ontology.h, m0.h–m5.h, arena.h, engine.h, vak.h)
 ├── src/               C sources (M0–M5, psychoid_numbers, engine, arena, qv_data)
-├── vendor/blake3/     Vendored BLAKE3 (portable C, no SIMD)
+├── vendor/blake3/     Vendored BLAKE3 (portable C, no SIMD; build disables NEON/SSE/AVX)
 ├── epi-cli/           Rust CLI + TUI
 │   ├── build.rs       cc crate: compiles C into Rust binary
 │   ├── src/           core, vault, graph, gate, agent, sync, tui, ...

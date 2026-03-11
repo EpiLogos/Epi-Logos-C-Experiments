@@ -6,6 +6,7 @@
 #include "m1.h"
 #include "psychoid_numbers.h"
 #include "arena.h"
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -15,6 +16,11 @@ static int passed = 0, failed = 0;
 #define EXPECT(cond, msg) \
     do { if (cond) { passed++; } \
          else { fprintf(stderr, "FAIL: %s\n", msg); failed++; } } while(0)
+
+static bool approxf(float a, float b) {
+    float diff = a - b;
+    return diff < 0.001f && diff > -0.001f;
+}
 
 int main(void) {
     printf("=== test_m1: M1 Paramasiva Verification ===\n\n");
@@ -142,6 +148,37 @@ int main(void) {
     EXPECT(get_topological_element_count(5u) == 5u,  "TOPO_LUT[5] == 5");
     EXPECT(get_topological_element_count(6u) == 8u,  "TOPO_LUT[6] == 8");
     EXPECT(get_topological_element_count(12u) == 1u, "TOPO_LUT[12] wraps to 0 -> 1");
+
+    /* --- Quaternion algebra activation --- */
+    Quaternion i = { .w = 0.0f, .x = 1.0f, .y = 0.0f, .z = 0.0f };
+    Quaternion j = { .w = 0.0f, .x = 0.0f, .y = 1.0f, .z = 0.0f };
+    Quaternion k = { .w = 0.0f, .x = 0.0f, .y = 0.0f, .z = 1.0f };
+    Quaternion neg_k = { .w = 0.0f, .x = 0.0f, .y = 0.0f, .z = -1.0f };
+
+    Quaternion ij = quat_mul(i, j);
+    Quaternion ji = quat_mul(j, i);
+    EXPECT(approxf(ij.z, 1.0f), "quat_mul(i, j) = k");
+    EXPECT(approxf(ji.z, -1.0f), "quat_mul(j, i) = -k");
+
+    Quaternion conj_i = quat_conj(i);
+    EXPECT(approxf(conj_i.x, -1.0f), "quat_conj(i) flips imaginary sign");
+
+    Quaternion neg_i = quat_neg(i);
+    EXPECT(approxf(neg_i.x, -1.0f), "quat_neg(i) negates x");
+
+    Quaternion normalized = quat_normalize((Quaternion){ .w = 0.0f, .x = 3.0f, .y = 0.0f, .z = 0.0f });
+    EXPECT(approxf(normalized.x, 1.0f), "quat_normalize normalizes magnitude");
+
+    Quaternion ring_zero = quat_from_ring_pos(0u);
+    Quaternion ring_eleven = quat_from_ring_pos(11u);
+    EXPECT(approxf(ring_zero.w, 1.0f), "ring pos 0 = identity");
+    EXPECT(approxf(ring_eleven.w, -1.0f), "ring pos 11 = -identity");
+    EXPECT(approxf(ring_eleven.x, 0.0f), "ring pos 11 x = 0");
+
+    EXPECT(M1_FULL_DOUBLE_COVER_STEPS == 24u, "full double cover is 24 steps");
+
+    (void)k;
+    (void)neg_k;
 
     printf("\n=== Results: %d passed, %d failed ===\n", passed, failed);
     return failed > 0 ? 1 : 0;

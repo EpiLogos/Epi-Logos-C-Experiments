@@ -24,6 +24,7 @@
 #include "ontology.h"
 #include "psychoid_numbers.h"
 #include "arena.h"
+#include "m1.h"
 #include "vak.h"
 #include <stdbool.h>
 
@@ -100,12 +101,23 @@ typedef enum {
     TETRAL_VOID    = 4    /* 00: void recurrence            */
 } Tetralemmic_Position;
 
-#define CONCRESCENCE_STEPS 8
+#define CONCRESCENCE_TETRALEMMIC_STATES 5u
+#define CONCRESCENCE_STEPS 12u
 
 typedef struct {
     Tetralemmic_Position states[CONCRESCENCE_STEPS];
     uint8_t              step_count;
+    uint8_t              is_descending;
 } Concrescence_Trace;
+
+_Static_assert(CONCRESCENCE_STEPS == RING_SIZE,
+    "Concrescence helix must match the 12-step SU(2) ring");
+
+/* The Quaternionic Ground — Purnata (#0-3-7)
+ * q = 0 + 0i + 0j + 0k — all rotation latent, none manifest. */
+static const Quaternion PURNATA_QUATERNION_SEED = {
+    .w = 0.0f, .x = 0.0f, .y = 0.0f, .z = 0.0f
+};
 
 
 /* ===================================================================

@@ -4,9 +4,10 @@ use common::{run_epi, TestEnv};
 
 #[test]
 fn install_reports_missing_pi_binary_or_installer() {
+    let env = TestEnv::repo_with_assets().with_env("PATH", "");
     let out = run_epi(
         ["agent", "install", "--json"].as_slice(),
-        &TestEnv::repo_with_assets(),
+        &env,
     );
     assert!(out.stdout.contains("\"status\": \"missing-prerequisite\""));
     assert!(out.stdout.contains("\"nextAction\""));

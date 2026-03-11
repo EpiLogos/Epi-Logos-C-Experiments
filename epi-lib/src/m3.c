@@ -23,7 +23,7 @@
  * =================================================================== */
 
 const M3_SD_Value M3_PAIR_MATRIX[16] = {
-    /* Homogeneous pairs — diff=0, SHARED across all 3 matrices */
+    /* Homogeneous pairs — differenceValue=0, SHARED across all 3 matrices */
     [0]  = { 12,  0 },  /* AA (Yin/Moving  + Yin/Moving)  — K'un  */
     [5]  = { 18,  0 },  /* TT (Yang/Moving + Yang/Moving) — Ch'ien (MAX SUM) */
     [10] = { 14,  0 },  /* CC (Yin/Rest    + Yin/Rest)    — K'an  */
@@ -35,7 +35,7 @@ const M3_SD_Value M3_PAIR_MATRIX[16] = {
     [11] = { 15,  1 },  /* GC (Yang/Rest   + Yin/Rest)    — Chen  */
     [14] = { 15, -1 },  /* CG (Yin/Rest    + Yang/Rest)   — Sun   */
 
-    /* Matrix 2 pairs — Cross-complementary (same polarity, mobility differs) */
+    /* Matrix 2 pairs — Cross-complementary (dataset keeps class-stable polarity) */
     [3]  = { 14,  2 },  /* AG (Yin/Moving  + Yang/Rest)   */
     [12] = { 14,  2 },  /* GA (Yang/Rest   + Yin/Moving)  */
     [6]  = { 16, -2 },  /* TC (Yang/Moving + Yin/Rest)    */
@@ -46,6 +46,12 @@ const M3_SD_Value M3_PAIR_MATRIX[16] = {
     [8]  = { 13,  1 },  /* CA (Yin/Rest    + Yin/Moving)  */
     [7]  = { 17,  1 },  /* TG (Yang/Moving + Yang/Rest)   */
     [13] = { 17, -1 },  /* GT (Yang/Rest   + Yang/Moving) */
+};
+
+const uint8_t M3_MATRIX_PAIR[M3_MATRIX_COUNT][4] = {
+    [M3_MATRIX_COMPLEMENTARY]  = { M3_NUC_T, M3_NUC_A, M3_NUC_G, M3_NUC_C },
+    [M3_MATRIX_MOVING_RESTING] = { M3_NUC_G, M3_NUC_C, M3_NUC_T, M3_NUC_A },
+    [M3_MATRIX_SAME_QUALITY]   = { M3_NUC_C, M3_NUC_G, M3_NUC_A, M3_NUC_T },
 };
 
 
@@ -116,6 +122,14 @@ const uint8_t M3_NONDUAL_CODONS[16] = {
 
 _Static_assert(sizeof(M3_NONDUAL_CODONS) == 16,
     "M3 must have exactly 16 non-dual (palindromic) codons");
+
+const uint64_t M3_RNA_FUNCTIONAL_MASK = 0x22F222F2FFFF22F2ULL;
+const uint64_t M3_RNA_DARK_MASK       = 0xDD0DDD0D0000DD0DULL;
+
+_Static_assert((M3_RNA_FUNCTIONAL_MASK & M3_RNA_DARK_MASK) == 0ULL,
+    "RNA functional/dark masks must not overlap");
+_Static_assert((M3_RNA_FUNCTIONAL_MASK | M3_RNA_DARK_MASK) == 0xFFFFFFFFFFFFFFFFULL,
+    "RNA functional/dark masks must cover all 64 codons");
 
 
 /* ===================================================================
@@ -234,7 +248,12 @@ const uint8_t M3_CODON_TO_AA[64] = {
 /* ===================================================================
  * FR 2.3.19: M3_TAROT_CODON_MAP[4][16] — Complete Tarot-Codon LUT
  *
- * Source: M3-mahamaya-symbolic-transcription.md FR 2.3.19
+ * Source: dataset-backed from Mahamaya card nodes plus relation edges:
+ *   - docs/datasets/mahamaya-deep/nodes-full-detail.json
+ *   - docs/datasets/relations_mahamaya.json
+ * REFLECTS_DNA_FORM fixes the exact codon reflection for each Minor Arcana
+ * card, while PAIRED_AS_COURT identifies the dual-codon courts that lift
+ * the 56-card deck into the full 64-codon rotational field.
  *
  * Codon encoding: (outer << 4) | (middle << 2) | inner
  *   A=0b00, T=0b01, C=0b10, G=0b11
@@ -243,6 +262,31 @@ const uint8_t M3_CODON_TO_AA[64] = {
  *   Yin suits (Cups/Pentacles): Knight+King are dual-codon
  *   Yang suits (Wands/Swords): Page+Queen are dual-codon
  * =================================================================== */
+
+const M3_Major_Arcana_Entry M3_MAJOR_ARCANA[M3_MAJOR_ARCANA_COUNT] = {
+    { 0,  "The Fool",          1,  0  },
+    { 1,  "The Magician",      2,  1  },
+    { 2,  "The High Priestess",3,  2  },
+    { 3,  "The Empress",       4,  3  },
+    { 4,  "The Emperor",       5,  4  },
+    { 5,  "The Hierophant",    6,  5  },
+    { 6,  "The Lovers",        7,  6  },
+    { 7,  "The Chariot",       8,  7  },
+    { 8,  "Adjustment",        9,  8  },
+    { 9,  "The Hermit",        10, 9  },
+    { 10, "Wheel of Fortune",  11, 10 },
+    { 11, "Lust",              12, 11 },
+    { 12, "The Hanged Man",    13, 12 },
+    { 13, "Death",             14, 13 },
+    { 14, "Art",               15, 14 },
+    { 15, "The Devil",         16, 15 },
+    { 16, "The Tower",         17, 16 },
+    { 17, "The Star",          18, 17 },
+    { 18, "The Moon",          19, 18 },
+    { 19, "The Sun",           20, 19 },
+    { 20, "Aeon",              21, 20 },
+    { 21, "The Universe",      22, 21 },
+};
 
 /* Helper: encode a 3-letter codon string to 6-bit value */
 #define COD(a,b,c) (uint8_t)((M3_NUC_##a << 4) | (M3_NUC_##b << 2) | M3_NUC_##c)
@@ -331,6 +375,55 @@ const M3_TarotCodonEntry M3_TAROT_CODON_MAP[4][16] = {
 #undef NONE
 
 
+/* ===================================================================
+ * FR 2.3.14 / codon reflection rotational metadata
+ *
+ * Source: docs/datasets/mahamaya-deep/nodes-full-detail.json
+ * Codon reflection nodes expose:
+ *   - stateCount (7 or 8)
+ *   - stateType ("non-dual-initiated" or "full-rotational")
+ *   - nonDualPair for 7-state anchors
+ *   - pairedWith for dual-codon court reflections
+ * =================================================================== */
+
+#define RCOD(a,b,c) ((uint8_t)((M3_NUC_##a << 4) | (M3_NUC_##b << 2) | M3_NUC_##c))
+#define RPAIR(a,b)  ((uint8_t)((M3_NUC_##a << 2) | M3_NUC_##b))
+#define R7(a,b,c,p1a,p1b,p2a,p2b) \
+    [RCOD(a,b,c)] = { 7u, M3_ROTATIONAL_NON_DUAL_INITIATED, RPAIR(p1a,p1b), RPAIR(p2a,p2b), M3_ROTATIONAL_NO_PAIRING }
+#define R8(a,b,c) \
+    [RCOD(a,b,c)] = { 8u, M3_ROTATIONAL_FULL_ROTATIONAL, M3_ROTATIONAL_NO_PAIR, M3_ROTATIONAL_NO_PAIR, M3_ROTATIONAL_NO_PAIRING }
+#define R8P(a,b,c,x,y,z) \
+    [RCOD(a,b,c)] = { 8u, M3_ROTATIONAL_FULL_ROTATIONAL, M3_ROTATIONAL_NO_PAIR, M3_ROTATIONAL_NO_PAIR, RCOD(x,y,z) }
+
+const M3_Rotational_Profile M3_ROTATIONAL_PROFILE[64] = {
+    R7(A,A,A, A,A, A,A), R7(A,A,T, A,A, A,T), R7(A,A,C, A,A, A,C), R7(A,A,G, A,A, A,G),
+    R7(A,T,A, A,T, T,A), R7(A,T,T, A,T, T,T), R8P(A,T,C, A,C,T),  R8(A,T,G),
+    R7(A,C,A, A,C, C,A), R7(A,C,C, A,C, C,C), R8P(A,C,T, A,T,C), R8P(A,C,G, A,G,C),
+    R7(A,G,A, A,G, G,A), R8(A,G,T),          R8P(A,G,C, A,C,G), R7(A,G,G, A,G, G,G),
+
+    R7(T,A,A, T,A, A,A), R7(T,A,T, T,A, A,T), R8(T,A,C),        R8P(T,A,G, T,G,A),
+    R8(T,C,A),           R8(T,C,T),          R7(T,C,C, T,C, C,C), R8P(T,C,G, T,G,C),
+    R8P(T,G,A, T,A,G),   R8P(T,G,C, T,C,G), R7(T,G,T, T,G, G,T), R7(T,G,G, T,G, G,G),
+    R7(T,T,A, T,T, T,A), R7(T,T,T, T,T, T,T), R7(T,T,C, T,T, T,C), R7(T,T,G, T,T, T,G),
+
+    R7(C,A,A, C,A, A,A), R8P(C,A,T, C,T,A), R7(C,A,C, C,A, A,C), R8P(C,A,G, C,G,A),
+    R8P(C,T,A, C,A,T),   R7(C,T,T, C,T, T,T), R7(C,T,C, C,T, T,C), R8(C,T,G),
+    R7(C,C,A, C,C, C,A), R7(C,C,T, C,C, C,T), R7(C,C,C, C,C, C,C), R7(C,C,G, C,C, C,G),
+    R8P(C,G,A, C,A,G),   R8(C,G,T),          R7(C,G,C, C,G, G,C), R7(C,G,G, C,G, G,G),
+
+    R7(G,A,A, G,A, A,A), R8P(G,A,T, G,T,A), R8(G,A,C),          R7(G,A,G, G,A, A,G),
+    R8P(G,T,A, G,A,T),   R7(G,T,T, G,T, T,T), R8P(G,T,C, G,C,T), R7(G,T,G, G,T, T,G),
+    R8(G,C,A),           R8P(G,C,T, G,T,C), R7(G,C,C, G,C, C,C), R7(G,C,G, G,C, C,G),
+    R7(G,G,A, G,G, G,A), R7(G,G,T, G,G, G,T), R7(G,G,C, G,G, G,C), R7(G,G,G, G,G, G,G),
+};
+
+#undef RCOD
+#undef RPAIR
+#undef R7
+#undef R8
+#undef R8P
+
+
 /* FR 2.3.0: M2_TO_M3_CYMATIC_PROJECTION[72] — defined in m2.c
  * Declared extern in m2.h. No duplicate needed here. */
 
@@ -367,6 +460,128 @@ static int m3_verify_integral_invariant(void) {
     if (suit_totals[3] != (int32_t)(M3_SUIT_G_INTEGRAL * 4)) return -5;
 
     return 0;
+}
+
+M3_DET_Overlay_Result m3_det_with_quaternion(
+    const M2_Root* m2,
+    const M3_Root* m3,
+    QL_Tick torus_tick,
+    M3_Matrix_Type matrix)
+{
+    M3_DET_Overlay_Result result;
+    memset(&result, 0, sizeof(result));
+    for (int i = 0; i < 64; i++) {
+        result.codon_states[i] = 0xFFu;
+    }
+    result.torus_tick = torus_tick;
+
+    if (!m2 || !m3 || matrix >= M3_MATRIX_COUNT) {
+        return result;
+    }
+
+    uint8_t active_indices[2];
+    size_t active_count = 0;
+
+    active_indices[active_count++] = m2->active_tattva;
+    if (m2->active_decan != m2->active_tattva) {
+        active_indices[active_count++] = m2->active_decan;
+    }
+
+    result.active_mask = transduce_vibration_to_symbol(active_indices, (uint8_t)active_count);
+
+    Quaternion ring_q = quat_from_ring_pos(torus_tick);
+    Quaternion elem_q = m3_element_to_quat(m2->active_elem);
+    Quaternion axis_q = M3_MATRIX_QUATERNION_AXIS[matrix];
+    result.composed_q = quat_mul(ring_q, quat_mul(elem_q, axis_q));
+
+    for (uint8_t codon = 0; codon < 64u; codon++) {
+        if (((result.active_mask >> codon) & 1ULL) != 0ULL) {
+            result.codon_states[codon] = m3_quat_active_state(result.composed_q, codon);
+        }
+    }
+
+    return result;
+}
+
+size_t m3_generate_rotational_states(
+    uint8_t codon6bit,
+    M3_Rotational_Generation out[M3_ROTATIONAL_TABLE_ENTRIES])
+{
+    if (!out) {
+        return 0u;
+    }
+
+    uint8_t n1 = codon_outer(codon6bit);
+    uint8_t n2 = codon_middle(codon6bit);
+    uint8_t n3 = codon_inner(codon6bit);
+    uint8_t first_pair = m3_encode_pair(n1, n2);
+    uint8_t last_pair = m3_encode_pair(n2, n3);
+    size_t idx = 0u;
+
+    for (uint8_t first = 0; first < 4u; first++) {
+        uint8_t pair2 = m3_encode_pair(first, n3);
+        out[idx] = (M3_Rotational_Generation){
+            .pair1_idx = first_pair,
+            .pair2_idx = pair2,
+            .resulting_codon = compose_rotational_state(first_pair, pair2, 0),
+            .polarity = M3_ROTATIONAL_NEGATIVE,
+            .rotation_slot = (uint8_t)idx,
+            .rotation_degrees = (uint16_t)(idx * 45u),
+            .rotational_value = (int8_t)(M3_PAIR_MATRIX[first_pair].sum_value +
+                                         M3_PAIR_MATRIX[pair2].difference_value),
+            .is_non_dual = (first_pair == pair2)
+        };
+        idx++;
+    }
+
+    for (uint8_t second = 0; second < 4u; second++) {
+        uint8_t pair1 = m3_encode_pair(n1, second);
+        out[idx] = (M3_Rotational_Generation){
+            .pair1_idx = pair1,
+            .pair2_idx = last_pair,
+            .resulting_codon = compose_rotational_state(pair1, last_pair, 1),
+            .polarity = M3_ROTATIONAL_POSITIVE,
+            .rotation_slot = (uint8_t)idx,
+            .rotation_degrees = (uint16_t)(idx * 45u),
+            .rotational_value = (int8_t)(M3_PAIR_MATRIX[pair1].difference_value +
+                                         M3_PAIR_MATRIX[last_pair].sum_value),
+            .is_non_dual = (pair1 == last_pair)
+        };
+        idx++;
+    }
+
+    {
+        uint8_t order[M3_ROTATIONAL_TABLE_ENTRIES];
+        for (uint8_t i = 0; i < (uint8_t)idx; i++) {
+            order[i] = i;
+        }
+        for (uint8_t i = 1; i < (uint8_t)idx; i++) {
+            uint8_t key = order[i];
+            uint8_t j = i;
+            while (j > 0u) {
+                uint8_t prev = order[j - 1u];
+                bool before = out[prev].rotational_value < out[key].rotational_value;
+                bool tie_break = out[prev].rotational_value == out[key].rotational_value &&
+                                 out[prev].polarity <= out[key].polarity;
+                if (before || tie_break) {
+                    break;
+                }
+                order[j] = prev;
+                j--;
+            }
+            order[j] = key;
+        }
+        for (uint8_t rank = 0; rank < (uint8_t)idx; rank++) {
+            out[order[rank]].rotation_slot = rank;
+            out[order[rank]].rotation_degrees = (uint16_t)(rank * 45u);
+        }
+    }
+
+    return idx;
+}
+
+const M3_Rotational_Profile* m3_get_rotational_profile(uint8_t codon6bit) {
+    return codon6bit < 64u ? &M3_ROTATIONAL_PROFILE[codon6bit] : NULL;
 }
 
 
@@ -420,18 +635,18 @@ void m3_teardown(M3_Root* root) {
 
 bool m3_verify(void) {
     /* PAIR_MATRIX integrity */
-    if (M3_PAIR_MATRIX[5].sum != 18) return false;   /* TT = MAX */
-    if (M3_PAIR_MATRIX[0].sum != 12) return false;   /* AA = MIN */
-    if (M3_PAIR_MATRIX[0].diff != 0) return false;   /* Homo: diff=0 */
-    if (M3_PAIR_MATRIX[5].diff != 0) return false;
-    if (M3_PAIR_MATRIX[10].diff != 0) return false;
-    if (M3_PAIR_MATRIX[15].diff != 0) return false;
+    if (M3_PAIR_MATRIX[5].sum_value != 18) return false;   /* TT = MAX */
+    if (M3_PAIR_MATRIX[0].sum_value != 12) return false;   /* AA = MIN */
+    if (M3_PAIR_MATRIX[0].difference_value != 0) return false;   /* Homo: differenceValue=0 */
+    if (M3_PAIR_MATRIX[5].difference_value != 0) return false;
+    if (M3_PAIR_MATRIX[10].difference_value != 0) return false;
+    if (M3_PAIR_MATRIX[15].difference_value != 0) return false;
 
-    /* Watson-Crick sum = 15 */
-    if (M3_PAIR_MATRIX[1].sum != 15) return false;  /* AT */
-    if (M3_PAIR_MATRIX[4].sum != 15) return false;  /* TA */
-    if (M3_PAIR_MATRIX[11].sum != 15) return false; /* GC */
-    if (M3_PAIR_MATRIX[14].sum != 15) return false; /* CG */
+    /* Watson-Crick sumValue = 15 */
+    if (M3_PAIR_MATRIX[1].sum_value != 15) return false;  /* AT */
+    if (M3_PAIR_MATRIX[4].sum_value != 15) return false;  /* TA */
+    if (M3_PAIR_MATRIX[11].sum_value != 15) return false; /* GC */
+    if (M3_PAIR_MATRIX[14].sum_value != 15) return false; /* CG */
 
     /* Non-dual codons: all 16 must pass is_nondual_codon() */
     for (int i = 0; i < 16; i++) {
@@ -459,10 +674,74 @@ bool m3_verify(void) {
     /* 360 integral invariant */
     if (m3_verify_integral_invariant() != 0) return false;
 
+    /* Tarot codon coverage: 56 cards + 8 court duals = 64 unique codons */
+    {
+        uint8_t codon_count[64] = {0};
+        uint8_t dual_cards = 0;
+        for (int suit = 0; suit < 4; suit++) {
+            for (int rank = 0; rank < 14; rank++) {
+                const M3_TarotCodonEntry* entry = &M3_TAROT_CODON_MAP[suit][rank];
+                if (entry->suit != (uint8_t)suit) return false;
+                codon_count[entry->codon_a]++;
+                if (entry->codon_b != M3_TAROT_SINGLE_CODON) {
+                    dual_cards++;
+                    codon_count[entry->codon_b]++;
+                }
+            }
+        }
+        if (dual_cards != 8u) return false;
+        for (int codon = 0; codon < 64; codon++) {
+            if (codon_count[codon] != 1u) return false;
+        }
+    }
+
+    /* Rotational reflection metadata: dataset-backed 39/25 split with 16 pair-links */
+    {
+        uint8_t seven_state = 0;
+        uint8_t eight_state = 0;
+        uint8_t anchored = 0;
+        uint8_t paired = 0;
+        for (int codon = 0; codon < 64; codon++) {
+            const M3_Rotational_Profile* profile = &M3_ROTATIONAL_PROFILE[codon];
+            if (profile->state_count == 7u) seven_state++;
+            else if (profile->state_count == 8u) eight_state++;
+            else return false;
+
+            if (profile->state_type == M3_ROTATIONAL_NON_DUAL_INITIATED) {
+                if (profile->anchor_pair_a == M3_ROTATIONAL_NO_PAIR ||
+                    profile->anchor_pair_b == M3_ROTATIONAL_NO_PAIR) {
+                    return false;
+                }
+                anchored++;
+            } else if (profile->state_type == M3_ROTATIONAL_FULL_ROTATIONAL) {
+                if (profile->anchor_pair_a != M3_ROTATIONAL_NO_PAIR ||
+                    profile->anchor_pair_b != M3_ROTATIONAL_NO_PAIR) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
+            if (profile->paired_codon != M3_ROTATIONAL_NO_PAIRING) {
+                paired++;
+            }
+        }
+        if (seven_state != 39u) return false;
+        if (eight_state != 25u) return false;
+        if (anchored != 39u) return false;
+        if (paired != 16u) return false;
+        if (M3_ROTATIONAL_PROFILE[encode_codon(M3_NUC_T, M3_NUC_C, M3_NUC_T)].state_count != 8u) {
+            return false;
+        }
+    }
+
     /* NUCLEOTIDE_ICHING_VALUE sum */
     uint16_t nuc_sum = 0;
     for (int i = 0; i < 4; i++) nuc_sum += NUCLEOTIDE_ICHING_VALUE[i];
     if (nuc_sum != 30) return false;
+
+    if ((M3_RNA_FUNCTIONAL_MASK & M3_RNA_DARK_MASK) != 0ULL) return false;
+    if ((M3_RNA_FUNCTIONAL_MASK | M3_RNA_DARK_MASK) != 0xFFFFFFFFFFFFFFFFULL) return false;
 
     /* DET coverage: OR of all 72 projections must cover all 64 bits */
     uint64_t det_union = 0;
@@ -509,9 +788,9 @@ static void m3_print_pair(int argc, char** argv) {
         return;
     }
     uint8_t idx = (uint8_t)((n1 << 2) | n2);
-    printf("Pair %c%c (index %u): Sum=%d, Diff=%d\n",
+    printf("Pair %c%c (index %u): sumValue=%d, differenceValue=%d\n",
            nuc_to_char((uint8_t)n1), nuc_to_char((uint8_t)n2),
-           idx, M3_PAIR_MATRIX[idx].sum, M3_PAIR_MATRIX[idx].diff);
+           idx, M3_PAIR_MATRIX[idx].sum_value, M3_PAIR_MATRIX[idx].difference_value);
     printf("  I-Ching values: %c=%u, %c=%u\n",
            nuc_to_char((uint8_t)n1), get_iching_value((uint8_t)n1),
            nuc_to_char((uint8_t)n2), get_iching_value((uint8_t)n2));
@@ -547,6 +826,9 @@ static void m3_print_codon(int argc, char** argv) {
     uint8_t codon = encode_codon(n1, n2, n3);
     int8_t pp, nn, np, pn;
     m3_compute_charges(codon, &pp, &nn, &np, &pn);
+    const M3_Rotational_Profile* profile = m3_get_rotational_profile(codon);
+    M3_Rotational_Generation states[M3_ROTATIONAL_TABLE_ENTRIES];
+    size_t state_count = m3_generate_rotational_states(codon, states);
 
     printf("Codon %c%c%c (0x%02X):\n", seq[0], seq[1], seq[2], codon);
     printf("  I-Ching sum:  %u (%u+%u+%u)\n",
@@ -559,11 +841,45 @@ static void m3_print_codon(int argc, char** argv) {
     printf("  Suit:         %s (%c)\n", SUIT_NAMES[n1], nuc_to_char(n1));
     printf("  Non-dual:     %s\n", is_nondual_codon(codon) ? "YES (XyX)" : "no");
     printf("  RNA-capable:  %s\n", m3_codon_is_rna_capable(codon) ? "YES (contains T)" : "no");
+    if (profile) {
+        printf("  Reflection:   %s (%u states)\n",
+               profile->state_type == M3_ROTATIONAL_NON_DUAL_INITIATED ? "non-dual-initiated" : "full-rotational",
+               profile->state_count);
+        if (profile->anchor_pair_a != M3_ROTATIONAL_NO_PAIR) {
+            printf("  Anchor pair:  %c%c+%c%c\n",
+                   nuc_to_char(m3_pair_first(profile->anchor_pair_a)),
+                   nuc_to_char(m3_pair_second(profile->anchor_pair_a)),
+                   nuc_to_char(m3_pair_first(profile->anchor_pair_b)),
+                   nuc_to_char(m3_pair_second(profile->anchor_pair_b)));
+        }
+        if (profile->paired_codon != M3_ROTATIONAL_NO_PAIRING) {
+            printf("  Paired with:  %c%c%c\n",
+                   nuc_to_char(codon_outer(profile->paired_codon)),
+                   nuc_to_char(codon_middle(profile->paired_codon)),
+                   nuc_to_char(codon_inner(profile->paired_codon)));
+        }
+    }
     printf("  Complement:   0x%02X (%c%c%c)\n",
            m3_complement(codon),
            nuc_to_char(codon_outer(m3_complement(codon))),
            nuc_to_char(codon_middle(m3_complement(codon))),
            nuc_to_char(codon_inner(m3_complement(codon))));
+    printf("  Raw states:\n");
+    for (size_t i = 0; i < state_count; i++) {
+        const M3_Rotational_Generation* state = &states[i];
+        printf("    [%zu] %s %c%c+%c%c -> %c%c%c value=%d%s\n",
+               i,
+               state->polarity == M3_ROTATIONAL_NEGATIVE ? "neg" : "pos",
+               nuc_to_char(m3_pair_first(state->pair1_idx)),
+               nuc_to_char(m3_pair_second(state->pair1_idx)),
+               nuc_to_char(m3_pair_first(state->pair2_idx)),
+               nuc_to_char(m3_pair_second(state->pair2_idx)),
+               nuc_to_char(codon_outer(state->resulting_codon)),
+               nuc_to_char(codon_middle(state->resulting_codon)),
+               nuc_to_char(codon_inner(state->resulting_codon)),
+               state->rotational_value,
+               state->is_non_dual ? " [non-dual]" : "");
+    }
 }
 
 static void m3_print_clock(int argc, char** argv) {
