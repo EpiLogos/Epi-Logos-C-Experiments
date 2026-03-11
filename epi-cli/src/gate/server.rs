@@ -1292,7 +1292,7 @@ async fn execute_run_job(
 ) {
     let agent_id = agent_id_from_session_key(&session_key);
     let job = tokio::task::spawn_blocking(move || {
-        agent::spawn::spawn(agent_id.as_deref(), &[], Some(&message), false)
+        agent::spawn::run_prompt(agent_id.as_deref(), &[], Some(&message), false)
     })
     .await;
 

@@ -10,7 +10,9 @@ fn spawn_includes_epi_citta_extension() {
         &env,
     );
     assert!(out.status.success());
-    assert!(read_to_string(env.fake_pi_log.join("argv.txt")).contains("extensions/epi-citta.ts"));
+    let argv = read_to_string(env.fake_pi_log.join("argv.txt"));
+    assert!(!argv.lines().any(|line| line == "spawn"));
+    assert!(argv.contains("extensions/epi-citta.ts"));
 }
 
 #[test]
@@ -25,6 +27,19 @@ fn spawn_exports_selected_agent_dir_to_pi() {
     assert!(captured_env.contains("PI_CODING_AGENT_DIR="));
     assert!(captured_env.contains("EPI_AGENT_DIR="));
     assert!(captured_env.contains("EPI_AGENT_PROMPTS_DIR="));
+}
+
+#[test]
+fn run_forwards_real_pi_flags_without_legacy_run_subcommand() {
+    let env = TestEnv::with_fake_pi();
+    let out = run_epi(
+        ["agent", "run", "--agent", "anima", "--", "-p", "hello"].as_slice(),
+        &env,
+    );
+    assert!(out.status.success());
+    let argv = read_to_string(env.fake_pi_log.join("argv.txt"));
+    assert!(!argv.lines().any(|line| line == "run"));
+    assert!(argv.lines().any(|line| line == "-p"));
 }
 
 #[test]

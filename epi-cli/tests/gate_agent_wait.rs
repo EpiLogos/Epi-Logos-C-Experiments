@@ -42,7 +42,7 @@ async fn agent_wait_returns_completed_snapshot_after_run_finishes() {
 
 #[tokio::test]
 async fn agent_wait_returns_error_snapshot_when_pi_launch_fails() {
-    let env = TestEnv::repo_with_pi();
+    let env = TestEnv::repo_with_pi().with_env("PATH", "/tmp/empty-pi-path");
     let mut client = TestGatewayClient::connect(env, 18827).await;
     client
         .request("connect", json!({}))

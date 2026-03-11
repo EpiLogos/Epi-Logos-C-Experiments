@@ -24,7 +24,17 @@ pub fn spawn(
     prompt: Option<&str>,
     json: bool,
 ) -> Result<String, String> {
-    let (layout, args) = prepare_spawn_invocation(agent, plugin_dirs, prompt)?;
+    let (layout, args) = prepare_interactive_invocation(agent, plugin_dirs, prompt)?;
+    invoke_pi(&layout, &args, json)
+}
+
+pub fn run_prompt(
+    agent: Option<&str>,
+    plugin_dirs: &[PathBuf],
+    prompt: Option<&str>,
+    json: bool,
+) -> Result<String, String> {
+    let (layout, args) = prepare_print_invocation(agent, plugin_dirs, prompt)?;
     invoke_pi(&layout, &args, json)
 }
 
@@ -35,10 +45,22 @@ pub fn attach(agent: Option<&str>, session_id: &str, json: bool) -> Result<Strin
     invoke_pi(
         &layout,
         &[
-            "attach".to_owned(),
+            "--session".to_owned(),
             session_id.to_owned(),
             "--extension".to_owned(),
             layout.composite_entry_path.display().to_string(),
+            "--extension".to_owned(),
+            layout
+                .extensions_dir
+                .join("epi-citta.ts")
+                .display()
+                .to_string(),
+            "--system-prompt".to_owned(),
+            layout
+                .prompts_dir
+                .join("epi-system.md")
+                .display()
+                .to_string(),
         ],
         json,
     )
@@ -51,11 +73,7 @@ pub fn run_pi(
     json: bool,
 ) -> Result<String, String> {
     let layout = prepare_layout(agent, plugin_dirs)?;
-    let mut pi_args = vec![
-        "run".to_owned(),
-        "--extension".to_owned(),
-        layout.composite_entry_path.display().to_string(),
-    ];
+    let mut pi_args = base_pi_args(&layout);
     pi_args.extend(args.iter().cloned());
     invoke_pi(&layout, &pi_args, json)
 }
@@ -65,7 +83,7 @@ pub fn spawn_process(
     plugin_dirs: &[PathBuf],
     prompt: Option<&str>,
 ) -> Result<SpawnedPiProcess, String> {
-    let (layout, args) = prepare_spawn_invocation(agent, plugin_dirs, prompt)?;
+    let (layout, args) = prepare_print_invocation(agent, plugin_dirs, prompt)?;
     let command = format!("pi {}", args.join(" "));
     let child = configure_tokio_command(&layout, &args)
         .stdout(Stdio::piped())
@@ -80,14 +98,42 @@ pub fn spawn_process(
     })
 }
 
-fn prepare_spawn_invocation(
+fn prepare_interactive_invocation(
     agent: Option<&str>,
     plugin_dirs: &[PathBuf],
     prompt: Option<&str>,
 ) -> Result<(AgentLayout, Vec<String>), String> {
     let layout = prepare_layout(agent, plugin_dirs)?;
-    let mut args = vec![
-        "spawn".to_owned(),
+    let mut args = base_pi_args(&layout);
+    if let Some(prompt) = prompt {
+        args.push(prompt.to_owned());
+    }
+    Ok((layout, args))
+}
+
+fn prepare_print_invocation(
+    agent: Option<&str>,
+    plugin_dirs: &[PathBuf],
+    prompt: Option<&str>,
+) -> Result<(AgentLayout, Vec<String>), String> {
+    let layout = prepare_layout(agent, plugin_dirs)?;
+    let mut args = vec!["-p".to_owned()];
+    args.extend(base_pi_args(&layout));
+    if let Some(prompt) = prompt {
+        args.push(prompt.to_owned());
+    }
+    Ok((layout, args))
+}
+
+fn prepare_layout(agent: Option<&str>, plugin_dirs: &[PathBuf]) -> Result<AgentLayout, String> {
+    let layout = AgentLayout::resolve(agent)?;
+    extensions::sync_layout(&layout)?;
+    plugins::prepare_runtime(&layout, plugin_dirs)?;
+    Ok(layout)
+}
+
+fn base_pi_args(layout: &AgentLayout) -> Vec<String> {
+    vec![
         "--extension".to_owned(),
         layout.composite_entry_path.display().to_string(),
         "--extension".to_owned(),
@@ -102,18 +148,7 @@ fn prepare_spawn_invocation(
             .join("epi-system.md")
             .display()
             .to_string(),
-    ];
-    if let Some(prompt) = prompt {
-        args.push(prompt.to_owned());
-    }
-    Ok((layout, args))
-}
-
-fn prepare_layout(agent: Option<&str>, plugin_dirs: &[PathBuf]) -> Result<AgentLayout, String> {
-    let layout = AgentLayout::resolve(agent)?;
-    extensions::sync_layout(&layout)?;
-    plugins::prepare_runtime(&layout, plugin_dirs)?;
-    Ok(layout)
+    ]
 }
 
 fn invoke_pi(layout: &AgentLayout, args: &[String], json: bool) -> Result<String, String> {

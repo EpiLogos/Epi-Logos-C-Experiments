@@ -13,14 +13,13 @@ pub fn run(agent: Option<&str>, initial_prompt: Option<&str>) -> color_eyre::Res
     let pi_check = Command::new("pi").arg("--version").output();
     if pi_check.is_err() {
         return Err(color_eyre::eyre::eyre!(
-            "pi is not installed. Install with: npm install -g @anthropic-ai/pi\n\
+            "pi is not installed. Install with: npm install -g @mariozechner/pi-coding-agent\n\
              Or use 'epi agent install' to set up the agent environment."
         ));
     }
 
     let mut child = Command::new("pi")
         .args([
-            "spawn",
             "--extension",
             &layout.composite_entry_path.display().to_string(),
         ])
