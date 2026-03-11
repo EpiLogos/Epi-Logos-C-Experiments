@@ -64,7 +64,8 @@ async fn agent_returns_accepted_snapshot_and_patches_session_before_execution() 
 
     let argv = fs::read_to_string(fake_pi_log.join("argv.txt"))
         .expect("fake pi argv log should be written once background process launches");
-    assert!(argv.contains("spawn"));
+    assert!(!argv.lines().any(|line| line == "spawn"));
+    assert!(argv.lines().any(|line| line == "-p"));
     assert!(argv.contains("run the real gateway agent lane"));
 }
 

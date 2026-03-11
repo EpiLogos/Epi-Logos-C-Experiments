@@ -17,7 +17,7 @@
 | `epi core` | S0' | C library — bare-metal QL engine | **Live** |
 | `epi vault` | S1' | Obsidian vault operations | **Live (obsidian-cli wrapper)** |
 | `epi graph` | S2' | Neo4j + Redis — GraphRAG | **Live (stub — needs connection)** |
-| `epi gate` | S3' | WebSocket gateway | Stub |
+| `epi gate` | S3' | WebSocket gateway | **Live** |
 | `epi agent` | S4' | PI agent lifecycle + chat | **Live (pi wrapper)** |
 | `epi sync` | S5' | n8n webhooks | Stub |
 
@@ -254,10 +254,14 @@ epi agent models status                # Model configuration status
 epi agent auth status                  # Auth profile status
 ```
 
-### `epi gate` — WebSocket Gateway (S3') — Stub
+### `epi gate` — WebSocket Gateway (S3')
 
 ```bash
 epi gate status
+epi gate start [--port 18794]
+epi gate stop
+epi gate methods
+epi gate inspect
 ```
 
 ### `epi sync` — n8n Webhooks (S5') — Stub

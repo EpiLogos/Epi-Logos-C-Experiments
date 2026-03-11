@@ -1,433 +1,252 @@
-# PI Agent Layer (S4')
+# S3/S3' Gateway and Universal NOW
 
-This document lives under `docs/dev/S3` by request, but it describes the **current S4/S4' PI agent layer** as implemented on `main` on **2026-03-07**.
+This document describes the current S3/S3' gateway layer as implemented on `main` on 2026-03-11.
 
-It is intended to be a versioned implementation-state document, not a speculative design note.
+It is an implementation-state note for the live Rust gateway, not a speculative design document.
 
 ---
 
 ## Status
 
-**Current state:** merged into `main`, implemented, tested at the `epi-cli` layer.
+Current state: merged into `main`, implemented, and verified against the real repo/runtime.
 
-**Primary surfaces:**
-- `epi agent` in Rust under `epi-cli/src/agent/`
-- repo-native PI runtime assets under `.pi/`
-- repo-local PI surfaces under `skills/`, `commands/`, and `hooks/`
+Primary surfaces:
+- `epi gate` in Rust under `epi-cli/src/gate/`
+- gateway-aware app clients under `Idea/Pratibimba/System/epi-app`
+- session/Khora binding through `.epi/session.json`
+- parity contract and runtime tests under `epi-cli/tests/`
 
-**External runtime dependency:**
-- the `pi` binary is still an external prerequisite; the repo does not vendor it
-
-**Verified on 2026-03-07:**
-- `cargo fmt --check`
-- `cargo check`
-- `cargo test -- --nocapture` in `epi-cli/`
+Verified on 2026-03-11:
+- `cargo test -p epi-logos`
+- `npm test` in `Idea/Pratibimba/System/epi-app`
+- live PI check: `pi --version`
+- live gateway smoke on the default S3' port `18794` with `connect -> agent -> agent.wait`
 
 ---
 
 ## What This Layer Is
 
-The PI agent layer is the repo's managed orchestration surface for PI sessions.
+S3 is the gateway control plane.
 
-The key architectural choice now implemented is:
+It owns:
+- websocket connection lifecycle
+- request/response RPC
+- session registry and transcript access
+- agent and chat run orchestration
+- health, heartbeat, and presence events
+- config, node, device, skills, cron, and wizard surfaces
+- Electron OmniPanel compatibility
 
-1. The repository owns the authoritative PI configuration and extension assets.
-2. `epi agent` materializes that repo-owned state into managed per-agent runtime directories.
-3. PI sessions are launched against those managed directories rather than against ad hoc local files.
+S3' is the live state plane.
 
-In practice, S4' is no longer just "planned." It now exists as a concrete bridge between:
+It owns:
+- shared runtime state and event fanout
+- session authority and alias resolution
+- per-run sequencing and reconnect-safe terminal snapshots
+- Khora/NOW binding into session identity and health
+- the bridge surface for future collective/world-state infrastructure
 
-- repo-owned prompts, extensions, and agent topology in `.pi/`
-- managed agent state under `~/.epi/agents/<agent-id>/agent`
-- the `pi` executable at runtime
-- repo-local operational surfaces in `skills/`, `commands/`, and `hooks/`
+The practical rule is:
+- imperative command execution lives in the gateway plane first
+- shared synchronized state lives in the S3' plane first
 
 ---
 
 ## Source Of Truth
 
-### Rust CLI
+### Rust Gateway
 
-The active command surface is implemented in:
+The active gateway surface is implemented in:
 
-- `epi-cli/src/agent/mod.rs`
-- `epi-cli/src/agent/agent_dirs.rs`
-- `epi-cli/src/agent/install.rs`
-- `epi-cli/src/agent/doctor.rs`
-- `epi-cli/src/agent/extensions.rs`
-- `epi-cli/src/agent/agents.rs`
-- `epi-cli/src/agent/models.rs`
-- `epi-cli/src/agent/auth.rs`
-- `epi-cli/src/agent/spawn.rs`
+- `epi-cli/src/gate/server.rs`
+- `epi-cli/src/gate/protocol.rs`
+- `epi-cli/src/gate/runtime.rs`
+- `epi-cli/src/gate/sessions.rs`
+- `epi-cli/src/gate/session_store.rs`
+- `epi-cli/src/gate/transcripts.rs`
+- `epi-cli/src/gate/system.rs`
+- `epi-cli/src/gate/parity.rs`
 
-### Repo-Native PI Assets
+### App Compatibility Surface
 
-The repo-owned PI layer lives in:
+The active Electron compatibility surface lives in:
 
-- `.pi/README.md`
-- `.pi/composite-entry.ts`
-- `.pi/prompts/`
-- `.pi/agents/`
-- `.pi/extensions/`
+- `Idea/Pratibimba/System/epi-app/main/epi-claw-client.ts`
+- `Idea/Pratibimba/System/epi-app/main/s3-gateway-client.ts`
+- `Idea/Pratibimba/System/epi-app/renderer/controllers/epi-claw/gateway-client.ts`
+- `Idea/Pratibimba/System/epi-app/renderer/stores/epiClawGatewayStore.ts`
 
-### Repo-Local PI Surfaces
+### Canonical Specification
 
-The doctor command also treats these as part of the PI agent layer:
+The canonical architecture and parity contract is tracked in:
 
-- `skills/`
-- `commands/`
-- `hooks/`
+- `docs/specs/S/S3-S3i-GATEWAY.md`
 
 ---
 
 ## CLI Surface
 
-The current `epi agent` command tree is:
+The current `epi gate` command surface is:
 
 ```bash
-epi agent install [--agent <id>]
-epi agent doctor [--agent <id>] [--json]
-epi agent extensions sync|status|list [--agent <id>]
-epi agent agents init|add|list|inspect
-epi agent models init|add-provider|set-default|status [--agent <id>]
-epi agent auth set|status [--agent <id>]
-epi agent spawn [--agent <id>] [prompt]
-epi agent attach [--agent <id>] <session-id>
-epi agent run [--agent <id>] <args...>
+epi gate status
+epi gate start [--port 18794]
+epi gate stop
+epi gate methods
+epi gate inspect
 ```
 
-### What Each Command Owns
+### What These Commands Own
 
-**`install`**
-- creates the managed agent directory layout
-- initializes empty `models.json` and `auth-profiles.json` if missing
-- reports whether the external `pi` binary is present
+**`status`**
+- reports whether the gateway is configured/running
+- reports bind address, port, and readiness information
 
-**`doctor`**
-- verifies required repo assets
-- reports whether `pi` is installed
-- reports selected agent directory status
-- reports extension sync state
-- enumerates repo-local `skills`, `commands`, and `hooks`
+**`start`**
+- starts the live Rust websocket gateway
+- supports explicit port override
+- is what `epi up` uses for gateway bring-up
 
-**`extensions`**
-- copies the repo `.pi/` tree into the selected managed agent directory
-- records a source hash in `extensions-sync-state.json`
-- reports `synced`, `drifted`, or `not-synced`
+**`stop`**
+- shuts down the managed gateway process
 
-**`agents`**
-- manages the repo-local registry of named managed agents
-- stores registry data under `~/.epi/agents/registry.json`
+**`methods`**
+- exposes the implemented RPC manifest for parity inspection
 
-**`models`**
-- manages provider/model definitions in `models.json`
-- currently supports `kimi`, `minimax`, and `glm`
-
-**`auth`**
-- stores provider API keys in `auth-profiles.json`
-- status output is redacted
-
-**`spawn` / `attach` / `run`**
-- always sync `.pi/` first
-- then launch `pi` against the selected managed agent directory
+**`inspect`**
+- surfaces runtime/session-level gateway state for operator debugging
 
 ---
 
-## Managed Runtime Layout
+## Protocol and Runtime Contract
 
-By default, agent state resolves under:
+The current live gateway contract is:
 
-```text
-~/.epi/
-  agents/
-    <agent-id>/
-      agent/
-        auth-profiles.json
-        models.json
-        composite-entry.ts
-        prompts/
-        extensions/
-        extensions-sync-state.json
-```
+- connections receive `hello-ok` with protocol version `3`
+- open sockets then receive `connect.challenge`
+- the first client RPC must be `connect`
+- request/response frames use `req`, `res`, and `event`
+- event streams use monotonic per-run `seq`
+- `agent.wait` resolves from cached terminal snapshots rather than ad hoc process polling
+- transcript persistence is real JSONL storage, not an in-memory-only shim
 
-### Resolution Rules
+Implemented and verified runtime lanes:
 
-The current resolution logic is:
+- `health`
+- `status`
+- `wake`
+- `agent`
+- `agent.wait`
+- `chat.send`
+- `chat.abort`
+- `chat.history`
 
-1. If `PI_CODING_AGENT_DIR` or `EPI_AGENT_DIR` is set, that explicit directory wins.
-2. Otherwise, the default home is:
+Implemented and verified parity/state surfaces also include:
 
-```text
-$EPI_AGENT_HOME/agents/<agent-id>/agent
-```
-
-3. If `EPI_AGENT_HOME` is not set, the default home becomes:
-
-```text
-$HOME/.epi/agents/<agent-id>/agent
-```
-
-The default agent id is `main`.
+- config/model/log usage mutation paths
+- node/device/browser/approval state
+- channels/cron/voice surfaces
+- OmniPanel/Electron method compatibility
+- heartbeat/tick/health event fanout
 
 ---
 
-## Required Repo Assets
+## Session Model
 
-The doctor/install logic currently treats the following as required foundation assets:
+The implemented gateway session authority now includes:
 
-- `.pi/README.md`
-- `.pi/composite-entry.ts`
-- `.pi/prompts/epi-system.md`
-- `.pi/prompts/epi-agent-help.md`
-- `.pi/agents/teams.yaml`
-- `.pi/agents/agent-chain.yaml`
-- `skills/README.md`
-- `commands/README.md`
-- `hooks/README.md`
-- `hooks/manifest.json`
+- canonical `epi-claw`-compatible session keys
+- alias and label-based resolution
+- `sessionId`
+- `dayId`
+- `vaultNowPath`
+- delivery metadata such as channel/thread/group fields
+- model/provider overrides
+- subagent lineage via `spawnedBy`
 
-If any of these are missing, `epi agent doctor --json` reports them explicitly in `missingRepoAssets`.
+Important session rules:
 
----
+- the canonical wire/storage key remains the compatible session key
+- aliases and labels are first-class lookup surfaces
+- `spawnedBy` is only valid for subagent session keys
+- nested subagent spawning is rejected
+- once set, subagent lineage is immutable
 
-## Current `.pi` Asset Set
+Khora integration:
 
-### Entrypoint
-
-- `.pi/composite-entry.ts`
-
-This is the curated repo entrypoint that imports the repo extension set.
-
-### Prompts
-
-- `.pi/prompts/epi-system.md`
-- `.pi/prompts/epi-agent-help.md`
-
-### Agent Topology
-
-- `.pi/agents/teams.yaml`
-- `.pi/agents/agent-chain.yaml`
-
-### Extensions
-
-The current extension set on `main` is:
-
-- `agent-chain.ts`
-- `agent-team.ts`
-- `child-extension-propagation.ts`
-- `cross-agent.ts`
-- `epi-citta.ts`
-- `prompt-url-widget.ts`
-- `redraws.ts`
-- `subagent-widget.ts`
-- `themeMap.ts`
-
-`epi-citta.ts` is the repo's current Epi bridge extension.
-
-The other files are curated PI extension assets that are now copied into each managed agent during sync.
+- gateway session creation binds to active `.epi/session.json` state when present
+- health/system surfaces inherit that binding so session identity and NOW context stay aligned
 
 ---
 
-## Provider And Auth State
+## PI Relationship
 
-### Supported Providers
+The gateway is PI-open, but PI is not the gateway.
 
-The provider registry currently supports:
+Current behavior:
 
-- `kimi`
-  - provider: `moonshot`
-  - api base: `https://api.moonshot.ai/v1`
-  - models: `kimi-k2`, `kimi-latest`
-- `minimax`
-  - provider: `minimax`
-  - api base: `https://api.minimax.chat/v1`
-  - models: `minimax-m1`
-- `glm`
-  - provider: `zai`
-  - api base: `https://open.bigmodel.cn/api/paas/v4`
-  - models: `glm-4.5`
+- the gateway owns validation, session mutation, run registration, event emission, transcript writes, and terminal snapshot caching
+- the PI runtime is invoked as the execution engine behind `agent` and chat flows
+- one-shot PI execution now follows the real current CLI contract using `pi -p ...`
+- `epi agent install` now attempts a real npm install of `@mariozechner/pi-coding-agent` when `pi` is missing
 
-### Storage
-
-- model/provider definitions live in `models.json`
-- provider secrets live in `auth-profiles.json`
-- auth status is intentionally redacted on read
+This means the S3 runtime is no longer a facade around hoped-for agent behavior. It is the real execution spine, with PI attached as a live runtime dependency where appropriate.
 
 ---
 
-## Spawn Semantics
+## App and Infra Alignment
 
-The current runtime behavior for PI launches is:
+The current repo now aligns on the real S3' default port:
 
-1. Resolve the managed agent directory.
-2. Sync the repo `.pi/` tree into that managed directory.
-3. Invoke `pi` with managed paths and environment.
+- default gateway port: `18794`
 
-Current env propagation:
+That port is the one used for the live smoke verification, not a synthetic alternate test port.
 
-- `PI_CODING_AGENT_DIR`
-- `EPI_AGENT_DIR`
-- `EPI_AGENT_PROMPTS_DIR`
+`epi up` now coordinates the real startup order:
 
-Current launch behavior:
+1. load repo env
+2. initialize or reuse Khora session state
+3. verify NOW/vault path readiness
+4. optionally start and verify graph services
+5. start the gateway and probe websocket readiness
+6. optionally bootstrap tmux
+7. optionally launch the app
+8. optionally attach cmux
 
-- `spawn` injects the managed `composite-entry.ts`
-- `spawn` also injects `extensions/epi-citta.ts`
-- `spawn` passes the managed `prompts/epi-system.md` as the system prompt
-- `attach` and `run` also execute through the managed agent directory
+Supported `epi up` flags:
 
-This means the repo is already acting as a controlled PI harness rather than as a loose set of prompts.
-
----
-
-## Repo-Local Operational Surfaces
-
-The PI layer now includes repo-local operational surfaces outside `.pi/`:
-
-### `skills/`
-
-Current repo-local PI skills:
-
-- `skills/epi-cli/SKILL.md`
-- `skills/graph/SKILL.md`
-- `skills/vault/SKILL.md`
-
-### `commands/`
-
-Current repo-local command docs:
-
-- `commands/core-verify.md`
-- `commands/graph-context.md`
-- `commands/model-status.md`
-
-### `hooks/`
-
-Current repo-local hooks:
-
-- `hooks/pre-agent-run.sh`
-- `hooks/post-agent-run.sh`
-- `hooks/pre-epi-command.sh`
-- `hooks/post-epi-command.sh`
-- `hooks/manifest.json`
-
-These are surfaced by `epi agent doctor --json` and are now part of the repo's declared PI runtime shape.
+- `--no-app`
+- `--no-graph`
+- `--no-tmux`
+- `--attach`
+- `--json`
 
 ---
 
-## Testing And Verification State
+## Verification Snapshot
 
-The merged `main` branch includes real integration coverage for the PI agent layer under:
+The current evidence for S3/S3' on `main` is:
 
-- `epi-cli/tests/agent_dirs.rs`
-- `epi-cli/tests/agent_install.rs`
-- `epi-cli/tests/agent_extensions.rs`
-- `epi-cli/tests/agent_agents.rs`
-- `epi-cli/tests/agent_models.rs`
-- `epi-cli/tests/agent_auth.rs`
-- `epi-cli/tests/agent_spawn.rs`
-- `epi-cli/tests/common/mod.rs`
+- full Rust suite passes with `cargo test -p epi-logos`
+- Electron tests pass with `npm test`
+- the installed PI binary is live and reports `0.57.1`
+- a real websocket smoke on port `18794` completed the `connect -> agent -> agent.wait` flow with terminal `status: ok`
 
-These tests verify real filesystem behavior and CLI outcomes, not mocked shell-only stubs.
+The relevant contract coverage includes:
 
-Verified during the 2026-03-07 merge cleanup:
-
-- `cargo fmt --check`
-- `cargo check`
-- `cargo test -- --nocapture`
-
----
-
-## Current Gaps
-
-This layer is now real, but it is not finished.
-
-### Implemented Now
-
-- repo-native PI asset tree
-- managed per-agent directory layout
-- extension sync
-- agent registry
-- provider/model/auth state
-- managed PI spawn/attach/run
-- doctor/install surface
-- repo-local skill/command/hook inventory
-
-### Not Yet Implemented
-
-- PI-native orchestration through `epi techne wt ...`
-- PI-native multi-agent workspace/window control through `epi techne cmux ...`
-- richer repo-authored PI extensions beyond the current curated set
-- deeper ta-onta / orchestration semantics in the agent layer
-- first-class agent delegation APIs above the current `spawn` / `attach` / `run` surface
-
-### Important Adjacent State
-
-`epi techne` now already exposes direct wrapper commands for:
-
-- `epi techne wt ...`
-- `epi techne cmux ...`
-
-Those wrappers are adjacent groundwork, not yet integrated into the PI agent layer itself.
-
----
-
-## Relationship To Older Docs
-
-`docs/specs/S/S4-S4i-PI-AGENT.md` should now be read carefully as a mixed document:
-
-- parts of it are still useful as architectural intent
-- parts of it are stale because they describe the PI layer as merely planned
-
-For implementation state on `main`, this README is the more accurate source.
-
-For repo-native PI runtime details, also see:
-
-- `.pi/README.md`
-- `docs/plans/2026-03-06-s4-pi-agent-foundation.md`
-- `docs/plans/2026-03-06-epi-skills-system-design.md`
-
----
-
-## Practical Commands
-
-```bash
-# inspect current repo/runtime state
-epi agent doctor --json
-
-# initialize managed default agent
-epi agent install --agent main
-
-# create another managed agent
-epi agent agents add anima
-
-# sync repo-owned PI assets into selected managed agent
-epi agent extensions sync --agent main
-
-# register a provider and set auth
-epi agent models add-provider kimi --agent main
-epi agent auth set glm --api-key "$GLM_API_KEY" --agent main
-
-# launch PI through the managed harness
-epi agent spawn --agent main
-```
+- full parity manifest tests
+- OmniPanel/Electron compatibility tests
+- runtime state tests
+- session authority/store contract tests
+- chat send/abort/history tests
+- agent lane and wait-path tests
+- tick/health/heartbeat fanout tests
+- Khora integration tests
 
 ---
 
 ## Bottom Line
 
-The PI agent layer is now a live, repo-native managed runtime.
+S3/S3' is now a real gateway runtime in this repo.
 
-The repository owns:
-
-- the PI extension tree
-- the prompts
-- the team/chain topology assets
-- the repo-local skills/commands/hooks surfaces
-- the Rust control plane that syncs and launches managed agents
-
-What it does **not** own yet is the next orchestration tier:
-
-- Worktrunk-mediated execution as an agent skill
-- `cmux`-mediated multi-agent workspace/window management
-
-That is the next layer of work, not the current state.
+It is no longer a stub, no longer a placeholder facade, and no longer documented as if it were still waiting on future architecture. The live Rust gateway, the app client compatibility surface, the real PI-backed execution lane, and the default-port verification path are all now part of the implemented system on `main`.
