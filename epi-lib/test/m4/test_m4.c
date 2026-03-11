@@ -3,7 +3,7 @@
  *
  * Tests all FRs from M4-nara-personal-interface.md.
  * Build: clang -std=c11 -Wall -Wextra -I include -I vendor/blake3 \
- *        -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 \
+ *        -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 -DBLAKE3_USE_NEON=0 \
  *        -fsanitize=address,undefined \
  *        src/psychoid_numbers.c src/engine.c src/arena.c src/families.c \
  *        src/m0.c src/m1.c src/m2.c src/m3.c src/m4.c \

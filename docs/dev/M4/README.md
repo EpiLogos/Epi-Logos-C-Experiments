@@ -156,7 +156,7 @@ blake3_hasher_update(&hasher, input, sizeof(M4_Input_Data));
 blake3_hasher_finalize(&hasher, hash_out, 8);  /* 8 bytes = 64 bits */
 ```
 
-Build flag required: `-DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512`
+Build flag required: `-DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 -DBLAKE3_USE_NEON=0`
 
 ---
 
@@ -581,7 +581,7 @@ All commands should be run from the project root (`Epi-Logos C Experiments/`).
 
 ```
 clang -std=c11 -Wall -Wextra -I include -I vendor/blake3 \
-    -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 \
+    -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 -DBLAKE3_USE_NEON=0 \
     src/psychoid_numbers.c src/engine.c src/arena.c src/families.c \
     src/m0.c src/m1.c src/m2.c src/m3.c src/m4.c \
     vendor/blake3/blake3.c vendor/blake3/blake3_dispatch.c vendor/blake3/blake3_portable.c \
@@ -601,7 +601,7 @@ clang -std=c11 -Wall -Wextra -I include -I vendor/blake3 \
 
 ```
 clang -std=c11 -Wall -Wextra -I include -I vendor/blake3 \
-    -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 \
+    -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 -DBLAKE3_USE_NEON=0 \
     -fsanitize=address,undefined \
     src/psychoid_numbers.c src/engine.c src/arena.c src/families.c \
     src/m0.c src/m1.c src/m2.c src/m3.c src/m4.c \
@@ -737,7 +737,7 @@ Files:
 - `blake3_portable.c` -- Portable C implementation
 - `blake3_impl.h` -- Internal implementation header
 
-Build: Always use `-DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512`
+Build: Always use `-DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 -DBLAKE3_USE_NEON=0`
 to force portable-only mode. This avoids linker errors from missing SIMD intrinsic
 implementations and ensures cross-platform compatibility.
 

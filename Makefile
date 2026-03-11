@@ -1,6 +1,8 @@
 CC      = clang
 CFLAGS  = -std=c11 -Wall -Wextra -Werror -pedantic -Iepi-lib/include -Ivendor/blake3
-BLAKE3  = -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512
+# Vendored BLAKE3 in this repo is the portable C subset only, so SIMD backends
+# must be disabled explicitly on every architecture, including arm64/NEON.
+BLAKE3  = -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 -DBLAKE3_USE_NEON=0
 LDFLAGS =
 SANFLAGS = -fsanitize=address,undefined -g -O0
 RUST_MANIFEST = epi-cli/Cargo.toml

@@ -22,6 +22,7 @@
 #include "psychoid_numbers.h"
 #include "arena.h"
 #include <stdbool.h>
+#include <math.h>
 #include <stdint.h>
 
 /* ===================================================================
@@ -361,8 +362,75 @@ typedef struct {
 
 _Static_assert(sizeof(Quaternion) == 16, "Quaternion must be 16 bytes");
 
-static inline float quat_norm_sq(const Quaternion* q) {
-    return q->w*q->w + q->x*q->x + q->y*q->y + q->z*q->z;
+static inline float quat_norm_sq(Quaternion q) {
+    return q.w*q.w + q.x*q.x + q.y*q.y + q.z*q.z;
+}
+
+static inline Quaternion quat_mul(Quaternion a, Quaternion b) {
+    return (Quaternion){
+        .w = a.w*b.w - a.x*b.x - a.y*b.y - a.z*b.z,
+        .x = a.w*b.x + a.x*b.w + a.y*b.z - a.z*b.y,
+        .y = a.w*b.y - a.x*b.z + a.y*b.w + a.z*b.x,
+        .z = a.w*b.z + a.x*b.y - a.y*b.x + a.z*b.w
+    };
+}
+
+static inline Quaternion quat_conj(Quaternion q) {
+    return (Quaternion){ .w = q.w, .x = -q.x, .y = -q.y, .z = -q.z };
+}
+
+static inline Quaternion quat_neg(Quaternion q) {
+    return (Quaternion){ .w = -q.w, .x = -q.x, .y = -q.y, .z = -q.z };
+}
+
+static inline Quaternion quat_normalize(Quaternion q) {
+    float norm_sq = quat_norm_sq(q);
+    if (norm_sq <= 0.0f) {
+        return q;
+    }
+    float scale = 1.0f / sqrtf(norm_sq);
+    return (Quaternion){
+        .w = q.w * scale,
+        .x = q.x * scale,
+        .y = q.y * scale,
+        .z = q.z * scale
+    };
+}
+
+static inline Quaternion quat_rotate(Quaternion q, Quaternion v) {
+    return quat_mul(quat_mul(q, v), quat_conj(q));
+}
+
+static inline Quaternion quat_slerp(Quaternion a, Quaternion b, float t) {
+    float dot = a.w*b.w + a.x*b.x + a.y*b.y + a.z*b.z;
+    if (dot < 0.0f) {
+        b = quat_neg(b);
+        dot = -dot;
+    }
+    if (dot > 0.9995f) {
+        Quaternion lerp = {
+            .w = a.w + t * (b.w - a.w),
+            .x = a.x + t * (b.x - a.x),
+            .y = a.y + t * (b.y - a.y),
+            .z = a.z + t * (b.z - a.z)
+        };
+        return quat_normalize(lerp);
+    }
+    if (dot < -1.0f) dot = -1.0f;
+    if (dot > 1.0f) dot = 1.0f;
+    float theta = acosf(dot);
+    float sin_theta = sinf(theta);
+    if (fabsf(sin_theta) < 0.0001f) {
+        return quat_normalize(a);
+    }
+    float wa = sinf((1.0f - t) * theta) / sin_theta;
+    float wb = sinf(t * theta) / sin_theta;
+    return (Quaternion){
+        .w = wa*a.w + wb*b.w,
+        .x = wa*a.x + wb*b.x,
+        .y = wa*a.y + wb*b.y,
+        .z = wa*a.z + wb*b.z
+    };
 }
 
 /* Topological constants — derived from genus-1 necessity */
@@ -375,6 +443,27 @@ static inline float quat_norm_sq(const Quaternion* q) {
 _Static_assert(QL_POSITIONS == 6u,          "QL_POSITIONS must be 6 (genus-1 necessity)");
 _Static_assert(DOUBLE_COVER_STEPS == 12u,   "DOUBLE_COVER_STEPS must equal RING_SIZE");
 _Static_assert(PARASHAKTI_TOTAL == 72u,     "PARASHAKTI_TOTAL must be 72");
+
+static const Quaternion RING_QUATERNION_LUT[12] = {
+    [0]  = { .w = 1.0f,    .x = 0.0f,    .y = 0.0f, .z = 0.0f },
+    [1]  = { .w = 0.8660254f,  .x = 0.5f,    .y = 0.0f, .z = 0.0f },
+    [2]  = { .w = 0.5f,    .x = 0.8660254f,  .y = 0.0f, .z = 0.0f },
+    [3]  = { .w = 0.0f,    .x = 1.0f,    .y = 0.0f, .z = 0.0f },
+    [4]  = { .w = -0.5f,   .x = 0.8660254f,  .y = 0.0f, .z = 0.0f },
+    [5]  = { .w = -0.8660254f, .x = 0.5f,    .y = 0.0f, .z = 0.0f },
+    [6]  = { .w = 0.8660254f,  .x = -0.5f,   .y = 0.0f, .z = 0.0f },
+    [7]  = { .w = 0.5f,    .x = -0.8660254f, .y = 0.0f, .z = 0.0f },
+    [8]  = { .w = 0.0f,    .x = -1.0f,   .y = 0.0f, .z = 0.0f },
+    [9]  = { .w = -0.5f,   .x = -0.8660254f, .y = 0.0f, .z = 0.0f },
+    [10] = { .w = -0.8660254f, .x = -0.5f,   .y = 0.0f, .z = 0.0f },
+    [11] = { .w = -1.0f,   .x = 0.0f,    .y = 0.0f, .z = 0.0f },
+};
+
+static inline Quaternion quat_from_ring_pos(QL_Tick tick) {
+    return RING_QUATERNION_LUT[tick % RING_SIZE];
+}
+
+#define M1_FULL_DOUBLE_COVER_STEPS  (2u * RING_SIZE)
 
 
 /* ===================================================================

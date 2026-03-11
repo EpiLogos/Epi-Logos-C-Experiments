@@ -25,6 +25,7 @@
 #include "m0.h"
 #include "m2.h"
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 
@@ -42,6 +43,10 @@ _Static_assert(
     6 + 9 + 7 + 8 == 30,
     "NUCLEOTIDE_ICHING_VALUE must sum to 30 (6+9+7+8)"
 );
+_Static_assert(NUCLEOTIDE_ICHING_VALUE[0] + NUCLEOTIDE_ICHING_VALUE[1] == 15,
+    "Complementary pair A+T must sum to 15");
+_Static_assert(NUCLEOTIDE_ICHING_VALUE[2] + NUCLEOTIDE_ICHING_VALUE[3] == 15,
+    "Complementary pair C+G must sum to 15");
 
 /* O(1) accessor — single array index, no branch */
 static inline uint8_t get_iching_value(uint8_t nuc2bit) {
@@ -143,11 +148,26 @@ static inline uint64_t integral_symmetry_field(uint64_t m3_word) {
  * =================================================================== */
 
 typedef struct {
-    int8_t sum;   /* The (+) evaluation (I-Ching pair sum) */
-    int8_t diff;  /* The (-) evaluation (directional asymmetry) */
+    int8_t sum_value;          /* Dataset-backed sumValue */
+    int8_t difference_value;   /* Dataset-backed differenceValue */
 } M3_SD_Value;
 
 extern const M3_SD_Value M3_PAIR_MATRIX[16];
+
+typedef enum {
+    M3_MATRIX_COMPLEMENTARY = 0,
+    M3_MATRIX_MOVING_RESTING = 1,
+    M3_MATRIX_SAME_QUALITY = 2,
+    M3_MATRIX_COUNT = 3
+} M3_Matrix_Type;
+
+extern const uint8_t M3_MATRIX_PAIR[M3_MATRIX_COUNT][4];
+
+static const Quaternion M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_COUNT] = {
+    [M3_MATRIX_COMPLEMENTARY]  = { .w = 0.0f, .x = 1.0f, .y = 0.0f, .z = 0.0f },
+    [M3_MATRIX_MOVING_RESTING] = { .w = 0.0f, .x = 0.0f, .y = 1.0f, .z = 0.0f },
+    [M3_MATRIX_SAME_QUALITY]   = { .w = 0.0f, .x = 0.0f, .y = 0.0f, .z = 1.0f },
+};
 
 
 /* ===================================================================
@@ -158,8 +178,8 @@ extern const M3_SD_Value M3_PAIR_MATRIX[16];
  * =================================================================== */
 
 typedef struct {
-    int8_t total_sum;
-    int8_t total_diff;
+    int8_t total_sum_value;
+    int8_t total_difference_value;
 } Rotational_State;
 
 #define M3_RESONANCE_GAP  0xFF
@@ -169,8 +189,9 @@ typedef struct {
 
 static inline Rotational_State compute_rotational_state(uint8_t p1_idx, uint8_t p2_idx) {
     return (Rotational_State){
-        .total_sum  = (int8_t)(M3_PAIR_MATRIX[p1_idx].sum  + M3_PAIR_MATRIX[p2_idx].sum),
-        .total_diff = (int8_t)(M3_PAIR_MATRIX[p1_idx].diff + M3_PAIR_MATRIX[p2_idx].diff)
+        .total_sum_value = (int8_t)(M3_PAIR_MATRIX[p1_idx].sum_value + M3_PAIR_MATRIX[p2_idx].sum_value),
+        .total_difference_value =
+            (int8_t)(M3_PAIR_MATRIX[p1_idx].difference_value + M3_PAIR_MATRIX[p2_idx].difference_value)
     };
 }
 
@@ -185,6 +206,53 @@ static inline bool compute_rotational_state_safe(
     }
     *out = compute_rotational_state(p1_idx, p2_idx);
     return true;
+}
+
+typedef struct {
+    Quaternion q;
+    uint8_t    active_state;
+    uint8_t    codon_id;
+} M3_Codon_Quaternion;
+
+static inline Quaternion m3_quat_from_codon(uint8_t codon_id) {
+    uint8_t n1 = (codon_id >> 4) & 0x03;
+    uint8_t n2 = (codon_id >> 2) & 0x03;
+    uint8_t n3 = codon_id & 0x03;
+    uint8_t v1 = NUCLEOTIDE_ICHING_VALUE[n1];
+    uint8_t v2 = NUCLEOTIDE_ICHING_VALUE[n2];
+    uint8_t v3 = NUCLEOTIDE_ICHING_VALUE[n3];
+    uint8_t sum = (uint8_t)(v1 + v2 + v3);
+    int8_t diff = (int8_t)v1 - (int8_t)v3;
+    return (Quaternion){
+        .w = (float)sum,
+        .x = (float)diff,
+        .y = 0.0f,
+        .z = (float)(sum % 6u)
+    };
+}
+
+static inline Quaternion m3_quat_codon_state(uint8_t codon_id, uint8_t state) {
+    Quaternion base = m3_quat_from_codon(codon_id);
+    if ((state & 0x07u) == 0u) {
+        return base;
+    }
+    float angle = (float)(state & 0x07u) * 0.7853981633974483f;
+    Quaternion rot = {
+        .w = cosf(angle * 0.5f),
+        .x = sinf(angle * 0.5f),
+        .y = 0.0f,
+        .z = 0.0f
+    };
+    return quat_mul(rot, base);
+}
+
+static inline uint8_t m3_quat_active_state(Quaternion env, uint8_t codon_id) {
+    Quaternion composed = quat_mul(env, m3_quat_from_codon(codon_id));
+    float angle = atan2f(composed.x, composed.w);
+    if (angle < 0.0f) {
+        angle += 6.2831853071795865f;
+    }
+    return (uint8_t)(angle / 0.7853981633974483f) & 0x07u;
 }
 
 
@@ -272,10 +340,10 @@ static inline Unified_Clock_State read_cosmic_clock(uint16_t d) {
  * The 8 missing states drive evolutionary spiral.
  * =================================================================== */
 
-/* ASCENDING: M3 → M2 (rotational sum → Parashakti frequency index) */
+/* ASCENDING: M3 → M2 (rotational sumValue → Parashakti frequency index) */
 static inline uint8_t get_parashakti_frequency(Rotational_State m3_state,
                                                 bool is_shadow_phase) {
-    uint8_t base_frequency = (uint8_t)m3_state.total_sum;
+    uint8_t base_frequency = (uint8_t)m3_state.total_sum_value;
     return is_shadow_phase ? (uint8_t)(base_frequency + 36u) : base_frequency;
 }
 
@@ -406,24 +474,35 @@ typedef struct {
     int8_t pm;   /* (+,-): descending resonance */
 } M3_CodonEvaluation;
 
-/* Evaluate codon from its three embedded dinucleotide pairs */
+/* Evaluate codon from the dataset-native inner charge identities. */
 static inline M3_CodonEvaluation evaluate_codon(uint8_t codon6bit) {
-    uint8_t X = (codon6bit >> 4) & 0x03;
-    uint8_t Y = (codon6bit >> 2) & 0x03;
-    uint8_t Z = (codon6bit)      & 0x03;
-
+    uint8_t X = NUCLEOTIDE_ICHING_VALUE[(codon6bit >> 4) & 0x03];
+    uint8_t Y = NUCLEOTIDE_ICHING_VALUE[(codon6bit >> 2) & 0x03];
+    uint8_t Z = NUCLEOTIDE_ICHING_VALUE[(codon6bit)      & 0x03];
     M3_CodonEvaluation ev;
-    /* (+,+): sum of S values — convergent resonance peak */
-    ev.pp = (int8_t)(M3_PAIR_MATRIX[(X << 2) | Y].sum +
-                     M3_PAIR_MATRIX[(Y << 2) | Z].sum);
-    /* (-,-): negation of sum — convergent resonance trough */
-    ev.mm = (int8_t)(-(M3_PAIR_MATRIX[(X << 2) | Y].sum +
-                       M3_PAIR_MATRIX[(Y << 2) | Z].sum));
-    /* (-,+): net D of inner pair (ascending if D>0) */
-    ev.mp = M3_PAIR_MATRIX[(Y << 2) | Z].diff;
-    /* (+,-): net D of outer pair (descending if D<0) */
-    ev.pm = M3_PAIR_MATRIX[(X << 2) | Y].diff;
+    ev.pp = (int8_t)(X + Y + Z);
+    ev.mm = (int8_t)(X - Y - Z);
+    ev.mp = (int8_t)(X - Y + Z);
+    ev.pm = (int8_t)(X + Y - Z);
     return ev;
+}
+
+static inline Quaternion m3_eval_to_quat(M3_CodonEvaluation eval) {
+    return (Quaternion){
+        .w = (float)eval.pp,
+        .x = (float)eval.mm,
+        .y = (float)eval.mp,
+        .z = (float)eval.pm
+    };
+}
+
+static inline M3_CodonEvaluation m3_quat_to_eval(Quaternion q) {
+    return (M3_CodonEvaluation){
+        .pp = (int8_t)q.w,
+        .mm = (int8_t)q.x,
+        .mp = (int8_t)q.y,
+        .pm = (int8_t)q.z
+    };
 }
 
 
@@ -438,6 +517,49 @@ static inline M3_CodonEvaluation evaluate_codon(uint8_t codon6bit) {
 #define M3_ROTATIONAL_TABLE_ENTRIES       8
 #define M3_ROTATIONAL_POLARIZED_ENTRIES   7
 #define M3_ROTATIONAL_NONDUAL_ENTRIES     1
+#define M3_ROTATIONAL_NO_PAIR             0xFF
+#define M3_ROTATIONAL_NO_PAIRING          0xFF
+
+typedef enum {
+    M3_ROTATIONAL_NEGATIVE = 0,
+    M3_ROTATIONAL_POSITIVE = 1
+} M3_Rotational_Polarity;
+
+typedef enum {
+    M3_ROTATIONAL_NON_DUAL_INITIATED = 0,
+    M3_ROTATIONAL_FULL_ROTATIONAL    = 1
+} M3_Rotational_State_Type;
+
+typedef struct {
+    uint8_t pair1_idx;
+    uint8_t pair2_idx;
+    uint8_t resulting_codon;
+    uint8_t polarity;
+    uint8_t rotation_slot;
+    uint16_t rotation_degrees;
+    int8_t rotational_value;
+    bool is_non_dual;
+} M3_Rotational_Generation;
+
+typedef struct {
+    uint8_t state_count;   /* dataset-backed 7 or 8 */
+    uint8_t state_type;    /* non-dual-initiated or full-rotational */
+    uint8_t anchor_pair_a; /* pair idx, or 0xFF if not applicable */
+    uint8_t anchor_pair_b; /* pair idx, or 0xFF if not applicable */
+    uint8_t paired_codon;  /* paired codon reflection, or 0xFF */
+} M3_Rotational_Profile;
+
+static inline uint8_t m3_encode_pair(uint8_t n1, uint8_t n2) {
+    return (uint8_t)((n1 << 2) | n2);
+}
+
+static inline uint8_t m3_pair_first(uint8_t pair_idx) {
+    return (pair_idx >> 2) & 0x03;
+}
+
+static inline uint8_t m3_pair_second(uint8_t pair_idx) {
+    return pair_idx & 0x03;
+}
 
 static inline uint8_t compose_rotational_state(uint8_t xy, uint8_t za, int positive) {
     uint8_t X = (xy >> 2) & 0x03;
@@ -452,6 +574,8 @@ static inline uint8_t compose_rotational_state(uint8_t xy, uint8_t za, int posit
 static inline int is_nondual_composition(uint8_t xy, uint8_t za) {
     return ((xy) & 0x03) == ((za >> 2) & 0x03);
 }
+
+extern const M3_Rotational_Profile M3_ROTATIONAL_PROFILE[64];
 
 
 /* ===================================================================
@@ -505,6 +629,36 @@ static const char* const TAROT_RANK_NAMES[14] = {
     "Eight", "Nine", "Ten", "Page", "Knight", "Queen", "King"
 };
 
+#define M3_MINOR_ARCANA_COUNT         56u
+#define M3_MAJOR_ARCANA_COUNT         22u
+#define M3_TRANSCENDENT_TAROT_COUNT    2u
+#define M3_TAROT_QUATERNION_COUNT     80u
+
+typedef struct {
+    uint8_t     card_id;
+    const char* name;
+    uint8_t     chromosome_pair;  /* 1-22 */
+    uint8_t     amino_acid_index; /* 0-21 */
+} M3_Major_Arcana_Entry;
+
+extern const M3_Major_Arcana_Entry M3_MAJOR_ARCANA[M3_MAJOR_ARCANA_COUNT];
+
+typedef struct {
+    uint8_t    card_id;
+    uint8_t    suit;          /* 0-3 for minor, 0xFF for major/transcendent */
+    uint8_t    rank;          /* 0-13 minor, 0-21 major, 0-1 transcendent */
+    uint8_t    primary_codon; /* 0xFF for major/transcendent */
+    uint8_t    shadow_codon;  /* 0xFF if none */
+} M3_Tarot_Quaternion_Entry;
+
+/* Dataset-backed Tarot bridge metadata:
+ * 56 Minor Arcana cards from elemental codon mappings,
+ * 22 Major Arcana cards mapped to autosomal chromosome pairs,
+ * 2 transcendent operators beyond the 22-fold autosomal cycle. */
+
+extern const uint64_t M3_RNA_FUNCTIONAL_MASK;
+extern const uint64_t M3_RNA_DARK_MASK;
+
 
 /* ===================================================================
  * FR 2.3.17: NON-DUAL CODONS — Palindromic Anchors (XyX Pattern)
@@ -548,6 +702,15 @@ static inline void m3_compute_charges(
 _Static_assert((9+9+9) + (9-9-9) + (9-9+9) + (9+9-9) == 4*9,
     "m3_compute_charges 4X invariant must hold for TTT codon");
 
+#define M3_EULER_PRIME_41  41u
+#define M3_EULER_PRIME_43  43u
+
+static inline int m3_is_prime_attractor(uint8_t codon_a, uint8_t codon_b) {
+    uint16_t total = (uint16_t)get_codon_iching_sum(codon_a)
+                   + (uint16_t)get_codon_iching_sum(codon_b);
+    return total == M3_EULER_PRIME_41 || total == M3_EULER_PRIME_43;
+}
+
 
 /* ===================================================================
  * FR 2.3.20: DNA/RNA SUPERPOSITION
@@ -559,6 +722,57 @@ static inline int m3_codon_is_rna_capable(uint8_t codon6bit) {
     return ((codon6bit >> 4) & 0x03) == M3_NUC_T ||
            ((codon6bit >> 2) & 0x03) == M3_NUC_T ||
            ((codon6bit)      & 0x03) == M3_NUC_T;
+}
+
+static inline Quaternion m3_element_to_quat(Elemental_Signature sig) {
+    return quat_from_ring_pos((QL_Tick)ELEM_SIG_GET_ELEMENT(sig));
+}
+
+static inline Quaternion m3_tarot_rotation(uint8_t card_id) {
+    if (card_id < M3_MINOR_ARCANA_COUNT) {
+        uint8_t suit = (uint8_t)(card_id / 14u);
+        uint8_t rank = (uint8_t)(card_id % 14u);
+        const M3_TarotCodonEntry* entry = &M3_TAROT_CODON_MAP[suit][rank];
+        Quaternion primary = quat_normalize(m3_quat_from_codon(entry->codon_a));
+        if (entry->codon_b != M3_TAROT_SINGLE_CODON) {
+            Quaternion secondary = quat_normalize(m3_quat_from_codon(entry->codon_b));
+            return quat_slerp(primary, secondary, 0.5f);
+        }
+        return primary;
+    }
+
+    if (card_id < (M3_MINOR_ARCANA_COUNT + M3_MAJOR_ARCANA_COUNT)) {
+        uint8_t major_idx = (uint8_t)(card_id - M3_MINOR_ARCANA_COUNT);
+        float angle = ((float)major_idx / (float)M3_MAJOR_ARCANA_COUNT) * 6.2831853071795865f;
+        return (Quaternion){
+            .w = cosf(angle * 0.5f),
+            .x = 0.0f,
+            .y = sinf(angle * 0.5f),
+            .z = 0.0f
+        };
+    }
+
+    return (card_id == (M3_TAROT_QUATERNION_COUNT - 2u))
+        ? (Quaternion){ .w = 0.0f, .x = 0.0f, .y = 0.0f, .z = 1.0f }
+        : (Quaternion){ .w = 0.0f, .x = 0.0f, .y = 0.0f, .z = -1.0f };
+}
+
+static inline uint8_t m3_tarot_translate(
+    uint8_t card_id,
+    uint8_t source_pos,
+    int codon_to_hexagram)
+{
+    Quaternion q = quat_normalize(m3_tarot_rotation(card_id));
+    if (!codon_to_hexagram) {
+        q = quat_conj(q);
+    }
+    Quaternion pos_q = quat_normalize(m3_quat_from_codon(source_pos));
+    Quaternion result = quat_mul(q, quat_mul(pos_q, quat_conj(q)));
+    float angle = atan2f(result.x, result.w);
+    if (angle < 0.0f) {
+        angle += 6.2831853071795865f;
+    }
+    return (uint8_t)(((angle / 6.2831853071795865f) * 64.0f)) % 64u;
 }
 
 
@@ -577,6 +791,13 @@ static inline M3_CodonEvaluation m3_evaluate_with_nondual_guard(
     }
     return ev;
 }
+
+typedef struct {
+    uint64_t   active_mask;
+    uint8_t    codon_states[64];
+    Quaternion composed_q;
+    QL_Tick    torus_tick;
+} M3_DET_Overlay_Result;
 
 
 /* ===================================================================
@@ -605,6 +826,18 @@ void     m3_teardown(M3_Root* root);
 
 /* CLI dispatch entry point: argv[0] = "m3" */
 int      m3_cli_dispatch(int argc, char** argv, M3_Root* root);
+
+M3_DET_Overlay_Result m3_det_with_quaternion(
+    const M2_Root* m2,
+    const M3_Root* m3,
+    QL_Tick torus_tick,
+    M3_Matrix_Type matrix);
+
+size_t m3_generate_rotational_states(
+    uint8_t codon6bit,
+    M3_Rotational_Generation out[M3_ROTATIONAL_TABLE_ENTRIES]);
+
+const M3_Rotational_Profile* m3_get_rotational_profile(uint8_t codon6bit);
 
 /* Boot-time verification of .rodata integrity */
 bool     m3_verify(void);

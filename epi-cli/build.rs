@@ -12,6 +12,7 @@ fn main() {
         .define("BLAKE3_NO_SSE41", None)
         .define("BLAKE3_NO_AVX2", None)
         .define("BLAKE3_NO_AVX512", None)
+        .define("BLAKE3_USE_NEON", "0")
         // Pillar I
         .file("../epi-lib/src/psychoid_numbers.c")
         .file("../epi-lib/src/engine.c")
