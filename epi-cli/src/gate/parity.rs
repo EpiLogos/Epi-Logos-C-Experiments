@@ -10,8 +10,11 @@ pub const OMNIPANEL_SESSION_METADATA: &[&str] = &[
     "bootstrapScope",
 ];
 
+pub const EVENT_NAMES: &[&str] = &["agent", "chat", "tick", "health", "heartbeat"];
+
 pub const METHOD_NAMES: &[&str] = &[
     "connect",
+    "agent",
     "agent.identity.get",
     "agent.wait",
     "agents.list",
@@ -49,6 +52,8 @@ pub const METHOD_NAMES: &[&str] = &[
     "exec.approvals.node.set",
     "logs.tail",
     "models.list",
+    "status",
+    "health",
     "status.summary",
     "health.snapshot",
     "presence.list",
@@ -69,6 +74,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "node.invoke",
     "node.invoke.result",
     "node.event",
+    "send",
     "sessions.list",
     "sessions.preview",
     "sessions.resolve",
@@ -78,6 +84,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "sessions.compact",
     "last-heartbeat",
     "set-heartbeats",
+    "wake",
     "system-presence",
     "system-event",
     "talk.mode",
@@ -98,6 +105,10 @@ pub const METHOD_NAMES: &[&str] = &[
 
 pub fn method_names() -> &'static [&'static str] {
     METHOD_NAMES
+}
+
+pub fn event_names() -> &'static [&'static str] {
+    EVENT_NAMES
 }
 
 pub fn session_method_names() -> &'static [&'static str] {

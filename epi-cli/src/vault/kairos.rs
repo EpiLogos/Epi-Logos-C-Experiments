@@ -35,14 +35,15 @@ pub fn kairos_status(vault_root: &Path) -> Result<String, String> {
 
     if chart_exists {
         let chart_path = chart_path_field.as_deref().unwrap_or("");
-        let chart_content = fs::read_to_string(vault_root.join(chart_path))
-            .unwrap_or_default();
+        let chart_content = fs::read_to_string(vault_root.join(chart_path)).unwrap_or_default();
         // Parse planet_valid from chart JSON
         let planet_valid = chart_content
             .find("\"planet_valid\":")
             .and_then(|i| {
                 let rest = &chart_content[i + 15..];
-                let end = rest.find(|c: char| !c.is_ascii_digit()).unwrap_or(rest.len());
+                let end = rest
+                    .find(|c: char| !c.is_ascii_digit())
+                    .unwrap_or(rest.len());
                 rest[..end].trim().parse::<u8>().ok()
             })
             .unwrap_or(0);
@@ -72,7 +73,9 @@ pub fn kairos_fetch(vault_root: &Path, force: bool) -> Result<String, String> {
 
     let full_chart_path = vault_root.join(&chart_path);
     if full_chart_path.exists() && !force {
-        return Ok(format!("chart already exists at {chart_path} — use --force to recompute"));
+        return Ok(format!(
+            "chart already exists at {chart_path} — use --force to recompute"
+        ));
     }
 
     // Invoke kerykeion via Python
@@ -129,6 +132,10 @@ pub fn kairos_show(vault_root: &Path) -> Result<String, String> {
     let chart_path = read_pasu_field(vault_root, "c_0_natal_chart_path")
         .unwrap_or_else(|| "Pratibimba/Self/natal-chart.json".to_string());
     let full_path = vault_root.join(&chart_path);
-    fs::read_to_string(&full_path)
-        .map_err(|_| format!("no chart at {} — run `epi vault kairos fetch`", full_path.display()))
+    fs::read_to_string(&full_path).map_err(|_| {
+        format!(
+            "no chart at {} — run `epi vault kairos fetch`",
+            full_path.display()
+        )
+    })
 }

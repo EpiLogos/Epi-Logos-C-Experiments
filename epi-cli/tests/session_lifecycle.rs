@@ -65,7 +65,11 @@ fn session_id_follows_datetime_prefix_format() {
     let vault = PathBuf::from("/tmp/vault");
     let ctx = SessionContext::new(now, Some("tst01"), &vault);
     // Format: {YYYYMMDD-HHmmss-randomId}
-    assert!(ctx.session_id.starts_with("20260310-143000-"), "got: {}", ctx.session_id);
+    assert!(
+        ctx.session_id.starts_with("20260310-143000-"),
+        "got: {}",
+        ctx.session_id
+    );
     assert_eq!(ctx.day_id, "10-03-2026");
 }
 
@@ -93,8 +97,16 @@ fn bootstrap_sequence_returns_ordered_artifacts() {
     let seq = bootstrap_sequence(&tmp, &now_path);
     let names: Vec<&str> = seq.iter().map(|a| a.name.as_str()).collect();
     // Bootstrap uses PASU (non-dual agent-user field), NOT MEMORY
-    assert!(names.iter().any(|n| n.contains("PASU")), "bootstrap must include PASU, got: {:?}", names);
-    assert!(!names.iter().any(|n| n.contains("MEMORY")), "bootstrap must NOT include MEMORY (use PASU instead), got: {:?}", names);
+    assert!(
+        names.iter().any(|n| n.contains("PASU")),
+        "bootstrap must include PASU, got: {:?}",
+        names
+    );
+    assert!(
+        !names.iter().any(|n| n.contains("MEMORY")),
+        "bootstrap must NOT include MEMORY (use PASU instead), got: {:?}",
+        names
+    );
     // ANIMA must come before PASU in ordering
     let anima_pos = names.iter().position(|n| n.contains("ANIMA")).unwrap();
     let pasu_pos = names.iter().position(|n| n.contains("PASU")).unwrap();

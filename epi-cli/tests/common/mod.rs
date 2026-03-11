@@ -1,4 +1,5 @@
 use std::env;
+use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
@@ -15,6 +16,10 @@ pub struct TestEnv {
     pub fake_pi_log: PathBuf,
     extra_env: Vec<(String, String)>,
     path_prefixes: Vec<PathBuf>,
+}
+
+pub struct ProcessEnvGuard {
+    saved: Vec<(&'static str, Option<OsString>)>,
 }
 
 impl TestEnv {
@@ -146,7 +151,7 @@ impl TestEnv {
         fs::write(
             &script_path,
             format!(
-                "#!/bin/sh\nprintf '%s\n' \"$@\" > \"{argv}\"\nenv | sort > \"{envs}\"\n",
+                "#!/bin/sh\nprintf '%s\n' \"$@\" > \"{argv}\"\nenv | sort > \"{envs}\"\nlast=\"\"\nfor arg in \"$@\"; do\n  last=\"$arg\"\ndone\ncase \"$last\" in\n  *__FAKE_PI_FAIL__*)\n    printf '%s\n' 'simulated fake pi failure' >&2\n    exit 17\n    ;;\n  *__FAKE_PI_STREAM__*)\n    printf '%s\n' 'delta one'\n    sleep 0.1\n    printf '%s\n' 'delta two'\n    exit 0\n    ;;\n  *__FAKE_PI_SLOW__*)\n    printf '%s\n' 'delta one'\n    sleep 5\n    printf '%s\n' 'late final'\n    exit 0\n    ;;\n  *)\n    if [ -n \"$last\" ]; then\n      printf '%s\n' \"assistant: $last\"\n    fi\n    exit 0\n    ;;\nesac\n",
                 argv = log_dir.join("argv.txt").display(),
                 envs = log_dir.join("env.txt").display()
             ),
@@ -168,6 +173,66 @@ impl TestEnv {
     pub fn with_env(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
         self.extra_env.push((key.into(), value.into()));
         self
+    }
+
+    pub fn apply_to_process(&self) -> ProcessEnvGuard {
+        let mut saved = Vec::new();
+        for key in [
+            "HOME",
+            "EPI_REPO_ROOT",
+            "EPI_AGENT_HOME",
+            "EPI_AGENT_DIR",
+            "PI_CODING_AGENT_DIR",
+            "PATH",
+        ] {
+            saved.push((key, env::var_os(key)));
+        }
+        for (key, _) in &self.extra_env {
+            let leaked: &'static str = Box::leak(key.clone().into_boxed_str());
+            saved.push((leaked, env::var_os(leaked)));
+        }
+
+        unsafe {
+            env::set_var("HOME", &self.home);
+            env::set_var("EPI_REPO_ROOT", &self.repo_root);
+            env::remove_var("EPI_AGENT_HOME");
+            env::remove_var("EPI_AGENT_DIR");
+            env::remove_var("PI_CODING_AGENT_DIR");
+        }
+
+        if !self.path_prefixes.is_empty() {
+            let mut path_entries: Vec<PathBuf> = self.path_prefixes.clone();
+            if let Some(existing) = env::var_os("PATH") {
+                path_entries.extend(env::split_paths(&existing));
+            }
+            let joined = env::join_paths(path_entries).unwrap();
+            unsafe {
+                env::set_var("PATH", joined);
+            }
+        }
+
+        for (key, value) in &self.extra_env {
+            unsafe {
+                env::set_var(key, value);
+            }
+        }
+
+        ProcessEnvGuard { saved }
+    }
+}
+
+impl Drop for ProcessEnvGuard {
+    fn drop(&mut self) {
+        for (key, value) in self.saved.drain(..).rev() {
+            match value {
+                Some(value) => unsafe {
+                    env::set_var(key, value);
+                },
+                None => unsafe {
+                    env::remove_var(key);
+                },
+            }
+        }
     }
 }
 

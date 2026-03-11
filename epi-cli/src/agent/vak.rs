@@ -7,12 +7,12 @@
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct VakCoordinates {
-    pub cpf: Option<String>,   // Category-Position-Frame
-    pub ct: Option<String>,    // Context-Time
-    pub cp: Option<String>,    // Context-Position
-    pub cf: Option<String>,    // Context-Frame
-    pub cfp: Option<String>,   // Context-Frame-Position
-    pub cs: Option<String>,    // Context-System
+    pub cpf: Option<String>, // Category-Position-Frame
+    pub ct: Option<String>,  // Context-Time
+    pub cp: Option<String>,  // Context-Position
+    pub cf: Option<String>,  // Context-Frame
+    pub cfp: Option<String>, // Context-Frame-Position
+    pub cs: Option<String>,  // Context-System
     pub rationale: Option<String>,
 }
 

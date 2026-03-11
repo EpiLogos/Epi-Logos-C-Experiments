@@ -11,5 +11,6 @@ pub mod sesh;
 pub mod sync;
 pub mod techne;
 pub mod tui;
+pub mod up;
 pub mod vault;
 pub mod vimarsa;

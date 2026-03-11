@@ -29,8 +29,7 @@ pub fn pasu_set(vault_root: &Path, field: &str, value: &str) -> Result<String, S
         return Err(format!("PASU.md not found at {}", path.display()));
     }
 
-    let content = fs::read_to_string(&path)
-        .map_err(|e| format!("failed to read PASU.md: {e}"))?;
+    let content = fs::read_to_string(&path).map_err(|e| format!("failed to read PASU.md: {e}"))?;
 
     let updated = set_frontmatter_value(&content, &key, value);
     fs::write(&path, &updated).map_err(|e| format!("failed to write PASU.md: {e}"))?;
@@ -111,15 +110,24 @@ mod tests {
     #[test]
     fn field_to_key_maps_correctly() {
         assert_eq!(field_to_key("birth-date").unwrap(), "c_0_birth_date");
-        assert_eq!(field_to_key("birth-location").unwrap(), "c_0_birth_location");
-        assert_eq!(field_to_key("natal-chart-path").unwrap(), "c_0_natal_chart_path");
+        assert_eq!(
+            field_to_key("birth-location").unwrap(),
+            "c_0_birth_location"
+        );
+        assert_eq!(
+            field_to_key("natal-chart-path").unwrap(),
+            "c_0_natal_chart_path"
+        );
         assert!(field_to_key("unknown").is_err());
     }
 
     #[test]
     fn extract_and_set_frontmatter() {
         let content = "---\ncoordinate: \"PASU\"\nc_0_birth_date: \"\"\n---\n\n# PASU\n";
-        assert_eq!(extract_frontmatter_value(content, "c_0_birth_date"), Some("".to_string()));
+        assert_eq!(
+            extract_frontmatter_value(content, "c_0_birth_date"),
+            Some("".to_string())
+        );
 
         let updated = set_frontmatter_value(content, "c_0_birth_date", "1990-06-15");
         assert!(updated.contains("c_0_birth_date: \"1990-06-15\""));

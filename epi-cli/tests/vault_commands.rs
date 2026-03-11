@@ -121,7 +121,9 @@ fn template_and_day_now_commands_write_real_files() {
         "archive-day must fail without c_5_reflection_complete"
     );
     assert!(
-        archive_no_reflect.stderr.contains("c_5_reflection_complete not set"),
+        archive_no_reflect
+            .stderr
+            .contains("c_5_reflection_complete not set"),
         "wrong error: {}",
         archive_no_reflect.stderr
     );
@@ -134,8 +136,15 @@ fn template_and_day_now_commands_write_real_files() {
     let first_close = content.find("---\nc_5").unwrap();
     fs::write(&daily_note, &content).unwrap();
 
-    let plan_out = run_epi(["vault", "archive-day", "10-03-2026", "--plan"].as_slice(), &env);
-    assert!(plan_out.status.success(), "plan failed: {}", plan_out.stderr);
+    let plan_out = run_epi(
+        ["vault", "archive-day", "10-03-2026", "--plan"].as_slice(),
+        &env,
+    );
+    assert!(
+        plan_out.status.success(),
+        "plan failed: {}",
+        plan_out.stderr
+    );
     assert!(
         plan_out.stdout.contains("→"),
         "--plan must print SOURCE → DEST, got: {}",
@@ -187,8 +196,14 @@ fn flow_init_creates_flow_md_in_day_folder() {
     let flow = vault_root.join("Empty/Present/10-03-2026/FLOW.md");
     assert!(flow.exists(), "FLOW.md not created at {}", flow.display());
     let content = fs::read_to_string(&flow).unwrap();
-    assert!(content.contains("c_4_artifact_role: \"flow\""), "missing artifact_role in:\n{content}");
-    assert!(content.contains("m_4_nara_domain: \"journal\""), "missing nara_domain in:\n{content}");
+    assert!(
+        content.contains("c_4_artifact_role: \"flow\""),
+        "missing artifact_role in:\n{content}"
+    );
+    assert!(
+        content.contains("m_4_nara_domain: \"journal\""),
+        "missing nara_domain in:\n{content}"
+    );
 
     // Idempotency: second call must not fail
     let r2 = run_epi(
@@ -202,7 +217,10 @@ fn flow_init_creates_flow_md_in_day_folder() {
     );
     // Content must not change
     let content2 = fs::read_to_string(&flow).unwrap();
-    assert_eq!(content, content2, "flow-init must not modify on second call");
+    assert_eq!(
+        content, content2,
+        "flow-init must not modify on second call"
+    );
 }
 
 #[test]
@@ -275,10 +293,7 @@ fn pasu_set_and_get_roundtrip() {
     );
 
     // Get birth-date roundtrip
-    let get_result = run_epi(
-        ["vault", "pasu", "get", "birth-date"].as_slice(),
-        &env,
-    );
+    let get_result = run_epi(["vault", "pasu", "get", "birth-date"].as_slice(), &env);
     assert!(
         get_result.stdout.contains("1990-06-15"),
         "get must return value, got: {}",
@@ -301,11 +316,12 @@ fn kairos_status_returns_stub_when_no_birth_data() {
         "---\ncoordinate: \"PASU\"\nc_0_birth_date: \"\"\nc_0_birth_location: \"\"\nc_0_natal_chart_path: \"\"\n---\n\n# PASU\n",
     ).unwrap();
 
-    let result = run_epi(
-        ["vault", "kairos", "status"].as_slice(),
-        &env,
+    let result = run_epi(["vault", "kairos", "status"].as_slice(), &env);
+    assert!(
+        result.status.success(),
+        "kairos status must succeed: {}",
+        result.stderr
     );
-    assert!(result.status.success(), "kairos status must succeed: {}", result.stderr);
     let out = &result.stdout;
     assert!(
         out.contains("mode: stub") || out.contains("planet_valid: 0x00"),
@@ -332,11 +348,12 @@ fn kairos_status_reports_natal_when_chart_exists() {
         r#"{"sun_degree":168.4,"moon_degree":42.1,"planet_degrees":[168.4,42.1,155.2,190.3,45.6,210.7,300.2],"planet_valid":127}"#,
     ).unwrap();
 
-    let result = run_epi(
-        ["vault", "kairos", "status"].as_slice(),
-        &env,
+    let result = run_epi(["vault", "kairos", "status"].as_slice(), &env);
+    assert!(
+        result.status.success(),
+        "kairos status must succeed: {}",
+        result.stderr
     );
-    assert!(result.status.success(), "kairos status must succeed: {}", result.stderr);
     let out = &result.stdout;
     assert!(
         out.contains("mode: natal"),

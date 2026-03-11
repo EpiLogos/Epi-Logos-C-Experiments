@@ -90,13 +90,13 @@ pub fn dispatch(cmd: &TechneCmd) {
             run(c, "quote", "claude (glm profile)");
         }
         TechneCmd::Cmux { args } => {
-            let mut c = Command::new("cmux");
-            c.args(args);
+            let c = cmux_command(args);
             // Set working directory to current project when cmux needs context
             if !args.is_empty() && args.first().map(|a| a.starts_with('-')).unwrap_or(false) {
                 // Flags only - stay in current directory
             }
-            run(c, "cmux", "cmux");
+            let cmux_display = resolve_cmux_bin().display().to_string();
+            run(c, "cmux", &cmux_display);
         }
         TechneCmd::Wt { args } => {
             let mut c = Command::new("wt");
@@ -128,6 +128,18 @@ fn run(mut cmd: Command, name: &str, binary: &str) {
 
 fn shell_escape(s: &str) -> String {
     format!("'{}'", s.replace('\'', "'\\''"))
+}
+
+pub fn resolve_cmux_bin() -> PathBuf {
+    std::env::var_os("EPI_CMUX_BIN")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from("cmux"))
+}
+
+pub fn cmux_command(args: &[String]) -> Command {
+    let mut command = Command::new(resolve_cmux_bin());
+    command.args(args);
+    command
 }
 
 /// Resolve the notebooklm venv binary (shared with notebook subcommand).

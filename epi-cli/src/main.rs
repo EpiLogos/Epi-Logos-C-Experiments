@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 use epi_logos::{
-    agent, app, book, code, core, ffi, gate, graph, notebook, sesh, sync, techne, vault, vimarsa,
+    agent, app, book, code, core, ffi, gate, graph, notebook, sesh, sync, techne, up, vault,
+    vimarsa,
 };
 
 #[derive(Parser)]
@@ -86,6 +87,8 @@ enum Commands {
         #[command(subcommand)]
         cmd: app::AppCmd,
     },
+    /// Full-stack startup orchestration
+    Up(up::UpCmd),
     /// Claude Code with LLM provider profiles
     Code {
         #[command(subcommand)]
@@ -140,6 +143,10 @@ async fn main() -> color_eyre::Result<()> {
         Commands::Notebook { cmd } => notebook::dispatch(cmd),
         Commands::Techne { cmd } => techne::dispatch(cmd),
         Commands::App { cmd } => app::dispatch(cmd),
+        Commands::Up(cmd) => match up::dispatch(cmd, cli.json).await {
+            Ok(out) => println!("{}", out),
+            Err(e) => eprintln!("up error: {}", e),
+        },
         Commands::Code { cmd } => code::dispatch(cmd),
         Commands::Help { topic } => core::help_dispatch(topic.as_deref(), cli.json)?,
     }
