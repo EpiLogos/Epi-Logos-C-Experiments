@@ -20,10 +20,27 @@ mod theme;
 /// Launch the portal TUI with a two-tab workspace.
 pub fn launch(
     _epi: &EpiLib,
-    _reset: bool,
+    reset: bool,
     tab: Option<&str>,
-    _layout: Option<&str>,
+    layout: Option<&str>,
 ) -> color_eyre::Result<()> {
+    // Handle --layout: load a named saved layout
+    if let Some(name) = layout {
+        let path = persist::WorkspaceState::portal_dir()
+            .join("defaults")
+            .join(format!("{}.json", name));
+        if !path.exists() {
+            eprintln!("Layout not found: {}", path.display());
+            std::process::exit(1);
+        }
+    }
+
+    // Handle --reset: ignore saved state (build_workspace always creates fresh default)
+    if reset {
+        let ws_path = persist::WorkspaceState::workspace_path();
+        let _ = std::fs::remove_file(&ws_path);
+    }
+
     enable_raw_mode()?;
     stdout().execute(EnterAlternateScreen)?;
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
