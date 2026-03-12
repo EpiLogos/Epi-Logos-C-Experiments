@@ -1,5 +1,4 @@
 pub mod frontmatter;
-pub mod kairos;
 pub mod pasu;
 pub mod paths;
 pub mod templates;
@@ -170,9 +169,6 @@ pub enum VaultCmd {
     /// Interact with PASU.md (non-dual agent-user field)
     #[command(subcommand)]
     Pasu(PasuCmd),
-    /// Kairos temporal enrichment (kerykeion natal chart)
-    #[command(subcommand)]
-    Kairos(KairosCmd),
 }
 
 #[derive(Subcommand)]
@@ -183,20 +179,6 @@ pub enum PasuCmd {
     Get { field: String },
     /// Set a PASU field value
     Set { field: String, value: String },
-}
-
-#[derive(Subcommand)]
-pub enum KairosCmd {
-    /// Show kairos status (mode, planet_valid bitmask)
-    Status,
-    /// Fetch natal chart from kerykeion (requires PASU birth data)
-    Fetch {
-        /// Recompute even if chart already exists
-        #[arg(long)]
-        force: bool,
-    },
-    /// Print current natal chart JSON
-    Show,
 }
 
 pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
@@ -394,14 +376,6 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
                 PasuCmd::Show => pasu::pasu_show(&vr),
                 PasuCmd::Get { field } => pasu::pasu_get(&vr, field),
                 PasuCmd::Set { field, value } => pasu::pasu_set(&vr, field, value),
-            }
-        }
-        VaultCmd::Kairos(sub) => {
-            let vr = vault_root();
-            match sub {
-                KairosCmd::Status => kairos::kairos_status(&vr),
-                KairosCmd::Fetch { force } => kairos::kairos_fetch(&vr, *force),
-                KairosCmd::Show => kairos::kairos_show(&vr),
             }
         }
     }

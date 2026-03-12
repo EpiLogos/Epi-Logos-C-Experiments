@@ -167,7 +167,7 @@ export async function chronosExtension(api: ExtensionAPI) {
       },
     },
     async handler(input: { force_refresh?: boolean }) {
-      const args = ["vault", "kairos", "fetch"];
+      const args = ["gate", "kairos", "fetch"];
       if (input.force_refresh) args.push("--force");
       const result = spawnSync("epi", args, { encoding: "utf8" });
       return {
@@ -183,7 +183,7 @@ export async function chronosExtension(api: ExtensionAPI) {
     description: "Get kairos temporal enrichment status: mode (natal/stub), planet_valid bitmask, chart path.",
     inputSchema: { type: "object", properties: {} },
     async handler() {
-      const result = spawnSync("epi", ["vault", "kairos", "status"], { encoding: "utf8" });
+      const result = spawnSync("epi", ["gate", "kairos", "status"], { encoding: "utf8" });
       return { content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });

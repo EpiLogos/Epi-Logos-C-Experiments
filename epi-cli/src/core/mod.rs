@@ -1879,6 +1879,9 @@ fn knowing_export(_json: bool) -> color_eyre::Result<()> {
 
 /// Detect project root by walking up from cwd
 fn project_root() -> Option<std::path::PathBuf> {
+    if let Ok(repo_root) = std::env::var("EPI_REPO_ROOT") {
+        return Some(std::path::PathBuf::from(repo_root));
+    }
     let mut dir = std::env::current_dir().ok()?;
     for _ in 0..5 {
         if dir.join("src").join("m5.c").exists() {
@@ -1896,9 +1899,10 @@ fn knowing_bake(json: bool) -> color_eyre::Result<()> {
     let root = project_root().ok_or_else(|| {
         color_eyre::eyre::eyre!("Cannot find project root (looking for src/m5.c)")
     })?;
-    let qv_path = root.join("src").join("qv_data.c");
+    let qv_path = root.join("epi-lib").join("src").join("qv_data.c");
 
     let ov = overlay::load_overlay();
+    let dov_excerpts = load_dov_seed_excerpts(&root)?;
     let families = [
         ("C", "C"),
         ("P", "P"),
@@ -1937,6 +1941,17 @@ fn knowing_bake(json: bool) -> color_eyre::Result<()> {
             }
         }
         lines.push("};".to_string());
+        lines.push(format!("const char* QV_DOV_SEED_{}[6] = {{", array_suffix));
+        for pos in 0..6usize {
+            let key = format!("{}{}", fam_letter, pos);
+            let val = dov_excerpts.get(&key);
+            let comma = if pos < 5 { "," } else { "" };
+            match val {
+                Some(text) => lines.push(format!("    \"{}\"{}", escape_c_string(text), comma)),
+                None => lines.push(format!("    NULL{}", comma)),
+            }
+        }
+        lines.push("};".to_string());
 
         // Inverted array
         lines.push(format!("const char* QV_PITHY_{}_INV[6] = {{", array_suffix));
@@ -1946,6 +1961,17 @@ fn knowing_bake(json: bool) -> color_eyre::Result<()> {
             let comma = if pos < 5 { "," } else { "" };
             match val {
                 Some(p) => lines.push(format!("    \"{}\"{}", p.replace('"', "\\\""), comma)),
+                None => lines.push(format!("    NULL{}", comma)),
+            }
+        }
+        lines.push("};".to_string());
+        lines.push(format!("const char* QV_DOV_SEED_{}_INV[6] = {{", array_suffix));
+        for pos in 0..6usize {
+            let key = format!("{}{}'", fam_letter, pos);
+            let val = dov_excerpts.get(&key);
+            let comma = if pos < 5 { "," } else { "" };
+            match val {
+                Some(text) => lines.push(format!("    \"{}\"{}", escape_c_string(text), comma)),
                 None => lines.push(format!("    NULL{}", comma)),
             }
         }
@@ -1961,6 +1987,17 @@ fn knowing_bake(json: bool) -> color_eyre::Result<()> {
         let comma = if i < 5 { "," } else { "" };
         match val {
             Some(p) => lines.push(format!("    \"{}\"{}", p.replace('"', "\\\""), comma)),
+            None => lines.push(format!("    NULL{}", comma)),
+        }
+    }
+    lines.push("};".to_string());
+    lines.push("const char* QV_DOV_SEED_PSYCHOID[6] = {".to_string());
+    for i in 0..6usize {
+        let key = format!("#{}", i);
+        let val = dov_excerpts.get(&key);
+        let comma = if i < 5 { "," } else { "" };
+        match val {
+            Some(text) => lines.push(format!("    \"{}\"{}", escape_c_string(text), comma)),
             None => lines.push(format!("    NULL{}", comma)),
         }
     }
@@ -1981,6 +2018,16 @@ fn knowing_bake(json: bool) -> color_eyre::Result<()> {
         }
     }
     lines.push("};".to_string());
+    lines.push("const char* QV_DOV_SEED_CF[7] = {".to_string());
+    for (i, key) in cf_keys.iter().enumerate() {
+        let val = dov_excerpts.get(*key);
+        let comma = if i < 6 { "," } else { "" };
+        match val {
+            Some(text) => lines.push(format!("    \"{}\"{}", escape_c_string(text), comma)),
+            None => lines.push(format!("    NULL{}", comma)),
+        }
+    }
+    lines.push("};".to_string());
     lines.push(String::new());
 
     // Weaves
@@ -1991,6 +2038,16 @@ fn knowing_bake(json: bool) -> color_eyre::Result<()> {
         let comma = if i < 3 { "," } else { "" };
         match val {
             Some(p) => lines.push(format!("    \"{}\"{}", p.replace('"', "\\\""), comma)),
+            None => lines.push(format!("    NULL{}", comma)),
+        }
+    }
+    lines.push("};".to_string());
+    lines.push("const char* QV_DOV_SEED_WEAVE[4] = {".to_string());
+    for (i, key) in w_keys.iter().enumerate() {
+        let val = dov_excerpts.get(*key);
+        let comma = if i < 3 { "," } else { "" };
+        match val {
+            Some(text) => lines.push(format!("    \"{}\"{}", escape_c_string(text), comma)),
             None => lines.push(format!("    NULL{}", comma)),
         }
     }
@@ -2020,4 +2077,31 @@ fn knowing_bake(json: bool) -> color_eyre::Result<()> {
         println!("Run 'cargo install --path epi-cli/ --force' to compile into binary.");
     }
     Ok(())
+}
+
+#[derive(serde::Deserialize)]
+struct DovSeedCatalog {
+    #[serde(default)]
+    coordinates: std::collections::BTreeMap<String, String>,
+}
+
+fn load_dov_seed_excerpts(
+    root: &std::path::Path,
+) -> color_eyre::Result<std::collections::BTreeMap<String, String>> {
+    let path = root
+        .join("docs")
+        .join("seeds")
+        .join("coordinate-dov-excerpts.yaml");
+    if !path.exists() {
+        return Ok(std::collections::BTreeMap::new());
+    }
+    let body = std::fs::read_to_string(&path)?;
+    let catalog: DovSeedCatalog = serde_yaml::from_str(&body)?;
+    Ok(catalog.coordinates)
+}
+
+fn escape_c_string(text: &str) -> String {
+    text.replace('\\', "\\\\")
+        .replace('"', "\\\"")
+        .replace('\n', "\\n")
 }

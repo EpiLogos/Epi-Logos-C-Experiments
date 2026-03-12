@@ -119,6 +119,7 @@ epi graph                                       — Neo4j query and sync command
 - `coordinate` — the node's coordinate address (e.g., `#M2`, `S3`, `C4'`). Canonical in both frontmatter YAML and Neo4j. **No translation. No conversion.** `bimbaCoordinate` is the deprecated form.
 - `artifact_role`, `ctx_type`, `ctx_frame` — template metadata
 - `uuid`, `created_at`, `updated_at`, `session_id`, `day_id` — system identity
+- `q_essence`, `q_correspondence`, `q_vimarsa_field`, `q_relational_field`, `q_notebook_pulse`, `q_latest_snapshot` — quintessence bridge fields linking S1 frontmatter into S2/M5 KnowingDossier assembly
 
 **Schema source of truth:** `hen/S1'/frontmatter_schema.ts` — 126 canonical keys. All modules that write vault content use this schema.
 

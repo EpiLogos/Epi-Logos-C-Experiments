@@ -1,3 +1,14 @@
+//! gate — S3 Gateway Layer (PAI / Mahamaya pattern)
+//!
+//! Public entry points:
+//!   server::start()       — gateway runtime lifecycle
+//!   session_store         — source of truth for live session state
+//!   omnipanel             — OmniPanel RPC dispatch (WebSocket)
+//!   protocol              — protocol version negotiation
+//!
+//! Everything else in this module is implementation.
+//! Read these four to understand what the gateway does.
+
 use clap::Subcommand;
 
 pub mod approvals;
@@ -11,6 +22,7 @@ pub mod config_tui;
 pub mod cron;
 pub mod devices;
 pub mod events;
+pub mod kairos;
 pub mod lock;
 pub mod logs;
 pub mod models;
@@ -62,6 +74,11 @@ pub enum GateCmd {
     Bootstrap,
     /// Inspect gateway workspace state
     Workspace,
+    /// Kairos temporal authority operations
+    Kairos {
+        #[command(subcommand)]
+        cmd: kairos::KairosCmd,
+    },
 }
 
 #[derive(Subcommand)]
@@ -141,5 +158,6 @@ pub async fn dispatch(cmd: &GateCmd, json: bool) -> Result<String, String> {
         GateCmd::Pair => Err("epi gate pair: not yet implemented".to_owned()),
         GateCmd::Bootstrap => Err("epi gate bootstrap: not yet implemented".to_owned()),
         GateCmd::Workspace => Err("epi gate workspace: not yet implemented".to_owned()),
+        GateCmd::Kairos { cmd } => kairos::dispatch(cmd),
     }
 }

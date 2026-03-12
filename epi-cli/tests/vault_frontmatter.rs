@@ -216,3 +216,27 @@ fn bimba_coordinate_field_is_deprecated() {
         result.warnings
     );
 }
+
+#[test]
+fn integration_validate_frontmatter_accepts_q_metadata_keys() {
+    let yaml: Value = serde_yaml::from_str(
+        r#"
+coordinate: "M5"
+family: "M"
+artifact_role: "thought"
+session_id: "20260310-090807-abc123"
+day_id: "10-03-2026"
+thought_type: "T5"
+q_essence: "Self-knowing"
+q_correspondence: "M5 harmonises S5"
+q_vimarsa_field: "Reflective dossier"
+"#,
+    )
+    .unwrap();
+    let result = validate_frontmatter(&yaml);
+    assert!(
+        result.errors.is_empty(),
+        "Expected q_* metadata to validate cleanly, got: {:?}",
+        result.errors
+    );
+}

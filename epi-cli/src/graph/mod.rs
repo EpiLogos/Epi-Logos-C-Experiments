@@ -1,4 +1,5 @@
 use clap::Subcommand;
+use serde_json::json;
 
 pub mod alignment_validator;
 pub mod api;
@@ -86,6 +87,21 @@ pub enum GraphCmd {
         #[arg(default_value = "all")]
         dataset: String,
     },
+    /// Redis-specific health, semantic cache maintenance, and tier statistics
+    Redis {
+        #[command(subcommand)]
+        cmd: RedisCmd,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum RedisCmd {
+    /// Redis-specific health check + Redis Stack readiness
+    Status,
+    /// Clear the semantic cache backing Redis storage
+    Flush,
+    /// HOT/WARM/COLD cache tier statistics and contract
+    Stats,
 }
 
 /// Parse YAML frontmatter from a markdown file (content between --- delimiters).
@@ -416,7 +432,102 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                 ))
             }
         }
+        GraphCmd::Redis { cmd } => dispatch_redis(cmd, json).await,
     }
+}
+
+async fn dispatch_redis(cmd: &RedisCmd, json_output: bool) -> Result<String, String> {
+    match cmd {
+        RedisCmd::Status => {
+            let report = doctor::collect_report(&repo_root()?).await;
+            let payload = json!({
+                "redis": report.redis,
+                "redisStack": report.redis_stack,
+                "semanticCache": report.semantic_cache,
+            });
+            if json_output {
+                serde_json::to_string_pretty(&payload).map_err(|err| err.to_string())
+            } else {
+                Ok(format!(
+                    "Redis status\n  Redis: {} ({})\n  Redis Stack: {} (indexes: {})\n  Semantic cache: {}",
+                    payload["redis"]["status"].as_str().unwrap_or("unknown"),
+                    payload["redis"]["uri"].as_str().unwrap_or(""),
+                    if payload["redisStack"]["ok"].as_bool().unwrap_or(false) {
+                        "ready"
+                    } else {
+                        "not-ready"
+                    },
+                    payload["redisStack"]["search_indexes"]
+                        .as_array()
+                        .map(|items| items.len())
+                        .unwrap_or(0),
+                    if payload["semanticCache"]["ok"].as_bool().unwrap_or(false) {
+                        "ready"
+                    } else {
+                        "not-ready"
+                    }
+                ))
+            }
+        }
+        RedisCmd::Flush => {
+            let client =
+                semantic_cache::SemanticCacheClient::new(semantic_cache::SemanticCacheConfig::from_env()?);
+            client.flush().await?;
+            let payload = json!({
+                "ok": true,
+                "flushed": true,
+            });
+            if json_output {
+                serde_json::to_string_pretty(&payload).map_err(|err| err.to_string())
+            } else {
+                Ok("flushed semantic cache".into())
+            }
+        }
+        RedisCmd::Stats => {
+            let report = doctor::collect_report(&repo_root()?).await;
+            let payload = json!({
+                "redis": {
+                    "ok": report.redis.ok,
+                    "status": report.redis.status,
+                    "uri": report.redis.uri,
+                },
+                "tiers": {
+                    "hot": {
+                        "prefix": redis_cache::CacheTier::Hot.prefix(),
+                        "ttlSeconds": redis_cache::CacheTier::Hot.ttl_seconds(),
+                    },
+                    "warm": {
+                        "prefix": redis_cache::CacheTier::Warm.prefix(),
+                        "ttlSeconds": redis_cache::CacheTier::Warm.ttl_seconds(),
+                    },
+                    "cold": {
+                        "prefix": redis_cache::CacheTier::Cold.prefix(),
+                        "ttlSeconds": redis_cache::CacheTier::Cold.ttl_seconds(),
+                    },
+                }
+            });
+            if json_output {
+                serde_json::to_string_pretty(&payload).map_err(|err| err.to_string())
+            } else {
+                Ok(format!(
+                    "Redis cache tiers\n  HOT  {} ttl={}s\n  WARM {} ttl={}s\n  COLD {} ttl={}s",
+                    redis_cache::CacheTier::Hot.prefix(),
+                    redis_cache::CacheTier::Hot.ttl_seconds(),
+                    redis_cache::CacheTier::Warm.prefix(),
+                    redis_cache::CacheTier::Warm.ttl_seconds(),
+                    redis_cache::CacheTier::Cold.prefix(),
+                    redis_cache::CacheTier::Cold.ttl_seconds(),
+                ))
+            }
+        }
+    }
+}
+
+fn repo_root() -> Result<std::path::PathBuf, String> {
+    if let Ok(path) = std::env::var("EPI_REPO_ROOT") {
+        return Ok(std::path::PathBuf::from(path));
+    }
+    std::env::current_dir().map_err(|err| err.to_string())
 }
 
 async fn maybe_refresh_semantic_embeddings(client: &client::Neo4jClient) -> Result<String, String> {

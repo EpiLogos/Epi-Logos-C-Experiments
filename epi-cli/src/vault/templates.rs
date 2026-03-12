@@ -117,6 +117,16 @@ fn render_builtin_template(context: &TemplateRenderContext) -> String {
             .unwrap_or_else(|| "T0".to_string());
         lines.push(format!("thought_type: \"{thought_type}\""));
     }
+    for key in [
+        "q_essence",
+        "q_correspondence",
+        "q_vimarsa_field",
+        "q_relational_field",
+        "q_notebook_pulse",
+        "q_latest_snapshot",
+    ] {
+        lines.push(format!("{key}: \"\""));
+    }
     lines.push("---".to_string());
     lines.push(String::new());
     lines.push(format!("# {}", title_for(&normalized)));

@@ -1,7 +1,16 @@
 # Build artifacts
 epi-logos
+epi_logos
+epi_logos.c
+epi_logos.h
 test_runner
 /test_*
+/test_m0_init
+/test_m1
+/test_m2
+/test_m3
+/test_m4
+/test_m5
 *.o
 *.a
 *.dSYM/

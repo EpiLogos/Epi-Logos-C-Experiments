@@ -1,6 +1,6 @@
 mod common;
 
-use common::{run_epi, TestEnv};
+use common::{run_epi, write_file, TestEnv};
 
 #[test]
 fn knowing_json_outputs_dossier_facets() {
@@ -92,4 +92,47 @@ fn knowing_help_mentions_dossier_flags() {
             output.stdout
         );
     }
+}
+
+#[test]
+fn knowing_bake_writes_dov_seed_arrays_to_epi_lib() {
+    let env = TestEnv::repo_with_assets();
+    let knowing_dir = env.root.join("qv").display().to_string();
+    let env = env
+        .with_env("EPI_KNOWING_DIR", knowing_dir)
+        .with_env("EPI_WRITE_PASSPHRASE", "satya");
+
+    write_file(
+        env.root.join("qv/overlay.json"),
+        r#"{
+  "version": 1,
+  "updated_at": "2026-03-12T00:00:00Z",
+  "coordinates": {
+    "C1": {
+      "essence": "Form -- essential nature"
+    }
+  }
+}"#,
+    );
+    write_file(
+        env.repo_root.join("epi-lib/src/qv_data.c"),
+        "/* old generated file */\n",
+    );
+    write_file(
+        env.repo_root.join("docs/seeds/coordinate-dov-excerpts.yaml"),
+        "coordinates:\n  C1: \"Doctrine excerpt for C1\"\n",
+    );
+
+    let output = run_epi(&["--json", "core", "knowing", "--bake"], &env);
+    assert!(
+        output.status.success(),
+        "command failed:\nstdout:\n{}\n\nstderr:\n{}",
+        output.stdout,
+        output.stderr
+    );
+
+    let generated = std::fs::read_to_string(env.repo_root.join("epi-lib/src/qv_data.c")).unwrap();
+    assert!(generated.contains("QV_PITHY_C[6]"));
+    assert!(generated.contains("QV_DOV_SEED_C[6]"));
+    assert!(generated.contains("Doctrine excerpt for C1"));
 }

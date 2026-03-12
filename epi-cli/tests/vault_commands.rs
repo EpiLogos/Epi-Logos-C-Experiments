@@ -224,6 +224,27 @@ fn flow_init_creates_flow_md_in_day_folder() {
 }
 
 #[test]
+fn template_invoke_emits_q_metadata_stubs() {
+    let env = env_with_fake_obsidian();
+    let output = run_epi(
+        ["vault", "template-invoke", "thought", "--coordinate", "M5"].as_slice(),
+        &env,
+    );
+    assert!(
+        output.status.success(),
+        "template-invoke failed: {}",
+        output.stderr
+    );
+    for key in ["q_essence", "q_correspondence", "q_vimarsa_field"] {
+        assert!(
+            output.stdout.contains(key),
+            "expected template output to include {key}, got:\n{}",
+            output.stdout
+        );
+    }
+}
+
+#[test]
 fn now_init_creates_thinking_and_thoughts_dirs() {
     let base_env = env_with_fake_obsidian();
     let vault_root = base_env.root.join("vault");
@@ -298,65 +319,5 @@ fn pasu_set_and_get_roundtrip() {
         get_result.stdout.contains("1990-06-15"),
         "get must return value, got: {}",
         get_result.stdout
-    );
-}
-
-#[test]
-fn kairos_status_returns_stub_when_no_birth_data() {
-    let base_env = env_with_fake_obsidian();
-    let vault_root = base_env.root.join("vault");
-    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
-    let vault_root = env.root.join("vault");
-
-    // Create PASU.md with empty birth data
-    let pasu_dir = vault_root.join("Pratibimba/Self");
-    fs::create_dir_all(&pasu_dir).unwrap();
-    fs::write(
-        pasu_dir.join("PASU.md"),
-        "---\ncoordinate: \"PASU\"\nc_0_birth_date: \"\"\nc_0_birth_location: \"\"\nc_0_natal_chart_path: \"\"\n---\n\n# PASU\n",
-    ).unwrap();
-
-    let result = run_epi(["vault", "kairos", "status"].as_slice(), &env);
-    assert!(
-        result.status.success(),
-        "kairos status must succeed: {}",
-        result.stderr
-    );
-    let out = &result.stdout;
-    assert!(
-        out.contains("mode: stub") || out.contains("planet_valid: 0x00"),
-        "must report stub mode when no birth data: {out}"
-    );
-}
-
-#[test]
-fn kairos_status_reports_natal_when_chart_exists() {
-    let base_env = env_with_fake_obsidian();
-    let vault_root = base_env.root.join("vault");
-    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
-    let vault_root = env.root.join("vault");
-
-    // Create PASU.md with birth data and a pre-existing chart
-    let pasu_dir = vault_root.join("Pratibimba/Self");
-    fs::create_dir_all(&pasu_dir).unwrap();
-    fs::write(
-        pasu_dir.join("PASU.md"),
-        "---\ncoordinate: \"PASU\"\nc_0_birth_date: \"1990-06-15\"\nc_0_birth_location: \"Berlin, Germany\"\nc_0_natal_chart_path: \"Pratibimba/Self/natal-chart.json\"\n---\n\n# PASU\n",
-    ).unwrap();
-    fs::write(
-        pasu_dir.join("natal-chart.json"),
-        r#"{"sun_degree":168.4,"moon_degree":42.1,"planet_degrees":[168.4,42.1,155.2,190.3,45.6,210.7,300.2],"planet_valid":127}"#,
-    ).unwrap();
-
-    let result = run_epi(["vault", "kairos", "status"].as_slice(), &env);
-    assert!(
-        result.status.success(),
-        "kairos status must succeed: {}",
-        result.stderr
-    );
-    let out = &result.stdout;
-    assert!(
-        out.contains("mode: natal"),
-        "must report natal mode when chart exists: {out}"
     );
 }

@@ -12,6 +12,7 @@ mod plugin_manifest;
 mod plugins;
 pub mod session;
 mod skills;
+pub mod techne;
 pub mod spawn;
 mod subagents;
 pub mod vak;
@@ -121,6 +122,11 @@ pub enum AgentCmd {
         #[command(subcommand)]
         cmd: session::SessionCmd,
     },
+    /// Techne craft tools (NotebookLM, provider profiles, capture, worktrees)
+    Techne {
+        #[command(subcommand)]
+        cmd: techne::TechneCmd,
+    },
     /// Evaluate VAK coordinates for a task
     #[command(name = "vak")]
     Vak {
@@ -170,6 +176,7 @@ pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
             Ok(String::new())
         }
         AgentCmd::Session { cmd } => session::run(cmd, json),
+        AgentCmd::Techne { cmd } => techne::dispatch(cmd),
         AgentCmd::Vak { cmd } => match cmd {
             VakCmd::Evaluate {
                 task,
