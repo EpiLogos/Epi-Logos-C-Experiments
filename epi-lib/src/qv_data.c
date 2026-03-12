@@ -41,12 +41,12 @@ const char* QV_PITHY_P_INV[6] = {
 };
 
 const char* QV_PITHY_L[6] = {
-    "Literal -- surface reading, direct meaning",
-    "Functional -- operational view, how-it-works",
-    "Structural -- form analysis, architecture",
-    "Archetypal -- deep pattern, universal form",
-    "Paradigmatic -- model-level, framework shift",
-    "Integral -- unified view, all lenses active"
+    "Quaternal [#0-Mirror] -- QL as psychoid ground; curiosity, creative potential",
+    "Causal [#1-Singularity] -- Iccha Shakti, will as first cause, material causation",
+    "Logical [#2-Sat] -- Nagarjuna Catuskoti, tetralemmic IS/IS-NOT/BOTH/NEITHER",
+    "Processual [#3-Magician] -- Whitehead concrescence, creative advance, novelty",
+    "Phenomenological [#4-Lemniscate] -- Heidegger Being-in-World, existential ground",
+    "Para Vak [#5-Vak] -- Kashmir Shaivism speech ontology, Vak as creative power"
 };
 const char* QV_PITHY_L_INV[6] = {
     "Literal (inv) -- applied reading, contextual surface",
@@ -132,6 +132,32 @@ const char* QV_PITHY_WEAVE[4] = {
     "Ground reaching Instance -- transitional",
     "Instance reaching Ground -- return",
     "Pure Instance -- #5 implicate, integration"
+};
+
+/* M0 (Anuttara) sub-branches: #0.0 void through #0.5 Shakti */
+const char* QV_PITHY_M0_BRANCHES[6] = {
+    "Void arithmetic -- (-) mirror operator, pre-numerical absolute zero, the unmanifest",
+    "Singularity seed -- 0/1 binary gate, first differentiation, number awakening",
+    "Virtue field -- 9-fold Shakti qualities: love/truth/openness/joy/goodness/beauty/life/wisdom/reality",
+    "Number language -- 12-fold archetype LUT, vimarsa operators, complete formulation table",
+    "Temporal engine -- QL stack, cosmic clock, Siva-table, logos state computation",
+    "Shakti frame operators -- @0-@5 context frames, Mobius completion, generates M5 logos cycle"
+};
+
+/* Vak speech operators: 12 zodiacal consciousness-grammar symbols */
+const char* QV_PITHY_VAK_SPEECH[12] = {
+    "! (Aries/Fire/Cardinal) -- pure assertion, undivided impulse, act without precondition",
+    "? (Taurus/Earth/Fixed) -- pure inquiry, receptive holding, open question stable",
+    "!- (Gemini/Air/Mutable) -- assertion-branch, dual affirmation, or-statement split",
+    "-? (Cancer/Water/Cardinal) -- branch-inquiry, conditional entry, context threshold",
+    "!? (Leo/Fire/Fixed) -- assertion-inquiry, declaration seeking confirmation, fixed act",
+    "?- (Virgo/Earth/Mutable) -- inquiry-branch, analytical questioning, path discernment",
+    "-! (Libra/Air/Cardinal) -- branch-assertion, relational affirmation, balance-claim",
+    "?! (Scorpio/Water/Fixed) -- inquiry-assertion, question revealed as imperative",
+    "-!/!- (Sagittarius/Fire/Mutable) -- mutable polarity dual: branch-assert / assert-branch",
+    "-?/?- (Capricorn/Earth/Cardinal) -- grounded dual: branch-inquire / inquire-branch",
+    "!?/?! (Aquarius/Air/Fixed) -- recursive paradox dual: assert-inquire / inquire-assert",
+    "?!/!? (Pisces/Water/Mutable) -- dissolution dual: inquire-assert / assert-inquire, return"
 };
 
 /* Help sub-branches of # */

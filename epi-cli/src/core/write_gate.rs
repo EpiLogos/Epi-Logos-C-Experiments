@@ -13,15 +13,6 @@ pub fn require_auth() -> Result<(), String> {
         return Ok(());
     }
 
-    if std::env::var("EPI_WRITE_PASSPHRASE")
-        .ok()
-        .as_deref()
-        == Some(PASSPHRASE)
-    {
-        UNLOCKED.store(true, Ordering::Relaxed);
-        return Ok(());
-    }
-
     eprint!("Enter passphrase for write operations: ");
     io::stderr().flush().ok();
 

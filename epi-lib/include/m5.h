@@ -56,6 +56,12 @@
 /* Logos stage names — defined in m5.c */
 extern const char* const M5_LOGOS_STAGE_NAMES[6];
 
+/* M0 (Anuttara) sub-branch pithy strings — defined in qv_data.c */
+extern const char* QV_PITHY_M0_BRANCHES[6];
+
+/* Vak consciousness-grammar speech operators (12 zodiacal) — defined in qv_data.c */
+extern const char* QV_PITHY_VAK_SPEECH[12];
+
 
 /* ===================================================================
  * II. QUINTESSENTIAL VIEW — Per-coordinate self-description

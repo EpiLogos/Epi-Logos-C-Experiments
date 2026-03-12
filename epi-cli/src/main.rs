@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use epi_logos::{
-    agent, anuttara, app, book, code, core, epii, ffi, gate, graph, mahamaya, nara,
-    paramasiva, parashakti, portal, sesh, sync, techne, up, vault,
+    agent, app, book, code, core, ffi, gate, graph, nara, notebook, portal, sesh, sync, techne,
+    up, vault, vimarsa,
 };
 
 #[derive(Parser)]
@@ -59,6 +59,11 @@ enum Commands {
         #[command(subcommand)]
         cmd: sesh::SeshCmd,
     },
+    /// Vimarsa -- curiosity-driven coordinate exploration
+    Vimarsa {
+        #[command(subcommand)]
+        cmd: vimarsa::VimarsaCmd,
+    },
     /// Book reader — bookokrat TUI (runs 'open' by default)
     Book {
         #[command(subcommand)]
@@ -66,6 +71,11 @@ enum Commands {
         /// .epub file to open (opens TUI browser if omitted)
         #[arg(value_name = "FILE")]
         file: Option<String>,
+    },
+    /// NotebookLM — query and manage Google NotebookLM notebooks
+    Notebook {
+        #[command(subcommand)]
+        cmd: notebook::NotebookCmd,
     },
     /// Research tools — chat log capture, NotebookLM, quote research
     Techne {
@@ -88,31 +98,6 @@ enum Commands {
     Nara {
         #[command(subcommand)]
         cmd: nara::NaraCmd,
-    },
-    /// Epii consciousness domain — synthesis / integration
-    Epii {
-        #[command(subcommand)]
-        cmd: epii::EpiiCmd,
-    },
-    /// M0' Proto-Logos domain
-    Anuttara {
-        #[command(subcommand)]
-        cmd: anuttara::AnuttaraCmd,
-    },
-    /// M1' Pro-Logos domain
-    Paramasiva {
-        #[command(subcommand)]
-        cmd: paramasiva::ParamasivaCmd,
-    },
-    /// M2' Co-Logos domain
-    Parashakti {
-        #[command(subcommand)]
-        cmd: parashakti::ParashaktiCmd,
-    },
-    /// M3' Axio-Logos domain
-    Mahamaya {
-        #[command(subcommand)]
-        cmd: mahamaya::MahamayaCmd,
     },
     /// M' experiential TUI portal
     Portal {
@@ -167,10 +152,12 @@ async fn main() -> color_eyre::Result<()> {
         },
         Commands::Sync { cmd } => sync::dispatch(cmd),
         Commands::Sesh { cmd } => sesh::dispatch(cmd),
+        Commands::Vimarsa { cmd } => vimarsa::dispatch(cmd),
         Commands::Book { file, cmd } => match cmd {
             Some(sub) => book::dispatch(sub),
             None => book::open_default(file.clone()),
         },
+        Commands::Notebook { cmd } => notebook::dispatch(cmd),
         Commands::Techne { cmd } => techne::dispatch(cmd),
         Commands::App { cmd } => app::dispatch(cmd),
         Commands::Up(cmd) => match up::dispatch(cmd, cli.json).await {
@@ -186,18 +173,6 @@ async fn main() -> color_eyre::Result<()> {
                 std::process::exit(1);
             }
         },
-        Commands::Epii { cmd } => match epii::dispatch(cmd, cli.json) {
-            Ok(out) if !out.is_empty() => println!("{}", out),
-            Ok(_) => {}
-            Err(e) => {
-                eprintln!("{}", e);
-                std::process::exit(1);
-            }
-        },
-        Commands::Anuttara { cmd } => anuttara::dispatch(cmd)?,
-        Commands::Paramasiva { cmd } => paramasiva::dispatch(cmd)?,
-        Commands::Parashakti { cmd } => parashakti::dispatch(cmd)?,
-        Commands::Mahamaya { cmd } => mahamaya::dispatch(cmd)?,
         Commands::Portal {
             reset,
             tab,

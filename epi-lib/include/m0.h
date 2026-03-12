@@ -156,6 +156,8 @@ typedef struct {
     uint8_t  r_factor;
     uint8_t  divine_act;
     uint16_t cross_branch_refs;
+    const char* name;           /* virtue name, e.g. "Joy/Play - Creation Virtue" */
+    const char* symbol;         /* mathematical symbol, e.g. "0R = @ = (9-O#-X#-N#)" */
 } Virtue_Entry;
 
 extern const Virtue_Entry VIRTUE_LUT[9];
@@ -199,10 +201,32 @@ typedef struct {
         const Virtue_Entry*    virtue_entries;
     } sub_table;
 
+    const char* symbol;         /* short mathematical symbol: "(-)", "0/1", "2", "3"… "9" */
     Compiled_Formulation formulation;
 } Archetype_Entry;
 
 extern const Archetype_Entry ARCHETYPE_LUT[ARCHETYPE_LUT_SIZE];
+
+/* ===================================================================
+ * VI-B. MIRROR CHILDREN — Frame () and Operator - (#0-3-0/1-0, #0-3-0/1-1)
+ *
+ * The two pre-numerical meta-elements that compose the Mirror (-).
+ * Referenced by M1 Paramasiva:
+ *   #1-0 --EMBODIES_FRAME_PRINCIPLE--> #0-3-0/1-0    (The Frame '()')
+ *   #1-0 --EMBODIES_OPERATOR_PRINCIPLE--> #0-3-0/1-1 (The Operator '-')
+ * These are the zero-dimensional and one-dimensional foundations of Vimarsa.
+ * =================================================================== */
+
+typedef struct {
+    uint8_t     position;             /* 0=Frame, 1=Operator */
+    const char* symbol;               /* "()" or "-" */
+    const char* name;                 /* "The Frame" or "The Operator" */
+    const char* core_nature;          /* from dataset coreNature */
+    const char* operational_essence;  /* from dataset operationalEssence */
+} Mirror_Child_Entry;
+
+#define MIRROR_CHILDREN_COUNT 2u
+extern const Mirror_Child_Entry MIRROR_CHILDREN[MIRROR_CHILDREN_COUNT];
 
 /* FR 2.0.3-H: Zodiacal Quality Augment */
 #define ZOD_ELEM_FIRE    0x00u
@@ -215,7 +239,7 @@ extern const Archetype_Entry ARCHETYPE_LUT[ARCHETYPE_LUT_SIZE];
 #define ZOD_MODE_MUTABLE   0x02u
 
 struct Zodiacal_Entry {
-    uint8_t symbol_pair;
+    const char* symbol;         /* Vak operator, e.g. "!", "!-", "?!/!?" — from #0-3-6 children */
     uint8_t resonance;
     uint8_t successor;
     uint8_t zodiacal_quality;
@@ -243,6 +267,8 @@ struct DivineAct_Entry {
     uint8_t manifests_arch;
     uint8_t cf_id;
     DivineAct_WeaveMask weave_mask;
+    const char* symbol;         /* symbolic formula, e.g. "(R0)", "(R#)" */
+    const char* name;           /* act name, e.g. "Srishti - Creation" */
 };
 
 extern const DivineAct_Entry DIVINE_ACT_LUT[7];
@@ -291,6 +317,28 @@ typedef struct {
 } Siva_Entry;
 
 extern const Siva_Entry SIVA_TABLE[6];
+
+
+/* ===================================================================
+ * VIII-B. SHAKTI TABLE — 6 entries (#0-5-5/0 children)
+ *
+ * The other half of the Siva-Shakti polarity. SIVA_TABLE covers Siva
+ * (static operator/processor side); SHAKTI_TABLE covers Shakti
+ * (dynamic psyche/duration side). @0=## through @5=R# map to QL frames.
+ *
+ * Dataset: nodes_anuttara.json #0-5-5/0-0 through #0-5-5/0-5
+ * =================================================================== */
+
+typedef struct {
+    uint8_t     shakti_id;    /* 0-5 */
+    uint8_t     ql_system;   /* QL_STACK index: 0=##/O#, 1=O#, 2=X#, 3=N#, 4=M#, 5=R# */
+    const char* symbol;      /* e.g. "@0 = ##", "@5 = R#" */
+    const char* name;        /* "Shakti Library", "Shakti Techne" etc */
+    const char* description; /* operationalEssence from dataset */
+} Shakti_Entry;
+
+#define SHAKTI_TABLE_SIZE 6u
+extern const Shakti_Entry SHAKTI_TABLE[SHAKTI_TABLE_SIZE];
 
 
 /* ===================================================================
@@ -410,7 +458,85 @@ extern const uint8_t M0_GOVERNING_CF[6];
 
 
 /* ===================================================================
- * XIII. M0 ROOT STRUCT — HC-anchored module state
+ * XIII. M0_CORE_RELATIONS — Curated cross-system relational skeleton
+ *
+ * Coordinate encoding (4 nibbles): M0C(m,b,c,d) = ((m)<<12)|((b)<<8)|((c)<<4)|(d)
+ * where each nibble is 0-15, 0xF = absent/leaf-level.
+ * Examples:
+ *   #0 root  = M0C_ROOT(0)    = 0x0FFF
+ *   #0-3     = M0C_BR(0,3)    = 0x03FF
+ *   #0-3-6   = M0C_D1(0,3,6)  = 0x036F
+ *   #0-3-6-0 = M0C(0,3,6,0)   = 0x0360
+ *   #1-3-5   = M0C_D1(1,3,5)  = 0x135F
+ *   #0-3-10  = M0C_D1(0,3,0xA)= 0x03AF
+ *
+ * 65 entries: Tier1=20 structural skeleton, Tier2=14 anchors, Tier3=31 hot-links
+ * Tier4 (remaining ~900 Parashakti relations) lives in Neo4j only.
+ * =================================================================== */
+
+#define M0C(m,b,c,d)  ((uint16_t)(((uint16_t)(m)<<12)|((uint16_t)(b)<<8)|((uint16_t)(c)<<4)|(uint16_t)(d)))
+#define M0C_ROOT(m)   M0C((m),0xF,0xF,0xF)
+#define M0C_BR(m,b)   M0C((m),(b),0xF,0xF)
+#define M0C_D1(m,b,c) M0C((m),(b),(c),0xF)
+
+typedef enum {
+    M0_REL_HAS_COMPONENT               = 0,
+    M0_REL_HAS_ARCHETYPE_COMPONENT     = 1,
+    M0_REL_HAS_VIRTUE_COMPONENT        = 2,
+    M0_REL_HAS_ZODIACAL_COMPONENT      = 3,
+    M0_REL_HAS_MONOPOLY_COMPONENT      = 4,
+    M0_REL_HAS_DIVINE_ACT_COMPONENT    = 5,
+    M0_REL_HAS_MIRROR_COMPONENT        = 6,
+    M0_REL_PROVIDES_ABSOLUTE_GROUND    = 7,
+    M0_REL_COMPLETES_CYCLE_INTO        = 8,
+    M0_REL_MANIFESTS_ZERO_LOGIC        = 9,
+    M0_REL_R_FACTOR_SUBSYSTEM_WEAVING  = 10,
+    M0_REL_INHERITS_CONCRESCENCE       = 11,
+    M0_REL_EMBODIES_ARCHETYPE_0        = 12,
+    M0_REL_EMBODIES_ARCHETYPE_1        = 13,
+    M0_REL_EMBODIES_ARCHETYPE          = 14,
+    M0_REL_ACHIEVES_SIVA_SHAKTI_UNITY  = 15,
+    M0_REL_EMBODIES_FRAME_PRINCIPLE    = 16,
+    M0_REL_EMBODIES_OPERATOR_PRINCIPLE = 17,
+    M0_REL_TRIKA_VOID_SOURCE           = 18,
+    M0_REL_O_SYSTEM_ZERO_LOGIC_BRIDGE  = 19,
+    M0_REL_X_SYSTEM_IMAGINATION_BRIDGE = 20,
+    M0_REL_DIVINE_SPEECH_TEMPLATES     = 21,
+    M0_REL_O_SYSTEM_AFFIRMATION        = 22,
+    M0_REL_O_SYSTEM_NEGATION           = 23,
+    M0_REL_CREATION_ACT                = 24,
+    M0_REL_SUSTENANCE_ACT              = 25,
+    M0_REL_DISSOLUTION_ACT             = 26,
+    M0_REL_VEILING_ACT                 = 27,
+    M0_REL_EMANATES_VIRTUE             = 28,
+    M0_REL_GENERATES                   = 29,
+} M0_Rel_Type;
+
+typedef struct {
+    uint16_t source_coord;  /* M0C(...) packed coordinate */
+    uint16_t target_coord;  /* M0C(...) packed coordinate */
+    uint8_t  rel_type;      /* M0_Rel_Type (fits in uint8_t: max 29) */
+    uint8_t  tier;          /* 1=structural skeleton, 2=anchor, 3=hot-link */
+    uint8_t  _pad[2];       /* alignment to 8 bytes */
+} M0_Relation;
+
+#define M0_CORE_RELATIONS_COUNT 65u
+extern const M0_Relation M0_CORE_RELATIONS[M0_CORE_RELATIONS_COUNT];
+
+
+/* ===================================================================
+ * XIV. M5 LOGOS ADVANCE CALLBACK — #5→#0 COMPLETES_CYCLE_INTO arc
+ *
+ * Wire from m5_init: m0_bind_m5_logos(fn_wrapper, m5_root_ptr)
+ * This avoids a circular header dependency (m0.h ← m5.h would be circular).
+ * =================================================================== */
+
+typedef Unified_Logos_State (*M5_Logos_Advance_Fn)(void* m5_root);
+void m0_bind_m5_logos(M5_Logos_Advance_Fn fn, void* m5_root);
+
+
+/* ===================================================================
+ * XV. M0 ROOT STRUCT — HC-anchored module state
  * =================================================================== */
 
 typedef struct {

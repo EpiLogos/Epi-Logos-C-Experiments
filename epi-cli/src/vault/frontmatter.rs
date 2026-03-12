@@ -39,14 +39,6 @@ const CANONICAL_METADATA_KEYS: &[&str] = &[
     "invocation_kind",
     "thought_type",
 ];
-const Q_METADATA_KEYS: &[&str] = &[
-    "q_essence",
-    "q_correspondence",
-    "q_vimarsa_field",
-    "q_relational_field",
-    "q_notebook_pulse",
-    "q_latest_snapshot",
-];
 const DEPRECATED_PATTERNS: &[&str] = &["bimbaCoordinate", "ql_position"];
 
 pub fn is_valid_coordinate(coord: &str) -> bool {
@@ -168,13 +160,6 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
             continue;
         }
 
-        if Q_METADATA_KEYS.contains(&key_str) {
-            if let Some(err) = validate_q_metadata_key(key_str, value) {
-                result.errors.push(err);
-            }
-            continue;
-        }
-
         if CANONICAL_METADATA_KEYS.contains(&key_str) {
             continue;
         }
@@ -248,13 +233,6 @@ fn validate_coordinate_key(key: &str, value: &Value) -> Option<String> {
     match value {
         Value::String(_) => None,
         _ => Some(format!("Coordinate key '{key}' must have a string value")),
-    }
-}
-
-fn validate_q_metadata_key(key: &str, value: &Value) -> Option<String> {
-    match value {
-        Value::String(_) => None,
-        _ => Some(format!("Q metadata key '{key}' must have a string value")),
     }
 }
 

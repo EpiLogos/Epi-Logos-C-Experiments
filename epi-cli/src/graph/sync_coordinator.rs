@@ -1,5 +1,3 @@
-use std::collections::BTreeMap;
-
 use crate::graph::client::Neo4jClient;
 use crate::graph::coordinate_array_parser::CoordinateArrayParser;
 use crate::graph::relationship_manager::RelationshipManager;
@@ -51,14 +49,21 @@ impl<'a> SyncCoordinator<'a> {
             .await
             .map_err(|e| format!("upsert error: {}", e))?;
 
-        // Set additional scalar frontmatter properties, including q_* metadata.
-        for (key, value) in frontmatter_scalar_properties(frontmatter) {
-            let escaped_v = value.replace('\'', "\\'");
-            let set_cypher = format!(
-                "MATCH (n:Bimba {{coordinate: '{}'}}) SET n.{} = '{}'",
-                coord, key, escaped_v
-            );
-            let _ = self.client.run(&set_cypher).await;
+        // Set additional frontmatter properties
+        if let Some(map) = frontmatter.as_mapping() {
+            let skip_keys = ["coordinate"];
+            for (key, value) in map {
+                if let (Some(k), Some(v)) = (key.as_str(), value.as_str()) {
+                    if !skip_keys.contains(&k) && !k.contains('_') {
+                        let escaped_v = v.replace('\'', "\\'");
+                        let set_cypher = format!(
+                            "MATCH (n:Bimba {{coordinate: '{}'}}) SET n.{} = '{}'",
+                            coord, k, escaped_v
+                        );
+                        let _ = self.client.run(&set_cypher).await;
+                    }
+                }
+            }
         }
 
         // Parse coordinate arrays and create relationships
@@ -76,50 +81,6 @@ impl<'a> SyncCoordinator<'a> {
             relationships_created: rel_count,
         })
     }
-}
-
-pub fn frontmatter_scalar_properties(frontmatter: &serde_yaml::Value) -> BTreeMap<String, String> {
-    let mut props = BTreeMap::new();
-    let Some(map) = frontmatter.as_mapping() else {
-        return props;
-    };
-
-    for (key, value) in map {
-        let (Some(key), Some(value)) = (key.as_str(), value.as_str()) else {
-            continue;
-        };
-        if key == "coordinate" {
-            continue;
-        }
-        if should_promote_scalar_property(key) {
-            props.insert(key.to_string(), value.to_string());
-        }
-    }
-
-    props
-}
-
-fn should_promote_scalar_property(key: &str) -> bool {
-    const ALLOWED_METADATA_KEYS: &[&str] = &[
-        "family",
-        "artifact_role",
-        "ctx_type",
-        "invocation_profile",
-        "source_coordinate",
-        "parent_day_id",
-        "now_id",
-        "day_id",
-        "session_id",
-        "parent_session_id",
-        "created_at",
-        "updated_at",
-        "merged_at",
-        "merge_reason",
-        "invocation_kind",
-        "thought_type",
-    ];
-
-    !key.contains('_') || key.starts_with("q_") || ALLOWED_METADATA_KEYS.contains(&key)
 }
 
 #[cfg(test)]

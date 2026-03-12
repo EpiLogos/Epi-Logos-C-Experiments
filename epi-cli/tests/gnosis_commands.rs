@@ -17,7 +17,7 @@ fn chunker_keeps_section_context() {
 }
 
 #[test]
-fn gnosis_context_ingest_query_and_book_commands_use_local_store() {
+fn gnosis_notebook_ingest_query_and_book_commands_use_local_store() {
     let env = TestEnv::repo_with_assets()
         .with_env("EPILOGOS_VAULT", env_path_placeholder())
         .with_env("EPILOGOS_ROOT", "/tmp")
@@ -30,21 +30,18 @@ fn gnosis_context_ingest_query_and_book_commands_use_local_store() {
     );
 
     let create = run_epi(
-        ["epii", "gnosis", "context", "create", "Research"].as_slice(),
+        ["techne", "gnosis", "notebook", "create", "Research"].as_slice(),
         &env,
     );
     assert!(create.stdout.contains("Research"));
 
-    let contexts = run_epi(["epii", "gnosis", "context", "list"].as_slice(), &env);
-    assert!(contexts.stdout.contains("Research"));
-
     let ingest = run_epi(
         [
-            "epii",
+            "techne",
             "gnosis",
             "ingest",
             source.to_str().unwrap(),
-            "--context",
+            "--notebook",
             "Research",
             "--source-type",
             "Books",
@@ -54,13 +51,27 @@ fn gnosis_context_ingest_query_and_book_commands_use_local_store() {
     );
     assert!(ingest.stdout.contains("stored"));
 
+    let docs = run_epi(
+        [
+            "techne",
+            "gnosis",
+            "document",
+            "list",
+            "--notebook",
+            "Research",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(docs.stdout.contains("source.md"));
+
     let query = run_epi(
         [
-            "epii",
+            "techne",
             "gnosis",
             "query",
             "gamma epsilon",
-            "--context",
+            "--notebook",
             "Research",
         ]
         .as_slice(),

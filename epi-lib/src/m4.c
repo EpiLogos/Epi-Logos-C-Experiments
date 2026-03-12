@@ -297,6 +297,91 @@ void m4_identity_compute(M4_Identity_Matrix* id, M4_Input_Data* input) {
 
 
 /* ===================================================================
+ * API: m4_identity_hash_compute — BLAKE3 from present layers only
+ *
+ * Input format: layer_presence (1 byte) || each PRESENT layer's raw bytes
+ * Absent layers contribute NOTHING to the hash input.
+ * =================================================================== */
+
+void m4_identity_hash_compute(M4_Identity_Matrix* id) {
+    if (!id) return;
+
+    /* Layer byte sizes and pointers — indexed by layer number */
+    const void* layer_ptrs[5] = {
+        &id->layer_0,  /* 0: Numerological — 8 bytes */
+        &id->layer_1,  /* 1: Astrological  — 32 bytes */
+        &id->layer_2,  /* 2: Jungian       — 12 bytes */
+        &id->layer_3,  /* 3: Gene Keys     — 40 bytes */
+        &id->layer_4,  /* 4: Human Design  — 20 bytes */
+    };
+    const size_t layer_sizes[5] = {
+        sizeof(M4_Numerological_Layer),
+        sizeof(M4_Astrological_Layer),
+        sizeof(M4_Jungian_Layer),
+        sizeof(M4_GeneKeys_Layer),
+        sizeof(M4_HumanDesign_Layer),
+    };
+
+    blake3_hasher hasher;
+    blake3_hasher_init(&hasher);
+
+    /* First byte: presence mask */
+    blake3_hasher_update(&hasher, &id->layer_presence, 1);
+
+    /* Each present layer's raw bytes, in order 0→4 */
+    for (int i = 0; i < 5; i++) {
+        if (id->layer_presence & (1u << (unsigned)i)) {
+            blake3_hasher_update(&hasher, layer_ptrs[i], layer_sizes[i]);
+        }
+    }
+
+    uint8_t hash_out[8];
+    blake3_hasher_finalize(&hasher, hash_out, 8);
+    memcpy(&id->quintessence_hash, hash_out, 8);
+}
+
+
+/* ===================================================================
+ * API: m4_identity_augment — Add layer, recompute hash
+ * =================================================================== */
+
+void m4_identity_augment(M4_Identity_Matrix* id,
+                         uint8_t layer_index,
+                         const void* new_layer_data,
+                         size_t new_layer_size) {
+    if (!id || !new_layer_data || layer_index > 4) return;
+
+    /* Target slot and expected size */
+    void* layer_slots[5] = {
+        &id->layer_0,
+        &id->layer_1,
+        &id->layer_2,
+        &id->layer_3,
+        &id->layer_4,
+    };
+    const size_t expected_sizes[5] = {
+        sizeof(M4_Numerological_Layer),
+        sizeof(M4_Astrological_Layer),
+        sizeof(M4_Jungian_Layer),
+        sizeof(M4_GeneKeys_Layer),
+        sizeof(M4_HumanDesign_Layer),
+    };
+
+    /* Validate size */
+    if (new_layer_size != expected_sizes[layer_index]) return;
+
+    /* Copy layer data into the appropriate slot */
+    memcpy(layer_slots[layer_index], new_layer_data, new_layer_size);
+
+    /* Set presence bit */
+    id->layer_presence |= (uint8_t)(1u << layer_index);
+
+    /* Recompute quintessence hash */
+    m4_identity_hash_compute(id);
+}
+
+
+/* ===================================================================
  * API: m4_cast_iching — I-Ching casting
  * =================================================================== */
 

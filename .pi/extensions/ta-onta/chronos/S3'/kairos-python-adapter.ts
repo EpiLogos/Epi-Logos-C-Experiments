@@ -32,13 +32,13 @@ export async function fetchKairosData(params: {
   }
 
   // 2. Delegate to epi CLI (which handles kerykeion invocation)
-  const result = spawnSync("epi", ["gate", "kairos", "fetch"], { encoding: "utf8" });
+  const result = spawnSync("epi", ["vault", "kairos", "fetch"], { encoding: "utf8" });
 
   if (result.status !== 0) {
     throw new Error(`kairos fetch failed: ${result.stderr || result.stdout}`);
   }
 
-  // 3. Read the chart file written by epi gate kairos fetch
+  // 3. Read the chart file written by epi vault kairos fetch
   const fs = await import("node:fs/promises");
   const chartPath = `${params.vault_root}/${params.chart_output_path}`;
   const content = await fs.readFile(chartPath, "utf8");
@@ -59,7 +59,7 @@ export async function fetchKairosData(params: {
 }
 
 export function getKairosStatus(): { mode: string; planet_valid: string } {
-  const result = spawnSync("epi", ["gate", "kairos", "status"], { encoding: "utf8" });
+  const result = spawnSync("epi", ["vault", "kairos", "status"], { encoding: "utf8" });
   if (result.status !== 0) {
     throw new Error(`kairos status failed: ${result.stderr || result.stdout}`);
   }

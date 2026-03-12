@@ -1,6 +1,5 @@
 use epi_logos::graph::bidirectional_sync::ConflictResolution;
 use epi_logos::graph::parse_yaml_frontmatter;
-use epi_logos::graph::sync_coordinator::frontmatter_scalar_properties;
 
 #[test]
 fn test_parse_yaml_frontmatter_basic() {
@@ -41,35 +40,6 @@ fn test_conflict_resolution_strategies() {
         ConflictResolution::from_str("anything-else"),
         ConflictResolution::Skip
     ));
-}
-
-#[test]
-fn test_syncable_frontmatter_properties_include_q_metadata() {
-    let yaml: serde_yaml::Value = serde_yaml::from_str(
-        r#"
-coordinate: "M5"
-family: "M"
-artifact_role: "thought"
-q_essence: "Self-knowing"
-q_correspondence: "M5 mirrors S5"
-c_0_source_coordinates:
-  - "[[M5]]"
-"#,
-    )
-    .unwrap();
-
-    let props = frontmatter_scalar_properties(&yaml);
-    assert_eq!(props.get("family").map(String::as_str), Some("M"));
-    assert_eq!(
-        props.get("q_essence").map(String::as_str),
-        Some("Self-knowing")
-    );
-    assert_eq!(
-        props.get("q_correspondence").map(String::as_str),
-        Some("M5 mirrors S5")
-    );
-    assert!(!props.contains_key("coordinate"));
-    assert!(!props.contains_key("c_0_source_coordinates"));
 }
 
 #[tokio::test]

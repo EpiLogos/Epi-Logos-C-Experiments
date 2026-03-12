@@ -82,7 +82,100 @@ typedef struct {
 
 
 /* ===================================================================
- * FR 2.4.1: M4_Input_Data + M4_Identity_Matrix
+ * FR 2.4.0 EXPANDED: 6-slot open identity architecture
+ * Each slot is independently optional. Hash computed from present slots only.
+ * =================================================================== */
+
+/* #4.0-0 — Birthdate Numerological Encoding */
+typedef struct {
+    uint32_t numerological_key;     /* Original 4-fold encoding from date arithmetic */
+    uint8_t  sixfold_difference;    /* 6-fold difference (Bimba/Pratibimba tension) */
+    uint8_t  sixfold_sum;           /* 6-fold sum (synthesis) */
+    uint8_t  life_path;             /* Single-digit life path number (1-9, 11, 22, 33) */
+    uint8_t  _pad;
+} M4_Numerological_Layer;           /* #4.0-0 — 8 bytes */
+
+_Static_assert(sizeof(M4_Numerological_Layer) == 8,
+    "M4_Numerological_Layer must be 8 bytes");
+
+/* #4.0-1 — Astrological Natal Chart */
+typedef struct {
+    uint16_t sun_degree_anchor;     /* 0-719 on SU(2) ring */
+    uint16_t moon_degree_anchor;    /* 0-719 */
+    uint16_t asc_degree_anchor;     /* Ascendant/Rising sign (0-719) */
+    uint16_t mc_degree_anchor;      /* Midheaven (0-719) */
+    uint16_t planet_degrees[10];    /* All 10 planets (Planet_Id order from m2.h) */
+    uint8_t  dominant_sign;         /* 0-11 zodiac sign index */
+    uint8_t  dominant_element;      /* Element_Id from m2.h */
+    uint8_t  dominant_modality;     /* 0=Cardinal, 1=Fixed, 2=Mutable */
+    uint8_t  _pad;
+} M4_Astrological_Layer;            /* #4.0-1 — 32 bytes */
+
+_Static_assert(sizeof(M4_Astrological_Layer) == 32,
+    "M4_Astrological_Layer must be 32 bytes");
+
+/* #4.0-2 — Jungian / MBTI Typological Assessment */
+typedef struct {
+    struct {
+        uint8_t adenine_water;      /* Cups / Feeling (Fi/Fe) — 0-255 intensity */
+        uint8_t thymine_fire;       /* Wands / Intuition (Ni/Ne) */
+        uint8_t cytosine_earth;     /* Pentacles / Sensation (Si/Se) */
+        uint8_t guanine_air;        /* Swords / Thinking (Ti/Te) */
+    } nucleotide_balance;           /* The elemental throughline encoding */
+    uint8_t  mbti_raw;              /* 4-bit MBTI: bit0=E/I, bit1=S/N, bit2=T/F, bit3=J/P */
+    uint8_t  dominant_function;     /* Cognitive function index (0=Ti..7=Se) */
+    uint8_t  auxiliary_function;    /* Secondary cognitive function index */
+    uint8_t  enneagram_type;        /* 1-9 (0 = not set) */
+    uint8_t  enneagram_wing;        /* 1-9 (0 = not set) */
+    uint8_t  _pad[3];
+} M4_Jungian_Layer;                 /* #4.0-2 — 12 bytes */
+
+_Static_assert(sizeof(M4_Jungian_Layer) == 12,
+    "M4_Jungian_Layer must be 12 bytes");
+
+/* #4.0-3 — Gene Keys / I-Ching Activation Profile */
+typedef struct {
+    uint64_t gene_keys_activation;  /* M3_Matrix_Word mask: bit N = hexagram N active */
+    uint64_t shadow_mask;           /* Low-frequency shadow hexagrams active in profile */
+    uint64_t gift_mask;             /* Mid-frequency gift hexagrams */
+    uint64_t siddhi_mask;           /* High-frequency siddhi hexagrams */
+    uint8_t  life_work_hex;         /* Primary Gene Key (Sun hexagram) — 1-64 */
+    uint8_t  evolution_hex;         /* Earth hexagram (opposite of life_work) */
+    uint8_t  radiance_hex;          /* Moon hexagram */
+    uint8_t  purpose_hex;           /* Nodal axis hexagram */
+    uint8_t  attraction_hex;        /* Venus hexagram */
+    uint8_t  iq_hex;                /* Mercury hexagram */
+    uint8_t  eq_hex;                /* Moon south node hexagram */
+    uint8_t  sq_hex;                /* Ascendant hexagram ("spiritual quotient") */
+} M4_GeneKeys_Layer;                /* #4.0-3 — 40 bytes */
+
+_Static_assert(sizeof(M4_GeneKeys_Layer) == 40,
+    "M4_GeneKeys_Layer must be 40 bytes");
+
+/* #4.0-4 — Human Design Profile (stub — extensible) */
+typedef struct {
+    uint8_t  hd_type;               /* 0=Manifestor, 1=Generator, 2=ManGen, 3=Projector, 4=Reflector */
+    uint8_t  hd_authority;          /* 0=Emotional..7=None */
+    uint8_t  hd_profile[2];         /* Profile lines (e.g. {1,3} = "Investigator/Martyr") */
+    uint8_t  hd_definition;         /* 0=None, 1=Single, 2=Split, 3=Triple, 4=Quadruple */
+    uint8_t  incarnation_cross;     /* 0-63 (index into cross LUT — TBD) */
+    uint16_t defined_channels;      /* Bitmask of defined channels (0-35) */
+    uint32_t defined_gates[2];      /* Two uint32 bitmasks covering all 64 gates */
+    uint8_t  _pad[4];
+} M4_HumanDesign_Layer;             /* #4.0-4 — 20 bytes */
+
+_Static_assert(sizeof(M4_HumanDesign_Layer) == 20,
+    "M4_HumanDesign_Layer must be 20 bytes");
+
+/* Presence bitmask — which layers are populated */
+#define M4_LAYER_0_PRESENT  (1u << 0u)  /* Numerological */
+#define M4_LAYER_1_PRESENT  (1u << 1u)  /* Astrological */
+#define M4_LAYER_2_PRESENT  (1u << 2u)  /* Jungian */
+#define M4_LAYER_3_PRESENT  (1u << 3u)  /* Gene Keys */
+#define M4_LAYER_4_PRESENT  (1u << 4u)  /* Human Design */
+
+/* ===================================================================
+ * FR 2.4.1: M4_Input_Data + M4_Identity_Matrix (EXPANDED)
  *
  * Input is transient: zeroed immediately after compute.
  * Identity is compute-once, then effectively const.
@@ -100,17 +193,53 @@ typedef struct {
     uint8_t  _pad[3];
 } M4_Input_Data;
 
+/* The expanded Identity Matrix — 6 independent layer slots */
 typedef struct {
-    M4_Symbol_DNA_Profile dna_profile;
+    /* Presence guard — which layers are populated */
+    uint8_t  layer_presence;        /* Bitmask: M4_LAYER_N_PRESENT */
+    uint8_t  _pad_lp[7];           /* Align to 8-byte boundary */
+
+    /* The six sub-system layers (each independently optional) */
+    M4_Numerological_Layer  layer_0;  /* #4.0-0 — 8 bytes */
+    M4_Astrological_Layer   layer_1;  /* #4.0-1 — 28 bytes */
+    M4_Jungian_Layer        layer_2;  /* #4.0-2 — 12 bytes */
+    M4_GeneKeys_Layer       layer_3;  /* #4.0-3 — 40 bytes */
+    M4_HumanDesign_Layer    layer_4;  /* #4.0-4 — 20 bytes */
+
+    /* The Symbol DNA Profile — synthesized view (legacy compat) */
+    M4_Symbol_DNA_Profile   dna_profile;
+
+    /* #4.0-5 — Quintessence Hash
+     * BLAKE3(layer_presence || present_layer_data...) truncated to 64 bits */
+    uint64_t quintessence_hash;
+
+    /* Legacy fields (preserved for existing M4 subsystem compatibility) */
     uint32_t numerological_key;     /* #4.0-0: birthdate encoding */
-    uint64_t quintessence_hash;     /* #4.0-5: BLAKE3 truncated to 64 bits */
     uint8_t  jung_type;             /* #4.0-2: 4-bit MBTI composite */
-    bool     computed;              /* Compute-once guard */
+
+    /* Compute-once guard */
+    bool     computed;
 } M4_Identity_Matrix;
 
 static inline bool m4_identity_ready(const M4_Identity_Matrix* id) {
     return id->computed;
 }
+
+static inline uint8_t m4_identity_layer_count(const M4_Identity_Matrix* id) {
+    uint8_t count = 0;
+    uint8_t mask = id->layer_presence;
+    while (mask) { count += (uint8_t)(mask & 1u); mask >>= 1u; }
+    return count;
+}
+
+/* Compute quintessence hash from present layers only */
+void m4_identity_hash_compute(M4_Identity_Matrix* id);
+
+/* Augment: add a new layer to existing matrix, recompute hash */
+void m4_identity_augment(M4_Identity_Matrix* id,
+                         uint8_t layer_index,
+                         const void* new_layer_data,
+                         size_t new_layer_size);
 
 
 /* ===================================================================
@@ -175,6 +304,75 @@ typedef struct {
     uint8_t  element;               /* Fire/Earth/Air/Water/Akasha */
     uint16_t degree;                /* Position on M3 wheel (0-719) */
 } M4_Canonical_Tag;
+
+
+/* ===================================================================
+ * FR 2.4.13b: M4_Oracle_Draw — Expanded oracle draw result
+ *
+ * Captures full draw + canonical payload for gateway emission.
+ * =================================================================== */
+
+typedef struct {
+    uint8_t  system;                /* 0=tarot-rws, 1=tarot-thoth, 2=tarot-marseille,
+                                       3=tarot-ql, 4=iching-coins, 5=iching-yarrow */
+    uint8_t  draw_count;            /* Cards drawn or lines cast */
+    uint8_t  drawn[12];             /* Card ids (tarot) or line values (iching) */
+    uint8_t  reversal_mask;         /* Bitmask: which cards are reversed (tarot) */
+    uint8_t  hexagram_primary;      /* I-Ching: primary hexagram (0-63), 0xFF if tarot */
+    uint8_t  hexagram_relating;     /* I-Ching: relating hexagram, 0xFF if none */
+    uint8_t  changing_mask;         /* I-Ching: 6-bit changing line mask */
+    uint16_t cast_degree;           /* Kairos moment degree (0-719) */
+    uint32_t cast_epoch;            /* Unix seconds at cast time */
+    uint8_t  consent_granted;       /* 1 = user consented */
+    uint8_t  hygiene_status;        /* 0=clear, 1=warning, 2=blocked */
+    uint8_t  _pad[2];
+    M4_Canonical_Tag canonical_tags[12]; /* Up to 12 canonical tag payloads */
+    uint8_t  canonical_tag_count;   /* How many tags populated */
+    uint8_t  _pad2[3];
+} M4_Oracle_Draw;                   /* ~128 bytes */
+
+
+/* ===================================================================
+ * FR 2.4.1b: M4_Medicine_Triage — Compact elemental triage
+ * =================================================================== */
+
+typedef struct {
+    uint8_t  fire;                  /* 0-255 intensity */
+    uint8_t  water;
+    uint8_t  earth;
+    uint8_t  air;
+    uint8_t  dominant_element;      /* Element_Id */
+    uint8_t  deficient_element;     /* Element_Id */
+    uint8_t  primary_chakra;        /* Chakra_Id (most activated) */
+    uint8_t  triage_vector;         /* 0=balanced, 1=excess, 2=deficient, 3=blocked */
+    uint32_t planetary_hour;        /* Current planetary hour (from kairos) */
+    uint8_t  safety_mask;           /* Contraindication bitmask */
+    uint8_t  _pad[3];
+} M4_Medicine_Triage;               /* 16 bytes */
+
+_Static_assert(sizeof(M4_Medicine_Triage) == 16,
+    "M4_Medicine_Triage must be 16 bytes");
+
+
+/* ===================================================================
+ * FR 2.4.4b: M4_Transform_State — Compact transformation state
+ * =================================================================== */
+
+typedef struct {
+    uint8_t  current_op;            /* Alchemical operation index (0-6) */
+    uint8_t  stroke_phase;          /* 0=outer (writing), 1=inner (reflecting) */
+    uint8_t  cycle_count_today;     /* Cycles completed today */
+    uint8_t  container_active;      /* 0=none, 1=bohm, 2=circle, 3=diamond */
+    uint32_t cycle_id;              /* Current cycle sequential id */
+    uint32_t opened_at;             /* Unix seconds when cycle opened */
+    uint8_t  decan_recipe_idx;      /* Active decan recipe (0-35) */
+    uint8_t  arousal_level;         /* 0-255 */
+    uint8_t  safety_threshold;      /* If arousal > threshold → halt */
+    uint8_t  _pad;
+} M4_Transform_State;               /* 16 bytes */
+
+_Static_assert(sizeof(M4_Transform_State) == 16,
+    "M4_Transform_State must be 16 bytes");
 
 
 /* ===================================================================
