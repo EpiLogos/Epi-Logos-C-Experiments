@@ -45,7 +45,13 @@ pub fn launch(
     stdout().execute(EnterAlternateScreen)?;
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
 
-    let result = run_event_loop(&mut terminal, tab);
+    let layout_path = layout.map(|name| {
+        persist::WorkspaceState::portal_dir()
+            .join("defaults")
+            .join(format!("{}.json", name))
+    });
+
+    let result = run_event_loop(&mut terminal, tab, layout_path.as_deref());
 
     // Always restore terminal, even on error
     disable_raw_mode()?;
@@ -58,8 +64,16 @@ pub fn launch(
 fn run_event_loop(
     terminal: &mut Terminal<CrosstermBackend<std::io::Stdout>>,
     tab: Option<&str>,
+    layout_path: Option<&std::path::Path>,
 ) -> color_eyre::Result<()> {
     let mut workspace = build_workspace()?;
+
+    // Apply a named layout if provided
+    if let Some(path) = layout_path {
+        if let Some(state) = persist::load_workspace(path) {
+            persist::apply_workspace_state(&mut workspace, &state)?;
+        }
+    }
 
     // Handle --tab flag
     if let Some(tab_name) = tab {
@@ -125,8 +139,8 @@ fn run_event_loop(
         }
     }
 
-    // Save workspace state on exit
-    let ws_state = persist::WorkspaceState::default_layout();
+    // Save actual workspace state (BSP trees + pane assignments) on exit
+    let ws_state = persist::capture_workspace(&mut workspace);
     let ws_path = persist::WorkspaceState::workspace_path();
     let _ = persist::save_workspace(&ws_path, &ws_state);
 

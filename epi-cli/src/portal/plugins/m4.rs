@@ -1223,7 +1223,7 @@ mod tests {
 
     fn buffer_to_string(buf: &Buffer, area: Rect) -> String {
         (0..area.height)
-            .flat_map(|y| (0..area.width).map(move |x| buf.get(x, y).symbol().to_string()))
+            .flat_map(|y| (0..area.width).map(move |x| buf[(x, y)].symbol().to_string()))
             .collect()
     }
 
