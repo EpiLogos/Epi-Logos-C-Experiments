@@ -417,7 +417,9 @@ All of these call FFI or read cached state. No consent, no mutation.
     // Tarot card → canonical tags (static lookup)
     // Each of 78 cards maps to: elements[], organs[], body_zones[], operations[], timing
     // This is the #4.2-0 Common Substrate — the machine-readable oracle
-    const TAROT_RWS_CANONICAL_TAGS: [OracleCanonicalTags; 78] = [ ... ];
+    // Thoth deck (Princess/Prince/Queen/Knight naming — already confirmed in m3.h pip constants)
+    // Body zones derived VIA element → chakra chain (CHAKRA_BODY_ZONES[chakra_id]), not direct
+    const TAROT_THOTH_CANONICAL_TAGS: [OracleCanonicalTags; 78] = [ ... ];
     // I-Ching hexagram → canonical tags
     const ICHING_CANONICAL_TAGS: [OracleCanonicalTags; 64] = [ ... ];
     ```

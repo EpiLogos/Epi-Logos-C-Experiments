@@ -82,7 +82,7 @@ CF_Id values:
 | CF_TRIKA | (0/1/2) | M2 vibrational mediation |
 | CF_QUATERNAL | (0/1/2/3) | M3/M4 clock operations |
 | CF_FRACTAL | (4.0/1-4.4/5) | M4 Lemniscate/personal |
-| CF_SYNTHESIS | (4/5/0) | M5 agent synthesis |
+| CF_SYNTHESIS | (4.5/0) | M5 agent synthesis |
 | CF_MOBIUS | (5/0) | M5 Möbius write-back |
 
 ### 3. BIMBA in .rodata, PRATIBIMBA on heap
