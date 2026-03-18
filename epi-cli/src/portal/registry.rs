@@ -21,20 +21,34 @@ mod tests {
         let reg = ws.active_runtime().registry();
         let types: Vec<&str> = reg.registered_types().collect();
         let expected = vec![
-            "shared.help", "shared.status",
-            "m0.dashboard", "m0.families",
+            "shared.help",
+            "shared.status",
+            "m0.dashboard",
+            "m0.families",
             "m1.walk",
             "m2.vibrational",
             "m3.knowing",
-            "m4.identity", "m4.flow", "m4.oracle",
-            "m4.medicine", "m4.transform", "m4.lens", "m4.pratibimba",
-            "m5.logos", "m5.chat", "m5.fsm",
+            "m4.identity",
+            "m4.flow",
+            "m4.oracle",
+            "m4.medicine",
+            "m4.transform",
+            "m4.lens",
+            "m4.pratibimba",
+            "m5.logos",
+            "m5.chat",
+            "m5.fsm",
         ];
         for name in &expected {
             assert!(types.contains(name), "Registry missing plugin: {}", name);
         }
         // WorkspaceRuntime builder may add a default "block" placeholder type
-        assert!(types.len() >= expected.len(), "Missing plugin types: got {}, expected at least {}", types.len(), expected.len());
+        assert!(
+            types.len() >= expected.len(),
+            "Missing plugin types: got {}, expected at least {}",
+            types.len(),
+            expected.len()
+        );
     }
 
     #[test]

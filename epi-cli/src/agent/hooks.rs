@@ -1,6 +1,7 @@
 use crate::agent::HooksCmd;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::collections::BTreeMap;
 use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -17,6 +18,7 @@ const SUPPORTED_EVENTS: &[&str] = &[
     "PreToolUse",
     "SessionEnd",
     "SessionStart",
+    "Setup",
     "Stop",
     "SubagentStart",
     "SubagentStop",
@@ -71,12 +73,31 @@ pub struct HookTestReport {
 #[derive(Debug, Deserialize)]
 struct HooksFile {
     #[serde(default)]
-    hooks: Vec<HookEventConfig>,
+    hooks: HookEntries,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+enum HookEntries {
+    Legacy(Vec<HookEventConfig>),
+    Modern(BTreeMap<String, Vec<HookMatcherConfig>>),
+}
+
+impl Default for HookEntries {
+    fn default() -> Self {
+        Self::Legacy(Vec::new())
+    }
 }
 
 #[derive(Debug, Deserialize)]
 struct HookEventConfig {
     event: String,
+    #[serde(default)]
+    hooks: Vec<HookConfig>,
+}
+
+#[derive(Debug, Deserialize)]
+struct HookMatcherConfig {
     #[serde(default)]
     hooks: Vec<HookConfig>,
 }
@@ -211,7 +232,7 @@ fn validate_hooks(path: &Path, file: HooksFile) -> (Vec<HookAction>, Vec<String>
     let mut errors = Vec::new();
     let hooks_root = path.parent().unwrap_or(path);
 
-    for event in file.hooks {
+    for event in file.hooks.into_event_configs() {
         if !SUPPORTED_EVENTS.contains(&event.event.as_str()) {
             errors.push(format!(
                 "{}: unsupported hook event `{}`",
@@ -224,15 +245,18 @@ fn validate_hooks(path: &Path, file: HooksFile) -> (Vec<HookAction>, Vec<String>
             let resolved_path = if hook.hook_type == "command" {
                 match hook.command.as_deref() {
                     Some(command) => {
-                        let resolved = hooks_root.join(command);
-                        if !resolved.exists() {
-                            errors.push(format!(
-                                "{}: missing hook command `{}`",
-                                display_path(path),
-                                resolved.display()
-                            ));
+                        if let Some(resolved) = resolve_command_path(hooks_root, command) {
+                            if !resolved.exists() {
+                                errors.push(format!(
+                                    "{}: missing hook command `{}`",
+                                    display_path(path),
+                                    resolved.display()
+                                ));
+                            }
+                            Some(display_path(&resolved))
+                        } else {
+                            None
                         }
-                        Some(display_path(&resolved))
                     }
                     None => {
                         errors.push(format!(
@@ -282,6 +306,45 @@ fn validate_hooks(path: &Path, file: HooksFile) -> (Vec<HookAction>, Vec<String>
     }
 
     (events, errors)
+}
+
+impl HookEntries {
+    fn into_event_configs(self) -> Vec<HookEventConfig> {
+        match self {
+            HookEntries::Legacy(events) => events,
+            HookEntries::Modern(events) => events
+                .into_iter()
+                .flat_map(|(event, groups)| {
+                    groups.into_iter().map(move |group| HookEventConfig {
+                        event: event.clone(),
+                        hooks: group.hooks,
+                    })
+                })
+                .collect(),
+        }
+    }
+}
+
+fn resolve_command_path(hooks_root: &Path, command: &str) -> Option<PathBuf> {
+    let trimmed = command.trim();
+    if !is_direct_path_command(trimmed) {
+        return None;
+    }
+
+    let path = Path::new(trimmed);
+    Some(if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        hooks_root.join(path)
+    })
+}
+
+fn is_direct_path_command(command: &str) -> bool {
+    if command.is_empty() || command.contains(char::is_whitespace) {
+        return false;
+    }
+
+    !command.contains(|ch: char| matches!(ch, '$' | '"' | '\'' | '`' | ';' | '|' | '&' | '(' | ')'))
 }
 
 fn run_command_hook(

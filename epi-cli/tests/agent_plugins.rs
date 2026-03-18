@@ -1,6 +1,6 @@
 mod common;
 
-use common::{create_plugin_bundle, run_epi, write_file, TestEnv};
+use common::{create_modern_plugin_bundle, create_plugin_bundle, run_epi, write_file, TestEnv};
 
 #[test]
 fn valid_plugin_bundle_passes_validation() {
@@ -107,6 +107,44 @@ fn hooks_validate_reports_supported_event_inventory() {
     assert!(out
         .stdout
         .contains(plugin.hook_script_path.to_str().unwrap()));
+}
+
+#[test]
+fn modern_hook_schema_bundle_passes_validation() {
+    let env = TestEnv::repo_with_assets();
+    let plugin = create_modern_plugin_bundle(env.repo_root.join("plugins"), "claude-mem");
+
+    let out = run_epi(
+        [
+            "agent",
+            "plugin",
+            "validate",
+            plugin.root.to_str().unwrap(),
+            "--json",
+        ]
+        .as_slice(),
+        &env,
+    );
+
+    assert!(out.stdout.contains("\"valid\": true"));
+    assert!(out.stdout.contains("\"name\": \"claude-mem\""));
+    assert!(out.stdout.contains("\"hookEventCount\": 2"));
+
+    let hooks = run_epi(
+        [
+            "agent",
+            "hooks",
+            "validate",
+            plugin.hooks_path.to_str().unwrap(),
+            "--json",
+        ]
+        .as_slice(),
+        &env,
+    );
+
+    assert!(hooks.stdout.contains("\"valid\": true"));
+    assert!(hooks.stdout.contains("\"event\": \"SessionStart\""));
+    assert!(hooks.stdout.contains("\"event\": \"PostToolUse\""));
 }
 
 #[test]

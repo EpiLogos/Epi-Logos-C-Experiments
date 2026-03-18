@@ -34,10 +34,7 @@ fn install_bootstraps_pi_when_binary_is_missing_but_npm_is_available() {
     );
 
     let env = env.with_env("PATH", format!("{}:/usr/bin:/bin", bin_dir.display()));
-    let out = run_epi(
-        ["agent", "install", "--json"].as_slice(),
-        &env,
-    );
+    let out = run_epi(["agent", "install", "--json"].as_slice(), &env);
 
     assert!(out.status.success());
     assert!(out.stdout.contains("\"status\": \"ready\""));

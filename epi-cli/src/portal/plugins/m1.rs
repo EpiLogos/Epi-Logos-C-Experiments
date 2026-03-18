@@ -32,8 +32,7 @@ impl M1WalkPlugin {
     }
 
     fn step(&mut self) {
-        self.epi
-            .torus_walk(self.epi.psychoid_0, &mut self.ctx, 1);
+        self.epi.torus_walk(self.epi.psychoid_0, &mut self.ctx, 1);
         self.history
             .push((self.ctx.current_position, self.ctx.covering));
     }
@@ -44,8 +43,7 @@ impl M1WalkPlugin {
     }
 
     fn double_cover(&mut self) {
-        self.epi
-            .double_covering(self.epi.psychoid_0, &mut self.ctx);
+        self.epi.double_covering(self.epi.psychoid_0, &mut self.ctx);
         self.history
             .push((self.ctx.current_position, self.ctx.covering));
     }
@@ -92,10 +90,7 @@ impl M1WalkPlugin {
             Style::default().fg(Color::DarkGray),
         ));
         spans.push(Span::styled("#0", Style::default().fg(Color::Green)));
-        spans.push(Span::styled(
-            " \u{21BB}",
-            Style::default().fg(Color::Green),
-        ));
+        spans.push(Span::styled(" \u{21BB}", Style::default().fg(Color::Green)));
 
         let covering_label = if inv { "INVERTED (')" } else { "NORMAL" };
         let covering_style = if inv {
@@ -322,7 +317,10 @@ mod tests {
         let mut plugin = M1WalkPlugin::new();
         assert_eq!(plugin.ctx.step_count, 0);
         plugin.step();
-        assert!(plugin.ctx.step_count > 0, "Step count should increase after step");
+        assert!(
+            plugin.ctx.step_count > 0,
+            "Step count should increase after step"
+        );
         assert_eq!(plugin.history.len(), 2);
     }
 

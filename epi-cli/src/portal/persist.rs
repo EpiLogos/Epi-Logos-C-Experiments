@@ -28,11 +28,7 @@ impl WorkspaceState {
             tabs: vec![
                 TabState {
                     label: "M4'-M5' Personal".to_string(),
-                    panes: vec![
-                        "m4.identity".into(),
-                        "m4.flow".into(),
-                        "m4.oracle".into(),
-                    ],
+                    panes: vec!["m4.identity".into(), "m4.flow".into(), "m4.oracle".into()],
                     layout_bsp: None,
                     pane_map: None,
                 },
@@ -156,7 +152,11 @@ pub fn apply_workspace_state(
         }
     }
 
-    workspace.go_to_tab(state.active_tab.min(workspace.tab_count().saturating_sub(1)));
+    workspace.go_to_tab(
+        state
+            .active_tab
+            .min(workspace.tab_count().saturating_sub(1)),
+    );
     Ok(())
 }
 

@@ -104,14 +104,12 @@ impl HypertilePlugin for HelpPlugin {
             Line::from("  shared.help     This help"),
         ];
 
-        let para = Paragraph::new(lines)
-            .scroll((self.scroll as u16, 0))
-            .block(
-                Block::default()
-                    .title(" Help ")
-                    .borders(Borders::ALL)
-                    .border_style(Style::default().fg(border_color)),
-            );
+        let para = Paragraph::new(lines).scroll((self.scroll as u16, 0)).block(
+            Block::default()
+                .title(" Help ")
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(border_color)),
+        );
         Widget::render(para, area, buf);
     }
 
@@ -190,11 +188,15 @@ impl StatusPlugin {
         // Identity / wound status
         let (identity_val, identity_ind) = match crate::nara::identity::load_profile() {
             Ok(Some(profile)) => {
-                let wound_str = profile.last_wound
+                let wound_str = profile
+                    .last_wound
                     .map(|ts| format!("last wound: {}", ts))
                     .unwrap_or_else(|| "no wounds".to_string());
                 let layers = profile.layer_presence_mask.count_ones();
-                (format!("{}/5 layers, {}", layers, wound_str), StatusIndicator::Green)
+                (
+                    format!("{}/5 layers, {}", layers, wound_str),
+                    StatusIndicator::Green,
+                )
             }
             Ok(None) => ("No profile".to_string(), StatusIndicator::Yellow),
             Err(e) => (format!("Error: {}", e), StatusIndicator::Red),
@@ -210,8 +212,14 @@ impl StatusPlugin {
         let (kairos_val, kairos_ind) = match crate::nara::kairos::load_current() {
             Ok(Some(k)) => {
                 let fresh_str = if kairos_fresh { "fresh" } else { "stale" };
-                (format!("decan {} [{}]", k.active_decan, fresh_str),
-                 if kairos_fresh { StatusIndicator::Green } else { StatusIndicator::Yellow })
+                (
+                    format!("decan {} [{}]", k.active_decan, fresh_str),
+                    if kairos_fresh {
+                        StatusIndicator::Green
+                    } else {
+                        StatusIndicator::Yellow
+                    },
+                )
             }
             Ok(None) => ("Not synced".to_string(), StatusIndicator::Gray),
             Err(e) => (format!("Error: {}", e), StatusIndicator::Red),
@@ -226,12 +234,17 @@ impl StatusPlugin {
         let (transform_val, transform_ind) = match crate::nara::transform::status(false) {
             Ok(text) => {
                 // Parse open count from text
-                let open_count = text.lines()
+                let open_count = text
+                    .lines()
                     .find(|l| l.contains("Open:"))
                     .and_then(|l| l.split_whitespace().last())
                     .and_then(|n| n.parse::<u32>().ok())
                     .unwrap_or(0);
-                let ind = if open_count > 0 { StatusIndicator::Yellow } else { StatusIndicator::Green };
+                let ind = if open_count > 0 {
+                    StatusIndicator::Yellow
+                } else {
+                    StatusIndicator::Green
+                };
                 (format!("{} open cycles", open_count), ind)
             }
             Err(e) => (format!("Error: {}", e), StatusIndicator::Red),
@@ -245,7 +258,10 @@ impl StatusPlugin {
         // Logos progress
         let (logos_val, logos_ind) = match crate::nara::logos::status(false) {
             Ok(text) => {
-                let completed = text.lines().filter(|l| l.contains('+') && l.contains('[') ).count();
+                let completed = text
+                    .lines()
+                    .filter(|l| l.contains('+') && l.contains('['))
+                    .count();
                 let ind = match completed {
                     6 => StatusIndicator::Green,
                     0 => StatusIndicator::Gray,
@@ -264,7 +280,8 @@ impl StatusPlugin {
         // Oracle hygiene
         let (oracle_val, oracle_ind) = match crate::nara::oracle::show_hygiene(None) {
             Ok(text) => {
-                let casts_line = text.lines()
+                let casts_line = text
+                    .lines()
                     .find(|l| l.contains("Casts today"))
                     .unwrap_or("0/6");
                 (casts_line.trim().to_string(), StatusIndicator::Green)
@@ -303,13 +320,19 @@ impl StatusPlugin {
 
 impl HypertilePlugin for StatusPlugin {
     fn render(&self, area: Rect, buf: &mut Buffer, is_focused: bool) {
-        let border_color = if is_focused { Color::Cyan } else { Color::DarkGray };
+        let border_color = if is_focused {
+            Color::Cyan
+        } else {
+            Color::DarkGray
+        };
         let dim = Style::default().fg(Color::DarkGray);
 
         let mut lines: Vec<Line> = Vec::new();
         lines.push(Line::from(Span::styled(
             "  Cross-M Status Overview",
-            Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::BOLD),
         )));
         lines.push(Line::from(""));
 
@@ -408,6 +431,9 @@ mod tests {
     #[test]
     fn status_indicator_colors_are_distinct() {
         assert_ne!(StatusIndicator::Green.color(), StatusIndicator::Red.color());
-        assert_ne!(StatusIndicator::Yellow.color(), StatusIndicator::Gray.color());
+        assert_ne!(
+            StatusIndicator::Yellow.color(),
+            StatusIndicator::Gray.color()
+        );
     }
 }

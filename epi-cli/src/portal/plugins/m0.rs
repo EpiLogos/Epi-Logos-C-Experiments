@@ -169,13 +169,12 @@ impl M0DashboardPlugin {
 impl HypertilePlugin for M0DashboardPlugin {
     fn render(&self, area: Rect, buf: &mut Buffer, is_focused: bool) {
         if self.entries.is_empty() {
-            let para = Paragraph::new("M0' Coordinate Dashboard — no data loaded")
-                .block(
-                    Block::default()
-                        .title(" M0' Dashboard ")
-                        .borders(Borders::ALL)
-                        .border_style(Style::default().fg(theme::pane_border(is_focused))),
-                );
+            let para = Paragraph::new("M0' Coordinate Dashboard — no data loaded").block(
+                Block::default()
+                    .title(" M0' Dashboard ")
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(theme::pane_border(is_focused))),
+            );
             Widget::render(para, area, buf);
             return;
         }
@@ -320,11 +319,12 @@ impl HypertilePlugin for M0FamiliesPlugin {
         let accent = theme::m_level_color(0);
 
         if self.family_coords.is_empty() {
-            let para = Paragraph::new("M0' Families — no coordinates loaded")
-                .block(Block::default()
+            let para = Paragraph::new("M0' Families — no coordinates loaded").block(
+                Block::default()
                     .title(" M0' Families ")
                     .borders(Borders::ALL)
-                    .border_style(Style::default().fg(theme::pane_border(is_focused))));
+                    .border_style(Style::default().fg(theme::pane_border(is_focused))),
+            );
             Widget::render(para, area, buf);
             return;
         }
@@ -335,16 +335,21 @@ impl HypertilePlugin for M0FamiliesPlugin {
             .split(area);
 
         // Left: family coordinate list (6x6 = 36 coords)
-        let items: Vec<ListItem> = self.family_coords.iter().enumerate().map(|(i, (name, snap))| {
-            let inv = if snap.inversion_state != 0 { "'" } else { " " };
-            let line = format!(" {}{}  pos={}", name, inv, snap.ql_position);
-            let style = if i == self.selected {
-                Style::default().fg(Color::Black).bg(Color::Cyan)
-            } else {
-                Style::default().fg(Self::family_color(snap.family))
-            };
-            ListItem::new(line).style(style)
-        }).collect();
+        let items: Vec<ListItem> = self
+            .family_coords
+            .iter()
+            .enumerate()
+            .map(|(i, (name, snap))| {
+                let inv = if snap.inversion_state != 0 { "'" } else { " " };
+                let line = format!(" {}{}  pos={}", name, inv, snap.ql_position);
+                let style = if i == self.selected {
+                    Style::default().fg(Color::Black).bg(Color::Cyan)
+                } else {
+                    Style::default().fg(Self::family_color(snap.family))
+                };
+                ListItem::new(line).style(style)
+            })
+            .collect();
 
         let list = List::new(items).block(
             Block::default()
@@ -365,7 +370,9 @@ impl HypertilePlugin for M0FamiliesPlugin {
                     Span::styled("name:         ", Style::default().fg(Color::DarkGray)),
                     Span::styled(
                         name.clone(),
-                        Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+                        Style::default()
+                            .fg(Color::White)
+                            .add_modifier(Modifier::BOLD),
                     ),
                 ]),
                 Line::from(vec![
@@ -374,7 +381,11 @@ impl HypertilePlugin for M0FamiliesPlugin {
                 ]),
                 Line::from(vec![
                     Span::styled("ql_position:  ", Style::default().fg(Color::DarkGray)),
-                    Span::raw(format!("0x{:02X} ({})", snap.ql_position, crate::core::position_name(snap.ql_position))),
+                    Span::raw(format!(
+                        "0x{:02X} ({})",
+                        snap.ql_position,
+                        crate::core::position_name(snap.ql_position)
+                    )),
                 ]),
                 Line::from(vec![
                     Span::styled("flags:        ", Style::default().fg(Color::DarkGray)),
@@ -387,7 +398,11 @@ impl HypertilePlugin for M0FamiliesPlugin {
                 Line::from(vec![
                     Span::styled("inversion:    ", Style::default().fg(Color::DarkGray)),
                     Span::styled(
-                        if snap.inversion_state == 0 { "normal" } else { "inverted (')" },
+                        if snap.inversion_state == 0 {
+                            "normal"
+                        } else {
+                            "inverted (')"
+                        },
                         if snap.inversion_state != 0 {
                             Style::default().fg(Color::Red)
                         } else {
@@ -396,7 +411,10 @@ impl HypertilePlugin for M0FamiliesPlugin {
                     ),
                 ]),
                 Line::from(""),
-                Line::from(Span::styled("── Base Pointers ──", Style::default().fg(Color::Cyan))),
+                Line::from(Span::styled(
+                    "── Base Pointers ──",
+                    Style::default().fg(Color::Cyan),
+                )),
                 ptr_line(".p  ", &snap.p),
                 ptr_line(".s  ", &snap.s),
                 ptr_line(".t  ", &snap.t),
@@ -404,7 +422,10 @@ impl HypertilePlugin for M0FamiliesPlugin {
                 ptr_line(".l  ", &snap.l),
                 ptr_line(".c  ", &snap.c),
                 Line::from(""),
-                Line::from(Span::styled("── Reflective ──", Style::default().fg(Color::Yellow))),
+                Line::from(Span::styled(
+                    "── Reflective ──",
+                    Style::default().fg(Color::Yellow),
+                )),
                 ptr_line(".cpf", &snap.cpf),
                 ptr_line(".ct ", &snap.ct),
                 ptr_line(".cp ", &snap.cp),
@@ -472,8 +493,10 @@ mod tests {
         let mut buf = Buffer::empty(area);
         plugin.render(area, &mut buf, true);
         let content = buffer_to_string(&buf, area);
-        assert!(content.contains("Psychoid") || content.contains("#0"),
-            "Should render psychoid entity list");
+        assert!(
+            content.contains("Psychoid") || content.contains("#0"),
+            "Should render psychoid entity list"
+        );
     }
 
     #[test]
@@ -483,7 +506,10 @@ mod tests {
         let mut buf = Buffer::empty(area);
         plugin.render(area, &mut buf, false);
         let content = buffer_to_string(&buf, area);
-        assert!(content.contains("no data"), "Empty plugin should show no data message");
+        assert!(
+            content.contains("no data"),
+            "Empty plugin should show no data message"
+        );
     }
 
     #[test]
@@ -525,8 +551,10 @@ mod tests {
         let mut buf = Buffer::empty(area);
         plugin.render(area, &mut buf, true);
         let content = buffer_to_string(&buf, area);
-        assert!(content.contains("36 Family") || content.contains("Families"),
-            "Should show families title");
+        assert!(
+            content.contains("36 Family") || content.contains("Families"),
+            "Should show families title"
+        );
     }
 
     #[test]
@@ -554,7 +582,9 @@ mod tests {
     #[test]
     fn m0_families_has_coordinates() {
         let plugin = M0FamiliesPlugin::new();
-        assert!(!plugin.family_coords.is_empty(),
-            "Should have loaded family coordinates from arena");
+        assert!(
+            !plugin.family_coords.is_empty(),
+            "Should have loaded family coordinates from arena"
+        );
     }
 }

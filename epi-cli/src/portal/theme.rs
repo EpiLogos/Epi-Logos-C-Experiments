@@ -3,12 +3,12 @@ use ratatui::style::Color;
 /// M-level accent colors (spec section 9.2)
 pub fn m_level_color(m: u8) -> Color {
     match m {
-        0 => Color::Green,     // M0' Ground
-        1 => Color::Cyan,      // M1' Mathematical
-        2 => Color::Magenta,   // M2' Vibrational
-        3 => Color::Yellow,    // M3' Symbolic
-        4 => Color::Red,       // M4' Personal
-        5 => Color::White,     // M5' Integration
+        0 => Color::Green,   // M0' Ground
+        1 => Color::Cyan,    // M1' Mathematical
+        2 => Color::Magenta, // M2' Vibrational
+        3 => Color::Yellow,  // M3' Symbolic
+        4 => Color::Red,     // M4' Personal
+        5 => Color::White,   // M5' Integration
         _ => Color::DarkGray,
     }
 }
@@ -20,7 +20,6 @@ pub fn pane_border(focused: bool) -> Color {
         Color::DarkGray
     }
 }
-
 
 #[cfg(test)]
 mod tests {

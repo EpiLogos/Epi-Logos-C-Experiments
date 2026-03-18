@@ -1,1 +1,1 @@
-{"plugin":"claude-mem","version":"latest","harnesses":["claude-code","openclaw"],"port":37777}
+{"plugin":"claude-mem","version":"10.5.5","harnesses":["epi-agent","claude-code","openclaw"],"port":37777,"install_mode":"repo_bundle","root":"vendor/claude-mem-v10.5.5/plugin"}

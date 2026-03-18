@@ -1,9 +1,9 @@
+use crate::nara::{identity, kairos};
+use crate::portal::theme;
 use ratatui::prelude::*;
 use ratatui::widgets::*;
 use ratatui_hypertile::{EventOutcome, HypertileEvent, KeyCode};
 use ratatui_hypertile_extras::HypertilePlugin;
-use crate::portal::theme;
-use crate::nara::{identity, kairos};
 
 // ─── Cached display fields parsed from identity + kairos JSON ───────────────
 
@@ -99,20 +99,22 @@ impl M4IdentityPlugin {
         match kairos::load_current() {
             Ok(Some(result)) => {
                 let planet_names = [
-                    "Sun", "Earth", "Venus", "Mercury", "Moon",
-                    "Saturn", "Jupiter", "Mars", "Neptune", "Pluto",
+                    "Sun", "Earth", "Venus", "Mercury", "Moon", "Saturn", "Jupiter", "Mars",
+                    "Neptune", "Pluto",
                 ];
-                let planets: Vec<PlanetDisplay> = result.planets.iter().map(|p| {
-                    let name = planet_names
-                        .get(p.planet_id as usize)
-                        .unwrap_or(&"?");
-                    PlanetDisplay {
-                        name: name.to_string(),
-                        degree: p.degree,
-                        anchor: p.degree_anchor,
-                        retrograde: p.retrograde,
-                    }
-                }).collect();
+                let planets: Vec<PlanetDisplay> = result
+                    .planets
+                    .iter()
+                    .map(|p| {
+                        let name = planet_names.get(p.planet_id as usize).unwrap_or(&"?");
+                        PlanetDisplay {
+                            name: name.to_string(),
+                            degree: p.degree,
+                            anchor: p.degree_anchor,
+                            retrograde: p.retrograde,
+                        }
+                    })
+                    .collect();
 
                 self.kairos_state = Some(KairosFields {
                     active_decan: result.active_decan,
@@ -150,9 +152,18 @@ impl M4IdentityPlugin {
 
     fn sign_name(id: u8) -> &'static str {
         match id {
-            0 => "Aries", 1 => "Taurus", 2 => "Gemini", 3 => "Cancer",
-            4 => "Leo", 5 => "Virgo", 6 => "Libra", 7 => "Scorpio",
-            8 => "Sagittarius", 9 => "Capricorn", 10 => "Aquarius", 11 => "Pisces",
+            0 => "Aries",
+            1 => "Taurus",
+            2 => "Gemini",
+            3 => "Cancer",
+            4 => "Leo",
+            5 => "Virgo",
+            6 => "Libra",
+            7 => "Scorpio",
+            8 => "Sagittarius",
+            9 => "Capricorn",
+            10 => "Aquarius",
+            11 => "Pisces",
             _ => "\u{2014}",
         }
     }
@@ -200,7 +211,10 @@ impl HypertilePlugin for M4IdentityPlugin {
                 Span::styled("  Hash: ", label_style),
                 Span::styled(&id.hash_preview, value_style),
                 Span::styled(
-                    format!("  ({}/5 layers, mask: 0x{:02x})", id.layer_count, id.layer_mask),
+                    format!(
+                        "  ({}/5 layers, mask: 0x{:02x})",
+                        id.layer_count, id.layer_mask
+                    ),
                     dim,
                 ),
             ]));
@@ -251,7 +265,10 @@ impl HypertilePlugin for M4IdentityPlugin {
             lines.push(Line::from(vec![
                 Span::styled("  Active decan: ", label_style),
                 Span::styled(format!("{}", k.active_decan), value_style),
-                Span::styled(format!("  [{}]", freshness), Style::default().fg(fresh_color)),
+                Span::styled(
+                    format!("  [{}]", freshness),
+                    Style::default().fg(fresh_color),
+                ),
             ]));
             lines.push(Line::from(vec![
                 Span::styled("  Dominant element: ", label_style),
@@ -348,14 +365,22 @@ impl M4FlowPlugin {
     fn load_flow(&mut self) {
         // Try to find FLOW.md via vault conventions
         let home = dirs::home_dir().unwrap_or_default();
-        let vault_base = home.join("Documents").join("Epi-Logos C Experiments")
-            .join("Idea").join("Empty").join("Present");
+        let vault_base = home
+            .join("Documents")
+            .join("Epi-Logos C Experiments")
+            .join("Idea")
+            .join("Empty")
+            .join("Present");
 
         // Try today's date folder
         let candidates = [
             vault_base.join("FLOW.md"),
-            home.join("Documents").join("Epi-Logos C Experiments")
-                .join("Idea").join("Bimba").join("World").join("FLOW.md"),
+            home.join("Documents")
+                .join("Epi-Logos C Experiments")
+                .join("Idea")
+                .join("Bimba")
+                .join("World")
+                .join("FLOW.md"),
         ];
 
         for path in &candidates {
@@ -365,7 +390,11 @@ impl M4FlowPlugin {
                     Ok(content) => {
                         self.entries = content
                             .lines()
-                            .filter(|l| !l.trim().is_empty() && !l.starts_with("---") && !l.starts_with("coordinate:"))
+                            .filter(|l| {
+                                !l.trim().is_empty()
+                                    && !l.starts_with("---")
+                                    && !l.starts_with("coordinate:")
+                            })
                             .map(|l| l.to_string())
                             .collect();
                     }
@@ -377,13 +406,18 @@ impl M4FlowPlugin {
             }
         }
 
-        self.status_msg = Some("No FLOW.md found. Run `epi vault flow-init` to initialize.".to_string());
+        self.status_msg =
+            Some("No FLOW.md found. Run `epi vault flow-init` to initialize.".to_string());
     }
 
     fn append_entry(&mut self, text: &str) {
         if let Some(ref path) = self.flow_path {
             use std::io::Write;
-            match std::fs::OpenOptions::new().create(true).append(true).open(path) {
+            match std::fs::OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(path)
+            {
                 Ok(mut file) => {
                     let timestamp = chrono::Utc::now().format("%H:%M").to_string();
                     let line = format!("\n- [{}] {}", timestamp, text);
@@ -412,25 +446,30 @@ impl HypertilePlugin for M4FlowPlugin {
 
         let chunks = Layout::default()
             .direction(Direction::Vertical)
-            .constraints([
-                Constraint::Min(3),
-                Constraint::Length(input_height),
-            ])
+            .constraints([Constraint::Min(3), Constraint::Length(input_height)])
             .split(area);
 
         // Entries list
         let visible_start = if self.entries.len() > inner_height.saturating_sub(2) {
-            self.entries.len().saturating_sub(inner_height.saturating_sub(2)) + self.scroll_offset.min(0)
+            self.entries
+                .len()
+                .saturating_sub(inner_height.saturating_sub(2))
+                + self.scroll_offset.min(0)
         } else {
             0
         };
         let visible_start = visible_start.saturating_sub(self.scroll_offset);
 
-        let lines: Vec<Line> = self.entries.iter()
+        let lines: Vec<Line> = self
+            .entries
+            .iter()
             .skip(visible_start)
             .take(inner_height)
             .map(|entry| {
-                Line::from(Span::styled(format!("  {}", entry), Style::default().fg(Color::White)))
+                Line::from(Span::styled(
+                    format!("  {}", entry),
+                    Style::default().fg(Color::White),
+                ))
             })
             .collect();
 
@@ -438,19 +477,24 @@ impl HypertilePlugin for M4FlowPlugin {
         if let Some(ref msg) = self.status_msg {
             if all_lines.is_empty() {
                 all_lines.push(Line::from(Span::styled(
-                    format!("  {}", msg), Style::default().fg(Color::Yellow),
+                    format!("  {}", msg),
+                    Style::default().fg(Color::Yellow),
                 )));
             }
         }
         if all_lines.is_empty() {
             all_lines.push(Line::from(Span::styled(
-                "  Flow writer -- initialize with `epi vault flow-init`", dim,
+                "  Flow writer -- initialize with `epi vault flow-init`",
+                dim,
             )));
         }
 
         let entries_block = Paragraph::new(all_lines).block(
             Block::default()
-                .title(Span::styled(" M4' Flow ", Style::default().fg(accent).add_modifier(Modifier::BOLD)))
+                .title(Span::styled(
+                    " M4' Flow ",
+                    Style::default().fg(accent).add_modifier(Modifier::BOLD),
+                ))
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(theme::pane_border(is_focused))),
         );
@@ -553,10 +597,10 @@ impl M4OraclePlugin {
     }
 
     fn load_data(&mut self) {
-        self.history_text = crate::nara::oracle::show_history()
-            .unwrap_or_else(|e| format!("Error: {}", e));
-        self.hygiene_text = crate::nara::oracle::show_hygiene(None)
-            .unwrap_or_else(|e| format!("Error: {}", e));
+        self.history_text =
+            crate::nara::oracle::show_history().unwrap_or_else(|e| format!("Error: {}", e));
+        self.hygiene_text =
+            crate::nara::oracle::show_hygiene(None).unwrap_or_else(|e| format!("Error: {}", e));
     }
 }
 
@@ -596,10 +640,7 @@ impl HypertilePlugin for M4OraclePlugin {
         // Last cast output
         if let Some(ref cast) = self.last_cast {
             lines.push(Line::from(""));
-            lines.push(Line::from(Span::styled(
-                "  Last Cast",
-                label_style,
-            )));
+            lines.push(Line::from(Span::styled("  Last Cast", label_style)));
             for cl in cast.lines() {
                 lines.push(Line::from(Span::styled(
                     format!("  {}", cl),
@@ -613,7 +654,9 @@ impl HypertilePlugin for M4OraclePlugin {
             lines.push(Line::from(""));
             lines.push(Line::from(Span::styled(
                 "  Cast oracle? This is a sacred portal. [y] confirm  [n] cancel",
-                Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD),
+                Style::default()
+                    .fg(Color::Yellow)
+                    .add_modifier(Modifier::BOLD),
             )));
         }
 
@@ -710,12 +753,14 @@ impl M4MedicinePlugin {
 
     fn load_data(&mut self) {
         self.error = None;
-        self.balance_text = crate::nara::medicine::balance(false)
-            .unwrap_or_else(|e| { self.error = Some(e.clone()); format!("Unavailable: {}", e) });
-        self.chakra_text = crate::nara::medicine::chakra(false)
-            .unwrap_or_else(|e| format!("Unavailable: {}", e));
-        self.safety_text = crate::nara::medicine::safety(None)
-            .unwrap_or_else(|e| format!("Unavailable: {}", e));
+        self.balance_text = crate::nara::medicine::balance(false).unwrap_or_else(|e| {
+            self.error = Some(e.clone());
+            format!("Unavailable: {}", e)
+        });
+        self.chakra_text =
+            crate::nara::medicine::chakra(false).unwrap_or_else(|e| format!("Unavailable: {}", e));
+        self.safety_text =
+            crate::nara::medicine::safety(None).unwrap_or_else(|e| format!("Unavailable: {}", e));
     }
 }
 
@@ -754,10 +799,7 @@ impl HypertilePlugin for M4MedicinePlugin {
         lines.push(Line::from(""));
 
         // Chakra section
-        lines.push(Line::from(Span::styled(
-            "  Chakra",
-            label_style,
-        )));
+        lines.push(Line::from(Span::styled("  Chakra", label_style)));
         lines.push(Line::from(Span::styled(
             format!("  {}", self.chakra_text),
             Style::default().fg(Color::White),
@@ -766,10 +808,7 @@ impl HypertilePlugin for M4MedicinePlugin {
 
         // Prescription
         if let Some(ref rx) = self.prescription_text {
-            lines.push(Line::from(Span::styled(
-                "  Prescription",
-                label_style,
-            )));
+            lines.push(Line::from(Span::styled("  Prescription", label_style)));
             for pl in rx.lines() {
                 lines.push(Line::from(Span::styled(
                     format!("  {}", pl),
@@ -810,7 +849,7 @@ impl HypertilePlugin for M4MedicinePlugin {
                 KeyCode::Char('p') => {
                     self.prescription_text = Some(
                         crate::nara::medicine::prescribe("integration")
-                            .unwrap_or_else(|e| format!("Error: {}", e))
+                            .unwrap_or_else(|e| format!("Error: {}", e)),
                     );
                     return EventOutcome::Consumed;
                 }
@@ -854,10 +893,10 @@ impl M4TransformPlugin {
     }
 
     fn load_data(&mut self) {
-        self.status_text = crate::nara::transform::status(false)
-            .unwrap_or_else(|e| format!("Error: {}", e));
-        self.recipe_text = crate::nara::transform::recipe(false)
-            .unwrap_or_else(|e| format!("Unavailable: {}", e));
+        self.status_text =
+            crate::nara::transform::status(false).unwrap_or_else(|e| format!("Error: {}", e));
+        self.recipe_text =
+            crate::nara::transform::recipe(false).unwrap_or_else(|e| format!("Unavailable: {}", e));
         self.history_text = crate::nara::transform::history(false, false)
             .unwrap_or_else(|e| format!("Error: {}", e));
     }
@@ -982,18 +1021,15 @@ impl M4LensPlugin {
     }
 
     fn load_data(&mut self) {
-        self.lens_list_text = crate::nara::lens::list(false)
-            .unwrap_or_else(|e| format!("Error: {}", e));
+        self.lens_list_text =
+            crate::nara::lens::list(false).unwrap_or_else(|e| format!("Error: {}", e));
     }
 
     fn load_detail(&mut self) {
         self.detail_text = Some(match self.selected {
-            3 => crate::nara::lens::jungian(false)
-                .unwrap_or_else(|e| format!("Error: {}", e)),
-            5 => crate::nara::lens::trika(false)
-                .unwrap_or_else(|e| format!("Error: {}", e)),
-            4 => crate::nara::lens::phenomenal(false)
-                .unwrap_or_else(|e| format!("Error: {}", e)),
+            3 => crate::nara::lens::jungian(false).unwrap_or_else(|e| format!("Error: {}", e)),
+            5 => crate::nara::lens::trika(false).unwrap_or_else(|e| format!("Error: {}", e)),
+            4 => crate::nara::lens::phenomenal(false).unwrap_or_else(|e| format!("Error: {}", e)),
             i => format!(
                 "Lens #{} detail\n  Use `epi nara lens apply {}` for full analysis",
                 i, i
@@ -1022,14 +1058,18 @@ impl HypertilePlugin for M4LensPlugin {
             "Trika/Kashmir Shaivism",
         ];
 
-        let items: Vec<ListItem> = lens_names.iter().enumerate().map(|(i, name)| {
-            let style = if i == self.selected {
-                Style::default().fg(Color::Black).bg(Color::Red)
-            } else {
-                Style::default().fg(Color::White)
-            };
-            ListItem::new(format!("  [{}] {}", i, name)).style(style)
-        }).collect();
+        let items: Vec<ListItem> = lens_names
+            .iter()
+            .enumerate()
+            .map(|(i, name)| {
+                let style = if i == self.selected {
+                    Style::default().fg(Color::Black).bg(Color::Red)
+                } else {
+                    Style::default().fg(Color::White)
+                };
+                ListItem::new(format!("  [{}] {}", i, name)).style(style)
+            })
+            .collect();
 
         let list = List::new(items).block(
             Block::default()
@@ -1120,10 +1160,10 @@ impl M4PratibimbaPlugin {
     }
 
     fn load_data(&mut self) {
-        self.stats_text = crate::nara::pratibimba::stats(false)
-            .unwrap_or_else(|e| format!("Error: {}", e));
-        self.recent_text = crate::nara::pratibimba::recent(7, false)
-            .unwrap_or_else(|e| format!("Error: {}", e));
+        self.stats_text =
+            crate::nara::pratibimba::stats(false).unwrap_or_else(|e| format!("Error: {}", e));
+        self.recent_text =
+            crate::nara::pratibimba::recent(7, false).unwrap_or_else(|e| format!("Error: {}", e));
     }
 }
 
@@ -1177,10 +1217,7 @@ impl HypertilePlugin for M4PratibimbaPlugin {
 
         // Footer
         lines.push(Line::from(""));
-        lines.push(Line::from(Span::styled(
-            "  [e] excavate  [r] refresh",
-            dim,
-        )));
+        lines.push(Line::from(Span::styled("  [e] excavate  [r] refresh", dim)));
 
         let para = Paragraph::new(lines).block(
             Block::default()
@@ -1200,7 +1237,7 @@ impl HypertilePlugin for M4PratibimbaPlugin {
                 KeyCode::Char('e') => {
                     self.excavate_result = Some(
                         crate::nara::pratibimba::excavate("self", false)
-                            .unwrap_or_else(|e| format!("Error: {}", e))
+                            .unwrap_or_else(|e| format!("Error: {}", e)),
                     );
                     return EventOutcome::Consumed;
                 }
@@ -1406,6 +1443,9 @@ mod tests {
         let mut buf = Buffer::empty(area);
         plugin.render(area, &mut buf, true);
         let content = buffer_to_string(&buf, area);
-        assert!(content.contains("Pratibimba"), "Should show Pratibimba title");
+        assert!(
+            content.contains("Pratibimba"),
+            "Should show Pratibimba title"
+        );
     }
 }

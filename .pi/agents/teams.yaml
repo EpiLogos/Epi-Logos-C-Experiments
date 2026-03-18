@@ -1,0 +1,4 @@
+teams:
+  - id: main
+    agents:
+      - main
