@@ -239,19 +239,16 @@ export async function henExtension(api: ExtensionAPI) {
     },
   });
 
-  // ── Hook: before_tool_call ─────────────────────────────────────────
-  if (api.hooks) {
-    api.hooks.on?.("before_tool_call", async (event: { tool: string; input: unknown }) => {
-      if (event.tool === "khora_write" && typeof event.input === "object" && event.input !== null) {
-        const inp = event.input as { content?: string; path?: string };
-        if (inp.content?.includes("---") && inp.path?.endsWith(".md")) {
-          // Best-effort frontmatter validation on vault writes (logged, not blocking)
-        }
+  api.on("tool_call", async (event) => {
+    if (event.toolName === "khora_write" && typeof event.input === "object" && event.input !== null) {
+      const inp = event.input as { content?: string; path?: string };
+      if (inp.content?.includes("---") && inp.path?.endsWith(".md")) {
+        // Best-effort frontmatter validation on vault writes (logged, not blocking)
       }
-    });
+    }
+  });
 
-    api.hooks.on?.("after_tool_call", async (_event: unknown) => {
-      // Sync event emission handled by khora_write → khora_sync_queue_push
-    });
-  }
+  api.on("tool_result", async () => {
+    // Sync event emission handled by khora_write → khora_sync_queue_push
+  });
 }

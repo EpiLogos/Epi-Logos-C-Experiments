@@ -58,6 +58,12 @@ export const PRIMITIVE_REGISTRY: PrimitiveDef[] = [
     allowChildExtension: false,
     executionMode: "bounded",
   },
+  {
+    name: "context7",
+    description: "Live library documentation oracle. Resolves version-specific docs for gate and integration checks.",
+    allowChildExtension: false,
+    executionMode: "bounded",
+  },
 ];
 
 export function getPrimitive(name: string): PrimitiveDef | undefined {

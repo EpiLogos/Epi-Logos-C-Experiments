@@ -1,7 +1,9 @@
 use crate::agent::{extensions, plugins, AgentLayout};
 use serde::Serialize;
+use std::fs;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::process::{Child, Command as TokioCommand};
 
 #[derive(Serialize)]
@@ -10,6 +12,22 @@ struct SpawnReport {
     status: String,
     agent_id: String,
     command: String,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct VerifyRuntimeReport {
+    status: String,
+    agent_id: String,
+    command: String,
+    runtime_root: String,
+    home_path: String,
+    cwd: String,
+    agent_dir: String,
+    plugin_runtime_path: String,
+    event_log_path: String,
+    stdout: String,
+    stderr: String,
 }
 
 pub struct SpawnedPiProcess {
@@ -98,6 +116,77 @@ pub fn spawn_process(
     })
 }
 
+pub fn verify_runtime(
+    agent: Option<&str>,
+    plugin_dirs: &[PathBuf],
+    prompt: Option<&str>,
+    json: bool,
+) -> Result<String, String> {
+    let layout = prepare_isolated_layout(agent, plugin_dirs)?;
+    let runtime_root = layout
+        .epi_home
+        .parent()
+        .ok_or_else(|| "unable to resolve isolated runtime root".to_owned())?
+        .to_path_buf();
+    let home_path = runtime_root.join("home");
+    let cwd = runtime_root.join("cwd");
+    fs::create_dir_all(&home_path).map_err(|err| err.to_string())?;
+    fs::create_dir_all(&cwd).map_err(|err| err.to_string())?;
+
+    let mut args = vec!["-p".to_owned()];
+    args.extend(base_pi_args(&layout));
+    args.extend(minimal_verification_args());
+    args.push(
+        prompt
+            .unwrap_or("Reply with a single line confirming runtime verification.")
+            .to_owned(),
+    );
+
+    let output = configure_std_command(&layout, &args)
+        .current_dir(&cwd)
+        .env("HOME", &home_path)
+        .env("EPI_AGENT_HOME", &layout.epi_home)
+        .output()
+        .map_err(|err| format!("failed to launch pi: {err}"))?;
+
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+    let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+    if !output.status.success() {
+        return Err(format!(
+            "pi runtime verification failed with status {}.\nstdout:\n{}\nstderr:\n{}",
+            output.status, stdout, stderr
+        ));
+    }
+
+    let report = VerifyRuntimeReport {
+        status: "ok".to_owned(),
+        agent_id: layout.agent_id.clone(),
+        command: format!("pi {}", args.join(" ")),
+        runtime_root: runtime_root.display().to_string(),
+        home_path: home_path.display().to_string(),
+        cwd: cwd.display().to_string(),
+        agent_dir: layout.agent_dir.display().to_string(),
+        plugin_runtime_path: layout.plugin_runtime_path.display().to_string(),
+        event_log_path: layout
+            .agent_dir
+            .join("plugin-runtime-events.jsonl")
+            .display()
+            .to_string(),
+        stdout,
+        stderr,
+    };
+
+    if json {
+        serde_json::to_string_pretty(&report).map_err(|err| err.to_string())
+    } else {
+        Ok(format!(
+            "{}: {}",
+            report.status,
+            report.event_log_path
+        ))
+    }
+}
+
 fn prepare_interactive_invocation(
     agent: Option<&str>,
     plugin_dirs: &[PathBuf],
@@ -127,13 +216,32 @@ fn prepare_print_invocation(
 
 fn prepare_layout(agent: Option<&str>, plugin_dirs: &[PathBuf]) -> Result<AgentLayout, String> {
     let layout = AgentLayout::resolve(agent)?;
+    prepare_layout_from_resolved(layout, plugin_dirs)
+}
+
+fn prepare_isolated_layout(agent: Option<&str>, plugin_dirs: &[PathBuf]) -> Result<AgentLayout, String> {
+    let repo_root = AgentLayout::resolve(agent)?.repo_root;
+    let runtime_root = repo_root
+        .join(".tmp-real-pi-verify")
+        .join(unique_runtime_suffix("runtime"));
+    let epi_home = runtime_root.join(".epi");
+    let layout = AgentLayout::resolve_for_epi_home(agent, epi_home)?;
+    prepare_layout_from_resolved(layout, plugin_dirs)
+}
+
+fn prepare_layout_from_resolved(
+    layout: AgentLayout,
+    plugin_dirs: &[PathBuf],
+) -> Result<AgentLayout, String> {
     extensions::sync_layout(&layout)?;
-    plugins::prepare_runtime(&layout, plugin_dirs)?;
+    let runtime_plugin_dirs = plugins::resolve_runtime_plugin_dirs(&layout.repo_root, plugin_dirs)?;
+    plugins::prepare_runtime(&layout, &runtime_plugin_dirs)?;
     Ok(layout)
 }
 
 fn base_pi_args(layout: &AgentLayout) -> Vec<String> {
     vec![
+        "--no-extensions".to_owned(),
         "--extension".to_owned(),
         layout.composite_entry_path.display().to_string(),
         "--extension".to_owned(),
@@ -148,6 +256,14 @@ fn base_pi_args(layout: &AgentLayout) -> Vec<String> {
             .join("epi-system.md")
             .display()
             .to_string(),
+    ]
+}
+
+fn minimal_verification_args() -> Vec<String> {
+    vec![
+        "--no-skills".to_owned(),
+        "--no-prompt-templates".to_owned(),
+        "--no-themes".to_owned(),
     ]
 }
 
@@ -196,4 +312,12 @@ fn configure_tokio_command(layout: &AgentLayout, args: &[String]) -> TokioComman
         plugins::runtime_path(layout),
     );
     command
+}
+
+fn unique_runtime_suffix(prefix: &str) -> String {
+    let nanos = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_nanos())
+        .unwrap_or(0);
+    format!("{prefix}-{}-{nanos}", std::process::id())
 }

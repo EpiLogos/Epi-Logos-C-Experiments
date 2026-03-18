@@ -381,6 +381,102 @@ Verify the requested change before completion.
     }
 }
 
+pub fn create_modern_plugin_bundle(base_dir: impl AsRef<Path>, name: &str) -> PluginFixture {
+    let root = base_dir.as_ref().join(name);
+    let skill_path = write_file(
+        root.join("skills/mem-search/SKILL.md"),
+        r#"---
+name: mem-search
+description: Search prior observations
+allowed-tools:
+  - Read
+user-invocable: true
+---
+
+# Memory Search
+
+Search prior observations and fetch the relevant detail.
+"#,
+    );
+    let subagent_path = write_file(
+        root.join("agents/memory-reviewer.md"),
+        r#"---
+name: memory-reviewer
+description: Review memory observations
+tools:
+  - Read
+model: sonnet
+permissionMode: default
+skills:
+  - mem-search
+---
+
+# Memory Reviewer
+
+Review memory observations for relevant historical context.
+"#,
+    );
+    let hook_script_path = write_executable(
+        root.join("scripts/context.sh"),
+        "#!/bin/sh\ncat >/dev/null\nprintf '{\"continue\":true,\"source\":\"modern-schema\"}\\n'\n",
+    );
+    let hooks_path = write_file(
+        root.join("hooks/hooks.json"),
+        r#"{
+  "description": "Modern Claude hook schema fixture",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "../scripts/context.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/worker-service.cjs\" hook claude-code observation",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}
+"#,
+    );
+    write_file(
+        root.join(".claude-plugin/plugin.json"),
+        &format!(
+            "{{\n  \"name\": \"{name}\",\n  \"version\": \"1.0.0\",\n  \"description\": \"{name} modern plugin\"\n}}\n"
+        ),
+    );
+    write_file(
+        root.join("scripts/worker-service.cjs"),
+        "console.log('worker');\n",
+    );
+    write_file(
+        root.join("package.json"),
+        "{\n  \"name\": \"modern-plugin\"\n}\n",
+    );
+
+    PluginFixture {
+        root,
+        skill_path,
+        subagent_path,
+        hooks_path,
+        hook_script_path,
+    }
+}
+
 pub struct TestOutput {
     pub status: std::process::ExitStatus,
     pub stdout: String,

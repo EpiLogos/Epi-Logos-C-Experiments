@@ -18,8 +18,8 @@ pub fn run(agent: Option<&str>, json: bool) -> Result<String, String> {
     let layout = AgentLayout::resolve(agent)?;
     layout.ensure_managed_layout()?;
 
-    let mut next_action = "Run `epi agent doctor --json` to confirm sync and provider status."
-        .to_owned();
+    let mut next_action =
+        "Run `epi agent doctor --json` to confirm sync and provider status.".to_owned();
 
     let pi_present = if pi_binary_present() {
         true

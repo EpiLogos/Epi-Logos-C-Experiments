@@ -32,47 +32,110 @@ use serde::Serialize;
 /// 0-5 = Day (Torus topology), 6-11 = Night (Klein topology).
 /// Source: m2.c M2_MEF_LENS_NAMES
 pub const LENS_NAMES: [&str; 12] = [
-    "Quaternal",             // L0  — QL as psychoid ground; curiosity, creative potential
-    "Causal",                // L1  — Aristotle + Iccha Shakti; will as causation
-    "Logical",               // L2  — Nagarjuna Catuskoti; tetralemmic 4-corner logic
-    "Processual",            // L3  — Whitehead concrescence; creative advance, novelty
-    "Phenomenological",      // L4  — Heidegger Being-in-World; existential analysis
-    "Para Vak",              // L5  — Kashmir Shaivism speech ontology; Vak as creative power
-    "Archetypal-Numerical",  // L0' — Jung-Pauli psychoid numbers; synchronicity
-    "Phenomenal",            // L1' — Jungian psychic functions; qualia, immediate experience
-    "Alchemical-Elemental",  // L2' — Jung transcendent function; solve et coagula, elements
-    "Chronological",         // L3' — Hegelian dialectic, Aion; history as becoming
-    "Scientific",            // L4' — Kuhn paradigm shifts; knowledge work, methodology
-    "Divine Logos",          // L5' — Epi-Logos, resurrection; divine speech, creative inception
+    "Quaternal",            // L0  — QL as psychoid ground; curiosity, creative potential
+    "Causal",               // L1  — Aristotle + Iccha Shakti; will as causation
+    "Logical",              // L2  — Nagarjuna Catuskoti; tetralemmic 4-corner logic
+    "Processual",           // L3  — Whitehead concrescence; creative advance, novelty
+    "Phenomenological",     // L4  — Heidegger Being-in-World; existential analysis
+    "Para Vak",             // L5  — Kashmir Shaivism speech ontology; Vak as creative power
+    "Archetypal-Numerical", // L0' — Jung-Pauli psychoid numbers; synchronicity
+    "Phenomenal",           // L1' — Jungian psychic functions; qualia, immediate experience
+    "Alchemical-Elemental", // L2' — Jung transcendent function; solve et coagula, elements
+    "Chronological",        // L3' — Hegelian dialectic, Aion; history as becoming
+    "Scientific",           // L4' — Kuhn paradigm shifts; knowledge work, methodology
+    "Divine Logos",         // L5' — Epi-Logos, resurrection; divine speech, creative inception
 ];
 
 /// Sub-position names for each of the 12 lenses (6 positions each).
 /// From L*-n.md files in Idea/Bimba/World/.
 pub const LENS_SUBPOSITIONS: [[&str; 6]; 12] = [
     // L0 Quaternal
-    ["Why (Insofar as)", "What", "How", "Where/When", "Why-for", "Why-so/Why-not"],
+    [
+        "Why (Insofar as)",
+        "What",
+        "How",
+        "Where/When",
+        "Why-for",
+        "Why-so/Why-not",
+    ],
     // L1 Causal
-    ["Svatantrya", "Material Cause", "Efficient Cause", "Formal Cause", "Final Cause", "Iccha Shakti"],
+    [
+        "Svatantrya",
+        "Material Cause",
+        "Efficient Cause",
+        "Formal Cause",
+        "Final Cause",
+        "Iccha Shakti",
+    ],
     // L2 Logical
-    ["Tetralemmic Ground", "IS", "IS-NOT", "BOTH", "NEITHER", "SILENCE"],
+    [
+        "Tetralemmic Ground",
+        "IS",
+        "IS-NOT",
+        "BOTH",
+        "NEITHER",
+        "SILENCE",
+    ],
     // L3 Processual
-    ["Concrescent Desire", "Actual Occasion", "Ingression", "Eternal Objects", "Community", "Satisfaction"],
+    [
+        "Concrescent Desire",
+        "Actual Occasion",
+        "Ingression",
+        "Eternal Objects",
+        "Community",
+        "Satisfaction",
+    ],
     // L4 Phenomenological (Lemniscate anchor — decimal sub-notation in docs)
-    ["Sein (Being)", "Geworfenheit", "Dasein", "Zeit (Time)", "Besorge", "Gelassenheit"],
+    [
+        "Sein (Being)",
+        "Geworfenheit",
+        "Dasein",
+        "Zeit (Time)",
+        "Besorge",
+        "Gelassenheit",
+    ],
     // L5 Para Vak
-    ["Anuttara/Asambhava", "Para Vak", "Pasyanti", "Madhyama", "Vaikhari", "Matrika"],
+    [
+        "Anuttara/Asambhava",
+        "Para Vak",
+        "Pasyanti",
+        "Madhyama",
+        "Vaikhari",
+        "Matrika",
+    ],
     // L0' Archetypal-Numerical
     ["One", "Two", "Three", "Four", "Five", "Six"],
     // L1' Phenomenal
-    ["Introversion", "Sensation", "Feeling", "Thinking", "Intuition", "Extroversion"],
+    [
+        "Introversion",
+        "Sensation",
+        "Feeling",
+        "Thinking",
+        "Intuition",
+        "Extroversion",
+    ],
     // L2' Alchemical-Elemental  ← THE ELEMENT-BEARING LENS
     ["Aether", "Earth", "Water", "Air", "Fire", "Mineral"],
     // L3' Chronological
     ["Spirit", "Spring", "Summer", "Autumn", "Winter", "Life"],
     // L4' Scientific
-    ["Questions", "Traces", "Challenges", "Patterns", "Discovery", "Insight"],
+    [
+        "Questions",
+        "Traces",
+        "Challenges",
+        "Patterns",
+        "Discovery",
+        "Insight",
+    ],
     // L5' Divine Logos (unified aspects of one creative reality)
-    ["Inception", "Divine Speech", "Resurrection", "Epi-Logos", "Alpha", "Omega"],
+    [
+        "Inception",
+        "Divine Speech",
+        "Resurrection",
+        "Epi-Logos",
+        "Alpha",
+        "Omega",
+    ],
 ];
 
 /// Philosophical root for each lens.
@@ -105,19 +168,22 @@ pub const LENS_ARCHETYPE_NUMBER: [u8; 12] = [
     4,  // L2  Logical               ↔ Archetype 4:  Number 2 (Lemniscate anchor, context)
     6,  // L3  Processual            ↔ Archetype 6:  Number 4, Jung-Pauli psychoid root
     8,  // L4  Phenomenological      ↔ Archetype 8:  Number 6 (Synthetic Emptiness, ADAM)
-   10,  // L5  Para Vak              ↔ Archetype 10: Number 8
+    10, // L5  Para Vak              ↔ Archetype 10: Number 8
     1,  // L0' Archetypal-Numerical  ↔ Archetype 1:  0/1 Singularity, first differentiation
     3,  // L1' Phenomenal            ↔ Archetype 3:  Number 1 (Magician/Vak), creative advance
     5,  // L2' Alchemical-Elemental  ↔ Archetype 5:  Number 3 (Vak, Zodiacal grammar)
     7,  // L3' Chronological         ↔ Archetype 7:  Number 5 (Dynamic Harmony, MonoPoly)
     9,  // L4' Scientific            ↔ Archetype 9:  Number 7 (Divine Action, Siva-table)
-   11,  // L5' Divine Logos          ↔ Archetype 11: Number 9 (Paramesvara, Virtue LUT)
+    11, // L5' Divine Logos          ↔ Archetype 11: Number 9 (Paramesvara, Virtue LUT)
 ];
 
 /// Return the M0 ARCHETYPE_LUT index resonant with this lens (0-11).
 /// Both systems are 12-fold; this makes the resonance explicit and named.
 pub fn archetype_number(lens_idx: u8) -> u8 {
-    LENS_ARCHETYPE_NUMBER.get(lens_idx as usize).copied().unwrap_or(lens_idx)
+    LENS_ARCHETYPE_NUMBER
+        .get(lens_idx as usize)
+        .copied()
+        .unwrap_or(lens_idx)
 }
 
 // ── Möbius Pairs ─────────────────────────────────────────────────────────────
@@ -134,7 +200,11 @@ pub const LENS_NIGHT_COMPLEMENT: [u8; 6] = [11, 10, 9, 8, 7, 6];
 /// For day lens n (0-5): night partner = n + 6
 /// For night lens n (6-11): day partner = n - 6
 pub fn night_partner(lens_idx: u8) -> u8 {
-    if lens_idx < 6 { lens_idx + 6 } else { lens_idx - 6 }
+    if lens_idx < 6 {
+        lens_idx + 6
+    } else {
+        lens_idx - 6
+    }
 }
 
 /// Day complement of any lens index (0-11).
@@ -142,7 +212,11 @@ pub fn day_complement(lens_idx: u8) -> u8 {
     let base = lens_idx % 6;
     let is_night = lens_idx >= 6;
     let comp = 5 - base;
-    if is_night { comp + 6 } else { comp }
+    if is_night {
+        comp + 6
+    } else {
+        comp
+    }
 }
 
 // ── Klein V4 Squares ─────────────────────────────────────────────────────────
@@ -151,9 +225,9 @@ pub fn day_complement(lens_idx: u8) -> u8 {
 /// Each entry: [day_lens, day_complement, night_lens, night_complement]
 /// These form a Klein four-group (V4 = Z2 × Z2) with four symmetries per square.
 pub const KLEIN_SQUARES: [[u8; 4]; 3] = [
-    [0, 5,  6, 11],  // Square A: Quaternal ↔ Para Vak ↔ Archetypal-Numerical ↔ Divine Logos
-    [1, 4,  7, 10],  // Square B: Causal ↔ Phenomenological ↔ Phenomenal ↔ Scientific
-    [2, 3,  8,  9],  // Square C: Logical ↔ Processual ↔ Alchemical-Elemental ↔ Chronological
+    [0, 5, 6, 11], // Square A: Quaternal ↔ Para Vak ↔ Archetypal-Numerical ↔ Divine Logos
+    [1, 4, 7, 10], // Square B: Causal ↔ Phenomenological ↔ Phenomenal ↔ Scientific
+    [2, 3, 8, 9],  // Square C: Logical ↔ Processual ↔ Alchemical-Elemental ↔ Chronological
 ];
 
 /// Return the Klein square containing lens_idx.
@@ -161,16 +235,26 @@ pub fn klein_square_for(lens_idx: u8) -> [u8; 4] {
     let sq = match lens_idx % 6 {
         0 | 5 => 0,
         1 | 4 => 1,
-        _     => 2, // 2 | 3
+        _ => 2, // 2 | 3
     };
     KLEIN_SQUARES[sq]
 }
 
 /// Human-readable names for the four corners of each Klein square.
 pub const KLEIN_SQUARE_NAMES: [[&str; 4]; 3] = [
-    ["Quaternal", "Para Vak", "Archetypal-Numerical", "Divine Logos"],
+    [
+        "Quaternal",
+        "Para Vak",
+        "Archetypal-Numerical",
+        "Divine Logos",
+    ],
     ["Causal", "Phenomenological", "Phenomenal", "Scientific"],
-    ["Logical", "Processual", "Alchemical-Elemental", "Chronological"],
+    [
+        "Logical",
+        "Processual",
+        "Alchemical-Elemental",
+        "Chronological",
+    ],
 ];
 
 // ── Element System via L2' ───────────────────────────────────────────────────
@@ -225,17 +309,22 @@ pub fn elemental_profile(lens_idx: u8) -> LensElementalProfile {
     // complement = same mode, different position; partner = same position, other mode
     let is_night = lens_idx >= 6;
     let base = lens_idx % 6;
-    let comp_idx  = if is_night { (5 - base) + 6 } else { 5 - base };
-    let part_idx  = night_partner(lens_idx);
+    let comp_idx = if is_night { (5 - base) + 6 } else { 5 - base };
+    let part_idx = night_partner(lens_idx);
     let cross_idx = night_partner(comp_idx);
 
     LensElementalProfile {
-        primary_element:    LENS_PRIMARY_ELEMENT[lens_idx as usize],
+        primary_element: LENS_PRIMARY_ELEMENT[lens_idx as usize],
         complement_element: LENS_PRIMARY_ELEMENT[comp_idx as usize],
-        partner_element:    LENS_PRIMARY_ELEMENT[part_idx as usize],
-        cross_element:      LENS_PRIMARY_ELEMENT[cross_idx as usize],
+        partner_element: LENS_PRIMARY_ELEMENT[part_idx as usize],
+        cross_element: LENS_PRIMARY_ELEMENT[cross_idx as usize],
         primary_name: match LENS_PRIMARY_ELEMENT[lens_idx as usize] {
-            0 => "Aether", 1 => "Air", 2 => "Fire", 3 => "Water", 4 => "Earth", _ => "unknown",
+            0 => "Aether",
+            1 => "Air",
+            2 => "Fire",
+            3 => "Water",
+            4 => "Earth",
+            _ => "unknown",
         },
     }
 }
@@ -254,8 +343,8 @@ pub fn elemental_profile(lens_idx: u8) -> LensElementalProfile {
 ///   L4.4 Besorge (Concern) → tattvas[24-29]: Pani, Pada, Upastha, Payu (karmendriyas) + Manas, Akasha
 ///   L4.5 Gelassenheit      → tattvas[30-35]: Vayu, Agni, Apas, Prithvi (mahabhutas) + Ahamkara, Buddhi
 pub const PHENOM_TATTVA_MAP: [[u8; 6]; 6] = [
-    [ 0,  1,  2,  3,  4,  5], // L4.0 Sein       → Shiva tattvas (pure consciousness)
-    [ 6,  7,  8,  9, 10, 11], // L4.1 Geworfen   → Purusha/Prakriti + subtle element seeds
+    [0, 1, 2, 3, 4, 5],       // L4.0 Sein       → Shiva tattvas (pure consciousness)
+    [6, 7, 8, 9, 10, 11],     // L4.1 Geworfen   → Purusha/Prakriti + subtle element seeds
     [12, 13, 14, 15, 16, 17], // L4.2 Dasein     → Tanmatras (subtle sense objects)
     [18, 19, 20, 21, 22, 23], // L4.3 Zeit       → Jnanendriyas (cognitive sense faculties)
     [24, 25, 26, 27, 28, 29], // L4.4 Besorge    → Karmendriyas (motor faculties) + antahkarana
@@ -292,7 +381,7 @@ pub fn germane_lenses(torus_pos: u8, dominant_element: u8) -> Vec<u8> {
 pub struct LensInfo {
     pub index: u8,
     pub name: &'static str,
-    pub mode: &'static str,        // "day" | "night"
+    pub mode: &'static str, // "day" | "night"
     pub philosopher: &'static str,
     pub primary_element: &'static str,
     pub klein_square: [u8; 4],
@@ -338,14 +427,23 @@ pub fn list(json: bool) -> Result<String, String> {
     let lenses: Vec<LensInfo> = (0..12u8)
         .map(|i| {
             let elem_id = LENS_PRIMARY_ELEMENT[i as usize];
-            let sq_idx = match i % 6 { 0 | 5 => 0, 1 | 4 => 1, _ => 2 };
+            let sq_idx = match i % 6 {
+                0 | 5 => 0,
+                1 | 4 => 1,
+                _ => 2,
+            };
             LensInfo {
                 index: i,
                 name: LENS_NAMES[i as usize],
                 mode: if i < 6 { "day" } else { "night" },
                 philosopher: LENS_PHILOSOPHER[i as usize],
                 primary_element: match elem_id {
-                    0 => "Aether", 1 => "Air", 2 => "Fire", 3 => "Water", 4 => "Earth", _ => "?",
+                    0 => "Aether",
+                    1 => "Air",
+                    2 => "Fire",
+                    3 => "Water",
+                    4 => "Earth",
+                    _ => "?",
                 },
                 klein_square: KLEIN_SQUARES[sq_idx],
                 germane: germane.contains(&i),
@@ -386,7 +484,11 @@ pub fn show(lens_index: u8, json: bool) -> Result<String, String> {
         return Err(format!("Lens index must be 0-11, got {}", lens_index));
     }
     let profile = elemental_profile(lens_index);
-    let sq_idx = match lens_index % 6 { 0 | 5 => 0, 1 | 4 => 1, _ => 2 };
+    let sq_idx = match lens_index % 6 {
+        0 | 5 => 0,
+        1 | 4 => 1,
+        _ => 2,
+    };
     let sq_names = KLEIN_SQUARE_NAMES[sq_idx];
     let mode = if lens_index < 6 { "day" } else { "night" };
     let label = if lens_index < 6 {
@@ -431,7 +533,8 @@ pub fn show(lens_index: u8, json: bool) -> Result<String, String> {
 
 /// epi nara lens phenomenal — L4 phenomenological view with tattva grounding
 pub fn phenomenal(json: bool) -> Result<String, String> {
-    let kairos = super::kairos::load_current()?.ok_or("No kairos state — run 'epi nara kairos sync'")?;
+    let kairos =
+        super::kairos::load_current()?.ok_or("No kairos state — run 'epi nara kairos sync'")?;
     let phenom_layer = (kairos.active_tattva as usize).min(5);
     let tattvas = &PHENOM_TATTVA_MAP[phenom_layer];
     let sub_name = LENS_SUBPOSITIONS[4][phenom_layer]; // L4 = index 4
@@ -460,7 +563,11 @@ pub fn apply(lens: &str, target: Option<&str>) -> Result<String, String> {
     let lens_idx = parse_lens_arg(lens)?;
     let target_desc = target.unwrap_or("(no target — use --target to specify content)");
     let profile = elemental_profile(lens_idx);
-    let sq_idx = match lens_idx % 6 { 0 | 5 => 0, 1 | 4 => 1, _ => 2 };
+    let sq_idx = match lens_idx % 6 {
+        0 | 5 => 0,
+        1 | 4 => 1,
+        _ => 2,
+    };
 
     Ok(LensApplyResult {
         lens: LENS_NAMES[lens_idx as usize].to_string(),
@@ -524,10 +631,14 @@ pub fn synthesize(lenses_arg: &str, target: Option<&str>) -> Result<String, Stri
         let mut sorted_sq = sq.clone();
         sorted_sq.sort();
         if sorted_input == sorted_sq {
-            out.push_str("\n  ◆ These lenses form a complete Klein V4 square — full integration scope.\n");
+            out.push_str(
+                "\n  ◆ These lenses form a complete Klein V4 square — full integration scope.\n",
+            );
         }
     }
-    out.push_str(&format!("  Target: {target_desc}\n  → Agent pipeline dispatch (Aletheia) pending\n"));
+    out.push_str(&format!(
+        "  Target: {target_desc}\n  → Agent pipeline dispatch (Aletheia) pending\n"
+    ));
     Ok(out)
 }
 
@@ -535,7 +646,11 @@ pub fn synthesize(lenses_arg: &str, target: Option<&str>) -> Result<String, Stri
 pub fn klein(lens: &str, json: bool) -> Result<String, String> {
     let lens_idx = parse_lens_arg(lens)?;
     let sq = klein_square_for(lens_idx);
-    let sq_idx = match lens_idx % 6 { 0 | 5 => 0, 1 | 4 => 1, _ => 2 };
+    let sq_idx = match lens_idx % 6 {
+        0 | 5 => 0,
+        1 | 4 => 1,
+        _ => 2,
+    };
     let names = KLEIN_SQUARE_NAMES[sq_idx];
 
     if json {
@@ -586,7 +701,9 @@ fn parse_lens_arg(s: &str) -> Result<u8, String> {
     // Accept: "0"-"11", "L0"-"L5", "L0'"-"L5'", lens names (case-insensitive prefix)
     let s = s.trim();
     if let Ok(n) = s.parse::<u8>() {
-        if n <= 11 { return Ok(n); }
+        if n <= 11 {
+            return Ok(n);
+        }
         return Err(format!("Lens index {n} out of range (0-11)"));
     }
     let stripped = s.trim_start_matches('L').trim_start_matches('l');
@@ -596,20 +713,32 @@ fn parse_lens_arg(s: &str) -> Result<u8, String> {
         (stripped, false)
     };
     if let Ok(n) = num_str.parse::<u8>() {
-        if n <= 5 { return Ok(if is_night { n + 6 } else { n }); }
+        if n <= 5 {
+            return Ok(if is_night { n + 6 } else { n });
+        }
     }
     // Try name prefix match
     let lower = s.to_lowercase();
     for (i, name) in LENS_NAMES.iter().enumerate() {
-        if name.to_lowercase().starts_with(&lower) || lower.starts_with(&name.to_lowercase()[..4.min(lower.len())]) {
+        if name.to_lowercase().starts_with(&lower)
+            || lower.starts_with(&name.to_lowercase()[..4.min(lower.len())])
+        {
             return Ok(i as u8);
         }
     }
-    Err(format!("Unknown lens '{}'. Use 0-11, L0-L5, L0'-L5', or a lens name.", s))
+    Err(format!(
+        "Unknown lens '{}'. Use 0-11, L0-L5, L0'-L5', or a lens name.",
+        s
+    ))
 }
 
 fn elem_name(id: u8) -> &'static str {
     match id {
-        0 => "Aether", 1 => "Air", 2 => "Fire", 3 => "Water", 4 => "Earth", _ => "?",
+        0 => "Aether",
+        1 => "Air",
+        2 => "Fire",
+        3 => "Water",
+        4 => "Earth",
+        _ => "?",
     }
 }

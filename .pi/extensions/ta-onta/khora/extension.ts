@@ -130,36 +130,30 @@ export async function khoraExtension(api: ExtensionAPI) {
     },
   });
 
-  // ── Hook: session_start ──────────────────────────────────────────
-  if (api.hooks) {
-    api.hooks.on?.("session_start", async (event: { session_id?: string }) => {
-      // Run pre-session-init hook if present
-      const hookPath = new URL("./S0/pre-session-init.sh", import.meta.url).pathname;
-      if (existsSync(hookPath)) {
-        spawnSync("sh", [hookPath], { stdio: "inherit" });
-      }
-      // Write [[NOW-{session_id}]] breadcrumb into today's daily-note ## Sessions heading
-      if (event.session_id) {
-        const breadcrumb = encodeURIComponent(`\n- [[NOW-${event.session_id}]]`);
-        const vault = process.env.EPI_VAULT_NAME ?? "Idea";
-        const uri = `obsidian://advanced-uri?vault=${encodeURIComponent(vault)}&daily=true&heading=Sessions&data=${breadcrumb}&mode=append`;
-        spawnSync("open", [uri], { encoding: "utf8" });
-      }
-    });
+  api.on("session_start", async () => {
+    const hookPath = new URL("./S0/pre-session-init.sh", import.meta.url).pathname;
+    if (existsSync(hookPath)) {
+      spawnSync("sh", [hookPath], { stdio: "inherit" });
+    }
 
-    api.hooks.on?.("before_compaction", async () => {
-      // Auto-write CONTINUATION.md
-      spawnSync("epi", ["agent", "session", "continuation"], { stdio: "inherit" });
-    });
+    if (_sessionId) {
+      const breadcrumb = encodeURIComponent(`\n- [[NOW-${_sessionId}]]`);
+      const vault = process.env.EPI_VAULT_NAME ?? "Idea";
+      const uri = `obsidian://advanced-uri?vault=${encodeURIComponent(vault)}&daily=true&heading=Sessions&data=${breadcrumb}&mode=append`;
+      spawnSync("open", [uri], { encoding: "utf8" });
+    }
+  });
 
-    api.hooks.on?.("session_end", async () => {
-      // Run post-session-close hook if present
-      const hookPath = new URL("./S0/post-session-close.sh", import.meta.url).pathname;
-      if (existsSync(hookPath)) {
-        spawnSync("sh", [hookPath], { stdio: "inherit" });
-      }
-    });
-  }
+  api.on("session_before_compact", async () => {
+    spawnSync("epi", ["agent", "session", "continuation"], { stdio: "inherit" });
+  });
+
+  api.on("session_shutdown", async () => {
+    const hookPath = new URL("./S0/post-session-close.sh", import.meta.url).pathname;
+    if (existsSync(hookPath)) {
+      spawnSync("sh", [hookPath], { stdio: "inherit" });
+    }
+  });
 }
 
 // Internal helper

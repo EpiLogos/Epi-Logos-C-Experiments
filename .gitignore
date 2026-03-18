@@ -33,6 +33,7 @@ playwright-report/
 
 # Local agent settings
 .claude/settings.local.json
+.onecontext/
 
 # Secrets (never commit)
 *.env
