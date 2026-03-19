@@ -33,9 +33,11 @@ playwright-report/
 
 # Git worktrees
 .worktrees/
+.tmp-real-pi-verify/
 
 # Local agent settings
 .claude/settings.local.json
+.claude/skills/gitnexus/
 /.epi/
 /epi-cli/.epi/
 
@@ -45,8 +47,14 @@ playwright-report/
 /depwire-output.json
 /depwire/
 .onecontext/
+.gitnexus
+
+# Mutable vendor install/runtime state
+/vendor/claude-mem-v10.5.5/plugin/.cli-installed
+/vendor/claude-mem-v10.5.5/plugin/.install-version
 
 # Secrets (never commit)
 *.env
 !*.env.template
 secrets.env
+.gitnexus
