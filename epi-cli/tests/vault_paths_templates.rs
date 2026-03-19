@@ -93,7 +93,7 @@ fn ct4a_and_ct4b_are_distinct_frames() {
     let ct4b_rendered =
         render_template(&ct4b, &PathBuf::from("/repo"), &PathBuf::from("/home")).unwrap();
 
-    assert!(ct4a_rendered.contains("CF(4/5/0)"));
+    assert!(ct4a_rendered.contains("CF(4.5/0)"));
     assert!(ct4b_rendered.contains("CF(4.0-4.4/5)"));
     assert!(ct4b_rendered.contains("## 4.5 Integration"));
 }

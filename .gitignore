@@ -1,7 +1,9 @@
 # Build artifacts
 epi-logos
+epi_logos
 test_runner
 /test_*
+epi-lib/test/bin/
 *.o
 *.a
 *.dSYM/
@@ -11,6 +13,7 @@ libepilogos.a
 
 # Rust
 epi-cli/target/
+epi-spacetime-module/target/
 
 # Python
 __pycache__/
@@ -33,6 +36,14 @@ playwright-report/
 
 # Local agent settings
 .claude/settings.local.json
+/.epi/
+/epi-cli/.epi/
+
+# Local analysis outputs
+/.depwire/
+**/.depwire/
+/depwire-output.json
+/depwire/
 
 # Secrets (never commit)
 *.env

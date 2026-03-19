@@ -1,6 +1,6 @@
 # Canonical Invariants — Nara / Cosmic Clock System
 
-**Status:** Canonical Reference (2026-03-16)
+**Status:** Canonical Reference (updated 2026-03-19)
 **Note:** This sheet supersedes any conflicting statement in other documents. When in doubt, trust this.
 
 ---
@@ -20,33 +20,35 @@
 ## §2 Planet Model
 
 ```
-Mod-10 Planet System (canonical 2026-03-16):
+Mod-10 Planet System + EarthBody (canonical 2026-03-16):
 
-Sun(0)   = stable parent, solar root
+Sun(0)   = stable parent, solar root, leading light
            NOT subject to chakral mapping
            encapsulates all others; the fixed attractor
 
 Moon(1), Mercury(2), Venus(3), Mars(4), Jupiter(5),
 Saturn(6), Uranus(7), Neptune(8), Pluto(9)
-           = 9 orbiting planets
+           = 9 orbiting planets in the tracked celestial operator field
 
-Earth    = center / observer / bridge
-           NOT in Planet_Id array
-           has no clock-face degree
-           occupies CHAKRA_EARTH=0 in the 8-slot chakra array
+EarthBody = center / observer / bridge / solar child of Sun
+            NOT in PlanetState[10]
+            has no clock-face degree
+            occupies CHAKRA_EARTH=0 in the 8-site bodily projection
+            renders as the root-anchor beneath the 7 canonical chakras
 
 9:8 Epogdoon
-  = 9 non-Sun planets (Moon–Pluto) : 8 chakras (CHAKRA_EARTH=0 + 7 standard)
+  = 9 non-Sun planets (Moon–Pluto) : 8 bodily sites (EarthBody + 7 canonical chakras)
   = the Pythagorean whole tone ratio
-  = Earth is in the chakral count but NOT in the planetary count
+  = EarthBody is in the bodily count but NOT in the planetary array
   = this asymmetry IS the interval — do not resolve it
 
 Transpersonal: Uranus(7), Neptune(8), Pluto(9)
   is_transpersonal: bool in PlanetState
 
-Internal array: [PlanetState; 10]  indexed  0=Sun, 1=Moon, 2=Mercury, 3=Venus,
-                                            4=Mars, 5=Jupiter, 6=Saturn, 7=Uranus,
-                                            8=Neptune, 9=Pluto
+Internal planetary array: [PlanetState; 10]
+  indexed 0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars,
+          5=Jupiter, 6=Saturn, 7=Uranus, 8=Neptune, 9=Pluto
+Companion embodied anchor: EarthBodyState
 ```
 
 **Migration note:** The current `m2.h` `Planet_Id` enum is in non-canonical order (`Sun=0, Earth=1, Venus=2, Mercury=3, Moon=4, ...`). Reordering requires full Parashakti dataset reconciliation — this is a **FUTURE TASK**. These specs describe canonical intent; code currently has legacy ordering. Do not propagate the legacy ordering into new code.
@@ -62,6 +64,7 @@ Internal array: [PlanetState; 10]  indexed  0=Sun, 1=Moon, 2=Mercury, 3=Venus,
 | `phase` | `u8` | `0` = explicate (Strand A), `1` = implicate (Strand B) |
 | `tick12` | `u8` | Canonical M1 ring position 0–11. The ONE discrete clock state. `tick12` IS `torus_stage` IS `spanda_stage` — one field, three names for the same thing. |
 | `cf_substage6` | `u8` | 6-fold view derived as `tick12 % 6`. Strand A view. Not a separate counter; always derivable on demand. |
+| `earth_body` | `EarthBodyState` | Special planet/chakra bridge node: geocentric center, solar child of Sun, `CHAKRA_EARTH=0`, rendered as the bodily root-anchor beneath the 7 canonical chakras. |
 | `quaternion4` | `[f32; 4]` | Normalized `[w=EARTH, x=FIRE, y=WATER, z=AIR]`. Always unit quaternion. EARTH anchors the w-component. |
 | `quintessence_hash` | `[u8; 32]` | BLAKE3 archetypal address. THE identity. Stable between enrichment updates. |
 | `oracle_eval4` | `(f32, f32, f32, f32)` | `(pp, nn, np, pn)` charge algebra from coin/card throw. Raw output of oracle cast before quaternion update. |
@@ -84,9 +87,9 @@ Internal array: [PlanetState; 10]  indexed  0=Sun, 1=Moon, 2=Mercury, 3=Venus,
 - **Earth is NOT "always fully activated" at level 1.0.** This formulation is deprecated.
 - **Earth IS the clock's fixed center:** the geocentric observer, the site of the #4.4.4.4 identity anchor.
 - All other elements (FIRE, WATER, AIR) are the "active" dynamic components that change with oracle state.
-- **Rendering:** Earth = central axis marker / anchor point, **not** a bar on the chakra spine alongside the other 7 chakras.
-- Earth occupies `CHAKRA_EARTH = 0` in the 8-slot chakra array as the ground reference.
-- The Earth chakra renders differently from the other 7 — it is the base/center, not a level to be filled.
+- **Rendering:** EarthBody = central axis marker / anchor point / bodily root, **not** a peer bar alongside Root–Crown.
+- Earth occupies `CHAKRA_EARTH = 0` in the 8-site bodily array (`EarthBody + 7 chakras`) as the ground reference.
+- The Earth site renders differently from the other 7 — it is the base/center, not a level to be filled.
 
 ---
 
@@ -138,7 +141,46 @@ Four faces are computed from every oracle cast. They are distinct transforms:
 
 ---
 
-## §9 Deprecated / Superseded Formulas
+## §9 — The # / ## Structural Relationship (Canonical)
+
+- **`#`** lives in `.rodata` — it IS the inversion act, the absolute non-dual ground.
+  Structurally foundational; nothing precedes it.
+- **`##`** (self-inversion of inversion) **emerges** from `#` applied to itself **at the Nara
+  level** within M0-4 (`#0-4.5/0-0` = Primordial Matrix). It does not precede `#` —
+  it arises from `#`'s own self-recognition within the Nara holographic matrix.
+- **`##` IS the world-matrix** — the non-dual becoming dual. The Sun/Earth esoteric
+  relationship (prakasha/vimarsha) IS this `##` event at cosmic scale.
+- **12/13/14-fold structure:** Every LUT[12] (ring of 12 positions) depends on a silent 13th
+  (`#` = Axis Mundi, always present as center, never a ring slot) and a silent 14th (`##` = the
+  generative event that produces the ring from within Nara space). Directionality: `# → ## → 12`.
+- **`#4.4.4.4`** (world-individual nexus): The individual here is not an entity confronting
+  a world. They ARE the vimarsha act through which a world is constituted. "Personal
+  pratibimba" is a provisional label — personhood and worldhood are non-dual here.
+  The individual is the default locus because the human is the demonstrably sentient being
+  (logos/language capacity = vimarsha made explicit).
+
+---
+
+## §10 — Decan Double-Cover (Canonical — 2026-03-19)
+
+- **The 36 decans each have two poles:** upright (light) and reversed (shadow).
+- **72 = 36 × 2** is the canonical decan count (not 36). This is the same 72 as
+  M1's 12 spanda × 6 QL, and M2's 36 decans × 2 strands.
+- **Data source:** `mahamaya-deep/nodes-full-detail.json`, field `reversedMeaning`
+  on pip card nodes (`#3-4-{suit}-{pip}`) — confirmed for all 36 pip decans.
+- **Body zone rule:** shadow pole (reversed) = same anatomical region as light pole,
+  read as the blocked or excessive expression of that zone.
+- **Oracle rule:** `card.orientation == Reversed` → read from `shadow_meaning`; body
+  zone annotation = `ObstructedExpression`.
+- **Rotational state (provisional):** 8-fold system at 45° steps. Upright = 0°; reversed
+  = 180°; 6 intermediate states form the full spectral wheel. The binary upright/reversed
+  is the minimal double-cover; full 8-fold expansion deferred to dedicated spec.
+- **coreRatio `64:8:40`** (`#3` Mahamaya): 64 codons, 8 rotational states each, 40
+  non-dual (palindromic) anchors. 64 × 8 = 512 total states; −40 = 472 dynamic.
+
+---
+
+## §12 Deprecated / Superseded Formulas
 
 The following MUST NOT be copied forward into new code or specs. If you encounter them in existing code, flag for migration.
 

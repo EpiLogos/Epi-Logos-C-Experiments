@@ -62,6 +62,18 @@ extern const char* QV_PITHY_M0_BRANCHES[6];
 /* Vak consciousness-grammar speech operators (12 zodiacal) — defined in qv_data.c */
 extern const char* QV_PITHY_VAK_SPEECH[12];
 
+/* # node navigation portal — orientation lines */
+extern const char* QV_HASH_PITHY_LINES[4];
+
+/* Doctrine of Vibration — philosophical ground (epi core knowing # essence) */
+extern const char* QV_DOV_PITHY[6];
+
+/* Communications seed-phrases — sympathetic technology register (epi core knowing # comms) */
+extern const char* QV_COMMS_SEEDS[8];
+
+/* Navigation map — six families at a glance (epi core knowing # map / # navigate) */
+extern const char* QV_NAVIGATE_PITHY[6];
+
 
 /* ===================================================================
  * II. QUINTESSENTIAL VIEW — Per-coordinate self-description

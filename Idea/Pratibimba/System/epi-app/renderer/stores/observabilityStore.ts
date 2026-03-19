@@ -1,7 +1,7 @@
 /**
- * S4' Observability Store
+ * S3' Observability Store
  *
- * Manages real-time observable events from S4' gateway via WebSocket.
+ * Manages real-time observable events from S3' gateway via WebSocket.
  * Tracks agent lifecycle, operations history, CFP phase changes, and session state.
  */
 

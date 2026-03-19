@@ -559,7 +559,7 @@ STAGE 4: RETURN
 **Current Definition:** File does NOT exist on disk (same rename issue).
 
 **Role:** Consensus -- aggregates parallel Gnosis retrievals from multiple subagents. Has two modes:
-- **CF4a Learning mode (4/5/0):** bkmr/vimarsa retrieval -- the "thinking with books" mode
+- **CF4a Learning mode (4.5/0):** bkmr/vimarsa retrieval -- the "thinking with books" mode
 - **CF4b Coordination mode (4.0/1-4.4/5):** Plugin absorption -- aggregating outputs from other Aletheia subagents
 
 **Alignment with Nous-as-Governor:** STRONG. Agora is Nous's aggregation layer -- when multiple subagents produce parallel results, Agora synthesizes them into a coherent dis-closure package.

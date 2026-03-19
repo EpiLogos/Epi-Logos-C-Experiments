@@ -72,44 +72,37 @@ contextBridge.exposeInMainWorld('sPrime', {
       getNodeById: (nodeId: string) => ipcRenderer.invoke('graph:getNodeById', nodeId),
     },
   },
-  // S3: PAI Infrastructure (placeholder)
-  s3: {},
-  // S4: Claude Code / Agent API
-  s4: {
-    agent: {
-      getSessionContext: () => ipcRenderer.invoke('agent:getSessionContext'),
-      getAvailableSkills: () => ipcRenderer.invoke('agent:getAvailableSkills'),
-      getSubagentStatus: () => ipcRenderer.invoke('agent:getSubagentStatus'),
-      queryByCoordinate: (coordinate: string) => ipcRenderer.invoke('agent:queryByCoordinate', coordinate),
-    },
-    // WebSocket API for S4' Gateway
+  // S3': Gateway WebSocket (epi gate, port 18794)
+  s3: {
     websocket: {
-      isConnected: () => ipcRenderer.invoke('s4:isConnected'),
-      send: (message: object) => ipcRenderer.invoke('s4:send', message),
+      isConnected: () => ipcRenderer.invoke('s3:isConnected'),
+      send: (message: object) => ipcRenderer.invoke('s3:send', message),
       configure: (config: { url?: string; token?: string | null; password?: string | null; reconnect?: boolean }) =>
-        ipcRenderer.invoke('s4:configure', config),
+        ipcRenderer.invoke('s3:configure', config),
       onMessage: (callback: (message: unknown) => void) => {
         const handler = (_event: Electron.IpcRendererEvent, message: unknown) => callback(message);
-        ipcRenderer.on('s4:message', handler);
-        return () => ipcRenderer.removeListener('s4:message', handler);
+        ipcRenderer.on('s3:message', handler);
+        return () => ipcRenderer.removeListener('s3:message', handler);
       },
       onConnected: (callback: () => void) => {
         const handler = () => callback();
-        ipcRenderer.on('s4:connected', handler);
-        return () => ipcRenderer.removeListener('s4:connected', handler);
+        ipcRenderer.on('s3:connected', handler);
+        return () => ipcRenderer.removeListener('s3:connected', handler);
       },
       onDisconnected: (callback: () => void) => {
         const handler = () => callback();
-        ipcRenderer.on('s4:disconnected', handler);
-        return () => ipcRenderer.removeListener('s4:disconnected', handler);
+        ipcRenderer.on('s3:disconnected', handler);
+        return () => ipcRenderer.removeListener('s3:disconnected', handler);
       },
       onError: (callback: (error: string) => void) => {
         const handler = (_event: Electron.IpcRendererEvent, error: string) => callback(error);
-        ipcRenderer.on('s4:error', handler);
-        return () => ipcRenderer.removeListener('s4:error', handler);
+        ipcRenderer.on('s3:error', handler);
+        return () => ipcRenderer.removeListener('s3:error', handler);
       },
     },
   },
+  // S4: Claude Code (placeholder)
+  s4: {},
   // S5: Notion/Reflection (placeholder)
   s5: {},
 

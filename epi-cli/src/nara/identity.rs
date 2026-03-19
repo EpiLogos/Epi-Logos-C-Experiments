@@ -166,6 +166,188 @@ pub fn save_profile(profile: &ProfileJson) -> Result<(), String> {
     Ok(())
 }
 
+// ─── PASU path ──────────────────────────────────────────────────────────────
+
+/// Path to PASU.md user identity bootstrap file
+fn pasu_path() -> std::path::PathBuf {
+    dirs::home_dir()
+        .unwrap_or_else(|| std::path::PathBuf::from("."))
+        .join("Documents")
+        .join("Epi-Logos C Experiments")
+        .join("Idea")
+        .join("Pratibimba")
+        .join("Self")
+        .join("PASU.md")
+}
+
+/// Simple hash for profile update (BLAKE3 FFI wired in wind.rs full phase)
+fn simple_identity_hash(presence: u8) -> u64 {
+    let mut h = presence as u64;
+    h = h.wrapping_mul(0x517cc1b727220a95);
+    h ^= h >> 32;
+    h
+}
+
+// ─── CLI entry: identity set ─────────────────────────────────────────────────
+
+/// Set an identity layer by key name.
+/// Keys: birth-date, birth-location, natal-chart-path, jungian, gene-keys, human-design
+pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
+    let now_ts = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs();
+
+    let mut profile = load_profile()?.unwrap_or_else(|| ProfileJson {
+        version: 1,
+        layers: HashMap::new(),
+        layer_presence_mask: 0,
+        hash_preview: String::new(),
+        last_wound: None,
+        kerykeion_version: None,
+    });
+
+    match key {
+        "birth-date" => {
+            // Validate YYYY-MM-DD format
+            let parts: Vec<&str> = value.split('-').collect();
+            if parts.len() != 3 || parts[0].len() != 4 {
+                return Err("birth-date must be YYYY-MM-DD format".to_string());
+            }
+            let _year: u32 = parts[0].parse().map_err(|_| "invalid year")?;
+            let _month: u8 = parts[1].parse().map_err(|_| "invalid month")?;
+            let _day: u8 = parts[2].parse().map_err(|_| "invalid day")?;
+
+            profile.layers.insert(
+                "0".to_string(),
+                LayerMeta {
+                    present: true,
+                    source: format!("birth-date:{value}"),
+                    completeness: 3,
+                    set_at: Some(now_ts),
+                },
+            );
+            profile.layer_presence_mask |= 0x01;
+
+            // Also write to PASU.md path if available
+            let pp = pasu_path();
+            if pp.exists() {
+                let content = fs::read_to_string(&pp).unwrap_or_default();
+                if !content.contains("c_0_birth_date") {
+                    let _ = fs::write(&pp, format!("{content}\nc_0_birth_date: \"{value}\"\n"));
+                }
+            }
+        }
+        "birth-location" => {
+            // Expect "lat,lon" format
+            let parts: Vec<&str> = value.split(',').collect();
+            if parts.len() != 2 {
+                return Err(
+                    "birth-location must be 'lat,lon' format (e.g. '51.5,-0.1')".to_string()
+                );
+            }
+            let _lat: f32 = parts[0].trim().parse().map_err(|_| "invalid latitude")?;
+            let _lon: f32 = parts[1].trim().parse().map_err(|_| "invalid longitude")?;
+
+            profile.layers.insert(
+                "1".to_string(),
+                LayerMeta {
+                    present: true,
+                    source: format!("birth-location:{value}"),
+                    completeness: 2,
+                    set_at: Some(now_ts),
+                },
+            );
+            profile.layer_presence_mask |= 0x02;
+        }
+        "natal-chart-path" => {
+            profile.layers.insert(
+                "1".to_string(),
+                LayerMeta {
+                    present: true,
+                    source: format!("natal-chart-path:{value}"),
+                    completeness: 5,
+                    set_at: Some(now_ts),
+                },
+            );
+            profile.layer_presence_mask |= 0x02;
+        }
+        "jungian" => {
+            if value.len() != 4 {
+                return Err(
+                    "jungian value must be 4-letter MBTI type (e.g. INFJ)".to_string()
+                );
+            }
+            profile.layers.insert(
+                "2".to_string(),
+                LayerMeta {
+                    present: true,
+                    source: format!("jungian:{value}"),
+                    completeness: 3,
+                    set_at: Some(now_ts),
+                },
+            );
+            profile.layer_presence_mask |= 0x04;
+        }
+        "gene-keys" => {
+            profile.layers.insert(
+                "3".to_string(),
+                LayerMeta {
+                    present: true,
+                    source: format!("gene-keys:{value}"),
+                    completeness: 2,
+                    set_at: Some(now_ts),
+                },
+            );
+            profile.layer_presence_mask |= 0x08;
+        }
+        "human-design" => {
+            profile.layers.insert(
+                "4".to_string(),
+                LayerMeta {
+                    present: true,
+                    source: format!("human-design:{value}"),
+                    completeness: 2,
+                    set_at: Some(now_ts),
+                },
+            );
+            profile.layer_presence_mask |= 0x10;
+        }
+        _ => {
+            return Err(format!(
+                "Unknown identity key '{}'. Valid keys: birth-date, birth-location, natal-chart-path, jungian, gene-keys, human-design",
+                key
+            ));
+        }
+    }
+
+    // Update hash preview from layer presence
+    let new_hash = simple_identity_hash(profile.layer_presence_mask);
+    profile.hash_preview = format!("{:016x}", new_hash)[..8].to_string();
+
+    save_profile(&profile)?;
+    Ok(format!(
+        "Identity layer '{}' set. Layer presence: 0x{:02x}",
+        key, profile.layer_presence_mask
+    ))
+}
+
+/// Augment identity by layer index with raw data string
+pub fn augment_layer(layer_idx: u8, data: &str) -> Result<String, String> {
+    if layer_idx > 4 {
+        return Err("Layer index must be 0-4".to_string());
+    }
+    let key = match layer_idx {
+        0 => "birth-date",
+        1 => "birth-location",
+        2 => "jungian",
+        3 => "gene-keys",
+        4 => "human-design",
+        _ => unreachable!(),
+    };
+    set_layer(key, data)
+}
+
 // ─── CLI entry: identity show ───────────────────────────────────────────────
 
 pub fn show(json: bool) -> Result<String, String> {

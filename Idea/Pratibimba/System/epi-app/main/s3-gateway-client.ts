@@ -1,9 +1,9 @@
 import { WebSocket } from './ws-wrapper.js';
 
 /**
- * S4' WebSocket Client
+ * S3' Gateway WebSocket Client
  *
- * Manages WebSocket connection to S4' Observability Gateway.
+ * Manages WebSocket connection to S3' Gateway (epi gate, port 18794).
  * Features:
  * - Auto-connect on startup
  * - Exponential backoff retry (max 5 retries)
@@ -16,7 +16,7 @@ type MessageHandler = (data: unknown) => void;
 type ConnectionHandler = () => void;
 type ErrorHandler = (error: Error) => void;
 
-interface S4WebSocketConfig {
+interface S3GatewayConfig {
   url?: string;
   token?: string;
   password?: string;
@@ -26,7 +26,7 @@ interface S4WebSocketConfig {
   pingInterval?: number;
 }
 
-export class S4WebSocketClient {
+export class S3GatewayClient {
   private ws: any = null;
   private url: string;
   private token?: string;
@@ -57,8 +57,8 @@ export class S4WebSocketClient {
   // EpiClaw client reference for message forwarding
   private epiClawClient: any = null;
 
-  constructor(config: S4WebSocketConfig = {}) {
-    this.url = config.url || 'ws://localhost:18790';
+  constructor(config: S3GatewayConfig = {}) {
+    this.url = config.url || 'ws://localhost:18794';
     this.token = config.token;
     this.password = config.password;
     this.maxRetries = config.maxRetries || 5;
@@ -99,15 +99,15 @@ export class S4WebSocketClient {
   }
 
   /**
-   * Connect to S4' gateway
+   * Connect to S3' gateway
    */
   public connect(): void {
     if (this.ws?.readyState === 1 || this.ws?.readyState === 0) {
-      console.log('[S4Client] Already connected or connecting');
+      console.log('[S3Gateway] Already connected or connecting');
       return;
     }
 
-    console.log(`[S4Client] Connecting to ${this.url}...`);
+    console.log(`[S3Gateway] Connecting to ${this.url}...`);
     this.isIntentionalClose = false;
 
     try {
@@ -121,16 +121,16 @@ export class S4WebSocketClient {
       this.ws.on('error', (error: Error) => this.handleError(error));
       this.ws.on('pong', () => this.handlePong());
     } catch (error) {
-      console.error('[S4Client] Connection error:', error);
+      console.error('[S3Gateway] Connection error:', error);
       this.scheduleReconnect();
     }
   }
 
   /**
-   * Disconnect from S4' gateway
+   * Disconnect from S3' gateway
    */
   public disconnect(): void {
-    console.log('[S4Client] Disconnecting...');
+    console.log('[S3Gateway] Disconnecting...');
     this.isIntentionalClose = true;
     this.stopPing();
     this.stopStabilityTimer();
@@ -164,17 +164,17 @@ export class S4WebSocketClient {
   }
 
   /**
-   * Send message to S4' gateway
+   * Send message to S3' gateway
    */
   public send(message: object): void {
     if (this.ws?.readyState === 1) {
       try {
         this.ws.send(JSON.stringify(message));
       } catch (error) {
-        console.error('[S4Client] Error sending message:', error);
+        console.error('[S3Gateway] Error sending message:', error);
       }
     } else {
-      console.warn('[S4Client] WebSocket not connected, cannot send message');
+      console.warn('[S3Gateway] WebSocket not connected, cannot send message');
     }
   }
 
@@ -279,7 +279,7 @@ export class S4WebSocketClient {
           this.markConnected();
         } else {
           const errMsg = message?.error?.message || 'connect failed';
-          console.error(`[S4Client] Connect rejected: ${errMsg}`);
+          console.error(`[S3Gateway] Connect rejected: ${errMsg}`);
           this.errorHandlers.forEach(handler => {
             try {
               handler(new Error(errMsg));
@@ -303,7 +303,7 @@ export class S4WebSocketClient {
         try {
           this.epiClawClient.handleMessage(data);
         } catch (error) {
-          console.error('[S4Client] Error forwarding to EpiClaw:', error);
+          console.error('[S3Gateway] Error forwarding to EpiClaw:', error);
         }
       }
 
@@ -312,17 +312,17 @@ export class S4WebSocketClient {
         try {
           handler(message);
         } catch (error) {
-          console.error('[S4Client] Error in message handler:', error);
+          console.error('[S3Gateway] Error in message handler:', error);
         }
       });
     } catch (error) {
-      console.error('[S4Client] Error parsing message:', error);
+      console.error('[S3Gateway] Error parsing message:', error);
     }
   }
 
   private handleClose(code: number, reason: string): void {
     const connectedForMs = this.connectedAtMs ? Date.now() - this.connectedAtMs : 0;
-    console.log(`[S4Client] Connection closed (code=${code}, reason="${reason || 'n/a'}", uptime=${connectedForMs}ms)`);
+    console.log(`[S3Gateway] Connection closed (code=${code}, reason="${reason || 'n/a'}", uptime=${connectedForMs}ms)`);
     this.stopPing();
     this.stopStabilityTimer();
     this.stopConnectTimer();
@@ -336,7 +336,7 @@ export class S4WebSocketClient {
       try {
         handler();
       } catch (error) {
-        console.error('[S4Client] Error in close handler:', error);
+        console.error('[S3Gateway] Error in close handler:', error);
       }
     });
 
@@ -351,14 +351,14 @@ export class S4WebSocketClient {
   }
 
   private handleError(error: Error): void {
-    console.error('[S4Client] WebSocket error:', error);
+    console.error('[S3Gateway] WebSocket error:', error);
 
     // Notify handlers
     this.errorHandlers.forEach(handler => {
       try {
         handler(error);
       } catch (err) {
-        console.error('[S4Client] Error in error handler:', err);
+        console.error('[S3Gateway] Error in error handler:', err);
       }
     });
   }
@@ -370,7 +370,7 @@ export class S4WebSocketClient {
 
   private scheduleReconnect(): void {
     if (this.retryCount >= this.maxRetries) {
-      console.error(`[S4Client] Max retries (${this.maxRetries}) reached. Giving up.`);
+      console.error(`[S3Gateway] Max retries (${this.maxRetries}) reached. Giving up.`);
       return;
     }
 
@@ -382,7 +382,7 @@ export class S4WebSocketClient {
 
     this.retryCount++;
     console.log(
-      `[S4Client] Reconnecting in ${delay}ms (attempt ${this.retryCount}/${this.maxRetries})...`
+      `[S3Gateway] Reconnecting in ${delay}ms (attempt ${this.retryCount}/${this.maxRetries})...`
     );
 
     this.reconnectTimeout = setTimeout(() => {
@@ -399,7 +399,7 @@ export class S4WebSocketClient {
             this.ws.ping();
           }
         } catch (error) {
-          console.error('[S4Client] Error sending ping:', error);
+          console.error('[S3Gateway] Error sending ping:', error);
         }
       }
     }, this.pingInterval);
@@ -437,7 +437,7 @@ export class S4WebSocketClient {
     const hasToken = Boolean(this.token && this.token.trim().length > 0);
     const hasPassword = Boolean(this.password && this.password.trim().length > 0);
     console.log(
-      `[S4Client] Sending connect handshake (id=${reqId}, token=${hasToken}, password=${hasPassword})`
+      `[S3Gateway] Sending connect handshake (id=${reqId}, token=${hasToken}, password=${hasPassword})`
     );
     const frame = {
       type: 'req',
@@ -470,7 +470,7 @@ export class S4WebSocketClient {
     try {
       this.ws.send(JSON.stringify(frame));
     } catch (error) {
-      console.error('[S4Client] Error sending connect request:', error);
+      console.error('[S3Gateway] Error sending connect request:', error);
       this.connectSent = false;
     }
   }
@@ -483,18 +483,18 @@ export class S4WebSocketClient {
     this.retryCount = 0;
     this.stopStabilityTimer();
     this.startPing();
-    console.log('[S4Client] ✓ S4\' gateway connected');
+    console.log('[S3Gateway] ✓ S3\' gateway connected');
     this.openHandlers.forEach(handler => {
       try {
         handler();
       } catch (error) {
-        console.error('[S4Client] Error in open handler:', error);
+        console.error('[S3Gateway] Error in open handler:', error);
       }
     });
   }
 
   private generateRequestId(): string {
-    return `s4-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    return `s3-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   }
 
   private shouldReconnect(closeCode: number): boolean {
@@ -508,7 +508,7 @@ export class S4WebSocketClient {
       4403, // forbidden
     ]);
     if (nonRetryableCloseCodes.has(closeCode)) {
-      console.error(`[S4Client] Non-retryable close code ${closeCode}; auto-reconnect disabled`);
+      console.error(`[S3Gateway] Non-retryable close code ${closeCode}; auto-reconnect disabled`);
       return false;
     }
     return true;

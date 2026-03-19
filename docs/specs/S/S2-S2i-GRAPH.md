@@ -177,7 +177,7 @@ UNWIND [
   {id: 2, coord: "CF_TRIKA",      name: "The Trika",           sig: "(0/1/2)", mod: "Mod3"},
   {id: 3, coord: "CF_QUATERNAL",  name: "Three-Plus-One",      sig: "(0/1/2/3)", mod: "Mod4"},
   {id: 4, coord: "CF_FRACTAL",    name: "Fractal Doubling",    sig: "(4.0/1-4.4/5)", mod: "Mod4/6"},
-  {id: 5, coord: "CF_SYNTHESIS",  name: "Mobius Synthesis",     sig: "(4/5/0)", mod: "Mod6"},
+  {id: 5, coord: "CF_SYNTHESIS",  name: "Mobius Synthesis",     sig: "(4.5/0)", mod: "Mod6"},
   {id: 6, coord: "CF_MOBIUS",     name: "Total Synthesis",      sig: "(5/0)",   mod: "Mod6"}
 ] AS cf
 CREATE (:BimbaCoordinate {
@@ -281,7 +281,7 @@ Context frames express HOW psychoids relate, not just THAT they relate:
 -[:FRAMES {cf: "CF_TRIKA"}]->        // (0/1/2) — User-Agent-Code
 -[:FRAMES {cf: "CF_QUATERNAL"}]->    // (0/1/2/3) — Media-Medium-Method
 -[:FRAMES {cf: "CF_FRACTAL"}]->      // (4.0/1-4.4/5) — fractal doubling
--[:FRAMES {cf: "CF_SYNTHESIS"}]->    // (4/5/0) — Mobius synthesis
+-[:FRAMES {cf: "CF_SYNTHESIS"}]->    // (4.5/0) — Mobius synthesis
 -[:FRAMES {cf: "CF_MOBIUS"}]->       // (5/0) — total return
 
 // The invariant: ALL CFs anchor to #4 via their .cf field

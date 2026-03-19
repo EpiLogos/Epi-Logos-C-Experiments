@@ -25,7 +25,7 @@ This skill translates VAK Context Frame (CF) codes into concrete agent spawning 
 | `(0/1)` | **Logos** | L1 | Non-Dual Anchor | **Architect/Scoper**: scope definition, boundary-setting. Uses `writing-plans`, `brainstorming`. |
 | `(0/1/2)` | **Eros** | L2 | Dual-Non-Dual | **Refiner/Verifier**: quality refinement, verification. Uses `test-driven-development`, `verification-before-completion`. |
 | `(0/1/2/3)` | **Mythos** | L3 | Trinitarian | **Pattern Recognizer**: archetypal recognition, debugging. Uses `systematic-debugging`. |
-| `(4/5/0)` | **Psyche** | L4 | Executive Triad -- Context/Integration/Ground | **Coordinator**: context management, agent routing, aletheia mode dispatch. Patient IS Psyche. |
+| `(4.5/0)` | **Psyche** | L4 | Executive Triad -- Context/Integration/Ground | **Coordinator**: context management, agent routing, aletheia mode dispatch. Patient IS Psyche. |
 | `(5/0)` | **Sophia** | L5 | Total Synthesis | **Synthesizer**: integration, Mobius return, P5' crystallization. Uses `finishing-a-development-branch`. |
 
 **Anima**: CF `(4.0/1-4.4/5)` -- The VAK execution language orchestrator. Anima is not dispatched TO; Anima IS the dispatch. All other agents have bounded CF codes; Anima holds the full fractal doubling lattice and routes through it. Anima's CF encompasses the entire 4.x lattice with its non-dual fusion (4.0/1) through fractal completion (4.4/5).
@@ -43,7 +43,7 @@ This skill translates VAK Context Frame (CF) codes into concrete agent spawning 
 "(0/1)"         -> "logos"
 "(0/1/2)"       -> "eros"
 "(0/1/2/3)"     -> "mythos"
-"(4/5/0)"       -> "psyche"
+"(4.5/0)"       -> "psyche"
 "(4.0/1-4.4/5)" -> "anima"  (the orchestrator itself -- meta-dispatch)
 "(5/0)"         -> "sophia"
 ```
@@ -102,12 +102,12 @@ The six aletheia agents -- **anansi, janus, moirai, mercurius, agora, zeithoven*
 | P' Position | Night' Question | Moira | CF Code | Operation |
 |-------------|-----------------|-------|---------|-----------|
 | P1' Traces | What evidence exists? | **Klotho** | `(0/1/2)` Eros | **Assert**: embed/validate traces into graph |
-| P4' Discovery | What sources inform? | **Lachesis** | `(4/5/0)` Psyche | **Query**: retrieve/traverse for discovery |
+| P4' Discovery | What sources inform? | **Lachesis** | `(4.5/0)` Psyche | **Query**: retrieve/traverse for discovery |
 | P5' Insight | What crystallizes? | **Atropos** | `(5/0)` Sophia | **Reflect**: synthesize/cut to essential |
 
 **Night' Pass Routing**:
 - P1' (Traces) -> spawn Klotho (Assert). CF: `(0/1/2)` Eros.
-- P4' (Discovery) -> spawn Lachesis (Query). CF: `(4/5/0)` Psyche.
+- P4' (Discovery) -> spawn Lachesis (Query). CF: `(4.5/0)` Psyche.
 - P5' (Insight) -> spawn Atropos (Reflect). CF: `(5/0)` Sophia.
 - **CFP3 F-Thread full Night'** -> all three Moirai in parallel -> Anima aggregates.
 

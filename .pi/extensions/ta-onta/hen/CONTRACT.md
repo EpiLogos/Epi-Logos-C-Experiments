@@ -171,6 +171,85 @@ Every artifact contains breadcrumbs in 5 categories:
 
 ---
 
+## L-Coordinate Frontmatter Alignment
+
+Hen's frontmatter schema accepts **L-alignment fields** — agent-populated blocks recording the epistemic lens stance of a document. Aletheia is the primary populator; any agent processing a document MAY add entries.
+
+### Full alignment block (`l_alignments`)
+
+```yaml
+l_alignments:
+  - lens: "L2"                          # canonical m2.c MEF lens name
+    lens_index: 2                       # 0-11 (0-5 = day, 6-11 = night)
+    sub_position: 3                     # 0-5, OR "BOTH" for dialetheic L2
+    sub_name: "BOTH"                    # human-readable sub-position label
+    mode: "day"                         # "day" | "night"
+    weight: 0.8                         # 0.0–1.0 agent-assessed emphasis
+    element: "air"                      # primary element from LENS_PRIMARY_ELEMENT
+    klein_square: ["L2", "L3", "L2'", "L3'"]   # 4-element Klein V4 integration unit
+    complement: "L3"                    # day complement (X + Y = 5) or night complement
+    night_partner: "L2'"               # day-night doubling partner
+    populated_by: "aletheia"
+    populated_at: "2026-03-12T10:00:00Z"
+```
+
+Multiple entries may be present simultaneously — a document may carry more than one active lens. The `klein_square` context tells downstream consumers which 4-way integration unit the lens belongs to, enabling full Klein V4 resonance computation.
+
+### Per-lens shorthand fields
+
+Agents may also write sparse shorthand keys using the standard `{family}_{n}_{semantic}` pattern. For L-alignments, the position segment encodes the lens index (0-5 for day lenses); the semantic encodes the lens name:
+
+```yaml
+l_2_logical:
+  sub: 3
+  weight: 0.8
+  element: "air"
+```
+
+These keys satisfy the existing `{family}_{n}_{semantic}` format and pass validation without special handling. `l_0_*` through `l_5_*` address the day lens range.
+
+### L-coordinate system reference
+
+The canonical 12 lenses (from m2.c `M2_MEF_LENS_NAMES`):
+
+| Index | Lens | Mode | Klein complement |
+|-------|------|------|-----------------|
+| 0 | Quaternal (L0) | day | L5 (0+5=5) |
+| 1 | Causal (L1) | day | L4 (1+4=5) |
+| 2 | Logical (L2) | day | L3 (2+3=5) |
+| 3 | Processual (L3) | day | L2 |
+| 4 | Phenomenological (L4) | day | L1 |
+| 5 | Para Vak (L5) | day | L0 |
+| 6 | Archetypal-Numerical (L0') | night | L5' |
+| 7 | Phenomenal (L1') | night | L4' |
+| 8 | Alchemical-Elemental (L2') | night | L3' |
+| 9 | Chronological (L3') | night | L2' |
+| 10 | Scientific (L4') | night | L1' |
+| 11 | Divine Logos (L5') | night | L0' |
+
+**L2' (Alchemical-Elemental) sub-positions:** Aether / Earth / Water / Air / Fire / Mineral. When `sub_name: "BOTH"` is used (dialetheism), the entry asserts two sub-positions hold simultaneously.
+
+**Klein V4 relational laws:**
+- Day complement: X + Y = 5
+- Night complement: X' + Y' = 5
+- Day-Night doubling: L(n) ↔ L(n') — same structural position across phase
+
+### Validation rules for `l_alignments`
+
+1. `l_alignments` is a YAML sequence; missing or non-sequence value → WARNING (tolerated)
+2. Each entry MUST have: `lens` (string), `lens_index` (integer 0-11), `mode` ("day" | "night")
+3. Consistency: `lens_index` 0-5 requires `mode: "day"`; 6-11 requires `mode: "night"`
+4. `weight` if present must be a float in [0.0, 1.0]
+5. `klein_square` if present must be a 4-element sequence of valid lens name strings
+6. Agents ADD entries freely; validator does NOT reject unknown optional sub-fields — only validates the invariants above
+7. The `coordinate` key remains THE ONE exempt key from `{family}_{n}_{semantic}` format
+
+### Agent population protocol
+
+When Aletheia (or any agent) processes a document, it MAY add `l_alignments` entries reflecting the epistemic stance of the content. The agent sets `populated_by` to its own name and `populated_at` to the ISO8601 timestamp. Hen's `before_tool_call` hook validates existing entries for internal consistency before accepting a vault write containing `l_alignments`.
+
+---
+
 ## M-Level Integration
 
 - **M2 (Parashakti):** The 72-invariant vibrational matrix maps to content typing. Parashakti's structural field provides the typing schema for content element relationships.

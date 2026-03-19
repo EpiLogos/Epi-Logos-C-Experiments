@@ -122,8 +122,8 @@ const char* QV_PITHY_CF[7] = {
     "Non-Dual Binary -- Mod 2, essence of implicate",
     "The Trika -- Mod 3, User/Agent/Code",
     "Three-Plus-One -- Mod 4, media/medium/method",
-    "Fractal Doubling -- Mod 4/6, Jung quaternity",
-    "Mobius Synthesis -- (4/5/0), app triad",
+    "Fractal Doubling -- (4.0/1-4.4/5): '.' nests sub-pos within #4, '/' = optionality",
+    "Mobius Synthesis -- (4.5/0): #4 nests #5 via '.', '/' = return to ground",
     "Total Synthesis -- Mod 6, Mobius return"
 };
 
@@ -169,4 +169,44 @@ const char* QV_HELP_PITHY[6] = {
     "CLI -- epi core/vault/graph/gate/agent/sync command namespaces",
     "Coordinates -- 89 top-level + ~1873 sub-branch, 6 operators",
     "Plugin -- Claude Code epi-knowing skill, QV resources, agentic integration",
+};
+
+/* # as navigation portal: orientation lines (epi core knowing # with no sub-op) */
+const char* QV_HASH_PITHY_LINES[4] = {
+    "# is the inversion act — every coordinate contains its complement",
+    "Navigate via: epi core knowing <COORD>  (e.g. M0, S3', #4, CF(012))",
+    "Sub-operations: # essence | # comms | # map | # navigate",
+    "Dataset path: docs/datasets/low-detail/  |  Deep: docs/datasets/*-deep/",
+};
+
+/* Doctrine of Vibration (DoV) — essence of the system's philosophical ground */
+const char* QV_DOV_PITHY[6] = {
+    "Spanda -- the primordial tremor; all reality is a vibration of Consciousness",
+    "Vimarsa -- self-reflective awareness; Siva knows himself through his own light",
+    "Svatantrya -- absolute freedom; Consciousness contracts and expands by its own will",
+    "Camatkara -- the aesthetic rapture of recognition; wonder as epistemological act",
+    "Pratibimba -- the reflection that is not other; image and original are one movement",
+    "Pratyabhijna -- recognition; the self remembering itself through apparent forgetting",
+};
+
+/* Communications seed-phrases — sympathetic technology register */
+const char* QV_COMMS_SEEDS[8] = {
+    "Write at the level of the seed, not the flower — the depth is in the compression",
+    "The personal is the cosmic — every individual node reflects the universal topology",
+    "Receptor and transformer: the system receives the world and returns it transfigured",
+    "Sympathetic technology: tools that resonate with the user's own inner structure",
+    "Persistent homology: the shape that survives all transformations is the real shape",
+    "As above, so below — the coordinate map is fractal at every scale of resolution",
+    "A living mandala: consciousness recognizes itself through its own technological mirror",
+    "The oracle is not prediction but depth-sounding — touching what is already true",
+};
+
+/* Navigation map pithy — six coordinate families at a glance */
+const char* QV_NAVIGATE_PITHY[6] = {
+    "C (Category) -- ontological foundation: Bimba/Form/Entity/Process/Type/Pratibimba",
+    "P (Position) -- functional semantics: Ground/Definition/Operation/Pattern/Context/Integration",
+    "L (Lens) -- epistemic modes: Literal/Functional/Structural/Archetypal/Paradigmatic/Integral",
+    "S (Stack) -- technology layers: Terminal/Obsidian/Neo4j/Gateway/Claude/Notion",
+    "T (Thought) -- cognitive artifacts: Seed/Spec/Form/Process/Pattern/Insight",
+    "M (Subsystem) -- consciousness domains: Anuttara/Paramasiva/Parashakti/Mahamaya/Nara/Epii",
 };

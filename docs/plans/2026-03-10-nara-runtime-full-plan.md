@@ -3,9 +3,27 @@
 
 **Date:** 2026-03-10
 **Coordinate:** #4 — M4 Nara Personal Dialogical Interface
-**Status:** Planning — canonical reference for all Nara runtime work
+**Status:** ✅ IMPLEMENTED (2026-03-12) — all phases complete except Phase 9 (Neo4j seeding) and Phase 11 WASM (needs rustc ≥ 1.90)
 **Supersedes:** 2026-03-06-m4-nara-design.md (partial), 2026-03-06-m4-nara-implementation.md (partial)
 **Dataset:** docs/datasets/nara-deep/ — 99 nodes, 169 unique relation types, 6 sub-branches
+
+### Implementation Status (2026-03-12)
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| 0 | C struct expansion (m4.h) | ✅ Done |
+| 1 | `epi nara` CLI scaffold | ✅ Done |
+| 2 | C FFI mirrors (ffi/nara.rs, m1.rs, m2.rs) | ✅ Done |
+| 3 | Identity full (#4.0) | ✅ Done — set/augment/show, profile.json |
+| 4 | Clock + Kairos (sync/show/status/fetch) | ✅ Done |
+| 5 | Oracle (#4.2) — iching/tarot, hygiene, decan maps | ✅ Done |
+| 6 | Medicine/Transform/Lens/Logos (#4.1–#4.5) | ✅ Done |
+| 7 | Gateway RPC (gate/nara.rs, all nara.* methods) | ✅ Done |
+| 8 | NaraWeights config (weights.rs, calibrate) | ✅ Done |
+| 9 | Parashakti Neo4j body zone seeding | ⏳ Pending — static LUTs work; `epi graph seed` Cypher not yet added |
+| 10 | Pratibimba subgraph (#4.4.4.4) | ✅ Done (Neo4j stubs, consent-gated atlas) |
+| 11 | SpacetimeDB WASM module | ⏳ Stub — epi-spacetime-module/ created; activate when rustc ≥ 1.90 |
+| 12–13 | ratatui-hypertile portal (17 plugins, 2 tabs) | ✅ Done |
 
 ---
 
@@ -62,7 +80,7 @@
 | **#4.1** | 7 | Determines remedy ("what") | Elemental balance, chakras, materia, timing, safety |
 | **#4.2** | 7 | Reveals guidance ("how") | Tarot engines, I-Ching, casting layer, interpretation, pedagogy |
 | **#4.3** | 10 | Enacts transformation ("do") | Cycle engine, 7 alchemical ops, 3 dialogical containers, decan recipes, telemetry |
-| **#4.4** | 55 | Interprets meaning ("why") | 6 wisdom lenses (Gebser/Ontology/Epistemology/Jung[43]/Phenom[7]/Trika) |
+| **#4.4** | 55 | Interprets meaning ("why") | 6 wisdom lenses (Gebser Consciousness Structures[0]/Ontological[1]/Epistemological[2]/Jungian Depth[43 nodes]/Phenomenological[7 nodes]/Trika) |
 | **#4.5** | 13 | Extracts wisdom ("learn") | Logos Cycle 0→5, curriculum, voice, transparency, pedagogy, atlas |
 
 ### #4.3 Dialogical Containers (#4.3-2)

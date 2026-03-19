@@ -6,7 +6,7 @@ import Store from 'electron-store';
 import matter from 'gray-matter';
 import * as yaml from 'js-yaml';
 import neo4j, { Driver, Session } from 'neo4j-driver';
-import { S4WebSocketClient } from './s4-websocket-client.js';
+import { S3GatewayClient } from './s3-gateway-client.js';
 import { EpiClawClient } from './epi-claw-client.js';
 import type { EventFrame } from './epi-claw-rpc.js';
 import { resolveIdeaRoot, resolvePresentRoot } from './repo-paths';
@@ -64,18 +64,18 @@ const NEO4J_URI = process.env.NEO4J_URI || 'bolt://localhost:7687';
 const NEO4J_USER = process.env.NEO4J_USER || 'neo4j';
 const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD || 'password';
 
-// S4' WebSocket gateway URL (epi-claw default port)
-const S4_GATEWAY_URL = process.env.S4_GATEWAY_URL || 'ws://127.0.0.1:18790';
-const S4_GATEWAY_TOKEN =
-  process.env.S4_GATEWAY_TOKEN || process.env.OPENCLAW_GATEWAY_TOKEN || undefined;
-const S4_GATEWAY_PASSWORD =
-  process.env.S4_GATEWAY_PASSWORD || process.env.OPENCLAW_GATEWAY_PASSWORD || undefined;
+// S3' Gateway WebSocket URL (epi gate default port)
+const S3_GATEWAY_URL = process.env.S3_GATEWAY_URL || 'ws://127.0.0.1:18794';
+const S3_GATEWAY_TOKEN =
+  process.env.S3_GATEWAY_TOKEN || process.env.OPENCLAW_GATEWAY_TOKEN || undefined;
+const S3_GATEWAY_PASSWORD =
+  process.env.S3_GATEWAY_PASSWORD || process.env.OPENCLAW_GATEWAY_PASSWORD || undefined;
 
 // Neo4j driver instance
 let neo4jDriver: Driver | null = null;
 
-// S4' WebSocket client instance (legacy)
-let s4WebSocketClient: S4WebSocketClient | null = null;
+// S3' Gateway client instance
+let s3GatewayClient: S3GatewayClient | null = null;
 
 // Epi-Claw WebSocket client instance (JSON-RPC 2.0)
 let epiClawClient: EpiClawClient | null = null;
@@ -96,40 +96,39 @@ async function closeNeo4jDriver(): Promise<void> {
   }
 }
 
-function getS4WebSocketClient(): S4WebSocketClient {
-  if (!s4WebSocketClient) {
-    s4WebSocketClient = new S4WebSocketClient({
-      url: S4_GATEWAY_URL,
-      token: S4_GATEWAY_TOKEN,
-      password: S4_GATEWAY_PASSWORD,
+function getS3GatewayClient(): S3GatewayClient {
+  if (!s3GatewayClient) {
+    s3GatewayClient = new S3GatewayClient({
+      url: S3_GATEWAY_URL,
+      token: S3_GATEWAY_TOKEN,
+      password: S3_GATEWAY_PASSWORD,
     });
   }
-  return s4WebSocketClient;
+  return s3GatewayClient;
 }
 
-function closeS4WebSocketClient(): void {
-  if (s4WebSocketClient) {
-    s4WebSocketClient.disconnect();
-    s4WebSocketClient = null;
+function closeS3GatewayClient(): void {
+  if (s3GatewayClient) {
+    s3GatewayClient.disconnect();
+    s3GatewayClient = null;
   }
 }
 
 function getEpiClawClient(): EpiClawClient {
   if (!epiClawClient) {
-    // EpiClawClient shares the S4' WebSocket connection
+    // EpiClawClient shares the S3' Gateway WebSocket connection
     // instead of creating its own (avoids auth issues)
     epiClawClient = new EpiClawClient({
       getWebSocket: () => {
-        const s4 = getS4WebSocketClient();
-        // Use the public getWebSocket() method from S4' client
-        return s4 ? s4.getWebSocket() : null;
+        const gw = getS3GatewayClient();
+        return gw ? gw.getWebSocket() : null;
       },
     });
 
-    // Wire S4' client to forward messages to EpiClaw
-    const s4 = getS4WebSocketClient();
-    if (s4) {
-      s4.setEpiClawClient(epiClawClient);
+    // Wire S3' gateway client to forward messages to EpiClaw
+    const gw = getS3GatewayClient();
+    if (gw) {
+      gw.setEpiClawClient(epiClawClient);
     }
   }
   return epiClawClient;
@@ -380,29 +379,6 @@ ipcMain.handle('graph:getGraph', async () => {
 
 ipcMain.handle('graph:getNodeById', async (_event, nodeId: string) => {
   return getNodeById(nodeId);
-});
-
-// Agent S4 API - Claude Code / Agent Operations
-ipcMain.handle('agent:getSessionContext', async () => {
-  try {
-    console.log('[Main] agent:getSessionContext called');
-    return getSessionContext();
-  } catch (err) {
-    console.error('[Main] Error in agent:getSessionContext:', err);
-    throw err;
-  }
-});
-
-ipcMain.handle('agent:getAvailableSkills', async () => {
-  return getAvailableSkills();
-});
-
-ipcMain.handle('agent:getSubagentStatus', async () => {
-  return getSubagentStatus();
-});
-
-ipcMain.handle('agent:queryByCoordinate', async (_event, coordinate: string) => {
-  return queryByCoordinate(coordinate);
 });
 
 // Shell S0 API - Open external links
@@ -845,234 +821,6 @@ async function getNodeById(nodeId: string): Promise<GraphNode | null> {
   }
 }
 
-// Session context state types
-interface AgentOperation {
-  time: string;
-  operation: string;
-  status: 'success' | 'failure' | 'pending';
-}
-
-interface SessionContextState {
-  sessionId: string;
-  started: string;
-  status: 'active' | 'idle' | 'error';
-  qlPosition: string;
-  vault: string;
-  neo4jUri: string;
-  neo4jContainer: string;
-  operations: AgentOperation[];
-}
-
-interface SkillDefinition {
-  name: string;
-  description: string;
-  command: string;
-}
-
-interface SubagentStatus {
-  name: string;
-  role: string;
-  status: 'active' | 'idle' | 'unavailable';
-  layer: string;
-}
-
-interface CoordinateQueryResult {
-  coordinate: string;
-  nodeCount: number;
-  nodes: GraphNode[];
-}
-
-interface ParsedCoordinateQuery {
-  normalized: string;
-  position: string | null;
-}
-
-// Path to CONTEXT.md
-const CONTEXT_PATH = path.join(PRESENT_PATH, 'CONTEXT.md');
-
-// Parse CONTEXT.md to extract session state and operations log
-function getSessionContext(): SessionContextState | null {
-  try {
-    if (!fs.existsSync(CONTEXT_PATH)) {
-      return null;
-    }
-
-    const content = fs.readFileSync(CONTEXT_PATH, 'utf-8');
-    const { data, content: body } = matter(content);
-
-    // Parse frontmatter
-    const sessionId = (data.session_id as string) || 'unknown';
-    const started = (data.started as string) || '';
-    const rawStatus = (data.status as string) || 'idle';
-    const qlPosition = (data.ql_position as string) || '#0';
-
-    // Parse status
-    let status: SessionContextState['status'] = 'idle';
-    if (rawStatus === 'active') status = 'active';
-    else if (rawStatus === 'error') status = 'error';
-
-    // Parse operations log from markdown table
-    const operations: AgentOperation[] = [];
-    const tableMatch = body.match(/## Operations Log[\s\S]*?\|[\s\S]*?\|[\s\S]*?\|([\s\S]*?)(?=##|$)/);
-    if (tableMatch) {
-      const tableContent = tableMatch[1];
-      const rows = tableContent.split('\n').filter(line => line.includes('|') && !line.includes('---'));
-
-      for (const row of rows) {
-        const cells = row.split('|').map(c => c.trim()).filter(Boolean);
-        if (cells.length >= 3) {
-          const time = cells[0];
-          const operation = cells[1];
-          const statusStr = cells[2];
-
-          let opStatus: AgentOperation['status'] = 'pending';
-          if (statusStr.includes('✓')) opStatus = 'success';
-          else if (statusStr.includes('✗') || statusStr.includes('✕')) opStatus = 'failure';
-
-          operations.push({ time, operation, status: opStatus });
-        }
-      }
-    }
-
-    return {
-      sessionId,
-      started,
-      status,
-      qlPosition,
-      vault: VAULT_PATH,
-      neo4jUri: NEO4J_URI,
-      neo4jContainer: 'epi-neo4j',
-      operations,
-    };
-  } catch (err) {
-    console.error('Error reading session context:', err);
-    return null;
-  }
-}
-
-// Get available skills (from installed packs)
-function getAvailableSkills(): SkillDefinition[] {
-  // These are the skills defined in the system (from CLAUDE.md / skill system)
-  // In a full implementation, this would scan the skills directory
-  return [
-    { name: 'daily-note', description: 'Create or open daily note', command: '/daily-note' },
-    { name: 'ralph', description: 'Start a Ralph TUI loop', command: '/ralph' },
-    { name: 'ralph-status', description: 'Show Ralph TUI status', command: '/ralph-status' },
-    { name: 'ralph-cancel', description: 'Cancel active Ralph loop', command: '/ralph-cancel' },
-    { name: 'youtube-transcript', description: 'Fetch YouTube transcript', command: '/youtube-transcript' },
-    { name: 'chat-log-extractor', description: 'Extract chat logs from AI platforms', command: '/chat-log-extractor' },
-    { name: 'gemini-client', description: 'Foundational Gemini CLI client', command: '/gemini-client' },
-    { name: 'nanobanana-gemini', description: 'Generate images via Gemini', command: '/nanobanana-gemini' },
-    { name: 'organic-writing', description: 'Generate human-like text', command: '/organic-writing' },
-    { name: 'ql-prompt-engineer', description: 'Transform prompts to QL-aligned', command: '/ql-prompt-engineer' },
-  ];
-}
-
-// Get subagent status (C1/C2 layer agents)
-function getSubagentStatus(): SubagentStatus[] {
-  // These are the architectural subagents from the QL system
-  return [
-    { name: 'Presence', role: 'Orchestrator - anchors current reality', status: 'active', layer: 'C1' },
-    { name: 'Chronos', role: 'Timeline orchestration engine', status: 'idle', layer: 'C2' },
-    { name: 'Logos', role: 'Abstract reasoning engine', status: 'idle', layer: 'C2' },
-    { name: 'Eros', role: 'Connection-making engine', status: 'idle', layer: 'C2' },
-    { name: 'Sophia', role: 'Pattern recognition engine', status: 'idle', layer: 'C2' },
-  ];
-}
-
-// Query graph by QL coordinate
-function parseCoordinateQueryInput(coordinate: string): ParsedCoordinateQuery {
-  const trimmed = coordinate.trim();
-  if (!trimmed) {
-    return { normalized: '', position: null };
-  }
-
-  const legacyPos = trimmed.match(/^#([0-5])(?:\.\d+)?$/i);
-  if (legacyPos) {
-    return { normalized: `M${legacyPos[1]}'`, position: legacyPos[1] };
-  }
-
-  const domain = trimmed.match(/^#?M([0-5])(?:-([0-5]))?'?$/i);
-  if (domain) {
-    const pos = domain[1];
-    const stratum = domain[2];
-    const normalized = stratum ? `M${pos}-${stratum}'` : `M${pos}'`;
-    return { normalized, position: pos };
-  }
-
-  const alias = trimmed.match(/^p([0-5])$/i);
-  if (alias) {
-    return { normalized: `M${alias[1]}'`, position: alias[1] };
-  }
-
-  return { normalized: trimmed, position: null };
-}
-
-async function queryByCoordinate(coordinate: string): Promise<CoordinateQueryResult | null> {
-  let session: Session | null = null;
-  try {
-    const driver = getNeo4jDriver();
-    session = driver.session();
-
-    const parsedQuery = parseCoordinateQueryInput(coordinate);
-    const normalizedCoord = parsedQuery.normalized;
-    if (!normalizedCoord) {
-      return null;
-    }
-
-    // Build query based on coordinate pattern
-    let cypherQuery: string;
-    let params: Record<string, string> = {};
-
-    if (parsedQuery.position) {
-      // Query nodes that match this position in any coordinate property
-      cypherQuery = `
-        MATCH (n)
-        WHERE n.coordinate CONTAINS $posNum
-           OR n.ql_position = 'p' + $posNum
-           OR n.m_primary = $posNum
-           OR n.coordinate =~ '.*#' + $posNum + '.*'
-        RETURN n LIMIT 50
-      `;
-      params = { posNum: parsedQuery.position };
-    } else {
-      // Exact coordinate match
-      cypherQuery = `
-        MATCH (n)
-        WHERE n.coordinate = $coord OR n.coord = $coord
-        RETURN n LIMIT 50
-      `;
-      params = { coord: normalizedCoord };
-    }
-
-    const result = await session.run(cypherQuery, params);
-    const nodes: GraphNode[] = result.records.map(record => {
-      const node = record.get('n');
-      const props = node.properties as Record<string, unknown>;
-      return {
-        id: node.elementId,
-        labels: node.labels,
-        properties: props,
-        qlPosition: extractQLPosition(props),
-        title: (props.title || props.name || props.p1_title) as string | undefined,
-        coordinate: (props.coordinate || props.coord) as string | undefined,
-      };
-    });
-
-    return {
-      coordinate: normalizedCoord,
-      nodeCount: nodes.length,
-      nodes,
-    };
-  } catch (err) {
-    console.error('Error querying by coordinate:', err);
-    return null;
-  } finally {
-    if (session) {
-      await session.close();
-    }
-  }
-}
 
 // Backlink reference type
 interface BacklinkReference {
@@ -1255,24 +1003,24 @@ function resolveWikiLink(linkText: string): string | null {
   return findFileByName(VAULT_PATH, targetName);
 }
 
-// S4' WebSocket IPC Handlers
-ipcMain.handle('s4:isConnected', () => {
-  const client = getS4WebSocketClient();
+// S3' Gateway WebSocket IPC Handlers
+ipcMain.handle('s3:isConnected', () => {
+  const client = getS3GatewayClient();
   return client.isConnected();
 });
 
-ipcMain.handle('s4:send', (_event, message: object) => {
-  const client = getS4WebSocketClient();
+ipcMain.handle('s3:send', (_event, message: object) => {
+  const client = getS3GatewayClient();
   client.send(message);
 });
 
 ipcMain.handle(
-  's4:configure',
+  's3:configure',
   async (
     _event,
     config?: { url?: string; token?: string | null; password?: string | null; reconnect?: boolean }
   ) => {
-    const client = getS4WebSocketClient();
+    const client = getS3GatewayClient();
     client.configure({
       url: config?.url,
       token: config?.token,
@@ -1286,32 +1034,32 @@ ipcMain.handle(
   }
 );
 
-// S4' WebSocket message forwarding to renderer
-function setupS4MessageForwarding(): void {
-  const client = getS4WebSocketClient();
+// S3' Gateway message forwarding to renderer
+function setupS3MessageForwarding(): void {
+  const client = getS3GatewayClient();
 
   client.onMessage((message) => {
-    // Forward S4' messages to all renderer windows
+    // Forward S3' gateway messages to all renderer windows
     BrowserWindow.getAllWindows().forEach(win => {
-      win.webContents.send('s4:message', message);
+      win.webContents.send('s3:message', message);
     });
   });
 
   client.onOpen(() => {
     BrowserWindow.getAllWindows().forEach(win => {
-      win.webContents.send('s4:connected');
+      win.webContents.send('s3:connected');
     });
   });
 
   client.onClose(() => {
     BrowserWindow.getAllWindows().forEach(win => {
-      win.webContents.send('s4:disconnected');
+      win.webContents.send('s3:disconnected');
     });
   });
 
   client.onError((error) => {
     BrowserWindow.getAllWindows().forEach(win => {
-      win.webContents.send('s4:error', error.message);
+      win.webContents.send('s3:error', error.message);
     });
   });
 }
@@ -1340,15 +1088,14 @@ ipcMain.handle('epiclaws:request', async (_event, method: string, params?: Recor
   }
 });
 
-// Gateway method helpers
-const DEFAULT_SESSION_KEY = 'agent:main:main';
-
 ipcMain.handle('epiclaws:agent', async (_event, message: string, sessionKey?: string) => {
   const client = getEpiClawClient();
   try {
     const params: Record<string, unknown> = { message };
-    // Default to agent:main:main session if none provided
-    params.sessionKey = sessionKey || DEFAULT_SESSION_KEY;
+    const resolvedSessionKey = await client.resolveDefaultSessionKey(sessionKey);
+    if (resolvedSessionKey) {
+      params.sessionKey = resolvedSessionKey;
+    }
     const result = await client.request('agent', params);
     return { success: true, result };
   } catch (error) {
@@ -1476,14 +1223,14 @@ app.whenReady().then(() => {
   createWindow();
 
   // Register forwarding handlers before connecting to avoid missing early open events.
-  setupS4MessageForwarding();
+  setupS3MessageForwarding();
   setupEpiClawEventForwarding();
 
-  // Initialize S4' WebSocket connection (EpiClaw shares this connection)
-  const client = getS4WebSocketClient();
+  // Initialize S3' Gateway connection (EpiClaw shares this connection)
+  const client = getS3GatewayClient();
   const epiClaw = getEpiClawClient();
 
-  // Keep EpiClaw state in sync with S4 socket lifecycle.
+  // Keep EpiClaw state in sync with S3' gateway socket lifecycle.
   client.onOpen(() => {
     epiClaw.connect();
   });
@@ -1506,9 +1253,9 @@ app.on('window-all-closed', () => {
   }
 });
 
-// Clean up Neo4j driver, S4' WebSocket client, and Epi-Claw client on quit
+// Clean up Neo4j driver, S3' Gateway client, and Epi-Claw client on quit
 app.on('will-quit', async () => {
-  closeS4WebSocketClient();
+  closeS3GatewayClient();
   closeEpiClawClient();
   await closeNeo4jDriver();
 });

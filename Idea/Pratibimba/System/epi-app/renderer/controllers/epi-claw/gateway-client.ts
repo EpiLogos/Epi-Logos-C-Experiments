@@ -83,17 +83,17 @@ export class GatewayClient {
   }
 
   private async startAsync() {
-    // Keep main-process S4 socket credentials aligned with UI input.
+    // Keep main-process S3' gateway socket credentials aligned with UI input.
     try {
-      await window.sPrime?.s4?.websocket?.configure?.({
+      await window.sPrime?.s3?.websocket?.configure?.({
         url: this.opts.url,
         token: this.opts.token ?? null,
         password: this.opts.password ?? null,
       });
     } catch (err) {
-      // Continue initialization: the main S4 socket may already be connected,
+      // Continue initialization: the main S3' socket may already be connected,
       // and hard-failing here forces a manual reconnect.
-      console.warn('[GatewayClient] s4.websocket.configure failed; continuing with existing connection', err);
+      console.warn('[GatewayClient] s3.websocket.configure failed; continuing with existing connection', err);
     }
 
     const onConnected = window.sPrime?.epiClaw?.onConnected?.(() => {
@@ -225,6 +225,6 @@ export class GatewayClient {
 
 /**
  * Default gateway URL for Epi-Claw
- * Port 18790 to avoid conflict with legacy OpenClaw on 18789
+ * Port 18794 — canonical S3' gateway port (epi gate)
  */
-export const DEFAULT_GATEWAY_URL = "ws://localhost:18790";
+export const DEFAULT_GATEWAY_URL = "ws://localhost:18794";

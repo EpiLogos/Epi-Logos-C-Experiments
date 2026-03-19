@@ -1,7 +1,7 @@
 # S3/S3' — Gateway and Universal NOW
 
-**Status:** Canonical specification
-**Date:** 2026-03-07
+**Status:** Canonical specification with 2026-03-11 parity implementation checkpoint
+**Date:** 2026-03-11
 **Coordinate:** S3 (gateway control plane), S3' (live state plane / QL gateway)
 **Implementation Home:** `epi-cli/src/gate/` (Rust)
 **CLI Namespace:** `epi gate`
@@ -232,6 +232,73 @@ Therefore:
 - the new S3 gateway must preserve a protocol and method surface that allows the OmniPanel path to be reused,
 - existing gateway-client logic is treated as a compatibility harness,
 - breaking the client model for the sake of architectural novelty is explicitly rejected.
+
+### Implemented Parity Checkpoint (2026-03-11)
+
+The Rust gateway now owns the shared execution spine rather than acting as a file-backed facade.
+
+Implemented and verified surfaces:
+
+- `hello-ok` protocol version `3`
+- enforced `connect`-first handshake plus `connect.challenge`
+- live event fanout for `agent`, `chat`, `tick`, `health`, and `heartbeat`
+- real `agent`, `agent.wait`, `chat.send`, `chat.abort`, and `chat.history` runtime lanes
+- per-run sequence numbers and cached terminal snapshots for wait/reconnect semantics
+- JSONL transcript persistence as the session-authority source of truth
+- session authority with canonical key, aliases, label, `sessionId`, `dayId`, `vaultNowPath`, delivery metadata, and model/provider overrides
+- subagent lineage with `spawnedBy` restricted to subagent session keys and nested-subagent rejection
+- Khora binding from `.epi/session.json` into gateway session creation and health surfaces
+- OmniPanel/Electron compatibility for real sessions, skills, models, and chat event normalization
+
+The production rule is now:
+
+- gateway-owned RPCs must own validation, session mutation, run registration, transcript writes, event emission, and completion/error/abort caching
+- the app must resolve session defaults from the gateway instead of hardcoding `agent:main:main`
+- parity claims apply only to implemented real surfaces, not placeholders
+
+### Session Identity Rules
+
+The implemented gateway session identity model is:
+
+- canonical wire/storage key remains the `epi-claw`-compatible session key
+- aliases and labels are first-class resolution keys
+- `sessionId`, `dayId`, and `vaultNowPath` are bound from the active Khora session when present
+- `spawnedBy` may only be set on subagent session keys such as `agent:<id>:subagent:<id>`
+- once set, `spawnedBy` is immutable
+- nested subagent spawning is rejected
+
+### Event Semantics
+
+The current event contract is:
+
+- gateway connections receive `hello-ok`, then `connect.challenge`, then must send `connect`
+- `agent` and `chat` runs broadcast lifecycle frames with monotonically increasing per-run `seq`
+- maintenance events (`tick`, `health`, `heartbeat`) broadcast on the shared gateway lane
+- `chat.send` emits delta/final/error/aborted surfaces and persists the terminal assistant transcript entry
+- `agent.wait` resolves from cached run snapshots rather than polling ad hoc process state
+
+### `epi up` Startup Ordering
+
+`epi up` is now the honest coordinator for the real surfaces that exist today.
+
+Current ordering:
+
+1. load repo env
+2. initialize or reuse Khora session state
+3. verify NOW/vault path readiness
+4. optionally start and verify graph services
+5. start the gateway and probe websocket readiness
+6. optionally bootstrap tmux
+7. optionally launch the app
+8. optionally attach cmux
+
+Current supported flags:
+
+- `--no-app`
+- `--no-graph`
+- `--no-tmux`
+- `--attach`
+- `--json`
 
 ---
 

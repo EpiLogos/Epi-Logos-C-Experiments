@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct KnowingDossier {
@@ -69,4 +69,37 @@ pub struct KnowingAction {
 pub struct FacetItem {
     pub label: String,
     pub detail: Option<String>,
+}
+
+/// A single L-coordinate lens alignment extracted from frontmatter `l_alignments`.
+///
+/// Corresponds to a future Neo4j relation:
+///   `(doc:BimbaNode)-[:HAS_LENS_ALIGNMENT {weight, sub_position, element, klein_square}]
+///    ->(lens:LensNode {name, index, mode})`
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LensAlignment {
+    /// Canonical lens name, e.g. "L2" or "L2'".
+    pub lens: String,
+    /// Index 0-11 (0-5 = day, 6-11 = night).
+    pub lens_index: u8,
+    /// "day" or "night".
+    pub mode: String,
+    /// Sub-position within the lens (0-5). None when dialetheic ("BOTH").
+    pub sub_position: Option<u8>,
+    /// Human-readable sub-position label (e.g. "BOTH", "air").
+    pub sub_name: Option<String>,
+    /// Agent-assessed emphasis weight [0.0, 1.0].
+    pub weight: Option<f64>,
+    /// Primary element for this lens activation (relevant for L2'/Alchemical-Elemental).
+    pub element: Option<String>,
+    /// The 4-element Klein V4 integration unit this lens belongs to.
+    pub klein_square: Option<Vec<String>>,
+    /// Day complement lens name (X + Y = 5 law).
+    pub complement: Option<String>,
+    /// Day-Night doubling partner lens name.
+    pub night_partner: Option<String>,
+    /// Agent that wrote this alignment entry.
+    pub populated_by: Option<String>,
+    /// ISO8601 timestamp of population.
+    pub populated_at: Option<String>,
 }

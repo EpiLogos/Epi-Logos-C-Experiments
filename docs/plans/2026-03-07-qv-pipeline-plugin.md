@@ -829,7 +829,7 @@ The root-level nodes in each dataset (`#0`, `#1`, ..., `#5`) map to M0-M5. Extra
 ~/.cargo/bin/epi core knowing 'CF(012)' --update "The Trika -- Mod 3, User/Agent/Code"
 ~/.cargo/bin/epi core knowing 'CF(0123)' --update "Three-Plus-One -- Mod 4, media/medium/method"
 ~/.cargo/bin/epi core knowing 'CF(4x)' --update "Fractal Doubling -- Mod 4/6, Jung quaternity"
-~/.cargo/bin/epi core knowing 'CF(450)' --update "Mobius Synthesis -- (4/5/0), app triad"
+~/.cargo/bin/epi core knowing 'CF(450)' --update "Mobius Synthesis -- (4.5/0), app triad"
 ~/.cargo/bin/epi core knowing 'CF(50)' --update "Total Synthesis -- Mod 6, Mobius return"
 ~/.cargo/bin/epi core knowing W0.0 --update "Pure Ground -- #0 implicate, 0-sphere"
 ~/.cargo/bin/epi core knowing W0.5 --update "Ground reaching Instance -- transitional"

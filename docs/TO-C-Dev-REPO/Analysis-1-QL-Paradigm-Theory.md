@@ -194,9 +194,9 @@ Context Frames serve as:
 | **(0/1/2/3)** | ...-> Pattern | Architect/Structurer | Lens 2 (Logical) | Schema design, planning |
 | **(4.0-4.4/5)** | Deep Context -> Synthesis | Philosopher/Writer | Lens 5 (Divine) | High-latency generation |
 | **(5/0)** | Telos -> Origin | Closer/Formatter | Lens 0 (Resonance) | Output formatting, closure |
-| **(4/5/0)** | Context -> Purpose -> New Ground | Learner/Updater | Lens 3 (Processual) | Feedback loop, learning |
+| **(4.5/0)** | Context -> Purpose -> New Ground | Learner/Updater | Lens 3 (Processual) | Feedback loop, learning |
 
-**USER's discovery of (4/5/0)**: "This creates the connective tissue that makes context and number 4 integrated and directly unified with the ultimate/absolute/implicate dimensions"
+**USER's discovery of (4.5/0)**: "This creates the connective tissue that makes context and number 4 integrated and directly unified with the ultimate/absolute/implicate dimensions"
 
 ### Context Frames as "Entity defining the Form of certain Types of Process"
 
@@ -458,8 +458,8 @@ Position 0: Ground/Why -----------> 0000, (0/1), (5/0)
 Position 1: Form/What ------------> (0/1), (0/1/2)
 Position 2: Process/How ----------> (0/1/2), (0/1/2/3)
 Position 3: Pattern/Who ----------> (0/1/2/3)
-Position 4: Context/Where --------> (4.0-4.4/5), (4/5/0)
-Position 5: Purpose/Why-for ------> (4.0-4.4/5), (5/0), (4/5/0)
+Position 4: Context/Where --------> (4.0-4.4/5), (4.5/0)
+Position 5: Purpose/Why-for ------> (4.0-4.4/5), (5/0), (4.5/0)
 
 Torus: Linear cycles, stable objects, 6-fold logic
 Klein: Paradoxical inversions, transformations, 12-fold logic

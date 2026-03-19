@@ -2529,7 +2529,7 @@ fn vak_evaluation_assigns_six_layers() {
 
 #[test]
 fn vak_evaluation_returns_valid_cf_codes() {
-    let valid_cf_codes = ["(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4/5/0)", "(5/0)", "(00/00)"];
+    let valid_cf_codes = ["(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4.5/0)", "(5/0)", "(00/00)"];
     let task = "Design the overall architecture";
     let result = evaluate_vak(task);
     let cf = result.cf.as_deref().unwrap_or("");
@@ -2568,7 +2568,7 @@ pub fn evaluate_vak(task: &str) -> VakCoordinates {
 
     // CF assignment heuristics
     let cf = if task_lower.contains("overview") || task_lower.contains("architecture") || task_lower.contains("design") {
-        "(4/5/0)"  // Psyche — session subject
+        "(4.5/0)"  // Psyche — session subject
     } else if task_lower.contains("question") || task_lower.contains("what") || task_lower.contains("why") {
         "(0/1)"    // Logos — binary/formal
     } else if task_lower.contains("test") || task_lower.contains("debug") || task_lower.contains("fix") {
@@ -2578,7 +2578,7 @@ pub fn evaluate_vak(task: &str) -> VakCoordinates {
     } else if task_lower.contains("review") || task_lower.contains("reflect") || task_lower.contains("summarize") {
         "(5/0)"    // Sophia — Möbius review
     } else {
-        "(4/5/0)"  // Default to Psyche
+        "(4.5/0)"  // Default to Psyche
     };
 
     // CFP (thread type) heuristics
@@ -2610,7 +2610,7 @@ pub fn cf_to_agent(cf: &str) -> &'static str {
         "(0/1/2)" => "eros",
         "(0/1/2/3)" => "mythos",
         "(4.0/1-4.4/5)" => "anima",
-        "(4/5/0)" => "psyche",
+        "(4.5/0)" => "psyche",
         "(5/0)" => "sophia",
         "(00/00)" => "nous",
         _ => "psyche",  // default
@@ -2687,7 +2687,7 @@ export async function animaExtension(api: ExtensionAPI) {
       properties: {
         cf_code: {
           type: "string",
-          enum: ["(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4/5/0)", "(5/0)", "(00/00)"],
+          enum: ["(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4.5/0)", "(5/0)", "(00/00)"],
         },
         task: { type: "string" },
       },
@@ -2699,7 +2699,7 @@ export async function animaExtension(api: ExtensionAPI) {
         "(0/1/2)": "eros",
         "(0/1/2/3)": "mythos",
         "(4.0/1-4.4/5)": "anima",
-        "(4/5/0)": "psyche",
+        "(4.5/0)": "psyche",
         "(5/0)": "sophia",
         "(00/00)": "nous",
       };
@@ -3195,7 +3195,7 @@ epi agent spawn --agent main
 In session:
 ```
 /vak_evaluate "Write tests for the archive_day function"
-/anima_orchestrate {"cf_code": "(4/5/0)", "task": "write tests"}
+/anima_orchestrate {"cf_code": "(4.5/0)", "task": "write tests"}
 ```
 
 ---
@@ -3795,7 +3795,7 @@ In PI session, run the full session lifecycle:
 2. /chronos_day_init
 3. /chronos_now_init {"session_id": "<from step 1>"}
 4. /vak_evaluate "Implement a new feature for the vault system"
-5. /anima_orchestrate {"cf_code": "(4/5/0)", "task": "implement vault feature"}
+5. /anima_orchestrate {"cf_code": "(4.5/0)", "task": "implement vault feature"}
 6. /hen_template_invoke {"template_type": "task-spec", "session_id": "<id>"}
 7. /aletheia_thought_route {"content": "pattern: vault writes need atomic guarantees", "position": 3}
 8. /aletheia_seed_refresh {"c_3_day_id": "<today>", "insights": ["atomic vault writes are needed"]}

@@ -47,9 +47,8 @@ export function useEpii() {
 
     const refreshContext = useCallback(async () => {
         try {
-            const ctx = await window.sPrime?.s4?.agent?.getSessionContext();
-            const skills = await window.sPrime?.s4?.agent?.getAvailableSkills();
-            setState(prev => ({ ...prev, context: ctx, skills: skills || [] }));
+            // TODO: agent context/skills will come via epi-claw gateway (epi-cli), not local Electron plumbing
+            setState(prev => ({ ...prev, context: null, skills: [] }));
         } catch (err) {
             console.error('[Epii] Context Load Error:', err);
         }
@@ -78,7 +77,9 @@ export function useEpii() {
         refreshContext,
         refreshfiles: refreshFiles,
         runQuery: async (q) => {
-            return await window.sPrime?.s4?.agent?.queryByCoordinate(q);
+            // TODO: coordinate queries will go via epi-claw gateway (epi-cli)
+            console.warn('[Epii] runQuery not yet connected to epi-claw gateway:', q);
+            return null;
         }
     };
 

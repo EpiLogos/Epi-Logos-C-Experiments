@@ -46,7 +46,7 @@
 
 | FR ID | Description | Source | Spec Coverage | Priority |
 |-------|-------------|--------|---------------|----------|
-| **FR-A-010** | CF code -> constitutional agent routing table: (0000)->Nous, (0/1)->Logos, (0/1/2)->Eros, (0/1/2/3)->Mythos, (4/5/0)->Psyche, (4.0/1-4.4/5)->Anima, (5/0)->Sophia | VAK-SUPERPOWERS-INTEGRATION-SPEC SS1.6; anima-orchestration SKILL.md | S4-EXTENSION-ARCHITECTURE SS III; TA-ONTA-EXTENSION-SPEC SS IV | P0 -- Core |
+| **FR-A-010** | CF code -> constitutional agent routing table: (0000)->Nous, (0/1)->Logos, (0/1/2)->Eros, (0/1/2/3)->Mythos, (4.5/0)->Psyche, (4.0/1-4.4/5)->Anima, (5/0)->Sophia | VAK-SUPERPOWERS-INTEGRATION-SPEC SS1.6; anima-orchestration SKILL.md | S4-EXTENSION-ARCHITECTURE SS III; TA-ONTA-EXTENSION-SPEC SS IV | P0 -- Core |
 | **FR-A-011** | Nous special behaviour: CF (0000) invokes fresh minimal-context agent, reports to Psyche, triggers re-evaluation via vak-evaluate | VAK-SUPERPOWERS-INTEGRATION-SPEC SS1.6 Nous note; nous.md agent def | anima-orchestration SKILL.md SS "Nous Special Behavior" | P0 -- Core |
 | **FR-A-012** | Anima as meta-dispatch: CF (4.0/1-4.4/5) is the orchestrator itself, not dispatched to | S4-EXTENSION-ARCHITECTURE SS III; anima-orchestration SKILL.md | Consistent across all sources | P0 -- Core |
 | **FR-A-013** | `anima_orchestrate` registered tool: takes VAK coordinates, returns dispatch decision | S4-EXTENSION-ARCHITECTURE SS III | Listed as registered tool | P0 -- Core |
@@ -151,7 +151,7 @@
 - [ ] CF (0/1) routes to Logos for architecture/scoping
 - [ ] CF (0/1/2) routes to Eros for refinement/verification
 - [ ] CF (0/1/2/3) routes to Mythos for pattern recognition
-- [ ] CF (4/5/0) routes to Psyche as coordinator (Patient IS Psyche)
+- [ ] CF (4.5/0) routes to Psyche as coordinator (Patient IS Psyche)
 - [ ] CF (5/0) routes to Sophia for synthesis/Mobius return
 - [ ] CF (4.0/1-4.4/5) is recognized as Anima itself (meta-dispatch)
 - [ ] Nous output triggers re-evaluation before actual dispatch
@@ -332,7 +332,7 @@
 | Logos | `.pi/extensions/ta-onta/anima/S4'/agents/logos.md` | `plugins/pleroma/agents/constitutional/logos.md` | **Complete** -- CF (0/1), L1, scope/boundary functions |
 | Mythos | `.pi/extensions/ta-onta/anima/S4'/agents/mythos.md` | `plugins/pleroma/agents/constitutional/mythos.md` | **Complete** -- CF (0/1/2/3), L3, pattern recognition |
 | Nous | `.pi/extensions/ta-onta/anima/S4'/agents/nous.md` | `plugins/pleroma/agents/constitutional/nous.md` | **Complete** -- CF (0000), L0, NOT task executor, epistemic clearing |
-| Psyche | `.pi/extensions/ta-onta/anima/S4'/agents/psyche.md` | `plugins/pleroma/agents/constitutional/psyche.md` | **Complete** -- CF (4/5/0), L4, coordinator, Patient IS Psyche, Aletheia mode dispatch |
+| Psyche | `.pi/extensions/ta-onta/anima/S4'/agents/psyche.md` | `plugins/pleroma/agents/constitutional/psyche.md` | **Complete** -- CF (4.5/0), L4, coordinator, Patient IS Psyche, Aletheia mode dispatch |
 | Sophia | `.pi/extensions/ta-onta/anima/S4'/agents/sophia.md` | `plugins/pleroma/agents/constitutional/sophia.md` | **Complete** -- CF (5/0), L5, synthesizer, Mobius return |
 | Techne Helper | `.pi/extensions/ta-onta/anima/S4'/agents/techne-helper.md` | `plugins/pleroma/agents/constitutional/techne-helper.md` | **Complete** -- Not a constitutional sovereign, workshop management, bounded helper |
 
@@ -386,9 +386,9 @@
 - Add pathology guard
 - Mythos's Night' role as P3' Patterns is correctly aligned -- no Moirai conflict here.
 
-### E.5 Psyche (#4 / P4' / CF (4/5/0))
+### E.5 Psyche (#4 / P4' / CF (4.5/0))
 
-**Current Definition Status:** The most detailed agent definition (95 lines). Includes executive triad explanation (4/5/0), Patient IS Psyche principle, Aletheia mode-function dispatch table (6 functions), Night' role as Lachesis (Query), skills integration, and dispatch context.
+**Current Definition Status:** The most detailed agent definition (95 lines). Includes executive triad explanation (4.5/0), Patient IS Psyche principle, Aletheia mode-function dispatch table (6 functions), Night' role as Lachesis (Query), skills integration, and dispatch context.
 
 **Alignment with Two-Hemisphere Model:** Well aligned. Psyche is correctly positioned as the contextual centre who "undergoes" the task. The Aletheia mode-function dispatch (Anansi, Janus, Moirai, Mercurius, Agora, Zeithoven) is well documented. Dis-closure mode says Psyche receives "Full contextual field -- everything, CF_SYNTHESIS collapse." This is implicitly present.
 
@@ -396,7 +396,7 @@
 - Add explicit dis-closure mode reference (Nous prepares full contextual field)
 - Add Vak-level mapping: Psyche = Madhyama-as-oikonomia (household management)
 - Add pathology guard
-- The CF code (4/5/0) vs Anima's (4.0/1-4.4/5) distinction is correctly maintained
+- The CF code (4.5/0) vs Anima's (4.0/1-4.4/5) distinction is correctly maintained
 
 **Critical Note:** The Psyche definition states "Psyche is never 'dispatched to' -- it IS the dispatch layer." This is subtly different from the TA-ONTA-EXTENSION-SPEC SS IV which says "Psyche undergoes the task as its 'subject'" and "Anima evaluates: VAK coordinates, CF dispatch, agent selection." There is a conceptual tension: is Psyche the dispatcher or the subject? The resolution appears to be that Anima IS the mechanical dispatch function, while Psyche is the experiential centre through which dispatch flows. The patient IS Psyche, but the dispatch mechanism IS Anima. This should be clarified.
 
@@ -575,19 +575,19 @@ These might be two modes of the same entity: Nous-active (spawned for epistemic 
 
 **Decision Needed:** Priority of Ouroboros implementation relative to the core VAK evaluation and CF dispatch pipeline.
 
-### H.7 Psyche CF Code: (4/5/0) vs (4.0-4.4/5) vs (4.0/1-4.4/5)
+### H.7 Psyche CF Code: (4.5/0) vs (4.0-4.4/5) vs (4.0/1-4.4/5)
 
 **Ambiguity:** Three different CF codes appear for the Psyche/Anima distinction:
 
 | Entity | CF Code (per agent def) | CF Code (per VAK spec) | CF Code (per TA-ONTA-EXTENSION-SPEC) |
 |--------|------------------------|----------------------|--------------------------------------|
-| **Psyche** | `(4/5/0)` | `(4.0-4.4/5)` | `(4/5/0)` -- "executive triad" |
+| **Psyche** | `(4.5/0)` | `(4.0-4.4/5)` | `(4.5/0)` -- "executive triad" |
 | **Anima** | `(4.0/1-4.4/5)` | `(4.0/1-4.4/5)` | `(4.0/1-4.4/5)` -- "fractal doubling" |
 
-The VAK-SUPERPOWERS-INTEGRATION-SPEC originally used `(4.0-4.4/5)` for Psyche. The later correction in the agent definitions and TA-ONTA-EXTENSION-SPEC changed Psyche to `(4/5/0)` (the executive triad: Context/Integration/Ground) and reserved `(4.0/1-4.4/5)` for Anima (the full fractal doubling lattice).
+The VAK-SUPERPOWERS-INTEGRATION-SPEC originally used `(4.0-4.4/5)` for Psyche. The later correction in the agent definitions and TA-ONTA-EXTENSION-SPEC changed Psyche to `(4.5/0)` (the executive triad: Context/Integration/Ground) and reserved `(4.0/1-4.4/5)` for Anima (the full fractal doubling lattice).
 
 **Resolution:** The corrected version is:
-- **Psyche** = CF `(4/5/0)` -- executive triad bridging Lemniscate, Mobius, and Ground
+- **Psyche** = CF `(4.5/0)` -- executive triad bridging Lemniscate, Mobius, and Ground
 - **Anima** = CF `(4.0/1-4.4/5)` -- full fractal doubling lattice, the dispatch function itself
 
 This is consistent across the latest agent definitions, the vak-coordinate-frame SKILL.md, and the TA-ONTA-EXTENSION-SPEC. The earlier VAK-SUPERPOWERS-INTEGRATION-SPEC is superseded on this point.

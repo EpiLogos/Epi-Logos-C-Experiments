@@ -21,6 +21,7 @@ One named primitive set to use across ALL specs — prevents future drift:
 | `phase` | `u8` | 0 = explicate (Strand A), 1 = implicate (Strand B). Derived from `(exact_degree_720 / 360) as u8` |
 | `tick12` | `u8` | Canonical M1 ring position 0–11. The single discrete clock state. All spanda/torus/substage terminology collapses here. |
 | `cf_substage6` | `u8` | 6-fold view derived from `tick12`: `tick12 % 6`. Strand A view of the 12-state ring. |
+| `earth_body` | `EarthBodyState` | Special planet/chakra bridge node: geocentric center, solar child of Sun, `CHAKRA_EARTH=0`, rendered separately from the 7 canonical chakras. |
 | `quaternion4` | `[f32;4]` | Normalized `[w=EARTH, x=FIRE, y=WATER, z=AIR]`. Always unit quaternion. |
 | `quintessence_hash` | `[u8;32]` | BLAKE3 archetypal address. The identity. |
 | `oracle_eval4` | `(f32,f32,f32,f32)` | `(pp, nn, np, pn)` charge algebra from coin throw. |
@@ -38,12 +39,12 @@ One named primitive set to use across ALL specs — prevents future drift:
 
 1. **Identity minimum:** Natal data is the only required identity layer for first entry. Numerological, Jungian, Gene Keys, and Human Design remain additive enrichment layers.
 2. **Quintessence identity:** The quintessence identity is the BLAKE3 archetypal address. The quintessence quaternion is a derived mathematical form of that identity, not a competing identity object.
-3. **Planet model:** Canonical public model is **10 planets + Earth as center**. Sun is at position 0 (the stable parent, encapsulates all others). Planets spiral outward: Sun(0), Moon(1), Mercury(2), Venus(3), Mars(4), Jupiter(5), Saturn(6), Uranus(7), Neptune(8), Pluto(9). Earth = center/observer/bridge, NOT in the 10-planet array. The 9:8 ratio (9 personal planets : 8 chakra slots) is canonical — Sun is excluded from the chakra-mapping series because it is the stable fixture that encapsulates all others. Planets Moon–Pluto (9 planets) map to the 8 chakras + Earth center. Uranus/Neptune/Pluto = M2-5 transpersonal layer (`is_transpersonal: bool` in `PlanetState`). Outer planets participate fully in the clock; their weight in the quintessence quaternion is configurable (default low). Transpersonal planets become primary in the SpacetimeDB multiplayer instantiation (future).
+3. **Planet model:** Canonical field model is **`PlanetState[10]` + `EarthBodyState`**. The tracked planetary operator space is Sun(0), Moon(1), Mercury(2), Venus(3), Mars(4), Jupiter(5), Saturn(6), Uranus(7), Neptune(8), Pluto(9). Earth is NOT an 11th orbiting entry; Earth is the separate geocentric center/observer/bridge object, the solar child of Sun, and the honorary/applied eighth bodily site beneath the 7 canonical chakras. The 9:8 ratio is therefore: 9 non-Sun orbiting bodies (Moon–Pluto) : 8 bodily sites (`EarthBody + 7 chakras`). Uranus/Neptune/Pluto = M2-5 transpersonal layer (`is_transpersonal: bool` in `PlanetState`). Outer planets participate fully in the clock; their weight in the quintessence quaternion is configurable (default low). Transpersonal planets become primary in the SpacetimeDB multiplayer instantiation (future).
 4. **Precision rule:** No arbitrary rounding or truncation. Preserve exact input precision. Quantization is allowed only when explicitly entering the M1 12-state ring or other named discrete lenses.
 5. **Clock state:** The M1 tick / torus stage / spanda ring must be one coherent 12-state model. If multiple 12-fold apertures coexist, they must be explicitly named as concurrent streams, not conflated accidentally.
 6. **Binary evaluation:** The system computes from real binary and arithmetic operators: M0 zero-logic and operator ISA, M1 `(0/1)` and spanda, M3 2-bit nucleotide logic, yin=2 / yang=3 coin arithmetic, 6-bit codon space, charge algebra, and downstream oracle payloads.
 7. **Cross-layer contract:** `identity -> clock -> oracle -> payload -> medicine/transform/logos` is canonical architecture even where implementation is pending. Specs must say which links are normative now and which are scheduled.
-8. **Earth center semantics:** Earth is NOT "always activated" at full level. Earth IS the clock's center anchor — the geocentric observer, the site of the 4.4.4.4 identity, the most neutral ground. All other elements (Fire/Water/Air) are the "active" ones that modulate around Earth's center. Rendering: Earth = central axis/anchor marker, not a chakra-level value on a spine.
+8. **Earth center semantics:** Earth is NOT "always activated" at full level. Earth IS the clock's center anchor — the geocentric observer, the site of the 4.4.4.4 identity, the most neutral ground. Earth also occupies `CHAKRA_EARTH=0` as the special bodily root-site beneath the 7 canonical chakras. Rendering: Earth = a distinct `EarthBody` anchor/root node, not an ordinary fill-bar equivalent to Root–Crown.
 9. **Lenses vs Walk modes (distinct, not the same):** Lenses = 16 simultaneous static reading apertures (all active at once for every degree). Walk modes = sequential traversal paths (one at a time). Most walks use a matching lens's step-size but serve a different function. WALK_HEXAGRAM (64-step, ~5.625°) and WALK_LINE_CHANGE (384-step) are binary-evaluation traversals with NO matching lens — intentionally, because 360/64 is not an integer. The 16-lens system is integer-factor geometry; the hexagram and line-change walks operate in 2^6 binary space. WALK_TORUS must be renamed WALK_SPANDA to signal M1 spanda semantics (distinct from WALK_ZODIAC even though both are 12-step/30°).
 10. **Gateway contract location:** Gateway contract fields (`nara.*` method shapes) belong BOTH in `docs/specs/S/S3-S3i-GATEWAY.md` (for safety/continuity of live gateway code) AND in the centralized nara/clock spec files (`M4-nara-personal-interface.md`, `09-cosmic-clock-plugin-tui-spec.md`). The S3 spec is the implementation reference; the nara/clock specs are the canonical design source.
 11. **Binary thread spec deferred:** The full binary evaluation thread spec (M0 zero-logic → M1 yin/yang → coin arithmetic → 2^6 oracle calculation → Ananda matrix as processing layer) is a dedicated spec requiring fresh focus. Do NOT interleave it with the harmonization edits. It becomes its own canonical document (`10-binary-evaluation-thread.md`) in a separate session.
@@ -52,25 +53,25 @@ One named primitive set to use across ALL specs — prevents future drift:
 
 ## Architectural Decisions Locked 2026-03-16
 
-### Planet Model Detail
+### Planet + EarthBody Model Detail
 
 ```
-Position  Planet       Role                       Chakra mapping (Moon–Pluto series)
-0         Sun          Stable parent, clock root  excluded from chakra series (encapsulates all)
-1         Moon         Personal inner             Sahasrara (Crown)
-2         Mercury      Personal                   Ajna (Third Eye)
-3         Venus        Personal                   Vishuddha (Throat)
-4         Mars         Personal                   Anahata (Heart)
-5         Jupiter      Social                     Manipura (Solar Plexus)
-6         Saturn       Social                     Svadhisthana (Sacral)
-7         Uranus       Transpersonal (M2-5)        Muladhara (Root)
-8         Neptune      Transpersonal (M2-5)        —  (2nd root / Earth resonance, to spec)
-9         Pluto        Transpersonal (M2-5)        —  (transformational deep; to spec)
-—         Earth        Center/observer/bridge      index slot = sentinel only
+Planet/Object  Role                                Bodily projection semantics
+Sun(0)         Stable parent, clock root           Leading light, excluded from chakra projection
+Moon(1)        Personal inner                      projects into the 7-chakra field
+Mercury(2)     Personal                            projects into the 7-chakra field
+Venus(3)       Personal                            projects into the 7-chakra field
+Mars(4)        Personal                            projects into the 7-chakra field
+Jupiter(5)     Social                              projects into the 7-chakra field
+Saturn(6)      Social                              projects into the 7-chakra field
+Uranus(7)      Transpersonal (M2-5)                outer/transpersonal projection
+Neptune(8)     Transpersonal (M2-5)                outer/transpersonal projection
+Pluto(9)       Transpersonal (M2-5)                outer/transpersonal projection
+EarthBody      Center/observer/bridge/solar child  CHAKRA_EARTH=0, honorary/applied 8th bodily site
 ```
 
-9:8 ratio: 9 personal+social planets (Moon–Saturn) : 8 chakra slots (Earth center + 7 chakras).
-Outer planets extend this into M2-5 territory. Internal array: `[PlanetState; 10]` with `is_transpersonal` flag.
+9:8 ratio: 9 non-Sun orbiting bodies (Moon–Pluto) : 8 bodily sites (`EarthBody + 7 canonical chakras`).
+Outer planets extend this into M2-5 territory. Internal planetary array: `[PlanetState; 10]` with `is_transpersonal` flag. `EarthBody` remains a separate companion object.
 Harmonic and frequency data for Uranus, Neptune, Pluto: TO BE ADDED from M2 Parashakti dataset updates.
 
 ### Lenses vs Walks Correspondence
@@ -133,23 +134,24 @@ Harmonic and frequency data for Uranus, Neptune, Pluto: TO BE ADDED from M2 Para
 - Modify: `docs/plans/2026-03-10-nara-runtime-full-plan.md`
 
 **Decision locked (2026-03-16):**
-- 10 planets + Earth center. Array `[PlanetState; 10]`. Sun = index 0.
+- 10 planets in the tracked orbital field. Array `[PlanetState; 10]`. Sun = index 0.
 - Sun is the stable parent/encapsulator — excluded from chakra-mapping series.
-- 9:8 ratio (Moon–Pluto : 8 chakras) is the canonical planetary-chakra alignment.
+- Earth is modeled separately as `EarthBodyState`: center/observer/bridge, solar child of Sun, `CHAKRA_EARTH=0`.
+- 9:8 ratio (`Moon–Pluto` : `EarthBody + 7 chakras`) is the canonical planetary-chakra alignment.
 - Uranus/Neptune/Pluto = M2-5 transpersonal, `is_transpersonal: bool` per PlanetState.
 - Harmonic/frequency data for outer planets: sourced from M2 Parashakti dataset updates.
 - SpacetimeDB multiplayer context: transpersonal planets are primary environmental field generators.
 
 **Steps:**
-1. Replace conflicting `[7]`, `[9]`, and `[10]` descriptions everywhere with `[PlanetState; 10]` and the canonical Sun(0)–Pluto(9) + Earth=center table from the "Architectural Decisions" section above.
-2. Define Earth in one sentence everywhere: clock center/observer, geocentric anchor, site of 4.4.4.4 identity — NOT a tracked clock-face planet.
+1. Replace conflicting `[7]`, `[9]`, and `[10]` descriptions everywhere with the canonical split model: `[PlanetState; 10]` for Sun–Pluto plus `EarthBodyState` as separate center/observer/bridge.
+2. Define Earth in one sentence everywhere: Earth is the geocentric center and solar child of Sun, the site of the 4.4.4.4 identity anchor, and `CHAKRA_EARTH=0` as a special bodily root-site — NOT a tracked orbiting planet.
 3. Update `KairosState` comment in `clock_state.rs` to reflect the 10-slot array with correct planet order and `is_transpersonal` annotation. (Code change — coordinate with implementation pass.)
 4. Add the M2-5 note: outer planets tie to M2 Parashakti bimba coordinates. Harmonic data for Uranus pending dataset update.
 5. Parashakti dataset reconciliation: mark as a dependent task. Uranus integration requires updating the C dataset layer (M2 branch) before full clock-face rendering is possible for outer planets.
 
 **Acceptance Criteria:**
 - No spec disagrees about array size or planet order.
-- Earth-center rule stated once, referenced everywhere.
+- EarthBody model stated once, referenced everywhere.
 - Outer planets explicitly marked as M2-5 transpersonal with staged rollout path documented.
 
 ### Task 4: Make The Binary Evaluation Thread Explicit End-To-End

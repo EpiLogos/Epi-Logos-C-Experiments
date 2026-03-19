@@ -39,6 +39,9 @@ rpassword = "7"
 zeroize = { version = "1", features = ["zeroize_derive"] }
 static_assertions = "1"
 
+# Quaternion / matrix math for torus projection
+nalgebra = "0.33"
+
 # Async runtime
 tokio = { version = "1", features = ["full"] }
 

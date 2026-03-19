@@ -193,7 +193,7 @@
       },
       {
         "id": "CF4",
-        "notation": "(4/5/0)",
+        "notation": "(4.5/0)",
         "subsystem": "M4 Nara",
         "role": "Lemniscate field / SOPHIA synthesis stream",
         "agent": "SOPHIA (Right Brain / Creative Synthesis 4-5-0)",
@@ -221,7 +221,7 @@
         {"forward": "4.5/4.0", "inverse": "4.5'/4.0'"}
       ],
       "cfp_variants": [
-        "4.(0000)", "4.(0/1)", "4.(0/1/2)", "4.(0/1/2/3)", "4.(4/5/0)", "4.(5/0)"
+        "4.(0000)", "4.(0/1)", "4.(0/1/2)", "4.(0/1/2/3)", "4.(4.5/0)", "4.(5/0)"
       ]
     }
   },
@@ -302,7 +302,7 @@
   "agent_roles": {
     "PRESENCE": {"position": "0", "frame": "CPF# = (00/00) = ∞", "role": "Transcendent Orchestrator / User interface"},
     "LOGOS": {"position": "0/1-2-3", "frame": "(0/1) analysis stream", "role": "Left Brain / Processing / Analysis"},
-    "SOPHIA": {"position": "4-5-0", "frame": "(4/5/0) synthesis stream", "role": "Right Brain / Creative Wisdom"},
+    "SOPHIA": {"position": "4-5-0", "frame": "(4.5/0) synthesis stream", "role": "Right Brain / Creative Wisdom"},
     "EROS": {"position": "bridge", "frame": "CPF#' = (4.0/1-4.4/5)", "role": "Handoffs / Bridge between LOGOS and SOPHIA"},
     "CHRONOS": {"position": "meta", "role": "Daytime Manager / Temporal coordination"}
   },

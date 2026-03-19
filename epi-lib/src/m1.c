@@ -150,17 +150,58 @@ const Holographic_Coordinate* const M1_M0_CROSSLINK[12] = {
 };
 
 /* ===================================================================
+ * SPANDA_CF_SUBSTAGE_LUT — 6 sub-stages of SPANDA_FLOWERING (#1-3-4)
+ *
+ * Each sub-stage is a depth of contextual flowering within stage 4.
+ * The element_count/fold_count traces the genus-0→genus-1 puncture:
+ *   4  → first stable quaternary sides of torus
+ *   6  → minimal circulation (Siva's 5 acts + Svatantrya)
+ *   8  → nested resolution increase (O(2,4), genus-2 preview)
+ *   10 → dual-track quantum superposition (T1/T2 double-slit)
+ *   12 → complete double-torus blueprint (O(2,6) or O(3,4))
+ *   0  → meta/percentile: 100% = 64+36; Möbius return completes
+ * =================================================================== */
+
+const CF_Substage_Entry SPANDA_CF_SUBSTAGE_LUT[6] = {
+    {
+        0, 4, 4, 0, "(4.0000)",
+        "{0/0,0/1,1/0,1/1} — 4-fold static: Void-Void,Void-Form,Form-Void,Form-Form"
+    },
+    {
+        1, 6, 6, 0, "(4.0/1)",
+        "0=(0/0)->(0/1)->(1/0)->(1/1)=1 — 6-fold dynamic; O(1,5)xN(0); Siva 5+Svatantrya"
+    },
+    {
+        2, 8, 8, 0, "(4.0/1/2)",
+        "0/(0/1)+(1/0)/0 — 8-fold nested states; O(2,4) pixel density; genus-2 preview"
+    },
+    {
+        3, 10, 10, 1, "(4.0/1/2/3)",
+        "[0/0,((0/1)/(1/0)),{T1:0/(0/1),0/1},{T2:(1/0)/0,1/0},(1/0+0/1),1/1] — 10-fold dual-track"
+    },
+    {
+        4, 12, 12, 0, "(4.4.0-4.4/5)",
+        "infinite differential potential — O(2,6)/O(3,4) 12-fold; double-torus blueprint"
+    },
+    {
+        5, 0, 0, 0, "(4.5/0)",
+        "Mobius return: synthesis=void=one-point; genus-1 torus completes; 100%=64+36=16/9"
+    },
+};
+
+/* ===================================================================
  * QL_FLOWERING — 6-stage mod-6 ring
  * Each stage: {index, name, formulation, next, inverse}
+ * Formulations sourced from Spanda Genesis canonical document.
  * =================================================================== */
 
 const QL_Stage QL_FLOWERING[6] = {
-    { 0, "Ground",      "Pure implicate; 16:9 root ratio",        1, 5 },
-    { 1, "Form",        "Mathematical DNA seed; 4^2 / 3^2",       2, 4 },
-    { 2, "Entity",      "72-space deployment; 36x2 Parashakti",   3, 3 },
-    { 3, "Pattern",     "64-bit word ring; Mahamaya doubling",     4, 2 },
-    { 4, "Context",     "QL-staging lemniscate; RING_SIZE=12",     5, 1 },
-    { 5, "Integration", "Logos synthesis; Mobius return to #0",    0, 0 },
+    { 0, "Ground",      "genus-0 sphere: (0/1) seed; 16/9=4^2/3^2 generative ratio",    1, 5 },
+    { 1, "Form",        "4+2 frame: 4 explicate + 2 implicate = 6-fold torus necessity", 2, 4 },
+    { 2, "Entity",      "12-fold ring: P*P'=36(Parashakti), P/P'=64(Mahamaya); 100%",   3, 3 },
+    { 3, "Pattern",     "bi-12 double-cover: Mahamaya 64-bit x Parashakti 72-space",     4, 2 },
+    { 4, "Context",     "7/8/9/10-fold nesting variants; lemniscate CF sub-staging",     5, 1 },
+    { 5, "Integration", "1-24-fold meta-sieve; Mobius 5/0 return; ceiling=24",           0, 0 },
 };
 
 /* ===================================================================
@@ -301,9 +342,20 @@ int m1_cli_dispatch(int argc, char** argv, M1_Root* root) {
         return 0;
     }
     if (strcmp(argv[1], "spanda") == 0) {
-        printf("[m1] Spanda stage: %u | track: %u | cf_sub: %u | state_bits: 0x%02X\n",
+        printf("[m1] Spanda stage: %u | track: %u | cf_sub: %u | state_bits: 0x%02X | dual_track: %u\n",
                (uint8_t)root->spanda.stage, root->spanda.track,
-               root->spanda.cf_substage, root->spanda.state_bits);
+               root->spanda.cf_substage, root->spanda.state_bits,
+               root->spanda.dual_track_active);
+        printf("[m1] 100%% = %u (Mahamaya %u + Parashakti %u) = 16/9 = 4^2/3^2\n",
+               QL_PERCENTILE_TOTAL, QL_PERCENTILE_MAHAMAYA, QL_PERCENTILE_PARASHAKTI);
+        printf("[m1] SPANDA_FLOWERING CF sub-stages (#1-3-4):\n");
+        for (int i = 0; i < 6; i++) {
+            const CF_Substage_Entry* e = &SPANDA_CF_SUBSTAGE_LUT[i];
+            printf("[m1]  [%d] %-16s fold=%u elem=%u dual=%u  %s\n",
+                   e->substage, e->cf_notation,
+                   e->fold_count, e->element_count, e->dual_track,
+                   e->formulation);
+        }
         return 0;
     }
     if (strcmp(argv[1], "ring") == 0) {

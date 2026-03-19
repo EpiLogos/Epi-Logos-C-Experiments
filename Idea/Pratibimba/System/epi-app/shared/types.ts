@@ -220,55 +220,6 @@ export interface S2GraphAPI {
   getNodeById: (nodeId: string) => Promise<GraphNode | null>;
 }
 
-// Agent operation from CONTEXT.md log
-export interface AgentOperation {
-  time: string;
-  operation: string;
-  status: 'success' | 'failure' | 'pending';
-}
-
-// Session context state from CONTEXT.md
-export interface SessionContextState {
-  sessionId: string;
-  started: string;
-  status: 'active' | 'idle' | 'error';
-  qlPosition: string;
-  vault: string;
-  neo4jUri: string;
-  neo4jContainer: string;
-  operations: AgentOperation[];
-}
-
-// Available skill definition
-export interface SkillDefinition {
-  name: string;
-  description: string;
-  command: string;  // e.g., '/daily-note'
-}
-
-// Subagent status
-export interface SubagentStatus {
-  name: string;
-  role: string;
-  status: 'active' | 'idle' | 'unavailable';
-  layer: string;  // C1, C2, etc.
-}
-
-// Coordinate query result
-export interface CoordinateQueryResult {
-  coordinate: string;
-  nodeCount: number;
-  nodes: GraphNode[];
-}
-
-// S4 Agent API - Claude Code / Agent operations
-export interface S4AgentAPI {
-  getSessionContext: () => Promise<SessionContextState | null>;
-  getAvailableSkills: () => Promise<SkillDefinition[]>;
-  getSubagentStatus: () => Promise<SubagentStatus[]>;
-  queryByCoordinate: (coordinate: string) => Promise<CoordinateQueryResult | null>;
-}
-
 // Link types for cross-domain linking
 export type LinkType = 'wiki' | 'coordinate' | 'external' | 'file';
 
@@ -308,8 +259,8 @@ export interface S0ShellAPI {
   openExternal: (url: string) => Promise<void>;
 }
 
-// S4 WebSocket API - Real-time observable events
-export interface S4WebSocketAPI {
+// S3' Gateway WebSocket API - Real-time observable events (port 18794)
+export interface S3GatewayAPI {
   isConnected: () => Promise<boolean>;
   send: (message: object) => Promise<void>;
   configure: (config: {
@@ -337,11 +288,10 @@ export interface SPrimeAPI {
   s2: {
     graph: S2GraphAPI;
   };
-  s3: Record<string, unknown>;
-  s4: {
-    agent: S4AgentAPI;
-    websocket: S4WebSocketAPI;
+  s3: {
+    websocket: S3GatewayAPI;
   };
+  s4: Record<string, unknown>;
   s5: Record<string, unknown>;
 }
 

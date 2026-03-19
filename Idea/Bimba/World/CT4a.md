@@ -8,7 +8,7 @@ invocation_profile: "frozen_process"
 
 ## Identity
 
-- Context Frame: CF(4/5/0)
+- Context Frame: CF(4.5/0)
 - Included Positions: 4, 5, 0
 - Function: integration-preview frame, non-cumulative
 

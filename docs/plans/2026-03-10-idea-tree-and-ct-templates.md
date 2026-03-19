@@ -82,7 +82,7 @@ Each CT template must declare:
 - position headings/scaffold
 
 Include the explicit split:
-- `CT4a` = `CF(4/5/0)`
+- `CT4a` = `CF(4.5/0)`
 - `CT4b` = `CF(4.0-4.4/5)` with all six content spaces
 
 **Step 2: Add named form instances**

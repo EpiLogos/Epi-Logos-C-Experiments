@@ -344,7 +344,7 @@ This is the largest missing component. Per S4-NOW spec Section III:
 | CT1 | (0/1) | Prompt/Form | #0 (question), #1 (material) |
 | CT2 | (0/1/2) | Task-Spec/Operation | #0 (question), #1 (material), #2 (analysis/operations) |
 | CT3 | (0/1/2/3) | Pattern-Note/Process | #0-#3 (full trika + process) |
-| CT4a | (4/5/0) | Integration Preview | #4 (context), #5 (synthesis), #0 (return) |
+| CT4a | (4.5/0) | Integration Preview | #4 (context), #5 (synthesis), #0 (return) |
 | CT4b' | (4.0/1-4.4/5) | Fractal Doubling | All 6 positions: 4.0-4.5 (daily-note, now) |
 | CT5 | (5/0) | Thought/Insight | #5 (synthesis), #0 (Mobius return) |
 
@@ -504,7 +504,7 @@ plugins/ta-onta/hen/
 - DAY-AS-CONTEXT-FRAMEWORK.md distinguishes CT4a' (standard integration) from CT4b' (fractal doubling) but designates CT4b' as the "Daily Note Home"
 - The daily-note-schema.md and Daily Note Template.md both use 6 positional content spaces (#0-#5), which aligns with CT4b' not CT4a
 
-**Resolution:** CT4b' is the **canonical and sole** template for both daily-note and now.md. CT4a (4/5/0) is a different archetype for integration preview artifacts, not for temporal notes. The 6-position structure is the defining feature of CT4b' and is correct for both Day and Session scope. CT4a would be used for synthesis artifacts that bridge context (4), synthesis (5), and return (0).
+**Resolution:** CT4b' is the **canonical and sole** template for both daily-note and now.md. CT4a (4.5/0) is a different archetype for integration preview artifacts, not for temporal notes. The 6-position structure is the defining feature of CT4b' and is correct for both Day and Session scope. CT4a would be used for synthesis artifacts that bridge context (4), synthesis (5), and return (0).
 
 **Decision:** CONFIRMED. CT4b' is the only template for daily-note and now.md.
 
@@ -582,8 +582,8 @@ plugins/ta-onta/hen/
 **Question:** The planning documents use CT4b' (with prime/apostrophe) inconsistently. Is CT4b' the template TYPE or the invoked INSTANCE?
 
 **Evidence:**
-- DAY-AS-CONTEXT-FRAMEWORK.md: CT4b' is the fractal doubling (4.0/1-4.4/5), distinct from CT4a' (4/5/0)
-- coordinate-type-system-and-reflection-families.md: "CT4b = CT' parent (meta-frame, frame-of-frames), CT4a = (4/5/0) integration preview"
+- DAY-AS-CONTEXT-FRAMEWORK.md: CT4b' is the fractal doubling (4.0/1-4.4/5), distinct from CT4a' (4.5/0)
+- coordinate-type-system-and-reflection-families.md: "CT4b = CT' parent (meta-frame, frame-of-frames), CT4a = (4.5/0) integration preview"
 - S4-NOW spec III: Template types map to CTx archetypes (CT4b' specifically)
 - US-010: "CT/CT' template-lens artifact contract validators (`CTX = CT(x)` explicit)"
 - US-027: "canonical template-definition vs runtime-invocation lineage contract (CT/CT' families)"

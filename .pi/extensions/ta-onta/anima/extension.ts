@@ -31,7 +31,7 @@ export async function animaExtension(api: ExtensionAPI) {
       properties: {
         cf_code: {
           type: "string",
-          enum: ["(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4/5/0)", "(5/0)", "(00/00)"],
+          enum: ["(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4.5/0)", "(5/0)", "(00/00)"],
         },
         task: { type: "string" },
       },
@@ -43,7 +43,7 @@ export async function animaExtension(api: ExtensionAPI) {
         "(0/1/2)": "eros",
         "(0/1/2/3)": "mythos",
         "(4.0/1-4.4/5)": "anima",
-        "(4/5/0)": "psyche",
+        "(4.5/0)": "psyche",
         "(5/0)": "sophia",
         "(00/00)": "nous",
       };

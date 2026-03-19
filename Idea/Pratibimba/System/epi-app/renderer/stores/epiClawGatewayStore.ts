@@ -23,7 +23,7 @@ import type { ConfigPanelMode } from '../domain/configPanelDomain';
 
 export type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error';
 
-function normalizeChatPayload(evt: GatewayEventFrame): Controllers.ChatEventPayload | null {
+export function normalizeChatPayload(evt: GatewayEventFrame): Controllers.ChatEventPayload | null {
   if (!evt.payload || typeof evt.payload !== 'object') {
     return null;
   }
@@ -254,7 +254,7 @@ const createInitialState = (): Omit<EpiClawGatewayState, 'connect' | 'disconnect
   chat: {
     client: null,
     connected: false,
-    sessionKey: 'main',
+    sessionKey: '',
     chatLoading: false,
     chatMessages: [],
     chatThinkingLevel: null,
@@ -326,7 +326,7 @@ const createInitialState = (): Omit<EpiClawGatewayState, 'connect' | 'disconnect
   config: {
     client: null,
     connected: false,
-    applySessionKey: 'main',
+    applySessionKey: '',
     configLoading: false,
     configRaw: '{}\n',
     configRawOriginal: '',
@@ -765,7 +765,28 @@ export const useEpiClawGatewayStore = create<EpiClawGatewayState>()(persist((set
     loadSessions: async (overrides) => {
       const state = get();
       await Controllers.loadSessions(state.sessions, overrides);
+      const preferredChatSession = Controllers.resolvePreferredSessionKey(
+        state.sessions.sessionsResult,
+        state.chat.sessionKey,
+      );
+      const preferredApplySession =
+        Controllers.resolvePreferredSessionKey(
+          state.sessions.sessionsResult,
+          state.config.applySessionKey,
+        ) ?? preferredChatSession;
+      const shouldReloadHistory =
+        Boolean(preferredChatSession) && preferredChatSession !== state.chat.sessionKey;
+      if (preferredChatSession) {
+        state.chat.sessionKey = preferredChatSession;
+      }
+      if (preferredApplySession) {
+        state.config.applySessionKey = preferredApplySession;
+      }
+      if (shouldReloadHistory) {
+        await Controllers.loadChatHistory(state.chat);
+      }
       set({ sessions: { ...state.sessions } });
+      set({ chat: { ...state.chat }, config: { ...state.config } });
     },
 
     patchSession: async (key: string, patch: {

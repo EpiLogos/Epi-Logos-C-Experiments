@@ -205,7 +205,7 @@ The S4-S4i-PI-SKILLS spec explicitly states the implementation order:
 | A-01 | VAK evaluation mechanics | Pure prompt → hybrid → fully programmatic | Core pipeline |
 | A-02 | Nous: agent or function? | Agent for CF(0000) clearing, function for routine dis-closure | Architecture model |
 | A-03 | CF dispatch mechanism | Rust lookup table + process boundary definition | Core routing |
-| A-04 | Psyche CF code | (4/5/0) confirmed — supersedes earlier (4.0-4.4/5) | Coordinate clarity |
+| A-04 | Psyche CF code | (4.5/0) confirmed — supersedes earlier (4.0-4.4/5) | Coordinate clarity |
 | A-05 | ANIMA.md vs Claude-compatible agent format | Keep Claude-compatible, add philosophical docs separately | Agent definition format |
 | A-06 | Agent model assignment | Single model (opus) for now, diversify later | Cost/capability |
 | A-07 | Aletheia subagent invocation path | Real subprocess? In-context skill? Prompt mode? | Process architecture |
@@ -235,7 +235,7 @@ These were flagged as ambiguities but the analysis resolved them:
 | ID | Decision | Resolution |
 |----|----------|------------|
 | R-01 | CT4b' sole template for daily/now | **CONFIRMED** — CT4b' only |
-| R-02 | Psyche CF code | **(4/5/0)** — executive triad. Supersedes earlier VAK spec. |
+| R-02 | Psyche CF code | **(4.5/0)** — executive triad. Supersedes earlier VAK spec. |
 | R-03 | Archive path | **{YYYY}/{MM}/{DD}/** — no week directory. S4 spec authoritative. |
 | R-04 | Thought routing split | Aletheia classifies → Khora writes → Hen indexes → Chronos lifecycles |
 | R-05 | Template authority | Hen generates, Chronos triggers |

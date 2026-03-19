@@ -89,7 +89,7 @@ CF code → constitutional agent mapping:
 | `(0/1/2)` | Eros | Dialectical synthesis |
 | `(0/1/2/3)` | Mythos | Narrative/pattern work |
 | `(4.0/1-4.4/5)` | Psyche | Session subject — undergoes the task |
-| `(4/5/0)` | Psyche | Executive triad (confirmed CF code) |
+| `(4.5/0)` | Psyche | Executive triad (confirmed CF code) |
 | `(5/0)` | Sophia | Möbius review, crystallisation |
 | `(00/00)` | Nous | Pre-categorical clearing, dis-closure preparation |
 
@@ -114,7 +114,7 @@ Located at: `anima/S4'/agents/`
 
 | Agent | CF Code | Role |
 |-------|---------|------|
-| **Psyche** | (4/5/0) | The session subject — undergoes the task; bridges Anima dispatch and Aletheia mode-functions |
+| **Psyche** | (4.5/0) | The session subject — undergoes the task; bridges Anima dispatch and Aletheia mode-functions |
 | **Sophia** | (5/0) | Post-execution reviewer; distills learnings; classifies `thinking/` → `thoughts/` |
 | **Nous** | (00/00) | Dis-closure preparation; prepares RAG context packages from Gnosis for task agents |
 | **Eros** | (0/1/2) | Dialectical synthesis; Night' Klotho mode |

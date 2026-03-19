@@ -82,9 +82,9 @@ Property key: `coordinate` (not `bimbaCoordinate`).
 - #2 ↔ CF_TRIKA (0/1/2)
 - #3 ↔ CF_QUATERNAL (0/1/2/3)
 - #4 ↔ CF_FRACTAL (4.0/1-4.4/5)
-- #4 ↔ CF_SYNTHESIS (4/5/0) — spans 4-5-0
-- #5 ↔ CF_SYNTHESIS (4/5/0) — second leg
-- #0 ↔ CF_SYNTHESIS (4/5/0) — third leg (the return)
+- #4 ↔ CF_SYNTHESIS (4.5/0) — spans 4-5-0
+- #5 ↔ CF_SYNTHESIS (4.5/0) — second leg
+- #0 ↔ CF_SYNTHESIS (4.5/0) — third leg (the return)
 - #5 ↔ CF_MOBIUS (5/0)
 
 ##### Weave Interleaving Detail (from C memory arena)

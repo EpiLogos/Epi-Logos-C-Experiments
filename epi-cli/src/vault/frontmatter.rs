@@ -38,6 +38,8 @@ const CANONICAL_METADATA_KEYS: &[&str] = &[
     "provenance_refs",
     "invocation_kind",
     "thought_type",
+    // L-alignment block: agent-populated epistemic lens annotations
+    "l_alignments",
 ];
 const DEPRECATED_PATTERNS: &[&str] = &["bimbaCoordinate", "ql_position"];
 
@@ -153,6 +155,12 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
             continue;
         }
 
+        // l_alignments: validate each entry's internal consistency
+        if key_str == "l_alignments" {
+            validate_l_alignments(value, result);
+            continue;
+        }
+
         if is_coordinate_key(key_str) {
             if let Some(err) = validate_coordinate_key(key_str, value) {
                 result.errors.push(err);
@@ -203,7 +211,16 @@ fn is_deprecated_key(key: &str) -> bool {
 
 fn is_coordinate_key(key: &str) -> bool {
     let parts: Vec<&str> = key.splitn(3, '_').collect();
-    parts.len() == 3 && matches!(parts[0], "c" | "p" | "l" | "s" | "t" | "m")
+    if parts.len() != 3 {
+        return false;
+    }
+    if !matches!(parts[0], "c" | "p" | "l" | "s" | "t" | "m") {
+        return false;
+    }
+    // L-family shorthand keys may use lens indices 0-11 (day + night lenses).
+    // All other families remain 0-5 — validated in validate_coordinate_key.
+    // Accepting them here routes them to validate_coordinate_key for further checks.
+    true
 }
 
 fn validate_coordinate_key(key: &str, value: &Value) -> Option<String> {
@@ -226,13 +243,154 @@ fn validate_coordinate_key(key: &str, value: &Value) -> Option<String> {
             ))
         }
     };
-    if n > 5 {
-        return Some(format!("Coordinate key '{key}': position {n} must be 0-5"));
+
+    // L-family per-lens shorthand keys support indices 0-11 (day 0-5, night 6-11).
+    // All other families are bounded by the standard 0-5 position range.
+    let max_pos: u8 = if family == "l" { 11 } else { 5 };
+    if n > max_pos {
+        return Some(format!(
+            "Coordinate key '{key}': position {n} must be 0-{max_pos} for family '{family}'"
+        ));
     }
 
     match value {
-        Value::String(_) => None,
-        _ => Some(format!("Coordinate key '{key}' must have a string value")),
+        Value::String(_) | Value::Mapping(_) => None,
+        _ => Some(format!(
+            "Coordinate key '{key}' must have a string or mapping value"
+        )),
+    }
+}
+
+/// Validate an `l_alignments` value.
+///
+/// `l_alignments` is a YAML sequence. Each entry must have:
+///   - `lens`: string
+///   - `lens_index`: integer 0-11
+///   - `mode`: "day" | "night"
+///   - consistency: index 0-5 → mode "day"; index 6-11 → mode "night"
+///   - `weight` (optional): float in [0.0, 1.0]
+///   - `klein_square` (optional): 4-element sequence of strings
+///
+/// Unknown sub-fields within an entry are tolerated (additive protocol).
+fn validate_l_alignments(value: &Value, result: &mut ValidationResult) {
+    let entries = match value.as_sequence() {
+        Some(seq) => seq,
+        None => {
+            result
+                .warnings
+                .push("l_alignments is present but not a sequence — ignored".to_string());
+            return;
+        }
+    };
+
+    for (i, entry) in entries.iter().enumerate() {
+        let map = match entry.as_mapping() {
+            Some(m) => m,
+            None => {
+                result
+                    .errors
+                    .push(format!("l_alignments[{i}]: entry must be a mapping"));
+                continue;
+            }
+        };
+
+        let get_str = |field: &str| -> Option<&str> {
+            map.get(Value::String(field.to_string()))
+                .and_then(Value::as_str)
+        };
+        let get_u64 = |field: &str| -> Option<u64> {
+            map.get(Value::String(field.to_string()))
+                .and_then(Value::as_u64)
+        };
+
+        // Required: `lens` (string)
+        if get_str("lens").is_none() {
+            result
+                .errors
+                .push(format!("l_alignments[{i}]: missing required 'lens' string field"));
+        }
+
+        // Required: `lens_index` (0-11)
+        let lens_index = match get_u64("lens_index") {
+            Some(n) => {
+                if n > 11 {
+                    result.errors.push(format!(
+                        "l_alignments[{i}]: lens_index {n} is out of range (must be 0-11)"
+                    ));
+                    None
+                } else {
+                    Some(n)
+                }
+            }
+            None => {
+                result
+                    .errors
+                    .push(format!("l_alignments[{i}]: missing or non-integer 'lens_index'"));
+                None
+            }
+        };
+
+        // Required: `mode` ("day" | "night")
+        let mode = get_str("mode");
+        match mode {
+            Some("day") | Some("night") => {}
+            Some(other) => result.errors.push(format!(
+                "l_alignments[{i}]: invalid mode '{other}' — must be 'day' or 'night'"
+            )),
+            None => result
+                .errors
+                .push(format!("l_alignments[{i}]: missing required 'mode' field")),
+        }
+
+        // Consistency: lens_index 0-5 → mode "day"; 6-11 → mode "night"
+        if let (Some(idx), Some(m)) = (lens_index, mode) {
+            let expected = if idx <= 5 { "day" } else { "night" };
+            if m != expected {
+                result.errors.push(format!(
+                    "l_alignments[{i}]: lens_index {idx} is a {expected}-mode lens \
+                     but mode is set to '{m}'"
+                ));
+            }
+        }
+
+        // Optional: `weight` (float 0.0-1.0)
+        if let Some(w) = map.get(Value::String("weight".to_string())) {
+            let weight_f = match w {
+                Value::Number(n) => n.as_f64(),
+                _ => None,
+            };
+            match weight_f {
+                Some(f) if (0.0..=1.0).contains(&f) => {}
+                Some(f) => result.errors.push(format!(
+                    "l_alignments[{i}]: weight {f} is out of range (must be 0.0-1.0)"
+                )),
+                None => result.errors.push(format!(
+                    "l_alignments[{i}]: weight must be a float"
+                )),
+            }
+        }
+
+        // Optional: `klein_square` (4-element sequence of strings)
+        if let Some(ks) = map.get(Value::String("klein_square".to_string())) {
+            match ks.as_sequence() {
+                Some(seq) if seq.len() == 4 => {
+                    for (j, elem) in seq.iter().enumerate() {
+                        if elem.as_str().is_none() {
+                            result.errors.push(format!(
+                                "l_alignments[{i}].klein_square[{j}]: must be a string"
+                            ));
+                        }
+                    }
+                }
+                Some(seq) => result.errors.push(format!(
+                    "l_alignments[{i}]: klein_square must be a 4-element array (got {})",
+                    seq.len()
+                )),
+                None => result
+                    .errors
+                    .push(format!("l_alignments[{i}]: klein_square must be a sequence")),
+            }
+        }
     }
 }
 
@@ -255,5 +413,117 @@ M_5_epii: "wrong"
             .errors
             .iter()
             .any(|error| error.contains("Unknown frontmatter key 'M_5_epii'")));
+    }
+
+    #[test]
+    fn l_alignments_valid_entry_passes() {
+        let yaml: Value = serde_yaml::from_str(
+            r#"
+coordinate: "S1"
+l_alignments:
+  - lens: "L2"
+    lens_index: 2
+    mode: "day"
+    weight: 0.8
+    klein_square: ["L2", "L3", "L2'", "L3'"]
+"#,
+        )
+        .unwrap();
+        let result = validate_frontmatter(&yaml);
+        assert!(result.errors.is_empty(), "expected no errors, got: {:?}", result.errors);
+    }
+
+    #[test]
+    fn l_alignments_night_lens_valid() {
+        let yaml: Value = serde_yaml::from_str(
+            r#"
+coordinate: "S1"
+l_alignments:
+  - lens: "L2'"
+    lens_index: 8
+    mode: "night"
+    weight: 0.5
+"#,
+        )
+        .unwrap();
+        let result = validate_frontmatter(&yaml);
+        assert!(result.errors.is_empty(), "expected no errors, got: {:?}", result.errors);
+    }
+
+    #[test]
+    fn l_alignments_mode_index_mismatch_is_error() {
+        let yaml: Value = serde_yaml::from_str(
+            r#"
+coordinate: "S1"
+l_alignments:
+  - lens: "L2"
+    lens_index: 2
+    mode: "night"
+"#,
+        )
+        .unwrap();
+        let result = validate_frontmatter(&yaml);
+        assert!(
+            result.errors.iter().any(|e| e.contains("day-mode lens") && e.contains("night")),
+            "expected day/night mismatch error, got: {:?}", result.errors
+        );
+    }
+
+    #[test]
+    fn l_alignments_weight_out_of_range_is_error() {
+        let yaml: Value = serde_yaml::from_str(
+            r#"
+coordinate: "S1"
+l_alignments:
+  - lens: "L3"
+    lens_index: 3
+    mode: "day"
+    weight: 1.5
+"#,
+        )
+        .unwrap();
+        let result = validate_frontmatter(&yaml);
+        assert!(
+            result.errors.iter().any(|e| e.contains("weight") && e.contains("out of range")),
+            "expected weight range error, got: {:?}", result.errors
+        );
+    }
+
+    #[test]
+    fn l_alignments_klein_square_wrong_length_is_error() {
+        let yaml: Value = serde_yaml::from_str(
+            r#"
+coordinate: "S1"
+l_alignments:
+  - lens: "L1"
+    lens_index: 1
+    mode: "day"
+    klein_square: ["L1", "L4"]
+"#,
+        )
+        .unwrap();
+        let result = validate_frontmatter(&yaml);
+        assert!(
+            result.errors.iter().any(|e| e.contains("klein_square") && e.contains("4-element")),
+            "expected klein_square length error, got: {:?}", result.errors
+        );
+    }
+
+    #[test]
+    fn l_shorthand_key_day_range_passes() {
+        // l_2_logical is a valid {family}_{n}_{semantic} key — n=2 within 0-5 day range
+        let yaml: Value = serde_yaml::from_str(
+            r#"
+coordinate: "S1"
+l_2_logical:
+  sub: 3
+  weight: 0.8
+  element: "air"
+"#,
+        )
+        .unwrap();
+        // l_2_logical has a mapping value — should pass with updated coordinate key validation
+        let result = validate_frontmatter(&yaml);
+        assert!(result.errors.is_empty(), "expected no errors, got: {:?}", result.errors);
     }
 }

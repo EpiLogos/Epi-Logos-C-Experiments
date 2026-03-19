@@ -1,10 +1,10 @@
 /**
- * S4' Observable Event Types
+ * S3' Observable Event Types
  *
- * TypeScript definitions for AgentObservableEvent schema from S4' Observability Gateway.
+ * TypeScript definitions for AgentObservableEvent schema from S3' Gateway.
  * These types enable real-time streaming of agent lifecycle events to the Omni Panel.
  *
- * Based on: app/s4_gateway/models.py
+ * Based on: epi-cli/src/gate/ (Rust S3' gateway)
  */
 
 // Constitutional positions in CFP (Context Frame Protocol)
@@ -16,7 +16,7 @@ export type ConstitutionalPosition =
   | 'RASA'      // #4 - Essence/Taste
   | 'SCENT';    // #5 - Synthesis/Integration
 
-// Hook event types from S3' infrastructure
+// Hook event types from S3' gateway infrastructure
 export type HookEventType =
   // Session lifecycle
   | 'SESSION_START'
@@ -77,7 +77,7 @@ export interface CurrentPhase {
   constitutional: ConstitutionalPosition;
 }
 
-// M5-4' Observable Context - agent metadata and CFP phase
+// Observable Context - agent metadata and CFP phase
 export interface M5Observable {
   agent_name?: string;      // e.g., 'nous', 'psyche', 'eros'
   agent_type?: string;      // e.g., 'holographic', 'coordinator'
@@ -100,7 +100,7 @@ export interface AgentObservableEvent {
 // Agent types for task delegation
 export type AgentType = 'nous' | 'logos' | 'eros' | 'mythos' | 'psyche' | 'sophia';
 
-// Outbound message types (Electron → S4' Gateway)
+// Outbound message types (Electron → S3' Gateway)
 export interface DelegateTaskMessage {
   type: 'DELEGATE_TASK';
   payload: {
@@ -110,7 +110,7 @@ export interface DelegateTaskMessage {
   };
 }
 
-// Inbound response types (S4' Gateway → Electron)
+// Inbound response types (S3' Gateway → Electron)
 export interface TaskAcknowledgedResponse {
   type: 'TASK_ACKNOWLEDGED';
   task_id: string;
@@ -125,8 +125,8 @@ export interface ErrorResponse {
   details?: Record<string, unknown>;
 }
 
-// WebSocket API for S4' gateway
-export interface S4WebSocketAPI {
+// WebSocket API for S3' gateway
+export interface S3GatewayAPI {
   isConnected: () => Promise<boolean>;
   send: (message: object) => Promise<void>;
   onMessage: (callback: (message: AgentObservableEvent) => void) => () => void;

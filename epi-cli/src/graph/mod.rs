@@ -86,6 +86,9 @@ pub enum GraphCmd {
         #[arg(default_value = "all")]
         dataset: String,
     },
+    /// Augment Parashakti ChakralCenter nodes with body_zones arrays + decan body data (Phase 9)
+    #[command(name = "seed-nara")]
+    SeedNara,
 }
 
 /// Parse YAML frontmatter from a markdown file (content between --- delimiters).
@@ -415,6 +418,15 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                     dataset
                 ))
             }
+        }
+
+        GraphCmd::SeedNara => {
+            let config = client::Neo4jConfig::from_env();
+            let client = client::Neo4jClient::connect(&config)
+                .map_err(|e| format!("connect failed: {}", e))?;
+            let chakra_result = seed::seed_parashakti_body_zones(&client).await?;
+            let decan_result = seed::seed_decan_body_data(&client).await?;
+            Ok(format!("{}\n{}", chakra_result, decan_result))
         }
     }
 }

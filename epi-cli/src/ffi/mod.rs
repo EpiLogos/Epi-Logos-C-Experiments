@@ -1,5 +1,8 @@
 //! FFI bindings to libepilogos — statically linked C library
 
+pub mod m1;
+pub mod m2;
+pub mod nara;
 pub mod tagged;
 
 use libc::c_void;

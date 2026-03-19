@@ -7,7 +7,7 @@ This package propagates the C `Holographic_Coordinate` struct (128 bytes, define
 - **Pi agent extensions** (S4') — runtime coordinate handling, context frame dispatch
 - **Obsidian vault tooling** (S1') — frontmatter validation against 68 canonical keys
 - **Neo4j graph layer** (S2') — node property typing, 34 canonical relation types
-- **Electron app** (4/5/0) — type-safe coordinate rendering
+- **Electron app** (4.5/0) — type-safe coordinate rendering
 
 This is a **foundation package** — it provides schemas and validation, not business logic. Higher-level systems import these types to ensure structural alignment with the C engine.
 

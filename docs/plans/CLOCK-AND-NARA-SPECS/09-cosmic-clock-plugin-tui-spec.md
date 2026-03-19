@@ -16,17 +16,19 @@
 
 The CosmicClockPlugin is **Tab 2 in its entirety**. It is not one panel among several — when the
 user switches to the structural tab, they are inside the clock. The clock IS the structural view
-of the system operating: 385 nodes (360 degrees + 24 backbone + 1 Earth center), 9 planetary
-positions orbiting from Kerykeion, the torus rotating continuously from the user's live oracle
-quaternion, the φ-stage showing which SPANDA sub-stage they currently occupy.
+of the system operating: 385 nodes (360 degrees + 24 backbone + 1 Earth center), 10 tracked
+planetary operators (Sun–Pluto) plus the separate EarthBody center, the torus rotating continuously
+from the user's live oracle quaternion, and the `tick12` label showing which full 12-fold SPANDA
+position they currently occupy.
 
 The MiniClockPlugin is a compact instantiable pane for Tab 1 (the personal/flow tab). It is a
-small orientation widget — current degree, torus_stage, active planet transits — that can be
+small orientation widget — current degree, `tick12`, active planet transits — that can be
 opened alongside flow.md, oracle, identity, or spine as the user configures their workspace.
 
-The M4SpinePlugin is the chakral-elemental spine — 8 vertical bars driven by the live quaternion's
-elemental balance (T/A/G/C = Earth/Fire/Water/Air). It compares the live spine to the natal spine
-as a subtle background reference.
+The M4SpinePlugin is the chakral-elemental spine — EarthBody as a distinct root-anchor plus 7
+canonical chakra bars driven by the live quaternion's elemental balance
+(T/A/G/C = Earth/Fire/Water/Air). It compares the live spine to the quintessence spine as a subtle
+background reference.
 
 **The shared clock state is what makes the portal a living system.** Every plugin that surfaces
 clock data reads from `Arc<Mutex<PortalClockState>>`. The oracle plugin writes to it on each cast.
@@ -47,7 +49,7 @@ No other additions needed. All rendering uses ratatui's `Buffer` (direct cell ma
 braille Unicode (U+2800–U+28FF). No pixel-graphics crate, no 3D renderer, no plotting library.
 
 **Rationale:** The torus projection math is ~60 lines of custom code tuned to this coordinate
-system (R/r = 16/9, φ-stages = SPANDA sub-stages, degree positions = I-Ching/codon nodes).
+system (R/r = 16/9, `tick12` = full 12-fold SPANDA position, degree positions = I-Ching/codon nodes).
 A generic 3D crate adds overhead and can't be tuned to QL geometry. `nalgebra` provides the
 quaternion-to-rotation-matrix, composition, and normalization primitives cleanly. Everything
 else — projection, rasterization to braille dots, degree ring rendering — is custom and correct.
@@ -79,9 +81,9 @@ pub struct OracleFaces {
     /// Degree-space shortcut (equivalent): (d + 180) % 360.
     pub deficient_degree: u16,
 
-    /// Implicate phase: #(d) — the # inversion operator applied to the degree coordinate.
-    /// NOT d+360 arithmetic. Same degree, inversion_state flipped (the antipodal spinor).
-    /// Canonical route: spanda_invert(primary_substage) = 11 - primary_substage
+    /// Implicate phase: same degree, opposite phase / inversion state (the antipodal spinor).
+    /// Canonical route: spanda_invert(primary_substage) = 11 - primary_substage.
+    /// Serialization forms may use either `(degree=d, phase=1)` or `exact_degree_720 = d + 360`.
     /// In the renderer: same ring position rendered with dim inverted marker.
     pub implicate_degree: u16,
 
@@ -113,10 +115,37 @@ pub struct PlanetState {
     pub transiting_tarot: u8,
     /// Chakra at this planet's current degree (from decan_chakra).
     pub transiting_chakra: u8,
+    /// True for Uranus/Neptune/Pluto (M2-5 transpersonal layer).
+    pub is_transpersonal: bool,
+}
+
+/// Earth as the special planet/chakra bridge object.
+/// Earth is NOT part of the orbiting PlanetState[10] array.
+#[derive(Clone, Debug)]
+pub struct EarthBodyState {
+    /// Canonical bodily-site index. Always `CHAKRA_EARTH = 0`.
+    pub chakra_index:      u8,
+    /// Solar parent. Always `0` = Sun.
+    pub solar_parent:      u8,
+    /// Reference frequency for the EarthBody anchor ("Om frequency").
+    pub base_frequency_hz: f32,
+    /// Earth renders as the geocentric center/root anchor, not an orbiting marker.
+    pub is_center_anchor:  bool,
+}
+
+impl Default for EarthBodyState {
+    fn default() -> Self {
+        Self {
+            chakra_index:      0,
+            solar_parent:      0,
+            base_frequency_hz: 136.10,
+            is_center_anchor:  true,
+        }
+    }
 }
 
 /// Full kairos (astrological time) state from Kerykeion.
-/// Replaces the bare planet_degrees: [u16; 9] array.
+/// Replaces the bare planet_degrees array with canonical PlanetState[10].
 /// Written by: KairosLoader on sync, SpacetimeDB subscriber for live updates.
 /// Read by:    CosmicClockPlugin (planet ring), M4SpinePlugin (chakra resonance).
 #[derive(Clone, Debug)]
@@ -126,15 +155,15 @@ pub struct KairosState {
     /// Earth = center/observer — NOT in this array (no clock degree).
     /// Sun at index 0 = stable solar root/parent (encapsulates all others).
     /// Uranus/Neptune/Pluto = M2-5 transpersonal (is_transpersonal: true).
-    /// 9:8 Epogdoon = 9 non-Sun planets (Moon–Pluto) : 8 chakras.
+    /// 9:8 Epogdoon = 9 non-Sun planets (Moon–Pluto) : EarthBody + 7 chakras.
     /// NOTE: Current m2.h Planet_Id enum uses legacy ordering; reorder pending Parashakti dataset reconciliation.
     pub planets:               [PlanetState; 10],
     /// Current planetary hour (0–23).
     pub current_hour:          u8,
     /// Which planet rules this hour (Planet_Id).
     pub hour_planet:           u8,
-    /// Which chakra resonates with the current hour's ruling planet.
-    /// PLANET_CHAKRA[hour_planet] — used by M4SpinePlugin for 110% glow.
+    /// Which bodily site resonates with the current hour's ruling planet.
+    /// 0 = EarthBody, 1..7 = Root..Crown. Used by M4SpinePlugin for resonance glow.
     pub active_chakra:         u8,
     /// Unix timestamp of this Kerykeion reading.
     pub timestamp:             u64,
@@ -212,10 +241,10 @@ pub struct PortalClockState {
     /// Current oracle cast degree (0–359).
     pub current_degree:          u16,
 
-    /// Spanda substage index (0–11, discrete — see 03-spanda-double-helix-12fold.md).
+    /// Canonical M1 tick / spanda index (0–11, discrete — see 03-spanda-double-helix-12fold.md).
     /// Strand A: 0–5 (explicit/ascending). Strand B: 6–11 (implicit/Möbius return).
     /// MUST be quantized via `quantize_to_spanda_substage()`, NOT float-cast.
-    pub torus_stage:             u8,
+    pub tick12:                  u8,
 
     /// Last complete oracle reading (4 faces). None until first cast.
     pub last_cast:               Option<OracleFaces>,
@@ -225,9 +254,13 @@ pub struct PortalClockState {
     pub last_cast_timestamp:     u64,
 
     // ── Branch state layer (#4.1–#4.5) ───────────────────────────────────────
-    /// Live chakra activation levels [0.0, 1.0] for 8 chakras (Earth/Root/Sacral/Solar/
-    /// Heart/Throat/ThirdEye/Crown). Updated by oracle cast and kairos planetary hour.
-    pub chakra_levels:           [f32; 8],
+    /// EarthBody anchor/root state. Separate from the 7 canonical chakra bars.
+    pub earth_body:              EarthBodyState,
+
+    /// Live chakra activation levels [0.0, 1.0] for the 7 canonical chakras
+    /// (Root/Sacral/Solar/Heart/Throat/ThirdEye/Crown). Updated by oracle cast
+    /// and kairos planetary hour. EarthBody renders separately as the bodily root.
+    pub chakra_levels:           [f32; 7],
 
     /// Which of the 6 lenses (#4.4.0–#4.4.5) is currently active for the user's lens view.
     /// 0=Literal 1=Functional 2=Structural 3=Archetypal 4=Phenomenological 5=KS.
@@ -241,12 +274,12 @@ pub struct PortalClockState {
     pub logos_stage:             u8,
 
     // ── Kairos layer ──────────────────────────────────────────────────────────
-    /// Full live planetary state from Kerykeion. Replaces bare planet_degrees[9].
+    /// Full live planetary state from Kerykeion. Replaces the old bare planet-degree array.
     pub kairos:                  KairosState,
 
     // ── Multiplayer anchor ────────────────────────────────────────────────────
     /// 3D position on torus surface for SpacetimeDB collective rendering.
-    /// Derived from (current_degree, torus_stage) → torus parametric coords.
+    /// Derived from (current_degree, tick12) → torus parametric coords.
     pub orbital_position:        [f32; 3],
 }
 
@@ -257,10 +290,11 @@ impl Default for PortalClockState {
             live_quaternion:         [1.0, 0.0, 0.0, 0.0],
             quintessence_quaternion: [1.0, 0.0, 0.0, 0.0],
             current_degree:          0,
-            torus_stage:             0,
+            tick12:                  0,
             last_cast:               None,
             last_cast_timestamp:     0,
-            chakra_levels:           [0.0; 8],
+            earth_body:              EarthBodyState::default(),
+            chakra_levels:           [0.0; 7],
             active_branch_lens:      0,
             transform_stage:         0,
             logos_stage:             0,
@@ -314,11 +348,11 @@ pub fn update_from_cast(
     let live_q = if mag > f32::EPSILON { [w/mag, x/mag, y/mag, z/mag] } else { [1.0,0.0,0.0,0.0] };
 
     // Quantize to discrete Spanda substage (0–11). No float cast.
-    let torus_stage = quantize_to_spanda_substage(y, x);
+    let tick12 = quantize_to_spanda_substage(y, x);
 
     // Deficient degree via # operator: antiparallel offset of 6 in Spanda index space,
     // equivalent to (d + 180) % 360 in degree space.
-    let deficient_substage = (torus_stage + 6) % 12;
+    let deficient_substage = (tick12 + 6) % 12;
     let deficient = (degree as u32 + 180) % 360;
     let _ = deficient_substage; // structural derivation preserved; degree formula used for LUT indexing
 
@@ -328,7 +362,7 @@ pub fn update_from_cast(
 
     // Orbital position on torus (parametric)
     let theta = degree as f32 * std::f32::consts::TAU / 360.0;
-    let phi   = torus_stage as f32 * std::f32::consts::TAU / 12.0;
+    let phi   = tick12 as f32 * std::f32::consts::TAU / 12.0;
     let (r, big_r) = (0.36, 0.64); // r/R = 9/16, normalized
     let orbital = [
         (big_r + r * phi.cos()) * theta.cos(),
@@ -348,7 +382,7 @@ pub fn update_from_cast(
     let mut s = state.lock().unwrap();
     s.live_quaternion   = live_q;
     s.current_degree    = degree;
-    s.torus_stage       = torus_stage;
+    s.tick12            = tick12;
     s.orbital_position  = orbital;
     s.last_cast_timestamp = ts;
     s.last_cast = Some(OracleFaces {
@@ -502,11 +536,11 @@ use nalgebra::{Unit, UnitQuaternion, Vector3};
 /// R = major radius (distance from torus center to tube center)
 /// r = minor radius (tube radius)  R/r = 16/9 (Epogdoon ratio)
 /// q = rotation quaternion from live_quaternion [w, x, y, z]
-/// phi_stage = 0-5; used to highlight the current φ-stage ring
+/// tick12 = 0-11; used to highlight the current full 12-fold spanda ring position
 pub fn render_torus(
     canvas:     &mut BrailleCanvas,
     q:          [f32; 4],
-    phi_stage:  u8,
+    tick12:     u8,
     width_pts:  usize,   // canvas dot width
     height_pts: usize,   // canvas dot height
 ) {
@@ -527,7 +561,7 @@ pub fn render_torus(
 
     // Sample density: more samples = smoother torus
     let theta_steps = 120;  // major circle (degree ring)
-    let phi_steps   = 60;   // minor circle (torus tube / φ-stages)
+    let phi_steps   = 60;   // minor circle (torus tube / 12-fold tick12 positions)
 
     for ti in 0..theta_steps {
         let theta = ti as f32 * 2.0 * std::f32::consts::PI / theta_steps as f32;
@@ -556,20 +590,17 @@ pub fn render_torus(
             if buf_idx < depth_buf_size && rz > z_buf[buf_idx] {
                 z_buf[buf_idx] = rz;
 
-                // Color: which φ-stage ring is this tube segment?
-                let stage_idx = (pi * 6 / phi_steps) as u8;
-                let color = if stage_idx == phi_stage {
-                    Color::Yellow      // current φ-stage highlighted
+                // Color: which tick12 ring segment is this tube position?
+                const TICK12_COLORS: [Color; 12] = [
+                    Color::DarkGray, Color::White, Color::Cyan, Color::Green,
+                    Color::Magenta, Color::Red, Color::DarkGray, Color::White,
+                    Color::Cyan, Color::Green, Color::Magenta, Color::Red,
+                ];
+                let stage_idx = (pi * 12 / phi_steps) as u8;
+                let color = if stage_idx == tick12 {
+                    Color::Yellow      // current tick12 highlighted
                 } else {
-                    match stage_idx {
-                        0 => Color::DarkGray,    // SEED — void/ground
-                        1 => Color::White,        // POLE — first cut
-                        2 => Color::Cyan,         // TRIKA — torus locks
-                        3 => Color::Green,        // FLOWER/lemniscate — oracle
-                        4 => Color::Magenta,      // FULL — double torus
-                        5 => Color::Red,          // META — Möbius close
-                        _ => Color::White,
-                    }
+                    TICK12_COLORS[stage_idx as usize]
                 };
 
                 // Depth shading: nearer = brighter (just affects whether we draw)
@@ -587,13 +618,13 @@ pub fn render_torus(
 
 ```rust
 /// Render the 360° degree ring around the torus.
-/// planet_degrees: [u16; 9] — degrees 0-359 for each of the 9 canonical planets
+/// planet_degrees: [u16; 10] — degrees 0-359 for the canonical Sun–Pluto array
 /// current_degree: the current oracle cast degree
-/// natal_degrees:  the natal planetary configuration (drawn as dim ghosts)
+/// quintessence_degrees: the stable identity reference configuration (drawn as dim ghosts)
 pub fn render_degree_ring(
     canvas:         &mut BrailleCanvas,
-    planet_degrees: &[u16; 9],
-    natal_degrees:  &[u16; 9],
+    planet_degrees: &[u16; 10],
+    quintessence_degrees: &[u16; 10],
     current_degree: u16,
     width_pts:      usize,
     height_pts:     usize,
@@ -603,8 +634,9 @@ pub fn render_degree_ring(
     let scale = (width_pts.min(height_pts) as f32 / 2.0) * 0.85;
     let ring_r = scale * 1.05;  // slightly outside the torus major radius
 
-    // Planet Unicode symbols (order matches planet_id_to_clock_idx)
-    const PLANET_SYMBOLS: [&str; 9] = ["☉","♀","☿","☽","♄","♃","♂","♆","♇"];
+    // Planet Unicode symbols (canonical order = Sun, Moon, Mercury, Venus, Mars,
+    // Jupiter, Saturn, Uranus, Neptune, Pluto)
+    const PLANET_SYMBOLS: [&str; 10] = ["☉","☽","☿","♀","♂","♃","♄","♅","♆","♇"];
 
     // Draw ring base: a circle of dim dots
     for deg in 0..360usize {
@@ -639,8 +671,8 @@ pub fn render_degree_ring(
         canvas.dot(px, py, Color::Green);
     }
 
-    // Natal ghosts: dim gray dots at natal planetary positions
-    for &ndeg in natal_degrees.iter().filter(|&&d| d != 0xFFFF) {
+    // Quintessence ghosts: dim gray dots at stable identity positions
+    for &ndeg in quintessence_degrees.iter().filter(|&&d| d != 0xFFFF) {
         let angle = (ndeg as f32 - 90.0) * std::f32::consts::PI / 180.0;
         let px = (cx as f32 + ring_r * angle.cos()) as i32;
         let py = (cy as f32 + ring_r * angle.sin() * 0.5) as i32;
@@ -656,19 +688,20 @@ pub fn render_degree_ring(
 /// symbol_offset: extra radius so symbols don't overlap the ring dots
 pub fn render_planet_symbols(
     buf:            &mut Buffer,
-    planet_degrees: &[u16; 9],
+    planet_degrees: &[u16; 10],
     area:           Rect,
     offset_px:      f32,   // additional radial offset for symbol placement
 ) {
-    const PLANET_SYMBOLS: [&str; 9] = ["☉","♀","☿","☽","♄","♃","♂","♆","♇"];
-    const PLANET_COLORS:  [Color; 9] = [
+    const PLANET_SYMBOLS: [&str; 10] = ["☉","☽","☿","♀","♂","♃","♄","♅","♆","♇"];
+    const PLANET_COLORS:  [Color; 10] = [
         Color::Yellow,    // ☉ Sun
-        Color::Green,     // ♀ Venus
-        Color::Cyan,      // ☿ Mercury
         Color::White,     // ☽ Moon
-        Color::DarkGray,  // ♄ Saturn
-        Color::Blue,      // ♃ Jupiter
+        Color::Cyan,      // ☿ Mercury
+        Color::Green,     // ♀ Venus
         Color::Red,       // ♂ Mars
+        Color::Blue,      // ♃ Jupiter
+        Color::DarkGray,  // ♄ Saturn
+        Color::LightBlue, // ♅ Uranus
         Color::Magenta,   // ♆ Neptune
         Color::Red,       // ♇ Pluto (dark)
     ];
@@ -727,12 +760,12 @@ impl HypertilePlugin for CosmicClockPlugin {
 
         let state = self.clock.lock().unwrap().clone();  // snapshot
 
-        // 2. Layout: main canvas (torus + ring) + side strip (φ-stages + status)
+        // 2. Layout: main canvas (torus + ring) + side strip (tick12 + status)
         let chunks = Layout::default()
             .direction(Direction::Horizontal)
             .constraints([
                 Constraint::Min(40),       // torus + ring canvas
-                Constraint::Length(24),    // φ-stage indicator + status + legend
+                Constraint::Length(24),    // tick12 indicator + status + legend
             ])
             .split(inner);
 
@@ -740,20 +773,21 @@ impl HypertilePlugin for CosmicClockPlugin {
         let canvas_w = chunks[0].width  as usize;
         let canvas_h = chunks[0].height as usize;
         let mut canvas = BrailleCanvas::new(canvas_w, canvas_h);
+        let planet_degrees = state.kairos.planets.map(|p| p.degree);
 
-        render_torus(&mut canvas, state.live_quaternion, state.torus_stage,
+        render_torus(&mut canvas, state.live_quaternion, state.tick12,
                      canvas_w * 2, canvas_h * 4);
-        render_degree_ring(&mut canvas, &state.planet_degrees,
-                           &state.natal_quaternion_to_degrees(),  // helper
+        render_degree_ring(&mut canvas, &planet_degrees,
+                           &state.quintessence_quaternion_to_degrees(),  // helper
                            state.current_degree,
                            canvas_w * 2, canvas_h * 4);
 
         canvas.render_to(buf, chunks[0].x, chunks[0].y);
 
         // 4. Planet symbols (text cells, written after braille flush)
-        render_planet_symbols(buf, &state.planet_degrees, chunks[0], 2.0);
+        render_planet_symbols(buf, &planet_degrees, chunks[0], 2.0);
 
-        // 5. Side panel: φ-stages, current degree info, kairos status
+        // 5. Side panel: tick12 ring, current degree info, kairos status
         Self::render_side_panel(buf, chunks[1], &state);
     }
 
@@ -764,9 +798,9 @@ impl HypertilePlugin for CosmicClockPlugin {
                 KeyCode::Char('k') => {
                     if let Ok(kairos) = self.epi.nara_kairos_load() {
                         let mut s = self.clock.lock().unwrap();
-                        // update planet_degrees from kairos JSON
-                        update_planet_degrees_from_json(&mut s, &kairos);
-                        s.kairos_loaded = true;
+                        // update canonical KairosState from kairos JSON
+                        update_kairos_state_from_json(&mut s, &kairos);
+                        s.kairos.valid = true;
                     }
                     EventOutcome::Consumed
                 }
@@ -781,35 +815,33 @@ impl HypertilePlugin for CosmicClockPlugin {
 impl CosmicClockPlugin {
     fn render_side_panel(buf: &mut Buffer, area: Rect, state: &PortalClockState) {
         let block = Block::default()
-            .title(" φ-Stage ")
+            .title(" tick12 ")
             .borders(Borders::LEFT)
             .border_style(Style::default().fg(Color::DarkGray));
         let inner = block.inner(area);
         Widget::render(block, area, buf);
 
-        // φ-stage names and colors
-        const STAGE_NAMES: [&str; 6] = [
-            "SEED   (0°)",     // #4.4.4.0
-            "POLE   (60°)",    // #4.4.4.1
-            "TRIKA  (120°)",   // #4.4.4.2
-            "FLOWER (180°)",   // #4.4.4.3 — oracle IS here
-            "FULL   (240°)",   // #4.4.4.4
-            "META   (300°)",   // #4.4.4.5
+        // Full 12-fold spanda labels and colors
+        const STAGE_NAMES: [&str; 12] = [
+            "SEED      (0)", "POLE_A    (1)", "TRIKA     (2)", "FLOWER_3  (3)",
+            "FLOWER_4  (4)", "META      (5)", "META'     (6)", "SEED'     (7)",
+            "POLE_B'   (8)", "TRIKA'    (9)", "FLOWER_3' (10)", "FLOWER_4' (11)",
         ];
-        const STAGE_COLORS: [Color; 6] = [
-            Color::DarkGray, Color::White, Color::Cyan,
-            Color::Green, Color::Magenta, Color::Red,
+        const STAGE_COLORS: [Color; 12] = [
+            Color::DarkGray, Color::White, Color::Cyan, Color::Green,
+            Color::Magenta, Color::Red, Color::DarkGray, Color::White,
+            Color::Cyan, Color::Green, Color::Magenta, Color::Red,
         ];
 
         let mut lines: Vec<Line> = Vec::new();
 
-        // φ-stages
+        // 12-fold tick12 ring
         for (i, (name, color)) in STAGE_NAMES.iter()
             .zip(STAGE_COLORS.iter())
             .enumerate()
         {
-            let marker = if i as u8 == state.torus_stage { "▶ " } else { "  " };
-            let style = if i as u8 == state.torus_stage {
+            let marker = if i as u8 == state.tick12 { "▶ " } else { "  " };
+            let style = if i as u8 == state.tick12 {
                 Style::default().fg(*color).add_modifier(Modifier::BOLD)
             } else {
                 Style::default().fg(Color::DarkGray)
@@ -857,7 +889,7 @@ impl CosmicClockPlugin {
         lines.push(Line::from(""));
 
         // Kairos status
-        let kairos_status = if state.kairos_loaded {
+        let kairos_status = if state.kairos.valid {
             Span::styled("kairos ✓", Style::default().fg(Color::Green))
         } else {
             Span::styled("kairos – (press k)", Style::default().fg(Color::DarkGray))
@@ -883,7 +915,7 @@ impl CosmicClockPlugin {
 ## VI. MiniClockPlugin
 
 The compact orientation widget for Tab 1 (personal workspace). Opens as a small pane alongside
-flow.md, oracle, identity. Shows: current degree, φ-stage, active planet symbols.
+flow.md, oracle, identity. Shows: current degree, tick12, active planet symbols.
 
 ```rust
 pub struct MiniClockPlugin {
@@ -904,22 +936,26 @@ impl HypertilePlugin for MiniClockPlugin {
         Widget::render(block, area, buf);
 
         // Planet symbols on one line (only loaded planets)
-        const PLANET_SYMBOLS: [&str; 9] = ["☉","♀","☿","☽","♄","♃","♂","♆","♇"];
-        let planet_line: String = state.planet_degrees
+        const PLANET_SYMBOLS: [&str; 10] = ["☉","☽","☿","♀","♂","♃","♄","♅","♆","♇"];
+        let planet_line: String = state.kairos.planets
             .iter()
             .enumerate()
-            .filter(|(_, &d)| d != 0xFFFF)
-            .map(|(i, &d)| format!("{}{}° ", PLANET_SYMBOLS[i], d))
+            .filter(|(_, planet)| planet.degree != 0xFFFF)
+            .map(|(i, planet)| format!("{}{}° ", PLANET_SYMBOLS[i], planet.degree))
             .collect();
 
-        const STAGE_LABELS: [&str; 6] = ["SEED","POLE","TRIKA","FLOWER","FULL","META"];
-        const STAGE_COLORS: [Color; 6] = [
-            Color::DarkGray, Color::White, Color::Cyan,
-            Color::Green, Color::Magenta, Color::Red,
+        const STAGE_LABELS: [&str; 12] = [
+            "SEED", "POLE_A", "TRIKA", "FLOWER_3", "FLOWER_4", "META",
+            "META'", "SEED'", "POLE_B'", "TRIKA'", "FLOWER_3'", "FLOWER_4'",
+        ];
+        const STAGE_COLORS: [Color; 12] = [
+            Color::DarkGray, Color::White, Color::Cyan, Color::Green,
+            Color::Magenta, Color::Red, Color::DarkGray, Color::White,
+            Color::Cyan, Color::Green, Color::Magenta, Color::Red,
         ];
 
-        let stage_name  = STAGE_LABELS[state.torus_stage as usize];
-        let stage_color = STAGE_COLORS[state.torus_stage as usize];
+        let stage_name  = STAGE_LABELS[state.tick12 as usize];
+        let stage_color = STAGE_COLORS[state.tick12 as usize];
 
         let lines = vec![
             Line::from(vec![
@@ -951,7 +987,8 @@ impl HypertilePlugin for MiniClockPlugin {
 
 ## VII. M4SpinePlugin — Chakral-Elemental Spine
 
-The 8-chakra vertical column driven by live oracle charges. Natal spine shown as dim ghost.
+The EarthBody root-anchor plus 7-chakra vertical column driven by live oracle charges.
+Quintessence spine shown as dim ghost.
 Lives on Tab 1; instantiable by the user alongside oracle/identity.
 
 ```rust
@@ -959,11 +996,10 @@ pub struct M4SpinePlugin {
     clock: SharedClockState,
 }
 
-const CHAKRA_NAMES:  [&str; 8] = [
-    "Earth", "Root ", "Sacrl", "Solar", "Heart", "Throa", "Ajna ", "Crown",
+const CHAKRA_NAMES:  [&str; 7] = [
+    "Root ", "Sacrl", "Solar", "Heart", "Throa", "Ajna ", "Crown",
 ];
-const CHAKRA_COLORS: [Color; 8] = [
-    Color::White,   // Earth (always-full base, observer anchor)
+const CHAKRA_COLORS: [Color; 7] = [
     Color::Red,     // Muladhara
     Color::LightRed, // Svadhishthana
     Color::Yellow,  // Manipura
@@ -973,24 +1009,19 @@ const CHAKRA_COLORS: [Color; 8] = [
     Color::Magenta, // Sahasrara
 ];
 
-/// Quaternion → chakra activation levels (0.0–1.0 per chakra)
-/// w=T=Earth, x=A=Fire, y=G=Water, z=C=Air; map elements to chakras via ELEMENT_CHAKRA
-fn quaternion_to_chakra_levels(q: [f32; 4]) -> [f32; 8] {
+/// Quaternion → 7 canonical chakra activation levels (0.0–1.0 per chakra).
+/// Earth (w/T) anchors the system through EarthBody and contributes into Root/Solar,
+/// but EarthBody itself is rendered separately as the center/root anchor.
+fn quaternion_to_chakra_levels(q: [f32; 4]) -> [f32; 7] {
     let [w, x, y, z] = q;
-    // Earth (0) = always 1.0 (the observer anchor)
-    // Earth element (w/T) → Root(1), Manipura(3)
-    // Fire  element (x/A) → Manipura(3), Sahasrara(7)
-    // Water element (y/G) → Sacral(2), Heart(4)
-    // Air   element (z/C) → Heart(4), Throat(5)
-    let mut levels = [0.0f32; 8];
-    levels[0] = 1.0;                       // Earth node always full
-    levels[1] = (w * 0.8 + z * 0.2).min(1.0);  // Root: Earth+Air blend
-    levels[2] = (y * 0.9 + w * 0.1).min(1.0);  // Sacral: Water
-    levels[3] = (w * 0.6 + x * 0.4).min(1.0);  // Solar: Earth+Fire
-    levels[4] = (z * 0.6 + y * 0.4).min(1.0);  // Heart: Air+Water
-    levels[5] = (z * 0.8 + x * 0.2).min(1.0);  // Throat: Air
-    levels[6] = (x * 0.5 + y * 0.5).min(1.0);  // Ajna: Fire+Water
-    levels[7] = (x * 0.9 + z * 0.1).min(1.0);  // Crown: Fire
+    let mut levels = [0.0f32; 7];
+    levels[0] = (w * 0.8 + z * 0.2).min(1.0);  // Root: Earth+Air blend
+    levels[1] = (y * 0.9 + w * 0.1).min(1.0);  // Sacral: Water
+    levels[2] = (w * 0.6 + x * 0.4).min(1.0);  // Solar: Earth+Fire
+    levels[3] = (z * 0.6 + y * 0.4).min(1.0);  // Heart: Air+Water
+    levels[4] = (z * 0.8 + x * 0.2).min(1.0);  // Throat: Air
+    levels[5] = (x * 0.5 + y * 0.5).min(1.0);  // Ajna: Fire+Water
+    levels[6] = (x * 0.9 + z * 0.1).min(1.0);  // Crown: Fire
     levels
 }
 
@@ -1008,17 +1039,17 @@ impl HypertilePlugin for M4SpinePlugin {
         Widget::render(block, area, buf);
 
         let live_levels  = quaternion_to_chakra_levels(state.live_quaternion);
-        let natal_levels = quaternion_to_chakra_levels(state.natal_quaternion);
+        let quint_levels = quaternion_to_chakra_levels(state.quintessence_quaternion);
 
         let bar_width = (inner.width as usize).saturating_sub(8).max(4);
 
-        // Render top-to-bottom (Sahasrara at top, Earth at bottom)
+        // Render top-to-bottom (Sahasrara at top, Muladhara above EarthBody root anchor)
         let mut lines: Vec<Line> = Vec::new();
-        for i in (0..8).rev() {
+        for i in (0..7).rev() {
             let live  = live_levels[i];
-            let natal = natal_levels[i];
+            let quint = quint_levels[i];
             let filled = (live  * bar_width as f32) as usize;
-            let ghost  = (natal * bar_width as f32) as usize;
+            let ghost  = (quint * bar_width as f32) as usize;
 
             let mut spans = vec![
                 Span::styled(
@@ -1031,13 +1062,13 @@ impl HypertilePlugin for M4SpinePlugin {
             let max_pos = filled.max(ghost);
             for pos in 0..bar_width {
                 let sym = if pos < filled && pos < ghost {
-                    // Both live and natal: bright bar
+                    // Both live and quintessence: bright bar
                     Span::styled("█", Style::default().fg(CHAKRA_COLORS[i]))
                 } else if pos < filled {
-                    // Live only (gained since natal): bright
+                    // Live only (gained since quintessence): bright
                     Span::styled("▓", Style::default().fg(CHAKRA_COLORS[i]).add_modifier(Modifier::BOLD))
                 } else if pos < ghost {
-                    // Natal only (lost since natal): ghost dim
+                    // Quintessence only (not currently activated): ghost dim
                     Span::styled("░", Style::default().fg(Color::DarkGray))
                 } else {
                     Span::styled("·", Style::default().fg(Color::Black))
@@ -1048,11 +1079,23 @@ impl HypertilePlugin for M4SpinePlugin {
             lines.push(Line::from(spans));
         }
 
-        // Quintessence indicator: low variance across levels = Akasha present
+        lines.push(Line::from(""));
+        lines.push(Line::from(vec![
+            Span::styled("Earth ", Style::default().fg(Color::White).add_modifier(Modifier::BOLD)),
+            Span::styled(
+                format!(
+                    "⊕ center / child of ☉ / {:.2} Hz / CHAKRA_EARTH={}",
+                    state.earth_body.base_frequency_hz,
+                    state.earth_body.chakra_index,
+                ),
+                Style::default().fg(Color::Gray),
+            ),
+        ]));
+
+        // Quintessence indicator: low variance across the 7 canonical levels = Akasha present
         let variance = {
-            let non_earth: Vec<f32> = live_levels[1..].to_vec();
-            let mean = non_earth.iter().sum::<f32>() / 7.0;
-            non_earth.iter().map(|&v| (v - mean).powi(2)).sum::<f32>() / 7.0
+            let mean = live_levels.iter().sum::<f32>() / 7.0;
+            live_levels.iter().map(|&v| (v - mean).powi(2)).sum::<f32>() / 7.0
         };
         let quin_sym = if variance < 0.02 { "◉ Quintessence" } else { "◎" };
         lines.push(Line::from(""));
@@ -1085,8 +1128,16 @@ On each cast it writes to `SharedClockState` and displays all 4 faces.
 
 // After cast, instead of just recording history:
 if let Ok(result) = self.epi.nara_oracle_cast_raw() {
-    let (pp, nn, np, pn, degree, primary_hex, temporal_hex) = parse_oracle_result(&result);
-    update_from_cast(&self.clock, pp, nn, np, pn, degree, primary_hex, temporal_hex);
+    let (pp, nn, np, pn, degree, primary_hex, temporal_hex, changing_lines_mask) =
+        parse_oracle_result(&result);
+    update_from_cast(
+        &self.clock,
+        pp, nn, np, pn,
+        degree,
+        primary_hex,
+        temporal_hex,
+        changing_lines_mask,
+    );
     // CosmicClockPlugin and SpinePlugin will read the updated state on their next render
 }
 
@@ -1256,7 +1307,7 @@ Phase 2 — Oracle writes to clock; spine + mini-clock live
   [ ] G13: Build + test: oracle cast in Tab 0 updates torus rotation in Tab 1
 
 Phase 3 — Kairos + Natal + Completeness
-  [ ] G14: Wire Kerykeion planet_degrees into SharedClockState at launch + k-key reload
+  [ ] G14: Wire canonical KairosState (PlanetState[10]) into SharedClockState at launch + k-key reload
            NOTE: Canonical array is [PlanetState; 10] (Sun–Pluto). Kerykeion currently returns
            9 planets (no Uranus); add Uranus stub until Kerykeion adapter updated.
   [ ] G15: Wire quintessence_quaternion from M4_Identity_Matrix at launch (NOT natal_quaternion —

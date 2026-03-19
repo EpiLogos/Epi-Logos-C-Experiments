@@ -44,8 +44,8 @@ extern BIMBA CF_0000;   /* Receptive Dynamism  (00/00) Mod%   */
 extern BIMBA CF_01;     /* Non-Dual Binary     (0/1)  Mod 2  */
 extern BIMBA CF_012;    /* The Trika           (0/1/2) Mod 3  */
 extern BIMBA CF_0123;   /* Three-Plus-One      (0/1/2/3) Mod 4 */
-extern BIMBA CF_4x;     /* Fractal Doubling    (4.0/1-4.4/5)  */
-extern BIMBA CF_450;    /* Möbius Synthesis     (4/5/0)        */
+extern BIMBA CF_4x;     /* Fractal Doubling    (4.0/1-4.4/5): '.' nests sub-pos in #4 */
+extern BIMBA CF_450;    /* Möbius Synthesis    (4.5/0): '.' = #4 nests #5; '/' = return */
 extern BIMBA CF_50;     /* Total Synthesis      (5/0) Mod 6   */
 
 /* =============================================================================
@@ -65,8 +65,8 @@ typedef enum {
     CF_BINARY      = 1,  /* (0/1)   Mod 2     — Non-Dual Binary           */
     CF_TRIKA       = 2,  /* (0/1/2) Mod 3     — The Trika                 */
     CF_QUATERNAL   = 3,  /* (0/1/2/3) Mod 4   — Three-Plus-One            */
-    CF_FRACTAL     = 4,  /* (4.0/1-4.4/5)     — Fractal Doubling          */
-    CF_SYNTHESIS   = 5,  /* (4/5/0)            — Möbius Synthesis          */
+    CF_FRACTAL     = 4,  /* (4.0/1-4.4/5)     — Fractal Doubling; '.' nests sub-pos in #4 */
+    CF_SYNTHESIS   = 5,  /* (4.5/0)            — Möbius Synthesis; '.' = #4 nests #5     */
     CF_MOBIUS      = 6,  /* (5/0)   Mod 6     — Total Synthesis           */
     CF_COUNT       = 7
 } CF_Id;

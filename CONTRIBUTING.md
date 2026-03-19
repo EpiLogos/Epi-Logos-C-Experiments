@@ -18,6 +18,7 @@
    ```bash
    make test    # 9 suites, 2180+ tests
    ```
+   Test binaries are emitted under `epi-lib/test/bin/`, not the repo root.
 
 4. If you are working on the graph stack, bootstrap the live local services:
    ```bash
@@ -47,6 +48,7 @@ Each coordinate has a quintessential self-description, structural correspondence
 - **Rust CLI:** Edit in `epi-cli/src/`, build with `cargo build`, test with `make rust-test`
 - **Graph stack:** Use `cargo run -- graph bootstrap-dev` for local Neo4j + Redis Stack + RedisVL setup, then `epi graph doctor` before claiming the stack is healthy
 - **Tests:** Every M-branch has a dedicated test suite (`test_m0_init.c`, `test_m1.c`, etc.)
+- **C test artifacts:** `make test` compiles runnable test binaries into `epi-lib/test/bin/`
 - **QV data:** Update coordinate descriptions via `epi core knowing <COORD> --update "pithy"` (write-gated), then `epi core knowing --bake` to regenerate `src/qv_data.c`
 
 For Rust artifact hygiene, prefer:

@@ -442,7 +442,7 @@ From `type_definitions.ts`:
 - QL coordinate-kernel runtime payload contracts → US-042
 - CT/CT' type family — **7 frames total** (CT4a and CT4b are structurally distinct; agents frequently confuse them — encode explicitly):
   - **CT4b = CT' parent** (fractal meta-frame / frame-of-frames): CF gate = `(4.0-4.4/5)` → Psyche (L4); includes ALL CT content types {0,1,2,3,4,5}; `CT_PARENT_FRAME = "CT4b"` const encodes parent status explicitly
-  - **CT4a** = distinct integration-preview frame: CF gate = `(4/5/0)`; includes {CT4, CT5, CT0} non-cumulatively; no primary agent assigned
+  - **CT4a** = distinct integration-preview frame: CF gate = `(4.5/0)`; includes {CT4, CT5, CT0} non-cumulatively; no primary agent assigned
   - CT0'..CT3', CT5' = 5 standard cumulative frames: CT0'={0}, CT1'={0,1}, CT2'={0,1,2}, CT3'={0,1,2,3}, CT5'={5,0} (Möbius)
   - `CT_CF_GATE` const — maps each CTLevel to its available positions; type-checked `satisfies Record<CTLevel, ...>`; prevents arbitrary 6-fold template imposition
   - `CTX = CT(x)` notation means "any concrete CT instance" in prose
@@ -660,7 +660,7 @@ From `vak_orchestration.ts`:
 From `context_frames.ts`:
 - Reflection/runtime coordinate family (CPF/CT/CP/CF/CFP/CS) — shared runtime ontology (six distinct families)
   - **CPF (S4-0')** — Context Frame Polarity: `(00/00)` = user-engaged/dialogical (→ brainstorming, human gate); `(4.0/1–4.4/5)` = autonomous execution (→ vak-evaluate → anima-orchestration dispatch)
-  - **CT (S4-1')** — Content/process primitive typing lens (C1/Form; asks "what type of content?" first — definitional gate; asked BEFORE processing to determine what agent/frame is needed); **7 total frames**: CT0'..CT3', CT4a, CT4b, CT5'; **CT4b = CT' parent** (Psyche/fractal meta-frame, CF(4.0-4.4/5), ALL types); **CT4a** = integration-preview frame (CF(4/5/0), {CT4,CT5,CT0}, no primary agent); CTX = CT(x); CT_CF_GATE + CT_PARENT_FRAME consts (see S0'); CT-MEF Lens mapping (see S0')
+  - **CT (S4-1')** — Content/process primitive typing lens (C1/Form; asks "what type of content?" first — definitional gate; asked BEFORE processing to determine what agent/frame is needed); **7 total frames**: CT0'..CT3', CT4a, CT4b, CT5'; **CT4b = CT' parent** (Psyche/fractal meta-frame, CF(4.0-4.4/5), ALL types); **CT4a** = integration-preview frame (CF(4.5/0), {CT4,CT5,CT0}, no primary agent); CTX = CT(x); CT_CF_GATE + CT_PARENT_FRAME consts (see S0'); CT-MEF Lens mapping (see S0')
   - **CP (S4-2')** — Context Positions (execution plotting / positional emphasis):
     - 4.0 Ground — "What do we have?" (starting condition, thrown context)
     - 4.1 Definition — "What must be true?" (scope, boundaries, requirements)

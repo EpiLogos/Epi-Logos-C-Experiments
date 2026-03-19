@@ -21,7 +21,7 @@ This pillar establishes the unbreakable physics of the C compiler.
 
 * **Requirement:** The system MUST instantiate 14 primordial root singularities in immutable `.rodata`.
 * **7 Static Psychoids:** The Mod-6 base `#0-#5`, plus the `#` boundary.
-* **7 Processual Context Frames:** `CF(0000)`, `CF(0/1)`, `CF(0/1/2)`, `CF(0/1/2/3)`, `CF(4/5/0)`, `CF(4.0-4.4/5)`, and `CF(5/0)`.
+* **7 Processual Context Frames:** `CF(0000)`, `CF(0/1)`, `CF(0/1/2)`, `CF(0/1/2/3)`, `CF(4.5/0)`, `CF(4.0-4.4/5)`, and `CF(5/0)`.
 
 
 * **Wiring:** Processual roots MUST contain a structural pointer physically anchoring them to the `#4` (Thought/Contextual) psychoid domain.

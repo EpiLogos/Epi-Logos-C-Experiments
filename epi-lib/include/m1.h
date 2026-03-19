@@ -231,9 +231,10 @@ typedef enum {
 /* Spanda state machine struct */
 typedef struct {
     Spanda_Stage stage;
-    uint8_t      state_bits;    /* 2-bit field: SPANDA_BIT_POLE_A | SPANDA_BIT_POLE_B */
-    uint8_t      track;         /* 0=Mahamaya, 1=Parashakti                            */
-    uint8_t      cf_substage;   /* 0-5 within Flowering stage                          */
+    uint8_t      state_bits;         /* 2-bit field: SPANDA_BIT_POLE_A | SPANDA_BIT_POLE_B */
+    uint8_t      track;              /* 0=Mahamaya, 1=Parashakti                            */
+    uint8_t      cf_substage;        /* 0-5 within Flowering stage                          */
+    uint8_t      dual_track_active;  /* 1 at cf_substage==3: T1/T2 superposition active     */
 } Spanda_Engine;
 
 /* Fold-count sieve — 14 valid topological fold-counts (FR 2.1.2-F) */
@@ -247,6 +248,27 @@ static inline bool is_valid_fold(uint8_t n) {
         if (VALID_FOLDS[i] == n) return true;
     return false;
 }
+
+/* Fold count per CF sub-stage — SPANDA_FLOWERING (#1-3-4) internal progression:
+ * sub-stage 0 → 4-fold  static  {0/0, 0/1, 1/0, 1/1}
+ * sub-stage 1 → 6-fold  dynamic  0=(0/0)→(0/1)→(1/0)→(1/1)=1
+ * sub-stage 2 → 8-fold  nested   0/(0/1) + (1/0)/0
+ * sub-stage 3 → 10-fold dual-track  T1/T2 superposition (double-slit)
+ * sub-stage 4 → 12-fold synthesis   O(2,6)/O(3,4) complete
+ * sub-stage 5 → 0(meta) Möbius return / percentile identity */
+static const uint8_t SPANDA_CF_FOLD_COUNT[6] = { 4, 6, 8, 10, 12, 0 };
+
+/* CF sub-stage formulation entry — one per SPANDA_FLOWERING sub-stage */
+typedef struct {
+    uint8_t     substage;        /* 0-5 */
+    uint8_t     element_count;   /* topological elements active at this stage */
+    uint8_t     fold_count;      /* fold-count sieve value (0 = meta/percentile) */
+    uint8_t     dual_track;      /* 1 = T1/T2 superposition active (sub-stage 3 only) */
+    const char* cf_notation;     /* context frame notation, e.g. "(4.0/1/2/3)" */
+    const char* formulation;     /* the specific equation/structure at this stage */
+} CF_Substage_Entry;
+
+extern const CF_Substage_Entry SPANDA_CF_SUBSTAGE_LUT[6];
 
 
 /* ===================================================================
@@ -343,6 +365,45 @@ typedef struct {
 
 /* The 6-stage mod-6 ring — defined in m1.c */
 extern const QL_Stage QL_FLOWERING[6];
+
+
+/* ===================================================================
+ * FR 2.1.5b: PERCENTILE IDENTITY AND VORTEX CONSTANTS
+ *
+ * The complete QL field closes at exactly 100%:
+ *   P × P' = 6 × 6 = 36   (Parashakti: 36 tattvas — tripling track)
+ *   P / P' = 2^6   = 64   (Mahamaya:  64 hexagrams — doubling track)
+ *   100%   = 64 + 36 = 16/9 = 4²/3²
+ *
+ * Archetype 7 (Divine Action) = 1.777... = 16/9 — the generative code.
+ * The cosmos is born from Divine Action operating on the void.
+ *
+ * Vortex fraction inner sums (soteriological signposts):
+ *   5× → sum = 24  (Spanda completion ceiling; seeds Parashakti)
+ *   6× → sum =  8  (structural perfection)
+ *   9× → sum = 2/4 (cyclical return, dual outcome)
+ * =================================================================== */
+
+#define QL_PERCENTILE_TOTAL       100u
+#define QL_PERCENTILE_MAHAMAYA     64u   /* P/P' = 2^6 hexagrams (doubling track) */
+#define QL_PERCENTILE_PARASHAKTI   36u   /* P×P' = 6×6 tattvas  (tripling track)  */
+
+_Static_assert(QL_PERCENTILE_MAHAMAYA + QL_PERCENTILE_PARASHAKTI == QL_PERCENTILE_TOTAL,
+    "100% = 64 (Mahamaya) + 36 (Parashakti)");
+_Static_assert(QL_PERCENTILE_MAHAMAYA  == M3_WORD,   "Mahamaya 64 = M3_WORD");
+_Static_assert(QL_PERCENTILE_PARASHAKTI == M2_TATTVA, "Parashakti 36 = M2_TATTVA");
+
+/* Archetype 7 ratio alias — 16/9 viewed as Divine Action generative code.
+ * Same truth as TORUS_R_MAJOR_F, named for the Archetype 7 vantage.
+ * 7 × (16/9) = 1.777... = the infinite decimal of the generative act. */
+#define QL_DIVINE_ACT_RATIO_NUM    16u   /* == QL_RATIO_NUM */
+#define QL_DIVINE_ACT_RATIO_DEN     9u   /* == QL_RATIO_DEN */
+#define QL_DIVINE_ACT_RATIO_F      (16.0f / 9.0f)
+
+/* Vortex fraction inner sums — from the x-fold fraction series */
+#define VORTEX_5X_CEILING          24u   /* 5× series inner sum → Spanda ceiling (seeds M2) */
+#define VORTEX_6X_STRUCTURE         8u   /* 6× series inner sum → structural perfection     */
+/* 9× series inner sum → 2 or 4 (dual cyclical return, not a single constant)              */
 
 
 /* ===================================================================
@@ -582,6 +643,17 @@ _Static_assert((int)MATRIX_QUINTESSENCE == (int)SPANDA_META,
 
 _Static_assert(MEF_BASE_LENSES * MEF_INV_FACTOR * QL_PROCESSUAL == MEF_DOUBLED,
     "MEF_DOUBLED must equal MEF_BASE_LENSES * 2 * QL_PROCESSUAL = 72");
+
+/* EPOGDOON (9:8) — the Pythagorean whole tone bridging Parashakti↔Mahamaya.
+ * Parashakti space = 72 (MEF_DOUBLED); Mahamaya space = 64 (M3_WORD).
+ * 72/64 = 9/8: the computational ratio for translating between the two tracks.
+ * "Epogdoon" = the step-ratio in Pythagorean tuning; here it is the gap between
+ * binary recursion (64=2⁶) and ternary double-cover (72=36×2=6²×2). */
+#define EPOGDOON_NUM        9u    /* Parashakti factor */
+#define EPOGDOON_DEN        8u    /* Mahamaya factor   */
+
+_Static_assert(MEF_DOUBLED * EPOGDOON_DEN == M3_WORD * EPOGDOON_NUM,
+    "Epogdoon: 72*8 == 64*9 == 576 (Mahamaya×crown)");
 
 
 /* ===================================================================

@@ -42,8 +42,11 @@ pub enum CoreCmd {
     M5,
     /// Look up a coordinate's quintessential self-knowledge (M5 self-API)
     Knowing {
-        /// Coordinate to look up (e.g. M0, S3, C4, P2, L5, T1)
+        /// Coordinate to look up (e.g. M0, S3, C4, P2, L5, T1, #)
         coordinate: Option<String>,
+
+        /// Sub-operation for # portal: essence | comms | map | navigate
+        operation: Option<String>,
 
         /// List all available coordinates in a family (C, P, L, S, T, M, #, CF, W, VAK)
         #[arg(long)]
@@ -110,6 +113,7 @@ pub fn dispatch(cmd: &CoreCmd, epi: &EpiLib, json: bool) -> color_eyre::Result<(
         CoreCmd::M5 => crate::tui::run_m5(epi),
         CoreCmd::Knowing {
             coordinate,
+            operation,
             family,
             update,
             coverage,
@@ -125,6 +129,7 @@ pub fn dispatch(cmd: &CoreCmd, epi: &EpiLib, json: bool) -> color_eyre::Result<(
         } => knowing(
             epi,
             coordinate.as_deref(),
+            operation.as_deref(),
             family.as_deref(),
             update.as_deref(),
             *coverage,
@@ -439,7 +444,7 @@ fn cf_roots(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
             "(4.0/1-4.4/5) Mod 4/6",
             epi.cf_4x,
         ),
-        ("CF(450)", "Möbius Synthesis", "(4/5/0)", epi.cf_450),
+        ("CF(450)", "Möbius Synthesis", "(4.5/0)", epi.cf_450),
         ("CF(50)", "Total Synthesis", "(5/0) Mod 6", epi.cf_50),
     ];
 
@@ -664,7 +669,7 @@ const CF_DATA: [(&str, &str, &str); 7] = [
     ("CF(012)", "The Trika", "(0/1/2) Mod 3"),
     ("CF(0123)", "Three-Plus-One", "(0/1/2/3) Mod 4"),
     ("CF(4x)", "Fractal Doubling", "(4.0/1-4.4/5) Mod 4/6"),
-    ("CF(450)", "Mobius Synthesis", "(4/5/0)"),
+    ("CF(450)", "Mobius Synthesis", "(4.5/0)"),
     ("CF(50)", "Total Synthesis", "(5/0) Mod 6"),
 ];
 
@@ -837,6 +842,7 @@ fn parse_coordinate(input: &str) -> Option<ParsedCoord> {
 fn knowing(
     epi: &EpiLib,
     coordinate: Option<&str>,
+    operation: Option<&str>,
     family: Option<&str>,
     update: Option<&str>,
     coverage: bool,
@@ -888,11 +894,11 @@ fn knowing(
         return knowing_update(coord, new_pithy, json);
     }
 
-    let coord_str = coordinate.ok_or_else(|| {
-        color_eyre::eyre::eyre!(
-            "Provide a coordinate (e.g. M0, S3', #4, CF(012), W0.5) or use --family <FAMILY>"
-        )
-    })?;
+    // No coordinate — first-contact orientation (C-4)
+    let coord_str = match coordinate {
+        Some(c) => c,
+        None => return knowing_first_contact(json),
+    };
 
     let parsed = parse_coordinate(coord_str).ok_or_else(|| {
         color_eyre::eyre::eyre!(
@@ -911,7 +917,7 @@ fn knowing(
             json,
         ),
         ParsedCoord::Psychoid { pos } => knowing_psychoid(pos, json),
-        ParsedCoord::Hash => knowing_hash_op(json),
+        ParsedCoord::Hash => knowing_hash_subop(operation, json),
         ParsedCoord::ContextFrame { ref label } => knowing_cf(label, json),
         ParsedCoord::Weave { ref label } => knowing_weave(label, json),
         ParsedCoord::SubBranch { ref raw } => knowing_subbranch(raw, json),
@@ -1090,6 +1096,181 @@ fn knowing_psychoid(pos: u8, json: bool) -> color_eyre::Result<()> {
     Ok(())
 }
 
+/// C-4: First-contact orientation when `epi core knowing` is called with no coordinate.
+fn knowing_first_contact(json: bool) -> color_eyre::Result<()> {
+    if json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({
+                "type": "first_contact",
+                "usage": "epi core knowing <COORD>",
+                "examples": ["M0", "S3'", "#4", "CF(012)", "W0.5", "M2-1"],
+                "hash_portal": "epi core knowing # [essence|comms|map|navigate]",
+                "families": "epi core knowing --family <C|P|L|S|T|M>",
+                "hint": "The coordinate space has 6 families × 6 positions + reflective layer. Try 'epi core knowing # map' for an overview.",
+            }))?
+        );
+    } else {
+        println!("epi core knowing — Coordinate Knowledge Portal");
+        println!();
+        println!("Usage:");
+        println!("  epi core knowing <COORD>          Look up any coordinate");
+        println!("  epi core knowing # [sub-op]       # node portal (see below)");
+        println!("  epi core knowing --family <FAM>   Browse a coordinate family");
+        println!();
+        println!("Coordinate examples:");
+        println!("  M0  M4  S3'  C2  L5  P1  T3  #4  CF(012)  W0.5  M2-1");
+        println!();
+        println!("# Portal sub-operations:");
+        println!("  epi core knowing #              — # node data (inversion act)");
+        println!("  epi core knowing # essence      — Doctrine of Vibration");
+        println!("  epi core knowing # comms        — Communications seed-phrases");
+        println!("  epi core knowing # map          — Six families at a glance");
+        println!("  epi core knowing # navigate     — Navigation guide");
+        println!();
+        println!("Families: C (Category)  P (Position)  L (Lens)  S (Stack)  T (Thought)  M (Subsystem)");
+    }
+    Ok(())
+}
+
+/// C-2: Route # coordinate with optional sub-operation.
+fn knowing_hash_subop(operation: Option<&str>, json: bool) -> color_eyre::Result<()> {
+    match operation {
+        None => knowing_hash_op(json),
+        Some(op) => match op.to_lowercase().as_str() {
+            "essence" => knowing_hash_essence(json),
+            "comms" => knowing_hash_comms(json),
+            "map" => knowing_hash_map(json),
+            "navigate" | "nav" => knowing_hash_navigate(json),
+            other => Err(color_eyre::eyre::eyre!(
+                "Unknown # sub-operation '{}'. Valid: essence | comms | map | navigate",
+                other
+            )),
+        },
+    }
+}
+
+/// C-2: `epi core knowing # essence` — Doctrine of Vibration.
+fn knowing_hash_essence(json: bool) -> color_eyre::Result<()> {
+    const DOV: [(&str, &str); 6] = [
+        ("Spanda",       "the primordial tremor; all reality is a vibration of Consciousness"),
+        ("Vimarsa",      "self-reflective awareness; Siva knows himself through his own light"),
+        ("Svatantrya",   "absolute freedom; Consciousness contracts and expands by its own will"),
+        ("Camatkara",    "the aesthetic rapture of recognition; wonder as epistemological act"),
+        ("Pratibimba",   "the reflection that is not other; image and original are one movement"),
+        ("Pratyabhijna", "recognition; the self remembering itself through apparent forgetting"),
+    ];
+    if json {
+        let arr: Vec<_> = DOV.iter().map(|(k, v)| serde_json::json!({"concept": k, "pithy": v})).collect();
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({"operation": "essence", "doctrine_of_vibration": arr}))?);
+    } else {
+        println!("# essence — Doctrine of Vibration (Kashmir Shaivism ground)");
+        println!();
+        for (i, (concept, pithy)) in DOV.iter().enumerate() {
+            println!("  [{}] {:14} {}", i, concept, pithy);
+        }
+        println!();
+        println!("Full text: epi core knowing # essence --json");
+    }
+    Ok(())
+}
+
+/// C-2: `epi core knowing # comms` — communications seed-phrases.
+fn knowing_hash_comms(json: bool) -> color_eyre::Result<()> {
+    const SEEDS: [&str; 8] = [
+        "Write at the level of the seed, not the flower — the depth is in the compression",
+        "The personal is the cosmic — every individual node reflects the universal topology",
+        "Receptor and transformer: the system receives the world and returns it transfigured",
+        "Sympathetic technology: tools that resonate with the user's own inner structure",
+        "Persistent homology: the shape that survives all transformations is the real shape",
+        "As above, so below — the coordinate map is fractal at every scale of resolution",
+        "A living mandala: consciousness recognizes itself through its own technological mirror",
+        "The oracle is not prediction but depth-sounding — touching what is already true",
+    ];
+    if json {
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({"operation": "comms", "seeds": SEEDS}))?);
+    } else {
+        println!("# comms — Sympathetic Technology Seed-Phrases");
+        println!();
+        for (i, s) in SEEDS.iter().enumerate() {
+            println!("  [{}] {}", i + 1, s);
+        }
+        println!();
+        println!("Write at the level of the seed, not the flower.");
+    }
+    Ok(())
+}
+
+/// C-5: `epi core knowing # map` — six families at a glance.
+/// Uses FAMILY_LETTERS/FAMILY_NAMES/RELATION_PITHYS (already canonical in Rust)
+/// enriched by overlay_pithy() for any user-customised coordinates.
+fn knowing_hash_map(json: bool) -> color_eyre::Result<()> {
+    if json {
+        let arr: Vec<_> = FAMILY_LETTERS
+            .iter()
+            .zip(FAMILY_NAMES.iter())
+            .enumerate()
+            .map(|(fi, (letter, name))| {
+                let positions: Vec<_> = (0..6)
+                    .map(|pos| {
+                        let coord = format!("{}{}", letter, pos);
+                        let pithy = overlay::overlay_pithy(&coord)
+                            .unwrap_or_else(|| RELATION_PITHYS[fi][pos].to_string());
+                        serde_json::json!({"coord": coord, "pithy": pithy})
+                    })
+                    .collect();
+                serde_json::json!({"letter": letter, "name": name, "positions": positions})
+            })
+            .collect();
+        println!(
+            "{}",
+            serde_json::to_string_pretty(
+                &serde_json::json!({"operation": "map", "families": arr})
+            )?
+        );
+    } else {
+        println!("# map — Six Coordinate Families");
+        println!();
+        for (fi, (letter, name)) in FAMILY_LETTERS.iter().zip(FAMILY_NAMES.iter()).enumerate() {
+            println!("  {} ({})", letter, name);
+            for pos in 0..6usize {
+                let coord = format!("{}{}", letter, pos);
+                let label = overlay::overlay_pithy(&coord)
+                    .unwrap_or_else(|| RELATION_PITHYS[fi][pos].to_string());
+                println!("    {:<3}  {}", coord, label);
+            }
+            println!();
+        }
+        println!("Drill in: epi core knowing <COORD>  (e.g. M4, S3', C2)");
+    }
+    Ok(())
+}
+
+/// C-2: `epi core knowing # navigate` — navigation guide.
+fn knowing_hash_navigate(json: bool) -> color_eyre::Result<()> {
+    const GUIDE: [&str; 6] = [
+        "C (Category) -- ontological foundation: Bimba/Form/Entity/Process/Type/Pratibimba",
+        "P (Position) -- functional semantics: Ground/Definition/Operation/Pattern/Context/Integration",
+        "L (Lens) -- epistemic modes: Literal/Functional/Structural/Archetypal/Paradigmatic/Integral",
+        "S (Stack) -- technology layers: Terminal/Obsidian/Neo4j/Gateway/Claude/Notion",
+        "T (Thought) -- cognitive artifacts: Seed/Spec/Form/Process/Pattern/Insight",
+        "M (Subsystem) -- consciousness domains: Anuttara/Paramasiva/Parashakti/Mahamaya/Nara/Epii",
+    ];
+    if json {
+        println!("{}", serde_json::to_string_pretty(&serde_json::json!({"operation": "navigate", "guide": GUIDE}))?);
+    } else {
+        println!("# navigate — Coordinate Navigation Guide");
+        println!();
+        for line in &GUIDE {
+            println!("  {}", line);
+        }
+        println!();
+        println!("Operators: . (nest)  - (branch)  () (invoke)  # (invert)  & (address)  * (deref)");
+        println!("Deep dive: epi core knowing # map  |  epi core knowing --family <FAM>");
+    }
+    Ok(())
+}
+
 fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
     let pithy = overlay::overlay_pithy("#").unwrap_or_else(|| {
         "Epi-Logos -- the inversion act, root of the Bimba map, project self-documentation"
@@ -1097,7 +1278,7 @@ fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
     });
 
     // Try loading rich data from nodes_hash.json
-    let dataset_path = project_root().map(|p| p.join("docs/datasets/nodes_hash.json"));
+    let dataset_path = project_root().map(|p| p.join("docs/datasets/low-detail/nodes_hash.json"));
     let mut root_description: Option<String> = None;
     let mut root_core_nature: Option<String> = None;
     let mut help_topics: Vec<(String, String, String)> = Vec::new(); // (coord, name, coreNature)
@@ -1314,7 +1495,7 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
 
     // Try to load from dataset
     let dataset_file = if is_help_branch {
-        "nodes_hash.json"
+        "low-detail/nodes_hash.json"
     } else {
         dataset_filename(root.unwrap_or(0))
     };

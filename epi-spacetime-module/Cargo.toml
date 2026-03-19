@@ -1,0 +1,35 @@
+[package]
+name = "epi-spacetime-module"
+version = "0.1.0"
+edition = "2021"
+description = "SpacetimeDB WASM module for Epi-Logos presence tracking"
+
+# ─── WASM Deployment Note ───────────────────────────────────────────────────
+#
+# This crate is a STUB that compiles as a standard Rust library for local
+# type-checking and development. The real SpacetimeDB module requires:
+#
+#   1. rustup toolchain >= 1.90.0 (spacetimedb 1.x) or >= 1.93.0 (spacetimedb 2.x)
+#      Current toolchain: 1.88.0 (too old for spacetimedb crate)
+#
+#   2. To upgrade and build for real:
+#      rustup update stable
+#      rustup target add wasm32-unknown-unknown
+#      # Then change crate-type to ["cdylib"] and uncomment spacetimedb dependency
+#      spacetime build
+#
+#   3. To deploy:
+#      spacetime publish epi-logos-presence
+#
+# For now, tables are plain structs and reducers are plain functions.
+# The SpacetimeDB macro attributes are preserved as comments for quick restoration.
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+spacetimedb = "2"
+
+[profile.release]
+opt-level = "s"
+lto = true

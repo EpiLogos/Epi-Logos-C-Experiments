@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-07
 **Status:** Planning Draft v1
-**Scope:** S1-S5 layer buildout, SpacetimeDB for M0'-M3' visualization, Electron app (4/5/0) architecture
+**Scope:** S1-S5 layer buildout, SpacetimeDB for M0'-M3' visualization, Electron app (4.5/0) architecture
 
 ---
 
@@ -20,7 +20,7 @@ Two distinct real-time systems, not one:
 The gateway handles **imperative operations** (send command, get response).
 SpacetimeDB handles **declarative observation** (subscribe to state, see changes).
 
-### The (4/5/0) Electron App
+### The (4.5/0) Electron App
 
 The frontend is a three-section app mapping to the CF(5/0) context frame:
 
@@ -30,7 +30,7 @@ Tab M5' (Epii)     — Knowledge work, philosophical expansion, agent orchestrat
 Tab M0' (Anuttara) — Full coordinate structure + embedded M0'-M3' SpacetimeDB view
 ```
 
-**Validation:** The existing Pratibimba Electron app already has 6-domain × 6-stratum = 36-view grid, Zustand stores per domain, OmniPanel as 12-panel gateway overlay. The (4/5/0) simplification collapses this into 3 primary sections while keeping the 6-stratum depth per section. The M0' section embeds the full M0-M3 visualization via SpacetimeDB SDK subscription.
+**Validation:** The existing Pratibimba Electron app already has 6-domain × 6-stratum = 36-view grid, Zustand stores per domain, OmniPanel as 12-panel gateway overlay. The (4.5/0) simplification collapses this into 3 primary sections while keeping the 6-stratum depth per section. The M0' section embeds the full M0-M3 visualization via SpacetimeDB SDK subscription.
 
 ---
 
@@ -408,7 +408,7 @@ enum PositionRelation {
 
 ---
 
-## VI. Electron App: (4/5/0) Architecture
+## VI. Electron App: (4.5/0) Architecture
 
 ### Three Sections
 

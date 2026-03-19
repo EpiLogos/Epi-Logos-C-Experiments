@@ -100,12 +100,12 @@ void Execute_CF_Quaternal(Holographic_Coordinate* self, void* ctx) {
 
 void Execute_CF_Fractal(Holographic_Coordinate* self, void* ctx) {
     (void)self; (void)ctx;
-    /* (4.0/1-4.4/5) Fractal Doubling — Lemniscate fractal */
+    /* (4.0/1-4.4/5) Fractal Doubling — '.' nests sub-positions within #4; '/' = optionality */
 }
 
 void Execute_CF_Synthesis(Holographic_Coordinate* self, void* ctx) {
     (void)self; (void)ctx;
-    /* (4/5/0) Möbius Synthesis */
+    /* (4.5/0) Möbius Synthesis — '.' = #4 nests #5 (weave_state=4.5f); '/' = return to ground */
 }
 
 void Execute_CF_Mobius(Holographic_Coordinate* self, void* ctx) {
@@ -321,7 +321,7 @@ BIMBA CF_4x = {
     .payload          = { .process_state = NULL }
 };
 
-/* --- CF (4/5/0): Möbius Synthesis --- */
+/* --- CF (4.5/0): Möbius Synthesis --- */
 BIMBA CF_450 = {
     .ql_position      = 4,
     .family           = FAMILY_NONE,
@@ -358,6 +358,6 @@ const Holographic_Coordinate* CF_TABLE[CF_COUNT] = {
     [CF_TRIKA]     = &CF_012,   /* (0/1/2) Mod 3     */
     [CF_QUATERNAL] = &CF_0123,  /* (0/1/2/3) Mod 4   */
     [CF_FRACTAL]   = &CF_4x,    /* (4.0/1-4.4/5)     */
-    [CF_SYNTHESIS] = &CF_450,   /* (4/5/0)            */
+    [CF_SYNTHESIS] = &CF_450,   /* (4.5/0)            */
     [CF_MOBIUS]    = &CF_50,    /* (5/0)   Mod 6     */
 };

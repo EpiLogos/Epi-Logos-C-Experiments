@@ -13,6 +13,7 @@ pub mod medicine;
 pub mod oracle;
 pub mod pratibimba;
 pub mod transform;
+pub mod weights;
 pub mod wind;
 
 use clap::Subcommand;
@@ -41,12 +42,10 @@ pub enum NaraCmd {
         #[arg(long)]
         json: bool,
     },
-    /// Show kairos temporal state
+    /// Kairos temporal state operations
     Kairos {
-        #[arg(long)]
-        json: bool,
-        #[arg(long)]
-        planets: bool,
+        #[command(subcommand)]
+        cmd: KairosCmd,
     },
     /// Identity matrix operations
     Identity {
@@ -98,6 +97,11 @@ pub enum NaraCmd {
         #[command(subcommand)]
         cmd: LogosCmd,
     },
+    /// Tunable resonance weight system
+    Weights {
+        #[command(subcommand)]
+        cmd: WeightsCmd,
+    },
     /// Composite Nara status
     Status {
         #[arg(long)]
@@ -106,6 +110,26 @@ pub enum NaraCmd {
 }
 
 // ─── Sub-enums ──────────────────────────────────────────────────────────────
+
+#[derive(Subcommand)]
+pub enum KairosCmd {
+    /// Sync current transits from kerykeion
+    Sync,
+    /// Show current kairos state
+    Show {
+        #[arg(long)]
+        json: bool,
+        #[arg(long)]
+        planets: bool,
+    },
+    /// Show kairos status (freshness, last sync)
+    Status {
+        #[arg(long)]
+        json: bool,
+    },
+    /// Fetch current transits (alias for sync)
+    Fetch,
+}
 
 #[derive(Subcommand)]
 pub enum IdentityCmd {
@@ -124,6 +148,38 @@ pub enum IdentityCmd {
     /// Set a specific layer source
     #[command(name = "layer-set")]
     LayerSet { layer: u8, source: String },
+    /// Set an identity layer value
+    Set {
+        /// Layer key: birth-date, birth-location, jungian, gene-keys, human-design
+        key: String,
+        /// Value (format depends on key)
+        value: String,
+    },
+    /// Augment identity with additional layer data
+    Augment {
+        #[arg(long)]
+        layer: u8,
+        #[arg(long)]
+        data: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum WeightsCmd {
+    /// Show current weights
+    Show {
+        #[arg(long)]
+        json: bool,
+    },
+    /// Set a specific weight (siblings auto-renormalized)
+    Set {
+        key: String,
+        value: f32,
+    },
+    /// Reset all weights to defaults
+    Reset,
+    /// Auto-calibrate oracle weights from identity nucleotide balance
+    Calibrate,
 }
 
 #[derive(Subcommand)]
@@ -389,7 +445,33 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
             json,
         ),
         NaraCmd::Clock { json: j } => clock::show(*j || json),
-        NaraCmd::Kairos { json: j, planets } => kairos::show(*j || json, *planets),
+        NaraCmd::Kairos { cmd: sub } => match sub {
+            KairosCmd::Sync => kairos::sync_current(),
+            KairosCmd::Fetch => kairos::sync_current(),
+            KairosCmd::Show { json: j, planets } => kairos::show(*j || json, *planets),
+            KairosCmd::Status { json: j } => {
+                let fresh = kairos::is_current_fresh();
+                let path = kairos::kairos_dir().join("current.json");
+                let last_sync = std::fs::metadata(&path)
+                    .ok()
+                    .and_then(|m| m.modified().ok())
+                    .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+                    .map(|d| d.as_secs());
+                if *j || json {
+                    Ok(serde_json::json!({
+                        "fresh": fresh,
+                        "last_sync_epoch": last_sync,
+                    })
+                    .to_string())
+                } else {
+                    Ok(format!(
+                        "Kairos status: {}\nLast sync: {:?}",
+                        if fresh { "fresh" } else { "stale (run sync)" },
+                        last_sync
+                    ))
+                }
+            }
+        },
         NaraCmd::Identity { cmd: sub } => match sub {
             IdentityCmd::Show { json: j } => identity::show(*j || json),
             IdentityCmd::Layers { json: j } => {
@@ -401,6 +483,8 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
                 let _ = (layer, source);
                 Err("identity layer-set: not yet implemented".into())
             }
+            IdentityCmd::Set { key, value } => identity::set_layer(key, value),
+            IdentityCmd::Augment { layer, data } => identity::augment_layer(*layer, data),
         },
         NaraCmd::Decan { json: j } => {
             let k = kairos::require_temporal_authority()?;
@@ -501,6 +585,12 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
             LogosCmd::Curriculum { json: j } => logos::curriculum(*j || json),
             LogosCmd::Export { date, yes } => logos::export(date.as_deref(), *yes),
             LogosCmd::Weekly { json: j } => logos::weekly(*j || json),
+        },
+        NaraCmd::Weights { cmd: sub } => match sub {
+            WeightsCmd::Show { json: j } => weights::show(*j || json),
+            WeightsCmd::Set { key, value } => weights::set_weight(key, *value),
+            WeightsCmd::Reset => weights::reset(),
+            WeightsCmd::Calibrate => weights::calibrate(),
         },
         NaraCmd::Status { json: j } => {
             let _ = *j || json;

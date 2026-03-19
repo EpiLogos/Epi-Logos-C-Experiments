@@ -139,6 +139,10 @@ export async function sendChatMessage(
   if (!state.client || !state.connected) {
     return null;
   }
+  if (!state.sessionKey.trim()) {
+    state.lastError = "No gateway session selected.";
+    return null;
+  }
   const msg = message.trim();
   const attachments = options?.attachments ?? [];
   const hasAttachments = attachments.length > 0;
@@ -402,6 +406,40 @@ export type SessionsState = {
   sessionsIncludeGlobal: boolean;
   sessionsIncludeUnknown: boolean;
 };
+
+type SessionListLikeRow = {
+  key?: unknown;
+  sessionKey?: unknown;
+  canonicalKey?: unknown;
+};
+
+function sessionKeyFromListRow(row: SessionListLikeRow): string | null {
+  const candidates = [row.sessionKey, row.key, row.canonicalKey];
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim().length > 0) {
+      return candidate.trim();
+    }
+  }
+  return null;
+}
+
+export function resolvePreferredSessionKey(
+  result: SessionsListResult | null | undefined,
+  preferred?: string | null,
+): string | null {
+  const rows = [
+    ...(Array.isArray(result?.sessions) ? (result.sessions as SessionListLikeRow[]) : []),
+    ...(Array.isArray(result?.items) ? (result.items as SessionListLikeRow[]) : []),
+  ];
+  const keys = rows
+    .map((row) => sessionKeyFromListRow(row))
+    .filter((value): value is string => Boolean(value));
+  const preferredTrimmed = typeof preferred === "string" ? preferred.trim() : "";
+  if (preferredTrimmed && keys.includes(preferredTrimmed)) {
+    return preferredTrimmed;
+  }
+  return keys[0] ?? null;
+}
 
 export async function loadSessions(
   state: SessionsState,
@@ -1033,7 +1071,7 @@ export async function applyConfig(state: ConfigState) {
     await state.client.request("config.apply", {
       raw: state.configRaw,
       baseHash,
-      sessionKey: state.applySessionKey || "main",
+      ...(state.applySessionKey.trim() ? { sessionKey: state.applySessionKey.trim() } : {}),
     });
     await loadConfig(state);
     markConfigActionResult(state, "apply", "success");
@@ -1052,7 +1090,9 @@ export async function runUpdate(state: ConfigState) {
   state.configSaving = true;
   state.lastError = null;
   try {
-    await state.client.request("update.run", { sessionKey: state.applySessionKey || "main" });
+    await state.client.request("update.run", {
+      ...(state.applySessionKey.trim() ? { sessionKey: state.applySessionKey.trim() } : {}),
+    });
     markConfigActionResult(state, "update", "success");
   } catch (err) {
     state.lastError = String(err);

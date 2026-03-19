@@ -115,13 +115,13 @@ There are **7 CT' frames** for 6 QL positions. This is not an error — it is st
 | **CT1'** | CF(0/1) | {0, 1} | Logos (L1) | Non-Dual Anchor — 2-position |
 | **CT2'** | CF(0/1/2) | {0, 1, 2} | Eros (L2) | Dual-Non-Dual — 3-position |
 | **CT3'** | CF(0/1/2/3) | {0, 1, 2, 3} | Mythos (L3) | Trinitarian — 4-position |
-| **CT4a'** | CF(4/5/0) | {4, 5, 0} | *(integration preview)* | Bridging — CT4+CT5+CT0 together |
+| **CT4a'** | CF(4.5/0) | {4, 5, 0} | *(integration preview)* | Bridging — CT4+CT5+CT0 together |
 | **CT4b' = CT' parent** | CF(4.0-4.4/5) | {4.0, 4.1, 4.2, 4.3, 4.4, 4.5} | Psyche (L4) | Fractal doubling — **ALL CT types** |
 | **CT5'** | CF(5/0) | {5, 0} | Sophia (L5) | Total synthesis — Möbius return |
 
 **CT4b = CT' parent**: CT4b is not merely "CT4, variant b" — it IS the full Psyche meta-frame, the fractal structure that manages all CT types simultaneously. It was named CT4b as a forced disambiguation; architecturally it is **CT' itself at the meta level** — the frame-of-frames. This also means CPF (S4-0') links naturally to CT4b (the Psyche frame): autonomous mode `(4.0/1-4.4/5)` in CPF IS the Psyche fractal frame.
 
-**CT4a**: The distinct integration-preview frame (4/5/0) — CT4, CT5, and CT0 together — bridges from CT3 (4-position) toward the fractal meta-frame without invoking full fractal complexity. It is genuinely separate from CT4b and must be encoded as such.
+**CT4a**: The distinct integration-preview frame (4.5/0) — CT4, CT5, and CT0 together — bridges from CT3 (4-position) toward the fractal meta-frame without invoking full fractal complexity. It is genuinely separate from CT4b and must be encoded as such.
 
 **The 7-in-6 problem**: Agents confuse CT4a and CT4b because both share the "4" prefix, and the parent-frame nature of CT4b is not expressed in its name. The TypeScript type system (Part VII) must encode CT4b's parent status explicitly.
 
@@ -208,7 +208,7 @@ This makes the full tree navigable from any node without needing to expand/explo
 | Family ordinal encoding | Not explicit | `familyOrdinal(F) = position in canonical array` |
 | Prime semantics | `prime: boolean` | `isImplicate: boolean` or `MobiusAxis` type |
 | Reflection family order | `["CPF","CT","CP","CF","CFP","CS"]` | **NO CHANGE — already correct** |
-| CT4a/CT4b distinction | CT4b as unnamed variant | CT4b = CT' parent (meta-frame); CT4a = (4/5/0) integration preview; both as distinct `CTLevel` values with parent flag on CT4b |
+| CT4a/CT4b distinction | CT4b as unnamed variant | CT4b = CT' parent (meta-frame); CT4a = (4.5/0) integration preview; both as distinct `CTLevel` values with parent flag on CT4b |
 | CTx as CF gate | Not typed | `CT_CF_GATE` const mapping each CTLevel to its available positions |
 | CT4b parent status | Implicit | `CT_PARENT_FRAME: CTLevel = "CT4b"` — explicit const |
 | M-as-open | Comment only | Type-level: M is open because it is the #5 synthetic family |
@@ -254,7 +254,7 @@ This makes the full tree navigable from any node without needing to expand/explo
 | `CF(0/1)` | **Logos** | L1 | Non-Dual Anchor | **Architect/Scoper**: scope definition, structure creation, boundary-setting. CP 4.1 tasks. |
 | `CF(0/1/2)` | **Eros** | L2 | Dual-Non-Dual | **Refiner/Verifier**: quality refinement, verification, desire-completion. CP 4.2 tasks. |
 | `CF(0/1/2/3)` | **Mythos** | L3 | Trinitarian | **Pattern Recognizer**: archetypal recognition, symbolic mapping, debugging. CP 4.3 tasks. |
-| `CF(4/5/0)` | *(none)* | — | CT4a integration preview | Bridge frame — no primary agent assigned |
+| `CF(4.5/0)` | *(none)* | — | CT4a integration preview | Bridge frame — no primary agent assigned |
 | `CF(4.0-4.4/5)` | **Psyche** | L4 | Fractal Doubling (CT4b/CT' parent) | **Coordinator**: context management, agent routing, session state. CP 4.4 tasks. Patient IS Psyche. |
 | `CF(5/0)` | **Sophia** | L5 | Total Synthesis | **Synthesizer**: integration, Möbius return, P5' crystallization. CP 4.5 tasks. |
 
@@ -362,7 +362,7 @@ export type CTContent = 0 | 1 | 2 | 3 | 4 | 5;
 
 // CT' frame levels — 7 frames in the structure
 // CT4b IS the CT' parent/meta-frame (fractal Psyche frame = frame-of-frames)
-// CT4a IS the distinct integration-preview frame (4/5/0) — not CT4b
+// CT4a IS the distinct integration-preview frame (4.5/0) — not CT4b
 export type CTLevel = "CT0" | "CT1" | "CT2" | "CT3" | "CT4a" | "CT4b" | "CT5";
 
 // Explicitly marks CT4b as the parent meta-frame
@@ -438,7 +438,7 @@ export type CFCode =
   | "CF(0/1)"        // Logos (L1) — non-dual anchor, scoping
   | "CF(0/1/2)"      // Eros (L2) — dual-non-dual, refinement
   | "CF(0/1/2/3)"    // Mythos (L3) — trinitarian, pattern
-  | "CF(4/5/0)"      // CT4a integration preview (no primary agent)
+  | "CF(4.5/0)"      // CT4a integration preview (no primary agent)
   | "CF(4.0-4.4/5)"  // Psyche (L4) — fractal (= CT4b/CT' parent)
   | "CF(5/0)";       // Sophia (L5) — total synthesis
 
@@ -447,7 +447,7 @@ export const CF_AGENT: Record<CFCode, string | null> = {
   "CF(0/1)":       "Logos",
   "CF(0/1/2)":     "Eros",
   "CF(0/1/2/3)":   "Mythos",
-  "CF(4/5/0)":     null,
+  "CF(4.5/0)":     null,
   "CF(4.0-4.4/5)": "Psyche",
   "CF(5/0)":       "Sophia",
 };
@@ -597,7 +597,7 @@ The canonical plan is the **execution hub** for the first functional build. This
 | CT at reflection #1 | Proposed moving to #5 | **#1 confirmed** (C1=Form→CT — definitional, asked first) |
 | CF at reflection #3 | Proposed moving to #1 | **#3 confirmed** (C3=Process→CF — frame = process selector) |
 | CS at reflection #5 | Proposed moving to #3 | **#5 confirmed** (C5=Pratibimba→CS — reflected path) |
-| CT4a | Missing from table | **CT4a = CF(4/5/0)** — integration preview, must be explicit |
+| CT4a | Missing from table | **CT4a = CF(4.5/0)** — integration preview, must be explicit |
 | CT4b | Unnamed "variant b" | **CT4b = CT' parent** — fractal meta-frame, frame-of-frames |
 | 7-in-6 problem | Agent confusion | **Encode CT4b parent status explicitly** as `CT_PARENT_FRAME` const |
 | CTx template structure | Arbitrary 6-fold | **CT level = CF gate**: CT3=4 positions, CT5=2 (5/0), CT4b=4.x fractal |

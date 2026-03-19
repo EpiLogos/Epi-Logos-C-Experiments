@@ -208,6 +208,7 @@ make debug                # AddressSanitizer + UBSan
 ```
 
 The C sources compile automatically via `build.rs` — no separate build step needed. The resulting `epi` binary is ~2.8 MB, fully self-contained with no runtime dependencies.
+`make test` writes its compiled C test binaries under `epi-lib/test/bin/` so test runs do not litter the repo root.
 
 Rust test hygiene:
 

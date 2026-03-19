@@ -26,7 +26,7 @@ pub fn evaluate_vak(task: &str) -> VakCoordinates {
         || task_lower.contains("architecture")
         || task_lower.contains("design")
     {
-        "(4/5/0)" // Psyche — session subject
+        "(4.5/0)" // Psyche — session subject
     } else if task_lower.contains("question")
         || task_lower.contains("what")
         || task_lower.contains("why")
@@ -48,7 +48,7 @@ pub fn evaluate_vak(task: &str) -> VakCoordinates {
     {
         "(5/0)" // Sophia — Möbius review
     } else {
-        "(4/5/0)" // Default to Psyche
+        "(4.5/0)" // Default to Psyche
     };
 
     // CFP (thread type) heuristics
@@ -88,7 +88,7 @@ pub fn cf_to_agent(cf: &str) -> &'static str {
         "(0/1/2)" => "eros",
         "(0/1/2/3)" => "mythos",
         "(4.0/1-4.4/5)" => "anima",
-        "(4/5/0)" => "psyche",
+        "(4.5/0)" => "psyche",
         "(5/0)" => "sophia",
         "(00/00)" => "nous",
         _ => "psyche",

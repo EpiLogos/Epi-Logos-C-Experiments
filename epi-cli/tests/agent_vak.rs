@@ -19,7 +19,7 @@ fn vak_evaluation_returns_valid_cf_codes() {
         "(0/1/2)",
         "(0/1/2/3)",
         "(4.0/1-4.4/5)",
-        "(4/5/0)",
+        "(4.5/0)",
         "(5/0)",
         "(00/00)",
     ];
@@ -38,7 +38,7 @@ fn cf_to_agent_maps_all_codes() {
     assert_eq!(cf_to_agent("(0/1/2)"), "eros");
     assert_eq!(cf_to_agent("(0/1/2/3)"), "mythos");
     assert_eq!(cf_to_agent("(4.0/1-4.4/5)"), "anima");
-    assert_eq!(cf_to_agent("(4/5/0)"), "psyche");
+    assert_eq!(cf_to_agent("(4.5/0)"), "psyche");
     assert_eq!(cf_to_agent("(5/0)"), "sophia");
     assert_eq!(cf_to_agent("(00/00)"), "nous");
     assert_eq!(cf_to_agent("unknown"), "psyche"); // default

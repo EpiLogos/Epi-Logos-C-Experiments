@@ -598,6 +598,130 @@ while never ceasing to be itself.",
     ))
 }
 
+// ---------------------------------------------------------------------------
+// Phase 9: Parashakti body zone augmentation
+// ---------------------------------------------------------------------------
+
+/// Augment `ChakralCenter` nodes with `body_zones` arrays.
+///
+/// Uses the canonical bimbaCoordinates `#2-5-0/1-1` through `#2-5-0/1-7`
+/// (Saturn→Muladhara … Sun→Sahasrara) from the parashakti-deep dataset.
+/// Safe to run multiple times — all statements use MERGE + SET =.
+pub async fn seed_parashakti_body_zones(client: &Neo4jClient) -> Result<String, String> {
+    // (bimbaCoordinate, body_zones, chakra_name)
+    let chakra_data: &[(&str, &[&str], &str)] = &[
+        (
+            "#2-5-0/1-1",
+            &["bones", "teeth", "skin", "joints", "nails", "skeletal_structure", "adrenal_cortex"],
+            "Muladhara",
+        ),
+        (
+            "#2-5-0/1-2",
+            &["blood", "lymph", "mucus", "reproductive_organs", "urine", "seminal_fluid", "synovial_fluid"],
+            "Svadhisthana",
+        ),
+        (
+            "#2-5-0/1-3",
+            &["muscles", "bile", "liver", "adrenals", "stomach", "small_intestine", "digestive_fire"],
+            "Manipura",
+        ),
+        (
+            "#2-5-0/1-4",
+            &["heart", "lungs", "thymus", "kidneys", "circulatory_system", "upper_chest", "arms"],
+            "Anahata",
+        ),
+        (
+            "#2-5-0/1-5",
+            &["throat", "vocal_cords", "thyroid", "bronchi", "trachea", "cervical_nerves", "ears"],
+            "Vishuddha",
+        ),
+        (
+            "#2-5-0/1-6",
+            &["pituitary", "pineal", "cerebrospinal_fluid", "optic_nerves", "frontal_lobe", "autonomic_nervous_system"],
+            "Ajna",
+        ),
+        (
+            "#2-5-0/1-7",
+            &["cerebral_cortex", "higher_nervous_system", "fontanelle", "crown_endocrine_axis", "consciousness_field"],
+            "Sahasrara",
+        ),
+    ];
+
+    let mut updated = 0usize;
+    for (coord, zones, _chakra_name) in chakra_data {
+        let zones_cypher: Vec<String> = zones.iter().map(|z| format!("'{}'", z)).collect();
+        let zones_list = zones_cypher.join(", ");
+        let cypher = format!(
+            "MERGE (c:ChakralCenter {{bimbaCoordinate: $coord}}) \
+             SET c.body_zones = [{}], \
+                 c.body_zones_source = 'ayurveda_tantra_canonical', \
+                 c.body_zones_updated_at = datetime()",
+            zones_list
+        );
+        client
+            .run_query(query(&cypher).param("coord", *coord))
+            .await
+            .map_err(|e| format!("body_zones seed {} failed: {}", coord, e))?;
+        updated += 1;
+    }
+
+    Ok(format!("Parashakti body zones seeded: {} ChakralCenter nodes updated", updated))
+}
+
+/// Augment decan nodes with `bodyPart` and `herbalism_herbs` properties.
+///
+/// Decan nodes are identified by their QL index (#2-3-0-N where N = 0..35).
+/// Data sourced from medicine.rs static LUTs (canonical Ayurvedic/Jyotish).
+/// Safe to re-run — uses MERGE + SET.
+pub async fn seed_decan_body_data(client: &Neo4jClient) -> Result<String, String> {
+    // Canonical body parts per decan (index 0-35, same as DECAN_BODY_PARTS in medicine.rs)
+    const DECAN_BODY_PARTS: [&str; 36] = [
+        "head_crown", "neck_throat", "shoulders_arms", "chest_lungs",
+        "solar_plexus", "intestines", "kidneys_lower_back", "reproductive_system",
+        "thighs_hips", "knees_joints", "ankles_calves", "feet_lymphatics",
+        "frontal_lobe", "cerebellum", "spinal_cord_cervical", "spinal_cord_thoracic",
+        "cardiac_plexus", "solar_plexus_liver", "sacral_plexus", "coccyx_perineum",
+        "femoral_nerve", "popliteal_nerve", "tibial_nerve", "plantar_fascia",
+        "occipital_lobe", "temporal_lobe", "parietal_lobe", "medulla_oblongata",
+        "thymus_gland", "pancreas", "adrenal_glands", "gonads_ovaries",
+        "sciatic_nerve", "cruciate_ligaments", "achilles_tendon", "metatarsals",
+    ];
+
+    const DECAN_HERBS: [&str; 36] = [
+        "ginger_ashwagandha", "sage_thyme", "lavender_eucalyptus", "mullein_elecampane",
+        "licorice_marshmallow", "slippery_elm_psyllium", "dandelion_milk_thistle", "raspberry_leaf_vitex",
+        "turmeric_moringa", "solomon_seal_horsetail", "ginkgo_gotu_kola", "calendula_cleavers",
+        "rosemary_brahmi", "skullcap_valerian", "wood_betony_st_johns_wort", "oat_straw_lemon_balm",
+        "hawthorn_rose_hips", "bupleurum_schisandra", "black_cohosh_dong_quai", "shatavari_maca",
+        "nettle_yellow_dock", "devil_claw_boswellia", "horse_chestnut_bilberry", "sea_buckthorn_turmeric",
+        "lions_mane_reishi", "bacopa_tulsi", "american_ginseng_eleuthero", "lobelia_passionflower",
+        "astragalus_codonopsis", "bitters_gentian_artichoke", "adaptogen_rhodiola_schisandra", "tribulus_maca",
+        "st_johns_wort_cats_claw", "comfrey_glucosamine_herbs", "arnica_boswellia", "plantain_yarrow",
+    ];
+
+    let mut updated = 0usize;
+    for (idx, (body_part, herbs)) in DECAN_BODY_PARTS.iter().zip(DECAN_HERBS.iter()).enumerate() {
+        let coord = format!("#2-3-0-{}", idx);
+        let q = query(
+            "MERGE (d:Decan {bimbaCoordinate: $coord}) \
+             SET d.bodyPart = $body_part, \
+                 d.herbalism_herbs = $herbs, \
+                 d.body_data_source = 'ayurveda_jyotish_canonical', \
+                 d.body_data_updated_at = datetime()",
+        )
+        .param("coord", coord.as_str())
+        .param("body_part", *body_part)
+        .param("herbs", *herbs);
+        client
+            .run_query(q)
+            .await
+            .map_err(|e| format!("decan body data seed {} failed: {}", coord, e))?;
+        updated += 1;
+    }
+
+    Ok(format!("Decan body data seeded: {} Decan nodes updated", updated))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

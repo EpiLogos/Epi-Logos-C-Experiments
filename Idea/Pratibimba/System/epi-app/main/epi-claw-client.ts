@@ -2,16 +2,16 @@ import { JsonRpcClient, JsonRpcResponse, EventFrame, createMethodBuilder, type J
 import { READY_STATE_OPEN } from './ws-wrapper.js';
 
 /**
- * Epi-Claw Client (shares S4' WebSocket connection)
+ * Epi-Claw Client (shares S3' WebSocket connection)
  *
- * Uses the existing S4' WebSocket connection instead of creating a separate one.
+ * Uses the existing S3' WebSocket connection instead of creating a separate one.
  * Provides JSON-RPC 2.0 protocol support for Epi-Claw gateway communication.
  *
  * Features:
  * - JSON-RPC 2.0 request/response correlation
  * - Event stream handling
  * - Method-specific helpers
- * - No separate WebSocket connection (shares S4')
+ * - No separate WebSocket connection (shares S3')
  */
 
 type MessageHandler = (data: unknown) => void;
@@ -22,9 +22,48 @@ type ErrorHandler = (error: Error) => void;
 export type { MessageHandler, ConnectionHandler, ErrorHandler };
 
 interface EpiClawClientConfig {
-  // Get the S4' WebSocket instance (must be already connected)
+  // Get the S3' WebSocket instance (must be already connected)
   getWebSocket: () => any | null;
   requestTimeout?: number;
+}
+
+type GatewaySessionLike = {
+  key?: unknown;
+  sessionKey?: unknown;
+  canonicalKey?: unknown;
+};
+
+type GatewaySessionsResultLike = {
+  sessions?: unknown;
+  items?: unknown;
+};
+
+function sessionKeyFromRow(row: GatewaySessionLike): string | null {
+  const candidates = [row.sessionKey, row.key, row.canonicalKey];
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim().length > 0) {
+      return candidate.trim();
+    }
+  }
+  return null;
+}
+
+export function resolvePreferredGatewaySessionKey(
+  result: GatewaySessionsResultLike | null | undefined,
+  preferred?: string | null,
+): string | undefined {
+  const rows = [
+    ...(Array.isArray(result?.sessions) ? (result.sessions as GatewaySessionLike[]) : []),
+    ...(Array.isArray(result?.items) ? (result.items as GatewaySessionLike[]) : []),
+  ];
+  const keys = rows
+    .map((row) => sessionKeyFromRow(row))
+    .filter((value): value is string => Boolean(value));
+  const preferredTrimmed = typeof preferred === 'string' ? preferred.trim() : '';
+  if (preferredTrimmed && keys.includes(preferredTrimmed)) {
+    return preferredTrimmed;
+  }
+  return keys[0];
 }
 
 export class EpiClawClient {
@@ -65,7 +104,7 @@ export class EpiClawClient {
   private checkConnection(): void {
     const ws = this.ws;
     if (ws && ws.readyState === READY_STATE_OPEN && this.connectionState === 'disconnected') {
-      console.log('[EpiClaw] Using S4\' WebSocket connection');
+      console.log('[EpiClaw] Using S3\' WebSocket connection');
       this.connectionState = 'connected';
 
       // Notify handlers
@@ -80,7 +119,7 @@ export class EpiClawClient {
   }
 
   /**
-   * Connect to epi-claw gateway (via S4' WebSocket)
+   * Connect to epi-claw gateway (via S3' WebSocket)
    */
   public connect(): void {
     this.checkConnection();
@@ -125,6 +164,19 @@ export class EpiClawClient {
     return this.rpc.sendRequest(method, (requestString) => {
       ws.send(requestString);
     }, params);
+  }
+
+  public async resolveDefaultSessionKey(preferred?: string | null): Promise<string | undefined> {
+    try {
+      const result = (await this.request('sessions.list', {
+        includeGlobal: false,
+        includeUnknown: false,
+        limit: 50,
+      })) as GatewaySessionsResultLike;
+      return resolvePreferredGatewaySessionKey(result, preferred);
+    } catch {
+      return typeof preferred === 'string' && preferred.trim().length > 0 ? preferred.trim() : undefined;
+    }
   }
 
   /**
@@ -256,8 +308,8 @@ export class EpiClawClient {
   }
 
   /**
-   * Handle incoming message from S4' WebSocket
-   * Called by S4' client when it receives a message
+   * Handle incoming message from S3' WebSocket
+   * Called by S3' client when it receives a message
    */
   public handleMessage(data: any): void {
     try {

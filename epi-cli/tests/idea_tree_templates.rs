@@ -206,7 +206,7 @@ fn canonical_idea_tree_and_template_authority_exist() {
     }
 
     let ct4a = fs::read_to_string(root.join("Idea/Bimba/World/CT4a.md")).unwrap();
-    assert!(ct4a.contains("CF(4/5/0)"));
+    assert!(ct4a.contains("CF(4.5/0)"));
     let ct4b = fs::read_to_string(root.join("Idea/Bimba/World/CT4b.md")).unwrap();
     assert!(ct4b.contains("CF(4.0-4.4/5)"));
 }

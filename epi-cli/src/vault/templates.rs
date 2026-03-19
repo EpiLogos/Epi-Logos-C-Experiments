@@ -224,7 +224,7 @@ fn ct_definition(template_type: &str) -> Option<CTDefinition> {
         }),
         "ct4a" => Some(CTDefinition {
             level: "CT4a",
-            cf_gate: "CF(4/5/0)",
+            cf_gate: "CF(4.5/0)",
             included: &["4 Context", "5 Integration", "0 Ground"],
             title: "CT4a Frozen Process",
         }),

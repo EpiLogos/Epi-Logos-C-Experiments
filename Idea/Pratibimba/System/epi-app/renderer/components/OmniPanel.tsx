@@ -293,16 +293,16 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     await patchSession(session.key, { label: nextLabel.trim() || null });
   };
 
-  const syncMainS4Connection = useCallback(async () => {
+  const syncMainS3Connection = useCallback(async () => {
     try {
-      await window.sPrime?.s4?.websocket?.configure?.({
+      await window.sPrime?.s3?.websocket?.configure?.({
         url: gatewayUrl,
         token: gatewayToken ?? null,
         password: gatewayPassword || null,
         reconnect: true,
       });
     } catch (err) {
-      console.warn('Failed to configure main S4 connection', err);
+      console.warn('Failed to configure main S3\' connection', err);
     }
   }, [gatewayPassword, gatewayToken, gatewayUrl]);
 
@@ -315,11 +315,11 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     }
     if (!client && (connectionState === 'disconnected' || connectionState === 'error')) {
       void (async () => {
-        await syncMainS4Connection();
+        await syncMainS3Connection();
         connect();
       })();
     }
-  }, [client, connect, connectionState, isVisible, syncMainS4Connection]);
+  }, [client, connect, connectionState, isVisible, syncMainS3Connection]);
 
   const handleAddCron = async () => {
     try {
@@ -408,7 +408,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
             onSetSessionKey={setSessionKey}
             onConnect={() => {
               void (async () => {
-                await syncMainS4Connection();
+                await syncMainS3Connection();
                 connect();
               })();
             }}
@@ -618,7 +618,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
                 onSetNavCollapsed={setNavCollapsed}
                 onConnect={() => {
                   void (async () => {
-                    await syncMainS4Connection();
+                    await syncMainS3Connection();
                     connect();
                   })();
                 }}
@@ -894,7 +894,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
             onSetNavCollapsed={setNavCollapsed}
             onConnect={() => {
               void (async () => {
-                await syncMainS4Connection();
+                await syncMainS3Connection();
                 connect();
               })();
             }}

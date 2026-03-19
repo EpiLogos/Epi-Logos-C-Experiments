@@ -1,9 +1,9 @@
 import { Shell } from './components/Shell';
-import { useS4WebSocket } from './stores/useS4WebSocket';
+import { useS3Gateway } from './stores/useS3Gateway';
 
 export function App() {
-  // Initialize S4' WebSocket subscription at app root
-  useS4WebSocket();
+  // Initialize S3' Gateway WebSocket subscription at app root
+  useS3Gateway();
 
   return <Shell />;
 }

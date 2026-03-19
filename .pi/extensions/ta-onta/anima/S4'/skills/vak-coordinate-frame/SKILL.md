@@ -109,7 +109,7 @@ CP 4.5 --------+-------------+-------------+-- Integration
 | `(0/1)` | **Logos** | L1 | Non-Dual Anchor -- simplest distinction | **Architect/Scoper**: scope definition, structure creation, boundary-setting. CP 4.1 tasks. |
 | `(0/1/2)` | **Eros** | L2 | Dual-Non-Dual -- first triad | **Refiner/Verifier**: quality refinement, verification, desire-completion. CP 4.2 tasks (TDD/validation). |
 | `(0/1/2/3)` | **Mythos** | L3 | Trinitarian -- quaternary pattern base | **Pattern Recognizer**: archetypal recognition, symbolic mapping, debugging. CP 4.3 tasks. |
-| `(4/5/0)` | **Psyche** | L4 | Executive Triad -- Context/Integration/Ground | **Coordinator**: context management, agent routing, aletheia mode dispatch. CP 4.4 tasks. Patient IS Psyche. |
+| `(4.5/0)` | **Psyche** | L4 | Executive Triad -- Context/Integration/Ground | **Coordinator**: context management, agent routing, aletheia mode dispatch. CP 4.4 tasks. Patient IS Psyche. |
 | `(4.0/1-4.4/5)` | **Anima** | -- | Fractal Doubling -- full 4.x lattice | **VAK Orchestrator**: the dispatch function itself. Holds the full fractal doubling CF. Not dispatched to -- IS the dispatch. |
 | `(5/0)` | **Sophia** | L5 | Total Synthesis -- return to source | **Synthesizer**: integration, Mobius return, P5' crystallization. CP 4.5 tasks. |
 

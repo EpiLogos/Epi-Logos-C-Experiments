@@ -6,7 +6,7 @@
 use serde_json::{json, Value};
 
 use crate::nara::{
-    clock, identity, kairos, lens, logos, medicine, oracle, pratibimba, transform, wind,
+    clock, identity, kairos, lens, logos, medicine, oracle, pratibimba, transform, weights, wind,
 };
 
 // ─── Runtime state ──────────────────────────────────────────────────────────
@@ -311,6 +311,25 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             let yes = opt_bool(params, "yes");
             cli_to_rpc(logos::export(date.as_deref(), yes))
         }
+
+        // ── Weights ─────────────────────────────────────────────────────
+        "nara.weights.get" => cli_to_rpc(weights::show(true)),
+        "nara.weights.set" => {
+            let key = required_param(params, "key")?;
+            let value = params
+                .get("value")
+                .and_then(|v| v.as_f64())
+                .map(|n| n as f32)
+                .ok_or_else(|| {
+                    (
+                        "invalid-params".to_owned(),
+                        "missing required param 'value'".to_owned(),
+                    )
+                })?;
+            cli_to_rpc(weights::set_weight(&key, value))
+        }
+        "nara.weights.reset" => cli_to_rpc(weights::reset()),
+        "nara.weights.calibrate" => cli_to_rpc(weights::calibrate()),
 
         // ── Cosmos (agent pipeline stubs) ───────────────────────────────
         "nara.cosmos.navigate" => deferred_stub("nara.cosmos.navigate"),

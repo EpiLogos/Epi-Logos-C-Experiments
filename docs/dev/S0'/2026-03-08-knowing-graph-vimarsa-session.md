@@ -29,7 +29,7 @@ and `epi vimarsa` (curiosity-driven exploration, renamed from kbase).
   - FAMILY_CONTAINS, REFLECTS_AS (C' → VAK), OPERATES_IN (VAK → CF)
   - MOBIUS_RETURN (#5 → #0), ANCHORED_TO (CF_FRACTAL → #4)
 - Property key: `coordinate` (not `bimbaCoordinate`)
-- CF_SYNTHESIS correctly maps to (4/5/0), spanning #4-#5-#0
+- CF_SYNTHESIS correctly maps to (4.5/0), spanning #4-#5-#0
 
 ### 3. Graph Schema Migration (DONE)
 - All ~20 graph module files migrated: `BimbaCoordinate` → `Bimba`, `bimbaCoordinate` → `coordinate`
@@ -68,7 +68,7 @@ and `epi vimarsa` (curiosity-driven exploration, renamed from kbase).
 2. **Vimarsa apertures** = bkmr projects per coordinate family, tags as multi-coordinate breadcrumbs
 3. **Neo4j labels** are layered (Bimba:Type), not flat (BimbaCoordinate)
 4. **M-branch ontological relation types** deferred to n10s (neosemantics) — not canonicalized now
-5. **CF_SYNTHESIS** = (4/5/0), not just (4.4/5) — spans #4, #5, #0
+5. **CF_SYNTHESIS** = (4.5/0), not just (4.4/5) — spans #4, #5, #0
 
 ## Remaining Work
 
