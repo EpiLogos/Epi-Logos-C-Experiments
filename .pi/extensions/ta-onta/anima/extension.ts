@@ -1,6 +1,60 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { spawnSync } from "node:child_process";
 
+type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
+type CSDirectionality = "day" | "night_prime";
+
+type CSState = {
+  value: CS;
+  directionality: CSDirectionality;
+  cpPosition: "4.0" | "4.1" | "4.2" | "4.3" | "4.4" | "4.5";
+};
+
+interface S4Frame {
+  // Canonical C' ordering: C0'=cpf, C1'=ct, C2'=cp, C3'=cf, C4'=cfp, C5'=cs.
+  cpf: string;
+  ct: string[];
+  cp: string;
+  cf: string;
+  cfp: string;
+  cs: CSState;
+}
+
+const sessionCSState = new Map<string, CSState>();
+
+function setCSState(sessionId: string | undefined, nextState: CSState) {
+  if (sessionId) {
+    sessionCSState.set(sessionId, nextState);
+  }
+  return nextState;
+}
+
+function getCSState(sessionId?: string): CSState {
+  return (sessionId && sessionCSState.get(sessionId)) ?? {
+    value: "CS0",
+    directionality: "day",
+    cpPosition: "4.0",
+  };
+}
+
+function sophiaReview(sessionId: string | undefined, sessionOutput: string) {
+  const nightState = setCSState(sessionId, {
+    value: "CS5",
+    directionality: "night_prime",
+    cpPosition: "4.5",
+  });
+  const prompt = [
+    "Review and crystallise this session output.",
+    "Emit P5' insight and P0' questions.",
+    `CS=${nightState.value}:${nightState.directionality}`,
+    sessionOutput,
+  ].join("\n\n");
+  return spawnSync("epi", ["agent", "run", "--agent", "sophia", prompt], {
+    encoding: "utf8",
+    timeout: 120_000,
+  });
+}
+
 export async function animaExtension(api: ExtensionAPI) {
   // ── Tool: vak_evaluate ───────────────────────────────────────────
   api.registerTool({
@@ -42,7 +96,10 @@ export async function animaExtension(api: ExtensionAPI) {
         "(0/1)": "logos",
         "(0/1/2)": "eros",
         "(0/1/2/3)": "mythos",
+        // Intentional self-routing: Anima owns the lemniscate frame as the dispatch
+        // function itself, so this route documents meta-dispatch rather than a gap.
         "(4.0/1-4.4/5)": "anima",
+        "(4/5/0)": "psyche",
         "(4.5/0)": "psyche",
         "(5/0)": "sophia",
         "(00/00)": "nous",
@@ -173,7 +230,7 @@ export async function animaExtension(api: ExtensionAPI) {
   // ── Tool: dispatch_agent ─────────────────────────────────────────
   api.registerTool({
     name: "dispatch_agent",
-    description: "Spawn agent from team grid (CFP1 P-Thread). Provide agent name and task.",
+    description: "Spawn a single constitutional agent for CFP0/base execution.",
     inputSchema: {
       type: "object",
       properties: {
@@ -222,6 +279,66 @@ export async function animaExtension(api: ExtensionAPI) {
       }
       return {
         content: [{ type: "text", text: `run_chain: completed [${agents.join(" → ")}]\n${context}` }],
+      };
+    },
+  });
+
+  api.registerTool({
+    name: "dispatch_parallel_agents",
+    description: "CFP1 P-Thread dispatch for independent tasks routed to agents in parallel.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        tasks: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              task: { type: "string" },
+              agent_name: { type: "string" },
+            },
+            required: ["task", "agent_name"],
+          },
+        },
+      },
+      required: ["tasks"],
+    },
+    async handler(input: { tasks: Array<{ task: string; agent_name: string }> }) {
+      const results = input.tasks.map(({ task, agent_name }) => {
+        const result = spawnSync("epi", ["agent", "run", "--agent", agent_name, task], {
+          encoding: "utf8",
+          timeout: 120_000,
+        });
+        return `## ${agent_name}\n${result.stdout || result.stderr}`;
+      });
+      return { content: [{ type: "text", text: results.join("\n\n") }] };
+    },
+  });
+
+  api.registerTool({
+    name: "dispatch_fusion_agents",
+    description: "CFP3 F-Thread dispatch: send one task to multiple agents and return Agora-style aggregation.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        task: { type: "string" },
+        agents: { type: "array", items: { type: "string" } },
+      },
+      required: ["task", "agents"],
+    },
+    async handler(input: { task: string; agents: string[] }) {
+      const outputs = input.agents.map((agent) => {
+        const result = spawnSync("epi", ["agent", "run", "--agent", agent, input.task], {
+          encoding: "utf8",
+          timeout: 120_000,
+        });
+        return `### ${agent}\n${result.stdout || result.stderr}`;
+      });
+      return {
+        content: [{
+          type: "text",
+          text: `Agora CFP3 aggregation\n\n${outputs.join("\n\n")}`,
+        }],
       };
     },
   });
@@ -292,14 +409,16 @@ export async function animaExtension(api: ExtensionAPI) {
     },
   });
 
-  // ── Hook: before_agent_start ─────────────────────────────────────
-  if (api.hooks) {
-    api.hooks.on?.("before_agent_start", async (_event: unknown) => {
-      // VAK evaluation happens when a task is dispatched
-    });
+  api.on("before_agent_start", async () => {
+    setCSState(undefined, { value: "CS0", directionality: "day", cpPosition: "4.0" });
+  });
 
-    api.hooks.on?.("session_end", async () => {
-      // Signal Sophia post-execution review
-    });
-  }
+  api.on("agent_end", async () => {
+    const currentState = getCSState();
+    const result = sophiaReview(
+      undefined,
+      `Session ended from ${currentState.cpPosition} in ${currentState.directionality} mode.`,
+    );
+    void result;
+  });
 }

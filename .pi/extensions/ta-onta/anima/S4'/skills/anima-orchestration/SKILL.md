@@ -110,6 +110,11 @@ The six aletheia agents -- **anansi, janus, moirai, mercurius, agora, zeithoven*
 - P4' (Discovery) -> spawn Lachesis (Query). CF: `(4.5/0)` Psyche.
 - P5' (Insight) -> spawn Atropos (Reflect). CF: `(5/0)` Sophia.
 - **CFP3 F-Thread full Night'** -> all three Moirai in parallel -> Anima aggregates.
+- Klotho mode activates when `CS = night'` and traversal reaches P1' / CP 4.1.
+- Lachesis mode activates when `CS = night'` and traversal reaches P4' / CP 4.4.
+- Atropos mode activates when `CS = night'` and traversal reaches P5' / the 4.5 -> 4.0 return.
+- This is not a hardwired pipeline of separate agent identities. The CS state turns the session toward Night', and the corresponding Moira mode becomes active at its position.
+- **CFP3 F-Thread full Night'** -> all three Moirai operate in parallel and Agora/Anima aggregate.
 
 ---
 

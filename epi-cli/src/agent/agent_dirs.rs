@@ -64,6 +64,20 @@ impl AgentLayout {
         ))
     }
 
+    pub fn resolve_for_epi_home(agent: Option<&str>, epi_home: PathBuf) -> Result<Self, String> {
+        let repo_root = detect_repo_root()?;
+        let repo_pi_root = repo_root.join(".pi");
+        let agent_id = agent.unwrap_or("main").to_owned();
+        let agent_dir = epi_home.join("agents").join(&agent_id).join("agent");
+        Ok(Self::build(
+            agent_id,
+            repo_root,
+            repo_pi_root,
+            epi_home,
+            agent_dir,
+        ))
+    }
+
     fn build(
         agent_id: String,
         repo_root: PathBuf,

@@ -1,0 +1,4 @@
+chains:
+  - id: default
+    steps:
+      - main

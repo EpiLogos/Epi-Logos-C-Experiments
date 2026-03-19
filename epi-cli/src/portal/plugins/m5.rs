@@ -1,9 +1,9 @@
+use crate::ffi;
+use crate::portal::theme;
 use ratatui::prelude::*;
 use ratatui::widgets::*;
 use ratatui_hypertile::{EventOutcome, HypertileEvent, KeyCode};
 use ratatui_hypertile_extras::HypertilePlugin;
-use crate::portal::theme;
-use crate::ffi;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // M5LogosPlugin — Logos cycle status from nara::logos
@@ -27,15 +27,15 @@ impl M5LogosPlugin {
     }
 
     fn load_data(&mut self) {
-        self.status_text = crate::nara::logos::status(false)
-            .unwrap_or_else(|e| format!("Error: {}", e));
+        self.status_text =
+            crate::nara::logos::status(false).unwrap_or_else(|e| format!("Error: {}", e));
     }
 
     fn load_stage_detail(&mut self) {
         let idx = self.selected_stage as u8;
         self.stage_detail = Some(
             crate::nara::logos::stage(idx, None, false)
-                .unwrap_or_else(|e| format!("Stage {} not yet completed: {}", idx, e))
+                .unwrap_or_else(|e| format!("Stage {} not yet completed: {}", idx, e)),
         );
     }
 }
@@ -48,22 +48,36 @@ impl HypertilePlugin for M5LogosPlugin {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .constraints([
-                Constraint::Length(3),  // progress bar
-                Constraint::Min(5),     // status + detail
-                Constraint::Length(1),  // footer
+                Constraint::Length(3), // progress bar
+                Constraint::Min(5),    // status + detail
+                Constraint::Length(1), // footer
             ])
             .split(area);
 
         // Progress bar as stage indicators
-        let stage_names = ["A-Logos", "Pro-Logos", "Dia-Logos", "Logos", "Epi-Logos", "Ana-Logos"];
-        let stage_spans: Vec<Span> = stage_names.iter().enumerate().map(|(i, name)| {
-            let style = if i == self.selected_stage {
-                Style::default().fg(Color::Black).bg(Color::Magenta).add_modifier(Modifier::BOLD)
-            } else {
-                Style::default().fg(Color::DarkGray)
-            };
-            Span::styled(format!(" {} ", name), style)
-        }).collect();
+        let stage_names = [
+            "A-Logos",
+            "Pro-Logos",
+            "Dia-Logos",
+            "Logos",
+            "Epi-Logos",
+            "Ana-Logos",
+        ];
+        let stage_spans: Vec<Span> = stage_names
+            .iter()
+            .enumerate()
+            .map(|(i, name)| {
+                let style = if i == self.selected_stage {
+                    Style::default()
+                        .fg(Color::Black)
+                        .bg(Color::Magenta)
+                        .add_modifier(Modifier::BOLD)
+                } else {
+                    Style::default().fg(Color::DarkGray)
+                };
+                Span::styled(format!(" {} ", name), style)
+            })
+            .collect();
 
         let progress = Paragraph::new(Line::from(stage_spans)).block(
             Block::default()
@@ -158,7 +172,10 @@ impl HypertilePlugin for M5LogosPlugin {
 
 const M5_SUB_BRANCHES: [(&str, &str); 6] = [
     ("#5-0  M+M'", "Integral Identity -- M0-M5 mirror"),
-    ("#5-1  L+P+L'+P'", "Theory Topology -- accumulated understanding"),
+    (
+        "#5-1  L+P+L'+P'",
+        "Theory Topology -- accumulated understanding",
+    ),
     ("#5-2  S+S'", "Full Stack -- objective + project-specific"),
     ("#5-3  M' UI", "Electron App -- WebMCP protocol hooks"),
     ("#5-4  S4/S4'", "Agent Rosters -- Anima + Aletheia"),
@@ -275,17 +292,27 @@ impl HypertilePlugin for M5FsmPlugin {
             .split(area);
 
         // Header
-        let phase = if self.logos_state.is_implicate { "descending" } else { "ascending" };
+        let phase = if self.logos_state.is_implicate {
+            "descending"
+        } else {
+            "ascending"
+        };
         let header = Paragraph::new(Line::from(vec![
             Span::styled(
                 " M5 (Epii) -- Holographic Integration ",
-                Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+                Style::default()
+                    .fg(Color::White)
+                    .add_modifier(Modifier::BOLD),
             ),
             Span::styled(
-                format!("  CF_MOBIUS (5/0)  tick {}/11 {} ", self.logos_state.pipeline_tick, phase),
+                format!(
+                    "  CF_MOBIUS (5/0)  tick {}/11 {} ",
+                    self.logos_state.pipeline_tick, phase
+                ),
                 Style::default().fg(Color::Magenta),
             ),
-        ])).block(
+        ]))
+        .block(
             Block::default()
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(theme::pane_border(is_focused))),
@@ -299,14 +326,18 @@ impl HypertilePlugin for M5FsmPlugin {
             .split(outer[1]);
 
         // Left: sub-branch list
-        let items: Vec<ListItem> = M5_SUB_BRANCHES.iter().enumerate().map(|(i, (name, _))| {
-            let style = if i == self.selected {
-                Style::default().fg(Color::Black).bg(Color::Magenta)
-            } else {
-                Style::default().fg(Color::White)
-            };
-            ListItem::new(format!(" {}", name)).style(style)
-        }).collect();
+        let items: Vec<ListItem> = M5_SUB_BRANCHES
+            .iter()
+            .enumerate()
+            .map(|(i, (name, _))| {
+                let style = if i == self.selected {
+                    Style::default().fg(Color::Black).bg(Color::Magenta)
+                } else {
+                    Style::default().fg(Color::White)
+                };
+                ListItem::new(format!(" {}", name)).style(style)
+            })
+            .collect();
 
         let list = List::new(items).block(
             Block::default()
@@ -319,32 +350,79 @@ impl HypertilePlugin for M5FsmPlugin {
         // Right: detail for selected sub-branch
         let (branch_name, branch_desc) = M5_SUB_BRANCHES[self.selected];
         let families_for_branch: &[(u8, &str)] = match self.selected {
-            0 => &[(5, "M0"), (5, "M1"), (5, "M2"), (5, "M3"), (5, "M4"), (5, "M5")],
-            1 => &[(2, "L0"), (2, "L1"), (2, "L2"), (2, "L3"), (2, "L4"), (2, "L5"),
-                   (1, "P0"), (1, "P1"), (1, "P2"), (1, "P3"), (1, "P4"), (1, "P5")],
-            2 => &[(3, "S0"), (3, "S1"), (3, "S2"), (3, "S3"), (3, "S4"), (3, "S5")],
+            0 => &[
+                (5, "M0"),
+                (5, "M1"),
+                (5, "M2"),
+                (5, "M3"),
+                (5, "M4"),
+                (5, "M5"),
+            ],
+            1 => &[
+                (2, "L0"),
+                (2, "L1"),
+                (2, "L2"),
+                (2, "L3"),
+                (2, "L4"),
+                (2, "L5"),
+                (1, "P0"),
+                (1, "P1"),
+                (1, "P2"),
+                (1, "P3"),
+                (1, "P4"),
+                (1, "P5"),
+            ],
+            2 => &[
+                (3, "S0"),
+                (3, "S1"),
+                (3, "S2"),
+                (3, "S3"),
+                (3, "S4"),
+                (3, "S5"),
+            ],
             3 => &[(5, "M'")],
             4 => &[(3, "S4"), (3, "S4'")],
-            5 => &[(4, "T0"), (4, "T1"), (4, "T2"), (4, "T3"), (4, "T4"), (4, "T5"),
-                   (0, "C0"), (0, "C1"), (0, "C2"), (0, "C3"), (0, "C4"), (0, "C5")],
+            5 => &[
+                (4, "T0"),
+                (4, "T1"),
+                (4, "T2"),
+                (4, "T3"),
+                (4, "T4"),
+                (4, "T5"),
+                (0, "C0"),
+                (0, "C1"),
+                (0, "C2"),
+                (0, "C3"),
+                (0, "C4"),
+                (0, "C5"),
+            ],
             _ => &[],
         };
 
         let mut lines = vec![
             Line::from(vec![
                 Span::styled("Branch:  ", dim),
-                Span::styled(branch_name, Style::default().fg(Color::Magenta).add_modifier(Modifier::BOLD)),
+                Span::styled(
+                    branch_name,
+                    Style::default()
+                        .fg(Color::Magenta)
+                        .add_modifier(Modifier::BOLD),
+                ),
             ]),
-            Line::from(vec![
-                Span::styled("Domain:  ", dim),
-                Span::raw(branch_desc),
-            ]),
+            Line::from(vec![Span::styled("Domain:  ", dim), Span::raw(branch_desc)]),
             Line::from(""),
-            Line::from(Span::styled("-- QV Lookups --", Style::default().fg(Color::Yellow))),
+            Line::from(Span::styled(
+                "-- QV Lookups --",
+                Style::default().fg(Color::Yellow),
+            )),
         ];
 
         for (fam, label) in families_for_branch {
-            let pos = label.chars().last().and_then(|c| c.to_digit(10)).unwrap_or(0) as u8;
+            let pos = label
+                .chars()
+                .last()
+                .and_then(|c| c.to_digit(10))
+                .unwrap_or(0) as u8;
             let qv = self.lookup(*fam, pos);
             lines.push(Line::from(vec![
                 Span::styled(format!("  {:<4} ", label), Style::default().fg(Color::Cyan)),
@@ -353,33 +431,47 @@ impl HypertilePlugin for M5FsmPlugin {
         }
 
         let detail = Paragraph::new(lines)
-            .block(Block::default()
-                .title(format!(" {} ", branch_name))
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(Color::Green)))
+            .block(
+                Block::default()
+                    .title(format!(" {} ", branch_name))
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(Color::Green)),
+            )
             .wrap(Wrap { trim: false });
         Widget::render(detail, main_area[1], buf);
 
         // Logos strip
         let stage_name = self.stage_name();
-        let logos_spans: Vec<Span> = (0u8..6).map(|i| {
-            let active = i == self.logos_state.current_stage;
-            let name = match i {
-                0 => "A-logos", 1 => "Pro-logos", 2 => "Dia-logos",
-                3 => "Logos", 4 => "Epi-logos", 5 => "Ana-logos",
-                _ => "?",
-            };
-            let style = if active {
-                Style::default().fg(Color::Black).bg(Color::Magenta).add_modifier(Modifier::BOLD)
-            } else {
-                Style::default().fg(Color::DarkGray)
-            };
-            Span::styled(format!(" {} ", name), style)
-        }).collect();
+        let logos_spans: Vec<Span> = (0u8..6)
+            .map(|i| {
+                let active = i == self.logos_state.current_stage;
+                let name = match i {
+                    0 => "A-logos",
+                    1 => "Pro-logos",
+                    2 => "Dia-logos",
+                    3 => "Logos",
+                    4 => "Epi-logos",
+                    5 => "Ana-logos",
+                    _ => "?",
+                };
+                let style = if active {
+                    Style::default()
+                        .fg(Color::Black)
+                        .bg(Color::Magenta)
+                        .add_modifier(Modifier::BOLD)
+                } else {
+                    Style::default().fg(Color::DarkGray)
+                };
+                Span::styled(format!(" {} ", name), style)
+            })
+            .collect();
 
         let mut all_spans = vec![Span::styled(" Logos FSM: ", dim)];
         all_spans.extend(logos_spans);
-        all_spans.push(Span::styled(format!("  [{}]", stage_name), Style::default().fg(Color::Magenta)));
+        all_spans.push(Span::styled(
+            format!("  [{}]", stage_name),
+            Style::default().fg(Color::Magenta),
+        ));
 
         let logos_bar = Paragraph::new(Line::from(all_spans)).block(
             Block::default()
@@ -390,10 +482,7 @@ impl HypertilePlugin for M5FsmPlugin {
         Widget::render(logos_bar, outer[2], buf);
 
         // Footer hints
-        let footer = Paragraph::new(Span::styled(
-            "  [->] advance logos  [j/k] navigate  ",
-            dim,
-        ));
+        let footer = Paragraph::new(Span::styled("  [->] advance logos  [j/k] navigate  ", dim));
         Widget::render(footer, outer[3], buf);
     }
 
@@ -430,7 +519,9 @@ impl HypertilePlugin for M5FsmPlugin {
 pub struct M5ChatPlugin;
 
 impl M5ChatPlugin {
-    pub fn new() -> Self { Self }
+    pub fn new() -> Self {
+        Self
+    }
 }
 
 impl HypertilePlugin for M5ChatPlugin {
@@ -458,10 +549,7 @@ impl HypertilePlugin for M5ChatPlugin {
                 "  not supported within the portal TUI. Launch it from",
                 dim,
             )),
-            Line::from(Span::styled(
-                "  a separate terminal session.",
-                dim,
-            )),
+            Line::from(Span::styled("  a separate terminal session.", dim)),
             Line::from(""),
             Line::from(Span::styled(
                 "  Agents: Anima, Nous, Logos, Eros, Mythos, Psyche, Sophia",
@@ -533,8 +621,10 @@ mod tests {
         let mut buf = Buffer::empty(area);
         plugin.render(area, &mut buf, true);
         let content = buffer_to_string(&buf, area);
-        assert!(content.contains("M5") || content.contains("Epii"),
-            "Should show M5 FSM header");
+        assert!(
+            content.contains("M5") || content.contains("Epii"),
+            "Should show M5 FSM header"
+        );
     }
 
     #[test]
@@ -545,8 +635,10 @@ mod tests {
             modifiers: ratatui_hypertile::Modifiers::NONE,
         });
         let result = plugin.on_event(&right);
-        assert!(matches!(result, EventOutcome::Consumed),
-            "Right arrow should be consumed by FSM plugin");
+        assert!(
+            matches!(result, EventOutcome::Consumed),
+            "Right arrow should be consumed by FSM plugin"
+        );
     }
 
     #[test]
@@ -569,7 +661,9 @@ mod tests {
         plugin.render(area, &mut buf, true);
         let content = buffer_to_string(&buf, area);
         assert!(content.contains("Chat"), "Should show Chat title");
-        assert!(content.contains("epi agent chat"),
-            "Should mention CLI command alternative");
+        assert!(
+            content.contains("epi agent chat"),
+            "Should mention CLI command alternative"
+        );
     }
 }

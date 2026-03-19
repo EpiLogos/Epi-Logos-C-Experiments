@@ -202,18 +202,12 @@ export async function chronosExtension(api: ExtensionAPI) {
     },
   });
 
-  // ── Hook: session_start ───────────────────────────────────────────
-  if (api.hooks) {
-    api.hooks.on?.("session_start", async () => {
-      // Idempotent day-init: ensure today's daily note exists in Obsidian
-      const daily = spawnSync("obsidian", ["daily"], { encoding: "utf8" });
-      if (daily.status !== 0) throw new Error(`session_start: obsidian daily failed: ${daily.stderr}`);
-      // epi handles the folder structure (day dir)
-      const dayInit = spawnSync("epi", ["vault", "day-init"], { encoding: "utf8" });
-      if (dayInit.status !== 0) throw new Error(`session_start: day-init failed: ${dayInit.stderr}`);
-      // Idempotent flow-init: ensure today's FLOW.md (CT0 journal) exists
-      const flowInit = spawnSync("epi", ["vault", "flow-init"], { encoding: "utf8" });
-      if (flowInit.status !== 0) throw new Error(`session_start: flow-init failed: ${flowInit.stderr}`);
-    });
-  }
+  api.on("session_start", async () => {
+    const daily = spawnSync("obsidian", ["daily"], { encoding: "utf8" });
+    if (daily.status !== 0) throw new Error(`session_start: obsidian daily failed: ${daily.stderr}`);
+    const dayInit = spawnSync("epi", ["vault", "day-init"], { encoding: "utf8" });
+    if (dayInit.status !== 0) throw new Error(`session_start: day-init failed: ${dayInit.stderr}`);
+    const flowInit = spawnSync("epi", ["vault", "flow-init"], { encoding: "utf8" });
+    if (flowInit.status !== 0) throw new Error(`session_start: flow-init failed: ${flowInit.stderr}`);
+  });
 }

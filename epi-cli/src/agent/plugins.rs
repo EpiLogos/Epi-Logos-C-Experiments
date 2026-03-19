@@ -4,10 +4,13 @@ use crate::agent::plugin_manifest;
 use crate::agent::skills;
 use crate::agent::subagents;
 use crate::agent::{AgentLayout, PluginCmd, PluginsCmd};
+use serde::Deserialize;
 use serde::Serialize;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
+
+const REPO_PLUGIN_REGISTRY_RELATIVE_PATH: &str = "plugins/registry.jsonl";
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -40,6 +43,11 @@ pub struct PluginRuntimeEntry {
     pub hook_event_count: usize,
 }
 
+#[derive(Debug, Deserialize)]
+struct RepoPluginRegistryEntry {
+    root: String,
+}
+
 pub fn run_plugin(cmd: &PluginCmd, json: bool) -> Result<String, String> {
     match cmd {
         PluginCmd::Validate { path } => render(validate_plugin(path), json),
@@ -50,7 +58,7 @@ pub fn run_plugins(cmd: &PluginsCmd, json: bool) -> Result<String, String> {
     match cmd {
         PluginsCmd::List => {
             let layout = AgentLayout::resolve(None)?;
-            let reports = discover_repo_plugins(&layout.repo_root);
+            let reports = discover_all_repo_plugins(&layout.repo_root);
             if json {
                 serde_json::to_string_pretty(&reports).map_err(|err| err.to_string())
             } else {
@@ -152,6 +160,25 @@ pub fn runtime_path(layout: &AgentLayout) -> &Path {
     &layout.plugin_runtime_path
 }
 
+pub fn resolve_runtime_plugin_dirs(
+    repo_root: &Path,
+    explicit_plugin_dirs: &[PathBuf],
+) -> Result<Vec<PathBuf>, String> {
+    let mut dirs = configured_repo_plugin_dirs(repo_root)?;
+    dirs.extend(explicit_plugin_dirs.iter().cloned());
+
+    let mut deduped = Vec::new();
+    let mut seen = BTreeMap::<String, ()>::new();
+    for dir in dirs {
+        let key = display_path(&dir);
+        if seen.insert(key, ()).is_none() {
+            deduped.push(dir);
+        }
+    }
+
+    Ok(deduped)
+}
+
 fn discover_repo_plugins(repo_root: &Path) -> Vec<PluginValidationReport> {
     let plugins_root = repo_root.join("plugins");
     let mut reports = Vec::new();
@@ -175,6 +202,82 @@ fn discover_repo_plugins(repo_root: &Path) -> Vec<PluginValidationReport> {
             .then_with(|| left.path.cmp(&right.path))
     });
     reports
+}
+
+fn discover_all_repo_plugins(repo_root: &Path) -> Vec<PluginValidationReport> {
+    let mut reports = discover_repo_plugins(repo_root);
+    let mut seen = reports
+        .iter()
+        .map(|report| report.path.clone())
+        .collect::<BTreeSet<_>>();
+
+    if let Ok(extra_dirs) = configured_repo_plugin_dirs(repo_root) {
+        for dir in extra_dirs {
+            let key = display_path(&dir);
+            if seen.insert(key.clone()) {
+                reports.push(validate_plugin(&dir));
+            }
+        }
+    }
+
+    reports.sort_by(|left, right| {
+        left.name
+            .as_deref()
+            .unwrap_or("")
+            .cmp(right.name.as_deref().unwrap_or(""))
+            .then_with(|| left.path.cmp(&right.path))
+    });
+    reports
+}
+
+fn configured_repo_plugin_dirs(repo_root: &Path) -> Result<Vec<PathBuf>, String> {
+    let registry_path = repo_root.join(REPO_PLUGIN_REGISTRY_RELATIVE_PATH);
+    if !registry_path.exists() {
+        return Ok(Vec::new());
+    }
+
+    let contents = fs::read_to_string(&registry_path).map_err(|err| {
+        format!(
+            "{}: unable to read plugin registry: {err}",
+            registry_path.display()
+        )
+    })?;
+
+    let mut dirs = Vec::new();
+    for (index, line) in contents.lines().enumerate() {
+        let trimmed = line.trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+
+        let entry = serde_json::from_str::<RepoPluginRegistryEntry>(trimmed).map_err(|err| {
+            format!(
+                "{}:{}: invalid plugin registry entry: {err}",
+                registry_path.display(),
+                index + 1
+            )
+        })?;
+
+        let path = PathBuf::from(&entry.root);
+        let resolved = if path.is_absolute() {
+            path
+        } else {
+            repo_root.join(path)
+        };
+
+        if !resolved.exists() {
+            return Err(format!(
+                "{}:{}: plugin root does not exist: {}",
+                registry_path.display(),
+                index + 1,
+                resolved.display()
+            ));
+        }
+
+        dirs.push(resolved);
+    }
+
+    Ok(dirs)
 }
 
 fn duplicate_name_errors<'a>(

@@ -1,5 +1,8 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { spawnSync } from "node:child_process";
+import { buildTemporalContextEnvelope, adjustKairosThreshold, coordinateMobiusReturn } from "./modules/chronos-integration.ts";
+import { buildTemplateInvocation, refreshTopology, validateHenSync } from "./modules/hen-integration.ts";
+import { maybeUpdateCoordinateMap } from "./modules/coordinate-loop.ts";
 
 export async function aletheiaExtension(api: ExtensionAPI) {
   // ── Tool: aletheia_session_promote ───────────────────────────────
@@ -248,6 +251,13 @@ export async function aletheiaExtension(api: ExtensionAPI) {
       required: ["source_bucket"],
     },
     async handler(input: { source_bucket: string; target_coordinate?: string; day_id?: string }) {
+      const syncState = validateHenSync();
+      if (!syncState.ok) {
+        return {
+          content: [{ type: "text", text: `crystallise blocked by Hen sync state: ${syncState.output}` }],
+          isError: true,
+        };
+      }
       const args = ["techne", "gnosis", "crystallise", "--bucket", input.source_bucket];
       if (input.target_coordinate) args.push("--coordinate", input.target_coordinate);
       if (input.day_id) args.push("--day", input.day_id);
@@ -275,12 +285,13 @@ export async function aletheiaExtension(api: ExtensionAPI) {
       required: ["day_id"],
     },
     async handler(input: { day_id: string; insights?: string[]; questions?: string[] }) {
+      const templateKey = buildTemplateInvocation("seed");
       const insights = (input.insights || []).map(i => `- ${i}`).join("\n");
       const questions = (input.questions || []).map(q => `- ${q}`).join("\n");
       const seedContent = `---
 coordinate: ""
 c_4_artifact_role: "seed"
-c_1_ct_type: "CT0"
+c_1_ct_type: "${templateKey}"
 c_3_ctx_frame: "00/00"
 c_3_day_id: "${input.day_id}"
 c_3_created_at: "${new Date().toISOString()}"
@@ -310,6 +321,8 @@ ${questions || "<!-- No questions carried forward -->"}
         };
       }
 
+      refreshTopology();
+
       // Log continuation marker
       const contArgs = ["agent", "session", "continuation", "--summary", `SEED.md refreshed for ${input.day_id}`];
       spawnSync("epi", contArgs, { encoding: "utf8" });
@@ -323,19 +336,21 @@ ${questions || "<!-- No questions carried forward -->"}
     },
   });
 
-  // ── Hook: session_end ────────────────────────────────────────────
-  if (api.hooks) {
-    api.hooks.on?.("session_end", async (_event: { session_id?: string }) => {
-      // Sophia has already classified thinking/ → thoughts/ before this fires.
-      // Aletheia routes thoughts/ → T-buckets via aletheia_thought_route.
-      // HOT→COLD promotion happens during night' pass only.
-    });
+  api.on("session_shutdown", async () => {
+    // Sophia has already classified thinking/ → thoughts/ before this fires.
+    // Aletheia routes thoughts/ → T-buckets via aletheia_thought_route.
+    // HOT→COLD promotion happens during night' pass only.
+  });
 
-    api.hooks.on?.("cron_evening", async (event: { janus_envelope?: string }) => {
-      // Night' Möbius engine. gate/cron.rs IS wired.
+  (api.on as unknown as (event: string, handler: (event: { janus_envelope?: string }) => Promise<void>) => void)(
+    "cron_evening",
+    async (event: { janus_envelope?: string }) => {
       const envelope = event?.janus_envelope
         ? JSON.parse(event.janus_envelope)
         : null;
+      const temporalEnvelope = buildTemporalContextEnvelope(envelope?.day_id, envelope?.session_ids ?? []);
+      const threshold = adjustKairosThreshold(0.5, /guarded/i.test(temporalEnvelope.kairos) ? "guarded" : undefined);
+      void threshold;
 
       if (envelope?.session_ids?.length) {
         const allIds: string[] = [...envelope.session_ids];
@@ -351,7 +366,14 @@ ${questions || "<!-- No questions carried forward -->"}
         ], { encoding: "utf8" });
       }
 
+      coordinateMobiusReturn(envelope?.day_id);
+      maybeUpdateCoordinateMap({
+        coordinatePath: `${process.cwd()}/Idea/Empty/COORDINATE-MAP.md`,
+        insight: envelope?.mobius_insight,
+        recommendation: envelope?.coordinate_recommendation,
+      });
+
       spawnSync("epi", ["gate", "cron", "status"], { encoding: "utf8" });
-    });
-  }
+    },
+  );
 }

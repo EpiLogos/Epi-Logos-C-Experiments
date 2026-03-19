@@ -108,6 +108,18 @@ pub enum AgentCmd {
         plugin_dirs: Vec<PathBuf>,
         args: Vec<String>,
     },
+    /// Execute a real PI smoke run in an isolated runtime sandbox
+    VerifyRuntime {
+        /// Resolve layout for a named agent
+        #[arg(long)]
+        agent: Option<String>,
+        /// Load one or more plugin bundles in-place for this verification run
+        #[arg(long = "plugin-dir")]
+        plugin_dirs: Vec<PathBuf>,
+        /// Override the default smoke prompt
+        #[arg(long)]
+        prompt: Option<String>,
+    },
     /// Interactive chat with managed PI agent
     Chat {
         /// Resolve layout for a named agent
@@ -165,6 +177,11 @@ pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
             plugin_dirs,
             args,
         } => spawn::run_pi(agent.as_deref(), plugin_dirs, args, json),
+        AgentCmd::VerifyRuntime {
+            agent,
+            plugin_dirs,
+            prompt,
+        } => spawn::verify_runtime(agent.as_deref(), plugin_dirs, prompt.as_deref(), json),
         AgentCmd::Chat { agent, prompt } => {
             chat::run(agent.as_deref(), prompt.as_deref()).map_err(|e| e.to_string())?;
             Ok(String::new())

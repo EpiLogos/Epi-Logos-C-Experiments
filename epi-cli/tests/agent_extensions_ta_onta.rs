@@ -117,6 +117,59 @@ fn khora_and_hen_extension_scaffolds_exist() {
     assert!(repo_ontology.contains("Idea/Pratibimba/Self"));
 }
 
+#[test]
+fn repo_pi_foundation_has_bootable_root_assets() {
+    let root = repo_root();
+    for path in [
+        ".pi/composite-entry.ts",
+        ".pi/extensions/epi-citta.ts",
+        ".pi/prompts/epi-system.md",
+        ".pi/prompts/epi-agent-help.md",
+        ".pi/agents/teams.yaml",
+        ".pi/agents/agent-chain.yaml",
+        ".pi/extensions/ta-onta/plugin-runtime-bridge.ts",
+    ] {
+        assert!(root.join(path).exists(), "missing {}", path);
+    }
+
+    let composite = fs::read_to_string(root.join(".pi/composite-entry.ts")).unwrap();
+    assert!(composite.contains("export default async function"));
+    assert!(composite.contains("./extensions/ta-onta/composite-entry.ts"));
+
+    let epi_citta = fs::read_to_string(root.join(".pi/extensions/epi-citta.ts")).unwrap();
+    assert!(epi_citta.contains("export default async function"));
+    assert!(epi_citta.contains("registerTool"));
+
+    let bridge =
+        fs::read_to_string(root.join(".pi/extensions/ta-onta/plugin-runtime-bridge.ts")).unwrap();
+    assert!(bridge.contains("export default async function"));
+    assert!(bridge.contains("api.on(\"session_start\""));
+    assert!(bridge.contains("EPI_AGENT_PLUGIN_RUNTIME_PATH"));
+}
+
+#[test]
+fn ta_onta_extensions_use_real_pi_hook_api() {
+    let root = repo_root();
+    for path in [
+        ".pi/extensions/ta-onta/anima/extension.ts",
+        ".pi/extensions/ta-onta/khora/extension.ts",
+        ".pi/extensions/ta-onta/hen/extension.ts",
+        ".pi/extensions/ta-onta/chronos/extension.ts",
+        ".pi/extensions/ta-onta/aletheia/extension.ts",
+        ".pi/extensions/ta-onta/composite-entry.ts",
+    ] {
+        let contents = fs::read_to_string(root.join(path)).unwrap();
+        assert!(
+            !contents.contains("api.hooks"),
+            "{path} still uses the non-existent api.hooks surface"
+        );
+    }
+
+    let composite =
+        fs::read_to_string(root.join(".pi/extensions/ta-onta/composite-entry.ts")).unwrap();
+    assert!(composite.contains("export default async function"));
+}
+
 fn repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
