@@ -254,40 +254,42 @@ const Decan_Face_Desc M2_QUINTESSENCE_DECAN = {
 /* ===================================================================
  * .rodata: PLANET_LUT[10] — All 10 Planetary Bodies
  *
- * Ordered by #2-5-X branch position.
- * Sun/Earth = 0/1 identity pair.
+ * Canonical mod-10 ordering (2026-03-16, 00-canonical-invariants §2):
+ *   index 0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars,
+ *         5=Jupiter, 6=Saturn, 7=Uranus, 8=Neptune, 9=Pluto
+ * Earth is NOT in this array — see EarthBodyState.
  * Cousto frequencies: Hans Cousto cosmic octave derivation.
  * =================================================================== */
 
 const Planet_Operator M2_PLANET_LUT[10] = {
-    /* Sun: identity, SU(2) centraliser, 126 Hz, DR=9 */
+    /* [0] Sun: stable root/parent, 126 Hz, DR=9 — not chakra-mapped */
     { PLANET_SUN,     0, 0, ELEM_SIG_PACK(ELEMENT_ID_AGNI, CHAKRA_EARTH, ELEM_PHASE_FUSED),
       PLANET_FREQ_SUN, PLANET_KEPLERIAN_SUN, 9, 0, 0x0300 },
-    /* Earth: identity, bridge above/below, 136 Hz (Om), DR=1 */
-    { PLANET_EARTH,   0, 0, ELEM_SIG_PACK(ELEMENT_ID_PRITHVI, CHAKRA_EARTH, ELEM_PHASE_FUSED),
-      PLANET_FREQ_EARTH, PLANET_KEPLERIAN_EARTH, 1, 1, 0x0301 },
-    /* Venus: SU(3) lambda_3, aesthetic, 221 Hz, DR=5 */
-    { PLANET_VENUS,   2, 0, ELEM_SIG_PACK(ELEMENT_ID_APAS, CHAKRA_ANAHATA, ELEM_PHASE_DESCENT),
-      PLANET_FREQ_VENUS, PLANET_KEPLERIAN_VENUS, 5, 2, 0x0302 },
-    /* Mercury: gauge boson SU(2)<->SU(3), 141 Hz, DR=6 */
-    { PLANET_MERCURY, 1, 0, ELEM_SIG_PACK(ELEMENT_ID_VAYU, CHAKRA_VISHUDDHA, ELEM_PHASE_DESCENT),
-      PLANET_FREQ_MERCURY, PLANET_KEPLERIAN_MERCURY, 6, 3, 0x0303 },
-    /* Moon: U(1) phase factor, 210 Hz, DR=3 */
+    /* [1] Moon: U(1) phase factor, 210 Hz, DR=3 */
     { PLANET_MOON,    3, 0, ELEM_SIG_PACK(ELEMENT_ID_APAS, CHAKRA_SVADHISTHANA, ELEM_PHASE_ASCENT),
-      PLANET_FREQ_MOON, PLANET_KEPLERIAN_MOON, 3, 4, 0x0304 },
-    /* Saturn: prime-43 constraint, 148 Hz, DR=4 */
-    { PLANET_SATURN,  4, 43, ELEM_SIG_PACK(ELEMENT_ID_PRITHVI, CHAKRA_MULADHARA, ELEM_PHASE_DESCENT),
-      PLANET_FREQ_SATURN, PLANET_KEPLERIAN_SATURN, 4, 5, 0x0305 },
-    /* Jupiter: prime-41 expander, 184 Hz, DR=4 */
-    { PLANET_JUPITER, 4, 41, ELEM_SIG_PACK(ELEMENT_ID_AGNI, CHAKRA_MANIPURA, ELEM_PHASE_ASCENT),
-      PLANET_FREQ_JUPITER, PLANET_KEPLERIAN_JUPITER, 4, 6, 0x0306 },
-    /* Mars: catalytic operator, 145 Hz, DR=1 */
+      PLANET_FREQ_MOON, PLANET_KEPLERIAN_MOON, 3, 1, 0x0301 },
+    /* [2] Mercury: gauge boson SU(2)<->SU(3), 141 Hz, DR=6 */
+    { PLANET_MERCURY, 1, 0, ELEM_SIG_PACK(ELEMENT_ID_VAYU, CHAKRA_VISHUDDHA, ELEM_PHASE_DESCENT),
+      PLANET_FREQ_MERCURY, PLANET_KEPLERIAN_MERCURY, 6, 2, 0x0302 },
+    /* [3] Venus: SU(3) lambda_3, aesthetic, 221 Hz, DR=5 */
+    { PLANET_VENUS,   2, 0, ELEM_SIG_PACK(ELEMENT_ID_APAS, CHAKRA_ANAHATA, ELEM_PHASE_DESCENT),
+      PLANET_FREQ_VENUS, PLANET_KEPLERIAN_VENUS, 5, 3, 0x0303 },
+    /* [4] Mars: catalytic operator, 145 Hz, DR=1 */
     { PLANET_MARS,    4, 0, ELEM_SIG_PACK(ELEMENT_ID_AGNI, CHAKRA_MANIPURA, ELEM_PHASE_DESCENT),
-      PLANET_FREQ_MARS, PLANET_KEPLERIAN_MARS, 1, 7, 0x0307 },
-    /* Neptune: transpersonal dissolver, 211 Hz, DR=4 (Lemniscate) */
+      PLANET_FREQ_MARS, PLANET_KEPLERIAN_MARS, 1, 4, 0x0304 },
+    /* [5] Jupiter: prime-41 expander, 184 Hz, DR=4 */
+    { PLANET_JUPITER, 4, 41, ELEM_SIG_PACK(ELEMENT_ID_AGNI, CHAKRA_MANIPURA, ELEM_PHASE_ASCENT),
+      PLANET_FREQ_JUPITER, PLANET_KEPLERIAN_JUPITER, 4, 5, 0x0305 },
+    /* [6] Saturn: prime-43 constraint, 148 Hz, DR=4 */
+    { PLANET_SATURN,  4, 43, ELEM_SIG_PACK(ELEMENT_ID_PRITHVI, CHAKRA_MULADHARA, ELEM_PHASE_DESCENT),
+      PLANET_FREQ_SATURN, PLANET_KEPLERIAN_SATURN, 4, 6, 0x0306 },
+    /* [7] Uranus: transpersonal awakener, 207 Hz, DR=9 */
+    { PLANET_URANUS,  5, 0, ELEM_SIG_PACK(ELEMENT_ID_AKASHA, CHAKRA_AJNA, ELEM_PHASE_BEYOND),
+      PLANET_FREQ_URANUS, PLANET_KEPLERIAN_URANUS, 9, 7, MEANING_ID_PREEMPTED },
+    /* [8] Neptune: transpersonal dissolver, 211 Hz, DR=4 (Lemniscate) */
     { PLANET_NEPTUNE, 5, 47, ELEM_SIG_PACK(ELEMENT_ID_APAS, CHAKRA_SAHASRARA, ELEM_PHASE_BEYOND),
       PLANET_FREQ_NEPTUNE, PLANET_KEPLERIAN_NEPTUNE, 4, 8, MEANING_ID_PREEMPTED },
-    /* Pluto: transpersonal transformer, 140 Hz, DR=5 (Mobius) */
+    /* [9] Pluto: transpersonal transformer, 140 Hz, DR=5 (Mobius) */
     { PLANET_PLUTO,   5, 53, ELEM_SIG_PACK(ELEMENT_ID_PRITHVI, CHAKRA_MULADHARA, ELEM_PHASE_BEYOND),
       PLANET_FREQ_PLUTO, PLANET_KEPLERIAN_PLUTO, 5, 9, MEANING_ID_PREEMPTED },
 };
@@ -958,19 +960,20 @@ void m2_teardown(M2_Root* root) {
  * =================================================================== */
 
 bool m2_verify(void) {
-    /* Planet LUT integrity */
-    if (M2_PLANET_LUT[0].id != PLANET_SUN)   return false;
-    if (M2_PLANET_LUT[1].id != PLANET_EARTH) return false;
-    if (M2_PLANET_LUT[9].id != PLANET_PLUTO) return false;
+    /* Planet LUT integrity — canonical mod-10 order */
+    if (M2_PLANET_LUT[0].id != PLANET_SUN)     return false;
+    if (M2_PLANET_LUT[1].id != PLANET_MOON)    return false;
+    if (M2_PLANET_LUT[7].id != PLANET_URANUS)  return false;
+    if (M2_PLANET_LUT[9].id != PLANET_PLUTO)   return false;
 
     /* All Cousto frequencies must be non-zero */
     for (int i = 0; i < 10; i++) {
         if (M2_PLANET_LUT[i].cousto_freq == 0) return false;
     }
 
-    /* Sun and Earth are identity */
-    if (!PLANET_IS_IDENTITY(M2_PLANET_LUT[0].id)) return false;
-    if (!PLANET_IS_IDENTITY(M2_PLANET_LUT[1].id)) return false;
+    /* Sun is personal; Uranus is transpersonal */
+    if (!PLANET_IS_PERSONAL(M2_PLANET_LUT[0].id))      return false;
+    if (!PLANET_IS_TRANSPERSONAL(M2_PLANET_LUT[7].id)) return false;
 
     /* 72-Invariant via union size (also compile-time, but belt-and-braces) */
     if (sizeof(M2_Vibrational_72_Space) != 72) return false;
@@ -1034,15 +1037,16 @@ static void m2_print_planets(void) {
     printf("  %-10s %-5s %-6s %-5s %-7s %-4s %-4s\n",
            "------", "--", "----", "--", "------", "---", "---");
     const char* names[] = {
-        "Sun", "Earth", "Venus", "Mercury", "Moon",
-        "Saturn", "Jupiter", "Mars", "Neptune", "Pluto"
+        "Sun", "Moon", "Mercury", "Venus", "Mars",
+        "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"
     };
     for (int i = 0; i < 10; i++) {
         const Planet_Operator* p = &M2_PLANET_LUT[i];
         printf("  %-10s %-5d %-6u %-5u %-7u %-4u %-4u%s\n",
                names[i], p->id, p->cousto_freq, p->digital_root,
                p->keplerian_vel, p->group_type, p->prime,
-               PLANET_IS_IDENTITY(p->id) ? " [identity]" : "");
+               PLANET_IS_TRANSPERSONAL(p->id) ? " [transpersonal]" :
+               PLANET_IS_PERSONAL(p->id) ? " [personal]" : "");
     }
 }
 

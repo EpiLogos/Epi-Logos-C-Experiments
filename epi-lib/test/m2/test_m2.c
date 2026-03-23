@@ -55,26 +55,34 @@ int main(void) {
         assert(sizeof(Shem_Name) == 1);
     } PASS;
 
-    /* T3: Planet data — 10 entries, Sun/Earth identity, all freqs non-zero */
+    /* T3: Planet data — canonical mod-10 order, all freqs non-zero
+     * Canonical order: Sun=0,Moon=1,Mercury=2,Venus=3,Mars=4,
+     *                  Jupiter=5,Saturn=6,Uranus=7,Neptune=8,Pluto=9
+     * Source: 00-canonical-invariants.md §2 */
     TEST(planet_data) {
-        /* Sun is id 0, Earth is id 1 */
+        /* Canonical LUT order */
         assert(M2_PLANET_LUT[0].id == PLANET_SUN);
-        assert(M2_PLANET_LUT[1].id == PLANET_EARTH);
-        /* Identity pair */
-        assert(PLANET_IS_IDENTITY(M2_PLANET_LUT[0].id));
-        assert(PLANET_IS_IDENTITY(M2_PLANET_LUT[1].id));
-        assert(!PLANET_IS_IDENTITY(M2_PLANET_LUT[2].id)); /* Venus */
+        assert(M2_PLANET_LUT[1].id == PLANET_MOON);
+        assert(M2_PLANET_LUT[4].id == PLANET_MARS);
+        assert(M2_PLANET_LUT[7].id == PLANET_URANUS);
+        assert(M2_PLANET_LUT[9].id == PLANET_PLUTO);
+        /* Personal/transpersonal groupings */
+        assert(PLANET_IS_PERSONAL(M2_PLANET_LUT[0].id));   /* Sun */
+        assert(PLANET_IS_PERSONAL(M2_PLANET_LUT[6].id));   /* Saturn */
+        assert(!PLANET_IS_PERSONAL(M2_PLANET_LUT[7].id));  /* Uranus — transpersonal */
+        assert(PLANET_IS_TRANSPERSONAL(M2_PLANET_LUT[7].id)); /* Uranus */
         /* All Cousto frequencies non-zero */
         for (int i = 0; i < 10; i++) {
             assert(M2_PLANET_LUT[i].cousto_freq > 0);
             assert(M2_PLANET_LUT[i].id == (uint8_t)i);
         }
-        /* Sun = 126 Hz, Earth = 136 Hz (the Om frequency) */
-        assert(M2_PLANET_LUT[PLANET_SUN].cousto_freq == 126);
-        assert(M2_PLANET_LUT[PLANET_EARTH].cousto_freq == 136);
+        /* Key frequency checks */
+        assert(M2_PLANET_LUT[PLANET_SUN].cousto_freq == 126);   /* 126 Hz, DR=9 */
+        assert(M2_PLANET_LUT[PLANET_MOON].cousto_freq == 210);  /* 210 Hz, DR=3 */
+        assert(M2_PLANET_LUT[PLANET_URANUS].cousto_freq == 207); /* 207 Hz, DR=9 */
         /* Digital root checks */
         assert(M2_PLANET_LUT[PLANET_SUN].digital_root == 9);
-        assert(M2_PLANET_LUT[PLANET_EARTH].digital_root == 1);
+        assert(M2_PLANET_LUT[PLANET_MOON].digital_root == 3);
     } PASS;
 
     /* T4: Elemental_Signature round-trip */

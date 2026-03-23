@@ -262,34 +262,32 @@ extern const Decan_Face_Desc M2_QUINTESSENCE_DECAN;
 /* ===================================================================
  * FR 2.2.5: PLANETARY HARMONICS — The Epogdoon Bridge
  *
- * 10 bodies: Sun(0) + Earth(1) as 0/1 identity pair,
- * then Venus(2)..Pluto(9) following #2-5-X branch positions.
- * 9:8 = 9 planets (excl. Sun-as-identity) : 8 angelic choirs.
+ * Canonical mod-10 planet ordering — 2026-03-16
+ * Source: 00-canonical-invariants.md §2
+ * DO NOT reorder — all array indexing depends on this.
+ * Earth is NOT in this enum — see EarthBodyState.
+ * 9:8 Epogdoon = 9 non-Sun planets (Moon–Pluto) : 8 bodily sites.
  * =================================================================== */
 
 typedef enum {
-    PLANET_SUN     = 0,
-    PLANET_EARTH   = 1,
-    PLANET_VENUS   = 2,
-    PLANET_MERCURY = 3,
-    PLANET_MOON    = 4,
-    PLANET_SATURN  = 5,
-    PLANET_JUPITER = 6,
-    PLANET_MARS    = 7,
-    PLANET_NEPTUNE = 8,
-    PLANET_PLUTO   = 9,
-    /* PLANET_URANUS canonical slot = 7.
-     * Migration note (2026-03-23): canonical mod-10 order (00-canonical-invariants §2)
-     * is Sun=0,Moon=1,Mercury=2,Venus=3,Mars=4,Jupiter=5,Saturn=6,Uranus=7,Neptune=8,Pluto=9.
-     * Full LUT reorder is deferred until Parashakti dataset reconciliation.
-     * Until then PLANET_URANUS aliases PLANET_MARS (both value 7). */
-    PLANET_URANUS  = 7
+    PLANET_SUN     = 0,  /* Stable root/parent — not chakra-mapped */
+    PLANET_MOON    = 1,
+    PLANET_MERCURY = 2,
+    PLANET_VENUS   = 3,
+    PLANET_MARS    = 4,
+    PLANET_JUPITER = 5,
+    PLANET_SATURN  = 6,
+    PLANET_URANUS  = 7,  /* Transpersonal */
+    PLANET_NEPTUNE = 8,  /* Transpersonal */
+    PLANET_PLUTO   = 9,  /* Transpersonal */
+    PLANET_COUNT   = 10
 } Planet_Id;
 
 #define M2_PLANET_COUNT 10u
 
-/* Sun and Earth form the fused 0/1 identity pair */
-#define PLANET_IS_IDENTITY(id)   ((id) <= PLANET_EARTH)
+/* Personal planets: Sun(0) through Saturn(6). Transpersonal: Uranus(7)+. */
+#define PLANET_IS_PERSONAL(id)      ((id) <= PLANET_SATURN)
+#define PLANET_IS_TRANSPERSONAL(id) ((id) >= PLANET_URANUS && (id) <= PLANET_PLUTO)
 
 /* Neptune/Pluto: analytically preempted — valid for hot-path use */
 #define MEANING_ID_PREEMPTED  0xFFFEu
@@ -326,27 +324,29 @@ typedef struct {
 /* CHAKRA_EARTH = 0 is defined in Chakra_Id enum above.
  * It serves as the geocentric ground anchor for EarthBodyState. */
 
-/* Cousto frequency #defines for cross-referencing */
+/* Cousto frequency #defines (canonical mod-10 order) */
 #define PLANET_FREQ_SUN      126u    /* DR=9 */
-#define PLANET_FREQ_EARTH    136u    /* DR=1 — the Om frequency */
-#define PLANET_FREQ_VENUS    221u    /* DR=5 */
-#define PLANET_FREQ_MERCURY  141u    /* DR=6 */
 #define PLANET_FREQ_MOON     210u    /* DR=3 */
-#define PLANET_FREQ_SATURN   148u    /* DR=4 */
-#define PLANET_FREQ_JUPITER  184u    /* DR=4 */
+#define PLANET_FREQ_MERCURY  141u    /* DR=6 */
+#define PLANET_FREQ_VENUS    221u    /* DR=5 */
 #define PLANET_FREQ_MARS     145u    /* DR=1 */
+#define PLANET_FREQ_JUPITER  184u    /* DR=4 */
+#define PLANET_FREQ_SATURN   148u    /* DR=4 */
+#define PLANET_FREQ_URANUS   207u    /* DR=9 — transpersonal awakener */
 #define PLANET_FREQ_NEPTUNE  211u    /* DR=4 — Lemniscate archetype */
 #define PLANET_FREQ_PLUTO    140u    /* DR=5 — Mobius return */
+/* Earth is geocentric observer — not in array; kept as named constant only */
+#define PLANET_FREQ_EARTH    136u    /* DR=1 — the Om frequency (EarthBodyState) */
 
-/* Keplerian velocities (arcsec/day x 10) */
+/* Keplerian velocities (arcsec/day x 10, canonical mod-10 order) */
 #define PLANET_KEPLERIAN_SUN       35999u
-#define PLANET_KEPLERIAN_EARTH     35999u  /* Same apparent motion as Sun */
-#define PLANET_KEPLERIAN_VENUS      3600u
-#define PLANET_KEPLERIAN_MERCURY   14739u
 #define PLANET_KEPLERIAN_MOON      47270u  /* ~13.17 deg/day */
-#define PLANET_KEPLERIAN_SATURN      120u
-#define PLANET_KEPLERIAN_JUPITER     299u
+#define PLANET_KEPLERIAN_MERCURY   14739u
+#define PLANET_KEPLERIAN_VENUS      3600u
 #define PLANET_KEPLERIAN_MARS       1886u
+#define PLANET_KEPLERIAN_JUPITER     299u
+#define PLANET_KEPLERIAN_SATURN      120u
+#define PLANET_KEPLERIAN_URANUS       42u  /* preempted */
 #define PLANET_KEPLERIAN_NEPTUNE      21u  /* preempted */
 #define PLANET_KEPLERIAN_PLUTO        14u  /* preempted */
 

@@ -17,6 +17,10 @@
 #include <stdio.h>
 #include <assert.h>
 
+/* Compile-time guards: canonical mod-10 invariants */
+_Static_assert(PLANET_URANUS != PLANET_MARS, "PLANET_URANUS and PLANET_MARS must be distinct");
+_Static_assert(PLANET_COUNT == 10, "Planet enum must have exactly 10 members");
+
 static int tp = 0, tr = 0;
 #define TEST(n) do { tr++; printf("  [%d] %s... ", tr, #n);
 #define PASS tp++; printf("OK\n"); } while(0)
@@ -35,10 +39,11 @@ int main(void) {
     } PASS;
 
     /* T3: PLANET_URANUS occupies canonical transpersonal slot 7
-     * NOTE: Until full LUT reorder (deferred per 00-canonical-invariants §2 migration note),
-     * PLANET_URANUS aliases PLANET_MARS (both value 7). */
+     * PLANET_URANUS=7 and PLANET_MARS=4 are DISTINCT (compile-time guard above). */
     TEST(planet_uranus_is_seven) {
         assert(PLANET_URANUS == 7);
+        assert(PLANET_MARS == 4);           /* Mars is in its canonical slot */
+        assert(PLANET_URANUS != PLANET_MARS); /* No aliasing */
     } PASS;
 
     /* T4: M4_Temporal_Now.planet_degrees holds exactly 10 slots (mod-10 planet array) */
