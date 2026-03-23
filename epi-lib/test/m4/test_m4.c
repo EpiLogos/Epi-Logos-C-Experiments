@@ -160,7 +160,7 @@ static void test_temporal_now(void) {
     TEST("now degree=0", now.degree == 0);
     TEST("now epoch=1000", now.chronos_epoch == 1000);
     TEST("now planet_valid=0", now.planet_valid == 0);
-    TEST("now clock torus=0", now.clock.m1_torus_stage == 0);
+    TEST("now clock torus=0", now.clock.tick12 == 0);
     TEST("now clock explicate", !now.clock.is_implicate_phase);
 
     /* Degree 360 = shadow layer */

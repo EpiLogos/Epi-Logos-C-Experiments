@@ -129,7 +129,7 @@ int main(void) {
     /* T11: Cosmic clock at degree 155 */
     TEST(cosmic_clock_155) {
         Unified_Clock_State c = m0_read_cosmic_clock(155);
-        assert(c.m1_torus_stage == 5);
+        assert(c.tick12 == 5);
         assert(c.m2_decan_phase == 15);
         assert(c.m3_hexagram_id == 27);
         assert(!c.is_implicate_phase);

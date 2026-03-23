@@ -894,7 +894,7 @@ static void m3_print_clock(int argc, char** argv) {
     }
     Unified_Clock_State cs = read_cosmic_clock((uint16_t)deg);
     printf("Cosmic Clock at %d°:\n", deg);
-    printf("  M1 Torus Stage:  %u (of 12)\n", cs.m1_torus_stage);
+    printf("  M1 Torus Stage:  %u (of 12)\n", cs.tick12);
     printf("  M2 Decan Phase:  %u (of 72)\n", cs.m2_decan_phase);
     printf("  M3 Hexagram:     %u (of 64)\n", cs.m3_hexagram_id);
     printf("  Layer:           %s\n", cs.is_implicate_phase ? "Shadow (implicate)" : "Primary (explicate)");

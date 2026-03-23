@@ -779,7 +779,7 @@ int m0_cli_dispatch(int argc, char** argv, M0_Root* root) {
         uint16_t degree = (argc > 2) ? (uint16_t)atoi(argv[2]) : 0;
         Unified_Clock_State c = m0_read_cosmic_clock(degree);
         printf("[M0 Clock] degree=%u\n", degree);
-        printf("  M1 Torus stage: %u\n", c.m1_torus_stage);
+        printf("  M1 Torus stage: %u\n", c.tick12);
         printf("  M2 Decan phase: %u\n", c.m2_decan_phase);
         printf("  M3 Hexagram ID: %u\n", c.m3_hexagram_id);
         printf("  Phase: %s\n", c.is_implicate_phase ? "Implicate" : "Explicate");

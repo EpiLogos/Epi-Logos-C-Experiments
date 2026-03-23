@@ -418,7 +418,7 @@ static void test_cosmic_clock(void) {
     Unified_Clock_State cs;
 
     cs = read_cosmic_clock(0);
-    TEST("clock(0) torus=0", cs.m1_torus_stage == 0);
+    TEST("clock(0) torus=0", cs.tick12 == 0);
     TEST("clock(0) decan=0", cs.m2_decan_phase == 0);
     TEST("clock(0) hex=0", cs.m3_hexagram_id == 0);
     TEST("clock(0) explicate", !cs.is_implicate_phase);
@@ -427,7 +427,7 @@ static void test_cosmic_clock(void) {
     TEST("clock(360) implicate", cs.is_implicate_phase);
 
     cs = read_cosmic_clock(180);
-    TEST("clock(180) torus=6", cs.m1_torus_stage == 6);
+    TEST("clock(180) torus=6", cs.tick12 == 6);
     TEST("clock(180) hex=32", cs.m3_hexagram_id == 32);
 }
 

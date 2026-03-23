@@ -556,7 +556,7 @@ static void m4_print_now(int argc, char** argv) {
     }
     M4_Temporal_Now now = m4_snapshot_now((uint16_t)deg, 0);
     printf("M4 Temporal Now at %d:\n", deg);
-    printf("  M1 Torus Stage:  %u (of 12)\n", now.clock.m1_torus_stage);
+    printf("  M1 Torus Stage:  %u (of 12)\n", now.clock.tick12);
     printf("  M2 Decan Phase:  %u (of 72)\n", now.clock.m2_decan_phase);
     printf("  M3 Hexagram:     %u (of 64)\n", now.clock.m3_hexagram_id);
     printf("  Layer:           %s\n", now.clock.is_implicate_phase ? "Shadow (implicate)" : "Primary (explicate)");

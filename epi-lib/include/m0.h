@@ -390,7 +390,9 @@ _Static_assert((int)ACT_SAMAVESA == 5, "Divine_Act must span 0-5");
  * =================================================================== */
 
 typedef struct {
-    uint8_t  m1_torus_stage;
+    uint8_t  tick12;          /* Canonical discrete clock position 0–11.
+                               * IS torus_stage IS spanda_stage — one field, one name.
+                               * Source: 00-canonical-invariants.md §3 */
     uint8_t  m2_decan_phase;
     uint8_t  m3_hexagram_id;
     bool     is_implicate_phase;
@@ -400,7 +402,7 @@ static inline Unified_Clock_State m0_read_cosmic_clock(uint16_t degree_0_to_719)
     Unified_Clock_State s;
     s.is_implicate_phase = (degree_0_to_719 >= 360u);
     uint16_t base = degree_0_to_719 % 360u;
-    s.m1_torus_stage = (uint8_t)(base / 30u);
+    s.tick12 = (uint8_t)(base / 30u);
     uint8_t base_decan = (uint8_t)(base / 10u);
     s.m2_decan_phase = s.is_implicate_phase ? (uint8_t)(base_decan + 36u) : base_decan;
     s.m3_hexagram_id = (uint8_t)((base * 64u) / 360u);
