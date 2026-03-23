@@ -87,19 +87,26 @@ pub struct NaraIdentityMatrix {
     pub layer_2: Option<JungianLayer>,
     pub layer_3: Option<GeneKeysLayer>,
     pub layer_4: Option<HumanDesignLayer>,
-    pub quintessence_hash: u64,
+    /// BLAKE3 quintessence identity hash — canonical 32-byte representation.
+    /// Source: 00-canonical-invariants.md §1
+    #[serde(with = "hex_bytes_32")]
+    pub quintessence_hash: [u8; 32],
+    /// Derived hex preview string (first 8 hex chars = first 4 bytes).
+    /// NOT stored separately — always derived from quintessence_hash on read.
+    #[serde(skip)]
+    pub quintessence_preview: String,
     pub computed: bool,
 }
 
 impl NaraIdentityMatrix {
-    /// Full 16-char hex representation of the quintessence hash.
+    /// Full 64-char hex representation of the quintessence hash.
     pub fn hash_hex(&self) -> String {
-        format!("{:016x}", self.quintessence_hash)
+        self.quintessence_hash.iter().map(|b| format!("{:02x}", b)).collect()
     }
 
-    /// First 8 characters of the hash hex — preview form.
+    /// First 8 characters of the hash hex — preview form (first 4 bytes).
     pub fn hash_preview(&self) -> String {
-        self.hash_hex()[..8].to_string()
+        self.quintessence_hash[..4].iter().map(|b| format!("{:02x}", b)).collect()
     }
 
     /// Minimum viable identity requires layer 0 (numerological) present.
@@ -110,6 +117,34 @@ impl NaraIdentityMatrix {
     /// Population count of layer_presence bitmask.
     pub fn layer_count(&self) -> u8 {
         self.layer_presence.count_ones() as u8
+    }
+}
+
+/// Serde helper: serialize/deserialize [u8; 32] as a 64-char lowercase hex string.
+mod hex_bytes_32 {
+    use serde::{Deserialize, Deserializer, Serializer};
+
+    pub fn serialize<S>(bytes: &[u8; 32], s: S) -> Result<S::Ok, S::Error>
+    where S: Serializer
+    {
+        let hex: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
+        s.serialize_str(&hex)
+    }
+
+    pub fn deserialize<'de, D>(d: D) -> Result<[u8; 32], D::Error>
+    where D: Deserializer<'de>
+    {
+        let hex = String::deserialize(d)?;
+        if hex.len() != 64 {
+            return Err(serde::de::Error::custom("quintessence_hash must be 64 hex chars"));
+        }
+        let mut out = [0u8; 32];
+        for (i, chunk) in hex.as_bytes().chunks(2).enumerate() {
+            let hi = u8::from_str_radix(std::str::from_utf8(chunk).unwrap_or("00"), 16)
+                .map_err(serde::de::Error::custom)?;
+            out[i] = hi;
+        }
+        Ok(out)
     }
 }
 

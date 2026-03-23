@@ -419,7 +419,7 @@ impl HypertilePlugin for CosmicClockPlugin {
 
         let dummy_natal = [0xFFFFu16; 9]; // natal planetary degrees not yet wired in Phase 1
 
-        render_torus(&mut canvas, state.live_quaternion, state.torus_stage,
+        render_torus(&mut canvas, state.live_quaternion, state.tick12,
                      cw * 2, ch * 4);
         render_degree_ring(&mut canvas, &state.planet_degrees, &dummy_natal,
                            state.current_degree, cw * 2, ch * 4);
@@ -469,7 +469,7 @@ fn render_side_panel(buf: &mut Buffer, area: Rect, state: &PortalClockState) {
     let mut lines: Vec<Line> = Vec::new();
 
     for (i, name) in STAGE_NAMES.iter().enumerate() {
-        let is_active = i as u8 == state.torus_stage;
+        let is_active = i as u8 == state.tick12;
         let color = if is_active {
             Color::Yellow
         } else {
@@ -564,8 +564,8 @@ impl HypertilePlugin for MiniClockPlugin {
 
         const STAGE_LABELS: [&str; 6] = ["SEED", "POLE", "TRIKA", "FLOWER", "FULL", "META"];
 
-        let stage_name  = STAGE_LABELS[state.torus_stage as usize];
-        let stage_color = PHI_STAGE_COLORS[state.torus_stage as usize];
+        let stage_name  = STAGE_LABELS[state.tick12 as usize];
+        let stage_color = PHI_STAGE_COLORS[state.tick12 as usize];
 
         let lines = vec![
             Line::from(vec![

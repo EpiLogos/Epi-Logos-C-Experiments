@@ -168,3 +168,38 @@ pub struct M4OracleDraw {
 }
 
 assert_eq_size!(M4OracleDraw, [u8; 128]);
+
+/// Mirror of C M4_Quintessence_Identity hash fields — canonical 32-byte BLAKE3 representation.
+/// Source: 00-canonical-invariants.md §1
+///
+/// NOTE: This is NOT repr(C) — it is the Rust-side FFI contract for the hash output.
+/// The 32-byte hash is the canonical identity; preview is derived display (first 8 hex chars).
+///
+/// quintessence_hash: [u8; 32]  — BLAKE3 output (raw bytes, NOT u64 truncation)
+/// quintessence_preview: [u8; 65] — null-terminated ASCII hex string (64 chars + '\0')
+///                                   derived: format!("{}", &hash_hex[..8]) with null at [64]
+#[derive(Debug, Clone, Copy)]
+pub struct M4QuintessenceHashFields {
+    /// BLAKE3 quintessence identity hash — 32 canonical bytes.
+    pub quintessence_hash: [u8; 32],
+    /// Derived null-terminated ASCII hex preview string.
+    /// Contains the full 64-char hex representation of quintessence_hash + '\0' at index 64.
+    pub quintessence_preview: [u8; 65],
+}
+
+impl M4QuintessenceHashFields {
+    /// Derive the preview from the hash (populates all 65 bytes).
+    pub fn derive_preview(&mut self) {
+        let hex: String = self.quintessence_hash.iter()
+            .map(|b| format!("{:02x}", b))
+            .collect();
+        let bytes = hex.as_bytes();
+        self.quintessence_preview[..64].copy_from_slice(bytes);
+        self.quintessence_preview[64] = 0; // null terminator
+    }
+
+    /// Return the 8-char preview string (first 4 bytes of hash as hex).
+    pub fn preview_str(&self) -> &str {
+        std::str::from_utf8(&self.quintessence_preview[..8]).unwrap_or("????????")
+    }
+}

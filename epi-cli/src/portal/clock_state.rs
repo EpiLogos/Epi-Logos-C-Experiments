@@ -124,7 +124,7 @@ pub struct PortalClockState {
     /// Spanda substage index (0–11, discrete).
     /// Strand A: 0–5 (explicit/ascending). Strand B: 6–11 (implicit/Möbius return).
     /// MUST be set via quantize_to_spanda_substage(), never float-cast.
-    pub torus_stage:             u8,
+    pub tick12:                  u8,
 
     /// Last complete oracle reading (4 faces). None until first cast.
     pub last_cast:               Option<OracleFaces>,
@@ -155,7 +155,7 @@ pub struct PortalClockState {
     pub kairos:                  KairosState,
 
     // ── Multiplayer anchor ────────────────────────────────────────────────────
-    /// 3D torus surface position derived from (current_degree, torus_stage).
+    /// 3D torus surface position derived from (current_degree, tick12).
     /// Used by SpacetimeDB for collective rendering of multiple users on the torus.
     pub orbital_position:        [f32; 3],
 }
@@ -167,7 +167,7 @@ impl Default for PortalClockState {
             live_quaternion:         [1.0, 0.0, 0.0, 0.0],
             quintessence_quaternion: [1.0, 0.0, 0.0, 0.0],
             current_degree:          0,
-            torus_stage:             0,
+            tick12:                  0,
             last_cast:               None,
             last_cast_timestamp:     0,
             chakra_levels:           [0.0; 8],
@@ -231,7 +231,7 @@ pub fn update_from_cast(
     let live_q = if mag > f32::EPSILON { [w/mag, x/mag, y/mag, z/mag] } else { [1.0, 0.0, 0.0, 0.0] };
 
     // Quantized Spanda substage — integer, not float cast
-    let torus_stage = quantize_to_spanda_substage(y, x);
+    let tick12 = quantize_to_spanda_substage(y, x);
 
     // Deficient degree via # operator in Spanda index space (antiparallel offset = 6 steps),
     // expressed in degree space as (d + 180) % 360 for LUT indexing.
@@ -243,7 +243,7 @@ pub fn update_from_cast(
 
     // Orbital position on torus surface (parametric, r/R = 9/16 normalized)
     let theta = degree as f32 * std::f32::consts::TAU / 360.0;
-    let phi   = torus_stage as f32 * std::f32::consts::TAU / 12.0;
+    let phi   = tick12 as f32 * std::f32::consts::TAU / 12.0;
     let (r, big_r) = (0.36f32, 0.64f32);
     let orbital = [
         (big_r + r * phi.cos()) * theta.cos(),
@@ -262,7 +262,7 @@ pub fn update_from_cast(
     let mut s = state.lock().unwrap();
     s.live_quaternion     = live_q;
     s.current_degree      = degree;
-    s.torus_stage         = torus_stage;
+    s.tick12              = tick12;
     s.orbital_position    = orbital;
     s.last_cast_timestamp = ts;
     s.last_cast = Some(OracleFaces {

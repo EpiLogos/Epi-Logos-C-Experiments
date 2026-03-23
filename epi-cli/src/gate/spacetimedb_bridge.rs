@@ -149,17 +149,17 @@ impl SpacetimePresence {
 
     /// Publish anonymous torus stage presence for the given BLAKE3 hash.
     /// hash must be >= 8 hex chars (BLAKE3 quintessence hash truncation).
-    /// torus_stage: 0-11 (ring position on the M1 torus walk).
+    /// tick12: 0-11 (ring position on the M1 torus walk).
     ///
     /// Stub: logs intent without making a network call.
     /// Real implementation: POST {url}/v1/database/epi-logos-presence/call/update_presence
-    pub fn publish_presence(&self, hash: &str, torus_stage: u8) -> Result<(), String> {
+    pub fn publish_presence(&self, hash: &str, tick12: u8) -> Result<(), String> {
         if hash.len() < 8 {
             return Err("invalid hash: must be at least 8 hex chars".to_string());
         }
         eprintln!(
-            "[SpacetimeDB] would publish: update_presence(hash={}, torus_stage={}) → {}",
-            hash, torus_stage, self.url
+            "[SpacetimeDB] would publish: update_presence(hash={}, tick12={}) → {}",
+            hash, tick12, self.url
         );
         Ok(())
     }
