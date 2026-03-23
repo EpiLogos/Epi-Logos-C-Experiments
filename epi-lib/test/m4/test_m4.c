@@ -465,10 +465,8 @@ static void test_mobius_return(void) {
 
     m4_mobius_return(&epii, &id);
 
-    /* First 8 bytes of hash XOR'd with wisdom delta */
-    uint64_t expected_low = initial ^ epii.wisdom_delta;
-    /* (wisdom_delta was already XOR'd before we read it back; recompute) */
-    expected_low = 0xDEADBEEFCAFEBABEULL ^ 0x0000000000000042ULL;
+    /* First 8 bytes of hash XOR'd with wisdom_delta (0xDEADBEEFCAFEBABE ^ 0x42) */
+    uint64_t expected_low = 0xDEADBEEFCAFEBABEULL ^ 0x0000000000000042ULL;
     uint64_t actual_low;
     memcpy(&actual_low, id.quintessence_hash, 8);
     TEST("mobius hash mutated", actual_low == expected_low);
