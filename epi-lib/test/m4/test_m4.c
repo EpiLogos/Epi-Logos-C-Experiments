@@ -92,7 +92,15 @@ static void test_identity_compute(void) {
     TEST("input zeroed: mbti", input.mbti_raw == 0);
 
     /* Quintessence hash is non-zero (BLAKE3 of non-trivial input) */
-    TEST("quintessence non-zero", id.quintessence_hash != 0);
+    {
+        int _all_zero = 1;
+        for (int _i = 0; _i < 32; _i++) { if (id.quintessence_hash[_i] != 0) { _all_zero = 0; break; } }
+        TEST("quintessence non-zero", !_all_zero);
+    }
+
+    /* Preview string must be non-empty and exactly 64 hex chars */
+    TEST("quintessence preview non-empty", id.quintessence_preview[0] != '\0');
+    TEST("quintessence preview length=64", strlen(id.quintessence_preview) == 64);
 
     /* Numerological key derived from birthdate */
     TEST("numerological key set", id.numerological_key != 0);
@@ -101,13 +109,14 @@ static void test_identity_compute(void) {
     TEST("nucleotide A set", id.dna_profile.nucleotide_balance.adenine_water > 0);
     TEST("nucleotide T set", id.dna_profile.nucleotide_balance.thymine_fire > 0);
 
-    /* Compute-once guard: second call is no-op */
-    uint64_t first_hash = id.quintessence_hash;
+    /* Compute-once guard: second call is no-op — snapshot hash before guard */
+    uint8_t first_hash[32];
+    memcpy(first_hash, id.quintessence_hash, 32);
     M4_Input_Data input2 = {0};
     input2.birth_year = 2000;
     input2.mbti_raw = 0xFF;
     m4_identity_compute(&id, &input2);
-    TEST("compute-once: hash unchanged", id.quintessence_hash == first_hash);
+    TEST("compute-once: hash unchanged", memcmp(id.quintessence_hash, first_hash, 32) == 0);
 }
 
 
@@ -130,7 +139,7 @@ static void test_blake3_determinism(void) {
 
     m4_identity_compute(&id1, &in1);
     m4_identity_compute(&id2, &in2);
-    TEST("blake3 deterministic", id1.quintessence_hash == id2.quintessence_hash);
+    TEST("blake3 deterministic", memcmp(id1.quintessence_hash, id2.quintessence_hash, 32) == 0);
 
     /* Different input -> different hash */
     M4_Identity_Matrix id3 = {0};
@@ -138,7 +147,7 @@ static void test_blake3_determinism(void) {
     in3.birth_year = 1985; in3.birth_month = 3; in3.birth_day = 23;
     in3.mbti_raw = 0x55;
     m4_identity_compute(&id3, &in3);
-    TEST("blake3 distinct", id1.quintessence_hash != id3.quintessence_hash);
+    TEST("blake3 distinct", memcmp(id1.quintessence_hash, id3.quintessence_hash, 32) != 0);
 }
 
 
@@ -443,7 +452,9 @@ static void test_voice_config(void) {
 
 static void test_mobius_return(void) {
     M4_Identity_Matrix id = {0};
-    id.quintessence_hash = 0xDEADBEEFCAFEBABEULL;
+    /* Set known pattern in first 8 bytes of the 32-byte hash */
+    uint64_t initial = 0xDEADBEEFCAFEBABEULL;
+    memcpy(id.quintessence_hash, &initial, 8);
     id.computed = true;
 
     M4_Epii_Integration epii = {0};
@@ -454,8 +465,13 @@ static void test_mobius_return(void) {
 
     m4_mobius_return(&epii, &id);
 
-    /* Hash XOR'd with wisdom delta */
-    TEST("mobius hash mutated", id.quintessence_hash == (0xDEADBEEFCAFEBABEULL ^ 0x42ULL));
+    /* First 8 bytes of hash XOR'd with wisdom delta */
+    uint64_t expected_low = initial ^ epii.wisdom_delta;
+    /* (wisdom_delta was already XOR'd before we read it back; recompute) */
+    expected_low = 0xDEADBEEFCAFEBABEULL ^ 0x0000000000000042ULL;
+    uint64_t actual_low;
+    memcpy(&actual_low, id.quintessence_hash, 8);
+    TEST("mobius hash mutated", actual_low == expected_low);
     /* Identity reseeded (computed = false) */
     TEST("mobius reseeds identity", !id.computed);
     /* Return ready cleared */

@@ -36,6 +36,7 @@
 #include "m3.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 
 /* ===================================================================
@@ -210,8 +211,13 @@ typedef struct {
     M4_Symbol_DNA_Profile   dna_profile;
 
     /* #4.0-5 — Quintessence Hash
-     * BLAKE3(layer_presence || present_layer_data...) truncated to 64 bits */
-    uint64_t quintessence_hash;
+     * BLAKE3(layer_presence || present_layer_data...) full 32-byte output.
+     * Canonical: 00-canonical-invariants.md §1 — never truncated. */
+    uint8_t  quintessence_hash[32];
+
+    /* Hex preview string — DERIVED from quintessence_hash, NOT the identity.
+     * 64 hex chars + null terminator. Updated whenever hash is recomputed. */
+    char     quintessence_preview[65];
 
     /* Legacy fields (preserved for existing M4 subsystem compatibility) */
     uint32_t numerological_key;     /* #4.0-0: birthdate encoding */
@@ -675,7 +681,11 @@ typedef struct {
 
 static inline void m4_mobius_return(M4_Epii_Integration* epii,
                                      M4_Identity_Matrix* identity) {
-    identity->quintessence_hash ^= epii->wisdom_delta;
+    /* XOR wisdom_delta into the first 8 bytes of the 32-byte hash (Möbius fold) */
+    uint64_t tmp;
+    memcpy(&tmp, identity->quintessence_hash, 8);
+    tmp ^= epii->wisdom_delta;
+    memcpy(identity->quintessence_hash, &tmp, 8);
     identity->computed = false;     /* RESEEDS_IDENTITY */
     epii->return_ready = false;
     epii->logos.position = 0;

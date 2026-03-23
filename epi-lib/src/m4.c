@@ -280,13 +280,17 @@ void m4_identity_compute(M4_Identity_Matrix* id, M4_Input_Data* input) {
     id->numerological_key = (uint32_t)(input->birth_year + input->birth_month * 100u
                                        + input->birth_day);
 
-    /* Step 3: BLAKE3 quintessence — archetypal synthesis hash */
+    /* Step 3: BLAKE3 quintessence — full 32-byte archetypal synthesis hash */
     blake3_hasher hasher;
     blake3_hasher_init(&hasher);
     blake3_hasher_update(&hasher, input, sizeof(M4_Input_Data));
-    uint8_t hash_out[8];
-    blake3_hasher_finalize(&hasher, hash_out, 8);
-    memcpy(&id->quintessence_hash, hash_out, 8);
+    blake3_hasher_finalize(&hasher, id->quintessence_hash, 32);
+
+    /* Generate hex preview string */
+    for (int _i = 0; _i < 32; _i++) {
+        snprintf(id->quintessence_preview + _i * 2, 3, "%02x",
+                 (unsigned)id->quintessence_hash[_i]);
+    }
 
     /* Step 4: ARCHITECTURAL PRIVACY — destroy raw input immediately */
     memset(input, 0, sizeof(M4_Input_Data));
@@ -335,9 +339,13 @@ void m4_identity_hash_compute(M4_Identity_Matrix* id) {
         }
     }
 
-    uint8_t hash_out[8];
-    blake3_hasher_finalize(&hasher, hash_out, 8);
-    memcpy(&id->quintessence_hash, hash_out, 8);
+    blake3_hasher_finalize(&hasher, id->quintessence_hash, 32);
+
+    /* Generate hex preview string */
+    for (int _i = 0; _i < 32; _i++) {
+        snprintf(id->quintessence_preview + _i * 2, 3, "%02x",
+                 (unsigned)id->quintessence_hash[_i]);
+    }
 }
 
 
@@ -523,7 +531,7 @@ static void m4_print_identity(const M4_Root* root) {
         return;
     }
     printf("M4 Identity (computed):\n");
-    printf("  Quintessence Hash: 0x%016llX\n", (unsigned long long)id->quintessence_hash);
+    printf("  Quintessence Hash: %s\n", id->quintessence_preview);
     printf("  Numerological Key: %u\n", id->numerological_key);
     printf("  Gene Keys Activation: 0x%016llX\n", (unsigned long long)id->dna_profile.gene_keys_activation);
     printf("  Nucleotide Balance: A=%u T=%u C=%u G=%u\n",
