@@ -1,0 +1,36 @@
+{
+  "nucleotides": {
+    "#3-2-1": {
+      "coordinate": "#3-2-1",
+      "name": "Adenine",
+      "integral_pp": 84,
+      "integral_nn": -36,
+      "integral_pn": 24,
+      "integral_np": 24
+    },
+    "#3-2-2": {
+      "coordinate": "#3-2-2",
+      "name": "Thymine",
+      "integral_pp": 96,
+      "integral_nn": -24,
+      "integral_pn": 36,
+      "integral_np": 36
+    },
+    "#3-2-3": {
+      "coordinate": "#3-2-3",
+      "name": "Cytosine",
+      "integral_pp": 88,
+      "integral_nn": -32,
+      "integral_pn": 28,
+      "integral_np": 28
+    },
+    "#3-2-4": {
+      "coordinate": "#3-2-4",
+      "name": "Guanine",
+      "integral_pp": 92,
+      "integral_nn": -28,
+      "integral_pn": 32,
+      "integral_np": 32
+    }
+  }
+}
