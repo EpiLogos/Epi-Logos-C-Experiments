@@ -80,6 +80,16 @@ int main(void) {
         assert(cs.tick12 == 6u);
     } PASS;
 
+    /* T9: compute-path sweep — all 12 ticks via m0_read_cosmic_clock
+     * degree = tick * 30 must always yield tick12 == tick */
+    TEST(compute_path_all_12_ticks) {
+        for (uint8_t tick = 0; tick < 12u; tick++) {
+            uint16_t degree = (uint16_t)(tick * 30u);
+            Unified_Clock_State cs = m0_read_cosmic_clock(degree);
+            assert(cs.tick12 == tick);
+        }
+    } PASS;
+
     printf("\n=== M0 tick12: %d/%d passed ===\n", tp, tr);
     return (tp == tr) ? 0 : 1;
 }
