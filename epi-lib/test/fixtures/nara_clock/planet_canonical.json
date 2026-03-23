@@ -1,0 +1,68 @@
+{
+  "canonical_planets": [
+    {
+      "index": 0,
+      "name": "Sun",
+      "is_transpersonal": false,
+      "note": "stable root/parent \u2014 NOT chakra-mapped"
+    },
+    {
+      "index": 1,
+      "name": "Moon",
+      "is_transpersonal": false
+    },
+    {
+      "index": 2,
+      "name": "Mercury",
+      "is_transpersonal": false
+    },
+    {
+      "index": 3,
+      "name": "Venus",
+      "is_transpersonal": false
+    },
+    {
+      "index": 4,
+      "name": "Mars",
+      "is_transpersonal": false
+    },
+    {
+      "index": 5,
+      "name": "Jupiter",
+      "is_transpersonal": false
+    },
+    {
+      "index": 6,
+      "name": "Saturn",
+      "is_transpersonal": false
+    },
+    {
+      "index": 7,
+      "name": "Uranus",
+      "is_transpersonal": true
+    },
+    {
+      "index": 8,
+      "name": "Neptune",
+      "is_transpersonal": true
+    },
+    {
+      "index": 9,
+      "name": "Pluto",
+      "is_transpersonal": true
+    }
+  ],
+  "earth_body": {
+    "name": "Earth",
+    "chakra_id": 0,
+    "in_planet_array": false,
+    "role": "geocentric observer / solar child of Sun / clock center",
+    "note": "9:8 epogdoon \u2014 EarthBody + 7 chakras = 8 bodily sites vs 9 non-Sun planets"
+  },
+  "epogdoon": {
+    "ratio": "9:8",
+    "numerator": "9 non-Sun planets (Moon through Pluto)",
+    "denominator": "8 bodily sites (EarthBody + 7 chakras)",
+    "note": "this asymmetry IS the interval \u2014 do not resolve it"
+  }
+}
