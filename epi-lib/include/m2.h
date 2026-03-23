@@ -289,11 +289,11 @@ typedef enum {
 #define PLANET_IS_PERSONAL(id)      ((id) <= PLANET_SATURN)
 #define PLANET_IS_TRANSPERSONAL(id) ((id) >= PLANET_URANUS && (id) <= PLANET_PLUTO)
 
-/* Neptune/Pluto: analytically preempted — valid for hot-path use */
+/* Uranus/Neptune/Pluto: analytically preempted — valid for hot-path use */
 #define MEANING_ID_PREEMPTED  0xFFFEu
 
 static inline bool m2_planet_is_preempted(uint8_t id) {
-    return (id == PLANET_NEPTUNE || id == PLANET_PLUTO);
+    return (id == PLANET_URANUS || id == PLANET_NEPTUNE || id == PLANET_PLUTO);
 }
 
 typedef struct {
