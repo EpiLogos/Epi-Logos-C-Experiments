@@ -290,6 +290,61 @@ void m1_teardown(M1_Root* root) {
     free(root);
 }
 
+/* ------------------------------------------------------------------ *
+ * ANANDA #1-2 MATRICES
+ * ------------------------------------------------------------------ */
+
+static uint8_t _ananda_core[6][10][10];
+static uint8_t _ananda_dr[6][10][10];
+static int _ananda_initialized = 0;
+
+static uint8_t _ananda_digital_root(uint8_t n) {
+    if (n == 0) return 0;
+    uint8_t r = n % 9;
+    return (r == 0) ? 9u : r;
+}
+
+static void _ananda_init(void) {
+    if (_ananda_initialized) return;
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            _ananda_core[0][i][j] = (uint8_t)((i * j) % 10);
+            _ananda_core[1][i][j] = (uint8_t)(((i * j) + 1) % 10);
+            _ananda_core[2][i][j] = (uint8_t)(((2 * i * j) + 1) % 10);
+            _ananda_core[3][i][j] = 9u;
+            _ananda_core[4][i][j] = 1u;
+            _ananda_core[5][i][j] = (uint8_t)(((i * j) ^ ((i * j) + 1)) % 10);
+        }
+    }
+    for (int m = 0; m < 6; m++)
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
+                _ananda_dr[m][i][j] = _ananda_digital_root(_ananda_core[m][i][j]);
+    _ananda_initialized = 1;
+}
+
+uint8_t m1_ananda_get(uint8_t matrix_idx, uint8_t row, uint8_t col) {
+    _ananda_init();
+    if (matrix_idx >= 6 || row >= 10 || col >= 10) return 0;
+    return _ananda_core[matrix_idx][row][col];
+}
+
+uint8_t m1_ananda_dr_get(uint8_t matrix_idx, uint8_t row, uint8_t col) {
+    _ananda_init();
+    if (matrix_idx >= 6 || row >= 10 || col >= 10) return 0;
+    return _ananda_dr[matrix_idx][row][col];
+}
+
+int m1_ananda_verify_axiom(void) {
+    _ananda_init();
+    for (int i = 0; i < 10; i++)
+        for (int j = 0; j < 10; j++) {
+            uint8_t diff = (uint8_t)((_ananda_core[1][i][j] - _ananda_core[0][i][j] + 10) % 10);
+            if (diff != 1) return 0;
+        }
+    return 1;
+}
+
 int m1_cli_dispatch(int argc, char** argv, M1_Root* root) {
     if (argc < 2) {
         printf("[m1] Paramasiva — Mathematical DNA (CF: 0/1 Binary)\n");

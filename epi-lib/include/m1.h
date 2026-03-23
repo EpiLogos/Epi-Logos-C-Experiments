@@ -131,6 +131,27 @@ extern const uint8_t DR_RING_PARASHAKTI[6];  /* {3,6,9,3,6,9} — tripling,  72-
 
 
 /* ===================================================================
+ * ANANDA RUNTIME API — #1-2 dataset, mod10 operational space
+ *
+ * 6 core matrices (0=Bimba, 1=Pratibimba, 2=Sum, 3=FirstDiff,
+ *                  4=SecondDiff, 5=NonDual) + 6 DR reflections.
+ *
+ * Ananda Axiom: m1_ananda_get(1,i,j) - m1_ananda_get(0,i,j) == 1 (mod10)
+ * This is Pratibimba = Bimba + 1 — the non-dual constant.
+ * Source: dataset-bridge/06-ananda-matrices-analysis.md
+ * =================================================================== */
+
+/* Get cell value from core matrix (matrix_idx 0–5, row/col 0–9) */
+uint8_t m1_ananda_get(uint8_t matrix_idx, uint8_t row, uint8_t col);
+
+/* Get digital-root reflection of cell */
+uint8_t m1_ananda_dr_get(uint8_t matrix_idx, uint8_t row, uint8_t col);
+
+/* Runtime axiom check: returns 1 if Pratibimba-Bimba=+1 holds, 0 if corrupted */
+int m1_ananda_verify_axiom(void);
+
+
+/* ===================================================================
  * FR 2.1.2: #1-3 — SPANDA (The Dynamic Intelligence Engine)
  *
  * 6-stage topological concrescence state machine.
