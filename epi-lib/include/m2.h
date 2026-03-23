@@ -277,7 +277,13 @@ typedef enum {
     PLANET_JUPITER = 6,
     PLANET_MARS    = 7,
     PLANET_NEPTUNE = 8,
-    PLANET_PLUTO   = 9
+    PLANET_PLUTO   = 9,
+    /* PLANET_URANUS canonical slot = 7.
+     * Migration note (2026-03-23): canonical mod-10 order (00-canonical-invariants §2)
+     * is Sun=0,Moon=1,Mercury=2,Venus=3,Mars=4,Jupiter=5,Saturn=6,Uranus=7,Neptune=8,Pluto=9.
+     * Full LUT reorder is deferred until Parashakti dataset reconciliation.
+     * Until then PLANET_URANUS aliases PLANET_MARS (both value 7). */
+    PLANET_URANUS  = 7
 } Planet_Id;
 
 #define M2_PLANET_COUNT 10u
@@ -305,6 +311,20 @@ typedef struct {
 } Planet_Operator;
 
 extern const Planet_Operator M2_PLANET_LUT[10];
+
+/* EarthBodyState — geocentric center/observer, clock anchor.
+ * NOT in PlanetState[10]. The 9:8 epogdoon asymmetry is intentional:
+ * 9 orbiting planets (Sun excluded as identity root) : 8 chakras.
+ * Earth = the witnessing ground of all planetary motion.
+ * Source: 00-canonical-invariants.md §2, §5 */
+typedef struct {
+    uint8_t  chakra_id;   /* Always CHAKRA_EARTH (= 0) */
+    float    activation;  /* 1.0 = fully active as geocentric anchor */
+    uint16_t reserved;
+} EarthBodyState;
+
+/* CHAKRA_EARTH = 0 is defined in Chakra_Id enum above.
+ * It serves as the geocentric ground anchor for EarthBodyState. */
 
 /* Cousto frequency #defines for cross-referencing */
 #define PLANET_FREQ_SUN      126u    /* DR=9 */

@@ -260,8 +260,9 @@ typedef struct {
     uint16_t            degree;         /* 0-719 (SU(2) double cover) */
     uint32_t            chronos_epoch;  /* Unix seconds */
 
-    uint16_t planet_degrees[7];         /* Sun/Moon/Merc/Venus/Mars/Jup/Sat */
+    uint16_t planet_degrees[10];        /* All 10 planets (Planet_Id order from m2.h) */
     uint8_t  planet_valid;              /* Bitmask: which planets have data */
+    uint8_t  _pad[1];                   /* Alignment pad after 7→10 expansion */
 } M4_Temporal_Now;
 
 static inline M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
@@ -269,7 +270,7 @@ static inline M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
     now.clock = m0_read_cosmic_clock(degree);
     now.degree = degree;
     now.chronos_epoch = epoch;
-    for (int i = 0; i < 7; i++) now.planet_degrees[i] = 0;
+    for (int i = 0; i < 10; i++) now.planet_degrees[i] = 0;
     now.planet_valid = 0x00;
     return now;
 }

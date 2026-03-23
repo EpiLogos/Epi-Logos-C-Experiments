@@ -20,10 +20,10 @@ ALL_SRC    = $(LIB_SRC) epi-lib/src/main.c
 BIN = epi-logos
 
 # Test suites
-TESTS = test_m0_init test_m0_rfactor test_m0_tick12 test_m1 test_m1_ananda test_m2 test_m3 test_m4 test_m4_hash32 test_m5 test_pillar1 test_vak
+TESTS = test_m0_init test_m0_rfactor test_m0_tick12 test_m1 test_m1_ananda test_m2 test_m2_planets test_m3 test_m4 test_m4_hash32 test_m5 test_pillar1 test_vak
 TEST_BIN_DIR = epi-lib/test/bin
 
-.PHONY: all lib test test-artifact-paths debug clean rust-test rust-clean rust-target-size $(TESTS) test_m1_ananda test_m4_hash32
+.PHONY: all lib test test-artifact-paths debug clean rust-test rust-clean rust-target-size $(TESTS) test_m1_ananda test_m2_planets test_m4_hash32
 
 all: $(BIN)
 
@@ -63,6 +63,9 @@ $(TEST_BIN_DIR)/test_m1_ananda: $(LIB_SRC) epi-lib/test/m1/test_m1_ananda.c | $(
 $(TEST_BIN_DIR)/test_m2: $(LIB_SRC) epi-lib/test/m2/test_m2.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
 
+$(TEST_BIN_DIR)/test_m2_planets: $(LIB_SRC) epi-lib/test/m2/test_m2_planets.c | $(TEST_BIN_DIR)
+	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^ -lm
+
 $(TEST_BIN_DIR)/test_m3: $(LIB_SRC) epi-lib/test/m3/test_m3.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
 
@@ -97,6 +100,9 @@ test_m1_ananda: $(TEST_BIN_DIR)/test_m1_ananda
 	./$<
 
 test_m2: $(TEST_BIN_DIR)/test_m2
+	./$<
+
+test_m2_planets: $(TEST_BIN_DIR)/test_m2_planets
 	./$<
 
 test_m3: $(TEST_BIN_DIR)/test_m3
