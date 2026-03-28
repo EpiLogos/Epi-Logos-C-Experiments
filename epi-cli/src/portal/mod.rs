@@ -12,6 +12,7 @@ use ratatui_hypertile_extras::{
 };
 use std::io::stdout;
 
+pub mod clock_state;
 pub mod persist;
 pub mod plugins;
 pub mod registry;

@@ -4,7 +4,7 @@ use ratatui::widgets::*;
 use ratatui_hypertile::{EventOutcome, HypertileEvent, KeyCode};
 use ratatui_hypertile_extras::HypertilePlugin;
 
-use crate::portal::clock_state::{PortalClockState, SharedClockState};
+use crate::portal::clock_state::{KairosState, PlanetState, PortalClockState, SharedClockState, update_kairos};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // BrailleCanvas
@@ -250,8 +250,8 @@ pub fn render_torus(
 /// Natal planetary positions: dim gray dots.
 pub fn render_degree_ring(
     canvas:         &mut BrailleCanvas,
-    planet_degrees: &[u16; 9],
-    natal_degrees:  &[u16; 9],
+    planet_degrees: &[u16; 10],
+    natal_degrees:  &[u16; 10],
     current_degree: u16,
     width_pts:      usize,
     height_pts:     usize,
@@ -316,24 +316,27 @@ pub fn render_degree_ring(
     }
 }
 
-const PLANET_SYMBOLS: [&str; 9] = ["☉", "♀", "☿", "☽", "♄", "♃", "♂", "♆", "♇"];
-const PLANET_COLORS:  [Color; 9] = [
-    Color::Yellow,   // ☉ Sun
-    Color::Green,    // ♀ Venus
-    Color::Cyan,     // ☿ Mercury
-    Color::White,    // ☽ Moon
-    Color::DarkGray, // ♄ Saturn
-    Color::Blue,     // ♃ Jupiter
-    Color::Red,      // ♂ Mars
-    Color::Magenta,  // ♆ Neptune
-    Color::Red,      // ♇ Pluto
+// Canonical mod-10 ordering: Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4,
+//   Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9
+const PLANET_SYMBOLS: [&str; 10] = ["☉", "☽", "☿", "♀", "♂", "♃", "♄", "⛢", "♆", "♇"];
+const PLANET_COLORS:  [Color; 10] = [
+    Color::Yellow,   // ☉ Sun      (0)
+    Color::White,    // ☽ Moon     (1)
+    Color::Cyan,     // ☿ Mercury  (2)
+    Color::Green,    // ♀ Venus    (3)
+    Color::Red,      // ♂ Mars     (4)
+    Color::Blue,     // ♃ Jupiter  (5)
+    Color::DarkGray, // ♄ Saturn   (6)
+    Color::Magenta,  // ⛢ Uranus   (7)
+    Color::Magenta,  // ♆ Neptune  (8)
+    Color::Red,      // ♇ Pluto    (9)
 ];
 
 /// Write planet glyphs as text cells onto the ratatui Buffer.
 /// Called after BrailleCanvas::render_to() so symbols overlay the ring.
 pub fn render_planet_symbols(
     buf:            &mut Buffer,
-    planet_degrees: &[u16; 9],
+    planet_degrees: &[u16; 10],
     area:           Rect,
 ) {
     let cx    = area.x + area.width  / 2;
@@ -356,8 +359,7 @@ pub fn render_planet_symbols(
         {
             if let Some(cell) = buf.cell_mut(Position::new(col, row)) {
                 cell.set_symbol(PLANET_SYMBOLS[i]);
-                cell.set_fg(PLANET_COLORS[i]);
-                cell.set_modifier(Modifier::BOLD);
+                cell.set_style(Style::default().fg(PLANET_COLORS[i]).add_modifier(Modifier::BOLD));
             }
         }
     }
@@ -417,15 +419,17 @@ impl HypertilePlugin for CosmicClockPlugin {
         let ch = chunks[0].height as usize;
         let mut canvas = BrailleCanvas::new(cw, ch);
 
-        let dummy_natal = [0xFFFFu16; 9]; // natal planetary degrees not yet wired in Phase 1
+        // Extract flat degree array from canonical KairosState.planets (mod-10 ordering)
+        let live_degrees: [u16; 10] = std::array::from_fn(|i| state.kairos.planets[i].degree);
+        let dummy_natal = [0xFFFFu16; 10]; // natal planetary degrees not yet wired in Phase 1
 
         render_torus(&mut canvas, state.live_quaternion, state.tick12,
                      cw * 2, ch * 4);
-        render_degree_ring(&mut canvas, &state.planet_degrees, &dummy_natal,
+        render_degree_ring(&mut canvas, &live_degrees, &dummy_natal,
                            state.current_degree, cw * 2, ch * 4);
 
         canvas.render_to(buf, chunks[0].x, chunks[0].y);
-        render_planet_symbols(buf, &state.planet_degrees, chunks[0]);
+        render_planet_symbols(buf, &live_degrees, chunks[0]);
 
         // Side panel
         render_side_panel(buf, chunks[1], &state);
@@ -515,7 +519,7 @@ fn render_side_panel(buf: &mut Buffer, area: Rect, state: &PortalClockState) {
 
     lines.push(Line::from(""));
 
-    let kairos_span = if state.kairos_loaded {
+    let kairos_span = if state.kairos.valid {
         Span::styled("kairos ✓", Style::default().fg(Color::Green))
     } else {
         Span::styled("kairos — [k]", Style::default().fg(Color::DarkGray))
@@ -554,18 +558,18 @@ impl HypertilePlugin for MiniClockPlugin {
         let inner = block.inner(area);
         Widget::render(block, area, buf);
 
-        // Planet symbols — only loaded ones
-        let planet_line: String = state.planet_degrees
+        // Planet symbols — only loaded ones (canonical mod-10 ordering)
+        let planet_line: String = state.kairos.planets
             .iter()
             .enumerate()
-            .filter(|(_, &d)| d != 0xFFFF)
-            .map(|(i, &d)| format!("{}{} ", PLANET_SYMBOLS[i], d))
+            .filter(|(_, p)| p.degree != 0xFFFF)
+            .map(|(i, p)| format!("{}{} ", PLANET_SYMBOLS[i], p.degree))
             .collect();
 
         const STAGE_LABELS: [&str; 6] = ["SEED", "POLE", "TRIKA", "FLOWER", "FULL", "META"];
 
-        let stage_name  = STAGE_LABELS[state.tick12 as usize];
-        let stage_color = PHI_STAGE_COLORS[state.tick12 as usize];
+        let stage_name  = STAGE_LABELS[(state.tick12 % 6) as usize];
+        let stage_color = PHI_STAGE_COLORS[(state.tick12 % 6) as usize];
 
         let lines = vec![
             Line::from(vec![
@@ -618,29 +622,36 @@ pub fn try_load_kairos_into_clock(clock: &SharedClockState) -> Result<bool, Stri
     let val: serde_json::Value = serde_json::from_str(&raw)
         .map_err(|e| e.to_string())?;
 
-    // Expected JSON: { "planets": { "sun": 45, "venus": 120, ... } }
-    // Order: Sun(0), Venus(1), Mercury(2), Moon(3), Saturn(4), Jupiter(5), Mars(6), Neptune(7), Pluto(8)
-    const PLANET_KEYS: [&str; 9] = [
-        "sun", "venus", "mercury", "moon",
-        "saturn", "jupiter", "mars", "neptune", "pluto",
+    // Expected JSON: { "planets": { "sun": 45, "moon": 30, ... } }
+    // Canonical mod-10 ordering: Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4,
+    //   Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9
+    const PLANET_KEYS: [&str; 10] = [
+        "sun", "moon", "mercury", "venus", "mars",
+        "jupiter", "saturn", "uranus", "neptune", "pluto",
     ];
 
-    let mut planet_degrees = [0xFFFFu16; 9];
+    let mut planets: [PlanetState; 10] = std::array::from_fn(|_| PlanetState {
+        degree: 0xFFFF,
+        ..Default::default()
+    });
     let mut any_loaded = false;
 
-    if let Some(planets) = val.get("planets").and_then(|p| p.as_object()) {
+    if let Some(planet_obj) = val.get("planets").and_then(|p| p.as_object()) {
         for (i, key) in PLANET_KEYS.iter().enumerate() {
-            if let Some(deg) = planets.get(*key).and_then(|v| v.as_f64()) {
-                planet_degrees[i] = (deg as u32 % 360) as u16;
+            if let Some(deg) = planet_obj.get(*key).and_then(|v| v.as_f64()) {
+                planets[i].degree = (deg as u32 % 360) as u16;
                 any_loaded = true;
             }
         }
     }
 
     if any_loaded {
-        let mut s = clock.lock().unwrap();
-        s.planet_degrees = planet_degrees;
-        s.kairos_loaded  = true;
+        let kairos = KairosState {
+            planets,
+            valid: true,
+            ..Default::default()
+        };
+        update_kairos(clock, kairos);
     }
 
     Ok(any_loaded)
