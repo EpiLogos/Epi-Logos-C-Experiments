@@ -158,7 +158,47 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             Ok(json!({"decan": k.active_decan, "element": k.dominant_element}))
         }
         "nara.oracle.history" => cli_to_rpc(oracle::show_history()),
-        "nara.oracle.payload" => deferred_stub("nara.oracle.payload"),
+        "nara.oracle.payload" => {
+            // Perform a live I-Ching cast and return the full OraclePayload
+            // (four faces + eval4 quaternionic charges) as structured JSON.
+            //
+            // `kairos_degree`: caller may pass the current sun degree (f32 0-360).
+            // Falls back to 0.0 — the four faces still compute correctly.
+            // `phase`: 0 = explicate (default), 1 = implicate.
+            let kairos_degree = opt_f32(params, "kairos_degree").unwrap_or(0.0);
+            let phase = opt_u8(params, "phase").unwrap_or(0);
+            let result = oracle::cast_iching_coins();
+            let payload = oracle::oracle_eval4(&result, kairos_degree, phase);
+            // Build transport JSON with tick12-labelled fields (canonical primitive vocabulary)
+            let tick12: u8 = {
+                let (y, x) = (payload.np, payload.nn);
+                let total = payload.pp.abs() + payload.nn.abs() + payload.np.abs() + payload.pn.abs();
+                if total < f32::EPSILON {
+                    0
+                } else {
+                    let ny = y / total;
+                    let nx = x.abs() / total;
+                    let phi = ny.atan2(nx);
+                    let normalized = (phi + std::f32::consts::PI) / std::f32::consts::TAU;
+                    ((normalized * 12.0).round() as u8) % 12
+                }
+            };
+            Ok(json!({
+                "degree":           payload.degree,
+                "phase":            payload.phase,
+                "primary_hex":      payload.primary_hex,
+                "deficient_degree": payload.deficient_degree,
+                "implicate_720":    payload.implicate_720,
+                "temporal_hex":     payload.temporal_hex,
+                "charges": {
+                    "pp": payload.pp,
+                    "nn": payload.nn,
+                    "pn": payload.pn,
+                    "np": payload.np,
+                },
+                "tick12": tick12,
+            }))
+        }
         "nara.oracle.payload.apply" => {
             let _target = required_param(params, "target")?;
             deferred_stub("nara.oracle.payload.apply")
