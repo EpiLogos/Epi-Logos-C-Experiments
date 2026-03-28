@@ -53,15 +53,17 @@ pub struct PlanetState {
 }
 
 /// Full kairos (astrological time) state.
-/// Replaces the bare `planet_degrees: [u16; 9]` array.
+/// Replaces the bare `planet_degrees: [u16; 9]` array; canonical size is now 10 (mod-10 ordering).
 /// Written by: KairosLoader on Kerykeion sync; SpacetimeDB subscriber for live.
 /// Read by: CosmicClockPlugin (planet ring), M4SpinePlugin (chakra resonance / hour sync).
 #[derive(Clone, Debug)]
 pub struct KairosState {
-    /// One entry per tracked planet. Order matches Planet_Id enum:
-    /// [Sun=0, Venus=2, Mercury=3, Moon=4, Saturn=5, Jupiter=6, Mars=7, Neptune=8, Pluto=9]
-    /// (Earth is the geocentric observer — not tracked.)
-    pub planets:           [PlanetState; 9],
+    /// One entry per tracked planet. Canonical mod-10 ordering (00-canonical-invariants §2):
+    /// [Sun=0, Moon=1, Venus=2, Mercury=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9]
+    /// Index 0 = Sun (stable root/parent; not chakra-mapped).
+    /// Index 7 = Uranus (outer/transpersonal, M2-5 layer).
+    /// Earth is the geocentric observer — NOT in this array (see EarthBodyState).
+    pub planets:           [PlanetState; 10],
     /// Current planetary hour (0–23, Chaldean hour cycle).
     pub current_hour:      u8,
     /// Which planet rules the current hour (Planet_Id). 0xFF = unknown.
