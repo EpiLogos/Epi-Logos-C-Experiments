@@ -59,7 +59,7 @@ pub struct PlanetState {
 #[derive(Clone, Debug)]
 pub struct KairosState {
     /// One entry per tracked planet. Canonical mod-10 ordering (00-canonical-invariants §2):
-    /// [Sun=0, Moon=1, Venus=2, Mercury=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9]
+    /// [Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9]
     /// Index 0 = Sun (stable root/parent; not chakra-mapped).
     /// Index 7 = Uranus (outer/transpersonal, M2-5 layer).
     /// Earth is the geocentric observer — NOT in this array (see EarthBodyState).

@@ -43,7 +43,7 @@ fn sun_is_index_0_pluto_is_index_9() {
 fn uranus_is_index_7_not_mars() {
     // Canonical mod-10 ordering: index 7 = Uranus (outer/transpersonal)
     // Mars is at index 4, not index 7.
-    // [Sun=0, Moon=1, Venus=2, Mercury=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9]
+    // [Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9]
     let uranus_idx: usize = 7;
     let mars_idx: usize = 4;
     assert_ne!(uranus_idx, mars_idx);
