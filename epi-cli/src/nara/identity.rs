@@ -356,9 +356,13 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
         }
     }
 
-    // Update hash preview from layer presence
-    let new_hash = simple_identity_hash(profile.layer_presence_mask);
-    profile.hash_preview = format!("{:016x}", new_hash)[..8].to_string();
+    // Update hash preview from layer presence.
+    // Derive from expanded 32-byte hash (same expansion strategy as wind.rs).
+    // preview = first 8 hex chars = first 4 bytes of hash32.
+    let h0 = simple_identity_hash(profile.layer_presence_mask);
+    let h0_bytes = h0.to_le_bytes();
+    // Use first 4 bytes of h0 for the preview — consistent with wind.rs hash32[..4].
+    profile.hash_preview = h0_bytes[..4].iter().map(|b| format!("{:02x}", b)).collect();
 
     save_profile(&profile)?;
     Ok(format!(

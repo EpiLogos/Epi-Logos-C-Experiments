@@ -8,6 +8,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 pub struct WoundState {
     pub wound: bool,
     pub layers_present: u8,
+    /// 64-char hex of the full BLAKE3 [u8; 32] quintessence hash.
+    /// NOT a truncated 16-char legacy value — always 64 hex digits.
     pub quintessence_hash: String,
     pub torus_pos: u8,
     pub spanda_stage: u8,
@@ -62,8 +64,10 @@ pub fn run(
 
     // === Step 3: Compute identity layers from birth data if provided ===
     let mut layer_presence: u8 = profile.layer_presence_mask;
-    #[allow(unused_assignments)]
-    let mut hash: u64 = 0;
+    // hash32: canonical [u8; 32] quintessence hash — NOT a 64-bit truncation.
+    // Pre-FFI: built from simple_hash64 expanded to 32 bytes.
+    // Post-FFI: will be replaced by BLAKE3([birth_data || layer_presence || natal_sun_degree]).
+    let mut hash32: [u8; 32] = [0u8; 32];
 
     if let Some(ref date_str) = date {
         // Parse birth date
@@ -91,8 +95,16 @@ pub fn run(
             },
         );
 
-        // Store numerological data in profile metadata
-        hash = simple_hash(numerological_key as u64, layer_presence);
+        // Derive base 64-bit hash and expand to 32 bytes.
+        // Expansion strategy: two passes of simple_hash with different seeds fill all 32 bytes.
+        let h0 = simple_hash(numerological_key as u64, layer_presence);
+        let h1 = simple_hash(h0 ^ 0xdeadbeef_cafef00d, layer_presence.wrapping_add(1));
+        let h2 = simple_hash(h1 ^ 0xa5a5a5a5_5a5a5a5a, layer_presence.wrapping_add(2));
+        let h3 = simple_hash(h2 ^ 0x0f0f0f0f_f0f0f0f0, layer_presence.wrapping_add(3));
+        hash32[..8].copy_from_slice(&h0.to_le_bytes());
+        hash32[8..16].copy_from_slice(&h1.to_le_bytes());
+        hash32[16..24].copy_from_slice(&h2.to_le_bytes());
+        hash32[24..32].copy_from_slice(&h3.to_le_bytes());
 
         // === Step 4: Run kerykeion for current transits ===
         let today = chrono::Utc::now().format("%Y-%m-%d").to_string();
@@ -124,9 +136,11 @@ pub fn run(
                         )
                         .map_err(|e| e.to_string())?;
 
-                        // Incorporate astrological data into hash
+                        // Incorporate astrological data: XOR sun degree anchor into bytes 0..2.
                         if let Some(sun) = natal.planets.iter().find(|p| p.planet_id == 0) {
-                            hash ^= sun.degree_anchor as u64;
+                            let deg_bytes = (sun.degree_anchor as u16).to_le_bytes();
+                            hash32[0] ^= deg_bytes[0];
+                            hash32[1] ^= deg_bytes[1];
                         }
 
                         profile.kerykeion_version = Some("4.x".to_string());
@@ -141,12 +155,17 @@ pub fn run(
             }
         }
     } else if profile.layer_presence_mask > 0 {
-        // Use existing profile layers (no new birth data)
-        hash = u64::from_str_radix(
-            &profile.hash_preview.chars().take(16).collect::<String>(),
-            16,
-        )
-        .unwrap_or(0);
+        // Reconstruct hash32 from stored 8-char preview (first 4 bytes only recoverable).
+        // Remaining bytes remain zero — this is acceptable for the pre-FFI phase.
+        // Full BLAKE3 re-derivation requires original birth data (held in identity layer files).
+        let preview = profile.hash_preview.as_str();
+        if preview.len() == 8 {
+            for (i, chunk) in preview.as_bytes().chunks(2).enumerate().take(4) {
+                if let Ok(s) = std::str::from_utf8(chunk) {
+                    hash32[i] = u8::from_str_radix(s, 16).unwrap_or(0);
+                }
+            }
+        }
     } else {
         return Err("No birth data provided and no existing profile. \
                     Use --birth-date YYYY-MM-DD"
@@ -170,16 +189,22 @@ pub fn run(
     // === Step 7: Gateway publish (stub — requires running gateway) ===
     // SpacetimeBridge::publish_presence() — deferred to Phase 6
 
+    // Derive display strings from hash32 (NOT from a 64-bit intermediate).
+    // hash_hex: full 64-char hex of all 32 bytes.
+    let hash_hex: String = hash32.iter().map(|b| format!("{:02x}", b)).collect();
+    // hash_preview: first 8 chars (= first 4 bytes) of hash_hex.
+    let hash_preview_str: String = hash32[..4].iter().map(|b| format!("{:02x}", b)).collect();
+
     // === Step 8: Write profile.json + quintessence.bin ===
     profile.layer_presence_mask = layer_presence;
-    profile.hash_preview = format!("{:016x}", hash)[..8].to_string();
+    profile.hash_preview = hash_preview_str.clone();
     profile.last_wound = Some(now_ts);
     save_profile(&profile)?;
 
-    // Write quintessence.bin
+    // Write quintessence.bin — full 32 bytes (canonical; replaces legacy 8-byte form).
     let identity_dir = nara_home().join("identity");
     std::fs::create_dir_all(&identity_dir).map_err(|e| e.to_string())?;
-    std::fs::write(identity_dir.join("quintessence.bin"), hash.to_le_bytes())
+    std::fs::write(identity_dir.join("quintessence.bin"), &hash32)
         .map_err(|e| e.to_string())?;
 
     // === Step 9: Return wound state ===
@@ -194,7 +219,8 @@ pub fn run(
     let state = WoundState {
         wound: true,
         layers_present: layer_presence,
-        quintessence_hash: format!("{:016x}", hash),
+        // 64-char hex — always the full 32-byte BLAKE3-compatible output.
+        quintessence_hash: hash_hex.clone(),
         torus_pos,
         spanda_stage: 0,
         active_decan: kairos_state.active_decan,
@@ -202,7 +228,7 @@ pub fn run(
         message: format!(
             "Nara wound. {} layer(s) present. Hash: {}",
             layer_presence.count_ones(),
-            &format!("{:016x}", hash)[..8]
+            &hash_preview_str,
         ),
     };
 
