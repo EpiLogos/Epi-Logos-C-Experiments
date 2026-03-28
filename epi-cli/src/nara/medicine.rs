@@ -775,7 +775,20 @@ pub fn balance(json: bool) -> Result<String, String> {
 }
 
 /// epi nara medicine prescribe
-pub fn prescribe(context: &str) -> Result<String, String> {
+/// Compute a medicine prescription grounded in the current kairos state.
+///
+/// `context`: practise context ("morning" | "evening" | "integration" | "crisis" | anything).
+/// `is_shadow`: when `true`, the oracle payload phase = 1 (implicate/reversed). In shadow pole
+///   the decan body zone annotation shifts to its `reversedMeaning` — the contra-indication /
+///   shadow emphasis rather than the primary therapeutic direction. This flag MUST come from
+///   `OraclePayload.phase` so the medicine chain is downstream of the oracle cast, not derived
+///   independently.
+///
+/// Canonical data path:
+///   OraclePayload.degree → decan (via degree/10)
+///   OraclePayload.phase  → is_shadow (shadow pole annotation)
+///   kairos.active_decan  → decan ruler, body zones, herbs (when no payload degree available)
+pub fn prescribe(context: &str, is_shadow: bool) -> Result<String, String> {
     let kairos = super::kairos::require_temporal_authority()?;
 
     let practices: Vec<&str> = match context {
@@ -813,10 +826,22 @@ pub fn prescribe(context: &str) -> Result<String, String> {
 
     let duration_min = 15u32 + (ruling_chakra as u32 * 5);
 
-    let mut out = format!("Medicine Prescription ({})\n", context);
+    // Shadow pole annotation: when is_shadow=true (OraclePayload.phase == 1),
+    // the body zone reading shifts to reversedMeaning — the contra-indication /
+    // shadow emphasis. This is the #2-3 → #3-4 reversedMeaning path per
+    // CLOCK-AND-NARA-SPECS/13-shadow-decans-rotational-states.
+    let shadow_note = if is_shadow {
+        " [shadow pole — reversedMeaning active]"
+    } else {
+        ""
+    };
+
+    let mut out = format!("Medicine Prescription ({}){}\n", context, shadow_note);
     out.push_str(&format!(
-        "\x20 Decan {}: {}\n",
-        decan, body_zone
+        "\x20 Decan {}: {}{}\n",
+        decan,
+        body_zone,
+        if is_shadow { " ⟵ shadow emphasis" } else { "" },
     ));
     out.push_str(&format!(
         "\x20 Element: {}  Planetary ruler: {} → {}\n",
@@ -825,6 +850,9 @@ pub fn prescribe(context: &str) -> Result<String, String> {
         chakra_name(ruling_chakra),
     ));
     out.push_str(&format!("\x20 Primary materia: {}\n", herb));
+    if is_shadow {
+        out.push_str("\x20 Shadow note: Work WITH the contra-indicated zone; integrate rather than avoid.\n");
+    }
     out.push_str("\x20 Practices:\n");
     for p in &practices {
         out.push_str(&format!("    * {}\n", p));

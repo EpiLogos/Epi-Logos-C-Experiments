@@ -848,7 +848,7 @@ impl HypertilePlugin for M4MedicinePlugin {
             match chord.code {
                 KeyCode::Char('p') => {
                     self.prescription_text = Some(
-                        crate::nara::medicine::prescribe("integration")
+                        crate::nara::medicine::prescribe("integration", false)
                             .unwrap_or_else(|e| format!("Error: {}", e)),
                     );
                     return EventOutcome::Consumed;

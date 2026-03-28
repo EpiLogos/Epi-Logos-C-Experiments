@@ -534,7 +534,7 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
             MedicineCmd::Balance { json: j } => medicine::balance(*j || json),
             MedicineCmd::Chakra { json: j } => medicine::chakra(*j || json),
             MedicineCmd::Materia { json: j } => medicine::materia(*j || json),
-            MedicineCmd::Prescribe { context } => medicine::prescribe(context),
+            MedicineCmd::Prescribe { context } => medicine::prescribe(context, false),
             MedicineCmd::Safety { practice } => medicine::safety(practice.as_deref()),
         },
         NaraCmd::Transform { cmd: sub } => match sub {

@@ -190,7 +190,7 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         "nara.medicine.materia" => cli_to_rpc(medicine::materia(true)),
         "nara.medicine.prescribe" => {
             let context = opt_str(params, "context").unwrap_or_else(|| "general".to_owned());
-            cli_to_rpc(medicine::prescribe(&context))
+            cli_to_rpc(medicine::prescribe(&context, false))
         }
         "nara.medicine.safety" => {
             let practice = opt_str(params, "practice");
