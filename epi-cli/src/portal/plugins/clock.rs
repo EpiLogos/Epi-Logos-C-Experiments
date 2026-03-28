@@ -16,7 +16,7 @@ use crate::portal::clock_state::{KairosState, PlanetState, PortalClockState, Sha
 /// This gives 2× horizontal and 4× vertical pixel density over raw terminal cells.
 ///
 /// Braille bit layout per cell:
-/// ```
+/// ```text
 ///   col: 0  1
 ///   row 0: bit0  bit3
 ///   row 1: bit1  bit4
