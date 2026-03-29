@@ -8,7 +8,7 @@ pub mod vimarsa;
 use super::{branch_for_family, overlay, FAMILY_LETTERS, FAMILY_NAMES, RELATION_PITHYS};
 use chrono::Utc;
 use types::{
-    EssenceFacet, KnowingAction, KnowingDossier, NotebookPulseFacet, RelationalFieldFacet,
+    EssenceFacet, KnowingAction, KnowingDossier, NotebookPulseFacet, QvFacet, RelationalFieldFacet,
     StructuralCorrespondence, VimarsaFieldFacet,
 };
 
@@ -60,6 +60,14 @@ pub fn build_family_dossier_with_mode(
             format!("{} -- {}", base, title)
         }
     });
+    let qv_facet = overlay::overlay_entry(&coordinate)
+        .map(|e| QvFacet {
+            q_nature: e.q_nature,
+            q_essence: e.q_essence,
+            q_formulation: e.q_formulation,
+            q_structure: e.q_structure,
+        })
+        .unwrap_or_default();
     let (branch_id, branch_name) = branch_for_family(family, inverted);
 
     let structural_correspondences = FAMILY_LETTERS
@@ -95,6 +103,7 @@ pub fn build_family_dossier_with_mode(
                 )
             }),
         },
+        qv_facet,
         structural_correspondences,
         relational_field,
         vimarsa_field,

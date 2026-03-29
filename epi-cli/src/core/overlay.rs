@@ -104,6 +104,12 @@ pub fn overlay_pithy(coord: &str) -> Option<String> {
         .and_then(|entry| entry.essence.clone())
 }
 
+/// Look up a coordinate's full QvEntry from the overlay.
+pub fn overlay_entry(coord: &str) -> Option<QvEntry> {
+    let overlay = load_overlay();
+    overlay.coordinates.get(coord).cloned()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -145,5 +151,40 @@ mod tests {
         );
 
         std::fs::remove_dir_all(&temp_dir).ok();
+    }
+
+    #[test]
+    fn overlay_entry_returns_all_qv_fields() {
+        let temp = std::env::temp_dir().join(format!("epi-qv-test-{}", std::process::id()));
+        std::fs::create_dir_all(&temp).unwrap();
+        let path = temp.join("overlay.json");
+        std::fs::write(
+            &path,
+            r#"{
+  "version": 1,
+  "updated_at": "2026-03-30T00:00:00Z",
+  "coordinates": {
+    "M4": {
+      "pithy": "Nara test",
+      "q_nature": "personal identity anchor",
+      "q_essence": "oracle engine",
+      "q_formulation": "six sub-branches",
+      "q_structure": "contextual lemniscate"
+    }
+  }
+}"#,
+        )
+        .unwrap();
+        let entry = load_overlay_from_path(&path)
+            .coordinates
+            .get("M4")
+            .cloned()
+            .unwrap();
+        assert_eq!(entry.essence.as_deref(), Some("Nara test"));
+        assert_eq!(entry.q_nature.as_deref(), Some("personal identity anchor"));
+        assert_eq!(entry.q_essence.as_deref(), Some("oracle engine"));
+        assert_eq!(entry.q_formulation.as_deref(), Some("six sub-branches"));
+        assert_eq!(entry.q_structure.as_deref(), Some("contextual lemniscate"));
+        std::fs::remove_dir_all(&temp).ok();
     }
 }

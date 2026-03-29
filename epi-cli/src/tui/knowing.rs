@@ -650,6 +650,7 @@ mod tests {
                 branch_name: "T+C+T'+C' Logos cycle".to_string(),
                 phase: None,
             },
+            qv_facet: Default::default(),
             structural_correspondences: vec![StructuralCorrespondence {
                 coordinate: "C1".to_string(),
                 family: "Category".to_string(),

@@ -1,10 +1,33 @@
 use serde::{Deserialize, Serialize};
 
+/// The four QL-structured vibrational properties for a coordinate.
+#[derive(Debug, Clone, Default, Serialize)]
+pub struct QvFacet {
+    /// #1 formal/definitional nature
+    pub q_nature: Option<String>,
+    /// #2 operational/vibrational essence
+    pub q_essence: Option<String>,
+    /// #3 processual/pattern formulation
+    pub q_formulation: Option<String>,
+    /// #4 structural/contextual role
+    pub q_structure: Option<String>,
+}
+
+impl QvFacet {
+    pub fn is_empty(&self) -> bool {
+        self.q_nature.is_none()
+            && self.q_essence.is_none()
+            && self.q_formulation.is_none()
+            && self.q_structure.is_none()
+    }
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct KnowingDossier {
     pub coordinate: String,
     pub title: String,
     pub essence: EssenceFacet,
+    pub qv_facet: QvFacet,
     pub structural_correspondences: Vec<StructuralCorrespondence>,
     pub relational_field: RelationalFieldFacet,
     pub vimarsa_field: VimarsaFieldFacet,

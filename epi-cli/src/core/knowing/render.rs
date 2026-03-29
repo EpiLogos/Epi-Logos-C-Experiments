@@ -13,6 +13,22 @@ pub fn render_text(dossier: &KnowingDossier) -> String {
         lines.push(format!("  Phase: {}", phase));
     }
 
+    if !dossier.qv_facet.is_empty() {
+        lines.push("── QV Properties ──────────────────────────────────────".to_string());
+        if let Some(v) = &dossier.qv_facet.q_nature {
+            lines.push(format!("  q_nature:      {}", v));
+        }
+        if let Some(v) = &dossier.qv_facet.q_essence {
+            lines.push(format!("  q_essence:     {}", v));
+        }
+        if let Some(v) = &dossier.qv_facet.q_formulation {
+            lines.push(format!("  q_formulation: {}", v));
+        }
+        if let Some(v) = &dossier.qv_facet.q_structure {
+            lines.push(format!("  q_structure:   {}", v));
+        }
+    }
+
     lines.push("Structural Correspondences:".to_string());
     for item in &dossier.structural_correspondences {
         let marker = if item.is_self { ">" } else { " " };
