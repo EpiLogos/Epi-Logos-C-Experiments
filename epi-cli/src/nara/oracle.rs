@@ -1160,6 +1160,19 @@ pub fn oracle_eval4(result: &IChingResult, kairos_degree: f32, phase: u8) -> Ora
     }
 }
 
+/// Cast coins and compute OraclePayload in one step — for portal clock state updates.
+///
+/// Does NOT write oracle history or perform hygiene checks.
+/// Intended for portal-internal clock synchronization after a cast has already been
+/// recorded via `cast()`.
+///
+/// `kairos_degree`: current sun degree (0.0-360.0) from KerykeionResult.
+/// Pass 0.0 if kairos unavailable — the four faces still compute correctly.
+pub fn cast_and_eval4(kairos_degree: f32, phase: u8) -> OraclePayload {
+    let result = cast_iching_coins();
+    oracle_eval4(&result, kairos_degree, phase)
+}
+
 // ─── History ─────────────────────────────────────────────────────────────
 
 #[derive(Debug, Serialize, Deserialize)]

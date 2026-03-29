@@ -371,6 +371,36 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
     ))
 }
 
+// ─── Clock Position from Hash ─────────────────────────────────────────────
+
+/// Derive clock position from a 32-byte quintessence hash.
+///
+/// degree = (hash[0] as u16 | (hash[1] as u16) << 8) % 360
+/// tick12 = degree / 30
+///
+/// Returns (degree, tick12) — integer arithmetic only, no float cast.
+pub fn hash_to_clock_position(hash: &[u8; 32]) -> (u16, u8) {
+    let degree = ((hash[0] as u16) | ((hash[1] as u16) << 8)) % 360;
+    let tick12 = (degree / 30) as u8;
+    (degree, tick12)
+}
+
+/// Derive clock position from the stored 8-char hash_preview string (e.g. "ab12ef34").
+///
+/// Parses first 4 hex chars (bytes 0 and 1) and delegates to `hash_to_clock_position`.
+/// Returns None if the preview is shorter than 4 chars or not valid hex.
+pub fn hash_to_clock_position_from_preview(preview: &str) -> Option<(u16, u8)> {
+    if preview.len() < 4 {
+        return None;
+    }
+    let b0 = u8::from_str_radix(&preview[0..2], 16).ok()?;
+    let b1 = u8::from_str_radix(&preview[2..4], 16).ok()?;
+    let mut hash = [0u8; 32];
+    hash[0] = b0;
+    hash[1] = b1;
+    Some(hash_to_clock_position(&hash))
+}
+
 /// Augment identity by layer index with raw data string
 pub fn augment_layer(layer_idx: u8, data: &str) -> Result<String, String> {
     if layer_idx > 4 {
@@ -423,5 +453,53 @@ pub fn show(json: bool) -> Result<String, String> {
                 Ok(out)
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn hash_zero_gives_degree_0_tick_0() {
+        let hash = [0u8; 32];
+        let (deg, tick) = hash_to_clock_position(&hash);
+        assert_eq!(deg, 0);
+        assert_eq!(tick, 0);
+    }
+
+    #[test]
+    fn hash_to_clock_tick12_in_range() {
+        // hash[0]=180, hash[1]=0 → degree = 180 % 360 = 180, tick12 = 6
+        let mut hash = [0u8; 32];
+        hash[0] = 180;
+        let (deg, tick) = hash_to_clock_position(&hash);
+        assert_eq!(deg, 180);
+        assert_eq!(tick, 6);
+    }
+
+    #[test]
+    fn hash_to_clock_wraps_at_360() {
+        // hash[0]=0xFF, hash[1]=0x01 → raw = 0x01FF = 511, 511 % 360 = 151, tick12 = 5
+        let mut hash = [0u8; 32];
+        hash[0] = 0xFF;
+        hash[1] = 0x01;
+        let (deg, tick) = hash_to_clock_position(&hash);
+        assert_eq!(deg, 151);
+        assert_eq!(tick, 5);
+    }
+
+    #[test]
+    fn hash_to_clock_from_preview_parses_bytes() {
+        // preview "b400..." → b0=0xb4=180, b1=0x00 → degree=180, tick12=6
+        let (deg, tick) = hash_to_clock_position_from_preview("b400").unwrap();
+        assert_eq!(deg, 180);
+        assert_eq!(tick, 6);
+    }
+
+    #[test]
+    fn hash_to_clock_from_preview_returns_none_on_short() {
+        assert!(hash_to_clock_position_from_preview("ab").is_none());
+        assert!(hash_to_clock_position_from_preview("").is_none());
     }
 }

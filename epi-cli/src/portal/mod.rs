@@ -1,4 +1,5 @@
 use crate::ffi::EpiLib;
+use crate::portal::clock_state::{new_shared_clock_state, SharedClockState};
 use crossterm::{
     event::{self, Event, KeyCode, KeyEventKind, KeyModifiers},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
@@ -67,7 +68,8 @@ fn run_event_loop(
     tab: Option<&str>,
     layout_path: Option<&std::path::Path>,
 ) -> color_eyre::Result<()> {
-    let mut workspace = build_workspace()?;
+    let clock_state = new_shared_clock_state();
+    let mut workspace = build_workspace(clock_state)?;
 
     // Apply a named layout if provided
     if let Some(path) = layout_path {
@@ -149,7 +151,10 @@ fn run_event_loop(
 }
 
 /// Register all portal plugin types on a given runtime.
-fn register_all_plugins(runtime: &mut ratatui_hypertile_extras::HypertileRuntime) {
+fn register_all_plugins(
+    runtime: &mut ratatui_hypertile_extras::HypertileRuntime,
+    clock_state: Option<SharedClockState>,
+) {
     use plugins::{m0, m1, m2, m3, m4, m5, shared};
 
     // Shared
@@ -172,7 +177,18 @@ fn register_all_plugins(runtime: &mut ratatui_hypertile_extras::HypertileRuntime
     // M4
     runtime.register_plugin_type("m4.identity", || m4::M4IdentityPlugin::new());
     runtime.register_plugin_type("m4.flow", || m4::M4FlowPlugin::new());
-    runtime.register_plugin_type("m4.oracle", || m4::M4OraclePlugin::new());
+    // M4 Oracle: wire SharedClockState so every cast updates portal clock state.
+    {
+        let cs = clock_state.clone();
+        runtime.register_plugin_type("m4.oracle", move || {
+            let plugin = m4::M4OraclePlugin::new();
+            if let Some(ref c) = cs {
+                plugin.with_clock_state(c.clone())
+            } else {
+                plugin
+            }
+        });
+    }
     runtime.register_plugin_type("m4.medicine", || m4::M4MedicinePlugin::new());
     runtime.register_plugin_type("m4.transform", || m4::M4TransformPlugin::new());
     runtime.register_plugin_type("m4.lens", || m4::M4LensPlugin::new());
@@ -188,7 +204,7 @@ fn register_all_plugins(runtime: &mut ratatui_hypertile_extras::HypertileRuntime
 ///
 /// Tab 0 ("M4'-M5' Personal"):  m4.identity | m4.flow / m4.oracle
 /// Tab 1 ("M0'-M3' Structural"): m0.dashboard / m0.families | m1.walk
-fn build_workspace() -> color_eyre::Result<WorkspaceRuntime> {
+fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<WorkspaceRuntime> {
     let mut workspace = WorkspaceRuntime::new(|| {
         HypertileRuntimeBuilder::default()
             .with_focus_highlight(true)
@@ -204,8 +220,8 @@ fn build_workspace() -> color_eyre::Result<WorkspaceRuntime> {
     // WorkspaceRuntime::new() already created tab 0 with one root pane (block placeholder).
     workspace.rename_tab(0, "M4'-M5' Personal".to_string());
 
-    // Register all plugin types on tab 0's runtime
-    register_all_plugins(workspace.active_runtime_mut());
+    // Register all plugin types on tab 0's runtime (oracle plugin gets the clock state)
+    register_all_plugins(workspace.active_runtime_mut(), Some(clock_state.clone()));
 
     // Replace the root pane's placeholder with m4.identity
     workspace
@@ -229,8 +245,8 @@ fn build_workspace() -> color_eyre::Result<WorkspaceRuntime> {
     workspace.new_tab();
     workspace.rename_tab(1, "M0'-M3' Structural".to_string());
 
-    // Register all plugin types on tab 1's runtime
-    register_all_plugins(workspace.active_runtime_mut());
+    // Register all plugin types on tab 1's runtime (no clock state needed for structural tab)
+    register_all_plugins(workspace.active_runtime_mut(), None);
 
     // Replace root placeholder with m0.dashboard
     workspace
@@ -267,6 +283,10 @@ fn build_workspace() -> color_eyre::Result<WorkspaceRuntime> {
 mod tests {
     use super::*;
 
+    fn test_workspace() -> color_eyre::Result<WorkspaceRuntime> {
+        build_workspace(new_shared_clock_state())
+    }
+
     #[test]
     fn default_workspace_state_has_two_tabs() {
         let state = persist::WorkspaceState::default_layout();
@@ -277,7 +297,7 @@ mod tests {
 
     #[test]
     fn build_workspace_creates_two_tabs() {
-        let ws = build_workspace().expect("build_workspace failed");
+        let ws = test_workspace().expect("build_workspace failed");
         assert_eq!(ws.tab_count(), 2);
 
         let labels = ws.tab_labels();
@@ -287,7 +307,7 @@ mod tests {
 
     #[test]
     fn tab_0_has_three_panes() {
-        let ws = build_workspace().expect("build_workspace failed");
+        let ws = test_workspace().expect("build_workspace failed");
         assert_eq!(ws.active_tab_index(), 0);
         // pane_ids() walks the BSP tree directly (no layout computation needed)
         let count = ws.active_runtime().core().state().pane_ids().len();
@@ -296,7 +316,7 @@ mod tests {
 
     #[test]
     fn tab_1_has_three_panes() {
-        let mut ws = build_workspace().expect("build_workspace failed");
+        let mut ws = test_workspace().expect("build_workspace failed");
         ws.go_to_tab(1);
         let count = ws.active_runtime().core().state().pane_ids().len();
         assert_eq!(count, 3, "Tab 1 should have 3 panes, got {}", count);

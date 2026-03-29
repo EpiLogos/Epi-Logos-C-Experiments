@@ -136,6 +136,28 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
 
         // ── Identity ────────────────────────────────────────────────────
         "nara.identity.get" => cli_to_rpc(identity::show(true)),
+        "nara.identity.clock_position" => {
+            use crate::nara::identity::{load_profile, hash_to_clock_position_from_preview};
+            match load_profile() {
+                Ok(Some(profile)) => {
+                    match hash_to_clock_position_from_preview(&profile.hash_preview) {
+                        Some((degree, tick12)) => cli_to_rpc(Ok(format!(
+                            r#"{{"degree":{},"tick12":{},"hash_preview":"{}","phase":{}}}"#,
+                            degree,
+                            tick12,
+                            profile.hash_preview,
+                            if degree >= 180 { 1u8 } else { 0u8 }
+                        ))),
+                        None => cli_to_rpc(Err(format!(
+                            "Cannot derive clock position — hash_preview '{}' too short",
+                            profile.hash_preview
+                        ))),
+                    }
+                }
+                Ok(None) => cli_to_rpc(Err("No identity profile found — run `epi nara identity set`".to_string())),
+                Err(e) => cli_to_rpc(Err(e)),
+            }
+        }
         "nara.identity.layers" => deferred_stub("nara.identity.layers"),
         "nara.identity.compute" => deferred_stub("nara.identity.compute"),
         "nara.identity.layer.set" => {

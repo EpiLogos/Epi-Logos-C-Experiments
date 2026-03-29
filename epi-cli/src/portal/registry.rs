@@ -7,7 +7,8 @@ use ratatui_hypertile_extras::{HypertileRuntimeBuilder, WorkspaceRuntime};
 /// Used by tests that need a registry without launching the full portal.
 pub fn build_registry_workspace() -> WorkspaceRuntime {
     let mut ws = WorkspaceRuntime::new(|| HypertileRuntimeBuilder::default());
-    super::register_all_plugins(ws.active_runtime_mut());
+    // Pass None for clock_state — registry tests don't need live clock wiring.
+    super::register_all_plugins(ws.active_runtime_mut(), None);
     ws
 }
 

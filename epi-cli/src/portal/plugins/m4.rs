@@ -581,6 +581,8 @@ pub struct M4OraclePlugin {
     last_cast: Option<String>,
     consent_pending: bool,
     scroll: usize,
+    /// Shared portal clock state — updated on every successful I-Ching cast.
+    clock_state: Option<crate::portal::clock_state::SharedClockState>,
 }
 
 impl M4OraclePlugin {
@@ -591,9 +593,16 @@ impl M4OraclePlugin {
             last_cast: None,
             consent_pending: false,
             scroll: 0,
+            clock_state: None,
         };
         plugin.load_data();
         plugin
+    }
+
+    /// Attach a SharedClockState that will be updated after each oracle cast.
+    pub fn with_clock_state(mut self, cs: crate::portal::clock_state::SharedClockState) -> Self {
+        self.clock_state = Some(cs);
+        self
     }
 
     fn load_data(&mut self) {
@@ -689,7 +698,27 @@ impl HypertilePlugin for M4OraclePlugin {
                         self.consent_pending = false;
                         // Cast with auto-consent (yes=true) since user confirmed in TUI
                         match crate::nara::oracle::cast("iching", "portal cast", true, None) {
-                            Ok(result) => self.last_cast = Some(result),
+                            Ok(result) => {
+                                self.last_cast = Some(result);
+                                // Update shared clock state from oracle cast.
+                                // Use a separate eval4 (no history write) to get quaternionic
+                                // charges and degree for the portal clock.
+                                if let Some(ref cs) = self.clock_state {
+                                    let payload = crate::nara::oracle::cast_and_eval4(0.0, 0);
+                                    let temporal_hex = payload.temporal_hex;
+                                    crate::portal::clock_state::update_from_cast(
+                                        cs,
+                                        payload.pp,
+                                        payload.nn,
+                                        payload.np,
+                                        payload.pn,
+                                        payload.degree,
+                                        payload.primary_hex,
+                                        temporal_hex,
+                                        (payload.primary_hex ^ temporal_hex) & 0x3F,
+                                    );
+                                }
+                            }
                             Err(e) => self.last_cast = Some(format!("Error: {}", e)),
                         }
                         self.load_data(); // Refresh history
