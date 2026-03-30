@@ -843,4 +843,25 @@ const M3_Rotational_Profile* m3_get_rotational_profile(uint8_t codon6bit);
 bool     m3_verify(void);
 
 
+/* ─────────────────────────────────────────────────────────────────────────
+ * CLOCK_DEGREE_LUT — 360-entry lookup table mapping degree nodes to
+ * astrological / symbolic data. Built by tools/build_clock_degree_lut.py.
+ * Until that script is run against the Neo4j dataset, all entries are
+ * zero-initialized (stub behavior).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+typedef struct {
+    uint16_t degree_node_360;   /* 0-359  LUT index                        */
+    uint8_t  hexagram_id;       /* 0-63   I-Ching hexagram                 */
+    uint8_t  decan_idx;         /* 0-35   floor(degree/10)                 */
+    uint8_t  ruling_planet;     /* 0-9    canonical mod-10 (Sun=0..Pluto=9)*/
+    uint8_t  zodiac_sign;       /* 0-11   Aries=0 … Pisces=11              */
+    uint8_t  chakra_id;         /* 0-7    Muladhara=0 … Bindu=7            */
+    uint8_t  strand;            /* 0=explicate/Strand-A  1=implicate/B     */
+    float    exact_degree_720;  /* degree * 2.0  in [0.0, 720.0)           */
+} Clock_Degree_Entry;
+
+extern const Clock_Degree_Entry CLOCK_DEGREE_LUT[360];
+
+
 #endif /* M3_H */
