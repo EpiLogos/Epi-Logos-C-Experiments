@@ -43,6 +43,42 @@ int main(void) {
         assert(CLOCK_DEGREE_LUT[359].strand == 1);
     } PASS;
 
+    TEST(backbone_nodes_at_multiples_of_15) {
+        /* 24 palindromic anchors: 360/15 == 24 */
+        int count = 0;
+        for (int i = 0; i < 360; i++) {
+            if (CLOCK_DEGREE_LUT[i].is_backbone_node) {
+                assert(i % 15 == 0);
+                count++;
+            }
+        }
+        assert(count == 24);
+    } PASS;
+
+    TEST(shadow_degree_is_degree_plus_360) {
+        for (int i = 0; i < 360; i++) {
+            assert(CLOCK_DEGREE_LUT[i].shadow_degree == (uint16_t)(i + 360));
+        }
+    } PASS;
+
+    TEST(polar_opposite_is_180_offset) {
+        assert(CLOCK_DEGREE_LUT[0].polar_opposite   == 180);
+        assert(CLOCK_DEGREE_LUT[180].polar_opposite  ==   0);
+        assert(CLOCK_DEGREE_LUT[90].polar_opposite   == 270);
+        assert(CLOCK_DEGREE_LUT[359].polar_opposite  == 179);
+    } PASS;
+
+    TEST(hexagram_line_active_in_range_0_5) {
+        for (int i = 0; i < 360; i++) {
+            assert(CLOCK_DEGREE_LUT[i].hexagram_line_active <= 5);
+        }
+    } PASS;
+
+    TEST(structural_law_360_plus_24_equals_384) {
+        /* 360 + 24 == 64 * 6: clock topology = I-Ching LINE_CHANGE count */
+        assert(360 + 24 == 64 * 6);
+    } PASS;
+
     printf("\n=== M3 CLOCK_DEGREE_LUT: %d/%d passed ===\n", tp, tr);
     return (tp == tr) ? 0 : 1;
 }

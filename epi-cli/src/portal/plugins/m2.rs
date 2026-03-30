@@ -1,4 +1,4 @@
-use crate::nara::medicine::{PLANET_CHAKRA, ZODIAC_DECAN_TABLE};
+use crate::nara::medicine::ZODIAC_DECAN_TABLE;
 use crate::portal::clock_state::SharedClockState;
 use crate::portal::theme;
 use ratatui::prelude::*;
@@ -8,32 +8,48 @@ use ratatui_hypertile_extras::HypertilePlugin;
 
 // ── Static lookup tables ──────────────────────────────────────────────────────
 
-/// Decan rulers in Chaldean/Golden Dawn order, canonical mod-10 planet indices.
-/// medicine.rs Planet_Id: SUN=0, EARTH=1(unused), VENUS=2, MERCURY=3, MOON=4, SATURN=5, JUPITER=6, MARS=7
+/// Decan rulers in Chaldean/Golden Dawn order — canonical mod-10 planet indices.
+/// Canonical: SUN=0, MOON=1, MERCURY=2, VENUS=3, MARS=4, JUPITER=5, SATURN=6, URANUS=7, NEPTUNE=8, PLUTO=9
+/// Earth = geocentric observer, NOT in array.
 pub static DECAN_RULER_TABLE: [u8; 36] = [
-    7, 0, 2,  // Aries:       Mars(7), Sun(0), Venus(2)
-    3, 4, 5,  // Taurus:      Mercury(3), Moon(4), Saturn(5)
-    6, 7, 0,  // Gemini:      Jupiter(6), Mars(7), Sun(0)
-    2, 3, 4,  // Cancer:      Venus(2), Mercury(3), Moon(4)
-    5, 6, 7,  // Leo:         Saturn(5), Jupiter(6), Mars(7)
-    0, 2, 3,  // Virgo:       Sun(0), Venus(2), Mercury(3)
-    4, 5, 6,  // Libra:       Moon(4), Saturn(5), Jupiter(6)
-    7, 0, 2,  // Scorpio:     Mars(7), Sun(0), Venus(2)
-    3, 4, 5,  // Sagittarius: Mercury(3), Moon(4), Saturn(5)
-    6, 7, 0,  // Capricorn:   Jupiter(6), Mars(7), Sun(0)
-    2, 3, 4,  // Aquarius:    Venus(2), Mercury(3), Moon(4)
-    5, 6, 7,  // Pisces:      Saturn(5), Jupiter(6), Mars(7)
+    4, 0, 3,  // Aries:        Mars(4), Sun(0), Venus(3)
+    2, 1, 6,  // Taurus:       Mercury(2), Moon(1), Saturn(6)
+    5, 4, 0,  // Gemini:       Jupiter(5), Mars(4), Sun(0)
+    3, 2, 1,  // Cancer:       Venus(3), Mercury(2), Moon(1)
+    6, 5, 4,  // Leo:          Saturn(6), Jupiter(5), Mars(4)
+    0, 3, 2,  // Virgo:        Sun(0), Venus(3), Mercury(2)
+    1, 6, 5,  // Libra:        Moon(1), Saturn(6), Jupiter(5)
+    4, 0, 3,  // Scorpio:      Mars(4), Sun(0), Venus(3)
+    2, 1, 6,  // Sagittarius:  Mercury(2), Moon(1), Saturn(6)
+    5, 4, 0,  // Capricorn:    Jupiter(5), Mars(4), Sun(0)
+    3, 2, 1,  // Aquarius:     Venus(3), Mercury(2), Moon(1)
+    6, 5, 4,  // Pisces:       Saturn(6), Jupiter(5), Mars(4)
+];
+
+/// Planet → Chakra (canonical mod-10). Matches PLANET_CHAKRA in build_clock_degree_lut.py.
+/// Root=0, Sacral=1, SolarPlexus=2, Heart=3, Throat=4, ThirdEye=5, Crown=6, Transpersonal=7
+pub static PLANET_CHAKRA_MOD10: [u8; 10] = [
+    6, // Sun(0)     → Crown (Sahasrara)
+    5, // Moon(1)    → Third Eye (Ajna)
+    4, // Mercury(2) → Throat (Vishuddha)
+    3, // Venus(3)   → Heart (Anahata)
+    2, // Mars(4)    → Solar Plexus (Manipura)
+    1, // Jupiter(5) → Sacral (Svadhisthana)
+    0, // Saturn(6)  → Root (Muladhara)
+    7, // Uranus(7)  → Transpersonal
+    7, // Neptune(8) → Transpersonal
+    0, // Pluto(9)   → Root (deep transformation)
 ];
 
 pub static PLANET_SYMBOLS: [char; 10] = [
     '☉', // 0: Sun
-    '⊕', // 1: Earth (geocentric observer)
-    '♀', // 2: Venus
-    '☿', // 3: Mercury
-    '☽', // 4: Moon
-    '♄', // 5: Saturn
-    '♃', // 6: Jupiter
-    '♂', // 7: Mars
+    '☽', // 1: Moon
+    '☿', // 2: Mercury
+    '♀', // 3: Venus
+    '♂', // 4: Mars
+    '♃', // 5: Jupiter
+    '♄', // 6: Saturn
+    '⛢', // 7: Uranus
     '♆', // 8: Neptune
     '♇', // 9: Pluto
 ];
@@ -43,8 +59,8 @@ pub static CHAKRA_SYMBOLS: [char; 8] = [
 ];
 
 pub static PLANET_NAMES: [&str; 10] = [
-    "Sun", "Earth", "Venus", "Mercury", "Moon",
-    "Saturn", "Jupiter", "Mars", "Neptune", "Pluto",
+    "Sun", "Moon", "Mercury", "Venus", "Mars",
+    "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
 ];
 
 pub static ELEMENT_NAMES: [&str; 5] = ["Akasha", "Air", "Fire", "Water", "Earth"];
@@ -423,9 +439,8 @@ fn build_cells() -> [[MatrixCell; 6]; 12] {
             let decan_within_sign = decan_idx % 3;
             let ruling_planet = DECAN_RULER_TABLE[decan_idx as usize];
             let element = SIGN_ELEMENT[zodiac_sign as usize];
-            // PLANET_CHAKRA has 8 entries (Planet_Id 0-7). Clamp to 7 for safety.
-            let planet_chakra_idx = (ruling_planet as usize).min(PLANET_CHAKRA.len() - 1);
-            let chakra = PLANET_CHAKRA[planet_chakra_idx];
+            let planet_chakra_idx = (ruling_planet as usize).min(PLANET_CHAKRA_MOD10.len() - 1);
+            let chakra = PLANET_CHAKRA_MOD10[planet_chakra_idx];
             // Approximate hexagram until CLOCK_DEGREE_LUT is built (Task 5)
             let primary_hex = ((decan_idx as u16 * 64) / 36) as u8;
             let body_zone = ZODIAC_DECAN_TABLE[decan_idx as usize].body_part;
@@ -649,11 +664,11 @@ mod tests {
     }
 
     #[test]
-    fn decan_ruler_aries_uses_medicine_planet_ids() {
-        // Aries decans: Mars(7), Sun(0), Venus(2) — medicine.rs Planet_Id encoding
-        assert_eq!(DECAN_RULER_TABLE[0], 7); // Mars
+    fn decan_ruler_aries_uses_canonical_mod10() {
+        // Aries decans: Mars(4), Sun(0), Venus(3) — canonical mod-10
+        assert_eq!(DECAN_RULER_TABLE[0], 4); // Mars
         assert_eq!(DECAN_RULER_TABLE[1], 0); // Sun
-        assert_eq!(DECAN_RULER_TABLE[2], 2); // Venus
+        assert_eq!(DECAN_RULER_TABLE[2], 3); // Venus
     }
 
     #[test]

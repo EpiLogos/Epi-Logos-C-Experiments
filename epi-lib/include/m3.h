@@ -845,20 +845,67 @@ bool     m3_verify(void);
 
 /* ─────────────────────────────────────────────────────────────────────────
  * CLOCK_DEGREE_LUT — 360-entry lookup table mapping degree nodes to
- * astrological / symbolic data. Built by tools/build_clock_degree_lut.py.
- * Until that script is run against the Neo4j dataset, all entries are
- * zero-initialized (stub behavior).
+ * all four M-layer data (M0-M3). Built by tools/build_clock_degree_lut.py.
+ *
+ * Topology law (compile-time verified):
+ *   384 = 360 dynamic degrees + 24 palindromic backbone nodes = 64 × 6 lines
+ *
+ * Fields that require Neo4j dataset query to be accurate:
+ *   hexagram_id, hexagram_line_active, codon_upper_pair, codon_lower_pair,
+ *   tarot_card_id, is_non_dual_codon (precise), m1_ananda_value, m0_archetype
+ *
+ * Fields computable from first principles (populated by build_clock_degree_lut.py):
+ *   degree_node_360, zodiac_sign, zodiac_degree, decan_idx, decan_position,
+ *   is_backbone_node, decan_planet, decan_element, decan_chakra, tick12,
+ *   strand, shadow_degree, polar_opposite, exact_degree_720,
+ *   enneadic_chamber, dr_ring
  * ─────────────────────────────────────────────────────────────────────── */
 
+/* Structural law: 360 dynamic degrees + 24 palindromic backbone = 64×6 LINE_CHANGES */
+_Static_assert(360 + 24 == 64 * 6,
+    "Clock topology: 360 degree nodes + 24 backbone = 384 = 64 hexagrams x 6 lines");
+
 typedef struct {
-    uint16_t degree_node_360;   /* 0-359  LUT index                        */
-    uint8_t  hexagram_id;       /* 0-63   I-Ching hexagram                 */
-    uint8_t  decan_idx;         /* 0-35   floor(degree/10)                 */
-    uint8_t  ruling_planet;     /* 0-9    canonical mod-10 (Sun=0..Pluto=9)*/
-    uint8_t  zodiac_sign;       /* 0-11   Aries=0 … Pisces=11              */
-    uint8_t  chakra_id;         /* 0-7    Muladhara=0 … Bindu=7            */
-    uint8_t  strand;            /* 0=explicate/Strand-A  1=implicate/B     */
-    float    exact_degree_720;  /* degree * 2.0  in [0.0, 720.0)           */
+    /* Identity */
+    uint16_t degree_node_360;       /* 0-359  LUT index                         */
+    float    exact_degree_720;      /* degree * 2.0  in [0.0, 720.0)            */
+
+    /* Ring membership */
+    uint8_t  zodiac_sign;           /* 0-11   Aries=0 … Pisces=11               */
+    uint8_t  zodiac_degree;         /* 0-29   degree within the zodiac sign      */
+    uint8_t  decan_idx;             /* 0-35   floor(degree/10)                   */
+    uint8_t  decan_position;        /* 0-9    degree within the decan            */
+    uint8_t  is_backbone_node;      /* 1 if this is a palindromic anchor (d%15==0) */
+
+    /* M3 data — symbolic transcription layer (Neo4j-sourced when available) */
+    uint8_t  hexagram_id;           /* 0-63   I-Ching hexagram                   */
+    uint8_t  hexagram_line_active;  /* 0-5    which of the 6 lines at this degree */
+    uint8_t  is_non_dual_codon;     /* 1 if palindromic/non-dual codon           */
+    uint8_t  codon_upper_pair;      /* 0-3    upper nucleotide (A/T/C/G)         */
+    uint8_t  codon_lower_pair;      /* 0-3    lower nucleotide                   */
+    uint8_t  tarot_card_id;         /* 0-55   Minor Arcana (0=unavailable)       */
+
+    /* M2 data — vibrational/elemental layer */
+    uint8_t  decan_planet;          /* 0-9    canonical mod-10 decan ruler       */
+    uint8_t  decan_element;         /* 0-4    FIRE/EARTH/AIR/WATER/AKASHA        */
+    uint8_t  decan_chakra;          /* 0-7    chakra from PLANET_CHAKRA[planet]  */
+
+    /* M1 data — mathematical/harmonic layer */
+    uint8_t  tick12;                /* 0-11   canonical spanda stage             */
+    uint8_t  strand;                /* 0=Strand-A/explicate  1=Strand-B/implicate */
+    uint8_t  dr_ring;               /* 0=Mahamaya{1,2,4,8,7,5} 1=Parashakti{3,6,9} */
+    uint8_t  m1_ananda_value;       /* ananda harmonic (0=unavailable)           */
+
+    /* M0 data — archetypal number language */
+    uint8_t  m0_archetype;          /* 0-11   Archetype_LUT index (0=unavailable) */
+
+    /* SU(2) double-cover shadow identity */
+    uint16_t shadow_degree;         /* degree + 360 in the 720° double-cover     */
+    uint16_t polar_opposite;        /* (degree + 180) % 360                      */
+
+    /* Enneadic chamber */
+    uint8_t  enneadic_chamber;      /* 0-8    which 40° chamber (degree/40)      */
+    uint8_t  chamber_day_night;     /* 0=day (first 20°)  1=night (second 20°)  */
 } Clock_Degree_Entry;
 
 extern const Clock_Degree_Entry CLOCK_DEGREE_LUT[360];
