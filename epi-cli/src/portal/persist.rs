@@ -35,8 +35,8 @@ impl WorkspaceState {
                 TabState {
                     label: "M0'-M3' Structural".to_string(),
                     panes: vec![
-                        "m0.dashboard".into(),
-                        "m0.families".into(),
+                        "clock.cosmic".into(),
+                        "m3.knowing".into(),
                         "m1.walk".into(),
                     ],
                     layout_bsp: None,
@@ -177,8 +177,8 @@ mod tests {
                 TabState {
                     label: "M0'-M3' Structural".to_string(),
                     panes: vec![
-                        "m0.dashboard".into(),
-                        "m0.families".into(),
+                        "clock.cosmic".into(),
+                        "m3.knowing".into(),
                         "m1.walk".into(),
                     ],
                     layout_bsp: None,
@@ -227,7 +227,7 @@ mod tests {
         assert_eq!(state.tabs[1].label, "M0'-M3' Structural");
         assert_eq!(
             state.tabs[1].panes,
-            vec!["m0.dashboard", "m0.families", "m1.walk"]
+            vec!["clock.cosmic", "m3.knowing", "m1.walk"]
         );
         assert_eq!(state.active_tab, 0);
     }

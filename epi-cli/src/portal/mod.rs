@@ -155,21 +155,36 @@ fn register_all_plugins(
     runtime: &mut ratatui_hypertile_extras::HypertileRuntime,
     clock_state: Option<SharedClockState>,
 ) {
-    use plugins::{m0, m1, m2, m3, m4, m5, shared};
+    use plugins::{clock, m0, m1, m2, m3, m4, m5, mini_clock, shared, spine};
 
     // Shared
     runtime.register_plugin_type("shared.help", || shared::HelpPlugin::new());
     runtime.register_plugin_type("shared.status", || shared::StatusPlugin::new());
 
-    // M0
+    // M0 (still available via palette)
     runtime.register_plugin_type("m0.dashboard", || m0::M0DashboardPlugin::new());
     runtime.register_plugin_type("m0.families", || m0::M0FamiliesPlugin::new());
 
-    // M1
+    // M1 (still available via palette)
     runtime.register_plugin_type("m1.walk", || m1::M1WalkPlugin::new());
 
-    // M2
-    runtime.register_plugin_type("m2.vibrational", || m2::M2VibrationalPlugin::new());
+    // Cosmic Clock — replaces M0Dashboard + M1Walk + M2Vibrational in structural tab
+    {
+        let cs = clock_state.clone();
+        runtime.register_plugin_type("clock.cosmic", move || {
+            let c = cs.clone().unwrap_or_else(new_shared_clock_state);
+            clock::CosmicClockPlugin::new(c)
+        });
+    }
+
+    // M2 — wire clock state so vibrational matrix reflects live kairos
+    {
+        let cs = clock_state.clone();
+        runtime.register_plugin_type("m2.vibrational", move || {
+            let c = cs.clone().unwrap_or_else(new_shared_clock_state);
+            m2::M2VibrationalPlugin::new_with_clock(c)
+        });
+    }
 
     // M3
     runtime.register_plugin_type("m3.knowing", || m3::M3KnowingPlugin::new());
@@ -194,6 +209,24 @@ fn register_all_plugins(
     runtime.register_plugin_type("m4.lens", || m4::M4LensPlugin::new());
     runtime.register_plugin_type("m4.pratibimba", || m4::M4PratibimbaPlugin::new());
 
+    // M4 Spine — 8-chakra column with oracle decay
+    {
+        let cs = clock_state.clone();
+        runtime.register_plugin_type("m4.spine", move || {
+            let c = cs.clone().unwrap_or_else(new_shared_clock_state);
+            spine::M4SpinePlugin::new_with_clock(c)
+        });
+    }
+
+    // M4 Mini-Clock — 12-tick spanda wheel
+    {
+        let cs = clock_state.clone();
+        runtime.register_plugin_type("m4.mini_clock", move || {
+            let c = cs.clone().unwrap_or_else(new_shared_clock_state);
+            mini_clock::MiniClockPlugin::new_with_clock(c)
+        });
+    }
+
     // M5
     runtime.register_plugin_type("m5.logos", || m5::M5LogosPlugin::new());
     runtime.register_plugin_type("m5.chat", || m5::M5ChatPlugin::new());
@@ -203,7 +236,8 @@ fn register_all_plugins(
 /// Build a two-tab workspace with default pane layouts.
 ///
 /// Tab 0 ("M4'-M5' Personal"):  m4.identity | m4.flow / m4.oracle
-/// Tab 1 ("M0'-M3' Structural"): m0.dashboard / m0.families | m1.walk
+/// Tab 1 ("M0'-M3' Structural"): clock.cosmic | m3.knowing / m1.walk
+///   (CosmicClockPlugin replaces M0Dashboard+M1Walk+M2Vibrational per cosmic-clock spec)
 fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<WorkspaceRuntime> {
     let mut workspace = WorkspaceRuntime::new(|| {
         HypertileRuntimeBuilder::default()
@@ -248,30 +282,24 @@ fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<Workspac
     // Register all plugin types on tab 1's runtime (no clock state needed for structural tab)
     register_all_plugins(workspace.active_runtime_mut(), None);
 
-    // Replace root placeholder with m0.dashboard
+    // Tab 1 layout: clock.cosmic (left 2/3) | m3.knowing (right top) / m1.walk (right bottom)
+    // CosmicClockPlugin replaces M0Dashboard + M1Walk + M2Vibrational per cosmic-clock spec.
     workspace
         .active_runtime_mut()
-        .replace_focused_plugin("m0.dashboard")
+        .replace_focused_plugin("clock.cosmic")
         .map_err(|e| color_eyre::eyre::eyre!("tab 1 replace root: {e}"))?;
 
-    // Split horizontally: top = m0.dashboard, bottom = m1.walk
+    // Split vertically: left = clock.cosmic, right = new pane
+    workspace
+        .active_runtime_mut()
+        .split_focused(Direction::Vertical, "m3.knowing")
+        .map_err(|e| color_eyre::eyre::eyre!("tab 1 split V: {e}"))?;
+
+    // Focus is on right (m3.knowing). Split horizontally: top = m3.knowing, bottom = m1.walk
     workspace
         .active_runtime_mut()
         .split_focused(Direction::Horizontal, "m1.walk")
         .map_err(|e| color_eyre::eyre::eyre!("tab 1 split H: {e}"))?;
-
-    // Focus is on bottom (m1.walk). Go back to top (m0.dashboard) to split it vertically.
-    // We need to focus the m0.dashboard pane. The root pane is PaneId::ROOT.
-    workspace
-        .active_runtime_mut()
-        .focus_pane(ratatui_hypertile::PaneId::ROOT)
-        .map_err(|e| color_eyre::eyre::eyre!("tab 1 focus root: {e}"))?;
-
-    // Split m0.dashboard vertically: left = m0.dashboard, right = m0.families
-    workspace
-        .active_runtime_mut()
-        .split_focused(Direction::Vertical, "m0.families")
-        .map_err(|e| color_eyre::eyre::eyre!("tab 1 split V: {e}"))?;
 
     // Switch back to tab 0 as default
     workspace.go_to_tab(0);
