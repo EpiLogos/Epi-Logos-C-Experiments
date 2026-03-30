@@ -8,7 +8,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 // Three static tables encoding the Golden Dawn Thoth Tarot decan assignments.
 //
 // PLANET ID constants (mirrors m2.h Planet_Id enum):
-//   SUN=0, EARTH=1, VENUS=2, MERCURY=3, MOON=4, SATURN=5, JUPITER=6, MARS=7
+//   SUN=0, MOON=1, MERCURY=2, VENUS=3, MARS=4, JUPITER=5, SATURN=6, Uranus=7, Neptune=8, Pluto=9
 //
 // SUIT constants (mirrors m3.h Tarot_Suit enum):
 //   SUIT_CUPS=0, SUIT_WANDS=1, SUIT_PENTACLES=2, SUIT_SWORDS=3
@@ -19,14 +19,16 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Planet ID constants mirroring m2.h `Planet_Id`.
 pub mod planet {
-    pub const SUN: u8 = 0;
-    pub const EARTH: u8 = 1;
-    pub const VENUS: u8 = 2;
-    pub const MERCURY: u8 = 3;
-    pub const MOON: u8 = 4;
-    pub const SATURN: u8 = 5;
-    pub const JUPITER: u8 = 6;
-    pub const MARS: u8 = 7;
+    pub const SUN:     u8 = 0;
+    pub const MOON:    u8 = 1;
+    pub const MERCURY: u8 = 2;
+    pub const VENUS:   u8 = 3;
+    pub const MARS:    u8 = 4;
+    pub const JUPITER: u8 = 5;
+    pub const SATURN:  u8 = 6;
+    pub const URANUS:  u8 = 7;
+    pub const NEPTUNE: u8 = 8;
+    pub const PLUTO:   u8 = 9;
 }
 
 /// Zodiac sign indices 0-11 (Aries=0 … Pisces=11).
@@ -58,8 +60,8 @@ pub mod element {
 ///
 /// `zodiac_sign`: 0-11 (Aries=0 … Pisces=11)
 /// `decan`:       0-2  (first, second, third decan of the sign)
-/// `ruling_planet`: mirrors m2.h Planet_Id (SUN=0, MOON=4, MERCURY=3, VENUS=2,
-///                  MARS=7, JUPITER=6, SATURN=5)
+/// `ruling_planet`: mirrors m2.h Planet_Id (SUN=0, MOON=1, MERCURY=2, VENUS=3,
+///                  MARS=4, JUPITER=5, SATURN=6)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct PipDecanEntry {
     pub zodiac_sign: u8,
@@ -1406,4 +1408,19 @@ fn getrandom(buf: &mut [u8]) {
     if let Ok(mut f) = std::fs::File::open("/dev/urandom") {
         let _ = f.read_exact(buf);
     }
+}
+
+#[cfg(test)]
+mod planet_constant_tests {
+    use super::planet;
+    #[test] fn sun_is_0()     { assert_eq!(planet::SUN,     0); }
+    #[test] fn moon_is_1()    { assert_eq!(planet::MOON,    1); }
+    #[test] fn mercury_is_2() { assert_eq!(planet::MERCURY, 2); }
+    #[test] fn venus_is_3()   { assert_eq!(planet::VENUS,   3); }
+    #[test] fn mars_is_4()    { assert_eq!(planet::MARS,    4); }
+    #[test] fn jupiter_is_5() { assert_eq!(planet::JUPITER, 5); }
+    #[test] fn saturn_is_6()  { assert_eq!(planet::SATURN,  6); }
+    #[test] fn uranus_is_7()  { assert_eq!(planet::URANUS,  7); }
+    #[test] fn neptune_is_8() { assert_eq!(planet::NEPTUNE, 8); }
+    #[test] fn pluto_is_9()   { assert_eq!(planet::PLUTO,   9); }
 }

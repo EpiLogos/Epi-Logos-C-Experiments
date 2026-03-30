@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::Command;
 
+use crate::portal::clock_state::{KairosState, PlanetState};
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KerykeionResult {
     pub planets: Vec<PlanetPosition>,
@@ -44,7 +46,7 @@ subject = AstrologicalSubject("nara", year, month, day, hour, minute, lat={lat},
 
 planets = []
 planet_names = ["sun", "moon", "mercury", "venus", "mars", "jupiter", "saturn", "uranus", "neptune", "pluto"]
-planet_ids = [0, 4, 3, 2, 7, 6, 5, 8, 8, 9]  # Map to Planet_Id enum
+planet_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]  # canonical mod-10: Sun=0..Pluto=9
 
 for i, name in enumerate(planet_names):
     p = getattr(subject, name, None)
@@ -213,7 +215,7 @@ pub fn show(json: bool, planets: bool) -> Result<String, String> {
     if planets {
         out.push_str("  Planets:\n");
         let names = [
-            "Sun", "Earth", "Venus", "Mercury", "Moon", "Saturn", "Jupiter", "Mars", "Neptune",
+            "Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune",
             "Pluto",
         ];
         for p in &result.planets {
@@ -240,4 +242,104 @@ pub fn sync_current() -> Result<String, String> {
         "Kairos synced for {today}: decan={}, element={}",
         result.active_decan, result.dominant_element
     ))
+}
+
+/// Parse kerykeion JSON output into a canonical KairosState with mod-10 planet ordering.
+/// The JSON is expected to have a `planets` array where each planet has a `name` string
+/// and a `degree` (or similar) float.
+/// Returns Err if JSON is invalid or missing required fields.
+pub fn parse_kerykeion_to_kairos_state(json: &str) -> Result<KairosState, String> {
+    use serde_json::Value;
+    let v: Value = serde_json::from_str(json).map_err(|e| e.to_string())?;
+
+    let mut planets = std::array::from_fn(|_| PlanetState {
+        degree: 0xFFFF,
+        ..Default::default()
+    });
+
+    if let Some(arr) = v.get("planets").and_then(|p| p.as_array()) {
+        for planet in arr {
+            let name = planet.get("name")
+                .or_else(|| planet.get("planet_name"))
+                .and_then(|n| n.as_str())
+                .unwrap_or("");
+
+            let degree_f = planet.get("degree")
+                .or_else(|| planet.get("abs_pos"))
+                .and_then(|d| d.as_f64())
+                .unwrap_or(-1.0) as f32;
+
+            let retrograde = planet.get("retrograde")
+                .or_else(|| planet.get("is_retrograde"))
+                .and_then(|r| r.as_bool())
+                .unwrap_or(false);
+
+            let idx = match name.to_lowercase().trim_start_matches("the ") {
+                "sun"     => Some(0usize),
+                "moon"    => Some(1),
+                "mercury" => Some(2),
+                "venus"   => Some(3),
+                "mars"    => Some(4),
+                "jupiter" => Some(5),
+                "saturn"  => Some(6),
+                "uranus"  => Some(7),
+                "neptune" => Some(8),
+                "pluto"   => Some(9),
+                _         => None,
+            };
+
+            if let Some(i) = idx {
+                if degree_f >= 0.0 {
+                    planets[i].degree = degree_f as u16;
+                    planets[i].is_retrograde = retrograde;
+                }
+            }
+        }
+    }
+
+    Ok(KairosState {
+        planets,
+        valid: true,
+        ..Default::default()
+    })
+}
+
+#[cfg(test)]
+mod kairos_parse_tests {
+    use super::*;
+
+    #[test]
+    fn parse_kerykeion_places_sun_at_index_0() {
+        let json = r#"{"planets":[{"name":"Sun","degree":247.5},{"name":"Moon","degree":33.2}]}"#;
+        let state = parse_kerykeion_to_kairos_state(json).unwrap();
+        assert_eq!(state.planets[0].degree, 247u16);
+        assert_eq!(state.planets[1].degree, 33u16);
+        assert_eq!(state.planets[2].degree, 0xFFFF); // Mercury unavailable
+    }
+
+    #[test]
+    fn parse_kerykeion_canonical_mod10_all_planets() {
+        let json = r#"{"planets":[
+            {"name":"Sun","degree":10.0},
+            {"name":"Moon","degree":20.0},
+            {"name":"Mercury","degree":30.0},
+            {"name":"Venus","degree":40.0},
+            {"name":"Mars","degree":50.0},
+            {"name":"Jupiter","degree":60.0},
+            {"name":"Saturn","degree":70.0},
+            {"name":"Uranus","degree":80.0},
+            {"name":"Neptune","degree":90.0},
+            {"name":"Pluto","degree":100.0}
+        ]}"#;
+        let state = parse_kerykeion_to_kairos_state(json).unwrap();
+        assert_eq!(state.planets[0].degree, 10);  // Sun
+        assert_eq!(state.planets[7].degree, 80);  // Uranus at index 7, not 8
+        assert_eq!(state.planets[9].degree, 100); // Pluto at index 9
+        assert!(state.valid);
+    }
+
+    #[test]
+    fn parse_kerykeion_invalid_json_returns_err() {
+        assert!(parse_kerykeion_to_kairos_state("not json").is_err());
+    }
 }
