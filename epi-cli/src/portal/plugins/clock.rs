@@ -1,3 +1,6 @@
+// DEPRECATED: Replaced by unified_clock.rs (full-screen offscreen-rendered clock).
+// Kept for reference during transition. Remove after unified clock is stable.
+
 use nalgebra::{UnitQuaternion, Vector3};
 use ratatui::prelude::*;
 use ratatui::widgets::*;
