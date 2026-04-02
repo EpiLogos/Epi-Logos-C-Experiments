@@ -316,6 +316,7 @@ pub fn update_kairos_full(state: &SharedClockState, kairos: KairosState) {
         s.kairos = kairos;
     }
     compute_aspects(state);
+    state.lock().unwrap().generation += 1;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -476,6 +477,14 @@ pub struct PortalClockState {
 
     /// Micro-orbit: recent degree history (capped at 360 entries).
     pub micro_orbit:             Vec<u16>,
+
+    /// Natal planet degrees from birth chart (loaded from identity profile).
+    /// 0xFFFF = unavailable. Canonical mod-10 ordering.
+    pub natal_degrees:           [u16; 10],
+
+    /// Monotonic generation counter. Incremented on every state mutation.
+    /// Render thread watches this to detect changes and skip redundant redraws.
+    pub generation:              u64,
 }
 
 impl Default for PortalClockState {
@@ -503,6 +512,8 @@ impl Default for PortalClockState {
             transit_quaternion:      [1.0, 0.0, 0.0, 0.0],
             aspects:                 Vec::new(),
             micro_orbit:             Vec::new(),
+            natal_degrees:           [0xFFFF; 10],
+            generation:              0,
         }
     }
 }
@@ -662,6 +673,8 @@ pub fn update_from_cast(
         anticodon: crate::nara::oracle::wc_anticodon(codon_a),
         rotation_count_a: class_a.rotational_state_count(),
     };
+
+    s.generation += 1;
 }
 
 /// Update the quintessence quaternion after identity augment.
@@ -680,7 +693,11 @@ pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32
     let (w, x, y, z) = (avg[2]/n, avg[0]/n, avg[1]/n, avg[3]/n);
     let mag = (w*w + x*x + y*y + z*z).sqrt();
     if mag < f32::EPSILON { return; }
-    state.lock().unwrap().quintessence_quaternion = [w/mag, x/mag, y/mag, z/mag];
+    {
+        let mut s = state.lock().unwrap();
+        s.quintessence_quaternion = [w/mag, x/mag, y/mag, z/mag];
+        s.generation += 1;
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -731,7 +748,9 @@ pub fn load_micro_orbit() -> Vec<u16> {
 
 /// Update kairos state from a fresh Kerykeion reading.
 pub fn update_kairos(state: &SharedClockState, kairos: KairosState) {
-    state.lock().unwrap().kairos = kairos;
+    let mut s = state.lock().unwrap();
+    s.kairos = kairos;
+    s.generation += 1;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
