@@ -17,6 +17,7 @@ pub mod clock_state;
 pub mod persist;
 pub mod plugins;
 pub mod registry;
+pub mod clock_renderer;
 mod theme;
 
 /// Launch the portal TUI with a two-tab workspace.
