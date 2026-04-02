@@ -3,6 +3,7 @@
 //! Bridges the CLI nara module into the gateway's JSON-RPC dispatch.
 //! Every method returns JSON (json=true) since the gateway is a structured transport.
 
+use chrono::Utc;
 use serde_json::{json, Value};
 
 use crate::nara::{
@@ -76,6 +77,24 @@ fn deferred_stub(method: &str) -> Result<Value, (String, String)> {
     Ok(json!({"status": format!("{}: deferred to agent pipeline", method)}))
 }
 
+/// Return a SpacetimePresence client pointed at the default local SpacetimeDB URL.
+/// Default: http://localhost:3000 (overridable via SPACETIMEDB_URL env var).
+fn spacetime_client() -> crate::gate::spacetimedb_bridge::SpacetimePresence {
+    let url = std::env::var("SPACETIMEDB_URL")
+        .unwrap_or_else(|_| "http://localhost:3000".to_owned());
+    crate::gate::spacetimedb_bridge::SpacetimePresence::new(&url)
+}
+
+/// Return the identity hash_preview from the stored profile, or None if unavailable.
+/// This is the anonymous BLAKE3 key used for SpacetimeDB presence routing.
+fn identity_hash() -> Option<String> {
+    identity::load_profile()
+        .ok()
+        .flatten()
+        .filter(|p| p.hash_preview.len() >= 8)
+        .map(|p| p.hash_preview)
+}
+
 // ─── Dispatch ───────────────────────────────────────────────────────────────
 
 pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, String)> {
@@ -125,7 +144,22 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
 
         // ── Kairos ──────────────────────────────────────────────────────
         "nara.kairos.current" => cli_to_rpc(kairos::show(true, false)),
-        "nara.kairos.sync" => cli_to_rpc(kairos::sync_current()),
+        "nara.kairos.sync" => {
+            let result = kairos::sync_current();
+            // SpacetimeDB: update presence with tick12 derived from sun degree after sync
+            if result.is_ok() {
+                if let Ok(Some(k)) = kairos::load_current() {
+                    if let Some(hash) = identity_hash() {
+                        // Sun degree (planet_id=0) → tick12 via 12 equal 30° segments
+                        if let Some(sun) = k.planets.iter().find(|p| p.planet_id == 0) {
+                            let tick12 = ((sun.degree as u16 % 360) * 12 / 360) as u8;
+                            let _ = spacetime_client().publish_presence(&hash, tick12);
+                        }
+                    }
+                }
+            }
+            cli_to_rpc(result)
+        }
         "nara.kairos.decan" => {
             let k =
                 kairos::require_temporal_authority().map_err(|e| ("nara-error".to_owned(), e))?;
@@ -172,7 +206,27 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             let question = required_param(params, "question")?;
             let yes = opt_bool(params, "yes");
             let method = opt_str(params, "method");
-            cli_to_rpc(oracle::cast(&system, &question, yes, method.as_deref()))
+            let result = oracle::cast(&system, &question, yes, method.as_deref());
+            // SpacetimeDB: record oracle draw with hexagram id if iching cast succeeded
+            if system.starts_with("iching") {
+                if let Ok(ref text) = result {
+                    // Parse primary hexagram from cast output ("Primary hexagram: N")
+                    if let Some(hex_id) = text
+                        .lines()
+                        .find_map(|l| l.strip_prefix("  Primary hexagram: "))
+                        .and_then(|s| s.trim().parse::<u8>().ok())
+                        .map(|n| n.saturating_sub(1)) // display is 1-indexed
+                    {
+                        if let Some(hash) = identity_hash() {
+                            let _ = spacetime_client().record_oracle_draw(&hash, hex_id);
+                            // Also update torus presence: derive tick12 from hex_id as crude proxy
+                            let tick12 = ((hex_id as u16 * 12) / 64) as u8;
+                            let _ = spacetime_client().publish_presence(&hash, tick12);
+                        }
+                    }
+                }
+            }
+            cli_to_rpc(result)
         }
         "nara.oracle.decan" => {
             let k =
@@ -365,7 +419,17 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
                     )
                 })?;
             let date = opt_str(params, "date");
-            cli_to_rpc(logos::stage(stage, date.as_deref(), true))
+            let result = logos::stage(stage, date.as_deref(), true);
+            // SpacetimeDB: record logos stage completion
+            if result.is_ok() {
+                if let Some(hash) = identity_hash() {
+                    let day_key = date.unwrap_or_else(|| {
+                        Utc::now().format("%Y-%m-%d").to_string()
+                    });
+                    let _ = spacetime_client().record_logos_stage(&hash, stage, &day_key);
+                }
+            }
+            cli_to_rpc(result)
         }
         "nara.logos.curriculum" => cli_to_rpc(logos::curriculum(true)),
         "nara.logos.export" => {

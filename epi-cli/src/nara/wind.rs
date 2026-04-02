@@ -92,6 +92,7 @@ pub fn run(
                 source: "birth_date".to_string(),
                 completeness: 3,
                 set_at: Some(now_ts),
+                elemental_profile: None,
             },
         );
 
@@ -123,6 +124,7 @@ pub fn run(
                                 source: "kerykeion_natal".to_string(),
                                 completeness: 4,
                                 set_at: Some(now_ts),
+                                elemental_profile: None,
                             },
                         );
 

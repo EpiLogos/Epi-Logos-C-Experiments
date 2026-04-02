@@ -148,6 +148,32 @@ pub fn kairos_dir() -> PathBuf {
     super::identity::nara_home().join("kairos")
 }
 
+/// Convert a `KerykeionResult` (from kerykeion Python output) into a `KairosState`
+/// usable by the portal clock.  `planet_id` is the canonical mod-10 index
+/// (Sun=0 … Pluto=9).  Missing planets are left as degree=0xFFFF (sentinel).
+///
+/// Canonical mod-10 ordering — spec: 00-canonical-invariants §2
+pub fn kerykeion_result_to_kairos_state(result: &KerykeionResult) -> KairosState {
+    let mut planets: [PlanetState; 10] = std::array::from_fn(|_| PlanetState {
+        degree: 0xFFFF,
+        ..Default::default()
+    });
+    for pos in &result.planets {
+        let idx = pos.planet_id as usize;
+        if idx < 10 {
+            planets[idx] = PlanetState {
+                degree: (pos.degree as u32 % 360) as u16,
+                ..Default::default()
+            };
+        }
+    }
+    KairosState {
+        planets,
+        valid: true,
+        ..Default::default()
+    }
+}
+
 /// Load current kairos state from cache
 pub fn load_current() -> Result<Option<KerykeionResult>, String> {
     let path = kairos_dir().join("current.json");

@@ -186,8 +186,14 @@ fn register_all_plugins(
         });
     }
 
-    // M3
-    runtime.register_plugin_type("m3.knowing", || m3::M3KnowingPlugin::new());
+    // M3 — wire clock state so dossier auto-suggests current coordinate from tick12
+    {
+        let cs = clock_state.clone();
+        runtime.register_plugin_type("m3.knowing", move || {
+            let c = cs.clone().unwrap_or_else(new_shared_clock_state);
+            m3::M3KnowingPlugin::new_with_clock(c)
+        });
+    }
 
     // M4
     runtime.register_plugin_type("m4.identity", || m4::M4IdentityPlugin::new());
@@ -279,8 +285,11 @@ fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<Workspac
     workspace.new_tab();
     workspace.rename_tab(1, "M0'-M3' Structural".to_string());
 
-    // Register all plugin types on tab 1's runtime (no clock state needed for structural tab)
-    register_all_plugins(workspace.active_runtime_mut(), None);
+    // Register all plugin types on tab 1's runtime.
+    // SharedClockState MUST be shared with Tab 0 — same Arc — so oracle casts in Tab 0
+    // propagate to CosmicClockPlugin, M2VibrationalPlugin, etc. in Tab 1.
+    // Spec: 00-canonical-invariants §4.4.4.4, 09-cosmic-clock-plugin-tui-spec §SharedClockState
+    register_all_plugins(workspace.active_runtime_mut(), Some(clock_state.clone()));
 
     // Tab 1 layout: clock.cosmic (left 2/3) | m3.knowing (right top) / m1.walk (right bottom)
     // CosmicClockPlugin replaces M0Dashboard + M1Walk + M2Vibrational per cosmic-clock spec.

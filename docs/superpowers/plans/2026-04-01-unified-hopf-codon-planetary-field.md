@@ -30,14 +30,14 @@
 
 ### C1. Codon Classification Is 3-Tier (40/24), NOT "5-Fold" (16/24/24)
 
-The plan's "5-fold codon classification" with enum values `{PERFECT_PALINDROMIC=0, PALINDROMIC=1, DUAL=2}` and counts 16+24+24=64 is **incorrect**. The canonical classification from the design specification is:
+The plan's original "5-fold codon classification" with enum values `{PERFECT_PALINDROMIC=0, PALINDROMIC=1, DUAL=2}` and counts 16+24+24=64 was **incorrect**. The canonical classification from the design specification is:
 
 **40 Non-Dual Codons (7 rotational states each):**
 
 | Sub-Type | Count | Pattern | Examples |
 |----------|-------|---------|---------|
 | **Perfect Palindromic** | 4 | XYX where X=Y (homogeneous triplet) | AAA, TTT, CCC, GGG |
-| **Imperfect Palindromic** | 12 | XYX where X≠Y (outer=inner, middle differs) | ATA, AGA, ACA, TAT, TCT, TGT, CGC, CTC, CAC, GCG, GAG, GTG |
+| **Imperfect Palindromic** | 12 | XYX where X≠Y (outer=inner, middle differs) | ATA, AGA, ACA, TAT, **TCT**, TGT, CGC, CTC, CAC, GCG, GAG, GTG |
 | **Non-Palindromic Non-Dual** | 24 | Watson-Crick pair symmetry (12 pairs) | AAT↔ATT, TTA↔TAA, AAC↔ACC, TTG↔TGG, AAG↔AGG, TTC↔TCC, CCG↔CGG, GGC↔GCC, CCA↔CAA, GGT↔GTT, CCT↔CTT, GGA↔GAA |
 
 **24 Dual Codons (8 rotational states each):**
@@ -50,15 +50,17 @@ The plan's "5-fold codon classification" with enum values `{PERFECT_PALINDROMIC=
 - Dual: 24 codons × 8 states = 192 rotational states
 - **Grand total: 472 distinct rotational states**
 
-**Code status:** `M3_ROTATIONAL_PROFILE[64]` in m3.c currently verifies as **39 seven-state + 25 eight-state** (assertions at m3.c:730-731). This is a **data discrepancy of 1** vs the design's 40/24. Must be reconciled — one codon is mis-classified in the C LUT. The design table (40/24) is canonical; the code must be corrected.
+**Code status:** `M3_ROTATIONAL_PROFILE[64]` in m3.c currently verifies as **39 seven-state + 25 eight-state** (assertions at m3.c:730-731). The single discrepant codon is **TCT** at line 405: `R8(T,C,T)` should be `R7(T,C,T, T,C, C,T)`. See Finding F1 for fix details.
 
-**Impact on plan:** Tasks 0, 1, 2, 3, 9 must be rewritten to use this 3-tier system. The `Codon_Class` enum should be:
+**Impact on plan:** Tasks 0, 1, 2, 3, 9 use this 3-tier system. The `Codon_Class` enum:
 ```
 NON_DUAL_PERFECT_PALINDROMIC = 0  (4 codons)
 NON_DUAL_IMPERFECT_PALINDROMIC = 1  (12 codons)
 NON_DUAL_NON_PALINDROMIC = 2  (24 codons, 12 pairs)
 DUAL = 3  (24 codons)
 ```
+
+**Note on existing C code:** `M3_NONDUAL_CODONS[16]` covers only the 16 XyX palindromes (4 perfect + 12 imperfect). The remaining 24 non-palindromic non-dual codons are NOT in this array — they're identified via `M3_ROTATIONAL_PROFILE[i].state_type == M3_ROTATIONAL_NON_DUAL_INITIATED`. The `non_dual_mask` bug (C6) stems from only iterating `M3_NONDUAL_CODONS[16]` instead of all 40.
 
 ### C2. 385 Clock Nodes: 360 + 24 + 1 (336 Truly Dual Degree Positions)
 
@@ -125,7 +127,7 @@ The plan must implement BOTH. The 4 drives SELECT which walk family; the 9 walks
 
 ### C6. non_dual_mask Bug — Sets 16 Bits, Should Set 40
 
-`m3_init()` at m3.c:613 computes mask from `M3_NONDUAL_CODONS[16]` only. But comment says "40 always-set bits" and the design specifies 40 non-dual codons. The remaining 24 non-palindromic non-dual codons are missing from the mask. Fix: iterate `M3_ROTATIONAL_PROFILE[64]`, set bit for every codon with `state_type == M3_ROTATIONAL_NON_DUAL_INITIATED`.
+`m3_init()` at m3.c:613 computes mask from `M3_NONDUAL_CODONS[16]` only (the 16 XyX palindromes: 4 perfect + 12 imperfect). But comment says "40 always-set bits" and the design specifies 40 non-dual codons. The remaining 24 non-palindromic non-dual codons are missing from the mask. Fix: iterate `M3_ROTATIONAL_PROFILE[64]`, set bit for every codon with `state_type == M3_ROTATIONAL_NON_DUAL_INITIATED`. After the TCT fix (F1), this will correctly identify all 40.
 
 ### C7. engine_walk_by_mode() API Mismatch
 
@@ -157,6 +159,159 @@ The clock walks create narrative flows via the tarot-codon-amino acid chain:
 - Start/Stop codons as operational gates in the transcription chain
 
 This chain must be wired so walks THROUGH the architecture produce readable narrative sequences.
+
+---
+
+## DATASET-BACKED RESEARCH FINDINGS (2026-04-01 Deep Audit)
+
+> All data verified against `docs/datasets/mahamaya-deep/nodes-full-detail.json` (996 nodes)
+> and `docs/datasets/mahamaya-deep/relations.json` (4891 relations). No Neo4j required.
+
+### F1. The Discrepant Codon: TCT (The Single Bug)
+
+The ONE codon causing the 39/25 vs 40/24 split in `m3_verify()` is **TCT** (6-bit encoding `0x19`, `m3.c` line 405).
+
+- **Design says:** Imperfect Palindromic (T=T at positions 1 and 3, XyX pattern) → R7 (non-dual, 7 states)
+- **Code says:** `R8(T,C,T)` → 8-state full-rotational (WRONG)
+- **Fix:** Change `R8(T,C,T)` to `R7(T,C,T, T,C, C,T)` in `m3.c:405`
+- **Then:** Update `m3_verify()` assertions from `seven_state != 39u` → `40u` and `eight_state != 25u` → `24u`
+
+No other discrepancies exist across all 64 codons. This is the ONLY fix needed to achieve 40/24.
+
+### F2. Charge Values — 4 Complete Layers (Dataset-Verified)
+
+**Layer 1: Nucleotide Integrals (#3-2-{1..4})**
+
+| Nuc | integral_pp | integral_nn | integral_pn | integral_np |
+|-----|------------|------------|------------|------------|
+| A   | 84         | -36        | 24         | 24         |
+| T   | 96         | -24        | 36         | 36         |
+| C   | 88         | -32        | 28         | 28         |
+| G   | 92         | -28        | 32         | 32         |
+| **SUM** | **360** | **-120** | **120**    | **120**    |
+
+**Structural law:** `pp_total = 360` (clock circle). `pn = np` (always symmetric at every level).
+
+**Layer 2: Dinucleotide Pairs (#3-2-{n}-{m})** — `sumValue` / `differenceValue`
+- All 16 pairs present. Sum range 12–18, diff range -3 to +3.
+- Self-pairs (AA/TT/CC/GG) have `differenceValue = 0`.
+- Matches `M3_PAIR_MATRIX[16]` in C exactly.
+
+**Layer 3: Codon Inner Charges (#3-2-{n}-{m}-{k})** — `inner_charge_pp/nn/pn/np`
+- ALL 64 codons carry 4 charge values. Ranges: pp 18–27, nn -12 to -3, pn 3–12, np 3–12.
+- **Invariant:** `inner_charge_pn == inner_charge_np` for EVERY codon. This is a structural law → `_Static_assert`.
+
+**Layer 4: Hexagram Charge Patterns (#3-4.0-{suit}-{n})** — `chargePattern` field
+- All 64 hexagram-organized nodes carry `"nn:VALUE np:VALUE pn:VALUE pp:VALUE"` strings.
+- These **perfectly mirror** the codon inner_charges. Must be parsed and loaded as LUT data.
+
+**Layer 5: Generation Events (#3-3-2-{0,1,2}-{n})** — Binary Pair Fields
+- 64 nodes at `#3-3-2-0` (M1-context): `positive_codon_binary`, `negative_codon_binary`, `upper_Pair_binary`, `lower_Pair_binary`
+- 64 nodes at `#3-3-2-1` (M2-context): same fields
+- 56 nodes at `#3-3-2-2` (M3-context): same fields (8 gaps = resonance matrix `0xFF` positions)
+
+**Charge derivation chain:** nucleotide integral → pair sum/diff → codon inner_charge → generation event binary → rotational state polarity
+
+### F3. The 3 Matrices — "M1/M2/M3" Labels Are INTERNAL to M3
+
+**Critical correction from dataset reports:** The `context: "M1-H{n}"`, `context: "M2-H{n}"`, `context: "M3-H{n}"` labels on generation event nodes refer to three **internal M3 traversal strategies**, NOT cross-subsystem references to M1 Paramasiva / M2 Parashakti / M3 Mahamaya.
+
+| Label | Node Prefix | Matrix | Axis | Count |
+|-------|-------------|--------|------|-------|
+| M1-context | `#3-3-2-0` | Complementarity (Watson-Crick) | `i` (Śiva) | 64 events |
+| M2-context | `#3-3-2-1` | Movement (Purine/Pyrimidine) | `j` (Śakti) | 64 events |
+| M3-context | `#3-3-2-2` | Resonance (Keto/Amino) | `k` (Spanda) | 56 events (8 gaps) |
+
+Each codon has **6 inner charges** from 3 matrices × 2 polarities (positive/negative) = 6 LINE_CHANGE possibilities.
+This IS the `64 × 6 = 384` transformation space. `_Static_assert(360 + 24 == 64 * 6)`.
+
+### F4. RNA/Amino Acid Transcription Chain — Fully Mapped
+
+**RNA System (#3-3-3):** 45 nodes in 7 consciousness categories:
+
+| Prefix | Category | Count |
+|--------|----------|-------|
+| UU | Non-Dual | 5 |
+| AU | Partnership | 8 |
+| CU | Expression | 8 |
+| GU | Wisdom | 8 |
+| UA | Reversal | 5 |
+| UC | Bridge | 5 |
+| UG | Completion | 5 |
+
+**START/STOP Gates:**
+- **START:** AUG (Methionine) at `#3-3-3-2-4` → `#3-3-4-22` (Start Operator, Tarot: Cosmic Fool, Uranus)
+- **STOP:** UAA at `#3-3-3-5-2`, UAG at `#3-3-3-5-3`, UGA at `#3-3-3-7-2` → `#3-3-4-23` (Stop Operator, Tarot: Cosmic World, Neptune)
+
+**24 Amino Acids (#3-3-4):**
+- 0–19: Standard 20 (Glycine→Histidine), each mapped 1:1 to Major Arcana 0–19
+- 20: Selenocysteine (rare, Judgement card)
+- 21: Pyrrolysine (rare, World card)
+- 22: Start Operator (Met* in transcendent role, Cosmic Fool)
+- 23: Stop Operator (release factor, Cosmic World)
+
+**22 Major Arcana (#3-4-5/0-{0..21}):**
+Each maps 1:1 to Chromosome (`#3-3-5-0-{0..21}`) via `GENETIC_ARCHETYPAL_MANIFESTATION` (22 relations) and to Amino Acid (`#3-3-4-{0..21}`) via `EMBODIES_AS` (22 relations).
+
+**The Complete Walk Chain:**
+```
+Degree (clock position, 360°)
+  → Hexagram (GOVERNS_DEGREE_ARC, 360 relations)
+  → Codon (REFLECTS_DNA_FORM, 64 relations)
+  → RNA (TRANSCRIBES_TO, 45 relations)
+  → Amino Acid (TRANSLATES_TO, 65 relations)
+  → Major Arcana (EMBODIES_AS, 22 relations)
+  → Chromosome (GENETIC_ARCHETYPAL_MANIFESTATION, 22 relations)
+```
+
+START/STOP codons act as **operational gates** — the oracle chain OPENS at AUG and CLOSES at UAA/UAG/UGA. Between these gates, every degree walked produces a readable transcription sequence.
+
+### F5. Tarot Suit Indexing: 1-Based in Dataset, 0-Based in C
+
+Dataset uses `#3-4-{1..4}` (1-indexed because suits are explicate manifestations). C code uses `SUIT_CUPS=0, SUIT_WANDS=1, SUIT_PENTACLES=2, SUIT_SWORDS=3` (0-indexed). Any coordinate-to-index translation must account for this offset. The functional mapping is clear in both languages; only the dataset coordinate needs the `-1` offset when bridging.
+
+### F6. Rotational State Protocol (rotational_state_protocol.txt)
+
+Full Cypher specification for generating 8-fold rotational states:
+- **Negative path** (4 states): `pair1.positiveValue + pair2.negativeValue` (first pair wins)
+- **Positive path** (4 states): `pair1.negativeValue + pair2.positiveValue` (second pair wins)
+- 8 states at 45° increments (0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°)
+- **Non-dual detection:** when pair1 == pair2, eigenstate collapses → 7 states (0°/180° merge)
+- **RNA enhancement:** 37 T-containing codons × 8 states = 296 additional RNA rotational states
+
+### F7. Relation Counts (Dataset Truth)
+
+| Relation Type | Count | Bridges |
+|--------------|-------|---------|
+| USES_Pair | 415 | Codon→Pair |
+| LINE_CHANGE | 384 | Codon→Codon (64×6) |
+| YIELDS_CODON | 368 | GenerationEvent→Codon |
+| GOVERNS_DEGREE_ARC | 360 | Hexagram→Degree |
+| POLAR_OPPOSITE | 360 | Degree↔Degree |
+| ANCHORED_BY | 360 | Degree→Backbone |
+| FLOWS_CLOCKWISE | 360 | Degree→Degree |
+| INTEGRAL_SYMMETRY | 192 | 3×64 (matrix symmetries) |
+| TRANSLATES_TO | 65 | RNA→AminoAcid |
+| REFLECTS_DNA_FORM | 64 | Hexagram→Codon |
+| TRANSCRIBES_TO | 45 | Codon→RNA |
+| HAS_RNA_POTENTIAL | 37 | Codon→RNA (T-containing) |
+| EMBODIES_AS | 22 | AminoAcid→MajorArcana |
+| GENETIC_ARCHETYPAL_MANIFESTATION | 22 | MajorArcana→Chromosome |
+
+---
+
+## WHAT THESE FINDINGS MEAN FOR IMPLEMENTATION
+
+All tasks below must incorporate these corrections:
+
+1. **Fix TCT** from R8 to R7 in `m3.c:405`, update verify assertions to 40/24 → **Task 0 prerequisite**
+2. **Port ALL 4 charge layers** to Rust (not just classification — the actual values) → **New Task: Charge LUT Port**
+3. **Wire the full transcription chain** so clock walks produce readable DNA→RNA→amino acid→tarot sequences → **New Task: Transcription Engine**
+4. **Treat START/STOP as oracle gates** — the walk opens at AUG and closes at UAA/UAG/UGA → **Integrated into transcription engine**
+5. **Port the 3-matrix 64×6 transformation space** — each codon's 6 inner charges determine LINE_CHANGE paths → **New Task: Matrix Port**
+6. **Parse hexagram chargePattern** strings and load as LUT data → **Integrated into charge port**
+7. **`inner_charge_pn == inner_charge_np` invariant** must be `_Static_assert`'d → **Task 0 addition**
+8. **Suit index offset** (`dataset_suit_coord - 1 = C_suit_index`) must be documented in bridge code → **Task 9 addition**
 
 ---
 
@@ -219,7 +374,7 @@ Before starting, understand what already exists — the C library is far more co
 | `epi-lib/src/engine.c` | Modify | Implement `engine_walk_by_mode()` dispatcher | A |
 | `epi-lib/include/m2.h` | Modify | Add `m2_aspect_between()` function, `Aspect_Result` struct | A |
 | `epi-lib/src/m2.c` | Modify | Implement `m2_aspect_between()` | A |
-| `epi-lib/test/test_m3_codon_class.c` | Create | Tests for 5-fold codon classification + rotational profile counts | A |
+| `epi-lib/test/test_m3_codon_class.c` | Create | Tests for 3-tier codon classification (40/24) + rotational profile counts | A |
 | `epi-lib/test/test_engine_walk_mode.c` | Create | Tests for Walk_Mode dispatch | A |
 | `epi-lib/test/test_m2_aspects.c` | Create | Tests for aspect computation | A |
 | `epi-cli/src/portal/clock_state.rs` | Modify | Add 11 new fields, quaternion composition, walk mode, bifurcation, aspects, codon bridge, micro-orbit | B |
@@ -252,13 +407,56 @@ Phase 0 (Sequential): Tasks 0–2  [Foundation types — blocks everything]
 
 ## Phase 0: Foundation Types (Sequential)
 
-### Task 0: Add Codon_Class Enum and Classification to C
+### Task 0a: Fix TCT Codon Bug (PREREQUISITE — Must Come First)
+
+**Files:**
+- Modify: `epi-lib/src/m3.c` (line 405, line 730-731)
+
+This is the single-character fix that unblocks the correct 40/24 split. See Finding F1.
+
+- [ ] **Step 1: Fix TCT from R8 to R7 in M3_ROTATIONAL_PROFILE**
+
+In `epi-lib/src/m3.c:405`, change:
+```c
+// BEFORE (line 405):
+R8(T,C,T)
+// AFTER:
+R7(T,C,T, T,C, C,T)
+```
+
+- [ ] **Step 2: Update m3_verify() assertions**
+
+In `epi-lib/src/m3.c:730-731`, change:
+```c
+// BEFORE:
+assert(seven_state != 39u && "...");
+assert(eight_state != 25u && "...");
+// AFTER:
+assert(seven_state != 40u && "40 non-dual codons × 7 states");
+assert(eight_state != 24u && "24 dual codons × 8 states");
+```
+
+- [ ] **Step 3: Build and verify**
+
+Run: `cd "/Users/admin/Documents/Epi-Logos C Experiments" && make test`
+Expected: All tests pass with correct 40/24 counts.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add epi-lib/src/m3.c
+git commit -m "fix(m3): correct TCT codon from R8→R7 (imperfect palindromic), achieve 40/24 split"
+```
+
+---
+
+### Task 0b: Add Codon_Class Enum and Classification to C
 
 **Files:**
 - Modify: `epi-lib/include/m3.h` (after line 676, the M3_NONDUAL_CODONS section)
 - Modify: `epi-lib/src/m3.c`
 
-This adds the 5-fold codon classification system. Three-tier enum with derived boolean accessors.
+This adds the 3-tier (40/24) codon classification system. Four-value enum with derived boolean accessors.
 
 - [ ] **Step 1: Add Codon_Class enum and classification struct to m3.h**
 
@@ -266,41 +464,45 @@ In `epi-lib/include/m3.h`, after the `M3_NONDUAL_CODONS[16]` declaration (line 6
 
 ```c
 /* ===================================================================
- * FR 2.3.17b: CODON CLASSIFICATION — 5-Fold Designation
+ * FR 2.3.17b: CODON CLASSIFICATION — 3-Tier (40 Non-Dual / 24 Dual)
  *
- * Every codon has exactly one class from three tiers:
- *   PERFECT_PALINDROMIC (16): XyX pattern (outer==inner nucleotide).
+ * Every codon has exactly one class from four sub-types across two tiers:
+ *   NON_DUAL_PERFECT_PALINDROMIC (4): Homogeneous triplet (AAA,TTT,CCC,GGG).
  *     Strongest non-dual anchors. 7 rotational states. Zero net deviation.
- *   PALINDROMIC (24 more, 40 total with perfect): Non-dual by pair equality
- *     (pair1.sequence == pair2.sequence) but NOT XyX. 7 rotational states.
+ *   NON_DUAL_IMPERFECT_PALINDROMIC (12): XyX where X≠Y (ATA,AGA,ACA,TAT,TCT,TGT,etc).
+ *     7 rotational states. Outer==inner but middle differs.
+ *   NON_DUAL_NON_PALINDROMIC (24): Watson-Crick pair symmetry (12 pairs).
+ *     7 rotational states. pair1.sequence == pair2.sequence.
  *   DUAL (24): pair1.sequence ≠ pair2.sequence. Full 8 rotational states.
  *
  * Derived boolean properties:
  *   is_dual           = (class == CODON_DUAL)
- *   is_non_dual       = (class != CODON_DUAL)
- *   is_palindromic    = (class != CODON_DUAL)        [all non-dual are palindromic]
- *   is_perfect_palindrome = (class == CODON_PERFECT_PALINDROMIC)
- *   is_non_palindromic = (class == CODON_DUAL)
+ *   is_non_dual       = (class != CODON_DUAL)        [40 codons]
+ *   is_palindromic    = (class <= NON_DUAL_IMPERFECT_PALINDROMIC)  [16 XyX codons]
+ *   is_perfect_palindrome = (class == NON_DUAL_PERFECT_PALINDROMIC) [4 codons]
  *
- * Counts: 16 + 24 + 24 = 64 codons.
- * Rotational states: 16×7 + 24×7 + 24×8 = 112 + 168 + 192 = 472 total.
+ * Counts: 4 + 12 + 24 + 24 = 64 codons.
+ * Rotational states: (4+12+24)×7 + 24×8 = 280 + 192 = 472 total.
  * =================================================================== */
 
 typedef enum {
-    CODON_PERFECT_PALINDROMIC = 0,  /* 16: XyX, strongest anchor, 7 states */
-    CODON_PALINDROMIC         = 1,  /* 24: non-dual but not XyX, 7 states  */
-    CODON_DUAL                = 2   /* 24: pair1≠pair2, full 8 states      */
+    CODON_PERFECT_PALINDROMIC     = 0,  /* 4:  AAA,TTT,CCC,GGG — strongest anchor, 7 states */
+    CODON_IMPERFECT_PALINDROMIC   = 1,  /* 12: XyX where X≠Y (ATA,TAT,etc), 7 states */
+    CODON_NON_PALINDROMIC_NONDUAL = 2,  /* 24: WC pair symmetry (12 pairs), 7 states */
+    CODON_DUAL                    = 3   /* 24: pair1≠pair2, full 8 states */
 } Codon_Class;
 
-#define CODON_PERFECT_PALINDROMIC_COUNT  16u
-#define CODON_PALINDROMIC_COUNT          24u  /* non-perfect palindromic */
-#define CODON_DUAL_COUNT                 24u
-#define CODON_NONDUAL_TOTAL_COUNT        40u  /* 16 + 24 */
-#define CODON_ROTATIONAL_STATE_TOTAL    472u  /* 40×7 + 24×8 */
+#define CODON_PERFECT_PALINDROMIC_COUNT   4u
+#define CODON_IMPERFECT_PALINDROMIC_COUNT 12u
+#define CODON_NON_PALINDROMIC_NONDUAL_COUNT 24u
+#define CODON_DUAL_COUNT                  24u
+#define CODON_NONDUAL_TOTAL_COUNT         40u  /* 4 + 12 + 24 */
+#define CODON_ROTATIONAL_STATE_TOTAL     472u  /* 40×7 + 24×8 */
 
 _Static_assert(
-    CODON_PERFECT_PALINDROMIC_COUNT + CODON_PALINDROMIC_COUNT + CODON_DUAL_COUNT == 64,
-    "Codon classification: 16 + 24 + 24 = 64 codons"
+    CODON_PERFECT_PALINDROMIC_COUNT + CODON_IMPERFECT_PALINDROMIC_COUNT
+    + CODON_NON_PALINDROMIC_NONDUAL_COUNT + CODON_DUAL_COUNT == 64,
+    "Codon classification: 4 + 12 + 24 + 24 = 64 codons"
 );
 _Static_assert(
     CODON_NONDUAL_TOTAL_COUNT * 7 + CODON_DUAL_COUNT * 8 == CODON_ROTATIONAL_STATE_TOTAL,
@@ -317,9 +519,9 @@ typedef struct {
 /* Derived boolean accessors — branchless O(1) */
 static inline bool codon_is_dual(Codon_Class c)                { return c == CODON_DUAL; }
 static inline bool codon_is_non_dual(Codon_Class c)            { return c != CODON_DUAL; }
-static inline bool codon_is_palindromic(Codon_Class c)         { return c != CODON_DUAL; }
-static inline bool codon_is_perfect_palindrome(Codon_Class c)  { return c == CODON_PERFECT_PALINDROMIC; }
-static inline bool codon_is_non_palindromic(Codon_Class c)     { return c == CODON_DUAL; }
+static inline bool codon_is_palindromic(Codon_Class c)         { return c <= CODON_IMPERFECT_PALINDROMIC; }  /* 16 XyX */
+static inline bool codon_is_perfect_palindrome(Codon_Class c)  { return c == CODON_PERFECT_PALINDROMIC; }   /* 4 homogeneous */
+static inline bool codon_is_xyx(Codon_Class c)                 { return c <= CODON_IMPERFECT_PALINDROMIC; } /* 16 XyX */
 
 /* Master LUT: 64 entries, one per codon. Defined in m3.c. */
 extern const Codon_Classification M3_CODON_CLASS[64];
@@ -346,12 +548,13 @@ In `epi-lib/src/m3.c`, add after the existing `M3_ROTATIONAL_PROFILE[64]` table:
 
 ```c
 /* ─────────────────────────────────────────────────────────────────────
- * M3_CODON_CLASS[64] — 5-fold codon classification LUT
+ * M3_CODON_CLASS[64] — 3-Tier (40/24) codon classification LUT
  *
  * Classification algorithm:
- *   1. If outer == inner nucleotide (XyX pattern) → PERFECT_PALINDROMIC (16 codons)
- *   2. Else if non_dual_mask bit set (pair1==pair2) → PALINDROMIC (24 codons)
- *   3. Else → DUAL (24 codons)
+ *   1. If outer == inner == middle (homogeneous) → PERFECT_PALINDROMIC (4 codons)
+ *   2. Else if outer == inner (XyX) → IMPERFECT_PALINDROMIC (12 codons)
+ *   3. Else if state_type == NON_DUAL_INITIATED → NON_PALINDROMIC_NONDUAL (24 codons)
+ *   4. Else → DUAL (24 codons)
  *
  * Paired codon = Watson-Crick complement: swap each nucleotide with its pair
  *   (A↔T, C↔G) then reverse. For XyX: pair is self.
@@ -369,23 +572,22 @@ static uint8_t wc_anticodon(uint8_t c) {
 /* Precomputed at file scope — init at load time */
 static Codon_Classification build_codon_class(uint8_t codon6bit) {
     uint8_t n1 = (codon6bit >> 4) & 0x03;
+    uint8_t n2 = (codon6bit >> 2) & 0x03;
     uint8_t n3 = codon6bit & 0x03;
     uint8_t anti = wc_anticodon(codon6bit);
-    bool is_xyx = (n1 == n3);
 
-    /* Check non_dual_mask from transcription engine:
-     * non-dual means pair1.sequence == pair2.sequence in the generation matrix.
-     * For runtime init we use the rotational profile state_type. */
     const M3_Rotational_Profile* prof = m3_get_rotational_profile(codon6bit);
     bool is_nd = (prof->state_type == M3_ROTATIONAL_NON_DUAL_INITIATED);
 
     Codon_Class cls;
-    if (is_xyx) {
-        cls = CODON_PERFECT_PALINDROMIC;
+    if (n1 == n3 && n1 == n2) {
+        cls = CODON_PERFECT_PALINDROMIC;       /* 4: AAA,TTT,CCC,GGG */
+    } else if (n1 == n3) {
+        cls = CODON_IMPERFECT_PALINDROMIC;     /* 12: XyX where X≠Y */
     } else if (is_nd) {
-        cls = CODON_PALINDROMIC;
+        cls = CODON_NON_PALINDROMIC_NONDUAL;   /* 24: WC pair symmetry */
     } else {
-        cls = CODON_DUAL;
+        cls = CODON_DUAL;                      /* 24: full rotational */
     }
 
     return (Codon_Classification){
@@ -450,7 +652,7 @@ Expected: All existing tests pass (110/110 + 5/5 VAK). New LUT is populated but 
 ```bash
 cd "/Users/admin/Documents/Epi-Logos C Experiments"
 git add epi-lib/include/m3.h epi-lib/src/m3.c
-git commit -m "feat(m3): add 5-fold codon classification (perfect palindromic/palindromic/dual)"
+git commit -m "feat(m3): add 3-tier codon classification (4+12+24 non-dual / 24 dual = 40/24)"
 ```
 
 ---
@@ -501,7 +703,7 @@ Expected: All tests pass with expanded struct.
 
 ```bash
 git add epi-lib/include/m3.h tools/build_clock_degree_lut.py epi-lib/src/m3_clock_lut.c
-git commit -m "feat(m3): add codon_class to Clock_Degree_Entry (5-fold classification)"
+git commit -m "feat(m3): add codon_class to Clock_Degree_Entry (3-tier 40/24 classification)"
 ```
 
 ---
@@ -519,34 +721,36 @@ In `epi-cli/src/portal/clock_state.rs`, after the `OracleFaces` struct, add:
 
 ```rust
 // ─────────────────────────────────────────────────────────────────────────────
-// CODON CLASSIFICATION — 5-fold designation
+// CODON CLASSIFICATION — 3-tier (40/24) designation
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Three-tier codon classification. Mirrors C `Codon_Class` in m3.h.
+/// 3-tier (40/24) codon classification. Mirrors C `Codon_Class` in m3.h.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
 pub enum CodonClass {
-    /// 16 codons: XyX pattern (outer == inner nucleotide). Strongest non-dual anchor. 7 rotational states.
+    /// 4 codons: Homogeneous triplet (AAA,TTT,CCC,GGG). 7 rotational states.
     PerfectPalindromic = 0,
-    /// 24 codons: Non-dual (pair1 == pair2) but not XyX. 7 rotational states.
-    Palindromic = 1,
+    /// 12 codons: XyX where X≠Y (ATA,TAT,AGA,etc). 7 rotational states.
+    ImperfectPalindromic = 1,
+    /// 24 codons: Watson-Crick pair symmetry, non-XyX, non-dual. 7 rotational states.
+    NonPalindromicNonDual = 2,
     /// 24 codons: Dual (pair1 ≠ pair2). Full 8 rotational states.
-    Dual = 2,
+    Dual = 3,
 }
 
 impl CodonClass {
     pub fn is_dual(self) -> bool { self == CodonClass::Dual }
     pub fn is_non_dual(self) -> bool { self != CodonClass::Dual }
-    pub fn is_palindromic(self) -> bool { self != CodonClass::Dual }
+    pub fn is_palindromic(self) -> bool { (self as u8) <= 1 }  // XyX: 4+12=16
     pub fn is_perfect_palindrome(self) -> bool { self == CodonClass::PerfectPalindromic }
-    pub fn is_non_palindromic(self) -> bool { self == CodonClass::Dual }
     pub fn rotational_state_count(self) -> u8 {
         if self == CodonClass::Dual { 8 } else { 7 }
     }
     pub fn label(self) -> &'static str {
         match self {
             CodonClass::PerfectPalindromic => "Perfect Palindrome",
-            CodonClass::Palindromic => "Palindromic",
+            CodonClass::ImperfectPalindromic => "Imperfect Palindrome",
+            CodonClass::NonPalindromicNonDual => "Non-Dual",
             CodonClass::Dual => "Dual",
         }
     }
@@ -701,7 +905,7 @@ git commit -m "feat(portal): expand PortalClockState with Hopf dynamics, codon c
 - [ ] **Step 1: Write test_m3_codon_class.c**
 
 ```c
-/* test_m3_codon_class.c — Tests for 5-fold codon classification */
+/* test_m3_codon_class.c — Tests for 3-tier codon classification (40/24) */
 #include "../include/m3.h"
 #include <stdio.h>
 #include <assert.h>
@@ -720,19 +924,22 @@ int main(void) {
     m3_init_codon_class_lut();
 
     /* Count each class */
-    int perfect = 0, palindromic = 0, dual = 0;
+    int perfect = 0, imperfect = 0, non_pal_nd = 0, dual = 0;
     for (uint8_t i = 0; i < 64; i++) {
         switch (M3_CODON_CLASS[i].class) {
-            case CODON_PERFECT_PALINDROMIC: perfect++; break;
-            case CODON_PALINDROMIC:         palindromic++; break;
-            case CODON_DUAL:                dual++; break;
+            case CODON_PERFECT_PALINDROMIC:     perfect++; break;
+            case CODON_IMPERFECT_PALINDROMIC:   imperfect++; break;
+            case CODON_NON_PALINDROMIC_NONDUAL: non_pal_nd++; break;
+            case CODON_DUAL:                    dual++; break;
         }
     }
 
-    TEST("perfect_palindromic_count_16", perfect == 16);
-    TEST("palindromic_count_24", palindromic == 24);
+    TEST("perfect_palindromic_count_4", perfect == 4);
+    TEST("imperfect_palindromic_count_12", imperfect == 12);
+    TEST("non_palindromic_nondual_count_24", non_pal_nd == 24);
     TEST("dual_count_24", dual == 24);
-    TEST("total_64", perfect + palindromic + dual == 64);
+    TEST("total_64", perfect + imperfect + non_pal_nd + dual == 64);
+    TEST("nondual_total_40", perfect + imperfect + non_pal_nd == 40);
 
     /* Verify XyX codons are all PERFECT_PALINDROMIC */
     for (uint8_t i = 0; i < 64; i++) {
@@ -743,10 +950,10 @@ int main(void) {
         }
     }
 
-    /* Verify M3_NONDUAL_CODONS[16] are all perfect palindromes */
+    /* Verify M3_NONDUAL_CODONS[16] are all XyX palindromes (perfect or imperfect) */
     for (int j = 0; j < 16; j++) {
         uint8_t c = M3_NONDUAL_CODONS[j];
-        TEST("nondual_lut_is_perfect", M3_CODON_CLASS[c].class == CODON_PERFECT_PALINDROMIC);
+        TEST("nondual_lut_is_xyx", codon_is_xyx(M3_CODON_CLASS[c].class));
     }
 
     /* Verify rotational state counts */
@@ -767,8 +974,10 @@ int main(void) {
     TEST("dual_not_palindromic", codon_is_palindromic(CODON_DUAL) == false);
     TEST("perfect_is_palindromic", codon_is_palindromic(CODON_PERFECT_PALINDROMIC) == true);
     TEST("perfect_is_perfect", codon_is_perfect_palindrome(CODON_PERFECT_PALINDROMIC) == true);
-    TEST("palindromic_not_perfect", codon_is_perfect_palindrome(CODON_PALINDROMIC) == false);
-    TEST("palindromic_is_nondual", codon_is_non_dual(CODON_PALINDROMIC) == true);
+    TEST("imperfect_is_palindromic", codon_is_palindromic(CODON_IMPERFECT_PALINDROMIC) == true);
+    TEST("imperfect_not_perfect", codon_is_perfect_palindrome(CODON_IMPERFECT_PALINDROMIC) == false);
+    TEST("non_pal_nd_is_nondual", codon_is_non_dual(CODON_NON_PALINDROMIC_NONDUAL) == true);
+    TEST("non_pal_nd_not_palindromic", codon_is_palindromic(CODON_NON_PALINDROMIC_NONDUAL) == false);
 
     /* Verify anticodon: for perfect palindromes, anticodon may differ
      * (complement reversal). For dual codons, anticodon is distinct. */
@@ -814,7 +1023,7 @@ Expected: All codon classification tests pass.
 
 ```bash
 git add epi-lib/test/test_m3_codon_class.c Makefile
-git commit -m "test(m3): add 5-fold codon classification tests (16+24+24=64, 472 states)"
+git commit -m "test(m3): add 3-tier codon classification tests (4+12+24+24=64, 472 states)"
 ```
 
 ---
@@ -1231,45 +1440,60 @@ At the top of `oracle.rs`, after the existing LUTs, add:
 use crate::portal::clock_state::CodonClass;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CODON_CLASS_LUT[64] — 5-fold classification mirroring C M3_CODON_CLASS
+// CODON CLASSIFICATION — 3-Tier (40/24) mirroring C M3_CODON_CLASS
 //
 // Classification:
-//   PerfectPalindromic (16): outer == inner nucleotide (XyX pattern)
-//   Palindromic (24): non-dual (pair1==pair2) but not XyX
-//   Dual (24): pair1 ≠ pair2
+//   PerfectPalindromic (4): AAA,TTT,CCC,GGG
+//   ImperfectPalindromic (12): XyX where X≠Y (ATA,TAT,AGA,etc)
+//   NonPalindromicNonDual (24): WC pair symmetry, 12 pairs, 7 states
+//   Dual (24): pair1≠pair2, full 8 states
 //
 // Nucleotide encoding: A=0b00, T=0b01, C=0b10, G=0b11
 // Codon = (outer<<4) | (middle<<2) | inner
+//
+// Dataset source: inner_charge_pn == inner_charge_np invariant on ALL 64 codons.
+// Suit indexing: dataset #3-4-{1..4} (1-based) → Rust 0-based (offset -1).
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Classify a 6-bit codon. XyX check: outer == inner.
-/// Non-dual check: uses Watson-Crick symmetry of the pair matrix.
+/// Classify a 6-bit codon into one of 4 sub-types.
+/// Uses M3_ROTATIONAL_PROFILE logic: XyX check first, then pair equality.
+/// Must produce 4+12+24+24 = 64 codons matching C m3_verify() after TCT fix.
 pub fn classify_codon(codon: u8) -> CodonClass {
     let outer = (codon >> 4) & 0x03;
+    let middle = (codon >> 2) & 0x03;
     let inner = codon & 0x03;
+
     if outer == inner {
-        return CodonClass::PerfectPalindromic;
-    }
-    // Non-dual check: the complement-reversed codon equals itself
-    // Complement: XOR each nucleotide with 0x01 (A↔T, C↔G), then reverse
-    let n1 = (codon >> 4) & 0x03;
-    let n2 = (codon >> 2) & 0x03;
-    let n3 = codon & 0x03;
-    let anti = ((n3 ^ 0x01) << 4) | ((n2 ^ 0x01) << 2) | (n1 ^ 0x01);
-    if anti == codon {
-        CodonClass::Palindromic
-    } else {
-        // Check rotational profile: non-dual if pair1.sequence == pair2.sequence
-        // This matches the M3_Transcription_Engine.non_dual_mask (40 bits)
-        // For now use the anticodon self-equality plus additional pair symmetry check
-        let pair_sym = ((n1 ^ 0x01) == n3) && ((n3 ^ 0x01) == n1);
-        if pair_sym && n2 == (n2 ^ 0x01) ^ 0x01 {
-            CodonClass::Palindromic
-        } else {
-            CodonClass::Dual
+        // XyX pattern — palindromic
+        if outer == middle {
+            // Homogeneous: AAA, TTT, CCC, GGG
+            return CodonClass::PerfectPalindromic;
         }
+        return CodonClass::ImperfectPalindromic;
     }
+
+    // Non-XyX: check if non-dual via rotational profile pair equality
+    // Non-dual condition: pair1.sequence == pair2.sequence across all 3 matrices
+    // Equivalent to: the codon's M3_ROTATIONAL_PROFILE.state_type == NON_DUAL_INITIATED
+    // For compile-time classification, use the NON_DUAL_MASK[64] LUT (40 bits set)
+    // This will be populated from M3_ROTATIONAL_PROFILE[64] at init time
+    NON_DUAL_MASK.get(codon as usize)
+        .map(|&is_nd| if is_nd { CodonClass::NonPalindromicNonDual } else { CodonClass::Dual })
+        .unwrap_or(CodonClass::Dual)
 }
+
+/// Non-dual mask: true for the 24 non-palindromic non-dual codons.
+/// Built from M3_ROTATIONAL_PROFILE[64].state_type at init time.
+/// For now, initialized via lazy_static or const fn from pair matrix analysis.
+/// NOTE: The 16 XyX codons are handled by the outer==inner check above,
+/// so this mask only needs to cover the remaining 24 non-dual codons.
+static NON_DUAL_MASK: [bool; 64] = {
+    // Will be replaced with actual computation from pair matrices.
+    // For the plan: this is generated by iterating all 64 codons,
+    // computing pair1 and pair2 from the 3 Purushic matrices,
+    // and checking pair1.sequence == pair2.sequence.
+    [false; 64] // PLACEHOLDER — must be computed at init
+};
 
 /// Watson-Crick anticodon of a 6-bit codon.
 pub fn wc_anticodon(codon: u8) -> u8 {
@@ -1299,20 +1523,20 @@ mod codon_class_tests {
 
     #[test]
     fn test_codon_classification_counts() {
-        let mut perfect = 0u32;
-        let mut palindromic = 0u32;
-        let mut dual = 0u32;
+        let (mut perfect, mut imperfect, mut non_pal_nd, mut dual) = (0u32, 0u32, 0u32, 0u32);
         for c in 0..64u8 {
             match classify_codon(c) {
                 CodonClass::PerfectPalindromic => perfect += 1,
-                CodonClass::Palindromic => palindromic += 1,
+                CodonClass::ImperfectPalindromic => imperfect += 1,
+                CodonClass::NonPalindromicNonDual => non_pal_nd += 1,
                 CodonClass::Dual => dual += 1,
             }
         }
-        assert_eq!(perfect, 16, "Expected 16 perfect palindromes");
-        assert_eq!(perfect + palindromic + dual, 64);
-        // Note: exact palindromic vs dual split depends on pair matrix
-        // At minimum: all XyX are perfect, total is 64
+        assert_eq!(perfect, 4, "Expected 4 perfect palindromes (AAA,TTT,CCC,GGG)");
+        assert_eq!(imperfect, 12, "Expected 12 imperfect palindromes (XyX, X≠Y)");
+        assert_eq!(non_pal_nd, 24, "Expected 24 non-palindromic non-dual");
+        assert_eq!(dual, 24, "Expected 24 dual codons");
+        assert_eq!(perfect + imperfect + non_pal_nd + dual, 64);
     }
 
     #[test]
@@ -1344,7 +1568,7 @@ Expected: All pass.
 
 ```bash
 git add epi-cli/src/nara/oracle.rs
-git commit -m "feat(oracle): add CODON_CLASS_LUT with 5-fold classification mirroring C m3.h"
+git commit -m "feat(oracle): add codon classification (3-tier 40/24) mirroring C m3.h"
 ```
 
 ---
@@ -1936,7 +2160,8 @@ In the side panel rendering section (where degree, hexagram, etc. are displayed)
             codon.class_a.label(),
             Style::default().fg(match codon.class_a {
                 CodonClass::PerfectPalindromic => Color::Yellow,
-                CodonClass::Palindromic => Color::Cyan,
+                CodonClass::ImperfectPalindromic => Color::Green,
+                CodonClass::NonPalindromicNonDual => Color::Cyan,
                 CodonClass::Dual => Color::Magenta,
             }),
         ),
@@ -2126,7 +2351,8 @@ In the matrix cell rendering loop:
                 let cls = crate::nara::oracle::classify_codon(codon_6bit);
                 Style::default().fg(match cls {
                     CodonClass::PerfectPalindromic => Color::Yellow,
-                    CodonClass::Palindromic => Color::Cyan,
+                    CodonClass::ImperfectPalindromic => Color::Green,
+                    CodonClass::NonPalindromicNonDual => Color::Cyan,
                     CodonClass::Dual => Color::White,
                 })
             };
@@ -2205,7 +2431,7 @@ make clean && make test
 
 Expected: All C tests pass, including:
 - Existing 110 tests + 5 VAK
-- New: test_m3_codon_class (16+24+24=64, 472 states)
+- New: test_m3_codon_class (4+12+24+24=64, 40/24 split, 472 states)
 - New: test_engine_walk_mode (Walk_Mode derivation + dispatch)
 - New: test_m2_aspects (5 major aspects + wrap-around)
 
@@ -2290,7 +2516,7 @@ After 5+ oracle casts, check:
 
 | Spec Requirement | Task |
 |-----------------|------|
-| 5-fold codon classification (dual/non-dual/perfect palindromic/palindromic/non-palindromic) | Tasks 0, 1, 9 |
+| 3-tier codon classification (4 perfect + 12 imperfect + 24 non-pal non-dual / 24 dual = 40/24) | Tasks 0, 1, 9 |
 | 472 rotational states (40×7 + 24×8) | Tasks 0, 3 (tested) |
 | Codon_Class in Clock_Degree_Entry | Task 1 |
 | Walk_Mode enum (GROUND/TORUS/FIBER/SPANDA) | Tasks 4, 5 |
