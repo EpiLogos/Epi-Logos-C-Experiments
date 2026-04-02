@@ -539,6 +539,22 @@ pub fn new_shared_clock_state() -> SharedClockState {
             update_quintessence_quaternion(&shared, &profiles);
         }
     }
+
+    // Load kairos transit data (live planet positions)
+    if let Ok(Some(result)) = crate::nara::kairos::load_current() {
+        let kairos = crate::nara::kairos::kerykeion_result_to_kairos_state(&result);
+        update_kairos_full(&shared, kairos);
+    }
+
+    // Load natal planet degrees from birth chart
+    if let Ok(Some(natal_result)) = crate::nara::kairos::load_natal() {
+        let natal_kairos = crate::nara::kairos::kerykeion_result_to_kairos_state(&natal_result);
+        let mut s = shared.lock().unwrap();
+        for i in 0..10 {
+            s.natal_degrees[i] = natal_kairos.planets[i].degree;
+        }
+    }
+
     shared
 }
 

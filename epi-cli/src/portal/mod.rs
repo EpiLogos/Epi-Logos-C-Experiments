@@ -70,6 +70,32 @@ fn run_event_loop(
     layout_path: Option<&std::path::Path>,
 ) -> color_eyre::Result<()> {
     let clock_state = new_shared_clock_state();
+
+    // Spawn kairos sync thread: refreshes planet positions every 60s
+    {
+        let clock = clock_state.clone();
+        std::thread::Builder::new()
+            .name("kairos-sync".into())
+            .spawn(move || {
+                loop {
+                    std::thread::sleep(std::time::Duration::from_secs(60));
+                    let result = if crate::nara::kairos::is_current_fresh() {
+                        crate::nara::kairos::load_current()
+                    } else {
+                        match crate::nara::kairos::sync_current() {
+                            Ok(_) => crate::nara::kairos::load_current(),
+                            Err(_) => crate::nara::kairos::load_current(),
+                        }
+                    };
+                    if let Ok(Some(kr)) = result {
+                        let kairos = crate::nara::kairos::kerykeion_result_to_kairos_state(&kr);
+                        crate::portal::clock_state::update_kairos_full(&clock, kairos);
+                    }
+                }
+            })
+            .ok();
+    }
+
     let mut workspace = build_workspace(clock_state)?;
 
     // Apply a named layout if provided

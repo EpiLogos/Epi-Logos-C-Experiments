@@ -330,6 +330,18 @@ pub fn parse_kerykeion_to_kairos_state(json: &str) -> Result<KairosState, String
     })
 }
 
+/// Load natal kairos state from cache. Returns None if no natal chart cached.
+pub fn load_natal() -> Result<Option<KerykeionResult>, String> {
+    let path = kairos_dir().join("natal.json");
+    if !path.exists() {
+        return Ok(None);
+    }
+    let data = std::fs::read_to_string(&path).map_err(|e| format!("kairos: read natal error: {e}"))?;
+    serde_json::from_str(&data)
+        .map(Some)
+        .map_err(|e| format!("kairos: parse natal error: {e}"))
+}
+
 #[cfg(test)]
 mod kairos_parse_tests {
     use super::*;
