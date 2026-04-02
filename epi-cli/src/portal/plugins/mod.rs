@@ -8,3 +8,4 @@ pub mod m5;
 pub mod mini_clock;
 pub mod shared;
 pub mod spine;
+pub mod unified_clock;
