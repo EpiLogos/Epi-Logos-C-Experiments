@@ -305,7 +305,7 @@ pub struct LensElementalProfile {
 pub fn elemental_profile(lens_idx: u8) -> LensElementalProfile {
     let sq = klein_square_for(lens_idx);
     // Find the other three corners
-    let others: Vec<u8> = sq.iter().copied().filter(|&x| x != lens_idx).collect();
+    let _others: Vec<u8> = sq.iter().copied().filter(|&x| x != lens_idx).collect();
     // complement = same mode, different position; partner = same position, other mode
     let is_night = lens_idx >= 6;
     let base = lens_idx % 6;

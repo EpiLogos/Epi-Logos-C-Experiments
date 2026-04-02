@@ -205,6 +205,7 @@ pub fn test_path(path: &Path, event: &str, fixture_path: &Path) -> HookTestRepor
     }
 }
 
+#[allow(dead_code)] // public API, not yet called from main binary
 pub fn load_inventory(path: &Path) -> Result<Vec<HookAction>, Vec<String>> {
     let hooks_path = resolve_hooks_path(path);
     let file = load_hooks_file(&hooks_path)?;

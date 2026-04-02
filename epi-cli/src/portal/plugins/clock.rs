@@ -42,7 +42,7 @@ impl BrailleCanvas {
 
     /// Set a dot at pixel coords (px, py) with the given color.
     /// Silently clips out-of-bounds pixels.
-    pub fn dot(&mut self, px: i32, py: i32, color: Color) {
+    pub fn dot(&mut self, px: i32, py: i32, _color: Color) {
         if px < 0 || py < 0
             || px >= (self.width  * 2) as i32
             || py >= (self.height * 4) as i32

@@ -223,6 +223,7 @@ fn pasu_path() -> std::path::PathBuf {
 }
 
 /// Simple hash for backward-compat (kept for wind.rs pre-FFI phase)
+#[allow(dead_code)]
 fn simple_identity_hash(presence: u8) -> u64 {
     let mut h = presence as u64;
     h = h.wrapping_mul(0x517cc1b727220a95);

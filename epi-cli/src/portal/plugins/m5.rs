@@ -187,6 +187,7 @@ pub struct M5FsmPlugin {
     arena: ffi::CoordinateArena,
     logos_state: ffi::M5LogosState,
     selected: usize,
+    #[allow(dead_code)] // retained for future FFI calls
     epi: ffi::EpiLib,
 }
 
