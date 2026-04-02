@@ -182,7 +182,7 @@ fn register_all_plugins(
     runtime: &mut ratatui_hypertile_extras::HypertileRuntime,
     clock_state: Option<SharedClockState>,
 ) {
-    use plugins::{clock, m0, m1, m2, m3, m4, m5, mini_clock, shared, spine};
+    use plugins::{clock, m0, m1, m2, m3, m4, m5, mini_clock, shared, spine, unified_clock};
 
     // Shared
     runtime.register_plugin_type("shared.help", || shared::HelpPlugin::new());
@@ -201,6 +201,15 @@ fn register_all_plugins(
         runtime.register_plugin_type("clock.cosmic", move || {
             let c = cs.clone().unwrap_or_else(new_shared_clock_state);
             clock::CosmicClockPlugin::new(c)
+        });
+    }
+
+    // Unified Clock — full-screen offscreen-rendered clock (replaces clock.cosmic)
+    {
+        let cs = clock_state.clone();
+        runtime.register_plugin_type("clock.unified", move || {
+            let c = cs.clone().unwrap_or_else(new_shared_clock_state);
+            unified_clock::UnifiedClockPlugin::new(c)
         });
     }
 
@@ -269,7 +278,7 @@ fn register_all_plugins(
 /// Build a two-tab workspace with default pane layouts.
 ///
 /// Tab 0 ("M4'-M5' Personal"):  m4.identity | m4.flow / m4.oracle
-/// Tab 1 ("M0'-M3' Structural"): clock.cosmic | m3.knowing / m1.walk
+/// Tab 1 ("Cosmic Clock"): clock.unified (single full-screen pane)
 ///   (CosmicClockPlugin replaces M0Dashboard+M1Walk+M2Vibrational per cosmic-clock spec)
 fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<WorkspaceRuntime> {
     let mut workspace = WorkspaceRuntime::new(|| {
@@ -308,34 +317,20 @@ fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<Workspac
         .split_focused(Direction::Horizontal, "m4.oracle")
         .map_err(|e| color_eyre::eyre::eyre!("tab 0 split H: {e}"))?;
 
-    // --- Tab 1: M0'-M3' Structural ---
+    // --- Tab 1: Cosmic Clock ---
     workspace.new_tab();
-    workspace.rename_tab(1, "M0'-M3' Structural".to_string());
+    workspace.rename_tab(1, "Cosmic Clock".to_string());
 
     // Register all plugin types on tab 1's runtime.
     // SharedClockState MUST be shared with Tab 0 — same Arc — so oracle casts in Tab 0
-    // propagate to CosmicClockPlugin, M2VibrationalPlugin, etc. in Tab 1.
-    // Spec: 00-canonical-invariants §4.4.4.4, 09-cosmic-clock-plugin-tui-spec §SharedClockState
+    // propagate to UnifiedClockPlugin in Tab 1.
     register_all_plugins(workspace.active_runtime_mut(), Some(clock_state.clone()));
 
-    // Tab 1 layout: clock.cosmic (left 2/3) | m3.knowing (right top) / m1.walk (right bottom)
-    // CosmicClockPlugin replaces M0Dashboard + M1Walk + M2Vibrational per cosmic-clock spec.
+    // Single full-screen plugin: the unified clock scene. No splits.
     workspace
         .active_runtime_mut()
-        .replace_focused_plugin("clock.cosmic")
+        .replace_focused_plugin("clock.unified")
         .map_err(|e| color_eyre::eyre::eyre!("tab 1 replace root: {e}"))?;
-
-    // Split vertically: left = clock.cosmic, right = new pane
-    workspace
-        .active_runtime_mut()
-        .split_focused(Direction::Vertical, "m3.knowing")
-        .map_err(|e| color_eyre::eyre::eyre!("tab 1 split V: {e}"))?;
-
-    // Focus is on right (m3.knowing). Split horizontally: top = m3.knowing, bottom = m1.walk
-    workspace
-        .active_runtime_mut()
-        .split_focused(Direction::Horizontal, "m1.walk")
-        .map_err(|e| color_eyre::eyre::eyre!("tab 1 split H: {e}"))?;
 
     // Switch back to tab 0 as default
     workspace.go_to_tab(0);
@@ -356,7 +351,7 @@ mod tests {
         let state = persist::WorkspaceState::default_layout();
         assert_eq!(state.tabs.len(), 2);
         assert_eq!(state.tabs[0].label, "M4'-M5' Personal");
-        assert_eq!(state.tabs[1].label, "M0'-M3' Structural");
+        assert_eq!(state.tabs[1].label, "Cosmic Clock");
     }
 
     #[test]
@@ -366,7 +361,7 @@ mod tests {
 
         let labels = ws.tab_labels();
         assert_eq!(labels[0].0, "M4'-M5' Personal");
-        assert_eq!(labels[1].0, "M0'-M3' Structural");
+        assert_eq!(labels[1].0, "Cosmic Clock");
     }
 
     #[test]
@@ -379,10 +374,10 @@ mod tests {
     }
 
     #[test]
-    fn tab_1_has_three_panes() {
+    fn tab_1_has_one_pane() {
         let mut ws = test_workspace().expect("build_workspace failed");
         ws.go_to_tab(1);
         let count = ws.active_runtime().core().state().pane_ids().len();
-        assert_eq!(count, 3, "Tab 1 should have 3 panes, got {}", count);
+        assert_eq!(count, 1, "Tab 1 should have 1 pane (unified clock), got {}", count);
     }
 }

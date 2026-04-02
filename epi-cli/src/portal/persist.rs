@@ -33,12 +33,8 @@ impl WorkspaceState {
                     pane_map: None,
                 },
                 TabState {
-                    label: "M0'-M3' Structural".to_string(),
-                    panes: vec![
-                        "clock.cosmic".into(),
-                        "m3.knowing".into(),
-                        "m1.walk".into(),
-                    ],
+                    label: "Cosmic Clock".to_string(),
+                    panes: vec!["clock.unified".into()],
                     layout_bsp: None,
                     pane_map: None,
                 },
@@ -175,12 +171,8 @@ mod tests {
                     pane_map: None,
                 },
                 TabState {
-                    label: "M0'-M3' Structural".to_string(),
-                    panes: vec![
-                        "clock.cosmic".into(),
-                        "m3.knowing".into(),
-                        "m1.walk".into(),
-                    ],
+                    label: "Cosmic Clock".to_string(),
+                    panes: vec!["clock.unified".into()],
                     layout_bsp: None,
                     pane_map: None,
                 },
@@ -224,10 +216,10 @@ mod tests {
             state.tabs[0].panes,
             vec!["m4.identity", "m4.flow", "m4.oracle"]
         );
-        assert_eq!(state.tabs[1].label, "M0'-M3' Structural");
+        assert_eq!(state.tabs[1].label, "Cosmic Clock");
         assert_eq!(
             state.tabs[1].panes,
-            vec!["clock.cosmic", "m3.knowing", "m1.walk"]
+            vec!["clock.unified"]
         );
         assert_eq!(state.active_tab, 0);
     }
