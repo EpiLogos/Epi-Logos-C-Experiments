@@ -175,38 +175,18 @@ Aspects computed by `compute_aspects()` from `KairosState.planets`. Stored as `V
 - **Active codon sequence**: 3-letter codon (e.g. "AUG") burned as text near current position via ab_glyph
 - **Hexagram indicator**: primary → temporal shown near oracle position
 
-### 2.6 Layer 6 — Data Panel (ratatui text, right side)
+### 2.6 Full-Screen Render (no data panel)
 
-A narrow column (24-26 cells wide) rendered as a standard ratatui `Paragraph` widget in a separate `Rect` adjacent to the image. No compositing conflict — image widget and text widget occupy different areas.
+The clock fills the entire terminal area. No side panel, no text column, no split layout. Every pixel is the rendered scene.
 
-Contents:
-```
-φ    ▶ SEED   0°
-       POLE   60°
-       TRIKA  120°
-       FLOWER 180°
-       FULL   240°
-       META   300°
+Any contextual data worth showing is burned directly into the pixmap via ab_glyph as subtle in-context labels:
+- Zodiac glyphs (♈-♓) positioned at their 30° entries on the outer ring
+- Planet symbols (☉☽☿♀♂♃♄⛢♆♇) positioned at their degree on the equator
+- Current degree number near the oracle marker
+- Codon sequence (e.g. "AUG") near the oracle position
+- Kairos status indicator: a small "✓" or "—" in a corner, barely visible
 
-deg  247°  ♐
-anti 67°
-impl 247° (inv)
-hex  #38 → #12
-
-walk torus
-λ    0.63  36-fold
-
-cdn  AUG perfect-palindromic 7R
-orb  17 casts
-asp  3 active
-
-☉ 12° ♈  ☽ 247° ♐  ☿ 89° ♊R
-♀ 315° ♒  ♂ 178° ♎  ♃ 54° ♉
-♄ 341° ♓  ⛢ 27° ♈  ♆ 0° ♈
-♇ 303° ♒
-
-kairos ✓  (42s ago)
-```
+These labels are part of the scene, not overlaid UI. They rotate with the torus. They are the clock's own markings, like hour numerals on a watch face.
 
 ---
 
@@ -271,7 +251,7 @@ Default: `[0xFFFF; 10]`.
 
 **Tab 1: "Cosmic Clock"**
 - ONE plugin: `clock.unified` (the new unified scene)
-- Full-screen, no splits
+- Full-screen, no splits, no data panel — the entire terminal area is the rendered clock image
 - No palette splitting allowed on this tab (the clock IS the tab)
 
 ### 4.2 Plugin Registration Changes
@@ -289,10 +269,9 @@ Default: `[0xFFFF; 10]`.
 │ Main Thread (event loop + ratatui render)                │
 │                                                          │
 │  - Polls crossterm events (50ms timeout)                 │
-│  - Reads SharedClockState for data panel text            │
+│  - Reads SharedClockState                                │
 │  - Receives latest StatefulProtocol from render channel  │
-│  - Calls render_stateful_widget() for clock image        │
-│  - Renders data panel Paragraph in adjacent Rect         │
+│  - Calls render_stateful_widget() for full-screen clock  │
 │  - Handles input (tab switch, kairos reload, quit)       │
 └─────────────┬───────────────────────────┬───────────────┘
               │ reads                     │ receives frames
@@ -469,7 +448,7 @@ Identity augment (on Tab 0 via m4.identity) → updates `quintessence_quaternion
 |------|---------|
 | `epi-cli/src/portal/plugins/unified_clock.rs` | The `UnifiedClockPlugin` — single full-screen clock scene |
 | `epi-cli/src/portal/clock_renderer.rs` | Offscreen tiny-skia rendering pipeline (torus, rings, planets, aspects, labels) |
-| `epi-cli/src/portal/clock_text.rs` | ab_glyph text label burning |
+| `epi-cli/src/portal/clock_text.rs` | ab_glyph in-scene label burning (zodiac glyphs, planet symbols, degree numbers — all part of the rendered scene, not UI overlay) |
 
 ### 8.2 Modified Files
 
