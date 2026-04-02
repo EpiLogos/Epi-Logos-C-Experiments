@@ -65,6 +65,27 @@ fn sign_to_element(sign: u8) -> u8 {
     sign % 4
 }
 
+/// Hamilton product of two quaternions, normalized to unit length.
+pub fn quat_mul_norm(a: [f32; 4], b: [f32; 4]) -> [f32; 4] {
+    let (aw, ax, ay, az) = (a[0], a[1], a[2], a[3]);
+    let (bw, bx, by, bz) = (b[0], b[1], b[2], b[3]);
+    let r = [
+        aw*bw - ax*bx - ay*by - az*bz,
+        aw*bx + ax*bw + ay*bz - az*by,
+        aw*by - ax*bz + ay*bw + az*bx,
+        aw*bz + ax*by - ay*bx + az*bw,
+    ];
+    let mag = (r[0]*r[0] + r[1]*r[1] + r[2]*r[2] + r[3]*r[3]).sqrt();
+    if mag < 1e-10 { [1.0, 0.0, 0.0, 0.0] } else { [r[0]/mag, r[1]/mag, r[2]/mag, r[3]/mag] }
+}
+
+/// Build a quaternion from axis-angle (axis must be unit length, angle in radians).
+pub fn quat_from_axis_angle(axis: [f32; 3], angle: f32) -> [f32; 4] {
+    let half = angle * 0.5;
+    let s = half.sin();
+    [half.cos(), axis[0] * s, axis[1] * s, axis[2] * s]
+}
+
 /// Rotate a 3-vector by quaternion q = [w, x, y, z] using sandwich product.
 pub fn quat_rotate(q: [f32; 4], px: f32, py: f32, pz: f32) -> (f32, f32, f32) {
     let (qw, qx, qy, qz) = (q[0], q[1], q[2], q[3]);
@@ -266,6 +287,9 @@ fn render_backbone_rings(
     dist: f32,
     resolution_level: u8,
 ) {
+    // Scale dot sizes with render resolution
+    let base_r = ((r_min * 0.04) as i32).max(2).min(8);
+
     for deg in 0u16..360 {
         let d = deg as f32;
         let (sx, sy, _rz) = equator_project(d, q, r_maj, r_min, cx, cy, dist);
@@ -276,16 +300,16 @@ fn render_backbone_rings(
 
         if deg % 90 == 0 {
             // Cardinal — large element dot
-            paint_dot(pixmap, sx, sy, 4, elem_color);
+            paint_dot(pixmap, sx, sy, base_r + 2, elem_color);
         } else if deg % 30 == 0 {
             // Zodiac sign boundary — medium dot
-            paint_dot(pixmap, sx, sy, 3, elem_color);
+            paint_dot(pixmap, sx, sy, base_r + 1, elem_color);
         } else if deg % 15 == 0 {
             // Amino backbone — gray dot
-            paint_dot(pixmap, sx, sy, 2, [100, 100, 110]);
+            paint_dot(pixmap, sx, sy, base_r, [100, 100, 110]);
         } else if resolution_level >= 2 && deg % 10 == 0 {
             // Decan — dark dot
-            paint_dot(pixmap, sx, sy, 1, [55, 55, 65]);
+            paint_dot(pixmap, sx, sy, (base_r / 2).max(1), [55, 55, 65]);
         }
     }
 }
@@ -309,26 +333,30 @@ fn render_planets(
         }
         let color = PLANET_COLORS[i];
 
+        // Scale dot sizes with render resolution
+        let dot_r = ((r_min * 0.06) as i32).max(3).min(12);
+
         // Live marker — slightly outside equator
         let (sx, sy, _) = equator_project(deg as f32, q, r_maj, r_min * 1.25, cx, cy, dist);
-        paint_dot(pixmap, sx, sy, 3, color);
+        paint_dot(pixmap, sx, sy, dot_r, color);
 
         // Retrograde: cross marker
         if planets[i].is_retrograde {
-            draw_line(pixmap, sx - 4, sy, sx + 4, sy, color);
-            draw_line(pixmap, sx, sy - 4, sx, sy + 4, color);
+            let cr = dot_r + 2;
+            draw_line(pixmap, sx - cr, sy, sx + cr, sy, color);
+            draw_line(pixmap, sx, sy - cr, sx, sy + cr, color);
         }
 
-        // Natal ghost — inside equator, heavily dimmed
+        // Natal ghost — inside equator, dimmed
         let nat = natal_degrees[i];
         if nat != 0xFFFF {
             let ghost_color = [
-                (color[0] as u16 * 50 / 255) as u8,
-                (color[1] as u16 * 50 / 255) as u8,
-                (color[2] as u16 * 50 / 255) as u8,
+                (color[0] as u16 * 80 / 255) as u8,
+                (color[1] as u16 * 80 / 255) as u8,
+                (color[2] as u16 * 80 / 255) as u8,
             ];
             let (nx, ny, _) = equator_project(nat as f32, q, r_maj, r_min * 0.75, cx, cy, dist);
-            paint_dot(pixmap, nx, ny, 2, ghost_color);
+            paint_dot(pixmap, nx, ny, (dot_r * 2 / 3).max(2), ghost_color);
         }
     }
 }
@@ -380,6 +408,8 @@ fn render_oracle_markers(
     state: &crate::portal::clock_state::PortalClockState,
 ) {
     let trail_len = state.micro_orbit.len();
+    let dot_r = ((r_min * 0.04) as i32).max(2).min(8);
+
     // Fading trail
     for (idx, &deg) in state.micro_orbit.iter().enumerate() {
         if deg == 0xFFFF { continue; }
@@ -387,7 +417,7 @@ fn render_oracle_markers(
         let intensity = (fade * 120.0) as u8;
         let trail_color = [intensity, intensity / 2, 0u8];
         let (tx, ty, _) = equator_project(deg as f32, q, r_maj, r_min * 1.1, cx, cy, dist);
-        paint_dot(pixmap, tx, ty, 1, trail_color);
+        paint_dot(pixmap, tx, ty, (dot_r / 2).max(1), trail_color);
     }
 
     // Anticodon — green marker at deficient degree
@@ -395,7 +425,7 @@ fn render_oracle_markers(
         let def_deg = cast.deficient_degree;
         if def_deg < 360 {
             let (ax, ay, _) = equator_project(def_deg as f32, q, r_maj, r_min * 1.2, cx, cy, dist);
-            paint_dot(pixmap, ax, ay, 3, [0, 200, 80]);
+            paint_dot(pixmap, ax, ay, dot_r, [0, 200, 80]);
         }
     }
 
@@ -403,8 +433,8 @@ fn render_oracle_markers(
     let cur = state.current_degree;
     if cur < 360 {
         let (kx, ky, _) = equator_project(cur as f32, q, r_maj, r_min * 1.15, cx, cy, dist);
-        paint_dot(pixmap, kx, ky, 5, [80, 80, 20]);   // outer glow
-        paint_dot(pixmap, kx, ky, 2, [255, 240, 0]);  // core
+        paint_dot(pixmap, kx, ky, dot_r + 3, [80, 80, 20]);   // outer glow
+        paint_dot(pixmap, kx, ky, dot_r, [255, 240, 0]);       // core
     }
 }
 
@@ -423,25 +453,33 @@ fn burn_labels(
         Ok(f) => f,
         Err(_) => return,
     };
-    let label_scale = ab_glyph::PxScale { x: 11.0, y: 11.0 };
+    // Scale glyphs proportionally to render resolution
+    let glyph_size = (r_min * 0.35).max(10.0).min(48.0);
+    let label_scale = ab_glyph::PxScale { x: glyph_size, y: glyph_size };
     let scaled = font.as_scaled(label_scale);
 
     // Zodiac glyphs at sign centers (15°, 45°, …)
     for sign in 0u8..12 {
         let deg = (sign as f32) * 30.0 + 15.0;
-        let (sx, sy, _) = equator_project(deg, q, r_maj, r_min * 1.7, cx, cy, dist);
+        let (sx, sy, rz) = equator_project(deg, q, r_maj, r_min * 1.8, cx, cy, dist);
+        if rz < -r_min * 0.3 { continue; } // skip back-face
         let elem = sign_to_element(sign);
         let color = ELEMENT_COLORS[elem as usize];
         burn_char(pixmap, &scaled, ZODIAC_GLYPHS[sign as usize], sx, sy, color);
     }
 
     // Planet glyphs near live planet positions
+    let planet_glyph_size = (r_min * 0.28).max(8.0).min(36.0);
+    let planet_scale = ab_glyph::PxScale { x: planet_glyph_size, y: planet_glyph_size };
+    let planet_scaled = font.as_scaled(planet_scale);
+    let offset = (glyph_size * 0.6) as i32;
     for i in 0..10usize {
         let deg = planets[i].degree;
         if deg == 0xFFFF { continue; }
-        let (px, py, _) = equator_project(deg as f32, q, r_maj, r_min * 1.5, cx, cy, dist);
+        let (px, py, rz) = equator_project(deg as f32, q, r_maj, r_min * 1.55, cx, cy, dist);
+        if rz < -r_min * 0.3 { continue; }
         let color = PLANET_COLORS[i];
-        burn_char(pixmap, &scaled, PLANET_GLYPHS[i], px + 4, py - 4, color);
+        burn_char(pixmap, &planet_scaled, PLANET_GLYPHS[i], px + offset, py - offset, color);
     }
 }
 
@@ -451,11 +489,13 @@ fn burn_labels(
 
 /// Render the Cosmic Clock torus to an RGBA pixmap.
 ///
+/// `view_q`: camera view quaternion (user-controlled rotation, separate from clock state).
 /// Returns `None` if pixmap allocation fails (OOM).
 pub fn render_clock(
     width: u32,
     height: u32,
     state: &crate::portal::clock_state::PortalClockState,
+    view_q: [f32; 4],
 ) -> Option<Pixmap> {
     use std::f32::consts::PI;
 
@@ -485,7 +525,8 @@ pub fn render_clock(
     let r_min = scale * (9.0 / 25.0);
     let dist = scale * 3.5; // perspective distance
 
-    let q = state.composed_quaternion;
+    // Compose: view rotation applied to clock state rotation
+    let q = quat_mul_norm(view_q, state.composed_quaternion);
     let tick12 = state.tick12;
     let resolution_level = state.resolution_level;
 
@@ -584,7 +625,7 @@ mod tests {
     fn render_clock_produces_non_empty_pixmap() {
         use crate::portal::clock_state::PortalClockState;
         let state = PortalClockState::default();
-        let pixmap = render_clock(200, 200, &state);
+        let pixmap = render_clock(200, 200, &state, [1.0, 0.0, 0.0, 0.0]);
         assert!(pixmap.is_some(), "render_clock returned None");
         let pixmap = pixmap.unwrap();
         assert_eq!(pixmap.width(), 200);
