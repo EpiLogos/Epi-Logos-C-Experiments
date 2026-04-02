@@ -43,6 +43,12 @@ static_assertions = "1"
 # Quaternion / matrix math for torus projection
 nalgebra = "0.33"
 
+# Offscreen clock renderer
+tiny-skia = "0.12"
+ratatui-image = { version = "10", default-features = false, features = ["crossterm"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
+ab_glyph = "0.2"
+
 # Async runtime
 tokio = { version = "1", features = ["full"] }
 
