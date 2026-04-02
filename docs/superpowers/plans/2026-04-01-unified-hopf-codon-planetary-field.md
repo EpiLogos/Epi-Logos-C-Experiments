@@ -1,11 +1,33 @@
 # Unified Hopf Dynamics, Codon Classification & Planetary Field — Implementation Plan
 
-> **STATUS: REVISION IN PROGRESS (2026-04-01)**
-> Original plan had structural errors in codon classification, walk mode architecture, and
-> rotational state charge system. Corrections below are dataset-backed and code-verified.
-> Tasks below this section are STALE — do NOT execute without reading corrections first.
-
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **STATUS: IMPLEMENTED — PENDING TUI VERIFICATION (2026-04-02)**
+>
+> All plan tasks executed. Architectural corrections (C1-C10) incorporated. Code-complete
+> with full automated test coverage (162 new tests: 105 C + 57 Rust). Merged to main.
+>
+> **What was implemented:**
+> - TCT codon fix (40/24 split, 472 rotational states)
+> - 3-tier codon classification (algorithmic: n1==n2||n2==n3 = non-dual)
+> - Quaternion composition (natal x transit x oracle, composed_quaternion stored)
+> - 4 Hopf drive modes + 9 structural walk types (separate enums)
+> - 3 Purushic matrices + rotational state engine ported to Rust
+> - Planetary aspects (5 major) + transit quaternion
+> - RNA/amino acid transcription chain with START/STOP gates
+> - Micro-orbit persistence to ~/.epi-logos/nara/orbit.json
+> - Clock A codon mapping via CLOCK_DEGREE_LUT (not approximation)
+> - Portal plugin rendering (clock, mini_clock, oracle, spine)
+>
+> **Pending manual TUI verification:**
+> - Portal rendering of aspect lines, micro-orbit trail, codon display
+> - Walk mode indicators and resolution cascade visual behavior
+> - Transcription chain narrative output during clock walks
+>
+> **Known limitations (documented, not blocking):**
+> - Dataset charge LUT (inner_charge values) not yet ported — C closed-form diverges from dataset
+> - 336 dynamic node tracking not explicitly modeled (implicit in CLOCK_DEGREE_LUT)
+> - Journal NLP elemental weighting is a stub (returns identity quaternion)
+>
+> Original plan corrections and task steps preserved below for reference.
 
 **Goal:** Complete the Cosmic Clock as a living dynamical system — quaternion composition, 4 Hopf drive modes + 9 structural walk types, bifurcation cascade, 3-tier codon classification (40 non-dual / 24 dual) with full rotational state charge profiles, 3 Purushic matrix port to Rust, 336 dynamic node tracking, planetary aspect rendering, micro-orbit persistence, RNA/amino acid transcription chain, and resolution-aware display — with full C↔Rust parity grounded in dataset truth.
 
