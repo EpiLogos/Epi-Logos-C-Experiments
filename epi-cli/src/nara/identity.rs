@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
+use std::time::{SystemTime, UNIX_EPOCH};
 use zeroize::Zeroize;
 
 // ─── Safe Layer Types (Serialize/Deserialize, NOT repr(C)) ──────────────────
@@ -166,6 +167,12 @@ pub struct LayerMeta {
     pub source: String,
     pub completeness: u8,
     pub set_at: Option<u64>,
+    /// Elemental charge profile for this identity layer: [FIRE, WATER, EARTH, AIR].
+    /// Derived from the layer's intrinsic symbolic content.
+    /// Used to compute quintessence_quaternion in portal clock state.
+    /// Spec: 01-quintessence-hash-architecture §elemental-profiles
+    #[serde(default)]
+    pub elemental_profile: Option<[f32; 4]>,
 }
 
 // ─── Filesystem I/O ─────────────────────────────────────────────────────────
@@ -215,12 +222,191 @@ fn pasu_path() -> std::path::PathBuf {
         .join("PASU.md")
 }
 
-/// Simple hash for profile update (BLAKE3 FFI wired in wind.rs full phase)
+/// Simple hash for backward-compat (kept for wind.rs pre-FFI phase)
 fn simple_identity_hash(presence: u8) -> u64 {
     let mut h = presence as u64;
     h = h.wrapping_mul(0x517cc1b727220a95);
     h ^= h >> 32;
     h
+}
+
+/// Canonical 32-byte BLAKE3 identity hash from profile layers.
+///
+/// Input: layer_presence_mask byte + sorted-by-key layer source strings.
+/// Spec: 00-canonical-invariants §1 (quintessence hash derivation)
+pub fn blake3_identity_hash(profile: &ProfileJson) -> [u8; 32] {
+    let mut hasher = blake3::Hasher::new();
+    hasher.update(&[profile.layer_presence_mask]);
+    let mut keys: Vec<&String> = profile.layers.keys().collect();
+    keys.sort();
+    for key in keys {
+        if let Some(meta) = profile.layers.get(key) {
+            hasher.update(key.as_bytes());
+            hasher.update(b":");
+            hasher.update(meta.source.as_bytes());
+        }
+    }
+    *hasher.finalize().as_bytes()
+}
+
+/// Derive session hash = BLAKE3(identity_hash[32] || session_start_u64[8]).
+/// session_start is the current Unix timestamp in seconds.
+/// Spec: 00-canonical-invariants §8
+pub fn compute_session_hash(profile: &ProfileJson) -> [u8; 32] {
+    let identity = blake3_identity_hash(profile);
+    let session_start = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs();
+    let mut hasher = blake3::Hasher::new();
+    hasher.update(&identity);
+    hasher.update(&session_start.to_le_bytes());
+    *hasher.finalize().as_bytes()
+}
+
+/// Derive the elemental profile [FIRE, WATER, EARTH, AIR] for an identity layer.
+///
+/// Element indices (matching portal::clock_state::update_quintessence_quaternion remap):
+///   0 = FIRE, 1 = WATER, 2 = EARTH, 3 = AIR
+///
+/// Derivation rules:
+/// - birth-date / natal-chart-path → solar zodiac element
+/// - jungian → MBTI four-function mapping (T=FIRE, F=WATER, S=EARTH, N=AIR)
+/// - human-design → type element (Generator=EARTH, Manifestor=FIRE, Projector=WATER, Reflector=AIR)
+/// - gene-keys / birth-location / unknown → equal distribution [0.25;4]
+fn elemental_profile_for_layer(key: &str, source: &str) -> [f32; 4] {
+    match key {
+        "0" => {
+            // birth-date → derive zodiac element from month+day
+            let date = source.strip_prefix("birth-date:").unwrap_or(source);
+            element_from_birth_date(date)
+        }
+        "1" => {
+            // birth-location or natal-chart-path → equal distribution
+            // (kerykeion result would give a better answer, but we only have strings here)
+            [0.25, 0.25, 0.25, 0.25]
+        }
+        "2" => {
+            // jungian MBTI
+            let mbti = source.strip_prefix("jungian:").unwrap_or(source);
+            element_from_mbti(mbti.trim())
+        }
+        "3" => {
+            // gene-keys — equal distribution (hologenetic map; no single element dominates)
+            [0.25, 0.25, 0.25, 0.25]
+        }
+        "4" => {
+            // human-design type
+            let hd = source.strip_prefix("human-design:").unwrap_or(source).to_lowercase();
+            element_from_human_design(&hd)
+        }
+        _ => [0.25, 0.25, 0.25, 0.25],
+    }
+}
+
+/// Derive solar zodiac element from "YYYY-MM-DD" birth date string.
+/// Returns [FIRE, WATER, EARTH, AIR] with dominant element at 0.7, others at ~0.1.
+fn element_from_birth_date(date: &str) -> [f32; 4] {
+    let parts: Vec<&str> = date.split('-').collect();
+    if parts.len() < 3 {
+        return [0.25, 0.25, 0.25, 0.25];
+    }
+    let month: u8 = parts[1].parse().unwrap_or(1);
+    let day: u8 = parts[2].parse().unwrap_or(1);
+
+    // Approximate zodiac sign from month+day (tropical)
+    // FIRE (idx 0): Aries(3/21-4/19), Leo(7/23-8/22), Sagittarius(11/22-12/21)
+    // WATER (idx 1): Cancer(6/21-7/22), Scorpio(10/23-11/21), Pisces(2/19-3/20)
+    // EARTH (idx 2): Taurus(4/20-5/20), Virgo(8/23-9/22), Capricorn(12/22-1/19)
+    // AIR (idx 3): Gemini(5/21-6/20), Libra(9/23-10/22), Aquarius(1/20-2/18)
+    let elem: usize = match (month, day) {
+        (3, 21..=31) | (4, 1..=19) => 0,  // Aries = FIRE
+        (4, 20..=30) | (5, 1..=20) => 2,  // Taurus = EARTH
+        (5, 21..=31) | (6, 1..=20) => 3,  // Gemini = AIR
+        (6, 21..=31) | (7, 1..=22) => 1,  // Cancer = WATER
+        (7, 23..=31) | (8, 1..=22) => 0,  // Leo = FIRE
+        (8, 23..=31) | (9, 1..=22) => 2,  // Virgo = EARTH
+        (9, 23..=30) | (10, 1..=22) => 3, // Libra = AIR
+        (10, 23..=31) | (11, 1..=21) => 1,// Scorpio = WATER
+        (11, 22..=30) | (12, 1..=21) => 0,// Sagittarius = FIRE
+        (12, 22..=31) | (1, 1..=19) => 2, // Capricorn = EARTH
+        (1, 20..=31) | (2, 1..=18) => 3,  // Aquarius = AIR
+        (2, 19..=29) | (3, 1..=20) => 1,  // Pisces = WATER
+        _ => 2,                            // default EARTH
+    };
+    let mut profile = [0.1f32; 4];
+    profile[elem] = 0.7;
+    profile
+}
+
+/// Derive elemental profile from MBTI type string (e.g. "INFJ", "ESTP").
+/// T=FIRE, F=WATER, S=EARTH, N=AIR; E/I modulates by ±0.05.
+fn element_from_mbti(mbti: &str) -> [f32; 4] {
+    let mut fire: f32  = 0.1; // Thinking
+    let mut water: f32 = 0.1; // Feeling
+    let mut earth: f32 = 0.1; // Sensing
+    let mut air: f32   = 0.1; // iNtuition
+
+    let upper = mbti.to_uppercase();
+    // Primary cognitive function
+    if upper.contains('T') { fire  = 0.55; }
+    if upper.contains('F') { water = 0.55; }
+    if upper.contains('S') { earth = 0.55; }
+    if upper.contains('N') { air   = 0.55; }
+
+    // I/E modifier: Extraversion → amplify leading function slightly
+    let extraversion = if upper.contains('E') { 0.05f32 } else { 0.0 };
+    fire += extraversion; water += extraversion;
+    earth += extraversion; air += extraversion;
+
+    // Normalize
+    let sum = fire + water + earth + air;
+    if sum > f32::EPSILON {
+        [fire/sum, water/sum, earth/sum, air/sum]
+    } else {
+        [0.25, 0.25, 0.25, 0.25]
+    }
+}
+
+/// Derive elemental profile from Human Design type string.
+fn element_from_human_design(hd_type: &str) -> [f32; 4] {
+    if hd_type.contains("generator") || hd_type.contains("manifesting generator") {
+        [0.1, 0.1, 0.7, 0.1] // EARTH
+    } else if hd_type.contains("manifestor") {
+        [0.7, 0.1, 0.1, 0.1] // FIRE
+    } else if hd_type.contains("projector") {
+        [0.1, 0.7, 0.1, 0.1] // WATER
+    } else if hd_type.contains("reflector") {
+        [0.1, 0.1, 0.1, 0.7] // AIR
+    } else {
+        [0.25, 0.25, 0.25, 0.25]
+    }
+}
+
+/// Compute quintessence elemental profiles for all 5 identity layers.
+///
+/// Returns [[FIRE, WATER, EARTH, AIR]; 5], one entry per layer index 0–4.
+/// Entries for absent layers have all-zero values (filtered out by update_quintessence_quaternion).
+/// Spec: 01-quintessence-hash-architecture §weighted-average
+pub fn compute_quintessence_profiles(profile: &ProfileJson) -> [[f32; 4]; 5] {
+    let mut profiles = [[0.0f32; 4]; 5];
+    for (key, meta) in &profile.layers {
+        if let Ok(idx) = key.parse::<usize>() {
+            if idx < 5 && meta.present {
+                profiles[idx] = meta.elemental_profile
+                    .unwrap_or_else(|| elemental_profile_for_layer(key, &meta.source));
+            }
+        }
+    }
+    profiles
+}
+
+// ─── Journal elemental weight stub ──────────────────────────────────────────
+
+/// Stub: derive elemental weights [FIRE, WATER, EARTH, AIR] from journal text.
+/// Future implementation will use NLP sentiment/element extraction.
+pub fn journal_elemental_weight(_text: &str) -> [f32; 4] {
+    [1.0, 0.0, 0.0, 0.0]
 }
 
 // ─── CLI entry: identity set ─────────────────────────────────────────────────
@@ -260,6 +446,7 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
                     source: format!("birth-date:{value}"),
                     completeness: 3,
                     set_at: Some(now_ts),
+                    elemental_profile: None, // filled by post-match elemental loop
                 },
             );
             profile.layer_presence_mask |= 0x01;
@@ -291,6 +478,7 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
                     source: format!("birth-location:{value}"),
                     completeness: 2,
                     set_at: Some(now_ts),
+                    elemental_profile: None, // filled by post-match elemental loop
                 },
             );
             profile.layer_presence_mask |= 0x02;
@@ -303,6 +491,7 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
                     source: format!("natal-chart-path:{value}"),
                     completeness: 5,
                     set_at: Some(now_ts),
+                    elemental_profile: None, // filled by post-match elemental loop
                 },
             );
             profile.layer_presence_mask |= 0x02;
@@ -320,6 +509,7 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
                     source: format!("jungian:{value}"),
                     completeness: 3,
                     set_at: Some(now_ts),
+                    elemental_profile: None, // filled by post-match elemental loop
                 },
             );
             profile.layer_presence_mask |= 0x04;
@@ -332,6 +522,7 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
                     source: format!("gene-keys:{value}"),
                     completeness: 2,
                     set_at: Some(now_ts),
+                    elemental_profile: None, // filled by post-match elemental loop
                 },
             );
             profile.layer_presence_mask |= 0x08;
@@ -344,6 +535,7 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
                     source: format!("human-design:{value}"),
                     completeness: 2,
                     set_at: Some(now_ts),
+                    elemental_profile: None, // filled by post-match elemental loop
                 },
             );
             profile.layer_presence_mask |= 0x10;
@@ -357,12 +549,19 @@ pub fn set_layer(key: &str, value: &str) -> Result<String, String> {
     }
 
     // Update hash preview from layer presence.
-    // Derive from expanded 32-byte hash (same expansion strategy as wind.rs).
-    // preview = first 8 hex chars = first 4 bytes of hash32.
-    let h0 = simple_identity_hash(profile.layer_presence_mask);
-    let h0_bytes = h0.to_le_bytes();
-    // Use first 4 bytes of h0 for the preview — consistent with wind.rs hash32[..4].
-    profile.hash_preview = h0_bytes[..4].iter().map(|b| format!("{:02x}", b)).collect();
+    // Fill in elemental profiles for any layer that doesn't have one yet.
+    // Layers are stored under numeric string keys "0"-"4".
+    for (idx_str, meta) in profile.layers.iter_mut() {
+        if meta.elemental_profile.is_none() && meta.present {
+            meta.elemental_profile = Some(
+                elemental_profile_for_layer(idx_str.as_str(), &meta.source)
+            );
+        }
+    }
+
+    // Canonical 32-byte BLAKE3 identity hash — spec: 00-canonical-invariants §1
+    let hash32 = blake3_identity_hash(&profile);
+    profile.hash_preview = hash32[..4].iter().map(|b| format!("{:02x}", b)).collect();
 
     save_profile(&profile)?;
     Ok(format!(

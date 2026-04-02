@@ -402,7 +402,7 @@ const M3_Rotational_Profile M3_ROTATIONAL_PROFILE[64] = {
     R7(A,G,A, A,G, G,A), R8(A,G,T),          R8P(A,G,C, A,C,G), R7(A,G,G, A,G, G,G),
 
     R7(T,A,A, T,A, A,A), R7(T,A,T, T,A, A,T), R8(T,A,C),        R8P(T,A,G, T,G,A),
-    R8(T,C,A),           R8(T,C,T),          R7(T,C,C, T,C, C,C), R8P(T,C,G, T,G,C),
+    R8(T,C,A),           R7(T,C,T, T,C, C,T), R7(T,C,C, T,C, C,C), R8P(T,C,G, T,G,C),
     R8P(T,G,A, T,A,G),   R8P(T,G,C, T,C,G), R7(T,G,T, T,G, G,T), R7(T,G,G, T,G, G,G),
     R7(T,T,A, T,T, T,A), R7(T,T,T, T,T, T,T), R7(T,T,C, T,T, T,C), R7(T,T,G, T,T, T,G),
 
@@ -586,6 +586,32 @@ const M3_Rotational_Profile* m3_get_rotational_profile(uint8_t codon6bit) {
 
 
 /* ===================================================================
+ * FR 2.3.17b: Codon Classification LUT — runtime init
+ * =================================================================== */
+
+Codon_Classification M3_CODON_CLASS[64] = {{0}};
+
+static uint8_t wc_anticodon(uint8_t c) {
+    uint8_t n1 = (c >> 4) & 0x03;
+    uint8_t n2 = (c >> 2) & 0x03;
+    uint8_t n3 = c & 0x03;
+    /* Complement each nucleotide (XOR 0x01: A↔T, C↔G), then reverse */
+    return (uint8_t)(((n3 ^ 0x01) << 4) | ((n2 ^ 0x01) << 2) | (n1 ^ 0x01));
+}
+
+void m3_init_codon_class_lut(void) {
+    for (uint8_t i = 0; i < 64; i++) {
+        M3_CODON_CLASS[i] = (Codon_Classification){
+            .cls = m3_classify_codon(i),
+            .rotational_state_count = m3_codon_rotation_count(i),
+            .paired_codon = wc_anticodon(i),
+            .amino_acid = M3_CODON_TO_AA[i],
+        };
+    }
+}
+
+
+/* ===================================================================
  * API: m3_init — Allocate and HC-link M3_Root
  * =================================================================== */
 
@@ -606,11 +632,16 @@ M3_Root* m3_init(Coordinate_Arena* arena, Holographic_Coordinate* hc) {
     root->engine.res_matrix  = M3_RES_MATRIX;
     root->engine.codon_to_aa = M3_CODON_TO_AA;
 
-    /* Compute non-dual base mask — 16 non-dual codons as seed bits */
+    /* Compute non-dual mask — all 40 non-dual codons (not just 16 XyX) */
     root->engine.non_dual_mask = 0;
-    for (int i = 0; i < 16; i++) {
-        root->engine.non_dual_mask |= (1ULL << M3_NONDUAL_CODONS[i]);
+    for (uint8_t i = 0; i < 64; i++) {
+        if (m3_classify_codon(i) != CODON_DUAL) {
+            root->engine.non_dual_mask |= (1ULL << i);
+        }
     }
+
+    /* Initialize codon classification LUT */
+    m3_init_codon_class_lut();
 
     return root;
 }
@@ -647,6 +678,22 @@ bool m3_verify(void) {
     if (M3_PAIR_MATRIX[4].sum_value != 15) return false;  /* TA */
     if (M3_PAIR_MATRIX[11].sum_value != 15) return false; /* GC */
     if (M3_PAIR_MATRIX[14].sum_value != 15) return false; /* CG */
+
+    /* Dataset invariant (Finding F2): inner_charge_pn == inner_charge_np for ALL 64 codons.
+     * NOTE: The C closed-form formula (np = X-Y+Z, pn = X+Y-Z) does NOT preserve
+     * this symmetry — it's an approximation. The dataset charge values come from a
+     * different computation path (pair sum/diff composition). When full dataset-backed
+     * charge LUTs are ported, this invariant MUST be verified against the LUT data.
+     * For now, verify the 360 integral invariant instead (below). */
+
+    /* Codon classification: verify 40/24 split matches rotational profile */
+    {
+        uint8_t nd_count = 0;
+        for (int i = 0; i < 64; i++) {
+            if (m3_classify_codon((uint8_t)i) != CODON_DUAL) nd_count++;
+        }
+        if (nd_count != CODON_NONDUAL_TOTAL_COUNT) return false;
+    }
 
     /* Non-dual codons: all 16 must pass is_nondual_codon() */
     for (int i = 0; i < 16; i++) {
@@ -726,11 +773,12 @@ bool m3_verify(void) {
                 paired++;
             }
         }
-        if (seven_state != 39u) return false;
-        if (eight_state != 25u) return false;
-        if (anchored != 39u) return false;
+        if (seven_state != 40u) return false;   /* 40 non-dual codons × 7 states */
+        if (eight_state != 24u) return false;   /* 24 dual codons × 8 states */
+        if (anchored != 40u) return false;      /* All 7-state have anchors */
         if (paired != 16u) return false;
-        if (M3_ROTATIONAL_PROFILE[encode_codon(M3_NUC_T, M3_NUC_C, M3_NUC_T)].state_count != 8u) {
+        /* TCT is imperfect palindromic (T_C_T, XyX): 7 states, non-dual */
+        if (M3_ROTATIONAL_PROFILE[encode_codon(M3_NUC_T, M3_NUC_C, M3_NUC_T)].state_count != 7u) {
             return false;
         }
     }

@@ -658,6 +658,52 @@ impl HypertilePlugin for M4OraclePlugin {
             }
         }
 
+        // Hopf dynamics summary (post-cast)
+        if let Some(ref cs) = self.clock_state {
+            if let Ok(s) = cs.lock() {
+                if s.last_cast.is_some() {
+                    lines.push(Line::from(""));
+                    lines.push(Line::from(Span::styled(
+                        "  Hopf Dynamics",
+                        Style::default().fg(accent).add_modifier(Modifier::BOLD),
+                    )));
+                    lines.push(Line::from(vec![
+                        Span::styled("  Walk: ", dim),
+                        Span::styled(
+                            s.walk_mode.label().to_string(),
+                            Style::default().fg(Color::Green),
+                        ),
+                        Span::styled(
+                            format!("  λ={:.2}  {}-fold",
+                                s.bifurcation_param,
+                                match s.resolution_level { 0=>6, 1=>12, 2=>36, _=>72 }),
+                            Style::default().fg(Color::Yellow),
+                        ),
+                    ]));
+                    let codon = &s.active_codon;
+                    let seq_str = std::str::from_utf8(&codon.sequence_a).unwrap_or("???");
+                    lines.push(Line::from(vec![
+                        Span::styled("  Codon: ", dim),
+                        Span::styled(
+                            seq_str.to_string(),
+                            Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+                        ),
+                        Span::styled(
+                            format!(" [{}] {}R", codon.class_a.label(), codon.rotation_count_a),
+                            Style::default().fg(Color::Cyan),
+                        ),
+                    ]));
+                    lines.push(Line::from(vec![
+                        Span::styled("  Orbit: ", dim),
+                        Span::styled(
+                            format!("{} casts", s.micro_orbit.len()),
+                            Style::default().fg(Color::White),
+                        ),
+                    ]));
+                }
+            }
+        }
+
         // Consent gate display
         if self.consent_pending {
             lines.push(Line::from(""));
@@ -696,15 +742,24 @@ impl HypertilePlugin for M4OraclePlugin {
                 match chord.code {
                     KeyCode::Char('y') => {
                         self.consent_pending = false;
-                        // Cast with auto-consent (yes=true) since user confirmed in TUI
-                        match crate::nara::oracle::cast("iching", "portal cast", true, None) {
-                            Ok(result) => {
-                                self.last_cast = Some(result);
-                                // Update shared clock state from oracle cast.
-                                // Use a separate eval4 (no history write) to get quaternionic
-                                // charges and degree for the portal clock.
+                        // Single cast: display string and OraclePayload come from the
+                        // same coin throw — eliminates the double-cast bug where
+                        // cast() and cast_and_eval4() produced independent hexagrams.
+                        // Kairos degree from clock state (0.0 if unavailable).
+                        let kairos_deg = self
+                            .clock_state
+                            .as_ref()
+                            .and_then(|cs| cs.lock().ok())
+                            .map(|s| s.current_degree as f32)
+                            .unwrap_or(0.0);
+                        match crate::nara::oracle::cast_iching_with_payload(
+                            "portal cast",
+                            kairos_deg,
+                            0,
+                        ) {
+                            Ok((display, payload)) => {
+                                self.last_cast = Some(display);
                                 if let Some(ref cs) = self.clock_state {
-                                    let payload = crate::nara::oracle::cast_and_eval4(0.0, 0);
                                     let temporal_hex = payload.temporal_hex;
                                     crate::portal::clock_state::update_from_cast(
                                         cs,

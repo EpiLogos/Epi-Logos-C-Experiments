@@ -12,6 +12,8 @@ pub mod logos;
 pub mod medicine;
 pub mod oracle;
 pub mod pratibimba;
+pub mod rotational;
+pub mod transcription;
 pub mod transform;
 pub mod weights;
 pub mod wind;

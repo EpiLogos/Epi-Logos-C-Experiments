@@ -124,6 +124,28 @@ impl HypertilePlugin for MiniClockPlugin {
             ),
         ]));
 
+        // Walk mode + bifurcation gauge
+        if let Some(ref cs) = self.shared_clock {
+            if let Ok(s) = cs.lock() {
+                let walk_color = match s.walk_mode {
+                    crate::portal::clock_state::WalkMode::Ground => Color::White,
+                    crate::portal::clock_state::WalkMode::Torus  => Color::Red,
+                    crate::portal::clock_state::WalkMode::Fiber  => Color::Blue,
+                    crate::portal::clock_state::WalkMode::Spanda => Color::Cyan,
+                };
+                let lambda_bars = (s.bifurcation_param * 8.0).round() as usize;
+                let bar = "▓".repeat(lambda_bars.min(8))
+                    + &"░".repeat(8 - lambda_bars.min(8));
+                wheel_lines.push(Line::from(vec![
+                    Span::styled(
+                        format!("  {} ", s.walk_mode.label()),
+                        Style::default().fg(walk_color),
+                    ),
+                    Span::styled(bar, Style::default().fg(Color::Yellow)),
+                ]));
+            }
+        }
+
         let para = Paragraph::new(wheel_lines).block(
             Block::default()
                 .title(" M' Mini Clock ")

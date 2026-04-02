@@ -677,6 +677,74 @@ extern const uint8_t M3_NONDUAL_CODONS[16];
 
 
 /* ===================================================================
+ * FR 2.3.17b: CODON CLASSIFICATION — 3-Tier (40 Non-Dual / 24 Dual)
+ *
+ * Algorithmic classification from nucleotide positions:
+ *   n1==n3 && n1==n2  → PERFECT_PALINDROMIC    (4:  AAA,TTT,CCC,GGG)
+ *   n1==n3 && n1!=n2  → IMPERFECT_PALINDROMIC  (12: XyX, X≠Y)
+ *   n1!=n3 && (n1==n2 || n2==n3) → NON_PALINDROMIC_NONDUAL (24: repeated dinucleotide)
+ *   n1!=n2 && n2!=n3 && n1!=n3   → DUAL (24: all neighbors differ)
+ *
+ * Non-dual = has at least one repeated adjacent pair → eigenstate
+ * collapse at 0°/180° in rotational system → 7 states.
+ * Dual = all distinct neighbor pairs → full 8 rotational states.
+ *
+ * Counts: 4 + 12 + 24 + 24 = 64 codons.
+ * Rotational states: 40×7 + 24×8 = 280 + 192 = 472 total.
+ * =================================================================== */
+
+typedef enum {
+    CODON_PERFECT_PALINDROMIC     = 0,  /* 4:  homogeneous triplet, 7 states */
+    CODON_IMPERFECT_PALINDROMIC   = 1,  /* 12: XyX where X≠Y, 7 states */
+    CODON_NON_PALINDROMIC_NONDUAL = 2,  /* 24: repeated dinucleotide, 7 states */
+    CODON_DUAL                    = 3   /* 24: all neighbors differ, 8 states */
+} Codon_Class;
+
+#define CODON_NONDUAL_TOTAL_COUNT         40u
+#define CODON_DUAL_COUNT                  24u
+#define CODON_ROTATIONAL_STATE_TOTAL     472u
+
+_Static_assert(CODON_NONDUAL_TOTAL_COUNT + CODON_DUAL_COUNT == 64,
+    "40 non-dual + 24 dual = 64 codons");
+_Static_assert(CODON_NONDUAL_TOTAL_COUNT * 7 + CODON_DUAL_COUNT * 8
+    == CODON_ROTATIONAL_STATE_TOTAL,
+    "40×7 + 24×8 = 472 rotational states");
+
+typedef struct {
+    Codon_Class cls;
+    uint8_t     rotational_state_count;  /* 7 or 8 */
+    uint8_t     paired_codon;            /* WC anticodon */
+    uint8_t     amino_acid;              /* M3_CODON_TO_AA index */
+} Codon_Classification;
+
+/* Algorithmic classifier — O(1), no lookup, pure arithmetic */
+static inline Codon_Class m3_classify_codon(uint8_t codon6bit) {
+    uint8_t n1 = (codon6bit >> 4) & 0x03;
+    uint8_t n2 = (codon6bit >> 2) & 0x03;
+    uint8_t n3 = codon6bit & 0x03;
+    if (n1 == n3) {
+        return (n1 == n2) ? CODON_PERFECT_PALINDROMIC
+                          : CODON_IMPERFECT_PALINDROMIC;
+    }
+    return (n1 == n2 || n2 == n3) ? CODON_NON_PALINDROMIC_NONDUAL
+                                  : CODON_DUAL;
+}
+
+static inline bool codon_is_dual(Codon_Class c)               { return c == CODON_DUAL; }
+static inline bool codon_is_non_dual(Codon_Class c)            { return c != CODON_DUAL; }
+static inline bool codon_is_palindromic(Codon_Class c)         { return c <= CODON_IMPERFECT_PALINDROMIC; }
+static inline bool codon_is_perfect_palindrome(Codon_Class c)  { return c == CODON_PERFECT_PALINDROMIC; }
+
+static inline uint8_t m3_codon_rotation_count(uint8_t codon6bit) {
+    return m3_classify_codon(codon6bit) == CODON_DUAL ? 8u : 7u;
+}
+
+/* Master LUT — initialized by m3_init_codon_class_lut(). Read-only after init. */
+extern Codon_Classification M3_CODON_CLASS[64];
+void m3_init_codon_class_lut(void);
+
+
+/* ===================================================================
  * FR 2.3.18: INNER CHARGE CLOSED-FORM DERIVATION
  *
  * pp = X+Y+Z, nn = X-Y-Z, np = X-Y+Z, pn = X+Y-Z
@@ -881,6 +949,7 @@ typedef struct {
     uint8_t  hexagram_id;           /* 0-63   I-Ching hexagram                   */
     uint8_t  hexagram_line_active;  /* 0-5    which of the 6 lines at this degree */
     uint8_t  is_non_dual_codon;     /* 1 if palindromic/non-dual codon           */
+    uint8_t  codon_class;           /* Codon_Class: 0=perfect,1=imperfect,2=nonpal_nd,3=dual */
     uint8_t  codon_upper_pair;      /* 0-3    upper nucleotide (A/T/C/G)         */
     uint8_t  codon_lower_pair;      /* 0-3    lower nucleotide                   */
     uint8_t  tarot_card_id;         /* 0-55   Minor Arcana (0=unavailable)       */

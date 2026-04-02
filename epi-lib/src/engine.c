@@ -1,7 +1,12 @@
 /**
  * engine.c — The Torus Engine
  *
- * Torus walk, Lemniscate dive, double covering.
+ * Torus walk (6-step QL cycle), Spanda walk (12-step M1 tick cycle),
+ * Lemniscate dive, double covering.
+ *
+ * Canonical walk vocabulary (spec: 00-canonical-invariants §6):
+ *   engine_torus_walk  = 6-step QL cycle (#0-#5), coordinate-driven
+ *   engine_spanda_walk = 12-step M1 spanda walk (tick12 0-11, 30°/tick)
  */
 
 #include "engine.h"
@@ -84,6 +89,104 @@ void engine_double_covering(
     if (context_state) {
         Walk_Context* wc = (Walk_Context*)context_state;
         wc->covering = 0;
+    }
+}
+
+
+/* M1 Paramasiva Spanda walk — 12 discrete ticks of 30° each.
+ * tick12 = 0-11; each tick = one spanda beat on the double-helix.
+ * Spec: 00-canonical-invariants §6, 03-spanda-double-helix §12-fold
+ */
+void engine_spanda_walk(
+    uint8_t tick12_start,
+    uint8_t tick_count,
+    void* context_state,
+    void (*on_tick)(uint8_t tick12, void* ctx)
+) {
+    if (!on_tick || tick_count == 0) return;
+    for (uint8_t i = 0; i < tick_count; i++) {
+        uint8_t tick = (uint8_t)((tick12_start + i) % 12);
+        on_tick(tick, context_state);
+    }
+}
+
+/* =============================================================================
+ * Walk_Mode dispatcher — engine_walk_by_mode()
+ * ============================================================================= */
+
+/* Adapter: wraps torus walk to emit position via Walk_Callback.
+ * context_state->accumulator stores the Walk_Callback.
+ * We use a small shim struct to carry both callback and user context. */
+
+typedef struct {
+    Walk_Callback cb;
+    void*         user_ctx;
+    uint32_t      emitted;
+} WalkAdapterCtx;
+
+static void spanda_to_walk_cb(uint8_t tick12, void* ctx) {
+    WalkAdapterCtx* adapter = (WalkAdapterCtx*)ctx;
+    if (adapter && adapter->cb) {
+        adapter->cb(tick12, adapter->user_ctx);
+    }
+}
+
+void engine_walk_by_mode(
+    Walk_Mode mode,
+    const Holographic_Coordinate* start,
+    void* context_state,
+    Walk_Callback callback,
+    uint32_t steps
+) {
+    /* Handle NULL callback and zero steps safely */
+    if (!callback) return;
+
+    switch (mode) {
+        case WALK_GROUND: {
+            /* Emit start position once, then return */
+            uint8_t pos = start ? start->ql_position : 0;
+            callback(pos, context_state);
+            break;
+        }
+
+        case WALK_TORUS: {
+            /* Torus walk uses invoke_process — we need to temporarily install
+             * our adapter as the invoke_process on each psychoid, then walk.
+             * Simpler approach: manually step through torus map with callback. */
+            if (!start) { callback(0, context_state); break; }
+            uint32_t limit = (steps == 0) ? 6 : steps;
+            const Holographic_Coordinate* current = start;
+            for (uint32_t i = 0; i < limit; i++) {
+                callback(current->ql_position, context_state);
+                const Holographic_Coordinate* next = engine_next_coordinate(current->ql_position);
+                if (!next) break;
+                current = next;
+            }
+            break;
+        }
+
+        case WALK_FIBER: {
+            /* Lemniscate dive — emit positions along cf chain */
+            if (!start) { callback(0, context_state); break; }
+            uint8_t depth = (steps == 0) ? 4 : (uint8_t)(steps > 255 ? 255 : steps);
+            const Holographic_Coordinate* current = start;
+            for (uint8_t d = 0; d < depth; d++) {
+                callback(current->ql_position, context_state);
+                if (!current->cf) break;
+                const Holographic_Coordinate* inner = GET_PTR(current->cf);
+                if (!inner) break;
+                current = inner;
+            }
+            break;
+        }
+
+        case WALK_SPANDA: {
+            /* 12-step spanda walk — use engine_spanda_walk with adapter */
+            uint8_t tick_count = (steps == 0) ? 12 : (uint8_t)(steps > 255 ? 255 : steps);
+            WalkAdapterCtx adapter = { .cb = callback, .user_ctx = context_state, .emitted = 0 };
+            engine_spanda_walk(0, tick_count, &adapter, spanda_to_walk_cb);
+            break;
+        }
     }
 }
 

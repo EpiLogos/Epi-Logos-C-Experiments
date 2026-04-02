@@ -522,8 +522,9 @@ static void test_rotational_profiles(void) {
     TEST("ACG paired with AGC", acg->paired_codon == encode_codon(M3_NUC_A, M3_NUC_G, M3_NUC_C));
     TEST("AGC paired with ACG", agc->paired_codon == encode_codon(M3_NUC_A, M3_NUC_C, M3_NUC_G));
 
-    TEST("TCT is dataset full-rotational outlier", tct->state_type == M3_ROTATIONAL_FULL_ROTATIONAL);
-    TEST("TCT state count = 8", tct->state_count == 8u);
+    /* TCT is imperfect palindromic (T_C_T, XyX): non-dual, 7 states */
+    TEST("TCT is non-dual initiated", tct->state_type == M3_ROTATIONAL_NON_DUAL_INITIATED);
+    TEST("TCT state count = 7", tct->state_count == 7u);
 
     {
         int seven_count = 0;
@@ -546,10 +547,10 @@ static void test_rotational_profiles(void) {
                  (profile->anchor_pair_a != M3_ROTATIONAL_NO_PAIR));
         }
 
-        TEST("dataset seven-state reflections = 39", seven_count == 39);
-        TEST("dataset eight-state reflections = 25", eight_count == 25);
+        TEST("dataset seven-state reflections = 40", seven_count == 40);
+        TEST("dataset eight-state reflections = 24", eight_count == 24);
         TEST("dataset paired codons = 16", paired_count == 16);
-        TEST("dataset non-dual anchors = 39", anchored_count == 39);
+        TEST("dataset non-dual anchors = 40", anchored_count == 40);
     }
 }
 
@@ -742,7 +743,7 @@ static void test_m3_api(void) {
     int bitcount = 0;
     uint64_t mask = root->engine.non_dual_mask;
     while (mask) { bitcount += mask & 1; mask >>= 1; }
-    TEST("non_dual_mask 16 bits", bitcount == 16);
+    TEST("non_dual_mask 40 bits", bitcount == 40);
 
     /* Wrong position should fail */
     Holographic_Coordinate* wrong = arena_alloc(&arena);

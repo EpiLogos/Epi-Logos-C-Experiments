@@ -4,7 +4,7 @@ use ratatui::widgets::*;
 use ratatui_hypertile::{EventOutcome, HypertileEvent, KeyCode};
 use ratatui_hypertile_extras::HypertilePlugin;
 
-use crate::portal::clock_state::{KairosState, PlanetState, PortalClockState, SharedClockState, update_kairos};
+use crate::portal::clock_state::{PortalClockState, SharedClockState, update_kairos};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // BrailleCanvas
@@ -517,6 +517,78 @@ fn render_side_panel(buf: &mut Buffer, area: Rect, state: &PortalClockState) {
         ]));
     }
 
+    // ── Hopf dynamics ──────────────────────────────────────────────
+    lines.push(Line::from(""));
+
+    // Walk mode + bifurcation
+    lines.push(Line::from(vec![
+        Span::styled("walk ", Style::default().fg(Color::DarkGray)),
+        Span::styled(
+            state.walk_mode.label(),
+            Style::default().fg(match state.walk_mode {
+                crate::portal::clock_state::WalkMode::Ground => Color::White,
+                crate::portal::clock_state::WalkMode::Torus  => Color::Red,
+                crate::portal::clock_state::WalkMode::Fiber  => Color::Blue,
+                crate::portal::clock_state::WalkMode::Spanda => Color::Cyan,
+            }),
+        ),
+    ]));
+    lines.push(Line::from(vec![
+        Span::styled("λ    ", Style::default().fg(Color::DarkGray)),
+        Span::styled(
+            format!("{:.2}  {}", state.bifurcation_param, match state.resolution_level {
+                0 => "6-fold", 1 => "12-fold", 2 => "36-fold", _ => "72-fold",
+            }),
+            Style::default().fg(Color::Yellow),
+        ),
+    ]));
+
+    // Active codon
+    let codon = &state.active_codon;
+    let seq_str = std::str::from_utf8(&codon.sequence_a).unwrap_or("???");
+    lines.push(Line::from(vec![
+        Span::styled("cdn  ", Style::default().fg(Color::DarkGray)),
+        Span::styled(
+            seq_str.to_string(),
+            Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+        ),
+        Span::styled(
+            format!(" {}", codon.class_a.label()),
+            Style::default().fg(match codon.class_a {
+                crate::portal::clock_state::CodonClass::PerfectPalindromic => Color::Yellow,
+                crate::portal::clock_state::CodonClass::ImperfectPalindromic => Color::Green,
+                crate::portal::clock_state::CodonClass::NonPalindromicNonDual => Color::Cyan,
+                crate::portal::clock_state::CodonClass::Dual => Color::Magenta,
+            }),
+        ),
+        Span::styled(
+            format!(" {}R", codon.rotation_count_a),
+            Style::default().fg(Color::DarkGray),
+        ),
+    ]));
+
+    // Micro-orbit count
+    if !state.micro_orbit.is_empty() {
+        lines.push(Line::from(vec![
+            Span::styled("orb  ", Style::default().fg(Color::DarkGray)),
+            Span::styled(
+                format!("{} casts", state.micro_orbit.len()),
+                Style::default().fg(Color::White),
+            ),
+        ]));
+    }
+
+    // Aspects
+    if !state.aspects.is_empty() {
+        lines.push(Line::from(vec![
+            Span::styled("asp  ", Style::default().fg(Color::DarkGray)),
+            Span::styled(
+                format!("{} active", state.aspects.len()),
+                Style::default().fg(Color::Cyan),
+            ),
+        ]));
+    }
+
     lines.push(Line::from(""));
 
     let kairos_span = if state.kairos.valid {
@@ -530,131 +602,29 @@ fn render_side_panel(buf: &mut Buffer, area: Rect, state: &PortalClockState) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MiniClockPlugin — compact Tab 1 orientation widget
-// ─────────────────────────────────────────────────────────────────────────────
-
-pub struct MiniClockPlugin {
-    clock: SharedClockState,
-}
-
-unsafe impl Send for MiniClockPlugin {}
-
-impl MiniClockPlugin {
-    pub fn new(clock: SharedClockState) -> Self {
-        MiniClockPlugin { clock }
-    }
-}
-
-impl HypertilePlugin for MiniClockPlugin {
-    fn render(&self, area: Rect, buf: &mut Buffer, is_focused: bool) {
-        let state = self.clock.lock().unwrap().clone();
-
-        let block = Block::default()
-            .title(" ◎ ")
-            .borders(Borders::ALL)
-            .border_style(Style::default().fg(
-                if is_focused { Color::Cyan } else { Color::DarkGray }
-            ));
-        let inner = block.inner(area);
-        Widget::render(block, area, buf);
-
-        // Planet symbols — only loaded ones (canonical mod-10 ordering)
-        let planet_line: String = state.kairos.planets
-            .iter()
-            .enumerate()
-            .filter(|(_, p)| p.degree != 0xFFFF)
-            .map(|(i, p)| format!("{}{} ", PLANET_SYMBOLS[i], p.degree))
-            .collect();
-
-        const STAGE_LABELS: [&str; 6] = ["SEED", "POLE", "TRIKA", "FLOWER", "FULL", "META"];
-
-        let stage_name  = STAGE_LABELS[(state.tick12 % 6) as usize];
-        let stage_color = PHI_STAGE_COLORS[(state.tick12 % 6) as usize];
-
-        let lines = vec![
-            Line::from(vec![
-                Span::styled(
-                    format!("{}° ", state.current_degree),
-                    Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD),
-                ),
-                Span::styled(stage_name, Style::default().fg(stage_color).add_modifier(Modifier::BOLD)),
-            ]),
-            Line::from(vec![
-                Span::styled(
-                    if planet_line.is_empty() {
-                        "kairos not loaded".to_string()
-                    } else {
-                        planet_line
-                    },
-                    Style::default().fg(Color::DarkGray),
-                ),
-            ]),
-        ];
-
-        Widget::render(Paragraph::new(lines), inner, buf);
-    }
-
-    fn on_event(&mut self, _event: &HypertileEvent) -> EventOutcome {
-        EventOutcome::Ignored
-    }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // Kairos loader helper
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Try to load planet degrees from the cached kairos JSON file.
-/// Returns Ok(true) if successfully loaded, Ok(false) if no file found.
+/// Try to load planet degrees from the kerykeion sync cache.
+///
+/// Reads `~/.epi-logos/nara/kairos/current.json` (written by `epi nara kairos sync`
+/// via `kairos::save_current()`), parses it as a `KerykeionResult`, and converts it
+/// into a `KairosState` using `kairos::kerykeion_result_to_kairos_state()`.
+///
+/// Spec: 00-canonical-invariants §2 (mod-10 planet ordering),
+///       dataset-bridge/01-paramasiva-findings (Kairos data path)
+///
+/// Returns Ok(true) if successfully loaded, Ok(false) if no cache file exists.
 pub fn try_load_kairos_into_clock(clock: &SharedClockState) -> Result<bool, String> {
-    let kairos_path = {
-        let mut p = dirs::home_dir().unwrap_or_default();
-        p.push(".epi-logos");
-        p.push("kairos-cache.json");
-        p
-    };
-
-    if !kairos_path.exists() {
-        return Ok(false);
-    }
-
-    let raw = std::fs::read_to_string(&kairos_path)
-        .map_err(|e| e.to_string())?;
-    let val: serde_json::Value = serde_json::from_str(&raw)
-        .map_err(|e| e.to_string())?;
-
-    // Expected JSON: { "planets": { "sun": 45, "moon": 30, ... } }
-    // Canonical mod-10 ordering: Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4,
-    //   Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9
-    const PLANET_KEYS: [&str; 10] = [
-        "sun", "moon", "mercury", "venus", "mars",
-        "jupiter", "saturn", "uranus", "neptune", "pluto",
-    ];
-
-    let mut planets: [PlanetState; 10] = std::array::from_fn(|_| PlanetState {
-        degree: 0xFFFF,
-        ..Default::default()
-    });
-    let mut any_loaded = false;
-
-    if let Some(planet_obj) = val.get("planets").and_then(|p| p.as_object()) {
-        for (i, key) in PLANET_KEYS.iter().enumerate() {
-            if let Some(deg) = planet_obj.get(*key).and_then(|v| v.as_f64()) {
-                planets[i].degree = (deg as u32 % 360) as u16;
-                any_loaded = true;
-            }
+    match crate::nara::kairos::load_current() {
+        Ok(Some(result)) => {
+            let kairos = crate::nara::kairos::kerykeion_result_to_kairos_state(&result);
+            update_kairos(clock, kairos);
+            Ok(true)
         }
+        Ok(None) => Ok(false),
+        Err(e) => Err(e),
     }
-
-    if any_loaded {
-        let kairos = KairosState {
-            planets,
-            valid: true,
-            ..Default::default()
-        };
-        update_kairos(clock, kairos);
-    }
-
-    Ok(any_loaded)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

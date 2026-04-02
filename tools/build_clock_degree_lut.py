@@ -2,7 +2,7 @@
 """
 build_clock_degree_lut.py — Generate CLOCK_DEGREE_LUT[360] C source.
 
-Outputs all 26 fields of Clock_Degree_Entry matching the expanded struct in m3.h.
+Outputs all 27 fields of Clock_Degree_Entry matching the expanded struct in m3.h.
 Queries Neo4j for real hexagram assignments when available; falls back to computed.
 
 Usage:
@@ -93,16 +93,30 @@ def compute_lut_row(degree, neo4j_hexes=None):
         # Recompute line from Neo4j hex: use degree position within decan
         hexagram_line_active = (degree % 6)
 
-    # Palindromic/non-dual codon: backbone nodes are the palindromic anchors
-    # (precise 5-type codon classification requires Neo4j #3-2 nodes)
-    is_non_dual_codon = is_backbone_node
-
     # Codon nucleotide pairs: derived from hexagram binary encoding
     # Upper trigram = bits 5-3, lower trigram = bits 2-0 of hexagram_id
     # Each trigram nucleotide pair: approximate from hexagram structure
     # (full dataset sourced values from #3-2 codon nodes when available)
     codon_upper_pair = (hexagram_id >> 3) & 0x03   # bits 4-3 of hexagram
     codon_lower_pair = hexagram_id & 0x03           # bits 1-0 of hexagram
+
+    # 3-tier codon classification: algorithmic from nucleotide positions
+    # n1=outer, n2=middle (from hexagram line), n3=inner
+    n1 = codon_upper_pair
+    n3 = codon_lower_pair
+    n2 = (hexagram_id >> 2) & 0x03  # middle nucleotide from hexagram bits 3-2
+    if n1 == n3:
+        if n1 == n2:
+            codon_class = 0  # CODON_PERFECT_PALINDROMIC
+        else:
+            codon_class = 1  # CODON_IMPERFECT_PALINDROMIC
+    elif n1 == n2 or n2 == n3:
+        codon_class = 2      # CODON_NON_PALINDROMIC_NONDUAL
+    else:
+        codon_class = 3      # CODON_DUAL
+
+    # Non-dual: all non-dual codons (40 total), not just backbone
+    is_non_dual_codon = 1 if codon_class < 3 else 0
 
     # Tarot card: unavailable without decan→tarot dataset (#2-3 → #3-4 relations)
     tarot_card_id = 0
@@ -151,6 +165,7 @@ def compute_lut_row(degree, neo4j_hexes=None):
         'hexagram_id':       hexagram_id,
         'hexagram_line_active': hexagram_line_active,
         'is_non_dual_codon': is_non_dual_codon,
+        'codon_class':       codon_class,
         'codon_upper_pair':  codon_upper_pair,
         'codon_lower_pair':  codon_lower_pair,
         'tarot_card_id':     tarot_card_id,
@@ -208,7 +223,7 @@ def format_entry(e):
         f" {e['decan_idx']:2d},{e['decan_position']:2d},"
         f" {e['is_backbone_node']},"
         f" {e['hexagram_id']:2d},{e['hexagram_line_active']},"
-        f" {e['is_non_dual_codon']},"
+        f" {e['is_non_dual_codon']},{e['codon_class']},"
         f" {e['codon_upper_pair']},{e['codon_lower_pair']},"
         f" {e['tarot_card_id']},"
         f" {e['decan_planet']},{e['decan_element']},{e['decan_chakra']},"
@@ -230,10 +245,10 @@ def generate_c_source(entries):
         ' * 385-node structure: 360 degree nodes + 24 backbone (d%15==0) + 1 Axis Mundi',
         ' * Structural law: 360+24 == 64*6 (clock topology = I-Ching LINE_CHANGE count)',
         ' *',
-        ' * Field order matches Clock_Degree_Entry in m3.h (26 fields):',
+        ' * Field order matches Clock_Degree_Entry in m3.h (27 fields):',
         ' *   degree_node_360, exact_degree_720,',
         ' *   zodiac_sign, zodiac_degree, decan_idx, decan_position, is_backbone_node,',
-        ' *   hexagram_id, hexagram_line_active, is_non_dual_codon,',
+        ' *   hexagram_id, hexagram_line_active, is_non_dual_codon, codon_class,',
         ' *   codon_upper_pair, codon_lower_pair, tarot_card_id,',
         ' *   decan_planet, decan_element, decan_chakra,',
         ' *   tick12, strand, dr_ring, m1_ananda_value, m0_archetype,',

@@ -156,7 +156,29 @@ impl HypertilePlugin for M4SpinePlugin {
             ]));
         }
 
+        // λ-modulated resolution indicator
         lines.push(Line::from(""));
+        if let Some(ref cs) = self.shared_clock {
+            if let Ok(s) = cs.lock() {
+                let res_marker = match s.resolution_level {
+                    0 => "·  6-fold",
+                    1 => "∘  12-fold",
+                    2 => "○  36-fold",
+                    _ => "●  72-fold",
+                };
+                lines.push(Line::from(vec![
+                    Span::styled(
+                        format!("  λ={:.2} ", s.bifurcation_param),
+                        Style::default().fg(Color::Yellow),
+                    ),
+                    Span::styled(
+                        res_marker.to_string(),
+                        Style::default().fg(Color::Cyan),
+                    ),
+                ]));
+            }
+        }
+
         lines.push(Line::from(vec![Span::styled(
             "  EarthBody Observer",
             Style::default()

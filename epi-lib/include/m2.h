@@ -592,4 +592,51 @@ int      m2_cli_dispatch(int argc, char** argv, M2_Root* root);
 bool     m2_verify(void);
 
 
+/* ===================================================================
+ * ASPECT COMPUTATION — Angular relationships between planet degrees
+ *
+ * 5 major aspects: conjunction(0°), sextile(60°), square(90°),
+ * trine(120°), opposition(180°). Each with standard orb tolerance.
+ * Degree inputs are float [0, 360). Wrap-around handled.
+ * =================================================================== */
+
+#define ASPECT_NONE         0xFF
+#define ASPECT_CONJUNCTION  0
+#define ASPECT_SEXTILE      1
+#define ASPECT_SQUARE       2
+#define ASPECT_TRINE        3
+#define ASPECT_OPPOSITION   4
+#define ASPECT_COUNT        5
+
+static const uint16_t MAJOR_ASPECT_ANGLE[5] = { 0, 60, 90, 120, 180 };
+static const uint8_t  MAJOR_ASPECT_ORB[5]   = { 10, 6, 8, 8, 10 };
+
+typedef struct {
+    uint8_t aspect_type;  /* ASPECT_CONJUNCTION..ASPECT_OPPOSITION, or ASPECT_NONE */
+    float   angle;        /* Actual angular separation [0, 180] */
+    float   orb;          /* Deviation from exact aspect angle */
+} Aspect_Result;
+
+/* Compute aspect between two zodiacal degrees (0-360).
+ * Returns the tightest matching major aspect, or ASPECT_NONE. */
+static inline Aspect_Result m2_aspect_between(float deg_a, float deg_b) {
+    float diff = deg_a - deg_b;
+    if (diff < 0.0f) diff = -diff;
+    if (diff > 180.0f) diff = 360.0f - diff;
+
+    Aspect_Result best = { .aspect_type = ASPECT_NONE, .angle = diff, .orb = 999.0f };
+
+    for (uint8_t i = 0; i < ASPECT_COUNT; i++) {
+        float dev = diff - (float)MAJOR_ASPECT_ANGLE[i];
+        if (dev < 0.0f) dev = -dev;
+        if (dev <= (float)MAJOR_ASPECT_ORB[i] && dev < best.orb) {
+            best.aspect_type = i;
+            best.orb = dev;
+        }
+    }
+
+    return best;
+}
+
+
 #endif /* M2_H */
