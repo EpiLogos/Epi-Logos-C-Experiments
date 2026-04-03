@@ -19,6 +19,7 @@ epi-spacetime-module/target/
 __pycache__/
 *.pyc
 .venv/
+*.egg-info/
 
 # Node / Electron
 node_modules/
@@ -58,3 +59,4 @@ playwright-report/
 !*.env.template
 secrets.env
 .gitnexus
+.omx/
