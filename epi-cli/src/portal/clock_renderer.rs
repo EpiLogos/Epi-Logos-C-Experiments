@@ -60,9 +60,19 @@ const PLANET_GLYPHS: [char; 10] = [
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Map zodiac sign (0-11) to element index: Fire=0, Earth=1, Air=2, Water=3
+/// Map zodiac sign (0-11) to element index: Fire=0, Earth=1, Air=2, Water=3.
+/// Fire signs: Aries(0), Leo(4), Sagittarius(8).
+/// Earth signs: Taurus(1), Virgo(5), Capricorn(9).
+/// Air signs: Gemini(2), Libra(6), Aquarius(10).
+/// Water signs: Cancer(3), Scorpio(7), Pisces(11).
 fn sign_to_element(sign: u8) -> u8 {
-    sign % 4
+    match sign {
+        0 | 4 | 8  => 0, // Fire
+        1 | 5 | 9  => 1, // Earth
+        2 | 6 | 10 => 2, // Air
+        3 | 7 | 11 => 3, // Water
+        _           => 0, // fallback
+    }
 }
 
 /// Hamilton product of two quaternions, normalized to unit length.
@@ -253,27 +263,22 @@ fn burn_char(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Project a degree-position on the torus equator to screen coordinates.
+/// `r_offset` controls radial distance: 1.0 = equator, >1.0 = outside, <1.0 = inside.
 fn equator_project(
     degree: f32,
     q: [f32; 4],
     r_maj: f32,
     r_min: f32,
+    r_offset: f32,
     cx: f32,
     cy: f32,
     dist: f32,
 ) -> (i32, i32, f32) {
-    use std::f32::consts::PI;
-    let theta = degree * PI / 180.0;
-    // Torus equator: phi = 0  →  point is at (r_maj + r_min, 0, 0) rotated by theta
-    let x0 = (r_maj + r_min) * theta.cos();
-    let y0 = (r_maj + r_min) * theta.sin();
-    let z0 = 0.0f32;
-    let (rx, ry, rz) = quat_rotate(q, x0, y0, z0);
-    // Perspective
+    let theta = degree * std::f32::consts::PI / 180.0;
+    let r = r_maj + r_min * r_offset;
+    let (rx, ry, rz) = quat_rotate(q, r * theta.cos(), r * theta.sin(), 0.0);
     let w = dist / (dist - rz);
-    let sx = (cx + rx * w) as i32;
-    let sy = (cy - ry * w) as i32;
-    (sx, sy, rz)
+    ((cx + rx * w) as i32, (cy - ry * w) as i32, rz)
 }
 
 /// Render backbone rings: degree markers at the torus equator.
@@ -288,11 +293,11 @@ fn render_backbone_rings(
     resolution_level: u8,
 ) {
     // Scale dot sizes with render resolution
-    let base_r = ((r_min * 0.04) as i32).max(2).min(8);
+    let dot_scale = ((r_min * 0.05) as i32).max(2).min(10);
 
     for deg in 0u16..360 {
         let d = deg as f32;
-        let (sx, sy, _rz) = equator_project(d, q, r_maj, r_min, cx, cy, dist);
+        let (sx, sy, _rz) = equator_project(d, q, r_maj, r_min, 1.0, cx, cy, dist);
 
         let sign = (deg / 30) as u8;
         let elem = sign_to_element(sign);
@@ -300,16 +305,16 @@ fn render_backbone_rings(
 
         if deg % 90 == 0 {
             // Cardinal — large element dot
-            paint_dot(pixmap, sx, sy, base_r + 2, elem_color);
+            paint_dot(pixmap, sx, sy, dot_scale + 2, elem_color);
         } else if deg % 30 == 0 {
             // Zodiac sign boundary — medium dot
-            paint_dot(pixmap, sx, sy, base_r + 1, elem_color);
+            paint_dot(pixmap, sx, sy, dot_scale + 1, elem_color);
         } else if deg % 15 == 0 {
             // Amino backbone — gray dot
-            paint_dot(pixmap, sx, sy, base_r, [100, 100, 110]);
+            paint_dot(pixmap, sx, sy, dot_scale, [100, 100, 110]);
         } else if resolution_level >= 2 && deg % 10 == 0 {
             // Decan — dark dot
-            paint_dot(pixmap, sx, sy, (base_r / 2).max(1), [55, 55, 65]);
+            paint_dot(pixmap, sx, sy, (dot_scale / 2).max(1), [55, 55, 65]);
         }
     }
 }
@@ -334,10 +339,11 @@ fn render_planets(
         let color = PLANET_COLORS[i];
 
         // Scale dot sizes with render resolution
-        let dot_r = ((r_min * 0.06) as i32).max(3).min(12);
+        let dot_scale = ((r_min * 0.05) as i32).max(2).min(10);
+        let dot_r = dot_scale + 1;
 
-        // Live marker — slightly outside equator
-        let (sx, sy, _) = equator_project(deg as f32, q, r_maj, r_min * 1.25, cx, cy, dist);
+        // Live marker — outside equator
+        let (sx, sy, _) = equator_project(deg as f32, q, r_maj, r_min, 1.3, cx, cy, dist);
         paint_dot(pixmap, sx, sy, dot_r, color);
 
         // Retrograde: cross marker
@@ -355,7 +361,7 @@ fn render_planets(
                 (color[1] as u16 * 80 / 255) as u8,
                 (color[2] as u16 * 80 / 255) as u8,
             ];
-            let (nx, ny, _) = equator_project(nat as f32, q, r_maj, r_min * 0.75, cx, cy, dist);
+            let (nx, ny, _) = equator_project(nat as f32, q, r_maj, r_min, 0.7, cx, cy, dist);
             paint_dot(pixmap, nx, ny, (dot_r * 2 / 3).max(2), ghost_color);
         }
     }
@@ -381,8 +387,8 @@ fn render_aspect_lines(
         let deg_b = planets[b].degree;
         if deg_a == 0xFFFF || deg_b == 0xFFFF { continue; }
 
-        let (ax, ay, _) = equator_project(deg_a as f32, q, r_maj, r_min, cx, cy, dist);
-        let (bx, by, _) = equator_project(deg_b as f32, q, r_maj, r_min, cx, cy, dist);
+        let (ax, ay, _) = equator_project(deg_a as f32, q, r_maj, r_min, 1.0, cx, cy, dist);
+        let (bx, by, _) = equator_project(deg_b as f32, q, r_maj, r_min, 1.0, cx, cy, dist);
 
         let atype = (asp.aspect_type as usize).min(4);
         let color = ASPECT_COLORS[atype];
@@ -408,7 +414,7 @@ fn render_oracle_markers(
     state: &crate::portal::clock_state::PortalClockState,
 ) {
     let trail_len = state.micro_orbit.len();
-    let dot_r = ((r_min * 0.04) as i32).max(2).min(8);
+    let dot_scale = ((r_min * 0.05) as i32).max(2).min(10);
 
     // Fading trail
     for (idx, &deg) in state.micro_orbit.iter().enumerate() {
@@ -416,25 +422,25 @@ fn render_oracle_markers(
         let fade = (idx as f32 + 1.0) / (trail_len as f32 + 1.0);
         let intensity = (fade * 120.0) as u8;
         let trail_color = [intensity, intensity / 2, 0u8];
-        let (tx, ty, _) = equator_project(deg as f32, q, r_maj, r_min * 1.1, cx, cy, dist);
-        paint_dot(pixmap, tx, ty, (dot_r / 2).max(1), trail_color);
+        let (tx, ty, _) = equator_project(deg as f32, q, r_maj, r_min, 1.1, cx, cy, dist);
+        paint_dot(pixmap, tx, ty, (dot_scale / 2).max(1), trail_color);
     }
 
     // Anticodon — green marker at deficient degree
     if let Some(ref cast) = state.last_cast {
         let def_deg = cast.deficient_degree;
         if def_deg < 360 {
-            let (ax, ay, _) = equator_project(def_deg as f32, q, r_maj, r_min * 1.2, cx, cy, dist);
-            paint_dot(pixmap, ax, ay, dot_r, [0, 200, 80]);
+            let (ax, ay, _) = equator_project(def_deg as f32, q, r_maj, r_min, 1.2, cx, cy, dist);
+            paint_dot(pixmap, ax, ay, dot_scale, [0, 200, 80]);
         }
     }
 
     // Current degree — yellow glow + bright core
     let cur = state.current_degree;
     if cur < 360 {
-        let (kx, ky, _) = equator_project(cur as f32, q, r_maj, r_min * 1.15, cx, cy, dist);
-        paint_dot(pixmap, kx, ky, dot_r + 3, [80, 80, 20]);   // outer glow
-        paint_dot(pixmap, kx, ky, dot_r, [255, 240, 0]);       // core
+        let (kx, ky, _) = equator_project(cur as f32, q, r_maj, r_min, 1.15, cx, cy, dist);
+        paint_dot(pixmap, kx, ky, dot_scale + 3, [80, 80, 20]);   // outer glow
+        paint_dot(pixmap, kx, ky, dot_scale, [255, 240, 0]);       // core
     }
 }
 
@@ -454,14 +460,14 @@ fn burn_labels(
         Err(_) => return,
     };
     // Scale glyphs proportionally to render resolution
-    let glyph_size = (r_min * 0.35).max(10.0).min(48.0);
+    let glyph_size = (r_min * 0.35).max(12.0).min(48.0);
     let label_scale = ab_glyph::PxScale { x: glyph_size, y: glyph_size };
     let scaled = font.as_scaled(label_scale);
 
     // Zodiac glyphs at sign centers (15°, 45°, …)
     for sign in 0u8..12 {
         let deg = (sign as f32) * 30.0 + 15.0;
-        let (sx, sy, rz) = equator_project(deg, q, r_maj, r_min * 1.8, cx, cy, dist);
+        let (sx, sy, rz) = equator_project(deg, q, r_maj, r_min, 1.8, cx, cy, dist);
         if rz < -r_min * 0.3 { continue; } // skip back-face
         let elem = sign_to_element(sign);
         let color = ELEMENT_COLORS[elem as usize];
@@ -476,7 +482,7 @@ fn burn_labels(
     for i in 0..10usize {
         let deg = planets[i].degree;
         if deg == 0xFFFF { continue; }
-        let (px, py, rz) = equator_project(deg as f32, q, r_maj, r_min * 1.55, cx, cy, dist);
+        let (px, py, rz) = equator_project(deg as f32, q, r_maj, r_min, 1.5, cx, cy, dist);
         if rz < -r_min * 0.3 { continue; }
         let color = PLANET_COLORS[i];
         burn_char(pixmap, &planet_scaled, PLANET_GLYPHS[i], px + offset, py - offset, color);
@@ -490,12 +496,14 @@ fn burn_labels(
 /// Render the Cosmic Clock torus to an RGBA pixmap.
 ///
 /// `view_q`: camera view quaternion (user-controlled rotation, separate from clock state).
+/// `zoom`: camera zoom factor (1.0 = default).
 /// Returns `None` if pixmap allocation fails (OOM).
 pub fn render_clock(
     width: u32,
     height: u32,
     state: &crate::portal::clock_state::PortalClockState,
     view_q: [f32; 4],
+    zoom: f32,
 ) -> Option<Pixmap> {
     use std::f32::consts::PI;
 
@@ -523,23 +531,29 @@ pub fn render_clock(
 
     let r_maj = scale * (16.0 / 25.0);
     let r_min = scale * (9.0 / 25.0);
-    let dist = scale * 3.5; // perspective distance
+    let dist = scale * 3.5 * zoom; // perspective distance
 
     // Compose: view rotation applied to clock state rotation
     let q = quat_mul_norm(view_q, state.composed_quaternion);
     let tick12 = state.tick12;
     let resolution_level = state.resolution_level;
 
-    // Z-buffer: one f32 per pixel
-    let pixel_count = (width * height) as usize;
-    let mut zbuf: Vec<f32> = vec![f32::NEG_INFINITY; pixel_count];
-
     // ── Parametric torus surface ──────────────────────────────────────────────
     // 360 theta (degree) × 72 phi (spanda) steps
     let theta_steps = 360usize;
     let phi_steps   = 72usize;
 
-    for ti in 0..theta_steps {
+    // Sort theta slices back-to-front (painter's algorithm)
+    let mut theta_order: Vec<u32> = (0..theta_steps as u32).collect();
+    theta_order.sort_by(|&a, &b| {
+        let ta = (a as f32) * std::f32::consts::TAU / theta_steps as f32;
+        let tb = (b as f32) * std::f32::consts::TAU / theta_steps as f32;
+        let (_, _, za) = quat_rotate(q, r_maj * ta.cos(), r_maj * ta.sin(), 0.0);
+        let (_, _, zb) = quat_rotate(q, r_maj * tb.cos(), r_maj * tb.sin(), 0.0);
+        za.partial_cmp(&zb).unwrap_or(std::cmp::Ordering::Equal)
+    });
+
+    for &ti in &theta_order {
         let theta = (ti as f32) * 2.0 * PI / (theta_steps as f32);
         let sign = ((ti / 30) as u8) % 12;
         let elem = sign_to_element(sign);
@@ -564,14 +578,6 @@ pub fn render_clock(
                 continue;
             }
 
-            let idx = sy as usize * width as usize + sx as usize;
-
-            // Z-test
-            if rz <= zbuf[idx] {
-                continue;
-            }
-            zbuf[idx] = rz;
-
             // Lambertian: surface normal at (theta, phi)
             let nx0 = theta.cos() * phi.cos();
             let ny0 = theta.sin() * phi.cos();
@@ -582,6 +588,7 @@ pub fn render_clock(
 
             let color = surface_color(elem, tick, tick12, resolution_level, illum);
 
+            let idx = sy as usize * width as usize + sx as usize;
             let off = idx * 4;
             let data = pixmap.data_mut();
             data[off]     = color[0];
@@ -625,11 +632,11 @@ mod tests {
     fn render_clock_produces_non_empty_pixmap() {
         use crate::portal::clock_state::PortalClockState;
         let state = PortalClockState::default();
-        let pixmap = render_clock(200, 200, &state, [1.0, 0.0, 0.0, 0.0]);
+        let pixmap = render_clock(400, 400, &state, [1.0, 0.0, 0.0, 0.0], 1.0);
         assert!(pixmap.is_some(), "render_clock returned None");
         let pixmap = pixmap.unwrap();
-        assert_eq!(pixmap.width(), 200);
-        assert_eq!(pixmap.height(), 200);
+        assert_eq!(pixmap.width(), 400);
+        assert_eq!(pixmap.height(), 400);
 
         // At least some pixels must differ from the background (10, 10, 15)
         let data = pixmap.data();

@@ -123,7 +123,7 @@ fn render_loop(
         let user_q = *view_q.lock().unwrap();
         let final_view = quat_mul_norm(user_q, auto_q);
 
-        if let Some(pixmap) = crate::portal::clock_renderer::render_clock(w, h, &state, final_view) {
+        if let Some(pixmap) = crate::portal::clock_renderer::render_clock(w, h, &state, final_view, 1.0) {
             let data = pixmap.data().to_vec();
             if let Some(img_buf) = image::RgbaImage::from_raw(w, h, data) {
                 let dyn_img: image::DynamicImage = img_buf.into();
