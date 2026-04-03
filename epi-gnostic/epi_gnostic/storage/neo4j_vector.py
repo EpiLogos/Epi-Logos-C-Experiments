@@ -96,7 +96,10 @@ class Neo4jVectorStorage(BaseVectorStorage):
             f"FOR (n:`{label}`) ON (n.embedding) "
             f"OPTIONS {{indexConfig: {{"
             f"  `vector.dimensions`: {dim},"
-            f"  `vector.similarity_function`: 'cosine'"
+            f"  `vector.similarity_function`: 'cosine',"
+            f"  `vector.hnsw.m`: 16,"
+            f"  `vector.hnsw.ef_construction`: 200,"
+            f"  `vector.quantization.enabled`: true"
             f"}}}}"
         )
         async with self._driver.session(database=self._db) as session:
@@ -108,8 +111,8 @@ class Neo4jVectorStorage(BaseVectorStorage):
     async def _wait_for_index_online(self, timeout: float = 10.0) -> None:
         """Poll until the vector index reports ONLINE (or timeout)."""
         idx = self.vector_index_name
-        deadline = asyncio.get_event_loop().time() + timeout
-        while asyncio.get_event_loop().time() < deadline:
+        deadline = asyncio.get_running_loop().time() + timeout
+        while asyncio.get_running_loop().time() < deadline:
             async with self._driver.session(database=self._db) as session:
                 result = await session.run(
                     "SHOW INDEXES YIELD name, state "
@@ -194,7 +197,7 @@ class Neo4jVectorStorage(BaseVectorStorage):
         # Build parameter rows
         rows: list[dict[str, Any]] = []
         for vid, item in zip(ids, items):
-            emb = item.pop("embedding")
+            emb = item.get("embedding")
             row: dict[str, Any] = {"vector_id": vid, "embedding": emb}
             # Store entity_name and all meta_fields as node properties
             for key in ("entity_name", "content", *self.meta_fields):

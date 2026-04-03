@@ -149,6 +149,24 @@ async def test_get_vectors_by_ids(storage: Neo4jVectorStorage):
     assert len(vecs["id-vec"]) == EMBEDDING_DIM
 
 
+async def test_delete_entity_relation(storage: Neo4jVectorStorage):
+    """delete_entity_relation removes Neo4j relationships, not the node itself."""
+    await storage.upsert(
+        {
+            "id-rel-src": {
+                "content": "source entity",
+                "entity_name": "Source",
+                "source_id": "src",
+            },
+        }
+    )
+    # Should not raise; node survives but any edges are removed
+    await storage.delete_entity_relation("Source")
+    result = await storage.get_by_id("id-rel-src")
+    assert result is not None
+    assert result["entity_name"] == "Source"
+
+
 async def test_drop_clears_all(storage: Neo4jVectorStorage):
     await storage.upsert(
         {
