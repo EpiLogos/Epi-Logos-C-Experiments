@@ -158,3 +158,32 @@ pub fn write_documents(config: &GnosisConfig, documents: &[DocumentRecord]) -> R
         .map_err(|err| format!("failed to serialize documents: {err}"))?;
     fs::write(&path, body).map_err(|err| format!("failed to write {}: {err}", path.display()))
 }
+
+/// Ingest a document via the Python epi-gnostic CLI.
+pub fn ingest_gnostic(
+    config: &GnosisConfig,
+    source: &str,
+    coordinate: Option<&str>,
+    family: Option<&str>,
+) -> Result<String, String> {
+    let mut cmd = std::process::Command::new(&config.python_bin);
+    cmd.arg("ingest").arg(source);
+
+    if let Some(coord) = coordinate {
+        cmd.arg("--coordinate").arg(coord);
+    }
+    if let Some(fam) = family {
+        cmd.arg("--family").arg(fam);
+    }
+
+    let output = cmd
+        .output()
+        .map_err(|e| format!("Failed to run epi-gnostic: {e}"))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("epi-gnostic ingest failed: {stderr}"));
+    }
+
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
+}

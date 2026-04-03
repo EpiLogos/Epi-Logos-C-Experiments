@@ -36,6 +36,28 @@ pub enum GnosisCmd {
         #[command(subcommand)]
         cmd: DocumentCmd,
     },
+    /// Ingest a document via the Python epi-gnostic CLI
+    IngestGnostic {
+        source: String,
+        #[arg(long)]
+        coordinate: Option<String>,
+        #[arg(long)]
+        family: Option<String>,
+    },
+    /// Query the gnostic namespace via the Python epi-gnostic CLI
+    QueryGnostic {
+        question: String,
+        #[arg(long)]
+        mode: Option<String>,
+    },
+    /// Enrich a known entity via the Python epi-gnostic CLI
+    Enrich {
+        entity_id: String,
+        #[arg(long)]
+        coordinate: Option<String>,
+        #[arg(long)]
+        family: Option<String>,
+    },
 }
 
 #[derive(Subcommand)]
@@ -152,5 +174,23 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
                     .join("\n"))
             }
         },
+        GnosisCmd::IngestGnostic {
+            source,
+            coordinate,
+            family,
+        } => ingest::ingest_gnostic(&config, source, coordinate.as_deref(), family.as_deref()),
+        GnosisCmd::QueryGnostic { question, mode } => {
+            query::query_gnostic(&config, question, mode.as_deref())
+        }
+        GnosisCmd::Enrich {
+            entity_id,
+            coordinate,
+            family,
+        } => ingest::ingest_gnostic(
+            &config,
+            entity_id,
+            coordinate.as_deref(),
+            family.as_deref(),
+        ),
     }
 }

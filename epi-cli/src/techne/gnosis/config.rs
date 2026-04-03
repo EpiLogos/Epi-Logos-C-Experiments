@@ -5,6 +5,7 @@ pub struct GnosisConfig {
     pub root: PathBuf,
     pub chunk_words: usize,
     pub overlap_words: usize,
+    pub python_bin: String,
 }
 
 impl GnosisConfig {
@@ -21,11 +22,14 @@ impl GnosisConfig {
             .ok()
             .and_then(|value| value.parse::<usize>().ok())
             .unwrap_or(64);
+        let python_bin = std::env::var("EPI_GNOSTIC_PYTHON")
+            .unwrap_or_else(|_| "epi-gnostic".into());
 
         Self {
             root,
             chunk_words,
             overlap_words,
+            python_bin,
         }
     }
 

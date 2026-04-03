@@ -58,3 +58,28 @@ pub fn query_local(
     matches.truncate(options.top_k);
     Ok(matches)
 }
+
+/// Query the gnostic namespace via the Python epi-gnostic CLI.
+pub fn query_gnostic(
+    config: &GnosisConfig,
+    question: &str,
+    mode: Option<&str>,
+) -> Result<String, String> {
+    let mut cmd = std::process::Command::new(&config.python_bin);
+    cmd.arg("query").arg(question);
+
+    if let Some(m) = mode {
+        cmd.arg("--mode").arg(m);
+    }
+
+    let output = cmd
+        .output()
+        .map_err(|e| format!("Failed to run epi-gnostic: {e}"))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("epi-gnostic query failed: {stderr}"));
+    }
+
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
+}
