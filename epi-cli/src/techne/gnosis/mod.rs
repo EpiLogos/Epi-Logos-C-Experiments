@@ -1,23 +1,15 @@
-pub mod chunker;
 pub mod config;
-pub mod docling_client;
 pub mod ingest;
 pub mod notebook;
 pub mod query;
-pub mod sync;
 
 use clap::Subcommand;
 use config::GnosisConfig;
 
 #[derive(Subcommand)]
 pub enum GnosisCmd {
-    /// Check gnosis/docling/neo4j configuration state
+    /// Check gnosis/neo4j configuration state
     Status,
-    /// Manage Docling service lifecycle
-    Serve {
-        #[command(subcommand)]
-        cmd: ServeCmd,
-    },
     /// Ingest a source file into local gnosis storage
     Ingest {
         source: String,
@@ -44,18 +36,6 @@ pub enum GnosisCmd {
         #[command(subcommand)]
         cmd: DocumentCmd,
     },
-    /// Sync from Vimarsa stores
-    Sync {
-        #[arg(long = "from-vimarsa")]
-        from_vimarsa: bool,
-    },
-}
-
-#[derive(Subcommand)]
-pub enum ServeCmd {
-    Start,
-    Stop,
-    Status,
 }
 
 #[derive(Subcommand)]
@@ -79,16 +59,9 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
         GnosisCmd::Status => {
             let notebooks = notebook::list(&config)?;
             let documents = ingest::list_documents(&config)?;
-            let docling = docling_client::status(&config)?;
             let embedding = std::env::var("GEMINI_API_KEY").is_ok();
             Ok(format!(
-                "docling: {} ({})\nneo4j: {}\nembedding_api: {}\nnotebooks: {}\ndocuments: {}",
-                if docling.configured {
-                    "configured"
-                } else {
-                    "missing"
-                },
-                docling.url,
+                "neo4j: {}\nembedding_api: {}\nnotebooks: {}\ndocuments: {}",
                 std::env::var("EPILOGOS_NEO4J_URI")
                     .unwrap_or_else(|_| "bolt://localhost:7687".to_string()),
                 if embedding { "configured" } else { "missing" },
@@ -96,19 +69,6 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
                 documents.len(),
             ))
         }
-        GnosisCmd::Serve { cmd } => match cmd {
-            ServeCmd::Status => {
-                let docling = docling_client::status(&config)?;
-                Ok(format!(
-                    "docling-serve configured: {}\ndocker available: {}\ncompose: {}",
-                    docling.configured,
-                    docling.docker_available,
-                    docling.compose_file.display()
-                ))
-            }
-            ServeCmd::Start => docker_compose(&["up", "-d", "docling-serve"]),
-            ServeCmd::Stop => docker_compose(&["stop", "docling-serve"]),
-        },
         GnosisCmd::Ingest {
             source,
             notebook,
@@ -192,26 +152,5 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
                     .join("\n"))
             }
         },
-        GnosisCmd::Sync { from_vimarsa } => {
-            if *from_vimarsa {
-                sync::sync_from_vimarsa(&config)
-            } else {
-                Ok("sync skipped".to_string())
-            }
-        }
-    }
-}
-
-fn docker_compose(args: &[&str]) -> Result<String, String> {
-    let compose_file = docling_client::compose_path()?;
-    let output = std::process::Command::new("docker")
-        .args(["compose", "-f", compose_file.to_str().unwrap()])
-        .args(args)
-        .output()
-        .map_err(|err| format!("docker compose failed: {err}"))?;
-    if output.status.success() {
-        Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
-    } else {
-        Err(String::from_utf8_lossy(&output.stderr).trim().to_string())
     }
 }

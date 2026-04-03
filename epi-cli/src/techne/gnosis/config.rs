@@ -3,7 +3,6 @@ use std::path::PathBuf;
 #[derive(Debug, Clone)]
 pub struct GnosisConfig {
     pub root: PathBuf,
-    pub docling_url: String,
     pub chunk_words: usize,
     pub overlap_words: usize,
 }
@@ -25,8 +24,6 @@ impl GnosisConfig {
 
         Self {
             root,
-            docling_url: std::env::var("EPILOGOS_DOCLING_URI")
-                .unwrap_or_else(|_| "http://localhost:5001".to_string()),
             chunk_words,
             overlap_words,
         }

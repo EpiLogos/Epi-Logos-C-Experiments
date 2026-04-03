@@ -1,11 +1,8 @@
-use std::fs;
 use std::path::PathBuf;
 
 #[test]
-fn docling_service_and_aletheia_scaffold_exist() {
+fn aletheia_scaffold_exists() {
     let root = repo_root();
-    let compose = fs::read_to_string(root.join("docker-compose.epi-s2.yml")).unwrap();
-    assert!(compose.contains("docling-serve"));
 
     for path in [
         ".pi/extensions/ta-onta/aletheia/extension.ts",

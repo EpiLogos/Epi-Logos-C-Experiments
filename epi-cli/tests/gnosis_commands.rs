@@ -1,7 +1,7 @@
 mod common;
 
 use common::{run_epi, write_file, TestEnv};
-use epi_logos::techne::gnosis::chunker::{chunk_markdown, ChunkingOptions};
+use epi_logos::techne::gnosis::ingest::{chunk_markdown, ChunkingOptions};
 
 #[test]
 fn chunker_keeps_section_context() {
