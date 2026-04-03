@@ -485,6 +485,9 @@ pub struct PortalClockState {
     /// Monotonic generation counter. Incremented on every state mutation.
     /// Render thread watches this to detect changes and skip redundant redraws.
     pub generation:              u64,
+
+    /// Perspective zoom level. 1.0 = default, <1 = zoomed in, >1 = zoomed out.
+    pub zoom_level:              f32,
 }
 
 impl Default for PortalClockState {
@@ -514,6 +517,7 @@ impl Default for PortalClockState {
             micro_orbit:             Vec::new(),
             natal_degrees:           [0xFFFF; 10],
             generation:              0,
+            zoom_level:              1.0,
         }
     }
 }
