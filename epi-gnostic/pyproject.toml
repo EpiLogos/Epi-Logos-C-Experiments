@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Gnostic namespace RAG pipeline for Epi-Logos"
 requires-python = ">=3.10"
 dependencies = [
-    # "raganything>=1.2.0",  # TODO: uncomment before Task 3
+    "raganything>=1.2.0",
     "lightrag-hku>=1.0.0",
     "neo4j>=5.0.0",
     "google-genai>=1.0.0",
