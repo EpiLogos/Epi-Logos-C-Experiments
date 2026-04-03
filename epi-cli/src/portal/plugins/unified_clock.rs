@@ -175,8 +175,8 @@ fn render_loop(
 
         // Compute pixel dimensions from terminal cell area × font size
         let (fw, fh) = (font_size.0.max(1) as u32, font_size.1.max(1) as u32);
-        let w = (cols * fw).max(200).min(2400);
-        let h = (rows * fh).max(200).min(1600);
+        let w = ((cols * fw) / 2).max(200).min(1200);
+        let h = ((rows * fh) / 2).max(150).min(800);
 
         // Compose view quaternion with optional auto-rotation
         let user_q = *view_q.lock().unwrap();

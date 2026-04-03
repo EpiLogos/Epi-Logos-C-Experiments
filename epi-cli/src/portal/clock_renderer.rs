@@ -309,8 +309,8 @@ fn render_backbone_rings(
         } else if deg % 30 == 0 {
             // Zodiac sign boundary — medium dot
             paint_dot(pixmap, sx, sy, dot_scale + 1, elem_color);
-        } else if deg % 15 == 0 {
-            // Amino backbone — gray dot
+        } else if resolution_level >= 1 && deg % 15 == 0 {
+            // Amino backbone — gray dot (visible at resolution ≥ 1 only)
             paint_dot(pixmap, sx, sy, dot_scale, [100, 100, 110]);
         } else if resolution_level >= 2 && deg % 10 == 0 {
             // Decan — dark dot
@@ -340,10 +340,11 @@ fn render_planets(
 
         // Scale dot sizes with render resolution
         let dot_scale = ((r_min * 0.05) as i32).max(2).min(10);
-        let dot_r = dot_scale + 1;
+        let dot_r = (dot_scale * 3).max(5).min(14);
 
-        // Live marker — outside equator
+        // Live marker — outside equator, with white outline for visibility
         let (sx, sy, _) = equator_project(deg as f32, q, r_maj, r_min, 1.3, cx, cy, dist);
+        paint_dot(pixmap, sx, sy, dot_r + 2, [255, 255, 255]);
         paint_dot(pixmap, sx, sy, dot_r, color);
 
         // Retrograde: cross marker
@@ -482,8 +483,8 @@ fn burn_labels(
     for i in 0..10usize {
         let deg = planets[i].degree;
         if deg == 0xFFFF { continue; }
-        let (px, py, rz) = equator_project(deg as f32, q, r_maj, r_min, 1.5, cx, cy, dist);
-        if rz < -r_min * 0.3 { continue; }
+        let (px, py, _rz) = equator_project(deg as f32, q, r_maj, r_min, 1.5, cx, cy, dist);
+        // No backface cull — planets must always be labeled
         let color = PLANET_COLORS[i];
         burn_char(pixmap, &planet_scaled, PLANET_GLYPHS[i], px + offset, py - offset, color);
     }
@@ -527,11 +528,12 @@ pub fn render_clock(
     let h = height as f32;
     let cx = w * 0.5;
     let cy = h * 0.5;
-    let scale = w.min(h) * 0.5 * 0.88; // leave margin
+    let scale_base = w.min(h) * 0.5 * 0.88;
+    let scale = scale_base / zoom.max(0.1); // zoom < 1 = bigger, > 1 = smaller
 
     let r_maj = scale * (16.0 / 25.0);
     let r_min = scale * (9.0 / 25.0);
-    let dist = scale * 3.5 * zoom; // perspective distance
+    let dist = scale_base * 3.5; // perspective distance stays fixed
 
     // Compose: view rotation applied to clock state rotation
     let q = quat_mul_norm(view_q, state.composed_quaternion);
