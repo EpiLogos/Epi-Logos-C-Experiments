@@ -3,15 +3,15 @@ import pytest
 from epi_gnostic.config import GnosticConfig
 
 
-def test_config_loads_defaults():
-    config = GnosticConfig()
+def test_config_loads_defaults(tmp_path):
+    config = GnosticConfig(working_dir=str(tmp_path / "gnostic"))
     assert config.neo4j_uri == "bolt://localhost:7687"
     assert config.neo4j_database == "neo4j"
     assert config.workspace == "gnostic"
     assert config.embedding_dim == 3072
     assert config.embedding_model == "gemini-embedding-2-preview"
     assert config.llm_model == "gemini-3.1-flash-lite"
-    assert config.working_dir.endswith("gnostic")
+    assert str(config.working_dir).endswith("gnostic")
 
 
 def test_config_reads_env_overrides(monkeypatch):
