@@ -1,5 +1,6 @@
 ---
 name: nous
+description: Constitutional agent nous — Pleroma VAK
 cf: "(00/00)"
 cpf: "(00/00)"
 ---

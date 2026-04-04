@@ -1,5 +1,6 @@
 ---
 name: anima
+description: Constitutional agent anima — Pleroma VAK
 cf: "(4.0/1-4.4/5)"
 cpf: "(4.0/1-4.4/5)"
 ---

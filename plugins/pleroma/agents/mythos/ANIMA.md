@@ -1,5 +1,6 @@
 ---
 name: mythos
+description: Constitutional agent mythos — Pleroma VAK
 cf: "(0/1/2/3)"
 cpf: "(4.0/1-4.4/5)"
 ---

@@ -1,5 +1,6 @@
 ---
 name: psyche
+description: Constitutional agent psyche — Pleroma VAK
 cf: "(4.5/0)"
 cpf: "(4.5/0)"
 ---

@@ -1,5 +1,6 @@
 ---
 name: logos
+description: Constitutional agent logos — Pleroma VAK
 cf: "(0/1)"
 cpf: "(4.0/1-4.4/5)"
 ---

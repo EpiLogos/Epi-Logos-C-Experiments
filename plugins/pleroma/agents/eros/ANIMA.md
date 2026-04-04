@@ -1,5 +1,6 @@
 ---
 name: eros
+description: Constitutional agent eros — Pleroma VAK
 cf: "(0/1/2)"
 cpf: "(4.0/1-4.4/5)"
 ---

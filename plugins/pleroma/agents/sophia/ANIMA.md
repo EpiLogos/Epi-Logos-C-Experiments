@@ -1,5 +1,6 @@
 ---
 name: sophia
+description: Constitutional agent sophia — Pleroma VAK
 cf: "(5/0)"
 cpf: "(4.0/1-4.4/5)"
 ---
