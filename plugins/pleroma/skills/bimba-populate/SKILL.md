@@ -115,6 +115,7 @@ For each node in the batch:
 python epi-gnostic/scripts/enrich.py "{coordinate}"
 ```
 Use the returned `c_2_uuid`, `c_4_family`, `c_4_ql_position`, `c_4_layer`, `c_4_topo_mode` verbatim.
+If any computed field is null (e.g. `c_4_ql_position` for the bare `#` root node), omit it from the SET block — do not write `SET n.prop = null`.
 
 **Step 2 — Apportion semantically:**
 
