@@ -19,7 +19,7 @@ import uuid
 _UUID_NS = uuid.UUID('6ba7b810-9dad-11d1-80b4-00c04fd430c8')
 
 _TOPO_MODE = {0: 'ZERO_SPHERE', 1: 'TORUS', 2: 'TORUS',
-              3: 'LEMNISCATE', 4: 'LEMNISCATE', 5: 'KLEIN'}
+              3: 'TORUS', 4: 'LEMNISCATE', 5: 'KLEIN'}
 
 _LAYER_BY_DEPTH = {0: 'PSYCHOID', 1: 'PSYCHOID', 2: 'COORDINATE',
                    3: 'COORDINATE', 4: 'COORDINATE', 5: 'COORDINATE'}

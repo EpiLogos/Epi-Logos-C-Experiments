@@ -100,6 +100,7 @@ docs/datasets/epii-deep/        → M5
 ```
 
 Try node files in order: `nodes-full-detail.json`, `nodes-full-details.json`, `nodes-full-data.json`.
+If none of the three match, list the files in the dataset directory and ask the user which file to use.
 Each file may be a root-level list, `{"nodes": [...]}`, or a single object — handle all three.
 
 **A2.2 — Process nodes in batches of 20–30**
@@ -256,6 +257,16 @@ relation properties map.
 
 **C4.** Present for review — same conversation protocol as Stage B.
 
+**C5. Execution ordering:**
+Execute all approved `m{n}-nodes.cypher` files BEFORE executing `relations.cypher`.
+After executing `relations.cypher`, verify the total relation count:
+
+```cypher
+MATCH (a:BimbaNode)-[r]->(b:BimbaNode) RETURN count(r)
+```
+
+Compare against the total relation count in the source files. If the counts diverge, MATCH returned no rows for some relations — the source or target nodes were missing at execution time.
+
 ---
 
 ## Stage D: Execution
@@ -271,9 +282,10 @@ Execute one file at a time. After each, verify with a count query:
 
 ```bash
 cypher-shell -u neo4j -p $NEO4J_PASSWORD \
-  --query "MATCH (n:BimbaNode) WHERE n.c_4_ql_position = 3 RETURN count(n)"
+  --query "MATCH (n:BimbaNode) WHERE n.c_4_ql_position = {n} RETURN count(n)"
 ```
 
+Substitute `{n}` with the branch number being verified (0 for M0, 3 for M3, etc.).
 Count should match the node count in the Cypher file.
 
 **If errors occur:**
@@ -281,6 +293,7 @@ Count should match the node count in the Cypher file.
 2. Identify the offending MERGE block by coordinate
 3. Fix that block in the Cypher file
 4. Re-run only the failing block (extract it, run standalone)
+   Copy the single `MERGE...SET...ON CREATE SET...;` block (everything between the blank-line separators for that coordinate) into a temp file and run: `cypher-shell -u neo4j -p $NEO4J_PASSWORD --file /tmp/single-node.cypher`
 5. Do NOT re-execute the whole file — use `MERGE` idempotency
 
 **For relations** — use inline MATCH/MERGE per relation type if APOC is unavailable,
@@ -307,8 +320,7 @@ Model: `gemini-embedding-2-preview`, 3072 dimensions, stored as `c_5_embedding`.
 ## Stage F: 18-Fold Pointer Resolution
 
 After embeddings, wire the pointer web using `03-pointers-resolve.cypher`.
-Query the live graph to derive pointer targets from coordinate arithmetic and
-the known M-branch structure, then build the `$batch` parameter.
+**Note: pointer computation algorithm not yet implemented.** When Stage F is reached, ask the user for the coordinate arithmetic rules before proceeding. Do not attempt to infer the batch structure without explicit guidance.
 
 The 18 pointer refs per node: `c_ref`, `p_ref`, `l_ref`, `s_ref`, `t_ref`, `m_ref` (direct families), `cpf_ref`, `ct_ref`, `cp_ref`, `cf_ref`, `cfp_ref`, `cs_ref` (reflective coords), `c_inv_ref`, `p_inv_ref`, `l_inv_ref`, `s_inv_ref`, `t_inv_ref`, `m_inv_ref` (inverted families).
 
