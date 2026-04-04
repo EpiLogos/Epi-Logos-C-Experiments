@@ -416,8 +416,28 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
     }
 }
 
+/// Commands that configure the vault itself — must NOT receive -v injection
+const VAULT_CONFIG_CMDS: &[&str] = &["set-default", "print-default", "open-vault"];
+
 fn obsidian_cli(args: &[&str]) -> Result<String, String> {
-    match Command::new("obsidian-cli").args(args).output() {
+    let is_config_cmd = args
+        .first()
+        .map(|cmd| VAULT_CONFIG_CMDS.contains(cmd))
+        .unwrap_or(false);
+
+    let injected: Vec<String> = if !is_config_cmd {
+        if let Some(name) = vault_name() {
+            let mut v = vec!["-v".to_string(), name];
+            v.extend(args.iter().map(|s| s.to_string()));
+            v
+        } else {
+            args.iter().map(|s| s.to_string()).collect()
+        }
+    } else {
+        args.iter().map(|s| s.to_string()).collect()
+    };
+
+    match Command::new("obsidian-cli").args(&injected).output() {
         Ok(out) if out.status.success() => Ok(String::from_utf8_lossy(&out.stdout).to_string()),
         Ok(out) => Err(String::from_utf8_lossy(&out.stderr).to_string()),
         Err(err) => Err(format!("Failed to execute obsidian-cli: {err}")),

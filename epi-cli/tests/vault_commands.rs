@@ -329,7 +329,6 @@ fn kairos_status_returns_stub_when_no_birth_data() {
     );
 }
 
-#[ignore = "vault_name() wired into obsidian_cli() in Task 3"]
 #[test]
 fn vault_daily_passes_vault_flag_when_epi_vault_name_set() {
     let env = env_with_fake_obsidian_cli()
@@ -341,7 +340,6 @@ fn vault_daily_passes_vault_flag_when_epi_vault_name_set() {
     assert!(log.contains("MyVault"), "expected vault name: {log}");
 }
 
-#[ignore = "vault_name() wired into obsidian_cli() in Task 3"]
 #[test]
 fn vault_daily_passes_vault_flag_from_obsidian_dir_autodetect() {
     let base_env = env_with_fake_obsidian_cli();
