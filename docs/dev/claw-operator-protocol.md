@@ -69,6 +69,25 @@ Claw lane:  epi agent claw doctor     ← experimental (additive)
 Both lanes coexist. The migration plan cutover (Task 8) will make claw the default
 when parity is confirmed.
 
+## Authoring Surface
+
+The **primary** authoring surface for skills, agents, and hooks is `plugins/`:
+
+```
+plugins/pleroma/       ← transportable Pleroma skill/agent package (primary)
+  .claude-plugin/
+  skills/
+  agents/
+  hooks/
+  evals/
+```
+
+The `.pi/extensions/ta-onta/` tree is the **compatibility** surface — it remains for PI compat
+but is no longer the primary location for new capability authoring.
+
+New skills and agents should be authored in `plugins/<package>/` and projected into runtimes
+(Codex, managed agent dirs) by `epi-cli`, not written directly into `.pi/extensions/`.
+
 ## See Also
 
 - `docs/dev/pi-operator-protocol.md` — PI operator protocol (production default)
