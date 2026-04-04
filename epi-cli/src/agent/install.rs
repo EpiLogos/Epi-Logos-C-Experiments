@@ -9,9 +9,7 @@ const PI_PACKAGE: &str = "@mariozechner/pi-coding-agent";
 struct InstallReport {
     status: String,
     agent_id: String,
-    canonical_pi_agent_dir: String,
-    managed_epi_agent_dir: String,
-    interactive_launch_mode: String,
+    agent_dir: String,
     pi_binary_present: bool,
     next_action: String,
 }
@@ -48,9 +46,7 @@ pub fn run(agent: Option<&str>, json: bool) -> Result<String, String> {
             "missing-prerequisite".to_owned()
         },
         agent_id: layout.agent_id,
-        canonical_pi_agent_dir: layout.canonical_pi_agent_dir.display().to_string(),
-        managed_epi_agent_dir: layout.managed_epi_agent_dir.display().to_string(),
-        interactive_launch_mode: "claw".to_owned(),
+        agent_dir: layout.agent_dir.display().to_string(),
         pi_binary_present: pi_present,
         next_action,
     };

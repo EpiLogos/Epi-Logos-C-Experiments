@@ -1,5 +1,4 @@
 use crate::agent::AgentLayout;
-use crate::agent::runtime;
 use serde::Serialize;
 use std::fs;
 use std::process::Command;
@@ -9,19 +8,11 @@ use std::process::Command;
 struct DoctorReport {
     agent_id: String,
     repo_root: String,
-    epi_home: String,
-    canonical_pi_agent_dir: String,
-    managed_epi_agent_dir: String,
-    interactive_launch_mode: String,
-    gate_state_root: String,
     missing_repo_assets: Vec<String>,
     present_repo_assets: Vec<String>,
     pi_binary_present: bool,
     agent_dir: AgentDirStatus,
     extension_sync: ExtensionSyncStatus,
-    gateway: GatewayStatus,
-    codex_home: CodexHomeStatus,
-    skill_roots: Vec<String>,
     surfaces: SurfaceStatus,
 }
 
@@ -44,25 +35,6 @@ struct ExtensionSyncStatus {
 }
 
 #[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-struct GatewayStatus {
-    state_root: String,
-    url: String,
-    port: u16,
-    status_file_present: bool,
-    process_record_path: String,
-}
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-struct CodexHomeStatus {
-    path: String,
-    skills_path: String,
-    superpowers_skills_path: String,
-    projected_agents_path: String,
-}
-
-#[derive(Serialize)]
 struct SurfaceStatus {
     skills: Vec<String>,
     commands: Vec<String>,
@@ -75,11 +47,6 @@ pub fn run(agent: Option<&str>, json: bool) -> Result<String, String> {
     let report = DoctorReport {
         agent_id: layout.agent_id.clone(),
         repo_root: layout.repo_root.display().to_string(),
-        epi_home: layout.epi_home.display().to_string(),
-        canonical_pi_agent_dir: layout.canonical_pi_agent_dir.display().to_string(),
-        managed_epi_agent_dir: layout.managed_epi_agent_dir.display().to_string(),
-        interactive_launch_mode: "claw".to_owned(),
-        gate_state_root: layout.gate_state_root.display().to_string(),
         missing_repo_assets,
         present_repo_assets,
         pi_binary_present: pi_binary_present(),
@@ -99,28 +66,6 @@ pub fn run(agent: Option<&str>, json: bool) -> Result<String, String> {
             },
             sync_state_path: layout.extension_sync_state_path.display().to_string(),
         },
-        gateway: GatewayStatus {
-            state_root: layout.gate_state_root.display().to_string(),
-            url: format!("ws://127.0.0.1:{}", runtime::gateway_port_from_env()),
-            port: runtime::gateway_port_from_env(),
-            status_file_present: layout.gate_state_root.join("status.json").exists(),
-            process_record_path: layout
-                .gate_state_root
-                .join("up/gateway-process.json")
-                .display()
-                .to_string(),
-        },
-        codex_home: CodexHomeStatus {
-            path: layout.codex_home.display().to_string(),
-            skills_path: layout.codex_skills_dir.display().to_string(),
-            superpowers_skills_path: layout.codex_superpowers_skills_dir.display().to_string(),
-            projected_agents_path: layout.agents_subagents_dir.display().to_string(),
-        },
-        skill_roots: layout
-            .repo_skill_roots()
-            .into_iter()
-            .map(|path| path.display().to_string())
-            .collect(),
         surfaces: SurfaceStatus {
             skills: list_surface_files(&layout.repo_root.join("skills")),
             commands: list_surface_files(&layout.repo_root.join("commands")),

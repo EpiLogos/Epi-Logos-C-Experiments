@@ -4,11 +4,6 @@
 **S-Layer fold:** S2 (Graph/Neo4j) — entity layer, where operations are typed and bounded
 **Position:** #2 (Parashakti — operation, dynamic process, entity)
 
-> **Claw-first note (2026-04-04):** This `.pi/extensions/ta-onta/pleroma/` tree is the
-> **PI compatibility surface**. The canonical authoring source is now `plugins/pleroma/`.
-> New skills and agents should be authored there, not here. This tree is maintained for
-> PI compat while claw parity is being verified.
-
 ---
 
 ## Responsibility
