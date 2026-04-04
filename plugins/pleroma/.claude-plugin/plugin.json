@@ -1,0 +1,9 @@
+{
+  "name": "pleroma",
+  "version": "0.1.0",
+  "description": "Pleroma — executive S4' layer for ta-onta VAK orchestration, constitutional agents, and Technē substrate. Derived from ta-onta specs; delivered via OMX Codex runtime.",
+  "author": {
+    "name": "Epi-Logos"
+  },
+  "keywords": ["vak", "ta-onta", "pleroma", "orchestration", "constitutional-agents"]
+}

@@ -1,0 +1,6 @@
+{
+  "description": "Pleroma plugin default agent settings",
+  "permissions": {
+    "allow": ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "Agent"]
+  }
+}
