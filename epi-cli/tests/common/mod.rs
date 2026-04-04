@@ -4,6 +4,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::{Mutex, MutexGuard, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 static NEXT_ID: AtomicU64 = AtomicU64::new(1);
@@ -19,6 +20,7 @@ pub struct TestEnv {
 }
 
 pub struct ProcessEnvGuard {
+    _lock: MutexGuard<'static, ()>,
     saved: Vec<(&'static str, Option<OsString>)>,
 }
 
@@ -70,6 +72,31 @@ impl TestEnv {
             "# Epi Help\n",
         )
         .unwrap();
+        write_file(
+            env.repo_root
+                .join(".pi/extensions/ta-onta/anima/S4'/skills/brainstorming/SKILL.md"),
+            "---\nname: brainstorming\ndescription: Brainstorm implementation directions\n---\n\n# Brainstorming\n",
+        );
+        write_file(
+            env.repo_root
+                .join(".pi/extensions/ta-onta/anima/S4'/agents/nous.md"),
+            "---\nname: nous\ndescription: Fresh perspective agent\ntools:\n  - Read\nskills:\n  - brainstorming\n---\n\n# Nous\n",
+        );
+        write_file(
+            env.repo_root
+                .join(".pi/extensions/ta-onta/aletheia/S5'/skills/repl/SKILL.md"),
+            "---\nname: repl\ndescription: Structural exploration skill\n---\n\n# REPL\n",
+        );
+        write_file(
+            env.repo_root
+                .join(".pi/extensions/ta-onta/aletheia/S5'/agents/anansi.md"),
+            "---\nname: anansi\ndescription: Structural topology agent\ntools:\n  - Read\nskills:\n  - repl\n---\n\n# Anansi\n",
+        );
+        write_file(
+            env.repo_root
+                .join(".pi/extensions/ta-onta/pleroma/S2'/skills/pleroma-skill-proxy/SKILL.md"),
+            "---\nname: pleroma-skill-proxy\ndescription: Configure constitutional progeny skill roots\n---\n\n# Pleroma Skill Proxy\n",
+        );
         env
     }
 
@@ -142,7 +169,7 @@ impl TestEnv {
     }
 
     pub fn with_fake_pi() -> Self {
-        let mut env = Self::repo_with_pi();
+        let mut env = Self::repo_with_assets();
         let bin_dir = env.root.join("bin");
         fs::create_dir_all(&bin_dir).unwrap();
         let log_dir = env.root.join("fake-pi-log");
@@ -176,6 +203,7 @@ impl TestEnv {
     }
 
     pub fn apply_to_process(&self) -> ProcessEnvGuard {
+        let lock = process_env_lock().lock().unwrap();
         let mut saved = Vec::new();
         for key in [
             "HOME",
@@ -183,6 +211,10 @@ impl TestEnv {
             "EPI_AGENT_HOME",
             "EPI_AGENT_DIR",
             "PI_CODING_AGENT_DIR",
+            "EPI_GATE_STATE_ROOT",
+            "CODEX_HOME",
+            "EPI_GATE_SKILLS_PATHS",
+            "EPILOGOS_VAULT",
             "PATH",
         ] {
             saved.push((key, env::var_os(key)));
@@ -198,6 +230,10 @@ impl TestEnv {
             env::remove_var("EPI_AGENT_HOME");
             env::remove_var("EPI_AGENT_DIR");
             env::remove_var("PI_CODING_AGENT_DIR");
+            env::remove_var("EPI_GATE_STATE_ROOT");
+            env::remove_var("CODEX_HOME");
+            env::remove_var("EPI_GATE_SKILLS_PATHS");
+            env::remove_var("EPILOGOS_VAULT");
         }
 
         if !self.path_prefixes.is_empty() {
@@ -217,7 +253,7 @@ impl TestEnv {
             }
         }
 
-        ProcessEnvGuard { saved }
+        ProcessEnvGuard { _lock: lock, saved }
     }
 }
 
@@ -254,6 +290,10 @@ pub fn run_epi(args: &[&str], env: &TestEnv) -> TestOutput {
     command.env_remove("EPI_AGENT_HOME");
     command.env_remove("EPI_AGENT_DIR");
     command.env_remove("PI_CODING_AGENT_DIR");
+    command.env_remove("EPI_GATE_STATE_ROOT");
+    command.env_remove("CODEX_HOME");
+    command.env_remove("EPI_GATE_SKILLS_PATHS");
+    command.env_remove("EPILOGOS_VAULT");
 
     if !env.path_prefixes.is_empty() {
         let mut path_entries: Vec<PathBuf> = env.path_prefixes.clone();
@@ -505,6 +545,11 @@ fn unique_temp_dir(prefix: &str) -> PathBuf {
     ));
     fs::create_dir_all(&dir).unwrap();
     dir
+}
+
+fn process_env_lock() -> &'static Mutex<()> {
+    static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+    LOCK.get_or_init(|| Mutex::new(()))
 }
 
 fn curated_extension_files() -> Vec<(&'static str, &'static str)> {

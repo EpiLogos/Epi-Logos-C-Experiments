@@ -434,15 +434,24 @@ fn parse_now(raw: Option<&str>) -> Result<DateTime<Utc>, String> {
 }
 
 fn vault_root() -> PathBuf {
-    std::env::var("EPILOGOS_VAULT")
-        .map(PathBuf::from)
-        .unwrap_or_else(|_| {
-            dirs::home_dir()
-                .unwrap_or_else(|| PathBuf::from("."))
-                .join("Documents")
-                .join("Epi-Logos")
-                .join("Idea")
-        })
+    // 1. Explicit env var (base.env or test override) — trusted unconditionally
+    if let Ok(v) = std::env::var("EPILOGOS_VAULT") {
+        if !v.is_empty() {
+            return PathBuf::from(v);
+        }
+    }
+    // 2. {repo_root}/Idea if present (the canonical repo-as-vault layout)
+    let repo = repo_root();
+    let idea = repo.join("Idea");
+    if idea.exists() {
+        return idea;
+    }
+    // 3. Legacy home-based fallback
+    dirs::home_dir()
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join("Documents")
+        .join("Epi-Logos")
+        .join("Idea")
 }
 
 fn repo_root() -> PathBuf {

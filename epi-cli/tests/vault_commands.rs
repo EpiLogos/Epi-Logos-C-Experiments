@@ -397,3 +397,26 @@ fn kairos_status_reports_natal_when_chart_exists() {
         "must report natal mode when chart exists: {out}"
     );
 }
+
+#[test]
+fn vault_root_autodetects_idea_in_repo_root() {
+    let base_env = env_with_fake_obsidian_cli();
+    // Create Idea/ in repo_root (no EPILOGOS_VAULT set)
+    let idea_dir = base_env.repo_root.join("Idea");
+    std::fs::create_dir_all(&idea_dir).unwrap();
+    // Run day-init — it should write into repo_root/Idea, not ~/Documents/Epi-Logos/Idea
+    let result = run_epi(
+        ["vault", "day-init", "--now", "2026-04-04T10:00:00Z"].as_slice(),
+        &base_env,
+    );
+    assert!(
+        result.status.success(),
+        "day-init failed: {}",
+        result.stderr
+    );
+    assert!(
+        idea_dir.join("Empty/Present/04-04-2026/daily-note.md").exists(),
+        "daily-note must be in repo_root/Idea, got stdout: {}",
+        result.stdout
+    );
+}
