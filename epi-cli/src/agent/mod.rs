@@ -3,6 +3,7 @@ mod agents;
 mod auth;
 mod capabilities;
 mod chain;
+pub mod claw_runtime;
 pub mod codex_runtime;
 mod doctor;
 mod extensions;
@@ -158,6 +159,27 @@ pub enum AgentCmd {
         #[command(subcommand)]
         cmd: CodexCmd,
     },
+    /// Experimental claw-rust native substrate lane
+    Claw {
+        #[command(subcommand)]
+        cmd: ClawCmd,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum ClawCmd {
+    /// Report health of the vendored claw runtime
+    Doctor {
+        /// Output as JSON
+        #[arg(long)]
+        json: bool,
+    },
+    /// Non-destructive smoke path through claw runtime
+    VerifyRuntime {
+        /// Output as JSON
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -236,6 +258,14 @@ pub async fn dispatch(cmd: Option<&AgentCmd>, json: bool) -> Result<String, Stri
             }
             CodexCmd::Doctor { json: as_json } => {
                 codex_runtime::run_doctor(*as_json || json)
+            }
+        },
+        AgentCmd::Claw { cmd } => match cmd {
+            ClawCmd::Doctor { json: as_json } => {
+                claw_runtime::run_doctor(*as_json || json)
+            }
+            ClawCmd::VerifyRuntime { json: as_json } => {
+                claw_runtime::run_verify_runtime(*as_json || json)
             }
         },
         AgentCmd::Vak { cmd } => match cmd {
