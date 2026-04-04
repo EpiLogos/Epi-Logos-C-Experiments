@@ -3,13 +3,13 @@ mod common;
 use common::{read_to_string, run_epi, write_executable, write_file, TestEnv};
 use std::fs;
 
-fn env_with_fake_obsidian() -> TestEnv {
+fn env_with_fake_obsidian_cli() -> TestEnv {
     let env = TestEnv::repo_with_assets();
     let bin_dir = env.root.join("bin");
     std::fs::create_dir_all(&bin_dir).unwrap();
     let log_path = env.root.join("obsidian.log");
     write_executable(
-        bin_dir.join("obsidian"),
+        bin_dir.join("obsidian-cli"),
         &format!(
             "#!/bin/sh\nprintf '%s\\n' \"$@\" > \"{}\"\nif [ \"$1\" = \"print-default\" ]; then printf 'Main Vault\\n'; fi\n",
             log_path.display()
@@ -23,7 +23,7 @@ fn env_with_fake_obsidian() -> TestEnv {
 
 #[test]
 fn obsidian_passthrough_commands_use_expected_args() {
-    let env = env_with_fake_obsidian();
+    let env = env_with_fake_obsidian_cli();
 
     let _ = run_epi(["vault", "set-default", "Ideas"].as_slice(), &env);
     let log = read_to_string(env.root.join("obsidian.log"));
@@ -46,7 +46,7 @@ fn obsidian_passthrough_commands_use_expected_args() {
 
 #[test]
 fn template_and_day_now_commands_write_real_files() {
-    let base_env = env_with_fake_obsidian();
+    let base_env = env_with_fake_obsidian_cli();
     let vault_root = base_env.root.join("vault");
     let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
     let vault_root = env.root.join("vault");
@@ -178,7 +178,7 @@ fn template_and_day_now_commands_write_real_files() {
 
 #[test]
 fn flow_init_creates_flow_md_in_day_folder() {
-    let base_env = env_with_fake_obsidian();
+    let base_env = env_with_fake_obsidian_cli();
     let vault_root = base_env.root.join("vault");
     let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
     let vault_root = env.root.join("vault");
@@ -225,7 +225,7 @@ fn flow_init_creates_flow_md_in_day_folder() {
 
 #[test]
 fn now_init_creates_thinking_and_thoughts_dirs() {
-    let base_env = env_with_fake_obsidian();
+    let base_env = env_with_fake_obsidian_cli();
     let vault_root = base_env.root.join("vault");
     let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
     let vault_root = env.root.join("vault");
@@ -257,7 +257,7 @@ fn now_init_creates_thinking_and_thoughts_dirs() {
 
 #[test]
 fn pasu_set_and_get_roundtrip() {
-    let base_env = env_with_fake_obsidian();
+    let base_env = env_with_fake_obsidian_cli();
     let vault_root = base_env.root.join("vault");
     let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
     let vault_root = env.root.join("vault");
@@ -303,7 +303,7 @@ fn pasu_set_and_get_roundtrip() {
 
 #[test]
 fn kairos_status_returns_stub_when_no_birth_data() {
-    let base_env = env_with_fake_obsidian();
+    let base_env = env_with_fake_obsidian_cli();
     let vault_root = base_env.root.join("vault");
     let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
     let vault_root = env.root.join("vault");
@@ -330,8 +330,43 @@ fn kairos_status_returns_stub_when_no_birth_data() {
 }
 
 #[test]
+fn vault_daily_passes_vault_flag_when_epi_vault_name_set() {
+    let env = env_with_fake_obsidian_cli()
+        .with_env("EPI_VAULT_NAME", "MyVault");
+    let _ = run_epi(["vault", "open", "SomeNote"].as_slice(), &env);
+    let log = read_to_string(env.root.join("obsidian.log"));
+    // obsidian-cli should receive: -v MyVault open SomeNote
+    assert!(log.contains("-v"), "expected -v flag: {log}");
+    assert!(log.contains("MyVault"), "expected vault name: {log}");
+}
+
+#[test]
+fn vault_daily_passes_vault_flag_from_obsidian_dir_autodetect() {
+    let base_env = env_with_fake_obsidian_cli();
+    // Create .obsidian/ in repo_root to trigger autodetection
+    std::fs::create_dir_all(base_env.repo_root.join(".obsidian")).unwrap();
+    let env = base_env;
+    let _ = run_epi(["vault", "open", "SomeNote"].as_slice(), &env);
+    let log = read_to_string(env.root.join("obsidian.log"));
+    // vault name should be basename of repo_root (the test dir name)
+    assert!(log.contains("-v"), "expected -v flag from autodetect: {log}");
+}
+
+#[test]
+fn vault_set_default_does_not_inject_vault_flag() {
+    let env = env_with_fake_obsidian_cli()
+        .with_env("EPI_VAULT_NAME", "MyVault");
+    let _ = run_epi(["vault", "set-default", "OtherVault"].as_slice(), &env);
+    let log = read_to_string(env.root.join("obsidian.log"));
+    // set-default must NOT receive -v (it IS the vault config command)
+    assert!(!log.contains("-v"), "set-default must not get -v injected: {log}");
+    assert!(log.contains("set-default"), "log: {log}");
+    assert!(log.contains("OtherVault"), "log: {log}");
+}
+
+#[test]
 fn kairos_status_reports_natal_when_chart_exists() {
-    let base_env = env_with_fake_obsidian();
+    let base_env = env_with_fake_obsidian_cli();
     let vault_root = base_env.root.join("vault");
     let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
     let vault_root = env.root.join("vault");

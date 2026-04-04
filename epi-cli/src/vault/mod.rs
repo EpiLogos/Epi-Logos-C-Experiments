@@ -87,6 +87,14 @@ pub enum VaultCmd {
     /// Write the active NOW.md file
     #[command(name = "now-write")]
     NowWrite { content: String },
+    /// Resolve the managed NOW.md path for a session
+    #[command(name = "now-path")]
+    NowPath {
+        #[arg(long)]
+        session_id: String,
+        #[arg(long)]
+        now: Option<String>,
+    },
     /// Set the default vault
     #[command(name = "set-default")]
     SetDefault { vault_name: String },
@@ -314,6 +322,7 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
                 now_path.display()
             ))
         }
+        VaultCmd::NowPath { session_id, now } => now_path(session_id, now.as_deref()),
         VaultCmd::SetDefault { vault_name } => obsidian_cli(&["set-default", vault_name.as_str()]),
         VaultCmd::Open { note, vault } => {
             let mut args = vec!["open", note.as_str()];
@@ -408,24 +417,11 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
 }
 
 fn obsidian_cli(args: &[&str]) -> Result<String, String> {
-    let binaries = ["obsidian", "obsidian-cli"];
-    let mut last_error = String::new();
-
-    for binary in binaries {
-        match Command::new(binary).args(args).output() {
-            Ok(out) if out.status.success() => {
-                return Ok(String::from_utf8_lossy(&out.stdout).to_string());
-            }
-            Ok(out) => {
-                last_error = String::from_utf8_lossy(&out.stderr).to_string();
-            }
-            Err(err) => {
-                last_error = format!("Failed to execute {binary}: {err}");
-            }
-        }
+    match Command::new("obsidian-cli").args(args).output() {
+        Ok(out) if out.status.success() => Ok(String::from_utf8_lossy(&out.stdout).to_string()),
+        Ok(out) => Err(String::from_utf8_lossy(&out.stderr).to_string()),
+        Err(err) => Err(format!("Failed to execute obsidian-cli: {err}")),
     }
-
-    Err(last_error)
 }
 
 fn parse_now(raw: Option<&str>) -> Result<DateTime<Utc>, String> {
@@ -454,6 +450,23 @@ fn repo_root() -> PathBuf {
         .map(PathBuf::from)
         .or_else(|_| std::env::current_dir())
         .unwrap_or_else(|_| PathBuf::from("."))
+}
+
+/// Resolve the Obsidian vault name for -v flag injection.
+/// Priority: EPI_VAULT_NAME env var → .obsidian/ in repo_root → None
+fn vault_name() -> Option<String> {
+    if let Ok(name) = std::env::var("EPI_VAULT_NAME") {
+        if !name.is_empty() {
+            return Some(name);
+        }
+    }
+    let repo = repo_root();
+    if repo.join(".obsidian").exists() {
+        if let Some(name) = repo.file_name().and_then(|n| n.to_str()) {
+            return Some(name.to_string());
+        }
+    }
+    None
 }
 
 fn home_root() -> PathBuf {
@@ -510,6 +523,12 @@ fn now_init(session_id: &str, now_override: Option<&str>) -> Result<String, Stri
     let body = render_template(&context, &repo_root(), &home_root())?;
     write_rendered_template(&path, &body)?;
     Ok(format!("created {}", path.display()))
+}
+
+fn now_path(session_id: &str, now_override: Option<&str>) -> Result<String, String> {
+    let now = parse_now(now_override)?;
+    let path = now_note_path(&vault_root(), now, session_id);
+    Ok(path.display().to_string())
 }
 
 fn route_thought(
