@@ -2,24 +2,28 @@ mod agent_dirs;
 mod agents;
 mod auth;
 mod capabilities;
-pub mod chat;
+mod chain;
+pub mod codex_runtime;
 mod doctor;
 mod extensions;
 mod hooks;
 mod install;
+pub mod launch;
 mod models;
 mod plugin_manifest;
 mod plugins;
+pub mod runtime;
 pub mod session;
 mod skills;
 pub mod spawn;
 mod subagents;
+mod team;
 pub mod vak;
 
 use clap::{Args, Subcommand};
 use std::path::PathBuf;
 
-pub use agent_dirs::AgentLayout;
+pub use agent_dirs::{canonical_pi_agent_dir, managed_epi_agent_dir, AgentLayout};
 
 #[derive(Subcommand)]
 pub enum AgentCmd {
@@ -47,6 +51,16 @@ pub enum AgentCmd {
     Hooks {
         #[command(subcommand)]
         cmd: HooksCmd,
+    },
+    /// Manage durable multi-agent teams and dispatch runs
+    Team {
+        #[command(subcommand)]
+        cmd: TeamCmd,
+    },
+    /// Execute ordered agent chains through the native runtime
+    Chain {
+        #[command(subcommand)]
+        cmd: ChainCmd,
     },
     /// Prepare the managed PI agent directory layout for this repo
     Install {
@@ -139,6 +153,27 @@ pub enum AgentCmd {
         #[command(subcommand)]
         cmd: VakCmd,
     },
+    /// Manage repo-local oh-my-codex (OMX) Codex runtime
+    Codex {
+        #[command(subcommand)]
+        cmd: CodexCmd,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum CodexCmd {
+    /// Install OMX runtime from vendors/oh-my-codex into .codex/ and .omx/
+    Install {
+        /// Output as JSON
+        #[arg(long)]
+        json: bool,
+    },
+    /// Verify repo-local Codex runtime state
+    Doctor {
+        /// Output as JSON
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -153,13 +188,19 @@ pub enum VakCmd {
     },
 }
 
-pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
+pub async fn dispatch(cmd: Option<&AgentCmd>, json: bool) -> Result<String, String> {
+    let Some(cmd) = cmd else {
+        return spawn::spawn(None, &[], None, json).await;
+    };
+
     match cmd {
         AgentCmd::Plugin { cmd } => plugins::run_plugin(cmd, json),
         AgentCmd::Plugins { cmd } => plugins::run_plugins(cmd, json),
         AgentCmd::Skill { cmd } => skills::run(cmd, json),
         AgentCmd::Subagent { cmd } => subagents::run(cmd, json),
         AgentCmd::Hooks { cmd } => hooks::run(cmd, json),
+        AgentCmd::Team { cmd } => team::run(cmd, json),
+        AgentCmd::Chain { cmd } => chain::run(cmd, json),
         AgentCmd::Install { agent } => install::run(agent.as_deref(), json),
         AgentCmd::Doctor { agent } => doctor::run(agent.as_deref(), json),
         AgentCmd::Extensions { cmd } => extensions::run(cmd, json),
@@ -170,23 +211,33 @@ pub fn dispatch(cmd: &AgentCmd, json: bool) -> Result<String, String> {
             agent,
             plugin_dirs,
             prompt,
-        } => spawn::spawn(agent.as_deref(), plugin_dirs, prompt.as_deref(), json),
-        AgentCmd::Attach { agent, session_id } => spawn::attach(agent.as_deref(), session_id, json),
+        } => spawn::spawn(agent.as_deref(), plugin_dirs, prompt.as_deref(), json).await,
+        AgentCmd::Attach { agent, session_id } => {
+            spawn::attach(agent.as_deref(), session_id, json).await
+        }
         AgentCmd::Run {
             agent,
             plugin_dirs,
             args,
-        } => spawn::run_pi(agent.as_deref(), plugin_dirs, args, json),
+        } => spawn::run_pi(agent.as_deref(), plugin_dirs, args, json).await,
         AgentCmd::VerifyRuntime {
             agent,
             plugin_dirs,
             prompt,
-        } => spawn::verify_runtime(agent.as_deref(), plugin_dirs, prompt.as_deref(), json),
+        } => spawn::verify_runtime(agent.as_deref(), plugin_dirs, prompt.as_deref(), json).await,
         AgentCmd::Chat { agent, prompt } => {
-            chat::run(agent.as_deref(), prompt.as_deref()).map_err(|e| e.to_string())?;
-            Ok(String::new())
+            let plan = runtime::plan_chat(agent.as_deref(), &[], prompt.as_deref())?;
+            spawn::execute_plan(&plan, json).await
         }
         AgentCmd::Session { cmd } => session::run(cmd, json),
+        AgentCmd::Codex { cmd } => match cmd {
+            CodexCmd::Install { json: as_json } => {
+                codex_runtime::run_install(*as_json || json)
+            }
+            CodexCmd::Doctor { json: as_json } => {
+                codex_runtime::run_doctor(*as_json || json)
+            }
+        },
         AgentCmd::Vak { cmd } => match cmd {
             VakCmd::Evaluate {
                 task,
@@ -246,6 +297,89 @@ pub enum SkillCmd {
 pub enum SubagentCmd {
     /// Validate a single subagent file
     Validate { path: PathBuf },
+    /// Spawn a real managed subagent session and run a prompt
+    Run {
+        #[arg(long)]
+        agent: String,
+        #[arg(long, default_value = "agent:main:main")]
+        parent_session: String,
+        #[arg(long)]
+        session_key: Option<String>,
+        #[arg(long)]
+        task: String,
+    },
+    /// Continue an existing managed subagent session
+    Continue {
+        #[arg(long)]
+        session_key: String,
+        #[arg(long)]
+        task: String,
+    },
+    /// List tracked subagent sessions
+    List {
+        #[arg(long)]
+        parent_session: Option<String>,
+    },
+    /// Stop a tracked subagent session
+    Stop {
+        #[arg(long)]
+        session_key: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum TeamCmd {
+    /// Create a durable team record and worker sessions without executing them
+    Create {
+        #[arg(long, default_value = "agent:main:main")]
+        parent_session: String,
+        #[arg(long, default_value = "parallel")]
+        strategy: String,
+        #[arg(long)]
+        label: Option<String>,
+        #[arg(long)]
+        task: String,
+        #[arg(long = "agent")]
+        agents: Vec<String>,
+    },
+    /// Dispatch a single agent through the durable team runtime
+    Dispatch {
+        #[arg(long, default_value = "agent:main:main")]
+        parent_session: String,
+        #[arg(long)]
+        label: Option<String>,
+        #[arg(long)]
+        agent: String,
+        #[arg(long)]
+        task: String,
+        #[arg(long)]
+        session_key: Option<String>,
+    },
+    /// List durable team records
+    List,
+    /// Resolve one durable team record
+    Resolve {
+        team_id: String,
+    },
+    /// Stop a durable team record
+    Stop {
+        team_id: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum ChainCmd {
+    /// Run an ordered chain of agents through the native runtime
+    Run {
+        #[arg(long, default_value = "agent:main:main")]
+        parent_session: String,
+        #[arg(long)]
+        label: Option<String>,
+        #[arg(long)]
+        task: String,
+        #[arg(long = "agent")]
+        agents: Vec<String>,
+    },
 }
 
 #[derive(Subcommand)]
