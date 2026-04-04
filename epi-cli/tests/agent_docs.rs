@@ -7,6 +7,28 @@ fn repo_root() -> PathBuf {
         .to_path_buf()
 }
 
+/// Task 1: The authority matrix must exist and name all four authority layers.
+#[test]
+fn omx_pleroma_claw_authority_matrix_exists() {
+    let matrix =
+        repo_root().join("docs/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md");
+    let text = std::fs::read_to_string(&matrix)
+        .unwrap_or_else(|err| panic!("failed to read {}: {err}", matrix.display()));
+
+    for needle in [
+        "OMX",
+        "ta-onta",
+        "PI",
+        "claw-rust",
+    ] {
+        assert!(
+            text.contains(needle),
+            "missing {needle:?} in {}",
+            matrix.display()
+        );
+    }
+}
+
 #[test]
 fn pleroma_port_matrix_lists_all_capability_families() {
     let matrix = repo_root().join("docs/specs/S/S4/S4i-PLEROMA-PORT-MATRIX.md");

@@ -1,9 +1,15 @@
 # S4/S4' — Pi Skills and Plugin System
 
-**Status:** Proposed architecture and implementation plan
-**Date:** 2026-03-07
+**Status:** Active — runtime substrate is now OMX (Codex) + claw-rust; PI is compatibility layer
+**Date:** 2026-03-07 (updated 2026-04-03)
 **Coordinate:** S4 (agent runtime substrate), S4' (skills, plugins, subagents, ta-onta execution layer)
 **Purpose:** Define a Claude-compatible skills and plugin system for the custom Pi agent stack in this repo, and establish the prerequisite foundation for Pleroma and the ta-onta module family now mapped to S4'.
+
+> **Authority split (2026-04-03):** The upstream substrate is now **oh-my-codex (OMX)** for
+> Codex-facing runtime and **claw-rust** for the long-term native harness.  PI remains as a
+> compatibility substrate only.  `plugins/pleroma/` is the canonical authoring surface for
+> ta-onta-governed Pleroma capabilities.  See
+> `docs/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md` for the full authority split.
 
 ---
 
@@ -118,10 +124,10 @@ Key official behaviors we should mirror:
   - preserve the authoring syntax
   - implement with Pi subagent spawn and our managed agent directory model
 - plugin install scopes:
-  - map Claude’s `user`, `project`, `local`, `managed` concepts to Epi-managed agent homes and repo-local plugin activation
+  - map Claude’s `user`, `project`, `local`, `managed` concepts onto repo-local managed agent homes plus repo-local plugin activation
 - plugin cache:
   - preserve the “installed plugins are copied to cache” behavior
-  - implement it under `~/.epi/agents/<agent>/plugins/cache/`
+  - implement it under `.epi/agents/<agent>/plugins/cache/` inside the active repo runtime
 - dynamic context injection (`!command` patterns):
   - support it only through explicit safe-command rules, not arbitrary shell execution by default
 - hook `type: "agent"`:
@@ -240,15 +246,17 @@ This is what prevents Pleroma and ta-onta from collapsing back into one monolith
 
 ## Plugin and Skill Precedence Model
 
-S4 should follow a Claude-like precedence model, but with Epi-managed paths:
+S4 should follow a Claude-like precedence model, but with repo-local Epi-managed paths:
 
 ### Discovery Sources
 
 1. Session-defined temporary agents/plugins
-2. Repo-local `plugins/`
-3. Repo-local project skills compatibility directories if present
-4. User-local managed skills/plugins under `~/.epi/`
-5. Optional Claude compatibility import from `~/.claude/`
+2. Explicit CLI `--plugin-dir` paths for the current launch
+3. Repo-local `plugins/`
+4. Repo-local plain skill roots such as `skills/` and ta-onta skill trees under `.pi/extensions/.../skills`
+5. Repo-local managed compatibility projections under `.epi/agents/<id>/agent/compat/...`
+
+Ambient user-home trees such as `~/.agents`, user-global `CODEX_HOME`, and `~/.claude` must not be read directly by the interactive runtime. If compatibility import is needed, it should be copied or projected into the repo-local managed runtime first.
 
 ### Conflict Rules
 
@@ -396,10 +404,10 @@ Behavior:
 
 ### Installed Mode
 
-Installed plugins should be copied to a managed cache under the selected agent home:
+Installed plugins should be copied to a managed cache under the selected repo-local agent home:
 
 ```text
-~/.epi/agents/<agent-id>/
+.epi/agents/<agent-id>/
   plugins/
     cache/
       <plugin-name>@<version>/

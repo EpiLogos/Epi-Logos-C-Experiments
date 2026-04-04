@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 pub struct PratibimbaStats {
@@ -6,6 +6,88 @@ pub struct PratibimbaStats {
     pub edge_count: u32,
     pub days_active: u32,
     pub last_added: Option<String>,
+}
+
+const GRAPHITI_URL: &str = "http://127.0.0.1:37778";
+
+#[derive(Serialize)]
+struct IdentityEventPayload<'a> {
+    event_type: &'a str,
+    quintessence_hash: &'a str,
+    tick12: u8,
+    layer_key: Option<&'a str>,
+    source: &'a str,
+    cp: &'a str,
+}
+
+#[derive(Deserialize)]
+struct IdentityEventResponse {
+    status: String,
+    #[serde(default)]
+    event_type: String,
+}
+
+/// epi nara pratibimba init — create PersonalNexus anchor at #4.4.4.4
+///
+/// Requires `epi nara wind` to have run first (profile.json must exist).
+/// Posts to the Graphiti sidecar /identity/event to upsert the anchor node.
+pub fn init(json: bool) -> Result<String, String> {
+    use super::identity::load_profile;
+
+    let profile = load_profile()?
+        .ok_or("No profile found — run `epi nara wind --birth-date YYYY-MM-DD` first")?;
+
+    if profile.hash_preview.is_empty() {
+        return Err(
+            "Profile has no quintessence hash — run `epi nara wind --force` to recompute".into(),
+        );
+    }
+
+    let payload = IdentityEventPayload {
+        event_type: "personal_nexus_init",
+        quintessence_hash: &profile.hash_preview,
+        tick12: 0,
+        layer_key: None,
+        source: "pratibimba-init-cli",
+        cp: "4.0",
+    };
+
+    let client = reqwest::blocking::Client::new();
+    let resp = client
+        .post(format!("{GRAPHITI_URL}/identity/event"))
+        .json(&payload)
+        .send()
+        .map_err(|e| {
+            format!(
+                "graphiti sidecar unreachable at {GRAPHITI_URL}: {e}\n  start with: epi gate graphiti start"
+            )
+        })?;
+
+    if !resp.status().is_success() {
+        return Err(format!(
+            "graphiti /identity/event returned {}: {}",
+            resp.status(),
+            resp.text().unwrap_or_default()
+        ));
+    }
+
+    let result: IdentityEventResponse = resp.json().map_err(|e: reqwest::Error| e.to_string())?;
+
+    if json {
+        serde_json::to_string(&serde_json::json!({
+            "ok": result.status == "ok",
+            "event_type": result.event_type,
+            "quintessence_hash": &profile.hash_preview,
+            "coordinate": "4.4.4.4",
+            "message": "PersonalNexus anchor created in Neo4j Pratibimba namespace"
+        }))
+        .map_err(|e| e.to_string())
+    } else {
+        Ok(format!(
+            "PersonalNexus anchor initialised at #4.4.4.4\n  quintessence: {}\n  BEDROCK edge → Bimba #4 created",
+            &profile.hash_preview
+        ))
+    }
 }
 
 /// epi nara pratibimba stats

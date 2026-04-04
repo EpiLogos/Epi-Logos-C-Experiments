@@ -1,7 +1,13 @@
 # Superpowers and Pleroma Source Inventory
 
-**Date:** 2026-03-08
+**Date:** 2026-03-08 (updated 2026-04-03)
 **Purpose:** File-by-file analysis of the upstream and local source surfaces that actually define Pleroma behavior, prompt strategy, and parity-relevant substrate functions.
+
+> **Superseded upstream (2026-04-03):** The `vendor/obra-superpowers-v4.x` base referenced below
+> has been replaced by `vendors/oh-my-codex/` (OMX) as the Codex runtime substrate.  Semantic
+> authority remains with the ta-onta specs.  All new capability authoring targets `plugins/pleroma/`.
+> PI (`vendor/obra-superpowers-*`) lineage is no longer the long-term base.  See the authority
+> matrix at `docs/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md`.
 
 ## Reading Rule
 
