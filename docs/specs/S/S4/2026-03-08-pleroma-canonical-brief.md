@@ -6,15 +6,20 @@
 
 ## Authority Order
 
-1. `Idea/Empty/Present/ARCHIVE-2026-02-25-taonta-install/VAK-SUPERPOWERS-INTEGRATION-SPEC.md`
-2. Canonical Pleroma/Ta Onta planning, especially:
-   - `docs/resources/S/2026-02-26-epi-logos-canonical-system-plan.md`
-   - `docs/resources/S/2026-02-27-fr-layer-assignment-full.md`
-3. Current execution-ground documents, especially:
-   - `docs/plans/2026-03-07-s4-prime-pleroma-real-port-plan.md`
+> **Updated 2026-04-03 — OMX fork base supersedes superpowers lineage.**
+> The runtime substrate is now `vendors/oh-my-codex/` (OMX) and claw-rust.
+> Full authority split: `docs/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md`
+> Port routing decisions: `docs/specs/S/S4/2026-04-03-omx-pleroma-port-matrix.md`
+
+1. **ta-onta specs** (`.pi/extensions/ta-onta/pleroma/`, `docs/specs/S/S4/`) — semantic authority
+2. **VAK-SUPERPOWERS-INTEGRATION-SPEC.md** (archived) — original philosophical ground; semantics still authoritative, packaging superpowers lineage is NOT
+3. **OMX** (`vendors/oh-my-codex/`) — Codex runtime/workflow layer; replaces `obra/superpowers` fork base
+4. Execution-ground documents:
+   - `docs/plans/2026-04-03-omx-pleroma-claw-runtime-migration.md` (primary)
+   - `docs/specs/S/S4/2026-04-03-omx-pleroma-port-matrix.md`
    - `docs/specs/S/S4/S4i-PLEROMA-PORT-MATRIX.md`
 
-Interpretation rule: newer runtime docs are implementation-grounding, not telos-grounding. They answer packaging, loading, validation, and runtime fit in this repo. They do not redefine what Pleroma is.
+Interpretation rule: OMX runtime docs answer packaging, loading, and Codex runtime fit. They do not redefine what Pleroma means. ta-onta specs remain telos-grounding.
 
 ## Pleroma Identity
 
@@ -24,7 +29,12 @@ In canonical planning, named modules are functions within one integral system, n
 
 ## Fork Base
 
-The intended fork base is `obra/superpowers v4.3.0` per the VAK integration spec. The locally installed source captured during Phase 1 is a concrete `obra/superpowers` clone at commit `a98c5dfc9de0df5318f4980d91d24780a566ee60`, locally tagged `v4.2.0`. That provenance mismatch is real and must stay visible in all downstream analysis; it does not authorize conceptual drift.
+> **Updated 2026-04-03:** The fork base is now `vendors/oh-my-codex/` (OMX v0.11.12).
+> `obra/superpowers` is no longer the packaging base; it is archived reference only.
+> See `docs/provenance/2026-04-03-oh-my-codex-vendor.md`.
+
+~~The intended fork base is `obra/superpowers v4.3.0` per the VAK integration spec.~~
+The `obra/superpowers` clone captured in Phase 1 (`a98c5dfc9de0df5318f4980d91d24780a566ee60`, `v4.2.0`) remains in `vendor/obra-superpowers-v4.2.0` as read-only reference. It is not the delivery substrate.
 
 ## Atomic vs VAK Skill Taxonomy
 
@@ -41,14 +51,17 @@ Atomic skills are not allowed to silently grow into constitutional routers. VAK/
 
 The VAK spec makes the constitutional routing table non-negotiable:
 
-- `(0000)` → `nous`
+- `(00/00)` → `nous`
 - `(0/1)` → `logos`
 - `(0/1/2)` → `eros`
 - `(0/1/2/3)` → `mythos`
-- `(4.0-4.4/5)` → `psyche`
+- `(4.0/1-4.4/5)` → `anima` — **active execution / Ralph mode**
+- `(4.5/0)` → `psyche` — session synthesis / contemplative subject
 - `(5/0)` → `sophia`
 
-`nous` is a fresh-perspective resetter, not a normal executor. `psyche` is the coordinator. `sophia` closes and synthesizes. This routing should be realized through plugin agents plus substrate dispatch, not via free-floating prompt conventions.
+**CANONICAL CORRECTION (2026-04-04):** `(4.0/1-4.4/5)` → `anima` (active execution). `(4.5/0)` → `psyche` (session subject/synthesis). These are distinct agents. Any document that maps `(4.0-4.4/5)` or `(4.0/1-4.4/5)` to `psyche` is incorrect and must be treated as stale.
+
+`nous` is a fresh-perspective resetter, not a normal executor. `anima` is the active execution coordinator (Ralph mode). `psyche` holds the session subject and synthesises. `sophia` closes and synthesizes across the Möbius return. This routing must be realized through plugin agents plus substrate dispatch, not via free-floating prompt conventions.
 
 ## Day/Night' Topology
 

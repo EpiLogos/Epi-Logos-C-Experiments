@@ -1,9 +1,13 @@
 # S4' Extension Architecture — The Six-Layer Agent Runtime
 
-**Status:** Architectural Scoping (pre-implementation)
-**Date:** 2026-03-08
-**Branch:** `codex/s4-prime-pleroma-real-port`
-**Purpose:** Define how PI agent extensions organize into exactly 6 classes aligned with S4-0' through S4-5', folding in S0-S5 stack capabilities and pi-vs-claude-code runtime primitives.
+**Status:** Active — substrate updated to OMX + claw-rust (2026-04-03)
+**Date:** 2026-03-08 (updated 2026-04-03)
+**Purpose:** Define how agent extensions organize into exactly 6 classes aligned with S4-0' through S4-5', folding in S0-S5 stack capabilities.
+
+> **Runtime note (2026-04-03):** The authoring surface is now `plugins/pleroma/` (skills) and
+> `plugins/pleroma/agents/` (ANIMA.md), not `.pi/extensions/` directly.  OMX (`vendors/oh-my-codex/`)
+> is the Codex runtime substrate.  claw-rust is the long-term native harness target.
+> See authority matrix: `docs/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md`
 
 ---
 
