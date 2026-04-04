@@ -434,7 +434,7 @@ fn parse_now(raw: Option<&str>) -> Result<DateTime<Utc>, String> {
 }
 
 fn vault_root() -> PathBuf {
-    // 1. Explicit env var (base.env or test override) — trusted unconditionally
+    // 1. Explicit env var (base.env or test override) — trusted when non-empty
     if let Ok(v) = std::env::var("EPILOGOS_VAULT") {
         if !v.is_empty() {
             return PathBuf::from(v);
