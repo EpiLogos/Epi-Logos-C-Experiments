@@ -28,11 +28,10 @@ All property keys follow `{family}_{n}[_{sub_n}]*_{semantic}` where:
 Sub-numbers follow the same QL semantics as their parent position. `c_0_0_*` is more ground-ward than `c_0_5_*` within the C0 family. Use this coherently — sub-numbers are not just sequence indices.
 
 `coordinate` is the single exempt key (the Bimba address itself, not a property).
-Computed fields (c_2_uuid, c_4_family, c_4_ql_position, c_4_layer, c_4_topo_mode)
-are filled by enrich.py — do NOT assign these from content.
-If enrich.py returns null for any computed field (e.g. c_4_ql_position is null for
-the bare `#` root node), omit that field from the generated Cypher SET block entirely
-— do not write `SET n.prop = null`.
+Computed fields (c_2_uuid, c_4_family, c_4_ql_position) are filled by enrich.py —
+do NOT assign these from content.
+If enrich.py returns null for c_4_ql_position (bare `#` root node), omit it from
+the generated Cypher SET block — do not write `SET n.prop = null`.
 
 ---
 

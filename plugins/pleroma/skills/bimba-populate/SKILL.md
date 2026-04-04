@@ -114,8 +114,8 @@ For each node in the batch:
 ```bash
 python epi-gnostic/scripts/enrich.py "{coordinate}"
 ```
-Use the returned `c_2_uuid`, `c_4_family`, `c_4_ql_position`, `c_4_layer`, `c_4_topo_mode` verbatim.
-If any computed field is null (e.g. `c_4_ql_position` for the bare `#` root node), omit it from the SET block — do not write `SET n.prop = null`.
+Use the returned `c_2_uuid`, `c_4_family`, `c_4_ql_position` verbatim.
+If `c_4_ql_position` is null (bare `#` root node), omit it from the SET block — do not write `SET n.prop = null`.
 
 **Step 2 — Apportion semantically:**
 
@@ -149,9 +149,7 @@ SET n.c_2_uuid              = '{from enrich.py}'
 SET n.c_3_updated_at        = '{value}'
 SET n.c_3_context_frame     = '{value}'
 SET n.c_4_family            = 'M'
-SET n.c_4_ql_position       = {int}
-SET n.c_4_layer             = '{from enrich.py}'
-SET n.c_4_topo_mode         = '{from enrich.py}'
+SET n.c_4_ql_position       = {int from enrich.py}
 SET n.c_4_access_level      = '{value}'
 SET n.c_4_ql_category       = '{value}'
 SET n.c_4_ql_operator_types = ['{val1}', '{val2}']
