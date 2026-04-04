@@ -8,7 +8,7 @@ No LLM involvement — these are deterministic.
 Usage (from agent via Bash tool):
     python enrich.py "#3-1-0-0"
     → prints JSON: {"c_2_uuid": "...", "c_4_family": "M", "c_4_ql_position": 3,
-                    "c_4_layer": "COORDINATE", "c_4_topo_mode": "LEMNISCATE"}
+                    "c_4_layer": "COORDINATE", "c_4_topo_mode": "TORUS"}
 """
 from __future__ import annotations
 import json
