@@ -1,6 +1,8 @@
 // spine/compositor.ts
 
 import type { SpineContribution, SessionContext, InjectionSlot } from "./types.ts";
+import { mkdirSync, appendFileSync } from "node:fs";
+import { join } from "node:path";
 
 const INJECT_CHAR_BUDGET = 18_000; // leave headroom under vendor's 20k
 
@@ -48,7 +50,7 @@ export class SpineCompositor {
       try {
         const entry = await channel.extract(ctx);
         if (entry) {
-          await appendToLedger(channel.ledgerDir, ctx.dayId, entry);
+          appendToLedger(channel.ledgerDir, ctx.dayId, entry);
         }
       } catch (e) {
         console.warn(`[spine] ledger extract failed for ${c.coordinate}: ${e}`);
@@ -58,28 +60,35 @@ export class SpineCompositor {
 
   /** Seam 3: get warm/hot compiler passes for scheduling */
   getCompilerPasses() {
-    return this.contributions.map(c => c.compilerPass());
+    return this.contributions
+      .map(c => {
+        try {
+          return c.compilerPass();
+        } catch (e) {
+          console.warn(`[spine] compiler pass failed for ${c.coordinate}: ${e}`);
+          return null;
+        }
+      })
+      .filter((pass): pass is NonNullable<typeof pass> => pass !== null);
   }
 
   /** Seam 4: unified query — dispatches to coordinate-matching handler */
   async query(question: string, coordinateFilter?: string): Promise<string> {
-    const handlers = this.contributions
-      .filter(c => !coordinateFilter || c.coordinate.startsWith(coordinateFilter))
-      .map(c => c.queryHandler().query(question, coordinateFilter));
+    const filtered = this.contributions
+      .filter(c => !coordinateFilter || c.coordinate.startsWith(coordinateFilter));
+    const handlers = filtered.map(c => c.queryHandler().query(question, coordinateFilter));
     const results = await Promise.allSettled(handlers);
     return results
       .filter(r => r.status === "fulfilled")
       .map((r, i) => {
-        const coord = this.contributions[i]?.coordinate ?? "?";
+        const coord = filtered[i]?.coordinate ?? "?";
         return `[${coord}] ${(r as PromiseFulfilledResult<string>).value}`;
       })
       .join("\n\n");
   }
 }
 
-async function appendToLedger(ledgerDir: string, dayId: string, entry: string): Promise<void> {
-  const { mkdirSync, appendFileSync } = await import("node:fs");
-  const { join } = await import("node:path");
+function appendToLedger(ledgerDir: string, dayId: string, entry: string): void {
   const vaultRoot = process.env.EPILOGOS_PROJECT_ROOT ?? process.cwd();
   const dir = join(vaultRoot, "epi-dev-vault", "ledger", ledgerDir);
   mkdirSync(dir, { recursive: true });
