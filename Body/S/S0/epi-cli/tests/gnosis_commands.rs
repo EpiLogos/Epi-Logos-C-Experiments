@@ -1,7 +1,11 @@
 mod common;
 
 use common::{run_epi, write_file, TestEnv};
-use epi_logos::techne::gnosis::ingest::{chunk_markdown, ChunkingOptions};
+use epi_logos::techne::gnosis::{
+    config::GnosisConfig,
+    ingest::{chunk_markdown, ingest_path, ChunkingOptions},
+    query::{query_local_report, DisclosureLevel, QueryOptions},
+};
 
 #[test]
 fn chunker_keeps_section_context() {
@@ -96,6 +100,71 @@ fn gnosis_notebook_ingest_query_and_book_commands_use_local_store() {
         &env,
     );
     assert!(book_ask.stdout.contains("Detail"));
+}
+
+#[test]
+fn gnosis_query_report_proves_s5_world_return_over_s2_substrate() {
+    let env = TestEnv::repo_with_assets()
+        .with_env("EPI_GNOSIS_CHUNK_WORDS", "4")
+        .with_env("EPI_GNOSIS_OVERLAP_WORDS", "1");
+    let _guard = env.apply_to_process();
+    let config = GnosisConfig::from_env();
+
+    let canonical = write_file(
+        env.repo_root.join("fixtures/canonical.md"),
+        "# Canon\nalpha beta gamma delta\n\n## Disclosure\nshared alpha source\n",
+    );
+    let book = write_file(
+        env.repo_root.join("fixtures/book.md"),
+        "# Book\nalpha epsilon zeta\n",
+    );
+
+    ingest_path(
+        &config,
+        canonical.to_str().unwrap(),
+        Some("Research"),
+        "Canonical",
+    )
+    .expect("canonical source should ingest");
+    ingest_path(&config, book.to_str().unwrap(), None, "Books").expect("book source should ingest");
+
+    let report = query_local_report(
+        &config,
+        "alpha",
+        QueryOptions {
+            notebook: Some("Research"),
+            source_type: Some("Canonical"),
+            title: None,
+            top_k: 5,
+        },
+        DisclosureLevel::SourceSummary,
+    )
+    .expect("query report should be built from real local storage");
+
+    assert_eq!(report.coordinate, "S5");
+    assert_eq!(report.service, "gnosis");
+    assert_eq!(report.storage_substrate, "S2");
+    assert_eq!(report.governance_owner, "S5'");
+    assert_eq!(report.disclosure_level, DisclosureLevel::SourceSummary);
+    assert_eq!(
+        report.source_selection.notebook.as_deref(),
+        Some("Research")
+    );
+    assert_eq!(
+        report.source_selection.source_type.as_deref(),
+        Some("Canonical")
+    );
+    assert_eq!(report.hits.len(), 2);
+    assert!(report.hits.iter().all(|hit| hit.source_type == "Canonical"));
+    assert!(report
+        .hits
+        .iter()
+        .all(|hit| hit.notebook.as_deref() == Some("Research")));
+    assert!(report
+        .hits
+        .iter()
+        .all(|hit| hit.disclosure.contains("Canonical")));
+    assert!(!report.hits.iter().any(|hit| hit.title == "book.md"));
 }
 
 fn env_path_placeholder() -> String {

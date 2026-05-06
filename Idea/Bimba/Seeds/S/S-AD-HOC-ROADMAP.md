@@ -78,6 +78,8 @@ Both agents use the same four-seam spine grammar inherited from the compiler ven
 
 But they receive different capabilities, tools, skills, and permission envelopes. [[Anima]] is allowed to act, route, compose teams, and execute bounded workflows. [[Epii]] is allowed to review, research, explain, govern promotion, and improve the system. Cross-agent calls should be typed requests, not shared ambient authority.
 
+They do not own separate copies of the substrate services. [[Pleroma]] and the planned [[epi-logos plugin]] are parallel capability membranes over the same S-layer service field: [[S1']] compiler law, [[S2]] graph/embedding substrate, [[S3]] gateway/session/temporal runtime, [[S3']] Graphiti temporal architecture, [[S5]] Gnosis/Nara/world-return services, and [[S5']] review/autoresearch governance. [[ta-onta]] plugs [[Anima]] into these services for dispatch and execution; [[Epii]] plugs into the same services for review, interpretation, research, promotion, and return. The difference is not which services exist, but which agent may invoke which capability, under which coordinate method, with which review gate.
+
 This makes the testing distinction sharper:
 
 - service automation proves a substrate can run,
@@ -128,6 +130,7 @@ Built enough to serve as substrate:
 - `Body/S/S4/plugins/pleroma/capability-matrix.json` now gives the first machine-checkable Anima capability membrane: constitutional agents, real skill files, hooks, Anima authority, and Epii handoff boundaries.
 - `Body/S/S5/epi-gnostic` exists with real [[RAG-Anything]], [[LightRAG]], [[Neo4j]], embeddings, and temporary [[Graphiti]] wrapper code.
 - `Body/S/S5/epii-agent/agent-contract.json` now gives the first machine-checkable Epii PI-agent contract: epi-logos resource target, autoresearch spine, review inbox spine, accepted Anima deposits, and bounded Epii -> Anima requests.
+- [[Gnosis]] now exposes a first source-selection/disclosure report over real local ingested documents, explicitly marking itself as [[S5]] world-return over [[S2]] storage substrate with [[S5']] governance. `s5'.epii.status` carries the same S5/S2/S5' service contract for Epii observation.
 - The S/S' specs, shard indexes, and source traceability indexes exist.
 
 Not yet built in the right way:

@@ -117,11 +117,12 @@ The live S4 implementation is broad and uneven:
 - `Body/S/S4/plugins/pleroma` is Anima's executable capability membrane package. It carries constitutional ANIMA definitions, critical VAK skills, hooks, settings, and a tested capability matrix. It is distinct from the ta-onta `S4-2p-pleroma` module, which is the internal S4' extension/module expression of Pleroma law.
 - `epi agent` source-to-runtime projection distinguishes source package, managed runtime sync target, and installed state: source lives under `Body/S/S4/...`; managed PI runtime lives under `.epi/agents/<id>/agent`; Codex/OMX projection lives under `.codex/` / `.omx/`.
 
-Current implementation gaps:
+Current implementation state and gaps:
 
-- The coordinate-native API methods `s4.agent.query`, `s4.agent.notify`, `s4.agent.status`, `s4'.team.*`, `s4'.cs.*`, `s4'.thought.*`, `s4'.crystallise`, `s4'.notify_user`, `s4'.context.assemble`, `s4'.psyche.*`, `s4'.goal.*`, and `s4'.permission.get` are not yet exposed as a unified gateway/API surface. `s4'.vak.evaluate` and `s4'.orchestrate` now have first gateway-backed Anima/Pleroma access.
-- [[Psyche]] is the largest missing API surface. The audit explicitly calls for `s4'.psyche.state` and `s4'.psyche.update` to cover operative notebook, current task, subtasks, artifacts, visibility stance, and run-local continuity.
-- `s_4_permission_boundary` is hot and still lacks a proper API method.
+- The first coordinate-native S4/S4' gateway surfaces are now live: `s4.agent.query`, `s4.agent.notify`, `s4.agent.status`, `s4'.vak.evaluate`, `s4'.orchestrate`, `s4'.psyche.state`, `s4'.psyche.update`, and `s4'.permission.get`. They are tested by `gate_s4_coordinate_surfaces.rs` and `gate_anima_pleroma_access.rs`.
+- Remaining coordinate-native API gaps include `s4'.team.*`, `s4'.cs.*`, `s4'.thought.*`, `s4'.crystallise`, `s4'.notify_user`, `s4'.context.assemble`, and richer `s4'.goal.*` semantics.
+- [[Psyche]] now has first persisted gateway state for operative notebook, current task, subtasks, artifacts, visibility stance, and run-local continuity. The next Psyche gap is richer goal-state, context-pack assembly, and integration with team/VAK state.
+- `s_4_permission_boundary` now has first explicit API exposure through `s4'.permission.get`; the next gap is making every S0 exec, Pleroma primitive, file write, subagent spawn, and external API call enforce the same boundary rather than merely report it.
 - `s4'.vak.evaluate` must expand beyond the live heuristic response to return primary family, primary coordinate, CPF, prime targets, intent class, and agent sequence position.
 - `nous_disclose` currently writes context through a Gnosis notebook path and direct temporary files; target `s4'.context.assemble` must assemble context through explicit S1/S2/S3/S5 contracts without smuggling ontology through a helper workflow.
 - Sophia post-execution review is currently an extension hook with guard logic, not yet a proven coordinate-native crystallisation lifecycle.

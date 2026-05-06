@@ -50,6 +50,7 @@ The rule for the next runs: do not stop after one small correction. Work phase b
 - Treat [[Anima]] and [[Epii]] as distinct spine-bearing PI agents. Do not give them identical tool/skill authority.
 - Treat [[Pleroma]] as Anima's executive capability membrane: extension primitives, skills, agents, hooks, and bounded tools must be apportioned deliberately.
 - Treat the [[epi-logos plugin]] plus [[autoresearch]] as Epii's resource/return body: review, gnosis, Nara, QL/MEF, pedagogy, and improvement must be Epii-governed.
+- Treat [[Pleroma]] and the [[epi-logos plugin]] as parallel capability membranes over shared S-layer services, not separate service stacks. [[ta-onta]] / [[Anima]] invokes the shared services for dispatch/execution; [[Epii]] invokes and governs the same services for review, meaning, research, promotion, and return.
 - Treat human judgement as human-gated. Automation may create, route, persist, and resolve review states, but it does not pretend to replace validation.
 - Keep `Idea/` mostly vault/spec/runtime markdown. Put source code and packages under `Body/`.
 - Treat Docker-backed Neo4j/Redis as stateful, useful data unless proven otherwise. Use `docker compose -f docker-compose.epi-s2.yml up -d neo4j redis`; do not use `down -v`, prune, or teardown tests that delete `:Bimba`, `:GraphMeta`, or Redis indexes without explicit approval.
@@ -314,9 +315,9 @@ Checklist:
 - [x] Define first Anima authority split from Epii review authority: Anima can dispatch/deposit/request; Epii review gates are forbidden to Anima.
 - [x] Prove source-to-runtime sync for `.epi/agents/<id>/agent` with `agent_extensions` and `agent_spawn` tests.
 - [x] Prove real spawn/session/invocation path or clearly name the missing runtime piece: launch contract, runtime plugin indexing, session state, gateway RPC, and subagent persistence are tested; provider-backed live PI worker boot remains the missing external-auth/runtime piece.
-- [ ] Make `s4.agent.query/notify/status` reachable through gateway parity or explicit CLI mirror.
+- [x] Make `s4.agent.query/notify/status` reachable through gateway parity or explicit CLI mirror: gateway methods now persist S4 agent query/notify receipts and expose status through `gate_s4_coordinate_surfaces.rs`.
 - [x] Make `s4'.vak.evaluate` and `s4'.orchestrate` callable through gateway-backed Anima/Pleroma access: the first pass returns real Pleroma skill paths, deterministic VAK routing, constitutional agent mapping, and Epii authority boundaries. Full provider-backed PI extension execution remains the later live-worker proof.
-- [ ] Persist or expose Psyche state, goal state, and permission boundary.
+- [x] Persist or expose Psyche state, goal state, and permission boundary: `s4'.psyche.state`, `s4'.psyche.update`, and `s4'.permission.get` now expose the first persisted Psyche state and explicit permission boundary; richer goal-state semantics remain future `s4'.goal.*`.
 - [ ] Add reviewable approval state for human-gated actions.
 - [x] Add first typed Anima -> Epii handoff/deposit shape in the Pleroma capability matrix without giving Anima Epii's review authority.
 
@@ -421,13 +422,13 @@ Files/code areas:
 
 Checklist:
 
-- [ ] Confirm Gnosis/RAG-Anything uses S2 substrate but remains S5 world-return service.
+- [x] Confirm Gnosis/RAG-Anything uses S2 substrate but remains S5 world-return service: `query_local_report` and `s5'.epii.status` now expose `coordinate=S5`, `storage_substrate=S2`, and `governance_owner=S5'`.
 - [ ] Decide `epi gnostic` vs `epi techne gnosis` alias/promotion.
 - [ ] Decide `epi kbase` vs `epi vimarsa` command status.
 - [ ] Keep Nara as M4/PASU operator surface under S5/M integration.
 - [ ] Make Graphiti usage/search/arc governance consume S3' runtime rather than own runtime architecture.
-- [ ] Add raw service proof for Gnosis ingestion/query where dependencies are available.
-- [ ] Add module-level source selection/disclosure tests.
+- [x] Add raw service proof for Gnosis ingestion/query where dependencies are available: deterministic local-store ingestion/query proof remains in `gnosis_commands.rs`, and the Python package smoke subset passes without live Neo4j/Gemini.
+- [x] Add module-level source selection/disclosure tests: `gnosis_query_report_proves_s5_world_return_over_s2_substrate` proves notebook/source-type filtering and source-summary disclosure over real local ingested documents.
 - [x] Add Epii access proof for review/autoresearch surfaces.
 - [x] Add Epii access proof for Gnosis, Nara, and Graphiti usage/status surfaces: `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_epii_agent_access`
 
@@ -437,7 +438,7 @@ Verification:
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test nara_e2e_smoke`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test nara_oracle_payload`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test nara_identity_contract`
-- [ ] Run `Body/S/S5/epi-gnostic` Python tests with the package's configured test runner.
+- [ ] Run `Body/S/S5/epi-gnostic` full Python tests with the package's configured test runner once the Body-native Python environment is repaired. Current checked-in `.venv` has stale root-path shebangs, and system Python collection is blocked by an x86_64 NumPy wheel on arm64; the non-NumPy smoke subset passes.
 - [ ] Run `Body/S/S0/epi-lib` C tests/build command once active build command is confirmed.
 
 Exit condition:

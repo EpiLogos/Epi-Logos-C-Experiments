@@ -120,6 +120,10 @@ async fn s5_epii_gateway_status_observes_gnosis_nara_and_graphiti_without_mutati
         .expect("Epii status should include read-only world-return surfaces");
 
     assert_eq!(status["world_return"]["gnosis"]["available"], true);
+    assert_eq!(status["world_return"]["gnosis"]["coordinate"], "S5");
+    assert_eq!(status["world_return"]["gnosis"]["service"], "gnosis");
+    assert_eq!(status["world_return"]["gnosis"]["storage_substrate"], "S2");
+    assert_eq!(status["world_return"]["gnosis"]["governance_owner"], "S5'");
     assert_eq!(status["world_return"]["gnosis"]["documents_count"], 1);
     assert_eq!(status["world_return"]["gnosis"]["notebooks_count"], 1);
     assert_eq!(
@@ -138,6 +142,14 @@ async fn s5_epii_gateway_status_observes_gnosis_nara_and_graphiti_without_mutati
     assert_eq!(
         status["world_return"]["graphiti"]["invocation_owner"],
         "S5 episodic invocation and arc governance"
+    );
+    assert_eq!(
+        status["world_return"]["graphiti"]["runtime_coordinate"],
+        "S3'"
+    );
+    assert_eq!(
+        status["world_return"]["graphiti"]["usage_governance_coordinate"],
+        "S5/S5'"
     );
     assert_eq!(
         status["world_return"]["graphiti"]["url"],

@@ -646,6 +646,8 @@ S5/S5' serves:
 
 4. The [[epi-logos plugin]] is the planned S5/S5' spine. A local scaffold now exists at `Body/S/S5/plugins/epi-logos`; it should grow into the complete core resource and skill body for executing Epi-Logos philosophy and the Nara/Epii functional field.
 
+4a. [[Pleroma]] and the [[epi-logos plugin]] are parallel capability membranes over the same underlying S-layer services. [[Pleroma]] gives [[Anima]] bounded dispatch/execution access; the [[epi-logos plugin]] gives [[Epii]] bounded review, research, meaning, Nara/Epii workflow, pedagogy, and promotion access. [[ta-onta]] and [[Epii]] therefore share service substrate by contract, but do not share ambient authority.
+
 5. [[autoresearch]] is the dynamic self-improvement spine of the [[Epii]] agent. Its effects return through every S-level because Epii is the #5 reflective/user position, not because autoresearch is a generic ambient service.
 
 6. The Epii review inbox is the canonical recipient for [[Anima]] results, [[Aletheia]] crystallisations, [[Sophia]] disclosures, and human validation gates. It is where their work makes sense to the user-position and where review resolves into Nara action, autoresearch, SEED carry-forward, or promotion.

@@ -42,6 +42,10 @@ fn gnosis_status() -> Value {
     match (notebooks, documents) {
         (Ok(notebooks), Ok(documents)) => json!({
             "available": true,
+            "coordinate": "S5",
+            "service": "gnosis",
+            "storage_substrate": "S2",
+            "governance_owner": "S5'",
             "storage_root": config.root,
             "neo4j_uri": neo4j_uri,
             "embedding_api_configured": embedding_api,
@@ -50,6 +54,10 @@ fn gnosis_status() -> Value {
         }),
         (notebooks, documents) => json!({
             "available": false,
+            "coordinate": "S5",
+            "service": "gnosis",
+            "storage_substrate": "S2",
+            "governance_owner": "S5'",
             "storage_root": config.root,
             "neo4j_uri": neo4j_uri,
             "embedding_api_configured": embedding_api,
@@ -84,6 +92,8 @@ async fn graphiti_status() -> Value {
         "running": status.running,
         "url": status.url,
         "health": status.health,
+        "runtime_coordinate": "S3'",
+        "usage_governance_coordinate": "S5/S5'",
         "runtime_authority": GRAPHITI_RUNTIME_AUTHORITY,
         "invocation_owner": GRAPHITI_INVOCATION_OWNER,
     })
