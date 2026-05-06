@@ -1130,10 +1130,28 @@ async fn dispatch_rpc(
                 .map(DispatchResult::immediate)
                 .map_err(internal_error)
         }
+        "s4.agent.query" => anima::agent_query(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s4.agent.notify" => anima::agent_notify(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s4.agent.status" => anima::agent_status(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "s4'.vak.evaluate" => anima::vak_evaluate(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
         "s4'.orchestrate" => anima::orchestrate(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s4'.psyche.state" => anima::psyche_state(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s4'.psyche.update" => anima::psyche_update(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s4'.permission.get" => anima::permission_get(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
         "s5'.review.submit" => review::submit(state_root, &frame.params)

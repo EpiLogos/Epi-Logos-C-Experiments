@@ -135,13 +135,14 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
     CoordinateParityRecord {
         canonical_method: "s4.agent.*",
         owner: "S4",
-        status: CoordinateParityStatus::Mirror,
-        live_gateway_method: Some("agent / agent.wait / node.invoke"),
+        status: CoordinateParityStatus::Native,
+        live_gateway_method: Some("s4.agent.query / s4.agent.notify / s4.agent.status / agent / agent.wait / node.invoke"),
         cli_mirror: Some("epi agent"),
-        body_path: "Body/S/S0/epi-cli/src/agent",
+        body_path: "Body/S/S0/epi-cli/src/gate/anima.rs + Body/S/S0/epi-cli/src/agent",
         test_evidence: &[
             "agent_spawn.rs",
             "gate_agent_rpc.rs",
+            "gate_s4_coordinate_surfaces.rs",
             "gate_subagent_spawn.rs",
         ],
     },
@@ -149,12 +150,13 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s4'.*",
         owner: "S4'",
         status: CoordinateParityStatus::Mirror,
-        live_gateway_method: Some("s4'.vak.evaluate / s4'.orchestrate / skills.* / exec.approval.*"),
+        live_gateway_method: Some("s4'.vak.evaluate / s4'.orchestrate / s4'.psyche.state / s4'.psyche.update / s4'.permission.get / skills.* / exec.approval.*"),
         cli_mirror: Some("epi agent vak"),
         body_path: "Body/S/S4/ta-onta/S4-4p-anima",
         test_evidence: &[
             "agent_vak.rs",
             "gate_anima_pleroma_access.rs",
+            "gate_s4_coordinate_surfaces.rs",
             "vak_constitutional_architecture.rs",
             "ta_onta_cli_contract.rs",
         ],
@@ -311,10 +313,9 @@ pub fn coordinate_parity_records() -> &'static [CoordinateParityRecord] {
 pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str> {
     match method {
         "connect" => Some("connect"),
-        "agent" | "agent.identity.get" | "agent.wait" | "agents.list" | "node.invoke"
-        | "node.invoke.result" | "node.event" | "node.list" | "node.describe" | "node.rename" => {
-            Some("s4.agent.*")
-        }
+        "agent" | "agent.identity.get" | "agent.wait" | "agents.list" | "s4.agent.query"
+        | "s4.agent.notify" | "s4.agent.status" | "node.invoke" | "node.invoke.result"
+        | "node.event" | "node.list" | "node.describe" | "node.rename" => Some("s4.agent.*"),
         "browser.request" | "web.login.start" | "web.login.wait" | "logs.tail" | "update.run"
         | "wizard.start" | "wizard.next" | "wizard.cancel" | "wizard.status" => Some("s0.*"),
         "channels.status" | "channels.logout" | "chat.history" | "chat.abort" | "chat.send"
@@ -344,7 +345,10 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "skills.install"
         | "skills.update"
         | "s4'.vak.evaluate"
-        | "s4'.orchestrate" => Some("s4'.*"),
+        | "s4'.orchestrate"
+        | "s4'.psyche.state"
+        | "s4'.psyche.update"
+        | "s4'.permission.get" => Some("s4'.*"),
         "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve" | "s5'.review.history" => {
             Some("s5'.review.*")
         }
