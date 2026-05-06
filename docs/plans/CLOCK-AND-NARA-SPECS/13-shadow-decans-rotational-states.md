@@ -1,7 +1,7 @@
 # Shadow Decans, Rotational States, and the ## World-Matrix
 
-**Status:** Provisional (2026-03-19) — rotational state architecture is partially established here;
-deeper 8-fold rotational system spec deferred to a dedicated follow-on session.
+**Status:** Phase 1 complete (2026-03-19) — 7/8-state correction applied; decan double-cover
+canonical; deeper rotational system (full 8-fold expansion) deferred to follow-on spec.
 **Depends on:** Spec 11 (M1→M2 vibrational bridge), Spec 12 (Anuttara languification)
 
 ---
@@ -191,33 +191,39 @@ From minor arcana root (#3-4):
 > "Dynamic rotational field where 56 cards create 360-degree consciousness mapping
 > through **8-fold absence generating perpetual novelty**"
 
-### The Spectrum
+### The 7/8 State Distinction (corrected)
 
-The 8 rotational states form a spectral wheel between the two poles:
+Rotational states are NOT uniformly 8 per codon. The count is determined algebraically
+by the codon's type:
 
-```
-0°   = UPRIGHT / LIGHT pole        ← our current implementation (only this)
-45°  = first intermediate state (positive lean)
-90°  = orthogonal / neither-nor
-135° = second intermediate (negative lean)
-180° = REVERSED / SHADOW pole      ← the missing double-cover
-225° = third intermediate
-270° = orthogonal return
-315° = fourth intermediate (approaching light again)
-```
+**Dual codons** (24 total, where pair1.sequence ≠ pair2.sequence): **8 states**
+- 4 positive states (second pair dominant in each)
+- 4 negative states (first pair dominant in each)
+- Full spectral coverage: 4 × pair1-dominant + 4 × pair2-dominant
 
-The tarot upright/reversed binary maps to the 0°/180° poles — the **minimal double-cover**.
-The 6 intermediate states (45°, 90°, 135°, 225°, 270°, 315°) are the **7 options between
-poles** referenced above (6 intermediates + the 180° shadow itself = 7 non-upright states;
-or: upright + reversed + 6 intermediates = 8 total).
+**Non-dual codons** (40 total, where pair1.sequence = pair2.sequence): **7 states**
+- 1 non-dual anchor state (the eigenspace-collapsed state: pair1=pair2 plays both roles simultaneously — it is both positive and negative, neither wins)
+- 3 positive states (pair expressed outward)
+- 3 negative states (pair expressed inward)
+- Total: 1 + 3 + 3 = 7 (NOT 8 — the non-dual collapse removes one degree of freedom)
 
-### 64:8:40 Architecture (high-level)
+### 64:8:40 Architecture (corrected)
 
 ```
-64 codons × 8 rotational states = 512 total states
-512 - 40 non-dual (palindromic, self-identical under rotation) = 472 dynamic states
-40 non-dual anchors ≈ our backbone + certain structural palindromes
+NAIVE:  64 codons × 8 states = 512
+ACTUAL: 40 non-dual × 7 states + 24 dual × 8 states = 280 + 192 = 472
 ```
+
+The reduction 512 → 472 = exactly 40 degenerate states removed (one per non-dual codon).
+
+The 45° step model from `rotational_state_protocol.txt` provides the geometric
+parameterization (8 angular positions at 45° intervals). For dual codons, all 8 positions
+are distinct. For non-dual codons, the 0° and 180° positions collapse into the eigenstate,
+giving 7 geometrically distinct outputs.
+
+The tarot upright/reversed binary = the **minimal double-cover** of the 0°/180° poles.
+The 6 intermediate states are the additional expressibility range available once the
+full spectrum is implemented.
 
 The 40 non-dual anchors are the **most stable** codon positions — structurally related to
 (but not identical with) the 24 clock backbone nodes. This relationship requires dedicated

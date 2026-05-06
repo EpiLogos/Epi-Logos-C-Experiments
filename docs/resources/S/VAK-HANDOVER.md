@@ -118,7 +118,7 @@ The Moirai are the Night′ execution layer. This was missed in early spec itera
 | Moira | Night′ Position | Question | CF Role |
 |-------|----------------|----------|---------|
 | Klotho | P1′ Traces | "What evidence exists?" | CF `(0/1/2)` Eros |
-| Lachesis | P4′ Discovery | "What sources inform?" | CF `(4.0–4.4/5)` Psyche |
+| Lachesis | P4′ Discovery | "What sources inform?" | CF `(4.0/1–4.4/5)` Anima |
 | Atropos | P5′ Insight | "What crystallizes?" | CF `(5/0)` Sophia |
 
 CFP3 F-Thread full Night′ = all three in parallel, Anima aggregates.
@@ -146,7 +146,7 @@ sophia (CT5′):        + finishing-a-development-branch, day-night-pass
 CPF (S4-0′): (00/00) dialogical | (4.0/1–4.4/5) mechanistic
 CT  (S4-1′): CT0 Relational | CT1 Definitional | CT2 Operational | CT3 Pattern | CT4 Contextual | CT5 Integrative
 CP  (S4-2′): 4.0 Ground | 4.1 Definition | 4.2 Operation | 4.3 Pattern | 4.4 Context | 4.5 Integration
-CF  (S4-3′): (0000) Nous | (0/1) Logos | (0/1/2) Eros | (0/1/2/3) Mythos | (4.0–4.4/5) Psyche | (5/0) Sophia
+CF  (S4-3′): (00/00) Nous | (0/1) Logos | (0/1/2) Eros | (0/1/2/3) Mythos | (4.0/1–4.4/5) Anima | (4.5/0) Psyche | (5/0) Sophia
 CFP (S4-4′): CFP0 Base | CFP1 P-Thread | CFP2 C-Thread | CFP3 F-Thread | CFP4 L-Thread | CFP5 B-Thread | Z
 CS  (S4-5′): CS0 Full | CS1 Quick | CS2 Ground→op | CS3 Through-pattern | CS4 Context | CS5 Direct
 ```

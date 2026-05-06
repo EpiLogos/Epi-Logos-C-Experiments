@@ -1,6 +1,6 @@
 # Holographic Validation Matrix — Nara / Cosmic Clock
 
-**Status:** Living document (2026-03-16)
+**Status:** Living document — last updated 2026-03-30 (spec-parity audit pass)
 
 ---
 
@@ -27,20 +27,20 @@ This document is the answer to: "Is every piece of the nara/clock system account
 
 | # | Claim | Source Spec | Data Structure | Derivation Function | Downstream Consumers | Status | Notes |
 |---|-------|-------------|----------------|---------------------|----------------------|--------|-------|
-| 1 | Quintessence identity (BLAKE3 archetypal address) | `01-quintessence-hash-architecture.md` | `M4_Quintessence_Identity` struct | `BLAKE3(natal_config \|\| genekeys \|\| humandesign \|\| jungian \|\| ql_birth)` | `PortalClockState.session_hash`, SpacetimeDB presence routing, identity panel | `partial` | Struct defined; derivation function is stub only; no caller wires all 5 layers yet |
-| 2 | Quintessence quaternion `[f32;4]` | `01-quintessence-hash-architecture.md`, `clock_state.rs` | `PortalClockState.quintessence_quaternion [f32;4]` | `update_quintessence_quaternion()` in `clock_state.rs` | `CosmicClockPlugin` torus orientation, identity panel quaternion display | `partial` | Function implemented; no caller invokes it on identity augment |
-| 3 | Oracle faces (4-face reading) | `04-shadow-dynamics-three-computations.md` | `OracleFaces` struct in `clock_state.rs` | `update_from_cast()` | `M4OraclePlugin`, `medicine prescribe`, `SpacetimeDB oracle event` | `partial` | Struct exists; `update_from_cast()` has zero callers in the portal pipeline |
-| 4 | Clock degree from oracle cast | `09-cosmic-clock-plugin-tui-spec.md` | `PortalClockState.current_degree: u16` | `cast_result → primary_hexagram → degree_node_360` | `CosmicClockPlugin` ring highlight, medicine decan lookup, lens segment display | `planned` | Not yet wired through portal; oracle cast does not update `current_degree` |
-| 5 | tick12 (spanda / torus stage) | `03-spanda-double-helix-12fold.md`, `clock_state.rs` | `PortalClockState.torus_stage: u8` | `quantize_to_spanda_substage(y, x)` from live quaternion | `CosmicClockPlugin` torus stage indicator, oracle-cast moment detection, walk step display | `implemented` | Correct integer quantization 0–11 in `clock_state.rs`; rename `torus_stage` → `tick12` is pending |
-| 6 | KairosState (full 10-planet + Earth center) | `09-cosmic-clock-plugin-tui-spec.md`, `clock_state.rs` | `KairosState` with `PlanetState[10]` | `parse_kerykeion_to_kairos_state()` | `CosmicClockPlugin` planetary ring render, `M4SpinePlugin` hour marker, transit map | `partial` | `KairosState` struct has `[PlanetState;9]` (legacy, no Uranus); needs update to `[PlanetState;10]`; `parse_kerykeion_to_kairos_state()` not implemented |
-| 7 | Oracle payload (machine + human simultaneously) | `07-unified-architecture-golden-thread.md §7`, `M4-nara-subtle-body-map` | `oracle_payload` (type TBD) | `cast → update_from_cast() → emit oracle_payload` | Gateway `nara.oracle.payload` RPC, frontend subtle-body map, SpacetimeDB oracle presence event | `planned` | Schema not yet defined; no struct exists; blocked by §3 |
-| 8 | Medicine decan chain | `M4-nara-personal-interface`, `epi-cli/src/nara/medicine.rs` | `ZodiacDecanEntry`; `DECAN_BODY_PARTS[36]`; `CHAKRA_BODY_ZONES[8]` | `zodiac_decan(degree) → planet → element → chakra → body_zones` | `prescribe()`, `chakra()`, `balance()` | `implemented` | Real LUT data from Parashakti dataset; internally coherent; no dependency on clock degree yet (uses identity natal degree only) |
-| 9 | Hexagram body map | `epi-cli/src/nara/oracle.rs` | `HEXAGRAM_BODY_DYNAMICS[64]` array of `HexagramBodyEntry` | `hexagram_body_lookup(hex: u8) → Option<&HexagramBodyEntry>` | NONE YET | `partial` | Data exists; zero downstream dependents found in codebase; needs wiring to oracle_payload and medicine |
-| 10 | session_hash derivation | `00-canonical-invariants.md §8` | `PortalClockState.session_hash [u8;32]` | `BLAKE3(quintessence_hash[32] \|\| session_start_u64[8])` | SpacetimeDB presence routing (session-scoped events) | `planned` | Khora owns derivation; not yet called; Nara must receive it as read-only input from Khora event |
-| 11 | Amino acid backbone (24-fold lens) | `02-16-lenses-backbone-temporal.md` | `Clock_Backbone_Node[24]` | `degree → backbone_index` at 15° intervals (every 15° boundary is a backbone node) | Lens 7 rendering, medicine backbone path, Major Arcana bridge (Tarot Trumps) | `planned` | Struct defined in spec; LUT not yet built; blocked by `build_clock_degree_lut.py` script |
-| 12 | Planet model canonical ordering (Sun=0…Pluto=9) | `00-canonical-invariants.md §2` | `PlanetState[10]` in `KairosState` | `parse_kerykeion_to_kairos_state()` maps Kerykeion output → canonical index | Clock face render (10-planet ring), transit map, natal config display | `partial` | `KairosState` has `[PlanetState;9]` with legacy order; Uranus missing; migration requires Parashakti dataset reconciliation |
-| 13 | WALK_SPANDA (12-step M1 spanda traversal) | `00-canonical-invariants.md §6`, `02-16-lenses-backbone-temporal.md` | `Walk_Mode::WALK_SPANDA` enum variant | Clock walk at 30°/step, 12 nodes; semantics: each step = one M1 spanda beat | Clock walk UI sequencing, QL-aligned oracle cycle display, spanda phase indicator | `planned` | Currently named `WALK_TORUS` in specs and code; rename pending; semantics correct, name misleading |
-| 14 | Tarot elemental quaternion bridge | `07-unified-architecture-golden-thread.md §7`, `docs/specs/M/HMS-quaternionic-overlay.md` | TBD (`TarotQuaternionBridge` struct) | `tarot_card → suit → element → quaternion_component_weight` then fold into `oracle_eval4` | `oracle_payload` quaternion field, clock position update from tarot cast | `planned` | Data exists in `oracle.rs` (ACE_ELEMENT_MAP, PIP_DECAN_MAP); quaternion bridge struct not defined; quaternion fold not wired |
+| 1 | Quintessence identity (BLAKE3 archetypal address) | `01-quintessence-hash-architecture.md` | `M4_Quintessence_Identity` struct | `BLAKE3(natal_config \|\| genekeys \|\| humandesign \|\| jungian \|\| ql_birth)` | `PortalClockState.session_hash`, SpacetimeDB presence routing, identity panel | `implemented` | `blake3_identity_hash()` in identity.rs hashes presence_mask + sorted layer source strings via BLAKE3; full 64-char hex stored; seeded into `PortalClockState` at portal startup via `new_shared_clock_state()` |
+| 2 | Quintessence quaternion `[f32;4]` | `01-quintessence-hash-architecture.md`, `clock_state.rs` | `PortalClockState.quintessence_quaternion [f32;4]` | `update_quintessence_quaternion()` in `clock_state.rs` | `CosmicClockPlugin` torus orientation, identity panel quaternion display | `implemented` | `elemental_profile: Option<[f32;4]>` added to `LayerMeta`; `compute_quintessence_profiles()` extracts 5-layer profiles; `new_shared_clock_state()` seeds quaternion at startup; per-layer derivation via `elemental_profile_for_layer()` |
+| 3 | Oracle faces (4-face reading) | `04-shadow-dynamics-three-computations.md` | `OracleFaces` struct in `clock_state.rs` | `update_from_cast()` | `M4OraclePlugin`, `medicine prescribe`, `SpacetimeDB oracle event` | `implemented` | `update_from_cast()` called from `M4OraclePlugin.on_event` via `cast_iching_with_payload()`; SharedClockState propagates to all Tab 0 + Tab 1 plugins |
+| 4 | Clock degree from oracle cast | `09-cosmic-clock-plugin-tui-spec.md` | `PortalClockState.current_degree: u16` | `cast_iching_with_payload()` → `oracle_eval4()` → `update_from_cast()` | `CosmicClockPlugin` ring highlight, medicine decan lookup, lens segment display | `implemented` | Fixed: `cast_iching_with_payload()` eliminates double-cast bug; same `IChingResult` feeds display string and `OraclePayload`; `update_from_cast()` writes `current_degree` from the same cast |
+| 5 | tick12 (spanda / torus stage) | `03-spanda-double-helix-12fold.md`, `clock_state.rs` | `PortalClockState.tick12: u8` | `quantize_to_spanda_substage(y, x)` from live quaternion | `CosmicClockPlugin` torus stage indicator, oracle-cast moment detection, walk step display | `implemented` | Correct integer quantization 0–11; `update_from_cast()` sets tick12 from live quaternion via `quantize_to_spanda_substage(y, x)` |
+| 6 | KairosState (full 10-planet + Earth center) | `09-cosmic-clock-plugin-tui-spec.md`, `clock_state.rs` | `KairosState` with `PlanetState[10]` | `kerykeion_result_to_kairos_state()` in `kairos.rs` | `CosmicClockPlugin` planetary ring render, `M4SpinePlugin` hour marker, transit map | `implemented` | `KairosState` has `[PlanetState;10]` (Sun=0…Pluto=9); `kerykeion_result_to_kairos_state()` implemented; `try_load_kairos_into_clock()` fixed to read `~/.epi-logos/nara/kairos/current.json` |
+| 7 | Oracle payload (machine + human simultaneously) | `07-unified-architecture-golden-thread.md §7`, `M4-nara-subtle-body-map` | `OraclePayload` struct in `oracle.rs` | `cast_iching_with_payload()` → `oracle_eval4()` → returns `OraclePayload` | Gateway `nara.oracle.payload` RPC ✅, SpacetimeDB `record_oracle_draw()` ✅, frontend subtle-body map (Electron, out of scope) | `implemented` | `OraclePayload` struct implemented; gateway RPC dispatched; SpacetimeDB `record_oracle_draw(hash, hex_id)` + `publish_presence(hash, tick12)` wired in gate/nara.rs after oracle cast |
+| 8 | Medicine decan chain | `M4-nara-personal-interface`, `epi-cli/src/nara/medicine.rs` | `ZodiacDecanEntry`; `DECAN_BODY_PARTS[36]`; `CHAKRA_BODY_ZONES[8]` | `zodiac_decan(degree) → planet → element → chakra → body_zones` | `prescribe()`, `chakra()`, `balance()` | `implemented` | Real LUT data from Parashakti dataset; internally coherent; uses identity natal degree (live oracle degree wiring is next step) |
+| 9 | Hexagram body map | `epi-cli/src/nara/oracle.rs` | `HEXAGRAM_BODY_DYNAMICS[64]` array of `HexagramBodyEntry` | `hexagram_body_lookup(hex: u8) → Option<&HexagramBodyEntry>` | NONE YET | `partial` | Data exists; zero downstream dependents; needs wiring to oracle_payload and medicine |
+| 10 | session_hash derivation | `00-canonical-invariants.md §8` | `PortalClockState.session_hash [u8;32]` | `BLAKE3(quintessence_hash[32] \|\| session_start_u64[8])` | SpacetimeDB presence routing (session-scoped events) | `implemented` | `compute_session_hash()` in identity.rs uses BLAKE3(identity_hash \|\| session_start_u64); seeded into `PortalClockState.session_hash` at portal startup via `new_shared_clock_state()`; Khora-session handoff is future refinement (uses startup time for now) |
+| 11 | Amino acid backbone (24-fold lens) | `02-16-lenses-backbone-temporal.md` | `Clock_Backbone_Node[24]` | `degree → backbone_index` at 15° intervals | Lens 7 rendering, medicine backbone path, Major Arcana bridge | `planned` | Struct defined in spec; LUT populated by `build_clock_degree_lut.py` with computed values; Neo4j-backed fields still approximated |
+| 12 | Planet model canonical ordering (Sun=0…Pluto=9) | `00-canonical-invariants.md §2` | `PlanetState[10]` in `KairosState` | `kerykeion_result_to_kairos_state()` uses `planet_id` as direct index | Clock face render (10-planet ring), transit map, natal config display | `implemented` | `[PlanetState;10]` with canonical mod-10; `planet_id` from Python kerykeion output maps directly; `PLANET_SYMBOLS[10]` aligned in `CosmicClockPlugin` |
+| 13 | WALK_SPANDA (12-step M1 spanda traversal) | `00-canonical-invariants.md §6`, `02-16-lenses-backbone-temporal.md` | `Walk_Mode::WALK_SPANDA` enum variant | Clock walk at 30°/step, 12 nodes | Clock walk UI sequencing, QL-aligned oracle cycle display | `planned` | Legacy name `WALK_TORUS` still in some spec text; rename pending; `MiniClockPlugin` (mini_clock.rs) implements 12-tick spanda wheel correctly |
+| 14 | Tarot elemental quaternion bridge | `07-unified-architecture-golden-thread.md §7` | `[f32;4]` weights from `tarot_card_to_element_weights()`; folded by `tarot_draw_to_oracle_payload()` | `card→pip_decan/court_sign/ace_element/major_arcana → sign_to_elem_idx → [EARTH,FIRE,WATER,AIR] → pp/nn/pn/np×32` | `cast_tarot_with_payload()` → `OraclePayload`, clock position update, hexagram body annotation | `implemented` | `tarot_card_to_element_weights()` uses ACE_ELEMENT_MAP/PIP_DECAN_MAP/COURT_SIGN_MAP/major_arcana_elem_idx; `tarot_draw_to_oracle_payload()` folds to pp/nn/pn/np; `cast_tarot_with_payload()` is atomic draw+history+display+payload; `cast()` CLI tarot branch now delegates to it |
 
 ---
 
@@ -95,7 +95,7 @@ oracle_cast (coin throw / tarot draw)
       temporal  = primary_hex XOR changing_lines_mask
   → update_from_cast() → PortalClockState
       .current_degree ← d
-      .torus_stage    ← tick12
+      .tick12         ← tick12
       .live_quaternion ← updated
   → oracle_payload (machine + human-readable)
   → gateway RPC nara.oracle.payload
@@ -141,14 +141,32 @@ hexagram (from oracle cast, Chain C)
 
 ---
 
-## Open Gaps (Priority Order)
+## Resolved Gaps (2026-03-30 parity audit)
 
-The following gaps are the highest-priority blockers for full chain coherence:
+Items closed in the 2026-03-30 spec-parity audit session:
 
-1. **`parse_kerykeion_to_kairos_state()`** — not implemented. Blocks Chain D entirely. Required for any live planetary display.
-2. **`update_from_cast()` has zero callers** — oracle cast does not update `PortalClockState`. Blocks Chain C downstream consumers.
-3. **`oracle_payload` type undefined** — no struct schema. Blocks gateway RPC and frontend subtle-body map.
-4. **`HEXAGRAM_BODY_DYNAMICS[64]` has zero downstream consumers** — data exists, wiring absent. Connect to oracle_payload (§7) and medicine (§8).
-5. **`build_clock_degree_lut.py` not built** — blocks Lens 7 backbone rendering (§11) and any degree-indexed LUT access.
-6. **`KairosState[PlanetState;9]` → `[PlanetState;10]`** — Uranus missing; canonical array size is 10. Requires Parashakti dataset reconciliation.
-7. **`quintessence_quaternion` has no caller** — `update_quintessence_quaternion()` is implemented but never invoked on identity augment.
+- ✅ **Oracle double-cast bug** — `M4OraclePlugin` now uses `cast_iching_with_payload()` (oracle.rs) which issues coins once, writes history, and returns `(display_string, OraclePayload)` atomically. `update_from_cast()` receives the same cast's charges and degree.
+- ✅ **`update_from_cast()` had zero callers** — wired through `cast_iching_with_payload()` in M4OraclePlugin.
+- ✅ **Kairos sync path mismatch** — `try_load_kairos_into_clock()` (clock.rs) now reads `~/.epi-logos/nara/kairos/current.json` via `kairos::load_current()` and converts via `kerykeion_result_to_kairos_state()`. The former stale path (`~/.epi-logos/kairos-cache.json`) and old object format (`{planets:{sun:45}}`) are replaced.
+- ✅ **`kerykeion_result_to_kairos_state()` not implemented** — implemented in kairos.rs; uses `planet_id` as direct canonical-mod-10 index.
+- ✅ **`KairosState[PlanetState;9]`** — `[PlanetState;10]` with full Sun=0…Pluto=9 mod-10 ordering.
+- ✅ **SharedClockState isolation (Tab 1)** — portal/mod.rs now passes `Some(clock_state.clone())` for Tab 1 plugin registration; oracle casts in Tab 0 propagate to CosmicClockPlugin, M2Vibrational, M3Knowing in Tab 1.
+- ✅ **m3.knowing unclocked** — registered with `new_with_clock(c)` so auto-suggest from tick12 works.
+- ✅ **Orphaned MiniClockPlugin in clock.rs** — removed; portal uses mini_clock.rs exclusively.
+
+### Resolved Gaps (2026-03-30 second pass — blocker clearance)
+
+- ✅ **`quintessence_quaternion` data model gap** — `elemental_profile: Option<[f32;4]>` added to `LayerMeta`; `elemental_profile_for_layer()` derives [FIRE,WATER,EARTH,AIR] per layer source type; `compute_quintessence_profiles()` extracts 5-layer array; `new_shared_clock_state()` seeds quaternion at portal startup.
+- ✅ **Quintessence BLAKE3 full 5-layer fold** — `blake3_identity_hash()` implemented in identity.rs using vendored BLAKE3; hashes sorted layer source strings + presence mask; replaces `simple_identity_hash()` 4-byte approach.
+- ✅ **session_hash not computed** — `compute_session_hash()` implemented; `new_shared_clock_state()` writes it into `PortalClockState.session_hash` at startup.
+- ✅ **SpacetimeDB dispatch zero-wired** — gate/nara.rs now calls `record_oracle_draw()` + `publish_presence()` after oracle cast; `publish_presence()` after kairos sync; `record_logos_stage()` after logos stage command. Stub client in `gate/spacetimedb_bridge.rs` logs intent without live HTTP (pending real SpacetimeDB server).
+- ✅ **`engine_spanda_walk()` missing from C library** — implemented in engine.c; declared in engine.h with clarifying comment distinguishing it from 6-step `engine_torus_walk()`.
+- ✅ **Tarot elemental quaternion bridge** — `tarot_card_to_element_weights()` maps every card category (Ace/pip/court/Major Arcana) via Golden Dawn attributions to `[EARTH,FIRE,WATER,AIR]` weights; `tarot_draw_to_oracle_payload()` folds spread into pp/nn/pn/np charges (×32 per card, I-Ching line scale); `cast_tarot_with_payload()` delivers atomic draw+history+display+payload with hexagram body annotation; `cast()` CLI tarot branch now delegates to it.
+- ✅ **`HEXAGRAM_BODY_DYNAMICS[64]` downstream wiring** — hexagram body data now appended in both `cast_iching_with_payload()` and `cast_tarot_with_payload()` display output.
+
+---
+
+## Open Gaps (Remaining — Future Only)
+
+1. **WALK_SPANDA rename** — legacy `WALK_TORUS` naming in some spec text; `MiniClockPlugin` correctly implements 12-tick spanda; cosmetic enum rename in C code deferred.
+2. **session_hash Khora handoff** — currently seeded from portal startup timestamp; canonical form requires Khora session_start event. Nara portal field is correctly populated and consumed; handoff protocol is a future refinement once Khora session lifecycle is built out.

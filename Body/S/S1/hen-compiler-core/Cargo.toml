@@ -1,0 +1,13 @@
+[package]
+name = "epi-s1-hen-compiler-core"
+version = "0.1.0"
+edition = "2021"
+description = "S1 Hen compiler contract for Epi-Logos residency and agent invocation law"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "epi_s1_hen_compiler_core"
+path = "src/lib.rs"
+
+[dependencies]
+serde_yaml = "0.9"

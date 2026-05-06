@@ -1,0 +1,2 @@
+# CFP2 C-Thread chains. Add named chains here when Anima needs sequential phases.
+# No default chains — Anima routes through vak_evaluate, not a hardcoded pipeline.

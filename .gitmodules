@@ -1,0 +1,15 @@
+[submodule "vendors/autoresearch"]
+	path = vendors/autoresearch
+	url = https://github.com/karpathy/autoresearch
+[submodule "vendors/claude-memory-compiler"]
+	path = vendors/claude-memory-compiler
+	url = https://github.com/coleam00/claude-memory-compiler
+[submodule "vendors/pi-vs-claude-code"]
+	path = vendors/pi-vs-claude-code
+	url = https://github.com/disler/pi-vs-claude-code.git
+[submodule "vendors/claw-code-parity"]
+	path = vendors/claw-code-parity
+	url = https://github.com/ultraworkers/claw-code-parity
+[submodule "vendors/oh-my-codex"]
+	path = vendors/oh-my-codex
+	url = https://github.com/Yeachan-Heo/oh-my-codex

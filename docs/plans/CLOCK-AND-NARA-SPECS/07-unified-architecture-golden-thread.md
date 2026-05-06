@@ -1,10 +1,15 @@
 # Unified Clock-Nara-VAK Architecture — The Golden Thread
 
-**Status:** Canonical Integration Spec (2026-03-15)
+**Status:** Integrated architecture narrative with canonical patches (2026-03-23). Where this document conflicts with `00-canonical-invariants.md`, the invariants sheet wins.
 **Coordinate:** #4.4.4.4 — Personal Pratibimba; the self-recognizing architecture
 **Depends on:** 01–06 (all sub-specs in this folder), cosmic-clock-full-architecture.md, nara-runtime-full-plan.md
 **Key Principle:** The Cosmic Clock and the Nara UX are not two specs. They are one motion described from opposite
 directions. This file establishes the golden thread that joins them.
+
+> **Harmonization note (2026-03-23):**
+> Preserve this file for the conceptual throughline, but do not treat older hash-width,
+> quaternion-to-degree, or Earth-slot formulations here as authoritative. Canonical field shapes,
+> ownership, and derivation rules now live in `00-canonical-invariants.md`.
 
 ---
 
@@ -221,20 +226,17 @@ used as the solar root anchor on the clock face — it is the [0] position in a 
 *The full architecture of #01-quintessence-hash-architecture.md applies. This section states the
 two-track structure that emerges from it.*
 
-### Track 1 — Natal Hash (Stable, Compute-Once)
+### Track 1 — Quintessence Identity (Stable Between Identity Augments)
 
-**Input:** All 5 sub-systems of `#4.0 Identity` — the birth data parsed through 5 frameworks:
-- `#4.0-0` — Natal Chart: 9 planet degrees at birth → elemental balance via sign elements
-- `#4.0-1` — Gene Keys: 64 Gene Keys derived from birth data → Shadow/Gift/Siddhi elemental
-- `#4.0-2` — Human Design: Type/Profile/Centers/Channels → defined/undefined center elemental
-- `#4.0-3` — Jungian Typology: 4 functions (Sensation/Feeling/Intuition/Thinking) → 4 elements
-- `#4.0-4` — QL Birth Encoding: birthdate parsed through QL coordinate system → 4 QL coords
+**Input:** canonical `#4.0` identity layers with natal/astrological data as the minimum viable
+entry layer and other layers treated as additive enrichment.
 
-**Computation:** `BLAKE3(layer_presence || profile_40_natal[4] || profile_40_genekeys[4] || ...)` truncated to 64 bits.
+**Computation:** canonical BLAKE3 256-bit address over the harmonized identity payload.
 
-**Output:** `M4_Identity_Matrix.quintessence_hash` — the stable natal identity.
+**Output:** `M4_Identity_Matrix.quintessence_hash[32]` — the archetypal address.
 **Semantics:** "Who this entity IS, at root, as a configuration in symbolic space."
-**Changes only at:** `m4_mobius_return()` — when accumulated wisdom_delta folds back in.
+**Changes only when:** identity inputs are augmented or explicitly integrated into the canonical
+identity payload.
 
 ### Track 2 — Live Quaternion (Evolving, Oracle-Driven)
 
@@ -262,15 +264,16 @@ symbolic space." The live quaternion rotates the torus. It is the answer to "whe
 ### The Wisdom Delta and Möbius Return
 
 ```
-wisdom_delta = live_quaternion - natal_quaternion  (as 64-bit difference)
-             = accumulated drift across all oracle casts since last Möbius return
+wisdom_delta = live_orientation - quintessence_orientation
+             = accumulated drift across all oracle casts since last integration event
              = the 'shape of the journey so far'
 
 m4_mobius_return():
-  natal_quaternion += wisdom_delta  (weighted by session coherence score)
+  integrate accumulated drift into the explicit identity state
+  recompute quintessence_quaternion from updated identity balance
+  recompute quintessence_hash from updated canonical identity payload
   wisdom_delta = 0
-  recompute quintessence_hash from updated natal_quaternion
-  → the entity has genuinely changed; their clock home position has permanently shifted
+  → the entity has genuinely changed; their stable orientation has shifted
 ```
 
 The Möbius return is the INTEGRATION of accumulated drift — a snapshot of evolution. It is NOT the only
@@ -550,7 +553,7 @@ oracle IS the lemniscate. The lemniscate IS the oracle.
 
 The user begins at φ=0° (pre-categorical, identity bootstrap) and moves through the minor circle as
 they deepen their practice. This is not a spatial metaphor — it is the actual torus minor-circle angle
-(φ). The clock knows where the user is on the minor circle by reading the torus_stage field from the
+(φ). The clock knows where the user is on the minor circle by reading the `tick12` field from the
 live oracle state. As practice deepens, φ advances toward 300° (Pratyabhijñā, recognition). The
 system should track φ-stage explicitly and name transitions.
 
@@ -616,13 +619,13 @@ original orientation after 360°. It returns to `q = -original` (the antipodal, 
 Only after 720° does `q = original` again. This is the mandatory double cover:
 
 ```
-After 360°  (degree 360, torus_stage back to 0): you are at -q (the phase-inverted state)
+After 360°  (degree 360, tick12 back to 0): you are at -q (the phase-inverted state)
              This is the implicate phase — the same position seen from the inside
 After 720°  (degree 720): you are back at q (the original, fully returned)
              This is the Möbius return — the journey completed, identity confirmed
 ```
 
-The clock renders this as a 720-degree face (degree_720 in [0, 719]). The torus_stage (φ) tracks
+The clock renders this as a 720-degree face (degree_720 in [0, 719]). The `tick12` phase (φ) tracks
 the minor circle. Together they give the full (θ, φ) position on the torus surface.
 
 ### R/r = 16/9 — The Epogdoon in the Renderer
@@ -701,7 +704,7 @@ Reference `docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md §3` for t
 ### P0 — Hard Blockers (Nothing Downstream Works Without These)
 
 **G1: `planet_degrees[10]` correction**
-- Fix `M4_Astrological_Layer.planet_degrees[10]` → keep size but correct Earth exclusion (Earth slot = 0xFFFF sentinel)
+- Fix `M4_Astrological_Layer.planet_degrees[10]` → keep size and correct Earth exclusion (Earth is a separate `EarthBodyState`, not a sentinel slot)
 - Fix `M4_Temporal_Now.planet_degrees[7]` → `[10]` (add Uranus, Neptune, Pluto; include Sun as solar root [0])
 - Add `planet_id_to_clock_idx[11]` LUT mapping Planet_Id → clock array index (Earth = 0xFF, no clock degree)
 - Canonical order: [0]=Sun, [1]=Moon, [2]=Mercury, [3]=Venus, [4]=Mars, [5]=Jupiter, [6]=Saturn, [7]=Uranus, [8]=Neptune, [9]=Pluto
@@ -751,10 +754,10 @@ Reference `docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md §3` for t
 - Earth chakra at base always full
 - Files: portal plugin (new sub-panel)
 
-**G9: `torus_stage` tracking → φ-axis UX**
+**G9: `tick12` tracking → φ-axis UX**
 - Explicit tracking of which #4.4.4.x phase the user is in
 - Names the phase in UI ("you are at the lemniscate crossing — the oracle cast is your T1/T2 moment")
-- Uses `torus_stage` from live_quaternion projection
+- Uses `tick12` from live_quaternion projection
 - Files: `epi-cli/src/nara/identity.rs`, portal IdentityPanel
 
 **G10: Kerykeion live 9-planet positions on clock face**
@@ -773,7 +776,7 @@ Reference `docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md §3` for t
 
 **G12: Logos FSM stage validation with φ-coherence enforcement**
 - `epi nara logos` CLI subcommands (currently stubs)
-- Stage validation: only advance φ when torus_stage coherence score passes threshold
+- Stage validation: only advance φ when tick12 coherence score passes threshold
 - Files: `epi-cli/src/nara/mod.rs`
 
 **G13: SpacetimeDB TorusSync with multiplayer presence**

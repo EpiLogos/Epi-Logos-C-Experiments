@@ -1,0 +1,83 @@
+[package]
+name = "epi-logos"
+version = "0.1.0"
+edition = "2021"
+description = "The Master CLI for the Epi-Logos coordinate system — ontology-is-code"
+license = "MIT OR Apache-2.0"
+keywords = ["philosophy", "coordinate-system", "cli", "tui"]
+categories = ["command-line-utilities"]
+
+[lib]
+name = "epi_logos"
+path = "src/lib.rs"
+
+[[bin]]
+name = "epi"
+path = "src/main.rs"
+test = false
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+ratatui = "0.30"
+ratatui-hypertile = { version = "0.1", features = ["serde"] }
+ratatui-hypertile-extras = { version = "0.1", features = ["crossterm", "serde"] }
+crossterm = "0.29"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+dirs = "5"
+libc = "0.2"
+color-eyre = "0.6"
+futures-util = "0.3"
+tokio-tungstenite = "0.24"
+rcgen = "0.13"
+sha2 = "0.10"
+blake3 = "1"
+hex = "0.4"
+chacha20poly1305 = "0.10"
+argon2 = "0.5"
+rpassword = "7"
+zeroize = { version = "1", features = ["zeroize_derive"] }
+static_assertions = "1"
+epi-s2-graph-schema = { path = "../../S2/graph-schema" }
+epi-s2-graph-services = { path = "../../S2/graph-services" }
+epi-s3-gateway-contract = { path = "../../S3/gateway-contract" }
+epi-s5-kbase-core = { path = "../../S5/epi-kbase-core" }
+epi-s5-epii-review-core = { path = "../../S5/epii-review-core" }
+epi-s5-epii-autoresearch-core = { path = "../../S5/epii-autoresearch-core" }
+epi-s5-epii-agent-core = { path = "../../S5/epii-agent-core" }
+epi-s1-hen-compiler-core = { path = "../../S1/hen-compiler-core" }
+
+# Quaternion / matrix math for torus projection
+nalgebra = "0.33"
+
+# Offscreen clock renderer
+tiny-skia = "0.12"
+ratatui-image = { version = "10", default-features = false, features = ["crossterm"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
+ab_glyph = "0.2"
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Neo4j driver
+neo4rs = "0.9.0-rc.9"
+
+# Redis client
+redis = { version = "0.25", features = ["tokio-comp", "connection-manager"] }
+
+# HTTP client (for embeddings API)
+reqwest = { version = "0.12", features = ["json", "blocking"] }
+
+# UUID generation
+uuid = { version = "1", features = ["v4", "v5"] }
+
+# Chrono for timestamps
+chrono = { version = "0.4", features = ["serde"] }
+
+[build-dependencies]
+cc = "1"
+
+[profile.test]
+debug = 1
+incremental = false

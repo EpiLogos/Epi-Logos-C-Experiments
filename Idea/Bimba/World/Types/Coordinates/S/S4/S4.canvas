@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "id": "title",
+      "type": "text",
+      "text": "# [[S4]]: Agent Runtime\n\nMOC Index for the S4 coordinate — #4 Lemniscate position in the S-family stack.",
+      "x": 0, "y": 0, "width": 500, "height": 150
+    },
+    {
+      "id": "s4-form",
+      "type": "file",
+      "file": "Idea/Bimba/World/Types/Coordinates/S/S4/S4.md",
+      "x": 0, "y": 200, "width": 500, "height": 100
+    },
+    {
+      "id": "s4p-link",
+      "type": "text",
+      "text": "## Inverted Layer\n\n[[S4']] — Ta-Onta Extension Architecture",
+      "x": 0, "y": 350, "width": 500, "height": 80
+    },
+    {
+      "id": "sub-coords",
+      "type": "text",
+      "text": "## Sub-Coordinates\n\n[[S4.0]] Event Ground\n[[S4.1]] Agent Identity\n[[S4.2]] Skill/Tool Ops\n[[S4.3]] Thread Patterns\n[[S4.4]] Runtime Context\n[[S4.5]] Subagent Orchestration",
+      "x": 560, "y": 0, "width": 400, "height": 200
+    },
+    {
+      "id": "agents",
+      "type": "text",
+      "text": "## Anima 7\n\n[[Anima]] | [[Nous]] | [[Logos]] | [[Eros]] | [[Mythos]] | [[Psyche]] | [[Sophia]]\n\n## Aletheia 7\n\n[[Techne]] | [[Anansi]] | [[Moirai]] | [[Janus]] | [[Mercurius]] | [[Agora]] | [[Zeithoven]]",
+      "x": 560, "y": 250, "width": 400, "height": 200
+    }
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "title", "toNode": "s4-form", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e2", "fromNode": "s4-form", "toNode": "s4p-link", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e3", "fromNode": "title", "toNode": "sub-coords", "fromSide": "right", "toSide": "left"},
+    {"id": "e4", "fromNode": "sub-coords", "toNode": "agents", "fromSide": "bottom", "toSide": "top"}
+  ]
+}

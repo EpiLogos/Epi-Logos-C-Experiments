@@ -5,10 +5,10 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-EPI="${REPO_ROOT}/epi-cli/target/debug/epi"
+EPI="${REPO_ROOT}/Body/S/S0/epi-cli/target/debug/epi"
 
 if [[ ! -x "$EPI" ]]; then
-  echo "ERROR: epi binary not found at $EPI — run: cargo build --manifest-path epi-cli/Cargo.toml"
+  echo "ERROR: epi binary not found at $EPI — run: cargo build --manifest-path Body/S/S0/epi-cli/Cargo.toml"
   exit 1
 fi
 

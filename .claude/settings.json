@@ -1,0 +1,44 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --directory epi-dev-vault python hooks/session-start.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --directory epi-dev-vault python hooks/pre-compact.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --directory epi-dev-vault python hooks/session-end.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "EPILOGOS_VAULT": "/Users/admin/Documents/Epi-Logos C Experiments/Idea",
+    "EPILOGOS_PROJECT_ROOT": "/Users/admin/Documents/Epi-Logos C Experiments"
+  }
+}

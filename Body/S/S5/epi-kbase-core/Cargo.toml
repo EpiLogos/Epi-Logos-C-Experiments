@@ -1,0 +1,9 @@
+[package]
+name = "epi-s5-kbase-core"
+version = "0.1.0"
+edition = "2021"
+description = "S5.2' kbase foundations — bounded resource context, project scoping, search facets"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+dirs = "5"

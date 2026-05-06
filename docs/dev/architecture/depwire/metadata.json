@@ -1,0 +1,64 @@
+{
+  "version": "0.8.0",
+  "generated_at": "2026-04-02T13:53:12.489Z",
+  "project_path": "/Users/admin/Documents/Epi-Logos C Experiments",
+  "analysis_profile": "full",
+  "view_filters": {},
+  "file_count": 513,
+  "symbol_count": 8437,
+  "edge_count": 3154,
+  "documents": {
+    "architecture": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "ARCHITECTURE.md"
+    },
+    "conventions": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "CONVENTIONS.md"
+    },
+    "dependencies": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "DEPENDENCIES.md"
+    },
+    "onboarding": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "ONBOARDING.md"
+    },
+    "files": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "FILES.md"
+    },
+    "api_surface": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "API_SURFACE.md"
+    },
+    "errors": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "ERRORS.md"
+    },
+    "tests": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "TESTS.md"
+    },
+    "history": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "HISTORY.md"
+    },
+    "current": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "CURRENT.md"
+    },
+    "status": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "STATUS.md"
+    },
+    "health": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "HEALTH.md"
+    },
+    "dead_code": {
+      "generated_at": "2026-04-02T13:53:12.489Z",
+      "file": "DEAD_CODE.md"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[package]
+name = "epi-s2-graph-schema"
+version = "0.1.0"
+edition = "2021"
+description = "S2 graph schema contract for Epi-Logos Bimba graph services"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "epi_s2_graph_schema"
+path = "src/lib.rs"

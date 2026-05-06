@@ -3,9 +3,14 @@
 
 **Date:** 2026-03-10
 **Coordinate:** #4 — M4 Nara Personal Dialogical Interface
-**Status:** ✅ IMPLEMENTED (2026-03-12) — all phases complete except Phase 9 (Neo4j seeding) and Phase 11 WASM (needs rustc ≥ 1.90)
+**Status:** Historical runtime plan with live implementation notes. Canonical field shapes and precedence are governed by `docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md`, `docs/plans/CLOCK-AND-NARA-SPECS/00-spec-harmonization-plan.md`, `docs/plans/CLOCK-AND-NARA-SPECS/09-cosmic-clock-plugin-tui-spec.md`, and the dataset-bridge coordination set.
 **Supersedes:** 2026-03-06-m4-nara-design.md (partial), 2026-03-06-m4-nara-implementation.md (partial)
 **Dataset:** docs/datasets/nara-deep/ — 99 nodes, 169 unique relation types, 6 sub-branches
+
+> **Harmonization note (2026-03-23):**
+> Treat the implementation status table below as a historical/runtime snapshot, not as the final
+> architectural truth. Where this document still contains older field widths, naming, or ownership
+> assumptions, the newer canonical clock/Nara specs win.
 
 ### Implementation Status (2026-03-12)
 
@@ -29,10 +34,10 @@
 
 ## I. Design Principles
 
-1. **Open identity architecture** — 6 identity sub-systems (#4.0-0 through #4.0-5) are independent
-   slots. Each can be absent, partial, or complete. The quintessence hash (#4.0-5) is computed
-   from whatever layers ARE present. Adding a new layer recomputes the hash — this IS the
-   epigenetic augmentation mechanism.
+1. **Open identity architecture** — the identity sub-systems are additive, but natal/astrological
+   data is the minimum viable layer for portal entry. The canonical quintessence identity is the
+   32-byte BLAKE3 archetypal address; adding enrichment layers recomputes the live synthesis
+   without making non-natal layers blockers.
 
 2. **Privacy-first by architecture** — raw personal data never leaves the compute call. BLAKE3
    hash is the only thing shared with SpacetimeDB. Encrypted per-layer storage on disk.
@@ -44,9 +49,10 @@
 4. **C is authoritative** — the M1_Root, M2_Root, M4_Identity_Matrix live in C. Rust is a thin
    FFI wrapper. The clock ticks in C. The hash is computed in C. Rust exposes it.
 
-5. **Clock is a year clock** — torus_pos maps to solar year via sun_degree_anchor / 60° = tick 0-11.
-   cf_substage maps to planetary hour within the tick. The SU(2) double cover means tick 0-5
-   = ascending/explicate (spring→autumn), tick 6-11 = descending/implicate (autumn→spring).
+5. **Clock preserves exact position and derives one discrete state** — `exact_degree_720` is the
+   continuous address, and `tick12` is the one canonical discrete M1 state derived by named
+   quantization. Older `torus_pos` / `torus_stage` phrasing in this document should be read through
+   that harmonized model.
 
 6. **#4.1-4 is the temporal authority for ALL operations** — before any oracle cast, medicine
    suggestion, alchemical operation, or container selection, the planetary hour / lunar phase /
@@ -220,11 +226,13 @@ typedef struct {
     M4_Symbol_DNA_Profile   dna_profile;
 
     // #4.0-5 — Quintessence Hash
-    // BLAKE3(layer_presence || present_layer_data...) truncated to 64 bits
+    // Canonical quintessence identity: 32-byte BLAKE3 archetypal address.
+    // Preview/transport compression may derive shorter forms elsewhere, but this field
+    // is the authoritative identity surface.
     // Input format: presence_mask (1 byte) || each present layer's bytes in order
     // Absent layers contribute 0 bytes (not zero-filled, literally absent from input)
     // This means adding a new layer CHANGES the hash — intentional epigenetic growth
-    uint64_t quintessence_hash;
+    uint8_t quintessence_hash[32];
 
     // Compute-once guard
     bool     computed;
@@ -356,7 +364,7 @@ pub struct NaraIdentityMatrix {
     pub layer_2: Option<M4JungianLayer>,
     pub layer_3: Option<M4GeneKeysLayer>,
     pub layer_4: Option<M4HumanDesignLayer>,
-    pub quintessence_hash: u64,
+    pub quintessence_hash: [u8; 32],
     pub computed: bool,
 }
 
@@ -365,11 +373,14 @@ impl NaraIdentityMatrix {
         self.layer_presence.count_ones() as u8
     }
     pub fn hash_hex(&self) -> String {
-        format!("{:016x}", self.quintessence_hash)
+        self.quintessence_hash
+            .iter()
+            .map(|b| format!("{:02x}", b))
+            .collect()
     }
     pub fn is_minimum_viable(&self) -> bool {
-        // At minimum layer_0 (birthdate) must be present
-        self.layer_presence & 0x01 != 0
+        // Canonical minimum = natal/astrological layer present.
+        self.layer_1.is_some()
     }
 }
 ```
@@ -652,7 +663,7 @@ pub struct M0ArchetypeTable {
 #[spacetimedb::table(public)]
 pub struct M1TorusState {
     #[primary_key] pub id: u32,       // Single row, id=0
-    pub torus_pos: u8,                // QL_Tick 0-11
+    pub tick12: u8,                   // Canonical M1 discrete state 0-11
     pub spanda_stage: u8,             // Spanda_Stage enum value
     pub active_poles: u8,             // state_bits (0x01/0x02/0x03)
     pub spanda_track: u8,             // 0=Mahamaya, 1=Parashakti
@@ -698,7 +709,7 @@ pub struct M3BitboardState {
 #[spacetimedb::table(public)]
 pub struct CoordinatePresence {
     #[primary_key] pub session_id: String,
-    pub quintessence_hash: u64,       // BLAKE3 — no personal data
+    pub quintessence_hash: [u8; 32],  // Canonical BLAKE3 archetypal address
     pub hash_preview: String,         // First 8 hex chars for display
     pub coordinate: String,           // Current coordinate e.g. "M4.2"
     pub degree_anchor: u16,           // Current position on the 360° wheel
@@ -706,7 +717,7 @@ pub struct CoordinatePresence {
                                       // Derived from hash, not original weights
     pub layer_count: u8,              // How many identity layers active (0-5)
                                       // Not which layers — just how many
-    pub torus_pos: u8,                // Current torus position (public)
+    pub tick12: u8,                   // Current canonical M1 tick / spanda state (public)
     pub last_seen: u64,
 }
 

@@ -1,0 +1,35 @@
+{
+  "context": {
+    "session_id": "20260311-121816-ab3862",
+    "day_id": "11-03-2026",
+    "now_path": "/Users/admin/Documents/Epi-Logos/Idea/Empty/Present/11-03-2026/20260311-121816-ab3862/now.md",
+    "started_at": "2026-03-11T12:18:16.123597Z"
+  },
+  "bootstrap": [
+    {
+      "name": "CONTINUATION.md",
+      "path": "/Users/admin/Documents/Epi-Logos C Experiments/epi-cli/CONTINUATION.md"
+    },
+    {
+      "name": "ANIMA.md",
+      "path": "/Users/admin/Documents/Epi-Logos C Experiments/epi-cli/ANIMA.md"
+    },
+    {
+      "name": "PARADIGM.md",
+      "path": "/Users/admin/Documents/Epi-Logos C Experiments/epi-cli/PARADIGM.md"
+    },
+    {
+      "name": "PASU",
+      "path": "/Users/admin/Documents/Epi-Logos C Experiments/epi-cli/PASU.md"
+    },
+    {
+      "name": "NOW.md",
+      "path": "/Users/admin/Documents/Epi-Logos/Idea/Empty/Present/11-03-2026/20260311-121816-ab3862/now.md"
+    },
+    {
+      "name": "TOOLS.md",
+      "path": "/Users/admin/Documents/Epi-Logos C Experiments/epi-cli/TOOLS.md"
+    }
+  ],
+  "env": {}
+}

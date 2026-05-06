@@ -223,7 +223,7 @@ epi-gnostic/                          ← New Python package
 ├── wrapper.py                        ← RAGAnything init + convenience functions
 └── migrate_bimba_embeddings.py       ← One-shot 768→3072 migration script
 
-vendors/RAG-Anything/                 ← Cloned, unmodified dependency
+# RAG-Anything installed via: pip install raganything (not vendored)
 ```
 
 ---

@@ -1,5 +1,12 @@
 # M4' — Archetypal-Citta: Subtle Body Map Specification
 
+> **Harmonization note (2026-03-23):**
+> Canonical hash shape, planet model, EarthBody semantics, and live clock terminology follow
+> `docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md` and
+> `docs/plans/CLOCK-AND-NARA-SPECS/09-cosmic-clock-plugin-tui-spec.md`. Where this document says
+> "torus state" or uses shortened hash language, read it through the canonical `tick12` /
+> `quintessence_hash[32]` model.
+
 **Status:** Canonical Specification — v1.0
 **Date:** 2026-03-10
 **Coordinate:** #4.0 × #4.1 × #4.2 × M2 — Identity × Medicine × Oracle × Vibrational Ground
@@ -66,14 +73,14 @@ tag MUST render in silver/indigo. High Adenine (A/Water) MUST expand the teal fi
 
 | Source | Gateway Method | Contribution | Update Rate |
 |--------|----------------|-------------|-------------|
-| Identity layer 0 | `nara.identity.get` | Quintessence hash → colour seed | Session open |
+| Identity layer 0 | `nara.identity.get` | Quintessence hash / preview → colour seed | Session open |
 | Identity layer 1 | `nara.identity.get` | Natal planet positions → ring anchors | Session open |
 | Identity layer 2 | `nara.identity.get` | Nucleotide weights → element field | Session open |
 | Identity layer 3 | `nara.identity.get` | Gene Keys mask → active hexagram glyphs | Session open |
 | Medicine triage | `nara.medicine.balance` | Chakra activation levels | On request / daily |
 | Kairos current | `nara.kairos.current` | Live planet positions → ring animation | Daily / on demand |
 | Oracle payload | `nara.oracle.payload` | Body zones, organs, elements, operations | Per cast |
-| M1 torus state | SpacetimeDB subscribe | Torus rotation, ascending/descending | Live |
+| M1 tick12 / live phase | SpacetimeDB subscribe | Torus rotation, ascending/descending | Live |
 | M2 planetary | SpacetimeDB subscribe | Planetary orbital positions | Live |
 
 ### Synthesis Rule
@@ -100,12 +107,12 @@ Seven layers render from back to front. Each independently toggleable.
 ### Layer 7 — Quintessence Ground (background canvas)
 
 **Technology:** Canvas 2D (offscreen, redrawn once per session)
-**Input:** `quintessence_hash` (u64, first 16 hex chars)
+**Input:** canonical `quintessence_hash` (`[u8; 32]`) plus an optional short preview string for UI.
 **Renders:**
 - Seeded generative geometry from hash — every user sees a unique tiled pattern
 - Pattern family: sacred geometry variants (Flower of Life, Metatron, Sri Yantra grid,
   Fibonacci spiral) selected by `hash % 4`
-- Hue: derived from `hash & 0xFF` mapped to a 0-360° HSL rotation on a muted dark base
+- Hue: derived from a stable byte window of the canonical hash, mapped to a 0-360° HSL rotation on a muted dark base
 - Low opacity (0.08–0.15): this is ground, not foreground
 - Never animates — computed once, displayed statically
 

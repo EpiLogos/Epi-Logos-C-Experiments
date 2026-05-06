@@ -1,0 +1,7 @@
+CompileFlags:
+  Add:
+    - "-Iepi-lib/include"
+    - "-Ivendor/blake3"
+    - "-std=c11"
+    - "-Wall"
+    - "-Wextra"

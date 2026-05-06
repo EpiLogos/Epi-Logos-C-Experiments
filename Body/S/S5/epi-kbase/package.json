@@ -1,0 +1,23 @@
+{
+  "name": "epi-kbase",
+  "version": "0.1.0",
+  "description": "S5.2' kbase: bounded resource context for DAY/NOW agent runs (NotebookLM-type scoping)",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./project-scope": "./src/project-scope.ts",
+    "./envelope-metadata": "./src/envelope-metadata.ts",
+    "./sem-search": "./src/sem-search.ts",
+    "./skill-search": "./src/skill-search.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vitest": "^4.0.0",
+    "typescript": "^5.8.0"
+  }
+}

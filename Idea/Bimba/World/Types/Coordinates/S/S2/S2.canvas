@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {
+      "id": "title",
+      "type": "text",
+      "text": "# S2\n\nMOC Index for [[S2]]",
+      "x": 0,
+      "y": 0,
+      "width": 420,
+      "height": 150
+    },
+    {
+      "id": "note",
+      "type": "file",
+      "file": "Bimba/World/Types/Coordinates/S/S2/S2.md",
+      "x": 0,
+      "y": 210,
+      "width": 420,
+      "height": 90
+    }
+  ],
+  "edges": []
+}

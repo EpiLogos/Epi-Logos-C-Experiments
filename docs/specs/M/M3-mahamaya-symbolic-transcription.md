@@ -560,7 +560,7 @@ The compression is purely structural: the 8 court cards that hold two codons are
 // FR 2.3.5: UNIFIED COSMIC CLOCK
 // ==============================================================================
 typedef struct {
-    uint8_t m1_torus_stage;      // 0-11 (12 stages: 30° each across 360°)
+    uint8_t tick12;              // 0-11 (canonical M1 discrete state)
     uint8_t m2_decan_phase;      // 0-71 (72 decans across full 720° double-cover)
     uint8_t m3_hexagram_id;      // 0-63 (active hexagram / codon at this degree)
     bool    is_implicate_phase;  // true = degrees 360-719 (shadow/implicate layer)
@@ -572,8 +572,8 @@ static inline Unified_Clock_State read_cosmic_clock(uint16_t degree_0_to_719) {
     bool    is_implicate = (degree_0_to_719 >= 360);
     uint16_t base        = degree_0_to_719 % 360;
 
-    // M1: 30° per torus stage → 12 stages per 360° cycle
-    uint8_t torus_stage  = (uint8_t)(base / 30);
+    // M1: 30° per tick12 stage → 12 stages per 360° cycle
+    uint8_t tick12       = (uint8_t)(base / 30);
 
     // M2: 10° per decan → 36 decans per 360°; shadow layer adds 36
     uint8_t decan_phase  = is_implicate
@@ -586,7 +586,7 @@ static inline Unified_Clock_State read_cosmic_clock(uint16_t degree_0_to_719) {
     uint8_t hexagram_id  = (uint8_t)((base * 64u) / 360u);
 
     return (Unified_Clock_State){
-        .m1_torus_stage   = torus_stage,
+        .tick12           = tick12,
         .m2_decan_phase   = decan_phase,
         .m3_hexagram_id   = hexagram_id,
         .is_implicate_phase = is_implicate

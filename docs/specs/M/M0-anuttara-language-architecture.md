@@ -784,7 +784,7 @@ if (strcmp(entry->symbol, "?!") == 0) { ... }  // NEVER
 // Unified_Clock_State: O(1) snapshot of all four M-subsystems
 // from a single cosmic degree (0-719)
 typedef struct {
-    uint8_t  m1_torus_stage;     // 0-11  (30° sectors; Inner Gear)
+    uint8_t  tick12;             // 0-11  (canonical M1 discrete state)
     uint8_t  m2_decan_phase;     // 0-71  (10° sectors + SU(2) phase; Middle Dial)
     uint8_t  m3_hexagram_id;     // 0-63  (5.625° sectors; Outer Face)
     bool     is_implicate_phase; // true if degree >= 360 (Descending/Night phase)
@@ -799,7 +799,7 @@ static inline Unified_Clock_State read_cosmic_clock(uint16_t degree_0_to_719) {
     uint16_t base_degree     = degree_0_to_719 % 360u;
 
     // 2. M1 Torus Gear: 30° per stage → integer divide
-    state.m1_torus_stage = (uint8_t)(base_degree / 30u);
+    state.tick12 = (uint8_t)(base_degree / 30u);
 
     // 3. M2 Parashakti Dial: 10° per decan
     // Implicate phase shifts to shadow decans (indices 36-71)
@@ -815,7 +815,7 @@ static inline Unified_Clock_State read_cosmic_clock(uint16_t degree_0_to_719) {
 }
 ```
 
-**Validation:** For degree 155 the function returns: `m1_torus_stage=5, m2_decan_phase=15, m3_hexagram_id=27, is_implicate_phase=false`. Confirms correct alignment with example in source documentation.
+**Validation:** For degree 155 the function returns: `tick12=5, m2_decan_phase=15, m3_hexagram_id=27, is_implicate_phase=false`. Confirms correct alignment with example in source documentation.
 
 ---
 

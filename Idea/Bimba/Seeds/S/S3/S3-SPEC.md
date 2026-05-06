@@ -1,0 +1,619 @@
+---
+coordinate: "S3/S3'"
+c_4_artifact_role: "spec"
+c_1_ct_type: "CT1"
+c_3_created_at: "2026-04-25T00:00:00Z"
+c_0_source_coordinates:
+  - "[[PROTOCOL S COORDINATE MODULE SPEC BUILD]]"
+  - "[[S0-SPEC]]"
+  - "[[S1-SPEC]]"
+  - "[[S2-SPEC]]"
+  - "[[FLOW 2026 04 24 PI AGENT API v0.1]]"
+  - "[[FLOW 2026 04 25 TS INTERFACE DEFINITIONS]]"
+  - "[[FLOW 2026 04 22 ENVELOPE FIELD SCHEMA]]"
+  - "[[FLOW 2026 04 22 SYSTEMS RESIDENCY AND LATTICE NAMING]]"
+  - "[[FLOW 2026 04 23 TRACK B PI INTEGRATION AUDIT]]"
+  - "[[FLOW 2026 04 25 PI AGENT API AUDIT]]"
+  - "[[S-SYSTEM-INDEX]]"
+  - "[[S-SOURCE-TRACEABILITY-INDEX]]"
+  - "[[S3-TRACEABILITY-INDEX]]"
+  - "[[S3'-TRACEABILITY-INDEX]]"
+  - "[[S3]]"
+  - "[[S3']]"
+  - "[[S3'Cx]]"
+---
+
+# S3/S3' Specification: Gateway Control and Temporal State Law
+
+## Status
+
+This is the consolidated S3-level master specification. It replaces the older scattered [[S3]], [[S3']], [[S3'Cx]], and S3-y/S3-y' files as the build reference for the gateway/runtime layer.
+
+S3 is the imperative gateway control plane: [[WebSocket]] / [[RPC]] transport, protocol handshake, request/response frames, session authority, channel routing, chat/agent/config/cron/skills/device/node/browser/approval/log surfaces, event fanout, and [[OmniPanel]] / [[Epi-Claw Parity]] pressure.
+
+S3' is the shared temporal/state contract: [[Chronos]] grounding, [[Day]], [[NOW]], [[Kairos]], Redis-backed temporal context, [[Graphiti]] temporal episodic architecture, presence, subscriptions, [[SpacetimeDB]] live-state projection, session close/arc timing, and the [[Universal NOW]] field where gateway consequences become shared state.
+
+Redis ownership must be clear here: S2 may operate Redis/RedisVL as graph/cache substrate, but S3' owns Redis-backed temporal contextual grounding because live context is time-bound before it is graph-bound. Session continuity, NOW linkage, kairos state, active arc handles, episode handles, Graphiti search/result cache keys, and shared Day context belong under [[Chronos]] key law.
+
+Graphiti placement is likewise explicit: architecturally, [[Graphiti]] belongs at S3/S3' as the temporal episodic memory architecture. S5/S5' owns how Graphiti is invoked, searched, governed, reflected, and used by [[Aletheia]] / [[Epii]]. The current `epi-graphiti` FastAPI process is a wrapper around the `graphiti-core` Python library for Rust/HTTP/Docker convenience; it is not a necessary architectural sidecar and should not be preserved as the target shape.
+
+## VAK Gate
+
+- CPF: `(4.0/1-4.4/5)` - full reflective lattice held as one dispatch field.
+- CT: `CT1` - specification / form-giving law.
+- CP: `4.1 Definition` moving toward `4.2 Operation`.
+- CF: `(0/1)` primary [[Logos]] with [[Eros]] implementation/test reality.
+- CFP: S-family, S3/S3' gateway and temporal runtime.
+- CS: `CS3` with dependency on [[S0]], [[S1]], and [[S2]].
+
+Manual dispatch result: [[Logos]] owns the command/state distinction; [[Eros]] owns the live gateway and parity-test implications; [[Chronos]] is the named S3' augmentation module; [[Anima]] and [[Psyche]] consume S3/S3' as runtime inhabitation substrate.
+
+## Preflight. Derivation Notes
+
+### Old S-file carry-forward
+
+The older [[S3]] files correctly preserve the loop intuition: observe, think, plan, build, execute, verify/learn. That is still useful as a runtime-cycle image, especially for gateway event flow and session learning. The older [[S3']] files correctly identify infrastructure concerns such as hooks, plugin lifecycle, temporal context, agent execution, and reflection.
+
+The old base sequence survives only as genealogy, not as final ownership:
+
+| Old base coordinate | Carry-forward intuition |
+|---|---|
+| [[S3.0]] Observe | Connection/perception ground, input reception, status/health |
+| [[S3.1]] Think | Request/message form, requester identity, channel definition |
+| [[S3.2]] Plan | Session operations, history windows, patch/reset lineage |
+| [[S3.3]] Build | Routing patterns, agent/channel dispatch, event fanout |
+| [[S3.4]] Execute | Presence/runtime context, action consequences, shared state |
+| [[S3.5]] Verify/Learn | Integration surface, app bridge, telemetry, history return |
+
+The old prime sequence names ta-onta modules at S3', but current architecture re-homes most of those modules to [[S4]] / [[S4']]. What remains at S3' is the temporal/state contract, primarily [[Chronos]]:
+
+| Old prime coordinate | Current expression |
+|---|---|
+| [[S3.0']] Khora/plugin ground | Gateway contract ground: protocol v3, hello-ok, session invariants |
+| [[S3.1']] Hen/state coordination | Gateway form law: method manifest, channel schemas, parity naming |
+| [[S3.2']] Pleroma/skills | Gateway operation contract: SessionStore, cron, config, command/state mutation |
+| [[S3.3']] Chronos/Kairos | Shared state patterns: subscriptions, broadcast, SpacetimeDB projection |
+| [[S3.4']] Anima/agent runtime | Temporal surfacing: Day/NOW/Kairos/Redis context/presence |
+| [[S3.5']] Aletheia/learning | Gateway return law: history, close, arc timing, event delivery |
+
+### Corrections / re-homing
+
+Older PAI/plugin readings are not the target shape. Current architecture settles the split:
+
+- [[S3]] is gateway control plane, not general agent cognition.
+- [[S3']] is temporal/state law, not the whole ta-onta plugin system.
+- [[S4]] / [[S4']] owns agent runtime, [[Anima]], [[VAK]], constitutional dispatch, and inhabitation law.
+- [[S3]] / [[S3']] owns [[Graphiti]] as temporal episodic architecture. [[S5]] / [[S5']] owns Graphiti invocation, usage, search strategy, arc governance, reflection, and world-return meaning through [[Aletheia]] / [[Epii]].
+- Redis-backed live context is S3' when it grounds temporal continuity, NOW linkage, kairos state, and active episode/arc handles.
+
+### Current code reality
+
+The live implementation is broad but not yet coordinate-native:
+
+- `Body/S/S0/epi-cli/src/gate/` implements gateway commands, protocol frames, parity manifest, server/runtime state, sessions, chat, config, cron, channels, logs, models, skills, nodes, devices, browser, approvals, TLS/lock, subagents, team store, Graphiti compatibility controls, and SpacetimeDB bridge. This is S3/S3' code currently package-resident inside the S0 CLI; future work should thin it into CLI wrappers over Body-native S3 modules.
+- `epi gate methods` returns a product/RPC-native manifest: `connect`, `chat.send`, `sessions.list`, `cron.add`, `node.invoke`, `exec.approval.request`, `models.list`, `skills.status`, `wizard.start`, and related methods.
+- Current canonical FLOW API wants coordinate-native methods: `s3.session.*`, `s3.channel.*`, `s3.message.route`, `s3'.temporal.*`, `s3'.day.*`, `s3'.kairos.*`, `s3'.presence.*`, and `s3'.context.*`.
+- `spacetimedb_bridge.rs` is currently a file-backed/test event bridge plus a stub client that logs intended SpacetimeDB reducer calls; full live SpacetimeDB reducer integration is not complete.
+- `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` currently wraps the `graphiti-core` library in a FastAPI service on port `37778`. This proves Graphiti can be used as a Python library; the HTTP sidecar is only the current integration wrapper for Rust gateway/Nara callers and should be retired or demoted behind an S3 library/runtime adapter.
+- There is not yet a dedicated `Body/S/S3/gateway`, `Body/S/S3/redis-context`, or `Body/S/S3/graphiti-runtime` module. `Body/S/S3` currently holds `epi-app` and `epi-spacetime-module`; the S3 gateway/runtime extraction remains a real next build step.
+
+### Planning consequence
+
+The S3 shard/build pass must reconcile three surfaces:
+
+- Product/RPC parity manifest required by [[OmniPanel]] and Epi-Claw-shaped clients.
+- Coordinate-native `s3.*` / `s3'.*` API contracts required by the FLOW architecture.
+- Actual process/state implementation: Rust gateway, SessionStore, Redis temporal context, SpacetimeDB live-state plane, and Graphiti-as-library integration currently hidden behind an HTTP wrapper.
+
+## A. S3 - Gateway Control Plane Base Technology
+
+### What It Is
+
+S3 is the objective gateway transport/control technology. It is the place where commands enter, are authenticated or accepted, routed, persisted, emitted, and returned to clients.
+
+Current canonical S3 base technology:
+
+- Rust gateway server under `Body/S/S0/epi-cli/src/gate/` until extracted to a Body-native S3 gateway module.
+- WebSocket protocol v3, `hello-ok` frame, method/event advertisement.
+- Gateway runtime state and event fanout.
+- SessionStore and transcript state.
+- Channel, chat, agent, config, cron, logs, skills, models, nodes, devices, browser, approvals, update, and wizard RPC surfaces.
+- OmniPanel/Epi-Claw parity contract.
+
+### Services, Binaries, Processes
+
+| Component | Coordinate | Language | Runtime / Port | Role |
+|---|---:|---|---|---|
+| `epi gate start` | [[S3.0]] | Rust | WebSocket, default `18794` | Gateway control-plane server |
+| Gateway method manifest | [[S3.1]] / [[S3.1']] | Rust | `gate/parity.rs` | Product/RPC compatibility surface |
+| SessionStore | [[S3.2]] / [[S3.2']] | Rust/files | `.epi/gate/sessions` | Session identity and patch authority |
+| GatewayRuntimeState | [[S3.3]] | Rust memory | Process-local | Run registry, event listeners, chat process tracking |
+| OmniPanel / app bridge | [[S3.5]] | Electron/React app side | Client process | Human-facing gateway client |
+| Graphiti runtime | [[S3.4']] / [[S3.5']] | Python library currently wrapped by FastAPI in `Body/S/S5/epi-gnostic` | Current wrapper port `37778` | Temporal episodic architecture; target is `Body/S/S3/graphiti-runtime` library/runtime integration, not a canonical sidecar |
+
+### API Methods Homed Here
+
+#### `connect`
+
+Initial gateway handshake after socket open.
+
+Request type: `ConnectRequest`
+
+```typescript
+interface ConnectRequest {
+  agent_id: AgentId;
+  agent_version: string;
+  capabilities: string[];
+  subscriptions: string[];
+  auth: { nonce: string; token: string };
+}
+```
+
+Response type: `ConnectResponse`
+
+```typescript
+interface ConnectResponse {
+  session_key: string;
+  session_id: string;
+  day_id: string;
+  group_id: string;
+  now_id: string | null;
+  now_path: string | null;
+  workspace_root: string;
+  temporal_state: TemporalState;
+  protocol_version: 3;
+  peer_agents: AgentSummary[];
+}
+```
+
+Build implications:
+
+- Must include NOW identity and path; the API audit marks these hot fields as critical.
+- Must populate `s_3_session_key`, `s_3_session_id`, `s_3_day_id`, `s_3_agent_id`, and workspace root.
+- Product-level `connect` remains compatible with protocol v3 while coordinate-native fields are added.
+
+#### `agent.capabilities`
+
+Lists connected/known agent capabilities.
+
+Request type: `AgentCapabilitiesRequest`
+
+```typescript
+interface AgentCapabilitiesRequest {
+  agent_id?: AgentId;
+}
+```
+
+Response type: `AgentCapabilitiesResponse`
+
+```typescript
+interface AgentCapabilitiesResponse {
+  agents: AgentSummary[];
+}
+```
+
+#### `s3.session.list` / `s3.session.get` / `s3.session.patch`
+
+Coordinate-native session management.
+
+Request/response types:
+
+```typescript
+interface S3SessionListRequest {
+  agent_id?: AgentId;
+  day_id?: string;
+  group_id?: string;
+}
+
+interface S3SessionGetRequest {
+  session_key: string;
+}
+
+interface S3SessionPatchRequest {
+  session_key: string;
+  patch: SessionPatch;
+}
+```
+
+Build implications:
+
+- Live gateway currently exposes product names `sessions.list`, `sessions.resolve`, `sessions.patch`, `sessions.reset`, `sessions.delete`, and `sessions.compact`.
+- S3 spec must preserve parity while adding/aliasing coordinate-native names.
+- Session identity includes canonical key, aliases, day id, NOW path, active agent, subagent lineage, workspace root, bootstrap scope, team/cmux metadata, and model/provider overrides.
+
+#### `s3.channel.register` / `s3.channel.list` / `s3.channel.send`
+
+Channel registry and delivery.
+
+Request/response types:
+
+```typescript
+interface S3ChannelRegisterRequest {
+  name: string;
+  handler_agent: AgentId;
+  config?: ChannelConfig;
+}
+
+interface S3ChannelSendRequest {
+  channel: string;
+  message: string;
+  thread?: string;
+  metadata?: Record<string, unknown>;
+}
+```
+
+Build implications:
+
+- Existing `channels.status` / `channels.logout` are not enough for the target channel registry.
+- Telegram, WhatsApp, Slack, and web channels need real registration/delivery surfaces or explicit unsupported status.
+
+#### `s3.message.route`
+
+Async inter-agent or inter-surface message routing.
+
+Request type: `S3MessageRouteRequest`
+
+```typescript
+interface S3MessageRouteRequest {
+  target_agent: AgentId;
+  method: string;
+  params: Record<string, unknown>;
+  callback_channel?: string;
+}
+```
+
+Response type: `AsyncAck`
+
+```typescript
+interface AsyncAck {
+  ack_id: string;
+  status: "routed" | "queued" | "rejected";
+}
+```
+
+Build implications:
+
+- The result returns through event channel `agent.result.{ack_id}`.
+- Routing authority belongs here; agent reasoning belongs to [[S4]] / [[S4']].
+
+### Envelope Fields Populated
+
+S3 populates Transport and part of Runtime:
+
+| Envelope field | Coordinate home | Producer | Notes |
+|---|---:|---|---|
+| `s_3_session_key` | [[S3.0]] | Gateway connect/session store | Canonical wire/session key |
+| `s_3_session_id` | [[S3.0]] | Gateway + session bootstrap | Stable session id |
+| `s_3_request_id` | [[S3.1]] | Gateway request frame | Request/response correlation |
+| `s_3_requester` | [[S3.1]] | Gateway/auth/channel | Who sent the request |
+| `s_3_channel` | [[S3.1]] | Gateway channel layer | terminal/app/Telegram/etc. |
+| `s_3_thread_scope` | [[S3.1]] | Gateway channel/thread | Delivery thread context |
+| `s_3_target_agent` | [[S3.3]] | Gateway routing | Agent target for command/message |
+| `s_3_history_limit` | [[S3.2]] | Gateway session/history | Audit marks API coverage gap |
+| `s_3_patch_lineage` | [[S3.2]] | Gateway session patch/reset | Session mutation ancestry |
+| `s_3_protocol_version` | [[S3.0']] | Protocol v3 hello-ok | Handshake contract |
+| `s_3_session_store_handle` | [[S3.2']] | SessionStore | Runtime/session handle |
+| `s_3_agent_id` | [[S3']] | connect agent_id | Added by API audit as field 116 |
+| `s_3_app_surface` | [[S3.5]] | App bridge | OmniPanel / app surface |
+
+### CLI Commands
+
+S3/S3' is currently surfaced through `epi gate`.
+
+| Live command | Primary coordinate home | Notes |
+|---|---:|---|
+| `epi gate status` | [[S3.0]] | Gateway health/status |
+| `epi gate start --port` | [[S3.0]] | Starts WebSocket gateway |
+| `epi gate stop` | [[S3.0]] | Stops gateway |
+| `epi gate methods` | [[S3.1']] | Product/RPC method manifest |
+| `epi gate config` | [[S3.2]] | Config get/schema/set/patch/apply/TUI |
+| `epi gate cron` | [[S3.4']] / [[Chronos]] | Persistent cron jobs; API parity name gap around toggle/update |
+| `epi gate inspect` | [[S3.5]] | Runtime inspection |
+| `epi gate graphiti` | Current compatibility wrapper for [[S3']] Graphiti runtime | Starts/stops/status-checks the temporary HTTP wrapper; target is to retire this sidecar-style command or turn it into an S3 runtime adapter |
+| `epi gate subscribe` / `pair` / `bootstrap` / `workspace` | Intended [[S3]] surfaces | Currently not implemented in CLI dispatch |
+
+### Current Implementation State
+
+Current Rust files include:
+
+- `gate/mod.rs` - command tree and dispatch.
+- `gate/server.rs`, `protocol.rs`, `parity.rs`, `runtime.rs`, `events.rs` - gateway server/protocol/method/event/runtime surfaces.
+- `gate/session_store.rs`, `sessions.rs`, `transcripts.rs`, `workspace.rs`, `bootstrap.rs`, `subagents.rs`, `team_store.rs` - session identity and lineage.
+- `gate/chat.rs`, `runs.rs`, `channels.rs`, `cron.rs`, `config.rs`, `logs.rs`, `models.rs`, `skills.rs`, `nodes.rs`, `devices.rs`, `browser.rs`, `approvals.rs`, `system.rs`, `wizard.rs`, `update.rs` - product/RPC domains.
+- `gate/spacetimedb_bridge.rs` - bridge/test event projection and stub SpacetimeDB client.
+- `gate/graphiti.rs` - current HTTP-wrapper lifecycle and provenance forwarding for Graphiti; useful evidence, but not target architecture.
+- `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` - current FastAPI wrapper around the `graphiti-core` library; should be treated as adapter scaffolding, not the architectural boundary.
+
+Current test evidence:
+
+- `gate_method_parity.rs`, `gate_full_parity_contract.rs`, `gate_parity_manifest.rs` cover real method surface/parity expectations.
+- `gate_connect_protocol.rs`, `gate_protocol.rs`, `gate_auth.rs` cover protocol/handshake/auth behavior.
+- `gate_sessions.rs`, `gate_session_store_contract.rs`, `gate_lineage_contract.rs`, `session_lifecycle.rs` cover session identity and mutation.
+- `gate_chat_*`, `gate_agent_*`, `gate_subagent_spawn.rs`, `gate_team_runtime_contract.rs` cover chat/agent runtime behavior.
+- `gate_spacetimedb_bridge.rs` proves gateway mutations emit bridge events into a file-backed SpacetimeDB test queue.
+- `gate_channels_cron_voice.rs`, `gate_nodes_devices_browser.rs`, `gate_config_system.rs`, `gate_config_tui.rs`, `gate_lock_tls.rs` cover specific gateway domains.
+
+### Internal 0-5 Breakdown
+
+| Coordinate | Current ownership |
+|---|---|
+| [[S3.0]] Gateway primitive ground | WebSocket server, port, raw connection, hello frame, status/health |
+| [[S3.1]] Gateway message form | Request/response frames, method names, channel types, event envelopes |
+| [[S3.2]] Gateway session operations | SessionStore, list/get/patch/reset/delete/compact, history and transcript windows |
+| [[S3.3]] Gateway routing patterns | Agent/channel routing, run registry, event fanout, callback channels |
+| [[S3.4]] Gateway presence/context | Runtime presence, cron/kairos-adjacent scheduling, action consequences |
+| [[S3.5]] Gateway integration surface | OmniPanel/app bridge, nodes/devices/browser/approvals/logs/update/wizard, cross-system broadcast |
+
+## B. S3' - Temporal State Law
+
+### What It Is
+
+S3' is [[Chronos]] as shared temporal runtime. It turns gateway consequences into lawful time/state: Day opens and closes, NOW identity is surfaced, kairos is fetched and cached, context keys are temporally grounded, presence is projected, and session/arc events become subscribable.
+
+S3' is not simply "state storage." It is temporal contextual grounding. A context value is S3' when its validity depends on Day, NOW, session, kairos, active arc, presence, subscription, or short-lived continuity.
+
+### Ta-onta Module
+
+S3' module: [[Chronos]].
+
+Responsibilities:
+
+- Day/NOW temporal state.
+- Kairos and decan state.
+- Redis-backed live context keys.
+- Graphiti temporal episodic runtime architecture.
+- SpacetimeDB shared-state projection.
+- Presence and subscription state.
+- Session close and arc lifecycle timing.
+- Gateway event channels for temporal changes.
+
+### API Methods Homed Here
+
+#### `s3'.temporal.state` / `subscribe` / `unsubscribe`
+
+Reads and subscribes to temporal runtime state.
+
+Response/request types:
+
+```typescript
+type S3PrimeTemporalStateResponse = TemporalState;
+
+interface S3PrimeTemporalSubscribeRequest {
+  events: string[];
+}
+
+interface S3PrimeTemporalSubscribeResponse {
+  subscription_id: string;
+  active_subscriptions: string[];
+}
+```
+
+Build implications:
+
+- Must return `now_id`, `now_path`, `archive_status`, and `continuation_status`.
+- Event channels include `temporal.day.*`, `temporal.kairos.*`, `temporal.arc.*`, `temporal.session.*`, and `temporal.presence.update`.
+
+#### `s3'.day.open` / `close` / `status`
+
+Day lifecycle.
+
+Request/response types:
+
+```typescript
+interface S3PrimeDayOpenRequest {
+  day_id: string;
+  seed_content?: string;
+  kairos_snapshot?: KairosSnapshot;
+}
+
+interface S3PrimeDayCloseRequest {
+  day_id: string;
+  crystallisation?: string;
+  force?: boolean;
+}
+
+interface S3PrimeDayStatusResponse {
+  day_id: string;
+  open: boolean;
+  session_count: number;
+  agents_active: AgentId[];
+  arcs: ArcSummary[];
+}
+```
+
+Build implications:
+
+- Material Day files are anchored in [[S1]], but temporal open/close truth is S3'.
+- `s_5_session_close` should be re-homed to S3' because session close is temporal.
+
+#### `s3'.kairos.fetch` / `status` / `natal`
+
+Kairos temporal state.
+
+Request/response types:
+
+```typescript
+interface S3PrimeKairosFetchResponse {
+  planet_degrees: number[];
+  sun_decan: DecanInfo;
+  moon_decan: DecanInfo;
+  sun_degree: number;
+  moon_degree: number;
+  mode: "natal" | "realtime" | "kairotic";
+  timestamp: number;
+}
+
+interface S3PrimeKairosNatalRequest {
+  birth_date: string;
+  birth_location: string;
+}
+```
+
+Build implications:
+
+- [[Kerykeion]]/pyswisseph supplies the calculation path.
+- Kairos cache keys belong to S3' temporal context, even if stored in Redis.
+
+#### `s3'.presence.state` / `update`
+
+Presence state for the shared field.
+
+Request/response types:
+
+```typescript
+interface S3PrimePresenceStateResponse {
+  agents: PresenceEntry[];
+}
+
+interface S3PrimePresenceUpdateRequest {
+  torus_position: number;
+  hexagram: number;
+  hash?: string;
+}
+```
+
+Build implications:
+
+- SpacetimeDB is the target shared-state host.
+- Current Rust client is a stub; file-backed bridge events are test evidence, not final live reducer integration.
+
+#### `s3'.context.get` / `set` / `shared.get` / `shared.set` / `pool`
+
+Redis-backed temporal context.
+
+Request/response types:
+
+```typescript
+interface S3PrimeContextGetRequest {
+  key: string;
+}
+
+interface S3PrimeContextSetRequest {
+  key: string;
+  value: unknown;
+  ttl_seconds?: number;
+}
+
+interface S3PrimeContextPoolRequest {
+  keys: string[];
+  include_shared?: boolean;
+}
+```
+
+Build implications:
+
+- Agent-scoped keys auto-prefix with `{agent_id}:{session_id}`.
+- Shared keys auto-prefix with `{day_id}:shared`.
+- This is the batch assembly surface for [[Psyche]] session context packs.
+- `s_4_run_local_continuity` should use this surface.
+
+### Envelope Fields Populated
+
+S3' populates Temporal and Context-Economy runtime fields:
+
+| Envelope field | Coordinate home | S3' role |
+|---|---:|---|
+| `s_3_day_id` | [[S3.4']] | Day identity |
+| `s_4_now_id` | [[S4.1']] with S3' surfacing | NOW identity in connect/temporal state |
+| `s_4_now_path` | [[S1]] + [[S3']] surfacing | Material NOW path |
+| `s_3_session_start` | [[S3.4']] | Session start time |
+| `s_3_kairos_tick` | [[S3.4']] | Kairos/planet/decan tick |
+| `s_3_context_key` | [[S3']] | Renamed from `s_2_redis_context_key` |
+| `s_3_episodic_handles` | [[S3']] | Renamed from `s_2_episodic_handles`; temporal handles for Graphiti episodic arcs |
+| `s_5_session_close` | Re-home to [[S3']] | Session close is temporal |
+| `s_5_arc_membership` | Re-home to [[S3']] | Arc membership is temporal |
+| `s_5_graphiti_node_ids` | Re-home to [[S3']] as `s_3_graphiti_node_ids` for handle surfacing | Graphiti node ids are temporal artifacts; invocation/use semantics remain S5/S5' |
+
+### S3'Cx Projection
+
+The corrected C-family projection:
+
+| C coordinate | S3'Cx meaning | Runtime manifestation |
+|---|---|---|
+| C0 | Gateway contract ground | protocol v3, hello-ok, session invariants |
+| C1 | Message form | method manifest, request/response schema, channel form |
+| C2 | Operation | session mutations, cron/config/chat/node/device operations |
+| C3 | Process/pattern | routing patterns, subscriptions, broadcast, SpacetimeDB reducers |
+| C4 | Context/type | Day/NOW/Kairos/presence/Redis temporal context |
+| C5 | Pratibimba/return | history, close, arcs, activity events, shared-state projection |
+
+Decision: S3'Cx no longer means generic plugin folders. It means the temporal/shared-state projection of gateway consequences.
+
+### Current Implementation State
+
+S3' is partially embodied in:
+
+- `spacetimedb_bridge.rs` bridge events for presence, session surface, activity, and M-clock placeholders.
+- `system.rs` heartbeats and presence-like state.
+- `cron.rs` scheduling state.
+- `session_store.rs` day/NOW/session metadata capture.
+- Gateway events and runtime subscriptions.
+- `graphiti_service.py` currently as an HTTP wrapper around a library that should be S3-integrated directly.
+
+S3' is not yet complete:
+
+- Full SpacetimeDB reducer calls are stubbed/logged.
+- `s3'.context.*` Redis API is not yet clearly implemented as coordinate-native gateway methods.
+- `s3'.temporal.state` target fields exist in TS but are not obviously exposed in live gateway RPC.
+- `s3'.day.*` and `s3'.kairos.*` are designed, with related CLI/vault/nara surfaces elsewhere, but not cleanly unified under S3' gateway methods.
+- Graphiti is unnecessarily isolated behind the current FastAPI sidecar; target work should make it an S3 runtime/library component and leave S5/S5' to decide when and how to use it.
+
+### Internal 0-5 Breakdown
+
+| Coordinate | Current ownership |
+|---|---|
+| [[S3.0']] Gateway contract ground | Protocol v3, hello-ok, session invariants, connect response law |
+| [[S3.1']] Gateway form law | Method contracts, parity manifest, channel schemas, stable API names |
+| [[S3.2']] Gateway operation contract | SessionStore source of truth, Redis-backed temporal metadata target, config/cron mutations |
+| [[S3.3']] Shared state patterns | Subscriptions, event bus, SpacetimeDB projection, multi-session coordination |
+| [[S3.4']] Temporal surfacing | Day/NOW/Kairos/decan/presence/context key law, Graphiti episode timing |
+| [[S3.5']] Gateway return law | Session close, Graphiti arc tracking handles, history, activity events, runtime yield |
+
+## C. Cross-References
+
+### Depends On
+
+- [[S0]] / [[S0']] for `epi gate`, process execution, ports, and local command lifecycle.
+- [[S1]] / [[S1']] for Day/NOW material paths and vault-backed session artifacts.
+- [[S2]] / [[S2']] for graph/cache health and context source pools.
+- [[Khora]] for bootstrap/session identity sequence.
+- [[Hen]] for vault/material anchoring of temporal facts.
+
+### Consumed By
+
+- [[S4]] / [[S4']] consumes S3 transport/session state for [[Anima]], [[Psyche]], and agent execution.
+- [[S5]] / [[S5']] consumes S3' Graphiti/temporal grounding for [[Aletheia]] and [[Epii]] world-return invocation and governance.
+- [[Nara]] and [[M']] consume S3' presence, kairos, oracle, and shared-state surfaces.
+- [[OmniPanel]] and app clients consume S3 gateway RPC and S3' shared state projections.
+
+### Envelope Layers Served
+
+S3/S3' serves these [[Envelope]] layers:
+
+- Transport Layer
+- Temporal Layer
+- Runtime Layer, through session store handles
+- [[Context Economy]], through S3' Redis context surfaces
+- [[Execution Layer]], through routing and message delivery
+- [[Episodic Layer]], through Graphiti temporal architecture, handles, and arc timing; usage/governance remains S5/S5'
+
+### Gaps
+
+- Add coordinate-native aliases or methods for `s3.session.*`, `s3.channel.*`, `s3.message.route`, `s3'.temporal.*`, `s3'.day.*`, `s3'.kairos.*`, `s3'.presence.*`, and `s3'.context.*`.
+- Preserve product/RPC parity names needed by OmniPanel while exposing coordinate-native method names.
+- Implement real `s3'.context.*` Redis temporal-context API with key namespace law.
+- Implement full SpacetimeDB reducer integration beyond file-backed test bridge/stub logging.
+- Ensure `connect` and `s3'.temporal.state` return NOW identity/path, archive status, continuation status, and `s_3_agent_id`.
+- Retire the Graphiti sidecar as canonical architecture: use `graphiti-core` as an S3/S3' runtime/library component; keep any HTTP wrapper only as a temporary compatibility adapter.
+- Add or explicitly reject Telegram/web channel registration.
+- Resolve cron parity naming (`cron.toggle` versus `cron.update`) by alias or compatibility layer.
+
+## D. Key Architectural Decisions
+
+1. S3 is gateway control plane; S3' is temporal/shared-state law.
+2. Old PAI/plugin readings are genealogy. Current target is gateway plus [[Chronos]] temporal runtime.
+3. Redis-backed live context belongs to S3' because it is temporally grounded in session, Day, NOW, kairos, and arc continuity.
+4. Product/RPC names and coordinate-native names must coexist until parity clients migrate.
+5. [[SpacetimeDB]] is the target Universal NOW shared-state host; current bridge code is not full live integration yet.
+6. [[Graphiti]] is architecturally S3/S3' temporal episodic memory; S5/S5' owns invocation, usage, search, governance, and reflective meaning.
+7. Session identity is a gateway authority, while session inhabitation and reasoning are S4/S4'.

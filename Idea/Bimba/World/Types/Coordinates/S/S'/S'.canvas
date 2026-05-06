@@ -1,0 +1,12 @@
+{
+	"nodes":[
+		{"id":"title","type":"text","text":"# S'\n\nMOC Index for inverted [[S]] coordinates","x":0,"y":0,"width":440,"height":160},
+		{"id":"s0i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S0'/S0'.md","x":0,"y":220,"width":440,"height":90},
+		{"id":"s1i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S1'/S1'.md","x":0,"y":340,"width":440,"height":90},
+		{"id":"s2i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S2'/S2'.md","x":0,"y":460,"width":440,"height":90},
+		{"id":"s3i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S3'/S3'.md","x":0,"y":580,"width":440,"height":90},
+		{"id":"s4i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md","x":0,"y":700,"width":440,"height":90},
+		{"id":"s5i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md","x":0,"y":820,"width":440,"height":90}
+	],
+	"edges":[]
+}

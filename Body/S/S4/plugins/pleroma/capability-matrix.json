@@ -1,0 +1,220 @@
+{
+  "coordinate": "S4/S4'",
+  "owner_agent": "anima",
+  "package_role": "anima_executive_capability_membrane",
+  "body_residency": "Body/S/S4/plugins/pleroma",
+  "plugin_manifest": ".claude-plugin/plugin.json",
+  "constitutional_agents": [
+    "anima",
+    "eros",
+    "logos",
+    "mythos",
+    "nous",
+    "psyche",
+    "sophia"
+  ],
+  "skills": [
+    {
+      "name": "anima-orchestration",
+      "layer": "S4/S4'",
+      "kind": "vak-dispatch"
+    },
+    {
+      "name": "vak-evaluate",
+      "layer": "S4/S4'",
+      "kind": "vak-coordinate-assignment"
+    },
+    {
+      "name": "vak-coordinate-frame",
+      "layer": "S4/S4'",
+      "kind": "coordinate-framing"
+    },
+    {
+      "name": "day-night-pass",
+      "layer": "S4/S4'",
+      "kind": "psyche-continuity"
+    },
+    {
+      "name": "bimba-populate",
+      "layer": "S3/S3'",
+      "kind": "graph-population"
+    },
+    {
+      "name": "deep-interview",
+      "layer": "S4/S4'",
+      "kind": "dialogical-clearing"
+    },
+    {
+      "name": "git-master",
+      "layer": "S5/S5'",
+      "kind": "change-integration"
+    },
+    {
+      "name": "pipeline",
+      "layer": "S4/S4'",
+      "kind": "dispatch-sequencing"
+    },
+    {
+      "name": "plan",
+      "layer": "S1/S1'",
+      "kind": "specification"
+    },
+    {
+      "name": "ralplan",
+      "layer": "S1/S1'",
+      "kind": "consensus-planning"
+    },
+    {
+      "name": "tdd",
+      "layer": "S5/S5'",
+      "kind": "implementation-verification"
+    },
+    {
+      "name": "team",
+      "layer": "S4/S4'",
+      "kind": "agent-dispatch"
+    },
+    {
+      "name": "ultraqa",
+      "layer": "S5/S5'",
+      "kind": "quality-gating"
+    },
+    {
+      "name": "web-research",
+      "layer": "S2/S2'",
+      "kind": "external-research"
+    }
+  ],
+  "hooks": {
+    "manifest": "hooks.json",
+    "role": "bounded-runtime-extension"
+  },
+  "execution_backbone": {
+    "name": "tilldone",
+    "source": "vendors/pi-vs-claude-code/extensions/tilldone.ts",
+    "body_path": "Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts",
+    "scope": "anima_execution_runs",
+    "enabled_for": [
+      "anima"
+    ],
+    "gate": "requires an active TillDone task list before non-TillDone tool use",
+    "disable_env": "EPI_TILLDONE_MODE=off",
+    "force_env": "EPI_TILLDONE_MODE=on"
+  },
+  "agent_capability_gates": {
+    "anima": {
+      "tools": [
+        "vak_evaluate",
+        "anima_orchestrate",
+        "dispatch_agent",
+        "dispatch_parallel_agents",
+        "dispatch_fusion_agents",
+        "run_chain",
+        "subagent_create",
+        "subagent_continue",
+        "subagent_list",
+        "subagent_remove",
+        "tilldone"
+      ],
+      "skills": [
+        "vak-coordinate-frame",
+        "vak-evaluate",
+        "anima-orchestration",
+        "day-night-pass"
+      ]
+    },
+    "nous": {
+      "tools": [
+        "vak_evaluate",
+        "nous_disclose"
+      ],
+      "skills": [
+        "deep-interview",
+        "vak-coordinate-frame"
+      ]
+    },
+    "logos": {
+      "tools": [
+        "vak_evaluate",
+        "hen_template_invoke",
+        "khora_read"
+      ],
+      "skills": [
+        "plan",
+        "ralplan"
+      ]
+    },
+    "eros": {
+      "tools": [
+        "vak_evaluate",
+        "hen_template_invoke",
+        "khora_write"
+      ],
+      "skills": [
+        "tdd"
+      ]
+    },
+    "mythos": {
+      "tools": [
+        "vak_evaluate",
+        "graph_pattern_query",
+        "aletheia_trace"
+      ],
+      "skills": [
+        "vak-coordinate-frame",
+        "bimba-populate"
+      ]
+    },
+    "psyche": {
+      "tools": [
+        "vak_evaluate",
+        "psyche_state_read",
+        "psyche_state_update",
+        "day_night_pass"
+      ],
+      "skills": [
+        "day-night-pass",
+        "team",
+        "pipeline"
+      ]
+    },
+    "sophia": {
+      "tools": [
+        "vak_evaluate",
+        "sophia_review",
+        "epii_inbox_deposit",
+        "aletheia_crystallise"
+      ],
+      "skills": [
+        "git-master",
+        "ultraqa"
+      ]
+    }
+  },
+  "anima_authority": [
+    "dispatch_to_constitutional_agent",
+    "invoke_bounded_skill",
+    "deposit_epii_inbox_item",
+    "request_epii_validation",
+    "request_epii_research"
+  ],
+  "epii_relation": {
+    "relation": "peer_pi_agent",
+    "deposits_to_epii": [
+      "review_item",
+      "improvement_request",
+      "validation_gate",
+      "aletheia_crystallisation"
+    ],
+    "requests_to_epii": [
+      "validation_request",
+      "research_request",
+      "philosophical_alignment_request"
+    ]
+  },
+  "forbidden_authority": [
+    "resolve_epii_review_gate",
+    "mutate_epii_identity_state",
+    "bypass_epii_inbox"
+  ]
+}

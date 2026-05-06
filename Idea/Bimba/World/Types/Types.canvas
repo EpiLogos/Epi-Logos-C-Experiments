@@ -1,0 +1,16 @@
+{
+	"nodes":[
+		{"id":"title","type":"text","text":"# Types\n\nMaster MOC for [[World Types Mirror]]","x":0,"y":0,"width":460,"height":160},
+		{"id":"s0","type":"file","file":"Bimba/World/Types/Coordinates/S/S0/S0.md","x":0,"y":220,"width":460,"height":90},
+		{"id":"s0i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S0'/S0'.md","x":0,"y":340,"width":460,"height":90},
+		{"id":"s1","type":"file","file":"Bimba/World/Types/Coordinates/S/S1/S1.md","x":0,"y":460,"width":460,"height":90},
+		{"id":"s1i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S1'/S1'.md","x":0,"y":580,"width":460,"height":90},
+		{"id":"s2","type":"file","file":"Bimba/World/Types/Coordinates/S/S2/S2.md","x":0,"y":700,"width":460,"height":90},
+		{"id":"s2i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S2'/S2'.md","x":0,"y":820,"width":460,"height":90},
+		{"id":"s3","type":"file","file":"Bimba/World/Types/Coordinates/S/S3/S3.md","x":0,"y":940,"width":460,"height":90},
+		{"id":"s3i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S3'/S3'.md","x":0,"y":1060,"width":460,"height":90},
+		{"id":"s4","type":"file","file":"Bimba/World/Types/Coordinates/S/S4/S4.md","x":0,"y":1180,"width":460,"height":90},
+		{"id":"s4i","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md","x":0,"y":1300,"width":460,"height":90}
+	],
+	"edges":[]
+}

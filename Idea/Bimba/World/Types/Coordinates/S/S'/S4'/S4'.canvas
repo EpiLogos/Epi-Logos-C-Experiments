@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "id": "title",
+      "type": "text",
+      "text": "# [[S4']]: Ta-Onta Extension Architecture\n\nMOC Index for the S4' coordinate — inverted operational API of [[S4]].",
+      "x": 0, "y": 0, "width": 500, "height": 150
+    },
+    {
+      "id": "s4p-form",
+      "type": "file",
+      "file": "Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md",
+      "x": 0, "y": 200, "width": 500, "height": 100
+    },
+    {
+      "id": "extensions",
+      "type": "text",
+      "text": "## The Six Extension Classes\n\n[[S4.0']] [[Khora]] — Bootstrap\n[[S4.1']] [[Hen]] — Content\n[[S4.2']] [[Pleroma]] — Primitives\n[[S4.3']] [[Chronos]] — Temporal\n[[S4.4']] [[Anima]] — Orchestration\n[[S4.5']] [[Aletheia]] — Crystallisation",
+      "x": 560, "y": 0, "width": 400, "height": 200
+    },
+    {
+      "id": "s4cx",
+      "type": "text",
+      "text": "## S4'Cx Reflective Coordinates\n\n[[CPF]] Polarity Gate\n[[CT]] Semantic Phase-Type\n[[CP]] Incubation Coordinate\n[[CF]] Archetypal Operator\n[[CFP]] Nesting Algebra\n[[CS]] Path Operator",
+      "x": 560, "y": 250, "width": 400, "height": 200
+    },
+    {
+      "id": "base",
+      "type": "text",
+      "text": "## Base Layer\n\n[[S4]] — Agent Runtime substrate",
+      "x": 0, "y": 350, "width": 500, "height": 80
+    }
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "title", "toNode": "s4p-form", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e2", "fromNode": "title", "toNode": "extensions", "fromSide": "right", "toSide": "left"},
+    {"id": "e3", "fromNode": "extensions", "toNode": "s4cx", "fromSide": "bottom", "toSide": "top"},
+    {"id": "e4", "fromNode": "s4p-form", "toNode": "base", "fromSide": "bottom", "toSide": "top"}
+  ]
+}

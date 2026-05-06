@@ -18,7 +18,7 @@
 | `epi vault` | S1' | Obsidian vault operations | **Live (obsidian-cli wrapper)** |
 | `epi graph` | S2' | Neo4j + Redis — GraphRAG | **Live (stub — needs connection)** |
 | `epi gate` | S3' | WebSocket gateway | **Live** |
-| `epi agent` | S4' | PI agent lifecycle + chat | **Live (pi wrapper)** |
+| `epi agent` | S4' | PI agent lifecycle + native operator launch | **Live (native PI control plane)** |
 | `epi sync` | S5' | n8n webhooks | Stub |
 
 Plus tooling namespaces: `epi sesh`, `epi kbase`, `epi book`, `epi techne`, `epi app`, `epi code`.
@@ -26,6 +26,18 @@ Plus tooling namespaces: `epi sesh`, `epi kbase`, `epi book`, `epi techne`, `epi
 ---
 
 ## Changelog
+
+### v0.4.0 — 2026-04-02
+
+**Native PI + Gateway Harmonisation**
+
+- `epi agent` with no subcommand now launches native `pi` directly
+- `epi agent spawn` and `epi agent chat` now share the same native interactive PI contract
+- interactive operator launches now perform a shared gateway readiness preflight before handing the terminal to PI
+- managed agent state now defaults to repo-local `.epi/` instead of ambient home-level runtime paths
+- repo-authored skills and ta-onta subagents are projected into repo-local compatibility directories rather than relying on `~/.agents`
+- `epi up` and `epi agent` now share the same repo-local gateway state root
+- ta-onta extension command paths were corrected to use real `epi` and `obsidian-cli` surfaces only
 
 ### v0.3.0 — 2026-03-07
 
@@ -241,12 +253,14 @@ epi graph hybrid "<query>" [--top-k N]   # Hybrid vector + graph
 Wraps the `pi` binary with managed agent environments.
 
 ```bash
-epi agent install                      # Set up managed agent directory
+epi agent                              # Launch native PI with the managed repo runtime
+epi agent install                      # Set up repo-local managed agent directory
 epi agent doctor                       # Inspect agent foundation state
-epi agent spawn [prompt]               # Start a PI session
+epi agent spawn [prompt]               # Start a native PI session
 epi agent attach <id>                  # Attach to existing session
 epi agent run <args...>                # Pass args directly to pi
-epi agent chat [--agent <name>] [prompt]  # Interactive chat TUI
+epi agent chat [--agent <name>] [prompt]  # Compatibility alias for native PI chat
+epi agent verify-runtime               # Captured isolated smoke run
 epi agent extensions sync              # Sync repo extensions
 epi agent extensions status            # Extension sync status
 epi agent agents list                  # List registered agents
@@ -317,8 +331,8 @@ epi (Rust binary — ~/.cargo/bin/epi, 2.8 MB)
 │   │   ├── retrieval/                 — coordinate, hybrid RRF, progressive disclosure
 │   │   ├── sync_coordinator.rs        — vault → graph sync
 │   │   └── embeddings.rs              — Gemini embedding client
-│   ├── agent/           — epi agent (pi wrapper + interactive chat)
-│   ├── gate/            — epi gate (stub)
+│   ├── agent/           — epi agent (native PI control plane + repo-local runtime)
+│   ├── gate/            — epi gate (live gateway + shared preflight)
 │   ├── sync/            — epi sync (stub)
 │   └── {sesh,kbase,book,techne,app,code}/  — tooling wrappers
 │
@@ -343,9 +357,9 @@ epi (Rust binary — ~/.cargo/bin/epi, 2.8 MB)
 | `epi graph query/sync/import` | **Live** | Needs Neo4j + Redis (docker compose) |
 | `epi graph retrieve/graphrag/hybrid` | **Live** | Coordinate, RRF, progressive disclosure |
 | `@epi-logos/ql-schema` (TS) | **Live** | 4-ring Zod schemas, 69 tests |
-| `epi agent install/doctor/spawn/run` | **Live** | Needs `pi` or `npm` |
-| `epi agent chat` | **Live** | Needs `pi` installed |
-| `epi gate` | Stub | WebSocket server TBD |
+| `epi agent` / `spawn` / `chat` / `attach` / `run` | **Live** | Native PI runtime, gateway preflight, repo-local `.epi/` |
+| `epi agent verify-runtime` | **Live** | Captured isolated smoke path |
+| `epi gate` | **Live** | Shared WebSocket gateway runtime on the Rust side |
 | `epi sync` | Stub | n8n webhook config TBD |
 
 ---

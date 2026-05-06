@@ -62,10 +62,10 @@ Companion embodied anchor: EarthBodyState
 | `exact_degree_720` | `f32` | High-precision continuous clock address 0.0–719.999…; first 360° = explicate (Strand A), second 360° = implicate (Strand B) |
 | `degree_node_360` | `u16` | Integer 0–359 for LUT lookup only. Never used in arithmetic. Cast is explicit and named. |
 | `phase` | `u8` | `0` = explicate (Strand A), `1` = implicate (Strand B) |
-| `tick12` | `u8` | Canonical M1 ring position 0–11. The ONE discrete clock state. `tick12` IS `torus_stage` IS `spanda_stage` — one field, three names for the same thing. |
+| `tick12` | `u8` | Canonical M1 ring position 0–11. The ONE discrete clock state. `tick12` IS `torus_stage` IS `spanda_stage` — one field, three names for the same thing. Equivalently: `hopf_tick12(exact_degree_720)` = `floor(hopf_project(deg) / 30)`. See §13. |
 | `cf_substage6` | `u8` | 6-fold view derived as `tick12 % 6`. Strand A view. Not a separate counter; always derivable on demand. |
 | `earth_body` | `EarthBodyState` | Special planet/chakra bridge node: geocentric center, solar child of Sun, `CHAKRA_EARTH=0`, rendered as the bodily root-anchor beneath the 7 canonical chakras. |
-| `quaternion4` | `[f32; 4]` | Normalized `[w=EARTH, x=FIRE, y=WATER, z=AIR]`. Always unit quaternion. EARTH anchors the w-component. |
+| `quaternion4` | `[f32; 4]` | Normalized `[w=EARTH, x=FIRE, y=WATER, z=AIR]`. Always unit quaternion (S³). w=EARTH derives from Hopf projection axis = cos-pole (P5). See §13. |
 | `quintessence_hash` | `[u8; 32]` | BLAKE3 archetypal address. THE identity. Stable between enrichment updates. |
 | `oracle_eval4` | `(f32, f32, f32, f32)` | `(pp, nn, np, pn)` charge algebra from coin/card throw. Raw output of oracle cast before quaternion update. |
 | `oracle_payload` | struct | Machine-readable + human-readable simultaneously. See `09-cosmic-clock-plugin-tui-spec.md §oracle-payload` for full schema. |
@@ -172,11 +172,54 @@ Four faces are computed from every oracle cast. They are distinct transforms:
   read as the blocked or excessive expression of that zone.
 - **Oracle rule:** `card.orientation == Reversed` → read from `shadow_meaning`; body
   zone annotation = `ObstructedExpression`.
-- **Rotational state (provisional):** 8-fold system at 45° steps. Upright = 0°; reversed
-  = 180°; 6 intermediate states form the full spectral wheel. The binary upright/reversed
-  is the minimal double-cover; full 8-fold expansion deferred to dedicated spec.
-- **coreRatio `64:8:40`** (`#3` Mahamaya): 64 codons, 8 rotational states each, 40
-  non-dual (palindromic) anchors. 64 × 8 = 512 total states; −40 = 472 dynamic.
+- **Rotational state (corrected):** Dual codons = **8 states** (4 positive + 4 negative).
+  Non-dual/palindromic codons = **7 states** (1 degenerate eigenstate + 3 positive + 3 negative).
+  `40×7 + 24×8 = 280 + 192 = 472` distinct states — NOT `64×8 − 40`.
+  Upright/reversed binary = minimal double-cover (0°/180° poles). Full 8-fold deferred.
+- **coreRatio `64:8:40`** (`#3` Mahamaya): 64 codons, 8 max rotational states, 40
+  non-dual anchors (each loses one state due to eigenspace collapse). Net: 472 states.
+
+---
+
+## §11 — M3 Canonical Coordinates and Ananda Structural Constants (2026-03-19)
+
+### M3 Mahamaya Coordinate Corrections
+
+| Entity | WRONG coordinate | CANONICAL coordinate |
+|---|---|---|
+| Three pairing matrices | `#3-2-matrix-{1,2,3}` | `#3-3-2-{0,1,2}` |
+| Major Arcana | `#3-4-0-{n}` | `#3-4-5/0-{0..21}` (Möbius `5/0` notation) |
+| Chromosomal system | "scattered in #3-5" | `#3-3-5` (full branch, 28 nodes) |
+| Hexagram `n` | `#3-1-0-{n}` | `#3-1-{lower_trigram_idx}-{upper_trigram_idx}` |
+| Decan tarot (codon-linked) | `#3-4-{suit}-{n}` | `#3-4.0-{suit}-{n}` (dot = decan view) |
+
+**n/p charges**: `integral_pp / integral_nn / integral_pn / integral_np` on `#3-2-{1..4}` nucleotides. NOT runtime-computed — pre-stored.
+
+**Three matrices** (from `#3-3-2`):
+- M1 Complementarity = H-bond binary (A↔T, G↔C) = Clifford Reversion / Śiva
+- M2 Movement = Purine/Pyrimidine (A,G vs T,C) = Grade Involution / Śakti
+- M3 Resonance = Keto/Amino (G,T vs A,C) = Conjugation / Spanda
+
+### Ananda Matrices Structural Constants
+
+These numbers are derivable from the Vortex Modulae system (7X / 8X rows, mod10 and mod12):
+
+| Constant | Source | Value |
+|---|---|---|
+| Hexagrams | 7X+1 position 9 | 64 |
+| Tarot deck (total) | 7X+1 position 11 | 78 |
+| Clock degrees | 8X+0 row sum (0-9) | 360 |
+| Decan double-cover | 8X+0 position 9 | 72 = 8×9 |
+| Total operators (DNA+RNA) | 8X+0 position 10 | 80 |
+| Amino acids (full set) | 5X column sum | 24 |
+| I-Ching LINE_CHANGE | 64×6 | 384 |
+| Matrix symmetries | 3×64 | 192 |
+
+**Non-dual constant** (Ananda invariant): `(#X+1)-(#X+0) = +1` at every position for every vortex — the yang always exceeds the yin by exactly 1 at every scale.
+
+**Transcription pathway** (confirmed):
+`DNA (#3-2)` → `RNA (#3-3-3)` → `Amino Acids (#3-3-4)` → `Chromosomes (#3-3-5)`
+Total 64 + 16 = 80 operators = 78 Tarot + 2 transcendent (Fool/World)
 
 ---
 
@@ -193,3 +236,46 @@ The following MUST NOT be copied forward into new code or specs. If you encounte
 | `degree_720 = atan2(y, z) × (720 / 2π)` | Oracle cast degree comes from the primary hexagram/codon position | Quaternion components don't encode degree directly |
 | "Earth always fully activated" | "Earth = clock center anchor, fixed ground reference" | Confuses observer with signal |
 | `natal_quaternion` as standalone field | `quintessence_quaternion` (derived from 5 #4.0 profiles) | Natal is one input layer, not the whole quaternion |
+
+---
+
+## §13 Clifford Algebra Cl(4,2) — Trigonometric Identity
+
+The 6 QL positions correspond to the 6 trigonometric functions via the Clifford algebra Cl(4,2):
+
+| Position | P-family | Trig Function | Formula | Cl(4,2) Signature | Role |
+|----------|----------|---------------|---------|-------------------|------|
+| 0 | P0 Ground | sinθ | sinθ | −1 (implicate) | Generator pole 1 |
+| 1 | P1 Definition | tanθ | sinθ/cosθ | +1 (explicate) | Ratio of generators |
+| 2 | P2 Operation | secθ | 1/cosθ | +1 (explicate) | cos reciprocal |
+| 3 | P3 Pattern | cotθ | cosθ/sinθ | +1 (explicate) | tan inverse |
+| 4 | P4 Context | cscθ | 1/sinθ | +1 (explicate) | sin reciprocal; [[Lemniscate]] fold |
+| 5 | P5 Integration | cosθ | cosθ | −1 (implicate) | Generator pole 2 |
+
+**Structural law:** 4 explicate (+1) + 2 implicate (−1) = Cl(4,2). The two −1 positions generate the algebra; the four +1 positions are derived ratios. This mirrors the ontological pattern: [[#0]] (Ground) and [[#5]] (Integration) are the implicate poles that generate [[#1]]–[[#4]].
+
+**Derivation chain:**
+- P0 (sinθ) and P5 (cosθ) are the two independent generators
+- P1 (tanθ) = P0/P5 — the defining ratio
+- P2 (secθ) = 1/P5 — cos reciprocal
+- P3 (cotθ) = P5/P0 — inverse of P1
+- P4 (cscθ) = 1/P0 — sin reciprocal; also the [[Lemniscate]] fold point (#4)
+
+**Hopf bundle (S³ → S² → S¹):**
+
+| Component | Space | Dimension | Clock Manifestation |
+|-----------|-------|-----------|---------------------|
+| Total space | S³ | tick12, 720° | 12 double-cover steps |
+| Base space | S² | 6 QL positions, 360° | The explicate circle |
+| Fiber | S¹ | phase binary | explicate (0) / implicate (1) |
+| Projection | S³ → S² | `% 360` | `hopf_project(exact_degree_720)` |
+| Fiber coord | S³ → S¹ | `≥ 360` | `hopf_fiber(exact_degree_720)` |
+
+The modular reduction `exact_degree_720 % 360` IS the [[Hopf]] projection map. The quotient (`>= 360` or `< 360`) IS the fiber coordinate. `tick12 = floor(hopf_project(deg) / 30)`.
+
+**Quaternion elemental derivation:**
+- `w = EARTH = cos(θ/2)` — the Hopf projection axis IS the cosine pole (P5). The geocentric observer IS the projection center. EARTH anchors the real part because the observer IS the implicate ground.
+- `x = FIRE`, `y = WATER`, `z = AIR` — three explicate rotation axes around the earthed center.
+- P4 (cscθ) is not a quaternion axis — it is the [[Lemniscate]] fold (4 explicate − 3 rotation axes = 1 fold point).
+
+**Code:** `CL42_BASIS[6]`, `QL_TRIG_TABLE[6]`, `hopf_project()`, `hopf_fiber()`, `quat_is_unit()` in `epi-lib/include/m1.h`. Rust mirrors in `epi-cli/src/nara/clock.rs`.

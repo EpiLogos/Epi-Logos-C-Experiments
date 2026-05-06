@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "id": "title",
+      "type": "text",
+      "text": "# [[S5']]: Pedagogical Crystallisation and Integration Policy\n\nMOC Index for the inverted S5 coordinate — disclosure, policy, and return.",
+      "x": 0,
+      "y": 0,
+      "width": 520,
+      "height": 150
+    },
+    {
+      "id": "s5p-form",
+      "type": "file",
+      "file": "Idea/Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md",
+      "x": 0,
+      "y": 200,
+      "width": 520,
+      "height": 100
+    },
+    {
+      "id": "actualisation",
+      "type": "text",
+      "text": "## Living Actualisation\n\n[[Aletheia]]\n[[Gnostic]]\n[[Graphiti]]\n[[SEED.md]]\n[[Moirai]] [[Janus]] [[Agora]] [[Zeithoven]]",
+      "x": 580,
+      "y": 0,
+      "width": 380,
+      "height": 180
+    },
+    {
+      "id": "subcoords",
+      "type": "text",
+      "text": "## Internal 0-5\n\n[[S5.0']] Disclosure Ground\n[[S5.1']] Crystallised Form\n[[S5.2']] Retrieval and Promotion\n[[S5.3']] Memory Weave Pattern\n[[S5.4']] Integration Context\n[[S5.5']] Return-to-Ground",
+      "x": 580,
+      "y": 220,
+      "width": 380,
+      "height": 220
+    },
+    {
+      "id": "base",
+      "type": "text",
+      "text": "## Base Layer\n\n[[S5]] — integral world-boundary",
+      "x": 0,
+      "y": 350,
+      "width": 520,
+      "height": 80
+    }
+  ],
+  "edges": [
+    { "id": "e1", "fromNode": "title", "toNode": "s5p-form", "fromSide": "bottom", "toSide": "top" },
+    { "id": "e2", "fromNode": "title", "toNode": "actualisation", "fromSide": "right", "toSide": "left" },
+    { "id": "e3", "fromNode": "actualisation", "toNode": "subcoords", "fromSide": "bottom", "toSide": "top" },
+    { "id": "e4", "fromNode": "s5p-form", "toNode": "base", "fromSide": "bottom", "toSide": "top" }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "title",
+      "type": "text",
+      "text": "# [[S3']]: [[Universal NOW]] / [[SpacetimeDB]]\n\nMOC Index for the S3' coordinate — implicate shared-state plane of [[S3]].",
+      "x": 0,
+      "y": 0,
+      "width": 540,
+      "height": 150
+    },
+    {
+      "id": "s3i-form",
+      "type": "file",
+      "file": "Idea/Bimba/World/Types/Coordinates/S/S'/S3'/S3'.md",
+      "x": 0,
+      "y": 200,
+      "width": 540,
+      "height": 100
+    },
+    {
+      "id": "base",
+      "type": "text",
+      "text": "## Base Layer\n\n[[S3]] — imperative gateway control plane",
+      "x": 0,
+      "y": 350,
+      "width": 540,
+      "height": 80
+    },
+    {
+      "id": "bridge",
+      "type": "text",
+      "text": "## Core State Families\n\n`identity_presence`\n`pratibimba_presence`\n`agent_presence`\n`session_surface`\n`activity_event`\n`m0_surface` -> `m5_pedagogical_surface`\n`topology_surface`",
+      "x": 600,
+      "y": 0,
+      "width": 420,
+      "height": 220
+    },
+    {
+      "id": "actualisation",
+      "type": "text",
+      "text": "## Actualising Extensions\n\n[[Chronos]] temporal cadence\n[[Khora]] identity binding\n[[Nara]] M-surface contract\n[[Anima]] participatory agency\n[[Aletheia]] reflective overlays",
+      "x": 600,
+      "y": 260,
+      "width": 420,
+      "height": 200
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "fromNode": "title",
+      "toNode": "s3i-form",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "e2",
+      "fromNode": "s3i-form",
+      "toNode": "base",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "e3",
+      "fromNode": "title",
+      "toNode": "bridge",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "e4",
+      "fromNode": "bridge",
+      "toNode": "actualisation",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ]
+}

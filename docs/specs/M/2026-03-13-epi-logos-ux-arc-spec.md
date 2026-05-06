@@ -5,6 +5,13 @@
 **Scope:** Nara integration, TUI/CLI feature implications, SpacetimeDB collective layer, communications philosophy, `#` CLI portal
 **Dataset Source:** `docs/datasets/nara-deep/nodes-full-detail.json` (canonical)
 
+> **Harmonization note (2026-03-23):**
+> This UX arc remains useful for experience design and product framing, but canonical field shapes
+> and runtime contracts now follow `docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md`,
+> `docs/plans/CLOCK-AND-NARA-SPECS/00-spec-harmonization-plan.md`, and the current Nara / clock
+> implementation specs. Read any older `u64` hash, `torus_stage`, or 7-planet examples here as
+> legacy framing, not final implementation truth.
+
 ---
 
 ## I. The Core Insight
@@ -78,9 +85,12 @@ The user enters at `#4.0` — identity ground. The system gathers the constituti
 | #4.0-2 | Jungian | MBTI, functions, nucleotide balance | `M4_Jungian_Layer` (12 bytes) |
 | #4.0-3 | Gene Keys | 64-hexagram activation mask, shadow/gift/siddhi | `M4_GeneKeys_Layer` (40 bytes) |
 | #4.0-4 | Human Design | Type, authority, profile, defined channels | `M4_HumanDesign_Layer` (20 bytes) |
-| #4.0-5 | Quintessence Hash | BLAKE3(layer_presence \|\| present_layers) → 64-bit | `uint64_t quintessence_hash` |
+| #4.0-5 | Quintessence Hash | Canonical BLAKE3 archetypal address (32 bytes) | `uint8_t quintessence_hash[32]` |
 
-The hash is computed only from present layers — partial identity is valid. Each `m4_identity_augment()` call adds a layer and recomputes the hash. The hash is NOT static: `m4_mobius_return()` XORs `wisdom_delta` into it and resets `computed = false` — the quintessence **reseeds on each Möbius return**, meaning the identity evolves as the user deepens their engagement.
+The hash is computed from the canonical identity payload — partial identity is valid once the natal
+layer exists. Each `m4_identity_augment()` call adds a layer and recomputes the canonical address.
+Möbius return acts by integrating experience into the identity payload and then recomputing the
+hash; the raw hash bytes are not directly XOR-mutated.
 
 **PASU.md as the identity bootstrap file:** `Idea/Pratibimba/Self/PASU.md` holds the user-facing representation of these layers via frontmatter keys `c_0_birth_date`, `c_0_birth_location`, `c_0_natal_chart_path`. The `vault/kairos.rs` reads PASU.md to determine kerykeion state. This file is the bridge between the user's self-description and the C-layer computation.
 
@@ -167,7 +177,7 @@ At `#5`, the user sees:
 **Transition to multiplayer:**
 
 SpacetimeDB serves as the S3' (Gateway) presence layer for the collective M0'-M3' cosmic clock. The schema is already fully defined in `epi-spacetime-module/src/lib.rs`:
-- `UserPresence` — hash + torus_stage + last_seen
+- `UserPresence` — hash + tick12 + last_seen
 - `OracleDraw` — hash + hexagram_id + timestamp
 - `LogosPhase` — hash + stage + day_key
 - `TorusSync` — hash + position + spanda
@@ -324,7 +334,7 @@ epi nara identity show --hash   # display quintessence hash
 ### Priority 2: Kerykeion (Kairos) — MUST BE REAL, NOT STUB
 ```bash
 epi vault kairos fetch           # actually invoke kerykeion Python
-epi nara kairos sync             # populate M4_Temporal_Now.planet_degrees[7]
+epi nara kairos sync             # populate M4_Temporal_Now.planet_degrees[10]
 epi nara kairos show             # show live planetary state
 ```
 *Live planetary degrees are the temporal substrate of oracle, medicine, and transform. See Task K-1 through K-4 below.*
@@ -369,13 +379,13 @@ epi nara personal-graph atlas-query [coordinate]
 
 ```rust
 // Four tables — all keyed by BLAKE3 hash only. Zero PII.
-UserPresence  { hash: String, torus_stage: u8, last_seen: u64 }
+UserPresence  { hash: String, tick12: u8, last_seen: u64 }
 OracleDraw    { id: u64(auto), hash: String, hexagram_id: u8, timestamp: u64 }
 LogosPhase    { id: u64(auto), hash: String, stage: u8, day_key: String }
 TorusSync     { hash: String, position: u8, spanda: u8 }
 
 // Three reducers
-update_presence(hash, torus_stage)
+update_presence(hash, tick12)
 record_oracle_draw(hash, hexagram_id)
 record_logos_stage(hash, stage, day_key)
 ```
@@ -434,11 +444,11 @@ These are grounded implementation tasks arising from the architectural analysis.
 **K-1: Verify kerykeion Python installation and `epi vault kairos fetch`**
 - Check whether `epi-cli/src/vault/kairos.rs` `kairos_fetch()` actually invokes kerykeion or returns a stub
 - If stub: implement the actual Python subprocess call (`python3 -m kerykeion` or script)
-- Required output: `chart.json` with `planet_degrees[7]`, `planet_valid` bitmask, `sun_degree`, `moon_degree` in 0-719 SU(2) format
-- Acceptance: `epi vault kairos status` shows `mode: natal`, `planet_valid: 0x7F` (all 7 planets)
+- Required output: `chart.json` with `planet_degrees[10]`, `planet_valid` bitmask, `sun_degree`, `moon_degree` in 0-719 SU(2) format
+- Acceptance: `epi vault kairos status` shows `mode: natal`, `planet_valid: 0x03FF` (all 10 tracked planets)
 
 **K-2: Wire kerykeion output into M4_Temporal_Now**
-- `M4_Temporal_Now.planet_degrees[7]` should be populated from the chart.json output
+- `M4_Temporal_Now.planet_degrees[10]` should be populated from the chart.json output
 - `planet_valid` bitmask should reflect which planets were computed
 - `m4_snapshot_now()` currently zero-fills planet degrees — this must use the vault/kairos data when available
 - The kairos-python-adapter.ts in chronos delegates to `epi vault kairos fetch` — ensure this chain is end-to-end
@@ -494,7 +504,7 @@ These are grounded implementation tasks arising from the architectural analysis.
 
 **S-2: Wire `SpacetimePresence` client into oracle and logos**
 - After S-1, replace `eprintln!` stubs in `SpacetimePresence` methods with actual POST calls to SpacetimeDB REST API
-- `update_presence(hash, torus_stage)` — call on session start and at each torus stage transition
+- `update_presence(hash, tick12)` — call on session start and at each `tick12` transition
 - `record_oracle_draw(hash, hexagram_id)` — call after each oracle cast (when `planet_valid > 0`)
 - `record_logos_stage(hash, stage, day_key)` — call after each logos stage completion
 - Acceptance: running `epi gate spacetime start` followed by an oracle cast shows entry in `oracle_draw` table

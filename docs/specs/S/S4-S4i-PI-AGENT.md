@@ -1,6 +1,6 @@
 # S4/S4' — Pi Agent (Agent / Thought)
 
-**Status:** PLANNED — detailed implementation plan exists, not yet executed
+**Status:** FOUNDATIONAL CONTRACT IMPLEMENTED — native PI launch, repo-local managed runtime, and shared gateway preflight are live
 **Coordinate:** S4 (raw agent runtime), S4' (VAK system / ta-onta extensions)
 **Implementation:** `epi-cli/src/agent/` (Rust) + `.pi/` (TypeScript extensions)
 **CLI Namespace:** `epi agent`
@@ -20,8 +20,10 @@ The ta-onta plugin system from the Epi-Logos repo is not a separate system — i
 - Multi-agent directory management (isolated agent configs)
 - Provider/model registry (Kimi, MiniMax, GLM, Claude)
 - Auth profile management
-- Agent spawn with env propagation
+- Agent spawn with env propagation and shared gateway preflight
 - Extension sync from repo `.pi/` into agent dirs
+- Repo-local managed agent homes under `.epi/`
+- Repo-first skill/subagent projection into managed compatibility directories
 
 ### S4' (Implicate) — VAK System / Ta-Onta
 - **epi-citta extension**: the single bridge extension that exposes `epi` CLI as PI tools
@@ -42,23 +44,23 @@ The ta-onta plugin system from the Epi-Logos repo is not a separate system — i
 ## Current State in This Repo
 
 ### What Exists
-- `epi-cli/src/agent/mod.rs` — stub (`epi agent: not yet implemented`)
-- `docs/plans/2026-03-06-s4-pi-agent-foundation.md` — **12-task TDD implementation plan** (ready to execute)
-- Pi agent binary: **NOT INSTALLED** (`pi` not found in PATH)
+- `epi-cli/src/agent/mod.rs` — live command surface with `install`, `doctor`, `spawn`, `attach`, `run`, `verify-runtime`, `chat`, plugin/skill/subagent validation, and session/VAK helpers
+- `epi-cli/src/agent/runtime.rs` — native PI launch planning contract
+- `epi-cli/src/agent/launch.rs` — interactive PI launcher with inherited stdio
+- `epi-cli/src/gate/preflight.rs` — shared gateway readiness check used by both `epi agent` and `epi up`
+- `docs/plans/2026-03-06-s4-pi-agent-foundation.md` — implementation plan that seeded the runtime
+- `docs/plans/2026-04-02-native-pi-epi-agent-convergence.md` — convergence plan for native PI operator parity
 
-### What's Planned (from implementation plan)
-1. Repo-native `.pi/` filesystem scaffold
-2. Managed PI agent directory resolution (multi-agent)
+### What Is Live
+1. Repo-native `.pi/` filesystem scaffold and extension sync
+2. Repo-local managed PI agent directory resolution under `.epi/agents/<id>/agent`
 3. `epi agent install` / `epi agent doctor`
-4. Extension sync from repo `.pi/` into agent dirs
-5. Curated PI ecosystem extensions port
-6. `epi-citta` extension (the architectural nucleus)
-7. Multi-agent management commands
-8. Provider/model registry (Kimi, MiniMax, GLM)
-9. Auth profile management
-10. Managed spawn/run with agent-aware env
-11. Skills/commands/hooks scaffold
-12. Skills system design doc (`docs/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md`)
+4. Native PI interactive launch for `epi agent`, `epi agent spawn`, and `epi agent chat`
+5. Managed `attach`, `run`, and isolated `verify-runtime`
+6. Shared gateway readiness preflight before interactive operator launches
+7. Curated repo-local skill/subagent projection for ta-onta and future Pleroma content
+8. Provider/model registry and auth profile management
+9. Skills/commands/hooks scaffold and S4 skills-system design doc
 
 ---
 
@@ -126,10 +128,16 @@ epi-cli/src/agent/ (Rust)
     +-- install.rs       — PI binary installation
     +-- doctor.rs        — health diagnostics
     +-- extensions.rs    — extension sync
+    +-- runtime.rs       — native PI launch planning
+    +-- launch.rs        — interactive PI launcher
     +-- agents.rs        — multi-agent CRUD
     +-- models.rs        — provider/model registry
     +-- auth.rs          — auth profile management
     +-- spawn.rs         — managed PI launch
+
+epi-cli/src/gate/
+    |
+    +-- preflight.rs     — shared gateway readiness probe/spawn
 ```
 
 ### Dependencies
@@ -183,6 +191,7 @@ epi-cli/src/agent/ (Rust)
 ---
 
 ## Authority Documents
+- `docs/dev/pi-operator-protocol.md` (live operator contract for native PI, repo-local runtime, and gateway preflight)
 - `docs/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md` (Claude-compatible skills/plugin system plan)
 - `docs/plans/2026-03-06-s4-pi-agent-foundation.md` (12-task implementation plan)
 - `docs/resources/S/2026-02-25-ta-onta-full-architecture-conformance-remediation-plan.md` (Ta-onta conformance)

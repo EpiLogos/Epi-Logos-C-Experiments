@@ -1,0 +1,77 @@
+{
+  "agent_id": "epii",
+  "coordinate": "S5/S5'",
+  "agent_kind": "pi_agent",
+  "relation_to_anima": "peer_pi_agent",
+  "resource_package": "epi-logos",
+  "resource_package_target": "Body/S/S5/plugins/epi-logos",
+  "resource_package_status": "local_canonical_scaffold",
+  "agent_access_core": "Body/S/S5/epii-agent-core",
+  "gateway_methods": [
+    "s5'.epii.status",
+    "s5'.epii.deposit",
+    "s5'.review.submit",
+    "s5'.review.inbox",
+    "s5'.review.resolve",
+    "s5'.review.history",
+    "s5'.improve.status",
+    "s5'.improve.propose",
+    "s5'.improve.evaluate",
+    "s5'.improve.promote",
+    "s5'.improve.history"
+  ],
+  "spines": [
+    "autoresearch",
+    "review_inbox"
+  ],
+  "accepted_deposits_from_anima": [
+    "review_item",
+    "improvement_request",
+    "validation_gate",
+    "aletheia_crystallisation"
+  ],
+  "allowed_requests_to_anima": [
+    "dispatch_request",
+    "implementation_request",
+    "runtime_action_request",
+    "validation_support_request"
+  ],
+  "epii_authority": [
+    "resolve_review_gate",
+    "accept_or_reject_validation",
+    "observe_and_improve_system",
+    "steward_user_pratibimba_identity",
+    "request_anima_dispatch"
+  ],
+  "forbidden_authority": [
+    "bypass_anima_dispatch_boundaries",
+    "mutate_raw_runtime_state_without_review_record",
+    "treat_anima_constitutional_agents_as_epii_subagents"
+  ],
+  "inbox_contract": {
+    "purpose": "Make Anima and Aletheia work reviewable by the PI agent position to which their outputs make sense.",
+    "required_fields": [
+      "source_agent",
+      "source_coordinate",
+      "request_type",
+      "artifact_ref",
+      "validation_required",
+      "created_at"
+    ]
+  },
+  "autoresearch_contract": {
+    "purpose": "Turn the prior architecture back upon itself to observe, research, and improve the system from inside its own philosophy.",
+    "inputs": [
+      "inbox_item",
+      "system_observation",
+      "code_state",
+      "spec_trace"
+    ],
+    "outputs": [
+      "research_note",
+      "improvement_hypothesis",
+      "implementation_request",
+      "alignment_review"
+    ]
+  }
+}

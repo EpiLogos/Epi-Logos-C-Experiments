@@ -1,0 +1,757 @@
+/**
+ * Agent Team — Dispatcher-only orchestrator with grid dashboard
+ *
+ * The primary Pi agent has NO codebase tools. It can ONLY delegate work
+ * to specialist agents via the `dispatch_agent` tool. Each specialist
+ * maintains its own Pi session for cross-invocation memory.
+ *
+ * Loads agent definitions from agents/*.md, .claude/agents/*.md, .pi/agents/*.md.
+ * Teams are defined in .pi/agents/teams.yaml — on boot a select dialog lets
+ * you pick which team to work with. Only team members are available for dispatch.
+ *
+ * Commands:
+ *   /agents-team          — switch active team
+ *   /agents-list          — list loaded agents
+ *   /agents-grid N        — set column count (default 2)
+ *
+ * Usage: pi -e extensions/agent-team.ts
+ */
+
+import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import { Type } from "@sinclair/typebox";
+import { Text, type AutocompleteItem, truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
+import { spawn } from "child_process";
+import { readdirSync, readFileSync, existsSync, mkdirSync, unlinkSync } from "fs";
+import { join, resolve } from "path";
+import { fileURLToPath } from "node:url";
+import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
+import { childPiRuntimeArgs } from "../../khora/S0'/child-extension-propagation.ts";
+
+// ── Types ────────────────────────────────────────
+
+interface AgentDef {
+	name: string;
+	description: string;
+	tools: string;
+	model: string;        // e.g. "sonnet", "opus", or "anthropic/claude-sonnet-4-6"
+	skills: string;       // comma-separated skill names (informational; loaded via plugin dirs)
+	permissionMode: string;
+	systemPrompt: string;
+	file: string;
+}
+
+interface AgentState {
+	def: AgentDef;
+	status: "idle" | "running" | "done" | "error";
+	task: string;
+	toolCount: number;
+	elapsed: number;
+	lastWork: string;
+	contextPct: number;
+	sessionFile: string | null;
+	runCount: number;
+	timer?: ReturnType<typeof setInterval>;
+}
+
+// ── Display Name Helper ──────────────────────────
+
+function displayName(name: string): string {
+	return name.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+}
+
+// ── Teams YAML Parser ────────────────────────────
+
+function parseTeamsYaml(raw: string): Record<string, string[]> {
+	const teams: Record<string, string[]> = {};
+	let current: string | null = null;
+	for (const line of raw.split("\n")) {
+		const teamMatch = line.match(/^(\S[^:]*):$/);
+		if (teamMatch) {
+			current = teamMatch[1].trim();
+			teams[current] = [];
+			continue;
+		}
+		const itemMatch = line.match(/^\s+-\s+(.+)$/);
+		if (itemMatch && current) {
+			teams[current].push(itemMatch[1].trim());
+		}
+	}
+	return teams;
+}
+
+// ── Frontmatter Parser ───────────────────────────
+
+function parseAgentFile(filePath: string): AgentDef | null {
+	try {
+		const raw = readFileSync(filePath, "utf-8");
+		const match = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+		if (!match) return null;
+
+		const frontmatter: Record<string, string> = {};
+		for (const line of match[1].split("\n")) {
+			const idx = line.indexOf(":");
+			if (idx > 0) {
+				frontmatter[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
+			}
+		}
+
+		if (!frontmatter.name) return null;
+
+		return {
+			name: frontmatter.name,
+			description: frontmatter.description || "",
+			tools: frontmatter.tools || "",
+			model: frontmatter.model || "",
+			skills: frontmatter.skills || "",
+			permissionMode: frontmatter.permissionMode || "",
+			systemPrompt: match[2].trim(),
+			file: filePath,
+		};
+	} catch {
+		return null;
+	}
+}
+
+function scanAgentDirs(cwd: string): AgentDef[] {
+	const dirs = [
+		// Pi-native: top-level agent .md files
+		join(cwd, ".pi", "agents"),
+		// Ta-Onta constitutional agents (S4' extension-resident)
+		join(cwd, ".pi", "extensions", "ta-onta", "anima", "S4'", "agents"),
+	];
+
+	const agents: AgentDef[] = [];
+	const seen = new Set<string>();
+
+	for (const dir of dirs) {
+		if (!existsSync(dir)) continue;
+		try {
+			for (const file of readdirSync(dir)) {
+				if (!file.endsWith(".md")) continue;
+				const fullPath = resolve(dir, file);
+				const def = parseAgentFile(fullPath);
+				if (def && !seen.has(def.name.toLowerCase())) {
+					seen.add(def.name.toLowerCase());
+					agents.push(def);
+				}
+			}
+		} catch {}
+	}
+
+	return agents;
+}
+
+// ── Extension ────────────────────────────────────
+
+export default function (pi: ExtensionAPI) {
+	const agentStates: Map<string, AgentState> = new Map();
+	let allAgentDefs: AgentDef[] = [];
+	let teams: Record<string, string[]> = {};
+	let activeTeamName = "";
+	let gridCols = 2;
+	let widgetCtx: any;
+	let sessionDir = "";
+	let contextWindow = 0;
+
+	function loadAgents(cwd: string) {
+		// Create session storage dir
+		sessionDir = join(cwd, ".pi", "agent-sessions");
+		if (!existsSync(sessionDir)) {
+			mkdirSync(sessionDir, { recursive: true });
+		}
+
+		// Load all agent definitions
+		allAgentDefs = scanAgentDirs(cwd);
+
+		// Load teams from .pi/agents/teams.yaml
+		const teamsPath = join(cwd, ".pi", "agents", "teams.yaml");
+		if (existsSync(teamsPath)) {
+			try {
+				teams = parseTeamsYaml(readFileSync(teamsPath, "utf-8"));
+			} catch {
+				teams = {};
+			}
+		} else {
+			teams = {};
+		}
+
+		// If no teams defined, create a default "all" team
+		if (Object.keys(teams).length === 0) {
+			teams = { all: allAgentDefs.map(d => d.name) };
+		}
+	}
+
+	function activateTeam(teamName: string) {
+		activeTeamName = teamName;
+		const members = teams[teamName] || [];
+		const defsByName = new Map(allAgentDefs.map(d => [d.name.toLowerCase(), d]));
+
+		agentStates.clear();
+		for (const member of members) {
+			const def = defsByName.get(member.toLowerCase());
+			if (!def) continue;
+			const key = def.name.toLowerCase().replace(/\s+/g, "-");
+			const sessionFile = join(sessionDir, `${key}.json`);
+			agentStates.set(def.name.toLowerCase(), {
+				def,
+				status: "idle",
+				task: "",
+				toolCount: 0,
+				elapsed: 0,
+				lastWork: "",
+				contextPct: 0,
+				sessionFile: existsSync(sessionFile) ? sessionFile : null,
+				runCount: 0,
+			});
+		}
+
+		// Auto-size grid columns based on team size
+		const size = agentStates.size;
+		gridCols = size <= 3 ? size : size === 4 ? 2 : 3;
+	}
+
+	// ── Grid Rendering ───────────────────────────
+
+	function renderCard(state: AgentState, colWidth: number, theme: any): string[] {
+		const w = colWidth - 2;
+		const truncate = (s: string, max: number) => s.length > max ? s.slice(0, max - 3) + "..." : s;
+
+		const statusColor = state.status === "idle" ? "dim"
+			: state.status === "running" ? "accent"
+			: state.status === "done" ? "success" : "error";
+		const statusIcon = state.status === "idle" ? "○"
+			: state.status === "running" ? "●"
+			: state.status === "done" ? "✓" : "✗";
+
+		const name = displayName(state.def.name);
+		const nameStr = theme.fg("accent", theme.bold(truncate(name, w)));
+		const nameVisible = Math.min(name.length, w);
+
+		const statusStr = `${statusIcon} ${state.status}`;
+		const timeStr = state.status !== "idle" ? ` ${Math.round(state.elapsed / 1000)}s` : "";
+		const statusLine = theme.fg(statusColor, statusStr + timeStr);
+		const statusVisible = statusStr.length + timeStr.length;
+
+		// Context bar: 5 blocks + percent
+		const filled = Math.ceil(state.contextPct / 20);
+		const bar = "#".repeat(filled) + "-".repeat(5 - filled);
+		const ctxStr = `[${bar}] ${Math.ceil(state.contextPct)}%`;
+		const ctxLine = theme.fg("dim", ctxStr);
+		const ctxVisible = ctxStr.length;
+
+		const workRaw = state.task
+			? (state.lastWork || state.task)
+			: state.def.description;
+		const workText = truncate(workRaw, Math.min(50, w - 1));
+		const workLine = theme.fg("muted", workText);
+		const workVisible = workText.length;
+
+		const top = "┌" + "─".repeat(w) + "┐";
+		const bot = "└" + "─".repeat(w) + "┘";
+		const border = (content: string, visLen: number) =>
+			theme.fg("dim", "│") + content + " ".repeat(Math.max(0, w - visLen)) + theme.fg("dim", "│");
+
+		return [
+			theme.fg("dim", top),
+			border(" " + nameStr, 1 + nameVisible),
+			border(" " + statusLine, 1 + statusVisible),
+			border(" " + ctxLine, 1 + ctxVisible),
+			border(" " + workLine, 1 + workVisible),
+			theme.fg("dim", bot),
+		];
+	}
+
+	function updateWidget() {
+		if (!widgetCtx) return;
+
+		widgetCtx.ui.setWidget("agent-team", (_tui: any, theme: any) => {
+			const text = new Text("", 0, 1);
+
+			return {
+				render(width: number): string[] {
+					if (agentStates.size === 0) {
+						text.setText(theme.fg("dim", "No agents found. Add .md files to agents/"));
+						return text.render(width);
+					}
+
+					const cols = Math.min(gridCols, agentStates.size);
+					const gap = 1;
+					const colWidth = Math.floor((width - gap * (cols - 1)) / cols);
+					const agents = Array.from(agentStates.values());
+					const rows: string[][] = [];
+
+					for (let i = 0; i < agents.length; i += cols) {
+						const rowAgents = agents.slice(i, i + cols);
+						const cards = rowAgents.map(a => renderCard(a, colWidth, theme));
+
+						while (cards.length < cols) {
+							cards.push(Array(6).fill(" ".repeat(colWidth)));
+						}
+
+						const cardHeight = cards[0].length;
+						for (let line = 0; line < cardHeight; line++) {
+							rows.push(cards.map(card => card[line] || ""));
+						}
+					}
+
+					const output = rows.map(cols => cols.join(" ".repeat(gap)));
+					text.setText(output.join("\n"));
+					return text.render(width);
+				},
+				invalidate() {
+					text.invalidate();
+				},
+			};
+		});
+	}
+
+	// ── Dispatch Agent (returns Promise) ─────────
+
+	function dispatchAgent(
+		agentName: string,
+		task: string,
+		ctx: any,
+	): Promise<{ output: string; exitCode: number; elapsed: number }> {
+		const key = agentName.toLowerCase();
+		const state = agentStates.get(key);
+		if (!state) {
+			return Promise.resolve({
+				output: `Agent "${agentName}" not found. Available: ${Array.from(agentStates.values()).map(s => displayName(s.def.name)).join(", ")}`,
+				exitCode: 1,
+				elapsed: 0,
+			});
+		}
+
+		if (state.status === "running") {
+			return Promise.resolve({
+				output: `Agent "${displayName(state.def.name)}" is already running. Wait for it to finish.`,
+				exitCode: 1,
+				elapsed: 0,
+			});
+		}
+
+		state.status = "running";
+		state.task = task;
+		state.toolCount = 0;
+		state.elapsed = 0;
+		state.lastWork = "";
+		state.runCount++;
+		updateWidget();
+
+		const startTime = Date.now();
+		state.timer = setInterval(() => {
+			state.elapsed = Date.now() - startTime;
+			updateWidget();
+		}, 1000);
+
+		// Spawn pi directly with the agent's system prompt — same pattern as pi-pi.ts.
+		// Do NOT use `epi agent team dispatch` which requires a managed agent layout
+		// at .epi/agents/{name}/ that doesn't exist for .md-file-based agents.
+
+		// Resolve model: prefer the agent's own model field, fall back to parent ctx model.
+		// Agent frontmatter uses shorthands like "sonnet"/"opus" — if no slash,
+		// prefix with the parent's provider so pi gets a full provider/model string.
+		let model: string | undefined;
+		if (state.def.model) {
+			if (state.def.model.includes("/")) {
+				model = state.def.model;
+			} else {
+				const parentProvider = (ctx as any).model?.provider || "anthropic";
+				model = `${parentProvider}/${state.def.model}`;
+			}
+		} else if ((ctx as any).model) {
+			model = `${(ctx as any).model.provider}/${(ctx as any).model.id}`;
+		}
+
+		// Inject session context so subagent knows which vault session it belongs to
+		const sessionCtxLines = [
+			process.env.EPI_SESSION_ID && `session_id: ${process.env.EPI_SESSION_ID}`,
+			process.env.EPI_DAY_ID     && `day_id: ${process.env.EPI_DAY_ID}`,
+			process.env.EPI_NOW_PATH   && `now_path: ${process.env.EPI_NOW_PATH}`,
+		].filter(Boolean) as string[];
+
+		let fullSystemPrompt = sessionCtxLines.length > 0
+			? `${state.def.systemPrompt}\n\n---\n\n## Current Session\n${sessionCtxLines.join("\n")}\n\nAll vault writes must use the now_path above as the session anchor. Reference [[NOW-${process.env.EPI_SESSION_ID}]] in any artifact you create.`
+			: state.def.systemPrompt;
+
+		// ── Skill injection ──────────────────────────────────────────────────────
+		// Load the content of each skill listed in the agent's `skills:` frontmatter
+		// and append it to the system prompt. Searched in two dirs in order:
+		//   1. S4'/skills/  — VAK skills (vak-evaluate, anima-orchestration, …)
+		//   2. plugins/pleroma/skills/  — shared pleroma skills (web-research, tdd, …)
+		const skillNames = state.def.skills.split(",").map((s: string) => s.trim()).filter(Boolean);
+		if (skillNames.length > 0) {
+			const animaSkillsDir = fileURLToPath(new URL("../S4'/skills", import.meta.url));
+			const pleromaSkillsDir = join((ctx as any).cwd || process.cwd(), "plugins", "pleroma", "skills");
+			const skillBlocks: string[] = [];
+			for (const skillName of skillNames) {
+				for (const base of [animaSkillsDir, pleromaSkillsDir]) {
+					const skillPath = join(base, skillName, "SKILL.md");
+					if (existsSync(skillPath)) {
+						const raw = readFileSync(skillPath, "utf-8");
+						const body = raw.replace(/^---[\s\S]*?---\n/, "").trim();
+						skillBlocks.push(`## Skill: ${skillName}\n\n${body}`);
+						break;
+					}
+				}
+			}
+			if (skillBlocks.length > 0) {
+				fullSystemPrompt += `\n\n---\n\n## Your Entitled Skills\n\nThese skills define your operational methodology. Follow them exactly.\n\n${skillBlocks.join("\n\n---\n\n")}`;
+			}
+		}
+
+		const args = [
+			"--mode", "json",
+			"-p",
+			"--no-session",
+			...childPiRuntimeArgs(),
+			...(state.def.tools ? ["--tools", state.def.tools] : []),
+			...(model ? ["--model", model] : []),
+			"--thinking", "off",
+			"--append-system-prompt", fullSystemPrompt,
+			task,
+		];
+
+		return new Promise((resolve) => {
+			const proc = spawn("pi", args, {
+				stdio: ["ignore", "pipe", "pipe"],
+				env: { ...process.env },
+				cwd: process.env.EPI_REPO_ROOT || (ctx as any).cwd || process.cwd(),
+			});
+
+			let stdout = "";
+			let stderr = "";
+
+			proc.stdout!.setEncoding("utf-8");
+			proc.stdout!.on("data", (chunk: string) => {
+				stdout += chunk;
+				const lines = chunk.split("\n").filter((l: string) => l.trim());
+				if (lines.length) {
+					state.lastWork = lines[lines.length - 1];
+					updateWidget();
+				}
+			});
+
+			proc.stderr!.setEncoding("utf-8");
+			proc.stderr!.on("data", (chunk: string) => {
+				stderr += chunk;
+			});
+
+			proc.on("close", (code) => {
+				clearInterval(state.timer);
+				const elapsed = Date.now() - startTime;
+				state.elapsed = elapsed;
+				state.status = code === 0 ? "done" : "error";
+				state.contextPct = 0;
+				const full = stdout || stderr;
+				updateWidget();
+
+				ctx.ui.notify(
+					`${displayName(state.def.name)} ${state.status} in ${Math.round(elapsed / 1000)}s`,
+					state.status === "done" ? "success" : "error"
+				);
+
+				resolve({
+					output: full,
+					exitCode: code ?? 1,
+					elapsed,
+				});
+			});
+
+			proc.on("error", (err) => {
+				clearInterval(state.timer);
+				state.status = "error";
+				state.lastWork = `Error: ${err.message}`;
+				updateWidget();
+				resolve({
+					output: `Error spawning agent: ${err.message}`,
+					exitCode: 1,
+					elapsed: Date.now() - startTime,
+				});
+			});
+		});
+	}
+
+	// ── dispatch_agent Tool (registered at top level) ──
+
+	pi.registerTool({
+		name: "dispatch_agent",
+		label: "Dispatch Agent",
+		description: "Dispatch a task to a specialist agent. The agent will execute the task and return the result. Use the system prompt to see available agent names.",
+		parameters: Type.Object({
+			agent: Type.String({ description: "Agent name (case-insensitive)" }),
+			task: Type.String({ description: "Task description for the agent to execute" }),
+		}),
+
+		async execute(_toolCallId, params, _signal, onUpdate, ctx) {
+			const { agent, task } = params as { agent: string; task: string };
+
+			try {
+				if (onUpdate) {
+					onUpdate({
+						content: [{ type: "text", text: `Dispatching to ${agent}...` }],
+						details: { agent, task, status: "dispatching" },
+					});
+				}
+
+				const result = await dispatchAgent(agent, task, ctx);
+
+				const truncated = result.output.length > 8000
+					? result.output.slice(0, 8000) + "\n\n... [truncated]"
+					: result.output;
+
+				const status = result.exitCode === 0 ? "done" : "error";
+				const summary = `[${agent}] ${status} in ${Math.round(result.elapsed / 1000)}s`;
+
+				return {
+					content: [{ type: "text", text: `${summary}\n\n${truncated}` }],
+					details: {
+						agent,
+						task,
+						status,
+						elapsed: result.elapsed,
+						exitCode: result.exitCode,
+						fullOutput: result.output,
+					},
+				};
+			} catch (err: any) {
+				return {
+					content: [{ type: "text", text: `Error dispatching to ${agent}: ${err?.message || err}` }],
+					details: { agent, task, status: "error", elapsed: 0, exitCode: 1, fullOutput: "" },
+				};
+			}
+		},
+
+		renderCall(args, theme) {
+			const agentName = (args as any).agent || "?";
+			const task = (args as any).task || "";
+			const preview = task.length > 60 ? task.slice(0, 57) + "..." : task;
+			return new Text(
+				theme.fg("toolTitle", theme.bold("dispatch_agent ")) +
+				theme.fg("accent", agentName) +
+				theme.fg("dim", " — ") +
+				theme.fg("muted", preview),
+				0, 0,
+			);
+		},
+
+		renderResult(result, options, theme) {
+			const details = result.details as any;
+			if (!details) {
+				const text = result.content[0];
+				return new Text(text?.type === "text" ? text.text : "", 0, 0);
+			}
+
+			// Streaming/partial result while agent is still running
+			if (options.isPartial || details.status === "dispatching") {
+				return new Text(
+					theme.fg("accent", `● ${details.agent || "?"}`) +
+					theme.fg("dim", " working..."),
+					0, 0,
+				);
+			}
+
+			const icon = details.status === "done" ? "✓" : "✗";
+			const color = details.status === "done" ? "success" : "error";
+			const elapsed = typeof details.elapsed === "number" ? Math.round(details.elapsed / 1000) : 0;
+			const header = theme.fg(color, `${icon} ${details.agent}`) +
+				theme.fg("dim", ` ${elapsed}s`);
+
+			if (options.expanded && details.fullOutput) {
+				const output = details.fullOutput.length > 4000
+					? details.fullOutput.slice(0, 4000) + "\n... [truncated]"
+					: details.fullOutput;
+				return new Text(header + "\n" + theme.fg("muted", output), 0, 0);
+			}
+
+			return new Text(header, 0, 0);
+		},
+	});
+
+	// ── Commands ─────────────────────────────────
+
+	pi.registerCommand("agents-team", {
+		description: "Select a team to work with",
+		handler: async (_args, ctx) => {
+			widgetCtx = ctx;
+			const teamNames = Object.keys(teams);
+			if (teamNames.length === 0) {
+				ctx.ui.notify("No teams defined in .pi/agents/teams.yaml", "warning");
+				return;
+			}
+
+			const options = teamNames.map(name => {
+				const members = teams[name].map(m => displayName(m));
+				return `${name} — ${members.join(", ")}`;
+			});
+
+			const choice = await ctx.ui.select("Select Team", options);
+			if (choice === undefined) return;
+
+			const idx = options.indexOf(choice);
+			const name = teamNames[idx];
+			activateTeam(name);
+			updateWidget();
+			ctx.ui.setStatus("agent-team", `Team: ${name} (${agentStates.size})`);
+			ctx.ui.notify(`Team: ${name} — ${Array.from(agentStates.values()).map(s => displayName(s.def.name)).join(", ")}`, "info");
+		},
+	});
+
+	pi.registerCommand("agents-list", {
+		description: "List all loaded agents",
+		handler: async (_args, _ctx) => {
+			widgetCtx = _ctx;
+			const names = Array.from(agentStates.values())
+				.map(s => {
+					const session = s.sessionFile ? "resumed" : "new";
+					return `${displayName(s.def.name)} (${s.status}, ${session}, runs: ${s.runCount}): ${s.def.description}`;
+				})
+				.join("\n");
+			_ctx.ui.notify(names || "No agents loaded", "info");
+		},
+	});
+
+	pi.registerCommand("agents-grid", {
+		description: "Set grid columns: /agents-grid <1-6>",
+		getArgumentCompletions: (prefix: string): AutocompleteItem[] | null => {
+			const items = ["1", "2", "3", "4", "5", "6"].map(n => ({
+				value: n,
+				label: `${n} columns`,
+			}));
+			const filtered = items.filter(i => i.value.startsWith(prefix));
+			return filtered.length > 0 ? filtered : items;
+		},
+		handler: async (args, _ctx) => {
+			widgetCtx = _ctx;
+			const n = parseInt(args?.trim() || "", 10);
+			if (n >= 1 && n <= 6) {
+				gridCols = n;
+				_ctx.ui.notify(`Grid set to ${gridCols} columns`, "info");
+				updateWidget();
+			} else {
+				_ctx.ui.notify("Usage: /agents-grid <1-6>", "error");
+			}
+		},
+	});
+
+	// ── System Prompt Override ───────────────────
+
+	pi.on("before_agent_start", async (_event, _ctx) => {
+		// Session context — set by Khora auto-init at session_start
+		const sessionId = process.env.EPI_SESSION_ID;
+		const dayId    = process.env.EPI_DAY_ID;
+		const nowPath  = process.env.EPI_NOW_PATH;
+
+		const sessionBlock = sessionId
+			? `## Active Session\nsession_id: ${sessionId}\nday_id: ${dayId || "-"}\nnow_path: ${nowPath || "-"}\n\n`
+			: "";
+
+		// Build dynamic agent catalog from active team only
+		const agentCatalog = Array.from(agentStates.values())
+			.map(s => {
+				const modelNote = s.def.model ? ` · model: ${s.def.model}` : "";
+				return `### ${displayName(s.def.name)}\n**Dispatch as:** \`${s.def.name}\`${modelNote}\n${s.def.description}\n**Tools:** ${s.def.tools}`;
+			})
+			.join("\n\n");
+
+		const teamMembers = Array.from(agentStates.values()).map(s => displayName(s.def.name)).join(", ");
+
+		return {
+			systemPrompt: `You are Anima — the orchestrating intelligence of the epi-logos system.
+You hold the full fractal doubling CF lattice (4.0/1–4.4/5). You are not one of the constitutional agents — you ARE the dispatch function itself.
+
+${sessionBlock}## Active Team: ${activeTeamName}
+Members: ${teamMembers}
+
+## Mandatory VAK Workflow
+For EVERY substantial task, follow these steps in strict order:
+
+1. **\`vak_evaluate\`** — pass the task; receive CPF / CT / CP / CF / CFP / CS coordinates
+2. **\`anima_orchestrate\`** — pass \`cf_code\` (from step 1) and \`task\`; receive the correct agent name
+3. **\`dispatch_agent\`** — pass the agent name from step 2 and the full task
+
+Repeat from step 1 for each distinct sub-task. Review each result before proceeding.
+
+**CPF = \`(00/00)\`**: Stop and brainstorm with the user first. Do NOT proceed autonomously.
+**CF resolves to \`anima\`**: You are orchestrating a sequence — plan the full dispatch pipeline before executing.
+
+## When to Respond Directly (skip VAK)
+- Trivial one-liners, quick lookups, reading a single file
+- Answering a factual question that requires no agent work
+
+## dispatch_agent Strict Rules
+- \`agent\` MUST be an exact agent name from the catalog below — NEVER a tool name
+- Pass a complete, self-contained task — the subagent has no memory of this conversation
+- Include the now_path and session_id in the task if vault writes are expected
+
+## Agents
+
+${agentCatalog}`,
+		};
+	});
+
+	// ── Session Start ────────────────────────────
+
+	pi.on("session_start", async (_event, _ctx) => {
+		applyExtensionDefaults(import.meta.url, _ctx);
+		// Clear widgets from previous session
+		if (widgetCtx) {
+			widgetCtx.ui.setWidget("agent-team", undefined);
+		}
+		widgetCtx = _ctx;
+		contextWindow = _ctx.model?.contextWindow || 0;
+
+		// Wipe old agent session files so subagents start fresh
+		const sessDir = join(_ctx.cwd, ".pi", "agent-sessions");
+		if (existsSync(sessDir)) {
+			for (const f of readdirSync(sessDir)) {
+				if (f.endsWith(".json")) {
+					try { unlinkSync(join(sessDir, f)); } catch {}
+				}
+			}
+		}
+
+		loadAgents(_ctx.cwd);
+
+		// Default to first team — use /agents-team to switch
+		const teamNames = Object.keys(teams);
+		if (teamNames.length > 0) {
+			activateTeam(teamNames[0]);
+		}
+
+		// Do not restrict tools — all registered tools (khora_write, web_search, etc.) must remain available
+
+		_ctx.ui.setStatus("agent-team", `Team: ${activeTeamName} (${agentStates.size})`);
+		const members = Array.from(agentStates.values()).map(s => displayName(s.def.name)).join(", ");
+		_ctx.ui.notify(
+			`Team: ${activeTeamName} (${members})\n` +
+			`Team sets loaded from: .pi/agents/teams.yaml\n\n` +
+			`/agents-team          Select a team\n` +
+			`/agents-list          List active agents and status\n` +
+			`/agents-grid <1-6>    Set grid column count`,
+			"info",
+		);
+		updateWidget();
+
+		// Footer: model | team | context bar
+		_ctx.ui.setFooter((_tui, theme, _footerData) => ({
+			dispose: () => {},
+			invalidate() {},
+			render(width: number): string[] {
+				const model = _ctx.model?.id || "no-model";
+				const usage = _ctx.getContextUsage();
+				const pct = usage ? usage.percent : 0;
+				const filled = Math.round(pct / 10);
+				const bar = "#".repeat(filled) + "-".repeat(10 - filled);
+
+				const left = theme.fg("dim", ` ${model}`) +
+					theme.fg("muted", " · ") +
+					theme.fg("accent", activeTeamName);
+				const right = theme.fg("dim", `[${bar}] ${Math.round(pct)}% `);
+				const pad = " ".repeat(Math.max(1, width - visibleWidth(left) - visibleWidth(right)));
+
+				return [truncateToWidth(left + pad + right, width)];
+			},
+		}));
+	});
+}

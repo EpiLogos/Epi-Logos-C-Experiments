@@ -1,5 +1,13 @@
 # FR 2.4: M4 (Nara) — The Personal Dialogical Interface
 
+> **Harmonization note (2026-03-23):**
+> This document contains historically important architecture, but canonical field shapes and
+> precedence now live in `docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md`,
+> `docs/plans/CLOCK-AND-NARA-SPECS/00-spec-harmonization-plan.md`, and
+> `docs/plans/CLOCK-AND-NARA-SPECS/09-cosmic-clock-plugin-tui-spec.md`. Where this file still
+> shows older forms like `uint64_t quintessence_hash`, `m1_torus_stage`, or 7-planet temporal
+> arrays, read them as superseded unless restated here in harmonized form.
+
 **Status:** Canonical Specification — Revision 2 (Gemini Refinements Incorporated)
 **Date:** 2026-03-04
 **Parent:** Pillar II, FR 2.4 (Epi-Logos C Spec)
@@ -136,7 +144,7 @@ typedef struct {
 | #4.0-2 | Jungian Assessment | MBTI × 4 elements | Psychological type translated to nucleotide weights | `nucleotide_balance` in Symbol DNA Profile |
 | #4.0-3 | Gene Keys Profile | I-Ching activation patterns | Evolutionary potential map | `gene_keys_activation` in Symbol DNA Profile — direct M3_Matrix_Word bitboard |
 | #4.0-4 | Human Design Profile | Multi-system synthesis | Energetic blueprint + authority | Composite struct referencing all above |
-| #4.0-5 | Archetypal Quintessence | Synthesis of layers 0-4 | Unified identity hash | `uint64_t quintessence_hash` — computed once, immutable |
+| #4.0-5 | Archetypal Quintessence | Synthesis of layers 0-4 | Canonical archetypal address + derived quaternion | `uint8_t quintessence_hash[32]` — canonical identity; shorter previews are derived only |
 
 ### Outbound Flow Relations (10 cross-sub edges — Identity radiates everywhere)
 
@@ -174,7 +182,7 @@ typedef struct {
 
     // Legacy compatibility fields (derived from dna_profile)
     uint32_t numerological_key;         // #4.0-0: birthdate encoding
-    uint64_t quintessence_hash;         // #4.0-5: privacy-safe hash of all layers
+    uint8_t  quintessence_hash[32];     // #4.0-5: canonical BLAKE3 archetypal address
     uint8_t  jung_type;                 // #4.0-2: 4-bit MBTI composite (legacy)
 
     // Status
@@ -187,19 +195,16 @@ typedef struct {
 // NO other function in M4 has access to raw personal data.
 // All downstream systems consume only quintessence_hash or dna_profile fields.
 //
-// HASH ALGORITHM: BLAKE3 truncated to 64 bits.
-//   Rationale: BLAKE3 is the strongest available option for this use case —
-//   modern (2020), cryptographically secure, faster than SHA-256, constant-time,
-//   and resistant to length-extension attacks. The 64-bit truncation fits uint64_t
-//   exactly, requires no padding, and has 2^64 collision resistance — adequate
-//   for a personal identity hash with no adversarial guessing surface (compute-once,
-//   never transmitted, never compared against external values).
-//   Implementation: call blake3_hasher_finalize() into an 8-byte output buffer.
+// HASH ALGORITHM: canonical BLAKE3 256-bit output.
+//   The full 32-byte output is the archetypal address. Any 64-bit or short-hex form is
+//   preview / transport compression only and must never outrank the canonical address.
+//   Implementation: call blake3_hasher_finalize() into a 32-byte output buffer.
 //   See: https://github.com/BLAKE3-team/BLAKE3
 //
 // IDENTITY SYSTEMS INTEGRATED:
-//   Minimum: ≥1 system required before quintessence_hash is considered valid.
-//   Base case: birthdate encoding (#4.0-0) + natal chart (#4.0-1) via Kerykeion.
+//   Minimum: natal/astrological layer (#4.0-1) required for a valid portal identity.
+//   Birthdate/QL encoding may enrich identity, but does not replace the natal requirement.
+//   Base case: natal chart (#4.0-1) via Kerykeion.
 //   Kerykeion Python library (https://kerykeion.net) is the dependency for
 //   astrological computation — natal chart positions, birthdate encoding from
 //   celestial offset. Must be invoked prior to m4_identity_compute() to populate
@@ -215,10 +220,10 @@ void m4_identity_compute(M4_Identity_Matrix* id, M4_Input_Data* mutable_input) {
     id->dna_profile.sun_degree_anchor     = derive_sun_degree(mutable_input);
     id->dna_profile.moon_degree_anchor    = derive_moon_degree(mutable_input);
 
-    // Step 2: Compute the quintessence hash — BLAKE3 truncated to 64 bits
+    // Step 2: Compute the quintessence hash — canonical 32-byte BLAKE3 address
     // Hashes the full M4_Input_Data buffer (includes all identity layers).
     // After this step, raw data is immediately destroyed.
-    id->quintessence_hash = blake3_hash_64(mutable_input, sizeof(M4_Input_Data));
+    blake3_hash_256(id->quintessence_hash, mutable_input, sizeof(M4_Input_Data));
 
     // Step 3: ARCHITECTURAL PRIVACY — destroy raw input immediately
     memset(mutable_input, 0, sizeof(M4_Input_Data));
@@ -1048,8 +1053,8 @@ typedef struct {
 } M4_Epii_Integration;
 
 void m4_mobius_return(M4_Epii_Integration* epii, M4_Identity_Matrix* identity) {
-    identity->quintessence_hash ^= epii->wisdom_delta;
-    identity->computed = false;         // RESEEDS_IDENTITY: mark for recomputation
+    integrate_wisdom_delta_into_identity(epii, identity);
+    identity->computed = false;         // RESEEDS_IDENTITY: mark for canonical recomputation
     epii->return_ready = false;
     epii->logos.position = 0;
     epii->logos.cycle_count++;
@@ -1084,7 +1089,7 @@ The CF(0/1/2/3) Context Frame is a **multi-layered astrolabe** with three concen
 // ==============================================================================
 
 typedef struct {
-    uint8_t  m1_torus_stage;     // 0-11  (M1 Inner Gear: 30° sectors)
+    uint8_t  tick12;             // 0-11  (canonical M1 discrete state)
     uint8_t  m2_decan_phase;     // 0-71  (M2 Energetic Dial: 10° sectors + Phase)
     uint8_t  m3_hexagram_id;     // 0-63  (M3 Outer Face: 5.625° sectors)
     bool     is_implicate_phase; // true if degree >= 360 (Night/Unconscious phase)
@@ -1102,8 +1107,8 @@ static inline Unified_Clock_State read_cosmic_clock(uint16_t current_degree_0_to
     Unified_Clock_State state;
     state.is_implicate_phase = is_implicate;
 
-    // M1 Torus stage: 30 degrees per stage (0-11)
-    state.m1_torus_stage = (uint8_t)(base_degree / 30);
+    // Canonical M1 tick12: 30 degrees per stage (0-11)
+    state.tick12 = (uint8_t)(base_degree / 30);
 
     // M2 Parashakti decan: 10 degrees per decan (0-35 Explicate, 36-71 Implicate)
     uint8_t base_decan = (uint8_t)(base_degree / 10);
@@ -1121,7 +1126,7 @@ static inline Unified_Clock_State read_cosmic_clock(uint16_t current_degree_0_to
 
 ```
 read_cosmic_clock(155) returns:
-  m1_torus_stage  = 5   → Torus Stage 5 (Analogical Recognition)
+  tick12          = 5   → Spanda / tick12 state 5 (Analogical Recognition)
   m2_decan_phase  = 15  → Decan 15, Mars-ruled, Manipura (Solar Plexus) Chakra
   m3_hexagram_id  = 27  → Hexagram 27 (Nourishment / Corners of the Mouth)
   is_implicate    = false → Explicate/Day phase (active transformation)
@@ -1300,7 +1305,7 @@ User provides M4_Input_Data (raw: birthdate, natal chart, MBTI, etc.)
             ↓
             MÖBIUS RETURN
             ├→ RETURNS_TO → #4.0
-            ├→ UPDATES_WISDOM_IN → #4.0 (quintessence_hash ^= wisdom_delta)
+            ├→ UPDATES_WISDOM_IN → #4.0 (identity state updated, then quintessence hash recomputed)
             └→ RESEEDS_IDENTITY → #4.0 (computed = false → triggers recomputation)
             ↓
 SESSION END (or next cycle begins from enriched #4.0 with updated Symbol DNA)
@@ -1639,11 +1644,11 @@ typedef struct {
     // Planetary operator slots — preempting Kerykeion at S4'
     // When S4' agent fills these, planets become live operators
     // acting on the M3 wheel as the clock's "bodies" (solar system clock)
-    uint16_t planet_degrees[7];         // Sun/Moon/Merc/Venus/Mars/Jup/Sat
+    uint16_t planet_degrees[10];        // Sun/Moon/Mercury/Venus/Mars/Jupiter/Saturn/Uranus/Neptune/Pluto
                                         // Each 0-719 (SU(2) double cover)
-    uint8_t  planet_valid;              // Bitmask: bit N = planet N has real data
+    uint16_t planet_valid;              // Bitmask: bit N = planet N has real data
                                         // 0x00 = stub mode (degree-only clock)
-                                        // 0x7F = all 7 populated by Kerykeion
+                                        // 0x03FF = all 10 populated by Kerykeion
 } M4_Temporal_Now;
 
 // Three temporal modes (same struct, different degree source):
@@ -1666,7 +1671,7 @@ static inline M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
 
 ### FR 2.4.12: BLAKE3 Quintessence as Archetypal Synthesis
 
-**Requirement:** The BLAKE3 hash in `m4_identity_compute()` MUST be understood and implemented as the **archetypal coordinate address** — the #4.0-5 (Integration/Quintessence) position that synthesizes the 5 prior identity layers into a single operable position in universal space. It is not merely a privacy mechanism. The hash participates in the Mobius return (`quintessence_hash ^= wisdom_delta`) and feeds into `M4_Personal_Pratibimba.synthesizedSignature`. BLAKE3 MUST be vendored as a single-file C dependency.
+**Requirement:** The BLAKE3 hash in `m4_identity_compute()` MUST be understood and implemented as the **archetypal coordinate address** — the #4.0-5 (Integration/Quintessence) position that synthesizes the prior identity layers into a single operable position in universal space. It is not merely a privacy mechanism. The canonical form is the full 32-byte BLAKE3 output; shorter previews are derived forms only. Möbius return acts by updating the identity/quintessence inputs and then recomputing the canonical address, not by XORing the raw hash bytes in place.
 
 **Gap addressed:** Spec frames BLAKE3 as privacy hashing. Dataset `f_stateProperties` reveals `synthesizedSignature` as operational field in the Pratibimba, and the quintessence hash is the user's position in universal space.
 
@@ -1685,14 +1690,14 @@ static inline M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
 //   #4.0-3 Gene Keys      → M3 bitboard mask (uint64_t)
 //   #4.0-4 Human Design   → stub
 //          ↓ ALL bytes fed to BLAKE3
-//   #4.0-5 → blake3_hasher_finalize(8 bytes) → uint64_t quintessence_hash
+//   #4.0-5 → blake3_hasher_finalize(32 bytes) → quintessence_hash[32]
 //          ↓ memset(input, 0) — raw data destroyed immediately
 //
 // The hash then:
 //   1. Becomes the user's "coordinate" in M3's universal space
 //   2. Feeds into M4_Personal_Pratibimba.synthesizedSignature
-//   3. Participates in Mobius return: quintessence_hash ^= wisdom_delta
-//   4. Never leaves the C engine — compute-once, never transmitted
+//   3. Participates in Möbius return by being recomputed from updated identity state
+//   4. May expose shorter previews for UX or transport, but those are never canonical
 //
 // ARCHITECTURAL NOTE: The hash is NOT a lookup key. It is the SYNTHESIS
 // of the identity — the #5-position (Integration) of the #4.0 sub-branch.
