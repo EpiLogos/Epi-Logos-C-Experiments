@@ -925,6 +925,8 @@ dependencies = [
 name = "epi-s1-hen-compiler-core"
 version = "0.1.0"
 dependencies = [
+ "serde",
+ "serde_json",
  "serde_yaml",
 ]
 
@@ -2530,8 +2532,6 @@ checksum = "b5a041e753da8b807c9255f28de81879c78c876392ff2469cde94799b2896b9d"
 [[package]]
 name = "quantette"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c98fecda8b16396ff9adac67644a523dd1778c42b58606a29df5c31ca925d174"
 dependencies = [
  "bitvec",
  "bytemuck",
@@ -2794,8 +2794,6 @@ dependencies = [
 [[package]]
 name = "redis"
 version = "0.25.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0d7a6955c7511f60f3ba9e86c6d02b3c3f144f8c24b288d1f4e18074ab8bbec"
 dependencies = [
  "arc-swap",
  "async-trait",

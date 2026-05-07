@@ -34,7 +34,7 @@ impl WorkspaceState {
                 },
                 TabState {
                     label: "Cosmic Clock".to_string(),
-                    panes: vec!["clock.unified".into()],
+                    panes: vec![default_clock_plugin_type().into()],
                     layout_bsp: None,
                     pane_map: None,
                 },
@@ -53,6 +53,17 @@ impl WorkspaceState {
 
     pub fn workspace_path() -> std::path::PathBuf {
         Self::portal_dir().join("workspace.json")
+    }
+}
+
+fn default_clock_plugin_type() -> &'static str {
+    #[cfg(feature = "portal-images")]
+    {
+        "clock.unified"
+    }
+    #[cfg(not(feature = "portal-images"))]
+    {
+        "clock.cosmic"
     }
 }
 
@@ -172,7 +183,7 @@ mod tests {
                 },
                 TabState {
                     label: "Cosmic Clock".to_string(),
-                    panes: vec!["clock.unified".into()],
+                    panes: vec![default_clock_plugin_type().into()],
                     layout_bsp: None,
                     pane_map: None,
                 },
@@ -217,7 +228,7 @@ mod tests {
             vec!["m4.identity", "m4.flow", "m4.oracle"]
         );
         assert_eq!(state.tabs[1].label, "Cosmic Clock");
-        assert_eq!(state.tabs[1].panes, vec!["clock.unified"]);
+        assert_eq!(state.tabs[1].panes, vec![default_clock_plugin_type()]);
         assert_eq!(state.active_tab, 0);
     }
 }

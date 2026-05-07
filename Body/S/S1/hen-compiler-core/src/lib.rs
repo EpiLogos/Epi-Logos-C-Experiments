@@ -1,8 +1,15 @@
 //! S1 Hen compiler contract.
 
+mod smart_env;
+
 use std::path::PathBuf;
 
 use serde_yaml::{Mapping, Value};
+
+pub use smart_env::{
+    suggest_link_candidates, LinkCandidate, LinkCandidateKind, LinkCandidateRequest,
+    LinkCandidateResponse,
+};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct HenTimestamp {

@@ -2,6 +2,29 @@ mod common;
 
 use common::{read_to_string, run_epi, write_executable, write_file, TestEnv};
 use std::fs;
+use std::path::{Path, PathBuf};
+
+fn fixture_repo_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf()
+}
+
+fn copy_fixture(from_root: &Path, to_root: &Path, rel: &str) {
+    let source = from_root.join(rel);
+    let target = to_root.join(rel);
+    if let Some(parent) = target.parent() {
+        fs::create_dir_all(parent).unwrap();
+    }
+    fs::copy(source, target).unwrap();
+}
 
 fn env_with_fake_obsidian_cli() -> TestEnv {
     let env = TestEnv::repo_with_assets();
@@ -41,6 +64,52 @@ fn obsidian_passthrough_commands_use_expected_args() {
     assert_eq!(
         log.trim(),
         "frontmatter\nNote Name\n--delete\n--key\nold_key"
+    );
+}
+
+#[test]
+fn link_suggest_surfaces_real_smart_env_candidates_via_cli() {
+    let env = TestEnv::repo_with_assets();
+    let repo_root = fixture_repo_root();
+    for rel in [
+        "Idea/Bimba/Seeds/S/S-SHARDING-TASK-LIST.md",
+        "Idea/Bimba/Seeds/S/S-AD-HOC-ROADMAP.md",
+        "Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md",
+        "Idea/.smart-env/multi/Bimba_Seeds_S_S-SHARDING-TASK-LIST_md.ajson",
+        "Idea/.smart-env/multi/Bimba_Seeds_S_S-AD-HOC-ROADMAP_md.ajson",
+        "Idea/.smart-env/multi/Bimba_Seeds_S_S-SYSTEM-INDEX_md.ajson",
+    ] {
+        copy_fixture(&repo_root, &env.repo_root, rel);
+    }
+
+    let vault_root = env.repo_root.join("Idea");
+    let env = env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let output = run_epi(
+        [
+            "vault",
+            "link-suggest",
+            "Bimba/Seeds/S/S-AD-HOC-ROADMAP.md",
+            "--source-coordinate",
+            "[[S-SHARDING-TASK-LIST]]",
+            "--limit",
+            "5",
+        ]
+        .as_slice(),
+        &env,
+    );
+
+    assert!(output.status.success(), "{}", output.stderr);
+    assert!(
+        output
+            .stdout
+            .contains("\"target_path\": \"Bimba/Seeds/S/S-SYSTEM-INDEX.md\""),
+        "{}",
+        output.stdout
+    );
+    assert!(
+        output.stdout.contains("\"kind\": \"explicit_outlink\""),
+        "{}",
+        output.stdout
     );
 }
 

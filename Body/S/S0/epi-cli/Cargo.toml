@@ -16,6 +16,10 @@ name = "epi"
 path = "src/main.rs"
 test = false
 
+[features]
+default = ["portal-images"]
+portal-images = ["dep:ratatui-image", "dep:image"]
+
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 ratatui = "0.30"
@@ -53,8 +57,8 @@ nalgebra = "0.33"
 
 # Offscreen clock renderer
 tiny-skia = "0.12"
-ratatui-image = { version = "10", default-features = false, features = ["crossterm"] }
-image = { version = "0.25", default-features = false, features = ["png"] }
+ratatui-image = { version = "10", default-features = false, features = ["crossterm"], optional = true }
+image = { version = "0.25", default-features = false, features = ["png"], optional = true }
 ab_glyph = "0.2"
 
 # Async runtime
@@ -77,6 +81,16 @@ chrono = { version = "0.4", features = ["serde"] }
 
 [build-dependencies]
 cc = "1"
+
+[patch.crates-io]
+# quantette 0.5.1 currently declares rust-version = 1.90, but the epi-cli
+# workspace is pinned to rustc 1.89 in this environment. Patch to a vendored
+# copy so we can carry the smallest possible compatibility override locally.
+quantette = { path = "vendor/quantette" }
+# redis 0.25.4 triggers Rust future-incompat warnings in script invocation
+# helpers due to never type fallback. Patch the vendored copy to make the
+# ignored load-script return values explicit unit.
+redis = { path = "vendor/redis" }
 
 [profile.test]
 debug = 1

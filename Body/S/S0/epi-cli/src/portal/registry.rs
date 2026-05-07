@@ -3,6 +3,32 @@
 
 use ratatui_hypertile_extras::{HypertileRuntimeBuilder, WorkspaceRuntime};
 
+pub const PORTAL_PLUGIN_TYPE_IDS: &[&str] = &[
+    "shared.help",
+    "shared.status",
+    "s0.command",
+    "m0.dashboard",
+    "m0.families",
+    "m1.walk",
+    "clock.cosmic",
+    #[cfg(feature = "portal-images")]
+    "clock.unified",
+    "m2.vibrational",
+    "m3.knowing",
+    "m4.identity",
+    "m4.flow",
+    "m4.oracle",
+    "m4.medicine",
+    "m4.transform",
+    "m4.lens",
+    "m4.pratibimba",
+    "m4.spine",
+    "m4.mini_clock",
+    "m5.logos",
+    "m5.chat",
+    "m5.fsm",
+];
+
 /// Build a standalone workspace with all portal plugin types registered.
 /// Used by tests that need a registry without launching the full portal.
 pub fn build_registry_workspace() -> WorkspaceRuntime {
@@ -24,6 +50,7 @@ mod tests {
         let expected = vec![
             "shared.help",
             "shared.status",
+            "s0.command",
             "m0.dashboard",
             "m0.families",
             "m1.walk",
@@ -40,6 +67,12 @@ mod tests {
             "m5.chat",
             "m5.fsm",
         ];
+        #[cfg(feature = "portal-images")]
+        let expected = {
+            let mut expected = expected;
+            expected.push("clock.unified");
+            expected
+        };
         for name in &expected {
             assert!(types.contains(name), "Registry missing plugin: {}", name);
         }

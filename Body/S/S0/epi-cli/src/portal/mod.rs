@@ -13,12 +13,15 @@ use ratatui_hypertile_extras::{
 };
 use std::io::stdout;
 
+#[cfg(feature = "portal-images")]
 pub mod clock_renderer;
 pub mod clock_state;
 pub mod persist;
 pub mod plugins;
 pub mod registry;
+pub mod surfaces;
 mod theme;
+pub mod topology;
 
 /// Launch the portal TUI with a two-tab workspace.
 pub fn launch(
@@ -180,11 +183,14 @@ fn register_all_plugins(
     runtime: &mut ratatui_hypertile_extras::HypertileRuntime,
     clock_state: Option<SharedClockState>,
 ) {
-    use plugins::{clock, m0, m1, m2, m3, m4, m5, mini_clock, shared, spine, unified_clock};
+    #[cfg(feature = "portal-images")]
+    use plugins::unified_clock;
+    use plugins::{clock, command, m0, m1, m2, m3, m4, m5, mini_clock, shared, spine};
 
     // Shared
     runtime.register_plugin_type("shared.help", || shared::HelpPlugin::new());
     runtime.register_plugin_type("shared.status", || shared::StatusPlugin::new());
+    runtime.register_plugin_type("s0.command", || command::CommandCenterPlugin::new());
 
     // M0 (still available via palette)
     runtime.register_plugin_type("m0.dashboard", || m0::M0DashboardPlugin::new());
@@ -202,8 +208,9 @@ fn register_all_plugins(
         });
     }
 
-    // Unified Clock — full-screen offscreen-rendered clock (replaces clock.cosmic)
+    #[cfg(feature = "portal-images")]
     {
+        // Unified Clock — full-screen offscreen-rendered clock (replaces clock.cosmic)
         let cs = clock_state.clone();
         runtime.register_plugin_type("clock.unified", move || {
             let c = cs.clone().unwrap_or_else(new_shared_clock_state);
@@ -276,7 +283,8 @@ fn register_all_plugins(
 /// Build a two-tab workspace with default pane layouts.
 ///
 /// Tab 0 ("M4'-M5' Personal"):  m4.identity | m4.flow / m4.oracle
-/// Tab 1 ("Cosmic Clock"): clock.unified (single full-screen pane)
+/// Tab 1 ("Cosmic Clock"): clock.unified if portal-images is enabled,
+/// otherwise clock.cosmic as the feature-free fallback.
 ///   (CosmicClockPlugin replaces M0Dashboard+M1Walk+M2Vibrational per cosmic-clock spec)
 fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<WorkspaceRuntime> {
     let mut workspace = WorkspaceRuntime::new(|| {
@@ -309,11 +317,17 @@ fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<Workspac
         .split_focused(Direction::Vertical, "m4.flow")
         .map_err(|e| color_eyre::eyre::eyre!("tab 0 split V: {e}"))?;
 
-    // Focus is now on the new right pane (m4.flow). Split it horizontally for m4.oracle below.
+    // Focus is now on the new centre pane (m4.flow). Split it horizontally for m4.oracle below.
     workspace
         .active_runtime_mut()
         .split_focused(Direction::Horizontal, "m4.oracle")
         .map_err(|e| color_eyre::eyre::eyre!("tab 0 split H: {e}"))?;
+
+    // Add the S0' command centre as the third register on the personal tab.
+    workspace
+        .active_runtime_mut()
+        .split_focused(Direction::Vertical, "s0.command")
+        .map_err(|e| color_eyre::eyre::eyre!("tab 0 split command: {e}"))?;
 
     // --- Tab 1: Cosmic Clock ---
     workspace.new_tab();
@@ -324,16 +338,28 @@ fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<Workspac
     // propagate to UnifiedClockPlugin in Tab 1.
     register_all_plugins(workspace.active_runtime_mut(), Some(clock_state.clone()));
 
-    // Single full-screen plugin: the unified clock scene. No splits.
+    // Single full-screen plugin: the image-backed unified clock when available,
+    // else the feature-free cosmic clock scene. No splits.
     workspace
         .active_runtime_mut()
-        .replace_focused_plugin("clock.unified")
+        .replace_focused_plugin(default_clock_plugin_type())
         .map_err(|e| color_eyre::eyre::eyre!("tab 1 replace root: {e}"))?;
 
     // Switch back to tab 0 as default
     workspace.go_to_tab(0);
 
     Ok(workspace)
+}
+
+fn default_clock_plugin_type() -> &'static str {
+    #[cfg(feature = "portal-images")]
+    {
+        "clock.unified"
+    }
+    #[cfg(not(feature = "portal-images"))]
+    {
+        "clock.cosmic"
+    }
 }
 
 #[cfg(test)]
@@ -363,12 +389,12 @@ mod tests {
     }
 
     #[test]
-    fn tab_0_has_three_panes() {
+    fn tab_0_has_command_centre_pane() {
         let ws = test_workspace().expect("build_workspace failed");
         assert_eq!(ws.active_tab_index(), 0);
         // pane_ids() walks the BSP tree directly (no layout computation needed)
         let count = ws.active_runtime().core().state().pane_ids().len();
-        assert_eq!(count, 3, "Tab 0 should have 3 panes, got {}", count);
+        assert_eq!(count, 4, "Tab 0 should have 4 panes, got {}", count);
     }
 
     #[test]
@@ -378,7 +404,7 @@ mod tests {
         let count = ws.active_runtime().core().state().pane_ids().len();
         assert_eq!(
             count, 1,
-            "Tab 1 should have 1 pane (unified clock), got {}",
+            "Tab 1 should have 1 pane (clock surface), got {}",
             count
         );
     }

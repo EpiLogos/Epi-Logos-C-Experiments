@@ -10,6 +10,7 @@ use crate::vault::paths::{
 use crate::vault::templates::{render_template, TemplateRenderContext};
 use chrono::{DateTime, NaiveDate, Utc};
 use clap::Subcommand;
+use epi_s1_hen_compiler_core::{suggest_link_candidates, LinkCandidateRequest};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -44,6 +45,17 @@ pub enum VaultCmd {
         query: String,
         #[arg(short, long)]
         vault: Option<String>,
+    },
+    /// Suggest ranked wikilink targets from Smart Env cache
+    #[command(name = "link-suggest")]
+    LinkSuggest {
+        note: String,
+        #[arg(long = "source-coordinate")]
+        source_coordinates: Vec<String>,
+        #[arg(long, default_value_t = 10)]
+        limit: usize,
+        #[arg(long)]
+        include_stale: bool,
     },
     /// Create/open daily note via obsidian CLI
     Daily {
@@ -247,6 +259,22 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
                 args.extend(["-v", v.as_str()]);
             }
             obsidian_cli(&args)
+        }
+        VaultCmd::LinkSuggest {
+            note,
+            source_coordinates,
+            limit,
+            include_stale,
+        } => {
+            let response = suggest_link_candidates(LinkCandidateRequest {
+                vault_root: vault_root(),
+                note_path: PathBuf::from(note),
+                source_wikilinks: source_coordinates.clone(),
+                limit: *limit,
+                include_stale: *include_stale,
+            })?;
+            serde_json::to_string_pretty(&response)
+                .map_err(|error| format!("Failed to serialize link suggestions: {error}"))
         }
         VaultCmd::Daily { vault } => {
             let mut args = vec!["daily"];

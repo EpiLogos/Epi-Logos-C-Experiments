@@ -44,6 +44,8 @@ The build must prioritize architectural solidity over preserving old code shape.
 - [[FLOW 2026 04 22 ENVELOPE FIELD SCHEMA]] - 12-layer envelope and compiler spine mapping.
 - [[FLOW 2026 04 24 PI AGENT API v0.1]] - coordinate-native API target.
 - [[FLOW 2026 04 25 TS INTERFACE DEFINITIONS]] - shared typed contract.
+- [[FLOW 2026 05 06 SMART ENV HEN LINK CANDIDATE POOL]] - read-only Smart Env suggestion seam for [[Hen]] wikilink selection.
+- [[FLOW 2026 05 07 RUST DEPENDENCY COMPATIBILITY]] - Rust 1.89 compatibility override, portal image feature isolation, and Redis future-incompat note.
 
 ## Core Build Principle
 
@@ -86,6 +88,31 @@ This makes the testing distinction sharper:
 - agent invocation proves [[Anima]] or [[Epii]] can use it,
 - human-gated review proves the system can route judgement without pretending to automate judgement itself.
 
+## [[S0']] Portal / TUI Return Surface
+
+The [[TUI]] is not a secondary UI skin. It is the first integrated operator portal where UX and backend setup interlace before the desktop app externalises the same pattern into M-form. It should therefore be treated as an [[S0']] return surface over the whole S/S' command topology, not as a separate product ontology.
+
+The target portal shape is threefold:
+
+| Panel | Register | Coordinate function | Primary contents |
+|---|---|---|---|
+| `0` left | structural clock | [[M0']] / [[M1']] / [[M2']] / [[M3']] | clock, coordinate walk, structural dashboards, Khora/Aletheia temporal-relational awareness |
+| `/` centre | command return | [[S0]] / [[S0']] over [[S1]]-[[S5]] | command palette, setup, config, readiness, service health, parity map, gateway/API methods, typed execution routes |
+| `1` right | personal/world return | [[M4']] / [[M5']] | [[Nara]], [[Epii]], review inbox, Gnosis/world-return, autoresearch, user/developer position |
+
+The centre `/` panel is the missing command and configuration organ. It should let an operator enter TUI mode and move directly through the S0-S5 command surfaces without inventing parallel logic. It must consume the same truths as the CLI and gateway: command registry, parity manifest, config schema, service readiness, envelope/API/TS method contracts, and agent capability membranes.
+
+Required design constraints:
+
+- `epi portal` remains the M' parent runtime, but its centre `/` panel is explicitly [[S0']] command topology and return proof.
+- The portal must not fork command behavior. It dispatches existing `epi` commands, gateway RPC methods, or typed service calls.
+- Settings must be schema-backed and coordinate-owned: S2 graph/cache settings, S3 gateway/session settings, S4 agent permission/capability settings, and S5/Epii/Gnosis/autoresearch settings should surface through one operator grammar while preserving ownership.
+- Readiness views must distinguish raw service health from agent invocation access. A live [[Neo4j]] connection, for example, does not prove [[Anima]] or [[Epii]] can use the graph.
+- The right panel should mirror [[M4']] / [[M5']] rather than owning services directly: [[Nara]] and [[Epii]] invoke or observe shared S-layer services through their bounded capability envelopes.
+- The future desktop app should be able to mirror this TUI layout externally instead of rediscovering command/config semantics.
+
+This gives [[S0]] its first-and-last role in the operator experience: the TUI can show whether the system is merely installed, actually connected, agent-accessible, and review-governed.
+
 ## The Two System Spines
 
 ### [[S1']] Compiler Spine
@@ -101,6 +128,8 @@ Its build purpose:
 This spine is meaningful only through the actual [[S4]] PI agent runtime and [[S4']] ta-onta inhabitation. The compiler spine must be accessible to the agents that write, review, and promote artifacts. The canonical compiler invocation should therefore be backend-aware: `pi_agent` is the target executor, while the vendor [[Claude Agent SDK]] path is a compatibility backend for Claude Code style sessions. The canonical contract home is Rust: `Body/S/S1/hen-compiler-core`. The Python vendor/compiler files remain useful compatibility and enrichment-backend material, but they do not own S1' law.
 
 In practice [[Hen]] defines source paths, target residency, ledger channel, CT/frontmatter law, expected artifact contract, and review requirements. The current Rust contract now validates compiled artifact frontmatter against the residency plan and invocation kind, so an output can prove it came from the Day/T-lane/agent contract that claims it. [[Anima]] or [[Epii]] then performs or requests the enrichment through its bounded tools/skills. Hen remains the law; the agent runtime performs the work.
+
+One concrete S1' subthread should now be carried inside this spine rather than spun out as a separate graph track: [[FLOW 2026 05 06 SMART ENV HEN LINK CANDIDATE POOL]]. The rule is simple. [[Hen]] may read [[Smart Env]] as a generated suggestion pool for ranked existing-note targets, but [[Hen]] remains the only authority that chooses and writes `[[wikilinks]]`, and the normal [[S2]] sync path remains the only canonical node/edge update path.
 
 ### [[S5']] Autoresearch / Epii Spine
 
@@ -125,18 +154,23 @@ Built enough to serve as substrate:
 - `Body/S/S0/epi-lib` exists as the M-family C engine foundation.
 - `Body/S/S1/hen-compiler-core` exists as the canonical Rust S1' compiler contract crate, and `Body/S/S1/hen-compiler` remains the compiler-vendor compatibility basis.
 - `Body/S/S2/external/bimba-mcp` exists as the S2' external graph interface.
-- `Body/S/S3/epi-app` and `Body/S/S3/epi-spacetime-module` exist.
+- Live Docker-backed Neo4j proof now covers S2/S5 namespace isolation without destructive graph cleanup: canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` nodes carrying S5 ownership as properties are test-created under a test-owned label, cross-linked deliberately, checked for label separation, and removed without changing pre-existing counts.
+- `Body/S/S3/epi-app` and `Body/S/S3/epi-spacetime-module` exist. The app is currently Electron + Vite + React with a live S3 gateway client and M-domain renderer. Its future Tauri v2 port should preserve useful renderer/domain work but replace Electron main-process authority with Rust Tauri commands over gateway RPC and SpaceTimeDB subscriptions. The SpaceTimeDB module is currently still presence-shaped; its target role is the S3/S3' registration and live projection plane for many gateway, agent, and client instances in one deployment.
 - `Body/S/S4/pi-agent`, `Body/S/S4/ta-onta`, and `Body/S/S4/plugins/pleroma` exist as S4/S4' source and package surfaces.
 - `Body/S/S4/plugins/pleroma/capability-matrix.json` now gives the first machine-checkable Anima capability membrane: constitutional agents, real skill files, hooks, Anima authority, and Epii handoff boundaries.
 - `Body/S/S5/epi-gnostic` exists with real [[RAG-Anything]], [[LightRAG]], [[Neo4j]], embeddings, and temporary [[Graphiti]] wrapper code.
 - `Body/S/S5/epii-agent/agent-contract.json` now gives the first machine-checkable Epii PI-agent contract: epi-logos resource target, autoresearch spine, review inbox spine, accepted Anima deposits, and bounded Epii -> Anima requests.
 - [[Gnosis]] now exposes a first source-selection/disclosure report over real local ingested documents, explicitly marking itself as [[S5]] world-return over [[S2]] storage substrate with [[S5']] governance. `s5'.epii.status` carries the same S5/S2/S5' service contract for Epii observation.
+- `Body/S/S0/epi-cli/src/portal` exists as the current terminal portal foundation, with M0-M5 plugins, clock state/rendering, persisted workspace state, and an existing config TUI surface. Its next architectural move is the centre `/` command/config/readiness panel described above.
+- `Body/S/S0/epi-cli/src/portal/topology.rs` now gives the first executable S0' portal topology contract for the `0` / `/` / `1` domains, S/S' stack coordinates, M/M' visualisation coordinates, editable config-field metadata, and interactive slash command-surface actions. `s0.command` is registered as the first TUI-facing command/config centre plugin.
+- `Body/S/S0/epi-cli/src/portal/surfaces.rs` now gives the first provider-backed S0' portal surface registry. The centre `/` panel no longer depends only on a hand-authored slash list: it aggregates topology seeds, gateway parity records, S4/S5 extension `tools.json` manifests, `.claude-plugin` package manifests, the Epii PI-agent contract, Pleroma capability gates, and Ratatui/Hypertile plugin registrations. This is the shared source the TUI and later desktop portal should mirror for command/config/readiness semantics.
 - The S/S' specs, shard indexes, and source traceability indexes exist.
 
 Not yet built in the right way:
 
 - [[S2]] graph schema/services are still physically hidden inside `Body/S/S0/epi-cli/src/graph` and S5 Gnosis support files.
 - [[S3]] gateway/runtime is still physically hidden inside `Body/S/S0/epi-cli/src/gate`.
+- [[S3]] SpaceTimeDB registration is not yet built in the right way. The current module must be re-centred from anonymous presence/oracle/logos into a shared gateway/client/agent registration surface with `gateway_instance`, `agent_instance`, `client_registration`, `session_surface`, and `temporal_event` tables.
 - [[S3']] Redis temporal context is not yet separated from S2 graph/cache Redis.
 - [[Graphiti]] still has sidecar/wrapper compatibility paths; target is S3' library/runtime integration with S5/S5' usage governance.
 - [[S1']] compiler spine has a first canonical Rust dry-run `CompilerInvocation` contract and S0 parity hook, but it is not yet the enforced schema authority across frontmatter, envelope, API, and code.
@@ -158,12 +192,27 @@ This harmonisation must not be abstract. It must be tied to:
 
 ## Contract Harmonisation Targets
 
+### DAY/NOW Kairos And PersonalNexus Harmonisation
+
+The temporal identity surface is now a first-class build thread. [[DAY]] / [[NOW]] should not be treated as vault-folder convenience alone. They are the [[S3']] temporal body through which [[Kairos]], session identity, Redis hot context, SpaceTimeDB live projection, Graphiti episodic arc handles, and protected [[M4.4.4.4]] [[PersonalNexus]] references become coherent.
+
+The target split is:
+
+- [[SpacetimeDB]] stores safe live projections only: gateway, agent, client, session, DAY/NOW, public-current-transit [[Kairos]], and protected Pratibimba anchor refs. One deployment can host many gateway/agent/user/session instances.
+- [[Redis]] stores hot local [[S3']] context with TTL: NOW markdown, DAY context, DAY Kairos, session Kairos, agent orientation, and personal orientation refs.
+- Local [[Neo4j]] / [[Graphiti]] stores protected personal truth: [[PersonalNexus]], journal-derived aspects, identity evolution, and episodic memory namespaces.
+- [[Epii]] / [[S5']] is the steward of user-position access and validation. [[Anima]] / [[S4']] may read orientation and deposit review requests, but must not mutate identity or journal-derived PersonalNexus state directly.
+
+This thread should be built in this order: extend `s3'.temporal.context`, prove Redis key law, project safe Kairos through SpaceTimeDB, expose `s5'.epii.user.orientation` / `s5'.epii.pratibimba.status` / `s5'.epii.kairos.context`, then replace old Graphiti sidecar-shaped Pratibimba calls with local graph/runtime contracts.
+
 ### Envelope Corrections
 
 - Move live temporal/session/context Redis authority to [[S3']] fields.
 - Keep S2 Redis fields only for graph semantic cache, RedisVL, and graph-context substrate.
 - Move [[Graphiti]] architecture/runtime handles to [[S3']] where they describe temporal episodic runtime.
 - Keep [[Graphiti]] search, arc policy, disclosure, and reflective meaning under [[S5]] / [[S5']].
+- Add [[Kairos]] fields to the [[S3']] temporal envelope: freshness, source, active decan, dominant sign/element, active tattva, planet degrees/anchors, and privacy class.
+- Add protected [[Pratibimba]] anchor fields to the temporal envelope: [[M4.4.4.4]] coordinate, anchor id, Graphiti namespace ref, layer presence summary, stewardship owner, and mutation boundary.
 - Add or confirm review inbox fields for Epii-accessible human validation and meaning review.
 - Add or confirm autoresearch/improvement fields as [[S5']] cold/deep-work fields.
 - Ensure compiler spine mapping names [[S1']] ledger channel, compiler pass, and return type for every layer.
@@ -332,13 +381,15 @@ These tests prove the circuit returns to S0.
 
 1. Harmonise [[Envelope]], [[API]], and [[TypeScript]] against locked S/S' decisions.
 2. Build global API/CLI/envelope parity matrix.
-3. Establish [[S1']] compiler spine contracts and tests.
+3. Establish [[S1']] compiler spine contracts and tests, including the read-only [[Smart Env]] link-candidate seam for [[Hen]].
 4. Establish [[S5']] review/autoresearch/Epii contracts and tests.
 5. Extract [[S2]] graph schema/services from S0 package residency.
-6. Extract [[S3]] gateway/redis-context/graphiti-runtime from S0 package residency.
+6. Extract [[S3]] gateway/redis-context/graphiti-runtime from S0 package residency, including the SpaceTimeDB registration plane as the live gateway/client/agent projection surface.
 7. Stabilise [[S4]] agent invocation/access architecture.
 8. Stabilise [[S5]] Gnosis/Nara/Epii world-return architecture.
-9. Return to [[S0]] with `epi up` as full-stack build proof.
+9. Build the [[S0']] portal/TUI centre `/` command/config/readiness surface so `epi portal` becomes the operator mirror of the same S0-S5 topology.
+10. Specify and then port the current Electron `epi-app` to Tauri v2 as the desktop mirror of the TUI portal: left `0`, centre `/`, right `1`, backed by the same portal surface registry, gateway RPC, and SpaceTimeDB live projection contracts.
+11. Return to [[S0]] with `epi up` as full-stack build proof.
 
 ## Handoff Reading Order
 

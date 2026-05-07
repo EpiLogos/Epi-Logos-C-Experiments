@@ -109,6 +109,11 @@ fn khora_and_hen_extension_scaffolds_exist() {
     assert!(hen_contract.contains("Idea/Bimba/World/Types/Coordinates/C/C1/C1'/CT"));
     assert!(hen_contract.contains("Idea/Bimba/World/Types/Coordinates/C/C3/C3'/CF"));
 
+    let hen_extension =
+        fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-1p-hen/extension.ts")).unwrap();
+    assert!(hen_extension.contains("name: \"hen_link_candidates\""));
+    assert!(hen_extension.contains("\"vault\", \"link-suggest\""));
+
     let repo_ontology = fs::read_to_string(root.join("repo-ontology.md")).unwrap();
     assert!(repo_ontology.contains("Idea/Bimba/Seeds"));
     assert!(repo_ontology.contains("Idea/Bimba/World"));

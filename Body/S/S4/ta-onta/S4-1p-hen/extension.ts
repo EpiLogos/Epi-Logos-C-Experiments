@@ -149,6 +149,38 @@ export async function henExtension(api: ExtensionAPI) {
     },
   });
 
+  // ── Tool: hen_link_candidates ────────────────────────────────────
+  api.registerTool({
+    name: "hen_link_candidates",
+    label: "Hen Link Candidates",
+    description: "Return ranked existing-note wikilink candidates from Smart Env. Read-only suggestion pool for Hen; does not write links or mutate graph state.",
+    parameters: Type.Object({
+      note: Type.String({ description: "Vault-relative note path being drafted or repaired" }),
+      source_coordinates: Type.Optional(
+        Type.Array(Type.String({ description: "Source-coordinate wikilinks such as [[S-SHARDING-TASK-LIST]]" }))
+      ),
+      limit: Type.Optional(Type.Integer({ default: 10 })),
+      include_stale: Type.Optional(Type.Boolean({ default: false })),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      const args = ["vault", "link-suggest", params.note];
+      for (const coord of params.source_coordinates ?? []) {
+        args.push("--source-coordinate", coord);
+      }
+      if (typeof params.limit === "number") {
+        args.push("--limit", String(params.limit));
+      }
+      if (params.include_stale) {
+        args.push("--include-stale");
+      }
+      const result = spawnSync("epi", args, { encoding: "utf8" });
+      return {
+        content: [{ type: "text", text: result.stdout || result.stderr || "link candidate lookup unavailable" }],
+        isError: result.status !== 0,
+      };
+    },
+  });
+
   // ── Tool: hen_backlinks ─────────────────────────────────────────
   api.registerTool({
     name: "hen_backlinks",

@@ -1,4 +1,5 @@
 pub mod clock;
+pub mod command;
 pub mod m0;
 pub mod m1;
 pub mod m2;
@@ -8,4 +9,5 @@ pub mod m5;
 pub mod mini_clock;
 pub mod shared;
 pub mod spine;
+#[cfg(feature = "portal-images")]
 pub mod unified_clock;

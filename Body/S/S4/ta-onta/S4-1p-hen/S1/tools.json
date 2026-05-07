@@ -9,6 +9,10 @@
       "command": "epi vault template-invoke"
     },
     {
+      "name": "epi_vault_link_suggest",
+      "command": "epi vault link-suggest"
+    },
+    {
       "name": "epi_vault_thought_route",
       "command": "epi vault thought-route"
     }
