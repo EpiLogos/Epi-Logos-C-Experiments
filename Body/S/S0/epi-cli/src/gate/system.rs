@@ -10,6 +10,8 @@ use crate::graph::doctor;
 use crate::sesh::session::{read_session_state, repo_root_from_env};
 
 use super::logs;
+use super::parity::DEFAULT_GATEWAY_PORT;
+use super::spacetimedb_bridge;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct SystemState {
@@ -104,6 +106,7 @@ pub fn health_snapshot(state_root: impl AsRef<Path>) -> Result<Value, String> {
     let session = session_health();
     let vault = vault_health(&session);
     let graph = graph_health(state_root)?;
+    let spacetimedb = spacetimedb_bridge::readiness_value(DEFAULT_GATEWAY_PORT, state_root);
     let ok = session["ok"] == Value::Bool(true)
         && vault["ok"] == Value::Bool(true)
         && graph["ok"] == Value::Bool(true);
@@ -126,6 +129,7 @@ pub fn health_snapshot(state_root: impl AsRef<Path>) -> Result<Value, String> {
             "session": session,
             "vault": vault,
             "graph": graph,
+            "spacetimedb": spacetimedb,
         }
     }))
 }

@@ -432,7 +432,7 @@ impl Default for KairosState {
 pub struct PortalClockState {
     // ── Identity anchor ───────────────────────────────────────────────────────
     /// Session identity hash (BLAKE3 of quintessence_hash + session_start).
-    /// Used for SpacetimeDB UserPresence routing and multi-user orbital placement.
+    /// Used for SpaceTimeDB agent/client/session registration and multi-user orbital placement.
     pub session_hash: [u8; 32],
 
     // ── Quaternion layer ──────────────────────────────────────────────────────

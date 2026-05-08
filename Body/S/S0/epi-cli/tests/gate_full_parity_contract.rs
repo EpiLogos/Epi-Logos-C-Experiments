@@ -24,6 +24,23 @@ fn gateway_method_manifest_covers_full_execution_spine() {
 }
 
 #[test]
+fn s0_parity_session_surface_is_derived_from_s3_gateway_contract() {
+    let contract_methods = epi_s3_gateway_contract::gateway_session_method_names();
+    let parity_methods = parity::session_surface_method_names();
+
+    for method in &contract_methods {
+        assert!(
+            parity_methods.contains(method),
+            "S0 parity should expose S3 gateway session method {method}; got {parity_methods:?}"
+        );
+    }
+
+    assert!(parity_methods.contains(&"chat.history"));
+    assert!(parity_methods.contains(&"channels.status"));
+    assert!(parity_methods.contains(&"sessions.resolve"));
+}
+
+#[test]
 fn coordinate_parity_records_preserve_missing_and_compatibility_boundaries() {
     let records = parity::coordinate_parity_records();
 
@@ -35,6 +52,7 @@ fn coordinate_parity_records_preserve_missing_and_compatibility_boundaries() {
         "s5'.review.*",
         "s5'.improve.*",
         "s5'.ql.*",
+        "s3'.temporal.*",
     ] {
         assert!(
             records
@@ -59,6 +77,13 @@ fn coordinate_parity_records_preserve_missing_and_compatibility_boundaries() {
         gateway.status,
         parity::CoordinateParityStatus::Compatibility
     );
+
+    let temporal = records
+        .iter()
+        .find(|record| record.canonical_method == "s3'.temporal.*")
+        .expect("s3 temporal parity record");
+    assert_eq!(temporal.status, parity::CoordinateParityStatus::Native);
+    assert_eq!(temporal.live_gateway_method, Some("s3'.temporal.context"));
 
     let review = records
         .iter()

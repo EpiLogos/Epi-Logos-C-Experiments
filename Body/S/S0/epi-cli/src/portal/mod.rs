@@ -1,5 +1,8 @@
 use crate::ffi::EpiLib;
-use crate::portal::clock_state::{new_shared_clock_state, SharedClockState};
+use crate::gate::parity::DEFAULT_GATEWAY_PORT;
+use crate::gate::spacetimedb_bridge::SpacetimeRegistration;
+use crate::portal::clock_state::new_shared_clock_state;
+use crate::portal::runtime_state::PortalRuntimeState;
 use crossterm::{
     event::{self, Event, KeyCode, KeyEventKind, KeyModifiers},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
@@ -12,6 +15,7 @@ use ratatui_hypertile_extras::{
     WorkspaceRuntime,
 };
 use std::io::stdout;
+use std::path::PathBuf;
 
 #[cfg(feature = "portal-images")]
 pub mod clock_renderer;
@@ -19,6 +23,7 @@ pub mod clock_state;
 pub mod persist;
 pub mod plugins;
 pub mod registry;
+pub mod runtime_state;
 pub mod surfaces;
 mod theme;
 pub mod topology;
@@ -72,11 +77,32 @@ fn run_event_loop(
     tab: Option<&str>,
     layout_path: Option<&std::path::Path>,
 ) -> color_eyre::Result<()> {
-    let clock_state = new_shared_clock_state();
+    let runtime_state = PortalRuntimeState::new();
+    let gate_root = default_gate_root();
+    if let Ok(Some(registration)) =
+        SpacetimeRegistration::from_env(DEFAULT_GATEWAY_PORT, &gate_root)
+    {
+        if registration
+            .subscription_plan("agent:main:main", "epii")
+            .mode
+            != "native-websocket"
+        {
+            let _ = runtime_state.refresh_from_spacetimedb_projection(
+                &registration,
+                "agent:main:main",
+                "epii",
+            );
+        } else {
+            let _ = runtime_state.refresh_from_default_gateway_context();
+        }
+        spawn_spacetimedb_projection_sync(runtime_state.clone(), registration);
+    } else {
+        let _ = runtime_state.refresh_from_default_gateway_context();
+    }
 
     // Spawn kairos sync thread: refreshes planet positions every 60s
     {
-        let clock = clock_state.clone();
+        let state = runtime_state.clone();
         std::thread::Builder::new()
             .name("kairos-sync".into())
             .spawn(move || loop {
@@ -91,13 +117,16 @@ fn run_event_loop(
                 };
                 if let Ok(Some(kr)) = result {
                     let kairos = crate::nara::kairos::kerykeion_result_to_kairos_state(&kr);
-                    crate::portal::clock_state::update_kairos_full(&clock, kairos);
+                    crate::portal::clock_state::update_kairos_full(&state.clock(), kairos);
+                    if state.refresh_from_default_gateway_context().is_err() {
+                        state.refresh_temporal_from_clock();
+                    }
                 }
             })
             .ok();
     }
 
-    let mut workspace = build_workspace(clock_state)?;
+    let mut workspace = build_workspace(runtime_state)?;
 
     // Apply a named layout if provided
     if let Some(path) = layout_path {
@@ -178,10 +207,93 @@ fn run_event_loop(
     Ok(())
 }
 
+fn default_gate_root() -> PathBuf {
+    dirs::home_dir()
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join(".epi")
+        .join("gate")
+}
+
+fn spawn_spacetimedb_projection_sync(
+    runtime_state: PortalRuntimeState,
+    registration: SpacetimeRegistration,
+) {
+    if registration
+        .subscription_plan("agent:main:main", "epii")
+        .mode
+        == "native-websocket"
+    {
+        spawn_native_spacetimedb_projection_sync(runtime_state, registration);
+        return;
+    }
+
+    std::thread::Builder::new()
+        .name("spacetimedb-projection-sync".into())
+        .spawn(move || loop {
+            std::thread::sleep(std::time::Duration::from_secs(5));
+            match runtime_state.refresh_from_spacetimedb_projection(
+                &registration,
+                "agent:main:main",
+                "epii",
+            ) {
+                Ok(true) => {}
+                _ => {
+                    let _ = runtime_state.refresh_from_default_gateway_context();
+                }
+            }
+        })
+        .ok();
+}
+
+fn spawn_native_spacetimedb_projection_sync(
+    runtime_state: PortalRuntimeState,
+    registration: SpacetimeRegistration,
+) {
+    std::thread::Builder::new()
+        .name("spacetimedb-native-projection-sync".into())
+        .spawn(move || {
+            let Ok(runtime) = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+            else {
+                let _ = runtime_state.refresh_from_default_gateway_context();
+                return;
+            };
+
+            runtime.block_on(async move {
+                loop {
+                    match registration
+                        .subscribe_projection("agent:main:main", "epii")
+                        .await
+                    {
+                        Ok(mut subscription) => loop {
+                            match subscription.next_context().await {
+                                Ok(Some(context)) => {
+                                    let _ =
+                                        runtime_state.refresh_from_gateway_context_value(&context);
+                                }
+                                Ok(None) => break,
+                                Err(_) => {
+                                    let _ = runtime_state.refresh_from_default_gateway_context();
+                                    break;
+                                }
+                            }
+                        },
+                        Err(_) => {
+                            let _ = runtime_state.refresh_from_default_gateway_context();
+                        }
+                    }
+                    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+                }
+            });
+        })
+        .ok();
+}
+
 /// Register all portal plugin types on a given runtime.
 fn register_all_plugins(
     runtime: &mut ratatui_hypertile_extras::HypertileRuntime,
-    clock_state: Option<SharedClockState>,
+    runtime_state: Option<PortalRuntimeState>,
 ) {
     #[cfg(feature = "portal-images")]
     use plugins::unified_clock;
@@ -190,7 +302,15 @@ fn register_all_plugins(
     // Shared
     runtime.register_plugin_type("shared.help", || shared::HelpPlugin::new());
     runtime.register_plugin_type("shared.status", || shared::StatusPlugin::new());
-    runtime.register_plugin_type("s0.command", || command::CommandCenterPlugin::new());
+    {
+        let state = runtime_state.clone();
+        runtime.register_plugin_type("s0.command", move || {
+            state
+                .clone()
+                .map(command::CommandCenterPlugin::new_with_runtime)
+                .unwrap_or_else(command::CommandCenterPlugin::new)
+        });
+    }
 
     // M0 (still available via palette)
     runtime.register_plugin_type("m0.dashboard", || m0::M0DashboardPlugin::new());
@@ -201,7 +321,7 @@ fn register_all_plugins(
 
     // Cosmic Clock — replaces M0Dashboard + M1Walk + M2Vibrational in structural tab
     {
-        let cs = clock_state.clone();
+        let cs = runtime_state.clone().map(|state| state.clock());
         runtime.register_plugin_type("clock.cosmic", move || {
             let c = cs.clone().unwrap_or_else(new_shared_clock_state);
             clock::CosmicClockPlugin::new(c)
@@ -211,7 +331,7 @@ fn register_all_plugins(
     #[cfg(feature = "portal-images")]
     {
         // Unified Clock — full-screen offscreen-rendered clock (replaces clock.cosmic)
-        let cs = clock_state.clone();
+        let cs = runtime_state.clone().map(|state| state.clock());
         runtime.register_plugin_type("clock.unified", move || {
             let c = cs.clone().unwrap_or_else(new_shared_clock_state);
             unified_clock::UnifiedClockPlugin::new(c)
@@ -220,7 +340,7 @@ fn register_all_plugins(
 
     // M2 — wire clock state so vibrational matrix reflects live kairos
     {
-        let cs = clock_state.clone();
+        let cs = runtime_state.clone().map(|state| state.clock());
         runtime.register_plugin_type("m2.vibrational", move || {
             let c = cs.clone().unwrap_or_else(new_shared_clock_state);
             m2::M2VibrationalPlugin::new_with_clock(c)
@@ -229,7 +349,7 @@ fn register_all_plugins(
 
     // M3 — wire clock state so dossier auto-suggests current coordinate from tick12
     {
-        let cs = clock_state.clone();
+        let cs = runtime_state.clone().map(|state| state.clock());
         runtime.register_plugin_type("m3.knowing", move || {
             let c = cs.clone().unwrap_or_else(new_shared_clock_state);
             m3::M3KnowingPlugin::new_with_clock(c)
@@ -241,7 +361,7 @@ fn register_all_plugins(
     runtime.register_plugin_type("m4.flow", || m4::M4FlowPlugin::new());
     // M4 Oracle: wire SharedClockState so every cast updates portal clock state.
     {
-        let cs = clock_state.clone();
+        let cs = runtime_state.clone().map(|state| state.clock());
         runtime.register_plugin_type("m4.oracle", move || {
             let plugin = m4::M4OraclePlugin::new();
             if let Some(ref c) = cs {
@@ -254,11 +374,19 @@ fn register_all_plugins(
     runtime.register_plugin_type("m4.medicine", || m4::M4MedicinePlugin::new());
     runtime.register_plugin_type("m4.transform", || m4::M4TransformPlugin::new());
     runtime.register_plugin_type("m4.lens", || m4::M4LensPlugin::new());
-    runtime.register_plugin_type("m4.pratibimba", || m4::M4PratibimbaPlugin::new());
+    {
+        let temporal = runtime_state.clone().map(|state| state.temporal());
+        runtime.register_plugin_type("m4.pratibimba", move || {
+            temporal
+                .clone()
+                .map(m4::M4PratibimbaPlugin::new_with_temporal)
+                .unwrap_or_else(m4::M4PratibimbaPlugin::new)
+        });
+    }
 
     // M4 Spine — 8-chakra column with oracle decay
     {
-        let cs = clock_state.clone();
+        let cs = runtime_state.clone().map(|state| state.clock());
         runtime.register_plugin_type("m4.spine", move || {
             let c = cs.clone().unwrap_or_else(new_shared_clock_state);
             spine::M4SpinePlugin::new_with_clock(c)
@@ -267,7 +395,7 @@ fn register_all_plugins(
 
     // M4 Mini-Clock — 12-tick spanda wheel
     {
-        let cs = clock_state.clone();
+        let cs = runtime_state.clone().map(|state| state.clock());
         runtime.register_plugin_type("m4.mini_clock", move || {
             let c = cs.clone().unwrap_or_else(new_shared_clock_state);
             mini_clock::MiniClockPlugin::new_with_clock(c)
@@ -276,7 +404,15 @@ fn register_all_plugins(
 
     // M5
     runtime.register_plugin_type("m5.logos", || m5::M5LogosPlugin::new());
-    runtime.register_plugin_type("m5.chat", || m5::M5ChatPlugin::new());
+    {
+        let temporal = runtime_state.clone().map(|state| state.temporal());
+        runtime.register_plugin_type("m5.chat", move || {
+            temporal
+                .clone()
+                .map(m5::M5ChatPlugin::new_with_temporal)
+                .unwrap_or_else(m5::M5ChatPlugin::new)
+        });
+    }
     runtime.register_plugin_type("m5.fsm", || m5::M5FsmPlugin::new());
 }
 
@@ -286,7 +422,7 @@ fn register_all_plugins(
 /// Tab 1 ("Cosmic Clock"): clock.unified if portal-images is enabled,
 /// otherwise clock.cosmic as the feature-free fallback.
 ///   (CosmicClockPlugin replaces M0Dashboard+M1Walk+M2Vibrational per cosmic-clock spec)
-fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<WorkspaceRuntime> {
+fn build_workspace(runtime_state: PortalRuntimeState) -> color_eyre::Result<WorkspaceRuntime> {
     let mut workspace = WorkspaceRuntime::new(|| {
         HypertileRuntimeBuilder::default()
             .with_focus_highlight(true)
@@ -303,7 +439,7 @@ fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<Workspac
     workspace.rename_tab(0, "M4'-M5' Personal".to_string());
 
     // Register all plugin types on tab 0's runtime (oracle plugin gets the clock state)
-    register_all_plugins(workspace.active_runtime_mut(), Some(clock_state.clone()));
+    register_all_plugins(workspace.active_runtime_mut(), Some(runtime_state.clone()));
 
     // Replace the root pane's placeholder with m4.identity
     workspace
@@ -334,9 +470,9 @@ fn build_workspace(clock_state: SharedClockState) -> color_eyre::Result<Workspac
     workspace.rename_tab(1, "Cosmic Clock".to_string());
 
     // Register all plugin types on tab 1's runtime.
-    // SharedClockState MUST be shared with Tab 0 — same Arc — so oracle casts in Tab 0
+    // PortalRuntimeState MUST be shared with Tab 0 — same Arcs — so oracle casts in Tab 0
     // propagate to UnifiedClockPlugin in Tab 1.
-    register_all_plugins(workspace.active_runtime_mut(), Some(clock_state.clone()));
+    register_all_plugins(workspace.active_runtime_mut(), Some(runtime_state.clone()));
 
     // Single full-screen plugin: the image-backed unified clock when available,
     // else the feature-free cosmic clock scene. No splits.
@@ -367,7 +503,7 @@ mod tests {
     use super::*;
 
     fn test_workspace() -> color_eyre::Result<WorkspaceRuntime> {
-        build_workspace(new_shared_clock_state())
+        build_workspace(PortalRuntimeState::new())
     }
 
     #[test]

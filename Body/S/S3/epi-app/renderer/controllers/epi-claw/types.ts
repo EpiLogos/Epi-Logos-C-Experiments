@@ -181,6 +181,8 @@ export type AgentsListResult = {
 
 export type GatewaySessionRow = {
   key: string;
+  sessionKey?: string;
+  canonicalKey?: string;
   kind: "direct" | "group" | "global" | "unknown";
   label?: string;
   displayName?: string;
@@ -190,6 +192,16 @@ export type GatewaySessionRow = {
   space?: string;
   updatedAt: number | null;
   sessionId?: string;
+  recordSessionId?: string;
+  dayId?: string;
+  parentSessionKey?: string;
+  sourceSessionKey?: string;
+  sourceSessionKind?: string;
+  runtimeCwd?: string;
+  vaultRoot?: string;
+  resourceLoaderId?: string;
+  retrySettlementState?: string;
+  diagnostics?: unknown[];
   systemSent?: boolean;
   abortedLastRun?: boolean;
   thinkingLevel?: string;

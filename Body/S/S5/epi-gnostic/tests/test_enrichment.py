@@ -158,7 +158,7 @@ def test_prompt_renders():
 @_skip_neo4j
 async def test_direct_assignment_sets_properties(enricher):
     """assign_direct sets bimba_coordinate, coordinate_family, assignment_method,
-    and adds the family label to the node."""
+    without encoding coordinate family as a Neo4j label."""
     coord_enricher, ws, drv = enricher
     vid = f"test-direct-{uuid.uuid4().hex[:8]}"
 
@@ -177,7 +177,7 @@ async def test_direct_assignment_sets_properties(enricher):
         assert props.get("assignment_method") == "direct"
 
         labels = await _fetch_labels(drv, ws, vid)
-        assert "M" in labels, f"Expected 'M' label, got: {labels}"
+        assert "M" not in labels, f"Coordinate family must remain a property: {labels}"
     finally:
         await _delete_gnostic_node(drv, ws, vid)
 

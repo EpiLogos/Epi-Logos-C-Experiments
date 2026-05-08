@@ -1,4 +1,5 @@
 use crate::nara::{identity, kairos};
+use crate::portal::runtime_state::SharedPortalTemporalSurface;
 use crate::portal::theme;
 use ratatui::prelude::*;
 use ratatui::widgets::*;
@@ -1239,6 +1240,7 @@ pub struct M4PratibimbaPlugin {
     stats_text: String,
     recent_text: String,
     excavate_result: Option<String>,
+    temporal: Option<SharedPortalTemporalSurface>,
 }
 
 impl M4PratibimbaPlugin {
@@ -1247,8 +1249,15 @@ impl M4PratibimbaPlugin {
             stats_text: String::new(),
             recent_text: String::new(),
             excavate_result: None,
+            temporal: None,
         };
         plugin.load_data();
+        plugin
+    }
+
+    pub fn new_with_temporal(temporal: SharedPortalTemporalSurface) -> Self {
+        let mut plugin = Self::new();
+        plugin.temporal = Some(temporal);
         plugin
     }
 
@@ -1300,6 +1309,39 @@ impl HypertilePlugin for M4PratibimbaPlugin {
                     Style::default().fg(Color::White),
                 )));
             }
+        }
+
+        if let Some(temporal) = &self.temporal {
+            let temporal = temporal.lock().unwrap();
+            lines.push(Line::from(""));
+            lines.push(Line::from(Span::styled(
+                "  Temporal Orientation",
+                label_style,
+            )));
+            lines.push(Line::from(format!(
+                "  DAY {}  NOW {}",
+                temporal.day_id.as_deref().unwrap_or("unbound"),
+                temporal
+                    .now_wikilink
+                    .as_deref()
+                    .or_else(|| temporal.now_path.as_ref().and_then(|path| path.to_str()))
+                    .unwrap_or("unbound")
+            )));
+            lines.push(Line::from(format!(
+                "  Kairos {} fresh={}  Redis {}",
+                temporal.kairos_valid, temporal.kairos_fresh, temporal.redis_hydrated
+            )));
+            lines.push(Line::from(format!(
+                "  Pratibimba {}  SpaceTimeDB {}",
+                temporal
+                    .pratibimba_anchor_id
+                    .as_deref()
+                    .unwrap_or("unbound"),
+                temporal
+                    .spacetimedb_projection_table
+                    .as_deref()
+                    .unwrap_or("unbound")
+            )));
         }
 
         lines.push(Line::from(""));
@@ -1540,5 +1582,32 @@ mod tests {
             content.contains("Pratibimba"),
             "Should show Pratibimba title"
         );
+    }
+
+    #[test]
+    fn m4_pratibimba_renders_shared_temporal_surface() {
+        let runtime = crate::portal::runtime_state::PortalRuntimeState::from_gateway_context_value(
+            serde_json::json!({
+                "day": { "dayId": "07-05-2026" },
+                "now": { "wikilink": "[[NOW session-main]]" },
+                "session": { "sessionId": "session-main" },
+                "kairos": { "available": true, "fresh": true, "source": "nara.kairos.current" },
+                "pratibimba": { "anchorId": "pratibimba-abcd1234", "coordinate": "M4.4.4.4" },
+                "redis": { "hydrated": true, "sessionNowKey": "s3:gateway:temporal:session:session-main:now:md" },
+                "spacetimedb": { "projectionTable": "session_surface", "kairosProjectionTable": "kairos_surface" }
+            })
+        )
+        .expect("runtime should hydrate from gateway context");
+
+        let plugin = M4PratibimbaPlugin::new_with_temporal(runtime.temporal());
+        let area = Rect::new(0, 0, 90, 24);
+        let mut buf = Buffer::empty(area);
+        plugin.render(area, &mut buf, true);
+        let content = buffer_to_string(&buf, area);
+
+        assert!(content.contains("07-05-2026"));
+        assert!(content.contains("pratibimba-abcd1234"));
+        assert!(content.contains("Kairos"));
+        assert!(content.contains("Redis"));
     }
 }

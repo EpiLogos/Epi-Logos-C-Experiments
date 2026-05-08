@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
+use epi_s2_graph_services::infer_positions;
 use neo4rs::query;
-use serde::{Deserialize, Serialize};
 
 use crate::graph::client::Neo4jClient;
 use crate::graph::embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
@@ -10,24 +10,7 @@ use crate::graph::meta;
 use crate::graph::semantic_cache::{
     SemanticCacheClient, SemanticCacheConfig, SemanticCacheMatchStrategy,
 };
-
-/// Which retrieval strategy to use.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum RetrievalMode {
-    VectorOnly,
-    GraphOnly,
-    HybridRrf,
-    HybridWeighted,
-}
-
-/// A single scored result from any retrieval pipeline.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct RetrievalResult {
-    pub coordinate: String,
-    pub score: f64,
-    pub source: String,
-    pub data: serde_json::Value,
-}
+pub use epi_s2_graph_services::{RetrievalMode, RetrievalResult};
 
 /// Hybrid retriever that fuses vector and graph results using RRF or weighted
 /// scoring.
@@ -135,7 +118,7 @@ impl<'a> HybridRetriever<'a> {
     ) -> Result<std::collections::BTreeMap<String, String>, String> {
         let meta = meta::read_graph_meta(self.client).await?;
         let mut attributes = std::collections::BTreeMap::new();
-        attributes.insert("mode".into(), retrieval_mode_name(mode).into());
+        attributes.insert("mode".into(), mode.as_str().into());
         attributes.insert("top_k".into(), top_k.to_string());
         attributes.insert(
             "graph_revision".into(),
@@ -164,7 +147,10 @@ impl<'a> HybridRetriever<'a> {
         top_k: usize,
     ) -> Result<Vec<RetrievalResult>, String> {
         let tokens = tokenize_query(query_text);
-        let position_hints = infer_positions(query_text);
+        let position_hints: Vec<i64> = infer_positions(query_text)
+            .into_iter()
+            .map(i64::from)
+            .collect();
         let lower_query = query_text.trim().to_lowercase();
 
         let q = query(
@@ -437,40 +423,6 @@ fn tokenize_query(query_text: &str) -> Vec<String> {
     }
 
     tokens
-}
-
-fn infer_positions(query_text: &str) -> Vec<i64> {
-    let lower = query_text.to_lowercase();
-    let semantics: &[(i64, &[&str])] = &[
-        (0, &["ground", "foundation", "base", "core", "fundamental"]),
-        (1, &["definition", "concept", "meaning", "form"]),
-        (2, &["operation", "process", "method", "function"]),
-        (3, &["pattern", "structure", "archetype", "template"]),
-        (4, &["context", "situation", "environment"]),
-        (
-            5,
-            &["integration", "integrate", "synthesis", "whole", "meta"],
-        ),
-    ];
-
-    semantics
-        .iter()
-        .filter_map(|(position, words)| {
-            words
-                .iter()
-                .any(|word| lower.contains(word))
-                .then_some(*position)
-        })
-        .collect()
-}
-
-fn retrieval_mode_name(mode: RetrievalMode) -> &'static str {
-    match mode {
-        RetrievalMode::VectorOnly => "vector_only",
-        RetrievalMode::GraphOnly => "graph_only",
-        RetrievalMode::HybridRrf => "hybrid_rrf",
-        RetrievalMode::HybridWeighted => "hybrid_weighted",
-    }
 }
 
 fn read_score(row: &neo4rs::Row, key: &str) -> f64 {

@@ -76,6 +76,7 @@ The live `epi` command tree mirrors the full [[S]]/[[S']] and [[M]]/[[M']] coord
 | `epi vault` | Obsidian/vault operations, frontmatter, templates, [[Day]], [[NOW]], [[PASU]], [[Kairos]] anchoring | [[S1]] / [[S1']] with temporal facts from [[S3']] / [[Chronos]] and identity ground from [[PASU]] |
 | `epi graph` | Neo4j/Redis lifecycle, graph sync, retrieval, GraphRAG, semantic cache | [[S2]] / [[S2']] / [[Parashakti]] |
 | `epi gate` | Gateway runtime, config, cron, sessions, channels, app/device/node RPC | [[S3]] / [[S3']] / [[Chronos]] |
+| `epi gate temporal context` | Operator mirror of the S3' DAY/NOW/session context report, including [[Kairos]], protected [[M4.4.4.4]] Pratibimba refs, Redis temporal keys, SpaceTimeDB projection facts, history archive path, and Graphiti arc orientation | [[S3']] / [[Chronos]], consumed by [[S4]] / [[S5]] agents |
 | `epi gate graphiti` | Current compatibility control for the temporary Graphiti HTTP wrapper | Transitional [[S3]] command for a runtime that should become an [[S3']] library component; [[S5]] / [[S5']] governs Graphiti invocation and usage |
 | `epi agent` | Managed [[PI Agent]] runtime, [[ta-onta]], [[VAK]], sessions, teams, subagents, hooks, skills, plugins | [[S4]] / [[S4']] / [[Anima]], with [[Pleroma]] maintenance surfaces nested inside |
 | `epi nara` | Personal dialogical and M-function commands: clock, identity, oracle, medicine, transform, lens, logos | [[M4]], [[M']], [[Nara]], [[S5.m]] |
@@ -93,6 +94,10 @@ The live `epi` command tree mirrors the full [[S]]/[[S']] and [[M]]/[[M']] coord
 Clarification: command nesting is allowed to reflect operator ergonomics. The spec must still name the deeper coordinate home, especially where a command controls a temporary wrapper or helper whose architecture belongs elsewhere.
 
 Return clarification from [[S-SYSTEM-INDEX]]: the command tree should eventually expose a parity map rather than force all ontology into command nesting. For example, `epi gate graphiti` may remain a temporary operator affordance while [[Graphiti]] architecture belongs to [[S3']] and its invocation policy belongs to [[S5]] / [[S5']]. Likewise, `epi nara` remains the personal [[M4]] / [[M']] operator surface while typed `s5.m.*` methods make it accessible to [[Epii]].
+
+Portal clarification: the `epi portal` TUI is now expected to consume a shared S0' surface registry, not a hand-maintained command menu. Its centre `/` panel must aggregate the stable [[S]]/[[S']] topology, gateway parity records, extension `tools.json` manifests, `.claude-plugin` package manifests, [[Epii]] PI-agent contract methods, [[Pleroma]] capability gates, and registered Ratatui/Hypertile plugin IDs. This keeps the TUI, future desktop portal, CLI, gateway, and PI-agent capability membrane aligned to the same command/config truth instead of creating a parallel settings model.
+
+Temporal clarification: the live portal state must also consume one shared [[S3']] temporal projection. [[DAY]], [[NOW]], vault root, [[Kairos]], [[Redis]] temporal keys, [[SpaceTimeDB]] projection tables, and protected [[Pratibimba]] anchor are not clock-plugin-private facts. The structural clock side reads them as M0'-M3' timing/orientation; the [[Nara]] / [[Epii]] side reads the same projection as M4'/M5' personal, review, inbox, and invocation context. `epi portal` now has a `PortalRuntimeState` carrying this shared temporal projection alongside the existing shared clock state. It hydrates from configured [[SpaceTimeDB]] projection reads by polling the canonical `session_surface` and `kairos_surface` SQL projection by default, or by opening the native `v1.json.spacetimedb` WebSocket subscription loop when `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket` is set. In both paths it falls back to the local gateway session-store context used by `s3'.temporal.context`, and only then falls back to clock/session state. The future desktop/Tauri mirror must feed this same shape rather than inventing desktop- or plugin-specific state models.
 
 ### API Methods Homed Here
 
@@ -436,6 +441,7 @@ Secondary:
 | Runtime `s0.env` API dispatch | Designed | Implement varlock-aware secret masking tests |
 | `s0'.cmux.*` API dispatch | Designed | Wire to real cmux/tmux surface or explicitly declare local fallback behavior |
 | Coordinate-native gateway manifest | Target API exists in FLOW docs; live gateway manifest is product/runtime-native | Resolve in [[S3-SPEC]]; S0 only records local command affordances |
+| S0' portal surface registry/runtime state | Rust registry exists in `epi-cli/src/portal/surfaces.rs`; shared runtime projection exists in `epi-cli/src/portal/runtime_state.rs`; configured SpaceTimeDB projection hydration now reads `session_surface` / `kairos_surface` through the gateway registration client by HTTP SQL fallback or native WebSocket subscription; live readiness results distinguish raw services from agent access and expose the native SpaceTimeDB subscription plan | Continue broadening providers toward schema-backed config values and desktop-app mirroring without forking CLI/gateway behavior |
 | S/S' central parity artifact | Created as [[S-SYSTEM-INDEX]]; must stay synchronized with level specs, API, envelope, and TS definitions | Treat the index as the cross-level guard before sharding or implementing |
 | API / Envelope / TS harmonisation | Level specs now include deltas beyond the original FLOW files, especially S5 review inbox fields/methods | Promote accepted deltas into [[FLOW 2026 04 24 PI AGENT API v0.1]], [[FLOW 2026 04 22 ENVELOPE FIELD SCHEMA]], and [[FLOW 2026 04 25 TS INTERFACE DEFINITIONS]] before implementation hardens |
 | `epi kbase` command | `epi-cli/src/kbase/mod.rs` exists but is not wired in `lib.rs`/`main.rs`; live surface is `epi vimarsa` | Decide in [[S5-SPEC]] whether to expose `epi kbase` as alias/canonical command or retire docs toward [[Vimarsa]] |
@@ -472,6 +478,8 @@ Secondary:
 
 11. S0's next return work is a parity manifest: coordinate-native API method, TypeScript request/response type, envelope field effects, live `epi` command mirror, gateway routing status, and real test evidence.
 
+12. The S0' portal surface registry is the operator-facing view of that parity manifest. Adding a command, gateway method, PI extension tool, plugin package, agent contract method, or capability gate should surface through provider-backed registry data rather than a bespoke TUI edit.
+
 ## Build-Test Requirements For S0/S0'
 
 Minimum real-functionality tests:
@@ -485,6 +493,7 @@ Minimum real-functionality tests:
 - `s0'.cmux.list` either returns actual terminal topology or a clearly typed empty surface when cmux is unavailable.
 - `epi` CLI parity tests verify command families remain addressable and documented method mappings do not silently disappear.
 - S/S' parity manifest tests verify that accepted API methods have TypeScript types, envelope field mappings where they produce durable facts, and documented CLI/gateway status.
+- Portal surface registry tests verify that topology entries, gateway parity methods, extension tools, package manifests, Epii agent contract methods, Pleroma capability gates, and registered TUI plugins become inspectable command/config surfaces.
 
 ## Sub-Level Shard Seeds
 

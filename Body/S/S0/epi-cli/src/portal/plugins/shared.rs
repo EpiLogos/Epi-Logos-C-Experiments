@@ -100,6 +100,7 @@ impl HypertilePlugin for HelpPlugin {
             Line::from("  m5.logos        Logos cycle status"),
             Line::from("  m5.chat         Agent chat (stub)"),
             Line::from("  m5.fsm          M5 Logos FSM"),
+            Line::from("  s0.command      S0' command/config centre"),
             Line::from("  shared.status   Cross-M overview"),
             Line::from("  shared.help     This help"),
         ];

@@ -1,5 +1,6 @@
 pub use epi_s3_gateway_contract::{
-    DEFAULT_GATEWAY_PORT, EVENT_NAMES, METHOD_NAMES, OMNIPANEL_SESSION_METADATA, TEST_GATEWAY_PORT,
+    gateway_session_method_names, DEFAULT_GATEWAY_PORT, EVENT_NAMES, METHOD_NAMES,
+    OMNIPANEL_SESSION_METADATA, TEST_GATEWAY_PORT,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -133,6 +134,20 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         ],
     },
     CoordinateParityRecord {
+        canonical_method: "s3'.temporal.*",
+        owner: "S3'",
+        status: CoordinateParityStatus::Native,
+        live_gateway_method: Some("s3'.temporal.context"),
+        cli_mirror: Some("epi gate temporal context"),
+        body_path: "Body/S/S0/epi-cli/src/gate/temporal.rs",
+        test_evidence: &[
+            "gate_temporal_context.rs",
+            "gate_spacetimedb_bridge.rs",
+            "redis_cache.rs",
+            "graph_client.rs",
+        ],
+    },
+    CoordinateParityRecord {
         canonical_method: "s4.agent.*",
         owner: "S4",
         status: CoordinateParityStatus::Native,
@@ -173,11 +188,15 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
     CoordinateParityRecord {
         canonical_method: "s5.episodic.*",
         owner: "S3 runtime / S5 invocation",
-        status: CoordinateParityStatus::Compatibility,
-        live_gateway_method: None,
+        status: CoordinateParityStatus::Native,
+        live_gateway_method: Some("s5.episodic.search / s5.episodic.deposit"),
         cli_mirror: Some("epi gate graphiti"),
         body_path: "Body/S/S3/gateway-contract + Body/S/S0/epi-cli/src/gate/graphiti.rs",
-        test_evidence: &["Body/S/S3/gateway-contract graphiti_contract_keeps_runtime_separate_from_invocation_governance"],
+        test_evidence: &[
+            "Body/S/S3/gateway-contract graphiti_contract_keeps_runtime_separate_from_invocation_governance",
+            "gate_epii_agent_access.rs",
+            "graph_client.rs live Neo4j S3/S5 episode ownership proof",
+        ],
     },
     CoordinateParityRecord {
         canonical_method: "s5.bimba.*",
@@ -244,7 +263,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5'.epii.*",
         owner: "S5'",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5'.epii.status / s5'.epii.deposit"),
+        live_gateway_method: Some("s5'.epii.status / s5'.epii.deposit / s5'.epii.user.orientation / s5'.epii.pratibimba.status / s5'.epii.kairos.context"),
         cli_mirror: None,
         body_path: "Body/S/S5/epii-agent-core",
         test_evidence: &[
@@ -321,6 +340,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         "channels.status" | "channels.logout" | "chat.history" | "chat.abort" | "chat.send"
         | "chat.inject" | "send" | "sessions.list" | "sessions.preview" | "sessions.resolve"
         | "sessions.patch" | "sessions.reset" | "sessions.delete" | "sessions.compact"
+        | "sessions.fork" | "sessions.resume" | "sessions.import" | "sessions.tree"
         | "last-heartbeat" | "set-heartbeats" | "wake" | "talk.mode" | "tts.status"
         | "tts.enable" | "tts.disable" | "tts.convert" | "tts.setProvider" | "tts.providers"
         | "voicewake.get" | "voicewake.set" => Some("s3.*"),
@@ -329,6 +349,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "cron.runs" | "models.list" | "status" | "health" | "status.summary"
         | "health.snapshot" | "presence.list" | "usage.status" | "usage.cost"
         | "system-presence" | "system-event" => Some("s3'.*"),
+        "s3'.temporal.context" => Some("s3'.temporal.*"),
         "device.pair.list"
         | "device.pair.approve"
         | "device.pair.reject"
@@ -352,12 +373,17 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve" | "s5'.review.history" => {
             Some("s5'.review.*")
         }
+        "s5.episodic.search" | "s5.episodic.deposit" => Some("s5.episodic.*"),
         "s5'.improve.status"
         | "s5'.improve.propose"
         | "s5'.improve.evaluate"
         | "s5'.improve.promote"
         | "s5'.improve.history" => Some("s5'.improve.*"),
-        "s5'.epii.status" | "s5'.epii.deposit" => Some("s5'.epii.*"),
+        "s5'.epii.status"
+        | "s5'.epii.deposit"
+        | "s5'.epii.user.orientation"
+        | "s5'.epii.pratibimba.status"
+        | "s5'.epii.kairos.context" => Some("s5'.epii.*"),
         "node.pair.request" | "node.pair.list" | "node.pair.approve" | "node.pair.reject"
         | "node.pair.verify" => Some("s4.agent.*"),
         _ => None,
@@ -377,9 +403,17 @@ pub fn session_method_names() -> &'static [&'static str] {
         "sessions.reset",
         "sessions.delete",
         "sessions.compact",
+        "sessions.fork",
+        "sessions.resume",
+        "sessions.import",
+        "sessions.tree",
     ]
 }
 
 pub fn chat_method_names() -> &'static [&'static str] {
     &["chat.history", "chat.abort", "chat.send", "chat.inject"]
+}
+
+pub fn session_surface_method_names() -> Vec<&'static str> {
+    gateway_session_method_names()
 }

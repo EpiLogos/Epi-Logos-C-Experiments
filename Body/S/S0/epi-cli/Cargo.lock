@@ -891,6 +891,7 @@ dependencies = [
  "epi-s2-graph-schema",
  "epi-s2-graph-services",
  "epi-s3-gateway-contract",
+ "epi-s3-redis-context",
  "epi-s5-epii-agent-core",
  "epi-s5-epii-autoresearch-core",
  "epi-s5-epii-review-core",
@@ -939,8 +940,11 @@ name = "epi-s2-graph-services"
 version = "0.1.0"
 dependencies = [
  "epi-s2-graph-schema",
+ "epi-s3-redis-context",
+ "neo4rs",
  "serde",
  "serde_json",
+ "serde_yaml",
 ]
 
 [[package]]
@@ -950,6 +954,13 @@ dependencies = [
  "serde",
  "serde_json",
  "uuid",
+]
+
+[[package]]
+name = "epi-s3-redis-context"
+version = "0.1.0"
+dependencies = [
+ "serde",
 ]
 
 [[package]]

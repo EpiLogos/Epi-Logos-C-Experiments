@@ -66,7 +66,7 @@ fn bootstrap_dev_dry_run_reports_paths_and_env_contract() {
     assert!(payload["redisvlSetupScript"]
         .as_str()
         .unwrap()
-        .ends_with("scripts/redisvl_cache_service/setup.sh"));
+        .ends_with("Body/S/S3/redis-context/scripts/redisvl_cache_service/setup.sh"));
     assert!(payload["envFile"]
         .as_str()
         .unwrap()
@@ -185,14 +185,14 @@ fn live_graph_doctor_reports_backend_readiness() {
         .with_env(
             "EPILOGOS_SEMANTIC_CACHE_SCRIPT",
             format!(
-                "{}/Body/S/S0/epi-cli/scripts/redisvl_cache_service/redisvl_cache_service.py",
+                "{}/Body/S/S3/redis-context/scripts/redisvl_cache_service/redisvl_cache_service.py",
                 workspace_root()
             ),
         )
         .with_env(
             "EPILOGOS_SEMANTIC_CACHE_PYTHON",
             format!(
-                "{}/Body/S/S0/epi-cli/scripts/redisvl_cache_service/.venv/bin/python3",
+                "{}/Body/S/S3/redis-context/scripts/redisvl_cache_service/.venv/bin/python3",
                 workspace_root()
             ),
         )

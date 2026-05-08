@@ -44,7 +44,19 @@ export const PANEL_RPC_PARITY: Record<GatewayPanelId, PanelParityContract> = {
     required: ['presence.list'],
   },
   sessions: {
-    required: ['sessions.list', 'sessions.patch', 'sessions.delete'],
+    required: [
+      'sessions.list',
+      'sessions.resolve',
+      'sessions.preview',
+      'sessions.patch',
+      'sessions.reset',
+      'sessions.delete',
+      'sessions.compact',
+      'sessions.fork',
+      'sessions.resume',
+      'sessions.import',
+      'sessions.tree',
+    ],
   },
   cron: {
     required: ['cron.status', 'cron.list', 'cron.add', 'cron.update', 'cron.run', 'cron.remove', 'cron.runs'],

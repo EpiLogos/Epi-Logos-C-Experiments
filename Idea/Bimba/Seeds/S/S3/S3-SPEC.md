@@ -33,7 +33,7 @@ S3 is the imperative gateway control plane: [[WebSocket]] / [[RPC]] transport, p
 
 S3' is the shared temporal/state contract: [[Chronos]] grounding, [[Day]], [[NOW]], [[Kairos]], Redis-backed temporal context, [[Graphiti]] temporal episodic architecture, presence, subscriptions, [[SpacetimeDB]] live-state projection, session close/arc timing, and the [[Universal NOW]] field where gateway consequences become shared state.
 
-Redis ownership must be clear here: S2 may operate Redis/RedisVL as graph/cache substrate, but S3' owns Redis-backed temporal contextual grounding because live context is time-bound before it is graph-bound. Session continuity, NOW linkage, kairos state, active arc handles, episode handles, Graphiti search/result cache keys, and shared Day context belong under [[Chronos]] key law.
+Redis ownership must be clear here: S3 owns the Redis runtime substrate and RedisVL bridge residency. S2 owns graph semantic-cache law and namespace use over that runtime, while S3' owns Redis-backed temporal contextual grounding because live context is time-bound before it is graph-bound. Session continuity, NOW linkage, kairos state, active arc handles, episode handles, Graphiti search/result cache keys, and shared Day context belong under [[Chronos]] key law.
 
 Graphiti placement is likewise explicit: architecturally, [[Graphiti]] belongs at S3/S3' as the temporal episodic memory architecture. S5/S5' owns how Graphiti is invoked, searched, governed, reflected, and used by [[Aletheia]] / [[Epii]]. The current `epi-graphiti` FastAPI process is a wrapper around the `graphiti-core` Python library for Rust/HTTP/Docker convenience; it is not a necessary architectural sidecar and should not be preserved as the target shape.
 
@@ -91,11 +91,15 @@ Older PAI/plugin readings are not the target shape. Current architecture settles
 The live implementation is broad but not yet coordinate-native:
 
 - `Body/S/S0/epi-cli/src/gate/` implements gateway commands, protocol frames, parity manifest, server/runtime state, sessions, chat, config, cron, channels, logs, models, skills, nodes, devices, browser, approvals, TLS/lock, subagents, team store, Graphiti compatibility controls, and SpacetimeDB bridge. This is S3/S3' code currently package-resident inside the S0 CLI; future work should thin it into CLI wrappers over Body-native S3 modules.
+- `Body/S/S0/epi-cli/src/gate/temporal.rs` now provides the first live S3' temporal context surface. It resolves a gateway session into DAY/NOW identity, date and NOW wikilinks, `Idea/Pratibimba/Self/Action/History` archive placement, S3 Redis temporal keys, SpaceTimeDB projection metadata, and Graphiti session-arc orientation. It is exposed as `epi gate temporal context` for CLI use and `s3'.temporal.context` for S4/S5 agent/tool access.
 - `epi gate methods` returns a product/RPC-native manifest: `connect`, `chat.send`, `sessions.list`, `cron.add`, `node.invoke`, `exec.approval.request`, `models.list`, `skills.status`, `wizard.start`, and related methods.
 - Current canonical FLOW API wants coordinate-native methods: `s3.session.*`, `s3.channel.*`, `s3.message.route`, `s3'.temporal.*`, `s3'.day.*`, `s3'.kairos.*`, `s3'.presence.*`, and `s3'.context.*`.
-- `spacetimedb_bridge.rs` is currently a file-backed/test event bridge plus a stub client that logs intended SpacetimeDB reducer calls; full live SpacetimeDB reducer integration is not complete.
+- `Body/S/S3/gateway-contract` owns the pure SpaceTimeDB projection contract: projection table list, native/HTTP modes, `SubscribeMulti` message shape, S3'/S4/S5 owner fields, and subscription row decoding for `session_surface` / `kairos_surface`.
+- `Body/S/S3/redis-context` owns Redis runtime residency and the RedisVL bridge path contract. It keeps `s2:graph:semantic` and `s3:gateway:temporal` as distinct namespaces over the same local Redis Stack substrate.
+- `spacetimedb_bridge.rs` is currently a file-backed/test event bridge plus a live reducer client for the S3/S3' SpaceTimeDB registration/projection plane. The current S0-hosted gateway can register gateway, client, agent, session, heartbeat, Kairos, and temporal event surfaces when configured, and it can read the `session_surface` / `kairos_surface` projection through HTTP SQL polling. Gateway readiness now also exposes the native WebSocket subscription plan over the same projection tables, and `epi portal` can use that S3-owned plan to open a `v1.json.spacetimedb` `SubscribeMulti` loop for `session_surface` and `kairos_surface` updates. The target remains one SpaceTimeDB deployment holding many gateway, agent, and client instances for the same installation/workspace.
+- `Body/S/S3/epi-spacetime-module` still carries the older anonymous presence/oracle/logos schema. Its next build step is to become the gateway-client registration module: gateway instances, PI-agent instances, TUI/desktop/browser clients, session temporal surfaces, and temporal activity events keyed by installation/workspace and instance identity.
 - `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` currently wraps the `graphiti-core` library in a FastAPI service on port `37778`. This proves Graphiti can be used as a Python library; the HTTP sidecar is only the current integration wrapper for Rust gateway/Nara callers and should be retired or demoted behind an S3 library/runtime adapter.
-- There is not yet a dedicated `Body/S/S3/gateway`, `Body/S/S3/redis-context`, or `Body/S/S3/graphiti-runtime` module. `Body/S/S3` currently holds `epi-app` and `epi-spacetime-module`; the S3 gateway/runtime extraction remains a real next build step.
+- There is now a first dedicated `Body/S/S3/redis-context` module for Redis runtime residency. There is not yet a dedicated `Body/S/S3/gateway` or `Body/S/S3/graphiti-runtime` module. `Body/S/S3` currently also holds `epi-app` and `epi-spacetime-module`; the S3 gateway/runtime extraction remains a real next build step.
 
 ### Planning consequence
 
@@ -104,6 +108,38 @@ The S3 shard/build pass must reconcile three surfaces:
 - Product/RPC parity manifest required by [[OmniPanel]] and Epi-Claw-shaped clients.
 - Coordinate-native `s3.*` / `s3'.*` API contracts required by the FLOW architecture.
 - Actual process/state implementation: Rust gateway, SessionStore, Redis temporal context, SpacetimeDB live-state plane, and Graphiti-as-library integration currently hidden behind an HTTP wrapper.
+
+The immediate S3' context contract is now:
+
+| Surface | Role |
+|---|---|
+| `s3'.temporal.context` | Gateway RPC method for [[Anima]], [[Epii]], and other S4/S5 agents to orient to the current DAY/NOW/session/history/Redis/Graphiti temporal ground |
+| `epi gate temporal context` | S0 CLI mirror over the same report for operator use and testing |
+| `s3:gateway:temporal:session:{session_id}:now:md` | Redis hot key for session NOW markdown |
+| `s3:gateway:temporal:day:{day_id}:context` | Redis hot key for day-level temporal context |
+| `s3:gateway:temporal:day:{day_id}:kairos` | Redis hot key for safe DAY-level public-current-transit [[Kairos]] projection |
+| `s3:gateway:temporal:session:{session_id}:kairos` | Redis hot key for session-bound Kairos orientation |
+| `s3:gateway:temporal:agent:{agent_id}:session:{session_id}:orientation` | Redis hot key for agent-specific temporal orientation |
+| `s3:gateway:temporal:personal:{anchor_id}:orientation` | Redis hot key for protected-reference-only [[PersonalNexus]] orientation |
+| `gateway_instance` / `agent_instance` SpaceTimeDB tables | Live registration plane for many gateway and PI-agent processes in one SpaceTimeDB deployment |
+| `client_registration` SpaceTimeDB table | Live registration plane for TUI, desktop, browser, external, and agent clients, with scope/capability ownership explicit |
+| `session_surface` / `kairos_surface` / `temporal_event` SpaceTimeDB tables | Live-state projection carrying canonical session, DAY/NOW, history, Redis, Graphiti orientation, safe Kairos transit facts, protected Pratibimba refs, and activity facts |
+
+The registration invariant is: **one SpaceTimeDB can hold any number of gateway and agent instances**. Isolation belongs in installation/workspace identity, gateway instance id, agent instance id, client id, and session key. It does not belong in multiplying databases per process.
+
+Target reducer surface:
+
+| Reducer | Role |
+|---|---|
+| `register_gateway` | Insert or update a gateway process with endpoint, protocol version, workspace root hash, service ports, and started/last-seen timestamps |
+| `heartbeat_gateway` | Keep gateway process liveness current without mutating session facts |
+| `register_agent` | Insert or update an Anima/Epii/subagent process with bounded capability surface, plugin/skill hash, owning gateway, and active session where applicable |
+| `register_client` | Insert or update TUI, desktop, browser, external, or agent clients with requested scopes and access status |
+| `bind_session_temporal_context` | Project the same DAY/NOW/history/Redis/Graphiti temporal facts exposed by `s3'.temporal.context` |
+| `bind_kairos_surface` | Project safe public-current-transit Kairos facts for DAY/session subscriptions without raw personal identity or journal data |
+| `publish_temporal_event` | Append live activity/event facts for subscribers without treating SpaceTimeDB as the historical graph |
+
+Privacy invariant: [[Kairos]] transit data can be projected through SpaceTimeDB because it is public-current-time context. [[PASU]], raw birth data, journal text, personal chart detail, and [[PersonalNexus]] graph contents must remain local/protected. SpaceTimeDB may carry only stable protected references such as a Pratibimba anchor id or Graphiti namespace ref.
 
 ## A. S3 - Gateway Control Plane Base Technology
 
@@ -128,8 +164,24 @@ Current canonical S3 base technology:
 | Gateway method manifest | [[S3.1]] / [[S3.1']] | Rust | `gate/parity.rs` | Product/RPC compatibility surface |
 | SessionStore | [[S3.2]] / [[S3.2']] | Rust/files | `.epi/gate/sessions` | Session identity and patch authority |
 | GatewayRuntimeState | [[S3.3]] | Rust memory | Process-local | Run registry, event listeners, chat process tracking |
-| OmniPanel / app bridge | [[S3.5]] | Electron/React app side | Client process | Human-facing gateway client |
+| OmniPanel / app bridge | [[S3.5]] | Current Electron/React app side; future Tauri v2 shell | Client process | Human-facing gateway client and eventual desktop mirror of the TUI portal |
 | Graphiti runtime | [[S3.4']] / [[S3.5']] | Python library currently wrapped by FastAPI in `Body/S/S5/epi-gnostic` | Current wrapper port `37778` | Temporal episodic architecture; target is `Body/S/S3/graphiti-runtime` library/runtime integration, not a canonical sidecar |
+
+### Desktop App / Tauri V2 Direction
+
+Current checkup: `Body/S/S3/epi-app` is an Electron + Vite + React app. It already contains a gateway WebSocket client, Epi-Claw-compatible RPC client, shared capability/envelope types, and M0-M5 renderer domains. It currently also has Electron main-process filesystem and Neo4j access. The Tauri v2 migration should be specified before porting code.
+
+Target shape:
+
+| Layer | Current state | Tauri v2 target |
+|---|---|---|
+| Renderer | React M-domain shell, M0-M5 domain components, OmniPanel, command palette | Preserve useful renderer/domain components, but reshape primary layout to mirror the TUI `0` / `/` / `1` topology |
+| Main process | Electron IPC, direct filesystem helpers, direct Neo4j driver, gateway WebSocket client | Rust Tauri command layer that prefers gateway RPC and SpaceTimeDB subscriptions; direct filesystem access only through explicit S1/Hen/vault commands |
+| Live state | Gateway WebSocket plus local stores | Gateway RPC for commands and SpaceTimeDB registration/projection for gateway/agent/client/session liveness |
+| Settings | App-local config and UI panels | Same S0' portal surface registry/config ownership used by the TUI; no parallel desktop-only settings ontology |
+| Desktop role | M-domain exploration shell | External M-form mirror of the TUI portal: left `0` structural clock, centre `/` command/config/readiness, right `1` Nara/Epii/review/autoresearch |
+
+The app port must not make Electron-to-Tauri a mechanical shell swap. The port is an architectural promotion: desktop state should be driven by the same gateway parity, SpaceTimeDB registration, and portal surface registry contracts used by `epi portal`.
 
 ### API Methods Homed Here
 
@@ -553,8 +605,8 @@ S3' is partially embodied in:
 S3' is not yet complete:
 
 - Full SpacetimeDB reducer calls are stubbed/logged.
-- `s3'.context.*` Redis API is not yet clearly implemented as coordinate-native gateway methods.
-- `s3'.temporal.state` target fields exist in TS but are not obviously exposed in live gateway RPC.
+- `s3'.context.*` is not yet a full Redis API family, but `s3'.temporal.context` now gives the first coordinate-native gateway method for reading and optionally hydrating the S3' temporal Redis context.
+- `s3'.temporal.state` target fields exist in TS but are only partially represented by the live `s3'.temporal.context` report.
 - `s3'.day.*` and `s3'.kairos.*` are designed, with related CLI/vault/nara surfaces elsewhere, but not cleanly unified under S3' gateway methods.
 - Graphiti is unnecessarily isolated behind the current FastAPI sidecar; target work should make it an S3 runtime/library component and leave S5/S5' to decide when and how to use it.
 

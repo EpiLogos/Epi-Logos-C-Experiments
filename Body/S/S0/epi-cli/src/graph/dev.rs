@@ -30,11 +30,7 @@ pub fn repo_root_from_compose(compose_file: &Path) -> Result<PathBuf, String> {
 }
 
 pub fn redisvl_setup_script(repo_root: &Path) -> PathBuf {
-    repo_root
-        .join("epi-cli")
-        .join("scripts")
-        .join("redisvl_cache_service")
-        .join("setup.sh")
+    epi_s3_redis_context::redisvl_setup_script(repo_root)
 }
 
 pub fn env_file_path(repo_root: &Path) -> PathBuf {

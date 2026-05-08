@@ -38,7 +38,7 @@ use super::runs::{RunContext, RunSnapshot};
 use super::runtime::GatewayRuntimeState;
 use super::sessions::{self, SessionPatch, SessionStore};
 use super::skills;
-use super::spacetimedb_bridge::SpacetimeBridge;
+use super::spacetimedb_bridge::{SpacetimeBridge, SpacetimeRegistration};
 use super::subagents;
 use super::system;
 use super::tls::GatewayTlsRuntime;
@@ -80,6 +80,7 @@ pub async fn start(config: &GatewayConfig, json: bool) -> Result<String, String>
     let listener = TcpListener::bind((bind_host, port))
         .await
         .map_err(|err| err.to_string())?;
+    register_gateway_with_spacetimedb(port, &state_root).await?;
     run_listener_loop(listener, state_root, GatewayRuntimeState::default(), None).await?;
 
     render(&status, json)
@@ -189,6 +190,7 @@ pub async fn spawn_test_server_with_state_root(
 ) -> Result<TestServerHandle, String> {
     publish_m_clock_placeholder(&state_root)?;
     let listener = bind_with_retry(port).await?;
+    register_gateway_with_spacetimedb(port, &state_root).await?;
     let (shutdown_tx, shutdown_rx) = oneshot::channel();
     let runtime = GatewayRuntimeState::default();
 
@@ -223,7 +225,12 @@ async fn run_listener_loop(
     runtime: GatewayRuntimeState,
     mut shutdown_rx: Option<oneshot::Receiver<()>>,
 ) -> Result<(), String> {
-    let maintenance_task = tokio::spawn(maintenance_loop(state_root.clone(), runtime.clone()));
+    let registration = SpacetimeRegistration::from_env(local_port(&listener)?, &state_root)?;
+    let maintenance_task = tokio::spawn(maintenance_loop(
+        state_root.clone(),
+        runtime.clone(),
+        registration,
+    ));
     loop {
         let accepted = if let Some(shutdown_rx) = shutdown_rx.as_mut() {
             tokio::select! {
@@ -328,10 +335,13 @@ async fn handle_connection(
             match auth::validate_connect(&frame.params) {
                 Ok(()) => {
                     connected = true;
-                    (
-                        protocol::success(frame.id, protocol::connect_result()),
-                        None,
-                    )
+                    match register_client_with_spacetimedb(&state_root, &frame.params).await {
+                        Ok(()) => (
+                            protocol::success(frame.id, protocol::connect_result()),
+                            None,
+                        ),
+                        Err(message) => (protocol::error(frame.id, "internal", message), None),
+                    }
                 }
                 Err(err) => (protocol::error(frame.id, err.code, err.message), None),
             }
@@ -413,6 +423,14 @@ async fn dispatch_rpc(
                     .params
                     .get("label")
                     .map(|value| value.as_str().map(str::to_owned)),
+                session_id: frame
+                    .params
+                    .get("sessionId")
+                    .and_then(|value| value.as_str().map(str::to_owned)),
+                day_id: frame
+                    .params
+                    .get("dayId")
+                    .map(|value| value.as_str().map(str::to_owned)),
                 active_agent_id: frame
                     .params
                     .get("activeAgentId")
@@ -441,10 +459,42 @@ async fn dispatch_rpc(
                     .params
                     .get("spawnedBy")
                     .map(|value| value.as_str().map(str::to_owned)),
+                parent_session_key: frame
+                    .params
+                    .get("parentSessionKey")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                source_session_key: frame
+                    .params
+                    .get("sourceSessionKey")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                source_session_kind: frame
+                    .params
+                    .get("sourceSessionKind")
+                    .map(|value| value.as_str().map(str::to_owned)),
                 vault_now_path: frame
                     .params
                     .get("vaultNowPath")
                     .map(|value| value.as_str().map(str::to_owned)),
+                runtime_cwd: frame
+                    .params
+                    .get("runtimeCwd")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                vault_root: frame
+                    .params
+                    .get("vaultRoot")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                resource_loader_id: frame
+                    .params
+                    .get("resourceLoaderId")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                retry_settlement_state: frame
+                    .params
+                    .get("retrySettlementState")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                diagnostics: frame
+                    .params
+                    .get("diagnostics")
+                    .and_then(|value| value.as_array().map(|items| items.to_vec())),
                 delivery_context: frame.params.get("deliveryContext").map(|value| {
                     if value.is_null() {
                         None
@@ -585,9 +635,121 @@ async fn dispatch_rpc(
         "sessions.compact" => {
             let identifier = session_identifier(&frame.params)?;
             let record = store.resolve(&identifier).map_err(not_found_error)?;
-            chat::compact(state_root, &record.canonical_key)
-                .map(DispatchResult::immediate)
-                .map_err(internal_error)
+            let mut result =
+                chat::compact(state_root, &record.canonical_key).map_err(internal_error)?;
+            let transcript_path = chat::transcript_path(state_root, &record.canonical_key);
+            let review = review::submit(
+                state_root,
+                &json!({
+                    "source": "aletheia",
+                    "title": format!("Session compact summary: {}", record.canonical_key),
+                    "body": format!(
+                        "Aletheia compacted gateway session {} for Epii review. Transcript messages: {}.",
+                        record.canonical_key,
+                        result["messageCount"].as_u64().unwrap_or_default()
+                    ),
+                    "priority": "normal",
+                    "coordinate_context": {
+                        "sessionKey": record.canonical_key,
+                        "recordSessionId": record.session_id,
+                        "dayId": record.day_id,
+                        "nowPath": record.vault_now_path,
+                        "transcriptPath": transcript_path.display().to_string(),
+                        "pipeline": [
+                            "NOW",
+                            "transcript",
+                            "session_tree",
+                            "graphiti_episodes",
+                            "kbase_gnosis_retrieval",
+                            "aletheia_crystallisation",
+                            "epii_review"
+                        ]
+                    },
+                    "proposed_action": {
+                        "kind": "aletheia_crystallisation",
+                        "target": {
+                            "sessionKey": record.canonical_key,
+                            "transcriptPath": transcript_path.display().to_string()
+                        },
+                        "destination": "epii"
+                    },
+                    "requires_human": true
+                }),
+            )
+            .map_err(internal_error)?;
+            result["summary"] = json!({
+                "transcriptPath": transcript_path.display().to_string(),
+                "pipeline": "NOW + transcript + session tree + Graphiti episodes + kbase/Gnosis retrieval -> Aletheia crystallisation -> Epii review inbox"
+            });
+            result["epiiReview"] = review["item"].clone();
+            Ok(DispatchResult::immediate(result))
+        }
+        "sessions.fork" => {
+            let record = branch_session(&store, &frame.params, "fork").map_err(internal_error)?;
+            publish_session_surface(state_root, &record)?;
+            Ok(DispatchResult::immediate(json!({
+                "ok": true,
+                "canonicalKey": record.canonical_key,
+                "record": sessions::record_to_value(&record),
+                "entry": sessions::session_row(&record),
+            })))
+        }
+        "sessions.resume" => {
+            let record = branch_session(&store, &frame.params, "resume").map_err(internal_error)?;
+            publish_session_surface(state_root, &record)?;
+            Ok(DispatchResult::immediate(json!({
+                "ok": true,
+                "canonicalKey": record.canonical_key,
+                "record": sessions::record_to_value(&record),
+                "entry": sessions::session_row(&record),
+            })))
+        }
+        "sessions.import" => {
+            let target_key = required_str(&frame.params, "targetSessionKey")?;
+            let source_key = required_str(&frame.params, "sourceSessionKey")?;
+            let mut record = store.ensure(&target_key).map_err(internal_error)?;
+            let patch = SessionPatch {
+                label: frame
+                    .params
+                    .get("label")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                source_session_key: Some(Some(source_key)),
+                source_session_kind: Some(Some("import".to_owned())),
+                parent_session_key: optional_str(&frame.params, "parentSessionKey").map(Some),
+                day_id: frame
+                    .params
+                    .get("dayId")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                vault_now_path: frame
+                    .params
+                    .get("vaultNowPath")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                runtime_cwd: frame
+                    .params
+                    .get("runtimeCwd")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                vault_root: frame
+                    .params
+                    .get("vaultRoot")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                ..Default::default()
+            };
+            record = store
+                .patch(&record.canonical_key, patch)
+                .map_err(internal_error)?;
+            publish_session_surface(state_root, &record)?;
+            Ok(DispatchResult::immediate(json!({
+                "ok": true,
+                "canonicalKey": record.canonical_key,
+                "record": sessions::record_to_value(&record),
+                "entry": sessions::session_row(&record),
+            })))
+        }
+        "sessions.tree" => {
+            let identifier = session_identifier(&frame.params)?;
+            let root = store.resolve(&identifier).map_err(not_found_error)?;
+            let tree = session_tree(&store, &root.canonical_key).map_err(internal_error)?;
+            Ok(DispatchResult::immediate(tree))
         }
         "health" => system::health_snapshot(state_root)
             .map(DispatchResult::immediate)
@@ -1154,6 +1316,32 @@ async fn dispatch_rpc(
         "s4'.permission.get" => anima::permission_get(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s3'.temporal.context" => {
+            let session_key = frame
+                .params
+                .get("sessionKey")
+                .and_then(|value| value.as_str())
+                .unwrap_or("agent:main:main");
+            let agent_id = frame
+                .params
+                .get("agentId")
+                .and_then(|value| value.as_str())
+                .unwrap_or("operator");
+            let mut value =
+                super::temporal::context_value(state_root, &store, session_key, agent_id)
+                    .map_err(internal_error)?;
+            if frame
+                .params
+                .get("hydrateRedis")
+                .and_then(|value| value.as_bool())
+                .unwrap_or(false)
+            {
+                super::temporal::hydrate_redis_from_context(&mut value)
+                    .await
+                    .map_err(internal_error)?;
+            }
+            Ok(DispatchResult::immediate(value))
+        }
         "s5'.review.submit" => review::submit(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
@@ -1208,9 +1396,20 @@ async fn dispatch_rpc(
             .await
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s5.episodic.search" => graphiti::session_memory_search(&frame.params)
+            .await
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5.episodic.deposit" => graphiti::session_memory_deposit(&frame.params)
+            .await
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "s5'.epii.deposit" => epii::deposit(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s5'.epii.user.orientation" | "s5'.epii.pratibimba.status" | "s5'.epii.kairos.context" => {
+            Ok(DispatchResult::immediate(epii::user_orientation()))
+        }
         method if method.starts_with("nara.") => {
             super::nara::dispatch_nara(method, &frame.params).map(DispatchResult::immediate)
         }
@@ -1952,10 +2151,15 @@ fn event_frame(event: &GatewayEvent) -> Value {
     })
 }
 
-async fn maintenance_loop(state_root: PathBuf, runtime: GatewayRuntimeState) {
+async fn maintenance_loop(
+    state_root: PathBuf,
+    runtime: GatewayRuntimeState,
+    registration: Option<SpacetimeRegistration>,
+) {
     let mut tick_interval = tokio::time::interval(Duration::from_millis(150));
     let mut health_interval = tokio::time::interval(Duration::from_millis(350));
     let mut heartbeat_interval = tokio::time::interval(Duration::from_millis(550));
+    heartbeat_interval.tick().await;
 
     loop {
         tokio::select! {
@@ -1984,6 +2188,10 @@ async fn maintenance_loop(state_root: PathBuf, runtime: GatewayRuntimeState) {
             }
             _ = heartbeat_interval.tick() => {
                 let seq = runtime.next_seq("__gateway__");
+                if let Some(registration) = registration.clone() {
+                    let _ =
+                        tokio::task::spawn_blocking(move || registration.heartbeat_gateway());
+                }
                 runtime.broadcast(GatewayEvent::new(
                     "heartbeat",
                     None,
@@ -2007,6 +2215,109 @@ fn session_identifier(params: &Value) -> Result<String, (String, String)> {
         return Ok(value.to_owned());
     }
     required_str(params, "sessionKey")
+}
+
+fn branch_session(
+    store: &SessionStore,
+    params: &Value,
+    source_kind: &str,
+) -> Result<sessions::SessionRecord, String> {
+    let source_identifier = session_identifier(params).map_err(|(_, message)| message)?;
+    let source = store.resolve(&source_identifier)?;
+    let target_key = required_str(params, "targetSessionKey").map_err(|(_, message)| message)?;
+    let target = store.ensure(&target_key)?;
+    let label = params
+        .get("label")
+        .map(|value| value.as_str().map(str::to_owned));
+
+    store.patch(
+        &target.canonical_key,
+        SessionPatch {
+            label,
+            day_id: Some(source.day_id.clone()),
+            parent_session_key: Some(Some(source.canonical_key.clone())),
+            source_session_key: Some(Some(source.canonical_key.clone())),
+            source_session_kind: Some(Some(source_kind.to_owned())),
+            vault_now_path: Some(source.vault_now_path.clone()),
+            runtime_cwd: Some(source.runtime_cwd.clone()),
+            vault_root: Some(source.vault_root.clone()),
+            resource_loader_id: Some(source.resource_loader_id.clone()),
+            retry_settlement_state: Some(source.retry_settlement_state.clone()),
+            delivery_context: Some(source.delivery_context.clone()),
+            channel: Some(source.channel.clone()),
+            thread_id: Some(source.thread_id.clone()),
+            group_id: Some(source.group_id.clone()),
+            group_channel: Some(source.group_channel.clone()),
+            group_space: Some(source.group_space.clone()),
+            team_id: Some(source.team_id.clone()),
+            team_role: Some(source.team_role.clone()),
+            orchestration_kind: Some(source.orchestration_kind.clone()),
+            cmux_workspace: Some(source.cmux_workspace.clone()),
+            cmux_surface: Some(source.cmux_surface.clone()),
+            cmux_pane_id: Some(source.cmux_pane_id.clone()),
+            thinking_level: Some(source.thinking_level.clone()),
+            verbose_level: Some(source.verbose_level.clone()),
+            reasoning_level: Some(source.reasoning_level.clone()),
+            model_override: Some(source.model_override.clone()),
+            provider_override: Some(source.provider_override.clone()),
+            ..Default::default()
+        },
+    )
+}
+
+fn session_tree(store: &SessionStore, root_key: &str) -> Result<Value, String> {
+    let records = store.list()?;
+    let mut included = vec![root_key.to_owned()];
+    let mut changed = true;
+    while changed {
+        changed = false;
+        for record in &records {
+            let parent_match = record
+                .parent_session_key
+                .as_ref()
+                .map(|key| included.iter().any(|entry| entry == key))
+                .unwrap_or(false);
+            let source_match = record
+                .source_session_key
+                .as_ref()
+                .map(|key| included.iter().any(|entry| entry == key))
+                .unwrap_or(false);
+            if (parent_match || source_match)
+                && !included.iter().any(|entry| entry == &record.canonical_key)
+            {
+                included.push(record.canonical_key.clone());
+                changed = true;
+            }
+        }
+    }
+
+    let sessions = records
+        .iter()
+        .filter(|record| included.iter().any(|entry| entry == &record.canonical_key))
+        .map(sessions::session_row)
+        .collect::<Vec<_>>();
+    let lineage = records
+        .iter()
+        .filter(|record| included.iter().any(|entry| entry == &record.canonical_key))
+        .filter_map(|record| {
+            let parent = record
+                .parent_session_key
+                .as_ref()
+                .or(record.source_session_key.as_ref())?;
+            Some(json!({
+                "parentSessionKey": parent,
+                "childSessionKey": record.canonical_key,
+                "sourceSessionKey": record.source_session_key,
+                "sourceSessionKind": record.source_session_kind,
+            }))
+        })
+        .collect::<Vec<_>>();
+
+    Ok(json!({
+        "rootSessionKey": root_key,
+        "sessions": sessions,
+        "lineage": lineage,
+    }))
 }
 
 fn required_str(params: &Value, key: &str) -> Result<String, (String, String)> {
@@ -2126,6 +2437,8 @@ fn publish_session_surface(
             &record.canonical_key,
             record.aliases.first().map(String::as_str),
         )
+        .map_err(internal_error)?;
+    register_session_agent_with_spacetimedb(state_root, &record.canonical_key)
         .map_err(internal_error)
 }
 
@@ -2164,4 +2477,70 @@ fn now_ms() -> u128 {
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_millis()
+}
+
+fn local_port(listener: &TcpListener) -> Result<u16, String> {
+    listener
+        .local_addr()
+        .map(|address| address.port())
+        .map_err(|err| err.to_string())
+}
+
+async fn register_gateway_with_spacetimedb(port: u16, state_root: &PathBuf) -> Result<(), String> {
+    let Some(registration) = SpacetimeRegistration::from_env(port, state_root)? else {
+        return Ok(());
+    };
+    tokio::task::spawn_blocking(move || {
+        registration.register_gateway()?;
+        registration.heartbeat_gateway()
+    })
+    .await
+    .map_err(|err| err.to_string())?
+}
+
+async fn register_client_with_spacetimedb(
+    state_root: &PathBuf,
+    params: &Value,
+) -> Result<(), String> {
+    let Some(registration) = SpacetimeRegistration::from_env(DEFAULT_GATEWAY_PORT, state_root)?
+    else {
+        return Ok(());
+    };
+    let client_id =
+        optional_str(params, "clientId").unwrap_or_else(|| "client:anonymous".to_owned());
+    let client_kind =
+        optional_str(params, "clientKind").unwrap_or_else(|| "gateway-client".to_owned());
+    let scopes = params
+        .get("scopes")
+        .and_then(Value::as_array)
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(Value::as_str)
+                .map(str::to_owned)
+                .collect::<Vec<_>>()
+        })
+        .filter(|items| !items.is_empty())
+        .unwrap_or_else(|| vec!["s3.session".to_owned(), "s3'.temporal.context".to_owned()]);
+
+    tokio::task::spawn_blocking(move || {
+        registration.register_client(&client_id, &client_kind, &scopes)
+    })
+    .await
+    .map_err(|err| err.to_string())?
+}
+
+fn register_session_agent_with_spacetimedb(
+    state_root: &PathBuf,
+    session_key: &str,
+) -> Result<(), String> {
+    let Some(registration) = SpacetimeRegistration::from_env(DEFAULT_GATEWAY_PORT, state_root)?
+    else {
+        return Ok(());
+    };
+    let state_root = state_root.clone();
+    let session_key = session_key.to_owned();
+    std::thread::spawn(move || registration.register_session_agent(&state_root, &session_key))
+        .join()
+        .map_err(|_| "spacetimedb session registration thread panicked".to_owned())?
 }

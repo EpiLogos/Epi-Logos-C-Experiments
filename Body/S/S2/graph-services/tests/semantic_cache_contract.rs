@@ -5,6 +5,7 @@ use epi_s2_graph_services::{
     GraphRedisRole, SearchPayload, SemanticCacheConfig, SemanticCacheHealth,
     SemanticCacheMatchStrategy, StorePayload,
 };
+use epi_s3_redis_context::REDISVL_SERVICE_RELATIVE_PATH;
 
 #[test]
 fn semantic_cache_contract_is_s2_graph_cache_not_gateway_temporal_context() {
@@ -44,6 +45,21 @@ fn semantic_cache_config_environment_contract_carries_s2_graph_identity() {
         env["EPILOGOS_SEMANTIC_CACHE_Q_SCHEMA_VERSION"],
         epi_s2_graph_schema::Q_SCHEMA_VERSION
     );
+}
+
+#[test]
+fn semantic_cache_local_dev_uses_s3_redisvl_runtime_bridge() {
+    let config = SemanticCacheConfig::for_local_dev(std::path::Path::new("/repo"));
+
+    assert_eq!(
+        config.script_path.to_string_lossy(),
+        format!("/repo/{REDISVL_SERVICE_RELATIVE_PATH}")
+    );
+    assert!(config
+        .script_path
+        .to_string_lossy()
+        .contains("Body/S/S3/redis-context/scripts/redisvl_cache_service"));
+    assert!(!config.script_path.to_string_lossy().contains("Body/S/S2/"));
 }
 
 #[test]

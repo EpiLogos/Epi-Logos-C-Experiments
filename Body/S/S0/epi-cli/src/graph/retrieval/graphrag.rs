@@ -1,66 +1,11 @@
 use crate::graph::client::Neo4jClient;
-use crate::graph::coordinate_array_parser::CoordinateArrayParser;
 use crate::graph::retrieval::hybrid::{HybridRetriever, RetrievalMode};
+use epi_s2_graph_services::{
+    classify_query, disclosure_for_query_type, extract_coordinate_mentions, infer_positions,
+    CoordinateArrayParser,
+};
+pub use epi_s2_graph_services::{DisclosureLevel, QueryType};
 use neo4rs::query;
-use std::collections::HashSet;
-
-/// Progressive disclosure levels — map to #0-#5 archetype positions.
-///
-/// Each level reveals more about a coordinate node, from a bare UUID
-/// to the full holographic view including all relationships.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum DisclosureLevel {
-    /// #0 — Ground: UUID only (minimum token cost)
-    UuidOnly = 0,
-    /// #1 — Form: identity fields (coordinate, name, family, position)
-    Identity = 1,
-    /// #2 — Operation: summary with pithy description and layer
-    Summary = 2,
-    /// #3 — Pattern: full node properties
-    Content = 3,
-    /// #4 — Context: node + outgoing relationships
-    Connected = 4,
-    /// #5 — Integration: complete holographic view (node + in/out rels)
-    Complete = 5,
-}
-
-impl DisclosureLevel {
-    pub fn from_u8(n: u8) -> Self {
-        match n {
-            0 => Self::UuidOnly,
-            1 => Self::Identity,
-            2 => Self::Summary,
-            3 => Self::Content,
-            4 => Self::Connected,
-            _ => Self::Complete,
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum QueryType {
-    WhatIs,
-    HowDoes,
-    WhereIs,
-    ListAll,
-    RelatedTo,
-    Navigate,
-    General,
-}
-
-impl QueryType {
-    pub fn as_str(self) -> &'static str {
-        match self {
-            Self::WhatIs => "what_is",
-            Self::HowDoes => "how_does",
-            Self::WhereIs => "where_is",
-            Self::ListAll => "list_all",
-            Self::RelatedTo => "related_to",
-            Self::Navigate => "navigate",
-            Self::General => "general",
-        }
-    }
-}
 
 pub struct GraphRAGRetriever<'a> {
     client: &'a Neo4jClient,
@@ -72,78 +17,15 @@ impl<'a> GraphRAGRetriever<'a> {
     }
 
     pub fn classify_query(query_text: &str) -> QueryType {
-        let lower = query_text.trim().to_lowercase();
-        if lower.starts_with("what is")
-            || lower.starts_with("what's")
-            || lower.starts_with("what are")
-        {
-            QueryType::WhatIs
-        } else if lower.starts_with("how does")
-            || lower.starts_with("how do")
-            || lower.starts_with("how to")
-        {
-            QueryType::HowDoes
-        } else if lower.starts_with("where is")
-            || lower.starts_with("where are")
-            || lower.starts_with("where can")
-        {
-            QueryType::WhereIs
-        } else if lower.starts_with("list")
-            || lower.starts_with("show all")
-            || lower.starts_with("get all")
-        {
-            QueryType::ListAll
-        } else if lower.contains("related to") || lower.contains("connected to") {
-            QueryType::RelatedTo
-        } else if lower.contains(" from ") && lower.contains(" to ") {
-            QueryType::Navigate
-        } else {
-            QueryType::General
-        }
+        classify_query(query_text)
     }
 
     pub fn extract_coordinate_mentions(query_text: &str) -> Vec<String> {
-        let mut results = Vec::new();
-        let mut seen = HashSet::new();
-
-        for token in query_text.split_whitespace() {
-            let cleaned = token
-                .trim_matches(|c: char| !c.is_alphanumeric() && c != '#' && c != '_' && c != '\'');
-            if cleaned.is_empty() {
-                continue;
-            }
-            if CoordinateArrayParser::parse_one(cleaned).is_ok() && seen.insert(cleaned.to_string())
-            {
-                results.push(cleaned.to_string());
-            }
-        }
-
-        results
+        extract_coordinate_mentions(query_text)
     }
 
     pub fn infer_positions(query_text: &str) -> Vec<u8> {
-        let lower = query_text.to_lowercase();
-        let semantics: &[(u8, &[&str])] = &[
-            (0, &["ground", "foundation", "base", "core", "fundamental"]),
-            (1, &["definition", "concept", "meaning", "form"]),
-            (2, &["operation", "process", "method", "function"]),
-            (3, &["pattern", "structure", "archetype", "template"]),
-            (4, &["context", "situation", "environment"]),
-            (
-                5,
-                &["integration", "integrate", "synthesis", "whole", "meta"],
-            ),
-        ];
-
-        semantics
-            .iter()
-            .filter_map(|(position, words)| {
-                words
-                    .iter()
-                    .any(|word| lower.contains(word))
-                    .then_some(*position)
-            })
-            .collect()
+        infer_positions(query_text)
     }
 
     pub async fn retrieve(
@@ -420,30 +302,5 @@ impl<'a> GraphRAGRetriever<'a> {
             "neighbors": neighbors,
             "neighbor_count": neighbors.len(),
         }))
-    }
-}
-
-fn disclosure_for_query_type(query_type: QueryType, depth: u32) -> DisclosureLevel {
-    if depth >= 3 {
-        return DisclosureLevel::Complete;
-    }
-
-    match query_type {
-        QueryType::WhatIs => DisclosureLevel::Summary,
-        QueryType::WhereIs | QueryType::ListAll => DisclosureLevel::Identity,
-        QueryType::HowDoes | QueryType::RelatedTo | QueryType::Navigate => {
-            if depth > 1 {
-                DisclosureLevel::Complete
-            } else {
-                DisclosureLevel::Connected
-            }
-        }
-        QueryType::General => {
-            if depth > 1 {
-                DisclosureLevel::Connected
-            } else {
-                DisclosureLevel::Summary
-            }
-        }
     }
 }

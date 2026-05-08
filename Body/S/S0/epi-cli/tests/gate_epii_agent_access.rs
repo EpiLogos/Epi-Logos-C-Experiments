@@ -157,3 +157,116 @@ async fn s5_epii_gateway_status_observes_gnosis_nara_and_graphiti_without_mutati
     );
     assert!(status["world_return"]["graphiti"]["running"].is_boolean());
 }
+
+#[tokio::test]
+async fn s5_epii_user_orientation_reads_kairos_and_pratibimba_without_identity_mutation() {
+    let env = TestEnv::with_fake_pi();
+    let nara_root = env.home.join(".epi-logos").join("nara");
+    std::fs::create_dir_all(nara_root.join("kairos")).unwrap();
+    std::fs::write(
+        nara_root.join("profile.json"),
+        r#"{
+  "version": 1,
+  "layers": {},
+  "layer_presence_mask": 5,
+  "hash_preview": "facefeed",
+  "last_wound": null,
+  "kerykeion_version": "test"
+}"#,
+    )
+    .unwrap();
+    std::fs::write(
+        nara_root.join("kairos").join("current.json"),
+        r#"{
+  "planets": [
+    {"planet_id": 0, "degree": 55.0, "degree_anchor": 55, "retrograde": false}
+  ],
+  "dominant_sign": 1,
+  "dominant_element": 4,
+  "active_decan": 18,
+  "active_tattva": 2
+}"#,
+    )
+    .unwrap();
+
+    let mut client = TestGatewayClient::connect(env, 18916).await;
+    client
+        .request("connect", json!({}))
+        .await
+        .expect("connect handshake should succeed");
+
+    let orientation = client
+        .request("s5'.epii.user.orientation", json!({}))
+        .await
+        .expect("Epii should expose bounded user orientation");
+
+    assert_eq!(orientation["coordinate"], "S5/S5'");
+    assert_eq!(orientation["pratibimba"]["coordinate"], "M4.4.4.4");
+    assert_eq!(orientation["pratibimba"]["anchorId"], "pratibimba-facefeed");
+    assert_eq!(orientation["kairos"]["available"], true);
+    assert_eq!(orientation["kairos"]["activeDecan"], 18);
+    assert_eq!(
+        orientation["access"]["s4Access"],
+        "read temporal orientation and deposit review requests; no identity mutation"
+    );
+    assert_eq!(
+        orientation["graphiti"]["namespaceSource"],
+        "M4.4.4.4 PersonalNexus protected anchor"
+    );
+}
+
+#[tokio::test]
+async fn s5_graphiti_session_memory_methods_are_bounded_and_runtime_honest() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18917).await;
+
+    let search = client
+        .request(
+            "s5.episodic.search",
+            json!({
+                "query": "session compact evidence",
+                "agentId": "anima",
+                "sessionKey": "agent:main:main",
+                "dayId": "07-05-2026",
+                "namespaceRef": "pratibimba-test",
+                "limit": 3
+            }),
+        )
+        .await
+        .expect("bounded Graphiti search should return an honest runtime envelope");
+
+    assert_eq!(search["coordinate"], "S5/S5'");
+    assert_eq!(search["runtimeOwner"], "S3'");
+    assert_eq!(search["invocationOwner"], "S5/S5'");
+    assert_eq!(search["access"]["agentId"], "anima");
+    assert_eq!(search["access"]["mayMutateIdentity"], false);
+    assert!(search["runtimeAvailable"].is_boolean());
+    assert_eq!(search["query"], "session compact evidence");
+
+    let deposit = client
+        .request(
+            "s5.episodic.deposit",
+            json!({
+                "sourceAgent": "aletheia",
+                "sessionKey": "agent:main:main",
+                "dayId": "07-05-2026",
+                "namespaceRef": "pratibimba-test",
+                "content": "Aletheia crystallised a session summary for Epii review.",
+                "qlPosition": "5'",
+                "cp": "4.5",
+                "cpf": "(5/0)"
+            }),
+        )
+        .await
+        .expect("bounded Graphiti deposit should return an honest runtime envelope");
+
+    assert_eq!(deposit["coordinate"], "S5/S5'");
+    assert_eq!(deposit["runtimeOwner"], "S3'");
+    assert_eq!(deposit["invocationOwner"], "S5/S5'");
+    assert_eq!(deposit["access"]["sourceAgent"], "aletheia");
+    assert_eq!(deposit["access"]["requiresEpiiReview"], true);
+    assert_eq!(
+        deposit["privacyBoundary"],
+        "protected-local-episodic-memory"
+    );
+    assert!(deposit["runtimeAvailable"].is_boolean());
+}

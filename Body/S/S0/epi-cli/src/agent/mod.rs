@@ -15,6 +15,7 @@ mod plugin_manifest;
 mod plugins;
 pub mod runtime;
 pub mod session;
+pub mod session_propagation;
 mod skills;
 pub mod spawn;
 mod subagents;

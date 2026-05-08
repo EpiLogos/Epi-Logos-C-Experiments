@@ -272,6 +272,9 @@ fn gateway_methods() -> Vec<String> {
         "s5'.improve.history",
         "s5'.epii.status",
         "s5'.epii.deposit",
+        "s5'.epii.user.orientation",
+        "s5'.epii.pratibimba.status",
+        "s5'.epii.kairos.context",
     ]
     .iter()
     .map(|method| (*method).to_owned())

@@ -1,11 +1,18 @@
-use crate::sesh::session::{
-    bootstrap_sequence, load_env_file, read_session_state, repo_root_from_env, resolve_vault_root,
-    write_session_state, SessionContext, SessionState,
+use crate::{
+    agent::session_propagation::{
+        default_gateway_state_root, propagate_agent_session_runtime, GatewaySessionPropagation,
+        GatewaySessionPropagationOperation,
+    },
+    gate::sessions::{SessionRecord, SessionStore},
+    sesh::session::{
+        read_session_state, repo_root_from_env, AgentSessionRuntime, AgentSessionRuntimeFactory,
+        AgentSessionRuntimeRequest,
+    },
 };
 use chrono::{DateTime, Utc};
 use clap::Subcommand;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::Command;
 
 #[derive(Subcommand)]
@@ -18,6 +25,75 @@ pub enum SessionCmd {
         /// Override the random suffix for deterministic automation/tests
         #[arg(long = "random-suffix")]
         random_suffix: Option<String>,
+    },
+    /// Create a new runtime-backed gateway session
+    New {
+        /// Override the current time for deterministic automation/tests
+        #[arg(long)]
+        now: Option<String>,
+        /// Override the random suffix for deterministic automation/tests
+        #[arg(long = "random-suffix")]
+        random_suffix: Option<String>,
+        /// Gateway session key to write; defaults to agent:{agent}:main
+        #[arg(long = "session-key")]
+        session_key: Option<String>,
+        /// Human-readable gateway session label
+        #[arg(long)]
+        label: Option<String>,
+    },
+    /// Resume an existing gateway session through a fresh PI runtime projection
+    Resume {
+        /// Source gateway session key or alias
+        #[arg(long = "source-session-key")]
+        source_session_key: String,
+        /// Target gateway session key; defaults to the source key
+        #[arg(long = "target-session-key")]
+        target_session_key: Option<String>,
+        /// Override the current time for deterministic automation/tests
+        #[arg(long)]
+        now: Option<String>,
+        /// Override the random suffix for deterministic automation/tests
+        #[arg(long = "random-suffix")]
+        random_suffix: Option<String>,
+        /// Human-readable gateway session label
+        #[arg(long)]
+        label: Option<String>,
+    },
+    /// Fork an existing gateway session through a fresh PI runtime projection
+    Fork {
+        /// Source gateway session key or alias
+        #[arg(long = "source-session-key")]
+        source_session_key: String,
+        /// Target gateway session key for the fork
+        #[arg(long = "target-session-key")]
+        target_session_key: String,
+        /// Override the current time for deterministic automation/tests
+        #[arg(long)]
+        now: Option<String>,
+        /// Override the random suffix for deterministic automation/tests
+        #[arg(long = "random-suffix")]
+        random_suffix: Option<String>,
+        /// Human-readable gateway session label
+        #[arg(long)]
+        label: Option<String>,
+    },
+    /// Import an external session reference through a fresh PI runtime projection
+    Import {
+        /// External/source session key
+        #[arg(long = "source-session-key")]
+        source_session_key: String,
+        /// Target gateway session key for the imported run
+        #[arg(long = "target-session-key")]
+        target_session_key: String,
+        /// Override the current time for deterministic automation/tests
+        #[arg(long)]
+        now: Option<String>,
+        /// Override the random suffix for deterministic automation/tests
+        #[arg(long = "random-suffix")]
+        random_suffix: Option<String>,
+        /// Human-readable gateway session label
+        #[arg(long)]
+        label: Option<String>,
     },
     /// Show current session identity and bootstrap context
     Status,
@@ -34,6 +110,77 @@ pub enum SessionCmd {
 pub fn run(cmd: &SessionCmd, _json: bool) -> Result<String, String> {
     match cmd {
         SessionCmd::Init { now, random_suffix } => init(now.as_deref(), random_suffix.as_deref()),
+        SessionCmd::New {
+            now,
+            random_suffix,
+            session_key,
+            label,
+        } => create_lifecycle_session(
+            GatewaySessionPropagationOperation::New,
+            None,
+            session_key.clone(),
+            label.clone(),
+            now.as_deref(),
+            random_suffix.as_deref(),
+        ),
+        SessionCmd::Resume {
+            source_session_key,
+            target_session_key,
+            now,
+            random_suffix,
+            label,
+        } => {
+            let source = resolve_gateway_session(source_session_key)?;
+            create_lifecycle_session(
+                GatewaySessionPropagationOperation::Resume {
+                    source_session_key: Some(source.canonical_key.clone()),
+                },
+                Some(source),
+                target_session_key
+                    .clone()
+                    .or_else(|| Some(source_session_key.clone())),
+                label.clone(),
+                now.as_deref(),
+                random_suffix.as_deref(),
+            )
+        }
+        SessionCmd::Fork {
+            source_session_key,
+            target_session_key,
+            now,
+            random_suffix,
+            label,
+        } => {
+            let source = resolve_gateway_session(source_session_key)?;
+            create_lifecycle_session(
+                GatewaySessionPropagationOperation::Fork {
+                    source_session_key: source.canonical_key.clone(),
+                    parent_session_key: Some(source.canonical_key.clone()),
+                },
+                Some(source),
+                Some(target_session_key.clone()),
+                label.clone(),
+                now.as_deref(),
+                random_suffix.as_deref(),
+            )
+        }
+        SessionCmd::Import {
+            source_session_key,
+            target_session_key,
+            now,
+            random_suffix,
+            label,
+        } => create_lifecycle_session(
+            GatewaySessionPropagationOperation::Import {
+                source_session_key: source_session_key.clone(),
+                source_session_kind: Some("import".to_owned()),
+            },
+            None,
+            Some(target_session_key.clone()),
+            label.clone(),
+            now.as_deref(),
+            random_suffix.as_deref(),
+        ),
         SessionCmd::Status => status(),
         SessionCmd::Close => close(),
         SessionCmd::Continuation { summary } => continuation(summary.as_deref()),
@@ -42,60 +189,39 @@ pub fn run(cmd: &SessionCmd, _json: bool) -> Result<String, String> {
 
 fn init(now_override: Option<&str>, random_suffix: Option<&str>) -> Result<String, String> {
     let repo_root = repo_root_from_env();
-    let env_map = load_env_file(&repo_root)?;
-    let vault_root = resolve_vault_root(&env_map);
     let now = parse_now(now_override)?;
+    let runtime = AgentSessionRuntimeFactory::new().create(AgentSessionRuntimeRequest {
+        effective_cwd: repo_root.clone(),
+        now,
+        random_suffix: random_suffix.map(ToOwned::to_owned),
+        force_new: now_override.is_some() || random_suffix.is_some(),
+        agent_id: std::env::var("EPI_AGENT_ID")
+            .ok()
+            .or_else(|| std::env::var("EPI_AGENT_NAME").ok()),
+        pi_event: Some("session_start".to_string()),
+    })?;
+    let record = propagate_agent_session_runtime(
+        &runtime,
+        GatewaySessionPropagation {
+            state_root: default_gateway_state_root(),
+            operation: GatewaySessionPropagationOperation::SessionStart,
+            target_session_key: None,
+            label: None,
+        },
+    )?;
 
-    // Idempotency: reuse today's session if it already exists and now_path is present.
-    // This prevents sub-agent invocations from spawning a new NOW file every second.
-    if now_override.is_none() && random_suffix.is_none() {
-        if let Ok(existing) = read_session_state(&repo_root) {
-            let same_day = existing.context.day_id == now.format("%d-%m-%Y").to_string();
-            if same_day && existing.context.now_path.exists() {
-                let mut lines = Vec::new();
-                lines.push(format!("EPI_SESSION_ID={}", existing.context.session_id));
-                lines.push(format!("EPI_DAY_ID={}", existing.context.day_id));
-                lines.push(format!(
-                    "EPI_NOW_PATH={}",
-                    existing.context.now_path.display()
-                ));
-                lines.push(format!(
-                    "bootstrap: {}",
-                    existing
-                        .bootstrap
-                        .iter()
-                        .map(|a| a.name.as_str())
-                        .collect::<Vec<_>>()
-                        .join(" -> ")
-                ));
-                return Ok(lines.join("\n"));
-            }
+    let mut lines = runtime_lines(&runtime, &record);
+    if runtime.now_write == "created" {
+        let hook_output =
+            run_hook(repo_root.join("Body/S/S4/ta-onta/S4-0p-khora/S0/pre-session-init.sh"))?;
+        if !hook_output.is_empty() {
+            lines.push(hook_output.trim().to_string());
         }
     }
-
-    let context = SessionContext::new(now, random_suffix, &vault_root);
-    ensure_now_file(&context)?;
-
-    let bootstrap = bootstrap_sequence(&repo_root, &context.now_path);
-    let state = SessionState {
-        context: context.clone(),
-        bootstrap: bootstrap.clone(),
-        env: env_map.clone(),
-    };
-    write_session_state(&repo_root, &state)?;
-
-    let mut lines = Vec::new();
-    let hook_output =
-        run_hook(repo_root.join("Body/S/S4/ta-onta/S4-0p-khora/S0/pre-session-init.sh"))?;
-    if !hook_output.is_empty() {
-        lines.push(hook_output.trim().to_string());
-    }
-    lines.push(format!("EPI_SESSION_ID={}", context.session_id));
-    lines.push(format!("EPI_DAY_ID={}", context.day_id));
-    lines.push(format!("EPI_NOW_PATH={}", context.now_path.display()));
     lines.push(format!(
         "bootstrap: {}",
-        bootstrap
+        runtime
+            .bootstrap
             .iter()
             .map(|artifact| artifact.name.as_str())
             .collect::<Vec<_>>()
@@ -106,6 +232,75 @@ fn init(now_override: Option<&str>, random_suffix: Option<&str>) -> Result<Strin
     }
 
     Ok(lines.join("\n"))
+}
+
+fn create_lifecycle_session(
+    operation: GatewaySessionPropagationOperation,
+    source: Option<SessionRecord>,
+    target_session_key: Option<String>,
+    label: Option<String>,
+    now_override: Option<&str>,
+    random_suffix: Option<&str>,
+) -> Result<String, String> {
+    let now = parse_now(now_override)?;
+    let runtime = AgentSessionRuntimeFactory::new().create(AgentSessionRuntimeRequest {
+        effective_cwd: source_runtime_cwd(source.as_ref()),
+        now,
+        random_suffix: random_suffix.map(ToOwned::to_owned),
+        force_new: true,
+        agent_id: lifecycle_agent_id(source.as_ref()),
+        pi_event: Some(pi_event_for_operation(&operation).to_owned()),
+    })?;
+    let record = propagate_agent_session_runtime(
+        &runtime,
+        GatewaySessionPropagation {
+            state_root: default_gateway_state_root(),
+            operation,
+            target_session_key,
+            label,
+        },
+    )?;
+
+    Ok(runtime_lines(&runtime, &record).join("\n"))
+}
+
+fn runtime_lines(runtime: &AgentSessionRuntime, record: &SessionRecord) -> Vec<String> {
+    vec![
+        format!("EPI_SESSION_ID={}", runtime.context.session_id),
+        format!("EPI_DAY_ID={}", runtime.context.day_id),
+        format!("EPI_NOW_PATH={}", runtime.context.now_path.display()),
+        format!("GATEWAY_SESSION_KEY={}", record.canonical_key),
+    ]
+}
+
+fn resolve_gateway_session(identifier: &str) -> Result<SessionRecord, String> {
+    SessionStore::new(default_gateway_state_root())?.resolve(identifier)
+}
+
+fn source_runtime_cwd(source: Option<&SessionRecord>) -> PathBuf {
+    source
+        .and_then(|record| record.runtime_cwd.as_ref())
+        .map(PathBuf::from)
+        .unwrap_or_else(repo_root_from_env)
+}
+
+fn lifecycle_agent_id(source: Option<&SessionRecord>) -> Option<String> {
+    std::env::var("EPI_AGENT_ID")
+        .ok()
+        .or_else(|| std::env::var("EPI_AGENT_NAME").ok())
+        .or_else(|| source.map(|record| record.active_agent_id.clone()))
+}
+
+fn pi_event_for_operation(operation: &GatewaySessionPropagationOperation) -> &'static str {
+    match operation {
+        GatewaySessionPropagationOperation::SessionStart => "session_start",
+        GatewaySessionPropagationOperation::New => "new",
+        GatewaySessionPropagationOperation::Resume { .. } => "resume",
+        GatewaySessionPropagationOperation::Fork { .. } => "fork",
+        GatewaySessionPropagationOperation::Import { .. } => "import",
+        GatewaySessionPropagationOperation::ResourceReload => "resource_reload",
+        GatewaySessionPropagationOperation::CloseCompact => "close_compact",
+    }
 }
 
 fn status() -> Result<String, String> {
@@ -184,22 +379,6 @@ fn parse_now(now_override: Option<&str>) -> Result<DateTime<Utc>, String> {
     }
 }
 
-fn ensure_now_file(context: &SessionContext) -> Result<(), String> {
-    if let Some(parent) = context.now_path.parent() {
-        fs::create_dir_all(parent)
-            .map_err(|err| format!("failed to create {}: {err}", parent.display()))?;
-    }
-    if !context.now_path.exists() {
-        let content = format!(
-            "---\nsession_id: \"{}\"\nday_id: \"{}\"\n---\n\n# NOW\n\n## #0 Question\n\n## #1 Material\n\n## #2 Analysis\n\n## #3 Pattern\n\n## #4 Context\n\n## #5 Integration\n",
-            context.session_id, context.day_id
-        );
-        fs::write(&context.now_path, content)
-            .map_err(|err| format!("failed to write {}: {err}", context.now_path.display()))?;
-    }
-    Ok(())
-}
-
 fn run_hook(path: PathBuf) -> Result<String, String> {
     if !path.exists() {
         return Ok(String::new());
@@ -213,9 +392,4 @@ fn run_hook(path: PathBuf) -> Result<String, String> {
     } else {
         Err(String::from_utf8_lossy(&output.stderr).trim().to_string())
     }
-}
-
-#[allow(dead_code)]
-fn _read_text(path: &Path) -> Result<String, String> {
-    fs::read_to_string(path).map_err(|err| format!("failed to read {}: {err}", path.display()))
 }

@@ -1,0 +1,13 @@
+[package]
+name = "epi-s3-redis-context"
+version = "0.1.0"
+edition = "2021"
+description = "S3 Redis runtime context and RedisVL bridge residency contract"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "epi_s3_redis_context"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }

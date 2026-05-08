@@ -53,7 +53,7 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 
 | Tool | Purpose |
 |------|---------|
-| `aletheia_gnosis_ingest` | Ingest document into Gnosis (Docling parse → chunk → embed → store) |
+| `aletheia_gnosis_ingest` | Ingest document into Gnosis through the current RAG-Anything/LightRAG/MinerU-oriented pipeline, then chunk/embed/store |
 | `aletheia_gnosis_query` | Retrieve from Gnosis (hybrid: vector + graph + Redis cache) |
 | `aletheia_gnosis_notebook_create` | Create Gnosis:Notebook (session-scoped or persistent family) |
 | `aletheia_thought_route` | Classify thought artifact → route to T{n} bucket in Pratibimba |
@@ -65,7 +65,6 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 ## CLI Bridge
 
 ```
-epi techne gnosis serve              — Start Docling Serve (Docker)
 epi techne gnosis ingest <path>      — Ingest document
 epi techne gnosis query <text>       — Ad-hoc retrieval
 epi techne gnosis notebook           — Notebook CRUD
@@ -81,12 +80,14 @@ epi vault thought                    — Thought routing commands
 
 ```
 Document Input
-  → Docling Serve (Docker, port 5001) — parse to structured markdown
-  → docling-rs (Rust HTTP client) — ingestion bridge
+  → RAG-Anything / LightRAG document pipeline — parse and structure source material
+  → MinerU-oriented parser path where structured document parsing is needed
   → Gnosis:Chunk (Neo4j) — chunked + embedded at 3072 dims
   → Redis semantic cache — HOT/WARM/COLD retrieval tiers
   → Hybrid retrieval: vector + graph + RRF fusion
 ```
+
+Docling Serve is no longer a live container dependency. Older Docling planning references are compatibility/history only and should not be restored into Docker setup, Aletheia tool descriptions, or readiness checks.
 
 ### Neo4j Gnosis Namespace (separate from Bimba)
 
@@ -246,7 +247,7 @@ Located at: `aletheia/S5'/agents/`. Each is a PI-native subagent (system prompt 
 
 | Phase | Deliverable |
 |-------|------------|
-| P0 | Gnosis pipeline: Docling Serve + docling-rs + Neo4j namespace + 3072-dim embeddings |
+| P0 | Gnosis pipeline: RAG-Anything/LightRAG/MinerU-oriented parsing + Neo4j namespace + 3072-dim embeddings |
 | P0 | Session notebook creation: `aletheia_gnosis_notebook_create` |
 | P0 | Thought routing: `aletheia_thought_route` (`thoughts/` → `T{n}/` archive) |
 | P1 | `aletheia_gnosis_ingest` + `aletheia_gnosis_query` (hybrid retrieval) |

@@ -4,6 +4,7 @@ use epi_s3_gateway_contract::{GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHOR
 use epi_s5_epii_agent_core::{DepositRequest, EpiiAgentAccess};
 use serde_json::{json, Value};
 
+use crate::nara::kairos;
 use crate::techne::gnosis::{config::GnosisConfig, ingest, notebook};
 
 pub async fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
@@ -17,6 +18,27 @@ pub fn deposit(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, St
     let request: DepositRequest =
         serde_json::from_value(params.clone()).map_err(|err| err.to_string())?;
     serde_json::to_value(access(state_root).deposit(request)?).map_err(|err| err.to_string())
+}
+
+pub fn user_orientation() -> Value {
+    json!({
+        "coordinate": "S5/S5'",
+        "method": "s5'.epii.user.orientation",
+        "access": {
+            "stewardshipOwner": "S5'",
+            "personalCoordinate": "M4.4.4.4",
+            "s4Access": "read temporal orientation and deposit review requests; no identity mutation",
+            "s5Access": "read protected references, steward review, and govern identity-affecting changes through Epii/user validation",
+        },
+        "pratibimba": super::temporal::pratibimba_surface_value(),
+        "kairos": epii_kairos_status(),
+        "graphiti": {
+            "runtimeOwner": "S3'",
+            "invocationOwner": "S5/S5'",
+            "namespaceSource": "M4.4.4.4 PersonalNexus protected anchor",
+            "privacy": "episodic memory is local/protected; SpaceTimeDB carries only safe projection refs",
+        },
+    })
 }
 
 fn access(state_root: impl AsRef<Path>) -> EpiiAgentAccess {
@@ -81,6 +103,35 @@ fn nara_status() -> Value {
                 "code": code,
                 "message": message,
             },
+        }),
+    }
+}
+
+fn epii_kairos_status() -> Value {
+    match kairos::load_current() {
+        Ok(Some(snapshot)) => json!({
+            "available": true,
+            "fresh": kairos::is_current_fresh(),
+            "source": "nara.kairos.current",
+            "dominantSign": snapshot.dominant_sign,
+            "dominantElement": snapshot.dominant_element,
+            "activeDecan": snapshot.active_decan,
+            "activeTattva": snapshot.active_tattva,
+            "privacy": "public-current-transit-only",
+        }),
+        Ok(None) => json!({
+            "available": false,
+            "fresh": false,
+            "source": "nara.kairos.current",
+            "reason": "no cached Kairos snapshot; run `epi nara kairos sync`",
+            "privacy": "public-current-transit-only",
+        }),
+        Err(error) => json!({
+            "available": false,
+            "fresh": false,
+            "source": "nara.kairos.current",
+            "error": error,
+            "privacy": "public-current-transit-only",
         }),
     }
 }

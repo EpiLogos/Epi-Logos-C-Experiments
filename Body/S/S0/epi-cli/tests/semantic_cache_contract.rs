@@ -118,18 +118,18 @@ async fn semantic_cache_python_bridge_round_trip() {
     );
     std::env::set_var(
         "EPILOGOS_SEMANTIC_CACHE_SCRIPT",
-        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/scripts/redisvl_cache_service/redisvl_cache_service.py",
+        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S3/redis-context/scripts/redisvl_cache_service/redisvl_cache_service.py",
     );
     std::env::set_var(
         "EPILOGOS_SEMANTIC_CACHE_PYTHON",
-        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/scripts/redisvl_cache_service/.venv/bin/python3",
+        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S3/redis-context/scripts/redisvl_cache_service/.venv/bin/python3",
     );
     std::env::set_var("EPILOGOS_SEMANTIC_CACHE_ARCH", "arm64");
 
     let config = SemanticCacheConfig::from_env().unwrap();
     assert_eq!(
         config.python_bin.to_string_lossy(),
-        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/scripts/redisvl_cache_service/.venv/bin/python3"
+        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S3/redis-context/scripts/redisvl_cache_service/.venv/bin/python3"
     );
     let client = SemanticCacheClient::new(config);
     client.flush().await.unwrap();
@@ -179,11 +179,11 @@ async fn semantic_cache_python_bridge_health() {
     );
     std::env::set_var(
         "EPILOGOS_SEMANTIC_CACHE_SCRIPT",
-        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/scripts/redisvl_cache_service/redisvl_cache_service.py",
+        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S3/redis-context/scripts/redisvl_cache_service/redisvl_cache_service.py",
     );
     std::env::set_var(
         "EPILOGOS_SEMANTIC_CACHE_PYTHON",
-        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-cli/scripts/redisvl_cache_service/.venv/bin/python3",
+        "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S3/redis-context/scripts/redisvl_cache_service/.venv/bin/python3",
     );
     std::env::set_var("EPILOGOS_SEMANTIC_CACHE_ARCH", "arm64");
 

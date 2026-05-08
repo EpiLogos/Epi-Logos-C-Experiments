@@ -46,7 +46,9 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
     let gate_root = env.home.join(".epi").join("gate");
     let _guard = env.apply_to_process();
     let store = SessionStore::new(&gate_root).unwrap();
-    let record = store.create("agent:main:main").unwrap();
+    let record = store
+        .resolve("agent:main:main")
+        .expect("session init should propagate PI runtime identity into S3 gateway session store");
 
     assert_eq!(record.session_id, khora.context.session_id);
     assert_eq!(
@@ -57,6 +59,32 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
         record.vault_now_path.as_deref(),
         Some(khora.context.now_path.to_string_lossy().as_ref())
     );
+    assert_eq!(record.active_agent_id, "main");
+    assert_eq!(
+        record.runtime_cwd.as_deref(),
+        Some(env.repo_root.to_string_lossy().as_ref())
+    );
+    assert_eq!(
+        record.vault_root.as_deref(),
+        Some(vault_root.to_string_lossy().as_ref())
+    );
+    assert!(record
+        .resource_loader_id
+        .as_deref()
+        .unwrap_or_default()
+        .contains("pi:main:"));
+    assert!(record
+        .resource_loader_id
+        .as_deref()
+        .unwrap_or_default()
+        .contains("plugin-runtime.json"));
+    assert!(record
+        .diagnostics
+        .iter()
+        .any(|diagnostic| diagnostic["message"]
+            .as_str()
+            .unwrap_or_default()
+            .contains("created NOW")));
 
     let listed = epi_logos::gate::sessions::session_row(&record);
     assert_eq!(listed["sessionId"], khora.context.session_id);

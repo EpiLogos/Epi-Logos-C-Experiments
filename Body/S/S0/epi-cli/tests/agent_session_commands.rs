@@ -1,6 +1,7 @@
 mod common;
 
 use common::{read_to_string, run_epi, write_file, TestEnv};
+use epi_logos::gate::sessions::SessionStore;
 
 #[test]
 fn init_status_continuation_and_close_manage_session_state() {
@@ -72,4 +73,94 @@ fn init_status_continuation_and_close_manage_session_state() {
     assert!(close
         .stdout
         .contains("archived session 20260310-090807-abc123"));
+}
+
+#[test]
+fn lifecycle_commands_create_runtime_backed_gateway_sessions() {
+    let env = TestEnv::repo_with_assets()
+        .with_env("EPILOGOS_VAULT", "/tmp/epilogos-test-vault-agent-lifecycle")
+        .with_env("EPI_AGENT_ID", "anima");
+
+    write_file(
+        env.repo_root.join(".epi-logos.env"),
+        "EPILOGOS_VAULT=/tmp/epilogos-test-vault-agent-lifecycle\n",
+    );
+
+    let new_session = run_epi(
+        [
+            "agent",
+            "session",
+            "new",
+            "--now",
+            "2026-05-08T10:00:00Z",
+            "--random-suffix",
+            "new001",
+            "--session-key",
+            "agent:anima:new:one",
+            "--label",
+            "Anima NEW session",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        new_session.status.success(),
+        "new failed:\nstdout:\n{}\nstderr:\n{}",
+        new_session.stdout,
+        new_session.stderr
+    );
+    assert!(new_session
+        .stdout
+        .contains("GATEWAY_SESSION_KEY=agent:anima:new:one"));
+
+    let fork_session = run_epi(
+        [
+            "agent",
+            "session",
+            "fork",
+            "--source-session-key",
+            "agent:anima:new:one",
+            "--target-session-key",
+            "agent:anima:fork:one",
+            "--label",
+            "Anima forked execution",
+            "--now",
+            "2026-05-08T10:15:00Z",
+            "--random-suffix",
+            "fork01",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        fork_session.status.success(),
+        "fork failed:\nstdout:\n{}\nstderr:\n{}",
+        fork_session.stdout,
+        fork_session.stderr
+    );
+
+    let store = SessionStore::new(env.home.join(".epi/gate")).unwrap();
+    let new_record = store.resolve("agent:anima:new:one").unwrap();
+    let fork_record = store.resolve("agent:anima:fork:one").unwrap();
+
+    assert_eq!(new_record.session_id, "20260508-100000-new001");
+    assert_eq!(new_record.label.as_deref(), Some("Anima NEW session"));
+    assert_eq!(new_record.active_agent_id, "anima");
+    assert_eq!(
+        new_record.vault_now_path.as_deref(),
+        Some("/tmp/epilogos-test-vault-agent-lifecycle/Empty/Present/08-05-2026/20260508-100000-new001/now.md")
+    );
+
+    assert_eq!(fork_record.session_id, "20260508-101500-fork01");
+    assert_eq!(fork_record.label.as_deref(), Some("Anima forked execution"));
+    assert_eq!(
+        fork_record.source_session_key.as_deref(),
+        Some("agent:anima:new:one")
+    );
+    assert_eq!(
+        fork_record.parent_session_key.as_deref(),
+        Some("agent:anima:new:one")
+    );
+    assert_eq!(fork_record.source_session_kind.as_deref(), Some("fork"));
+    assert_eq!(fork_record.active_agent_id, "anima");
 }

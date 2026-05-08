@@ -78,6 +78,7 @@ Do every time before code movement:
 - [ ] Search code with `rg` before moving or renaming anything.
 - [ ] If editing a Rust symbol, check current call sites before extraction.
 - [ ] If changing a tested behavior, identify the existing test file first.
+- [ ] Before worktree cleanup, inspect every `.worktrees/*` status and branch ancestry. Remove only non-git stray folders or explicitly retired clean worktrees; harvest or abandon dirty worktrees deliberately after checkpointing main.
 
 Output:
 
@@ -123,7 +124,7 @@ Exit condition:
 
 ## Phase 2. S2 Graph Schema / Services Extraction
 
-Status: service contract boundary advanced. `Body/S/S2/graph-schema` owns the S2 graph schema contract, and `Body/S/S2/graph-services` owns Neo4j primary graph role plus Redis semantic-cache role/config/payload/health/client contracts. S0 graph code imports/re-exports these S2 contracts. Live Neo4j client/retrieval extraction remains next.
+Status: service contract boundary advanced. `Body/S/S2/graph-schema` owns the S2 graph schema contract, and `Body/S/S2/graph-services` owns Neo4j primary graph role, the live Neo4j config/client, plus Redis semantic-cache role/config/payload/health/client contracts. S0 graph code imports/re-exports these S2 contracts so `epi graph` remains the command mirror while S2 becomes the client-service authority. Retrieval extraction remains next. A first live namespace-isolation proof now verifies canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` nodes carrying S5 ownership as properties can coexist in one real Neo4j instance without label overlap or destructive cleanup.
 
 Live Docker note: `docker compose -f docker-compose.epi-s2.yml up -d neo4j redis` starts existing stateful containers with named volumes. On 2026-05-02, read-only checks showed Redis healthy with `epi_semantic_cache` and `epi_semantic_cache_test` indexes, Neo4j healthy with 96 legacy `:BimbaCoordinate` nodes and zero canonical `:Bimba` nodes. Do not run destructive ignored graph tests until migration/backup policy is explicit.
 
@@ -134,6 +135,7 @@ Why now: S2 is a real foundation, but its authority is hidden in `Body/S/S0/epi-
 Files/code areas:
 
 - Source: `Body/S/S0/epi-cli/src/graph/`
+- Source moved/corrected this tranche: `Body/S/S0/epi-cli/scripts/redisvl_cache_service/` -> `Body/S/S3/redis-context/scripts/redisvl_cache_service/`
 - Source: `Body/S/S5/epi-gnostic/cypher/`
 - External interface: `Body/S/S2/external/bimba-mcp/`
 - Target: `Body/S/S2/graph-schema`
@@ -151,9 +153,13 @@ Checklist:
 - [x] Move or expose schema constants so `:Bimba` and 3072 dimensions are owned by S2.
 - [x] Mark `:BimbaNode`, `:BimbaCoordinate`, `bimbaCoordinate`, old `#` coordinate syntax, and 768-dim vectors as compatibility/migration concerns.
 - [ ] Keep `bimba-mcp` explicitly external-facing and not PI-internal authority.
-- [ ] Point S0 CLI graph commands at S2 services instead of defining S2 logic locally.
+- [x] Point the S0 Neo4j graph client mirror at the S2 graph-services client authority instead of defining that client locally.
+- [x] Point S0 coordinate parser, GraphRAG query grammar, retrieval mode/result/disclosure contracts, and semantic-cache law at S2 graph-services authority.
+- [x] Move RedisVL semantic-cache bridge scripts out of S0 and into `Body/S/S3/redis-context/scripts/redisvl_cache_service/`; remove the stale generated S0 `.venv` cache.
+- [x] Add S3 `redis-context` crate so Redis runtime/RedisVL bridge residency is S3-owned while S2 keeps the graph semantic-cache namespace and payload contract.
 - [x] Update tests to import/call S2 services where possible.
-- [ ] Add or keep raw Neo4j connectivity/schema/index tests.
+- [x] Add or keep raw Neo4j connectivity/schema/index tests.
+- [x] Add live Neo4j namespace-isolation proof for canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` graph nodes carrying S5 ownership as properties, using test-owned labels only.
 - [x] Add read-only live Docker health checks for Neo4j/Redis/Redis Stack/semantic cache.
 - [x] Add or keep Redis graph semantic cache tests.
 - [ ] Add module-level retrieval tests that exercise real retrieval logic.
@@ -162,8 +168,15 @@ Checklist:
 Verification:
 
 - [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client`
+- [x] `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml`
+- [x] `cargo test --manifest-path Body/S/S3/redis-context/Cargo.toml`
+- [x] `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test semantic_cache_contract semantic_cache_local_dev_uses_s3_redisvl_runtime_bridge`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test coordinate_parser`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_commands bootstrap_dev_dry_run_reports_paths_and_env_contract`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_commands graphrag_classifies_and_extracts_coordinate_queries`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_neo4j_connect_and_health -- --ignored --exact`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_neo4j_run_query -- --ignored --exact`
+- [x] `CARGO_TARGET_DIR=/tmp/epi-cargo-target-neo4j-namespace cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_live_neo4j_namespaces_isolate_bimba_legacy_and_gnosis -- --ignored --exact --nocapture`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_commands`
 - [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_retrieval`
 - [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_seed`
@@ -178,7 +191,7 @@ Exit condition:
 
 ## Phase 3. S3 Gateway / Redis Context / Graphiti Runtime Extraction
 
-Status: first extraction boundary advanced. `Body/S/S3/gateway-contract` now owns gateway protocol constants, product method names, event names, ports, omnipanel metadata, session record/patch contracts, run/event contracts, chat-run registry, S3 temporal Redis role/key contract, Graphiti runtime constants, Graphiti adapter mode contract, and the S3-runtime/S5-invocation Graphiti separation. S0 gate code re-exports/uses these contracts. Live gateway/server/session-store adapter extraction remains next. S4 invocation tests now also prove real gateway agent RPC and subagent session persistence through the current S0-hosted server/store.
+Status: first extraction boundary advanced. `Body/S/S3/gateway-contract` now owns gateway protocol constants, product method names, event names, ports, omnipanel metadata, session record/patch contracts, run/event contracts, chat-run registry, S3 temporal Redis role/key contract, SpaceTimeDB projection plan/message/row-decoding contracts, Graphiti runtime constants, Graphiti adapter mode contract, and the S3-runtime/S5-invocation Graphiti separation. S0 gate code re-exports/uses these contracts. `Body/S/S0/epi-cli/src/gate/temporal.rs` now gives the live S3' temporal context report over DAY/NOW/session/history/Redis/SpacetimeDB/Graphiti/Kairos/Pratibimba orientation, exposed as both `epi gate temporal context` and `s3'.temporal.context` for S4/S5 agent access. Live gateway/server/session-store adapter extraction remains next. S4 invocation tests now also prove real gateway agent RPC and subagent session persistence through the current S0-hosted server/store. SpaceTimeDB now declares the shared gateway/client/agent/session/temporal/Kairos projection schema, and the current S0-hosted gateway can register gateway, client, agent, session, heartbeat, and Kairos surfaces against that schema when `SPACETIMEDB_URL` / `EPI_GATE_SPACETIME_URL` is configured. `health.snapshot` and the S0' portal readiness registry surface registration readiness separately from projection-readiness. The TUI can hydrate the shared temporal projection from SpaceTimeDB through HTTP SQL polling by default; when `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket` is set, it now opens the native SpaceTimeDB WebSocket subscription, sends the S3-owned `SubscribeMulti` contract over `v1.json.spacetimedb`, decodes `session_surface` / `kairos_surface` updates through the S3-owned row contract, and updates the shared portal runtime state continuously, with local gateway context as fallback. The future desktop mirror remains next.
 
 Goal: make [[S3]] runtime authority Body-native and separate live temporal/session context from S2 graph cache.
 
@@ -203,9 +216,23 @@ Checklist:
 - [ ] Keep product-native gateway methods through explicit coordinate parity, not implicit ontology.
 - [x] Create or prepare S3 gateway module boundary.
 - [x] Create or prepare S3 Redis context boundary distinct from S2 Redis graph semantic cache.
+- [x] Add first S3' temporal context access surface for S4/S5 agents: `s3'.temporal.context` and `epi gate temporal context` report DAY/NOW wikilinks, history archive path, Redis keys, SpacetimeDB projection table, and Graphiti arc orientation.
+- [x] Hydrate S3' Redis temporal context from real NOW content under `s3:gateway:temporal:*` when requested, without treating Redis as S2 graph cache.
+- [x] Project the same DAY/NOW/Redis/history/Graphiti temporal facts through the SpaceTimeDB bridge session surface.
+- [x] Project safe Kairos and protected Pratibimba anchor references through the same S3/S3' temporal context and SpaceTimeDB bridge.
+- [x] Replace the older `epi-spacetime-module` presence/oracle/logos centre with a gateway-client registration schema: `gateway_instance`, `agent_instance`, `client_registration`, `session_surface`, `kairos_surface`, and `temporal_event`.
+- [x] Add reducer contracts for `register_gateway`, `heartbeat_gateway`, `register_agent`, `register_client`, `bind_session_temporal_context`, `bind_kairos_surface`, and `publish_temporal_event`.
+- [x] Wire the current S0-hosted gateway start/test-server path to register and heartbeat against the SpaceTimeDB registration plane when configured.
+- [x] Wire gateway `connect` client registration and session/agent surface publishing to SpaceTimeDB reducers when configured.
+- [x] Surface SpaceTimeDB registration readiness through `health.snapshot` without folding it into session/vault/graph health success.
+- [x] Add separate S0' portal readiness surfaces for SpaceTimeDB registration and TUI/desktop projection subscription.
+- [x] Make the TUI consume the shared SpaceTimeDB projection shape when configured by reading `session_surface` and `kairos_surface` through the gateway registration client.
+- [x] Add the native SpaceTimeDB projection subscription plan to the gateway registration readiness contract, including endpoint, tables, S3'/S4/S5 owner semantics, HTTP SQL fallback mode, `SubscribeMulti` message shape, and subscription row decoding.
+- [x] Upgrade the TUI projection reader to native SpaceTimeDB WebSocket subscription when `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket`, while retaining HTTP SQL polling as fallback/default until deployment config flips.
+- [ ] Make the future desktop/Tauri client consume the same SpaceTimeDB projection shape instead of inventing a desktop-local temporal state model.
 - [x] Move Graphiti runtime adapter target to S3' design language; demote wrapper/sidecar paths to compatibility.
 - [ ] Keep S5 invocation/search/arc governance out of S3 runtime code.
-- [ ] Add product-to-coordinate parity tests for at least one `s3.*` family and one `s3'.*` family.
+- [x] Add product-to-coordinate parity tests for at least one `s3.*` family and one `s3'.*` family.
 - [ ] Add raw gateway connect/session tests after extraction.
 - [x] Add module-level Redis temporal context tests.
 - [x] Add a Graphiti runtime adapter test that does not assume sidecar architecture.
@@ -217,11 +244,226 @@ Verification:
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_runtime_state`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_method_parity`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_full_parity_contract`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge`
+- [x] `cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_full_parity_contract`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_sessions`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_surfaces_contract`
+- [x] `CARGO_TARGET_DIR=/tmp/epi-cargo-target-spacetime cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_when_configured -- --exact --nocapture`
+- [x] `CARGO_TARGET_DIR=/tmp/epi-cargo-target-spacetime cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge --test portal_surfaces_contract --test gate_agent_runtime_contract`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_temporal_context`
+- [x] Live Redis hydration against Docker `epi-redis` on 2026-05-07: `EPILOGOS_REDIS_URI=redis://127.0.0.1:6379 CARGO_TARGET_DIR=/tmp/epi-cargo-target-kairos cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_temporal_context -- --ignored --nocapture`
+- [x] Live Neo4j Graphiti temporal substrate proof: `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_live_neo4j_graphiti_temporal_episode_keeps_s3_architecture_and_s5_usage_clear -- --ignored --exact --nocapture`
 
 Exit condition:
 
 - S3 owns gateway/session/temporal context architecture, S0 remains a mirror, and Redis/Graphiti roles are not ambiguous.
+
+## Phase 3A. Gateway Session Runtime / Khora Parity
+
+Status: first audit/contract pass complete, and the S3 gateway-contract now owns the first typed session operation surface consumed by S0 parity and the portal. The gateway session paradigm should now be treated as the shared S3/S4.0' runtime contract: S3 owns live session truth, Khora owns agent runtime identity and NOW write authority, S3' projects temporal/session facts through Redis and SpaceTimeDB, and S5' governs session summarisation, review, and autoresearch use. The existing Electron OmniPanel / Gateway UI has now been checked as the functional-logical parity reference for the first pass: the renderer actively exposes chat history/send/abort and session list/patch/delete, while the gateway already owns resolve, preview, reset, and compact as canonical operations. The renderer now uses `sessionKey` for patch/delete calls, gateway session rows expose `sessionKey` and `canonicalKey` alongside compatibility `key`, and the frontend parity manifest declares the full session operation family. Session records now have homes for parent/source lineage, runtime cwd, vault root, resource-loader identity, retry settlement state, and structured diagnostics. Remaining implementation should keep the logic in gateway/portal contracts rather than preserving Electron-local authority.
+
+Goal: make gateway sessions operate consistently across CLI, TUI, future Tauri app, PI-agent runtime, Khora session_start, SpaceTimeDB projection, Graphiti memory, and Epii review/summarisation.
+
+Why here: DAY/NOW context ids now give the correct session naming paradigm, but naming alone is not enough. The system needs one canonical session lifecycle for create, list, resolve, preview, patch, reset, delete, compact, fork, resume, import, transcript/run state, resource loading, diagnostics, and session memory.
+
+Files/code areas:
+
+- Source/parity reference: current Electron OmniPanel / Gateway UI session code in `Body/S/S3/epi-app`
+- Source: `Body/S/S0/epi-cli/src/gate/session_store.rs`
+- Source: `Body/S/S0/epi-cli/src/gate/sessions.rs`
+- Source: `Body/S/S0/epi-cli/src/gate/temporal.rs`
+- Source: `Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`
+- Source: `Body/S/S0/epi-cli/src/portal`
+- Source: `Body/S/S4/ta-onta/S4-0p-khora`
+- Source: `Body/S/S5/epi-kbase`
+- Target: `Body/S/S3/gateway`
+- Target: `Body/S/S3/gateway-contract`
+- Target: `Body/S/S3/redis-context`
+- Target: `Body/S/S3/graphiti-runtime`
+
+Full shape:
+
+The session runtime has seven work lanes. They should be executed as one phase, but each lane needs its own proof so the build does not collapse UI parity, gateway storage, Khora runtime, temporal projection, memory, and review into one vague "session" feature.
+
+Execution tranche - real PI session propagation:
+
+This tranche is the next non-negotiable work set. It should be run as one coherent implementation pass, not as isolated fixes. The intent is to make PI session identity propagate from the PI/Khora runtime into S3 gateway truth, S3' live projection, S4/S5 agent access, and S5' review/summarisation without product-local gaps.
+
+Task group A - centralize the runtime-to-gateway write path:
+
+- [x] Add the first direct propagation from `epi agent session init` into the S3 gateway session store.
+- [x] Extract the propagation logic from `Body/S/S0/epi-cli/src/agent/session.rs` into a reusable runtime propagation function/module with a narrow API: input `AgentSessionRuntime`, output canonical `SessionRecord` plus diagnostics.
+- [x] Make the reusable propagation function derive the canonical gateway key from PI agent identity and operation kind without hardcoding only `agent:{pi_agent}:main`.
+- [x] Ensure the propagation function accepts explicit operation context: `session_start`, `new`, `resume`, `fork`, `import`, `resource_reload`, and `close/compact`.
+- [x] Make the propagation function write only S3-owned fields through `SessionStore` and preserve Khora-owned fields as values supplied by the runtime, not recomputed in the gateway layer.
+- [x] Add tests proving repeated propagation for the same runtime is idempotent: no duplicate aliases, no new NOW path, no lost diagnostics, and stable canonical key.
+- [ ] Add tests proving propagation for a different effective cwd recreates cwd-bound paths, vault root, gate root, plugin runtime path, and resource-loader id.
+
+Task group B - make later PI lifecycle operations use the same runtime factory:
+
+- [ ] Identify the actual PI command/event surfaces for `/new`, `/resume`, `/fork`, import, resource reload, retry, compact, and close in the current PI/Khora/VAK code.
+- [ ] Add operation-specific `AgentSessionRuntimeRequest` fields where needed: operation kind, source session key, target session key, parent session key, source kind, imported source handle, branch label, and expected agent id.
+- [x] Implement `epi agent session new` or the existing equivalent command path so it calls `AgentSessionRuntimeFactory` with `force_new=true`, writes a new NOW, and propagates the new record to S3.
+- [ ] Implement/route `epi agent session resume` so it resolves a source gateway session, recreates effective-cwd-bound PI runtime state, preserves DAY/NOW identity where appropriate, and propagates S3 lineage.
+- [x] Implement/route `epi agent session fork` so it creates a new target gateway session with parent/source lineage, new runtime identity when requested, inherited agent/resource context, and explicit `sourceSessionKind=fork`.
+- [x] Implement/route `epi agent session import` so external Claude/PI/Codex runs enter through the same runtime factory and store imported source handles without pretending they are native Khora starts.
+- [ ] Ensure gateway RPC methods `sessions.fork`, `sessions.resume`, and `sessions.import` either call the shared runtime propagation path or explicitly document/test why they are storage-only compatibility operations.
+- [ ] Add real gateway RPC tests proving fork/resume/import records include runtime cwd, vault root, resource-loader id, DAY/NOW identity, diagnostics, and correct lineage after propagation.
+
+Implementation result, 2026-05-08:
+
+- `Body/S/S0/epi-cli/src/agent/session_propagation.rs` now owns the shared PI-runtime-to-S3-session propagation path for `session_start`, `new`, `resume`, `fork`, `import`, `resource_reload`, and `close_compact`.
+- `epi agent session init`, `new`, `resume`, `fork`, and `import` now call `AgentSessionRuntimeFactory` and propagate the resulting Khora/PI runtime into the gateway session store.
+- Gateway `SessionPatch` now carries `session_id`, so the S3 record can preserve the actual PI/Khora runtime id rather than falling back to compatibility defaults.
+- S0 portal runtime and SpaceTimeDB projection hydration now preserve the agent access fields needed by S4/S5: canonical session key, active PI agent id, runtime cwd, resource-loader id, source lineage, and Graphiti session arc id.
+
+Task group C - resource loading and singleton idempotency:
+
+- [ ] Audit current resource loading paths for plugins, skills, prompts, themes, settings, model config, auth profiles, and extension manifests.
+- [ ] Add structured diagnostics for missing explicit resource paths (`-e`, `--skill`, `--prompt-template`, theme/config paths) without log-and-exit in creation logic.
+- [ ] Add a resource-loader identity contract that is stable per effective cwd + agent id + plugin runtime path and changes when those inputs change.
+- [ ] Ensure startup, `/new`, `/resume`, `/fork`, and import do not double-load singleton-style extensions or duplicate Khora `session_start` side effects.
+- [ ] Add tests that run the runtime factory twice for the same cwd/day and prove only one NOW/session_start write occurs while diagnostics report reuse.
+- [ ] Add tests that run the runtime factory for two cwd roots and prove each gets distinct cwd-bound resource-loader ids and session state paths.
+- [ ] Add tests that simulate a missing resource path and assert a structured diagnostic appears in the gateway session record rather than process exit text.
+
+Task group D - retry/idle/run-state settlement:
+
+- [ ] Locate the PI/gateway retry and idle settlement paths for agent runs and chat runs.
+- [ ] Define the S3 session record fields that represent run state: active run ids, last run id, retry settlement state, idle state, abort state, and diagnostics.
+- [ ] Preserve retry-settlement semantics so a retried agent run does not mark the session idle until the full retry cycle completes.
+- [ ] Add gateway tests that simulate transient retry state and prove `sessions.resolve` / `sessions.run-state` exposes pending, retrying, settled, and aborted states truthfully.
+- [ ] Ensure TUI/portal readiness uses run-state facts from gateway records, not locally inferred UI state.
+
+Task group E - projection into S3' and portal consumption:
+
+- [ ] Ensure every propagation write publishes or schedules `session_surface` updates through the existing SpaceTimeDB bridge.
+- [ ] Ensure Redis S3' temporal keys are hydrated for the propagated PI base session: NOW markdown key, day context key, session Kairos key, and agent orientation key where available.
+- [ ] Add projection tests proving PI-propagated records appear in `session_surface` with session id, DAY id, NOW path, runtime cwd, vault root, resource-loader id, diagnostics, and active agent id.
+- [ ] Add portal runtime tests proving the centre `/` command panel, left clock side, and right Nara/Epii side all read the same propagated session identity.
+- [ ] Add health/readiness tests proving gateway health reports the propagated PI session without requiring a later manual `SessionStore::create`.
+
+Task group F - S4/S5 agent access and memory:
+
+- [ ] Add bounded S4/S5 tools to resolve current session runtime context from gateway: session identity, NOW path, DAY id, active PI agent, resource-loader id, and projection readiness.
+- [ ] Add bounded S4/S5 tools for Graphiti session-memory search/deposit that require propagated session identity and protected-local namespace facts.
+- [ ] Add kbase/Gnosis session-context retrieval to the same bounded pattern, with distinct capability envelopes for Anima and Epii.
+- [ ] Ensure Anima/Aletheia can deposit outputs and requests but cannot promote identity-affecting interpretation without Epii/human review.
+- [ ] Extend compact/close so the summarisation pipeline consumes propagated runtime identity, NOW, transcript, session tree, Graphiti episodes, and kbase/Gnosis retrieval.
+
+Task group G - Tauri/desktop parity after backend truth is settled:
+
+- [ ] Mark the Electron OmniPanel behavior as parity evidence, not runtime authority.
+- [ ] Specify the Tauri v2 client contract against `GatewaySessionOperationContract`, `session_surface`, readiness facts, and portal runtime state.
+- [ ] Ensure desktop session/chat/model controls, skill surfacing, VAK/Anima/Epi execution, inbox, Nara journal/flow, and Epii workbench route through the shared session/runtime contracts.
+- [ ] Add a Tauri planning/spec checkpoint only after groups A-F have passing backend and portal contract tests.
+
+Task group H - verification gate for this tranche:
+
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_khora_integration`
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test session_lifecycle`
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_sessions`
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_chat`
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge`
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_temporal_context`
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_surfaces_contract`
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_agent_runtime_contract`
+- [ ] `cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml`
+- [ ] Run live Redis hydration proof when touching S3' temporal keys.
+- [ ] Run live Neo4j/Graphiti namespace proof when touching episodic memory.
+- [ ] Run Electron/Tauri parity tests only after backend/session contracts are stable.
+
+Lane 1 - Canonical operation surface:
+
+- [x] Audit the current Electron OmniPanel / Gateway UI session surface for actual functional operations and state shape before changing gateway implementation.
+- [x] First parity correction: the renderer now calls session patch/delete with canonical `sessionKey`, gateway rows expose `sessionKey` / `canonicalKey`, and the frontend parity manifest declares list, resolve, preview, patch, reset, delete, and compact.
+- [x] Define typed request/response contracts for the full gateway session operation family: list, resolve, preview, patch, reset, delete, compact, fork, resume, import, tree/branch, transcript, run state, chat history/send/abort, and channel binding. First code landing: `GatewaySessionOperationContract` in `Body/S/S3/gateway-contract` maps the canonical operation ids to implemented gateway methods and `session_surface` projection ownership.
+- [x] First operation extension: `sessions.fork`, `sessions.resume`, `sessions.import`, and `sessions.tree` are in gateway-contract method names, S0 parity, OmniPanel parity, and real gateway RPC tests.
+- [x] Keep compatibility aliases accepted at the gateway edge (`key`, `session`, `sessionKey`) while emitting `sessionKey` / `canonicalKey` as the canonical portal/app/client shape.
+- [x] Extend product-to-coordinate parity so every current product-native session/chat method maps to `s3.*`, `s3'.*`, `s4.*`, `s4'.*`, `s5.*`, or `s5'.*`, or is explicitly marked compatibility/retired.
+- [x] Include model/provider override, reasoning/thinking/verbose controls, abort/retry/idle settlement, timestamps, and diagnostics in the contract rather than leaving them as Electron-local UI state.
+
+Lane 2 - Identity, lineage, and labels:
+
+- [x] Preserve DAY/NOW-derived session labels while keeping stable canonical session keys for main sessions, subagents, branches, forks, resumes, and imports.
+- [x] Define durable identity fields separately from display labels: record id, canonical key, session key, DAY id, NOW id, alias/display name, created/updated/last-active timestamps, and client/agent bindings.
+- [x] Define lineage fields for parent session, source session, source kind, branch/fork/resume/import relation, run-tree position, and subagent ownership.
+- [ ] Extend session records/contracts as needed for parent/source lineage, timestamps, runtime cwd, vault root, resource-loader identity, retry/idle settlement state, diagnostics, agent/client bindings, and temporal context ids.
+- [x] First session-record extension: parent/source lineage, runtime cwd, vault root, resource-loader identity, retry settlement state, and structured diagnostics have storage, patch, row, and renderer type support.
+- [x] Second session-record extension: `dayId` can be patched, fork/resume copy root temporal identity, import records source lineage, and `sessions.tree` returns lineage edges.
+- [x] Add explicit migration/compatibility rules for older session rows that only have `key` or product-local labels. First code landing: `SessionStore` normalizes legacy `key` / `sessionKey` / `canonicalKey`, `displayName`, and camelCase runtime fields at the read edge while keeping the in-memory `SessionRecord` canonical.
+
+Lane 3 - Khora runtime factory:
+
+- [ ] Port the PI `AgentSessionRuntime` pattern as a Khora/S3 runtime factory: startup, `/new`, `/resume`, `/fork`, and imports must recreate cwd-bound services and session config through one path. Startup/session_start is now propagated into the S3 gateway session store directly by `epi agent session init`; later `/new`/`/resume`/`/fork`/import propagation still needs the same runtime-factory path.
+- [x] First runtime-factory pass: `AgentSessionRuntimeFactory` now creates the base Pi session surface from effective cwd, including DAY/NOW context, vault root, bootstrap, env, managed agent id/dir, plugin runtime path, models/auth/settings paths, gate state root, resource-loader id, default model, and structured diagnostics; `epi agent session init` is now a wrapper over this base runtime.
+- [x] First S3 propagation pass: `epi agent session init` now seeds/patches the base `agent:{pi_agent}:main` gateway session record with Khora session id, DAY id, NOW path, effective cwd, vault root, PI resource-loader id, active PI agent id, model override, aliases, and structured runtime diagnostics.
+- [ ] Make the runtime factory close over process-global fixed inputs while recreating effective-cwd-bound services, vault root resolution, config, resource loading, permissions, provider/model options, and session store access.
+- [x] Make Khora `session_start` idempotent against duplicate DAY/NOW writes for first startup and repeated same-day extension startup.
+- [ ] Extend the same idempotency through later `/new`, `/resume`, `/fork`, import, and resource loading so singleton resources do not double-load.
+- [ ] Replace log-and-exit service/session creation paths with structured diagnostics that the CLI/TUI/app layer presents.
+- [ ] Preserve retry-settlement semantics so a retried agent run does not declare idle until the full retry cycle completes.
+- [ ] Make explicit which fields are Khora-owned (`now_path`, cwd-bound runtime identity, session_start write authority) and which are S3-owned (gateway key, connection, transcript/run state).
+
+Lane 4 - S3' projection through Redis and SpaceTimeDB:
+
+- [x] Project session labels, tree lineage, timestamps, runtime state, diagnostics, DAY/NOW ids, vault root, runtime cwd, client/agent bindings, and Kairos/Pratibimba anchors through the SpaceTimeDB `session_surface` / `kairos_surface` shape.
+- [x] Expose a native SpaceTimeDB projection subscription plan from the same S3' registration object consumed by gateway health and portal readiness.
+- [x] Upgrade the current TUI projection reader to native SpaceTimeDB WebSocket subscription under explicit native mode, using the same projection context shape and local fallback.
+- [x] Keep Redis temporal session keys in S3' as hot local DAY/NOW/session/Kairos orientation, separate from S2 Redis graph semantic cache.
+- [x] Add explicit readiness states for registration, projection-read, projection-subscription, Redis hydration, and local fallback so the portal can explain partial connectivity without pretending all layers are healthy.
+- [x] Ensure one SpaceTimeDB deployment can hold many gateway/client/agent/session/user projections while protected personal truth remains local Neo4j/Graphiti.
+
+Lane 5 - Memory, Graphiti, and summarisation:
+
+- [x] Keep Graphiti architecture at S3/S3' runtime and invocation/interpretation governance at S5/S5'; do not reintroduce sidecar-shaped ownership.
+- [x] Add first S4/S5 bounded tools for Graphiti session-memory search/deposit: `s5.episodic.search` and `s5.episodic.deposit` expose S3' runtime owner, S5/S5' invocation owner, protected-local privacy boundary, agent/source capability envelopes, and no identity mutation.
+- [ ] Add kbase/Gnosis session-context retrieval to the same bounded memory/access pattern, with different capability envelopes for Anima and Epii.
+- [x] Define first Graphiti episodic namespace rules in the gateway envelope: session key, DAY id, Pratibimba namespace ref, source agent, protected-local privacy boundary, and Epii-review requirement for promotion/identity-affecting interpretation.
+- [ ] Build the S5 session close/compact summarisation pipeline: NOW + transcript + session tree + Graphiti episodes + kbase/Gnosis retrieval -> Aletheia crystallisation -> Epii review inbox / autoresearch evidence.
+- [x] First compact handoff: `sessions.compact` creates a real Aletheia-sourced Epii review inbox item with transcript/session evidence and human review required.
+- [ ] Preserve human validation gates: Anima/Aletheia may deposit outputs and requests, but Epii/human review governs interpretation, promotion, and identity-affecting changes.
+
+Lane 6 - Portal, TUI, and future Tauri parity:
+
+- [x] Bind the TUI portal session surface to the same gateway operations and projection records; it must not keep local-only session truth. First code landing: `SessionOperationsProvider` renders S3 gateway session contracts as portal surfaces with gateway method, request/response keys, and `session_surface` metadata.
+- [x] Make the centre `/` panel surface session operations as coordinate-owned commands, not product-specific Electron affordances. First code landing: default portal surfaces now include `session-op.*` entries sourced from `GatewaySessionContract`.
+- [ ] Make the left `0` clock side and right `1` Nara/Epii side consume the same portal runtime state: DAY/NOW, Kairos, vault root, session identity, Redis hydration, SpaceTimeDB projection, and protected Pratibimba anchor.
+- [ ] Make the future desktop/Tauri client consume the same SpaceTimeDB projection shape and gateway operation contracts instead of inventing desktop-local temporal/session state.
+- [ ] Preserve OmniPanel breadth in the future app: session/chat/model controls, skill surfacing/management, VAK/Anima/Epi execution, inbox, Nara journal/flow, and Epii workbench all route through shared S-layer service contracts.
+
+Lane 7 - Test architecture and execution order:
+
+- [x] Start each subtask by checking the closest existing test, then write or correct the failing proof before implementation.
+- [x] Prove raw gateway/session/Redis/SpaceTimeDB connectivity separately from agent invocation and review-governed summarisation.
+- [x] Add gateway-contract tests before moving more fields across Rust/TS/app boundaries.
+- [x] Add portal contract tests before changing the TUI layout so data authority is locked before rendering polish.
+- [x] Add Graphiti/Neo4j tests using real local services and test-owned namespaces; never delete useful existing data. Current proof runs against live Docker Neo4j, writes only `EpiGraphitiTemporalTest` nodes, and deletes that test namespace after asserting S3'/S5 ownership.
+- [ ] Continue by executing the "Execution tranche - real PI session propagation" task groups A-H above in order, only moving to Tauri/desktop parity after backend session propagation, projection, portal, and agent-memory proofs are green.
+
+Verification:
+
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_sessions`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_khora_integration`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test session_lifecycle`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_chat`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_temporal_context`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_surfaces_contract`
+- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_agent_runtime_contract`
+- [x] Add gateway session runtime parity tests for DAY/NOW labels, canonical keys, fork/resume/import lineage, diagnostics, and SpaceTimeDB projection.
+- [x] Add Graphiti/session-memory tests that use real local Neo4j/Graphiti-compatible substrate under test-owned namespaces: live Neo4j S3'/S5 episode ownership proof plus gateway `s5.episodic.search` / `s5.episodic.deposit` bounded-runtime envelopes.
+- [x] Add S5 close/compact summarisation tests proving review-inbox evidence creation without mutating protected user identity.
+- [x] Add portal contract tests proving the TUI session surface uses gateway operations/projection facts rather than local-only state.
+- [x] After the UI audit, add frontend or contract tests covering the Electron parity operations that must survive the Tauri migration.
+- [x] `npm test -- --run tests/main/gateway-parity.test.ts` in `Body/S/S3/epi-app`
+- [x] `npx tsc --noEmit` in `Body/S/S3/epi-app`
+- [x] `cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml`
+
+Exit condition:
+
+- Gateway sessions have one coordinate-native lifecycle across CLI, TUI, SpaceTimeDB, Khora, Graphiti memory, and Epii review, with the existing OmniPanel behavior accounted for as parity evidence rather than left as hidden product logic.
 
 ## Phase 4. S1' Compiler Spine Enforcement
 
@@ -480,6 +722,83 @@ Exit condition:
 
 - One S0 command can report the status of every S/S' layer, and its output is contractually tied to the envelope/API/TS architecture.
 
+## Phase 9. S0' Portal / TUI Command Centre
+
+Goal: make `epi portal` the first integrated operator surface for the whole command/config/readiness topology.
+
+Why here: the portal is where UX and backend setup meet. Before the desktop app mirrors the system externally, the TUI should already expose the real S0-S5 command surfaces, settings, service health, agent access state, and review/governance status in one coordinate-native terminal portal.
+
+Target three-panel topology:
+
+- Left `0` panel: [[M0']] / [[M1']] / [[M2']] / [[M3']] structural clock, coordinate walk, Khora/Aletheia temporal-relational views.
+- Centre `/` panel: [[S0']] command return, setup, config, readiness, gateway/API method palette, service health, parity map, and typed execution routes across [[S0]]-[[S5]].
+- Right `1` panel: [[M4']] / [[M5']] Nara/Epii, review inbox, Gnosis/world-return, autoresearch, and user/developer position.
+
+Shared M' spec anchors:
+
+- [[M'-PORTAL-SPEC]] defines the shared TUI/desktop `0` / `/` / `1` grammar.
+- [[M'-TAURI-PORT-SPEC]] defines the Tauri v2 desktop port target. The current Electron [[OmniPanel]] is the desktop `/` surface and must preserve its wider usage: chat, sessions, skills, models, cron, config, logs, debug, nodes/devices, channels, and gateway settings.
+- The M' desktop target is full-domain, not just three panels: [[M0']] Bimba map, [[M1']] relation-walks, [[M2']] semantic/MEF/correspondence matrix, [[M3']] integrated clock/solar/kairos platform, [[M4']] Nara modalities, and [[M5']] Epii workbench.
+- Current Electron Nara code is the M4' parity seed for journal/flow, selected-text highlighting, Daily Note, Dream Journal, Oracle, highlights, and pending actions. Placeholder modality panels must become real surfaces during porting.
+- The M5' desktop target must include pedagogy, etymological archaeology, Bimba/wisdom exploration, autoresearch, review inbox, and VAK/Anima/Epi execution with typed routing, bounded tools/skills, run tree, diagnostics, and completion evidence.
+- For the desktop app, `0` is the structural [[Bimba]] map entry with routes into M1'-M3'; the clock is an M3' structural visualisation, not the whole `0` surface.
+
+Shared temporal-state rule: the portal must treat [[DAY]], [[NOW]], vault root, [[Kairos]], [[Redis]] temporal key state, [[SpaceTimeDB]] projection tables/source, and protected [[Pratibimba]] anchor as one [[S3']] projection consumed by both sides of the TUI. The structural clock reads this projection as M0'-M3' timing/orientation. [[Nara]] and [[Epii]] read the same projection as M4'/M5' personal context, review/inbox context, and agent invocation orientation. Plugin-specific vault or Kairos resolution is transitional only; the durable contract is a shared portal runtime state fed by configured SpaceTimeDB projection reads, falling back to the local gateway session-store temporal context and then clock/session state, with native SpaceTimeDB subscription and the Tauri mirror feeding the same shape.
+
+Files/code areas:
+
+- `Body/S/S0/epi-cli/src/portal/`
+- `Body/S/S0/epi-cli/src/portal/plugins/unified_clock.rs`
+- `Body/S/S0/epi-cli/src/portal/registry.rs`
+- `Body/S/S0/epi-cli/src/portal/persist.rs`
+- `Body/S/S0/epi-cli/src/gate/config_tui.rs`
+- `Body/S/S0/epi-cli/src/up.rs`
+- Gateway parity manifest and method registry tests
+- Relevant S2/S3/S4/S5 readiness and agent-access tests
+
+Checklist:
+
+- [x] Define the centre `/` panel contract as S0' command topology, not a new product ontology.
+- [x] Add first portal layout/plugin state so the TUI can represent the centre `/` command/config domain without breaking existing M0-M5 plugins.
+- [x] Source first command entries from explicit CLI/gateway/config command intents in the shared topology model.
+- [x] Replace the static slash-only backing list with a provider-backed portal surface registry over topology seeds, gateway parity records, extension tools, plugin package manifests, Epii agent contract methods, Pleroma capability gates, and registered TUI plugin IDs.
+- [x] Add shared portal runtime state so DAY/NOW/vault/Kairos/Redis/SpaceTimeDB/Pratibimba projection can feed both the clock and Nara/Epii sides instead of remaining clock-plugin-local.
+- [x] Hydrate the shared portal temporal projection from the same local gateway session-store context used by `s3'.temporal.context`, with clock/session fallback when no gateway session exists.
+- [x] Hydrate the shared portal temporal projection from configured SpaceTimeDB `session_surface` / `kairos_surface` reads before falling back to local gateway context.
+- [x] Wire `/`, `m4.pratibimba`, and `m5.chat` to consume the shared temporal projection.
+- [ ] Surface setup/readiness paths: graph Docker state, Neo4j, Redis, gateway, Graphiti runtime, PI agent install/sync, Gnosis, Nara, Epii review/autoresearch.
+- [x] Separate raw service health from agent invocation/access state in the topology model.
+- [x] Separate raw service health from agent invocation/access state in the live UI result state for Neo4j, Redis cache, gateway, SpaceTimeDB registration/subscription, Graphiti runtime, PI agent access, Gnosis, Nara, Epii review, and autoresearch.
+- [x] Add first editable settings metadata for S3 gateway config fields.
+- [ ] Add schema-backed settings views for S2 graph/cache, S3 gateway/session, S4 agent permissions/capabilities, and S5/Epii/Gnosis/autoresearch.
+- [ ] Add command execution result state with meaningful failure display, logs, and next-step affordances.
+- [ ] Ensure the future desktop app can mirror the TUI's command/config semantics instead of inventing a parallel settings model.
+- [x] Specify the Tauri v2 desktop migration against the current `Body/S/S3/epi-app` state in [[M'-TAURI-PORT-SPEC]]: preserve the React/M-domain renderer and [[OmniPanel]] where useful, replace Electron main-process authority with Rust Tauri commands, use gateway RPC plus SpaceTimeDB subscriptions for live state, and mirror the shared [[M'-PORTAL-SPEC]] `0` / `/` / `1` grammar.
+- [x] Extend M' desktop specification with full M0'-M5' domain mapping, current Electron Nara parity sources, old canonical Epii/VAK/Nara source traceability, agentic execution, inbox, and integrated clock-platform requirements.
+- [ ] Implement the Tauri v2 port after Phase 3A session parity is corrected, including typed renderer clients replacing `window.sPrime` preload assumptions.
+- [ ] Replace Nara raw slash-string sendoff with typed VAK/Anima/Epii invocation payloads that preserve selected text, modality, source file, DAY/NOW, session, and coordinate lineage.
+- [ ] Build real M4' modality surfaces for Daily Note, Dream Journal, and Oracle over the same flow/highlight/session substrate.
+- [ ] Build the M5' Epii workbench surface for pedagogy, etymological archaeology, Bimba/wisdom exploration, autoresearch, review inbox, and agentic execution.
+- [ ] Build the desktop M3' integrated clock platform as a visual enlargement of the TUI clock/Kairos specs, routeable from M0' structural exploration and into Nara walkabouts.
+
+Verification:
+
+- [x] Portal topology tests prove the three-domain `0` / `/` / `1` model and slash command-surface catalog.
+- [x] Portal topology tests prove interactive action kinds, editable config metadata, and S/S' plus M/M' coordinate catalogs.
+- [x] Portal surface registry tests prove gateway parity, extension `tools.json`, `.claude-plugin` manifests, Epii agent contract methods, Pleroma capability gates, and registered TUI plugin IDs are discoverable without TUI-specific duplication.
+- [x] Portal runtime tests prove gateway temporal context hydration, local session-store temporal refresh, and Nara/Epii plugin consumption of the shared projection.
+- [ ] Portal layout/state tests prove the rendered three-panel domain model.
+- [ ] Config/settings tests prove schema-backed values are read/written through existing config authority.
+- [ ] Command palette tests prove entries map to real CLI/gateway methods.
+- [x] Readiness tests prove service checks and agent-access checks are reported separately.
+- [x] Session/Khora tests prove explicit `EPILOGOS_VAULT` roots are authoritative before the directory exists, preventing NOW path fallback drift.
+- [ ] Manual TUI smoke with real local services once the panel is implemented.
+- [x] Current app checkup baseline: `npm run typecheck` in `Body/S/S3/epi-app` exits cleanly before Tauri v2 spec work.
+
+Exit condition:
+
+- `epi portal` gives an operator a coordinate-native terminal cockpit for setup, command execution, settings, readiness, Nara/Epii surfaces, and S0-S5 status without forking backend command logic.
+
 ## Development Readiness Gates
 
 - [ ] Phase 1 parity manifest is executable and tested.
@@ -489,14 +808,19 @@ Exit condition:
 - [ ] S4 agent invocation/access tests distinguish raw service checks from actual PI-agent runtime access.
 - [x] S5' review/autoresearch spine has state-machine, human-gated, and gateway-backed agent-access tests.
 - [x] S5 Gnosis/Nara/Epii tests distinguish raw client/service behavior from gateway-backed Epii observation/governance.
+- [ ] S0' portal/TUI has a real three-panel command/config/readiness contract over existing CLI/gateway/service truth.
 - [ ] `epi up` or equivalent full-stack proof has a real failure/success contract.
+- [ ] Final non-negotiable cleanup gate, only after all other build tasks: run full depwire dead-symbol resolution and full `.worktrees/*` harvest/retire cleanup as one terminal step, with deletions/moves proven by tests and git history clean.
 
 ## Preferred Next Run
 
 Continue the current spine progression:
 
-1. Finish the remaining S1 hardening by harmonising thought path helpers with canonical `Pratibimba/Self/Thought/T/Tn` residency and running `vault_commands` against the new Hen mirror.
-2. Continue Phase 5 by proving real PI runtime/source-to-installed sync and actual Anima invocation of a bounded Pleroma skill, using the capability matrix as authority.
-3. Continue Phase 6 by binding the epi-logos plugin resource/skill spine and adding full installed PI-runtime invocation for Anima/Aletheia -> Epii and Epii -> Anima.
+1. Run the Phase 3A gateway session parity audit against the current Electron OmniPanel / Gateway UI code, then define the coordinate-native session operation contract before touching implementation.
+2. Implement the gateway session runtime convergence: DAY/NOW-derived labels plus stable canonical keys, fork/resume/import lineage, structured diagnostics, idempotent Khora `session_start`, SpaceTimeDB session projection, and TUI session-surface binding.
+3. Upgrade the SpaceTimeDB projection tranche from TUI HTTP SQL polling to native WebSocket subscription, then mirror the same projection reader in the future desktop/Tauri client.
+4. Continue Phase 9 readiness work by making Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch render as distinct raw-service vs agent-access states in the live UI result state.
+5. Prepare the Tauri v2 desktop migration as a mirror of the TUI portal registry and gateway/SpaceTimeDB contracts, not as a fresh Electron rewrite.
+6. After checkpointing current main, harvest or retire the remaining `.worktrees/*` branches deliberately; do not delete uncommitted worktrees until useful deltas have been ported or explicitly abandoned.
 
 Do not start non-dry-run Epii/autoresearch mutation until S1' compiler invocation, Anima/Pleroma capability boundaries, and Epii review gates are testable.

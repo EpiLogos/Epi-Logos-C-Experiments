@@ -102,6 +102,7 @@ The older files over-bind S4 to a particular harness: first [[Claude Code]], the
 - [[S4]] consumes S3/S3' session and temporal state but does not own gateway persistence or Graphiti architecture.
 - [[S5]] / [[S5']] owns [[Gnosis]], [[RAG-Anything]], [[NotebookLM]], [[Vimarsa]], [[Epii]], improvement loops, and Graphiti invocation/usage governance.
 - [[Aletheia]] tooling appears inside the ta-onta operational package, but deep world-return knowledge governance is specified at S5/S5'. S4' may trigger crystallisation; S5' performs the heavy improvement/world-return work.
+- [[S4']] may read the [[S3']] DAY/NOW/Kairos temporal context and protected [[M4.4.4.4]] Pratibimba references for orientation, but it must not mutate identity, journal-derived aspects, or PersonalNexus graph state. Identity-affecting changes route to [[Epii]] / [[S5']] as review, validation, or user-consent deposits.
 
 ### Current code reality
 

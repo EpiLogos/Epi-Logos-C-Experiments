@@ -35,6 +35,7 @@ pub mod spacetimedb_bridge;
 pub mod subagents;
 pub mod system;
 pub mod team_store;
+pub mod temporal;
 pub mod tls;
 pub mod transcripts;
 pub mod update;
@@ -84,10 +85,28 @@ pub enum GateCmd {
     Bootstrap,
     /// Inspect gateway workspace state
     Workspace,
+    /// Inspect S3' temporal context for a session
+    Temporal {
+        #[command(subcommand)]
+        cmd: GateTemporalCmd,
+    },
     /// Manage the Graphiti runtime compatibility adapter (port 37778)
     Graphiti {
         #[command(subcommand)]
         cmd: GraphitiCmd,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum GateTemporalCmd {
+    /// Resolve DAY/NOW, Redis, SpaceTimeDB, and Graphiti temporal orientation
+    Context {
+        #[arg(long, default_value = "agent:main:main")]
+        session_key: String,
+        #[arg(long, default_value = "operator")]
+        agent_id: String,
+        #[arg(long, default_value_t = false)]
+        hydrate_redis: bool,
     },
 }
 
@@ -215,11 +234,36 @@ pub async fn dispatch(cmd: &GateCmd, json: bool) -> Result<String, String> {
         GateCmd::Pair => Err("epi gate pair: not yet implemented".to_owned()),
         GateCmd::Bootstrap => Err("epi gate bootstrap: not yet implemented".to_owned()),
         GateCmd::Workspace => Err("epi gate workspace: not yet implemented".to_owned()),
+        GateCmd::Temporal { cmd } => dispatch_temporal(cmd, json).await,
         GateCmd::Graphiti { cmd } => match cmd {
             GraphitiCmd::Start => graphiti::start(json),
             GraphitiCmd::Stop => graphiti::stop(json),
             GraphitiCmd::Status => graphiti::status(json).await,
         },
+    }
+}
+
+async fn dispatch_temporal(cmd: &GateTemporalCmd, json: bool) -> Result<String, String> {
+    let state_root = config::gate_root_from_env()?;
+    let store = sessions::SessionStore::new(&state_root)?;
+    let value = match cmd {
+        GateTemporalCmd::Context {
+            session_key,
+            agent_id,
+            hydrate_redis,
+        } => {
+            let mut value = temporal::context_value(&state_root, &store, session_key, agent_id)?;
+            if *hydrate_redis {
+                temporal::hydrate_redis_from_context(&mut value).await?;
+            }
+            value
+        }
+    };
+
+    if json {
+        serde_json::to_string_pretty(&value).map_err(|err| err.to_string())
+    } else {
+        Ok(value.to_string())
     }
 }
 

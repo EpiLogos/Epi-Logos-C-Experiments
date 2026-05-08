@@ -1,4 +1,5 @@
 use crate::ffi;
+use crate::portal::runtime_state::SharedPortalTemporalSurface;
 use crate::portal::theme;
 use ratatui::prelude::*;
 use ratatui::widgets::*;
@@ -517,11 +518,19 @@ impl HypertilePlugin for M5FsmPlugin {
 // M5ChatPlugin — functional stub
 // ═══════════════════════════════════════════════════════════════════════════
 
-pub struct M5ChatPlugin;
+pub struct M5ChatPlugin {
+    temporal: Option<SharedPortalTemporalSurface>,
+}
 
 impl M5ChatPlugin {
     pub fn new() -> Self {
-        Self
+        Self { temporal: None }
+    }
+
+    pub fn new_with_temporal(temporal: SharedPortalTemporalSurface) -> Self {
+        Self {
+            temporal: Some(temporal),
+        }
     }
 }
 
@@ -530,7 +539,7 @@ impl HypertilePlugin for M5ChatPlugin {
         let accent = theme::m_level_color(5);
         let dim = Style::default().fg(Color::DarkGray);
 
-        let lines = vec![
+        let mut lines = vec![
             Line::from(""),
             Line::from(Span::styled(
                 "  M5' Agent Chat",
@@ -557,6 +566,37 @@ impl HypertilePlugin for M5ChatPlugin {
                 Style::default().fg(Color::Magenta),
             )),
         ];
+
+        if let Some(temporal) = &self.temporal {
+            let temporal = temporal.lock().unwrap();
+            lines.push(Line::from(""));
+            lines.push(Line::from(Span::styled(
+                "  Epii Orientation",
+                Style::default().fg(Color::Yellow),
+            )));
+            lines.push(Line::from(format!(
+                "  DAY {}  session {}",
+                temporal.day_id.as_deref().unwrap_or("unbound"),
+                temporal.session_id.as_deref().unwrap_or("unbound")
+            )));
+            lines.push(Line::from(format!(
+                "  NOW {}",
+                temporal
+                    .now_wikilink
+                    .as_deref()
+                    .or_else(|| temporal.now_path.as_ref().and_then(|path| path.to_str()))
+                    .unwrap_or("unbound")
+            )));
+            lines.push(Line::from(format!(
+                "  Pratibimba {}  Kairos {} fresh={}",
+                temporal
+                    .pratibimba_anchor_id
+                    .as_deref()
+                    .unwrap_or("unbound"),
+                temporal.kairos_valid,
+                temporal.kairos_fresh
+            )));
+        }
 
         let para = Paragraph::new(lines).block(
             Block::default()
@@ -666,5 +706,32 @@ mod tests {
             content.contains("epi agent chat"),
             "Should mention CLI command alternative"
         );
+    }
+
+    #[test]
+    fn m5_chat_renders_epii_orientation_from_shared_temporal_surface() {
+        let runtime = crate::portal::runtime_state::PortalRuntimeState::from_gateway_context_value(
+            serde_json::json!({
+                "day": { "dayId": "07-05-2026" },
+                "now": { "wikilink": "[[NOW session-main]]" },
+                "session": { "sessionId": "session-main" },
+                "kairos": { "available": true, "fresh": true, "source": "nara.kairos.current" },
+                "pratibimba": { "anchorId": "pratibimba-abcd1234", "coordinate": "M4.4.4.4" },
+                "redis": { "hydrated": true, "sessionNowKey": "s3:gateway:temporal:session:session-main:now:md" },
+                "spacetimedb": { "projectionTable": "session_surface", "kairosProjectionTable": "kairos_surface" }
+            })
+        )
+        .expect("runtime should hydrate from gateway context");
+
+        let plugin = M5ChatPlugin::new_with_temporal(runtime.temporal());
+        let area = Rect::new(0, 0, 90, 18);
+        let mut buf = Buffer::empty(area);
+        plugin.render(area, &mut buf, true);
+        let content = buffer_to_string(&buf, area);
+
+        assert!(content.contains("07-05-2026"));
+        assert!(content.contains("session-main"));
+        assert!(content.contains("pratibimba-abcd1234"));
+        assert!(content.contains("Epii"));
     }
 }

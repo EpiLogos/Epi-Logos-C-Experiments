@@ -1,131 +1,349 @@
 //! Epi-Logos SpacetimeDB Module
 //!
-//! Privacy-preserving presence tracking. ALL data is keyed by BLAKE3 hash only.
-//! NO personal data (no birth dates, no natal chart raw degrees, no MBTI strings,
-//! no I-Ching interpretations — only the public hexagram number 0-63).
+//! Gateway/client/agent registration and live temporal projection.
+//!
+//! One SpaceTimeDB deployment can hold any number of Epi-Logos gateway,
+//! PI-agent, TUI, desktop, browser, and external client instances. Isolation is
+//! carried by installation/workspace identity and per-instance ids, not by
+//! multiplying databases per process.
 //!
 //! # Deployment
 //!
 //! ```bash
 //! spacetime build
-//! spacetime publish epi-logos-presence
+//! spacetime publish epi-logos-runtime
 //! ```
 //!
 //! # Tables (SpacetimeDB 2.x schema)
 //!
-//! - `UserPresence`  — hash + torus stage (anonymous identity)
-//! - `OracleDraw`    — hash + hexagram cast event (0-63)
-//! - `LogosPhase`    — hash + logos cycle stage (0-5)
-//! - `TorusSync`     — hash + current torus position + spanda
+//! - `GatewayInstance`    — gateway process registration and heartbeat
+//! - `AgentInstance`      — PI-agent/subagent registration and capability surface
+//! - `ClientRegistration` — TUI/desktop/browser/external/agent client registration
+//! - `SessionSurface`     — DAY/NOW/session/history/Redis/Graphiti projection
+//! - `KairosSurface`      — safe DAY/session Kairos transit projection
+//! - `TemporalEvent`      — live temporal activity events
 
 use spacetimedb::{reducer, table, ReducerContext, Table};
 
-// ─── UserPresence ─────────────────────────────────────────────────────────
-//
-// Tracks anonymous user presence by BLAKE3 quintessence hash.
-// hash = BLAKE3(layer_presence || present_layer_bytes) truncated to 16 hex chars.
-// Privacy invariant: no identity, no coordinates — only the hash.
-
-#[table(name = "user_presence", accessor = user_presence, public)]
-pub struct UserPresence {
+#[table(name = "gateway_instance", accessor = gateway_instance, public)]
+pub struct GatewayInstance {
     #[primary_key]
-    pub hash: String,
-    pub torus_stage: u8,
-    pub last_seen: u64, // Unix seconds
+    pub gateway_id: String,
+    pub installation_id: String,
+    pub workspace_root_hash: String,
+    pub endpoint: String,
+    pub protocol_version: String,
+    pub status: String,
+    pub started_at: u64,
+    pub last_seen: u64,
 }
 
-// ─── OracleDraw ────────────────────────────────────────────────────────────
-//
-// Records oracle cast events by hash.
-// hexagram_id is the public I-Ching hexagram result (0-63).
-// No personal reading content stored — only the drawn hexagram number.
+#[table(name = "agent_instance", accessor = agent_instance, public)]
+pub struct AgentInstance {
+    #[primary_key]
+    pub agent_instance_id: String,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub agent_id: String,
+    pub agent_kind: String,
+    pub session_key: String,
+    pub capability_surface_hash: String,
+    pub status: String,
+    pub started_at: u64,
+    pub last_seen: u64,
+}
 
-#[table(name = "oracle_draw", accessor = oracle_draw, public)]
-pub struct OracleDraw {
+#[table(name = "client_registration", accessor = client_registration, public)]
+pub struct ClientRegistration {
+    #[primary_key]
+    pub client_id: String,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub client_kind: String,
+    pub scopes: String,
+    pub status: String,
+    pub registered_at: u64,
+    pub last_seen: u64,
+}
+
+#[table(name = "session_surface", accessor = session_surface, public)]
+pub struct SessionSurface {
+    #[primary_key]
+    pub session_key: String,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub agent_instance_id: String,
+    pub day_id: String,
+    pub parent_session_key: String,
+    pub source_session_key: String,
+    pub source_session_kind: String,
+    pub runtime_cwd: String,
+    pub vault_root: String,
+    pub resource_loader_id: String,
+    pub retry_settlement_state: String,
+    pub diagnostics_json: String,
+    pub now_path: String,
+    pub now_wikilink: String,
+    pub history_archive_path: String,
+    pub redis_session_now_key: String,
+    pub redis_day_context_key: String,
+    pub graphiti_arc_id: String,
+    pub pratibimba_anchor_ref: String,
+    pub kairos_snapshot_id: String,
+    pub updated_at: u64,
+}
+
+#[table(name = "kairos_surface", accessor = kairos_surface, public)]
+pub struct KairosSurface {
+    #[primary_key]
+    pub kairos_snapshot_id: String,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub day_id: String,
+    pub session_key: String,
+    pub available: bool,
+    pub fresh: bool,
+    pub dominant_sign: u8,
+    pub dominant_element: u8,
+    pub active_decan: u8,
+    pub active_tattva: u8,
+    pub planets_json: String,
+    pub source: String,
+    pub privacy_class: String,
+    pub updated_at: u64,
+}
+
+#[table(name = "temporal_event", accessor = temporal_event, public)]
+pub struct TemporalEvent {
     #[primary_key]
     #[auto_inc]
-    pub id: u64,
-    pub hash: String,
-    pub hexagram_id: u8,
-    pub timestamp: u64, // Unix seconds
+    pub event_id: u64,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub agent_instance_id: String,
+    pub session_key: String,
+    pub event_kind: String,
+    pub payload_json: String,
+    pub created_at: u64,
 }
 
-// ─── LogosPhase ────────────────────────────────────────────────────────────
-//
-// Records logos cycle stage presence. day_key = "YYYY-MM-DD" string.
-// Stage 0-5 maps to: A-Logos, Pro-Logos, Dia-Logos, Logos, Epi-Logos, An-a-Logos.
-
-#[table(name = "logos_phase", accessor = logos_phase, public)]
-pub struct LogosPhase {
-    #[primary_key]
-    #[auto_inc]
-    pub id: u64,
-    pub hash: String,
-    pub stage: u8,
-    pub day_key: String, // "YYYY-MM-DD"
-}
-
-// ─── TorusSync ─────────────────────────────────────────────────────────────
-//
-// Tracks torus position for real-time synchronization.
-// position = 0-11 (ring position on torus), spanda = 0-5 (M0-M5 stage).
-
-#[table(name = "torus_sync", accessor = torus_sync, public)]
-pub struct TorusSync {
-    #[primary_key]
-    pub hash: String,
-    pub position: u8,
-    pub spanda: u8,
-}
-
-// ─── Reducers ─────────────────────────────────────────────────────────────
-
-/// Update or insert a user's torus stage presence.
-/// Called on session start and at each Spanda stage transition.
-/// Privacy: hash must be a BLAKE3 truncation (>= 8 hex chars). No raw identity.
 #[reducer]
-pub fn update_presence(ctx: &ReducerContext, hash: String, torus_stage: u8) {
-    assert!(hash.len() >= 8, "invalid hash: must be at least 8 hex chars");
-    let now = ctx.timestamp.to_micros_since_unix_epoch() as u64 / 1_000_000;
-    ctx.db.user_presence().insert(UserPresence {
-        hash: hash.clone(),
-        torus_stage,
+pub fn register_gateway(
+    ctx: &ReducerContext,
+    gateway_id: String,
+    installation_id: String,
+    workspace_root_hash: String,
+    endpoint: String,
+    protocol_version: String,
+) {
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&workspace_root_hash, "workspace_root_hash");
+    assert_nonempty(&endpoint, "endpoint");
+    let now = now(ctx);
+    ctx.db.gateway_instance().insert(GatewayInstance {
+        gateway_id,
+        installation_id,
+        workspace_root_hash,
+        endpoint,
+        protocol_version,
+        status: "online".to_owned(),
+        started_at: now,
         last_seen: now,
     });
-    ctx.db.torus_sync().insert(TorusSync {
-        hash,
-        position: torus_stage % 12,
-        spanda: torus_stage % 6,
+}
+
+#[reducer]
+pub fn heartbeat_gateway(ctx: &ReducerContext, gateway_id: String) {
+    assert_nonempty(&gateway_id, "gateway_id");
+    let Some(mut gateway) = ctx.db.gateway_instance().gateway_id().find(&gateway_id) else {
+        panic!("gateway_id is not registered");
+    };
+    gateway.status = "online".to_owned();
+    gateway.last_seen = now(ctx);
+    ctx.db.gateway_instance().gateway_id().update(gateway);
+}
+
+#[reducer]
+pub fn register_agent(
+    ctx: &ReducerContext,
+    agent_instance_id: String,
+    installation_id: String,
+    gateway_id: String,
+    agent_id: String,
+    agent_kind: String,
+    session_key: String,
+    capability_surface_hash: String,
+) {
+    assert_nonempty(&agent_instance_id, "agent_instance_id");
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_nonempty(&agent_id, "agent_id");
+    let now = now(ctx);
+    ctx.db.agent_instance().insert(AgentInstance {
+        agent_instance_id,
+        installation_id,
+        gateway_id,
+        agent_id,
+        agent_kind,
+        session_key,
+        capability_surface_hash,
+        status: "online".to_owned(),
+        started_at: now,
+        last_seen: now,
     });
 }
 
-/// Record an oracle cast event (hexagram only — no interpretation stored).
-/// hexagram_id must be 0-63 (I-Ching has 64 hexagrams, indexed 0-based).
 #[reducer]
-pub fn record_oracle_draw(ctx: &ReducerContext, hash: String, hexagram_id: u8) {
-    assert!(hash.len() >= 8, "invalid hash: must be at least 8 hex chars");
-    assert!(hexagram_id <= 63, "hexagram_id must be 0-63");
-    let now = ctx.timestamp.to_micros_since_unix_epoch() as u64 / 1_000_000;
-    ctx.db.oracle_draw().insert(OracleDraw {
-        id: 0,
-        hash,
-        hexagram_id,
-        timestamp: now,
+pub fn register_client(
+    ctx: &ReducerContext,
+    client_id: String,
+    installation_id: String,
+    gateway_id: String,
+    client_kind: String,
+    scopes: String,
+) {
+    assert_nonempty(&client_id, "client_id");
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_nonempty(&client_kind, "client_kind");
+    let now = now(ctx);
+    ctx.db.client_registration().insert(ClientRegistration {
+        client_id,
+        installation_id,
+        gateway_id,
+        client_kind,
+        scopes,
+        status: "online".to_owned(),
+        registered_at: now,
+        last_seen: now,
     });
 }
 
-/// Record a logos cycle stage completion for the given day.
-/// stage 0-5: A-Logos / Pro-Logos / Dia-Logos / Logos / Epi-Logos / An-a-Logos.
-/// day_key must be "YYYY-MM-DD" (10 chars).
 #[reducer]
-pub fn record_logos_stage(ctx: &ReducerContext, hash: String, stage: u8, day_key: String) {
-    assert!(hash.len() >= 8, "invalid hash: must be at least 8 hex chars");
-    assert!(stage <= 5, "stage must be 0-5 (A-Logos through An-a-Logos)");
-    assert_eq!(day_key.len(), 10, "day_key must be YYYY-MM-DD format (10 chars)");
-    ctx.db.logos_phase().insert(LogosPhase {
-        id: 0,
-        hash,
-        stage,
-        day_key,
+pub fn bind_session_temporal_context(
+    ctx: &ReducerContext,
+    session_key: String,
+    installation_id: String,
+    gateway_id: String,
+    agent_instance_id: String,
+    day_id: String,
+    now_path: String,
+    now_wikilink: String,
+    history_archive_path: String,
+    redis_session_now_key: String,
+    redis_day_context_key: String,
+    graphiti_arc_id: String,
+    pratibimba_anchor_ref: String,
+    kairos_snapshot_id: String,
+    parent_session_key: String,
+    source_session_key: String,
+    source_session_kind: String,
+    runtime_cwd: String,
+    vault_root: String,
+    resource_loader_id: String,
+    retry_settlement_state: String,
+    diagnostics_json: String,
+) {
+    assert_nonempty(&session_key, "session_key");
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_nonempty(&day_id, "day_id");
+    ctx.db.session_surface().insert(SessionSurface {
+        session_key,
+        installation_id,
+        gateway_id,
+        agent_instance_id,
+        day_id,
+        parent_session_key,
+        source_session_key,
+        source_session_kind,
+        runtime_cwd,
+        vault_root,
+        resource_loader_id,
+        retry_settlement_state,
+        diagnostics_json,
+        now_path,
+        now_wikilink,
+        history_archive_path,
+        redis_session_now_key,
+        redis_day_context_key,
+        graphiti_arc_id,
+        pratibimba_anchor_ref,
+        kairos_snapshot_id,
+        updated_at: now(ctx),
     });
+}
+
+#[reducer]
+pub fn bind_kairos_surface(
+    ctx: &ReducerContext,
+    kairos_snapshot_id: String,
+    installation_id: String,
+    gateway_id: String,
+    day_id: String,
+    session_key: String,
+    available: bool,
+    fresh: bool,
+    dominant_sign: u8,
+    dominant_element: u8,
+    active_decan: u8,
+    active_tattva: u8,
+    planets_json: String,
+    source: String,
+) {
+    assert_nonempty(&kairos_snapshot_id, "kairos_snapshot_id");
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_nonempty(&day_id, "day_id");
+    ctx.db.kairos_surface().insert(KairosSurface {
+        kairos_snapshot_id,
+        installation_id,
+        gateway_id,
+        day_id,
+        session_key,
+        available,
+        fresh,
+        dominant_sign,
+        dominant_element,
+        active_decan,
+        active_tattva,
+        planets_json,
+        source,
+        privacy_class: "public-current-transit-only".to_owned(),
+        updated_at: now(ctx),
+    });
+}
+
+#[reducer]
+pub fn publish_temporal_event(
+    ctx: &ReducerContext,
+    installation_id: String,
+    gateway_id: String,
+    agent_instance_id: String,
+    session_key: String,
+    event_kind: String,
+    payload_json: String,
+) {
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_nonempty(&event_kind, "event_kind");
+    ctx.db.temporal_event().insert(TemporalEvent {
+        event_id: 0,
+        installation_id,
+        gateway_id,
+        agent_instance_id,
+        session_key,
+        event_kind,
+        payload_json,
+        created_at: now(ctx),
+    });
+}
+
+fn now(ctx: &ReducerContext) -> u64 {
+    ctx.timestamp.to_micros_since_unix_epoch() as u64 / 1_000_000
+}
+
+fn assert_nonempty(value: &str, field: &str) {
+    assert!(!value.trim().is_empty(), "{field} must not be empty");
 }

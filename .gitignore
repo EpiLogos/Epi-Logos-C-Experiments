@@ -43,6 +43,9 @@ Body/**/playwright-report/
 # Local Obsidian plugin installs live with the vault but are not source.
 Idea/.obsidian/plugins/
 
+# Smart Env generated embeddings/events/outlink cache.
+Idea/.smart-env/
+
 # Generated local caches
 *.sqlite
 *.sqlite3

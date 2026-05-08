@@ -1,8 +1,19 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
+use std::sync::Arc;
 
+use neo4rs::{query, Graph, Query};
 use serde::{Deserialize, Serialize};
+
+mod coordinate;
+mod retrieval_query;
+
+pub use coordinate::{CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink};
+pub use retrieval_query::{
+    classify_query, disclosure_for_query_type, extract_coordinate_mentions, infer_positions,
+    DisclosureLevel, GraphRetrievalQuery, QueryType, RetrievalMode, RetrievalResult,
+};
 
 pub const SEMANTIC_REDIS_NAMESPACE: &str = "s2:graph:semantic";
 pub const SEMANTIC_CACHE_NAME: &str = "epi_semantic_cache";
@@ -42,6 +53,64 @@ impl Neo4jGraphRole {
             compatibility_labels: epi_s2_graph_schema::COMPAT_LABELS,
             compatibility_properties: epi_s2_graph_schema::COMPAT_COORDINATE_PROPERTIES,
         }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Neo4jConfig {
+    pub uri: String,
+    pub user: String,
+    pub password: String,
+}
+
+impl Neo4jConfig {
+    pub fn from_env() -> Self {
+        Self {
+            uri: std::env::var("EPILOGOS_NEO4J_URI")
+                .unwrap_or_else(|_| "bolt://localhost:7687".into()),
+            user: std::env::var("EPILOGOS_NEO4J_USER").unwrap_or_else(|_| "neo4j".into()),
+            password: std::env::var("EPILOGOS_NEO4J_PASSWORD").unwrap_or_else(|_| String::new()),
+        }
+    }
+}
+
+pub struct Neo4jClient {
+    graph: Arc<Graph>,
+}
+
+impl Neo4jClient {
+    pub fn connect(config: &Neo4jConfig) -> Result<Self, neo4rs::Error> {
+        let graph = Graph::new(&config.uri, &config.user, &config.password)?;
+        Ok(Self {
+            graph: Arc::new(graph),
+        })
+    }
+
+    pub async fn health_check(&self) -> Result<bool, neo4rs::Error> {
+        let mut result = self.graph.execute(query("RETURN 1 AS ok")).await?;
+        Ok(result.next().await?.is_some())
+    }
+
+    pub async fn run(&self, cypher: &str) -> Result<Vec<neo4rs::Row>, neo4rs::Error> {
+        let mut result = self.graph.execute(query(cypher)).await?;
+        let mut rows = Vec::new();
+        while let Some(row) = result.next().await? {
+            rows.push(row);
+        }
+        Ok(rows)
+    }
+
+    pub async fn run_query(&self, q: Query) -> Result<Vec<neo4rs::Row>, neo4rs::Error> {
+        let mut result = self.graph.execute(q).await?;
+        let mut rows = Vec::new();
+        while let Some(row) = result.next().await? {
+            rows.push(row);
+        }
+        Ok(rows)
+    }
+
+    pub fn graph(&self) -> &Graph {
+        &self.graph
     }
 }
 
@@ -91,15 +160,7 @@ impl SemanticCacheConfig {
     }
 
     pub fn for_local_dev(repo_root: &Path) -> Self {
-        let script_path = repo_root
-            .join("Body")
-            .join("S")
-            .join("S0")
-            .join("epi-cli")
-            .join("scripts")
-            .join("redisvl_cache_service")
-            .join("redisvl_cache_service.py");
-        Self::from_script_path(script_path)
+        Self::from_script_path(epi_s3_redis_context::redisvl_service_script(repo_root))
     }
 
     pub fn from_script_path(script_path: PathBuf) -> Self {
@@ -395,20 +456,26 @@ impl SemanticCacheClient {
 }
 
 fn default_script_path() -> PathBuf {
-    let manifest_candidate = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("scripts")
-        .join("redisvl_cache_service")
-        .join("redisvl_cache_service.py");
+    let manifest_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let repo_candidate = manifest_root
+        .parent()
+        .and_then(Path::parent)
+        .and_then(Path::parent)
+        .map(epi_s3_redis_context::redisvl_service_script);
+    if let Some(candidate) = repo_candidate {
+        if candidate.exists() {
+            return candidate;
+        }
+    }
+
+    let manifest_candidate = epi_s3_redis_context::redisvl_service_script(&manifest_root);
     if manifest_candidate.exists() {
         return manifest_candidate;
     }
 
     if let Ok(exe) = std::env::current_exe() {
         if let Some(root) = exe.parent().and_then(Path::parent) {
-            let candidate = root
-                .join("scripts")
-                .join("redisvl_cache_service")
-                .join("redisvl_cache_service.py");
+            let candidate = epi_s3_redis_context::redisvl_service_script(root);
             if candidate.exists() {
                 return candidate;
             }

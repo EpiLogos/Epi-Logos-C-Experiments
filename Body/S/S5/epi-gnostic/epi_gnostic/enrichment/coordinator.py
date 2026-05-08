@@ -63,9 +63,8 @@ class CoordinateEnricher:
         """Directly assign a known coordinate to a gnostic entity node.
 
         Sets ``bimba_coordinate``, ``coordinate_family``, and
-        ``assignment_method="direct"`` on the node, adds the family label,
-        and creates a ``MAPS_TO_COORDINATE`` edge to the matching
-        ``:BimbaCoordinate`` node.
+        ``assignment_method="direct"`` on the node, and creates a
+        ``MAPS_TO_COORDINATE`` edge to the matching ``:BimbaCoordinate`` node.
 
         Parameters
         ----------
@@ -77,7 +76,6 @@ class CoordinateEnricher:
             One of the VALID_FAMILIES letters, or ``"#"``.
         """
         family = _normalise_family(family)
-        node_label = _family_to_label(family)
         ws = self._workspace
 
         cypher = (
@@ -86,12 +84,10 @@ class CoordinateEnricher:
             f"    n.coordinate_family = $family, "
             f"    n.assignment_method = 'direct' "
             f"WITH n "
-            f"CALL apoc.create.addLabels(n, [$label]) YIELD node "
-            f"WITH node "
             f"MATCH (bc:BimbaCoordinate {{bimbaCoordinate: $coord}}) "
-            f"MERGE (node)-[r:MAPS_TO_COORDINATE]->(bc) "
+            f"MERGE (n)-[r:MAPS_TO_COORDINATE]->(bc) "
             f"SET r.confidence = 1.0, r.method = 'direct' "
-            f"RETURN node"
+            f"RETURN n"
         )
         async with self._driver.session(database=self._db) as session:
             await session.run(
@@ -99,7 +95,6 @@ class CoordinateEnricher:
                 vid=entity_id,
                 coord=coordinate,
                 family=family,
-                label=node_label,
             )
 
     async def assign_resonances(
@@ -112,8 +107,8 @@ class CoordinateEnricher:
         """Assign LLM-classified resonances to a gnostic entity node.
 
         Sets ``bimba_resonances``, ``coordinate_family``, and
-        ``assignment_method="llm_classified"`` on the node, adds the family
-        label, and creates ``RESONATES_WITH`` edges for each resonance.
+        ``assignment_method="llm_classified"`` on the node, and creates
+        ``RESONATES_WITH`` edges for each resonance.
 
         Parameters
         ----------
@@ -127,7 +122,6 @@ class CoordinateEnricher:
             Primary family letter (from LLM classification).
         """
         family = _normalise_family(family)
-        node_label = _family_to_label(family)
         ws = self._workspace
 
         # Pair up resonances and confidences, filling missing confidences with 0.0
@@ -138,15 +132,13 @@ class CoordinateEnricher:
             )
         )
 
-        # Update node properties and add label
+        # Update node properties. Coordinate family remains a property, not a label.
         set_cypher = (
             f"MATCH (n:`{ws}` {{vector_id: $vid}}) "
             f"SET n.bimba_resonances = $resonances, "
             f"    n.coordinate_family = $family, "
             f"    n.assignment_method = 'llm_classified' "
-            f"WITH n "
-            f"CALL apoc.create.addLabels(n, [$label]) YIELD node "
-            f"RETURN node"
+            f"RETURN n"
         )
         async with self._driver.session(database=self._db) as session:
             result = await session.run(
@@ -154,7 +146,6 @@ class CoordinateEnricher:
                 vid=entity_id,
                 resonances=resonances,
                 family=family,
-                label=node_label,
             )
             record = await result.single()
             if record is None:
@@ -303,12 +294,3 @@ def _normalise_family(family: str) -> str:
     """Return *family* uppercased if valid, else ``"#"``."""
     upper = family.upper() if family else "#"
     return upper if upper in VALID_FAMILIES else "#"
-
-
-def _family_to_label(family: str) -> str:
-    """Convert a family letter to a Neo4j-safe label name.
-
-    The special ``"#"`` family maps to ``"UNASSIGNED"`` because Neo4j
-    label names cannot contain ``#``.
-    """
-    return "UNASSIGNED" if family == "#" else family

@@ -23,6 +23,14 @@ fn session_now_redis_key_is_s3_temporal_context_not_graph_cache() {
         role.session_now_key("test-session-123"),
         "s3:gateway:temporal:session:test-session-123:now:md"
     );
+    assert_eq!(
+        role.day_context_key("07-05-2026"),
+        "s3:gateway:temporal:day:07-05-2026:context"
+    );
+    assert_eq!(
+        role.agent_orientation_key("epii", "test-session-123"),
+        "s3:gateway:temporal:agent:epii:session:test-session-123:orientation"
+    );
     assert_eq!(role.ttl_seconds, CacheTier::Hot.ttl_seconds());
 }
 

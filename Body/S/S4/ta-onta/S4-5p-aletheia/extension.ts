@@ -166,7 +166,7 @@ export async function aletheiaExtension(api: ExtensionAPI) {
   api.registerTool({
     name: "aletheia_gnosis_ingest",
     label: "Aletheia Gnosis Ingest",
-    description: "Ingest a document into Gnosis RAG pipeline (Docling parse → chunk → 3072-dim embed → Neo4j). Requires Docling Serve on port 5001.",
+    description: "Ingest a document into the Gnosis RAG pipeline (RAG-Anything/LightRAG/MinerU-oriented parse → chunk → 3072-dim embed → Neo4j).",
     parameters: Type.Object({
       path: Type.String({ description: "Filesystem path to document" }),
       notebook: Type.Optional(Type.String({ description: "Target Gnosis notebook name" })),

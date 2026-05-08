@@ -2,10 +2,23 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use epi_s3_gateway_contract::{
+    SpacetimeProjectionPlan, SpacetimeProjectionRows, SPACETIME_PROJECTION_SOURCE_HTTP_SQL,
+    SPACETIME_PROJECTION_SOURCE_NATIVE_WS, SPACETIME_PROJECTION_TABLES,
+};
+use futures_util::{SinkExt, StreamExt};
+use reqwest::blocking::Client as BlockingClient;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use sha2::{Digest, Sha256};
+use tokio::net::TcpStream;
+use tokio_tungstenite::{
+    connect_async,
+    tungstenite::{client::IntoClientRequest, Message},
+    MaybeTlsStream, WebSocketStream,
+};
 
-use super::{sessions::SessionStore, system};
+use super::{sessions::SessionStore, system, temporal};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BridgeEvent {
@@ -40,13 +53,104 @@ impl SpacetimeBridge {
         )
     }
 
+    pub fn register_gateway_instance(
+        &self,
+        gateway_id: &str,
+        installation_id: &str,
+        workspace_root_hash: &str,
+        endpoint: &str,
+        protocol_version: &str,
+    ) -> Result<(), String> {
+        self.append(
+            "gateway_registration",
+            "gateway_instance",
+            json!({
+                "gatewayId": gateway_id,
+                "installationId": installation_id,
+                "workspaceRootHash": workspace_root_hash,
+                "endpoint": endpoint,
+                "protocolVersion": protocol_version,
+                "status": "online",
+            }),
+        )
+    }
+
+    pub fn register_agent_instance(
+        &self,
+        agent_instance_id: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        agent_id: &str,
+        agent_kind: &str,
+        session_key: &str,
+        capability_surface_hash: &str,
+    ) -> Result<(), String> {
+        self.append(
+            "agent_registration",
+            "agent_instance",
+            json!({
+                "agentInstanceId": agent_instance_id,
+                "installationId": installation_id,
+                "gatewayId": gateway_id,
+                "agentId": agent_id,
+                "agentKind": agent_kind,
+                "sessionKey": session_key,
+                "capabilitySurfaceHash": capability_surface_hash,
+                "status": "online",
+            }),
+        )
+    }
+
+    pub fn register_client(
+        &self,
+        client_id: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        client_kind: &str,
+        scopes: &[&str],
+    ) -> Result<(), String> {
+        self.append(
+            "client_registration",
+            "client_registration",
+            json!({
+                "clientId": client_id,
+                "installationId": installation_id,
+                "gatewayId": gateway_id,
+                "clientKind": client_kind,
+                "scopes": scopes,
+                "status": "online",
+            }),
+        )
+    }
+
     pub fn publish_session(&self, identifier: &str, now_alias: Option<&str>) -> Result<(), String> {
         let store = SessionStore::new(&self.state_root)?;
         let record = store.resolve(identifier)?;
+        let temporal_context =
+            temporal::context_for_record(&self.state_root, &record, &record.active_agent_id);
         let mut payload = json!({
             "canonicalKey": record.canonical_key,
             "aliases": record.aliases,
             "label": record.label,
+            "sessionId": temporal_context["session"]["sessionId"].clone(),
+            "recordSessionId": record.session_id,
+            "dayId": temporal_context["day"]["dayId"].clone(),
+            "parentSessionKey": record.parent_session_key,
+            "sourceSessionKey": record.source_session_key,
+            "sourceSessionKind": record.source_session_kind,
+            "runtimeCwd": record.runtime_cwd,
+            "vaultRoot": record.vault_root,
+            "resourceLoaderId": record.resource_loader_id,
+            "retrySettlementState": record.retry_settlement_state,
+            "diagnostics": record.diagnostics,
+            "dayWikilink": temporal_context["day"]["wikilink"].clone(),
+            "vaultNowPath": temporal_context["now"]["path"].clone(),
+            "nowWikilink": temporal_context["now"]["wikilink"].clone(),
+            "history": temporal_context["history"].clone(),
+            "redisTemporalContext": temporal_context["redis"].clone(),
+            "kairos": temporal_context["kairos"].clone(),
+            "pratibimba": temporal_context["pratibimba"].clone(),
+            "graphiti": temporal_context["graphiti"].clone(),
             "activeAgentId": record.active_agent_id,
             "subagentLineage": record.subagent_lineage,
             "workspaceRoot": record.workspace_root,
@@ -63,7 +167,7 @@ impl SpacetimeBridge {
             payload["nowAlias"] = json!(alias);
         }
 
-        self.append("session_surface", "now_sessions", payload)
+        self.append("session_surface", "session_surface", payload)
     }
 
     pub fn publish_activity_event(&self, kind: &str, payload: Value) -> Result<(), String> {
@@ -128,89 +232,985 @@ fn event_path(state_root: &Path) -> PathBuf {
         .join("test-events.json")
 }
 
-// ─── SpacetimePresence Client ───────────────────────────────────────────────
+// ─── SpacetimeRuntime Client ────────────────────────────────────────────────
 //
-// Lightweight client stub for calling the epi-spacetime-module reducers.
-// Methods log intent without requiring a live SpacetimeDB connection.
-//
-// When SpacetimeDB is running locally (epi gate spacetime start), swap the
-// todo!() bodies for real HTTP/WebSocket calls to the SpacetimeDB REST API:
-//   POST /v1/database/{name}/call/{reducer}
-//
-// The epi-spacetime-module crate defines the table structs and reducer
-// signatures that this client mirrors.
+// Blocking client for calling the epi-spacetime-module registration reducers
+// over the SpacetimeDB REST surface.
 
+#[derive(Debug, Clone)]
 pub struct SpacetimePresence {
     url: String,
+    database: String,
+    client: BlockingClient,
+}
+
+#[derive(Debug, Clone)]
+pub struct SpacetimeRegistration {
+    pub url: String,
+    pub database: String,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub workspace_root_hash: String,
+    pub endpoint: String,
+    pub protocol_version: String,
+}
+
+pub type SpacetimeSubscriptionPlan = SpacetimeProjectionPlan;
+
+pub struct SpacetimeProjectionSubscription {
+    socket: WebSocketStream<MaybeTlsStream<TcpStream>>,
+    agent_id: String,
+}
+
+impl SpacetimeRegistration {
+    pub fn from_env(port: u16, state_root: &Path) -> Result<Option<Self>, String> {
+        let Some(url) =
+            optional_env("EPI_GATE_SPACETIME_URL").or_else(|| optional_env("SPACETIMEDB_URL"))
+        else {
+            return Ok(None);
+        };
+        let database = optional_env("EPI_GATE_SPACETIME_DATABASE")
+            .or_else(|| optional_env("SPACETIMEDB_DATABASE"))
+            .unwrap_or_else(|| "epi-logos-runtime".to_owned());
+        let installation_id =
+            optional_env("EPI_INSTALLATION_ID").unwrap_or_else(|| "local".to_owned());
+        let gateway_id =
+            optional_env("EPI_GATEWAY_ID").unwrap_or_else(|| format!("gateway-{port}"));
+        let workspace_root_hash = optional_env("EPI_WORKSPACE_ROOT_HASH")
+            .unwrap_or_else(|| workspace_root_hash(state_root));
+        let endpoint = optional_env("EPI_GATEWAY_ENDPOINT")
+            .unwrap_or_else(|| format!("ws://127.0.0.1:{port}"));
+        let protocol_version =
+            optional_env("EPI_GATEWAY_PROTOCOL_VERSION").unwrap_or_else(|| "3".to_owned());
+
+        Ok(Some(Self {
+            url,
+            database,
+            installation_id,
+            gateway_id,
+            workspace_root_hash,
+            endpoint,
+            protocol_version,
+        }))
+    }
+
+    pub fn readiness_value(&self) -> Value {
+        let plan = self.subscription_plan("", "");
+        let native_ready =
+            plan.mode == SPACETIME_PROJECTION_SOURCE_NATIVE_WS && !plan.endpoint.is_empty();
+        json!({
+            "ok": true,
+            "configured": true,
+            "registrationMode": "live-reducer",
+            "subscriptionMode": plan.mode,
+            "nativeSubscriptionReady": native_ready,
+            "url": self.url,
+            "database": self.database,
+            "installationId": self.installation_id,
+            "gatewayId": self.gateway_id,
+            "endpoint": self.endpoint,
+            "protocolVersion": self.protocol_version,
+            "projectionTables": [
+                SPACETIME_PROJECTION_TABLES[0],
+                SPACETIME_PROJECTION_TABLES[1],
+                SPACETIME_PROJECTION_TABLES[2],
+                SPACETIME_PROJECTION_TABLES[3],
+                SPACETIME_PROJECTION_TABLES[4],
+                SPACETIME_PROJECTION_TABLES[5]
+            ],
+            "projectionSubscriptionPlan": plan,
+            "rawServiceHealth": "configured reducer target; live reducer calls are verified by gateway registration tests",
+            "agentAccess": "agent/session surfaces register when sessions publish temporal context",
+            "subscriptionReadiness": if native_ready {
+                "native SpaceTimeDB WebSocket projection plan is configured; HTTP SQL polling remains the fallback"
+            } else {
+                "TUI can bind projection via HTTP SQL polling; native WebSocket subscription remains an upgrade path"
+            },
+        })
+    }
+
+    pub fn subscription_plan(
+        &self,
+        session_key: &str,
+        agent_id: &str,
+    ) -> SpacetimeSubscriptionPlan {
+        let mode = match optional_env("EPI_SPACETIME_SUBSCRIPTION_MODE").as_deref() {
+            Some("native-websocket") => SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
+            _ => SPACETIME_PROJECTION_SOURCE_HTTP_SQL,
+        }
+        .to_owned();
+        SpacetimeProjectionPlan::new(
+            mode,
+            spacetimedb_websocket_endpoint(&self.url),
+            self.database.clone(),
+        )
+        .for_session(session_key, agent_id)
+    }
+
+    pub fn register_gateway(&self) -> Result<(), String> {
+        self.client().register_gateway(
+            &self.gateway_id,
+            &self.installation_id,
+            &self.workspace_root_hash,
+            &self.endpoint,
+            &self.protocol_version,
+        )
+    }
+
+    pub fn heartbeat_gateway(&self) -> Result<(), String> {
+        self.client().heartbeat_gateway(&self.gateway_id)
+    }
+
+    pub fn register_client(
+        &self,
+        client_id: &str,
+        client_kind: &str,
+        scopes: &[String],
+    ) -> Result<(), String> {
+        let scope_refs = scopes.iter().map(String::as_str).collect::<Vec<_>>();
+        self.client().register_client(
+            client_id,
+            &self.installation_id,
+            &self.gateway_id,
+            client_kind,
+            &scope_refs,
+        )
+    }
+
+    pub fn register_session_agent(
+        &self,
+        state_root: &Path,
+        session_key: &str,
+    ) -> Result<(), String> {
+        let store = SessionStore::new(state_root)?;
+        let record = store.resolve(session_key)?;
+        let temporal_context =
+            temporal::context_for_record(state_root, &record, &record.active_agent_id);
+        let agent_instance_id = agent_instance_id(
+            &self.gateway_id,
+            &record.active_agent_id,
+            &record.session_id,
+        );
+        let capability_surface_hash =
+            capability_surface_hash(&record.active_agent_id, &record.canonical_key);
+
+        let client = self.client();
+        client.register_agent(
+            &agent_instance_id,
+            &self.installation_id,
+            &self.gateway_id,
+            &record.active_agent_id,
+            &agent_kind(&record.active_agent_id),
+            &record.canonical_key,
+            &capability_surface_hash,
+        )?;
+
+        client.bind_session_temporal_context(
+            &record.canonical_key,
+            &self.installation_id,
+            &self.gateway_id,
+            &agent_instance_id,
+            string_at(&temporal_context, "/day/dayId", "unknown-day"),
+            string_at(&temporal_context, "/now/path", ""),
+            string_at(&temporal_context, "/now/wikilink", ""),
+            string_at(&temporal_context, "/history/archivePath", ""),
+            string_at(&temporal_context, "/redis/sessionNowKey", ""),
+            string_at(&temporal_context, "/redis/dayContextKey", ""),
+            string_at(&temporal_context, "/graphiti/sessionArcId", ""),
+            string_at(&temporal_context, "/pratibimba/anchorId", ""),
+            &kairos_snapshot_id(&temporal_context),
+            record.parent_session_key.as_deref().unwrap_or(""),
+            record.source_session_key.as_deref().unwrap_or(""),
+            record.source_session_kind.as_deref().unwrap_or(""),
+            record.runtime_cwd.as_deref().unwrap_or(""),
+            record.vault_root.as_deref().unwrap_or(""),
+            record.resource_loader_id.as_deref().unwrap_or(""),
+            record.retry_settlement_state.as_deref().unwrap_or(""),
+            &serde_json::to_string(&record.diagnostics).unwrap_or_else(|_| "[]".to_owned()),
+        )?;
+
+        let kairos = &temporal_context["kairos"];
+        client.bind_kairos_surface(
+            &kairos_snapshot_id(&temporal_context),
+            &self.installation_id,
+            &self.gateway_id,
+            string_at(&temporal_context, "/day/dayId", "unknown-day"),
+            &record.canonical_key,
+            kairos
+                .get("available")
+                .and_then(Value::as_bool)
+                .unwrap_or(false),
+            kairos
+                .get("fresh")
+                .and_then(Value::as_bool)
+                .unwrap_or(false),
+            kairos
+                .get("dominantSign")
+                .and_then(Value::as_u64)
+                .unwrap_or(0) as u8,
+            kairos
+                .get("dominantElement")
+                .and_then(Value::as_u64)
+                .unwrap_or(0) as u8,
+            kairos
+                .get("activeDecan")
+                .and_then(Value::as_u64)
+                .unwrap_or(0) as u8,
+            kairos
+                .get("activeTattva")
+                .and_then(Value::as_u64)
+                .unwrap_or(0) as u8,
+            kairos.get("planets").cloned().unwrap_or_else(|| json!([])),
+            kairos
+                .get("source")
+                .and_then(Value::as_str)
+                .unwrap_or("nara.kairos.current"),
+        )
+    }
+
+    pub fn projection_temporal_context(
+        &self,
+        session_key: &str,
+        agent_id: &str,
+    ) -> Result<Option<Value>, String> {
+        self.client()
+            .projection_temporal_context(session_key, agent_id)
+    }
+
+    pub async fn subscribe_projection(
+        &self,
+        session_key: &str,
+        agent_id: &str,
+    ) -> Result<SpacetimeProjectionSubscription, String> {
+        require_nonempty(session_key, "session_key")?;
+        require_nonempty(agent_id, "agent_id")?;
+        let plan = self.subscription_plan(session_key, agent_id);
+        if plan.mode != SPACETIME_PROJECTION_SOURCE_NATIVE_WS {
+            return Err(format!(
+                "spacetimedb subscription mode is {}; set EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket",
+                plan.mode
+            ));
+        }
+
+        let mut request = plan
+            .subscribe_url()
+            .into_client_request()
+            .map_err(|err| format!("spacetimedb websocket request failed: {err}"))?;
+        request.headers_mut().insert(
+            "sec-websocket-protocol",
+            "v1.json.spacetimedb"
+                .parse()
+                .map_err(|err| format!("invalid websocket subprotocol header: {err}"))?,
+        );
+
+        let (mut socket, _) = connect_async(request)
+            .await
+            .map_err(|err| format!("spacetimedb websocket connect failed: {err}"))?;
+        socket
+            .send(Message::Text(plan.subscribe_multi_message().to_string()))
+            .await
+            .map_err(|err| format!("spacetimedb subscribe message failed: {err}"))?;
+
+        Ok(SpacetimeProjectionSubscription {
+            socket,
+            agent_id: agent_id.to_owned(),
+        })
+    }
+
+    fn client(&self) -> SpacetimePresence {
+        SpacetimePresence::for_database(&self.url, &self.database)
+    }
+}
+
+impl SpacetimeProjectionSubscription {
+    pub async fn next_context(&mut self) -> Result<Option<Value>, String> {
+        while let Some(message) = self.socket.next().await {
+            let message =
+                message.map_err(|err| format!("spacetimedb websocket receive failed: {err}"))?;
+            if !message.is_text() {
+                continue;
+            }
+            let raw = message
+                .to_text()
+                .map_err(|err| format!("spacetimedb text frame failed: {err}"))?;
+            let value = serde_json::from_str::<Value>(raw)
+                .map_err(|err| format!("spacetimedb websocket frame was not JSON: {err}"))?;
+            if let Some(context) =
+                projection_context_from_subscription_message(&value, &self.agent_id)?
+            {
+                return Ok(Some(context));
+            }
+        }
+        Ok(None)
+    }
+}
+
+pub fn readiness_value(port: u16, state_root: &Path) -> Value {
+    match SpacetimeRegistration::from_env(port, state_root) {
+        Ok(Some(registration)) => registration.readiness_value(),
+        Ok(None) => json!({
+            "ok": false,
+            "configured": false,
+            "registrationMode": "disabled",
+            "reason": "set SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL to enable live projection",
+            "projectionTables": [
+                "gateway_instance",
+                "agent_instance",
+                "client_registration",
+                "session_surface",
+                "kairos_surface",
+                "temporal_event"
+            ],
+            "rawServiceHealth": "not configured",
+            "agentAccess": "not registered",
+            "subscriptionReadiness": "disabled until SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL is set",
+        }),
+        Err(error) => json!({
+            "ok": false,
+            "configured": false,
+            "registrationMode": "invalid",
+            "error": error,
+            "subscriptionReadiness": "invalid SpaceTimeDB configuration",
+        }),
+    }
+}
+
+fn spacetimedb_websocket_endpoint(url: &str) -> String {
+    if let Some(rest) = url.strip_prefix("https://") {
+        format!("wss://{}", rest.trim_end_matches('/'))
+    } else if let Some(rest) = url.strip_prefix("http://") {
+        format!("ws://{}", rest.trim_end_matches('/'))
+    } else {
+        url.trim_end_matches('/').to_owned()
+    }
 }
 
 impl SpacetimePresence {
     /// Create a new SpacetimePresence client pointing at the given SpacetimeDB URL.
     /// Default local URL: "http://localhost:3000"
     pub fn new(url: &str) -> Self {
+        Self::for_database(url, "epi-logos-runtime")
+    }
+
+    pub fn for_database(url: &str, database: &str) -> Self {
         Self {
-            url: url.to_owned(),
+            url: url.trim_end_matches('/').to_owned(),
+            database: database.to_owned(),
+            client: BlockingClient::new(),
         }
     }
 
-    /// Publish anonymous torus stage presence for the given BLAKE3 hash.
-    /// hash must be >= 8 hex chars (BLAKE3 quintessence hash truncation).
-    /// tick12: 0-11 (ring position on the M1 torus walk).
-    ///
-    /// Stub: logs intent without making a network call.
-    /// Real implementation: POST {url}/v1/database/epi-logos-presence/call/update_presence
+    pub fn register_gateway(
+        &self,
+        gateway_id: &str,
+        installation_id: &str,
+        workspace_root_hash: &str,
+        endpoint: &str,
+        protocol_version: &str,
+    ) -> Result<(), String> {
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(workspace_root_hash, "workspace_root_hash")?;
+        require_nonempty(endpoint, "endpoint")?;
+        self.post_reducer(
+            "register_gateway",
+            json!([
+                gateway_id,
+                installation_id,
+                workspace_root_hash,
+                endpoint,
+                protocol_version,
+            ]),
+        )
+    }
+
+    pub fn heartbeat_gateway(&self, gateway_id: &str) -> Result<(), String> {
+        require_nonempty(gateway_id, "gateway_id")?;
+        self.post_reducer("heartbeat_gateway", json!([gateway_id]))
+    }
+
+    pub fn register_agent(
+        &self,
+        agent_instance_id: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        agent_id: &str,
+        agent_kind: &str,
+        session_key: &str,
+        capability_surface_hash: &str,
+    ) -> Result<(), String> {
+        require_nonempty(agent_instance_id, "agent_instance_id")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(agent_id, "agent_id")?;
+        self.post_reducer(
+            "register_agent",
+            json!([
+                agent_instance_id,
+                installation_id,
+                gateway_id,
+                agent_id,
+                agent_kind,
+                session_key,
+                capability_surface_hash,
+            ]),
+        )
+    }
+
+    pub fn register_client(
+        &self,
+        client_id: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        client_kind: &str,
+        scopes: &[&str],
+    ) -> Result<(), String> {
+        require_nonempty(client_id, "client_id")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(client_kind, "client_kind")?;
+        self.post_reducer(
+            "register_client",
+            json!([
+                client_id,
+                installation_id,
+                gateway_id,
+                client_kind,
+                scopes.join(","),
+            ]),
+        )
+    }
+
+    pub fn bind_session_temporal_context(
+        &self,
+        session_key: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        agent_instance_id: &str,
+        day_id: &str,
+        now_path: &str,
+        now_wikilink: &str,
+        history_archive_path: &str,
+        redis_session_now_key: &str,
+        redis_day_context_key: &str,
+        graphiti_arc_id: &str,
+        pratibimba_anchor_ref: &str,
+        kairos_snapshot_id: &str,
+        parent_session_key: &str,
+        source_session_key: &str,
+        source_session_kind: &str,
+        runtime_cwd: &str,
+        vault_root: &str,
+        resource_loader_id: &str,
+        retry_settlement_state: &str,
+        diagnostics_json: &str,
+    ) -> Result<(), String> {
+        require_nonempty(session_key, "session_key")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(day_id, "day_id")?;
+        self.post_reducer(
+            "bind_session_temporal_context",
+            json!([
+                session_key,
+                installation_id,
+                gateway_id,
+                agent_instance_id,
+                day_id,
+                now_path,
+                now_wikilink,
+                history_archive_path,
+                redis_session_now_key,
+                redis_day_context_key,
+                graphiti_arc_id,
+                pratibimba_anchor_ref,
+                kairos_snapshot_id,
+                parent_session_key,
+                source_session_key,
+                source_session_kind,
+                runtime_cwd,
+                vault_root,
+                resource_loader_id,
+                retry_settlement_state,
+                diagnostics_json,
+            ]),
+        )
+    }
+
+    pub fn bind_kairos_surface(
+        &self,
+        kairos_snapshot_id: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        day_id: &str,
+        session_key: &str,
+        available: bool,
+        fresh: bool,
+        dominant_sign: u8,
+        dominant_element: u8,
+        active_decan: u8,
+        active_tattva: u8,
+        planets: Value,
+        source: &str,
+    ) -> Result<(), String> {
+        require_nonempty(kairos_snapshot_id, "kairos_snapshot_id")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(day_id, "day_id")?;
+        self.post_reducer(
+            "bind_kairos_surface",
+            json!([
+                kairos_snapshot_id,
+                installation_id,
+                gateway_id,
+                day_id,
+                session_key,
+                available,
+                fresh,
+                dominant_sign,
+                dominant_element,
+                active_decan,
+                active_tattva,
+                planets.to_string(),
+                source,
+            ]),
+        )
+    }
+
+    pub fn publish_temporal_event(
+        &self,
+        installation_id: &str,
+        gateway_id: &str,
+        agent_instance_id: &str,
+        session_key: &str,
+        event_kind: &str,
+        payload: Value,
+    ) -> Result<(), String> {
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(event_kind, "event_kind")?;
+        self.post_reducer(
+            "publish_temporal_event",
+            json!([
+                installation_id,
+                gateway_id,
+                agent_instance_id,
+                session_key,
+                event_kind,
+                payload.to_string(),
+            ]),
+        )
+    }
+
     pub fn publish_presence(&self, hash: &str, tick12: u8) -> Result<(), String> {
-        if hash.len() < 8 {
-            return Err("invalid hash: must be at least 8 hex chars".to_string());
-        }
-        eprintln!(
-            "[SpacetimeDB] would publish: update_presence(hash={}, tick12={}) → {}",
-            hash, tick12, self.url
-        );
-        Ok(())
+        require_nonempty(hash, "hash")?;
+        self.publish_temporal_event(
+            "local",
+            "nara",
+            "",
+            hash,
+            "nara.presence",
+            json!({ "hash": hash, "tick12": tick12 }),
+        )
     }
 
-    /// Record an I-Ching oracle draw event (hexagram only — no interpretation).
-    /// hexagram_id: 0-63.
-    ///
-    /// Stub: logs intent without making a network call.
-    /// Real implementation: POST {url}/v1/database/epi-logos-presence/call/record_oracle_draw
     pub fn record_oracle_draw(&self, hash: &str, hexagram_id: u8) -> Result<(), String> {
-        if hash.len() < 8 {
-            return Err("invalid hash: must be at least 8 hex chars".to_string());
-        }
+        require_nonempty(hash, "hash")?;
         if hexagram_id > 63 {
             return Err("hexagram_id must be 0-63".to_string());
         }
-        eprintln!(
-            "[SpacetimeDB] would publish: record_oracle_draw(hash={}, hexagram_id={}) → {}",
-            hash, hexagram_id, self.url
-        );
-        Ok(())
+        self.publish_temporal_event(
+            "local",
+            "nara",
+            "",
+            hash,
+            "nara.oracle_draw",
+            json!({ "hash": hash, "hexagram_id": hexagram_id }),
+        )
     }
 
-    /// Record a logos cycle stage completion.
-    /// stage: 0-5 (A-Logos / Pro-Logos / Dia-Logos / Logos / Epi-Logos / An-a-Logos).
-    /// day_key: "YYYY-MM-DD" format (10 chars).
-    ///
-    /// Stub: logs intent without making a network call.
-    /// Real implementation: POST {url}/v1/database/epi-logos-presence/call/record_logos_stage
     pub fn record_logos_stage(&self, hash: &str, stage: u8, day_key: &str) -> Result<(), String> {
-        if hash.len() < 8 {
-            return Err("invalid hash: must be at least 8 hex chars".to_string());
-        }
+        require_nonempty(hash, "hash")?;
         if stage > 5 {
             return Err("stage must be 0-5 (A-Logos through An-a-Logos)".to_string());
         }
         if day_key.len() != 10 {
             return Err("day_key must be YYYY-MM-DD format (10 chars)".to_string());
         }
-        eprintln!(
-            "[SpacetimeDB] would publish: record_logos_stage(hash={}, stage={}, day_key={}) → {}",
-            hash, stage, day_key, self.url
-        );
-        Ok(())
+        self.publish_temporal_event(
+            "local",
+            "nara",
+            "",
+            hash,
+            "nara.logos_stage",
+            json!({ "hash": hash, "stage": stage, "day_key": day_key }),
+        )
     }
+
+    pub fn projection_temporal_context(
+        &self,
+        session_key: &str,
+        agent_id: &str,
+    ) -> Result<Option<Value>, String> {
+        require_nonempty(session_key, "session_key")?;
+        require_nonempty(agent_id, "agent_id")?;
+        let escaped_session = sql_string(session_key);
+        let query = format!(
+            "SELECT * FROM session_surface WHERE session_key = {escaped_session} LIMIT 1;\
+             SELECT * FROM kairos_surface WHERE session_key = {escaped_session} LIMIT 1"
+        );
+        let result = self.sql(&query)?;
+        projection_context_from_sql_result(&result, agent_id)
+    }
+
+    pub fn sql(&self, query: &str) -> Result<Value, String> {
+        require_nonempty(query, "query")?;
+        let url = format!("{}/v1/database/{}/sql", self.url, self.database);
+        let response = self
+            .client
+            .post(&url)
+            .body(query.to_owned())
+            .send()
+            .map_err(|err| format!("spacetimedb sql request failed: {err}"))?;
+
+        if response.status().is_success() {
+            return response
+                .json::<Value>()
+                .map_err(|err| format!("spacetimedb sql response was not JSON: {err}"));
+        }
+
+        let status = response.status();
+        let body = response
+            .text()
+            .unwrap_or_else(|_| "<unreadable body>".to_owned());
+        Err(format!("spacetimedb sql request failed: {status} {body}"))
+    }
+
+    fn post_reducer(&self, reducer: &str, payload: Value) -> Result<(), String> {
+        let url = format!(
+            "{}/v1/database/{}/call/{}",
+            self.url, self.database, reducer
+        );
+        let response = self
+            .client
+            .post(&url)
+            .json(&payload)
+            .send()
+            .map_err(|err| format!("spacetimedb {reducer} request failed: {err}"))?;
+
+        if response.status().is_success() {
+            return Ok(());
+        }
+
+        let status = response.status();
+        let body = response
+            .text()
+            .unwrap_or_else(|_| "<unreadable body>".to_owned());
+        Err(format!(
+            "spacetimedb {reducer} request failed: {status} {body}"
+        ))
+    }
+}
+
+fn projection_context_from_sql_result(
+    result: &Value,
+    agent_id: &str,
+) -> Result<Option<Value>, String> {
+    let statements = result.as_array().ok_or_else(|| {
+        "spacetimedb sql response must be an array of statement results".to_owned()
+    })?;
+    let Some(session_row) = statements
+        .first()
+        .and_then(|statement| statement.get("rows"))
+        .and_then(Value::as_array)
+        .and_then(|rows| rows.first())
+    else {
+        return Ok(None);
+    };
+    let kairos_row = statements
+        .get(1)
+        .and_then(|statement| statement.get("rows"))
+        .and_then(Value::as_array)
+        .and_then(|rows| rows.first());
+
+    let session_key = row_string(session_row, "session_key", "sessionKey", "");
+    let day_id = row_string(session_row, "day_id", "dayId", "unknown-day");
+    let now_path = row_string(session_row, "now_path", "nowPath", "");
+    let now_wikilink = row_string(session_row, "now_wikilink", "nowWikilink", "");
+    let history_archive_path = row_string(
+        session_row,
+        "history_archive_path",
+        "historyArchivePath",
+        "",
+    );
+    let redis_session_now_key = row_string(
+        session_row,
+        "redis_session_now_key",
+        "redisSessionNowKey",
+        "",
+    );
+    let redis_day_context_key = row_string(
+        session_row,
+        "redis_day_context_key",
+        "redisDayContextKey",
+        "",
+    );
+    let graphiti_arc_id = row_string(session_row, "graphiti_arc_id", "graphitiArcId", "");
+    let pratibimba_anchor_ref = row_string(
+        session_row,
+        "pratibimba_anchor_ref",
+        "pratibimbaAnchorRef",
+        "",
+    );
+    let active_agent_id = row_string(session_row, "active_agent_id", "activeAgentId", "");
+    let resource_loader_id = row_string(session_row, "resource_loader_id", "resourceLoaderId", "");
+    let runtime_cwd = row_string(session_row, "runtime_cwd", "runtimeCwd", "");
+    let source_session_key = row_string(session_row, "source_session_key", "sourceSessionKey", "");
+    let source_session_kind =
+        row_string(session_row, "source_session_kind", "sourceSessionKind", "");
+    let graphiti_namespace_ref = pratibimba_anchor_ref.clone();
+    let _kairos_snapshot_id = row_string(session_row, "kairos_snapshot_id", "kairosSnapshotId", "");
+    let session_id = session_id_from_now_path(&now_path).unwrap_or_else(|| session_key.to_owned());
+
+    let planets = kairos_row
+        .map(|row| row_string(row, "planets_json", "planetsJson", "[]"))
+        .and_then(|raw| serde_json::from_str::<Value>(&raw).ok())
+        .unwrap_or_else(|| json!([]));
+
+    Ok(Some(json!({
+        "coordinateOwner": "S3'",
+        "agentAccessOwner": "S4/S5",
+        "session": {
+            "canonicalKey": session_key,
+            "sessionId": session_id,
+            "activeAgentId": if active_agent_id.is_empty() {
+                Value::Null
+            } else {
+                Value::String(active_agent_id)
+            },
+            "resourceLoaderId": if resource_loader_id.is_empty() {
+                Value::Null
+            } else {
+                Value::String(resource_loader_id)
+            },
+            "runtimeCwd": if runtime_cwd.is_empty() {
+                Value::Null
+            } else {
+                Value::String(runtime_cwd)
+            },
+            "sourceSessionKey": if source_session_key.is_empty() {
+                Value::Null
+            } else {
+                Value::String(source_session_key)
+            },
+            "sourceSessionKind": if source_session_kind.is_empty() {
+                Value::Null
+            } else {
+                Value::String(source_session_kind)
+            },
+            "requestedAgentId": agent_id,
+        },
+        "day": {
+            "dayId": day_id,
+            "wikilink": if day_id == "unknown-day" {
+                Value::Null
+            } else {
+                Value::String(format!("[[{day_id}]]"))
+            },
+        },
+        "now": {
+            "path": now_path,
+            "wikilink": now_wikilink,
+            "content": Value::Null,
+        },
+        "history": {
+            "archivePath": history_archive_path,
+        },
+        "redis": {
+            "namespace": "s3:gateway:temporal",
+            "sessionNowKey": redis_session_now_key,
+            "dayContextKey": redis_day_context_key,
+            "hydrated": true,
+        },
+        "spacetimedb": {
+            "projectionSource": "http-sql-poll",
+            "projectionTable": "session_surface",
+            "kairosProjectionTable": "kairos_surface",
+        },
+        "kairos": {
+            "available": kairos_row
+                .map(|row| row_bool(row, "available", "available", false))
+                .unwrap_or(false),
+            "fresh": kairos_row
+                .map(|row| row_bool(row, "fresh", "fresh", false))
+                .unwrap_or(false),
+            "source": kairos_row
+                .map(|row| row_string(row, "source", "source", "nara.kairos.current"))
+                .unwrap_or_else(|| "nara.kairos.current".to_owned()),
+            "dominantSign": kairos_row
+                .map(|row| row_u64(row, "dominant_sign", "dominantSign", 0))
+                .unwrap_or(0),
+            "dominantElement": kairos_row
+                .map(|row| row_u64(row, "dominant_element", "dominantElement", 0))
+                .unwrap_or(0),
+            "activeDecan": kairos_row
+                .map(|row| row_u64(row, "active_decan", "activeDecan", 0))
+                .unwrap_or(0),
+            "activeTattva": kairos_row
+                .map(|row| row_u64(row, "active_tattva", "activeTattva", 0))
+                .unwrap_or(0),
+            "planets": planets,
+            "privacy": "public-current-transit-only",
+        },
+        "pratibimba": {
+            "available": !pratibimba_anchor_ref.is_empty(),
+            "anchorId": if pratibimba_anchor_ref.is_empty() {
+                Value::Null
+            } else {
+                Value::String(pratibimba_anchor_ref.to_owned())
+            },
+            "coordinate": "M4.4.4.4",
+            "graphitiNamespaceRef": if pratibimba_anchor_ref.is_empty() {
+                Value::Null
+            } else {
+                Value::String(pratibimba_anchor_ref)
+            },
+            "privacy": "protected-reference-only",
+        },
+        "graphiti": {
+            "runtimeOwner": "S3'",
+            "invocationOwner": "S5/S5'",
+            "sessionArcId": graphiti_arc_id,
+            "namespaceRef": if graphiti_arc_id.is_empty() {
+                Value::Null
+            } else {
+                Value::String(graphiti_namespace_ref)
+            },
+        },
+    })))
+}
+
+fn projection_context_from_subscription_message(
+    message: &Value,
+    agent_id: &str,
+) -> Result<Option<Value>, String> {
+    let rows = SpacetimeProjectionRows::from_subscription_message(message)?;
+    let Some(session_row) = rows.session else {
+        return Ok(None);
+    };
+    let result = json!([
+        {
+            "schema": {},
+            "rows": [session_row]
+        },
+        {
+            "schema": {},
+            "rows": rows.kairos.into_iter().collect::<Vec<_>>()
+        }
+    ]);
+    projection_context_from_sql_result(&result, agent_id).map(|context| {
+        context.map(|mut value| {
+            value["spacetimedb"]["projectionSource"] = json!("native-websocket");
+            value
+        })
+    })
+}
+
+fn row_string(row: &Value, snake: &str, camel: &str, fallback: &str) -> String {
+    row.get(snake)
+        .or_else(|| row.get(camel))
+        .and_then(Value::as_str)
+        .unwrap_or(fallback)
+        .to_owned()
+}
+
+fn row_bool(row: &Value, snake: &str, camel: &str, fallback: bool) -> bool {
+    row.get(snake)
+        .or_else(|| row.get(camel))
+        .and_then(Value::as_bool)
+        .unwrap_or(fallback)
+}
+
+fn row_u64(row: &Value, snake: &str, camel: &str, fallback: u64) -> u64 {
+    row.get(snake)
+        .or_else(|| row.get(camel))
+        .and_then(Value::as_u64)
+        .unwrap_or(fallback)
+}
+
+fn sql_string(value: &str) -> String {
+    format!("'{}'", value.replace('\'', "''"))
+}
+
+fn session_id_from_now_path(path: &str) -> Option<String> {
+    let parts = path.split('/').collect::<Vec<_>>();
+    let empty_idx = parts.iter().position(|part| *part == "Empty")?;
+    if parts.get(empty_idx + 1).copied() != Some("Present") {
+        return None;
+    }
+    parts.get(empty_idx + 3).map(|value| (*value).to_owned())
+}
+
+fn optional_env(key: &str) -> Option<String> {
+    std::env::var(key)
+        .ok()
+        .map(|value| value.trim().to_owned())
+        .filter(|value| !value.is_empty())
+}
+
+fn workspace_root_hash(state_root: &Path) -> String {
+    let workspace = optional_env("EPI_REPO_ROOT")
+        .or_else(|| {
+            std::env::current_dir()
+                .ok()
+                .map(|path| path.display().to_string())
+        })
+        .unwrap_or_else(|| state_root.display().to_string());
+    let mut hasher = Sha256::new();
+    hasher.update(workspace.as_bytes());
+    hex::encode(hasher.finalize())
+}
+
+fn agent_instance_id(gateway_id: &str, agent_id: &str, session_id: &str) -> String {
+    format!("{gateway_id}:{agent_id}:{session_id}")
+}
+
+fn capability_surface_hash(agent_id: &str, session_key: &str) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(agent_id.as_bytes());
+    hasher.update(b":");
+    hasher.update(session_key.as_bytes());
+    hex::encode(hasher.finalize())
+}
+
+fn agent_kind(agent_id: &str) -> String {
+    match agent_id {
+        "epii" => "epii",
+        "anima" => "anima",
+        value if value.starts_with("subagent:") => "subagent",
+        _ => "pi-agent",
+    }
+    .to_owned()
+}
+
+fn string_at<'a>(value: &'a Value, pointer: &str, fallback: &'a str) -> &'a str {
+    value
+        .pointer(pointer)
+        .and_then(Value::as_str)
+        .unwrap_or(fallback)
+}
+
+fn kairos_snapshot_id(context: &Value) -> String {
+    let day_id = string_at(context, "/day/dayId", "unknown-day");
+    let session_id = string_at(context, "/session/sessionId", "unknown-session");
+    format!("kairos-{day_id}-{session_id}")
+}
+
+fn require_nonempty(value: &str, field: &str) -> Result<(), String> {
+    if value.trim().is_empty() {
+        return Err(format!("{field} must not be empty"));
+    }
+    Ok(())
 }
 
 fn now_ms() -> Result<u128, String> {

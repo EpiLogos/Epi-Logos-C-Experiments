@@ -97,6 +97,7 @@ The current architecture supersedes several older assumptions:
 - [[Graphiti]] is architecturally [[S3']] temporal episodic runtime/library. [[S5]] / [[S5']] owns invocation, usage, search strategy, arc governance, disclosure, and reflective meaning. The current HTTP wrapper is not target architecture.
 - [[Gnosis]] / [[RAG-Anything]] uses [[S2]] graph/vector substrate but belongs here as world-return corpus service.
 - [[M']] functions are surfaced through `epi nara` today, but their integrative knowledge home is S5/S5' through [[Epii]].
+- [[DAY]] / [[NOW]] [[Kairos]] and [[M4.4.4.4]] [[PersonalNexus]] are now explicit Epii access concerns. [[S3']] owns the live temporal projection and Redis hot context; local [[Neo4j]] / [[Graphiti]] owns protected personal and episodic truth; [[Epii]] owns the user-position stewardship route through `s5'.epii.user.orientation`, `s5'.epii.pratibimba.status`, and `s5'.epii.kairos.context`.
 - [[bimba-mcp]] remains an S2' external graph interface, not the PI agent's internal S5 oracle.
 
 ### Current code reality
@@ -116,6 +117,7 @@ Live implementation is real but distributed:
 - `Body/S/S0/epi-cli/src/gate/improve.rs` exposes that S5 autoresearch core through the gateway methods `s5'.improve.status`, `s5'.improve.propose`, `s5'.improve.evaluate`, `s5'.improve.promote`, and `s5'.improve.history`. S0 is the API mirror; S5 owns the improvement state law. Gateway promotion requires an approved Epii review resolution before returning a dry-run Hen plan.
 - `Body/S/S5/epii-agent-core/` now owns the first Epii agent-access layer over the review and autoresearch stores: status snapshots, active improvement vectors, and Anima/Aletheia deposits that become review items and, for improvement requests, linked autoresearch runs.
 - `Body/S/S0/epi-cli/src/gate/epii.rs` exposes that Epii access layer through `s5'.epii.status` and `s5'.epii.deposit`. `s5'.epii.status` also performs read-only world-return observation over current Gnosis local-store/Neo4j config, Nara status, and Graphiti runtime status. This is gateway-backed agent access, not yet the fully installed PI runtime package.
+- `Body/S/S0/epi-cli/src/gate/epii.rs` also exposes the first read-only user-orientation routes: `s5'.epii.user.orientation`, `s5'.epii.pratibimba.status`, and `s5'.epii.kairos.context`. These surface the protected [[M4.4.4.4]] Pratibimba anchor, safe Kairos transit summary, and S4/S5 access boundary without granting Anima identity mutation authority.
 - `vendors/autoresearch/` exists as the autoresearch vendor basis for the Epii improvement spine.
 - `Body/S/S5/plugins/epi-logos/` is now the local canonical S5/S5' resource/skill scaffold for the [[epi-logos plugin]], promoted from the earlier sketch. It includes a plugin manifest, `epi-knowing` skill, QV overlay/schema resources, and install script. S0 plugin discovery includes `Body/S/S5/plugins`, so this body can enter the same PI runtime plugin path as [[Pleroma]].
 - `Body/S/S0/epi-lib/src/m0.c` through `m5.c` and tests contain M-family engine material, including M5/Epii/logos integration concerns.

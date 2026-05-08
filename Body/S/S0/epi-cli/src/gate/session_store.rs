@@ -2,7 +2,8 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::sesh::session::{read_session_state, repo_root_from_env};
+use crate::sesh::session::{read_session_state, repo_root_from_env, resolve_vault_root};
+use serde_json::{Map, Value};
 
 use super::{bootstrap, subagents, transcripts, workspace};
 
@@ -22,6 +23,15 @@ impl SessionStore {
 
     pub fn create(&self, canonical_key: &str) -> Result<SessionRecord, String> {
         let session_snapshot = load_current_session_state();
+        let empty_env = std::collections::BTreeMap::new();
+        let vault_root = resolve_vault_root(
+            session_snapshot
+                .as_ref()
+                .map(|state| &state.env)
+                .unwrap_or(&empty_env),
+        )
+        .display()
+        .to_string();
         let record = SessionRecord {
             canonical_key: canonical_key.to_owned(),
             aliases: Vec::new(),
@@ -34,9 +44,17 @@ impl SessionStore {
                 .as_ref()
                 .map(|state| state.context.day_id.clone()),
             spawned_by: None,
+            parent_session_key: None,
+            source_session_key: None,
+            source_session_kind: None,
             vault_now_path: session_snapshot
                 .as_ref()
                 .map(|state| state.context.now_path.display().to_string()),
+            runtime_cwd: Some(repo_root_from_env().display().to_string()),
+            vault_root: Some(vault_root),
+            resource_loader_id: None,
+            retry_settlement_state: None,
+            diagnostics: Vec::new(),
             delivery_context: None,
             channel: None,
             thread_id: None,
@@ -136,8 +154,7 @@ impl SessionStore {
         for entry in fs::read_dir(session_dir).map_err(|err| err.to_string())? {
             let entry = entry.map_err(|err| err.to_string())?;
             let content = fs::read_to_string(entry.path()).map_err(|err| err.to_string())?;
-            let record: SessionRecord =
-                serde_json::from_str(&content).map_err(|err| err.to_string())?;
+            let record = decode_session_record(&self.gate_root, &content)?;
             records.push(record);
         }
         records.sort_by(|left, right| left.canonical_key.cmp(&right.canonical_key));
@@ -166,6 +183,12 @@ impl SessionStore {
             if let Some(label) = patch.label {
                 record.label = label;
             }
+            if let Some(session_id) = patch.session_id {
+                record.session_id = session_id;
+            }
+            if let Some(day_id) = patch.day_id {
+                record.day_id = day_id;
+            }
             if let Some(active_agent_id) = patch.active_agent_id {
                 record.active_agent_id = active_agent_id;
             }
@@ -185,8 +208,32 @@ impl SessionStore {
             if let Some(spawned_by) = patch.spawned_by {
                 record.spawned_by = spawned_by;
             }
+            if let Some(parent_session_key) = patch.parent_session_key {
+                record.parent_session_key = parent_session_key;
+            }
+            if let Some(source_session_key) = patch.source_session_key {
+                record.source_session_key = source_session_key;
+            }
+            if let Some(source_session_kind) = patch.source_session_kind {
+                record.source_session_kind = source_session_kind;
+            }
             if let Some(vault_now_path) = patch.vault_now_path {
                 record.vault_now_path = vault_now_path;
+            }
+            if let Some(runtime_cwd) = patch.runtime_cwd {
+                record.runtime_cwd = runtime_cwd;
+            }
+            if let Some(vault_root) = patch.vault_root {
+                record.vault_root = vault_root;
+            }
+            if let Some(resource_loader_id) = patch.resource_loader_id {
+                record.resource_loader_id = resource_loader_id;
+            }
+            if let Some(retry_settlement_state) = patch.retry_settlement_state {
+                record.retry_settlement_state = retry_settlement_state;
+            }
+            if let Some(diagnostics) = patch.diagnostics {
+                record.diagnostics = diagnostics;
             }
             if let Some(delivery_context) = patch.delivery_context {
                 record.delivery_context = delivery_context;
@@ -299,6 +346,149 @@ fn refresh_derived_paths(gate_root: &Path, record: &mut SessionRecord) {
 fn load_current_session_state() -> Option<crate::sesh::session::SessionState> {
     let repo_root = repo_root_from_env();
     read_session_state(&repo_root).ok()
+}
+
+fn decode_session_record(gate_root: &Path, content: &str) -> Result<SessionRecord, String> {
+    let mut value: Value = serde_json::from_str(content).map_err(|err| err.to_string())?;
+    normalize_session_record_value(gate_root, &mut value)?;
+    serde_json::from_value(value).map_err(|err| err.to_string())
+}
+
+fn normalize_session_record_value(gate_root: &Path, value: &mut Value) -> Result<(), String> {
+    let Some(object) = value.as_object_mut() else {
+        return Err("session record must be a JSON object".to_owned());
+    };
+
+    copy_first_string(
+        object,
+        "canonical_key",
+        &["canonicalKey", "sessionKey", "key"],
+    );
+    copy_first_string(object, "label", &["displayName"]);
+    copy_camel_aliases(object);
+
+    let canonical_key = object
+        .get("canonical_key")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "session record missing canonical_key/sessionKey/key".to_owned())?
+        .to_owned();
+
+    if !object.contains_key("session_id") {
+        object.insert(
+            "session_id".to_owned(),
+            Value::String(epi_s3_gateway_contract::default_session_id()),
+        );
+    }
+    if !object.contains_key("active_agent_id") {
+        object.insert(
+            "active_agent_id".to_owned(),
+            Value::String(canonical_key.clone()),
+        );
+    }
+    if !object.contains_key("workspace_root") {
+        let lineage = string_array(object.get("subagent_lineage"));
+        object.insert(
+            "workspace_root".to_owned(),
+            Value::String(
+                workspace::derive_workspace_root(gate_root, &canonical_key, &lineage)
+                    .display()
+                    .to_string(),
+            ),
+        );
+    }
+    if !object.contains_key("bootstrap_scope") {
+        let lineage = string_array(object.get("subagent_lineage"));
+        object.insert(
+            "bootstrap_scope".to_owned(),
+            Value::String(
+                bootstrap::derive_bootstrap_scope(gate_root, &canonical_key, &lineage)
+                    .display()
+                    .to_string(),
+            ),
+        );
+    }
+    if !object.contains_key("updated_at_ms") {
+        object.insert(
+            "updated_at_ms".to_owned(),
+            Value::Number(serde_json::Number::from(now_ms()? as u64)),
+        );
+    }
+
+    Ok(())
+}
+
+fn copy_camel_aliases(object: &mut Map<String, Value>) {
+    for (snake, camel) in [
+        ("day_id", "dayId"),
+        ("spawned_by", "spawnedBy"),
+        ("parent_session_key", "parentSessionKey"),
+        ("source_session_key", "sourceSessionKey"),
+        ("source_session_kind", "sourceSessionKind"),
+        ("vault_now_path", "vaultNowPath"),
+        ("runtime_cwd", "runtimeCwd"),
+        ("vault_root", "vaultRoot"),
+        ("resource_loader_id", "resourceLoaderId"),
+        ("retry_settlement_state", "retrySettlementState"),
+        ("delivery_context", "deliveryContext"),
+        ("thread_id", "threadId"),
+        ("group_id", "groupId"),
+        ("group_channel", "groupChannel"),
+        ("group_space", "groupSpace"),
+        ("team_id", "teamId"),
+        ("team_role", "teamRole"),
+        ("orchestration_kind", "orchestrationKind"),
+        ("cmux_workspace", "cmuxWorkspace"),
+        ("cmux_surface", "cmuxSurface"),
+        ("cmux_pane_id", "cmuxPaneId"),
+        ("active_agent_id", "activeAgentId"),
+        ("subagent_lineage", "subagentLineage"),
+        ("workspace_root", "workspaceRoot"),
+        ("bootstrap_scope", "bootstrapScope"),
+        ("thinking_level", "thinkingLevel"),
+        ("verbose_level", "verboseLevel"),
+        ("reasoning_level", "reasoningLevel"),
+        ("model_override", "modelOverride"),
+        ("provider_override", "providerOverride"),
+        ("cli_session_ids", "cliSessionIds"),
+        ("updated_at_ms", "updatedAtMs"),
+    ] {
+        if !object.contains_key(snake) {
+            if let Some(value) = object.get(camel).cloned() {
+                object.insert(snake.to_owned(), value);
+            }
+        }
+    }
+}
+
+fn copy_first_string(
+    object: &mut Map<String, Value>,
+    canonical_key: &str,
+    compatibility_keys: &[&str],
+) {
+    if object.contains_key(canonical_key) {
+        return;
+    }
+
+    if let Some(value) = compatibility_keys
+        .iter()
+        .filter_map(|key| object.get(*key))
+        .find(|value| value.is_string())
+        .cloned()
+    {
+        object.insert(canonical_key.to_owned(), value);
+    }
+}
+
+fn string_array(value: Option<&Value>) -> Vec<String> {
+    value
+        .and_then(Value::as_array)
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(|item| item.as_str().map(str::to_owned))
+                .collect()
+        })
+        .unwrap_or_default()
 }
 
 fn now_ms() -> Result<u128, String> {

@@ -26,7 +26,7 @@ c_0_source_coordinates:
 
 This is the consolidated S2-level master specification. It replaces the older scattered [[S2]], [[S2']], [[S2'Cx]], and S2-y/S2-y' files as the build reference for the graph/cache layer.
 
-S2 is the graph body: raw shared [[Neo4j]] persistence, graph schema bootstrap, coordinate seed storage, raw [[Cypher]], graph sync operations, [[Redis]]/RedisVL cache substrate where still graph-context-bound, and the local service lifecycle for `epi-neo4j` and `epi-redis`.
+S2 is the graph body: raw shared [[Neo4j]] persistence, graph schema bootstrap, coordinate seed storage, raw [[Cypher]], graph sync operations, and graph-semantic cache law. [[Redis]] / RedisVL runtime residency belongs with [[S3]] / [[S3']] Redis context, while S2 owns the graph semantic-cache namespace, payload contract, retrieval use, and graph-context semantics over that runtime substrate.
 
 S2' is coordinate-aware graph law: [[Pleroma]]/[[Parashakti]] graph grammar over that substrate, [[Indra's Net]] retrieval, coordinate resolution, relation law, cross-namespace edges, reranking, disclosure density, and context pool assembly for [[Psyche]], [[Anima]], [[Hen]], and [[Aletheia]].
 
@@ -75,7 +75,7 @@ The old prime subcoordinate sequence survives as graph-law pressure:
 
 The old S2 material sometimes collapses graph substrate, semantic law, and world-return services into one layer. Current architecture separates them:
 
-- [[S2]] is raw shared substrate: [[Neo4j]], Redis/RedisVL where graph-context-bound, driver/session/health, raw query, graph seed, sync primitives.
+- [[S2]] is raw shared graph substrate: [[Neo4j]], graph semantic-cache law, driver/session/health, raw query, graph seed, sync primitives.
 - [[S2']] is coordinate-aware graph/retrieval law: schema contracts, relation law, coordinate resolution, retrieval/rerank/enrich, context pool assembly.
 - [[S1]] / [[S1']] owns vault material and sync queue production; S2 consumes the queue through sync/drain operations.
 - [[S3']] / [[Chronos]] owns temporal runtime and session truth. Redis placement should move toward [[S3']] where it grounds live context temporally: session state, active [[NOW]] continuity, kairos windows, episode handles, and short-lived context keys are temporal/contextual facts before they are graph facts. S2 may still operate Redis/RedisVL as graph-cache substrate, but ownership of living runtime context belongs to S3'.
@@ -85,7 +85,9 @@ The old S2 material sometimes collapses graph substrate, semantic law, and world
 
 The live implementation is substantial:
 
-- `Body/S/S0/epi-cli/src/graph/` implements `epi graph` lifecycle, Neo4j client, schema/seed/meta, retrieval, hybrid retrieval, GraphRAG, vault sync, dataset import, Redis cache, RedisVL semantic cache, doctor/status, and dev bootstrap. This is S2/S2' code currently package-resident inside the S0 CLI; future work should thin it into CLI wrappers over Body-native S2 modules.
+- `Body/S/S0/epi-cli/src/graph/` implements the `epi graph` command mirror plus remaining lifecycle, schema/seed/meta, retrieval execution, vault sync, dataset import, Redis cache, doctor/status, and dev bootstrap wiring. This is now partly thinned: S0 still hosts runtime orchestration, but parser/query/cache/client authority has moved to Body-native S2 modules.
+- `Body/S/S2/graph-schema` owns the canonical S2 graph schema constants: `:Bimba`, coordinate property, 3072 embedding dimensions, vector index names, and compatibility labels/properties.
+- `Body/S/S2/graph-services` owns the first Body-native S2 service authority: Neo4j primary graph role, live Neo4j config/client, coordinate parser, GraphRAG query grammar, disclosure/query/retrieval result contracts, and Redis semantic-cache role/config/payload/client/health contracts. It resolves the RedisVL Python bridge through `Body/S/S3/redis-context`, because the bridge is Redis runtime residency while S2 owns the graph semantic-cache law using it. `Body/S/S0/epi-cli/src/graph/client.rs`, `coordinate_array_parser.rs`, `retrieval/graphrag.rs`, `retrieval/hybrid.rs`, and `semantic_cache.rs` now mirror or delegate to this S2 authority where those contracts are involved.
 - `docker-compose.epi-s2.yml` is the local S2 service topology for Neo4j and Redis.
 - `Body/S/S2/external/bimba-mcp/` implements coordinate-aware Neo4j query, schema validation, sync API, coordinate parser, reranking, embeddings, and MCP-facing graph tools for external systems. It is not the PI agent's internal graph interface; PI should consume coordinate-native APIs/context pools rather than reaching through MCP as its own inner organ.
 - `Body/S/S5/epi-gnostic/` uses Neo4j as a storage substrate for RAG and currently contains Graphiti compatibility wrapper code. Graphiti should be treated as an S3' temporal library/runtime component; the current HTTP wrapper is integration scaffolding, while S5/S5' governs invocation and usage.
@@ -97,7 +99,7 @@ Current implementation gaps:
 - `s1.sync.flush` / S1 -> S2 queue drain is still a critical blocker in the audit; direct `epi graph sync <path>` exists, but Khora queue flushing is not complete.
 - The legacy `#` coordinate is not a defect by itself. It is the old `bimbaCoordinate` format, and the migration rule is that this branch becomes the [[M]] coordinate branch in the new system. Parser/API work must handle that conversion deliberately rather than treating `#` as an arbitrary invalid string.
 - Redis ownership needs final clarification in S3/S3': graph semantic cache may remain S2 substrate, but temporally grounded context, session continuity, kairos windows, and episode handles belong under [[S3']] / [[Chronos]] key law.
-- There is not yet a dedicated `Body/S/S2/graph-services` or `Body/S/S2/graph-schema` module. That absence is the main modularity gap: S2 code is present and usable, but its authority is still hidden inside the S0 CLI package and S5 Gnosis support files.
+- Remaining modularity gap: retrieval execution, seed, sync, enrichment, Redis hot/warm graph cache, and some CLI graph orchestration still live inside the S0 CLI package. These should move behind `Body/S/S2/graph-services` contracts while `epi graph` remains the S0 command mirror.
 
 ### Planning consequence
 
@@ -128,10 +130,10 @@ Current canonical S2 base technology:
 | Component | Coordinate | Language | Runtime / Port | Role |
 |---|---:|---|---|---|
 | `epi-neo4j` | [[S2.0]] | Neo4j | Bolt `7687` / HTTP depending config | Durable graph substrate |
-| `epi-redis` | [[S2.4]] / [[S2.4']] pending S3 split | Redis Stack | `6379` | Semantic cache, hot/warm graph-context cache, RedisVL indexes |
+| `epi-redis` | [[S3]] / [[S3']] runtime, consumed by [[S2.4]] / [[S2.4']] graph cache law | Redis Stack | `6379` | Shared Redis runtime with separated namespaces: S2 graph semantic cache, S3 temporal context |
 | `epi graph` | [[S2]] / [[S2']] via [[S0]] | Rust | Local CLI | Graph lifecycle, query, sync, retrieval, doctor, import |
 | `bimba-mcp` | [[S2']] external interface | TypeScript at `Body/S/S2/external/bimba-mcp` | MCP server | Coordinate-aware graph query/sync/rerank surface for external systems, not PI-agent internals |
-| RedisVL cache service | [[S2.4]] | Python | Local subprocess/service | Semantic cache bridge for prompt/result reuse |
+| RedisVL cache service | [[S3]] runtime, consumed by [[S2.4]] | Python | Local subprocess/service | RedisVL bridge residency for prompt/result reuse; graph semantic-cache namespace remains S2 |
 | `epi-gnostic` | Uses [[S2]] | Python at `Body/S/S5/epi-gnostic` | Local package/services | RAG-Anything/Gnostic world-return plus current Graphiti wrapper over shared graph substrate |
 
 S2 itself does not own vault residency, gateway sessions, constitutional routing, or gnosis governance. It provides the graph/cache body they use.
@@ -277,10 +279,11 @@ CLI parity law: `epi graph` is the local operator mirror. Canonical API methods 
 Current Rust files include:
 
 - `Body/S/S0/epi-cli/src/graph/mod.rs` - command tree and dispatch.
-- `client.rs` - Neo4j connection, health, raw query execution.
+- `client.rs` - S0 mirror re-export of the Body-native S2 Neo4j client.
+- `Body/S/S2/graph-services/src/lib.rs`, `src/coordinate.rs`, and `src/retrieval_query.rs` - S2 Neo4j config/client, primary graph role, coordinate parser, GraphRAG query grammar, retrieval result/mode/disclosure contracts, and Redis semantic-cache contracts.
 - `schema.rs`, `seed.rs`, `meta.rs` - schema constraints, coordinate seed space, graph metadata/revisions.
 - `sync.rs`, `sync_coordinator.rs`, `bidirectional_sync.rs`, `sync_orchestrator.rs` - vault/graph sync machinery.
-- `retrieval/graphrag.rs`, `retrieval/hybrid.rs`, `retrieval/coordinate.rs` - graph retrieval.
+- `retrieval/graphrag.rs`, `retrieval/hybrid.rs`, `retrieval/coordinate.rs` - graph retrieval execution; parser/query/mode/result contracts are now S2-owned re-exports.
 - `redis_cache.rs`, `semantic_cache.rs` - Redis/RedisVL cache surfaces.
 - `doctor.rs`, `dev.rs` - health and dev bootstrap.
 - `dataset_import.rs`, `embeddings.rs`, `semantic.rs`, `relationship_manager.rs`, `alignment_validator.rs`, `link_enforcement.rs` - graph enrichment/maintenance.
@@ -292,11 +295,13 @@ Current TypeScript/Python supporting implementation:
 - `Body/S/S2/external/bimba-mcp/src/schemas/graph.ts` - Zod graph schemas and coordinate filters.
 - `Body/S/S2/external/bimba-mcp/src/coordinates/parser.ts` - coordinate parser that currently rejects old hash syntax; migration should map old `bimbaCoordinate` / `#` values into the new [[M]] branch.
 - `Body/S/S2/external/bimba-mcp/src/reranking/reranker.ts` - reranking cache/precision surface.
+- `Body/S/S3/redis-context/scripts/redisvl_cache_service/` - S3-owned RedisVL Python bridge runtime; `epi graph bootstrap-dev` points here while S2 graph-services supplies the graph semantic-cache namespace/payload law.
 - `Body/S/S5/epi-gnostic/` - S5 world-return services using Neo4j/vector storage plus current Graphiti HTTP wrapper; target is Graphiti as S3' library/runtime component.
 
 Current test evidence:
 
 - `epi-cli/tests/graph_commands.rs` covers GraphRAG classification, bootstrap-dev dry-run env contract, doctor JSON sections, and ignored live Neo4j retrieval suite.
+- `Body/S/S2/graph-services/tests/coordinate_query_contract.rs` covers S2 coordinate parsing, wikilink frontmatter arrays, GraphRAG query classification, coordinate mention extraction, inferred positions, and cacheable retrieval result/mode serialization.
 - `epi-cli/tests/graph_sync.rs` covers frontmatter parsing, conflict resolution, and ignored live vault-to-graph sync.
 - `epi-cli/tests/graph_seed.rs` covers live seed/semantic behavior.
 - `epi-cli/tests/graph_retrieval.rs` covers coordinate retrieval behavior.
@@ -489,7 +494,8 @@ S2' is partially embodied in:
 
 - `Body/S/S2/external/bimba-mcp/src/schemas/graph.ts` and related schemas.
 - `Body/S/S2/external/bimba-mcp/src/api/graph.ts`, `sync.ts`, coordinate parser, validation, reranker.
-- `Body/S/S0/epi-cli/src/graph/retrieval/*` and `semantic_cache.rs`.
+- `Body/S/S2/graph-services/src/lib.rs` for the Body-native semantic cache and Neo4j client contracts.
+- `Body/S/S0/epi-cli/src/graph/retrieval/*` and remaining S0 graph semantic surfaces pending extraction.
 - `Body/S/S0/epi-cli/src/graph/alignment_validator.rs`, `relationship_manager.rs`, `link_enforcement.rs`, and enrichment-related code.
 
 S2' is not yet complete:
@@ -555,7 +561,7 @@ S2/S2' serves these [[Envelope]] layers:
 1. S2 is graph/cache substrate; S2' is coordinate-aware retrieval law.
 2. The old universal graph telos survives, but substrate and semantics are no longer collapsed.
 3. [[Gnosis]] and [[Graphiti]] use S2 storage; [[Graphiti]] is architecturally [[S3']] temporal episodic runtime, while [[S5]] / [[S5']] owns invocation and usage governance.
-4. [[Redis]] must be split by law and namespace: S2 graph semantic cache is substrate; S3' temporal contextual grounding owns live session/NOW/kairos/episode context and Graphiti runtime caches.
+4. [[Redis]] must be split by law and namespace: S3 owns the Redis runtime substrate and RedisVL bridge residency; S2 owns graph semantic-cache law under `s2:graph:semantic`; S3' temporal contextual grounding owns live session/NOW/kairos/episode context and Graphiti runtime caches under `s3:gateway:temporal`.
 5. `bimba-mcp` is the current S2' external-systems query interface layer and must be treated as more than a helper script, but it is not the PI agent's internal graph organ.
 6. `epi graph` is a real S2 command mirror, but CLI command names are not final coordinate-native API names.
 7. The S1/S2 sync blocker is critical: without queue drain, vault law and graph law remain manually bridged rather than systemically integrated.

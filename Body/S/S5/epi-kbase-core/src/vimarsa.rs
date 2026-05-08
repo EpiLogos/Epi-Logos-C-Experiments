@@ -14,11 +14,7 @@ const VIMARSA_TIMEOUT: Duration = Duration::from_millis(1500);
 /// Uses aperture-aware project mapping: each coordinate family maps to
 /// its own bkmr project namespace (M -> "M", S -> "S", etc.).
 /// Supports explicit project override and timeout handling.
-pub fn build_vimarsa_field(
-    coord: &str,
-    project: Option<&str>,
-    limit: usize,
-) -> VimarsaFieldFacet {
+pub fn build_vimarsa_field(coord: &str, project: Option<&str>, limit: usize) -> VimarsaFieldFacet {
     let project_scope = project.map(str::to_string);
 
     let script = match resolve_vimarsa_script() {

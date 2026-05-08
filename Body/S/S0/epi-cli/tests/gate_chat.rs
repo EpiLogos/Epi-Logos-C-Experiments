@@ -110,3 +110,148 @@ async fn sessions_rpc_lifecycle_mutates_real_store() {
     let store = SessionStore::new(client.gate_root()).unwrap();
     assert!(store.list().unwrap().is_empty());
 }
+
+#[tokio::test]
+async fn sessions_rpc_fork_resume_import_and_tree_preserve_lineage() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
+
+    client
+        .request(
+            "chat.send",
+            json!({"sessionKey":"agent:main:main","message":"root session"}),
+        )
+        .await
+        .unwrap();
+
+    client
+        .request(
+            "sessions.patch",
+            json!({
+                "sessionKey": "agent:main:main",
+                "label": "DAY 07-05-2026 / NOW root",
+                "dayId": "07-05-2026",
+                "vaultNowPath": "/vault/Empty/Present/07-05-2026/20260507-120000-root/now.md",
+                "runtimeCwd": "/repo",
+                "vaultRoot": "/vault"
+            }),
+        )
+        .await
+        .unwrap();
+
+    let fork = client
+        .request(
+            "sessions.fork",
+            json!({
+                "sessionKey": "agent:main:main",
+                "targetSessionKey": "agent:main:fork:one",
+                "label": "DAY 07-05-2026 / NOW fork"
+            }),
+        )
+        .await
+        .unwrap();
+    let resume = client
+        .request(
+            "sessions.resume",
+            json!({
+                "sessionKey": "agent:main:fork:one",
+                "targetSessionKey": "agent:main:resume:one"
+            }),
+        )
+        .await
+        .unwrap();
+    let imported = client
+        .request(
+            "sessions.import",
+            json!({
+                "sourceSessionKey": "external:claude:abc",
+                "targetSessionKey": "agent:main:import:one",
+                "label": "Imported Claude run"
+            }),
+        )
+        .await
+        .unwrap();
+    let tree = client
+        .request("sessions.tree", json!({"sessionKey": "agent:main:main"}))
+        .await
+        .unwrap();
+
+    assert_eq!(fork["canonicalKey"], "agent:main:fork:one");
+    assert_eq!(fork["record"]["parentSessionKey"], "agent:main:main");
+    assert_eq!(fork["record"]["sourceSessionKey"], "agent:main:main");
+    assert_eq!(fork["record"]["sourceSessionKind"], "fork");
+    assert_eq!(fork["record"]["dayId"], "07-05-2026");
+    assert_eq!(
+        fork["record"]["vaultNowPath"],
+        "/vault/Empty/Present/07-05-2026/20260507-120000-root/now.md"
+    );
+
+    assert_eq!(resume["canonicalKey"], "agent:main:resume:one");
+    assert_eq!(resume["record"]["parentSessionKey"], "agent:main:fork:one");
+    assert_eq!(resume["record"]["sourceSessionKind"], "resume");
+
+    assert_eq!(imported["canonicalKey"], "agent:main:import:one");
+    assert_eq!(
+        imported["record"]["sourceSessionKey"],
+        "external:claude:abc"
+    );
+    assert_eq!(imported["record"]["sourceSessionKind"], "import");
+    assert_eq!(imported["record"]["label"], "Imported Claude run");
+
+    let rows = tree["sessions"].as_array().unwrap();
+    assert!(rows
+        .iter()
+        .any(|row| row["canonicalKey"] == "agent:main:main"));
+    assert!(rows
+        .iter()
+        .any(|row| row["canonicalKey"] == "agent:main:fork:one"));
+    assert!(rows
+        .iter()
+        .any(|row| row["canonicalKey"] == "agent:main:resume:one"));
+    assert!(tree["lineage"].as_array().unwrap().iter().any(|edge| {
+        edge["parentSessionKey"] == "agent:main:main"
+            && edge["childSessionKey"] == "agent:main:fork:one"
+            && edge["sourceSessionKind"] == "fork"
+    }));
+}
+
+#[tokio::test]
+async fn sessions_compact_deposits_session_summary_evidence_for_epii_review() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
+
+    client
+        .request(
+            "chat.send",
+            json!({"sessionKey":"agent:main:main","message":"summarise this root event"}),
+        )
+        .await
+        .unwrap();
+    client
+        .request(
+            "chat.inject",
+            json!({"sessionKey":"agent:main:main","role":"assistant","message":"captured response"}),
+        )
+        .await
+        .unwrap();
+
+    let compact = client
+        .request("sessions.compact", json!({"sessionKey":"agent:main:main"}))
+        .await
+        .unwrap();
+    let inbox = client
+        .request("s5'.review.inbox", json!({"status":"open"}))
+        .await
+        .unwrap();
+
+    assert_eq!(compact["compacted"], true);
+    assert_eq!(compact["epiiReview"]["source"], "aletheia");
+    assert_eq!(compact["epiiReview"]["requires_human"], true);
+    assert!(compact["summary"]["transcriptPath"]
+        .as_str()
+        .unwrap()
+        .contains("agent_main_main.jsonl"));
+    assert!(inbox["items"].as_array().unwrap().iter().any(|item| {
+        item["title"] == "Session compact summary: agent:main:main"
+            && item["coordinate_context"]["sessionKey"] == "agent:main:main"
+            && item["proposed_action"]["kind"] == "aletheia_crystallisation"
+    }));
+}
