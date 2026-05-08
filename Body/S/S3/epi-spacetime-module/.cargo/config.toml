@@ -1,0 +1,2 @@
+[build]
+rustc = "scripts/rustc-1.93.sh"

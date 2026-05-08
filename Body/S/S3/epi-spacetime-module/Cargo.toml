@@ -2,6 +2,7 @@
 name = "epi-spacetime-module"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.93"
 description = "SpacetimeDB WASM module for Epi-Logos gateway/client/agent registration"
 
 # ─── WASM Deployment Note ───────────────────────────────────────────────────
@@ -10,6 +11,8 @@ description = "SpacetimeDB WASM module for Epi-Logos gateway/client/agent regist
 # registration and projection plane.
 #
 #   1. Rust must satisfy the selected SpacetimeDB 2.x dependency family.
+#      This crate pins the currently selected family and carries a local
+#      rustc wrapper so Homebrew cargo/rustc 1.89 cannot accidentally be used.
 #
 #   2. To build for the canonical WASM target:
 #      rustup target add wasm32-unknown-unknown
@@ -23,7 +26,7 @@ description = "SpacetimeDB WASM module for Epi-Logos gateway/client/agent regist
 crate-type = ["cdylib"]
 
 [dependencies]
-spacetimedb = "2"
+spacetimedb = "=2.2.0"
 
 [profile.release]
 opt-level = "s"
