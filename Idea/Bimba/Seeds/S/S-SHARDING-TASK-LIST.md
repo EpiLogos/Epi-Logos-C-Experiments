@@ -382,10 +382,10 @@ Task group H - verification gate for this tranche:
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_agent_runtime_contract`
 - [x] `cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml`
 - [x] Run live Redis hydration proof when touching S3' temporal keys.
-- [ ] Run live Neo4j/Graphiti namespace proof when touching episodic memory.
+- [x] Run live Neo4j/Graphiti namespace proof when touching episodic memory.
 - [ ] Run Electron/Tauri parity tests only after backend/session contracts are stable.
 
-Verification note, 2026-05-08: Task F passed the focused gateway/session/S5' suites, SpaceTimeDB projection suite, S3 gateway-contract suite, and the live Redis hydration proofs against the local Docker `epi-redis` container. A live Graphiti namespace proof is still not automated in this repo; the current Task F Graphiti coverage proves bounded gateway envelopes and identity requirements, but the live S3 Graphiti adapter/runtime proof remains an explicit follow-on before declaring episodic-memory runtime coverage complete.
+Verification note, 2026-05-08: Task F passed the focused gateway/session/S5' suites, SpaceTimeDB projection suite, S3 gateway-contract suite, and the live Redis hydration proofs against the local Docker `epi-redis` container. The live Graphiti runtime proof now also exists as an ignored real-service test: `cargo test -p epi-logos --test gate_epii_agent_access live_graphiti_runtime_round_trips_session_memory_through_gateway -- --ignored --exact`. It deposits through `s5.episodic.deposit`, searches through `s5.episodic.search`, preserves S3' runtime/S5 invocation ownership, and verifies against the running Graphiti adapter backed by local Docker Neo4j/Redis plus real Gemini clients.
 
 Lane 1 - Canonical operation surface:
 
@@ -432,6 +432,7 @@ Lane 5 - Memory, Graphiti, and summarisation:
 
 - [x] Keep Graphiti architecture at S3/S3' runtime and invocation/interpretation governance at S5/S5'; do not reintroduce sidecar-shaped ownership.
 - [x] Add first S4/S5 bounded tools for Graphiti session-memory search/deposit: `s5.episodic.search` and `s5.episodic.deposit` expose S3' runtime owner, S5/S5' invocation owner, protected-local privacy boundary, agent/source capability envelopes, and no identity mutation.
+- [x] Add live Graphiti runtime proof through the gateway: Graphiti now uses Gemini LLM, Gemini embeddings, Gemini reranking, storage-safe group ids derived from canonical Pi session keys, and real Neo4j/Redis state.
 - [ ] Add kbase/Gnosis session-context retrieval to the same bounded memory/access pattern, with different capability envelopes for Anima and Epii.
 - [x] Define first Graphiti episodic namespace rules in the gateway envelope: session key, DAY id, Pratibimba namespace ref, source agent, protected-local privacy boundary, and Epii-review requirement for promotion/identity-affecting interpretation.
 - [ ] Build the S5 session close/compact summarisation pipeline: NOW + transcript + session tree + Graphiti episodes + kbase/Gnosis retrieval -> Aletheia crystallisation -> Epii review inbox / autoresearch evidence.

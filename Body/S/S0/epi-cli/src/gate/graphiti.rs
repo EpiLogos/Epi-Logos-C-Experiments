@@ -25,6 +25,14 @@ fn iso8601_now() -> String {
     Utc::now().to_rfc3339()
 }
 
+fn graphiti_runtime_timeout() -> std::time::Duration {
+    let millis = std::env::var("EPI_GRAPHITI_TIMEOUT_MS")
+        .ok()
+        .and_then(|value| value.parse::<u64>().ok())
+        .unwrap_or(120_000);
+    std::time::Duration::from_millis(millis.max(1_000))
+}
+
 /// Build a ProvenanceEvent from a SessionRecord snapshot.
 pub fn provenance_from_record(
     event_type: &str,
@@ -201,7 +209,7 @@ pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
             ("group_id", session_key.to_owned()),
             ("num_results", limit.to_string()),
         ])
-        .timeout(std::time::Duration::from_millis(900))
+        .timeout(graphiti_runtime_timeout())
         .send()
         .await
     {
@@ -277,7 +285,7 @@ pub async fn session_memory_deposit(params: &Value) -> Result<Value, String> {
     match client
         .post(format!("{GRAPHITI_BASE_URL}/episode"))
         .json(&payload)
-        .timeout(std::time::Duration::from_millis(900))
+        .timeout(graphiti_runtime_timeout())
         .send()
         .await
     {

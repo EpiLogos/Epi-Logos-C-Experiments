@@ -3,6 +3,14 @@ mod support;
 use serde_json::json;
 use support::{TestEnv, TestGatewayClient};
 
+fn unique_live_graphiti_token() -> String {
+    let millis = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock should be after unix epoch")
+        .as_millis();
+    format!("live_graphiti_runtime_proof_{millis}")
+}
+
 #[tokio::test]
 async fn s5_epii_gateway_exposes_agent_status_over_real_stores() {
     let mut client = TestGatewayClient::connected_with_temp_store(18913).await;
@@ -345,6 +353,68 @@ async fn s5_graphiti_session_memory_requires_propagated_session_identity() {
         .expect_err("Graphiti deposit must require propagated session identity");
 
     assert!(error.message.contains("sessionKey is required"));
+}
+
+#[tokio::test]
+#[ignore = "requires live Neo4j, Redis, Graphiti adapter on port 37778, and a real GEMINI_API_KEY"]
+async fn live_graphiti_runtime_round_trips_session_memory_through_gateway() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18937).await;
+    let token = unique_live_graphiti_token();
+    let session_key = format!("agent:live-graphiti-proof:{token}");
+    let namespace_ref = "pratibimba-live-proof";
+    let content = format!(
+        "Live Graphiti runtime proof token {token}. Aletheia deposits this session memory for Epii review."
+    );
+
+    let deposit = client
+        .request(
+            "s5.episodic.deposit",
+            json!({
+                "sourceAgent": "aletheia",
+                "sessionKey": session_key,
+                "dayId": "08-05-2026",
+                "namespaceRef": namespace_ref,
+                "content": content,
+                "qlPosition": "5'",
+                "cp": "4.5",
+                "cpf": "(5/0)"
+            }),
+        )
+        .await
+        .expect("live Graphiti deposit should return through the gateway");
+
+    assert_eq!(deposit["coordinate"], "S5/S5'");
+    assert_eq!(deposit["runtimeOwner"], "S3'");
+    assert_eq!(deposit["invocationOwner"], "S5/S5'");
+    assert_eq!(deposit["runtimeAvailable"], true);
+    assert_eq!(deposit["sessionKey"], session_key);
+    assert_eq!(deposit["namespaceRef"], namespace_ref);
+
+    let search = client
+        .request(
+            "s5.episodic.search",
+            json!({
+                "query": token,
+                "agentId": "epii",
+                "sessionKey": session_key,
+                "dayId": "08-05-2026",
+                "namespaceRef": namespace_ref,
+                "limit": 5
+            }),
+        )
+        .await
+        .expect("live Graphiti search should return through the gateway");
+
+    assert_eq!(search["runtimeAvailable"], true);
+    let results = search["results"]
+        .as_array()
+        .expect("live Graphiti search should return a results array");
+    assert!(
+        results
+            .iter()
+            .any(|result| result.to_string().contains(&token)),
+        "live Graphiti search should recover the inserted proof token; results={results:#?}"
+    );
 }
 
 #[tokio::test]

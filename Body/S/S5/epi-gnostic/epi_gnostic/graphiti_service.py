@@ -8,6 +8,7 @@ filter only. All data stays in the "neo4j" database alongside Bimba and Gnostic.
 from __future__ import annotations
 
 import os
+import re
 import time
 from typing import Any, Optional
 
@@ -26,12 +27,23 @@ _redis: Any = None
 _config: Any = None
 
 
+def _graphiti_group_id(group_id: Optional[str]) -> str:
+    """Map canonical gateway/session keys onto Graphiti's storage-safe group id."""
+    if not group_id:
+        return "default"
+    safe = re.sub(r"[^a-zA-Z0-9_-]+", "_", group_id).strip("_")
+    return safe or "default"
+
+
 async def get_graphiti():
     global _graphiti, _config
     if _graphiti is None:
         from graphiti_core import Graphiti
+        from graphiti_core.cross_encoder.gemini_reranker_client import GeminiRerankerClient
         from graphiti_core.driver.neo4j_driver import Neo4jDriver
-        from graphiti_core.embedder.gemini import GeminiEmbedder
+        from graphiti_core.embedder.gemini import GeminiEmbedder, GeminiEmbedderConfig
+        from graphiti_core.llm_client.config import LLMConfig
+        from graphiti_core.llm_client.gemini_client import GeminiClient
 
         from epi_gnostic.graphiti_config import GraphitiConfig
 
@@ -49,11 +61,32 @@ async def get_graphiti():
         _patch_graphiti_group_id()
 
         embedder = GeminiEmbedder(
-            model=_config.embedding_model,
-            embedding_dim=_config.embedding_dim,
+            config=GeminiEmbedderConfig(
+                api_key=_config.gemini_api_key or None,
+                embedding_model=_config.embedding_model,
+                embedding_dim=_config.embedding_dim,
+            ),
+            batch_size=1,
+        )
+        llm_client = GeminiClient(
+            config=LLMConfig(
+                api_key=_config.gemini_api_key or None,
+                model=_config.llm_model,
+            )
+        )
+        cross_encoder = GeminiRerankerClient(
+            config=LLMConfig(
+                api_key=_config.gemini_api_key or None,
+                model=_config.llm_model,
+            )
         )
 
-        _graphiti = Graphiti(graph_driver=driver, embedder=embedder)
+        _graphiti = Graphiti(
+            graph_driver=driver,
+            embedder=embedder,
+            llm_client=llm_client,
+            cross_encoder=cross_encoder,
+        )
         await _graphiti.build_indices_and_constraints(delete_existing=False)
 
     return _graphiti
@@ -241,7 +274,7 @@ async def provenance(event: ProvenanceEvent):
         episode_body=content,
         source_description=f"s3-gateway:{event.channel_type}",
         reference_time=__import__("datetime").datetime.utcnow(),
-        group_id=event.session_id,
+        group_id=_graphiti_group_id(event.session_id),
     )
 
     return {"status": "ok", "ql": ql, "cpf": cpf}
@@ -261,7 +294,7 @@ async def add_episode(req: EpisodeRequest):
         episode_body=req.content,
         source_description=f"agent:{req.source}:cpf={req.cpf}:cp={req.cp}:ql={req.ql_position}",
         reference_time=__import__("datetime").datetime.utcnow(),
-        group_id=req.group_id or "default",
+        group_id=_graphiti_group_id(req.group_id),
     )
 
     return {"status": "ok", "name": name}
@@ -278,7 +311,7 @@ async def arc_open(req: ArcOpenRequest):
         episode_body=opening,
         source_description=f"arc:open:type={req.arc_type}",
         reference_time=__import__("datetime").datetime.utcnow(),
-        group_id=req.group_id or "default",
+        group_id=_graphiti_group_id(req.group_id),
     )
 
     # Cache arc state in Redis
@@ -303,7 +336,7 @@ async def arc_close(req: ArcCloseRequest):
         episode_body=req.crystallisation_text,
         source_description=f"arc:close:ql={req.ql_close_position}",
         reference_time=__import__("datetime").datetime.utcnow(),
-        group_id=req.group_id or "default",
+        group_id=_graphiti_group_id(req.group_id),
     )
 
     redis = await get_redis()
@@ -367,7 +400,7 @@ async def identity_event(req: IdentityEventRequest):
         episode_body=content,
         source_description=f"identity:cp=4.0:source={req.source}",
         reference_time=__import__("datetime").datetime.utcnow(),
-        group_id=req.quintessence_hash,
+        group_id=_graphiti_group_id(req.quintessence_hash),
     )
 
     return {
@@ -402,7 +435,11 @@ async def search(
         if cached is not None:
             return {"results": cached, "cache": "hit"}
 
-    results = await g.search(query=query, num_results=num_results * 3, group_ids=[group_id] if group_id else None)
+    results = await g.search(
+        query=query,
+        num_results=num_results * 3,
+        group_ids=[_graphiti_group_id(group_id)] if group_id else None,
+    )
 
     serialised = []
     for r in (results or []):
@@ -448,7 +485,7 @@ async def episodes(day_id: str = "", group_id: Optional[str] = None):
         params: dict = {}
         if group_id:
             query += " AND e.group_id = $gid"
-            params["gid"] = group_id
+            params["gid"] = _graphiti_group_id(group_id)
         query += " RETURN e ORDER BY e.created_at DESC LIMIT 50"
         res = await session.run(query, **params)
         rows = [dict(r["e"]) async for r in res]

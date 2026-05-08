@@ -26,3 +26,6 @@ epi-graphiti = "epi_gnostic.graphiti_service:main"
 [build-system]
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["epi_gnostic*"]

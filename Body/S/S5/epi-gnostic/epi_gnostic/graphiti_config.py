@@ -24,6 +24,9 @@ class GraphitiConfig:
     gemini_api_key: str = field(
         default_factory=lambda: os.getenv("GEMINI_API_KEY", "")
     )
+    llm_model: str = field(
+        default_factory=lambda: os.getenv("GNOSTIC_LLM_MODEL", "gemini-3.1-flash-lite")
+    )
     port: int = field(
         default_factory=lambda: int(os.getenv("GRAPHITI_PORT", str(GRAPHITI_PORT)))
     )
