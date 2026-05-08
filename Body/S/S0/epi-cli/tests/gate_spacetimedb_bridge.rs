@@ -18,7 +18,10 @@ use tokio_tungstenite::{accept_hdr_async, tungstenite::Message};
 
 #[test]
 fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
-    let env = temp_env();
+    let env = temp_env()
+        .with_env("EPI_INSTALLATION_ID", "install-local")
+        .with_env("EPI_GATEWAY_ID", "gateway-main");
+    let _guard = env.apply_to_process();
     let gate_root = env.home.join(".epi").join("gate");
     let store = SessionStore::new(&gate_root).unwrap();
     let session = store.create("agent:main:main").unwrap();
@@ -152,6 +155,23 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
                 .any(|alias| alias == "NOW-2026-03-07-main")
     }));
     assert!(events.iter().any(|event| {
+        event.kind == "global_temporal_surface"
+            && event.table == "global_temporal_surface"
+            && event.payload["coordinateOwner"] == "S3'"
+            && event.payload["agentAccessOwner"] == "S4/S5"
+            && event.payload["sessionKey"] == "agent:main:main"
+            && event.payload["dayId"] == "07-03-2026"
+            && event.payload["dayWikilink"] == "[[07-03-2026]]"
+            && event.payload["nowPath"] == "/vault/Empty/Present/07-03-2026/main/now.md"
+            && event.payload["nowLineageKey"] == "agent:main:main"
+            && event.payload["redis"]["dayContextKey"]
+                == "s3:gateway:temporal:day:07-03-2026:context"
+            && event.payload["redis"]["globalContextKey"]
+                == "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026"
+            && event.payload["graphiti"]["sessionArcId"] == "day:07-03-2026:session:main"
+            && event.payload["privacy"] == "safe-live-projection"
+    }));
+    assert!(events.iter().any(|event| {
         event.kind == "activity_event" && event.payload["kind"] == "gateway.tick"
     }));
     assert!(events
@@ -166,7 +186,7 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
     let (tx, rx) = mpsc::channel();
 
     let server = thread::spawn(move || {
-        for _ in 0..5 {
+        for _ in 0..6 {
             let (mut stream, _) = listener.accept().expect("accept");
             let mut reader = BufReader::new(stream.try_clone().expect("clone stream"));
             let mut request_line = String::new();
@@ -259,8 +279,30 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "nara.kairos.current",
         )
         .expect("kairos surface");
+    client
+        .bind_global_temporal_surface(
+            "install-local:gateway-main:agent:main:main",
+            "install-local",
+            "gateway-main",
+            "agent-main-1",
+            "agent:main:main",
+            "07-03-2026",
+            "[[07-03-2026]]",
+            "/vault/Empty/Present/07-03-2026/main/now.md",
+            "[[now]]",
+            "agent:main:main",
+            "Idea/Pratibimba/Self/Action/History/2026/03/W10/07",
+            "s3:gateway:temporal:session:main:now:md",
+            "s3:gateway:temporal:day:07-03-2026:context",
+            "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026",
+            "pratibimba-abcd1234",
+            "graphiti-main",
+            "pratibimba-abcd1234",
+            "kairos-07-03-2026-main",
+        )
+        .expect("global temporal surface");
 
-    let requests: Vec<_> = (0..5).map(|_| rx.recv().expect("request")).collect();
+    let requests: Vec<_> = (0..6).map(|_| rx.recv().expect("request")).collect();
     server.join().expect("server join");
 
     assert_reducer(
@@ -344,6 +386,30 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "nara.kairos.current",
         ]),
     );
+    assert_reducer(
+        &requests[5],
+        "bind_global_temporal_surface",
+        json!([
+            "install-local:gateway-main:agent:main:main",
+            "install-local",
+            "gateway-main",
+            "agent-main-1",
+            "agent:main:main",
+            "07-03-2026",
+            "[[07-03-2026]]",
+            "/vault/Empty/Present/07-03-2026/main/now.md",
+            "[[now]]",
+            "agent:main:main",
+            "Idea/Pratibimba/Self/Action/History/2026/03/W10/07",
+            "s3:gateway:temporal:session:main:now:md",
+            "s3:gateway:temporal:day:07-03-2026:context",
+            "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026",
+            "pratibimba-abcd1234",
+            "graphiti-main",
+            "pratibimba-abcd1234",
+            "kairos-07-03-2026-main",
+        ]),
+    );
 }
 
 #[test]
@@ -365,6 +431,7 @@ fn spacetimedb_projection_query_hydrates_gateway_temporal_context_shape() {
         );
         assert!(body.contains("FROM session_surface"));
         assert!(body.contains("FROM kairos_surface"));
+        assert!(body.contains("FROM global_temporal_surface"));
         assert!(body.contains("agent:main:main"));
 
         let response = json!([
@@ -400,6 +467,30 @@ fn spacetimedb_projection_query_hydrates_gateway_temporal_context_shape() {
                     "active_tattva": 2,
                     "planets_json": "[{\"planet_id\":0,\"degree\":41.2,\"degree_anchor\":41,\"retrograde\":false}]",
                     "source": "nara.kairos.current"
+                }]
+            },
+            {
+                "schema": {},
+                "rows": [{
+                    "surface_key": "install-local:gateway-main:agent:main:main",
+                    "installation_id": "install-local",
+                    "gateway_id": "gateway-main",
+                    "agent_instance_id": "gateway-main:epii:session-main",
+                    "session_key": "agent:main:main",
+                    "day_id": "07-05-2026",
+                    "day_wikilink": "[[07-05-2026]]",
+                    "now_path": "/vault/Empty/Present/07-05-2026/session-main/now.md",
+                    "now_wikilink": "[[NOW session-main]]",
+                    "now_lineage_key": "agent:main:main",
+                    "history_archive_path": "/vault/Pratibimba/Self/Action/History/2026/05/W19/07",
+                    "redis_session_now_key": "s3:gateway:temporal:session:session-main:now:md",
+                    "redis_day_context_key": "s3:gateway:temporal:day:07-05-2026:context",
+                    "redis_global_context_key": "s3:gateway:temporal:global:install-local:gateway-main:day:07-05-2026",
+                    "graphiti_namespace_ref": "pratibimba-abcd1234",
+                    "graphiti_session_arc_id": "day:07-05-2026:session:session-main",
+                    "pratibimba_anchor_ref": "pratibimba-abcd1234",
+                    "kairos_snapshot_id": "kairos-07-05-2026-session-main",
+                    "privacy_class": "safe-live-projection"
                 }]
             }
         ])
@@ -449,6 +540,15 @@ fn spacetimedb_projection_query_hydrates_gateway_temporal_context_shape() {
         context["graphiti"]["sessionArcId"],
         "day:07-05-2026:session:session-main"
     );
+    assert_eq!(
+        context["globalTemporal"]["surfaceKey"],
+        "install-local:gateway-main:agent:main:main"
+    );
+    assert_eq!(
+        context["globalTemporal"]["redisGlobalContextKey"],
+        "s3:gateway:temporal:global:install-local:gateway-main:day:07-05-2026"
+    );
+    assert_eq!(context["globalTemporal"]["privacy"], "safe-live-projection");
 }
 
 #[test]
@@ -485,6 +585,7 @@ fn spacetimedb_registration_builds_native_subscription_projection_plan() {
             "client_registration",
             "session_surface",
             "kairos_surface",
+            "global_temporal_surface",
             "temporal_event"
         ]
     );
@@ -506,7 +607,7 @@ fn spacetimedb_registration_builds_native_subscription_projection_plan() {
             .as_array()
             .unwrap()
             .len(),
-        6
+        7
     );
 }
 
@@ -556,6 +657,9 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
         }));
         assert!(queries.iter().any(|query| {
             query == "SELECT * FROM kairos_surface WHERE session_key = 'agent:main:main'"
+        }));
+        assert!(queries.iter().any(|query| {
+            query == "SELECT * FROM global_temporal_surface WHERE session_key = 'agent:main:main'"
         }));
 
         socket
@@ -623,6 +727,36 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
                                             1778179200
                                         ]]
                                     }]
+                                },
+                                {
+                                    "table_id": 6,
+                                    "table_name": "global_temporal_surface",
+                                    "num_rows": 1,
+                                    "updates": [{
+                                        "deletes": [],
+                                        "inserts": [[
+                                            "install-local:gateway-main:agent:main:main",
+                                            "install-local",
+                                            "gateway-main",
+                                            "gateway-main:epii:session-main",
+                                            "agent:main:main",
+                                            "07-05-2026",
+                                            "[[07-05-2026]]",
+                                            "/vault/Empty/Present/07-05-2026/session-main/now.md",
+                                            "[[NOW session-main]]",
+                                            "agent:main:main",
+                                            "/vault/Pratibimba/Self/Action/History/2026/05/W19/07",
+                                            "s3:gateway:temporal:session:session-main:now:md",
+                                            "s3:gateway:temporal:day:07-05-2026:context",
+                                            "s3:gateway:temporal:global:install-local:gateway-main:day:07-05-2026",
+                                            "pratibimba-abcd1234",
+                                            "day:07-05-2026:session:session-main",
+                                            "pratibimba-abcd1234",
+                                            "kairos-07-05-2026-session-main",
+                                            "safe-live-projection",
+                                            1778179200
+                                        ]]
+                                    }]
                                 }
                             ]
                         }
@@ -662,6 +796,14 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
     assert_eq!(context["session"]["sessionId"], "session-main");
     assert_eq!(context["kairos"]["activeDecan"], 17);
     assert_eq!(context["pratibimba"]["anchorId"], "pratibimba-abcd1234");
+    assert_eq!(
+        context["globalTemporal"]["projectionTable"],
+        "global_temporal_surface"
+    );
+    assert_eq!(
+        context["globalTemporal"]["graphitiSessionArcId"],
+        "day:07-05-2026:session:session-main"
+    );
 }
 
 fn assert_reducer(request: &(String, String, String), reducer: &str, payload: serde_json::Value) {
@@ -800,7 +942,7 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
     let (tx, rx) = mpsc::channel();
 
     let server = thread::spawn(move || {
-        for _ in 0..7 {
+        for _ in 0..8 {
             let (mut stream, _) = listener.accept().expect("accept");
             let mut reader = BufReader::new(stream.try_clone().expect("clone stream"));
             let mut request_line = String::new();
@@ -862,7 +1004,7 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
         .await
         .unwrap();
 
-    let requests: Vec<_> = (0..7).map(|_| rx.recv().expect("request")).collect();
+    let requests: Vec<_> = (0..8).map(|_| rx.recv().expect("request")).collect();
     server.join().expect("server join");
 
     assert_reducer(
@@ -907,7 +1049,7 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
         agent_registration,
         "register_agent",
         json!([
-            agent_instance_id,
+            agent_instance_id.clone(),
             "install-live-test",
             "gateway-live-test",
             "anima",
@@ -923,7 +1065,7 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "agent:main:main",
             "install-live-test",
             "gateway-live-test",
-            agent_instance_id,
+            agent_instance_id.clone(),
             "07-03-2026",
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[Empty/Present/07-03-2026/main/now|NOW main]]",
@@ -962,6 +1104,30 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "nara.kairos.current",
         ]),
     );
+    assert_reducer(
+        find_reducer(&requests, "bind_global_temporal_surface"),
+        "bind_global_temporal_surface",
+        json!([
+            "install-live-test:gateway-live-test:agent:main:main",
+            "install-live-test",
+            "gateway-live-test",
+            agent_instance_id.clone(),
+            "agent:main:main",
+            "07-03-2026",
+            "[[07-03-2026]]",
+            "/vault/Empty/Present/07-03-2026/main/now.md",
+            "[[Empty/Present/07-03-2026/main/now|NOW main]]",
+            "agent:main:main",
+            "/vault/Pratibimba/Self/Action/History/2026/03/W10/07",
+            "s3:gateway:temporal:session:main:now:md",
+            "s3:gateway:temporal:day:07-03-2026:context",
+            "s3:gateway:temporal:global:install-live-test:gateway-live-test:day:07-03-2026",
+            "",
+            "day:07-03-2026:session:main",
+            "",
+            "kairos-07-03-2026-main",
+        ]),
+    );
 }
 
 #[test]
@@ -989,6 +1155,11 @@ fn health_snapshot_surfaces_spacetimedb_projection_readiness_when_configured() {
         .unwrap()
         .iter()
         .any(|table| table == "kairos_surface"));
+    assert!(spacetime["projectionTables"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|table| table == "global_temporal_surface"));
     assert_eq!(
         spacetime["subscriptionReadiness"],
         "TUI can bind projection via HTTP SQL polling; native WebSocket subscription remains an upgrade path"

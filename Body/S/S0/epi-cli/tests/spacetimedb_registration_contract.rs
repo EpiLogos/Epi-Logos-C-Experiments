@@ -15,6 +15,7 @@ fn spacetime_module_declares_gateway_agent_client_registration_schema() {
         "pub struct ClientRegistration",
         "pub struct SessionSurface",
         "pub struct KairosSurface",
+        "pub struct GlobalTemporalSurface",
         "pub struct TemporalEvent",
         "pub fn register_gateway",
         "pub fn heartbeat_gateway",
@@ -22,6 +23,7 @@ fn spacetime_module_declares_gateway_agent_client_registration_schema() {
         "pub fn register_client",
         "pub fn bind_session_temporal_context",
         "pub fn bind_kairos_surface",
+        "pub fn bind_global_temporal_surface",
         "pub fn publish_temporal_event",
         "parent_session_key",
         "source_session_key",
@@ -31,6 +33,10 @@ fn spacetime_module_declares_gateway_agent_client_registration_schema() {
         "resource_loader_id",
         "retry_settlement_state",
         "diagnostics_json",
+        "global_temporal_surface",
+        "redis_global_context_key",
+        "graphiti_namespace_ref",
+        "safe-live-projection",
     ] {
         assert!(
             module_source.contains(expected),

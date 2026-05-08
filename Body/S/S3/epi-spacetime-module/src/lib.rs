@@ -21,6 +21,7 @@
 //! - `ClientRegistration` — TUI/desktop/browser/external/agent client registration
 //! - `SessionSurface`     — DAY/NOW/session/history/Redis/Graphiti projection
 //! - `KairosSurface`      — safe DAY/session Kairos transit projection
+//! - `GlobalTemporalSurface` — safe shared DAY/NOW/Kairos line for agents/portals
 //! - `TemporalEvent`      — live temporal activity events
 
 use spacetimedb::{reducer, table, ReducerContext, Table};
@@ -109,6 +110,31 @@ pub struct KairosSurface {
     pub active_tattva: u8,
     pub planets_json: String,
     pub source: String,
+    pub privacy_class: String,
+    pub updated_at: u64,
+}
+
+#[table(name = "global_temporal_surface", accessor = global_temporal_surface, public)]
+pub struct GlobalTemporalSurface {
+    #[primary_key]
+    pub surface_key: String,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub agent_instance_id: String,
+    pub session_key: String,
+    pub day_id: String,
+    pub day_wikilink: String,
+    pub now_path: String,
+    pub now_wikilink: String,
+    pub now_lineage_key: String,
+    pub history_archive_path: String,
+    pub redis_session_now_key: String,
+    pub redis_day_context_key: String,
+    pub redis_global_context_key: String,
+    pub graphiti_namespace_ref: String,
+    pub graphiti_session_arc_id: String,
+    pub pratibimba_anchor_ref: String,
+    pub kairos_snapshot_id: String,
     pub privacy_class: String,
     pub updated_at: u64,
 }
@@ -311,6 +337,57 @@ pub fn bind_kairos_surface(
         planets_json,
         source,
         privacy_class: "public-current-transit-only".to_owned(),
+        updated_at: now(ctx),
+    });
+}
+
+#[reducer]
+pub fn bind_global_temporal_surface(
+    ctx: &ReducerContext,
+    surface_key: String,
+    installation_id: String,
+    gateway_id: String,
+    agent_instance_id: String,
+    session_key: String,
+    day_id: String,
+    day_wikilink: String,
+    now_path: String,
+    now_wikilink: String,
+    now_lineage_key: String,
+    history_archive_path: String,
+    redis_session_now_key: String,
+    redis_day_context_key: String,
+    redis_global_context_key: String,
+    graphiti_namespace_ref: String,
+    graphiti_session_arc_id: String,
+    pratibimba_anchor_ref: String,
+    kairos_snapshot_id: String,
+) {
+    assert_nonempty(&surface_key, "surface_key");
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_nonempty(&session_key, "session_key");
+    assert_nonempty(&day_id, "day_id");
+    ctx.db.global_temporal_surface().insert(GlobalTemporalSurface {
+        surface_key,
+        installation_id,
+        gateway_id,
+        agent_instance_id,
+        session_key,
+        day_id,
+        day_wikilink,
+        now_path,
+        now_wikilink,
+        now_lineage_key,
+        history_archive_path,
+        redis_session_now_key,
+        redis_day_context_key,
+        redis_global_context_key,
+        graphiti_namespace_ref,
+        graphiti_session_arc_id,
+        pratibimba_anchor_ref,
+        kairos_snapshot_id,
+        privacy_class: "safe-live-projection".to_owned(),
         updated_at: now(ctx),
     });
 }

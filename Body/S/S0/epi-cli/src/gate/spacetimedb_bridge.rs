@@ -201,7 +201,59 @@ impl SpacetimeBridge {
             payload["nowAlias"] = json!(alias);
         }
 
-        self.append("session_surface", "session_surface", payload)
+        self.append("session_surface", "session_surface", payload)?;
+        self.publish_global_temporal_record(record, temporal_context)
+    }
+
+    fn publish_global_temporal_record(
+        &self,
+        record: &SessionRecord,
+        temporal_context: &Value,
+    ) -> Result<(), String> {
+        let day_id = string_at(temporal_context, "/day/dayId", "unknown-day");
+        let installation_id =
+            optional_env("EPI_INSTALLATION_ID").unwrap_or_else(|| "install-local".to_owned());
+        let gateway_id =
+            optional_env("EPI_GATEWAY_ID").unwrap_or_else(|| "gateway-main".to_owned());
+        let redis_global_context_key =
+            redis_global_context_key(&installation_id, &gateway_id, day_id);
+        let payload = json!({
+            "coordinateOwner": "S3'",
+            "agentAccessOwner": "S4/S5",
+            "surfaceKey": global_temporal_surface_key(&installation_id, &gateway_id, &record.canonical_key),
+            "installationId": installation_id,
+            "gatewayId": gateway_id,
+            "sessionKey": record.canonical_key,
+            "agentId": record.active_agent_id,
+            "dayId": day_id,
+            "dayWikilink": temporal_context["day"]["wikilink"].clone(),
+            "nowPath": temporal_context["now"]["path"].clone(),
+            "nowWikilink": temporal_context["now"]["wikilink"].clone(),
+            "nowLineageKey": record.canonical_key,
+            "historyArchivePath": temporal_context["history"]["archivePath"].clone(),
+            "redis": {
+                "sessionNowKey": temporal_context["redis"]["sessionNowKey"].clone(),
+                "dayContextKey": temporal_context["redis"]["dayContextKey"].clone(),
+                "globalContextKey": redis_global_context_key,
+                "hydrated": temporal_context["redis"]["hydrated"].clone(),
+            },
+            "kairosSnapshotId": kairos_snapshot_id(temporal_context),
+            "kairos": temporal_context["kairos"].clone(),
+            "pratibimba": temporal_context["pratibimba"].clone(),
+            "graphiti": {
+                "runtimeOwner": "S3'",
+                "invocationOwner": "S5/S5'",
+                "namespaceRef": temporal_context["graphiti"]["namespaceRef"].clone(),
+                "sessionArcId": temporal_context["graphiti"]["sessionArcId"].clone(),
+            },
+            "privacy": "safe-live-projection",
+        });
+
+        self.append(
+            "global_temporal_surface",
+            "global_temporal_surface",
+            payload,
+        )
     }
 
     pub fn publish_activity_event(&self, kind: &str, payload: Value) -> Result<(), String> {
@@ -343,14 +395,7 @@ impl SpacetimeRegistration {
             "gatewayId": self.gateway_id,
             "endpoint": self.endpoint,
             "protocolVersion": self.protocol_version,
-            "projectionTables": [
-                SPACETIME_PROJECTION_TABLES[0],
-                SPACETIME_PROJECTION_TABLES[1],
-                SPACETIME_PROJECTION_TABLES[2],
-                SPACETIME_PROJECTION_TABLES[3],
-                SPACETIME_PROJECTION_TABLES[4],
-                SPACETIME_PROJECTION_TABLES[5]
-            ],
+            "projectionTables": SPACETIME_PROJECTION_TABLES,
             "projectionSubscriptionPlan": plan,
             "rawServiceHealth": "configured reducer target; live reducer calls are verified by gateway registration tests",
             "agentAccess": "agent/session surfaces register when sessions publish temporal context",
@@ -438,20 +483,39 @@ impl SpacetimeRegistration {
             &capability_surface_hash,
         )?;
 
+        let day_id = string_at(&temporal_context, "/day/dayId", "unknown-day");
+        let now_path = string_at(&temporal_context, "/now/path", "");
+        let now_wikilink = string_at(&temporal_context, "/now/wikilink", "");
+        let history_archive_path = string_at(&temporal_context, "/history/archivePath", "");
+        let redis_session_now_key = string_at(&temporal_context, "/redis/sessionNowKey", "");
+        let redis_day_context_key = string_at(&temporal_context, "/redis/dayContextKey", "");
+        let graphiti_arc_id = string_at(&temporal_context, "/graphiti/sessionArcId", "");
+        let graphiti_namespace_ref = string_at(&temporal_context, "/graphiti/namespaceRef", "");
+        let pratibimba_anchor_ref = string_at(&temporal_context, "/pratibimba/anchorId", "");
+        let kairos_snapshot_id = kairos_snapshot_id(&temporal_context);
+        let day_wikilink = day_wikilink(day_id);
+        let global_surface_key = global_temporal_surface_key(
+            &self.installation_id,
+            &self.gateway_id,
+            &record.canonical_key,
+        );
+        let redis_global_context_key =
+            redis_global_context_key(&self.installation_id, &self.gateway_id, day_id);
+
         client.bind_session_temporal_context(
             &record.canonical_key,
             &self.installation_id,
             &self.gateway_id,
             &agent_instance_id,
-            string_at(&temporal_context, "/day/dayId", "unknown-day"),
-            string_at(&temporal_context, "/now/path", ""),
-            string_at(&temporal_context, "/now/wikilink", ""),
-            string_at(&temporal_context, "/history/archivePath", ""),
-            string_at(&temporal_context, "/redis/sessionNowKey", ""),
-            string_at(&temporal_context, "/redis/dayContextKey", ""),
-            string_at(&temporal_context, "/graphiti/sessionArcId", ""),
-            string_at(&temporal_context, "/pratibimba/anchorId", ""),
-            &kairos_snapshot_id(&temporal_context),
+            day_id,
+            now_path,
+            now_wikilink,
+            history_archive_path,
+            redis_session_now_key,
+            redis_day_context_key,
+            graphiti_arc_id,
+            pratibimba_anchor_ref,
+            &kairos_snapshot_id,
             record.parent_session_key.as_deref().unwrap_or(""),
             record.source_session_key.as_deref().unwrap_or(""),
             record.source_session_kind.as_deref().unwrap_or(""),
@@ -464,10 +528,10 @@ impl SpacetimeRegistration {
 
         let kairos = &temporal_context["kairos"];
         client.bind_kairos_surface(
-            &kairos_snapshot_id(&temporal_context),
+            &kairos_snapshot_id,
             &self.installation_id,
             &self.gateway_id,
-            string_at(&temporal_context, "/day/dayId", "unknown-day"),
+            day_id,
             &record.canonical_key,
             kairos
                 .get("available")
@@ -498,6 +562,27 @@ impl SpacetimeRegistration {
                 .get("source")
                 .and_then(Value::as_str)
                 .unwrap_or("nara.kairos.current"),
+        )?;
+
+        client.bind_global_temporal_surface(
+            &global_surface_key,
+            &self.installation_id,
+            &self.gateway_id,
+            &agent_instance_id,
+            &record.canonical_key,
+            day_id,
+            &day_wikilink,
+            now_path,
+            now_wikilink,
+            &record.canonical_key,
+            history_archive_path,
+            redis_session_now_key,
+            redis_day_context_key,
+            &redis_global_context_key,
+            graphiti_namespace_ref,
+            graphiti_arc_id,
+            pratibimba_anchor_ref,
+            &kairos_snapshot_id,
         )
     }
 
@@ -586,14 +671,7 @@ pub fn readiness_value(port: u16, state_root: &Path) -> Value {
             "configured": false,
             "registrationMode": "disabled",
             "reason": "set SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL to enable live projection",
-            "projectionTables": [
-                "gateway_instance",
-                "agent_instance",
-                "client_registration",
-                "session_surface",
-                "kairos_surface",
-                "temporal_event"
-            ],
+            "projectionTables": SPACETIME_PROJECTION_TABLES,
             "rawServiceHealth": "not configured",
             "agentAccess": "not registered",
             "subscriptionReadiness": "disabled until SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL is set",
@@ -809,6 +887,57 @@ impl SpacetimePresence {
         )
     }
 
+    pub fn bind_global_temporal_surface(
+        &self,
+        surface_key: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        agent_instance_id: &str,
+        session_key: &str,
+        day_id: &str,
+        day_wikilink: &str,
+        now_path: &str,
+        now_wikilink: &str,
+        now_lineage_key: &str,
+        history_archive_path: &str,
+        redis_session_now_key: &str,
+        redis_day_context_key: &str,
+        redis_global_context_key: &str,
+        graphiti_namespace_ref: &str,
+        graphiti_session_arc_id: &str,
+        pratibimba_anchor_ref: &str,
+        kairos_snapshot_id: &str,
+    ) -> Result<(), String> {
+        require_nonempty(surface_key, "surface_key")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(session_key, "session_key")?;
+        require_nonempty(day_id, "day_id")?;
+        self.post_reducer(
+            "bind_global_temporal_surface",
+            json!([
+                surface_key,
+                installation_id,
+                gateway_id,
+                agent_instance_id,
+                session_key,
+                day_id,
+                day_wikilink,
+                now_path,
+                now_wikilink,
+                now_lineage_key,
+                history_archive_path,
+                redis_session_now_key,
+                redis_day_context_key,
+                redis_global_context_key,
+                graphiti_namespace_ref,
+                graphiti_session_arc_id,
+                pratibimba_anchor_ref,
+                kairos_snapshot_id,
+            ]),
+        )
+    }
+
     pub fn publish_temporal_event(
         &self,
         installation_id: &str,
@@ -889,7 +1018,8 @@ impl SpacetimePresence {
         let escaped_session = sql_string(session_key);
         let query = format!(
             "SELECT * FROM session_surface WHERE session_key = {escaped_session} LIMIT 1;\
-             SELECT * FROM kairos_surface WHERE session_key = {escaped_session} LIMIT 1"
+             SELECT * FROM kairos_surface WHERE session_key = {escaped_session} LIMIT 1;\
+             SELECT * FROM global_temporal_surface WHERE session_key = {escaped_session} LIMIT 1"
         );
         let result = self.sql(&query)?;
         projection_context_from_sql_result(&result, agent_id)
@@ -982,6 +1112,11 @@ fn projection_context_from_sql_result(
         .and_then(|statement| statement.get("rows"))
         .and_then(Value::as_array)
         .and_then(|rows| rows.first());
+    let global_row = statements
+        .get(2)
+        .and_then(|statement| statement.get("rows"))
+        .and_then(Value::as_array)
+        .and_then(|rows| rows.first());
 
     let session_key = row_string(session_row, "session_key", "sessionKey", "");
     let day_id = row_string(session_row, "day_id", "dayId", "unknown-day");
@@ -1021,6 +1156,32 @@ fn projection_context_from_sql_result(
     let graphiti_namespace_ref = pratibimba_anchor_ref.clone();
     let _kairos_snapshot_id = row_string(session_row, "kairos_snapshot_id", "kairosSnapshotId", "");
     let session_id = session_id_from_now_path(&now_path).unwrap_or_else(|| session_key.to_owned());
+    let global_surface_key = global_row
+        .map(|row| row_string(row, "surface_key", "surfaceKey", ""))
+        .unwrap_or_else(|| {
+            global_temporal_surface_key(
+                &row_string(session_row, "installation_id", "installationId", "local"),
+                &row_string(session_row, "gateway_id", "gatewayId", "gateway-main"),
+                &session_key,
+            )
+        });
+    let global_redis_key = global_row
+        .map(|row| row_string(row, "redis_global_context_key", "redisGlobalContextKey", ""))
+        .unwrap_or_else(|| {
+            redis_global_context_key(
+                &row_string(session_row, "installation_id", "installationId", "local"),
+                &row_string(session_row, "gateway_id", "gatewayId", "gateway-main"),
+                &day_id,
+            )
+        });
+    let global_graphiti_namespace = global_row
+        .map(|row| row_string(row, "graphiti_namespace_ref", "graphitiNamespaceRef", ""))
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| graphiti_namespace_ref.clone());
+    let global_graphiti_arc = global_row
+        .map(|row| row_string(row, "graphiti_session_arc_id", "graphitiSessionArcId", ""))
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| graphiti_arc_id.clone());
 
     let planets = kairos_row
         .map(|row| row_string(row, "planets_json", "planetsJson", "[]"))
@@ -1086,6 +1247,62 @@ fn projection_context_from_sql_result(
             "projectionSource": "http-sql-poll",
             "projectionTable": "session_surface",
             "kairosProjectionTable": "kairos_surface",
+            "globalProjectionTable": "global_temporal_surface",
+        },
+        "globalTemporal": {
+            "coordinateOwner": "S3'",
+            "agentAccessOwner": "S4/S5",
+            "projectionTable": "global_temporal_surface",
+            "surfaceKey": global_surface_key,
+            "installationId": global_row
+                .map(|row| row_string(row, "installation_id", "installationId", ""))
+                .unwrap_or_else(|| row_string(session_row, "installation_id", "installationId", "")),
+            "gatewayId": global_row
+                .map(|row| row_string(row, "gateway_id", "gatewayId", ""))
+                .unwrap_or_else(|| row_string(session_row, "gateway_id", "gatewayId", "")),
+            "sessionKey": session_key,
+            "dayId": global_row
+                .map(|row| row_string(row, "day_id", "dayId", "unknown-day"))
+                .unwrap_or_else(|| day_id.clone()),
+            "dayWikilink": global_row
+                .map(|row| row_string(row, "day_wikilink", "dayWikilink", ""))
+                .filter(|value| !value.is_empty())
+                .unwrap_or_else(|| if day_id == "unknown-day" { String::new() } else { format!("[[{day_id}]]") }),
+            "nowPath": global_row
+                .map(|row| row_string(row, "now_path", "nowPath", ""))
+                .filter(|value| !value.is_empty())
+                .unwrap_or_else(|| now_path.clone()),
+            "nowWikilink": global_row
+                .map(|row| row_string(row, "now_wikilink", "nowWikilink", ""))
+                .filter(|value| !value.is_empty())
+                .unwrap_or_else(|| now_wikilink.clone()),
+            "nowLineageKey": global_row
+                .map(|row| row_string(row, "now_lineage_key", "nowLineageKey", ""))
+                .filter(|value| !value.is_empty())
+                .unwrap_or_else(|| session_key.clone()),
+            "historyArchivePath": global_row
+                .map(|row| row_string(row, "history_archive_path", "historyArchivePath", ""))
+                .filter(|value| !value.is_empty())
+                .unwrap_or_else(|| history_archive_path.clone()),
+            "redisGlobalContextKey": global_redis_key,
+            "graphitiNamespaceRef": if global_graphiti_namespace.is_empty() {
+                Value::Null
+            } else {
+                Value::String(global_graphiti_namespace)
+            },
+            "graphitiSessionArcId": global_graphiti_arc,
+            "pratibimbaAnchorRef": if pratibimba_anchor_ref.is_empty() {
+                Value::Null
+            } else {
+                Value::String(pratibimba_anchor_ref.clone())
+            },
+            "kairosSnapshotId": global_row
+                .map(|row| row_string(row, "kairos_snapshot_id", "kairosSnapshotId", ""))
+                .filter(|value| !value.is_empty())
+                .unwrap_or_else(|| row_string(session_row, "kairos_snapshot_id", "kairosSnapshotId", "")),
+            "privacy": global_row
+                .map(|row| row_string(row, "privacy_class", "privacyClass", "safe-live-projection"))
+                .unwrap_or_else(|| "safe-live-projection".to_owned()),
         },
         "kairos": {
             "available": kairos_row
@@ -1156,6 +1373,10 @@ fn projection_context_from_subscription_message(
         {
             "schema": {},
             "rows": rows.kairos.into_iter().collect::<Vec<_>>()
+        },
+        {
+            "schema": {},
+            "rows": rows.global.into_iter().collect::<Vec<_>>()
         }
     ]);
     projection_context_from_sql_result(&result, agent_id).map(|context| {
@@ -1223,6 +1444,26 @@ fn workspace_root_hash(state_root: &Path) -> String {
 
 fn agent_instance_id(gateway_id: &str, agent_id: &str, session_id: &str) -> String {
     format!("{gateway_id}:{agent_id}:{session_id}")
+}
+
+fn global_temporal_surface_key(
+    installation_id: &str,
+    gateway_id: &str,
+    session_key: &str,
+) -> String {
+    format!("{installation_id}:{gateway_id}:{session_key}")
+}
+
+fn redis_global_context_key(installation_id: &str, gateway_id: &str, day_id: &str) -> String {
+    format!("s3:gateway:temporal:global:{installation_id}:{gateway_id}:day:{day_id}")
+}
+
+fn day_wikilink(day_id: &str) -> String {
+    if day_id == "unknown-day" {
+        String::new()
+    } else {
+        format!("[[{day_id}]]")
+    }
 }
 
 fn capability_surface_hash(agent_id: &str, session_key: &str) -> String {

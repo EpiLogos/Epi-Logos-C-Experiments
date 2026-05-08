@@ -224,7 +224,7 @@ fn push_temporal_surface_lines(lines: &mut Vec<Line<'static>>, runtime_state: &P
             .unwrap_or("unbound")
     )));
     lines.push(Line::from(format!(
-        "Redis: {} {}  SpaceTimeDB: {} {}/{}",
+        "Redis: {} {}  SpaceTimeDB: {} {}/{}/{}",
         temporal.redis_hydrated,
         temporal
             .redis_session_now_key
@@ -240,6 +240,10 @@ fn push_temporal_surface_lines(lines: &mut Vec<Line<'static>>, runtime_state: &P
             .unwrap_or("unbound"),
         temporal
             .spacetimedb_kairos_projection_table
+            .as_deref()
+            .unwrap_or("unbound"),
+        temporal
+            .spacetimedb_global_projection_table
             .as_deref()
             .unwrap_or("unbound")
     )));

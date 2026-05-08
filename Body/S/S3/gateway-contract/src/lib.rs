@@ -40,6 +40,7 @@ pub const SPACETIME_PROJECTION_TABLES: &[&str] = &[
     "client_registration",
     "session_surface",
     "kairos_surface",
+    "global_temporal_surface",
     "temporal_event",
 ];
 
@@ -431,6 +432,7 @@ pub struct SpacetimeProjectionPlan {
 pub struct SpacetimeProjectionRows {
     pub session: Option<Value>,
     pub kairos: Option<Value>,
+    pub global: Option<Value>,
 }
 
 impl SpacetimeProjectionPlan {
@@ -496,6 +498,10 @@ impl SpacetimeProjectionPlan {
                     format!(
                         "SELECT * FROM kairos_surface WHERE session_key = {}",
                         sql_string(&self.session_key)
+                    ),
+                    format!(
+                        "SELECT * FROM global_temporal_surface WHERE session_key = {}",
+                        sql_string(&self.session_key)
                     )
                 ],
                 "request_id": 1,
@@ -528,6 +534,9 @@ impl SpacetimeProjectionRows {
             match table_name {
                 "session_surface" => rows.session = Some(subscription_session_row(row)?),
                 "kairos_surface" => rows.kairos = Some(subscription_kairos_row(row)?),
+                "global_temporal_surface" => {
+                    rows.global = Some(subscription_global_temporal_row(row)?)
+                }
                 _ => {}
             }
         }
@@ -632,6 +641,37 @@ fn subscription_kairos_row(row: &Value) -> Result<Value, String> {
         "source": subscription_string(values, 12),
         "privacy_class": subscription_string(values, 13),
         "updated_at": subscription_u64(values, 14),
+    }))
+}
+
+fn subscription_global_temporal_row(row: &Value) -> Result<Value, String> {
+    if row.is_object() {
+        return Ok(row.clone());
+    }
+    let values = row.as_array().ok_or_else(|| {
+        "global_temporal_surface subscription row must be object or array".to_owned()
+    })?;
+    Ok(serde_json::json!({
+        "surface_key": subscription_string(values, 0),
+        "installation_id": subscription_string(values, 1),
+        "gateway_id": subscription_string(values, 2),
+        "agent_instance_id": subscription_string(values, 3),
+        "session_key": subscription_string(values, 4),
+        "day_id": subscription_string(values, 5),
+        "day_wikilink": subscription_string(values, 6),
+        "now_path": subscription_string(values, 7),
+        "now_wikilink": subscription_string(values, 8),
+        "now_lineage_key": subscription_string(values, 9),
+        "history_archive_path": subscription_string(values, 10),
+        "redis_session_now_key": subscription_string(values, 11),
+        "redis_day_context_key": subscription_string(values, 12),
+        "redis_global_context_key": subscription_string(values, 13),
+        "graphiti_namespace_ref": subscription_string(values, 14),
+        "graphiti_session_arc_id": subscription_string(values, 15),
+        "pratibimba_anchor_ref": subscription_string(values, 16),
+        "kairos_snapshot_id": subscription_string(values, 17),
+        "privacy_class": subscription_string(values, 18),
+        "updated_at": subscription_u64(values, 19),
     }))
 }
 

@@ -36,6 +36,7 @@ pub struct PortalTemporalSurface {
     pub spacetimedb_projection_source: Option<String>,
     pub spacetimedb_projection_table: Option<String>,
     pub spacetimedb_kairos_projection_table: Option<String>,
+    pub spacetimedb_global_projection_table: Option<String>,
     pub pratibimba_anchor_id: Option<String>,
     pub pratibimba_coordinate: String,
     pub generation: u64,
@@ -102,6 +103,7 @@ impl PortalTemporalSurface {
             spacetimedb_projection_source: None,
             spacetimedb_projection_table: None,
             spacetimedb_kairos_projection_table: None,
+            spacetimedb_global_projection_table: None,
             pratibimba_anchor_id,
             pratibimba_coordinate: "M4.4.4.4".to_string(),
             generation: clock.generation,
@@ -220,6 +222,11 @@ impl PortalTemporalSurface {
                 .map(ToOwned::to_owned),
             spacetimedb_kairos_projection_table: value
                 .pointer("/spacetimedb/kairosProjectionTable")
+                .and_then(serde_json::Value::as_str)
+                .map(ToOwned::to_owned),
+            spacetimedb_global_projection_table: value
+                .pointer("/spacetimedb/globalProjectionTable")
+                .or_else(|| value.pointer("/globalTemporal/projectionTable"))
                 .and_then(serde_json::Value::as_str)
                 .map(ToOwned::to_owned),
             pratibimba_anchor_id: value

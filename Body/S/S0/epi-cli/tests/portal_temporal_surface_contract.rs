@@ -40,7 +40,8 @@ fn portal_command_nara_and_epii_surfaces_share_the_same_gateway_temporal_identit
         "spacetimedb": {
             "projectionSource": "native-ws-subscription",
             "projectionTable": "session_surface",
-            "kairosProjectionTable": "kairos_surface"
+            "kairosProjectionTable": "kairos_surface",
+            "globalProjectionTable": "global_temporal_surface"
         }
     }))
     .expect("gateway temporal context should create portal runtime state");
@@ -61,7 +62,7 @@ fn portal_command_nara_and_epii_surfaces_share_the_same_gateway_temporal_identit
     assert_shared_identity("nara", &nara);
     assert_shared_identity("epii", &epii);
     assert!(command.contains("native-ws-subscription"));
-    assert!(command.contains("session_surface/kairos_surface"));
+    assert!(command.contains("session_surface/kairos_surface/global_temporal_surface"));
     assert!(nara.contains("Redis"));
     assert!(epii.contains("Epii Orientation"));
 }
