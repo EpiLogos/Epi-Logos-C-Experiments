@@ -4,6 +4,7 @@ use epi_logos::agent::session_propagation::{
     GatewaySessionPropagationOperation,
 };
 use epi_logos::gate::sessions::SessionStore;
+use epi_logos::gate::spacetimedb_bridge::SpacetimeBridge;
 use epi_logos::sesh::session::{
     bootstrap_sequence, generate_session_id_with_suffix, resolve_vault_root,
     AgentSessionRuntimeFactory, AgentSessionRuntimeRequest, SessionContext,
@@ -331,6 +332,24 @@ fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
         .resolve(&runtime.context.session_id)
         .unwrap();
     assert_eq!(stored.canonical_key, second.canonical_key);
+
+    let events = SpacetimeBridge::new(&gate_root)
+        .unwrap()
+        .drain_test_events()
+        .unwrap();
+    let session_surface_events = events
+        .iter()
+        .filter(|event| {
+            event.kind == "session_surface"
+                && event.payload["canonicalKey"] == default_agent_gateway_session_key("anima")
+                && event.payload["sessionId"] == runtime.context.session_id
+                && event.payload["resourceLoaderId"] == runtime.pi_session.resource_loader_id
+        })
+        .count();
+    assert_eq!(
+        session_surface_events, 2,
+        "every PI runtime propagation write should project a session_surface event"
+    );
 }
 
 #[test]

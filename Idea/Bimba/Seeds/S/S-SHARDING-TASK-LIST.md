@@ -317,6 +317,7 @@ Implementation result, 2026-05-08:
 - `epi agent session init`, `new`, `resume`, `fork`, and `import` now call `AgentSessionRuntimeFactory` and propagate the resulting Khora/PI runtime into the gateway session store.
 - Gateway `SessionPatch` now carries `session_id`, so the S3 record can preserve the actual PI/Khora runtime id rather than falling back to compatibility defaults.
 - S0 portal runtime and SpaceTimeDB projection hydration now preserve the agent access fields needed by S4/S5: canonical session key, active PI agent id, runtime cwd, resource-loader id, source lineage, and Graphiti session arc id.
+- PI runtime propagation now calls the shared S3 SpaceTimeDB session-surface publisher after each S3 session-store write, so `session_start`, `new`, `resume`, `fork`, and `import` no longer wait for a later gateway RPC touch before appearing in the projection stream.
 
 Task group C - resource loading and singleton idempotency:
 
@@ -338,7 +339,7 @@ Task group D - retry/idle/run-state settlement:
 
 Task group E - projection into S3' and portal consumption:
 
-- [ ] Ensure every propagation write publishes or schedules `session_surface` updates through the existing SpaceTimeDB bridge.
+- [x] Ensure every propagation write publishes or schedules `session_surface` updates through the existing SpaceTimeDB bridge.
 - [ ] Ensure Redis S3' temporal keys are hydrated for the propagated PI base session: NOW markdown key, day context key, session Kairos key, and agent orientation key where available.
 - [ ] Add projection tests proving PI-propagated records appear in `session_surface` with session id, DAY id, NOW path, runtime cwd, vault root, resource-loader id, diagnostics, and active agent id.
 - [ ] Add portal runtime tests proving the centre `/` command panel, left clock side, and right Nara/Epii side all read the same propagated session identity.

@@ -2431,15 +2431,7 @@ fn publish_session_surface(
     state_root: &PathBuf,
     record: &sessions::SessionRecord,
 ) -> Result<(), (String, String)> {
-    let bridge = SpacetimeBridge::new(state_root).map_err(internal_error)?;
-    bridge
-        .publish_session(
-            &record.canonical_key,
-            record.aliases.first().map(String::as_str),
-        )
-        .map_err(internal_error)?;
-    register_session_agent_with_spacetimedb(state_root, &record.canonical_key)
-        .map_err(internal_error)
+    super::spacetimedb_bridge::publish_session_surface(state_root, record).map_err(internal_error)
 }
 
 fn publish_presence_surfaces(state_root: &PathBuf, result: &Value) -> Result<(), (String, String)> {
@@ -2528,19 +2520,4 @@ async fn register_client_with_spacetimedb(
     })
     .await
     .map_err(|err| err.to_string())?
-}
-
-fn register_session_agent_with_spacetimedb(
-    state_root: &PathBuf,
-    session_key: &str,
-) -> Result<(), String> {
-    let Some(registration) = SpacetimeRegistration::from_env(DEFAULT_GATEWAY_PORT, state_root)?
-    else {
-        return Ok(());
-    };
-    let state_root = state_root.clone();
-    let session_key = session_key.to_owned();
-    std::thread::spawn(move || registration.register_session_agent(&state_root, &session_key))
-        .join()
-        .map_err(|_| "spacetimedb session registration thread panicked".to_owned())?
 }

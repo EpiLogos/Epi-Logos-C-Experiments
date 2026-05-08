@@ -1,4 +1,5 @@
 use crate::gate::sessions::{SessionPatch, SessionRecord, SessionStore};
+use crate::gate::spacetimedb_bridge;
 use crate::sesh::session::AgentSessionRuntime;
 use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
@@ -41,7 +42,7 @@ pub fn propagate_agent_session_runtime(
         .unwrap_or_else(|| default_agent_gateway_session_key(&runtime.pi_session.agent_id));
     let record = store.ensure(&canonical_key)?;
 
-    store.patch(
+    let record = store.patch(
         &record.canonical_key,
         SessionPatch {
             aliases: Some(runtime_aliases(&record, runtime)),
@@ -69,7 +70,9 @@ pub fn propagate_agent_session_runtime(
             model_override: runtime.pi_session.default_model.clone().map(Some),
             ..Default::default()
         },
-    )
+    )?;
+    spacetimedb_bridge::publish_session_surface(&propagation.state_root, &record)?;
+    Ok(record)
 }
 
 pub fn default_agent_gateway_session_key(agent_id: &str) -> String {

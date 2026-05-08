@@ -3,8 +3,9 @@ use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use epi_s3_gateway_contract::{
-    SpacetimeProjectionPlan, SpacetimeProjectionRows, SPACETIME_PROJECTION_SOURCE_HTTP_SQL,
-    SPACETIME_PROJECTION_SOURCE_NATIVE_WS, SPACETIME_PROJECTION_TABLES,
+    SpacetimeProjectionPlan, SpacetimeProjectionRows, DEFAULT_GATEWAY_PORT,
+    SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
+    SPACETIME_PROJECTION_TABLES,
 };
 use futures_util::{SinkExt, StreamExt};
 use reqwest::blocking::Client as BlockingClient;
@@ -18,7 +19,10 @@ use tokio_tungstenite::{
     MaybeTlsStream, WebSocketStream,
 };
 
-use super::{sessions::SessionStore, system, temporal};
+use super::{
+    sessions::{SessionRecord, SessionStore},
+    system, temporal,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BridgeEvent {
@@ -30,6 +34,20 @@ pub struct BridgeEvent {
 
 pub struct SpacetimeBridge {
     state_root: PathBuf,
+}
+
+pub fn publish_session_surface(state_root: &Path, record: &SessionRecord) -> Result<(), String> {
+    let bridge = SpacetimeBridge::new(state_root)?;
+    bridge.publish_session(
+        &record.canonical_key,
+        record.aliases.first().map(String::as_str),
+    )?;
+
+    if let Some(registration) = SpacetimeRegistration::from_env(DEFAULT_GATEWAY_PORT, state_root)? {
+        registration.register_session_agent(state_root, &record.canonical_key)?;
+    }
+
+    Ok(())
 }
 
 impl SpacetimeBridge {
