@@ -318,6 +318,7 @@ Implementation result, 2026-05-08:
 - Gateway `SessionPatch` now carries `session_id`, so the S3 record can preserve the actual PI/Khora runtime id rather than falling back to compatibility defaults.
 - S0 portal runtime and SpaceTimeDB projection hydration now preserve the agent access fields needed by S4/S5: canonical session key, active PI agent id, runtime cwd, resource-loader id, source lineage, and Graphiti session arc id.
 - PI runtime propagation now calls the shared S3 SpaceTimeDB session-surface publisher after each S3 session-store write, so `session_start`, `new`, `resume`, `fork`, and `import` no longer wait for a later gateway RPC touch before appearing in the projection stream.
+- PI runtime propagation can now hydrate the S3' Redis temporal keyset during the same session-surface publish when `EPI_GATE_SESSION_REDIS_HYDRATION=required` or `best-effort`: session NOW markdown, DAY context, session Kairos, agent orientation, and personal orientation where the Pratibimba anchor is available.
 
 Task group C - resource loading and singleton idempotency:
 
@@ -340,9 +341,9 @@ Task group D - retry/idle/run-state settlement:
 Task group E - projection into S3' and portal consumption:
 
 - [x] Ensure every propagation write publishes or schedules `session_surface` updates through the existing SpaceTimeDB bridge.
-- [ ] Ensure Redis S3' temporal keys are hydrated for the propagated PI base session: NOW markdown key, day context key, session Kairos key, and agent orientation key where available.
-- [ ] Add projection tests proving PI-propagated records appear in `session_surface` with session id, DAY id, NOW path, runtime cwd, vault root, resource-loader id, diagnostics, and active agent id.
-- [ ] Add portal runtime tests proving the centre `/` command panel, left clock side, and right Nara/Epii side all read the same propagated session identity.
+- [x] Ensure Redis S3' temporal keys are hydrated for the propagated PI base session: NOW markdown key, day context key, session Kairos key, and agent orientation key where available.
+- [x] Add projection tests proving PI-propagated records appear in `session_surface` with session id, DAY id, NOW path, runtime cwd, vault root, resource-loader id, diagnostics, and active agent id.
+- [x] Add portal runtime tests proving the centre `/` command panel, left clock side, and right Nara/Epii side all read the same propagated session identity.
 - [ ] Add health/readiness tests proving gateway health reports the propagated PI session without requiring a later manual `SessionStore::create`.
 
 Task group F - S4/S5 agent access and memory:

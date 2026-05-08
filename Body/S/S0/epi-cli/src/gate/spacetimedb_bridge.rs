@@ -38,9 +38,15 @@ pub struct SpacetimeBridge {
 
 pub fn publish_session_surface(state_root: &Path, record: &SessionRecord) -> Result<(), String> {
     let bridge = SpacetimeBridge::new(state_root)?;
-    bridge.publish_session(
-        &record.canonical_key,
+    let temporal_context = temporal::hydrate_redis_for_record_on_propagation(
+        state_root,
+        record,
+        &record.active_agent_id,
+    )?;
+    bridge.publish_session_record(
+        record,
         record.aliases.first().map(String::as_str),
+        temporal_context.as_ref(),
     )?;
 
     if let Some(registration) = SpacetimeRegistration::from_env(DEFAULT_GATEWAY_PORT, state_root)? {
@@ -144,8 +150,18 @@ impl SpacetimeBridge {
     pub fn publish_session(&self, identifier: &str, now_alias: Option<&str>) -> Result<(), String> {
         let store = SessionStore::new(&self.state_root)?;
         let record = store.resolve(identifier)?;
-        let temporal_context =
-            temporal::context_for_record(&self.state_root, &record, &record.active_agent_id);
+        self.publish_session_record(&record, now_alias, None)
+    }
+
+    pub fn publish_session_record(
+        &self,
+        record: &SessionRecord,
+        now_alias: Option<&str>,
+        temporal_context: Option<&Value>,
+    ) -> Result<(), String> {
+        let default_temporal_context =
+            temporal::context_for_record(&self.state_root, record, &record.active_agent_id);
+        let temporal_context = temporal_context.unwrap_or(&default_temporal_context);
         let mut payload = json!({
             "canonicalKey": record.canonical_key,
             "aliases": record.aliases,

@@ -56,6 +56,11 @@ impl HypertilePlugin for CommandCenterPlugin {
                     .add_modifier(Modifier::BOLD),
             ),
         ]));
+
+        if let Some(runtime_state) = &self.runtime_state {
+            push_temporal_surface_lines(&mut lines, runtime_state);
+        }
+
         lines.push(Line::from(""));
         lines.push(Line::from("Surfaces"));
         for (idx, surface) in surfaces.iter().enumerate() {
@@ -123,56 +128,6 @@ impl HypertilePlugin for CommandCenterPlugin {
                 .join(" ")
         )));
 
-        if let Some(runtime_state) = &self.runtime_state {
-            let temporal = runtime_state.temporal();
-            let temporal = temporal.lock().unwrap();
-            lines.push(Line::from(""));
-            lines.push(Line::from("Temporal Surface"));
-            lines.push(Line::from(format!(
-                "{} -> {}  source: {:?}",
-                temporal.coordinate_owner, temporal.agent_access_owner, temporal.source
-            )));
-            lines.push(Line::from(format!(
-                "DAY: {}  NOW: {}",
-                temporal.day_id.as_deref().unwrap_or("unbound"),
-                temporal
-                    .now_wikilink
-                    .as_deref()
-                    .or_else(|| temporal.now_path.as_ref().and_then(|path| path.to_str()))
-                    .unwrap_or("unbound")
-            )));
-            lines.push(Line::from(format!(
-                "Kairos: {} fresh={} gen={}  Pratibimba: {}",
-                temporal.kairos_valid,
-                temporal.kairos_fresh,
-                temporal.generation,
-                temporal
-                    .pratibimba_anchor_id
-                    .as_deref()
-                    .unwrap_or("unbound")
-            )));
-            lines.push(Line::from(format!(
-                "Redis: {} {}  SpaceTimeDB: {} {}/{}",
-                temporal.redis_hydrated,
-                temporal
-                    .redis_session_now_key
-                    .as_deref()
-                    .unwrap_or("unbound"),
-                temporal
-                    .spacetimedb_projection_source
-                    .as_deref()
-                    .unwrap_or("unbound"),
-                temporal
-                    .spacetimedb_projection_table
-                    .as_deref()
-                    .unwrap_or("unbound"),
-                temporal
-                    .spacetimedb_kairos_projection_table
-                    .as_deref()
-                    .unwrap_or("unbound")
-            )));
-        }
-
         if let Some(report) = &self.readiness_report {
             lines.push(Line::from(""));
             lines.push(Line::from("Readiness Result State"));
@@ -238,6 +193,56 @@ fn load_default_readiness_report() -> Option<PortalReadinessReport> {
         &health,
         agent_status.as_ref(),
     ))
+}
+
+fn push_temporal_surface_lines(lines: &mut Vec<Line<'static>>, runtime_state: &PortalRuntimeState) {
+    let temporal = runtime_state.temporal();
+    let temporal = temporal.lock().unwrap();
+    lines.push(Line::from(""));
+    lines.push(Line::from("Temporal Surface"));
+    lines.push(Line::from(format!(
+        "{} -> {}  source: {:?}",
+        temporal.coordinate_owner, temporal.agent_access_owner, temporal.source
+    )));
+    lines.push(Line::from(format!(
+        "DAY: {}  NOW: {}",
+        temporal.day_id.as_deref().unwrap_or("unbound"),
+        temporal
+            .now_wikilink
+            .as_deref()
+            .or_else(|| temporal.now_path.as_ref().and_then(|path| path.to_str()))
+            .unwrap_or("unbound")
+    )));
+    lines.push(Line::from(format!(
+        "Kairos: {} fresh={} gen={}  Pratibimba: {}",
+        temporal.kairos_valid,
+        temporal.kairos_fresh,
+        temporal.generation,
+        temporal
+            .pratibimba_anchor_id
+            .as_deref()
+            .unwrap_or("unbound")
+    )));
+    lines.push(Line::from(format!(
+        "Redis: {} {}  SpaceTimeDB: {} {}/{}",
+        temporal.redis_hydrated,
+        temporal
+            .redis_session_now_key
+            .as_deref()
+            .unwrap_or("unbound"),
+        temporal
+            .spacetimedb_projection_source
+            .as_deref()
+            .unwrap_or("unbound"),
+        temporal
+            .spacetimedb_projection_table
+            .as_deref()
+            .unwrap_or("unbound"),
+        temporal
+            .spacetimedb_kairos_projection_table
+            .as_deref()
+            .unwrap_or("unbound")
+    )));
 }
 
 fn load_epii_status(state_root: &std::path::Path) -> Option<serde_json::Value> {

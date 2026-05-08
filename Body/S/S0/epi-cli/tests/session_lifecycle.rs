@@ -9,7 +9,11 @@ use epi_logos::sesh::session::{
     bootstrap_sequence, generate_session_id_with_suffix, resolve_vault_root,
     AgentSessionRuntimeFactory, AgentSessionRuntimeRequest, SessionContext,
 };
+use epi_s3_gateway_contract::RedisTemporalContextRole;
+use redis::AsyncCommands;
 use std::collections::BTreeMap;
+use std::env;
+use std::ffi::OsString;
 use std::fs;
 use std::path::PathBuf;
 
@@ -337,6 +341,38 @@ fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
         .unwrap()
         .drain_test_events()
         .unwrap();
+    let session_surface_event = events
+        .iter()
+        .find(|event| {
+            event.kind == "session_surface"
+                && event.payload["canonicalKey"] == default_agent_gateway_session_key("anima")
+                && event.payload["sessionId"] == runtime.context.session_id
+        })
+        .expect("PI propagation should publish a session_surface event");
+    assert_eq!(session_surface_event.payload["dayId"], "08-05-2026");
+    assert_eq!(
+        session_surface_event.payload["vaultNowPath"],
+        runtime.context.now_path.to_str().unwrap()
+    );
+    assert_eq!(
+        session_surface_event.payload["runtimeCwd"],
+        repo.to_str().unwrap()
+    );
+    assert_eq!(
+        session_surface_event.payload["vaultRoot"],
+        vault.to_str().unwrap()
+    );
+    assert_eq!(session_surface_event.payload["activeAgentId"], "anima");
+    assert_eq!(
+        session_surface_event.payload["resourceLoaderId"],
+        runtime.pi_session.resource_loader_id
+    );
+    assert!(session_surface_event.payload["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|diagnostic| diagnostic["source"] == "khora.agent_session_runtime"));
+
     let session_surface_events = events
         .iter()
         .filter(|event| {
@@ -350,6 +386,83 @@ fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
         session_surface_events, 2,
         "every PI runtime propagation write should project a session_surface event"
     );
+}
+
+#[tokio::test]
+#[ignore] // requires Docker: docker compose -f docker-compose.epi-s2.yml up -d redis
+async fn live_pi_runtime_propagation_hydrates_redis_temporal_keys() {
+    let root = std::env::temp_dir().join(format!(
+        "epi-session-runtime-redis-propagation-{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&root);
+    let repo = root.join("repo");
+    let vault = repo.join("Idea");
+    let gate_root = root.join("gate");
+    let anima_agent_dir = repo.join(".epi/agents/anima/agent");
+    fs::create_dir_all(&vault).unwrap();
+    fs::create_dir_all(&anima_agent_dir).unwrap();
+    fs::write(
+        anima_agent_dir.join("models.json"),
+        r#"{"defaultModel":"zai/glm-4.5","providers":[]}"#,
+    )
+    .unwrap();
+
+    let redis_uri =
+        std::env::var("EPILOGOS_REDIS_URI").unwrap_or_else(|_| "redis://localhost:6379".into());
+    let _guard = EnvGuard::set([
+        ("EPILOGOS_VAULT", vault.display().to_string()),
+        ("EPILOGOS_REDIS_URI", redis_uri.clone()),
+        ("EPI_GATE_SESSION_REDIS_HYDRATION", "required".to_owned()),
+    ]);
+
+    let runtime = AgentSessionRuntimeFactory::new()
+        .create(AgentSessionRuntimeRequest {
+            effective_cwd: repo.clone(),
+            now: Utc.with_ymd_and_hms(2026, 5, 8, 8, 30, 0).unwrap(),
+            random_suffix: Some("redis01".to_owned()),
+            force_new: true,
+            agent_id: Some("anima".to_owned()),
+            pi_event: Some("session_start".to_owned()),
+        })
+        .unwrap();
+    let record = propagate_agent_session_runtime(
+        &runtime,
+        GatewaySessionPropagation {
+            state_root: gate_root.clone(),
+            operation: GatewaySessionPropagationOperation::SessionStart,
+            target_session_key: None,
+            label: None,
+        },
+    )
+    .unwrap();
+
+    let role = RedisTemporalContextRole::session_now();
+    let session_now_key = role.session_now_key(&runtime.context.session_id);
+    let day_context_key = role.day_context_key(&runtime.context.day_id);
+    let session_kairos_key = role.session_kairos_key(&runtime.context.session_id);
+    let agent_orientation_key =
+        role.agent_orientation_key(&runtime.pi_session.agent_id, &runtime.context.session_id);
+
+    let client = redis::Client::open(redis_uri).unwrap();
+    let mut conn = client.get_multiplexed_async_connection().await.unwrap();
+    let now_content: String = conn.get(&session_now_key).await.unwrap();
+    let day_context: String = conn.get(&day_context_key).await.unwrap();
+    let session_kairos: String = conn.get(&session_kairos_key).await.unwrap();
+    let agent_orientation: String = conn.get(&agent_orientation_key).await.unwrap();
+
+    assert!(now_content.contains(&runtime.context.session_id));
+    assert!(day_context.contains(&runtime.context.day_id));
+    assert!(session_kairos.contains("public-current-transit-only"));
+    assert!(agent_orientation.contains(&record.canonical_key));
+
+    let cleanup_keys = [
+        session_now_key,
+        day_context_key,
+        session_kairos_key,
+        agent_orientation_key,
+    ];
+    let _: usize = conn.del(&cleanup_keys[..]).await.unwrap();
 }
 
 #[test]
@@ -401,4 +514,36 @@ fn pi_runtime_propagation_records_branch_lineage_for_forked_gateway_session() {
     );
     assert_eq!(record.session_id, runtime.context.session_id);
     assert_eq!(record.active_agent_id, "epii");
+}
+
+struct EnvGuard {
+    saved: Vec<(&'static str, Option<OsString>)>,
+}
+
+impl EnvGuard {
+    fn set(values: impl IntoIterator<Item = (&'static str, String)>) -> Self {
+        let mut saved = Vec::new();
+        for (key, value) in values {
+            saved.push((key, env::var_os(key)));
+            unsafe {
+                env::set_var(key, value);
+            }
+        }
+        Self { saved }
+    }
+}
+
+impl Drop for EnvGuard {
+    fn drop(&mut self) {
+        for (key, value) in self.saved.drain(..).rev() {
+            match value {
+                Some(value) => unsafe {
+                    env::set_var(key, value);
+                },
+                None => unsafe {
+                    env::remove_var(key);
+                },
+            }
+        }
+    }
 }

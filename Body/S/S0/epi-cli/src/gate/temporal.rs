@@ -1,12 +1,19 @@
 use std::path::{Component, Path, PathBuf};
 
 use chrono::{Datelike, NaiveDate};
-use redis::AsyncCommands;
+use redis::{AsyncCommands, Commands};
 use serde_json::{json, Value};
 
 use crate::nara::{identity, kairos};
 
 use super::sessions::{SessionRecord, SessionStore};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RedisHydrationMode {
+    Off,
+    BestEffort,
+    Required,
+}
 
 pub fn context_value(
     state_root: &Path,
@@ -137,6 +144,110 @@ pub fn context_for_record(state_root: &Path, record: &SessionRecord, agent_id: &
             "redisContextKey": role.session_now_key(&temporal_session_id),
         },
     })
+}
+
+pub fn hydrate_redis_for_record_on_propagation(
+    state_root: &Path,
+    record: &SessionRecord,
+    agent_id: &str,
+) -> Result<Option<Value>, String> {
+    match redis_hydration_mode() {
+        RedisHydrationMode::Off => Ok(None),
+        RedisHydrationMode::BestEffort => {
+            let mut context = context_for_record(state_root, record, agent_id);
+            if let Err(error) = hydrate_redis_from_context_blocking(&mut context) {
+                context["redis"]["hydrationError"] = json!(error);
+            }
+            Ok(Some(context))
+        }
+        RedisHydrationMode::Required => {
+            let mut context = context_for_record(state_root, record, agent_id);
+            hydrate_redis_from_context_blocking(&mut context)?;
+            Ok(Some(context))
+        }
+    }
+}
+
+pub fn redis_hydration_mode() -> RedisHydrationMode {
+    match std::env::var("EPI_GATE_SESSION_REDIS_HYDRATION") {
+        Ok(value) => match value.trim().to_ascii_lowercase().as_str() {
+            "required" | "strict" | "1" | "true" | "yes" => RedisHydrationMode::Required,
+            "best-effort" | "best_effort" | "best" => RedisHydrationMode::BestEffort,
+            "off" | "false" | "0" | "no" | "" => RedisHydrationMode::Off,
+            _ => RedisHydrationMode::Off,
+        },
+        Err(_) => RedisHydrationMode::Off,
+    }
+}
+
+pub fn hydrate_redis_from_context_blocking(context: &mut Value) -> Result<(), String> {
+    let content = context
+        .pointer("/now/content")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "temporal context has no NOW content to hydrate".to_string())?
+        .to_string();
+    let ttl = context
+        .pointer("/redis/ttlSeconds")
+        .and_then(Value::as_u64)
+        .ok_or_else(|| "temporal context missing Redis TTL".to_string())?;
+    let session_key = context
+        .pointer("/redis/sessionNowKey")
+        .and_then(Value::as_str)
+        .ok_or_else(|| "temporal context missing Redis session key".to_string())?
+        .to_string();
+    let day_key = context
+        .pointer("/redis/dayContextKey")
+        .and_then(Value::as_str)
+        .map(str::to_string);
+    let agent_key = context
+        .pointer("/redis/agentOrientationKey")
+        .and_then(Value::as_str)
+        .map(str::to_string);
+    let day_kairos_key = context
+        .pointer("/redis/dayKairosKey")
+        .and_then(Value::as_str)
+        .map(str::to_string);
+    let session_kairos_key = context
+        .pointer("/redis/sessionKairosKey")
+        .and_then(Value::as_str)
+        .map(str::to_string);
+    let personal_orientation_key = context
+        .pointer("/redis/personalOrientationKey")
+        .and_then(Value::as_str)
+        .map(str::to_string);
+    let redis_uri =
+        std::env::var("EPILOGOS_REDIS_URI").unwrap_or_else(|_| "redis://localhost:6379".into());
+    let client = redis::Client::open(redis_uri.as_str()).map_err(|err| err.to_string())?;
+    let mut conn = client.get_connection().map_err(|err| err.to_string())?;
+    conn.set_ex::<_, _, ()>(&session_key, content, ttl)
+        .map_err(|err| err.to_string())?;
+
+    if let Some(day_key) = day_key {
+        conn.set_ex::<_, _, ()>(&day_key, context["day"].to_string(), ttl)
+            .map_err(|err| err.to_string())?;
+    }
+    if let Some(agent_key) = agent_key {
+        conn.set_ex::<_, _, ()>(&agent_key, context["session"].to_string(), ttl)
+            .map_err(|err| err.to_string())?;
+    }
+    if let Some(day_kairos_key) = day_kairos_key {
+        conn.set_ex::<_, _, ()>(&day_kairos_key, context["kairos"].to_string(), ttl)
+            .map_err(|err| err.to_string())?;
+    }
+    if let Some(session_kairos_key) = session_kairos_key {
+        conn.set_ex::<_, _, ()>(&session_kairos_key, context["kairos"].to_string(), ttl)
+            .map_err(|err| err.to_string())?;
+    }
+    if let Some(personal_orientation_key) = personal_orientation_key {
+        conn.set_ex::<_, _, ()>(
+            &personal_orientation_key,
+            context["pratibimba"].to_string(),
+            ttl,
+        )
+        .map_err(|err| err.to_string())?;
+    }
+    context["redis"]["hydrated"] = json!(true);
+    Ok(())
 }
 
 pub async fn hydrate_redis_from_context(context: &mut Value) -> Result<(), String> {
