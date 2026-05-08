@@ -7,11 +7,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml ./
+RUN pip install --no-cache-dir uv
+
+COPY pyproject.toml uv.lock ./
 COPY epi_gnostic/ ./epi_gnostic/
 
-RUN pip install --no-cache-dir -e ".[graphiti]"
+RUN uv sync --frozen --no-dev
 
 EXPOSE 37778
 
-CMD ["python", "-m", "epi_gnostic.graphiti_service"]
+CMD ["uv", "run", "python", "-m", "epi_gnostic.graphiti_service"]

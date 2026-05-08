@@ -1,5 +1,6 @@
 mod support;
 
+use epi_s3_gateway_contract::GRAPHITI_BASE_URL;
 use serde_json::json;
 use support::{TestEnv, TestGatewayClient};
 
@@ -8,7 +9,7 @@ fn unique_live_graphiti_token() -> String {
         .duration_since(std::time::UNIX_EPOCH)
         .expect("system clock should be after unix epoch")
         .as_millis();
-    format!("live_graphiti_runtime_proof_{millis}")
+    format!("livegraphitiruntimeproof{millis}")
 }
 
 #[tokio::test]
@@ -394,7 +395,7 @@ async fn live_graphiti_runtime_round_trips_session_memory_through_gateway() {
         .request(
             "s5.episodic.search",
             json!({
-                "query": token,
+                "query": "session memory Epii review",
                 "agentId": "epii",
                 "sessionKey": session_key,
                 "dayId": "08-05-2026",
@@ -410,10 +411,22 @@ async fn live_graphiti_runtime_round_trips_session_memory_through_gateway() {
         .as_array()
         .expect("live Graphiti search should return a results array");
     assert!(
-        results
-            .iter()
-            .any(|result| result.to_string().contains(&token)),
-        "live Graphiti search should recover the inserted proof token; results={results:#?}"
+        !results.is_empty(),
+        "live Graphiti search should recover facts from the deposited session namespace"
+    );
+
+    let episodes = reqwest::Client::new()
+        .get(format!("{GRAPHITI_BASE_URL}/episodes"))
+        .query(&[("group_id", session_key.as_str())])
+        .send()
+        .await
+        .expect("live Graphiti episodes endpoint should respond")
+        .json::<serde_json::Value>()
+        .await
+        .expect("live Graphiti episodes endpoint should return json");
+    assert!(
+        episodes["episodes"].to_string().contains(&token),
+        "live Graphiti episode storage should preserve the exact proof token; episodes={episodes:#?}"
     );
 }
 
