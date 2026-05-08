@@ -11,6 +11,7 @@ use crate::sesh::session::{read_session_state, repo_root_from_env};
 
 use super::logs;
 use super::parity::DEFAULT_GATEWAY_PORT;
+use super::sessions::SessionStore;
 use super::spacetimedb_bridge;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -104,6 +105,7 @@ pub fn health_snapshot(state_root: impl AsRef<Path>) -> Result<Value, String> {
     let state_root = state_root.as_ref();
     let state = load_state(state_root)?;
     let session = session_health();
+    let gateway_session = gateway_session_health(state_root);
     let vault = vault_health(&session);
     let graph = graph_health(state_root)?;
     let spacetimedb = spacetimedb_bridge::readiness_value(DEFAULT_GATEWAY_PORT, state_root);
@@ -127,11 +129,57 @@ pub fn health_snapshot(state_root: impl AsRef<Path>) -> Result<Value, String> {
                 "enabled": state.voicewake_enabled,
             },
             "session": session,
+            "gatewaySession": gateway_session,
             "vault": vault,
             "graph": graph,
             "spacetimedb": spacetimedb,
         }
     }))
+}
+
+fn gateway_session_health(state_root: &Path) -> Value {
+    let store = match SessionStore::new(state_root) {
+        Ok(store) => store,
+        Err(error) => {
+            return json!({
+                "ok": false,
+                "error": error,
+            });
+        }
+    };
+    let record = match store.resolve("agent:main:main").or_else(|_| {
+        store
+            .list()?
+            .into_iter()
+            .next()
+            .ok_or_else(|| "no gateway sessions available".to_owned())
+    }) {
+        Ok(record) => record,
+        Err(error) => {
+            return json!({
+                "ok": false,
+                "error": error,
+            });
+        }
+    };
+    let temporal =
+        super::temporal::context_for_record(state_root, &record, &record.active_agent_id);
+    json!({
+        "ok": true,
+        "canonicalKey": record.canonical_key,
+        "sessionId": record.session_id,
+        "dayId": record.day_id,
+        "nowPath": record.vault_now_path,
+        "activeAgentId": record.active_agent_id,
+        "resourceLoaderId": record.resource_loader_id,
+        "runtimeCwd": record.runtime_cwd,
+        "projection": {
+            "sessionSurfaceTable": temporal["spacetimedb"]["projectionTable"].clone(),
+            "kairosSurfaceTable": temporal["spacetimedb"]["kairosProjectionTable"].clone(),
+            "graphitiSessionArcId": temporal["graphiti"]["sessionArcId"].clone(),
+            "redisSessionNowKey": temporal["redis"]["sessionNowKey"].clone(),
+        }
+    })
 }
 
 pub fn event(state_root: impl AsRef<Path>, kind: &str, payload: Value) -> Result<Value, String> {

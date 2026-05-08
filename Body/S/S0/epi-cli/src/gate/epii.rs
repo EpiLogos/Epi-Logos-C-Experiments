@@ -5,7 +5,11 @@ use epi_s5_epii_agent_core::{DepositRequest, EpiiAgentAccess};
 use serde_json::{json, Value};
 
 use crate::nara::kairos;
-use crate::techne::gnosis::{config::GnosisConfig, ingest, notebook};
+use crate::techne::gnosis::{
+    config::GnosisConfig,
+    ingest, notebook,
+    query::{self, DisclosureLevel, QueryOptions},
+};
 
 pub async fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
     let mut snapshot =
@@ -18,6 +22,95 @@ pub fn deposit(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, St
     let request: DepositRequest =
         serde_json::from_value(params.clone()).map_err(|err| err.to_string())?;
     serde_json::to_value(access(state_root).deposit(request)?).map_err(|err| err.to_string())
+}
+
+pub fn runtime_context(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
+    let state_root = state_root.as_ref();
+    let session_key = optional_str(params, "sessionKey").unwrap_or("agent:main:main");
+    let agent_id = optional_str(params, "agentId").unwrap_or("epii");
+    let store = super::sessions::SessionStore::new(state_root)?;
+    let record = store.resolve(session_key)?;
+    let temporal = super::temporal::context_for_record(state_root, &record, agent_id);
+    let spacetimedb =
+        super::spacetimedb_bridge::readiness_value(super::parity::DEFAULT_GATEWAY_PORT, state_root);
+
+    Ok(json!({
+        "coordinate": "S5/S5'",
+        "method": "s5'.epii.runtime.context",
+        "runtimeOwner": "S3'",
+        "invocationOwner": "S5/S5'",
+        "session": {
+            "canonicalKey": record.canonical_key,
+            "sessionId": record.session_id,
+            "activeAgentId": record.active_agent_id,
+            "resourceLoaderId": record.resource_loader_id,
+            "runtimeCwd": record.runtime_cwd,
+            "vaultRoot": record.vault_root,
+            "sourceSessionKey": record.source_session_key,
+            "sourceSessionKind": record.source_session_kind,
+        },
+        "temporal": {
+            "dayId": temporal["day"]["dayId"].clone(),
+            "nowPath": temporal["now"]["path"].clone(),
+            "nowWikilink": temporal["now"]["wikilink"].clone(),
+            "redisSessionNowKey": temporal["redis"]["sessionNowKey"].clone(),
+            "graphitiSessionArcId": temporal["graphiti"]["sessionArcId"].clone(),
+            "pratibimbaAnchorId": temporal["pratibimba"]["anchorId"].clone(),
+        },
+        "projection": {
+            "sessionSurfaceTable": temporal["spacetimedb"]["projectionTable"].clone(),
+            "kairosSurfaceTable": temporal["spacetimedb"]["kairosProjectionTable"].clone(),
+            "spacetimedb": spacetimedb,
+            "redisHydrated": temporal["redis"]["hydrated"].clone(),
+        },
+        "access": capability_envelope(agent_id),
+    }))
+}
+
+pub fn gnosis_context_retrieve(params: &Value) -> Result<Value, String> {
+    let query_text = required_str(params, "query")?;
+    let session_key = required_str(params, "sessionKey")?;
+    let agent_id = optional_str(params, "agentId").unwrap_or("epii");
+    let limit = params
+        .get("limit")
+        .and_then(Value::as_u64)
+        .unwrap_or(5)
+        .clamp(1, 20) as usize;
+    let notebook = optional_str(params, "notebook");
+    let source_type = optional_str(params, "sourceType");
+    let title = optional_str(params, "title");
+    let disclosure = if agent_id == "epii" {
+        DisclosureLevel::Chunk
+    } else {
+        DisclosureLevel::SourceSummary
+    };
+
+    let config = GnosisConfig::from_env();
+    let report = query::query_local_report(
+        &config,
+        query_text,
+        QueryOptions {
+            notebook,
+            source_type,
+            title,
+            top_k: limit,
+        },
+        disclosure,
+    )?;
+    let report_value = serde_json::to_value(report).map_err(|err| err.to_string())?;
+
+    Ok(json!({
+        "coordinate": "S5/S5'",
+        "method": "s5'.gnosis.context.retrieve",
+        "storageSubstrate": "S2",
+        "governanceOwner": "S5'",
+        "sessionKey": session_key,
+        "access": capability_envelope(agent_id),
+        "query": report_value["query"].clone(),
+        "sourceSelection": report_value["source_selection"].clone(),
+        "disclosureLevel": report_value["disclosure_level"].clone(),
+        "results": report_value["hits"].clone(),
+    }))
 }
 
 pub fn user_orientation() -> Value {
@@ -39,6 +132,38 @@ pub fn user_orientation() -> Value {
             "privacy": "episodic memory is local/protected; SpaceTimeDB carries only safe projection refs",
         },
     })
+}
+
+fn capability_envelope(agent_id: &str) -> Value {
+    match agent_id {
+        "epii" => json!({
+            "agentId": "epii",
+            "mayReadTemporalContext": true,
+            "maySearchMemory": true,
+            "mayDepositReviewRequest": true,
+            "mayPromoteInterpretation": true,
+            "mayMutateIdentity": false,
+            "requiresHumanForIdentityMutation": true,
+        }),
+        "anima" | "aletheia" => json!({
+            "agentId": agent_id,
+            "mayReadTemporalContext": true,
+            "maySearchMemory": true,
+            "mayDepositReviewRequest": true,
+            "mayPromoteInterpretation": false,
+            "mayMutateIdentity": false,
+            "requiresEpiiReview": true,
+        }),
+        _ => json!({
+            "agentId": agent_id,
+            "mayReadTemporalContext": true,
+            "maySearchMemory": true,
+            "mayDepositReviewRequest": false,
+            "mayPromoteInterpretation": false,
+            "mayMutateIdentity": false,
+            "requiresEpiiReview": true,
+        }),
+    }
 }
 
 fn access(state_root: impl AsRef<Path>) -> EpiiAgentAccess {
@@ -105,6 +230,14 @@ fn nara_status() -> Value {
             },
         }),
     }
+}
+
+fn required_str<'a>(params: &'a Value, key: &str) -> Result<&'a str, String> {
+    optional_str(params, key).ok_or_else(|| format!("{key} is required"))
+}
+
+fn optional_str<'a>(params: &'a Value, key: &str) -> Option<&'a str> {
+    params.get(key).and_then(Value::as_str)
 }
 
 fn epii_kairos_status() -> Value {

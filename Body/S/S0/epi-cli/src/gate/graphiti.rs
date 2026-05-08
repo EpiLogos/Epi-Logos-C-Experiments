@@ -171,9 +171,9 @@ pub async fn status_value() -> GraphitiStatus {
 pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
     let query = required_str(params, "query")?;
     let agent_id = optional_str(params, "agentId").unwrap_or("epii");
-    let session_key = optional_str(params, "sessionKey").unwrap_or("agent:main:main");
-    let namespace_ref = optional_str(params, "namespaceRef").unwrap_or("pratibimba-local");
-    let day_id = optional_str(params, "dayId").unwrap_or("");
+    let session_key = required_str(params, "sessionKey")?;
+    let namespace_ref = required_str(params, "namespaceRef")?;
+    let day_id = required_str(params, "dayId")?;
     let limit = params
         .get("limit")
         .and_then(|value| value.as_u64())
@@ -187,6 +187,7 @@ pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
         "mayMutateIdentity": false,
         "requiresEpiiReviewForPromotion": true,
     }));
+    envelope["method"] = Value::String("s5.episodic.search".to_owned());
     envelope["query"] = Value::String(query.to_owned());
     envelope["sessionKey"] = Value::String(session_key.to_owned());
     envelope["namespaceRef"] = Value::String(namespace_ref.to_owned());
@@ -235,9 +236,9 @@ pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
 pub async fn session_memory_deposit(params: &Value) -> Result<Value, String> {
     let content = required_str(params, "content")?;
     let source_agent = optional_str(params, "sourceAgent").unwrap_or("epii");
-    let session_key = optional_str(params, "sessionKey").unwrap_or("agent:main:main");
-    let namespace_ref = optional_str(params, "namespaceRef").unwrap_or("pratibimba-local");
-    let day_id = optional_str(params, "dayId").unwrap_or("");
+    let session_key = required_str(params, "sessionKey")?;
+    let namespace_ref = required_str(params, "namespaceRef")?;
+    let day_id = required_str(params, "dayId")?;
     let ql_position = optional_str(params, "qlPosition").unwrap_or("5'");
     let cp = optional_str(params, "cp").unwrap_or("4.5");
     let cpf = optional_str(params, "cpf").unwrap_or("(5/0)");
@@ -257,6 +258,7 @@ pub async fn session_memory_deposit(params: &Value) -> Result<Value, String> {
         "mayMutateIdentity": false,
         "requiresEpiiReview": true,
     }));
+    envelope["method"] = Value::String("s5.episodic.deposit".to_owned());
     envelope["sessionKey"] = Value::String(session_key.to_owned());
     envelope["namespaceRef"] = Value::String(namespace_ref.to_owned());
     envelope["dayId"] = Value::String(day_id.to_owned());

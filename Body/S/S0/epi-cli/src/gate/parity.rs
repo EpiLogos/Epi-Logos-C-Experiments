@@ -263,7 +263,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5'.epii.*",
         owner: "S5'",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5'.epii.status / s5'.epii.deposit / s5'.epii.user.orientation / s5'.epii.pratibimba.status / s5'.epii.kairos.context"),
+        live_gateway_method: Some("s5'.epii.status / s5'.epii.deposit / s5'.epii.runtime.context / s5'.epii.user.orientation / s5'.epii.pratibimba.status / s5'.epii.kairos.context"),
         cli_mirror: None,
         body_path: "Body/S/S5/epii-agent-core",
         test_evidence: &[
@@ -286,11 +286,11 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
     CoordinateParityRecord {
         canonical_method: "s5'.gnosis.*",
         owner: "S5'",
-        status: CoordinateParityStatus::Missing,
-        live_gateway_method: None,
+        status: CoordinateParityStatus::Native,
+        live_gateway_method: Some("s5'.gnosis.context.retrieve"),
         cli_mirror: None,
         body_path: "target Body/S/S5/epii-gnosis-governance",
-        test_evidence: &["future Epii gnosis governance tests"],
+        test_evidence: &["gate_epii_agent_access.rs"],
     },
     CoordinateParityRecord {
         canonical_method: "s5'.explain",
@@ -381,9 +381,11 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.improve.history" => Some("s5'.improve.*"),
         "s5'.epii.status"
         | "s5'.epii.deposit"
+        | "s5'.epii.runtime.context"
         | "s5'.epii.user.orientation"
         | "s5'.epii.pratibimba.status"
         | "s5'.epii.kairos.context" => Some("s5'.epii.*"),
+        "s5'.gnosis.context.retrieve" => Some("s5'.gnosis.*"),
         "node.pair.request" | "node.pair.list" | "node.pair.approve" | "node.pair.reject"
         | "node.pair.verify" => Some("s4.agent.*"),
         _ => None,

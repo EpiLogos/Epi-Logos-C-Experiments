@@ -638,6 +638,55 @@ async fn dispatch_rpc(
             let mut result =
                 chat::compact(state_root, &record.canonical_key).map_err(internal_error)?;
             let transcript_path = chat::transcript_path(state_root, &record.canonical_key);
+            let transcript_items =
+                chat::history(state_root, &record.canonical_key).map_err(internal_error)?;
+            let temporal_context =
+                super::temporal::context_for_record(state_root, &record, &record.active_agent_id);
+            let graphiti_evidence = graphiti::session_memory_search(&json!({
+                "query": format!("session compact {}", record.canonical_key),
+                "agentId": record.active_agent_id,
+                "sessionKey": record.canonical_key,
+                "dayId": temporal_context["day"]["dayId"].as_str().unwrap_or("unknown-day"),
+                "namespaceRef": temporal_context["graphiti"]["namespaceRef"].as_str().unwrap_or("pratibimba-local"),
+                "limit": 5
+            }))
+            .await
+            .map_err(internal_error)?;
+            let gnosis_evidence = epii::gnosis_context_retrieve(&json!({
+                "query": format!("session compact {}", record.canonical_key),
+                "agentId": "epii",
+                "sessionKey": record.canonical_key,
+                "limit": 5
+            }))
+            .unwrap_or_else(|error| {
+                json!({
+                    "method": "s5'.gnosis.context.retrieve",
+                    "runtimeAvailable": false,
+                    "error": error,
+                    "results": []
+                })
+            });
+            let session_rows = store
+                .list()
+                .map_err(internal_error)?
+                .into_iter()
+                .map(|session| sessions::session_row(&session))
+                .collect::<Vec<_>>();
+            let evidence = json!({
+                "session": sessions::record_to_value(&record),
+                "now": temporal_context["now"].clone(),
+                "temporal": temporal_context,
+                "transcript": {
+                    "path": transcript_path.display().to_string(),
+                    "messageCount": transcript_items.len(),
+                    "items": transcript_items,
+                },
+                "sessionTree": {
+                    "sessions": session_rows,
+                },
+                "graphiti": graphiti_evidence,
+                "gnosis": gnosis_evidence,
+            });
             let review = review::submit(
                 state_root,
                 &json!({
@@ -679,7 +728,8 @@ async fn dispatch_rpc(
             .map_err(internal_error)?;
             result["summary"] = json!({
                 "transcriptPath": transcript_path.display().to_string(),
-                "pipeline": "NOW + transcript + session tree + Graphiti episodes + kbase/Gnosis retrieval -> Aletheia crystallisation -> Epii review inbox"
+                "pipeline": "NOW + transcript + session tree + Graphiti episodes + kbase/Gnosis retrieval -> Aletheia crystallisation -> Epii review inbox",
+                "evidence": evidence
             });
             result["epiiReview"] = review["item"].clone();
             Ok(DispatchResult::immediate(result))
@@ -1396,12 +1446,18 @@ async fn dispatch_rpc(
             .await
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s5'.epii.runtime.context" => epii::runtime_context(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "s5.episodic.search" => graphiti::session_memory_search(&frame.params)
             .await
             .map(DispatchResult::immediate)
             .map_err(internal_error),
         "s5.episodic.deposit" => graphiti::session_memory_deposit(&frame.params)
             .await
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnosis.context.retrieve" => epii::gnosis_context_retrieve(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
         "s5'.epii.deposit" => epii::deposit(state_root, &frame.params)

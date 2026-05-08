@@ -216,6 +216,64 @@ async fn s5_epii_user_orientation_reads_kairos_and_pratibimba_without_identity_m
 }
 
 #[tokio::test]
+async fn s5_epii_runtime_context_resolves_gateway_session_and_projection_readiness() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18918).await;
+    client
+        .request(
+            "chat.send",
+            json!({"sessionKey": "agent:main:main", "message": "seed propagated session"}),
+        )
+        .await
+        .expect("chat send should create the gateway session");
+    client
+        .request(
+            "sessions.patch",
+            json!({
+                "sessionKey": "agent:main:main",
+                "dayId": "08-05-2026",
+                "vaultNowPath": "/vault/Empty/Present/08-05-2026/session-main/now.md",
+                "activeAgentId": "anima",
+                "resourceLoaderId": "loader://anima/plugin-runtime",
+                "runtimeCwd": "/repo"
+            }),
+        )
+        .await
+        .expect("session patch should establish propagated identity");
+
+    let context = client
+        .request(
+            "s5'.epii.runtime.context",
+            json!({
+                "sessionKey": "agent:main:main",
+                "agentId": "anima"
+            }),
+        )
+        .await
+        .expect("bounded runtime context should resolve through gateway");
+
+    assert_eq!(context["coordinate"], "S5/S5'");
+    assert_eq!(context["runtimeOwner"], "S3'");
+    assert_eq!(context["session"]["canonicalKey"], "agent:main:main");
+    assert_eq!(context["session"]["activeAgentId"], "anima");
+    assert_eq!(
+        context["session"]["resourceLoaderId"],
+        "loader://anima/plugin-runtime"
+    );
+    assert_eq!(context["temporal"]["dayId"], "08-05-2026");
+    assert_eq!(
+        context["temporal"]["nowPath"],
+        "/vault/Empty/Present/08-05-2026/session-main/now.md"
+    );
+    assert_eq!(
+        context["projection"]["sessionSurfaceTable"],
+        "session_surface"
+    );
+    assert!(context["projection"]["spacetimedb"].is_object());
+    assert_eq!(context["access"]["mayMutateIdentity"], false);
+    assert_eq!(context["access"]["mayDepositReviewRequest"], true);
+}
+
+#[tokio::test]
 async fn s5_graphiti_session_memory_methods_are_bounded_and_runtime_honest() {
     let mut client = TestGatewayClient::connected_with_temp_store(18917).await;
 
@@ -269,4 +327,83 @@ async fn s5_graphiti_session_memory_methods_are_bounded_and_runtime_honest() {
         "protected-local-episodic-memory"
     );
     assert!(deposit["runtimeAvailable"].is_boolean());
+}
+
+#[tokio::test]
+async fn s5_graphiti_session_memory_requires_propagated_session_identity() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18919).await;
+
+    let error = client
+        .request(
+            "s5.episodic.deposit",
+            json!({
+                "sourceAgent": "aletheia",
+                "content": "This should not enter memory without a propagated session identity."
+            }),
+        )
+        .await
+        .expect_err("Graphiti deposit must require propagated session identity");
+
+    assert!(error.message.contains("sessionKey is required"));
+}
+
+#[tokio::test]
+async fn s5_gnosis_context_retrieval_uses_distinct_anima_and_epii_capability_envelopes() {
+    let env = TestEnv::with_fake_pi();
+    let gnosis_root = env.home.join(".epi-logos/gnosis");
+    std::fs::create_dir_all(&gnosis_root).unwrap();
+    std::fs::write(
+        gnosis_root.join("documents.json"),
+        r#"[{
+          "id":"doc-gnosis-1",
+          "title":"session-source.md",
+          "source_path":"session-source.md",
+          "source_type":"Canonical",
+          "notebook":"Research",
+          "ingested_at":"2026-05-05T00:00:00Z",
+          "chunks":[{"chunk_index":0,"section_heading":"Runtime","text":"propagated runtime identity lets Anima deposit work while Epii governs interpretation"}]
+        }]"#,
+    )
+    .unwrap();
+
+    let mut client = TestGatewayClient::connect(env, 18920).await;
+    client.request("connect", json!({})).await.unwrap();
+
+    let anima = client
+        .request(
+            "s5'.gnosis.context.retrieve",
+            json!({
+                "query": "runtime identity",
+                "agentId": "anima",
+                "sessionKey": "agent:main:main",
+                "limit": 2
+            }),
+        )
+        .await
+        .expect("Anima should retrieve bounded gnosis context");
+    let epii = client
+        .request(
+            "s5'.gnosis.context.retrieve",
+            json!({
+                "query": "governs interpretation",
+                "agentId": "epii",
+                "sessionKey": "agent:main:main",
+                "limit": 2
+            }),
+        )
+        .await
+        .expect("Epii should retrieve governed gnosis context");
+
+    assert_eq!(anima["coordinate"], "S5/S5'");
+    assert_eq!(anima["storageSubstrate"], "S2");
+    assert_eq!(anima["governanceOwner"], "S5'");
+    assert_eq!(anima["access"]["agentId"], "anima");
+    assert_eq!(anima["access"]["mayPromoteInterpretation"], false);
+    assert_eq!(anima["access"]["requiresEpiiReview"], true);
+    assert_eq!(anima["results"][0]["title"], "session-source.md");
+
+    assert_eq!(epii["access"]["agentId"], "epii");
+    assert_eq!(epii["access"]["mayPromoteInterpretation"], true);
+    assert_eq!(epii["access"]["requiresHumanForIdentityMutation"], true);
+    assert_eq!(epii["results"][0]["source_type"], "Canonical");
 }

@@ -39,6 +39,7 @@ fn coordinate_manifest_covers_all_s_families() {
         "s5.bimba.*",
         "s5.m.*",
         "s5'.epii.*",
+        "s5'.gnosis.*",
         "s5'.review.*",
         "s5'.improve.*",
     ] {
@@ -94,6 +95,24 @@ fn epii_review_and_improvement_are_native_targets() {
     assert_eq!(
         epi_logos::gate::parity::coordinate_family_for_gateway_method("s5'.epii.deposit"),
         Some("s5'.epii.*")
+    );
+    assert_eq!(
+        epi_logos::gate::parity::coordinate_family_for_gateway_method("s5'.epii.runtime.context"),
+        Some("s5'.epii.*")
+    );
+
+    let gnosis = records
+        .iter()
+        .find(|record| record.canonical_method == "s5'.gnosis.*")
+        .expect("s5 gnosis parity record");
+
+    assert_eq!(gnosis.owner, "S5'");
+    assert_eq!(gnosis.status, CoordinateParityStatus::Native);
+    assert_eq!(
+        epi_logos::gate::parity::coordinate_family_for_gateway_method(
+            "s5'.gnosis.context.retrieve"
+        ),
+        Some("s5'.gnosis.*")
     );
 }
 

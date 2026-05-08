@@ -105,6 +105,19 @@ fn gateway_session_records_inherit_khora_identity_and_health_reports_cross_layer
         health["checks"]["session"]["nowPath"],
         khora.context.now_path.to_string_lossy().to_string()
     );
+    assert_eq!(
+        health["checks"]["gatewaySession"]["canonicalKey"],
+        "agent:main:main"
+    );
+    assert_eq!(
+        health["checks"]["gatewaySession"]["sessionId"],
+        khora.context.session_id
+    );
+    assert_eq!(health["checks"]["gatewaySession"]["activeAgentId"], "main");
+    assert_eq!(
+        health["checks"]["gatewaySession"]["projection"]["sessionSurfaceTable"],
+        "session_surface"
+    );
     assert_eq!(health["checks"]["vault"]["ok"], true);
     assert_eq!(
         health["checks"]["vault"]["nowPath"],

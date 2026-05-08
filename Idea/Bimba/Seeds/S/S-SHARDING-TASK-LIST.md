@@ -344,15 +344,24 @@ Task group E - projection into S3' and portal consumption:
 - [x] Ensure Redis S3' temporal keys are hydrated for the propagated PI base session: NOW markdown key, day context key, session Kairos key, and agent orientation key where available.
 - [x] Add projection tests proving PI-propagated records appear in `session_surface` with session id, DAY id, NOW path, runtime cwd, vault root, resource-loader id, diagnostics, and active agent id.
 - [x] Add portal runtime tests proving the centre `/` command panel, left clock side, and right Nara/Epii side all read the same propagated session identity.
-- [ ] Add health/readiness tests proving gateway health reports the propagated PI session without requiring a later manual `SessionStore::create`.
+- [x] Add health/readiness tests proving gateway health reports the propagated PI session without requiring a later manual `SessionStore::create`.
 
 Task group F - S4/S5 agent access and memory:
 
-- [ ] Add bounded S4/S5 tools to resolve current session runtime context from gateway: session identity, NOW path, DAY id, active PI agent, resource-loader id, and projection readiness.
-- [ ] Add bounded S4/S5 tools for Graphiti session-memory search/deposit that require propagated session identity and protected-local namespace facts.
-- [ ] Add kbase/Gnosis session-context retrieval to the same bounded pattern, with distinct capability envelopes for Anima and Epii.
-- [ ] Ensure Anima/Aletheia can deposit outputs and requests but cannot promote identity-affecting interpretation without Epii/human review.
-- [ ] Extend compact/close so the summarisation pipeline consumes propagated runtime identity, NOW, transcript, session tree, Graphiti episodes, and kbase/Gnosis retrieval.
+- [x] Add bounded S4/S5 tools to resolve current session runtime context from gateway: session identity, NOW path, DAY id, active PI agent, resource-loader id, and projection readiness.
+- [x] Add bounded S4/S5 tools for Graphiti session-memory search/deposit that require propagated session identity and protected-local namespace facts.
+- [x] Add kbase/Gnosis session-context retrieval to the same bounded pattern, with distinct capability envelopes for Anima and Epii.
+- [x] Ensure Anima/Aletheia can deposit outputs and requests but cannot promote identity-affecting interpretation without Epii/human review.
+- [x] Extend compact/close so the summarisation pipeline consumes propagated runtime identity, NOW, transcript, session tree, Graphiti episodes, and kbase/Gnosis retrieval.
+
+Implementation result, 2026-05-08:
+
+- `s5'.epii.runtime.context` now resolves the active gateway session into an S4/S5-safe runtime context envelope with canonical session key, PI/Khora runtime id, DAY/NOW identity, runtime cwd, resource-loader id, SpaceTimeDB readiness, and non-mutating access flags.
+- `s5.episodic.search` and `s5.episodic.deposit` now require propagated `sessionKey`, `dayId`, and `namespaceRef`; both return explicit `S3'` runtime owner / `S5/S5'` invocation owner envelopes, protected-local privacy boundary, method identity, and no identity-mutation authority.
+- `s5'.gnosis.context.retrieve` now reads the local Gnosis/kbase document store through the bounded S5' gateway surface and returns separate Anima/Aletheia versus Epii capability envelopes: Anima/Aletheia can retrieve and request review, while Epii can promote interpretation only with human review for identity mutation.
+- `sessions.compact` now deposits an Aletheia-to-Epii review item with a real evidence bundle covering session record, NOW/temporal context, transcript, session tree, Graphiti search evidence, and Gnosis retrieval evidence.
+- `epi agent session close` now propagates `close_compact` through the PI runtime-to-gateway session path before local session-state removal, preserving the close/compact diagnostic and gateway session key for S3/S3' projection.
+- S3 gateway contract and S0 parity manifest now expose `s5'.epii.runtime.context` and `s5'.gnosis.context.retrieve` as native S5' methods rather than hidden server-only dispatch.
 
 Task group G - Tauri/desktop parity after backend truth is settled:
 
@@ -363,18 +372,20 @@ Task group G - Tauri/desktop parity after backend truth is settled:
 
 Task group H - verification gate for this tranche:
 
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_khora_integration`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test session_lifecycle`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_sessions`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_chat`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_temporal_context`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_surfaces_contract`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_agent_runtime_contract`
-- [ ] `cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml`
-- [ ] Run live Redis hydration proof when touching S3' temporal keys.
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_khora_integration`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test session_lifecycle`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_sessions`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_chat`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_temporal_context`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_surfaces_contract`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_agent_runtime_contract`
+- [x] `cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml`
+- [x] Run live Redis hydration proof when touching S3' temporal keys.
 - [ ] Run live Neo4j/Graphiti namespace proof when touching episodic memory.
 - [ ] Run Electron/Tauri parity tests only after backend/session contracts are stable.
+
+Verification note, 2026-05-08: Task F passed the focused gateway/session/S5' suites, SpaceTimeDB projection suite, S3 gateway-contract suite, and the live Redis hydration proofs against the local Docker `epi-redis` container. A live Graphiti namespace proof is still not automated in this repo; the current Task F Graphiti coverage proves bounded gateway envelopes and identity requirements, but the live S3 Graphiti adapter/runtime proof remains an explicit follow-on before declaring episodic-memory runtime coverage complete.
 
 Lane 1 - Canonical operation surface:
 

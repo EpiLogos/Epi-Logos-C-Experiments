@@ -355,6 +355,25 @@ fn continuation(summary: Option<&str>) -> Result<String, String> {
 fn close() -> Result<String, String> {
     let repo_root = repo_root_from_env();
     let state = read_session_state(&repo_root)?;
+    let runtime = AgentSessionRuntimeFactory::new().create(AgentSessionRuntimeRequest {
+        effective_cwd: repo_root.clone(),
+        now: state.context.started_at,
+        random_suffix: None,
+        force_new: false,
+        agent_id: std::env::var("EPI_AGENT_ID")
+            .ok()
+            .or_else(|| std::env::var("EPI_AGENT_NAME").ok()),
+        pi_event: Some("close_compact".to_string()),
+    })?;
+    let record = propagate_agent_session_runtime(
+        &runtime,
+        GatewaySessionPropagation {
+            state_root: default_gateway_state_root(),
+            operation: GatewaySessionPropagationOperation::CloseCompact,
+            target_session_key: None,
+            label: None,
+        },
+    )?;
     let mut lines = Vec::new();
     let hook_output =
         run_hook(repo_root.join("Body/S/S4/ta-onta/S4-0p-khora/S0/post-session-close.sh"))?;
@@ -367,6 +386,7 @@ fn close() -> Result<String, String> {
         fs::remove_file(&state_path)
             .map_err(|err| format!("failed to remove {}: {err}", state_path.display()))?;
     }
+    lines.push(format!("GATEWAY_SESSION_KEY={}", record.canonical_key));
     Ok(lines.join("\n"))
 }
 

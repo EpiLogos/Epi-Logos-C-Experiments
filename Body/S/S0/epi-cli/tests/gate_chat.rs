@@ -249,6 +249,27 @@ async fn sessions_compact_deposits_session_summary_evidence_for_epii_review() {
         .as_str()
         .unwrap()
         .contains("agent_main_main.jsonl"));
+    assert_eq!(
+        compact["summary"]["evidence"]["session"]["canonicalKey"],
+        "agent:main:main"
+    );
+    assert_eq!(
+        compact["summary"]["evidence"]["transcript"]["messageCount"],
+        2
+    );
+    assert!(compact["summary"]["evidence"]["sessionTree"]["sessions"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|session| session["canonicalKey"] == "agent:main:main"));
+    assert_eq!(
+        compact["summary"]["evidence"]["graphiti"]["method"],
+        "s5.episodic.search"
+    );
+    assert_eq!(
+        compact["summary"]["evidence"]["gnosis"]["method"],
+        "s5'.gnosis.context.retrieve"
+    );
     assert!(inbox["items"].as_array().unwrap().iter().any(|item| {
         item["title"] == "Session compact summary: agent:main:main"
             && item["coordinate_context"]["sessionKey"] == "agent:main:main"

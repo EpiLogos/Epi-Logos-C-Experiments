@@ -108,6 +108,8 @@ pub const METHOD_NAMES: &[&str] = &[
     "s5'.improve.history",
     "s5'.epii.status",
     "s5'.epii.deposit",
+    "s5'.epii.runtime.context",
+    "s5'.gnosis.context.retrieve",
     "s5.episodic.search",
     "s5.episodic.deposit",
     "s5'.review.inbox",

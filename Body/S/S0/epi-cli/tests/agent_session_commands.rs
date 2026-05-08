@@ -73,6 +73,17 @@ fn init_status_continuation_and_close_manage_session_state() {
     assert!(close
         .stdout
         .contains("archived session 20260310-090807-abc123"));
+    assert!(close.stdout.contains("GATEWAY_SESSION_KEY=agent:main:main"));
+    let close_record = SessionStore::new(env.home.join(".epi/gate"))
+        .unwrap()
+        .resolve("agent:main:main")
+        .unwrap();
+    assert!(close_record.diagnostics.iter().any(|diagnostic| {
+        diagnostic["message"]
+            .as_str()
+            .unwrap_or_default()
+            .contains("close_compact")
+    }));
 }
 
 #[test]

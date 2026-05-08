@@ -275,7 +275,6 @@ fn event_path(state_root: &Path) -> PathBuf {
 pub struct SpacetimePresence {
     url: String,
     database: String,
-    client: BlockingClient,
 }
 
 #[derive(Debug, Clone)]
@@ -630,7 +629,6 @@ impl SpacetimePresence {
         Self {
             url: url.trim_end_matches('/').to_owned(),
             database: database.to_owned(),
-            client: BlockingClient::new(),
         }
     }
 
@@ -900,12 +898,14 @@ impl SpacetimePresence {
     pub fn sql(&self, query: &str) -> Result<Value, String> {
         require_nonempty(query, "query")?;
         let url = format!("{}/v1/database/{}/sql", self.url, self.database);
-        let response = self
-            .client
-            .post(&url)
-            .body(query.to_owned())
-            .send()
-            .map_err(|err| format!("spacetimedb sql request failed: {err}"))?;
+        let query = query.to_owned();
+        let response = run_blocking_http(move || {
+            BlockingClient::new()
+                .post(&url)
+                .body(query)
+                .send()
+                .map_err(|err| format!("spacetimedb sql request failed: {err}"))
+        })?;
 
         if response.status().is_success() {
             return response
@@ -925,12 +925,14 @@ impl SpacetimePresence {
             "{}/v1/database/{}/call/{}",
             self.url, self.database, reducer
         );
-        let response = self
-            .client
-            .post(&url)
-            .json(&payload)
-            .send()
-            .map_err(|err| format!("spacetimedb {reducer} request failed: {err}"))?;
+        let reducer_name = reducer.to_owned();
+        let response = run_blocking_http(move || {
+            BlockingClient::new()
+                .post(&url)
+                .json(&payload)
+                .send()
+                .map_err(|err| format!("spacetimedb {reducer_name} request failed: {err}"))
+        })?;
 
         if response.status().is_success() {
             return Ok(());
@@ -944,6 +946,20 @@ impl SpacetimePresence {
             "spacetimedb {reducer} request failed: {status} {body}"
         ))
     }
+}
+
+fn run_blocking_http<T, F>(operation: F) -> Result<T, String>
+where
+    F: FnOnce() -> Result<T, String> + Send + 'static,
+    T: Send + 'static,
+{
+    if tokio::runtime::Handle::try_current().is_ok() {
+        return std::thread::spawn(operation)
+            .join()
+            .map_err(|_| "blocking SpacetimeDB HTTP worker panicked".to_owned())?;
+    }
+
+    operation()
 }
 
 fn projection_context_from_sql_result(
