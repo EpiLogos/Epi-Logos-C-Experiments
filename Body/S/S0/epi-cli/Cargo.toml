@@ -45,6 +45,7 @@ zeroize = { version = "1", features = ["zeroize_derive"] }
 static_assertions = "1"
 epi-s2-graph-schema = { path = "../../S2/graph-schema" }
 epi-s2-graph-services = { path = "../../S2/graph-services" }
+epi-s3-gateway = { path = "../../S3/gateway" }
 epi-s3-gateway-contract = { path = "../../S3/gateway-contract" }
 epi-s3-redis-context = { path = "../../S3/redis-context" }
 epi-s5-kbase-core = { path = "../../S5/epi-kbase-core" }

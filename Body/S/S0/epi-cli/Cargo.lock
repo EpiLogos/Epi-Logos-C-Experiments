@@ -890,6 +890,7 @@ dependencies = [
  "epi-s1-hen-compiler-core",
  "epi-s2-graph-schema",
  "epi-s2-graph-services",
+ "epi-s3-gateway",
  "epi-s3-gateway-contract",
  "epi-s3-redis-context",
  "epi-s5-epii-agent-core",
@@ -945,6 +946,15 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
+]
+
+[[package]]
+name = "epi-s3-gateway"
+version = "0.1.0"
+dependencies = [
+ "epi-s3-gateway-contract",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

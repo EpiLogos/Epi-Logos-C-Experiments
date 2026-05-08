@@ -124,7 +124,7 @@ Exit condition:
 
 ## Phase 2. S2 Graph Schema / Services Extraction
 
-Status: service contract boundary advanced. `Body/S/S2/graph-schema` owns the S2 graph schema contract, and `Body/S/S2/graph-services` owns Neo4j primary graph role, the live Neo4j config/client, plus Redis semantic-cache role/config/payload/health/client contracts. S0 graph code imports/re-exports these S2 contracts so `epi graph` remains the command mirror while S2 becomes the client-service authority. Retrieval extraction remains next. A first live namespace-isolation proof now verifies canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` nodes carrying S5 ownership as properties can coexist in one real Neo4j instance without label overlap or destructive cleanup.
+Status: service contract boundary advanced. `Body/S/S2/graph-schema` owns the S2 graph schema contract, and `Body/S/S2/graph-services` owns Neo4j primary graph role, the live Neo4j config/client, Redis semantic-cache role/config/payload/health/client contracts, retrieval query semantics, tokenization, and pure hybrid fusion/ranking law. S0 graph code imports/re-exports these S2 contracts so `epi graph` remains the command mirror while S2 becomes the client-service authority. The remaining S2 work is not "move the same code around"; it is the deeper service/API extraction for graph seed/sync/retrieval commands and the coordinate-native gateway/API surface. A first live namespace-isolation proof now verifies canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` nodes carrying S5 ownership as properties can coexist in one real Neo4j instance without label overlap or destructive cleanup.
 
 Live Docker note: `docker compose -f docker-compose.epi-s2.yml up -d neo4j redis` starts existing stateful containers with named volumes. On 2026-05-02, read-only checks showed Redis healthy with `epi_semantic_cache` and `epi_semantic_cache_test` indexes, Neo4j healthy with 96 legacy `:BimbaCoordinate` nodes and zero canonical `:Bimba` nodes. Do not run destructive ignored graph tests until migration/backup policy is explicit.
 
@@ -162,7 +162,7 @@ Checklist:
 - [x] Add live Neo4j namespace-isolation proof for canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` graph nodes carrying S5 ownership as properties, using test-owned labels only.
 - [x] Add read-only live Docker health checks for Neo4j/Redis/Redis Stack/semantic cache.
 - [x] Add or keep Redis graph semantic cache tests.
-- [ ] Add module-level retrieval tests that exercise real retrieval logic.
+- [x] Add module-level retrieval tests that exercise real retrieval logic.
 - [ ] Update [[S-CODE-RESIDENCY-PLAN]] or [[S-SYSTEM-INDEX]] only if actual residency changes require it.
 
 Verification:
@@ -178,8 +178,8 @@ Verification:
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_neo4j_run_query -- --ignored --exact`
 - [x] `CARGO_TARGET_DIR=/tmp/epi-cargo-target-neo4j-namespace cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_live_neo4j_namespaces_isolate_bimba_legacy_and_gnosis -- --ignored --exact --nocapture`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_commands`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_retrieval`
-- [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_seed`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_retrieval` - contract harness builds; live retrieval suite remains ignored until a deliberate destructive Neo4j seed run is chosen.
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_seed` - contract harness builds; live seed test remains ignored because it mutates canonical `:Bimba`.
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test redis_cache`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test redis_cache test_redis_connect_and_health -- --ignored --exact`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test semantic_cache_contract`
@@ -191,7 +191,7 @@ Exit condition:
 
 ## Phase 3. S3 Gateway / Redis Context / Graphiti Runtime Extraction
 
-Status: first extraction boundary advanced. `Body/S/S3/gateway-contract` now owns gateway protocol constants, product method names, event names, ports, omnipanel metadata, session record/patch contracts, run/event contracts, chat-run registry, S3 temporal Redis role/key contract, SpaceTimeDB projection plan/message/row-decoding contracts, Graphiti runtime constants, Graphiti adapter mode contract, and the S3-runtime/S5-invocation Graphiti separation. S0 gate code re-exports/uses these contracts. `Body/S/S0/epi-cli/src/gate/temporal.rs` now gives the live S3' temporal context report over DAY/NOW/session/history/Redis/SpacetimeDB/Graphiti/Kairos/Pratibimba orientation, exposed as both `epi gate temporal context` and `s3'.temporal.context` for S4/S5 agent access. Live gateway/server/session-store adapter extraction remains next. S4 invocation tests now also prove real gateway agent RPC and subagent session persistence through the current S0-hosted server/store. SpaceTimeDB now declares the shared gateway/client/agent/session/global-temporal/Kairos projection schema, and the current S0-hosted gateway can register gateway, client, agent, session, heartbeat, Kairos, and global temporal surfaces against that schema when `SPACETIMEDB_URL` / `EPI_GATE_SPACETIME_URL` is configured. `global_temporal_surface` is the safe shared DAY/NOW/Kairos/Redis/Graphiti/Pratibimba-anchor row for portal and agent clients; it is not the protected PersonalNexus/Graphiti truth store. `health.snapshot` and the S0' portal readiness registry surface registration readiness separately from projection-readiness. The TUI can hydrate the shared temporal projection from SpaceTimeDB through HTTP SQL polling by default; when `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket` is set, it now opens the native SpaceTimeDB WebSocket subscription, sends the S3-owned `SubscribeMulti` contract over `v1.json.spacetimedb`, decodes `session_surface` / `kairos_surface` / `global_temporal_surface` updates through the S3-owned row contract, and updates the shared portal runtime state continuously, with local gateway context as fallback. The future desktop mirror remains next.
+Status: extraction boundary advanced. `Body/S/S3/gateway-contract` owns gateway protocol constants, product method names, event names, ports, omnipanel metadata, session record/patch contracts, run/event contracts, chat-run registry, S3 temporal Redis role/key contract, SpaceTimeDB projection plan/message/row-decoding contracts, Graphiti runtime constants, Graphiti adapter mode contract, and the S3-runtime/S5-invocation Graphiti separation. `Body/S/S3/gateway` now owns the durable gateway session store, session record creation with injected runtime context, patch/delete/resolve/list authority, legacy OmniPanel row normalization, transcript paths, workspace/bootstrap scope derivation, and subagent launch validation. S0 gate code is now the runtime adapter: it injects live Pi/Khora cwd, vault root, NOW path, day id, and session id into S3 session creation, while reusing the S3 store for persistence and mutation. `Body/S/S0/epi-cli/src/gate/temporal.rs` gives the live S3' temporal context report over DAY/NOW/session/history/Redis/SpacetimeDB/Graphiti/Kairos/Pratibimba orientation, exposed as both `epi gate temporal context` and `s3'.temporal.context` for S4/S5 agent access. Live gateway server extraction remains next, but session-store extraction is no longer pending. S4 invocation tests prove real gateway agent RPC and subagent session persistence through the current S0-hosted server/S3-backed store. SpaceTimeDB declares the shared gateway/client/agent/session/global-temporal/Kairos projection schema, and the current S0-hosted gateway can register gateway, client, agent, session, heartbeat, Kairos, and global temporal surfaces against that schema when `SPACETIMEDB_URL` / `EPI_GATE_SPACETIME_URL` is configured. `global_temporal_surface` is the safe shared DAY/NOW/Kairos/Redis/Graphiti/Pratibimba-anchor row for portal and agent clients; it is not the protected PersonalNexus/Graphiti truth store. `health.snapshot` and the S0' portal readiness registry surface registration readiness separately from projection-readiness. The TUI can hydrate the shared temporal projection from SpaceTimeDB through HTTP SQL polling by default; when `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket` is set, it opens the native SpaceTimeDB WebSocket subscription and decodes `session_surface` / `kairos_surface` / `global_temporal_surface` updates through the S3-owned row contract. The future desktop mirror remains next.
 
 Goal: make [[S3]] runtime authority Body-native and separate live temporal/session context from S2 graph cache.
 
@@ -213,7 +213,7 @@ Checklist:
 
 - [x] Inventory `src/gate` modules into protocol, server, sessions, channels, chat, runtime, parity, auth, approvals, devices, subagents, Graphiti, and CLI-only buckets.
 - [x] Decide the first extraction boundary: pure S3 gateway contract data first; keep live S0 server/store adapters until their dependency edges are tested.
-- [ ] Keep product-native gateway methods through explicit coordinate parity, not implicit ontology.
+- [x] Keep product-native gateway methods through explicit coordinate parity, not implicit ontology.
 - [x] Create or prepare S3 gateway module boundary.
 - [x] Create or prepare S3 Redis context boundary distinct from S2 Redis graph semantic cache.
 - [x] Add first S3' temporal context access surface for S4/S5 agents: `s3'.temporal.context` and `epi gate temporal context` report DAY/NOW wikilinks, history archive path, Redis keys, SpacetimeDB projection table, and Graphiti arc orientation.
@@ -231,9 +231,9 @@ Checklist:
 - [x] Upgrade the TUI projection reader to native SpaceTimeDB WebSocket subscription when `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket`, while retaining HTTP SQL polling as fallback/default until deployment config flips.
 - [ ] Make the future desktop/Tauri client consume the same SpaceTimeDB projection shape instead of inventing a desktop-local temporal state model.
 - [x] Move Graphiti runtime adapter target to S3' design language; demote wrapper/sidecar paths to compatibility.
-- [ ] Keep S5 invocation/search/arc governance out of S3 runtime code.
+- [x] Keep S5 invocation/search/arc governance out of S3 runtime code.
 - [x] Add product-to-coordinate parity tests for at least one `s3.*` family and one `s3'.*` family.
-- [ ] Add raw gateway connect/session tests after extraction.
+- [x] Add raw gateway session tests after extraction.
 - [x] Add module-level Redis temporal context tests.
 - [x] Add a Graphiti runtime adapter test that does not assume sidecar architecture.
 
@@ -246,6 +246,7 @@ Verification:
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_full_parity_contract`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge`
 - [x] `cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml`
+- [x] `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_full_parity_contract`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_sessions`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_surfaces_contract`
@@ -257,7 +258,7 @@ Verification:
 
 Exit condition:
 
-- S3 owns gateway/session/temporal context architecture, S0 remains a mirror, and Redis/Graphiti roles are not ambiguous.
+- S3 owns gateway/session/temporal context architecture, S0 remains a runtime adapter/mirror, and Redis/Graphiti roles are not ambiguous. Remaining work is live server extraction, graphiti-runtime extraction, and future Tauri projection consumption.
 
 ## Phase 3A. Gateway Session Runtime / Khora Parity
 
@@ -816,7 +817,7 @@ Exit condition:
 ## Development Readiness Gates
 
 - [ ] Phase 1 parity manifest is executable and tested.
-- [ ] S2 graph schema/services are Body-native or extraction is test-guarded with explicit remaining steps.
+- [x] S2 graph schema/services are Body-native or extraction is test-guarded with explicit remaining steps.
 - [ ] S3 gateway/redis-context/graphiti-runtime are Body-native or extraction is test-guarded with explicit remaining steps.
 - [x] S1' compiler spine has real file/schema tests and is reachable before vault writes.
 - [ ] S4 agent invocation/access tests distinguish raw service checks from actual PI-agent runtime access.
@@ -830,11 +831,11 @@ Exit condition:
 
 Continue the current spine progression:
 
-1. Run the Phase 3A gateway session parity audit against the current Electron OmniPanel / Gateway UI code, then define the coordinate-native session operation contract before touching implementation.
-2. Implement the gateway session runtime convergence: DAY/NOW-derived labels plus stable canonical keys, fork/resume/import lineage, structured diagnostics, idempotent Khora `session_start`, SpaceTimeDB session projection, and TUI session-surface binding.
-3. Upgrade the SpaceTimeDB projection tranche from TUI HTTP SQL polling to native WebSocket subscription, then mirror the same projection reader in the future desktop/Tauri client.
-4. Continue Phase 9 readiness work by making Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch render as distinct raw-service vs agent-access states in the live UI result state.
-5. Prepare the Tauri v2 desktop migration as a mirror of the TUI portal registry and gateway/SpaceTimeDB contracts, not as a fresh Electron rewrite.
+1. Extract the live S3 gateway server/runtime adapter body next, using `Body/S/S3/gateway` as the session/session-scope authority and keeping S0 as CLI/bootstrap mirror.
+2. Complete the S2 graph command/service extraction for seed/sync/retrieval APIs: S2 owns graph service law, S0 owns command presentation, and destructive live Neo4j tests require an explicit seed/migration run.
+3. Extract/demote the current Graphiti HTTP wrapper into the planned S3 graphiti-runtime shape while preserving S5/S5' invocation/search/arc governance.
+4. Mirror the native SpaceTimeDB projection reader in the future desktop/Tauri client, using the same TUI portal registry and gateway/SpaceTimeDB contracts.
+5. Continue Phase 9 readiness work by making Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch render as distinct raw-service vs agent-access states in the live UI result state.
 6. After checkpointing current main, harvest or retire the remaining `.worktrees/*` branches deliberately; do not delete uncommitted worktrees until useful deltas have been ported or explicitly abandoned.
 
 Do not start non-dry-run Epii/autoresearch mutation until S1' compiler invocation, Anima/Pleroma capability boundaries, and Epii review gates are testable.

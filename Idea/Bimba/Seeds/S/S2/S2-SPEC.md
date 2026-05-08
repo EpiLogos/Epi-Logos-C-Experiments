@@ -494,8 +494,8 @@ S2' is partially embodied in:
 
 - `Body/S/S2/external/bimba-mcp/src/schemas/graph.ts` and related schemas.
 - `Body/S/S2/external/bimba-mcp/src/api/graph.ts`, `sync.ts`, coordinate parser, validation, reranker.
-- `Body/S/S2/graph-services/src/lib.rs` for the Body-native semantic cache and Neo4j client contracts.
-- `Body/S/S0/epi-cli/src/graph/retrieval/*` and remaining S0 graph semantic surfaces pending extraction.
+- `Body/S/S2/graph-services/src/lib.rs` for the Body-native semantic cache, Neo4j client contracts, retrieval query semantics, tokenization, disclosure law, retrieval result shape, and pure hybrid fusion/ranking law.
+- `Body/S/S0/epi-cli/src/graph/retrieval/*` as the S0 Neo4j/CLI adapter over S2 retrieval law, plus remaining S0 graph semantic surfaces pending extraction.
 - `Body/S/S0/epi-cli/src/graph/alignment_validator.rs`, `relationship_manager.rs`, `link_enforcement.rs`, and enrichment-related code.
 
 S2' is not yet complete:
@@ -503,6 +503,7 @@ S2' is not yet complete:
 - No single canonical gateway method surface is visible for all `s2'.*` methods.
 - Coordinate parser behavior must intentionally migrate old `#` / `bimbaCoordinate` values into the new [[M]] branch rather than calling that data malformed.
 - Rerank/disclosure-density law is not yet uniformly enforced across CLI, MCP, and gateway.
+- Graph seed/sync/retrieval command bodies still need the next service/API extraction pass: S2 owns the law, S0 should remain command presentation, and destructive seed/migration tests require explicit live Neo4j intent.
 - S2' graph law is entangled operationally with Gnostic/Graphiti code in some paths; the spec must keep ownership clean while allowing shared storage.
 
 ### Internal 0-5 Breakdown

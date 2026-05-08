@@ -94,12 +94,13 @@ The live implementation is broad but not yet coordinate-native:
 - `Body/S/S0/epi-cli/src/gate/temporal.rs` now provides the first live S3' temporal context surface. It resolves a gateway session into DAY/NOW identity, date and NOW wikilinks, `Idea/Pratibimba/Self/Action/History` archive placement, S3 Redis temporal keys, SpaceTimeDB projection metadata, and Graphiti session-arc orientation. It is exposed as `epi gate temporal context` for CLI use and `s3'.temporal.context` for S4/S5 agent/tool access.
 - `epi gate methods` returns a product/RPC-native manifest: `connect`, `chat.send`, `sessions.list`, `cron.add`, `node.invoke`, `exec.approval.request`, `models.list`, `skills.status`, `wizard.start`, and related methods.
 - Current canonical FLOW API wants coordinate-native methods: `s3.session.*`, `s3.channel.*`, `s3.message.route`, `s3'.temporal.*`, `s3'.day.*`, `s3'.kairos.*`, `s3'.presence.*`, and `s3'.context.*`.
-- `Body/S/S3/gateway-contract` owns the pure SpaceTimeDB projection contract: projection table list, native/HTTP modes, `SubscribeMulti` message shape, S3'/S4/S5 owner fields, and subscription row decoding for `session_surface` / `kairos_surface` / `global_temporal_surface`.
+- `Body/S/S3/gateway-contract` owns the pure gateway/projection contract: product method names, event names, session record/patch shape, SpaceTimeDB projection table list, native/HTTP modes, `SubscribeMulti` message shape, S3'/S4/S5 owner fields, and subscription row decoding for `session_surface` / `kairos_surface` / `global_temporal_surface`.
+- `Body/S/S3/gateway` owns the durable gateway session store: record creation with externally injected Pi/Khora runtime context, list/resolve/patch/delete authority, legacy OmniPanel row normalization, transcript path law, workspace/bootstrap scope derivation, and subagent launch validation. S0 remains the runtime adapter that supplies cwd, vault root, session id, day id, and NOW path from the active Pi session.
 - `Body/S/S3/redis-context` owns Redis runtime residency and the RedisVL bridge path contract. It keeps `s2:graph:semantic` and `s3:gateway:temporal` as distinct namespaces over the same local Redis Stack substrate.
 - `spacetimedb_bridge.rs` is currently a file-backed/test event bridge plus a live reducer client for the S3/S3' SpaceTimeDB registration/projection plane. The current S0-hosted gateway can register gateway, client, agent, session, heartbeat, Kairos, global temporal, and temporal event surfaces when configured, and it can read the `session_surface` / `kairos_surface` / `global_temporal_surface` projection through HTTP SQL polling. Gateway readiness now also exposes the native WebSocket subscription plan over the same projection tables, and `epi portal` can use that S3-owned plan to open a `v1.json.spacetimedb` `SubscribeMulti` loop for `session_surface`, `kairos_surface`, and `global_temporal_surface` updates. The target remains one SpaceTimeDB deployment holding many gateway, agent, and client instances for the same installation/workspace.
 - `Body/S/S3/epi-spacetime-module` now carries the gateway-client registration module shape: gateway instances, PI-agent instances, TUI/desktop/browser clients, session temporal surfaces, global temporal surfaces, Kairos surfaces, and temporal activity events keyed by installation/workspace and instance identity.
 - `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` currently wraps the `graphiti-core` library in a FastAPI service on port `37778`. This proves Graphiti can be used as a Python library; the HTTP sidecar is only the current integration wrapper for Rust gateway/Nara callers and should be retired or demoted behind an S3 library/runtime adapter.
-- There is now a first dedicated `Body/S/S3/redis-context` module for Redis runtime residency. There is not yet a dedicated `Body/S/S3/gateway` or `Body/S/S3/graphiti-runtime` module. `Body/S/S3` currently also holds `epi-app` and `epi-spacetime-module`; the S3 gateway/runtime extraction remains a real next build step.
+- There are now dedicated `Body/S/S3/redis-context` and `Body/S/S3/gateway` modules for Redis runtime residency and gateway session-store residency. There is not yet a dedicated `Body/S/S3/graphiti-runtime` module, and the live gateway server body is still S0-hosted. `Body/S/S3` currently also holds `epi-app` and `epi-spacetime-module`; the next S3 extraction step is the live server/runtime adapter and Graphiti runtime boundary.
 
 ### Planning consequence
 
@@ -163,7 +164,7 @@ Current canonical S3 base technology:
 |---|---:|---|---|---|
 | `epi gate start` | [[S3.0]] | Rust | WebSocket, default `18794` | Gateway control-plane server |
 | Gateway method manifest | [[S3.1]] / [[S3.1']] | Rust | `gate/parity.rs` | Product/RPC compatibility surface |
-| SessionStore | [[S3.2]] / [[S3.2']] | Rust/files | `.epi/gate/sessions` | Session identity and patch authority |
+| SessionStore | [[S3.2]] / [[S3.2']] | `Body/S/S3/gateway` Rust/files, S0 Pi adapter | `.epi/gate/sessions` | Session identity and patch authority with Pi/Khora context injected at creation |
 | GatewayRuntimeState | [[S3.3]] | Rust memory | Process-local | Run registry, event listeners, chat process tracking |
 | OmniPanel / app bridge | [[S3.5]] | Current Electron/React app side; future Tauri v2 shell | Client process | Human-facing gateway client and eventual desktop mirror of the TUI portal |
 | Graphiti runtime | [[S3.4']] / [[S3.5']] | Python library currently wrapped by FastAPI in `Body/S/S5/epi-gnostic` | Current wrapper port `37778` | Temporal episodic architecture; target is `Body/S/S3/graphiti-runtime` library/runtime integration, not a canonical sidecar |
@@ -371,7 +372,8 @@ Current Rust files include:
 
 - `gate/mod.rs` - command tree and dispatch.
 - `gate/server.rs`, `protocol.rs`, `parity.rs`, `runtime.rs`, `events.rs` - gateway server/protocol/method/event/runtime surfaces.
-- `gate/session_store.rs`, `sessions.rs`, `transcripts.rs`, `workspace.rs`, `bootstrap.rs`, `subagents.rs`, `team_store.rs` - session identity and lineage.
+- `Body/S/S3/gateway/src/{session_store,transcripts,workspace,bootstrap,subagents}.rs` - durable session identity, lineage, transcript pathing, bootstrap/workspace scope, and subagent validation.
+- `gate/session_store.rs`, `sessions.rs`, `team_store.rs` - S0 runtime/CLI adapter over the S3 session authority plus team-specific state not yet extracted.
 - `gate/chat.rs`, `runs.rs`, `channels.rs`, `cron.rs`, `config.rs`, `logs.rs`, `models.rs`, `skills.rs`, `nodes.rs`, `devices.rs`, `browser.rs`, `approvals.rs`, `system.rs`, `wizard.rs`, `update.rs` - product/RPC domains.
 - `gate/spacetimedb_bridge.rs` - bridge/test event projection and stub SpacetimeDB client.
 - `gate/graphiti.rs` - current HTTP-wrapper lifecycle and provenance forwarding for Graphiti; useful evidence, but not target architecture.

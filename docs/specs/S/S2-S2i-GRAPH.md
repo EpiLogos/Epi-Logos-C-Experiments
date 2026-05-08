@@ -10,7 +10,7 @@
 
 ## Architectural Role
 
-S2 is the **Vector Arena** — the relational substrate where all coordinate entities exist as graph nodes with semantic embeddings. Neo4j manages persistent graph relations and high-dimensional vector storage. Redis handles high-speed ephemeral caching and pub/sub for live sessions.
+S2 is the **Vector Arena** — the relational substrate where all coordinate entities exist as graph nodes with semantic embeddings. Neo4j manages persistent graph relations and high-dimensional vector storage. Redis is used here only through S2 graph semantic-cache law (`s2:graph:semantic`) over the S3-owned Redis runtime substrate; live session/DAY/NOW/Kairos context belongs to S3/S3'.
 
 ### The Non-Negotiable Requirement
 
@@ -559,7 +559,7 @@ Default k=60, coordinate_boost=1.5x
 - Port sync coordinator (hash-based change detection)
 - Port bidirectional sync (6 conflict strategies)
 - Wire S1 vault mutations -> S2 graph upserts
-- Wire Redis pub/sub for S3' gateway events
+- Wire Redis-backed S3' gateway temporal events through the S3 runtime substrate, without collapsing them into the S2 graph semantic-cache namespace
 
 ---
 

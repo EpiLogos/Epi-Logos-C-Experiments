@@ -1,4 +1,5 @@
-use std::collections::HashSet;
+use std::cmp::Ordering;
+use std::collections::{HashMap, HashSet};
 
 use crate::CoordinateArrayParser;
 use serde::{Deserialize, Serialize};
@@ -62,6 +63,21 @@ pub struct RetrievalResult {
     pub score: f64,
     pub source: String,
     pub data: serde_json::Value,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct HybridFusionConfig {
+    pub rrf_k: u32,
+    pub coordinate_boost: f64,
+}
+
+impl Default for HybridFusionConfig {
+    fn default() -> Self {
+        Self {
+            rrf_k: 60,
+            coordinate_boost: 1.5,
+        }
+    }
 }
 
 impl QueryType {
@@ -192,4 +208,133 @@ pub fn disclosure_for_query_type(query_type: QueryType, depth: u32) -> Disclosur
             }
         }
     }
+}
+
+pub fn tokenize_query(query_text: &str) -> Vec<String> {
+    let mut tokens = Vec::new();
+    let mut seen = HashSet::new();
+
+    for token in query_text.split_whitespace() {
+        let cleaned = token
+            .trim_matches(|c: char| !c.is_alphanumeric() && c != '#' && c != '_' && c != '\'')
+            .to_lowercase();
+        if cleaned.len() < 2 {
+            continue;
+        }
+        if matches!(
+            cleaned.as_str(),
+            "how"
+                | "does"
+                | "what"
+                | "where"
+                | "show"
+                | "list"
+                | "all"
+                | "the"
+                | "and"
+                | "for"
+                | "with"
+                | "from"
+                | "into"
+                | "work"
+                | "works"
+        ) {
+            continue;
+        }
+        if seen.insert(cleaned.clone()) {
+            tokens.push(cleaned);
+        }
+    }
+
+    if tokens.is_empty() {
+        let fallback = query_text.trim().to_lowercase();
+        if !fallback.is_empty() {
+            tokens.push(fallback);
+        }
+    }
+
+    tokens
+}
+
+pub fn fusion_rrf_results(
+    vector_results: &[RetrievalResult],
+    graph_results: &[RetrievalResult],
+    config: HybridFusionConfig,
+) -> Vec<RetrievalResult> {
+    let mut scores: HashMap<String, f64> = HashMap::new();
+    let mut data_map: HashMap<String, serde_json::Value> = HashMap::new();
+
+    for (rank, result) in vector_results.iter().enumerate() {
+        let rrf = 1.0 / (config.rrf_k as f64 + rank as f64 + 1.0);
+        *scores.entry(result.coordinate.clone()).or_default() += rrf;
+        data_map
+            .entry(result.coordinate.clone())
+            .or_insert_with(|| result.data.clone());
+    }
+
+    for (rank, result) in graph_results.iter().enumerate() {
+        let rrf = 1.0 / (config.rrf_k as f64 + rank as f64 + 1.0);
+        *scores.entry(result.coordinate.clone()).or_default() += rrf * config.coordinate_boost;
+        data_map
+            .entry(result.coordinate.clone())
+            .or_insert_with(|| result.data.clone());
+    }
+
+    let mut results: Vec<RetrievalResult> = scores
+        .into_iter()
+        .map(|(coordinate, score)| RetrievalResult {
+            data: data_map.remove(&coordinate).unwrap_or_default(),
+            coordinate,
+            score,
+            source: "hybrid-rrf".into(),
+        })
+        .collect();
+    results.sort_by(|left, right| {
+        right
+            .score
+            .partial_cmp(&left.score)
+            .unwrap_or(Ordering::Equal)
+            .then_with(|| left.coordinate.cmp(&right.coordinate))
+    });
+    results
+}
+
+pub fn fusion_weighted_results(
+    vector_results: &[RetrievalResult],
+    graph_results: &[RetrievalResult],
+    alpha: f64,
+    config: HybridFusionConfig,
+) -> Vec<RetrievalResult> {
+    let mut scores: HashMap<String, (f64, serde_json::Value)> = HashMap::new();
+
+    for result in vector_results {
+        let entry = scores
+            .entry(result.coordinate.clone())
+            .or_insert((0.0, result.data.clone()));
+        entry.0 += alpha * result.score;
+    }
+    for result in graph_results {
+        let entry = scores
+            .entry(result.coordinate.clone())
+            .or_insert((0.0, result.data.clone()));
+        entry.0 += (1.0 - alpha) * result.score * config.coordinate_boost;
+    }
+
+    let mut results: Vec<RetrievalResult> = scores
+        .into_iter()
+        .map(|(coordinate, (score, data))| RetrievalResult {
+            coordinate,
+            score,
+            source: "hybrid-weighted".into(),
+            data,
+        })
+        .collect();
+    results.sort_by(|left, right| {
+        right
+            .score
+            .partial_cmp(&left.score)
+            .unwrap_or(Ordering::Equal)
+            .then_with(|| left.coordinate.cmp(&right.coordinate))
+    });
+    results
 }

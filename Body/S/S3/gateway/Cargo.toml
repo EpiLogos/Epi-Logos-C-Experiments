@@ -1,0 +1,15 @@
+[package]
+name = "epi-s3-gateway"
+version = "0.1.0"
+edition = "2021"
+description = "S3 gateway runtime primitives for sessions, transcripts, workspace scope, and product gateway parity"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "epi_s3_gateway"
+path = "src/lib.rs"
+
+[dependencies]
+epi-s3-gateway-contract = { path = "../gateway-contract" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

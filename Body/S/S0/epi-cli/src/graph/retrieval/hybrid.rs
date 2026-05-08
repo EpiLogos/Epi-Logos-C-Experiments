@@ -1,7 +1,7 @@
-use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
-
-use epi_s2_graph_services::infer_positions;
+use epi_s2_graph_services::{
+    fusion_rrf_results, fusion_weighted_results, infer_positions, tokenize_query,
+    HybridFusionConfig,
+};
 use neo4rs::query;
 
 use crate::graph::client::Neo4jClient;
@@ -303,40 +303,7 @@ impl<'a> HybridRetriever<'a> {
         vector_results: &[RetrievalResult],
         graph_results: &[RetrievalResult],
     ) -> Vec<RetrievalResult> {
-        let mut scores: HashMap<String, f64> = HashMap::new();
-        let mut data_map: HashMap<String, serde_json::Value> = HashMap::new();
-
-        for (rank, r) in vector_results.iter().enumerate() {
-            let rrf = 1.0 / (self.k as f64 + rank as f64 + 1.0);
-            *scores.entry(r.coordinate.clone()).or_default() += rrf;
-            data_map
-                .entry(r.coordinate.clone())
-                .or_insert_with(|| r.data.clone());
-        }
-
-        for (rank, r) in graph_results.iter().enumerate() {
-            let rrf = 1.0 / (self.k as f64 + rank as f64 + 1.0);
-            *scores.entry(r.coordinate.clone()).or_default() += rrf * self.coordinate_boost;
-            data_map
-                .entry(r.coordinate.clone())
-                .or_insert_with(|| r.data.clone());
-        }
-
-        let mut results: Vec<RetrievalResult> = scores
-            .into_iter()
-            .map(|(coord, score)| {
-                let data = data_map.remove(&coord).unwrap_or_default();
-                RetrievalResult {
-                    coordinate: coord,
-                    score,
-                    source: "hybrid-rrf".into(),
-                    data,
-                }
-            })
-            .collect();
-
-        results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(Ordering::Equal));
-        results
+        fusion_rrf_results(vector_results, graph_results, self.fusion_config())
     }
 
     // -----------------------------------------------------------------------
@@ -350,79 +317,15 @@ impl<'a> HybridRetriever<'a> {
         graph_results: &[RetrievalResult],
         alpha: f64,
     ) -> Vec<RetrievalResult> {
-        let mut scores: HashMap<String, (f64, serde_json::Value)> = HashMap::new();
-
-        for r in vector_results {
-            let entry = scores
-                .entry(r.coordinate.clone())
-                .or_insert((0.0, r.data.clone()));
-            entry.0 += alpha * r.score;
-        }
-        for r in graph_results {
-            let entry = scores
-                .entry(r.coordinate.clone())
-                .or_insert((0.0, r.data.clone()));
-            entry.0 += (1.0 - alpha) * r.score * self.coordinate_boost;
-        }
-
-        let mut results: Vec<RetrievalResult> = scores
-            .into_iter()
-            .map(|(coord, (score, data))| RetrievalResult {
-                coordinate: coord,
-                score,
-                source: "hybrid-weighted".into(),
-                data,
-            })
-            .collect();
-        results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(Ordering::Equal));
-        results
-    }
-}
-
-fn tokenize_query(query_text: &str) -> Vec<String> {
-    let mut tokens = Vec::new();
-    let mut seen = HashSet::new();
-
-    for token in query_text.split_whitespace() {
-        let cleaned = token
-            .trim_matches(|c: char| !c.is_alphanumeric() && c != '#' && c != '_' && c != '\'')
-            .to_lowercase();
-        if cleaned.len() < 2 {
-            continue;
-        }
-        if matches!(
-            cleaned.as_str(),
-            "how"
-                | "does"
-                | "what"
-                | "where"
-                | "show"
-                | "list"
-                | "all"
-                | "the"
-                | "and"
-                | "for"
-                | "with"
-                | "from"
-                | "into"
-                | "work"
-                | "works"
-        ) {
-            continue;
-        }
-        if seen.insert(cleaned.clone()) {
-            tokens.push(cleaned);
-        }
+        fusion_weighted_results(vector_results, graph_results, alpha, self.fusion_config())
     }
 
-    if tokens.is_empty() {
-        let fallback = query_text.trim().to_lowercase();
-        if !fallback.is_empty() {
-            tokens.push(fallback);
+    fn fusion_config(&self) -> HybridFusionConfig {
+        HybridFusionConfig {
+            rrf_k: self.k,
+            coordinate_boost: self.coordinate_boost,
         }
     }
-
-    tokens
 }
 
 fn read_score(row: &neo4rs::Row, key: &str) -> f64 {
