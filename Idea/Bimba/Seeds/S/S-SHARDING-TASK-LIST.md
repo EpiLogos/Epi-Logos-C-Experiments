@@ -124,7 +124,7 @@ Exit condition:
 
 ## Phase 2. S2 Graph Schema / Services Extraction
 
-Status: service contract boundary advanced. `Body/S/S2/graph-schema` owns the S2 graph schema contract, and `Body/S/S2/graph-services` owns Neo4j primary graph role, the live Neo4j config/client, schema creation, coordinate seed entrypoints, Redis semantic-cache role/config/payload/health/client contracts, retrieval query semantics, tokenization, and pure hybrid fusion/ranking law. S0 graph code imports/re-exports these S2 contracts so `epi graph` remains the command mirror while S2 becomes the client-service authority. The remaining S2 work is not "move the same code around"; it is the deeper service/API extraction for sync/import/enrichment and the coordinate-native gateway/API surface. A first live namespace-isolation proof now verifies canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` nodes carrying S5 ownership as properties can coexist in one real Neo4j instance without label overlap or destructive cleanup.
+Status: service contract boundary advanced. `Body/S/S2/graph-schema` owns the S2 graph schema contract, and `Body/S/S2/graph-services` owns Neo4j primary graph role, the live Neo4j config/client, schema creation, coordinate seed entrypoints, Redis semantic-cache role/config/payload/health/client contracts, retrieval query semantics, tokenization, and pure hybrid fusion/ranking law. S0 graph code imports/re-exports these S2 contracts so `epi graph` remains the command mirror while S2 becomes the client-service authority; S0 mirrors must stay passthrough/adapters, not copies of S2 service law. The remaining S2 work is not "move the same code around"; it is the deeper service/API extraction for sync/import/enrichment and the coordinate-native gateway/API surface. A first live namespace-isolation proof now verifies canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` nodes carrying S5 ownership as properties can coexist in one real Neo4j instance without label overlap or destructive cleanup.
 
 Live Docker note: `docker compose -f docker-compose.epi-s2.yml up -d neo4j redis` starts existing stateful containers with named volumes. On 2026-05-02, read-only checks showed Redis healthy with `epi_semantic_cache` and `epi_semantic_cache_test` indexes, Neo4j healthy with 96 legacy `:BimbaCoordinate` nodes and zero canonical `:Bimba` nodes. Do not run destructive ignored graph tests until migration/backup policy is explicit.
 
@@ -156,6 +156,7 @@ Checklist:
 - [ ] Keep `bimba-mcp` explicitly external-facing and not PI-internal authority.
 - [x] Point the S0 Neo4j graph client mirror at the S2 graph-services client authority instead of defining that client locally.
 - [x] Point S0 coordinate parser, GraphRAG query grammar, retrieval mode/result/disclosure contracts, and semantic-cache law at S2 graph-services authority.
+- [x] Keep S0 graph schema/seed/client/parser/cache mirrors as direct S2 passthroughs; S0 may keep command presentation and live runtime adapters, but not duplicated S2 service definitions.
 - [x] Move RedisVL semantic-cache bridge scripts out of S0 and into `Body/S/S3/redis-context/scripts/redisvl_cache_service/`; remove the stale generated S0 `.venv` cache.
 - [x] Add S3 `redis-context` crate so Redis runtime/RedisVL bridge residency is S3-owned while S2 keeps the graph semantic-cache namespace and payload contract.
 - [x] Update tests to import/call S2 services where possible.
@@ -188,6 +189,8 @@ Verification:
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test semantic_cache_contract semantic_cache_python_bridge_health -- --ignored --exact`
 
 Exit condition:
+
+- S2 owns schema, seed entrypoints, query grammar, retrieval contracts, fusion law, and semantic-cache contracts; S0 owns the `epi graph` command surface and live adapter wiring only. Any remaining S0 graph implementation must either be command presentation/runtime plumbing or an explicitly tracked extraction target for S2 services.
 
 - S2 schema/service authority is Body-native or extraction is test-guarded with explicit remaining steps, and `epi graph` remains a working mirror.
 
@@ -261,7 +264,7 @@ Verification:
 
 Exit condition:
 
-- S3 owns gateway protocol/session/runtime/temporal context architecture, S0 remains a live server/domain adapter/mirror, and Redis/Graphiti roles are not ambiguous. Remaining work is live dispatch/server extraction, graphiti-runtime extraction, S2 sync/import/enrichment extraction, and future Tauri projection consumption.
+- S3 owns gateway protocol/session/runtime/temporal context architecture, S0 remains a live server/domain adapter/mirror, and Redis/Graphiti roles are not ambiguous. S0 gateway support modules such as protocol, runtime state, transcripts, bootstrap scope, workspace derivation, subagent launch context, parity records, run records, and session-store contracts must passthrough to S3/S3' crates rather than carry copied definitions. Remaining work is live dispatch/server extraction, graphiti-runtime extraction, S2 sync/import/enrichment extraction, and future Tauri projection consumption.
 
 ## Phase 3A. Gateway Session Runtime / Khora Parity
 
@@ -828,7 +831,7 @@ Exit condition:
 - [x] S5 Gnosis/Nara/Epii tests distinguish raw client/service behavior from gateway-backed Epii observation/governance.
 - [ ] S0' portal/TUI has a real three-panel command/config/readiness contract over existing CLI/gateway/service truth.
 - [ ] `epi up` or equivalent full-stack proof has a real failure/success contract.
-- [ ] Final non-negotiable cleanup gate, only after all other build tasks: run full depwire dead-symbol resolution and full `.worktrees/*` harvest/retire cleanup as one terminal step, with deletions/moves proven by tests and git history clean.
+- [ ] Final non-negotiable cleanup/harmonisation gate, only after all other build tasks: run full depwire dead-symbol resolution and full `.worktrees/*` harvest/retire cleanup as one terminal step, then review [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] for agent/tool/skill compatibility implications before Tauri execution. Deletions, moves, and parity-driven changes must be proven by tests and git history clean.
 
 ## Preferred Next Run
 
@@ -839,6 +842,6 @@ Continue the current spine progression:
 3. Extract/demote the current Graphiti HTTP wrapper into the planned S3 graphiti-runtime shape while preserving S5/S5' invocation/search/arc governance.
 4. Mirror the native SpaceTimeDB projection reader in the future desktop/Tauri client, using the same TUI portal registry and gateway/SpaceTimeDB contracts.
 5. Continue Phase 9 readiness work by making Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch render as distinct raw-service vs agent-access states in the live UI result state.
-6. After checkpointing current main, harvest or retire the remaining `.worktrees/*` branches deliberately; do not delete uncommitted worktrees until useful deltas have been ported or explicitly abandoned.
+6. After the S2/S3 extraction/readiness work is complete, run the terminal cleanup/harmonisation gate: depwire dead-symbol resolution, `.worktrees/*` harvest/retire, and Hermes parity matrix review via [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] before Tauri implementation begins.
 
 Do not start non-dry-run Epii/autoresearch mutation until S1' compiler invocation, Anima/Pleroma capability boundaries, and Epii review gates are testable.
