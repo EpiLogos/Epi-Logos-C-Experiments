@@ -892,6 +892,7 @@ dependencies = [
  "epi-s2-graph-services",
  "epi-s3-gateway",
  "epi-s3-gateway-contract",
+ "epi-s3-graphiti-runtime",
  "epi-s3-redis-context",
  "epi-s5-epii-agent-core",
  "epi-s5-epii-autoresearch-core",
@@ -943,9 +944,12 @@ dependencies = [
  "epi-s2-graph-schema",
  "epi-s3-redis-context",
  "neo4rs",
+ "redis",
+ "reqwest",
  "serde",
  "serde_json",
  "serde_yaml",
+ "sha2",
  "uuid",
 ]
 
@@ -966,6 +970,18 @@ dependencies = [
  "serde",
  "serde_json",
  "uuid",
+]
+
+[[package]]
+name = "epi-s3-graphiti-runtime"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "epi-s3-gateway-contract",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]

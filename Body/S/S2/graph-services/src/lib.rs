@@ -6,17 +6,46 @@ use std::sync::Arc;
 use neo4rs::{query, Graph, Query};
 use serde::{Deserialize, Serialize};
 
+pub mod bidirectional_sync;
 mod coordinate;
+pub mod dataset_import;
+pub mod doctor;
+pub mod embeddings;
+pub mod link_enforcement;
+pub mod meta;
+pub mod redis_cache;
+pub mod relationship_manager;
+pub mod retrieval;
 mod retrieval_query;
 pub mod schema;
 pub mod seed;
+pub mod semantic;
+pub mod sync_coordinator;
+pub mod types;
 
+pub use bidirectional_sync::{BidirectionalSyncer, ConflictResolution, SyncConflict};
 pub use coordinate::{CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink};
+pub use dataset_import::DatasetImporter;
+pub use doctor::{
+    collect_report, render_human, render_status, DoctorReport, GraphState, RedisStackStatus,
+    SemanticCacheStatus, ServiceStatus,
+};
+pub use embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
+pub use link_enforcement::{LinkEnforcer, LinkValidationResult};
+pub use meta::{
+    desired_meta, is_bootstrapped, read_graph_meta, seed_source_hash, write_graph_meta, GraphMeta,
+};
+pub use redis_cache::{CacheTier, RedisCache, RedisConfig};
+pub use relationship_manager::{RelationshipManager, POSITION_REL_TYPES};
+pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};
 pub use retrieval_query::{
     classify_query, disclosure_for_query_type, extract_coordinate_mentions, fusion_rrf_results,
     fusion_weighted_results, infer_positions, tokenize_query, DisclosureLevel, GraphRetrievalQuery,
     HybridFusionConfig, QueryType, RetrievalMode, RetrievalResult,
 };
+pub use semantic::SemanticDocument;
+pub use sync_coordinator::{SyncCoordinator, SyncResult};
+pub use types::{EdgeRef, GraphResult, NodeRef, PathResult, RelationshipType};
 
 pub const SEMANTIC_REDIS_NAMESPACE: &str = "s2:graph:semantic";
 pub const SEMANTIC_CACHE_NAME: &str = "epi_semantic_cache";

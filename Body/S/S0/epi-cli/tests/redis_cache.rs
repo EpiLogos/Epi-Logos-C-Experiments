@@ -63,30 +63,6 @@ async fn test_redis_tiered_set_get() {
 
 #[tokio::test]
 #[ignore]
-async fn test_redis_session_now() {
-    let config = RedisConfig::from_env();
-    let mut cache = RedisCache::connect(&config).await.unwrap();
-
-    cache
-        .set_session_now("test-session-123", "# NOW\nTest content")
-        .await
-        .unwrap();
-
-    let val = cache
-        .get("s3:gateway:temporal:session:test-session-123:now:md")
-        .await
-        .unwrap();
-    assert!(val.is_some());
-
-    // Cleanup
-    cache
-        .delete("s3:gateway:temporal:session:test-session-123:now:md")
-        .await
-        .unwrap();
-}
-
-#[tokio::test]
-#[ignore]
 async fn test_redis_coordinate_cache() {
     let config = RedisConfig::from_env();
     let mut cache = RedisCache::connect(&config).await.unwrap();

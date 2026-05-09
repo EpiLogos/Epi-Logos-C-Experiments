@@ -47,6 +47,7 @@ epi-s2-graph-schema = { path = "../../S2/graph-schema" }
 epi-s2-graph-services = { path = "../../S2/graph-services" }
 epi-s3-gateway = { path = "../../S3/gateway" }
 epi-s3-gateway-contract = { path = "../../S3/gateway-contract" }
+epi-s3-graphiti-runtime = { path = "../../S3/graphiti-runtime" }
 epi-s3-redis-context = { path = "../../S3/redis-context" }
 epi-s5-kbase-core = { path = "../../S5/epi-kbase-core" }
 epi-s5-epii-review-core = { path = "../../S5/epii-review-core" }
