@@ -1,37 +1,6 @@
-use crate::graph::client::Neo4jClient;
-
-pub use epi_s2_graph_schema::{CONSTRAINTS, INDEXES, SCHEMA_VERSION, VECTOR_INDEX};
-
-/// Create all schema elements (constraints, indexes, vector index) in Neo4j.
-///
-/// Returns a summary string describing what was created.
-pub async fn create_schema(client: &Neo4jClient) -> Result<String, String> {
-    let mut created = Vec::new();
-
-    for cypher in CONSTRAINTS {
-        client
-            .run(cypher)
-            .await
-            .map_err(|e| format!("constraint failed: {}", e))?;
-    }
-    created.push(format!("{} constraints", CONSTRAINTS.len()));
-
-    for cypher in INDEXES {
-        client
-            .run(cypher)
-            .await
-            .map_err(|e| format!("index failed: {}", e))?;
-    }
-    created.push(format!("{} indexes", INDEXES.len()));
-
-    client
-        .run(VECTOR_INDEX)
-        .await
-        .map_err(|e| format!("vector index failed: {}", e))?;
-    created.push("1 vector index".to_string());
-
-    Ok(format!("Schema created: {}", created.join(", ")))
-}
+pub use epi_s2_graph_services::schema::{
+    create_schema, CONSTRAINTS, INDEXES, SCHEMA_VERSION, VECTOR_INDEX,
+};
 
 #[cfg(test)]
 mod tests {
@@ -55,16 +24,14 @@ mod tests {
 
     #[test]
     fn test_constraints_use_bimba_label() {
-        for c in CONSTRAINTS {
+        for constraint in CONSTRAINTS {
             assert!(
-                c.contains("(n:Bimba)"),
-                "constraint should use Bimba label: {}",
-                c
+                constraint.contains("(n:Bimba)"),
+                "constraint should use Bimba label: {constraint}"
             );
             assert!(
-                !c.contains("BimbaCoordinate"),
-                "constraint should not use old label: {}",
-                c
+                !constraint.contains("BimbaCoordinate"),
+                "constraint should not use old label: {constraint}"
             );
         }
     }

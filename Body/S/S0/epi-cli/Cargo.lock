@@ -946,6 +946,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
+ "uuid",
 ]
 
 [[package]]
@@ -955,6 +956,7 @@ dependencies = [
  "epi-s3-gateway-contract",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]

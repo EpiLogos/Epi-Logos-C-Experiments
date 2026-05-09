@@ -8,6 +8,8 @@ use serde::{Deserialize, Serialize};
 
 mod coordinate;
 mod retrieval_query;
+pub mod schema;
+pub mod seed;
 
 pub use coordinate::{CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink};
 pub use retrieval_query::{

@@ -253,8 +253,9 @@ Current implementation state:
 - Done: the local gateway context, S0 portal runtime state, and SpaceTimeDB projection hydration now preserve S4/S5 agent-access fields: canonical session key, active agent id, runtime cwd, resource-loader id, source lineage, Graphiti session arc id, and the global DAY/NOW projection surface consumed by portal/agent clients.
 - Done: RedisVL bridge residency is now S3-owned through `Body/S/S3/redis-context`, while S2 graph semantic-cache contracts keep `s2:graph:semantic` separate from S3' temporal keys.
 - Done: S3 durable gateway session store residency is now `Body/S/S3/gateway`; S0 injects Pi/Khora runtime context into S3 session creation rather than owning session truth itself.
-- Done: S2 graph-services now owns retrieval query semantics, tokenization, and pure hybrid fusion/ranking law, with S0 graph retrieval acting as a Neo4j/CLI adapter.
-- Next: extract the live S3 gateway server/runtime adapter body, complete S2 seed/sync/retrieval service/API extraction, mirror the same SpaceTimeDB projection reader in the future desktop/Tauri app, and replace old Graphiti sidecar-shaped Pratibimba calls with local graph/runtime contracts.
+- Done: S3 gateway now owns protocol frame construction and runtime run/event/chat state; S0 hosts the live WebSocket dispatch adapter and domain handlers.
+- Done: S2 graph-services now owns schema creation, coordinate seed entrypoints, retrieval query semantics, tokenization, and pure hybrid fusion/ranking law, with S0 graph commands acting as Neo4j/CLI adapters.
+- Next: extract the live S3 gateway dispatch/server body, complete S2 sync/import/enrichment service/API extraction, mirror the same SpaceTimeDB projection reader in the future desktop/Tauri app, and replace old Graphiti sidecar-shaped Pratibimba calls with local graph/runtime contracts.
 
 ### Envelope Corrections
 
