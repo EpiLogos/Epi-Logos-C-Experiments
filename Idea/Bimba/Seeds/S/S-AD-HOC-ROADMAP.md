@@ -438,12 +438,13 @@ These tests prove the circuit returns to S0.
 4. Establish [[S5']] review/autoresearch/Epii contracts and tests.
 5. Extract [[S2]] graph schema/services from S0 package residency; live Neo4j client, coordinate/query grammar, retrieval result/mode contracts, retrieval execution, schema creation, coordinate seed entrypoints, graph metadata, graph cache API, semantic-cache contracts, sync/import/link/conflict services, semantic refresh, and graph doctor/readiness are now Body-native, with RedisVL runtime residency corrected to S3. S0 graph mirrors must stay passthrough/adapters. Remaining S2 work is coordinate-native API/gateway surfacing and deliberate live seed/migration policy.
 6. Extract [[S3]] gateway/redis-context/graphiti-runtime from S0 package residency, including the SpaceTimeDB registration plane as the live gateway/client/agent projection surface. S0 gateway support modules must stay passthrough/adapters over S3 protocol, runtime, transcript, bootstrap, workspace, subagent, Graphiti runtime, run, and session contracts while S0 still hosts the live CLI/server domain adapter until that extraction is complete.
-7. Stabilise [[S4]] agent invocation/access architecture.
-8. Stabilise [[S5]] Gnosis/Nara/Epii world-return architecture.
-9. Build the [[S0']] portal/TUI centre `/` command/config/readiness surface so `epi portal` becomes the operator mirror of the same S0-S5 topology.
-10. Specify and then port the current Electron `epi-app` to Tauri v2 as the desktop mirror of the TUI portal: left `0`, centre `/`, right `1`, backed by the same portal surface registry, gateway RPC, and SpaceTimeDB live projection contracts.
-11. Return to [[S0]] with `epi up` as full-stack build proof.
-12. Final non-negotiable cleanup/harmonisation gate: after all build/extraction/readiness tasks are complete, run full depwire dead-symbol cleanup and full `.worktrees/*` harvest/retire cleanup as one terminal consolidation step, then review [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] for agent/tool/skill compatibility implications before Tauri implementation begins. Do not let any cleanup stream interrupt the build-order work before the S/S' system is coherent, but do not treat the build as complete until cleanup, parity review, tests, and git history are clean.
+7. Run the [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] contract-harmonisation tranche before broad UI/Tauri implementation. This is not Hermes worship: lift only the seams that strengthen the Epi-Logos coordinate-native architecture. Required outputs: corrected S4 VAK/ta-onta language, day-level Epii inbox path, Pleroma lifecycle hooks grounded in VAK + Psyche + DAY/NOW, provisional/user-position treatment of orientation snapshots, S0' command/chat event vocabulary, S3 platform/cron/subject-resolver shard specs, S4 provider profile trait target, MCP event cursor pattern, and vendor residency policy.
+8. Stabilise [[S4]] agent invocation/access architecture, including Pleroma capability evaluation, role restrictions, typed delegation, provider profiles, and lifecycle hooks as execution seams over VAK/Psyche rather than generic plugin callbacks.
+9. Stabilise [[S5]] Gnosis/Nara/Epii world-return architecture, including the day-level review inbox surfacing autonomous session work to the DAY container, Graphiti/Gnosis evidence retrieval, QL-6 autoresearch, and cautious Pratibimba/user-orientation design.
+10. Build the [[S0']] portal/TUI centre `/` command/config/readiness surface so `epi portal` becomes the operator mirror of the same S0-S5 topology, with command execution, chat/event rendering, service readiness, parity map, and review inbox access all coming from shared contracts.
+11. Specify and then port the current Electron `epi-app` to Tauri v2 as the desktop mirror of the TUI portal: left `0`, centre `/`, right `1`, backed by the same portal surface registry, gateway RPC, SpaceTimeDB live projection contracts, and Hermes-informed but Epi-Logos-native OmniPanel breadth.
+12. Return to [[S0]] with `epi up` as full-stack build proof.
+13. Final non-negotiable cleanup/harmonisation gate: after all build/extraction/readiness tasks are complete, run full depwire dead-symbol cleanup and full `.worktrees/*` harvest/retire cleanup as one terminal consolidation step, then verify the Hermes matrix-derived contracts and vendor ignore/collapse state before Tauri execution. Do not let any cleanup stream interrupt the build-order work before the S/S' system is coherent, but do not treat the build as complete until cleanup, parity review, tests, and git history are clean.
 
 ## Handoff Reading Order
 
@@ -452,11 +453,12 @@ A fresh build session should read:
 1. [[S-SYSTEM-INDEX]]
 2. this roadmap
 3. [[S-SHARDING-TASK-LIST]]
-4. [[S-CODE-RESIDENCY-AUDIT]]
-5. [[S-CODE-RESIDENCY-PLAN]]
-6. [[FLOW 2026 04 22 ENVELOPE FIELD SCHEMA]]
-7. [[FLOW 2026 04 24 PI AGENT API v0.1]]
-8. [[FLOW 2026 04 25 TS INTERFACE DEFINITIONS]]
-9. the relevant [[Sx-SHARD-INDEX]]
+4. [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]]
+5. [[S-CODE-RESIDENCY-AUDIT]]
+6. [[S-CODE-RESIDENCY-PLAN]]
+7. [[FLOW 2026 04 22 ENVELOPE FIELD SCHEMA]]
+8. [[FLOW 2026 04 24 PI AGENT API v0.1]]
+9. [[FLOW 2026 04 25 TS INTERFACE DEFINITIONS]]
+10. the relevant [[Sx-SHARD-INDEX]]
 
 Then it should work the task list in order, with real tests at every layer.

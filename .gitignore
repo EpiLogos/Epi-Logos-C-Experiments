@@ -71,8 +71,12 @@ Body/**/.epi/
 .gitnexus
 
 # Mutable vendor install/runtime state
-/vendor/claude-mem-v10.5.5/plugin/.cli-installed
-/vendor/claude-mem-v10.5.5/plugin/.install-version
+/vendor/
+/vendor/**
+/vendors/
+/vendors/**
+/vendrs/
+/vendrs/**
 
 # Secrets (never commit)
 *.env

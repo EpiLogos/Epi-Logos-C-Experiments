@@ -830,22 +830,69 @@ Exit condition:
 - [x] S2 graph schema/services are Body-native or extraction is test-guarded with explicit remaining steps.
 - [x] S3 gateway/redis-context/graphiti-runtime are Body-native or extraction is test-guarded with explicit remaining steps: raw Redis client/cache tiers and RedisVL bridge residency are in `Body/S/S3/redis-context`; Graphiti runtime law is in `Body/S/S3/graphiti-runtime`; and S3 gateway now owns session/runtime primitives plus the canonical method route table, with S0 retained as live executable adapter/server shell.
 - [x] S1' compiler spine has real file/schema tests and is reachable before vault writes.
+- [ ] Hermes matrix-derived contract harmonisation is complete: vendor residency is collapsed to ignored `vendors/`, S4 VAK/ta-onta language is corrected, S5 day-level inbox law is implemented in contract/tests, Pleroma lifecycle hooks are VAK/Psyche/DAY-NOW grounded, and S0/S3/S4/S5 method/event additions are represented in specs before Tauri work begins.
 - [ ] S4 agent invocation/access tests distinguish raw service checks from actual PI-agent runtime access.
 - [x] S5' review/autoresearch spine has state-machine, human-gated, and gateway-backed agent-access tests.
 - [x] S5 Gnosis/Nara/Epii tests distinguish raw client/service behavior from gateway-backed Epii observation/governance.
 - [ ] S0' portal/TUI has a real three-panel command/config/readiness contract over existing CLI/gateway/service truth.
 - [ ] `epi up` or equivalent full-stack proof has a real failure/success contract.
-- [ ] Final non-negotiable cleanup/harmonisation gate, only after all other build tasks: run full depwire dead-symbol resolution and full `.worktrees/*` harvest/retire cleanup as one terminal step, then review [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] for agent/tool/skill compatibility implications before Tauri execution. Deletions, moves, and parity-driven changes must be proven by tests and git history clean.
+- [ ] Final non-negotiable cleanup/harmonisation gate, only after all other build tasks: run full depwire dead-symbol resolution and full `.worktrees/*` harvest/retire cleanup as one terminal step, then verify [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] contract outputs and ignored vendor residency before Tauri execution. Deletions, moves, and parity-driven changes must be proven by tests and git history clean.
+
+## Hermes Matrix Contract Harmonisation
+
+Status: active. The Hermes matrix is inspiration and parity reference, not source authority. Vendor source has been physically collapsed to the single ignored `vendors/` lane, and the old tracked `vendor/` lane is retired. Implementation must land in Body-native coordinate homes and prove Epi-Logos contracts rather than vendor fidelity.
+
+Goal:
+
+- Fold the full useful Hermes surface into the S/S' system without importing Hermes's flat product assumptions: messaging gateway, cron, provider profiles, skill discovery, tool lifecycle hooks, transcript/chat rendering, approval queues, MCP event cursors, and dashboard/OmniPanel breadth.
+- Preserve the Epi-Logos authorities already locked: VAK as ta-onta execution grammar, Psyche as context/field holder, DAY/NOW as Khora temporal substrate, Graphiti as S3' episodic runtime with S5 usage governance, Epii as review/user-position spine, and QL-6 autoresearch rather than Honcho-3 cadence.
+
+Canonical references:
+
+- [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]]
+- [[S-AD-HOC-ROADMAP]]
+- [[S4-SPEC]]
+- [[S5-SPEC]]
+- [[S3-SPEC]]
+- [[FLOW-2026-05-08-ENVELOPE-SCHEMA]]
+- [[PI-API-AND-CLI-METHODS]]
+
+Execution checklist:
+
+- [x] Collapse tracked vendor residency into ignored `vendors/`; remove `vendor/` and `vendrs/` as tracked lanes.
+- [x] Clarify the Epii inbox law in the matrix: `inbox_path` is the day container `Idea/Empty/Present/{DD-MM-YYYY}/`; individual inbox items carry NOW/session identifiers in frontmatter or filename and link back to the relevant NOW subfolder.
+- [ ] Update S4 specs/seeds so [[S4']] is clearly ta-onta as API/execution surface, with Khora through Aletheia as `S4.0'` through `S4.5'`, and with VAK dimensions as the internal dispatch grammar rather than one module per dimension.
+- [ ] Update `Body/S/S5/epii-agent/agent-contract.json` and tests so Epii review inbox state exposes the day-level `inbox_path`, session/NOW-linked deposits, and inbox count/access methods without burying autonomous work inside one session folder.
+- [ ] Decide whether `s5'.epii.user.orientation` remains as a read-facing snapshot. If kept, define it under protected [[Pratibimba]] M4.4.4.4 authority with Epii write, Aletheia membrane assist, and Anima read-only access. Do not copy Honcho peer-card schema as authority.
+- [ ] Add Pleroma lifecycle contract files/tests: `pre_tool_call` as VAK/permission gate, `post_tool_call` as Psyche context/kbase/current-task field observation, and `transform_tool_result` as coordinate-aware result wrapping over DAY/NOW/session-aware gateway events.
+- [ ] Extend Pleroma capability matrix and Anima orchestration with typed delegation: `agents[].role_restrictions`, `delegate_lens(lens_id, task)`, `delegate_square(square_id, task)`, and deterministic `s4'.pleroma.gate.evaluate(...)` observability.
+- [ ] Add S0'/gateway event vocabulary and command contracts: `s0.command.exec`, `s0.command.completion`, `portal.token`, `portal.tool_call`, `portal.lens_pressure`, `portal.vak_eval`, `portal.review_deposit`, `portal.kairos_shift`, all consumed by direct PI, TUI portal, and OmniPanel/Tauri.
+- [ ] Add S3 platform/gateway shard contracts: Rust async `BasePlatformAdapter` trait without trait-level `truncate_message`, hot-reloadable platform modules, JSON-RPC/ACP protocol families, and subject-coordinate resolver as pre-agent identity continuity.
+- [ ] Add S3 cron contract: Hermes file-locked tick and delivery-target syntax, but output dual-writes to Graphiti episodic record plus DAY/NOW vault artifact rather than a flat ledger.
+- [ ] Add S4 provider profile trait target from Hermes `ProviderProfile` attributes, plus plugin discovery override order: bundled, user, legacy.
+- [ ] Add future S5' `epi-mcp` event cursor pattern from Hermes MCP: `events_poll(after_cursor)` and `events_wait(after_cursor, timeout)` for Epii inbox/autoresearch/Aletheia events.
+- [ ] Add trust-tier ranking metadata to the portal surface registry for skill/surface discovery: `builtin | trusted | community`, display ranking only, not access gating.
+
+Testing architecture:
+
+- Contract JSON tests for Pleroma capability matrix, lifecycle hook declarations, typed delegation, and Epii day-level inbox fields.
+- Gateway-contract tests for command completion/execution events, transcript/session event rendering contract, platform adapter trait-object dispatch, delivery-target parsing, cron dual-write planning, subject-coordinate resolver envelopes, and MCP event cursor ordering.
+- Agent-access tests that distinguish raw service readiness from actual PI invocation: S4 Anima/Pleroma gates, S5 Epii review/autoresearch access, and DAY/NOW-linked inbox deposit visibility.
+- Live-service tests only where the claim requires it: Neo4j namespace/subject resolution, Redis hot context, Graphiti episodic runtime, and SpaceTimeDB projection/subscription.
+
+Exit condition:
+
+- A fresh agent can read the matrix, roadmap, and specs and know exactly what to build from Hermes-inspired patterns without treating Hermes as architecture, without losing DAY/NOW inbox surfacing, and without ambiguity about S0/S3 raw-service boundaries vs S4/S5 agent invocation boundaries.
 
 ## Preferred Next Run
 
 Continue the current spine progression:
 
-1. Continue extracting live S3 gateway server adapter bodies only where the ownership is now unambiguous: S3 owns gateway/session/runtime/dispatch law; S0 remains CLI/bootstrap/server process adapter.
-2. Define the coordinate-native API/gateway surface for S2 graph services now that retrieval, sync, semantic refresh, doctor, dataset import, vault frontmatter/mapping, and graph semantic-cache residency are S2-owned; destructive live Neo4j seed/migration tests still require explicit migration policy.
-3. Keep the S3 Graphiti runtime crate as the compatibility HTTP adapter while the native library/runtime integration matures; preserve S5/S5' invocation/search/arc governance.
-4. Mirror the native SpaceTimeDB projection reader in the future desktop/Tauri client, using the same TUI portal registry and gateway/SpaceTimeDB contracts.
+1. Complete the Hermes matrix contract-harmonisation tranche above. This is now the near-term bridge between the S2/S3 extraction work and the S4/S5/Tauri build, not a deferred cleanup note.
+2. Apply the S4/S5 corrections first: S4' ta-onta/VAK language, Pleroma lifecycle/gate contracts, Epii day-level inbox contract, QL-6 autoresearch wording, and cautious Pratibimba/user-orientation schema decision.
+3. Apply the S0/S3 contract updates next: shared command/chat event vocabulary, platform adapter trait, cron dual-write, subject-coordinate resolver, ACP/JSON-RPC protocol family notes, and MCP cursor event pattern.
+4. Continue remaining S2/S3 extraction only where passthrough boundaries are now clear: S0 remains CLI/bootstrap/server adapter; S2 owns graph schema/services; S3 owns gateway, Redis context, Graphiti runtime, SpaceTimeDB projection, platform identity, and session/runtime dispatch law.
 5. Continue Phase 9 readiness work by making Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch render as distinct raw-service vs agent-access states in the live UI result state.
-6. After the S2/S3 extraction/readiness work is complete, run the terminal cleanup/harmonisation gate: depwire dead-symbol resolution, `.worktrees/*` harvest/retire, and Hermes parity matrix review via [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] before Tauri implementation begins.
+6. Only after the contract/build tranche is complete, run the terminal cleanup/harmonisation gate: depwire dead-symbol resolution, `.worktrees/*` harvest/retire, ignored-vendor verification, and git-history cleanup before Tauri implementation begins.
 
 Do not start non-dry-run Epii/autoresearch mutation until S1' compiler invocation, Anima/Pleroma capability boundaries, and Epii review gates are testable.
