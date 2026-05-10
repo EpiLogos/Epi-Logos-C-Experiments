@@ -2,6 +2,10 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
+pub mod redis_cache;
+
+pub use redis_cache::{CacheTier, RedisCache, RedisConfig};
+
 pub const REDIS_RUNTIME_OWNER: &str = "S3";
 pub const REDISVL_BRIDGE_OWNER: &str = "S3 Redis runtime substrate";
 pub const S2_GRAPH_SEMANTIC_NAMESPACE: &str = "s2:graph:semantic";

@@ -1,11 +1,16 @@
 use epi_s2_graph_services::{
-    desired_meta, seed_source_hash, CacheTier, ConflictResolution, CoordinateRetrieval,
-    DatasetImporter, DoctorReport, GraphMeta, GraphRAGRetriever, HybridRetriever,
+    desired_meta, seed_source_hash, ConflictResolution, CoordinateRetrieval, DatasetImporter,
+    DoctorReport, GraphMeta, GraphRAGRetriever, GraphRedisRole, HybridRetriever,
     LinkValidationResult, RelationshipManager, SemanticDocument, SyncResult,
 };
+use epi_s3_redis_context::CacheTier;
 
 #[test]
-fn redis_graph_cache_runtime_contract_is_s2_owned() {
+fn graph_cache_semantics_are_s2_owned_over_s3_redis_runtime() {
+    let role = GraphRedisRole::semantic_cache();
+    assert_eq!(role.coordinate_owner, "S2");
+    assert_eq!(role.redis_namespace, "s2:graph:semantic");
+
     assert_eq!(CacheTier::Hot.ttl_seconds(), 300);
     assert_eq!(CacheTier::Warm.prefix(), "cache:warm");
     assert_eq!(CacheTier::Cold.prefix(), "cache:cold");

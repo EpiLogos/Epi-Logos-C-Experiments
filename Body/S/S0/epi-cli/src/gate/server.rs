@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+use epi_s3_gateway::dispatch::classify_method;
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -379,6 +380,7 @@ async fn dispatch_rpc(
     frame: &RequestFrame,
 ) -> Result<DispatchResult, (String, String)> {
     let store = SessionStore::new(state_root).map_err(internal_error)?;
+    let route = classify_method(&frame.method);
 
     match frame.method.as_str() {
         "sessions.list" => {
@@ -1469,10 +1471,17 @@ async fn dispatch_rpc(
         method if method.starts_with("nara.") => {
             super::nara::dispatch_nara(method, &frame.params).map(DispatchResult::immediate)
         }
-        _ => Err((
-            "unimplemented".to_owned(),
-            format!("{} is not implemented yet", frame.method),
-        )),
+        _ => {
+            let message = route
+                .map(|route| {
+                    format!(
+                        "{} is routed by {} but has no executable gateway adapter",
+                        frame.method, route.route_id
+                    )
+                })
+                .unwrap_or_else(|| format!("{} is not implemented yet", frame.method));
+            Err(("unimplemented".to_owned(), message))
+        }
     }
 }
 

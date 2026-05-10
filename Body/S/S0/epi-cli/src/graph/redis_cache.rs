@@ -1,1 +1,1 @@
-pub use epi_s2_graph_services::{CacheTier, RedisCache, RedisConfig};
+pub use epi_s3_redis_context::{CacheTier, RedisCache, RedisConfig};

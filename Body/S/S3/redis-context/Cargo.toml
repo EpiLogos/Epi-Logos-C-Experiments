@@ -10,4 +10,8 @@ name = "epi_s3_redis_context"
 path = "src/lib.rs"
 
 [dependencies]
+redis = { version = "0.25", features = ["tokio-comp", "connection-manager"] }
 serde = { version = "1.0", features = ["derive"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

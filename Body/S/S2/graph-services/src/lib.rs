@@ -13,7 +13,6 @@ pub mod doctor;
 pub mod embeddings;
 pub mod link_enforcement;
 pub mod meta;
-pub mod redis_cache;
 pub mod relationship_manager;
 pub mod retrieval;
 mod retrieval_query;
@@ -22,6 +21,7 @@ pub mod seed;
 pub mod semantic;
 pub mod sync_coordinator;
 pub mod types;
+pub mod vault;
 
 pub use bidirectional_sync::{BidirectionalSyncer, ConflictResolution, SyncConflict};
 pub use coordinate::{CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink};
@@ -35,7 +35,6 @@ pub use link_enforcement::{LinkEnforcer, LinkValidationResult};
 pub use meta::{
     desired_meta, is_bootstrapped, read_graph_meta, seed_source_hash, write_graph_meta, GraphMeta,
 };
-pub use redis_cache::{CacheTier, RedisCache, RedisConfig};
 pub use relationship_manager::{RelationshipManager, POSITION_REL_TYPES};
 pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};
 pub use retrieval_query::{
@@ -46,6 +45,9 @@ pub use retrieval_query::{
 pub use semantic::SemanticDocument;
 pub use sync_coordinator::{SyncCoordinator, SyncResult};
 pub use types::{EdgeRef, GraphResult, NodeRef, PathResult, RelationshipType};
+pub use vault::{
+    parse_yaml_frontmatter, EntityMapper, GraphAPI, QLAlignmentValidator, SyncOrchestrator,
+};
 
 pub const SEMANTIC_REDIS_NAMESPACE: &str = "s2:graph:semantic";
 pub const SEMANTIC_CACHE_NAME: &str = "epi_semantic_cache";

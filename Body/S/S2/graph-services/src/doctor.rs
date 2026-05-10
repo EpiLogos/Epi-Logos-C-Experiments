@@ -5,8 +5,8 @@ use serde::Serialize;
 use crate::meta;
 use crate::semantic;
 use crate::{Neo4jClient, Neo4jConfig};
-use crate::{RedisCache, RedisConfig};
 use crate::{SemanticCacheClient, SemanticCacheConfig, SemanticCacheHealth};
+use epi_s3_redis_context::{RedisCache, RedisConfig};
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]

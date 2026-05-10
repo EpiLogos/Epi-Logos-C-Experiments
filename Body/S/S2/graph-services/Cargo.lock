@@ -271,7 +271,6 @@ dependencies = [
  "epi-s2-graph-schema",
  "epi-s3-redis-context",
  "neo4rs",
- "redis",
  "reqwest",
  "serde",
  "serde_json",
@@ -285,6 +284,7 @@ dependencies = [
 name = "epi-s3-redis-context"
 version = "0.1.0"
 dependencies = [
+ "redis",
  "serde",
 ]
 

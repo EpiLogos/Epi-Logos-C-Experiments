@@ -157,7 +157,7 @@ Checklist:
 - [x] Point the S0 Neo4j graph client mirror at the S2 graph-services client authority instead of defining that client locally.
 - [x] Point S0 coordinate parser, GraphRAG query grammar, retrieval mode/result/disclosure contracts, and semantic-cache law at S2 graph-services authority.
 - [x] Keep S0 graph schema/seed/client/parser/cache mirrors as direct S2 passthroughs; S0 may keep command presentation and live runtime adapters, but not duplicated S2 service definitions.
-- [x] Move retrieval execution, Redis graph cache API, graph metadata, dataset import, relationship/link/sync/conflict services, semantic document/embedding refresh, and graph doctor/readiness into `Body/S/S2/graph-services`; keep S0 graph modules as passthrough mirrors.
+- [x] Move retrieval execution, graph semantic-cache law, graph metadata, vault frontmatter parsing/mapping/alignment helpers, dataset import, relationship/link/sync/conflict services, semantic document/embedding refresh, and graph doctor/readiness into `Body/S/S2/graph-services`; keep S0 graph modules as passthrough mirrors.
 - [x] Remove the S3 temporal `session_now` writer from the S2 graph Redis cache API; temporal Redis keys remain S3/S3' gateway context, while S2 keeps graph cache keys.
 - [x] Move RedisVL semantic-cache bridge scripts out of S0 and into `Body/S/S3/redis-context/scripts/redisvl_cache_service/`; remove the stale generated S0 `.venv` cache.
 - [x] Add S3 `redis-context` crate so Redis runtime/RedisVL bridge residency is S3-owned while S2 keeps the graph semantic-cache namespace and payload contract.
@@ -693,7 +693,7 @@ Checklist:
 - [ ] Decide `epi gnostic` vs `epi techne gnosis` alias/promotion.
 - [ ] Decide `epi kbase` vs `epi vimarsa` command status.
 - [ ] Keep Nara as M4/PASU operator surface under S5/M integration.
-- [ ] Make Graphiti usage/search/arc governance consume S3' runtime rather than own runtime architecture.
+- [x] Make Graphiti usage/search/arc governance consume S3' runtime rather than own runtime architecture: `Body/S/S3/graphiti-runtime` owns the runtime adapter/envelope/provenance law while gateway `s5.episodic.*` and S5/Epii status surfaces keep invocation, disclosure, and review governance outside the runtime crate.
 - [x] Add raw service proof for Gnosis ingestion/query where dependencies are available: deterministic local-store ingestion/query proof remains in `gnosis_commands.rs`, and the Python package smoke subset passes without live Neo4j/Gemini.
 - [x] Add module-level source selection/disclosure tests: `gnosis_query_report_proves_s5_world_return_over_s2_substrate` proves notebook/source-type filtering and source-summary disclosure over real local ingested documents.
 - [x] Add Epii access proof for review/autoresearch surfaces.
@@ -828,7 +828,7 @@ Exit condition:
 
 - [ ] Phase 1 parity manifest is executable and tested.
 - [x] S2 graph schema/services are Body-native or extraction is test-guarded with explicit remaining steps.
-- [ ] S3 gateway/redis-context/graphiti-runtime are Body-native or extraction is test-guarded with explicit remaining steps.
+- [x] S3 gateway/redis-context/graphiti-runtime are Body-native or extraction is test-guarded with explicit remaining steps: raw Redis client/cache tiers and RedisVL bridge residency are in `Body/S/S3/redis-context`; Graphiti runtime law is in `Body/S/S3/graphiti-runtime`; and S3 gateway now owns session/runtime primitives plus the canonical method route table, with S0 retained as live executable adapter/server shell.
 - [x] S1' compiler spine has real file/schema tests and is reachable before vault writes.
 - [ ] S4 agent invocation/access tests distinguish raw service checks from actual PI-agent runtime access.
 - [x] S5' review/autoresearch spine has state-machine, human-gated, and gateway-backed agent-access tests.
@@ -841,8 +841,8 @@ Exit condition:
 
 Continue the current spine progression:
 
-1. Extract the live S3 gateway server/runtime adapter body next, using `Body/S/S3/gateway` as the session/session-scope authority and keeping S0 as CLI/bootstrap mirror.
-2. Define the coordinate-native API/gateway surface for S2 graph services now that retrieval, sync, semantic refresh, doctor, and dataset import residency are S2-owned; destructive live Neo4j seed/migration tests still require explicit migration policy.
+1. Continue extracting live S3 gateway server adapter bodies only where the ownership is now unambiguous: S3 owns gateway/session/runtime/dispatch law; S0 remains CLI/bootstrap/server process adapter.
+2. Define the coordinate-native API/gateway surface for S2 graph services now that retrieval, sync, semantic refresh, doctor, dataset import, vault frontmatter/mapping, and graph semantic-cache residency are S2-owned; destructive live Neo4j seed/migration tests still require explicit migration policy.
 3. Keep the S3 Graphiti runtime crate as the compatibility HTTP adapter while the native library/runtime integration matures; preserve S5/S5' invocation/search/arc governance.
 4. Mirror the native SpaceTimeDB projection reader in the future desktop/Tauri client, using the same TUI portal registry and gateway/SpaceTimeDB contracts.
 5. Continue Phase 9 readiness work by making Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch render as distinct raw-service vs agent-access states in the live UI result state.

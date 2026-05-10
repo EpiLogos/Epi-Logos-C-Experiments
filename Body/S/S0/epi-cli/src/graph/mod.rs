@@ -91,18 +91,7 @@ pub enum GraphCmd {
     SeedNara,
 }
 
-/// Parse YAML frontmatter from a markdown file (content between --- delimiters).
-pub fn parse_yaml_frontmatter(content: &str) -> Option<serde_yaml::Value> {
-    let trimmed = content.trim_start();
-    if !trimmed.starts_with("---") {
-        return None;
-    }
-    // Find the closing ---
-    let after_first = &trimmed[3..];
-    let end = after_first.find("\n---")?;
-    let yaml_str = &after_first[..end];
-    serde_yaml::from_str(yaml_str).ok()
-}
+pub use epi_s2_graph_services::parse_yaml_frontmatter;
 
 fn compose_file_path() -> Result<String, String> {
     let candidates = [
