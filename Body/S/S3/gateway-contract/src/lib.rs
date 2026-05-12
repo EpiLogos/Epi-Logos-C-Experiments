@@ -34,6 +34,17 @@ pub const OMNIPANEL_SESSION_METADATA: &[&str] = &[
 
 pub const EVENT_NAMES: &[&str] = &["agent", "chat", "tick", "health", "heartbeat"];
 
+pub const PORTAL_EVENT_NAMES: &[&str] = &[
+    "portal.token",
+    "portal.tool_call",
+    "portal.lens_pressure",
+    "portal.vak_eval",
+    "portal.review_deposit",
+    "portal.kairos_shift",
+];
+
+pub const COMMAND_METHOD_NAMES: &[&str] = &["s0.command.exec", "s0.command.completion"];
+
 pub const SPACETIME_PROJECTION_TABLES: &[&str] = &[
     "gateway_instance",
     "agent_instance",
@@ -64,6 +75,8 @@ pub const METHOD_NAMES: &[&str] = &[
     "config.set",
     "config.patch",
     "config.apply",
+    "s0.command.exec",
+    "s0.command.completion",
     "cron.list",
     "cron.status",
     "cron.add",
@@ -169,6 +182,227 @@ pub fn method_names() -> &'static [&'static str] {
 
 pub fn event_names() -> &'static [&'static str] {
     EVENT_NAMES
+}
+
+pub fn portal_event_names() -> &'static [&'static str] {
+    PORTAL_EVENT_NAMES
+}
+
+pub fn command_method_names() -> &'static [&'static str] {
+    COMMAND_METHOD_NAMES
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PortalEventContract {
+    pub event_name: &'static str,
+    pub coordinate_owner: &'static str,
+    pub projection_source: &'static str,
+    pub payload_keys: &'static [&'static str],
+    pub consumer_surfaces: &'static [&'static str],
+}
+
+pub const PORTAL_EVENT_CONTRACTS: &[PortalEventContract] = &[
+    PortalEventContract {
+        event_name: "portal.token",
+        coordinate_owner: "S0'/S3",
+        projection_source: "gateway transcript stream",
+        payload_keys: &["sessionKey", "runId", "delta", "sequence"],
+        consumer_surfaces: &["epi portal /", "OmniPanel /"],
+    },
+    PortalEventContract {
+        event_name: "portal.tool_call",
+        coordinate_owner: "S0'/S4",
+        projection_source: "gateway runtime events",
+        payload_keys: &["sessionKey", "toolName", "status", "input", "resultSnippet"],
+        consumer_surfaces: &["epi portal /", "OmniPanel /", "run tree"],
+    },
+    PortalEventContract {
+        event_name: "portal.lens_pressure",
+        coordinate_owner: "S4'",
+        projection_source: "Anima VAK/Psyche runtime",
+        payload_keys: &["sessionKey", "lensId", "pressure", "reason"],
+        consumer_surfaces: &["epi portal 0", "epi portal /", "Epii workbench"],
+    },
+    PortalEventContract {
+        event_name: "portal.vak_eval",
+        coordinate_owner: "S4'",
+        projection_source: "Pleroma VAK gate",
+        payload_keys: &["sessionKey", "cpf", "ct", "cp", "cf", "cfp", "cs"],
+        consumer_surfaces: &["epi portal /", "Anima execution", "OmniPanel /"],
+    },
+    PortalEventContract {
+        event_name: "portal.review_deposit",
+        coordinate_owner: "S5'",
+        projection_source: "Epii review inbox",
+        payload_keys: &[
+            "sessionKey",
+            "dayId",
+            "itemId",
+            "requiresHuman",
+            "sourceAgent",
+        ],
+        consumer_surfaces: &["epi portal 1", "OmniPanel /", "Epii inbox"],
+    },
+    PortalEventContract {
+        event_name: "portal.kairos_shift",
+        coordinate_owner: "S3'",
+        projection_source: "global_temporal_surface",
+        payload_keys: &["sessionKey", "dayId", "kairosSnapshotId", "fresh", "source"],
+        consumer_surfaces: &["epi portal 0", "epi portal 1", "Tauri M3 clock"],
+    },
+];
+
+pub fn portal_event_contracts() -> &'static [PortalEventContract] {
+    PORTAL_EVENT_CONTRACTS
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum GatewayProtocolFamily {
+    JsonRpc,
+    Acp,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GatewayProtocolContract {
+    pub family: GatewayProtocolFamily,
+    pub coordinate_owner: &'static str,
+    pub session_identity_source: &'static str,
+    pub transport_modes: &'static [&'static str],
+}
+
+pub const GATEWAY_PROTOCOL_CONTRACTS: &[GatewayProtocolContract] = &[
+    GatewayProtocolContract {
+        family: GatewayProtocolFamily::JsonRpc,
+        coordinate_owner: "S3",
+        session_identity_source: "DAY/NOW session key plus subject coordinate",
+        transport_modes: &["stdio", "websocket"],
+    },
+    GatewayProtocolContract {
+        family: GatewayProtocolFamily::Acp,
+        coordinate_owner: "S3",
+        session_identity_source: "DAY/NOW session key plus subject coordinate",
+        transport_modes: &["stdio"],
+    },
+];
+
+pub fn gateway_protocol_contracts() -> &'static [GatewayProtocolContract] {
+    GATEWAY_PROTOCOL_CONTRACTS
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PlatformAdapterContract {
+    pub trait_name: &'static str,
+    pub coordinate_owner: &'static str,
+    pub methods: &'static [&'static str],
+    pub implementation_internal_methods: &'static [&'static str],
+    pub subject_resolver: &'static str,
+}
+
+pub const PLATFORM_ADAPTER_CONTRACT: PlatformAdapterContract = PlatformAdapterContract {
+    trait_name: "BasePlatformAdapter",
+    coordinate_owner: "S3",
+    methods: &[
+        "connect",
+        "disconnect",
+        "send",
+        "send_typing",
+        "send_image",
+        "send_document",
+        "send_voice",
+        "send_video",
+        "send_animation",
+        "send_image_file",
+        "set_message_handler",
+    ],
+    implementation_internal_methods: &["reconnect_with_backoff", "truncate_message"],
+    subject_resolver: "subject-coordinate resolver runs before Anima/Epii invocation",
+};
+
+pub fn platform_adapter_contract() -> &'static PlatformAdapterContract {
+    &PLATFORM_ADAPTER_CONTRACT
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SubjectCoordinateResolverContract {
+    pub coordinate_owner: &'static str,
+    pub input_keys: &'static [&'static str],
+    pub output_keys: &'static [&'static str],
+    pub graph_boundary: &'static str,
+}
+
+pub const SUBJECT_COORDINATE_RESOLVER_CONTRACT: SubjectCoordinateResolverContract =
+    SubjectCoordinateResolverContract {
+        coordinate_owner: "S3",
+        input_keys: &[
+            "platform",
+            "platformUserId",
+            "threadId",
+            "displayName",
+            "dayId",
+        ],
+        output_keys: &[
+            "subjectCoordinate",
+            "identityNodeRef",
+            "privacyClass",
+            "confidence",
+        ],
+        graph_boundary:
+            "may resolve against S2/S5 graph refs; must not mutate protected Pratibimba identity",
+    };
+
+pub fn subject_coordinate_resolver_contract() -> &'static SubjectCoordinateResolverContract {
+    &SUBJECT_COORDINATE_RESOLVER_CONTRACT
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CronContract {
+    pub coordinate_owner: &'static str,
+    pub lock_strategy: &'static str,
+    pub delivery_target_syntax: &'static [&'static str],
+    pub output_writes: &'static [&'static str],
+}
+
+pub const CRON_CONTRACT: CronContract = CronContract {
+    coordinate_owner: "S3/S3'",
+    lock_strategy: "file-locked tick",
+    delivery_target_syntax: &["origin", "local", "platform_name", "platform_name:chat_id"],
+    output_writes: &[
+        "Graphiti episodic record",
+        "DAY/NOW vault artifact through Hen/Khora write law",
+    ],
+};
+
+pub fn cron_contract() -> &'static CronContract {
+    &CRON_CONTRACT
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct McpEventCursorContract {
+    pub coordinate_owner: &'static str,
+    pub methods: &'static [&'static str],
+    pub event_sources: &'static [&'static str],
+    pub ordering_key: &'static str,
+}
+
+pub const MCP_EVENT_CURSOR_CONTRACT: McpEventCursorContract = McpEventCursorContract {
+    coordinate_owner: "S5'",
+    methods: &[
+        "events_poll(after_cursor)",
+        "events_wait(after_cursor, timeout)",
+    ],
+    event_sources: &["Epii inbox", "autoresearch", "Aletheia crystallisation"],
+    ordering_key: "monotonic cursor over created_at + item_id",
+};
+
+pub fn mcp_event_cursor_contract() -> &'static McpEventCursorContract {
+    &MCP_EVENT_CURSOR_CONTRACT
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

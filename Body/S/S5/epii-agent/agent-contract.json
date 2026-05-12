@@ -3,9 +3,13 @@
   "coordinate": "S5/S5'",
   "agent_kind": "pi_agent",
   "relation_to_anima": "peer_pi_agent",
+  "pi_runtime_agent_id": "epii",
+  "pi_gateway_session_key": "agent:epii:main",
+  "plugin_registry": "Body/S/S5/plugins/registry.jsonl",
   "resource_package": "epi-logos",
   "resource_package_target": "Body/S/S5/plugins/epi-logos",
-  "resource_package_status": "local_canonical_scaffold",
+  "resource_package_status": "vendor_promoted_canonical_body",
+  "resource_package_vendor_source": "vendors/epi-logos",
   "agent_access_core": "Body/S/S5/epii-agent-core",
   "gateway_methods": [
     "s5'.epii.status",
@@ -50,11 +54,21 @@
   ],
   "inbox_contract": {
     "purpose": "Make Anima and Aletheia work reviewable by the PI agent position to which their outputs make sense.",
+    "inbox_path_template": "Idea/Empty/Present/{day-date}/",
+    "path_rule": "The Epii inbox is day-scoped. Deposits live in the active DAY container and carry NOW/session lineage in frontmatter or receipt metadata rather than being buried inside one NOW session folder.",
+    "access_pattern": {
+      "summary_first": "Epii tooling surfaces active day inbox counts first.",
+      "full_items": "Full deposit files and review records are opened on demand from the day container.",
+      "anima_access": "Anima and Aletheia may deposit and request validation, but cannot resolve Epii review gates."
+    },
     "required_fields": [
       "source_agent",
       "source_coordinate",
       "request_type",
       "artifact_ref",
+      "day_id",
+      "now_path",
+      "session_key",
       "validation_required",
       "created_at"
     ]

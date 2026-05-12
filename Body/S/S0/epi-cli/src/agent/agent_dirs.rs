@@ -26,6 +26,8 @@ const TA_ONTA_AGENT_ROOTS: &[&str] = &[
     "Body/S/S4/ta-onta/S4-5p-aletheia/S5'/agents",
 ];
 
+pub const DEFAULT_PI_AGENT_ID: &str = "epii";
+
 #[derive(Debug, Clone)]
 pub struct AgentLayout {
     pub agent_id: String,
@@ -78,7 +80,7 @@ impl AgentLayout {
             ));
         }
 
-        let agent_id = agent.unwrap_or("main").to_owned();
+        let agent_id = agent.unwrap_or(DEFAULT_PI_AGENT_ID).to_owned();
         let home_root = env_home_root()?;
         let epi_home = default_epi_home_for(&repo_root, &home_root);
         let canonical_pi_agent_dir = canonical_pi_agent_dir(&home_root);
@@ -97,7 +99,7 @@ impl AgentLayout {
     pub fn resolve_for_epi_home(agent: Option<&str>, epi_home: PathBuf) -> Result<Self, String> {
         let repo_root = detect_repo_root()?;
         let repo_pi_root = repo_root.join("Body/S/S4/pi-agent");
-        let agent_id = agent.unwrap_or("main").to_owned();
+        let agent_id = agent.unwrap_or(DEFAULT_PI_AGENT_ID).to_owned();
         let home_root = env_home_root().unwrap_or_else(|_| {
             epi_home
                 .parent()
@@ -208,10 +210,13 @@ impl AgentLayout {
         if repo_skills.exists() {
             roots.push(repo_skills);
         }
-        for relative in TA_ONTA_SKILL_ROOTS {
-            let path = self.repo_root.join(relative);
-            if path.exists() {
-                roots.push(path);
+
+        if agent_uses_ta_onta_roots(&self.agent_id) {
+            for relative in TA_ONTA_SKILL_ROOTS {
+                let path = self.repo_root.join(relative);
+                if path.exists() {
+                    roots.push(path);
+                }
             }
         }
         roots
@@ -219,10 +224,12 @@ impl AgentLayout {
 
     pub fn repo_subagent_roots(&self) -> Vec<PathBuf> {
         let mut roots = Vec::new();
-        for relative in TA_ONTA_AGENT_ROOTS {
-            let path = self.repo_root.join(relative);
-            if path.exists() {
-                roots.push(path);
+        if agent_uses_ta_onta_roots(&self.agent_id) {
+            for relative in TA_ONTA_AGENT_ROOTS {
+                let path = self.repo_root.join(relative);
+                if path.exists() {
+                    roots.push(path);
+                }
             }
         }
         roots
@@ -261,6 +268,10 @@ impl AgentLayout {
 
         Ok(())
     }
+}
+
+fn agent_uses_ta_onta_roots(agent_id: &str) -> bool {
+    matches!(agent_id, "main" | "anima" | "aletheia")
 }
 
 pub fn canonical_pi_agent_dir(home_root: &Path) -> PathBuf {
@@ -324,7 +335,7 @@ fn infer_agent_id(agent_dir: &Path) -> String {
         .parent()
         .and_then(Path::file_name)
         .and_then(|name| name.to_str())
-        .unwrap_or("main")
+        .unwrap_or(DEFAULT_PI_AGENT_ID)
         .to_owned()
 }
 

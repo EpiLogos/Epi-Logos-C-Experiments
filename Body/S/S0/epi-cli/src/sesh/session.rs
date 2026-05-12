@@ -156,7 +156,7 @@ fn pi_session_runtime_for_request(
         .or_else(|| std::env::var("EPI_AGENT_ID").ok())
         .or_else(|| std::env::var("EPI_AGENT_NAME").ok())
         .filter(|value| !value.trim().is_empty())
-        .unwrap_or_else(|| "main".to_string());
+        .unwrap_or_else(|| crate::agent::DEFAULT_PI_AGENT_ID.to_string());
     let epi_home = env
         .get("EPI_AGENT_HOME")
         .map(PathBuf::from)

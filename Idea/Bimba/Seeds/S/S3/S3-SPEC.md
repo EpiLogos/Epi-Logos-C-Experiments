@@ -33,6 +33,16 @@ S3 is the imperative gateway control plane: [[WebSocket]] / [[RPC]] transport, p
 
 S3' is the shared temporal/state contract: [[Chronos]] grounding, [[Day]], [[NOW]], [[Kairos]], Redis-backed temporal context, [[Graphiti]] temporal episodic architecture, presence, subscriptions, [[SpacetimeDB]] live-state projection, session close/arc timing, and the [[Universal NOW]] field where gateway consequences become shared state.
 
+The Hermes parity pass adds a set of contract-level gateway refinements, all implemented as Epi-Logos-native S3/S3' surfaces rather than vendor product inheritance:
+
+- `s0.command.exec` and `s0.command.completion` are S0' command-centre methods over the existing portal surface registry. The TUI and future OmniPanel/Tauri command bar should call these contracts instead of inventing a second settings/command model.
+- Portal event vocabulary is typed at the gateway-contract level: `portal.token`, `portal.tool_call`, `portal.lens_pressure`, `portal.vak_eval`, `portal.review_deposit`, and `portal.kairos_shift`.
+- Gateway protocol families are explicit: JSON-RPC for current stdio/WebSocket style clients and ACP as an additive editor/agent protocol family. Both derive session identity from DAY/NOW plus subject-coordinate resolution.
+- Platform adapters should be shaped as a Rust async trait (`BasePlatformAdapter`) with connect/disconnect/send/media/typing/handler methods. Platform-specific message chunking/truncation is implementation-internal, not part of the trait authority.
+- Subject-coordinate resolution is a gateway pre-agent step. Inbound platform identities resolve to a safe subject coordinate/identity ref before Anima or Epii fires.
+- Cron keeps the useful file-locked tick and target syntax (`origin`, `local`, `platform`, `platform:chat_id`) but writes outputs as Graphiti episodic records plus DAY/NOW vault artifacts under Hen/Khora law, not a flat product ledger.
+- The future S5' MCP event stream uses cursor methods (`events_poll(after_cursor)`, `events_wait(after_cursor, timeout)`) over Epii inbox, autoresearch, and Aletheia events.
+
 Redis ownership must be clear here: S3 owns the Redis runtime substrate and RedisVL bridge residency. S2 owns graph semantic-cache law and namespace use over that runtime, while S3' owns Redis-backed temporal contextual grounding because live context is time-bound before it is graph-bound. Session continuity, NOW linkage, kairos state, active arc handles, episode handles, Graphiti search/result cache keys, and shared Day context belong under [[Chronos]] key law.
 
 Graphiti placement is likewise explicit: architecturally, [[Graphiti]] belongs at S3/S3' as the temporal episodic memory architecture. S5/S5' owns how Graphiti is invoked, searched, governed, reflected, and used by [[Aletheia]] / [[Epii]]. The current `epi-graphiti` FastAPI process is a wrapper around the `graphiti-core` Python library for Rust/HTTP/Docker convenience; it is not a necessary architectural sidecar and should not be preserved as the target shape.

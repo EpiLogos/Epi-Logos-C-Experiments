@@ -21,6 +21,14 @@ pub fn configure_std_command(plan: &PiLaunchPlan) -> Command {
     command.args(&plan.args);
     command.env("EPI_REPO_ROOT", &plan.repo_root);
     command.env("EPI_AGENT_NAME", &plan.agent_id);
+    command.env("EPI_AGENT_ID", &plan.agent_id);
+    if let Some(role) = &plan.role {
+        command.env("EPI_AGENT_ROLE", role);
+        command.env(
+            "EPI_AGENT_SCOPED_SURFACE",
+            format!("{}:{role}", plan.agent_id),
+        );
+    }
     command.env("PI_CODING_AGENT_DIR", &plan.agent_dir);
     command.env("EPI_AGENT_DIR", &plan.agent_dir);
     command.env("EPI_AGENT_HOME", &plan.epi_home);

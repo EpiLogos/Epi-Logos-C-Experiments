@@ -227,10 +227,12 @@ async fn run_listener_loop(
     mut shutdown_rx: Option<oneshot::Receiver<()>>,
 ) -> Result<(), String> {
     let registration = SpacetimeRegistration::from_env(local_port(&listener)?, &state_root)?;
+    let lightweight_maintenance = shutdown_rx.is_some();
     let maintenance_task = tokio::spawn(maintenance_loop(
         state_root.clone(),
         runtime.clone(),
         registration,
+        lightweight_maintenance,
     ));
     loop {
         let accepted = if let Some(shutdown_rx) = shutdown_rx.as_mut() {
@@ -2220,6 +2222,7 @@ async fn maintenance_loop(
     state_root: PathBuf,
     runtime: GatewayRuntimeState,
     registration: Option<SpacetimeRegistration>,
+    lightweight_health: bool,
 ) {
     let mut tick_interval = tokio::time::interval(Duration::from_millis(150));
     let mut health_interval = tokio::time::interval(Duration::from_millis(350));
@@ -2239,10 +2242,29 @@ async fn maintenance_loop(
                 ));
             }
             _ = health_interval.tick() => {
+                if lightweight_health {
+                    let seq = runtime.next_seq("__gateway__");
+                    runtime.broadcast(GatewayEvent::new(
+                        "health",
+                        None,
+                        None,
+                        Some(seq),
+                        json!({
+                            "ok": true,
+                            "source": "lightweight-test-maintenance",
+                        }),
+                    ));
+                    continue;
+                }
+                let state_root = state_root.clone();
+                let payload = tokio::task::spawn_blocking(move || {
+                    super::system::health_snapshot(&state_root).unwrap_or_else(|_| json!({
+                        "ok": false,
+                    }))
+                })
+                .await
+                .unwrap_or_else(|_| json!({ "ok": false }));
                 let seq = runtime.next_seq("__gateway__");
-                let payload = super::system::health_snapshot(&state_root).unwrap_or_else(|_| json!({
-                    "ok": false,
-                }));
                 runtime.broadcast(GatewayEvent::new(
                     "health",
                     None,

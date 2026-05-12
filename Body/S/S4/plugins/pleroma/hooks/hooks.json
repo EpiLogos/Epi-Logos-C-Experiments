@@ -11,6 +11,39 @@
         ]
       }
     ],
+    "PreToolCall": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "contract",
+            "command": "s4'.pleroma.gate.evaluate --emit portal.vak_eval --emit portal.lens_pressure"
+          }
+        ]
+      }
+    ],
+    "PostToolCall": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "contract",
+            "command": "s4'.psyche.update --observe tool_result --emit portal.tool_call"
+          }
+        ]
+      }
+    ],
+    "TransformToolResult": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "contract",
+            "command": "s4'.pleroma.result.wrap --with-day-now-session"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "matcher": "",

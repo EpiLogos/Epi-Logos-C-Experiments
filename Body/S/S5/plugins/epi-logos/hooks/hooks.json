@@ -1,0 +1,18 @@
+{
+  "description": "Epi-Logos session bootstrap — loads source grounding, coordinate system, and square basin map",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "epi-logos-bootstrap.sh",
+            "timeout": 15,
+            "statusMessage": "Loading Epi-Logos bootstrap..."
+          }
+        ]
+      }
+    ]
+  }
+}

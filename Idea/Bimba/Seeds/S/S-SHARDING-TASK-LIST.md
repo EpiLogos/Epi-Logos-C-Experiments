@@ -608,7 +608,7 @@ Exit condition:
 
 ## Phase 6. S5' Epii Review / Autoresearch Spine
 
-Status: first review-inbox, autoresearch-core, Epii agent-access, read-only world-return access, source-referenced evaluation, accepted-review promotion-gating, and epi-logos plugin binding passes complete. `Body/S/S5/epii-review-core` owns durable Epii review inbox state, open/deferred/resolved transitions, approve/reject/revise/defer decisions, and the guard that agent actors cannot approve/reject/revise items marked `requires_human`. `Body/S/S5/epii-autoresearch-core` now generalises the vendor ML autoresearch shape into an Epii self-improvement state machine: baseline/challenger proposals, weighted evidence evaluation with `kind` / `uri` / coordinate / summary source references, keep/discard decisions, status/history, and dry-run promotion planning through S1' [[Hen]] compiler law. `Body/S/S5/epii-agent-core` gives Epii an access layer over both stores so Anima/Aletheia can deposit review/improvement requests and Epii can query review/autoresearch status through `s5'.epii.*`. `Body/S/S5/plugins/epi-logos` is now the local canonical S5/S5' resource/skill scaffold, promoted from the earlier sketch, with plugin manifest, `epi-knowing` skill, and QV resources. S0 plugin discovery includes S5 plugins so Epii's resource spine can be loaded by the PI runtime path. The `s5'.epii.status` gateway response now also includes read-only [[Gnosis]], [[Nara]], and [[Graphiti]] world-return status. Gateway promotion now requires an approved Epii review resolution before returning even a dry-run Hen plan. Non-dry-run promotion remains blocked until compiler mutation law is wired.
+Status: first review-inbox, autoresearch-core, Epii agent-access, read-only world-return access, source-referenced evaluation, accepted-review promotion-gating, and epi-logos PI embodiment passes complete. `Body/S/S5/epii-review-core` owns durable Epii review inbox state, open/deferred/resolved transitions, approve/reject/revise/defer decisions, and the guard that agent actors cannot approve/reject/revise items marked `requires_human`. `Body/S/S5/epii-autoresearch-core` now generalises the vendor ML autoresearch shape into an Epii self-improvement state machine: baseline/challenger proposals, weighted evidence evaluation with `kind` / `uri` / coordinate / summary source references, keep/discard decisions, status/history, and dry-run promotion planning through S1' [[Hen]] compiler law. `Body/S/S5/epii-agent-core` gives Epii an access layer over both stores so Anima/Aletheia can deposit review/improvement requests and Epii can query review/autoresearch status through `s5'.epii.*`. `Body/S/S5/plugins/epi-logos` is now the canonical local S5/S5' resource/skill body promoted from `vendors/epi-logos`, preserving `.pi-agent`, `.claude-plugin`, `.codex`, agents, commands, hooks, resources, and skills. S0 plugin runtime resolution is now agent-scoped: Anima/Aletheia/Main receive ta-onta/Pleroma roots, while Epii receives the S5 epi-logos registry entry. The `s5'.epii.status` gateway response now also includes read-only [[Gnosis]], [[Nara]], and [[Graphiti]] world-return status. Gateway promotion now requires an approved Epii review resolution before returning even a dry-run Hen plan. Non-dry-run promotion remains blocked until compiler mutation law is wired.
 
 Goal: build Epii's review inbox and autoresearch loop as real S5' capabilities.
 
@@ -645,9 +645,15 @@ Checklist:
 - [x] Add S5 gateway parity records/routes for `s5'.review.*` as implemented/native.
 - [x] Add S5 gateway parity records/routes for `s5'.improve.*` as implemented/native.
 - [x] Add S5 gateway parity records/routes for `s5'.epii.*` as implemented/native.
-- [x] Bind epi-logos plugin resources/skills as the planned S5/S5' resource spine: canonical local scaffold lives at `Body/S/S5/plugins/epi-logos`, with manifest, `epi-knowing` skill, QV resources, and S0 plugin discovery coverage.
+- [x] Bind epi-logos plugin resources/skills as the planned S5/S5' resource spine: canonical local body lives at `Body/S/S5/plugins/epi-logos`, promoted from `vendors/epi-logos` with `.pi-agent`, `.claude-plugin`, `.codex`, agents, commands, hooks, resources, skills, QV resources, and S0 plugin discovery coverage.
 - [x] Specify Epii as a distinct PI-agent embodiment with bounded authority in `Body/S/S5/epii-agent/agent-contract.json`, not as an Anima subagent.
 - [x] Define first Epii -> Anima request shape for bounded implementation, dispatch, validation, and runtime action.
+- [x] Add agent-scoped PI plugin resolution so `epi agent spawn --agent anima` loads the S4/Pleroma surface and `epi agent spawn --agent epii` loads the S5/epi-logos surface through the same managed PI substrate.
+- [x] Scope default repo skill/subagent roots so Epii does not ambiently inherit ta-onta/Anima roots, while Anima/Aletheia/Main keep the ta-onta defaults.
+- [x] Propagate Epii as a peer PI runtime identity through session lifecycle creation: `epi agent session new` with `EPI_AGENT_ID=epii` writes `agent:epii:main` and an Epii resource-loader path.
+- [x] Make the bare `epi agent` command default to the Epii PI embodiment, while preserving explicit `epi agent epii`, `epi agent anima`, `epi agent aletheia`, and `epi agent spawn --agent ...` routes.
+- [x] Add role-scoped launch metadata for direct testing of Anima constitutional roles, Aletheia return roles, and epi-logos subagents without promoting those roles into unbounded peer PI agents.
+- [x] Add a Khora tmux terminal envelope under `epi agent tmux up|attach|status|down`, explicitly separate from semantic Epii/Khora session identity.
 
 Verification:
 
@@ -655,7 +661,10 @@ Verification:
 - [x] Module-level autoresearch state-machine tests: `cargo test --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --test improvement_loop`
 - [x] Gateway/API access test for Anima/Aletheia -> Epii inbox handoff: `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_epii_review`
 - [x] Gateway-backed agent access test for Anima/Aletheia -> Epii review/autoresearch deposits: `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_epii_agent_access`
-- [ ] Full installed PI runtime invocation test for Anima/Aletheia -> Epii inbox handoff.
+- [x] Managed PI spawn proof for separate Anima/Epii plugin and skill surfaces: `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test agent_spawn -- --nocapture`
+- [x] Epii session propagation proof for peer PI identity: `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test agent_session_commands -- --nocapture`
+- [x] Direct embodiment, role-surface, roster, and Khora tmux envelope proof: `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test agent_spawn -- --nocapture`
+- [ ] Full provider-backed installed PI runtime invocation test for Anima/Aletheia -> Epii inbox handoff.
 - [ ] Agent invocation/access test for Epii -> Anima bounded dispatch request.
 - [x] Human-gated review test proving state transitions without automating judgement.
 - [x] Promotion test proving accepted output routes through S1' compiler/residency law in dry-run mode: `cargo test --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --test improvement_loop`
@@ -840,7 +849,7 @@ Exit condition:
 
 ## Hermes Matrix Contract Harmonisation
 
-Status: active. The Hermes matrix is inspiration and parity reference, not source authority. Vendor source has been physically collapsed to the single ignored `vendors/` lane, and the old tracked `vendor/` lane is retired. Implementation must land in Body-native coordinate homes and prove Epi-Logos contracts rather than vendor fidelity.
+Status: contract-harmonisation pass complete for the current tranche. The Hermes matrix is inspiration and parity reference, not source authority. Vendor source has been physically collapsed to the single ignored `vendors/` lane, and the old tracked `vendor/` lane is retired. Implementation lands in Body-native coordinate homes and proves Epi-Logos contracts rather than vendor fidelity. The live S0 gateway Epii deposit liveness gap is resolved: the focused gateway deposit test now completes cleanly, and test-spawned gateway servers use lightweight maintenance health events so graph-health diagnostic workers cannot hold Tokio shutdown open. Remaining work is deeper implementation behind the newly named S3 platform/cron contracts and later cleanup.
 
 Goal:
 
@@ -861,17 +870,18 @@ Execution checklist:
 
 - [x] Collapse tracked vendor residency into ignored `vendors/`; remove `vendor/` and `vendrs/` as tracked lanes.
 - [x] Clarify the Epii inbox law in the matrix: `inbox_path` is the day container `Idea/Empty/Present/{DD-MM-YYYY}/`; individual inbox items carry NOW/session identifiers in frontmatter or filename and link back to the relevant NOW subfolder.
-- [ ] Update S4 specs/seeds so [[S4']] is clearly ta-onta as API/execution surface, with Khora through Aletheia as `S4.0'` through `S4.5'`, and with VAK dimensions as the internal dispatch grammar rather than one module per dimension.
-- [ ] Update `Body/S/S5/epii-agent/agent-contract.json` and tests so Epii review inbox state exposes the day-level `inbox_path`, session/NOW-linked deposits, and inbox count/access methods without burying autonomous work inside one session folder.
-- [ ] Decide whether `s5'.epii.user.orientation` remains as a read-facing snapshot. If kept, define it under protected [[Pratibimba]] M4.4.4.4 authority with Epii write, Aletheia membrane assist, and Anima read-only access. Do not copy Honcho peer-card schema as authority.
-- [ ] Add Pleroma lifecycle contract files/tests: `pre_tool_call` as VAK/permission gate, `post_tool_call` as Psyche context/kbase/current-task field observation, and `transform_tool_result` as coordinate-aware result wrapping over DAY/NOW/session-aware gateway events.
-- [ ] Extend Pleroma capability matrix and Anima orchestration with typed delegation: `agents[].role_restrictions`, `delegate_lens(lens_id, task)`, `delegate_square(square_id, task)`, and deterministic `s4'.pleroma.gate.evaluate(...)` observability.
-- [ ] Add S0'/gateway event vocabulary and command contracts: `s0.command.exec`, `s0.command.completion`, `portal.token`, `portal.tool_call`, `portal.lens_pressure`, `portal.vak_eval`, `portal.review_deposit`, `portal.kairos_shift`, all consumed by direct PI, TUI portal, and OmniPanel/Tauri.
-- [ ] Add S3 platform/gateway shard contracts: Rust async `BasePlatformAdapter` trait without trait-level `truncate_message`, hot-reloadable platform modules, JSON-RPC/ACP protocol families, and subject-coordinate resolver as pre-agent identity continuity.
-- [ ] Add S3 cron contract: Hermes file-locked tick and delivery-target syntax, but output dual-writes to Graphiti episodic record plus DAY/NOW vault artifact rather than a flat ledger.
-- [ ] Add S4 provider profile trait target from Hermes `ProviderProfile` attributes, plus plugin discovery override order: bundled, user, legacy.
-- [ ] Add future S5' `epi-mcp` event cursor pattern from Hermes MCP: `events_poll(after_cursor)` and `events_wait(after_cursor, timeout)` for Epii inbox/autoresearch/Aletheia events.
-- [ ] Add trust-tier ranking metadata to the portal surface registry for skill/surface discovery: `builtin | trusted | community`, display ranking only, not access gating.
+- [x] Update S4 specs/seeds so [[S4']] is clearly ta-onta as API/execution surface, with Khora through Aletheia as `S4.0'` through `S4.5'`, and with VAK dimensions as the internal dispatch grammar rather than one module per dimension.
+- [x] Update `Body/S/S5/epii-agent/agent-contract.json` and tests so Epii review inbox state exposes the day-level `inbox_path`, session/NOW-linked deposits, and inbox count/access methods without burying autonomous work inside one session folder.
+- [x] Decide whether `s5'.epii.user.orientation` remains as a read-facing snapshot. Kept as a read-facing snapshot under protected [[Pratibimba]] M4.4.4.4 authority with Epii stewardship and Anima/Aletheia read/deposit boundaries; Honcho peer-card shape is not authority.
+- [x] Add Pleroma lifecycle contract files/tests: `pre_tool_call` as VAK/permission gate, `post_tool_call` as Psyche context/kbase/current-task field observation, and `transform_tool_result` as coordinate-aware result wrapping over DAY/NOW/session-aware gateway events.
+- [x] Extend Pleroma capability matrix and Anima orchestration with typed delegation: `agents[].role_restrictions`, `delegate_lens(lens_id, task)`, `delegate_square(square_id, task)`, and deterministic `s4'.pleroma.gate.evaluate(...)` observability.
+- [x] Add S0'/gateway event vocabulary and command contracts: `s0.command.exec`, `s0.command.completion`, `portal.token`, `portal.tool_call`, `portal.lens_pressure`, `portal.vak_eval`, `portal.review_deposit`, `portal.kairos_shift`, all consumed by direct PI, TUI portal, and OmniPanel/Tauri.
+- [x] Add S3 platform/gateway shard contracts: Rust async `BasePlatformAdapter` trait without trait-level `truncate_message`, hot-reloadable platform modules, JSON-RPC/ACP protocol families, and subject-coordinate resolver as pre-agent identity continuity.
+- [x] Add S3 cron contract: Hermes file-locked tick and delivery-target syntax, but output dual-writes to Graphiti episodic record plus DAY/NOW vault artifact rather than a flat ledger.
+- [x] Add S4 provider profile trait target from Hermes `ProviderProfile` attributes, plus plugin discovery override order: bundled, user, legacy.
+- [x] Add future S5' `epi-mcp` event cursor pattern from Hermes MCP: `events_poll(after_cursor)` and `events_wait(after_cursor, timeout)` for Epii inbox/autoresearch/Aletheia events.
+- [x] Add trust-tier ranking metadata to the portal surface registry for skill/surface discovery: `builtin | trusted | community`, display ranking only, not access gating.
+- [x] Resolve S0 gateway live deposit liveness: the focused `gate_epii_agent_access` deposit test now proves DAY/NOW-linked Epii deposit through the live gateway and exits cleanly. Root cause was not the deposit route; it was test-server shutdown waiting on the maintenance health snapshot's graph-health blocking worker. Test-spawned gateway servers now emit lightweight maintenance health while production gateway start keeps the full health snapshot path.
 
 Testing architecture:
 
@@ -879,6 +889,17 @@ Testing architecture:
 - Gateway-contract tests for command completion/execution events, transcript/session event rendering contract, platform adapter trait-object dispatch, delivery-target parsing, cron dual-write planning, subject-coordinate resolver envelopes, and MCP event cursor ordering.
 - Agent-access tests that distinguish raw service readiness from actual PI invocation: S4 Anima/Pleroma gates, S5 Epii review/autoresearch access, and DAY/NOW-linked inbox deposit visibility.
 - Live-service tests only where the claim requires it: Neo4j namespace/subject resolution, Redis hot context, Graphiti episodic runtime, and SpaceTimeDB projection/subscription.
+
+Current verification:
+
+- [x] `cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml --test hermes_inspired_contracts`
+- [x] `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract`
+- [x] `cargo test --manifest-path Body/S/S5/epii-agent-core/Cargo.toml --test agent_access`
+- [x] `python3 -m unittest discover -s Body/S/S4/plugins/pleroma/tests`
+- [x] `python3 -m unittest discover -s Body/S/S5/tests`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_surfaces_contract`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_epii_agent_access s5_epii_gateway_deposit_links_aletheia_improvement_to_review_item -- --nocapture`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_channels_cron_voice -- --nocapture`
 
 Exit condition:
 

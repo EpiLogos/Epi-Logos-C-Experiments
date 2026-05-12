@@ -48,3 +48,14 @@ fn extension_methods_are_explicitly_classified_without_polluting_contract_names(
 
     assert!(classify_method("totally.unknown").is_none());
 }
+
+#[test]
+fn s0_command_surface_methods_route_through_portal_command_contract() {
+    for method in ["s0.command.exec", "s0.command.completion"] {
+        let route = classify_method(method).expect("S0' command method should be routed");
+        assert_eq!(route.owner, GatewayDispatchOwner::S0ProductAdapter);
+        assert_eq!(route.class, GatewayDispatchClass::ConfigurationSurface);
+        assert_eq!(route.coordinate_owner, "S0'");
+        assert_eq!(route.route_id, "s0-prime.command-surface");
+    }
+}

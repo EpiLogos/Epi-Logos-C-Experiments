@@ -333,6 +333,13 @@ fn portal_surface_registry_reads_plugin_manifests_agent_contracts_and_capability
     assert_eq!(capability.coordinate, "S4'");
     assert_eq!(capability.kind, PortalSurfaceKind::CapabilityGate);
     assert_eq!(capability.source, PortalSurfaceSource::CapabilityMatrix);
+    assert_eq!(capability.trust_tier, "trusted");
+
+    let package = surfaces
+        .iter()
+        .find(|surface| surface.id == "package.pleroma")
+        .unwrap();
+    assert_eq!(package.trust_tier, "trusted");
 }
 
 #[test]
@@ -368,4 +375,7 @@ fn default_portal_surfaces_include_live_body_manifests() {
     assert!(surfaces
         .iter()
         .any(|surface| surface.proves_agent_access_separately));
+    assert!(surfaces
+        .iter()
+        .any(|surface| surface.trust_tier == "trusted"));
 }

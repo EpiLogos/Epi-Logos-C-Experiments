@@ -63,6 +63,7 @@ pub struct PortalSurface {
     pub config_fields: Vec<PortalSurfaceConfigField>,
     pub actions: Vec<PortalSurfaceAction>,
     pub source: PortalSurfaceSource,
+    pub trust_tier: String,
     pub metadata: Vec<String>,
 }
 
@@ -157,6 +158,7 @@ impl PortalSurfaceProvider for TopologyProvider {
                     })
                     .collect(),
                 source: PortalSurfaceSource::Topology,
+                trust_tier: "builtin".to_string(),
                 metadata: vec!["topology seed".to_string()],
             })
             .collect()
@@ -208,6 +210,7 @@ impl PortalSurfaceProvider for GatewayParityProvider {
                         command,
                     }],
                     source: PortalSurfaceSource::GatewayParity,
+                    trust_tier: "builtin".to_string(),
                     metadata: vec![
                         format!("owner: {}", record.owner),
                         format!("body: {}", record.body_path),
@@ -246,6 +249,7 @@ impl PortalSurfaceProvider for SessionOperationsProvider {
                     ],
                 }],
                 source: PortalSurfaceSource::GatewaySessionContract,
+                trust_tier: "builtin".to_string(),
                 metadata: vec![
                     format!("gateway_method: {}", contract.gateway_method),
                     format!("agent_access_owner: {}", contract.agent_access_owner),
@@ -284,6 +288,7 @@ impl PortalSurfaceProvider for ReadinessProvider {
                         .collect(),
                 }],
                 source: PortalSurfaceSource::ReadinessManifest,
+                trust_tier: "builtin".to_string(),
                 metadata: vec![
                     format!("readiness_layer: {}", spec.layer),
                     format!("proof_kind: {}", spec.proof_kind),
@@ -342,6 +347,7 @@ impl PortalSurfaceProvider for ExtensionToolsProvider {
                     command: split_command(&tool.command),
                 }],
                 source: PortalSurfaceSource::ExtensionManifest,
+                trust_tier: trust_tier_for_manifest_path(&self.manifest_path).to_string(),
                 metadata: vec![self.manifest_path.display().to_string()],
             })
             .collect()
@@ -414,6 +420,7 @@ impl PortalSurfaceProvider for PluginManifestProvider {
                 ],
             }],
             source: PortalSurfaceSource::PluginManifest,
+            trust_tier: trust_tier_for_manifest_path(&self.manifest_path).to_string(),
             metadata: vec![self.manifest_path.display().to_string()],
         }]
     }
@@ -465,6 +472,7 @@ impl PortalSurfaceProvider for AgentContractProvider {
                     ],
                 }],
                 source: PortalSurfaceSource::AgentContract,
+                trust_tier: "builtin".to_string(),
                 metadata: vec![
                     format!("agent_kind: {}", contract.agent_kind),
                     format!("resource_package: {}", contract.resource_package),
@@ -520,6 +528,7 @@ impl PortalSurfaceProvider for CapabilityMatrixProvider {
                         command: Vec::new(),
                     }],
                     source: PortalSurfaceSource::CapabilityMatrix,
+                    trust_tier: trust_tier_for_manifest_path(&self.manifest_path).to_string(),
                     metadata: vec![
                         format!("package_role: {package_role}"),
                         format!("skills: {skills}"),
@@ -556,6 +565,7 @@ impl PortalSurfaceProvider for PortalRegistryProvider {
                     ],
                 }],
                 source: PortalSurfaceSource::PortalRegistry,
+                trust_tier: "builtin".to_string(),
                 metadata: vec!["ratatui hypertile registry".to_string()],
             })
             .collect()
@@ -1101,6 +1111,17 @@ fn plugin_coordinate(plugin_id: &str) -> String {
         "S0"
     };
     coordinate.to_string()
+}
+
+fn trust_tier_for_manifest_path(path: &Path) -> &'static str {
+    let text = path.to_string_lossy();
+    if text.contains("/Body/S/") {
+        "trusted"
+    } else if text.contains("/vendors/") || text.contains("/vendor/") {
+        "community"
+    } else {
+        "builtin"
+    }
 }
 
 fn workspace_root() -> PathBuf {

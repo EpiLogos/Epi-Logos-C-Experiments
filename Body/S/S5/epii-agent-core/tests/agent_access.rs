@@ -88,12 +88,24 @@ fn anima_review_deposit_creates_inbox_item_without_resolution_authority() {
                 coordinate: Some("S4/S4'".to_owned()),
                 kind: Some("capability_matrix".to_owned()),
             },
+            day_id: Some("12-05-2026".to_owned()),
+            now_path: Some("Idea/Empty/Present/12-05-2026/NOW.md".to_owned()),
+            session_key: Some("agent:anima:12-05-2026".to_owned()),
+            vault_root: Some("Idea".to_owned()),
             requires_human: true,
         })
         .expect("Anima deposit should create review item");
 
     assert_eq!(receipt.review_item.unwrap().source, "anima");
     assert!(receipt.improvement_run.is_none());
+    assert_eq!(
+        receipt.inbox_surface.inbox_path.as_deref(),
+        Some("Idea/Empty/Present/12-05-2026/")
+    );
+    assert_eq!(
+        receipt.inbox_surface.session_key.as_deref(),
+        Some("agent:anima:12-05-2026")
+    );
 
     let snapshot = access
         .snapshot()
@@ -121,6 +133,10 @@ fn aletheia_improvement_deposit_creates_review_item_and_improvement_run() {
                 coordinate: Some("S5.4'".to_owned()),
                 kind: Some("seed_spec".to_owned()),
             },
+            day_id: Some("12-05-2026".to_owned()),
+            now_path: Some("Idea/Empty/Present/12-05-2026/NOW.md".to_owned()),
+            session_key: Some("agent:aletheia:12-05-2026".to_owned()),
+            vault_root: Some("Idea".to_owned()),
             requires_human: false,
         })
         .expect("Aletheia improvement deposit should create linked run");

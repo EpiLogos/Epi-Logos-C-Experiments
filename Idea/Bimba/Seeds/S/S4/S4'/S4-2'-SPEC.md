@@ -20,8 +20,14 @@ Pleroma is also the intended fork-lineage home for [[oh-my-codex]]. The target i
 ## Build Scope
 
 - Define `s4'.permission.get`.
+- Define deterministic Pleroma gate observability: `s4'.pleroma.gate.evaluate`.
+- Define typed delegation surfaces: `s4'.pleroma.delegate_lens` and `s4'.pleroma.delegate_square`.
 - Return durable capability/permission state.
 - Gate tool/write surfaces before execution.
+- Ground lifecycle hooks in the execution substrate:
+  - `pre_tool_call` is the VAK/permission gate before action and emits `portal.vak_eval` / `portal.lens_pressure`.
+  - `post_tool_call` observes Psyche context, kbase field, current task, and tool result after action and emits `portal.tool_call`.
+  - `transform_tool_result` wraps output with coordinate, DAY/NOW, session, and review-deposit context before it returns to the gateway/portal.
 
 ## API / Envelope / TS
 
@@ -38,11 +44,15 @@ Pleroma is also the intended fork-lineage home for [[oh-my-codex]]. The target i
 - skill/tool manifests.
 - plugin-runtime bridge.
 - bounded primitive wrappers.
+- `Body/S/S4/plugins/pleroma/capability-matrix.json` for the tested package-level capability membrane.
+- `Body/S/S4/plugins/pleroma/hooks/hooks.json` for current lifecycle hook declarations.
 
 ## Test Obligations
 
 - Unauthorized write is denied before S0 spawn.
 - Capability status matches installed tools.
+- Lifecycle declarations prove VAK/Psyche/DAY-NOW grounding rather than generic plugin callbacks.
+- Delegation declarations preserve leaf/orchestrator role restrictions and summary-only subagent returns.
 
 ## Boundaries
 

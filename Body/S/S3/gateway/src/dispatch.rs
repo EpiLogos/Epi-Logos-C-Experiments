@@ -159,16 +159,20 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "S0/S4/S5",
                 "s0.product-system-surface",
             ),
-            "config.get" | "config.schema" | "config.set" | "config.patch" | "config.apply" => {
-                route(
-                    method,
-                    GatewayDispatchOwner::S0ProductAdapter,
-                    GatewayDispatchClass::ConfigurationSurface,
-                    "S0",
-                    "S0/S4/S5",
-                    "s0.product-configuration",
-                )
-            }
+            "config.get"
+            | "config.schema"
+            | "config.set"
+            | "config.patch"
+            | "config.apply"
+            | "s0.command.exec"
+            | "s0.command.completion" => route(
+                method,
+                GatewayDispatchOwner::S0ProductAdapter,
+                GatewayDispatchClass::ConfigurationSurface,
+                "S0'",
+                "S0/S4/S5",
+                "s0-prime.command-surface",
+            ),
             "cron.list" | "cron.status" | "cron.add" | "cron.update" | "cron.remove"
             | "cron.run" | "cron.runs" | "wizard.start" | "wizard.next" | "wizard.cancel"
             | "wizard.status" => route(

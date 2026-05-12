@@ -39,11 +39,16 @@ pub struct SpawnedPiProcess {
 
 pub async fn spawn(
     agent: Option<&str>,
+    role: Option<&str>,
+    persist: bool,
     plugin_dirs: &[std::path::PathBuf],
     prompt: Option<&str>,
     json: bool,
 ) -> Result<String, String> {
-    let plan = runtime::plan_spawn(agent, plugin_dirs, prompt)?;
+    let plan = runtime::plan_spawn(agent, role, plugin_dirs, prompt)?;
+    if persist {
+        return crate::agent::tmux::run_plan(&plan, json);
+    }
     execute_plan(&plan, json).await
 }
 
@@ -53,7 +58,7 @@ pub fn run_prompt(
     prompt: Option<&str>,
     json: bool,
 ) -> Result<String, String> {
-    let plan = runtime::plan_prompt(agent, plugin_dirs, prompt)?;
+    let plan = runtime::plan_prompt(agent, None, plugin_dirs, prompt)?;
     invoke_pi(&plan, json)
 }
 
@@ -64,11 +69,12 @@ pub async fn attach(agent: Option<&str>, session_id: &str, json: bool) -> Result
 
 pub async fn run_pi(
     agent: Option<&str>,
+    role: Option<&str>,
     plugin_dirs: &[std::path::PathBuf],
     args: &[String],
     json: bool,
 ) -> Result<String, String> {
-    let plan = runtime::plan_run(agent, plugin_dirs, args)?;
+    let plan = runtime::plan_run(agent, role, plugin_dirs, args)?;
     execute_plan(&plan, json).await
 }
 
@@ -77,7 +83,7 @@ pub fn spawn_process(
     plugin_dirs: &[std::path::PathBuf],
     prompt: Option<&str>,
 ) -> Result<SpawnedPiProcess, String> {
-    let plan = runtime::plan_prompt(agent, plugin_dirs, prompt)?;
+    let plan = runtime::plan_prompt(agent, None, plugin_dirs, prompt)?;
     let command = format!("pi {}", plan.args.join(" "));
     let child = configure_tokio_command(&plan)
         .stdout(Stdio::piped())
@@ -94,11 +100,12 @@ pub fn spawn_process(
 
 pub async fn verify_runtime(
     agent: Option<&str>,
+    role: Option<&str>,
     plugin_dirs: &[std::path::PathBuf],
     prompt: Option<&str>,
     json: bool,
 ) -> Result<String, String> {
-    let plan = runtime::plan_verify_runtime(agent, plugin_dirs, prompt)?;
+    let plan = runtime::plan_verify_runtime(agent, role, plugin_dirs, prompt)?;
     let runtime_root = plan
         .runtime_root
         .clone()
@@ -195,6 +202,14 @@ fn configure_tokio_command(plan: &PiLaunchPlan) -> TokioCommand {
     command.args(&plan.args);
     command.env("EPI_REPO_ROOT", &plan.repo_root);
     command.env("EPI_AGENT_NAME", &plan.agent_id);
+    command.env("EPI_AGENT_ID", &plan.agent_id);
+    if let Some(role) = &plan.role {
+        command.env("EPI_AGENT_ROLE", role);
+        command.env(
+            "EPI_AGENT_SCOPED_SURFACE",
+            format!("{}:{role}", plan.agent_id),
+        );
+    }
     command.env("PI_CODING_AGENT_DIR", &plan.agent_dir);
     command.env("EPI_AGENT_DIR", &plan.agent_dir);
     command.env("EPI_AGENT_HOME", &plan.epi_home);

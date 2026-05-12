@@ -13,6 +13,7 @@ pub mod launch;
 mod models;
 mod plugin_manifest;
 mod plugins;
+mod roster;
 pub mod runtime;
 pub mod session;
 pub mod session_propagation;
@@ -20,12 +21,15 @@ mod skills;
 pub mod spawn;
 mod subagents;
 mod team;
+mod tmux;
 pub mod vak;
 
 use clap::{Args, Subcommand};
 use std::path::PathBuf;
 
-pub use agent_dirs::{canonical_pi_agent_dir, managed_epi_agent_dir, AgentLayout};
+pub use agent_dirs::{
+    canonical_pi_agent_dir, managed_epi_agent_dir, AgentLayout, DEFAULT_PI_AGENT_ID,
+};
 
 #[derive(Subcommand)]
 pub enum AgentCmd {
@@ -98,11 +102,23 @@ pub enum AgentCmd {
     },
     /// Launch Pi-Pi meta-agent (builds Pi agents; sets EPI_AGENT_MODE=pipi)
     Pipi,
+    /// Launch the default Epii PI embodiment
+    Epii(AgentLaunchArgs),
+    /// Launch the Anima PI embodiment, optionally role-scoped
+    Anima(AgentLaunchArgs),
+    /// Launch the Aletheia PI embodiment, optionally role-scoped
+    Aletheia(AgentLaunchArgs),
     /// Launch a managed PI session for the selected agent
     Spawn {
         /// Resolve layout for a named agent
         #[arg(long)]
         agent: Option<String>,
+        /// Scope the launch to a known agent surface/role within the selected embodiment
+        #[arg(long)]
+        role: Option<String>,
+        /// Launch inside the Khora tmux terminal envelope
+        #[arg(long)]
+        persist: bool,
         /// Load one or more plugin bundles in-place for this session
         #[arg(long = "plugin-dir")]
         plugin_dirs: Vec<PathBuf>,
@@ -121,6 +137,9 @@ pub enum AgentCmd {
         /// Resolve layout for a named agent
         #[arg(long)]
         agent: Option<String>,
+        /// Scope the launch to a known agent surface/role within the selected embodiment
+        #[arg(long)]
+        role: Option<String>,
         /// Load one or more plugin bundles in-place for this session
         #[arg(long = "plugin-dir")]
         plugin_dirs: Vec<PathBuf>,
@@ -131,6 +150,9 @@ pub enum AgentCmd {
         /// Resolve layout for a named agent
         #[arg(long)]
         agent: Option<String>,
+        /// Scope the launch to a known agent surface/role within the selected embodiment
+        #[arg(long)]
+        role: Option<String>,
         /// Load one or more plugin bundles in-place for this verification run
         #[arg(long = "plugin-dir")]
         plugin_dirs: Vec<PathBuf>,
@@ -143,8 +165,24 @@ pub enum AgentCmd {
         /// Resolve layout for a named agent
         #[arg(long)]
         agent: Option<String>,
+        /// Scope the launch to a known agent surface/role within the selected embodiment
+        #[arg(long)]
+        role: Option<String>,
+        /// Launch inside the Khora tmux terminal envelope
+        #[arg(long)]
+        persist: bool,
         /// Initial prompt (optional)
         prompt: Option<String>,
+    },
+    /// Manage the Khora tmux terminal envelope for raw process persistence
+    Tmux {
+        #[command(subcommand)]
+        cmd: TmuxCmd,
+    },
+    /// Inspect the agent embodiment and role surface roster
+    Roster {
+        #[command(subcommand)]
+        cmd: RosterCmd,
     },
     /// Manage workspace-bound Khora session lifecycle
     Session {
@@ -213,9 +251,24 @@ pub enum VakCmd {
     },
 }
 
+#[derive(Args, Clone)]
+pub struct AgentLaunchArgs {
+    /// Scope the launch to a known agent surface/role within this embodiment
+    #[arg(long)]
+    pub role: Option<String>,
+    /// Launch inside the Khora tmux terminal envelope
+    #[arg(long)]
+    pub persist: bool,
+    /// Load one or more plugin bundles in-place for this session
+    #[arg(long = "plugin-dir")]
+    pub plugin_dirs: Vec<PathBuf>,
+    /// Optional prompt to pass into PI
+    pub prompt: Option<String>,
+}
+
 pub async fn dispatch(cmd: Option<&AgentCmd>, json: bool) -> Result<String, String> {
     let Some(cmd) = cmd else {
-        return spawn::spawn(None, &[], None, json).await;
+        return spawn::spawn(Some(DEFAULT_PI_AGENT_ID), None, false, &[], None, json).await;
     };
 
     match cmd {
@@ -234,30 +287,70 @@ pub async fn dispatch(cmd: Option<&AgentCmd>, json: bool) -> Result<String, Stri
         AgentCmd::Auth { cmd } => auth::run(cmd, json),
         AgentCmd::Pipi => {
             std::env::set_var("EPI_AGENT_MODE", "pipi");
-            spawn::spawn(None, &[], None, json).await
+            spawn::spawn(Some(DEFAULT_PI_AGENT_ID), None, false, &[], None, json).await
         }
+        AgentCmd::Epii(args) => launch_direct("epii", args, json).await,
+        AgentCmd::Anima(args) => launch_direct("anima", args, json).await,
+        AgentCmd::Aletheia(args) => launch_direct("aletheia", args, json).await,
         AgentCmd::Spawn {
             agent,
+            role,
+            persist,
             plugin_dirs,
             prompt,
-        } => spawn::spawn(agent.as_deref(), plugin_dirs, prompt.as_deref(), json).await,
+        } => {
+            spawn::spawn(
+                agent.as_deref(),
+                role.as_deref(),
+                *persist,
+                plugin_dirs,
+                prompt.as_deref(),
+                json,
+            )
+            .await
+        }
         AgentCmd::Attach { agent, session_id } => {
             spawn::attach(agent.as_deref(), session_id, json).await
         }
         AgentCmd::Run {
             agent,
+            role,
             plugin_dirs,
             args,
-        } => spawn::run_pi(agent.as_deref(), plugin_dirs, args, json).await,
+        } => spawn::run_pi(agent.as_deref(), role.as_deref(), plugin_dirs, args, json).await,
         AgentCmd::VerifyRuntime {
             agent,
+            role,
             plugin_dirs,
             prompt,
-        } => spawn::verify_runtime(agent.as_deref(), plugin_dirs, prompt.as_deref(), json).await,
-        AgentCmd::Chat { agent, prompt } => {
-            let plan = runtime::plan_chat(agent.as_deref(), &[], prompt.as_deref())?;
-            spawn::execute_plan(&plan, json).await
+        } => {
+            spawn::verify_runtime(
+                agent.as_deref(),
+                role.as_deref(),
+                plugin_dirs,
+                prompt.as_deref(),
+                json,
+            )
+            .await
         }
+        AgentCmd::Chat {
+            agent,
+            role,
+            persist,
+            prompt,
+        } => {
+            spawn::spawn(
+                agent.as_deref(),
+                role.as_deref(),
+                *persist,
+                &[],
+                prompt.as_deref(),
+                json,
+            )
+            .await
+        }
+        AgentCmd::Tmux { cmd } => tmux::run(cmd, json),
+        AgentCmd::Roster { cmd } => roster::run(cmd, json),
         AgentCmd::Session { cmd } => session::run(cmd, json),
         AgentCmd::Codex { cmd } => match cmd {
             CodexCmd::Install { json: as_json } => codex_runtime::run_install(*as_json || json),
@@ -296,6 +389,22 @@ pub async fn dispatch(cmd: Option<&AgentCmd>, json: bool) -> Result<String, Stri
     }
 }
 
+async fn launch_direct(
+    agent_id: &str,
+    args: &AgentLaunchArgs,
+    json: bool,
+) -> Result<String, String> {
+    spawn::spawn(
+        Some(agent_id),
+        args.role.as_deref(),
+        args.persist,
+        &args.plugin_dirs,
+        args.prompt.as_deref(),
+        json,
+    )
+    .await
+}
+
 #[derive(Subcommand)]
 pub enum ExtensionsCmd {
     /// Copy the repo `.pi` asset tree into the selected managed agent dir
@@ -332,7 +441,7 @@ pub enum SubagentCmd {
     Run {
         #[arg(long)]
         agent: String,
-        #[arg(long, default_value = "agent:main:main")]
+        #[arg(long, default_value = "agent:epii:main")]
         parent_session: String,
         #[arg(long)]
         session_key: Option<String>,
@@ -362,7 +471,7 @@ pub enum SubagentCmd {
 pub enum TeamCmd {
     /// Create a durable team record and worker sessions without executing them
     Create {
-        #[arg(long, default_value = "agent:main:main")]
+        #[arg(long, default_value = "agent:epii:main")]
         parent_session: String,
         #[arg(long, default_value = "parallel")]
         strategy: String,
@@ -375,7 +484,7 @@ pub enum TeamCmd {
     },
     /// Dispatch a single agent through the durable team runtime
     Dispatch {
-        #[arg(long, default_value = "agent:main:main")]
+        #[arg(long, default_value = "agent:epii:main")]
         parent_session: String,
         #[arg(long)]
         label: Option<String>,
@@ -398,7 +507,7 @@ pub enum TeamCmd {
 pub enum ChainCmd {
     /// Run an ordered chain of agents through the native runtime
     Run {
-        #[arg(long, default_value = "agent:main:main")]
+        #[arg(long, default_value = "agent:epii:main")]
         parent_session: String,
         #[arg(long)]
         label: Option<String>,
@@ -432,7 +541,7 @@ pub struct AgentSelection {
 
 #[derive(Subcommand)]
 pub enum AgentsCmd {
-    /// Ensure the default `main` agent is registered
+    /// Ensure the default `epii` agent is registered
     Init,
     /// Add a named managed agent
     Add { id: String },
@@ -440,6 +549,43 @@ pub enum AgentsCmd {
     List,
     /// Inspect one registered agent
     Inspect { id: String },
+}
+
+#[derive(Subcommand)]
+pub enum TmuxCmd {
+    /// Start the Khora tmux terminal envelope if it is not already running
+    Up {
+        /// Override the derived tmux session name
+        #[arg(long)]
+        name: Option<String>,
+        /// Agent embodiment to export inside the terminal envelope
+        #[arg(long, default_value = DEFAULT_PI_AGENT_ID)]
+        agent: String,
+    },
+    /// Attach to the Khora tmux terminal envelope
+    Attach {
+        /// Override the derived tmux session name
+        #[arg(long)]
+        name: Option<String>,
+    },
+    /// Report whether the Khora tmux terminal envelope is running
+    Status {
+        /// Override the derived tmux session name
+        #[arg(long)]
+        name: Option<String>,
+    },
+    /// Tear down the Khora tmux terminal envelope
+    Down {
+        /// Override the derived tmux session name
+        #[arg(long)]
+        name: Option<String>,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum RosterCmd {
+    /// List PI embodiments and role-scoped agent surfaces
+    List,
 }
 
 #[derive(Subcommand)]

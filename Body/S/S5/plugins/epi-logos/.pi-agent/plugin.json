@@ -1,0 +1,46 @@
+{
+  "name": "epi-logos",
+  "version": "0.1.0",
+  "kind": "pi-agent-activation-bundle",
+  "description": "Pi activation bundle for the Epi-Logos plugin: SwarmVault-first writing, individual Epi-Logos skills, canonical resources, and vault governance.",
+  "native_contract": {
+    "swarmvault_3_12_0": "SwarmVault installs Pi rules into AGENTS.md only. This bundle supplies the Epi-Logos plugin activation surface around that shared Pi agent file."
+  },
+  "entrypoints": {
+    "repo_rules": "../../AGENTS.md",
+    "plugin_readme": "../README.md",
+    "pi_role": "../agents/pi-writing-cartographer.md",
+    "runtime_pi_agent": "../../Thought/Vault/agent/pi-agent.md",
+    "runtime_skill_index": "../../Thought/Vault/agent/skill-index.md",
+    "vault_schema": "../../swarmvault.schema.md",
+    "vault_index": "../../Thought/Vault/wiki/index.md",
+    "graph_report": "../../Thought/Vault/wiki/graph/report.md"
+  },
+  "plugin": {
+    "root": "../",
+    "skills": "../skills",
+    "commands": "../commands",
+    "resources": "../resources",
+    "agents": "../agents",
+    "scripts": "../scripts"
+  },
+  "install": {
+    "script": "../scripts/vault/install-pi-agent.sh",
+    "requires": [
+      "node >=24",
+      "swarmvault >=3.12.0"
+    ],
+    "skill_link_targets": [
+      "$HOME/.codex/skills/<skill-name>",
+      "$HOME/.agents/skills/<skill-name>"
+    ]
+  },
+  "activation_order": [
+    "Read AGENTS.md.",
+    "Read swarmvault.schema.md.",
+    "Read Thought/Vault/agent/pi-agent.md.",
+    "Read Thought/Vault/agent/skill-index.md.",
+    "Load using-epi-logos first, then route to the specific Epi-Logos skill required by the task.",
+    "Use SwarmVault query, graph, context, task, review, and lint commands before broad raw-source search."
+  ]
+}

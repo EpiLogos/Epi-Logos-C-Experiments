@@ -151,7 +151,7 @@ pub fn run(cmd: &SubagentCmd, json: bool) -> Result<String, String> {
                     parent_session_key: record
                         .spawned_by
                         .clone()
-                        .unwrap_or_else(|| "agent:main:main".to_owned()),
+                        .unwrap_or_else(|| "agent:epii:main".to_owned()),
                     session_key: Some(record.canonical_key),
                     prompt: task.clone(),
                     team_id: record.team_id,
@@ -226,7 +226,7 @@ pub fn run_runtime(request: RuntimeSubagentRequest) -> Result<RuntimeSubagentRep
 
     transcripts::append_message(&gate_root, &session_key, "user", &request.prompt, None)?;
 
-    let plan = runtime::plan_run(Some(&request.agent_id), &[], &args)?;
+    let plan = runtime::plan_run(Some(&request.agent_id), None, &[], &args)?;
     let start = now_ms()?;
     let output = launch::configure_std_command(&plan)
         .output()

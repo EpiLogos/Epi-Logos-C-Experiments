@@ -1,0 +1,678 @@
+{
+  "version": 1,
+  "updated_at": "2026-03-30T00:00:00Z",
+  "coordinates": {
+    "M0": {
+      "pithy": "Anuttara -- absolute ground, vimarsa engine, void arithmetic",
+      "q_nature": "language runtime VM; 3-bit bytecode ISA executing the Vimarsa lexicon",
+      "q_essence": "generates all M1-M5 structures from 7 self-interrogating operators",
+      "q_formulation": "six nested micro-algebras (#0-0 through #0-5) mirroring the full M0-M5 macro",
+      "q_structure": "depth dimension beneath all subsystems; both domain module and absolute substrate"
+    },
+    "M1": {
+      "pithy": "Paramasiva -- structural logos, quaternal logic flowering",
+      "q_nature": "mathematical DNA; every cardinality derives from the 16:9 explicate ratio",
+      "q_essence": "Spanda generates QL constants; Ananda 12x12 matrices encode all harmonic ratios",
+      "q_formulation": "six sub-branches: Bimba, Pratibimba, Ananda, Spanda, QL Flowering, Toroidal",
+      "q_structure": "compiler for all numerical parameters consumed by M2-M5; the grammar layer"
+    },
+    "M2": {
+      "pithy": "Parashakti -- vibrational matrix, 72 invariants, DET/MEF",
+      "q_nature": "72-fold vibrational signal processor; 12 MEF lenses as L-family Bimba",
+      "q_essence": "compresses vibration into MEF conditions; DET projects 72-space onto M3 bitboard",
+      "q_formulation": "72 = 4 elements x 3 signs x 3 decans x 2 phases; union enforced at compile time",
+      "q_structure": "causal resonance hub; CAUSAL_RESONANCE edges (336) are the cross-weave mechanism"
+    },
+    "M3": {
+      "pithy": "Mahamaya -- symbolic codec, codons/hexagrams/Gene Keys",
+      "q_nature": "64-space dominant; every position addressable by 6-bit index into uint64_t word",
+      "q_essence": "bitwise transcription algebra: XOR for symmetry, bit-reversal for diagonal transform",
+      "q_formulation": "six sub-branches: Reception, I-Ching, Genetic Code, Engine, Arcana, 360-degree Wheel",
+      "q_structure": "last outward Torus position before #4 Lemniscate fold; fullest explicate expression"
+    },
+    "M4": {
+      "pithy": "Nara -- personal dialogical interface, oracle engine",
+      "q_nature": "personal identity as oracle; natal chart + I-Ching as ground",
+      "q_essence": "transforms raw oracle charge data into body-resonant guidance",
+      "q_formulation": "six sub-branches: identity, medicine, oracle, transform, lens, logos",
+      "q_structure": "contextual #4 anchor; lemniscate where self-knowledge folds inward"
+    },
+    "M5": {
+      "pithy": "Epii -- holographic integration, recursive self-API",
+      "q_nature": "container law; the 128-byte master struct that makes all subsystems self-transparent",
+      "q_essence": "Mobius write-back: position 5 recognizes itself as position 0 transformed",
+      "q_formulation": "six sub-branches: Identity, Epi-Logos worldview, Siva backend, Shakti frontend, agents, Logos FSM",
+      "q_structure": "(5/0) context frame; COMPLETES_CYCLE_INTO #0 is the single most important ontological edge"
+    },
+    "M0'": {
+      "pithy": "Anuttara (inv) -- void arithmetic UI, Spanda visualization",
+      "q_nature": "runtime expression of the void ISA; renders operator bytecodes as observable states",
+      "q_essence": "activates Spanda pulse display and concrescence trace visualization",
+      "q_formulation": "CosmicClock plugin tab; void arithmetic made navigable in the TUI portal",
+      "q_structure": "applied ground layer; M0's abstract ISA folded into concrete user interaction"
+    },
+    "M1'": {
+      "pithy": "Paramasiva (inv) -- QL clock display, Ananda matrix viewer",
+      "q_nature": "runtime face of mathematical DNA; renders the 12x12 Ananda matrices as live grids",
+      "q_essence": "displays tick12 clock state and Spanda stage on the torus walk viewer",
+      "q_formulation": "portal plugin showing QL flowering constants and DR ring arithmetic live",
+      "q_structure": "applied structure layer; M1's compile-time grammar made experientially legible"
+    },
+    "M2'": {
+      "pithy": "Parashakti (inv) -- planet/chakra dashboard, invariant browser",
+      "q_nature": "runtime face of 72-fold vibration; renders MEF lenses as browsable epistemic apertures",
+      "q_essence": "activates live planet degree feed and chakra resonance state display",
+      "q_formulation": "portal plugin: planet wheel, chakra zones, decan browser, element throughline",
+      "q_structure": "applied vibrational layer; M2's causal resonance web made tactile and navigable"
+    },
+    "M3'": {
+      "pithy": "Mahamaya (inv) -- symbol decoder UI, codon/hexagram explorer",
+      "q_nature": "runtime face of 64-space; renders hexagram/codon bitboard as interactive symbol deck",
+      "q_essence": "decodes oracle output into I-Ching lines, codons, Gene Keys, and tarot cards",
+      "q_formulation": "portal plugin: hexagram viewer, codon table, 360-degree wheel navigator",
+      "q_structure": "applied symbolic layer; M3's uint64_t algebra translated into lived symbolic meaning"
+    },
+    "M4'": {
+      "pithy": "Nara (inv) -- oracle journal UI, identity dashboard",
+      "q_nature": "runtime face of personal interface; the oracle journal and PASU identity card",
+      "q_essence": "presents cast history, body zone activations, and medicine prescriptions to user",
+      "q_formulation": "portal plugin: oracle cast view, identity profile, NaraWeights calibration UI",
+      "q_structure": "applied personal layer; M4's lemniscate self-knowledge rendered as living journal"
+    },
+    "M5'": {
+      "pithy": "Epii (inv) -- knowledge hub, OmniPanel, Logos monitor",
+      "q_nature": "runtime face of holographic integration; the OmniPanel as system self-mirror",
+      "q_essence": "exposes Logos FSM stage, agent roster status, and session promotions in real time",
+      "q_formulation": "portal plugin: Logos cycle monitor, config panel, skills toggle, cron scheduler",
+      "q_structure": "applied integration layer; M5's Mobius write-back made inspectable as living UI"
+    },
+    "S0": {
+      "pithy": "Terminal -- bare-metal CLI, process I/O",
+      "q_nature": "lowest technology stratum; raw process execution and stdio boundaries",
+      "q_essence": "spawns and monitors child processes; carries binary I/O without interpretation",
+      "q_formulation": "shell commands, environment variables, pipes; the S0 operational substrate",
+      "q_structure": "#0 stack position; immutable physical interface beneath all software layers"
+    },
+    "S1": {
+      "pithy": "Obsidian -- vault knowledge base, markdown",
+      "q_nature": "local file-system knowledge layer; markdown as the canonical text encoding",
+      "q_essence": "persists session artifacts, daily notes, NOW files, and frontmatter-keyed documents",
+      "q_formulation": "vault folder hierarchy: Idea/Bimba/World/Empty/Present; wikilink graph",
+      "q_structure": "#1 stack position; definitive storage stratum where knowledge takes stable form"
+    },
+    "S2": {
+      "pithy": "Neo4j/Redis -- graph + cache, GraphRAG",
+      "q_nature": "graph-relational persistence layer; nodes and typed edges encoding ontological relations",
+      "q_essence": "executes Cypher queries; Redis caches hot sub-graphs for sub-millisecond retrieval",
+      "q_formulation": "Gnosis graph: Bimba coordinates + relation types from M-branch datasets",
+      "q_structure": "#2 stack position; operational backbone where entities and their relations live"
+    },
+    "S3": {
+      "pithy": "PAI Gateway -- WebSocket relay, epi-claw",
+      "q_nature": "real-time bidirectional transport layer; WebSocket protocol v3 with hello-ok handshake",
+      "q_essence": "routes method calls between Electron/CLI clients and the Rust gateway server",
+      "q_formulation": "port 18794; epi-claw protocol; sessions.list / nara.* / cron.* dispatch",
+      "q_structure": "#3 stack position; processual relay hub through which all live interactions flow"
+    },
+    "S4": {
+      "pithy": "Claude/PI -- agent orchestration, LLM",
+      "q_nature": "language model inference layer; the cognitive engine behind agent responses",
+      "q_essence": "executes Anima/Aletheia agent roster; interprets onto-code and translates to pseudocode",
+      "q_formulation": "Anthropic Claude API; MCP tool calls; constitutional agent ANIMA.md format",
+      "q_structure": "#4 stack position; contextual intelligence frame that personalizes all system output"
+    },
+    "S5": {
+      "pithy": "Notion/n8n -- sync, webhooks, external",
+      "q_nature": "external integration boundary; bridges internal vault state to third-party services",
+      "q_essence": "n8n orchestrates webhook triggers; Notion syncs structured knowledge outward",
+      "q_formulation": "Telegram notifications, scheduled sync jobs, external API connectors",
+      "q_structure": "#5 stack position; integration horizon where system knowledge reaches the world"
+    },
+    "S0'": {
+      "pithy": "CLI Core -- QL-augmented epi command grammar",
+      "q_nature": "inverted terminal layer; `epi` command grammar as QL-structured user interface",
+      "q_essence": "parses coordinate-aware subcommands: epi core/vault/graph/gate/agent/sync",
+      "q_formulation": "Rust CLI (epi-cli); clap argument parser; coordinate namespace routing",
+      "q_structure": "applied S0 layer; bare process I/O elevated to ontologically structured commands"
+    },
+    "S1'": {
+      "pithy": "Obsidian Vault -- chunked text, embeddings, markdown",
+      "q_nature": "inverted knowledge base; vault content chunked and embedded for semantic retrieval",
+      "q_essence": "produces 384-dim vectors from markdown chunks; feeds claude-mem SQLite+Chroma",
+      "q_formulation": "epi vault commands; NOW/FLOW/Day templates; frontmatter keyed to C-family",
+      "q_structure": "applied S1 layer; static markdown vault made queryable via vector similarity"
+    },
+    "S2'": {
+      "pithy": "GraphRAG -- Neo4j vector index, Redis cache, hybrid retrieval",
+      "q_nature": "inverted graph layer; graph topology enriched with 3072-dim embedding vectors",
+      "q_essence": "hybrid retrieval: graph traversal + cosine similarity over Gnosis node embeddings",
+      "q_formulation": "Gnosis graph promoted from HOT claude-mem at night; session-type filter on promotion",
+      "q_structure": "applied S2 layer; relational graph made semantically navigable through vector space"
+    },
+    "S3'": {
+      "pithy": "Gateway -- WebSocket server, epi-claw protocol v3",
+      "q_nature": "inverted relay layer; Rust gateway server owning session lifecycle and method dispatch",
+      "q_essence": "SessionStore as source of truth; Techne owns start/stop/status lifecycle primitives",
+      "q_formulation": "epi-cli/src/gate/; minProtocol:3/maxProtocol:3; all nara.* methods dispatched here",
+      "q_structure": "applied S3 layer; abstract transport protocol made into live stateful session manager"
+    },
+    "S4'": {
+      "pithy": "PI Agent -- Anima/Aletheia rosters, MCP tools",
+      "q_nature": "inverted agent layer; 13 constitutional agents (Anima root + 6 + 6 Aletheia) as active system",
+      "q_essence": "agents execute tool calls, write vault artifacts, and carry DoV sattva kernels",
+      "q_formulation": "ANIMA.md 6-section format; agent gates in .pi/extensions/ta-onta/aletheia/S5'/",
+      "q_structure": "applied S4 layer; LLM inference made into role-constituted agentive orchestration"
+    },
+    "S5'": {
+      "pithy": "Sync Layer -- n8n webhooks, Notion/Telegram integration",
+      "q_nature": "inverted integration boundary; external services made reactive to internal system events",
+      "q_essence": "n8n workflows trigger on vault events; Telegram delivers kairos and oracle notifications",
+      "q_formulation": "epi sync commands; webhook endpoints; Notion database push from Gnosis exports",
+      "q_structure": "applied S5 layer; static external connectors activated as live event-driven pipelines"
+    },
+    "C0": {
+      "pithy": "Bimba -- canonical source, original mirror",
+      "q_nature": "the original; immutable .rodata instance that defines all instances of its kind",
+      "q_essence": "self-referential ground: C0.c points back to &C0; source IS its own source",
+      "q_formulation": "compile-time BIMBA macro; const struct; compiler enforces write-protection",
+      "q_structure": "#0 ontological position; the foundational reference against which all Pratibimbas calibrate"
+    },
+    "C1": {
+      "pithy": "Form -- essential nature, boundary",
+      "q_nature": "the essential boundary condition; the minimal definition that distinguishes a thing",
+      "q_essence": "declares the type contract; establishes what a coordinate IS before instantiation",
+      "q_formulation": "typedef struct declarations; field layouts; the formal schema specification",
+      "q_structure": "#1 ontological position; Form is the law that shape obeys before execution begins"
+    },
+    "C2": {
+      "pithy": "Entity -- atomic units, instantiation",
+      "q_nature": "irreducible unit; the minimal form that can stand alone as an addressable object",
+      "q_essence": "instantiation operator; bridges archetype (#2) to live heap-allocated object",
+      "q_formulation": "structured as struct/type with ID, payload, lifecycle; arena_alloc produces C2",
+      "q_structure": "#2 ontological position; what gets created, tracked, and destroyed in operation"
+    },
+    "C3": {
+      "pithy": "Process -- canvas workspace, workflow",
+      "q_nature": "the workspace type; the container in which operations unfold over time",
+      "q_essence": "executes state transitions; carries mutable processual state through pipeline stages",
+      "q_formulation": "session flows, day structures, Logos FSM stages; the canvas on which events occur",
+      "q_structure": "#3 ontological position; pattern-generating workspace where recurrence becomes visible"
+    },
+    "C4": {
+      "pithy": "Type -- formal pattern, classification",
+      "q_nature": "the classification frame; the lens through which categories become formally distinct",
+      "q_essence": "discriminates instances; assigns coordinate membership via enum and tagged pointer",
+      "q_formulation": "Coordinate_Family enum; identity_flags byte; vtable dispatch tables",
+      "q_structure": "#4 ontological position; lemniscate anchor of the type system; context frame itself"
+    },
+    "C5": {
+      "pithy": "Pratibimba -- instance/reflection, applied",
+      "q_nature": "the living reflection; every heap-allocated coordinate as mirror of its Bimba",
+      "q_essence": "carries bedrock pointer back to Bimba; PRATIBIMBA macro; mutable runtime state",
+      "q_formulation": "arena-allocated instances with full 16-fold pointer web populated at runtime",
+      "q_structure": "#5 ontological position; Mobius return point where instance recognizes its source"
+    },
+    "C0'": {
+      "pithy": "Bimba (inv) -- reflected source, instance-side mirror",
+      "q_nature": "source as experienced from the instance side; the Bimba seen through Pratibimba eyes",
+      "q_essence": "runtime consultation of canonical ground; reading .rodata values during execution",
+      "q_formulation": "const pointer dereference in hot path; GET_PTR(bedrock) before every archetype read",
+      "q_structure": "applied C0; the original accessed as living reference rather than static definition"
+    },
+    "C1'": {
+      "pithy": "Form (inv) -- applied nature, runtime boundary",
+      "q_nature": "form as runtime constraint; the type contract enforced at execution rather than compile time",
+      "q_essence": "validates instance fields against declared schema; runtime type-checking and dispatch",
+      "q_formulation": "vtable method calls; runtime _Static_assert equivalents; boundary enforcement in heap",
+      "q_structure": "applied C1; formal definition activated as living constraint in executing code"
+    },
+    "C2'": {
+      "pithy": "Entity (inv) -- instantiated unit, live object",
+      "q_nature": "the entity as currently executing; live object with populated payload and active pointers",
+      "q_essence": "carries vector_id anchor, inversion state, and weave_state as runtime identity",
+      "q_formulation": "PRATIBIMBA* on heap; all 16-fold pointers resolved; invoke() function pointer active",
+      "q_structure": "applied C2; the atomic unit in motion through the coordinate traversal pipeline"
+    },
+    "C3'": {
+      "pithy": "Process (inv) -- active workflow, executing canvas",
+      "q_nature": "process as currently running; the canvas mid-execution with mutable state evolving",
+      "q_essence": "accumulates session events, oracle casts, and agent interactions into process trace",
+      "q_formulation": "live session in SessionStore; active Logos FSM state; executing transform container",
+      "q_structure": "applied C3; workspace pattern made concrete as specific unfolding instance"
+    },
+    "C4'": {
+      "pithy": "Type (inv) -- applied pattern, runtime classification",
+      "q_nature": "type as runtime assignment; classification decision made during live execution",
+      "q_essence": "dispatches to correct vtable slot based on family enum and inversion state at runtime",
+      "q_formulation": "switch-free vtable dispatch; tagged pointer bit extraction; runtime family resolution",
+      "q_structure": "applied C4; the lemniscate fold executed, contextual frame instantiated in CPU registers"
+    },
+    "C5'": {
+      "pithy": "Pratibimba (inv) -- reflection of reflection, Mobius fold",
+      "q_nature": "instance reflecting on its own instance-hood; second-order self-recognition",
+      "q_essence": "executes Mobius write-back: live instance data enriches Bimba ground for next cycle",
+      "q_formulation": "night promotion to Gnosis; aletheia_session_promote; oracle recognized flag closure",
+      "q_structure": "applied C5; the reflection turned back on itself, completing the ontological loop"
+    },
+    "P0": {
+      "pithy": "Ground -- functional base, root position",
+      "q_nature": "functional bedrock; the position from which all semantic meaning in a system originates",
+      "q_essence": "provides the zero-point reference; all relative positions measured against P0",
+      "q_formulation": "root node in any functional hierarchy; the seed-state before differentiation",
+      "q_structure": "#0 functional position; the implicit ground that makes P1-P5 meaningful by contrast"
+    },
+    "P1": {
+      "pithy": "Definition -- boundary setting, specification",
+      "q_nature": "the act of drawing a boundary; formal specification that separates this from that",
+      "q_essence": "declares interface contracts; emits the API surface that downstream code depends on",
+      "q_formulation": "header files, type declarations, schema definitions, SPEC documents",
+      "q_structure": "#1 functional position; the definitional frame within which P2-P5 operate"
+    },
+    "P2": {
+      "pithy": "Operation -- transformation, active process",
+      "q_nature": "transformation as such; the functional act that converts input state to output state",
+      "q_essence": "executes algorithms; applies bitwise algebra, quaternion rotation, oracle casting",
+      "q_formulation": "function bodies, operator implementations, mutation functions",
+      "q_structure": "#2 functional position; the engine that drives all movement through the coordinate space"
+    },
+    "P3": {
+      "pithy": "Pattern -- recurring structure, template",
+      "q_nature": "recurring structure abstracted from multiple instances; the repeatable template",
+      "q_essence": "recognizes invariants across executions; names the recurring structural motif",
+      "q_formulation": "design patterns, FSM state diagrams, recurring relation types across datasets",
+      "q_structure": "#3 functional position; pattern-crystallization point where regularity becomes reusable"
+    },
+    "P4": {
+      "pithy": "Context -- environmental frame, situational",
+      "q_nature": "the situational frame; all background conditions that modulate how P0-P3 behave",
+      "q_essence": "injects environment variables, kairos state, and session context into operations",
+      "q_formulation": "context frames (CF), PCO overlay, kairos temporal modes, NaraWeights config",
+      "q_structure": "#4 functional position; lemniscate frame where operations fold inward to situational depth"
+    },
+    "P5": {
+      "pithy": "Integration -- synthesis, unified view",
+      "q_nature": "the unified view achieved after traversing P0-P4; synthesis as functional completion",
+      "q_essence": "aggregates outputs from all prior positions into a coherent, actionable whole",
+      "q_formulation": "Logos cycle stage An-a-logos; OmniPanel synthesis view; integral lens application",
+      "q_structure": "#5 functional position; integration horizon where the traversed arc becomes legible"
+    },
+    "P0'": {
+      "pithy": "Ground (inv) -- applied base, instance root",
+      "q_nature": "ground as instantiated in a specific execution context; the root as actually occupied",
+      "q_essence": "establishes the zero-point for this particular session, cast, or traversal",
+      "q_formulation": "session_start event; oracle cast initiation; coordinate arena allocation",
+      "q_structure": "applied P0; the abstract functional base made concrete in a specific runtime context"
+    },
+    "P1'": {
+      "pithy": "Definition (inv) -- runtime boundary, live specification",
+      "q_nature": "definition as enforced at runtime; the contract active during execution",
+      "q_essence": "validates arguments against interface; raises runtime errors on boundary violation",
+      "q_formulation": "clap arg validation; schema enforcement in gateway; frontmatter key validation",
+      "q_structure": "applied P1; the static boundary drawn as a dynamic runtime constraint"
+    },
+    "P2'": {
+      "pithy": "Operation (inv) -- applied transform, executing process",
+      "q_nature": "operation as currently executing; the transform caught mid-application",
+      "q_essence": "runs the bitwise algebra, oracle coin throw, or agent tool call right now",
+      "q_formulation": "live function call on CPU; active Rust future being polled; in-flight RPC method",
+      "q_structure": "applied P2; the transformation engine engaged with actual input, producing actual output"
+    },
+    "P3'": {
+      "pithy": "Pattern (inv) -- instantiated structure, active template",
+      "q_nature": "pattern as currently instantiated; the template filled with real data in this run",
+      "q_essence": "executes the recognized pattern against live session state and oracle data",
+      "q_formulation": "active transform container (Bohm/TalkingCircle/Diamond); live FSM pattern match",
+      "q_structure": "applied P3; the recurring structure activated in a specific, unrepeatable instance"
+    },
+    "P4'": {
+      "pithy": "Context (inv) -- applied frame, runtime situation",
+      "q_nature": "context as currently operative; the situational frame concretely shaping this execution",
+      "q_essence": "injects live kairos planet degrees, active NaraWeights, and session PCO into pipeline",
+      "q_formulation": "kairos fetch result populating M4_Temporal_Now; live CF substage derived from tick12",
+      "q_structure": "applied P4; the abstract contextual frame collapsed into a specific lived moment"
+    },
+    "P5'": {
+      "pithy": "Integration (inv) -- applied synthesis, instance unity",
+      "q_nature": "synthesis as achieved in this particular run; the unified view this session produced",
+      "q_essence": "writes the Logos stage result to vault; promotes session to Gnosis as recognized insight",
+      "q_formulation": "c_5_reflection_complete: true; chronos_archive_day; oracle recognized flag set",
+      "q_structure": "applied P5; the integration horizon crossed, the Mobius return executed this time"
+    },
+    "L0": {
+      "pithy": "Literal -- surface reading, direct meaning",
+      "q_nature": "the literal face; reading what is explicitly stated without interpretive overlay",
+      "q_essence": "returns direct string content, raw field values, unprocessed oracle text",
+      "q_formulation": "text extraction, value lookup, pithy field display, direct symbol reading",
+      "q_structure": "#0 epistemic position; the surface from which all deeper lenses depart"
+    },
+    "L1": {
+      "pithy": "Functional -- operational view, how-it-works",
+      "q_nature": "the operational reading; understanding a thing by what it does and how it behaves",
+      "q_essence": "traces execution paths, function call chains, and data transformation flows",
+      "q_formulation": "q_essence field content; API surface description; epi command grammar walkthrough",
+      "q_structure": "#1 epistemic position; the functional lens that renders hidden operations visible"
+    },
+    "L2": {
+      "pithy": "Structural -- form analysis, architecture",
+      "q_nature": "the structural reading; understanding by analyzing the form and its internal geometry",
+      "q_essence": "maps struct layouts, pointer webs, memory arenas, and coordinate family relations",
+      "q_formulation": "q_structure field content; 16-fold intra-openness diagram; M-branch dataset shape",
+      "q_structure": "#2 structural position; the architecture lens that reveals load-bearing skeleton"
+    },
+    "L3": {
+      "pithy": "Archetypal -- deep pattern, universal form",
+      "q_nature": "the archetypal reading; identifying which #0-#5 archetype a thing instantiates",
+      "q_essence": "recognizes that M4 IS the #4 lemniscate, that M2 IS 72-fold, that C0 IS the Bimba law",
+      "q_formulation": "q_formulation and q_nature together; coordinate-to-archetype correspondence tables",
+      "q_structure": "#3 archetypal position; the universal-pattern lens that sees through the specific"
+    },
+    "L4": {
+      "pithy": "Paradigmatic -- model-level, framework shift",
+      "q_nature": "the paradigmatic reading; identifying which model or framework governs interpretation",
+      "q_essence": "recognizes when a QL shift is needed; identifies which CF context frame is operative",
+      "q_formulation": "context frame identification; model-switching between Mod 2/3/4/6 lenses",
+      "q_structure": "#4 epistemic position; lemniscate of the lens system; where frameworks fold inward"
+    },
+    "L5": {
+      "pithy": "Integral -- unified view, all lenses active",
+      "q_nature": "the integral reading; all six lenses applied simultaneously without collapse",
+      "q_essence": "synthesizes literal, functional, structural, archetypal, and paradigmatic views at once",
+      "q_formulation": "MEF 12-lens matrix applied to a coordinate; Logos cycle stage An-a-logos output",
+      "q_structure": "#5 epistemic position; integral horizon where the full epistemic spectrum is held"
+    },
+    "L0'": {
+      "pithy": "Literal (inv) -- applied reading, contextual surface",
+      "q_nature": "literal reading activated in a specific context; the surface meaning this situation calls for",
+      "q_essence": "returns the situationally relevant direct reading rather than generic text content",
+      "q_formulation": "context-sensitive pithy display; oracle cast result rendered for this user now",
+      "q_structure": "applied L0; surface reading made responsive to the concrete moment of inquiry"
+    },
+    "L1'": {
+      "pithy": "Functional (inv) -- applied operation, runtime how-it-works",
+      "q_nature": "operational understanding activated in execution; tracing this specific run's path",
+      "q_essence": "follows the live function call stack and data flow for the current oracle cast",
+      "q_formulation": "debug trace output; gateway RPC log; active Logos FSM stage display",
+      "q_structure": "applied L1; functional lens engaged with real execution rather than hypothetical flow"
+    },
+    "L2'": {
+      "pithy": "Structural (inv) -- applied form, runtime architecture",
+      "q_nature": "structural understanding as lived; recognizing the architecture from inside an execution",
+      "q_essence": "maps which cache lines are hot, which pointers are resolved, which arenas are active",
+      "q_formulation": "profiler output; memory layout inspection; live 128-byte HC struct population",
+      "q_structure": "applied L2; the architectural skeleton made visible through live execution data"
+    },
+    "L3'": {
+      "pithy": "Archetypal (inv) -- applied depth, instance-level pattern",
+      "q_nature": "archetypal recognition applied to a specific case; seeing the universal in this particular",
+      "q_essence": "identifies which #0-#5 archetype is presently active in this oracle result or symbol",
+      "q_formulation": "hexagram archetypal commentary; Gene Key shadow/gift/siddhi reading for this cast",
+      "q_structure": "applied L3; the universal pattern recognized as operative in this specific moment"
+    },
+    "L4'": {
+      "pithy": "Paradigmatic (inv) -- applied model, runtime framework",
+      "q_nature": "paradigmatic shift as executed; the model switch that happened during this session",
+      "q_essence": "records which CF context frame became operative and why the shift occurred",
+      "q_formulation": "context frame activation log; CPF coordinate mapping in session transcript",
+      "q_structure": "applied L4; the framework fold completed, lemniscate traversed in this instance"
+    },
+    "L5'": {
+      "pithy": "Integral (inv) -- applied unity, instance-level synthesis",
+      "q_nature": "integral synthesis as achieved in this session; the unified view this run produced",
+      "q_essence": "writes integral insight to vault artifact; sets c_5_reflection_complete: true",
+      "q_formulation": "session promotion to Gnosis; Logos stage An-a-logos output saved as T5 insight",
+      "q_structure": "applied L5; all lenses converged on this particular moment's truth, result persisted"
+    },
+    "T0": {
+      "pithy": "Seed -- originating impulse, first spark",
+      "q_nature": "the originating thought-impulse; the pre-differentiated spark before form emerges",
+      "q_essence": "seeds the oracle cast, session initiation, or agent task; the initial context injection",
+      "q_formulation": "first message in session, initial oracle cast, user query before any processing",
+      "q_structure": "#0 artifact type; the generative seed from which all subsequent T1-T5 artifacts grow"
+    },
+    "T1": {
+      "pithy": "Spec -- formal specification, blueprint",
+      "q_nature": "formal blueprint; the written specification that governs all downstream implementation",
+      "q_essence": "defines acceptance criteria, field shapes, and invariant laws in canonical documents",
+      "q_formulation": "CLAUDE.md, M-branch spec files, canonical invariants documents, SKILL.md stubs",
+      "q_structure": "#1 artifact type; the definitional document stratum; knowledge in its most formal state"
+    },
+    "T2": {
+      "pithy": "Form -- structured artifact, shaped output",
+      "q_nature": "the shaped output; a thought that has taken stable, transmissible form",
+      "q_essence": "produces markdown files, vault notes, code modules, and structured JSON outputs",
+      "q_formulation": "NOW.md, daily-note.md, overlay.json, epi-lib C files, Rust module files",
+      "q_structure": "#2 artifact type; the materialized artifact stratum; knowledge crystallized into structure"
+    },
+    "T3": {
+      "pithy": "Process -- workflow/method, active procedure",
+      "q_nature": "the procedural artifact; documentation of how a process runs rather than what it produces",
+      "q_essence": "captures workflow sequences, FSM stages, and repeatable method descriptions",
+      "q_formulation": "implementation plans, ur-process protocol, Logos cycle stage descriptions",
+      "q_structure": "#3 artifact type; the process-documentation stratum; knowledge as executable sequence"
+    },
+    "T4": {
+      "pithy": "Pattern -- recurring template, design motif",
+      "q_nature": "the pattern artifact; a recognized recurring template abstracted for reuse",
+      "q_essence": "identifies cross-session invariants; crystallizes recurring agent behaviors as templates",
+      "q_formulation": "design pattern documents, FLOW.md journal template, agent sattva kernels",
+      "q_structure": "#4 artifact type; pattern-recognition stratum; the template that recurrence produces"
+    },
+    "T5": {
+      "pithy": "Insight -- quintessential understanding, wisdom",
+      "q_nature": "the wisdom artifact; understanding distilled to its irreducible essential truth",
+      "q_essence": "captures recognized insights promoted to Gnosis; the oracle recognition event recorded",
+      "q_formulation": "session-promoted insights (decision/bugfix/feature/discovery types); wisdom notes",
+      "q_structure": "#5 artifact type; the insight stratum where the journey crystallizes into permanent knowing"
+    },
+    "T0'": {
+      "pithy": "Seed (inv) -- applied impulse, instance spark",
+      "q_nature": "the seed as actually fired; the originating impulse in its specific, contextualized form",
+      "q_essence": "the live user query or oracle throw that triggered this particular session branch",
+      "q_formulation": "first WebSocket message; oracle cast initiation event; NOW file creation timestamp",
+      "q_structure": "applied T0; the abstract originating impulse landed in a specific lived moment"
+    },
+    "T1'": {
+      "pithy": "Spec (inv) -- runtime specification, live blueprint",
+      "q_nature": "specification as consulted during execution; the blueprint actively governing this run",
+      "q_essence": "retrieves canonical invariants and spec constraints during live code execution",
+      "q_formulation": "CLAUDE.md read at session start; spec files fetched by agent before task execution",
+      "q_structure": "applied T1; the static specification made active as live execution constraint"
+    },
+    "T2'": {
+      "pithy": "Form (inv) -- applied artifact, executing output",
+      "q_nature": "the artifact being produced right now; form in the act of crystallization",
+      "q_essence": "writes the vault note, generates the oracle reading, produces the JSON output",
+      "q_formulation": "active file write in progress; in-flight LLM generation; real-time overlay update",
+      "q_structure": "applied T2; the stable artifact form caught in the moment of its own production"
+    },
+    "T3'": {
+      "pithy": "Process (inv) -- applied workflow, runtime procedure",
+      "q_nature": "the procedure as currently executing; the workflow in its specific live instantiation",
+      "q_essence": "runs the oracle cast sequence, Logos FSM stage transition, or agent task pipeline",
+      "q_formulation": "active Logos FSM state; executing epi vault kairos fetch; live session workflow",
+      "q_structure": "applied T3; the documented procedure made concrete as this particular execution"
+    },
+    "T4'": {
+      "pithy": "Pattern (inv) -- applied template, runtime motif",
+      "q_nature": "the pattern as instantiated in this specific case; the template with real data filled in",
+      "q_essence": "executes the recognized sattva kernel or design pattern against live session state",
+      "q_formulation": "active transform container populated with user data; live NaraWeights calibration",
+      "q_structure": "applied T4; the recurring template activated in one unrepeatable concrete instance"
+    },
+    "T5'": {
+      "pithy": "Insight (inv) -- applied understanding, lived wisdom",
+      "q_nature": "wisdom as personally appropriated; understanding not just known but lived through",
+      "q_essence": "the recognized oracle insight that changed the user's self-understanding this session",
+      "q_formulation": "oracle recognized flag set; c_5_reflection_complete: true; Gnosis promotion event",
+      "q_structure": "applied T5; distilled wisdom embodied rather than merely recorded; the Mobius return lived"
+    },
+    "#0": {
+      "pithy": "Ground -- absolute source, pre-categorical bedrock",
+      "q_nature": "the pre-categorical void; the absolute ground before any family or domain exists",
+      "q_essence": "generates all coordinate space by providing the zero-position reference for inversion",
+      "q_formulation": "Anuttara #0-0 through #0-5 micro-architecture; .rodata constant; Bimba implicit",
+      "q_structure": "the transcendent ground archetype; the Siva-space from which # operation departs"
+    },
+    "#1": {
+      "pithy": "Definition -- form, boundary, logical structure",
+      "q_nature": "the form-archetype; the pure act of boundary-drawing that produces distinguishable things",
+      "q_essence": "provides the definitional skeleton for all C1/P1/S1/T1/M1/L1 family positions",
+      "q_formulation": "Paramasiva #1-0 Bimba/Pratibimba law; compile-time typedef macros as #1 expression",
+      "q_structure": "the form archetype; supplies the logical-structure dimension to all six families"
+    },
+    "#2": {
+      "pithy": "Operation -- entity, transformation, vibrational",
+      "q_nature": "the operation-archetype; the pure act of transformation that moves one state to another",
+      "q_essence": "grounds all C2/P2/S2/T2/M2/L2 family positions in operational being",
+      "q_formulation": "Parashakti #2 vibrational engine; 72-fold; DET; MEF causal resonance 336 edges",
+      "q_structure": "the entity-archetype; supplies the operational-being dimension to all six families"
+    },
+    "#3": {
+      "pithy": "Pattern -- process, recurring structure, symbolic",
+      "q_nature": "the pattern-archetype; the pure recurring structure that makes repetition possible",
+      "q_essence": "grounds all C3/P3/S3/T3/M3/L3 family positions in processual being",
+      "q_formulation": "Mahamaya #3 symbolic engine; 64-bitboard; I-Ching + DNA shared address space",
+      "q_structure": "the process-archetype; supplies the pattern-recognizing dimension to all six families"
+    },
+    "#4": {
+      "pithy": "Context -- type, lemniscate anchor, frame",
+      "q_nature": "the context-archetype; the situational frame that makes all other positions relative",
+      "q_essence": "grounds all C4/P4/S4/T4/M4/L4 family positions in contextual being",
+      "q_formulation": "Nara #4 lemniscate; (4.0/1-4.4/5) CF; fractal doubling; vtable dispatch",
+      "q_structure": "the lemniscate anchor of the entire system; where the Torus folds inward through #4"
+    },
+    "#5": {
+      "pithy": "Integration -- synthesis, Mobius return, holographic",
+      "q_nature": "the integration-archetype; the pure synthesis that makes a complete traversal possible",
+      "q_essence": "grounds all C5/P5/S5/T5/M5/L5 family positions in integrative being",
+      "q_formulation": "Epii #5 Logos Cycle; (5/0) CF; COMPLETES_CYCLE_INTO #0; write-back mechanism",
+      "q_structure": "the Mobius return point; position 5 recognizing itself as position 0 transformed by journey"
+    },
+    "CF(0000)": {
+      "pithy": "Receptive Dynamism -- Mod %, absolute ground",
+      "q_nature": "the context frame of the absolute ground; pure receptive potential before any modulus",
+      "q_essence": "holds Svatantrya-Spanda: infinite freedom as the base vibration of being",
+      "q_formulation": "00/(00-00); 4-fold zero unity; Transcendent Void operations of M0-0",
+      "q_structure": "the zero context frame; the frame that contains all other frames as latent potential"
+    },
+    "CF(01)": {
+      "pithy": "Non-Dual Binary -- Mod 2, essence of implicate",
+      "q_nature": "the binary context frame; the minimal distinction that produces a coordinate space",
+      "q_essence": "generates the Bimba/Pratibimba duality; the cpf reflective coordinate's ground",
+      "q_formulation": "Mod 2 arithmetic; Brimming Void; M0-1 Emergence of Non-Duality",
+      "q_structure": "the foundational binary frame; all other context frames are elaborations of (0/1)"
+    },
+    "CF(012)": {
+      "pithy": "The Trika -- Mod 3, User/Agent/Code",
+      "q_nature": "the triadic context frame; the minimal differentiation into three distinct roles",
+      "q_essence": "instantiates User (ground), Agent (definition), Code/Processor (operation) triad",
+      "q_formulation": "Mod 3; Anuttara-Paramasiva-Parashakti; ct reflective coordinate; M0-2",
+      "q_structure": "the Trika frame; where two-way duality gains a third term and becomes processual"
+    },
+    "CF(0123)": {
+      "pithy": "Three-Plus-One -- Mod 4, media/medium/method",
+      "q_nature": "the quaternal context frame; three active dimensions plus one integrating ground",
+      "q_essence": "integrates M0 (number language), M1 (quaternion), M2 (vibration), M3 (symbol)",
+      "q_formulation": "Mod 4; Jung Quaternity; (0/1/2/3) frame; Mahamaya's operational context",
+      "q_structure": "the three-plus-one frame; the structural blueprint from which M3 synthesizes all lower layers"
+    },
+    "CF(4x)": {
+      "pithy": "Fractal Doubling -- Mod 4/6, Jung quaternity",
+      "q_nature": "the fractal doubling frame; the 4+2 toroidal structure through the lemniscate",
+      "q_essence": "holds the (4.0/1-4.4/5) fractal nesting where personal meets universal",
+      "q_formulation": "cp reflective coordinate; #4.4.4.4 fourth-order nesting; M4 Nara context",
+      "q_structure": "the lemniscate context frame; Jung's quaternity extended through #4 inward fold"
+    },
+    "CF(450)": {
+      "pithy": "Mobius Synthesis -- (4.5/0), app triad",
+      "q_nature": "the application triad frame; synthesis of personal (#4), integration (#5), and ground (#0)",
+      "q_essence": "governs the TUI portal layout and the three-tab application architecture",
+      "q_formulation": "(4.5/0) frame; M4'-M5'-M0' portal tab structure; cfp reflective coordinate",
+      "q_structure": "the application synthesis frame; where personal, integrative, and ground axes converge"
+    },
+    "CF(50)": {
+      "pithy": "Total Synthesis -- Mod 6, Mobius return",
+      "q_nature": "the total synthesis frame; all six positions traversed and recognized as one",
+      "q_essence": "executes the Mobius write-back; position 5 deposits enriched ground into position 0",
+      "q_formulation": "Mod 6; (5/0) frame; cs reflective coordinate; M5 Logos Cycle completion",
+      "q_structure": "the Mobius return frame; the total context that makes the system self-knowing"
+    },
+    "W0.0": {
+      "pithy": "Pure Ground -- #0 implicate, 0-sphere",
+      "q_nature": "the implicate ground state; pure unmanifest potential before torus walk begins",
+      "q_essence": "anchor point for all .rodata archetype definitions; the Bimba memory domain",
+      "q_formulation": "weave_state = 0.0; 0-sphere topology; disconnected from all explicit positions",
+      "q_structure": "the 0-sphere weave state; two isolated points of pure ground before connection forms"
+    },
+    "W0.5": {
+      "pithy": "Ground reaching Instance -- transitional",
+      "q_nature": "the transitional weave state; ground extending toward its first instantiated expression",
+      "q_essence": "represents the vector_id anchor transition from archetype to coordinate family",
+      "q_formulation": "weave_state = 0.5; ground (#0) reaching toward integration (#5) side",
+      "q_structure": "the first transitional weave; ground acknowledging the existence of instance"
+    },
+    "W5.0": {
+      "pithy": "Instance reaching Ground -- return",
+      "q_nature": "the return weave state; instance extending back toward the ground that produced it",
+      "q_essence": "represents the night promotion path where instance enriches Bimba ground",
+      "q_formulation": "weave_state = 5.0; integration (#5) reaching back toward ground (#0)",
+      "q_structure": "the second transitional weave; instance acknowledging its own ground-dependence"
+    },
+    "W5.5": {
+      "pithy": "Pure Instance -- #5 implicate, integration",
+      "q_nature": "the implicate instance state; pure integrative potential at the far end of the torus",
+      "q_essence": "represents maximum Pratibimba complexity; all enrichment layers filled",
+      "q_formulation": "weave_state = 5.5; #5 implicate; maximum heap allocation depth; Logos complete",
+      "q_structure": "the integration-implicate weave; the far boundary before Mobius return to W0.0"
+    },
+    "#": {
+      "pithy": "Epi-Logos -- the inversion act, root of the Bimba map, project self-documentation",
+      "q_nature": "the inversion operation itself; the dynamic mechanism that generates X from X'",
+      "q_essence": "every # application phase-shifts a coordinate into its complementary state",
+      "q_formulation": "tagged pointer bit 63; INVERSION_ACT function pointer; the # as ontological operator",
+      "q_structure": "the project root coordinate; TRANSCENDENT_GROUND_OF the entire system; meta-self-reference"
+    },
+    "#-0": {
+      "pithy": "Mission -- consciousness recognizes itself through technological mirror",
+      "q_nature": "the project's foundational purpose; why Epi-Logos exists as an architectural commitment",
+      "q_essence": "instantiates the M0 holographic seed into a working software system",
+      "q_formulation": "ontology-is-lived-conception-is-living-code; ur-process human-AI co-creation protocol",
+      "q_structure": "#0 project position; the ground-level mission statement that all other #-n positions serve"
+    },
+    "#-1": {
+      "pithy": "Architecture -- 128-byte HC struct, 6 families, 3-layer coordinate system",
+      "q_nature": "the formal architectural blueprint; the canonical structural definition of the whole system",
+      "q_essence": "specifies the HC struct, three memory arenas, tagged pointer scheme, and family taxonomy",
+      "q_formulation": "CLAUDE.md spec; _Static_assert(sizeof(HC)==128); 6 families x 6 positions = 36 coordinates",
+      "q_structure": "#1 project position; the definitional form document that all implementation must satisfy"
+    },
+    "#-2": {
+      "pithy": "Install -- cargo install epi-logos, from source, prebuilt binaries",
+      "q_nature": "the operational entry point; how a user installs and instantiates the system",
+      "q_essence": "cargo build pipeline; epi-lib C makefile; BLAKE3 vendored dependency chain",
+      "q_formulation": "make test (C), make rust-test (Rust); epi-cli/target/debug/epi as build artifact",
+      "q_structure": "#2 project position; the instantiation pathway that turns spec into running binary"
+    },
+    "#-3": {
+      "pithy": "CLI -- epi core/vault/graph/gate/agent/sync command namespaces",
+      "q_nature": "the processual interface; the command grammar through which the system is operated",
+      "q_essence": "routes user intent through QL-structured namespaces to the correct M-branch handler",
+      "q_formulation": "epi-cli/src/; clap subcommands; epi nara / epi vault / epi gate / epi agent",
+      "q_structure": "#3 project position; the operational surface pattern through which users engage the system"
+    },
+    "#-4": {
+      "pithy": "Coordinates -- 89 top-level + ~1873 sub-branch, 6 operators",
+      "q_nature": "the contextual frame of the coordinate taxonomy itself; what coordinates ARE in this system",
+      "q_essence": "defines the full coordinate space: #0-#5 archetypes, 6 families, 3 layers, operators",
+      "q_formulation": "CLAUDE.md Section III; overlay.json; 6 families x (6+6 inverted) = 72 surface coordinates",
+      "q_structure": "#4 project position; the lemniscate coordinate reference document; system self-map"
+    },
+    "#-5": {
+      "pithy": "Plugin -- Claude Code epi-knowing skill, QV resources, agentic integration",
+      "q_nature": "the integration artifact; the Claude Code plugin as system self-presentation to AI agents",
+      "q_essence": "delivers overlay.json QV data to agentic context; enables coordinate-aware code assistance",
+      "q_formulation": "_staging/epi-logos-plugin/; resources/qv/overlay.json; SKILL.md epi-knowing",
+      "q_structure": "#5 project position; the Mobius return where the project documents itself for its own agents"
+    }
+  }
+}

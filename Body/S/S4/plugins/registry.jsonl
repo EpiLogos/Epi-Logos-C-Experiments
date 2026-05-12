@@ -1,2 +1,2 @@
-{"name":"claude-mem","version":"10.5.5","source":"vendor","root":"vendor/claude-mem-v10.5.5/plugin"}
-{"name":"pleroma","version":"0.1.0","source":"local","root":"Body/S/S4/plugins/pleroma"}
+{"name":"claude-mem","version":"10.5.5","source":"vendor","root":"vendors/claude-mem-v10.5.5/plugin","agents":["main","anima","aletheia"]}
+{"name":"pleroma","version":"0.1.0","source":"local","root":"Body/S/S4/plugins/pleroma","agents":["main","anima","aletheia"]}

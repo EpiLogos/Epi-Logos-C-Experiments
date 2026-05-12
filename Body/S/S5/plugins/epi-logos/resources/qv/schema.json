@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "QV Overlay",
+  "description": "Quintessential View overlay for epi core knowing",
+  "type": "object",
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "coordinates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "pithy": { "type": "string", "maxLength": 128 },
+          "q_nature": { "type": "string" },
+          "q_essence": { "type": "string" },
+          "q_formulation": { "type": "string" },
+          "q_structure": { "type": "string" }
+        }
+      }
+    }
+  },
+  "required": ["version", "coordinates"]
+}

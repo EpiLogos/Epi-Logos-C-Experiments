@@ -78,7 +78,7 @@ The live `epi` command tree mirrors the full [[S]]/[[S']] and [[M]]/[[M']] coord
 | `epi gate` | Gateway runtime, config, cron, sessions, channels, app/device/node RPC | [[S3]] / [[S3']] / [[Chronos]] |
 | `epi gate temporal context` | Operator mirror of the S3' DAY/NOW/session context report, including [[Kairos]], protected [[M4.4.4.4]] Pratibimba refs, Redis temporal keys, SpaceTimeDB projection facts, history archive path, and Graphiti arc orientation | [[S3']] / [[Chronos]], consumed by [[S4]] / [[S5]] agents |
 | `epi gate graphiti` | Current compatibility control for the temporary Graphiti HTTP wrapper | Transitional [[S3]] command for a runtime that should become an [[S3']] library component; [[S5]] / [[S5']] governs Graphiti invocation and usage |
-| `epi agent` | Managed [[PI Agent]] runtime, [[ta-onta]], [[VAK]], sessions, teams, subagents, hooks, skills, plugins | [[S4]] / [[S4']] / [[Anima]], with [[Pleroma]] maintenance surfaces nested inside |
+| `epi agent` | Managed [[PI Agent]] runtime, default [[Epii]] entry, explicit [[Anima]] / [[Aletheia]] embodiments, role-scoped launch metadata, [[ta-onta]], [[VAK]], sessions, teams, subagents, hooks, skills, plugins | S0 command mirror over [[S4]] / [[S4']] / [[Anima]] and [[S5]] / [[S5']] / [[Epii]]; plugin bodies remain S4/S5 authority |
 | `epi nara` | Personal dialogical and M-function commands: clock, identity, oracle, medicine, transform, lens, logos | [[M4]], [[M']], [[Nara]], [[S5.m]] |
 | `epi portal` | Experiential TUI for the M' surface | [[M']] / [[Pratibimba]] / [[S5]] |
 | `epi vimarsa` | BKMR/kbase bookmark and semantic search bridge | [[S5']] / [[Vimarsa]] / [[kbase]] / [[Context Economy]] |
@@ -87,7 +87,7 @@ The live `epi` command tree mirrors the full [[S]]/[[S']] and [[M]]/[[M']] coord
 | `epi techne` | Research helpers, cmux/worktrunk, NotebookLM passthrough, Gnosis local storage | [[Pleroma]] / [[Techne]], spanning [[S0']], [[S3]], [[S5']] |
 | `epi app` | EpiLogos app launch/dev/build surface | [[S3.5]] / app bridge / [[Pratibimba/System]] |
 | `epi up` | Full-stack bootstrap return: session, vault check, graph, gateway, cmux, app | [[S0.5]] / [[S0.5']] returning through [[S1]], [[S2]], [[S3]], [[S4]], [[S5]] |
-| `epi sesh` | Legacy tmux session lifecycle | [[S0.3]] / [[S0.4]]; may be superseded by [[cmux]] surfaces |
+| `epi agent tmux` / `epi sesh` | Khora terminal-persistence envelope and legacy tmux session lifecycle | [[S0.3]] / [[S0.4]] terminal body; not the semantic gateway/Epii session authority |
 | `epi code` | Claude Code provider-profile launcher | [[S0.5]] / [[S0']] tool bridge; not an S4 constitutional agent surface |
 | `epi sync` | n8n/webhook placeholder | Intended integration bridge; current implementation is a stub |
 
@@ -281,7 +281,7 @@ Relevant files:
 - `.pi/extensions/ta-onta/khora/S0/cli/resolve.sh`
 - `.pi/extensions/ta-onta/khora/S0'/cli-primitives.md`
 
-Installed agent copies currently also exist under `.epi/agents/main/...` and `.epi/agents/anima/...`; these are runtime materialisations of the same contract and must not become divergent sources of truth.
+Installed agent copies currently also exist under `.epi/agents/epii/...`, `.epi/agents/anima/...`, `.epi/agents/aletheia/...`, and compatibility `.epi/agents/main/...`; these are runtime materialisations of the same contract and must not become divergent sources of truth. The bare `epi agent` launch defaults to `epii`, while `epi agent anima`, `epi agent aletheia`, `epi agent epii`, and `epi agent spawn --agent ...` select explicit embodiments.
 
 ### API Methods Homed Here
 
@@ -447,7 +447,7 @@ Secondary:
 | `epi kbase` command | `epi-cli/src/kbase/mod.rs` exists but is not wired in `lib.rs`/`main.rs`; live surface is `epi vimarsa` | Decide in [[S5-SPEC]] whether to expose `epi kbase` as alias/canonical command or retire docs toward [[Vimarsa]] |
 | `epi gnostic` command | Canonical docs mention top-level command; live surface is `epi techne gnosis` plus `epi book` ingestion/query | Decide in [[S5-SPEC]] whether to promote top-level `epi gnostic` or document nested operational surface |
 | `epi gate graphiti` coordinate placement | Current live control is under `gate`, but the sidecar shape is not target architecture | Retire wrapper framing: Graphiti architecture belongs to [[S3']] temporal episodic runtime; [[S5]]/[[S5']] owns invocation/usage |
-| `epi agent` mixed strata | Contains true [[S4']] runtime and [[Pleroma]]/tooling maintenance | Split command-family role from coordinate home in [[S4-SPEC]] |
+| `epi agent` mixed strata | Contains S0 launch/tmux/session mechanics, true [[S4']] runtime surfaces, [[Pleroma]] maintenance, and [[S5']] Epii entry | Keep S0 as command envelope; S4/S5 specs own agent authority and plugin bodies |
 | `epi vault` temporal commands | Vault writes [[Day]]/[[NOW]]/[[Kairos]] files, but temporal semantics belong to [[S3']] | Clarify ownership in [[S1-SPEC]] and [[S3-SPEC]] |
 | CLI audit trail | Known gap; not v0.2 scope | Later S0.5' build should capture resolution logs, session exit code, hook output |
 | `epi up` two-window PI setup | Roadmap item | Build after gateway two-agent connection path is ready |

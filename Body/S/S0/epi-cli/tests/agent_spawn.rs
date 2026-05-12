@@ -1,6 +1,8 @@
 mod common;
 
-use common::{create_plugin_bundle, read_to_string, run_epi, write_file, TestEnv};
+use common::{
+    create_plugin_bundle, read_to_string, run_epi, write_executable, write_file, TestEnv,
+};
 
 #[test]
 fn spawn_includes_epi_citta_extension() {
@@ -115,6 +117,61 @@ fn spawn_auto_loads_repo_plugin_registry_entries() {
 }
 
 #[test]
+fn spawn_scopes_repo_plugins_and_skill_roots_by_pi_agent_identity() {
+    let env = TestEnv::with_fake_pi().with_env("EPI_AGENT_GATEWAY_PORT", "18869");
+    let pleroma = create_plugin_bundle(env.root.join("agent-bundles"), "pleroma");
+    let epi_logos = create_plugin_bundle(env.root.join("agent-bundles"), "epi-logos");
+    write_file(
+        env.repo_root.join("Body/S/S4/plugins/registry.jsonl"),
+        &format!(
+            "{{\"name\":\"pleroma\",\"root\":\"{}\",\"agents\":[\"anima\"]}}\n",
+            pleroma.root.display()
+        ),
+    );
+    write_file(
+        env.repo_root.join("Body/S/S5/plugins/registry.jsonl"),
+        &format!(
+            "{{\"name\":\"epi-logos\",\"root\":\"{}\",\"agents\":[\"epii\"]}}\n",
+            epi_logos.root.display()
+        ),
+    );
+
+    let anima = run_epi(
+        ["agent", "spawn", "--agent", "anima", "hello"].as_slice(),
+        &env,
+    );
+    assert!(anima.status.success(), "stderr: {}", anima.stderr);
+    let anima_runtime = read_to_string(
+        env.repo_root
+            .join(".epi/agents/anima/agent/plugin-runtime.json"),
+    );
+    assert!(anima_runtime.contains("\"name\": \"pleroma\""));
+    assert!(!anima_runtime.contains("\"name\": \"epi-logos\""));
+
+    let epii = run_epi(
+        ["agent", "spawn", "--agent", "epii", "hello"].as_slice(),
+        &env,
+    );
+    assert!(epii.status.success(), "stderr: {}", epii.stderr);
+    let epii_runtime = read_to_string(
+        env.repo_root
+            .join(".epi/agents/epii/agent/plugin-runtime.json"),
+    );
+    assert!(epii_runtime.contains("\"name\": \"epi-logos\""));
+    assert!(!epii_runtime.contains("\"name\": \"pleroma\""));
+
+    let argv = read_to_string(env.fake_pi_log.join("argv.txt"));
+    assert!(
+        argv.contains(epi_logos.root.join("skills").to_str().unwrap()),
+        "Epii PI launch should receive epi-logos skills: {argv}"
+    );
+    assert!(
+        !argv.contains("Body/S/S4/ta-onta/S4-4p-anima"),
+        "Epii PI launch should not inherit Anima ta-onta skill roots: {argv}"
+    );
+}
+
+#[test]
 fn spawn_disables_ambient_skill_discovery_and_loads_repo_skill_roots() {
     let env = TestEnv::with_fake_pi().with_env("EPI_AGENT_GATEWAY_PORT", "18866");
 
@@ -224,5 +281,126 @@ fn bare_agent_command_defaults_to_native_launch_contract_when_preflight_skipped(
     let argv = read_to_string(env.fake_pi_log.join("argv.txt"));
     assert!(argv.lines().any(|line| line == "--no-extensions"));
     let captured_env = read_to_string(env.fake_pi_log.join("env.txt"));
+    assert!(captured_env.contains("EPI_AGENT_ID=epii"));
+    assert!(captured_env.contains("EPI_AGENT_NAME=epii"));
+    assert!(captured_env.contains(".epi/agents/epii/agent"));
     assert!(captured_env.contains(&format!("EPI_AGENT_GATEWAY_PORT={port}")));
+}
+
+#[test]
+fn direct_agent_embodiment_commands_and_roles_export_scoped_surface() {
+    let env = TestEnv::with_fake_pi().with_env("EPI_AGENT_GATEWAY_PORT", "18871");
+
+    let out = run_epi(
+        ["agent", "anima", "--role", "logos", "define this"].as_slice(),
+        &env,
+    );
+
+    assert!(out.status.success(), "stderr: {}", out.stderr);
+    let argv = read_to_string(env.fake_pi_log.join("argv.txt"));
+    assert!(argv.contains("define this"));
+    let captured_env = read_to_string(env.fake_pi_log.join("env.txt"));
+    assert!(captured_env.contains("EPI_AGENT_ID=anima"));
+    assert!(captured_env.contains("EPI_AGENT_ROLE=logos"));
+    assert!(captured_env.contains("EPI_AGENT_SCOPED_SURFACE=anima:logos"));
+    assert!(captured_env.contains(".epi/agents/anima/agent"));
+
+    let bad = run_epi(
+        ["agent", "epii", "--role", "logos", "wrong surface"].as_slice(),
+        &env,
+    );
+    assert!(!bad.status.success());
+    assert!(bad.stderr.contains("unknown role `logos` for agent `epii`"));
+}
+
+#[test]
+fn roster_lists_epii_anima_and_aletheia_scoped_surfaces() {
+    let env = TestEnv::repo_with_assets();
+
+    let out = run_epi(["--json", "agent", "roster", "list"].as_slice(), &env);
+
+    assert!(out.status.success(), "stderr: {}", out.stderr);
+    assert!(out.stdout.contains("\"agentId\": \"epii\""));
+    assert!(out.stdout.contains("\"agentId\": \"anima\""));
+    assert!(out.stdout.contains("\"agentId\": \"aletheia\""));
+    assert!(out.stdout.contains("\"id\": \"logos\""));
+    assert!(out.stdout.contains("\"id\": \"anansi\""));
+    assert!(out.stdout.contains("\"id\": \"ql-cartographer\""));
+}
+
+#[test]
+fn agent_tmux_surface_manages_khora_terminal_envelope_without_pi_session_identity() {
+    let mut env = TestEnv::repo_with_assets();
+    let tmux_log = env.root.join("tmux.log");
+    let tmux_bin = write_executable(
+        env.root.join("bin/tmux"),
+        &format!(
+            "#!/bin/sh\nprintf '%s %s\n' \"$1\" \"$*\" >> \"{}\"\ncase \"$1\" in\n  has-session) exit 1 ;;\n  *) exit 0 ;;\nesac\n",
+            tmux_log.display()
+        ),
+    );
+    env = env.with_env("EPI_AGENT_TMUX_BIN", tmux_bin.display().to_string());
+
+    let up = run_epi(
+        [
+            "--json",
+            "agent",
+            "tmux",
+            "up",
+            "--name",
+            "epi-test-khora",
+            "--agent",
+            "epii",
+        ]
+        .as_slice(),
+        &env,
+    );
+
+    assert!(up.status.success(), "stderr: {}", up.stderr);
+    assert!(up.stdout.contains("\"status\": \"running\""));
+    assert!(up.stdout.contains("\"sessionName\": \"epi-test-khora\""));
+    let log = read_to_string(tmux_log);
+    assert!(log.contains("has-session has-session -t epi-test-khora"));
+    assert!(log.contains("new-session new-session -d -s epi-test-khora"));
+}
+
+#[test]
+fn persist_launch_routes_pi_plan_into_khora_tmux_envelope() {
+    let mut env = TestEnv::with_fake_pi().with_env("EPI_AGENT_GATEWAY_PORT", "18872");
+    let tmux_log = env.root.join("tmux-persist.log");
+    let tmux_env = env.root.join("tmux-persist.env");
+    let tmux_bin = write_executable(
+        env.root.join("bin/tmux"),
+        &format!(
+            "#!/bin/sh\nenv | sort > \"{}\"\nprintf '%s %s\n' \"$1\" \"$*\" >> \"{}\"\ncase \"$1\" in\n  has-session) exit 1 ;;\n  *) exit 0 ;;\nesac\n",
+            tmux_env.display(),
+            tmux_log.display()
+        ),
+    );
+    env = env.with_env("EPI_AGENT_TMUX_BIN", tmux_bin.display().to_string());
+
+    let out = run_epi(
+        [
+            "--json",
+            "agent",
+            "anima",
+            "--persist",
+            "--role",
+            "psyche",
+            "hold state",
+        ]
+        .as_slice(),
+        &env,
+    );
+
+    assert!(out.status.success(), "stderr: {}", out.stderr);
+    assert!(out.stdout.contains("\"status\": \"running\""));
+    assert!(out.stdout.contains("\"agentId\": \"anima\""));
+    assert!(!env.fake_pi_log.join("argv.txt").exists());
+    let log = read_to_string(tmux_log);
+    assert!(log.contains("new-session new-session -d"));
+    let captured_env = read_to_string(tmux_env);
+    assert!(captured_env.contains("EPI_AGENT_ID=anima"));
+    assert!(captured_env.contains("EPI_AGENT_ROLE=psyche"));
+    assert!(captured_env.contains("EPI_AGENT_SCOPED_SURFACE=anima:psyche"));
 }

@@ -79,6 +79,10 @@ async fn s5_epii_gateway_deposit_links_aletheia_improvement_to_review_item() {
                     "coordinate": "S5.4'",
                     "kind": "seed_spec"
                 },
+                "day_id": "12-05-2026",
+                "now_path": "Idea/Empty/Present/12-05-2026/NOW.md",
+                "session_key": "agent:aletheia:12-05-2026",
+                "vault_root": "Idea",
                 "requires_human": false
             }),
         )
@@ -90,6 +94,14 @@ async fn s5_epii_gateway_deposit_links_aletheia_improvement_to_review_item() {
     assert_eq!(
         receipt["improvement_run"]["source_review_item_id"],
         serde_json::Value::String(item_id.to_owned())
+    );
+    assert_eq!(
+        receipt["inbox_surface"]["inbox_path"],
+        serde_json::Value::String("Idea/Empty/Present/12-05-2026/".to_owned())
+    );
+    assert_eq!(
+        receipt["inbox_surface"]["session_key"],
+        serde_json::Value::String("agent:aletheia:12-05-2026".to_owned())
     );
 
     let status = client

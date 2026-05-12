@@ -52,6 +52,8 @@ pub struct PluginRuntimeEntry {
 #[derive(Debug, Deserialize)]
 struct RepoPluginRegistryEntry {
     root: String,
+    #[serde(default)]
+    agents: Option<Vec<String>>,
 }
 
 pub fn run_plugin(cmd: &PluginCmd, json: bool) -> Result<String, String> {
@@ -168,9 +170,10 @@ pub fn runtime_path(layout: &AgentLayout) -> &Path {
 
 pub fn resolve_runtime_plugin_dirs(
     repo_root: &Path,
+    agent_id: &str,
     explicit_plugin_dirs: &[PathBuf],
 ) -> Result<Vec<PathBuf>, String> {
-    let mut dirs = configured_repo_plugin_dirs(repo_root)?;
+    let mut dirs = configured_repo_plugin_dirs(repo_root, agent_id)?;
     dirs.extend(explicit_plugin_dirs.iter().cloned());
 
     let mut deduped = Vec::new();
@@ -224,7 +227,7 @@ fn discover_all_repo_plugins(repo_root: &Path) -> Vec<PluginValidationReport> {
         .map(|report| report.path.clone())
         .collect::<BTreeSet<_>>();
 
-    if let Ok(extra_dirs) = configured_repo_plugin_dirs(repo_root) {
+    if let Ok(extra_dirs) = configured_repo_plugin_dirs(repo_root, "*") {
         for dir in extra_dirs {
             let key = display_path(&dir);
             if seen.insert(key.clone()) {
@@ -243,7 +246,7 @@ fn discover_all_repo_plugins(repo_root: &Path) -> Vec<PluginValidationReport> {
     reports
 }
 
-fn configured_repo_plugin_dirs(repo_root: &Path) -> Result<Vec<PathBuf>, String> {
+fn configured_repo_plugin_dirs(repo_root: &Path, agent_id: &str) -> Result<Vec<PathBuf>, String> {
     let mut dirs = Vec::new();
     for relative_path in REPO_PLUGIN_REGISTRY_RELATIVE_PATHS {
         let registry_path = repo_root.join(relative_path);
@@ -273,6 +276,10 @@ fn configured_repo_plugin_dirs(repo_root: &Path) -> Result<Vec<PathBuf>, String>
                     )
                 })?;
 
+            if !entry_applies_to_agent(&entry, agent_id) {
+                continue;
+            }
+
             let path = PathBuf::from(&entry.root);
             let resolved = if path.is_absolute() {
                 path
@@ -294,6 +301,24 @@ fn configured_repo_plugin_dirs(repo_root: &Path) -> Result<Vec<PathBuf>, String>
     }
 
     Ok(dirs)
+}
+
+fn entry_applies_to_agent(entry: &RepoPluginRegistryEntry, agent_id: &str) -> bool {
+    if agent_id == "*" {
+        return true;
+    }
+
+    entry
+        .agents
+        .as_ref()
+        .map(|agents| {
+            agents.iter().any(|agent| {
+                agent == agent_id
+                    || agent == "*"
+                    || (agent_id == "main" && matches!(agent.as_str(), "anima" | "main"))
+            })
+        })
+        .unwrap_or(true)
 }
 
 fn duplicate_name_errors<'a>(

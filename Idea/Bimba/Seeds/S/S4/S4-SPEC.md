@@ -36,16 +36,18 @@ This is the consolidated S4-level master specification. It replaces the older sc
 
 [[S4']] is the [[ta-onta]] API surface itself: the coordinate-native agentic inhabitation layer through which the PI runtime becomes [[Epi-Logos]] operative grammar. [[Anima]] is the sovereign dispatch function within this layer, but S4' must not be reduced to the Anima extension alone. S4' includes the full ta-onta internal sequence: [[Khora]] through [[Aletheia]], mapped as S4.0' through S4.5'.
 
-The [[ta-onta]] package is the agent's operational body and the base implementation surface for S4'. Its six modules are not loose cross-level references. They are the internal S4' articulation of the whole S-family inside the agent:
+The [[ta-onta]] package is the agent's operational body and the base implementation surface for S4'. Its six modules are not loose cross-level references. They are the internal S4' articulation of the whole S-family inside the agent.
 
-| Internal coordinate | Ta-onta module | VAK pressure | Responsibility |
+Important correction from the Hermes parity pass: the six ta-onta carriers are not the six VAK dimensions. The C-family/VAK sequence (`CPF`, `CT`, `CP`, `CF`, `CFP`, `CS`) is the vertical dispatch grammar evaluated by [[Anima]] through [[Pleroma]] skills. The ta-onta modules are the horizontal S4' carriers that provide the runtime surface on which that grammar acts. A module may condition a VAK field, but it does not equal that field.
+
+| Internal coordinate | Ta-onta module | S-fold carrier | Responsibility |
 |---|---|---|---|
-| [[S4.0']] | [[Khora]] | [[CPF]] / bootstrap polarity | Session ground, write authority, visibility, lifecycle hooks |
-| [[S4.1']] | [[Hen]] | [[CT]] / form law | Agent artifact form, templates, prompt/content schema, CT context |
-| [[S4.2']] | [[Pleroma]] | [[CP]] / operation law | Skills, bounded primitives, capability/tool surfaces, Techne mechanics |
-| [[S4.3']] | [[Chronos]] | [[CF]] / timing and process law | Day/NOW/Kairos timing as agent runtime condition |
-| [[S4.4']] | [[Anima]] | [[CFP]] / inhabitation law | VAK evaluation, CF routing, team composition, Psyche state |
-| [[S4.5']] | [[Aletheia]] | [[CS]] / return law | Thought route, crystallisation trigger, Sophia disclosure, Epii handoff |
+| [[S4.0']] | [[Khora]] | S0 inside the agent | Session ground, write authority, visibility, lifecycle hooks |
+| [[S4.1']] | [[Hen]] | S1 inside the agent | Agent artifact form, templates, prompt/content schema, CT context |
+| [[S4.2']] | [[Pleroma]] | S2 inside the agent | Skills, bounded primitives, capability/tool surfaces, Techne mechanics |
+| [[S4.3']] | [[Chronos]] | S3 inside the agent | Day/NOW/Kairos timing as agent runtime condition |
+| [[S4.4']] | [[Anima]] | S4 inside the agent | VAK evaluation, CF routing, team composition, Psyche state |
+| [[S4.5']] | [[Aletheia]] | S5 inside the agent | Thought route, crystallisation trigger, Sophia disclosure, Epii handoff |
 
 Each module may correspond analogically to an S-fold, but its implementation residency in ta-onta is S4'. S0-S5 remain the wider system homes; S4' internalizes them so the agent can inhabit and dispatch them.
 
@@ -322,7 +324,7 @@ Implementation files:
 - `.pi/extensions/ta-onta/composite-entry.ts` - ta-onta spine and extension loader.
 - `.pi/extensions/ta-onta/anima/extension.ts` - Anima tools and VAK skill injection.
 
-The implementation is production-oriented in several places: runtime verification launches a real isolated PI process, source-to-runtime sync is tested, plugin runtime indexing discovers Body-native S4 plugins, subagent execution appends real transcripts, gateway agent RPC is exercised through the server, and team dispatch creates durable records. The main gap is not "fake code"; it is API unification, PI extension-level VAK/orchestration invocation proof, and Psyche-state residency.
+The implementation is production-oriented in several places: runtime verification launches a real isolated PI process, source-to-runtime sync is tested, plugin runtime indexing discovers Body-native S4 plugins, agent-scoped plugin loading keeps Anima/Pleroma and Epii/epi-logos surfaces separate, direct `epi agent anima` / `epi agent aletheia` launches make the S4 embodiments testable, subagent execution appends real transcripts, gateway agent RPC is exercised through the server, and team dispatch creates durable records. The main gap is not "fake code"; it is API unification, PI extension-level VAK/orchestration invocation proof, and Psyche-state residency.
 
 ### Internal 0-5 Breakdown
 
@@ -568,6 +570,7 @@ Live:
 - Constitutional agents in `.pi/extensions/ta-onta/anima/S4'/agents/`.
 - VAK/orchestration skills in `.pi/extensions/ta-onta/anima/S4'/skills/`.
 - Body-native Pleroma plugin package with critical VAK skills: `vak-evaluate`, `anima-orchestration`, `vak-coordinate-frame`, and `day-night-pass`.
+- Agent-scoped PI runtime loading: `anima`, `aletheia`, and `main` receive ta-onta/Pleroma skill and subagent roots by default; `epii` receives its S5 epi-logos plugin body instead. This proves the shared PI substrate can host peer embodiments without ambient capability bleed. Role-scoped launches such as `epi agent anima --role logos` and `epi agent aletheia --role anansi` export `EPI_AGENT_ROLE` / `EPI_AGENT_SCOPED_SURFACE` for direct testing without turning constitutional roles into separate top-level PI embodiments.
 - Team, chain, subagent runtime via `epi agent team`, `epi agent chain`, `epi agent subagent`.
 - Rust deterministic VAK baseline in `epi-cli/src/agent/vak.rs`.
 

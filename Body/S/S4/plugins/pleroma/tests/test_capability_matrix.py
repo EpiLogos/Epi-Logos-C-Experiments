@@ -49,6 +49,8 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         self.assertEqual(set(gates), set(matrix["constitutional_agents"]))
 
         anima_tools = set(gates["anima"]["tools"])
+        self.assertIn("orchestrator", gates["anima"]["role_restrictions"])
+        self.assertIn("summary_only_subagent_returns", gates["anima"]["role_restrictions"])
         for required in [
             "dispatch_agent",
             "run_chain",
@@ -68,6 +70,56 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
             "day-night-pass",
         ]:
             self.assertIn(required, anima_skills)
+
+        for agent in ["nous", "logos", "eros", "mythos", "psyche", "sophia"]:
+            self.assertIn("leaf", gates[agent]["role_restrictions"])
+
+    def test_matrix_declares_vak_psyche_day_now_lifecycle_contracts(self):
+        matrix = json.loads((PLUGIN_ROOT / "capability-matrix.json").read_text(encoding="utf-8"))
+        hooks = json.loads((PLUGIN_ROOT / "hooks" / "hooks.json").read_text(encoding="utf-8"))
+
+        lifecycle = matrix["hooks"]["lifecycle_contract"]
+        self.assertEqual(
+            lifecycle["pre_tool_call"]["role"],
+            "VAK and permission gate before action",
+        )
+        self.assertIn("DAY/NOW", lifecycle["pre_tool_call"]["inputs"])
+        self.assertIn("portal.vak_eval", lifecycle["pre_tool_call"]["must_emit"])
+        self.assertIn("Psyche", lifecycle["post_tool_call"]["role"])
+        self.assertIn("portal.tool_call", lifecycle["post_tool_call"]["must_emit"])
+        self.assertIn("day_id", lifecycle["transform_tool_result"]["inputs"])
+        self.assertIn("portal.review_deposit", lifecycle["transform_tool_result"]["must_emit"])
+
+        for hook_name in ["PreToolCall", "PostToolCall", "TransformToolResult"]:
+            self.assertIn(hook_name, hooks["hooks"])
+
+    def test_matrix_declares_typed_delegation_and_provider_profile_target(self):
+        matrix = json.loads((PLUGIN_ROOT / "capability-matrix.json").read_text(encoding="utf-8"))
+
+        delegation = matrix["typed_delegation"]
+        self.assertEqual(delegation["delegate_lens"]["method"], "s4'.pleroma.delegate_lens")
+        self.assertIn("lens_id", delegation["delegate_lens"]["arguments"])
+        self.assertEqual(delegation["delegate_square"]["method"], "s4'.pleroma.delegate_square")
+        self.assertEqual(
+            delegation["gate_observability"]["method"],
+            "s4'.pleroma.gate.evaluate",
+        )
+        self.assertIn("vak", delegation["gate_observability"]["returns"])
+
+        provider = matrix["provider_profile_contract"]
+        self.assertEqual(provider["coordinate_owner"], "S4")
+        for attribute in [
+            "fixed_temperature",
+            "default_aux_model",
+            "prepare_messages",
+            "build_extra_body",
+            "build_api_kwargs_extras",
+            "fetch_models",
+            "auth_type",
+            "env_vars",
+            "base_url",
+        ]:
+            self.assertIn(attribute, provider["attributes"])
 
     def test_matrix_separates_anima_actions_from_epii_review_authority(self):
         matrix = json.loads((PLUGIN_ROOT / "capability-matrix.json").read_text(encoding="utf-8"))

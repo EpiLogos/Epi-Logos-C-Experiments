@@ -16,6 +16,7 @@ pub struct PiLaunchPlan {
     pub launch_mode: PiLaunchMode,
     pub capture_output: bool,
     pub agent_id: String,
+    pub role: Option<String>,
     pub args: Vec<String>,
     pub repo_root: PathBuf,
     pub agent_dir: PathBuf,
@@ -40,10 +41,12 @@ struct PreparedLayout {
 
 pub fn plan_spawn(
     agent: Option<&str>,
+    role: Option<&str>,
     plugin_dirs: &[PathBuf],
     prompt: Option<&str>,
 ) -> Result<PiLaunchPlan, String> {
     let prepared = prepare_layout(agent, plugin_dirs)?;
+    validate_role(&prepared.layout.agent_id, role)?;
     let mut args = base_pi_args(&prepared.layout, &prepared.skill_roots);
     if let Some(prompt) = prompt {
         args.push(prompt.to_owned());
@@ -52,6 +55,7 @@ pub fn plan_spawn(
         &prepared,
         PiLaunchMode::InteractiveInherit,
         false,
+        role,
         prepared.layout.agent_dir.clone(),
         args,
     ))
@@ -59,18 +63,21 @@ pub fn plan_spawn(
 
 pub fn plan_chat(
     agent: Option<&str>,
+    role: Option<&str>,
     plugin_dirs: &[PathBuf],
     prompt: Option<&str>,
 ) -> Result<PiLaunchPlan, String> {
-    plan_spawn(agent, plugin_dirs, prompt)
+    plan_spawn(agent, role, plugin_dirs, prompt)
 }
 
 pub fn plan_prompt(
     agent: Option<&str>,
+    role: Option<&str>,
     plugin_dirs: &[PathBuf],
     prompt: Option<&str>,
 ) -> Result<PiLaunchPlan, String> {
     let prepared = prepare_layout(agent, plugin_dirs)?;
+    validate_role(&prepared.layout.agent_id, role)?;
     let mut args = vec!["-p".to_owned()];
     args.extend(base_pi_args(&prepared.layout, &prepared.skill_roots));
     if let Some(prompt) = prompt {
@@ -80,6 +87,7 @@ pub fn plan_prompt(
         &prepared,
         PiLaunchMode::CapturedPrompt,
         true,
+        role,
         prepared.layout.agent_dir.clone(),
         args,
     ))
@@ -95,6 +103,7 @@ pub fn plan_attach(agent: Option<&str>, session_id: &str) -> Result<PiLaunchPlan
         &prepared,
         PiLaunchMode::InteractiveInherit,
         false,
+        None,
         layout.agent_dir.clone(),
         args,
     ))
@@ -102,16 +111,19 @@ pub fn plan_attach(agent: Option<&str>, session_id: &str) -> Result<PiLaunchPlan
 
 pub fn plan_run(
     agent: Option<&str>,
+    role: Option<&str>,
     plugin_dirs: &[PathBuf],
     args: &[String],
 ) -> Result<PiLaunchPlan, String> {
     let prepared = prepare_layout(agent, plugin_dirs)?;
+    validate_role(&prepared.layout.agent_id, role)?;
     let mut pi_args = base_pi_args(&prepared.layout, &prepared.skill_roots);
     pi_args.extend(args.iter().cloned());
     Ok(plan_from_prepared(
         &prepared,
         PiLaunchMode::InteractiveInherit,
         false,
+        role,
         prepared.layout.agent_dir.clone(),
         pi_args,
     ))
@@ -119,10 +131,12 @@ pub fn plan_run(
 
 pub fn plan_verify_runtime(
     agent: Option<&str>,
+    role: Option<&str>,
     plugin_dirs: &[PathBuf],
     prompt: Option<&str>,
 ) -> Result<PiLaunchPlan, String> {
     let prepared = prepare_isolated_layout(agent, plugin_dirs)?;
+    validate_role(&prepared.layout.agent_id, role)?;
     let layout = &prepared.layout;
     let runtime_root = layout
         .epi_home
@@ -147,6 +161,7 @@ pub fn plan_verify_runtime(
         &prepared,
         PiLaunchMode::IsolatedVerify,
         true,
+        role,
         layout.agent_dir.clone(),
         args,
     );
@@ -179,7 +194,8 @@ fn prepare_layout_from_resolved(
     plugin_dirs: &[PathBuf],
 ) -> Result<PreparedLayout, String> {
     extensions::sync_layout(&layout)?;
-    let runtime_plugin_dirs = plugins::resolve_runtime_plugin_dirs(&layout.repo_root, plugin_dirs)?;
+    let runtime_plugin_dirs =
+        plugins::resolve_runtime_plugin_dirs(&layout.repo_root, &layout.agent_id, plugin_dirs)?;
     plugins::prepare_runtime(&layout, &runtime_plugin_dirs)?;
     let skill_roots = collect_skill_roots(&layout, &runtime_plugin_dirs);
     Ok(PreparedLayout {
@@ -192,6 +208,7 @@ fn plan_from_prepared(
     prepared: &PreparedLayout,
     launch_mode: PiLaunchMode,
     capture_output: bool,
+    role: Option<&str>,
     agent_dir: PathBuf,
     args: Vec<String>,
 ) -> PiLaunchPlan {
@@ -200,6 +217,7 @@ fn plan_from_prepared(
         launch_mode,
         capture_output,
         agent_id: prepared.layout.agent_id.clone(),
+        role: role.map(str::to_owned),
         args,
         repo_root: prepared.layout.repo_root.clone(),
         agent_dir,
@@ -214,6 +232,48 @@ fn plan_from_prepared(
         runtime_root: None,
         working_dir: None,
         home_override: None,
+    }
+}
+
+fn validate_role(agent_id: &str, role: Option<&str>) -> Result<(), String> {
+    let Some(role) = role else {
+        return Ok(());
+    };
+    let allowed = match agent_id {
+        "anima" | "main" => &[
+            "anima",
+            "nous",
+            "logos",
+            "eros",
+            "mythos",
+            "psyche",
+            "sophia",
+            "techne-helper",
+        ][..],
+        "aletheia" => &[
+            "aletheia",
+            "agora",
+            "anansi",
+            "janus",
+            "mercurius",
+            "moirai",
+            "zeithoven",
+        ][..],
+        "epii" => &[
+            "epii",
+            "mef-diagnostician",
+            "pi-writing-cartographer",
+            "ql-cartographer",
+        ][..],
+        _ => &[][..],
+    };
+
+    if allowed.contains(&role) {
+        Ok(())
+    } else {
+        Err(format!(
+            "unknown role `{role}` for agent `{agent_id}`; run `epi agent roster list`"
+        ))
     }
 }
 

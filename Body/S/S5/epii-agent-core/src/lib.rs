@@ -68,6 +68,14 @@ pub struct DepositRequest {
     pub title: String,
     pub body: String,
     pub artifact: DepositArtifact,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub day_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub now_path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub session_key: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vault_root: Option<String>,
     pub requires_human: bool,
 }
 
@@ -75,6 +83,17 @@ pub struct DepositRequest {
 pub struct DepositReceipt {
     pub review_item: Option<ReviewItemReceipt>,
     pub improvement_run: Option<ImprovementRun>,
+    pub inbox_surface: EpiiInboxSurface,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EpiiInboxSurface {
+    pub coordinate: String,
+    pub inbox_path: Option<String>,
+    pub day_id: Option<String>,
+    pub now_path: Option<String>,
+    pub session_key: Option<String>,
+    pub rule: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -144,6 +163,10 @@ impl EpiiAgentAccess {
                 "source_coordinate": request.source_coordinate,
                 "deposit_type": request.deposit_type,
                 "artifact": request.artifact,
+                "day_id": request.day_id,
+                "now_path": request.now_path,
+                "session_key": request.session_key,
+                "inbox_path": day_inbox_path(&request),
             }),
             proposed_action: Some(ReviewProposedAction {
                 kind: proposed_action_kind(&request.deposit_type).to_owned(),
@@ -163,12 +186,12 @@ impl EpiiAgentAccess {
                         .coordinate
                         .clone()
                         .unwrap_or_else(|| "S5/S5'".to_owned()),
-                    direction: request.body,
+                    direction: request.body.clone(),
                     source_review_item_id: Some(review_item.item_id.clone()),
                     baseline: ArtifactRef {
-                        path: request.artifact.path,
-                        coordinate: request.artifact.coordinate,
-                        kind: request.artifact.kind,
+                        path: request.artifact.path.clone(),
+                        coordinate: request.artifact.coordinate.clone(),
+                        kind: request.artifact.kind.clone(),
                     },
                 })?,
             )
@@ -179,6 +202,7 @@ impl EpiiAgentAccess {
         Ok(DepositReceipt {
             review_item: Some(review_receipt(&review_item)),
             improvement_run,
+            inbox_surface: inbox_surface(&request),
         })
     }
 
@@ -207,7 +231,36 @@ fn validate_deposit(request: &DepositRequest) -> Result<(), String> {
     if request.artifact.path.trim().is_empty() {
         return Err("deposit artifact path is required".to_owned());
     }
+    if let Some(day_id) = &request.day_id {
+        if day_id.trim().is_empty() {
+            return Err("deposit day_id must not be blank when provided".to_owned());
+        }
+    }
     Ok(())
+}
+
+fn inbox_surface(request: &DepositRequest) -> EpiiInboxSurface {
+    EpiiInboxSurface {
+        coordinate: "S5/S5'".to_owned(),
+        inbox_path: day_inbox_path(request),
+        day_id: request.day_id.clone(),
+        now_path: request.now_path.clone(),
+        session_key: request.session_key.clone(),
+        rule: "Epii inbox items live at Idea/Empty/Present/{day-date}/ and carry NOW/session lineage in metadata".to_owned(),
+    }
+}
+
+fn day_inbox_path(request: &DepositRequest) -> Option<String> {
+    let day_id = request.day_id.as_deref()?.trim();
+    let vault_root = request.vault_root.as_deref().unwrap_or("Idea").trim();
+    if day_id.is_empty() {
+        return None;
+    }
+    Some(format!(
+        "{}/Empty/Present/{}/",
+        vault_root.trim_end_matches('/'),
+        day_id
+    ))
 }
 
 fn review_source(source_agent: &str) -> Result<ReviewSource, String> {

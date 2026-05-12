@@ -73,10 +73,10 @@ fn init_status_continuation_and_close_manage_session_state() {
     assert!(close
         .stdout
         .contains("archived session 20260310-090807-abc123"));
-    assert!(close.stdout.contains("GATEWAY_SESSION_KEY=agent:main:main"));
+    assert!(close.stdout.contains("GATEWAY_SESSION_KEY=agent:epii:main"));
     let close_record = SessionStore::new(env.home.join(".epi/gate"))
         .unwrap()
-        .resolve("agent:main:main")
+        .resolve("agent:epii:main")
         .unwrap();
     assert!(close_record.diagnostics.iter().any(|diagnostic| {
         diagnostic["message"]
@@ -174,4 +174,51 @@ fn lifecycle_commands_create_runtime_backed_gateway_sessions() {
     );
     assert_eq!(fork_record.source_session_kind.as_deref(), Some("fork"));
     assert_eq!(fork_record.active_agent_id, "anima");
+}
+
+#[test]
+fn epii_lifecycle_session_propagates_as_peer_pi_agent_identity() {
+    let env = TestEnv::repo_with_assets()
+        .with_env("EPILOGOS_VAULT", "/tmp/epilogos-test-vault-agent-epii")
+        .with_env("EPI_AGENT_ID", "epii");
+
+    write_file(
+        env.repo_root.join(".epi-logos.env"),
+        "EPILOGOS_VAULT=/tmp/epilogos-test-vault-agent-epii\n",
+    );
+
+    let session = run_epi(
+        [
+            "agent",
+            "session",
+            "new",
+            "--now",
+            "2026-05-12T11:00:00Z",
+            "--random-suffix",
+            "epii01",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        session.status.success(),
+        "session failed:\nstdout:\n{}\nstderr:\n{}",
+        session.stdout,
+        session.stderr
+    );
+    assert!(session
+        .stdout
+        .contains("GATEWAY_SESSION_KEY=agent:epii:main"));
+
+    let record = SessionStore::new(env.home.join(".epi/gate"))
+        .unwrap()
+        .resolve("agent:epii:main")
+        .unwrap();
+    assert_eq!(record.active_agent_id, "epii");
+    assert_eq!(record.session_id, "20260512-110000-epii01");
+    assert!(record
+        .resource_loader_id
+        .as_deref()
+        .unwrap_or_default()
+        .contains("agents/epii/agent/plugin-runtime.json"));
 }

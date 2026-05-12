@@ -87,7 +87,102 @@
   ],
   "hooks": {
     "manifest": "hooks.json",
-    "role": "bounded-runtime-extension"
+    "role": "bounded-runtime-extension",
+    "lifecycle_contract": {
+      "pre_tool_call": {
+        "coordinate_owner": "S4'",
+        "role": "VAK and permission gate before action",
+        "inputs": [
+          "DAY/NOW",
+          "session_key",
+          "active_agent",
+          "tool_name",
+          "vak_evaluation",
+          "permission_boundary"
+        ],
+        "must_emit": [
+          "portal.vak_eval",
+          "portal.lens_pressure"
+        ]
+      },
+      "post_tool_call": {
+        "coordinate_owner": "S4'",
+        "role": "Psyche observation of context, kbase field, and current task after action",
+        "inputs": [
+          "tool_result",
+          "session_key",
+          "psyche_state_ref",
+          "kbase_refs"
+        ],
+        "must_emit": [
+          "portal.tool_call"
+        ]
+      },
+      "transform_tool_result": {
+        "coordinate_owner": "S4'/S3'",
+        "role": "Coordinate-aware result wrapping over DAY/NOW/session-aware gateway events",
+        "inputs": [
+          "raw_result",
+          "coordinate_context",
+          "day_id",
+          "now_path",
+          "session_key"
+        ],
+        "must_emit": [
+          "portal.review_deposit",
+          "portal.kairos_shift"
+        ]
+      }
+    }
+  },
+  "typed_delegation": {
+    "delegate_lens": {
+      "method": "s4'.pleroma.delegate_lens",
+      "arguments": [
+        "lens_id",
+        "task",
+        "day_id",
+        "session_key"
+      ],
+      "return_policy": "summary_only_with_evidence_refs"
+    },
+    "delegate_square": {
+      "method": "s4'.pleroma.delegate_square",
+      "arguments": [
+        "square_id",
+        "task",
+        "day_id",
+        "session_key"
+      ],
+      "return_policy": "summary_only_with_evidence_refs"
+    },
+    "gate_observability": {
+      "method": "s4'.pleroma.gate.evaluate",
+      "returns": [
+        "allowed",
+        "agent",
+        "tools",
+        "skills",
+        "vak",
+        "reason"
+      ]
+    }
+  },
+  "provider_profile_contract": {
+    "coordinate_owner": "S4",
+    "trait_target": "PiProviderProfile",
+    "attributes": [
+      "fixed_temperature",
+      "default_aux_model",
+      "prepare_messages",
+      "build_extra_body",
+      "build_api_kwargs_extras",
+      "fetch_models",
+      "auth_type",
+      "env_vars",
+      "base_url"
+    ],
+    "residency": "Body/S/S4/pi-agent provider abstraction; S0 agent model commands remain mirrors"
   },
   "execution_backbone": {
     "name": "tilldone",
@@ -103,6 +198,11 @@
   },
   "agent_capability_gates": {
     "anima": {
+      "role_restrictions": [
+        "orchestrator",
+        "may_spawn_leaf_agents",
+        "summary_only_subagent_returns"
+      ],
       "tools": [
         "vak_evaluate",
         "anima_orchestrate",
@@ -124,6 +224,10 @@
       ]
     },
     "nous": {
+      "role_restrictions": [
+        "leaf",
+        "dialogical_disclosure_only"
+      ],
       "tools": [
         "vak_evaluate",
         "nous_disclose"
@@ -134,6 +238,10 @@
       ]
     },
     "logos": {
+      "role_restrictions": [
+        "leaf",
+        "planning_and_residency_only"
+      ],
       "tools": [
         "vak_evaluate",
         "hen_template_invoke",
@@ -145,6 +253,10 @@
       ]
     },
     "eros": {
+      "role_restrictions": [
+        "leaf",
+        "implementation_and_test_only"
+      ],
       "tools": [
         "vak_evaluate",
         "hen_template_invoke",
@@ -155,6 +267,10 @@
       ]
     },
     "mythos": {
+      "role_restrictions": [
+        "leaf",
+        "pattern_and_graph_reading_only"
+      ],
       "tools": [
         "vak_evaluate",
         "graph_pattern_query",
@@ -166,6 +282,10 @@
       ]
     },
     "psyche": {
+      "role_restrictions": [
+        "leaf",
+        "state_context_and_field_holder"
+      ],
       "tools": [
         "vak_evaluate",
         "psyche_state_read",
@@ -179,6 +299,10 @@
       ]
     },
     "sophia": {
+      "role_restrictions": [
+        "leaf",
+        "review_disclosure_and_epii_deposit"
+      ],
       "tools": [
         "vak_evaluate",
         "sophia_review",

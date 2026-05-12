@@ -1,6 +1,8 @@
 # Build artifacts
 epi-logos
 epi_logos
+!/Body/S/S5/plugins/epi-logos/
+!/Body/S/S5/plugins/epi-logos/**
 test_runner
 /test_*
 epi-lib/test/bin/

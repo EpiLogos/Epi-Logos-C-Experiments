@@ -111,7 +111,21 @@ impl TestGatewayClient {
             .await
             .expect("request should send");
 
-        while let Some(message) = self.socket.next().await {
+        let deadline = tokio::time::sleep(Duration::from_secs(5));
+        tokio::pin!(deadline);
+
+        loop {
+            let message = tokio::select! {
+                message = self.socket.next() => message,
+                _ = &mut deadline => {
+                    return Err(TestGatewayError {
+                        message: format!("timed out waiting for response to {method}#{id}"),
+                    });
+                }
+            };
+            let Some(message) = message else {
+                break;
+            };
             let message = message.expect("response frame should decode");
             if !message.is_text() {
                 continue;
