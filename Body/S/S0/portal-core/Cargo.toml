@@ -1,0 +1,9 @@
+[package]
+name = "portal-core"
+version = "0.1.0"
+edition = "2021"
+description = "Pure math types and functions for the Epi-Logos portal clock — shared by epi-cli and epi-tauri"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
