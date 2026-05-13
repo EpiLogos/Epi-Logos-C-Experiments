@@ -1,0 +1,68 @@
+[package]
+name = "epi-tauri"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+default-run = "epi-tauri"
+
+[lib]
+name = "epi_tauri_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# Tauri
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-window-state = "2"
+
+# Async / IO
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = { version = "0.24", features = ["native-tls"] }
+futures-util = "0.3"
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+
+# Data / serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+
+# Filesystem / paths
+dirs = "5"
+walkdir = "2"
+globset = "0.4"
+notify = { version = "6", optional = true }
+
+# Time
+chrono = { version = "0.4", default-features = false, features = ["clock", "serde"] }
+
+# Math
+nalgebra = "0.33"
+
+# Graph
+neo4rs = "0.7"
+
+# Identifiers
+uuid = { version = "1", features = ["v4", "serde"] }
+
+# Hashing
+blake3 = "1"
+
+# Portal core — shared math types from epi-cli
+portal-core = { path = "../../../S/S0/portal-core" }
+
+# Errors / logging
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[features]
+default = ["watcher"]
+watcher = ["dep:notify"]
+
+[dev-dependencies]
+tempfile = "3"
