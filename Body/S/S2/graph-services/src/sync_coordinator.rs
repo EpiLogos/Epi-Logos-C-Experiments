@@ -2,6 +2,25 @@ use crate::CoordinateArrayParser;
 use crate::Neo4jClient;
 use crate::RelationshipManager;
 
+/// Map a bare frontmatter key to its coordinate-driven canonical name.
+/// Returns None for unknown keys (caller decides whether to skip).
+fn canonical_frontmatter_key(key: &str) -> Option<&'static str> {
+    Some(match key {
+        "name" => "c_1_name",
+        "description" => "c_1_description",
+        "form" | "formulation" => "c_1_form",
+        "structure" => "c_1_structure",
+        "essence" => "c_0_essence",
+        "core_nature" | "coreNature" => "c_0_core_nature",
+        "family" => "c_4_family",
+        "ql_position" => "c_4_ql_position",
+        "layer" => "c_4_layer",
+        "topo_mode" => "c_4_topo_mode",
+        "vault_path" => "s_1_vault_path",
+        _ => return None,
+    })
+}
+
 pub struct SyncResult {
     pub coordinate: String,
     pub vault_path: String,
@@ -40,7 +59,7 @@ impl<'a> SyncCoordinator<'a> {
         let escaped_path = vault_path.replace('\'', "\\'");
         let cypher = format!(
             "MERGE (n:Bimba {{coordinate: '{}'}}) \
-             SET n.vault_path = '{}', n.updated_at = datetime() \
+             SET n.s_1_vault_path = '{}', n.c_3_updated_at = datetime() \
              RETURN n.coordinate AS coord",
             coord, escaped_path
         );
@@ -49,19 +68,28 @@ impl<'a> SyncCoordinator<'a> {
             .await
             .map_err(|e| format!("upsert error: {}", e))?;
 
-        // Set additional frontmatter properties
+        // Set additional frontmatter properties, remapping bare keys to their
+        // coordinate-driven canonical names.
         if let Some(map) = frontmatter.as_mapping() {
             let skip_keys = ["coordinate"];
             for (key, value) in map {
                 if let (Some(k), Some(v)) = (key.as_str(), value.as_str()) {
-                    if !skip_keys.contains(&k) && !k.contains('_') {
-                        let escaped_v = v.replace('\'', "\\'");
-                        let set_cypher = format!(
-                            "MATCH (n:Bimba {{coordinate: '{}'}}) SET n.{} = '{}'",
-                            coord, k, escaped_v
-                        );
-                        let _ = self.client.run(&set_cypher).await;
+                    if skip_keys.contains(&k) {
+                        continue;
                     }
+                    let canonical = canonical_frontmatter_key(k);
+                    // Only persist keys we've explicitly mapped or that already follow the prefix.
+                    let target_key = match canonical {
+                        Some(canonical) => canonical,
+                        None if k.starts_with("c_") || k.starts_with("s_") => k,
+                        None => continue,
+                    };
+                    let escaped_v = v.replace('\'', "\\'");
+                    let set_cypher = format!(
+                        "MATCH (n:Bimba {{coordinate: '{}'}}) SET n.{} = '{}'",
+                        coord, target_key, escaped_v
+                    );
+                    let _ = self.client.run(&set_cypher).await;
                 }
             }
         }

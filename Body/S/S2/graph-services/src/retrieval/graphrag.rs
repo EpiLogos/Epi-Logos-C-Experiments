@@ -93,27 +93,27 @@ impl<'a> GraphRAGRetriever<'a> {
 
         // Build RETURN clause based on disclosure level
         let return_clause = match level {
-            DisclosureLevel::UuidOnly => "n.coordinate AS coordinate, n.uuid AS uuid",
+            DisclosureLevel::UuidOnly => "n.coordinate AS coordinate, n.c_2_uuid AS uuid",
             DisclosureLevel::Identity => {
-                "n.coordinate AS coordinate, n.uuid AS uuid, \
-                 n.name AS name, n.family AS family, \
-                 n.ql_position AS ql_position, n.vault_path AS vault_path"
+                "n.coordinate AS coordinate, n.c_2_uuid AS uuid, \
+                 n.c_1_name AS name, n.c_4_family AS family, \
+                 n.c_4_ql_position AS ql_position, n.s_1_vault_path AS vault_path"
             }
             DisclosureLevel::Summary => {
-                "n.coordinate AS coordinate, n.uuid AS uuid, \
-                 n.name AS name, n.family AS family, \
-                 n.ql_position AS ql_position, n.vault_path AS vault_path, \
-                 n.s0_pithy AS s0_pithy, n.layer AS layer"
+                "n.coordinate AS coordinate, n.c_2_uuid AS uuid, \
+                 n.c_1_name AS name, n.c_4_family AS family, \
+                 n.c_4_ql_position AS ql_position, n.s_1_vault_path AS vault_path, \
+                 n.s0_pithy AS s0_pithy, n.c_4_layer AS layer"
             }
             // Content / Connected / Complete all fetch the same node props;
             // Connected + Complete additionally query relationships below.
             _ => {
-                "n.coordinate AS coordinate, n.uuid AS uuid, \
-                 n.name AS name, n.family AS family, \
-                 n.ql_position AS ql_position, n.vault_path AS vault_path, \
-                 n.s0_pithy AS s0_pithy, n.layer AS layer, \
-                 n.topo_mode AS topo_mode, n.flags AS flags, \
-                 n.inversion_state AS inversion_state"
+                "n.coordinate AS coordinate, n.c_2_uuid AS uuid, \
+                 n.c_1_name AS name, n.c_4_family AS family, \
+                 n.c_4_ql_position AS ql_position, n.s_1_vault_path AS vault_path, \
+                 n.s0_pithy AS s0_pithy, n.c_4_layer AS layer, \
+                 n.c_4_topo_mode AS topo_mode, n.c_4_flags AS flags, \
+                 n.c_4_inversion_state AS inversion_state"
             }
         };
 

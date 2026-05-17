@@ -27,14 +27,14 @@ async fn test_seed_creates_expected_nodes() {
 
     // Verify # node
     let hash = client
-        .run("MATCH (n:Bimba {coordinate: '#'}) RETURN n.name AS name")
+        .run("MATCH (n:Bimba {coordinate: '#'}) RETURN n.c_1_name AS name")
         .await
         .unwrap();
     assert_eq!(hash.len(), 1);
 
     // Verify psychoids
     let psychoids = client
-        .run("MATCH (n:Bimba {layer: 'PSYCHOID'}) RETURN count(n) AS c")
+        .run("MATCH (n:Bimba {c_4_layer: 'PSYCHOID'}) RETURN count(n) AS c")
         .await
         .unwrap();
     let p_count: i64 = psychoids[0].get("c").unwrap();
@@ -43,7 +43,7 @@ async fn test_seed_creates_expected_nodes() {
     // Verify CF anchor invariant for the current topology rewrite:
     // only CF_FRACTAL anchors to #4.
     let anchors = client
-        .run("MATCH (cf:Bimba {layer: 'CONTEXT_FRAME'})-[:ANCHORED_TO]->(p4) RETURN count(cf) AS c")
+        .run("MATCH (cf:Bimba {c_4_layer: 'CONTEXT_FRAME'})-[:ANCHORED_TO]->(p4) RETURN count(cf) AS c")
         .await
         .unwrap();
     let a_count: i64 = anchors[0].get("c").unwrap();
@@ -89,10 +89,10 @@ async fn test_seed_creates_expected_nodes() {
     let rows = client
         .run(
             "MATCH (n:Bimba {coordinate: '#4'})
-             RETURN n.semantic_document AS semantic_document,
-                    n.semantic_source_hash AS semantic_source_hash,
-                    n.semantic_embedding_version AS semantic_embedding_version,
-                    size(n.semantic_embedding) AS embedding_size",
+             RETURN n.c_5_document AS semantic_document,
+                    n.c_5_source_hash AS semantic_source_hash,
+                    n.c_5_embedding_version AS semantic_embedding_version,
+                    size(n.c_5_embedding) AS embedding_size",
         )
         .await
         .unwrap();

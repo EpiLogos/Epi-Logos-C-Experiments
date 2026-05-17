@@ -364,7 +364,7 @@ async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
     let indexed_rows = match client
         .run(
             "MATCH (n:Bimba)
-             WHERE n.semantic_embedding_version IS NOT NULL
+             WHERE n.c_5_embedding_version IS NOT NULL
              RETURN count(n) AS c",
         )
         .await

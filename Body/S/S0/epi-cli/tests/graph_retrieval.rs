@@ -138,9 +138,9 @@ async fn test_retrieval_suite() {
                    n.q_surface_bias = 'Prefer surfacing for context questions',
                    n.extra_detail = 'should not be embedded by default',
                    n.q_dynamic = 'No allowlist, every q_ key counts',
-                   n.description = 'Context organizes relation-aware retrieval',
-                   n.essence = 'The center of disclosed context',
-                   n.semantic_embedding = [0.1, 0.2, 0.3]"#,
+                   n.c_1_description = 'Context organizes relation-aware retrieval',
+                   n.c_0_essence = 'The center of disclosed context',
+                   n.c_5_embedding = [0.1, 0.2, 0.3]"#,
         )
         .await
         .unwrap();

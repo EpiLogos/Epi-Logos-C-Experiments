@@ -78,7 +78,7 @@ async fn test_sync_from_frontmatter() {
 
     // Verify node exists in graph
     let rows = neo4j
-        .run("MATCH (n:Bimba {coordinate: 'M5'}) RETURN n.name AS name")
+        .run("MATCH (n:Bimba {coordinate: 'M5'}) RETURN n.c_1_name AS name")
         .await
         .expect("query should succeed");
     assert!(!rows.is_empty(), "M5 node should exist after sync");

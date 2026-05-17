@@ -37,7 +37,7 @@ impl<'a> LinkEnforcer<'a> {
     async fn node_exists(&self, path_or_coord: &str) -> Result<bool, String> {
         let escaped = path_or_coord.replace('\'', "\\'");
         let cypher = format!(
-            "MATCH (n:Bimba) WHERE n.vault_path = '{}' OR n.coordinate = '{}' RETURN count(n) > 0 AS exists",
+            "MATCH (n:Bimba) WHERE n.s_1_vault_path = '{}' OR n.coordinate = '{}' RETURN count(n) > 0 AS exists",
             escaped, escaped
         );
         let rows = self

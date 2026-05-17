@@ -94,7 +94,7 @@ pub enum GraphCmd {
 pub use epi_s2_graph_services::{
     fusion_rrf_results, parse_yaml_frontmatter, GraphMethodParams, GraphMethodService,
     GraphNodeRequest, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
-    HybridFusionConfig, RetrievalResult,
+    HybridFusionConfig, KernelResonanceObservationRequest, RetrievalResult,
 };
 
 fn compose_file_path() -> Result<String, String> {
@@ -449,7 +449,7 @@ async fn maybe_refresh_semantic_embeddings(client: &client::Neo4jClient) -> Resu
     let rows = client
         .run(
             "MATCH (n:Bimba)
-             WHERE n.semantic_embedding_version IS NOT NULL
+             WHERE n.c_5_embedding_version IS NOT NULL
              RETURN count(n) AS c",
         )
         .await

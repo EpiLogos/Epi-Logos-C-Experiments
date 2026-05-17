@@ -46,7 +46,7 @@ impl<'a> BidirectionalSyncer<'a> {
     ) -> Result<Vec<SyncConflict>, String> {
         let cypher = format!(
             "MATCH (n:Bimba {{coordinate: '{}'}}) \
-             RETURN n.name AS name, n.family AS family, n.ql_position AS ql_position",
+             RETURN n.c_1_name AS name, n.c_4_family AS family, n.c_4_ql_position AS ql_position",
             coord
         );
         let rows = self
@@ -68,7 +68,7 @@ impl<'a> BidirectionalSyncer<'a> {
                 if vault_name != graph_name {
                     conflicts.push(SyncConflict {
                         coordinate: coord.to_string(),
-                        property: "name".to_string(),
+                        property: "c_1_name".to_string(),
                         vault_value: vault_name.to_string(),
                         graph_value: graph_name,
                     });
@@ -153,12 +153,12 @@ mod tests {
     fn test_sync_conflict_fields() {
         let conflict = SyncConflict {
             coordinate: "M5".into(),
-            property: "name".into(),
+            property: "c_1_name".into(),
             vault_value: "Epii".into(),
             graph_value: "epii".into(),
         };
         assert_eq!(conflict.coordinate, "M5");
-        assert_eq!(conflict.property, "name");
+        assert_eq!(conflict.property, "c_1_name");
         assert_eq!(conflict.vault_value, "Epii");
         assert_eq!(conflict.graph_value, "epii");
     }

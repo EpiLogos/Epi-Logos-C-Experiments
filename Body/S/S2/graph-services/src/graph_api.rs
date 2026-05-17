@@ -5,6 +5,12 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 use crate::{CoordinateArrayParser, Neo4jClient};
+use epi_s2_graph_schema::{
+    GRAPHITI_ARC_ID_PROPERTY, KERNEL_RESONANCE_HELIX_PROPERTY, KERNEL_RESONANCE_INDEX_PROPERTY,
+    KERNEL_RESONANCE_LABEL, KERNEL_RESONANCE_LENS_PROPERTY, KERNEL_RESONANCE_POSITION_PROPERTY,
+    KERNEL_RESONANCE_RELATION, KERNEL_RESONANCE_SCORE_PROPERTY, KERNEL_RESONANCE_SQUARE_PROPERTY,
+    KERNEL_TICK_PROPERTY, SESSION_KEY_PROPERTY,
+};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum GraphParamValue {
@@ -40,9 +46,9 @@ impl GraphMethodParams {
                     items
                         .iter()
                         .map(|item| {
-                            item.as_str().map(str::to_owned).ok_or_else(|| {
-                                format!("param '{key}' only supports string arrays")
-                            })
+                            item.as_str()
+                                .map(str::to_owned)
+                                .ok_or_else(|| format!("param '{key}' only supports string arrays"))
                         })
                         .collect::<Result<Vec<_>, _>>()?,
                 ),
@@ -60,6 +66,27 @@ impl GraphMethodParams {
     pub fn get_string(&self, key: &str) -> Option<&str> {
         match self.values.get(key) {
             Some(GraphParamValue::String(value)) => Some(value),
+            _ => None,
+        }
+    }
+
+    pub fn get_integer(&self, key: &str) -> Option<i64> {
+        match self.values.get(key) {
+            Some(GraphParamValue::Integer(value)) => Some(*value),
+            _ => None,
+        }
+    }
+
+    pub fn get_float(&self, key: &str) -> Option<f64> {
+        match self.values.get(key) {
+            Some(GraphParamValue::Float(value)) => Some(*value),
+            _ => None,
+        }
+    }
+
+    pub fn get_bool(&self, key: &str) -> Option<bool> {
+        match self.values.get(key) {
+            Some(GraphParamValue::Boolean(value)) => Some(*value),
             _ => None,
         }
     }
@@ -107,7 +134,8 @@ pub struct GraphNodeRequest {
 
 impl GraphNodeRequest {
     pub fn validate(&self) -> Result<String, String> {
-        GraphMethodService::resolve_coordinate_string(&self.coordinate).map(|resolved| resolved.canonical)
+        GraphMethodService::resolve_coordinate_string(&self.coordinate)
+            .map(|resolved| resolved.canonical)
     }
 }
 
@@ -137,6 +165,29 @@ pub struct CoordinateResolution {
     pub input: String,
     pub canonical: String,
     pub compatibility_property: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct KernelResonanceObservationRequest {
+    pub source_coordinate: String,
+    pub session_key: String,
+    pub timestamp_ms: u64,
+    pub lens: u8,
+    pub ascent_helix: bool,
+    pub position: u8,
+    pub score: f64,
+    pub kernel_tick: u8,
+    pub graphiti_arc_id: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct KernelResonanceObservationPlan {
+    pub resolution: CoordinateResolution,
+    pub observation_coordinate: String,
+    pub resonance_index: i64,
+    pub tritone_square: i64,
+    pub cypher: String,
+    pub params: GraphMethodParams,
 }
 
 pub struct GraphMethodService<'a> {
@@ -170,6 +221,110 @@ impl<'a> GraphMethodService<'a> {
         })
     }
 
+    pub fn kernel_resonance_observation_plan(
+        request: &KernelResonanceObservationRequest,
+    ) -> Result<KernelResonanceObservationPlan, String> {
+        let resolution = Self::resolve_coordinate_string(&request.source_coordinate)?;
+        if request.session_key.trim().is_empty() {
+            return Err("session key is required for kernel resonance observation".into());
+        }
+        if request.timestamp_ms == 0 {
+            return Err("timestamp_ms is required for kernel resonance observation".into());
+        }
+        if !request.score.is_finite() {
+            return Err("kernel resonance score must be finite".into());
+        }
+        if !(0.0..=1.0).contains(&request.score) {
+            return Err("kernel resonance score must be normalized between 0 and 1".into());
+        }
+        let resonance_index =
+            kernel_resonance_index(request.lens, request.ascent_helix, request.position)?;
+        let tritone_square = tritone_square_for_lens(request.lens)?;
+        let session_fragment = coordinate_fragment(&request.session_key);
+        let observation_coordinate = format!(
+            "S2.kernel.resonance.{session_fragment}.{}.{}",
+            request.timestamp_ms, resonance_index
+        );
+        let graphiti_arc_id = request.graphiti_arc_id.clone().unwrap_or_default();
+        let provenance = json!({
+            "source": "s2.graph.kernel_resonance.record",
+            "source_coordinate": resolution.canonical,
+            "session_key": request.session_key,
+            "graphiti_arc_id": graphiti_arc_id,
+        })
+        .to_string();
+        let params = GraphMethodParams::from_json(json!({
+            "source_coordinate": resolution.canonical,
+            "source_input": resolution.input,
+            "observation_coordinate": observation_coordinate,
+            "observation_name": format!("Kernel resonance {}", resonance_index),
+            "resonance_index": resonance_index,
+            "tritone_square": tritone_square,
+            "lens": request.lens as i64,
+            "position": request.position as i64,
+            "ascent_helix": request.ascent_helix,
+            "score": request.score,
+            "kernel_tick": (request.kernel_tick % 12) as i64,
+            "session_key": request.session_key,
+            "graphiti_arc_id": graphiti_arc_id,
+            "timestamp_ms": request.timestamp_ms as i64,
+            "provenance": provenance,
+        }))?;
+        let cypher = format!(
+            "MATCH (source:Bimba)
+             WHERE source.coordinate = $source_coordinate OR source.bimbaCoordinate = $source_input
+             MERGE (obs:Bimba:{kernel_label} {{coordinate: $observation_coordinate}})
+             SET obs.c_2_uuid = $observation_coordinate,
+                 obs.c_1_name = $observation_name,
+                 obs.c_4_family = 'S',
+                 obs.c_4_layer = 'S2',
+                 obs.c_4_ql_position = 2,
+                 obs.{resonance_index_property} = $resonance_index,
+                 obs.{resonance_score_property} = $score,
+                 obs.{resonance_square_property} = $tritone_square,
+                 obs.{resonance_lens_property} = $lens,
+                 obs.{resonance_position_property} = $position,
+                 obs.{resonance_helix_property} = $ascent_helix,
+                 obs.{kernel_tick_property} = $kernel_tick,
+                 obs.{session_key_property} = $session_key,
+                 obs.{graphiti_arc_property} = $graphiti_arc_id
+             MERGE (source)-[r:{kernel_relation}]->(obs)
+             SET r.c_0_source_coordinate = source.coordinate,
+                 r.c_0_target_coordinate = obs.coordinate,
+                 r.c_1_relation_family = 'kernel-resonance',
+                 r.c_2_relation_type = '{kernel_relation}',
+                 r.c_3_created_at = datetime({{epochMillis: $timestamp_ms}}),
+                 r.c_4_provenance = $provenance,
+                 r.{resonance_index_property} = $resonance_index
+             RETURN obs.coordinate AS coordinate,
+                    obs.c_2_uuid AS uuid,
+                    obs.c_1_name AS name,
+                    obs.c_4_family AS family,
+                    obs.c_4_layer AS layer,
+                    obs.c_4_ql_position AS ql_position",
+            kernel_label = KERNEL_RESONANCE_LABEL,
+            kernel_relation = KERNEL_RESONANCE_RELATION,
+            resonance_index_property = KERNEL_RESONANCE_INDEX_PROPERTY,
+            resonance_score_property = KERNEL_RESONANCE_SCORE_PROPERTY,
+            resonance_square_property = KERNEL_RESONANCE_SQUARE_PROPERTY,
+            resonance_lens_property = KERNEL_RESONANCE_LENS_PROPERTY,
+            resonance_position_property = KERNEL_RESONANCE_POSITION_PROPERTY,
+            resonance_helix_property = KERNEL_RESONANCE_HELIX_PROPERTY,
+            kernel_tick_property = KERNEL_TICK_PROPERTY,
+            session_key_property = SESSION_KEY_PROPERTY,
+            graphiti_arc_property = GRAPHITI_ARC_ID_PROPERTY,
+        );
+
+        Ok(KernelResonanceObservationPlan {
+            resolution,
+            observation_coordinate,
+            resonance_index,
+            tritone_square,
+            cypher,
+            params,
+        })
+    }
+
     pub async fn query(&self, request: GraphQueryRequest) -> Result<Value, String> {
         request.validate()?;
         let rows = self
@@ -190,11 +345,11 @@ impl<'a> GraphMethodService<'a> {
              WHERE n.coordinate = $canonical OR n.bimbaCoordinate = $input
              OPTIONAL MATCH (n)-[r]-(m:Bimba)
              RETURN n.coordinate AS coordinate,
-                    n.uuid AS uuid,
-                    n.name AS name,
-                    n.family AS family,
-                    n.layer AS layer,
-                    n.ql_position AS ql_position,
+                    n.c_2_uuid AS uuid,
+                    n.c_1_name AS name,
+                    n.c_4_family AS family,
+                    n.c_4_layer AS layer,
+                    n.c_4_ql_position AS ql_position,
                     collect(DISTINCT {
                       type: type(r),
                       direction: CASE WHEN startNode(r) = n THEN 'outbound' ELSE 'inbound' END,
@@ -241,8 +396,8 @@ impl<'a> GraphMethodService<'a> {
              MATCH path = {pattern}
              {relation_filter}
              RETURN target.coordinate AS coordinate,
-                    target.uuid AS uuid,
-                    target.name AS name,
+                    target.c_2_uuid AS uuid,
+                    target.c_1_name AS name,
                     length(path) AS depth
              ORDER BY depth ASC, coordinate ASC
              LIMIT 100"
@@ -262,6 +417,72 @@ impl<'a> GraphMethodService<'a> {
             "direction": request.direction,
             "nodes": rows.iter().map(known_row_json).collect::<Vec<_>>(),
         }))
+    }
+
+    pub async fn record_kernel_resonance(
+        &self,
+        request: KernelResonanceObservationRequest,
+    ) -> Result<Value, String> {
+        let plan = Self::kernel_resonance_observation_plan(&request)?;
+        let rows = self
+            .client
+            .run_query(plan.params.apply_to_query(query(&plan.cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.kernel_resonance.record failed: {err}"))?;
+        Ok(json!({
+            "source": plan.resolution,
+            "observation": {
+                "coordinate": plan.observation_coordinate,
+                "label": KERNEL_RESONANCE_LABEL,
+                "relation": KERNEL_RESONANCE_RELATION,
+                "resonance_index": plan.resonance_index,
+                "tritone_square": plan.tritone_square,
+                "session_key": request.session_key,
+                "graphiti_arc_id": request.graphiti_arc_id.unwrap_or_default(),
+            },
+            "rowCount": rows.len(),
+            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+        }))
+    }
+}
+
+fn kernel_resonance_index(lens: u8, ascent_helix: bool, position: u8) -> Result<i64, String> {
+    if lens >= 6 {
+        return Err("kernel resonance lens must be in 0..6".into());
+    }
+    if position >= 6 {
+        return Err("kernel resonance position must be in 0..6".into());
+    }
+    let helix = if ascent_helix { 1i64 } else { 0i64 };
+    Ok((lens as i64 * 12) + (helix * 6) + position as i64)
+}
+
+fn tritone_square_for_lens(lens: u8) -> Result<i64, String> {
+    match lens {
+        0 | 5 => Ok(0),
+        1 | 4 => Ok(1),
+        2 | 3 => Ok(2),
+        _ => Err("kernel resonance lens must map to a tritone square".into()),
+    }
+}
+
+fn coordinate_fragment(value: &str) -> String {
+    let fragment = value
+        .chars()
+        .map(|ch| {
+            if ch.is_ascii_alphanumeric() || ch == '-' || ch == '_' {
+                ch
+            } else {
+                '-'
+            }
+        })
+        .collect::<String>()
+        .trim_matches('-')
+        .to_owned();
+    if fragment.is_empty() {
+        "session".to_owned()
+    } else {
+        fragment
     }
 }
 

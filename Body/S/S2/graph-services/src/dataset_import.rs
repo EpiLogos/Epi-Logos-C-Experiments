@@ -1,6 +1,8 @@
+use crate::coordinate::{convert_hash_to_m_family, CoordLayer, CoordinateArrayParser};
 use crate::Neo4jClient;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
+use uuid::Uuid;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DatasetBranch {
@@ -88,23 +90,64 @@ impl<'a> DatasetImporter<'a> {
         let mut count = 0;
         let mut skipped = 0;
         for node in &nodes {
-            let coord = match coordinate_from_node(node) {
+            let raw_coord = match coordinate_from_node(node) {
                 Some(c) => c,
                 None => {
                     skipped += 1;
                     continue;
                 }
             };
+            let coord = convert_hash_to_m_family(raw_coord);
+            let parsed = CoordinateArrayParser::parse_one(&coord).ok();
 
             let mut set_parts = Vec::new();
-            set_parts.push("n.source_dataset = 'bimba'".to_string());
+
+            // Provenance (C3 — process)
+            set_parts.push(format!(
+                "n.c_3_source_dataset = COALESCE(n.c_3_source_dataset, 'bimba')"
+            ));
             if let Some(branch) = branch {
-                set_parts.push(format!("n.dataset_branch = '{}'", escape_cypher(branch.id)));
                 set_parts.push(format!(
-                    "n.dataset_branch_label = '{}'",
+                    "n.c_3_dataset_branch = COALESCE(n.c_3_dataset_branch, '{}')",
+                    escape_cypher(branch.id)
+                ));
+                set_parts.push(format!(
+                    "n.c_3_dataset_branch_label = COALESCE(n.c_3_dataset_branch_label, '{}')",
                     escape_cypher(branch.label)
                 ));
             }
+
+            // Deterministic UUID v5 from coordinate (C2 — Entity).
+            let uuid = Uuid::new_v5(&Uuid::NAMESPACE_OID, coord.as_bytes());
+            set_parts.push(format!("n.c_2_uuid = COALESCE(n.c_2_uuid, '{}')", uuid));
+
+            // Computed coordinate-driven metadata (C4 — Type).
+            if let Some(parsed) = &parsed {
+                if let Some(family) = &parsed.family {
+                    set_parts.push(format!(
+                        "n.c_4_family = COALESCE(n.c_4_family, '{}')",
+                        escape_cypher(family)
+                    ));
+                }
+                if let Some(pos) = parsed.ql_position {
+                    set_parts.push(format!(
+                        "n.c_4_ql_position = COALESCE(n.c_4_ql_position, {})",
+                        pos
+                    ));
+                }
+                let layer_str = layer_string(&parsed.layer);
+                set_parts.push(format!(
+                    "n.c_4_layer = COALESCE(n.c_4_layer, '{}')",
+                    layer_str
+                ));
+                if parsed.inverted {
+                    set_parts.push(
+                        "n.c_4_inversion_state = COALESCE(n.c_4_inversion_state, 1)".to_string(),
+                    );
+                }
+            }
+
+            // Identity (C1 — Form)
             if let Some(name) = node_text_property(
                 node,
                 &[
@@ -115,7 +158,10 @@ impl<'a> DatasetImporter<'a> {
                     "displayName",
                 ],
             ) {
-                set_parts.push(format!("n.name = '{}'", escape_cypher(name)));
+                set_parts.push(format!(
+                    "n.c_1_name = COALESCE(n.c_1_name, '{}')",
+                    escape_cypher(name)
+                ));
             }
             if let Some(desc) = node_text_property(
                 node,
@@ -127,10 +173,35 @@ impl<'a> DatasetImporter<'a> {
                 ],
             ) {
                 set_parts.push(format!(
-                    "n.description = '{}'",
+                    "n.c_1_description = COALESCE(n.c_1_description, '{}')",
                     escape_cypher(truncate_utf8(desc, 2000))
                 ));
             }
+            if let Some(form) = node_text_property(
+                node,
+                &[
+                    "formulation",
+                    "form",
+                    "operationalFormulation",
+                    "metaphysicalFormulation",
+                ],
+            ) {
+                set_parts.push(format!(
+                    "n.c_1_form = COALESCE(n.c_1_form, '{}')",
+                    escape_cypher(truncate_utf8(form, 2000))
+                ));
+            }
+            if let Some(structure) = node_text_property(
+                node,
+                &["structure", "structuralPattern", "operationalStructure"],
+            ) {
+                set_parts.push(format!(
+                    "n.c_1_structure = COALESCE(n.c_1_structure, '{}')",
+                    escape_cypher(truncate_utf8(structure, 2000))
+                ));
+            }
+
+            // Ground / essence (C0 — Bimba)
             if let Some(essence) = node_text_property(
                 node,
                 &[
@@ -141,20 +212,22 @@ impl<'a> DatasetImporter<'a> {
                 ],
             ) {
                 set_parts.push(format!(
-                    "n.essence = '{}'",
+                    "n.c_0_essence = COALESCE(n.c_0_essence, '{}')",
                     escape_cypher(truncate_utf8(essence, 1000))
                 ));
             }
             if let Some(core_nature) = node_text_property(node, &["coreNature", "core_nature"]) {
                 set_parts.push(format!(
-                    "n.core_nature = '{}'",
+                    "n.c_0_core_nature = COALESCE(n.c_0_core_nature, '{}')",
                     escape_cypher(truncate_utf8(core_nature, 1000))
                 ));
             }
+
+            // Compat — preserve legacy bimbaCoordinate when it differs from new form.
             if let Some(legacy) = legacy_bimba_coordinate(node) {
                 if legacy != coord {
                     set_parts.push(format!(
-                        "n.legacy_bimba_coordinate = '{}'",
+                        "n.bimbaCoordinate = COALESCE(n.bimbaCoordinate, '{}')",
                         escape_cypher(legacy)
                     ));
                 }
@@ -162,7 +235,7 @@ impl<'a> DatasetImporter<'a> {
 
             let cypher = format!(
                 "MERGE (n:Bimba {{coordinate: '{}'}}) SET {} RETURN n.coordinate",
-                escape_cypher(coord),
+                escape_cypher(&coord),
                 set_parts.join(", ")
             );
 
@@ -196,20 +269,23 @@ impl<'a> DatasetImporter<'a> {
         let mut count = 0;
         let mut skipped = 0;
         for rel in &rels {
-            let source = match relation_endpoint(rel, "source") {
+            let raw_source = match relation_endpoint(rel, "source") {
                 Some(s) => s,
                 None => {
                     skipped += 1;
                     continue;
                 }
             };
-            let target = match relation_endpoint(rel, "target") {
+            let raw_target = match relation_endpoint(rel, "target") {
                 Some(t) => t,
                 None => {
                     skipped += 1;
                     continue;
                 }
             };
+            let source = convert_hash_to_m_family(raw_source);
+            let target = convert_hash_to_m_family(raw_target);
+
             let rel_type = match relation_type_from_value(rel) {
                 Some(t) => sanitize_rel_type(t),
                 None => {
@@ -219,27 +295,33 @@ impl<'a> DatasetImporter<'a> {
             };
 
             let mut set_parts = Vec::new();
+            set_parts.push(format!(
+                "r.c_0_source_coordinate = COALESCE(r.c_0_source_coordinate, '{}')",
+                escape_cypher(&source)
+            ));
+            set_parts.push(format!(
+                "r.c_0_target_coordinate = COALESCE(r.c_0_target_coordinate, '{}')",
+                escape_cypher(&target)
+            ));
+            set_parts.push(format!(
+                "r.c_2_relation_type = COALESCE(r.c_2_relation_type, '{}')",
+                escape_cypher(&rel_type)
+            ));
+            set_parts.push("r.c_3_created_at = COALESCE(r.c_3_created_at, datetime())".to_string());
             if let Some(branch) = branch {
-                set_parts.push(format!("r.dataset_branch = '{}'", escape_cypher(branch.id)));
-            }
-            if let Some(source_id) = relation_string_property(rel, "id") {
                 set_parts.push(format!(
-                    "r.source_relation_id = '{}'",
-                    escape_cypher(source_id)
+                    "r.c_3_dataset_branch = COALESCE(r.c_3_dataset_branch, '{}')",
+                    escape_cypher(branch.id)
                 ));
             }
-            let set_clause = if set_parts.is_empty() {
-                String::new()
-            } else {
-                format!(" SET {}", set_parts.join(", "))
-            };
+            let set_clause = format!(" SET {}", set_parts.join(", "));
 
             let cypher = format!(
                 "MATCH (s:Bimba {{coordinate: '{}'}}) \
                  MATCH (t:Bimba {{coordinate: '{}'}}) \
                  MERGE (s)-[r:{}]->(t){}",
-                escape_cypher(source),
-                escape_cypher(target),
+                escape_cypher(&source),
+                escape_cypher(&target),
                 rel_type,
                 set_clause
             );
@@ -495,14 +577,6 @@ fn legacy_bimba_coordinate(node: &Value) -> Option<&str> {
         .or_else(|| node.get("bimbaCoordinate").and_then(|value| value.as_str()))
 }
 
-fn relation_string_property<'a>(rel: &'a Value, key: &str) -> Option<&'a str> {
-    rel.get(key).and_then(|value| value.as_str()).or_else(|| {
-        rel.get("relProperties")?
-            .get(key)
-            .and_then(|value| value.as_str())
-    })
-}
-
 fn truncate_utf8(value: &str, max_len: usize) -> &str {
     if value.len() <= max_len {
         return value;
@@ -512,6 +586,18 @@ fn truncate_utf8(value: &str, max_len: usize) -> &str {
         end -= 1;
     }
     &value[..end]
+}
+
+fn layer_string(layer: &CoordLayer) -> &'static str {
+    match layer {
+        CoordLayer::Psychoid => "PSYCHOID",
+        CoordLayer::Family => "COORDINATE",
+        CoordLayer::FamilyRoot => "FAMILY_ROOT",
+        CoordLayer::Lens => "LENS",
+        CoordLayer::ContextFrame => "CONTEXT_FRAME",
+        CoordLayer::Vak => "VAK",
+        CoordLayer::Weave => "WEAVE",
+    }
 }
 
 #[cfg(test)]
@@ -584,5 +670,13 @@ mod tests {
             "relType": "RELATES_TO"
         });
         assert_eq!(relation_endpoint(&rel, "target"), None);
+    }
+
+    #[test]
+    fn layer_string_covers_all_variants() {
+        assert_eq!(layer_string(&CoordLayer::Psychoid), "PSYCHOID");
+        assert_eq!(layer_string(&CoordLayer::Family), "COORDINATE");
+        assert_eq!(layer_string(&CoordLayer::FamilyRoot), "FAMILY_ROOT");
+        assert_eq!(layer_string(&CoordLayer::Lens), "LENS");
     }
 }

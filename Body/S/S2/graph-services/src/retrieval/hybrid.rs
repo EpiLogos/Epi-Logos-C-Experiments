@@ -155,15 +155,15 @@ impl<'a> HybridRetriever<'a> {
             "MATCH (n:Bimba)
              WITH n,
                   size([token IN $tokens WHERE token <> '' AND toLower(n.coordinate) CONTAINS token]) AS coord_hits,
-                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.name, '')) CONTAINS token]) AS name_hits,
-                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.family, '')) CONTAINS token]) AS family_hits,
-                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.layer, '')) CONTAINS token]) AS layer_hits,
-                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.essence, '')) CONTAINS token]) AS essence_hits,
-                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.description, '')) CONTAINS token]) AS desc_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_1_name, '')) CONTAINS token]) AS name_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_4_family, '')) CONTAINS token]) AS family_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_4_layer, '')) CONTAINS token]) AS layer_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_0_essence, '')) CONTAINS token]) AS essence_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_1_description, '')) CONTAINS token]) AS desc_hits,
                   CASE
                       WHEN $raw_query = '' THEN 0
                       WHEN toLower(n.coordinate) = $raw_query THEN 12
-                      WHEN toLower(coalesce(n.name, '')) = $raw_query THEN 10
+                      WHEN toLower(coalesce(n.c_1_name, '')) = $raw_query THEN 10
                       ELSE 0
                   END AS exact_hits
              WITH n,
@@ -171,16 +171,16 @@ impl<'a> HybridRetriever<'a> {
                    essence_hits * 3 + desc_hits * 2 + exact_hits +
                    CASE
                        WHEN size($positions) = 0 THEN 0
-                       WHEN n.ql_position IN $positions THEN 2
+                       WHEN n.c_4_ql_position IN $positions THEN 2
                        ELSE 0
                    END) AS score
              WHERE score > 0
              RETURN n.coordinate AS coordinate,
-                    n.uuid AS uuid,
-                    n.name AS name,
-                    n.family AS family,
-                    n.layer AS layer,
-                    n.ql_position AS ql_position,
+                    n.c_2_uuid AS uuid,
+                    n.c_1_name AS name,
+                    n.c_4_family AS family,
+                    n.c_4_layer AS layer,
+                    n.c_4_ql_position AS ql_position,
                     score AS score
              ORDER BY score DESC, coordinate ASC
              LIMIT $top_k",
@@ -252,11 +252,11 @@ impl<'a> HybridRetriever<'a> {
             "CALL db.index.vector.queryNodes('coord_embedding', $top_k, $embedding)
              YIELD node, score
              RETURN node.coordinate AS coordinate,
-                    node.uuid AS uuid,
-                    node.name AS name,
-                    node.family AS family,
-                    node.layer AS layer,
-                    node.ql_position AS ql_position,
+                    node.c_2_uuid AS uuid,
+                    node.c_1_name AS name,
+                    node.c_4_family AS family,
+                    node.c_4_layer AS layer,
+                    node.c_4_ql_position AS ql_position,
                     score AS score
              ORDER BY score DESC",
         )

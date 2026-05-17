@@ -33,8 +33,9 @@ pub use doctor::{
 };
 pub use embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
 pub use graph_api::{
-    CoordinateResolution, GraphMethodParams, GraphMethodService, GraphNodeRequest,
-    GraphParamValue, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    CoordinateResolution, GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphParamValue,
+    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    KernelResonanceObservationPlan, KernelResonanceObservationRequest,
 };
 pub use link_enforcement::{LinkEnforcer, LinkValidationResult};
 pub use meta::{

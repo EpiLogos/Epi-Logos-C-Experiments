@@ -136,15 +136,15 @@ async fn merge_node(
     let cypher = format!(
         "MERGE (n:Bimba {{coordinate: $coord}}) \
          SET n:{}, \
-             n.uuid = $uuid, \
-             n.name = $name, \
-             n.family = $family, \
-             n.layer = $layer, \
-             n.ql_position = $pos, \
-             n.topo_mode = $topo, \
-             n.weave_state = $weave, \
-             n.inversion_state = $inv, \
-             n.flags = $flags",
+             n.c_2_uuid = $uuid, \
+             n.c_1_name = $name, \
+             n.c_4_family = $family, \
+             n.c_4_layer = $layer, \
+             n.c_4_ql_position = $pos, \
+             n.c_4_topo_mode = $topo, \
+             n.c_4_weave_state = $weave, \
+             n.c_4_inversion_state = $inv, \
+             n.c_4_flags = $flags",
         type_label
     );
     let q = query(&cypher)
@@ -178,16 +178,16 @@ async fn merge_family_node(
     let q = query(
         "MERGE (n:Bimba {coordinate: $coord}) \
          SET n:Family, \
-             n.uuid = $uuid, \
-             n.name = $name, \
-             n.domain = $domain, \
-             n.family_letter = $letter, \
-             n.layer = 'FAMILY_META', \
-             n.ql_position = -1, \
-             n.topo_mode = 'NONE', \
-             n.weave_state = 0.0, \
-             n.inversion_state = 0, \
-             n.flags = 0",
+             n.c_2_uuid = $uuid, \
+             n.c_1_name = $name, \
+             n.c_1_description = $domain, \
+             n.c_4_family = $letter, \
+             n.c_4_layer = 'FAMILY_META', \
+             n.c_4_ql_position = -1, \
+             n.c_4_topo_mode = 'NONE', \
+             n.c_4_weave_state = 0.0, \
+             n.c_4_inversion_state = 0, \
+             n.c_4_flags = 0",
     )
     .param("coord", coordinate)
     .param("uuid", uuid.as_str())
@@ -276,8 +276,8 @@ pub async fn seed_coordinate_space(client: &Neo4jClient) -> Result<String, Strin
     // the Kashmir Shaivite principle that everything is everything — the Real self-inverted in principle.
     let q = query(
         "MATCH (n:Bimba {coordinate: '#'}) \
-         SET n.essence = $essence, \
-             n.description = $desc",
+         SET n.c_0_essence = $essence, \
+             n.c_1_description = $desc",
     )
     .param(
         "essence",

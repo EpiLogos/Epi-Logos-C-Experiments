@@ -28,12 +28,12 @@ pub async fn build_semantic_document(
                 "MATCH (n:Bimba {coordinate: $coord})
                  WITH n, [k IN keys(n) WHERE k STARTS WITH 'q_'] AS q_keys
                  RETURN n.coordinate AS coordinate,
-                        coalesce(n.name, '') AS name,
-                        coalesce(n.family, '') AS family,
-                        coalesce(n.layer, '') AS layer,
-                        coalesce(n.essence, '') AS essence,
-                        coalesce(n.description, '') AS description,
-                        coalesce(toString(n.ql_position), '') AS ql_position,
+                        coalesce(n.c_1_name, '') AS name,
+                        coalesce(n.c_4_family, '') AS family,
+                        coalesce(n.c_4_layer, '') AS layer,
+                        coalesce(n.c_0_essence, '') AS essence,
+                        coalesce(n.c_1_description, '') AS description,
+                        coalesce(toString(n.c_4_ql_position), '') AS ql_position,
                         q_keys AS q_keys,
                         [k IN q_keys | coalesce(toString(n[k]), '')] AS q_values",
             )
@@ -116,9 +116,9 @@ pub async fn find_stale_nodes(
         .run(
             "MATCH (n:Bimba)
              RETURN n.coordinate AS coordinate,
-                    n.semantic_source_hash AS semantic_source_hash,
-                    n.semantic_embedding_version AS semantic_embedding_version,
-                    n.semantic_embedding AS semantic_embedding
+                    n.c_5_source_hash AS semantic_source_hash,
+                    n.c_5_embedding_version AS semantic_embedding_version,
+                    n.c_5_embedding AS semantic_embedding
              ORDER BY coordinate",
         )
         .await
@@ -174,11 +174,11 @@ pub async fn refresh_coordinate_embedding(
         .run_query(
             query(
                 "MATCH (n:Bimba {coordinate: $coord})
-                 SET n.semantic_document = $semantic_document,
-                     n.semantic_source_hash = $semantic_source_hash,
-                     n.semantic_embedding_version = $semantic_embedding_version,
-                     n.semantic_embedding = $semantic_embedding,
-                     n.semantic_indexed_at = datetime()",
+                 SET n.c_5_document = $semantic_document,
+                     n.c_5_source_hash = $semantic_source_hash,
+                     n.c_5_embedding_version = $semantic_embedding_version,
+                     n.c_5_embedding = $semantic_embedding,
+                     n.c_5_indexed_at = datetime()",
             )
             .param("coord", coordinate)
             .param("semantic_document", doc.text.as_str())
@@ -214,14 +214,14 @@ async fn relation_summaries(
          OPTIONAL MATCH (n)-[r]->(m:Bimba)
          RETURN collect(DISTINCT CASE
              WHEN r IS NULL THEN NULL
-             ELSE type(r) + ' -> ' + coalesce(m.coordinate, '') + ' :: ' + coalesce(m.name, '')
+             ELSE type(r) + ' -> ' + coalesce(m.coordinate, '') + ' :: ' + coalesce(m.c_1_name, '')
          END) AS rels"
     } else {
         "MATCH (n:Bimba {coordinate: $coord})
          OPTIONAL MATCH (m:Bimba)-[r]->(n)
          RETURN collect(DISTINCT CASE
              WHEN r IS NULL THEN NULL
-             ELSE type(r) + ' <- ' + coalesce(m.coordinate, '') + ' :: ' + coalesce(m.name, '')
+             ELSE type(r) + ' <- ' + coalesce(m.coordinate, '') + ' :: ' + coalesce(m.c_1_name, '')
          END) AS rels"
     };
 

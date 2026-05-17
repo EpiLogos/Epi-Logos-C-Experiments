@@ -9,11 +9,11 @@ pub struct CoordinateRetrieval<'a> {
 /// Common Bimba return clause — aliased columns for neo4rs Row::get.
 const BASE_RETURN: &str = "\
 n.coordinate AS coordinate, \
-n.name AS name, \
-n.family AS family, \
-n.layer AS layer, \
-n.ql_position AS ql_position, \
-n.uuid AS uuid";
+n.c_1_name AS name, \
+n.c_4_family AS family, \
+n.c_4_layer AS layer, \
+n.c_4_ql_position AS ql_position, \
+n.c_2_uuid AS uuid";
 
 impl<'a> CoordinateRetrieval<'a> {
     pub fn new(client: &'a Neo4jClient) -> Self {
@@ -106,7 +106,7 @@ impl<'a> CoordinateRetrieval<'a> {
             return Err(format!("invalid family: {}", family));
         }
         let q = query(&format!(
-            "MATCH (n:Bimba {{family: $fam}}) RETURN {} ORDER BY n.ql_position",
+            "MATCH (n:Bimba {{c_4_family: $fam}}) RETURN {} ORDER BY n.c_4_ql_position",
             BASE_RETURN
         ))
         .param("fam", family.to_owned());
