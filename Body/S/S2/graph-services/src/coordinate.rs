@@ -7,7 +7,7 @@ pub struct ParsedCoordinate {
     pub ql_position: Option<u8>,
     pub inverted: bool,
     /// Fractal sub-coordinate path. `M0-2-4` -> [2, 4]. `M4.0` -> [0].
-    pub sub_positions: Vec<u8>,
+    pub sub_positions: Vec<u16>,
     /// Depth in the fractal tree.
     /// -1 = family root (e.g. `M`).
     ///  0 = base family coordinate (e.g. `M0`).
@@ -326,39 +326,27 @@ fn empty_kind(coord: &str, layer: CoordLayer, family: Option<String>) -> ParsedC
     }
 }
 
-/// Parse a separator-delimited sub-coordinate tail like `2-4` or `0-0`.
-/// Returns None if any segment is not a single digit 0..=9.
-fn parse_sub_positions(tail: &str, sep: char) -> Option<Vec<u8>> {
+/// Parse a separator-delimited sub-coordinate tail like `2-4`, `0-360`, `4.0/1`.
+///
+/// Sub-positions are unconstrained integers (Bimba variants extend well past the
+/// QL ideal of 0..=5 — e.g. decan degrees 0..=360, codon indices 0..=63). The
+/// canonical 0..=5 ideal lives ONLY on the base `ql_position` of a family coord.
+/// Returns None for empty segments or genuinely invalid tokens.
+fn parse_sub_positions(tail: &str, sep: char) -> Option<Vec<u16>> {
     if tail.is_empty() {
         return None;
     }
     let mut out = Vec::new();
-    for segment in tail.split(sep) {
-        // Allow nested dots inside dash segments (or vice versa) — split on the active separator
-        // and then look for the alternate separator within the segment.
-        let alt = if sep == '-' { '.' } else { '-' };
-        if segment.contains(alt) {
-            // Recurse: a mixed run like `0.0` inside a dash split.
-            for inner in segment.split(alt) {
-                if inner.is_empty() {
-                    return None;
-                }
-                let n: u8 = inner.parse().ok()?;
-                if n > 9 {
-                    return None;
-                }
-                out.push(n);
-            }
-        } else {
-            if segment.is_empty() {
-                return None;
-            }
-            let n: u8 = segment.parse().ok()?;
-            if n > 9 {
-                return None;
-            }
-            out.push(n);
+    // Split on every Bimba sub-separator: '-' (branch), '.' (lemniscate), '/' (variant fork).
+    // The `sep` parameter just identifies which separator the parser entered on; for the
+    // path below, all three separators flatten the tail into a sequence of integer positions.
+    let _ = sep;
+    for segment in tail.split(['-', '.', '/'].as_ref()) {
+        if segment.is_empty() {
+            return None;
         }
+        let n: u16 = segment.parse().ok()?;
+        out.push(n);
     }
     Some(out)
 }
@@ -439,6 +427,20 @@ mod tests {
         assert!(CoordinateArrayParser::parse_one("M0--").is_err());
         assert!(CoordinateArrayParser::parse_one("M0-").is_err());
         assert!(CoordinateArrayParser::parse_one("M0-abc").is_err());
+    }
+
+    #[test]
+    fn parses_variant_positions_beyond_ql_ideal() {
+        // Decan degrees, codon indices etc. push sub-positions well past 5.
+        let p = CoordinateArrayParser::parse_one("M2-3-0-360").unwrap();
+        assert_eq!(p.ql_position, Some(2)); // base stays QL-canonical
+        assert_eq!(p.sub_positions, vec![3, 0, 360]);
+
+        let p = CoordinateArrayParser::parse_one("M2-5-9").unwrap();
+        assert_eq!(p.sub_positions, vec![5, 9]);
+
+        let p = CoordinateArrayParser::parse_one("M0-5-5/0").unwrap();
+        assert_eq!(p.sub_positions, vec![5, 5, 0]);
     }
 
     #[test]

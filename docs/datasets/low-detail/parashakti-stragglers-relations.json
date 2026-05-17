@@ -1,0 +1,76 @@
+﻿[
+  {
+    "coordinate": "#2-5-8",
+    "outgoing": [
+      {
+        "target_name": "Pluto",
+        "direction": "out",
+        "target_coord": "#2-5-9",
+        "type": "HARMONICALLY_LEADS_TO"
+      },
+      {
+        "target_name": "Ājñā",
+        "direction": "out",
+        "target_coord": "#2-5-0/1-6",
+        "type": "HAS_CHAKRAL_ANCHOR"
+      }
+    ],
+    "incoming": [
+      {
+        "direction": "in",
+        "source_name": "Planetary Harmonic Integration",
+        "source_coord": "#2-5",
+        "type": "HAS_INTERNAL_COMPONENT"
+      },
+      {
+        "direction": "in",
+        "source_name": "Mars",
+        "source_coord": "#2-5-7",
+        "type": "HARMONICALLY_LEADS_TO"
+      }
+    ]
+  },
+  {
+    "coordinate": "#2-5-9",
+    "outgoing": [
+      {
+        "target_name": "Planet Earth",
+        "direction": "out",
+        "target_coord": "#2-5-0/1-0",
+        "type": "CLOSES_TO_GROUND"
+      },
+      {
+        "target_name": "Sahasrāra",
+        "direction": "out",
+        "target_coord": "#2-5-0/1-7",
+        "type": "HAS_CHAKRAL_ANCHOR"
+      },
+      {
+        "target_name": "Mercury",
+        "direction": "out",
+        "target_coord": "#2-5-3",
+        "type": "SPIRALS_THROUGH_VORTEX"
+      }
+    ],
+    "incoming": [
+      {
+        "direction": "in",
+        "source_name": "Planetary Harmonic Integration",
+        "source_coord": "#2-5",
+        "type": "HAS_INTERNAL_COMPONENT"
+      },
+      {
+        "direction": "in",
+        "source_name": "Neptune",
+        "source_coord": "#2-5-8",
+        "type": "HARMONICALLY_LEADS_TO"
+      },
+      {
+        "direction": "in",
+        "source_name": "Jupiter",
+        "source_coord": "#2-5-6",
+        "type": "SPIRALS_THROUGH_VORTEX"
+      }
+    ]
+  }
+]

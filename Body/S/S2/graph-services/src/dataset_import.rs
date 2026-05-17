@@ -233,6 +233,23 @@ impl<'a> DatasetImporter<'a> {
                 }
             }
 
+            // Per-node `labels` field (added by Bimba label exports). When present,
+            // these are authoritative — applied via APOC after the MERGE.
+            let node_labels: Vec<String> = node
+                .get("labels")
+                .and_then(|v| v.as_array())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|v| v.as_str())
+                        .filter(|s| !s.is_empty()
+                            && *s != "Bimba"
+                            && *s != "BimbaNode"
+                            && *s != "BimbaCoordinate")
+                        .map(|s| s.to_string())
+                        .collect()
+                })
+                .unwrap_or_default();
+
             let cypher = format!(
                 "MERGE (n:Bimba {{coordinate: '{}'}}) SET {} RETURN n.coordinate",
                 escape_cypher(&coord),
@@ -243,6 +260,24 @@ impl<'a> DatasetImporter<'a> {
                 Ok(_) => count += 1,
                 Err(e) => {
                     eprintln!("  warn: skip node '{}': {}", coord, e);
+                    continue;
+                }
+            }
+
+            if !node_labels.is_empty() {
+                let labels_lit = node_labels
+                    .iter()
+                    .map(|l| format!("'{}'", escape_cypher(l)))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                let label_cypher = format!(
+                    "MATCH (n:Bimba {{coordinate: '{}'}}) \
+                     CALL apoc.create.addLabels(n, [{}]) YIELD node RETURN node.coordinate",
+                    escape_cypher(&coord),
+                    labels_lit
+                );
+                if let Err(e) = self.client.run(&label_cypher).await {
+                    eprintln!("  warn: skip labels for '{}': {}", coord, e);
                 }
             }
         }
@@ -263,8 +298,16 @@ impl<'a> DatasetImporter<'a> {
         let path = self.resolve_dataset_path(filename);
         let data = std::fs::read_to_string(&path)
             .map_err(|e| format!("read {}: {}", path.display(), e))?;
-        let rels: Vec<Value> = serde_json::from_str(strip_json_bom(&data))
+        let raw: Vec<Value> = serde_json::from_str(strip_json_bom(&data))
             .map_err(|e| format!("parse {}: {}", path.display(), e))?;
+
+        // Detect aggregated shape `[{coordinate, outgoing, incoming}]` and flatten
+        // into the standard `[{source, target, type}]` shape the loop expects.
+        let rels: Vec<Value> = if raw.iter().any(|r| r.get("outgoing").is_some() || r.get("incoming").is_some()) {
+            flatten_aggregated_relations(&raw)
+        } else {
+            raw
+        };
 
         let mut count = 0;
         let mut skipped = 0;
@@ -347,9 +390,9 @@ impl<'a> DatasetImporter<'a> {
     }
 
     pub async fn import_low_detail_all(&self) -> Result<String, String> {
-        self.import_branches(low_detail_dataset_plan())
-            .await
-            .map(|report| report.render())
+        let report = self.import_branches(low_detail_dataset_plan()).await?;
+        let labels_report = self.import_labels_if_present("low-detail/bimba_labels.json").await?;
+        Ok(format!("{}\n{}", report.render(), labels_report))
     }
 
     pub async fn import_deep_all(&self) -> Result<String, String> {
@@ -401,6 +444,99 @@ impl<'a> DatasetImporter<'a> {
 
     fn resolve_dataset_path(&self, filename: &str) -> PathBuf {
         Path::new(&self.datasets_dir).join(filename)
+    }
+
+    /// Apply secondary labels from a `[{coord, labels}]` JSON file to existing :Bimba
+    /// nodes. Coordinates are `# → M`-converted before matching. Nodes referenced by
+    /// the label file that don't yet exist are CREATEd as stubs so the variant Bimba
+    /// structure stays whole (the QL ideal 0..=5 doesn't gate which positions exist —
+    /// real subsystems have decan degrees 0..=360, codon indices 0..=63, etc.).
+    ///
+    /// Requires APOC (`apoc.create.addLabels`). Returns a human-readable summary.
+    pub async fn import_labels_if_present(&self, filename: &str) -> Result<String, String> {
+        let path = self.resolve_dataset_path(filename);
+        if !path.exists() {
+            return Ok(format!("Labels import skipped: {} not present", filename));
+        }
+        let data = std::fs::read_to_string(&path)
+            .map_err(|e| format!("read {}: {}", path.display(), e))?;
+        let entries: Vec<Value> = serde_json::from_str(strip_json_bom(&data))
+            .map_err(|e| format!("parse {}: {}", path.display(), e))?;
+
+        const EXCLUDE: &[&str] = &["Bimba", "BimbaNode", "BimbaCoordinate"];
+        let mut stubbed = 0usize;
+        let mut labeled = 0usize;
+        let mut skipped = 0usize;
+
+        for entry in &entries {
+            let raw_coord = match entry.get("coord").and_then(|v| v.as_str()) {
+                Some(c) if !c.trim().is_empty() => c,
+                _ => {
+                    skipped += 1;
+                    continue;
+                }
+            };
+            let coord = crate::coordinate::convert_hash_to_m_family(raw_coord);
+            let labels: Vec<&str> = entry
+                .get("labels")
+                .and_then(|v| v.as_array())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|v| v.as_str())
+                        .filter(|l| !EXCLUDE.contains(l) && !l.is_empty())
+                        .collect()
+                })
+                .unwrap_or_default();
+            if labels.is_empty() {
+                skipped += 1;
+                continue;
+            }
+            let labels_lit = labels
+                .iter()
+                .map(|l| format!("'{}'", escape_cypher(l)))
+                .collect::<Vec<_>>()
+                .join(", ");
+
+            // Pre-check whether the node already exists so we report stub creations honestly.
+            let exists_cypher = format!(
+                "MATCH (n:Bimba {{coordinate: '{}'}}) RETURN 1 AS hit LIMIT 1",
+                escape_cypher(&coord)
+            );
+            let pre_exists = self
+                .client
+                .run(&exists_cypher)
+                .await
+                .map(|rows| !rows.is_empty())
+                .unwrap_or(false);
+
+            let cypher = format!(
+                "MERGE (n:Bimba {{coordinate: '{coord}'}}) \
+                 ON CREATE SET n.c_3_source_dataset = 'bimba-labels', \
+                               n.c_3_dataset_branch = 'low-detail/labels-only' \
+                 WITH n \
+                 CALL apoc.create.addLabels(n, [{labels_lit}]) YIELD node \
+                 RETURN node.coordinate AS coord",
+                coord = escape_cypher(&coord),
+                labels_lit = labels_lit,
+            );
+
+            match self.client.run(&cypher).await {
+                Ok(_) => {
+                    labeled += 1;
+                    if !pre_exists {
+                        stubbed += 1;
+                    }
+                }
+                Err(e) => {
+                    eprintln!("  warn: skip labels for '{}': {}", coord, e);
+                    skipped += 1;
+                }
+            }
+        }
+        Ok(format!(
+            "Labels applied: {} nodes labeled ({} newly stubbed, {} skipped)",
+            labeled, stubbed, skipped
+        ))
     }
 }
 
@@ -462,6 +598,17 @@ pub fn low_detail_dataset_plan() -> Vec<DatasetBranch> {
             label: "M5 Epii",
             nodes_file: "low-detail/nodes_epii.json",
             relations_file: Some("low-detail/relations_epii.json"),
+        },
+        // Parashakti stragglers: Neptune (M2-5-8) and Pluto (M2-5-9) — variant
+        // positions beyond the QL ideal of 0..=5 that round out the 9-planet
+        // harmonic. Sourced separately because the rest of low-detail froze the
+        // 7-planet form. The relations file is in per-node aggregated shape;
+        // import_relations_with_metadata handles either shape.
+        DatasetBranch {
+            id: "low-detail/parashakti-stragglers",
+            label: "M2 Parashakti Stragglers",
+            nodes_file: "low-detail/parashakti-stragglers-nodes.json",
+            relations_file: Some("low-detail/parashakti-stragglers-relations.json"),
         },
     ]
 }
@@ -588,6 +735,58 @@ fn truncate_utf8(value: &str, max_len: usize) -> &str {
     &value[..end]
 }
 
+/// Flatten relations exported in per-node aggregated form
+/// `[{coordinate, outgoing: [{target_coord, type, ...}], incoming: [{source_coord, type, ...}]}]`
+/// into the standard `[{source, target, type}]` shape the importer expects.
+/// Dedupes within the file so an edge listed under both endpoints lands once.
+fn flatten_aggregated_relations(raw: &[Value]) -> Vec<Value> {
+    use std::collections::BTreeSet;
+    let mut seen: BTreeSet<(String, String, String)> = BTreeSet::new();
+    let mut out = Vec::new();
+    for entry in raw {
+        let center = entry
+            .get("coordinate")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+        if center.is_empty() {
+            continue;
+        }
+        if let Some(outgoing) = entry.get("outgoing").and_then(|v| v.as_array()) {
+            for rel in outgoing {
+                let target = rel.get("target_coord").and_then(|v| v.as_str());
+                let rel_type = rel.get("type").and_then(|v| v.as_str());
+                if let (Some(target), Some(rel_type)) = (target, rel_type) {
+                    let key = (center.to_string(), target.to_string(), rel_type.to_string());
+                    if seen.insert(key) {
+                        out.push(serde_json::json!({
+                            "source": center,
+                            "target": target,
+                            "type": rel_type,
+                        }));
+                    }
+                }
+            }
+        }
+        if let Some(incoming) = entry.get("incoming").and_then(|v| v.as_array()) {
+            for rel in incoming {
+                let source = rel.get("source_coord").and_then(|v| v.as_str());
+                let rel_type = rel.get("type").and_then(|v| v.as_str());
+                if let (Some(source), Some(rel_type)) = (source, rel_type) {
+                    let key = (source.to_string(), center.to_string(), rel_type.to_string());
+                    if seen.insert(key) {
+                        out.push(serde_json::json!({
+                            "source": source,
+                            "target": center,
+                            "type": rel_type,
+                        }));
+                    }
+                }
+            }
+        }
+    }
+    out
+}
+
 fn layer_string(layer: &CoordLayer) -> &'static str {
     match layer {
         CoordLayer::Psychoid => "PSYCHOID",
@@ -678,5 +877,26 @@ mod tests {
         assert_eq!(layer_string(&CoordLayer::Family), "COORDINATE");
         assert_eq!(layer_string(&CoordLayer::FamilyRoot), "FAMILY_ROOT");
         assert_eq!(layer_string(&CoordLayer::Lens), "LENS");
+    }
+
+    #[test]
+    fn flatten_aggregated_dedupes_across_endpoints() {
+        let raw = vec![
+            serde_json::json!({
+                "coordinate": "#2-5-8",
+                "outgoing": [{"target_coord": "#2-5-9", "type": "HARMONICALLY_LEADS_TO"}],
+                "incoming": []
+            }),
+            serde_json::json!({
+                "coordinate": "#2-5-9",
+                "outgoing": [],
+                "incoming": [{"source_coord": "#2-5-8", "type": "HARMONICALLY_LEADS_TO"}]
+            }),
+        ];
+        let flat = flatten_aggregated_relations(&raw);
+        assert_eq!(flat.len(), 1, "duplicate edge listed under both endpoints should dedupe");
+        assert_eq!(flat[0]["source"], "#2-5-8");
+        assert_eq!(flat[0]["target"], "#2-5-9");
+        assert_eq!(flat[0]["type"], "HARMONICALLY_LEADS_TO");
     }
 }

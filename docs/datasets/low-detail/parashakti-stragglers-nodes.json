@@ -1,0 +1,82 @@
+﻿[
+  {
+    "coordinate": "#2-5-8",
+    "labels": [
+      "ParashaktiComponent",
+      "VectorNode",
+      "PlanetaryHarmonic",
+      "QuantumInterface",
+      "CelestialArchetype"
+    ],
+    "name": "Neptune",
+    "description": null,
+    "essence": null,
+    "coreNature": null,
+    "formulation": null,
+    "structure": null,
+    "all_props": {
+      "medievalSublimation": "Dissolution of gold into universal solvent—the nigredo purifying through oceanic immersion",
+      "vortexDynamics": "9-fold vortex rim—final whorl before return to center",
+      "therapeuticRole": "Dissolves rigid ego-structures, facilitates visionary opening, enables compassion through transcendence",
+      "planetaryMode": "Locrian",
+      "swedenborgResonance": "Spiritual love flowing into natural plane—the influx of higher perception into earthly consciousness, creating visionary capacity",
+      "spandaResonance": "Spanda of dissolution: −1 contracting into oceanic void",
+      "vedicMantra": "Om Śukrāya Namaḥ",
+      "scalarDegree": 8,
+      "bimbaCoordinate": "#2-5-8",
+      "lastUpdated": "2025-03-05T00:00:00.000000000Z",
+      "modernSymbolic": "Imagination, dreams, psychic sensitivity, artistic vision, dissolution of ego-boundaries",
+      "intervalFromRoot": "Minor Seventh (9:5)",
+      "primaryDesignation": "The Transcendent Mediator",
+      "harmonicRole": "Dissolution threshold—carries consciousness beyond diatonic boundaries",
+      "qlPosition": 8,
+      "name": "Neptune",
+      "subsystem": 2,
+      "kashimirBijaMantra": "नम् नेपच्यूनाय",
+      "ancientOffering": "Incense of sandalwood and lotus, dissolved in sacred water",
+      "orphicHymn": "Oceanic vastness holding all forms in suspension—the waters of becoming from which all life rises and returns",
+      "kashimirUnderstanding": "Neptune represents transcendent dissolution of boundary consciousness—the shakti that dissolves fixed perception into oceanic awareness. The recognition that all forms flow from undifferentiated ocean.",
+      "quantumOperatorFunction": "Dissolution operator—transforms definite form into subtle potential"
+    }
+  },
+  {
+    "coordinate": "#2-5-9",
+    "labels": [
+      "ParashaktiComponent",
+      "VectorNode",
+      "PlanetaryHarmonic",
+      "QuantumInterface",
+      "CelestialArchetype"
+    ],
+    "name": "Pluto",
+    "description": null,
+    "essence": null,
+    "coreNature": null,
+    "formulation": null,
+    "structure": null,
+    "all_props": {
+      "medievalSublimation": "The philosopher's stone—final rubedo where all alchemical work crystallizes into living gold",
+      "vortexDynamics": "9-fold vortex center—still point of the turning world where all motion completes",
+      "therapeuticRole": "Integrates shadow material, facilitates deep psychological transformation, enables reclamation of repressed power",
+      "planetaryMode": "Altered Dominant",
+      "swedenborgResonance": "Spiritual power flowing into will—the capacity to transform inner realization into outer action. The descent into darkness preceding illumination.",
+      "spandaResonance": "Spanda of return: +1 spiraling outward from void, gathering dissolved substance into regenerative pulse",
+      "vedicMantra": "Om Śanaiścarāya Namaḥ",
+      "scalarDegree": 9,
+      "bimbaCoordinate": "#2-5-9",
+      "lastUpdated": "2025-03-05T00:00:00.000000000Z",
+      "modernSymbolic": "Transformation, death-and-rebirth, power reclamation, shadow integration, regeneration",
+      "intervalFromRoot": "Major Ninth (9:4)",
+      "primaryDesignation": "The Integrative Transformer",
+      "harmonicRole": "Completion and return—carries overtone series to harmonic completion",
+      "qlPosition": 9,
+      "name": "Pluto",
+      "subsystem": 2,
+      "kashimirBijaMantra": "ॐ प्लूटो परमात्मने",
+      "ancientOffering": "Obsidian stone and pomegranate seed, buried and resurrected",
+      "orphicHymn": "The underworld becomes the womb. What dies at the surface is reborn at the depths. Transformation through absolute encounter.",
+      "kashimirUnderstanding": "Pluto represents the Möbius return where dissolution becomes integration. The power that brings accumulated experience into unified consciousness. Governs death-and-rebirth, alchemical transformation.",
+      "quantumOperatorFunction": "Integrative transformation operator—collapses dissolved potentials into singular crystallized form"
+    }
+  }
+]
