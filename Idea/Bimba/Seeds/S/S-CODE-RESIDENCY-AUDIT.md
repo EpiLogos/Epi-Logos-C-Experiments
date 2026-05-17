@@ -152,30 +152,33 @@ This is a conservative target stance, not a command list.
 - Locate [[autoresearch]] as the [[Epii]] improvement spine under S5.
 - Implement review inbox/API/envelope as Epii-facing return infrastructure.
 
-## Depwire Refresh - 2026-05-07
+## Depwire Refresh - 2026-05-17
 
-Depwire docs were regenerated at `docs/dev/architecture/depwire` against the Body-native core profile, excluding vendors, worktrees, docs, caches, targets, and Smart Env generated state.
+Depwire docs were regenerated at `docs/dev/architecture/depwire` against the Body-native core profile, excluding top-level vendors, worktrees, docs, caches, targets, node modules, virtualenvs, git/tool state, and the in-flight `Body/M/epi-tauri` desktop handoff tree.
 
 Current depwire snapshot:
 
-- Files parsed: 632.
-- Symbols: 11,252.
-- Edges: 3,846.
-- Health score: 64/100, grade D.
-- Orphan files: 251.
-- Potentially dead symbols: 7,008 high-confidence candidates.
-- TODOs: 8.
+- Files parsed in generated docs: 810.
+- Symbols: 16,264.
+- Edges: 5,622.
+- Health score: 56/100, grade F.
+- Orphan files: 322.
+- Potentially dead symbols: 10,460 high-confidence candidates.
+- Stubbed symbols: 19.
+- Public API symbols with zero in-repo dependents: 204.
+- TODOs: 9.
 
 Interpretation rule: depwire dead-code output is a triage surface, not a deletion order. It flags entrypoint scripts, public schemas, exported contracts, and generated-facing surfaces as unreferenced when they may still be runtime/API authorities. Use it to focus review, then prove deletability with search, tests, and runtime checks before removal.
 
-Standalone `depwire dead-code --stats` over the wider tree reported 24,538 high-confidence candidates because that command does not accept the same vendor/worktree excludes used by the docs pass. Treat the vendor-excluded docs snapshot above as the actionable project audit, and use the wider number only as evidence that vendor and public-API noise must be filtered before deletion work.
+The 2026-05-17 run deliberately regenerated the tracked docs rather than deleting from the full high-confidence list. That list still includes public schemas, entrypoints, generated-facing symbols, external adapters, and depwire's own source because this repo carries tool source in-tree. Treat broad deletion as unsafe unless a candidate is confirmed by targeted search, ownership review, and tests.
 
 High-signal depwire audit candidates:
 
 1. `Body/S/S2/external/bimba-mcp/src/index.ts` still contains TODOs for Neo4j connection/query, semantic search/embeddings, context retrieval, and coordinate listing. Because `bimba-mcp` is external S2' only, these should become adapters over canonical S2 services, not PI-agent internals.
-2. `Body/S/S3/epi-app/renderer/domains/M5_Epii/core/useEpii.ts` and `Body/S/S3/epi-app/renderer/stores/epiClawStore.ts` still contain gateway/session TODOs that should be resolved through S3 gateway RPC and SpaceTimeDB projection, especially before the Tauri v2 spec/port.
-3. `Body/S/S0/epi-cli/src/portal/plugins/clock.rs` is marked deprecated in favor of `unified_clock.rs`; confirm no registry/runtime path still needs it, then delete or quarantine with tests.
+2. `Body/S/S3/epi-app/renderer/domains/M5_Epii/core/useEpii.ts` and `Body/S/S3/epi-app/renderer/stores/epiClawStore.ts` still contain gateway/session TODOs that should be resolved through S3 gateway RPC and SpaceTimeDB projection in the Tauri handoff.
+3. `Body/S/S0/epi-cli/src/portal/plugins/clock.rs` is marked deprecated in favor of `unified_clock.rs`, but it is still registered in the portal runtime, so it must not be deleted until the registry/runtime path is replaced and tested.
 4. `epi_logos.c` still carries a TODO for inversion; classify under S0/M-family engine work or retire it if superseded by `Body/S/S0/epi-lib`.
+5. Depwire's own `depwire/src/**` symbols appear heavily in the dead-code output because the tool source is vendored in-tree as an analyzer body; do not delete from that list during Epi-Logos cleanup.
 
 ## Next Concrete Task List
 

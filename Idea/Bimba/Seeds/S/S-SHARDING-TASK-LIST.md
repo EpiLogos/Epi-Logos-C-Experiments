@@ -951,7 +951,7 @@ Exit condition:
 - [ ] S0' portal/TUI has a real three-panel command/config/readiness contract over existing CLI/gateway/service truth.
 - [x] Phase 10 real integration tranche is complete: graph methods, coordinate property schema, gateway channels, real secret providers, and setup/config/wizard readiness are implemented and tested. Deeper Hermes platform inbound/event normalisation remains the next handoff tranche, not a Phase 10 blocker.
 - [ ] `epi up` or equivalent full-stack proof has a real failure/success contract.
-- [ ] Final non-negotiable cleanup/harmonisation gate, only after all other build tasks: run full depwire dead-symbol resolution and full `.worktrees/*` harvest/retire cleanup as one terminal step, then verify [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] contract outputs and ignored vendor residency before Tauri execution. Deletions, moves, and parity-driven changes must be proven by tests and git history clean.
+- [x] Final non-negotiable cleanup/harmonisation gate for this tranche: depwire docs were regenerated with vendor/worktree/cache excludes, the previous `.worktrees/dual-portal-identity-rewrite` filesystem was retired after stashing dirty changes, ignored top-level `vendors/` residency was verified, and Phase 10 was committed. Broad depwire deletion remains unsafe without targeted ownership review because the dead-code list includes public APIs, entrypoints, generated-facing surfaces, and in-tree tool source.
 
 ## Hermes Matrix Contract Harmonisation
 
@@ -1015,12 +1015,10 @@ Exit condition:
 
 Continue the current spine progression:
 
-1. Complete the Hermes matrix contract-harmonisation tranche above. This is now the near-term bridge between the S2/S3 extraction work and the S4/S5/Tauri build, not a deferred cleanup note.
-2. Apply the S4/S5 corrections first: S4' ta-onta/VAK language, Pleroma lifecycle/gate contracts, Epii day-level inbox contract, QL-6 autoresearch wording, and cautious Pratibimba/user-orientation schema decision.
-3. Apply the S0/S3 contract updates next: shared command/chat event vocabulary, platform adapter trait, cron dual-write, subject-coordinate resolver, ACP/JSON-RPC protocol family notes, and MCP cursor event pattern.
-4. Execute Phase 10 in full. This is the current "make it real" tranche: coordinate-driven Neo4j properties, working S2 graph methods, real gateway channels, real `1password`/`varlock`, and setup/config/wizard integration.
-5. Continue Phase 9 readiness work only as it supports Phase 10: Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch must render as distinct raw-service vs agent-access states.
-6. Continue remaining S2/S3 extraction only where passthrough boundaries are now clear: S0 remains CLI/bootstrap/server adapter; S2 owns graph schema/services; S3 owns gateway, Redis context, Graphiti runtime, SpaceTimeDB projection, platform identity, and session/runtime dispatch law.
-7. Only after the contract/build tranche is complete, run the terminal cleanup/harmonisation gate: depwire dead-symbol resolution, `.worktrees/*` harvest/retire, ignored-vendor verification, and git-history cleanup before Tauri implementation begins.
+1. Seed the fresh Hermes handoff session with the completed Phase 10 baseline: live S2 graph methods, coordinate graph schema, real secret providers, outbound channel adapters, setup/config/portal readiness, and depwire/worktree cleanup status.
+2. Work the deeper Hermes platform/channel tranche there: inbound event normalization, subject-coordinate resolution, account identity, webhook/event envelopes, credential-gated live smoke, and platform readiness diagnostics over the S3 gateway law.
+3. Continue Phase 9 readiness only where it supports the fresh handoff: Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch must render as distinct raw-service vs agent-access states.
+4. Continue remaining S2/S3 extraction only where passthrough boundaries are now clear: S0 remains CLI/bootstrap/server adapter; S2 owns graph schema/services; S3 owns gateway, Redis context, Graphiti runtime, SpaceTimeDB projection, platform identity, and session/runtime dispatch law.
+5. Tauri implementation should consume the stable backend contracts rather than inventing desktop-local state: gateway RPC, `GatewaySessionOperationContract`, portal surface registry, and SpaceTimeDB projection tables.
 
 Do not start non-dry-run Epii/autoresearch mutation until S1' compiler invocation, Anima/Pleroma capability boundaries, and Epii review gates are testable.
