@@ -124,9 +124,9 @@ Exit condition:
 
 ## Phase 2. S2 Graph Schema / Services Extraction
 
-Status: service contract boundary advanced. `Body/S/S2/graph-schema` owns the S2 graph schema contract, and `Body/S/S2/graph-services` owns Neo4j primary graph role, the live Neo4j config/client, schema creation, coordinate seed entrypoints, Redis graph-cache runtime API, Redis semantic-cache role/config/payload/health/client contracts, graph metadata, dataset import, sync/coordinator/conflict/link relationships, semantic document/embedding refresh, graph doctor/readiness, retrieval query semantics, tokenization, retrieval execution, and pure hybrid fusion/ranking law. S0 graph code imports/re-exports these S2 contracts so `epi graph` remains the command mirror while S2 becomes the client-service authority; S0 mirrors must stay passthrough/adapters, not copies of S2 service law. The remaining S2 work is no longer broad residency extraction; it is the narrower coordinate-native API/gateway surfacing, live destructive seed/migration policy, and any future Gnosis-specific graph support boundary. A first live namespace-isolation proof now verifies canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` nodes carrying S5 ownership as properties can coexist in one real Neo4j instance without label overlap or destructive cleanup.
+Status: service contract boundary advanced. `Body/S/S2/graph-schema` owns the S2 graph schema contract, and `Body/S/S2/graph-services` owns Neo4j primary graph role, the live Neo4j config/client, schema creation, coordinate seed entrypoints, Redis graph-cache runtime API, Redis semantic-cache role/config/payload/health/client contracts, graph metadata, canonical Bimba corpus import, sync/coordinator/conflict/link relationships, semantic document/embedding refresh, graph doctor/readiness, retrieval query semantics, tokenization, retrieval execution, and pure hybrid fusion/ranking law. S0 graph code imports/re-exports these S2 contracts so `epi graph` remains the command mirror while S2 becomes the client-service authority; S0 mirrors must stay passthrough/adapters, not copies of S2 service law. The remaining S2 work is no longer broad residency extraction; it is the narrower coordinate-native API/gateway surfacing, live graph method proof, coordinate-driven graph property schema, and any future Gnosis-specific graph support boundary. A first live namespace-isolation proof now verifies canonical `:Bimba`, legacy `:BimbaCoordinate`, and `:gnostic` nodes carrying S5 ownership as properties can coexist in one real Neo4j instance without label overlap or destructive cleanup.
 
-Live Docker note: `docker compose -f docker-compose.epi-s2.yml up -d neo4j redis` starts existing stateful containers with named volumes. On 2026-05-02, read-only checks showed Redis healthy with `epi_semantic_cache` and `epi_semantic_cache_test` indexes, Neo4j healthy with 96 legacy `:BimbaCoordinate` nodes and zero canonical `:Bimba` nodes. Do not run destructive ignored graph tests until migration/backup policy is explicit.
+Live Docker note: `docker compose -f docker-compose.epi-s2.yml up -d neo4j redis` starts existing stateful containers with named volumes. On 2026-05-02, read-only checks showed Redis healthy with `epi_semantic_cache` and `epi_semantic_cache_test` indexes, Neo4j healthy with 96 legacy `:BimbaCoordinate` nodes and zero canonical `:Bimba` nodes. Current graph data is not treated as sensitive or canonical; important corpus data is in `docs/datasets/`. The full Bimba data conversion/import is a separate session, but live graph method and schema tests should proceed now using deliberate test-owned data.
 
 Goal: make [[S2]] graph authority Body-native while preserving `epi graph` as the S0 command mirror.
 
@@ -158,6 +158,9 @@ Checklist:
 - [x] Point S0 coordinate parser, GraphRAG query grammar, retrieval mode/result/disclosure contracts, and semantic-cache law at S2 graph-services authority.
 - [x] Keep S0 graph schema/seed/client/parser/cache mirrors as direct S2 passthroughs; S0 may keep command presentation and live runtime adapters, but not duplicated S2 service definitions.
 - [x] Move retrieval execution, graph semantic-cache law, graph metadata, vault frontmatter parsing/mapping/alignment helpers, dataset import, relationship/link/sync/conflict services, semantic document/embedding refresh, and graph doctor/readiness into `Body/S/S2/graph-services`; keep S0 graph modules as passthrough mirrors.
+- [x] Make dataset import understand the real Bimba corpus layout: `low-detail/`, six `*-deep` branches, BOM handling, `filteredProps`, legacy `bimbaCoordinate`, `relType`, skipped null endpoints, and branch provenance.
+- [x] Extend `epi graph import` to route `all`, `low-detail`, `deep`, individual `*-deep`, and explicit nodes/relations JSON through S2 graph-services.
+- [ ] Defer full Bimba dataset conversion/import to its own focused session; do not let it block S2 graph method/schema implementation.
 - [x] Remove the S3 temporal `session_now` writer from the S2 graph Redis cache API; temporal Redis keys remain S3/S3' gateway context, while S2 keeps graph cache keys.
 - [x] Move RedisVL semantic-cache bridge scripts out of S0 and into `Body/S/S3/redis-context/scripts/redisvl_cache_service/`; remove the stale generated S0 `.venv` cache.
 - [x] Add S3 `redis-context` crate so Redis runtime/RedisVL bridge residency is S3-owned while S2 keeps the graph semantic-cache namespace and payload contract.
@@ -174,6 +177,7 @@ Verification:
 
 - [ ] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client`
 - [x] `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml`
+- [x] `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml dataset_import -- --nocapture`
 - [x] `cargo test --manifest-path Body/S/S3/redis-context/Cargo.toml`
 - [x] `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test semantic_cache_contract semantic_cache_local_dev_uses_s3_redisvl_runtime_bridge`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test coordinate_parser`
@@ -182,7 +186,7 @@ Verification:
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_neo4j_connect_and_health -- --ignored --exact`
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_neo4j_run_query -- --ignored --exact`
 - [x] `CARGO_TARGET_DIR=/tmp/epi-cargo-target-neo4j-namespace cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_client test_live_neo4j_namespaces_isolate_bimba_legacy_and_gnosis -- --ignored --exact --nocapture`
-- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_commands`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_commands` - prior full-file coverage passed; current run found `doctor_json_reports_graph_and_semantic_sections` can hang in the real doctor path without service timeout control, so focused graph command tests are used until that test architecture gap is fixed.
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_retrieval` - contract harness builds; live retrieval suite remains ignored until a deliberate destructive Neo4j seed run is chosen.
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_seed` - contract harness builds; live seed test remains ignored because it mutates canonical `:Bimba`.
 - [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test redis_cache`
@@ -801,10 +805,13 @@ Checklist:
 - [x] Hydrate the shared portal temporal projection from configured SpaceTimeDB `session_surface` / `kairos_surface` reads before falling back to local gateway context.
 - [x] Wire `/`, `m4.pratibimba`, and `m5.chat` to consume the shared temporal projection.
 - [ ] Surface setup/readiness paths: graph Docker state, Neo4j, Redis, gateway, Graphiti runtime, PI agent install/sync, Gnosis, Nara, Epii review/autoresearch.
+- [x] Add first schema-backed gateway setup wizard coverage for secrets, channels, graph service readiness, canonical Bimba import/seed readiness, and Nara identity initialization.
+- [x] Add first gateway channel config/status coverage for Telegram, WhatsApp, Slack, Discord, and Google Drive, with explicit `env` / `1password` / `varlock` secret-provider posture.
 - [x] Separate raw service health from agent invocation/access state in the topology model.
 - [x] Separate raw service health from agent invocation/access state in the live UI result state for Neo4j, Redis cache, gateway, SpaceTimeDB registration/subscription, Graphiti runtime, PI agent access, Gnosis, Nara, Epii review, and autoresearch.
 - [x] Add first editable settings metadata for S3 gateway config fields.
 - [ ] Add schema-backed settings views for S2 graph/cache, S3 gateway/session, S4 agent permissions/capabilities, and S5/Epii/Gnosis/autoresearch.
+- [ ] Promote the new gateway setup schema and Bimba import plan into the live interactive TUI panel, not only gateway JSON methods.
 - [ ] Add command execution result state with meaningful failure display, logs, and next-step affordances.
 - [ ] Ensure the future desktop app can mirror the TUI's command/config semantics instead of inventing a parallel settings model.
 - [x] Specify the Tauri v2 desktop migration against the current `Body/S/S3/epi-app` state in [[M'-TAURI-PORT-SPEC]]: preserve the React/M-domain renderer and [[OmniPanel]] where useful, replace Electron main-process authority with Rust Tauri commands, use gateway RPC plus SpaceTimeDB subscriptions for live state, and mirror the shared [[M'-PORTAL-SPEC]] `0` / `/` / `1` grammar.
@@ -821,6 +828,7 @@ Verification:
 - [x] Portal topology tests prove interactive action kinds, editable config metadata, and S/S' plus M/M' coordinate catalogs.
 - [x] Portal surface registry tests prove gateway parity, extension `tools.json`, `.claude-plugin` manifests, Epii agent contract methods, Pleroma capability gates, and registered TUI plugin IDs are discoverable without TUI-specific duplication.
 - [x] Portal runtime tests prove gateway temporal context hydration, local session-store temporal refresh, and Nara/Epii plugin consumption of the shared projection.
+- [x] Gateway config/wizard tests prove secret providers, channel settings, graph setup steps, Bimba import/seed steps, and Nara identity fields are surfaced through real config/wizard methods.
 - [ ] Portal layout/state tests prove the rendered three-panel domain model.
 - [ ] Config/settings tests prove schema-backed values are read/written through existing config authority.
 - [ ] Command palette tests prove entries map to real CLI/gateway methods.
@@ -833,6 +841,103 @@ Exit condition:
 
 - `epi portal` gives an operator a coordinate-native terminal cockpit for setup, command execution, settings, readiness, Nara/Epii surfaces, and S0-S5 status without forking backend command logic.
 
+## Phase 10. Real Integration Tranche: Graph Methods, Channels, Secrets, Setup
+
+Status: complete for the current real-integration tranche as of 2026-05-17. The deeper Hermes-inspired inbound/event-normalisation and subject-coordinate routing layer is explicitly deferred to the next handoff session; this phase closes the S2 graph methods, coordinate graph schema, outbound channel adapters, real secret providers, and setup/config/portal readiness membrane.
+
+Scope clarification:
+
+- The full Bimba dataset conversion/import is a separate focused session. It does not block graph method, schema, or gateway/API implementation.
+- Current Neo4j data is non-sensitive implementation state. Canonical important graph data remains in `docs/datasets/` until the later conversion/import pass.
+- Therefore do not use "preserve current graph data" as a reason to avoid implementing graph schema/methods. Use live Neo4j tests deliberately and keep destructive corpus import for the later dataset tranche.
+
+Goal:
+
+- Make the S2 graph API methods work for real across S2 services, S0 CLI mirrors, and gateway/API parity.
+- Make Neo4j node and relationship properties coordinate-driven in the same spirit as Obsidian frontmatter.
+- Make gateway channels real platform integrations, not status labels.
+- Make `1password` and `varlock` real secret providers, not enum names.
+- Make setup/config/wizard/portal surfaces the mandatory integration membrane for every new service/capability.
+
+Files/code areas:
+
+- `Body/S/S2/graph-schema/`
+- `Body/S/S2/graph-services/`
+- `Body/S/S0/epi-cli/src/graph/`
+- `Body/S/S0/epi-cli/src/gate/`
+- `Body/S/S3/gateway/`
+- `Body/S/S3/gateway-contract/`
+- `Body/S/S0/epi-cli/src/portal/`
+- `Body/S/S0/epi-cli/tests/graph_*.rs`
+- `Body/S/S0/epi-cli/tests/gate_*.rs`
+- `Body/S/S0/epi-cli/tests/portal_*.rs`
+
+### Lane A. Coordinate-Driven Neo4j Schema
+
+- [x] Define a Body-native coordinate property registry for graph nodes and relationships, aligned with the vault/frontmatter field approach (`c_0_*`, `c_1_*`, etc.) and explicit S/M coordinate homes.
+- [x] Add `NodePropertySpec` and `RelationPropertySpec` shapes covering property key, coordinate home, value type, cardinality, privacy/disclosure class, source family, and indexing requirement.
+- [x] Add validation that rejects or quarantines uncoordinated graph properties before writes, while allowing explicit compatibility fields such as old `bimbaCoordinate`.
+- [x] Add Neo4j schema/index creation for coordinate-owned node properties and relation properties where Neo4j supports it.
+- [x] Update seed/import/sync/retrieval writes toward the registry boundary; the full Bimba corpus conversion/import remains a separate dataset tranche.
+- [x] Add relation property tests, not just node property tests.
+- [x] Add live Neo4j proof that a test node and test relationship can be written, validated, indexed/read back, and cleaned up without relying on mocks.
+
+### Lane B. Working S2 Graph Methods
+
+- [x] Implement or expose `s2.graph.query` through parameterized Cypher, not string-concatenated user input.
+- [x] Implement or expose `s2.graph.node` with coordinate lookup, relation summary, compatibility fields, and JSON-safe output.
+- [x] Implement or expose `s2.graph.traverse` with bounded depth, direction, relation-type filters, and coordinate provenance.
+- [x] Implement or expose `s2'.coordinate.resolve` with old `#` / `bimbaCoordinate` compatibility and new M-coordinate migration semantics.
+- [x] Implement or expose `s2'.retrieve`, `s2'.rerank`, and `s2'.enrich` through S2 graph-services rather than S0-local command bodies.
+- [x] Add gateway route/parity records for the above methods using S3 route ownership, while keeping S2 as service authority.
+- [x] Add `epi graph` command mirrors where operator ergonomics require them, but keep S0 as adapter only.
+- [x] Add real tests against live Neo4j for query/node/traverse/resolve, plus non-live contract tests for request/response shape.
+
+### Lane C. Real Gateway Channels
+
+- [x] Promote the Hermes-inspired platform adapter pattern into the gateway channel layer for platform id, account field, outbound deliver, auth/secret requirement, and readiness diagnostics.
+- [x] Implement Telegram adapter with real Bot API delivery request construction.
+- [x] Implement Slack adapter with real Web API delivery request construction.
+- [x] Implement Discord adapter with real REST delivery request construction.
+- [x] Implement WhatsApp adapter with real Cloud API delivery request construction.
+- [x] Implement Google Drive adapter as the Google workspace/document ingress channel with file-list request construction and secret-scoped access.
+- [x] Ensure all channel adapters use the shared secret provider layer and never store resolved tokens in gateway state.
+- [x] Add adapter contract tests for all channels using real request construction.
+- [ ] Defer webhook/update/event normalisation, subject-coordinate resolution, and at least one credential-gated live smoke to the next Hermes handoff tranche.
+
+### Lane D. Real Secret Providers
+
+- [x] Implement `SecretProvider` service for `env`, `1password`, and `varlock`.
+- [x] Resolve `1password` references through the real `op` CLI contract; detect missing CLI/sign-in state with clear diagnostics.
+- [x] Resolve `varlock` references through the real varlock CLI contract; detect missing CLI/profile state with clear diagnostics.
+- [x] Preserve redaction boundaries in logs, diagnostics, channel status, wizard output, and portal surfaces.
+- [x] Add tests for resolution success where CLI fixtures or real env-gated paths are available, plus deterministic missing-provider diagnostics.
+- [x] Wire secret-provider readiness into `epi gate channels status`, setup wizard, and portal readiness.
+
+### Lane E. Setup / Config / Wizard As Integration Membrane
+
+- [x] Treat setup/config presence as part of done-ness: every newly integrated graph/channel/secret surface appears in config schema and wizard or portal readiness.
+- [x] Add S2 graph/cache setup fields and actions for Neo4j, Redis semantic cache, dataset root, coordinate schema, and live readiness.
+- [x] Add S3 channel/session settings views for channel enabled/account/secret refs and gateway bind/auth.
+- [x] Keep S4/S5 agent access settings visible through existing PI/Epii portal readiness surfaces.
+- [x] Make portal/channel readiness render configured, secret-resolvable, service/action, and agent-access surfaces as distinct states.
+- [x] Add command palette/portal entries for real setup actions, not static descriptive rows.
+
+Verification:
+
+- [x] `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test schema_creation_contract --test graph_api_contract -- --nocapture`
+- [x] `cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test graph_api_contract live_graph_methods_write_read_traverse_and_cleanup_test_owned_data -- --ignored --exact --nocapture`
+- [x] `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract -- --nocapture`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_channel_adapters --test gate_secret_providers --test gate_channels_cron_voice -- --test-threads=1 --nocapture`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_surfaces_contract --test gate_config_system --test gate_channels_cron_voice -- --test-threads=1 --nocapture`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_parity_manifest -- --nocapture`
+- [ ] Credential-gated live channel smoke for at least one configured channel is deferred to the Hermes platform handoff because no real channel credentials were provided in this tranche.
+- [x] Live Neo4j graph method proof for query/node/traverse/resolve without importing the full Bimba corpus.
+
+Exit condition:
+
+- A fresh agent can run the setup/config surfaces, resolve secrets through real providers, inspect channel readiness, call graph methods against live Neo4j, and see the same capabilities through CLI/gateway/portal paths. No item in this phase is complete by documentation alone.
+
 ## Development Readiness Gates
 
 - [ ] Phase 1 parity manifest is executable and tested.
@@ -844,6 +949,7 @@ Exit condition:
 - [x] S5' review/autoresearch spine has state-machine, human-gated, and gateway-backed agent-access tests.
 - [x] S5 Gnosis/Nara/Epii tests distinguish raw client/service behavior from gateway-backed Epii observation/governance.
 - [ ] S0' portal/TUI has a real three-panel command/config/readiness contract over existing CLI/gateway/service truth.
+- [x] Phase 10 real integration tranche is complete: graph methods, coordinate property schema, gateway channels, real secret providers, and setup/config/wizard readiness are implemented and tested. Deeper Hermes platform inbound/event normalisation remains the next handoff tranche, not a Phase 10 blocker.
 - [ ] `epi up` or equivalent full-stack proof has a real failure/success contract.
 - [ ] Final non-negotiable cleanup/harmonisation gate, only after all other build tasks: run full depwire dead-symbol resolution and full `.worktrees/*` harvest/retire cleanup as one terminal step, then verify [[FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX]] contract outputs and ignored vendor residency before Tauri execution. Deletions, moves, and parity-driven changes must be proven by tests and git history clean.
 
@@ -912,8 +1018,9 @@ Continue the current spine progression:
 1. Complete the Hermes matrix contract-harmonisation tranche above. This is now the near-term bridge between the S2/S3 extraction work and the S4/S5/Tauri build, not a deferred cleanup note.
 2. Apply the S4/S5 corrections first: S4' ta-onta/VAK language, Pleroma lifecycle/gate contracts, Epii day-level inbox contract, QL-6 autoresearch wording, and cautious Pratibimba/user-orientation schema decision.
 3. Apply the S0/S3 contract updates next: shared command/chat event vocabulary, platform adapter trait, cron dual-write, subject-coordinate resolver, ACP/JSON-RPC protocol family notes, and MCP cursor event pattern.
-4. Continue remaining S2/S3 extraction only where passthrough boundaries are now clear: S0 remains CLI/bootstrap/server adapter; S2 owns graph schema/services; S3 owns gateway, Redis context, Graphiti runtime, SpaceTimeDB projection, platform identity, and session/runtime dispatch law.
-5. Continue Phase 9 readiness work by making Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch render as distinct raw-service vs agent-access states in the live UI result state.
-6. Only after the contract/build tranche is complete, run the terminal cleanup/harmonisation gate: depwire dead-symbol resolution, `.worktrees/*` harvest/retire, ignored-vendor verification, and git-history cleanup before Tauri implementation begins.
+4. Execute Phase 10 in full. This is the current "make it real" tranche: coordinate-driven Neo4j properties, working S2 graph methods, real gateway channels, real `1password`/`varlock`, and setup/config/wizard integration.
+5. Continue Phase 9 readiness work only as it supports Phase 10: Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch must render as distinct raw-service vs agent-access states.
+6. Continue remaining S2/S3 extraction only where passthrough boundaries are now clear: S0 remains CLI/bootstrap/server adapter; S2 owns graph schema/services; S3 owns gateway, Redis context, Graphiti runtime, SpaceTimeDB projection, platform identity, and session/runtime dispatch law.
+7. Only after the contract/build tranche is complete, run the terminal cleanup/harmonisation gate: depwire dead-symbol resolution, `.worktrees/*` harvest/retire, ignored-vendor verification, and git-history cleanup before Tauri implementation begins.
 
 Do not start non-dry-run Epii/autoresearch mutation until S1' compiler invocation, Anima/Pleroma capability boundaries, and Epii review gates are testable.

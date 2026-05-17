@@ -31,12 +31,64 @@ async fn config_apply_persists_and_reports_new_version() {
 
     assert_eq!(default_config["gateway"]["port"], 18794);
     assert_eq!(schema["domains"][0]["key"], "gateway");
+    assert_eq!(schema["domains"][1]["key"], "channels");
     assert_eq!(set["gateway"]["port"], 18794);
     assert_eq!(patch["gateway"]["tlsEnabled"], true);
     assert_eq!(apply["ok"], true);
     assert!(apply["version"].as_str().unwrap().starts_with("v"));
     assert_eq!(persisted["gateway"]["bootstrapRoot"], "/tmp/bootstrap");
     assert_eq!(persisted["gateway"]["workspaceRoot"], "/tmp/workspace");
+}
+
+#[tokio::test]
+async fn config_schema_and_apply_cover_secret_provider_and_gateway_channels() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
+
+    let schema = client.request("config.schema", json!({})).await.unwrap();
+    let channel_fields = schema["domains"][1]["fields"].to_string();
+    assert!(channel_fields.contains("gateway.channels.telegram.enabled"));
+    assert!(channel_fields.contains("gateway.channels.google-drive.secretRef"));
+    assert!(schema["uiHints"].to_string().contains("Secret Provider"));
+
+    let apply = client
+        .request(
+            "config.apply",
+            json!({
+                "patch": {
+                    "gateway": {
+                        "secrets": {
+                            "provider": "1password",
+                            "onePasswordVault": "Epi-Logos"
+                        },
+                        "channels": {
+                            "telegram": {
+                                "enabled": true,
+                                "secretRef": "op://Epi-Logos/Telegram/bot-token",
+                                "accountHint": "epi-telegram"
+                            },
+                            "google-drive": {
+                                "enabled": true,
+                                "secretRef": "op://Epi-Logos/Google Drive/service-account"
+                            }
+                        }
+                    }
+                }
+            }),
+        )
+        .await
+        .unwrap();
+    let persisted = client.request("config.get", json!({})).await.unwrap();
+
+    assert_eq!(apply["ok"], true);
+    assert_eq!(persisted["gateway"]["secrets"]["provider"], "1password");
+    assert_eq!(
+        persisted["gateway"]["channels"]["telegram"]["secretRef"],
+        "op://Epi-Logos/Telegram/bot-token"
+    );
+    assert_eq!(
+        persisted["gateway"]["channels"]["google-drive"]["enabled"],
+        true
+    );
 }
 
 #[tokio::test]
@@ -84,7 +136,36 @@ async fn system_models_logs_usage_update_and_wizard_methods_persist_state() {
     assert_eq!(usage_cost["currency"], "USD");
     assert_eq!(update["ok"], true);
     assert_eq!(wizard_start["active"], true);
+    assert_eq!(wizard_start["totalSteps"], 5);
+    assert_eq!(wizard_start["current"]["id"], "gateway");
     assert_eq!(wizard_next["step"], 1);
+    assert_eq!(wizard_next["current"]["id"], "secrets");
     assert_eq!(wizard_status["flow"], "gateway-setup");
     assert_eq!(wizard_cancel["active"], false);
+}
+
+#[tokio::test]
+async fn wizard_surfaces_graph_seed_and_nara_identity_setup_flows() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
+
+    let graph = client
+        .request("wizard.start", json!({"flow":"graph-setup"}))
+        .await
+        .unwrap();
+    assert_eq!(graph["steps"][0]["id"], "graph");
+    assert_eq!(graph["steps"][1]["id"], "bimba-seed");
+    assert_eq!(graph["steps"][1]["namespace"]["nodeLabel"], "Bimba");
+    assert_eq!(graph["steps"][1]["namespace"]["embeddingDimensions"], 3072);
+
+    let nara = client
+        .request("wizard.start", json!({"flow":"nara-identity"}))
+        .await
+        .unwrap();
+    assert_eq!(nara["current"]["id"], "nara-identity");
+    assert!(nara["current"]["fields"]
+        .to_string()
+        .contains("c_0_birth_date"));
+    assert!(nara["current"]["actions"]
+        .to_string()
+        .contains("vault.kairos.fetch"));
 }

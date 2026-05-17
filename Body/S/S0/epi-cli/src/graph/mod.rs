@@ -80,9 +80,9 @@ pub enum GraphCmd {
         #[arg(short, long)]
         top_k: Option<usize>,
     },
-    /// Import M-branch datasets from docs/datasets/
+    /// Import Bimba namespace datasets from docs/datasets/
     Import {
-        /// Specific dataset file, or "all" for full import
+        /// "all", "low-detail", "deep", a "*-deep" branch, or a dataset JSON path
         #[arg(default_value = "all")]
         dataset: String,
     },
@@ -91,7 +91,11 @@ pub enum GraphCmd {
     SeedNara,
 }
 
-pub use epi_s2_graph_services::parse_yaml_frontmatter;
+pub use epi_s2_graph_services::{
+    fusion_rrf_results, parse_yaml_frontmatter, GraphMethodParams, GraphMethodService,
+    GraphNodeRequest, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    HybridFusionConfig, RetrievalResult,
+};
 
 fn compose_file_path() -> Result<String, String> {
     let candidates = [
@@ -404,15 +408,27 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
 
             if dataset == "all" {
                 importer.import_all().await
-            } else if dataset.starts_with("nodes_") {
+            } else if dataset == "low-detail" {
+                importer.import_low_detail_all().await
+            } else if dataset == "deep" {
+                importer.import_deep_all().await
+            } else if dataset.ends_with("-deep") {
+                importer.import_deep_branch(dataset).await
+            } else if dataset.starts_with("nodes_") || dataset.contains("/nodes_") {
                 let count = importer.import_nodes(dataset).await?;
                 Ok(format!("Imported {} nodes from {}", count, dataset))
-            } else if dataset.starts_with("relations_") {
+            } else if dataset.starts_with("relations_") || dataset.contains("/relations_") {
+                let count = importer.import_relations(dataset).await?;
+                Ok(format!("Imported {} relations from {}", count, dataset))
+            } else if dataset.ends_with(".json") && dataset.contains("nodes") {
+                let count = importer.import_nodes(dataset).await?;
+                Ok(format!("Imported {} nodes from {}", count, dataset))
+            } else if dataset.ends_with(".json") && dataset.contains("relations") {
                 let count = importer.import_relations(dataset).await?;
                 Ok(format!("Imported {} relations from {}", count, dataset))
             } else {
                 Err(format!(
-                    "Unknown dataset: {} (expected 'all', 'nodes_*.json', or 'relations_*.json')",
+                    "Unknown dataset: {} (expected 'all', 'low-detail', 'deep', '*-deep', nodes*.json, or relations*.json)",
                     dataset
                 ))
             }

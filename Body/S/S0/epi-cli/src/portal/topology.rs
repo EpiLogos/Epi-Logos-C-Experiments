@@ -185,9 +185,49 @@ const M_COORDINATES: &[CoordinateSurface] = &[
 
 const GATEWAY_PORT_APPLY: &[&str] = &["epi", "gate", "config", "set", "gateway.port"];
 const GATEWAY_BIND_APPLY: &[&str] = &["epi", "gate", "config", "set", "gateway.bindMode"];
+const SECRET_PROVIDER_APPLY: &[&str] =
+    &["epi", "gate", "config", "set", "gateway.secrets.provider"];
+const TELEGRAM_ENABLED_APPLY: &[&str] = &[
+    "epi",
+    "gate",
+    "config",
+    "set",
+    "gateway.channels.telegram.enabled",
+];
+const WHATSAPP_ENABLED_APPLY: &[&str] = &[
+    "epi",
+    "gate",
+    "config",
+    "set",
+    "gateway.channels.whatsapp.enabled",
+];
+const SLACK_ENABLED_APPLY: &[&str] = &[
+    "epi",
+    "gate",
+    "config",
+    "set",
+    "gateway.channels.slack.enabled",
+];
+const DISCORD_ENABLED_APPLY: &[&str] = &[
+    "epi",
+    "gate",
+    "config",
+    "set",
+    "gateway.channels.discord.enabled",
+];
+const GOOGLE_DRIVE_ENABLED_APPLY: &[&str] = &[
+    "epi",
+    "gate",
+    "config",
+    "set",
+    "gateway.channels.google-drive.enabled",
+];
 const GRAPH_UP: &[&str] = &["epi", "graph", "up"];
 const GRAPH_DOCTOR: &[&str] = &["epi", "graph", "doctor"];
 const GATEWAY_STATUS: &[&str] = &["epi", "gate", "status"];
+const CHANNELS_STATUS: &[&str] = &["epi", "gate", "rpc", "channels.status"];
+const CHANNELS_SEND: &[&str] = &["epi", "gate", "rpc", "channels.send"];
+const CHANNELS_FILES_LIST: &[&str] = &["epi", "gate", "rpc", "channels.files.list"];
 const AGENT_STATUS: &[&str] = &["epi", "agent", "status"];
 const EPII_STATUS: &[&str] = &["epi", "gate", "rpc", "s5'.epii.status"];
 const EPI_UP: &[&str] = &["epi", "up"];
@@ -222,6 +262,125 @@ const CONFIG_FIELDS: &[PortalConfigField] = &[
         coordinate: "S3",
         editable: true,
         apply_command: Some(GATEWAY_BIND_APPLY),
+    },
+    PortalConfigField {
+        key: "gateway.secrets.provider",
+        label: "Secret provider",
+        coordinate: "S0'/S3",
+        editable: true,
+        apply_command: Some(SECRET_PROVIDER_APPLY),
+    },
+    PortalConfigField {
+        key: "gateway.secrets.onePasswordVault",
+        label: "1Password vault",
+        coordinate: "S0'/S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.secrets.varlockProfile",
+        label: "Varlock profile",
+        coordinate: "S0'/S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.telegram.enabled",
+        label: "Telegram channel",
+        coordinate: "S3",
+        editable: true,
+        apply_command: Some(TELEGRAM_ENABLED_APPLY),
+    },
+    PortalConfigField {
+        key: "gateway.channels.telegram.secretRef",
+        label: "Telegram secret",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.telegram.accountHint",
+        label: "Telegram account",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.whatsapp.enabled",
+        label: "WhatsApp channel",
+        coordinate: "S3",
+        editable: true,
+        apply_command: Some(WHATSAPP_ENABLED_APPLY),
+    },
+    PortalConfigField {
+        key: "gateway.channels.whatsapp.secretRef",
+        label: "WhatsApp secret",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.whatsapp.workspace",
+        label: "WhatsApp phone number id",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.slack.enabled",
+        label: "Slack channel",
+        coordinate: "S3",
+        editable: true,
+        apply_command: Some(SLACK_ENABLED_APPLY),
+    },
+    PortalConfigField {
+        key: "gateway.channels.slack.secretRef",
+        label: "Slack secret",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.slack.accountHint",
+        label: "Slack default channel",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.discord.enabled",
+        label: "Discord channel",
+        coordinate: "S3",
+        editable: true,
+        apply_command: Some(DISCORD_ENABLED_APPLY),
+    },
+    PortalConfigField {
+        key: "gateway.channels.discord.secretRef",
+        label: "Discord secret",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.discord.accountHint",
+        label: "Discord default channel",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
+    },
+    PortalConfigField {
+        key: "gateway.channels.google-drive.enabled",
+        label: "Google Drive channel",
+        coordinate: "S3",
+        editable: true,
+        apply_command: Some(GOOGLE_DRIVE_ENABLED_APPLY),
+    },
+    PortalConfigField {
+        key: "gateway.channels.google-drive.secretRef",
+        label: "Google Drive secret",
+        coordinate: "S3",
+        editable: true,
+        apply_command: None,
     },
 ];
 
@@ -261,12 +420,32 @@ const GRAPH_ACTIONS: &[PortalAction] = &[
     },
 ];
 
-const GATEWAY_ACTIONS: &[PortalAction] = &[PortalAction {
-    id: "gateway.status",
-    label: "Check gateway status",
-    kind: PortalActionKind::Verify,
-    command: Some(GATEWAY_STATUS),
-}];
+const GATEWAY_ACTIONS: &[PortalAction] = &[
+    PortalAction {
+        id: "gateway.status",
+        label: "Check gateway status",
+        kind: PortalActionKind::Verify,
+        command: Some(GATEWAY_STATUS),
+    },
+    PortalAction {
+        id: "channels.status",
+        label: "Check channel readiness",
+        kind: PortalActionKind::Verify,
+        command: Some(CHANNELS_STATUS),
+    },
+    PortalAction {
+        id: "channels.send",
+        label: "Send channel message",
+        kind: PortalActionKind::RunCommand,
+        command: Some(CHANNELS_SEND),
+    },
+    PortalAction {
+        id: "channels.files.list",
+        label: "List Drive files",
+        kind: PortalActionKind::RunCommand,
+        command: Some(CHANNELS_FILES_LIST),
+    },
+];
 
 const AGENT_ACTIONS: &[PortalAction] = &[PortalAction {
     id: "agent.status",

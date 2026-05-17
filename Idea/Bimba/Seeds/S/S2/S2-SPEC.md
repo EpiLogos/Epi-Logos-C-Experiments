@@ -88,6 +88,7 @@ The live implementation is substantial:
 - `Body/S/S0/epi-cli/src/graph/` implements the `epi graph` command mirror plus remaining lifecycle, meta, retrieval execution, vault sync, dataset import, Redis cache, doctor/status, and dev bootstrap wiring. This is now partly thinned: S0 still hosts runtime orchestration, but parser/query/cache/client/schema/seed authority has moved to Body-native S2 modules.
 - `Body/S/S2/graph-schema` owns the canonical S2 graph schema constants: `:Bimba`, coordinate property, 3072 embedding dimensions, vector index names, and compatibility labels/properties.
 - `Body/S/S2/graph-services` owns the first Body-native S2 service authority: Neo4j primary graph role, live Neo4j config/client, schema creation, coordinate seed entrypoints, coordinate parser, GraphRAG query grammar, disclosure/query/retrieval result contracts, and Redis semantic-cache role/config/payload/client/health contracts. It resolves the RedisVL Python bridge through `Body/S/S3/redis-context`, because the bridge is Redis runtime residency while S2 owns the graph semantic-cache law using it. `Body/S/S0/epi-cli/src/graph/client.rs`, `schema.rs`, `seed.rs`, `coordinate_array_parser.rs`, `retrieval/graphrag.rs`, `retrieval/hybrid.rs`, and `semantic_cache.rs` now mirror or delegate to this S2 authority where those contracts are involved.
+- `Body/S/S2/graph-services/src/dataset_import.rs` owns canonical Bimba corpus import. It plans/imports the actual `docs/datasets/low-detail/` corpus and the six deep branches: `anuttara-deep`, `paramasiva-deep`, `parashakti-deep`, `mahamaya-deep`, `nara-deep`, and `epii-deep`. It handles BOM-prefixed JSON, deep-node `filteredProps`, legacy `bimbaCoordinate` compatibility, `relType` relation records, null endpoint skips, branch provenance properties, and skipped-count reporting.
 - `docker-compose.epi-s2.yml` is the local S2 service topology for Neo4j and Redis.
 - `Body/S/S2/external/bimba-mcp/` implements coordinate-aware Neo4j query, schema validation, sync API, coordinate parser, reranking, embeddings, and MCP-facing graph tools for external systems. It is not the PI agent's internal graph interface; PI should consume coordinate-native APIs/context pools rather than reaching through MCP as its own inner organ.
 - `Body/S/S5/epi-gnostic/` uses Neo4j as a storage substrate for RAG and currently contains Graphiti compatibility wrapper code. Graphiti should be treated as an S3' temporal library/runtime component; the current HTTP wrapper is integration scaffolding, while S5/S5' governs invocation and usage.
@@ -98,14 +99,16 @@ Current implementation gaps:
 - The live CLI has pragmatic commands such as `graph query`, `retrieve`, `graphrag`, and `hybrid`, but they do not perfectly match the TS method contracts.
 - `s1.sync.flush` / S1 -> S2 queue drain is still a critical blocker in the audit; direct `epi graph sync <path>` exists, but Khora queue flushing is not complete.
 - The legacy `#` coordinate is not a defect by itself. It is the old `bimbaCoordinate` format, and the migration rule is that this branch becomes the [[M]] coordinate branch in the new system. Parser/API work must handle that conversion deliberately rather than treating `#` as an arbitrary invalid string.
+- Neo4j property law is not yet coordinate-driven enough. The next schema pass must align graph node and relationship properties with the Obsidian/frontmatter coordinate-field approach: each durable property key should have a coordinate home, type/cardinality rule, disclosure/privacy class, source family, and index/constraint intent. This applies to relationship properties as much as node properties.
 - Redis ownership needs final clarification in S3/S3': graph semantic cache may remain S2 substrate, but temporally grounded context, session continuity, kairos windows, and episode handles belong under [[S3']] / [[Chronos]] key law.
-- Remaining modularity gap: retrieval execution, sync, import/enrichment, Redis hot/warm graph cache, and some CLI graph orchestration still live inside the S0 CLI package. These should move behind `Body/S/S2/graph-services` contracts while `epi graph` remains the S0 command mirror.
+- Remaining modularity gap: coordinate-native gateway/API surfacing, destructive seed/migration policy, S1 queue drain, and some CLI graph orchestration still need consolidation. Retrieval execution, dataset import, schema/seed, metadata, semantic cache, relationship/link/sync helpers, graph doctor/readiness, and parser/query law now sit behind `Body/S/S2/graph-services` contracts while `epi graph` remains the S0 command mirror.
 
 ### Planning consequence
 
 The S2 shard/build pass must produce a clean split:
 
 - S2 substrate commands and tests for Neo4j/Redis/RedisVL health, schema, seed, raw query, sync, retrieval, and import.
+- S2 schema enforcement for coordinate-owned node and relationship properties, matching [[S1']] frontmatter discipline rather than allowing arbitrary graph property drift.
 - S2' coordinate-law commands/API for resolve, retrieve, rerank, enrich, relation typing, disclosure density, and context pool formation.
 - Explicit integration contracts with [[S1]] sync flush, [[S3']] temporal/session Redis, and [[S5]] world-return services.
 
@@ -269,7 +272,7 @@ S2/S2' is currently surfaced through `epi graph`.
 | `epi graph retrieve` | [[S2.5]] / [[S2']] | Coordinate retrieval |
 | `epi graph graphrag` | [[S2.5]] / [[S2']] | GraphRAG retrieval |
 | `epi graph hybrid` | [[S2.4']] / [[S2.5']] | Hybrid vector + graph retrieval |
-| `epi graph import` | [[S2.2]] / [[S2.5]] | Dataset import |
+| `epi graph import` | [[S2.2]] / [[S2.5]] | Canonical Bimba dataset import: `all`, `low-detail`, `deep`, individual `*-deep`, or explicit nodes/relations JSON |
 | `epi graph seed-nara` | [[S2.2]] using [[Nara]] data | Seeds Parashakti/Nara body-zone/decan data; ontology may need S5/M re-home notes |
 
 CLI parity law: `epi graph` is the local operator mirror. Canonical API methods are `s2.graph.*` and `s2'.*`.
@@ -503,7 +506,7 @@ S2' is not yet complete:
 - No single canonical gateway method surface is visible for all `s2'.*` methods.
 - Coordinate parser behavior must intentionally migrate old `#` / `bimbaCoordinate` values into the new [[M]] branch rather than calling that data malformed.
 - Rerank/disclosure-density law is not yet uniformly enforced across CLI, MCP, and gateway.
-- Graph sync/import/enrichment and retrieval execution command bodies still need the next service/API extraction pass: S2 owns the law, S0 should remain command presentation, and destructive seed/migration tests require explicit live Neo4j intent.
+- Graph sync/enrichment and coordinate-native API exposure still need the next service/API pass: S2 owns the law and S0 should remain command presentation. Dataset import has crossed the first boundary: `epi graph import all|low-detail|deep|*-deep|*.json` now delegates to S2 graph-services and understands the real Bimba corpus layout. Full Bimba dataset conversion/import is deferred to a separate session, while graph method/schema implementation proceeds against live Neo4j with test-owned data.
 - S2' graph law is entangled operationally with Gnostic/Graphiti code in some paths; the spec must keep ownership clean while allowing shared storage.
 
 ### Internal 0-5 Breakdown

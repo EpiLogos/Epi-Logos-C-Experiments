@@ -1,5 +1,58 @@
 use crate::Neo4jClient;
-use std::path::Path;
+use serde_json::Value;
+use std::path::{Path, PathBuf};
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetBranch {
+    pub id: &'static str,
+    pub label: &'static str,
+    pub nodes_file: &'static str,
+    pub relations_file: Option<&'static str>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DatasetImportReport {
+    pub branches: Vec<DatasetBranchReport>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetBranchReport {
+    pub branch_id: String,
+    pub label: String,
+    pub nodes: usize,
+    pub relations: usize,
+    pub skipped_nodes: usize,
+    pub skipped_relations: usize,
+}
+
+impl DatasetImportReport {
+    pub fn push(&mut self, branch: DatasetBranchReport) {
+        self.branches.push(branch);
+    }
+
+    pub fn render(&self) -> String {
+        if self.branches.is_empty() {
+            return "Dataset import complete: no dataset files found".into();
+        }
+
+        let lines = self
+            .branches
+            .iter()
+            .map(|branch| {
+                format!(
+                    "  {}: {} nodes, {} relations, {} skipped nodes, {} skipped relations",
+                    branch.label,
+                    branch.nodes,
+                    branch.relations,
+                    branch.skipped_nodes,
+                    branch.skipped_relations
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        format!("Dataset import complete:\n{}", lines)
+    }
+}
 
 pub struct DatasetImporter<'a> {
     client: &'a Neo4jClient,
@@ -17,56 +70,100 @@ impl<'a> DatasetImporter<'a> {
     /// Import a nodes JSON file. Each entry becomes a Bimba node.
     /// Uses MERGE on coordinate to avoid duplicates with seed data.
     pub async fn import_nodes(&self, filename: &str) -> Result<usize, String> {
-        let path = Path::new(&self.datasets_dir).join(filename);
-        let data =
-            std::fs::read_to_string(&path).map_err(|e| format!("read {}: {}", filename, e))?;
-        let nodes: Vec<serde_json::Value> =
-            serde_json::from_str(&data).map_err(|e| format!("parse {}: {}", filename, e))?;
+        let report = self.import_nodes_with_metadata(filename, None).await?;
+        Ok(report.0)
+    }
+
+    async fn import_nodes_with_metadata(
+        &self,
+        filename: &str,
+        branch: Option<&DatasetBranch>,
+    ) -> Result<(usize, usize), String> {
+        let path = self.resolve_dataset_path(filename);
+        let data = std::fs::read_to_string(&path)
+            .map_err(|e| format!("read {}: {}", path.display(), e))?;
+        let nodes: Vec<Value> = serde_json::from_str(strip_json_bom(&data))
+            .map_err(|e| format!("parse {}: {}", path.display(), e))?;
 
         let mut count = 0;
+        let mut skipped = 0;
         for node in &nodes {
-            let coord = match node.get("coordinate").and_then(|v| v.as_str()) {
+            let coord = match coordinate_from_node(node) {
                 Some(c) => c,
-                None => continue,
+                None => {
+                    skipped += 1;
+                    continue;
+                }
             };
 
-            // Build SET clause from available properties
             let mut set_parts = Vec::new();
-            if let Some(name) = node.get("name").and_then(|v| v.as_str()) {
+            set_parts.push("n.source_dataset = 'bimba'".to_string());
+            if let Some(branch) = branch {
+                set_parts.push(format!("n.dataset_branch = '{}'", escape_cypher(branch.id)));
+                set_parts.push(format!(
+                    "n.dataset_branch_label = '{}'",
+                    escape_cypher(branch.label)
+                ));
+            }
+            if let Some(name) = node_text_property(
+                node,
+                &[
+                    "name",
+                    "title",
+                    "primaryDesignation",
+                    "label",
+                    "displayName",
+                ],
+            ) {
                 set_parts.push(format!("n.name = '{}'", escape_cypher(name)));
             }
-            if let Some(desc) = node.get("description").and_then(|v| v.as_str()) {
-                // Truncate long descriptions for Neo4j property storage
-                let truncated = if desc.len() > 2000 {
-                    &desc[..2000]
-                } else {
-                    desc
-                };
-                set_parts.push(format!("n.description = '{}'", escape_cypher(truncated)));
+            if let Some(desc) = node_text_property(
+                node,
+                &[
+                    "description",
+                    "summary",
+                    "operationalDescription",
+                    "bimbaDescription",
+                ],
+            ) {
+                set_parts.push(format!(
+                    "n.description = '{}'",
+                    escape_cypher(truncate_utf8(desc, 2000))
+                ));
             }
-            if let Some(essence) = node.get("essence").and_then(|v| v.as_str()) {
-                let truncated = if essence.len() > 1000 {
-                    &essence[..1000]
-                } else {
-                    essence
-                };
-                set_parts.push(format!("n.essence = '{}'", escape_cypher(truncated)));
+            if let Some(essence) = node_text_property(
+                node,
+                &[
+                    "essence",
+                    "operationalEssence",
+                    "metaphysicalEssence",
+                    "ontologicalEssence",
+                ],
+            ) {
+                set_parts.push(format!(
+                    "n.essence = '{}'",
+                    escape_cypher(truncate_utf8(essence, 1000))
+                ));
             }
-            if let Some(cn) = node.get("coreNature").and_then(|v| v.as_str()) {
-                let truncated = if cn.len() > 1000 { &cn[..1000] } else { cn };
-                set_parts.push(format!("n.core_nature = '{}'", escape_cypher(truncated)));
+            if let Some(core_nature) = node_text_property(node, &["coreNature", "core_nature"]) {
+                set_parts.push(format!(
+                    "n.core_nature = '{}'",
+                    escape_cypher(truncate_utf8(core_nature, 1000))
+                ));
             }
-
-            let set_clause = if set_parts.is_empty() {
-                String::new()
-            } else {
-                format!(" SET {}", set_parts.join(", "))
-            };
+            if let Some(legacy) = legacy_bimba_coordinate(node) {
+                if legacy != coord {
+                    set_parts.push(format!(
+                        "n.legacy_bimba_coordinate = '{}'",
+                        escape_cypher(legacy)
+                    ));
+                }
+            }
 
             let cypher = format!(
-                "MERGE (n:Bimba {{coordinate: '{}'}}){} RETURN n.coordinate",
+                "MERGE (n:Bimba {{coordinate: '{}'}}) SET {} RETURN n.coordinate",
                 escape_cypher(coord),
-                set_clause
+                set_parts.join(", ")
             );
 
             match self.client.run(&cypher).await {
@@ -76,39 +173,75 @@ impl<'a> DatasetImporter<'a> {
                 }
             }
         }
-        Ok(count)
+        Ok((count, skipped))
     }
 
     /// Import a relations JSON file. Each entry becomes a Neo4j relationship.
     pub async fn import_relations(&self, filename: &str) -> Result<usize, String> {
-        let path = Path::new(&self.datasets_dir).join(filename);
-        let data =
-            std::fs::read_to_string(&path).map_err(|e| format!("read {}: {}", filename, e))?;
-        let rels: Vec<serde_json::Value> =
-            serde_json::from_str(&data).map_err(|e| format!("parse {}: {}", filename, e))?;
+        let report = self.import_relations_with_metadata(filename, None).await?;
+        Ok(report.0)
+    }
+
+    async fn import_relations_with_metadata(
+        &self,
+        filename: &str,
+        branch: Option<&DatasetBranch>,
+    ) -> Result<(usize, usize), String> {
+        let path = self.resolve_dataset_path(filename);
+        let data = std::fs::read_to_string(&path)
+            .map_err(|e| format!("read {}: {}", path.display(), e))?;
+        let rels: Vec<Value> = serde_json::from_str(strip_json_bom(&data))
+            .map_err(|e| format!("parse {}: {}", path.display(), e))?;
 
         let mut count = 0;
+        let mut skipped = 0;
         for rel in &rels {
-            let source = match rel.get("source").and_then(|v| v.as_str()) {
+            let source = match relation_endpoint(rel, "source") {
                 Some(s) => s,
-                None => continue,
+                None => {
+                    skipped += 1;
+                    continue;
+                }
             };
-            let target = match rel.get("target").and_then(|v| v.as_str()) {
+            let target = match relation_endpoint(rel, "target") {
                 Some(t) => t,
-                None => continue,
+                None => {
+                    skipped += 1;
+                    continue;
+                }
             };
-            let rel_type = match rel.get("type").and_then(|v| v.as_str()) {
+            let rel_type = match relation_type_from_value(rel) {
                 Some(t) => sanitize_rel_type(t),
-                None => continue,
+                None => {
+                    skipped += 1;
+                    continue;
+                }
+            };
+
+            let mut set_parts = Vec::new();
+            if let Some(branch) = branch {
+                set_parts.push(format!("r.dataset_branch = '{}'", escape_cypher(branch.id)));
+            }
+            if let Some(source_id) = relation_string_property(rel, "id") {
+                set_parts.push(format!(
+                    "r.source_relation_id = '{}'",
+                    escape_cypher(source_id)
+                ));
+            }
+            let set_clause = if set_parts.is_empty() {
+                String::new()
+            } else {
+                format!(" SET {}", set_parts.join(", "))
             };
 
             let cypher = format!(
                 "MATCH (s:Bimba {{coordinate: '{}'}}) \
                  MATCH (t:Bimba {{coordinate: '{}'}}) \
-                 MERGE (s)-[:{}]->(t)",
+                 MERGE (s)-[r:{}]->(t){}",
                 escape_cypher(source),
                 escape_cypher(target),
-                rel_type
+                rel_type,
+                set_clause
             );
 
             match self.client.run(&cypher).await {
@@ -121,65 +254,216 @@ impl<'a> DatasetImporter<'a> {
                 }
             }
         }
-        Ok(count)
+        Ok((count, skipped))
     }
 
-    /// Import all datasets in dependency order
+    /// Import all canonical datasets in dependency order.
     pub async fn import_all(&self) -> Result<String, String> {
-        let mut report = Vec::new();
-
-        // Foundation relationships first
-        if Path::new(&self.datasets_dir)
-            .join("relations_foundation.json")
-            .exists()
-        {
-            let n = self.import_relations("relations_foundation.json").await?;
-            report.push(format!("  foundation relations: {}", n));
-        }
-
-        // M-branches in order
-        let branches = [
-            (
-                "M0 Anuttara",
-                "nodes_anuttara.json",
-                "relations_anuttara.json",
-            ),
-            (
-                "M1 Paramasiva",
-                "nodes_paramasiva.json",
-                "relations_paramasiva.json",
-            ),
-            (
-                "M2 Parashakti",
-                "nodes_parashakti.json",
-                "relations_parashakti.json",
-            ),
-            (
-                "M3 Mahamaya",
-                "nodes_mahamaya.json",
-                "relations_mahamaya.json",
-            ),
-            ("M4 Nara", "nodes_nara.json", "relations_nara.json"),
-            ("M5 Epii", "nodes_epii.json", "relations_epii.json"),
-        ];
-
-        for (branch, node_file, rel_file) in &branches {
-            let node_path = Path::new(&self.datasets_dir).join(node_file);
-            let rel_path = Path::new(&self.datasets_dir).join(rel_file);
-
-            if node_path.exists() {
-                let nodes = self.import_nodes(node_file).await?;
-                let rels = if rel_path.exists() {
-                    self.import_relations(rel_file).await?
-                } else {
-                    0
-                };
-                report.push(format!("  {}: {} nodes, {} relations", branch, nodes, rels));
-            }
-        }
-
-        Ok(format!("Dataset import complete:\n{}", report.join("\n")))
+        self.import_branches(canonical_dataset_plan(Path::new(&self.datasets_dir)))
+            .await
+            .map(|report| report.render())
     }
+
+    pub async fn import_low_detail_all(&self) -> Result<String, String> {
+        self.import_branches(low_detail_dataset_plan())
+            .await
+            .map(|report| report.render())
+    }
+
+    pub async fn import_deep_all(&self) -> Result<String, String> {
+        self.import_branches(deep_dataset_plan())
+            .await
+            .map(|report| report.render())
+    }
+
+    pub async fn import_deep_branch(&self, branch_id: &str) -> Result<String, String> {
+        let branch = deep_dataset_plan()
+            .into_iter()
+            .find(|branch| branch.id == branch_id)
+            .ok_or_else(|| format!("unknown deep dataset branch: {}", branch_id))?;
+        self.import_branches(vec![branch])
+            .await
+            .map(|report| report.render())
+    }
+
+    async fn import_branches(
+        &self,
+        branches: Vec<DatasetBranch>,
+    ) -> Result<DatasetImportReport, String> {
+        let mut report = DatasetImportReport::default();
+        for branch in branches {
+            if !self.resolve_dataset_path(branch.nodes_file).exists() {
+                continue;
+            }
+            let (nodes, skipped_nodes) = self
+                .import_nodes_with_metadata(branch.nodes_file, Some(&branch))
+                .await?;
+            let (relations, skipped_relations) = match branch.relations_file {
+                Some(rel_file) if self.resolve_dataset_path(rel_file).exists() => {
+                    self.import_relations_with_metadata(rel_file, Some(&branch))
+                        .await?
+                }
+                _ => (0, 0),
+            };
+            report.push(DatasetBranchReport {
+                branch_id: branch.id.into(),
+                label: branch.label.into(),
+                nodes,
+                relations,
+                skipped_nodes,
+                skipped_relations,
+            });
+        }
+        Ok(report)
+    }
+
+    fn resolve_dataset_path(&self, filename: &str) -> PathBuf {
+        Path::new(&self.datasets_dir).join(filename)
+    }
+}
+
+pub fn canonical_dataset_plan(datasets_dir: &Path) -> Vec<DatasetBranch> {
+    let mut branches = Vec::new();
+    if datasets_dir.join("low-detail").exists() {
+        branches.extend(low_detail_dataset_plan());
+    }
+    branches.extend(deep_dataset_plan());
+    branches
+}
+
+pub fn low_detail_dataset_plan() -> Vec<DatasetBranch> {
+    vec![
+        DatasetBranch {
+            id: "low-detail/hash",
+            label: "M# Root",
+            nodes_file: "low-detail/nodes_hash.json",
+            relations_file: Some("low-detail/relations_hash.json"),
+        },
+        DatasetBranch {
+            id: "low-detail/foundation",
+            label: "M Foundation",
+            nodes_file: "low-detail/nodes_hash.json",
+            relations_file: Some("low-detail/relations_foundation.json"),
+        },
+        DatasetBranch {
+            id: "low-detail/anuttara",
+            label: "M0 Anuttara",
+            nodes_file: "low-detail/nodes_anuttara.json",
+            relations_file: Some("low-detail/relations_anuttara.json"),
+        },
+        DatasetBranch {
+            id: "low-detail/paramasiva",
+            label: "M1 Paramasiva",
+            nodes_file: "low-detail/nodes_paramasiva.json",
+            relations_file: Some("low-detail/relations_paramasiva.json"),
+        },
+        DatasetBranch {
+            id: "low-detail/parashakti",
+            label: "M2 Parashakti",
+            nodes_file: "low-detail/nodes_parashakti.json",
+            relations_file: Some("low-detail/relations_parashakti.json"),
+        },
+        DatasetBranch {
+            id: "low-detail/mahamaya",
+            label: "M3 Mahamaya",
+            nodes_file: "low-detail/nodes_mahamaya.json",
+            relations_file: Some("low-detail/relations_mahamaya.json"),
+        },
+        DatasetBranch {
+            id: "low-detail/nara",
+            label: "M4 Nara",
+            nodes_file: "low-detail/nodes_nara.json",
+            relations_file: Some("low-detail/relations_nara.json"),
+        },
+        DatasetBranch {
+            id: "low-detail/epii",
+            label: "M5 Epii",
+            nodes_file: "low-detail/nodes_epii.json",
+            relations_file: Some("low-detail/relations_epii.json"),
+        },
+    ]
+}
+
+pub fn deep_dataset_plan() -> Vec<DatasetBranch> {
+    vec![
+        DatasetBranch {
+            id: "anuttara-deep",
+            label: "M0 Anuttara Deep",
+            nodes_file: "anuttara-deep/nodes-full-data.json",
+            relations_file: Some("anuttara-deep/relations.json"),
+        },
+        DatasetBranch {
+            id: "paramasiva-deep",
+            label: "M1 Paramasiva Deep",
+            nodes_file: "paramasiva-deep/nodes-full-detail.json",
+            relations_file: Some("paramasiva-deep/relations.json"),
+        },
+        DatasetBranch {
+            id: "parashakti-deep",
+            label: "M2 Parashakti Deep",
+            nodes_file: "parashakti-deep/nodes-full-detail.json",
+            relations_file: Some("parashakti-deep/relations.json"),
+        },
+        DatasetBranch {
+            id: "mahamaya-deep",
+            label: "M3 Mahamaya Deep",
+            nodes_file: "mahamaya-deep/nodes-full-detail.json",
+            relations_file: Some("mahamaya-deep/relations.json"),
+        },
+        DatasetBranch {
+            id: "nara-deep",
+            label: "M4 Nara Deep",
+            nodes_file: "nara-deep/nodes-full-detail.json",
+            relations_file: Some("nara-deep/relations.json"),
+        },
+        DatasetBranch {
+            id: "epii-deep",
+            label: "M5 Epii Deep",
+            nodes_file: "epii-deep/nodes-full-details.json",
+            relations_file: Some("epii-deep/relations.json"),
+        },
+    ]
+}
+
+pub fn strip_json_bom(raw: &str) -> &str {
+    raw.trim_start_matches('\u{feff}')
+}
+
+pub fn coordinate_from_node(node: &Value) -> Option<&str> {
+    node.get("coordinate")
+        .and_then(|value| value.as_str())
+        .or_else(|| nested_filtered_property(node, "coordinate"))
+        .or_else(|| nested_filtered_property(node, "bimbaCoordinate"))
+}
+
+pub fn node_text_property<'a>(node: &'a Value, keys: &[&str]) -> Option<&'a str> {
+    for key in keys {
+        if let Some(value) = node.get(*key).and_then(|value| value.as_str()) {
+            return Some(value);
+        }
+        if let Some(value) = nested_filtered_property(node, key) {
+            return Some(value);
+        }
+    }
+    None
+}
+
+pub fn relation_type_from_value(rel: &Value) -> Option<&str> {
+    rel.get("type")
+        .and_then(|value| value.as_str())
+        .or_else(|| rel.get("relType").and_then(|value| value.as_str()))
+        .or_else(|| rel.get("relationshipType").and_then(|value| value.as_str()))
+}
+
+pub fn relation_endpoint<'a>(rel: &'a Value, key: &str) -> Option<&'a str> {
+    rel.get(key).and_then(|value| match value {
+        Value::String(s) if !s.trim().is_empty() => Some(s.as_str()),
+        Value::Object(map) => map
+            .get("coordinate")
+            .and_then(|value| value.as_str())
+            .or_else(|| map.get("id").and_then(|value| value.as_str())),
+        _ => None,
+    })
 }
 
 /// Escape single quotes for Cypher string literals
@@ -198,6 +482,36 @@ fn sanitize_rel_type(t: &str) -> String {
             }
         })
         .collect()
+}
+
+fn nested_filtered_property<'a>(node: &'a Value, key: &str) -> Option<&'a str> {
+    node.get("filteredProps")?
+        .get(key)
+        .and_then(|value| value.as_str())
+}
+
+fn legacy_bimba_coordinate(node: &Value) -> Option<&str> {
+    nested_filtered_property(node, "bimbaCoordinate")
+        .or_else(|| node.get("bimbaCoordinate").and_then(|value| value.as_str()))
+}
+
+fn relation_string_property<'a>(rel: &'a Value, key: &str) -> Option<&'a str> {
+    rel.get(key).and_then(|value| value.as_str()).or_else(|| {
+        rel.get("relProperties")?
+            .get(key)
+            .and_then(|value| value.as_str())
+    })
+}
+
+fn truncate_utf8(value: &str, max_len: usize) -> &str {
+    if value.len() <= max_len {
+        return value;
+    }
+    let mut end = max_len;
+    while !value.is_char_boundary(end) {
+        end -= 1;
+    }
+    &value[..end]
 }
 
 #[cfg(test)]
@@ -219,5 +533,56 @@ mod tests {
             "SUCCEEDED_BY_AND_MANIFESTS_THROUGH"
         );
         assert_eq!(sanitize_rel_type("has-relation"), "HAS_RELATION");
+    }
+
+    #[test]
+    fn canonical_plan_covers_low_detail_and_deep_branches() {
+        let plan = canonical_dataset_plan(Path::new("../../../../docs/datasets"));
+        assert!(plan
+            .iter()
+            .any(|branch| branch.id == "low-detail/parashakti"));
+        assert!(plan.iter().any(|branch| branch.id == "parashakti-deep"));
+        assert_eq!(deep_dataset_plan().len(), 6);
+    }
+
+    #[test]
+    fn helpers_understand_deep_dataset_shape() {
+        let node = serde_json::json!({
+            "coordinate": "#2-3-0",
+            "filteredProps": {
+                "bimbaCoordinate": "#2-3-0",
+                "operationalEssence": "Parashakti operational body"
+            }
+        });
+        assert_eq!(coordinate_from_node(&node), Some("#2-3-0"));
+        assert_eq!(
+            node_text_property(&node, &["essence", "operationalEssence"]),
+            Some("Parashakti operational body")
+        );
+
+        let rel = serde_json::json!({
+            "source": "#2",
+            "target": "#2-3",
+            "relType": "has-deep child"
+        });
+        assert_eq!(relation_endpoint(&rel, "source"), Some("#2"));
+        assert_eq!(relation_type_from_value(&rel), Some("has-deep child"));
+        assert_eq!(
+            sanitize_rel_type(relation_type_from_value(&rel).unwrap()),
+            "HAS_DEEP_CHILD"
+        );
+    }
+
+    #[test]
+    fn helpers_reject_null_relation_endpoints_and_strip_bom() {
+        let raw = "\u{feff}[{\"coordinate\":\"#\"}]";
+        assert!(strip_json_bom(raw).starts_with('['));
+
+        let rel = serde_json::json!({
+            "source": "#2",
+            "target": null,
+            "relType": "RELATES_TO"
+        });
+        assert_eq!(relation_endpoint(&rel, "target"), None);
     }
 }

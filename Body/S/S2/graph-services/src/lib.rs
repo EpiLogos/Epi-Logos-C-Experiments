@@ -11,6 +11,7 @@ mod coordinate;
 pub mod dataset_import;
 pub mod doctor;
 pub mod embeddings;
+pub mod graph_api;
 pub mod link_enforcement;
 pub mod meta;
 pub mod relationship_manager;
@@ -31,6 +32,10 @@ pub use doctor::{
     SemanticCacheStatus, ServiceStatus,
 };
 pub use embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
+pub use graph_api::{
+    CoordinateResolution, GraphMethodParams, GraphMethodService, GraphNodeRequest,
+    GraphParamValue, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+};
 pub use link_enforcement::{LinkEnforcer, LinkValidationResult};
 pub use meta::{
     desired_meta, is_bootstrapped, read_graph_meta, seed_source_hash, write_graph_meta, GraphMeta,

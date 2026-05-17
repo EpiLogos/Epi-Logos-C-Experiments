@@ -135,6 +135,65 @@ fn portal_surface_registry_separates_readiness_from_agent_access() {
 }
 
 #[test]
+fn portal_config_surface_exposes_channel_and_secret_provider_fields() {
+    let registry = SurfaceRegistry::from_providers(vec![Box::new(TopologyProvider)]);
+    let surfaces = registry.surfaces();
+    let config = surfaces
+        .iter()
+        .find(|surface| surface.id == "topology.config.schema")
+        .expect("config schema surface should be present");
+    let keys: Vec<&str> = config
+        .config_fields
+        .iter()
+        .map(|field| field.key.as_str())
+        .collect();
+
+    for expected in [
+        "gateway.secrets.provider",
+        "gateway.secrets.onePasswordVault",
+        "gateway.secrets.varlockProfile",
+        "gateway.channels.telegram.enabled",
+        "gateway.channels.telegram.secretRef",
+        "gateway.channels.whatsapp.enabled",
+        "gateway.channels.whatsapp.secretRef",
+        "gateway.channels.whatsapp.workspace",
+        "gateway.channels.slack.enabled",
+        "gateway.channels.slack.secretRef",
+        "gateway.channels.discord.enabled",
+        "gateway.channels.discord.secretRef",
+        "gateway.channels.google-drive.enabled",
+        "gateway.channels.google-drive.secretRef",
+    ] {
+        assert!(
+            keys.contains(&expected),
+            "portal config surface should expose {expected}; got {keys:?}"
+        );
+    }
+}
+
+#[test]
+fn portal_gateway_surface_exposes_real_channel_actions() {
+    let registry = SurfaceRegistry::from_providers(vec![Box::new(TopologyProvider)]);
+    let surfaces = registry.surfaces();
+    let gateway = surfaces
+        .iter()
+        .find(|surface| surface.id == "topology.s3.gateway")
+        .expect("gateway surface should be present");
+    let actions = gateway
+        .actions
+        .iter()
+        .map(|action| action.id.as_str())
+        .collect::<Vec<_>>();
+
+    for expected in ["channels.status", "channels.send", "channels.files.list"] {
+        assert!(
+            actions.contains(&expected),
+            "gateway surface should expose {expected}; got {actions:?}"
+        );
+    }
+}
+
+#[test]
 fn portal_readiness_report_splits_live_raw_service_and_agent_access_results() {
     let health = json!({
         "ok": false,

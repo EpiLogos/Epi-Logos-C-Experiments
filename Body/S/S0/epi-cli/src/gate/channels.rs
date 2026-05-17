@@ -6,6 +6,9 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
+use super::channel_adapters::{self, ChannelOperation};
+use super::config::{self, ChannelConfig};
+use super::secrets::{SecretResolver, SecretStatus};
 use super::skills;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -27,13 +30,22 @@ struct ChannelRecord {
 
 pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
     let state = load_state(&state_root)?;
+    let config = config::load_document(&state_root)?.gateway;
+    let secret_resolver = SecretResolver::new(config.secrets.clone());
     let invocation_surface = skills::invocation_surface(&state_root)?;
 
     let mut channel_order = vec![
         "telegram".to_owned(),
-        "slack".to_owned(),
         "whatsapp".to_owned(),
+        "slack".to_owned(),
+        "discord".to_owned(),
+        "google-drive".to_owned(),
     ];
+    for key in config.channels.keys() {
+        if !channel_order.contains(key) {
+            channel_order.push(key.clone());
+        }
+    }
     for key in state.channels.keys() {
         if !channel_order.contains(key) {
             channel_order.push(key.clone());
@@ -48,10 +60,17 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
                 .get(id)
                 .cloned()
                 .unwrap_or_else(default_channel_record);
+            let channel_config = config.channels.get(id);
+            let configured = record.configured
+                || channel_config
+                    .map(|channel| channel.enabled)
+                    .unwrap_or(false);
+            let secret_state = secret_state(id, channel_config, &config.secrets, &secret_resolver);
+            let adapter = adapter_state(id);
             (
                 id.clone(),
                 json!({
-                    "configured": record.configured,
+                    "configured": configured,
                     "running": record.running,
                     "connected": record.connected,
                     "mode": record.mode,
@@ -59,6 +78,8 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
                     "lastProbeAt": record.last_probe_at,
                     "lastStartAt": record.last_start_at,
                     "lastConnectedAt": record.last_connected_at,
+                    "secret": secret_state,
+                    "adapter": adapter,
                 }),
             )
         })
@@ -72,14 +93,22 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
                 .get(id)
                 .cloned()
                 .unwrap_or_else(default_channel_record);
+            let channel_config = config.channels.get(id);
+            let configured = record.configured
+                || channel_config
+                    .map(|channel| channel.enabled)
+                    .unwrap_or(false);
+            let account_id = channel_config
+                .and_then(|channel| channel.account_hint.clone())
+                .unwrap_or_else(|| format!("{id}-main"));
             (
                 id.clone(),
                 json!([{
-                    "accountId": format!("{id}-main"),
-                    "configured": record.configured,
+                    "accountId": account_id,
+                    "configured": configured,
                     "connected": record.connected,
                     "running": record.running,
-                    "tokenSource": if record.connected { "gateway" } else { "none" },
+                    "tokenSource": token_source(record.connected, channel_config, &config.secrets),
                 }]),
             )
         })
@@ -91,7 +120,14 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
         .collect::<serde_json::Map<String, Value>>();
     let default_account = channel_order
         .iter()
-        .map(|id| (id.clone(), json!(format!("{id}-main"))))
+        .map(|id| {
+            let account_id = config
+                .channels
+                .get(id)
+                .and_then(|channel| channel.account_hint.clone())
+                .unwrap_or_else(|| format!("{id}-main"));
+            (id.clone(), json!(account_id))
+        })
         .collect::<serde_json::Map<String, Value>>();
 
     let channel_meta = json!([{
@@ -106,6 +142,12 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
         "channelAccounts": channel_accounts,
         "channelDefaultAccountId": default_account,
         "channelMeta": channel_meta,
+        "secretProvider": config.secrets.provider.as_str(),
+        "secretProviderDetail": {
+            "envPrefix": config.secrets.env_prefix,
+            "onePasswordVault": config.secrets.one_password_vault,
+            "varlockProfile": config.secrets.varlock_profile,
+        },
         "channels": channels,
     });
 
@@ -113,6 +155,145 @@ pub fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
     response.insert("channelsSnapshot".to_owned(), snapshot);
     response.insert("invocationSurface".to_owned(), invocation_surface);
     Ok(Value::Object(response))
+}
+
+pub fn send_text(
+    state_root: impl AsRef<Path>,
+    channel: &str,
+    target: &str,
+    text: &str,
+) -> Result<Value, String> {
+    let config = config::load_document(&state_root)?.gateway;
+    let channel_config = config
+        .channels
+        .get(channel)
+        .ok_or_else(|| format!("unknown channel: {channel}"))?;
+    if !channel_config.enabled {
+        return Err(format!("channel is not enabled: {channel}"));
+    }
+    let secret_ref = channel_config
+        .secret_ref
+        .as_deref()
+        .ok_or_else(|| format!("channel has no secretRef: {channel}"))?;
+    let secret = SecretResolver::new(config.secrets.clone()).resolve(secret_ref)?;
+    let request = channel_adapters::build_send_text_request(
+        channel,
+        &secret,
+        target,
+        text,
+        channel_config.workspace.as_deref(),
+    )?;
+    let response = channel_adapters::execute_request(request)?;
+    Ok(json!({
+        "ok": true,
+        "channel": channel,
+        "target": target,
+        "response": response,
+    }))
+}
+
+pub fn list_files(
+    state_root: impl AsRef<Path>,
+    channel: &str,
+    page_size: u32,
+) -> Result<Value, String> {
+    if channel != "google-drive" {
+        return Err(format!("channel does not support file listing: {channel}"));
+    }
+    let config = config::load_document(&state_root)?.gateway;
+    let channel_config = config
+        .channels
+        .get(channel)
+        .ok_or_else(|| format!("unknown channel: {channel}"))?;
+    if !channel_config.enabled {
+        return Err(format!("channel is not enabled: {channel}"));
+    }
+    let secret_ref = channel_config
+        .secret_ref
+        .as_deref()
+        .ok_or_else(|| format!("channel has no secretRef: {channel}"))?;
+    let secret = SecretResolver::new(config.secrets.clone()).resolve(secret_ref)?;
+    let request = channel_adapters::build_google_drive_list_files_request(&secret, page_size)?;
+    let response = channel_adapters::execute_request(request)?;
+    Ok(json!({
+        "ok": true,
+        "channel": channel,
+        "response": response,
+    }))
+}
+
+fn adapter_state(channel_id: &str) -> Value {
+    let Some(spec) = channel_adapters::adapter_spec(channel_id) else {
+        return json!({
+            "available": false,
+            "operations": [],
+        });
+    };
+    let operations = spec
+        .operations
+        .iter()
+        .map(|operation| match operation {
+            ChannelOperation::SendText => "send-text",
+            ChannelOperation::ListFiles => "list-files",
+        })
+        .collect::<Vec<_>>();
+    json!({
+        "available": true,
+        "coordinateOwner": spec.coordinate_owner,
+        "accountField": spec.account_field,
+        "secretKind": spec.secret_kind,
+        "operations": operations,
+    })
+}
+
+fn secret_state(
+    channel_id: &str,
+    channel_config: Option<&ChannelConfig>,
+    secrets: &config::SecretsConfig,
+    resolver: &SecretResolver,
+) -> Value {
+    let Some(secret_ref) = channel_config.and_then(|channel| channel.secret_ref.as_deref()) else {
+        return json!({
+            "provider": secrets.provider.as_str(),
+            "configured": false,
+            "ref": Value::Null,
+            "resolved": false,
+            "status": "missing",
+        });
+    };
+    let status = resolver.status(secret_ref);
+    let (status_label, resolved, diagnostic) = match status {
+        SecretStatus::Resolved => ("resolved", true, None),
+        SecretStatus::Missing => ("missing", false, None),
+        SecretStatus::Unavailable { diagnostic } => ("unavailable", false, Some(diagnostic)),
+        SecretStatus::Error { diagnostic } => ("error", false, Some(diagnostic)),
+    };
+    json!({
+        "provider": secrets.provider.as_str(),
+        "configured": true,
+        "ref": secret_ref,
+        "resolved": resolved,
+        "status": status_label,
+        "diagnostic": diagnostic,
+        "channel": channel_id,
+    })
+}
+
+fn token_source(
+    connected: bool,
+    channel_config: Option<&ChannelConfig>,
+    secrets: &config::SecretsConfig,
+) -> &'static str {
+    if connected {
+        "gateway"
+    } else if channel_config
+        .and_then(|channel| channel.secret_ref.as_ref())
+        .is_some()
+    {
+        secrets.provider.as_str()
+    } else {
+        "none"
+    }
 }
 
 pub fn mark_login_start(state_root: impl AsRef<Path>, channel: &str) -> Result<(), String> {

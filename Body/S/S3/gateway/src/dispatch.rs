@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum GatewayDispatchOwner {
+    S2GraphService,
     S3Gateway,
     S3TemporalGateway,
     S3GraphitiRuntime,
@@ -16,6 +17,7 @@ pub enum GatewayDispatchOwner {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum GatewayDispatchClass {
+    GraphService,
     Connection,
     SessionRuntime,
     ChatRuntime,
@@ -58,11 +60,26 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "S0/S4/S5",
                 "s3.gateway.connect",
             ),
-            "sessions.list" | "sessions.resolve" | "sessions.preview" | "sessions.patch"
-            | "sessions.reset" | "sessions.delete" | "sessions.compact" | "sessions.fork"
-            | "sessions.resume" | "sessions.import" | "sessions.tree" | "chat.history"
-            | "chat.send" | "chat.inject" | "chat.abort" | "channels.status"
-            | "channels.logout" => route(
+            "sessions.list"
+            | "sessions.resolve"
+            | "sessions.preview"
+            | "sessions.patch"
+            | "sessions.reset"
+            | "sessions.delete"
+            | "sessions.compact"
+            | "sessions.fork"
+            | "sessions.resume"
+            | "sessions.import"
+            | "sessions.tree"
+            | "chat.history"
+            | "chat.send"
+            | "chat.inject"
+            | "chat.abort"
+            | "channels.status"
+            | "channels.send"
+            | "channels.files.list"
+            | "channels.logout"
+            | "send" => route(
                 method,
                 GatewayDispatchOwner::S3Gateway,
                 GatewayDispatchClass::SessionRuntime,
@@ -70,7 +87,7 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "S4/S5",
                 "s3.gateway.session-runtime",
             ),
-            "send" | "agent" | "agent.identity.get" | "agent.wait" | "agents.list" => route(
+            "agent" | "agent.identity.get" | "agent.wait" | "agents.list" => route(
                 method,
                 GatewayDispatchOwner::S3Gateway,
                 GatewayDispatchClass::AgentRuntime,
@@ -85,6 +102,20 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "S3'",
                 "S4/S5",
                 "s3-prime.temporal-context",
+            ),
+            "s2.graph.query"
+            | "s2.graph.node"
+            | "s2.graph.traverse"
+            | "s2'.coordinate.resolve"
+            | "s2'.retrieve"
+            | "s2'.rerank"
+            | "s2'.enrich" => route(
+                method,
+                GatewayDispatchOwner::S2GraphService,
+                GatewayDispatchClass::GraphService,
+                "S2/S2'",
+                "S4/S5",
+                "s2.graph-service",
             ),
             "s5.episodic.search" | "s5.episodic.deposit" => route(
                 method,

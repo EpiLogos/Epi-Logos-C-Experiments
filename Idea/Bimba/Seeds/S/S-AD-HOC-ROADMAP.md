@@ -88,6 +88,38 @@ This makes the testing distinction sharper:
 - agent invocation proves [[Anima]] or [[Epii]] can use it,
 - human-gated review proves the system can route judgement without pretending to automate judgement itself.
 
+## Completed Execution Tranche: Make The Integrations Real
+
+Status: complete for the current tranche as of 2026-05-17. The remaining deeper Hermes-inspired platform/inbound-normalisation work is intentionally deferred to the next handoff session rather than folded into this closure pass.
+
+This tranche crossed from pointer/spec coverage into executable integration. Documentation-only changes did not complete it; completion is grounded in real implementation paths, configuration surfaces, and tests that exercise actual behavior or explicit credential-gated live paths.
+
+The Bimba dataset conversion/import itself is a separate focused session. It does not block graph method/schema work. Current Neo4j data is non-sensitive and may be treated as disposable implementation state; canonical important data lives in `docs/datasets/` until converted into the new coordinate-driven form. The immediate graph work is therefore:
+
+- make graph methods really work through S2 services, S0 CLI mirrors, and gateway/API routes;
+- define and enforce coordinate-driven Neo4j schema/property law so graph node and relationship properties align with the Obsidian frontmatter coordinate approach;
+- keep old `bimbaCoordinate` / `#` compatibility as a deliberate migration input, not as schema authority.
+
+Execution lanes:
+
+| Lane | Must become real now | Completion evidence |
+|---|---|---|
+| [[S2]] / [[S2']] graph methods | `s2.graph.query`, `s2.graph.node`, `s2.graph.traverse`, `s2'.coordinate.resolve`, `s2'.retrieve`, `s2'.rerank`, `s2'.enrich` callable through graph-services, `epi graph`, and gateway/API parity where applicable | live Neo4j tests plus contract tests; no mock-only claims |
+| [[S2]] coordinate property schema | Node and relationship property registry using coordinate-owned property specs, frontmatter-compatible field names, relation property contracts, validation before writes, and indexes/constraints where Neo4j can enforce them | schema/validation tests and live Neo4j write/read proof |
+| [[S3]] gateway channels | Telegram, WhatsApp, Slack, Discord, and Google Drive integrated as platform/channel adapters following the Hermes-inspired platform pattern, with outgoing delivery paths and readiness diagnostics. Full inbound normalisation is deferred to the next Hermes handoff session. | adapter contract tests for all; credential-gated live smoke remains available when secrets are present |
+| Secrets | `env`, `1password`, and `varlock` implemented as real secret providers, not config labels; runtime resolution must use installed CLIs/protocols and never persist resolved secrets | provider tests using real CLI availability detection plus redaction/error behavior |
+| Setup/config wizard | Setup surfaces become the honesty membrane for new functionality. If a service/capability has no settings/readiness access path, it is not integrated. | config schema/wizard/portal tests proving new surfaces are discoverable and patchable |
+
+Completion evidence:
+
+- Live Docker stack verified with Neo4j, Redis, and Graphiti running.
+- Live S2 Neo4j graph proof passed: schema creation, test-owned node/relationship write, node lookup, bounded traversal, parameterized query, and cleanup.
+- S2 graph-services contract tests pass for coordinate property schema and graph API request/response law.
+- S3 gateway dispatch contract tests pass for graph and channel route ownership.
+- S0 gateway/channel/secret/config/portal tests pass for adapter request construction, secret provider resolution, setup wizard, config schema, channel status, and portal readiness.
+
+Next durable work should be cleanup/harmonisation and then the larger Hermes handoff, not another pointer pass over this tranche.
+
 ## [[S0']] Portal / TUI Return Surface
 
 The [[TUI]] is not a secondary UI skin. It is the first integrated operator portal where UX and backend setup interlace before the desktop app externalises the same pattern into M-form. It should therefore be treated as an [[S0']] return surface over the whole S/S' command topology, not as a separate product ontology.
@@ -255,11 +287,11 @@ Current implementation state:
 - Done: RedisVL bridge residency is now S3-owned through `Body/S/S3/redis-context`, while S2 graph semantic-cache contracts keep `s2:graph:semantic` separate from S3' temporal keys.
 - Done: S3 durable gateway session store residency is now `Body/S/S3/gateway`; S0 injects Pi/Khora runtime context into S3 session creation rather than owning session truth itself.
 - Done: S3 gateway now owns protocol frame construction and runtime run/event/chat state; S0 hosts the live WebSocket dispatch adapter and domain handlers.
-- Done: S2 graph-services now owns schema creation, coordinate seed entrypoints, graph metadata, graph semantic-cache contracts over S3 Redis runtime, vault frontmatter parsing/mapping/alignment helpers, dataset import, relationship/link/sync/conflict services, semantic embedding refresh, graph doctor/readiness, retrieval query semantics, retrieval execution, tokenization, and pure hybrid fusion/ranking law, with S0 graph commands acting as Neo4j/CLI adapters.
+- Done: S2 graph-services now owns schema creation, coordinate seed entrypoints, graph metadata, graph semantic-cache contracts over S3 Redis runtime, vault frontmatter parsing/mapping/alignment helpers, canonical Bimba corpus import, relationship/link/sync/conflict services, semantic embedding refresh, graph doctor/readiness, retrieval query semantics, retrieval execution, tokenization, and pure hybrid fusion/ranking law, with S0 graph commands acting as Neo4j/CLI adapters. The importer understands the real `docs/datasets` shape: low-detail corpus, all six deep branches, BOM-stripped JSON, deep `filteredProps`, legacy `bimbaCoordinate`, `relType`, null relation endpoints, branch provenance, and skipped-count reporting.
 - Done: S3 graphiti-runtime now owns Graphiti compatibility runtime adapter law; S0 gate graphiti is a passthrough and S5/S5' invocation/search/arc governance remains explicit.
 - Done: S3 gateway now owns the dispatch route ownership table for every advertised gateway method and extension route family; S0 consults that table while remaining the live executable server adapter. S0' command exec/completion now routes through that table as `s0-prime.command-surface`.
 - Done: the Hermes matrix contract tranche has been folded into Body-native contracts: S4 VAK/ta-onta wording, Epii day-level inbox law, Pleroma lifecycle/delegation/provider-profile contracts, S0'/portal event vocabulary, S3 platform/protocol/cron/subject contracts, S5' MCP cursor contract, and portal trust-tier metadata are now test-covered. The focused live S0 gateway Epii deposit liveness gap is resolved: the deposit route completed correctly, and the actual hang was gateway test-server teardown waiting on the maintenance health snapshot's graph-health blocking worker. Test-spawned gateway servers now emit lightweight maintenance health while production gateway start keeps the full health snapshot path.
-- Next: continue extracting live S3 gateway server adapter bodies only where ownership is settled, define the coordinate-native S2 API/gateway surface, mirror the same SpaceTimeDB projection reader in the future desktop/Tauri app, and mature Graphiti from compatibility HTTP adapter toward native local runtime integration.
+- Next: execute the current real-integration tranche: coordinate-driven Neo4j property/schema law, working S2 graph/API/gateway methods, real gateway channel adapters, real `1password` / `varlock` secret resolution, and setup/config wizard integration as the required access surface. The Bimba dataset conversion/import is a later focused session and does not block these method/schema integrations.
 
 ### Envelope Corrections
 

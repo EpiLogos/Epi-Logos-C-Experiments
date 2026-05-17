@@ -59,3 +59,22 @@ fn s0_command_surface_methods_route_through_portal_command_contract() {
         assert_eq!(route.route_id, "s0-prime.command-surface");
     }
 }
+
+#[test]
+fn s2_graph_methods_route_to_graph_service_authority() {
+    for method in [
+        "s2.graph.query",
+        "s2.graph.node",
+        "s2.graph.traverse",
+        "s2'.coordinate.resolve",
+        "s2'.retrieve",
+        "s2'.rerank",
+        "s2'.enrich",
+    ] {
+        let route = classify_method(method).expect("S2 graph method should be routed");
+        assert_eq!(route.owner, GatewayDispatchOwner::S2GraphService);
+        assert_eq!(route.class, GatewayDispatchClass::GraphService);
+        assert_eq!(route.coordinate_owner, "S2/S2'");
+        assert_eq!(route.agent_access_owner, "S4/S5");
+    }
+}

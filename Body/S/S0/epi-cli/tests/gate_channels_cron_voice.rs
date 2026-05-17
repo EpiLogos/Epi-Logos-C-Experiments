@@ -8,6 +8,23 @@ async fn channel_and_cron_surfaces_persist_real_state() {
     let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
     let channels_before = client.request("channels.status", json!({})).await.unwrap();
+    client
+        .request(
+            "config.apply",
+            json!({
+                "patch": {
+                    "gateway": {
+                        "secrets": {"provider": "varlock", "varlockProfile": "epi-local"},
+                        "channels": {
+                            "discord": {"enabled": true, "secretRef": "discord/bot-token"},
+                            "google-drive": {"enabled": true, "secretRef": "google/service-account"}
+                        }
+                    }
+                }
+            }),
+        )
+        .await
+        .unwrap();
     let login_start = client
         .request(
             "web.login.start",
@@ -63,6 +80,21 @@ async fn channel_and_cron_surfaces_persist_real_state() {
     assert_eq!(
         channels_before["channelsSnapshot"]["channelOrder"][0],
         "telegram"
+    );
+    assert!(channels_before["channelsSnapshot"]["channelOrder"]
+        .to_string()
+        .contains("discord"));
+    assert_eq!(
+        channels_after["channelsSnapshot"]["secretProvider"],
+        "varlock"
+    );
+    assert_eq!(
+        channels_after["channelsSnapshot"]["channels"]["discord"]["configured"],
+        true
+    );
+    assert_eq!(
+        channels_after["channelsSnapshot"]["channels"]["google-drive"]["secret"]["provider"],
+        "varlock"
     );
     assert_eq!(
         channels_after["channelsSnapshot"]["channels"]["telegram"]["connected"],

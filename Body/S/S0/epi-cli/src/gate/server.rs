@@ -27,6 +27,7 @@ use super::cron;
 use super::devices;
 use super::epii;
 use super::events::GatewayEvent;
+use super::graph;
 use super::graphiti;
 use super::improve;
 use super::logs;
@@ -1167,12 +1168,43 @@ async fn dispatch_rpc(
         "channels.status" => channels::status(state_root)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "channels.send" | "send" => {
+            let channel = required_str(&frame.params, "channel")?;
+            let target =
+                required_str_alias(&frame.params, &["target", "chatId", "channelId", "to"])?;
+            let text = required_str_alias(&frame.params, &["text", "message"])?;
+            channels::send_text(state_root, &channel, &target, &text)
+                .map(DispatchResult::immediate)
+                .map_err(internal_error)
+        }
+        "channels.files.list" => {
+            let channel =
+                optional_str(&frame.params, "channel").unwrap_or_else(|| "google-drive".to_owned());
+            let page_size = frame
+                .params
+                .get("pageSize")
+                .and_then(|value| value.as_u64())
+                .unwrap_or(20) as u32;
+            channels::list_files(state_root, &channel, page_size)
+                .map(DispatchResult::immediate)
+                .map_err(internal_error)
+        }
         "channels.logout" => {
             let channel = required_str(&frame.params, "channel")?;
             channels::logout(state_root, &channel)
                 .map(DispatchResult::immediate)
                 .map_err(internal_error)
         }
+        "s2.graph.query"
+        | "s2.graph.node"
+        | "s2.graph.traverse"
+        | "s2'.coordinate.resolve"
+        | "s2'.retrieve"
+        | "s2'.rerank"
+        | "s2'.enrich" => graph::dispatch_graph_method(&frame.method, &frame.params)
+            .await
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "cron.status" => cron::status(state_root)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
