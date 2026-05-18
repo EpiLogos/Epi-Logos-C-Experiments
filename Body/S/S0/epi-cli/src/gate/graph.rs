@@ -1,9 +1,11 @@
 use serde_json::{json, Value};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::graph::client::{Neo4jClient, Neo4jConfig};
 use crate::graph::{
-    GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphQueryRequest,
-    GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig, RetrievalResult,
+    kernel_coordinate_anchor_from_parts, GraphMethodParams, GraphMethodService, GraphNodeRequest,
+    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
+    KernelResonanceObservationRequest, PointerWebRefreshRequest, RetrievalResult,
 };
 
 pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value, String> {
@@ -11,6 +13,21 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
         let coordinate = required_string(params, "coordinate")?;
         let resolution = GraphMethodService::resolve_coordinate_string(&coordinate)?;
         return serde_json::to_value(resolution).map_err(|err| err.to_string());
+    }
+    if method == "s2.graph.pointer_web.compute" {
+        let coordinate = required_string(params, "coordinate")?;
+        let resolution = GraphMethodService::resolve_coordinate_string(&coordinate)?;
+        let coordinate_anchor = kernel_coordinate_anchor_from_parts(
+            &resolution.canonical,
+            &resolution.input,
+            resolution.compatibility_property.clone(),
+        )?;
+        let pointer_web = coordinate_anchor.pointer_web.clone();
+        return Ok(json!({
+            "resolution": resolution,
+            "coordinate_anchor": coordinate_anchor,
+            "pointerWeb": pointer_web,
+        }));
     }
 
     let config = Neo4jConfig::from_env();
@@ -63,6 +80,40 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
                     edge_types,
                     direction,
                     depth,
+                })
+                .await
+        }
+        "s2.graph.kernel_resonance.record" => {
+            service
+                .record_kernel_resonance(KernelResonanceObservationRequest {
+                    source_coordinate: required_string(params, "sourceCoordinate")?,
+                    session_key: required_string(params, "sessionKey")?,
+                    timestamp_ms: required_u64(params, "timestampMs")?,
+                    lens: required_u8(params, "lens", 5)?,
+                    ascent_helix: params
+                        .get("ascentHelix")
+                        .and_then(|value| value.as_bool())
+                        .unwrap_or(false),
+                    position: required_u8(params, "position", 5)?,
+                    score: required_f64(params, "score")?,
+                    kernel_tick: required_u8(params, "kernelTick", 11)?,
+                    graphiti_arc_id: params
+                        .get("graphitiArcId")
+                        .and_then(|value| value.as_str())
+                        .map(str::to_owned),
+                })
+                .await
+        }
+        "s2.graph.pointer_web.refresh" => {
+            let coordinate = required_string(params, "coordinate")?;
+            let timestamp_ms = params
+                .get("timestampMs")
+                .and_then(|value| value.as_u64())
+                .unwrap_or_else(current_epoch_millis);
+            service
+                .refresh_pointer_web(PointerWebRefreshRequest {
+                    coordinate,
+                    timestamp_ms,
                 })
                 .await
         }
@@ -134,6 +185,39 @@ fn required_string(params: &Value, key: &str) -> Result<String, String> {
         .and_then(|value| value.as_str())
         .map(str::to_owned)
         .ok_or_else(|| format!("{key} must be a string"))
+}
+
+fn required_u64(params: &Value, key: &str) -> Result<u64, String> {
+    params
+        .get(key)
+        .and_then(|value| value.as_u64())
+        .ok_or_else(|| format!("{key} must be a positive integer"))
+}
+
+fn current_epoch_millis() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or(0)
+}
+
+fn required_u8(params: &Value, key: &str, max: u8) -> Result<u8, String> {
+    let value = required_u64(params, key)?;
+    if value > max as u64 {
+        return Err(format!("{key} must be <= {max}"));
+    }
+    Ok(value as u8)
+}
+
+fn required_f64(params: &Value, key: &str) -> Result<f64, String> {
+    let value = params
+        .get(key)
+        .and_then(|value| value.as_f64())
+        .ok_or_else(|| format!("{key} must be a number"))?;
+    if !value.is_finite() {
+        return Err(format!("{key} must be finite"));
+    }
+    Ok(value)
 }
 
 fn parse_results(params: &Value, key: &str) -> Result<Vec<RetrievalResult>, String> {

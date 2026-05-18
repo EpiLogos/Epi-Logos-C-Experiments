@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 // S5.2' kbase types — canonical definitions live in epi-s5-kbase-core
+pub use epi_s2_graph_services::KernelCoordinateAnchor;
 pub use epi_s5_kbase_core::types::{FacetItem, KbaseFieldFacet, VimarsaFieldFacet};
 
 /// The four QL-structured vibrational properties for a coordinate.
@@ -31,6 +32,7 @@ pub struct KnowingDossier {
     pub title: String,
     pub essence: EssenceFacet,
     pub qv_facet: QvFacet,
+    pub coordinate_anchor: KernelCoordinateAnchor,
     pub structural_correspondences: Vec<StructuralCorrespondence>,
     pub relational_field: RelationalFieldFacet,
     pub vimarsa_field: VimarsaFieldFacet,

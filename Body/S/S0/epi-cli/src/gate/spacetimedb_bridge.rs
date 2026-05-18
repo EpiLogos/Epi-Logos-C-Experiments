@@ -183,6 +183,7 @@ impl SpacetimeBridge {
             "history": temporal_context["history"].clone(),
             "redisTemporalContext": temporal_context["redis"].clone(),
             "kairos": temporal_context["kairos"].clone(),
+            "kernel": temporal_context["kernel"].clone(),
             "pratibimba": temporal_context["pratibimba"].clone(),
             "graphiti": temporal_context["graphiti"].clone(),
             "activeAgentId": record.active_agent_id,
@@ -239,6 +240,7 @@ impl SpacetimeBridge {
             },
             "kairosSnapshotId": kairos_snapshot_id(temporal_context),
             "kairos": temporal_context["kairos"].clone(),
+            "kernel": temporal_context["kernel"].clone(),
             "pratibimba": temporal_context["pratibimba"].clone(),
             "graphiti": {
                 "runtimeOwner": "S3'",
@@ -493,6 +495,7 @@ impl SpacetimeRegistration {
         let graphiti_namespace_ref = string_at(&temporal_context, "/graphiti/namespaceRef", "");
         let pratibimba_anchor_ref = string_at(&temporal_context, "/pratibimba/anchorId", "");
         let kairos_snapshot_id = kairos_snapshot_id(&temporal_context);
+        let kernel_projection_json = kernel_projection_json(&temporal_context);
         let day_wikilink = day_wikilink(day_id);
         let global_surface_key = global_temporal_surface_key(
             &self.installation_id,
@@ -524,6 +527,7 @@ impl SpacetimeRegistration {
             record.resource_loader_id.as_deref().unwrap_or(""),
             record.retry_settlement_state.as_deref().unwrap_or(""),
             &serde_json::to_string(&record.diagnostics).unwrap_or_else(|_| "[]".to_owned()),
+            &kernel_projection_json,
         )?;
 
         let kairos = &temporal_context["kairos"];
@@ -583,6 +587,7 @@ impl SpacetimeRegistration {
             graphiti_arc_id,
             pratibimba_anchor_ref,
             &kairos_snapshot_id,
+            &kernel_projection_json,
         )
     }
 
@@ -814,6 +819,7 @@ impl SpacetimePresence {
         resource_loader_id: &str,
         retry_settlement_state: &str,
         diagnostics_json: &str,
+        kernel_projection_json: &str,
     ) -> Result<(), String> {
         require_nonempty(session_key, "session_key")?;
         require_nonempty(installation_id, "installation_id")?;
@@ -843,6 +849,7 @@ impl SpacetimePresence {
                 resource_loader_id,
                 retry_settlement_state,
                 diagnostics_json,
+                kernel_projection_json,
             ]),
         )
     }
@@ -907,6 +914,7 @@ impl SpacetimePresence {
         graphiti_session_arc_id: &str,
         pratibimba_anchor_ref: &str,
         kairos_snapshot_id: &str,
+        kernel_projection_json: &str,
     ) -> Result<(), String> {
         require_nonempty(surface_key, "surface_key")?;
         require_nonempty(installation_id, "installation_id")?;
@@ -934,6 +942,7 @@ impl SpacetimePresence {
                 graphiti_session_arc_id,
                 pratibimba_anchor_ref,
                 kairos_snapshot_id,
+                kernel_projection_json,
             ]),
         )
     }
@@ -1182,6 +1191,7 @@ fn projection_context_from_sql_result(
         .map(|row| row_string(row, "graphiti_session_arc_id", "graphitiSessionArcId", ""))
         .filter(|value| !value.is_empty())
         .unwrap_or_else(|| graphiti_arc_id.clone());
+    let kernel_projection = kernel_projection_from_rows(session_row, global_row);
 
     let planets = kairos_row
         .map(|row| row_string(row, "planets_json", "planetsJson", "[]"))
@@ -1237,6 +1247,7 @@ fn projection_context_from_sql_result(
         "history": {
             "archivePath": history_archive_path,
         },
+        "kernel": kernel_projection.clone(),
         "redis": {
             "namespace": "s3:gateway:temporal",
             "sessionNowKey": redis_session_now_key,
@@ -1300,6 +1311,7 @@ fn projection_context_from_sql_result(
                 .map(|row| row_string(row, "kairos_snapshot_id", "kairosSnapshotId", ""))
                 .filter(|value| !value.is_empty())
                 .unwrap_or_else(|| row_string(session_row, "kairos_snapshot_id", "kairosSnapshotId", "")),
+            "kernelProjectionJson": kernel_projection.to_string(),
             "privacy": global_row
                 .map(|row| row_string(row, "privacy_class", "privacyClass", "safe-live-projection"))
                 .unwrap_or_else(|| "safe-live-projection".to_owned()),
@@ -1342,6 +1354,15 @@ fn projection_context_from_sql_result(
             } else {
                 Value::String(pratibimba_anchor_ref)
             },
+            "layerPresenceSummary": {
+                "presentCount": Value::Null,
+                "detail": "projection-anchor-only",
+                "protectedSource": "local-nara-profile",
+            },
+            "localProtectedGraphOwner": "S2/S5",
+            "stewardshipOwner": "S5'",
+            "mutationOwner": "Epii/user validation",
+            "mutationBoundary": "identity-affecting changes require Epii/user validation; live projections carry references only",
             "privacy": "protected-reference-only",
         },
         "graphiti": {
@@ -1495,6 +1516,30 @@ fn kairos_snapshot_id(context: &Value) -> String {
     let day_id = string_at(context, "/day/dayId", "unknown-day");
     let session_id = string_at(context, "/session/sessionId", "unknown-session");
     format!("kairos-{day_id}-{session_id}")
+}
+
+fn kernel_projection_json(context: &Value) -> String {
+    let kernel = context
+        .get("kernel")
+        .filter(|value| value.is_object())
+        .cloned()
+        .unwrap_or_else(temporal::kernel_surface_value);
+    kernel.to_string()
+}
+
+fn kernel_projection_from_rows(session_row: &Value, global_row: Option<&Value>) -> Value {
+    for row in [global_row, Some(session_row)].into_iter().flatten() {
+        let raw = row_string(row, "kernel_projection_json", "kernelProjectionJson", "");
+        if raw.trim().is_empty() {
+            continue;
+        }
+        if let Ok(value) = serde_json::from_str::<Value>(&raw) {
+            if value.is_object() {
+                return value;
+            }
+        }
+    }
+    temporal::kernel_surface_value()
 }
 
 fn require_nonempty(value: &str, field: &str) -> Result<(), String> {

@@ -82,7 +82,7 @@ enum Commands {
         #[command(subcommand)]
         cmd: techne::TechneCmd,
     },
-    /// EpiLogos Electron app
+    /// EpiLogos Tauri desktop app
     App {
         #[command(subcommand)]
         cmd: app::AppCmd,

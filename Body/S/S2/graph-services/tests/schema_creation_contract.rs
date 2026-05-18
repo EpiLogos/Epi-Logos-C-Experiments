@@ -3,6 +3,7 @@ use epi_s2_graph_services::schema::{
     validate_node_properties, validate_relationship_properties, CONSTRAINTS,
     GRAPHITI_ARC_ID_PROPERTY, INDEXES, KERNEL_RESONANCE_INDEX_PROPERTY, KERNEL_RESONANCE_LABEL,
     KERNEL_RESONANCE_RELATION, KERNEL_RESONANCE_SCORE_PROPERTY, KERNEL_TICK_PROPERTY,
+    POINTER_COUNT_PROPERTY, POINTER_FAMILY_REFS_PROPERTY, POINTER_WEB_JSON_PROPERTY,
     RELATIONSHIP_INDEXES, SESSION_KEY_PROPERTY, VECTOR_INDEX,
 };
 
@@ -28,6 +29,15 @@ fn coordinate_property_registry_covers_nodes_and_relationships() {
         .any(|spec| spec.key == "c_0_source_coordinates"));
     assert!(node_specs.iter().any(|spec| spec.key == "c_1_ct_type"));
     assert!(node_specs.iter().any(|spec| spec.key == "coordinate"));
+    assert!(node_specs
+        .iter()
+        .any(|spec| spec.key == POINTER_WEB_JSON_PROPERTY && spec.coordinate_home == "S2.5"));
+    assert!(node_specs
+        .iter()
+        .any(|spec| spec.key == POINTER_COUNT_PROPERTY && spec.coordinate_home == "S2.5"));
+    assert!(node_specs
+        .iter()
+        .any(|spec| spec.key == POINTER_FAMILY_REFS_PROPERTY && spec.coordinate_home == "S2.5"));
 
     assert!(rel_specs.iter().any(|spec| spec.key == "c_2_relation_type"));
     assert!(rel_specs
@@ -49,6 +59,24 @@ fn coordinate_property_registry_covers_nodes_and_relationships() {
     assert!(rel_specs
         .iter()
         .all(|spec| !spec.coordinate_home.is_empty()));
+}
+
+#[test]
+fn deep_bimba_regional_properties_are_registered_before_import() {
+    let node_specs = coordinate_node_property_specs();
+
+    for key in [
+        "l_2_therapeutic_properties",
+        "s_4_function_role",
+        "t_5_next_evolution_phase",
+        "q_1_theoretical_thesis",
+        "m_5_lacanian_interface",
+    ] {
+        assert!(
+            node_specs.iter().any(|spec| spec.key == key),
+            "{key} must be registered before deep Bimba Cypher can write it"
+        );
+    }
 }
 
 #[test]
@@ -116,4 +144,22 @@ fn coordinate_property_validation_rejects_unregistered_graph_drift() {
         "s_3_graphiti_arc_id": "day:20260517:session:agent:epii:main:namespace:pratibimba-test"
     });
     assert!(validate_node_properties(valid_observation.as_object().unwrap()).is_ok());
+
+    let valid_pointer_web = serde_json::json!({
+        "coordinate": "M2",
+        "c_5_pointer_web_json": "{}",
+        "c_5_pointer_count": 36,
+        "c_5_pointer_family_refs": ["C2", "P2", "L2", "S2", "T2", "M2"]
+    });
+    assert!(validate_node_properties(valid_pointer_web.as_object().unwrap()).is_ok());
+
+    let valid_regional_surface = serde_json::json!({
+        "coordinate": "M5",
+        "l_2_therapeutic_properties": ["diagnostic balance"],
+        "s_4_function_role": "agent quick-view contributor",
+        "t_5_next_evolution_phase": "pithy update loop",
+        "q_1_theoretical_thesis": "QV is the compact surface of deep Bimba detail",
+        "m_5_lacanian_interface": "public interface synthesis"
+    });
+    assert!(validate_node_properties(valid_regional_surface.as_object().unwrap()).is_ok());
 }

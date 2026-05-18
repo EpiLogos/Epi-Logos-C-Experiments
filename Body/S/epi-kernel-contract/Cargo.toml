@@ -1,0 +1,19 @@
+[package]
+name = "epi-kernel-contract"
+version = "0.1.0"
+edition = "2021"
+description = "Parent-role kernel-aligned contract layer for Epi-Logos: KernelTickEnvelope, TrajectoryDeposit, AnuttaraDiagnostic, PhysicalPoleState, MentalPoleState"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "epi_kernel_contract"
+path = "src/lib.rs"
+
+[dependencies]
+portal-core = { path = "../S0/portal-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1.18", features = ["v4"] }
+
+[dev-dependencies]
+serde_json = "1"

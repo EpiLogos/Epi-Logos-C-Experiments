@@ -39,6 +39,12 @@ pub struct PortalTemporalSurface {
     pub spacetimedb_global_projection_table: Option<String>,
     pub pratibimba_anchor_id: Option<String>,
     pub pratibimba_coordinate: String,
+    pub kernel_generation: u64,
+    pub kernel_sub_tick: u8,
+    pub kernel_phase: String,
+    pub kernel_element: String,
+    pub kernel_harmonic_ratio: String,
+    pub kernel_total_energy: String,
     pub generation: u64,
 }
 
@@ -106,6 +112,12 @@ impl PortalTemporalSurface {
             spacetimedb_global_projection_table: None,
             pratibimba_anchor_id,
             pratibimba_coordinate: "M4.4.4.4".to_string(),
+            kernel_generation: clock.generation,
+            kernel_sub_tick: clock.kernel_projection.tick.sub_tick,
+            kernel_phase: format!("{:?}", clock.kernel_projection.tick.phase),
+            kernel_element: format!("{:?}", clock.kernel_projection.tick.element),
+            kernel_harmonic_ratio: format!("{:.6}", clock.kernel_projection.tick.harmonic_ratio),
+            kernel_total_energy: format!("{:.6}", clock.kernel_projection.energy.total_energy),
             generation: clock.generation,
         }
     }
@@ -238,8 +250,41 @@ impl PortalTemporalSurface {
                 .and_then(serde_json::Value::as_str)
                 .unwrap_or("M4.4.4.4")
                 .to_string(),
+            kernel_generation: value
+                .pointer("/kernel/generation")
+                .and_then(serde_json::Value::as_u64)
+                .unwrap_or(0),
+            kernel_sub_tick: value
+                .pointer("/kernel/tick/subTick")
+                .and_then(serde_json::Value::as_u64)
+                .map(|v| v.min(11) as u8)
+                .unwrap_or(0),
+            kernel_phase: gateway_value_string(value.pointer("/kernel/tick/phase"), "Descent"),
+            kernel_element: gateway_value_string(
+                value.pointer("/kernel/tick/element"),
+                "BimbaEncoding",
+            ),
+            kernel_harmonic_ratio: gateway_value_string(
+                value.pointer("/kernel/tick/harmonicRatio"),
+                "1.000000",
+            ),
+            kernel_total_energy: gateway_value_string(
+                value.pointer("/kernel/energy/totalEnergy"),
+                "0.000000",
+            ),
             generation: 0,
         })
+    }
+}
+
+fn gateway_value_string(value: Option<&serde_json::Value>, fallback: &str) -> String {
+    match value {
+        Some(serde_json::Value::String(value)) if !value.is_empty() => value.clone(),
+        Some(serde_json::Value::Number(value)) => value
+            .as_f64()
+            .map(|number| format!("{number:.6}"))
+            .unwrap_or_else(|| fallback.to_string()),
+        _ => fallback.to_string(),
     }
 }
 
@@ -384,6 +429,8 @@ mod tests {
         let mut clock = PortalClockState::default();
         clock.kairos.valid = true;
         clock.generation = 7;
+        clock.tick12 = 7;
+        crate::portal::clock_state::sync_kernel_projection(&mut clock);
 
         let surface = PortalTemporalSurface::from_clock_and_session(&clock);
 
@@ -392,6 +439,11 @@ mod tests {
         assert_eq!(surface.kairos_source, "nara.kairos.current");
         assert_eq!(surface.pratibimba_coordinate, "M4.4.4.4");
         assert!(surface.kairos_valid);
+        assert_eq!(surface.kernel_generation, 7);
+        assert_eq!(surface.kernel_sub_tick, 7);
+        assert_eq!(surface.kernel_phase, "Ascent");
+        assert_eq!(surface.kernel_element, "InverseMobius");
+        assert_eq!(surface.kernel_harmonic_ratio, "0.750000");
         assert_eq!(surface.generation, 7);
     }
 
@@ -422,6 +474,18 @@ mod tests {
             "pratibimba": {
                 "anchorId": "pratibimba-abcd1234",
                 "coordinate": "M4.4.4.4"
+            },
+            "kernel": {
+                "generation": 11,
+                "tick": {
+                    "subTick": 4,
+                    "phase": "Descent",
+                    "element": "SlashFlip",
+                    "harmonicRatio": 1.125
+                },
+                "energy": {
+                    "totalEnergy": 0.375
+                }
             }
         });
 
@@ -448,6 +512,11 @@ mod tests {
             surface.pratibimba_anchor_id.as_deref(),
             Some("pratibimba-abcd1234")
         );
+        assert_eq!(surface.kernel_generation, 11);
+        assert_eq!(surface.kernel_sub_tick, 4);
+        assert_eq!(surface.kernel_element, "SlashFlip");
+        assert_eq!(surface.kernel_harmonic_ratio, "1.125000");
+        assert_eq!(surface.kernel_total_energy, "0.375000");
     }
 
     #[test]

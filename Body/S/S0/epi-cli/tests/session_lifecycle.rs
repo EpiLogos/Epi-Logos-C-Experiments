@@ -202,6 +202,7 @@ fn agent_session_runtime_factory_recreates_cwd_bound_runtime_idempotently() {
         .unwrap();
 
     assert_eq!(first.context.session_id, "20260507-120000-root01");
+    assert_eq!(first.now_write, "created");
     assert_eq!(
         second.context.session_id, first.context.session_id,
         "same cwd/day should reuse the existing Khora runtime"
@@ -238,6 +239,122 @@ fn agent_session_runtime_factory_recreates_cwd_bound_runtime_idempotently() {
         .diagnostics
         .iter()
         .any(|diagnostic| diagnostic.message.contains("reused existing NOW")));
+
+    let day_dir = vault_a.join("Empty/Present/07-05-2026");
+    let now_files: Vec<_> = fs::read_dir(day_dir)
+        .unwrap()
+        .filter_map(Result::ok)
+        .map(|entry| entry.path().join("now.md"))
+        .filter(|path| path.exists())
+        .collect();
+    assert_eq!(
+        now_files.len(),
+        1,
+        "same cwd/day session_start reuse must not create duplicate NOW roots"
+    );
+}
+
+#[test]
+fn resource_loader_identity_is_stable_and_scoped_by_cwd_agent_and_plugin_runtime() {
+    let root = std::env::temp_dir().join(format!(
+        "epi-session-runtime-resource-loader-{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&root);
+    let repo_a = root.join("repo-a");
+    let repo_b = root.join("repo-b");
+    let shared_epi_home = root.join("shared-epi-home");
+    let anima_agent_dir = shared_epi_home.join("agents/anima/agent");
+    let epii_agent_dir = shared_epi_home.join("agents/epii/agent");
+    fs::create_dir_all(repo_a.join("Idea")).unwrap();
+    fs::create_dir_all(repo_b.join("Idea")).unwrap();
+    fs::create_dir_all(&anima_agent_dir).unwrap();
+    fs::create_dir_all(&epii_agent_dir).unwrap();
+    fs::write(
+        repo_a.join(".epi-logos.env"),
+        format!("EPI_AGENT_HOME={}\n", shared_epi_home.display()),
+    )
+    .unwrap();
+    fs::write(
+        repo_b.join(".epi-logos.env"),
+        format!("EPI_AGENT_HOME={}\n", shared_epi_home.display()),
+    )
+    .unwrap();
+
+    let factory = AgentSessionRuntimeFactory::new();
+    let anima_a_first = factory
+        .create(AgentSessionRuntimeRequest {
+            effective_cwd: repo_a.clone(),
+            now: Utc.with_ymd_and_hms(2026, 5, 7, 13, 0, 0).unwrap(),
+            random_suffix: Some("rl0001".to_owned()),
+            force_new: true,
+            agent_id: Some("anima".to_owned()),
+            pi_event: Some("session_start".to_owned()),
+        })
+        .unwrap();
+    let anima_a_second = factory
+        .create(AgentSessionRuntimeRequest {
+            effective_cwd: repo_a.clone(),
+            now: Utc.with_ymd_and_hms(2026, 5, 7, 13, 5, 0).unwrap(),
+            random_suffix: Some("rl0002".to_owned()),
+            force_new: true,
+            agent_id: Some("anima".to_owned()),
+            pi_event: Some("resource_reload".to_owned()),
+        })
+        .unwrap();
+    let epii_a = factory
+        .create(AgentSessionRuntimeRequest {
+            effective_cwd: repo_a.clone(),
+            now: Utc.with_ymd_and_hms(2026, 5, 7, 13, 10, 0).unwrap(),
+            random_suffix: Some("rl0003".to_owned()),
+            force_new: true,
+            agent_id: Some("epii".to_owned()),
+            pi_event: Some("session_start".to_owned()),
+        })
+        .unwrap();
+    let anima_b = factory
+        .create(AgentSessionRuntimeRequest {
+            effective_cwd: repo_b.clone(),
+            now: Utc.with_ymd_and_hms(2026, 5, 7, 13, 15, 0).unwrap(),
+            random_suffix: Some("rl0004".to_owned()),
+            force_new: true,
+            agent_id: Some("anima".to_owned()),
+            pi_event: Some("session_start".to_owned()),
+        })
+        .unwrap();
+
+    assert_eq!(
+        anima_a_first.pi_session.resource_loader_id, anima_a_second.pi_session.resource_loader_id,
+        "same effective cwd, agent id, and plugin runtime path must keep one loader identity"
+    );
+    assert_ne!(
+        anima_a_first.pi_session.resource_loader_id, epii_a.pi_session.resource_loader_id,
+        "agent id and plugin runtime path are part of the loader identity"
+    );
+    assert_ne!(
+        anima_a_first.pi_session.resource_loader_id, anima_b.pi_session.resource_loader_id,
+        "effective cwd is part of the loader identity even when EPI_AGENT_HOME is shared"
+    );
+
+    let repo_a_fragment = repo_a.to_string_lossy().replace('\\', "/");
+    let plugin_fragment = anima_agent_dir
+        .join("plugin-runtime.json")
+        .to_string_lossy()
+        .replace('\\', "/");
+    assert!(
+        anima_a_first
+            .pi_session
+            .resource_loader_id
+            .contains(&repo_a_fragment),
+        "loader identity must disclose the effective cwd input"
+    );
+    assert!(
+        anima_a_first
+            .pi_session
+            .resource_loader_id
+            .contains(&plugin_fragment),
+        "loader identity must disclose the plugin runtime input"
+    );
 }
 
 #[test]
@@ -386,6 +503,192 @@ fn pi_runtime_propagation_merges_gateway_identity_without_duplicate_aliases() {
         session_surface_events, 2,
         "every PI runtime propagation write should project a session_surface event"
     );
+}
+
+#[test]
+fn pi_runtime_propagation_recreates_cwd_bound_identity_for_distinct_repos() {
+    let root = std::env::temp_dir().join(format!(
+        "epi-session-runtime-cwd-propagation-{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&root);
+    let repo_a = root.join("repo-a");
+    let repo_b = root.join("repo-b");
+    let gate_root = root.join("shared-gateway");
+    let anima_agent_dir = repo_a.join(".epi/agents/anima/agent");
+    let epii_agent_dir = repo_b.join(".epi/agents/epii/agent");
+    fs::create_dir_all(repo_a.join("Idea")).unwrap();
+    fs::create_dir_all(repo_b.join("Idea")).unwrap();
+    fs::create_dir_all(&anima_agent_dir).unwrap();
+    fs::create_dir_all(&epii_agent_dir).unwrap();
+    fs::write(
+        anima_agent_dir.join("models.json"),
+        r#"{"defaultModel":"zai/glm-4.5","providers":[]}"#,
+    )
+    .unwrap();
+    fs::write(
+        epii_agent_dir.join("models.json"),
+        r#"{"defaultModel":"openai/gpt-5.2","providers":[]}"#,
+    )
+    .unwrap();
+
+    let factory = AgentSessionRuntimeFactory::new();
+    let anima_runtime = factory
+        .create(AgentSessionRuntimeRequest {
+            effective_cwd: repo_a.clone(),
+            now: Utc.with_ymd_and_hms(2026, 5, 8, 8, 30, 0).unwrap(),
+            random_suffix: Some("cwd001".to_owned()),
+            force_new: true,
+            agent_id: Some("anima".to_owned()),
+            pi_event: Some("session_start".to_owned()),
+        })
+        .unwrap();
+    let epii_runtime = factory
+        .create(AgentSessionRuntimeRequest {
+            effective_cwd: repo_b.clone(),
+            now: Utc.with_ymd_and_hms(2026, 5, 8, 8, 45, 0).unwrap(),
+            random_suffix: Some("cwd002".to_owned()),
+            force_new: true,
+            agent_id: Some("epii".to_owned()),
+            pi_event: Some("session_start".to_owned()),
+        })
+        .unwrap();
+
+    let anima_record = propagate_agent_session_runtime(
+        &anima_runtime,
+        GatewaySessionPropagation {
+            state_root: gate_root.clone(),
+            operation: GatewaySessionPropagationOperation::SessionStart,
+            target_session_key: Some("agent:anima:cwd-a".to_owned()),
+            label: None,
+        },
+    )
+    .unwrap();
+    let epii_record = propagate_agent_session_runtime(
+        &epii_runtime,
+        GatewaySessionPropagation {
+            state_root: gate_root.clone(),
+            operation: GatewaySessionPropagationOperation::SessionStart,
+            target_session_key: Some("agent:epii:cwd-b".to_owned()),
+            label: None,
+        },
+    )
+    .unwrap();
+    let anima_vault = repo_a.join("Idea");
+    let epii_vault = repo_b.join("Idea");
+
+    assert_eq!(
+        anima_record.runtime_cwd.as_deref(),
+        Some(repo_a.to_str().unwrap())
+    );
+    assert_eq!(
+        epii_record.runtime_cwd.as_deref(),
+        Some(repo_b.to_str().unwrap())
+    );
+    assert_eq!(
+        anima_record.vault_root.as_deref(),
+        Some(anima_vault.to_str().unwrap())
+    );
+    assert_eq!(
+        epii_record.vault_root.as_deref(),
+        Some(epii_vault.to_str().unwrap())
+    );
+    assert_eq!(
+        anima_runtime.pi_session.gate_state_root,
+        repo_a.join(".epi/gate")
+    );
+    assert_eq!(
+        epii_runtime.pi_session.gate_state_root,
+        repo_b.join(".epi/gate")
+    );
+    assert_eq!(
+        anima_runtime.pi_session.plugin_runtime_path,
+        anima_agent_dir.join("plugin-runtime.json")
+    );
+    assert_eq!(
+        epii_runtime.pi_session.plugin_runtime_path,
+        epii_agent_dir.join("plugin-runtime.json")
+    );
+    assert_ne!(
+        anima_record.resource_loader_id,
+        epii_record.resource_loader_id,
+        "distinct effective cwd and agent package roots must produce distinct PI resource loader ids"
+    );
+    assert_eq!(anima_record.active_agent_id, "anima");
+    assert_eq!(epii_record.active_agent_id, "epii");
+}
+
+#[test]
+fn pi_runtime_propagation_records_missing_explicit_resource_paths_as_diagnostics() {
+    let root = std::env::temp_dir().join(format!(
+        "epi-session-runtime-resource-diagnostics-{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&root);
+    let repo = root.join("repo");
+    let gate_root = root.join("gate");
+    fs::create_dir_all(repo.join("Idea")).unwrap();
+    let missing_skill = root.join("missing/skills");
+    let missing_theme = root.join("missing/theme.json");
+    let _guard = EnvGuard::set([
+        (
+            "EPI_GATE_SKILLS_PATHS",
+            std::env::join_paths([missing_skill.as_path()])
+                .unwrap()
+                .to_string_lossy()
+                .into_owned(),
+        ),
+        ("EPI_AGENT_THEME_PATH", missing_theme.display().to_string()),
+    ]);
+
+    let runtime = AgentSessionRuntimeFactory::new()
+        .create(AgentSessionRuntimeRequest {
+            effective_cwd: repo,
+            now: Utc.with_ymd_and_hms(2026, 5, 8, 10, 0, 0).unwrap(),
+            random_suffix: Some("res001".to_owned()),
+            force_new: true,
+            agent_id: Some("anima".to_owned()),
+            pi_event: Some("resource_reload".to_owned()),
+        })
+        .unwrap();
+    assert!(runtime.diagnostics.iter().any(|diagnostic| {
+        diagnostic.severity == "error"
+            && diagnostic.message.contains("EPI_GATE_SKILLS_PATHS")
+            && diagnostic.message.contains(missing_skill.to_str().unwrap())
+    }));
+    assert!(runtime.diagnostics.iter().any(|diagnostic| {
+        diagnostic.severity == "error"
+            && diagnostic.message.contains("EPI_AGENT_THEME_PATH")
+            && diagnostic.message.contains(missing_theme.to_str().unwrap())
+    }));
+
+    let record = propagate_agent_session_runtime(
+        &runtime,
+        GatewaySessionPropagation {
+            state_root: gate_root,
+            operation: GatewaySessionPropagationOperation::ResourceReload,
+            target_session_key: Some("agent:anima:resource-check".to_owned()),
+            label: None,
+        },
+    )
+    .unwrap();
+
+    assert!(record.diagnostics.iter().any(|diagnostic| {
+        diagnostic["severity"] == "error"
+            && diagnostic["source"] == "khora.agent_session_runtime"
+            && diagnostic["message"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("EPI_GATE_SKILLS_PATHS")
+    }));
+    assert!(record.diagnostics.iter().any(|diagnostic| {
+        diagnostic["severity"] == "error"
+            && diagnostic["source"] == "khora.agent_session_runtime"
+            && diagnostic["message"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("EPI_AGENT_THEME_PATH")
+    }));
 }
 
 #[tokio::test]

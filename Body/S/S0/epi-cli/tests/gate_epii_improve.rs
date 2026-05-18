@@ -42,6 +42,41 @@ async fn s5_improve_gateway_runs_generalized_autoresearch_loop() {
                         "challenger_score": 0.86,
                         "weight": 0.75,
                         "notes": "Challenger preserves the vendor loop shape without ML coupling.",
+                        "kernel_evidence": {
+                            "baseline": {
+                                "generation": 20,
+                                "phase": "Descent",
+                                "element": "PratibimbaAsBimba",
+                                "harmonic_ratio": "0.666667",
+                                "pulse_ratio": "2/3",
+                                "total_energy": "0.120000"
+                            },
+                            "challenger": {
+                                "generation": 21,
+                                "phase": "Ascent",
+                                "element": "InverseMobius",
+                                "harmonic_ratio": "0.750000",
+                                "pulse_ratio": "3/4",
+                                "total_energy": "0.270000"
+                            },
+                            "delta": {
+                                "energy_delta": "0.150000",
+                                "harmonic_changed": true,
+                                "resonance_delta": "tritone-square:2:+0.080000"
+                            },
+                            "privacy": "safe-public-current-kernel-tick",
+                            "computation_source": "portal-core::KernelProjection",
+                            "advisory_only": true,
+                            "interpretation_boundary": "kernel deltas are advisory evidence only; Epii review decides interpretation",
+                            "trajectory": {
+                                "session_key": "agent:epii:main",
+                                "day_id": "17-05-2026",
+                                "now_path": "Idea/Empty/Present/17-05-2026/20260517-120000-epii/now.md",
+                                "spacetimedb_session_surface": "session_surface",
+                                "spacetimedb_global_surface": "global_temporal_surface",
+                                "graphiti_arc_id": "day:17-05-2026:session:epii-main"
+                            }
+                        },
                         "source_refs": [{
                             "kind": "gnosis_status",
                             "uri": "s5'.epii.status#/world_return/gnosis",
@@ -68,6 +103,19 @@ async fn s5_improve_gateway_runs_generalized_autoresearch_loop() {
         evaluated["run"]["evaluation"]["evidence"][0]["source_refs"][0]["kind"],
         "gnosis_status"
     );
+    assert_eq!(
+        evaluated["run"]["evaluation"]["evidence"][0]["kernel_evidence"]["delta"]["energy_delta"],
+        "0.150000"
+    );
+    assert_eq!(
+        evaluated["run"]["evaluation"]["evidence"][0]["kernel_evidence"]["advisory_only"],
+        true
+    );
+    assert_eq!(
+        evaluated["run"]["evaluation"]["evidence"][0]["kernel_evidence"]["trajectory"]
+            ["graphiti_arc_id"],
+        "day:17-05-2026:session:epii-main"
+    );
 
     let status = client
         .request("s5'.improve.status", json!({}))
@@ -76,6 +124,7 @@ async fn s5_improve_gateway_runs_generalized_autoresearch_loop() {
 
     assert_eq!(status["keep_count"], 1);
     assert_eq!(status["discard_count"], 0);
+    assert_eq!(status["kernel_evidence_count"], 1);
 
     let history = client
         .request("s5'.improve.history", json!({"limit": 5}))

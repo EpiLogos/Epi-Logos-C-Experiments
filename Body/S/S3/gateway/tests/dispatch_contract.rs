@@ -66,6 +66,9 @@ fn s2_graph_methods_route_to_graph_service_authority() {
         "s2.graph.query",
         "s2.graph.node",
         "s2.graph.traverse",
+        "s2.graph.pointer_web.compute",
+        "s2.graph.pointer_web.refresh",
+        "s2.graph.kernel_resonance.record",
         "s2'.coordinate.resolve",
         "s2'.retrieve",
         "s2'.rerank",
@@ -77,4 +80,14 @@ fn s2_graph_methods_route_to_graph_service_authority() {
         assert_eq!(route.coordinate_owner, "S2/S2'");
         assert_eq!(route.agent_access_owner, "S4/S5");
     }
+}
+
+#[test]
+fn kernel_resonance_episode_method_routes_to_graphiti_runtime_with_s5_access() {
+    let route = classify_method("s5.episodic.kernel_resonance.deposit")
+        .expect("kernel resonance Graphiti deposit should route");
+    assert_eq!(route.owner, GatewayDispatchOwner::S3GraphitiRuntime);
+    assert_eq!(route.class, GatewayDispatchClass::GraphitiInvocation);
+    assert_eq!(route.coordinate_owner, "S3/S5");
+    assert_eq!(route.agent_access_owner, "S5");
 }

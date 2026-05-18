@@ -56,6 +56,7 @@ pub fn runtime_context(state_root: impl AsRef<Path>, params: &Value) -> Result<V
             "redisSessionNowKey": temporal["redis"]["sessionNowKey"].clone(),
             "graphitiSessionArcId": temporal["graphiti"]["sessionArcId"].clone(),
             "pratibimbaAnchorId": temporal["pratibimba"]["anchorId"].clone(),
+            "kernel": temporal["kernel"].clone(),
         },
         "projection": {
             "sessionSurfaceTable": temporal["spacetimedb"]["projectionTable"].clone(),

@@ -25,6 +25,7 @@ fn main() {
         .file("../epi-lib/src/m3.c")
         .file("../epi-lib/src/m4.c")
         .file("../epi-lib/src/m5.c")
+        .file("../epi-lib/src/kernel.c")
         // QV data (generated)
         .file("../epi-lib/src/qv_data.c")
         // BLAKE3

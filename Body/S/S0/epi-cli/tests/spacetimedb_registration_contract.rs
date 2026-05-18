@@ -33,6 +33,7 @@ fn spacetime_module_declares_gateway_agent_client_registration_schema() {
         "resource_loader_id",
         "retry_settlement_state",
         "diagnostics_json",
+        "kernel_projection_json",
         "global_temporal_surface",
         "redis_global_context_key",
         "graphiti_namespace_ref",

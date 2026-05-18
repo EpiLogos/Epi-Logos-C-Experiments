@@ -34,6 +34,15 @@ pub const KERNEL_RESONANCE_LENS_PROPERTY: &str = "c_5_kernel_resonance_lens";
 pub const KERNEL_RESONANCE_POSITION_PROPERTY: &str = "c_5_kernel_resonance_position";
 pub const KERNEL_RESONANCE_HELIX_PROPERTY: &str = "c_5_kernel_resonance_helix";
 pub const KERNEL_TICK_PROPERTY: &str = "c_5_kernel_tick";
+pub const POINTER_WEB_JSON_PROPERTY: &str = "c_5_pointer_web_json";
+pub const POINTER_COUNT_PROPERTY: &str = "c_5_pointer_count";
+pub const POINTER_FAMILY_REFS_PROPERTY: &str = "c_5_pointer_family_refs";
+pub const POINTER_REFLECTIVE_REFS_PROPERTY: &str = "c_5_pointer_reflective_refs";
+pub const POINTER_INVERSION_REFS_PROPERTY: &str = "c_5_pointer_inversion_refs";
+pub const POINTER_POSITION_REFS_PROPERTY: &str = "c_5_pointer_position_refs";
+pub const POINTER_LENS_REFS_PROPERTY: &str = "c_5_pointer_lens_refs";
+pub const POINTER_LENS_INVERSION_REFS_PROPERTY: &str = "c_5_pointer_lens_inversion_refs";
+pub const POINTER_REFRESHED_AT_PROPERTY: &str = "c_3_pointer_refreshed_at";
 pub const SESSION_KEY_PROPERTY: &str = "s_3_session_key";
 pub const GRAPHITI_ARC_ID_PROPERTY: &str = "s_3_graphiti_arc_id";
 
@@ -107,6 +116,27 @@ pub struct GraphPropertySpec {
     pub source_family: &'static str,
     pub indexed: bool,
     pub compatibility: bool,
+}
+
+const fn node_spec(
+    key: &'static str,
+    coordinate_home: &'static str,
+    value_type: GraphPropertyType,
+    cardinality: GraphPropertyCardinality,
+    disclosure: GraphPropertyDisclosure,
+    source_family: &'static str,
+) -> GraphPropertySpec {
+    GraphPropertySpec {
+        key,
+        coordinate_home,
+        owner: GraphPropertyOwner::Node,
+        value_type,
+        cardinality,
+        disclosure,
+        source_family,
+        indexed: false,
+        compatibility: false,
+    }
 }
 
 pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
@@ -352,6 +382,222 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         indexed: true,
         compatibility: false,
     },
+    node_spec(
+        "l_2_therapeutic_properties",
+        "L2'",
+        GraphPropertyType::StringList,
+        GraphPropertyCardinality::Many,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-lens",
+    ),
+    node_spec(
+        "l_2_temperament_balance",
+        "L2'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-lens",
+    ),
+    node_spec(
+        "l_2_healing_specialty",
+        "L2'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-lens",
+    ),
+    node_spec(
+        "l_2_chakra_correspondence",
+        "L2'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-lens",
+    ),
+    node_spec(
+        "l_2_breath_pattern",
+        "L2'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-lens",
+    ),
+    node_spec(
+        "l_4_mef_condition",
+        "L4",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-lens",
+    ),
+    node_spec(
+        "l_4_interpretive_role",
+        "L4",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-lens",
+    ),
+    node_spec(
+        "s_4_function_role",
+        "S4'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-system",
+    ),
+    node_spec(
+        "s_4_input_contracts",
+        "S4'",
+        GraphPropertyType::JsonString,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Internal,
+        "deep-bimba-system",
+    ),
+    node_spec(
+        "s_4_output_contracts",
+        "S4'",
+        GraphPropertyType::JsonString,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Internal,
+        "deep-bimba-system",
+    ),
+    node_spec(
+        "s_4_queryable_properties",
+        "S4'",
+        GraphPropertyType::JsonString,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Internal,
+        "deep-bimba-system",
+    ),
+    node_spec(
+        "s_5_agent",
+        "S5'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Internal,
+        "deep-bimba-system",
+    ),
+    node_spec(
+        "s_5_tool_affinity",
+        "S5'",
+        GraphPropertyType::StringList,
+        GraphPropertyCardinality::Many,
+        GraphPropertyDisclosure::Internal,
+        "deep-bimba-system",
+    ),
+    node_spec(
+        "t_5_next_evolution_phase",
+        "T5",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-thought",
+    ),
+    node_spec(
+        "t_1_epistemic_function",
+        "T1",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-thought",
+    ),
+    node_spec(
+        "q_1_theoretical_thesis",
+        "Q1",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-quickview",
+    ),
+    node_spec(
+        "q_2_sophia_logos_dialectic",
+        "Q2",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-quickview",
+    ),
+    node_spec(
+        "q_2_instantiation_mode",
+        "Q2",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-quickview",
+    ),
+    node_spec(
+        "q_3_dialectical_movement",
+        "Q3",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-quickview",
+    ),
+    node_spec(
+        "q_4_historical_diagnosis",
+        "Q4",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-quickview",
+    ),
+    node_spec(
+        "q_5_integration_template",
+        "Q5",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-quickview",
+    ),
+    node_spec(
+        "q_5_conjunctive_threshold",
+        "Q5",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-quickview",
+    ),
+    node_spec(
+        "m_1_topological_significance",
+        "M1'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-m-prime",
+    ),
+    node_spec(
+        "m_2_abjad_value",
+        "M2'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-m-prime",
+    ),
+    node_spec(
+        "m_3_degree",
+        "M3'",
+        GraphPropertyType::Integer,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-m-prime",
+    ),
+    node_spec(
+        "m_4_two_stroke_doctrine",
+        "M4'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-m-prime",
+    ),
+    node_spec(
+        "m_5_lacanian_interface",
+        "M5'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-m-prime",
+    ),
     GraphPropertySpec {
         key: SEMANTIC_EMBEDDING_PROPERTY,
         coordinate_home: "S2.5",
@@ -438,6 +684,105 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         disclosure: GraphPropertyDisclosure::Internal,
         source_family: "kernel-clock",
         indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_WEB_JSON_PROPERTY,
+        coordinate_home: "S2.5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::JsonString,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_COUNT_PROPERTY,
+        coordinate_home: "S2.5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::Integer,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_FAMILY_REFS_PROPERTY,
+        coordinate_home: "S2.5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_REFLECTIVE_REFS_PROPERTY,
+        coordinate_home: "S2.5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_INVERSION_REFS_PROPERTY,
+        coordinate_home: "S2.5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_POSITION_REFS_PROPERTY,
+        coordinate_home: "S2.5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_LENS_REFS_PROPERTY,
+        coordinate_home: "S2.5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_LENS_INVERSION_REFS_PROPERTY,
+        coordinate_home: "S2.5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: POINTER_REFRESHED_AT_PROPERTY,
+        coordinate_home: "S2.3",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::DateTime,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Internal,
+        source_family: "pointer-web",
+        indexed: false,
         compatibility: false,
     },
     GraphPropertySpec {
@@ -584,6 +929,7 @@ pub const INDEXES: &[&str] = &[
     "CREATE INDEX coord_kernel_resonance_index IF NOT EXISTS FOR (n:Bimba) ON (n.c_5_kernel_resonance_index)",
     "CREATE INDEX coord_kernel_resonance_square IF NOT EXISTS FOR (n:Bimba) ON (n.c_5_kernel_resonance_square)",
     "CREATE INDEX coord_kernel_tick IF NOT EXISTS FOR (n:Bimba) ON (n.c_5_kernel_tick)",
+    "CREATE INDEX coord_pointer_count IF NOT EXISTS FOR (n:Bimba) ON (n.c_5_pointer_count)",
     "CREATE INDEX coord_session_key IF NOT EXISTS FOR (n:Bimba) ON (n.s_3_session_key)",
     "CREATE INDEX coord_graphiti_arc_id IF NOT EXISTS FOR (n:Bimba) ON (n.s_3_graphiti_arc_id)",
 ];
@@ -677,10 +1023,25 @@ mod tests {
     }
 
     #[test]
+    fn regional_property_specs_cover_deep_bimba_surfaces() {
+        assert!(node_property_spec("l_2_therapeutic_properties").is_some());
+        assert!(node_property_spec("t_5_next_evolution_phase").is_some());
+        assert!(node_property_spec("q_1_theoretical_thesis").is_some());
+        assert!(node_property_spec("m_5_lacanian_interface").is_some());
+    }
+
+    #[test]
     fn all_canonical_node_props_follow_prefix_convention() {
         for key in canonical_node_property_keys() {
             assert!(
-                key == "coordinate" || key.starts_with("c_") || key.starts_with("s_"),
+                key == "coordinate"
+                    || key.starts_with("c_")
+                    || key.starts_with("p_")
+                    || key.starts_with("l_")
+                    || key.starts_with("s_")
+                    || key.starts_with("t_")
+                    || key.starts_with("q_")
+                    || key.starts_with("m_"),
                 "non-canonical property key escaped: {}",
                 key
             );

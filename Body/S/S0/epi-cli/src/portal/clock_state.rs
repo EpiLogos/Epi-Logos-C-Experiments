@@ -1,5 +1,7 @@
 use std::sync::{Arc, Mutex};
 
+use portal_core::KernelProjection;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ORACLE FACES
 // ─────────────────────────────────────────────────────────────────────────────
@@ -352,7 +354,12 @@ pub fn update_kairos_full(state: &SharedClockState, kairos: KairosState) {
         s.kairos = kairos;
     }
     compute_aspects(state);
-    state.lock().unwrap().generation += 1;
+    {
+        let mut s = state.lock().unwrap();
+        recompute_composed_quaternion_state(&mut s);
+        s.generation += 1;
+        sync_kernel_projection(&mut s);
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -487,6 +494,9 @@ pub struct PortalClockState {
     /// Full live planetary state from Kerykeion.
     pub kairos: KairosState,
 
+    /// QL/MEF kernel projection computed from tick, quintessence, transit, and composed state.
+    pub kernel_projection: KernelProjection,
+
     // ── Multiplayer anchor ────────────────────────────────────────────────────
     /// 3D torus surface position derived from (current_degree, tick12).
     /// Used by SpacetimeDB for collective rendering of multiple users on the torus.
@@ -545,6 +555,7 @@ impl Default for PortalClockState {
             transform_stage: 0,
             logos_stage: 0,
             kairos: KairosState::default(),
+            kernel_projection: KernelProjection::default(),
             orbital_position: [0.0; 3],
             ql_position: 0,
             walk_mode: WalkMode::default(),
@@ -562,6 +573,30 @@ impl Default for PortalClockState {
 }
 
 pub type SharedClockState = Arc<Mutex<PortalClockState>>;
+
+fn recompute_composed_quaternion_state(s: &mut PortalClockState) {
+    let composed = quat_normalize(quat_mul(
+        quat_mul(s.quintessence_quaternion, s.transit_quaternion),
+        s.live_quaternion,
+    ));
+    s.composed_quaternion = composed;
+    s.walk_mode = derive_walk_mode(composed);
+    let (lambda, res) = derive_bifurcation(composed);
+    s.bifurcation_param = lambda;
+    s.resolution_level = res;
+}
+
+pub fn sync_kernel_projection(s: &mut PortalClockState) {
+    s.kernel_projection = KernelProjection::from_clock_state(
+        s.generation / 12,
+        s.tick12,
+        s.quintessence_quaternion,
+        s.composed_quaternion,
+        None,
+        None,
+        0.0,
+    );
+}
 
 /// Create a new SharedClockState, pre-seeding identity-derived fields if a profile exists.
 ///
@@ -700,15 +735,7 @@ pub fn update_from_cast(
 
     // ── Quaternion composition (Task 10) ─────────────────────────────────────
     // Compose: quintessence * transit * oracle → composed quaternion
-    let composed = quat_normalize(quat_mul(
-        quat_mul(s.quintessence_quaternion, s.transit_quaternion),
-        live_q,
-    ));
-    s.composed_quaternion = composed;
-    s.walk_mode = derive_walk_mode(composed);
-    let (lambda, res) = derive_bifurcation(composed);
-    s.bifurcation_param = lambda;
-    s.resolution_level = res;
+    recompute_composed_quaternion_state(&mut s);
 
     // QL position: fold tick12 into 0-5 range
     s.ql_position = if tick12 < 6 { tick12 } else { 11 - tick12 };
@@ -743,6 +770,7 @@ pub fn update_from_cast(
     };
 
     s.generation += 1;
+    sync_kernel_projection(&mut s);
 }
 
 /// Update the quintessence quaternion after identity augment.
@@ -773,7 +801,9 @@ pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32
     {
         let mut s = state.lock().unwrap();
         s.quintessence_quaternion = [w / mag, x / mag, y / mag, z / mag];
+        recompute_composed_quaternion_state(&mut s);
         s.generation += 1;
+        sync_kernel_projection(&mut s);
     }
 }
 
@@ -833,6 +863,7 @@ pub fn update_kairos(state: &SharedClockState, kairos: KairosState) {
     let mut s = state.lock().unwrap();
     s.kairos = kairos;
     s.generation += 1;
+    sync_kernel_projection(&mut s);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

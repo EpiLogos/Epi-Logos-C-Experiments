@@ -62,6 +62,7 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
             ),
             "sessions.list"
             | "sessions.resolve"
+            | "sessions.run-state"
             | "sessions.preview"
             | "sessions.patch"
             | "sessions.reset"
@@ -106,10 +107,21 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
             "s2.graph.query"
             | "s2.graph.node"
             | "s2.graph.traverse"
+            | "s2.graph.pointer_web.compute"
+            | "s2.graph.pointer_web.refresh"
+            | "s2.graph.kernel_resonance.record"
+            | "s2'.coordinate.cypher"
+            | "s2'.coordinate.ingest"
+            | "s2'.coordinate.analyse_resonance"
+            | "s2'.coordinate.persist_analysis"
+            | "s2'.coordinate.aggregate_resonance"
             | "s2'.coordinate.resolve"
             | "s2'.retrieve"
             | "s2'.rerank"
-            | "s2'.enrich" => route(
+            | "s2'.enrich"
+            | "s2'.constraint.list"
+            | "s2'.constraint.register"
+            | "s2'.constraint.test" => route(
                 method,
                 GatewayDispatchOwner::S2GraphService,
                 GatewayDispatchClass::GraphService,
@@ -117,13 +129,34 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "S4/S5",
                 "s2.graph-service",
             ),
-            "s5.episodic.search" | "s5.episodic.deposit" => route(
+            "s3'.kernel.envelope.publish" => route(
+                method,
+                GatewayDispatchOwner::S3TemporalGateway,
+                GatewayDispatchClass::TemporalContext,
+                "S3'",
+                "S4/S5",
+                "s3-prime.kernel-envelope",
+            ),
+            "s5.episodic.search"
+            | "s5.episodic.deposit"
+            | "s5.episodic.kernel_resonance.deposit" => route(
                 method,
                 GatewayDispatchOwner::S3GraphitiRuntime,
                 GatewayDispatchClass::GraphitiInvocation,
                 "S3/S5",
                 "S5",
                 "s3.graphiti-runtime.s5-episodic",
+            ),
+            "s5.trajectory.verify"
+            | "s5.ebm.train"
+            | "s5.ebm.export_state"
+            | "s5'.anuttara.diagnose" => route(
+                method,
+                GatewayDispatchOwner::S5Autoresearch,
+                GatewayDispatchClass::AutoresearchRuntime,
+                "S5/S5'",
+                "S5",
+                "s5.autoresearch-kernel",
             ),
             "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve"
             | "s5'.review.history" => route(

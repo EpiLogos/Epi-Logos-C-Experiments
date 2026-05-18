@@ -95,6 +95,27 @@ fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     assert_eq!(value["pratibimba"]["coordinate"], "M4.4.4.4");
     assert_eq!(value["pratibimba"]["anchorId"], "pratibimba-abcd1234");
     assert_eq!(
+        value["pratibimba"]["graphitiNamespaceRef"],
+        "pratibimba-abcd1234"
+    );
+    assert_eq!(value["pratibimba"]["privacy"], "protected-reference-only");
+    assert_eq!(
+        value["pratibimba"]["layerPresenceSummary"]["presentCount"],
+        2
+    );
+    assert!(
+        value["pratibimba"].get("identityHashPreview").is_none(),
+        "temporal context must not publish protected profile hash detail"
+    );
+    assert!(
+        value["pratibimba"].get("layerPresenceMask").is_none(),
+        "temporal context must not publish protected layer mask detail"
+    );
+    assert!(
+        value["pratibimba"].get("layerCount").is_none(),
+        "temporal context must keep layer detail inside the count-only summary"
+    );
+    assert_eq!(
         value["redis"]["dayKairosKey"],
         "s3:gateway:temporal:day:07-05-2026:kairos"
     );
@@ -110,6 +131,7 @@ fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
         value["spacetimedb"]["kairosProjectionTable"],
         "kairos_surface"
     );
+    assert_safe_kernel_projection(&value);
     assert_eq!(value["graphiti"]["namespaceRef"], "pratibimba-abcd1234");
     assert!(value["now"]["wikilink"].as_str().unwrap().contains(
         "[[Empty/Present/07-05-2026/session-temporal-main/now|NOW session-temporal-main]]"
@@ -152,6 +174,7 @@ async fn gateway_rpc_temporal_context_is_available_to_agent_surfaces() {
     assert_eq!(value["graphiti"]["invocationOwner"], "S5/S5'");
     assert_eq!(value["kairos"]["available"], true);
     assert_eq!(value["pratibimba"]["stewardshipOwner"], "S5'");
+    assert_safe_kernel_projection(&value);
 }
 
 #[tokio::test]
@@ -188,6 +211,48 @@ async fn live_redis_temporal_context_hydration_uses_s3_namespace() {
     let cached: String = conn.get(&key).await.unwrap();
     assert!(cached.contains("[[Chronos]]"));
     let _: usize = conn.del(&key).await.unwrap();
+}
+
+fn assert_safe_kernel_projection(value: &serde_json::Value) {
+    assert_eq!(value["kernel"]["coordinateOwner"], "S0/QL-meta");
+    assert_eq!(value["kernel"]["projectionOwner"], "S3'");
+    assert_eq!(
+        value["kernel"]["privacy"],
+        "safe-public-current-kernel-tick"
+    );
+    assert_eq!(
+        value["kernel"]["computationSource"],
+        "portal-core::KernelProjection"
+    );
+    assert!(value["kernel"]["generation"].as_u64().unwrap() > 0);
+    assert!(value["kernel"]["tick"]["subTick"].as_u64().unwrap() <= 11);
+    assert!(value["kernel"]["tick"]["cycle"].as_u64().unwrap() > 0);
+    assert!(value["kernel"]["tick"]["phase"].as_str().unwrap().len() > 0);
+    assert!(value["kernel"]["tick"]["element"].as_str().unwrap().len() > 0);
+    assert!(value["kernel"]["tick"]["harmonicRatio"]
+        .as_str()
+        .unwrap()
+        .contains('.'));
+    assert!(
+        value["kernel"]["harmonicPulse"]["ratioNum"]
+            .as_u64()
+            .unwrap()
+            >= 1
+    );
+    assert!(
+        value["kernel"]["harmonicPulse"]["ratioDen"]
+            .as_u64()
+            .unwrap()
+            >= 1
+    );
+    assert!(
+        value["kernel"].get("bioquaternion").is_none(),
+        "gateway temporal context must not publish protected bioquaternion detail"
+    );
+    assert!(
+        value["kernel"].get("resonanceSquareEmphasis").is_none(),
+        "gateway temporal context must not publish protected resonance vectors"
+    );
 }
 
 fn write_nara_temporal_identity(env: &TestEnv) {

@@ -1,5 +1,6 @@
 use crate::aspect::compute_aspects;
 use crate::codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
+use crate::kernel::KernelProjection;
 use crate::quaternion::{derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize};
 use crate::spanda::quantize_to_spanda_substage;
 use crate::transcription::DEGREE_TO_HEXAGRAM;
@@ -15,6 +16,30 @@ pub fn compute_orbital_position(degree: u16, tick12: u8) -> [f32; 3] {
         (big_r + r * phi.cos()) * theta.sin(),
         r * phi.sin(),
     ]
+}
+
+fn recompute_composed_quaternion_state(state: &mut PortalClockState) {
+    let composed = quat_normalize(quat_mul(
+        quat_mul(state.quintessence_quaternion, state.transit_quaternion),
+        state.live_quaternion,
+    ));
+    state.composed_quaternion = composed;
+    state.walk_mode = derive_walk_mode(composed);
+    let (lambda, res) = derive_bifurcation(composed);
+    state.bifurcation_param = lambda;
+    state.resolution_level = res;
+}
+
+pub fn sync_kernel_projection(state: &mut PortalClockState) {
+    state.kernel_projection = KernelProjection::from_clock_state(
+        state.generation / 12,
+        state.tick12,
+        state.quintessence_quaternion,
+        state.composed_quaternion,
+        None,
+        None,
+        0.0,
+    );
 }
 
 /// Update clock state from a completed oracle cast. Pure math — no Arc/Mutex, no I/O.
@@ -64,15 +89,7 @@ pub fn update_from_cast(
         changing_lines_mask,
     });
 
-    let composed = quat_normalize(quat_mul(
-        quat_mul(state.quintessence_quaternion, state.transit_quaternion),
-        live_q,
-    ));
-    state.composed_quaternion = composed;
-    state.walk_mode = derive_walk_mode(composed);
-    let (lambda, res) = derive_bifurcation(composed);
-    state.bifurcation_param = lambda;
-    state.resolution_level = res;
+    recompute_composed_quaternion_state(state);
     state.ql_position = if tick12 < 6 { tick12 } else { 11 - tick12 };
 
     state.micro_orbit.push(degree);
@@ -97,6 +114,7 @@ pub fn update_from_cast(
     };
 
     state.generation += 1;
+    sync_kernel_projection(state);
 }
 
 /// Full kairos update: set kairos, compute transit quaternion from element distribution,
@@ -135,15 +153,14 @@ pub fn update_kairos_full(state: &mut PortalClockState, kairos: KairosState) {
 
     state.kairos = kairos;
     compute_aspects(state);
+    recompute_composed_quaternion_state(state);
     state.generation += 1;
+    sync_kernel_projection(state);
 }
 
 /// Update quintessence quaternion after identity augment.
 /// `profiles`: 5 x [FIRE, WATER, EARTH, AIR] from identity layers.
-pub fn update_quintessence_quaternion(
-    state: &mut PortalClockState,
-    profiles: &[[f32; 4]; 5],
-) {
+pub fn update_quintessence_quaternion(state: &mut PortalClockState, profiles: &[[f32; 4]; 5]) {
     let valid: Vec<_> = profiles
         .iter()
         .filter(|p| p.iter().any(|&v| v > f32::EPSILON))
@@ -165,7 +182,9 @@ pub fn update_quintessence_quaternion(
         return;
     }
     state.quintessence_quaternion = [w / mag, x / mag, y / mag, z / mag];
+    recompute_composed_quaternion_state(state);
     state.generation += 1;
+    sync_kernel_projection(state);
 }
 
 #[cfg(test)]

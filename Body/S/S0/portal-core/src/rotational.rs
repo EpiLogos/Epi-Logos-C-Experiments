@@ -1,10 +1,22 @@
 /// Pair matrix: (sum_value, difference_value) indexed by (nuc1<<2)|nuc2.
 /// Mirrors C M3_PAIR_MATRIX[16].
 pub const PM: [(i8, i8); 16] = [
-    (12, 0),  (15, -3), (13, -1), (14, 2),
-    (15, 3),  (18, 0),  (16, -2), (17, 1),
-    (13, 1),  (16, -2), (14, 0),  (15, -1),
-    (14, 2),  (17, -1), (15, 1),  (16, 0),
+    (12, 0),
+    (15, -3),
+    (13, -1),
+    (14, 2),
+    (15, 3),
+    (18, 0),
+    (16, -2),
+    (17, 1),
+    (13, 1),
+    (16, -2),
+    (14, 0),
+    (15, -1),
+    (14, 2),
+    (17, -1),
+    (15, 1),
+    (16, 0),
 ];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -37,7 +49,11 @@ pub fn compose_rotational_state(xy: u8, za: u8, positive: bool) -> u8 {
     let y = xy & 0x03;
     let z = (za >> 2) & 0x03;
     let a = za & 0x03;
-    if positive { (x << 4) | (y << 2) | a } else { (x << 4) | (z << 2) | a }
+    if positive {
+        (x << 4) | (y << 2) | a
+    } else {
+        (x << 4) | (z << 2) | a
+    }
 }
 
 /// Generate all 8 rotational states for a given 6-bit codon.
@@ -83,7 +99,9 @@ pub fn generate_rotational_states(codon6bit: u8) -> Vec<RotationalState> {
 
     let mut order: Vec<usize> = (0..states.len()).collect();
     order.sort_by(|&a, &b| {
-        states[a].rotational_value.cmp(&states[b].rotational_value)
+        states[a]
+            .rotational_value
+            .cmp(&states[b].rotational_value)
             .then_with(|| (states[a].polarity as u8).cmp(&(states[b].polarity as u8)))
     });
 
@@ -119,8 +137,14 @@ mod tests {
     fn polarity_balance() {
         for codon in 0u8..64 {
             let states = generate_rotational_states(codon);
-            let neg = states.iter().filter(|s| s.polarity == Polarity::Negative).count();
-            let pos = states.iter().filter(|s| s.polarity == Polarity::Positive).count();
+            let neg = states
+                .iter()
+                .filter(|s| s.polarity == Polarity::Negative)
+                .count();
+            let pos = states
+                .iter()
+                .filter(|s| s.polarity == Polarity::Positive)
+                .count();
             assert_eq!(neg, 4);
             assert_eq!(pos, 4);
         }
@@ -130,7 +154,9 @@ mod tests {
     fn slots_unique_0_to_7() {
         for codon in 0u8..64 {
             let mut slots: Vec<u8> = generate_rotational_states(codon)
-                .iter().map(|s| s.rotation_slot).collect();
+                .iter()
+                .map(|s| s.rotation_slot)
+                .collect();
             slots.sort();
             assert_eq!(slots, vec![0, 1, 2, 3, 4, 5, 6, 7]);
         }

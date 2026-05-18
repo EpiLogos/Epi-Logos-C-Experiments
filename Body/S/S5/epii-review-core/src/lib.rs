@@ -111,6 +111,8 @@ pub struct ReviewSubmission {
     pub coordinate_context: Value,
     pub proposed_action: Option<ReviewProposedAction>,
     pub requires_human: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kernel_visibility: Option<KernelReviewVisibility>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -124,7 +126,21 @@ pub struct ReviewInboxItem {
     pub coordinate_context: Value,
     pub proposed_action: Option<ReviewProposedAction>,
     pub requires_human: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kernel_visibility: Option<KernelReviewVisibility>,
     pub created_at: u128,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct KernelReviewVisibility {
+    pub projection: Value,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub energy_delta: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resonance_delta: Option<String>,
+    pub musical_readiness: String,
+    pub visual_readiness: String,
+    pub advisory_only: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -200,6 +216,7 @@ impl ReviewStore {
             coordinate_context: submission.coordinate_context,
             proposed_action: submission.proposed_action,
             requires_human: submission.requires_human,
+            kernel_visibility: submission.kernel_visibility,
             created_at: now_ms(),
         };
         state.items.push(item.clone());
@@ -324,6 +341,52 @@ fn validate_submission(submission: &ReviewSubmission) -> Result<(), String> {
     }
     if !submission.coordinate_context.is_object() {
         return Err("coordinate_context must be an object".to_owned());
+    }
+    if let Some(kernel_visibility) = &submission.kernel_visibility {
+        validate_kernel_visibility(kernel_visibility)?;
+    }
+    Ok(())
+}
+
+fn validate_kernel_visibility(visibility: &KernelReviewVisibility) -> Result<(), String> {
+    if !visibility.advisory_only {
+        return Err("kernel visibility must be advisory_only".to_owned());
+    }
+    if visibility.musical_readiness.trim().is_empty() {
+        return Err("kernel visibility musical_readiness is required".to_owned());
+    }
+    if visibility.visual_readiness.trim().is_empty() {
+        return Err("kernel visibility visual_readiness is required".to_owned());
+    }
+    if visibility
+        .projection
+        .pointer("/privacy")
+        .and_then(Value::as_str)
+        != Some("safe-public-current-kernel-tick")
+    {
+        return Err(
+            "kernel visibility projection privacy must be safe-public-current-kernel-tick"
+                .to_owned(),
+        );
+    }
+    if visibility
+        .projection
+        .pointer("/computationSource")
+        .and_then(Value::as_str)
+        != Some("portal-core::KernelProjection")
+    {
+        return Err(
+            "kernel visibility projection computationSource must be portal-core::KernelProjection"
+                .to_owned(),
+        );
+    }
+    if visibility.projection.get("bioquaternion").is_some()
+        || visibility
+            .projection
+            .get("resonanceSquareEmphasis")
+            .is_some()
+    {
+        return Err("kernel visibility must not expose protected kernel fields".to_owned());
     }
     Ok(())
 }

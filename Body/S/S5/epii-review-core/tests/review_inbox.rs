@@ -1,7 +1,8 @@
 use epi_s5_epii_review_core::{
-    ResolutionActor, ReviewDecision, ReviewInboxFilter, ReviewPriority, ReviewResolveRequest,
-    ReviewSource, ReviewStatus, ReviewStore, ReviewSubmission,
+    KernelReviewVisibility, ResolutionActor, ReviewDecision, ReviewInboxFilter, ReviewPriority,
+    ReviewResolveRequest, ReviewSource, ReviewStatus, ReviewStore, ReviewSubmission,
 };
+use serde_json::json;
 
 #[test]
 fn submit_persists_anima_review_item_and_lists_open_inbox() {
@@ -21,6 +22,7 @@ fn submit_persists_anima_review_item_and_lists_open_inbox() {
             }),
             proposed_action: None,
             requires_human: false,
+            kernel_visibility: None,
         })
         .expect("review item should submit");
 
@@ -54,6 +56,7 @@ fn human_required_review_cannot_be_resolved_by_agent() {
             coordinate_context: serde_json::json!({"coordinate": "S2/S2'"}),
             proposed_action: None,
             requires_human: true,
+            kernel_visibility: None,
         })
         .expect("human-gated item should submit");
 
@@ -108,6 +111,7 @@ fn resolved_review_moves_to_history_with_resolution_record() {
             coordinate_context: serde_json::json!({"coordinate": "S5/S5'"}),
             proposed_action: None,
             requires_human: false,
+            kernel_visibility: None,
         })
         .expect("item should submit");
 
@@ -133,6 +137,84 @@ fn resolved_review_moves_to_history_with_resolution_record() {
     assert_eq!(history.items[0].status, ReviewStatus::Resolved);
     assert_eq!(history.resolutions.len(), 1);
     assert_eq!(history.resolutions[0].decision, ReviewDecision::Revise);
+}
+
+#[test]
+fn review_items_surface_kernel_visibility_without_granting_judgement() {
+    let root = temp_store_root("review_items_surface_kernel_visibility");
+    let store = ReviewStore::new(&root);
+    let kernel_visibility = KernelReviewVisibility {
+        projection: json!({
+            "coordinateOwner": "S0/QL-meta",
+            "projectionOwner": "S3'",
+            "privacy": "safe-public-current-kernel-tick",
+            "computationSource": "portal-core::KernelProjection",
+            "generation": 44,
+            "tick": {
+                "cycle": 2,
+                "subTick": 7,
+                "phase": "Ascent",
+                "element": "InverseMobius",
+                "position6": 1,
+                "harmonicRatio": "0.750000"
+            },
+            "harmonicPulse": {
+                "cycle": 2,
+                "subTick": 7,
+                "phase": "Ascent",
+                "element": "InverseMobius",
+                "ratioNum": 3,
+                "ratioDen": 4,
+                "tempoMultiplier": "0.750000",
+                "periodMultiplier": "1.333333"
+            },
+            "energy": { "totalEnergy": "0.270000" }
+        }),
+        energy_delta: Some("0.150000".to_owned()),
+        resonance_delta: Some("tritone-square:2:+0.080000".to_owned()),
+        musical_readiness: "data_ready_audio_deferred".to_owned(),
+        visual_readiness: "ready_for_projection".to_owned(),
+        advisory_only: true,
+    };
+
+    let item = store
+        .submit(ReviewSubmission {
+            source: ReviewSource::Autoresearch,
+            title: "Review kernel-informed visual readiness".to_owned(),
+            body: "Autoresearch observed a kernel pulse delta; Epii must interpret it.".to_owned(),
+            priority: ReviewPriority::High,
+            coordinate_context: json!({"coordinate": "S5/S5'", "session_key": "agent:epii:main"}),
+            proposed_action: None,
+            requires_human: false,
+            kernel_visibility: Some(kernel_visibility),
+        })
+        .expect("kernel visibility should submit");
+
+    let visibility = item.kernel_visibility.as_ref().unwrap();
+    assert!(visibility.advisory_only);
+    assert_eq!(visibility.musical_readiness, "data_ready_audio_deferred");
+    assert_eq!(visibility.visual_readiness, "ready_for_projection");
+    assert_eq!(
+        visibility.projection["privacy"],
+        "safe-public-current-kernel-tick"
+    );
+
+    let inbox = store
+        .inbox(ReviewInboxFilter {
+            status: Some(ReviewStatus::Open),
+            source: Some(ReviewSource::Autoresearch),
+            limit: None,
+        })
+        .expect("inbox should load");
+    assert_eq!(
+        inbox.items[0]
+            .kernel_visibility
+            .as_ref()
+            .unwrap()
+            .energy_delta
+            .as_deref(),
+        Some("0.150000")
+    );
 }
 
 fn temp_store_root(test_name: &str) -> std::path::PathBuf {

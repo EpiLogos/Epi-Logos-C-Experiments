@@ -6,6 +6,7 @@ import { useClockStore } from '@/stores/clockStore';
 import { useGraphStore } from '@/stores/graphStore';
 import { useVaultStore } from '@/stores/vaultStore';
 import { useTemporalStore } from '@/stores/temporalStore';
+import { projectKernelHarmonicConsumer } from '@/services/kernelProjection';
 import {
   MessageCircle,
   LayoutDashboard,
@@ -81,6 +82,7 @@ function OverviewContent() {
   const { connected: graphConnected } = useGraphStore();
   const { runtime } = useTemporalStore();
   const { todayNote } = useVaultStore();
+  const kernel = projectKernelHarmonicConsumer(runtime);
 
   return (
     <div className="p-4 space-y-4">
@@ -115,6 +117,15 @@ function OverviewContent() {
             <span className="text-xs text-neutral-400">Temporal</span>
           </div>
           <span className="text-sm">{runtime?.day_id ?? '—'}</span>
+        </div>
+        <div className="rounded border border-neutral-800 p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <StatusDot connected={kernel.available} />
+            <span className="text-xs text-neutral-400">Kernel</span>
+          </div>
+          <span className="text-sm font-mono">
+            {kernel.available ? `${kernel.phase} ${kernel.pulseRatio}` : '—'}
+          </span>
         </div>
       </div>
       {todayNote && (

@@ -4,6 +4,14 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+pub use epi_kernel_contract::{
+    AnuttaraDiagnostic, AnuttaraExpression, BioQuaternionState, EnergyDecomposition,
+    KernelElement, KernelPhase, KernelProjection, KernelTemporalProjection, KernelTick,
+    KernelTickEnvelope, MentalPoleState, PhysicalPoleState, ResonanceVector72,
+    TrajectoryDeposit, TrajectoryDepositRef, ENVELOPE_COORDINATE_OWNER,
+    ENVELOPE_PRIVACY_CLASS,
+};
+
 pub const DEFAULT_GATEWAY_PORT: u16 = 18794;
 pub const TEST_GATEWAY_PORT: u16 = 18794;
 pub const PROTOCOL_VERSION: u8 = 3;
@@ -82,6 +90,22 @@ pub const METHOD_NAMES: &[&str] = &[
     "s2.graph.query",
     "s2.graph.node",
     "s2.graph.traverse",
+    "s2.graph.pointer_web.compute",
+    "s2.graph.pointer_web.refresh",
+    "s2.graph.kernel_resonance.record",
+    "s2'.coordinate.cypher",
+    "s2'.coordinate.ingest",
+    "s2'.coordinate.analyse_resonance",
+    "s2'.coordinate.persist_analysis",
+    "s2'.coordinate.aggregate_resonance",
+    "s2'.constraint.list",
+    "s2'.constraint.register",
+    "s2'.constraint.test",
+    "s5.trajectory.verify",
+    "s5.ebm.train",
+    "s5.ebm.export_state",
+    "s5'.anuttara.diagnose",
+    "s3'.kernel.envelope.publish",
     "s2'.coordinate.resolve",
     "s2'.retrieve",
     "s2'.rerank",
@@ -135,6 +159,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "s5'.gnosis.context.retrieve",
     "s5.episodic.search",
     "s5.episodic.deposit",
+    "s5.episodic.kernel_resonance.deposit",
     "s5'.review.inbox",
     "s5'.review.submit",
     "s5'.review.resolve",
@@ -156,6 +181,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "sessions.list",
     "sessions.preview",
     "sessions.resolve",
+    "sessions.run-state",
     "sessions.patch",
     "sessions.reset",
     "sessions.delete",
@@ -414,6 +440,43 @@ pub fn mcp_event_cursor_contract() -> &'static McpEventCursorContract {
     &MCP_EVENT_CURSOR_CONTRACT
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelEnvelopeContract {
+    pub coordinate_owner: &'static str,
+    pub projection_owner: &'static str,
+    pub privacy: &'static str,
+    pub typed_publish_method: &'static str,
+    pub legacy_json_column: &'static str,
+    pub legacy_session_method: &'static str,
+    pub deposit_method: &'static str,
+    pub diagnostic_method: &'static str,
+    pub required_optional_fields: &'static [&'static str],
+}
+
+pub const KERNEL_ENVELOPE_CONTRACT: KernelEnvelopeContract = KernelEnvelopeContract {
+    coordinate_owner: ENVELOPE_COORDINATE_OWNER,
+    projection_owner: "S3'",
+    privacy: ENVELOPE_PRIVACY_CLASS,
+    typed_publish_method: "s3'.kernel.envelope.publish",
+    legacy_json_column: "kernel_projection_json",
+    legacy_session_method: "s3'.temporal.context",
+    deposit_method: "s5.episodic.kernel_resonance.deposit",
+    diagnostic_method: "s5'.anuttara.diagnose",
+    required_optional_fields: &[
+        "observedResonance",
+        "targetResonance",
+        "physicalPole",
+        "mentalPole",
+        "trajectoryDeposit",
+        "anuttaraDiagnostic",
+    ],
+};
+
+pub fn kernel_envelope_contract() -> &'static KernelEnvelopeContract {
+    &KERNEL_ENVELOPE_CONTRACT
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum GatewaySessionOperationKind {
@@ -579,13 +642,16 @@ pub const GATEWAY_SESSION_OPERATION_CONTRACTS: &[GatewaySessionOperationContract
     GatewaySessionOperationContract {
         kind: GatewaySessionOperationKind::RunState,
         operation_id: "sessions.run-state",
-        gateway_method: "sessions.resolve",
+        gateway_method: "sessions.run-state",
         coordinate_owner: "S3",
         agent_access_owner: "S4/S5",
         projection_table: "session_surface",
         request_keys: &["sessionKey"],
         response_keys: &[
             "canonicalKey",
+            "runState",
+            "activeRunIds",
+            "idleState",
             "retrySettlementState",
             "diagnostics",
             "deliveryContext",
@@ -857,7 +923,8 @@ fn subscription_session_row(row: &Value) -> Result<Value, String> {
         "graphiti_arc_id": subscription_string(values, 18),
         "pratibimba_anchor_ref": subscription_string(values, 19),
         "kairos_snapshot_id": subscription_string(values, 20),
-        "updated_at": subscription_u64(values, 21),
+        "kernel_projection_json": subscription_string(values, 21),
+        "updated_at": subscription_u64(values, 22),
     }))
 }
 
@@ -913,8 +980,9 @@ fn subscription_global_temporal_row(row: &Value) -> Result<Value, String> {
         "graphiti_session_arc_id": subscription_string(values, 15),
         "pratibimba_anchor_ref": subscription_string(values, 16),
         "kairos_snapshot_id": subscription_string(values, 17),
-        "privacy_class": subscription_string(values, 18),
-        "updated_at": subscription_u64(values, 19),
+        "kernel_projection_json": subscription_string(values, 18),
+        "privacy_class": subscription_string(values, 19),
+        "updated_at": subscription_u64(values, 20),
     }))
 }
 
@@ -1306,6 +1374,7 @@ mod tests {
             "connect",
             "agent",
             "chat.send",
+            "sessions.run-state",
             "sessions.resolve",
             "sessions.fork",
             "sessions.resume",
@@ -1365,8 +1434,10 @@ mod tests {
             .iter()
             .find(|contract| contract.kind == GatewaySessionOperationKind::RunState)
             .expect("run state contract should be present");
-        assert_eq!(run_state.gateway_method, "sessions.resolve");
+        assert_eq!(run_state.gateway_method, "sessions.run-state");
+        assert!(METHOD_NAMES.contains(&run_state.gateway_method));
         assert!(run_state.response_keys.contains(&"retrySettlementState"));
+        assert!(run_state.response_keys.contains(&"idleState"));
         assert!(run_state.response_keys.contains(&"diagnostics"));
 
         let channel_binding = contracts
@@ -1547,6 +1618,75 @@ mod tests {
     }
 
     #[test]
+    fn kernel_envelope_contract_registers_typed_publish_method_and_keeps_legacy_json_column() {
+        let envelope = kernel_envelope_contract();
+        assert_eq!(envelope.coordinate_owner, "S0/QL-meta");
+        assert_eq!(envelope.privacy, "safe-public-current-kernel-tick");
+        assert_eq!(envelope.typed_publish_method, "s3'.kernel.envelope.publish");
+        assert_eq!(envelope.legacy_json_column, "kernel_projection_json");
+        assert!(METHOD_NAMES.contains(&envelope.typed_publish_method));
+        assert!(METHOD_NAMES.contains(&envelope.deposit_method));
+        assert!(METHOD_NAMES.contains(&envelope.diagnostic_method));
+        for required in [
+            "s2'.coordinate.cypher",
+            "s2'.coordinate.ingest",
+            "s2'.coordinate.analyse_resonance",
+            "s2'.coordinate.persist_analysis",
+            "s2'.coordinate.aggregate_resonance",
+            "s2'.constraint.list",
+            "s2'.constraint.register",
+            "s2'.constraint.test",
+            "s5.trajectory.verify",
+            "s5.ebm.train",
+            "s5.ebm.export_state",
+        ] {
+            assert!(
+                METHOD_NAMES.contains(&required),
+                "kernel-aligned method {required} missing from METHOD_NAMES"
+            );
+        }
+    }
+
+    #[test]
+    fn kernel_tick_envelope_serialises_into_legacy_kernel_projection_json_shape() {
+        let projection = KernelProjection::default();
+        let envelope = KernelTickEnvelope::from_kernel_projection(1, &projection);
+        let value = serde_json::to_value(&envelope).expect("envelope serialises");
+        let privacy = value
+            .get("privacy")
+            .and_then(Value::as_str)
+            .expect("privacy field");
+        let element = value
+            .get("tick")
+            .and_then(|tick| tick.get("element"))
+            .and_then(Value::as_str)
+            .expect("tick.element field");
+        assert_eq!(privacy, "safe-public-current-kernel-tick");
+        assert_eq!(element, "BimbaEncoding");
+
+        let temporal = envelope.to_temporal_projection();
+        let legacy = serde_json::to_value(&temporal).expect("temporal serialises");
+        assert_eq!(legacy["privacy"], "safe-public-current-kernel-tick");
+        assert_eq!(legacy["coordinateOwner"], "S0/QL-meta");
+    }
+
+    #[test]
+    fn anuttara_diagnostic_carried_in_envelope_round_trips_through_serde() {
+        let projection = KernelProjection::default();
+        let diag = AnuttaraDiagnostic::parse("?#2-1-3-4{2,4}; ○").expect("parses");
+        let envelope = KernelTickEnvelope::from_kernel_projection(2, &projection)
+            .with_session_key("session-1")
+            .with_source_coordinate("M2-1-3")
+            .with_anuttara_diagnostic(diag.clone());
+
+        let json = serde_json::to_string(&envelope).expect("serialises");
+        let restored: KernelTickEnvelope =
+            serde_json::from_str(&json).expect("round-trips");
+        assert_eq!(restored.anuttara_diagnostic, Some(diag));
+        assert_eq!(restored.source_coordinate.as_deref(), Some("M2-1-3"));
+    }
+
+    #[test]
     fn spacetimedb_projection_contract_builds_native_subscribe_multi_and_decodes_updates() {
         let plan = SpacetimeProjectionPlan::native("ws://127.0.0.1:3000", "epi-logos-runtime")
             .for_session("agent:main:main", "epii");
@@ -1595,6 +1735,7 @@ mod tests {
                                 "day:07-05-2026:session:session-main",
                                 "pratibimba-abcd1234",
                                 "kairos-07-05-2026-session-main",
+                                r#"{"privacy":"safe-public-current-kernel-tick","tick":{"element":"SlashFlip"}}"#,
                                 1778179200
                             ]]
                         }]
@@ -1604,6 +1745,11 @@ mod tests {
         });
 
         let rows = SpacetimeProjectionRows::from_subscription_message(&update).unwrap();
-        assert_eq!(rows.session.unwrap()["session_key"], "agent:main:main");
+        let session = rows.session.unwrap();
+        assert_eq!(session["session_key"], "agent:main:main");
+        assert_eq!(
+            session["kernel_projection_json"],
+            r#"{"privacy":"safe-public-current-kernel-tick","tick":{"element":"SlashFlip"}}"#
+        );
     }
 }

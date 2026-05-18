@@ -112,6 +112,91 @@ async fn sessions_rpc_lifecycle_mutates_real_store() {
 }
 
 #[tokio::test]
+async fn sessions_run_state_reports_retry_cycle_without_local_ui_inference() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
+
+    client
+        .request(
+            "chat.inject",
+            json!({
+                "sessionKey":"agent:main:main",
+                "role":"system",
+                "message":"seed retry-cycle session"
+            }),
+        )
+        .await
+        .unwrap();
+
+    client
+        .request(
+            "sessions.patch",
+            json!({
+                "sessionKey":"agent:main:main",
+                "retrySettlementState":"pending"
+            }),
+        )
+        .await
+        .unwrap();
+    let pending = client
+        .request(
+            "sessions.run-state",
+            json!({"sessionKey":"agent:main:main"}),
+        )
+        .await
+        .unwrap();
+    assert_eq!(pending["canonicalKey"], "agent:main:main");
+    assert_eq!(pending["runState"]["retrySettlementState"], "pending");
+    assert_eq!(pending["runState"]["idleState"], "pending");
+    assert_eq!(pending["runState"]["activeRunCount"], 0);
+
+    client
+        .request(
+            "sessions.patch",
+            json!({
+                "sessionKey":"agent:main:main",
+                "retrySettlementState":"retrying"
+            }),
+        )
+        .await
+        .unwrap();
+    let retrying = client
+        .request(
+            "sessions.run-state",
+            json!({"sessionKey":"agent:main:main"}),
+        )
+        .await
+        .unwrap();
+    assert_eq!(retrying["runState"]["retrySettlementState"], "retrying");
+    assert_eq!(retrying["runState"]["idleState"], "retrying");
+
+    client
+        .request(
+            "sessions.patch",
+            json!({
+                "sessionKey":"agent:main:main",
+                "retrySettlementState":"settled"
+            }),
+        )
+        .await
+        .unwrap();
+    let settled = client
+        .request(
+            "sessions.run-state",
+            json!({"sessionKey":"agent:main:main"}),
+        )
+        .await
+        .unwrap();
+    assert_eq!(settled["runState"]["retrySettlementState"], "settled");
+    assert_eq!(settled["runState"]["idleState"], "idle");
+
+    let resolved = client
+        .request("sessions.resolve", json!({"sessionKey":"agent:main:main"}))
+        .await
+        .unwrap();
+    assert_eq!(resolved["runState"], settled["runState"]);
+}
+
+#[tokio::test]
 async fn sessions_rpc_fork_resume_import_and_tree_preserve_lineage() {
     let mut client = TestGatewayClient::connected_with_temp_store(18794).await;
 
@@ -129,10 +214,19 @@ async fn sessions_rpc_fork_resume_import_and_tree_preserve_lineage() {
             json!({
                 "sessionKey": "agent:main:main",
                 "label": "DAY 07-05-2026 / NOW root",
+                "sessionId": "20260507-120000-root",
                 "dayId": "07-05-2026",
+                "activeAgentId": "anima",
                 "vaultNowPath": "/vault/Empty/Present/07-05-2026/20260507-120000-root/now.md",
                 "runtimeCwd": "/repo",
-                "vaultRoot": "/vault"
+                "vaultRoot": "/vault",
+                "resourceLoaderId": "pi:anima:/repo/.epi/agents/anima/agent/plugin-runtime.json",
+                "retrySettlementState": "idle-after-retry",
+                "diagnostics": [{
+                    "severity": "info",
+                    "message": "root runtime propagated",
+                    "source": "khora.agent_session_runtime"
+                }]
             }),
         )
         .await
@@ -165,7 +259,20 @@ async fn sessions_rpc_fork_resume_import_and_tree_preserve_lineage() {
             json!({
                 "sourceSessionKey": "external:claude:abc",
                 "targetSessionKey": "agent:main:import:one",
-                "label": "Imported Claude run"
+                "label": "Imported Claude run",
+                "sessionId": "external-claude-abc",
+                "dayId": "07-05-2026",
+                "activeAgentId": "anima",
+                "vaultNowPath": "/vault/Empty/Present/07-05-2026/external-claude-abc/now.md",
+                "runtimeCwd": "/repo",
+                "vaultRoot": "/vault",
+                "resourceLoaderId": "pi:anima:/repo/.epi/agents/anima/agent/plugin-runtime.json",
+                "retrySettlementState": "imported-idle",
+                "diagnostics": [{
+                    "severity": "info",
+                    "message": "external run imported through compatibility RPC",
+                    "source": "khora.agent_session_runtime"
+                }]
             }),
         )
         .await
@@ -179,15 +286,35 @@ async fn sessions_rpc_fork_resume_import_and_tree_preserve_lineage() {
     assert_eq!(fork["record"]["parentSessionKey"], "agent:main:main");
     assert_eq!(fork["record"]["sourceSessionKey"], "agent:main:main");
     assert_eq!(fork["record"]["sourceSessionKind"], "fork");
+    assert_eq!(fork["record"]["sessionId"], "20260507-120000-root");
     assert_eq!(fork["record"]["dayId"], "07-05-2026");
+    assert_eq!(fork["record"]["activeAgentId"], "anima");
     assert_eq!(
         fork["record"]["vaultNowPath"],
         "/vault/Empty/Present/07-05-2026/20260507-120000-root/now.md"
+    );
+    assert_eq!(fork["record"]["runtimeCwd"], "/repo");
+    assert_eq!(fork["record"]["vaultRoot"], "/vault");
+    assert_eq!(
+        fork["record"]["resourceLoaderId"],
+        "pi:anima:/repo/.epi/agents/anima/agent/plugin-runtime.json"
+    );
+    assert_eq!(fork["record"]["retrySettlementState"], "idle-after-retry");
+    assert_eq!(
+        fork["record"]["diagnostics"][0]["source"],
+        "khora.agent_session_runtime"
     );
 
     assert_eq!(resume["canonicalKey"], "agent:main:resume:one");
     assert_eq!(resume["record"]["parentSessionKey"], "agent:main:fork:one");
     assert_eq!(resume["record"]["sourceSessionKind"], "resume");
+    assert_eq!(resume["record"]["sessionId"], "20260507-120000-root");
+    assert_eq!(resume["record"]["activeAgentId"], "anima");
+    assert_eq!(resume["record"]["runtimeCwd"], "/repo");
+    assert_eq!(
+        resume["record"]["resourceLoaderId"],
+        "pi:anima:/repo/.epi/agents/anima/agent/plugin-runtime.json"
+    );
 
     assert_eq!(imported["canonicalKey"], "agent:main:import:one");
     assert_eq!(
@@ -196,6 +323,24 @@ async fn sessions_rpc_fork_resume_import_and_tree_preserve_lineage() {
     );
     assert_eq!(imported["record"]["sourceSessionKind"], "import");
     assert_eq!(imported["record"]["label"], "Imported Claude run");
+    assert_eq!(imported["record"]["sessionId"], "external-claude-abc");
+    assert_eq!(imported["record"]["dayId"], "07-05-2026");
+    assert_eq!(imported["record"]["activeAgentId"], "anima");
+    assert_eq!(
+        imported["record"]["vaultNowPath"],
+        "/vault/Empty/Present/07-05-2026/external-claude-abc/now.md"
+    );
+    assert_eq!(imported["record"]["runtimeCwd"], "/repo");
+    assert_eq!(imported["record"]["vaultRoot"], "/vault");
+    assert_eq!(
+        imported["record"]["resourceLoaderId"],
+        "pi:anima:/repo/.epi/agents/anima/agent/plugin-runtime.json"
+    );
+    assert_eq!(imported["record"]["retrySettlementState"], "imported-idle");
+    assert_eq!(
+        imported["record"]["diagnostics"][0]["source"],
+        "khora.agent_session_runtime"
+    );
 
     let rows = tree["sessions"].as_array().unwrap();
     assert!(rows

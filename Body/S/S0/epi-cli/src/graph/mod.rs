@@ -1,14 +1,19 @@
-use clap::Subcommand;
+use clap::{Subcommand, ValueEnum};
 
 pub mod alignment_validator;
+pub mod analyse;
+pub mod anuttara;
 pub mod api;
 pub mod bidirectional_sync;
 pub mod client;
+pub mod constraint;
 pub mod coordinate_array_parser;
+pub mod cypher;
 pub mod dataset_import;
 pub mod dev;
 pub mod doctor;
 pub mod embeddings;
+pub mod ingest;
 pub mod link_enforcement;
 pub mod mapper;
 pub mod meta;
@@ -89,12 +94,136 @@ pub enum GraphCmd {
     /// Augment Parashakti ChakralCenter nodes with body_zones arrays + decan body data (Phase 9)
     #[command(name = "seed-nara")]
     SeedNara,
+    /// Run constrained Cypher against the bimba graph (read-only by default)
+    Cypher {
+        /// Cypher query string
+        query: String,
+        /// JSON object of scalar parameters
+        #[arg(short, long)]
+        params: Option<String>,
+        /// Maximum rows to return (default 200, capped at 10000)
+        #[arg(long, default_value_t = cypher::DEFAULT_ROW_LIMIT)]
+        limit: usize,
+        /// Allow write operations (CREATE/MERGE/SET/DELETE/REMOVE/CALL/FOREACH)
+        #[arg(long)]
+        write: bool,
+        /// Allow DDL (CREATE INDEX, CREATE CONSTRAINT, etc.) — implies --write
+        #[arg(long)]
+        admin: bool,
+    },
+    /// Open a typed document ingestion session
+    Ingest {
+        /// Path to the document being ingested (acts as the document_id)
+        document: String,
+        /// Engaged Bimba coordinate (e.g., M2-1-3)
+        #[arg(short, long)]
+        coordinate: String,
+        /// Session key for this ingestion arc
+        #[arg(short = 'k', long)]
+        session_key: String,
+    },
+    /// Produce a structured 72-vector resonance analysis for a document
+    #[command(name = "analyse-resonance")]
+    AnalyseResonance {
+        /// Path to the document to analyse
+        document: String,
+        /// Engaged Bimba coordinate
+        #[arg(short, long)]
+        coordinate: String,
+        /// Optional ingestion session id to advance through PrehensiveAnalysis
+        #[arg(long)]
+        session_id: Option<String>,
+    },
+    /// Persist a completed resonance analysis to the bimba map
+    #[command(name = "persist-analysis")]
+    PersistAnalysis {
+        /// Path to a JSON file containing a ResonanceAnalysis
+        analysis_file: String,
+        /// Session key for the deposit
+        #[arg(short = 'k', long)]
+        session_key: String,
+        /// Optional ingestion session id to advance through PersistedAnalysis
+        #[arg(long)]
+        session_id: Option<String>,
+    },
+    /// Recompute the aggregate target resonance vector for a coordinate
+    #[command(name = "aggregate-resonance")]
+    AggregateResonance {
+        /// Engaged Bimba coordinate
+        coordinate: String,
+    },
+    /// Verify a trajectory deposit against the registered constraints
+    #[command(name = "verify-trajectory")]
+    VerifyTrajectory {
+        /// Path to a JSON file containing a TrajectoryDeposit
+        deposit_file: String,
+    },
+    /// Constraint registry management
+    Constraint {
+        #[command(subcommand)]
+        cmd: ConstraintCmd,
+    },
+    /// Parse an Anuttara symbolic-coordinate diagnostic string
+    #[command(name = "ask-anuttara")]
+    AskAnuttara {
+        /// Symbolic expression to parse (e.g., "?#2-1-3-4{2,4}; ○")
+        expression: String,
+        /// Coordinate context to include in the reflection prompt
+        #[arg(short, long, default_value = "M0")]
+        coordinate: String,
+        /// Optional session key
+        #[arg(short = 'k', long)]
+        session_key: Option<String>,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum ConstraintCmd {
+    /// List all registered constraints
+    List,
+    /// Register or replace a constraint
+    Register {
+        /// Constraint name (unique within registry)
+        name: String,
+        /// Path to a .cypher file containing the read-only query
+        query_file: String,
+        /// Severity level
+        #[arg(short, long, value_enum, default_value_t = ConstraintSeverityArg::Warning)]
+        severity: ConstraintSeverityArg,
+        /// Anuttara template (e.g., "?#{coord}{3}")
+        #[arg(short, long)]
+        template: String,
+    },
+    /// Enable a constraint by name
+    Enable { name: String },
+    /// Disable a constraint by name
+    Disable { name: String },
+    /// Remove a constraint by name
+    Remove { name: String },
+}
+
+#[derive(Clone, Copy, Debug, ValueEnum)]
+pub enum ConstraintSeverityArg {
+    Info,
+    Warning,
+    Error,
+}
+
+impl From<ConstraintSeverityArg> for epi_kernel_contract::ConstraintSeverity {
+    fn from(value: ConstraintSeverityArg) -> Self {
+        match value {
+            ConstraintSeverityArg::Info => Self::Info,
+            ConstraintSeverityArg::Warning => Self::Warning,
+            ConstraintSeverityArg::Error => Self::Error,
+        }
+    }
 }
 
 pub use epi_s2_graph_services::{
-    fusion_rrf_results, parse_yaml_frontmatter, GraphMethodParams, GraphMethodService,
-    GraphNodeRequest, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
-    HybridFusionConfig, KernelResonanceObservationRequest, RetrievalResult,
+    fusion_rrf_results, kernel_coordinate_anchor_from_parts, parse_yaml_frontmatter,
+    GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphQueryRequest,
+    GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
+    KernelResonanceObservationRequest, PointerWebRefreshRequest, RetrievalResult,
 };
 
 fn compose_file_path() -> Result<String, String> {
@@ -441,6 +570,258 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
             let chakra_result = seed::seed_parashakti_body_zones(&client).await?;
             let decan_result = seed::seed_decan_body_data(&client).await?;
             Ok(format!("{}\n{}", chakra_result, decan_result))
+        }
+        GraphCmd::Cypher {
+            query,
+            params,
+            limit,
+            write,
+            admin,
+        } => {
+            let mode = if *admin {
+                cypher::CypherMode::ADMIN
+            } else if *write {
+                cypher::CypherMode::WRITE
+            } else {
+                cypher::CypherMode::READ_ONLY
+            };
+            let parsed: serde_json::Map<String, serde_json::Value> = match params.as_deref() {
+                Some(raw) if !raw.trim().is_empty() => serde_json::from_str(raw)
+                    .map_err(|e| format!("--params must be a JSON object: {e}"))?,
+                _ => serde_json::Map::new(),
+            };
+            let config = client::Neo4jConfig::from_env();
+            let neo4j = client::Neo4jClient::connect(&config)
+                .map_err(|e| format!("connect failed: {}", e))?;
+            let result = cypher::run(&neo4j, query, &parsed, mode, *limit).await?;
+            serde_json::to_string_pretty(&result).map_err(|e| e.to_string())
+        }
+        GraphCmd::Ingest {
+            document,
+            coordinate,
+            session_key,
+        } => {
+            let home = ingest::ingest_home();
+            let (session, path) = ingest::open_session(document, coordinate, session_key, &home)?;
+            let payload = serde_json::json!({
+                "session_id": session.session_id,
+                "document_id": session.document_id,
+                "coordinate": session.coordinate,
+                "session_key": session.session_key,
+                "status": session.status,
+                "path": path.display().to_string(),
+            });
+            serde_json::to_string_pretty(&payload).map_err(|e| e.to_string())
+        }
+        GraphCmd::AnalyseResonance {
+            document,
+            coordinate,
+            session_id,
+        } => {
+            let content =
+                std::fs::read_to_string(document).map_err(|e| format!("read {document}: {e}"))?;
+            let analyser = analyse::DeterministicAnalyser::new();
+            let analysis = <analyse::DeterministicAnalyser as analyse::ResonanceAnalyser>::analyse(
+                &analyser, document, coordinate, &content,
+            )?;
+            if let Some(sid) = session_id {
+                let home = ingest::ingest_home();
+                let mut session = ingest::load(sid, &home)?;
+                let projection = portal_core::KernelProjection::from_clock_state(
+                    0,
+                    1,
+                    [1.0, 0.0, 0.0, 0.0],
+                    [0.5, 0.5, 0.5, 0.5],
+                    Some(&analysis.resonance_vector),
+                    None,
+                    0.0,
+                );
+                let envelope =
+                    epi_kernel_contract::KernelTickEnvelope::from_kernel_projection(1, &projection)
+                        .with_session_key(session.session_key.clone())
+                        .with_source_coordinate(session.coordinate.clone())
+                        .with_observed_resonance(analysis.resonance_vector.clone());
+                session
+                    .record_envelope(
+                        epi_kernel_contract::IngestionStatus::PrehensiveAnalysis,
+                        envelope,
+                    )
+                    .map_err(str::to_owned)?;
+                ingest::save(&session, &home)?;
+            }
+            serde_json::to_string_pretty(&analysis).map_err(|e| e.to_string())
+        }
+        GraphCmd::PersistAnalysis {
+            analysis_file,
+            session_key,
+            session_id,
+        } => {
+            let raw = std::fs::read_to_string(analysis_file)
+                .map_err(|e| format!("read {analysis_file}: {e}"))?;
+            let analysis: epi_kernel_contract::ResonanceAnalysis =
+                serde_json::from_str(&raw).map_err(|e| format!("parse analysis: {e}"))?;
+            let config = client::Neo4jConfig::from_env();
+            let neo4j = client::Neo4jClient::connect(&config)
+                .map_err(|e| format!("connect failed: {}", e))?;
+            let service = GraphMethodService::new(&neo4j);
+            let timestamp_ms = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_millis() as u64)
+                .unwrap_or(1);
+            let mut written = Vec::new();
+            for pos in &analysis.dominant_positions {
+                let request = KernelResonanceObservationRequest {
+                    source_coordinate: analysis.coordinate.clone(),
+                    session_key: session_key.clone(),
+                    timestamp_ms,
+                    lens: pos.lens,
+                    ascent_helix: pos.ascent_helix,
+                    position: pos.position,
+                    score: pos.intensity as f64,
+                    kernel_tick: 2,
+                    graphiti_arc_id: None,
+                };
+                let outcome = service.record_kernel_resonance(request).await?;
+                written.push(outcome);
+            }
+            if let Some(sid) = session_id {
+                let home = ingest::ingest_home();
+                let mut session = ingest::load(sid, &home)?;
+                let projection = portal_core::KernelProjection::from_clock_state(
+                    0,
+                    2,
+                    [1.0, 0.0, 0.0, 0.0],
+                    [0.5, 0.5, 0.5, 0.5],
+                    Some(&analysis.resonance_vector),
+                    None,
+                    0.0,
+                );
+                let envelope =
+                    epi_kernel_contract::KernelTickEnvelope::from_kernel_projection(2, &projection)
+                        .with_session_key(session.session_key.clone())
+                        .with_source_coordinate(session.coordinate.clone());
+                session
+                    .record_envelope(
+                        epi_kernel_contract::IngestionStatus::PersistedAnalysis,
+                        envelope,
+                    )
+                    .map_err(str::to_owned)?;
+                ingest::save(&session, &home)?;
+            }
+            let payload = serde_json::json!({
+                "coordinate": analysis.coordinate,
+                "dominant_positions_written": written.len(),
+                "observations": written,
+            });
+            serde_json::to_string_pretty(&payload).map_err(|e| e.to_string())
+        }
+        GraphCmd::AggregateResonance { coordinate } => {
+            let config = client::Neo4jConfig::from_env();
+            let neo4j = client::Neo4jClient::connect(&config)
+                .map_err(|e| format!("connect failed: {}", e))?;
+            let resolved = GraphMethodService::resolve_coordinate_string(coordinate)?;
+            let cypher_text = "MATCH (source:Bimba)
+                 WHERE source.coordinate = $canonical OR source.bimbaCoordinate = $input
+                 MATCH (source)-[:HAS_KERNEL_RESONANCE]->(obs:Bimba:KernelResonanceObservation)
+                 RETURN obs.c_5_kernel_resonance_index AS idx,
+                        avg(obs.c_5_kernel_resonance_score) AS score,
+                        count(obs) AS contributions";
+            let q = neo4rs::query(cypher_text)
+                .param("canonical", resolved.canonical.clone())
+                .param("input", resolved.input.clone());
+            let rows = neo4j
+                .run_query(q)
+                .await
+                .map_err(|e| format!("aggregate-resonance failed: {e}"))?;
+            let mut target = epi_kernel_contract::ResonanceVector72::default();
+            let mut total = 0usize;
+            for row in &rows {
+                let idx: i64 = row.get("idx").unwrap_or_default();
+                let score: f64 = row.get("score").unwrap_or_default();
+                if (0..72).contains(&idx) {
+                    target.values[idx as usize] = score as f32;
+                    total += 1;
+                }
+            }
+            let payload = serde_json::json!({
+                "coordinate": resolved.canonical,
+                "dimensions_filled": total,
+                "target_resonance": target,
+                "square_emphasis": portal_core::kernel_resonance_square_emphasis(&target),
+            });
+            serde_json::to_string_pretty(&payload).map_err(|e| e.to_string())
+        }
+        GraphCmd::VerifyTrajectory { deposit_file } => {
+            let raw = std::fs::read_to_string(deposit_file)
+                .map_err(|e| format!("read {deposit_file}: {e}"))?;
+            let deposit: epi_kernel_contract::TrajectoryDeposit =
+                serde_json::from_str(&raw).map_err(|e| format!("parse deposit: {e}"))?;
+            let config = client::Neo4jConfig::from_env();
+            let neo4j = client::Neo4jClient::connect(&config)
+                .map_err(|e| format!("connect failed: {}", e))?;
+            let home = constraint::constraint_home();
+            let report = constraint::run_all(&neo4j, &deposit, &home).await?;
+            serde_json::to_string_pretty(&report).map_err(|e| e.to_string())
+        }
+        GraphCmd::Constraint { cmd } => match cmd {
+            ConstraintCmd::List => {
+                let home = constraint::constraint_home();
+                let registry = constraint::Registry::load(&home)?;
+                serde_json::to_string_pretty(&registry).map_err(|e| e.to_string())
+            }
+            ConstraintCmd::Register {
+                name,
+                query_file,
+                severity,
+                template,
+            } => {
+                let home = constraint::constraint_home();
+                let entry = constraint::register(
+                    name,
+                    std::path::Path::new(query_file),
+                    (*severity).into(),
+                    template,
+                    &home,
+                )?;
+                serde_json::to_string_pretty(&entry).map_err(|e| e.to_string())
+            }
+            ConstraintCmd::Enable { name } => {
+                let home = constraint::constraint_home();
+                let mut registry = constraint::Registry::load(&home)?;
+                if !registry.set_enabled(name, true) {
+                    return Err(format!("constraint {name} not found"));
+                }
+                registry.save(&home)?;
+                Ok(format!("enabled {name}"))
+            }
+            ConstraintCmd::Disable { name } => {
+                let home = constraint::constraint_home();
+                let mut registry = constraint::Registry::load(&home)?;
+                if !registry.set_enabled(name, false) {
+                    return Err(format!("constraint {name} not found"));
+                }
+                registry.save(&home)?;
+                Ok(format!("disabled {name}"))
+            }
+            ConstraintCmd::Remove { name } => {
+                let home = constraint::constraint_home();
+                let mut registry = constraint::Registry::load(&home)?;
+                if !registry.remove(name) {
+                    return Err(format!("constraint {name} not found"));
+                }
+                registry.save(&home)?;
+                Ok(format!("removed {name}"))
+            }
+        },
+        GraphCmd::AskAnuttara {
+            expression,
+            coordinate,
+            session_key,
+        } => {
+            let diag = anuttara::parse_strict(expression)?;
+            let prompt =
+                anuttara::build_reflection_prompt(diag, coordinate.clone(), session_key.clone());
+            serde_json::to_string_pretty(&prompt).map_err(|e| e.to_string())
         }
     }
 }

@@ -651,6 +651,7 @@ mod tests {
                 phase: None,
             },
             qv_facet: Default::default(),
+            coordinate_anchor: epi_s2_graph_services::kernel_coordinate_anchor_for("C1").unwrap(),
             structural_correspondences: vec![StructuralCorrespondence {
                 coordinate: "C1".to_string(),
                 family: "Category".to_string(),

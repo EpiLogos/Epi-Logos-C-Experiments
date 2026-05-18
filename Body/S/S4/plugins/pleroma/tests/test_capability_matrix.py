@@ -21,12 +21,16 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         for skill in matrix["skills"]:
             self.assertTrue((PLUGIN_ROOT / "skills" / skill["name"] / "SKILL.md").is_file(), skill)
 
+        for command in matrix["commands"]:
+            self.assertTrue((PLUGIN_ROOT / command["path"]).is_file(), command)
+
         skill_names = {skill["name"] for skill in matrix["skills"]}
         for required in [
             "anima-orchestration",
             "vak-evaluate",
             "vak-coordinate-frame",
             "day-night-pass",
+            "goal-prelude",
         ]:
             self.assertIn(required, skill_names)
 
@@ -53,6 +57,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         self.assertIn("summary_only_subagent_returns", gates["anima"]["role_restrictions"])
         for required in [
             "dispatch_agent",
+            "goal_prelude",
             "run_chain",
             "subagent_create",
             "subagent_continue",
@@ -67,6 +72,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
             "vak-coordinate-frame",
             "vak-evaluate",
             "anima-orchestration",
+            "goal-prelude",
             "day-night-pass",
         ]:
             self.assertIn(required, anima_skills)

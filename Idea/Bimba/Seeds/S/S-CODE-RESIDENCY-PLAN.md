@@ -54,6 +54,7 @@ Body/
     S0/
       epi-cli/
       epi-lib/
+      portal-core/
       tools/
     S1/
       hen-compiler/
@@ -120,8 +121,10 @@ Owns:
 
 - `epi-cli` as command/control-plane package.
 - `epi-lib` as C/M-family ground engine.
+- `portal-core` as the shared Rust math/runtime mirror for portal, TUI, and future desktop surfaces.
 - S0 tools and command helpers.
 - Compatibility shims that make the rest of S executable.
+- The first executable [[Kernel]] body: QL/MEF meta-layer math, bioquaternionic state, epogdoon tick law, harmonic ratios, resonance-vector indexing, and C/Rust/FFI exposure.
 
 Current roots to migrate:
 
@@ -131,6 +134,8 @@ Current roots to migrate:
 - `src/qv_data.c` -> `Body/S/S0/epi-lib/` or retired into a non-code seed artifact after dependency proof.
 
 Important nuance: `epi-cli` contains modules for every level. Its package residency is S0 because CLI is the executable return surface. Its internal modules must still be indexed by their owning coordinate: `gate` is S3, `agent` is S4, `graph` is S2, `nara` is S5/M4, and so on.
+
+Kernel nuance: envelope/API/TypeScript contracts should not become a second kernel. They should expose the QL/MEF computational meta-layer that is actually computed in `epi-lib` and mirrored in Rust. The kernel's mathematical authority begins in the deep C substrate, passes through Rust/FFI/runtime surfaces, and only then appears as API/envelope shape.
 
 ### S1 / S1'
 

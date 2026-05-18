@@ -43,6 +43,21 @@ This resolves the apparent 0/1 bifurcation:
 - [[M4']] / [[M5']] hold the Nara/Epii personal and integrative return.
 - `/` is the S0' return through which setup, configuration, command invocation, and agent access become explicit.
 
+## Harmonic / Musical Surface Law
+
+The M' portal must treat the musical instrument as the common rendering substrate for the structural side, clock side, and personal/world return. The same `MathemeHarmonicProfile` should be readable by all M' domains:
+
+- [[M0']] shows the selected coordinate's harmonic profile and pointer-web topology on the Bimba map.
+- [[M1']] turns graph traversal into intervallic/topological movement.
+- [[M2']] exposes MEF lens anchors, correspondences, elements, and semantic resonance.
+- [[M3']] renders the epogdoon tick, bimba/pratibimba helix, Kairos, solar/cosmic clock, sonic pulse, and cymatic boundary.
+- [[M4']] records journal/DAY/NOW events against the current harmonic context.
+- [[M5']] reviews and improves the system using harmonic-profile, graph, session, and evidence deltas.
+
+The portal should not derive this separately per widget. It should consume the shared kernel/pointer profile from S0/S2/S3 contracts, with [[M'-SYSTEM-SPEC]] as the language authority.
+
+The same profile must also expose the diatonic CF/VAK projection. [[M2']] uses it to show modes and correspondences as context-frame rotations; [[M3']] uses it to make the clock's tick audible/visible as CF progression; [[M5']] uses it so VAK/Anima/Epii routing can share the same tonal/context grammar as the instrument. Ionian-through-Locrian mode labels are acceptable UI terms only when backed by the explicit CF anchor they name.
+
 ## Shared Runtime Law
 
 The TUI and desktop app must consume the same underlying truths:

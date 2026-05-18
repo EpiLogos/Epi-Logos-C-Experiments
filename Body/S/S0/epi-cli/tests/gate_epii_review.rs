@@ -102,3 +102,72 @@ async fn s5_review_gateway_preserves_human_gate() {
 
     assert!(rejected.message.contains("requires human resolution"));
 }
+
+#[tokio::test]
+async fn s5_review_gateway_surfaces_kernel_visibility_for_epii() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18917).await;
+
+    let submitted = client
+        .request(
+            "s5'.review.submit",
+            json!({
+                "source": "autoresearch",
+                "title": "Review kernel-informed readiness",
+                "body": "Autoresearch observed a kernel pulse delta; Epii must interpret it.",
+                "priority": "high",
+                "coordinate_context": {
+                    "coordinate": "S5/S5'",
+                    "session_key": "agent:epii:main"
+                },
+                "requires_human": false,
+                "kernel_visibility": {
+                    "projection": {
+                        "coordinateOwner": "S0/QL-meta",
+                        "projectionOwner": "S3'",
+                        "privacy": "safe-public-current-kernel-tick",
+                        "computationSource": "portal-core::KernelProjection",
+                        "generation": 44,
+                        "tick": {
+                            "cycle": 2,
+                            "subTick": 7,
+                            "phase": "Ascent",
+                            "element": "InverseMobius",
+                            "position6": 1,
+                            "harmonicRatio": "0.750000"
+                        },
+                        "harmonicPulse": {
+                            "cycle": 2,
+                            "subTick": 7,
+                            "phase": "Ascent",
+                            "element": "InverseMobius",
+                            "ratioNum": 3,
+                            "ratioDen": 4,
+                            "tempoMultiplier": "0.750000",
+                            "periodMultiplier": "1.333333"
+                        },
+                        "energy": { "totalEnergy": "0.270000" }
+                    },
+                    "energy_delta": "0.150000",
+                    "resonance_delta": "tritone-square:2:+0.080000",
+                    "musical_readiness": "data_ready_audio_deferred",
+                    "visual_readiness": "ready_for_projection",
+                    "advisory_only": true
+                }
+            }),
+        )
+        .await
+        .expect("kernel visibility review item should submit");
+
+    assert_eq!(
+        submitted["item"]["kernel_visibility"]["projection"]["privacy"],
+        "safe-public-current-kernel-tick"
+    );
+    assert_eq!(
+        submitted["item"]["kernel_visibility"]["musical_readiness"],
+        "data_ready_audio_deferred"
+    );
+    assert_eq!(
+        submitted["item"]["kernel_visibility"]["advisory_only"],
+        true
+    );
+}

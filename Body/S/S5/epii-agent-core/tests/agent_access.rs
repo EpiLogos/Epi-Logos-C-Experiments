@@ -21,6 +21,7 @@ fn snapshot_reads_real_review_and_autoresearch_state() {
             coordinate_context: json!({"coordinate": "S4/S4' -> S5/S5'"}),
             proposed_action: None,
             requires_human: false,
+            kernel_visibility: None,
         })
         .expect("review deposit should persist");
 
@@ -51,6 +52,7 @@ fn snapshot_reads_real_review_and_autoresearch_state() {
                             .to_owned(),
                     ),
                 }],
+                kernel_evidence: None,
             }],
         )
         .expect("improvement evaluation should persist");

@@ -84,7 +84,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s2.graph.*",
         owner: "S2",
         status: CoordinateParityStatus::Mirror,
-        live_gateway_method: None,
+        live_gateway_method: Some("s2.graph.query / s2.graph.node / s2.graph.traverse / s2.graph.pointer_web.compute / s2.graph.pointer_web.refresh / s2.graph.kernel_resonance.record"),
         cli_mirror: Some("epi graph"),
         body_path: "Body/S/S0/epi-cli/src/graph",
         test_evidence: &[
@@ -189,7 +189,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5.episodic.*",
         owner: "S3 runtime / S5 invocation",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5.episodic.search / s5.episodic.deposit"),
+        live_gateway_method: Some("s5.episodic.search / s5.episodic.deposit / s5.episodic.kernel_resonance.deposit"),
         cli_mirror: Some("epi gate graphiti"),
         body_path: "Body/S/S3/gateway-contract + Body/S/S0/epi-cli/src/gate/graphiti.rs",
         test_evidence: &[
@@ -346,8 +346,27 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "wizard.status"
         | "s0.command.exec"
         | "s0.command.completion" => Some("s0.*"),
-        "s2.graph.query" | "s2.graph.node" | "s2.graph.traverse" => Some("s2.graph.*"),
-        "s2'.coordinate.resolve" | "s2'.retrieve" | "s2'.rerank" | "s2'.enrich" => Some("s2'.*"),
+        "s2.graph.query"
+        | "s2.graph.node"
+        | "s2.graph.traverse"
+        | "s2.graph.pointer_web.compute"
+        | "s2.graph.pointer_web.refresh" => Some("s2.graph.*"),
+        "s2.graph.kernel_resonance.record" => Some("s2.graph.*"),
+        "s2'.coordinate.resolve"
+        | "s2'.coordinate.cypher"
+        | "s2'.coordinate.ingest"
+        | "s2'.coordinate.analyse_resonance"
+        | "s2'.coordinate.persist_analysis"
+        | "s2'.coordinate.aggregate_resonance"
+        | "s2'.constraint.list"
+        | "s2'.constraint.register"
+        | "s2'.constraint.test"
+        | "s2'.retrieve"
+        | "s2'.rerank"
+        | "s2'.enrich" => Some("s2'.*"),
+        "s3'.kernel.envelope.publish" => Some("s3'.*"),
+        "s5.trajectory.verify" | "s5.ebm.train" | "s5.ebm.export_state" => Some("s5'.improve.*"),
+        "s5'.anuttara.diagnose" => Some("s5'.ql.*"),
         "channels.status"
         | "channels.send"
         | "channels.files.list"
@@ -360,6 +379,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "sessions.list"
         | "sessions.preview"
         | "sessions.resolve"
+        | "sessions.run-state"
         | "sessions.patch"
         | "sessions.reset"
         | "sessions.delete"
@@ -409,7 +429,9 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve" | "s5'.review.history" => {
             Some("s5'.review.*")
         }
-        "s5.episodic.search" | "s5.episodic.deposit" => Some("s5.episodic.*"),
+        "s5.episodic.search" | "s5.episodic.deposit" | "s5.episodic.kernel_resonance.deposit" => {
+            Some("s5.episodic.*")
+        }
         "s5'.improve.status"
         | "s5'.improve.propose"
         | "s5'.improve.evaluate"
@@ -437,6 +459,7 @@ pub fn session_method_names() -> &'static [&'static str] {
         "sessions.list",
         "sessions.preview",
         "sessions.resolve",
+        "sessions.run-state",
         "sessions.patch",
         "sessions.reset",
         "sessions.delete",

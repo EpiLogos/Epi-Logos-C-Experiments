@@ -330,6 +330,12 @@ This layer is also explicitly **open to its own development and evolution**. The
 | Field | Coordinate Home | Implementation Slot | Residency | Cost |
 |---|---|---|---|---|
 | `c_0_ql_schema_version` | [[C]] / [[C']] | [[C']] coordinate law — version of QL schema operative for this run | `vault:Bimba/World` (QL law is canonical) | hot |
+| `c_0_kernel_projection` | [[S0]] / [[C]] / [[C']] | [[S0]] kernel public projection; `portal-core::KernelTemporalProjection` emitted through `s3'.temporal.context` | `spacetimedb:session_surface.kernel_projection_json` / `spacetimedb:global_temporal_surface.kernel_projection_json` | hot |
+| `c_3_kernel_tick` | [[C]] / [[S3']] | [[S3']] temporal surface of `portal-core::KernelProjection.tick` | `spacetimedb:*_surface.kernel_projection_json.tick` | hot |
+| `c_2_kernel_harmonic_pulse` | [[C]] / [[S3']] | [[S3']] temporal surface of `portal-core::KernelProjection.harmonic_pulse` | `spacetimedb:*_surface.kernel_projection_json.harmonicPulse` | hot |
+| `c_5_kernel_energy` | [[C]] / [[S3']] | [[S3']] public energy summary; protected detail remains local to portal-core / graph / Graphiti | `spacetimedb:*_surface.kernel_projection_json.energy` | hot |
+| `c_0_kernel_computation_source` | [[C]] / [[S0]] | source marker for projections computed by `portal-core::KernelProjection` | none | hot |
+| `c_0_kernel_privacy_class` | [[C]] / [[S3']] | privacy membrane marker `safe-public-current-kernel-tick` | none | hot |
 | `c_3_ql_modal` | [[C']] / [[S4.4']] | [[Anima]] declares; [[C']] validates (Mod 2 / Mod 3 / Mod 4 / Mod 6 / Mod %) | none | hot |
 | `c_4_ctx_frame_variant` | [[S4.4']] | [[Anima]] constitutional agents — `(00/00)` / `(0/1)` / `(0/1/2)` / `(0/1/2/3)` / `(4.0/1-4.4/5)` / `(5/0)` | none | hot |
 | `c_5_inversion_state` | [[S4']] / [[C']] | [[Anima]] (ta-onta) — whether `#` has been applied; normal or inverted | none | hot |
@@ -339,6 +345,8 @@ This layer is also explicitly **open to its own development and evolution**. The
 | `c_5_pratibimba_mirror` | [[C']] / [[S4']] | [[Anima]] + [[S4']] — active [[Pratibimba]] reflection (Self / System face) | `vault:Pratibimba` | warm |
 | `c_2_dialectical_polarity` | [[C']] / [[S4.4']] | [[Anima]] — yin (# archetypes as structural potential) / yang (() context frames as actuality) | none | cold |
 | `c_0_ql_extension_fields` | [[C]] / [[C']] | [[C']] law — open typed map for QL concepts not yet formalised; versioned alongside `c_0_ql_schema_version` | `vault:Bimba/Seeds` (extension candidates) | cold |
+
+**Kernel projection invariant:** The QL Process layer may expose the current public kernel tick, harmonic pulse, and energy summary, but it must not expose protected bioquaternion state, resonance vectors, identity material, or journal content through the shared temporal surface. The public projection is `safe-public-current-kernel-tick`; protected kernel detail remains inside local portal-core consumers, private graph/Graphiti namespaces, or explicit user-authorised views.
 
 **On evolution:** The `c_0_ql_extension_fields` field is the explicit growth surface for this layer. New QL insights begin here — informal, experimental, named but not yet canonised. When an extension field has been validated through improvement loops and stabilised in [[Sophia]]'s disclosure, it graduates from `c_0_ql_extension_fields` into a named field in a new schema version. The version is bumped via `c_0_ql_schema_version`. Prior runs are legible because their version is recorded. This is how the QL layer stays philosophically open without becoming architecturally unstable.
 
@@ -361,10 +369,10 @@ This layer is also explicitly **open to its own development and evolution**. The
 | 9. Episodic Reporting | 3 | 1 | 5 | 9 |
 | 10. Crystallisation | 0 | 0 | 11 | 11 |
 | 11. Improvement | 0 | 0 | 10 | 10 |
-| 12. QL Process | 6 | 2 | 2 | 10 |
-| **Total** | **61** | **9** | **48** | **118** |
+| 12. QL Process | 12 | 2 | 2 | 16 |
+| **Total** | **67** | **9** | **48** | **124** |
 
-An ordinary execution run carries the 61 hot fields and potentially some warm fields via Redis. Cold fields are gated to deep-work modes. The QL Process layer contributes 6 hot fields to every run — QL is always live, never optional.
+An ordinary execution run carries the 67 hot fields and potentially some warm fields via Redis. Cold fields are gated to deep-work modes. The QL Process layer contributes 12 hot fields to every run — QL is always live, never optional, and the public kernel pulse is part of that temporal law.
 
 ---
 

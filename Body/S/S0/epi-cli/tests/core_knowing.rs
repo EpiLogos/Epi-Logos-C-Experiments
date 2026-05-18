@@ -32,6 +32,20 @@ fn knowing_json_outputs_dossier_facets() {
     assert!(json["latest_snapshot"].is_object());
     assert_ne!(json["notebook_pulse"]["source"], "structural-placeholder");
     assert_ne!(json["latest_snapshot"]["source"], "structural-placeholder");
+    assert_eq!(json["coordinate_anchor"]["coordinate"], "C1");
+    assert_eq!(json["coordinate_anchor"]["kernel"]["source"], "s0.kernel");
+    assert_eq!(
+        json["coordinate_anchor"]["pointer_web"]["pointer_count"],
+        36
+    );
+    assert_eq!(
+        json["coordinate_anchor"]["pointer_web"]["family_refs"]["c_ref"],
+        "C1"
+    );
+    assert_eq!(
+        json["coordinate_anchor"]["qvdata"]["source"],
+        "epi core knowing"
+    );
     assert!(json["actions"]
         .as_array()
         .is_some_and(|actions| actions.iter().any(|action| action["id"] == "refresh")));

@@ -228,35 +228,51 @@ impl PortalSurfaceProvider for SessionOperationsProvider {
     fn surfaces(&self) -> Vec<PortalSurface> {
         gateway_session_operation_contracts()
             .iter()
-            .map(|contract| PortalSurface {
-                id: format!("session-op.{}", contract.operation_id),
-                coordinate: contract.coordinate_owner.to_string(),
-                kind: PortalSurfaceKind::GatewayMethod,
-                label: format!("{} session operation", contract.operation_id),
-                command_hint: contract.gateway_method.to_string(),
-                proves_raw_service_health: true,
-                proves_agent_access_separately: true,
-                config_fields: Vec::new(),
-                actions: vec![PortalSurfaceAction {
-                    id: format!("session-op.{}.invoke", contract.operation_id),
-                    label: "Invoke session operation".to_string(),
-                    kind: PortalActionKind::RunCommand,
-                    command: vec![
-                        "epi".to_string(),
-                        "gate".to_string(),
-                        "rpc".to_string(),
-                        contract.gateway_method.to_string(),
-                    ],
-                }],
-                source: PortalSurfaceSource::GatewaySessionContract,
-                trust_tier: "builtin".to_string(),
-                metadata: vec![
+            .map(|contract| {
+                let mut metadata = vec![
                     format!("gateway_method: {}", contract.gateway_method),
                     format!("agent_access_owner: {}", contract.agent_access_owner),
                     format!("projection: {}", contract.projection_table),
                     format!("request: {}", contract.request_keys.join(", ")),
                     format!("response: {}", contract.response_keys.join(", ")),
-                ],
+                ];
+                metadata.extend(
+                    contract
+                        .request_keys
+                        .iter()
+                        .map(|key| format!("request: {key}")),
+                );
+                metadata.extend(
+                    contract
+                        .response_keys
+                        .iter()
+                        .map(|key| format!("response: {key}")),
+                );
+
+                PortalSurface {
+                    id: format!("session-op.{}", contract.operation_id),
+                    coordinate: contract.coordinate_owner.to_string(),
+                    kind: PortalSurfaceKind::GatewayMethod,
+                    label: format!("{} session operation", contract.operation_id),
+                    command_hint: contract.gateway_method.to_string(),
+                    proves_raw_service_health: true,
+                    proves_agent_access_separately: true,
+                    config_fields: Vec::new(),
+                    actions: vec![PortalSurfaceAction {
+                        id: format!("session-op.{}.invoke", contract.operation_id),
+                        label: "Invoke session operation".to_string(),
+                        kind: PortalActionKind::RunCommand,
+                        command: vec![
+                            "epi".to_string(),
+                            "gate".to_string(),
+                            "rpc".to_string(),
+                            contract.gateway_method.to_string(),
+                        ],
+                    }],
+                    source: PortalSurfaceSource::GatewaySessionContract,
+                    trust_tier: "builtin".to_string(),
+                    metadata,
+                }
             })
             .collect()
     }

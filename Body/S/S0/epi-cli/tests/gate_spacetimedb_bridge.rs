@@ -143,7 +143,18 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["redisTemporalContext"]["sessionKairosKey"]
                 == "s3:gateway:temporal:session:main:kairos"
             && event.payload["kairos"]["privacy"] == "public-current-transit-only"
+            && event.payload["kernel"]["privacy"] == "safe-public-current-kernel-tick"
+            && event.payload["kernel"]["projectionOwner"] == "S3'"
             && event.payload["pratibimba"]["coordinate"] == "M4.4.4.4"
+            && event.payload["pratibimba"]["privacy"] == "protected-reference-only"
+            && event.payload["pratibimba"]["layerPresenceSummary"]["detail"] == "count-only"
+            && event.payload["pratibimba"]
+                .get("identityHashPreview")
+                .is_none()
+            && event.payload["pratibimba"]
+                .get("layerPresenceMask")
+                .is_none()
+            && event.payload["pratibimba"].get("layerCount").is_none()
             && event.payload["history"]["archivePath"]
                 .as_str()
                 .unwrap()
@@ -169,6 +180,10 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["redis"]["globalContextKey"]
                 == "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026"
             && event.payload["graphiti"]["sessionArcId"] == "day:07-03-2026:session:main"
+            && event.payload["kernel"]["privacy"] == "safe-public-current-kernel-tick"
+            && event.payload["kernel"]["tick"]["harmonicRatio"]
+                .as_str()
+                .is_some()
             && event.payload["privacy"] == "safe-live-projection"
     }));
     assert!(events.iter().any(|event| {
@@ -237,6 +252,7 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             &["s0.portal", "s3.session"],
         )
         .expect("client registration");
+    let kernel_projection_json = kernel_projection_json_string();
     client
         .bind_session_temporal_context(
             "agent:main:main",
@@ -260,6 +276,7 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "loader-main",
             "idle-after-retry",
             r#"[{"severity":"info","message":"session projected"}]"#,
+            &kernel_projection_json,
         )
         .expect("session surface");
     client
@@ -299,6 +316,7 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "graphiti-main",
             "pratibimba-abcd1234",
             "kairos-07-03-2026-main",
+            &kernel_projection_json,
         )
         .expect("global temporal surface");
 
@@ -365,6 +383,7 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "loader-main",
             "idle-after-retry",
             r#"[{"severity":"info","message":"session projected"}]"#,
+            kernel_projection_json.clone(),
         ]),
     );
     assert_reducer(
@@ -408,6 +427,7 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "graphiti-main",
             "pratibimba-abcd1234",
             "kairos-07-03-2026-main",
+            kernel_projection_json.clone(),
         ]),
     );
 }
@@ -416,6 +436,7 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
 fn spacetimedb_projection_query_hydrates_gateway_temporal_context_shape() {
     let listener = TcpListener::bind("127.0.0.1:0").expect("test listener should bind");
     let address = listener.local_addr().expect("listener addr");
+    let kernel_projection_json = kernel_projection_json_string();
     let server = thread::spawn(move || {
         let (mut stream, _) = listener.accept().expect("accept");
         let mut reader = BufReader::new(stream.try_clone().expect("clone stream"));
@@ -448,6 +469,7 @@ fn spacetimedb_projection_query_hydrates_gateway_temporal_context_shape() {
                     "graphiti_arc_id": "day:07-05-2026:session:session-main",
                     "pratibimba_anchor_ref": "pratibimba-abcd1234",
                     "kairos_snapshot_id": "kairos-07-05-2026-session-main",
+                    "kernel_projection_json": kernel_projection_json.clone(),
                     "active_agent_id": "anima",
                     "resource_loader_id": "loader://anima/plugin-runtime",
                     "runtime_cwd": "/repo",
@@ -490,6 +512,7 @@ fn spacetimedb_projection_query_hydrates_gateway_temporal_context_shape() {
                     "graphiti_session_arc_id": "day:07-05-2026:session:session-main",
                     "pratibimba_anchor_ref": "pratibimba-abcd1234",
                     "kairos_snapshot_id": "kairos-07-05-2026-session-main",
+                    "kernel_projection_json": kernel_projection_json.clone(),
                     "privacy_class": "safe-live-projection"
                 }]
             }
@@ -535,7 +558,39 @@ fn spacetimedb_projection_query_hydrates_gateway_temporal_context_shape() {
     assert_eq!(context["spacetimedb"]["projectionSource"], "http-sql-poll");
     assert_eq!(context["kairos"]["available"], true);
     assert_eq!(context["kairos"]["activeDecan"], 17);
+    assert_eq!(
+        context["kernel"]["privacy"],
+        "safe-public-current-kernel-tick"
+    );
+    assert_eq!(context["kernel"]["generation"], 11);
+    assert_eq!(context["kernel"]["tick"]["subTick"], 4);
+    assert_eq!(context["kernel"]["tick"]["phase"], "Descent");
+    assert_eq!(context["kernel"]["tick"]["element"], "SlashFlip");
+    assert_eq!(context["kernel"]["tick"]["harmonicRatio"], "1.125000");
+    assert_eq!(context["kernel"]["energy"]["totalEnergy"], "0.375000");
     assert_eq!(context["pratibimba"]["anchorId"], "pratibimba-abcd1234");
+    assert_eq!(
+        context["pratibimba"]["graphitiNamespaceRef"],
+        "pratibimba-abcd1234"
+    );
+    assert_eq!(context["pratibimba"]["privacy"], "protected-reference-only");
+    assert_eq!(
+        context["pratibimba"]["layerPresenceSummary"]["detail"],
+        "projection-anchor-only"
+    );
+    assert!(context["pratibimba"]["layerPresenceSummary"]["presentCount"].is_null());
+    assert!(
+        context["pratibimba"].get("identityHashPreview").is_none(),
+        "SpaceTimeDB projection must not hydrate protected profile hash detail"
+    );
+    assert!(
+        context["pratibimba"].get("layerPresenceMask").is_none(),
+        "SpaceTimeDB projection must not hydrate protected layer mask detail"
+    );
+    assert!(
+        context["pratibimba"].get("layerCount").is_none(),
+        "SpaceTimeDB projection must keep layer detail inside the safe summary"
+    );
     assert_eq!(
         context["graphiti"]["sessionArcId"],
         "day:07-05-2026:session:session-main"
@@ -620,6 +675,7 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
         .expect("test listener should bind");
     let address = listener.local_addr().expect("listener addr");
 
+    let kernel_projection_json = kernel_projection_json_string();
     let server = tokio::spawn(async move {
         let (stream, _) = listener.accept().await.expect("accept websocket");
         let mut socket = accept_hdr_async(stream, |request: &tokio_tungstenite::tungstenite::handshake::server::Request, mut response: tokio_tungstenite::tungstenite::handshake::server::Response| {
@@ -699,6 +755,7 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
                                             "day:07-05-2026:session:session-main",
                                             "pratibimba-abcd1234",
                                             "kairos-07-05-2026-session-main",
+                                            kernel_projection_json.clone(),
                                             1778179200
                                         ]]
                                     }]
@@ -753,6 +810,7 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
                                             "day:07-05-2026:session:session-main",
                                             "pratibimba-abcd1234",
                                             "kairos-07-05-2026-session-main",
+                                            kernel_projection_json.clone(),
                                             "safe-live-projection",
                                             1778179200
                                         ]]
@@ -795,7 +853,22 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
     assert_eq!(context["spacetimedb"]["projectionTable"], "session_surface");
     assert_eq!(context["session"]["sessionId"], "session-main");
     assert_eq!(context["kairos"]["activeDecan"], 17);
+    assert_eq!(
+        context["kernel"]["privacy"],
+        "safe-public-current-kernel-tick"
+    );
+    assert_eq!(context["kernel"]["tick"]["element"], "SlashFlip");
+    assert_eq!(context["kernel"]["energy"]["totalEnergy"], "0.375000");
     assert_eq!(context["pratibimba"]["anchorId"], "pratibimba-abcd1234");
+    assert_eq!(context["pratibimba"]["privacy"], "protected-reference-only");
+    assert_eq!(
+        context["pratibimba"]["layerPresenceSummary"]["detail"],
+        "projection-anchor-only"
+    );
+    assert!(context["pratibimba"]["layerPresenceSummary"]["presentCount"].is_null());
+    assert!(context["pratibimba"].get("identityHashPreview").is_none());
+    assert!(context["pratibimba"].get("layerPresenceMask").is_none());
+    assert!(context["pratibimba"].get("layerCount").is_none());
     assert_eq!(
         context["globalTemporal"]["projectionTable"],
         "global_temporal_surface"
@@ -815,6 +888,56 @@ fn assert_reducer(request: &(String, String, String), reducer: &str, payload: se
     assert_eq!(
         serde_json::from_str::<serde_json::Value>(&request.2).expect("request json"),
         payload
+    );
+}
+
+fn kernel_projection_json_string() -> String {
+    json!({
+        "coordinateOwner": "S0/QL-meta",
+        "projectionOwner": "S3'",
+        "privacy": "safe-public-current-kernel-tick",
+        "computationSource": "portal-core::KernelProjection",
+        "generation": 11,
+        "tick": {
+            "cycle": 99,
+            "subTick": 4,
+            "phase": "Descent",
+            "element": "SlashFlip",
+            "position6": 4,
+            "harmonicRatio": "1.125000"
+        },
+        "harmonicPulse": {
+            "cycle": 99,
+            "subTick": 4,
+            "phase": "Descent",
+            "element": "SlashFlip",
+            "ratioNum": 9,
+            "ratioDen": 8,
+            "tempoMultiplier": "1.125000",
+            "periodMultiplier": "0.888889"
+        },
+        "energy": {
+            "totalEnergy": "0.375000"
+        }
+    })
+    .to_string()
+}
+
+fn assert_safe_kernel_projection_json(raw: &str) {
+    let value: serde_json::Value = serde_json::from_str(raw).expect("kernel projection json");
+    assert_eq!(value["coordinateOwner"], "S0/QL-meta");
+    assert_eq!(value["projectionOwner"], "S3'");
+    assert_eq!(value["privacy"], "safe-public-current-kernel-tick");
+    assert_eq!(value["computationSource"], "portal-core::KernelProjection");
+    assert!(value["generation"].as_u64().unwrap() > 0);
+    assert!(value["tick"]["subTick"].as_u64().unwrap() <= 11);
+    assert!(
+        value.get("bioquaternion").is_none(),
+        "SpaceTimeDB public kernel projection must not carry protected bioquaternion detail"
+    );
+    assert!(
+        value.get("resonanceSquareEmphasis").is_none(),
+        "SpaceTimeDB public kernel projection must not carry protected resonance vectors"
     );
 }
 
@@ -1058,8 +1181,16 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "049563640efaa8256fa2b0acc06427636639dfa60054e0bf13943e7c40577394",
         ]),
     );
+    let bind_session = find_reducer(&requests, "bind_session_temporal_context");
+    let bind_session_payload: serde_json::Value =
+        serde_json::from_str(&bind_session.2).expect("bind session payload");
+    let kernel_projection_json = bind_session_payload[21]
+        .as_str()
+        .expect("kernel projection json")
+        .to_owned();
+    assert_safe_kernel_projection_json(&kernel_projection_json);
     assert_reducer(
-        find_reducer(&requests, "bind_session_temporal_context"),
+        bind_session,
         "bind_session_temporal_context",
         json!([
             "agent:main:main",
@@ -1083,6 +1214,7 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "loader-live",
             "idle",
             r#"[{"message":"registered","severity":"info"}]"#,
+            kernel_projection_json.clone(),
         ]),
     );
     assert_reducer(
@@ -1104,8 +1236,17 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "nara.kairos.current",
         ]),
     );
+    let bind_global = find_reducer(&requests, "bind_global_temporal_surface");
+    let bind_global_payload: serde_json::Value =
+        serde_json::from_str(&bind_global.2).expect("bind global payload");
+    assert_eq!(
+        bind_global_payload[18]
+            .as_str()
+            .expect("global kernel json"),
+        kernel_projection_json
+    );
     assert_reducer(
-        find_reducer(&requests, "bind_global_temporal_surface"),
+        bind_global,
         "bind_global_temporal_surface",
         json!([
             "install-live-test:gateway-live-test:agent:main:main",
@@ -1126,6 +1267,7 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "day:07-03-2026:session:main",
             "",
             "kairos-07-03-2026-main",
+            kernel_projection_json.clone(),
         ]),
     );
 }

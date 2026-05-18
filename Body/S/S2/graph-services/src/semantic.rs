@@ -7,6 +7,7 @@ use sha2::{Digest, Sha256};
 use crate::meta;
 use crate::GeminiEmbeddingClient;
 use crate::Neo4jClient;
+use crate::{kernel_coordinate_anchor_for, KernelCoordinateAnchor};
 
 pub const EMBEDDING_VERSION: &str = meta::EMBEDDING_VERSION;
 
@@ -16,6 +17,93 @@ pub struct SemanticDocument {
     pub text: String,
     pub source_hash: String,
     pub q_properties: BTreeMap<String, String>,
+    pub coordinate_anchor: KernelCoordinateAnchor,
+}
+
+impl SemanticDocument {
+    #[allow(clippy::too_many_arguments)]
+    pub fn from_coordinate_parts(
+        coordinate: &str,
+        name: &str,
+        family: &str,
+        layer: &str,
+        ql_position: &str,
+        essence: Option<&str>,
+        description: Option<&str>,
+        q_properties: BTreeMap<String, String>,
+        outgoing: Vec<String>,
+        incoming: Vec<String>,
+    ) -> Result<Self, String> {
+        let coordinate_anchor = kernel_coordinate_anchor_for(coordinate)?;
+        let mut lines = vec![
+            format!("coordinate: {coordinate}"),
+            format!("name: {name}"),
+            format!("family: {family}"),
+            format!("layer: {layer}"),
+            format!("ql_position: {ql_position}"),
+        ];
+
+        if let Some(essence) = essence.filter(|value| !value.is_empty()) {
+            lines.push(format!("essence: {essence}"));
+        }
+        if let Some(description) = description.filter(|value| !value.is_empty()) {
+            lines.push(format!("description: {description}"));
+        }
+
+        for (key, value) in &q_properties {
+            if !value.is_empty() {
+                lines.push(format!("{key}: {value}"));
+            }
+        }
+
+        lines.push("coordinate_anchor:".into());
+        lines.push(format!(
+            "kernel_source: {}",
+            coordinate_anchor.kernel.source
+        ));
+        lines.push(format!(
+            "kernel_projection: {}",
+            coordinate_anchor.kernel.safe_projection
+        ));
+        lines.push(format!(
+            "pointer_web_count: {}",
+            coordinate_anchor.pointer_web.pointer_count
+        ));
+        lines.push("pointer_family_refs:".into());
+        lines.extend(
+            pointer_ref_values(&coordinate_anchor.pointer_web.family_refs)
+                .into_iter()
+                .map(|item| format!("- {item}")),
+        );
+        lines.push(format!(
+            "qvdata_source: {}",
+            coordinate_anchor.qvdata.source
+        ));
+        lines.push(format!(
+            "qvdata_command: {}",
+            coordinate_anchor.qvdata.command
+        ));
+
+        if !outgoing.is_empty() {
+            lines.push("outgoing_relations:".into());
+            lines.extend(outgoing.into_iter().map(|item| format!("- {item}")));
+        }
+        if !incoming.is_empty() {
+            lines.push("incoming_relations:".into());
+            lines.extend(incoming.into_iter().map(|item| format!("- {item}")));
+        }
+
+        let text = lines.join("\n");
+        let source_hash = hash_text(&text);
+
+        Ok(Self {
+            coordinate: coordinate.to_owned(),
+            text,
+            source_hash,
+            q_properties,
+            coordinate_anchor,
+        })
+    }
 }
 
 pub async fn build_semantic_document(
@@ -56,56 +144,20 @@ pub async fn build_semantic_document(
     let outgoing = relation_summaries(client, coordinate, true).await?;
     let incoming = relation_summaries(client, coordinate, false).await?;
 
-    let mut lines = vec![
-        format!(
-            "coordinate: {}",
-            row.get::<String>("coordinate").unwrap_or_default()
-        ),
-        format!("name: {}", row.get::<String>("name").unwrap_or_default()),
-        format!(
-            "family: {}",
-            row.get::<String>("family").unwrap_or_default()
-        ),
-        format!("layer: {}", row.get::<String>("layer").unwrap_or_default()),
-        format!(
-            "ql_position: {}",
-            row.get::<String>("ql_position").unwrap_or_default()
-        ),
-    ];
-
     let essence: String = row.get("essence").unwrap_or_default();
-    if !essence.is_empty() {
-        lines.push(format!("essence: {}", essence));
-    }
     let description: String = row.get("description").unwrap_or_default();
-    if !description.is_empty() {
-        lines.push(format!("description: {}", description));
-    }
-
-    for (key, value) in &q_properties {
-        if !value.is_empty() {
-            lines.push(format!("{}: {}", key, value));
-        }
-    }
-
-    if !outgoing.is_empty() {
-        lines.push("outgoing_relations:".into());
-        lines.extend(outgoing.into_iter().map(|item| format!("- {}", item)));
-    }
-    if !incoming.is_empty() {
-        lines.push("incoming_relations:".into());
-        lines.extend(incoming.into_iter().map(|item| format!("- {}", item)));
-    }
-
-    let text = lines.join("\n");
-    let source_hash = hash_text(&text);
-
-    Ok(SemanticDocument {
-        coordinate: coordinate.to_string(),
-        text,
-        source_hash,
+    SemanticDocument::from_coordinate_parts(
+        &row.get::<String>("coordinate").unwrap_or_default(),
+        &row.get::<String>("name").unwrap_or_default(),
+        &row.get::<String>("family").unwrap_or_default(),
+        &row.get::<String>("layer").unwrap_or_default(),
+        &row.get::<String>("ql_position").unwrap_or_default(),
+        Some(essence.as_str()),
+        Some(description.as_str()),
         q_properties,
-    })
+        outgoing,
+        incoming,
+    )
 }
 
 pub async fn find_stale_nodes(
@@ -263,6 +315,12 @@ fn hash_text(text: &str) -> String {
     let mut hasher = Sha256::new();
     hasher.update(text.as_bytes());
     format!("{:x}", hasher.finalize())
+}
+
+fn pointer_ref_values(refs: &BTreeMap<String, String>) -> Vec<String> {
+    refs.iter()
+        .map(|(key, value)| format!("{key}={value}"))
+        .collect()
 }
 
 #[cfg(test)]

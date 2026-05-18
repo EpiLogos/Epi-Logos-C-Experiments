@@ -11,14 +11,21 @@ pub fn hopf_project(exact_degree_720: f64) -> f64 {
 
 /// Hopf fiber coordinate: 0 = explicate (Strand A), 1 = implicate (Strand B).
 pub fn hopf_fiber(exact_degree_720: f64) -> u8 {
-    if exact_degree_720 >= FULL_CYCLE_DEG { 1 } else { 0 }
+    if exact_degree_720 >= FULL_CYCLE_DEG {
+        1
+    } else {
+        0
+    }
 }
 
 /// Validate that a quaternion lies on S3 (unit sphere in 4D).
 pub fn validate_quaternion_unity(q: &[f32; 4]) -> Result<(), String> {
     let norm_sq = q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3];
     if (1.0 - norm_sq).abs() > 1e-4 {
-        Err(format!("Quaternion off S3: |q|^2 = {:.6}, expected 1.0", norm_sq))
+        Err(format!(
+            "Quaternion off S3: |q|^2 = {:.6}, expected 1.0",
+            norm_sq
+        ))
     } else {
         Ok(())
     }

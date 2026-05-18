@@ -1015,6 +1015,47 @@ interface KairosSnapshot {
   timestamp: number;
 }
 
+type KernelPhase = "Descent" | "Ascent";
+
+type KernelElement =
+  | "BimbaEncoding"
+  | "PratibimbaPrehension"
+  | "MobiusDescent"
+  | "SlashFlip"
+  | "PratibimbaAsBimba"
+  | "DoubledPrehension"
+  | "InverseMobius"
+  | "EnrichedReturn";
+
+interface KernelTemporalProjection {
+  coordinateOwner: "S0/QL-meta";
+  projectionOwner: "S3'";
+  privacy: "safe-public-current-kernel-tick";
+  computationSource: "portal-core::KernelProjection";
+  generation: number;
+  tick: {
+    cycle: number;
+    subTick: number;
+    phase: KernelPhase;
+    element: KernelElement;
+    position6: number;
+    harmonicRatio: string;
+  };
+  harmonicPulse: {
+    cycle: number;
+    subTick: number;
+    phase: KernelPhase;
+    element: KernelElement;
+    ratioNum: number;
+    ratioDen: number;
+    tempoMultiplier: string;
+    periodMultiplier: string;
+  };
+  energy: {
+    totalEnergy: string;
+  };
+}
+
 interface DecanInfo {
   index: number;                 // 0-35
   name: string;
@@ -1113,6 +1154,7 @@ interface TemporalState {
   day_id: string;
   now_id: string | null;
   kairos: KairosSnapshot | null;
+  kernel: KernelTemporalProjection | null;
   tick12: number;
   active_arcs: ArcSummary[];
   connected_agents: AgentId[];
@@ -1180,6 +1222,21 @@ interface S3MessageRouteRequest {
 // --- s3'.temporal ---
 // s3'.temporal.state: no request params
 type S3PrimeTemporalStateResponse = TemporalState;
+
+interface S3PrimeTemporalContextRequest {
+  session_key: string;
+  agent_id?: AgentId;
+  hydrate_redis?: boolean;
+}
+
+interface S3PrimeTemporalContextResponse {
+  day_id: string;
+  now_id: string | null;
+  now_path: string | null;
+  kairos: KairosSnapshot | null;
+  kernel: KernelTemporalProjection | null;
+  privacy: "safe-public-current-kernel-tick";
+}
 
 interface S3PrimeTemporalSubscribeRequest {
   events: string[];              // supports wildcards
@@ -2432,6 +2489,7 @@ interface S5PrimeSeedGenerateResponse {
 | `s3.channel.send` | `S3ChannelSendRequest` | `S3ChannelSendResponse` |
 | `s3.message.route` | `S3MessageRouteRequest` | `AsyncAck` |
 | `s3'.temporal.state` | — | `TemporalState` |
+| `s3'.temporal.context` | `S3PrimeTemporalContextRequest` | `S3PrimeTemporalContextResponse` |
 | `s3'.temporal.subscribe` | `S3PrimeTemporalSubscribeRequest` | `S3PrimeTemporalSubscribeResponse` |
 | `s3'.day.open` | `S3PrimeDayOpenRequest` | `S3PrimeDayOpenResponse` |
 | `s3'.day.close` | `S3PrimeDayCloseRequest` | `S3PrimeDayCloseResponse` |

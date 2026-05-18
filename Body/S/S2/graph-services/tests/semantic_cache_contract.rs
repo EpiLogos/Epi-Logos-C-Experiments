@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use epi_s2_graph_services::{
     GraphRedisRole, SearchPayload, SemanticCacheConfig, SemanticCacheHealth,
-    SemanticCacheMatchStrategy, StorePayload,
+    SemanticCacheMatchStrategy, SemanticDocument, StorePayload,
 };
 use epi_s3_redis_context::REDISVL_SERVICE_RELATIVE_PATH;
 
@@ -93,6 +93,34 @@ fn semantic_cache_payloads_include_prompt_attributes_and_threshold() {
     assert_eq!(store_json["prompt"], "How does context work?");
     assert_eq!(store_json["response"], "[{\"coordinate\":\"#4\"}]");
     assert_eq!(store_json["attributes"]["mode"], "hybrid_rrf");
+}
+
+#[test]
+fn semantic_document_text_includes_safe_kernel_coordinate_anchor() {
+    let mut q_properties = BTreeMap::new();
+    q_properties.insert("q_2_essence".to_string(), "patterned knowing".to_string());
+
+    let doc = SemanticDocument::from_coordinate_parts(
+        "M2",
+        "Mahamaya",
+        "M",
+        "M",
+        "2",
+        Some("matrix intelligence"),
+        Some("coordinate field for semantic patterning"),
+        q_properties,
+        vec!["RELATES_TO -> M3 :: Pattern".to_string()],
+        Vec::new(),
+    )
+    .expect("semantic document from coordinate parts");
+
+    assert_eq!(doc.coordinate, "M2");
+    assert_eq!(doc.coordinate_anchor.coordinate, "M2");
+    assert!(doc.text.contains("kernel_source: s0.kernel"));
+    assert!(doc.text.contains("pointer_web_count: 36"));
+    assert!(doc.text.contains("pointer_family_refs:"));
+    assert!(doc.text.contains("m_ref=M2"));
+    assert!(doc.text.contains("qvdata_source: epi core knowing"));
 }
 
 #[test]

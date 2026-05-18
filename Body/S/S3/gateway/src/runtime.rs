@@ -88,6 +88,24 @@ impl GatewayRuntimeState {
             .cloned()
     }
 
+    pub fn snapshots_for_session(&self, session_key: &str) -> Vec<RunSnapshot> {
+        let mut snapshots = self
+            .inner
+            .snapshots
+            .lock()
+            .expect("gateway runtime snapshots lock should not poison")
+            .values()
+            .filter(|snapshot| snapshot.session_key == session_key)
+            .cloned()
+            .collect::<Vec<_>>();
+        snapshots.sort_by(|left, right| {
+            left.started_at_ms
+                .cmp(&right.started_at_ms)
+                .then_with(|| left.run_id.cmp(&right.run_id))
+        });
+        snapshots
+    }
+
     pub fn subscribe(&self) -> GatewayEventSubscription {
         let id = self.inner.next_listener_id.fetch_add(1, Ordering::Relaxed) + 1;
         let (sender, receiver) = mpsc::unbounded_channel();

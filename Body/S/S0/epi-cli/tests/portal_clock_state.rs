@@ -1,70 +1,54 @@
-// portal_clock_state.rs — portal SharedClockState and KairosState contracts
+use std::sync::{Arc, Mutex};
 
-#[test]
-fn kairos_state_has_10_planet_slots() {
-    // KairosState must carry 10 planet degrees (Sun=0 through Pluto=9)
-    // Source: 00-canonical-invariants.md §2
-    const PLANET_COUNT: usize = 10;
-    let degrees: [u16; PLANET_COUNT] = [0u16; PLANET_COUNT];
-    assert_eq!(degrees.len(), 10);
-    // Index 7 = Uranus, not Mars (canonical mod-10 ordering)
-    // Index 0 = Sun (stable root, not chakra-mapped)
+use epi_logos::portal::clock_state::{
+    update_from_cast, update_quintessence_quaternion, PortalClockState,
+};
+use portal_core::{KernelElement, KernelPhase};
+
+fn near(a: f32, b: f32) -> bool {
+    (a - b).abs() < 0.0001
 }
 
 #[test]
-fn portal_clock_uses_tick12_not_torus_stage() {
-    // SharedClockState discrete clock field must be tick12
-    let tick12: u8 = 5;
-    assert!(tick12 < 12, "tick12 must be 0-11");
+fn cli_portal_clock_uses_real_kernel_projection_after_cast() {
+    let state = Arc::new(Mutex::new(PortalClockState::default()));
+
+    update_from_cast(&state, 2.0, 2.0, 1.0, 1.0, 90, 7, 12, 0b001100);
+
+    let state = state.lock().unwrap();
+    let kernel = &state.kernel_projection;
+    assert_eq!(kernel.tick.sub_tick, state.tick12);
+    assert_eq!(kernel.tick.phase, KernelPhase::Ascent);
+    assert_eq!(kernel.tick.element, KernelElement::InverseMobius);
+    assert!(near(kernel.tick.harmonic_ratio, 3.0 / 4.0));
+    assert_eq!(kernel.harmonic_pulse.ratio_num, 3);
+    assert_eq!(kernel.harmonic_pulse.ratio_den, 4);
+    assert_eq!(kernel.bioquaternion.q_b, state.quintessence_quaternion);
+    assert_eq!(kernel.bioquaternion.q_p, state.composed_quaternion);
+    assert!(kernel.energy.total_energy > 0.0);
 }
 
 #[test]
-fn portal_exact_degree_720_range() {
-    // exact_degree_720 is f32 in [0.0, 720.0)
-    let d: f32 = 405.5;
-    assert!(d >= 0.0 && d < 720.0);
-    let phase: u8 = if d < 360.0 { 0 } else { 1 };
-    assert_eq!(phase, 1, "degree >= 360 must be phase=1 (Strand B)");
-}
+fn cli_quintessence_update_refreshes_kernel_q_b() {
+    let state = Arc::new(Mutex::new(PortalClockState::default()));
+    update_from_cast(&state, 3.0, 1.0, 1.0, 1.0, 45, 5, 10, 0);
 
-#[test]
-fn sun_is_index_0_pluto_is_index_9() {
-    // Canonical: Sun at index 0, Pluto at index 9
-    // Earth is NOT in the array (it's EarthBodyState, geocentric observer)
-    let planet_count: usize = 10;
-    let sun_idx: usize = 0;
-    let pluto_idx: usize = 9;
-    assert!(sun_idx < planet_count);
-    assert!(pluto_idx < planet_count);
-    assert_eq!(pluto_idx - sun_idx, 9);
-}
+    let profiles = [
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+    ];
+    update_quintessence_quaternion(&state, &profiles);
 
-#[test]
-fn uranus_is_index_7_not_mars() {
-    // Canonical mod-10 ordering: index 7 = Uranus (outer/transpersonal)
-    // Mars is at index 4, not index 7.
-    // [Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9]
-    let uranus_idx: usize = 7;
-    let mars_idx: usize = 4;
-    assert_ne!(uranus_idx, mars_idx);
-    assert_eq!(uranus_idx, 7);
-    assert_eq!(mars_idx, 4);
-}
-
-#[test]
-fn outer_planets_are_indices_7_8_9() {
-    // Outer planets (transpersonal M2-5 layer): Uranus=7, Neptune=8, Pluto=9
-    let outer: [usize; 3] = [7, 8, 9];
-    for &idx in &outer {
-        assert!(idx >= 7 && idx <= 9, "outer planet idx {idx} out of range");
-    }
-}
-
-#[test]
-fn planet_count_not_nine() {
-    // Regression: the old (wrong) count was 9; canonical is 10.
-    let canonical_count: usize = 10;
-    let wrong_count: usize = 9;
-    assert_ne!(canonical_count, wrong_count);
-    assert_eq!(canonical_count, 10);
+    let state = state.lock().unwrap();
+    assert_eq!(
+        state.kernel_projection.bioquaternion.q_b,
+        state.quintessence_quaternion
+    );
+    assert_eq!(
+        state.kernel_projection.bioquaternion.q_p,
+        state.composed_quaternion
+    );
 }

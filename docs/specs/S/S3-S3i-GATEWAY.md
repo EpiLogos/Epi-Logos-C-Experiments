@@ -249,6 +249,8 @@ Implemented and verified surfaces:
 - subagent lineage with `spawnedBy` restricted to subagent session keys and nested-subagent rejection
 - Khora binding from `.epi/session.json` into gateway session creation and health surfaces
 - OmniPanel/Electron compatibility for real sessions, skills, models, and chat event normalization
+- S3 route ownership table for advertised method families, including `s2.graph.kernel_resonance.record` as an S2 graph-service method and `s5.episodic.kernel_resonance.deposit` as an S3 Graphiti runtime method with S5/S5' invocation governance
+- Graphiti runtime envelopes for kernel-resonance deposition that keep `runtimeOwner=S3'`, `graphOwner=S2`, protected-local episodic memory, and Epii-review governance visible
 
 The production rule is now:
 

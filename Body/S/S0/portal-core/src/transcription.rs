@@ -6,20 +6,42 @@ pub const AMINO_ACID_NAMES: [&str; 24] = [
 ];
 
 pub const MAJOR_ARCANA_NAMES: [&str; 22] = [
-    "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
-    "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
-    "Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance",
-    "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgement", "The World",
+    "The Fool",
+    "The Magician",
+    "The High Priestess",
+    "The Empress",
+    "The Emperor",
+    "The Hierophant",
+    "The Lovers",
+    "The Chariot",
+    "Strength",
+    "The Hermit",
+    "Wheel of Fortune",
+    "Justice",
+    "The Hanged Man",
+    "Death",
+    "Temperance",
+    "The Devil",
+    "The Tower",
+    "The Star",
+    "The Moon",
+    "The Sun",
+    "Judgement",
+    "The World",
 ];
 
 pub const START_CODON: u8 = 0x07;
 pub const STOP_CODONS: [u8; 3] = [0x10, 0x13, 0x1C];
 
 #[inline]
-pub fn is_start_codon(codon: u8) -> bool { codon == START_CODON }
+pub fn is_start_codon(codon: u8) -> bool {
+    codon == START_CODON
+}
 
 #[inline]
-pub fn is_stop_codon(codon: u8) -> bool { STOP_CODONS.contains(&codon) }
+pub fn is_stop_codon(codon: u8) -> bool {
+    STOP_CODONS.contains(&codon)
+}
 
 pub const DEGREE_TO_HEXAGRAM: [u8; 360] = [
     0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5,
@@ -74,7 +96,10 @@ pub fn transcribe_degree_from_lut(degree: u16) -> TranscriptionStep {
 }
 
 pub fn walk_transcription_chain(degrees: &[u16]) -> Vec<TranscriptionStep> {
-    degrees.iter().map(|&d| transcribe_degree_from_lut(d)).collect()
+    degrees
+        .iter()
+        .map(|&d| transcribe_degree_from_lut(d))
+        .collect()
 }
 
 pub fn extract_first_orf(chain: &[TranscriptionStep]) -> &[TranscriptionStep] {

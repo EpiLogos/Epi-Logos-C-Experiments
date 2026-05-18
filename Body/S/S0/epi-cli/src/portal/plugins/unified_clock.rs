@@ -336,6 +336,28 @@ fn render_data_panel(
     line!(Style::default().fg(Color::White), "Tick:  {}", state.tick12);
     line!(
         Style::default().fg(Color::White),
+        "Kernel: {:?}/{:?}",
+        state.kernel_projection.tick.phase,
+        state.kernel_projection.tick.element
+    );
+    line!(
+        Style::default().fg(Color::White),
+        "Ratio: {:.3}",
+        state.kernel_projection.tick.harmonic_ratio
+    );
+    line!(
+        Style::default().fg(Color::White),
+        "Pulse: {}/{}",
+        state.kernel_projection.harmonic_pulse.ratio_num,
+        state.kernel_projection.harmonic_pulse.ratio_den
+    );
+    line!(
+        Style::default().fg(Color::White),
+        "Energy: {:.3}",
+        state.kernel_projection.energy.total_energy
+    );
+    line!(
+        Style::default().fg(Color::White),
         "Res:   {}",
         state.resolution_level
     );

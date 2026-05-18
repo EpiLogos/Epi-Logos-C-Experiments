@@ -19,12 +19,14 @@ This is the sovereign dispatch center of S4'. It consumes the other ta-onta carr
 
 - Type `s4'.vak.evaluate` fields.
 - Define Psyche lifecycle.
+- Define [[S4-4'-GOAL-PRELUDE-SPEC]] as the default `/goal` discovery surface: first pass writes NOW-bound markdown and returns to user dialogue before any execution, cron scheduling, or review promotion.
 - Keep day-night-pass inside Anima orchestration, not a separate authority.
 
 ## API / Envelope / TS
 
 - Owns `s4'.vak.evaluate`, `s4'.cs.*`, `s4'.context.assemble`, `s4'.psyche.*`, `s4'.goal.*`.
 - Populates coordinate and lived-environs layers.
+- `s4'.goal.prelude` is dialogical and NOW-bound; `s4'.goal.compile` and `s4'.goal.invoke` require confirmed intent.
 
 ## Implementation Hooks
 
@@ -38,6 +40,7 @@ This is the sovereign dispatch center of S4'. It consumes the other ta-onta carr
 
 - VAK output includes primary family, coordinate, CPF, CT, CP, CF, CFP, CS.
 - Psyche update/read round-trips.
+- First `/goal` pass creates a `goal-prelude` artifact only; no cron job, run history, or Epii review resolution is created without explicit continuation.
 
 ## Boundaries
 

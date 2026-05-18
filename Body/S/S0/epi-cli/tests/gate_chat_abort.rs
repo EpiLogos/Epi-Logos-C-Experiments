@@ -86,6 +86,73 @@ async fn stop_command_aborts_active_session_chat_runs() {
     assert_eq!(aborted_event["payload"]["stopReason"], "stop");
 }
 
+#[tokio::test]
+async fn sessions_resolve_reports_live_chat_run_state_without_local_ui_inference() {
+    let (_server, mut socket) = connected_socket(18832).await;
+
+    let accepted = rpc_request(
+        &mut socket,
+        2,
+        "chat.send",
+        json!({
+            "sessionKey":"agent:main:main",
+            "message":"__FAKE_PI_SLOW__",
+            "idempotencyKey":"gate-chat-run-state",
+        }),
+    )
+    .await;
+    let run_id = accepted["runId"].as_str().unwrap().to_owned();
+    let _first_delta = next_chat_state(&mut socket, &run_id, "delta").await;
+
+    let active = rpc_request(
+        &mut socket,
+        3,
+        "sessions.resolve",
+        json!({"sessionKey":"agent:main:main"}),
+    )
+    .await;
+    assert_eq!(active["runState"]["idleState"], "active");
+    assert_eq!(active["runState"]["lastRunId"], run_id);
+    assert!(active["runState"]["activeRunIds"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|item| item.as_str() == Some(&run_id)));
+
+    let aborted = rpc_request(
+        &mut socket,
+        4,
+        "chat.abort",
+        json!({
+            "sessionKey":"agent:main:main",
+            "runId": run_id,
+        }),
+    )
+    .await;
+    assert_eq!(aborted["aborted"], true);
+    let _aborted_event = next_chat_state(
+        &mut socket,
+        aborted["runIds"][0].as_str().unwrap(),
+        "aborted",
+    )
+    .await;
+
+    let idle = rpc_request(
+        &mut socket,
+        5,
+        "sessions.resolve",
+        json!({"sessionKey":"agent:main:main"}),
+    )
+    .await;
+    assert_eq!(idle["runState"]["idleState"], "idle");
+    assert_eq!(idle["runState"]["abortState"], "aborted");
+    assert_eq!(idle["runState"]["lastRunStatus"], "aborted");
+    assert!(idle["runState"]["activeRunIds"]
+        .as_array()
+        .unwrap()
+        .is_empty());
+}
+
 async fn connected_socket(port: u16) -> (support::TestServerFixture, TestSocket) {
     let fixture = support::TestServerFixture::start(support::TestEnv::with_fake_pi(), port).await;
     let (mut socket, _) = connect_async(format!("ws://127.0.0.1:{port}"))

@@ -177,6 +177,141 @@ fn lifecycle_commands_create_runtime_backed_gateway_sessions() {
 }
 
 #[test]
+fn resume_and_import_commands_preserve_runtime_identity_and_lineage() {
+    let env = TestEnv::repo_with_assets()
+        .with_env(
+            "EPILOGOS_VAULT",
+            "/tmp/epilogos-test-vault-agent-resume-import",
+        )
+        .with_env("EPI_AGENT_ID", "anima");
+
+    write_file(
+        env.repo_root.join(".epi-logos.env"),
+        "EPILOGOS_VAULT=/tmp/epilogos-test-vault-agent-resume-import\n",
+    );
+
+    let new_session = run_epi(
+        [
+            "agent",
+            "session",
+            "new",
+            "--now",
+            "2026-05-08T11:00:00Z",
+            "--random-suffix",
+            "root01",
+            "--session-key",
+            "agent:anima:resume-source",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        new_session.status.success(),
+        "new failed:\nstdout:\n{}\nstderr:\n{}",
+        new_session.stdout,
+        new_session.stderr
+    );
+
+    let resume_session = run_epi(
+        [
+            "agent",
+            "session",
+            "resume",
+            "--source-session-key",
+            "agent:anima:resume-source",
+            "--target-session-key",
+            "agent:anima:resume-target",
+            "--now",
+            "2026-05-08T11:15:00Z",
+            "--random-suffix",
+            "res001",
+            "--label",
+            "Anima resumed execution",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        resume_session.status.success(),
+        "resume failed:\nstdout:\n{}\nstderr:\n{}",
+        resume_session.stdout,
+        resume_session.stderr
+    );
+
+    let import_session = run_epi(
+        [
+            "agent",
+            "session",
+            "import",
+            "--source-session-key",
+            "codex:external:20260508",
+            "--target-session-key",
+            "agent:anima:imported-codex",
+            "--now",
+            "2026-05-08T11:30:00Z",
+            "--random-suffix",
+            "imp001",
+            "--label",
+            "Imported Codex run",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        import_session.status.success(),
+        "import failed:\nstdout:\n{}\nstderr:\n{}",
+        import_session.stdout,
+        import_session.stderr
+    );
+
+    let store = SessionStore::new(env.home.join(".epi/gate")).unwrap();
+    let source = store.resolve("agent:anima:resume-source").unwrap();
+    let resumed = store.resolve("agent:anima:resume-target").unwrap();
+    let imported = store.resolve("agent:anima:imported-codex").unwrap();
+
+    assert_eq!(source.session_id, "20260508-110000-root01");
+    assert_eq!(resumed.session_id, "20260508-111500-res001");
+    assert_eq!(resumed.source_session_kind.as_deref(), Some("resume"));
+    assert_eq!(
+        resumed.source_session_key.as_deref(),
+        Some("agent:anima:resume-source")
+    );
+    assert_eq!(resumed.active_agent_id, "anima");
+    assert_eq!(
+        resumed.runtime_cwd.as_deref(),
+        Some(env.repo_root.to_str().unwrap())
+    );
+    assert_eq!(
+        resumed.vault_root.as_deref(),
+        Some("/tmp/epilogos-test-vault-agent-resume-import")
+    );
+    assert!(resumed
+        .resource_loader_id
+        .as_deref()
+        .unwrap_or_default()
+        .contains("agents/anima/agent/plugin-runtime.json"));
+    assert!(resumed.diagnostics.iter().any(|diagnostic| {
+        diagnostic["source"] == "khora.agent_session_runtime"
+            && diagnostic["message"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("resume")
+    }));
+
+    assert_eq!(imported.session_id, "20260508-113000-imp001");
+    assert_eq!(imported.source_session_kind.as_deref(), Some("import"));
+    assert_eq!(
+        imported.source_session_key.as_deref(),
+        Some("codex:external:20260508")
+    );
+    assert_eq!(imported.active_agent_id, "anima");
+    assert_eq!(
+        imported.runtime_cwd.as_deref(),
+        Some(env.repo_root.to_str().unwrap())
+    );
+}
+
+#[test]
 fn epii_lifecycle_session_propagates_as_peer_pi_agent_identity() {
     let env = TestEnv::repo_with_assets()
         .with_env("EPILOGOS_VAULT", "/tmp/epilogos-test-vault-agent-epii")

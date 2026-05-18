@@ -40,6 +40,7 @@ pub struct ImprovementAccessSnapshot {
     pub total_runs: usize,
     pub keep_count: usize,
     pub discard_count: usize,
+    pub kernel_evidence_count: usize,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -146,6 +147,7 @@ impl EpiiAgentAccess {
                 total_runs: improve_status.total_runs,
                 keep_count: improve_status.keep_count,
                 discard_count: improve_status.discard_count,
+                kernel_evidence_count: improve_status.kernel_evidence_count,
             },
             gateway_methods: gateway_methods(),
         })
@@ -175,6 +177,7 @@ impl EpiiAgentAccess {
                 payload: None,
             }),
             requires_human: request.requires_human,
+            kernel_visibility: None,
         })?;
 
         let improvement_run = if request.deposit_type == DepositType::ImprovementRequest {

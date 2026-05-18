@@ -60,6 +60,106 @@ export interface KairosState {
   valid: boolean;
 }
 
+export type KernelPhase = 'Descent' | 'Ascent';
+
+export type KernelElement =
+  | 'BimbaEncoding'
+  | 'PratibimbaPrehension'
+  | 'MobiusDescent'
+  | 'SlashFlip'
+  | 'PratibimbaAsBimba'
+  | 'DoubledPrehension'
+  | 'InverseMobius'
+  | 'EnrichedReturn';
+
+export interface KernelTick {
+  cycle: number;
+  sub_tick: number;
+  phase: KernelPhase;
+  element: KernelElement;
+  position6: number;
+  harmonic_ratio: number;
+}
+
+export interface HarmonicPulse {
+  cycle: number;
+  sub_tick: number;
+  phase: KernelPhase;
+  element: KernelElement;
+  ratio_num: number;
+  ratio_den: number;
+  tempo_multiplier: number;
+  period_multiplier: number;
+}
+
+export interface BioQuaternionState {
+  q_b: Quaternion;
+  q_p: Quaternion;
+}
+
+export interface EnergyDecomposition {
+  bimba_pratibimba_energy: number;
+  lens_energy: number;
+  r_energy: number;
+  total_energy: number;
+}
+
+export interface KernelProjection {
+  tick: KernelTick;
+  harmonic_pulse: HarmonicPulse;
+  bioquaternion: BioQuaternionState;
+  energy: EnergyDecomposition;
+  resonance_square_emphasis: [number, number, number];
+}
+
+export interface KernelTemporalProjectionTick {
+  cycle: number;
+  subTick: number;
+  phase: KernelPhase;
+  element: KernelElement;
+  position6: number;
+  harmonicRatio: string;
+}
+
+export interface KernelTemporalProjectionPulse {
+  cycle: number;
+  subTick: number;
+  phase: KernelPhase;
+  element: KernelElement;
+  ratioNum: number;
+  ratioDen: number;
+  tempoMultiplier: string;
+  periodMultiplier: string;
+}
+
+export interface KernelTemporalProjectionEnergy {
+  totalEnergy: string;
+}
+
+export interface KernelTemporalProjection {
+  coordinateOwner: 'S0/QL-meta';
+  projectionOwner: "S3'";
+  privacy: 'safe-public-current-kernel-tick';
+  computationSource: 'portal-core::KernelProjection';
+  generation: number;
+  tick: KernelTemporalProjectionTick;
+  harmonicPulse: KernelTemporalProjectionPulse;
+  energy: KernelTemporalProjectionEnergy;
+}
+
+export interface KernelResonanceObservation {
+  source_coordinate: string;
+  session_key: string;
+  timestamp_ms: number;
+  lens: number;
+  ascent_helix: boolean;
+  position: number;
+  score: number;
+  resonance_index: number;
+  tritone_square: number;
+  kernel_tick: KernelTick;
+}
+
 export interface PortalClockState {
   session_hash: number[];
   live_quaternion: Quaternion;
@@ -74,6 +174,7 @@ export interface PortalClockState {
   transform_stage: number;
   logos_stage: number;
   kairos: KairosState;
+  kernel_projection: KernelProjection;
   orbital_position: Vec3;
   ql_position: number;
   walk_mode: WalkMode;
@@ -116,6 +217,51 @@ export interface GraphWalkResult {
   nodes: GraphNode[];
   edges: GraphEdge[];
   depth_reached: number;
+}
+
+export interface S2KernelResonanceRecordRequest {
+  sourceCoordinate: string;
+  sessionKey: string;
+  timestampMs: number;
+  lens: number;
+  ascentHelix: boolean;
+  position: number;
+  score: number;
+  kernelTick: number;
+  graphitiArcId?: string;
+}
+
+export interface S2KernelResonanceRecordResponse {
+  source: {
+    input: string;
+    canonical: string;
+    compatibility_property?: string | null;
+  };
+  observation: {
+    coordinate: string;
+    label: 'KernelResonanceObservation';
+    relation: 'HAS_KERNEL_RESONANCE';
+    resonance_index: number;
+    tritone_square: number;
+    session_key: string;
+    graphiti_arc_id: string;
+  };
+  rowCount: number;
+  rows: Record<string, unknown>[];
+}
+
+export interface S5KernelResonanceDepositRequest {
+  sourceAgent?: string;
+  sessionKey: string;
+  namespaceRef: string;
+  dayId: string;
+  observationCoordinate: string;
+  sourceCoordinate: string;
+  resonanceIndex: number;
+  tritoneSquare: number;
+  score: number;
+  kernelTick: number;
+  identityMutation?: boolean;
 }
 
 // ── Geometry ──────────────────────────────────────────────────────────
@@ -360,6 +506,7 @@ export interface AtelierSession {
 export interface PortalRuntimeState {
   day_id: string;
   now_path: string;
+  kernel: KernelTemporalProjection | null;
 }
 
 export interface ClockPresenceRow {

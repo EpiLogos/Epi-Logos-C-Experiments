@@ -632,11 +632,26 @@ Inter-agent async message routing. The caller gets an `ack_id`. The result arriv
     now_id: string | null,
     session_start: number,        // epoch ms
     kairos: KairosSnapshot | null,
+    kernel: KernelTemporalProjection | null,
     tick12: number,               // 0-11 spanda stage
     sun_decan: DecanInfo | null,
     moon_decan: DecanInfo | null,
     active_arcs: ArcSummary[],
     connected_agents: string[]
+}
+
+{ method: "s3'.temporal.context", params: {
+    session_key: string,
+    agent_id?: string,
+    hydrate_redis?: boolean
+}}
+→ {
+    day_id: string,
+    now_id: string | null,
+    now_path: string | null,
+    kairos: KairosSnapshot | null,
+    kernel: KernelTemporalProjection | null,
+    privacy: "safe-public-current-kernel-tick"
 }
 
 { method: "s3'.temporal.subscribe", params: {

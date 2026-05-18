@@ -14,6 +14,7 @@ pub mod embeddings;
 pub mod graph_api;
 pub mod link_enforcement;
 pub mod meta;
+pub mod pointers;
 pub mod relationship_manager;
 pub mod retrieval;
 mod retrieval_query;
@@ -26,8 +27,8 @@ pub mod vault;
 
 pub use bidirectional_sync::{BidirectionalSyncer, ConflictResolution, SyncConflict};
 pub use coordinate::{
-    convert_hash_to_m_family, wrap_context_frames, CoordLayer, CoordinateArrayParser,
-    ParsedCoordinate, WikiLink,
+    cf_node_for_frame, convert_hash_to_m_family, extract_context_frames, wrap_context_frames,
+    CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink,
 };
 pub use dataset_import::DatasetImporter;
 pub use doctor::{
@@ -38,11 +39,16 @@ pub use embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
 pub use graph_api::{
     CoordinateResolution, GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphParamValue,
     GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
-    KernelResonanceObservationPlan, KernelResonanceObservationRequest,
+    KernelResonanceObservationPlan, KernelResonanceObservationRequest, PointerWebRefreshPlan,
+    PointerWebRefreshRequest,
 };
 pub use link_enforcement::{LinkEnforcer, LinkValidationResult};
 pub use meta::{
     desired_meta, is_bootstrapped, read_graph_meta, seed_source_hash, write_graph_meta, GraphMeta,
+};
+pub use pointers::{
+    compute_pointer_web, kernel_coordinate_anchor_for, kernel_coordinate_anchor_from_parts,
+    KernelAnchor, KernelCoordinateAnchor, PointerWeb, QvDataAnchor,
 };
 pub use relationship_manager::{RelationshipManager, POSITION_REL_TYPES};
 pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};

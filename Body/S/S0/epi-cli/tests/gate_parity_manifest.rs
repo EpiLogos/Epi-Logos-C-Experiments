@@ -4,7 +4,26 @@ fn gateway_method_manifest_is_complete() {
     assert!(methods.contains(&"chat.send"));
     assert!(methods.contains(&"skills.install"));
     assert!(methods.contains(&"sessions.compact"));
+    assert!(methods.contains(&"s2.graph.pointer_web.compute"));
+    assert!(methods.contains(&"s2.graph.pointer_web.refresh"));
+    assert!(methods.contains(&"s2.graph.kernel_resonance.record"));
+    assert!(methods.contains(&"s5.episodic.kernel_resonance.deposit"));
     assert_eq!(epi_logos::gate::parity::TEST_GATEWAY_PORT, 18794);
+}
+
+#[tokio::test]
+async fn pointer_web_compute_dispatch_is_s2_owned_without_neo4j_connection() {
+    let value = epi_logos::gate::graph::dispatch_graph_method(
+        "s2.graph.pointer_web.compute",
+        &serde_json::json!({ "coordinate": "#2" }),
+    )
+    .await
+    .expect("compute pointer web through S0 gateway mirror");
+
+    assert_eq!(value["resolution"]["canonical"], "M2");
+    assert_eq!(value["coordinate_anchor"]["kernel"]["source"], "s0.kernel");
+    assert_eq!(value["pointerWeb"]["pointer_count"], 36);
+    assert_eq!(value["pointerWeb"]["family_refs"]["m_ref"], "M2");
 }
 
 #[test]

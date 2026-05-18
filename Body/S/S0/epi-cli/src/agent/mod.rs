@@ -7,6 +7,7 @@ pub mod claw_runtime;
 pub mod codex_runtime;
 mod doctor;
 mod extensions;
+mod goal;
 mod hooks;
 mod install;
 pub mod launch;
@@ -189,6 +190,11 @@ pub enum AgentCmd {
         #[command(subcommand)]
         cmd: session::SessionCmd,
     },
+    /// Create and manage NOW-bound goal prelude artifacts
+    Goal {
+        #[command(subcommand)]
+        cmd: goal::GoalCmd,
+    },
     /// Evaluate VAK coordinates for a task
     #[command(name = "vak")]
     Vak {
@@ -352,6 +358,7 @@ pub async fn dispatch(cmd: Option<&AgentCmd>, json: bool) -> Result<String, Stri
         AgentCmd::Tmux { cmd } => tmux::run(cmd, json),
         AgentCmd::Roster { cmd } => roster::run(cmd, json),
         AgentCmd::Session { cmd } => session::run(cmd, json),
+        AgentCmd::Goal { cmd } => goal::run(cmd, json),
         AgentCmd::Codex { cmd } => match cmd {
             CodexCmd::Install { json: as_json } => codex_runtime::run_install(*as_json || json),
             CodexCmd::Doctor { json: as_json } => codex_runtime::run_doctor(*as_json || json),

@@ -2,8 +2,8 @@ use epi_s3_gateway_contract::{
     GRAPHITI_BASE_URL, GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY,
 };
 use epi_s3_graphiti_runtime::{
-    provenance_from_record, session_memory_deposit_payload, session_memory_envelope,
-    GraphitiRuntimeConfig,
+    kernel_resonance_deposit_payload, provenance_from_record, session_memory_deposit_payload,
+    session_memory_envelope, GraphitiRuntimeConfig,
 };
 use serde_json::json;
 
@@ -57,6 +57,58 @@ fn graphiti_deposit_payload_rejects_identity_mutation_and_keeps_session_arc() {
         "5'",
         "4.5",
         "(5/0)",
+        true,
+    )
+    .unwrap_err();
+    assert!(err.contains("cannot mutate protected identity"));
+}
+
+#[test]
+fn graphiti_kernel_resonance_payload_keeps_s3_runtime_and_s2_graph_origin_clear() {
+    let payload = kernel_resonance_deposit_payload(
+        "anima",
+        "agent:epii:main",
+        "pratibimba-test",
+        "20260517",
+        "S2.kernel.resonance.agent-epii-main.1779000001234.31",
+        "M2",
+        31,
+        2,
+        0.875,
+        9,
+        false,
+    )
+    .expect("kernel resonance deposit should be allowed");
+
+    assert_eq!(payload["source"], "anima");
+    assert_eq!(payload["ql_position"], "2/5");
+    assert_eq!(payload["cp"], "S2.5");
+    assert_eq!(payload["cpf"], "kernel-resonance");
+    assert_eq!(payload["episode_type"], "kernel_resonance");
+    assert_eq!(payload["metadata"]["source_coordinate"], "M2");
+    assert_eq!(
+        payload["metadata"]["observation_coordinate"],
+        "S2.kernel.resonance.agent-epii-main.1779000001234.31"
+    );
+    assert_eq!(payload["metadata"]["resonance_index"], 31);
+    assert_eq!(payload["metadata"]["tritone_square"], 2);
+    assert_eq!(payload["metadata"]["kernel_tick"], 9);
+    assert_eq!(
+        payload["arc_id"],
+        "day:20260517:session:agent:epii:main:namespace:pratibimba-test"
+    );
+
+    let err = kernel_resonance_deposit_payload(
+        "anima",
+        "agent:epii:main",
+        "pratibimba-test",
+        "20260517",
+        "S2.kernel.resonance.agent-epii-main.1779000001234.31",
+        "M2",
+        31,
+        2,
+        0.875,
+        9,
         true,
     )
     .unwrap_err();

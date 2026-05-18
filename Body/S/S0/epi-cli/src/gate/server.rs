@@ -38,7 +38,7 @@ use super::protocol::{self, RequestFrame};
 use super::review;
 use super::runs::{RunContext, RunSnapshot};
 use super::runtime::GatewayRuntimeState;
-use super::sessions::{self, SessionPatch, SessionStore};
+use super::sessions::{self, SessionPatch, SessionRecord, SessionStore};
 use super::skills;
 use super::spacetimedb_bridge::{SpacetimeBridge, SpacetimeRegistration};
 use super::subagents;
@@ -397,11 +397,11 @@ async fn dispatch_rpc(
             result["items"] = json!(items);
             Ok(DispatchResult::immediate(result))
         }
-        "sessions.resolve" => {
+        "sessions.resolve" | "sessions.run-state" => {
             let identifier = session_identifier(&frame.params)?;
             let record = store.resolve(&identifier).map_err(not_found_error)?;
-            Ok(DispatchResult::immediate(sessions::record_to_value(
-                &record,
+            Ok(DispatchResult::immediate(session_value_with_run_state(
+                runtime, &record,
             )))
         }
         "sessions.preview" => {
@@ -768,6 +768,10 @@ async fn dispatch_rpc(
                     .params
                     .get("label")
                     .map(|value| value.as_str().map(str::to_owned)),
+                session_id: frame
+                    .params
+                    .get("sessionId")
+                    .and_then(|value| value.as_str().map(str::to_owned)),
                 source_session_key: Some(Some(source_key)),
                 source_session_kind: Some(Some("import".to_owned())),
                 parent_session_key: optional_str(&frame.params, "parentSessionKey").map(Some),
@@ -775,6 +779,10 @@ async fn dispatch_rpc(
                     .params
                     .get("dayId")
                     .map(|value| value.as_str().map(str::to_owned)),
+                active_agent_id: frame
+                    .params
+                    .get("activeAgentId")
+                    .and_then(|value| value.as_str().map(str::to_owned)),
                 vault_now_path: frame
                     .params
                     .get("vaultNowPath")
@@ -787,6 +795,18 @@ async fn dispatch_rpc(
                     .params
                     .get("vaultRoot")
                     .map(|value| value.as_str().map(str::to_owned)),
+                resource_loader_id: frame
+                    .params
+                    .get("resourceLoaderId")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                retry_settlement_state: frame
+                    .params
+                    .get("retrySettlementState")
+                    .map(|value| value.as_str().map(str::to_owned)),
+                diagnostics: frame
+                    .params
+                    .get("diagnostics")
+                    .and_then(|value| value.as_array().map(|items| items.to_vec())),
                 ..Default::default()
             };
             record = store
@@ -1198,6 +1218,9 @@ async fn dispatch_rpc(
         "s2.graph.query"
         | "s2.graph.node"
         | "s2.graph.traverse"
+        | "s2.graph.pointer_web.compute"
+        | "s2.graph.pointer_web.refresh"
+        | "s2.graph.kernel_resonance.record"
         | "s2'.coordinate.resolve"
         | "s2'.retrieve"
         | "s2'.rerank"
@@ -1490,6 +1513,10 @@ async fn dispatch_rpc(
             .map(DispatchResult::immediate)
             .map_err(internal_error),
         "s5.episodic.deposit" => graphiti::session_memory_deposit(&frame.params)
+            .await
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5.episodic.kernel_resonance.deposit" => graphiti::kernel_resonance_deposit(&frame.params)
             .await
             .map(DispatchResult::immediate)
             .map_err(internal_error),
@@ -2353,7 +2380,9 @@ fn branch_session(
         &target.canonical_key,
         SessionPatch {
             label,
+            session_id: Some(source.session_id.clone()),
             day_id: Some(source.day_id.clone()),
+            active_agent_id: Some(source.active_agent_id.clone()),
             parent_session_key: Some(Some(source.canonical_key.clone())),
             source_session_key: Some(Some(source.canonical_key.clone())),
             source_session_kind: Some(Some(source_kind.to_owned())),
@@ -2362,6 +2391,7 @@ fn branch_session(
             vault_root: Some(source.vault_root.clone()),
             resource_loader_id: Some(source.resource_loader_id.clone()),
             retry_settlement_state: Some(source.retry_settlement_state.clone()),
+            diagnostics: Some(source.diagnostics.clone()),
             delivery_context: Some(source.delivery_context.clone()),
             channel: Some(source.channel.clone()),
             thread_id: Some(source.thread_id.clone()),
@@ -2437,6 +2467,66 @@ fn session_tree(store: &SessionStore, root_key: &str) -> Result<Value, String> {
         "sessions": sessions,
         "lineage": lineage,
     }))
+}
+
+fn session_value_with_run_state(runtime: &GatewayRuntimeState, record: &SessionRecord) -> Value {
+    let mut value = sessions::record_to_value(record);
+    value["runState"] = session_run_state_value(runtime, record);
+    value
+}
+
+fn session_run_state_value(runtime: &GatewayRuntimeState, record: &SessionRecord) -> Value {
+    let snapshots = runtime.snapshots_for_session(&record.canonical_key);
+    let mut active_run_ids = snapshots
+        .iter()
+        .filter(|snapshot| snapshot.ended_at_ms.is_none())
+        .map(|snapshot| snapshot.run_id.clone())
+        .collect::<Vec<_>>();
+    for run_id in runtime.active_chat_runs(&record.canonical_key) {
+        if !active_run_ids.iter().any(|existing| existing == &run_id) {
+            active_run_ids.push(run_id);
+        }
+    }
+    active_run_ids.sort();
+
+    let last_snapshot = snapshots.iter().max_by(|left, right| {
+        left.started_at_ms
+            .cmp(&right.started_at_ms)
+            .then_with(|| left.run_id.cmp(&right.run_id))
+    });
+    let idle_state = if active_run_ids.is_empty() {
+        retry_cycle_idle_state(record.retry_settlement_state.as_deref()).unwrap_or("idle")
+    } else {
+        "active"
+    };
+    let abort_state = last_snapshot
+        .filter(|snapshot| snapshot.status == "aborted")
+        .map(|_| "aborted");
+    let active_run_count = active_run_ids.len();
+
+    json!({
+        "idleState": idle_state,
+        "activeRunIds": active_run_ids,
+        "activeRunCount": active_run_count,
+        "lastRunId": last_snapshot.map(|snapshot| snapshot.run_id.clone()),
+        "lastRunStatus": last_snapshot.map(|snapshot| snapshot.status.clone()),
+        "lastRunStartedAtMs": last_snapshot.map(|snapshot| snapshot.started_at_ms),
+        "lastRunEndedAtMs": last_snapshot.and_then(|snapshot| snapshot.ended_at_ms),
+        "abortState": abort_state,
+        "retrySettlementState": record.retry_settlement_state.clone(),
+    })
+}
+
+fn retry_cycle_idle_state(retry_settlement_state: Option<&str>) -> Option<&'static str> {
+    let normalized = retry_settlement_state?
+        .trim()
+        .to_ascii_lowercase()
+        .replace('_', "-");
+    match normalized.as_str() {
+        "pending" | "retry-pending" | "pending-retry" => Some("pending"),
+        "retrying" | "retry-active" | "active-retry" => Some("retrying"),
+        _ => None,
+    }
 }
 
 fn required_str(params: &Value, key: &str) -> Result<String, (String, String)> {

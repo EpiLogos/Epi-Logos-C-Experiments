@@ -21,7 +21,7 @@
 //! - `ClientRegistration` — TUI/desktop/browser/external/agent client registration
 //! - `SessionSurface`     — DAY/NOW/session/history/Redis/Graphiti projection
 //! - `KairosSurface`      — safe DAY/session Kairos transit projection
-//! - `GlobalTemporalSurface` — safe shared DAY/NOW/Kairos line for agents/portals
+//! - `GlobalTemporalSurface` — safe shared DAY/NOW/Kairos/kernel line for agents/portals
 //! - `TemporalEvent`      — live temporal activity events
 
 use spacetimedb::{reducer, table, ReducerContext, Table};
@@ -91,6 +91,7 @@ pub struct SessionSurface {
     pub graphiti_arc_id: String,
     pub pratibimba_anchor_ref: String,
     pub kairos_snapshot_id: String,
+    pub kernel_projection_json: String,
     pub updated_at: u64,
 }
 
@@ -135,6 +136,7 @@ pub struct GlobalTemporalSurface {
     pub graphiti_session_arc_id: String,
     pub pratibimba_anchor_ref: String,
     pub kairos_snapshot_id: String,
+    pub kernel_projection_json: String,
     pub privacy_class: String,
     pub updated_at: u64,
 }
@@ -270,6 +272,7 @@ pub fn bind_session_temporal_context(
     resource_loader_id: String,
     retry_settlement_state: String,
     diagnostics_json: String,
+    kernel_projection_json: String,
 ) {
     assert_nonempty(&session_key, "session_key");
     assert_nonempty(&installation_id, "installation_id");
@@ -297,6 +300,7 @@ pub fn bind_session_temporal_context(
         graphiti_arc_id,
         pratibimba_anchor_ref,
         kairos_snapshot_id,
+        kernel_projection_json,
         updated_at: now(ctx),
     });
 }
@@ -362,6 +366,7 @@ pub fn bind_global_temporal_surface(
     graphiti_session_arc_id: String,
     pratibimba_anchor_ref: String,
     kairos_snapshot_id: String,
+    kernel_projection_json: String,
 ) {
     assert_nonempty(&surface_key, "surface_key");
     assert_nonempty(&installation_id, "installation_id");
@@ -387,6 +392,7 @@ pub fn bind_global_temporal_surface(
         graphiti_session_arc_id,
         pratibimba_anchor_ref,
         kairos_snapshot_id,
+        kernel_projection_json,
         privacy_class: "safe-live-projection".to_owned(),
         updated_at: now(ctx),
     });

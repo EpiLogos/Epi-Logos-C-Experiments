@@ -31,6 +31,10 @@ The desktop app must surface the whole [[M']] set, even when the shell groups it
 - [[M4']] — Nara lived modalities: journal/flow, daily note, dream journal, oracle, highlighting, personal continuity.
 - [[M5']] — Epii integrative workbench: pedagogy, etymological archaeology, Bimba wisdom exploration, autoresearch, inbox/review, VAK execution.
 
+The desktop port must also consume the harmonic/musical profile defined by [[M'-SYSTEM-SPEC]] and the S0/S2 kernel-pointer contracts. It should not create a renderer-local version of the matheme. `ClockCosmos`, Bimba map, correspondence matrix, Nara journal context, and Epii review evidence must all read the same profile shape: tick, helix, position, pitch class, ratio, square, element, lens anchor, resonance index, and 8+4 rendering role.
+
+The renderer must also read the profile's diatonic CF/VAK projection: diatonic degree, mode, mode-anchor CF, VAK register, and agent/function label. This is how the desktop app keeps the musical instrument, pointer web, and VAK execution language in one contract instead of treating agent routing and harmonic rendering as separate taxonomies.
+
 ## Preserve From Electron
 
 The current app already has valuable M' shape:
@@ -103,6 +107,16 @@ Required target:
 The existing `M0_Anuttara/GraphWorkspace` is the basis, but it must be backed by current S2/S3 contracts rather than Electron-local graph loading.
 
 The integrated clock platform is the desktop enlargement of the TUI clock/portal specs. It should provide a real visual substrate for the `0` side: solar-system/kairos clock, temporal conditions, coordinate correspondences, and routeable Nara walkabouts. The clock is [[M3']], and it is reached through the structural world rather than replacing that world.
+
+Musical instrument requirement:
+
+- Operational tick state comes from S0/S3 projection, not animation frame count.
+- Pitch-class, ratio, square, helix, and element labels come from the shared `MathemeHarmonicProfile`.
+- Diatonic mode and context-frame labels come from the same profile; the renderer may select views over them but may not recompute or rename the CF mapping locally.
+- Inner eight positions drive sounded/visual frequency content.
+- Outer four positions drive nodal/boundary conditions for cymatic or standing-wave rendering.
+- Future audio analysis follows `STFT -> CQT -> chromagram -> active lens -> coordinate profile`.
+- The renderer may visualise or sonify the profile, but may not redefine the profile.
 
 ## `1` Personal / World Return
 

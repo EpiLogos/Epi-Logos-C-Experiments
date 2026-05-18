@@ -50,6 +50,7 @@ fn portal_session_surfaces_are_generated_from_gateway_session_contracts() {
     for expected in [
         "session-op.sessions.list",
         "session-op.sessions.resolve",
+        "session-op.sessions.run-state",
         "session-op.sessions.fork",
         "session-op.chat.history",
         "session-op.chat.send",
@@ -86,6 +87,16 @@ fn portal_session_surfaces_are_generated_from_gateway_session_contracts() {
         .metadata
         .iter()
         .any(|item| item == "request: sessionKey"));
+
+    let run_state = surfaces
+        .iter()
+        .find(|surface| surface.id == "session-op.sessions.run-state")
+        .expect("run-state should be a first-class portal session surface");
+    assert_eq!(run_state.command_hint, "sessions.run-state");
+    assert!(run_state
+        .metadata
+        .iter()
+        .any(|item| item == "response: runState"));
 }
 
 #[test]

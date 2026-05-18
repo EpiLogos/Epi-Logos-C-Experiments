@@ -68,6 +68,8 @@ pub fn build_family_dossier_with_mode(
             q_structure: e.q_structure,
         })
         .unwrap_or_default();
+    let coordinate_anchor = epi_s2_graph_services::kernel_coordinate_anchor_for(&coordinate)
+        .expect("family coordinate anchor must be valid");
     let (branch_id, branch_name) = branch_for_family(family, inverted);
 
     let structural_correspondences = FAMILY_LETTERS
@@ -104,6 +106,7 @@ pub fn build_family_dossier_with_mode(
             }),
         },
         qv_facet,
+        coordinate_anchor,
         structural_correspondences,
         relational_field,
         vimarsa_field,

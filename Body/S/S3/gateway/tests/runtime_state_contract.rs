@@ -23,6 +23,29 @@ fn runtime_tracks_run_context_sequence_and_snapshots() {
     assert_eq!(state.snapshot("run-1").unwrap().status, "ok");
 }
 
+#[test]
+fn runtime_lists_snapshots_by_session_for_gateway_run_state_projection() {
+    let state = GatewayRuntimeState::default();
+    state.cache_snapshot(RunSnapshot {
+        run_id: "run-later".to_owned(),
+        session_key: "agent:main:main".to_owned(),
+        status: "running".to_owned(),
+        started_at_ms: 20,
+        ended_at_ms: None,
+        error: None,
+    });
+    state.cache_snapshot(RunSnapshot::ok("run-earlier", "agent:main:main", 10, 15));
+    state.cache_snapshot(RunSnapshot::ok("run-other", "agent:other:main", 5, 6));
+
+    let run_ids = state
+        .snapshots_for_session("agent:main:main")
+        .into_iter()
+        .map(|snapshot| snapshot.run_id)
+        .collect::<Vec<_>>();
+
+    assert_eq!(run_ids, vec!["run-earlier", "run-later"]);
+}
+
 #[tokio::test]
 async fn runtime_broadcasts_to_active_subscribers_only() {
     let state = GatewayRuntimeState::default();

@@ -35,6 +35,11 @@
       "kind": "psyche-continuity"
     },
     {
+      "name": "goal-prelude",
+      "layer": "S4/S4'",
+      "kind": "dialogical-goal-discovery"
+    },
+    {
       "name": "bimba-populate",
       "layer": "S3/S3'",
       "kind": "graph-population"
@@ -83,6 +88,14 @@
       "name": "web-research",
       "layer": "S2/S2'",
       "kind": "external-research"
+    }
+  ],
+  "commands": [
+    {
+      "name": "goal",
+      "surface": "/goal",
+      "path": "commands/goal.md",
+      "kind": "now-bound-goal-prelude"
     }
   ],
   "hooks": {
@@ -205,6 +218,7 @@
       ],
       "tools": [
         "vak_evaluate",
+        "goal_prelude",
         "anima_orchestrate",
         "dispatch_agent",
         "dispatch_parallel_agents",
@@ -220,6 +234,7 @@
         "vak-coordinate-frame",
         "vak-evaluate",
         "anima-orchestration",
+        "goal-prelude",
         "day-night-pass"
       ]
     },

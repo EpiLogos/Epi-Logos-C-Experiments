@@ -40,6 +40,7 @@ This file records the source corpus used to crystallise [[S4']] (Ta-Onta Extensi
 | [[2026-02-24-ta-onta-us003-us010-deep-grounding-implementation]] | `docs/resources/S/2026-02-24-ta-onta-us003-us010-deep-grounding-implementation.md` | Deep grounding for US003-US010 user stories |
 | [[2026-02-25-ta-onta-full-architecture-conformance-remediation-plan]] | `docs/resources/S/2026-02-25-ta-onta-full-architecture-conformance-remediation-plan.md` | Architecture conformance remediation across all 6 extensions |
 | [[ta-onta-dev-session]] | `docs/prompts/ta-onta-dev-session.md` | Developer onboarding prompt; extension structure, tool patterns, session workflow |
+| [[S4-4'-GOAL-PRELUDE-SPEC]] | `Idea/Bimba/Seeds/S/S4/S4'/S4-4'-GOAL-PRELUDE-SPEC.md` | `/goal` as dialogical VAK discovery surface; NOW-bound prelude artifact; transition boundary to GoalSpec, Chronos, Aletheia, and Epii |
 
 ### Live Code — All 6 Extension Classes
 
@@ -94,6 +95,7 @@ Key conclusions drawn for [[S4']]:
 - [[Chronos]] CONTRACT.md tool table is stale (lists 5 tools, extension.ts registers 10)
 - `kairos.rs` computes 7 planets; Graphiti spec expects 10 (mod-10). Outer planets pending.
 - CT4a (integration-preview, `(4.5/0)`) was missing from initial crystallisation; now included
+- `/goal` belongs first to [[S4.4']] as a NOW-bound `GoalPrelude` discovery artifact. [[Chronos]] schedules only confirmed `GoalSpec` references, while [[Aletheia]] and [[Epii]] govern disclosure, review, autoresearch, and promotion after execution material exists.
 
 ## #0 Ground
 

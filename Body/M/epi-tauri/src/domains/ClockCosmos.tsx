@@ -3,6 +3,7 @@ import { useClockStore } from '@/stores/clockStore';
 import { useGraphStore } from '@/stores/graphStore';
 import { useTemporalStore } from '@/stores/temporalStore';
 import { useUiStore } from '@/stores/uiStore';
+import { projectKernelHarmonicConsumer } from '@/services/kernelProjection';
 import { Activity, Eye, Layers, Clock, Compass, ChevronDown, ChevronUp } from 'lucide-react';
 import { StrataPanel } from '@/domains/M3_Mahamaya/StrataPanel';
 
@@ -178,6 +179,7 @@ function ClockReadout() {
 
 function TemporalStrip() {
   const { runtime } = useTemporalStore();
+  const kernel = projectKernelHarmonicConsumer(runtime);
 
   return (
     <div className="px-3 py-2 border-t border-neutral-800">
@@ -186,6 +188,10 @@ function TemporalStrip() {
         <span>{runtime?.day_id ?? 'No day'}</span>
         <span className="text-neutral-700">|</span>
         <span className="font-mono">{runtime?.now_path ?? '—'}</span>
+        <span className="text-neutral-700">|</span>
+        <span className="font-mono">
+          {kernel.available ? `${kernel.element} ${kernel.pulseRatio}` : 'kernel —'}
+        </span>
       </div>
     </div>
   );

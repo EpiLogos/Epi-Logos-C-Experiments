@@ -874,6 +874,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "epi-kernel-contract"
+version = "0.1.0"
+dependencies = [
+ "portal-core",
+ "serde",
+ "serde_json",
+ "uuid",
+]
+
+[[package]]
 name = "epi-logos"
 version = "0.1.0"
 dependencies = [
@@ -887,6 +897,7 @@ dependencies = [
  "color-eyre",
  "crossterm",
  "dirs",
+ "epi-kernel-contract",
  "epi-s1-hen-compiler-core",
  "epi-s2-graph-schema",
  "epi-s2-graph-services",
@@ -904,6 +915,7 @@ dependencies = [
  "libc",
  "nalgebra",
  "neo4rs",
+ "portal-core",
  "ratatui",
  "ratatui-hypertile",
  "ratatui-hypertile-extras",
@@ -966,6 +978,7 @@ dependencies = [
 name = "epi-s3-gateway-contract"
 version = "0.1.0"
 dependencies = [
+ "epi-kernel-contract",
  "serde",
  "serde_json",
  "uuid",
@@ -2518,6 +2531,13 @@ name = "portable-atomic"
 version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c33a9471896f1c69cecef8d20cbe2f7accd12527ce60845ff44c153bb2a21b49"
+
+[[package]]
+name = "portal-core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "potential_utf"

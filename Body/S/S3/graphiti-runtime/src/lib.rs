@@ -106,6 +106,63 @@ pub fn session_memory_deposit_payload(
     }))
 }
 
+#[allow(clippy::too_many_arguments)]
+pub fn kernel_resonance_deposit_payload(
+    source_agent: &str,
+    session_key: &str,
+    namespace_ref: &str,
+    day_id: &str,
+    observation_coordinate: &str,
+    source_coordinate: &str,
+    resonance_index: u8,
+    tritone_square: u8,
+    score: f64,
+    kernel_tick: u8,
+    identity_mutation: bool,
+) -> Result<Value, String> {
+    if observation_coordinate.trim().is_empty() {
+        return Err("observationCoordinate is required".into());
+    }
+    if source_coordinate.trim().is_empty() {
+        return Err("sourceCoordinate is required".into());
+    }
+    if !score.is_finite() {
+        return Err("kernel resonance score must be finite".into());
+    }
+    if !(0.0..=1.0).contains(&score) {
+        return Err("kernel resonance score must be normalized between 0 and 1".into());
+    }
+
+    let content = format!(
+        "Kernel resonance observation {observation_coordinate} links {source_coordinate} through resonance index {resonance_index}, tritone square {tritone_square}, score {score:.6}, kernel tick {}.",
+        kernel_tick % 12
+    );
+    let mut payload = session_memory_deposit_payload(
+        source_agent,
+        &content,
+        session_key,
+        namespace_ref,
+        day_id,
+        "2/5",
+        "S2.5",
+        "kernel-resonance",
+        identity_mutation,
+    )?;
+    payload["episode_type"] = Value::String("kernel_resonance".to_owned());
+    payload["metadata"] = json!({
+        "observation_coordinate": observation_coordinate,
+        "source_coordinate": source_coordinate,
+        "resonance_index": resonance_index,
+        "tritone_square": tritone_square,
+        "score": score,
+        "kernel_tick": kernel_tick % 12,
+        "runtime_owner": "S3'",
+        "graph_owner": "S2",
+        "invocation_owner": "S5/S5'",
+    });
+    Ok(payload)
+}
+
 pub fn compose_file_path() -> Result<String, String> {
     let candidates = [
         std::env::var("EPILOGOS_ROOT").unwrap_or_default(),
@@ -349,6 +406,82 @@ pub async fn session_memory_deposit(params: &Value) -> Result<Value, String> {
     Ok(envelope)
 }
 
+pub async fn kernel_resonance_deposit(params: &Value) -> Result<Value, String> {
+    let source_agent = optional_str(params, "sourceAgent").unwrap_or("anima");
+    let session_key = required_str(params, "sessionKey")?;
+    let namespace_ref = required_str(params, "namespaceRef")?;
+    let day_id = required_str(params, "dayId")?;
+    let observation_coordinate = required_str(params, "observationCoordinate")?;
+    let source_coordinate = required_str(params, "sourceCoordinate")?;
+    let resonance_index = required_u8(params, "resonanceIndex", 71)?;
+    let tritone_square = required_u8(params, "tritoneSquare", 2)?;
+    let score = required_score(params, "score")?;
+    let kernel_tick = required_u8(params, "kernelTick", 11)?;
+    let identity_mutation = params
+        .get("identityMutation")
+        .and_then(|value| value.as_bool())
+        .unwrap_or(false);
+
+    let payload = kernel_resonance_deposit_payload(
+        source_agent,
+        session_key,
+        namespace_ref,
+        day_id,
+        observation_coordinate,
+        source_coordinate,
+        resonance_index,
+        tritone_square,
+        score,
+        kernel_tick,
+        identity_mutation,
+    )?;
+
+    let mut envelope = session_memory_envelope(json!({
+        "sourceAgent": source_agent,
+        "maySearch": true,
+        "mayDeposit": true,
+        "mayMutateIdentity": false,
+        "requiresEpiiReview": true,
+        "graphOwner": "S2",
+    }));
+    envelope["method"] = Value::String("s5.episodic.kernel_resonance.deposit".to_owned());
+    envelope["sessionKey"] = Value::String(session_key.to_owned());
+    envelope["namespaceRef"] = Value::String(namespace_ref.to_owned());
+    envelope["dayId"] = Value::String(day_id.to_owned());
+    envelope["deposit"] = payload.clone();
+
+    match reqwest::Client::new()
+        .post(format!("{GRAPHITI_BASE_URL}/episode"))
+        .json(&payload)
+        .timeout(graphiti_runtime_timeout())
+        .send()
+        .await
+    {
+        Ok(response) if response.status().is_success() => {
+            let body = response.json::<Value>().await.unwrap_or_else(|_| json!({}));
+            envelope["runtimeAvailable"] = Value::Bool(true);
+            envelope["episode"] = body;
+        }
+        Ok(response) => {
+            envelope["runtimeAvailable"] = Value::Bool(false);
+            envelope["error"] = json!({
+                "kind": "graphiti-http-error",
+                "status": response.status().as_u16(),
+            });
+        }
+        Err(error) => {
+            envelope["runtimeAvailable"] = Value::Bool(false);
+            envelope["error"] = json!({
+                "kind": "graphiti-unavailable",
+                "message": error.to_string(),
+                "next": "Start the compatibility runtime with `epi gate graphiti start`, or replace it with the native S3 Graphiti runtime adapter."
+            });
+        }
+    }
+
+    Ok(envelope)
+}
+
 fn iso8601_now() -> String {
     Utc::now().to_rfc3339()
 }
@@ -357,7 +490,7 @@ fn graphiti_runtime_timeout() -> std::time::Duration {
     let millis = std::env::var("EPI_GRAPHITI_TIMEOUT_MS")
         .ok()
         .and_then(|value| value.parse::<u64>().ok())
-        .unwrap_or(120_000);
+        .unwrap_or(3_000);
     std::time::Duration::from_millis(millis.max(1_000))
 }
 
@@ -367,4 +500,29 @@ fn required_str<'a>(params: &'a Value, key: &str) -> Result<&'a str, String> {
 
 fn optional_str<'a>(params: &'a Value, key: &str) -> Option<&'a str> {
     params.get(key).and_then(|value| value.as_str())
+}
+
+fn required_u8(params: &Value, key: &str, max: u8) -> Result<u8, String> {
+    let value = params
+        .get(key)
+        .and_then(|value| value.as_u64())
+        .ok_or_else(|| format!("{key} is required"))?;
+    if value > max as u64 {
+        return Err(format!("{key} must be <= {max}"));
+    }
+    Ok(value as u8)
+}
+
+fn required_score(params: &Value, key: &str) -> Result<f64, String> {
+    let value = params
+        .get(key)
+        .and_then(|value| value.as_f64())
+        .ok_or_else(|| format!("{key} is required"))?;
+    if !value.is_finite() {
+        return Err(format!("{key} must be finite"));
+    }
+    if !(0.0..=1.0).contains(&value) {
+        return Err(format!("{key} must be normalized between 0 and 1"));
+    }
+    Ok(value)
 }

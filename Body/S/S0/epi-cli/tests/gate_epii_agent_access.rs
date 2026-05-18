@@ -224,6 +224,28 @@ async fn s5_epii_user_orientation_reads_kairos_and_pratibimba_without_identity_m
     assert_eq!(orientation["coordinate"], "S5/S5'");
     assert_eq!(orientation["pratibimba"]["coordinate"], "M4.4.4.4");
     assert_eq!(orientation["pratibimba"]["anchorId"], "pratibimba-facefeed");
+    assert_eq!(
+        orientation["pratibimba"]["privacy"],
+        "protected-reference-only"
+    );
+    assert_eq!(
+        orientation["pratibimba"]["layerPresenceSummary"]["presentCount"],
+        2
+    );
+    assert!(
+        orientation["pratibimba"]
+            .get("identityHashPreview")
+            .is_none(),
+        "Epii orientation must not publish protected profile hash detail"
+    );
+    assert!(
+        orientation["pratibimba"].get("layerPresenceMask").is_none(),
+        "Epii orientation must not publish protected layer mask detail"
+    );
+    assert!(
+        orientation["pratibimba"].get("layerCount").is_none(),
+        "Epii orientation must keep layer detail inside the count-only summary"
+    );
     assert_eq!(orientation["kairos"]["available"], true);
     assert_eq!(orientation["kairos"]["activeDecan"], 18);
     assert_eq!(
@@ -289,6 +311,24 @@ async fn s5_epii_runtime_context_resolves_gateway_session_and_projection_readine
         context["projection"]["sessionSurfaceTable"],
         "session_surface"
     );
+    assert_eq!(
+        context["temporal"]["kernel"]["privacy"],
+        "safe-public-current-kernel-tick"
+    );
+    assert_eq!(
+        context["temporal"]["kernel"]["computationSource"],
+        "portal-core::KernelProjection"
+    );
+    assert!(
+        context["temporal"]["kernel"]["tick"]["subTick"]
+            .as_u64()
+            .unwrap()
+            <= 11
+    );
+    assert!(
+        context["temporal"]["kernel"].get("bioquaternion").is_none(),
+        "Epii/Anima runtime context must not expose protected bioquaternion state"
+    );
     assert!(context["projection"]["spacetimedb"].is_object());
     assert_eq!(context["access"]["mayMutateIdentity"], false);
     assert_eq!(context["access"]["mayDepositReviewRequest"], true);
@@ -348,6 +388,40 @@ async fn s5_graphiti_session_memory_methods_are_bounded_and_runtime_honest() {
         "protected-local-episodic-memory"
     );
     assert!(deposit["runtimeAvailable"].is_boolean());
+
+    let kernel_deposit = client
+        .request(
+            "s5.episodic.kernel_resonance.deposit",
+            json!({
+                "sourceAgent": "anima",
+                "sessionKey": "agent:main:main",
+                "dayId": "07-05-2026",
+                "namespaceRef": "pratibimba-test",
+                "observationCoordinate": "S2.kernel.resonance.agent-main-main.1779000001234.31",
+                "sourceCoordinate": "M2",
+                "resonanceIndex": 31,
+                "tritoneSquare": 2,
+                "score": 0.875,
+                "kernelTick": 9
+            }),
+        )
+        .await
+        .expect("kernel resonance Graphiti deposit should return an honest runtime envelope");
+
+    assert_eq!(kernel_deposit["coordinate"], "S5/S5'");
+    assert_eq!(kernel_deposit["runtimeOwner"], "S3'");
+    assert_eq!(kernel_deposit["invocationOwner"], "S5/S5'");
+    assert_eq!(
+        kernel_deposit["method"],
+        "s5.episodic.kernel_resonance.deposit"
+    );
+    assert_eq!(kernel_deposit["access"]["sourceAgent"], "anima");
+    assert_eq!(kernel_deposit["access"]["requiresEpiiReview"], true);
+    assert_eq!(
+        kernel_deposit["deposit"]["metadata"]["source_coordinate"],
+        "M2"
+    );
+    assert!(kernel_deposit["runtimeAvailable"].is_boolean());
 }
 
 #[tokio::test]

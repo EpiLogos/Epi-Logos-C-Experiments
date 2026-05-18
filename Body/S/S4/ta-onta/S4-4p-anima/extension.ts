@@ -87,6 +87,7 @@ export async function animaExtension(api: ExtensionAPI) {
   registerSubagentWidget(api);
   api.setActiveTools([
     "vak_evaluate",
+    "goal_prelude",
     "anima_orchestrate",
     "nous_disclose",
     "dispatch_agent",
@@ -120,6 +121,32 @@ export async function animaExtension(api: ExtensionAPI) {
       }
       const result = runEpi(args);
       return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+    },
+  });
+
+  api.registerTool({
+    name: "goal_prelude",
+    label: "Goal Prelude",
+    description:
+      "Create the first-pass /goal artifact: a dialogical, NOW-bound GoalPrelude markdown file. This does not start a run, create cron, or resolve review.",
+    parameters: Type.Object({
+      goal: Type.String({ description: "Raw user goal text, 4,000 characters or fewer" }),
+      now_path: Type.Optional(Type.String({ description: "Active NOW.md path; defaults to session environment" })),
+      session_key: Type.Optional(Type.String({ description: "Gateway session key to resolve NOW when now_path is absent" })),
+      session_id: Type.Optional(Type.String({ description: "Session id override for non-canonical NOW paths" })),
+      day_id: Type.Optional(Type.String({ description: "Day id override for non-canonical NOW paths" })),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      const args = ["agent", "goal", "prelude", params.goal, "--json"];
+      if (params.now_path) args.push("--now-path", params.now_path);
+      if (params.session_key) args.push("--session-key", params.session_key);
+      if (params.session_id) args.push("--session-id", params.session_id);
+      if (params.day_id) args.push("--day-id", params.day_id);
+      const result = runEpi(args, 30_000);
+      return {
+        content: [{ type: "text", text: result.stdout || result.stderr }],
+        isError: result.status !== 0,
+      };
     },
   });
 

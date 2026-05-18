@@ -1,6 +1,8 @@
 use std::path::{Component, Path, PathBuf};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use chrono::{Datelike, NaiveDate};
+use portal_core::KernelTemporalProjection;
 use redis::{AsyncCommands, Commands};
 use serde_json::{json, Value};
 
@@ -59,6 +61,7 @@ pub fn context_for_record(state_root: &Path, record: &SessionRecord, agent_id: &
         .pointer("/anchorId")
         .and_then(Value::as_str)
         .unwrap_or("unbound");
+    let kernel_surface = kernel_surface_value();
 
     json!({
         "coordinateOwner": "S3'",
@@ -91,6 +94,7 @@ pub fn context_for_record(state_root: &Path, record: &SessionRecord, agent_id: &
             },
         },
         "kairos": kairos_surface,
+        "kernel": kernel_surface,
         "now": {
             "path": now_path.as_ref().map(|path| path.display().to_string()),
             "wikilink": now_wikilink,
@@ -144,6 +148,23 @@ pub fn context_for_record(state_root: &Path, record: &SessionRecord, agent_id: &
             "redisContextKey": role.session_now_key(&temporal_session_id),
         },
     })
+}
+
+pub fn kernel_surface_value() -> Value {
+    let timestamp_ms = current_timestamp_ms();
+    kernel_surface_value_at(timestamp_ms, timestamp_ms)
+}
+
+pub fn kernel_surface_value_at(timestamp_ms: u64, generation: u64) -> Value {
+    let projection = KernelTemporalProjection::from_clock_tick(timestamp_ms, generation);
+    serde_json::to_value(projection).unwrap_or_else(|_| json!({}))
+}
+
+fn current_timestamp_ms() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_millis().min(u64::MAX as u128) as u64)
+        .unwrap_or(0)
 }
 
 pub fn hydrate_redis_for_record_on_propagation(
@@ -371,32 +392,51 @@ pub fn pratibimba_surface_value() -> Value {
                 "available": true,
                 "anchorId": anchor_id,
                 "coordinate": "M4.4.4.4",
-                "identityHashPreview": profile.hash_preview,
-                "layerCount": profile.layer_presence_mask.count_ones(),
-                "layerPresenceMask": profile.layer_presence_mask,
                 "graphitiNamespaceRef": anchor_id,
+                "layerPresenceSummary": {
+                    "presentCount": profile.layer_presence_mask.count_ones(),
+                    "detail": "count-only",
+                    "protectedSource": "local-nara-profile",
+                },
                 "localProtectedGraphOwner": "S2/S5",
                 "stewardshipOwner": "S5'",
                 "mutationOwner": "Epii/user validation",
-                "privacy": "protected-reference-only; raw identity and journal data stay local in Neo4j/Graphiti",
+                "mutationBoundary": "identity-affecting changes require Epii/user validation; live projections carry references only",
+                "privacy": "protected-reference-only",
             })
         }
         Ok(None) => json!({
             "available": false,
             "anchorId": Value::Null,
             "coordinate": "M4.4.4.4",
+            "graphitiNamespaceRef": Value::Null,
+            "layerPresenceSummary": {
+                "presentCount": 0,
+                "detail": "count-only",
+                "protectedSource": "local-nara-profile",
+            },
             "reason": "no Nara profile found",
             "localProtectedGraphOwner": "S2/S5",
             "stewardshipOwner": "S5'",
+            "mutationOwner": "Epii/user validation",
+            "mutationBoundary": "identity-affecting changes require Epii/user validation; live projections carry references only",
             "privacy": "protected-reference-only",
         }),
         Err(error) => json!({
             "available": false,
             "anchorId": Value::Null,
             "coordinate": "M4.4.4.4",
+            "graphitiNamespaceRef": Value::Null,
+            "layerPresenceSummary": {
+                "presentCount": 0,
+                "detail": "count-only",
+                "protectedSource": "local-nara-profile",
+            },
             "error": error,
             "localProtectedGraphOwner": "S2/S5",
             "stewardshipOwner": "S5'",
+            "mutationOwner": "Epii/user validation",
+            "mutationBoundary": "identity-affecting changes require Epii/user validation; live projections carry references only",
             "privacy": "protected-reference-only",
         }),
     }

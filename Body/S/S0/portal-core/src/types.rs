@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::kernel::KernelProjection;
+
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct OracleFaces {
     pub primary_degree: u16,
@@ -36,7 +38,11 @@ impl CodonClass {
         self == CodonClass::PerfectPalindromic
     }
     pub fn rotational_state_count(self) -> u8 {
-        if self.is_dual() { 8 } else { 7 }
+        if self.is_dual() {
+            8
+        } else {
+            7
+        }
     }
     pub fn label(self) -> &'static str {
         match self {
@@ -201,6 +207,7 @@ pub struct PortalClockState {
     pub transform_stage: u8,
     pub logos_stage: u8,
     pub kairos: KairosState,
+    pub kernel_projection: KernelProjection,
     pub orbital_position: [f32; 3],
     pub ql_position: u8,
     pub walk_mode: WalkMode,
@@ -231,6 +238,7 @@ impl Default for PortalClockState {
             transform_stage: 0,
             logos_stage: 0,
             kairos: KairosState::default(),
+            kernel_projection: KernelProjection::default(),
             orbital_position: [0.0; 3],
             ql_position: 0,
             walk_mode: WalkMode::default(),

@@ -1,8 +1,8 @@
 # S2/S2' — Neo4j + Redis (Relational / Lens)
 
-**Status:** PLANNED — Docker infrastructure + Rust clients next
+**Status:** IMPLEMENTING — Body-native graph schema/services and live Neo4j proofs in place
 **Coordinate:** S2 (raw graph/cache access), S2' (coordinate-aware GraphRAG)
-**Implementation:** `epi-cli/src/graph/` (Rust)
+**Implementation:** `Body/S/S2/graph-schema`, `Body/S/S2/graph-services`, with `Body/S/S0/epi-cli/src/graph/` as CLI adapter
 **CLI Namespace:** `epi graph`
 **Docker:** `docker-compose.epi-s2.yml` (Neo4j 5.x + Redis 7.x)
 
@@ -24,7 +24,7 @@ The same coordinate exists at every S-level at different detail:
 |-------|--------------|---------------|
 | **S0** | 128-byte HC struct (`.rodata` / heap) | C struct fields |
 | **S1** | Markdown + frontmatter (`{family}_{n}_{semantic}`) | YAML keys |
-| **S2** | Neo4j node + vector embedding + Redis cache | `bimbaCoordinate` |
+| **S2** | Neo4j node + vector embedding + Redis-backed semantic cache | `coordinate` (`bimbaCoordinate` compatibility only) |
 | **S3** | Live state subscription (SpacetimeDB row) | Real-time delta |
 | **S4** | Agent context window (prompt-compressed) | Tool output |
 | **S5** | Published artifact (Notion page) | External form |
@@ -52,12 +52,30 @@ S2 holds the **maximum relational detail** — the full graph of cross-coordinat
 
 ## Current State in This Repo
 
-### What Exists (Rust stubs)
+### What Exists (Rust packages)
 
-`epi-cli/src/graph/` — 18 files, mostly stubs:
-- **Complete:** `types.rs` (NodeRef, EdgeRef, GraphResult, RelationshipType), `alignment_validator.rs` (36 valid coordinates), `coordinate_array_parser.rs` (comma-separated parsing)
-- **Stub:** everything else (client, api, mapper, embeddings, redis_cache, all sync files, all retrieval files)
-- **No Cargo.toml deps:** `neo4rs`, `redis`, `tokio`, `reqwest` all missing
+`Body/S/S2/graph-schema` owns canonical Neo4j schema constants, `:Bimba` label law, coordinate property keys, relationship property keys, 3072-dimensional embedding index configuration, compatibility properties for old `bimbaCoordinate` data, kernel-resonance observation schema, and the coordinate-owned pointer-web property registry (`c_5_pointer_web_json`, pointer count, pointer ref arrays, refresh timestamp).
+
+`Body/S/S2/graph-services` owns Neo4j client authority, coordinate parsing/resolution, schema creation, graph metadata, seed/import entrypoints, vault frontmatter mapping/alignment helpers, relationship/link/sync/conflict services, semantic embedding refresh, graph doctor/readiness, graph retrieval semantics, hybrid fusion/ranking law, semantic-cache contract over the S3 Redis runtime, the safe kernel-coordinate anchor, pointer-web compute/refresh methods, and parameterized graph API methods. `Body/S/S0/epi-cli/src/graph/` remains the command adapter and must not become a second schema authority.
+
+Implemented gateway/API methods include `s2.graph.query`, `s2.graph.node`, `s2.graph.traverse`, `s2.graph.pointer_web.compute`, `s2.graph.pointer_web.refresh`, `s2'.coordinate.resolve`, retrieval/rerank/enrich methods, and `s2.graph.kernel_resonance.record`.
+
+### Harmonic Pointer-Web Lock-In
+
+S2 must now treat the pointer web as coordinate topology carrying harmonic semantics, not as an opaque set of reference strings. The current grouped `c_5_pointer_*` fields are the compiled projection. Canonical graph law should move toward granular `c_2_*` operation fields and/or typed Neo4j relationships carrying relation descriptors.
+
+The shared descriptor should agree with the S0 kernel/Rust mirror and include:
+
+- bimba/pratibimba helix semantics, with `descent` / `ascent` kept only as compatibility language;
+- X/X' semitone spanda pairs;
+- X+Y=5 square mirrors: Square C = 1 whole-tone / epogdoon, Square B = tritone, Square A = 16/9 totality / 5 whole-tones plus absent closure epogdoon;
+- 12 lens anchors and 72 MEF resonance slots;
+- 8+4 partition for future cymatic rendering: inner 8 as sounded/explicate content, outer 4 as nodal/implicate boundary conditions;
+- diatonic CF/VAK projection fields where a relation is interpreted through the lemniscatic scale grammar: `context_frame`, `vak_register`, `context_agent`, `diatonic_degree`, `mode_name`, and `mode_anchor_cf`;
+- Mahāmāyā / binary symbolic-codec fields where a relation is interpreted through M3: `mahamaya_address64`, `hexagram`, `codon`, `line_change_operator`, `transcription_state`, and `m3_codec_provenance`;
+- semantic embedding context that can include the safe `KernelCoordinateAnchor` and harmonic profile without exposing protected live-kernel or private Pratibimba state.
+
+This is the S2 side of the same matheme computed by S0. S0 computes pulse, ratio, energy, resonance, and safe temporal projection; S2 persists the graph topology and relation metadata that make those computations addressable by coordinate.
 
 ### Python Source (Port Target)
 

@@ -39,6 +39,210 @@ The rule for the next runs: do not stop after one small correction. Work phase b
 - [x] Harmonise canonical [[Envelope]], [[API]], and [[TypeScript]] docs for S3' Redis/Graphiti ownership, S5' Epii review fields/methods, and field/method counts.
 - [x] Add first-pass family-level implementation parity matrix to [[S-SYSTEM-INDEX]].
 
+## Phase K. Kernel Computation / QL Meta-Layer
+
+Status: executable primitive pass, first live portal binding, first graph/episodic handoff, safe temporal projection pass, formal API/envelope/TS contract pass, first S5/Tauri consumer pass, and first C/Rust/FFI hardening pass complete. `Body/S/S0/epi-lib/include/kernel.h` and `Body/S/S0/epi-lib/src/kernel.c` expose the deep C kernel surface; `Body/S/S0/portal-core/src/kernel.rs` mirrors it for Rust portal/runtime clients and now owns `KernelTemporalProjection` as the safe public-current projection type. `Body/S/S0/epi-cli/src/ffi/kernel.rs` exposes the C functions to CLI/runtime tests. `portal-core::PortalClockState` now owns `KernelProjection`, and S0's TUI portal clock mirror computes the same projection through `portal-core`. `KernelResonanceObservation` now turns a computed projection into a validated S0/S2/S3 handoff object; S2 owns the coordinate graph schema/write method, and S3 owns the Graphiti episodic deposit payload/routing. S0/S3' temporal context now also exposes a public-current kernel tick/pulse/energy block computed through `portal-core::KernelTemporalProjection`; SpaceTimeDB stores it as `kernel_projection_json` on `session_surface` and `global_temporal_surface` without exposing protected bioquaternion or resonance-vector detail. S5's `s5'.epii.runtime.context` carries the same safe kernel projection into PI-agent orientation, `Body/S/S5/epii-autoresearch-core` can consume kernel deltas as advisory evidence, `Body/S/S5/epii-review-core` can surface kernel readiness to the Epii inbox, and the Tauri renderer now consumes the safe projection as harmonic/visual data without claiming audio synthesis yet. The first hardening pass caught and fixed Rust kernel-local normalization drift against the C kernel for non-zero near-zero quaternions, and now tests zero/tiny axes, invalid resonance indexes, tick wrapping, square emphasis, and FFI C-vs-Rust parity.
+
+Goal: make the Epi-Logos kernel compute in the deep substrate before API/envelope/TUI/Tauri surfaces claim to render or route it.
+
+Why here: the provisional kernel documents make clear that the kernel is the QL/MEF computational engine, not a documentation layer. The system should beat, compute, and eventually play itself from the same epogdoon/harmonic state.
+
+Coordinate integration law: the kernel, [[Pointer Web]], and qvdata / [[epi core knowing]] surfaces must be joined as three functional layers over one coordinate ontology. The kernel computes harmonic/QL-MEF state; the S2 pointer web computes coordinate reachability and Bimba-map topology; qvdata is the compiled S0' coordinate self-knowledge surface. Kernel resonance records must therefore carry explicit coordinate anchors, pointer-web reachability refs, qvdata/source-version refs, and safe projection boundaries instead of leaving API clients to infer this relation.
+
+Files/code areas:
+
+- Source: `Body/S/S0/epi-lib/include/kernel.h`
+- Source: `Body/S/S0/epi-lib/src/kernel.c`
+- Source: `Body/S/S0/portal-core/src/kernel.rs`
+- Source: `Body/S/S0/portal-core/src/types.rs`
+- Source: `Body/S/S0/portal-core/src/state.rs`
+- Source: `Body/S/S0/epi-cli/src/ffi/kernel.rs`
+- Source: `Body/S/S0/epi-cli/src/portal/clock_state.rs`
+- Source: `Body/S/S0/epi-cli/src/portal/runtime_state.rs`
+- Source: `Body/S/S0/epi-cli/src/portal/plugins/unified_clock.rs`
+- Source: `Body/S/S2/graph-schema/src/lib.rs`
+- Source: `Body/S/S2/graph-services/src/graph_api.rs`
+- Source: `Body/S/S2/graph-services/src/pointers.rs`
+- Source: `Body/S/S3/graphiti-runtime/src/lib.rs`
+- Source: `Body/S/S3/gateway-contract/src/lib.rs`
+- Source: `Body/S/S3/epi-spacetime-module/src/lib.rs`
+- Source: `Body/S/S5/epii-autoresearch-core/src/lib.rs`
+- Source: `Body/S/S5/epii-review-core/src/lib.rs`
+- Source: `Body/M/epi-tauri/src/services/types.ts`
+- Source: `Body/M/epi-tauri/src/services/kernelProjection.ts`
+- Source: `Body/M/epi-tauri/src/components/OmniPanel.tsx`
+- Source: `Body/M/epi-tauri/src/domains/ClockCosmos.tsx`
+- Source: `Body/M/epi-tauri/src-tauri/src/commands/clock.rs`
+- Source: `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`
+- Source: `Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md`
+- Source: `Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md`
+- Source: `docs/specs/2026-05-18-bimba-pointer-web-and-integration-spec.md`
+- Tests: `Body/S/S0/epi-lib/test/engine/test_kernel.c`
+- Tests: `Body/S/S0/portal-core/tests/kernel_math.rs`
+- Tests: `Body/S/S0/portal-core/tests/kernel_clock_projection.rs`
+- Tests: `Body/S/S0/epi-cli/tests/kernel_ffi_contract.rs`
+- Tests: `Body/S/S0/epi-cli/tests/portal_clock_state.rs`
+- Tests: `Body/S/S2/graph-services/tests/graph_api_contract.rs`
+- Tests: `Body/S/S2/graph-services/tests/schema_creation_contract.rs`
+- Tests: `Body/S/S3/gateway/tests/graphiti_runtime_contract.rs`
+- Tests: `Body/S/S3/gateway/tests/dispatch_contract.rs`
+- Tests: `Body/S/S0/epi-cli/tests/gate_temporal_context.rs`
+- Tests: `Body/S/S0/epi-cli/tests/gate_spacetimedb_bridge.rs`
+- Tests: `Body/S/S0/epi-cli/tests/spacetimedb_registration_contract.rs`
+- Tests: `Body/S/S0/epi-cli/tests/kernel_api_envelope_contract.rs`
+- Tests: `Body/S/S0/epi-cli/tests/gate_epii_agent_access.rs`
+- Tests: `Body/S/S0/epi-cli/tests/gate_epii_improve.rs`
+- Tests: `Body/S/S0/epi-cli/tests/gate_epii_review.rs`
+- Tests: `Body/S/S5/epii-autoresearch-core/tests/improvement_loop.rs`
+- Tests: `Body/S/S5/epii-review-core/tests/review_inbox.rs`
+- Tests: `Body/M/epi-tauri/src/services/kernelProjection.test.ts`
+- Tests: `Body/S/S3/gateway-contract/src/lib.rs`
+
+Completed first pass:
+
+- [x] Add kernel harmonic constants: 9/8 epogdoon, log(9/8), 4/3, 3/4, 2/3, 3/2.
+- [x] Add bioquaternionic state over `q_b` and `q_p` with unit normalization.
+- [x] Add slash-flip conjugation from pratibimba to bimba-prime.
+- [x] Add squared latent distance energy over quaternions.
+- [x] Add 72-fold resonance-vector indexing: 6 lenses × 2 helices × 6 positions.
+- [x] Add X+Y=5 tritone-square grouping and square-emphasis computation.
+- [x] Add decomposed energy arithmetic: bimba/pratibimba + lens MSE + R energy.
+- [x] Add 12-epogdoon tick phasing into 8 kernel elements with descent/ascent phase.
+- [x] Expose the C kernel through Rust FFI and prove the CLI can call it.
+- [x] Add canonical `KernelProjection` over tick, bioquaternion, decomposed energy, and tritone-square emphasis.
+- [x] Bind `KernelProjection` into `portal-core::PortalClockState`.
+- [x] Bind the same projection into S0's TUI `PortalClockState` mirror through `portal-core`.
+- [x] Recompose clock state after oracle casts, Kairos transit updates, and quintessence updates before syncing kernel state.
+- [x] Add deterministic `HarmonicPulse` derivation from `KernelTick` with integer ratios, tempo multiplier, and period multiplier.
+- [x] Expose kernel phase, element, ratio, pulse ratio, and energy in the unified clock panel.
+- [x] Carry kernel tick facts into `PortalTemporalSurface` for DAY/NOW/session projection.
+- [x] Add TypeScript IPC interfaces for `KernelProjection`, `KernelTick`, `HarmonicPulse`, `BioQuaternionState`, and `EnergyDecomposition`.
+- [x] Project a safe kernel tick/pulse/energy surface through `s3'.temporal.context`, bridge events, HTTP SQL projection, native SpaceTimeDB subscription decoding, and SpaceTimeDB reducer payloads without publishing protected bioquaternion or resonance-vector state.
+
+Next kernel tranche:
+
+Canonical state and live portal binding:
+
+- [x] Add a canonical `KernelProjection` struct to `portal-core` that carries `KernelTick`, `BioQuaternionState`, decomposed energy, tritone-square emphasis, and a 72-fold resonance-vector summary hook.
+- [x] Make `PortalClockState` in `portal-core` own the current `KernelProjection` as first-class state, not as a UI-derived afterthought.
+- [x] Add `sync_kernel_projection` / equivalent pure function in `portal-core::state` so every cast, Kairos update, and quintessence update recomputes kernel state from the same source of truth.
+- [x] Prove `update_from_cast` updates `KernelTick` from `tick12`, uses `quintessence_quaternion` as `q_b`, uses `composed_quaternion` as `q_p`, and updates decomposed energy with real values.
+- [x] Prove `update_kairos_full` and `update_quintessence_quaternion` refresh kernel projection when transit or identity state changes.
+- [x] Add the same kernel projection fields to the S0 TUI `PortalClockState` mirror without duplicating kernel math.
+- [x] Add a local adapter from the S0 TUI mirror into `portal-core` computation so CLI/TUI and Tauri remain contract-compatible.
+- [x] Replace weak/mock-only portal clock tests with real tests that import and exercise `epi_logos::portal::clock_state`.
+- [x] Render kernel tick phase, harmonic ratio, kernel element, and total energy in the live unified clock data panel.
+- [x] Carry kernel projection generation into `PortalTemporalSurface` so DAY/NOW, gateway sessions, and live portal clients can detect kernel-state changes.
+
+Envelope, API, and TypeScript contract:
+
+- [x] Add kernel projection fields to Tauri TypeScript interfaces and keep them aligned with `portal-core` serialization.
+- [x] Add or update API/envelope schema entries for QL meta-layer state: kernel tick, phase, element, harmonic ratio, resonance summary, energy decomposition, and computation source.
+- [x] Ensure gateway/session projection can expose safe kernel fields without leaking protected personal/Nara data.
+- [x] Add regression tests that serialize `PortalClockState` and prove the kernel projection survives IPC/API round trips.
+- [x] Update the Tauri clock/runtime type mirror to include `KernelProjection` and `KernelTemporalProjection`; legacy Electron clock shape remains historical port reference rather than canonical runtime contract.
+
+Musical and harmonic runtime:
+
+- [x] Define the first `HarmonicPulse` / rhythm-prep type from kernel tick ratio, phase, element, cycle, and tempo basis.
+- [x] Prove pulse derivation is deterministic from `KernelTick` and does not depend on display frame rate.
+- [x] Make future audio/cymatic rendering consume kernel pulse types rather than ad hoc UI timer values.
+- [x] Add test coverage for epogdoon cycle wrap, slash-flip tick, ascent/descent inversion, and fourth/fifth harmonic ratios.
+- [x] Prepare the Tauri/desktop visual layer to consume harmonic pulse as data, with actual audio synthesis deferred until the rendering target is ready.
+
+Resonance, graph, and autoresearch handoff:
+
+- [x] Define the first resonance observation envelope from active lens, helix, QL position, score, source coordinate, session key, timestamp, and `KernelTick`.
+- [x] Route resonance-vector writes toward S2 graph/lens ingestion contracts; S0 may invoke, but S2 owns graph schema and Neo4j persistence. Current method: `s2.graph.kernel_resonance.record`.
+- [x] Route episodic kernel/session deposition toward S3 Graphiti runtime handles; S3 owns runtime adapter/provenance, S5 owns meaning/search/governance. Current method: `s5.episodic.kernel_resonance.deposit`.
+- [x] Add S5 autoresearch evidence fields that can consume kernel energy/resonance deltas as improvement evidence without pretending they are final judgement.
+- [x] Add Epii review visibility for kernel-derived deltas and musical/visual readiness, keeping human validation gates intact.
+- [x] Define `KernelCoordinateAnchor` / equivalent shared contract that links `KernelResonanceObservation` to the S2 36-fold pointer web, S0' qvdata source/version, and `epi core knowing` coordinate dossier output.
+- [x] Add tests proving kernel resonance records can be enriched with pointer-web reachability without moving pointer computation into S0 or duplicating S2 graph topology.
+- [x] Add tests proving `epi core knowing <coord> --json` can expose safe kernel/pointer anchors for PI-agent orientation without claiming to own live kernel computation or graph persistence.
+- [x] Promote pointer-web reachability from a pure anchor into an S2 graph method surface: `s2.graph.pointer_web.compute` for connection-free orientation and `s2.graph.pointer_web.refresh` for live Neo4j persistence.
+- [x] Add coordinate-owned pointer-web node properties to the S2 schema registry and semantic documents so embeddings inherit the same safe kernel/pointer/qvdata topology.
+
+Implementation result, 2026-05-18:
+
+- `Body/S/S2/graph-services/src/pointers.rs` now owns the first pure 36-fold pointer-web computation and the shared `KernelCoordinateAnchor` contract joining kernel source, S2 pointer topology, and S0' qvdata / `epi core knowing` orientation.
+- `KernelResonanceObservationPlan` now carries `coordinate_anchor`, stores a serialized safe anchor on the S2 observation params/cypher, and returns it in the S2 graph method response. This keeps pointer topology S2-owned while making kernel resonance records computationally anchored.
+- `KnowingDossier` now includes the same safe coordinate anchor in `epi core knowing <coord> --json`, so PI agents can orient from qvdata/pointer/kernel relations without direct Neo4j or live kernel authority.
+- `PointerWebRefreshPlan` now writes `c_5_pointer_web_json`, pointer count, pointer-family/ref arrays, and refresh timestamp through parameterized S2 Cypher. The S0 gateway mirror only dispatches `compute` / `refresh`; S3 owns route classification, not graph schema.
+- `SemanticDocument::from_coordinate_parts` includes the safe `KernelCoordinateAnchor`, so S2' semantic embeddings and future Bimba-map consumers can see kernel source, pointer reachability, and qvdata source without touching protected live-kernel state.
+
+Immediate task group K-H - harmonic pointer/kernel lock-in:
+
+- [ ] Define a shared `MathemeHarmonicProfile` / equivalent contract in the S0 kernel/Rust mirror and S2 pointer-service boundary. The profile must cover coordinate, QL position, bimba/pratibimba helix semantics, pitch-class anchor, X/X' spanda pair, X+Y=5 mirror, Klein square, interval role, ratio role, lens-anchor membership, 72-fold resonance index slots, 8+4 sounded/nodal role, and compatibility labels for older descent/ascent wording.
+- [ ] Extend the same profile with the kernel-canon minimum shape: `quintessence_hash`, `quintessence_quaternion`, `live_quaternion`, `tick12`, 720-degree address, oracle/cast payload handle, safe clock projection handle, graph-deposit handle, and renewed-ground provenance. Protected quaternion detail must stay out of public-current projections unless an explicit local/private boundary permits it.
+- [ ] Add kernel-level tests for the musical invariants: tick decomposition into `cycle=floor(n/12)`, `sub_tick=n mod 12`, `helix_bit=floor(sub_tick/6)`, `position=sub_tick mod 6`; two whole-tone helices; 12 chromatic anchors; 12 lens anchors; 72 resonance uniqueness; semitone cross-helix spanda; whole-tone epogdoon tick; Square C 1-WT mirror; Square B tritone mirror; Square A 16:9 / 5-WT totality mirror; and the absent +1 epogdoon closure residue.
+- [ ] Add ratio-mode tests that distinguish operational 12-TET pitch-class closure from pure ratio-space: `pure_helix_ratio(q)=(9/8)^q`, `16/9 * 9/8 = 2/1`, and the A#/Bb comma site remains explanatory rather than collapsed into equal temperament.
+- [ ] Add elemental tracing fields and tests for both projections: P-position lens-link elements (`Aether, Earth, Air, Water, Earth, Aether`) and L2' element-bearing inner positions (`Aether, Earth, Water, Air, Fire, Mineral`). The clock/profile must expose both rather than choosing one silently.
+- [ ] Add diatonic CF/VAK projection fields and tests: Lens 0 maps C/D/E/F/G/A/B/C' to `(00/00)`, `(0/1)`, `(0/1/2)`, `(0/1/2/3)`, `(4.0/1-4.4/5)`, `(4.5/0)`, `(5/0)`, enriched `(00/00)`; modal rotation changes the `mode_anchor_cf` while preserving the chromatic 12 and bimba/pratibimba helix law.
+- [ ] Add Mahāmāyā / binary DNA transcription fields and tests: 64 hexagram/codon address, 384 line-change operator address, T/U storage-expression state, 16/64/80 frame-breathing markers where applicable, and M3 symbolic-codec provenance. This layer must be a coordinate-native symbolic codec, not biology-as-metaphor.
+- [ ] Add pointer-service relation metadata for context-frame projection: every emitted harmonic relation descriptor should be able to carry `context_frame`, `vak_register`, `context_agent`, `diatonic_degree`, `mode_name`, and `mode_anchor_cf` where the relation is being read through the diatonic/lemniscatic projection.
+- [ ] Add VAK/agent routing compatibility tests proving the harmonic profile can route CF anchors to the expected constitutional function: Nous, Logos, Eros, Mythos, Anima/Psyche, Psyche bridge, Sophia, without making these labels the sole authority for dispatch.
+- [ ] Add pointer-service tests proving each base coordinate receives a harmonic profile that agrees with its pointer web: family refs preserve QL position, inversion refs use `5-Q` plus prime flip, lens refs expose the day/night Mobius pair, and mirror interval metadata matches the X+Y=5 square.
+- [ ] Resolve the canonical property split in code/specs: `c_2_*` and/or typed relationships are canonical S2 relation law; `c_5_pointer_*` remains the compiled integration snapshot for API, semantic embeddings, qvdata, PI orientation, and visualisation.
+- [ ] Extend `PointerWebRefreshPlan` or the next graph write plan to materialise typed relation edges where useful, at minimum inversion / polar-opposite, reflective/VAK, position, and lens-operation relations with coordinate-owned relationship properties.
+- [ ] Thread the harmonic profile through `KernelCoordinateAnchor`, `SemanticDocument`, `epi core knowing`, gateway `s2.graph.pointer_web.compute` / `refresh` responses, and safe S3 projection only where the data is public-current and non-protected.
+- [ ] Update envelope/API/TS contracts so the QL meta-layer carries the harmonic profile shape rather than forcing TUI/Tauri/agents to infer it from unrelated kernel and graph fields.
+- [ ] Add M/Tauri planning hooks for the future Bimba-map/clock/cymatic surface through [[M'-SYSTEM-SPEC]]: inner 8 positions drive sounded/visual frequency content, outer 4 positions drive nodal/boundary conditions, and spectral observer output maps through `STFT -> CQT -> chromagram -> active lens -> coordinate profile`.
+- [ ] Add S5 review/autoresearch evidence fields for harmonic-profile drift or readiness. These fields remain advisory and must not become automatic judgement or identity mutation.
+- [ ] Add Neo4j development-awareness protocol: active seed/spec/code/test anchors should be queryable from the relevant coordinate node or relationship plan, with compatibility boundaries for legacy `bimbaCoordinate` data and no destructive corpus import during this tranche.
+- [ ] Add Graphiti development-memory protocol: every substantial development session can deposit DAY/NOW, session key, coordinate(s), files touched, tests run, decisions, unresolved gaps, and next actions through S3 Graphiti runtime / S5 invocation governance.
+- [ ] Add Nara journal-memory protocol: journal and modality episodes can be deposited to Graphiti under protected-local namespace rules while identity-affecting interpretation still routes through Epii review.
+- [ ] Verification gate: run focused S0 kernel tests, S2 graph-services tests, S0 `core_knowing` / gate parity tests, and live Neo4j pointer refresh proof after implementation.
+
+Immediate task group K-I - cleanup, commit, and minimum-shape trajectory:
+
+- [ ] Commit the current implementation in coherent slices rather than one undifferentiated state: kernel/FFI contract, S2 graph-pointer domain, S3 gateway/Graphiti/harmonic runtime, M/S4/S5 UI-agent operations, and docs/planning.
+- [ ] Exclude local/editor noise unless explicitly intended: `Idea/.obsidian/workspace.json` and ad hoc daily-note files should not enter implementation commits by accident.
+- [ ] Run `git diff --check`, focused cargo tests for changed S0/S2/S3/S5 slices, and GitNexus reindex/change review where tooling is available before final commit claims.
+- [ ] Reconcile post-cleanup Nara/clock docs with current `tick12`, `PortalClockState`, `quintessence_quaternion`, `live_quaternion`, shared portal runtime state, and portal-core extraction law.
+- [ ] Reconcile post-cleanup binary/Mahāmāyā docs with current M3 symbolic-codec, T/U transcription, 64 codon/hexagram, 384 line-change, and Clifford/72-fold resonance contracts.
+- [ ] Promote the minimum-shape loop into implementation tickets: `quintessence_hash -> quintessence_quaternion -> live_quaternion -> tick12/720 -> oracle/cast -> shared clock -> graph/Graphiti deposit -> renewed ground`.
+- [ ] Keep Tauri/audio/cymatic development downstream of the shared profile and S2 relation law. Rendering can start once it consumes the profile; it must not redefine tick, helix, mode, CF, binary, or codon semantics locally.
+
+Trajectory, deposition, and session propagation:
+
+- [x] Add trajectory/deposition structs that point to S3 session, DAY/NOW, SpaceTimeDB, and Graphiti handles without owning their policies.
+- [x] Add first test-owned Neo4j proof for kernel resonance observation persistence under canonical `:Bimba` schema and cleanup by session key.
+- [x] Prove kernel projection can be named by DAY/NOW/session keys and safely projected through SpaceTimeDB as live public-current state.
+- [x] Preserve protected personal truth in local Neo4j/Graphiti namespaces while exposing only safe Pratibimba anchor refs through live projections.
+- [x] Connect kernel projection into PI session orientation so Anima and Epii agents can read the same temporal/harmonic state with their own permission membranes.
+
+C/Rust/FFI hardening:
+
+- [x] Keep the deep C kernel and Rust `portal-core` mirror behaviorally identical with paired tests for every added kernel primitive.
+- [x] Extend FFI tests whenever the C kernel adds a new field/function used by S0/S4/S5 agents.
+- [x] Add property-style edge tests for zero quaternions, invalid lens/position indexes, sub-tick wrapping, and resonance-vector length preservation.
+- [x] Ensure `epi-lib`, `portal-core`, and `epi-cli` all build cleanly from Body-native paths with no root-level source shim dependency.
+
+Live verification and cleanup:
+
+- [x] Run focused `make test_kernel`, `portal-core`, `epi-cli` portal-clock, and kernel FFI tests after each tranche.
+- [ ] Run `git diff --check` and GitNexus change detection before commit.
+- [ ] Reindex GitNexus after structural changes so the next agent can trust symbol routing.
+- [ ] Before the final cleanup pass, run the non-negotiable depwire dead-symbol audit and worktree cleanup/harmonisation step already tracked in the roadmap.
+
+Verification:
+
+- [x] `make test_kernel`
+- [x] `cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test kernel_math`
+- [x] `cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml --test kernel_clock_projection`
+- [x] `cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_ffi_contract`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test portal_clock_state`
+- [x] `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml portal::runtime_state::tests`
+- [x] `cargo build --manifest-path Body/S/S0/portal-core/Cargo.toml`
+- [x] `cargo build --manifest-path Body/S/S0/epi-cli/Cargo.toml`
+- [x] `make lib`
+
+Exit condition:
+
+- Kernel primitives are no longer prose-only. C, Rust, and CLI FFI agree on the same real mathematical behavior, and later API/envelope/TUI/Tauri layers have a computable source to expose.
+
 ## Execution Rules
 
 - Right design beats old code shape. Existing code is evidence and reusable material, not authority.
@@ -158,6 +362,7 @@ Checklist:
 - [x] Point S0 coordinate parser, GraphRAG query grammar, retrieval mode/result/disclosure contracts, and semantic-cache law at S2 graph-services authority.
 - [x] Keep S0 graph schema/seed/client/parser/cache mirrors as direct S2 passthroughs; S0 may keep command presentation and live runtime adapters, but not duplicated S2 service definitions.
 - [x] Move retrieval execution, graph semantic-cache law, graph metadata, vault frontmatter parsing/mapping/alignment helpers, dataset import, relationship/link/sync/conflict services, semantic document/embedding refresh, and graph doctor/readiness into `Body/S/S2/graph-services`; keep S0 graph modules as passthrough mirrors.
+- [x] Add S2-owned pointer-web compute/refresh service methods and keep S0/S3 as method mirrors/route classifiers.
 - [x] Make dataset import understand the real Bimba corpus layout: `low-detail/`, six `*-deep` branches, BOM handling, `filteredProps`, legacy `bimbaCoordinate`, `relType`, skipped null endpoints, and branch provenance.
 - [x] Extend `epi graph import` to route `all`, `low-detail`, `deep`, individual `*-deep`, and explicit nodes/relations JSON through S2 graph-services.
 - [ ] Defer full Bimba dataset conversion/import to its own focused session; do not let it block S2 graph method/schema implementation.
@@ -203,7 +408,7 @@ Exit condition:
 
 ## Phase 3. S3 Gateway / Redis Context / Graphiti Runtime Extraction
 
-Status: extraction boundary advanced. `Body/S/S3/gateway-contract` owns gateway product constants, method names, event names, ports, omnipanel metadata, session record/patch contracts, run/event contracts, chat-run registry, S3 temporal Redis role/key contract, SpaceTimeDB projection plan/message/row-decoding contracts, Graphiti runtime constants, Graphiti adapter mode contract, and the S3-runtime/S5-invocation Graphiti separation. `Body/S/S3/gateway` now owns gateway protocol frame construction, durable session store, runtime run/event/chat state, session record creation with injected runtime context, patch/delete/resolve/list authority, legacy OmniPanel row normalization, transcript paths, workspace/bootstrap scope derivation, and subagent launch validation. `Body/S/S3/graphiti-runtime` now owns the Graphiti runtime adapter contract, compatibility HTTP client, provenance event construction, session-memory envelope, identity-mutation guard, and deposit/search payloads while preserving S5/S5' invocation governance. S0 gate code is now the runtime/server adapter: it injects live Pi/Khora cwd, vault root, NOW path, day id, and session id into S3 session creation, reuses the S3 store/runtime/protocol/Graphiti runtime crates for persistence, wire behavior, and episodic runtime calls, and still hosts the live WebSocket dispatch body while domain handlers remain S0-resident. `Body/S/S0/epi-cli/src/gate/temporal.rs` gives the live S3' temporal context report over DAY/NOW/session/history/Redis/SpacetimeDB/Graphiti/Kairos/Pratibimba orientation, exposed as both `epi gate temporal context` and `s3'.temporal.context` for S4/S5 agent access. Live gateway dispatch/server extraction remains next, but protocol, runtime, session-store, and Graphiti runtime adapter extraction are no longer pending. S4 invocation tests prove real gateway agent RPC and subagent session persistence through the current S0-hosted server/S3-backed store. SpaceTimeDB declares the shared gateway/client/agent/session/global-temporal/Kairos projection schema, and the current S0-hosted gateway can register gateway, client, agent, session, heartbeat, Kairos, and global temporal surfaces against that schema when `SPACETIMEDB_URL` / `EPI_GATE_SPACETIME_URL` is configured. `global_temporal_surface` is the safe shared DAY/NOW/Kairos/Redis/Graphiti/Pratibimba-anchor row for portal and agent clients; it is not the protected PersonalNexus/Graphiti truth store. `health.snapshot` and the S0' portal readiness registry surface registration readiness separately from projection-readiness. The TUI can hydrate the shared temporal projection from SpaceTimeDB through HTTP SQL polling by default; when `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket` is set, it opens the native SpaceTimeDB WebSocket subscription and decodes `session_surface` / `kairos_surface` / `global_temporal_surface` updates through the S3-owned row contract. The future desktop mirror remains next.
+Status: extraction boundary advanced. `Body/S/S3/gateway-contract` owns gateway product constants, method names, event names, ports, omnipanel metadata, session record/patch contracts, run/event contracts, chat-run registry, S3 temporal Redis role/key contract, SpaceTimeDB projection plan/message/row-decoding contracts, Graphiti runtime constants, Graphiti adapter mode contract, and the S3-runtime/S5-invocation Graphiti separation. `Body/S/S3/gateway` now owns gateway protocol frame construction, durable session store, runtime run/event/chat state, session record creation with injected runtime context, patch/delete/resolve/list authority, legacy OmniPanel row normalization, transcript paths, workspace/bootstrap scope derivation, and subagent launch validation. `Body/S/S3/graphiti-runtime` now owns the Graphiti runtime adapter contract, compatibility HTTP client, provenance event construction, session-memory envelope, identity-mutation guard, and deposit/search payloads while preserving S5/S5' invocation governance. S0 gate code is now the runtime/server adapter: it injects live Pi/Khora cwd, vault root, NOW path, day id, and session id into S3 session creation, reuses the S3 store/runtime/protocol/Graphiti runtime crates for persistence, wire behavior, and episodic runtime calls, and still hosts the live WebSocket dispatch body while domain handlers remain S0-resident. `Body/S/S0/epi-cli/src/gate/temporal.rs` gives the live S3' temporal context report over DAY/NOW/session/history/Redis/SpacetimeDB/Graphiti/Kairos/kernel/Pratibimba orientation, exposed as both `epi gate temporal context` and `s3'.temporal.context` for S4/S5 agent access. Live gateway dispatch/server extraction remains next, but protocol, runtime, session-store, and Graphiti runtime adapter extraction are no longer pending. S4 invocation tests prove real gateway agent RPC and subagent session persistence through the current S0-hosted server/S3-backed store. SpaceTimeDB declares the shared gateway/client/agent/session/global-temporal/Kairos/kernel projection schema, and the current S0-hosted gateway can register gateway, client, agent, session, heartbeat, Kairos, kernel, and global temporal surfaces against that schema when `SPACETIMEDB_URL` / `EPI_GATE_SPACETIME_URL` is configured. `global_temporal_surface` is the safe shared DAY/NOW/Kairos/kernel/Redis/Graphiti/Pratibimba-anchor row for portal and agent clients; it is not the protected PersonalNexus/Graphiti truth store. `health.snapshot` and the S0' portal readiness registry surface registration readiness separately from projection-readiness. The TUI can hydrate the shared temporal projection from SpaceTimeDB through HTTP SQL polling by default; when `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket` is set, it opens the native SpaceTimeDB WebSocket subscription and decodes `session_surface` / `kairos_surface` / `global_temporal_surface` updates through the S3-owned row contract, including `kernel_projection_json` as safe public-current kernel state. The future desktop mirror remains next.
 
 Goal: make [[S3]] runtime authority Body-native and separate live temporal/session context from S2 graph cache.
 
@@ -232,7 +437,7 @@ Checklist:
 - [x] Add first S3' temporal context access surface for S4/S5 agents: `s3'.temporal.context` and `epi gate temporal context` report DAY/NOW wikilinks, history archive path, Redis keys, SpacetimeDB projection table, and Graphiti arc orientation.
 - [x] Hydrate S3' Redis temporal context from real NOW content under `s3:gateway:temporal:*` when requested, without treating Redis as S2 graph cache.
 - [x] Project the same DAY/NOW/Redis/history/Graphiti temporal facts through the SpaceTimeDB bridge session surface and shared `global_temporal_surface`.
-- [x] Project safe Kairos and protected Pratibimba anchor references through the same S3/S3' temporal context and SpaceTimeDB bridge.
+- [x] Project safe Kairos, safe kernel tick/pulse/energy, and protected Pratibimba anchor references through the same S3/S3' temporal context and SpaceTimeDB bridge.
 - [x] Replace the older `epi-spacetime-module` presence/oracle/logos centre with a gateway-client registration schema: `gateway_instance`, `agent_instance`, `client_registration`, `session_surface`, `kairos_surface`, `global_temporal_surface`, and `temporal_event`.
 - [x] Add reducer contracts for `register_gateway`, `heartbeat_gateway`, `register_agent`, `register_client`, `bind_session_temporal_context`, `bind_kairos_surface`, `bind_global_temporal_surface`, and `publish_temporal_event`.
 - [x] Wire the current S0-hosted gateway start/test-server path to register and heartbeat against the SpaceTimeDB registration plane when configured.
@@ -313,18 +518,18 @@ Task group A - centralize the runtime-to-gateway write path:
 - [x] Ensure the propagation function accepts explicit operation context: `session_start`, `new`, `resume`, `fork`, `import`, `resource_reload`, and `close/compact`.
 - [x] Make the propagation function write only S3-owned fields through `SessionStore` and preserve Khora-owned fields as values supplied by the runtime, not recomputed in the gateway layer.
 - [x] Add tests proving repeated propagation for the same runtime is idempotent: no duplicate aliases, no new NOW path, no lost diagnostics, and stable canonical key.
-- [ ] Add tests proving propagation for a different effective cwd recreates cwd-bound paths, vault root, gate root, plugin runtime path, and resource-loader id.
+- [x] Add tests proving propagation for a different effective cwd recreates cwd-bound paths, vault root, gate root, plugin runtime path, and resource-loader id.
 
 Task group B - make later PI lifecycle operations use the same runtime factory:
 
 - [ ] Identify the actual PI command/event surfaces for `/new`, `/resume`, `/fork`, import, resource reload, retry, compact, and close in the current PI/Khora/VAK code.
 - [ ] Add operation-specific `AgentSessionRuntimeRequest` fields where needed: operation kind, source session key, target session key, parent session key, source kind, imported source handle, branch label, and expected agent id.
 - [x] Implement `epi agent session new` or the existing equivalent command path so it calls `AgentSessionRuntimeFactory` with `force_new=true`, writes a new NOW, and propagates the new record to S3.
-- [ ] Implement/route `epi agent session resume` so it resolves a source gateway session, recreates effective-cwd-bound PI runtime state, preserves DAY/NOW identity where appropriate, and propagates S3 lineage.
+- [x] Implement/route `epi agent session resume` so it resolves a source gateway session, recreates effective-cwd-bound PI runtime state, preserves DAY/NOW identity where appropriate, and propagates S3 lineage.
 - [x] Implement/route `epi agent session fork` so it creates a new target gateway session with parent/source lineage, new runtime identity when requested, inherited agent/resource context, and explicit `sourceSessionKind=fork`.
 - [x] Implement/route `epi agent session import` so external Claude/PI/Codex runs enter through the same runtime factory and store imported source handles without pretending they are native Khora starts.
-- [ ] Ensure gateway RPC methods `sessions.fork`, `sessions.resume`, and `sessions.import` either call the shared runtime propagation path or explicitly document/test why they are storage-only compatibility operations.
-- [ ] Add real gateway RPC tests proving fork/resume/import records include runtime cwd, vault root, resource-loader id, DAY/NOW identity, diagnostics, and correct lineage after propagation.
+- [x] Ensure gateway RPC methods `sessions.fork`, `sessions.resume`, and `sessions.import` either call the shared runtime propagation path or explicitly document/test why they are storage-only compatibility operations.
+- [x] Add real gateway RPC tests proving fork/resume/import records include runtime cwd, vault root, resource-loader id, DAY/NOW identity, diagnostics, and correct lineage after propagation.
 
 Implementation result, 2026-05-08:
 
@@ -334,24 +539,38 @@ Implementation result, 2026-05-08:
 - S0 portal runtime and SpaceTimeDB projection hydration now preserve the agent access fields needed by S4/S5: canonical session key, active PI agent id, runtime cwd, resource-loader id, source lineage, and Graphiti session arc id.
 - PI runtime propagation now calls the shared S3 SpaceTimeDB session-surface publisher after each S3 session-store write, so `session_start`, `new`, `resume`, `fork`, and `import` no longer wait for a later gateway RPC touch before appearing in the projection stream.
 - PI runtime propagation can now hydrate the S3' Redis temporal keyset during the same session-surface publish when `EPI_GATE_SESSION_REDIS_HYDRATION=required` or `best-effort`: session NOW markdown, DAY context, session Kairos, agent orientation, and personal orientation where the Pratibimba anchor is available.
+- Additional propagation proof: the runtime factory now has a cwd-bound regression test showing distinct repo roots recreate distinct vault roots, gate state roots, plugin runtime paths, resource-loader ids, and active PI agent identities. Gateway compatibility RPCs for `sessions.fork`, `sessions.resume`, and `sessions.import` are explicitly tested as storage-level operation mirrors which preserve propagated Khora/S3 runtime identity fields, diagnostics, DAY/NOW identity, and lineage rather than recomputing cwd-bound PI services inside the gateway server.
+- Command-level lifecycle proof: `epi agent session resume` and `epi agent session import` now have regression coverage showing they preserve runtime cwd, vault root, active PI agent id, resource-loader id, diagnostics, and source lineage through the real CLI/store path.
 
 Task group C - resource loading and singleton idempotency:
 
 - [ ] Audit current resource loading paths for plugins, skills, prompts, themes, settings, model config, auth profiles, and extension manifests.
-- [ ] Add structured diagnostics for missing explicit resource paths (`-e`, `--skill`, `--prompt-template`, theme/config paths) without log-and-exit in creation logic.
-- [ ] Add a resource-loader identity contract that is stable per effective cwd + agent id + plugin runtime path and changes when those inputs change.
+- [x] Add structured diagnostics for missing explicit resource paths (`-e`, `--skill`, `--prompt-template`, theme/config paths) without log-and-exit in creation logic.
+- [x] Add a resource-loader identity contract that is stable per effective cwd + agent id + plugin runtime path and changes when those inputs change.
 - [ ] Ensure startup, `/new`, `/resume`, `/fork`, and import do not double-load singleton-style extensions or duplicate Khora `session_start` side effects.
-- [ ] Add tests that run the runtime factory twice for the same cwd/day and prove only one NOW/session_start write occurs while diagnostics report reuse.
-- [ ] Add tests that run the runtime factory for two cwd roots and prove each gets distinct cwd-bound resource-loader ids and session state paths.
-- [ ] Add tests that simulate a missing resource path and assert a structured diagnostic appears in the gateway session record rather than process exit text.
+- [x] Add tests that run the runtime factory twice for the same cwd/day and prove only one NOW/session_start write occurs while diagnostics report reuse.
+- [x] Add tests that run the runtime factory for two cwd roots and prove each gets distinct cwd-bound resource-loader ids and session state paths.
+- [x] Add tests that simulate a missing resource path and assert a structured diagnostic appears in the gateway session record rather than process exit text.
+
+Implementation result, 2026-05-18:
+
+- `AgentSessionRuntimeFactory` now constructs resource-loader identity from effective cwd, PI agent id, and plugin runtime path. This prevents two PI instances that share `EPI_AGENT_HOME` from collapsing into the same singleton loader identity.
+- `Body/S/S0/epi-cli/tests/session_lifecycle.rs` now proves same cwd + same agent + same plugin runtime keeps one identity, agent/plugin changes change it, shared-home/different-cwd changes it, and same-day runtime reuse creates only one NOW root while reporting reuse diagnostics.
 
 Task group D - retry/idle/run-state settlement:
 
-- [ ] Locate the PI/gateway retry and idle settlement paths for agent runs and chat runs.
-- [ ] Define the S3 session record fields that represent run state: active run ids, last run id, retry settlement state, idle state, abort state, and diagnostics.
-- [ ] Preserve retry-settlement semantics so a retried agent run does not mark the session idle until the full retry cycle completes.
-- [ ] Add gateway tests that simulate transient retry state and prove `sessions.resolve` / `sessions.run-state` exposes pending, retrying, settled, and aborted states truthfully.
-- [ ] Ensure TUI/portal readiness uses run-state facts from gateway records, not locally inferred UI state.
+- [x] Locate the PI/gateway retry and idle settlement paths for agent runs and chat runs.
+- [x] Define the S3 run-state envelope fields that represent active run ids, last run id, retry settlement state, idle state, abort state, and diagnostics.
+- [x] Preserve retry-settlement semantics so a retried agent run does not mark the session idle until the full retry cycle completes.
+- [x] Add gateway tests that simulate transient retry state and prove `sessions.resolve` / `sessions.run-state` exposes pending, retrying, settled, and aborted states truthfully.
+- [x] Ensure TUI/portal command surfaces use run-state facts from gateway records, not locally inferred UI state.
+
+Implementation result, 2026-05-08:
+
+- Gateway runtime state now exposes session-scoped run snapshots, and `sessions.resolve` includes a live `runState` envelope with active run ids, active count, last run id/status/timestamps, idle state, abort state, and retry-settlement state.
+- The run-state proof drives a real gateway WebSocket session with the fake long-running PI process: `chat.send` creates an active run, `sessions.resolve` reports `idleState=active` with the run id, `chat.abort` terminates it, and a later `sessions.resolve` reports `idleState=idle`, `abortState=aborted`, and `lastRunStatus=aborted`.
+- The `GatewaySessionOperationContract` run-state response now names `runState`, `activeRunIds`, and `idleState`, so the portal/desktop clients can consume gateway truth rather than inventing UI-local run-state inference.
+- `sessions.run-state` is now a live gateway method rather than only a `sessions.resolve` contract note. The same gateway-backed `runState` envelope reports pending/retrying retry cycles as non-idle, settled cycles as idle, active/aborted chat runs from runtime snapshots, and is surfaced by the portal session-operation provider as a first-class `/` command. The S3 dispatch route table now classifies the newer S2 coordinate/kernel methods and S5 autoresearch/kernel methods so contract methods do not dangle outside the S/S' ownership map.
 
 Task group E - projection into S3' and portal consumption:
 
@@ -887,6 +1106,7 @@ Files/code areas:
 - [x] Implement or expose `s2.graph.query` through parameterized Cypher, not string-concatenated user input.
 - [x] Implement or expose `s2.graph.node` with coordinate lookup, relation summary, compatibility fields, and JSON-safe output.
 - [x] Implement or expose `s2.graph.traverse` with bounded depth, direction, relation-type filters, and coordinate provenance.
+- [x] Implement or expose `s2.graph.pointer_web.compute` and `s2.graph.pointer_web.refresh` with S2-owned schema, S0/S3 gateway mirrors, and live Neo4j write/read proof.
 - [x] Implement or expose `s2'.coordinate.resolve` with old `#` / `bimbaCoordinate` compatibility and new M-coordinate migration semantics.
 - [x] Implement or expose `s2'.retrieve`, `s2'.rerank`, and `s2'.enrich` through S2 graph-services rather than S0-local command bodies.
 - [x] Add gateway route/parity records for the above methods using S3 route ownership, while keeping S2 as service authority.
@@ -1013,12 +1233,13 @@ Exit condition:
 
 ## Preferred Next Run
 
-Continue the current spine progression:
+Continue the current spine progression, but re-center the immediate run around the harmonic pointer/kernel foundation before returning to broader platform work:
 
-1. Seed the fresh Hermes handoff session with the completed Phase 10 baseline: live S2 graph methods, coordinate graph schema, real secret providers, outbound channel adapters, setup/config/portal readiness, and depwire/worktree cleanup status.
-2. Work the deeper Hermes platform/channel tranche there: inbound event normalization, subject-coordinate resolution, account identity, webhook/event envelopes, credential-gated live smoke, and platform readiness diagnostics over the S3 gateway law.
-3. Continue Phase 9 readiness only where it supports the fresh handoff: Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, and autoresearch must render as distinct raw-service vs agent-access states.
-4. Continue remaining S2/S3 extraction only where passthrough boundaries are now clear: S0 remains CLI/bootstrap/server adapter; S2 owns graph schema/services; S3 owns gateway, Redis context, Graphiti runtime, SpaceTimeDB projection, platform identity, and session/runtime dispatch law.
-5. Tauri implementation should consume the stable backend contracts rather than inventing desktop-local state: gateway RPC, `GatewaySessionOperationContract`, portal surface registry, and SpaceTimeDB projection tables.
+1. Execute task group K-H in full: implement the shared harmonic profile, prove the 12-note / 12-lens / 72-resonance / 8+4 invariants, resolve the `c_2` canonical relation vs `c_5` compiled snapshot split, and thread the profile through pointer web, qvdata, semantic documents, gateway responses, and contract types.
+2. Then continue the Bimba-map structural data path: deep dataset property assessment/import planning, typed pointer relation materialisation, pointer refresh diffing, and embedding readiness over `gemini-embedding-002`.
+3. Continue Phase 9 readiness only where it supports the same foundation: Neo4j, Redis, gateway, SpaceTimeDB, Graphiti runtime, PI-agent access, Gnosis, Nara, Epii review, autoresearch, and harmonic profile readiness must render as distinct raw-service vs agent-access states.
+4. Keep the deeper Hermes platform/channel tranche queued after the harmonic foundation: inbound event normalization, subject-coordinate resolution, account identity, webhook/event envelopes, credential-gated live smoke, and platform readiness diagnostics over the S3 gateway law.
+5. Continue remaining S2/S3 extraction only where passthrough boundaries are now clear: S0 remains CLI/bootstrap/server adapter; S2 owns graph schema/services; S3 owns gateway, Redis context, Graphiti runtime, SpaceTimeDB projection, platform identity, and session/runtime dispatch law.
+6. Tauri implementation should consume the stable backend contracts rather than inventing desktop-local state: gateway RPC, `GatewaySessionOperationContract`, portal surface registry, SpaceTimeDB projection tables, and the shared harmonic profile.
 
 Do not start non-dry-run Epii/autoresearch mutation until S1' compiler invocation, Anima/Pleroma capability boundaries, and Epii review gates are testable.

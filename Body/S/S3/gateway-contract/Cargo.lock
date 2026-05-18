@@ -27,9 +27,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
+name = "epi-kernel-contract"
+version = "0.1.0"
+dependencies = [
+ "portal-core",
+ "serde",
+ "serde_json",
+ "uuid",
+]
+
+[[package]]
 name = "epi-s3-gateway-contract"
 version = "0.1.0"
 dependencies = [
+ "epi-kernel-contract",
  "serde",
  "serde_json",
  "uuid",
@@ -144,6 +155,13 @@ name = "once_cell"
 version = "1.21.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
+
+[[package]]
+name = "portal-core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "prettyplease"

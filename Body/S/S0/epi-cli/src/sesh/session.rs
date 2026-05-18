@@ -1,6 +1,8 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use std::env;
+use std::ffi::OsStr;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -84,7 +86,7 @@ impl AgentSessionRuntimeFactory {
         let vault_root = resolve_vault_root_for_repo(&request.effective_cwd, &env);
         let pi_session = pi_session_runtime_for_request(&request, &env);
         let expected_day_id = request.now.format("%d-%m-%Y").to_string();
-        let mut diagnostics = Vec::new();
+        let mut diagnostics = explicit_resource_path_diagnostics(&env);
 
         if !request.force_new && request.random_suffix.is_none() {
             if let Ok(existing) = read_session_state(&request.effective_cwd) {
@@ -140,6 +142,63 @@ impl AgentSessionRuntimeFactory {
     }
 }
 
+fn explicit_resource_path_diagnostics(
+    env_map: &BTreeMap<String, String>,
+) -> Vec<AgentSessionRuntimeDiagnostic> {
+    let mut diagnostics = Vec::new();
+    for (var, kind) in [
+        ("EPI_GATE_SKILLS_PATHS", "skill"),
+        ("EPI_AGENT_SKILL_PATHS", "skill"),
+        ("EPI_AGENT_EXTENSION_PATHS", "extension"),
+        ("EPI_GATE_EXTENSION_PATHS", "extension"),
+    ] {
+        if let Some(raw) = resource_env_value(env_map, var) {
+            for path in env::split_paths(OsStr::new(&raw)) {
+                push_missing_resource_diagnostic(&mut diagnostics, var, kind, path);
+            }
+        }
+    }
+
+    for (var, kind) in [
+        ("EPI_AGENT_PROMPT_TEMPLATE_PATH", "prompt-template"),
+        ("EPI_AGENT_SYSTEM_PROMPT_PATH", "system-prompt"),
+        ("EPI_AGENT_THEME_PATH", "theme"),
+        ("EPI_AGENT_CONFIG_PATH", "config"),
+    ] {
+        if let Some(raw) = resource_env_value(env_map, var) {
+            push_missing_resource_diagnostic(&mut diagnostics, var, kind, PathBuf::from(raw));
+        }
+    }
+    diagnostics
+}
+
+fn resource_env_value(env_map: &BTreeMap<String, String>, var: &str) -> Option<String> {
+    env_map
+        .get(var)
+        .cloned()
+        .or_else(|| env::var(var).ok())
+        .map(|value| value.trim().to_owned())
+        .filter(|value| !value.is_empty())
+}
+
+fn push_missing_resource_diagnostic(
+    diagnostics: &mut Vec<AgentSessionRuntimeDiagnostic>,
+    var: &str,
+    kind: &str,
+    path: PathBuf,
+) {
+    if path.as_os_str().is_empty() || path.exists() {
+        return;
+    }
+    diagnostics.push(AgentSessionRuntimeDiagnostic {
+        severity: "error".to_owned(),
+        message: format!(
+            "missing explicit {kind} resource path from {var}: {}",
+            path.display()
+        ),
+    });
+}
+
 fn pi_session_runtime_for_request(
     request: &AgentSessionRuntimeRequest,
     env: &BTreeMap<String, String>,
@@ -169,10 +228,8 @@ fn pi_session_runtime_for_request(
     let settings_path = agent_dir.join("settings.json");
     let gate_state_root = epi_home.join("gate");
     let default_model = read_default_model(&models_path);
-    let resource_loader_id = format!(
-        "pi:{agent_id}:{}",
-        plugin_runtime_path.to_string_lossy().replace('\\', "/")
-    );
+    let resource_loader_id =
+        resource_loader_id_for(&agent_id, &request.effective_cwd, &plugin_runtime_path);
 
     PiSessionRuntime {
         event,
@@ -186,6 +243,22 @@ fn pi_session_runtime_for_request(
         resource_loader_id,
         default_model,
     }
+}
+
+fn resource_loader_id_for(
+    agent_id: &str,
+    effective_cwd: &Path,
+    plugin_runtime_path: &Path,
+) -> String {
+    format!(
+        "pi:{agent_id}:cwd:{}:runtime:{}",
+        identity_path(effective_cwd),
+        identity_path(plugin_runtime_path)
+    )
+}
+
+fn identity_path(path: &Path) -> String {
+    path.to_string_lossy().replace('\\', "/")
 }
 
 fn read_default_model(models_path: &Path) -> Option<String> {

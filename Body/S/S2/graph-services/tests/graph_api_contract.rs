@@ -1,7 +1,7 @@
 use epi_s2_graph_services::{
     schema, GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphQueryRequest,
     GraphTraverseDirection, GraphTraverseRequest, KernelResonanceObservationRequest, Neo4jClient,
-    Neo4jConfig,
+    Neo4jConfig, PointerWebRefreshRequest,
 };
 use serde_json::json;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -71,6 +71,31 @@ fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
     assert_eq!(plan.resolution.canonical, "M2");
     assert_eq!(plan.resonance_index, 31);
     assert_eq!(plan.tritone_square, 2);
+    assert_eq!(plan.coordinate_anchor.coordinate, "M2");
+    assert_eq!(plan.coordinate_anchor.kernel.source, "s0.kernel");
+    assert_eq!(plan.coordinate_anchor.pointer_web.pointer_count, 36);
+    assert_eq!(
+        plan.coordinate_anchor
+            .pointer_web
+            .family_refs
+            .get("m_ref")
+            .map(String::as_str),
+        Some("M2")
+    );
+    assert_eq!(
+        plan.coordinate_anchor
+            .pointer_web
+            .lens_inversion_refs
+            .get("l2_inv_ref")
+            .map(String::as_str),
+        Some("L3'")
+    );
+    assert_eq!(plan.coordinate_anchor.qvdata.source, "epi core knowing");
+    assert_eq!(plan.coordinate_anchor.qvdata.coordinate, "M2");
+    assert_eq!(
+        plan.params.get_string("coordinate_anchor_json").is_some(),
+        true
+    );
     assert!(plan
         .observation_coordinate
         .starts_with("S2.kernel.resonance.agent-epii-main.1779000001234.31"));
@@ -103,6 +128,37 @@ fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
         })
         .unwrap_err();
     assert!(err.contains("lens"));
+}
+
+#[test]
+fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
+    let plan = GraphMethodService::pointer_web_refresh_plan(&PointerWebRefreshRequest {
+        coordinate: "#2".into(),
+        timestamp_ms: 1_779_000_001_555,
+    })
+    .expect("valid pointer web refresh plan");
+
+    assert_eq!(plan.resolution.canonical, "M2");
+    assert_eq!(plan.pointer_web.coordinate, "M2");
+    assert_eq!(plan.pointer_web.pointer_count, 36);
+    assert_eq!(
+        plan.pointer_web
+            .family_refs
+            .get("m_ref")
+            .map(String::as_str),
+        Some("M2")
+    );
+    assert_eq!(plan.params.get_string("pointer_web_json").is_some(), true);
+    assert_eq!(plan.params.get_integer("pointer_count"), Some(36));
+    assert_eq!(plan.params.get_string("source_coordinate"), Some("M2"));
+    assert!(plan.cypher.contains("MATCH (n:Bimba)"));
+    assert!(plan
+        .cypher
+        .contains("c_5_pointer_web_json = $pointer_web_json"));
+    assert!(plan.cypher.contains("c_5_pointer_count = $pointer_count"));
+    assert!(plan
+        .cypher
+        .contains("c_5_pointer_family_refs = $family_refs"));
 }
 
 #[tokio::test]
@@ -153,6 +209,31 @@ async fn live_graph_methods_write_read_traverse_and_cleanup_test_owned_data() {
         .await
         .expect("node method");
     assert_eq!(node["node"]["coordinate"], source);
+
+    let refreshed = service
+        .refresh_pointer_web(PointerWebRefreshRequest {
+            coordinate: source.clone(),
+            timestamp_ms: 1_779_000_001_555,
+        })
+        .await
+        .expect("refresh pointer web");
+    assert_eq!(refreshed["source"]["canonical"], source);
+    assert_eq!(refreshed["pointerWeb"]["coordinate"], source);
+    assert_eq!(refreshed["pointerWeb"]["pointer_count"], 18);
+    assert_eq!(refreshed["rowCount"], 1);
+    let pointer_rows = client
+        .run(&format!(
+            "MATCH (n:Bimba {{coordinate: '{source}'}})
+             RETURN n.c_5_pointer_count AS pointer_count"
+        ))
+        .await
+        .expect("read persisted pointer web fields");
+    assert_eq!(
+        pointer_rows
+            .first()
+            .and_then(|row| row.get::<i64>("pointer_count").ok()),
+        Some(18)
+    );
 
     let traversed = service
         .traverse(GraphTraverseRequest {
