@@ -1,4 +1,6 @@
-use crate::coordinate::{convert_hash_to_m_family, wrap_context_frames, CoordLayer, CoordinateArrayParser};
+use crate::coordinate::{
+    convert_hash_to_m_family, wrap_context_frames, CoordLayer, CoordinateArrayParser,
+};
 use crate::Neo4jClient;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
@@ -241,10 +243,12 @@ impl<'a> DatasetImporter<'a> {
                 .map(|arr| {
                     arr.iter()
                         .filter_map(|v| v.as_str())
-                        .filter(|s| !s.is_empty()
-                            && *s != "Bimba"
-                            && *s != "BimbaNode"
-                            && *s != "BimbaCoordinate")
+                        .filter(|s| {
+                            !s.is_empty()
+                                && *s != "Bimba"
+                                && *s != "BimbaNode"
+                                && *s != "BimbaCoordinate"
+                        })
                         .map(|s| s.to_string())
                         .collect()
                 })
@@ -280,6 +284,31 @@ impl<'a> DatasetImporter<'a> {
                     eprintln!("  warn: skip labels for '{}': {}", coord, e);
                 }
             }
+
+            // Tie every embedded context frame to its canonical CF_* node via OPERATES_IN.
+            // `(0/1) → CF_BINARY`, `(5/0) → CF_MOBIUS`, all `(4.*/*) → CF_FRACTAL`, etc.
+            for frame in crate::coordinate::extract_context_frames(&coord) {
+                let Some(cf_node) = crate::coordinate::cf_node_for_frame(&frame) else {
+                    continue;
+                };
+                let op_cypher = format!(
+                    "MATCH (s:Bimba {{coordinate: '{src}'}}) \
+                     MATCH (t:Bimba {{coordinate: '{tgt}'}}) \
+                     MERGE (s)-[r:OPERATES_IN]->(t) \
+                     ON CREATE SET r.c_3_created_at = datetime(), \
+                                   r.c_0_source_coordinate = '{src}', \
+                                   r.c_0_target_coordinate = '{tgt}', \
+                                   r.c_2_relation_type = 'OPERATES_IN'",
+                    src = escape_cypher(&coord),
+                    tgt = cf_node,
+                );
+                if let Err(e) = self.client.run(&op_cypher).await {
+                    eprintln!(
+                        "  warn: skip OPERATES_IN '{}' -> '{}': {}",
+                        coord, cf_node, e
+                    );
+                }
+            }
         }
         Ok((count, skipped))
     }
@@ -303,7 +332,10 @@ impl<'a> DatasetImporter<'a> {
 
         // Detect aggregated shape `[{coordinate, outgoing, incoming}]` and flatten
         // into the standard `[{source, target, type}]` shape the loop expects.
-        let rels: Vec<Value> = if raw.iter().any(|r| r.get("outgoing").is_some() || r.get("incoming").is_some()) {
+        let rels: Vec<Value> = if raw
+            .iter()
+            .any(|r| r.get("outgoing").is_some() || r.get("incoming").is_some())
+        {
             flatten_aggregated_relations(&raw)
         } else {
             raw
@@ -391,7 +423,9 @@ impl<'a> DatasetImporter<'a> {
 
     pub async fn import_low_detail_all(&self) -> Result<String, String> {
         let report = self.import_branches(low_detail_dataset_plan()).await?;
-        let labels_report = self.import_labels_if_present("low-detail/bimba_labels.json").await?;
+        let labels_report = self
+            .import_labels_if_present("low-detail/bimba_labels.json")
+            .await?;
         Ok(format!("{}\n{}", report.render(), labels_report))
     }
 
@@ -894,7 +928,11 @@ mod tests {
             }),
         ];
         let flat = flatten_aggregated_relations(&raw);
-        assert_eq!(flat.len(), 1, "duplicate edge listed under both endpoints should dedupe");
+        assert_eq!(
+            flat.len(),
+            1,
+            "duplicate edge listed under both endpoints should dedupe"
+        );
         assert_eq!(flat[0]["source"], "#2-5-8");
         assert_eq!(flat[0]["target"], "#2-5-9");
         assert_eq!(flat[0]["type"], "HARMONICALLY_LEADS_TO");
