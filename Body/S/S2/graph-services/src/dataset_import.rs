@@ -1,4 +1,4 @@
-use crate::coordinate::{convert_hash_to_m_family, CoordLayer, CoordinateArrayParser};
+use crate::coordinate::{convert_hash_to_m_family, wrap_context_frames, CoordLayer, CoordinateArrayParser};
 use crate::Neo4jClient;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
@@ -97,7 +97,7 @@ impl<'a> DatasetImporter<'a> {
                     continue;
                 }
             };
-            let coord = convert_hash_to_m_family(raw_coord);
+            let coord = wrap_context_frames(&convert_hash_to_m_family(raw_coord));
             let parsed = CoordinateArrayParser::parse_one(&coord).ok();
 
             let mut set_parts = Vec::new();
@@ -326,8 +326,8 @@ impl<'a> DatasetImporter<'a> {
                     continue;
                 }
             };
-            let source = convert_hash_to_m_family(raw_source);
-            let target = convert_hash_to_m_family(raw_target);
+            let source = wrap_context_frames(&convert_hash_to_m_family(raw_source));
+            let target = wrap_context_frames(&convert_hash_to_m_family(raw_target));
 
             let rel_type = match relation_type_from_value(rel) {
                 Some(t) => sanitize_rel_type(t),
@@ -476,7 +476,7 @@ impl<'a> DatasetImporter<'a> {
                     continue;
                 }
             };
-            let coord = crate::coordinate::convert_hash_to_m_family(raw_coord);
+            let coord = wrap_context_frames(&convert_hash_to_m_family(raw_coord));
             let labels: Vec<&str> = entry
                 .get("labels")
                 .and_then(|v| v.as_array())

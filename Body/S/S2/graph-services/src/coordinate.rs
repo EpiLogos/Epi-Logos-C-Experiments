@@ -6,8 +6,15 @@ pub struct ParsedCoordinate {
     pub family: Option<String>,
     pub ql_position: Option<u8>,
     pub inverted: bool,
-    /// Fractal sub-coordinate path. `M0-2-4` -> [2, 4]. `M4.0` -> [0].
+    /// Fractal sub-coordinate path as pure integers. Populated when every segment
+    /// is a digit (e.g. `M0-2-4` -> [2, 4]). Empty when any segment is a context
+    /// frame like `(0/1)` — use `sub_segments` instead.
     pub sub_positions: Vec<u16>,
+    /// All sub-coordinate tokens as raw strings, including parenthesized context
+    /// frames. `M2-(0/1)-6` -> ["2", "(0/1)", "6"] is the wrong shape; correctly
+    /// the dash-split of the tail `(0/1)-6` is ["(0/1)", "6"]. Context frames
+    /// retain their parens.
+    pub sub_segments: Vec<String>,
     /// Depth in the fractal tree.
     /// -1 = family root (e.g. `M`).
     ///  0 = base family coordinate (e.g. `M0`).
@@ -78,6 +85,7 @@ impl CoordinateArrayParser {
                         ql_position: Some(pos),
                         inverted: false,
                         sub_positions: Vec::new(),
+                        sub_segments: Vec::new(),
                         depth: 0,
                         separator: None,
                         is_lens: false,
@@ -96,6 +104,7 @@ impl CoordinateArrayParser {
                 ql_position: None,
                 inverted: false,
                 sub_positions: Vec::new(),
+                sub_segments: Vec::new(),
                 depth: 0,
                 separator: None,
                 is_lens: false,
@@ -112,6 +121,7 @@ impl CoordinateArrayParser {
                 ql_position: Some(idx),
                 inverted: false,
                 sub_positions: Vec::new(),
+                sub_segments: Vec::new(),
                 depth: 0,
                 separator: None,
                 is_lens: false,
@@ -128,6 +138,7 @@ impl CoordinateArrayParser {
                 ql_position: Some(idx),
                 inverted: false,
                 sub_positions: Vec::new(),
+                sub_segments: Vec::new(),
                 depth: 0,
                 separator: None,
                 is_lens: false,
@@ -149,6 +160,7 @@ impl CoordinateArrayParser {
                     ql_position: None,
                     inverted,
                     sub_positions: Vec::new(),
+                    sub_segments: Vec::new(),
                     depth: -1,
                     separator: None,
                     is_lens: false,
@@ -162,7 +174,7 @@ impl CoordinateArrayParser {
             let second = base.chars().nth(1).unwrap();
             if FAMILIES.contains(&fam) && second == '-' {
                 let rest = &base[2..];
-                if let Some(sub_positions) = parse_sub_positions(rest, '-') {
+                if let Some(sub) = parse_sub_tokens(rest) {
                     return Ok(ParsedCoordinate {
                         raw: trimmed.into(),
                         coordinate: trimmed.into(),
@@ -170,7 +182,8 @@ impl CoordinateArrayParser {
                         family: Some(fam.to_string()),
                         ql_position: None,
                         inverted,
-                        sub_positions,
+                        sub_positions: sub.positions.unwrap_or_default(),
+                        sub_segments: sub.segments,
                         depth: 0,
                         separator: Some('-'),
                         is_lens: true,
@@ -196,6 +209,7 @@ impl CoordinateArrayParser {
                             ql_position: Some(pos),
                             inverted,
                             sub_positions: Vec::new(),
+                            sub_segments: Vec::new(),
                             depth: 0,
                             separator: None,
                             is_lens: false,
@@ -205,8 +219,8 @@ impl CoordinateArrayParser {
                     // Sub-coordinate path. First char must be a separator.
                     let separator = tail.chars().next().unwrap();
                     if separator == '-' || separator == '.' {
-                        if let Some(sub_positions) = parse_sub_positions(&tail[1..], separator) {
-                            let depth = sub_positions.len() as i8;
+                        if let Some(sub) = parse_sub_tokens(&tail[1..]) {
+                            let depth = sub.segments.len() as i8;
                             return Ok(ParsedCoordinate {
                                 raw: trimmed.into(),
                                 coordinate: trimmed.into(),
@@ -214,7 +228,8 @@ impl CoordinateArrayParser {
                                 family: Some(fam.to_string()),
                                 ql_position: Some(pos),
                                 inverted,
-                                sub_positions,
+                                sub_positions: sub.positions.unwrap_or_default(),
+                                sub_segments: sub.segments,
                                 depth,
                                 separator: Some(separator),
                                 is_lens: false,
@@ -295,6 +310,28 @@ impl CoordinateArrayParser {
     }
 }
 
+/// Wrap every dash-delimited segment of a coordinate that contains `/` in parentheses.
+/// Already-parenthesised segments are left alone. Idempotent.
+///
+/// This makes context-frame structure explicit in the coordinate string:
+///   `M2-4.0-0/1-0-10` → `M2-4.0-(0/1)-0-10`
+///   `M2-5-0/1-6`      → `M2-5-(0/1)-6`
+///   `M0-4.4.0-4.4/5`  → `M0-4.4.0-(4.4/5)`
+///   `M2-(0/1)-6`      → `M2-(0/1)-6`   (already wrapped — no change)
+pub fn wrap_context_frames(coord: &str) -> String {
+    coord
+        .split('-')
+        .map(|seg| {
+            if seg.contains('/') && !(seg.starts_with('(') && seg.ends_with(')')) {
+                format!("({})", seg)
+            } else {
+                seg.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("-")
+}
+
 /// Convert leading `#` to `M` (legacy notation for the M-branch).
 pub fn convert_hash_to_m_family(coord: &str) -> String {
     if coord.starts_with('#') {
@@ -320,35 +357,81 @@ fn empty_kind(coord: &str, layer: CoordLayer, family: Option<String>) -> ParsedC
         ql_position: None,
         inverted: false,
         sub_positions: Vec::new(),
+        sub_segments: Vec::new(),
         depth: -1,
         separator: None,
         is_lens: false,
     }
 }
 
-/// Parse a separator-delimited sub-coordinate tail like `2-4`, `0-360`, `4.0/1`.
+struct SubCoordinateTokens {
+    positions: Option<Vec<u16>>,
+    segments: Vec<String>,
+}
+
+/// Parse a separator-delimited sub-coordinate tail like `2-4`, `0-360`,
+/// `4.0/1`, or `(0/1)-6`.
 ///
-/// Sub-positions are unconstrained integers (Bimba variants extend well past the
-/// QL ideal of 0..=5 — e.g. decan degrees 0..=360, codon indices 0..=63). The
-/// canonical 0..=5 ideal lives ONLY on the base `ql_position` of a family coord.
-/// Returns None for empty segments or genuinely invalid tokens.
-fn parse_sub_positions(tail: &str, sep: char) -> Option<Vec<u16>> {
+/// Numeric sub-positions are unconstrained integers (Bimba variants extend well
+/// past 5). Parenthesized context-frame segments are preserved in
+/// `sub_segments` and make `positions` unavailable rather than invalidating the
+/// coordinate. Bare non-numeric tokens remain invalid.
+fn parse_sub_tokens(tail: &str) -> Option<SubCoordinateTokens> {
     if tail.is_empty() {
         return None;
     }
-    let mut out = Vec::new();
-    // Split on every Bimba sub-separator: '-' (branch), '.' (lemniscate), '/' (variant fork).
-    // The `sep` parameter just identifies which separator the parser entered on; for the
-    // path below, all three separators flatten the tail into a sequence of integer positions.
-    let _ = sep;
-    for segment in tail.split(['-', '.', '/'].as_ref()) {
-        if segment.is_empty() {
-            return None;
+    let segments = split_sub_segments(tail)?;
+    let mut positions = Vec::new();
+    let mut all_numeric = true;
+    for segment in &segments {
+        if let Ok(position) = segment.parse::<u16>() {
+            positions.push(position);
+            continue;
         }
-        let n: u16 = segment.parse().ok()?;
-        out.push(n);
+        if segment.starts_with('(') && segment.ends_with(')') && segment.len() > 2 {
+            all_numeric = false;
+            continue;
+        }
+        return None;
     }
-    Some(out)
+    Some(SubCoordinateTokens {
+        positions: all_numeric.then_some(positions),
+        segments,
+    })
+}
+
+fn split_sub_segments(tail: &str) -> Option<Vec<String>> {
+    let mut segments = Vec::new();
+    let mut current = String::new();
+    let mut paren_depth = 0usize;
+    for ch in tail.chars() {
+        match ch {
+            '(' => {
+                paren_depth += 1;
+                current.push(ch);
+            }
+            ')' => {
+                paren_depth = paren_depth.checked_sub(1)?;
+                current.push(ch);
+            }
+            '-' | '.' | '/' if paren_depth == 0 => {
+                if current.is_empty() {
+                    return None;
+                }
+                segments.push(std::mem::take(&mut current));
+            }
+            _ => current.push(ch),
+        }
+    }
+    if paren_depth != 0 || current.is_empty() {
+        return None;
+    }
+    segments.push(current);
+    if segments.iter().any(|segment| segment.is_empty()) {
+        None
+    } else {
+        Some(segments)
+    }
 }
 
 #[cfg(test)]
@@ -381,6 +464,7 @@ mod tests {
         assert_eq!(p.family.as_deref(), Some("M"));
         assert_eq!(p.ql_position, Some(0));
         assert_eq!(p.sub_positions, vec![2, 4]);
+        assert_eq!(p.sub_segments, vec!["2", "4"]);
         assert_eq!(p.depth, 2);
         assert_eq!(p.separator, Some('-'));
     }
@@ -402,6 +486,16 @@ mod tests {
         assert_eq!(p.layer, CoordLayer::Family);
         assert_eq!(p.ql_position, Some(4));
         assert_eq!(p.sub_positions, vec![0, 0]);
+    }
+
+    #[test]
+    fn parses_context_frame_sub_segments_without_forcing_numeric_positions() {
+        let p = CoordinateArrayParser::parse_one("M2-(0/1)-6").unwrap();
+        assert_eq!(p.layer, CoordLayer::Family);
+        assert_eq!(p.ql_position, Some(2));
+        assert!(p.sub_positions.is_empty());
+        assert_eq!(p.sub_segments, vec!["(0/1)", "6"]);
+        assert_eq!(p.depth, 2);
     }
 
     #[test]
@@ -427,6 +521,38 @@ mod tests {
         assert!(CoordinateArrayParser::parse_one("M0--").is_err());
         assert!(CoordinateArrayParser::parse_one("M0-").is_err());
         assert!(CoordinateArrayParser::parse_one("M0-abc").is_err());
+    }
+
+    #[test]
+    fn parses_parenthesized_context_frames() {
+        let p = CoordinateArrayParser::parse_one("M2-5-(0/1)-6").unwrap();
+        assert_eq!(p.family.as_deref(), Some("M"));
+        assert_eq!(p.ql_position, Some(2));
+        assert_eq!(p.sub_segments, vec!["5", "(0/1)", "6"]);
+        // sub_positions only populated when all-numeric
+        assert!(p.sub_positions.is_empty());
+        assert_eq!(p.depth, 3);
+
+        let p = CoordinateArrayParser::parse_one("M0-(4.0/1/2/3)-5").unwrap();
+        assert_eq!(p.sub_segments, vec!["(4.0/1/2/3)", "5"]);
+        assert_eq!(p.depth, 2);
+
+        let p = CoordinateArrayParser::parse_one("M3-5-(5/0)-99").unwrap();
+        assert_eq!(p.sub_segments, vec!["5", "(5/0)", "99"]);
+    }
+
+    #[test]
+    fn wrap_context_frames_is_correct_and_idempotent() {
+        assert_eq!(wrap_context_frames("M2-4.0-0/1-0-10"), "M2-4.0-(0/1)-0-10");
+        assert_eq!(wrap_context_frames("M2-5-0/1-6"), "M2-5-(0/1)-6");
+        assert_eq!(wrap_context_frames("M0-4.0/1"), "M0-(4.0/1)");
+        assert_eq!(wrap_context_frames("M0-4.0/1/2/3-5"), "M0-(4.0/1/2/3)-5");
+        assert_eq!(wrap_context_frames("M0-4.4.0-4.4/5"), "M0-4.4.0-(4.4/5)");
+        // Already-wrapped — idempotent
+        assert_eq!(wrap_context_frames("M2-(0/1)-6"), "M2-(0/1)-6");
+        // No slash → no change
+        assert_eq!(wrap_context_frames("M0-2-4"), "M0-2-4");
+        assert_eq!(wrap_context_frames("M"), "M");
     }
 
     #[test]
