@@ -318,6 +318,15 @@ impl CoordinateArrayParser {
 ///   `M2-5-0/1-6`      → `M2-5-(0/1)-6`
 ///   `M0-4.4.0-4.4/5`  → `M0-4.4.0-(4.4/5)`
 ///   `M2-(0/1)-6`      → `M2-(0/1)-6`   (already wrapped — no change)
+///
+/// Canonical mod-N context frames recognised by the parser (in `(...)` form):
+///   `(00/00)`        — Mod % (Receptive Dynamism, Svatantrya-Spanda)
+///   `(0/1)`          — Mod 2 (Non-dual binary)
+///   `(0/1/2)`        — Mod 3 (Trika)
+///   `(0/1/2/3)`      — Mod 4 (Three Plus One)
+///   `(4.0/1-4.4/5)`  — Mod 4/6 (Fractal doubling — dash *inside* parens stays atomic)
+///   `(5/0)`          — Mod 6 (Möbius return)
+///   `(4/5/0)`        — late-add synthesis frame
 pub fn wrap_context_frames(coord: &str) -> String {
     coord
         .split('-')
@@ -539,6 +548,29 @@ mod tests {
 
         let p = CoordinateArrayParser::parse_one("M3-5-(5/0)-99").unwrap();
         assert_eq!(p.sub_segments, vec!["5", "(5/0)", "99"]);
+    }
+
+    /// All canonical mod-N context frames — including the Mod 4/6 fractal
+    /// `(4.0/1-4.4/5)` (dash *inside* parens, must stay one atomic segment)
+    /// and the later-added `(4/5/0)` synthesis frame. Embedded in family coords.
+    #[test]
+    fn parses_all_canonical_mod_frames_embedded() {
+        let cases: &[(&str, &[&str])] = &[
+            ("M0-(00/00)",         &["(00/00)"]),       // Mod %
+            ("M2-5-(0/1)-6",       &["5", "(0/1)", "6"]), // Mod 2
+            ("M0-(0/1/2)",         &["(0/1/2)"]),       // Mod 3
+            ("M0-(0/1/2/3)",       &["(0/1/2/3)"]),     // Mod 4
+            ("M0-(4.0/1-4.4/5)",   &["(4.0/1-4.4/5)"]), // Mod 4/6 fractal
+            ("M3-5-(5/0)-99",      &["5", "(5/0)", "99"]), // Mod 6 Möbius
+            ("M0-(4/5/0)",         &["(4/5/0)"]),       // late-add synthesis
+            ("M2-3-(4/5/0)-1",     &["3", "(4/5/0)", "1"]),
+        ];
+        for (coord, expected_segs) in cases {
+            let p = CoordinateArrayParser::parse_one(coord)
+                .unwrap_or_else(|e| panic!("parse failed for '{}': {}", coord, e));
+            let segs: Vec<String> = expected_segs.iter().map(|s| s.to_string()).collect();
+            assert_eq!(p.sub_segments, segs, "coord {}", coord);
+        }
     }
 
     #[test]

@@ -25,7 +25,10 @@ pub mod types;
 pub mod vault;
 
 pub use bidirectional_sync::{BidirectionalSyncer, ConflictResolution, SyncConflict};
-pub use coordinate::{CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink};
+pub use coordinate::{
+    convert_hash_to_m_family, wrap_context_frames, CoordLayer, CoordinateArrayParser,
+    ParsedCoordinate, WikiLink,
+};
 pub use dataset_import::DatasetImporter;
 pub use doctor::{
     collect_report, render_human, render_status, DoctorReport, GraphState, RedisStackStatus,
