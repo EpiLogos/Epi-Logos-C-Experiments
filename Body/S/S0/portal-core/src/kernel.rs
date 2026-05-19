@@ -1,6 +1,8 @@
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Serialize};
 
+use crate::mahamaya::MahamayaCodecProjection;
+
 pub const EPOGDOON_NUM: u8 = 9;
 pub const EPOGDOON_DEN: u8 = 8;
 pub const RESONANCE_DIM: usize = 72;
@@ -246,9 +248,14 @@ pub struct MathemeHarmonicProfile {
     pub cycle: u64,
     pub degree720: u16,
     pub degree360: u16,
+    pub su2_layer: String,
     pub helix: String,
+    pub ratio_role: String,
     pub chromatic: MathemeChromaticProfile,
     pub diatonic: Option<MathemeDiatonicContext>,
+    pub resonance72: MathemeResonance72Projection,
+    pub elements: MathemeElementalProjection,
+    pub planetary_chakral: MathemePlanetaryChakralProjection,
     pub binary: MathemeBinaryProjection,
 }
 
@@ -258,15 +265,34 @@ impl MathemeHarmonicProfile {
         let helix = if tick12 < 6 { "bimba" } else { "pratibimba" };
         let position = tick12 % 6;
         let pitch_class = pitch_class_for_tick(tick12);
+        let degree720 = tick12 as u16 * 60;
+        let degree360 = degree720 % 360;
+        let diatonic = MathemeDiatonicContext::from_pitch_class(pitch_class);
+        let resonance72 = MathemeResonance72Projection::from_tick(tick12, position);
         Self {
             tick12,
             cycle: tick.cycle,
-            degree720: tick12 as u16 * 60,
-            degree360: tick12 as u16 * 60 % 360,
+            degree720,
+            degree360,
+            su2_layer: if degree720 >= 360 {
+                "shadow"
+            } else {
+                "primary"
+            }
+            .to_owned(),
             helix: helix.to_owned(),
+            ratio_role: ratio_role_for_sub_tick(tick12).to_owned(),
             chromatic: MathemeChromaticProfile::from_tick(tick12, position, pitch_class),
-            diatonic: MathemeDiatonicContext::from_pitch_class(pitch_class),
-            binary: MathemeBinaryProjection::pending(position),
+            diatonic: diatonic.clone(),
+            resonance72,
+            elements: MathemeElementalProjection::from_position(position),
+            planetary_chakral: MathemePlanetaryChakralProjection::from_diatonic(diatonic.as_ref()),
+            binary: MathemeBinaryProjection::from_clock(
+                degree360,
+                position,
+                resonance72.lens_anchor_index,
+                tick12 >= 6,
+            ),
         }
     }
 }
@@ -356,6 +382,141 @@ impl MathemeDiatonicContext {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeResonance72Projection {
+    pub legacy_resonance_index: usize,
+    pub lens_anchor_index: usize,
+    pub base_lens: u8,
+    pub helix_bit: u8,
+    pub lens_anchor: u8,
+    pub position: u8,
+}
+
+impl MathemeResonance72Projection {
+    fn from_tick(tick12: u8, position: u8) -> Self {
+        let helix_bit = tick12 / 6;
+        let base_lens = position;
+        Self {
+            legacy_resonance_index: kernel_resonance_index(base_lens, helix_bit == 1, position)
+                .expect("tick-derived resonance address remains in the 72-fold domain"),
+            lens_anchor_index: tick12 as usize * 6 + position as usize,
+            base_lens,
+            helix_bit,
+            lens_anchor: tick12,
+            position,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeElementalProjection {
+    pub p_position_element: String,
+    pub l2_prime_element: String,
+    pub rendering_role: String,
+}
+
+impl MathemeElementalProjection {
+    fn from_position(position: u8) -> Self {
+        Self {
+            p_position_element: p_position_element(position).to_owned(),
+            l2_prime_element: l2_prime_element(position).to_owned(),
+            rendering_role: if matches!(position, 0 | 5) {
+                "nodal-boundary"
+            } else {
+                "explicate-sounded"
+            }
+            .to_owned(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemePlanetaryChakralProjection {
+    pub body: String,
+    pub chakra_role: String,
+    pub element: String,
+    pub musical_role: String,
+    pub modal_color: String,
+    pub provenance: String,
+}
+
+impl MathemePlanetaryChakralProjection {
+    fn from_diatonic(diatonic: Option<&MathemeDiatonicContext>) -> Self {
+        let (body, chakra_role, element, musical_role, modal_color) =
+            match diatonic.map(|context| context.degree) {
+                Some(1) => (
+                    "Earth",
+                    "Muladhara / grounding center",
+                    "Earth",
+                    "1/1 tonic",
+                    "Rast / stable tonic ground",
+                ),
+                Some(2) => (
+                    "Venus",
+                    "Svadhisthana / generative water",
+                    "Water",
+                    "9/8 epogdoon pulse",
+                    "Bayati / living difference",
+                ),
+                Some(3) => (
+                    "Mars",
+                    "Manipura / active fire",
+                    "Fire",
+                    "5/4 major-third fire articulation",
+                    "Hijaz / charged action",
+                ),
+                Some(4) => (
+                    "Jupiter",
+                    "Anahata / expansive heart",
+                    "Air",
+                    "4/3 perfect fourth",
+                    "Saba / relational opening",
+                ),
+                Some(5) => (
+                    "Saturn",
+                    "Vishuddha-Ajna discipline bridge",
+                    "Ether/structure",
+                    "3/2 perfect fifth",
+                    "Kurd / structuring resonance",
+                ),
+                Some(6) => (
+                    "Uranus",
+                    "Ajna transpersonal extension",
+                    "Light/Air",
+                    "5/3 major sixth",
+                    "Nahawand / disruptive insight",
+                ),
+                Some(7) => (
+                    "Neptune",
+                    "Crown/transpersonal ocean",
+                    "Consciousness/Water",
+                    "15/8 leading-toward-octave",
+                    "Ajam / luminous expansion",
+                ),
+                _ => (
+                    "Pluto",
+                    "underworld/transmutation",
+                    "Mineral/depth",
+                    "chromatic shadow pressure",
+                    "Locrian/shadow mode pressure",
+                ),
+            };
+        Self {
+            body: body.to_owned(),
+            chakra_role: chakra_role.to_owned(),
+            element: element.to_owned(),
+            musical_role: musical_role.to_owned(),
+            modal_color: modal_color.to_owned(),
+            provenance:
+                "initial M2/M' alignment; canonical values must be governed by S2 graph law"
+                    .to_owned(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MathemeBinaryProjection {
@@ -363,28 +524,68 @@ pub struct MathemeBinaryProjection {
     pub codon: Option<String>,
     pub hexagram: Option<String>,
     pub line_change_operator: Option<String>,
+    pub hexagram_id: u8,
+    pub upper_trigram: u8,
+    pub lower_trigram: u8,
+    pub codon_id: u8,
+    pub nucleotide_bits: [u8; 3],
+    pub dna_rna_phase: String,
+    pub line_index: u8,
+    pub line_change_operator_address: u16,
+    pub m2_vibration_index: usize,
+    pub m2_to_m3_symbol: u8,
+    pub evolutionary_gap: bool,
+    pub tarot_minor_id: Option<u8>,
+    pub tarot_shadow_codon: Option<u8>,
+    pub amino_acid_code: Option<String>,
+    pub dataset_lut_state: String,
     pub transcription_state: String,
     pub frame_breathing_role: String,
     pub m3_codec_provenance: String,
 }
 
 impl MathemeBinaryProjection {
-    fn pending(position: u8) -> Self {
+    fn from_clock(
+        degree360: u16,
+        position: u8,
+        m2_vibration_index: usize,
+        rna_phase: bool,
+    ) -> Self {
+        let codec =
+            MahamayaCodecProjection::from_clock(degree360, position, m2_vibration_index, rna_phase);
         Self {
-            mahamaya_address64: None,
-            codon: None,
-            hexagram: None,
-            line_change_operator: None,
-            transcription_state: "pending-m3-codec".to_owned(),
+            mahamaya_address64: Some(codec.address64),
+            codon: Some(codec.codon),
+            hexagram: Some(format!("H{:02}", codec.hexagram_id + 1)),
+            line_change_operator: Some(format!(
+                "H{:02}.{}",
+                codec.hexagram_id + 1,
+                codec.line_index + 1
+            )),
+            hexagram_id: codec.hexagram_id,
+            upper_trigram: codec.upper_trigram,
+            lower_trigram: codec.lower_trigram,
+            codon_id: codec.codon_id,
+            nucleotide_bits: codec.nucleotide_bits,
+            dna_rna_phase: codec.dna_rna_phase,
+            line_index: codec.line_index,
+            line_change_operator_address: codec.line_change_operator,
+            m2_vibration_index: codec.m2_vibration_index,
+            m2_to_m3_symbol: codec.m2_to_m3_symbol,
+            evolutionary_gap: codec.evolutionary_gap,
+            tarot_minor_id: None,
+            tarot_shadow_codon: None,
+            amino_acid_code: None,
+            dataset_lut_state: "pending-dataset-lut".to_owned(),
+            transcription_state: codec.transcription_state,
             frame_breathing_role: match position {
                 0 | 5 => "sq1-boundary-totality",
                 1 | 4 => "sq2-active-tritone",
                 _ => "sq3-inner-epogdoon",
             }
             .to_owned(),
-            m3_codec_provenance:
-                "M3 Mahamaya symbolic codec required for 64-fold codon/hexagram materialisation"
-                    .to_owned(),
+            m3_codec_provenance: "portal-core::mahamaya address law; tarot/amino LUTs pending"
+                .to_owned(),
         }
     }
 }
@@ -648,6 +849,40 @@ fn mirror_square(position: u8) -> &'static str {
         0 | 5 => "Sq1",
         1 | 4 => "Sq2",
         _ => "Sq3",
+    }
+}
+
+fn ratio_role_for_sub_tick(sub_tick: u8) -> &'static str {
+    match harmonic_ratio_fraction_for_sub_tick(sub_tick) {
+        (1, 1) => "1/1 unison standing identity",
+        (9, 8) => "9/8 epogdoon tick",
+        (4, 3) => "4/3 perfect-fourth manifestation",
+        (3, 4) => "3/4 perfect-fourth recognition",
+        (3, 2) => "3/2 perfect-fifth aspiration",
+        (2, 3) => "2/3 perfect-fifth grounding",
+        _ => "derived harmonic ratio",
+    }
+}
+
+fn p_position_element(position: u8) -> &'static str {
+    match position % 6 {
+        0 => "Aether",
+        1 => "Earth",
+        2 => "Air",
+        3 => "Water",
+        4 => "Earth",
+        _ => "Aether",
+    }
+}
+
+fn l2_prime_element(position: u8) -> &'static str {
+    match position % 6 {
+        0 => "Aether",
+        1 => "Earth",
+        2 => "Water",
+        3 => "Air",
+        4 => "Fire",
+        _ => "Mineral",
     }
 }
 

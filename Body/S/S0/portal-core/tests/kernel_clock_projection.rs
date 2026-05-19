@@ -127,7 +127,12 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
     assert_eq!(public_json["harmonicProfile"]["tick12"], 7);
     assert_eq!(public_json["harmonicProfile"]["degree720"], 420);
     assert_eq!(public_json["harmonicProfile"]["degree360"], 60);
+    assert_eq!(public_json["harmonicProfile"]["su2Layer"], "shadow");
     assert_eq!(public_json["harmonicProfile"]["helix"], "pratibimba");
+    assert_eq!(
+        public_json["harmonicProfile"]["ratioRole"],
+        "3/4 perfect-fourth recognition"
+    );
     assert_eq!(public_json["harmonicProfile"]["chromatic"]["note"], "D#");
     assert_eq!(
         public_json["harmonicProfile"]["chromatic"]["xPrimeNote"],
@@ -138,8 +143,33 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
         serde_json::Value::Null
     );
     assert_eq!(
+        public_json["harmonicProfile"]["resonance72"]["lensAnchorIndex"],
+        43
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["elements"]["renderingRole"],
+        "explicate-sounded"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["planetaryChakral"]["body"],
+        "Pluto"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["binary"]["mahamayaAddress64"],
+        10
+    );
+    assert_eq!(public_json["harmonicProfile"]["binary"]["codon"], "UGG");
+    assert_eq!(
+        public_json["harmonicProfile"]["binary"]["lineChangeOperatorAddress"],
+        61
+    );
+    assert_eq!(
         public_json["harmonicProfile"]["binary"]["transcriptionState"],
-        "pending-m3-codec"
+        "provisional-gap"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["binary"]["datasetLutState"],
+        "pending-dataset-lut"
     );
     assert_eq!(public_json["harmonicPulse"]["ratioNum"], 3);
     assert_eq!(public_json["harmonicPulse"]["ratioDen"], 4);
@@ -170,6 +200,11 @@ fn kernel_harmonic_profile_maps_tick_to_diatonic_cf_when_pitch_is_sounded() {
     assert_eq!(json["harmonicProfile"]["tick12"], 10);
     assert_eq!(json["harmonicProfile"]["degree720"], 600);
     assert_eq!(json["harmonicProfile"]["degree360"], 240);
+    assert_eq!(json["harmonicProfile"]["su2Layer"], "shadow");
+    assert_eq!(
+        json["harmonicProfile"]["ratioRole"],
+        "3/2 perfect-fifth aspiration"
+    );
     assert_eq!(json["harmonicProfile"]["chromatic"]["note"], "A");
     assert_eq!(json["harmonicProfile"]["chromatic"]["position"], 4);
     assert_eq!(json["harmonicProfile"]["chromatic"]["mirrorNote"], "D#");
@@ -186,5 +221,110 @@ fn kernel_harmonic_profile_maps_tick_to_diatonic_cf_when_pitch_is_sounded() {
     assert_eq!(
         json["harmonicProfile"]["diatonic"]["vakRegister"],
         "partial-Aletheia"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["resonance72"]["legacyResonanceIndex"],
+        58
+    );
+    assert_eq!(
+        json["harmonicProfile"]["resonance72"]["lensAnchorIndex"],
+        64
+    );
+    assert_eq!(
+        json["harmonicProfile"]["elements"]["pPositionElement"],
+        "Earth"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["elements"]["l2PrimeElement"],
+        "Fire"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["planetaryChakral"]["body"],
+        "Uranus"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["planetaryChakral"]["musicalRole"],
+        "5/3 major sixth"
+    );
+    assert_eq!(json["harmonicProfile"]["binary"]["mahamayaAddress64"], 42);
+    assert_eq!(json["harmonicProfile"]["binary"]["hexagramId"], 42);
+    assert_eq!(json["harmonicProfile"]["binary"]["upperTrigram"], 5);
+    assert_eq!(json["harmonicProfile"]["binary"]["lowerTrigram"], 2);
+    assert_eq!(json["harmonicProfile"]["binary"]["codon"], "GGG");
+    assert_eq!(json["harmonicProfile"]["binary"]["dnaRnaPhase"], "RNA");
+    assert_eq!(
+        json["harmonicProfile"]["binary"]["lineChangeOperatorAddress"],
+        256
+    );
+    assert_eq!(json["harmonicProfile"]["binary"]["m2VibrationIndex"], 64);
+    assert_eq!(json["harmonicProfile"]["binary"]["m2ToM3Symbol"], 56);
+    assert_eq!(json["harmonicProfile"]["binary"]["evolutionaryGap"], true);
+    assert_eq!(
+        json["harmonicProfile"]["binary"]["transcriptionState"],
+        "provisional-gap"
+    );
+}
+
+#[test]
+fn kernel_harmonic_profile_covers_chromatic_resonance_and_rendering_invariants() {
+    let mut pitch_classes = std::collections::BTreeSet::new();
+    let mut lens_anchor_indexes = std::collections::BTreeSet::new();
+
+    for tick12 in 0..12 {
+        let projection = portal_core::KernelProjection::from_clock_state(
+            3,
+            tick12,
+            [1.0, 0.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0],
+            None,
+            None,
+            0.0,
+        );
+        let profile =
+            KernelTemporalProjection::from_kernel_projection(1, &projection).harmonic_profile;
+
+        pitch_classes.insert(profile.chromatic.pitch_class);
+        lens_anchor_indexes.insert(profile.resonance72.lens_anchor_index);
+
+        assert_eq!(profile.tick12, tick12);
+        assert_eq!(profile.chromatic.position, tick12 % 6);
+        assert_eq!(profile.resonance72.lens_anchor, tick12);
+        assert_eq!(profile.resonance72.helix_bit, tick12 / 6);
+        assert_eq!(
+            profile.resonance72.lens_anchor_index,
+            tick12 as usize * 6 + (tick12 % 6) as usize
+        );
+
+        let expected_rendering = if matches!(tick12 % 6, 0 | 5) {
+            "nodal-boundary"
+        } else {
+            "explicate-sounded"
+        };
+        assert_eq!(profile.elements.rendering_role, expected_rendering);
+
+        let expected_mirror_span = match tick12 % 6 {
+            0 | 5 => 5,
+            1 | 4 => 3,
+            _ => 1,
+        };
+        assert_eq!(
+            profile.chromatic.mirror_span_whole_tones,
+            expected_mirror_span
+        );
+        assert_eq!(
+            profile.chromatic.mirror_span_semitones,
+            expected_mirror_span * 2
+        );
+    }
+
+    assert_eq!(
+        pitch_classes.len(),
+        12,
+        "12 ticks cover the chromatic substrate"
+    );
+    assert_eq!(
+        lens_anchor_indexes.len(),
+        12,
+        "coarse tick profile exposes one 72-fold anchor slot per tick"
     );
 }

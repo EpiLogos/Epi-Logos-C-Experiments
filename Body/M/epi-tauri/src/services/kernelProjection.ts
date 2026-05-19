@@ -18,15 +18,25 @@ export interface KernelHarmonicConsumer {
   tick12: number | null;
   degree720: number | null;
   degree360: number | null;
+  su2Layer: string | null;
   helix: KernelTemporalProjection['harmonicProfile']['helix'] | null;
+  ratioRole: string | null;
   chromaticNote: string | null;
   xPrimeNote: string | null;
   mirrorNote: string | null;
   mirrorSquare: string | null;
+  resonance72Index: number | null;
+  elementProjection: string | null;
+  planetaryBody: string | null;
+  chakraRole: string | null;
   diatonicDegree: number | null;
   contextFrame: string | null;
   contextAgent: string | null;
   vakRegister: string | null;
+  mahamayaAddress64: number | null;
+  codon: string | null;
+  hexagram: string | null;
+  lineChangeOperatorAddress: number | null;
   binaryTranscriptionState: string | null;
   tempoMultiplier: string | null;
   periodMultiplier: string | null;
@@ -48,15 +58,25 @@ const MISSING_KERNEL_CONSUMER: KernelHarmonicConsumer = {
   tick12: null,
   degree720: null,
   degree360: null,
+  su2Layer: null,
   helix: null,
+  ratioRole: null,
   chromaticNote: null,
   xPrimeNote: null,
   mirrorNote: null,
   mirrorSquare: null,
+  resonance72Index: null,
+  elementProjection: null,
+  planetaryBody: null,
+  chakraRole: null,
   diatonicDegree: null,
   contextFrame: null,
   contextAgent: null,
   vakRegister: null,
+  mahamayaAddress64: null,
+  codon: null,
+  hexagram: null,
+  lineChangeOperatorAddress: null,
   binaryTranscriptionState: null,
   tempoMultiplier: null,
   periodMultiplier: null,
@@ -92,15 +112,25 @@ export function projectKernelHarmonicConsumer(
     tick12: kernel.harmonicProfile.tick12,
     degree720: kernel.harmonicProfile.degree720,
     degree360: kernel.harmonicProfile.degree360,
+    su2Layer: kernel.harmonicProfile.su2Layer,
     helix: kernel.harmonicProfile.helix,
+    ratioRole: kernel.harmonicProfile.ratioRole,
     chromaticNote: kernel.harmonicProfile.chromatic.note,
     xPrimeNote: kernel.harmonicProfile.chromatic.xPrimeNote,
     mirrorNote: kernel.harmonicProfile.chromatic.mirrorNote,
     mirrorSquare: kernel.harmonicProfile.chromatic.mirrorSquare,
+    resonance72Index: kernel.harmonicProfile.resonance72.lensAnchorIndex,
+    elementProjection: kernel.harmonicProfile.elements.renderingRole,
+    planetaryBody: kernel.harmonicProfile.planetaryChakral.body,
+    chakraRole: kernel.harmonicProfile.planetaryChakral.chakraRole,
     diatonicDegree: kernel.harmonicProfile.diatonic?.degree ?? null,
     contextFrame: kernel.harmonicProfile.diatonic?.contextFrame ?? null,
     contextAgent: kernel.harmonicProfile.diatonic?.contextAgent ?? null,
     vakRegister: kernel.harmonicProfile.diatonic?.vakRegister ?? null,
+    mahamayaAddress64: kernel.harmonicProfile.binary.mahamayaAddress64,
+    codon: kernel.harmonicProfile.binary.codon,
+    hexagram: kernel.harmonicProfile.binary.hexagram,
+    lineChangeOperatorAddress: kernel.harmonicProfile.binary.lineChangeOperatorAddress,
     binaryTranscriptionState: kernel.harmonicProfile.binary.transcriptionState,
     tempoMultiplier: kernel.harmonicPulse.tempoMultiplier,
     periodMultiplier: kernel.harmonicPulse.periodMultiplier,

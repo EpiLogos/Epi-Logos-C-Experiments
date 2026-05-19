@@ -164,9 +164,48 @@ export interface MathemeBinaryProjection {
   codon: string | null;
   hexagram: string | null;
   lineChangeOperator: string | null;
+  hexagramId: number;
+  upperTrigram: number;
+  lowerTrigram: number;
+  codonId: number;
+  nucleotideBits: [number, number, number];
+  dnaRnaPhase: string;
+  lineIndex: number;
+  lineChangeOperatorAddress: number;
+  m2VibrationIndex: number;
+  m2ToM3Symbol: number;
+  evolutionaryGap: boolean;
+  tarotMinorId: number | null;
+  tarotShadowCodon: number | null;
+  aminoAcidCode: string | null;
+  datasetLutState: string;
   transcriptionState: string;
   frameBreathingRole: string;
   m3CodecProvenance: string;
+}
+
+export interface MathemeResonance72Projection {
+  legacyResonanceIndex: number;
+  lensAnchorIndex: number;
+  baseLens: number;
+  helixBit: number;
+  lensAnchor: number;
+  position: number;
+}
+
+export interface MathemeElementalProjection {
+  pPositionElement: string;
+  l2PrimeElement: string;
+  renderingRole: string;
+}
+
+export interface MathemePlanetaryChakralProjection {
+  body: string;
+  chakraRole: string;
+  element: string;
+  musicalRole: string;
+  modalColor: string;
+  provenance: string;
 }
 
 export interface MathemeHarmonicProfile {
@@ -174,9 +213,14 @@ export interface MathemeHarmonicProfile {
   cycle: number;
   degree720: number;
   degree360: number;
+  su2Layer: string;
   helix: 'bimba' | 'pratibimba';
+  ratioRole: string;
   chromatic: MathemeChromaticProfile;
   diatonic: MathemeDiatonicContext | null;
+  resonance72: MathemeResonance72Projection;
+  elements: MathemeElementalProjection;
+  planetaryChakral: MathemePlanetaryChakralProjection;
   binary: MathemeBinaryProjection;
 }
 

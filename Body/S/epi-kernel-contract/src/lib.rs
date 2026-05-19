@@ -25,13 +25,16 @@
 //! evaluation, deposit, verification).
 
 pub use portal_core::{
-    epogdoon_log, epogdoon_ratio, harmonic_ratio_fraction_for_sub_tick, kernel_energy_evaluate,
+    apply_epogdoon_compression, epogdoon_log, epogdoon_ratio,
+    harmonic_ratio_fraction_for_sub_tick, is_evolutionary_gap, kernel_energy_evaluate,
     kernel_resonance_index, kernel_resonance_square_emphasis, kernel_tick_from_epogdoon,
-    quat_distance_sq, slash_flip_bimba_prime, tritone_square_for_lens, BioQuaternionState,
-    EnergyDecomposition, HarmonicPulse, KernelElement, KernelPhase, KernelProjection,
-    KernelResonanceObservation, KernelTemporalEnergy, KernelTemporalProjection,
-    KernelTemporalPulse, KernelTemporalTick, KernelTick, MathemeBinaryProjection,
-    MathemeChromaticProfile, MathemeDiatonicContext, MathemeHarmonicProfile, ResonanceVector72,
+    line_change_operator, mahamaya_address64_from_degree, quat_distance_sq,
+    slash_flip_bimba_prime, tritone_square_for_lens, BioQuaternionState, EnergyDecomposition,
+    HarmonicPulse, KernelElement, KernelPhase, KernelProjection, KernelResonanceObservation,
+    KernelTemporalEnergy, KernelTemporalProjection, KernelTemporalPulse, KernelTemporalTick,
+    KernelTick, MahamayaCodecProjection, MathemeBinaryProjection, MathemeChromaticProfile,
+    MathemeDiatonicContext, MathemeElementalProjection, MathemeHarmonicProfile,
+    MathemePlanetaryChakralProjection, MathemeResonance72Projection, ResonanceVector72,
     EPOGDOON_DEN, EPOGDOON_NUM, RESONANCE_DIM, TRITONE_SQUARES,
 };
 

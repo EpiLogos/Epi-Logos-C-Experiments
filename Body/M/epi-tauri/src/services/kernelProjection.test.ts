@@ -39,7 +39,9 @@ describe('projectKernelHarmonicConsumer', () => {
           cycle: 2,
           degree720: 600,
           degree360: 240,
+          su2Layer: 'shadow',
           helix: 'pratibimba',
+          ratioRole: '3/2 perfect-fifth aspiration',
           chromatic: {
             position: 4,
             pitchClass: 9,
@@ -53,6 +55,28 @@ describe('projectKernelHarmonicConsumer', () => {
             mirrorSpanWholeTones: 3,
             mirrorSpanSemitones: 6,
           },
+          resonance72: {
+            legacyResonanceIndex: 58,
+            lensAnchorIndex: 64,
+            baseLens: 4,
+            helixBit: 1,
+            lensAnchor: 10,
+            position: 4,
+          },
+          elements: {
+            pPositionElement: 'Earth',
+            l2PrimeElement: 'Fire',
+            renderingRole: 'explicate-sounded',
+          },
+          planetaryChakral: {
+            body: 'Uranus',
+            chakraRole: 'Ajna transpersonal extension',
+            element: 'Light/Air',
+            musicalRole: '5/3 major sixth',
+            modalColor: 'Nahawand / disruptive insight',
+            provenance:
+              "initial M2/M' alignment; canonical values must be governed by S2 graph law",
+          },
           diatonic: {
             degree: 6,
             pitchClass: 9,
@@ -62,14 +86,29 @@ describe('projectKernelHarmonicConsumer', () => {
             vakRegister: 'partial-Aletheia',
           },
           binary: {
-            mahamayaAddress64: null,
-            codon: null,
-            hexagram: null,
-            lineChangeOperator: null,
-            transcriptionState: 'pending-m3-codec',
+            mahamayaAddress64: 42,
+            codon: 'GGG',
+            hexagram: 'H43',
+            lineChangeOperator: 'H43.5',
+            hexagramId: 42,
+            upperTrigram: 5,
+            lowerTrigram: 2,
+            codonId: 42,
+            nucleotideBits: [3, 3, 3],
+            dnaRnaPhase: 'RNA',
+            lineIndex: 4,
+            lineChangeOperatorAddress: 256,
+            m2VibrationIndex: 64,
+            m2ToM3Symbol: 56,
+            evolutionaryGap: true,
+            tarotMinorId: null,
+            tarotShadowCodon: null,
+            aminoAcidCode: null,
+            datasetLutState: 'pending-dataset-lut',
+            transcriptionState: 'provisional-gap',
             frameBreathingRole: 'sq2-active-tritone',
             m3CodecProvenance:
-              'M3 Mahamaya symbolic codec required for 64-fold codon/hexagram materialisation',
+              'portal-core::mahamaya address law; tarot/amino LUTs pending',
           },
         },
       },
@@ -84,12 +123,22 @@ describe('projectKernelHarmonicConsumer', () => {
     expect(consumer.pulseRatio).toBe('3/4');
     expect(consumer.tick12).toBe(10);
     expect(consumer.degree720).toBe(600);
+    expect(consumer.su2Layer).toBe('shadow');
     expect(consumer.helix).toBe('pratibimba');
+    expect(consumer.ratioRole).toBe('3/2 perfect-fifth aspiration');
     expect(consumer.chromaticNote).toBe('A');
     expect(consumer.mirrorNote).toBe('D#');
+    expect(consumer.resonance72Index).toBe(64);
+    expect(consumer.elementProjection).toBe('explicate-sounded');
+    expect(consumer.planetaryBody).toBe('Uranus');
+    expect(consumer.chakraRole).toBe('Ajna transpersonal extension');
     expect(consumer.contextFrame).toBe('4.5/0');
     expect(consumer.contextAgent).toBe('Psyche');
-    expect(consumer.binaryTranscriptionState).toBe('pending-m3-codec');
+    expect(consumer.mahamayaAddress64).toBe(42);
+    expect(consumer.codon).toBe('GGG');
+    expect(consumer.hexagram).toBe('H43');
+    expect(consumer.lineChangeOperatorAddress).toBe(256);
+    expect(consumer.binaryTranscriptionState).toBe('provisional-gap');
     expect(consumer.visualReadiness).toBe('ready_for_projection');
     expect(consumer.musicalReadiness).toBe('data_ready_audio_deferred');
     expect(consumer.protectedFieldsExposed).toBe(false);
