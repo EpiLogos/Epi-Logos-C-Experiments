@@ -15,6 +15,19 @@ export interface KernelHarmonicConsumer {
   element: KernelTemporalProjection['tick']['element'] | null;
   harmonicRatio: string | null;
   pulseRatio: string | null;
+  tick12: number | null;
+  degree720: number | null;
+  degree360: number | null;
+  helix: KernelTemporalProjection['harmonicProfile']['helix'] | null;
+  chromaticNote: string | null;
+  xPrimeNote: string | null;
+  mirrorNote: string | null;
+  mirrorSquare: string | null;
+  diatonicDegree: number | null;
+  contextFrame: string | null;
+  contextAgent: string | null;
+  vakRegister: string | null;
+  binaryTranscriptionState: string | null;
   tempoMultiplier: string | null;
   periodMultiplier: string | null;
   totalEnergy: string | null;
@@ -32,6 +45,19 @@ const MISSING_KERNEL_CONSUMER: KernelHarmonicConsumer = {
   element: null,
   harmonicRatio: null,
   pulseRatio: null,
+  tick12: null,
+  degree720: null,
+  degree360: null,
+  helix: null,
+  chromaticNote: null,
+  xPrimeNote: null,
+  mirrorNote: null,
+  mirrorSquare: null,
+  diatonicDegree: null,
+  contextFrame: null,
+  contextAgent: null,
+  vakRegister: null,
+  binaryTranscriptionState: null,
   tempoMultiplier: null,
   periodMultiplier: null,
   totalEnergy: null,
@@ -63,6 +89,19 @@ export function projectKernelHarmonicConsumer(
     element: kernel.tick.element,
     harmonicRatio: kernel.tick.harmonicRatio,
     pulseRatio: `${kernel.harmonicPulse.ratioNum}/${kernel.harmonicPulse.ratioDen}`,
+    tick12: kernel.harmonicProfile.tick12,
+    degree720: kernel.harmonicProfile.degree720,
+    degree360: kernel.harmonicProfile.degree360,
+    helix: kernel.harmonicProfile.helix,
+    chromaticNote: kernel.harmonicProfile.chromatic.note,
+    xPrimeNote: kernel.harmonicProfile.chromatic.xPrimeNote,
+    mirrorNote: kernel.harmonicProfile.chromatic.mirrorNote,
+    mirrorSquare: kernel.harmonicProfile.chromatic.mirrorSquare,
+    diatonicDegree: kernel.harmonicProfile.diatonic?.degree ?? null,
+    contextFrame: kernel.harmonicProfile.diatonic?.contextFrame ?? null,
+    contextAgent: kernel.harmonicProfile.diatonic?.contextAgent ?? null,
+    vakRegister: kernel.harmonicProfile.diatonic?.vakRegister ?? null,
+    binaryTranscriptionState: kernel.harmonicProfile.binary.transcriptionState,
     tempoMultiplier: kernel.harmonicPulse.tempoMultiplier,
     periodMultiplier: kernel.harmonicPulse.periodMultiplier,
     totalEnergy: kernel.energy.totalEnergy,

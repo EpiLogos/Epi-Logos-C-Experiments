@@ -326,6 +326,17 @@ async fn s5_epii_runtime_context_resolves_gateway_session_and_projection_readine
             <= 11
     );
     assert!(
+        context["temporal"]["kernel"]["harmonicProfile"]["chromatic"]["note"]
+            .as_str()
+            .unwrap()
+            .len()
+            > 0
+    );
+    assert_eq!(
+        context["temporal"]["kernel"]["harmonicProfile"]["binary"]["transcriptionState"],
+        "pending-m3-codec"
+    );
+    assert!(
         context["temporal"]["kernel"].get("bioquaternion").is_none(),
         "Epii/Anima runtime context must not expose protected bioquaternion state"
     );

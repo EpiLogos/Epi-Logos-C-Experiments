@@ -124,6 +124,23 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
     assert_eq!(public_json["tick"]["phase"], "Ascent");
     assert_eq!(public_json["tick"]["element"], "InverseMobius");
     assert_eq!(public_json["tick"]["harmonicRatio"], "0.750000");
+    assert_eq!(public_json["harmonicProfile"]["tick12"], 7);
+    assert_eq!(public_json["harmonicProfile"]["degree720"], 420);
+    assert_eq!(public_json["harmonicProfile"]["degree360"], 60);
+    assert_eq!(public_json["harmonicProfile"]["helix"], "pratibimba");
+    assert_eq!(public_json["harmonicProfile"]["chromatic"]["note"], "D#");
+    assert_eq!(
+        public_json["harmonicProfile"]["chromatic"]["xPrimeNote"],
+        "D"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["diatonic"],
+        serde_json::Value::Null
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["binary"]["transcriptionState"],
+        "pending-m3-codec"
+    );
     assert_eq!(public_json["harmonicPulse"]["ratioNum"], 3);
     assert_eq!(public_json["harmonicPulse"]["ratioDen"], 4);
     assert!(
@@ -133,5 +150,41 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
     assert!(
         public_json.get("resonanceSquareEmphasis").is_none(),
         "public temporal projection must not expose protected resonance vectors"
+    );
+}
+
+#[test]
+fn kernel_harmonic_profile_maps_tick_to_diatonic_cf_when_pitch_is_sounded() {
+    let projection = portal_core::KernelProjection::from_clock_state(
+        9,
+        10,
+        [1.0, 0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0, 0.0],
+        None,
+        None,
+        0.0,
+    );
+    let public = KernelTemporalProjection::from_kernel_projection(11, &projection);
+    let json = serde_json::to_value(public).unwrap();
+
+    assert_eq!(json["harmonicProfile"]["tick12"], 10);
+    assert_eq!(json["harmonicProfile"]["degree720"], 600);
+    assert_eq!(json["harmonicProfile"]["degree360"], 240);
+    assert_eq!(json["harmonicProfile"]["chromatic"]["note"], "A");
+    assert_eq!(json["harmonicProfile"]["chromatic"]["position"], 4);
+    assert_eq!(json["harmonicProfile"]["chromatic"]["mirrorNote"], "D#");
+    assert_eq!(
+        json["harmonicProfile"]["chromatic"]["mirrorSpanWholeTones"],
+        3
+    );
+    assert_eq!(json["harmonicProfile"]["diatonic"]["degree"], 6);
+    assert_eq!(json["harmonicProfile"]["diatonic"]["contextFrame"], "4.5/0");
+    assert_eq!(
+        json["harmonicProfile"]["diatonic"]["contextAgent"],
+        "Psyche"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["diatonic"]["vakRegister"],
+        "partial-Aletheia"
     );
 }

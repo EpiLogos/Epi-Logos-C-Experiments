@@ -245,6 +245,18 @@ fn assert_safe_kernel_projection(value: &serde_json::Value) {
             .unwrap()
             >= 1
     );
+    let profile = &value["kernel"]["harmonicProfile"];
+    assert!(profile["tick12"].as_u64().unwrap() <= 11);
+    assert!(profile["degree720"].as_u64().unwrap() <= 660);
+    assert!(profile["degree360"].as_u64().unwrap() < 360);
+    assert!(
+        ["bimba", "pratibimba"].contains(&profile["helix"].as_str().unwrap()),
+        "kernel harmonic profile must expose bimba/pratibimba helix"
+    );
+    assert!(profile["chromatic"]["note"].as_str().unwrap().len() > 0);
+    assert!(profile["chromatic"]["xPrimeNote"].as_str().unwrap().len() > 0);
+    assert!(profile["chromatic"]["mirrorNote"].as_str().unwrap().len() > 0);
+    assert_eq!(profile["binary"]["transcriptionState"], "pending-m3-codec");
     assert!(
         value["kernel"].get("bioquaternion").is_none(),
         "gateway temporal context must not publish protected bioquaternion detail"

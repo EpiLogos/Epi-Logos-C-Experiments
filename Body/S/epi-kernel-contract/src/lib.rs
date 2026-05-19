@@ -29,9 +29,10 @@ pub use portal_core::{
     kernel_resonance_index, kernel_resonance_square_emphasis, kernel_tick_from_epogdoon,
     quat_distance_sq, slash_flip_bimba_prime, tritone_square_for_lens, BioQuaternionState,
     EnergyDecomposition, HarmonicPulse, KernelElement, KernelPhase, KernelProjection,
-    KernelResonanceObservation, KernelTemporalEnergy, KernelTemporalProjection, KernelTemporalPulse,
-    KernelTemporalTick, KernelTick, ResonanceVector72, EPOGDOON_DEN, EPOGDOON_NUM, RESONANCE_DIM,
-    TRITONE_SQUARES,
+    KernelResonanceObservation, KernelTemporalEnergy, KernelTemporalProjection,
+    KernelTemporalPulse, KernelTemporalTick, KernelTick, MathemeBinaryProjection,
+    MathemeChromaticProfile, MathemeDiatonicContext, MathemeHarmonicProfile, ResonanceVector72,
+    EPOGDOON_DEN, EPOGDOON_NUM, RESONANCE_DIM, TRITONE_SQUARES,
 };
 
 pub mod analysis;

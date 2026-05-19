@@ -136,6 +136,50 @@ export interface KernelTemporalProjectionEnergy {
   totalEnergy: string;
 }
 
+export interface MathemeChromaticProfile {
+  position: number;
+  pitchClass: number;
+  note: string;
+  xPrimePitchClass: number;
+  xPrimeNote: string;
+  mirrorPosition: number;
+  mirrorPitchClass: number;
+  mirrorNote: string;
+  mirrorSquare: string;
+  mirrorSpanWholeTones: number;
+  mirrorSpanSemitones: number;
+}
+
+export interface MathemeDiatonicContext {
+  degree: number;
+  pitchClass: number;
+  note: string;
+  contextFrame: string;
+  contextAgent: string;
+  vakRegister: string;
+}
+
+export interface MathemeBinaryProjection {
+  mahamayaAddress64: number | null;
+  codon: string | null;
+  hexagram: string | null;
+  lineChangeOperator: string | null;
+  transcriptionState: string;
+  frameBreathingRole: string;
+  m3CodecProvenance: string;
+}
+
+export interface MathemeHarmonicProfile {
+  tick12: number;
+  cycle: number;
+  degree720: number;
+  degree360: number;
+  helix: 'bimba' | 'pratibimba';
+  chromatic: MathemeChromaticProfile;
+  diatonic: MathemeDiatonicContext | null;
+  binary: MathemeBinaryProjection;
+}
+
 export interface KernelTemporalProjection {
   coordinateOwner: 'S0/QL-meta';
   projectionOwner: "S3'";
@@ -145,6 +189,7 @@ export interface KernelTemporalProjection {
   tick: KernelTemporalProjectionTick;
   harmonicPulse: KernelTemporalProjectionPulse;
   energy: KernelTemporalProjectionEnergy;
+  harmonicProfile: MathemeHarmonicProfile;
 }
 
 export interface KernelResonanceObservation {

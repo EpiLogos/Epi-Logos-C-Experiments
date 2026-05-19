@@ -194,6 +194,13 @@ Immediate task group K-H - harmonic pointer/kernel lock-in:
 - [ ] Add Nara journal-memory protocol: journal and modality episodes can be deposited to Graphiti under protected-local namespace rules while identity-affecting interpretation still routes through Epii review.
 - [ ] Verification gate: run focused S0 kernel tests, S2 graph-services tests, S0 `core_knowing` / gate parity tests, and live Neo4j pointer refresh proof after implementation.
 
+Implementation result, 2026-05-19 first profile slice:
+
+- `portal-core::KernelTemporalProjection` now carries a public-current `MathemeHarmonicProfile` derived from the same `KernelTick` that drives the harmonic pulse. The profile exposes `tick12`, `cycle`, `degree720`, `degree360`, bimba/pratibimba helix, chromatic pitch class/note, X/X' partner, X+Y=5 mirror note, square, mirror-span whole-tones/semitones, optional Lens-0 diatonic CF/VAK context, and a pending M3 Mahāmāyā symbolic-codec slot.
+- The 720-degree address is computed as `tick12 * 60`, with `degree360 = degree720 % 360`. This treats the two helices as the two sheets of the 720-degree Hopf/double-cover: bimba ticks 0-5 occupy 0..300 degrees, pratibimba ticks 6-11 occupy the same 360-degree base positions on the second sheet.
+- The Tauri service mirror now consumes `harmonicProfile` directly, so the desktop/clock/cymatic side no longer infers helix, note, mirror, CF, or M3-readiness facts from unrelated tick or pulse fields.
+- S0 temporal context and S5 Epii runtime context tests now assert that the safe public kernel projection includes this harmonic profile while still excluding protected bioquaternion and resonance-vector internals.
+
 Immediate task group K-I - cleanup, commit, and minimum-shape trajectory:
 
 - [ ] Commit the current implementation in coherent slices rather than one undifferentiated state: kernel/FFI contract, S2 graph-pointer domain, S3 gateway/Graphiti/harmonic runtime, M/S4/S5 UI-agent operations, and docs/planning.

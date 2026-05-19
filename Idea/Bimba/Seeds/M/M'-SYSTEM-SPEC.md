@@ -153,6 +153,8 @@ M' must consume a shared `MathemeHarmonicProfile` rather than inferring from unr
 
 This profile is the bridge between planned system vision and actual code implementation. It should be visible in specs, graph nodes, qvdata, semantic documents, gateway responses, portal readiness, and Tauri render clients.
 
+Implementation foothold, 2026-05-19: `portal-core::KernelTemporalProjection` now serializes a first public-current `harmonicProfile` with `tick12`, `degree720`, `degree360`, helix, chromatic note, X/X' partner, X+Y=5 mirror, square, optional Lens-0 diatonic CF/VAK context, and a pending M3 Mahāmāyā codec slot. `Body/M/epi-tauri/src/services/kernelProjection.ts` consumes the same shape for renderer readiness. The remaining work is to enrich this same profile with coordinate-specific S2 pointer relation metadata, full ratio/element/72-fold slots, and the real M3 symbolic codec once that dataset path is materialised.
+
 ## Development Memory Protocol
 
 M' development should be live with graph and episodic memory as soon as the substrate is stable enough.

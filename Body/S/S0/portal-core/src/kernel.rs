@@ -199,6 +199,7 @@ pub struct KernelTemporalProjection {
     pub tick: KernelTemporalTick,
     pub harmonic_pulse: KernelTemporalPulse,
     pub energy: KernelTemporalEnergy,
+    pub harmonic_profile: MathemeHarmonicProfile,
 }
 
 impl KernelTemporalProjection {
@@ -217,6 +218,7 @@ impl KernelTemporalProjection {
             tick: KernelTemporalTick::from_tick(projection.tick),
             harmonic_pulse: KernelTemporalPulse::from_pulse(projection.harmonic_pulse),
             energy: KernelTemporalEnergy::from_energy(projection.energy),
+            harmonic_profile: MathemeHarmonicProfile::from_tick(projection.tick),
         }
     }
 
@@ -234,6 +236,156 @@ impl KernelTemporalProjection {
             0.0,
         );
         Self::from_kernel_projection(generation, &projection)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeHarmonicProfile {
+    pub tick12: u8,
+    pub cycle: u64,
+    pub degree720: u16,
+    pub degree360: u16,
+    pub helix: String,
+    pub chromatic: MathemeChromaticProfile,
+    pub diatonic: Option<MathemeDiatonicContext>,
+    pub binary: MathemeBinaryProjection,
+}
+
+impl MathemeHarmonicProfile {
+    pub fn from_tick(tick: KernelTick) -> Self {
+        let tick12 = tick.sub_tick % 12;
+        let helix = if tick12 < 6 { "bimba" } else { "pratibimba" };
+        let position = tick12 % 6;
+        let pitch_class = pitch_class_for_tick(tick12);
+        Self {
+            tick12,
+            cycle: tick.cycle,
+            degree720: tick12 as u16 * 60,
+            degree360: tick12 as u16 * 60 % 360,
+            helix: helix.to_owned(),
+            chromatic: MathemeChromaticProfile::from_tick(tick12, position, pitch_class),
+            diatonic: MathemeDiatonicContext::from_pitch_class(pitch_class),
+            binary: MathemeBinaryProjection::pending(position),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeChromaticProfile {
+    pub position: u8,
+    pub pitch_class: u8,
+    pub note: String,
+    pub x_prime_pitch_class: u8,
+    pub x_prime_note: String,
+    pub mirror_position: u8,
+    pub mirror_pitch_class: u8,
+    pub mirror_note: String,
+    pub mirror_square: String,
+    pub mirror_span_whole_tones: u8,
+    pub mirror_span_semitones: u8,
+}
+
+impl MathemeChromaticProfile {
+    fn from_tick(tick12: u8, position: u8, pitch_class: u8) -> Self {
+        let mirror_position = 5 - position;
+        let mirror_tick = if tick12 < 6 {
+            mirror_position
+        } else {
+            6 + mirror_position
+        };
+        let mirror_pitch_class = pitch_class_for_tick(mirror_tick);
+        let x_prime_pitch_class = if tick12 < 6 {
+            pitch_class + 1
+        } else {
+            pitch_class - 1
+        };
+        let mirror_span_whole_tones = match position {
+            0 | 5 => 5,
+            1 | 4 => 3,
+            _ => 1,
+        };
+        Self {
+            position,
+            pitch_class,
+            note: note_name(pitch_class).to_owned(),
+            x_prime_pitch_class,
+            x_prime_note: note_name(x_prime_pitch_class).to_owned(),
+            mirror_position,
+            mirror_pitch_class,
+            mirror_note: note_name(mirror_pitch_class).to_owned(),
+            mirror_square: mirror_square(position).to_owned(),
+            mirror_span_whole_tones,
+            mirror_span_semitones: mirror_span_whole_tones * 2,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeDiatonicContext {
+    pub degree: u8,
+    pub pitch_class: u8,
+    pub note: String,
+    pub context_frame: String,
+    pub context_agent: String,
+    pub vak_register: String,
+}
+
+impl MathemeDiatonicContext {
+    fn from_pitch_class(pitch_class: u8) -> Option<Self> {
+        let (degree, context_frame, context_agent, vak_register) = match pitch_class {
+            0 => (1, "00/00", "Nous", "Para"),
+            2 => (2, "0/1", "Logos", "Madhyama-nomos"),
+            4 => (3, "0/1/2", "Eros", "Madhyama-chreia"),
+            5 => (4, "0/1/2/3", "Mythos", "Pasyanti"),
+            7 => (5, "4.0/1-4.4/5", "Anima/Psyche", "Madhyama-oikonomia"),
+            9 => (6, "4.5/0", "Psyche", "partial-Aletheia"),
+            11 => (7, "5/0", "Sophia", "Spanda-Shakti"),
+            _ => return None,
+        };
+        Some(Self {
+            degree,
+            pitch_class,
+            note: note_name(pitch_class).to_owned(),
+            context_frame: context_frame.to_owned(),
+            context_agent: context_agent.to_owned(),
+            vak_register: vak_register.to_owned(),
+        })
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeBinaryProjection {
+    pub mahamaya_address64: Option<u8>,
+    pub codon: Option<String>,
+    pub hexagram: Option<String>,
+    pub line_change_operator: Option<String>,
+    pub transcription_state: String,
+    pub frame_breathing_role: String,
+    pub m3_codec_provenance: String,
+}
+
+impl MathemeBinaryProjection {
+    fn pending(position: u8) -> Self {
+        Self {
+            mahamaya_address64: None,
+            codon: None,
+            hexagram: None,
+            line_change_operator: None,
+            transcription_state: "pending-m3-codec".to_owned(),
+            frame_breathing_role: match position {
+                0 | 5 => "sq1-boundary-totality",
+                1 | 4 => "sq2-active-tritone",
+                _ => "sq3-inner-epogdoon",
+            }
+            .to_owned(),
+            m3_codec_provenance:
+                "M3 Mahamaya symbolic codec required for 64-fold codon/hexagram materialisation"
+                    .to_owned(),
+        }
     }
 }
 
@@ -454,6 +606,48 @@ pub fn harmonic_ratio_fraction_for_sub_tick(sub_tick: u8) -> (u16, u16) {
         5 | 6 => (2, 3),
         9 | 10 => (3, 2),
         _ => (1, 1),
+    }
+}
+
+fn pitch_class_for_tick(tick12: u8) -> u8 {
+    match tick12 % 12 {
+        0 => 0,
+        1 => 2,
+        2 => 4,
+        3 => 6,
+        4 => 8,
+        5 => 10,
+        6 => 1,
+        7 => 3,
+        8 => 5,
+        9 => 7,
+        10 => 9,
+        _ => 11,
+    }
+}
+
+fn note_name(pitch_class: u8) -> &'static str {
+    match pitch_class % 12 {
+        0 => "C",
+        1 => "C#",
+        2 => "D",
+        3 => "D#",
+        4 => "E",
+        5 => "F",
+        6 => "F#",
+        7 => "G",
+        8 => "G#",
+        9 => "A",
+        10 => "A#",
+        _ => "B",
+    }
+}
+
+fn mirror_square(position: u8) -> &'static str {
+    match position {
+        0 | 5 => "Sq1",
+        1 | 4 => "Sq2",
+        _ => "Sq3",
     }
 }
 
