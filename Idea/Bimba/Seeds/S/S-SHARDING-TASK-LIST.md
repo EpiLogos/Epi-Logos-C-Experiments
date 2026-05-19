@@ -1250,3 +1250,10 @@ Continue the current spine progression, but re-center the immediate run around t
 6. Tauri implementation should consume the stable backend contracts rather than inventing desktop-local state: gateway RPC, `GatewaySessionOperationContract`, portal surface registry, SpaceTimeDB projection tables, and the shared harmonic profile.
 
 Do not start non-dry-run Epii/autoresearch mutation until S1' compiler invocation, Anima/Pleroma capability boundaries, and Epii review gates are testable.
+
+Implementation result, 2026-05-19 deep property generator slice:
+
+- The deep regional Cypher generator is now import-safe and testable: pure helpers can be exercised without writing review files, while CLI invocation still generates the ignored `Body/S/S5/epi-gnostic/cypher/generated/*.cypher` review artifacts.
+- Executable Cypher now updates only existing `Bimba` nodes with `MATCH`; missing coordinates are treated as graph-coverage defects rather than silently created nodes.
+- Unregistered P/L/S/T/Q/M-prime targets stay out of executable `SET n +=` blocks as `PROPOSED_REVIEW` comments until schema approval.
+- Real dataset tests cover coordinate conversion, Cypher literal escaping, registered/proposed separation, P-region non-executability, and output construction from the actual deep JSON files.

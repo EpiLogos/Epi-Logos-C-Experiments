@@ -2,6 +2,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 const repoRoot = path.resolve(import.meta.dirname, "../../..");
 const datasetsRoot = path.join(repoRoot, "docs/datasets");
@@ -16,7 +17,7 @@ const branches = [
   ["m5", "epii-deep", "nodes-full-details.json"],
 ];
 
-const registeredTargets = new Set([
+export const registeredTargets = new Set([
   "coordinate",
   "c_0_core_nature",
   "c_0_essence",
@@ -29,11 +30,6 @@ const registeredTargets = new Set([
   "c_4_ql_category",
   "c_4_ql_operator_types",
   "c_5_resonances",
-  "p_1_variant",
-  "p_1_weave",
-  "p_1_position_id",
-  "p_1_stage_id",
-  "p_3_sequence",
   "l_2_therapeutic_properties",
   "l_2_temperament_balance",
   "l_2_healing_specialty",
@@ -63,14 +59,14 @@ const registeredTargets = new Set([
   "m_5_lacanian_interface",
 ]);
 
-const stringListTargets = new Set([
+export const stringListTargets = new Set([
   "c_4_ql_operator_types",
   "c_5_resonances",
   "l_2_therapeutic_properties",
   "s_5_tool_affinity",
 ]);
 
-const mappings = {
+export const mappings = {
   c: {
     name: "c_1_name",
     description: "c_1_description",
@@ -85,11 +81,6 @@ const mappings = {
     qlOperatorTypes: "c_4_ql_operator_types",
     accessLevel: "c_4_access_level",
     resonances: "c_5_resonances",
-    qlVariant: "c_4_ql_variant",
-    qlPositionWeave: "c_4_ql_position_weave",
-    positionId: "c_2_position_id",
-    stageId: "c_2_stage_id",
-    sequence: "c_3_sequence",
     primaryDesignation: "c_1_primary_designation",
     completeFormulation: "c_1_complete_formulation",
     formulationBreakdown: "c_1_formulation_breakdown",
@@ -98,7 +89,13 @@ const mappings = {
     practicalApplications: "c_3_practical_applications",
     relatedCoordinates: "c_3_related_coordinates",
   },
-  p: {},
+  p: {
+    qlVariant: "p_1_variant",
+    qlPositionWeave: "p_1_weave",
+    positionId: "p_1_position_id",
+    stageId: "p_1_stage_id",
+    sequence: "p_3_sequence",
+  },
   l: {
     therapeuticProperties: "l_2_therapeutic_properties",
     temperamentBalance: "l_2_temperament_balance",
@@ -172,7 +169,7 @@ const mappings = {
   },
 };
 
-function sanitizeJson(text) {
+export function sanitizeJson(text) {
   let result = "";
   let inString = false;
   let escaped = false;
@@ -217,17 +214,22 @@ function sanitizeJson(text) {
   return result;
 }
 
-function mCoordinate(coordinate) {
+export function mCoordinate(coordinate) {
   if (coordinate === "#") return "M";
   if (coordinate.startsWith("#")) return `M${coordinate.slice(1)}`;
   return coordinate;
 }
 
-function cypherString(value) {
-  return `'${String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
+export function cypherString(value) {
+  return `'${String(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+    .replace(/\t/g, "\\t")}'`;
 }
 
-function cypherLiteral(value, target) {
+export function cypherLiteral(value, target) {
   if (value === null || value === undefined) return null;
   if (stringListTargets.has(target)) {
     const values = Array.isArray(value) ? value : String(value).split(",").map((item) => item.trim());
@@ -247,15 +249,15 @@ function cypherLiteral(value, target) {
   return cypherString(value);
 }
 
-function blockForNode(coordinate, sourceBranch, assignments) {
+export function blockForNode(coordinate, sourceBranch, assignments) {
   const executable = assignments.filter((item) => registeredTargets.has(item.target));
   const proposed = assignments.filter((item) => !registeredTargets.has(item.target));
   const lines = [
     `// ${coordinate} | ${sourceBranch} | ${executable.length} registered, ${proposed.length} proposed`,
-    `MERGE (n:Bimba { coordinate: ${cypherString(coordinate)} })`,
   ];
 
   if (executable.length > 0) {
+    lines.push(`MATCH (n:Bimba { coordinate: ${cypherString(coordinate)} })`);
     lines.push("SET n += {");
     executable.forEach((item, index) => {
       lines.push(`  ${item.target}: ${item.literal}${index === executable.length - 1 ? "" : ","}`);
@@ -271,58 +273,82 @@ function blockForNode(coordinate, sourceBranch, assignments) {
   return `${lines.join("\n")}\n`;
 }
 
-function readNodes(branchDir, fileName) {
+export function assignmentsForRegion(props, regionMappings) {
+  const assignments = [];
+  const seenTargets = new Set();
+
+  for (const [sourceKey, target] of Object.entries(regionMappings)) {
+    if (!Object.hasOwn(props, sourceKey) || seenTargets.has(target)) continue;
+    const literal = cypherLiteral(props[sourceKey], target);
+    if (!literal) continue;
+    assignments.push({ sourceKey, target, literal });
+    seenTargets.add(target);
+  }
+
+  return assignments;
+}
+
+export function readNodes(branchDir, fileName) {
   const filePath = path.join(datasetsRoot, branchDir, fileName);
   const raw = fs.readFileSync(filePath, "utf8");
   const parsed = JSON.parse(sanitizeJson(raw));
   return Array.isArray(parsed) ? parsed : parsed.nodes ?? [parsed];
 }
 
-fs.mkdirSync(outputDir, { recursive: true });
+export function buildRegionalOutputs() {
+  const outputs = new Map(Object.keys(mappings).map((region) => [region, []]));
+  const summary = [];
 
-const outputs = new Map(Object.keys(mappings).map((region) => [region, []]));
-const summary = [];
+  for (const [branchId, branchDir, fileName] of branches) {
+    const nodes = readNodes(branchDir, fileName);
+    const branchCounts = Object.fromEntries(Object.keys(mappings).map((region) => [region, 0]));
 
-for (const [branchId, branchDir, fileName] of branches) {
-  const nodes = readNodes(branchDir, fileName);
-  const branchCounts = Object.fromEntries(Object.keys(mappings).map((region) => [region, 0]));
+    for (const node of nodes) {
+      const props = node.filteredProps ?? node.filtered_props ?? {};
+      const coordinate = mCoordinate(node.coordinate ?? props.bimbaCoordinate);
+      if (!coordinate) continue;
 
-  for (const node of nodes) {
-    const props = node.filteredProps ?? node.filtered_props ?? {};
-    const coordinate = mCoordinate(node.coordinate ?? props.bimbaCoordinate);
-    if (!coordinate) continue;
+      for (const [region, regionMappings] of Object.entries(mappings)) {
+        const assignments = assignmentsForRegion(props, regionMappings);
 
-    for (const [region, regionMappings] of Object.entries(mappings)) {
-      const assignments = [];
-      const seenTargets = new Set();
-
-      for (const [sourceKey, target] of Object.entries(regionMappings)) {
-        if (!Object.hasOwn(props, sourceKey) || seenTargets.has(target)) continue;
-        const literal = cypherLiteral(props[sourceKey], target);
-        if (!literal) continue;
-        assignments.push({ sourceKey, target, literal });
-        seenTargets.add(target);
+        if (assignments.length === 0) continue;
+        branchCounts[region] += 1;
+        outputs.get(region).push(blockForNode(coordinate, branchId, assignments));
       }
-
-      if (assignments.length === 0) continue;
-      branchCounts[region] += 1;
-      outputs.get(region).push(blockForNode(coordinate, branchId, assignments));
     }
+
+    const counts = Object.entries(branchCounts).map(([key, value]) => `${key}=${value}`).join(", ");
+    summary.push(`${branchId}: ${nodes.length} nodes | ${counts}`);
   }
 
-  summary.push(`${branchId}: ${nodes.length} nodes | ${Object.entries(branchCounts).map(([k, v]) => `${k}=${v}`).join(", ")}`);
+  return { outputs, summary };
 }
 
-for (const [region, blocks] of outputs.entries()) {
-  const filePath = path.join(outputDir, `deep-regional-${region}.cypher`);
-  const header = [
-    "// GENERATED REVIEW FILE. Do not execute wholesale without human approval.",
-    `// Region: ${region}`,
-    `// Generated at: ${new Date().toISOString()}`,
-    "",
-  ].join("\n");
-  fs.writeFileSync(filePath, `${header}${blocks.join("\n")}`);
+export function writeRegionalOutputs({ outputs, summary }, generatedAt = new Date()) {
+  fs.mkdirSync(outputDir, { recursive: true });
+
+  for (const [region, blocks] of outputs.entries()) {
+    const filePath = path.join(outputDir, `deep-regional-${region}.cypher`);
+    const header = [
+      "// GENERATED REVIEW FILE. Do not execute wholesale without human approval.",
+      `// Region: ${region}`,
+      `// Generated at: ${generatedAt.toISOString()}`,
+      "",
+    ].join("\n");
+    fs.writeFileSync(filePath, `${header}${blocks.join("\n")}`);
+  }
+
+  return [
+    `Generated regional Cypher review files in ${path.relative(repoRoot, outputDir)}`,
+    ...summary,
+  ];
 }
 
-console.log(`Generated regional Cypher review files in ${path.relative(repoRoot, outputDir)}`);
-for (const line of summary) console.log(line);
+export function main() {
+  const outputLines = writeRegionalOutputs(buildRegionalOutputs());
+  for (const line of outputLines) console.log(line);
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main();
+}

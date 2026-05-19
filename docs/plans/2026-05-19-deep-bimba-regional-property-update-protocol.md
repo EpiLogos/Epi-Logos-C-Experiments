@@ -202,7 +202,7 @@ Tests must prove:
 
 ### Task 3: Generate Review Cypher
 
-Generate targeted Cypher files from the property map. Use `MERGE (n:Bimba { coordinate })` and `SET n += { ... }`.
+Generate targeted Cypher files from the property map. Use `MATCH (n:Bimba { coordinate })` and `SET n += { ... }` so a review/import batch can update existing Bimba nodes but cannot create new coordinates by accident.
 
 Never execute generated Cypher in the same step that creates it.
 
@@ -248,6 +248,7 @@ Compare returned keys against the approved registry. Any unapproved key is a def
 ## Guardrails
 
 - Do not flatten all content into `c_*`.
+- Do not use `MERGE` in generated property-review patches; missing target nodes are graph-coverage defects, not import-time creation opportunities.
 - Do not promote branch-local M-prime content into global schema just because it repeats within one branch.
 - Do not turn M coordinate identity into an `m_*` property; M coordinates are the Bimba nodes.
 - Do not bury `q_*` fields under `m_5_*`; Q is its own quick-view/quintessential surface.
@@ -255,3 +256,21 @@ Compare returned keys against the approved registry. Any unapproved key is a def
 - Do not execute proposed properties before registry approval.
 - Do not treat source key names as authoritative. Classify by semantic function.
 - Do not use mocks for verification. Use real dataset files and live or test-owned Neo4j nodes.
+
+## Implementation Result, 2026-05-19
+
+The first generator-hardening tranche is in place:
+
+- `docs/datasets/scripts/generate-deep-regional-cypher.mjs` now exposes pure helpers for direct test coverage and only writes generated review files when invoked as a CLI script.
+- Generated executable blocks use `MATCH`, never `MERGE`, and unregistered targets remain `// PROPOSED_REVIEW` comments outside `SET n +=`.
+- Cypher string literals now escape quotes, backslashes, newlines, carriage returns, and tabs.
+- `docs/datasets/scripts/generate-deep-regional-cypher.test.mjs` exercises the real deep dataset reader, generated block semantics, P-region non-executability, and literal escaping with Node's built-in test runner.
+
+Verified:
+
+```bash
+node --test docs/datasets/scripts/generate-deep-regional-cypher.test.mjs
+node docs/datasets/scripts/generate-deep-regional-cypher.mjs
+```
+
+The generated `Body/S/S5/epi-gnostic/cypher/generated/*.cypher` files remain ignored review artifacts. They are regenerable and should not be treated as applied migrations until schema review and live Neo4j verification complete.
