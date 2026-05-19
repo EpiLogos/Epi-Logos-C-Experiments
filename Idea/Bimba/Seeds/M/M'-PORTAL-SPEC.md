@@ -1,7 +1,7 @@
 ---
 coordinate: "M'"
 status: "active-spec"
-updated: "2026-05-07"
+updated: "2026-05-19"
 depends_on:
   - "[[M-SYSTEM-INDEX]]"
   - "[[M-M-prime-coordinate-mapping-inaugural]]"
@@ -33,6 +33,8 @@ The full [[M']] set must remain visible behind this shorthand:
 | [[M3']] | integrated clock platform | solar-system/kairos clock, temporal visualisation, Nara walkabout routing |
 | [[M4']] | [[Nara]] lived interface | journal/flow, daily note, dream journal, oracle, highlights, personal [[Pratibimba]] continuity |
 | [[M5']] | [[Epii]] integrative interface | pedagogy, etymological archaeology, [[Bimba]] wisdom exploration, autoresearch, review inbox, VAK/agentic execution |
+
+The build-facing domain requirements live in [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]]. Portal work should use those files for per-domain surface, backend contract, privacy, readiness, and visual/audio criteria, then use this file for the shared `0` / `/` / `1` portal grammar.
 
 The split should be read carefully. In the broad TUI shorthand, `0` can stand for the M0'-M3' structural side. In the desktop app, `0` should be the structural map/ground entry rather than the clock alone. The clock belongs most precisely to [[M3']] as the symbolic temporal visualisation; it should be available from the `0` side, but the `0` surface itself is the Bimba map explorer and coordinate-ground orientation.
 

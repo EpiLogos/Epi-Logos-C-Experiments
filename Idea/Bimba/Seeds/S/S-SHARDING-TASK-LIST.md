@@ -209,6 +209,13 @@ Planning result, 2026-05-19 full integration map:
 - The plan explicitly treats the planetary-chakral-musical alignment as M2/M' profile data governed by S2, not as hardcoded renderer decoration.
 - The plan includes a parallel-session handoff prompt for producing the M' Tauri spec set against the new kernel files, Tauri v2 planning, and current `Body/M/epi-tauri` state.
 
+Implementation result, 2026-05-19 second profile/M' tranche:
+
+- `portal-core::mahamaya` now owns the first real M3 address-law codec: `degree360 -> 64`, codon triplet from 2-bit nucleotide logic with DNA/RNA polarity flip, upper/lower trigram split, `hexagram * 6 + line` line-change operator, M2->M3 epogdoon compression, and evolutionary-gap detection.
+- `MathemeHarmonicProfile` now exposes `su2Layer`, `ratioRole`, `resonance72`, `elements`, `planetaryChakral`, and enriched M3/Mahāmāyā `binary` fields. Tarot/amino details remain honest `pending-dataset-lut` fields rather than guessed mappings.
+- The Tauri service mirror consumes the enriched profile fields for readiness, including resonance72 address, elemental rendering role, planetary/chakral body, Mahāmāyā address, codon, hexagram, line-change operator, and provisional-gap state.
+- [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]] now define the six M' domain contracts, and [[M'-TAURI-PORT-SPEC]] carries the shared-profile app architecture and current-state gap table.
+
 Immediate task group K-I - cleanup, commit, and minimum-shape trajectory:
 
 - [ ] Commit the current implementation in coherent slices rather than one undifferentiated state: kernel/FFI contract, S2 graph-pointer domain, S3 gateway/Graphiti/harmonic runtime, M/S4/S5 UI-agent operations, and docs/planning.

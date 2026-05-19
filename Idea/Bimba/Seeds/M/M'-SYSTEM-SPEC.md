@@ -48,6 +48,21 @@ The shell grouping is:
 
 Do not let this shorthand erase the six domains. `0` is not "the clock"; the clock is [[M3']] reached through the structural side. `1` is not "chat"; it is Nara/Epii as lived and integrative return. `/` is not a product menu; it is the S0' command/config/readiness membrane.
 
+## Domain Spec Set
+
+The build-facing domain contracts are now split into six spec files:
+
+| Domain | Spec |
+|--------|------|
+| [[M0']] | [[M0'-SPEC]] |
+| [[M1']] | [[M1'-SPEC]] |
+| [[M2']] | [[M2'-SPEC]] |
+| [[M3']] | [[M3'-SPEC]] |
+| [[M4']] | [[M4'-SPEC]] |
+| [[M5']] | [[M5'-SPEC]] |
+
+These files are the domain-level authority for user-facing surface, consumed backend contract, required `MathemeHarmonicProfile` fields, privacy boundary, readiness/test criteria, and visual/audio interaction model. [[M'-TAURI-PORT-SPEC]] remains the desktop integration authority across those domains.
+
 ## Musical Instrument Ramification
 
 The musical instrument is the key M' unifier. It gives the same matheme as sound, rhythm, visual pulse, graph traversal, and lived timing.
@@ -154,7 +169,7 @@ M' must consume a shared `MathemeHarmonicProfile` rather than inferring from unr
 
 This profile is the bridge between planned system vision and actual code implementation. It should be visible in specs, graph nodes, qvdata, semantic documents, gateway responses, portal readiness, and Tauri render clients.
 
-Implementation foothold, 2026-05-19: `portal-core::KernelTemporalProjection` now serializes a first public-current `harmonicProfile` with `tick12`, `degree720`, `degree360`, helix, chromatic note, X/X' partner, X+Y=5 mirror, square, optional Lens-0 diatonic CF/VAK context, and a pending M3 Mahāmāyā codec slot. `Body/M/epi-tauri/src/services/kernelProjection.ts` consumes the same shape for renderer readiness. The remaining work is to enrich this same profile with coordinate-specific S2 pointer relation metadata, full ratio/element/72-fold slots, and the real M3 symbolic codec once that dataset path is materialised.
+Implementation foothold, 2026-05-19: `portal-core::KernelTemporalProjection` now serializes a public-current `harmonicProfile` with `tick12`, `degree720`, `degree360`, `su2Layer`, helix, ratio role, chromatic note, X/X' partner, X+Y=5 mirror, square, optional Lens-0 diatonic CF/VAK context, 72-fold resonance address, elemental projection, initial planetary-chakral projection, and an M3/Mahāmāyā address-law projection. `Body/M/epi-tauri/src/services/kernelProjection.ts` consumes the same shape for renderer readiness. The remaining work is to enrich this profile with coordinate-specific S2 pointer relation metadata, S3 deposition anchors, and dataset-backed Tarot/amino/correspondence LUT provenance where the address law currently reports `pending-dataset-lut`.
 
 ## Harmonic Clock Integration Plan
 

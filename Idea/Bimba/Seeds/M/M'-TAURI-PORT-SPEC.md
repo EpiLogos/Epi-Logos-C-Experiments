@@ -1,13 +1,17 @@
 ---
 coordinate: "M'.desktop"
 status: "active-spec"
-updated: "2026-05-07"
+updated: "2026-05-19"
 depends_on:
   - "[[M'-PORTAL-SPEC]]"
+  - "[[M'-SYSTEM-SPEC]]"
   - "[[S3-SPEC]]"
   - "[[S-AD-HOC-ROADMAP]]"
   - "[[S-SHARDING-TASK-LIST]]"
   - "[[S0-SPEC]]"
+  - "[[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]]"
+  - "[[mprime-domain-specs]]"
+  - "[[mprime-tauri-gap-table]]"
 ---
 
 # [[M']] Tauri Port Spec
@@ -180,6 +184,99 @@ Renderer domain clients should be explicit enough to stop drift:
 - `naraClient` for journal/flow/highlight/modality records.
 - `epiiClient` for pedagogy, archaeology, Bimba/wisdom exploration, autoresearch, and inbox operations.
 - `agentExecutionClient` for VAK evaluation, Anima/Aletheia dispatch, tool stream, diagnostics, and review deposits.
+
+## Harmonic Profile Architecture Amendment
+
+The Tauri port must now treat `MathemeHarmonicProfile` as the desktop app's shared instrument contract. `PortalClockState` and legacy clock commands may remain as compatibility surfaces during migration, but the six M' domains should converge on one profile client that reads the S0/S3 projection and S2 pointer law.
+
+Recommended renderer contract:
+
+- `profileClient`: fetches/subscribes to the current safe `MathemeHarmonicProfile`, selected-coordinate profile, readiness state, and provenance.
+- `kernelProjection` remains the narrow projection helper for safe public-current profile consumption.
+- `clockClient` remains compatibility for existing Tauri clock state until the profile contract contains the M2/M3 fields and S3 deposition anchor.
+- `graphClient` remains S2 graph access, but harmonic pointer descriptors must flow through S2 law rather than being inferred from renderer node labels.
+
+The app-level provider should expose:
+
+- public-current tick and harmonic state;
+- selected coordinate and pointer anchor;
+- profile readiness and blocked reasons;
+- DAY/NOW/session/deposition anchor;
+- privacy class and protected-projection block state.
+
+No renderer domain may hardcode private clock, codon, hexagram, tarot, planetary, or chakral mapping tables. The renderer may contain display labels and iconography. The authority for mappings is the backend profile plus S2 graph law.
+
+### Portal 0 Structural / Instrument Side
+
+The `0` side is M0'-M3' as one structural instrument:
+
+- [[M0']] renders the selected Bimba graph coordinate and pointer topology.
+- [[M1']] renders relation movement, torus/path traversal, and graph-law routeability.
+- [[M2']] renders the 72-fold MEF/element/planetary/chakral/mode field.
+- [[M3']] renders the harmonic clock and Mahamaya DNA/I-Ching/Tarot transcription.
+
+The `0` side consumes the same profile. It does not contain separate clocks for graph, torus, harmonic matrix, and codon wheel.
+
+### S0' Command / Config / Readiness Membrane
+
+The `/` surface must expose profile readiness as an operator concern:
+
+- gateway/kernel profile availability;
+- S2 pointer-harmonic law availability;
+- S3 DAY/NOW/session/deposition availability;
+- Graphiti protected-local memory availability;
+- missing backend contract vs private projection block vs pending dataset LUT.
+
+Readiness panels must distinguish raw service health from usable bounded capability. A connected graph or gateway is not enough if the current surface lacks the required profile fields or privacy permission.
+
+### Portal 1 Nara / Epii Lived Return
+
+The `1` side consumes profile context through Nara and Epii:
+
+- [[M4']] receives profile handles for journal, dream, oracle, highlight, and playback context while keeping protected identity and content local.
+- [[M5']] receives profile, pointer, deposition, source/spec/code/test, and Graphiti handles as review evidence.
+
+Public S2 topology and protected Graphiti/Nara episodes may link by coordinate and handle; they do not collapse into one data plane.
+
+### M2 / M3 Harmonic Clock Panels
+
+M2 and M3 panels must be separate views over the same tick:
+
+- [[M2']] is the 72-fold vibrational source: MEF, elements, planetary/chakral correspondences, modal/scale color, and semantic resonance.
+- [[M3']] is the 64-fold symbolic transcription: DNA codon, I-Ching hexagram, 384 line-change operator, 2-bit nucleotide logic, DNA/RNA phase, Tarot compression, shadow/provisional states, and M2->M3 epogdoon compression.
+
+The exact mathematical commitments are:
+
+- Paramasiva tick is the harmonic clock.
+- M2 is the 72-fold MEF/planetary/chakral field.
+- M3 is the DNA/I-Ching/Tarot binary transcription surface.
+- S2 is the pointer-law authority.
+- S3 deposits DAY/NOW/session/Graphiti observations.
+
+### Graphiti And S2 Graph Boundary
+
+S2 is canonical coordinate topology. Graphiti is episodic protected-local memory. Tauri may show links between them, but:
+
+- S2 graph nodes do not absorb private journal content or unreconciled Graphiti episode bodies.
+- Graphiti episodes may point to coordinates, profile ticks, and source handles.
+- Profile deposition uses safe handles: coordinate, tick, harmonic state, M2 resonance index, M3 symbolic address, pointer anchor, DAY/NOW/session, and episode id.
+- Promotion into canonical graph facts is an Epii/S5' review operation.
+
+## Current-State Gap Table
+
+Assessment from `Body/M/epi-tauri` as of 2026-05-19:
+
+| Area | Already present | Needs backend contract | Needs design/spec only | Blocked by kernel profile tranche |
+|------|-----------------|------------------------|------------------------|-----------------------------------|
+| Shared profile types/client | `services/types.ts` defines `MathemeHarmonicProfile` with tick12, degree720, degree360, su2Layer, helix, ratioRole, chromatic, optional diatonic, resonance72, elements, planetaryChakral, and enriched binary/M3 projection. `services/kernelProjection.ts` projects safe public-current readiness and has a Vitest coverage foothold. | Add `pointerAnchor`, `depositionAnchor`, and eventual explicit `mahamaya` alias if the contract separates M3 from the current `binary` projection. | Add a domain-shared `profileClient`/provider contract so M0'-M5' stop reading profile fragments differently. | Partly: S0 profile tranche landed; S2/S3 anchors remain blocked by Tranche 3/4. |
+| M0' graph map | `M0_Anuttara/BimbaMap2D.tsx`, graph store, and `graphClient` can load/select graph data. | S2 must return harmonic pointer descriptors and selected-coordinate profile anchors. | Node inspector needs profile/readiness/source/spec/code/test layout. | Partly: pointerAnchor waits on S2 tranche. |
+| M1' movement | `M1_Paramasiva/SchemaWorkspace.tsx` shows graph schema counts. Graph client has `walk`, geometry, and coordinate methods. | S2 relation walk must return typed relation descriptors plus harmonic law. | Torus/path traversal surface is not specified in runtime UI yet beyond this spec. | Partly: movement can begin after S2 pointer descriptors; tick binding depends on profile tranche. |
+| M2' harmonic matrix | `M2_Parashakti/CollabWorkspace.tsx` reads temporal DAY/NOW presence. `epiiClient.mef` can list active MEF lenses. Profile now exposes first `resonance72`, `elements`, and `planetaryChakral` fields. | S2 must still govern configurable correspondence provenance and selected-coordinate harmonic pointer descriptors. | Matrix, element, planetary/chakral, and modal panels need implementation design from [[M2'-SPEC]]. | Partly: backend fields exist; graph-law mapping remains blocked by Tranche 3. |
+| M3' clock/cosmos | `ClockCosmos.tsx`, `HopfClock.tsx`, `StrataPanel.tsx`, `clockStore`, and `clockClient` provide visual shell, Hopf view, current degree, tick12, active codon, aspects, and temporal footer. Profile now exposes M3 address-law fields through `binary`. | Tarot/amino LUT-backed details, pointerAnchor, and depositionAnchor still need backend contracts. | UI needs migration plan from compatibility clock state to shared profile provider. | Partly: M3 codec foothold exists; LUTs and S2/S3 anchors remain blocked. |
+| M4' Nara | `NaraDashboard.tsx`, editor, flow timeline, highlights, vault-backed daily/flow clients, and typed highlight sendoff envelope exist. | S3 deposition must include profile observation anchors and Graphiti privacy class; agent invocation must return governed review/deposit handles. | Daily Note, Dream Journal, Oracle, playback, and privacy-state UX need completion against [[M4'-SPEC]]. | Partly: profile handles wait on Tranche 4; modality surfaces can proceed from existing contracts. |
+| M5' Epii | `EpiiDashboard.tsx`, Library, Atelier, Epii Agent, `epiiClient`, and `agentExecutionClient` exist. | Review inbox needs real gateway/session/task deposits, profile evidence, pointer/deposition anchors, and promotion transitions. | Evidence matrix and VAK execution page need integration design against [[M5'-SPEC]]. | Partly: M2/M3 evidence waits on full profile; agent/review shell can proceed. |
+| S0' `/` membrane | `OmniPanel.tsx`, gateway/temporal/agent clients, and command surfaces exist. | Readiness API must report profile availability, S2 law availability, S3 deposition, Graphiti privacy, pending LUT, and private-block states. | Display taxonomy for readiness states needs alignment with this amendment. | Partly: field-level readiness depends on backend tranches. |
+| Privacy boundary | `kernelProjection.ts` blocks exposed `bioquaternion` / `resonanceSquareEmphasis` from safe public-current consumer readiness. | Backend profile must formalize public-current vs protected-local fields and Graphiti/Nara privacy classes. | Per-domain UI copy/states need consistent protected projection language. | Yes for formal privacy classes; current foothold is renderer-side only. |
 
 ## Testing Contract
 
