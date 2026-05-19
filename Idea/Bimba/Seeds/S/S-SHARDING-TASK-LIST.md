@@ -173,6 +173,8 @@ Implementation result, 2026-05-18:
 
 Immediate task group K-H - harmonic pointer/kernel lock-in:
 
+Planning authority: [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]] is the current detailed tranche map for this task group. It folds the musical derivation, pointer-web spec, kernel canon, M1/M2/M3 specs, and M' system spec into one implementation trajectory.
+
 - [ ] Define a shared `MathemeHarmonicProfile` / equivalent contract in the S0 kernel/Rust mirror and S2 pointer-service boundary. The profile must cover coordinate, QL position, bimba/pratibimba helix semantics, pitch-class anchor, X/X' spanda pair, X+Y=5 mirror, Klein square, interval role, ratio role, lens-anchor membership, 72-fold resonance index slots, 8+4 sounded/nodal role, and compatibility labels for older descent/ascent wording.
 - [ ] Extend the same profile with the kernel-canon minimum shape: `quintessence_hash`, `quintessence_quaternion`, `live_quaternion`, `tick12`, 720-degree address, oracle/cast payload handle, safe clock projection handle, graph-deposit handle, and renewed-ground provenance. Protected quaternion detail must stay out of public-current projections unless an explicit local/private boundary permits it.
 - [ ] Add kernel-level tests for the musical invariants: tick decomposition into `cycle=floor(n/12)`, `sub_tick=n mod 12`, `helix_bit=floor(sub_tick/6)`, `position=sub_tick mod 6`; two whole-tone helices; 12 chromatic anchors; 12 lens anchors; 72 resonance uniqueness; semitone cross-helix spanda; whole-tone epogdoon tick; Square C 1-WT mirror; Square B tritone mirror; Square A 16:9 / 5-WT totality mirror; and the absent +1 epogdoon closure residue.
@@ -200,6 +202,12 @@ Implementation result, 2026-05-19 first profile slice:
 - The 720-degree address is computed as `tick12 * 60`, with `degree360 = degree720 % 360`. This treats the two helices as the two sheets of the 720-degree Hopf/double-cover: bimba ticks 0-5 occupy 0..300 degrees, pratibimba ticks 6-11 occupy the same 360-degree base positions on the second sheet.
 - The Tauri service mirror now consumes `harmonicProfile` directly, so the desktop/clock/cymatic side no longer infers helix, note, mirror, CF, or M3-readiness facts from unrelated tick or pulse fields.
 - S0 temporal context and S5 Epii runtime context tests now assert that the safe public kernel projection includes this harmonic profile while still excluding protected bioquaternion and resonance-vector internals.
+
+Planning result, 2026-05-19 full integration map:
+
+- `docs/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md` now defines the next integrated path: Paramasiva tick as harmonic clock, Parashakti/M2 as 72-fold MEF-element-planetary-chakral vibrational field, Mahāmāyā/M3 as DNA-I-Ching-Tarot binary transcription engine, S2 as pointer/harmonic law of record, S3 as DAY/NOW/Graphiti deposition, and M' as the live instrument surface.
+- The plan explicitly treats the planetary-chakral-musical alignment as M2/M' profile data governed by S2, not as hardcoded renderer decoration.
+- The plan includes a parallel-session handoff prompt for producing the M' Tauri spec set against the new kernel files, Tauri v2 planning, and current `Body/M/epi-tauri` state.
 
 Immediate task group K-I - cleanup, commit, and minimum-shape trajectory:
 

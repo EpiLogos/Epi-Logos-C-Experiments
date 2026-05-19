@@ -9,6 +9,7 @@ depends_on:
   - "[[S-AD-HOC-ROADMAP]]"
   - "[[S-SHARDING-TASK-LIST]]"
   - "[[2026-05-18-bimba-pointer-web-and-integration-spec]]"
+  - "[[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]]"
 ---
 
 # [[M']] System Spec
@@ -154,6 +155,40 @@ M' must consume a shared `MathemeHarmonicProfile` rather than inferring from unr
 This profile is the bridge between planned system vision and actual code implementation. It should be visible in specs, graph nodes, qvdata, semantic documents, gateway responses, portal readiness, and Tauri render clients.
 
 Implementation foothold, 2026-05-19: `portal-core::KernelTemporalProjection` now serializes a first public-current `harmonicProfile` with `tick12`, `degree720`, `degree360`, helix, chromatic note, X/X' partner, X+Y=5 mirror, square, optional Lens-0 diatonic CF/VAK context, and a pending M3 Mahāmāyā codec slot. `Body/M/epi-tauri/src/services/kernelProjection.ts` consumes the same shape for renderer readiness. The remaining work is to enrich this same profile with coordinate-specific S2 pointer relation metadata, full ratio/element/72-fold slots, and the real M3 symbolic codec once that dataset path is materialised.
+
+## Harmonic Clock Integration Plan
+
+Planning foothold, 2026-05-19: [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]] is the current execution map for turning this spec into the minimum integrated kernel/M' basis.
+
+It makes four corrections explicit:
+
+1. [[Paramaśiva]]'s tick is the harmonic clock for the whole stack, not a display timer.
+2. [[Parāśakti]]/[[M2]] is the 72-fold vibrational field where MEF, elements, planetary-chakral correspondences, modes, and scales are read from the same tick profile.
+3. [[Mahāmāyā]]/[[M3]] is the binary symbolic transcription engine: DNA codons, I-Ching hexagrams, 384 line-change operators, Tarot compression, T/U phase, and M2->M3 epogdoon compression.
+4. [[M']] is the instrument surface that renders the shared profile; it must not create a private clock, private codon mapping, or private planetary/musical correspondence table.
+
+The intended computational chain is:
+
+```text
+absolute tick n
+  -> tick12 / degree720 / SU(2) layer
+  -> bimba-pratibimba harmonic state
+  -> M2 72-fold vibration / MEF / solar-chakral correspondence
+  -> M3 64-fold DNA-I-Ching-Tarot transcription
+  -> S2 pointer-web coordinate law
+  -> S3 DAY/NOW and Graphiti deposition
+  -> M' lived instrument surface
+```
+
+The planetary-chakral-musical correspondences are part of [[M2']] and [[M3']] rendering. They should be stored and refreshed through S2 graph law and consumed through `MathemeHarmonicProfile`, with exact tradition-sensitive mappings treated as canonical data rather than renderer constants.
+
+The next runtime tranche should therefore proceed in this order:
+
+1. Enrich `MathemeHarmonicProfile` in S0/S0' with the full tick, harmonic, diatonic, 72-fold, elemental, planetary-chakral, and M3 symbolic address fields.
+2. Add the M3 codec foothold as real integer address law with honest `pending-dataset-lut` state for unmaterialized LUTs.
+3. Make S2 the pointer/harmonic law of record for coordinate relations and configurable correspondences.
+4. Wire S3 Graphiti/Nara-clock deposition around the shared profile.
+5. Let M' Tauri consume the contract as the live instrument surface.
 
 ## Development Memory Protocol
 
