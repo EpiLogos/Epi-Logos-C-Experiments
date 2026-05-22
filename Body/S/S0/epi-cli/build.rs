@@ -18,6 +18,7 @@ fn main() {
         .file("../epi-lib/src/engine.c")
         .file("../epi-lib/src/arena.c")
         .file("../epi-lib/src/families.c")
+        .file("../epi-lib/src/pointer_web.c")
         // M-branches
         .file("../epi-lib/src/m0.c")
         .file("../epi-lib/src/m1.c")

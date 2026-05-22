@@ -257,6 +257,9 @@ pub struct MathemeHarmonicProfile {
     pub elements: MathemeElementalProjection,
     pub planetary_chakral: MathemePlanetaryChakralProjection,
     pub binary: MathemeBinaryProjection,
+    pub bedrock: MathemeBedrockProjection,
+    pub pointer_anchor: MathemePointerAnchorProjection,
+    pub context_frames: MathemeContextFrameWebProjection,
 }
 
 impl MathemeHarmonicProfile {
@@ -293,6 +296,14 @@ impl MathemeHarmonicProfile {
                 resonance72.lens_anchor_index,
                 tick12 >= 6,
             ),
+            bedrock: MathemeBedrockProjection::from_position(position),
+            pointer_anchor: MathemePointerAnchorProjection::from_tick(
+                tick12,
+                position,
+                helix,
+                pitch_class,
+            ),
+            context_frames: MathemeContextFrameWebProjection::from_diatonic(diatonic.as_ref()),
         }
     }
 }
@@ -592,6 +603,105 @@ impl MathemeBinaryProjection {
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct MathemeBedrockProjection {
+    pub hash_operator: String,
+    pub psychoid_number: String,
+    pub inverted_psychoid_number: String,
+    pub successor_psychoid_number: String,
+    pub successor_relation: String,
+    pub inversion_relation: String,
+    pub bimba_pitch_class: u8,
+    pub inversion_pitch_class: u8,
+}
+
+impl MathemeBedrockProjection {
+    fn from_position(position: u8) -> Self {
+        let successor = (position + 1) % 6;
+        Self {
+            hash_operator: "#".to_owned(),
+            psychoid_number: format!("#{position}"),
+            inverted_psychoid_number: format!("#{position}'"),
+            successor_psychoid_number: format!("#{successor}"),
+            successor_relation: if position == 5 {
+                "mobius-return"
+            } else {
+                "epogdoon-tick"
+            }
+            .to_owned(),
+            inversion_relation: "inversion-spanda".to_owned(),
+            bimba_pitch_class: bimba_pitch_class_for_position(position),
+            inversion_pitch_class: pratibimba_pitch_class_for_position(position),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemePointerAnchorProjection {
+    pub source_coordinate: String,
+    pub ql_position: u8,
+    pub helix: String,
+    pub web_index: u8,
+    pub bedrock_index: u8,
+    pub family_ring_size: u8,
+    pub position_ring_size: u8,
+    pub lens_ring_size: u8,
+    pub web_cardinality: u8,
+    pub lens_anchor: String,
+    pub relation_role: String,
+    pub pitch_class: u8,
+    pub provenance: String,
+}
+
+impl MathemePointerAnchorProjection {
+    fn from_tick(tick12: u8, position: u8, helix: &str, pitch_class: u8) -> Self {
+        Self {
+            source_coordinate: "S0/QL-meta".to_owned(),
+            ql_position: position,
+            helix: helix.to_owned(),
+            web_index: tick12,
+            bedrock_index: position,
+            family_ring_size: 12,
+            position_ring_size: 12,
+            lens_ring_size: 12,
+            web_cardinality: 36,
+            lens_anchor: lens_anchor_label(tick12),
+            relation_role: if tick12 < 6 {
+                "position-identity"
+            } else {
+                "inversion-spanda"
+            }
+            .to_owned(),
+            pitch_class,
+            provenance: "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract".to_owned(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeContextFrameWebProjection {
+    pub frame_count: u8,
+    pub active_frame_index: Option<u8>,
+    pub active_frame: Option<String>,
+    pub active_agent: Option<String>,
+    pub projection: String,
+}
+
+impl MathemeContextFrameWebProjection {
+    fn from_diatonic(diatonic: Option<&MathemeDiatonicContext>) -> Self {
+        Self {
+            frame_count: 7,
+            active_frame_index: diatonic.map(|context| context.degree - 1),
+            active_frame: diatonic.map(|context| context.context_frame.clone()),
+            active_agent: diatonic.map(|context| context.context_agent.clone()),
+            projection: "CF7 diatonic lemniscate overlay".to_owned(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct KernelTemporalTick {
     pub cycle: u64,
     pub sub_tick: u8,
@@ -824,6 +934,23 @@ fn pitch_class_for_tick(tick12: u8) -> u8 {
         9 => 7,
         10 => 9,
         _ => 11,
+    }
+}
+
+fn bimba_pitch_class_for_position(position: u8) -> u8 {
+    (2 * (position % 6)) % 12
+}
+
+fn pratibimba_pitch_class_for_position(position: u8) -> u8 {
+    (bimba_pitch_class_for_position(position) + 1) % 12
+}
+
+fn lens_anchor_label(tick12: u8) -> String {
+    let position = tick12 % 6;
+    if tick12 < 6 {
+        format!("L{position}")
+    } else {
+        format!("L{position}'")
     }
 }
 

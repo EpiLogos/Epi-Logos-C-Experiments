@@ -2,8 +2,9 @@
 
 set -eu
 
-repo_root=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
-artifact_dir="$repo_root/epi-lib/test/bin"
+s0_root=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
+repo_root=$(CDPATH= cd -- "$s0_root/../../.." && pwd)
+artifact_dir="$s0_root/epi-lib/test/bin"
 root_binary="$repo_root/test_m1"
 root_dsym="$repo_root/test_m1.dSYM"
 artifact_binary="$artifact_dir/test_m1"

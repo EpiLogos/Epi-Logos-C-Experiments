@@ -171,6 +171,42 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
         public_json["harmonicProfile"]["binary"]["datasetLutState"],
         "pending-dataset-lut"
     );
+    assert_eq!(
+        public_json["harmonicProfile"]["bedrock"]["hashOperator"],
+        "#"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["bedrock"]["psychoidNumber"],
+        "#1"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["bedrock"]["invertedPsychoidNumber"],
+        "#1'"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["bedrock"]["successorPsychoidNumber"],
+        "#2"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["pointerAnchor"]["lensAnchor"],
+        "L1'"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["pointerAnchor"]["relationRole"],
+        "inversion-spanda"
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["pointerAnchor"]["webCardinality"],
+        36
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["contextFrames"]["frameCount"],
+        7
+    );
+    assert_eq!(
+        public_json["harmonicProfile"]["contextFrames"]["activeFrame"],
+        serde_json::Value::Null
+    );
     assert_eq!(public_json["harmonicPulse"]["ratioNum"], 3);
     assert_eq!(public_json["harmonicPulse"]["ratioDen"], 4);
     assert!(
@@ -262,6 +298,34 @@ fn kernel_harmonic_profile_maps_tick_to_diatonic_cf_when_pitch_is_sounded() {
     assert_eq!(
         json["harmonicProfile"]["binary"]["transcriptionState"],
         "provisional-gap"
+    );
+    assert_eq!(json["harmonicProfile"]["bedrock"]["psychoidNumber"], "#4");
+    assert_eq!(
+        json["harmonicProfile"]["bedrock"]["invertedPsychoidNumber"],
+        "#4'"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["bedrock"]["successorPsychoidNumber"],
+        "#5"
+    );
+    assert_eq!(json["harmonicProfile"]["bedrock"]["inversionPitchClass"], 9);
+    assert_eq!(json["harmonicProfile"]["pointerAnchor"]["qlPosition"], 4);
+    assert_eq!(json["harmonicProfile"]["pointerAnchor"]["webIndex"], 10);
+    assert_eq!(
+        json["harmonicProfile"]["pointerAnchor"]["lensAnchor"],
+        "L4'"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["pointerAnchor"]["provenance"],
+        "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["contextFrames"]["activeFrame"],
+        "4.5/0"
+    );
+    assert_eq!(
+        json["harmonicProfile"]["contextFrames"]["activeFrameIndex"],
+        5
     );
 }
 

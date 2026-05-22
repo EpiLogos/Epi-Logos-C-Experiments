@@ -51,6 +51,70 @@ pub struct CoordinateArena {
     pub count: u32,
 }
 
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct HcBedrockRef {
+    pub target: *const HolographicCoordinate,
+    pub index: u8,
+    pub ql_position: u8,
+    pub bedrock_role: u8,
+    pub relation_role: u8,
+    pub interval_role: u8,
+    pub ratio_role: u8,
+    pub pitch_class: u8,
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct HcBedrockWeb7 {
+    pub hash: HcBedrockRef,
+    pub psychoid: [HcBedrockRef; 6],
+    pub successor: [HcBedrockRef; 6],
+    pub inversion: [HcBedrockRef; 6],
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct HcPointerRef {
+    pub target: *mut HolographicCoordinate,
+    pub ring: u8,
+    pub index: u8,
+    pub ql_position: u8,
+    pub helix: u8,
+    pub relation_role: u8,
+    pub interval_role: u8,
+    pub ratio_role: u8,
+    pub pitch_class: u8,
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct HcPointerWeb36 {
+    pub family: [HcPointerRef; 12],
+    pub position: [HcPointerRef; 12],
+    pub lens: [HcPointerRef; 12],
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct HcContextFrameRef {
+    pub target: *const HolographicCoordinate,
+    pub cf_index: u8,
+    pub notation: *const libc::c_char,
+    pub diatonic_degree: u8,
+    pub mode_anchor: u8,
+    pub ql_position: u8,
+    pub helix: u8,
+    pub relation_role: u8,
+    pub pitch_class: u8,
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct HcContextFrameWeb7 {
+    pub frame: [HcContextFrameRef; 7],
+}
+
 /// Mirror of C Walk_Context
 #[repr(C)]
 #[derive(Debug, Default, Clone)]
@@ -89,6 +153,22 @@ pub enum CoordinateFamily {
     M = 5,    // Map (Bimba) — #5
     None = 7, // Raw psychoid — pre-categorical
 }
+
+pub const HC_HELIX_BIMBA: u8 = 0;
+pub const HC_HELIX_PRATIBIMBA: u8 = 1;
+pub const HC_REL_EPOGDOON_TICK: u8 = 3;
+pub const HC_REL_INVERSION_SPANDA: u8 = 2;
+pub const HC_REL_MIRROR_XY5: u8 = 4;
+pub const HC_REL_MOBIUS_RETURN: u8 = 5;
+pub const HC_REL_LENS_ANCHOR: u8 = 7;
+pub const HC_INTERVAL_SEMITONE: u8 = 1;
+pub const HC_INTERVAL_WHOLE_TONE: u8 = 2;
+pub const HC_INTERVAL_TRITONE: u8 = 6;
+pub const HC_INTERVAL_TOTALITY_16_9: u8 = 10;
+pub const HC_INTERVAL_OCTAVE: u8 = 12;
+pub const HC_BEDROCK_HASH_OPERATOR: u8 = 0;
+pub const HC_BEDROCK_PSYCHOID_NUMBER: u8 = 1;
+pub const HC_BEDROCK_INVERTED_PSYCHOID: u8 = 2;
 
 impl CoordinateFamily {
     pub fn from_u8(v: u8) -> Self {
@@ -164,6 +244,17 @@ extern "C" {
     ) -> i32;
     pub fn families_crosslink(arena: *mut CoordinateArena) -> i32;
     pub fn families_wire_reflective(arena: *mut CoordinateArena) -> i32;
+    pub fn hc_bedrock_web7_fill(out: *mut HcBedrockWeb7) -> i32;
+    pub fn hc_pointer_web36_fill(
+        arena: *const CoordinateArena,
+        source: *const HolographicCoordinate,
+        out: *mut HcPointerWeb36,
+    ) -> i32;
+    pub fn hc_context_frame_web7_fill(out: *mut HcContextFrameWeb7) -> i32;
+    pub fn hc_bimba_pitch_class(ql_position: u8) -> u8;
+    pub fn hc_pratibimba_pitch_class(ql_position: u8) -> u8;
+    pub fn hc_mirror_position(ql_position: u8) -> u8;
+    pub fn hc_mirror_interval_role(ql_position: u8) -> u8;
     pub fn engine_torus_walk(start: *const HolographicCoordinate, ctx: *mut c_void, steps: u32);
     pub fn engine_double_covering(start: *const HolographicCoordinate, ctx: *mut c_void);
     pub fn Execute_Hash(hc: *mut HolographicCoordinate, target: *mut c_void);
@@ -309,6 +400,31 @@ impl EpiLib {
 
     pub fn families_wire_reflective(&self, arena: &mut CoordinateArena) -> i32 {
         unsafe { crate::ffi::families_wire_reflective(arena as *mut _) }
+    }
+
+    pub fn bedrock_web7(&self) -> Option<HcBedrockWeb7> {
+        let mut web = unsafe { std::mem::zeroed::<HcBedrockWeb7>() };
+        let result = unsafe { hc_bedrock_web7_fill(&mut web) };
+        (result == 0).then_some(web)
+    }
+
+    pub fn pointer_web36(
+        &self,
+        arena: &CoordinateArena,
+        source: *const HolographicCoordinate,
+    ) -> Option<HcPointerWeb36> {
+        if source.is_null() {
+            return None;
+        }
+        let mut web = unsafe { std::mem::zeroed::<HcPointerWeb36>() };
+        let result = unsafe { hc_pointer_web36_fill(arena as *const _, source, &mut web) };
+        (result == 0).then_some(web)
+    }
+
+    pub fn context_frame_web7(&self) -> Option<HcContextFrameWeb7> {
+        let mut web = unsafe { std::mem::zeroed::<HcContextFrameWeb7>() };
+        let result = unsafe { hc_context_frame_web7_fill(&mut web) };
+        (result == 0).then_some(web)
     }
 
     pub fn torus_walk(

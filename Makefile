@@ -15,7 +15,7 @@ RUST_LEGACY_TARGET_DIR := $(if $(TMPDIR),$(TMPDIR)/epi-logos-cargo-target,)
 RUST_TEST_ARGS ?=
 
 # Source groups (Body/S/S0/epi-lib/)
-PILLAR_SRC = $(EPI_LIB)/src/psychoid_numbers.c $(EPI_LIB)/src/engine.c $(EPI_LIB)/src/arena.c $(EPI_LIB)/src/families.c
+PILLAR_SRC = $(EPI_LIB)/src/psychoid_numbers.c $(EPI_LIB)/src/engine.c $(EPI_LIB)/src/arena.c $(EPI_LIB)/src/families.c $(EPI_LIB)/src/pointer_web.c
 M_SRC      = $(EPI_LIB)/src/m0.c $(EPI_LIB)/src/m1.c $(EPI_LIB)/src/m2.c $(EPI_LIB)/src/m3.c $(EPI_LIB)/src/m3_clock_lut.c $(EPI_LIB)/src/m4.c $(EPI_LIB)/src/m5.c $(EPI_LIB)/src/kernel.c
 BLAKE3_SRC = $(S0_VENDOR)/blake3/blake3.c $(S0_VENDOR)/blake3/blake3_dispatch.c $(S0_VENDOR)/blake3/blake3_portable.c
 LIB_SRC    = $(PILLAR_SRC) $(M_SRC) $(BLAKE3_SRC)
@@ -24,10 +24,10 @@ ALL_SRC    = $(LIB_SRC) $(EPI_LIB)/src/main.c
 BIN = epi-logos
 
 # Test suites
-TESTS = test_m0_init test_m0_rfactor test_m0_tick12 test_m1 test_m1_ananda test_m2 test_m2_planets test_m2_aspects test_m3 test_m3_clock_lut test_m3_codon_class test_m4 test_m4_hash32 test_m4_oracle_faces test_m5 test_pillar1 test_vak test_engine_walk_mode test_kernel
+TESTS = test_m0_init test_m0_rfactor test_m0_tick12 test_m1 test_m1_ananda test_m2 test_m2_planets test_m2_aspects test_m3 test_m3_clock_lut test_m3_codon_class test_m4 test_m4_hash32 test_m4_oracle_faces test_m5 test_pillar1 test_vak test_engine_walk_mode test_kernel test_pointer_web
 TEST_BIN_DIR = $(EPI_LIB)/test/bin
 
-.PHONY: all lib test test-artifact-paths debug clean rust-test rust-clean rust-target-size verify-graphiti-live lut $(TESTS) test_m1_ananda test_m2_planets test_m2_aspects test_m3_codon_class test_m4_hash32 test_m4_oracle_faces test_engine_walk_mode test_kernel
+.PHONY: all lib test test-artifact-paths debug clean rust-test rust-clean rust-target-size verify-graphiti-live lut $(TESTS) test_m1_ananda test_m2_planets test_m2_aspects test_m3_codon_class test_m4_hash32 test_m4_oracle_faces test_engine_walk_mode test_kernel test_pointer_web
 
 all: $(BIN)
 
@@ -106,6 +106,9 @@ $(TEST_BIN_DIR)/test_kernel: $(LIB_SRC) $(EPI_LIB)/test/engine/test_kernel.c | $
 $(TEST_BIN_DIR)/test_vak: $(LIB_SRC) $(EPI_LIB)/test/vak/test_vak.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
 
+$(TEST_BIN_DIR)/test_pointer_web: $(LIB_SRC) $(EPI_LIB)/test/infrastructure/test_pointer_web.c | $(TEST_BIN_DIR)
+	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
+
 test_m0_init: $(TEST_BIN_DIR)/test_m0_init
 	./$<
 
@@ -161,6 +164,9 @@ test_engine_walk_mode: $(TEST_BIN_DIR)/test_engine_walk_mode
 	./$<
 
 test_kernel: $(TEST_BIN_DIR)/test_kernel
+	./$<
+
+test_pointer_web: $(TEST_BIN_DIR)/test_pointer_web
 	./$<
 
 lut: ## Regenerate CLOCK_DEGREE_LUT from Neo4j dataset (requires NEO4J_URI + NEO4J_PASSWORD)
