@@ -1,12 +1,20 @@
-# Kernel M' Harmonic Clock Integration Plan
+# Minimum Viable Machine / M' Techne Harmonic Clock Integration Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans before mutating runtime code from this plan.
 
-**Goal:** Make the kernel, pointer web, M2 vibrational system, M3 DNA/I-Ching/Tarot clock, S3 deposition, and M' Tauri surface consume one shared harmonic-clock profile.
+**Goal:** Make the minimum viable Epi-Logos machine usable from one shared harmonic-clock profile: S/S' computes, certifies, deposits, and gates the profile; M/M' renders it as the lived techne/instrument surface.
 
-**Architecture:** Treat Paramasiva's tick as the harmonic clock. The tick projects through M1 integer/SU(2) dynamics, M2 72-fold vibration and planetary-chakral correspondences, M3 64-fold symbolic transcription, S2 pointer topology, S3 temporal/Graphiti deposition, and M' rendering. The shared `MathemeHarmonicProfile` is the contract that prevents these layers from inventing private interpretations.
+**Architecture:** Treat Paramasiva's tick as the harmonic clock. The tick projects through M1 integer/SU(2) dynamics, M2 72-fold vibration and planetary-chakral correspondences, M3 64-fold symbolic transcription, S0 Bedrock7/Web36/CF7 pointer topology, S2 graph certification, S3 temporal/Graphiti deposition, and M' techne rendering. The shared `MathemeHarmonicProfile` is the contract that prevents these layers from inventing private interpretations.
 
 **Tech Stack:** `portal-core` and `epi-kernel-contract` for typed kernel math; S2 `graph-services` for pointer law; S3 `gateway-contract` and `graphiti-runtime` for deposition; Tauri v2 React/Rust clients for M' surfaces; seed/spec docs in `Idea/Bimba/Seeds/M` and `Idea/Bimba/Seeds/S`.
+
+**Canonical vocabulary anchors (the `MathemeHarmonicProfile` reads these):**
+
+- [[05-ql-7fold-law-and-vak-c-substrate]] §Seven-CFs-As-Positions — positional law for the seven CFs. The profile's diatonic CF/VAK state field exposes each CF with its inner-position (0–5) or "parent outer-#4" marker. This is the single source-of-truth that prevents S0/S2/S3/M/M' from inventing private CF interpretations.
+- [[S0-HARMONIC-POINTER-WEB36-SPEC]] §Identity-Claim — the diatonic IS the CF-grammar made audible. The profile's tick12 → degree720 → diatonic-CF projection IS this identity claim made executable.
+- [[07-c-prime-vak-grammar-layer]] §Diatonic-Interpretation — CF → diatonic-note table consumed by Tauri M' renderer.
+- [[2026-05-19-vak-musical-execution-z-thread]] — the Z-thread loop that consumes this profile as a *performance trace contract* (compose → perform → rehear → recompose).
+- [[S4-4'-GOAL-PRELUDE-SPEC]] §Z-Thread-Identity — the operational cycle that closes the circuit around this profile.
 
 ---
 
@@ -22,8 +30,58 @@ absolute tick n
   -> M3 64-fold DNA-I-Ching-Tarot transcription
   -> S2 pointer-web coordinate law
   -> S3 DAY/NOW and Graphiti deposition
-  -> M' lived instrument surface
+  -> M' techne / lived instrument surface
 ```
+
+## Minimum Viable Machine Framing
+
+The minimum viable machine is not "the app" and not "the graph" in isolation. It is one coordinate-aware harmonic tick that can be computed, projected, certified, deposited, viewed, tested, and reviewed.
+
+```text
+coordinate / Bimba node
+  -> S0 kernel tick + MathemeHarmonicProfile
+  -> S0 Bedrock7 / PointerWeb36 / CF7 relation law
+  -> S2 graph pointer and provenance certification
+  -> S3 DAY/NOW + Graphiti protected-local deposition
+  -> M' techne surface in Tauri
+  -> Nara/Epii review and next-action guidance
+  -> renewed coordinate-aware development
+```
+
+M' is the Pratibimba/techne layer of M: the performable instrument-face where the 1-2-3 physical pole and 4/5/0 mental pole become usable. The Tauri app at the M' parent level is the minimal `0 / / / 1` surface: `0` previews the integrated 1-2-3 structural/cymatic clock, `/` is the S0' OmniPanel command membrane, and `1` previews the 4/5/0 lived-return surface. The six deep M0'-M5' subsystem pages are the 4+2 body of the app, opened from that parent shell. M' renders the lived instrument, while S' exposes command, readiness, privacy, and safe-current projection boundaries.
+
+### Current Roadmap Shape
+
+The roadmap is now governed by this M' page architecture:
+
+```text
+M' parent surface
+  0  = integrated M1'-M3' cymatic clock face
+       relation movement + harmonic/correspondential matrix + clock/cosmos transcription
+
+  /  = OmniPanel / S0' command membrane
+       agents, settings, gateway, sessions, readiness, review access
+
+  1  = integrated 4/5/0 lived-return face
+       Nara journal + Epii pedagogy/review + relevant M0' Bimba data structures
+
+M' 4+2 subsystem body
+  M0' = full Bimba map / coordinate source traceability
+  M1' = full relational movement / path and torus traversal
+  M2' = full harmonic, MEF, correspondence, planetary/chakral matrix
+  M3' = full Paramasiva/Mahamaya clock, codon, cymatic platform
+  M4' = full Nara journal, daily note, dream, oracle, continuity dashboard
+  M5' = full Epii IDE, pedagogy, review, agentic control room, Logos Atelier
+```
+
+The parent `0` and `1` surfaces are not substitutes for the six subsystems. They are the minimum daily-driver faces of the whole instrument. Conversely, the six subsystem pages are not separate apps; they are the deeper 4+2 unfolding of the same parent `0/1` state. The same active coordinate, tick, `MathemeHarmonicProfile`, DAY/NOW context, and gateway/session identity must move across both levels.
+
+### Current Implementation Baseline
+
+- S0 C now exposes the derived pointer foundation: `Bedrock7 = # + #0..#5`, `PointerWeb36 = 12 family + 12 QL-position + 12 MEF-lens`, and `CF7 = #4 diatonic/lemniscatic context-frame overlay`.
+- `portal-core::MathemeHarmonicProfile` already exposes tick12, 720/360 degree, SU(2) layer, chromatic harmonic state, diatonic CF/VAK state, 72-fold resonance, elemental projection, planetary-chakral projection, and Mahamaya/M3 symbolic transcription.
+- `Body/M/epi-tauri` already has a profile consumer path for safe-current kernel projection.
+- The remaining gap is to make Bedrock7/Web36/CF7, S2 pointer provenance, S3 deposition anchors, and M' readiness visible through the same profile instead of leaving them as adjacent specifications.
 
 So "binary" means the full Mahamaya symbolic transcription system:
 
@@ -226,6 +284,8 @@ MathemeHarmonicProfile
   elements: ElementalProjection
   planetaryChakral: PlanetaryChakralProjection
   mahamaya: MahamayaSymbolicProjection
+  bedrock: Bedrock7Projection
+  contextFrames: CF7Projection
   pointerAnchor: PointerWebAnchor | null
   depositionAnchor: DepositionAnchor | null
 ```
@@ -245,7 +305,6 @@ Files:
 
 - Modify: `Body/S/S0/portal-core/src/kernel.rs`
 - Modify: `Body/S/S0/portal-core/tests/kernel_clock_projection.rs`
-- Modify: `Body/S/epi-kernel-contract/src/lib.rs`
 - Modify: `Body/M/epi-tauri/src/services/types.ts`
 - Modify: `Body/M/epi-tauri/src/services/kernelProjection.ts`
 - Test: `Body/M/epi-tauri/src/services/kernelProjection.test.ts`
@@ -255,6 +314,9 @@ Tests:
 - 12 ticks produce the full chromatic substrate.
 - Every tick has correct bimba/pratibimba helix and X/X' partner.
 - X+Y=5 mirror spans are exactly 1/3/5 whole-tones.
+- Bedrock7 exposes the hash/inversion operator, raw psychoid number, successor, and inverted psychoid number for the active tick position.
+- PointerWeb36 exposes active family/position/lens ring anchors and labels the active MEF lens as `Lx` or `Lx'`.
+- CF7 exposes its sevenfold count and active frame when the tick lands on a Lens-0 diatonic pitch.
 - 72 resonance index legacy and 12-anchor encodings agree.
 - 8+4 rendering role is correct for sounded/nodal positions.
 - M3 address law maps 720/360 degree to stable 0..63 address.

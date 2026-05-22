@@ -1,7 +1,7 @@
 ---
 coordinate: "M'.desktop"
 status: "active-spec"
-updated: "2026-05-19"
+updated: "2026-05-21"
 depends_on:
   - "[[M'-PORTAL-SPEC]]"
   - "[[M'-SYSTEM-SPEC]]"
@@ -18,22 +18,34 @@ depends_on:
 
 The Tauri v2 port of `Body/S/S3/epi-app` should preserve the useful renderer/domain work from the current Electron app while replacing Electron main-process authority with Rust-backed Tauri commands, gateway RPC, and [[SpaceTimeDB]] subscriptions.
 
-The port is not a fresh desktop rewrite. It is the desktop mirror of the [[M'-PORTAL-SPEC]] grammar:
+The port is not a fresh desktop rewrite. It is the desktop mirror of the [[M'-PORTAL-SPEC]] grammar.
 
-| Desktop surface | Existing basis | Target authority |
-|---|---|---|
-| `0` structural map | `M0_Anuttara`, `GraphWorkspace`, graph APIs | [[S2]] graph services + [[S3]] gateway projection |
-| `/` OmniPanel | `renderer/components/OmniPanel.tsx` and `renderer/components/omni/*` | [[S3]] gateway RPC + S0' portal surface registry |
-| `1` Nara/Epii return | `M4_Nara`, `M5_Epii` domains | [[S4]] / [[S5]] agent access and governed M4/M5 services |
+### Two-Layer Page Architecture
 
-The desktop app must surface the whole [[M']] set, even when the shell groups it as `0` / `/` / `1`:
+The app has two distinct page layers plus a cross-cutting command membrane. This separation is load-bearing — shell surfaces must stay lean and immediately usable; subsystem pages must have maximum scope for depth:
 
-- [[M0']] — Bimba graph/map explorer and coordinate source traceability.
-- [[M1']] — relational/topological walks from selected coordinates.
-- [[M2']] — semantic, MEF, and correspondential matrix inspection.
-- [[M3']] — integrated clock platform: solar-system/kairos visualisation and Nara walkabout entry.
-- [[M4']] — Nara lived modalities: journal/flow, daily note, dream journal, oracle, highlighting, personal continuity.
-- [[M5']] — Epii integrative workbench: pedagogy, etymological archaeology, Bimba wisdom exploration, autoresearch, inbox/review, VAK execution.
+| Layer | Pages | Purpose | Design principle |
+|---|---|---|---|
+| **Parent Shell 0/1** | Home (split view), CosmicPage, PersonalPage | Daily-driver operational UX | Minimal M' parent surface — open the app, see the integrated instrument state, start writing |
+| **Subsystem M0-M5** | Six full-page deep workspaces | Full 4+2 M' instrument per domain | Maximum scope, inner 0-5 strata, unique depth modules |
+| **OmniPanel `/`** | ESC-toggled overlay | Agent, settings, config, readiness, navigation | S0' command membrane — cross-cuts all layers |
+
+**Shell 0 (Cosmic):** Clock/Hopf fibration, temporal field, structural orientation. Previews the integrated M1'-M2'-M3' structural clock/instrument (relation movement, harmonic/correspondential matrix, clock/cosmos transcription) as a single cymatic harmonic clock surface without becoming those subsystems. Existing basis: `HopfClock`, `ClockHUD`, `StrataOverlay`.
+
+**Shell 1 (Personal):** Flow editor, identity sidebar, immediate journaling, Epii pedagogy/review access, and relevant Bimba data structures. Previews the integrated 4/5/0 return: Nara journal/continuity, Epii learning/review, and M0' ground-data as needed for orientation, without entering the full Nara, Epii, or Bimba map subsystems. Existing basis: `FlowEditor`, `IdentityLayerCard`, `IdentitySidebar`.
+
+**Home** defaults to the 0/1 split view. A toggle (`0/1` ↔ `#0-#5`) switches to the subsystems grid entry. Both views coexist.
+
+**Subsystem pages (M0-M5)** are the deep workspaces:
+
+- [[M0']] — full Bimba graph/map explorer and coordinate source traceability.
+- [[M1']] — relational/topological walks, torus/path traversal from selected coordinates.
+- [[M2']] — semantic, MEF, and correspondential matrix inspection at full depth.
+- [[M3']] — full clock cosmos: solar-system/kairos visualisation, DNA/I-Ching transcription, cymatic rendering.
+- [[M4']] — full Nara dashboard: Journal, Daily Note, Dream Journal, Oracle, highlight management, personal continuity.
+- [[M5']] — full Epii IDE: Library/Bimba pedagogy, philosophy/canon studio, backend/frontend/code studios, agentic control room, review inbox, and Logos Atelier.
+
+Each subsystem page has room for inner 0-5 strata that would overwhelm the lean shell. The parent shell is the minimal 0/1 surface; the subsystem pages are the 4+2 body of the app. Shell surfaces preview; subsystem pages deliver depth. Do not merge them.
 
 The desktop port must also consume the harmonic/musical profile defined by [[M'-SYSTEM-SPEC]] and the S0/S2 kernel-pointer contracts. It should not create a renderer-local version of the matheme. `ClockCosmos`, Bimba map, correspondence matrix, Nara journal context, and Epii review evidence must all read the same profile shape: tick, helix, position, pitch class, ratio, square, element, lens anchor, resonance index, and 8+4 rendering role.
 
@@ -62,8 +74,9 @@ Specific Nara seed to preserve:
 Specific Epii seed to revise:
 
 - `M5_Epii` should not remain only a generic system/file/agent panel.
-- It must become the clean Epii workspace for pedagogy, etymological archaeology, Bimba map exploration, autoresearch evidence, and review/inbox work.
+- It must become the clean Epii IDE workspace for pedagogy, etymological archaeology, Bimba/Gnosis graph exploration, philosophy/canon editing, code-aware autoresearch, and review/inbox work.
 - The older Epii archaeology plan requires conversational exploration and QL community crystallisation before backend Bimba resonance, MEF lensing, and knowledge sedimentation are surfaced.
+- The current `Library` / `Atelier` / `Epii Agent` triad is a useful first shell, but the full M5' subsystem must expose the six IDE strata defined in [[M5'-SPEC]].
 
 ## Replace From Electron
 
@@ -96,23 +109,31 @@ It must keep its wider operator scope:
 
 Known parity issue to resolve during implementation: current renderer session patch/delete calls use `{ key }`, while the gateway identifier contract accepts `session` or `sessionKey`. The Tauri port should not copy that drift. It should standardise request params through a shared session client.
 
-## `0` Structural Surface
+## Shell `0` — Cosmic Surface (Lean Preview)
 
-The Tauri app should make `0` the structural Bimba map entry.
+Shell `0` is the structural operational preview of the integrated 1-2-3 systems. It surfaces [[M1']] relational movement, [[M2']] harmonic/correspondential matrix, and [[M3']] clock/cosmos transcription as one cymatic harmonic clock surface. Open the app, see the harmonic state, temporal field, current relation/correspondence/transcription, and selected coordinate — without navigating into a subsystem.
 
-Required target:
+Current implementation: `CosmicPage` renders `HopfClock` (Hopf fibration / temporal field), `ClockHUD` (degree, tick, codon, aspects), and `StrataOverlay` (temporal strata panel). In the 0/1 split view, the cosmic side occupies the left half with the clock and its overlays.
 
-- full-window graph/map explorer for canonical M/Bimba coordinates.
-- source/wikilink traceability for selected nodes.
-- route selected coordinates into M0'-M3' views.
-- expose clock as an M3' structural visualisation, not as the whole `0` surface.
-- use live temporal/Kairos projection where it informs orientation.
+Shell `0` should show:
 
-The existing `M0_Anuttara/GraphWorkspace` is the basis, but it must be backed by current S2/S3 contracts rather than Electron-local graph loading.
+- Live Hopf/clock visualisation from the shared `MathemeHarmonicProfile`.
+- Current tick state, harmonic phase, and Kairos conditions.
+- Selected coordinate orientation and the Bimba node identity needed to contextualise the current tick.
+- Entry points into full subsystem pages (M0-M3) for depth work.
 
-The integrated clock platform is the desktop enlargement of the TUI clock/portal specs. It should provide a real visual substrate for the `0` side: solar-system/kairos clock, temporal conditions, coordinate correspondences, and routeable Nara walkabouts. The clock is [[M3']], and it is reached through the structural world rather than replacing that world.
+Shell `0` should NOT attempt to be the full Bimba map explorer (that is M0' subsystem page), the full topological traversal workspace (M1'), the full correspondence matrix (M2'), or the full DNA/I-Ching transcription surface (M3'). It previews the M1'-M3' instrument outputs and may show selected M0' coordinate data only as orientation.
 
-Musical instrument requirement:
+### Full Structural Subsystem Pages (M0-M3)
+
+The deep structural workspaces are reached as separate full-page routes:
+
+- **M0 (Anuttara):** Full Bimba graph/map explorer, source/wikilink traceability, coordinate inspector with harmonic profile and pointer-web layout. Backed by S2/S3 contracts.
+- **M1 (Paramasiva):** Relational movement, torus/path traversal, graph-law route visualisation. The topological workspace.
+- **M2 (Parashakti):** Full MEF/element/planetary/chakral/mode correspondence matrix. 72-fold vibrational field at depth.
+- **M3 (Mahamaya):** Full clock cosmos — Hopf fibration at scale, DNA/I-Ching/Tarot transcription, 384 line-change surface, cymatic rendering. The M3' subsystem page enlarges what Shell `0` previews.
+
+Musical instrument requirement (applies to all structural subsystem pages):
 
 - Operational tick state comes from S0/S3 projection, not animation frame count.
 - Pitch-class, ratio, square, helix, and element labels come from the shared `MathemeHarmonicProfile`.
@@ -122,14 +143,34 @@ Musical instrument requirement:
 - Future audio analysis follows `STFT -> CQT -> chromagram -> active lens -> coordinate profile`.
 - The renderer may visualise or sonify the profile, but may not redefine the profile.
 
-## `1` Personal / World Return
+## Shell `1` — Personal Surface (Lean Daily Driver)
 
-The Tauri app should preserve and deepen the current M4/M5 domains:
+Shell `1` is the personal daily-driver surface. It surfaces the 4/5/0 lived-return face: [[M4']] journal/continuity, [[M5']] Epii pedagogy/review, and the [[M0']] Bimba data structures relevant to the user's current return-to-ground. It lets the user write, reflect, see identity, invoke help, receive Bimba/Epii resonance, and return to ground without requiring the full subsystem deep-dive. Click-anywhere-to-write remains the fastest path from thought to record.
 
-- [[Nara]] journal/editor/flow remains the M4' personal-dialogical surface.
-- [[Epii]] system/developer view becomes the M5' autoresearch/review/system-building surface.
-- Both consume the shared DAY/NOW/Kairos/session projection.
-- Both use gateway-backed agent access rather than local Electron placeholders.
+Current implementation: In the 0/1 split view, the personal side occupies the right half with `FlowEditor` (TipTap journal), `IdentitySidebar` (quintessence, wound status, elemental balance, identity layer cards). `PersonalPage` is the dedicated full-route for the personal shell surface.
+
+Shell `1` should show:
+
+- Flow editor for immediate journaling and note capture.
+- Identity configuration sidebar (quintessence, layers, elemental balance).
+- Current DAY/NOW context from the shared temporal projection.
+- Minimal agent/Bimba/Epii affordance for immediate reflection, pedagogy, review alerts, or guided continuation.
+- Relevant Bimba coordinate/source data when it helps the journal or Epii return to ground.
+- Entry points into full subsystem pages (M4, M5) for depth work.
+
+Shell `1` should NOT attempt to be the full Nara dashboard with all modality tabs (that is M4' subsystem page), the full Epii workbench (M5'), or the full Bimba map explorer (M0'). It is the daily writing/learning/reviewing surface of the 4/5/0 return.
+
+### Full Personal Subsystem Pages (M4-M5)
+
+The deep personal/world-return workspaces are reached as separate full-page routes:
+
+- **M4 (Nara):** Full dashboard with Journal, Daily Note, Dream Journal, Oracle, and highlight management tabs. Modality-specific tools, search, timeline, and review. The M4' subsystem page expands what Shell `1` previews into a full personal instrument.
+- **M5 (Epii):** Full agent-led developer/pedagogical IDE — Library/Bimba pedagogy, philosophy/canon studio, backend/frontend/code studios, agentic control room, autoresearch, inbox/review, VAK execution, and Logos Atelier. The system-building and evidence-review workspace.
+
+Both subsystem pages:
+
+- Consume the shared DAY/NOW/Kairos/session projection.
+- Use gateway-backed agent access rather than local Electron placeholders.
 - Epii sees review inbox deposits from Anima/Aletheia as the work to which their output makes sense.
 
 Nara modality requirements:
@@ -142,15 +183,27 @@ Nara modality requirements:
 
 Epii workspace requirements:
 
-- Pedagogy: conversational Epi-Logos teaching and guided interpretation.
-- Etymological archaeology: staged word/root/cognate/community exploration with backend insight surfacing only after relevant crystallisation.
-- Bimba map explorer: wisdom packets, coordinate relations, and source traceability.
-- Autoresearch: system self-observation, research loops, improvement proposals, and implementation evidence.
-- Inbox/review: Anima/Aletheia deposits, validation gates, user-facing decisions, and continuation requests.
+- Library / Bimba pedagogy: wisdom packets, coordinate relations, source traceability, Gnosis library graph, and pedagogical explanations.
+- Philosophy / Canon Studio: Epi-Logos philosophy files, foundational instructions, edited specs, and reviewable canon changes.
+- Backend Studio: C/Rust/Python services, S-layer contracts, graph/storage/gateway evidence, and real test results.
+- Frontend Studio: Tauri UI files, graph canvases, editors, shell/deep workspace UX, and interaction specs.
+- Agentic Control Room: Pi agent, Anima/Aletheia, VAK routing, forks/worktrees/tasks, run tree, diagnostics, and promotion gates.
+- Logos Atelier: staged word/root/cognate/community exploration with backend insight surfacing only after relevant crystallisation.
+- Inbox/review: Anima/Aletheia deposits, validation gates, user-facing decisions, continuation requests, and implementation evidence.
+
+Epii graph viewer requirements:
+
+- The graph viewer must support namespace selection across `bimba`, `gnosis`, and `etymology`, with protected reviewed `pratibimba` handles only where governance permits.
+- `bimba` is canonical coordinate topology in S2.
+- `gnosis` is library/document knowledge and wisdom-packet context.
+- `etymology` is the Logos Atelier graph: roots, cognates, semantic drift, word communities, and crystallisations.
+- Namespace links may share coordinates, source handles, episode handles, and review ids; they must not merge raw private Graphiti bodies into canonical S2 topology.
 
 ## VAK / Anima / Epi Execution Surface
 
 The app needs an explicit agentic execution page. It should be accessible from [[M5']] and controllable from [[OmniPanel]] as `/`.
+
+`/` and M5-4' overlap but are not identical. [[OmniPanel]] is the universal command/config/readiness membrane. [[M5-4']] is the deep agentic IDE surface where Epii can bind tasks to files, graph nodes, source evidence, tests, agent runs, review decisions, and promotion targets.
 
 Required shape:
 
@@ -159,6 +212,7 @@ Required shape:
 - payload panel: selected text, journal source, coordinate, session, DAY/NOW, attachments.
 - execution panel: run tree, tool events, diagnostics, retry/abort/continue, completion evidence.
 - inbox panel: deposits that require Epii/user validation, continuation, or rejection.
+- development panel: fork/worktree basis when present, touched files, graph/source anchors, test commands, and promotion target.
 
 Implementation must preserve the VAK planning distinction: Aletheia is a mode/activity surface of Anima, not a separate peer app; Epii is the integrative/user-developer position that can review, learn from, and improve the system.
 
@@ -182,7 +236,7 @@ Renderer domain clients should be explicit enough to stop drift:
 - `gatewayClient` for RPC/session/chat/config.
 - `temporalClient` for DAY/NOW/Kairos/SpaceTimeDB projection.
 - `naraClient` for journal/flow/highlight/modality records.
-- `epiiClient` for pedagogy, archaeology, Bimba/wisdom exploration, autoresearch, and inbox operations.
+- `epiiClient` for library/canon/code/graph/atelier/autoresearch/inbox operations.
 - `agentExecutionClient` for VAK evaluation, Anima/Aletheia dispatch, tool stream, diagnostics, and review deposits.
 
 ## Harmonic Profile Architecture Amendment
@@ -208,14 +262,18 @@ No renderer domain may hardcode private clock, codon, hexagram, tarot, planetary
 
 ### Portal 0 Structural / Instrument Side
 
-The `0` side is M0'-M3' as one structural instrument:
+Shell `0` previews the structural instrument; subsystem pages M0-M3 deliver it at depth. Both layers consume the same shared profile — the difference is scope, not authority.
 
-- [[M0']] renders the selected Bimba graph coordinate and pointer topology.
+Shell `0` shows: live clock, tick state, harmonic phase, and coordinate orientation. It is lean and immediately legible.
+
+Subsystem pages expand:
+
+- [[M0']] renders the full Bimba graph coordinate field and pointer topology.
 - [[M1']] renders relation movement, torus/path traversal, and graph-law routeability.
 - [[M2']] renders the 72-fold MEF/element/planetary/chakral/mode field.
-- [[M3']] renders the harmonic clock and Mahamaya DNA/I-Ching/Tarot transcription.
+- [[M3']] renders the full harmonic clock and Mahamaya DNA/I-Ching/Tarot transcription.
 
-The `0` side consumes the same profile. It does not contain separate clocks for graph, torus, harmonic matrix, and codon wheel.
+Neither shell nor subsystem pages contain separate clocks for graph, torus, harmonic matrix, and codon wheel. One profile, multiple views at different depths.
 
 ### S0' Command / Config / Readiness Membrane
 
@@ -231,10 +289,14 @@ Readiness panels must distinguish raw service health from usable bounded capabil
 
 ### Portal 1 Nara / Epii Lived Return
 
-The `1` side consumes profile context through Nara and Epii:
+Shell `1` previews the personal instrument; subsystem pages M4-M5 deliver it at depth.
 
-- [[M4']] receives profile handles for journal, dream, oracle, highlight, and playback context while keeping protected identity and content local.
-- [[M5']] receives profile, pointer, deposition, source/spec/code/test, and Graphiti handles as review evidence.
+Shell `1` shows: flow editor, identity sidebar, current DAY/NOW context. It is the daily-driver writing surface — click-anywhere-to-write.
+
+Subsystem pages expand:
+
+- [[M4']] receives profile handles for journal, dream, oracle, highlight, and playback context while keeping protected identity and content local. The full Nara dashboard with modality tabs, timeline, search, and review.
+- [[M5']] receives profile, pointer, deposition, source/spec/code/test, graph namespace, and Graphiti handles as review evidence. The full Epii IDE spans Library/Bimba pedagogy, philosophy/canon, backend/frontend code, agentic control, Logos Atelier, autoresearch, and inbox.
 
 Public S2 topology and protected Graphiti/Nara episodes may link by coordinate and handle; they do not collapse into one data plane.
 
@@ -262,6 +324,13 @@ S2 is canonical coordinate topology. Graphiti is episodic protected-local memory
 - Profile deposition uses safe handles: coordinate, tick, harmonic state, M2 resonance index, M3 symbolic address, pointer anchor, DAY/NOW/session, and episode id.
 - Promotion into canonical graph facts is an Epii/S5' review operation.
 
+Epii adds namespace-aware graph viewing over the same graph infrastructure:
+
+- `bimba` for canonical coordinate topology and pointer law.
+- `gnosis` for library/document knowledge and wisdom packets.
+- `etymology` for Logos Atelier roots, cognates, semantic drift, and crystallised constellations.
+- protected reviewed `pratibimba` handles for personal resonances when the review boundary permits.
+
 ## Current-State Gap Table
 
 Assessment from `Body/M/epi-tauri` as of 2026-05-19:
@@ -274,7 +343,7 @@ Assessment from `Body/M/epi-tauri` as of 2026-05-19:
 | M2' harmonic matrix | `M2_Parashakti/CollabWorkspace.tsx` reads temporal DAY/NOW presence. `epiiClient.mef` can list active MEF lenses. Profile now exposes first `resonance72`, `elements`, and `planetaryChakral` fields. | S2 must still govern configurable correspondence provenance and selected-coordinate harmonic pointer descriptors. | Matrix, element, planetary/chakral, and modal panels need implementation design from [[M2'-SPEC]]. | Partly: backend fields exist; graph-law mapping remains blocked by Tranche 3. |
 | M3' clock/cosmos | `ClockCosmos.tsx`, `HopfClock.tsx`, `StrataPanel.tsx`, `clockStore`, and `clockClient` provide visual shell, Hopf view, current degree, tick12, active codon, aspects, and temporal footer. Profile now exposes M3 address-law fields through `binary`. | Tarot/amino LUT-backed details, pointerAnchor, and depositionAnchor still need backend contracts. | UI needs migration plan from compatibility clock state to shared profile provider. | Partly: M3 codec foothold exists; LUTs and S2/S3 anchors remain blocked. |
 | M4' Nara | `NaraDashboard.tsx`, editor, flow timeline, highlights, vault-backed daily/flow clients, and typed highlight sendoff envelope exist. | S3 deposition must include profile observation anchors and Graphiti privacy class; agent invocation must return governed review/deposit handles. | Daily Note, Dream Journal, Oracle, playback, and privacy-state UX need completion against [[M4'-SPEC]]. | Partly: profile handles wait on Tranche 4; modality surfaces can proceed from existing contracts. |
-| M5' Epii | `EpiiDashboard.tsx`, Library, Atelier, Epii Agent, `epiiClient`, and `agentExecutionClient` exist. | Review inbox needs real gateway/session/task deposits, profile evidence, pointer/deposition anchors, and promotion transitions. | Evidence matrix and VAK execution page need integration design against [[M5'-SPEC]]. | Partly: M2/M3 evidence waits on full profile; agent/review shell can proceed. |
+| M5' Epii | `EpiiDashboard.tsx`, Library, Atelier, Epii Agent, `epiiClient`, and `agentExecutionClient` exist. | Review inbox needs real gateway/session/task deposits, profile evidence, pointer/deposition anchors, namespace-aware graph access, and promotion transitions. | Evidence matrix, VAK execution page, IDE strata, and graph namespace UX need integration design against [[M5'-SPEC]]. | Partly: M2/M3 evidence waits on full profile; agent/review shell can proceed. |
 | S0' `/` membrane | `OmniPanel.tsx`, gateway/temporal/agent clients, and command surfaces exist. | Readiness API must report profile availability, S2 law availability, S3 deposition, Graphiti privacy, pending LUT, and private-block states. | Display taxonomy for readiness states needs alignment with this amendment. | Partly: field-level readiness depends on backend tranches. |
 | Privacy boundary | `kernelProjection.ts` blocks exposed `bioquaternion` / `resonanceSquareEmphasis` from safe public-current consumer readiness. | Backend profile must formalize public-current vs protected-local fields and Graphiti/Nara privacy classes. | Per-domain UI copy/states need consistent protected projection language. | Yes for formal privacy classes; current foothold is renderer-side only. |
 
@@ -292,6 +361,8 @@ The port is not complete until tests prove:
 - Daily Note, Dream Journal, and Oracle surfaces persist and retrieve real modality data rather than showing placeholders.
 - Epii inbox can read actual gateway/session/task deposits and apply review transitions.
 - Epii archaeology workflow respects staged progression: exploration/community formation before backend Bimba resonance, MEF analysis, and sedimentation display.
+- Epii graph viewer preserves `bimba`, `gnosis`, `etymology`, and protected reviewed handle boundaries.
+- Epii agentic IDE runs preserve file/source/graph/task provenance and require review before promotion.
 - VAK execution page exercises a real bounded agent invocation path with diagnostics and completion evidence.
 - current app typecheck remains clean before and after port steps.
 

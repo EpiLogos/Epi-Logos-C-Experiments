@@ -7,6 +7,8 @@
 
 **Current executable baseline:** `Body/S/S2/graph-services/src/pointers.rs` computes the safe pointer web and `Body/S/S2/graph-services/src/graph_api.rs` exposes `s2.graph.pointer_web.compute` / `s2.graph.pointer_web.refresh` through S0/S3 gateway mirrors. Live Neo4j verification writes test-owned pointer fields and cleans them up. Deep dataset import and relationship materialisation remain follow-on work.
 
+**S0 authority correction (2026-05-19):** the graph-side 36-pointer layout is now downstream of `Idea/Bimba/Seeds/S/S0/S0-HARMONIC-POINTER-WEB36-SPEC.md`. The C/`epi-lib` law is `Bedrock7 -> Web36 -> CF7`: `Bedrock7 = # + #0..#5`, `36 = 12 family ring + 12 QL-position ring + 12 MEF-lens ring`, with CF7 as a separate diatonic/lemniscatic overlay. The 36-web is generated from the raw psychoid bedrock; it does not replace it. S2 must migrate away from treating `5-Q prime` as primitive inversion: X/X' inversion, X+Y=5 mirror, and Mobius 5->0 return are distinct operations.
+
 **Harmonic integration amendment:** the pointer web must now be read with the QL musical derivation as a computational source. The 36-fold pointer web is the coordinate-topology side of the same matheme the kernel computes as pulse, ratio, phase, resonance, and energy. Future implementation must therefore attach explicit harmonic/topological metadata to pointer relations rather than treating the 36 targets as untyped string lists.
 
 ---
@@ -267,7 +269,7 @@ This 36-fold complement is not merely a convenience count. It is the graph-side 
 |---|----------|---------|-------|-----------------|
 | 1 | **Family Refs** | `c_ref`, `p_ref`, `l_ref`, `s_ref`, `t_ref`, `m_ref` | 6 | Same QL position in each family |
 | 2 | **Reflective/VAK Refs** | `cpf_ref`, `ct_ref`, `cp_ref`, `cf_ref`, `cfp_ref`, `cs_ref` | 6 | VAK-to-C mapping applied to node position |
-| 3 | **Inversion Refs** | `c_inv_ref`, `p_inv_ref`, `l_inv_ref`, `s_inv_ref`, `t_inv_ref`, `m_inv_ref` | 6 | Polar opposite in each family |
+| 3 | **Inversion Refs** | `c_inv_ref`, `p_inv_ref`, `l_inv_ref`, `s_inv_ref`, `t_inv_ref`, `m_inv_ref` | 6 | Same-position X/X' spanda pair in each family |
 | 4 | **Position Refs** | `p0_ref`, `p1_ref`, `p2_ref`, `p3_ref`, `p4_ref`, `p5_ref` | 6 | What this node IS at each QL position |
 | 5 | **Lens Refs** | `l0_ref`, `l1_ref`, `l2_ref`, `l3_ref`, `l4_ref`, `l5_ref` | 6 | This node seen through each lens |
 | 6 | **Lens Inversion Refs** | `l0_inv_ref`, `l1_inv_ref`, `l2_inv_ref`, `l3_inv_ref`, `l4_inv_ref`, `l5_inv_ref` | 6 | Mobius-paired lens inversions |
@@ -315,16 +317,23 @@ For node with ql_position Q:
 Reflective refs are positionally invariant: every node at any position points to the same 6 VAK coordinates. The specific VAK coordinate that "governs" the node's position is `VAK_NAMES[Q]` — this is the node's **primary reflective context**.
 
 #### Category 3: Inversion Refs (6)
-The polar opposite across each family via the `#` operation.
+The same-position X/X' pair across each family via the `#` operation. This is the cross-helix spanda relation, not the X+Y=5 mirror.
 
 ```
 For each family X in {C, P, L, S, T, M}:
-    X_inv_ref = "{X}{5-Q}'"   (if N is non-inverted: flip position, mark inverted)
-    X_inv_ref = "{X}{5-Q}"    (if N is already inverted: flip position, remove inversion mark)
+    X_inv_ref = "{X}{Q}'"   (if N is non-inverted: preserve position, mark inverted)
+    X_inv_ref = "{X}{Q}"    (if N is already inverted: preserve position, remove inversion mark)
 ```
 
-Example: `M2` -> `c_inv_ref = C3'`, `p_inv_ref = P3'`, etc. (position 5-2=3, prime added)
-Example: `M2'` -> `c_inv_ref = C3`, `p_inv_ref = P3`, etc. (position 5-2=3, prime removed)
+Example: `M2` -> `c_inv_ref = C2'`, `p_inv_ref = P2'`, etc. (position preserved, prime added)
+Example: `M2'` -> `c_inv_ref = C2`, `p_inv_ref = P2`, etc. (position preserved, prime removed)
+
+The X+Y=5 relation remains a mirror relation:
+
+```
+mirror_ref = "{X}{5-Q}"       // same helix
+mirror_prime_ref = "{X}{5-Q}'" // composite mirror-prime, not primitive inversion
+```
 
 #### Category 4: Position Refs (6)
 What the node IS when viewed from each QL position. These refs point to the node's own family but at each of the 6 base positions, creating a "positional projection" web.
@@ -381,8 +390,10 @@ The Night lenses:
 
 ```
 For each lens position LP in {0, 1, 2, 3, 4, 5}:
-    l{LP}_inv_ref = "L{5-LP}'"    (Mobius pair: Day lens -> Night lens)
+    l{LP}_inv_ref = "L{LP}'"      (same lens position, primed orientation)
 ```
+
+Mobius pairings such as `L2 <-> L3'` remain structural metadata over the lens ring; they are not the primitive meaning of priming.
 
 #### Klein V4 Squaring (Structural Principle)
 

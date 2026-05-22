@@ -6,12 +6,17 @@ depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-PORTAL-SPEC]]"
   - "[[M'-TAURI-PORT-SPEC]]"
+  - "[[m4-prime-nara-activity-graphiti-instrument]]"
   - "[[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]]"
 ---
 
 # [[M4']] Domain Spec
 
 [[M4']] is [[Nara]]: journal, DAY/NOW lived context, dream, oracle, highlight, and personal Pratibimba continuity. It receives the harmonic clock as lived condition without exposing protected identity.
+
+## Companion Spec
+
+- [`m4-prime-nara-activity-graphiti-instrument.md`](m4-prime-nara-activity-graphiti-instrument.md) specifies M4' as the protected activity-graph instrument: #4.0 identity/quintessence, #4.1 somatic-medicinal readout, #4.2 oracle service, #4.3 transformation processor, #4.4 Graphiti/lens/NLP surface, and #4.5 Epii/Sophia review gate.
 
 ## User-Facing Surface
 

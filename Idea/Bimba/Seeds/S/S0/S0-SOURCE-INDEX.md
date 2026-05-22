@@ -26,10 +26,16 @@ These are the specs, plans, and supporting docs used to derive the target-state 
 
 - `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/S/S0-S0i-CLI-CORE.md`
   Role: direct statement that [[S0]] is terminal / CLI / [[C]] ground and that [[S0']] is its reflective command surface.
+- `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S0/S0-HARMONIC-POINTER-WEB36-SPEC.md`
+  Role: canonical S0 seed for the C-level harmonic pointer ontology: 36 as three 12-rings, `#` as X/X' inversion, X+Y=5 as mirror, 5->0 as Mobius return, CF7 as diatonic context overlay, and the 12 MEF lenses as first-class anchors.
+- `/Users/admin/Documents/Epi-Logos C Experiments/docs/epi-logos-kernel/ql-musical-derivation.md`
+  Role: mathematical and musical authority for the bimba/pratibimba helices, epogdoon tick, mirror progression, CF7 modal grammar, and 12 MEF lens-scale substrate used by the pointer-web seed.
 - `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/S/S_Series_Master_CLI_Architecture.md`
   Role: target architectural law for the full [[S]] and [[S']] stack, especially the claim that all higher stack layers are accessed through the master command surface grounded in [[S0]].
 - `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md`
   Role: specified how quintessential self-knowledge compresses down into the low-level surface, clarifying that [[S0]] must own the baked and shippable executable ground.
+- `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/2026-05-18-bimba-pointer-web-and-integration-spec.md`
+  Role: earlier graph-side 36-fold pointer-web implementation record. Its S2 storage categories are now downstream of the S0 harmonic pointer ontology and must migrate away from conflating X/X' inversion with X+Y=5 mirror.
 
 ### Design and implementation plans
 

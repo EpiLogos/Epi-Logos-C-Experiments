@@ -26,6 +26,8 @@ The old files remain useful for the sixfold coordinate intuition, but their S0' 
 
 S0/S0' is both first and last. It is first because every higher layer must become executable here. It is last because every incomplete higher-layer system eventually returns to S0/S0' as command shape, runtime method, test harness, bootstrap surface, and audit trail. Current code gaps in [[S1]] through [[S5']] are therefore not all S0 failures; many are future returns that will solidify as those levels are specified.
 
+Pointer-web correction: the harmonic pointer web is now explicitly an S0/S0' C-level ontology before it is an S2 graph projection. [[S0-HARMONIC-POINTER-WEB36-SPEC]] defines the next law as `Bedrock7 -> Web36 -> CF7`: `Bedrock7 = # + #0..#5`, `36 = 12 family ring + 12 QL-position ring + 12 MEF-lens ring`, and CF7 is the separate diatonic/lemniscatic context overlay. `#` is the raw same-position X/X' inversion act, X+Y=5 is mirror, 5->0 is Mobius return, and every family coordinate derives bedrock identity from one raw psychoid number. S2 graph fields and M' presentation surfaces consume this C authority rather than defining private pointer semantics.
+
 After the full S0-S5 pass, S0's return task is clearer: it must make the whole [[S-SYSTEM-INDEX]] executable. The [[API]], [[Envelope]], [[TypeScript]] interfaces, `epi` command tree, gateway method manifest, and test harness should converge so every accepted S/S' capability has a coordinate-native method, typed request/response shape, envelope field home, local command mirror where appropriate, and real-functionality verification.
 
 ## VAK Gate

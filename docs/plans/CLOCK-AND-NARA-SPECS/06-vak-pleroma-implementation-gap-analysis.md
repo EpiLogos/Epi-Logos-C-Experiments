@@ -32,10 +32,11 @@
 - Cannot spawn Anima itself; recursive meta-orchestration blocked
 - **Fix:** Create `anima.md` using canonical 6-section ANIMA.md format
 
-**2. Sophia post-execution hook is an empty stub**
+**2. Sophia post-execution hook is an empty stub** *(Z-thread closure blocker)*
 - `anima/extension.ts` lines 301-304 are comments only — no actual Sophia invocation
 - No post-task review, no thinking/ → thoughts/ routing, no Möbius return signal
 - Per CONTRACT.md: Sophia is ALWAYS invoked at session end
+- **Without this seam closing, the Z-thread (self-composing) cycle defined in [[S4-4'-GOAL-PRELUDE-SPEC]] cannot round-trip**: the rehear-phase has no disclosure to ingest, so Aletheia cannot route to Epii's autoresearch and the next compose-phase starts from an unenriched ground.
 - **Fix:** Wire `session_end` hook → spawn Sophia with review tools
 
 **3. CFP1 (P-Thread parallel dispatch) not wired**
@@ -56,10 +57,11 @@
 - 4 of 6 Aletheia mode-functions functionally absent
 - **Fix:** Complete 6-section ANIMA.md for all 6 — especially Mercurius (kairos translation) and Zeithoven (temporal creativity)
 
-**6. Moirai Night′ sequence not dispatch-wired**
+**6. Moirai Night′ sequence not dispatch-wired** *(Z-thread rehear-phase blocker)*
 - `anima-orchestration.md` skill documents the Klotho→Lachesis→Atropos 3-stage sequence
 - `extension.ts` has NO tool that invokes this sequence
 - Night′ phase of the session lifecycle non-functional
+- **This is the rehear-phase of the Z-thread cycle** ([[S4-4'-GOAL-PRELUDE-SPEC]], [[S4-5'-SPEC]]). Klotho measures the run's traces, Lachesis sources the harmonic context, Atropos cuts the cadential crystallisation. Without the dispatch wired, the rehear-phase cannot fire and no challenger-vectors reach Epii's autoresearch.
 - **Fix:** Add `dispatch_moirai_night_pass` tool to anima/extension.ts
 
 ### P2 — Enhancement
@@ -128,3 +130,19 @@ The QL law IS satisfied in structure: 6 constitutional children all exist.
 The violations are BOTH parent positions (# level) — Anima and Aletheia have no agent.md.
 This is the critical architectural incompleteness: the # operators of both 7-fold systems
 exist as functions/effects but not as instantiated agents.
+
+---
+
+## Z-Thread Closure Stake
+
+Three of the P0/P1 gaps above are also the **Z-thread closure blockers** — the seams that must close for the self-composing cycle defined in [[S4-4'-GOAL-PRELUDE-SPEC]] to round-trip:
+
+| Gap | Z-cycle phase blocked | Without it... |
+|---|---|---|
+| #2 Sophia post-execution hook | rehear → recompose handoff | session ends silently; no disclosure routes to Aletheia |
+| #6 Moirai Night′ dispatch | rehear-phase execution | T/T' artifacts pile up but no Klotho/Lachesis/Atropos read crystallises them |
+| #1 Anima parent agent.md | compose-phase meta-orchestration | `/goal` can fire but Anima as `#` operator cannot self-reference for next-cycle composition |
+
+Closing these three is the minimum for the Z-cycle to run end-to-end. CFP1/CFP3/CFP5 wiring (#3, #7) and the Aletheia parent + 4 sub-agents (#4, #5) are needed for richer textures but not for cycle closure itself.
+
+See also: [[05-ql-7fold-law-and-vak-c-substrate]] §VAK-Position-Mapping (canonical seven-CF positional law).

@@ -6,7 +6,7 @@
 
 **Rule:** A source key's name is evidence, not authority. The target property is chosen by what the content does in the Bimba graph.
 
-**M/M-prime rule:** M coordinates are the Bimba nodes themselves. M-derived properties describe the M-prime/Pratibimba expression surface of those nodes, not the bare M identity.
+**M/M-prime rule:** M coordinates are the Bimba nodes themselves. M-derived properties describe the M-prime/Pratibimba expression surface of those nodes, not the bare M identity. The canonical serialized property form is `m_{n}_{i?}_{semantic}`: `n` is the M-root coordinate and optional `i` is the immediate sub-coordinate slot of the owning node. Example: a Parashakti name-matrix field on `M2-4-*` is `m_2_4_abjad_value`, not the loose global `m_2_abjad_value`.
 
 **Q rule:** `q_n_{semantic}` is its own quintessential quick-view family. It is the graph-side detail surface for pithy node views baked into `src/qv_data.c` by `epi core knowing --bake` and updated through `epi core knowing <COORD> --update "pithy"`.
 
@@ -118,7 +118,7 @@
 
 ## M-Prime Region: Branch-Local Expressive Properties
 
-These keys are serialized as `m_<n>_{semantic}` only because the current property grammar does not encode apostrophes. Conceptually they are M-prime properties: reflected, operational, dataset-exposed expressions of an M coordinate. The M coordinate itself remains the node's `coordinate`.
+These keys are serialized as `m_{n}_{i?}_{semantic}` because the graph property grammar does not encode apostrophes. Conceptually they are M-prime properties: reflected, operational, dataset-exposed expressions of an M coordinate. The M coordinate itself remains the node's `coordinate`; the property prefix is derived from that node's M root and immediate sub-coordinate slot.
 
 ### M0' Anuttara Expression
 

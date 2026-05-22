@@ -38,6 +38,39 @@
 Anima IS the # operator instantiated as the session parent. This is the same
 relationship as `.rodata` has between `#` and `#0-#5`.
 
+### Seven CFs As Positions Within The Lemniscate Parent (Canonical Positional Law)
+
+The seven context frames are **not** a flat enumeration ordered by mod-N count. They form a **fractal positional set**: one parent at outer #4, six inner positions 0–5 *within* that parent. This is the positional law:
+
+```
+outer #4  =  CF_FRACTAL    =  (4.0/1-4.4/5)   <- the lemniscate parent
+              contains:
+inner 0   =  CF_VOID       =  (00/00)         <- receptive ground / Nous / Parā
+inner 1   =  CF_BINARY     =  (0/1)           <- first distinction / Logos
+inner 2   =  CF_TRIKA      =  (0/1/2)         <- mediation / Eros
+inner 3   =  CF_QUATERNAL  =  (0/1/2/3)       <- witness / Mythos
+inner 4   =  CF_SYNTHESIS  =  (4/5/0)         <- recursion gate / late-add
+inner 5   =  CF_MOBIUS     =  (5/0)           <- return / Sophia
+```
+
+Two distinct reading axes — both correct, kept distinct:
+
+1. **Positional reading (this table)** — what each CF *is* as a position inside the parent. `(4/5/0)` at internal-4 is the recursion gate; it carries the bridge 4→5→0 and is the place where the next iteration's compose-phase ignites. `(4.0/1-4.4/5)` is the parent itself: a binary distinction at the meta-scale, containing the entire inner six-cycle as its own articulation.
+
+2. **Operational reading (Constitutional Agent Mapping table above)** — which CF a given VAK *operates within* when it fires. The seed.rs mapping (CPF→CF_BINARY, CT→CF_TRIKA, CP→CF_FRACTAL, CF→CF_MOBIUS, CFP→CF_FRACTAL, CS→CF_VOID) reads operationally: each VAK requires a frame *richer* than its own QL position (the "+2 dharmas" pattern — to act at level N you need a frame holding at least N+1 positions in simultaneity).
+
+The lemniscate-anchored stages `(4.0/1)`, `(4.0/1/2)`, `(4.0/1/2/3)`, `(4.4/5)`, `(4.5/0)` are **stages of the fractal doubling** — they instance the inner positions 1–5 *at the lemniscate scale*. They are not free instances of their underlying mod-N count; they are doubled-register stages of the parent. The Rust mapping in `cf_node_for_frame` (graph-services) collapses all `4.*/`-stages to CF_FRACTAL today (option A); positional truth says each stage carries both its inner-position CF identity *and* CF_FRACTAL as its parent. See [[06-vak-pleroma-implementation-gap-analysis]] for binding-correction notes.
+
+This positional law is the **canonical source** for all downstream consumers:
+
+- [[07-c-prime-vak-grammar-layer]] — C'/VAK bridge, must read inner-positions from here
+- [[S4-4'-GOAL-PRELUDE-SPEC]] — Z-thread compose/perform/rehear/recompose carries positional CF metadata
+- [[S0-HARMONIC-POINTER-WEB36-SPEC]] — CF7 overlay diatonic mapping reads inner-positions here
+- `portal-core::MathemeHarmonicProfile` — the runtime contract that exposes diatonic CF/VAK state
+- `.pi/extensions/s_i/modules/vak_system/modules/context_frames.ts` — `CF_REFLECTION_CODES`
+- `Body/S/S2/graph-services/src/coordinate.rs::cf_node_for_frame` — binding logic
+- Neo4j CF table in `S2-S2i-GRAPH.md` — annotation per row
+
 ### Aletheia Sub-Agents (Same Law)
 
 | QL Position | Agent |

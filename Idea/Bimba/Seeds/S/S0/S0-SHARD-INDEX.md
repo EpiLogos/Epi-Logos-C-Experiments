@@ -12,6 +12,12 @@ c_0_source_coordinates:
 
 [[S0]] / [[S0']] is the executable ground and return surface. These shards make command, API, envelope, TypeScript, bootstrap, and test parity buildable without flattening higher-level ownership into S0.
 
+## Kernel Ground Shards
+
+| Shard | Build focus |
+|---|---|
+| [[S0-HARMONIC-POINTER-WEB36-SPEC]] | C/`epi-lib` pointer ontology: 36-fold harmonic relation web, `#` inversion law, QL position ring, full MEF lens ring, and CF7 context overlay. This is S0 authority; S2 graph projection consumes it. |
+
 ## Base Shards
 
 | Shard | Build focus |

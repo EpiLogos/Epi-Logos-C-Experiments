@@ -24,6 +24,14 @@ The `c_*` family is still the universal ontological layer, but it is not the dum
 
 M needs one extra guardrail: M coordinates are the Bimba nodes themselves. They are not ordinary properties of the node. Therefore M-derived property keys describe the M-prime/Pratibimba expression surface of an M node: the operational, reflected, or usable aspect exposed by the dataset. If the content is simply "this node is M2", that belongs in `coordinate`/computed metadata, not an `m_*` property.
 
+M-prime serialized property keys must use the coordinate-slot form:
+
+```text
+m_{n}_{i?}_{semantic}
+```
+
+where `n` is the M-root coordinate and optional `i` is the owning node's immediate sub-coordinate slot. This means `M2-4-*` name-matrix surfaces use keys such as `m_2_4_abjad_value`; root `M5` surfaces may use `m_5_lacanian_interface`. Do not use loose global keys when a sub-coordinate slot is present.
+
 ## Property Regions
 
 ### Universal C Region
@@ -123,6 +131,8 @@ Examples:
 - M5': Epii, logos cycle, archaeology, agent governance, gnosis synthesis as exposed for use.
 
 Batch rule: M-prime properties are branch-local by default. Only batch across branches after proving the semantic key means the same thing in both places. Do not create properties for bare M identity; M identity is the node coordinate itself.
+
+Prefix rule: derive the `m_{n}_{i?}` prefix from each target node coordinate during import/review generation. The source key decides the semantic tail; the node coordinate decides the M-prime address.
 
 ## Regional Batching Strategy
 

@@ -39,6 +39,33 @@ This is not the whole [[S5]] world-return system. It is S5/S5' return pressure i
 - Crystallisation creates typed disclosure.
 - Review-required output routes to Epii inbox target.
 
+## Z-Thread Rehear-Phase Role
+
+Aletheia is the **rehear-phase membrane** of the Z-thread self-composing cycle. The Z-cycle runs four phases:
+
+```
+compose  →  perform  →  rehear  →  recompose  →  next compose
+(/goal      (CFP        (Aletheia   (Epii         (P5' Insight
+ prelude)    dispatch)   here)       autoresearch)  → P0' Questions)
+```
+
+Aletheia receives [[Sophia]]'s session-end disclosure, curates the T/T' artifacts produced by the run, and routes the rehear-output to [[Epii]] as autoresearch intake. The Aletheia sub-agent rotation through the Z-cycle:
+
+| Sub-agent | Z-thread role | Phase |
+|---|---|---|
+| [[Anansi]] | compose-phase witness (the unknown the new theme reaches into) | compose |
+| [[Klotho]] | spins traces as the performance unfolds (P1' Traces) | perform |
+| [[Lachesis]] | measures harmonic context for analysis (P4' Discovery) | rehear |
+| [[Atropos]] | marks what crystallizes (P5' Insight) | rehear |
+| [[Janus]] | two-faced bridge — looks back at prior cycle, forward at next | seams |
+| [[Mercurius]] | carries P5' Insight across the Möbius seam to next-cycle P0' Questions | seam |
+| [[Agora]] | marketplace where challenger-vectors get evaluated | recompose |
+| [[Zeithoven]] | generates the next-form; hands score to next compose | recompose |
+
+The deeper work (Sophia/Darshana/Zeithoven autoresearch execution) delegates to [[Epii]]; Aletheia owns the membrane between Anima's session-scoped run and Epii's cross-session improvement.
+
 ## Boundaries
 
 Aletheia triggers and curates; [[Epii]] governs deep review and improvement.
+
+The Z-thread closure depends on two seams that are tracked as P0 blockers in [[06-vak-pleroma-implementation-gap-analysis]]: the Sophia post-execution hook (currently empty stub) and the Moirai Night' dispatch (spec exists, not wired). Until both close, the Z-cycle's rehear→recompose arc cannot round-trip.

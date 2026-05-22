@@ -8,6 +8,15 @@
 
 **Tech Stack:** TypeScript Pi extensions using Node 24 `--experimental-strip-types` tests, Python unittest for plugin capability contracts, Rust crates for S5 Epii review/autoresearch, JSONL trace envelopes, Pleroma/Epi-Logos plugin skills.
 
+**Canonical vocabulary anchors (read these first):**
+
+- [[05-ql-7fold-law-and-vak-c-substrate]] §Seven-CFs-As-Positions — positional law: parent `(4.0/1-4.4/5)` at outer #4, inner 0–5 = `(00/00)` / `(0/1)` / `(0/1/2)` / `(0/1/2/3)` / `(4/5/0)` / `(5/0)`. Every performance event in this plan reads its CF identity from here.
+- [[07-c-prime-vak-grammar-layer]] §Diatonic-Interpretation — CF → diatonic-note table. Each CF is one diatonic degree; modal rotation = CF-anchoring shift. The musical projection in Task 2 reads this mapping.
+- [[S0-HARMONIC-POINTER-WEB36-SPEC]] §Identity-Claim — the diatonic IS the CF-grammar made audible. The harmonic profile carrying CF/VAK state through M1/M2/M3 to M' is the audible realisation of this claim.
+- [[S4-4'-GOAL-PRELUDE-SPEC]] §Z-Thread-Identity — the `/goal` lifecycle IS this Z-thread cycle; compose / perform / rehear / recompose are owned at S4.4' / S4.3' / S4.5' / S5' respectively.
+- [[S4-5'-SPEC]] §Z-Thread-Rehear-Phase-Role — Aletheia sub-agent rotation (Anansi / Klotho / Lachesis / Atropos / Janus / Mercurius / Agora / Zeithoven) through the Z-cycle phases.
+- [[06-vak-pleroma-implementation-gap-analysis]] §Z-Thread-Closure-Stake — the three P0 blockers (Sophia hook, Moirai dispatch, Anima parent agent.md) that gate Z-cycle round-trip.
+
 ---
 
 ## Preflight Scope And Guardrails

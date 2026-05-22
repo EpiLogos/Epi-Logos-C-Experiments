@@ -22,6 +22,32 @@ The first `/goal` invocation discovers intent. It writes a markdown prelude into
 
 The goal prelude is the place where [[Nous]] clears assumptions, [[Aletheia]] and kbase surfaces gather source context, and [[Psyche]] receives a living task-world. Only after user dialogue confirms or revises the discovered intent may the system compile an immediate task, isolated NOW run, scheduled Chronos run, or Epii/Aletheia review lane.
 
+## Z-Thread Identity
+
+**The `/goal` lifecycle defined here IS the Z-thread self-composing cycle** — the CFP code `Z` in [[VAK]] grammar, redefined from "zero-touch / transcendent automation" to **"self-composing: the system as its own composer, performer, audience, and critic"**.
+
+The four phases:
+
+```
+compose   →   perform   →   rehear   →   recompose   →   next compose
+(GoalPrelude  (GoalRun     (Aletheia    (Epii            (P5' Insight
+ in (00/00)    via CFP      ingest +     autoresearch:    -> P0'
+ dialogical)   dispatch     Sophia       Zeithoven        Questions
+               from         disclosure   challenger +     opens
+               compiled     + T/T'       Darshana         next
+               GoalSpec)    routing)     evaluation +     compose
+                                         keep/discard)    phase)
+```
+
+- Compose-phase is owned by S4.4' (this spec).
+- Perform-phase is owned by [[S4.3']] (Chronos timing) and the CFP/CF dispatch at this layer.
+- Rehear-phase is owned by [[S4.5']] / [[Aletheia]] (see [[S4-5'-SPEC]] §Z-Thread Rehear-Phase Role).
+- Recompose-phase is owned by [[S5']] / [[Epii]] via autoresearch.
+
+The cycle closes via the **Möbius seam**: [[Sophia]] (within Anima's #5) discloses → [[Aletheia]] curates → [[Epii]] recomposes → next compose-phase begins from an enriched ground.
+
+Z-thread is the only CFP that completes the Möbius. CFP0–5 are textures *within* a single perform-phase; Z is the cycle that holds compose/perform/rehear/recompose together. The dependency: the Z-cycle round-trips only when the Sophia post-execution hook and Moirai Night' dispatch are wired (currently P0 blockers per [[06-vak-pleroma-implementation-gap-analysis]] §Z-Thread Closure Stake).
+
 ## Coordinate Placement
 
 Primary home: [[S4.4']] because `/goal` is a VAK/Psyche context surface.

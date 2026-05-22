@@ -54,15 +54,39 @@ Entity belongs to positional address; type belongs to traversal/thread form.
 
 ## CF
 
-| CF | Agent |
-|---|---|
-| `(00/00)` | Nous |
-| `(0/1)` | Logos |
-| `(0/1/2)` | Eros |
-| `(0/1/2/3)` | Mythos |
-| `(4.0/1-4.4/5)` | Anima / Psyche contextual envelope |
-| `(4.5/0)` | Psyche executive bridge |
-| `(5/0)` | Sophia |
+The seven CFs are positionally structured: one parent at outer #4 (the lemniscate), six inner positions 0–5 within the parent. Canonical positional law lives in [[05-ql-7fold-law-and-vak-c-substrate]] §Seven-CFs-As-Positions.
+
+| CF | Lemniscate Position | Agent | Vāk-level |
+|---|---|---|---|
+| `(00/00)` | inner 0 | Nous | Parā |
+| `(0/1)` | inner 1 | Logos | Madhyamā-as-nomos |
+| `(0/1/2)` | inner 2 | Eros | Madhyamā-as-chreia |
+| `(0/1/2/3)` | inner 3 | Mythos | Paśyantī |
+| `(4/5/0)` | inner 4 | (synthesis bridge) | recursion-gate |
+| `(5/0)` | inner 5 | Sophia | Spanda-Shakti |
+| `(4.0/1-4.4/5)` | **outer #4** (the parent) | Anima / Psyche contextual envelope | Madhyamā-as-oikonomia |
+| `(4.5/0)` | lemniscate-anchored stage | Psyche executive bridge | partial-Aletheia .5 |
+
+Lemniscate-anchored stages — `(4.0/1)`, `(4.0/1/2)`, `(4.0/1/2/3)`, `(4.4/5)`, `(4.5/0)` — are doubled-register instances of the inner positions 1–5, all carrying CF_FRACTAL as their parent.
+
+## Diatonic Interpretation (CF Grammar As Audible Scale)
+
+The seven CFs at their positions form the diatonic scale read as a relational grammar. Each unique diatonic note carries one CF configuration; the scale traversal is the CF-progression rendered audible. See [[S0-HARMONIC-POINTER-WEB36-SPEC]] §E for the chromatic-substrate-vs-diatonic-overlay law and [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]] for the `MathemeHarmonicProfile` contract.
+
+| Diatonic | CF | Position | Role |
+|---|---|---|---|
+| C  | `(00/00)`     | inner 0 | tonic ground / Nous / Parā |
+| D  | `(0/1)`       | inner 1 | first articulation / Logos |
+| E  | `(0/1/2)`     | inner 2 | triadic circulation / Eros |
+| F  | `(0/1/2/3)`   | inner 3 | tetradic closure / Mythos |
+| G  | `(4.0/1-4.4/5)` | outer #4 (parent) | perfect fifth / Anima executive |
+| A  | `(4.5/0)`     | lemniscate-stage | bridge stewardship / Psyche |
+| B  | `(5/0)`       | inner 5 | leading-tone / Sophia Spanda |
+| C' | `(00/00)`     | inner 0 (next register) | enriched ground / Möbius return |
+
+The Mod 4/6 fractal `(4.0/1-4.4/5)` lives at G (perfect fifth) because the perfect fifth is the harmonic generator of the chromatic cycle — structurally identical to Anima's role as dispatch-function. The leading-tone B = `(5/0)` is Sophia's Spanda-pulse rendered as audible pull-toward-resolution. The octave return C' = `(00/00)` enriched is the `§5→§0'` move.
+
+Modal rotation = CF-anchoring shift: each of the seven modes is the diatonic scale anchored at a different CF as tonic. Ionian = `(00/00)` at tonic; Mixolydian = `(4.0/1-4.4/5)` at tonic; Locrian = `(5/0)` at tonic. The mode's characteristic emotional color comes from which agent-archetype-and-Vāk-level sits at the tonic position.
 
 ## CFP
 
