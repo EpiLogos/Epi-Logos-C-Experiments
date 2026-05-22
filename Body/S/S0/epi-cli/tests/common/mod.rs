@@ -181,7 +181,7 @@ impl TestEnv {
         fs::write(
             &script_path,
             format!(
-                "#!/bin/sh\nprintf '%s\n' \"$@\" > \"{argv}\"\nenv | sort > \"{envs}\"\nlast=\"\"\nfor arg in \"$@\"; do\n  last=\"$arg\"\ndone\ncase \"$last\" in\n  *__FAKE_PI_FAIL__*)\n    printf '%s\n' 'simulated fake pi failure' >&2\n    exit 17\n    ;;\n  *__FAKE_PI_STREAM__*)\n    printf '%s\n' 'delta one'\n    sleep 0.1\n    printf '%s\n' 'delta two'\n    exit 0\n    ;;\n  *__FAKE_PI_SLOW__*)\n    printf '%s\n' 'delta one'\n    sleep 5\n    printf '%s\n' 'late final'\n    exit 0\n    ;;\n  *)\n    if [ -n \"$last\" ]; then\n      printf '%s\n' \"assistant: $last\"\n    fi\n    exit 0\n    ;;\nesac\n",
+                "#!/bin/sh\nprintf '%s\n' \"$@\" > \"{argv}\"\nenv | sort > \"{envs}\"\nlast=\"\"\nfor arg in \"$@\"; do\n  last=\"$arg\"\n  if [ \"$arg\" = \"--list-models\" ]; then\n    printf '%s\n' 'provider  model'\n    printf '%s\n' 'google    gemini-owned-by-pi'\n    exit 0\n  fi\ndone\ncase \"$last\" in\n  *__FAKE_PI_FAIL__*)\n    printf '%s\n' 'simulated fake pi failure' >&2\n    exit 17\n    ;;\n  *__FAKE_PI_STREAM__*)\n    printf '%s\n' 'delta one'\n    sleep 0.1\n    printf '%s\n' 'delta two'\n    exit 0\n    ;;\n  *__FAKE_PI_SLOW__*)\n    printf '%s\n' 'delta one'\n    sleep 5\n    printf '%s\n' 'late final'\n    exit 0\n    ;;\n  *)\n    if [ -n \"$last\" ]; then\n      printf '%s\n' \"assistant: $last\"\n    fi\n    exit 0\n    ;;\nesac\n",
                 argv = log_dir.join("argv.txt").display(),
                 envs = log_dir.join("env.txt").display()
             ),

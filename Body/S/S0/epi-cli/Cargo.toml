@@ -92,10 +92,6 @@ cc = "1"
 # workspace is pinned to rustc 1.89 in this environment. Patch to a vendored
 # copy so we can carry the smallest possible compatibility override locally.
 quantette = { path = "vendor/quantette" }
-# redis 0.25.4 triggers Rust future-incompat warnings in script invocation
-# helpers due to never type fallback. Patch the vendored copy to make the
-# ignored load-script return values explicit unit.
-redis = { path = "vendor/redis" }
 
 [profile.test]
 debug = 1

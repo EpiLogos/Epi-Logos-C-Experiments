@@ -1,6 +1,7 @@
 mod common;
 
 use common::{read_to_string, run_epi, TestEnv};
+use serde_json::Value;
 
 #[test]
 fn auth_set_writes_provider_profile_for_minimax() {
@@ -10,10 +11,16 @@ fn auth_set_writes_provider_profile_for_minimax() {
         &env,
     );
     assert!(out.status.success());
-    assert!(
-        read_to_string(env.home.join(".epi/agents/main/agent/auth-profiles.json"))
-            .contains("\"minimax:default\"")
+    let auth_profiles = read_to_string(
+        env.repo_root
+            .join(".epi/agents/epii/agent/auth-profiles.json"),
     );
+    assert!(auth_profiles.contains("\"minimax:default\""));
+    assert!(!auth_profiles.contains("secret"));
+    let pi_auth = read_to_string(env.repo_root.join(".epi/agents/epii/agent/auth.json"));
+    let parsed: Value = serde_json::from_str(&pi_auth).expect("auth.json is valid JSON");
+    assert_eq!(parsed["minimax"]["type"], "api_key");
+    assert_eq!(parsed["minimax"]["key"], "secret");
 }
 
 #[test]

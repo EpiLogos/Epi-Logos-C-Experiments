@@ -85,7 +85,7 @@ export async function animaExtension(api: ExtensionAPI) {
   registerAgentTeam(api);
   registerAgentChain(api);
   registerSubagentWidget(api);
-  api.setActiveTools([
+  const animaDefaultTools = [
     "vak_evaluate",
     "goal_prelude",
     "anima_orchestrate",
@@ -99,7 +99,10 @@ export async function animaExtension(api: ExtensionAPI) {
     "subagent_list",
     "subagent_remove",
     "tilldone",
-  ]);
+  ];
+  api.on("session_start", async () => {
+    api.setActiveTools(animaDefaultTools);
+  });
   // Pi-Pi only loads when EPI_AGENT_MODE=pipi (via `epi agent pipi`)
   if (process.env.EPI_AGENT_MODE === "pipi") {
     registerPiPi(api);

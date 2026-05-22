@@ -21,25 +21,29 @@ pub fn list(state_root: impl AsRef<Path>) -> Result<Value, String> {
         "models": models,
         "defaultModel": inventory.default_model,
         "defaultProvider": inventory.default_provider().or_else(|| Some(doc.gateway.auth_mode)),
+        "availabilityAuthority": "pi",
     }))
 }
 
 #[derive(Debug, Default, Deserialize)]
-#[serde(rename_all = "camelCase")]
 struct AgentModelsConfig {
     #[serde(default)]
-    default_model: Option<String>,
-    #[serde(default)]
-    providers: Vec<AgentProviderConfig>,
+    providers: BTreeMap<String, AgentProviderConfig>,
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct AgentProviderConfig {
-    key: String,
-    provider: String,
     #[serde(default)]
-    models: Vec<String>,
+    api: String,
+    #[serde(default)]
+    models: Vec<AgentModelConfig>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct AgentModelConfig {
+    id: String,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -75,10 +79,10 @@ impl GatewayModelInventory {
         let providers = load_models(&layout)?
             .providers
             .into_iter()
-            .map(|provider| GatewayProviderInventory {
-                key: provider.key,
-                provider: provider.provider,
-                models: provider.models,
+            .map(|(key, provider)| GatewayProviderInventory {
+                provider: upstream_provider_for(&key, &provider.api),
+                key,
+                models: provider.models.into_iter().map(|model| model.id).collect(),
             })
             .collect::<Vec<_>>();
         let auth_providers = load_auth_profiles(&layout)?
@@ -88,7 +92,7 @@ impl GatewayModelInventory {
             .collect::<Vec<_>>();
 
         Ok(Self {
-            default_model: load_models(&layout)?.default_model,
+            default_model: load_default_model(&layout),
             providers,
             auth_providers,
         })
@@ -123,17 +127,38 @@ impl GatewayModelInventory {
             .collect::<Vec<_>>();
 
         if items.is_empty() {
-            items.push(json!({
-                "id": "pi.default",
-                "provider": fallback_provider,
-                "transport": "gateway",
-                "default": true,
-                "authenticated": false,
-            }));
+            if let Some(default_model) = &self.default_model {
+                if let Some((provider, _)) = parse_provider_model(default_model) {
+                    items.push(json!({
+                        "id": default_model,
+                        "provider": provider,
+                        "transport": "gateway",
+                        "default": true,
+                        "authenticated": self.auth_providers.iter().any(|entry| entry == provider),
+                    }));
+                }
+            }
+            if items.is_empty() {
+                items.push(json!({
+                    "id": "pi.default",
+                    "provider": fallback_provider,
+                    "transport": "gateway",
+                    "default": true,
+                    "authenticated": false,
+                }));
+            }
         }
 
         items
     }
+}
+
+fn load_default_model(layout: &AgentLayout) -> Option<String> {
+    let contents = fs::read_to_string(&layout.settings_path).ok()?;
+    let parsed = serde_json::from_str::<Value>(&contents).ok()?;
+    let provider = parsed.get("defaultProvider")?.as_str()?;
+    let model = parsed.get("defaultModel")?.as_str()?;
+    Some(format!("{provider}/{model}"))
 }
 
 fn load_models(layout: &AgentLayout) -> Result<AgentModelsConfig, String> {
@@ -160,4 +185,9 @@ fn parse_provider_model(value: &str) -> Option<(&str, &str)> {
         return None;
     }
     Some((provider.trim(), model.trim()))
+}
+
+fn upstream_provider_for(provider: &str, fallback: &str) -> String {
+    let _ = fallback;
+    provider.to_owned()
 }

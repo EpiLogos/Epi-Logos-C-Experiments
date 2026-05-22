@@ -11,35 +11,28 @@
         ]
       }
     ],
-    "PreToolCall": [
+    "UserPromptSubmit": [
       {
         "matcher": "",
         "hooks": [
           {
-            "type": "contract",
-            "command": "s4'.pleroma.gate.evaluate --emit portal.vak_eval --emit portal.lens_pressure"
+            "type": "command",
+            "command": "printf '%s\\n' '[pleroma] user prompt submit: contract s4-prime.pleroma.gate.evaluate emits portal.vak_eval portal.lens_pressure'"
           }
         ]
       }
     ],
-    "PostToolCall": [
+    "PostToolUse": [
       {
         "matcher": "",
         "hooks": [
           {
-            "type": "contract",
-            "command": "s4'.psyche.update --observe tool_result --emit portal.tool_call"
-          }
-        ]
-      }
-    ],
-    "TransformToolResult": [
-      {
-        "matcher": "",
-        "hooks": [
+            "type": "command",
+            "command": "printf '%s\\n' '[pleroma] post tool use: contract s4-prime.psyche.update observes tool_result emits portal.tool_call'"
+          },
           {
-            "type": "contract",
-            "command": "s4'.pleroma.result.wrap --with-day-now-session"
+            "type": "command",
+            "command": "printf '%s\\n' '[pleroma] post tool use: contract s4-prime.pleroma.result.wrap with day now session emits portal.review_deposit portal.kairos_shift'"
           }
         ]
       }

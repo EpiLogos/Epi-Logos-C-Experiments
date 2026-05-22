@@ -6,8 +6,6 @@ use support::{run_epi, TestEnv, TestGatewayClient};
 #[tokio::test]
 async fn models_config_and_skills_surfaces_reflect_real_gateway_state() {
     let env = TestEnv::repo_with_assets();
-    let add_provider = run_epi(["agent", "models", "add-provider", "glm"].as_slice(), &env);
-    assert!(add_provider.status.success());
     let set_default = run_epi(
         ["agent", "models", "set-default", "glm/glm-4.5"].as_slice(),
         &env,

@@ -182,7 +182,7 @@ impl AgentLayout {
             .map_err(|err| err.to_string())?;
 
         if !self.models_path.exists() {
-            fs::write(&self.models_path, "{\n  \"providers\": []\n}\n")
+            fs::write(&self.models_path, "{\n  \"providers\": {}\n}\n")
                 .map_err(|err| err.to_string())?;
         }
         if !self.auth_profiles_path.exists() {

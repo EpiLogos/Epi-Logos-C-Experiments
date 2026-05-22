@@ -1,5 +1,6 @@
 use crate::agent::{AgentLayout, AuthCmd};
 use serde::{Deserialize, Serialize};
+use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::fs;
 
@@ -13,7 +14,6 @@ struct AuthProfiles {
 #[serde(rename_all = "camelCase")]
 struct StoredAuthProfile {
     provider: String,
-    api_key: String,
 }
 
 #[derive(Serialize)]
@@ -49,10 +49,10 @@ fn set(agent: Option<&str>, provider: &str, api_key: &str, json: bool) -> Result
         format!("{provider}:default"),
         StoredAuthProfile {
             provider: provider.to_owned(),
-            api_key: api_key.to_owned(),
         },
     );
     save_profiles(&layout, &profiles)?;
+    save_pi_auth(&layout, provider, api_key)?;
     status(agent, json)
 }
 
@@ -106,7 +106,36 @@ fn save_profiles(layout: &AgentLayout, profiles: &AuthProfiles) -> Result<(), St
 }
 
 fn load_default_model(layout: &AgentLayout) -> Option<String> {
-    let contents = fs::read_to_string(&layout.models_path).ok()?;
+    let contents = fs::read_to_string(&layout.settings_path).ok()?;
     let parsed = serde_json::from_str::<serde_json::Value>(&contents).ok()?;
-    parsed.get("defaultModel")?.as_str().map(str::to_owned)
+    let provider = parsed.get("defaultProvider")?.as_str()?;
+    let model = parsed.get("defaultModel")?.as_str()?;
+    Some(format!("{provider}/{model}"))
+}
+
+fn save_pi_auth(layout: &AgentLayout, provider: &str, api_key: &str) -> Result<(), String> {
+    let mut auth = load_pi_auth(layout)?;
+    let object = auth
+        .as_object_mut()
+        .ok_or_else(|| "PI auth.json must be a JSON object".to_owned())?;
+    object.insert(
+        provider.to_owned(),
+        json!({
+            "type": "api_key",
+            "key": api_key,
+        }),
+    );
+    fs::write(
+        &layout.auth_path,
+        serde_json::to_string_pretty(&auth).map_err(|err| err.to_string())?,
+    )
+    .map_err(|err| err.to_string())
+}
+
+fn load_pi_auth(layout: &AgentLayout) -> Result<Value, String> {
+    if !layout.auth_path.exists() {
+        return Ok(json!({}));
+    }
+    let contents = fs::read_to_string(&layout.auth_path).map_err(|err| err.to_string())?;
+    serde_json::from_str(&contents).or_else(|_| Ok(json!({})))
 }

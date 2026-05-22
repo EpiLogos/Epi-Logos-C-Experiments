@@ -238,7 +238,9 @@ fn anima_extension_uses_s4_runtime_modules_instead_of_local_stub_tools() {
     assert!(source.contains("./S4/agent-team.ts"));
     assert!(source.contains("./S4/agent-chain.ts"));
     assert!(source.contains("./S4/subagent-widget.ts"));
-    assert!(source.contains("api.setActiveTools(["));
+    assert!(source.contains("const animaDefaultTools = ["));
+    assert!(source.contains("api.on(\"session_start\""));
+    assert!(source.contains("api.setActiveTools(animaDefaultTools)"));
     assert!(source.contains("\"vak_evaluate\""));
     assert!(source.contains("\"anima_orchestrate\""));
     assert!(source.contains("\"dispatch_agent\""));
@@ -583,6 +585,24 @@ fn ta_onta_extensions_avoid_stale_cli_contracts() {
     assert!(
         hen.contains("\"vault\", \"now-path\""),
         "hen should use the real vault now-path helper for NOW task routing"
+    );
+}
+
+#[test]
+fn anima_extension_defers_runtime_action_methods_until_session_events() {
+    let root = repo_root();
+    let source =
+        fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/extension.ts")).unwrap();
+    let set_active_tools = source
+        .find("api.setActiveTools(")
+        .expect("anima extension should configure its active tool set");
+    let session_start = source
+        .find("api.on(\"session_start\"")
+        .expect("anima extension should configure runtime actions in a session_start handler");
+
+    assert!(
+        session_start < set_active_tools,
+        "anima extension must not call runtime action methods during extension loading"
     );
 }
 

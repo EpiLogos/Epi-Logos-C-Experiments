@@ -1,3 +1,10 @@
+//! PI runtime adapter commands.
+//!
+//! This module prepares managed PI agent directories, writes PI-compatible
+//! settings/auth files, validates repo-local runtime bundles, and launches PI.
+//! It must not become the model availability authority, relation-inference
+//! engine, or S4/S5 agent behavior layer.
+
 mod agent_dirs;
 mod agents;
 mod auth;
@@ -599,7 +606,7 @@ pub enum RosterCmd {
 pub enum ModelsCmd {
     /// Ensure the managed agent has a PI-compatible models file
     Init(AgentSelection),
-    /// Add a supported provider definition to models.json
+    /// Deprecated: PI owns model availability; configure custom models in PI-native models.json
     AddProvider {
         #[command(flatten)]
         selection: AgentSelection,
@@ -613,11 +620,17 @@ pub enum ModelsCmd {
     },
     /// Show the current models status
     Status(AgentSelection),
+    /// Delegate model discovery to the managed PI runtime
+    List {
+        #[command(flatten)]
+        selection: AgentSelection,
+        provider: Option<String>,
+    },
 }
 
 #[derive(Subcommand)]
 pub enum AuthCmd {
-    /// Set the API key for a supported provider profile
+    /// Set the API key for a PI provider profile
     Set {
         #[command(flatten)]
         selection: AgentSelection,

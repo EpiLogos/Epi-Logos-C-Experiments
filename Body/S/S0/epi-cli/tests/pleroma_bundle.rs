@@ -111,6 +111,66 @@ fn pleroma_has_hooks_config() {
         .unwrap_or_else(|err| panic!("invalid JSON in {}: {err}", hooks_json.display()));
 }
 
+#[test]
+fn pleroma_hooks_use_supported_pi_runtime_contract() {
+    let hooks_json = pleroma_root().join("hooks/hooks.json");
+    let text = fs::read_to_string(&hooks_json)
+        .unwrap_or_else(|err| panic!("failed to read {}: {err}", hooks_json.display()));
+    let v: serde_json::Value = serde_json::from_str(&text)
+        .unwrap_or_else(|err| panic!("invalid JSON in {}: {err}", hooks_json.display()));
+    let hooks = v
+        .get("hooks")
+        .and_then(|value| value.as_object())
+        .expect("pleroma hooks must use the modern event map schema");
+    let supported_events = [
+        "ConfigChange",
+        "InstructionsLoaded",
+        "Notification",
+        "PermissionRequest",
+        "PostToolUse",
+        "PostToolUseFailure",
+        "PreCompact",
+        "PreToolUse",
+        "SessionEnd",
+        "SessionStart",
+        "Setup",
+        "Stop",
+        "SubagentStart",
+        "SubagentStop",
+        "TaskCompleted",
+        "TeammateIdle",
+        "UserPromptSubmit",
+        "WorktreeCreate",
+        "WorktreeRemove",
+    ];
+
+    for (event, groups) in hooks {
+        assert!(
+            supported_events.contains(&event.as_str()),
+            "unsupported pleroma hook event `{event}`"
+        );
+        let groups = groups
+            .as_array()
+            .unwrap_or_else(|| panic!("hook event `{event}` must contain matcher groups"));
+        for group in groups {
+            let group_hooks = group
+                .get("hooks")
+                .and_then(|value| value.as_array())
+                .unwrap_or_else(|| panic!("hook event `{event}` matcher group must contain hooks"));
+            for hook in group_hooks {
+                let hook_type = hook
+                    .get("type")
+                    .and_then(|value| value.as_str())
+                    .unwrap_or("");
+                assert!(
+                    ["agent", "command", "prompt"].contains(&hook_type),
+                    "unsupported pleroma hook type `{hook_type}` for event `{event}`"
+                );
+            }
+        }
+    }
+}
+
 /// Task 5: Body/S/S4/plugins/pleroma must have an evals/suites/ directory.
 #[test]
 fn pleroma_has_eval_suites() {
