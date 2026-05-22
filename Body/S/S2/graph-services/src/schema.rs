@@ -2,13 +2,14 @@ use crate::Neo4jClient;
 use serde_json::{Map, Value};
 
 pub use epi_s2_graph_schema::{
-    node_property_spec, relationship_property_spec, GraphPropertyCardinality,
-    GraphPropertyDisclosure, GraphPropertyOwner, GraphPropertySpec, GraphPropertyType, CONSTRAINTS,
-    GRAPHITI_ARC_ID_PROPERTY, INDEXES, KERNEL_RESONANCE_HELIX_PROPERTY,
-    KERNEL_RESONANCE_INDEX_PROPERTY, KERNEL_RESONANCE_LABEL, KERNEL_RESONANCE_LENS_PROPERTY,
-    KERNEL_RESONANCE_POSITION_PROPERTY, KERNEL_RESONANCE_RELATION, KERNEL_RESONANCE_SCORE_PROPERTY,
-    KERNEL_RESONANCE_SQUARE_PROPERTY, KERNEL_TICK_PROPERTY, NODE_PROPERTY_SPECS,
-    POINTER_COUNT_PROPERTY, POINTER_FAMILY_REFS_PROPERTY, POINTER_INVERSION_REFS_PROPERTY,
+    node_property_spec, relationship_property_spec, validate_coordinate_prefix_property,
+    GraphPropertyCardinality, GraphPropertyDisclosure, GraphPropertyOwner, GraphPropertySpec,
+    GraphPropertyType, CONSTRAINTS, GRAPHITI_ARC_ID_PROPERTY, INDEXES,
+    KERNEL_RESONANCE_HELIX_PROPERTY, KERNEL_RESONANCE_INDEX_PROPERTY, KERNEL_RESONANCE_LABEL,
+    KERNEL_RESONANCE_LENS_PROPERTY, KERNEL_RESONANCE_POSITION_PROPERTY, KERNEL_RESONANCE_RELATION,
+    KERNEL_RESONANCE_SCORE_PROPERTY, KERNEL_RESONANCE_SQUARE_PROPERTY, KERNEL_TICK_PROPERTY,
+    NODE_PROPERTY_SPECS, POINTER_COUNT_PROPERTY, POINTER_FAMILY_REFS_PROPERTY,
+    POINTER_HARMONIC_ANCHOR_JSON_PROPERTY, POINTER_INVERSION_REFS_PROPERTY,
     POINTER_LENS_INVERSION_REFS_PROPERTY, POINTER_LENS_REFS_PROPERTY,
     POINTER_POSITION_REFS_PROPERTY, POINTER_REFLECTIVE_REFS_PROPERTY,
     POINTER_REFRESHED_AT_PROPERTY, POINTER_WEB_JSON_PROPERTY, RELATIONSHIP_INDEXES,
@@ -38,7 +39,10 @@ fn validate_properties(
     let unknown = properties
         .keys()
         .filter(|key| match owner {
-            GraphPropertyOwner::Node => node_property_spec(key).is_none(),
+            GraphPropertyOwner::Node => {
+                node_property_spec(key).is_none()
+                    && validate_coordinate_prefix_property(key).is_err()
+            }
             GraphPropertyOwner::Relationship => relationship_property_spec(key).is_none(),
         })
         .cloned()

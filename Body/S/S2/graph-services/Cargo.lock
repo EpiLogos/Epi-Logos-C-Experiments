@@ -261,14 +261,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "epi-kernel-contract"
+version = "0.1.0"
+dependencies = [
+ "portal-core",
+ "serde",
+ "serde_json",
+ "uuid",
+]
+
+[[package]]
+name = "epi-s1-hen-compiler-core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "sha2",
+]
+
+[[package]]
 name = "epi-s2-graph-schema"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "epi-s2-graph-services"
 version = "0.1.0"
 dependencies = [
+ "epi-s1-hen-compiler-core",
  "epi-s2-graph-schema",
+ "epi-s3-gateway-contract",
  "epi-s3-redis-context",
  "neo4rs",
  "reqwest",
@@ -277,6 +302,16 @@ dependencies = [
  "serde_yaml",
  "sha2",
  "tokio",
+ "uuid",
+]
+
+[[package]]
+name = "epi-s3-gateway-contract"
+version = "0.1.0"
+dependencies = [
+ "epi-kernel-contract",
+ "serde",
+ "serde_json",
  "uuid",
 ]
 
@@ -1038,6 +1073,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "19f132c84eca552bf34cab8ec81f1c1dcc229b811638f9d283dceabe58c5569e"
 
 [[package]]
+name = "portal-core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "potential_utf"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1750,6 +1792,7 @@ version = "1.23.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ddd74a9687298c6858e9b88ec8935ec45d22e8fd5e6394fa1bd4e99a87789c76"
 dependencies = [
+ "getrandom 0.4.2",
  "js-sys",
  "sha1_smol",
  "wasm-bindgen",

@@ -13,8 +13,9 @@ use epi_s2_graph_schema::{
     KERNEL_RESONANCE_LABEL, KERNEL_RESONANCE_LENS_PROPERTY, KERNEL_RESONANCE_POSITION_PROPERTY,
     KERNEL_RESONANCE_RELATION, KERNEL_RESONANCE_SCORE_PROPERTY, KERNEL_RESONANCE_SQUARE_PROPERTY,
     KERNEL_TICK_PROPERTY, POINTER_COUNT_PROPERTY, POINTER_FAMILY_REFS_PROPERTY,
-    POINTER_INVERSION_REFS_PROPERTY, POINTER_LENS_INVERSION_REFS_PROPERTY,
-    POINTER_LENS_REFS_PROPERTY, POINTER_POSITION_REFS_PROPERTY, POINTER_REFLECTIVE_REFS_PROPERTY,
+    POINTER_HARMONIC_ANCHOR_JSON_PROPERTY, POINTER_INVERSION_REFS_PROPERTY,
+    POINTER_LENS_INVERSION_REFS_PROPERTY, POINTER_LENS_REFS_PROPERTY,
+    POINTER_POSITION_REFS_PROPERTY, POINTER_REFLECTIVE_REFS_PROPERTY,
     POINTER_REFRESHED_AT_PROPERTY, POINTER_WEB_JSON_PROPERTY, SESSION_KEY_PROPERTY,
 };
 
@@ -231,15 +232,10 @@ impl<'a> GraphMethodService<'a> {
         } else {
             parsed.coordinate
         };
-        let compatibility_property = if trimmed.starts_with('#') {
-            Some("bimbaCoordinate".to_string())
-        } else {
-            None
-        };
         Ok(CoordinateResolution {
             input: trimmed.to_string(),
             canonical,
-            compatibility_property,
+            compatibility_property: None,
         })
     }
 
@@ -303,7 +299,7 @@ impl<'a> GraphMethodService<'a> {
         }))?;
         let cypher = format!(
             "MATCH (source:Bimba)
-             WHERE source.coordinate = $source_coordinate OR source.bimbaCoordinate = $source_input
+             WHERE source.coordinate = $source_coordinate
              MERGE (obs:Bimba:{kernel_label} {{coordinate: $observation_coordinate}})
              SET obs.c_2_uuid = $observation_coordinate,
                  obs.c_1_name = $observation_name,
@@ -373,10 +369,18 @@ impl<'a> GraphMethodService<'a> {
         let pointer_web = coordinate_anchor.pointer_web.clone();
         let pointer_web_json =
             serde_json::to_string(&pointer_web).map_err(|err| err.to_string())?;
+        let harmonic_pointer_anchor_json = coordinate_anchor
+            .harmonic_pointer
+            .as_ref()
+            .map(serde_json::to_string)
+            .transpose()
+            .map_err(|err| err.to_string())?
+            .unwrap_or_default();
         let params = GraphMethodParams::from_json(json!({
             "source_coordinate": resolution.canonical,
             "source_input": resolution.input,
             "pointer_web_json": pointer_web_json,
+            "harmonic_pointer_anchor_json": harmonic_pointer_anchor_json,
             "pointer_count": pointer_web.pointer_count as i64,
             "family_refs": pointer_ref_values(&pointer_web.family_refs),
             "reflective_refs": pointer_ref_values(&pointer_web.reflective_refs),
@@ -388,7 +392,7 @@ impl<'a> GraphMethodService<'a> {
         }))?;
         let cypher = format!(
             "MATCH (n:Bimba)
-             WHERE n.coordinate = $source_coordinate OR n.bimbaCoordinate = $source_input
+             WHERE n.coordinate = $source_coordinate
              SET n.{pointer_web_property} = $pointer_web_json,
                  n.{pointer_count_property} = $pointer_count,
                  n.{pointer_family_refs_property} = $family_refs,
@@ -397,6 +401,7 @@ impl<'a> GraphMethodService<'a> {
                  n.{pointer_position_refs_property} = $position_refs,
                  n.{pointer_lens_refs_property} = $lens_refs,
                  n.{pointer_lens_inversion_refs_property} = $lens_inversion_refs,
+                 n.{pointer_harmonic_anchor_property} = $harmonic_pointer_anchor_json,
                  n.{pointer_refreshed_at_property} = datetime({{epochMillis: $timestamp_ms}})
              RETURN n.coordinate AS coordinate,
                     n.c_2_uuid AS uuid,
@@ -412,6 +417,7 @@ impl<'a> GraphMethodService<'a> {
             pointer_position_refs_property = POINTER_POSITION_REFS_PROPERTY,
             pointer_lens_refs_property = POINTER_LENS_REFS_PROPERTY,
             pointer_lens_inversion_refs_property = POINTER_LENS_INVERSION_REFS_PROPERTY,
+            pointer_harmonic_anchor_property = POINTER_HARMONIC_ANCHOR_JSON_PROPERTY,
             pointer_refreshed_at_property = POINTER_REFRESHED_AT_PROPERTY,
         );
 
@@ -441,7 +447,7 @@ impl<'a> GraphMethodService<'a> {
         let resolved = Self::resolve_coordinate_string(&request.coordinate)?;
         let q = query(
             "MATCH (n:Bimba)
-             WHERE n.coordinate = $canonical OR n.bimbaCoordinate = $input
+             WHERE n.coordinate = $canonical
              OPTIONAL MATCH (n)-[r]-(m:Bimba)
              RETURN n.coordinate AS coordinate,
                     n.c_2_uuid AS uuid,
@@ -491,7 +497,7 @@ impl<'a> GraphMethodService<'a> {
         };
         let cypher = format!(
             "MATCH (start:Bimba)
-             WHERE start.coordinate = $canonical OR start.bimbaCoordinate = $input
+             WHERE start.coordinate = $canonical
              MATCH path = {pattern}
              {relation_filter}
              RETURN target.coordinate AS coordinate,

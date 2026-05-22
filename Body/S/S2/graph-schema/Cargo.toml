@@ -8,3 +8,6 @@ license = "MIT OR Apache-2.0"
 [lib]
 name = "epi_s2_graph_schema"
 path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }

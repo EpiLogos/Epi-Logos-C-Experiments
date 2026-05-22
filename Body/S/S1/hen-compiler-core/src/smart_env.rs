@@ -212,7 +212,7 @@ pub fn suggest_link_candidates(
 
     let mut candidates = by_target.into_values().collect::<Vec<_>>();
     candidates.sort_by(rank_candidates);
-    candidates.truncate(request.limit.max(1));
+    candidates = truncate_with_semantic_block_coverage(candidates, request.limit.max(1));
 
     Ok(LinkCandidateResponse {
         seed_sources,
@@ -284,12 +284,41 @@ fn upsert_candidate(
 }
 
 fn rank_candidates(left: &LinkCandidate, right: &LinkCandidate) -> Ordering {
-    right
-        .score
-        .partial_cmp(&left.score)
-        .unwrap_or(Ordering::Equal)
-        .then_with(|| candidate_kind_rank(left.kind).cmp(&candidate_kind_rank(right.kind)))
+    candidate_kind_rank(left.kind)
+        .cmp(&candidate_kind_rank(right.kind))
+        .then_with(|| {
+            right
+                .score
+                .partial_cmp(&left.score)
+                .unwrap_or(Ordering::Equal)
+        })
         .then_with(|| left.target_path.cmp(&right.target_path))
+}
+
+fn truncate_with_semantic_block_coverage(
+    candidates: Vec<LinkCandidate>,
+    limit: usize,
+) -> Vec<LinkCandidate> {
+    if candidates.len() <= limit {
+        return candidates;
+    }
+
+    let mut selected = candidates.iter().take(limit).cloned().collect::<Vec<_>>();
+    if limit > 1
+        && !selected
+            .iter()
+            .any(|candidate| candidate.kind == LinkCandidateKind::SemanticBlock)
+    {
+        if let Some(block_candidate) = candidates
+            .iter()
+            .find(|candidate| candidate.kind == LinkCandidateKind::SemanticBlock)
+        {
+            selected.pop();
+            selected.push(block_candidate.clone());
+            selected.sort_by(rank_candidates);
+        }
+    }
+    selected
 }
 
 fn candidate_kind_rank(kind: LinkCandidateKind) -> u8 {

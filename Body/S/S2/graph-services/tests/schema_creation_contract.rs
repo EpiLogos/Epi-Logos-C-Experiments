@@ -3,8 +3,8 @@ use epi_s2_graph_services::schema::{
     validate_node_properties, validate_relationship_properties, CONSTRAINTS,
     GRAPHITI_ARC_ID_PROPERTY, INDEXES, KERNEL_RESONANCE_INDEX_PROPERTY, KERNEL_RESONANCE_LABEL,
     KERNEL_RESONANCE_RELATION, KERNEL_RESONANCE_SCORE_PROPERTY, KERNEL_TICK_PROPERTY,
-    POINTER_COUNT_PROPERTY, POINTER_FAMILY_REFS_PROPERTY, POINTER_WEB_JSON_PROPERTY,
-    RELATIONSHIP_INDEXES, SESSION_KEY_PROPERTY, VECTOR_INDEX,
+    POINTER_COUNT_PROPERTY, POINTER_FAMILY_REFS_PROPERTY, POINTER_HARMONIC_ANCHOR_JSON_PROPERTY,
+    POINTER_WEB_JSON_PROPERTY, RELATIONSHIP_INDEXES, SESSION_KEY_PROPERTY, VECTOR_INDEX,
 };
 
 #[test]
@@ -38,6 +38,9 @@ fn coordinate_property_registry_covers_nodes_and_relationships() {
     assert!(node_specs
         .iter()
         .any(|spec| spec.key == POINTER_FAMILY_REFS_PROPERTY && spec.coordinate_home == "S2.5"));
+    assert!(node_specs.iter().any(|spec| {
+        spec.key == POINTER_HARMONIC_ANCHOR_JSON_PROPERTY && spec.coordinate_home == "S2.5"
+    }));
 
     assert!(rel_specs.iter().any(|spec| spec.key == "c_2_relation_type"));
     assert!(rel_specs
@@ -115,10 +118,16 @@ fn coordinate_property_validation_rejects_unregistered_graph_drift() {
     let valid_node = serde_json::json!({
         "coordinate": "S2",
         "c_0_source_coordinates": ["[[S2-SPEC]]"],
-        "c_1_ct_type": "CT1",
-        "bimbaCoordinate": "#2"
+        "c_1_ct_type": "CT1"
     });
     assert!(validate_node_properties(valid_node.as_object().unwrap()).is_ok());
+
+    let deprecated_node = serde_json::json!({
+        "coordinate": "S2",
+        "bimbaCoordinate": "#2"
+    });
+    let err = validate_node_properties(deprecated_node.as_object().unwrap()).unwrap_err();
+    assert!(err.contains("bimbaCoordinate"));
 
     let invalid_node = serde_json::json!({
         "coordinate": "S2",
@@ -159,7 +168,16 @@ fn coordinate_property_validation_rejects_unregistered_graph_drift() {
         "s_4_function_role": "agent quick-view contributor",
         "t_5_next_evolution_phase": "pithy update loop",
         "q_1_theoretical_thesis": "QV is the compact surface of deep Bimba detail",
-        "m_5_lacanian_interface": "public interface synthesis"
+        "m_5_4_lacanian_interface": "public interface synthesis"
     });
     assert!(validate_node_properties(valid_regional_surface.as_object().unwrap()).is_ok());
+
+    let invalid_prime_surface = serde_json::json!({
+        "coordinate": "M5",
+        "m_5_bad-characters": "not canonical",
+        "m_2_prime_colour": "prime spelling must use i"
+    });
+    let err = validate_node_properties(invalid_prime_surface.as_object().unwrap()).unwrap_err();
+    assert!(err.contains("m_5_bad-characters"));
+    assert!(err.contains("m_2_prime_colour"));
 }

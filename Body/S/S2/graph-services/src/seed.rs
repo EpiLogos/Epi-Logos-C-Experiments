@@ -604,11 +604,11 @@ while never ceasing to be itself.",
 
 /// Augment `ChakralCenter` nodes with `body_zones` arrays.
 ///
-/// Uses the canonical bimbaCoordinates `#2-5-0/1-1` through `#2-5-0/1-7`
+/// Uses the canonical coordinates `#2-5-0/1-1` through `#2-5-0/1-7`
 /// (Saturn→Muladhara … Sun→Sahasrara) from the parashakti-deep dataset.
 /// Safe to run multiple times — all statements use MERGE + SET =.
 pub async fn seed_parashakti_body_zones(client: &Neo4jClient) -> Result<String, String> {
-    // (bimbaCoordinate, body_zones, chakra_name)
+    // (coordinate, body_zones, chakra_name)
     let chakra_data: &[(&str, &[&str], &str)] = &[
         (
             "#2-5-0/1-1",
@@ -705,7 +705,7 @@ pub async fn seed_parashakti_body_zones(client: &Neo4jClient) -> Result<String, 
         let zones_cypher: Vec<String> = zones.iter().map(|z| format!("'{}'", z)).collect();
         let zones_list = zones_cypher.join(", ");
         let cypher = format!(
-            "MERGE (c:ChakralCenter {{bimbaCoordinate: $coord}}) \
+            "MERGE (c:ChakralCenter {{coordinate: $coord}}) \
              SET c.body_zones = [{}], \
                  c.body_zones_source = 'ayurveda_tantra_canonical', \
                  c.body_zones_updated_at = datetime()",
@@ -813,7 +813,7 @@ pub async fn seed_decan_body_data(client: &Neo4jClient) -> Result<String, String
     for (idx, (body_part, herbs)) in DECAN_BODY_PARTS.iter().zip(DECAN_HERBS.iter()).enumerate() {
         let coord = format!("#2-3-0-{}", idx);
         let q = query(
-            "MERGE (d:Decan {bimbaCoordinate: $coord}) \
+            "MERGE (d:Decan {coordinate: $coord}) \
              SET d.bodyPart = $body_part, \
                  d.herbalism_herbs = $herbs, \
                  d.body_data_source = 'ayurveda_jyotish_canonical', \

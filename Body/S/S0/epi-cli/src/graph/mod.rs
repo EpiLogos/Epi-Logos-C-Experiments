@@ -66,6 +66,36 @@ pub enum GraphCmd {
     },
     /// Sync vault to graph
     Sync { path: Option<String> },
+    /// Classify a path against the S2 agent-facing promotion policy
+    #[command(name = "promotion-policy")]
+    PromotionPolicy {
+        /// Vault, docs, or repo path to classify
+        path: String,
+    },
+    /// Print the S2 frontmatter-to-property rulebook for agents
+    #[command(name = "property-rules")]
+    PropertyRules,
+    /// Print the S2 coordinate semantics and property-key construction law
+    #[command(name = "coordinate-semantics")]
+    CoordinateSemantics,
+    /// Plan Graphiti routing for day/now/thought material without mutating Neo4j
+    #[command(name = "graphiti-plan")]
+    GraphitiPlan {
+        /// Vault path to route
+        path: String,
+        /// Optional source coordinate to attach as episode context
+        #[arg(long)]
+        coordinate: Option<String>,
+    },
+    /// Validate or apply a full S2 graph promotion intent JSON payload
+    #[command(name = "promote-intent")]
+    PromoteIntent {
+        /// JSON file containing an S2GraphPromotionIntent
+        intent_file: String,
+        /// Validate and render the S2 plan without writing Neo4j
+        #[arg(long)]
+        dry_run: bool,
+    },
     /// Coordinate-based retrieval
     Retrieve {
         coordinate: String,
@@ -475,6 +505,99 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                 result.vault_path, result.coordinate, result.relationships_created
             ))
         }
+        GraphCmd::PromotionPolicy { path } => {
+            let decision = sync_coordinator::SyncCoordinator::classify_promotion_path(path);
+            if json {
+                serde_json::to_string_pretty(&decision).map_err(|e| e.to_string())
+            } else {
+                Ok(format!(
+                    "Promotion policy: {:?} -> {:?}\n{}",
+                    decision.class, decision.target_surface, decision.reason
+                ))
+            }
+        }
+        GraphCmd::PropertyRules => {
+            let rules = sync_coordinator::SyncCoordinator::frontmatter_property_rules();
+            if json {
+                serde_json::to_string_pretty(rules).map_err(|e| e.to_string())
+            } else {
+                Ok(rules
+                    .iter()
+                    .map(|rule| {
+                        format!(
+                            "{} -> {} ({:?})",
+                            rule.frontmatter_key, rule.canonical_property, rule.kind
+                        )
+                    })
+                    .collect::<Vec<_>>()
+                    .join("\n"))
+            }
+        }
+        GraphCmd::CoordinateSemantics => {
+            let semantics = epi_s2_graph_schema::coordinate_semantic_registry();
+            if json {
+                serde_json::to_string_pretty(&semantics).map_err(|e| e.to_string())
+            } else {
+                Ok(format!(
+                    "Coordinate identity: {}\nProperty keys: {} / {}\nAuthorities: {}",
+                    semantics.property_law.identity_property,
+                    semantics.property_law.direct_key_pattern,
+                    semantics.property_law.inverted_key_pattern,
+                    semantics.authority_paths.join(", ")
+                ))
+            }
+        }
+        GraphCmd::GraphitiPlan { path, coordinate } => {
+            let plan = sync_coordinator::SyncCoordinator::plan_graphiti_episode(
+                path,
+                coordinate.as_deref(),
+            )?;
+            if json {
+                serde_json::to_string_pretty(&plan).map_err(|e| e.to_string())
+            } else {
+                Ok(format!(
+                    "Graphiti plan: {} ({})\n{}",
+                    plan.source_path, plan.episode_kind, plan.reason
+                ))
+            }
+        }
+        GraphCmd::PromoteIntent {
+            intent_file,
+            dry_run,
+        } => {
+            let payload = std::fs::read_to_string(intent_file)
+                .map_err(|e| format!("promotion intent read error: {e}"))?;
+            let intent: epi_s2_graph_services::S2GraphPromotionIntent =
+                serde_json::from_str(&payload)
+                    .map_err(|e| format!("promotion intent JSON error: {e}"))?;
+            let plan = sync_coordinator::SyncCoordinator::validate_promotion_intent(&intent)?;
+            if *dry_run {
+                let report = epi_s2_graph_services::GraphPromotionSyncReport::planned(&plan);
+                if json {
+                    serde_json::to_string_pretty(&report).map_err(|e| e.to_string())
+                } else {
+                    Ok(format!(
+                        "Promotion dry-run: {} -> {} relationship action(s)",
+                        report.coordinate,
+                        report.relation_actions.len()
+                    ))
+                }
+            } else {
+                let config = client::Neo4jConfig::from_env();
+                let neo4j = client::Neo4jClient::connect(&config)
+                    .map_err(|e| format!("connect failed: {}", e))?;
+                let coordinator = sync_coordinator::SyncCoordinator::new(&neo4j);
+                let report = coordinator.promote_intent(&intent).await?;
+                if json {
+                    serde_json::to_string_pretty(&report).map_err(|e| e.to_string())
+                } else {
+                    Ok(format!(
+                        "Promoted {} from {}",
+                        report.coordinate, report.source_path
+                    ))
+                }
+            }
+        }
         GraphCmd::Retrieve { coordinate, nested } => {
             let config = client::Neo4jConfig::from_env();
             let neo4j = client::Neo4jClient::connect(&config)
@@ -721,7 +844,7 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                 .map_err(|e| format!("connect failed: {}", e))?;
             let resolved = GraphMethodService::resolve_coordinate_string(coordinate)?;
             let cypher_text = "MATCH (source:Bimba)
-                 WHERE source.coordinate = $canonical OR source.bimbaCoordinate = $input
+                 WHERE source.coordinate = $canonical
                  MATCH (source)-[:HAS_KERNEL_RESONANCE]->(obs:Bimba:KernelResonanceObservation)
                  RETURN obs.c_5_kernel_resonance_index AS idx,
                         avg(obs.c_5_kernel_resonance_score) AS score,

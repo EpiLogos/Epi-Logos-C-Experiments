@@ -118,6 +118,11 @@ fn semantic_document_text_includes_safe_kernel_coordinate_anchor() {
     assert_eq!(doc.coordinate_anchor.coordinate, "M2");
     assert!(doc.text.contains("kernel_source: s0.kernel"));
     assert!(doc.text.contains("pointer_web_count: 36"));
+    assert!(doc
+        .text
+        .contains("harmonic_profile: portal-core::MathemeHarmonicProfile"));
+    assert!(doc.text.contains("harmonic_bedrock: #2/#2'"));
+    assert!(doc.text.contains("harmonic_pointer_lens: L2"));
     assert!(doc.text.contains("pointer_family_refs:"));
     assert!(doc.text.contains("m_ref=M2"));
     assert!(doc.text.contains("qvdata_source: epi core knowing"));

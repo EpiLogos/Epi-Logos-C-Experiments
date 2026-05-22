@@ -69,6 +69,21 @@ impl SemanticDocument {
             "pointer_web_count: {}",
             coordinate_anchor.pointer_web.pointer_count
         ));
+        if let Some(harmonic_pointer) = &coordinate_anchor.harmonic_pointer {
+            lines.push(format!(
+                "harmonic_profile: {}",
+                harmonic_pointer.source_profile
+            ));
+            lines.push(format!(
+                "harmonic_bedrock: {}/{}",
+                harmonic_pointer.bedrock.psychoid_number,
+                harmonic_pointer.bedrock.inverted_psychoid_number
+            ));
+            lines.push(format!(
+                "harmonic_pointer_lens: {}",
+                harmonic_pointer.pointer_anchor.lens_anchor
+            ));
+        }
         lines.push("pointer_family_refs:".into());
         lines.extend(
             pointer_ref_values(&coordinate_anchor.pointer_web.family_refs)

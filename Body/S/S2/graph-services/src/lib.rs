@@ -48,9 +48,10 @@ pub use meta::{
 };
 pub use pointers::{
     compute_pointer_web, kernel_coordinate_anchor_for, kernel_coordinate_anchor_from_parts,
-    KernelAnchor, KernelCoordinateAnchor, PointerWeb, QvDataAnchor,
+    HarmonicBedrockAnchor, HarmonicContextFrameAnchor, HarmonicPointerAnchor,
+    HarmonicPointerWebAnchor, KernelAnchor, KernelCoordinateAnchor, PointerWeb, QvDataAnchor,
 };
-pub use relationship_manager::{RelationshipManager, POSITION_REL_TYPES};
+pub use relationship_manager::{RelationshipManager, RelationshipWritePlan, POSITION_REL_TYPES};
 pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};
 pub use retrieval_query::{
     classify_query, disclosure_for_query_type, extract_coordinate_mentions, fusion_rrf_results,
@@ -58,7 +59,13 @@ pub use retrieval_query::{
     HybridFusionConfig, QueryType, RetrievalMode, RetrievalResult,
 };
 pub use semantic::SemanticDocument;
-pub use sync_coordinator::{SyncCoordinator, SyncResult};
+pub use sync_coordinator::{
+    CodeProvenanceEvidence, FrontmatterPropertyRule, FrontmatterPropertyRuleKind,
+    GraphPromotionSyncReport, GraphitiEpisodePlan, PromotionClass, PromotionFrontmatterEvidence,
+    PromotionLinkEvidence, PromotionNodeIntent, PromotionPlan, PromotionPolicyDecision,
+    PromotionRelationCandidate, PromotionTargetSurface, PropertyProposal, PropertySchemaStatus,
+    S2GraphPromotionIntent, S2GraphPromotionNode, SyncCoordinator, SyncResult,
+};
 pub use types::{EdgeRef, GraphResult, NodeRef, PathResult, RelationshipType};
 pub use vault::{
     parse_yaml_frontmatter, EntityMapper, GraphAPI, QLAlignmentValidator, SyncOrchestrator,

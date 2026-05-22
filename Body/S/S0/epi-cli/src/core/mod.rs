@@ -427,6 +427,31 @@ fn dump(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
     Ok(())
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn graph_coordinate_alternates_include_m_family_for_hash_subbranches() {
+        assert_eq!(
+            graph_coordinate_alternates("#5-1"),
+            vec!["#5-1".to_string(), "M5-1".to_string()]
+        );
+        assert_eq!(
+            graph_coordinate_alternates("M5-1"),
+            vec!["M5-1".to_string()]
+        );
+    }
+
+    #[test]
+    fn cypher_literal_escape_covers_deep_multiline_prose() {
+        assert_eq!(
+            escape_cypher_literal("Sophia's\nLogos\tbridge"),
+            "Sophia\\'s\\nLogos\\tbridge"
+        );
+    }
+}
+
 fn cf_roots(epi: &EpiLib, json: bool) -> color_eyre::Result<()> {
     let roots = [
         (
@@ -1609,7 +1634,19 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
         }
     }
 
+    let graph_node = load_graph_subbranch(raw);
+    if let Some(ref node) = graph_node {
+        node_name = node.name.clone().or(node_name);
+        node_essence = node.essence.clone().or(node_essence);
+        node_core_nature = node.core_nature.clone().or(node_core_nature);
+        node_description = node.description.clone().or(node_description);
+    }
+
     let display_name = node_name.as_deref().unwrap_or("(unknown)");
+    let display_coord = graph_node
+        .as_ref()
+        .map(|node| node.coordinate.as_str())
+        .unwrap_or(raw);
     let branch_label = if let Some(r) = root {
         format!("M{} {}", r, mbranch_name(r))
     } else {
@@ -1619,6 +1656,7 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
     if json {
         let mut obj = serde_json::json!({
             "coord": raw,
+            "graph_coord": display_coord,
             "type": if is_help_branch { "help_topic" } else { "sub_branch" },
             "branch": branch_label,
             "name": display_name,
@@ -1644,12 +1682,20 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
                 .map(|(c, n)| serde_json::json!({"coord": c, "name": n}))
                 .collect::<Vec<_>>());
         }
+        if let Some(ref node) = graph_node {
+            if !node.q_props.is_empty() {
+                obj["q"] = serde_json::json!(node.q_props);
+            }
+            if !node.regional_props.is_empty() {
+                obj["regional"] = serde_json::json!(node.regional_props);
+            }
+        }
         println!("{}", serde_json::to_string_pretty(&obj)?);
     } else {
         if is_help_branch {
-            println!("{} — {}", raw, display_name);
+            println!("{} — {}", display_coord, display_name);
         } else {
-            println!("{} — {} sub-branch", raw, display_name);
+            println!("{} — {} sub-branch", display_coord, display_name);
         }
         if let Some(r) = root {
             println!("  Root: {} ({})", branch_label, PSYCHOID_NAMES[r as usize]);
@@ -1673,6 +1719,20 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
                 }
             }
         }
+        if let Some(ref node) = graph_node {
+            if !node.q_props.is_empty() {
+                println!("  Quintessential Graph Surface:");
+                for (key, value) in &node.q_props {
+                    println!("    {}: {}", key, truncate_safe(value, 160));
+                }
+            }
+            if !node.regional_props.is_empty() {
+                println!("  Regional Graph Surface:");
+                for (key, value) in &node.regional_props {
+                    println!("    {}: {}", key, truncate_safe(value, 120));
+                }
+            }
+        }
         if node_name.is_none() {
             println!("  (no dataset entry found — coordinate may be invalid)");
         } else if pithy.is_none() && !is_help_branch {
@@ -1688,6 +1748,187 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
         }
     }
     Ok(())
+}
+
+#[derive(Debug, Clone)]
+struct GraphSubbranch {
+    coordinate: String,
+    name: Option<String>,
+    essence: Option<String>,
+    core_nature: Option<String>,
+    description: Option<String>,
+    q_props: Vec<(String, String)>,
+    regional_props: Vec<(String, String)>,
+}
+
+fn load_graph_subbranch(raw: &str) -> Option<GraphSubbranch> {
+    let alternates = graph_coordinate_alternates(raw);
+    let quoted = alternates
+        .iter()
+        .map(|coord| format!("'{}'", escape_cypher_literal(coord)))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let m_prime_keys = graph_m_prime_surface_keys(raw);
+    let m_prime_return = m_prime_keys
+        .iter()
+        .map(|key| format!("                n.{key} AS {key}"))
+        .collect::<Vec<_>>()
+        .join(",\n");
+    let m_prime_return = if m_prime_return.is_empty() {
+        String::new()
+    } else {
+        format!(",\n{m_prime_return}")
+    };
+    let cypher = format!(
+        "MATCH (n:Bimba) \
+         WHERE n.coordinate IN [{coords}] \
+         RETURN n.coordinate AS coordinate, \
+                n.c_1_name AS name, \
+                n.c_0_essence AS essence, \
+                n.c_0_core_nature AS core_nature, \
+                n.c_1_description AS description, \
+                n.q_1_theoretical_thesis AS q_1_theoretical_thesis, \
+                n.q_2_sophia_logos_dialectic AS q_2_sophia_logos_dialectic, \
+                n.q_2_instantiation_mode AS q_2_instantiation_mode, \
+                n.q_3_dialectical_movement AS q_3_dialectical_movement, \
+                n.q_4_historical_diagnosis AS q_4_historical_diagnosis, \
+                n.q_5_integration_template AS q_5_integration_template, \
+                n.q_5_conjunctive_threshold AS q_5_conjunctive_threshold, \
+                n.l_4_mef_condition AS l_4_mef_condition, \
+                n.s_4_function_role AS s_4_function_role, \
+                n.t_1_epistemic_function AS t_1_epistemic_function, \
+                n.t_5_next_evolution_phase AS t_5_next_evolution_phase{m_prime_return} \
+         LIMIT 1",
+        coords = quoted,
+        m_prime_return = m_prime_return,
+    );
+
+    let fetch = async move {
+        let config = crate::graph::client::Neo4jConfig::from_env();
+        let client = crate::graph::client::Neo4jClient::connect(&config).ok()?;
+        let rows = client.run(&cypher).await.ok()?;
+        let row = rows.first()?;
+
+        let q_props = collect_optional_row_strings(
+            row,
+            &[
+                "q_1_theoretical_thesis",
+                "q_2_sophia_logos_dialectic",
+                "q_2_instantiation_mode",
+                "q_3_dialectical_movement",
+                "q_4_historical_diagnosis",
+                "q_5_integration_template",
+                "q_5_conjunctive_threshold",
+            ],
+        );
+        let mut regional_keys = vec![
+            "l_4_mef_condition",
+            "s_4_function_role",
+            "t_1_epistemic_function",
+            "t_5_next_evolution_phase",
+        ];
+        regional_keys.extend(m_prime_keys.iter().map(String::as_str));
+        let regional_props = collect_optional_row_strings(row, &regional_keys);
+
+        Some(GraphSubbranch {
+            coordinate: row.get::<String>("coordinate").ok()?,
+            name: row.get::<String>("name").ok(),
+            essence: row.get::<String>("essence").ok(),
+            core_nature: row.get::<String>("core_nature").ok(),
+            description: row.get::<String>("description").ok(),
+            q_props,
+            regional_props,
+        })
+    };
+
+    if let Ok(handle) = tokio::runtime::Handle::try_current() {
+        tokio::task::block_in_place(|| handle.block_on(fetch))
+    } else {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .ok()?
+            .block_on(fetch)
+    }
+}
+
+fn graph_m_prime_surface_keys(raw: &str) -> Vec<String> {
+    let Some(prefix) = graph_m_prime_property_prefix(raw) else {
+        return Vec::new();
+    };
+    [
+        "topological_significance",
+        "abjad_value",
+        "degree",
+        "two_stroke_doctrine",
+        "lacanian_interface",
+        "matrix_constant",
+        "consciousness_operation",
+        "grammatical_function",
+        "processual_topology_role",
+        "dhikr_application",
+        "rotational_phase",
+        "temporal_structure",
+        "archaeology_method",
+    ]
+    .iter()
+    .map(|semantic| format!("{prefix}_{semantic}"))
+    .collect()
+}
+
+fn graph_m_prime_property_prefix(raw: &str) -> Option<String> {
+    let normalized = raw
+        .strip_prefix('#')
+        .map(|rest| format!("M{rest}"))
+        .unwrap_or_else(|| raw.to_string());
+    let mut chars = normalized.chars();
+    if chars.next()? != 'M' {
+        return None;
+    }
+    let root = chars.next()?.to_digit(10)?;
+    let mut prefix = format!("m_{root}");
+    if chars.next() == Some('-') {
+        let slot = chars
+            .take_while(|ch| ch.is_ascii_digit())
+            .collect::<String>();
+        if !slot.is_empty() {
+            prefix.push('_');
+            prefix.push_str(&slot);
+        }
+    }
+    Some(prefix)
+}
+
+fn graph_coordinate_alternates(raw: &str) -> Vec<String> {
+    let mut alternates = vec![raw.to_string()];
+    if let Some(rest) = raw.strip_prefix('#') {
+        alternates.push(format!("M{}", rest));
+    }
+    alternates.sort();
+    alternates.dedup();
+    alternates
+}
+
+fn collect_optional_row_strings(row: &neo4rs::Row, keys: &[&str]) -> Vec<(String, String)> {
+    keys.iter()
+        .filter_map(|key| {
+            let value = row.get::<String>(*key).ok()?;
+            if value.trim().is_empty() {
+                None
+            } else {
+                Some(((*key).to_string(), value))
+            }
+        })
+        .collect()
+}
+
+fn escape_cypher_literal(value: &str) -> String {
+    value
+        .replace('\\', "\\\\")
+        .replace('\'', "\\'")
+        .replace('\n', "\\n")
+        .replace('\r', "\\r")
+        .replace('\t', "\\t")
 }
 
 fn knowing_family(fam_str: &str, json: bool) -> color_eyre::Result<()> {

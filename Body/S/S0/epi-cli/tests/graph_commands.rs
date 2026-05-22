@@ -99,6 +99,178 @@ fn doctor_json_reports_graph_and_semantic_sections() {
     assert!(payload["graph"]["staleSemanticNodes"].is_number());
 }
 
+#[test]
+fn graph_agent_planning_commands_expose_s2_rules_without_backend() {
+    let env = TestEnv::empty().with_env("EPILOGOS_ROOT", workspace_root());
+
+    let policy = run_epi(
+        [
+            "--json",
+            "graph",
+            "promotion-policy",
+            "docs/specs/S/S2-S2i-GRAPH.md",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        policy.status.success(),
+        "stdout={} stderr={}",
+        policy.stdout,
+        policy.stderr
+    );
+    let policy_json: serde_json::Value = serde_json::from_str(&policy.stdout).unwrap();
+    assert_eq!(policy_json["class"], "TechnicalCoordinateDoc");
+    assert_eq!(policy_json["target_surface"], "Neo4jCoordinateGraph");
+    assert_eq!(
+        policy_json["coordinate_property_families"],
+        serde_json::json!(["c", "p", "l", "s", "t", "m", "q"])
+    );
+
+    let rules = run_epi(["--json", "graph", "property-rules"].as_slice(), &env);
+    assert!(
+        rules.status.success(),
+        "stdout={} stderr={}",
+        rules.stdout,
+        rules.stderr
+    );
+    let rules_json: serde_json::Value = serde_json::from_str(&rules.stdout).unwrap();
+    assert!(rules_json
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|rule| rule["frontmatter_key"] == "source_coordinates"));
+
+    let semantics = run_epi(["--json", "graph", "coordinate-semantics"].as_slice(), &env);
+    assert!(
+        semantics.status.success(),
+        "stdout={} stderr={}",
+        semantics.stdout,
+        semantics.stderr
+    );
+    let semantics_json: serde_json::Value = serde_json::from_str(&semantics.stdout).unwrap();
+    assert_eq!(
+        semantics_json["property_law"]["identity_property"],
+        "coordinate"
+    );
+    assert_eq!(
+        semantics_json["property_law"]["inverted_key_pattern"],
+        "{family}_{position}_i_{semantic_suffix}"
+    );
+    assert!(semantics_json["families"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|family| family["prefix"] == "s"
+            && family["family_name"].as_str().unwrap().contains("System")));
+
+    let graphiti = run_epi(
+        [
+            "--json",
+            "graph",
+            "graphiti-plan",
+            "Idea/Empty/Present/22-05-2026/session/now.md",
+            "--coordinate",
+            "C0/T5",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        graphiti.status.success(),
+        "stdout={} stderr={}",
+        graphiti.stdout,
+        graphiti.stderr
+    );
+    let graphiti_json: serde_json::Value = serde_json::from_str(&graphiti.stdout).unwrap();
+    assert_eq!(graphiti_json["target_surface"], "graphiti_episode");
+    assert_eq!(
+        graphiti_json["runtime_authority"],
+        "S3 graphiti runtime adapter"
+    );
+    assert_eq!(
+        graphiti_json["invocation_owner"],
+        "S5 episodic invocation and arc governance"
+    );
+    assert_eq!(graphiti_json["gateway_method"], "s5.episodic.deposit");
+    assert_eq!(graphiti_json["creates_neo4j_coordinate_node"], false);
+}
+
+#[test]
+fn graph_promote_intent_dry_run_validates_s2_plan_without_backend() {
+    let env = TestEnv::empty().with_env("EPILOGOS_ROOT", workspace_root());
+    let intent_path = std::env::temp_dir().join(format!(
+        "epi-s2-promotion-intent-{}.json",
+        std::process::id()
+    ));
+    std::fs::write(
+        &intent_path,
+        serde_json::json!({
+            "node": {
+                "coordinate": "S2",
+                "identity_property": "coordinate",
+                "vault_path": "docs/specs/S/S2-S2i-GRAPH.md",
+                "requested_label_hints": [],
+                "properties": {
+                    "coordinate": "S2",
+                    "vault_path": "docs/specs/S/S2-S2i-GRAPH.md",
+                    "artifact_kind": "vault_markdown",
+                    "content_hash": "sha256:s2-dry-run",
+                    "coordinate_prefix": "S2",
+                    "coordinate_depth": 1,
+                    "s_4_function_role": "S2 graph schema and promotion authority"
+                }
+            },
+            "link_evidence": [],
+            "frontmatter_evidence": [],
+            "property_proposals": [{
+                "key": "s_4_function_role",
+                "value": "S2 graph schema and promotion authority",
+                "evidence_kind": "content_synthesis",
+                "evidence_text": "The S2 graph spec presents this coordinate as the schema and promotion authority.",
+                "source_path": "docs/specs/S/S2-S2i-GRAPH.md",
+                "source_line": 1,
+                "proposed_by": "pi:pleroma",
+                "reasoning": "The property is derived by Pi-agent reasoning over the technical coordinate doc, not by a CLI heuristic."
+            }],
+            "relation_candidates": [],
+            "content_hash": "sha256:s2-dry-run",
+            "markdown_body_hash": "sha256:s2-dry-run-body",
+            "compatibility_source_label": null,
+            "compatibility_source_property": null,
+            "compatibility_source_coordinate": null,
+            "promotion_source": "pi_agent",
+            "sync_version": "s2-agent-promotion-v1"
+        })
+        .to_string(),
+    )
+    .unwrap();
+
+    let out = run_epi(
+        [
+            "--json",
+            "graph",
+            "promote-intent",
+            intent_path.to_str().unwrap(),
+            "--dry-run",
+        ]
+        .as_slice(),
+        &env,
+    );
+    let _ = std::fs::remove_file(intent_path);
+
+    assert!(
+        out.status.success(),
+        "stdout={} stderr={}",
+        out.stdout,
+        out.stderr
+    );
+    let payload: serde_json::Value = serde_json::from_str(&out.stdout).unwrap();
+    assert_eq!(payload["coordinate"], "S2");
+    assert_eq!(payload["node_action"], "planned_upsert");
+    assert_eq!(payload["validation_errors"], serde_json::json!([]));
+}
+
 #[tokio::test]
 #[ignore] // requires Docker: docker compose -f docker-compose.epi-s2.yml up -d
 async fn live_graph_commands_suite() {

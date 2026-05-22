@@ -1,6 +1,11 @@
 //! S1 Hen compiler contract.
 
+pub mod artifact_evidence;
+pub mod graph_promotion;
+pub mod property_intelligence;
+pub mod relation_inference;
 mod smart_env;
+pub mod wikilinks;
 
 use std::path::PathBuf;
 

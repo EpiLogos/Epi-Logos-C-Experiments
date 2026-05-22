@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 use crate::CoordinateArrayParser;
 
 const FAMILIES: &[&str] = &["C", "P", "L", "S", "T", "M"];
+const HC_WEB_RING_SIZE: u8 = 12;
+const HC_WEB_HELIX_SIZE: u8 = 6;
 const VAK_REFS: &[(&str, &str)] = &[
     ("cpf_ref", "S4-0'"),
     ("ct_ref", "S4-1'"),
@@ -51,8 +53,59 @@ pub struct KernelCoordinateAnchor {
     pub compatibility_property: Option<String>,
     pub projection_boundary: String,
     pub kernel: KernelAnchor,
+    pub harmonic_pointer: Option<HarmonicPointerAnchor>,
     pub pointer_web: PointerWeb,
     pub qvdata: QvDataAnchor,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HarmonicPointerAnchor {
+    pub source_profile: String,
+    pub source_contract: String,
+    pub coordinate: String,
+    pub ql_position: u8,
+    pub helix: String,
+    pub bedrock: HarmonicBedrockAnchor,
+    pub pointer_anchor: HarmonicPointerWebAnchor,
+    pub context_frames: HarmonicContextFrameAnchor,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HarmonicBedrockAnchor {
+    pub hash_operator: String,
+    pub psychoid_number: String,
+    pub inverted_psychoid_number: String,
+    pub successor_psychoid_number: String,
+    pub successor_relation: String,
+    pub inversion_relation: String,
+    pub bimba_pitch_class: u8,
+    pub inversion_pitch_class: u8,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HarmonicPointerWebAnchor {
+    pub source_coordinate: String,
+    pub ql_position: u8,
+    pub helix: String,
+    pub web_index: u8,
+    pub bedrock_index: u8,
+    pub family_ring_size: u8,
+    pub position_ring_size: u8,
+    pub lens_ring_size: u8,
+    pub web_cardinality: u8,
+    pub lens_anchor: String,
+    pub relation_role: String,
+    pub pitch_class: u8,
+    pub provenance: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HarmonicContextFrameAnchor {
+    pub frame_count: u8,
+    pub active_frame_index: Option<u8>,
+    pub active_frame: Option<String>,
+    pub active_agent: Option<String>,
+    pub projection: String,
 }
 
 pub fn kernel_coordinate_anchor_for(coordinate: &str) -> Result<KernelCoordinateAnchor, String> {
@@ -70,6 +123,7 @@ pub fn kernel_coordinate_anchor_from_parts(
     compatibility_property: Option<String>,
 ) -> Result<KernelCoordinateAnchor, String> {
     let pointer_web = compute_pointer_web(canonical_coordinate)?;
+    let harmonic_pointer = compute_harmonic_pointer_anchor(canonical_coordinate)?;
     Ok(KernelCoordinateAnchor {
         coordinate: canonical_coordinate.to_owned(),
         source_input: source_input.to_owned(),
@@ -82,6 +136,7 @@ pub fn kernel_coordinate_anchor_from_parts(
             computation_layer: "Body/S/S0/epi-lib + Body/S/S0/portal-core".to_owned(),
             safe_projection: "KernelTemporalProjection / KernelResonanceObservation".to_owned(),
         },
+        harmonic_pointer,
         pointer_web,
         qvdata: QvDataAnchor {
             source: "epi core knowing".to_owned(),
@@ -93,13 +148,89 @@ pub fn kernel_coordinate_anchor_from_parts(
     })
 }
 
+pub fn compute_harmonic_pointer_anchor(
+    coordinate: &str,
+) -> Result<Option<HarmonicPointerAnchor>, String> {
+    let parsed = CoordinateArrayParser::parse_one(coordinate)?;
+    let Some(position) = parsed.ql_position.filter(|position| *position <= 5) else {
+        return Ok(None);
+    };
+    let tick12 = if parsed.inverted {
+        position + HC_WEB_HELIX_SIZE
+    } else {
+        position
+    };
+    let helix = if parsed.inverted {
+        "pratibimba"
+    } else {
+        "bimba"
+    };
+    let pitch_class = if parsed.inverted {
+        pratibimba_pitch_class(position)
+    } else {
+        bimba_pitch_class(position)
+    };
+    let successor = (position + 1) % HC_WEB_HELIX_SIZE;
+    let diatonic = diatonic_context_for_pitch_class(pitch_class);
+
+    Ok(Some(HarmonicPointerAnchor {
+        source_profile: "portal-core::MathemeHarmonicProfile".to_owned(),
+        source_contract: "S0 Bedrock7/PointerWeb36/CF7".to_owned(),
+        coordinate: parsed.coordinate,
+        ql_position: position,
+        helix: helix.to_owned(),
+        bedrock: HarmonicBedrockAnchor {
+            hash_operator: "#".to_owned(),
+            psychoid_number: format!("#{position}"),
+            inverted_psychoid_number: format!("#{position}'"),
+            successor_psychoid_number: format!("#{successor}"),
+            successor_relation: if position == 5 {
+                "mobius-return"
+            } else {
+                "epogdoon-tick"
+            }
+            .to_owned(),
+            inversion_relation: "inversion-spanda".to_owned(),
+            bimba_pitch_class: bimba_pitch_class(position),
+            inversion_pitch_class: pratibimba_pitch_class(position),
+        },
+        pointer_anchor: HarmonicPointerWebAnchor {
+            source_coordinate: "S0/QL-meta".to_owned(),
+            ql_position: position,
+            helix: helix.to_owned(),
+            web_index: tick12,
+            bedrock_index: position,
+            family_ring_size: 12,
+            position_ring_size: 12,
+            lens_ring_size: 12,
+            web_cardinality: 36,
+            lens_anchor: lens_anchor_label(tick12),
+            relation_role: if parsed.inverted {
+                "inversion-spanda"
+            } else {
+                "position-identity"
+            }
+            .to_owned(),
+            pitch_class,
+            provenance: "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract".to_owned(),
+        },
+        context_frames: HarmonicContextFrameAnchor {
+            frame_count: 7,
+            active_frame_index: diatonic.as_ref().map(|context| context.0),
+            active_frame: diatonic.as_ref().map(|context| context.1.to_owned()),
+            active_agent: diatonic.as_ref().map(|context| context.2.to_owned()),
+            projection: "CF7 diatonic lemniscate overlay".to_owned(),
+        },
+    }))
+}
+
 pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
     let parsed = CoordinateArrayParser::parse_one(coordinate)?;
     let ql_position = parsed.ql_position;
     let sixfold_position = ql_position.filter(|position| *position <= 5);
     let family = parsed.family.as_deref();
     let prime = if parsed.inverted { "'" } else { "" };
-    let flipped_prime = if parsed.inverted { "" } else { "'" };
+    let inverted_prime = if parsed.inverted { "" } else { "'" };
 
     let mut family_refs = BTreeMap::new();
     let mut inversion_refs = BTreeMap::new();
@@ -111,7 +242,7 @@ pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
             );
             inversion_refs.insert(
                 format!("{}_inv_ref", family.to_ascii_lowercase()),
-                format!("{family}{}{flipped_prime}", 5 - q),
+                format!("{family}{q}{inverted_prime}"),
             );
         }
     }
@@ -132,7 +263,7 @@ pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
         .map(|lens| (format!("l{lens}_ref"), format!("L{lens}")))
         .collect::<BTreeMap<_, _>>();
     let lens_inversion_refs = (0..=5)
-        .map(|lens| (format!("l{lens}_inv_ref"), format!("L{}'", 5 - lens)))
+        .map(|lens| (format!("l{lens}_inv_ref"), format!("L{lens}'")))
         .collect::<BTreeMap<_, _>>();
 
     let pointer_count = family_refs.len()
@@ -157,6 +288,36 @@ pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
     })
 }
 
+fn bimba_pitch_class(position: u8) -> u8 {
+    (2 * (position % HC_WEB_HELIX_SIZE)) % HC_WEB_RING_SIZE
+}
+
+fn pratibimba_pitch_class(position: u8) -> u8 {
+    (bimba_pitch_class(position) + 1) % HC_WEB_RING_SIZE
+}
+
+fn lens_anchor_label(tick12: u8) -> String {
+    let position = tick12 % HC_WEB_HELIX_SIZE;
+    if tick12 < HC_WEB_HELIX_SIZE {
+        format!("L{position}")
+    } else {
+        format!("L{position}'")
+    }
+}
+
+fn diatonic_context_for_pitch_class(pitch_class: u8) -> Option<(u8, &'static str, &'static str)> {
+    match pitch_class % HC_WEB_RING_SIZE {
+        0 => Some((0, "00/00", "Nous")),
+        2 => Some((1, "0/1", "Logos")),
+        4 => Some((2, "0/1/2", "Eros")),
+        5 => Some((3, "0/1/2/3", "Mythos")),
+        7 => Some((4, "4.0/1-4.4/5", "Anima/Psyche")),
+        9 => Some((5, "4.5/0", "Psyche")),
+        11 => Some((6, "5/0", "Sophia")),
+        _ => None,
+    }
+}
+
 struct AnchorResolution {
     input: String,
     canonical: String,
@@ -173,13 +334,10 @@ fn resolve_coordinate_for_anchor(input: &str) -> Result<AnchorResolution, String
     } else {
         parsed.coordinate
     };
-    let compatibility_property = trimmed
-        .starts_with('#')
-        .then(|| "bimbaCoordinate".to_owned());
     Ok(AnchorResolution {
         input: trimmed.to_owned(),
         canonical,
-        compatibility_property,
+        compatibility_property: None,
     })
 }
 
@@ -196,5 +354,45 @@ mod tests {
         assert!(pointer_web.family_refs.is_empty());
         assert!(pointer_web.inversion_refs.is_empty());
         assert_eq!(pointer_web.primary_reflective_context, None);
+    }
+
+    #[test]
+    fn inversion_refs_are_same_position_prime_not_xy5_mirror() {
+        let pointer_web = compute_pointer_web("M2").unwrap();
+
+        assert_eq!(
+            pointer_web
+                .inversion_refs
+                .get("m_inv_ref")
+                .map(String::as_str),
+            Some("M2'")
+        );
+        assert_ne!(
+            pointer_web
+                .inversion_refs
+                .get("m_inv_ref")
+                .map(String::as_str),
+            Some("M3'")
+        );
+    }
+
+    #[test]
+    fn lens_inversion_refs_are_full_twelve_lens_ring() {
+        let pointer_web = compute_pointer_web("M2").unwrap();
+
+        assert_eq!(
+            pointer_web
+                .lens_inversion_refs
+                .get("l2_inv_ref")
+                .map(String::as_str),
+            Some("L2'")
+        );
+        assert_eq!(
+            pointer_web
+                .lens_inversion_refs
+                .get("l5_inv_ref")
+                .map(String::as_str),
+            Some("L5'")
+        );
     }
 }

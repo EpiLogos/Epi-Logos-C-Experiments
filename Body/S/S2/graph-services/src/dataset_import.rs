@@ -63,6 +63,13 @@ pub struct DatasetImporter<'a> {
     datasets_dir: String,
 }
 
+const STRING_LIST_TARGETS: &[&str] = &[
+    "c_4_ql_operator_types",
+    "c_5_resonances",
+    "l_2_therapeutic_properties",
+    "s_5_tool_affinity",
+];
+
 impl<'a> DatasetImporter<'a> {
     pub fn new(client: &'a Neo4jClient, datasets_dir: &str) -> Self {
         Self {
@@ -86,7 +93,8 @@ impl<'a> DatasetImporter<'a> {
         let path = self.resolve_dataset_path(filename);
         let data = std::fs::read_to_string(&path)
             .map_err(|e| format!("read {}: {}", path.display(), e))?;
-        let nodes: Vec<Value> = serde_json::from_str(strip_json_bom(&data))
+        let sanitized = sanitize_json_control_chars(strip_json_bom(&data));
+        let nodes: Vec<Value> = serde_json::from_str(&sanitized)
             .map_err(|e| format!("parse {}: {}", path.display(), e))?;
 
         let mut count = 0;
@@ -225,15 +233,7 @@ impl<'a> DatasetImporter<'a> {
                 ));
             }
 
-            // Compat — preserve legacy bimbaCoordinate when it differs from new form.
-            if let Some(legacy) = legacy_bimba_coordinate(node) {
-                if legacy != coord {
-                    set_parts.push(format!(
-                        "n.bimbaCoordinate = COALESCE(n.bimbaCoordinate, '{}')",
-                        escape_cypher(legacy)
-                    ));
-                }
-            }
+            append_deep_prefixed_filtered_props(node, parsed.as_ref(), &mut set_parts);
 
             // Per-node `labels` field (added by Bimba label exports). When present,
             // these are authoritative — applied via APOC after the MERGE.
@@ -327,7 +327,8 @@ impl<'a> DatasetImporter<'a> {
         let path = self.resolve_dataset_path(filename);
         let data = std::fs::read_to_string(&path)
             .map_err(|e| format!("read {}: {}", path.display(), e))?;
-        let raw: Vec<Value> = serde_json::from_str(strip_json_bom(&data))
+        let sanitized = sanitize_json_control_chars(strip_json_bom(&data));
+        let raw: Vec<Value> = serde_json::from_str(&sanitized)
             .map_err(|e| format!("parse {}: {}", path.display(), e))?;
 
         // Detect aggregated shape `[{coordinate, outgoing, incoming}]` and flatten
@@ -389,6 +390,7 @@ impl<'a> DatasetImporter<'a> {
                     escape_cypher(branch.id)
                 ));
             }
+            append_deep_prefixed_rel_props(rel, &mut set_parts);
             let set_clause = format!(" SET {}", set_parts.join(", "));
 
             let cypher = format!(
@@ -494,7 +496,8 @@ impl<'a> DatasetImporter<'a> {
         }
         let data = std::fs::read_to_string(&path)
             .map_err(|e| format!("read {}: {}", path.display(), e))?;
-        let entries: Vec<Value> = serde_json::from_str(strip_json_bom(&data))
+        let sanitized = sanitize_json_control_chars(strip_json_bom(&data));
+        let entries: Vec<Value> = serde_json::from_str(&sanitized)
             .map_err(|e| format!("parse {}: {}", path.display(), e))?;
 
         const EXCLUDE: &[&str] = &["Bimba", "BimbaNode", "BimbaCoordinate"];
@@ -692,6 +695,41 @@ pub fn strip_json_bom(raw: &str) -> &str {
     raw.trim_start_matches('\u{feff}')
 }
 
+fn sanitize_json_control_chars(raw: &str) -> String {
+    let mut result = String::with_capacity(raw.len());
+    let mut in_string = false;
+    let mut escaped = false;
+
+    for ch in raw.chars() {
+        if escaped {
+            result.push(ch);
+            escaped = false;
+            continue;
+        }
+
+        if ch == '\\' {
+            result.push(ch);
+            escaped = true;
+            continue;
+        }
+
+        if ch == '"' {
+            in_string = !in_string;
+            result.push(ch);
+            continue;
+        }
+
+        match ch {
+            '\n' if in_string => result.push_str("\\n"),
+            '\r' if in_string => result.push_str("\\r"),
+            '\t' if in_string => result.push_str("\\t"),
+            _ => result.push(ch),
+        }
+    }
+
+    result
+}
+
 pub fn coordinate_from_node(node: &Value) -> Option<&str> {
     node.get("coordinate")
         .and_then(|value| value.as_str())
@@ -731,7 +769,11 @@ pub fn relation_endpoint<'a>(rel: &'a Value, key: &str) -> Option<&'a str> {
 
 /// Escape single quotes for Cypher string literals
 fn escape_cypher(s: &str) -> String {
-    s.replace('\\', "\\\\").replace('\'', "\\'")
+    s.replace('\\', "\\\\")
+        .replace('\'', "\\'")
+        .replace('\n', "\\n")
+        .replace('\r', "\\r")
+        .replace('\t', "\\t")
 }
 
 /// Sanitize relationship type to valid Neo4j identifier (uppercase, underscores only)
@@ -753,9 +795,362 @@ fn nested_filtered_property<'a>(node: &'a Value, key: &str) -> Option<&'a str> {
         .and_then(|value| value.as_str())
 }
 
-fn legacy_bimba_coordinate(node: &Value) -> Option<&str> {
-    nested_filtered_property(node, "bimbaCoordinate")
-        .or_else(|| node.get("bimbaCoordinate").and_then(|value| value.as_str()))
+fn append_deep_prefixed_filtered_props(
+    node: &Value,
+    parsed: Option<&crate::coordinate::ParsedCoordinate>,
+    set_parts: &mut Vec<String>,
+) {
+    let Some(props) = node
+        .get("filteredProps")
+        .and_then(|value| value.as_object())
+    else {
+        return;
+    };
+
+    for (source_key, value) in props {
+        if is_deep_coordinate_source_key(source_key) {
+            continue;
+        }
+        let Some(target_key) = canonical_deep_property_key(source_key, node, parsed) else {
+            continue;
+        };
+        if target_already_set(set_parts, &target_key) {
+            continue;
+        }
+        let Some(literal) = cypher_literal(value, &target_key) else {
+            continue;
+        };
+        set_parts.push(format!("n.{target_key} = {literal}"));
+    }
+}
+
+fn is_deep_coordinate_source_key(source_key: &str) -> bool {
+    matches!(source_key, "coordinate" | "bimbaCoordinate")
+}
+
+fn target_already_set(set_parts: &[String], target_key: &str) -> bool {
+    let prefix = format!("n.{target_key} ");
+    set_parts.iter().any(|part| part.starts_with(&prefix))
+}
+
+fn canonical_deep_property_key(
+    source_key: &str,
+    node: &Value,
+    parsed: Option<&crate::coordinate::ParsedCoordinate>,
+) -> Option<String> {
+    explicit_deep_property_key(source_key)
+        .and_then(|target| canonicalize_prime_surface_property(&target, node))
+        .or_else(|| {
+            let semantic = deep_property_semantic(source_key)?;
+            source_key
+                .starts_with("q_")
+                .then(|| format!("q_{}_{}", node_position(node, parsed), semantic))
+        })
+}
+
+fn canonicalize_prime_surface_property(target_key: &str, node: &Value) -> Option<String> {
+    if !target_key.starts_with("m_") {
+        return Some(target_key.to_string());
+    }
+
+    let semantic = target_key.splitn(3, '_').nth(2)?;
+    let prefix = m_prime_property_prefix(node)?;
+    Some(format!("{prefix}_{semantic}"))
+}
+
+fn m_prime_property_prefix(node: &Value) -> Option<String> {
+    let coord = coordinate_from_node(node)?;
+    let normalized = convert_hash_to_m_family(coord);
+    let mut chars = normalized.chars();
+    if chars.next()? != 'M' {
+        return None;
+    }
+
+    let root = chars.next()?.to_digit(10)?;
+    let mut prefix = format!("m_{root}");
+
+    if chars.next() == Some('-') {
+        let slot = chars
+            .take_while(|ch| ch.is_ascii_digit())
+            .collect::<String>();
+        if !slot.is_empty() {
+            prefix.push('_');
+            prefix.push_str(&slot);
+        }
+    }
+
+    Some(prefix)
+}
+
+fn deep_property_semantic(source_key: &str) -> Option<String> {
+    let raw = source_key
+        .strip_prefix("q_")
+        .or_else(|| source_key.strip_prefix("f_"))
+        .unwrap_or(source_key);
+    let mut out = String::new();
+    let mut last_was_underscore = false;
+
+    for ch in raw.chars() {
+        let replacement = ascii_property_char(ch);
+        if replacement == "_" {
+            if !last_was_underscore && !out.is_empty() {
+                out.push('_');
+                last_was_underscore = true;
+            }
+            continue;
+        }
+        if ch.is_uppercase() && !out.is_empty() && !last_was_underscore {
+            out.push('_');
+        }
+        out.push_str(&replacement);
+        last_was_underscore = false;
+    }
+
+    let semantic = out.trim_matches('_').to_string();
+    if semantic.is_empty() {
+        None
+    } else {
+        Some(semantic)
+    }
+}
+
+fn ascii_property_char(ch: char) -> String {
+    match ch {
+        'a'..='z' | '0'..='9' => ch.to_string(),
+        'A'..='Z' => ch.to_ascii_lowercase().to_string(),
+        'ā' | 'á' | 'à' | 'â' | 'ä' | 'ã' | 'å' | 'Ā' | 'Á' | 'À' | 'Â' | 'Ä' | 'Ã' | 'Å' => {
+            "a".into()
+        }
+        'ç' | 'Ç' => "c".into(),
+        'ḍ' | 'ď' | 'Ḍ' | 'Ď' => "d".into(),
+        'é' | 'è' | 'ê' | 'ë' | 'É' | 'È' | 'Ê' | 'Ë' => "e".into(),
+        'ī' | 'í' | 'ì' | 'î' | 'ï' | 'Ī' | 'Í' | 'Ì' | 'Î' | 'Ï' => "i".into(),
+        'ñ' | 'Ñ' => "n".into(),
+        'ó' | 'ò' | 'ô' | 'ö' | 'õ' | 'Ó' | 'Ò' | 'Ô' | 'Ö' | 'Õ' => "o".into(),
+        'ṛ' | 'ř' | 'Ṛ' | 'Ř' => "r".into(),
+        'ś' | 'ṣ' | 'š' | 'Ś' | 'Ṣ' | 'Š' => "s".into(),
+        'ṭ' | 'ť' | 'Ṭ' | 'Ť' => "t".into(),
+        'ú' | 'ù' | 'û' | 'ü' | 'Ú' | 'Ù' | 'Û' | 'Ü' => "u".into(),
+        'ý' | 'ÿ' | 'Ý' => "y".into(),
+        _ => "_".into(),
+    }
+}
+
+fn explicit_deep_property_key(source_key: &str) -> Option<String> {
+    let target = match source_key {
+        "name" => "c_1_name",
+        "primaryDesignation" => "c_1_primary_designation",
+        "description" => "c_1_description",
+        "coreNature" => "c_0_core_nature",
+        "operationalEssence" => "c_0_essence",
+        "internalStructure" => "c_1_structure",
+        "completeFormulation" => "c_1_complete_formulation",
+        "formulationBreakdown" => "c_1_formulation_breakdown",
+        "keyPrinciples" => "c_1_key_principles",
+        "practicalApplications" => "c_3_practical_applications",
+        "relatedCoordinates" => "c_3_related_coordinates",
+        "lastUpdated" | "updatedAt" | "updated_at" => "c_3_updated_at",
+        "contextFrame" => "c_3_context_frame",
+        "qlCategory" => "c_4_ql_category",
+        "qlOperatorTypes" => "c_4_ql_operator_types",
+        "accessLevel" => "c_4_access_level",
+        "resonances" => "c_5_resonances",
+        "qlVariant" => "p_1_variant",
+        "qlPositionWeave" => "p_1_weave",
+        "positionId" => "p_1_position_id",
+        "stageId" => "p_1_stage_id",
+        "sequence" => "p_3_sequence",
+        "therapeuticProperties" => "l_2_therapeutic_properties",
+        "temperamentBalance" => "l_2_temperament_balance",
+        "healingSpecialty" => "l_2_healing_specialty",
+        "chakraCorrespondence" => "l_2_chakra_correspondence",
+        "breathPattern" => "l_2_breath_pattern",
+        "elementalNature" => "l_2_elemental_nature",
+        "seasonalPosition" => "l_3_seasonal_position",
+        "modality" => "l_4_modality",
+        "mefCondition" => "l_4_mef_condition",
+        "interpretiveRole" => "l_4_interpretive_role",
+        "reflectionTable" => "l_4_reflection_table",
+        "f_role" => "s_4_function_role",
+        "f_description" => "s_4_function_description",
+        "f_inputContracts" => "s_4_input_contracts",
+        "f_outputContracts" => "s_4_output_contracts",
+        "f_queryableProperties" => "s_4_queryable_properties",
+        "f_translationSchema" => "s_4_translation_schema",
+        "f_agent" => "s_5_agent",
+        "f_tool_affinity" => "s_5_tool_affinity",
+        "f_system_prompt" => "s_5_system_prompt",
+        "f_capabilities" => "s_5_capabilities",
+        "safetyClass" => "s_4_safety_class",
+        "eligibleFormats" => "s_4_eligible_formats",
+        "epistemicFunction" => "t_1_epistemic_function",
+        "developmentalStage" => "t_3_developmental_stage",
+        "processRealization" => "t_3_process_realization",
+        "nextEvolutionPhase" => "t_5_next_evolution_phase",
+        "q_theoreticalThesis" => "q_1_theoretical_thesis",
+        "q_sophiaLogosDialectic" => "q_2_sophia_logos_dialectic",
+        "q_instantiationMode" => "q_2_instantiation_mode",
+        "q_dialecticalMovement" => "q_3_dialectical_movement",
+        "q_historicalDiagnosis" => "q_4_historical_diagnosis",
+        "q_integrationTemplate" => "q_5_integration_template",
+        "q_conjunctiveThreshold" => "q_5_conjunctive_threshold",
+        "consciousnessOperation" => "m_0_consciousness_operation",
+        "consciousnessFunction" => "m_0_consciousness_function",
+        "grammaticalFunction" => "m_0_grammatical_function",
+        "spandaRelationship" => "m_0_spanda_relationship",
+        "metaphysicalNames" => "m_0_metaphysical_names",
+        "adamEveClassification" => "m_0_adam_eve_classification",
+        "topologicalSignificance" => "m_1_topological_significance",
+        "topologicalFormula" => "m_1_topological_formula",
+        "processualTopologyRole" => "m_1_processual_topology_role",
+        "matrixType" => "m_1_matrix_type",
+        "constructionPhase" => "m_1_construction_phase",
+        "algebraicCorrespondence" => "m_1_algebraic_correspondence",
+        "abjadValue" => "m_2_abjad_value",
+        "arabicText" => "m_2_arabic_text",
+        "trilateralRoot" => "m_2_trilateral_root",
+        "dhikrApplication" => "m_2_dhikr_application",
+        "recitationCount" => "m_2_recitation_count",
+        "zodiacalInfluence" => "m_2_zodiacal_influence",
+        "therapeuticCluster" => "m_2_therapeutic_cluster",
+        "digitalRoot" => "m_2_digital_root",
+        "matrixConstant" => "m_2_matrix_constant",
+        "magicSquareSum" => "m_2_magic_square_sum",
+        "degree" => "m_3_degree",
+        "quadrant" => "m_3_quadrant",
+        "rotationalPhase" => "m_3_rotational_phase",
+        "yinYangBalance" => "m_3_yin_yang_balance",
+        "elementalAffinity" => "m_3_elemental_affinity",
+        "aminoAcidCode" => "m_3_amino_acid_code",
+        "positive_codon_binary" => "m_3_positive_codon_binary",
+        "negative_codon_binary" => "m_3_negative_codon_binary",
+        "upper_Pair_binary" => "m_3_upper_pair_binary",
+        "lower_Pair_binary" => "m_3_lower_pair_binary",
+        "tarotCard" => "m_3_tarot_card",
+        "hebrewLetter" => "m_3_hebrew_letter",
+        "twoStrokeDoctrine" => "m_4_two_stroke_doctrine",
+        "temporalStructure" => "m_4_temporal_structure",
+        "temporalIntelligenceLayer" => "m_4_temporal_intelligence_layer",
+        "kashmirShaivismAlignment" => "m_4_kashmir_shaivism_alignment",
+        "practicalManifestations" => "m_4_practical_manifestations",
+        "capabilitySignals" => "m_4_capability_signals",
+        "preferredTiming" => "m_4_preferred_timing",
+        "lacanianPublicInterface" => "m_5_lacanian_interface",
+        "whiteheadLacanSynthesis" => "m_5_whitehead_lacanian",
+        "lacanianEtymologicalArchaeology" => "m_5_archaeology_method",
+        _ => return None,
+    };
+    Some(target.to_string())
+}
+
+fn append_deep_prefixed_rel_props(rel: &Value, set_parts: &mut Vec<String>) {
+    let Some(props) = rel.get("relProperties").and_then(|value| value.as_object()) else {
+        return;
+    };
+
+    for (source_key, value) in props {
+        let Some(target_key) = explicit_deep_relation_property_key(source_key) else {
+            continue;
+        };
+        if rel_target_already_set(set_parts, &target_key) {
+            continue;
+        }
+        let Some(literal) = cypher_literal(value, &target_key) else {
+            continue;
+        };
+        set_parts.push(format!(
+            "r.{target_key} = COALESCE(r.{target_key}, {literal})"
+        ));
+    }
+}
+
+fn explicit_deep_relation_property_key(source_key: &str) -> Option<String> {
+    let target = match source_key {
+        "description" => "c_1_relation_description",
+        "type" | "relationship" | "relationshipType" => "c_2_relation_kind",
+        "createdAt" => "c_3_created_at",
+        "correspondenceType" | "specificCorrespondence" | "correspondence" => "c_5_correspondence",
+        "basis" => "c_5_correspondence_basis",
+        "fromCoordinate" => "c_0_source_coordinate",
+        "toCoordinate" => "c_0_target_coordinate",
+        "realizationLevel" => "l_5_realization_level",
+        "mysticalIdentity" => "l_5_mystical_identity",
+        "functionalRole" | "systemicFunction" => "s_4_function_role",
+        "hierarchyLevel" => "s_4_hierarchy_level",
+        "insight" | "holisticInsight" => "t_5_insight",
+        "patternStructure" => "p_3_pattern_structure",
+        "patternName" => "p_3_pattern_name",
+        "developmentalFunction" => "t_3_developmental_function",
+        _ => return None,
+    };
+    Some(target.to_string())
+}
+
+fn rel_target_already_set(set_parts: &[String], target_key: &str) -> bool {
+    let prefix = format!("r.{target_key} ");
+    set_parts.iter().any(|part| part.starts_with(&prefix))
+}
+
+fn node_position(node: &Value, parsed: Option<&crate::coordinate::ParsedCoordinate>) -> u8 {
+    parsed
+        .and_then(|parsed| parsed.ql_position)
+        .or_else(|| {
+            nested_filtered_property(node, "qlPosition").and_then(|value| value.parse::<u8>().ok())
+        })
+        .or_else(|| {
+            coordinate_from_node(node).and_then(|coord| {
+                coord
+                    .trim_start_matches('#')
+                    .chars()
+                    .find(|ch| ch.is_ascii_digit())
+                    .and_then(|ch| ch.to_digit(10))
+                    .map(|digit| digit as u8)
+            })
+        })
+        .filter(|position| *position <= 5)
+        .unwrap_or(0)
+}
+
+fn cypher_literal(value: &Value, target_key: &str) -> Option<String> {
+    match value {
+        Value::Null => None,
+        Value::Bool(value) => Some(value.to_string()),
+        Value::Number(value) => Some(value.to_string()),
+        Value::String(value) if STRING_LIST_TARGETS.contains(&target_key) => {
+            let items = value
+                .split(',')
+                .map(str::trim)
+                .filter(|item| !item.is_empty())
+                .map(|item| format!("'{}'", escape_cypher(item)))
+                .collect::<Vec<_>>();
+            Some(format!("[{}]", items.join(", ")))
+        }
+        Value::String(value) if value.trim().is_empty() => None,
+        Value::String(value) => Some(format!("'{}'", escape_cypher(value))),
+        Value::Array(values) => {
+            let items = values
+                .iter()
+                .filter_map(|value| cypher_array_item_literal(value))
+                .collect::<Vec<_>>();
+            Some(format!("[{}]", items.join(", ")))
+        }
+        Value::Object(_) => serde_json::to_string(value)
+            .ok()
+            .map(|value| format!("'{}'", escape_cypher(&value))),
+    }
+}
+
+fn cypher_array_item_literal(value: &Value) -> Option<String> {
+    match value {
+        Value::Null => None,
+        Value::Bool(value) => Some(value.to_string()),
+        Value::Number(value) => Some(value.to_string()),
+        Value::String(value) if value.trim().is_empty() => None,
+        Value::String(value) => Some(format!("'{}'", escape_cypher(value))),
+        Value::Array(_) | Value::Object(_) => serde_json::to_string(value)
+            .ok()
+            .map(|value| format!("'{}'", escape_cypher(&value))),
+    }
 }
 
 fn truncate_utf8(value: &str, max_len: usize) -> &str {
@@ -842,6 +1237,7 @@ mod tests {
         assert_eq!(escape_cypher("hello"), "hello");
         assert_eq!(escape_cypher("it's"), "it\\'s");
         assert_eq!(escape_cypher("a\\b"), "a\\\\b");
+        assert_eq!(escape_cypher("line\nnext\tcell"), "line\\nnext\\tcell");
     }
 
     #[test]
@@ -889,6 +1285,164 @@ mod tests {
         assert_eq!(
             sanitize_rel_type(relation_type_from_value(&rel).unwrap()),
             "HAS_DEEP_CHILD"
+        );
+    }
+
+    #[test]
+    fn deep_properties_are_promoted_with_canonical_prefixes() {
+        let node = serde_json::json!({
+            "coordinate": "#2-4",
+            "filteredProps": {
+                "q_theoreticalThesis": "QV is quintessential",
+                "f_role": "Knowing surface",
+                "therapeuticProperties": "grounding, integration",
+                "topologicalSignificance": "M-prime expression",
+                "qlVariant": "0/1",
+                "matrixConstant": 21,
+                "vimarśaFunction": "self-recognition"
+            }
+        });
+        let parsed = CoordinateArrayParser::parse_one("M2-4").ok();
+        let mut set_parts = Vec::new();
+
+        append_deep_prefixed_filtered_props(&node, parsed.as_ref(), &mut set_parts);
+
+        assert!(set_parts.contains(&"n.q_1_theoretical_thesis = 'QV is quintessential'".into()));
+        assert!(set_parts.contains(&"n.s_4_function_role = 'Knowing surface'".into()));
+        assert!(set_parts
+            .contains(&"n.l_2_therapeutic_properties = ['grounding', 'integration']".into()));
+        assert!(
+            set_parts.contains(&"n.m_2_4_topological_significance = 'M-prime expression'".into())
+        );
+        assert!(set_parts.contains(&"n.p_1_variant = '0/1'".into()));
+        assert!(set_parts.contains(&"n.m_2_4_matrix_constant = 21".into()));
+        assert!(
+            set_parts
+                .iter()
+                .all(|part| !part.contains("vimarsa_function")),
+            "unreviewed non-q properties must not be guessed into coordinate families"
+        );
+        assert!(
+            set_parts.iter().all(|part| !part.contains("n.`")),
+            "deep properties must never be written as raw backtick-escaped source keys"
+        );
+    }
+
+    #[test]
+    fn deep_coordinate_source_keys_are_not_written_as_duplicate_properties() {
+        let node = serde_json::json!({
+            "coordinate": "#2-1",
+            "filteredProps": {
+                "bimbaCoordinate": "#2-1",
+                "coordinate": "#2-1",
+                "name": "Already handled by identity path"
+            }
+        });
+        let parsed = CoordinateArrayParser::parse_one("M2-1").ok();
+        let mut set_parts = Vec::new();
+        set_parts.push("n.c_1_name = COALESCE(n.c_1_name, 'Already handled')".into());
+
+        append_deep_prefixed_filtered_props(&node, parsed.as_ref(), &mut set_parts);
+
+        assert!(
+            set_parts
+                .iter()
+                .all(|part| !part.contains("bimbaCoordinate") && !part.contains("`coordinate`")),
+            "coordinate aliases are node identity, not deep properties"
+        );
+        assert!(
+            set_parts.iter().filter(|part| part.starts_with("n.c_1_name ")).count() == 1,
+            "canonical targets already set by higher-priority importer paths must not be duplicated"
+        );
+    }
+
+    #[test]
+    fn q_properties_keep_their_own_class_and_node_position() {
+        let node = serde_json::json!({
+            "coordinate": "#5-1",
+            "filteredProps": {
+                "q_instantiationMode": "Quick-view surface",
+                "q_paramādvaita": "supreme nondualism",
+                "q_śivaŚaktiPlay": "light-power play"
+            }
+        });
+        let parsed = CoordinateArrayParser::parse_one("M5-1").ok();
+        let mut set_parts = Vec::new();
+
+        append_deep_prefixed_filtered_props(&node, parsed.as_ref(), &mut set_parts);
+
+        assert!(set_parts.contains(&"n.q_2_instantiation_mode = 'Quick-view surface'".into()));
+        assert!(set_parts.contains(&"n.q_5_paramadvaita = 'supreme nondualism'".into()));
+        assert!(set_parts.contains(&"n.q_5_siva_sakti_play = 'light-power play'".into()));
+    }
+
+    #[test]
+    fn m_prime_properties_use_coordinate_slot_prefixes() {
+        let root_node = serde_json::json!({
+            "coordinate": "#3",
+            "filteredProps": {
+                "degree": 0
+            }
+        });
+        let sub_node = serde_json::json!({
+            "coordinate": "#3-5-8",
+            "filteredProps": {
+                "degree": 248
+            }
+        });
+        let mut root_parts = Vec::new();
+        let mut sub_parts = Vec::new();
+
+        append_deep_prefixed_filtered_props(&root_node, None, &mut root_parts);
+        append_deep_prefixed_filtered_props(&sub_node, None, &mut sub_parts);
+
+        assert!(root_parts.contains(&"n.m_3_degree = 0".into()));
+        assert!(sub_parts.contains(&"n.m_3_5_degree = 248".into()));
+    }
+
+    #[test]
+    fn relation_properties_are_promoted_from_reviewed_map_only() {
+        let rel = serde_json::json!({
+            "relProperties": {
+                "description": "relation prose",
+                "correspondenceType": "harmonic",
+                "functionalRole": "bridge",
+                "patternStructure": "triadic",
+                "mysteryField": "do not guess"
+            }
+        });
+        let mut set_parts = Vec::new();
+
+        append_deep_prefixed_rel_props(&rel, &mut set_parts);
+
+        assert!(set_parts.contains(
+            &"r.c_1_relation_description = COALESCE(r.c_1_relation_description, 'relation prose')"
+                .into()
+        ));
+        assert!(set_parts
+            .contains(&"r.c_5_correspondence = COALESCE(r.c_5_correspondence, 'harmonic')".into()));
+        assert!(set_parts
+            .contains(&"r.s_4_function_role = COALESCE(r.s_4_function_role, 'bridge')".into()));
+        assert!(set_parts.contains(
+            &"r.p_3_pattern_structure = COALESCE(r.p_3_pattern_structure, 'triadic')".into()
+        ));
+        assert!(
+            set_parts.iter().all(|part| !part.contains("mystery")),
+            "unreviewed relation properties must not be guessed into coordinate families"
+        );
+    }
+
+    #[test]
+    fn deep_dataset_json_sanitizer_preserves_multiline_string_content() {
+        let raw =
+            "[{\"coordinate\":\"#5\",\"filteredProps\":{\"f_system_prompt\":\"first\nsecond\"}}]";
+        let sanitized = sanitize_json_control_chars(raw);
+        let parsed: Vec<Value> =
+            serde_json::from_str(&sanitized).expect("sanitized JSON should parse");
+
+        assert_eq!(
+            parsed[0]["filteredProps"]["f_system_prompt"],
+            Value::String("first\nsecond".into())
         );
     }
 

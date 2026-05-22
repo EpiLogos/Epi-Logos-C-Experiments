@@ -36,14 +36,11 @@ fn graph_method_requests_are_s2_owned_and_parameterized() {
 }
 
 #[test]
-fn coordinate_resolution_handles_legacy_bimba_coordinates() {
+fn coordinate_resolution_canonicalizes_hash_without_legacy_property() {
     let resolved = GraphMethodService::resolve_coordinate_string("#2").unwrap();
     assert_eq!(resolved.input, "#2");
     assert_eq!(resolved.canonical, "M2");
-    assert_eq!(
-        resolved.compatibility_property.as_deref(),
-        Some("bimbaCoordinate")
-    );
+    assert!(resolved.compatibility_property.is_none());
 
     let resolved = GraphMethodService::resolve_coordinate_string("M4").unwrap();
     assert_eq!(resolved.canonical, "M4");
@@ -88,10 +85,24 @@ fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
             .lens_inversion_refs
             .get("l2_inv_ref")
             .map(String::as_str),
-        Some("L3'")
+        Some("L2'")
     );
     assert_eq!(plan.coordinate_anchor.qvdata.source, "epi core knowing");
     assert_eq!(plan.coordinate_anchor.qvdata.coordinate, "M2");
+    let harmonic_pointer = plan
+        .coordinate_anchor
+        .harmonic_pointer
+        .as_ref()
+        .expect("sixfold coordinate should have harmonic pointer certification");
+    assert_eq!(
+        harmonic_pointer.source_profile,
+        "portal-core::MathemeHarmonicProfile"
+    );
+    assert_eq!(harmonic_pointer.bedrock.psychoid_number, "#2");
+    assert_eq!(harmonic_pointer.bedrock.inverted_psychoid_number, "#2'");
+    assert_eq!(harmonic_pointer.pointer_anchor.lens_anchor, "L2");
+    assert_eq!(harmonic_pointer.pointer_anchor.web_cardinality, 36);
+    assert_eq!(harmonic_pointer.context_frames.frame_count, 7);
     assert_eq!(
         plan.params.get_string("coordinate_anchor_json").is_some(),
         true
@@ -141,6 +152,19 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
     assert_eq!(plan.resolution.canonical, "M2");
     assert_eq!(plan.pointer_web.coordinate, "M2");
     assert_eq!(plan.pointer_web.pointer_count, 36);
+    let harmonic_pointer = plan
+        .coordinate_anchor
+        .harmonic_pointer
+        .as_ref()
+        .expect("sixfold coordinate should have harmonic pointer certification");
+    assert_eq!(
+        harmonic_pointer.pointer_anchor.provenance,
+        "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract"
+    );
+    assert_eq!(
+        harmonic_pointer.pointer_anchor.relation_role,
+        "position-identity"
+    );
     assert_eq!(
         plan.pointer_web
             .family_refs
@@ -150,6 +174,10 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
     );
     assert_eq!(plan.params.get_string("pointer_web_json").is_some(), true);
     assert_eq!(plan.params.get_integer("pointer_count"), Some(36));
+    assert!(plan
+        .params
+        .get_string("harmonic_pointer_anchor_json")
+        .is_some());
     assert_eq!(plan.params.get_string("source_coordinate"), Some("M2"));
     assert!(plan.cypher.contains("MATCH (n:Bimba)"));
     assert!(plan
@@ -159,6 +187,9 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
     assert!(plan
         .cypher
         .contains("c_5_pointer_family_refs = $family_refs"));
+    assert!(plan
+        .cypher
+        .contains("c_5_harmonic_pointer_anchor_json = $harmonic_pointer_anchor_json"));
 }
 
 #[tokio::test]
