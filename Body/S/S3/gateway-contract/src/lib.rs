@@ -5,11 +5,10 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 pub use epi_kernel_contract::{
-    AnuttaraDiagnostic, AnuttaraExpression, BioQuaternionState, EnergyDecomposition,
-    KernelElement, KernelPhase, KernelProjection, KernelTemporalProjection, KernelTick,
-    KernelTickEnvelope, MentalPoleState, PhysicalPoleState, ResonanceVector72,
-    TrajectoryDeposit, TrajectoryDepositRef, ENVELOPE_COORDINATE_OWNER,
-    ENVELOPE_PRIVACY_CLASS,
+    AnuttaraDiagnostic, AnuttaraExpression, BioQuaternionState, EnergyDecomposition, KernelElement,
+    KernelPhase, KernelProjection, KernelTemporalProjection, KernelTick, KernelTickEnvelope,
+    MentalPoleState, PhysicalPoleState, ResonanceVector72, TrajectoryDeposit, TrajectoryDepositRef,
+    ENVELOPE_COORDINATE_OWNER, ENVELOPE_PRIVACY_CLASS,
 };
 
 pub const DEFAULT_GATEWAY_PORT: u16 = 18794;
@@ -160,6 +159,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "s5.episodic.search",
     "s5.episodic.deposit",
     "s5.episodic.kernel_resonance.deposit",
+    "s5.episodic.kernel_profile_observation.deposit",
     "s5'.review.inbox",
     "s5'.review.submit",
     "s5'.review.resolve",
@@ -1639,6 +1639,7 @@ mod tests {
             "s5.trajectory.verify",
             "s5.ebm.train",
             "s5.ebm.export_state",
+            "s5.episodic.kernel_profile_observation.deposit",
         ] {
             assert!(
                 METHOD_NAMES.contains(&required),
@@ -1680,8 +1681,7 @@ mod tests {
             .with_anuttara_diagnostic(diag.clone());
 
         let json = serde_json::to_string(&envelope).expect("serialises");
-        let restored: KernelTickEnvelope =
-            serde_json::from_str(&json).expect("round-trips");
+        let restored: KernelTickEnvelope = serde_json::from_str(&json).expect("round-trips");
         assert_eq!(restored.anuttara_diagnostic, Some(diag));
         assert_eq!(restored.source_coordinate.as_deref(), Some("M2-1-3"));
     }

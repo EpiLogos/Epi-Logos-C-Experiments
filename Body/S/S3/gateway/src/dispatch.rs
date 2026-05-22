@@ -139,7 +139,8 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
             ),
             "s5.episodic.search"
             | "s5.episodic.deposit"
-            | "s5.episodic.kernel_resonance.deposit" => route(
+            | "s5.episodic.kernel_resonance.deposit"
+            | "s5.episodic.kernel_profile_observation.deposit" => route(
                 method,
                 GatewayDispatchOwner::S3GraphitiRuntime,
                 GatewayDispatchClass::GraphitiInvocation,

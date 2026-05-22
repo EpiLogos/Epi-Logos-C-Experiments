@@ -38,6 +38,14 @@ export interface KernelHarmonicConsumer {
   hexagram: string | null;
   lineChangeOperatorAddress: number | null;
   binaryTranscriptionState: string | null;
+  bedrockPsychoidNumber: string | null;
+  invertedPsychoidNumber: string | null;
+  successorPsychoidNumber: string | null;
+  pointerLensAnchor: string | null;
+  pointerWebIndex: number | null;
+  pointerRelationRole: string | null;
+  pointerProvenance: string | null;
+  contextFrameCount: number | null;
   tempoMultiplier: string | null;
   periodMultiplier: string | null;
   totalEnergy: string | null;
@@ -78,6 +86,14 @@ const MISSING_KERNEL_CONSUMER: KernelHarmonicConsumer = {
   hexagram: null,
   lineChangeOperatorAddress: null,
   binaryTranscriptionState: null,
+  bedrockPsychoidNumber: null,
+  invertedPsychoidNumber: null,
+  successorPsychoidNumber: null,
+  pointerLensAnchor: null,
+  pointerWebIndex: null,
+  pointerRelationRole: null,
+  pointerProvenance: null,
+  contextFrameCount: null,
   tempoMultiplier: null,
   periodMultiplier: null,
   totalEnergy: null,
@@ -132,6 +148,14 @@ export function projectKernelHarmonicConsumer(
     hexagram: kernel.harmonicProfile.binary.hexagram,
     lineChangeOperatorAddress: kernel.harmonicProfile.binary.lineChangeOperatorAddress,
     binaryTranscriptionState: kernel.harmonicProfile.binary.transcriptionState,
+    bedrockPsychoidNumber: kernel.harmonicProfile.bedrock.psychoidNumber,
+    invertedPsychoidNumber: kernel.harmonicProfile.bedrock.invertedPsychoidNumber,
+    successorPsychoidNumber: kernel.harmonicProfile.bedrock.successorPsychoidNumber,
+    pointerLensAnchor: kernel.harmonicProfile.pointerAnchor.lensAnchor,
+    pointerWebIndex: kernel.harmonicProfile.pointerAnchor.webIndex,
+    pointerRelationRole: kernel.harmonicProfile.pointerAnchor.relationRole,
+    pointerProvenance: kernel.harmonicProfile.pointerAnchor.provenance,
+    contextFrameCount: kernel.harmonicProfile.contextFrames.frameCount,
     tempoMultiplier: kernel.harmonicPulse.tempoMultiplier,
     periodMultiplier: kernel.harmonicPulse.periodMultiplier,
     totalEnergy: kernel.energy.totalEnergy,

@@ -1520,6 +1520,12 @@ async fn dispatch_rpc(
             .await
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s5.episodic.kernel_profile_observation.deposit" => {
+            graphiti::kernel_profile_observation_deposit(&frame.params)
+                .await
+                .map(DispatchResult::immediate)
+                .map_err(internal_error)
+        }
         "s5'.gnosis.context.retrieve" => epii::gnosis_context_retrieve(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),

@@ -163,6 +163,103 @@ pub fn kernel_resonance_deposit_payload(
     Ok(payload)
 }
 
+#[allow(clippy::too_many_arguments)]
+pub fn kernel_profile_observation_deposit_payload(
+    source_agent: &str,
+    session_key: &str,
+    namespace_ref: &str,
+    day_id: &str,
+    vault_now_path: &str,
+    source_coordinate: &str,
+    tick12: u8,
+    degree720: u16,
+    resonance72_index: u8,
+    mahamaya_address64: u8,
+    coordinate_anchor: &Value,
+    identity_mutation: bool,
+) -> Result<Value, String> {
+    if source_coordinate.trim().is_empty() {
+        return Err("sourceCoordinate is required".into());
+    }
+    if vault_now_path.trim().is_empty() {
+        return Err("vaultNowPath is required".into());
+    }
+    if !coordinate_anchor.is_object() {
+        return Err("coordinateAnchor must be an object".into());
+    }
+    if let Some(key) = protected_kernel_state_key(coordinate_anchor) {
+        return Err(format!(
+            "coordinateAnchor cannot include protected kernel state key `{key}`"
+        ));
+    }
+
+    let content = format!(
+        "Kernel profile observation links {source_coordinate} at harmonic clock tick {}, degree720 {}, resonance72 index {}, Mahamaya address64 {}, with S2-certified coordinate anchor evidence.",
+        tick12 % 12,
+        degree720 % 720,
+        resonance72_index % 72,
+        mahamaya_address64 % 64
+    );
+    let mut payload = session_memory_deposit_payload(
+        source_agent,
+        &content,
+        session_key,
+        namespace_ref,
+        day_id,
+        "3/5",
+        "S3.5",
+        "kernel-profile-observation",
+        identity_mutation,
+    )?;
+    payload["episode_type"] = Value::String("kernel_profile_observation".to_owned());
+    payload["metadata"] = json!({
+        "source_coordinate": source_coordinate,
+        "tick12": tick12 % 12,
+        "degree720": degree720 % 720,
+        "resonance72_index": resonance72_index % 72,
+        "mahamaya_address64": mahamaya_address64 % 64,
+        "vault_now_path": vault_now_path,
+        "coordinate_anchor": coordinate_anchor,
+        "harmonic_medium": "portal-core::MathemeHarmonicProfile",
+        "kernel_owner": "S0",
+        "graph_owner": "S2",
+        "runtime_owner": "S3'",
+        "invocation_owner": "S5/S5'",
+        "privacy_boundary": "protected-local-episodic-memory",
+    });
+    Ok(payload)
+}
+
+fn protected_kernel_state_key(value: &Value) -> Option<&'static str> {
+    const PROTECTED_KEYS: &[&str] = &[
+        "q_b",
+        "q_p",
+        "qB",
+        "qP",
+        "raw_state",
+        "rawState",
+        "bio_quaternion_state",
+        "bioQuaternionState",
+    ];
+
+    match value {
+        Value::Object(map) => {
+            for (key, child) in map {
+                if let Some(protected) = PROTECTED_KEYS.iter().find(|candidate| **candidate == key)
+                {
+                    return Some(*protected);
+                }
+                if let Some(protected) = protected_kernel_state_key(child) {
+                    return Some(protected);
+                }
+            }
+            None
+        }
+        Value::Array(values) => values.iter().find_map(protected_kernel_state_key),
+        _ => None,
+    }
+}
+
 pub fn compose_file_path() -> Result<String, String> {
     let candidates = [
         std::env::var("EPILOGOS_ROOT").unwrap_or_default(),
@@ -482,6 +579,88 @@ pub async fn kernel_resonance_deposit(params: &Value) -> Result<Value, String> {
     Ok(envelope)
 }
 
+pub async fn kernel_profile_observation_deposit(params: &Value) -> Result<Value, String> {
+    let source_agent = optional_str(params, "sourceAgent").unwrap_or("anima");
+    let session_key = required_str(params, "sessionKey")?;
+    let namespace_ref = required_str(params, "namespaceRef")?;
+    let day_id = required_str(params, "dayId")?;
+    let vault_now_path = required_str(params, "vaultNowPath")?;
+    let source_coordinate = required_str(params, "sourceCoordinate")?;
+    let tick12 = required_u8(params, "tick12", 11)?;
+    let degree720 = required_u16(params, "degree720", 719)?;
+    let resonance72_index = required_u8(params, "resonance72Index", 71)?;
+    let mahamaya_address64 = required_u8(params, "mahamayaAddress64", 63)?;
+    let coordinate_anchor = params
+        .get("coordinateAnchor")
+        .ok_or_else(|| "coordinateAnchor is required".to_owned())?;
+    let identity_mutation = params
+        .get("identityMutation")
+        .and_then(|value| value.as_bool())
+        .unwrap_or(false);
+
+    let payload = kernel_profile_observation_deposit_payload(
+        source_agent,
+        session_key,
+        namespace_ref,
+        day_id,
+        vault_now_path,
+        source_coordinate,
+        tick12,
+        degree720,
+        resonance72_index,
+        mahamaya_address64,
+        coordinate_anchor,
+        identity_mutation,
+    )?;
+
+    let mut envelope = session_memory_envelope(json!({
+        "sourceAgent": source_agent,
+        "maySearch": true,
+        "mayDeposit": true,
+        "mayMutateIdentity": false,
+        "requiresEpiiReview": true,
+        "kernelOwner": "S0",
+        "graphOwner": "S2",
+        "dayNowPath": vault_now_path,
+    }));
+    envelope["method"] = Value::String("s5.episodic.kernel_profile_observation.deposit".to_owned());
+    envelope["sessionKey"] = Value::String(session_key.to_owned());
+    envelope["namespaceRef"] = Value::String(namespace_ref.to_owned());
+    envelope["dayId"] = Value::String(day_id.to_owned());
+    envelope["deposit"] = payload.clone();
+
+    match reqwest::Client::new()
+        .post(format!("{GRAPHITI_BASE_URL}/episode"))
+        .json(&payload)
+        .timeout(graphiti_runtime_timeout())
+        .send()
+        .await
+    {
+        Ok(response) if response.status().is_success() => {
+            let body = response.json::<Value>().await.unwrap_or_else(|_| json!({}));
+            envelope["runtimeAvailable"] = Value::Bool(true);
+            envelope["episode"] = body;
+        }
+        Ok(response) => {
+            envelope["runtimeAvailable"] = Value::Bool(false);
+            envelope["error"] = json!({
+                "kind": "graphiti-http-error",
+                "status": response.status().as_u16(),
+            });
+        }
+        Err(error) => {
+            envelope["runtimeAvailable"] = Value::Bool(false);
+            envelope["error"] = json!({
+                "kind": "graphiti-unavailable",
+                "message": error.to_string(),
+                "next": "Start the compatibility runtime with `epi gate graphiti start`, or replace it with the native S3 Graphiti runtime adapter."
+            });
+        }
+    }
+
+    Ok(envelope)
+}
+
 fn iso8601_now() -> String {
     Utc::now().to_rfc3339()
 }
@@ -511,6 +690,17 @@ fn required_u8(params: &Value, key: &str, max: u8) -> Result<u8, String> {
         return Err(format!("{key} must be <= {max}"));
     }
     Ok(value as u8)
+}
+
+fn required_u16(params: &Value, key: &str, max: u16) -> Result<u16, String> {
+    let value = params
+        .get(key)
+        .and_then(|value| value.as_u64())
+        .ok_or_else(|| format!("{key} is required"))?;
+    if value > max as u64 {
+        return Err(format!("{key} must be <= {max}"));
+    }
+    Ok(value as u16)
 }
 
 fn required_score(params: &Value, key: &str) -> Result<f64, String> {

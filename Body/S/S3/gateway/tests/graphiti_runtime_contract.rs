@@ -2,8 +2,9 @@ use epi_s3_gateway_contract::{
     GRAPHITI_BASE_URL, GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY,
 };
 use epi_s3_graphiti_runtime::{
-    kernel_resonance_deposit_payload, provenance_from_record, session_memory_deposit_payload,
-    session_memory_envelope, GraphitiRuntimeConfig,
+    kernel_profile_observation_deposit_payload, kernel_resonance_deposit_payload,
+    provenance_from_record, session_memory_deposit_payload, session_memory_envelope,
+    GraphitiRuntimeConfig,
 };
 use serde_json::json;
 
@@ -113,6 +114,98 @@ fn graphiti_kernel_resonance_payload_keeps_s3_runtime_and_s2_graph_origin_clear(
     )
     .unwrap_err();
     assert!(err.contains("cannot mutate protected identity"));
+}
+
+#[test]
+fn graphiti_kernel_profile_observation_payload_carries_s2_anchor_without_private_state() {
+    let coordinate_anchor = json!({
+        "coordinate": "M2",
+        "coordinate_anchor": {
+            "coordinate": "M2",
+            "kernel": {
+                "source": "s0.kernel",
+                "profile": "portal-core::MathemeHarmonicProfile"
+            },
+            "harmonic_pointer": {
+                "source_profile": "portal-core::MathemeHarmonicProfile",
+                "source_contract": "S0 Bedrock7/PointerWeb36/CF7",
+                "bedrock": {
+                    "psychoid_number": "#2",
+                    "inverted_psychoid_number": "#2'",
+                    "successor_psychoid_number": "#3"
+                },
+                "pointer_anchor": {
+                    "source_coordinate": "S0/QL-meta",
+                    "ql_position": 2,
+                    "helix": "bimba",
+                    "web_index": 2,
+                    "web_cardinality": 36,
+                    "lens_anchor": "L2"
+                },
+                "context_frames": {
+                    "cf_cardinality": 7,
+                    "diatonic_frame": "(0/1/2)",
+                    "vak_agent": "Eros"
+                }
+            }
+        }
+    });
+
+    let payload = kernel_profile_observation_deposit_payload(
+        "anima",
+        "agent:epii:main",
+        "pratibimba-test",
+        "20260519",
+        "Idea/Empty/Present/19-05-2026/20260519-120000-main/now.md",
+        "M2",
+        10,
+        600,
+        64,
+        42,
+        &coordinate_anchor,
+        false,
+    )
+    .expect("kernel profile observation deposit should be allowed");
+
+    assert_eq!(payload["source"], "anima");
+    assert_eq!(payload["ql_position"], "3/5");
+    assert_eq!(payload["cp"], "S3.5");
+    assert_eq!(payload["cpf"], "kernel-profile-observation");
+    assert_eq!(payload["episode_type"], "kernel_profile_observation");
+    assert_eq!(payload["metadata"]["source_coordinate"], "M2");
+    assert_eq!(payload["metadata"]["tick12"], 10);
+    assert_eq!(payload["metadata"]["degree720"], 600);
+    assert_eq!(payload["metadata"]["resonance72_index"], 64);
+    assert_eq!(payload["metadata"]["mahamaya_address64"], 42);
+    assert_eq!(payload["metadata"]["kernel_owner"], "S0");
+    assert_eq!(payload["metadata"]["graph_owner"], "S2");
+    assert_eq!(payload["metadata"]["runtime_owner"], "S3'");
+    assert_eq!(payload["metadata"]["invocation_owner"], "S5/S5'");
+    assert_eq!(
+        payload["metadata"]["coordinate_anchor"]["coordinate_anchor"]["harmonic_pointer"]
+            ["pointer_anchor"]["lens_anchor"],
+        "L2"
+    );
+    assert!(payload["metadata"].get("q_b").is_none());
+
+    let mut private_anchor = coordinate_anchor;
+    private_anchor["q_b"] = json!([1.0, 0.0, 0.0, 0.0]);
+    let err = kernel_profile_observation_deposit_payload(
+        "anima",
+        "agent:epii:main",
+        "pratibimba-test",
+        "20260519",
+        "Idea/Empty/Present/19-05-2026/20260519-120000-main/now.md",
+        "M2",
+        10,
+        600,
+        64,
+        42,
+        &private_anchor,
+        false,
+    )
+    .unwrap_err();
+    assert!(err.contains("protected kernel state"));
 }
 
 #[test]

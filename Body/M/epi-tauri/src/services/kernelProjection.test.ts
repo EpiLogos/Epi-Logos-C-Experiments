@@ -110,6 +110,38 @@ describe('projectKernelHarmonicConsumer', () => {
             m3CodecProvenance:
               'portal-core::mahamaya address law; tarot/amino LUTs pending',
           },
+          bedrock: {
+            hashOperator: '#',
+            psychoidNumber: '#4',
+            invertedPsychoidNumber: "#4'",
+            successorPsychoidNumber: '#5',
+            successorRelation: 'epogdoon-tick',
+            inversionRelation: 'inversion-spanda',
+            bimbaPitchClass: 8,
+            inversionPitchClass: 9,
+          },
+          pointerAnchor: {
+            sourceCoordinate: 'S0/QL-meta',
+            qlPosition: 4,
+            helix: 'pratibimba',
+            webIndex: 10,
+            bedrockIndex: 4,
+            familyRingSize: 12,
+            positionRingSize: 12,
+            lensRingSize: 12,
+            webCardinality: 36,
+            lensAnchor: "L4'",
+            relationRole: 'inversion-spanda',
+            pitchClass: 9,
+            provenance: 'S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract',
+          },
+          contextFrames: {
+            frameCount: 7,
+            activeFrameIndex: 5,
+            activeFrame: '4.5/0',
+            activeAgent: 'Psyche',
+            projection: 'CF7 diatonic lemniscate overlay',
+          },
         },
       },
     };
@@ -139,6 +171,11 @@ describe('projectKernelHarmonicConsumer', () => {
     expect(consumer.hexagram).toBe('H43');
     expect(consumer.lineChangeOperatorAddress).toBe(256);
     expect(consumer.binaryTranscriptionState).toBe('provisional-gap');
+    expect(consumer.bedrockPsychoidNumber).toBe('#4');
+    expect(consumer.invertedPsychoidNumber).toBe("#4'");
+    expect(consumer.pointerLensAnchor).toBe("L4'");
+    expect(consumer.pointerWebIndex).toBe(10);
+    expect(consumer.contextFrameCount).toBe(7);
     expect(consumer.visualReadiness).toBe('ready_for_projection');
     expect(consumer.musicalReadiness).toBe('data_ready_audio_deferred');
     expect(consumer.protectedFieldsExposed).toBe(false);

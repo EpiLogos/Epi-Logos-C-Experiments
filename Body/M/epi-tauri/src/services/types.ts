@@ -208,6 +208,41 @@ export interface MathemePlanetaryChakralProjection {
   provenance: string;
 }
 
+export interface MathemeBedrockProjection {
+  hashOperator: string;
+  psychoidNumber: string;
+  invertedPsychoidNumber: string;
+  successorPsychoidNumber: string;
+  successorRelation: string;
+  inversionRelation: string;
+  bimbaPitchClass: number;
+  inversionPitchClass: number;
+}
+
+export interface MathemePointerAnchorProjection {
+  sourceCoordinate: string;
+  qlPosition: number;
+  helix: 'bimba' | 'pratibimba';
+  webIndex: number;
+  bedrockIndex: number;
+  familyRingSize: number;
+  positionRingSize: number;
+  lensRingSize: number;
+  webCardinality: number;
+  lensAnchor: string;
+  relationRole: string;
+  pitchClass: number;
+  provenance: string;
+}
+
+export interface MathemeContextFrameWebProjection {
+  frameCount: number;
+  activeFrameIndex: number | null;
+  activeFrame: string | null;
+  activeAgent: string | null;
+  projection: string;
+}
+
 export interface MathemeHarmonicProfile {
   tick12: number;
   cycle: number;
@@ -222,6 +257,9 @@ export interface MathemeHarmonicProfile {
   elements: MathemeElementalProjection;
   planetaryChakral: MathemePlanetaryChakralProjection;
   binary: MathemeBinaryProjection;
+  bedrock: MathemeBedrockProjection;
+  pointerAnchor: MathemePointerAnchorProjection;
+  contextFrames: MathemeContextFrameWebProjection;
 }
 
 export interface KernelTemporalProjection {

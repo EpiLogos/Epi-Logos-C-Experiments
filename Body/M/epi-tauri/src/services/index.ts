@@ -9,5 +9,17 @@ export { clockClient } from './clockClient';
 export { naraClient } from './naraClient';
 export { epiiClient } from './epiiClient';
 export { agentExecutionClient } from './agentExecutionClient';
+export {
+  buildKernelProfileObservationRequest,
+  depositKernelProfileObservation,
+  KERNEL_PROFILE_OBSERVATION_METHOD,
+} from './kernelProfileObservation';
+export type {
+  KernelProfileCoordinateAnchor,
+  KernelProfileObservationGateway,
+  KernelProfileObservationOptions,
+  KernelProfileObservationParams,
+  KernelProfileObservationRequest,
+} from './kernelProfileObservation';
 
 export type * from './types';

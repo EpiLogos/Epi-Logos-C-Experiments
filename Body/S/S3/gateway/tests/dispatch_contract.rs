@@ -84,10 +84,14 @@ fn s2_graph_methods_route_to_graph_service_authority() {
 
 #[test]
 fn kernel_resonance_episode_method_routes_to_graphiti_runtime_with_s5_access() {
-    let route = classify_method("s5.episodic.kernel_resonance.deposit")
-        .expect("kernel resonance Graphiti deposit should route");
-    assert_eq!(route.owner, GatewayDispatchOwner::S3GraphitiRuntime);
-    assert_eq!(route.class, GatewayDispatchClass::GraphitiInvocation);
-    assert_eq!(route.coordinate_owner, "S3/S5");
-    assert_eq!(route.agent_access_owner, "S5");
+    for method in [
+        "s5.episodic.kernel_resonance.deposit",
+        "s5.episodic.kernel_profile_observation.deposit",
+    ] {
+        let route = classify_method(method).expect("kernel Graphiti deposit should route");
+        assert_eq!(route.owner, GatewayDispatchOwner::S3GraphitiRuntime);
+        assert_eq!(route.class, GatewayDispatchClass::GraphitiInvocation);
+        assert_eq!(route.coordinate_owner, "S3/S5");
+        assert_eq!(route.agent_access_owner, "S5");
+    }
 }

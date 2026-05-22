@@ -1,5 +1,5 @@
 pub use epi_s3_graphiti_runtime::{
-    fire_provenance, kernel_resonance_deposit, provenance_from_record, session_memory_deposit,
-    session_memory_search, start, status, status_value, stop, GraphitiRuntimeConfig,
-    GraphitiStatus,
+    fire_provenance, kernel_profile_observation_deposit, kernel_resonance_deposit,
+    provenance_from_record, session_memory_deposit, session_memory_search, start, status,
+    status_value, stop, GraphitiRuntimeConfig, GraphitiStatus,
 };

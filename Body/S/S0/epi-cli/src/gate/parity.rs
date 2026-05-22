@@ -189,7 +189,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5.episodic.*",
         owner: "S3 runtime / S5 invocation",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5.episodic.search / s5.episodic.deposit / s5.episodic.kernel_resonance.deposit"),
+        live_gateway_method: Some("s5.episodic.search / s5.episodic.deposit / s5.episodic.kernel_resonance.deposit / s5.episodic.kernel_profile_observation.deposit"),
         cli_mirror: Some("epi gate graphiti"),
         body_path: "Body/S/S3/gateway-contract + Body/S/S0/epi-cli/src/gate/graphiti.rs",
         test_evidence: &[
@@ -429,9 +429,10 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve" | "s5'.review.history" => {
             Some("s5'.review.*")
         }
-        "s5.episodic.search" | "s5.episodic.deposit" | "s5.episodic.kernel_resonance.deposit" => {
-            Some("s5.episodic.*")
-        }
+        "s5.episodic.search"
+        | "s5.episodic.deposit"
+        | "s5.episodic.kernel_resonance.deposit"
+        | "s5.episodic.kernel_profile_observation.deposit" => Some("s5.episodic.*"),
         "s5'.improve.status"
         | "s5'.improve.propose"
         | "s5'.improve.evaluate"

@@ -433,6 +433,51 @@ async fn s5_graphiti_session_memory_methods_are_bounded_and_runtime_honest() {
         "M2"
     );
     assert!(kernel_deposit["runtimeAvailable"].is_boolean());
+
+    let profile_deposit = client
+        .request(
+            "s5.episodic.kernel_profile_observation.deposit",
+            json!({
+                "sourceAgent": "anima",
+                "sessionKey": "agent:main:main",
+                "dayId": "19-05-2026",
+                "namespaceRef": "pratibimba-test",
+                "vaultNowPath": "Idea/Empty/Present/19-05-2026/20260519-120000-main/now.md",
+                "sourceCoordinate": "M2",
+                "tick12": 10,
+                "degree720": 600,
+                "resonance72Index": 64,
+                "mahamayaAddress64": 42,
+                "coordinateAnchor": {
+                    "coordinate": "M2",
+                    "coordinate_anchor": {
+                        "harmonic_pointer": {
+                            "source_profile": "portal-core::MathemeHarmonicProfile",
+                            "source_contract": "S0 Bedrock7/PointerWeb36/CF7",
+                            "pointer_anchor": {
+                                "lens_anchor": "L2",
+                                "web_cardinality": 36
+                            }
+                        }
+                    }
+                }
+            }),
+        )
+        .await
+        .expect("kernel profile observation deposit should return an honest runtime envelope");
+
+    assert_eq!(profile_deposit["coordinate"], "S5/S5'");
+    assert_eq!(profile_deposit["runtimeOwner"], "S3'");
+    assert_eq!(
+        profile_deposit["method"],
+        "s5.episodic.kernel_profile_observation.deposit"
+    );
+    assert_eq!(
+        profile_deposit["deposit"]["metadata"]["coordinate_anchor"]["coordinate_anchor"]
+            ["harmonic_pointer"]["pointer_anchor"]["lens_anchor"],
+        "L2"
+    );
+    assert!(profile_deposit["runtimeAvailable"].is_boolean());
 }
 
 #[tokio::test]

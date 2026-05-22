@@ -8,6 +8,7 @@ fn gateway_method_manifest_is_complete() {
     assert!(methods.contains(&"s2.graph.pointer_web.refresh"));
     assert!(methods.contains(&"s2.graph.kernel_resonance.record"));
     assert!(methods.contains(&"s5.episodic.kernel_resonance.deposit"));
+    assert!(methods.contains(&"s5.episodic.kernel_profile_observation.deposit"));
     assert_eq!(epi_logos::gate::parity::TEST_GATEWAY_PORT, 18794);
 }
 
