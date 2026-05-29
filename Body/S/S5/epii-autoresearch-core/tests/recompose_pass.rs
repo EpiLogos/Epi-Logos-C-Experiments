@@ -1,5 +1,6 @@
 use epi_s5_epii_autoresearch_core::inbox::{InboxEntry, InboxStore};
-use epi_s5_epii_autoresearch_core::{recompose_pass, KeepDiscard};
+#[allow(unused_imports)]
+use epi_s5_epii_autoresearch_core::recompose::{recompose_pass, RecomposeDecision, RecomposeOutput};
 use portal_core::{CpfState, CsDirection, CsField, VakAddress};
 use std::collections::BTreeMap;
 use tempfile::tempdir;
@@ -105,8 +106,8 @@ fn recompose_pass_defaults_to_human_review_gate() {
         .unwrap();
 
     let outputs = recompose_pass(&store).unwrap();
-    match &outputs[0].keep_discard {
-        KeepDiscard::HumanReview(reason) => {
+    match &outputs[0].decision {
+        RecomposeDecision::HumanReview(reason) => {
             assert!(
                 reason.contains("human"),
                 "human-review reason should mention human"
@@ -142,4 +143,43 @@ fn recompose_pass_handles_empty_inbox() {
     let store = InboxStore::new(tmp.path()).unwrap();
     let outputs = recompose_pass(&store).unwrap();
     assert_eq!(outputs.len(), 0);
+}
+
+#[test]
+fn recompose_pass_empty_improvement_vectors_still_human_review() {
+    // Documented choice: an entry with no improvement_vectors still gets
+    // HumanReview because artifacts may be human-interesting even without
+    // vectors. We do NOT auto-discard.
+    let tmp = tempdir().unwrap();
+    let store = InboxStore::new(tmp.path()).unwrap();
+    store
+        .append(sample_entry("agent:empty", vec![], vec!["/x.md"]))
+        .unwrap();
+
+    let outputs = recompose_pass(&store).unwrap();
+    assert_eq!(outputs.len(), 1);
+    assert_eq!(outputs[0].next_compose_hint.proposed_p0_questions.len(), 0);
+    assert_eq!(outputs[0].next_compose_hint.challenger_artifacts.len(), 1);
+    assert!(matches!(
+        &outputs[0].decision,
+        RecomposeDecision::HumanReview(_)
+    ));
+}
+
+#[test]
+fn recompose_pass_preserves_duplicate_improvement_vectors() {
+    // Decision: duplicate vectors → duplicate questions (signal of repeated
+    // emphasis, not noise). Pin this behaviour.
+    let tmp = tempdir().unwrap();
+    let store = InboxStore::new(tmp.path()).unwrap();
+    store
+        .append(sample_entry(
+            "agent:dup",
+            vec!["consider X", "consider X"],
+            vec![],
+        ))
+        .unwrap();
+
+    let outputs = recompose_pass(&store).unwrap();
+    assert_eq!(outputs[0].next_compose_hint.proposed_p0_questions.len(), 2);
 }
