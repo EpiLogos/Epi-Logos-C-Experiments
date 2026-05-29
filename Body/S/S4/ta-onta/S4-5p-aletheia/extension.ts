@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { buildTemporalContextEnvelope, adjustKairosThreshold, coordinateMobiusReturn } from "./modules/chronos-integration.ts";
 import { buildTemplateInvocation, refreshTopology, validateHenSync } from "./modules/hen-integration.ts";
 import { maybeUpdateCoordinateMap } from "./modules/coordinate-loop.ts";
+import { aletheiaIngestSophia } from "./modules/sophia-ingest.ts";
 // NB: renderThoughtFrontmatter (modules/thought-vak.ts) is intentionally NOT
 // imported here. VAK merging now happens Rust-side via the
 // --vak-address-json flag on `epi vault thought-route` so the persisted
@@ -889,6 +890,56 @@ ${questions || "<!-- No questions carried forward -->"}
       ].filter(Boolean).join("\n");
 
       return { content: [{ type: "text", text: summary }], isError: ingested.length === 0 && failed.length > 0 };
+    },
+  });
+
+  // ── Tool: aletheia_ingest ────────────────────────────────────────
+  // C4 / Möbius seam TS handoff. Reads the Sophia disclosure JSONL written
+  // by Khora's session_shutdown (C2), fuses it with optional Moirai outputs
+  // (C3), and writes ONE epii_autoresearch_inbox_entry JSONL line to
+  // ${EPILOGOS_VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl. That file
+  // is the bridge surface consumed by Epii-autoresearch-core (C5/C6).
+  api.registerTool({
+    name: "aletheia_ingest",
+    label: "Aletheia Ingest",
+    description: "C4 Möbius seam TS handoff: ingest the Sophia session-end disclosure for the given session " +
+      "and (optionally) the three Moirai summaries, compose the canonical " +
+      "epii_autoresearch_inbox_entry payload, and append it as a JSONL line to " +
+      "${EPILOGOS_VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl. That JSONL is what " +
+      "Epii-autoresearch-core (C5 InboxStore / C6 recompose_pass) reads.",
+    parameters: Type.Object({
+      session_id: Type.String({ description: "Session whose Sophia disclosure to ingest" }),
+      day_id: Type.String({ description: "Day identifier (DD-MM-YYYY)" }),
+      moirai_outputs: Type.Optional(Type.Object({
+        klotho: Type.Optional(Type.String({ description: "Klotho (traces) summary" })),
+        lachesis: Type.Optional(Type.String({ description: "Lachesis (sources) summary" })),
+        atropos: Type.Optional(Type.String({ description: "Atropos (insight) summary" })),
+      })),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      const result = aletheiaIngestSophia({
+        session_id: params.session_id,
+        day_id: params.day_id,
+        moirai_outputs: params.moirai_outputs ?? {},
+      });
+      if (!result.ok) {
+        return {
+          content: [{ type: "text", text: `aletheia_ingest failed: ${result.reason}` }],
+          isError: true,
+        };
+      }
+      // Compact response: do not echo the full final_vak — callers can read
+      // the Epii inbox JSONL directly if they need the full payload.
+      const compact = {
+        kind: result.payload.kind,
+        source: result.payload.source,
+        session_id: result.payload.session_id,
+        day_id: result.payload.day_id,
+        path: result.path,
+      };
+      return {
+        content: [{ type: "text", text: JSON.stringify(compact) }],
+      };
     },
   });
 
