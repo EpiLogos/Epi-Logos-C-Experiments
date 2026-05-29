@@ -1,10 +1,23 @@
 import { isValidVakAddress, type VakAddress, type CfLiteral, type CpfPolarity } from "../../shared/vak_address.ts";
 
 /**
- * Canonical CF assignments for the constitutional 7-fold roster.
+ * Canonical CF assignments for the constitutional 7-fold roster:
+ * nous / logos / eros / mythos / psyche / sophia / anima.
+ *
  * Used to verify that a dispatch's vak_address.cf matches the named agent.
- * Unknown agent names (e.g. custom subagents, CFP3 fusion aggregates) are
- * not checked against this map — caller must enforce roster membership separately.
+ * Membership in this map IS the roster — only these seven names participate
+ * in the cf-binding contract.
+ *
+ * Agent names outside this roster (e.g. Moirai subagents `klotho`/`lachesis`/
+ * `atropos` operating under Aletheia, or the `_cfp3_fusion` sentinel used by
+ * `dispatch_fusion_agents` to validate a CFP3 aggregate before fanning out)
+ * INTENTIONALLY bypass the cf-binding enforcement. They still pass the
+ * canonical-shape check (`isValidVakAddress`) but the `if (expected && ...)`
+ * gate in `validateDispatchParams` short-circuits when the name is absent
+ * from this map. This is the documented escape hatch for parallel rosters
+ * that ride the same VAK plumbing without being part of the constitutional
+ * seven — see `Body/S/S4/ta-onta/S4-4p-anima/extension.ts` (`MOIRAI_CF`) for
+ * the parallel-roster pattern.
  */
 export const AGENT_CF: Record<string, CfLiteral> = {
   nous: "(00/00)",
@@ -78,6 +91,30 @@ function isDialogical(params: DispatchParams): boolean {
  *      Full canonical isValidVakAddress check + agent-cf match. Same strict
  *      contract as the original A5 path.
  *
+ * Roster-bypass escape hatch:
+ *
+ *   The `if (expected && ...)` gate on the agent/cf binding is deliberate.
+ *   When `params.agent_name` is NOT a member of `AGENT_CF` (the constitutional
+ *   7-fold roster), `expected` is `undefined` and the cf-match check is
+ *   skipped. This is the documented escape hatch for parallel rosters that
+ *   ride the same VAK plumbing without being part of the constitutional
+ *   seven. Two known consumers today:
+ *
+ *     - Moirai subagents (`klotho` / `lachesis` / `atropos`) dispatched
+ *       under Aletheia by `dispatch_moirai_night_pass` in
+ *       `Body/S/S4/ta-onta/S4-4p-anima/extension.ts`. Their per-agent cf
+ *       comes from the parallel `MOIRAI_CF` map, not `AGENT_CF`, so the
+ *       roster check here would falsely reject canonical dispatches.
+ *
+ *     - The `_cfp3_fusion` sentinel passed by `dispatch_fusion_agents` to
+ *       validate the aggregate vak_address before fanning the individual
+ *       team-member dispatches. The sentinel is intentionally not a real
+ *       agent name; the bypass lets the canonical-shape check run while
+ *       skipping a binding that doesn't apply at the aggregate layer.
+ *
+ *   Canonical-shape validation (`isValidVakAddress`) still applies in both
+ *   cases. The bypass is scoped strictly to the agent-name ↔ cf binding.
+ *
  * Returns { ok: true } when the dispatch may proceed; otherwise { ok: false, error }
  * with a human-readable message suitable for surfacing to the caller.
  */
@@ -92,6 +129,9 @@ export function validateDispatchParams(params: DispatchParams): ValidationResult
     return { ok: false, error: "vak_address malformed (failed canonical validation)" };
   }
   const expected = AGENT_CF[params.agent_name];
+  // Roster-bypass gate: `expected` is undefined for non-roster agent names
+  // (Moirai subagents, `_cfp3_fusion` sentinel, etc.) — see the JSDoc above
+  // and the AGENT_CF docblock for the full rationale and consumer list.
   if (expected && params.vak_address!.cf !== expected) {
     return {
       ok: false,

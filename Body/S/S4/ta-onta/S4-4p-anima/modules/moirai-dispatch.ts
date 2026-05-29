@@ -58,3 +58,25 @@ export function planMoiraiNightPass(input: {
     ],
   };
 }
+
+/**
+ * Classification of a single Moirai dispatch's output string.
+ *
+ *   - "empty"  → the subagent returned nothing (whitespace-only or zero-length)
+ *   - "failed" → the output starts with "Error:" (per `dispatchTeamMember`'s
+ *                `proc.on("error", ...)` convention, which resolves — never
+ *                rejects — with an "Error: ..." prefix on subprocess failure)
+ *   - "ok"     → any non-empty output not matching the error sentinel
+ *
+ * Pure: no I/O, no allocation beyond a trimmed string check. Lifted here from
+ * the `dispatch_moirai_night_pass` tool so the partial-failure aggregation
+ * logic is independently testable and reusable across CFP3 fan-outs.
+ */
+export type MoiraiOutputClass = "ok" | "failed" | "empty";
+
+export function classifyMoiraiOutput(output: string): MoiraiOutputClass {
+  const trimmed = output.trim();
+  if (trimmed.length === 0) return "empty";
+  if (trimmed.startsWith("Error:")) return "failed";
+  return "ok";
+}

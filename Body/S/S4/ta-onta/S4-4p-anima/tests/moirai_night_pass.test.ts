@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
-import { planMoiraiNightPass } from "../modules/moirai-dispatch.ts";
+import { planMoiraiNightPass, classifyMoiraiOutput } from "../modules/moirai-dispatch.ts";
 
 describe("Moirai Night' pass plan", () => {
   it("dispatches all three Moirai as CFP3 F-Thread with proper Night' positions", () => {
@@ -45,5 +45,19 @@ describe("Moirai Night' pass plan", () => {
     assert.equal(byAgent.klotho, "P1'");
     assert.equal(byAgent.lachesis, "P4'");
     assert.equal(byAgent.atropos, "P5'");
+  });
+});
+
+describe("classifyMoiraiOutput", () => {
+  it("classifies empty output as 'empty'", () => {
+    assert.equal(classifyMoiraiOutput(""), "empty");
+    assert.equal(classifyMoiraiOutput("   \n  "), "empty");
+  });
+  it("classifies Error:-prefixed output as 'failed'", () => {
+    assert.equal(classifyMoiraiOutput("Error: subprocess crashed"), "failed");
+    assert.equal(classifyMoiraiOutput("  Error: something"), "failed");
+  });
+  it("classifies normal output as 'ok'", () => {
+    assert.equal(classifyMoiraiOutput("traces: thread A, thread B"), "ok");
   });
 });

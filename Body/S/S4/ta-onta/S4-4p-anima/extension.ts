@@ -7,7 +7,7 @@ import registerAgentChain from "./S4/agent-chain.ts";
 import registerSubagentWidget from "./S4/subagent-widget.ts";
 import registerPiPi from "./S4/pi-pi.ts";
 import { validateDispatchParams, validateParallelDispatch } from "./modules/dispatch-validate.ts";
-import { planMoiraiNightPass } from "./modules/moirai-dispatch.ts";
+import { planMoiraiNightPass, classifyMoiraiOutput } from "./modules/moirai-dispatch.ts";
 import type { VakAddress } from "../shared/vak_address.ts";
 
 // Per-agent VAK address fragments used by `dispatch_moirai_night_pass`. The
@@ -441,7 +441,17 @@ export async function animaExtension(api: ExtensionAPI) {
       // unknown agent names (the cf-match check is gated by `if (expected)`
       // on roster membership), so klotho/lachesis/atropos pass through
       // canonical-shape validation only.
-      const outputs = await Promise.all(
+      //
+      // We use Promise.allSettled (semantically equivalent to Promise.all
+      // here, since `dispatchTeamMember` resolves — never rejects — even on
+      // subprocess error, prefixing the output with "Error:") for clarity:
+      // it makes explicit that we expect to classify every result rather
+      // than fail the whole tool on the first rejection. Each output is
+      // then run through `classifyMoiraiOutput` and the section header
+      // surfaces the per-agent status (ok / failed / empty / refused).
+      // If any Moirai is non-ok the tool return carries `isError: true`
+      // so callers can detect partial failure without parsing the body.
+      const settled = await Promise.allSettled(
         plan.dispatches.map(async (d) => {
           const vak: VakAddress = {
             cpf: "(4.0/1-4.4/5)",
@@ -457,28 +467,51 @@ export async function animaExtension(api: ExtensionAPI) {
             vak_address: vak,
           });
           if (!validation.ok) {
-            return `### ${d.agent} (${d.night_position})\n[refused] ${validation.error}`;
+            return { d, output: `[refused] ${validation.error}`, status: "refused" as const };
           }
           const out = await dispatchTeamMember(d.agent, d.task, vak);
-          return `### ${d.agent} (${d.night_position})\n${out}`;
+          return { d, output: out, status: classifyMoiraiOutput(out) };
         }),
       );
+
+      let okCount = 0;
+      const sections: string[] = [];
+      for (let i = 0; i < settled.length; i++) {
+        const r = settled[i];
+        const d = plan.dispatches[i];
+        if (r.status === "fulfilled") {
+          const { output, status } = r.value;
+          if (status === "ok") okCount++;
+          sections.push(`### ${d.agent} (${status}) [${d.night_position}]\n${output}`);
+        } else {
+          // Promise.allSettled rejection: the async closure itself threw
+          // (not a subprocess "Error:" string). Treat as failed.
+          sections.push(
+            `### ${d.agent} (failed) [${d.night_position}]\nError: ${String(r.reason)}`,
+          );
+        }
+      }
+      const summary = `Moirai Night' pass: ${okCount}/3 succeeded`;
+      const anyFailed = okCount !== plan.dispatches.length;
 
       return {
         content: [
           {
             type: "text",
             text:
+              `${summary}\n` +
               `CFP3 F-Thread Night' rehearing — Moirai dispatch\n` +
               `session_id: ${params.session_id}\n` +
               `disclosure: ${params.disclosure_path}\n\n` +
-              outputs.join("\n\n"),
+              sections.join("\n\n"),
           },
         ],
+        ...(anyFailed ? { isError: true } : {}),
         details: {
           plan,
           session_id: params.session_id,
           disclosure_path: params.disclosure_path,
+          ok_count: okCount,
         },
       };
     },
