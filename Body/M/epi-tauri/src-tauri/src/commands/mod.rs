@@ -4,6 +4,7 @@ pub mod atelier;
 pub mod clock;
 pub mod gateway;
 pub mod graph;
+pub mod harmonic_profile;
 pub mod library;
 pub mod mef;
 pub mod nara;

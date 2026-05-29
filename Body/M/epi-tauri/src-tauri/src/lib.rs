@@ -66,6 +66,7 @@ pub fn run() {
             commands::gateway::gateway_rpc,
             commands::gateway::gateway_send_raw,
             commands::gateway::gateway_is_connected,
+            commands::harmonic_profile::harmonic_profile_for_tick,
             commands::clock::clock_get_state,
             commands::clock::clock_oracle_cast,
             commands::clock::clock_update_kairos,
