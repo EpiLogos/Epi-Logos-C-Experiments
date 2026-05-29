@@ -151,6 +151,9 @@ impl<'a> HybridRetriever<'a> {
             .collect();
         let lower_query = query_text.trim().to_lowercase();
 
+        // NOTE: This legacy Cypher still reads `c_4_*` / `c_1_*` properties from the
+        // Bimba graph. Canonical VAK bias keys (`cf`, `cp`, `ct`, `cs_direction`) are
+        // emitted by `vak_bias_weights` below — do not conflate the two vocabularies.
         let q = query(
             "MATCH (n:Bimba)
              WITH n,
@@ -359,9 +362,18 @@ impl<'a> HybridRetriever<'a> {
         w.insert("cp".into(), 0.5);
         w.insert("ct".into(), 0.4);
         w.insert("cs_direction".into(), 0.2);
-        // Sentinel match values for the scorer.
+        // Sentinel match values for the scorer — `__<key>_value:<canonical>`
+        // entries carry the target VAK coordinate values so downstream Cypher /
+        // scoring code does not need to re-thread `VakAddress` through every
+        // layer.
         w.insert(format!("__cf_value:{}", vak.cf), 1.0);
         w.insert(format!("__cp_value:{}", vak.cp), 1.0);
+        let cs_direction_literal = serde_json::to_value(&vak.cs.direction)
+            .expect("CsDirection serialization is infallible (fieldless enum)")
+            .as_str()
+            .expect("CsDirection serializes to JSON string")
+            .to_string();
+        w.insert(format!("__cs_direction_value:{}", cs_direction_literal), 1.0);
         w
     }
 }

@@ -34,11 +34,20 @@ fn hybrid_retriever_computes_vak_bias_weights_mechanistic() {
         "cs_direction weight present"
     );
 
-    // CF is the strongest signal (frame-binding) — must outweigh CT
+    // Full conceptual hierarchy: cf > cp > ct > cs_direction.
+    // CF is the strongest (frame-binding affinity); CP positional bias outranks
+    // content-type CT; CS direction (Day/Night') is the weakest synthesis bias.
+    let cf = weights.get("cf").copied().unwrap_or(0.0);
+    let cp = weights.get("cp").copied().unwrap_or(0.0);
+    let ct = weights.get("ct").copied().unwrap_or(0.0);
+    let cs_direction = weights.get("cs_direction").copied().unwrap_or(0.0);
+    assert!(cf > cp, "CF must outweigh CP (cf={}, cp={})", cf, cp);
+    assert!(cp > ct, "CP must outweigh CT (cp={}, ct={})", cp, ct);
     assert!(
-        weights.get("cf").copied().unwrap_or(0.0)
-            >= weights.get("ct").copied().unwrap_or(0.0),
-        "CF should be at least as strong as CT"
+        ct > cs_direction,
+        "CT must outweigh CS direction (ct={}, cs_direction={})",
+        ct,
+        cs_direction
     );
 }
 
@@ -62,6 +71,8 @@ fn hybrid_retriever_carries_address_values_for_matching() {
     // re-passing VakAddress through every layer.
     assert!(weights.contains_key("__cf_value:(0/1/2/3)"));
     assert!(weights.contains_key("__cp_value:CP4.3"));
+    // CsDirection::Night serializes via serde rename to "Night'" (apostrophe).
+    assert!(weights.contains_key("__cs_direction_value:Night'"));
 }
 
 #[test]
