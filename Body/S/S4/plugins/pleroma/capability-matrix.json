@@ -47,77 +47,152 @@
     {
       "name": "anima-orchestration",
       "layer": "S4/S4'",
-      "kind": "vak-dispatch"
+      "kind": "vak-dispatch",
+      "vak_profile": {
+        "operates_at_cf": ["(4.0/1-4.4/5)"],
+        "serves_ct": ["CT4", "CT5"],
+        "ranges_cp": ["CP4.0", "CP4.1", "CP4.2", "CP4.3", "CP4.4", "CP4.5"]
+      }
     },
     {
       "name": "vak-evaluate",
       "layer": "S4/S4'",
-      "kind": "vak-coordinate-assignment"
+      "kind": "vak-coordinate-assignment",
+      "vak_profile": {
+        "operates_at_cf": ["(4.0/1-4.4/5)"],
+        "serves_ct": ["CT0", "CT1", "CT2", "CT3", "CT4", "CT5"],
+        "ranges_cp": ["CP4.0"]
+      }
     },
     {
       "name": "vak-coordinate-frame",
       "layer": "S4/S4'",
-      "kind": "coordinate-framing"
+      "kind": "coordinate-framing",
+      "vak_profile": {
+        "operates_at_cf": ["(4.0/1-4.4/5)"],
+        "serves_ct": ["CT0", "CT1", "CT2", "CT3", "CT4", "CT5"],
+        "ranges_cp": ["CP4.0"]
+      }
     },
     {
       "name": "day-night-pass",
       "layer": "S4/S4'",
-      "kind": "psyche-continuity"
+      "kind": "psyche-continuity",
+      "vak_profile": {
+        "operates_at_cf": ["(4.0/1-4.4/5)", "(5/0)"],
+        "serves_ct": ["CT2", "CT3", "CT5"],
+        "ranges_cp": ["CP4.5", "CP4.3"]
+      }
     },
     {
       "name": "goal-prelude",
       "layer": "S4/S4'",
-      "kind": "dialogical-goal-discovery"
+      "kind": "dialogical-goal-discovery",
+      "vak_profile": {
+        "operates_at_cf": ["(00/00)"],
+        "serves_ct": ["CT0", "CT4b"],
+        "ranges_cp": ["CP4.0", "CP4.4"]
+      }
     },
     {
       "name": "bimba-populate",
       "layer": "S3/S3'",
-      "kind": "graph-population"
+      "kind": "graph-population",
+      "vak_profile": {
+        "operates_at_cf": ["(0/1/2/3)"],
+        "serves_ct": ["CT2", "CT3"],
+        "ranges_cp": ["CP2", "CP3"]
+      }
     },
     {
       "name": "deep-interview",
       "layer": "S4/S4'",
-      "kind": "dialogical-clearing"
+      "kind": "dialogical-clearing",
+      "vak_profile": {
+        "operates_at_cf": ["(00/00)"],
+        "serves_ct": ["CT0", "CT4b"],
+        "ranges_cp": ["CP4.0", "CP4.4"]
+      }
     },
     {
       "name": "git-master",
       "layer": "S5/S5'",
-      "kind": "change-integration"
+      "kind": "change-integration",
+      "vak_profile": {
+        "operates_at_cf": ["(5/0)"],
+        "serves_ct": ["CT5"],
+        "ranges_cp": ["CP4.5", "CP5"]
+      }
     },
     {
       "name": "pipeline",
       "layer": "S4/S4'",
-      "kind": "dispatch-sequencing"
+      "kind": "dispatch-sequencing",
+      "vak_profile": {
+        "operates_at_cf": ["(4.0/1-4.4/5)"],
+        "serves_ct": ["CT4", "CT4a", "CT4b"],
+        "ranges_cp": ["CP4.0", "CP4.1", "CP4.2", "CP4.3", "CP4.4", "CP4.5"]
+      }
     },
     {
       "name": "plan",
       "layer": "S1/S1'",
-      "kind": "specification"
+      "kind": "specification",
+      "vak_profile": {
+        "operates_at_cf": ["(0/1/2)"],
+        "serves_ct": ["CT1", "CT2"],
+        "ranges_cp": ["CP1", "CP2"]
+      }
     },
     {
       "name": "ralplan",
       "layer": "S1/S1'",
-      "kind": "consensus-planning"
+      "kind": "consensus-planning",
+      "vak_profile": {
+        "operates_at_cf": ["(0/1/2)"],
+        "serves_ct": ["CT1", "CT2"],
+        "ranges_cp": ["CP1", "CP2"]
+      }
     },
     {
       "name": "tdd",
       "layer": "S5/S5'",
-      "kind": "implementation-verification"
+      "kind": "implementation-verification",
+      "vak_profile": {
+        "operates_at_cf": ["(5/0)"],
+        "serves_ct": ["CT5"],
+        "ranges_cp": ["CP4.5", "CP5"]
+      }
     },
     {
       "name": "team",
       "layer": "S4/S4'",
-      "kind": "agent-dispatch"
+      "kind": "agent-dispatch",
+      "vak_profile": {
+        "operates_at_cf": ["(4.0/1-4.4/5)"],
+        "serves_ct": ["CT4", "CT4a", "CT4b"],
+        "ranges_cp": ["CP4.0", "CP4.1", "CP4.2", "CP4.3", "CP4.4", "CP4.5"]
+      }
     },
     {
       "name": "ultraqa",
       "layer": "S5/S5'",
-      "kind": "quality-gating"
+      "kind": "quality-gating",
+      "vak_profile": {
+        "operates_at_cf": ["(5/0)"],
+        "serves_ct": ["CT5"],
+        "ranges_cp": ["CP4.5", "CP5"]
+      }
     },
     {
       "name": "web-research",
       "layer": "S2/S2'",
-      "kind": "external-research"
+      "kind": "external-research",
+      "vak_profile": {
+        "operates_at_cf": ["(0/1/2/3)"],
+        "serves_ct": ["CT2", "CT3"],
+        "ranges_cp": ["CP2", "CP3"]
+      }
     }
   ],
   "commands": [

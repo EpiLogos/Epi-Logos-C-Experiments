@@ -7,6 +7,18 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 
 
 class PleromaCapabilityMatrixTest(unittest.TestCase):
+    PLEROMA_ROOT = PLUGIN_ROOT
+    CANONICAL_CT = {"CT0", "CT1", "CT2", "CT3", "CT4", "CT4a", "CT4b", "CT5"}
+    CANONICAL_CP = {
+        "CP0", "CP1", "CP2", "CP3",
+        "CP4.0", "CP4.1", "CP4.2", "CP4.3", "CP4.4", "CP4.5",
+        "CP5",
+    }
+    CANONICAL_CF_KEYS = {
+        "(00/00)", "(0/1)", "(0/1/2)", "(0/1/2/3)",
+        "(4/5/0)", "(5/0)", "(4.0/1-4.4/5)", "(4.5/0)",
+    }
+
     def test_matrix_maps_real_agents_skills_and_hooks(self):
         matrix_path = PLUGIN_ROOT / "capability-matrix.json"
         matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
@@ -183,6 +195,62 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         expected = {"dispatch_agent", "dispatch_parallel_agents", "dispatch_fusion_agents", "run_chain"}
         missing = expected - names
         self.assertFalse(missing, f"dispatch_tools missing entries: {missing}")
+
+
+    def test_every_skill_declares_vak_profile(self):
+        """Each skill must carry operates_at_cf / serves_ct / ranges_cp profile fields."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        for skill in matrix["skills"]:
+            with self.subTest(skill=skill["name"]):
+                self.assertIn(
+                    "vak_profile",
+                    skill,
+                    f"skill {skill['name']} missing vak_profile",
+                )
+                vp = skill["vak_profile"]
+                self.assertIn("operates_at_cf", vp)
+                self.assertIn("serves_ct", vp)
+                self.assertIn("ranges_cp", vp)
+                self.assertTrue(isinstance(vp["operates_at_cf"], list))
+                self.assertTrue(isinstance(vp["serves_ct"], list))
+                self.assertTrue(isinstance(vp["ranges_cp"], list))
+                # canonical value sanity: at least one CF, CT, CP must be present
+                self.assertTrue(
+                    len(vp["operates_at_cf"]) > 0,
+                    f"{skill['name']}: operates_at_cf must be non-empty",
+                )
+                self.assertTrue(
+                    len(vp["serves_ct"]) > 0,
+                    f"{skill['name']}: serves_ct must be non-empty",
+                )
+                self.assertTrue(
+                    len(vp["ranges_cp"]) > 0,
+                    f"{skill['name']}: ranges_cp must be non-empty",
+                )
+
+    def test_vak_profile_values_are_canonical(self):
+        """Every vak_profile value must come from the canonical literal sets."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        for skill in matrix["skills"]:
+            with self.subTest(skill=skill["name"]):
+                for cf in skill["vak_profile"]["operates_at_cf"]:
+                    self.assertIn(
+                        cf,
+                        self.CANONICAL_CF_KEYS,
+                        f"{skill['name']}: unknown cf {cf}",
+                    )
+                for ct in skill["vak_profile"]["serves_ct"]:
+                    self.assertIn(
+                        ct,
+                        self.CANONICAL_CT,
+                        f"{skill['name']}: unknown ct {ct}",
+                    )
+                for cp in skill["vak_profile"]["ranges_cp"]:
+                    self.assertIn(
+                        cp,
+                        self.CANONICAL_CP,
+                        f"{skill['name']}: unknown cp {cp}",
+                    )
 
 
 if __name__ == "__main__":
