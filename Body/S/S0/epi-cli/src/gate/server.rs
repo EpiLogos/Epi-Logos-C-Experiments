@@ -567,6 +567,12 @@ async fn dispatch_rpc(
                             .collect::<Vec<_>>()
                     })
                 }),
+                // VAK address on SessionPatch is not currently wire-settable
+                // via sessions.patch — set None. Source: pre-existing build
+                // gap from cfdafb1 (feat(s3-gateway): persist VakAddress on
+                // SessionRecord/SessionPatch). Filed for follow-up only —
+                // outside B2 scope.
+                vak_address: None,
             };
             let record = store.patch(&identifier, patch).map_err(not_found_error)?;
             // Provenance: session_open when vault_now_path first set

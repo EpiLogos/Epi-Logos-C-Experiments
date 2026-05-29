@@ -1,4 +1,5 @@
 use chrono::{DateTime, Utc};
+use portal_core::VakAddress;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -25,10 +26,42 @@ pub fn render_template(
     repo_root: &Path,
     home_root: &Path,
 ) -> Result<String, String> {
+    render_template_with_vak(context, repo_root, home_root, None)
+}
+
+/// Render a template, optionally inlining canonical VAK keys (`cpf`, `ct`,
+/// `cp`, `cf`, `cfp`, `cs_code`, `cs_direction`) into the SAME `---...---`
+/// frontmatter block emitted by the built-in template renderer.
+///
+/// VAK keys are appended at the bottom of the existing frontmatter block,
+/// directly above the closing `---`. This preserves the invariant that the
+/// persisted artifact has exactly ONE frontmatter block at the top of the
+/// file — readable by Obsidian, gnosis_ingest, hen_frontmatter_validate,
+/// Aletheia retrieval, and every other standard YAML-frontmatter parser.
+///
+/// Canonical literals (`(00/00)`, `(4.0/1-4.4/5)`, `Night'`) survive
+/// because [`portal_core::CpfState`] and [`portal_core::CsDirection`] carry
+/// serde `rename` markers — the same pattern as B1
+/// `PromotionPlan::attach_vak_address`.
+///
+/// Behaviour with `vak_address = None` is identical to plain
+/// [`render_template`]: emits the existing block unchanged.
+///
+/// When a World/template override matches (under `Idea/Bimba/World/*.md` or
+/// `$HOME/.epi-logos/templates/*.md`), VAK merging is skipped — the override
+/// is the authority for that artifact's frontmatter shape and we don't
+/// silently rewrite user-authored templates. This is consistent with
+/// `world_template_authority_precedes_built_in_template`.
+pub fn render_template_with_vak(
+    context: &TemplateRenderContext,
+    repo_root: &Path,
+    home_root: &Path,
+    vak_address: Option<&VakAddress>,
+) -> Result<String, String> {
     if let Some(body) = load_template_override(context, repo_root, home_root)? {
         return Ok(body);
     }
-    Ok(render_builtin_template(context))
+    Ok(render_builtin_template(context, vak_address))
 }
 
 fn load_template_override(
@@ -93,9 +126,14 @@ fn candidate_paths(
     candidates
 }
 
-fn render_builtin_template(context: &TemplateRenderContext) -> String {
+fn render_builtin_template(
+    context: &TemplateRenderContext,
+    vak_address: Option<&VakAddress>,
+) -> String {
     let normalized = normalize_template_type(&context.template_type);
     if let Some(definition) = ct_definition(&normalized) {
+        // CT frozen-process templates don't carry per-artifact VAK addresses
+        // (they're the process scaffolding itself). Ignore vak_address here.
         return render_builtin_ct(definition, context);
     }
 
@@ -141,6 +179,9 @@ fn render_builtin_template(context: &TemplateRenderContext) -> String {
             .unwrap_or_else(|| "T0".to_string());
         lines.push(format!("thought_type: \"{thought_type}\""));
     }
+    if let Some(vak) = vak_address {
+        append_vak_lines(&mut lines, vak);
+    }
     lines.push("---".to_string());
     lines.push(String::new());
     lines.push(format!("# {}", title_for(&normalized)));
@@ -181,6 +222,58 @@ fn render_builtin_ct(definition: CTDefinition, context: &TemplateRenderContext) 
         lines.push(String::new());
     }
     lines.join("\n")
+}
+
+/// Append canonical VAK keys to the in-progress frontmatter line buffer.
+///
+/// Emitted order (canonical, mirrors A3 Hen template-vak.ts, A4 Graphiti,
+/// and B1 `PromotionPlan::attach_vak_address`):
+///   cpf, ct, cp, cf, cfp, cs_code, cs_direction
+///
+/// Why JSON serde for `cpf` and `cs_direction`:
+///   - [`portal_core::CpfState`] and [`portal_core::CsDirection`] carry
+///     `#[serde(rename = "...")]` markers that emit canonical literals
+///     `(00/00)`, `(4.0/1-4.4/5)`, `Night'`. Round-tripping through
+///     `serde_json::to_value` recovers the canonical literal as a
+///     `Value::String`. Hand-rolling a Display impl would risk drift.
+///   - `.expect()` is sound here: both are fieldless enums and serialization
+///     is infallible. This mirrors the B1 attach_vak_address pattern.
+///
+/// YAML formatting choices:
+///   - `cpf` and `cf` are emitted double-quoted because their canonical
+///     literals contain parens and slashes (YAML reader ambiguity).
+///   - `cp`, `cfp`, `cs_code` are alphanumeric coordinate codes — safe
+///     unquoted. (Validated upstream by the caller.)
+///   - `cs_direction` `Night'` carries a trailing apostrophe — YAML-legal
+///     in an unquoted scalar position. Consistent with A3 Hen and the
+///     pure TS renderer in modules/thought-vak.ts.
+///   - `ct` is a YAML block sequence (one item per line, two-space
+///     indentation). Each item is double-quoted via JSON.stringify-style
+///     serde to preserve any embedded characters.
+fn append_vak_lines(lines: &mut Vec<String>, vak: &VakAddress) {
+    let cpf_literal = serde_json::to_value(&vak.cpf)
+        .expect("CpfState serialization is infallible (fieldless enum)")
+        .as_str()
+        .expect("CpfState serializes to a string via serde rename")
+        .to_owned();
+    let cs_direction_literal = serde_json::to_value(&vak.cs.direction)
+        .expect("CsDirection serialization is infallible (fieldless enum)")
+        .as_str()
+        .expect("CsDirection serializes to a string via serde rename")
+        .to_owned();
+
+    lines.push(format!("cpf: \"{cpf_literal}\""));
+    lines.push("ct:".to_string());
+    for item in &vak.ct {
+        let quoted = serde_json::to_string(item)
+            .expect("String serialization to JSON is infallible");
+        lines.push(format!("  - {quoted}"));
+    }
+    lines.push(format!("cp: {}", vak.cp));
+    lines.push(format!("cf: \"{}\"", vak.cf));
+    lines.push(format!("cfp: {}", vak.cfp));
+    lines.push(format!("cs_code: {}", vak.cs.code));
+    lines.push(format!("cs_direction: {cs_direction_literal}"));
 }
 
 fn normalize_template_type(template_type: &str) -> String {

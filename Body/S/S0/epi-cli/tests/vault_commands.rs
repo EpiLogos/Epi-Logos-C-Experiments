@@ -249,6 +249,213 @@ fn template_and_day_now_commands_write_real_files() {
 }
 
 #[test]
+fn thought_route_with_vak_inlines_keys_in_single_frontmatter_block() {
+    // B2 fix integration test. Asserts that when --vak-address-json is
+    // supplied, the persisted T-bucket artifact contains exactly ONE
+    // ---...--- YAML frontmatter block at the top, AND that block contains
+    // BOTH the template keys (coordinate, family, thought_type, ...) AND
+    // the seven canonical VAK keys (cpf, ct, cp, cf, cfp, cs_code,
+    // cs_direction) in the same map.
+    //
+    // Before this fix, VAK was prepended to --content as a separate
+    // frontmatter block, producing two ---...--- blocks — invisible to
+    // standard YAML-frontmatter parsers.
+    let base_env = env_with_fake_obsidian_cli();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    // Canonical VAK address — uses (4.0/1-4.4/5) cpf and Night' direction to
+    // exercise the serde-rename round-trip for the two enum-typed fields.
+    let vak_json = r#"{
+        "cpf": "(4.0/1-4.4/5)",
+        "ct": ["CT3"],
+        "cp": "CP4.3",
+        "cf": "(0/1/2/3)",
+        "cfp": "CFP0",
+        "cs": { "code": "CS3", "direction": "Night'" }
+    }"#;
+
+    let output = run_epi(
+        [
+            "vault",
+            "thought-route",
+            "--position",
+            "3",
+            "--content",
+            "user thought body\n",
+            "--now",
+            "2026-03-10T09:08:07Z",
+            "--vak-address-json",
+            vak_json,
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        output.status.success(),
+        "thought-route must succeed with --vak-address-json: {}",
+        output.stderr
+    );
+
+    let persisted_path = vault_root.join("Pratibimba/Self/Thought/T/T3/T3-20260310-090807.md");
+    assert!(
+        persisted_path.exists(),
+        "thought file must be written: {}",
+        persisted_path.display()
+    );
+    let body = fs::read_to_string(&persisted_path).unwrap();
+
+    // 1. Exactly ONE ---...--- frontmatter block at the head.
+    assert!(body.starts_with("---\n"), "must start with ---: {body}");
+    let after_first_marker = &body[4..];
+    let close_offset = after_first_marker
+        .find("\n---\n")
+        .expect("closing --- marker must exist");
+    let frontmatter_block = &after_first_marker[..close_offset];
+    let after_close = &after_first_marker[close_offset + 5..];
+    assert!(
+        !after_close.contains("\n---\n") && !after_close.starts_with("---\n"),
+        "must NOT contain a SECOND ---...--- block — got:\n{body}"
+    );
+
+    // 2. Parse the single frontmatter block as YAML and assert both
+    //    template + VAK keys live in the same map.
+    let parsed: serde_yaml::Value = serde_yaml::from_str(frontmatter_block)
+        .unwrap_or_else(|err| panic!("frontmatter must be valid YAML: {err}\n{frontmatter_block}"));
+    let map = parsed.as_mapping().expect("frontmatter must be a YAML map");
+
+    // Template keys
+    for key in &[
+        "coordinate",
+        "family",
+        "artifact_role",
+        "ctx_type",
+        "thought_type",
+    ] {
+        assert!(
+            map.contains_key(&serde_yaml::Value::String((*key).to_string())),
+            "template key `{key}` missing from frontmatter: {frontmatter_block}"
+        );
+    }
+    // VAK keys — all seven canonical prefix keys
+    for key in &["cpf", "ct", "cp", "cf", "cfp", "cs_code", "cs_direction"] {
+        assert!(
+            map.contains_key(&serde_yaml::Value::String((*key).to_string())),
+            "VAK key `{key}` missing from frontmatter: {frontmatter_block}"
+        );
+    }
+
+    // 3. Canonical literals survive serde round-trip
+    assert_eq!(
+        map.get(&serde_yaml::Value::String("cpf".to_string()))
+            .and_then(|v| v.as_str()),
+        Some("(4.0/1-4.4/5)"),
+        "cpf canonical literal must survive: {frontmatter_block}"
+    );
+    assert_eq!(
+        map.get(&serde_yaml::Value::String("cs_direction".to_string()))
+            .and_then(|v| v.as_str()),
+        Some("Night'"),
+        "cs_direction primed literal Night' must survive: {frontmatter_block}"
+    );
+    assert_eq!(
+        map.get(&serde_yaml::Value::String("cs_code".to_string()))
+            .and_then(|v| v.as_str()),
+        Some("CS3"),
+    );
+    let ct_seq = map
+        .get(&serde_yaml::Value::String("ct".to_string()))
+        .and_then(|v| v.as_sequence())
+        .expect("ct must be a YAML sequence");
+    assert_eq!(ct_seq.len(), 1);
+    assert_eq!(ct_seq[0].as_str(), Some("CT3"));
+
+    // 4. User content appended after the frontmatter block
+    assert!(
+        body.contains("user thought body"),
+        "user content must be preserved verbatim: {body}"
+    );
+}
+
+#[test]
+fn thought_route_rejects_malformed_vak_address_json() {
+    // Parse failure on --vak-address-json must surface as non-zero exit
+    // (consistent with malformed --now behaviour). Callers that have no
+    // VAK should OMIT the flag entirely (dialogical pass-through), not
+    // pass garbage.
+    let base_env = env_with_fake_obsidian_cli();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+
+    let output = run_epi(
+        [
+            "vault",
+            "thought-route",
+            "--position",
+            "0",
+            "--content",
+            "x",
+            "--now",
+            "2026-03-10T09:08:07Z",
+            "--vak-address-json",
+            "{ not valid json",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        !output.status.success(),
+        "malformed --vak-address-json must fail: stdout={} stderr={}",
+        output.stdout,
+        output.stderr
+    );
+    assert!(
+        output.stderr.contains("invalid --vak-address-json"),
+        "expected parse error message, got stderr: {}",
+        output.stderr
+    );
+}
+
+#[test]
+fn thought_route_without_vak_omits_vak_keys() {
+    // Dialogical pass-through: when --vak-address-json is OMITTED, the
+    // persisted artifact has the template frontmatter block UNCHANGED —
+    // no VAK keys, no extra ---...--- block.
+    let base_env = env_with_fake_obsidian_cli();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    let output = run_epi(
+        [
+            "vault",
+            "thought-route",
+            "--position",
+            "1",
+            "--content",
+            "dialogical thought\n",
+            "--now",
+            "2026-03-10T09:08:07Z",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(output.status.success(), "{}", output.stderr);
+
+    let path = vault_root.join("Pratibimba/Self/Thought/T/T1/T1-20260310-090807.md");
+    let body = fs::read_to_string(&path).unwrap();
+    for key in &["cpf:", "cs_code:", "cs_direction:", "cfp:"] {
+        assert!(
+            !body.contains(key),
+            "no-VAK call must NOT emit `{key}` — got:\n{body}"
+        );
+    }
+    // Template keys still present
+    assert!(body.contains("thought_type: \"T1\""), "{body}");
+}
+
+#[test]
 fn thought_route_rejects_positions_outside_t0_to_t5() {
     let base_env = env_with_fake_obsidian_cli();
     let vault_root = base_env.root.join("vault");

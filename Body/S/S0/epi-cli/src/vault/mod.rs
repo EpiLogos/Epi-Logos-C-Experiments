@@ -7,7 +7,7 @@ pub mod templates;
 use crate::vault::paths::{
     archive_day_path, day_folder, day_note_path, now_note_path, thought_note_path,
 };
-use crate::vault::templates::{render_template, TemplateRenderContext};
+use crate::vault::templates::{render_template, render_template_with_vak, TemplateRenderContext};
 use chrono::{DateTime, NaiveDate, Utc};
 use clap::Subcommand;
 use epi_s1_hen_compiler_core::{suggest_link_candidates, LinkCandidateRequest};
@@ -137,6 +137,16 @@ pub enum VaultCmd {
         coordinate: Option<String>,
         #[arg(long)]
         now: Option<String>,
+        /// JSON-encoded producing `portal_core::VakAddress`. When present and
+        /// parses successfully, the seven canonical VAK keys are inlined
+        /// into the SAME `---...---` frontmatter block as the template keys
+        /// — producing a single, parser-readable block. When absent or
+        /// malformed JSON, this flag is rejected with a non-zero exit so
+        /// callers don't silently lose VAK provenance (the
+        /// aletheia_thought_route extension omits the flag entirely when
+        /// no VAK is available, which is dialogical pass-through).
+        #[arg(long = "vak-address-json")]
+        vak_address_json: Option<String>,
     },
     /// Validate frontmatter of a note
     #[command(name = "frontmatter-validate")]
@@ -382,13 +392,24 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
             session_id,
             coordinate,
             now,
-        } => route_thought(
-            *position,
-            content,
-            session_id.as_deref(),
-            coordinate.as_deref(),
-            now.as_deref(),
-        ),
+            vak_address_json,
+        } => {
+            let vak_address = match vak_address_json.as_deref() {
+                Some(raw) => Some(
+                    serde_json::from_str::<portal_core::VakAddress>(raw)
+                        .map_err(|err| format!("invalid --vak-address-json: {err}"))?,
+                ),
+                None => None,
+            };
+            route_thought(
+                *position,
+                content,
+                session_id.as_deref(),
+                coordinate.as_deref(),
+                now.as_deref(),
+                vak_address.as_ref(),
+            )
+        }
         VaultCmd::FrontmatterValidate { note, vault } => {
             let mut args = vec!["frontmatter", note.as_str(), "--print"];
             if let Some(v) = vault {
@@ -621,6 +642,7 @@ fn route_thought(
     session_id: Option<&str>,
     coordinate: Option<&str>,
     now_override: Option<&str>,
+    vak_address: Option<&portal_core::VakAddress>,
 ) -> Result<String, String> {
     if position > 5 {
         return Err("thought position must be T0 through T5".to_owned());
@@ -637,7 +659,13 @@ fn route_thought(
         session_id: session_id.map(ToOwned::to_owned),
         now,
     };
-    let mut body = render_template(&context, &repo_root(), &home_root())?;
+    // VAK keys (when present) are merged into the SAME ---...--- frontmatter
+    // block that the template emits — see render_template_with_vak. This
+    // replaces the previous (B2 v1) approach of prepending a separate VAK
+    // frontmatter block to the body, which produced TWO ---...--- blocks
+    // and was silently invisible to standard parsers (Obsidian,
+    // gnosis_ingest, hen_frontmatter_validate, Aletheia retrieval).
+    let mut body = render_template_with_vak(&context, &repo_root(), &home_root(), vak_address)?;
     body.push_str(content);
     body.push('\n');
     write_rendered_template(&path, &body)?;

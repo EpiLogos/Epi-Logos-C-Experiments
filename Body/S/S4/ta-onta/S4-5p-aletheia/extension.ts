@@ -4,7 +4,13 @@ import { spawnSync } from "node:child_process";
 import { buildTemporalContextEnvelope, adjustKairosThreshold, coordinateMobiusReturn } from "./modules/chronos-integration.ts";
 import { buildTemplateInvocation, refreshTopology, validateHenSync } from "./modules/hen-integration.ts";
 import { maybeUpdateCoordinateMap } from "./modules/coordinate-loop.ts";
-import { renderThoughtFrontmatter } from "./modules/thought-vak.ts";
+// NB: renderThoughtFrontmatter (modules/thought-vak.ts) is intentionally NOT
+// imported here. VAK merging now happens Rust-side via the
+// --vak-address-json flag on `epi vault thought-route` so the persisted
+// artifact has a single ---...--- frontmatter block. The pure renderer is
+// kept as a reference implementation of the expected output shape (covered
+// by tests/thought_route_vak.test.ts) and may be needed later for non-CLI
+// paths.
 import { isValidVakAddress } from "../shared/vak_address.ts";
 
 function resolveNotebookName(name: string, scope?: string, sessionId?: string, family?: string) {
@@ -248,7 +254,7 @@ export async function aletheiaExtension(api: ExtensionAPI) {
   api.registerTool({
     name: "aletheia_thought_route",
     label: "Aletheia Thought Route",
-    description: "Classify thought artifact and route to T{n} bucket in /Pratibimba/Self/Thought/. T0=questions, T1=traces, T2=challenges, T3=patterns, T4=discoveries, T5=insights. When EPI_SESSION_VAK_ADDRESS env is present and validates, the persisted artifact body is prefixed with canonical VAK frontmatter (cpf/ct/cp/cf/cfp/cs_*) recording the producing coordinate. Dialogical-mode dispatches (no VAK in env) persist the raw content without VAK keys.",
+    description: "Classify thought artifact and route to T{n} bucket in /Pratibimba/Self/Thought/. T0=questions, T1=traces, T2=challenges, T3=patterns, T4=discoveries, T5=insights. When EPI_SESSION_VAK_ADDRESS env is present and validates, the producing VAK address is forwarded to `epi vault thought-route --vak-address-json` and the Rust template renderer inlines the seven canonical VAK keys (cpf/ct/cp/cf/cfp/cs_code/cs_direction) into the SAME ---...--- frontmatter block as the template keys — producing a single, parser-readable block. Dialogical-mode dispatches (no VAK in env) persist without VAK keys.",
     parameters: Type.Object({
       content: Type.String({ description: "Thought content to archive" }),
       position: Type.Integer({ minimum: 0, maximum: 5, description: "T-bucket position (0-5)" }),
@@ -260,37 +266,34 @@ export async function aletheiaExtension(api: ExtensionAPI) {
       summary: Type.Optional(Type.String({ description: "Short summary for VAK frontmatter (falls back to first line of content)" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      // VAK-aware prefix path: when EPI_SESSION_VAK_ADDRESS is present and
-      // validates, prepend canonical VAK frontmatter to the persisted body
-      // so the T-bucket artifact carries its producing coordinate. Falls
-      // through silently to raw content on any parse/validation failure —
-      // dialogical-mode dispatches (no VAK in env) have no obligation to
-      // carry VAK and persist as-is.
-      const bucket = `T${params.position}`;
-      let content: string = params.content;
+      // VAK-aware path: when EPI_SESSION_VAK_ADDRESS is present and validates,
+      // forward the raw JSON verbatim to the Rust CLI as --vak-address-json.
+      // The Rust render_template_with_vak inlines the canonical VAK keys
+      // into the SAME frontmatter block as the template keys — producing a
+      // single, parser-readable ---...--- block at the top of the file.
+      //
+      // Falls through silently to no-flag (dialogical pass-through) on parse
+      // or validation failure — dialogical-mode dispatches have no
+      // obligation to carry VAK.
+      const args = ["vault", "thought-route", "--position", String(params.position), "--content", params.content];
+      if (params.session_id) args.push("--session-id", params.session_id);
+      if (params.source_coordinates?.length) {
+        for (const coord of params.source_coordinates) {
+          args.push("--coordinate", coord);
+        }
+      }
       const vakJson = process.env.EPI_SESSION_VAK_ADDRESS;
       if (vakJson) {
         try {
           const parsed = JSON.parse(vakJson);
           if (isValidVakAddress(parsed)) {
-            const summary = (params.summary && String(params.summary).trim())
-              || String(params.content).split("\n", 1)[0].slice(0, 200);
-            const fm = renderThoughtFrontmatter({
-              bucket,
-              summary,
-              vak_address: parsed,
-            });
-            content = `${fm}${params.content}`;
+            // Forward the original env string verbatim — re-stringifying
+            // could drop canonical literal markers (the env value is
+            // authoritative; we only used parse+validate to gate the flag).
+            args.push("--vak-address-json", vakJson);
           }
         } catch {
-          // Malformed env or non-VAK content — fall through to raw content.
-        }
-      }
-      const args = ["vault", "thought-route", "--position", String(params.position), "--content", content];
-      if (params.session_id) args.push("--session-id", params.session_id);
-      if (params.source_coordinates?.length) {
-        for (const coord of params.source_coordinates) {
-          args.push("--coordinate", coord);
+          // Malformed env — omit the flag (dialogical pass-through).
         }
       }
       const result = spawnSync("epi", args, { encoding: "utf8" });
