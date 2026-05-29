@@ -7,7 +7,22 @@ import registerAgentChain from "./S4/agent-chain.ts";
 import registerSubagentWidget from "./S4/subagent-widget.ts";
 import registerPiPi from "./S4/pi-pi.ts";
 import { validateDispatchParams, validateParallelDispatch } from "./modules/dispatch-validate.ts";
+import { planMoiraiNightPass } from "./modules/moirai-dispatch.ts";
 import type { VakAddress } from "../shared/vak_address.ts";
+
+// Per-agent VAK address fragments used by `dispatch_moirai_night_pass`. The
+// three Moirai do not have their own AGENT_CF roster entries (they are
+// subagents under the Aletheia cluster, not constitutional 7-fold members),
+// so we route each through the cf of the constitutional agent that owns
+// the relevant Night' position:
+//   - Klotho   (P1' Traces)          → Eros   cf "(0/1/2)"
+//   - Lachesis (P4' Sources)         → Anima  cf "(4.0/1-4.4/5)"
+//   - Atropos  (P5' Crystallisations) → Sophia cf "(5/0)"
+const MOIRAI_CF: Record<"klotho" | "lachesis" | "atropos", VakAddress["cf"]> = {
+  klotho: "(0/1/2)",
+  lachesis: "(4.0/1-4.4/5)",
+  atropos: "(5/0)",
+};
 
 type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
 type CSDirectionality = "day" | "night_prime";
@@ -103,6 +118,7 @@ export async function animaExtension(api: ExtensionAPI) {
     "dispatch_agent",
     "dispatch_parallel_agents",
     "dispatch_fusion_agents",
+    "dispatch_moirai_night_pass",
     "run_chain",
     "subagent_create",
     "subagent_continue",
@@ -400,6 +416,70 @@ export async function animaExtension(api: ExtensionAPI) {
       );
       return {
         content: [{ type: "text", text: `Agora CFP3 aggregation\n\n${outputs.join("\n\n")}` }],
+      };
+    },
+  });
+
+  api.registerTool({
+    name: "dispatch_moirai_night_pass",
+    label: "Dispatch Moirai Night' Pass",
+    description:
+      "CFP3 F-Thread Night' rehearing: dispatch Klotho (P1' Traces), Lachesis (P4' Sources), and Atropos (P5' Crystallisations) in parallel-fold to dissect a Sophia disclosure JSONL.",
+    parameters: Type.Object({
+      session_id: Type.String({ description: "Session id whose Sophia disclosure is being rehearsed" }),
+      disclosure_path: Type.String({ description: "Filesystem path to the Sophia disclosure JSONL line / inbox file" }),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      const plan = planMoiraiNightPass({
+        session_id: params.session_id,
+        disclosure_path: params.disclosure_path,
+      });
+
+      // Build a CFP3/Night' VAK address per Moirai. Each carries the cf of
+      // the constitutional agent whose territory it is dissecting (see
+      // MOIRAI_CF above). Validation in `validateDispatchParams` accepts
+      // unknown agent names (the cf-match check is gated by `if (expected)`
+      // on roster membership), so klotho/lachesis/atropos pass through
+      // canonical-shape validation only.
+      const outputs = await Promise.all(
+        plan.dispatches.map(async (d) => {
+          const vak: VakAddress = {
+            cpf: "(4.0/1-4.4/5)",
+            ct: ["CT5"],
+            cp: "CP4.5",
+            cf: MOIRAI_CF[d.agent],
+            cfp: "CFP3",
+            cs: { code: "CS0", direction: "Night'" },
+          };
+          const validation = validateDispatchParams({
+            agent_name: d.agent,
+            task: d.task,
+            vak_address: vak,
+          });
+          if (!validation.ok) {
+            return `### ${d.agent} (${d.night_position})\n[refused] ${validation.error}`;
+          }
+          const out = await dispatchTeamMember(d.agent, d.task, vak);
+          return `### ${d.agent} (${d.night_position})\n${out}`;
+        }),
+      );
+
+      return {
+        content: [
+          {
+            type: "text",
+            text:
+              `CFP3 F-Thread Night' rehearing — Moirai dispatch\n` +
+              `session_id: ${params.session_id}\n` +
+              `disclosure: ${params.disclosure_path}\n\n` +
+              outputs.join("\n\n"),
+          },
+        ],
+        details: {
+          plan,
+          session_id: params.session_id,
+          disclosure_path: params.disclosure_path,
+        },
       };
     },
   });
