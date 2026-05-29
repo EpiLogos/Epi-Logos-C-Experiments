@@ -1,6 +1,8 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { spawnSync } from "node:child_process";
+import { renderTemplateWithVak } from "./modules/template-vak.ts";
+import { isValidVakAddress } from "../shared/vak_address.ts";
 
 export async function henExtension(api: ExtensionAPI) {
   // ── Tool: hen_template_invoke ────────────────────────────────────
@@ -22,8 +24,34 @@ export async function henExtension(api: ExtensionAPI) {
       coordinate: Type.Optional(Type.String({ description: "Coordinate of the artifact" })),
       session_id: Type.Optional(Type.String()),
       now_override: Type.Optional(Type.String({ description: "ISO8601 timestamp override (testing)" })),
+      day_id: Type.Optional(Type.String({ description: "Day identifier (e.g. 22-05-2026) for daily-note/now" })),
+      body: Type.Optional(Type.String({ description: "Optional markdown body appended after frontmatter" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      // VAK-aware render path: if the session VAK address is in env, inject it
+      // into the frontmatter directly rather than delegating to the epi CLI.
+      // Falls through silently to the legacy spawn path on any parse/validation
+      // failure — the legacy path still works without VAK injection.
+      const vakJson = process.env.EPI_SESSION_VAK_ADDRESS;
+      if (vakJson) {
+        try {
+          const parsed = JSON.parse(vakJson);
+          if (isValidVakAddress(parsed)) {
+            const text = renderTemplateWithVak({
+              template_id: params.template_type,
+              day_id: params.day_id ?? "",
+              vak_address: parsed,
+              body: params.body,
+            });
+            return {
+              content: [{ type: "text", text }],
+              isError: false,
+            };
+          }
+        } catch {
+          // Malformed env or non-VAK content — fall through to legacy render path.
+        }
+      }
       const args = ["vault", "template-invoke", params.template_type];
       if (params.coordinate) args.push("--coordinate", params.coordinate);
       if (params.session_id) args.push("--session-id", params.session_id);
