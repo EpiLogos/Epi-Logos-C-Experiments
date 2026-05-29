@@ -1,31 +1,42 @@
 anima:
-  - psyche
-  - nous
-  - logos
-  - eros
-  - mythos
-  - sophia
+  description: "Anima orchestrator plus the six constitutional functions"
+  members:
+    - psyche
+    - nous
+    - logos
+    - eros
+    - mythos
+    - sophia
 
 constitutional:
-  - psyche
-  - nous
-  - logos
-  - eros
-  - mythos
-  - sophia
+  description: "The full constitutional six (Nous through Sophia) plus Anima parent"
+  members:
+    - anima
+    - nous
+    - logos
+    - eros
+    - mythos
+    - psyche
+    - sophia
 
 closure:
-  - psyche
-  - sophia
+  description: "Closure pairing for end-of-cycle integration"
+  members:
+    - psyche
+    - sophia
 
 disclosure:
-  - nous
-  - logos
-  - sophia
+  description: "Disclosure triad for surfacing implicit structure"
+  members:
+    - nous
+    - logos
+    - sophia
 
 pi-pi:
-  - ext-expert
-  - theme-expert
-  - skill-expert
-  - config-expert
-  - tui-expert
+  description: "Pi-mono domain experts for building Pi components"
+  members:
+    - ext-expert
+    - theme-expert
+    - skill-expert
+    - config-expert
+    - tui-expert
