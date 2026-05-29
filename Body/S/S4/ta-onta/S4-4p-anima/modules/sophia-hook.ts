@@ -17,6 +17,19 @@
 
 import type { VakAddress } from "../../shared/vak_address.ts";
 
+/**
+ * Discriminator that downstream (Aletheia C4, Epii C5–C6) uses to distinguish
+ * sessions that were deliberately closed via the `khora_session_close` tool
+ * (`"rehear"` — the canonical Möbius-return synthesis) from sessions whose
+ * process was killed before the deliberate-close tool was invoked
+ * (`"force_closed"` — lifecycle event still fired, but no explicit rehear).
+ *
+ * Primary signal: presence of `recordPendingSophia` state at consume time.
+ * The act of calling `khora_session_close` IS the rehear signal — no
+ * env-VAK heuristics, no comparison lies. See sophia-fire.ts.
+ */
+export type ClosureKind = "rehear" | "force_closed";
+
 export interface SophiaDisclosure {
   kind: "sophia_session_end_disclosure";
   session_id: string;
@@ -25,6 +38,7 @@ export interface SophiaDisclosure {
   artifacts: string[];
   improvement_vectors: string[];
   handoff_target: "aletheia_ingest";
+  closure_kind: ClosureKind;
 }
 
 /**
@@ -40,6 +54,7 @@ export function buildSophiaDisclosure(input: {
   final_vak: VakAddress;
   artifacts: string[];
   improvement_vectors: string[];
+  closure_kind: ClosureKind;
 }): SophiaDisclosure {
   return {
     kind: "sophia_session_end_disclosure",
@@ -49,5 +64,6 @@ export function buildSophiaDisclosure(input: {
     artifacts: input.artifacts,
     improvement_vectors: input.improvement_vectors,
     handoff_target: "aletheia_ingest",
+    closure_kind: input.closure_kind,
   };
 }

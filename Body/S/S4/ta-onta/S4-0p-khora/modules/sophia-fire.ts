@@ -13,13 +13,31 @@
 // one empty) whenever a caller invoked the tool before lifecycle close.
 
 import { appendFileSync, mkdirSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { join } from "node:path";
-import { buildSophiaDisclosure } from "../../S4-4p-anima/modules/sophia-hook.ts";
+import {
+  buildSophiaDisclosure,
+  type ClosureKind,
+} from "../../S4-4p-anima/modules/sophia-hook.ts";
+import {
+  isValidVakAddress,
+  type VakAddress,
+} from "../../shared/vak_address.ts";
 import { rehearPhaseVakAddress } from "./z-phase-vak.ts";
 
 export interface PendingSophia {
   artifacts: string[];
   improvement_vectors: string[];
+}
+
+/**
+ * Shape returned by `consumePendingSophia`. `had_pending` is the load-bearing
+ * discriminant for `closure_kind`: true when `khora_session_close` was called
+ * (deliberate rehear), false when the lifecycle handler fires without any
+ * prior tool invocation (process killed mid-perform → force_closed).
+ */
+export interface ConsumedSophia extends PendingSophia {
+  had_pending: boolean;
 }
 
 // Module-scope pending-disclosure state, keyed by session_id. The tool
@@ -40,17 +58,23 @@ export function recordPendingSophia(
 }
 
 /**
- * Lifecycle-side reader. Returns pending enrichment for sessionId (empty
- * defaults if none) AND clears the slot atomically. The caller is the
+ * Lifecycle-side reader. Returns pending enrichment for sessionId AND clears
+ * the slot atomically. The `had_pending` flag distinguishes "no recorded
+ * entry" (tool never called → force_closed) from "recorded entry with empty
+ * arrays" (tool called with no artifacts → still rehear). The caller is the
  * single writer.
  */
-export function consumePendingSophia(sessionId: string): PendingSophia {
-  const pending = _pendingSophia.get(sessionId) ?? {
-    artifacts: [],
-    improvement_vectors: [],
-  };
+export function consumePendingSophia(sessionId: string): ConsumedSophia {
+  const pending = _pendingSophia.get(sessionId);
   _pendingSophia.delete(sessionId);
-  return pending;
+  if (pending) {
+    return {
+      had_pending: true,
+      artifacts: pending.artifacts,
+      improvement_vectors: pending.improvement_vectors,
+    };
+  }
+  return { had_pending: false, artifacts: [], improvement_vectors: [] };
 }
 
 /** Test-only: peek without consuming. */
@@ -67,25 +91,38 @@ export function clearAllPendingSophia(): void {
  * Fire the Sophia disclosure: build the canonical envelope and append it to
  * ${EPILOGOS_VAULT}/Pratibimba/Sophia/inbox/${session_id}.jsonl.
  *
- * Contract: Sophia disclosures are rehear-phase by definition. They represent
- * the post-execution synthesis state regardless of whether execution reached
- * canonical rehear or was force-closed mid-perform. We therefore always use
- * `rehearPhaseVakAddress()` as `final_vak`. The actual final in-flight VAK
- * (if any) is recoverable from `EPI_SESSION_VAK_ADDRESS` env or downstream
- * from session-record reads — a "force_closed vs rehear" discriminator is
- * deferred to a follow-up (see C1 NOTE in extension.ts).
+ * Contract: `closure_kind` is the load-bearing discriminator distinguishing
+ * deliberate rehear ("rehear" — `khora_session_close` was called, signalled
+ * via `recordPendingSophia` having stashed state) from force-closed mid-perform
+ * ("force_closed" — lifecycle event fired without the explicit tool call).
+ * The C2 fix (commit 8522b4e) dropped the dishonest env-VAK heuristic — this
+ * is the honest replacement.
+ *
+ * `final_vak` defaults to `rehearPhaseVakAddress()`. For the force_closed
+ * branch we additionally attempt a best-effort read of the live SessionRecord
+ * via `epi gate sessions get` (added alongside `patch` in this change — the
+ * C1 follow-up at 19fbc8fc made sessions.patch persist `vak_address` and
+ * sessions.resolve return it). If that read returns a valid VakAddress, we
+ * use it as `final_vak` — truthfully reporting where the session was when
+ * killed. Silent fallback to rehearPhase if the gateway read fails for any
+ * reason (CLI absent, gateway not running, parse error, etc.).
  */
 export function fireSophiaDisclosure(input: {
   session_id: string | null;
   day_id: string | null;
   artifacts: string[];
   improvement_vectors: string[];
+  closure_kind: ClosureKind;
 }): { ok: true; path: string } | { ok: false; reason: string } {
   if (!input.session_id || !input.day_id) {
     return { ok: false, reason: "no session_id or day_id (session not initialised)" };
   }
 
-  const final_vak = rehearPhaseVakAddress();
+  let final_vak = rehearPhaseVakAddress();
+  if (input.closure_kind === "force_closed") {
+    const recovered = trySafeReadSessionVak(input.session_id);
+    if (recovered) final_vak = recovered;
+  }
 
   const disclosure = buildSophiaDisclosure({
     session_id: input.session_id,
@@ -93,6 +130,7 @@ export function fireSophiaDisclosure(input: {
     final_vak,
     artifacts: input.artifacts,
     improvement_vectors: input.improvement_vectors,
+    closure_kind: input.closure_kind,
   });
 
   const vaultRoot = process.env.EPILOGOS_VAULT;
@@ -104,4 +142,32 @@ export function fireSophiaDisclosure(input: {
   const inboxPath = join(inboxDir, `${input.session_id}.jsonl`);
   appendFileSync(inboxPath, JSON.stringify(disclosure) + "\n", "utf8");
   return { ok: true, path: inboxPath };
+}
+
+/**
+ * Best-effort read of the live SessionRecord's `vak_address` via the gateway
+ * CLI. Returns `undefined` on any failure — caller falls back to
+ * `rehearPhaseVakAddress()`. Pure-side-effect-free from the caller's POV:
+ * any error path is silently swallowed.
+ *
+ * Relies on `epi gate sessions get --session-id <id>` printing a JSON object
+ * whose `vakAddress`/`vak_address` field is a canonical VakAddress.
+ */
+function trySafeReadSessionVak(sessionId: string): VakAddress | undefined {
+  try {
+    const result = spawnSync(
+      "epi",
+      ["gate", "sessions", "get", "--session-id", sessionId],
+      { encoding: "utf8" },
+    );
+    if (result.status !== 0) return undefined;
+    const stdout = result.stdout?.trim();
+    if (!stdout) return undefined;
+    const record = JSON.parse(stdout) as Record<string, unknown>;
+    const vak = (record.vakAddress ?? record.vak_address) as unknown;
+    if (vak && isValidVakAddress(vak)) return vak;
+    return undefined;
+  } catch {
+    return undefined;
+  }
 }

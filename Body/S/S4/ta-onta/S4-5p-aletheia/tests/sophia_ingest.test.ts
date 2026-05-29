@@ -33,6 +33,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
         artifacts: ["/path/to/note.md"],
         improvement_vectors: ["v1"],
         handoff_target: "aletheia_ingest",
+        closure_kind: "rehear",
       },
       moirai_outputs: { klotho: "traces summary", lachesis: "sources", atropos: "insight" },
     });
@@ -45,6 +46,64 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
     assert.equal(payload.artifacts.length, 1);
     assert.equal(payload.moirai_summary.klotho, "traces summary");
     assert.equal(payload.moirai_summary.atropos, "insight");
+    assert.equal(payload.closure_kind, "rehear", "closure_kind propagates through to Epii routing");
+  });
+
+  it("propagates closure_kind=force_closed through routing", () => {
+    const payload = routeToEpiiInbox({
+      session_id: "agent:forced:1",
+      day_id: "22-05-2026",
+      sophia_disclosure: {
+        kind: "sophia_session_end_disclosure",
+        session_id: "agent:forced:1",
+        day_id: "22-05-2026",
+        final_vak: {
+          cpf: "(4.0/1-4.4/5)",
+          ct: ["CT2"],
+          cp: "CP4.3",
+          cf: "(0/1/2)",
+          cfp: "CFP1",
+          cs: { code: "CS3", direction: "Day" },
+        },
+        artifacts: [],
+        improvement_vectors: [],
+        handoff_target: "aletheia_ingest",
+        closure_kind: "force_closed",
+      },
+      moirai_outputs: {},
+    });
+    assert.equal(payload.closure_kind, "force_closed");
+    assert.equal(payload.final_vak.cf, "(0/1/2)", "mid-perform VAK survives routing too");
+  });
+
+  it("defaults closure_kind=rehear for legacy Sophia disclosures missing the field", () => {
+    // Older Sophia disclosures pre-date the closure_kind discriminator. The
+    // routing factory treats them as rehear (the historical assumption) so
+    // existing entries flowing through C4 don't regress to force_closed.
+    const legacy = {
+      kind: "sophia_session_end_disclosure" as const,
+      session_id: "agent:legacy:1",
+      day_id: "22-05-2026",
+      final_vak: {
+        cpf: "(4.0/1-4.4/5)" as const,
+        ct: ["CT5"] as const,
+        cp: "CP4.5" as const,
+        cf: "(5/0)" as const,
+        cfp: "CFP0" as const,
+        cs: { code: "CS0" as const, direction: "Night'" as const },
+      },
+      artifacts: [],
+      improvement_vectors: [],
+      handoff_target: "aletheia_ingest" as const,
+    };
+    // Cast: legacy literal lacks closure_kind — that's the point of this test.
+    const payload = routeToEpiiInbox({
+      session_id: "agent:legacy:1",
+      day_id: "22-05-2026",
+      sophia_disclosure: legacy as unknown as Parameters<typeof routeToEpiiInbox>[0]["sophia_disclosure"],
+      moirai_outputs: {},
+    });
+    assert.equal(payload.closure_kind, "rehear", "legacy disclosures default to rehear");
   });
 
   it("accepts empty moirai_outputs (Aletheia ingests Sophia-only)", () => {
@@ -66,6 +125,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
         artifacts: [],
         improvement_vectors: [],
         handoff_target: "aletheia_ingest",
+        closure_kind: "rehear",
       },
       moirai_outputs: {},
     });
@@ -94,6 +154,7 @@ describe("Aletheia routes Sophia disclosure to Epii inbox", () => {
         artifacts: [],
         improvement_vectors: [],
         handoff_target: "aletheia_ingest",
+        closure_kind: "rehear",
       },
       moirai_outputs: {},
     });

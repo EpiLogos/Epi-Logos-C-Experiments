@@ -290,14 +290,20 @@ export async function khoraExtension(api: ExtensionAPI) {
     try {
       const session_id = getSessionId();
       const day_id = getDayId();
-      const pending = session_id
+      // had_pending true ⇔ `khora_session_close` was called this session →
+      // closure_kind = "rehear" (deliberate Möbius return).
+      // had_pending false ⇔ lifecycle fired without the tool call → process
+      // killed before deliberate close → closure_kind = "force_closed".
+      const consumed = session_id
         ? consumePendingSophia(session_id)
-        : { artifacts: [], improvement_vectors: [] };
+        : { had_pending: false, artifacts: [], improvement_vectors: [] };
+      const closure_kind = consumed.had_pending ? "rehear" : "force_closed";
       fireSophiaDisclosure({
         session_id,
         day_id,
-        artifacts: pending.artifacts,
-        improvement_vectors: pending.improvement_vectors,
+        artifacts: consumed.artifacts,
+        improvement_vectors: consumed.improvement_vectors,
+        closure_kind,
       });
     } catch (e) {
       console.warn(`[khora] sophia disclosure: ${e}`);

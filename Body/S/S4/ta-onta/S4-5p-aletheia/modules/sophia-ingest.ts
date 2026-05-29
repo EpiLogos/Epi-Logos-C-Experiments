@@ -31,6 +31,16 @@ export interface EpiiInboxEntry {
   improvement_vectors: string[];
   moirai_summary: { klotho?: string; lachesis?: string; atropos?: string };
   artifacts: string[];
+  /**
+   * Propagated through from the Sophia disclosure. Distinguishes deliberate
+   * close via `khora_session_close` ("rehear" — Möbius return synthesis) from
+   * sessions whose process was killed before the explicit close tool fired
+   * ("force_closed"). Epii C6 `recompose_pass` uses this to decide whether
+   * the session deserves canonical recompose treatment or interrupted-flow
+   * salvage. Defaults to "rehear" when reading older Sophia disclosures that
+   * predate this field.
+   */
+  closure_kind: "rehear" | "force_closed";
 }
 
 /**
@@ -54,6 +64,10 @@ export function routeToEpiiInbox(input: {
     improvement_vectors: input.sophia_disclosure.improvement_vectors,
     moirai_summary: input.moirai_outputs,
     artifacts: input.sophia_disclosure.artifacts,
+    // Older Sophia disclosures (pre-closure_kind) default to "rehear" — the
+    // historical assumption was that any disclosure represented deliberate
+    // synthesis. New disclosures carry the discriminator explicitly.
+    closure_kind: input.sophia_disclosure.closure_kind ?? "rehear",
   };
 }
 

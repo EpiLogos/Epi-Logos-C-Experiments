@@ -43,6 +43,19 @@ pub struct InboxEntry {
     pub moirai_summary: BTreeMap<String, String>,
     #[serde(default)]
     pub artifacts: Vec<String>,
+    /// Discriminator propagated from Sophia disclosure through Aletheia.
+    /// "rehear" = `khora_session_close` tool was invoked (deliberate Möbius
+    /// return synthesis). "force_closed" = lifecycle event fired without the
+    /// explicit tool call (process killed mid-perform). Older entries that
+    /// predate this field default to "rehear" — the historical assumption.
+    /// C6 `recompose_pass` consumes this to decide canonical recompose vs
+    /// interrupted-flow salvage.
+    #[serde(default = "default_closure_kind")]
+    pub closure_kind: String,
+}
+
+fn default_closure_kind() -> String {
+    "rehear".to_string()
 }
 
 /// A persisted inbox entry, paired with a deterministic, line-derived id.

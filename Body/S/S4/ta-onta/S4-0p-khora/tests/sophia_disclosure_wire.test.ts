@@ -46,6 +46,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
       day_id,
       artifacts: ["/vault/Idea/note.md"],
       improvement_vectors: ["load CT4 templates earlier"],
+      closure_kind: "rehear",
     });
 
     assert.equal(result.ok, true, `fire should succeed: ${JSON.stringify(result)}`);
@@ -65,6 +66,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
     assert.equal(parsed.final_vak.cs.direction, "Night'", "Night' direction survives JSON roundtrip");
     assert.deepEqual(parsed.artifacts, ["/vault/Idea/note.md"]);
     assert.deepEqual(parsed.improvement_vectors, ["load CT4 templates earlier"]);
+    assert.equal(parsed.closure_kind, "rehear");
   });
 
   it("returns ok:false with reason when EPILOGOS_VAULT is unset", () => {
@@ -74,6 +76,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
       day_id: "29-05-2026",
       artifacts: [],
       improvement_vectors: [],
+      closure_kind: "rehear",
     });
     assert.equal(result.ok, false);
     if (result.ok) return;
@@ -86,6 +89,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
       day_id: "29-05-2026",
       artifacts: [],
       improvement_vectors: [],
+      closure_kind: "rehear",
     });
     assert.equal(r1.ok, false);
     const r2 = fireSophiaDisclosure({
@@ -93,6 +97,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
       day_id: null,
       artifacts: [],
       improvement_vectors: [],
+      closure_kind: "rehear",
     });
     assert.equal(r2.ok, false);
   });
@@ -108,6 +113,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
 
     // Simulate lifecycle handler reading + clearing the pending state.
     const pending = consumePendingSophia(session_id);
+    assert.equal(pending.had_pending, true, "had_pending true when recordPendingSophia was called");
     assert.deepEqual(pending.artifacts, ["/a.md", "/b.md"], "last writer wins");
     assert.deepEqual(pending.improvement_vectors, ["v2"]);
     assert.equal(peekPendingSophia(session_id), undefined, "pending cleared after consume");
@@ -117,6 +123,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
       day_id,
       artifacts: pending.artifacts,
       improvement_vectors: pending.improvement_vectors,
+      closure_kind: pending.had_pending ? "rehear" : "force_closed",
     });
     assert.equal(result.ok, true);
     if (!result.ok) return;
@@ -126,11 +133,22 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
     const parsed = JSON.parse(lines[0]);
     assert.deepEqual(parsed.artifacts, ["/a.md", "/b.md"]);
     assert.deepEqual(parsed.improvement_vectors, ["v2"]);
+    assert.equal(parsed.closure_kind, "rehear");
   });
 
-  it("consumePendingSophia returns empty defaults when nothing was recorded", () => {
+  it("consumePendingSophia distinguishes had_pending false (never recorded) from empty arrays", () => {
     const pending = consumePendingSophia("agent:never-recorded:main");
-    assert.deepEqual(pending, { artifacts: [], improvement_vectors: [] });
+    assert.deepEqual(pending, { had_pending: false, artifacts: [], improvement_vectors: [] });
+  });
+
+  it("consumePendingSophia returns had_pending true even when recorded arrays are empty", () => {
+    const session_id = "agent:empty-pending:main";
+    recordPendingSophia(session_id, [], []);
+    const pending = consumePendingSophia(session_id);
+    assert.equal(pending.had_pending, true,
+      "tool was called even if it stashed empty arrays — that still signals deliberate close");
+    assert.deepEqual(pending.artifacts, []);
+    assert.deepEqual(pending.improvement_vectors, []);
   });
 
   it("rehear VAK is used even if EPI_SESSION_VAK_ADDRESS holds a compose-phase VAK (I2)", () => {
@@ -151,6 +169,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
         day_id,
         artifacts: [],
         improvement_vectors: [],
+        closure_kind: "rehear",
       });
       assert.equal(result.ok, true);
       if (!result.ok) return;
@@ -162,5 +181,72 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
       if (savedEnvVak === undefined) delete process.env.EPI_SESSION_VAK_ADDRESS;
       else process.env.EPI_SESSION_VAK_ADDRESS = savedEnvVak;
     }
+  });
+
+  // ── closure_kind discriminator (replaces dropped env-VAK heuristic) ─────
+  it("tags closure_kind=rehear when khora_session_close was called first (recordPendingSophia)", () => {
+    const session_id = "agent:test:rehear-wire";
+    const day_id = "29-05-2026";
+
+    // Simulate tool surface — IS the deliberate-close signal.
+    recordPendingSophia(session_id, ["/a.md"], ["v1"]);
+    const consumed = consumePendingSophia(session_id);
+
+    const result = fireSophiaDisclosure({
+      session_id,
+      day_id,
+      artifacts: consumed.artifacts,
+      improvement_vectors: consumed.improvement_vectors,
+      closure_kind: consumed.had_pending ? "rehear" : "force_closed",
+    });
+    assert.equal(result.ok, true);
+    if (!result.ok) return;
+    const parsed = JSON.parse(readFileSync(result.path, "utf8").trim());
+    assert.equal(parsed.closure_kind, "rehear");
+  });
+
+  it("tags closure_kind=force_closed when lifecycle fires without prior recordPendingSophia", () => {
+    const session_id = "agent:test:forced-wire";
+    const day_id = "29-05-2026";
+
+    // No recordPendingSophia call — simulates process kill before tool invocation.
+    const consumed = consumePendingSophia(session_id);
+    assert.equal(consumed.had_pending, false);
+
+    const result = fireSophiaDisclosure({
+      session_id,
+      day_id,
+      artifacts: consumed.artifacts,
+      improvement_vectors: consumed.improvement_vectors,
+      closure_kind: consumed.had_pending ? "rehear" : "force_closed",
+    });
+    assert.equal(result.ok, true);
+    if (!result.ok) return;
+    const parsed = JSON.parse(readFileSync(result.path, "utf8").trim());
+    assert.equal(parsed.closure_kind, "force_closed");
+  });
+
+  it("force_closed fallback uses rehearPhaseVakAddress when gateway read fails", () => {
+    // `epi gate sessions get` may exit non-zero (gateway not running, session
+    // not found, CLI absent on PATH) — trySafeReadSessionVak swallows it and
+    // returns undefined, so final_vak falls back to rehearPhaseVakAddress.
+    const session_id = "agent:test:nogateway";
+    const day_id = "29-05-2026";
+
+    const result = fireSophiaDisclosure({
+      session_id,
+      day_id,
+      artifacts: [],
+      improvement_vectors: [],
+      closure_kind: "force_closed",
+    });
+    assert.equal(result.ok, true);
+    if (!result.ok) return;
+    const parsed = JSON.parse(readFileSync(result.path, "utf8").trim());
+    assert.equal(parsed.closure_kind, "force_closed");
+    // When gateway read fails we fall through to rehearPhaseVakAddress —
+    // cf="(5/0)" is the canonical Möbius shape.
+    assert.equal(parsed.final_vak.cf, "(5/0)",
+      "force_closed without gateway recovery falls back to rehearPhase shape");
   });
 });

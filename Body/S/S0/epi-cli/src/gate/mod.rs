@@ -125,6 +125,15 @@ pub enum GateSessionsCmd {
         #[arg(long = "vak-address-json")]
         vak_address_json: Option<String>,
     },
+    /// Read a SessionRecord. Mirrors `sessions.resolve` but operates directly
+    /// on the local SessionStore (gate state root), same pattern as `patch`.
+    /// Used by Khora's session_shutdown handler (C2 closure_kind discriminator)
+    /// to best-effort recover the live `vak_address` when reporting force_closed.
+    Get {
+        /// Session canonical key or alias used to resolve the record.
+        #[arg(long)]
+        session_id: String,
+    },
 }
 
 #[derive(Subcommand)]
@@ -294,6 +303,15 @@ fn dispatch_sessions(cmd: &GateSessionsCmd, json: bool) -> Result<String, String
                 ..Default::default()
             };
             let record = store.patch(session_id, patch)?;
+            let value = sessions::record_to_value(&record);
+            if json {
+                serde_json::to_string_pretty(&value).map_err(|err| err.to_string())
+            } else {
+                Ok(value.to_string())
+            }
+        }
+        GateSessionsCmd::Get { session_id } => {
+            let record = store.resolve(session_id)?;
             let value = sessions::record_to_value(&record);
             if json {
                 serde_json::to_string_pretty(&value).map_err(|err| err.to_string())
