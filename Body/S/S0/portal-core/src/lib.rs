@@ -25,4 +25,4 @@ pub use state::{
     update_quintessence_quaternion,
 };
 pub use types::*;
-pub use vak_address::{canonical_cf_position, CfPosition, CpfState, CsDirection, VakAddress};
+pub use vak_address::{canonical_cf_position, CfPosition, CpfState, CsDirection, CsField, VakAddress};

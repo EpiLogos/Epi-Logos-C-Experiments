@@ -28,14 +28,19 @@ pub enum CsDirection {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CsField {
+    pub code: String,
+    pub direction: CsDirection,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct VakAddress {
     pub cpf: CpfState,
     pub ct: Vec<String>,
     pub cp: String,
     pub cf: String,
     pub cfp: String,
-    pub cs_code: String,
-    pub cs_direction: CsDirection,
+    pub cs: CsField,
 }
 
 pub fn canonical_cf_position(cf_literal: &str) -> Option<CfPosition> {
