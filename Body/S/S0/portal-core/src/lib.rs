@@ -10,6 +10,7 @@ pub mod spanda;
 pub mod state;
 pub mod transcription;
 pub mod types;
+pub mod vak_address;
 
 pub use aspect::compute_aspects;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
@@ -24,3 +25,4 @@ pub use state::{
     update_quintessence_quaternion,
 };
 pub use types::*;
+pub use vak_address::{canonical_cf_position, CfPosition, CpfState, CsDirection, VakAddress};
