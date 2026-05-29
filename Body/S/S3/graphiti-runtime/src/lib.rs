@@ -3,8 +3,59 @@ use epi_s3_gateway_contract::{
     ProvenanceEvent, GRAPHITI_BASE_URL, GRAPHITI_INVOCATION_OWNER, GRAPHITI_PORT,
     GRAPHITI_RUNTIME_AUTHORITY,
 };
-use serde::Serialize;
+use portal_core::VakAddress;
+use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::collections::BTreeMap;
+
+/// Bag of episode attributes flattened into the episode payload.
+///
+/// Built primarily via `with_vak(...)` which populates the c_4_* coordinate
+/// fields that downstream Bimba retrieval reads. Default-constructed is empty
+/// (no fields serialised), matching graphiti's pre-existing episode payloads.
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
+pub struct EpisodeAttrs {
+    #[serde(flatten)]
+    pub kv: BTreeMap<String, serde_json::Value>,
+}
+
+impl EpisodeAttrs {
+    /// Populate canonical VAK c_4_* fields on the episode payload.
+    ///
+    /// Field mapping is byte-identical to the gateway SessionRecord, Hen
+    /// frontmatter, and Aletheia T/T' frontmatter forms.
+    pub fn with_vak(vak: VakAddress) -> Self {
+        let mut kv = BTreeMap::new();
+        let cpf_str = match vak.cpf {
+            portal_core::CpfState::Dialogical => "(00/00)",
+            portal_core::CpfState::Mechanistic => "(4.0/1-4.4/5)",
+        };
+        kv.insert("c_4_cpf".into(), serde_json::json!(cpf_str));
+        kv.insert("c_1_ct".into(), serde_json::json!(vak.ct));
+        kv.insert("c_4_cp".into(), serde_json::json!(vak.cp));
+        kv.insert("c_4_cf".into(), serde_json::json!(vak.cf));
+        kv.insert("c_4_cfp".into(), serde_json::json!(vak.cfp));
+        kv.insert("c_4_cs".into(), serde_json::json!(vak.cs.code));
+        let dir = match vak.cs.direction {
+            portal_core::CsDirection::Day => "Day",
+            portal_core::CsDirection::Night => "Night'",
+        };
+        kv.insert("c_4_cs_direction".into(), serde_json::json!(dir));
+        Self { kv }
+    }
+}
+
+/// Insertion payload for a graphiti episode.
+///
+/// `attrs` carries the coordinate-state metadata (VAK address fields) so
+/// each episode is recoverable as "the work produced under this VAK".
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct EpisodeInsert {
+    pub group_id: String,
+    pub body: String,
+    #[serde(default)]
+    pub attrs: EpisodeAttrs,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GraphitiRuntimeConfig {

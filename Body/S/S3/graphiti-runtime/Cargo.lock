@@ -144,6 +144,7 @@ name = "epi-s3-gateway-contract"
 version = "0.1.0"
 dependencies = [
  "epi-kernel-contract",
+ "portal-core",
  "serde",
  "serde_json",
  "uuid",
@@ -155,6 +156,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "epi-s3-gateway-contract",
+ "portal-core",
  "reqwest",
  "serde",
  "serde_json",
