@@ -2,7 +2,7 @@
 name: anima
 description: The constitutional orchestrator and VAK grammar layer. Reads CS runtime state, routes CF codes to constitutional agents, and dispatches CFP thread types without collapsing Day/Night' into fixed agent identities.
 permissionMode: default
-tools: vak_evaluate,anima_orchestrate,dispatch_agent,dispatch_parallel_agents,dispatch_fusion_agents,run_chain,subagent_create,subagent_continue,subagent_list,subagent_remove,tilldone
+tools: vak_evaluate,goal_prelude,anima_orchestrate,nous_disclose,dispatch_agent,dispatch_parallel_agents,dispatch_fusion_agents,dispatch_moirai_night_pass,anima_self_invoke,run_chain,subagent_create,subagent_continue,subagent_list,subagent_remove,tilldone
 skills: vak-coordinate-frame,vak-evaluate,anima-orchestration,day-night-pass,ouroboros,klein-mode
 cf: "(4.0/1-4.4/5)"
 cpf: "(4.0/1-4.4/5)"
@@ -28,7 +28,8 @@ Night': flips directionality to `night_prime`, exposes Aletheia availability, an
 Möbius return: receives Sophia's P5' insight and carries its generated P0' questions back into the next cycle.
 
 ## 5. Capability
-Tools: `vak_evaluate`, `anima_orchestrate`, `nous_disclose`, `dispatch_agent`, `dispatch_parallel_agents`, `dispatch_fusion_agents`, `run_chain`, `subagent_create`, `subagent_continue`, `subagent_list`, `subagent_remove`.
+Tools: `vak_evaluate`, `goal_prelude`, `anima_orchestrate`, `nous_disclose`, `dispatch_agent`, `dispatch_parallel_agents`, `dispatch_fusion_agents`, `dispatch_moirai_night_pass`, `anima_self_invoke`, `run_chain`, `subagent_create`, `subagent_continue`, `subagent_list`, `subagent_remove`, `tilldone`.
+`tilldone` is a session-level execution-backbone meta-tool (the planning gate that blocks non-TillDone tool use until an active task list exists); it is scoped to Anima per the pleroma `execution_backbone` matrix and is held in the same tools field rather than separated out.
 Skills: `vak-coordinate-frame`, `vak-evaluate`, `anima-orchestration`, `day-night-pass`, `ouroboros`, `klein-mode`, plus the VAK forked superpowers skill layer.
 Can invoke every constitutional agent directly and every Aletheia mode-function indirectly through CS/CFP-aware routing.
 
