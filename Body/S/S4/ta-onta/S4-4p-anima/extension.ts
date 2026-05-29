@@ -8,7 +8,8 @@ import registerSubagentWidget from "./S4/subagent-widget.ts";
 import registerPiPi from "./S4/pi-pi.ts";
 import { validateDispatchParams, validateParallelDispatch } from "./modules/dispatch-validate.ts";
 import { planMoiraiNightPass, classifyMoiraiOutput } from "./modules/moirai-dispatch.ts";
-import type { VakAddress } from "../shared/vak_address.ts";
+import { buildAnimaInvokePayload } from "./modules/anima-invoke-payload.ts";
+import { isValidVakAddress, type VakAddress } from "../shared/vak_address.ts";
 
 // Per-agent VAK address fragments used by `dispatch_moirai_night_pass`. The
 // three Moirai do not have their own AGENT_CF roster entries (they are
@@ -119,6 +120,7 @@ export async function animaExtension(api: ExtensionAPI) {
     "dispatch_parallel_agents",
     "dispatch_fusion_agents",
     "dispatch_moirai_night_pass",
+    "anima_self_invoke",
     "run_chain",
     "subagent_create",
     "subagent_continue",
@@ -513,6 +515,80 @@ export async function animaExtension(api: ExtensionAPI) {
           disclosure_path: params.disclosure_path,
           ok_count: okCount,
         },
+      };
+    },
+  });
+
+  api.registerTool({
+    name: "anima_self_invoke",
+    label: "Anima Self-Invoke",
+    description:
+      "Invoke another Anima session via the D2 gateway endpoint (route_anima_invoke). " +
+      "Patches the target session's VAK address and queues `task` on its transcript as an " +
+      "anima_invoke-tagged message. Use when one user's Anima needs to surface a task into " +
+      "another user's Anima session (e.g. cross-user VAK evaluation).",
+    parameters: Type.Object({
+      target_user: Type.String({ description: "Target user id (becomes agent:anima:<target_user>)" }),
+      task: Type.String({ description: "Task to queue on the target session's transcript" }),
+      // vak_address opaque to TypeBox — validated structurally below.
+      // If absent, falls back to EPI_SESSION_VAK_ADDRESS (C1 propagation), then a
+      // compose-default. Keeps the agent surface ergonomic when the current
+      // session VAK is the right thing to carry.
+      vak_address: Type.Optional(Type.Any()),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      // Resolve vak_address: param > env (C1 propagation) > compose-default.
+      let vak: VakAddress | undefined;
+      if (params.vak_address) {
+        vak = params.vak_address as VakAddress;
+      } else if (process.env.EPI_SESSION_VAK_ADDRESS) {
+        try {
+          const parsed = JSON.parse(process.env.EPI_SESSION_VAK_ADDRESS);
+          if (isValidVakAddress(parsed)) vak = parsed;
+        } catch {
+          // Malformed env — fall through to compose-default.
+        }
+      }
+      if (!vak) {
+        // Compose-default: Anima's own constitutional CF.
+        vak = {
+          cpf: "(4.0/1-4.4/5)",
+          ct: ["CT4a"],
+          cp: "CP4.4",
+          cf: "(4.0/1-4.4/5)",
+          cfp: "CFP0",
+          cs: { code: "CS0", direction: "Day" },
+        };
+      }
+      if (!isValidVakAddress(vak)) {
+        return {
+          content: [{ type: "text", text: `anima_self_invoke refused: vak_address failed canonical validation` }],
+          isError: true,
+        };
+      }
+
+      const payload = buildAnimaInvokePayload({
+        target_user: params.target_user,
+        task: params.task,
+        vak_address: vak,
+      });
+
+      // TODO(d2-cli-bridge): epi-cli currently lacks `epi gate dispatch anima-invoke`. The pure
+      // payload builder + this tool registration are the agent-facing surface;
+      // when the CLI bridge lands, replace this stub with the real spawnSync
+      // call dispatching the payload to the gateway's route_anima_invoke endpoint.
+      // See gateway commit 89f7943 (Body/S/S3/gateway/src/dispatch.rs) for the
+      // Rust endpoint that will receive this payload.
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({
+            ok: false,
+            reason: "gateway CLI bridge not yet wired (d2-cli-bridge)",
+            payload,
+          }, null, 2),
+        }],
+        details: { payload },
       };
     },
   });

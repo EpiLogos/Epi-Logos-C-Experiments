@@ -12,7 +12,8 @@ import { aletheiaIngestSophia } from "./modules/sophia-ingest.ts";
 // kept as a reference implementation of the expected output shape (covered
 // by tests/thought_route_vak.test.ts) and may be needed later for non-CLI
 // paths.
-import { isValidVakAddress } from "../shared/vak_address.ts";
+import { isValidVakAddress, type VakAddress } from "../shared/vak_address.ts";
+import { buildAnimaInvokePayload } from "../S4-4p-anima/modules/anima-invoke-payload.ts";
 
 function resolveNotebookName(name: string, scope?: string, sessionId?: string, family?: string) {
   const parts: string[] = [];
@@ -939,6 +940,89 @@ ${questions || "<!-- No questions carried forward -->"}
       };
       return {
         content: [{ type: "text", text: JSON.stringify(compact) }],
+      };
+    },
+  });
+
+  // ── Tool: epii_invoke_anima ──────────────────────────────────────
+  // Concern 2 closure: Epii → Anima cross-invoke. Epii works through Aletheia
+  // for cross-agent invocations (Aletheia is already the bridge from Sophia
+  // disclosures to Epii inbox via aletheia_ingest, so it's the cleanest
+  // architectural fit for Epii's outbound dispatch surface).
+  //
+  // Uses the SAME pure payload-builder as anima_self_invoke
+  // (S4-4p-anima/modules/anima-invoke-payload.ts) — the factory is
+  // target-agnostic; only the originating tool differs.
+  api.registerTool({
+    name: "epii_invoke_anima",
+    label: "Epii Invoke Anima",
+    description:
+      "Invoke an Anima session from Epii's autoresearch flow via the D2 gateway " +
+      "endpoint (route_anima_invoke). Used when Epii's recompose pass surfaces a " +
+      "question that needs Anima's full VAK evaluation. Closes the user's Concern 2 " +
+      "(Epii ↔ Anima bidirectional cross-invoke). Shares the canonical payload " +
+      "builder with anima_self_invoke.",
+    parameters: Type.Object({
+      target_user: Type.String({ description: "Target user id (becomes agent:anima:<target_user>)" }),
+      task: Type.String({ description: "Task to surface into the target Anima session" }),
+      // vak_address opaque to TypeBox — validated structurally below.
+      vak_address: Type.Optional(Type.Any()),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      // Resolve vak_address: param > env (C1 propagation) > Epii-flavoured default.
+      let vak: VakAddress | undefined;
+      if (params.vak_address) {
+        vak = params.vak_address as VakAddress;
+      } else if (process.env.EPI_SESSION_VAK_ADDRESS) {
+        try {
+          const parsed = JSON.parse(process.env.EPI_SESSION_VAK_ADDRESS);
+          if (isValidVakAddress(parsed)) vak = parsed;
+        } catch {
+          // Malformed env — fall through to default.
+        }
+      }
+      if (!vak) {
+        // Epii-flavoured compose-default: Night' rehearing, CF (5/0) Möbius.
+        // Epii cross-invokes typically originate from the recompose pass, which
+        // sits at the (5/0) integration cusp.
+        vak = {
+          cpf: "(4.0/1-4.4/5)",
+          ct: ["CT5"],
+          cp: "CP4.5",
+          cf: "(5/0)",
+          cfp: "CFP0",
+          cs: { code: "CS0", direction: "Night'" },
+        };
+      }
+      if (!isValidVakAddress(vak)) {
+        return {
+          content: [{ type: "text", text: `epii_invoke_anima refused: vak_address failed canonical validation` }],
+          isError: true,
+        };
+      }
+
+      const payload = buildAnimaInvokePayload({
+        target_user: params.target_user,
+        task: params.task,
+        vak_address: vak,
+      });
+
+      // TODO(d2-cli-bridge): same gap as anima_self_invoke — epi-cli lacks
+      // `epi gate dispatch anima-invoke`. The pure builder + this tool
+      // registration are the agent-facing surface; when the CLI bridge lands,
+      // replace this stub with the real call to the gateway's
+      // route_anima_invoke endpoint (Body/S/S3/gateway/src/dispatch.rs,
+      // gateway commit 89f7943).
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({
+            ok: false,
+            reason: "gateway CLI bridge not yet wired (d2-cli-bridge)",
+            payload,
+          }, null, 2),
+        }],
+        details: { payload },
       };
     },
   });
