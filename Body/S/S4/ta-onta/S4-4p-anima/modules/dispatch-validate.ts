@@ -54,3 +54,31 @@ export function validateDispatchParams(params: DispatchParams): ValidationResult
   }
   return { ok: true };
 }
+
+/**
+ * Validate a CFP1 (P-Thread) parallel dispatch.
+ *
+ * Per the VAK grammar, dispatch_parallel_agents is the P-Thread surface:
+ * N different tasks, each running independently. Every task must:
+ *   - carry a valid VAK address (per validateDispatchParams)
+ *   - declare cfp: "CFP1" specifically (not CFP0, CFP2, etc.)
+ *
+ * If any task fails either check, the whole batch is refused — there's no
+ * partial-fan-out semantic at the parallel surface.
+ */
+export function validateParallelDispatch(input: { tasks: DispatchParams[] }): ValidationResult {
+  if (!input.tasks || input.tasks.length === 0) {
+    return { ok: false, error: "no tasks supplied to dispatch_parallel_agents" };
+  }
+  for (const t of input.tasks) {
+    const v = validateDispatchParams(t);
+    if (!v.ok) return v;
+    if (t.vak_address!.cfp !== "CFP1") {
+      return {
+        ok: false,
+        error: `dispatch_parallel_agents requires CFP1 on every task (task for agent ${t.agent_name} declared ${t.vak_address!.cfp})`,
+      };
+    }
+  }
+  return { ok: true };
+}

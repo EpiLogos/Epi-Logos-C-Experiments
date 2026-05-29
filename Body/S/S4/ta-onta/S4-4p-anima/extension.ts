@@ -6,7 +6,7 @@ import registerAgentTeam from "./S4/agent-team.ts";
 import registerAgentChain from "./S4/agent-chain.ts";
 import registerSubagentWidget from "./S4/subagent-widget.ts";
 import registerPiPi from "./S4/pi-pi.ts";
-import { validateDispatchParams } from "./modules/dispatch-validate.ts";
+import { validateDispatchParams, validateParallelDispatch } from "./modules/dispatch-validate.ts";
 import type { VakAddress } from "../shared/vak_address.ts";
 
 type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
@@ -341,21 +341,22 @@ export async function animaExtension(api: ExtensionAPI) {
       })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      // Gate every sub-dispatch before any fire. One bad address aborts the whole CFP1 fan-out
-      // (refusing partial-state writes upholds the address-causality invariant).
+      // Validate every task carries CFP1 + valid VAK before any subprocess fires.
+      // One bad address aborts the whole CFP1 fan-out (refusing partial-state writes
+      // upholds the address-causality invariant; A6 binds CFP1 across every task).
       const tasks = params.tasks as Array<{ task: string; agent_name: string; vak_address?: VakAddress }>;
-      for (const t of tasks) {
-        const validation = validateDispatchParams({
+      const parallel = validateParallelDispatch({
+        tasks: tasks.map((t) => ({
           agent_name: t.agent_name,
           task: t.task,
           vak_address: t.vak_address,
-        });
-        if (!validation.ok) {
-          return {
-            content: [{ type: "text", text: `dispatch refused (agent=${t.agent_name}): ${validation.error}` }],
-            isError: true,
-          };
-        }
+        })),
+      });
+      if (!parallel.ok) {
+        return {
+          content: [{ type: "text", text: `dispatch_parallel_agents refused: ${parallel.error}` }],
+          isError: true,
+        };
       }
       const results = await Promise.all(
         tasks.map(({ task, agent_name, vak_address }) =>
