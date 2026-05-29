@@ -6,7 +6,13 @@ import registerAgentTeam from "./S4/agent-team.ts";
 import registerAgentChain from "./S4/agent-chain.ts";
 import registerSubagentWidget from "./S4/subagent-widget.ts";
 import registerPiPi from "./S4/pi-pi.ts";
-import { validateDispatchParams, validateParallelDispatch } from "./modules/dispatch-validate.ts";
+import {
+  validateDispatchParams,
+  validateParallelDispatch,
+  dispatchGuardrails,
+  CANONICAL_TRIGGERS,
+  safeParseVak,
+} from "./modules/dispatch-validate.ts";
 import { planMoiraiNightPass, classifyMoiraiOutput } from "./modules/moirai-dispatch.ts";
 import { buildAnimaInvokePayload } from "./modules/anima-invoke-payload.ts";
 import { isValidVakAddress, type VakAddress } from "../shared/vak_address.ts";
@@ -356,13 +362,17 @@ export async function animaExtension(api: ExtensionAPI) {
         // vak_address opaque to TypeBox — validator is source of truth so error messages
         // are domain-friendly rather than schema-shaped. Required per A5: no fire without address.
         vak_address: Type.Optional(Type.Any()),
+        // Optional risk score (0..1) for gate guardrail evaluation. Default 0
+        // preserves the pre-D5 surface (existing callers unaffected; only
+        // collab-gate consumes risk and only when cpf is dialogical).
+        risk: Type.Optional(Type.Number()),
       })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       // Validate every task carries CFP1 + valid VAK before any subprocess fires.
       // One bad address aborts the whole CFP1 fan-out (refusing partial-state writes
       // upholds the address-causality invariant; A6 binds CFP1 across every task).
-      const tasks = params.tasks as Array<{ task: string; agent_name: string; vak_address?: VakAddress }>;
+      const tasks = params.tasks as Array<{ task: string; agent_name: string; vak_address?: VakAddress; risk?: number }>;
       const parallel = validateParallelDispatch({
         tasks: tasks.map((t) => ({
           agent_name: t.agent_name,
@@ -376,12 +386,40 @@ export async function animaExtension(api: ExtensionAPI) {
           isError: true,
         };
       }
+      // Per-task gate guardrails (D5). Same dialectic as A5's per-entry
+      // mechanistic validation: each task is independently gated against
+      // CANONICAL_TRIGGERS. A single blocking gate on any task aborts the
+      // whole fan-out, consistent with the no-partial-fanout invariant.
+      const prev_vak = safeParseVak(process.env.EPI_SESSION_VAK_ADDRESS);
+      const informationalFires: string[] = [];
+      for (const t of tasks) {
+        if (!t.vak_address) continue; // dialogical task — gates apply to next_vak only when present
+        const guardrails = dispatchGuardrails(
+          { prev_vak, next_vak: t.vak_address, risk: t.risk ?? 0 },
+          CANONICAL_TRIGGERS,
+        );
+        if (!guardrails.allowed) {
+          return {
+            content: [{
+              type: "text",
+              text: `dispatch_parallel_agents refused: dispatch blocked by gates on task for ${t.agent_name}: ${guardrails.gates_fired.join(", ")}`,
+            }],
+            isError: true,
+          };
+        }
+        if (guardrails.gates_fired.length > 0) {
+          informationalFires.push(`${t.agent_name}: ${guardrails.gates_fired.join(", ")}`);
+        }
+      }
       const results = await Promise.all(
         tasks.map(({ task, agent_name, vak_address }) =>
           dispatchTeamMember(agent_name, task, vak_address).then((out) => `## ${agent_name}\n${out}`)
         )
       );
-      return { content: [{ type: "text", text: results.join("\n\n") }] };
+      const header = informationalFires.length > 0
+        ? `[gates fired (informational): ${informationalFires.join("; ")}]\n\n`
+        : "";
+      return { content: [{ type: "text", text: `${header}${results.join("\n\n")}` }] };
     },
   });
 

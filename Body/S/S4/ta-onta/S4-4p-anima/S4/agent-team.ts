@@ -26,7 +26,12 @@ import { join, resolve } from "path";
 import { fileURLToPath } from "node:url";
 import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
 import { childPiRuntimeArgs } from "../../khora/S0'/child-extension-propagation.ts";
-import { validateDispatchParams } from "../modules/dispatch-validate.ts";
+import {
+	validateDispatchParams,
+	dispatchGuardrails,
+	CANONICAL_TRIGGERS,
+	safeParseVak,
+} from "../modules/dispatch-validate.ts";
 import type { VakAddress } from "../../shared/vak_address.ts";
 
 // ── Types ────────────────────────────────────────
@@ -490,11 +495,13 @@ export default function (pi: ExtensionAPI) {
 			agent: Type.String({ description: "Agent name (case-insensitive)" }),
 			task: Type.String({ description: "Task description for the agent to execute" }),
 			vak_address: Type.Optional(Type.Any({ description: "VAK address gating dispatch (validated by dispatch-validate; required at runtime)" })),
+			risk: Type.Optional(Type.Number({ description: "Risk score (0..1) for gate guardrail evaluation; default 0" })),
 		}),
 
 		async execute(_toolCallId, params, _signal, onUpdate, ctx) {
-			const { agent, task } = params as { agent: string; task: string; vak_address?: unknown };
+			const { agent, task } = params as { agent: string; task: string; vak_address?: unknown; risk?: number };
 			const vakAddress = (params as any).vak_address as VakAddress | undefined;
+			const risk = (params as any).risk as number | undefined;
 
 			// VAK gating — every dispatch must carry a valid vak_address whose cf
 			// matches the agent's canonical CF (for the constitutional 7-fold roster).
@@ -509,6 +516,36 @@ export default function (pi: ExtensionAPI) {
 					isError: true,
 					details: { agent, task, status: "refused", error: validation.error },
 				};
+			}
+
+			// Gate guardrails (D5). Run AFTER validateDispatchParams so the
+			// dialogical short-circuit in validateDispatchParams stays the
+			// outer gate. When vak_address is absent (pure dialogical), there's
+			// no next_vak to evaluate gates against — skip silently.
+			let gatesFiredInformational: string[] = [];
+			if (vakAddress) {
+				const prev_vak = safeParseVak(process.env.EPI_SESSION_VAK_ADDRESS);
+				const guardrails = dispatchGuardrails(
+					{ prev_vak, next_vak: vakAddress, risk: risk ?? 0 },
+					CANONICAL_TRIGGERS,
+				);
+				if (!guardrails.allowed) {
+					return {
+						content: [{
+							type: "text",
+							text: `dispatch refused: dispatch blocked by gates: ${guardrails.gates_fired.join(", ")}`,
+						}],
+						isError: true,
+						details: {
+							agent,
+							task,
+							status: "refused",
+							error: `gates_blocked: ${guardrails.gates_fired.join(", ")}`,
+							gates_fired: guardrails.gates_fired,
+						},
+					};
+				}
+				gatesFiredInformational = guardrails.gates_fired;
 			}
 
 			try {
@@ -527,9 +564,12 @@ export default function (pi: ExtensionAPI) {
 
 				const status = result.exitCode === 0 ? "done" : "error";
 				const summary = `[${agent}] ${status} in ${Math.round(result.elapsed / 1000)}s`;
+				const gatesHeader = gatesFiredInformational.length > 0
+					? `[gates fired (informational): ${gatesFiredInformational.join(", ")}]\n`
+					: "";
 
 				return {
-					content: [{ type: "text", text: `${summary}\n\n${truncated}` }],
+					content: [{ type: "text", text: `${gatesHeader}${summary}\n\n${truncated}` }],
 					details: {
 						agent,
 						task,
@@ -537,6 +577,7 @@ export default function (pi: ExtensionAPI) {
 						elapsed: result.elapsed,
 						exitCode: result.exitCode,
 						fullOutput: result.output,
+						...(gatesFiredInformational.length > 0 ? { gates_fired: gatesFiredInformational } : {}),
 					},
 				};
 			} catch (err: any) {

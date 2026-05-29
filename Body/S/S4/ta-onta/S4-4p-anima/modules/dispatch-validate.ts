@@ -1,4 +1,5 @@
 import { isValidVakAddress, type VakAddress, type CfLiteral, type CpfPolarity } from "../../shared/vak_address.ts";
+import { matchGateTrigger, type GateTrigger, type GateName } from "../../S4-5p-aletheia/modules/gate-trigger.ts";
 
 /**
  * Canonical CF assignments for the constitutional 7-fold roster:
@@ -171,4 +172,87 @@ export function validateParallelDispatch(input: { tasks: DispatchParams[] }): Va
     }
   }
   return { ok: true };
+}
+
+/**
+ * Best-effort parse of a JSON-serialised VAK address (typically from
+ * EPI_SESSION_VAK_ADDRESS). Returns `undefined` on parse failure or
+ * non-object payload — callers should treat that as "no prev_vak" rather
+ * than refusing dispatch on malformed env.
+ *
+ * Deliberately does NOT run isValidVakAddress: prev_vak in the guardrail
+ * path is matched against partial-shape predicates (cf, ct, cpf fields
+ * only), so a partial parse is still useful for transition detection.
+ */
+export function safeParseVak(json: string | undefined): Partial<VakAddress> | undefined {
+  if (!json) return undefined;
+  try {
+    const parsed = JSON.parse(json);
+    if (parsed && typeof parsed === "object") return parsed as Partial<VakAddress>;
+  } catch {
+    // fall through
+  }
+  return undefined;
+}
+
+/**
+ * Canonical gate-trigger configuration for Anima dispatch guardrails (D5).
+ *
+ * Pairs the pure `matchGateTrigger` DSL (D4, S4-5p-aletheia) with the project's
+ * gate semantics. Each trigger names a gate and the VAK condition that fires it:
+ *
+ *   - ql-gate         (informational): fires on CF transition INTO (00/00).
+ *                     QL ground reentry — downstream tools may want to surface
+ *                     "you've returned to receptive ground" feedback.
+ *   - m-prime-gate    (informational): fires when next CT bucket includes CT4b.
+ *                     Psyche fractal meta-frame — high-dialogical-shift signal.
+ *   - rupa-gate       (BLOCKING): fires when next CT bucket includes CT3.
+ *                     Pattern-bucket dispatches need a human gate; CT3 is the
+ *                     processual-pattern slot whose autonomous execution is
+ *                     not permitted without prior human-loop approval.
+ *   - collab-gate     (BLOCKING): fires when next CPF is (00/00) AND risk > 0.7.
+ *                     High-risk dialogical work needs collab — open-conversation
+ *                     register with high risk score must route through a
+ *                     collaborative approval surface, not a unilateral dispatch.
+ */
+export const CANONICAL_TRIGGERS: GateTrigger[] = [
+  { gate: "ql-gate", on: { cf_transition_to: "(00/00)" } },
+  { gate: "m-prime-gate", on: { ct_includes: "CT4b" } },
+  { gate: "rupa-gate", on: { ct_includes: "CT3" } },
+  { gate: "collab-gate", on: { cpf_equals: "(00/00)", risk_above: 0.7 } },
+];
+
+export interface GuardrailResult {
+  allowed: boolean;
+  gates_fired: GateName[];
+}
+
+/**
+ * Run gate guardrails on a VAK transition. Returns whether dispatch is
+ * allowed plus the list of gates that fired.
+ *
+ * BLOCKING gates (deny dispatch): collab-gate (high-risk dialogical),
+ * rupa-gate (CT3 pattern bucket).
+ *
+ * NON-BLOCKING gates (informational): ql-gate (QL ground reentry),
+ * m-prime-gate (Psyche fractal meta-frame). Fired but don't block — they
+ * signal that downstream tools may want to react.
+ *
+ * The split between blocking and informational lives HERE, not in the
+ * trigger DSL, because the DSL is purely declarative — it tells us *which*
+ * gates fire on a transition. Whether a fired gate denies dispatch is a
+ * policy decision local to Anima's dispatch path.
+ */
+export function dispatchGuardrails(
+  state: { prev_vak?: Partial<VakAddress>; next_vak: Partial<VakAddress>; risk?: number },
+  triggers: GateTrigger[],
+): GuardrailResult {
+  const fired = matchGateTrigger(triggers, {
+    prev_vak: state.prev_vak,
+    next_vak: state.next_vak,
+    context: { risk: state.risk },
+  });
+  const BLOCKING: GateName[] = ["collab-gate", "rupa-gate"];
+  const allowed = !fired.some((g) => BLOCKING.includes(g));
+  return { allowed, gates_fired: fired };
 }
