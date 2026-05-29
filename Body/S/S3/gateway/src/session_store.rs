@@ -174,6 +174,10 @@ impl SessionStore {
         Ok(records)
     }
 
+    pub fn gate_root(&self) -> &Path {
+        &self.gate_root
+    }
+
     pub fn session_path(&self, canonical_key: &str) -> PathBuf {
         self.gate_root
             .join("sessions")

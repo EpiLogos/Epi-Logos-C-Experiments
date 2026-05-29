@@ -1,5 +1,62 @@
 use serde::{Deserialize, Serialize};
 
+use epi_s3_gateway_contract::SessionPatch;
+use portal_core::VakAddress;
+
+use crate::{transcripts, SessionStore};
+
+/// Request payload for `route_anima_invoke` — the multi-session endpoint that
+/// lets a constitutional agent (Anima today, Epii via the same mechanism per
+/// Concern 2) invoke another Anima session by `target_session_key`, patching
+/// its VAK address and queueing a task on its transcript.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AnimaInvokeRequest {
+    pub target_session_key: String,
+    pub task: String,
+    pub vak_address: VakAddress,
+}
+
+/// Response confirming the dispatch landed.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AnimaInvokeResponse {
+    pub dispatched_to: String,
+    pub task_queued: bool,
+}
+
+/// Tag used on the transcript role when an `anima_invoke` arrives, so that
+/// receivers (and tests) can distinguish multi-session invocations from
+/// ordinary user/agent messages.
+pub const ANIMA_INVOKE_ROLE: &str = "anima_invoke";
+
+/// Patch the target session's VAK address and append the task into its
+/// transcript as an `anima_invoke`-tagged message.
+///
+/// Returns `Err` if the target session cannot be resolved (e.g. unknown
+/// `target_session_key`).
+pub fn route_anima_invoke(
+    store: &SessionStore,
+    req: AnimaInvokeRequest,
+) -> Result<AnimaInvokeResponse, String> {
+    let patch = SessionPatch {
+        vak_address: Some(req.vak_address.clone()),
+        ..Default::default()
+    };
+    let record = store.patch(&req.target_session_key, patch)?;
+
+    transcripts::append_message(
+        store.gate_root(),
+        &record.canonical_key,
+        ANIMA_INVOKE_ROLE,
+        &req.task,
+        None,
+    )?;
+
+    Ok(AnimaInvokeResponse {
+        dispatched_to: req.target_session_key,
+        task_queued: true,
+    })
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum GatewayDispatchOwner {
