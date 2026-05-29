@@ -1,7 +1,14 @@
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Serialize};
 
+use crate::codon_rotation_projection::{
+    codon_charge_quaternion, codon_rotation_from_lens_mode, CodonRotationProjection,
+    MathemeLensMode,
+};
 use crate::mahamaya::MahamayaCodecProjection;
+use crate::parashakti::vimarsha_read_profile;
+use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
+use crate::vak_address::VakAddress;
 
 pub const EPOGDOON_NUM: u8 = 9;
 pub const EPOGDOON_DEN: u8 = 8;
@@ -190,7 +197,7 @@ impl Default for KernelProjection {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct KernelTemporalProjection {
     pub coordinate_owner: String,
@@ -241,25 +248,38 @@ impl KernelTemporalProjection {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MathemeHarmonicProfile {
+    pub tick: u64,
     pub tick12: u8,
     pub cycle: u64,
     pub degree720: u16,
     pub degree360: u16,
     pub su2_layer: String,
+    pub phase: KernelPhase,
+    pub position6: u8,
     pub helix: String,
     pub ratio_role: String,
+    pub lens_mode: MathemeLensMode,
     pub chromatic: MathemeChromaticProfile,
     pub diatonic: Option<MathemeDiatonicContext>,
     pub resonance72: MathemeResonance72Projection,
+    pub audio_octet: [f32; 8],
+    pub nodal_quartet: [MathemeNodalConstraint; 4],
     pub elements: MathemeElementalProjection,
     pub planetary_chakral: MathemePlanetaryChakralProjection,
     pub binary: MathemeBinaryProjection,
+    pub codon_rotation_projection: CodonRotationProjection,
+    pub q_cosmic: [f32; 4],
+    pub resonance: Option<f32>,
+    pub conjugate_form_character: ConjugateFormCharacter,
+    pub privacy_class: ProfilePrivacyClass,
     pub bedrock: MathemeBedrockProjection,
     pub pointer_anchor: MathemePointerAnchorProjection,
     pub context_frames: MathemeContextFrameWebProjection,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vak_address: Option<VakAddress>,
 }
 
 impl MathemeHarmonicProfile {
@@ -272,7 +292,21 @@ impl MathemeHarmonicProfile {
         let degree360 = degree720 % 360;
         let diatonic = MathemeDiatonicContext::from_pitch_class(pitch_class);
         let resonance72 = MathemeResonance72Projection::from_tick(tick12, position);
+        let lens_mode = MathemeLensMode::new(
+            tick12,
+            diatonic
+                .as_ref()
+                .map(|context| context.degree - 1)
+                .unwrap_or(position % 7),
+        )
+        .expect("tick-derived lens-mode remains in the 12x7 landscape");
+        let codon_rotation_projection =
+            codon_rotation_from_lens_mode(lens_mode.lens, lens_mode.mode)
+                .expect("tick-derived lens-mode maps into the codon-rotation surface");
+        let q_cosmic = codon_charge_quaternion(codon_rotation_projection.codon_id);
+        let vimarsha_reading = vimarsha_read_profile(tick, lens_mode);
         Self {
+            tick: tick.cycle * 12 + tick12 as u64,
             tick12,
             cycle: tick.cycle,
             degree720,
@@ -283,11 +317,16 @@ impl MathemeHarmonicProfile {
                 "primary"
             }
             .to_owned(),
+            phase: tick.phase,
+            position6: position,
             helix: helix.to_owned(),
             ratio_role: ratio_role_for_sub_tick(tick12).to_owned(),
+            lens_mode,
             chromatic: MathemeChromaticProfile::from_tick(tick12, position, pitch_class),
             diatonic: diatonic.clone(),
             resonance72,
+            audio_octet: vimarsha_reading.audio_octet,
+            nodal_quartet: vimarsha_reading.nodal_quartet,
             elements: MathemeElementalProjection::from_position(position),
             planetary_chakral: MathemePlanetaryChakralProjection::from_diatonic(diatonic.as_ref()),
             binary: MathemeBinaryProjection::from_clock(
@@ -296,6 +335,11 @@ impl MathemeHarmonicProfile {
                 resonance72.lens_anchor_index,
                 tick12 >= 6,
             ),
+            codon_rotation_projection,
+            q_cosmic,
+            resonance: None,
+            conjugate_form_character: conjugate_form_character_for_mode(lens_mode.mode),
+            privacy_class: ProfilePrivacyClass::PublicCurrentContext,
             bedrock: MathemeBedrockProjection::from_position(position),
             pointer_anchor: MathemePointerAnchorProjection::from_tick(
                 tick12,
@@ -304,8 +348,59 @@ impl MathemeHarmonicProfile {
                 pitch_class,
             ),
             context_frames: MathemeContextFrameWebProjection::from_diatonic(diatonic.as_ref()),
+            vak_address: None,
         }
     }
+
+    /// Construct a profile for the given tick and attach the supplied
+    /// `VakAddress` as the current coordinate-state correlate.
+    ///
+    /// All other fields follow `from_tick` exactly — this constructor exists so
+    /// callers (E4 Tauri command, kernel-side reasoners) can publish harmonic
+    /// state and VAK state in a single artifact without reaching past the
+    /// public API. The base `from_tick` constructor remains the canonical
+    /// path; `vak_address` defaults to `None` there for backward compatibility.
+    pub fn with_vak(tick: KernelTick, vak: VakAddress) -> Self {
+        let mut profile = Self::from_tick(tick);
+        profile.vak_address = Some(vak);
+        profile
+    }
+
+    pub fn from_tick_with_personal_identity(
+        tick: KernelTick,
+        identity: &PersonalIdentityProfile,
+    ) -> Self {
+        let mut profile = Self::from_tick(tick);
+        let resonance = PersonalResonance::from_quaternions(identity.q_personal, profile.q_cosmic);
+        profile.resonance = Some(resonance.score);
+        profile.conjugate_form_character = resonance.conjugate_form_character;
+        profile
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConjugateFormCharacter {
+    Major,
+    Minor,
+    ShadowInversion,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum ProfilePrivacyClass {
+    ProtectedLocalBody,
+    ProtectedLocalDerived,
+    PublicCurrentContext,
+    ReviewedCanonical,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeNodalConstraint {
+    pub ql_position: u8,
+    pub helix: String,
+    pub m: u8,
+    pub n: u8,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -988,6 +1083,14 @@ fn ratio_role_for_sub_tick(sub_tick: u8) -> &'static str {
         (3, 2) => "3/2 perfect-fifth aspiration",
         (2, 3) => "2/3 perfect-fifth grounding",
         _ => "derived harmonic ratio",
+    }
+}
+
+fn conjugate_form_character_for_mode(mode: u8) -> ConjugateFormCharacter {
+    match mode % 7 {
+        0 | 3 | 4 => ConjugateFormCharacter::Major,
+        6 => ConjugateFormCharacter::ShadowInversion,
+        _ => ConjugateFormCharacter::Minor,
     }
 }
 
