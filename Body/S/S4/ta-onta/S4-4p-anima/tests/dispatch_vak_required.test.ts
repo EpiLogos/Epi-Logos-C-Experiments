@@ -77,3 +77,16 @@ describe("dispatch_agent VAK requirement", () => {
     assert.equal(result.ok, true);
   });
 });
+
+describe("dispatch_agent gating (agent-team.ts variant)", () => {
+  it("validateDispatchParams adapted for {agent, task} shape rejects no-vak", () => {
+    // The agent-team.ts tool uses `agent` rather than `agent_name`.
+    // The shared validator works with either via a thin adapter.
+    const result = validateDispatchParams({
+      agent_name: "logos",
+      task: "x",
+      // no vak_address
+    } as any);
+    assert.equal(result.ok, false);
+  });
+});

@@ -26,6 +26,8 @@ import { join, resolve } from "path";
 import { fileURLToPath } from "node:url";
 import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
 import { childPiRuntimeArgs } from "../../khora/S0'/child-extension-propagation.ts";
+import { validateDispatchParams } from "../modules/dispatch-validate.ts";
+import type { VakAddress } from "../../shared/vak_address.ts";
 
 // ── Types ────────────────────────────────────────
 
@@ -311,6 +313,7 @@ export default function (pi: ExtensionAPI) {
 		agentName: string,
 		task: string,
 		ctx: any,
+		vakAddress?: VakAddress,
 	): Promise<{ output: string; exitCode: number; elapsed: number }> {
 		const key = agentName.toLowerCase();
 		const state = agentStates.get(key);
@@ -412,10 +415,15 @@ export default function (pi: ExtensionAPI) {
 			task,
 		];
 
+		const childEnv: NodeJS.ProcessEnv = { ...process.env };
+		if (vakAddress) {
+			childEnv.EPI_SESSION_VAK_ADDRESS = JSON.stringify(vakAddress);
+		}
+
 		return new Promise((resolve) => {
 			const proc = spawn("pi", args, {
 				stdio: ["ignore", "pipe", "pipe"],
-				env: { ...process.env },
+				env: childEnv,
 				cwd: process.env.EPI_REPO_ROOT || (ctx as any).cwd || process.cwd(),
 			});
 
@@ -481,10 +489,27 @@ export default function (pi: ExtensionAPI) {
 		parameters: Type.Object({
 			agent: Type.String({ description: "Agent name (case-insensitive)" }),
 			task: Type.String({ description: "Task description for the agent to execute" }),
+			vak_address: Type.Optional(Type.Any({ description: "VAK address gating dispatch (validated by dispatch-validate; required at runtime)" })),
 		}),
 
 		async execute(_toolCallId, params, _signal, onUpdate, ctx) {
-			const { agent, task } = params as { agent: string; task: string };
+			const { agent, task } = params as { agent: string; task: string; vak_address?: unknown };
+			const vakAddress = (params as any).vak_address as VakAddress | undefined;
+
+			// VAK gating — every dispatch must carry a valid vak_address whose cf
+			// matches the agent's canonical CF (for the constitutional 7-fold roster).
+			const validation = validateDispatchParams({
+				agent_name: agent,           // map agent -> agent_name for the validator
+				task,
+				vak_address: vakAddress,
+			});
+			if (!validation.ok) {
+				return {
+					content: [{ type: "text", text: `dispatch refused: ${validation.error}` }],
+					isError: true,
+					details: { agent, task, status: "refused", error: validation.error },
+				};
+			}
 
 			try {
 				if (onUpdate) {
@@ -494,7 +519,7 @@ export default function (pi: ExtensionAPI) {
 					});
 				}
 
-				const result = await dispatchAgent(agent, task, ctx);
+				const result = await dispatchAgent(agent, task, ctx, vakAddress);
 
 				const truncated = result.output.length > 8000
 					? result.output.slice(0, 8000) + "\n\n... [truncated]"
