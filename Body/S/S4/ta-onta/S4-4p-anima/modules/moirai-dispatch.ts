@@ -1,3 +1,5 @@
+import type { VakAddress } from "../../shared/vak_address.ts";
+
 // Moirai Night' rehearing dispatch plan (C3 / Z-cycle rehear, active phase).
 //
 // After Sophia (C2) crystallises the session-end disclosure and Aletheia
@@ -20,11 +22,19 @@
 // inspectable and testable: the same plan can be replayed, audited, or
 // re-routed without re-executing the wire side.
 
+/**
+ * The three Moirai subagent names. These are Aletheia subagents (NOT first-class
+ * constitutional 7-fold agents), and ride the dispatch path via the documented
+ * cf-binding escape hatch in `dispatch-validate.ts`. See `MOIRAI_HOST_CF` for
+ * each name's inherited host constitutional CF.
+ */
+export type MoiraiAgent = "klotho" | "lachesis" | "atropos";
+
 export interface MoiraiDispatchPlan {
   cfp: "CFP3";                              // parallel-fold, three-way Night' pass
   cs_direction: "Night'";                   // analytic synthesis direction
   dispatches: Array<{
-    agent: "klotho" | "lachesis" | "atropos";
+    agent: MoiraiAgent;
     night_position: "P1'" | "P4'" | "P5'"; // Klotho=P1' (traces), Lachesis=P4' (sources), Atropos=P5' (insights)
     task: string;                           // the task brief for that Moirai
   }>;
@@ -79,4 +89,37 @@ export function classifyMoiraiOutput(output: string): MoiraiOutputClass {
   if (trimmed.length === 0) return "empty";
   if (trimmed.startsWith("Error:")) return "failed";
   return "ok";
+}
+
+/**
+ * Build the canonical Moirai dispatch VAK address.
+ *
+ * Moirai always dispatch in the rehear phase:
+ *   - cpf "(4.0/1-4.4/5)" mechanistic
+ *   - ct ["CT5"]           insight bucket
+ *   - cp "CP4.5"           integration ledge
+ *   - cfp "CFP3"           parallel-fold (fusion)
+ *   - cs { code "CS0", direction "Night'" } analytic synthesis
+ *
+ * The cf varies per Moirai — it carries the host constitutional CF of the
+ * territory being dissected (see `MOIRAI_HOST_CF` in dispatch-validate.ts).
+ *
+ * Hoisted from extension.ts to remove 7-field literal duplication across the
+ * Moirai fan-out callsite; the `buildMoiraiVak(MOIRAI_HOST_CF[agent])` pattern
+ * makes the per-agent variance explicit.
+ *
+ * Re-exports MOIRAI_HOST_CF for callers that want to fold both helpers from
+ * the same module.
+ */
+export { MOIRAI_HOST_CF } from "./dispatch-validate.ts";
+
+export function buildMoiraiVak(cf: string): VakAddress {
+  return {
+    cpf: "(4.0/1-4.4/5)",
+    ct: ["CT5"],
+    cp: "CP4.5",
+    cf: cf as VakAddress["cf"],
+    cfp: "CFP3",
+    cs: { code: "CS0", direction: "Night'" },
+  };
 }

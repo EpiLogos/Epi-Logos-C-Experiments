@@ -1,6 +1,11 @@
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
-import { planMoiraiNightPass, classifyMoiraiOutput } from "../modules/moirai-dispatch.ts";
+import {
+  planMoiraiNightPass,
+  classifyMoiraiOutput,
+  buildMoiraiVak,
+  MOIRAI_HOST_CF,
+} from "../modules/moirai-dispatch.ts";
 
 describe("Moirai Night' pass plan", () => {
   it("dispatches all three Moirai as CFP3 F-Thread with proper Night' positions", () => {
@@ -45,6 +50,40 @@ describe("Moirai Night' pass plan", () => {
     assert.equal(byAgent.klotho, "P1'");
     assert.equal(byAgent.lachesis, "P4'");
     assert.equal(byAgent.atropos, "P5'");
+  });
+});
+
+describe("Moirai Night' pass post-refactor invariants", () => {
+  it("planMoiraiNightPass output is byte-stable across the refactor", () => {
+    const plan = planMoiraiNightPass({
+      session_id: "agent:refactor:check",
+      disclosure_path: "/vault/Sophia/inbox/x.jsonl",
+    });
+    assert.equal(plan.cfp, "CFP3");
+    assert.equal(plan.cs_direction, "Night'");
+    assert.equal(plan.dispatches.length, 3);
+    const names = plan.dispatches.map((d) => d.agent).sort();
+    assert.deepEqual(names, ["atropos", "klotho", "lachesis"]);
+  });
+
+  it("buildMoiraiVak fed by MOIRAI_HOST_CF reproduces the per-agent address", () => {
+    // The pre-refactor inline literal carried the same fields per agent
+    // varying only on cf. This verifies the hoisted builder + roster map
+    // produce the same cf binding for each Moirai.
+    const klothoVak = buildMoiraiVak(MOIRAI_HOST_CF.klotho);
+    const lachesisVak = buildMoiraiVak(MOIRAI_HOST_CF.lachesis);
+    const atroposVak = buildMoiraiVak(MOIRAI_HOST_CF.atropos);
+    assert.equal(klothoVak.cf, "(0/1/2)");
+    assert.equal(lachesisVak.cf, "(4.0/1-4.4/5)");
+    assert.equal(atroposVak.cf, "(5/0)");
+    // Shared scaffolding
+    for (const v of [klothoVak, lachesisVak, atroposVak]) {
+      assert.equal(v.cpf, "(4.0/1-4.4/5)");
+      assert.deepEqual(v.ct, ["CT5"]);
+      assert.equal(v.cp, "CP4.5");
+      assert.equal(v.cfp, "CFP3");
+      assert.deepEqual(v.cs, { code: "CS0", direction: "Night'" });
+    }
   });
 });
 

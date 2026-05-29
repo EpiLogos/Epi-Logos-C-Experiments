@@ -7,32 +7,19 @@ import registerAgentChain from "./S4/agent-chain.ts";
 import registerSubagentWidget from "./S4/subagent-widget.ts";
 import registerPiPi from "./S4/pi-pi.ts";
 import {
-  validateDispatchParams,
   validateParallelDispatch,
+  validateFusionDispatch,
   dispatchGuardrails,
   CANONICAL_TRIGGERS,
   safeParseVak,
+  MOIRAI_HOST_CF,
 } from "./modules/dispatch-validate.ts";
-import { planMoiraiNightPass, classifyMoiraiOutput } from "./modules/moirai-dispatch.ts";
+import { planMoiraiNightPass, classifyMoiraiOutput, buildMoiraiVak } from "./modules/moirai-dispatch.ts";
 import { buildAnimaInvokePayload } from "./modules/anima-invoke-payload.ts";
 import { findSkillsForVak, type CapabilityMatrix } from "./modules/skill-registry.ts";
 import { isValidVakAddress, type VakAddress } from "../shared/vak_address.ts";
 import { resolve as resolvePath, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-
-// Per-agent VAK address fragments used by `dispatch_moirai_night_pass`. The
-// three Moirai do not have their own AGENT_CF roster entries (they are
-// subagents under the Aletheia cluster, not constitutional 7-fold members),
-// so we route each through the cf of the constitutional agent that owns
-// the relevant Night' position:
-//   - Klotho   (P1' Traces)          → Eros   cf "(0/1/2)"
-//   - Lachesis (P4' Sources)         → Anima  cf "(4.0/1-4.4/5)"
-//   - Atropos  (P5' Crystallisations) → Sophia cf "(5/0)"
-const MOIRAI_CF: Record<"klotho" | "lachesis" | "atropos", VakAddress["cf"]> = {
-  klotho: "(0/1/2)",
-  lachesis: "(4.0/1-4.4/5)",
-  atropos: "(5/0)",
-};
 
 type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
 type CSDirectionality = "day" | "night_prime";
@@ -479,16 +466,17 @@ export async function animaExtension(api: ExtensionAPI) {
       agents: Type.Array(Type.String()),
       // vak_address opaque to TypeBox — validator gates it. Required per A5.
       // For CFP3 fusion the address describes the joint task, not per-agent CF;
-      // the validator's AGENT_CF check is skipped for the fusion aggregate
-      // by passing a synthetic agent_name "_cfp3_fusion" which is not in the roster.
+      // `validateFusionDispatch` runs per-entry validation via the documented
+      // escape hatch — each agent_name passes through canonical-shape checks
+      // without roster cf-binding (since the aggregate isn't a 7-fold member).
       vak_address: Type.Optional(Type.Any()),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const vakAddress = params.vak_address as VakAddress | undefined;
-      const validation = validateDispatchParams({
-        agent_name: "_cfp3_fusion",
+      const agents = params.agents as string[];
+      const validation = validateFusionDispatch({
         task: params.task,
-        vak_address: vakAddress,
+        dispatches: agents.map((agent_name) => ({ agent_name, vak_address: vakAddress })),
       });
       if (!validation.ok) {
         return {
@@ -497,7 +485,7 @@ export async function animaExtension(api: ExtensionAPI) {
         };
       }
       const outputs = await Promise.all(
-        params.agents.map((agent: string) =>
+        agents.map((agent: string) =>
           dispatchTeamMember(agent, params.task, vakAddress).then((out) => `### ${agent}\n${out}`)
         )
       );
@@ -522,40 +510,44 @@ export async function animaExtension(api: ExtensionAPI) {
         disclosure_path: params.disclosure_path,
       });
 
-      // Build a CFP3/Night' VAK address per Moirai. Each carries the cf of
-      // the constitutional agent whose territory it is dissecting (see
-      // MOIRAI_CF above). Validation in `validateDispatchParams` accepts
-      // unknown agent names (the cf-match check is gated by `if (expected)`
-      // on roster membership), so klotho/lachesis/atropos pass through
-      // canonical-shape validation only.
+      // Build a CFP3/Night' VAK address per Moirai via `buildMoiraiVak`. Each
+      // carries the cf of the constitutional agent whose territory it is
+      // dissecting (see `MOIRAI_HOST_CF` in dispatch-validate.ts).
       //
+      // Aggregate pre-flight: validateFusionDispatch runs per-entry
+      // validateDispatchParams via the documented cf-binding escape hatch.
+      // Refusing the whole pass on any malformed entry upholds the
+      // no-partial-fanout invariant (same dialectic as parallel dispatch).
+      const dispatchesWithVak = plan.dispatches.map((d) => ({
+        d,
+        vak: buildMoiraiVak(MOIRAI_HOST_CF[d.agent]),
+      }));
+      const sharedTask = `Moirai Night' rehearing pass on ${params.disclosure_path} for session ${params.session_id}`;
+      const fusionValidation = validateFusionDispatch({
+        task: sharedTask,
+        dispatches: dispatchesWithVak.map(({ d, vak }) => ({
+          agent_name: d.agent,
+          vak_address: vak,
+        })),
+      });
+      if (!fusionValidation.ok) {
+        return {
+          content: [{ type: "text", text: `dispatch_moirai_night_pass refused: ${fusionValidation.error}` }],
+          isError: true,
+        };
+      }
+
       // We use Promise.allSettled (semantically equivalent to Promise.all
       // here, since `dispatchTeamMember` resolves — never rejects — even on
       // subprocess error, prefixing the output with "Error:") for clarity:
       // it makes explicit that we expect to classify every result rather
       // than fail the whole tool on the first rejection. Each output is
       // then run through `classifyMoiraiOutput` and the section header
-      // surfaces the per-agent status (ok / failed / empty / refused).
+      // surfaces the per-agent status (ok / failed / empty).
       // If any Moirai is non-ok the tool return carries `isError: true`
       // so callers can detect partial failure without parsing the body.
       const settled = await Promise.allSettled(
-        plan.dispatches.map(async (d) => {
-          const vak: VakAddress = {
-            cpf: "(4.0/1-4.4/5)",
-            ct: ["CT5"],
-            cp: "CP4.5",
-            cf: MOIRAI_CF[d.agent],
-            cfp: "CFP3",
-            cs: { code: "CS0", direction: "Night'" },
-          };
-          const validation = validateDispatchParams({
-            agent_name: d.agent,
-            task: d.task,
-            vak_address: vak,
-          });
-          if (!validation.ok) {
-            return { d, output: `[refused] ${validation.error}`, status: "refused" as const };
-          }
+        dispatchesWithVak.map(async ({ d, vak }) => {
           const out = await dispatchTeamMember(d.agent, d.task, vak);
           return { d, output: out, status: classifyMoiraiOutput(out) };
         }),

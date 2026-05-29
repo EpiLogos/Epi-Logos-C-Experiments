@@ -1,5 +1,6 @@
 import { isValidVakAddress, type VakAddress, type CfLiteral, type CpfPolarity } from "../../shared/vak_address.ts";
 import { matchGateTrigger, type GateTrigger, type GateName } from "../../S4-5p-aletheia/modules/gate-trigger.ts";
+import type { MoiraiAgent } from "./moirai-dispatch.ts";
 
 /**
  * Canonical CF assignments for the constitutional 7-fold roster:
@@ -17,8 +18,9 @@ import { matchGateTrigger, type GateTrigger, type GateName } from "../../S4-5p-a
  * gate in `validateDispatchParams` short-circuits when the name is absent
  * from this map. This is the documented escape hatch for parallel rosters
  * that ride the same VAK plumbing without being part of the constitutional
- * seven — see `Body/S/S4/ta-onta/S4-4p-anima/extension.ts` (`MOIRAI_CF`) for
- * the parallel-roster pattern.
+ * seven — see `MOIRAI_HOST_CF` below for the subagent-roster pattern and
+ * `validateFusionDispatch` for the documented CFP3 entry point that
+ * exploits the bypass.
  */
 export const AGENT_CF: Record<string, CfLiteral> = {
   nous: "(00/00)",
@@ -28,6 +30,28 @@ export const AGENT_CF: Record<string, CfLiteral> = {
   psyche: "(4.5/0)",
   sophia: "(5/0)",
   anima: "(4.0/1-4.4/5)",
+};
+
+/**
+ * Moirai subagent → host constitutional CF mapping.
+ *
+ * Klotho, Lachesis, Atropos are Aletheia subagents — NOT first-class
+ * constitutional agents. They inherit the CF of the constitutional territory
+ * they dissect during the Night' rehearing pass:
+ *
+ *   - klotho   → (0/1/2)         Eros   (traces / P1' fates spun)
+ *   - lachesis → (4.0/1-4.4/5)   Anima  (sources / P4' measured)
+ *   - atropos  → (5/0)           Sophia (crystallisations / P5' cut)
+ *
+ * Deliberately NOT included in `AGENT_CF` (the constitutional 7-fold roster) —
+ * the validator's `if (expected && ...)` gate intentionally skips cf-binding
+ * enforcement for these names. See `validateFusionDispatch` for the documented
+ * escape hatch used by `dispatch_moirai_night_pass`.
+ */
+export const MOIRAI_HOST_CF: Record<MoiraiAgent, CfLiteral> = {
+  klotho: "(0/1/2)",
+  lachesis: "(4.0/1-4.4/5)",
+  atropos: "(5/0)",
 };
 
 /**
@@ -104,8 +128,9 @@ function isDialogical(params: DispatchParams): boolean {
  *     - Moirai subagents (`klotho` / `lachesis` / `atropos`) dispatched
  *       under Aletheia by `dispatch_moirai_night_pass` in
  *       `Body/S/S4/ta-onta/S4-4p-anima/extension.ts`. Their per-agent cf
- *       comes from the parallel `MOIRAI_CF` map, not `AGENT_CF`, so the
- *       roster check here would falsely reject canonical dispatches.
+ *       comes from the `MOIRAI_HOST_CF` subagent-roster map (above), not
+ *       `AGENT_CF`, so the roster check here would falsely reject
+ *       canonical dispatches.
  *
  *     - The `_cfp3_fusion` sentinel passed by `dispatch_fusion_agents` to
  *       validate the aggregate vak_address before fanning the individual
@@ -168,6 +193,59 @@ export function validateParallelDispatch(input: { tasks: DispatchParams[] }): Va
       return {
         ok: false,
         error: `dispatch_parallel_agents requires CFP1 on every task (task for agent ${t.agent_name} declared ${t.vak_address!.cfp})`,
+      };
+    }
+  }
+  return { ok: true };
+}
+
+export interface FusionDispatchEntry {
+  agent_name: string;
+  vak_address?: VakAddress;
+}
+
+/**
+ * Validate a fusion (CFP3) dispatch — one task fanned out to many agents.
+ *
+ * Distinct from parallel (CFP1) dispatch: fusion is "one shared task, many
+ * agents working in coordinated rehearsal"; parallel is "many independent
+ * tasks". Fusion entries share a single task brief but each agent receives
+ * its own VAK address.
+ *
+ * Two known consumers exploit the cf-binding escape hatch via this path:
+ *   - `dispatch_moirai_night_pass` — klotho/lachesis/atropos with
+ *     `MOIRAI_HOST_CF`-derived per-agent cf
+ *   - `dispatch_fusion_agents`     — the `_cfp3_fusion` synthetic-name sentinel
+ *
+ * Both rely on `validateDispatchParams` accepting non-constitutional agent
+ * names (those absent from `AGENT_CF`) — the validator only enforces canonical
+ * VAK shape via `isValidVakAddress` for these names, not agent/cf binding.
+ *
+ * @param input.task       shared task brief for all entries
+ * @param input.dispatches per-agent dispatch entries with their VAK addresses
+ * @returns ok=true if every entry passes `validateDispatchParams`; ok=false
+ *          with the first failing entry's error otherwise
+ */
+export function validateFusionDispatch(input: {
+  task: string;
+  dispatches: FusionDispatchEntry[];
+}): ValidationResult {
+  if (!input.task || input.task.trim().length === 0) {
+    return { ok: false, error: "fusion dispatch requires a non-empty task" };
+  }
+  if (input.dispatches.length === 0) {
+    return { ok: false, error: "fusion dispatch requires at least one entry" };
+  }
+  for (const entry of input.dispatches) {
+    const result = validateDispatchParams({
+      agent_name: entry.agent_name,
+      task: input.task,
+      vak_address: entry.vak_address,
+    });
+    if (!result.ok) {
+      return {
+        ok: false,
+        error: `fusion entry for agent '${entry.agent_name}': ${result.error}`,
       };
     }
   }
