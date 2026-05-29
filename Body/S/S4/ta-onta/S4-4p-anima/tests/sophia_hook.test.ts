@@ -5,13 +5,16 @@ import { isValidVakAddress } from "../../shared/vak_address.ts";
 
 describe("Sophia post-execution hook", () => {
   it("builds a disclosure from session end state", () => {
+    // Aligned with what rehearPhaseVakAddress() actually produces in the wire path
+    // (CS0/Night' — analytic synthesis at Möbius return). The previous CS5/Day
+    // fixture was canonically valid but did not match the system's output.
     const final_vak = {
       cpf: "(4.0/1-4.4/5)" as const,
       ct: ["CT5"] as const,
       cp: "CP4.5" as const,
       cf: "(5/0)" as const,
-      cfp: "CFP0" as const,
-      cs: { code: "CS5" as const, direction: "Day" as const },
+      cfp: "CFP3" as const,
+      cs: { code: "CS0" as const, direction: "Night'" as const },
     };
     assert.ok(isValidVakAddress(final_vak), "fixture final VAK is canonical");
 
