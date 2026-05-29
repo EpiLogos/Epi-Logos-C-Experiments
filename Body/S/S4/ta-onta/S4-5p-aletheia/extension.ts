@@ -4,6 +4,8 @@ import { spawnSync } from "node:child_process";
 import { buildTemporalContextEnvelope, adjustKairosThreshold, coordinateMobiusReturn } from "./modules/chronos-integration.ts";
 import { buildTemplateInvocation, refreshTopology, validateHenSync } from "./modules/hen-integration.ts";
 import { maybeUpdateCoordinateMap } from "./modules/coordinate-loop.ts";
+import { renderThoughtFrontmatter } from "./modules/thought-vak.ts";
+import { isValidVakAddress } from "../shared/vak_address.ts";
 
 function resolveNotebookName(name: string, scope?: string, sessionId?: string, family?: string) {
   const parts: string[] = [];
@@ -246,7 +248,7 @@ export async function aletheiaExtension(api: ExtensionAPI) {
   api.registerTool({
     name: "aletheia_thought_route",
     label: "Aletheia Thought Route",
-    description: "Classify thought artifact and route to T{n} bucket in /Pratibimba/Self/Thought/. T0=questions, T1=traces, T2=challenges, T3=patterns, T4=discoveries, T5=insights.",
+    description: "Classify thought artifact and route to T{n} bucket in /Pratibimba/Self/Thought/. T0=questions, T1=traces, T2=challenges, T3=patterns, T4=discoveries, T5=insights. When EPI_SESSION_VAK_ADDRESS env is present and validates, the persisted artifact body is prefixed with canonical VAK frontmatter (cpf/ct/cp/cf/cfp/cs_*) recording the producing coordinate. Dialogical-mode dispatches (no VAK in env) persist the raw content without VAK keys.",
     parameters: Type.Object({
       content: Type.String({ description: "Thought content to archive" }),
       position: Type.Integer({ minimum: 0, maximum: 5, description: "T-bucket position (0-5)" }),
@@ -255,9 +257,36 @@ export async function aletheiaExtension(api: ExtensionAPI) {
         description: "Bimba coordinate refs (e.g. ['M4-3','T3','S1'])",
       })),
       now_path: Type.Optional(Type.String({ description: "Source NOW folder path" })),
+      summary: Type.Optional(Type.String({ description: "Short summary for VAK frontmatter (falls back to first line of content)" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const args = ["vault", "thought-route", "--position", String(params.position), "--content", params.content];
+      // VAK-aware prefix path: when EPI_SESSION_VAK_ADDRESS is present and
+      // validates, prepend canonical VAK frontmatter to the persisted body
+      // so the T-bucket artifact carries its producing coordinate. Falls
+      // through silently to raw content on any parse/validation failure —
+      // dialogical-mode dispatches (no VAK in env) have no obligation to
+      // carry VAK and persist as-is.
+      const bucket = `T${params.position}`;
+      let content: string = params.content;
+      const vakJson = process.env.EPI_SESSION_VAK_ADDRESS;
+      if (vakJson) {
+        try {
+          const parsed = JSON.parse(vakJson);
+          if (isValidVakAddress(parsed)) {
+            const summary = (params.summary && String(params.summary).trim())
+              || String(params.content).split("\n", 1)[0].slice(0, 200);
+            const fm = renderThoughtFrontmatter({
+              bucket,
+              summary,
+              vak_address: parsed,
+            });
+            content = `${fm}${params.content}`;
+          }
+        } catch {
+          // Malformed env or non-VAK content — fall through to raw content.
+        }
+      }
+      const args = ["vault", "thought-route", "--position", String(params.position), "--content", content];
       if (params.session_id) args.push("--session-id", params.session_id);
       if (params.source_coordinates?.length) {
         for (const coord of params.source_coordinates) {
