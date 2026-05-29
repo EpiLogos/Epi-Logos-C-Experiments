@@ -6,6 +6,7 @@ import { join, basename } from "node:path";
 // cross-agent disabled: Claude/Gemini/Codex @-discovery not needed for pi-native agent dispatch
 // import registerCrossAgent from "./S0'/cross-agent.ts";
 import registerSystemSelect from "./S0'/system-select.ts";
+import { composePhaseVakAddress } from "./modules/z-phase-vak.ts";
 
 // Session state singleton (persists within a PI process)
 let _sessionId: string | null = null;
@@ -162,7 +163,24 @@ export async function khoraExtension(api: ExtensionAPI) {
     const dayInit = spawnSync("epi", ["vault", "day-init"], { encoding: "utf8" });
     if (dayInit.status !== 0) console.warn(`[khora] day-init: ${dayInit.stderr?.trim()}`);
 
-    // 4. Initialize the Khora session (idempotent: reuses today's session if already started)
+    // 4. Z-cycle COMPOSE phase fires here — the dialogical Nous-clearing entry state.
+    //    Export EPI_SESSION_VAK_ADDRESS so child processes (Anima dispatches, Aletheia
+    //    thoughts, Hen template renders) inherit the initial VAK before any task is bound.
+    //    See: Body/S/S4/ta-onta/S4-0p-khora/modules/z-phase-vak.ts and the Z-thread
+    //    docstring in docs/superpowers/plans/2026-05-22-vak-as-operational-substrate.md.
+    //
+    //    NOTE (gateway patch deferred): the SessionRecord.vak_address field exists on the
+    //    Rust side (A2 / commit cfdafb1b) and `sessions.patch` JSON-RPC handler in
+    //    Body/S/S0/epi-cli/src/gate/server.rs needs to be extended to accept a
+    //    `vak_address` param. Once that's wired + an `epi gate sessions patch` CLI lands
+    //    (or a TS gateway-RPC client is available here), call it here with
+    //    `{ vak_address: composeVak }` so the gateway record matches the env-propagated VAK.
+    //    For now, env-propagation is the load-bearing channel (consumed by A5 in
+    //    Body/S/S4/ta-onta/S4-4p-anima/extension.ts line 62, etc.).
+    const composeVak = composePhaseVakAddress();
+    process.env.EPI_SESSION_VAK_ADDRESS = JSON.stringify(composeVak);
+
+    // 5. Initialize the Khora session (idempotent: reuses today's session if already started)
     const initResult = spawnSync("epi", ["agent", "session", "init"], { encoding: "utf8" });
     if (initResult.status === 0) {
       for (const line of initResult.stdout.split("\n")) {
@@ -178,7 +196,7 @@ export async function khoraExtension(api: ExtensionAPI) {
         }
       }
 
-      // 5. Create NOW folder structure from template (thinking/thoughts/tasks/patterns + rendered now.md).
+      // 6. Create NOW folder structure from template (thinking/thoughts/tasks/patterns + rendered now.md).
       // Uses vault now-init which renders Idea/Bimba/World/NOW.md — overwrites any previous stub.
       if (_sessionId) {
         const nowInit = spawnSync("epi", ["vault", "now-init", "--session-id", _sessionId], { encoding: "utf8" });
