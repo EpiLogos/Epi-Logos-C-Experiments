@@ -13,6 +13,7 @@ path = "src/lib.rs"
 epi-s2-graph-schema = { path = "../graph-schema" }
 epi-s3-gateway-contract = { path = "../../S3/gateway-contract" }
 epi-s3-redis-context = { path = "../../S3/redis-context" }
+portal-core = { path = "../../S0/portal-core" }
 neo4rs = "0.9.0-rc.9"
 reqwest = { version = "0.12", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }

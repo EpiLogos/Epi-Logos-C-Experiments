@@ -328,6 +328,33 @@ impl PromotionPlan {
         Self::new(coordinate, artifact_kind)
     }
 
+    /// Absorb a `portal_core::VakAddress` into the plan's properties map under
+    /// the canonical VAK prefix keys (`cpf`, `ct`, `cp`, `cf`, `cfp`,
+    /// `cs_code`, `cs_direction`). Sophia-promoted artifacts inherit their
+    /// producing VAK address this way.
+    ///
+    /// Leans on the serde `rename` markers on [`portal_core::CpfState`] and
+    /// [`portal_core::CsDirection`] so the canonical wire literals — `(00/00)`,
+    /// `(4.0/1-4.4/5)`, `Night'` — survive round-trip into the property map.
+    pub fn attach_vak_address(&mut self, vak: &portal_core::VakAddress) {
+        if let Ok(value) = serde_json::to_value(&vak.cpf) {
+            self.properties.insert("cpf".to_owned(), value);
+        }
+        self.properties
+            .insert("ct".to_owned(), serde_json::json!(vak.ct));
+        self.properties
+            .insert("cp".to_owned(), Value::String(vak.cp.clone()));
+        self.properties
+            .insert("cf".to_owned(), Value::String(vak.cf.clone()));
+        self.properties
+            .insert("cfp".to_owned(), Value::String(vak.cfp.clone()));
+        self.properties
+            .insert("cs_code".to_owned(), Value::String(vak.cs.code.clone()));
+        if let Ok(value) = serde_json::to_value(&vak.cs.direction) {
+            self.properties.insert("cs_direction".to_owned(), value);
+        }
+    }
+
     pub fn node_upsert_cypher(&self) -> String {
         let label_clause = if self.labels.is_empty() {
             String::new()

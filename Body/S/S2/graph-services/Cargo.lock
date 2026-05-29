@@ -296,6 +296,7 @@ dependencies = [
  "epi-s3-gateway-contract",
  "epi-s3-redis-context",
  "neo4rs",
+ "portal-core",
  "reqwest",
  "serde",
  "serde_json",
@@ -310,6 +311,7 @@ name = "epi-s3-gateway-contract"
 version = "0.1.0"
 dependencies = [
  "epi-kernel-contract",
+ "portal-core",
  "serde",
  "serde_json",
  "uuid",
@@ -1077,6 +1079,7 @@ name = "portal-core"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "serde_json",
 ]
 
 [[package]]
