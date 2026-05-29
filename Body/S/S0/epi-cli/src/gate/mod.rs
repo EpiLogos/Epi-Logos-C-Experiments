@@ -103,6 +103,30 @@ pub enum GateCmd {
         #[command(subcommand)]
         cmd: GateSessionsCmd,
     },
+    /// Dispatch a request to a gateway multi-session endpoint
+    /// (e.g. route_anima_invoke). Mirrors C1/C2 follow-up pattern —
+    /// operates directly on the local SessionStore.
+    Dispatch {
+        #[command(subcommand)]
+        cmd: GateDispatchCmd,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum GateDispatchCmd {
+    /// Invoke another Anima session via `route_anima_invoke` (D2 endpoint).
+    ///
+    /// Closes the D3 follow-up CLI-bridge gap: TS tools `anima_self_invoke`
+    /// (S4-4p-anima) and `epii_invoke_anima` (S4-5p-aletheia) build the
+    /// canonical payload via `buildAnimaInvokePayload` and shell out here
+    /// to actually post it to the gateway.
+    AnimaInvoke {
+        /// JSON-encoded `epi_s3_gateway::dispatch::AnimaInvokeRequest`. Must
+        /// include `target_session_key`, `task`, and `vak_address`. Malformed
+        /// JSON exits non-zero. Unknown target session exits non-zero.
+        #[arg(long)]
+        payload_json: String,
+    },
 }
 
 #[derive(Subcommand)]
@@ -280,6 +304,27 @@ pub async fn dispatch(cmd: &GateCmd, json: bool) -> Result<String, String> {
             GraphitiCmd::Status => graphiti::status(json).await,
         },
         GateCmd::Sessions { cmd } => dispatch_sessions(cmd, json),
+        GateCmd::Dispatch { cmd } => dispatch_dispatch(cmd, json),
+    }
+}
+
+fn dispatch_dispatch(cmd: &GateDispatchCmd, json: bool) -> Result<String, String> {
+    let state_root = config::gate_root_from_env()?;
+    let store = sessions::SessionStore::new(&state_root)?;
+    match cmd {
+        GateDispatchCmd::AnimaInvoke { payload_json } => {
+            let req: epi_s3_gateway::dispatch::AnimaInvokeRequest =
+                serde_json::from_str(payload_json)
+                    .map_err(|err| format!("invalid --payload-json: {err}"))?;
+            let resp = epi_s3_gateway::dispatch::route_anima_invoke(&store, req)
+                .map_err(|err| format!("route_anima_invoke failed: {err}"))?;
+            let value = serde_json::to_value(&resp).map_err(|err| err.to_string())?;
+            if json {
+                serde_json::to_string_pretty(&value).map_err(|err| err.to_string())
+            } else {
+                serde_json::to_string(&value).map_err(|err| err.to_string())
+            }
+        }
     }
 }
 

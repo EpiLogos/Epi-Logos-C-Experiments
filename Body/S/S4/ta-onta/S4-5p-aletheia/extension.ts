@@ -1018,22 +1018,44 @@ ${questions || "<!-- No questions carried forward -->"}
         vak_address: vak,
       });
 
-      // TODO(d2-cli-bridge): same gap as anima_self_invoke — epi-cli lacks
-      // `epi gate dispatch anima-invoke`. The pure builder + this tool
-      // registration are the agent-facing surface; when the CLI bridge lands,
-      // replace this stub with the real call to the gateway's
-      // route_anima_invoke endpoint (Body/S/S3/gateway/src/dispatch.rs,
-      // gateway commit 89f7943).
+      // D3 follow-up: shell out to `epi gate dispatch anima-invoke` which
+      // routes the payload through the gateway's route_anima_invoke endpoint
+      // (Body/S/S3/gateway/src/dispatch.rs, gateway commit 89f7943).
+      const result = spawnSync(
+        "epi",
+        ["gate", "dispatch", "anima-invoke", "--payload-json", JSON.stringify(payload)],
+        { encoding: "utf8" },
+      );
+
+      if (result.status !== 0) {
+        return {
+          content: [{
+            type: "text",
+            text: `gateway anima-invoke failed: ${result.stderr || "non-zero exit"}`,
+          }],
+          isError: true,
+        };
+      }
+
+      let parsedResponse: { dispatched_to: string; task_queued: boolean } | undefined;
+      try {
+        parsedResponse = JSON.parse(result.stdout);
+      } catch {
+        return {
+          content: [{
+            type: "text",
+            text: `gateway returned non-JSON: ${result.stdout}`,
+          }],
+          isError: true,
+        };
+      }
+
       return {
         content: [{
           type: "text",
-          text: JSON.stringify({
-            ok: false,
-            reason: "gateway CLI bridge not yet wired (d2-cli-bridge)",
-            payload,
-          }, null, 2),
+          text: `Anima invoke dispatched: ${parsedResponse?.dispatched_to ?? "<unknown>"} (queued=${parsedResponse?.task_queued ?? false})`,
         }],
-        details: { payload },
+        details: { payload, response: parsedResponse },
       };
     },
   });
