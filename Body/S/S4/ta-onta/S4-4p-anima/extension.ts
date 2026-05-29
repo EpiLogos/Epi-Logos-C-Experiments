@@ -6,6 +6,8 @@ import registerAgentTeam from "./S4/agent-team.ts";
 import registerAgentChain from "./S4/agent-chain.ts";
 import registerSubagentWidget from "./S4/subagent-widget.ts";
 import registerPiPi from "./S4/pi-pi.ts";
+import { validateDispatchParams } from "./modules/dispatch-validate.ts";
+import type { VakAddress } from "../shared/vak_address.ts";
 
 type CS = "CS0" | "CS1" | "CS2" | "CS3" | "CS4" | "CS5";
 type CSDirectionality = "day" | "night_prime";
@@ -43,7 +45,11 @@ function runEpi(args: string[], timeout = 120_000) {
 
 // Dispatch a single agent task via the native team runtime (epi agent team dispatch).
 // Returns a Promise so callers can fan-out concurrently with Promise.all.
-function dispatchTeamMember(agentName: string, task: string): Promise<string> {
+// vak_address is REQUIRED — every dispatch must carry its causal address (A5).
+// Callers must pre-validate via validateDispatchParams; this function trusts its input.
+// The address is forwarded to the child via EPI_SESSION_VAK_ADDRESS so downstream
+// tools (Hen template render, future VAK-aware tools) can read it.
+function dispatchTeamMember(agentName: string, task: string, vakAddress?: VakAddress): Promise<string> {
   const parentSession = process.env.EPI_PARENT_SESSION || "agent:main:main";
   const args = [
     "--json", "agent", "team", "dispatch",
@@ -51,10 +57,14 @@ function dispatchTeamMember(agentName: string, task: string): Promise<string> {
     "--agent", agentName,
     "--task", task,
   ];
+  const childEnv: NodeJS.ProcessEnv = { ...process.env };
+  if (vakAddress) {
+    childEnv.EPI_SESSION_VAK_ADDRESS = JSON.stringify(vakAddress);
+  }
   return new Promise((resolve) => {
     const proc = spawn("epi", args, {
       stdio: ["ignore", "pipe", "pipe"],
-      env: { ...process.env },
+      env: childEnv,
       cwd: process.env.EPI_REPO_ROOT || process.cwd(),
     });
     let stdout = "";
@@ -325,12 +335,31 @@ export async function animaExtension(api: ExtensionAPI) {
       tasks: Type.Array(Type.Object({
         task: Type.String(),
         agent_name: Type.String(),
+        // vak_address opaque to TypeBox — validator is source of truth so error messages
+        // are domain-friendly rather than schema-shaped. Required per A5: no fire without address.
+        vak_address: Type.Optional(Type.Any()),
       })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      // Gate every sub-dispatch before any fire. One bad address aborts the whole CFP1 fan-out
+      // (refusing partial-state writes upholds the address-causality invariant).
+      const tasks = params.tasks as Array<{ task: string; agent_name: string; vak_address?: VakAddress }>;
+      for (const t of tasks) {
+        const validation = validateDispatchParams({
+          agent_name: t.agent_name,
+          task: t.task,
+          vak_address: t.vak_address,
+        });
+        if (!validation.ok) {
+          return {
+            content: [{ type: "text", text: `dispatch refused (agent=${t.agent_name}): ${validation.error}` }],
+            isError: true,
+          };
+        }
+      }
       const results = await Promise.all(
-        params.tasks.map(({ task, agent_name }: { task: string; agent_name: string }) =>
-          dispatchTeamMember(agent_name, task).then((out) => `## ${agent_name}\n${out}`)
+        tasks.map(({ task, agent_name, vak_address }) =>
+          dispatchTeamMember(agent_name, task, vak_address).then((out) => `## ${agent_name}\n${out}`)
         )
       );
       return { content: [{ type: "text", text: results.join("\n\n") }] };
@@ -344,11 +373,28 @@ export async function animaExtension(api: ExtensionAPI) {
     parameters: Type.Object({
       task: Type.String(),
       agents: Type.Array(Type.String()),
+      // vak_address opaque to TypeBox — validator gates it. Required per A5.
+      // For CFP3 fusion the address describes the joint task, not per-agent CF;
+      // the validator's AGENT_CF check is skipped for the fusion aggregate
+      // by passing a synthetic agent_name "_cfp3_fusion" which is not in the roster.
+      vak_address: Type.Optional(Type.Any()),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      const vakAddress = params.vak_address as VakAddress | undefined;
+      const validation = validateDispatchParams({
+        agent_name: "_cfp3_fusion",
+        task: params.task,
+        vak_address: vakAddress,
+      });
+      if (!validation.ok) {
+        return {
+          content: [{ type: "text", text: `dispatch refused: ${validation.error}` }],
+          isError: true,
+        };
+      }
       const outputs = await Promise.all(
         params.agents.map((agent: string) =>
-          dispatchTeamMember(agent, params.task).then((out) => `### ${agent}\n${out}`)
+          dispatchTeamMember(agent, params.task, vakAddress).then((out) => `### ${agent}\n${out}`)
         )
       );
       return {
