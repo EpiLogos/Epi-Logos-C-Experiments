@@ -1,5 +1,21 @@
 use epi_s5_epii_autoresearch_core::inbox::{InboxEntry, InboxStore};
+use portal_core::{CpfState, CsDirection, CsField, VakAddress};
+use std::collections::BTreeMap;
 use tempfile::tempdir;
+
+fn sample_vak() -> VakAddress {
+    VakAddress {
+        cpf: CpfState::Mechanistic,
+        ct: vec!["CT5".into()],
+        cp: "CP4.5".into(),
+        cf: "(5/0)".into(),
+        cfp: "CFP0".into(),
+        cs: CsField {
+            code: "CS0".into(),
+            direction: CsDirection::Night,
+        },
+    }
+}
 
 fn sample_entry(session_id: &str) -> InboxEntry {
     InboxEntry {
@@ -7,82 +23,108 @@ fn sample_entry(session_id: &str) -> InboxEntry {
         source: "aletheia_sophia_ingest".into(),
         session_id: session_id.into(),
         day_id: "22-05-2026".into(),
-        improvement_vectors: vec!["v1".into()],
-        raw: serde_json::json!({"final_vak": "stub"}),
+        final_vak: sample_vak(),
+        improvement_vectors: vec!["consider X".into()],
+        moirai_summary: BTreeMap::from([("klotho".into(), "traces".into())]),
+        artifacts: vec!["/vault/note.md".into()],
     }
 }
 
 #[test]
-fn inbox_persists_and_lists_entries() {
+fn append_then_list_returns_one_entry_with_line_derived_id() {
     let tmp = tempdir().unwrap();
     let store = InboxStore::new(tmp.path()).unwrap();
-
     let id = store.append(sample_entry("agent:test:main")).unwrap();
+    assert_eq!(id, "agent:test:main#L0");
     let listed = store.list_pending().unwrap();
-
     assert_eq!(listed.len(), 1);
-    assert_eq!(listed[0].id, id);
-    assert_eq!(listed[0].entry.session_id, "agent:test:main");
-    assert_eq!(listed[0].entry.kind, "epii_autoresearch_inbox_entry");
-    assert_eq!(listed[0].entry.source, "aletheia_sophia_ingest");
+    assert_eq!(listed[0].id, "agent:test:main#L0");
+    assert_eq!(listed[0].entry.final_vak.cf, "(5/0)");
+    assert_eq!(listed[0].entry.final_vak.cs.direction, CsDirection::Night);
+    assert_eq!(
+        listed[0].entry.moirai_summary.get("klotho").unwrap(),
+        "traces"
+    );
 }
 
 #[test]
-fn inbox_id_is_unique_across_repeated_appends_for_same_session() {
-    // Aletheia (C4) uses appendFileSync — same session may write multiple
-    // entries. Each must land as a distinct file in the store.
+fn repeated_appends_grow_session_jsonl_with_distinct_line_ids() {
     let tmp = tempdir().unwrap();
     let store = InboxStore::new(tmp.path()).unwrap();
-
     let id1 = store.append(sample_entry("agent:repeat:1")).unwrap();
     let id2 = store.append(sample_entry("agent:repeat:1")).unwrap();
-
-    assert_ne!(id1, id2, "uuid disambiguates same-session appends");
+    assert_eq!(id1, "agent:repeat:1#L0");
+    assert_eq!(id2, "agent:repeat:1#L1");
     let listed = store.list_pending().unwrap();
     assert_eq!(listed.len(), 2);
 }
 
 #[test]
-fn inbox_sanitises_unsafe_chars_in_session_id_for_filename() {
-    // session_id like "agent:test:main" must not produce a colon-bearing
-    // filename (cross-platform safety).
+fn list_aggregates_across_multiple_session_files() {
     let tmp = tempdir().unwrap();
     let store = InboxStore::new(tmp.path()).unwrap();
+    store.append(sample_entry("agent:s1")).unwrap();
+    store.append(sample_entry("agent:s2")).unwrap();
+    let listed = store.list_pending().unwrap();
+    assert_eq!(listed.len(), 2);
+    // Deterministic order via filename sort
+    assert_eq!(listed[0].id, "agent:s1#L0");
+    assert_eq!(listed[1].id, "agent:s2#L0");
+}
 
-    let id = store.append(sample_entry("agent:slash/colon")).unwrap();
-    // The id is used in the filename; assert no raw : or / survived
-    assert!(!id.contains(':'), "colon must be replaced for filename safety");
-    assert!(!id.contains('/'), "slash must be replaced for filename safety");
-
+#[test]
+fn list_pending_reads_actual_c4_wire_format() {
+    // Simulate Aletheia's actual write — JSONL line, top-level fields, compact form.
+    let tmp = tempdir().unwrap();
+    let store = InboxStore::new(tmp.path()).unwrap();
+    let aletheia_written = r#"{"kind":"epii_autoresearch_inbox_entry","source":"aletheia_sophia_ingest","session_id":"agent:c4test:main","day_id":"22-05-2026","final_vak":{"cpf":"(4.0/1-4.4/5)","ct":["CT5"],"cp":"CP4.5","cf":"(5/0)","cfp":"CFP0","cs":{"code":"CS0","direction":"Night'"}},"improvement_vectors":["v1"],"moirai_summary":{"klotho":"k","lachesis":"l","atropos":"a"},"artifacts":["/x"]}"#;
+    std::fs::write(
+        tmp.path().join("agent:c4test:main.jsonl"),
+        format!("{aletheia_written}\n"),
+    )
+    .unwrap();
     let listed = store.list_pending().unwrap();
     assert_eq!(listed.len(), 1);
-    assert_eq!(
-        listed[0].entry.session_id, "agent:slash/colon",
-        "data preserved even when filename is sanitised"
-    );
+    assert_eq!(listed[0].id, "agent:c4test:main#L0");
+    assert_eq!(listed[0].entry.final_vak.cf, "(5/0)");
+    assert_eq!(listed[0].entry.moirai_summary.len(), 3);
+    assert_eq!(listed[0].entry.artifacts, vec!["/x".to_string()]);
 }
 
 #[test]
-fn inbox_skips_non_json_files_in_root() {
+fn list_pending_skips_non_jsonl_files() {
     let tmp = tempdir().unwrap();
     let store = InboxStore::new(tmp.path()).unwrap();
-    store.append(sample_entry("agent:filter:test")).unwrap();
-
-    // Pollute with a non-json file
-    std::fs::write(tmp.path().join("README.md"), "not an inbox entry").unwrap();
-
+    store.append(sample_entry("agent:filter")).unwrap();
+    std::fs::write(tmp.path().join("README.md"), "not an entry").unwrap();
+    std::fs::write(tmp.path().join("notes.json"), "{}").unwrap();
     let listed = store.list_pending().unwrap();
-    assert_eq!(listed.len(), 1, "non-.json files ignored");
+    assert_eq!(listed.len(), 1);
 }
 
 #[test]
-fn inbox_returns_error_when_listing_fails_to_parse() {
+fn list_pending_surfaces_parse_failure() {
     let tmp = tempdir().unwrap();
     let store = InboxStore::new(tmp.path()).unwrap();
+    std::fs::write(tmp.path().join("bogus.jsonl"), "{ not valid json\n").unwrap();
+    assert!(store.list_pending().is_err());
+}
 
-    // Write a malformed .json file directly into the root
-    std::fs::write(tmp.path().join("inbox_bogus_xyz.json"), "{ not valid json").unwrap();
-
-    let result = store.list_pending();
-    assert!(result.is_err(), "list_pending surfaces parse failures");
+#[test]
+fn list_pending_ignores_empty_lines() {
+    // Documented semantics: line indexes count among NON-EMPTY lines only,
+    // so blank lines do not consume an id slot. This keeps ids stable when
+    // whitespace-only lines are added or removed.
+    let tmp = tempdir().unwrap();
+    let store = InboxStore::new(tmp.path()).unwrap();
+    let entry = serde_json::to_string(&sample_entry("agent:blanks")).unwrap();
+    std::fs::write(
+        tmp.path().join("agent:blanks.jsonl"),
+        format!("\n\n{entry}\n   \n{entry}\n"),
+    )
+    .unwrap();
+    let listed = store.list_pending().unwrap();
+    assert_eq!(listed.len(), 2);
+    assert_eq!(listed[0].id, "agent:blanks#L0");
+    assert_eq!(listed[1].id, "agent:blanks#L1");
 }
