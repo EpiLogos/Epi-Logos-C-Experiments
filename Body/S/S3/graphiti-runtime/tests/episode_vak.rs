@@ -17,13 +17,13 @@ fn episode_attrs_with_vak_carries_canonical_fields() {
     let attrs = EpisodeAttrs::with_vak(vak.clone());
     let serialised = serde_json::to_value(&attrs).expect("attrs serialise");
 
-    assert_eq!(serialised["c_4_cpf"], "(4.0/1-4.4/5)");
-    assert_eq!(serialised["c_1_ct"], serde_json::json!(["CT2"]));
-    assert_eq!(serialised["c_4_cp"], "CP4.2");
-    assert_eq!(serialised["c_4_cf"], "(0/1/2)");
-    assert_eq!(serialised["c_4_cfp"], "CFP2");
-    assert_eq!(serialised["c_4_cs"], "CS3");
-    assert_eq!(serialised["c_4_cs_direction"], "Day");
+    assert_eq!(serialised["cpf"], "(4.0/1-4.4/5)");
+    assert_eq!(serialised["ct"], serde_json::json!(["CT2"]));
+    assert_eq!(serialised["cp"], "CP4.2");
+    assert_eq!(serialised["cf"], "(0/1/2)");
+    assert_eq!(serialised["cfp"], "CFP2");
+    assert_eq!(serialised["cs_code"], "CS3");
+    assert_eq!(serialised["cs_direction"], "Day");
 }
 
 #[test]
@@ -41,7 +41,7 @@ fn episode_attrs_with_vak_uses_primed_night_for_pratibimba_direction() {
     };
     let attrs = EpisodeAttrs::with_vak(vak);
     let serialised = serde_json::to_value(&attrs).unwrap();
-    assert_eq!(serialised["c_4_cs_direction"], "Night'", "must use primed form");
+    assert_eq!(serialised["cs_direction"], "Night'", "must use primed form");
 }
 
 #[test]
@@ -75,9 +75,9 @@ fn episode_insert_carries_vak_attrs_through_serialisation() {
     assert_eq!(serialised["group_id"], "session:test:main");
     assert_eq!(serialised["body"], "test episode");
     // VAK fields flattened into the attrs object at top level of attrs (not nested):
-    assert_eq!(serialised["attrs"]["c_4_cf"], "(00/00)");
-    assert_eq!(serialised["attrs"]["c_4_cpf"], "(00/00)");
-    assert_eq!(serialised["attrs"]["c_4_cs_direction"], "Day");
+    assert_eq!(serialised["attrs"]["cf"], "(00/00)");
+    assert_eq!(serialised["attrs"]["cpf"], "(00/00)");
+    assert_eq!(serialised["attrs"]["cs_direction"], "Day");
 }
 
 #[test]

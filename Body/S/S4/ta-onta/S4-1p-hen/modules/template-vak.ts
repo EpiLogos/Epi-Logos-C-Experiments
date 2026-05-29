@@ -16,8 +16,9 @@ export interface TemplateRenderInput {
 /**
  * Render a Day/NOW template with the current VAK address injected as frontmatter.
  *
- * Field naming follows the canonical coordinate-driven convention:
- *   c_4_cpf, c_1_ct, c_4_cp, c_4_cf, c_4_cfp, c_4_cs, c_4_cs_direction
+ * Field naming follows the canonical VAK grammar — each layer is its own
+ * coordinate key (cpf, ct, cp, cf, cfp, cs_code, cs_direction) because VAK
+ * is S0' grammar in its own right, not C4/Type metadata.
  *
  * The cs_direction is split out from the nested cs object because Obsidian
  * frontmatter is flat YAML — nested objects don't render cleanly in property
@@ -47,14 +48,14 @@ export function renderTemplateWithVak(input: TemplateRenderInput): string {
     : "";
   return `---
 template_id: ${input.template_id}
-${dayIdLine}c_4_cpf: "${v.cpf}"
-c_1_ct:
+${dayIdLine}cpf: "${v.cpf}"
+ct:
 ${ctList}
-c_4_cp: ${v.cp}
-c_4_cf: "${v.cf}"
-c_4_cfp: ${v.cfp}
-c_4_cs: ${v.cs.code}
-c_4_cs_direction: ${v.cs.direction}
+cp: ${v.cp}
+cf: "${v.cf}"
+cfp: ${v.cfp}
+cs_code: ${v.cs.code}
+cs_direction: ${v.cs.direction}
 ---
 ${body}
 `;

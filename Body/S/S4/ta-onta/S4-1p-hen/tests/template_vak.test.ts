@@ -19,13 +19,13 @@ describe("hen template_invoke VAK injection", () => {
       day_id: "22-05-2026",
       vak_address: vak,
     });
-    assert.match(out, /c_4_cpf:\s*"\(4\.0\/1-4\.4\/5\)"/);
-    assert.match(out, /c_1_ct:\s*\n\s*-\s*CT4a/);
-    assert.match(out, /c_4_cp:\s*CP4\.4/);
-    assert.match(out, /c_4_cf:\s*"\(4\.0\/1-4\.4\/5\)"/);
-    assert.match(out, /c_4_cfp:\s*CFP0/);
-    assert.match(out, /c_4_cs:\s*CS0/);
-    assert.match(out, /c_4_cs_direction:\s*Day/);
+    assert.match(out, /cpf:\s*"\(4\.0\/1-4\.4\/5\)"/);
+    assert.match(out, /ct:\s*\n\s*-\s*CT4a/);
+    assert.match(out, /cp:\s*CP4\.4/);
+    assert.match(out, /cf:\s*"\(4\.0\/1-4\.4\/5\)"/);
+    assert.match(out, /cfp:\s*CFP0/);
+    assert.match(out, /cs_code:\s*CS0/);
+    assert.match(out, /cs_direction:\s*Day/);
     assert.match(out, /template_id:\s*daily-note/);
     assert.match(out, /day_id:\s*"22-05-2026"/);
   });
@@ -36,7 +36,7 @@ describe("hen template_invoke VAK injection", () => {
       day_id: "22-05-2026",
       vak_address: { ...vak, ct: ["CT0", "CT2", "CT5"] },
     });
-    assert.match(out, /c_1_ct:\s*\n\s*-\s*CT0\s*\n\s*-\s*CT2\s*\n\s*-\s*CT5/);
+    assert.match(out, /ct:\s*\n\s*-\s*CT0\s*\n\s*-\s*CT2\s*\n\s*-\s*CT5/);
   });
 
   it("emits primed Night' direction (canonical Pratibimba marker)", () => {
@@ -45,7 +45,7 @@ describe("hen template_invoke VAK injection", () => {
       day_id: "22-05-2026",
       vak_address: { ...vak, cs: { code: "CS5", direction: "Night'" } },
     });
-    assert.match(out, /c_4_cs_direction:\s*Night'/);
+    assert.match(out, /cs_direction:\s*Night'/);
   });
 
   it("appends optional body content after the frontmatter close", () => {

@@ -10,9 +10,10 @@ use std::collections::BTreeMap;
 
 /// Bag of episode attributes flattened into the episode payload.
 ///
-/// Built primarily via `with_vak(...)` which populates the c_4_* coordinate
-/// fields that downstream Bimba retrieval reads. Default-constructed is empty
-/// (no fields serialised), matching graphiti's pre-existing episode payloads.
+/// Built primarily via `with_vak(...)` which populates the canonical VAK
+/// coordinate fields (cpf, ct, cp, cf, cfp, cs_code, cs_direction) that
+/// downstream Bimba retrieval reads. Default-constructed is empty (no fields
+/// serialised), matching graphiti's pre-existing episode payloads.
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct EpisodeAttrs {
     #[serde(flatten)]
@@ -20,7 +21,11 @@ pub struct EpisodeAttrs {
 }
 
 impl EpisodeAttrs {
-    /// Populate canonical VAK c_4_* fields on the episode payload.
+    /// Populate canonical VAK fields on the episode payload.
+    ///
+    /// Field naming follows the canonical VAK grammar — each layer is its own
+    /// coordinate key (cpf, ct, cp, cf, cfp, cs_code, cs_direction) because VAK
+    /// is S0' grammar in its own right, not C4/Type metadata.
     ///
     /// Field mapping is byte-identical to the gateway SessionRecord, Hen
     /// frontmatter, and Aletheia T/T' frontmatter forms.
@@ -30,17 +35,17 @@ impl EpisodeAttrs {
             portal_core::CpfState::Dialogical => "(00/00)",
             portal_core::CpfState::Mechanistic => "(4.0/1-4.4/5)",
         };
-        kv.insert("c_4_cpf".into(), serde_json::json!(cpf_str));
-        kv.insert("c_1_ct".into(), serde_json::json!(vak.ct));
-        kv.insert("c_4_cp".into(), serde_json::json!(vak.cp));
-        kv.insert("c_4_cf".into(), serde_json::json!(vak.cf));
-        kv.insert("c_4_cfp".into(), serde_json::json!(vak.cfp));
-        kv.insert("c_4_cs".into(), serde_json::json!(vak.cs.code));
+        kv.insert("cpf".into(), serde_json::json!(cpf_str));
+        kv.insert("ct".into(), serde_json::json!(vak.ct));
+        kv.insert("cp".into(), serde_json::json!(vak.cp));
+        kv.insert("cf".into(), serde_json::json!(vak.cf));
+        kv.insert("cfp".into(), serde_json::json!(vak.cfp));
+        kv.insert("cs_code".into(), serde_json::json!(vak.cs.code));
         let dir = match vak.cs.direction {
             portal_core::CsDirection::Day => "Day",
             portal_core::CsDirection::Night => "Night'",
         };
-        kv.insert("c_4_cs_direction".into(), serde_json::json!(dir));
+        kv.insert("cs_direction".into(), serde_json::json!(dir));
         Self { kv }
     }
 }
