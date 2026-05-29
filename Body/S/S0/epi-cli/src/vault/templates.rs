@@ -58,10 +58,35 @@ pub fn render_template_with_vak(
     home_root: &Path,
     vak_address: Option<&VakAddress>,
 ) -> Result<String, String> {
+    render_template_with_vak_and_summary(context, repo_root, home_root, vak_address, None)
+}
+
+/// Render a template, optionally inlining a `summary:` line AND canonical
+/// VAK keys into the same `---...---` frontmatter block.
+///
+/// `summary` lands between the template-rendered fields and the VAK block
+/// (close to the template-emitted keys; not nested under VAK). YAML-quoting
+/// uses `serde_yaml::to_string` so embedded quotes, colons, newlines, and
+/// other YAML-significant characters round-trip safely.
+///
+/// `summary = None` → no `summary:` key emitted (matches the dialogical
+/// pass-through pattern used for `vak_address`).
+///
+/// When a World/template override matches, BOTH summary and VAK merging are
+/// skipped — the override is the authority for the artifact's frontmatter
+/// shape. This is consistent with
+/// `world_template_authority_precedes_built_in_template`.
+pub fn render_template_with_vak_and_summary(
+    context: &TemplateRenderContext,
+    repo_root: &Path,
+    home_root: &Path,
+    vak_address: Option<&VakAddress>,
+    summary: Option<&str>,
+) -> Result<String, String> {
     if let Some(body) = load_template_override(context, repo_root, home_root)? {
         return Ok(body);
     }
-    Ok(render_builtin_template(context, vak_address))
+    Ok(render_builtin_template(context, vak_address, summary))
 }
 
 fn load_template_override(
@@ -129,11 +154,13 @@ fn candidate_paths(
 fn render_builtin_template(
     context: &TemplateRenderContext,
     vak_address: Option<&VakAddress>,
+    summary: Option<&str>,
 ) -> String {
     let normalized = normalize_template_type(&context.template_type);
     if let Some(definition) = ct_definition(&normalized) {
         // CT frozen-process templates don't carry per-artifact VAK addresses
-        // (they're the process scaffolding itself). Ignore vak_address here.
+        // (they're the process scaffolding itself). Ignore vak_address /
+        // summary here.
         return render_builtin_ct(definition, context);
     }
 
@@ -178,6 +205,12 @@ fn render_builtin_template(
             .clone()
             .unwrap_or_else(|| "T0".to_string());
         lines.push(format!("thought_type: \"{thought_type}\""));
+    }
+    if let Some(s) = summary {
+        // Emit `summary: <yaml-quoted>` BETWEEN the template-rendered fields
+        // and the VAK keys. YAML-quoted via serde_yaml so quotes, colons,
+        // newlines etc. survive verbatim.
+        lines.push(format!("summary: {}", yaml_quote_summary(s)));
     }
     if let Some(vak) = vak_address {
         append_vak_lines(&mut lines, vak);
@@ -250,6 +283,30 @@ fn render_builtin_ct(definition: CTDefinition, context: &TemplateRenderContext) 
 ///   - `ct` is a YAML block sequence (one item per line, two-space
 ///     indentation). Each item is double-quoted via JSON.stringify-style
 ///     serde to preserve any embedded characters.
+/// YAML-quote a summary string for safe inlining as `summary: <value>`.
+///
+/// Delegates to `serde_yaml::to_string` so that embedded quotes, colons,
+/// newlines, leading whitespace, etc. survive a YAML round-trip. The trailing
+/// `\n` that `serde_yaml::to_string` always emits is stripped before return,
+/// because the caller appends its own newline when joining the frontmatter
+/// lines.
+///
+/// For typical short summaries serde_yaml emits a plain scalar (no quotes);
+/// for summaries containing YAML-significant characters it emits a properly
+/// quoted scalar.
+fn yaml_quote_summary(value: &str) -> String {
+    match serde_yaml::to_string(value) {
+        Ok(serialized) => serialized.trim_end_matches('\n').to_string(),
+        // serde_yaml::to_string on a borrowed &str is infallible in practice;
+        // if it ever fails fall back to a JSON-encoded double-quoted scalar,
+        // which is YAML 1.2-compatible.
+        Err(_) => {
+            serde_json::to_string(value)
+                .unwrap_or_else(|_| format!("\"{}\"", value.replace('"', "\\\"")))
+        }
+    }
+}
+
 fn append_vak_lines(lines: &mut Vec<String>, vak: &VakAddress) {
     let cpf_literal = serde_json::to_value(&vak.cpf)
         .expect("CpfState serialization is infallible (fieldless enum)")

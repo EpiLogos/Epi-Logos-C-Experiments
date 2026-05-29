@@ -7,7 +7,9 @@ pub mod templates;
 use crate::vault::paths::{
     archive_day_path, day_folder, day_note_path, now_note_path, thought_note_path,
 };
-use crate::vault::templates::{render_template, render_template_with_vak, TemplateRenderContext};
+use crate::vault::templates::{
+    render_template, render_template_with_vak_and_summary, TemplateRenderContext,
+};
 use chrono::{DateTime, NaiveDate, Utc};
 use clap::Subcommand;
 use epi_s1_hen_compiler_core::{suggest_link_candidates, LinkCandidateRequest};
@@ -147,6 +149,16 @@ pub enum VaultCmd {
         /// no VAK is available, which is dialogical pass-through).
         #[arg(long = "vak-address-json")]
         vak_address_json: Option<String>,
+        /// Optional summary line emitted as `summary: "..."` inside the same
+        /// ---...--- frontmatter block as the template keys (above any VAK
+        /// keys). YAML-quoted via `serde_yaml` so embedded quotes, colons,
+        /// or newlines round-trip safely. When omitted, no `summary:` key is
+        /// emitted (consistent with the dialogical pass-through pattern used
+        /// for `--vak-address-json`). The TS-side `aletheia_thought_route`
+        /// tool falls back to `content.split("\n")[0].slice(0, 200)` when
+        /// the agent doesn't pass a summary explicitly.
+        #[arg(long = "summary")]
+        summary: Option<String>,
     },
     /// Validate frontmatter of a note
     #[command(name = "frontmatter-validate")]
@@ -393,6 +405,7 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
             coordinate,
             now,
             vak_address_json,
+            summary,
         } => {
             let vak_address = match vak_address_json.as_deref() {
                 Some(raw) => Some(
@@ -408,6 +421,7 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
                 coordinate.as_deref(),
                 now.as_deref(),
                 vak_address.as_ref(),
+                summary.as_deref(),
             )
         }
         VaultCmd::FrontmatterValidate { note, vault } => {
@@ -643,6 +657,7 @@ fn route_thought(
     coordinate: Option<&str>,
     now_override: Option<&str>,
     vak_address: Option<&portal_core::VakAddress>,
+    summary: Option<&str>,
 ) -> Result<String, String> {
     if position > 5 {
         return Err("thought position must be T0 through T5".to_owned());
@@ -665,7 +680,18 @@ fn route_thought(
     // frontmatter block to the body, which produced TWO ---...--- blocks
     // and was silently invisible to standard parsers (Obsidian,
     // gnosis_ingest, hen_frontmatter_validate, Aletheia retrieval).
-    let mut body = render_template_with_vak(&context, &repo_root(), &home_root(), vak_address)?;
+    //
+    // `summary` (when present) is YAML-quoted via serde_yaml and emitted
+    // BETWEEN the template-rendered keys and the VAK block — restoring the
+    // contract for the `summary` parameter on the TS-side schema, which was
+    // orphaned by the B2 (cc53d882) refactor.
+    let mut body = render_template_with_vak_and_summary(
+        &context,
+        &repo_root(),
+        &home_root(),
+        vak_address,
+        summary,
+    )?;
     body.push_str(content);
     body.push('\n');
     write_rendered_template(&path, &body)?;

@@ -379,6 +379,181 @@ fn thought_route_with_vak_inlines_keys_in_single_frontmatter_block() {
 }
 
 #[test]
+fn thought_route_summary_lands_in_frontmatter_block() {
+    // B2 follow-up: the TS-side schema has carried `summary:
+    // Type.Optional(Type.String())` since before cc53d882, but the B2
+    // refactor moved VAK rendering to the Rust CLI and silently dropped the
+    // summary parameter. This test asserts the contract is now restored:
+    // `--summary <s>` is YAML-quoted (via serde_yaml) and emitted in the
+    // SAME ---...--- frontmatter block as the template + VAK keys.
+    let base_env = env_with_fake_obsidian_cli();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    let summary = "concise summary line";
+    let vak_json = r#"{
+        "cpf": "(4.0/1-4.4/5)",
+        "ct": ["CT3"],
+        "cp": "CP4.3",
+        "cf": "(0/1/2/3)",
+        "cfp": "CFP0",
+        "cs": { "code": "CS3", "direction": "Day" }
+    }"#;
+
+    let output = run_epi(
+        [
+            "vault",
+            "thought-route",
+            "--position",
+            "3",
+            "--content",
+            "the actual user content goes here\n",
+            "--now",
+            "2026-05-22T09:08:07Z",
+            "--summary",
+            summary,
+            "--vak-address-json",
+            vak_json,
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        output.status.success(),
+        "thought-route should succeed with summary + VAK: {}",
+        output.stderr
+    );
+
+    let persisted_path = vault_root.join("Pratibimba/Self/Thought/T/T3/T3-20260522-090807.md");
+    assert!(
+        persisted_path.exists(),
+        "thought file must be written: {}",
+        persisted_path.display()
+    );
+    let body = fs::read_to_string(&persisted_path).unwrap();
+
+    // 1. Exactly ONE ---...--- frontmatter block at the head (no regression
+    //    of the B2 double-frontmatter bug).
+    assert!(body.starts_with("---\n"), "must start with ---:\n{body}");
+    let after_first_marker = &body[4..];
+    let close_offset = after_first_marker
+        .find("\n---\n")
+        .expect("closing --- marker must exist");
+    let frontmatter_block = &after_first_marker[..close_offset];
+    let after_close = &after_first_marker[close_offset + 5..];
+    assert!(
+        !after_close.contains("\n---\n") && !after_close.starts_with("---\n"),
+        "must NOT contain a SECOND ---...--- block — got:\n{body}"
+    );
+
+    // 2. Parse frontmatter as YAML, assert summary AND VAK keys live in the
+    //    same map.
+    let parsed: serde_yaml::Value = serde_yaml::from_str(frontmatter_block)
+        .unwrap_or_else(|err| panic!("frontmatter must be valid YAML: {err}\n{frontmatter_block}"));
+    let map = parsed.as_mapping().expect("frontmatter must be a YAML map");
+
+    assert_eq!(
+        map.get(serde_yaml::Value::String("summary".to_string()))
+            .and_then(|v| v.as_str()),
+        Some(summary),
+        "summary key must round-trip via YAML: {frontmatter_block}"
+    );
+
+    // VAK keys still present alongside summary
+    for key in &["cpf", "ct", "cp", "cf", "cfp", "cs_code", "cs_direction"] {
+        assert!(
+            map.contains_key(serde_yaml::Value::String((*key).to_string())),
+            "VAK key `{key}` missing from frontmatter: {frontmatter_block}"
+        );
+    }
+}
+
+#[test]
+fn thought_route_summary_yaml_quotes_special_characters() {
+    // Summaries containing quotes, colons, and other YAML-significant chars
+    // must survive a YAML round-trip — serde_yaml handles the quoting; we
+    // verify the resulting frontmatter parses and the value matches.
+    let base_env = env_with_fake_obsidian_cli();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    let tricky = "tricky: has \"quotes\" and: colons";
+    let output = run_epi(
+        [
+            "vault",
+            "thought-route",
+            "--position",
+            "0",
+            "--content",
+            "x\n",
+            "--now",
+            "2026-05-22T09:08:07Z",
+            "--summary",
+            tricky,
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(output.status.success(), "{}", output.stderr);
+
+    let persisted_path = vault_root.join("Pratibimba/Self/Thought/T/T0/T0-20260522-090807.md");
+    let body = fs::read_to_string(&persisted_path).unwrap();
+    let after_first_marker = &body[4..];
+    let close_offset = after_first_marker.find("\n---\n").unwrap();
+    let frontmatter_block = &after_first_marker[..close_offset];
+    let parsed: serde_yaml::Value =
+        serde_yaml::from_str(frontmatter_block).expect("must be valid YAML");
+    let map = parsed.as_mapping().unwrap();
+    assert_eq!(
+        map.get(serde_yaml::Value::String("summary".to_string()))
+            .and_then(|v| v.as_str()),
+        Some(tricky),
+        "tricky summary must survive YAML round-trip: {frontmatter_block}"
+    );
+}
+
+#[test]
+fn thought_route_without_summary_omits_summary_key() {
+    // Dialogical pass-through: when --summary is OMITTED, no `summary:` key
+    // is emitted in the frontmatter (parallel to the no-VAK pass-through).
+    let base_env = env_with_fake_obsidian_cli();
+    let vault_root = base_env.root.join("vault");
+    let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
+    let vault_root = env.root.join("vault");
+
+    let output = run_epi(
+        [
+            "vault",
+            "thought-route",
+            "--position",
+            "2",
+            "--content",
+            "no summary content\n",
+            "--now",
+            "2026-05-22T09:08:07Z",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(output.status.success(), "{}", output.stderr);
+
+    let persisted_path = vault_root.join("Pratibimba/Self/Thought/T/T2/T2-20260522-090807.md");
+    let body = fs::read_to_string(&persisted_path).unwrap();
+    let after_first_marker = &body[4..];
+    let close_offset = after_first_marker.find("\n---\n").unwrap();
+    let frontmatter_block = &after_first_marker[..close_offset];
+    let parsed: serde_yaml::Value =
+        serde_yaml::from_str(frontmatter_block).expect("must be valid YAML");
+    let map = parsed.as_mapping().unwrap();
+    assert!(
+        !map.contains_key(serde_yaml::Value::String("summary".to_string())),
+        "summary key should be absent when --summary not provided: {frontmatter_block}"
+    );
+}
+
+#[test]
 fn thought_route_rejects_malformed_vak_address_json() {
     // Parse failure on --vak-address-json must surface as non-zero exit
     // (consistent with malformed --now behaviour). Callers that have no

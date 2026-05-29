@@ -284,6 +284,17 @@ export async function aletheiaExtension(api: ExtensionAPI) {
           args.push("--coordinate", coord);
         }
       }
+      // Restore the `summary` contract that was orphaned by the B2 (cc53d882)
+      // refactor: explicit param wins, otherwise fall back to the first
+      // 200 chars of the first line of content. When BOTH are empty, omit
+      // the flag entirely (matches the dialogical pass-through pattern used
+      // for --vak-address-json — never pass an empty value).
+      const summary = (typeof params.summary === "string" && params.summary.length > 0)
+        ? params.summary
+        : (typeof params.content === "string" ? params.content.split("\n")[0]?.slice(0, 200) ?? "" : "");
+      if (summary) {
+        args.push("--summary", summary);
+      }
       const vakJson = process.env.EPI_SESSION_VAK_ADDRESS;
       if (vakJson) {
         try {
