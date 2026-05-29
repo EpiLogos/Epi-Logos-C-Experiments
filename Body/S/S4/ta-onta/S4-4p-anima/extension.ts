@@ -15,7 +15,10 @@ import {
 } from "./modules/dispatch-validate.ts";
 import { planMoiraiNightPass, classifyMoiraiOutput } from "./modules/moirai-dispatch.ts";
 import { buildAnimaInvokePayload } from "./modules/anima-invoke-payload.ts";
+import { findSkillsForVak, type CapabilityMatrix } from "./modules/skill-registry.ts";
 import { isValidVakAddress, type VakAddress } from "../shared/vak_address.ts";
+import { resolve as resolvePath, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Per-agent VAK address fragments used by `dispatch_moirai_night_pass`. The
 // three Moirai do not have their own AGENT_CF roster entries (they are
@@ -55,6 +58,25 @@ function getCSState(sessionId?: string): CSState {
     directionality: "day",
     cpPosition: "4.0",
   };
+}
+
+// Lazily-loaded pleroma capability matrix. Cached after first read because the
+// matrix is shipped-with-the-plugin static data; in-process mutation is not a
+// concern. If the file is missing or malformed we surface `null` so callers
+// can degrade gracefully (matrix-aware features are advisory, not gating).
+let _capabilityMatrix: CapabilityMatrix | null | undefined;
+function loadCapabilityMatrix(): CapabilityMatrix | null {
+  if (_capabilityMatrix !== undefined) return _capabilityMatrix;
+  try {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const matrixPath = resolvePath(here, "../../plugins/pleroma/capability-matrix.json");
+    const raw = readFileSync(matrixPath, "utf8");
+    const parsed = JSON.parse(raw) as CapabilityMatrix;
+    _capabilityMatrix = parsed && Array.isArray(parsed.skills) ? parsed : null;
+  } catch {
+    _capabilityMatrix = null;
+  }
+  return _capabilityMatrix;
 }
 
 function runEpi(args: string[], timeout = 120_000) {
@@ -203,6 +225,10 @@ export async function animaExtension(api: ExtensionAPI) {
         Type.Literal("(00/00)"),
       ]),
       task: Type.String(),
+      // Optional full VAK address — when present, the pleroma capability matrix
+      // is consulted via `findSkillsForVak` to surface auto-loadable skills for
+      // the dispatch plan. Validated structurally; opaque to TypeBox.
+      vak_address: Type.Optional(Type.Any()),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const cfToAgent: Record<string, string> = {
@@ -215,6 +241,21 @@ export async function animaExtension(api: ExtensionAPI) {
         "(00/00)": "nous",
       };
 
+      // Resolve suggested_skills via matrix query when a full VAK is provided.
+      // Falls back to undefined when vak_address is absent / malformed / matrix
+      // is unavailable — orchestration is matrix-advisory, never matrix-gated.
+      let suggestedSkills: string[] | undefined;
+      if (params.vak_address && isValidVakAddress(params.vak_address)) {
+        const matrix = loadCapabilityMatrix();
+        if (matrix) {
+          suggestedSkills = findSkillsForVak(matrix, params.vak_address as VakAddress)
+            .map((s) => s.name);
+        }
+      }
+      const skillsLine = suggestedSkills
+        ? `\nsuggested_skills: ${suggestedSkills.length ? suggestedSkills.join(", ") : "(none match this VAK)"}`
+        : "";
+
       if (params.cf_code === "(00/00)") {
         return {
           content: [
@@ -224,9 +265,11 @@ export async function animaExtension(api: ExtensionAPI) {
                 `CF (00/00) — CO-ACTION GATE: This task requires collaborative brainstorming with the user before autonomous execution.\n` +
                 `Task: ${params.task}\n` +
                 "Agent: nous\n" +
-                "ACTION REQUIRED: Present the task to the user and brainstorm approach before dispatching.",
+                "ACTION REQUIRED: Present the task to the user and brainstorm approach before dispatching." +
+                skillsLine,
             },
           ],
+          details: { agent: "nous", co_action_gate: true, suggested_skills: suggestedSkills },
         };
       }
 
@@ -244,7 +287,11 @@ export async function animaExtension(api: ExtensionAPI) {
       }
 
       return {
-        content: [{ type: "text", text: `CF ${params.cf_code} → agent: ${agent}\ntask: ${params.task}` }],
+        content: [{
+          type: "text",
+          text: `CF ${params.cf_code} → agent: ${agent}\ntask: ${params.task}${skillsLine}`,
+        }],
+        details: { agent, suggested_skills: suggestedSkills },
       };
     },
   });
