@@ -9,6 +9,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use uuid::Uuid;
 
+pub mod inbox;
+
 pub const KERNEL_EVIDENCE_PRIVACY: &str = "safe-public-current-kernel-tick";
 pub const KERNEL_EVIDENCE_COMPUTATION_SOURCE: &str = "portal-core::KernelProjection";
 
