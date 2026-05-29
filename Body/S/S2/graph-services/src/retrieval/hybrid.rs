@@ -324,6 +324,46 @@ impl<'a> HybridRetriever<'a> {
             coordinate_boost: self.coordinate_boost,
         }
     }
+
+    /// Compute VAK-aware bias weights for graph retrieval.
+    ///
+    /// Returns a HashMap keyed by canonical VAK property names (`cf`, `cp`,
+    /// `ct`, `cs_direction`) with positive f64 weights, plus sentinel entries
+    /// `__cf_value:<value>` / `__cp_value:<value>` carrying the target
+    /// coordinate values for matching by the downstream Cypher generator /
+    /// scorer (so the caller does not need to re-thread `VakAddress` through
+    /// every layer).
+    ///
+    /// **Dialogical mode** (CPF = `(00/00)`) returns an empty map — open
+    /// conversation has no canonical VAK to bias toward; retrieval falls back
+    /// to vector + symbol scoring only.
+    ///
+    /// **Mechanistic mode** (CPF = `(4.0/1-4.4/5)`) returns:
+    /// - `cf: 0.8` — strongest signal; frame-binding affinity (agent's CF
+    ///   must align with retrieved chunk's CF)
+    /// - `cp: 0.5` — positional bias (CP-aligned chunks rank higher)
+    /// - `ct: 0.4` — content-type bias
+    /// - `cs_direction: 0.2` — Day/Night' synthesis-vs-analysis bias
+    ///
+    /// Canonical-prefix keys (`cf`, `cp`, `ct`, `cs_direction`) align with
+    /// the B1 PromotionPlan / A4 Graphiti / A3 Hen vocabulary — no `c_4_*`
+    /// drift.
+    pub fn vak_bias_weights(
+        vak: &portal_core::VakAddress,
+    ) -> std::collections::HashMap<String, f64> {
+        let mut w = std::collections::HashMap::new();
+        if matches!(vak.cpf, portal_core::CpfState::Dialogical) {
+            return w;
+        }
+        w.insert("cf".into(), 0.8);
+        w.insert("cp".into(), 0.5);
+        w.insert("ct".into(), 0.4);
+        w.insert("cs_direction".into(), 0.2);
+        // Sentinel match values for the scorer.
+        w.insert(format!("__cf_value:{}", vak.cf), 1.0);
+        w.insert(format!("__cp_value:{}", vak.cp), 1.0);
+        w
+    }
 }
 
 fn read_score(row: &neo4rs::Row, key: &str) -> f64 {
