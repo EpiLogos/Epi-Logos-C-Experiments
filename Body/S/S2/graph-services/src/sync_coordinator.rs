@@ -336,10 +336,17 @@ impl PromotionPlan {
     /// Leans on the serde `rename` markers on [`portal_core::CpfState`] and
     /// [`portal_core::CsDirection`] so the canonical wire literals — `(00/00)`,
     /// `(4.0/1-4.4/5)`, `Night'` — survive round-trip into the property map.
+    ///
+    /// Note: `ct` is stored here as a raw JSON value, but when this
+    /// `PromotionPlan` is bound to Neo4j it flows through the
+    /// `bind_json_param` convention (see `sync_coordinator.rs:1268-1285`)
+    /// which JSON-encodes complex values to strings before binding.
     pub fn attach_vak_address(&mut self, vak: &portal_core::VakAddress) {
-        if let Ok(value) = serde_json::to_value(&vak.cpf) {
-            self.properties.insert("cpf".to_owned(), value);
-        }
+        self.properties.insert(
+            "cpf".to_owned(),
+            serde_json::to_value(&vak.cpf)
+                .expect("CpfState serialization is infallible (fieldless enum)"),
+        );
         self.properties
             .insert("ct".to_owned(), serde_json::json!(vak.ct));
         self.properties
@@ -350,9 +357,11 @@ impl PromotionPlan {
             .insert("cfp".to_owned(), Value::String(vak.cfp.clone()));
         self.properties
             .insert("cs_code".to_owned(), Value::String(vak.cs.code.clone()));
-        if let Ok(value) = serde_json::to_value(&vak.cs.direction) {
-            self.properties.insert("cs_direction".to_owned(), value);
-        }
+        self.properties.insert(
+            "cs_direction".to_owned(),
+            serde_json::to_value(&vak.cs.direction)
+                .expect("CsDirection serialization is infallible (fieldless enum)"),
+        );
     }
 
     pub fn node_upsert_cypher(&self) -> String {
