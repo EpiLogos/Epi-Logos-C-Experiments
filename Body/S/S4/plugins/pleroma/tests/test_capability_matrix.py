@@ -139,6 +139,51 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         self.assertIn("review_item", matrix["epii_relation"]["deposits_to_epii"])
         self.assertIn("validation_request", matrix["epii_relation"]["requests_to_epii"])
 
+    def test_dispatch_tools_declare_vak_evaluate_as_upstream(self):
+        """Every dispatch-class tool must declare vak-evaluate as upstream gate.
+
+        Per Task A7 of the VAK-as-operational-substrate plan, the Pleroma
+        capability matrix is the single source of truth for which tools are
+        VAK-gated. Each dispatch tool's `upstream_required` list must include
+        `vak-evaluate` so callers know to fire it before any dispatch.
+        """
+        matrix = json.loads((PLUGIN_ROOT / "capability-matrix.json").read_text(encoding="utf-8"))
+        dispatch_tools = [t for t in matrix.get("dispatch_tools", []) if t.get("kind") == "vak-dispatch"]
+        self.assertTrue(
+            dispatch_tools,
+            "dispatch_tools section missing or has no vak-dispatch entries",
+        )
+        for t in dispatch_tools:
+            with self.subTest(tool=t.get("name")):
+                self.assertIn(
+                    "upstream_required",
+                    t,
+                    f"{t.get('name')} missing upstream_required",
+                )
+                self.assertIsInstance(
+                    t["upstream_required"],
+                    list,
+                    f"{t.get('name')} upstream_required must be a list",
+                )
+                self.assertIn(
+                    "vak-evaluate",
+                    t["upstream_required"],
+                    f"{t.get('name')} does not declare vak-evaluate upstream",
+                )
+
+    def test_dispatch_tools_cover_anima_dispatch_surface(self):
+        """The dispatch_tools list must include the four Anima dispatch entry points.
+
+        dispatch_agent, dispatch_parallel_agents, dispatch_fusion_agents, run_chain
+        all need to be declared so prompts know they're VAK-gated. New dispatch
+        tools added later must register here too.
+        """
+        matrix = json.loads((PLUGIN_ROOT / "capability-matrix.json").read_text(encoding="utf-8"))
+        names = {t.get("name") for t in matrix.get("dispatch_tools", [])}
+        expected = {"dispatch_agent", "dispatch_parallel_agents", "dispatch_fusion_agents", "run_chain"}
+        missing = expected - names
+        self.assertFalse(missing, f"dispatch_tools missing entries: {missing}")
+
 
 if __name__ == "__main__":
     unittest.main()

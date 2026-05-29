@@ -13,6 +13,36 @@
     "psyche",
     "sophia"
   ],
+  "dispatch_tools": [
+    {
+      "name": "dispatch_agent",
+      "kind": "vak-dispatch",
+      "layer": "S4/S4'",
+      "vak_thread": "single",
+      "upstream_required": ["vak-evaluate"]
+    },
+    {
+      "name": "dispatch_parallel_agents",
+      "kind": "vak-dispatch",
+      "layer": "S4/S4'",
+      "vak_thread": "CFP1",
+      "upstream_required": ["vak-evaluate"]
+    },
+    {
+      "name": "dispatch_fusion_agents",
+      "kind": "vak-dispatch",
+      "layer": "S4/S4'",
+      "vak_thread": "CFP3",
+      "upstream_required": ["vak-evaluate"]
+    },
+    {
+      "name": "run_chain",
+      "kind": "vak-dispatch",
+      "layer": "S4/S4'",
+      "vak_thread": "CFP2",
+      "upstream_required": ["vak-evaluate"]
+    }
+  ],
   "skills": [
     {
       "name": "anima-orchestration",
