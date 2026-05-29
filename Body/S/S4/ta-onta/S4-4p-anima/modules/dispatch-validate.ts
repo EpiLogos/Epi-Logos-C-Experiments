@@ -1,4 +1,4 @@
-import { isValidVakAddress, type VakAddress, type CfLiteral } from "../../shared/vak_address.ts";
+import { isValidVakAddress, type VakAddress, type CfLiteral, type CpfPolarity } from "../../shared/vak_address.ts";
 
 /**
  * Canonical CF assignments for the constitutional 7-fold roster.
@@ -16,6 +16,26 @@ export const AGENT_CF: Record<string, CfLiteral> = {
   anima: "(4.0/1-4.4/5)",
 };
 
+/**
+ * The dialogical CPF polarity. When a dispatch carries this CPF (or no
+ * vak_address at all), the system is in *Ouroboros / open-conversation* mode:
+ *
+ *   - VAK scaffolding is OPTIONAL
+ *   - simple agent invocations, brainstorming, back-and-forth chat all flow freely
+ *   - no canonical address is required, no agent/cf binding is enforced
+ *
+ * The complementary polarity "(4.0/1-4.4/5)" — and ANY other CPF value — keeps
+ * the strict mechanistic path: full canonical VAK, cf must match agent, CFP1
+ * required for parallel. Treating "unknown" as mechanistic prevents bypass paths.
+ *
+ * Architectural quote from the user:
+ *   "(00/00) CPF is for open convo, no necessary vak scaffolding, can't have
+ *    the system constrained for explorative or open chat, vak is the complex
+ *    execution system but not all things are complex (like back and forth chat,
+ *    simple invocations of logos or eros or whatever)"
+ */
+export const CPF_DIALOGICAL: CpfPolarity = "(00/00)" as const;
+
 export interface DispatchParams {
   agent_name: string;
   task: string;
@@ -28,28 +48,54 @@ export interface ValidationResult {
 }
 
 /**
+ * Is this dispatch in dialogical (open-conversation, Ouroboros) mode?
+ *
+ *   - vak_address absent                           → dialogical
+ *   - vak_address.cpf === "(00/00)"                → dialogical
+ *   - vak_address present with any other cpf       → mechanistic
+ *
+ * Mechanistic includes the canonical "(4.0/1-4.4/5)" polarity AND any unknown
+ * cpf string — we err on the side of strict validation rather than open new
+ * bypass paths.
+ */
+function isDialogical(params: DispatchParams): boolean {
+  if (!params.vak_address) return true;
+  const cpf = (params.vak_address as { cpf?: unknown }).cpf;
+  return cpf === CPF_DIALOGICAL;
+}
+
+/**
  * Validate a single dispatch's parameters before firing.
  *
- * Required invariants:
- *   - vak_address must be present (no fire without an address)
- *   - vak_address must validate via the canonical isValidVakAddress
- *   - If agent_name is in the AGENT_CF roster, vak_address.cf must match
+ * Two modes:
+ *
+ *   1. Dialogical / Ouroboros — CPF = "(00/00)" or vak_address absent.
+ *      VAK is OPTIONAL. A partial vak_address (e.g. just { cpf: "(00/00)" })
+ *      is accepted; we don't enforce CF/agent match, completeness, or canonical
+ *      shape. This is the "brainstorming IS the VAK determination" register.
+ *
+ *   2. Mechanistic / Anima — CPF = "(4.0/1-4.4/5)" or any other (unknown) CPF.
+ *      Full canonical isValidVakAddress check + agent-cf match. Same strict
+ *      contract as the original A5 path.
  *
  * Returns { ok: true } when the dispatch may proceed; otherwise { ok: false, error }
  * with a human-readable message suitable for surfacing to the caller.
  */
 export function validateDispatchParams(params: DispatchParams): ValidationResult {
-  if (!params.vak_address) {
-    return { ok: false, error: "vak_address required for every dispatch" };
+  if (isDialogical(params)) {
+    // Dialogical: no required scaffolding. Whatever partial VAK fields the
+    // caller chose to send are tolerated; we don't pry. Open conversation.
+    return { ok: true };
   }
+  // Mechanistic path — strict canonical VAK + agent/cf binding.
   if (!isValidVakAddress(params.vak_address)) {
     return { ok: false, error: "vak_address malformed (failed canonical validation)" };
   }
   const expected = AGENT_CF[params.agent_name];
-  if (expected && params.vak_address.cf !== expected) {
+  if (expected && params.vak_address!.cf !== expected) {
     return {
       ok: false,
-      error: `cf does not match agent ${params.agent_name} (expected ${expected}, got ${params.vak_address.cf})`,
+      error: `cf does not match agent ${params.agent_name} (expected ${expected}, got ${params.vak_address!.cf})`,
     };
   }
   return { ok: true };
@@ -59,12 +105,14 @@ export function validateDispatchParams(params: DispatchParams): ValidationResult
  * Validate a CFP1 (P-Thread) parallel dispatch.
  *
  * Per the VAK grammar, dispatch_parallel_agents is the P-Thread surface:
- * N different tasks, each running independently. Every task must:
- *   - carry a valid VAK address (per validateDispatchParams)
- *   - declare cfp: "CFP1" specifically (not CFP0, CFP2, etc.)
+ * N different tasks, each running independently.
  *
- * If any task fails either check, the whole batch is refused — there's no
- * partial-fan-out semantic at the parallel surface.
+ * Per-task mode applies:
+ *   - Dialogical task (no vak_address, or cpf "(00/00)"): allowed without CFP1
+ *   - Mechanistic task: must pass canonical VAK + carry cfp === "CFP1"
+ *
+ * If any task fails its mode-appropriate check, the whole batch is refused —
+ * there's no partial-fan-out semantic at the parallel surface.
  */
 export function validateParallelDispatch(input: { tasks: DispatchParams[] }): ValidationResult {
   if (!input.tasks || input.tasks.length === 0) {
@@ -73,7 +121,9 @@ export function validateParallelDispatch(input: { tasks: DispatchParams[] }): Va
   for (const t of input.tasks) {
     const v = validateDispatchParams(t);
     if (!v.ok) return v;
-    if (t.vak_address!.cfp !== "CFP1") {
+    // CFP1 enforcement only applies in mechanistic mode — dialogical parallels
+    // (open brainstorm fan-outs) need no CFP1 ceremony.
+    if (!isDialogical(t) && t.vak_address!.cfp !== "CFP1") {
       return {
         ok: false,
         error: `dispatch_parallel_agents requires CFP1 on every task (task for agent ${t.agent_name} declared ${t.vak_address!.cfp})`,
