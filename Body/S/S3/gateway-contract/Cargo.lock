@@ -41,6 +41,7 @@ name = "epi-s3-gateway-contract"
 version = "0.1.0"
 dependencies = [
  "epi-kernel-contract",
+ "portal-core",
  "serde",
  "serde_json",
  "uuid",

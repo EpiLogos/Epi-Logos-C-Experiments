@@ -82,6 +82,7 @@ impl SessionStore {
             model_override: None,
             provider_override: None,
             cli_session_ids: Vec::new(),
+            vak_address: None,
             updated_at_ms: now_ms()?,
         };
         self.save(&record)?;
@@ -291,6 +292,9 @@ impl SessionStore {
             }
             if let Some(cli_session_ids) = patch.cli_session_ids {
                 record.cli_session_ids = cli_session_ids;
+            }
+            if let Some(vak_address) = patch.vak_address {
+                record.vak_address = Some(vak_address);
             }
             Ok::<(), String>(())
         })

@@ -10,6 +10,7 @@ pub use epi_kernel_contract::{
     MentalPoleState, PhysicalPoleState, ResonanceVector72, TrajectoryDeposit, TrajectoryDepositRef,
     ENVELOPE_COORDINATE_OWNER, ENVELOPE_PRIVACY_CLASS,
 };
+pub use portal_core::VakAddress;
 
 pub const DEFAULT_GATEWAY_PORT: u16 = 18794;
 pub const TEST_GATEWAY_PORT: u16 = 18794;
@@ -1079,6 +1080,8 @@ pub struct SessionRecord {
     pub provider_override: Option<String>,
     #[serde(default)]
     pub cli_session_ids: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vak_address: Option<portal_core::VakAddress>,
     #[serde(default)]
     pub updated_at_ms: u128,
 }
@@ -1119,6 +1122,7 @@ pub struct SessionPatch {
     pub model_override: Option<Option<String>>,
     pub provider_override: Option<Option<String>>,
     pub cli_session_ids: Option<Vec<String>>,
+    pub vak_address: Option<portal_core::VakAddress>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1551,6 +1555,7 @@ mod tests {
             model_override: Some("gpt".to_owned()),
             provider_override: Some("openai".to_owned()),
             cli_session_ids: vec!["cli-1".to_owned()],
+            vak_address: None,
             updated_at_ms: 1,
         };
 

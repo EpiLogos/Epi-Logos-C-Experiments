@@ -105,3 +105,50 @@ fn patches_subagent_authority_and_transcript_path_without_cli_runtime() {
             .join("agent_epii_subagent_research.jsonl")
     );
 }
+
+#[test]
+fn session_store_round_trips_vak_address() {
+    use epi_s3_gateway::SessionStore;
+    use epi_s3_gateway_contract::SessionPatch;
+    use portal_core::{CpfState, CsDirection, CsField, VakAddress};
+
+    let tmp = tempfile::tempdir().expect("tempdir");
+    let store = SessionStore::new(tmp.path()).expect("create store");
+    let key = "agent:vak-test:main";
+    let _ = store.create(key).expect("create session");
+
+    // Initially no vak_address.
+    let initial = store.resolve(key).expect("load initial");
+    assert!(initial.vak_address.is_none(), "fresh session has no VAK yet");
+
+    // Patch with a VAK address.
+    let addr = VakAddress {
+        cpf: CpfState::Mechanistic,
+        ct: vec!["CT2".into()],
+        cp: "CP4.2".into(),
+        cf: "(0/1)".into(),
+        cfp: "CFP0".into(),
+        cs: CsField {
+            code: "CS1".into(),
+            direction: CsDirection::Day,
+        },
+    };
+    let patch = SessionPatch {
+        vak_address: Some(addr.clone()),
+        ..SessionPatch::default()
+    };
+    store.patch(key, patch).expect("patch with VAK");
+
+    // Load and confirm round-trip.
+    let loaded = store.resolve(key).expect("load after patch");
+    assert_eq!(loaded.vak_address.as_ref(), Some(&addr));
+    assert_eq!(loaded.vak_address.as_ref().unwrap().cf, "(0/1)");
+    assert_eq!(loaded.vak_address.as_ref().unwrap().cs.code, "CS1");
+    assert_eq!(loaded.vak_address.as_ref().unwrap().cs.direction, CsDirection::Day);
+
+    // Patch with None should NOT clear (semantics: Some(addr) sets, None means "no update").
+    let null_patch = SessionPatch::default();
+    store.patch(key, null_patch).expect("null patch");
+    let still_loaded = store.resolve(key).expect("load after null patch");
+    assert_eq!(still_loaded.vak_address.as_ref(), Some(&addr), "null patch must not clear");
+}
