@@ -9,7 +9,7 @@ export async function henExtension(api: ExtensionAPI) {
   api.registerTool({
     name: "hen_template_invoke",
     label: "Hen Template Invoke",
-    description: "Instantiate a CT template type (seed|prompt|task-spec|pattern-note|daily-note|now|thought|flow) with correct frontmatter and content scaffold. Routes through epi CLI for rendering.",
+    description: "Render a template into the vault. When EPI_SESSION_VAK_ADDRESS env is present and validates as a VAK address, renders the frontmatter inline with c_4_* coordinate fields injected; otherwise routes through epi CLI for legacy rendering.",
     parameters: Type.Object({
       template_type: Type.Union([
         Type.Literal("seed"),
@@ -39,7 +39,7 @@ export async function henExtension(api: ExtensionAPI) {
           if (isValidVakAddress(parsed)) {
             const text = renderTemplateWithVak({
               template_id: params.template_type,
-              day_id: params.day_id ?? "",
+              day_id: params.day_id,
               vak_address: parsed,
               body: params.body,
             });

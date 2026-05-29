@@ -68,4 +68,33 @@ describe("hen template_invoke VAK injection", () => {
     // Match the closing --- somewhere after the first ---
     assert.ok(out.indexOf("---", 4) > 4, "must have closing --- after opening");
   });
+
+  it("omits day_id line when day_id is absent", () => {
+    const out = renderTemplateWithVak({
+      template_id: "seed",
+      vak_address: vak,
+    });
+    assert.doesNotMatch(out, /day_id:/);
+  });
+
+  it("omits day_id line when day_id is empty string", () => {
+    const out = renderTemplateWithVak({
+      template_id: "seed",
+      day_id: "",
+      vak_address: vak,
+    });
+    assert.doesNotMatch(out, /day_id:/);
+  });
+
+  it("escapes YAML-significant characters in day_id", () => {
+    const out = renderTemplateWithVak({
+      template_id: "daily-note",
+      day_id: 'has "quotes" and\nnewline',
+      vak_address: vak,
+    });
+    // JSON.stringify produces a valid YAML double-quoted string:
+    //   "has \"quotes\" and\nnewline"
+    // Confirm the output contains the escaped form, not raw injection.
+    assert.match(out, /day_id: "has \\"quotes\\" and\\nnewline"/);
+  });
 });
