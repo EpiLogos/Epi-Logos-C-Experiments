@@ -46,6 +46,9 @@ export function composePhaseVakAddress(): VakAddress {
  * - ct `CT5` — insight bucket
  * - cfp `CFP3` — parallel-fold (Moirai three-way Night' pass)
  * - cs `CS0/Night'` — analytic synthesis direction
+ *
+ * Consumed by C2 (Sophia post-execution hook in S4-4p-anima/modules/sophia-hook.ts
+ * and S4-0p-khora/extension.ts session_shutdown handler).
  */
 export function rehearPhaseVakAddress(): VakAddress {
   return {

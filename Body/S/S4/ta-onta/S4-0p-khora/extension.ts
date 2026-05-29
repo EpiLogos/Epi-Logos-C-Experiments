@@ -6,7 +6,9 @@ import { join, basename } from "node:path";
 // cross-agent disabled: Claude/Gemini/Codex @-discovery not needed for pi-native agent dispatch
 // import registerCrossAgent from "./S0'/cross-agent.ts";
 import registerSystemSelect from "./S0'/system-select.ts";
-import { composePhaseVakAddress } from "./modules/z-phase-vak.ts";
+import { composePhaseVakAddress, rehearPhaseVakAddress } from "./modules/z-phase-vak.ts";
+import { buildSophiaDisclosure } from "../S4-4p-anima/modules/sophia-hook.ts";
+import { vakAddressFromObject, type VakAddress } from "../shared/vak_address.ts";
 
 // Session state singleton (persists within a PI process)
 let _sessionId: string | null = null;
@@ -139,6 +141,35 @@ export async function khoraExtension(api: ExtensionAPI) {
     },
   });
 
+  // ── Tool: khora_session_close ────────────────────────────────────
+  // C2 / Z-cycle rehear: fires the Sophia disclosure at session end.
+  // Accepts optional artifacts + improvement_vectors from the caller; builds the
+  // canonical SophiaDisclosure envelope and appends it as one JSONL line to the
+  // vault Sophia inbox (consumed by Aletheia in C4, routed to Epii in C5-C6).
+  api.registerTool({
+    name: "khora_session_close",
+    label: "Khora Session Close",
+    description: "Z-cycle rehear: fire the Sophia post-execution disclosure. Writes a sophia_session_end_disclosure JSONL line to ${VAULT_ROOT}/Pratibimba/Sophia/inbox/${session_id}.jsonl with final VAK, artifacts, and improvement vectors. Aletheia consumes the inbox in the night' pass.",
+    parameters: Type.Object({
+      artifacts: Type.Optional(Type.Array(Type.String(), { description: "Absolute paths of vault notes touched during the session." })),
+      improvement_vectors: Type.Optional(Type.Array(Type.String(), { description: "Free-form improvement vectors surfaced during the session — read by Epii recompose." })),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      try {
+        const result = fireSophiaDisclosure({
+          artifacts: params.artifacts ?? [],
+          improvement_vectors: params.improvement_vectors ?? [],
+        });
+        if (!result.ok) {
+          return { content: [{ type: "text", text: `khora_session_close skipped: ${result.reason}` }] };
+        }
+        return { content: [{ type: "text", text: `sophia disclosure written: ${result.path}` }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: `khora_session_close error: ${e}` }], isError: true };
+      }
+    },
+  });
+
   api.on("session_start", async () => {
     const repoRoot = process.env.EPI_REPO_ROOT || process.cwd();
 
@@ -178,6 +209,10 @@ export async function khoraExtension(api: ExtensionAPI) {
     //    For now, env-propagation is the load-bearing channel (consumed by A5 in
     //    Body/S/S4/ta-onta/S4-4p-anima/extension.ts line 62, etc.).
     const composeVak = composePhaseVakAddress();
+    // SAFETY: mutating process.env here is safe today because composePhaseVakAddress() is a
+    // pure constant (same value for every session). If it ever becomes session-parameterised,
+    // this mutation must move into per-child-spawn context (e.g. spawnSync env override) to
+    // avoid cross-session bleed.
     process.env.EPI_SESSION_VAK_ADDRESS = JSON.stringify(composeVak);
 
     // 5. Initialize the Khora session (idempotent: reuses today's session if already started)
@@ -220,11 +255,73 @@ export async function khoraExtension(api: ExtensionAPI) {
   });
 
   api.on("session_shutdown", async () => {
+    // Z-cycle rehear (C2): always fire the Sophia disclosure as the last act of the
+    // session. The lifecycle handler runs with empty defaults; callers that need to
+    // include artifacts / improvement_vectors should invoke `khora_session_close`
+    // explicitly before shutdown.
+    try {
+      fireSophiaDisclosure({ artifacts: [], improvement_vectors: [] });
+    } catch (e) {
+      console.warn(`[khora] sophia disclosure: ${e}`);
+    }
+
     const hookPath = new URL("./S0/post-session-close.sh", import.meta.url).pathname;
     if (existsSync(hookPath)) {
       spawnSync("sh", [hookPath], { stdio: "inherit" });
     }
   });
+}
+
+// fireSophiaDisclosure: build the Sophia envelope and append it to the vault inbox.
+// Reads session identity from getSessionId/getDayId; falls back to rehearPhaseVakAddress()
+// for final_vak because the gateway RPC for reading SessionRecord.vak_address from TS
+// does not yet exist (gateway patch deferred — see session_start NOTE above and C1
+// follow-up). EPI_SESSION_VAK_ADDRESS carries the most-recently-set VAK, which on a
+// clean session is still the compose address; that is intentionally not the rehear
+// state, so we use the canonical rehear factory unless a caller has overwritten the
+// env with a true rehear address.
+function fireSophiaDisclosure(input: {
+  artifacts: string[];
+  improvement_vectors: string[];
+}): { ok: true; path: string } | { ok: false; reason: string } {
+  const session_id = getSessionId();
+  const day_id = getDayId();
+  if (!session_id || !day_id) {
+    return { ok: false, reason: "no session_id or day_id (session not initialised)" };
+  }
+
+  // Resolve final VAK: prefer the env-propagated session VAK only if it represents
+  // the rehear phase (cf = "(5/0)"); otherwise fall back to the canonical rehear factory.
+  let final_vak: VakAddress = rehearPhaseVakAddress();
+  const envVak = process.env.EPI_SESSION_VAK_ADDRESS;
+  if (envVak) {
+    try {
+      const parsed = vakAddressFromObject(JSON.parse(envVak));
+      if (parsed && parsed.cf === "(5/0)") {
+        final_vak = parsed;
+      }
+    } catch {
+      // ignore malformed env, keep rehear fallback
+    }
+  }
+
+  const disclosure = buildSophiaDisclosure({
+    session_id,
+    day_id,
+    final_vak,
+    artifacts: input.artifacts,
+    improvement_vectors: input.improvement_vectors,
+  });
+
+  const vaultRoot = process.env.EPILOGOS_VAULT;
+  if (!vaultRoot) {
+    return { ok: false, reason: "EPILOGOS_VAULT not set" };
+  }
+  const inboxDir = join(vaultRoot, "Pratibimba", "Sophia", "inbox");
+  mkdirSync(inboxDir, { recursive: true });
+  const inboxPath = join(inboxDir, `${session_id}.jsonl`);
+  appendFileSync(inboxPath, JSON.stringify(disclosure) + "\n", "utf8");
+  return { ok: true, path: inboxPath };
 }
 
 // Internal helper
