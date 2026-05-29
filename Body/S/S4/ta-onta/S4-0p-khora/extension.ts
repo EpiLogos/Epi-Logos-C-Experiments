@@ -209,15 +209,6 @@ export async function khoraExtension(api: ExtensionAPI) {
     //    thoughts, Hen template renders) inherit the initial VAK before any task is bound.
     //    See: Body/S/S4/ta-onta/S4-0p-khora/modules/z-phase-vak.ts and the Z-thread
     //    docstring in docs/superpowers/plans/2026-05-22-vak-as-operational-substrate.md.
-    //
-    //    NOTE (gateway patch deferred): the SessionRecord.vak_address field exists on the
-    //    Rust side (A2 / commit cfdafb1b) and `sessions.patch` JSON-RPC handler in
-    //    Body/S/S0/epi-cli/src/gate/server.rs needs to be extended to accept a
-    //    `vak_address` param. Once that's wired + an `epi gate sessions patch` CLI lands
-    //    (or a TS gateway-RPC client is available here), call it here with
-    //    `{ vak_address: composeVak }` so the gateway record matches the env-propagated VAK.
-    //    For now, env-propagation is the load-bearing channel (consumed by A5 in
-    //    Body/S/S4/ta-onta/S4-4p-anima/extension.ts line 62, etc.).
     const composeVak = composePhaseVakAddress();
     // SAFETY: mutating process.env here is safe today because composePhaseVakAddress() is a
     // pure constant (same value for every session). If it ever becomes session-parameterised,
@@ -251,6 +242,32 @@ export async function khoraExtension(api: ExtensionAPI) {
         if (nowInitOut && nowInitOut.endsWith("now.md")) {
           _nowPath = nowInitOut;
           process.env.EPI_NOW_PATH = _nowPath;
+        }
+
+        // 7. Echo the compose-phase VAK into the gateway SessionRecord.
+        //    Env-propagation (step 4) is the load-bearing channel for child
+        //    processes; this gateway patch is additive — it makes the VAK
+        //    visible to multi-session surfaces / inspection tooling that
+        //    read the SessionRecord directly. Non-blocking: if the patch
+        //    fails (gateway not running, schema drift, etc.), session_start
+        //    still succeeds via the env channel.
+        const patchResult = spawnSync(
+          "epi",
+          [
+            "gate",
+            "sessions",
+            "patch",
+            "--session-id",
+            _sessionId,
+            "--vak-address-json",
+            JSON.stringify(composeVak),
+          ],
+          { encoding: "utf8" }
+        );
+        if (patchResult.status !== 0) {
+          console.warn(
+            `[khora] gateway sessions.patch failed (non-blocking): ${patchResult.stderr?.trim() || "no stderr"}`
+          );
         }
       }
     } else {

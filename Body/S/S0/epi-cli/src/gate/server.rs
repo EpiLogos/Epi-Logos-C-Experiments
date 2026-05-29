@@ -567,12 +567,20 @@ async fn dispatch_rpc(
                             .collect::<Vec<_>>()
                     })
                 }),
-                // VAK address on SessionPatch is not currently wire-settable
-                // via sessions.patch — set None. Source: pre-existing build
-                // gap from cfdafb1 (feat(s3-gateway): persist VakAddress on
-                // SessionRecord/SessionPatch). Filed for follow-up only —
-                // outside B2 scope.
-                vak_address: None,
+                // VAK address: deserialize from JSON-RPC params. Clients
+                // (Khora session_start, multi-session orchestrators) supply
+                // `vakAddress` as a JSON object matching `portal_core::VakAddress`.
+                // Absent / null = no change to the existing record (single
+                // Option, unlike the double-Option string fields above —
+                // VakAddress doesn't support an explicit clear-to-None over
+                // the wire today; that's a separate sentinel design).
+                vak_address: frame
+                    .params
+                    .get("vakAddress")
+                    .filter(|value| !value.is_null())
+                    .and_then(|value| {
+                        serde_json::from_value::<portal_core::VakAddress>(value.clone()).ok()
+                    }),
             };
             let record = store.patch(&identifier, patch).map_err(not_found_error)?;
             // Provenance: session_open when vault_now_path first set

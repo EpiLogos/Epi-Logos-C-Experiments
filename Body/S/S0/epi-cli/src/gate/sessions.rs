@@ -41,6 +41,7 @@ pub fn record_to_value(record: &SessionRecord) -> Value {
         "modelOverride": record.model_override,
         "providerOverride": record.provider_override,
         "cliSessionIds": record.cli_session_ids,
+        "vakAddress": record.vak_address,
         "updatedAtMs": record.updated_at_ms,
     })
 }

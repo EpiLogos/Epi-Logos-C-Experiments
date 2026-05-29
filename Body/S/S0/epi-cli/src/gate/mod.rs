@@ -98,6 +98,33 @@ pub enum GateCmd {
         #[command(subcommand)]
         cmd: GraphitiCmd,
     },
+    /// Operate on gateway SessionRecord entries (patch metadata, etc.)
+    Sessions {
+        #[command(subcommand)]
+        cmd: GateSessionsCmd,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum GateSessionsCmd {
+    /// Patch a SessionRecord field. Currently supports vak_address.
+    ///
+    /// Mirrors the `sessions.patch` JSON-RPC method but operates directly on
+    /// the local SessionStore (gate state root) — same pattern as
+    /// `epi gate temporal context`. Used by Khora's session_start tool to
+    /// echo the compose-phase VakAddress into the gateway record alongside
+    /// the env-propagated EPI_SESSION_VAK_ADDRESS.
+    Patch {
+        /// Session canonical key or alias used to resolve the record.
+        #[arg(long)]
+        session_id: String,
+        /// JSON-encoded `portal_core::VakAddress`. When present and parses
+        /// successfully, the record's `vak_address` field is set. Absent or
+        /// null = no change. Malformed JSON exits non-zero — callers must
+        /// either supply a valid VAK or omit the flag entirely.
+        #[arg(long = "vak-address-json")]
+        vak_address_json: Option<String>,
+    },
 }
 
 #[derive(Subcommand)]
@@ -243,6 +270,37 @@ pub async fn dispatch(cmd: &GateCmd, json: bool) -> Result<String, String> {
             GraphitiCmd::Stop => graphiti::stop(json),
             GraphitiCmd::Status => graphiti::status(json).await,
         },
+        GateCmd::Sessions { cmd } => dispatch_sessions(cmd, json),
+    }
+}
+
+fn dispatch_sessions(cmd: &GateSessionsCmd, json: bool) -> Result<String, String> {
+    let state_root = config::gate_root_from_env()?;
+    let store = sessions::SessionStore::new(&state_root)?;
+    match cmd {
+        GateSessionsCmd::Patch {
+            session_id,
+            vak_address_json,
+        } => {
+            let vak_address = match vak_address_json.as_deref() {
+                Some(raw) => Some(
+                    serde_json::from_str::<portal_core::VakAddress>(raw)
+                        .map_err(|err| format!("invalid --vak-address-json: {err}"))?,
+                ),
+                None => None,
+            };
+            let patch = sessions::SessionPatch {
+                vak_address,
+                ..Default::default()
+            };
+            let record = store.patch(session_id, patch)?;
+            let value = sessions::record_to_value(&record);
+            if json {
+                serde_json::to_string_pretty(&value).map_err(|err| err.to_string())
+            } else {
+                Ok(value.to_string())
+            }
+        }
     }
 }
 
