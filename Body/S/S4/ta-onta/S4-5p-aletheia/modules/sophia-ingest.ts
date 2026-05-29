@@ -83,6 +83,7 @@ export function routeToEpiiInbox(input: {
  * failure (missing env, missing Sophia file, parse error). Callers can
  * surface `reason` directly in tool results.
  */
+// Uses appendFileSync — repeated invocations grow the Epii inbox jsonl. C5 InboxStore should treat each line as a distinct entry.
 export function aletheiaIngestSophia(input: {
   session_id: string;
   day_id: string;

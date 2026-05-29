@@ -221,7 +221,11 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
 
     const raw = readFileSync(result.path, "utf8");
     const lines = raw.trim().split("\n");
-    assert.equal(lines.length, 1, "exactly one JSONL line");
+    // The function uses appendFileSync — its contract permits repeated
+    // invocations to grow the Epii inbox jsonl. The earlier "exactly one
+    // line" assertion only held because the test uses a fresh tmpdir.
+    // See the dedicated append-grows test below for the multi-invocation pin.
+    assert.ok(lines.length >= 1, "at least one JSONL line written");
 
     const parsed = JSON.parse(lines[0]);
     assert.equal(parsed.kind, "epii_autoresearch_inbox_entry");
@@ -300,5 +304,112 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
     const parsed = JSON.parse(readFileSync(result.path, "utf8").trim());
     assert.deepEqual(parsed.artifacts, ["/latest.md"]);
     assert.deepEqual(parsed.improvement_vectors, ["v-latest"]);
+  });
+
+  it("repeated invocations grow the Epii inbox (append semantics)", () => {
+    // Pins the append-grows contract that the C5 Rust-side InboxStore
+    // consumes: each invocation against the same session_id appends a
+    // distinct JSONL line rather than overwriting. The Sophia file is
+    // read once and identical across calls; differentiation between
+    // entries comes from the orchestrator's moirai_outputs parameter.
+    const session_id = "agent:append:1";
+    const day_id = "29-05-2026";
+    seedSophia(session_id, day_id);
+
+    const first = aletheiaIngestSophia({
+      session_id,
+      day_id,
+      moirai_outputs: { klotho: "first-K", lachesis: "first-L", atropos: "first-A" },
+    });
+    assert.equal(first.ok, true, `first ingest should succeed: ${JSON.stringify(first)}`);
+    if (!first.ok) return;
+
+    const second = aletheiaIngestSophia({
+      session_id,
+      day_id,
+      moirai_outputs: { klotho: "second-K", lachesis: "second-L", atropos: "second-A" },
+    });
+    assert.equal(second.ok, true, `second ingest should succeed: ${JSON.stringify(second)}`);
+    if (!second.ok) return;
+
+    // Both invocations write to the same per-session Epii inbox file.
+    assert.equal(first.path, second.path, "same session_id → same Epii inbox path");
+
+    const raw = readFileSync(second.path, "utf8");
+    const lines = raw.trim().split("\n");
+    assert.equal(lines.length, 2, "two invocations → two appended JSONL lines");
+
+    const firstParsed = JSON.parse(lines[0]);
+    const secondParsed = JSON.parse(lines[1]);
+    assert.equal(firstParsed.kind, "epii_autoresearch_inbox_entry");
+    assert.equal(secondParsed.kind, "epii_autoresearch_inbox_entry");
+    assert.deepEqual(firstParsed.moirai_summary, { klotho: "first-K", lachesis: "first-L", atropos: "first-A" });
+    assert.deepEqual(secondParsed.moirai_summary, { klotho: "second-K", lachesis: "second-L", atropos: "second-A" });
+    assert.notDeepEqual(
+      firstParsed.moirai_summary,
+      secondParsed.moirai_summary,
+      "second invocation's moirai_summary differs from the first",
+    );
+  });
+
+  it("returns ok:false with an 'empty' reason when the Sophia file exists but has no content", () => {
+    // Distinguishes a present-but-empty Sophia file from a missing one.
+    // The orchestrator must surface this cleanly so the C5 InboxStore
+    // consumer can tell a degenerate disclosure write apart from the
+    // common "no Sophia at all" case (no synthesis was attempted).
+    const session_id = "agent:empty-sophia:1";
+    const day_id = "29-05-2026";
+    const inboxDir = join(workDir, "Pratibimba", "Sophia", "inbox");
+    mkdirSync(inboxDir, { recursive: true });
+    writeFileSync(join(inboxDir, `${session_id}.jsonl`), "\n   \n\n", "utf8");
+
+    const result = aletheiaIngestSophia({
+      session_id,
+      day_id,
+      moirai_outputs: {},
+    });
+    assert.equal(result.ok, false);
+    if (result.ok) return;
+    assert.match(result.reason, /empty/i, "reason mentions emptiness");
+  });
+
+  it("returns ok:false with a parse-failed reason when the last Sophia line is malformed", () => {
+    // The orchestrator parses the LAST non-empty line. If that line is
+    // malformed JSON the failure must be classified — not crash the
+    // lifecycle handler — so tool surfaces can surface the reason.
+    const session_id = "agent:bad-tail:1";
+    const day_id = "29-05-2026";
+    const inboxDir = join(workDir, "Pratibimba", "Sophia", "inbox");
+    mkdirSync(inboxDir, { recursive: true });
+    const validDisclosure = {
+      kind: "sophia_session_end_disclosure",
+      session_id,
+      day_id,
+      final_vak: {
+        cpf: "(4.0/1-4.4/5)",
+        ct: ["CT5"],
+        cp: "CP4.5",
+        cf: "(5/0)",
+        cfp: "CFP0",
+        cs: { code: "CS0", direction: "Night'" },
+      },
+      artifacts: [],
+      improvement_vectors: [],
+      handoff_target: "aletheia_ingest",
+    };
+    writeFileSync(
+      join(inboxDir, `${session_id}.jsonl`),
+      JSON.stringify(validDisclosure) + "\n" + "{ invalid json" + "\n",
+      "utf8",
+    );
+
+    const result = aletheiaIngestSophia({
+      session_id,
+      day_id,
+      moirai_outputs: {},
+    });
+    assert.equal(result.ok, false);
+    if (result.ok) return;
+    assert.match(result.reason, /parse failed|JSON parse/i, "reason mentions parse failure");
   });
 });
