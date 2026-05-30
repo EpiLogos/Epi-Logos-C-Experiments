@@ -470,13 +470,19 @@ export async function animaExtension(api: ExtensionAPI) {
       // escape hatch — each agent_name passes through canonical-shape checks
       // without roster cf-binding (since the aggregate isn't a 7-fold member).
       vak_address: Type.Optional(Type.Any()),
+      // Optional risk score (0..1) for gate guardrail evaluation. Default 0
+      // preserves the pre-D5 surface (existing callers unaffected; only
+      // collab-gate consumes risk and only when cpf is dialogical). Mirrors
+      // the dispatch_agent / dispatch_parallel_agents schema for symmetry.
+      risk: Type.Optional(Type.Number()),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const vakAddress = params.vak_address as VakAddress | undefined;
       const agents = params.agents as string[];
+      const dispatches = agents.map((agent_name) => ({ agent_name, vak_address: vakAddress }));
       const validation = validateFusionDispatch({
         task: params.task,
-        dispatches: agents.map((agent_name) => ({ agent_name, vak_address: vakAddress })),
+        dispatches,
       });
       if (!validation.ok) {
         return {
@@ -484,13 +490,43 @@ export async function animaExtension(api: ExtensionAPI) {
           isError: true,
         };
       }
+      // Per-entry gate guardrails (D5 symmetry). Same dialectic as the
+      // per-entry mechanistic validation above: each fusion entry is
+      // independently gated against CANONICAL_TRIGGERS. A single blocking
+      // gate on any entry aborts the whole fan-out, consistent with the
+      // no-partial-fanout invariant. Mirrors dispatch_parallel_agents.
+      const prev_vak = safeParseVak(process.env.EPI_SESSION_VAK_ADDRESS);
+      const risk = params.risk ?? 0;
+      const informationalFires: string[] = [];
+      for (const entry of dispatches) {
+        if (!entry.vak_address) continue; // dialogical fusion — no next_vak to gate
+        const guardrails = dispatchGuardrails(
+          { prev_vak, next_vak: entry.vak_address, risk },
+          CANONICAL_TRIGGERS,
+        );
+        if (!guardrails.allowed) {
+          return {
+            content: [{
+              type: "text",
+              text: `Fusion dispatch blocked by gates on entry for '${entry.agent_name}': ${guardrails.gates_fired.join(", ")}`,
+            }],
+            isError: true,
+          };
+        }
+        if (guardrails.gates_fired.length > 0) {
+          informationalFires.push(`${entry.agent_name}: ${guardrails.gates_fired.join(", ")}`);
+        }
+      }
       const outputs = await Promise.all(
         agents.map((agent: string) =>
           dispatchTeamMember(agent, params.task, vakAddress).then((out) => `### ${agent}\n${out}`)
         )
       );
+      const header = informationalFires.length > 0
+        ? `[gates fired (informational): ${informationalFires.join("; ")}]\n\n`
+        : "";
       return {
-        content: [{ type: "text", text: `Agora CFP3 aggregation\n\n${outputs.join("\n\n")}` }],
+        content: [{ type: "text", text: `${header}Agora CFP3 aggregation\n\n${outputs.join("\n\n")}` }],
       };
     },
   });
