@@ -41,6 +41,20 @@
       "layer": "S4/S4'",
       "vak_thread": "CFP2",
       "upstream_required": ["vak-evaluate"]
+    },
+    {
+      "name": "dispatch_moirai_night_pass",
+      "kind": "vak-dispatch",
+      "layer": "S4/S4'",
+      "vak_thread": "CFP3",
+      "upstream_required": ["vak-evaluate"]
+    },
+    {
+      "name": "anima_self_invoke",
+      "kind": "vak-dispatch",
+      "layer": "S4/S4'",
+      "vak_thread": "single",
+      "upstream_required": ["vak-evaluate"]
     }
   ],
   "skills": [
@@ -325,9 +339,12 @@
         "vak_evaluate",
         "goal_prelude",
         "anima_orchestrate",
+        "nous_disclose",
         "dispatch_agent",
         "dispatch_parallel_agents",
         "dispatch_fusion_agents",
+        "dispatch_moirai_night_pass",
+        "anima_self_invoke",
         "run_chain",
         "subagent_create",
         "subagent_continue",

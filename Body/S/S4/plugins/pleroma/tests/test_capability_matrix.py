@@ -1,9 +1,13 @@
 import json
+import re
 import unittest
 from pathlib import Path
 
+import yaml
+
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = PLUGIN_ROOT.parents[4]  # Body/S/S4/plugins/pleroma -> repo root
 
 
 class PleromaCapabilityMatrixTest(unittest.TestCase):
@@ -262,6 +266,29 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
                     skill["vak_profile"]["serves_ct"],
                     f"{skill['name']}: bare 'CT4' is not canonical — use CT4a and/or CT4b",
                 )
+
+    def test_agent_capability_gates_anima_tools_matches_anima_md_tools(self):
+        """Matrix anima tools must match the anima.md frontmatter tools list (which itself matches runtime animaDefaultTools).
+
+        Pins the matrix↔runtime parity surfaced by D1 follow-up (commit 7103576).
+        The static matrix is governance documentation, not a constraint on what
+        executes — but it must accurately reflect the runtime surface.
+        """
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        matrix_anima_tools = set(matrix["agent_capability_gates"]["anima"]["tools"])
+
+        # Read the anima.md frontmatter (D1 follow-up keeps both pi-agent and S4' copies byte-identical)
+        anima_md = REPO_ROOT / "Body" / "S" / "S4" / "pi-agent" / "agents" / "anima.md"
+        text = anima_md.read_text()
+        m = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
+        self.assertIsNotNone(m, "anima.md missing frontmatter")
+        fm = yaml.safe_load(m.group(1))
+        md_tools = set(t.strip() for t in fm["tools"].split(","))
+
+        self.assertEqual(
+            matrix_anima_tools, md_tools,
+            f"matrix↔anima.md drift: only-in-matrix={matrix_anima_tools - md_tools}, only-in-md={md_tools - matrix_anima_tools}"
+        )
 
 
 if __name__ == "__main__":
