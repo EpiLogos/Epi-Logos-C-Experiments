@@ -50,7 +50,7 @@
       "kind": "vak-dispatch",
       "vak_profile": {
         "operates_at_cf": ["(4.0/1-4.4/5)"],
-        "serves_ct": ["CT4", "CT5"],
+        "serves_ct": ["CT4a", "CT4b", "CT5"],
         "ranges_cp": ["CP4.0", "CP4.1", "CP4.2", "CP4.3", "CP4.4", "CP4.5"]
       }
     },
@@ -60,7 +60,7 @@
       "kind": "vak-coordinate-assignment",
       "vak_profile": {
         "operates_at_cf": ["(4.0/1-4.4/5)"],
-        "serves_ct": ["CT0", "CT1", "CT2", "CT3", "CT4", "CT5"],
+        "serves_ct": ["CT0", "CT1", "CT2", "CT3", "CT4a", "CT4b", "CT5"],
         "ranges_cp": ["CP4.0"]
       }
     },
@@ -70,7 +70,7 @@
       "kind": "coordinate-framing",
       "vak_profile": {
         "operates_at_cf": ["(4.0/1-4.4/5)"],
-        "serves_ct": ["CT0", "CT1", "CT2", "CT3", "CT4", "CT5"],
+        "serves_ct": ["CT0", "CT1", "CT2", "CT3", "CT4a", "CT4b", "CT5"],
         "ranges_cp": ["CP4.0"]
       }
     },
@@ -130,7 +130,7 @@
       "kind": "dispatch-sequencing",
       "vak_profile": {
         "operates_at_cf": ["(4.0/1-4.4/5)"],
-        "serves_ct": ["CT4", "CT4a", "CT4b"],
+        "serves_ct": ["CT4a", "CT4b"],
         "ranges_cp": ["CP4.0", "CP4.1", "CP4.2", "CP4.3", "CP4.4", "CP4.5"]
       }
     },
@@ -170,7 +170,7 @@
       "kind": "agent-dispatch",
       "vak_profile": {
         "operates_at_cf": ["(4.0/1-4.4/5)"],
-        "serves_ct": ["CT4", "CT4a", "CT4b"],
+        "serves_ct": ["CT4a", "CT4b"],
         "ranges_cp": ["CP4.0", "CP4.1", "CP4.2", "CP4.3", "CP4.4", "CP4.5"]
       }
     },

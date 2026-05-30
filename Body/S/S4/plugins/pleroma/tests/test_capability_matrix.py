@@ -8,7 +8,7 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 
 class PleromaCapabilityMatrixTest(unittest.TestCase):
     PLEROMA_ROOT = PLUGIN_ROOT
-    CANONICAL_CT = {"CT0", "CT1", "CT2", "CT3", "CT4", "CT4a", "CT4b", "CT5"}
+    CANONICAL_CT = {"CT0", "CT1", "CT2", "CT3", "CT4a", "CT4b", "CT5"}
     CANONICAL_CP = {
         "CP0", "CP1", "CP2", "CP3",
         "CP4.0", "CP4.1", "CP4.2", "CP4.3", "CP4.4", "CP4.5",
@@ -251,6 +251,17 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
                         self.CANONICAL_CP,
                         f"{skill['name']}: unknown cp {cp}",
                     )
+
+    def test_no_skill_uses_bare_CT4_after_harmonization(self):
+        """E1↔E2 harmonization (CT4 → CT4a/CT4b): bare 'CT4' is not a canonical literal."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        for skill in matrix["skills"]:
+            with self.subTest(skill=skill["name"]):
+                self.assertNotIn(
+                    "CT4",
+                    skill["vak_profile"]["serves_ct"],
+                    f"{skill['name']}: bare 'CT4' is not canonical — use CT4a and/or CT4b",
+                )
 
 
 if __name__ == "__main__":

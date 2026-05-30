@@ -61,21 +61,45 @@ describe("skill registry query", () => {
     assert.deepEqual(matches, []);
   });
 
-  it("queries the real pleroma capability matrix (anima-orchestration surfaces for CT4 + CF (4.0/1-4.4/5) + CP4.4)", () => {
+  it("queries the real pleroma capability matrix (anima-orchestration surfaces for canonical CT4a + CF (4.0/1-4.4/5) + CP4.4)", () => {
     // Smoke test against the actual shipped matrix to catch import-path /
-    // schema drift between E1 (matrix shape) and E2 (query). Uses CT codes
-    // that match the matrix's own vocabulary (CT4, not CT4a/CT4b — see
-    // matrix file). If E1's matrix vocabulary changes, this test signals it.
+    // schema drift between E1 (matrix shape) and E2 (query). Post-E1↔E2
+    // harmonization, the matrix uses canonical CT4a/CT4b (not bare CT4 —
+    // see shared/vak_address.ts CT_LITERALS). If matrix vocabulary drifts
+    // away from canonical, this test signals it.
     const here = dirname(fileURLToPath(import.meta.url));
     const matrixPath = resolve(here, "../../../plugins/pleroma/capability-matrix.json");
     const matrix = JSON.parse(readFileSync(matrixPath, "utf8")) as CapabilityMatrix;
     const matches = findSkillsForVak(matrix, {
       cf: "(4.0/1-4.4/5)",
-      ct: ["CT4"],
+      ct: ["CT4a"],
       cp: "CP4.4",
     } as any);
     const names = matches.map((s) => s.name);
     assert.ok(names.includes("anima-orchestration"),
       `expected anima-orchestration in matches, got: ${names.join(", ")}`);
+  });
+
+  it("surfaces skills for canonical CT4a VAK (post-CT4 harmonization)", () => {
+    // Pins the E1↔E2 harmonization: a canonical VakAddress carrying CT4a
+    // (per shared/vak_address.ts) must successfully intersect with matrix
+    // serves_ct entries. Before harmonization, bare 'CT4' in the matrix
+    // produced empty intersections against canonical CT4a vak values.
+    const here = dirname(fileURLToPath(import.meta.url));
+    const matrixPath = resolve(here, "../../../plugins/pleroma/capability-matrix.json");
+    const matrix = JSON.parse(readFileSync(matrixPath, "utf8")) as CapabilityMatrix;
+    const matches = findSkillsForVak(matrix, {
+      cpf: "(4.0/1-4.4/5)",
+      ct: ["CT4a"],
+      cp: "CP4.4",
+      cf: "(4.0/1-4.4/5)",
+      cfp: "CFP0",
+      cs: { code: "CS0", direction: "Day" },
+    } as any);
+    assert.ok(matches.length > 0,
+      "at least one skill should match canonical CT4a VAK post-harmonization");
+    const animaSkill = matches.find((s) => s.name === "anima-orchestration");
+    assert.ok(animaSkill,
+      `anima-orchestration should match canonical CT4a VAK, got: ${matches.map((s) => s.name).join(", ")}`);
   });
 });
