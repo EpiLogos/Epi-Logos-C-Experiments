@@ -1,0 +1,9 @@
+{
+  "cpf": "C2",
+  "ct": "CT4b",
+  "cp": "CP4",
+  "cf": "(4.0/1-4.4/5)",
+  "cfp": "CFP0",
+  "cs": "Day",
+  "rationale": "heuristic: task keywords matched cf=(4.0/1-4.4/5) cfp=CFP0"
+}

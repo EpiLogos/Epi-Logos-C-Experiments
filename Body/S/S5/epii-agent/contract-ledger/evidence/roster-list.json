@@ -1,0 +1,104 @@
+{
+  "embodiments": [
+    {
+      "agentId": "epii",
+      "coordinate": "S5/S5'",
+      "defaultSessionKey": "agent:epii:main",
+      "pluginSurface": "Body/S/S5/plugins/epi-logos",
+      "roles": [
+        {
+          "id": "epii",
+          "scope": "base Epii user-position and review surface"
+        },
+        {
+          "id": "mef-diagnostician",
+          "scope": "epi-logos plugin subagent"
+        },
+        {
+          "id": "pi-writing-cartographer",
+          "scope": "epi-logos plugin subagent"
+        },
+        {
+          "id": "ql-cartographer",
+          "scope": "epi-logos plugin subagent"
+        }
+      ]
+    },
+    {
+      "agentId": "anima",
+      "coordinate": "S4/S4'",
+      "defaultSessionKey": "agent:anima:main",
+      "pluginSurface": "Body/S/S4/plugins/pleroma",
+      "roles": [
+        {
+          "id": "anima",
+          "scope": "base dispatch function"
+        },
+        {
+          "id": "nous",
+          "scope": "constitutional clearing role"
+        },
+        {
+          "id": "logos",
+          "scope": "constitutional form-giving role"
+        },
+        {
+          "id": "eros",
+          "scope": "constitutional operation role"
+        },
+        {
+          "id": "mythos",
+          "scope": "constitutional pattern role"
+        },
+        {
+          "id": "psyche",
+          "scope": "constitutional context role"
+        },
+        {
+          "id": "sophia",
+          "scope": "constitutional integration role"
+        },
+        {
+          "id": "techne-helper",
+          "scope": "technical helper role"
+        }
+      ]
+    },
+    {
+      "agentId": "aletheia",
+      "coordinate": "S4.5'/S5 handoff",
+      "defaultSessionKey": "agent:aletheia:main",
+      "pluginSurface": "Body/S/S4/ta-onta/S4-5p-aletheia",
+      "roles": [
+        {
+          "id": "aletheia",
+          "scope": "base crystallisation and return bridge"
+        },
+        {
+          "id": "agora",
+          "scope": "collective disclosure role"
+        },
+        {
+          "id": "anansi",
+          "scope": "structural topology role"
+        },
+        {
+          "id": "janus",
+          "scope": "threshold and bifurcation role"
+        },
+        {
+          "id": "mercurius",
+          "scope": "translation and mediation role"
+        },
+        {
+          "id": "moirai",
+          "scope": "lineage and fate-thread role"
+        },
+        {
+          "id": "zeithoven",
+          "scope": "temporal composition role"
+        }
+      ]
+    }
+  ]
+}

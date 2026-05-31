@@ -1,0 +1,147 @@
+{
+  "vak_profiles": {
+    "anuttara": {
+      "keys_present": [
+        "cf",
+        "cfp",
+        "cp",
+        "cpf",
+        "cs",
+        "ct",
+        "rationale"
+      ],
+      "missing_required": [],
+      "values": {
+        "cpf": "C2",
+        "ct": "CT4b",
+        "cp": "CP4",
+        "cf": "(5/0)",
+        "cfp": "CFP0",
+        "cs": "Day",
+        "rationale": "heuristic: task keywords matched cf=(5/0) cfp=CFP0"
+      }
+    },
+    "paramasiva": {
+      "keys_present": [
+        "cf",
+        "cfp",
+        "cp",
+        "cpf",
+        "cs",
+        "ct",
+        "rationale"
+      ],
+      "missing_required": [],
+      "values": {
+        "cpf": "C2",
+        "ct": "CT4b",
+        "cp": "CP4",
+        "cf": "(5/0)",
+        "cfp": "CFP0",
+        "cs": "Day",
+        "rationale": "heuristic: task keywords matched cf=(5/0) cfp=CFP0"
+      }
+    },
+    "parashakti": {
+      "keys_present": [
+        "cf",
+        "cfp",
+        "cp",
+        "cpf",
+        "cs",
+        "ct",
+        "rationale"
+      ],
+      "missing_required": [],
+      "values": {
+        "cpf": "C2",
+        "ct": "CT4b",
+        "cp": "CP4",
+        "cf": "(4.0/1-4.4/5)",
+        "cfp": "CFP0",
+        "cs": "Day",
+        "rationale": "heuristic: task keywords matched cf=(4.0/1-4.4/5) cfp=CFP0"
+      }
+    },
+    "mahamaya": {
+      "keys_present": [
+        "cf",
+        "cfp",
+        "cp",
+        "cpf",
+        "cs",
+        "ct",
+        "rationale"
+      ],
+      "missing_required": [],
+      "values": {
+        "cpf": "C2",
+        "ct": "CT4b",
+        "cp": "CP4",
+        "cf": "(5/0)",
+        "cfp": "CFP0",
+        "cs": "Day",
+        "rationale": "heuristic: task keywords matched cf=(5/0) cfp=CFP0"
+      }
+    },
+    "nara": {
+      "keys_present": [
+        "cf",
+        "cfp",
+        "cp",
+        "cpf",
+        "cs",
+        "ct",
+        "rationale"
+      ],
+      "missing_required": [],
+      "values": {
+        "cpf": "C2",
+        "ct": "CT4b",
+        "cp": "CP4",
+        "cf": "(5/0)",
+        "cfp": "CFP0",
+        "cs": "Day",
+        "rationale": "heuristic: task keywords matched cf=(5/0) cfp=CFP0"
+      }
+    },
+    "epii-on-epii": {
+      "keys_present": [
+        "cf",
+        "cfp",
+        "cp",
+        "cpf",
+        "cs",
+        "ct",
+        "rationale"
+      ],
+      "missing_required": [],
+      "values": {
+        "cpf": "C2",
+        "ct": "CT4b",
+        "cp": "CP4",
+        "cf": "(5/0)",
+        "cfp": "CFP0",
+        "cs": "Day",
+        "rationale": "heuristic: task keywords matched cf=(5/0) cfp=CFP0"
+      }
+    }
+  },
+  "roster": {
+    "agentIds": [
+      "epii",
+      "anima",
+      "aletheia"
+    ],
+    "epii_present": true,
+    "anima_present": true,
+    "aletheia_present": true
+  },
+  "agent_contract": {
+    "gateway_methods_count": 11,
+    "gateway_methods_nonempty": true,
+    "forbidden_authority_present": true,
+    "forbidden_authority_count": 3,
+    "epii_authority_count": 5
+  }
+}

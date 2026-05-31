@@ -1,0 +1,657 @@
+{
+  "ledger_id": "track-09-T0-preflight",
+  "ledger_version": "1.0.0",
+  "produced_at": "2026-05-31",
+  "tranche": "09.T0",
+  "tranche_title": "Mediation Contract Preflight And VAK Baseline",
+  "plan_source": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md",
+  "scope_summary": "Inventory the current Anima/Sophia/Pi/Aletheia mediation surface, the live S5 epii-agent contract, the upstream track surfaces Track 09 will consume (Tracks 01/04/05/06/07/08), and the six operational-capacity route profiles. Every row is either backed by a live observation (CLI output, file parse, code path) or explicitly flagged as a readiness_blocker. No prose-only assumptions are recorded as ready.",
+  "readiness_status_legend": {
+    "authoritative": "Surface exists as live, test-locked code/CLI/file in the current repo and can be consumed today.",
+    "transitional": "Surface exists but is partial, in flux, or behind a flag; downstream tranches should code defensively.",
+    "blocked": "Surface is named in upstream plans but has no live implementation; Track 09 must either build the binding through gateway/library adapters or report blocked readiness."
+  },
+  "privacy_gate_legend": {
+    "public_current": "Public-current bridge data, safe for `/body` and `/pratibimba/system` surfacing.",
+    "session_scoped": "Carries session/DAY/NOW lineage; safe within governed session boundary; never raw-protected.",
+    "protected_local": "Originated in user-private substrate (Nara journal/dream/oracle, Graphiti body); only safe handles and aggregate-metric derivations may cross M5-4.",
+    "review_gate": "Must traverse an S5 review item with human-required or user-final validation gate before downstream use.",
+    "forbidden_to_agents": "Authority reserved for human or Epii position; agents may surface and request but never resolve."
+  },
+  "vak_baseline_for_track_09": {
+    "summary": "Track 09 itself is Sophia-led integration work (Anuttara, Paramasiva, Parashakti, Mahamaya, Epii-on-Epii share Sophia as governance lead; Nara is Anima-primary), while Anima remains the dispatch function across all six profiles. The baseline is recorded against the live `epi agent vak evaluate` heuristic output for representative tasks drawn from this plan body.",
+    "governance_lead": "sophia",
+    "dispatch_function": "anima",
+    "user_final_validation_required_for_load_bearing": true,
+    "nara_exception": "Nara workflow is Anima-primary with five Anima gates (admission/refresh-trigger/deployment/rollback/DPO-trigger); Sophia is secondary for cross-subsystem coherence.",
+    "baseline_invocations": [
+      {
+        "profile": "Anuttara",
+        "task_text": "Anuttara: review a SHACL/reasoner construction proposal as a load-bearing axiom elaboration requiring Sophia review and user-final validation",
+        "evidence_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-anuttara.json",
+        "observed_vak": {"cpf": "C2", "ct": "CT4b", "cp": "CP4", "cf": "(5/0)", "cfp": "CFP0", "cs": "Day"},
+        "required_keys_present": ["cpf", "ct", "cp", "cf", "cfp", "cs"]
+      },
+      {
+        "profile": "Paramasiva",
+        "task_text": "Paramasiva: refresh CPT/RAG corpus with synthetic-proof validation and request Sophia plus Epii co-review with Pi training dispatch",
+        "evidence_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-paramasiva.json",
+        "observed_vak": {"cpf": "C2", "ct": "CT4b", "cp": "CP4", "cf": "(5/0)", "cfp": "CFP0", "cs": "Day"},
+        "required_keys_present": ["cpf", "ct", "cp", "cf", "cfp", "cs"]
+      },
+      {
+        "profile": "Parashakti",
+        "task_text": "Parashakti: detect embedding-quality metric drift and request graph-relational ML hot-swap with Anima cluster/rotation/Klein aesthetic check",
+        "evidence_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-parashakti.json",
+        "observed_vak": {"cpf": "C2", "ct": "CT4b", "cp": "CP4", "cf": "(4.0/1-4.4/5)", "cfp": "CFP0", "cs": "Day"},
+        "required_keys_present": ["cpf", "ct", "cp", "cf", "cfp", "cs"]
+      },
+      {
+        "profile": "Mahamaya",
+        "task_text": "Mahamaya: execute process-reward federated training round with tier-asymmetric review and Pi rollback handle preparation",
+        "evidence_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-mahamaya.json",
+        "observed_vak": {"cpf": "C2", "ct": "CT4b", "cp": "CP4", "cf": "(5/0)", "cfp": "CFP0", "cs": "Day"},
+        "required_keys_present": ["cpf", "ct", "cp", "cf", "cfp", "cs"]
+      },
+      {
+        "profile": "Nara",
+        "task_text": "Nara: dialogic-voice QLoRA adapter refresh trigger requires Anima admission gate, consent verification, and PII stripping before Sophia coherence review",
+        "evidence_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-nara.json",
+        "observed_vak": {"cpf": "C2", "ct": "CT4b", "cp": "CP4", "cf": "(5/0)", "cfp": "CFP0", "cs": "Day"},
+        "required_keys_present": ["cpf", "ct", "cp", "cf", "cfp", "cs"]
+      },
+      {
+        "profile": "Epii-on-Epii",
+        "task_text": "Epii-on-Epii: recursive Sophia-on-Sophia anti-self-justification review of spine governance mechanism with user-final validation gate",
+        "evidence_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-epii-on-epii.json",
+        "observed_vak": {"cpf": "C2", "ct": "CT4b", "cp": "CP4", "cf": "(5/0)", "cfp": "CFP0", "cs": "Day"},
+        "required_keys_present": ["cpf", "ct", "cp", "cf", "cfp", "cs"]
+      }
+    ],
+    "baseline_caveat": "The current `epi agent vak evaluate` returns a heuristic keyword-driven mapping; five of the six representative tasks collapse to cf=(5/0)/cfp=CFP0 because the heuristic does not yet discriminate among capacity-profile vocabularies. Track 09 T1 must build a profile-aware mapping (or accept the heuristic as a deterministic baseline) so that capacity-specific route decisions are derivable from VAK rather than re-inferred from caller intent. Flagged as readiness_blocker `vak.profile-aware-mapping`."
+  },
+  "cli_surfaces": [
+    {
+      "name": "epi agent vak evaluate",
+      "ownership_track": "S4/S4' (PI runtime, ta-onta Anima)",
+      "binary_path": "~/.cargo/bin/epi",
+      "live_invocation": "epi agent vak evaluate <TASK> --json",
+      "observed_output_keys": ["cpf", "ct", "cp", "cf", "cfp", "cs", "rationale"],
+      "readiness": "authoritative",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "notes": "Per Track 09 keystones: `dispatch_tools[]` carry `upstream_required: [\"vak-evaluate\"]`; dispatch without a real prior VAK evaluation must be rejected at the gate. Current CLI is heuristic; downstream gateway-shaped binding is Track 09 T1 work."
+    },
+    {
+      "name": "epi agent roster list",
+      "ownership_track": "S4/S4' (PI runtime)",
+      "live_invocation": "epi agent roster list --json",
+      "observed_embodiments": ["epii", "anima", "aletheia"],
+      "readiness": "authoritative",
+      "privacy_gate": "public_current",
+      "is_prose_assumption": false,
+      "evidence_path": "Body/S/S5/epii-agent/contract-ledger/evidence/roster-list.json"
+    },
+    {
+      "name": "epi agent team {create|dispatch|list|resolve|stop}",
+      "ownership_track": "S4/S4' (PI runtime durable team substrate)",
+      "live_invocation": "epi agent team --help",
+      "readiness": "authoritative",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "notes": "Durable multi-agent team substrate is live (per Track 09 Dependencies section)."
+    },
+    {
+      "name": "epi gate dispatch anima-invoke",
+      "ownership_track": "S3/S3' gateway + S4/S4' Anima",
+      "readiness": "authoritative",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "notes": "Wired through gateway per D3 chip, commit 419aac5 (referenced in Track 09 plan body). Track 09 T1 must extend the binding to the full set of dispatch tools."
+    },
+    {
+      "name": "epi agent verify-runtime",
+      "ownership_track": "S4/S4'",
+      "live_invocation": "epi agent verify-runtime",
+      "readiness": "transitional",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "notes": "Smoke harness for real PI runtime; required by Track 09 T2 to prove the AgentRunEnvelope reaches a managed agent runtime when provider credentials are available."
+    },
+    {
+      "name": "epi agent anima | epi agent epii | epi agent aletheia",
+      "ownership_track": "S4/S4' embodiment launchers",
+      "readiness": "authoritative",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false
+    }
+  ],
+  "agent_contracts": [
+    {
+      "agent": "epii",
+      "contract_path": "Body/S/S5/epii-agent/agent-contract.json",
+      "coordinate": "S5/S5'",
+      "live_gateway_methods": [
+        "s5'.epii.status",
+        "s5'.epii.deposit",
+        "s5'.review.submit",
+        "s5'.review.inbox",
+        "s5'.review.resolve",
+        "s5'.review.history",
+        "s5'.improve.status",
+        "s5'.improve.propose",
+        "s5'.improve.evaluate",
+        "s5'.improve.promote",
+        "s5'.improve.history"
+      ],
+      "gateway_methods_nonempty": true,
+      "forbidden_authority": [
+        "bypass_anima_dispatch_boundaries",
+        "mutate_raw_runtime_state_without_review_record",
+        "treat_anima_constitutional_agents_as_epii_subagents"
+      ],
+      "forbidden_authority_present": true,
+      "epii_authority": [
+        "resolve_review_gate",
+        "accept_or_reject_validation",
+        "observe_and_improve_system",
+        "steward_user_pratibimba_identity",
+        "request_anima_dispatch"
+      ],
+      "accepted_deposits_from_anima": [
+        "review_item",
+        "improvement_request",
+        "validation_gate",
+        "aletheia_crystallisation"
+      ],
+      "allowed_requests_to_anima": [
+        "dispatch_request",
+        "implementation_request",
+        "runtime_action_request",
+        "validation_support_request"
+      ],
+      "readiness": "authoritative",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false
+    },
+    {
+      "agent": "anima",
+      "contract_path": "Body/S/S4/plugins/pleroma/capability-matrix.json",
+      "coordinate": "S4/S4'",
+      "agent_tools_15": [
+        "vak_evaluate", "goal_prelude", "anima_orchestrate", "nous_disclose",
+        "dispatch_agent", "dispatch_parallel_agents", "dispatch_fusion_agents",
+        "dispatch_moirai_night_pass", "anima_self_invoke", "run_chain",
+        "subagent_create", "subagent_continue", "subagent_list", "subagent_remove",
+        "tilldone"
+      ],
+      "dispatch_tools_6": [
+        "dispatch_agent", "dispatch_parallel_agents", "dispatch_fusion_agents",
+        "run_chain", "dispatch_moirai_night_pass", "anima_self_invoke"
+      ],
+      "anima_authority": [
+        "dispatch_to_constitutional_agent",
+        "invoke_bounded_skill",
+        "deposit_epii_inbox_item",
+        "request_epii_validation",
+        "request_epii_research"
+      ],
+      "forbidden_authority": [
+        "resolve_epii_review_gate",
+        "mutate_epii_identity_state",
+        "bypass_epii_inbox"
+      ],
+      "three_way_parity_test": "Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py::test_agent_capability_gates_anima_tools_matches_anima_md_tools",
+      "parity_targets": [
+        "Body/S/S4/plugins/pleroma/capability-matrix.json",
+        "Body/S/S4/pi-agent/agents/anima.md",
+        "runtime animaDefaultTools"
+      ],
+      "readiness": "authoritative",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "notes": "Sophia is recorded in the matrix as a constitutional agent under Anima orchestration (`role_restrictions: leaf, review_disclosure_and_epii_deposit`). Track 09 T2 must extend governance metadata for Sophia-as-governance-lead while preserving Sophia-as-Anima-constitutional-agent."
+    },
+    {
+      "agent": "aletheia",
+      "contract_path": "Body/S/S4/ta-onta/S4-5p-aletheia (legacy CONTRACT.md is historical; roster surfaces aletheia at S4.5'/S5 handoff)",
+      "coordinate": "S4.5'/S5 handoff",
+      "roles": ["aletheia", "agora", "anansi", "janus", "mercurius", "moirai", "zeithoven"],
+      "default_session_key": "agent:aletheia:main",
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "readiness_blocker": "No `aletheia-agent/agent-contract.json` exists analogous to the Epii contract. Track 09 needs Aletheia's gateway methods, accepted deposits, allowed requests, and forbidden authority captured as a live JSON contract before T2 governance metadata can hang off it.",
+      "blocker_id": "aletheia.agent-contract-missing"
+    },
+    {
+      "agent": "sophia",
+      "contract_path": "Body/S/S4/plugins/pleroma/capability-matrix.json#agent_capability_gates.sophia",
+      "current_position": "constitutional_agent_under_anima",
+      "tools": ["vak_evaluate", "sophia_review", "epii_inbox_deposit", "aletheia_crystallise"],
+      "skills": ["git-master", "ultraqa"],
+      "role_restrictions": ["leaf", "review_disclosure_and_epii_deposit"],
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "readiness_blocker": "Track 09 plan requires Sophia to be the default long-arc wisdom/governance lead across five of six capacity profiles, but the current capability matrix encodes Sophia as a constitutional leaf agent. Track 09 T2 must add M5-4 governance metadata that lifts Sophia to capacity-specific governance lead WITHOUT breaking the three-way parity test or the existing Anima-orchestrator pattern.",
+      "blocker_id": "sophia.governance-lead-metadata-missing"
+    },
+    {
+      "agent": "pi",
+      "contract_path": "Body/S/S4/pi-agent/README.md (managed PI runtime)",
+      "role": "bounded technical dispatcher and evidence preparer",
+      "readiness": "transitional",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "readiness_blocker": "Pi is a runtime (managed PI agent directory) rather than a constitutional agent in the matrix; no separate capability JSON encodes 'Pi can prepare evidence and dispatch bounded runs but cannot approve human-required review'. Track 09 T2 must add this metadata.",
+      "blocker_id": "pi.bounded-authority-metadata-missing"
+    }
+  ],
+  "track_01_bridge_capabilities": [
+    {
+      "capability": "MathemeHarmonicProfile",
+      "owner": "Track 01 (kernel bridge / portal-core)",
+      "readiness": "transitional",
+      "privacy_gate": "public_current",
+      "is_prose_assumption": false,
+      "notes": "Named as the single public-current profile contract in Track 01 keystones; profile JSON fixtures from real `portal-core::MathemeHarmonicProfile::from_tick` are required by Track 01 T2."
+    },
+    {
+      "capability": "Readiness taxonomy",
+      "owner": "Track 01",
+      "readiness": "transitional",
+      "privacy_gate": "public_current",
+      "is_prose_assumption": false,
+      "notes": "Shared TypeScript contract consumed by `/body` and `/pratibimba/system`."
+    },
+    {
+      "capability": "VAK/CF metadata (canonical-prefix CPF/CT/CP/CF/CFP/CS keys carried end-to-end)",
+      "owner": "Track 01 (encoded from profile/context-frame layer)",
+      "readiness": "transitional",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "notes": "sessions.patch RPC `vak_address` is live (C1 chip, commit 19fbc8fc). Kernel observations, capability invocations, and review-deposit envelopes must carry the canonical-prefix keys."
+    },
+    {
+      "capability": "Bounded agent capabilities (readCurrentProfile, readPointerAnchor, readGraphContext, subscribeRunEvents, invokeGatewayRpc, depositReviewEvidence, requestDryRunPromotion)",
+      "owner": "Track 01 T7 (Agentic Capability And Observability Feed)",
+      "readiness": "blocked",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "blocker_id": "track-01.t7-bounded-capabilities-not-landed",
+      "notes": "Allowlist is named in Track 09 T3 but the implementation is gated on Track 01 T7. Track 09 must declare blocked rather than fake capabilities."
+    },
+    {
+      "capability": "Observability events stream",
+      "owner": "Track 01",
+      "readiness": "transitional",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false
+    }
+  ],
+  "track_04_s5_dtos": [
+    {
+      "dto": "ImprovementCandidate",
+      "owner": "Track 04 (autoresearch-core)",
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false
+    },
+    {
+      "dto": "TargetSubsystem (Anuttara, Paramasiva, Parashakti, Mahamaya, Nara, Epii)",
+      "owner": "Track 04 T1",
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "notes": "Closed enum derived from the six operational-capacity specs. Track 09 T4 must map capacity workflows onto this enum."
+    },
+    {
+      "dto": "ImprovementVectorKind",
+      "owner": "Track 04",
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false
+    },
+    {
+      "dto": "OrchestrationState (Routed, AwaitingArticulation, BackendSpecified, ReviewInProgress, ReviewApproved, AwaitingUserFinalValidation, IntegrationInProgress, IntegrationCompleted, Discarded, ...)",
+      "owner": "Track 04",
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false
+    },
+    {
+      "dto": "PromotionDestination + MutationKind",
+      "owner": "Track 04",
+      "readiness": "blocked",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "blocker_id": "track-04.promotion-dry-run-only",
+      "notes": "Per Track 04 keystone: non-dry-run execution must stay blocked until compiler mutation law, rollback capture, deployment gate, and per-target mutation contracts are implemented. Track 09 keeps surfacing dry-run plans only."
+    },
+    {
+      "dto": "ReviewSource identity shape (Sophia/Pi/Epii/Nara-specific variants vs coarse + actor metadata)",
+      "owner": "Track 04",
+      "readiness": "blocked",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": true,
+      "blocker_id": "track-04.review-source-identity-shape-undecided",
+      "notes": "Listed in Track 09 Open Decisions. Track 09 needs the answer for control-room filters and authority tests. Recorded here as a prose-only open decision — NOT as ready."
+    },
+    {
+      "dto": "Continuity / closure / content-type-register / schema-version types",
+      "owner": "Track 04 autoresearch-core",
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false
+    }
+  ],
+  "track_05_surface_hooks": [
+    {
+      "hook": "Theia Agentic Control Room host",
+      "owner": "Track 05 T4 + T8",
+      "readiness": "blocked",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false,
+      "blocker_id": "track-05.agentic-control-room-host-missing"
+    },
+    {
+      "hook": "Evidence Workbench pane",
+      "owner": "Track 05 T4",
+      "readiness": "blocked",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "blocker_id": "track-05.evidence-workbench-missing"
+    }
+  ],
+  "track_06_surface_hooks": [
+    {
+      "hook": "/body lightweight review alerts",
+      "owner": "Track 06 T5",
+      "readiness": "blocked",
+      "privacy_gate": "public_current",
+      "is_prose_assumption": false
+    },
+    {
+      "hook": "/body agent check-in",
+      "owner": "Track 06 T5",
+      "readiness": "blocked",
+      "privacy_gate": "session_scoped",
+      "is_prose_assumption": false
+    },
+    {
+      "hook": "Typed deep-link intents `/body` → `/pratibimba/system`",
+      "owner": "Track 06 T6",
+      "readiness": "blocked",
+      "privacy_gate": "public_current",
+      "is_prose_assumption": false,
+      "notes": "Intent envelope must carry coordinate, DAY/NOW, session key, profile generation, privacy class, source artifact handle, and target surface. No raw protected body text."
+    }
+  ],
+  "track_07_surface_hooks": [
+    {
+      "hook": "M0-M5 extension route/evidence/action hooks (especially m5-epii)",
+      "owner": "Track 07",
+      "readiness": "blocked",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false
+    },
+    {
+      "hook": "Spine-state inspector composition (split between Track 04 / Track 07 / Track 09)",
+      "owner": "Track 07 m5-epii + Track 04 S5 state + Track 09 mediation",
+      "readiness": "blocked",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": true,
+      "blocker_id": "track-09.spine-state-inspector-ownership-undecided",
+      "notes": "Listed in Track 09 Open Decisions. Ownership of inspector composition is unresolved. Prose-only — flagged."
+    }
+  ],
+  "track_08_surface_hooks": [
+    {
+      "hook": "1-2-3 plugin evidence envelopes and review requests",
+      "owner": "Track 08 T4",
+      "readiness": "blocked",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false
+    },
+    {
+      "hook": "4/5/0 Epii review, consent, and canon-recognition hooks",
+      "owner": "Track 08 T6",
+      "readiness": "blocked",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false
+    }
+  ],
+  "six_operational_capacity_route_profiles": [
+    {
+      "profile_id": "Anuttara",
+      "target_subsystem": "M0",
+      "spec_source": "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-anuttara-language-development.md",
+      "governance_lead": "Sophia",
+      "support_roles": ["Anima aesthetic-coherence", "Pi formal-translation", "Aletheia disclosure"],
+      "user_final_gate": "required for load-bearing axiom changes",
+      "trigger_examples": ["SHACL evaluation failures", "reasoner inconsistency detections", "M5-5 Atelier proposals"],
+      "discipline": "construction-not-training",
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "vak_baseline_evidence": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-anuttara.json"
+    },
+    {
+      "profile_id": "Paramasiva",
+      "target_subsystem": "M1",
+      "spec_source": "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md",
+      "governance_lead": "Sophia + Epii co-review",
+      "support_roles": ["Pi CPT/RAG dispatch", "Anima light oversight when flagged", "Aletheia disclosure"],
+      "user_final_gate": "required for load-bearing corpus/checkpoint refresh",
+      "trigger_examples": ["corpus refresh candidates", "synthetic-proof validation"],
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "vak_baseline_evidence": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-paramasiva.json"
+    },
+    {
+      "profile_id": "Parashakti",
+      "target_subsystem": "M2",
+      "spec_source": "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-parashakti-graph-relational-ml.md",
+      "governance_lead": "Sophia",
+      "support_roles": ["Anima cluster/rotation/Klein aesthetic review", "Pi training and hot-swap dispatch", "Aletheia disclosure"],
+      "user_final_gate": "required for load-bearing embedding/lens changes",
+      "trigger_examples": ["embedding-quality metric drift", "Lens-LoRA refinement", "new edge-type integration"],
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "vak_baseline_evidence": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-parashakti.json"
+    },
+    {
+      "profile_id": "Mahamaya",
+      "target_subsystem": "M3",
+      "spec_source": "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md",
+      "governance_lead": "Sophia (pipeline review)",
+      "support_roles": ["Anima user-pathway diversity oversight", "Pi rollback/integration impact", "Aletheia pattern disclosure"],
+      "user_final_gate": "required at tier-asymmetric thresholds for non-routine updates",
+      "trigger_examples": ["process-reward RL", "federated rounds (~100+ opted-in users)", "genetic program promotion"],
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "vak_baseline_evidence": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-mahamaya.json"
+    },
+    {
+      "profile_id": "Nara",
+      "target_subsystem": "M4",
+      "spec_source": "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md",
+      "governance_lead": "Anima (primary)",
+      "support_roles": ["Sophia secondary for cross-subsystem coherence", "Epii coordination", "Pi training/eval dispatch", "Aletheia adapter-version disclosure"],
+      "anima_five_gates": ["admission", "refresh-trigger", "deployment", "rollback", "DPO-trigger"],
+      "anti_frequency_bias": true,
+      "consent_required": true,
+      "pii_stripping_required": true,
+      "user_final_gate": "required for non-routine adapter promotion",
+      "trigger_examples": ["dialogue-exchange accumulation (~5k reviewed)", "Anima qualitative voice-drift flag", "new register-requirement emergence"],
+      "readiness": "transitional",
+      "privacy_gate": "protected_local",
+      "is_prose_assumption": false,
+      "vak_baseline_evidence": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-nara.json",
+      "readiness_blocker": "Nara consent/corpus storage boundary (artifact schema, revocation behavior, Anima-bound corpus partition API) is unresolved per Track 09 Open Decisions; full Nara voice mediation cannot be production-ready until it lands.",
+      "blocker_id": "nara.consent-corpus-boundary-undecided"
+    },
+    {
+      "profile_id": "Epii-on-Epii",
+      "target_subsystem": "M5",
+      "spec_source": "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-epii-self-referential-capacity.md",
+      "governance_lead": "Sophia (with anti-self-justification protocol)",
+      "support_roles": ["Anima self-review variants", "Pi self-review variants", "Aletheia self-review variants"],
+      "recursive_self_modification": true,
+      "user_final_gate": "required for criterion or spine mechanism changes",
+      "trigger_examples": ["Sophia review-decision inconsistency patterns", "review-time growth without proposal-complexity growth", "voice-articulation drift"],
+      "readiness": "transitional",
+      "privacy_gate": "review_gate",
+      "is_prose_assumption": false,
+      "vak_baseline_evidence": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-epii-on-epii.json"
+    }
+  ],
+  "readiness_blockers": [
+    {
+      "id": "vak.profile-aware-mapping",
+      "summary": "Current `epi agent vak evaluate` heuristic collapses five of six capacity-profile representative tasks to identical VAK addresses. Capacity-specific dispatch cannot derive from VAK alone today.",
+      "owner": "Track 09 T1",
+      "downstream_impact": "Route decisions cannot be selected purely from VAK output; T1 must either build a profile-aware mapping or treat the heuristic as a deterministic baseline and route on additional envelope fields."
+    },
+    {
+      "id": "aletheia.agent-contract-missing",
+      "summary": "No `aletheia-agent/agent-contract.json` exists analogous to the Epii contract. Gateway methods, deposits, requests, and forbidden authority for Aletheia are not declared as live JSON.",
+      "owner": "Track 09 T2 (with S4/S4' Aletheia owner)",
+      "downstream_impact": "T2 governance metadata cannot hang off a missing Aletheia contract surface."
+    },
+    {
+      "id": "sophia.governance-lead-metadata-missing",
+      "summary": "Sophia is encoded as a constitutional leaf agent under Anima in the capability matrix; Track 09 plan requires Sophia to be capacity-specific governance lead. Three-way parity test must remain green after extension.",
+      "owner": "Track 09 T2"
+    },
+    {
+      "id": "pi.bounded-authority-metadata-missing",
+      "summary": "Pi is a runtime, not a capability-matrix agent. No JSON encodes 'Pi can prepare evidence and dispatch bounded runs but cannot approve human-required review'.",
+      "owner": "Track 09 T2"
+    },
+    {
+      "id": "track-01.t7-bounded-capabilities-not-landed",
+      "summary": "Bounded agent capabilities allowlist (readCurrentProfile, readPointerAnchor, readGraphContext, subscribeRunEvents, invokeGatewayRpc, depositReviewEvidence, requestDryRunPromotion) is gated on Track 01 T7.",
+      "owner": "Track 01 T7 (upstream)"
+    },
+    {
+      "id": "track-04.promotion-dry-run-only",
+      "summary": "Non-dry-run promotion blocked until Hen/S1 mutation law, rollback capture, deployment gate, and per-target MutationKind execution are implemented.",
+      "owner": "Track 04 (upstream); Track 09 keeps surfacing dry-run plans only"
+    },
+    {
+      "id": "track-04.review-source-identity-shape-undecided",
+      "summary": "ReviewSource expansion vs. coarse + actor metadata is unresolved. Recorded here because Track 09 plan flags it as an open decision; Track 09 control-room filters and authority tests need the answer.",
+      "owner": "Track 04 (upstream)",
+      "prose_only": true
+    },
+    {
+      "id": "track-05.agentic-control-room-host-missing",
+      "summary": "Theia Agentic Control Room host not yet implemented. Track 09 T9 cannot deliver acceptance without it.",
+      "owner": "Track 05 T4 + T8 (upstream)"
+    },
+    {
+      "id": "track-05.evidence-workbench-missing",
+      "summary": "Evidence Workbench pane required by Track 09 surfacing flows.",
+      "owner": "Track 05 T4 (upstream)"
+    },
+    {
+      "id": "track-09.spine-state-inspector-ownership-undecided",
+      "summary": "Inspector composition ownership split between Track 04 (S5 state), Track 07 (m5-epii), and Track 09 (mediation semantics) is unresolved per Open Decisions.",
+      "owner": "Track 09 (with Tracks 04 and 07)",
+      "prose_only": true
+    },
+    {
+      "id": "nara.consent-corpus-boundary-undecided",
+      "summary": "Nara artifact schema, revocation behavior, Anima-bound corpus partition API are unresolved per Open Decisions; Nara voice mediation cannot be production-ready until landed.",
+      "owner": "Track 09 (with M4/Nara owner)",
+      "prose_only": true
+    },
+    {
+      "id": "track-09.dispatch-tool-variant-bindings-incomplete",
+      "summary": "Remaining dispatch-tool variants (dispatch_parallel_agents, dispatch_fusion_agents, dispatch_moirai_night_pass, anima_self_invoke, run_chain) live in PI/ta-onta runtime; gateway/library bindings are not complete.",
+      "owner": "Track 09 T1 (with S4/S4' PI runtime)"
+    },
+    {
+      "id": "pratibimba.system-receiver-undefined",
+      "summary": "`pratibimba/` directory does not exist in the current repo and the smallest real `/pratibimba/system` receiver that satisfies 'not a placeholder' has no joint acceptance definition.",
+      "owner": "Track 05 + Track 09",
+      "prose_only": true
+    }
+  ],
+  "verification_evidence": {
+    "verification_summary_path": "Body/S/S5/epii-agent/contract-ledger/evidence/verification-summary.json",
+    "commands_executed": [
+      {
+        "command": "epi agent vak evaluate \"Anuttara: review a SHACL/reasoner construction proposal as a load-bearing axiom elaboration requiring Sophia review and user-final validation\" --json",
+        "stdout_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-anuttara.json",
+        "assertion": "CPF/CT/CP/CF/CFP/CS all present",
+        "result": "PASS"
+      },
+      {
+        "command": "epi agent vak evaluate \"Paramasiva: refresh CPT/RAG corpus with synthetic-proof validation and request Sophia plus Epii co-review with Pi training dispatch\" --json",
+        "stdout_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-paramasiva.json",
+        "assertion": "CPF/CT/CP/CF/CFP/CS all present",
+        "result": "PASS"
+      },
+      {
+        "command": "epi agent vak evaluate \"Parashakti: detect embedding-quality metric drift and request graph-relational ML hot-swap with Anima cluster/rotation/Klein aesthetic check\" --json",
+        "stdout_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-parashakti.json",
+        "assertion": "CPF/CT/CP/CF/CFP/CS all present",
+        "result": "PASS"
+      },
+      {
+        "command": "epi agent vak evaluate \"Mahamaya: execute process-reward federated training round with tier-asymmetric review and Pi rollback handle preparation\" --json",
+        "stdout_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-mahamaya.json",
+        "assertion": "CPF/CT/CP/CF/CFP/CS all present",
+        "result": "PASS"
+      },
+      {
+        "command": "epi agent vak evaluate \"Nara: dialogic-voice QLoRA adapter refresh trigger requires Anima admission gate, consent verification, and PII stripping before Sophia coherence review\" --json",
+        "stdout_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-nara.json",
+        "assertion": "CPF/CT/CP/CF/CFP/CS all present",
+        "result": "PASS"
+      },
+      {
+        "command": "epi agent vak evaluate \"Epii-on-Epii: recursive Sophia-on-Sophia anti-self-justification review of spine governance mechanism with user-final validation gate\" --json",
+        "stdout_path": "Body/S/S5/epii-agent/contract-ledger/evidence/vak-epii-on-epii.json",
+        "assertion": "CPF/CT/CP/CF/CFP/CS all present",
+        "result": "PASS"
+      },
+      {
+        "command": "epi agent roster list --json",
+        "stdout_path": "Body/S/S5/epii-agent/contract-ledger/evidence/roster-list.json",
+        "assertion": "embodiments include epii, anima, aletheia",
+        "result": "PASS"
+      },
+      {
+        "command": "python3 -c \"json.load(open('Body/S/S5/epii-agent/agent-contract.json'))\"",
+        "stdout_path": "Body/S/S5/epii-agent/agent-contract.json",
+        "assertion": "gateway_methods nonempty AND forbidden_authority present",
+        "result": "PASS",
+        "details": "gateway_methods=11; forbidden_authority count=3"
+      }
+    ]
+  },
+  "self_review": {
+    "all_required_fields_observed_or_flagged": true,
+    "prose_only_items_flagged": [
+      "track-04.review-source-identity-shape-undecided",
+      "track-09.spine-state-inspector-ownership-undecided",
+      "nara.consent-corpus-boundary-undecided",
+      "pratibimba.system-receiver-undefined"
+    ],
+    "verification_commands_actually_executed": true,
+    "evidence_reproducible": true,
+    "outside_write_scope_writes": false,
+    "follow_up_notes": [
+      "Track 09 T1 should treat the VAK heuristic as a deterministic baseline; profile-aware mapping is an open spec gap.",
+      "Track 09 T2 needs Aletheia + Sophia + Pi capability JSON parity before governance metadata is meaningful.",
+      "Track 09 T9 acceptance is blocked until Track 05 lands the Theia Agentic Control Room host."
+    ]
+  }
+}
