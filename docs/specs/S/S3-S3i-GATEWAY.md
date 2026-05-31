@@ -642,11 +642,14 @@ The Universal NOW should be designed as a shared ontological runtime, not a gene
 
 These are the recommended initial tables for the Universal NOW plane:
 
+- `world_clock`
 - `identity_presence`
 - `pratibimba_presence`
 - `agent_presence`
 - `session_surface`
 - `activity_event`
+- `shared_archetype_event`
+- `coincidence`
 - `m0_surface`
 - `m1_clock_state`
 - `m2_planetary_state`
@@ -654,6 +657,29 @@ These are the recommended initial tables for the Universal NOW plane:
 - `m4_collective_surface`
 - `m5_pedagogical_surface`
 - `topology_surface`
+
+The alpha-quaternionic / psychoid-cymatic pass sharpens the first native WebSocket milestone:
+
+- `world_clock`: shared temporal pulse row advanced by reducer cadence, the source for M0' graph pulse and M3' clock-wheel rendering. If `m1_clock_state` remains for compatibility, it should be a view/projection over `world_clock`, not a rival clock authority.
+- `pratibimba_presence`: protected participant-local presence row carrying canonical bytes or opaque handles for `Q_composed` / `q_Nara` state, RLS-filtered to the owning participant unless explicitly shared through governed projection.
+- `shared_archetype_event`: opt-in shared archetypal event rows suitable for collective synchronicity surfaces without exposing private journal or identity bodies.
+- `coincidence`: RLS-filtered coincidence rows visible only to participants included in the event, never a global surveillance table.
+
+Required reducers:
+
+- `advance_world_clock` scheduled at 1 Hz to advance the shared world pulse.
+- `bind_pratibimba_presence` to update the participant's protected presence binding from local Nara / M4' state.
+- `detect_coincidences` scheduled at 1/min to evaluate opt-in shared archetype/coincidence candidates.
+
+Quaternionic identity signature law:
+
+```text
+quintessence_hash = BLAKE3(canonical_bytes(q_Nara) || caps)
+transit_signature = HopfProjection(Q_transit) -> S² grid quantization
+daily_rotation    = quaternion multiplication over bounded daily state
+```
+
+`quintessence_hash` is retained as a compatibility/indexing name; BLAKE3 is a storage and lookup fingerprint, not the ontological identity. The authoritative identity material is quaternionic canonical bytes plus capability/privacy caps.
 
 ### Visibility Strategy
 
@@ -770,6 +796,8 @@ Add one-way world-state publication:
 - session mirror
 - activity mirror
 - M-clock/state mirror
+- native WebSocket subscription path for `world_clock`, `pratibimba_presence`, `session_surface`, `kairos_surface`, and compatible gateway/global-temporal rows
+- first reducers: `advance_world_clock`, `bind_pratibimba_presence`, `detect_coincidences`
 
 ### Phase 5 — Universal NOW Plane
 
@@ -780,6 +808,8 @@ Build the first inhabitable shared world-state:
 - M0-M5 surfaces
 - collective projections
 - pedagogical overlays
+- opt-in synchronicity layer using `shared_archetype_event` and participant-filtered `coincidence`
+- unified gateway WebSocket + SpaceTimeDB Universal NOW subscription surface, preserving gateway RPC as command plane and SpaceTimeDB as shared state plane
 
 ---
 
@@ -801,6 +831,10 @@ Because this is a production-readiness repo, S3 work is not complete without rea
 - skill propagation tests through channel-oriented gateway paths
 - reconnect and sequence-gap tests
 - SpaceTimeDB bridge integration tests when introduced
+- native WebSocket subscription tests for first milestone tables and row-delta decoding
+- reducer tests for `advance_world_clock`, `bind_pratibimba_presence`, and `detect_coincidences`
+- RLS / visibility tests proving `pratibimba_presence` and `coincidence` do not leak private bodies or nonparticipant rows
+- identity-signature tests proving BLAKE3 hashes are indexing fingerprints over canonical quaternionic bytes, not replacement identity objects
 
 ### Hard Rule
 

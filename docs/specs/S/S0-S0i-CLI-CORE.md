@@ -71,6 +71,12 @@ Computed behavior now includes:
 
 Envelope, API, TypeScript, TUI, and future Tauri surfaces should expose this computed kernel state as the QL meta-layer. They must not duplicate it as independent schema-only logic.
 
+### Reflected M0' / M1' Contract
+
+S0/S0' is the upstream profile contract for M0' graph rendering and M1' relational movement. It exposes the shared `MathemeHarmonicProfile` substrate, safe kernel projection, tick / degree / helix / ratio state, and coordinate validation hooks consumed by graph, torus, clock, Nara, and Epii surfaces.
+
+S0/S0' does not render the M0' graph view, compute filtered subgraphs, own GDS overlays, or synthesize the M2-1' Vimarśa audio bus locally. Those are downstream surface or S2/S3 responsibilities over the profile contract. `world_clock`-driven pulse behavior belongs to S3/SpaceTimeDB and downstream renderers; S0 may mirror or expose it through typed projection but must not create a second world-clock authority.
+
 ### Next Steps
 - Carry kernel energy/resonance deltas toward S5 EBM/autoresearch surfaces and Epii review evidence.
 - Push gateway/API/envelope schema fields all the way through the SpaceTimeDB projection once the safe-public kernel projection payload is final.

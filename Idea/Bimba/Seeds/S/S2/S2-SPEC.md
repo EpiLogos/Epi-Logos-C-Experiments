@@ -18,6 +18,8 @@ c_0_source_coordinates:
   - "[[S2]]"
   - "[[S2']]"
   - "[[S2'Cx]]"
+  - "[[alpha_quaternionic_integration_across_M_stack]]"
+  - "[[m4-prime-psychoid-cymatic-field-engine]]"
 ---
 
 # S2/S2' Specification: Graph Body and Coordinate-Aware Retrieval
@@ -29,6 +31,8 @@ This is the consolidated S2-level master specification. It replaces the older sc
 S2 is the graph body: raw shared [[Neo4j]] persistence, graph schema bootstrap, coordinate seed storage, raw [[Cypher]], graph sync operations, and graph-semantic cache law. [[Redis]] / RedisVL runtime residency belongs with [[S3]] / [[S3']] Redis context, while S2 owns the graph semantic-cache namespace, payload contract, retrieval use, and graph-context semantics over that runtime substrate.
 
 S2' is coordinate-aware graph law: [[Pleroma]]/[[Parashakti]] graph grammar over that substrate, [[Indra's Net]] retrieval, coordinate resolution, relation law, cross-namespace edges, reranking, disclosure density, and context pool assembly for [[Psyche]], [[Anima]], [[Hen]], and [[Aletheia]].
+
+The 2026-05-30 M0/Mahāmāyā pass extends S2' with formal graph semantics and graph-data-science law: Anuttara node properties (`symbol`, `formulation_type`) lifted through neosemantics / OWL2 RL, FastRP / personalised PageRank / node similarity / Louvain / K-NN projections for M0' tangent overlays, two-phase GDS projection (Option 1 baseline, Option 3 enrichment), Möbius/Klein handling (Approach A baseline, B/C deferred), and C-kernel-to-Neo4j synchronisation where the C kernel remains source of truth for the 65 core relation laws.
 
 [[Gnosis]] / [[RAG-Anything]] and [[Graphiti]] are not S2 owners. They use the S2 substrate, but Graphiti's temporal episodic architecture belongs to [[S3']] and its invocation/usage governance belongs to [[S5]] / [[S5']]. S2 must keep the substrate clean enough that those systems can share it without collapsing their laws into the database layer.
 
@@ -111,6 +115,7 @@ The S2 shard/build pass must produce a clean split:
 - S2 schema enforcement for coordinate-owned node and relationship properties, matching [[S1']] frontmatter discipline rather than allowing arbitrary graph property drift.
 - S2' coordinate-law commands/API for resolve, retrieve, rerank, enrich, relation typing, disclosure density, and context pool formation.
 - Explicit integration contracts with [[S1]] sync flush, [[S3']] temporal/session Redis, and [[S5]] world-return services.
+- n10s / GDS / topology enrichment must be built as graph law, not UI garnish: `epi:` ontology, OWL2 RL reasoning, optional CIDOC-CRM / FOAF / SKOS / PROV-O alignment, GDS projections, and runtime drift audit all belong in the S2/S2' contract.
 
 ## A. S2 - Graph Body Base Technology
 
@@ -555,6 +560,9 @@ S2/S2' serves these [[Envelope]] layers:
 - Implement coordinate-native gateway/API parity for all `s2.graph.*` and `s2'.*` methods.
 - Complete `s1.sync.flush` or equivalent S1/S2 queue drain so vault writes reach Neo4j automatically.
 - Implement the old `bimbaCoordinate` / `#` to new [[M]] coordinate-branch migration rule consistently across Rust, TypeScript, tests, and graph data.
+- Implement `symbol` / `formulation_type` node properties and neosemantics lifting so M0' can inspect Anuttara syntax without client-side invention.
+- Implement privacy-safe GDS overlays: FastRP, personalised PageRank, node similarity, Louvain, and K-NN over `c_5_embedding`, with Option 1 baseline and Option 3 gated.
+- Implement C kernel ↔ Neo4j relation-law audit so S2 cannot drift from S0's 65 core relation source of truth.
 - Clarify Redis key namespaces so S2 graph semantic cache remains distinct from S3' temporal contextual grounding and Graphiti runtime caches.
 - Formalize relation registry and cross-namespace edge law in one place consumed by Rust and TypeScript.
 - Ensure `epi graph query` has a raw Cypher mode or clearly separate it from coordinate query/retrieval.

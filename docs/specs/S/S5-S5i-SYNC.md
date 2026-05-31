@@ -27,6 +27,7 @@ S5' gives those raw APIs coordinate meaning: which API to call and why, automati
 - **Notification dispatch**: Chronos-driven notifications via Telegram with full lineage metadata
 - **Evolutionary recompile orchestration**: S5' coordinates the full S0' <-> S2' recompile cycle
 - **Mobius return workflow**: S5 -> S0 (external world feeds back to ground)
+- **Canon-recognition and promotion**: distinguish canon-worthy spec deltas, evidence-only outputs, protected-local Nara material, and external-publication candidates before any Notion/n8n/world push.
 
 ---
 
@@ -41,6 +42,7 @@ S5' gives those raw APIs coordinate meaning: which API to call and why, automati
 3. **No Telegram bot** — no notification dispatch
 4. **No automation rules** — no trigger/action system
 5. **No publication pipeline** — no vault -> external transformation
+6. **No canon-recognition queue** — no production path for reviewing M'/S' structural claims before publication, deprecation, or external sync
 
 ---
 

@@ -77,6 +77,46 @@ The shared descriptor should agree with the S0 kernel/Rust mirror and include:
 
 This is the S2 side of the same matheme computed by S0. S0 computes pulse, ratio, energy, resonance, and safe temporal projection; S2 persists the graph topology and relation metadata that make those computations addressable by coordinate.
 
+### S2' Neosemantics, GDS, And Topology Contract
+
+The M0/Anuttara graph-view pass extends S2' beyond pointer-web lock-in into formal graph semantics and graph-data-science support.
+
+**Neosemantics / OWL bridge**:
+
+- maintain an `epi:` namespace OWL ontology for coordinate classes, relation families, M-family node semantics, and source/spec/code/test anchors;
+- lift node-level Anuttara properties `symbol` and `formulation_type` into formal inferential semantics;
+- encode relation-type characteristics where useful: symmetry, inversion, transitivity, source/provenance class, privacy/disclosure class;
+- use OWL2 RL reasoning as the baseline inferential profile;
+- keep optional alignment hooks for CIDOC-CRM, FOAF, SKOS, and PROV-O without making them mandatory dependencies.
+
+**Graph Data Science plan**:
+
+- FastRP embeddings over canonical coordinate topology;
+- personalised PageRank from active coordinate, current session handles, and review-safe episode-touched coordinates;
+- node similarity and K-NN over `c_5_embedding` / semantic embedding fields;
+- Louvain/community detection for graph-region and tangent-overlay grouping;
+- output surfaced to M0' as GDS tangent overlays and to M5' as review/context evidence, not as private-user inference leakage.
+
+**Two-phase GDS projection contract**:
+
+- Option 1 baseline: canonical structural projection plus local centroid / active-coordinate personalisation outside the canonical graph. Build this first because it proves the privacy boundary under live workload.
+- Option 3 enrichment: episode-as-property aggregation where reviewed, privacy-safe episode features enrich ranking. Keep this spec'd but decision-gated; do not silently promote it to baseline.
+
+**Möbius / Klein topology handling**:
+
+- Approach A baseline: coordinate-duplication / preprocessing that makes non-orientable traversals legible to standard GDS algorithms.
+- Approach B deferred: custom walks that understand Möbius / Klein transitions directly.
+- Approach C deferred: two embeddings per node for opposing orientations.
+
+**C kernel ↔ Neo4j synchronisation**:
+
+- single source of truth for the 65 core relations remains the C kernel / S0 contract;
+- S2 sync is build-time materialisation plus runtime audit, not a second relation generator;
+- graph doctor must detect drift between S0 constants, S2 node/edge state, and M0' view expectations;
+- relation registry versions must be explicit so frontmatter, Neo4j, TypeScript, and kernel mirrors can be reconciled.
+
+Open decisions remain: GDS Option 1 vs Option 3 production choice, and Möbius/Klein Approach A vs B/C production choice.
+
 ### Python Source (Port Target)
 
 `/Epi-Logos/Idea/Pratibimba/System/Subsystems/Parashakti/graph/` — 30 files, ~28K LOC:
@@ -579,6 +619,15 @@ Default k=60, coordinate_boost=1.5x
 - Wire S1 vault mutations -> S2 graph upserts
 - Wire Redis-backed S3' gateway temporal events through the S3 runtime substrate, without collapsing them into the S2 graph semantic-cache namespace
 
+### Phase 8: n10s / GDS / Topology Enrichment
+
+- Add neosemantics import/export for the `epi:` ontology, including `symbol` and `formulation_type`.
+- Add graph doctor checks for OWL2 RL reasoning readiness and relation-characteristic drift.
+- Add FastRP, personalised PageRank, node similarity, Louvain, and K-NN projection jobs with privacy-safe result payloads.
+- Implement Option 1 two-phase GDS projection first; keep Option 3 as an explicit enrichment decision.
+- Implement Approach A Möbius/Klein preprocessing first; keep custom walks and dual embeddings as deferred production choices.
+- Add C kernel ↔ Neo4j sync audit for the 65 core relation laws.
+
 ---
 
 ## Authority Documents
@@ -592,3 +641,10 @@ Default k=60, coordinate_boost=1.5x
 - `include/ontology.h` (HC struct — the canonical schema source)
 - `include/psychoid_numbers.h` (Psychoid + CF + Weave declarations)
 - `include/vak.h` (VAK instruction set — reflective coordinate operations)
+
+## Verification Additions
+
+- Tests prove `symbol` and `formulation_type` round-trip from S2 node properties through the M0' inspector without renderer invention.
+- Tests prove GDS overlay payloads are generated from real Neo4j/GDS projections or controlled local graph fixtures, not mock-only data.
+- Tests prove private Graphiti/Nara episode bodies do not enter canonical GDS projections.
+- Tests prove kernel relation registry versions match Neo4j relation materialisation, with drift surfaced by graph doctor.

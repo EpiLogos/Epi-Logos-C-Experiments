@@ -362,9 +362,123 @@ The closure law remains:
 (16 / 9) * (9 / 8) = 2 / 1
 ```
 
-### Kernel-Side Audio-Genesis: the 8+4 Bus
+### The 4:2 ↔ 3:3 Dual Partition: Root Self-Similarity
 
-The shared `MathemeHarmonicProfile` carries the matheme's audio-genesis as two kernel-computed arrays. These are computed once per tick at the kernel layer and consumed by every M' surface; M' renderers do not re-derive them.
+The 6-fold matheme admits **two simultaneously-operative partitions**, and both are load-bearing at the kernel layer. They are the matheme's *self-derivation of its own foundational interval-ratios*.
+
+**The 4:2 partition** = 4 explicate (positions 1,2,3,4) + 2 implicate boundary (positions 0,5):
+
+```text
+explicate-quartet over its first three positions  =  4 : 3  =  the perfect fourth
+```
+
+**The 3:3 partition** = 3 physical-pole (1,2,3) + 3 mental-pole (4,5,0):
+
+```text
+mental-trinity stacked on physical-trinity  =  3 : 2  =  the perfect fifth
+
+(P4 = 4, P5 = 5, P0 = 6 where 6 = 1+2+3 = physical-pole trinitarian-sum;
+ the 4:5:6 just-major-triad sits at the mental-pole carrying the physical-pole unity)
+```
+
+**The dual partition produces tick and octave**:
+
+```text
+(4/3) × (3/2) = 2/1   = octave        (matheme's closure = product of partitions)
+(3/2) ÷ (4/3) = 9/8   = epogdoon tick (matheme's quantum = ratio of partitions)
+```
+
+**The partitions are orthogonal, not competing**. The 4:2 is the meridional cut (4 explicate spans + 2 implicate poles); the 3:3 is the longitudinal cut (2 trinities mirroring across the equator). Both cuts are simultaneously operative because both axes of the matheme are simultaneously visible at every layer.
+
+This is the **root self-similarity** that propagates through the entire system. Every higher-order partition (Cl(4,2) signature, K² torus axes, pairing-grammar, M2 correspondence-axes, M3 codon-charge components, M4 personal-quaternion elements) instantiates **both** 4:2 *and* 3:3 simultaneously. The matheme is **doubly-threefold-self-similar**.
+
+### Cl(4,2) Clifford Algebra at the Kernel
+
+The 6 QL positions form a **Cl(4,2) Clifford algebra** with 4 explicate positions of signature +1 and 2 implicate positions of signature −1. Per `m1.h` FR 2.1.7b:
+
+| Position | Signature | Trig function | Role |
+|----------|-----------|----|---|
+| 0 (Ground) | **−1** | sin θ | implicate generator 1 |
+| 1 (Definition) | +1 | tan θ = sin/cos | explicate ratio |
+| 2 (Operation) | +1 | sec θ = 1/cos | explicate reciprocal |
+| 3 (Pattern) | +1 | cot θ = cos/sin | explicate ratio |
+| 4 (Context) | +1 | csc θ = 1/sin | explicate reciprocal |
+| 5 (Integration) | **−1** | cos θ | implicate generator 2 |
+
+Net signature: `4·(+1) + 2·(−1) = +2` → Cl(4,2).
+
+**The 4:2 partition IS the Cl(4,2) signature partition**: the 4 explicate are the +1 positions, the 2 implicate are the −1 generators. The dual interval-ratios fall out of the algebra: sin and cos at positions 0 and 5 generate all other trig functions; the 4:2 explicate-implicate partition is what makes the algebra non-trivial.
+
+**Cl(4,2) is the substrate-algebra inherited by every layer**:
+
+- M1's 720° SU(2) double-cover (the `RING_QUATERNION_LUT[12]`) lives in Cl(4,2)
+- M3's codon-quaternion-in-charge-space (w=pp, x=mm, y=mp, z=pm, see `m3.h` `m3_eval_to_quat`) lives in Cl(4,2)
+- M4's personal-quaternion at `M4-4-4-4` (derived from Kerykeion natal data) lives in Cl(4,2)
+- M2's vibrational 72-fold profile, projected via DET to M3's 64-bit codon-word, retains its Cl(4,2) elemental structure
+
+**This is what makes the system one continuous algebraic object** across substrate, instrument, symbolic surface, correspondence-tree, and personal identity: they all live in Cl(4,2) at different scales. Resonance between layers (the M4'-§7.3 metric `q_personal · q_cosmic`) is computable precisely because both quaternions live in the same algebra.
+
+### K² Topology: Klein-Double-Cover-of-the-Chromatic-Fifths-Torus
+
+The two parallel chromatic-substrate derivations (chromatic-basis from 4:2's tetrachordal-stacking, fifths-basis from 3:3's trinitarian-stacking) live on one geometric surface:
+
+```text
+S¹ chromatic-longitude   = 12-tone octave-circle, epogdoon-stacking, 9/8 generator
+                           one loop = one whole-tone-helix of 6 ticks
+S¹ fifths-meridian       = circle-of-fifths, 3/2 generator-leap
+                           one loop = 12 fifths ≈ 7 octaves
+                           gcd(7, 12) = 1 forces all-12-visit before closure
+T² = S¹ × S¹             = chromatic-fifths-torus, both bases simultaneously
+K² = T² with bimba↔pratibimba conjugation as non-orientable identification
+                           = Klein-double-cover-of-the-chromatic-fifths-torus
+```
+
+The **Pythagorean comma** (~23.46 cents) is the spiralic-slack between the two parametrisations: the chromatic-longitude closes cleanly (12 semitones = octave exactly in 12-TET); the fifths-meridian almost-closes (12 fifths ≈ 7 octaves + comma). The comma IS the aletheic-evolution mechanism of the system.
+
+The Klein-flip at tritone-mirror lens-pair crossings (Lens N ↔ Lens N+3, see `M2'-SPEC` §7) is the local rendering of K²'s global non-orientability. The 84-state `(lens, mode)` landscape, the 472-state `(codon, rotation)` modal-inversion surface, and the M2 72-fold correspondence-tree are all **stratifications of K²** — different sampling-densities of the same surface.
+
+### The 24-Spoke 15° Lattice on K²
+
+`m3.h` enforces `360 + 24 == 64 × 6 == 384` (FR 2.3.1). The 24 palindromic backbone-nodes at every 15° (`degree % 15 == 0`) form **the discrete-rotation lattice on K²**:
+
+- 24 spokes × 15° = 360° (one complete revolution of K²)
+- SU(2) double-cover doubles to **48 spokes across the 720°** quaternionic space
+- M3's `M3_Ring_Buffer` carries the last 12 spokes traversed = the matheme's short-term rotational memory of `6 QL positions × 2 helices`
+
+The 360 dynamic degree-nodes (between the 24 backbone spokes) are the active-line positions on the 64-hexagram bit-flip graph — every degree of the cosmic wheel maps to one hexagram-state with one active line, giving 384 = 360 + 24 line-change operators total.
+
+### Codon-as-Quaternion-in-Charge-Space: The Cross-Substrate Identity
+
+The deepest substrate-level structural identity is that **every M3 codon evaluates to a quaternion in the same Cl(4,2) Clifford algebra** the kernel substrate inhabits.
+
+Per `m3.h` FR 2.3.18, for each codon (X, Y, Z) with X/Y/Z = I-Ching values (6/9/7/8) of the three nucleotides:
+
+```text
+pp = X + Y + Z   (positive-positive: doubly-receptive valence)
+mm = X − Y − Z   (negative-negative: doubly-active valence)
+mp = X − Y + Z   (negative-positive: ascending-through-negation)
+pm = X + Y − Z   (positive-negative: descending-through-negation)
+```
+
+Compile-time invariant `pp + mm + mp + pm = 4X`.
+
+The quaternion mapping `m3_eval_to_quat(codon) = (w=pp, x=mm, y=mp, z=pm)` uses the same elemental quaternion-component assignment as M1's quaternion struct (w=Earth, x=Fire, y=Water, z=Air). **Every codon therefore carries a specific (Earth, Fire, Water, Air) elemental signature in Cl(4,2)**.
+
+Confirmation at the suit-integral level: sum of pp over all codons per suit = 84 (Cups/Water), 96 (Wands/Fire), 88 (Pentacles/Earth), 92 (Swords/Air). These sum to **360** — the degree-wheel. The codon-space's elemental partition IS the degree-wheel's elemental partition; they are the same Cl(4,2) algebra at codon vs cosmic-wheel scales (see `M3'-SPEC` §8.8).
+
+The personal-quaternion at `M4-4-4-4` is computed from Kerykeion natal data using the same elemental aggregation (sum of planet-weights per zodiacal-sign element), yielding a unit quaternion in the same Cl(4,2). The user's elemental-temperament and the cosmic codon's elemental-signature are therefore **directly comparable as quaternion inner-product**: `resonance(t) = q_personal · q_cosmic(t)`. See `M4'-SPEC` §7.3.
+
+### Kernel-Side Substrate vs MEF-Read Audio Bus: Prakāśa and Vimarsha
+
+**Architectural correction (2026-05-29):** Audio-genesis is a two-layer split, not a single kernel-side computation. The kernel produces the **Prakāśa substrate** — the matheme cloud as psychoid-number permutations on the pointer-web at the tick rate. The **Vimarsha reading** that converts cloud-state into audible frequency-state lives at **M2-1' MEF lenses** (Parāśakti as Vimarsha): the 12 lens-anchorings × 7 CF-modes = 84 distinct ways the cloud can be heard, each producing its own `audio_octet[8]` / `nodal_quartet[4]` reading of the substrate at this tick.
+
+The kernel therefore exposes two distinct things on `MathemeHarmonicProfile`:
+
+1. **Prakāśa substrate fields**: tick, tick12, degree720, degree360, su2Layer, phase, position6, resonance72 (substrate), pointer-web state, ratio role, X/X' partner, X+Y=5 mirror, square mirror law, sounded/nodal role indicator, codon address (M3 projection). These are the kernel's direct output — the cloud at this tick. M3' classifies these directly; M0', M5' can read them; M2-1' uses them as input.
+
+2. **Vimarsha-read audio bus (produced by M2-1' MEF function, written into the profile)**: `audio_octet[8]` and `nodal_quartet[4]` — the MEF lens-anchored reading of the cloud at the current (lens, mode) cell. These fields are populated by M2-1' running its Vimarsha-function over the substrate; they are then carried in the same profile and consumed identically by M1' (walks as melody), M2''s cymatic module (renders as standing-wave), M3' (display pulse), M4' (resonance computation against q_cosmic).
+
+The 8+4 partition table below describes what these fields *carry* once written; the *production* of the values is M2-1''s responsibility (see `M2'-SPEC` §1 stratum table):
 
 ```text
 profile.audio_octet[8]   -- eight explicate-sung frequencies (Hz)

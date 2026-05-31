@@ -1,7 +1,7 @@
 ---
 coordinate: "M'.desktop"
 status: "active-spec"
-updated: "2026-05-21"
+updated: "2026-05-30"
 depends_on:
   - "[[M'-PORTAL-SPEC]]"
   - "[[M'-SYSTEM-SPEC]]"
@@ -12,6 +12,8 @@ depends_on:
   - "[[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]]"
   - "[[mprime-domain-specs]]"
   - "[[mprime-tauri-gap-table]]"
+  - "[[alpha_quaternionic_integration_across_M_stack]]"
+  - "[[m4-prime-psychoid-cymatic-field-engine]]"
 ---
 
 # [[M']] Tauri Port Spec
@@ -35,6 +37,8 @@ The app has two distinct page layers plus a cross-cutting command membrane. This
 **Shell 1 (Personal):** Flow editor, identity sidebar, immediate journaling, Epii pedagogy/review access, and relevant Bimba data structures. Previews the integrated 4/5/0 return: Nara journal/continuity, Epii learning/review, and M0' ground-data as needed for orientation, without entering the full Nara, Epii, or Bimba map subsystems. Existing basis: `FlowEditor`, `IdentityLayerCard`, `IdentitySidebar`.
 
 **Home** defaults to the 0/1 split view. A toggle (`0/1` ↔ `#0-#5`) switches to the subsystems grid entry. Both views coexist.
+
+The Tauri-v2 app must mirror the canonical 0/1/4+2 discipline from [[M'-SYSTEM-SPEC]]: 0 side = Mahāmāyā graph view + clock-wheel, 1 side = psychoid cymatic field + flow surface, and 4+2 depth = the full subsystem composition with canonical bimba map as architectural-knowledge backdrop. The existing `Body/M/epi-tauri/src/domains/M0_Anuttara/BimbaMap2D.tsx` and `BimbaMap3D.tsx` stubs are the 0-side graph affordance to extend with filtered subgraph rendering, `world_clock` pulse animation, GDS tangent overlay, and Anuttara `symbol` / `formulation_type` inspection.
 
 **Subsystem pages (M0-M5)** are the deep workspaces:
 
@@ -124,6 +128,10 @@ Shell `0` should show:
 
 Shell `0` should NOT attempt to be the full Bimba map explorer (that is M0' subsystem page), the full topological traversal workspace (M1'), the full correspondence matrix (M2'), or the full DNA/I-Ching transcription surface (M3'). It previews the M1'-M3' instrument outputs and may show selected M0' coordinate data only as orientation.
 
+### 0-Side Graph Affordance
+
+The 0 side nevertheless includes a real Mahāmāyā graph affordance, not only text orientation. The current Tauri stubs `Body/M/epi-tauri/src/domains/M0_Anuttara/BimbaMap2D.tsx` and `Body/M/epi-tauri/src/domains/M0_Anuttara/BimbaMap3D.tsx` are the graph-view seed. They should be extended toward filtered subgraph rendering, `world_clock` pulse animation, GDS tangent overlays, Anuttara `symbol` / `formulation_type` inspection, and safe source/spec/code/test anchors. Whether this is co-resident with the clock, toggled, or graph-overlaying-clock remains a UX design decision; the data authority remains S2/S3 either way.
+
 ### Full Structural Subsystem Pages (M0-M3)
 
 The deep structural workspaces are reached as separate full-page routes:
@@ -142,6 +150,7 @@ Musical instrument requirement (applies to all structural subsystem pages):
 - Outer four positions drive nodal/boundary conditions for cymatic or standing-wave rendering.
 - Future audio analysis follows `STFT -> CQT -> chromagram -> active lens -> coordinate profile`.
 - The renderer may visualise or sonify the profile, but may not redefine the profile.
+- M0' graph and M3' clock are two 0-side Mahāmāyā affordances over the same canonical substrate; the UX pass may choose co-resident, toggle, or overlay composition, but implementation must not fork their data authority.
 
 ## Shell `1` — Personal Surface (Lean Daily Driver)
 
@@ -359,6 +368,8 @@ The port is not complete until tests prove:
 - Nara/Epii surfaces distinguish raw service connectivity from actual agent access.
 - Nara highlight/sendoff produces typed invocation payloads preserving selected text, source, category, DAY/NOW, and session lineage.
 - Daily Note, Dream Journal, and Oracle surfaces persist and retrieve real modality data rather than showing placeholders.
+- M0' graph affordance renders filtered subgraphs from real S2 data, `world_clock` pulse, GDS overlay readiness, and Anuttara inspector facts without leaking private content.
+- The 1-side psychoid cymatic field remains protected-local; any shared SpaceTimeDB or public profile payload carries only opaque handles / safe projection facts.
 - Epii inbox can read actual gateway/session/task deposits and apply review transitions.
 - Epii archaeology workflow respects staged progression: exploration/community formation before backend Bimba resonance, MEF analysis, and sedimentation display.
 - Epii graph viewer preserves `bimba`, `gnosis`, `etymology`, and protected reviewed handle boundaries.

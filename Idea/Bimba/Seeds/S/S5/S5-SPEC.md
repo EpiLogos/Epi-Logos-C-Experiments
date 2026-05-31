@@ -23,6 +23,8 @@ c_0_source_coordinates:
   - "[[S5]]"
   - "[[S5']]"
   - "[[S5'Cx]]"
+  - "[[alpha_quaternionic_integration_across_M_stack]]"
+  - "[[m4-prime-psychoid-cymatic-field-engine]]"
 ---
 
 # S5/S5' Specification: Integral World Boundary and Epii Return Law
@@ -40,6 +42,8 @@ This is the consolidated S5-level master specification. It replaces the older sc
 The core planned spine for S5/S5' is the [[epi-logos plugin]]. That plugin is being developed outside this immediate spec pass, but it is the intended resource and skill body for executing [[Epi-Logos]] philosophy and the related [[Nara]] / [[Epii]] functionalities. It should hold the core philosophical resources, skills, prompt contracts, M' function affordances, and Epii/Nara-facing operational grammar. External automations, [[Notion]], webhooks, and publication connectors remain valid S5 manifestations, but they are secondary to this plugin-first planned state.
 
 The dynamic self-improvement spine of the [[Epii]] agent is the [[autoresearch]] loop. Because Epii is the #5 [[epi-logos]] return position, autoresearch is how the prior architecture turns back upon itself: hypotheses, challengers, evaluations, keep/discard decisions, promotions, and schema/skill refinement return through S5' into lower layers. This is not a generic background loop; it is Epii's reflective capacity, informed by [[Sophia]] disclosures and [[Anima]] / [[Aletheia]] outputs.
+
+The 2026-05-30 M'/Nara integration adds canon-recognition pressure to S5': Epii must distinguish canon-worthy artifacts, evidence-worthy local outputs, protected personal material, and external/publication candidates before promotion. Claims such as `137 = 64 + 72 + 1` or Jiva-is-Śiva at the 4+2 surface are promoted only with source anchors, privacy class, review state, and S2/S3 evidence handles; they are not pushed outward as raw synchronicity or private Nara material.
 
 This is the newest and least-settled S-level. The older [[Notion]] / dashboard files preserve useful #5 intuition, but the current architecture is broader: [[Notion]] is one possible S5 manifestation, not the coordinate itself.
 
@@ -578,6 +582,7 @@ Partial / missing:
 - Full live `s5'.improve.*` loop with PI-agent invocation, deeper evidence criteria/diagnostic deposits, and non-dry-run promotion through compiler mutation law.
 - Typed M' function API surface over existing `epi nara`.
 - Notion/publication connector as optional S5 manifestation.
+- Canon-recognition queue for M' structural updates, including source-anchored review of alpha-quaternionic, psychoid-cymatic, GDS/neosemantics, and shared-cosmos claims before publication or deprecation of working files.
 
 ### Internal 0-5 Breakdown
 

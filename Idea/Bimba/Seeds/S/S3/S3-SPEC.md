@@ -21,6 +21,8 @@ c_0_source_coordinates:
   - "[[S3]]"
   - "[[S3']]"
   - "[[S3'Cx]]"
+  - "[[alpha_quaternionic_integration_across_M_stack]]"
+  - "[[m4-prime-psychoid-cymatic-field-engine]]"
 ---
 
 # S3/S3' Specification: Gateway Control and Temporal State Law
@@ -108,6 +110,7 @@ The live implementation is broad but not yet coordinate-native:
 - `Body/S/S3/gateway` owns gateway protocol frame construction, runtime run/event/chat state, and the durable gateway session store: record creation with externally injected Pi/Khora runtime context, list/resolve/patch/delete authority, legacy OmniPanel row normalization, transcript path law, workspace/bootstrap scope derivation, and subagent launch validation. S0 remains the live server/runtime adapter that supplies cwd, vault root, session id, day id, and NOW path from the active Pi session and hosts domain-specific dispatch while it is being extracted.
 - `Body/S/S3/redis-context` owns Redis runtime residency and the RedisVL bridge path contract. It keeps `s2:graph:semantic` and `s3:gateway:temporal` as distinct namespaces over the same local Redis Stack substrate.
 - `spacetimedb_bridge.rs` is currently a file-backed/test event bridge plus a live reducer client for the S3/S3' SpaceTimeDB registration/projection plane. The current S0-hosted gateway can register gateway, client, agent, session, heartbeat, Kairos, safe kernel projection, global temporal, and temporal event surfaces when configured, and it can read the `session_surface` / `kairos_surface` / `global_temporal_surface` projection through HTTP SQL polling. Gateway readiness now also exposes the native WebSocket subscription plan over the same projection tables, and `epi portal` can use that S3-owned plan to open a `v1.json.spacetimedb` `SubscribeMulti` loop for `session_surface`, `kairos_surface`, and `global_temporal_surface` updates. The target remains one SpaceTimeDB deployment holding many gateway, agent, and client instances for the same installation/workspace.
+- The 2026-05-30 shared-cosmos contract adds the first native SpaceTimeDB world-plane tables and reducers to the S3/S3' law: `world_clock`, RLS-filtered `pratibimba_presence`, opt-in `shared_archetype_event`, and participant-filtered `coincidence`; reducers `advance_world_clock` at 1 Hz, `bind_pratibimba_presence`, and `detect_coincidences` at 1/min; quaternionic identity signatures where `quintessence_hash = BLAKE3(canonical_bytes(q_Nara) || caps)` is an indexing fingerprint over canonical quaternionic bytes, not the ontological identity itself.
 - `Body/S/S3/epi-spacetime-module` now carries the gateway-client registration module shape: gateway instances, PI-agent instances, TUI/desktop/browser clients, session temporal surfaces, global temporal surfaces, Kairos surfaces, and temporal activity events keyed by installation/workspace and instance identity.
 - `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` currently wraps the `graphiti-core` library in a FastAPI service on port `37778`. This proves Graphiti can be used as a Python library; the HTTP sidecar is only the current integration wrapper for Rust gateway/Nara callers and is now demoted behind `Body/S/S3/graphiti-runtime`.
 - There are now dedicated `Body/S/S3/redis-context`, `Body/S/S3/gateway`, and `Body/S/S3/graphiti-runtime` modules for Redis runtime residency, gateway protocol/session/runtime residency, and Graphiti runtime adapter law. The live gateway dispatch/server body is still S0-hosted, but it consults S3 route ownership and passes Graphiti envelope/provenance/deposit/search law through the S3 crate rather than owning it locally. `Body/S/S3` currently also holds `epi-app` and `epi-spacetime-module`; the next S3 extraction step is the live dispatch/server adapter.
@@ -541,6 +544,8 @@ Build implications:
 
 - SpacetimeDB is the target shared-state host.
 - Current Rust client is a stub; file-backed bridge events are test evidence, not final live reducer integration.
+- `world_clock` is the canonical shared pulse table for graph/clock surfaces. Existing `m1_clock_state` or global temporal rows should be compatibility projections over that pulse unless a later spec deliberately separates them.
+- Native WebSocket subscription parity is the first shared-cosmos milestone; HTTP SQL polling remains fallback, not the target live UX.
 
 #### `s3'.context.get` / `set` / `shared.get` / `shared.set` / `pool`
 

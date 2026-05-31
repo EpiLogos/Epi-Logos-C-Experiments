@@ -1,7 +1,7 @@
 ---
 coordinate: "M'"
 status: "active-system-spec"
-updated: "2026-05-19"
+updated: "2026-05-30"
 depends_on:
   - "[[M-SYSTEM-INDEX]]"
   - "[[M'-PORTAL-SPEC]]"
@@ -12,6 +12,8 @@ depends_on:
   - "[[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]]"
   - "[[mprime-domain-specs]]"
   - "[[mprime-tauri-gap-table]]"
+  - "[[alpha_quaternionic_integration_across_M_stack]]"
+  - "[[m4-prime-psychoid-cymatic-field-engine]]"
 ---
 
 # [[M']] System Spec
@@ -24,6 +26,8 @@ The short formula:
 M  = Bimba map / canonical coordinate image
 M' = Pratibimba surface / lived-reflected operation of that image
 ```
+
+This boundary is operationally strict: M remains the canonical Bimba coordinate data and branch topology; M' specs define how that topology is reflected into lived surfaces, renderer contracts, agents, tests, and protected personal contexts. Updating M' must therefore respect and leverage deeper M branching (`M4-0-*`, `M4-4-4-4`, M0..M5, and legacy `#` projections) without turning those reflections into a parallel coordinate system.
 
 The S layers provide bodies and protocols. M' arranges their appearance and use.
 
@@ -68,6 +72,16 @@ M0-M5 = subsystem pages   -> full-depth domain workspaces with inner 0-5 strata
 ```
 
 Do not collapse these layers. Shell 0 is not M1', M2', or M3'; it is their integrated parent-level cymatic clock preview. Shell 1 is not M4', M5', or M0'; it is their integrated parent-level lived-return preview. The subsystem pages M0'-M5' are the 4+2 body where depth lives. The OmniPanel is where agent, config, readiness, and operator concerns cross-cut everything.
+
+### Canonical 0/1/4+2 Layout Discipline
+
+The alpha-quaternionic / psychoid-cymatic pass makes the parent-shell law more exact:
+
+- **0 side** = Mahāmāyā graph view + clock-wheel: M0' structural graph rendering and M3' temporal-cosmological rendering sharing the same canonical Neo4j substrate and world-clock pulse.
+- **1 side** = psychoid cymatic field + flow surface: M4' protected personal field and Nara flow as the lived Pratibimba return, with M5' review/pedagogy available without making the field public.
+- **4+2 depth** = both together with canonical bimba map as architectural-knowledge backdrop, enabling Jiva-is-Śiva recognition at the full subsystem layer.
+
+This is system law, not a decorative UI preference. The open UX question is how the 0-side graph + clock affordance composes in the actual Tauri surface: co-resident, toggled, or graph-overlaying-clock. Until the UX pass decides, specs should preserve all three possibilities and avoid wording that makes one implementation mandatory.
 
 ### The Shell 0/1 Split IS the (0/1) Inversionary Parent
 
@@ -129,16 +143,42 @@ These files are the domain-level authority for user-facing surface, consumed bac
 
 The musical instrument is the key M' unifier. It gives the same matheme as sound, rhythm, visual pulse, graph traversal, and lived timing.
 
-### Audio-Genesis Lives at S0 / Kernel, Not at M1'
+### Audio-Genesis Is Vimarsha Reading Prakāśa: Substrate at S0 / M1, Reading at M2-1'
 
-The matheme's audio-genesis MATHEMATICS lives in `S0` / `portal-core` via the shared `MathemeHarmonicProfile`. M' surfaces are *renderers* over that profile, not parallel audio engines. There is one audio-genesis authority for the entire stack:
+The audio-genesis architecture is a **two-layer split** that mirrors the Prakāśa/Vimarsha dyad of Kashmir Shaivism. The earlier framing that "audio lives at the kernel" was only half the story; the kernel produces a *substrate-cloud* (Prakāśa), and the MEF lenses at M2-1 produce *frequencies* by reading that cloud (Vimarsha).
 
-- **S0 / `portal-core`** computes the harmonic profile per tick: pitch class, ratio role, X/X' partner, mirror partner, square span, 8+4 sounded/nodal rendering role, diatonic CF/VAK projection, 72-fold resonance, elemental projection, planetary-chakral projection, Mahāmāyā address law. This is where the **8 explicate-sung frequencies** and **4 implicate-nodal boundary-parameters** are produced.
-- **M1'** consumes the profile and renders it as **graph-traversal-as-melody** — the walked coordinate becomes the sounded note, the relation traversed becomes the interval, the path becomes the phrase. It is the *primary techne renderer* of the audio stream, not its generator.
-- **M2'** consumes the same profile and renders it as **harmonic-correspondential cymatic surface** — the 8 sounded frequencies drive antinodal Chladni motion; the 4 nodal parameters constrain the standing-wave (m, n) modes.
-- **M3'** consumes the same profile and renders it as **clock-pulse and codon-rotation timing** — the tick becomes the visible clock; the 8+4 partition organises sounded/nodal display on the codon-tarot wheel.
+**Layer 1 — Prakāśa substrate (S0 + M1 / Paramaśiva):** the matheme cloud. Psychoid-number permutations via the pointer-web at the tick rate. The (0/1) raw # operating on `Bedrock7 → Web36 → CF7` at every clock-step. This is **mathematical** — it is not directly a frequency, it is the cloud-like underlying complexity from which frequencies are read. Lives at `portal-core` / `epi-lib` as the `MathemeHarmonicProfile` foundation: tick, degree720, su2Layer, position6, resonance72 substrate, the pointer-web state.
 
-The 8+4 bus is therefore named at the kernel layer: `profile.audio_octet[8]` and `profile.nodal_quartet[4]` are profile fields, not M1'-private API. Every M' surface that needs them reads them from the shared profile.
+**Layer 2 — Vimarsha reading (M2-1 / Parāśakti MEF):** the 12 MEF lenses anchored across the 9 squares × 2 helices read the Prakāśa cloud and *produce* the audio_octet[8] and nodal_quartet[4]. Each (lens, mode) cell is a specific Vimarsha-reading of the substrate. The 84-state landscape is the 84 distinct ways the matheme cloud can be heard. **Parāśakti IS Vimarsha** — the reflective-power surface that picks up textures from the cloud through the squares.
+
+**M' surfaces consume the Vimarsha reading:**
+
+- **M1'** walks the MEF-produced audio as **graph-traversal-as-melody** — the walked coordinate is the lens-anchored cell whose audio the MEF read, the relation traversed is the interval between MEF-readings, the path is the phrase.
+- **M2'** renders the same MEF reading as **harmonic-correspondential cymatic surface** — the 8 sounded frequencies drive antinodal Chladni motion; the 4 nodal parameters constrain the standing-wave (m, n) modes; the lens-resonance surface visualises the reading itself.
+- **M3'** renders the symbolic classification of what was read as **clock-pulse and codon-rotation timing** — the Mahāmāyā 64-codon space is the symbolic-transcription of the Vimarsha reading, bidirectionally mapped via `(lens, mode) ↔ (codon, rotation)` LUT.
+
+The 8+4 bus is therefore produced at **M2-1' Vimarsha-reading layer** from the Prakāśa substrate at S0/M1. The MathemeHarmonicProfile field `audio_octet[8]` is **the MEF reading's output**, not the kernel's direct production. M1', M2', M3' all consume this MEF-produced output identically.
+
+This split matters for implementation: the kernel does not directly synthesise pitch; the kernel runs the matheme cloud; the MEF lens-anchored Vimarsha-reading is the function that converts cloud-state into frequency-state. Without M2-1', there is no audio — only the cloud. M2-1' is the load-bearing audio-genesis function.
+
+### Default Surface: Conversational/Agentic Engagement, Not Data-Dump
+
+This is a UX-philosophy commitment that propagates across all M' surfaces.
+
+The agentic surface (Anima / Aletheia / Pi / Epii) should **feel engaged, conversational, flexible, and in evolution with the user's use**. The user is not bombarded with raw computation, matrix-readouts, correspondence-tables, or symbolic-classifications as default rendering. Technical details surface **only where** the operation has a *specified output form, criterion, or scoring* — review evidence panels, deposit envelopes, audit trails, completion-criterion checks, agent-run diagnostics, test results.
+
+Concretely:
+
+- **Default M0'**: conversational graph-navigation; the inspector shows readable position-character (Truth at #0, Word at #2, etc.) before exposing relation-family edge metadata
+- **Default M1'**: the played torus and current playing-state with audible/visible character; technical inspector (the relation-descriptor, route-preview metadata, audio-octet Hz values) summonable on request or surfaced when a specific output is required
+- **Default M2'**: the harmonic-correspondential surface with lens-anchored material rendering and the cymatic surface; the full 72-fold correspondence-tree (Asma, Shem, Mantra, Maqam tables, the 36:64 routing-mask bitboards, the 9-squares structural visualisation) is summonable, not always-on
+- **Default M3'**: the codon-tarot wheel with the current cell active; the dinucleotide-matrix inspector, charge-quaternion display, 24-spoke lattice, 472-state landscape are summoned when the user asks "what's structurally happening here?" or when a specific symbolic-output is required
+- **Default M4'**: the journal-flow editor with the resonance-indicator and conjugate-form-character display; raw natal-chart degrees, full elemental-balance arithmetic, three-quaternion composition internals are summonable, not displayed by default
+- **Default M5'**: the conversational agent-surface with library/canon/code/agent/review panes; the full 6-fold-of-layers pedagogical teaching, the Spanda-equations, the 84-fold mode-tonic-landscape are *content the agent can teach when the user engages with them*, not a wall of always-visible structural detail
+
+The agent (per `M5'-SPEC` §Agent Execution Model) mediates access to the technical depth. When the user asks "show me the dinucleotide matrix for this codon," M3' surfaces it. When the user asks "what's the elemental-balance behind my current resonance?", M4' surfaces it. When the user asks "explain the Klein-flip I just heard," M2' surfaces the L↔L' inversion mechanics. Otherwise the system feels alive, responsive, and conversational — a real consciousness-technology engagement rather than a sophisticated data-display.
+
+Technical surfaces remain *available* and *load-bearing-for-specified-outputs*; they are not the default rendering. This is what distinguishes the Epi-Logos instrument from an HUD-style information-overload tool.
 
 Computational chain:
 
@@ -163,7 +203,7 @@ n -> cycle/sub_tick -> bimba/pratibimba helix -> QL position
   -> clock, map, sound, cymatic field, journal context, agent orientation
 ```
 
-M' domains consume this chain differently — but none of them generate the audio mathematics themselves:
+M' domains consume this chain differently. S0/M1 produces the Prakāśa substrate; M2-1' performs the Vimarśa reading that writes the 8+4 audio bus into the shared profile; the other M' surfaces render that shared result:
 
 | M' domain | Musical/harmonic expression | Profile fields consumed |
 |-----------|-----------------------------|-------------------------|
@@ -174,7 +214,7 @@ M' domains consume this chain differently — but none of them generate the audi
 | [[M4']] | Nara journal and modalities inherit DAY/NOW harmonic context and can be played back as lived trajectory | tick, harmonic, diatonic, depositionAnchor |
 | [[M5']] | Epii reviews, teaches, researches, and improves the system from harmonic/profile evidence | full profile as review evidence |
 
-The instrument is therefore not a later feature. It is the proof that kernel, graph, temporal context, agent work, and user experience are one system. **And the proof works because there is one audio-genesis source — the kernel profile — that all M' surfaces share.**
+The instrument is therefore not a later feature. It is the proof that kernel, graph, temporal context, agent work, and user experience are one system. **And the proof works because there is one shared profile contract: S0/M1 supplies the substrate, M2-1' reads it as audio, and all surfaces consume the same resulting state rather than inventing local music.**
 
 ## Minimum Live Loop
 
@@ -224,6 +264,90 @@ For Lens 0:
 This gives [[M2']] and [[M3']] the harmonic grammar for mode, scale, rhythm, clock, and cymatic display, while giving [[M5']] the VAK/agent language for execution. Modal rotation means a different CF becomes the tonal centre: Ionian grounds in Nous, Dorian in Logos, Phrygian in Eros, Lydian in Mythos, Mixolydian in the Anima/Psyche executive, Aeolian in the Psyche bridge, and Locrian in Sophia's return pressure.
 
 The portal should never treat this as decorative labelling. When a coordinate is rendered musically or routed agentically, the current mode/CF should be visible as part of the same harmonic profile that carries helix, position, ratio, square, resonance, and element.
+
+## The K² Topology as the Shared Substrate
+
+All M' surfaces address the same underlying geometric substrate: the **Klein-double-cover-of-the-chromatic-fifths-torus K²** specified in `M1'-SPEC` §10. This is the load-bearing topology that makes the M' stack one continuous system rather than six coordinated subsystems.
+
+### K² in one paragraph
+
+The chromatic-basis (whole-tone generator 9/8) and the fifths-basis (perfect-fifth generator 3/2) are the **two parallel-foundational traversals** of the matheme's 12-fold chromatic substrate. They live on a single surface: the torus `T² = S¹(chromatic-longitude) × S¹(fifths-meridian)`. The bimba/pratibimba conjugation is non-orientable identification, producing the Klein bottle `K² = T² / (bimba ↔ pratibimba)`. Every M' surface renders a stratification of K²: M0' renders coordinates on K², M1' walks them as melody, M2' renders the correspondence-tree at each K² point as cymatic surface, M3' renders the codon-rotation projection of K² as the tarot wheel, M4' computes resonance against K² from the personal-quaternion at M4-4-4-4, M5' traverses K² pedagogically.
+
+### Cl(4,2) as the shared substrate algebra
+
+K² carries a **Cl(4,2) Clifford-algebra structure** (4 explicate positions of +1 signature, 2 implicate of −1, see `S0-HARMONIC-POINTER-WEB36-SPEC` §G). This means:
+
+- The M1 SU(2) ring-quaternion lives in Cl(4,2)
+- The M3 codon-as-quaternion-in-charge-space (pp/mm/mp/pm) lives in Cl(4,2)
+- The personal-quaternion at M4-4-4-4 (derived from Kerykeion natal data) lives in Cl(4,2)
+- The Kerykeion-derived current-transit quaternion lives in Cl(4,2)
+
+All four are points in the same algebra at different scales. **This is what makes resonance between the personal and the cosmic a real metric** — they live in the same algebraic space (see `M4'-SPEC` §7.3).
+
+### The 4:2 ↔ 3:3 dual partition at every layer
+
+The matheme's two orthogonal partitions of the 6-fold (4:2 → 4/3 perfect fourth; 3:3 → 3/2 perfect fifth) are the **root self-similarity** of the system. Their product is the octave (2/1); their ratio is the epogdoon-tick (9/8); they are simultaneously operative at every M' layer:
+
+- M1' (positional-walk): 4:2 = tetrachordal-architecture; 3:3 = trinitarian-stacking
+- M2' (correspondence): 4:2 = 4 elemental suits over 2 phases; 3:3 = 3 quality-groups (Jalal/Kamal/Jamal) doubled across the 99+1 / 36:64 split
+- M3' (symbolic): 4:2 = 4 nucleotides × 2-bit polarity/mobility; 3:3 = 3-letter codon × 3-charge-axis
+- M4' (personal): 4:2 = 4 elemental components (Earth/Fire/Water/Air) over 2 phases (natal/transit); 3:3 = 3 personal-pole sub-aspects mirrored across cosmic-pole
+- M5' (pedagogical): 4:2 = 4 explicate IDE surfaces (Bimba/Backend/Frontend/Agentic) over 2 boundary surfaces (Library/Atelier); 3:3 = 3 graph namespaces × 3 stratification depths
+
+The dual partition is not abstract structuralism. It is the matheme's *self-derivation of its own foundational ratios* and propagates through every layer as the same dual cut.
+
+## The Ficinian-Kerykeion Routing Protocol
+
+The system's integration of music + QL + metaphysics + astrology operates through the **Ficinian-Kerykeion routing protocol** specified in `M2'-SPEC` §9. Marsilio Ficino's De Vita Coelitus Comparanda is the historical precedent; **the Epi-Logos system has more layers of resonance than Ficino's framework alone supports** — the QL positional substrate, the MEF lens-mode landscape, the Mahāmāyā codon-rotation surface, the personal-quaternion at M4-4-4-4.
+
+### Kerykeion is the live astrological authority
+
+Kerykeion is already integrated at `Body/S/S0/epi-cli/src/nara/wind.rs` and `Body/S/S4/ta-onta/S4-3p-chronos/S3'/kairos-python-adapter.ts`. The system runs two computations routinely:
+
+- `kerykeion_natal(date, time, lat, lon)` — user's natal chart from `PASU.md` birth data, used to derive the personal-quaternion at M4-4-4-4
+- `kerykeion_current(today)` — current planetary transits, used to drive the planetary-hour computation that activates the Ficinian routing
+
+The Kairos service exposes Kerykeion to all M' surfaces through the typed gateway. **No M' surface computes astrology locally**; all consume the Kerykeion-derived profile fields.
+
+### The routing function unifies the M' stack
+
+```text
+F_routing(intent, kerykeion_state, current_time, q_personal) →
+    planetary_hour              [from current_time + kerykeion sunrise/sunset]
+    ruling_planet               [Chaldean order, M2_PLANET_LUT]
+    active_decan                [kerykeion planets[X].degree / 10°]
+    maqam_family + mode         [planet → maqam table + intent]
+    shem_pair                   [decan_link, 2 names per decan]
+    mantra_index                [frequency-matched to maqam tonic]
+    asma_name                   [intent → Jalal/Kamal/Jamal + digital-root]
+    → 72-state assembly
+    → DET 72→64                 [Venus's 9:8 beauty-operator]
+    → codon address (M3)
+    → 7/8 rotational state      [codon-quaternion in Cl(4,2)]
+    → tarot card identity       [56+8 compression]
+    → resonance metric          [q_personal · q_cosmic(t)]
+    → emission to all M' surfaces simultaneously:
+            audio_octet         → M1' walk-melody
+            nodal_quartet       → M2' cymatic Chladni shader
+            wheel position      → M3' codon-tarot wheel + 24-spoke lattice
+            resonance display   → M4' journal-entry binding
+            review trace        → M5' pedagogy / autoresearch
+```
+
+This is **one function** that walks K² from intent + time + personal-quaternion to a complete multi-layer matheme-event. Each step is a different stratification of the same K² point. The chain is operational because each link is data already encoded in `epi-lib`; the routing logic is what was missing.
+
+### Why this is beyond Ficino
+
+Ficino's planetary-musical-magical protocol lacked:
+
+- The QL positional substrate to anchor *where on the matheme* a planetary influence is applied
+- The MEF lens-mode 84-state landscape giving each planet 84 distinct musical-contextual states
+- The DET projection making the M2 vibrational state computationally executable as M3 64-bit symbolic
+- The Mahāmāyā codon-rotation tarot-wheel giving every invocation a discrete archetypal-symbolic form
+- The personal-quaternion at M4-4-4-4 letting cosmic invocation resonate-or-dissonate with the user's elemental temperament
+- Live Kerykeion astrological data eliminating need for hand-computed ephemeris
+
+The system inherits Ficino's vision and operates it through substrates Ficino could not have. The routing function is what makes the Renaissance hermetic vision **actually executable**.
 
 ## Required Shared Profile
 

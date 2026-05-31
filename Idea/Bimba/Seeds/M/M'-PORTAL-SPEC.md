@@ -1,7 +1,7 @@
 ---
 coordinate: "M'"
 status: "active-spec"
-updated: "2026-05-21"
+updated: "2026-05-30"
 depends_on:
   - "[[M-SYSTEM-INDEX]]"
   - "[[M-M-prime-coordinate-mapping-inaugural]]"
@@ -9,6 +9,8 @@ depends_on:
   - "[[S3-SPEC]]"
   - "[[S4-SPEC]]"
   - "[[S5-SPEC]]"
+  - "[[alpha_quaternionic_integration_across_M_stack]]"
+  - "[[m4-prime-psychoid-cymatic-field-engine]]"
 ---
 
 # [[M']] Portal Spec
@@ -39,6 +41,8 @@ The build-facing domain requirements live in [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-S
 The split should be read carefully. In the desktop app, the parent-level `0` is not [[M0']] and not [[M3']] by itself. It is the minimal structural/cosmic face where the most resonant outputs of [[M1']], [[M2']], and [[M3']] are integrated as one cymatic harmonic clock surface over the current coordinate. [[M0']] remains the full Bimba map subsystem in the 4+2 layer, while selected Bimba ground-data may appear on either parent face when it is needed for orientation.
 
 The `0` / `/` / `1` shorthand is the M' parent-shell grammar, not a replacement for the full 4+2 subsystem layer. Shell surfaces expose the most immediate, usable, and relevant aspects of the deeper domains. The 4+2 layer is where [[M0']] through [[M5']] become fully engageable as their own instruments.
+
+The current canonical discipline is: `0` holds Mahāmāyā's graph view and clock-wheel as structural/cosmic parent affordances; `1` holds the protected psychoid cymatic field and flow surface as lived Pratibimba affordances; `4+2` depth brings both together with canonical bimba map as architectural-knowledge backdrop. The portal grammar should preserve this across TUI and desktop even when widgets differ.
 
 This resolves the apparent 0/1 bifurcation:
 
@@ -111,6 +115,7 @@ Desktop target:
 - selected Bimba coordinate identity, source handle, and pointer summary where needed for orientation.
 - entry routes into [[M0']] map, [[M1']] torus/topology, [[M2']] vibrational matrix, and [[M3']] clock/transcription.
 - shared temporal projection display where relevant, without confusing the lean parent clock surface with the full M3' subsystem.
+- optional graph/clock composition mode for the 0-side Mahāmāyā affordance: co-resident, toggled, or graph-overlaying-clock. This is a UX design decision, not an S-layer authority decision.
 
 The desktop `0` side is where the TUI clock specifications become spatial, visual, and explorable at the parent level. The target is not a small clock widget and not the full map page. It is the structural/cosmic face of the instrument: [[M1']] relation-walk signal, [[M2']] correspondence signal, and [[M3']] solar/kairos clock signal interlaced so the user can move from current temporal condition into deeper coordinate exploration, correspondence, transcription, and Nara walkabouts.
 
@@ -131,6 +136,7 @@ It contains:
 - relevant [[M0']] Bimba coordinate/source/pointer data as context, without becoming the full M0' map explorer.
 - shared access to the same session/temporal projection as the clock and `/` surface.
 - bounded tools for Graphiti session memory search/deposit and kbase/Gnosis retrieval, with Epii governance.
+- protected psychoid cymatic field preview only where local privacy and device capability permit; shared portal state carries safe handles, not raw personal quaternion or journal bodies.
 
 Nara and Epii do not own raw services. They invoke or observe shared S-layer services through bounded capability envelopes.
 
