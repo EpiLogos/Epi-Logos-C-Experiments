@@ -214,15 +214,15 @@
     },
     {
       "agent": "aletheia",
-      "contract_path": "Body/S/S4/ta-onta/S4-5p-aletheia (legacy CONTRACT.md is historical; roster surfaces aletheia at S4.5'/S5 handoff)",
+      "contract_path": "Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md",
       "coordinate": "S4.5'/S5 handoff",
+      "kind": "tool_guardian_and_subagent_set",
       "roles": ["aletheia", "agora", "anansi", "janus", "mercurius", "moirai", "zeithoven"],
       "default_session_key": "agent:aletheia:main",
-      "readiness": "transitional",
+      "readiness": "authoritative",
       "privacy_gate": "review_gate",
       "is_prose_assumption": false,
-      "readiness_blocker": "No `aletheia-agent/agent-contract.json` exists analogous to the Epii contract. Track 09 needs Aletheia's gateway methods, accepted deposits, allowed requests, and forbidden authority captured as a live JSON contract before T2 governance metadata can hang off it.",
-      "blocker_id": "aletheia.agent-contract-missing"
+      "notes": "Aletheia is NOT a peer agent like Epii — it is a set of subagents that act as powers and tool guardians, already specced and mapped in the S4 layer (Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md). Registered tools (aletheia_gnosis_ingest/query/notebook_create, aletheia_thought_route, aletheia_crystallise) and PI-native subagents (Anansi, Moirai, Janus, Mercurius, Agora, Zeithoven) are declared there. All Aletheia invocation routes through Anima dispatch — Aletheia is emergent, not routed independently. Track 09 T2 hangs governance metadata off this S4 contract; no parallel `aletheia-agent/agent-contract.json` is required."
     },
     {
       "agent": "sophia",
@@ -516,12 +516,6 @@
       "summary": "Current `epi agent vak evaluate` heuristic collapses five of six capacity-profile representative tasks to identical VAK addresses. Capacity-specific dispatch cannot derive from VAK alone today.",
       "owner": "Track 09 T1",
       "downstream_impact": "Route decisions cannot be selected purely from VAK output; T1 must either build a profile-aware mapping or treat the heuristic as a deterministic baseline and route on additional envelope fields."
-    },
-    {
-      "id": "aletheia.agent-contract-missing",
-      "summary": "No `aletheia-agent/agent-contract.json` exists analogous to the Epii contract. Gateway methods, deposits, requests, and forbidden authority for Aletheia are not declared as live JSON.",
-      "owner": "Track 09 T2 (with S4/S4' Aletheia owner)",
-      "downstream_impact": "T2 governance metadata cannot hang off a missing Aletheia contract surface."
     },
     {
       "id": "sophia.governance-lead-metadata-missing",

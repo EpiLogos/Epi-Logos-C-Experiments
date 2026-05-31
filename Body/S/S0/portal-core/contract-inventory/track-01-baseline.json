@@ -1,0 +1,243 @@
+{
+  "track": "01",
+  "tranche": "T0",
+  "title": "Baseline Contract Inventory",
+  "generated_at": "2026-05-31",
+  "purpose": "Inventory the current S0/S0' contract surface across C, Rust, CLI, and TypeScript schemas without changing implementation. Each entry names the source file, anchored type/symbol, downstream owner, readiness, privacy class, and whether the field is authoritative, transitional, compatibility-only, or blocked on S2/S3/S5.",
+  "purpose_anchors": [
+    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md#tranche-0",
+    "docs/specs/S/S0-S0i-CLI-CORE.md#reflected-m0--m1-contract",
+    "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md#required-shared-profile",
+    "Idea/Bimba/Seeds/S/S0/S0-HARMONIC-POINTER-WEB36-SPEC.md"
+  ],
+  "readiness_legend": {
+    "authoritative": "S0 owns this contract and produces it from real code; downstream consumers must mirror without re-deriving.",
+    "transitional": "S0 currently emits this field but the canonical form, schema version, or ownership is unresolved.",
+    "compatibility_only": "Field exists for backward compatibility; downstream should prefer a newer surface.",
+    "blocked_by_other_track": "Field is named in S0 contract but its final shape or runtime depends on S2/S3/S4/S5 work that has not landed."
+  },
+  "privacy_legend": {
+    "public_current_context": "Safe to expose in bridge payloads, SpaceTimeDB rows, M' renderers.",
+    "protected_local_derived": "Derived from protected body; must not leave the local arena except as opaque handle.",
+    "protected_local_body": "Raw protected body; forbidden in any cross-process payload.",
+    "reviewed_canonical": "Published only after explicit user review."
+  },
+
+  "rust_portal_core": {
+    "package": "Body/S/S0/portal-core",
+    "manifest": "Body/S/S0/portal-core/Cargo.toml",
+    "kernel_module": "Body/S/S0/portal-core/src/kernel.rs",
+
+    "core_types": [
+      {
+        "name": "KernelTick",
+        "source": "Body/S/S0/portal-core/src/kernel.rs#L114",
+        "fields": ["cycle:u64", "sub_tick:u8", "phase:KernelPhase", "element:KernelElement", "position6:u8", "harmonic_ratio:f32"],
+        "constructor": "portal_core::kernel_tick_from_epogdoon(cycle, sub_tick)",
+        "readiness": "authoritative",
+        "privacy": "public_current_context",
+        "downstream_owner": "S3 SpaceTimeDB world-clock projection",
+        "notes": "tick.cycle and sub_tick are the canonical epogdoon clock state; SpaceTimeDB must not synthesize an alternate clock."
+      },
+      {
+        "name": "HarmonicPulse",
+        "source": "Body/S/S0/portal-core/src/kernel.rs#L124",
+        "fields": ["cycle", "sub_tick", "phase", "element", "ratio_num:u16", "ratio_den:u16", "tempo_multiplier:f32", "period_multiplier:f32"],
+        "constructor": "HarmonicPulse::from_tick(tick)",
+        "readiness": "authoritative",
+        "privacy": "public_current_context",
+        "downstream_owner": "M' renderers + S3 envelope `c_2_kernel_harmonic_pulse`"
+      },
+      {
+        "name": "KernelProjection",
+        "source": "Body/S/S0/portal-core/src/kernel.rs#L152",
+        "fields": ["tick", "harmonic_pulse", "bioquaternion", "energy", "resonance_square_emphasis"],
+        "constructor": "KernelProjection::from_clock_state(...)",
+        "readiness": "authoritative",
+        "privacy": "public_current_context",
+        "downstream_owner": "Envelope schema `c_0_kernel_projection`; FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md"
+      },
+      {
+        "name": "MathemeHarmonicProfile",
+        "source": "Body/S/S0/portal-core/src/kernel.rs#L253",
+        "constructor": "MathemeHarmonicProfile::from_tick(tick) [canonical] | with_vak(tick, vak) | from_tick_with_personal_identity(tick, &identity)",
+        "field_inventory": {
+          "tick": {"type": "u64", "readiness": "authoritative", "privacy": "public_current_context"},
+          "tick12": {"type": "u8", "readiness": "authoritative"},
+          "cycle": {"type": "u64", "readiness": "authoritative"},
+          "degree720": {"type": "u16", "readiness": "authoritative", "notes": "0..720 across primary+shadow SU(2) layers"},
+          "degree360": {"type": "u16", "readiness": "authoritative"},
+          "su2_layer": {"type": "String", "readiness": "authoritative", "values": ["primary", "shadow"]},
+          "phase": {"type": "KernelPhase", "readiness": "authoritative"},
+          "position6": {"type": "u8", "readiness": "authoritative"},
+          "helix": {"type": "String", "readiness": "authoritative", "values": ["bimba", "pratibimba"]},
+          "ratio_role": {"type": "String", "readiness": "authoritative"},
+          "lens_mode": {"type": "MathemeLensMode", "readiness": "authoritative"},
+          "chromatic": {"type": "MathemeChromaticProfile", "readiness": "authoritative"},
+          "diatonic": {"type": "Option<MathemeDiatonicContext>", "readiness": "authoritative"},
+          "resonance72": {"type": "MathemeResonance72Projection", "readiness": "authoritative"},
+          "audio_octet": {"type": "[f32; 8]", "readiness": "transitional", "downstream_owner": "DCC-05 (audio bus and cymatic derivation ownership); produced via vimarsha_read_profile in portal-core today, eventual home may be M2-1'", "notes": "engineering boundary documented under open decision; S0 currently houses the M2-1' Vimarśa reading function."},
+          "nodal_quartet": {"type": "[MathemeNodalConstraint; 4]", "readiness": "transitional", "downstream_owner": "Same as audio_octet"},
+          "elements": {"type": "MathemeElementalProjection", "readiness": "authoritative"},
+          "planetary_chakral": {"type": "MathemePlanetaryChakralProjection", "readiness": "authoritative"},
+          "binary": {"type": "MathemeBinaryProjection", "readiness": "transitional", "blocker_id": "IOD-04", "notes": "Profile versioning and `binary` vs future `mahamaya` naming compatibility unresolved."},
+          "codon_rotation_projection": {"type": "CodonRotationProjection", "readiness": "authoritative", "source_spec": "Idea/Bimba/Seeds/S/S0/S0-CODON-ROTATION-PROJECTION-SPEC.md"},
+          "q_cosmic": {"type": "[f32; 4]", "readiness": "authoritative", "privacy": "public_current_context"},
+          "resonance": {"type": "Option<f32>", "readiness": "authoritative", "notes": "Populated only via from_tick_with_personal_identity; absent in baseline public-current."},
+          "conjugate_form_character": {"type": "ConjugateFormCharacter", "readiness": "authoritative"},
+          "privacy_class": {"type": "ProfilePrivacyClass", "readiness": "authoritative", "default": "PublicCurrentContext"},
+          "bedrock": {"type": "MathemeBedrockProjection", "readiness": "authoritative"},
+          "pointer_anchor": {"type": "MathemePointerAnchorProjection", "readiness": "transitional", "blocker_id": "IOD-05+S2/S3", "notes": "Current shape lives at S0; final certification and downstream `depositionAnchor` depend on S2/S3 owners. Open decision: nullable vs readiness-blocked vs separate sub-objects."},
+          "context_frames": {"type": "MathemeContextFrameWebProjection", "readiness": "authoritative"},
+          "vak_address": {"type": "Option<VakAddress>", "readiness": "authoritative", "carries_to": ["epi gate dispatch anima-invoke (D3, 419aac5)", "sessions.patch RPC (C1, 19fbc8fc)"]}
+        }
+      },
+      {
+        "name": "ProfilePrivacyClass",
+        "source": "Body/S/S0/portal-core/src/kernel.rs#L388",
+        "variants_kebab_case": ["protected-local-body", "protected-local-derived", "public-current-context", "reviewed-canonical"],
+        "readiness": "authoritative",
+        "notes": "Wire serialization uses kebab-case via serde rename_all."
+      },
+      {
+        "name": "PersonalIdentityProfile",
+        "source": "Body/S/S0/portal-core/src/personal_identity.rs#L103",
+        "fields": ["q_personal:[f32;4]", "natal_chart_handle:String", "elemental_balance:ElementalBalance", "identity_hash:String", "privacy_class:ProfilePrivacyClass"],
+        "constructors": ["from_kerykeion_json", "from_natal_chart"],
+        "readiness": "authoritative_protected",
+        "privacy": "protected_local_body",
+        "downstream_owner": "S0 protected arena; never leaves S0 except through handle/derived projection.",
+        "notes": "Public-current baseline fixture MUST NOT carry these fields. Track 01 T0 fixture test asserts absence of natalChartHandle, qPersonal, identityHash, elementalBalance."
+      },
+      {
+        "name": "VakAddress",
+        "source": "Body/S/S0/portal-core/src/vak_address.rs",
+        "readiness": "authoritative",
+        "downstream_owner": "S3 gateway `vak_address` plumbed end-to-end via sessions.patch RPC (commit 19fbc8fc) and through `epi gate dispatch anima-invoke` (commit 419aac5)."
+      }
+    ],
+
+    "kernel_temporal_surface": [
+      {
+        "name": "KernelTemporalProjection",
+        "source": "Body/S/S0/portal-core/src/kernel.rs#L202",
+        "readiness": "authoritative",
+        "downstream_owner": "Envelope schema + FLOW TS interface; tauri types.ts mirror"
+      },
+      {
+        "name": "KernelTemporalTick / KernelTemporalPulse / KernelTemporalEnergy",
+        "source": "Body/S/S0/portal-core/src/kernel.rs#L800-L862",
+        "readiness": "authoritative"
+      },
+      {
+        "name": "KernelResonanceObservation",
+        "source": "Body/S/S0/portal-core/src/kernel.rs#L865",
+        "downstream_owner": "S2 graph `s2.graph.kernel_resonance.record`; S5 episodic `s5.episodic.kernel_resonance.deposit`",
+        "notes": "S0 mirrors; S2/S3 retain schema/runtime ownership."
+      }
+    ],
+
+    "shared_event_surface": [
+      {
+        "name": "KernelProfileObservationEvent | MPrimePerformanceEvent | NaraActivityEvent | PersonalResonanceObservationEvent | RelationDescriptor",
+        "source": "Body/S/S0/portal-core/src/events.rs",
+        "contract_test": "Body/S/S0/portal-core/tests/m_prime_shared_contracts.rs#shared_m_prime_event_contracts_serialize_without_private_body_leakage",
+        "readiness": "authoritative",
+        "privacy_invariant": "Nara activity events with EventPrivacyClass::ProtectedLocalBody must serialize with rawBodyHandle and no rawBody field."
+      }
+    ]
+  },
+
+  "c_lib": {
+    "package": "Body/S/S0/epi-lib",
+    "kernel_header": "Body/S/S0/epi-lib/include/kernel.h",
+    "pointer_web": {
+      "header": "Body/S/S0/epi-lib/include/pointer_web.h",
+      "impl": "Body/S/S0/epi-lib/src/pointer_web.c",
+      "test": "Body/S/S0/epi-lib/test/infrastructure/test_pointer_web.c",
+      "constants": {"HC_WEB_RING_COUNT": 3, "HC_WEB_RING_SIZE": 12, "HC_WEB_HELIX_SIZE": 6, "HC_BEDROCK_POSITION_COUNT": 6, "CF_COUNT": 7},
+      "enums": ["HC_PointerRing", "HC_Helix", "HC_RelationRole", "HC_IntervalRole", "HC_RatioRole", "HC_BedrockRole"],
+      "structs": ["HC_BedrockRef", "HC_BedrockWeb7", "HC_PointerRef", "HC_PointerWeb36", "HC_ContextFrameRef", "HC_ContextFrameWeb7"],
+      "fill_apis": ["hc_bedrock_web7_fill", "hc_pointer_web36_fill", "hc_context_frame_web7_fill"],
+      "pitch_class_apis": ["hc_bimba_pitch_class", "hc_pratibimba_pitch_class", "hc_lens_bimba_pitch_class", "hc_lens_pratibimba_pitch_class", "hc_mirror_position", "hc_mirror_interval_role", "hc_mirror_ratio_role"],
+      "readiness": "authoritative",
+      "ffi_contract_test": "Body/S/S0/epi-cli/tests/pointer_web_ffi_contract.rs",
+      "downstream_owner": "S2 graph layer consumes via FFI envelopes; M' renderers consume the projection in MathemeHarmonicProfile."
+    }
+  },
+
+  "rust_cli": {
+    "package": "Body/S/S0/epi-cli",
+    "ffi_surface": "Body/S/S0/epi-cli/src/ffi/mod.rs",
+    "spacetimedb_bridge": "Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs",
+    "spacetimedb_bridge_test": "Body/S/S0/epi-cli/tests/gate_spacetimedb_bridge.rs",
+    "key_contract_tests": [
+      "Body/S/S0/epi-cli/tests/pointer_web_ffi_contract.rs",
+      "Body/S/S0/epi-cli/tests/kernel_api_envelope_contract.rs",
+      "Body/S/S0/epi-cli/tests/kernel_ffi_contract.rs",
+      "Body/S/S0/epi-cli/tests/portal_temporal_surface_contract.rs",
+      "Body/S/S0/epi-cli/tests/spacetimedb_registration_contract.rs"
+    ],
+    "envelope_schema_refs": {
+      "schema_doc": "Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md",
+      "ts_interface_doc": "Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md",
+      "pi_agent_api_doc": "Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md",
+      "tauri_types_mirror": "Body/M/epi-tauri/src/services/types.ts",
+      "named_fields": [
+        "c_0_kernel_projection",
+        "c_3_kernel_tick",
+        "c_2_kernel_harmonic_pulse",
+        "c_5_kernel_energy",
+        "c_0_kernel_computation_source",
+        "c_0_kernel_privacy_class",
+        "safe-public-current-kernel-tick"
+      ]
+    },
+    "readiness": "authoritative"
+  },
+
+  "ts_schemas": {
+    "package": "Body/S/S0/epi-cli/schemas",
+    "coordinate_module": "Body/S/S0/epi-cli/schemas/src/coordinate.ts",
+    "exported_zod_schemas": ["HCCoordinate", "HCPointerRing", "HCHelix", "HCRelationRole", "HCIntervalRole", "HCRatioRole", "HCBedrockRole", "HCBedrockRef", "HCBedrockWeb7", "HCPointerRef", "HCPointerWeb36", "HCContextFrameRef", "HCContextFrameWeb7"],
+    "context_frame_notations": ["(00/00)", "(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4.5/0)", "(5/0)"],
+    "ring_sizes": {"family": 12, "position": 12, "lens": 12, "frame": 7},
+    "readiness": "authoritative",
+    "downstream_owner": "M' Tauri renderer + Theia kernel-bridge extension."
+  },
+
+  "readiness_blockers_carried_forward": [
+    {"id": "IOD-04", "summary": "Profile versioning and `binary` vs future `mahamaya` field naming compatibility window undecided.", "affected_fields": ["MathemeHarmonicProfile.binary"], "owner": "Track 01 T2 (Profile Completion And Versioning)"},
+    {"id": "IOD-05", "summary": "S2 canonical `#` root mapping undecided; affects pointer_anchor S2 anchor side.", "owner": "Track 02"},
+    {"id": "S2/S3-pointer_anchor", "summary": "`pointerAnchor` has S0 shape; final certification + `depositionAnchor` blocked on S2/S3 ownership. Decide nullable vs readiness-blocked vs separate sub-object.", "owner": "Track 02 T7-T8 + Track 03 T2-T5"},
+    {"id": "DCC-05", "summary": "Audio bus and cymatic derivation ownership wording — engineering boundary should be documented as `S0/portal-core implementation of the M2-1' reading function` or moved if another track owns it.", "affected_fields": ["MathemeHarmonicProfile.audio_octet", "MathemeHarmonicProfile.nodal_quartet"], "owner": "Open canon decision (Tracks 01, 07, 08)"},
+    {"id": "DSD-04", "summary": "SpaceTimeDB schema source, migration, and table compatibility for profile/world-clock/presence/shared-archetype/coincidence/kernel-trace streams not finalized.", "owner": "Track 03"},
+    {"id": "IOD-03", "summary": "`world_clock` source of truth and cadence — S0 may mirror but must not create a second world-clock authority.", "owner": "Track 03"},
+    {"id": "kernel-bridge-host-PRD-03", "summary": "Kernel-bridge host boundary (Theia ext vs Tauri Rust process vs hybrid Tauri singleton) unresolved; affects whether the typed profile contract is consumed in JS or Rust at the seam.", "owner": "Track 05 prototype ADR"}
+  ],
+
+  "verification_record": {
+    "ran_at": "2026-05-31",
+    "commands": [
+      {
+        "cmd": "cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml",
+        "expected": "all tests pass including new track_01_t0_baseline_fixture"
+      },
+      {
+        "cmd": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml pointer_web_ffi_contract kernel_api_envelope_contract",
+        "expected": "both contract tests pass"
+      },
+      {
+        "cmd": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test pointer_web_ffi_contract",
+        "alternate": "exercises the C pointer-web through Rust FFI; treated as the C test wrapper for this baseline."
+      }
+    ],
+    "fixture": "Body/S/S0/portal-core/contract-inventory/baseline-profile.json",
+    "fixture_generator_test": "Body/S/S0/portal-core/tests/track_01_t0_baseline_fixture.rs",
+    "fixture_invariants_asserted": [
+      "privacy_class == PublicCurrentContext",
+      "vak_address == None",
+      "no protected_local fields: natalChartHandle, qPersonal, identityHash, elementalBalance, naraBody, journalBody"
+    ]
+  }
+}

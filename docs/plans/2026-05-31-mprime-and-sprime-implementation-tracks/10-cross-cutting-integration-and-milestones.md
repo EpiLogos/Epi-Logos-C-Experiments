@@ -50,6 +50,13 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
    - A fresh checkout can start or intentionally skip each local service with explicit readiness output; silent "service absent but UI still green" is a failure.
    - Track 05 T0/T2, Track 03 T1/T3, Track 01 T5/T6, Track 02 T0/T3, and Track 04 T0/T2 all consume the same harness topology.
 
+   T0 artifacts:
+
+   - [[10-t0-integration-decision-gate-adr-bundle]] records the blocking ADR gate with owner tracks, blocked tracks, prototype commands, pass/fail criteria, and fallback policy.
+   - [[10-t0-local-harness-topology]] and `10-t0-local-harness-topology.json` define service readiness, explicit skip policy, reset policy, shared identifiers, and the existing repo commands to use before adding wrappers.
+   - [[10-t0-milestone-checklist-template]] is the readiness template for every Track 10 milestone and cross-track tranche.
+   - `10-t0-validate.mjs` validates the artifacts and emits machine-readable local readiness with `node docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-validate.mjs --readiness`.
+
 2. **T1 - S0/S3 Live Profile Stream MVP.**
 
    Deliverables:

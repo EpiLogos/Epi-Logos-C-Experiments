@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "track": "10.T0",
+  "name": "M-prime/S-prime local integration harness topology",
+  "readinessCommand": "node docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-validate.mjs --readiness",
+  "serviceSkipEnvironmentPrefix": "EPI_T10_SKIP_",
+  "sharedIdentifiers": [
+    {
+      "name": "profile_generation",
+      "ownerTrack": "01",
+      "requiredFrom": "10.T1",
+      "description": "Monotonic id for the S0 MathemeHarmonicProfile or KairosSurface generation observed by every consumer."
+    },
+    {
+      "name": "selected_coordinate",
+      "ownerTrack": "02",
+      "requiredFrom": "10.T2",
+      "description": "Canonical coordinate plus alias/provenance state resolved by S2, never invented by renderer code."
+    },
+    {
+      "name": "session_key",
+      "ownerTrack": "03",
+      "requiredFrom": "10.T1",
+      "description": "Gateway/session identity that lets bridge, body, Theia, and M5-4 correlate one live run."
+    },
+    {
+      "name": "day_now",
+      "ownerTrack": "05",
+      "requiredFrom": "10.T4",
+      "description": "DAY/NOW vault handle carried as a path-safe reference, not raw private body content."
+    },
+    {
+      "name": "privacy_class",
+      "ownerTrack": "03",
+      "requiredFrom": "10.T1",
+      "description": "Visibility class for rows, events, profile fields, evidence, and UI read models."
+    },
+    {
+      "name": "s2_anchor",
+      "ownerTrack": "02",
+      "requiredFrom": "10.T2",
+      "description": "Graph node/relation/provenance anchor used by M0/M5 graph consumers and review evidence."
+    },
+    {
+      "name": "s3_deposition_handle",
+      "ownerTrack": "03",
+      "requiredFrom": "10.T1",
+      "description": "Handle for gateway or SpaceTimeDB deposition row/frame; private content must remain out of shared rows."
+    },
+    {
+      "name": "s5_review_evidence_id",
+      "ownerTrack": "04",
+      "requiredFrom": "10.T2",
+      "description": "Stable persisted id for review items, evidence envelopes, and governance gates."
+    },
+    {
+      "name": "bridge_readiness",
+      "ownerTrack": "01",
+      "requiredFrom": "10.T3",
+      "description": "Typed readiness state for bridge connectivity, upstream substrate, and consumer fanout."
+    }
+  ],
+  "readinessStates": [
+    "ready",
+    "skipped",
+    "blocked",
+    "missing-command",
+    "missing-path",
+    "not-configured"
+  ],
+  "services": [
+    {
+      "id": "tauri_app",
+      "label": "Tauri app and /body renderer",
+      "ownerTrack": "05",
+      "blockedTracks": ["05", "06", "07", "08", "10"],
+      "root": "Body/M/epi-tauri",
+      "requiredPaths": ["package.json", "src-tauri/tauri.conf.json", "src/App.tsx"],
+      "startCommand": "pnpm --dir Body/M/epi-tauri dev:renderer",
+      "testCommands": [
+        "pnpm --dir Body/M/epi-tauri test",
+        "pnpm --dir Body/M/epi-tauri test:e2e",
+        "cargo test --manifest-path Body/M/epi-tauri/src-tauri/Cargo.toml"
+      ],
+      "readiness": {
+        "mode": "filesystem-and-command",
+        "command": "pnpm",
+        "args": ["--version"]
+      }
+    },
+    {
+      "id": "theia_runtime",
+      "label": "Theia /pratibimba/system runtime",
+      "ownerTrack": "05",
+      "blockedTracks": ["05", "07", "08", "10"],
+      "root": "Body/M/epi-tauri",
+      "requiredPaths": ["package.json"],
+      "startCommand": "Track 05 must bind this after ADR-T10-PRD-01 resolves the runtime mode.",
+      "testCommands": ["cd Body/M/epi-tauri && pnpm test:e2e -- --grep \"@theia-runtime\""],
+      "readiness": {
+        "mode": "decision-gated",
+        "decisionId": "ADR-T10-PRD-01"
+      }
+    },
+    {
+      "id": "s3_gateway",
+      "label": "S3 gateway",
+      "ownerTrack": "03",
+      "blockedTracks": ["01", "03", "05", "06", "07", "08", "10"],
+      "root": "Body/S/S3/gateway",
+      "requiredPaths": ["Cargo.toml", "src"],
+      "startCommand": "epi gate start --port 18794",
+      "testCommands": [
+        "epi gate status",
+        "epi gate methods",
+        "cargo test --manifest-path Body/S/S3/gateway-contract/Cargo.toml"
+      ],
+      "readiness": {
+        "mode": "filesystem-and-command",
+        "command": "epi"
+      }
+    },
+    {
+      "id": "spacetimedb_module",
+      "label": "SpaceTimeDB module",
+      "ownerTrack": "03",
+      "blockedTracks": ["01", "03", "05", "06", "08", "10"],
+      "root": "Body/S/S3/epi-spacetime-module",
+      "requiredPaths": ["Cargo.toml", "src"],
+      "startCommand": "cd Body/S/S3/epi-spacetime-module && spacetime publish epi-logos-runtime",
+      "testCommands": [
+        "cd Body/S/S3/epi-spacetime-module && cargo build --target wasm32-unknown-unknown",
+        "cd Body/S/S3/epi-spacetime-module && spacetime build",
+        "cargo test --manifest-path Body/S/S3/epi-spacetime-module/Cargo.toml"
+      ],
+      "readiness": {
+        "mode": "filesystem-and-command",
+        "command": "spacetime"
+      }
+    },
+    {
+      "id": "s2_neo4j_redis",
+      "label": "S2 Neo4j and Redis",
+      "ownerTrack": "02",
+      "blockedTracks": ["02", "05", "06", "07", "08", "10"],
+      "root": ".",
+      "requiredPaths": ["docker-compose.epi-s2.yml", "Body/S/S2/graph-schema/Cargo.toml", "Body/S/S2/graph-services/Cargo.toml"],
+      "startCommand": "docker compose -f docker-compose.epi-s2.yml up -d --build neo4j redis graphiti",
+      "testCommands": [
+        "epi graph bootstrap-dev",
+        "epi graph doctor",
+        "make verify-graphiti-live",
+        "cargo test --manifest-path Body/S/S2/graph-schema/Cargo.toml",
+        "cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml"
+      ],
+      "readiness": {
+        "mode": "filesystem-and-command",
+        "command": "docker",
+        "args": ["compose", "version"]
+      }
+    },
+    {
+      "id": "s5_review_stores",
+      "label": "S5 review and agent persisted stores",
+      "ownerTrack": "04",
+      "blockedTracks": ["04", "05", "06", "07", "08", "09", "10"],
+      "root": "Body/S/S5",
+      "requiredPaths": ["epii-review-core/Cargo.toml", "epii-agent-core/Cargo.toml", "epii-agent/agent-contract.json", "epi-kbase/package.json"],
+      "startCommand": "Track 04 owns the persisted store runner; until present, run crate tests and expose review_store_pending readiness.",
+      "testCommands": [
+        "npm --prefix Body/S/S5/epi-kbase test",
+        "npm --prefix Body/S/S5/epi-kbase run typecheck",
+        "cargo test --manifest-path Body/S/S5/epii-review-core/Cargo.toml",
+        "cargo test --manifest-path Body/S/S5/epii-agent-core/Cargo.toml"
+      ],
+      "readiness": {
+        "mode": "filesystem-and-command",
+        "command": "cargo",
+        "args": ["--version"]
+      }
+    },
+    {
+      "id": "vault_fixture_area",
+      "label": "Khora-managed vault fixture area",
+      "ownerTrack": "05",
+      "blockedTracks": ["05", "06", "08", "10"],
+      "root": "Idea",
+      "requiredPaths": ["Empty", "Bimba"],
+      "startCommand": "No daemon. Fixtures are path-scoped under Idea/Empty/Present and must be reset by deleting only the run-specific session folder.",
+      "testCommands": ["node docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-validate.mjs --readiness"],
+      "readiness": {
+        "mode": "filesystem"
+      }
+    }
+  ]
+}

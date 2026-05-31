@@ -1,0 +1,26 @@
+{
+  "runId": "20260531T232904Z-08-T0",
+  "taskId": "08.T0",
+  "startedAt": "2026-05-31T23:29:04.105Z",
+  "task": {
+    "id": "08.T0",
+    "trackId": "08",
+    "tranche": "T0",
+    "title": "Composition Contract Inventory And Fixture Capture",
+    "effort": null,
+    "file": "08-integrated-plugin-tracks.md",
+    "path": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md",
+    "dependsOn": [],
+    "writeScopes": [
+      "Idea/Pratibimba/System/extensions/**",
+      "Idea/Pratibimba/System/shared"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null
+  }
+}

@@ -1,0 +1,517 @@
+{
+  "version": 1,
+  "taskId": "07.T0",
+  "title": "Extension Contract Preflight",
+  "vakBaseline": {
+    "cpf": "C2",
+    "ct": "CT4b",
+    "cp": "CP4",
+    "cf": "(4.0/1-4.4/5)",
+    "cfp": "CFP0",
+    "cs": "Day",
+    "source": "epi agent vak evaluate --json \"Extension Contract Preflight\""
+  },
+  "sourceAnchors": [
+    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/07-m-extension-individual-tracks.md",
+    "docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md",
+    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md",
+    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md",
+    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md",
+    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md",
+    "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md",
+    "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md"
+  ],
+  "sharedBridgeAdapter": {
+    "dependencySymbol": "KernelBridgeAPI",
+    "requiredCapabilities": [
+      "readCurrentProfile",
+      "readPointerAnchor",
+      "readReadiness",
+      "subscribeObservability",
+      "invokeGatewayRpc",
+      "depositKernelObservation",
+      "requestReviewEvidence"
+    ],
+    "requiredSubscriptions": [
+      "onMathemeHarmonicProfile",
+      "onConnectionStatusChange",
+      "onObservabilityEvent"
+    ],
+    "forbiddenDirectImports": [
+      "Body/S/S0",
+      "Body/S/S2",
+      "Body/S/S3",
+      "Body/S/S5",
+      "@clockworklabs/spacetimedb-sdk",
+      "neo4j-driver",
+      "redis",
+      "portal-core",
+      "epii-review-core",
+      "epii-agent-core"
+    ],
+    "rule": "Individual extensions consume S0/S2/S3/S5 only through the shared bridge adapter or approved shared runtime package."
+  },
+  "readinessTaxonomy": [
+    {
+      "id": "bridge_unavailable",
+      "severity": "blocked",
+      "ownerTrack": "01",
+      "meaning": "The shared bridge instance is absent, disconnected, or unreadable; extensions render no derived state."
+    },
+    {
+      "id": "profile_missing_field",
+      "severity": "blocked",
+      "ownerTrack": "01",
+      "meaning": "The current MathemeHarmonicProfile lacks a field the extension needs and must name the missing field explicitly."
+    },
+    {
+      "id": "s2_graph_blocked",
+      "severity": "blocked",
+      "ownerTrack": "02",
+      "meaning": "Coordinate-native graph law, provenance, or graph-service readiness is missing for the requested surface."
+    },
+    {
+      "id": "s3_subscription_blocked",
+      "severity": "blocked",
+      "ownerTrack": "03",
+      "meaning": "The shared stream/session/DAY-NOW path cannot provide ordered live state to the extension."
+    },
+    {
+      "id": "s5_review_blocked",
+      "severity": "blocked",
+      "ownerTrack": "04",
+      "meaning": "Review/evidence/governance state is not available for deep action or deposit surfaces."
+    },
+    {
+      "id": "authority_payload_missing",
+      "severity": "degraded",
+      "ownerTrack": "02",
+      "meaning": "The authoritative graph/profile/review payload for this display is not available, so the extension must show exactly which owner is missing instead of inferring defaults."
+    },
+    {
+      "id": "privacy_blocked",
+      "severity": "blocked",
+      "ownerTrack": "03/04",
+      "meaning": "Protected-local or consent-gated data cannot cross into the current surface."
+    },
+    {
+      "id": "degraded_but_readable",
+      "severity": "degraded",
+      "ownerTrack": "01/02/03/04",
+      "meaning": "A read-only or lower-fidelity view is safe to show, but write/deposit/deep interaction remains blocked."
+    },
+    {
+      "id": "ready_public_current",
+      "severity": "ready",
+      "ownerTrack": "01/02/03/04",
+      "meaning": "The surface has all current public-safe data and capabilities needed for its first slice."
+    }
+  ],
+  "routeConvention": {
+    "scheme": "epi-logos://ide",
+    "commandSuffixes": {
+      "readOnly": ".readOnly",
+      "depositOnly": ".depositOnly"
+    },
+    "examples": [
+      "epi-logos://ide/m0-anuttara/coordinate?coordinate=M0.2",
+      "epi-logos://ide/m4-nara/artifact?artifact_id=<handle>&day_now=<handle>"
+    ]
+  },
+  "extensions": [
+    {
+      "id": "m0-anuttara",
+      "packagePath": "Idea/Pratibimba/System/extensions/m0-anuttara",
+      "viewIds": [
+        "m0.anuttara.languageMap",
+        "m0.anuttara.owlShaclInspector",
+        "m0.anuttara.rVirtuePanel"
+      ],
+      "command": {
+        "open": "m0.openCoordinate",
+        "readOnly": "m0.openCoordinate.readOnly",
+        "depositOnly": "m0.openCoordinate.depositOnly"
+      },
+      "routePath": "/m0-anuttara/coordinate",
+      "bridge": {
+        "requiredCapabilities": [
+          "readCurrentProfile",
+          "readReadiness",
+          "invokeGatewayRpc",
+          "requestReviewEvidence"
+        ],
+        "requiredSubscriptions": [
+          "profile",
+          "connection_status",
+          "observability"
+        ],
+        "methodFamilies": {
+          "s2": [
+            "s2.coordinate.read",
+            "s2.anuttara.provenance.read"
+          ],
+          "s3": [
+            "s3.session.readiness.read"
+          ],
+          "s5": [
+            "s5.review.request",
+            "s5.evidence.deposit"
+          ]
+        },
+        "forbiddenDirectImports": [
+          "Body/S/S0",
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S5",
+          "neo4j-driver"
+        ]
+      },
+      "privacyClass": "public_current_with_graph_provenance",
+      "observabilityEventTypes": [
+        "m0.graph.provenance",
+        "m0.review.requested"
+      ],
+      "track08Exports": [
+        "M0CoordinateSummaryCard",
+        "M0SelectionHandler"
+      ],
+      "firstSlicePriority": "Anuttara language-map browser plus OWL/SHACL provenance inspector backed by bridge-mediated S2 graph queries.",
+      "blockers": [
+        "Track 02 T7/T8 coordinate-native graph API parity",
+        "Track 01 profile and pointer anchors",
+        "Shell-vs-individual ownership split for graph viewer and canon studio"
+      ]
+    },
+    {
+      "id": "m1-paramasiva",
+      "packagePath": "Idea/Pratibimba/System/extensions/m1-paramasiva",
+      "viewIds": [
+        "m1.paramasiva.clockInstrument",
+        "m1.paramasiva.kleinTopology",
+        "m1.paramasiva.audioBusInspector"
+      ],
+      "command": {
+        "open": "m1.startWalk",
+        "readOnly": "m1.startWalk.readOnly",
+        "depositOnly": "m1.startWalk.depositOnly"
+      },
+      "routePath": "/m1-paramasiva/walk",
+      "bridge": {
+        "requiredCapabilities": [
+          "readCurrentProfile",
+          "readReadiness",
+          "subscribeObservability",
+          "requestReviewEvidence"
+        ],
+        "requiredSubscriptions": [
+          "profile",
+          "audio_bus",
+          "connection_status"
+        ],
+        "methodFamilies": {
+          "s2": [
+            "s2.pointer.walk.read",
+            "s2.relation.descriptor.read"
+          ],
+          "s3": [
+            "s3.world_clock.read",
+            "s3.session.readiness.read"
+          ],
+          "s5": [
+            "s5.evidence.deposit"
+          ]
+        },
+        "forbiddenDirectImports": [
+          "Body/S/S0",
+          "Body/S/S2",
+          "Body/S/S3",
+          "@clockworklabs/spacetimedb-sdk",
+          "portal-core"
+        ]
+      },
+      "privacyClass": "public_current_audio_metadata_only",
+      "observabilityEventTypes": [
+        "m1.walk.step",
+        "m1.klein_flip.source"
+      ],
+      "track08Exports": [
+        "M1WalkStrip",
+        "M1TopologyMiniView"
+      ],
+      "firstSlicePriority": "Profile clock instrument with 84-state walk, exact audio bus consumption, and typed relation-walk evidence.",
+      "blockers": [
+        "Track 01 profile fields and audio bus",
+        "Track 02 typed harmonic pointer relation descriptors",
+        "M1/M2 authority split on audio-genesis must stay explicit in UI provenance"
+      ]
+    },
+    {
+      "id": "m2-parashakti",
+      "packagePath": "Idea/Pratibimba/System/extensions/m2-parashakti",
+      "viewIds": [
+        "m2.parashakti.meaningPacket",
+        "m2.parashakti.cymaticEngine",
+        "m2.parashakti.correspondenceTree"
+      ],
+      "command": {
+        "open": "m2.openMeaningPacket",
+        "readOnly": "m2.openMeaningPacket.readOnly",
+        "depositOnly": "m2.openMeaningPacket.depositOnly"
+      },
+      "routePath": "/m2-parashakti/meaning-packet",
+      "bridge": {
+        "requiredCapabilities": [
+          "readCurrentProfile",
+          "readReadiness",
+          "invokeGatewayRpc",
+          "depositKernelObservation",
+          "requestReviewEvidence"
+        ],
+        "requiredSubscriptions": [
+          "profile",
+          "audio_bus",
+          "cymatic_field",
+          "connection_status"
+        ],
+        "methodFamilies": {
+          "s2": [
+            "s2.correspondence.read",
+            "s2.provenance.read"
+          ],
+          "s3": [
+            "s3.world_clock.read",
+            "s3.kerykeion.read"
+          ],
+          "s5": [
+            "s5.evidence.deposit",
+            "s5.review.request"
+          ]
+        },
+        "forbiddenDirectImports": [
+          "Body/S/S0",
+          "Body/S/S2",
+          "Body/S/S3",
+          "@clockworklabs/spacetimedb-sdk",
+          "neo4j-driver"
+        ]
+      },
+      "privacyClass": "public_current_with_pending_private_projection_blocks",
+      "observabilityEventTypes": [
+        "m2.meaning_packet",
+        "m2.routing_trace",
+        "m2.klein_flip"
+      ],
+      "track08Exports": [
+        "M2MeaningPacketCard",
+        "M2CymaticMiniView"
+      ],
+      "firstSlicePriority": "M2PrimeMeaningPacket viewer plus deterministic cymatic renderer driven by profile bus and proven correspondence payloads.",
+      "blockers": [
+        "Track 01 resonance72, planetary-chakral, audio bus, and kleinFlipState fields",
+        "Track 02 correspondence provenance and mapping law",
+        "Track 03 Kerykeion and world_clock provider path"
+      ]
+    },
+    {
+      "id": "m3-mahamaya",
+      "packagePath": "Idea/Pratibimba/System/extensions/m3-mahamaya",
+      "viewIds": [
+        "m3.mahamaya.cosmicWheel",
+        "m3.mahamaya.codonNavigator",
+        "m3.mahamaya.traceOverlay"
+      ],
+      "command": {
+        "open": "m3.openCodon",
+        "readOnly": "m3.openCodon.readOnly",
+        "depositOnly": "m3.openCodon.depositOnly"
+      },
+      "routePath": "/m3-mahamaya/codon",
+      "bridge": {
+        "requiredCapabilities": [
+          "readCurrentProfile",
+          "readReadiness",
+          "invokeGatewayRpc",
+          "subscribeObservability"
+        ],
+        "requiredSubscriptions": [
+          "profile",
+          "kernel_trace",
+          "connection_status"
+        ],
+        "methodFamilies": {
+          "s2": [
+            "s2.codon.scalar_ref.read",
+            "s2.m3.library.read"
+          ],
+          "s3": [
+            "s3.world_clock.read",
+            "s3.subscription.readiness.read"
+          ],
+          "s5": [
+            "s5.evidence.deposit"
+          ]
+        },
+        "forbiddenDirectImports": [
+          "Body/S/S0",
+          "Body/S/S2",
+          "Body/S/S3",
+          "portal-core",
+          "@clockworklabs/spacetimedb-sdk"
+        ]
+      },
+      "privacyClass": "public_current_with_scalar_oracle_refs_only",
+      "observabilityEventTypes": [
+        "m3.codon_projection",
+        "m3.kernel_trace_view"
+      ],
+      "track08Exports": [
+        "M3CodonChip",
+        "M3WheelMiniView"
+      ],
+      "firstSlicePriority": "64/472 wheel with backend-provided codon projection, provenance, and trace overlay only.",
+      "blockers": [
+        "Track 01 codon-rotation projection fields",
+        "Track 02 canonical M3 library graph nodes",
+        "Track 03 native subscription and world_clock path",
+        "Authoritative M3 projection/library payload readiness for 64/472 surfaces"
+      ]
+    },
+    {
+      "id": "m4-nara",
+      "packagePath": "Idea/Pratibimba/System/extensions/m4-nara",
+      "viewIds": [
+        "m4.nara.dayContainer",
+        "m4.nara.graphitiBrowser",
+        "m4.nara.personalField"
+      ],
+      "command": {
+        "open": "m4.openArtifact",
+        "readOnly": "m4.openArtifact.readOnly",
+        "depositOnly": "m4.openArtifact.depositOnly"
+      },
+      "routePath": "/m4-nara/artifact",
+      "bridge": {
+        "requiredCapabilities": [
+          "readCurrentProfile",
+          "readReadiness",
+          "invokeGatewayRpc",
+          "requestReviewEvidence",
+          "depositKernelObservation"
+        ],
+        "requiredSubscriptions": [
+          "profile",
+          "cymatic_field",
+          "connection_status",
+          "observability"
+        ],
+        "methodFamilies": {
+          "s2": [
+            "s2.scalar_ref.resolve",
+            "s2.bedrock.anchor.read"
+          ],
+          "s3": [
+            "s3.day_now.read",
+            "s3.graphiti.handle.read"
+          ],
+          "s5": [
+            "s5.review.request",
+            "s5.evidence.deposit",
+            "s5.consent.read"
+          ]
+        },
+        "forbiddenDirectImports": [
+          "Body/S/S0",
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S5",
+          "neo4j-driver"
+        ]
+      },
+      "privacyClass": "protected_local_handle_only",
+      "observabilityEventTypes": [
+        "m4.artifact.created",
+        "m4.privacy.blocked"
+      ],
+      "track08Exports": [
+        "M4ArtifactHandleChip",
+        "M4RecognitionMiniView"
+      ],
+      "firstSlicePriority": "Protected Nara DayContainer and Graphiti browser with handle-only deep links and explicit consent/privacy gates.",
+      "blockers": [
+        "Track 03 canonical Nara/Graphiti service path",
+        "Track 04 consent and review services",
+        "Protected-local M4 data cannot surface outside privacy-filtered bridge payloads"
+      ]
+    },
+    {
+      "id": "m5-epii",
+      "packagePath": "Idea/Pratibimba/System/extensions/m5-epii",
+      "viewIds": [
+        "m5.epii.reviewQueue",
+        "m5.epii.spineStateInspector",
+        "m5.epii.metaConversation"
+      ],
+      "command": {
+        "open": "m5.openReview",
+        "readOnly": "m5.openReview.readOnly",
+        "depositOnly": "m5.openReview.depositOnly"
+      },
+      "routePath": "/m5-epii/review",
+      "bridge": {
+        "requiredCapabilities": [
+          "readCurrentProfile",
+          "readReadiness",
+          "invokeGatewayRpc",
+          "requestReviewEvidence",
+          "subscribeObservability"
+        ],
+        "requiredSubscriptions": [
+          "profile",
+          "connection_status",
+          "observability"
+        ],
+        "methodFamilies": {
+          "s2": [
+            "s2.provenance.read"
+          ],
+          "s3": [
+            "s3.session.readiness.read"
+          ],
+          "s5": [
+            "s5.review.read",
+            "s5.review.transition.read",
+            "s5.improve.read",
+            "s5.improve.deposit"
+          ]
+        },
+        "forbiddenDirectImports": [
+          "Body/S/S0",
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S5",
+          "epii-review-core"
+        ]
+      },
+      "privacyClass": "governed_review_metadata_only",
+      "observabilityEventTypes": [
+        "m5.review.transition",
+        "m5.spine.event"
+      ],
+      "track08Exports": [
+        "M5ReviewQueueBadge",
+        "M5SpineStatePanel"
+      ],
+      "firstSlicePriority": "Review queue and spine-state inspector over real S5 review/improve DTOs with dry-run-only governance.",
+      "blockers": [
+        "Track 04 persisted review/improve state",
+        "Track 09 bounded agent capability and route metadata",
+        "Ownership split between ide-shell control room and deep m5-epii views"
+      ]
+    }
+  ]
+}

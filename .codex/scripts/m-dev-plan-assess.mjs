@@ -19,6 +19,11 @@ export function parseArgs(argv) {
     status: null,
     evidence: null,
     noGit: false,
+    context: null,
+    reset: false,
+    subagents: false,
+    inSession: false,
+    parallel: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -31,6 +36,11 @@ export function parseArgs(argv) {
     else if (arg === "--mark") args.mark = argv[++i];
     else if (arg === "--status") args.status = argv[++i];
     else if (arg === "--evidence") args.evidence = argv[++i];
+    else if (arg === "--context") args.context = argv[++i];
+    else if (arg === "--reset") args.reset = true;
+    else if (arg === "--subagents") args.subagents = true;
+    else if (arg === "--in-session") args.inSession = true;
+    else if (arg === "--parallel") args.parallel = true;
     else if (!arg.startsWith("--") && !args.plan) args.plan = arg;
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -239,11 +249,11 @@ function trackHeuristicScopes(trackId) {
     "02": ["Body/S/S2/**"],
     "03": ["Body/S/S3/**", "Body/S/S0/epi-cli/src/gate/**"],
     "04": ["Body/S/S5/**"],
-    "05": ["Body/M/epi-tauri/**", "pratibimba/system/**"],
+    "05": ["Body/M/epi-tauri/**", "Idea/Pratibimba/System/**"],
     "06": ["Body/M/epi-tauri/**"],
-    "07": ["pratibimba/system/extensions/**"],
-    "08": ["pratibimba/system/extensions/**"],
-    "09": ["Body/S/S4/**", "Body/S/S5/**", "Body/M/epi-tauri/**", "pratibimba/system/**"],
+    "07": ["Idea/Pratibimba/System/extensions/**"],
+    "08": ["Idea/Pratibimba/System/extensions/**"],
+    "09": ["Body/S/S4/**", "Body/S/S5/**", "Body/M/epi-tauri/**", "Idea/Pratibimba/System/**"],
     "10": [".omx/**", "docs/plans/**"],
     "11": ["docs/plans/**"],
   };
@@ -378,6 +388,130 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true 
   };
 }
 
+export function buildContextPack({ cwd = process.cwd(), planFolder, assessment, taskId }) {
+  const indexedTask = assessment.index.tasks.find((entry) => entry.id === taskId);
+  const task = assessment.tasks.find((entry) => entry.id === taskId);
+  if (!indexedTask || !task) throw new Error(`Cannot build context pack for unknown task: ${taskId}`);
+
+  const trackPath = join(planFolder, indexedTask.file);
+  const trackContent = readFileSync(trackPath, "utf8");
+  const sourceSpecs = extractMarkdownSection(trackContent, "Source Specs");
+  const trackOpenDecisions = extractMarkdownSection(trackContent, "Open Decisions");
+  const dependencies = task.dependsOn.map((depId) => {
+    const dep = assessment.index.tasks.find((entry) => entry.id === depId);
+    return dep ? `${dep.id} - ${dep.title} (${dep.file})` : `${depId} - missing from current index`;
+  });
+  const sourceFiles = Array.from(
+    new Set([
+      indexedTask.path,
+      ...extractPathReferences(sourceSpecs),
+      ...extractPathReferences(indexedTask.body),
+      ...task.dependsOn
+        .map((depId) => assessment.index.tasks.find((entry) => entry.id === depId)?.path)
+        .filter(Boolean),
+      relative(cwd, join(planFolder, "11-open-architectural-decisions.md")),
+    ]),
+  ).sort();
+  const openDecisionExcerpt = readOpenDecisionExcerpt(planFolder);
+  const contextPath = join(planFolder, "plan.runs", `context-${taskId.replace(".", "-")}.md`);
+  const generatedAt = new Date().toISOString();
+
+  const markdown = `# M-Dev Context Pack - ${taskId}
+
+Generated: ${generatedAt}
+
+## Task
+
+- **ID:** ${task.id}
+- **Title:** ${task.title}
+- **Track:** ${indexedTask.file}
+- **Computed status:** ${task.computedStatus}
+- **Write scopes:** ${task.writeScopes.join(", ") || "unspecified"}
+
+## Required Reading
+
+Read these before implementation. Do not rely on the tranche summary alone.
+
+${sourceFiles.map((file) => `- \`${file}\``).join("\n")}
+
+## Dependency Context
+
+${dependencies.length > 0 ? dependencies.map((dep) => `- ${dep}`).join("\n") : "- None"}
+
+## Track Source Specs
+
+${sourceSpecs || "_No Source Specs section found in the track file. Pause and gather source context manually before implementation._"}
+
+## Task Body
+
+${indexedTask.body}
+
+## Track Open Decisions
+
+${trackOpenDecisions || "_No track-specific Open Decisions section found._"}
+
+## Decision Register Excerpt
+
+${openDecisionExcerpt}
+
+## Execution Guidance
+
+- Default to in-session execution unless the user explicitly requested subagents for this run.
+- If subagents are used, give each subagent this context pack plus the exact source files it must read.
+- Before editing code, verify the relevant source/spec files above have actually been read or searched for the sections cited in the plan.
+- Verification must exercise real functionality; mock-only or placeholder proof does not satisfy the ledger.
+`;
+
+  mkdirSync(dirname(contextPath), { recursive: true });
+  writeFileSync(contextPath, markdown);
+  return {
+    path: relative(cwd, contextPath),
+    taskId,
+    sourceFiles,
+  };
+}
+
+function extractMarkdownSection(content, heading) {
+  const lines = content.split("\n");
+  const headingPattern = new RegExp(`^##\\s+${heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`);
+  const start = lines.findIndex((line) => headingPattern.test(line));
+  if (start === -1) return "";
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i += 1) {
+    if (/^##\s+/.test(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+  return lines.slice(start + 1, end).join("\n").trim();
+}
+
+function extractPathReferences(text) {
+  const refs = new Set();
+  if (!text) return [];
+  const patterns = [
+    /`((?:Body|Idea|docs|pratibimba|\.codex|\.claude|\.omx|src|scripts|tests|vendors)\/[^`]+?)`/g,
+    /\b((?:Body|Idea|docs|pratibimba|\.codex|\.claude|\.omx|src|scripts|tests|vendors)\/[^\s),;]+?\.(?:md|rs|ts|tsx|js|mjs|json|toml|yaml|yml|c|h))\b/g,
+  ];
+  for (const pattern of patterns) {
+    for (const match of text.matchAll(pattern)) {
+      const ref = match[1].replace(/[,.;:]$/, "");
+      refs.add(ref);
+    }
+  }
+  return Array.from(refs);
+}
+
+function readOpenDecisionExcerpt(planFolder) {
+  const decisionPath = join(planFolder, "11-open-architectural-decisions.md");
+  if (!existsSync(decisionPath)) return "_No decision register found._";
+  const content = readFileSync(decisionPath, "utf8");
+  const index = extractMarkdownSection(content, "Decision Index");
+  const userFinal = extractMarkdownSection(content, "User-Final-Validation Required");
+  const prototype = extractMarkdownSection(content, "Prototype-Resolved Decisions");
+  return [index, userFinal, prototype].filter(Boolean).join("\n\n").slice(0, 16000);
+}
+
 function enrichTask(task, state, taskById) {
   const record = state.tasks[task.id] ?? { status: "pending", evidence: [] };
   const missingDeps = task.dependsOn.filter((dep) => !taskById.has(dep));
@@ -492,6 +626,16 @@ function writeAssessmentFiles(planFolder, assessment) {
   writeFileSync(join(planFolder, "plan.state.json"), `${JSON.stringify(assessment.state, null, 2)}\n`);
 }
 
+function resetState() {
+  return {
+    version: STATE_VERSION,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    tasks: {},
+    runs: [],
+  };
+}
+
 function claimTask(planFolder, assessment, taskId) {
   const task = assessment.tasks.find((entry) => entry.id === taskId);
   if (!task) throw new Error(`Cannot claim unknown task: ${taskId}`);
@@ -559,12 +703,19 @@ function printHuman(assessment) {
   if (assessment.parallelGroup.length > 1) {
     lines.push(`Parallel-safe candidates: ${assessment.parallelGroup.map((task) => task.id).join(", ")}`);
   }
+  if (assessment.contextPack) {
+    lines.push(`Context pack: ${assessment.contextPack.path}`);
+  }
   return `${lines.join("\n")}\n`;
 }
 
 export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
   const args = parseArgs(argv);
   const planFolder = discoverPlanFolder(cwd, args.plan);
+  if (args.reset) {
+    mkdirSync(join(planFolder, "plan.runs"), { recursive: true });
+    writeFileSync(join(planFolder, "plan.state.json"), `${JSON.stringify(resetState(), null, 2)}\n`);
+  }
   let assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
 
   if (args.claim) {
@@ -577,6 +728,10 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
     assessment.state = markTask(assessment, args.mark, args.status, args.evidence);
     writeAssessmentFiles(planFolder, assessment);
     assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
+  }
+
+  if (args.context) {
+    assessment.contextPack = buildContextPack({ cwd, planFolder, assessment, taskId: args.context });
   }
 
   if (args.write) writeAssessmentFiles(planFolder, assessment);

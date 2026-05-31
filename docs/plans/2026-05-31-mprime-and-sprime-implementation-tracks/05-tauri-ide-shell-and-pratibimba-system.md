@@ -69,11 +69,11 @@ Current implementation surface observed for this plan:
    - ADRs name the selected prototype commands, ports, CSP requirements, service dependencies, and pass/fail criteria before any Theia embedding code is merged.
    - No Theia tranche is marked unblocked unless its Track 01-04 dependency contract is either implemented or represented as an explicit readiness-blocked state.
 
-2. **T1 - `/pratibimba/system` Theia Application Skeleton And Version Pin.**
+2. **T1 - `Idea/Pratibimba/System` Theia Application Skeleton And Version Pin.**
 
    Deliverables:
 
-   - Create `/pratibimba/system` as an in-tree Theia workspace with `theia-app`, `extensions`, `shared`, `docs`, and `scripts` matching the existing Theia plan section 3, adjusted for the chosen package manager.
+   - Create `Idea/Pratibimba/System` as the in-tree Theia workspace, served or summoned as the `/pratibimba/system` IDE surface, with `theia-app`, `extensions`, `shared`, `docs`, and `scripts` matching the existing Theia plan section 3, adjusted for the chosen package manager.
    - Pin a Theia release after checking current official Theia compatibility with the selected Node, package manager, and Tauri webview constraints.
    - Add a minimal Theia application with real Theia workbench services, workspace state, command registry, layout service, contribution loading, and extension activation smoke tests.
    - Add the first non-placeholder Theia contribution: a diagnostic/readiness view that reads a real Tauri or gateway readiness endpoint and displays blocked/ready states.
@@ -81,8 +81,8 @@ Current implementation surface observed for this plan:
 
    Verification:
 
-   - `pnpm --dir pratibimba/system install --frozen-lockfile` or the chosen equivalent is reproducible from a clean checkout.
-   - `pnpm --dir pratibimba/system build` produces a real Theia browser bundle or the selected runtime artifact without Electron-only assumptions unless Electron fallback is explicitly chosen.
+   - `pnpm --dir Idea/Pratibimba/System install --frozen-lockfile` or the chosen equivalent is reproducible from a clean checkout.
+   - `pnpm --dir Idea/Pratibimba/System build` produces a real Theia browser bundle or the selected runtime artifact without Electron-only assumptions unless Electron fallback is explicitly chosen.
    - The Theia app starts in development and activates the readiness contribution through Theia's real DI/contribution system.
    - A Theia browser test verifies the workbench shell, command registry, layout service, and readiness view are live; a static HTML "hello" page is not acceptable.
 
@@ -240,7 +240,7 @@ Current implementation surface observed for this plan:
 - **Single versus multi-webview:** Should IDE summon navigate the existing webview, open a second Tauri window/webview, or keep `/body` in tray/background with Theia foregrounded? The canon prefers persistent co-existence, but implementation must prove state and resource behavior.
 - **Bridge ownership:** Is the long-lived shared bridge owned by the Tauri Rust process, by a Theia first-loaded extension, or by a hybrid Tauri singleton with Theia and `/body` adapters? The API should be stable before this is finalized.
 - **Theia version pin and update cadence:** The existing Theia plan mentions "1.50+" as an example, but implementation must verify the current stable release and choose an update cadence.
-- **Package manager:** Theia convention often favors Yarn workspaces, while the current Tauri app uses `pnpm`. Decide whether `/pratibimba/system` follows Theia convention, repo convention, or an explicitly isolated package manager.
+- **Package manager:** Theia convention often favors Yarn workspaces, while the current Tauri app uses `pnpm`. Decide whether `Idea/Pratibimba/System` follows Theia convention, repo convention, or an explicitly isolated package manager.
 - **Build composition strategy:** Decide whether Tauri bundles Theia static assets, supervises a local Theia server, or embeds/supervises a sidecar. This affects bundle size, CSP, offline behavior, startup time, and security review.
 - **Extension host model:** Decide whether all 6+2 extensions are in-tree Theia-native packages for phase 1, whether any use VS Code Extension API, and how external plugin publishing would be introduced later.
 - **Workspace and state persistence:** Decide which state belongs to Theia workspace storage, Tauri app state, S3 session state, S5 review state, S1/vault files, or bridge cache.

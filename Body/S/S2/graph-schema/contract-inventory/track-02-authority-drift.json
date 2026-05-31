@@ -1,0 +1,198 @@
+{
+  "track": "02",
+  "tranche": "T0",
+  "title": "Authority and drift preflight",
+  "generated_at": "2026-06-01",
+  "purpose": "Inventory the live S2 graph modules and tests; record current schema version, seed count expectations, dataset plan, registry relationship set, Docker plugin state, M5-3/M5-4 API consumers; define live-test environment variables. Surfaces existing drift between schema registry and seed emission for explicit decision in T1.",
+  "purpose_anchors": [
+    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md#tranche-0",
+    "docs/specs/S/S2-S2i-GRAPH.md",
+    "Idea/Bimba/Seeds/S/S2/S2-SPEC.md"
+  ],
+
+  "schema_authority": {
+    "package": "Body/S/S2/graph-schema",
+    "manifest": "Body/S/S2/graph-schema/Cargo.toml",
+    "source": "Body/S/S2/graph-schema/src/lib.rs",
+    "versions": {
+      "SCHEMA_VERSION": "2026-05-17-s2-bimba-coord-driven-3072",
+      "GRAPH_ID": "primary",
+      "EMBEDDING_VERSION": "q-semantic-v2-3072",
+      "Q_SCHEMA_VERSION": "q-prefix-v2"
+    },
+    "canonical_node_label": "Bimba",
+    "registered_relationship_types": [
+      "REFERENCES", "SOURCES", "CONTAINS", "PART_OF", "ELABORATES", "CONTRASTS",
+      "IMPLEMENTS", "OPERATES_IN", "REFLECTS_AS", "INVERTS_TO", "SUPPORTS", "CRITIQUES",
+      "DERIVES_FROM", "PROMOTES_TO", "SYNCED_FROM", "POS0_LINKS_TO", "POS5_INTEGRATES_INTO"
+    ],
+    "registered_count": 17,
+    "kernel_resonance_relation": "HAS_KERNEL_RESONANCE",
+    "required_relationship_evidence_properties": ["evidence_kind", "evidence_text"],
+    "constants_total": 105,
+    "source_loc": 2881,
+    "readiness": "authoritative"
+  },
+
+  "seed_authority": {
+    "package": "Body/S/S2/graph-services",
+    "source": "Body/S/S2/graph-services/src/seed.rs",
+    "loc": 897,
+    "expected_node_count": {
+      "value": 102,
+      "breakdown": {
+        "hash_root": 1,
+        "psychoids": 6,
+        "weaves": 4,
+        "context_frames": 7,
+        "family_meta": 6,
+        "family_coords": 72,
+        "vak": 6
+      },
+      "asserted_by": "Body/S/S2/graph-services/src/seed.rs#test_expected_node_count"
+    },
+    "expected_relationship_count": {
+      "value": 306,
+      "breakdown": {
+        "GENERATES": 6,
+        "ENTANGLES": 18,
+        "INTERLEAVES": 16,
+        "MANIFESTS": 72,
+        "BEDROCK": 72,
+        "INVERTS_TO": 36,
+        "FAMILY_CONTAINS": 72,
+        "REFLECTS_AS": 6,
+        "OPERATES_IN": 6,
+        "MOBIUS_RETURN": 1,
+        "ANCHORED_TO": 1
+      },
+      "asserted_by": "Body/S/S2/graph-services/src/seed.rs#test_expected_rel_count"
+    }
+  },
+
+  "registry_seed_drift": {
+    "summary": "Seed emits 11 relationship types; only 3 (INVERTS_TO, REFLECTS_AS, OPERATES_IN) are present in RELATIONSHIP_TYPE_SPECS. The other 8 are structural/graph-topology relations that pre-date the coord-driven registry.",
+    "registered_only": [
+      "REFERENCES", "SOURCES", "CONTAINS", "PART_OF", "ELABORATES", "CONTRASTS",
+      "IMPLEMENTS", "SUPPORTS", "CRITIQUES", "DERIVES_FROM", "PROMOTES_TO", "SYNCED_FROM",
+      "POS0_LINKS_TO", "POS5_INTEGRATES_INTO"
+    ],
+    "seed_only": [
+      "GENERATES", "ENTANGLES", "INTERLEAVES", "MANIFESTS", "BEDROCK",
+      "FAMILY_CONTAINS", "MOBIUS_RETURN", "ANCHORED_TO"
+    ],
+    "shared": ["INVERTS_TO", "REFLECTS_AS", "OPERATES_IN"],
+    "blocker_id": "track-02.seed-registry-drift",
+    "open_decision": "T1 (Schema and relation-law convergence) must decide: expand RELATIONSHIP_TYPE_SPECS to include the seed-only structural set, OR migrate seed.rs to the smaller canonical relation set. Current tests intentionally reject ad-hoc rel types — the drift means seed emission would fail a strict registry check if such a test existed."
+  },
+
+  "graph_api_surface": {
+    "source": "Body/S/S2/graph-services/src/graph_api.rs",
+    "loc": 630,
+    "downstream_consumers": [
+      "M5-3 Tauri/Theia (Track 05) via S3 gateway",
+      "M5-4 mediation (Track 09) for namespace-aware graph access",
+      "Bimba MCP external (compatibility)"
+    ],
+    "key_apis": [
+      "parameterized GraphParamValue queries",
+      "pointer_web refresh + JSON anchor",
+      "kernel resonance record (HAS_KERNEL_RESONANCE)",
+      "session-keyed namespace pools"
+    ],
+    "readiness": "transitional",
+    "blockers": ["IOD-05 # root mapping", "IOD-06 Anuttara field naming canonicality", "IOD-08 Graphiti runtime boundary"]
+  },
+
+  "dataset_import": {
+    "source": "Body/S/S2/graph-services/src/dataset_import.rs",
+    "loc": 1494,
+    "datasets_root": "docs/datasets/",
+    "branches_present": [
+      "low-detail",
+      "anuttara-deep",
+      "paramasiva-deep",
+      "parashakti-deep",
+      "mahamaya-deep",
+      "nara-deep",
+      "epii-deep"
+    ],
+    "supplementary": [
+      "docs/datasets/nodes_hash.json",
+      "docs/datasets/relations_hash.json",
+      "docs/datasets/deep-property-map.md",
+      "docs/datasets/hashtag_node_data.md"
+    ],
+    "migration_scripts": ["docs/datasets/migrations/2026-05-17-bimba-scaffold-to-bimba.cypher"],
+    "readiness": "transitional",
+    "blocker_id": "IOD-05",
+    "notes": "Import migration paths convert `#` -> `M`, but seed.rs preserves `#` root. Canonical decision required in T1/T3."
+  },
+
+  "external_mcp": {
+    "path": "Body/S/S2/external/bimba-mcp/",
+    "readiness": "transitional",
+    "open_decision": "Stays purely external/MCP-facing, or refactor to consume Rust S2 graph-service contract? TS parser documents `#` as deprecated/invalid; Rust resolves `#` intentionally — divergence risk.",
+    "blocker_id": "track-02.bimba-mcp-divergence"
+  },
+
+  "docker_topology": {
+    "compose_file": "docker-compose.epi-s2.yml",
+    "services": ["neo4j (5-community + apoc)", "redis (redis-stack-server)", "graphiti"],
+    "neo4j_ports": ["7474", "7687"],
+    "redis_ports": ["6379"],
+    "graphiti_ports": ["37778"],
+    "auth_mode": "NEO4J_AUTH=none (neo4rs 0.9 compatibility with Neo4j 5.26)",
+    "preinstalled_plugins": ["apoc"],
+    "missing_plugins_for_full_S2_prime": ["neosemantics (n10s)", "Graph Data Science (GDS)"],
+    "blocker_id": "IOD-07",
+    "open_decision": "Whether n10s/GDS run in the engineer-facing service or in optional profiles. Doctor must report `blocked` honestly when absent."
+  },
+
+  "live_test_env_vars": {
+    "neo4j": {
+      "EPILOGOS_NEO4J_URI": {"default_for_dev": "bolt://127.0.0.1:7687", "required_for_live_tests": true},
+      "EPILOGOS_NEO4J_USER": {"default": "neo4j", "required": false},
+      "EPILOGOS_NEO4J_PASSWORD": {"default": "(empty)", "required": false, "notes": "Empty matches NEO4J_AUTH=none in docker-compose.epi-s2.yml"}
+    },
+    "redis_semantic_cache": {
+      "EPILOGOS_SEMANTIC_CACHE_REDIS_URL": {"default_for_dev": "redis://127.0.0.1:6379", "required_for_live_cache_tests": true},
+      "EPILOGOS_SEMANTIC_CACHE_REDIS_NAMESPACE": {"default": "epilogos:cache", "required": false},
+      "EPILOGOS_SEMANTIC_CACHE_NAME": {"default": "primary", "required": false},
+      "EPILOGOS_SEMANTIC_CACHE_SCRIPT": {"default": "(packaged)", "required": false}
+    },
+    "shape_anchors": "Body/S/S2/graph-services/src/lib.rs (all env::var reads colocated)"
+  },
+
+  "downstream_consumer_inventory": {
+    "M0_prime": "Backend node facts, symbol/formulation_type provenance, OWL/SHACL/GDS readiness",
+    "M1_prime": "Typed S2 relation traversal + harmonic pointer relation descriptors",
+    "M2_prime": "S2-governed correspondence provenance + graph-relational evidence",
+    "M3_prime": "Shared Neo4j substrate for graph/wheel surfaces; symbolic/profile provenance",
+    "M4_prime": "Public S2 coordinate anchors WITHOUT leaking protected Nara/Graphiti bodies",
+    "M5_prime": "Namespace-aware access: bimba | gnosis | etymology | governed protected handles",
+    "M5_3_Tauri_Theia": "S2-backed graph clients, profile/pointer anchors, real local service tests",
+    "M5_4_agentic_mediation": "Coordinate-native graph APIs gated by privacy/namespace law"
+  },
+
+  "readiness_blockers_carried_forward": [
+    {"id": "IOD-05", "summary": "S2 canonical `#` root mapping — seed preserves `#`; import converts `#`->`M`; bimba-mcp TS parser deprecates `#`. T1 must reconcile.", "owner": "Track 02 T1"},
+    {"id": "IOD-06", "summary": "Anuttara field naming: public aliases (symbol/formulation_type/...) vs coordinate-prefixed registry keys (c_1_symbol/c_1_formulation_type/...).", "owner": "Track 02 T1+T5"},
+    {"id": "IOD-07", "summary": "n10s/GDS packaging and GDS output persistence (derived nodes vs ephemeral overlays vs both).", "owner": "Track 02 T2+T6"},
+    {"id": "IOD-08", "summary": "Graphiti runtime boundary; what handles may appear in S2 responses before S5 review.", "owner": "Track 02 + Track 03"},
+    {"id": "track-02.seed-registry-drift", "summary": "8 seed-emitted structural relations (GENERATES, ENTANGLES, INTERLEAVES, MANIFESTS, BEDROCK, FAMILY_CONTAINS, MOBIUS_RETURN, ANCHORED_TO) not in RELATIONSHIP_TYPE_SPECS.", "owner": "Track 02 T1"},
+    {"id": "track-02.bimba-mcp-divergence", "summary": "External MCP parser vs Rust graph-service parser — coordinate parser/schema behavior risk.", "owner": "Track 02 T2"},
+    {"id": "track-02.destructive-rebuild-policy", "summary": "No explicit safe path for wiping test-owned graph data without risking shared/user data.", "owner": "Track 02 T1"},
+    {"id": "DSD-05", "summary": "Protected Nara/Graphiti substrate ownership before M4/4-5-0 readiness.", "owner": "Track 03"}
+  ],
+
+  "verification_record": {
+    "ran_at": "2026-06-01",
+    "commands": [
+      {"cmd": "cargo test --manifest-path Body/S/S2/graph-schema/Cargo.toml", "expected": "all schema-registry tests pass (relation registry, label registry, property registry, constraint plan, index plan)"},
+      {"cmd": "cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml", "expected": "all in-process tests pass; live-Neo4j tests skip if EPILOGOS_NEO4J_URI absent"},
+      {"cmd": "docker compose -f docker-compose.epi-s2.yml up -d neo4j redis", "expected": "neo4j + redis containers running; not run during preflight"},
+      {"cmd": "epi graph doctor --json", "expected": "structured health report covering Neo4j, Redis, semantic cache, graph state; reports `blocked` honestly when services unreachable"}
+    ]
+  }
+}

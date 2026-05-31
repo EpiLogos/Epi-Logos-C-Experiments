@@ -63,8 +63,8 @@ The first implementation slice must establish the extension packaging, shared co
 
    Deliverables:
 
-   - Produce an implementation inventory for the future `/pratibimba/system/extensions/` packages: extension ids, view ids, commands, bridge subscriptions, S2/S3/S5 methods, privacy class, observability event types, and Track 08 contribution exports for all six extensions.
-   - Define the shared extension readiness taxonomy: `bridge_unavailable`, `profile_missing_field`, `s2_graph_blocked`, `s3_subscription_blocked`, `s5_review_blocked`, `pending_dataset_lut`, `privacy_blocked`, `degraded_but_readable`, and `ready_public_current`.
+   - Produce an implementation inventory for the future `Idea/Pratibimba/System/extensions/` packages: extension ids, view ids, commands, bridge subscriptions, S2/S3/S5 methods, privacy class, observability event types, and Track 08 contribution exports for all six extensions.
+   - Define the shared extension readiness taxonomy: `bridge_unavailable`, `profile_missing_field`, `s2_graph_blocked`, `s3_subscription_blocked`, `s5_review_blocked`, `authority_payload_missing`, `privacy_blocked`, `degraded_but_readable`, and `ready_public_current`.
    - Define naming conventions for commands and routes: `m0.openCoordinate`, `m1.startWalk`, `m2.openMeaningPacket`, `m3.openCodon`, `m4.openArtifact`, `m5.openReview`, and their read-only/deposit-only variants.
    - Record exact first-slice priorities and blockers per extension before any UI work starts.
 
@@ -78,7 +78,7 @@ The first implementation slice must establish the extension packaging, shared co
 
    Deliverables:
 
-   - Create six Theia-native extension packages under the future `/pratibimba/system/extensions/` structure named exactly `m0-anuttara`, `m1-paramasiva`, `m2-parashakti`, `m3-mahamaya`, `m4-nara`, and `m5-epii`.
+   - Create six Theia-native extension packages under the future `Idea/Pratibimba/System/extensions/` structure named exactly `m0-anuttara`, `m1-paramasiva`, `m2-parashakti`, `m3-mahamaya`, `m4-nara`, and `m5-epii`.
    - Each package registers one primary view contribution, one command to open the view, one route handler for deep links, and one observability publisher.
    - Implement a shared `m-extension-runtime` adapter over `KernelBridgeAPI`: profile subscription, graph query dispatch, gateway RPC dispatch, readiness state, privacy gate, observability emit, and safe late-subscriber cache.
    - Add a shared `CoordinateContext` model: selected coordinate, legacy `#` input, canonical M coordinate, current profile generation, pointer anchor, DAY/NOW/session handle when present, privacy class, and provenance.
@@ -330,7 +330,7 @@ The first implementation slice must establish the extension packaging, shared co
 - **`ide-shell-m0-m5` must stabilize chrome boundaries.** M0 and M5 are both shell-integrated and individual deep surfaces; implementation must decide which commands/views live in chrome vs extension before avoiding duplicate UI ownership.
 - **Track 08 depends on this track's exported contributions.** Track 08 should not start integrated UI choreography until Tranche 2 contribution contracts and at least M1/M2/M3 and M4/M5/M0 first-slice state exports exist.
 - **M4 privacy and consent services are prerequisites for deep Nara.** `m4-nara` cannot be marked ready until protected-local Nara vault, Graphiti handles, consent records, and privacy-filtered bridge payloads are real.
-- **M2/M3 dataset LUT readiness affects visual truthfulness.** Until codon/correspondence datasets are materialized, M2/M3 panels must render `pending_dataset_lut` or equivalent rather than inferred defaults.
+- **M2/M3 authority payload readiness affects visual truthfulness.** Until S0/S2/S3 supply the codon/correspondence payloads, M2/M3 panels must render `authority_payload_missing` or equivalent rather than inferred defaults.
 - **S5 compiler mutation law remains out of scope.** `m5-epii` may render dry-run promotion and reviewed destination plans, but it must not enable non-dry-run mutation until the owning S1/S5 work explicitly wires mutation law and rollback.
 
 ## Open Decisions
@@ -349,7 +349,7 @@ The first implementation slice must establish the extension packaging, shared co
 - **Epii review surface duplication.** The agentic control room in `ide-shell-m0-m5` and the deep `m5-epii` spine inspector overlap. The build needs explicit command/view ownership to avoid two review queues with different state.
 - **State persistence across IDE sessions.** Theia workspace state, Tauri app state, bridge cache, extension layout state, Nara drafts, and agent conversation history need one persistence policy.
 - **Observability event schema home.** Track 01 and Track 04 both need observability events; this track can define extension event families, but the canonical event schema should live in the shared bridge/S5 contract, not in individual extensions.
-- **Source gap: `/pratibimba/system` is not yet an observed implementation tree.** This plan assumes the directory structure from the Theia plan, but actual package manager, Theia version, build scripts, and test harness are still prototype decisions.
+- **Source gap: `Idea/Pratibimba/System` is the observed implementation tree, but the Theia build shape is not settled.** The repo path is fixed; the actual package manager, Theia version, build scripts, and test harness are still prototype decisions.
 
 ## Success Criteria
 

@@ -51,7 +51,7 @@ The integrated plugins must prove M5-2/M5-3/M5-4 separation: they consume live S
    Deliverables:
 
    - Inventory the expected contribution surfaces from `m0-anuttara`, `m1-paramasiva`, `m2-parashakti`, `m3-mahamaya`, `m4-nara`, and `m5-epii`, using Track 07 outputs where available.
-   - Define `IntegratedSurfaceContribution`, `IntegratedViewPart`, `IntegratedMiniInspector`, `IntegratedEvidenceProducer`, `IntegratedLayoutClaim`, and `IntegratedReadiness` TypeScript contract shapes in the future implementation plan for `/pratibimba/system/shared`.
+   - Define `IntegratedSurfaceContribution`, `IntegratedViewPart`, `IntegratedMiniInspector`, `IntegratedEvidenceProducer`, `IntegratedLayoutClaim`, and `IntegratedReadiness` TypeScript contract shapes in the future implementation plan for `Idea/Pratibimba/System/shared`.
    - Capture real or planned fixture payload requirements from Tracks 01-04: `MathemeHarmonicProfile`, S2 graph node/subgraph/GDS overlay, S3 world clock/presence/session deltas, and S5 review/autoresearch DTOs.
    - Produce a compatibility matrix naming which fields each integrated plugin needs, which upstream track owns them, and what readiness state appears when absent.
 
@@ -65,7 +65,7 @@ The integrated plugins must prove M5-2/M5-3/M5-4 separation: they consume live S
 
    Deliverables:
 
-   - Add Theia package plans for `plugin-integrated-1-2-3` and `plugin-integrated-4-5-0` under `/pratibimba/system/extensions/` once the Theia skeleton exists.
+   - Add Theia package plans for `plugin-integrated-1-2-3` and `plugin-integrated-4-5-0` under `Idea/Pratibimba/System/extensions/` once the Theia skeleton exists.
    - Register commands: `epi.integrated.openCosmicEngine`, `epi.integrated.openJivaSiva`, `epi.integrated.toggleMiniInspectors`, `epi.integrated.openEvidencePanel`, and `epi.integrated.copyEvidenceHandle`.
    - Implement a composition/layout service that accepts layout claims from individual extensions and resolves center-stage, side-panel, mini-inspector, audio, selection, and evidence-panel ownership.
    - Define named workspace layouts for each plugin: `cosmic-engine.integrated` and `jiva-siva.integrated`.

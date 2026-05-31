@@ -109,3 +109,36 @@ test("claim and mark preserve state through the CLI runner", () => {
   assert.equal(marked.state.tasks[taskId].status, "done");
   assert.equal(marked.state.tasks[taskId].evidence.at(-1).text, "unit test evidence");
 });
+
+test("context pack includes task body, source specs, dependencies, and decision context", () => {
+  const { root, planFolder } = makePlanSet();
+  writeFileSync(
+    join(planFolder, "11-open-architectural-decisions.md"),
+    `# Decisions
+
+## Decision Index
+
+| ID | Decision |
+| --- | --- |
+| PRD-01 | Runtime choice |
+
+## User-Final-Validation Required
+
+### UFV-01 - Consent
+
+Resolve consent text.
+`,
+  );
+  const assessment = run(["--plan", planFolder, "--context", "01.T1", "--write", "--no-git"], root);
+  assert.equal(assessment.contextPack.taskId, "01.T1");
+  assert.ok(assessment.contextPack.sourceFiles.includes("docs/plans/2026-05-31-example-tracks/11-open-architectural-decisions.md"));
+  assert.ok(assessment.contextPack.sourceFiles.includes("Body/S/S0/bridge.rs"));
+});
+
+test("reset clears task state without deleting the index", () => {
+  const { root, planFolder } = makePlanSet();
+  run(["--plan", planFolder, "--claim", "01.T0", "--write", "--no-git"], root);
+  const reset = run(["--plan", planFolder, "--reset", "--write", "--no-git"], root);
+  assert.equal(reset.state.tasks["01.T0"].status, "pending");
+  assert.equal(reset.state.runs.length, 0);
+});

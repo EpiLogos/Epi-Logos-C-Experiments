@@ -65,7 +65,7 @@ The decision index and grouped entries below are the active open-decision set fo
 | DSD-03 | Non-dry-run promotion waits for compiler mutation law | Dependency and sequencing | 04, 05, 07, 08 |
 | DSD-04 | SpaceTimeDB schema source, migration, and table compatibility | Dependency and sequencing | 01, 03, 05, 06, 08 |
 | DSD-05 | Protected Nara/Graphiti substrate before M4 and 4/5/0 readiness | Dependency and sequencing | 02, 03, 04, 06, 07, 08 |
-| DSD-06 | M2/M3 dataset LUT readiness before full 1-2-3 readiness | Dependency and sequencing | 01, 02, 07, 08 |
+| DSD-06 | M2/M3 authority payload readiness before full 1-2-3 readiness | Dependency and sequencing | 01, 02, 07, 08 |
 | DCC-01 | M0 versus M1 `+1` attribution | Deferred canon contradiction | 07, 08, M5' canon |
 | DCC-02 | M3 `16+1` / "17th lens" language | Deferred canon contradiction | 07, 08 |
 | DCC-03 | M2 planet count and Earth-observer semantics | Deferred canon contradiction | 07, 08 |
@@ -153,8 +153,8 @@ The decision index and grouped entries below are the active open-decision set fo
 - **Why it matters:** All six individual extensions and two integrated plugins depend on a stable build and contribution model before package skeletons, activation tests, and CI can be meaningful.
 - **Affected tracks:** 05, 07, 08.
 - **Options:** Recent stable Theia with Theia-native extensions; VS Code Extension API for compatibility; Yarn workspaces per Theia convention; `pnpm` per repo convention; isolated package manager; bundled static assets or supervised local server.
-- **Recommended default if safe:** Recent stable Theia, Theia-native extensions for `kernel-bridge` and M surfaces, in-tree `/pratibimba/system/extensions`, and a package-manager choice made by the Tauri/Theia prototype rather than assumed.
-- **Skill-vs-tool invariant (from VAK-as-Operational-Substrate landing):** Within the agent-capability layer (`Body/S/S4/plugins/pleroma/capability-matrix.json`), `vak_profile` is a skill-level concept: every `skills[]` entry has a matching `skills/<name>/SKILL.md` directory enforced by `test_matrix_maps_real_agents_skills_and_hooks`. `dispatch_tools[]` entries are tools not skills and carry no `vak_profile`. Theia extensions hosting skills (under `/pratibimba/system/extensions/*/skills/*/SKILL.md`) inherit this invariant; new agent capabilities added through Theia extensions must respect skill-vs-tool distinction at matrix-authoring time. See `IOD-17` for the broader governance authority.
+- **Recommended default if safe:** Recent stable Theia, Theia-native extensions for `kernel-bridge` and M surfaces, in-tree `Idea/Pratibimba/System/extensions`, and a package-manager choice made by the Tauri/Theia prototype rather than assumed.
+- **Skill-vs-tool invariant (from VAK-as-Operational-Substrate landing):** Within the agent-capability layer (`Body/S/S4/plugins/pleroma/capability-matrix.json`), `vak_profile` is a skill-level concept: every `skills[]` entry has a matching `skills/<name>/SKILL.md` directory enforced by `test_matrix_maps_real_agents_skills_and_hooks`. `dispatch_tools[]` entries are tools not skills and carry no `vak_profile`. Theia extensions hosting skills (under `Idea/Pratibimba/System/extensions/*/skills/*/SKILL.md`) inherit this invariant; new agent capabilities added through Theia extensions must respect skill-vs-tool distinction at matrix-authoring time. See `IOD-17` for the broader governance authority.
 - **Validation path:** Build `kernel-bridge` plus `m0-anuttara` as Theia-native slices; verify workbench command/layout service activation; record Theia version/package manager/update cadence ADR; verify any Theia-extension-hosted skills respect the skill-vs-tool invariant via the live `test_matrix_maps_real_agents_skills_and_hooks` check.
 - **Consequence of delaying:** Track 07 package inventory and Track 08 composition contracts remain abstract and cannot be enforced by static checks.
 
@@ -362,7 +362,7 @@ The decision index and grouped entries below are the active open-decision set fo
 - **Validation path:** Nara artifact service tests; Graphiti handle tests; S5 evidence tests requiring privacy boundary; automated privacy audits.
 - **Consequence of delaying:** 4/5/0 can render canonical backdrop and review shell only, not personal recognition flow.
 
-### DSD-06 - M2/M3 dataset LUT readiness before full 1-2-3 readiness
+### DSD-06 - M2/M3 authority payload readiness before full 1-2-3 readiness
 
 - **Question:** Which M2/M3 dataset LUTs and profile fields must be live before 1-2-3 claims full cosmic-engine readiness?
 - **Why it matters:** 1-2-3 must not fill missing correspondence, codon, planetary, pitch, or `mahamaya` data with renderer-local tables.

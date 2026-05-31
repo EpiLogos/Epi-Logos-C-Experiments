@@ -1,0 +1,180 @@
+{
+  "tick": 0,
+  "tick12": 0,
+  "cycle": 0,
+  "degree720": 0,
+  "degree360": 0,
+  "su2Layer": "primary",
+  "phase": "Descent",
+  "position6": 0,
+  "helix": "bimba",
+  "ratioRole": "1/1 unison standing identity",
+  "lensMode": {
+    "lens": 0,
+    "mode": 0
+  },
+  "chromatic": {
+    "position": 0,
+    "pitchClass": 0,
+    "note": "C",
+    "xPrimePitchClass": 1,
+    "xPrimeNote": "C#",
+    "mirrorPosition": 5,
+    "mirrorPitchClass": 10,
+    "mirrorNote": "A#",
+    "mirrorSquare": "Sq1",
+    "mirrorSpanWholeTones": 5,
+    "mirrorSpanSemitones": 10
+  },
+  "diatonic": {
+    "degree": 1,
+    "pitchClass": 0,
+    "note": "C",
+    "contextFrame": "00/00",
+    "contextAgent": "Nous",
+    "vakRegister": "Para"
+  },
+  "resonance72": {
+    "legacyResonanceIndex": 0,
+    "lensAnchorIndex": 0,
+    "baseLens": 0,
+    "helixBit": 0,
+    "lensAnchor": 0,
+    "position": 0
+  },
+  "audioOctet": [
+    146.8324,
+    167.55635,
+    191.20532,
+    216.39905,
+    174.61412,
+    199.25922,
+    227.38274,
+    233.0819
+  ],
+  "nodalQuartet": [
+    {
+      "qlPosition": 0,
+      "helix": "bimba",
+      "m": 1,
+      "n": 1
+    },
+    {
+      "qlPosition": 5,
+      "helix": "bimba",
+      "m": 6,
+      "n": 1
+    },
+    {
+      "qlPosition": 0,
+      "helix": "pratibimba",
+      "m": 2,
+      "n": 5
+    },
+    {
+      "qlPosition": 5,
+      "helix": "pratibimba",
+      "m": 7,
+      "n": 7
+    }
+  ],
+  "elements": {
+    "pPositionElement": "Aether",
+    "l2PrimeElement": "Aether",
+    "renderingRole": "nodal-boundary"
+  },
+  "planetaryChakral": {
+    "body": "Earth",
+    "chakraRole": "Muladhara / grounding center",
+    "element": "Earth",
+    "musicalRole": "1/1 tonic",
+    "modalColor": "Rast / stable tonic ground",
+    "provenance": "initial M2/M' alignment; canonical values must be governed by S2 graph law"
+  },
+  "binary": {
+    "mahamayaAddress64": 0,
+    "codon": "AAA",
+    "hexagram": "H01",
+    "lineChangeOperator": "H01.1",
+    "hexagramId": 0,
+    "upperTrigram": 0,
+    "lowerTrigram": 0,
+    "codonId": 0,
+    "nucleotideBits": [
+      0,
+      0,
+      0
+    ],
+    "dnaRnaPhase": "DNA",
+    "lineIndex": 0,
+    "lineChangeOperatorAddress": 0,
+    "m2VibrationIndex": 0,
+    "m2ToM3Symbol": 0,
+    "evolutionaryGap": false,
+    "tarotMinorId": null,
+    "tarotShadowCodon": null,
+    "aminoAcidCode": null,
+    "datasetLutState": "pending-dataset-lut",
+    "transcriptionState": "resolved",
+    "frameBreathingRole": "sq1-boundary-totality",
+    "m3CodecProvenance": "portal-core::mahamaya address law; tarot/amino LUTs pending"
+  },
+  "codonRotationProjection": {
+    "lens": 0,
+    "mode": 0,
+    "lensLabel": "L0",
+    "modeName": "Ionian",
+    "surfaceIndex": 0,
+    "codonId": 0,
+    "codon": "AAA",
+    "codonClass": "non-dual",
+    "rotation": 0,
+    "rotationalStateCount": 7,
+    "rotationDegrees": 0,
+    "reverseLens": 0,
+    "reverseMode": 0,
+    "datasetLutState": "materialized-kernel-lut",
+    "provenance": "portal-core::codon_rotation_projection 84↔472 surface LUT"
+  },
+  "qCosmic": [
+    0.8660254,
+    -0.28867513,
+    0.28867513,
+    0.28867513
+  ],
+  "resonance": null,
+  "conjugateFormCharacter": "Major",
+  "privacyClass": "public-current-context",
+  "bedrock": {
+    "hashOperator": "#",
+    "psychoidNumber": "#0",
+    "invertedPsychoidNumber": "#0'",
+    "successorPsychoidNumber": "#1",
+    "successorRelation": "epogdoon-tick",
+    "inversionRelation": "inversion-spanda",
+    "bimbaPitchClass": 0,
+    "inversionPitchClass": 1
+  },
+  "pointerAnchor": {
+    "sourceCoordinate": "S0/QL-meta",
+    "qlPosition": 0,
+    "helix": "bimba",
+    "webIndex": 0,
+    "bedrockIndex": 0,
+    "familyRingSize": 12,
+    "positionRingSize": 12,
+    "lensRingSize": 12,
+    "webCardinality": 36,
+    "lensAnchor": "L0",
+    "relationRole": "position-identity",
+    "pitchClass": 0,
+    "provenance": "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract"
+  },
+  "contextFrames": {
+    "frameCount": 7,
+    "activeFrameIndex": 0,
+    "activeFrame": "00/00",
+    "activeAgent": "Nous",
+    "projection": "CF7 diatonic lemniscate overlay"
+  }
+}

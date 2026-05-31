@@ -48,7 +48,6 @@ See `track-09-preflight.json#readiness_blockers` for the full list. The most con
 
 - `vak.profile-aware-mapping` — T1 must build profile-aware VAK or treat the heuristic as deterministic baseline
 - `track-09.dispatch-tool-variant-bindings-incomplete` — five of six dispatch-tool variants still need gateway/library bindings
-- `aletheia.agent-contract-missing` — no `aletheia-agent/agent-contract.json` exists; T2 governance metadata is blocked until it lands
 - `sophia.governance-lead-metadata-missing` — capability matrix encodes Sophia as a constitutional leaf; T2 must lift her to governance lead without breaking three-way parity
 - `track-01.t7-bounded-capabilities-not-landed` — bounded agent capabilities allowlist depends on Track 01 T7
 - `track-04.promotion-dry-run-only` — non-dry-run promotion stays blocked
