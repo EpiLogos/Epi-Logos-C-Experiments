@@ -5,15 +5,16 @@ disable-model-invocation: true
 
 # `/m-dev`
 
-Run the active implementation plan set as a context-first development loop.
+Run the active implementation plan set as a context-first route-development loop.
 
-This is the only user-facing command. Internally, `/m-dev` discovers the plan set, refreshes the index/state ledger, selects the next safe tranche, builds a context pack from the plan and source/spec files, then executes in the current session by default.
+This is the only user-facing command. Internally, `/m-dev` discovers the plan set, refreshes the index/state ledger, marks a short dependency-aware route through the work, builds context packs from the plan and source/spec files, then executes in the current session by default.
 
 Subagents are optional. Do not use them unless the user passes `--subagents`, asks for parallel work, or explicitly approves them after seeing the task.
 
 ## Modes
 
 - **Default:** in-session execution by the current agent.
+- **`--route`:** explicitly mark the current recommended 3-5 task route. The command does this by default unless the user is only resetting or inspecting.
 - **`--subagents`:** use subagent-driven development for implementation/review.
 - **`--parallel`:** only with `--subagents`, and only for tasks the assessor marks parallel-safe after a second sanity check.
 - **`--reset`:** reset `plan.state.json` to a clean pending ledger for the active plan set.
@@ -29,12 +30,18 @@ Invoke only what applies:
 
 If an Epi-Logos/VAK gate is available, run it before claiming implementation work.
 
-## Step 1 - Assess The Plan Set
+## Step 1 - Assess And Mark The Route
 
-Run from the repository root:
+For normal development runs, run from the repository root:
 
 ```bash
-node .codex/scripts/m-dev-plan-assess.mjs --write --json $ARGUMENTS
+node .codex/scripts/m-dev-plan-assess.mjs --route --write --json $ARGUMENTS
+```
+
+For a reset-only request, do not mark a new route:
+
+```bash
+node .codex/scripts/m-dev-plan-assess.mjs --reset --write --json $ARGUMENTS
 ```
 
 If `$ARGUMENTS` includes only a plan folder, pass it through. If it includes mode flags such as `--subagents`, `--parallel`, `--in-session`, or `--reset`, those are accepted by the helper.
@@ -44,6 +51,8 @@ The helper writes or refreshes:
 - `plan.index.json`
 - `plan.state.json`
 - `plan.runs/`
+
+The assessment returns `recommendedRoute`: a 3-5 task route when enough work is available, shortened when tasks are too taxing or dependencies run out. Treat this route as the intended path for the session, not as a promise to finish everything regardless of verification.
 
 Do not manually invent task state if the assessor can compute it.
 
@@ -61,9 +70,19 @@ Also stop before implementation if:
 
 If stopping, do not claim the task. Give the user the smallest useful next decision or unblocker.
 
-## Step 3 - Build The Context Pack
+## Step 3 - Read The Route
 
-Before claiming work, generate the context pack for the selected task:
+Use `recommendedRoute.tasks` as the path. Each route task includes:
+
+- `effortWeight`: small tasks are light; larger/week-scale tasks count heavier.
+- `modeHint`: `in-session`, `consider-subagents-if-approved`, or `split-before-execution`.
+- `dependsOn`, `writeScopes`, and computed status.
+
+Plan to work through the route in order. For a light route, continuing through 4-5 tasks is encouraged if verification remains clean. For a balanced route, aim for 3-4 tasks. For a heavy route, stop after the first task that needs splitting, user validation, or substantial review.
+
+## Step 4 - Build Each Context Pack
+
+Before claiming each task, generate the context pack for that route task:
 
 ```bash
 node .codex/scripts/m-dev-plan-assess.mjs --context <TASK_ID> --write --json $ARGUMENTS
@@ -85,9 +104,9 @@ The process must carry forward:
 
 If the context pack is thin, pause and gather missing context before implementation. Do not compensate with ceremony.
 
-## Step 4 - Select Work
+## Step 5 - Select Work
 
-Default to `recommendedTask`.
+Default to the first task in `recommendedRoute.taskIds`. Continue to later route tasks only after the prior task is marked `done` or deliberately marked `review`/`blocked`.
 
 Use `parallelGroup` only in `--parallel --subagents` mode, and only if every task is genuinely independent:
 
@@ -99,7 +118,7 @@ Use `parallelGroup` only in `--parallel --subagents` mode, and only if every tas
 
 When uncertain, execute only the recommended task in-session.
 
-## Step 5 - Claim Work
+## Step 6 - Claim Work
 
 Claim each selected task before implementation:
 
@@ -109,7 +128,7 @@ node .codex/scripts/m-dev-plan-assess.mjs --claim <TASK_ID> --write --json $ARGU
 
 If the claim fails, stop and report the assessor output. Do not bypass the claim check.
 
-## Step 6 - Execute
+## Step 7 - Execute
 
 ### Default In-Session Execution
 
@@ -123,7 +142,7 @@ Work in the current session:
 
 ### Optional Subagent Execution
 
-Only when `--subagents` is active:
+Only when `--subagents` is active, or when the user explicitly approves subagents after seeing a route task marked `consider-subagents-if-approved`:
 
 1. Dispatch a fresh implementer subagent with the context pack and the exact required-reading list.
 2. Require the subagent to read/search the listed source/spec files before editing.
@@ -133,7 +152,7 @@ Only when `--subagents` is active:
 
 Subagents must not update `plan.state.json`; the controller owns the ledger.
 
-## Step 7 - Verify Before Completion
+## Step 8 - Verify Before Completion
 
 Verification must exercise real functionality for the task. Mock-only, placeholder, fake-review, demo-data, or fixture-only claims do not satisfy production readiness.
 
@@ -145,7 +164,7 @@ node .codex/scripts/m-dev-plan-assess.mjs --write --json $ARGUMENTS
 
 Confirm the task is still the claimed task and no new stop reason appeared.
 
-## Step 8 - Update The Ledger
+## Step 9 - Update The Ledger
 
 If implementation and verification pass:
 
@@ -170,7 +189,8 @@ node .codex/scripts/m-dev-plan-assess.mjs --mark <TASK_ID> --status blocked --ev
 Report:
 
 - Plan set path.
-- Task id and final status.
+- Active route and how far through it you got.
+- Task id(s) and final status.
 - Context pack path.
 - What changed.
 - Verification run and result.

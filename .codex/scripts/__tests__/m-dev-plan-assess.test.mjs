@@ -99,6 +99,38 @@ test("assesses ready tasks and recommends a ready tranche before later tranches"
   assert.equal(assessment.recommendedTask.computedStatus, "ready");
 });
 
+test("builds a recommended 3-5 task route by simulating dependency completion", () => {
+  const { root, planFolder } = makePlanSet();
+  const assessment = assessPlan({ cwd: root, planFolder, includeGit: false });
+  assert.deepEqual(
+    assessment.recommendedRoute.tasks.map((task) => task.id),
+    ["01.T0", "02.T0", "02.T1", "01.T1"],
+  );
+  assert.equal(assessment.recommendedRoute.totalWeight, 8);
+  assert.equal(assessment.recommendedRoute.taxingLevel, "balanced");
+  assert.equal(assessment.recommendedRoute.tasks[2].modeHint, "consider-subagents-if-approved");
+});
+
+test("route marking stores the active route in plan state", () => {
+  const { root, planFolder } = makePlanSet();
+  const assessment = run(["--plan", planFolder, "--route", "--write", "--no-git"], root);
+  assert.deepEqual(
+    assessment.state.activeRoute.taskIds,
+    assessment.recommendedRoute.tasks.map((task) => task.id),
+  );
+  assert.equal(assessment.state.activeRoute.status, "active");
+  assert.equal(assessment.state.activeRoute.totalWeight, assessment.recommendedRoute.totalWeight);
+});
+
+test("active in-progress task is the first task in the recommended route", () => {
+  const { root, planFolder } = makePlanSet();
+  run(["--plan", planFolder, "--claim", "01.T0", "--write", "--no-git"], root);
+  const assessment = assessPlan({ cwd: root, planFolder, includeGit: false });
+  assert.equal(assessment.recommendedRoute.tasks[0].id, "01.T0");
+  assert.equal(assessment.recommendedRoute.tasks[0].status, "in_progress");
+  assert.ok(assessment.recommendedRoute.taskIds.includes("01.T1"));
+});
+
 test("claim and mark preserve state through the CLI runner", () => {
   const { root, planFolder } = makePlanSet();
   const initial = run(["--plan", planFolder, "--write", "--no-git"], root);
@@ -137,8 +169,10 @@ Resolve consent text.
 
 test("reset clears task state without deleting the index", () => {
   const { root, planFolder } = makePlanSet();
+  run(["--plan", planFolder, "--route", "--write", "--no-git"], root);
   run(["--plan", planFolder, "--claim", "01.T0", "--write", "--no-git"], root);
   const reset = run(["--plan", planFolder, "--reset", "--write", "--no-git"], root);
   assert.equal(reset.state.tasks["01.T0"].status, "pending");
   assert.equal(reset.state.runs.length, 0);
+  assert.equal(reset.state.activeRoute, null);
 });

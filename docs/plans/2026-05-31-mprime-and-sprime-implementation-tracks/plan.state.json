@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-05-31T23:37:42.371Z",
+  "updatedAt": "2026-05-31T23:53:22.629Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -17,11 +17,16 @@
       "notes": null
     },
     "01.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-05-31T23:47:49.900Z",
+      "claimedAt": "2026-05-31T23:43:07.560Z",
+      "completedAt": "2026-05-31T23:47:49.900Z",
+      "evidence": [
+        {
+          "at": "2026-05-31T23:47:49.900Z",
+          "text": "Deliverable 1 (stable C contracts): HC_BedrockWeb7/PointerWeb36/ContextFrameWeb7 already declared in Body/S/S0/epi-lib/include/pointer_web.h and exercised by native make test_pointer_web — 8/8 pass (keeps_hot_coordinate_128_bytes, bedrock_web_exposes_hash_and_six_raw_psychoids, bedrock_web_declares_kernel_successor_and_inversion_law, family_ring_six_plus_six_prime, position_ring_separates_inversion_mirror_tick_return, lens_ring_exposes_twelve_lens_anchors, context_frame_overlay_sevenfold_and_diatonic, harmonic_helpers_match_ql_math). Deliverable 2 (sizeof==128): _Static_assert in Body/S/S0/epi-lib/test/pillar1/test_pillar1_gaps.c (compile-time) + runtime asserts in test_struct.c and test_pointer_web.c; make test_pillar1 runs 110/110. Deliverable 3 (FFI exposes Bedrock7/PointerWeb36/CF7 without re-deriving): existing Body/S/S0/epi-cli/src/ffi/mod.rs already mirrors all three structs and fill functions; pointer_web_ffi_contract.rs 4/4 confirms through statically linked libepilogos. Deliverable 4 (stable enum/string mapping boundary): NEW Body/S/S0/epi-cli/src/ffi/role_names.rs + Body/S/S0/epi-cli/tests/ffi_role_name_contract.rs (9/9) — relation_role_name/interval_role_name/ratio_role_name/bedrock_role_name/helix_name/pointer_ring_name/context_frame_notation, locked against canonical strings extracted from Body/S/S0/epi-cli/schemas/src/coordinate.ts zod enums (HCRelationRole/HCIntervalRole/HCRatioRole/HCBedrockRole/HCHelix/HCPointerRing + 7 CF labels), plus publicly_exported + pointer_web36 12+12+12=36+CF7 layout invariants. portal-core 79/79 (no regression). NO mocked/string-only test paths."
+        }
+      ],
       "notes": null
     },
     "01.T2": {
@@ -95,10 +100,19 @@
     },
     "02.T1": {
       "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "updatedAt": "2026-05-31T23:53:18.774Z",
+      "claimedAt": "2026-05-31T23:48:04.511Z",
+      "completedAt": "2026-05-31T23:53:02.210Z",
+      "evidence": [
+        {
+          "at": "2026-05-31T23:53:02.210Z",
+          "text": "Schema and relation-law convergence applied to Body/S/S2/graph-schema/src/lib.rs: 8 seed-emitted structural relations added as canonical entries (GENERATES/ENTANGLES/INTERLEAVES with coordinate_home=C0 source_family=seed-topology; MANIFESTS/BEDROCK/FAMILY_CONTAINS/MOBIUS_RETURN with coordinate_home=M source_family=seed-topology; ANCHORED_TO with coordinate_home=CF) — RELATIONSHIP_TYPE_SPECS now 17->25, all compatibility=false. Deep-dataset relation convention recognized via NEW is_deep_dataset_relation_type() + classify_relationship_type() returning RelationshipTypeClass{Canonical,Compatibility,DeepDataset,Drift} — pattern (uppercase ASCII + digits + underscores, starts uppercase, no consecutive/trailing underscores) — covers the ~thousands of relation types in docs/datasets/{anuttara,paramasiva,parashakti,mahamaya,nara,epii}-deep/relations.json without per-instance registration. Two Anuttara fields added as canonical C1 node specs: c_1_symbol + c_1_formulation_type (Public disclosure, source_family=anuttara-language). NEW Body/S/S2/graph-schema/tests/track_02_t1_convergence.rs (5 tests) locks: every seed-emitted topology relation is canonical; deep-dataset samples (ARCHETYPAL_RESONANCE_*, MIRRORS_SVATANTRYA, ABHINAVAGUPTA_RESONANCE_07, ACHIEVES_SIVA_SHAKTI_UNITY) classify correctly; registered/lowercase/malformed strings do NOT capture; Anuttara c_1_symbol/c_1_formulation_type/c_1_complete_formulation are Public C1 nodes; AdHocRelation and relates_to classify as Drift. Verification: cargo test graph-schema 13+suites all green (including new 5/5); graph-services 68+sub-suites green (5 live-gated tests ignored without EPI_GRAPH_LIVE). validate_node_properties + validate_relationship_properties pass (existing tests). Carry-forward: live db.relationshipTypes() vs registry assertion deferred to T2 (needs running Neo4j harness); GDS overlay provenance field set deferred to T6 (n10s/GDS packaging IOD-07 unresolved); Anuttara field name vs c_*-prefix open decision still tracked as IOD-06."
+        },
+        {
+          "at": "2026-05-31T23:53:18.774Z",
+          "text": "Parked by user request to switch to ready Track 01 T2; existing S2 worktree changes preserved for later resume."
+        }
+      ],
       "notes": null
     },
     "02.T2": {
@@ -264,11 +278,16 @@
       "notes": null
     },
     "06.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "blocked",
+      "updatedAt": "2026-05-31T23:43:02.871Z",
+      "claimedAt": "2026-05-31T23:42:19.180Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-05-31T23:43:02.871Z",
+          "text": "Soft-gated on Track 01 T5 (kernel-bridge contract package). 06.T1's primary deliverable is a kernelBridgeClient + kernelBridgeStore consuming 'the shared Track 01 TypeScript contract for lite mode', and the body explicitly forbids inventing a parallel hand-authored MathemeHarmonicProfile/readiness/bridge contract outside the boundary mirror. Track 01 T5 has not landed (depends on 01.T1-T4), so no contract exists to consume. Releasing 06.T1 back to ready/blocked until 01.T5 lands; foundational route is to do 01.T1 next which unblocks the chain."
+        }
+      ],
       "notes": null
     },
     "06.T2": {
@@ -748,6 +767,52 @@
       "status": "done",
       "startedAt": "2026-05-31T23:34:37.774Z",
       "completedAt": "2026-05-31T23:37:42.363Z"
+    },
+    {
+      "runId": "20260531T234219Z-06-T1",
+      "taskId": "06.T1",
+      "status": "blocked",
+      "startedAt": "2026-05-31T23:42:19.180Z",
+      "completedAt": "2026-05-31T23:43:02.871Z"
+    },
+    {
+      "runId": "20260531T234307Z-01-T1",
+      "taskId": "01.T1",
+      "status": "done",
+      "startedAt": "2026-05-31T23:43:07.560Z",
+      "completedAt": "2026-05-31T23:47:49.900Z"
+    },
+    {
+      "runId": "20260531T234804Z-02-T1",
+      "taskId": "02.T1",
+      "status": "done",
+      "startedAt": "2026-05-31T23:48:04.511Z",
+      "completedAt": "2026-05-31T23:53:02.210Z"
     }
-  ]
+  ],
+  "activeRoute": {
+    "status": "active",
+    "createdAt": "2026-05-31T23:51:30.331Z",
+    "updatedAt": "2026-05-31T23:51:30.331Z",
+    "taskIds": [
+      "02.T1",
+      "01.T2",
+      "02.T2",
+      "02.T3"
+    ],
+    "totalWeight": 8,
+    "taxingLevel": "balanced",
+    "weightBudget": 8,
+    "modeHints": {
+      "02.T1": "in-session",
+      "01.T2": "in-session",
+      "02.T2": "in-session",
+      "02.T3": "in-session"
+    },
+    "rationale": [
+      "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+    ]
+  }
 }

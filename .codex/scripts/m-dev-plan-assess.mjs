@@ -21,6 +21,7 @@ export function parseArgs(argv) {
     noGit: false,
     context: null,
     reset: false,
+    route: false,
     subagents: false,
     inSession: false,
     parallel: false,
@@ -38,6 +39,7 @@ export function parseArgs(argv) {
     else if (arg === "--evidence") args.evidence = argv[++i];
     else if (arg === "--context") args.context = argv[++i];
     else if (arg === "--reset") args.reset = true;
+    else if (arg === "--route" || arg === "--mark-route") args.route = true;
     else if (arg === "--subagents") args.subagents = true;
     else if (arg === "--in-session") args.inSession = true;
     else if (arg === "--parallel") args.parallel = true;
@@ -312,6 +314,7 @@ function reconcileState(index, state) {
     updatedAt: now,
     tasks: { ...(state.tasks ?? {}) },
     runs: Array.isArray(state.runs) ? state.runs : [],
+    activeRoute: state.activeRoute ?? null,
   };
 
   for (const task of index.tasks) {
@@ -363,6 +366,7 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true 
 
   const recommendedTask = readyTasks[0] ?? null;
   const parallelGroup = buildParallelGroup(readyTasks, dirtyFiles);
+  const recommendedRoute = buildRecommendedRoute(enrichedTasks);
 
   return {
     version: STATE_VERSION,
@@ -378,6 +382,7 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true 
     },
     stopReasons,
     recommendedTask,
+    recommendedRoute,
     parallelGroup,
     parallelExecution: parallelGroup.length > 1 && stopReasons.length === 0,
     dirtyFiles,
@@ -571,6 +576,126 @@ function buildParallelGroup(readyTasks, dirtyFiles, max = 3) {
   return group;
 }
 
+function buildRecommendedRoute(tasks, { minTasks = 3, maxTasks = 5, weightBudget = 8 } = {}) {
+  const simulatedDone = new Set(tasks.filter((task) => task.status === "done").map((task) => task.id));
+  const selectedIds = new Set();
+  const route = [];
+  let totalWeight = 0;
+
+  for (const task of activeRoutePrefix(tasks)) {
+    if (route.length >= maxTasks) break;
+    const weight = effortWeight(task);
+    route.push(routeTaskSummary(task, weight));
+    selectedIds.add(task.id);
+    simulatedDone.add(task.id);
+    totalWeight += weight;
+  }
+
+  while (route.length < maxTasks) {
+    const ready = simulatedReadyTasks(tasks, simulatedDone, selectedIds).sort(comparePriority);
+    if (ready.length === 0) break;
+
+    const next = ready[0];
+    const weight = effortWeight(next);
+    if (route.length >= minTasks && totalWeight + weight > weightBudget) break;
+
+    route.push(routeTaskSummary(next, weight));
+    selectedIds.add(next.id);
+    simulatedDone.add(next.id);
+    totalWeight += weight;
+  }
+
+  const taskIds = route.map((task) => task.id);
+  return {
+    taskIds,
+    tasks: route,
+    totalWeight,
+    maxTasks,
+    minTasks: Math.min(minTasks, tasks.filter((task) => task.status !== "done").length),
+    weightBudget,
+    taxingLevel: routeTaxingLevel(route, totalWeight),
+    rationale: routeRationale(route, totalWeight, weightBudget),
+  };
+}
+
+function activeRoutePrefix(tasks) {
+  return tasks
+    .filter((task) => task.status === "in_progress" || task.status === "review")
+    .sort((a, b) => {
+      const aTime = a.claimedAt ?? a.completedAt ?? "";
+      const bTime = b.claimedAt ?? b.completedAt ?? "";
+      return aTime.localeCompare(bTime) || a.id.localeCompare(b.id, undefined, { numeric: true });
+    });
+}
+
+function simulatedReadyTasks(tasks, simulatedDone, selectedIds) {
+  return tasks.filter((task) => {
+    if (selectedIds.has(task.id)) return false;
+    if (task.status === "done" || task.status === "blocked" || task.status === "in_progress" || task.status === "review") return false;
+    if (task.missingDeps.length > 0) return false;
+    return task.dependsOn.every((depId) => simulatedDone.has(depId));
+  });
+}
+
+function routeTaskSummary(task, weight) {
+  const { body, ...summary } = task;
+  return {
+    ...summary,
+    effortWeight: weight,
+    modeHint: modeHintForWeight(weight),
+  };
+}
+
+function effortWeight(task) {
+  const text = `${task.effort ?? ""} ${task.title ?? ""}`.toLowerCase();
+  let weight = 2;
+  if (/\bxl\b/.test(text)) weight = 5;
+  else if (/\bl\b/.test(text)) weight = 3;
+  else if (/\bm\b/.test(text)) weight = 2;
+  else if (/\bs\b/.test(text)) weight = 1;
+
+  const weekRange = text.match(/(\d+)(?:\s*[-–]\s*(\d+))?\s*weeks?/);
+  if (weekRange) {
+    const weeks = Number.parseInt(weekRange[2] ?? weekRange[1], 10);
+    weight = Math.max(weight, weeks >= 2 ? 5 : 3);
+  }
+
+  const dayRange = text.match(/(\d+)(?:\s*[-–]\s*(\d+))?\s*days?/);
+  if (dayRange) {
+    const days = Number.parseInt(dayRange[2] ?? dayRange[1], 10);
+    weight = Math.max(weight, days >= 5 ? 3 : days >= 2 ? 2 : 1);
+  }
+
+  return weight;
+}
+
+function modeHintForWeight(weight) {
+  if (weight >= 5) return "split-before-execution";
+  if (weight >= 3) return "consider-subagents-if-approved";
+  return "in-session";
+}
+
+function routeTaxingLevel(route, totalWeight) {
+  if (route.some((task) => task.effortWeight >= 5) || totalWeight > 8) return "heavy";
+  if (totalWeight <= 4) return "light";
+  return "balanced";
+}
+
+function routeRationale(route, totalWeight, weightBudget) {
+  if (route.length === 0) return ["No pending task is dependency-ready under the current ledger."];
+  const rationale = [
+    `Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.`,
+    `Capped the route at ${route.length} task(s) with total effort weight ${totalWeight}/${weightBudget} unless fewer tasks were available.`,
+  ];
+  if (route.some((task) => task.status === "in_progress" || task.status === "review")) {
+    rationale.push("Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work.");
+  }
+  if (route.some((task) => task.modeHint !== "in-session")) {
+    rationale.push("Marked heavier tasks for optional subagents or split-before-execution review; default execution remains in-session.");
+  }
+  return rationale;
+}
+
 function canRunTogether(a, b) {
   if (a.trackId === b.trackId) return false;
   if (a.dependsOn.includes(b.id) || b.dependsOn.includes(a.id)) return false;
@@ -633,7 +758,26 @@ function resetState() {
     updatedAt: new Date().toISOString(),
     tasks: {},
     runs: [],
+    activeRoute: null,
   };
+}
+
+function markActiveRoute(assessment) {
+  const now = new Date().toISOString();
+  const route = assessment.recommendedRoute;
+  assessment.state.activeRoute = {
+    status: route.taskIds.length > 0 ? "active" : "empty",
+    createdAt: now,
+    updatedAt: now,
+    taskIds: route.taskIds,
+    totalWeight: route.totalWeight,
+    taxingLevel: route.taxingLevel,
+    weightBudget: route.weightBudget,
+    modeHints: Object.fromEntries(route.tasks.map((task) => [task.id, task.modeHint])),
+    rationale: route.rationale,
+  };
+  assessment.state.updatedAt = now;
+  return assessment.state.activeRoute;
 }
 
 function claimTask(planFolder, assessment, taskId) {
@@ -700,6 +844,16 @@ function printHuman(assessment) {
   } else {
     lines.push("Recommended: none");
   }
+  if (assessment.recommendedRoute?.tasks?.length > 0) {
+    lines.push(
+      `Route (${assessment.recommendedRoute.taxingLevel}, weight ${assessment.recommendedRoute.totalWeight}/${assessment.recommendedRoute.weightBudget}): ${assessment.recommendedRoute.tasks
+        .map((task) => `${task.id}[${task.modeHint}]`)
+        .join(" -> ")}`,
+    );
+  }
+  if (assessment.state.activeRoute?.taskIds?.length > 0) {
+    lines.push(`Active route: ${assessment.state.activeRoute.taskIds.join(" -> ")}`);
+  }
   if (assessment.parallelGroup.length > 1) {
     lines.push(`Parallel-safe candidates: ${assessment.parallelGroup.map((task) => task.id).join(", ")}`);
   }
@@ -717,6 +871,12 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
     writeFileSync(join(planFolder, "plan.state.json"), `${JSON.stringify(resetState(), null, 2)}\n`);
   }
   let assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
+
+  if (args.route) {
+    markActiveRoute(assessment);
+    writeAssessmentFiles(planFolder, assessment);
+    assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
+  }
 
   if (args.claim) {
     assessment.state = claimTask(planFolder, assessment, args.claim);

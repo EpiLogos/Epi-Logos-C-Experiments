@@ -4,6 +4,7 @@ pub mod kernel;
 pub mod m1;
 pub mod m2;
 pub mod nara;
+pub mod role_names;
 pub mod tagged;
 
 use libc::c_void;
