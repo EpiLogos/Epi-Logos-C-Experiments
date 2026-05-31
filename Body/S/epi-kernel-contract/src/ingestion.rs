@@ -38,10 +38,7 @@ impl IngestionStatus {
                 )
                 | (Self::PersistedAnalysis, KernelElement::MobiusDescent)
                 | (Self::SlashFlipped, KernelElement::SlashFlip)
-                | (
-                    Self::InverseRecognition,
-                    KernelElement::DoubledPrehension
-                )
+                | (Self::InverseRecognition, KernelElement::DoubledPrehension)
                 | (Self::DepositedReturn, KernelElement::EnrichedReturn)
         )
     }

@@ -23,10 +23,7 @@ fn profile_carries_vak_address_field() {
     let profile = MathemeHarmonicProfile::with_vak(tick, vak.clone());
     // tick.cycle = 3, sub_tick = 6 => stored tick = 3 * 12 + 6 = 42
     assert_eq!(profile.tick, 42);
-    assert_eq!(
-        profile.vak_address.as_ref().unwrap().cf,
-        "(4.0/1-4.4/5)"
-    );
+    assert_eq!(profile.vak_address.as_ref().unwrap().cf, "(4.0/1-4.4/5)");
     assert_eq!(
         profile.vak_address.as_ref().unwrap().cs.direction,
         CsDirection::Day
@@ -38,7 +35,10 @@ fn profile_without_vak_serializes_without_address_field() {
     // Baseline: existing from_tick constructor must not emit vakAddress at all.
     let tick = kernel_tick_from_epogdoon(0, 7);
     let bare = MathemeHarmonicProfile::from_tick(tick);
-    assert!(bare.vak_address.is_none(), "from_tick must leave vak_address None");
+    assert!(
+        bare.vak_address.is_none(),
+        "from_tick must leave vak_address None"
+    );
     let bare_json = serde_json::to_string(&bare).unwrap();
     assert!(
         !bare_json.contains("vakAddress"),
@@ -47,10 +47,8 @@ fn profile_without_vak_serializes_without_address_field() {
     );
 
     // And: with_vak constructor MUST serialise the field. Note camelCase rename.
-    let with_json = serde_json::to_string(
-        &MathemeHarmonicProfile::with_vak(tick, sample_vak()),
-    )
-    .unwrap();
+    let with_json =
+        serde_json::to_string(&MathemeHarmonicProfile::with_vak(tick, sample_vak())).unwrap();
     assert!(
         with_json.contains("\"vakAddress\""),
         "vakAddress present when set, got: {}",

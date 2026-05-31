@@ -133,7 +133,10 @@ fn vak_address_can_be_hash_map_key() {
         cp: "CP4.2".into(),
         cf: "(0/1)".into(),
         cfp: "CFP0".into(),
-        cs: CsField { code: "CS1".into(), direction: CsDirection::Day },
+        cs: CsField {
+            code: "CS1".into(),
+            direction: CsDirection::Day,
+        },
     };
     let addr_b = VakAddress {
         cpf: CpfState::Dialogical,
@@ -141,7 +144,10 @@ fn vak_address_can_be_hash_map_key() {
         cp: "CP4.0".into(),
         cf: "(00/00)".into(),
         cfp: "CFP0".into(),
-        cs: CsField { code: "CS1".into(), direction: CsDirection::Day },
+        cs: CsField {
+            code: "CS1".into(),
+            direction: CsDirection::Day,
+        },
     };
 
     let mut map: HashMap<VakAddress, &'static str> = HashMap::new();

@@ -35,13 +35,20 @@ describe('projectKernelHarmonicConsumer', () => {
           totalEnergy: '0.270000',
         },
         harmonicProfile: {
+          tick: 34,
           tick12: 10,
           cycle: 2,
           degree720: 600,
           degree360: 240,
           su2Layer: 'shadow',
+          phase: 'Ascent',
+          position6: 4,
           helix: 'pratibimba',
           ratioRole: '3/2 perfect-fifth aspiration',
+          lensMode: {
+            lens: 10,
+            mode: 5,
+          },
           chromatic: {
             position: 4,
             pitchClass: 9,
@@ -63,6 +70,13 @@ describe('projectKernelHarmonicConsumer', () => {
             lensAnchor: 10,
             position: 4,
           },
+          audioOctet: [110, 123.47, 138.59, 146.83, 164.81, 185, 207.65, 220],
+          nodalQuartet: [
+            { qlPosition: 0, helix: 'bimba', m: 7, n: 8 },
+            { qlPosition: 5, helix: 'bimba', m: 4, n: 2 },
+            { qlPosition: 0, helix: 'pratibimba', m: 8, n: 4 },
+            { qlPosition: 5, helix: 'pratibimba', m: 5, n: 6 },
+          ],
           elements: {
             pPositionElement: 'Earth',
             l2PrimeElement: 'Fire',
@@ -110,6 +124,27 @@ describe('projectKernelHarmonicConsumer', () => {
             m3CodecProvenance:
               'portal-core::mahamaya address law; tarot/amino LUTs pending',
           },
+          codonRotationProjection: {
+            lens: 10,
+            mode: 5,
+            lensLabel: "L4'",
+            modeName: 'Aeolian',
+            surfaceIndex: 421,
+            codonId: 57,
+            codon: 'GCT',
+            codonClass: 'dual',
+            rotation: 5,
+            rotationalStateCount: 8,
+            rotationDegrees: 225,
+            reverseLens: 10,
+            reverseMode: 5,
+            datasetLutState: 'materialized-kernel-lut',
+            provenance: 'portal-core::codon_rotation_projection 84↔472 surface LUT',
+          },
+          qCosmic: [0.75, -0.25, 0.5, 0.35],
+          resonance: null,
+          conjugateFormCharacter: 'Minor',
+          privacyClass: 'public-current-context',
           bedrock: {
             hashOperator: '#',
             psychoidNumber: '#4',
@@ -176,6 +211,12 @@ describe('projectKernelHarmonicConsumer', () => {
     expect(consumer.pointerLensAnchor).toBe("L4'");
     expect(consumer.pointerWebIndex).toBe(10);
     expect(consumer.contextFrameCount).toBe(7);
+    expect(consumer.audioOctetHz).toHaveLength(8);
+    expect(consumer.nodalQuartet).toHaveLength(4);
+    expect(consumer.lensMode).toEqual({ lens: 10, mode: 5 });
+    expect(consumer.codonRotationProjection?.surfaceIndex).toBeLessThan(472);
+    expect(consumer.qCosmic).toHaveLength(4);
+    expect(consumer.conjugateFormCharacter).toBe('Minor');
     expect(consumer.visualReadiness).toBe('ready_for_projection');
     expect(consumer.musicalReadiness).toBe('data_ready_audio_deferred');
     expect(consumer.protectedFieldsExposed).toBe(false);

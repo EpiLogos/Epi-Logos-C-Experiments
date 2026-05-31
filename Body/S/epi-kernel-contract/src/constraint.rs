@@ -75,7 +75,10 @@ impl ConstraintRegistryEntry {
     /// Placeholders are `{key}` referencing string keys in `bindings`.
     /// Missing keys are left as the empty string and reported through
     /// the returned diagnostic's `source_constraint`.
-    pub fn render(&self, bindings: &BTreeMap<String, String>) -> Result<AnuttaraDiagnostic, AnuttaraParseError> {
+    pub fn render(
+        &self,
+        bindings: &BTreeMap<String, String>,
+    ) -> Result<AnuttaraDiagnostic, AnuttaraParseError> {
         let mut rendered = String::with_capacity(self.anuttara_template.len());
         let mut iter = self.anuttara_template.chars().peekable();
         while let Some(ch) = iter.next() {
@@ -188,17 +191,21 @@ mod tests {
 
     #[test]
     fn entry_construction_validates_fields() {
-        assert!(
-            ConstraintRegistryEntry::new("", "MATCH (n) RETURN n", ConstraintSeverity::Warning, "?#X")
-                .is_err()
-        );
-        assert!(
-            ConstraintRegistryEntry::new("n", "", ConstraintSeverity::Warning, "?#X").is_err()
-        );
-        assert!(
-            ConstraintRegistryEntry::new("n", "MATCH (n) RETURN n", ConstraintSeverity::Warning, "")
-                .is_err()
-        );
+        assert!(ConstraintRegistryEntry::new(
+            "",
+            "MATCH (n) RETURN n",
+            ConstraintSeverity::Warning,
+            "?#X"
+        )
+        .is_err());
+        assert!(ConstraintRegistryEntry::new("n", "", ConstraintSeverity::Warning, "?#X").is_err());
+        assert!(ConstraintRegistryEntry::new(
+            "n",
+            "MATCH (n) RETURN n",
+            ConstraintSeverity::Warning,
+            ""
+        )
+        .is_err());
         ConstraintRegistryEntry::new(
             "mid_position_adjacency",
             "MATCH (t) RETURN t",
@@ -223,7 +230,10 @@ mod tests {
         let mut bindings = BTreeMap::new();
         bindings.insert("coord".to_owned(), "2-1-3".to_owned());
         let diag = entry.render(&bindings).unwrap();
-        assert_eq!(diag.source_constraint.as_deref(), Some("mid_position_adjacency"));
+        assert_eq!(
+            diag.source_constraint.as_deref(),
+            Some("mid_position_adjacency")
+        );
         assert_eq!(diag.questions.len(), 1);
     }
 

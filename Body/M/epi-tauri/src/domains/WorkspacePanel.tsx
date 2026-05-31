@@ -5,6 +5,8 @@ import { Map, Box } from 'lucide-react';
 import { BimbaMap2D } from '@/domains/M0_Anuttara/BimbaMap2D';
 import { NaraDashboard } from '@/domains/M4_Nara/NaraDashboard';
 import { EpiiDashboard } from '@/domains/M5_Epii/EpiiDashboard';
+import { MPrimeSubsystemPage } from '@/domains/MPrime_Subsystems';
+import { useTemporalStore } from '@/stores/temporalStore';
 
 const BimbaMap3D = lazy(() =>
   import('@/domains/M0_Anuttara/BimbaMap3D').then((m) => ({ default: m.BimbaMap3D })),
@@ -22,6 +24,7 @@ function WorkspaceHeader({ ws }: { ws: ActiveWorkspace }) {
     M0: { label: 'Anuttara', coordinate: 'M0', color: '#a78bfa' },
     M4: { label: 'Nara', coordinate: 'M4', color: '#f59e0b' },
     M5: { label: 'Epii', coordinate: 'M5', color: '#3b82f6' },
+    MPrime: { label: "M' 4+2 Subsystem map", coordinate: 'MPrime', color: '#22d3ee' },
   };
 
   const c = config[ws];
@@ -125,6 +128,11 @@ function M5Workspace() {
   return <EpiiDashboard />;
 }
 
+function MPrimeWorkspace() {
+  const { runtime } = useTemporalStore();
+  return <MPrimeSubsystemPage runtime={runtime} />;
+}
+
 function WorkspaceContent({ ws }: { ws: ActiveWorkspace }) {
   switch (ws) {
     case 'M0':
@@ -133,6 +141,8 @@ function WorkspaceContent({ ws }: { ws: ActiveWorkspace }) {
       return <M4Workspace />;
     case 'M5':
       return <M5Workspace />;
+    case 'MPrime':
+      return <MPrimeWorkspace />;
   }
 }
 

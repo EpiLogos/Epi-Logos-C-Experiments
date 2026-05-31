@@ -19,6 +19,7 @@ const WORKSPACES: WorkspaceTarget[] = [
   { id: 'M0', coordinate: 'M0', name: 'Anuttara', description: '2D Bimba graph — the canonical source map', color: '#a78bfa' },
   { id: 'M4', coordinate: 'M4', name: 'Nara', description: 'Journal dashboard — vault, flow, daily notes', color: '#f59e0b' },
   { id: 'M5', coordinate: 'M5', name: 'Epii', description: 'Library, Atelier, and agent execution', color: '#3b82f6' },
+  { id: 'MPrime', coordinate: "M'", name: '4+2 Subsystems', description: 'Deep subsystem map — four operational fields plus two poles', color: '#22d3ee' },
 ];
 
 interface CommandEntry {
@@ -48,6 +49,9 @@ function saveHistory(coord: string) {
 
 function parseCoordinate(input: string): WorkspaceTarget | null {
   const cleaned = input.trim().replace(/^#/, '').toUpperCase();
+  if (cleaned === "M'" || cleaned === 'MPRIME') {
+    return WORKSPACES.find((w) => w.id === 'MPrime') ?? null;
+  }
   const match = cleaned.match(/^M(\d)'?$/);
   if (!match) return null;
   const num = parseInt(match[1], 10);

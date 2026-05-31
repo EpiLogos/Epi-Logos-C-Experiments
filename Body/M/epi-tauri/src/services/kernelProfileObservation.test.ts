@@ -38,13 +38,20 @@ function runtimeFixture(): PortalRuntimeState {
         totalEnergy: '0.270000',
       },
       harmonicProfile: {
+        tick: 34,
         tick12: 10,
         cycle: 2,
         degree720: 600,
         degree360: 240,
         su2Layer: 'shadow',
+        phase: 'Ascent',
+        position6: 4,
         helix: 'pratibimba',
         ratioRole: '3/2 perfect-fifth aspiration',
+        lensMode: {
+          lens: 10,
+          mode: 5,
+        },
         chromatic: {
           position: 4,
           pitchClass: 9,
@@ -66,6 +73,13 @@ function runtimeFixture(): PortalRuntimeState {
           lensAnchor: 10,
           position: 4,
         },
+        audioOctet: [110, 123.47, 138.59, 146.83, 164.81, 185, 207.65, 220],
+        nodalQuartet: [
+          { qlPosition: 0, helix: 'bimba', m: 7, n: 8 },
+          { qlPosition: 5, helix: 'bimba', m: 4, n: 2 },
+          { qlPosition: 0, helix: 'pratibimba', m: 8, n: 4 },
+          { qlPosition: 5, helix: 'pratibimba', m: 5, n: 6 },
+        ],
         elements: {
           pPositionElement: 'Earth',
           l2PrimeElement: 'Fire',
@@ -113,6 +127,27 @@ function runtimeFixture(): PortalRuntimeState {
           m3CodecProvenance:
             'portal-core::mahamaya address law; tarot/amino LUTs pending',
         },
+        codonRotationProjection: {
+          lens: 10,
+          mode: 5,
+          lensLabel: "L4'",
+          modeName: 'Aeolian',
+          surfaceIndex: 421,
+          codonId: 57,
+          codon: 'GCT',
+          codonClass: 'dual',
+          rotation: 5,
+          rotationalStateCount: 8,
+          rotationDegrees: 225,
+          reverseLens: 10,
+          reverseMode: 5,
+          datasetLutState: 'materialized-kernel-lut',
+          provenance: 'portal-core::codon_rotation_projection 84↔472 surface LUT',
+        },
+        qCosmic: [0.75, -0.25, 0.5, 0.35],
+        resonance: null,
+        conjugateFormCharacter: 'Minor',
+        privacyClass: 'public-current-context',
         bedrock: {
           hashOperator: '#',
           psychoidNumber: '#4',
@@ -170,6 +205,7 @@ describe('kernel profile observation deposit requests', () => {
       degree720: 600,
       resonance72Index: 64,
       mahamayaAddress64: 42,
+      profilePrivacyClass: 'public-current-context',
     });
     expect(request?.params.coordinateAnchor.coordinate).toBe('M2');
     expect(
@@ -182,6 +218,10 @@ describe('kernel profile observation deposit requests', () => {
     ).toBe('Psyche');
     expect(JSON.stringify(request?.params)).not.toContain('bioquaternion');
     expect(JSON.stringify(request?.params)).not.toContain('q_b');
+    expect(JSON.stringify(request?.params)).not.toContain('qCosmic');
+    expect(JSON.stringify(request?.params)).not.toContain('codonRotationProjection');
+    expect(JSON.stringify(request?.params)).not.toContain('lensMode');
+    expect(JSON.stringify(request?.params)).not.toContain('conjugateFormCharacter');
   });
 
   it('returns null instead of depositing when the safe temporal kernel projection is absent', () => {

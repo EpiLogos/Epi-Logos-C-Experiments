@@ -251,9 +251,8 @@ mod tests {
             session_key: Some("session-1".to_owned()),
             model: Some("local-candle".to_owned()),
         });
-        let verifier = VerifierOutcome::Diagnostic(
-            AnuttaraDiagnostic::parse("?#2-1-3-4{2,4}").unwrap(),
-        );
+        let verifier =
+            VerifierOutcome::Diagnostic(AnuttaraDiagnostic::parse("?#2-1-3-4{2,4}").unwrap());
         let mental = MentalPoleState::new(nara, lens, verifier);
 
         let mut deposit =

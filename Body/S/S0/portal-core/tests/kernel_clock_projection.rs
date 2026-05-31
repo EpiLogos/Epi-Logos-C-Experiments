@@ -392,3 +392,44 @@ fn kernel_harmonic_profile_covers_chromatic_resonance_and_rendering_invariants()
         "coarse tick profile exposes one 72-fold anchor slot per tick"
     );
 }
+
+#[test]
+fn kernel_harmonic_profile_exposes_canonical_m_prime_contract_fields() {
+    let tick = portal_core::kernel_tick_from_epogdoon(9, 10);
+    let profile = portal_core::harmonic_profile::MathemeHarmonicProfile::from_tick(tick);
+
+    assert_eq!(profile.tick, 118);
+    assert_eq!(profile.tick12, 10);
+    assert_eq!(profile.phase, portal_core::KernelPhase::Ascent);
+    assert_eq!(profile.position6, 4);
+    assert_eq!(profile.lens_mode.lens, 10);
+    assert_eq!(profile.lens_mode.mode, 5);
+    assert_eq!(profile.audio_octet.len(), 8);
+    assert!(profile
+        .audio_octet
+        .iter()
+        .all(|hz| hz.is_finite() && *hz > 0.0));
+    assert_eq!(profile.nodal_quartet.len(), 4);
+    assert!(profile
+        .nodal_quartet
+        .iter()
+        .all(|node| node.m > 0 && node.n > 0));
+    assert_eq!(profile.codon_rotation_projection.lens, 10);
+    assert_eq!(profile.codon_rotation_projection.mode, 5);
+    assert!(profile.codon_rotation_projection.surface_index < 472);
+    assert!(profile.codon_rotation_projection.codon_id < 64);
+    assert!(matches!(
+        profile.conjugate_form_character,
+        portal_core::ConjugateFormCharacter::Major
+            | portal_core::ConjugateFormCharacter::Minor
+            | portal_core::ConjugateFormCharacter::ShadowInversion
+    ));
+    assert!(profile
+        .q_cosmic
+        .iter()
+        .all(|component| component.is_finite()));
+    assert_eq!(
+        profile.privacy_class,
+        portal_core::ProfilePrivacyClass::PublicCurrentContext
+    );
+}

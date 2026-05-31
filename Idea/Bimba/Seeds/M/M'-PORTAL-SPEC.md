@@ -1,21 +1,35 @@
 ---
 coordinate: "M'"
 status: "active-spec"
-updated: "2026-05-30"
+updated: "2026-05-31"
 depends_on:
   - "[[M-SYSTEM-INDEX]]"
+  - "[[M'-SYSTEM-SPEC]]"
+  - "[[M'-TAURI-PORT-SPEC]]"
+  - "[[M0'-SPEC]]"
+  - "[[M1'-SPEC]]"
+  - "[[M2'-SPEC]]"
+  - "[[M3'-SPEC]]"
+  - "[[M4'-SPEC]]"
+  - "[[M5'-SPEC]]"
   - "[[M-M-prime-coordinate-mapping-inaugural]]"
+  - "[[S0-HARMONIC-POINTER-WEB36-SPEC]]"
   - "[[S0-SPEC]]"
   - "[[S3-SPEC]]"
   - "[[S4-SPEC]]"
   - "[[S5-SPEC]]"
+  - "[[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]]"
+  - "[[2026-04-04-graphiti-unified-temporal-context-service]]"
+  - "[[2026-05-31-theia-ide-shell-and-m-plugin-architecture]]"
   - "[[alpha_quaternionic_integration_across_M_stack]]"
   - "[[m4-prime-psychoid-cymatic-field-engine]]"
+  - "[[m4-prime-nara-day-episodes-and-oracle-artifacts]]"
+  - "[[m5-prime-system-shape-and-tauri-ide-canon]]"
 ---
 
 # [[M']] Portal Spec
 
-The [[M']] portal is the shared experiential surface for the [[TUI]] and the desktop app. It is not a separate product ontology. It is the [[Pratibimba]] expression of the [[M]] coordinate map, backed by the same [[S]] / [[S']] services, gateway methods, session runtime, and temporal projection.
+The [[M']] portal is the shared experiential surface for the [[TUI]] and the [[Tauri]] desktop app. It is not a separate product ontology. It is the [[Pratibimba]] expression of the [[M]] coordinate map, backed by the same [[S]] / [[S']] services, gateway methods, session runtime, and temporal projection.
 
 The portal grammar is:
 
@@ -38,11 +52,11 @@ The full [[M']] set must remain visible behind this shorthand:
 
 The build-facing domain requirements live in [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]]. Portal work should use those files for per-domain surface, backend contract, privacy, readiness, and visual/audio criteria, then use this file for the shared `0` / `/` / `1` portal grammar.
 
-The split should be read carefully. In the desktop app, the parent-level `0` is not [[M0']] and not [[M3']] by itself. It is the minimal structural/cosmic face where the most resonant outputs of [[M1']], [[M2']], and [[M3']] are integrated as one cymatic harmonic clock surface over the current coordinate. [[M0']] remains the full Bimba map subsystem in the 4+2 layer, while selected Bimba ground-data may appear on either parent face when it is needed for orientation.
+The split should be read carefully. In the desktop app, the parent-level `0` is not [[M0']] and not [[M3']] by itself. It is the minimal structural/cosmic face where the most resonant outputs of [[M1']], [[M2']], and [[M3']] are integrated as one cymatic harmonic clock surface over the current coordinate. [[M0']] remains the full [[Bimba]] map subsystem in the 4+2 layer, while selected Bimba ground-data may appear on either parent face when it is needed for orientation.
 
 The `0` / `/` / `1` shorthand is the M' parent-shell grammar, not a replacement for the full 4+2 subsystem layer. Shell surfaces expose the most immediate, usable, and relevant aspects of the deeper domains. The 4+2 layer is where [[M0']] through [[M5']] become fully engageable as their own instruments.
 
-The current canonical discipline is: `0` holds Mahāmāyā's graph view and clock-wheel as structural/cosmic parent affordances; `1` holds the protected psychoid cymatic field and flow surface as lived Pratibimba affordances; `4+2` depth brings both together with canonical bimba map as architectural-knowledge backdrop. The portal grammar should preserve this across TUI and desktop even when widgets differ.
+The current canonical discipline is: `0` holds [[Mahāmāyā]]'s graph view and clock-wheel as structural/cosmic parent affordances; `1` holds the protected [[psychoid cymatic field]] and flow surface as lived [[Pratibimba]] affordances; `4+2` depth brings both together with canonical [[Bimba]] map as architectural-knowledge backdrop. The portal grammar should preserve this across [[TUI]] and [[Tauri]] desktop even when widgets differ.
 
 This resolves the apparent 0/1 bifurcation:
 
@@ -55,7 +69,7 @@ This resolves the apparent 0/1 bifurcation:
 
 ## Harmonic / Musical Surface Law
 
-The M' portal must treat the musical instrument as the common rendering substrate for the structural side, clock side, and personal/world return. The same `MathemeHarmonicProfile` should be readable by all M' domains:
+The M' portal must treat the musical instrument as the common rendering substrate for the structural side, clock side, and personal/world return. The same [[MathemeHarmonicProfile]] should be readable by all M' domains:
 
 - [[M0']] shows the selected coordinate's harmonic profile and pointer-web topology on the Bimba map.
 - [[M1']] turns graph traversal into intervallic/topological movement.
@@ -64,9 +78,9 @@ The M' portal must treat the musical instrument as the common rendering substrat
 - [[M4']] records journal/DAY/NOW events against the current harmonic context.
 - [[M5']] reviews and improves the system using harmonic-profile, graph, session, and evidence deltas.
 
-The portal should not derive this separately per widget. It should consume the shared kernel/pointer profile from S0/S2/S3 contracts, with [[M'-SYSTEM-SPEC]] as the language authority.
+The portal should not derive this separately per widget. It should consume the shared kernel/pointer profile from [[S0]]/[[S2]]/[[S3]] contracts, with [[M'-SYSTEM-SPEC]] as the language authority.
 
-The same profile must also expose the diatonic CF/VAK projection. [[M2']] uses it to show modes and correspondences as context-frame rotations; [[M3']] uses it to make the clock's tick audible/visible as CF progression; [[M5']] uses it so VAK/Anima/Epii routing can share the same tonal/context grammar as the instrument. Ionian-through-Locrian mode labels are acceptable UI terms only when backed by the explicit CF anchor they name.
+The same profile must also expose the diatonic CF/[[VAK]] projection. [[M2']] uses it to show modes and correspondences as context-frame rotations; [[M3']] uses it to make the clock's tick audible/visible as CF progression; [[M5']] uses it so [[VAK]]/[[Anima]]/[[Epii]] routing can share the same tonal/context grammar as the instrument. Ionian-through-Locrian mode labels are acceptable UI terms only when backed by the explicit CF anchor they name.
 
 ## Shared Runtime Law
 
@@ -75,7 +89,7 @@ The TUI and desktop app must consume the same underlying truths:
 - [[S3]] gateway/session records are the live session authority.
 - [[Khora]] owns agent-runtime session identity and [[NOW]] write authority.
 - [[SpaceTimeDB]] projects safe live gateway, client, agent, session, temporal, and [[Kairos]] surfaces.
-- [[Redis]] carries hot S3' temporal/session context.
+- [[Redis]] carries hot [[S3']] temporal/session context.
 - [[Graphiti]] carries episodic memory under S3 runtime architecture and S5/S5' use governance.
 - [[Epii]] receives review, validation, summarisation, and autoresearch work through its governed inbox.
 
@@ -117,28 +131,28 @@ Desktop target:
 - shared temporal projection display where relevant, without confusing the lean parent clock surface with the full M3' subsystem.
 - optional graph/clock composition mode for the 0-side Mahāmāyā affordance: co-resident, toggled, or graph-overlaying-clock. This is a UX design decision, not an S-layer authority decision.
 
-The desktop `0` side is where the TUI clock specifications become spatial, visual, and explorable at the parent level. The target is not a small clock widget and not the full map page. It is the structural/cosmic face of the instrument: [[M1']] relation-walk signal, [[M2']] correspondence signal, and [[M3']] solar/kairos clock signal interlaced so the user can move from current temporal condition into deeper coordinate exploration, correspondence, transcription, and Nara walkabouts.
+The desktop `0` side is where the [[TUI]] clock specifications become spatial, visual, and explorable at the parent level. The target is not a small clock widget and not the full map page. It is the structural/cosmic face of the instrument: [[M1']] relation-walk signal, [[M2']] correspondence signal, and [[M3']] solar/kairos clock signal interlaced so the user can move from current temporal condition into deeper coordinate exploration, correspondence, transcription, and [[Nara]] walkabouts.
 
 TUI target:
 
-- compact structural dashboard(s) over the integrated M1'-M3' parent signal, with selected M0' coordinate data where needed.
+- compact structural dashboard(s) over the integrated [[M1']]-[[M3']] parent signal, with selected [[M0']] coordinate data where needed.
 - clock and mini-clock views as structural orientation plugins.
 - coordinate catalog and readiness links into `/`.
 
 ## `1` Surface
 
-The `1` surface is the personal/world return. It is the lean parent preview of the 4/5/0 face: Nara journal/continuity, Epii pedagogy/review, and Bimba ground-data where it helps the user or agent return the lived moment to coordinate structure.
+The `1` surface is the personal/world return. It is the lean parent preview of the 4/5/0 face: [[Nara]] journal/continuity, [[Epii]] pedagogy/review, and [[Bimba]] ground-data where it helps the user or agent return the lived moment to coordinate structure.
 
 It contains:
 
-- [[M4']] [[Nara]] journal, editor, search, personal context, Kairos, Pratibimba orientation.
+- [[M4']] [[Nara]] journal, editor, search, personal context, [[Kairos]], [[Pratibimba]] orientation.
 - [[M5']] [[Epii]] developer/system return, review inbox, Gnosis observation, autoresearch evidence, and system-building portal.
-- relevant [[M0']] Bimba coordinate/source/pointer data as context, without becoming the full M0' map explorer.
+- relevant [[M0']] [[Bimba]] coordinate/source/pointer data as context, without becoming the full M0' map explorer.
 - shared access to the same session/temporal projection as the clock and `/` surface.
-- bounded tools for Graphiti session memory search/deposit and kbase/Gnosis retrieval, with Epii governance.
+- bounded tools for [[Graphiti]] session memory search/deposit and kbase/[[Gnosis]] retrieval, with [[Epii]] governance.
 - protected psychoid cymatic field preview only where local privacy and device capability permit; shared portal state carries safe handles, not raw personal quaternion or journal bodies.
 
-Nara and Epii do not own raw services. They invoke or observe shared S-layer services through bounded capability envelopes.
+[[Nara]] and [[Epii]] do not own raw services. They invoke or observe shared [[S]]-layer services through bounded capability envelopes.
 
 ### [[M4']] Nara Modality Surface
 
@@ -149,39 +163,39 @@ The current Electron app already contains the correct M4' seed:
 - Daily Note, Dream Journal, and Oracle tabs as modality-specific views.
 - right-rail highlights and pending-action affordances.
 
-Those pieces should be preserved, but deepened. Daily Note, Dream Journal, and Oracle must become real modality surfaces over the same journal/highlight/session substrate, not decorative placeholders. Highlight sendoff should move from raw slash-string dispatch toward typed VAK/Anima/Epii invocation envelopes, while keeping the ergonomic text-selection gesture.
+Those pieces should be preserved, but deepened. Daily Note, Dream Journal, and Oracle must become real modality surfaces over the same journal/highlight/session substrate, not decorative placeholders. Highlight sendoff should move from raw slash-string dispatch toward typed [[VAK]]/[[Anima]]/[[Epii]] invocation envelopes, while keeping the ergonomic text-selection gesture.
 
 ### [[M5']] Epii Surface
 
-The Epii page must be a clean integrative workspace, not a generic file/agent panel. Its full subsystem role is an AI-agent-led developer/pedagogical IDE. Its core domains are:
+The [[Epii]] page must be a clean integrative workspace, not a generic file/agent panel. Its full subsystem role is an AI-agent-led developer/pedagogical IDE. Its core domains are:
 
 - [[M5-0']] Library / Bimba Pedagogy: Bimba map, wisdom packets, Gnosis library graph, coordinate teaching, and sedimented quintessential views.
 - [[M5-1']] Philosophy / Canon Studio: Epi-Logos philosophy files, worldview docs, foundational instructions, and guided canon editing.
 - [[M5-2']] Backend Studio: C/Rust/Python services, graph/storage/runtime contracts, gateway and retrieval evidence.
-- [[M5-3']] Frontend Studio: Tauri UI, graph canvases, editors, shell/deep workspace UX, and interaction specs.
-- [[M5-4']] Agentic Control Room: Pi agent, Anima/Aletheia, VAK routing, forks/worktrees/tasks, tests, review inbox, and promotion gates.
+- [[M5-3']] Frontend Studio: [[Tauri]] UI, graph canvases, editors, shell/deep workspace UX, and interaction specs.
+- [[M5-4']] Agentic Control Room: [[Pi]] agent, [[Anima]]/[[Aletheia]], [[VAK]] routing, forks/worktrees/tasks, tests, review inbox, and promotion gates.
 - [[M5-5']] Logos Atelier: etymological archaeology as conversational co-investigation and Logos-cycle engine.
 
-The graph viewer is a shared Epii affordance over multiple namespaces: `bimba` for canonical coordinate topology, `gnosis` for library/document knowledge, `etymology` for roots/cognates/semantic drift/constellations, and protected reviewed handles into `pratibimba` / Graphiti where governance permits. These namespaces may link by coordinate, source handle, episode handle, and review id, but they must not collapse into one graph plane.
+The graph viewer is a shared [[Epii]] affordance over multiple namespaces: `bimba` for canonical coordinate topology, `gnosis` for library/document knowledge, `etymology` for roots/cognates/semantic drift/constellations, and protected reviewed handles into `pratibimba` / [[Graphiti]] where governance permits. These namespaces may link by coordinate, source handle, episode handle, and review id, but they must not collapse into one graph plane.
 
-For etymological archaeology, [[Epii]] must preserve the staged logic from the older canonical plan: conversational word exploration first; QL community crystallisation when a real pattern emerges; backend Bimba resonance detection, MEF lens analysis, and LightRAG/knowledge sedimentation after that. The UI should not prematurely collapse etymological exploration into map lookup.
+For etymological archaeology, [[Epii]] must preserve the staged logic from the older canonical plan: conversational word exploration first; [[QL]] community crystallisation when a real pattern emerges; backend [[Bimba]] resonance detection, [[MEF]] lens analysis, and [[LightRAG]]/knowledge sedimentation after that. The UI should not prematurely collapse etymological exploration into map lookup.
 
 ### Agentic Execution / Inbox
 
-The VAK/Anima/Epi execution page belongs functionally to [[M5']] and operationally to `/`.
+The [[VAK]]/[[Anima]]/[[Epii]] execution page belongs functionally to [[M5']] and operationally to `/`.
 
-The distinction is precise: `/` is the universal command/config/readiness membrane available from anywhere; [[M5-4']] is the deep agentic development and review environment where Epii can inspect tasks, graph context, source files, tests, run output, and promotion evidence as one governed workbench.
+The distinction is precise: `/` is the universal command/config/readiness membrane available from anywhere; [[M5-4']] is the deep agentic development and review environment where [[Epii]] can inspect tasks, graph context, source files, tests, run output, and promotion evidence as one governed workbench.
 
 It should expose:
 
-- VAK evaluation and coordinate assignment.
-- CF routing into Anima/Aletheia execution.
+- [[VAK]] evaluation and coordinate assignment.
+- CF routing into [[Anima]]/[[Aletheia]] execution.
 - selected agent/team/chain with bounded tool and skill gates.
 - DAY/NOW/session binding and gateway lineage.
 - task payload, run tree, tool stream, outputs, diagnostics, and completion evidence.
-- inbox deposits requiring Epii/user review, validation, continuation, or rejection.
+- inbox deposits requiring [[Epii]]/user review, validation, continuation, or rejection.
 
-This must not become a flat "twelve agent cards" dashboard. Aletheia is an Anima mode/activity surface, and Epi-Logos appears as the coherent Epii/Anima invocation grammar rather than twelve unrelated peers.
+This must not become a flat "twelve agent cards" dashboard. [[Aletheia]] is an [[Anima]] mode/activity surface, and [[Epi-Logos]] appears as the coherent [[Epii]]/Anima invocation grammar rather than twelve unrelated peers.
 
 ## Canonical Source Traceability
 

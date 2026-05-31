@@ -1,0 +1,1 @@
+export { MPrimeSubsystemPage } from './MPrimeSubsystemPage';

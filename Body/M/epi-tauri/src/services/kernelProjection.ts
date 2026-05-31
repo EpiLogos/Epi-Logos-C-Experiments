@@ -46,6 +46,18 @@ export interface KernelHarmonicConsumer {
   pointerRelationRole: string | null;
   pointerProvenance: string | null;
   contextFrameCount: number | null;
+  audioOctetHz: KernelTemporalProjection['harmonicProfile']['audioOctet'] | null;
+  nodalQuartet: KernelTemporalProjection['harmonicProfile']['nodalQuartet'] | null;
+  lensMode: KernelTemporalProjection['harmonicProfile']['lensMode'] | null;
+  codonRotationProjection:
+    | KernelTemporalProjection['harmonicProfile']['codonRotationProjection']
+    | null;
+  qCosmic: KernelTemporalProjection['harmonicProfile']['qCosmic'] | null;
+  resonance: number | null;
+  conjugateFormCharacter:
+    | KernelTemporalProjection['harmonicProfile']['conjugateFormCharacter']
+    | null;
+  profilePrivacyClass: KernelTemporalProjection['harmonicProfile']['privacyClass'] | null;
   tempoMultiplier: string | null;
   periodMultiplier: string | null;
   totalEnergy: string | null;
@@ -94,6 +106,14 @@ const MISSING_KERNEL_CONSUMER: KernelHarmonicConsumer = {
   pointerRelationRole: null,
   pointerProvenance: null,
   contextFrameCount: null,
+  audioOctetHz: null,
+  nodalQuartet: null,
+  lensMode: null,
+  codonRotationProjection: null,
+  qCosmic: null,
+  resonance: null,
+  conjugateFormCharacter: null,
+  profilePrivacyClass: null,
   tempoMultiplier: null,
   periodMultiplier: null,
   totalEnergy: null,
@@ -156,6 +176,14 @@ export function projectKernelHarmonicConsumer(
     pointerRelationRole: kernel.harmonicProfile.pointerAnchor.relationRole,
     pointerProvenance: kernel.harmonicProfile.pointerAnchor.provenance,
     contextFrameCount: kernel.harmonicProfile.contextFrames.frameCount,
+    audioOctetHz: kernel.harmonicProfile.audioOctet,
+    nodalQuartet: kernel.harmonicProfile.nodalQuartet,
+    lensMode: kernel.harmonicProfile.lensMode,
+    codonRotationProjection: kernel.harmonicProfile.codonRotationProjection,
+    qCosmic: kernel.harmonicProfile.qCosmic,
+    resonance: kernel.harmonicProfile.resonance,
+    conjugateFormCharacter: kernel.harmonicProfile.conjugateFormCharacter,
+    profilePrivacyClass: kernel.harmonicProfile.privacyClass,
     tempoMultiplier: kernel.harmonicPulse.tempoMultiplier,
     periodMultiplier: kernel.harmonicPulse.periodMultiplier,
     totalEnergy: kernel.energy.totalEnergy,

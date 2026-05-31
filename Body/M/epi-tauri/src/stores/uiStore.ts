@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { MefLensId } from '@/services/types';
 
-export type ActiveWorkspace = 'M0' | 'M4' | 'M5';
+export type ActiveWorkspace = 'M0' | 'M4' | 'M5' | 'MPrime';
 export type ViewDimension = '2d' | '3d';
 
 interface UiStore {

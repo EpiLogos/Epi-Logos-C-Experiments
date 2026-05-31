@@ -1,0 +1,78 @@
+{
+  "planets": [
+    {
+      "planet_id": 0,
+      "name": "Sun",
+      "degree": 104.25,
+      "degree_anchor": 104,
+      "retrograde": false
+    },
+    {
+      "planet_id": 1,
+      "name": "Moon",
+      "degree": 17.5,
+      "degree_anchor": 18,
+      "retrograde": false
+    },
+    {
+      "planet_id": 2,
+      "name": "Mercury",
+      "degree": 129.75,
+      "degree_anchor": 130,
+      "retrograde": true
+    },
+    {
+      "planet_id": 3,
+      "name": "Venus",
+      "degree": 73.0,
+      "degree_anchor": 73,
+      "retrograde": false
+    },
+    {
+      "planet_id": 4,
+      "name": "Mars",
+      "degree": 224.4,
+      "degree_anchor": 224,
+      "retrograde": false
+    },
+    {
+      "planet_id": 5,
+      "name": "Jupiter",
+      "degree": 286.2,
+      "degree_anchor": 286,
+      "retrograde": false
+    },
+    {
+      "planet_id": 6,
+      "name": "Saturn",
+      "degree": 330.6,
+      "degree_anchor": 331,
+      "retrograde": true
+    },
+    {
+      "planet_id": 7,
+      "name": "Uranus",
+      "degree": 41.8,
+      "degree_anchor": 42,
+      "retrograde": false
+    },
+    {
+      "planet_id": 8,
+      "name": "Neptune",
+      "degree": 351.3,
+      "degree_anchor": 351,
+      "retrograde": true
+    },
+    {
+      "planet_id": 9,
+      "name": "Pluto",
+      "degree": 272.1,
+      "degree_anchor": 272,
+      "retrograde": false
+    }
+  ],
+  "dominant_sign": 3,
+  "dominant_element": 3,
+  "active_decan": 10,
+  "active_tattva": 3
+}

@@ -34,7 +34,12 @@ pub struct TorusPoint {
 impl TorusPoint {
     /// Construct a torus point, wrapping the input angles into `[0, 2π)`
     /// and rejecting non-finite values.
-    pub fn new(theta: f32, phi: f32, aspect_ratio: f32, winding: WindingNumber) -> Result<Self, &'static str> {
+    pub fn new(
+        theta: f32,
+        phi: f32,
+        aspect_ratio: f32,
+        winding: WindingNumber,
+    ) -> Result<Self, &'static str> {
         if !theta.is_finite() || !phi.is_finite() || !aspect_ratio.is_finite() {
             return Err("torus point angles and aspect ratio must be finite");
         }
@@ -335,7 +340,8 @@ mod tests {
 
     #[test]
     fn physical_pole_rejects_duplicate_chakras() {
-        let activation = ChakralActivation::new(0, "muladhara", "Earth", "Earth", 256.0, 0.8).unwrap();
+        let activation =
+            ChakralActivation::new(0, "muladhara", "Earth", "Earth", 256.0, 0.8).unwrap();
         let dup = activation.clone();
         let codon = CodonClockCell::new(0, ['A', 'T', 'G'], [false; 6], 'M').unwrap();
         let torus = TorusPoint::new(0.0, 0.0, 9.0 / 8.0, WindingNumber::DOUBLE_COVER).unwrap();

@@ -1,0 +1,13 @@
+{
+  "planets": [
+    { "planet_id": 0, "name": "Sun", "degree": 104.25 },
+    { "planet_id": 1, "name": "Moon", "degree": 17.5 },
+    { "planet_id": 2, "name": "Mercury", "degree": 129.75 },
+    { "planet_id": 3, "name": "Venus", "degree": 73.0 },
+    { "planet_id": 4, "name": "Mars", "degree": 224.4 },
+    { "planet_id": 5, "name": "Jupiter", "degree": 286.2 },
+    { "planet_id": 6, "name": "Saturn", "degree": 330.6 },
+    { "planet_id": 7, "name": "Uranus", "degree": 41.8 },
+    { "planet_id": 9, "name": "Pluto", "degree": 272.1 }
+  ]
+}

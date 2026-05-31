@@ -961,6 +961,7 @@ dependencies = [
  "epi-s3-gateway-contract",
  "epi-s3-redis-context",
  "neo4rs",
+ "portal-core",
  "reqwest",
  "serde",
  "serde_json",
@@ -974,6 +975,7 @@ name = "epi-s3-gateway"
 version = "0.1.0"
 dependencies = [
  "epi-s3-gateway-contract",
+ "portal-core",
  "serde",
  "serde_json",
  "tokio",
@@ -984,6 +986,7 @@ name = "epi-s3-gateway-contract"
 version = "0.1.0"
 dependencies = [
  "epi-kernel-contract",
+ "portal-core",
  "serde",
  "serde_json",
  "uuid",
@@ -995,6 +998,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "epi-s3-gateway-contract",
+ "portal-core",
  "reqwest",
  "serde",
  "serde_json",
@@ -1024,6 +1028,7 @@ name = "epi-s5-epii-autoresearch-core"
 version = "0.1.0"
 dependencies = [
  "epi-s1-hen-compiler-core",
+ "portal-core",
  "serde",
  "serde_json",
  "uuid",
@@ -2542,6 +2547,7 @@ name = "portal-core"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "serde_json",
 ]
 
 [[package]]

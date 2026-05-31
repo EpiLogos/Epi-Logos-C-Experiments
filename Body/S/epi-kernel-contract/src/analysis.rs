@@ -190,16 +190,10 @@ mod tests {
     fn analysis_clamps_invalid_resonance_values() {
         let mut vector = ResonanceVector72::default();
         vector.values[0] = -0.1;
-        assert!(ResonanceAnalysis::new(
-            "doc",
-            "M2-1-3",
-            vector,
-            extractions(),
-            vec![],
-            None,
-            1
-        )
-        .is_err());
+        assert!(
+            ResonanceAnalysis::new("doc", "M2-1-3", vector, extractions(), vec![], None, 1)
+                .is_err()
+        );
     }
 
     #[test]
@@ -212,16 +206,9 @@ mod tests {
                 vector.values[idx] = 1.0;
             }
         }
-        let analysis = ResonanceAnalysis::new(
-            "doc",
-            "M2-1-3",
-            vector,
-            extractions(),
-            vec![],
-            None,
-            1,
-        )
-        .unwrap();
+        let analysis =
+            ResonanceAnalysis::new("doc", "M2-1-3", vector, extractions(), vec![], None, 1)
+                .unwrap();
         assert!(analysis.square_emphasis[0] > analysis.square_emphasis[1]);
         assert!(analysis.square_emphasis[0] > analysis.square_emphasis[2]);
     }

@@ -41,6 +41,12 @@ export function Shell() {
           case 'workspace_m4':
             setWorkspace('M4');
             break;
+          case 'workspace_m5':
+            setWorkspace('M5');
+            break;
+          case 'workspace_mprime':
+            setWorkspace('MPrime');
+            break;
           case 'open_command_palette':
             setCommandPaletteOpen(true);
             break;

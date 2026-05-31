@@ -103,7 +103,11 @@ impl AnuttaraDiagnostic {
         if self.questions.is_empty() && self.coherence_recognised {
             return "○".to_owned();
         }
-        let mut parts: Vec<String> = self.questions.iter().map(AnuttaraExpression::render).collect();
+        let mut parts: Vec<String> = self
+            .questions
+            .iter()
+            .map(AnuttaraExpression::render)
+            .collect();
         if self.coherence_recognised {
             parts.push("○".to_owned());
         }
@@ -116,30 +120,13 @@ impl AnuttaraDiagnostic {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case")]
 pub enum AnuttaraExpression {
-    Coordinate {
-        coord: String,
-    },
-    HelixPrime {
-        coord: String,
-    },
-    PositionEmphasis {
-        coord: String,
-        positions: Vec<u8>,
-    },
-    Relation {
-        source: String,
-        target: String,
-    },
-    MirrorPair {
-        first: String,
-        second: String,
-    },
-    ResonanceDiscrepancy {
-        coord: String,
-    },
-    Question {
-        inner: Box<AnuttaraExpression>,
-    },
+    Coordinate { coord: String },
+    HelixPrime { coord: String },
+    PositionEmphasis { coord: String, positions: Vec<u8> },
+    Relation { source: String, target: String },
+    MirrorPair { first: String, second: String },
+    ResonanceDiscrepancy { coord: String },
+    Question { inner: Box<AnuttaraExpression> },
 }
 
 impl AnuttaraExpression {
@@ -399,7 +386,10 @@ mod tests {
         let diag = AnuttaraDiagnostic::parse("?#2-1-3-4")
             .unwrap()
             .with_source_constraint("mid_position_adjacency");
-        assert_eq!(diag.source_constraint.as_deref(), Some("mid_position_adjacency"));
+        assert_eq!(
+            diag.source_constraint.as_deref(),
+            Some("mid_position_adjacency")
+        );
     }
 
     #[test]

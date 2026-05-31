@@ -15,11 +15,8 @@ export {
   KERNEL_PROFILE_OBSERVATION_METHOD,
 } from './kernelProfileObservation';
 export type {
-  KernelProfileCoordinateAnchor,
   KernelProfileObservationGateway,
   KernelProfileObservationOptions,
-  KernelProfileObservationParams,
-  KernelProfileObservationRequest,
 } from './kernelProfileObservation';
 
 export type * from './types';

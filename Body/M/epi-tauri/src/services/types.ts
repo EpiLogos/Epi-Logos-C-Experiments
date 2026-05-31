@@ -243,20 +243,69 @@ export interface MathemeContextFrameWebProjection {
   projection: string;
 }
 
+export type ConjugateFormCharacter = 'Major' | 'Minor' | 'ShadowInversion';
+
+export type ProfilePrivacyClass =
+  | 'protected-local-body'
+  | 'protected-local-derived'
+  | 'public-current-context'
+  | 'reviewed-canonical';
+
+export interface MathemeLensMode {
+  lens: number;
+  mode: number;
+}
+
+export interface MathemeNodalConstraint {
+  qlPosition: number;
+  helix: 'bimba' | 'pratibimba';
+  m: number;
+  n: number;
+}
+
+export interface CodonRotationProjection {
+  lens: number;
+  mode: number;
+  lensLabel: string;
+  modeName: string;
+  surfaceIndex: number;
+  codonId: number;
+  codon: string;
+  codonClass: 'dual' | 'non-dual';
+  rotation: number;
+  rotationalStateCount: number;
+  rotationDegrees: number;
+  reverseLens: number;
+  reverseMode: number;
+  datasetLutState: string;
+  provenance: string;
+}
+
 export interface MathemeHarmonicProfile {
+  tick: number;
   tick12: number;
   cycle: number;
   degree720: number;
   degree360: number;
   su2Layer: string;
+  phase: KernelPhase;
+  position6: number;
   helix: 'bimba' | 'pratibimba';
   ratioRole: string;
+  lensMode: MathemeLensMode;
   chromatic: MathemeChromaticProfile;
   diatonic: MathemeDiatonicContext | null;
   resonance72: MathemeResonance72Projection;
+  audioOctet: number[];
+  nodalQuartet: MathemeNodalConstraint[];
   elements: MathemeElementalProjection;
   planetaryChakral: MathemePlanetaryChakralProjection;
   binary: MathemeBinaryProjection;
+  codonRotationProjection: CodonRotationProjection;
+  qCosmic: Quaternion;
+  resonance: number | null;
+  conjugateFormCharacter: ConjugateFormCharacter;
+  privacyClass: ProfilePrivacyClass;
   bedrock: MathemeBedrockProjection;
   pointerAnchor: MathemePointerAnchorProjection;
   contextFrames: MathemeContextFrameWebProjection;
@@ -272,6 +321,152 @@ export interface KernelTemporalProjection {
   harmonicPulse: KernelTemporalProjectionPulse;
   energy: KernelTemporalProjectionEnergy;
   harmonicProfile: MathemeHarmonicProfile;
+}
+
+export interface KernelProfileCoordinateAnchor {
+  coordinate: string;
+  coordinate_anchor: {
+    coordinate: string;
+    kernel: {
+      source: 's0.kernel';
+      profile: 'portal-core::MathemeHarmonicProfile';
+      generation: number;
+      projection_owner: "S3'";
+    };
+    harmonic_pointer: {
+      source_profile: 'portal-core::MathemeHarmonicProfile';
+      source_contract: 'S0 Bedrock7/PointerWeb36/CF7';
+      bedrock: {
+        psychoid_number: string;
+        inverted_psychoid_number: string;
+        successor_psychoid_number: string;
+        successor_relation: string;
+        inversion_relation: string;
+      };
+      pointer_anchor: {
+        source_coordinate: string;
+        ql_position: number;
+        helix: 'bimba' | 'pratibimba';
+        web_index: number;
+        web_cardinality: number;
+        lens_anchor: string;
+        relation_role: string;
+        pitch_class: number;
+      };
+      context_frames: {
+        cf_cardinality: number;
+        active_frame_index: number | null;
+        active_frame: string | null;
+        active_agent: string | null;
+        projection: string;
+      };
+      provenance: string;
+    };
+  };
+}
+
+export interface KernelProfileObservationParams {
+  sourceAgent: string;
+  sessionKey: string;
+  namespaceRef: string;
+  dayId: string;
+  vaultNowPath: string;
+  sourceCoordinate: string;
+  tick12: number;
+  degree720: number;
+  resonance72Index: number;
+  mahamayaAddress64: number;
+  privacy: 'protected-local-derived';
+  profilePrivacyClass: ProfilePrivacyClass;
+  harmonicMedium: 'portal-core::MathemeHarmonicProfile';
+  coordinateAnchor: KernelProfileCoordinateAnchor;
+}
+
+export interface KernelProfileObservationRequest {
+  method: 's5.episodic.kernel_profile_observation.deposit';
+  params: KernelProfileObservationParams;
+}
+
+export type EventPrivacyClass =
+  | 'protected-local-body'
+  | 'protected-local-derived'
+  | 'public-current-context'
+  | 'reviewed-canonical';
+
+export type NaraActivityKind =
+  | 'Journal'
+  | 'DailyNote'
+  | 'Dream'
+  | 'Highlight'
+  | 'Oracle'
+  | 'SessionOpen'
+  | 'SessionClose'
+  | 'AgentExchange'
+  | 'SophiaLoop'
+  | 'EpiiReview'
+  | 'KernelProfileObservation';
+
+export type ActivityStateEffect =
+  | { kind: 'NoStateChange' }
+  | { kind: 'EphemeralContextOnly' }
+  | { kind: 'UpdateActivityQuaternion'; decay: number; weight: number }
+  | { kind: 'OpenTransformationEpisode' }
+  | { kind: 'CreateIdentityAugmentProposal' };
+
+export type NaraObservationKind = 'HeuristicDerived' | 'NoDerivedObservation';
+
+export type NaraEmotionalValenceHint = 'positive' | 'negative' | 'mixed';
+
+export interface NaraSymbolicObservation {
+  observationKind: NaraObservationKind;
+  detectedActivityKind: NaraActivityKind;
+  wordCount: number;
+  lineCount: number;
+  mentionedCoordinates: string[];
+  mentionedLenses: number[];
+  mentionedPositions: number[];
+  mentionedOracleMarkers: string[];
+  emotionalValenceHint: NaraEmotionalValenceHint | null;
+  privacyClass: EventPrivacyClass;
+  stateEffect: ActivityStateEffect;
+  confidence: number;
+  heuristicBasis: string[];
+}
+
+export interface NaraActivityEvent {
+  eventId: string;
+  kind: NaraActivityKind;
+  coordinate: string;
+  dayId: string;
+  nowPath: string;
+  sessionKey: string;
+  sourceRef: string | null;
+  privacy: EventPrivacyClass;
+  identityRef: string;
+  mathemeHandle: string;
+  kairosSnapshot: string | null;
+  rawBodyHandle: string;
+  derivedSymbolicObservation: NaraSymbolicObservation | null;
+  stateEffect: ActivityStateEffect;
+  provenance: string;
+}
+
+export interface KernelProfileObservationEvent {
+  eventId: string;
+  sourceAgent: string;
+  sessionKey: string;
+  namespaceRef: string;
+  dayId: string;
+  vaultNowPath: string;
+  sourceCoordinate: string;
+  tick12: number;
+  degree720: number;
+  resonance72Index: number;
+  mahamayaAddress64: number;
+  privacy: EventPrivacyClass;
+  profilePrivacyClass: ProfilePrivacyClass;
+  harmonicMedium: string;
+  coordinateAnchor: KernelProfileCoordinateAnchor;
 }
 
 export interface KernelResonanceObservation {

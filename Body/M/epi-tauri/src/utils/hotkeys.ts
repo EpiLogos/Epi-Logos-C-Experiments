@@ -11,6 +11,8 @@ export const HOTKEYS: HotkeyBinding[] = [
   { key: 'Escape', action: 'toggle_omni_panel', description: 'Toggle OmniPanel' },
   { key: '0', action: 'workspace_m0', description: 'Switch to M0 Anuttara (2D Bimba)' },
   { key: '1', action: 'workspace_m4', description: 'Switch to M4 Nara' },
+  { key: '2', action: 'workspace_m5', description: 'Switch to M5 Epii' },
+  { key: '3', action: 'workspace_mprime', description: "Switch to M' 4+2 subsystem map" },
   { key: '/', action: 'open_command_palette', description: 'Open command palette' },
   { key: 'g', mod: ['cmd'], action: 'goto_coordinate', description: 'Go to coordinate' },
   { key: 'i', mod: ['cmd'], action: 'toggle_info_pool', description: 'Toggle KBase info pool' },
