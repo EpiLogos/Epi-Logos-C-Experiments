@@ -1,0 +1,42 @@
+diff --git a/lib/application-process.js b/lib/application-process.js
+index 58c01ea9d4d9c2bb5e42e5fec2ca0b5a523806f5..2b9952aef1ac7344a6a9785d876ce0940ecfd22e 100644
+--- a/lib/application-process.js
++++ b/lib/application-process.js	
+@@ -29,7 +29,12 @@ class ApplicationProcess {
+         };
+     }
+     spawn(command, args, options) {
+-        return cp.spawn(command, args || [], Object.assign({}, this.defaultOptions, {
++        // Track 05 T1 patch: quote command so paths with spaces don't
++        // break /bin/sh word-splitting under { shell: true }.
++        const safeCommand = command && command.includes(' ') && !command.startsWith('"')
++            ? `"${command.replace(/"/g, '\\"')}"`
++            : command;
++        return cp.spawn(safeCommand, args || [], Object.assign({}, this.defaultOptions, {
+             ...options,
+             shell: true
+         }));
+@@ -52,8 +57,21 @@ class ApplicationProcess {
+         });
+     }
+     resolveBin(command) {
+-        const commandPath = path.resolve(this.binProjectPath, 'node_modules', '.bin', command);
+-        return process.platform === 'win32' ? commandPath + '.cmd' : commandPath;
++        // Track 05 T1 patch: walk up from binProjectPath until we find
++        // node_modules/.bin/<command>. pnpm hoists bins to the workspace
++        // root, so the local lookup misses.
++        const suffix = process.platform === 'win32' ? '.cmd' : '';
++        let dir = this.binProjectPath;
++        for (let i = 0; i < 8; i++) {
++            const candidate = path.resolve(dir, 'node_modules', '.bin', command + suffix);
++            if (fs.existsSync(candidate)) {
++                return candidate;
++            }
++            const parent = path.dirname(dir);
++            if (parent === dir) break;
++            dir = parent;
++        }
++        return path.resolve(this.binProjectPath, 'node_modules', '.bin', command + suffix);
+     }
+     promisify(command, p) {
+         return new Promise((resolve, reject) => {

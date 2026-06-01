@@ -1,8 +1,11 @@
 # Pratibimba System
 
-This directory is the vault-side M' residency plane: the reflected system image, subsystem specs, operator notes, and future portal-domain seeds. It is not the active source-code home for runtime packages.
+This directory holds **two distinct things** after Track 05 T1:
 
-Executable code belongs in `Body/`. This vault tree holds the meaning and design homes that let the code stay coordinate-native.
+1. **The Theia IDE surface** (`theia-app/` + `extensions/` + `shared/` + `docs/` + `scripts/`) — the in-tree `/pratibimba/system` M5-3 IDE host. Real Theia 1.56 browser-mode application with the foundational `kernel-bridge-readiness` extension. See [`docs/`](./docs/) for naming, dependency, and publishing model. Run `./scripts/smoke-build.sh` to verify the browser bundle builds.
+2. **The M' subsystem residency plane** (`Subsystems/`) — vault-side reflected system image, subsystem specs, operator notes, and portal-domain seeds. Below.
+
+The IDE surface is the active executable home for M5-3; the residency plane below is the meaning-side reflected image. They coexist because `/pratibimba/system` is canonically *both* the deep IDE shell AND the reflected vault — the C5 (Pratibimba) coordinate is necessarily a doubled surface.
 
 ## M' Subsystem Homes
 
