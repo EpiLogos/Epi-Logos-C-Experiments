@@ -365,7 +365,10 @@ function styleCss(plugin) {
 // scaffold — leave their widget.tsx and style/index.css alone. The package
 // manifest, tsconfig, common index, and frontend-module remain
 // scaffold-owned.
-const PRESERVE_HANDWRITTEN = new Set(['plugin-integrated-1-2-3']);
+const PRESERVE_HANDWRITTEN = new Set([
+  'plugin-integrated-1-2-3',
+  'plugin-integrated-4-5-0'
+]);
 
 for (const plugin of PLUGINS) {
   const root = join(extensionsRoot, plugin.id);

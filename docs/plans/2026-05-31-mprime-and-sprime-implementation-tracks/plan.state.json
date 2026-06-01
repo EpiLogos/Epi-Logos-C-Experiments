@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T12:55:03.844Z",
+  "updatedAt": "2026-06-01T13:02:30.917Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -854,16 +854,21 @@
       "worktree": null
     },
     "08.T5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T13:02:30.885Z",
+      "claimedAt": "2026-06-01T12:56:54.330Z",
+      "completedAt": "2026-06-01T13:02:30.885Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T13:02:30.885Z",
+          "text": "08.T5 landed 4/5/0 Jiva-Siva privacy-first composition slice. New consent-gate.ts: ConsentRecord type + ConsentGate class enforcing per-action consent state with five named ConsentActions (publish-shared-archetype, open-graphiti-body, open-identity-quaternion, open-nara-dialogue, open-m4-field-deep), require() throws ConsentMissingError when no record on file and ConsentExpiredError when expiresAt has passed, isPermitted() non-throwing variant for UI gating, revoke() for explicit consent withdrawal. New jiva-siva-fields.ts: checkJivaSivaPanes maps the three pane availability snapshots (m4-field-foreground, m0-graph-backdrop, m5-review-side) over 9 public-safe field names — bedrock_link/selected_coordinate/activity_resonance_dots/field_state_summary (M4 handles only), gds_clusters/m0_coordinate_provenance (M0 graph), review_queue_count/continuity_handle/last_canon_recognition_event (M5 metadata) — each field annotated with Track 02/03/04 owner; raw body / quaternion / journal names explicitly absent from the public-safe set (enforced by self-test). New jiva-siva-panes.tsx: React panes for the three roles, deep-action buttons rendered per pane but disabled until ConsentGate.isPermitted(action) returns true, no raw bodies anywhere. New widget integration: PluginIntegrated450Widget subscribes to profile updates, renders JivaSivaPanes when contributors+profile ready, holds a ConsentGate that mediates handleDeepOpen(action); when consent is missing the gate throws and the button stays disabled. Privacy-scrubber.ts already had range-aware enforcement from 08.T4 — verified that 4/5/0 envelopes correctly accept opaque protected handles (graphiti_handle, review_target_handle) while rejecting bioquaternion_raw / nara_raw / graphiti_body. Scaffolder updated to also preserve plugin-integrated-4-5-0/widget+style across regenerations. Grid CSS for jiva-siva-layout (m0-backdrop | m4-foreground | m5-side) with disabled deep-action buttons styled. Verification: ./scripts/smoke-build.sh green (bundle 21.32MB, all 11 chunks); node --test extensions/test/*.test.mjs 66/66 pass including 11 new jiva-siva tests covering: (a) all 9 public-safe field names contain no body/raw/journal/q_personal/q_nara/bioquaternion substrings; (b) three panes share one profile generation; (c) missing GDS overlay marks M0 blocked without fabricating clusters; (d) layout names M4 center, M5 side, M0/M5 mini-inspector, audioBusOwner=null; (e) ConsentGate.require throws ConsentMissingError when empty; (f) ConsentGate.require throws ConsentExpiredError past expiresAt; (g) accepts unexpired record and rejects after revoke; (h) consent action enum matches DEEP_ACTIONS exhaustively; (i) 4/5/0 envelope with bioquaternion_raw fails scrubber; (j) 4/5/0 envelope with opaque handles passes scrubber; (k) plugin source no-local-tables scan rejects q_personal/q_nara/bioquaternion literal arrays and named *Table identifiers. Validator ok=true. Deferred: real Track 04 consent service plumbing (gate compiles against typed record boundary; S5 consent service hookup awaits Track 04 T6+), actual deep-open routines after consent acceptance (currently logs and returns — real Graphiti/identity/Nara dialogue reads await Track 04 + Track 03 Graphiti service)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T12:56:54.330Z",
+      "runId": "20260601T125654Z-08-T5",
       "worktree": null
     },
     "08.T6": {
@@ -1431,6 +1436,16 @@
       "owner": "admin",
       "leaseExpiresAt": "2026-06-01T14:47:20.869Z",
       "worktree": null
+    },
+    {
+      "runId": "20260601T125654Z-08-T5",
+      "taskId": "08.T5",
+      "status": "done",
+      "startedAt": "2026-06-01T12:56:54.330Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:56:54.330Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T13:02:30.885Z"
     }
   ],
   "activeRoute": {

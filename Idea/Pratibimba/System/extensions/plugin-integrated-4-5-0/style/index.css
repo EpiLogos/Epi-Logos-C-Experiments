@@ -8,3 +8,104 @@
     background-color: var(--theia-editor-background);
     font-family: var(--theia-ui-font-family);
 }
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-siva-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(320px, 2fr) minmax(220px, 1fr);
+    grid-template-areas: "m0 m4 m5";
+    gap: 12px;
+    padding: 12px;
+    height: 100%;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane {
+    background-color: var(--theia-sideBar-background);
+    border: 1px solid var(--theia-sideBar-border);
+    border-radius: 4px;
+    padding: 12px;
+    overflow: auto;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-m4-field-foreground { grid-area: m4; }
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-m0-graph-backdrop { grid-area: m0; }
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-m5-review-side { grid-area: m5; }
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-title {
+    margin: 0;
+    font-size: var(--theia-ui-font-size2);
+    font-weight: 600;
+    flex: 1;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-source,
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-gen {
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+    color: var(--theia-descriptionForeground);
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-body dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 12px;
+    row-gap: 4px;
+    margin: 0;
+    font-size: var(--theia-ui-font-size1);
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-body dt {
+    color: var(--theia-descriptionForeground);
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-body dd {
+    margin: 0;
+    word-break: break-all;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-deep-actions {
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--theia-sideBar-border);
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-deep-actions h4 {
+    margin: 0 0 6px;
+    font-size: var(--theia-ui-font-size0);
+    color: var(--theia-descriptionForeground);
+    font-weight: 500;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-deep-actions ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-deep-actions li + li {
+    margin-top: 4px;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-deep-action {
+    width: 100%;
+    text-align: left;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-blocker {
+    font-size: var(--theia-ui-font-size0);
+    color: var(--theia-descriptionForeground);
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-pane-blocker code {
+    background-color: var(--theia-editor-background);
+    padding: 1px 4px;
+    border-radius: 2px;
+}

@@ -9,6 +9,8 @@ export * from './evidence-envelope';
 export * from './evidence-producers';
 export * from './s5-review-actions';
 export * from './privacy-scrubber';
+export * from './consent-gate';
+export * from './jiva-siva-fields';
 
 // Browser-runtime helpers — re-exported here so plugin packages can import
 // everything from the package root, matching the m-extension-runtime pattern.
