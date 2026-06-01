@@ -1,0 +1,28 @@
+{
+  "name": "@pratibimba/integrated-composition",
+  "version": "0.1.0",
+  "description": "Shared composition coordinator for Track 08 integrated plugins. Owns LayoutClaim arbitration, named layout descriptors, IntegratedReadiness aggregation, and the empty-state contract consumed by plugin-integrated-1-2-3 and plugin-integrated-4-5-0. Track 08 T1.",
+  "license": "MIT",
+  "files": ["lib", "src", "style"],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "keywords": ["theia-extension", "epi-logos", "integrated-plugin", "composition"],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@pratibimba/m-extension-runtime": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build"
+  }
+}

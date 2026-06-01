@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "composite": true,
+    "jsx": "react"
+  },
+  "references": [
+    {
+      "path": "../m-extension-runtime"
+    },
+    {
+      "path": "../integrated-composition"
+    },
+    {
+      "path": "../m4-nara"
+    },
+    {
+      "path": "../m5-epii"
+    },
+    {
+      "path": "../m0-anuttara"
+    }
+  ],
+  "include": [
+    "src"
+  ]
+}

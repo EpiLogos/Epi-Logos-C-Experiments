@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "composite": true,
+    "jsx": "react"
+  },
+  "references": [
+    {
+      "path": "../m-extension-runtime"
+    },
+    {
+      "path": "../integrated-composition"
+    },
+    {
+      "path": "../m1-paramasiva"
+    },
+    {
+      "path": "../m2-parashakti"
+    },
+    {
+      "path": "../m3-mahamaya"
+    }
+  ],
+  "include": [
+    "src"
+  ]
+}

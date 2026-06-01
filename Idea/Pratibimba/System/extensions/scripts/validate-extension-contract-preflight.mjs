@@ -44,6 +44,12 @@ function walkFiles(root) {
 
   const files = [];
   for (const entry of readdirSync(root)) {
+    if (entry === "node_modules" || entry === "lib" || entry === ".pnpm") {
+      // node_modules / lib are populated by the toolchain and may symlink to the
+      // shared runtime; only the source tree counts as the extension's authored
+      // surface for forbidden-import scanning.
+      continue;
+    }
     const fullPath = join(root, entry);
     const stats = statSync(fullPath);
     if (stats.isDirectory()) {
@@ -121,7 +127,14 @@ function scanExtensionImports(manifest, errors) {
     for (const file of scannedFiles) {
       const content = readFileSync(file, "utf8");
       for (const forbiddenFragment of extension.bridge.forbiddenDirectImports) {
-        if (content.includes(forbiddenFragment)) {
+        // Only flag forbidden fragments that appear inside actual import/require
+        // statements; substring matches inside JSDoc or comments are noise.
+        const escaped = forbiddenFragment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const importPattern = new RegExp(
+          `(?:from\\s+['"\`]|require\\(\\s*['"\`]|import\\s*\\(\\s*['"\`])[^'"\`\\n]*${escaped}`,
+          "m"
+        );
+        if (importPattern.test(content)) {
           errors.push(`${extension.id} imports forbidden dependency fragment ${forbiddenFragment} in ${file}`);
         }
       }

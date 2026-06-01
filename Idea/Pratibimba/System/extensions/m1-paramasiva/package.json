@@ -1,0 +1,42 @@
+{
+  "name": "@pratibimba/m1-paramasiva",
+  "version": "0.1.0",
+  "description": "m1-paramasiva M-extension scaffold. First-slice priority: Profile clock instrument with 84-state walk, exact audio bus consumption, and typed relation-walk evidence.",
+  "license": "MIT",
+  "files": [
+    "lib",
+    "src",
+    "style"
+  ],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "keywords": [
+    "theia-extension",
+    "epi-logos",
+    "m-extension",
+    "m1-paramasiva"
+  ],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@pratibimba/m-extension-runtime": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build"
+  }
+}

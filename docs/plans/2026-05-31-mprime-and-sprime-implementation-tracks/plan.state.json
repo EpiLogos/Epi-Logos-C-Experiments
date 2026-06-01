@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T10:38:12.686Z",
+  "updatedAt": "2026-06-01T12:45:54.562Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -76,24 +76,34 @@
       "worktree": null
     },
     "01.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T12:14:51.975Z",
+      "claimedAt": "2026-06-01T12:08:54.227Z",
+      "completedAt": "2026-06-01T12:14:51.975Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T12:14:51.975Z",
+          "text": "Implemented SpaceTimeDB projection/resync bridge: shared S3 SpacetimeProjectionPlan now has lite/full subscription profiles and generated SubscribeMulti queries; S0 bridge readiness exposes capabilityFacts plus lite/full table sets; native WebSocket subscriptions now return typed projection updates with connected/connection-lost/reconnecting/stale-profile/resynced-profile-generation/degraded-but-subscribable semantics while preserving next_context compatibility and HTTP SQL fallback. Verification: cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge (10/10 pass with real local reducer HTTP and WebSocket subscription harness); cargo test --offline --manifest-path Body/S/S3/gateway-contract/Cargo.toml (13 unit + 3 integration pass); cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_temporal_context (2 pass, 1 ignored live Redis). GitNexus impact attempted but blocked by local @ladybugdb native module arch mismatch (arm64 module under x86_64 Node), so blast radius was constrained by targeted contract tests."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T12:08:54.227Z",
+      "runId": "20260601T120854Z-01-T4",
       "worktree": null
     },
     "01.T5": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-01T12:24:12.020Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-01T12:24:12.020Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T12:24:12.020Z",
+          "text": "Added shared @epi-logos/ql-schema kernel-bridge contract schemas for profile, readiness, connection status, event taxonomy, capability names, subscription mode/profile, and RPC envelopes; strict real MathemeHarmonicProfile fixture parsing rejects renderer-local fields and RPC validation rejects unauthorized methods/private payload keys. Preserved bimbaCoordinate identity contract and family-as-property parsing, not family node labels. Verification: npm --prefix Body/S/S0/epi-cli/schemas test (79/79 pass); npm --prefix Body/S/S0/epi-cli/schemas run build (tsc pass); node dist import smoke parsed real baseline profile and readReadiness RPC envelope; pnpm --dir Idea/Pratibimba/System test:contracts (21/21 pass). GitNexus impact attempted with npx gitnexus impact MathemeHarmonicProfile but blocked by @ladybugdb/core native module architecture mismatch: have arm64, need x86_64."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -207,29 +217,39 @@
       "worktree": null
     },
     "02.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T11:59:34.109Z",
+      "claimedAt": "2026-06-01T11:51:04.901Z",
+      "completedAt": "2026-06-01T11:59:34.109Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T11:59:34.109Z",
+          "text": "Implemented canonical S2 seed baseline helpers and tests: seed_baseline_coordinates() covers 102 seed nodes, seed_relationship_types() covers canonical relation types, and seed_baseline_snapshot_queries() exposes node-count, relationship-count, and M0/M1/M5 smoke queries. Fixed s2'.coordinate.resolve behavior so bare # remains the root node while numbered legacy #N inputs still resolve to MN (verified #4 -> M4). Updated VAK seed label to registered VakCoordinate and idempotently removes stale Vak from the six VAK seed nodes; family identity remains in c_4_family properties, not family-specific labels. Verification: cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml; cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --test seed_contract live_seed_baseline_is_idempotent_and_queryable_by_coordinate_api -- --ignored --nocapture against live Neo4j; cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --test graph_api_contract live_graph_methods_write_read_traverse_and_cleanup_test_owned_data -- --ignored --nocapture; cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test graph_commands; live epi graph doctor shows Neo4j/schema/APOC/Redis/Redis Stack ready with n10s/GDS/RedisVL honestly blocked; live sample Cypher returned relations for #, M0, M2, M4, M5, CF_FRACTAL, CPF and stale Vak label count 0."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T11:51:04.901Z",
+      "runId": "20260601T115104Z-02-T3",
       "worktree": null
     },
     "02.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T12:45:54.546Z",
+      "claimedAt": "2026-06-01T12:24:20.684Z",
+      "completedAt": "2026-06-01T12:45:54.546Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T12:45:54.546Z",
+          "text": "Implemented dataset population hardening for real docs/datasets corpus: DatasetImporter now applies low-detail labels during import_all, records deterministic imported node/relation names plus skipped node/relation reasons, treats missing write confirmations and missing graph endpoints as skips instead of false successes, and overwrites c_3_dataset_branch/c_3_dataset_branch_label with the active branch so deep branch provenance is visible after low-detail preloading. Preserved family identity as c_4_family property/coordinate metadata, not family node labels. Registered five reviewed prime/inversion corpus properties in S2 schema. Added live ignored Neo4j integrity test covering branch provenance, duplicate/null coordinates, raw bimbaCoordinate properties, imported relation endpoint properties, unregistered imported properties, and relationship type drift. Verification: cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml dataset_import passed; cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml deep_bimba_regional_properties_are_registered_before_import passed; escalated EPILOGOS_DATASETS=... cargo run --manifest-path Body/S/S0/epi-cli/Cargo.toml -- graph import all succeeded against local Neo4j (15 branches imported; labels applied: 1865 labeled, 0 newly stubbed, 11 skipped; remaining relation skips are missing target endpoint source-data issues); escalated cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --test dataset_import_live_contract -- --ignored passed; full cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml passed (71 unit + integration suites, 3 ignored unit/live tests). GitNexus impact attempted with npx gitnexus impact DatasetImporter but blocked by @ladybugdb/core native module architecture mismatch: have arm64, need x86_64."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T12:24:20.684Z",
+      "runId": "20260601T122420Z-02-T4",
       "worktree": null
     },
     "02.T5": {
@@ -317,13 +337,17 @@
     },
     "05.T1": {
       "status": "done",
-      "updatedAt": "2026-06-01T10:15:15.109Z",
+      "updatedAt": "2026-06-01T11:33:33.756Z",
       "claimedAt": "2026-06-01T09:51:28.258Z",
-      "completedAt": "2026-06-01T10:15:15.109Z",
+      "completedAt": "2026-06-01T11:33:33.756Z",
       "evidence": [
         {
           "at": "2026-06-01T10:15:15.109Z",
           "text": "Idea/Pratibimba/System Theia workspace scaffolded and BUILDING. Layout: theia-app/ (Theia browser app) + extensions/kernel-bridge-readiness/ (first non-placeholder contribution) + shared/ (composition contracts from 08.T0) + docs/ (extension-naming.md, dependency-model.md, publishing-model.md) + scripts/smoke-build.sh + pnpm-workspace.yaml + tsconfig.base.json + pnpm-lock.yaml + patches/. Theia pinned to 1.56.0 (latest stable, browser-mode, no Electron preset). kernel-bridge-readiness extension implements the 9-state readiness taxonomy from 07.T0, calls real epi gate /health endpoint via GatewayReadinessSource (no mock branch), renders a ReactWidget with severity-coded state + reason + profile generation + carried-forward blocker IDs + Refresh action. tsc -b compiles cleanly (extension lib/ output verified). theia build emits real 9.4MB browser bundle at theia-app/lib/frontend/bundle.js + index.html + extensions_kernel-bridge-readiness_*.js chunk + Theia fonts/assets — confirmed via grep that our extension chunk is part of the bundle. Two upstream patches committed to patches/@theia__application-manager@1.56.0.patch and pinned via pnpm.patchedDependencies: (a) spawn() quotes command so paths-with-spaces don't trigger /bin/sh word-splitting under shell:true; (b) resolveBin() walks up to find pnpm-hoisted bins instead of looking only in the package's local node_modules. @vscode/ripgrep pinned to 1.15.9 (newer versions removed bin/rg subpath from exports). scripts/smoke-build.sh runs pnpm install --frozen-lockfile + extension tsc + theia build + verifies bundle.js/index.html/our extension chunk presence — PASSES (9.4MB bundle). Known carry-forward: backend bundle (Node-side server) hits drivelist@9.2.4 module-not-found on Node 24 (drivelist is a native gyp module that doesn't build there); frontend bundle is unaffected so 05.T1's canonical 'real Theia browser bundle' deliverable is met. Pin Node 22 for backend startup OR add webpack alias stubbing drivelist (Track 05 T2 work). Also documented: keytar and node-pty native modules skipped via pnpm onlyBuiltDependencies — @theia/terminal and @theia/process removed from theia-app deps until upstream supports Node ≥22."
+        },
+        {
+          "at": "2026-06-01T11:33:33.756Z",
+          "text": "Pratibimba System Theia 1.56 app now has reproducible frozen pnpm install, full frontend/backend webpack build, real kernel-bridge readiness source test via loopback HTTP, clean smoke-build.sh with no tolerated backend failure, and live headless Chrome verification of Theia shell plus mounted readiness widget showing real bridge_unavailable gateway state. Verified: pnpm --dir Idea/Pratibimba/System test; bash Idea/Pratibimba/System/scripts/smoke-build.sh; pnpm --filter @pratibimba/theia-app start; headless Chrome DOM assertion for .theia-ApplicationShell, readiness tab/widget, and epi gate source."
         }
       ],
       "notes": null,
@@ -592,29 +616,43 @@
       "worktree": null
     },
     "07.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T11:49:27.187Z",
+      "claimedAt": "2026-06-01T10:39:15.374Z",
+      "completedAt": "2026-06-01T11:49:27.187Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T11:37:00.679Z",
+          "text": "07.T1 landed Theia extension skeleton + shared m-extension-runtime adapter. Six packages (@pratibimba/{m0-anuttara,m1-paramasiva,m2-parashakti,m3-mahamaya,m4-nara,m5-epii}) generated from 07.T0 contract via scaffold-m-extensions.mjs, each registering primary view contribution, open/readOnly/depositOnly commands, epi-logos:// route handler command, and observability publisher gated by 07.T0 event-type list. Shared @pratibimba/m-extension-runtime owns single-fan-out SharedBridgeAdapter (KernelBridgeAPI consumer with late-subscriber cache), CoordinateContext model, MathemeHarmonicProfileBoundary, 9-state readiness taxonomy mirroring epi-cli/schemas, ReadinessBanner shared visual shell, and DI module binding SHARED_BRIDGE_ADAPTER as singleton. Verification: pnpm --filter ... build clean for runtime + all six (tsc); ./scripts/smoke-build.sh green (21.3MB bundle.js, all eight required extension chunks landed in theia-app/lib/frontend/); node --test extensions/test/shared-bridge-fan-out.test.mjs proves one upstream subscription fans out to six subscribers with identical profile generation; existing 07.T0/08.T0 contract test suite still passes (12/12); validate-extension-contract-preflight.mjs ok=true with tightened import-pattern matcher that skips node_modules and only flags forbidden fragments inside import/require statements. With bridge unattached, all six widgets render PENDING_M_READINESS = bridge_unavailable without crashing or fabricating data; live kernel-bridge runtime wiring deferred to 01.T5/T6."
+        },
+        {
+          "at": "2026-06-01T11:49:27.187Z",
+          "text": "Six Theia-native M-extension packages and shared m-extension-runtime adapter build in the Pratibimba Theia workspace. Fixed scaffold generator import drift, wired root test gate to run Track 07/08 contract tests, and verified SharedBridgeAdapter single upstream subscription fans out to six extension subscribers. Verification PASS: pnpm --dir Idea/Pratibimba/System build; pnpm --dir Idea/Pratibimba/System test; node Idea/Pratibimba/System/scripts/verify-m-extension-activation.mjs against live Theia server opened m0/m1/m2/m3/m4/m5 primary commands/views and confirmed bridge_unavailable readiness plus no fabricated MathemeHarmonicProfile data."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T11:27:16.887Z",
+      "runId": "20260601T103915Z-07-T1",
       "worktree": null
     },
     "07.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T12:07:18.677Z",
+      "claimedAt": "2026-06-01T12:00:00.052Z",
+      "completedAt": "2026-06-01T12:07:18.677Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T12:07:18.677Z",
+          "text": "Added Track 08-facing contribution contracts for all six M extensions. Implemented shared runtime contribution-contract types, CROSS_EXTENSION_ROUTE_CONTRACTS, REQUIRED_OBSERVABILITY_PAYLOAD_FIELDS, createMExtensionContributionRuntime, and validateContributionEvent. Regenerated each M extension common export with TRACK_08_CONTRIBUTION covering compact views, selection handlers, current-state selectors, evidence serializers, mini modes, per-extension route contracts, observability event contracts, and explicit Track 07/Track 08 composition boundary. Added contracts/07-t2-track08-contribution-contracts.md. Added track-08-contribution-contract.test.mjs proving Track 08 imports only package-root public contracts, route chain M0->M1->M2->M3->M4->M5 is encoded, events require sourceExtension/coordinateContext/profileGeneration/privacyClass/evidenceHandles/provenanceHandles, and stand-alone/composition runtimes read one SharedBridgeAdapter instance. Verification: pnpm --dir Idea/Pratibimba/System build passed; pnpm --dir Idea/Pratibimba/System test:contracts passed 16 tests; pnpm --dir Idea/Pratibimba/System test passed under escalation for the real localhost readiness verifier."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T12:00:00.052Z",
+      "runId": "20260601T120000Z-07-T2",
       "worktree": null
     },
     "07.T3": {
@@ -740,42 +778,61 @@
       "worktree": null
     },
     "08.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T12:17:47.577Z",
+      "claimedAt": "2026-06-01T12:09:03.234Z",
+      "completedAt": "2026-06-01T12:17:47.577Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T12:17:45.881Z",
+          "text": "08.T1 landed integrated plugin packages + composition arbitration skeleton. New @pratibimba/integrated-composition shared package owns CompositionCoordinator (singleton-slot arbitration with named-layout preference, mini-mode downgrade for named mini-inspector owners, blocked-conflict for equal-priority non-named claims), IntegratedReadinessAggregate (degrades to worst contributor severity), IntegratedNamedLayout descriptors COSMIC_ENGINE_LAYOUT + JIVA_SIVA_LAYOUT, IntegratedBridgeGate (starts detached; flips on connected/non-detached status — gates command + layout install per 08.T1 verification 1), IntegratedEmptyState view that lists missing contributors + blocking readiness with ownerTrack/blockerId/humanReason and never fabricates demo data (verification 3), enforceProtectedLocalBoundary() that blocks M4 raw-body selectors from the 4/5/0 composition per 08.T0 sharedRules, and the five named commands epi.integrated.{openCosmicEngine,openJivaSiva,toggleMiniInspectors,openEvidencePanel,copyEvidenceHandle}. New @pratibimba/plugin-integrated-1-2-3 and @pratibimba/plugin-integrated-4-5-0 packages register the five commands behind the bridge gate (commands short-circuit to no-op while !installed), bind the named layout via NAMED_LAYOUTS, and render the IntegratedEmptyState as their primary view. Both plugins generated from 08.T0 manifest via scaffold-integrated-plugins.mjs for idempotent regeneration. Verification: ./scripts/smoke-build.sh green (bundle 21.32MB, all 11 required chunks present including extensions_integrated-composition_*, extensions_plugin-integrated-1-2-3_*, extensions_plugin-integrated-4-5-0_*); node --test extensions/test/*.test.mjs 31/31 pass including 10 new arbitration tests covering named-owner-wins, equal-priority-conflict, mini-inspector inhibition for non-named owners, readiness aggregate degradation, M4 protected-local violation detection on jiva-siva, no-op on cosmic-engine, empty-state owner-track mapping, bridge gate detached-by-default, exact command set, and named-layout descriptors; validator ok=true (no forbidden imports in any new package). Open decisions deferred to later tranches: track-08.activation-mode (named layouts implemented as descriptors not as Theia workspace layouts yet — gated by Theia LayoutService wiring in T2), track-08.mini-mode-contract (mini-mode types defined; concrete mount-point inhibition flow in T2), track-08.composition-ownership (resolved by placing coordinator in extensions/integrated-composition/ following the worker's 07.T2 precedent rather than under a new shared/ workspace)."
+        },
+        {
+          "at": "2026-06-01T12:17:47.577Z",
+          "text": "Implemented/verified Track 08 T1 integrated plugin skeleton: @pratibimba/integrated-composition package with command constants, named layouts, CompositionCoordinator layout arbitration, bridge-gated activation helper, and degraded empty-state contract; generated @pratibimba/plugin-integrated-1-2-3 and @pratibimba/plugin-integrated-4-5-0 packages with Theia frontend modules, primary widgets, workspace layout identifiers, and guarded integrated commands. Added extensions/test/track-08-integrated-layout-contract.test.mjs and wired it into test:contracts; it verifies package-root exports, command IDs, named layouts, overlap-to-mini-mode arbitration, equal-priority conflict blocking, missing-contributor degraded empty states without demo/placeholder payloads, and kernel-bridge gate activation. Verification: pnpm --dir Idea/Pratibimba/System build passed (Theia build compiled successfully; known optional @theia/electron resolution warning plus transient local package resolution warnings); pnpm --dir Idea/Pratibimba/System test:contracts passed 21/21; pnpm --dir Idea/Pratibimba/System test passed with escalation because sandbox blocks localhost listen for the real kernel-bridge readiness verifier."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T12:09:03.234Z",
+      "runId": "20260601T120903Z-08-T1",
       "worktree": null
     },
     "08.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T12:33:57.838Z",
+      "claimedAt": "2026-06-01T12:27:25.290Z",
+      "completedAt": "2026-06-01T12:33:57.838Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T12:33:57.838Z",
+          "text": "08.T2 landed IntegratedStateCoordinator + cadence/staleness model on top of 08.T1 composition skeleton. integrated-composition gains: IntegratedViewState (frozen snapshot tracking profileGeneration + worldClockGeneration as separate ordered streams, selectedCoordinate, activeRoute, connection, bridgeReadiness, per-track s2/s3/s5 readiness, privacyScope, lastUpdatedAt), PENDING_INTEGRATED_VIEW_STATE constant, computeStaleness() helper that produces immutable StalenessMeta from (view, displayedProfileGen, displayedWorldClockGen) — renderers compute their own staleness against the authoritative immutable view and never mutate it, INTEGRATED_OBSERVABILITY_KINDS exhaustive enum of the 6 event families (activation, readiness-transition, layout-conflict, privacy-blocked-projection, evidence-envelope-created, capability-invocation-rejected), and IntegratedStateCoordinator class. Coordinator subscribes ONCE to SharedBridgeAdapter (inheriting 07.T1's single-fan-out guarantee), exposes onViewState() with late-subscriber replay, advanceWorldClock(), setActiveRoute(), and publish() that throws on undeclared event kinds. Disconnect cycle clears profileGeneration + worldClockGeneration to null and emits integrated.readiness-transition; reconnect with a new generation flows through cleanly without stale claims. Verification: ./scripts/smoke-build.sh green (bundle 21.32MB, all 11 chunks); node --test extensions/test/*.test.mjs 37/37 pass including 6 new state coordinator tests covering (a) single upstream subscription per raw-bridge channel with adapter.getUpstreamSubscriptionCount()===1, (b) late subscribers receive current view with computed staleness, (c) disconnect-reconnect-resync drives view through degraded states without stale profile/worldclock fields, (d) publish enforces declared 6-kind set and rejects fabricated kinds, (e) view-state snapshots are Object.frozen so renderer-local cadence cannot mutate authoritative fields, (f) readiness state-specific mapping isolates s2/s3/s5 blocks to the named track. Validator ok=true. Open decisions still deferred: track-08.activation-mode (workspace-layout install still gated on Theia LayoutService binding — coordinator owns the active route value but production wiring waits on 08.T3+), track-08.live-state-cadence (coordinator carries the two generations and StalenessMeta primitives needed by future cadence policy — renderer-side interpolation timer choice deferred)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T12:27:25.290Z",
+      "runId": "20260601T122725Z-08-T2",
       "worktree": null
     },
     "08.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T12:43:40.585Z",
+      "claimedAt": "2026-06-01T12:37:02.000Z",
+      "completedAt": "2026-06-01T12:43:40.585Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T12:43:40.585Z",
+          "text": "08.T3 landed the 1-2-3 Cosmic Engine composition slice. New profile-field-checker module exports checkCosmicEnginePanes() which produces an immutable PaneAvailability snapshot for each of the three panes (m3-center-stage, m2-left-stage, m1-right-inspector) carrying profileGeneration + per-field availability + named blocker owner track per missing field — fields scanned: M3 codon_rotation_projection/mahamaya/codec_lut, M2 resonance72/planetaryChakral/kleinFlipState, M1 lens/mode/audio_octet/nodal_quartet. COSMIC_ENGINE_LAYOUT updated to match the 08.T3 plan body (M3 cosmic wheel center, M2 lens/cymatic backdrop providing evidence, M1 torus/path/audio-walk inspector side) — previous 08.T1 placeholder ownership corrected; M1/M2/M3 all listed as mini-inspector owners for the choreography rule. New CosmicEnginePanes React component renders the three panes from one shared MathemeHarmonicProfileBoundary — every value is read directly from profile.payload via readPayloadString helper, no local codon/tarot/planetary/pitch/correspondence tables anywhere in the package (enforced by static scanner test). PluginIntegrated123Widget extended to subscribe to bridge.onProfile, branch on contributor+profile availability, render CosmicEnginePanes when ready and IntegratedEmptyState otherwise. Scaffolder updated to preserve hand-extended widget. Grid CSS for cosmic-engine-layout (m2-left | m3-center | m1-right) + per-pane shells. Verification: ./scripts/smoke-build.sh green (bundle 21.32MB, all 11 chunks present); node --test extensions/test/*.test.mjs 44/44 pass including 7 new cosmic engine slice tests: (a) single profile generation drives identical generation ids across all three panes; (b) missing M3 codec LUT degrades only M3 pane with named Track 02 owner; (c) missing M1 audio_octet degrades only M1 pane; (d) null profile produces all-panes-missing with generation null; (e) pane field groups match layout owner extensions; (f) static scan of plugin-integrated-1-2-3/src rejects 4 forbidden literal patterns (long numeric arrays, dense object maps, codon/tarot/planet/pitch/chakra keyword + array literal, named *Table identifiers); (g) every field has a non-empty blocker owner track. 10 existing 08.T1 arbitration tests still pass after layout update. Validator ok=true. Open decisions still deferred: track-08.activation-mode (Theia LayoutService binding still uses widget area:main; named workspace layout install awaits T4+), live-state-cadence (StalenessMeta primitives ready but renderer-side world_clock interpolation timer awaits Track 03 T3 native deltas)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T12:37:02.000Z",
+      "runId": "20260601T123702Z-08-T3",
       "worktree": null
     },
     "08.T4": {
@@ -1269,26 +1326,107 @@
       "leaseExpiresAt": "2026-06-01T12:25:02.099Z",
       "worktree": null,
       "completedAt": "2026-06-01T10:38:12.677Z"
+    },
+    {
+      "runId": "20260601T103915Z-07-T1",
+      "taskId": "07.T1",
+      "status": "done",
+      "startedAt": "2026-06-01T10:39:15.374Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T13:27:16.887Z",
+      "worktree": null,
+      "heartbeatAt": "2026-06-01T11:27:16.887Z",
+      "completedAt": "2026-06-01T11:37:00.679Z"
+    },
+    {
+      "runId": "20260601T115104Z-02-T3",
+      "taskId": "02.T3",
+      "status": "done",
+      "startedAt": "2026-06-01T11:51:04.901Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T13:51:04.901Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T11:59:34.109Z"
+    },
+    {
+      "runId": "20260601T120000Z-07-T2",
+      "taskId": "07.T2",
+      "status": "done",
+      "startedAt": "2026-06-01T12:00:00.052Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:00:00.052Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T12:07:18.677Z"
+    },
+    {
+      "runId": "20260601T120854Z-01-T4",
+      "taskId": "01.T4",
+      "status": "done",
+      "startedAt": "2026-06-01T12:08:54.227Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:08:54.227Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T12:14:51.975Z"
+    },
+    {
+      "runId": "20260601T120903Z-08-T1",
+      "taskId": "08.T1",
+      "status": "done",
+      "startedAt": "2026-06-01T12:09:03.234Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:09:03.234Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T12:17:45.881Z"
+    },
+    {
+      "runId": "20260601T122420Z-02-T4",
+      "taskId": "02.T4",
+      "status": "done",
+      "startedAt": "2026-06-01T12:24:20.684Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:24:20.684Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T12:45:54.546Z"
+    },
+    {
+      "runId": "20260601T122725Z-08-T2",
+      "taskId": "08.T2",
+      "status": "done",
+      "startedAt": "2026-06-01T12:27:25.290Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:27:25.290Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T12:33:57.838Z"
+    },
+    {
+      "runId": "20260601T123702Z-08-T3",
+      "taskId": "08.T3",
+      "status": "done",
+      "startedAt": "2026-06-01T12:37:02.000Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:37:02.000Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T12:43:40.585Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-01T10:10:03.059Z",
-    "updatedAt": "2026-06-01T10:10:03.059Z",
+    "createdAt": "2026-06-01T12:43:50.210Z",
+    "updatedAt": "2026-06-01T12:43:50.210Z",
     "taskIds": [
-      "05.T1",
-      "05.T2",
-      "02.T3",
-      "01.T3"
+      "02.T4",
+      "09.T1",
+      "02.T5",
+      "02.T6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "05.T1": "in-session",
-      "05.T2": "in-session",
-      "02.T3": "in-session",
-      "01.T3": "in-session"
+      "02.T4": "in-session",
+      "09.T1": "in-session",
+      "02.T5": "in-session",
+      "02.T6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

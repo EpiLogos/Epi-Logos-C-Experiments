@@ -1,0 +1,83 @@
+.integrated-widget-plugin-integrated-1-2-3 .integrated-widget-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    overflow: auto;
+    color: var(--theia-foreground);
+    background-color: var(--theia-editor-background);
+    font-family: var(--theia-ui-font-family);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-engine-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(320px, 2fr) minmax(220px, 1fr);
+    grid-template-areas: "m2 m3 m1";
+    gap: 12px;
+    padding: 12px;
+    height: 100%;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane {
+    background-color: var(--theia-sideBar-background);
+    border: 1px solid var(--theia-sideBar-border);
+    border-radius: 4px;
+    padding: 12px;
+    overflow: auto;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-m3-center-stage { grid-area: m3; }
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-m2-left-stage { grid-area: m2; }
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-m1-right-inspector { grid-area: m1; }
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-title {
+    margin: 0;
+    font-size: var(--theia-ui-font-size2);
+    font-weight: 600;
+    flex: 1;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-source,
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-gen {
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+    color: var(--theia-descriptionForeground);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-body dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 12px;
+    row-gap: 4px;
+    margin: 0;
+    font-size: var(--theia-ui-font-size1);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-body dt {
+    color: var(--theia-descriptionForeground);
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-body dd {
+    margin: 0;
+    word-break: break-all;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-blocker {
+    font-size: var(--theia-ui-font-size0);
+    color: var(--theia-descriptionForeground);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .cosmic-pane-blocker code {
+    background-color: var(--theia-editor-background);
+    padding: 1px 4px;
+    border-radius: 2px;
+}

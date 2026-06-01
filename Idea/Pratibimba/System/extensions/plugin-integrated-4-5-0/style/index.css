@@ -1,0 +1,10 @@
+.integrated-widget-plugin-integrated-4-5-0 .integrated-widget-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    overflow: auto;
+    color: var(--theia-foreground);
+    background-color: var(--theia-editor-background);
+    font-family: var(--theia-ui-font-family);
+}

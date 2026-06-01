@@ -1,0 +1,85 @@
+.mext-banner {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--theia-sideBar-border);
+    background-color: var(--theia-editor-background);
+    color: var(--theia-foreground);
+    font-family: var(--theia-ui-font-family);
+}
+
+.mext-banner-ok {
+    border-left-color: var(--theia-successForeground, #59c75a);
+}
+
+.mext-banner-degraded {
+    border-left-color: var(--theia-warningForeground, #d4a14a);
+}
+
+.mext-banner-blocked {
+    border-left-color: var(--theia-errorForeground, #f48771);
+}
+
+.mext-banner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.mext-banner-title {
+    margin: 0;
+    font-size: var(--theia-ui-font-size2);
+    font-weight: 600;
+}
+
+.mext-banner-state {
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+    padding: 1px 6px;
+    border-radius: 3px;
+    background-color: var(--theia-badge-background);
+    color: var(--theia-badge-foreground);
+}
+
+.mext-banner-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 16px;
+    row-gap: 4px;
+    margin: 0 0 8px;
+    font-size: var(--theia-ui-font-size1);
+}
+
+.mext-banner-grid dt {
+    color: var(--theia-descriptionForeground);
+    font-weight: 500;
+}
+
+.mext-banner-grid dd {
+    margin: 0;
+    word-break: break-word;
+}
+
+.mext-banner-provenance {
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-banner details {
+    margin-bottom: 4px;
+}
+
+.mext-banner details ul {
+    margin: 4px 0 0;
+    padding-left: 1.4em;
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-banner-m5-review {
+    align-self: flex-start;
+    margin-top: 8px;
+    padding: 4px 10px;
+}

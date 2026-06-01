@@ -1,0 +1,68 @@
+.integrated-empty-state {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px 20px;
+    color: var(--theia-foreground);
+    background-color: var(--theia-editor-background);
+    font-family: var(--theia-ui-font-family);
+}
+
+.integrated-empty-state header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.integrated-empty-state-title {
+    margin: 0;
+    font-size: var(--theia-ui-font-size3);
+    font-weight: 600;
+}
+
+.integrated-empty-state-overall {
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+    padding: 1px 6px;
+    border-radius: 3px;
+    background-color: var(--theia-badge-background);
+    color: var(--theia-badge-foreground);
+}
+
+.integrated-empty-state-summary {
+    margin: 0 0 12px;
+    color: var(--theia-descriptionForeground);
+    font-style: italic;
+}
+
+.integrated-empty-state-missing,
+.integrated-empty-state-reasons {
+    margin-bottom: 12px;
+}
+
+.integrated-empty-state-missing h3,
+.integrated-empty-state-reasons h3 {
+    margin: 0 0 6px;
+    font-size: var(--theia-ui-font-size1);
+    color: var(--theia-descriptionForeground);
+    font-weight: 500;
+}
+
+.integrated-empty-state-reasons table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--theia-ui-font-size0);
+}
+
+.integrated-empty-state-reasons th,
+.integrated-empty-state-reasons td {
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--theia-sideBar-border);
+}
+
+.integrated-empty-state-reasons th {
+    color: var(--theia-descriptionForeground);
+    font-weight: 500;
+}

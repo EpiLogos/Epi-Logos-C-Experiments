@@ -1,0 +1,32 @@
+{
+  "name": "@pratibimba/m-extension-runtime",
+  "version": "0.1.0",
+  "description": "Shared runtime adapter for the six M-extensions. Owns the single KernelBridgeAPI consumer, late-subscriber cache, CoordinateContext model, readiness banner, and observability publisher base. Track 07 T1.",
+  "license": "MIT",
+  "files": ["lib", "src", "style"],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "keywords": ["theia-extension", "epi-logos", "m-extension", "kernel-bridge"],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build"
+  }
+}
