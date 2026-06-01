@@ -21,6 +21,7 @@ pub mod epii_agent {
 pub mod nara;
 pub mod notebook;
 pub mod portal;
+pub mod profile;
 pub mod sesh;
 pub mod sync;
 pub mod techne;

@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use epi_logos::{
-    agent, app, book, code, core, ffi, gate, graph, nara, notebook, portal, sesh, sync, techne, up,
-    vault, vimarsa,
+    agent, app, book, code, core, ffi, gate, graph, nara, notebook, portal, profile, sesh, sync,
+    techne, up, vault, vimarsa,
 };
 
 #[derive(Parser)]
@@ -99,6 +99,11 @@ enum Commands {
         #[command(subcommand)]
         cmd: nara::NaraCmd,
     },
+    /// S0' harmonic profile surface — show / pointer / codon / readiness
+    Profile {
+        #[command(subcommand)]
+        cmd: profile::ProfileCmd,
+    },
     /// M' experiential TUI portal
     Portal {
         /// Force factory default layout
@@ -180,6 +185,22 @@ async fn main() -> color_eyre::Result<()> {
             Ok(_) => {}
             Err(e) => {
                 eprintln!("{}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Profile { cmd } => match profile::run(cmd) {
+            Ok(value) => {
+                // Always emit JSON for profile commands — they're machine
+                // consumers (Tauri, Theia, gateway, CI tests).
+                let _ = cli.json;
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&value)
+                        .unwrap_or_else(|e| format!("serialise: {e}"))
+                );
+            }
+            Err(e) => {
+                eprintln!("profile error: {}", e);
                 std::process::exit(1);
             }
         },

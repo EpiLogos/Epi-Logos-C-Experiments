@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T10:23:48.504Z",
+  "updatedAt": "2026-06-01T10:38:12.686Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -58,16 +58,21 @@
       "worktree": null
     },
     "01.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T10:38:12.677Z",
+      "claimedAt": "2026-06-01T10:25:02.099Z",
+      "completedAt": "2026-06-01T10:38:12.677Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T10:38:12.677Z",
+          "text": "New 'epi profile' CLI cluster lands at Body/S/S0/epi-cli/src/profile/mod.rs with four real-code-backed subcommands: 'epi profile show --cycle N --sub-tick N' emits the full MathemeHarmonicProfile JSON via portal_core::MathemeHarmonicProfile::from_tick (no handwritten fixture); 'epi profile pointer' emits pointer_anchor + context_frames + roleDictionaries (canonical TS-zod label sets for pointerRings/helices/relationRoles/intervalRoles/ratioRoles/bedrockRoles/contextFrameNotations) + webCardinality=36; 'epi profile codon --lens N --mode N' calls portal_core::codon_rotation_from_lens_mode with proper Option-based error reporting; 'epi profile readiness [--probe] [--gateway-url URL]' implements the 9-state bridge-readiness taxonomy mirroring 07.T0 (BridgeUnavailable / ProfileMissingField / S2GraphBlocked / S3SubscriptionBlocked / S5ReviewBlocked / AuthorityPayloadMissing / PrivacyBlocked / DegradedButReadable / ReadyPublicCurrent) with severity classifier (ok/degraded/blocked) and dimensional-axis enumeration. TCP-based gateway probe (deliberately not reqwest::blocking — avoids tokio runtime conflict in tests) reports DegradedButReadable on TCP-reachable gateway, BridgeUnavailable on unreachable/refused — honest failure surfacing, no mock-success branch. main.rs wires Commands::Profile { cmd } to profile::run(&cmd) printing pretty-JSON; new top-level 'epi profile' alongside core/vault/graph/gate/agent. TS schema mirror at Body/S/S0/epi-cli/schemas/src/readiness.ts with zod BridgeReadinessState + BridgeReadinessSeverity + BridgeReadinessSnapshot + DIMENSIONAL_READINESS_STATES, exported from index.ts. Verification PASS: cargo test --lib profile (10/10 unit tests covering taxonomy, severity, dimensional, role_dictionaries, run dispatcher for all four subcommands); cargo test --test profile_cli_contract (6/6 integration tests spawn the real epi binary via CARGO_BIN_EXE_epi and assert show source/canonical fields/no protected-local leak, pointer 36+7+canonical dicts, codon portal-core source, readiness no-probe and unreachable both report bridge_unavailable honestly, taxonomy coverage); pointer_web_ffi_contract 4/4 + kernel_api_envelope_contract 1/1 + ffi_role_name_contract 9/9 all still green; epi-cli lib suite 224/224. Carry-forward: actual HTTP/contract verification for the gateway deferred to Track 04 T6 (this T3 reports honest TCP reachability only); gateway-facing profile methods continue to use existing S3 ownership (no parallel session authority created inside S0)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T10:25:02.099Z",
+      "runId": "20260601T102502Z-01-T3",
       "worktree": null
     },
     "01.T4": {
@@ -1254,6 +1259,16 @@
       "leaseExpiresAt": "2026-06-01T12:16:51.903Z",
       "worktree": null,
       "completedAt": "2026-06-01T10:23:48.493Z"
+    },
+    {
+      "runId": "20260601T102502Z-01-T3",
+      "taskId": "01.T3",
+      "status": "done",
+      "startedAt": "2026-06-01T10:25:02.099Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T12:25:02.099Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T10:38:12.677Z"
     }
   ],
   "activeRoute": {
