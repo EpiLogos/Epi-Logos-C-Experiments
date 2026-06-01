@@ -1,6 +1,7 @@
 # ADR-05-003 — Kernel-bridge host boundary (Theia / Tauri Rust / hybrid singleton)
 
-**Status:** Open — recorded by Track 05 T0 (2026-06-01).
+**Status:** Decision (provisional) — recorded by Track 05 T0, amended by Track 05 T2 (2026-06-01).
+**Selected option:** Option 3 — hybrid Tauri-singleton + Theia-native `KernelBridgeAPI` adapter. The Rust singleton lives in `epi-tauri`'s `AppState`; `/body` consumes via Tauri `invoke`; Theia consumes via a `kernel-bridge` Theia extension (Track 01 T5 — pending) that proxies the same singleton.
 **Decision register link:** `PRD-03` in `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`.
 **Affected tracks:** 01, 03, 05, 06, 07, 08.
 
@@ -49,3 +50,14 @@ Tracks 06–08 can define against an API seam but cannot finalize subscription e
 - `07-t0-extension-contract-preflight.json#sharedBridgeAdapter` — the API shape this ADR is choosing a host for.
 - `08-t0-composition-contract-preflight.json#sharedRules` — both integrated plugins consume the same bridge declared by 07.T0.
 - `Body/S/S5/epii-agent/contract-ledger/track-09-preflight.json` — Track 09 mediation consumes `invokeGatewayRpc` and `subscribeRunEvents` through this seam.
+
+## 05.T2 Prototype Amendment (2026-06-01)
+
+The current Tauri singleton already exists as `AppState` in `Body/M/epi-tauri/src-tauri/src/state.rs` and holds gateway, clock, neo4j, runtime, vault, settings, agents. Track 01 T5 lands the typed `KernelBridgeAPI` contract package; the Theia adapter at `Idea/Pratibimba/System/extensions/kernel-bridge-readiness` already calls the gateway directly via HTTP (`GatewayReadinessSource`) — once T5 lands, the readiness extension swaps the direct HTTP for the typed adapter.
+
+The Track 05 T2 prototype confirms the hybrid is feasible:
+- `/body` and `pratibimba-ide` webviews are sibling children of the same Tauri process, so they share `AppState` through `tauri::State<AppState>` injection in commands.
+- Both webviews can call the same gateway via `gateway_rpc`, `gateway_send_raw`, `gateway_is_connected` — no second connection is required.
+- Background lifecycle: closing `/body` does not drop the singleton; closing the IDE window does not drop it either; only `app.exit()` ends the bridge.
+
+**Status caveat:** marked `Decision (provisional)` because the full `KernelBridgeAPI` contract package is owned by Track 01 T5. The host boundary chosen here is correct; the typed adapter wiring will be authored when T5 lands.

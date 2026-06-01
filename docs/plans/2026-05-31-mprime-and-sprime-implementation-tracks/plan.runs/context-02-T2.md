@@ -1,11 +1,11 @@
-# M-Dev Context Pack - 02.T1
+# M-Dev Context Pack - 02.T2
 
-Generated: 2026-06-01T09:47:39.383Z
+Generated: 2026-06-01T09:49:57.152Z
 
 ## Task
 
-- **ID:** 02.T1
-- **Title:** Schema and relation-law convergence
+- **ID:** 02.T2
+- **Title:** Neo4j topology and plugin readiness
 - **Track:** 02-s2-bimba-map-population.md
 - **Computed status:** ready
 - **Write scopes:** Body/S/S2/**
@@ -36,7 +36,7 @@ Read these before implementation. Do not rely on the tranche summary alone.
 
 ## Dependency Context
 
-- 02.T0 - Authority and drift preflight (02-s2-bimba-map-population.md)
+- 02.T1 - Schema and relation-law convergence (02-s2-bimba-map-population.md)
 
 ## Track Source Specs
 
@@ -55,9 +55,9 @@ Read these before implementation. Do not rely on the tranche summary alone.
 
 ## Task Body
 
-2. **T1 - Schema and relation-law convergence.**
-   Deliverables: reconcile `graph-schema` relationship registry with the relationships actually emitted by `seed.rs` and `dataset_import.rs`; either register production seed/import relationships such as `GENERATES`, `ENTANGLES`, `INTERLEAVES`, `MANIFESTS`, `BEDROCK`, `FAMILY_CONTAINS`, `MOBIUS_RETURN`, `ANCHORED_TO`, and deep dataset relation types, or migrate seed/import output to registered canonical relation types with evidence properties; add/confirm canonical node property specs for Anuttara fields (`c_1_symbol`, `c_1_formulation_type`, `c_1_complete_formulation` or their approved names), namespace/provenance fields, ontology readiness fields, and GDS overlay provenance.
-   Verification: registry tests reject ad hoc relationship/property drift; a live seeded graph returns zero relationship types outside the registry or approved compatibility list via `CALL db.relationshipTypes()` plus a registry comparison; `validate_node_properties` and `validate_relationship_properties` pass on representative low-detail and deep dataset records before import.
+3. **T2 - Neo4j topology and plugin readiness.**
+   Deliverables: decide and implement the local service topology for APOC, n10s, and GDS readiness; update the operational runbook and doctor checks to report plugin/procedure availability; add a clear fallback state for environments where n10s/GDS are intentionally unavailable.
+   Verification: live Neo4j procedure checks prove APOC is available and either prove `n10s.*` / `gds.*` are available or produce explicit blocked readiness states; `epi graph doctor` JSON includes separate `neo4j`, `schema`, `n10s`, `owl2_rl`, `gds`, and `privacy_projection` readiness fields; no test passes by stubbing plugin procedure results.
 
 ## Track Open Decisions
 

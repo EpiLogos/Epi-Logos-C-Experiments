@@ -25,7 +25,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' data: asset: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval'; connect-src 'self' ipc: ws://127.0.0.1:18794 ws://127.0.0.1:3000 bolt://127.0.0.1:7687; font-src 'self' data:",
+      "csp": "default-src 'self' pratibimba: tauri:; img-src 'self' data: asset: blob: pratibimba:; style-src 'self' 'unsafe-inline' pratibimba:; script-src 'self' 'unsafe-eval' pratibimba: blob:; worker-src 'self' pratibimba: blob:; connect-src 'self' ipc: pratibimba: ws://127.0.0.1:18794 ws://127.0.0.1:3000 ws://127.0.0.1:1421 bolt://127.0.0.1:7687 http://127.0.0.1:1421; font-src 'self' data: pratibimba:; child-src 'self' pratibimba: blob:; frame-src 'self' pratibimba:",
       "assetProtocol": {
         "enable": true,
         "scope": ["**"]

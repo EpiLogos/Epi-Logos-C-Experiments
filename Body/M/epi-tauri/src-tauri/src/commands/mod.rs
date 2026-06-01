@@ -8,5 +8,6 @@ pub mod harmonic_profile;
 pub mod library;
 pub mod mef;
 pub mod nara;
+pub mod pratibimba;
 pub mod temporal;
 pub mod vault;

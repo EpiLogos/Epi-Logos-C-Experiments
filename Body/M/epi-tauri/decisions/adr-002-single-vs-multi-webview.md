@@ -1,6 +1,7 @@
 # ADR-05-002 — Single-webview navigation vs multi-webview persistence
 
-**Status:** Open — recorded by Track 05 T0 (2026-06-01).
+**Status:** Decision — recorded by Track 05 T0, amended by Track 05 T2 (2026-06-01).
+**Selected option:** Option 2 — multi-webview co-existence. `/body` stays in the primary Tauri window; `/pratibimba/system` opens in a second `WebviewWindow` labelled `pratibimba-ide` and persists until explicitly dismissed.
 **Decision register link:** `PRD-02` in `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`.
 **Affected tracks:** 05, 06, 08.
 
@@ -39,3 +40,11 @@ Menubar/background semantics (UFV-03), deep links (IOD-10), workspace persistenc
 
 - Inherited from `Body/M/epi-tauri/contract-inventory/track-06-baseline.json` migration ledger.
 - Coordinates with ADR-05-003 (bridge ownership): multi-webview implies the bridge cannot live exclusively in one webview's JS scope.
+
+## 05.T2 Prototype Amendment (2026-06-01)
+
+`pratibimba_summon_ide` builds a fresh `WebviewWindow` (1600 × 1000 default, min 1280 × 800) the first time it's called; subsequent calls reuse the same window via `app.get_webview_window(PRATIBIMBA_IDE_WINDOW)` and call `.show().set_focus()`. Closing `/body` does not close the IDE window and vice versa — they share the Tauri process but have independent webview contexts.
+
+Single-webview navigation (Option 1) was rejected because the existing `/body` Vite renderer carries substantial in-flight state (gateway connections, graph store, atelier session) which would be lost on every IDE summon/dismiss cycle. Tray/background `/body` (Option 3) is a future refinement once UFV-03 (menubar/background lifecycle semantics) closes.
+
+**Verification:** `pratibimbaClient.test.ts` exercises `summon` / `dismiss` / `status` returning typed `PratibimbaIdeStatus` with `window_open` toggling correctly. Resource-use measurements deferred to a later acceptance run on a real desktop runtime; the Rust shell tests confirm the command surface compiles and behaves as specified.

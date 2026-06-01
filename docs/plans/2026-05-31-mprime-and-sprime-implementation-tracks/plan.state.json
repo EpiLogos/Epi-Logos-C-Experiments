@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T10:15:15.121Z",
+  "updatedAt": "2026-06-01T10:23:48.504Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -329,16 +329,21 @@
       "worktree": null
     },
     "05.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T10:23:48.493Z",
+      "claimedAt": "2026-06-01T10:16:51.903Z",
+      "completedAt": "2026-06-01T10:23:48.493Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T10:23:48.493Z",
+          "text": "Tauri composition prototype landed end-to-end, closing PRD-01 + PRD-02 + PRD-03 (the three ADRs left Open by 05.T0). ADR-05-001 amended Decision: Option 1 browser-mode-in-Wry via 'pratibimba://' custom URI scheme protocol. ADR-05-002 amended Decision: Option 2 multi-webview co-existence (separate WebviewWindow labelled pratibimba-ide, persists until dismissed). ADR-05-003 amended Decision (provisional): Option 3 hybrid Tauri singleton (AppState already exists) + Theia-native KernelBridgeAPI adapter (typed wiring lands with Track 01 T5). Files: Body/M/epi-tauri/src-tauri/src/commands/pratibimba.rs (summon/dismiss/status commands), Body/M/epi-tauri/src-tauri/src/lib.rs (registers register_uri_scheme_protocol('pratibimba', ...) handler, resolves Idea/Pratibimba/System/theia-app/lib/frontend/, MIME-types html/js/mjs/css/json/svg/png/jpg/woff/woff2/ttf/eot/map, rejects '..' traversal as 403, missing as 404; EPI_PRATIBIMBA_FRONTEND_DIR env override for tests), tauri.conf.json#csp extended with pratibimba: origin across default-src/img-src/style-src/script-src/worker-src/connect-src/font-src/child-src/frame-src (allows Workers, IndexedDB, gateway connect-src, blob: workers, AMD 'unsafe-eval'), Body/M/epi-tauri/src/services/pratibimbaClient.ts (typed summon/dismiss/status renderer client). Verification: cargo test src-tauri 49/49 (was 44, +5 new pratibimba_protocol tests: root→index.html, bundle.js correct MIME, path traversal 403, missing 404, full Theia MIME table); vitest 21/21 (+4 pratibimbaClient.test.ts: summon/dismiss/status invoke correct command, AppError surfacing); tsc --noEmit clean. Resource-use/CSP/IPC live-app measurements deferred to a desktop acceptance run; the protocol handler + command surface + CSP + client are all compile-and-test verified."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T10:16:51.903Z",
+      "runId": "20260601T101651Z-05-T2",
       "worktree": null
     },
     "05.T3": {
@@ -1239,6 +1244,16 @@
       "status": "done",
       "startedAt": "2026-06-01T09:51:28.258Z",
       "completedAt": "2026-06-01T10:15:15.109Z"
+    },
+    {
+      "runId": "20260601T101651Z-05-T2",
+      "taskId": "05.T2",
+      "status": "done",
+      "startedAt": "2026-06-01T10:16:51.903Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T12:16:51.903Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T10:23:48.493Z"
     }
   ],
   "activeRoute": {

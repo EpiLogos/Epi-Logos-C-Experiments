@@ -1,76 +1,101 @@
-# M-Dev Context Pack - 02.T1
+# M-Dev Context Pack - 05.T2
 
-Generated: 2026-06-01T09:47:39.383Z
+Generated: 2026-06-01T10:16:52.411Z
 
 ## Task
 
-- **ID:** 02.T1
-- **Title:** Schema and relation-law convergence
-- **Track:** 02-s2-bimba-map-population.md
-- **Computed status:** ready
-- **Write scopes:** Body/S/S2/**
+- **ID:** 05.T2
+- **Title:** Tauri Composition Prototype And Runtime Decision Gate
+- **Track:** 05-tauri-ide-shell-and-pratibimba-system.md
+- **Computed status:** in_progress
+- **Write scopes:** Body/M/epi-tauri/**, Idea/Pratibimba/System/**
 
 ## Required Reading
 
 Read these before implementation. Do not rely on the tranche summary alone.
 
-- `Body/S/S2/external/bimba-mcp/`
-- `Body/S/S2/graph-schema/src/lib.rs`
-- `Body/S/S2/graph-services/src/dataset_import.rs`
-- `Body/S/S2/graph-services/src/graph_api.rs`
-- `Body/S/S2/graph-services/src/seed.rs`
+- `Body/M/epi-tauri`
+- `Body/M/epi-tauri/package.json`
+- `Body/M/epi-tauri/src-tauri/src/lib.rs`
+- `Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`
+- `Body/M/epi-tauri/src/domains/M5_Epii/EpiiDashboard.tsx`
+- `Body/M/epi-tauri/src/services/types.ts`
+- `Body/M/epi-tauri/src/shell/Shell.tsx`
+- `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`
 - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`
 - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`
-- `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`
-- `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`
-- `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`
-- `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`
-- `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`
 - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`
 - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`
-- `Idea/Bimba/Seeds/S/S2/S2-SPEC.md`
-- `docs/datasets`
+- `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md`
 - `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md`
+- `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md`
+- `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md`
+- `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md`
 - `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`
-- `docs/specs/S/S2-S2i-GRAPH.md`
+- `docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md`
+- `src/components/CommandPalette.tsx`
+- `src/components/OmniPanel.tsx`
+- `src/domains/MPrime_Subsystems/MPrimeSubsystemPage.tsx`
+- `src/stores/uiStore.ts`
 
 ## Dependency Context
 
-- 02.T0 - Authority and drift preflight (02-s2-bimba-map-population.md)
+- 05.T1 - `Idea/Pratibimba/System` Theia Application Skeleton And Version Pin (05-tauri-ide-shell-and-pratibimba-system.md)
 
 ## Track Source Specs
 
-- [[m5-prime-system-shape-and-tauri-ide-canon]] - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`, especially "Section 1.2 M5-2 = S-family; M5-3 = M'-family; M5-4 = operational-capacities + agentic mediation", "Section 4.2 M0 + M5 integrated into the IDE shell itself", "Section 5.2 The kernel-bridge contribution", "Section 8 Implementation milestones", and "Section 9 Open implementation questions". Load-bearing commitment: M5-2 is the full S-stack, M5-3 is the Tauri/Theia app, and M5-4 is the operational-capacity/agentic mediation layer.
-- [[S2-SPEC]] - `Idea/Bimba/Seeds/S/S2/S2-SPEC.md`, especially "Status", "Current code reality", "Planning consequence", "A. S2 - Graph Body Base Technology", "B. S2' - QL Augmentation", "C. Cross-References", "Gaps", and "D. Key Architectural Decisions". Load-bearing commitment: S2 is raw Neo4j/graph/cache substrate; S2' is coordinate-aware graph/retrieval law.
-- [[S2-S2i-GRAPH]] - `docs/specs/S/S2-S2i-GRAPH.md`, especially "Architectural Role", "S2' Neosemantics, GDS, And Topology Contract", "Implementation Plan / Phase 8: n10s / GDS / Topology Enrichment", and "Verification Additions". Load-bearing commitment: every semantic vector is coordinate-anchored, n10s/OWL and GDS are graph law rather than UI garnish, and tests must prove real Neo4j/GDS behavior.
-- [[M'-SYSTEM-SPEC]] - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`, especially "Domain Language", "Canonical 0/1/4+2 Layout Discipline", "Minimum Live Loop", "Neo4j / Graphiti Boundary", and "Minimum Evolutionary Basis". Load-bearing commitment: M' reflects the M/Bimba topology without becoming a parallel coordinate system; Neo4j is canonical coordinate topology and Graphiti is episodic/protected memory.
-- [[M0'-SPEC]] - `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`, especially "Backend Contract Consumed", "Anuttara As Pre-Math Node Language", "Section M0'-3 Graph-Inference-GDS Delta", and "Readiness / Test Criteria". M0' needs S2 node facts, `symbol`/`formulation_type` provenance, OWL/SHACL/GDS readiness, and legacy `#` to M-family resolution.
-- [[M1'-SPEC]] - `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`, especially "Section 3 Backend Contract Consumed", "Section 13.1 Profile-to-Performance Stream", and "Section 14 Readiness / Test Criteria". M1' needs typed S2 relation traversal and harmonic pointer relation descriptors.
-- [[M2'-SPEC]] - `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`, especially "Section 3 Backend Contract Consumed", "Section 9.6 Routing Traces as Epii Learning Evidence", and "Section 10 Readiness / Test Criteria". M2' needs S2-governed correspondence provenance and graph-relational evidence without renderer constants.
-- [[M3'-SPEC]] - `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`, especially "Section 2 Backend Contract Consumed", "Section 7 The 472-State Modal-Inversion Landscape", and "Section 8.14 App Surface and Pipeline Hooks". M3' needs the graph/wheel surfaces to share canonical Neo4j substrate and backend-supplied symbolic/profile provenance.
-- [[M4'-SPEC]] - `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`, especially "Backend Contract Consumed", "Section 6.7 Cross-M Interface Seams And Promotion Law", "Section 7.11 Day Episodes, Artifact Graph, And Temporal Trajectory", and "Section 8 Readiness / Test Criteria". M4' needs public S2 coordinate anchors without leaking protected Nara/Graphiti bodies.
-- [[M5'-SPEC]] - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`, especially "Graph Namespace Model", "Backend Contract Consumed", "Relationship To Portal 0/1 And The 4+2 Layer", and "Readiness / Test Criteria". M5' needs namespace-aware graph access across `bimba`, `gnosis`, `etymology`, and governed protected handles.
-- [[M'-TAURI-PORT-SPEC]] - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`, especially "0-Side Graph Affordance", "Port Architecture", "Harmonic Profile Architecture Amendment", "Graphiti And S2 Graph Boundary", "Current-State Gap Table", and "Testing Contract". M5-3 needs S2-backed graph clients, profile/pointer anchors, and real local service tests.
-- Current implementation surface: `Body/S/S2/graph-schema/src/lib.rs` owns the schema constants, property registry, relationship registry, constraints, indexes, vector index, and compatibility law; `Body/S/S2/graph-services/src/seed.rs` owns coordinate-space seeding; `Body/S/S2/graph-services/src/dataset_import.rs` owns `docs/datasets` imports; `Body/S/S2/graph-services/src/graph_api.rs` owns parameterized graph methods, pointer-web refresh, and kernel-resonance writes; `Body/S/S2/external/bimba-mcp/` remains the external MCP-facing graph interface.
+- [[2026-05-31-theia-ide-shell-and-m-plugin-architecture]] - `docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md`, especially section 1 "Architectural commitments", section 3 "The `/pratibimba/system/` directory structure", section 4 "The kernel-bridge foundational extension", section 5 "The ide-shell-m0-m5 extension", section 8 "The 0/1 <-> IDE bridging", section 9 "Build pipeline", section 10 "Open architectural questions", section 11 "Initial tranche specification", and section 12 "Success criteria". Track 05 folds this plan in and supersedes section 11's proof-of-concept tranches with production tranches.
+- [[m5-prime-system-shape-and-tauri-ide-canon]] - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`, section 2 "Code organisation: /body and /pratibimba/system", section 3 "The single-Tauri-app two-surface model", section 4 "Theia as IDE shell + the 6 + 2 plugin-app architecture", section 5 "The kernel-bridge foundational extension", section 8 "Implementation milestones", and section 9 "Open implementation questions". This is the authority for one Tauri app, two surfaces, Theia as the deep IDE, M0/M5 IDE chrome, 6+2 extension/plugin shape, and kernel-bridge as M5-2 access point.
+- [[M'-SYSTEM-SPEC]] - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`, "Shell vs Subsystem Architecture", "Canonical 0/1/4+2 Layout Discipline", "The Shell 0/1 Split IS the (0/1) Inversionary Parent", "Minimum Live Loop", "Diatonic CF / VAK Projection", "The K2 Topology as the Shared Substrate", "Required Shared MathemeHarmonicProfile", and "Neo4j / Graphiti Boundary". This is the authority that M' surfaces share one profile, topology, VAK projection, and graph/memory boundary rather than widget-local interpretations.
+- [[M'-TAURI-PORT-SPEC]] - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`, "Two-Layer Page Architecture", "Preserve From Electron", "Replace From Electron", "OmniPanel As `/`", "VAK / Anima / Epii Execution Surface", "Port Architecture", "Harmonic Profile Architecture Amendment", "Graphiti And S2 Graph Boundary", "Current-State Gap Table", and "Testing Contract". This is the authority for current `Body/M/epi-tauri` reuse, Tauri command/event boundaries, typed renderer clients, OmniPanel parity, and mock-free desktop tests.
+- [[M'-PORTAL-SPEC]] - `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`, "Harmonic / Musical Surface Law", "Shared Runtime Law", "`/` Surface", "`0` Surface", "`1` Surface", "M5' Epii Surface", "Agentic Execution / Inbox", and "Implementation Rule". This is the authority that desktop and TUI mirror logical contracts, not widgets, and that `/` dispatches CLI/gateway/typed service calls instead of forking backend behavior.
+- [[M5'-SPEC]] - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`, "Sixfold IDE Surface", "Graph Namespace Model", "Surface Philosophy: The Agentic IDE as Conversational Engagement", "User-Facing Surface", "Backend Contract Consumed", "Required MathemeHarmonicProfile Fields", "Relationship To Portal 0/1 And The 4+2 Layer", and "Readiness / Test Criteria". This is the authority for M5-2/S-stack, M5-3/Tauri-Theia, M5-4/agentic mediation, graph namespaces, review evidence, human gates, and Theia kernel-bridge readiness.
+- [[01-kernel-bridge-and-s0-foundation]] - `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md`, "Architectural Keystones", Tranches 5-8, "Dependencies", and "Open Decisions". Track 05 depends on the shared TypeScript contract, lite/full bridge modes, real `MathemeHarmonicProfile`, readiness taxonomy, bridge capabilities, and bridge-host decision path.
+- [[02-s2-bimba-map-population]] - `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md`, Tranches T7-T9 and "Success Criteria". Track 05 depends on S2 graph payloads, pointer anchors, namespace-aware graph access, Anuttara fields, GDS overlay readiness, and real S2 response fixtures.
+- [[03-s3-gateway-and-spacetimedb]] - `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md`, Tranches 1-5, "Open Decisions", and "Success Criteria". Track 05 depends on the gateway/WebSocket stream contract, native SpaceTimeDB subscriptions, `world_clock`, `pratibimba_presence`, shared archetype/coincidence rows, DAY/NOW/session/deposition anchors, and reconnect/resync semantics.
+- [[04-s5-autoresearch-and-review-extension]] - `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md`, Tranches 6-9, "Dependencies", and "Success Criteria". Track 05 depends on real S5 review/autoresearch DTOs, route queues, agent-access snapshots, review gates, dry-run promotion plans, and M5-3 IDE/workbench contract surfaces.
+
+Current implementation surface observed for this plan:
+
+- `Body/M/epi-tauri/package.json`, `vite.config.ts`, `vitest.config.ts`, `playwright.config.ts`, and `src-tauri/tauri.conf.json` define the existing React/Vite/Tauri v2 app and one-window `frontendDist` build shape.
+- `Body/M/epi-tauri/src/shell/Shell.tsx`, `src/components/OmniPanel.tsx`, `src/components/CommandPalette.tsx`, and `src/stores/uiStore.ts` already provide a lightweight shell, hotkeys, workspace selection, OmniPanel, command palette, and an MPrime workspace entry.
+- `Body/M/epi-tauri/src/services/types.ts`, `kernelProjection.ts`, `kernelProfileObservation.ts`, `gatewayClient.ts`, `temporalClient.ts`, `graphClient.ts`, `epiiClient.ts`, and `agentExecutionClient.ts` are the current typed-client footholds for profile, S2/S3/S5, and agent surfaces.
+- `Body/M/epi-tauri/src-tauri/src/lib.rs`, `commands/*`, `events.rs`, `gateway`, `graph`, `temporal`, `vault`, `agents`, `atelier`, and `library` show the current Tauri command/event authority surface.
+- `Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs` still treats native SpaceTimeDB WebSocket mode as a stub and logs fallback to polling; Track 05 must depend on Track 03 before claiming native live projection readiness.
+- `Body/M/epi-tauri/src/domains/M5_Epii/EpiiDashboard.tsx` and `src/domains/MPrime_Subsystems/MPrimeSubsystemPage.tsx` already move toward conversational M5 and 4+2 profile-grounded surfaces, but they are not a Theia IDE shell.
 
 ## Task Body
 
-2. **T1 - Schema and relation-law convergence.**
-   Deliverables: reconcile `graph-schema` relationship registry with the relationships actually emitted by `seed.rs` and `dataset_import.rs`; either register production seed/import relationships such as `GENERATES`, `ENTANGLES`, `INTERLEAVES`, `MANIFESTS`, `BEDROCK`, `FAMILY_CONTAINS`, `MOBIUS_RETURN`, `ANCHORED_TO`, and deep dataset relation types, or migrate seed/import output to registered canonical relation types with evidence properties; add/confirm canonical node property specs for Anuttara fields (`c_1_symbol`, `c_1_formulation_type`, `c_1_complete_formulation` or their approved names), namespace/provenance fields, ontology readiness fields, and GDS overlay provenance.
-   Verification: registry tests reject ad hoc relationship/property drift; a live seeded graph returns zero relationship types outside the registry or approved compatibility list via `CALL db.relationshipTypes()` plus a registry comparison; `validate_node_properties` and `validate_relationship_properties` pass on representative low-detail and deep dataset records before import.
+3. **T2 - Tauri Composition Prototype And Runtime Decision Gate.**
+
+   Deliverables:
+
+   - Extend the Tauri composition prototype so one app can load the existing `/body` surface and the `/pratibimba/system` Theia surface from the same runtime envelope.
+   - Test browser-mode Theia loaded directly from bundled assets in a Tauri webview, including workers, IndexedDB, CSP, asset URLs, file access constraints, and extension-host behavior.
+   - Test local-server Theia loaded through Tauri webview as a fallback, with deterministic port allocation, health checks, shutdown, and security review.
+   - Test Theia Electron sidecar only as a last-resort fallback and document the user-experience and process-boundary costs if selected.
+   - Test single-webview navigation and multi-webview/window persistence against the one-app law and decide which path will carry production implementation.
+
+   Verification:
+
+   - A Tauri integration test launches the app, lands on `/body`, opens the IDE surface through a command, and asserts the real Theia workbench becomes interactive.
+   - The same test asserts `/body` state is preserved or intentionally persisted/restored according to the selected single/multi-webview decision.
+   - CSP tests prove Theia assets, workers, WebSocket connections, and IPC calls are allowed only for the selected local endpoints.
+   - The prototype records memory/process count, cold-open time, warm-open time, shutdown behavior, and bridge connection identity for each tested embedding mode.
 
 ## Track Open Decisions
 
-- Should production seed relationships expand the schema registry to include current seed relation types, or should `seed.rs` migrate to the smaller canonical relation set? Current tests intentionally reject ad hoc relationship types, while current seed code emits several unregistered graph-structural relationships.
-- What is the exact canonical handling of the root `#` node after `#0..#5` map into `M0..M5`? Current code preserves a `#` seed root while import/API migration paths convert `#` to `M`; this must be made explicit before dataset population is treated as canonical.
-- Which property names are canonical for Anuttara language fields: public aliases (`symbol`, `formulation_type`, `complete_formulation`) or coordinate-prefixed registry keys (`c_1_symbol`, `c_1_formulation_type`, `c_1_complete_formulation`)? M0' can display aliases, but S2 must own the storage/provenance contract.
-- Will the local Neo4j topology include n10s and GDS in the same service used by engineers, or should ontology/GDS run in optional profiles? The plan assumes doctor can report `blocked` honestly when plugins are absent.
-- Does S2 persist GDS outputs as derived nodes/properties, return them as ephemeral API overlays, or both? Canon says recommendations must not become canonical relations automatically.
-- When does Option 3 GDS enrichment supersede Option 1, and what evidence is required? Build Option 1 first unless a later canon decision changes the privacy boundary.
-- Which topology approach is production for non-orientable traversal: Approach A coordinate-duplication/preprocessing, or deferred B/C graph modeling? Build Approach A first unless contradicted by a companion architecture decision.
-- Is `bimba-mcp` staying purely external/MCP-facing, or must it be refactored to consume the Rust S2 graph-service contract to avoid divergent coordinate parser/schema behavior? Current TS parser still documents `#` syntax as deprecated/invalid, while Rust resolves `#` intentionally.
-- What is the destructive rebuild policy for local/dev graph population? Engineers need a safe, explicit path for wiping test-owned graph data without risking shared or user data.
-- What exact Graphiti/pratibimba handles may appear in S2 responses before S5 review? The line between public safe handles and protected-local episode data must be encoded before M5-4 agent retrieval is enabled.
+- **Theia runtime mode:** Can Theia browser-mode run directly inside Tauri's Wry/WebKit webview with required workers, IndexedDB, asset paths, CSP, and extension-host behavior? If not, is the production fallback local-server-in-webview or Theia Electron sidecar?
+- **Single versus multi-webview:** Should IDE summon navigate the existing webview, open a second Tauri window/webview, or keep `/body` in tray/background with Theia foregrounded? The canon prefers persistent co-existence, but implementation must prove state and resource behavior.
+- **Bridge ownership:** Is the long-lived shared bridge owned by the Tauri Rust process, by a Theia first-loaded extension, or by a hybrid Tauri singleton with Theia and `/body` adapters? The API should be stable before this is finalized.
+- **Theia version pin and update cadence:** The existing Theia plan mentions "1.50+" as an example, but implementation must verify the current stable release and choose an update cadence.
+- **Package manager:** Theia convention often favors Yarn workspaces, while the current Tauri app uses `pnpm`. Decide whether `Idea/Pratibimba/System` follows Theia convention, repo convention, or an explicitly isolated package manager.
+- **Build composition strategy:** Decide whether Tauri bundles Theia static assets, supervises a local Theia server, or embeds/supervises a sidecar. This affects bundle size, CSP, offline behavior, startup time, and security review.
+- **Extension host model:** Decide whether all 6+2 extensions are in-tree Theia-native packages for phase 1, whether any use VS Code Extension API, and how external plugin publishing would be introduced later.
+- **Workspace and state persistence:** Decide which state belongs to Theia workspace storage, Tauri app state, S3 session state, S5 review state, S1/vault files, or bridge cache.
+- **IDE terminal and shell access:** Theia normally provides terminal/task features; Epi-Logos needs bounded agent/task execution. Decide whether a local terminal is available to users, agents, both, or neither in phase 1.
+- **Source of deep M-extension ownership:** Track 05 owns the shell, registry, and first real contribution slices, but deeper M1/M2/M3/M4 subsystem renderers may require follow-on tracks once backend contracts mature.
+- **Current source gap:** The source specs define the desired Theia shell and M5' workbench, but they do not yet provide a definitive Theia/Tauri embedding proof, bridge-host decision, or SpaceTimeDB table/stream shape for Theia beyond upstream track contracts.
 
 ## Decision Register Excerpt
 
