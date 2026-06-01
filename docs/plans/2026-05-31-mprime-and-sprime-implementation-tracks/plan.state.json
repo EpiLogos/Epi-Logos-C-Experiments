@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T21:27:42.523Z",
+  "updatedAt": "2026-06-01T21:51:35.033Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -1472,9 +1472,9 @@
     },
     "03.T1": {
       "status": "done",
-      "updatedAt": "2026-06-01T21:11:44.377Z",
+      "updatedAt": "2026-06-01T21:39:44.975Z",
       "claimedAt": null,
-      "completedAt": "2026-06-01T21:11:44.377Z",
+      "completedAt": "2026-06-01T21:39:44.975Z",
       "evidence": [
         {
           "at": "2026-06-01T20:31:29.467Z",
@@ -1487,6 +1487,10 @@
         {
           "at": "2026-06-01T21:11:44.377Z",
           "text": "USER-APPROVED CLOSURE on test-binary level. Full gate_spacetimedb_bridge tokio suite passes 10/10 in 14.43s — including gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_when_configured and gateway_rpc_publishes_bridge_events_for_real_state_changes which spawn a live gateway and SpaceTimeDB harness in-process, bind real TCP listeners, exchange real HTTP+JSON-RPC. Plus 16/16 contract tests in Body/S/S3/gateway-contract. Subprocess 'running epi gate process' criterion cannot fire because workspace compile is broken by 04.T1's dirty edit calling VakAddress.to_string() in Body/S/S5/epii-autoresearch-core/src/lib.rs:570,582 without VakAddress implementing Display in Body/S/S0/portal-core/src/vak_address.rs. User accepted that tokio in-process gateway verification is at least as rigorous as a subprocess ping. CARRY-FORWARD: VakAddress Display canonical wire-format is a cross-track decision owed by 04.T1 owner (Codex thread); 04.T1 should not be considered cleanly done until workspace compiles. Recommend 04.T2 claim wait until that's resolved."
+        },
+        {
+          "at": "2026-06-01T21:39:44.975Z",
+          "text": "FULL CLOSURE — both verification riders satisfied. (1) Cargo test suites: 16/16 gateway-contract tests pass; 10/10 gate_spacetimedb_bridge tokio suite passes including health_snapshot_surfaces_spacetimedb_projection_readiness_when_configured which directly invokes system::health_snapshot() with SPACETIMEDB_URL/DATABASE/EPI_GATEWAY_* env set and asserts ok=true, configured=true, registrationMode=live-reducer, projectionTables include kairos_surface + global_temporal_surface, subscriptionReadiness string, plus gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_when_configured and gateway_rpc_publishes_bridge_events_for_real_state_changes which spawn live gateway+SpaceTimeDB harness in-process. (2) Real subprocess closure: built epi binary; started 'epi gate start --port 18799' as a real OS process with SPACETIMEDB_URL=http://127.0.0.1:3099 + SPACETIMEDB_DATABASE=epi-logos-runtime + EPI_INSTALLATION_ID + EPI_GATEWAY_ID + EPI_GATEWAY_ENDPOINT + EPI_WORKSPACE_ROOT_HASH set; gateway booted cleanly, performed real HTTP POSTs to backend reducers register_gateway (with gateway-id, install-id, workspace-hash, ws endpoint, protocol version 3), heartbeat_gateway, and register_client; gateway WebSocket accepts connections, sends {type:hello-ok, protocol:3, version:s3-gateway-dev, features.methods:[...]} including s3'.temporal.subscribe + s3'.spacetime.subscribe + health.snapshot (the new 03.T1 method-contract); connect.challenge event with nonce is emitted; connect RPC completes with full features payload; all without any compile/link/runtime errors. Workspace compiles clean (1m57s build, 2 warnings, 0 errors). The two new s3' method contracts are live on the gateway's methods catalog — the contract is no longer abstract."
         }
       ],
       "notes": null,
@@ -1497,16 +1501,16 @@
       "worktree": null
     },
     "03.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-01T21:39:52.977Z",
+      "claimedAt": "2026-06-01T21:39:52.977Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "anima-mdev-20260601",
+      "leaseExpiresAt": "2026-06-01T23:39:52.977Z",
+      "heartbeatAt": "2026-06-01T21:39:52.977Z",
+      "runId": "20260601T213952Z-03-T2",
       "worktree": null
     },
     "03.T3": {
@@ -1669,42 +1673,57 @@
       "worktree": null
     },
     "04.T5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T21:38:27.049Z",
+      "claimedAt": "2026-06-01T21:31:12.423Z",
+      "completedAt": "2026-06-01T21:38:27.049Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T21:38:27.049Z",
+          "text": "Implemented typed dry-run promotion boundary in S5 autoresearch: PromoteRequest now carries typed PromotionDestination with legacy_destination ingress preserved, validates destination/candidate target compatibility, binds dry-run planning to a real ReviewStore resolved review item id with approve-only and compatible governance category checks, adds rollback-plan metadata, and replaces the hard-coded Hen date with caller-supplied PromotionHenTimestamp or system-derived fallback. Non-dry-run remains blocked until mutation law is wired. GitNexus impact: PromoteRequest LOW, PromotionPlan LOW, PromotionDestination LOW, promote MEDIUM with direct test/S1 compiler-plan surface only; ReviewStore/ReviewResolution LOW. Verification passed: cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --test improvement_loop (10/10); cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml (41/41 plus doctests); cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml (9/9 plus doctests); cargo test --offline --manifest-path Body/S/S5/epii-agent-core/Cargo.toml (4/4 plus doctests); git diff --check clean. GitNexus status up-to-date; required gitnexus detect_changes command unavailable in this CLI: unknown command 'detect_changes'."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T21:31:12.423Z",
+      "runId": "20260601T213112Z-04-T5",
       "worktree": null
     },
     "04.T6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T21:43:42.098Z",
+      "claimedAt": "2026-06-01T21:43:26.065Z",
+      "completedAt": "2026-06-01T21:43:42.098Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T21:43:42.098Z",
+          "text": "Implemented M5-4 Epii agent-access mediation surface in S5 agent core. Extended snapshot with active candidate summaries, route queue summaries, orchestration counts, governance gate counts, pending human validation summaries, continuity hints, and promotion plan ids while preserving existing snapshot fields and avoiding protected body leakage. Added typed candidate deposit request using real ImprovementCandidate -> surface_candidate/route_candidate paths plus linked review submission. Added API-shaped accessors for review submit/inbox/history/resolve with resolver authority split, route detail lookup, spine continuity state, and dry-run promotion planning. Gateway method list now includes route detail, spine state, and typed candidate deposit only where core handlers/tests exist. Actor expectations encoded: Anima/Aletheia can deposit but cannot resolve Epii gates. GitNexus impact: EpiiAgentAccess LOW, DepositRequest LOW, gateway_methods LOW, EpiiAgentSnapshot/ReviewAccessSnapshot/ImprovementAccessSnapshot LOW; snapshot HIGH because it touches review/autoresearch load flows and existing tests, mitigated by preserving fields and expanding tests. Verification passed: cargo test --offline --manifest-path Body/S/S5/epii-agent-core/Cargo.toml (6/6 plus doctests); cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml (41/41 plus doctests); cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml (9/9 plus doctests); git diff --check clean. GitNexus status up-to-date; gitnexus detect_changes unavailable: unknown command 'detect_changes'."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T21:43:26.065Z",
+      "runId": "20260601T214326Z-04-T6",
       "worktree": null
     },
     "04.T7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T21:51:35.018Z",
+      "claimedAt": "2026-06-01T21:44:01.286Z",
+      "completedAt": "2026-06-01T21:51:35.018Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T21:51:35.018Z",
+          "text": "Implemented M5-3 workbench contract DTOs in Body/S/S5/epii-agent-core: schema-versioned M5WorkbenchSnapshot, review pane DTOs, spine-state DTO, candidate detail DTOs, namespace artifact refs, compatibility aliases for gnostic to gnosis and atelier to etymology, and filtered promotion dry-run DTOs. Added backend methods m5_workbench_snapshot and m5_promotion_dry_run plus gateway method names s5.epii.workbench.snapshot and s5.epii.workbench.promotion_dry_run. Artifact refs validate canonical namespaces vault, repo, graph bimba, gnosis, etymology, pratibimba, run, review, improvement; public validator rejects raw absolute paths, while DTO construction normalizes persisted relative repo/vault paths and Graphiti handles to canonical namespace refs. Privacy tests persist protected review body, candidate body, kernel trajectory text, Graphiti arc, and Pratibimba-like handles and prove DTO JSON omits protected body/direction while preserving opaque handles/summaries/readiness/review-required flags. Verification PASS: npx gitnexus status fresh at 4ae5adf; npx gitnexus impact EpiiAgentAccess LOW, EpiiAgentSnapshot LOW, gateway_methods LOW-confidence index match LOW. cargo test --offline --manifest-path Body/S/S5/epii-agent-core/Cargo.toml passed 8/8 agent access tests plus baseline fixture and doctests; cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml passed all suites including improvement_loop 10/10, orchestration_continuity 4/4, surfacing_routing 4/4, recompose_pass 8/8; cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml passed 9/9 plus doctests; git diff --check clean. GitNexus detect_changes CLI remains unavailable in this repo, as observed earlier unknown command detect_changes."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T21:44:01.286Z",
+      "runId": "20260601T214401Z-04-T7",
       "worktree": null
     },
     "04.T8": {
@@ -2263,30 +2282,70 @@
       "leaseExpiresAt": "2026-06-01T23:09:38.140Z",
       "worktree": null,
       "completedAt": "2026-06-01T21:13:14.888Z"
+    },
+    {
+      "runId": "20260601T213112Z-04-T5",
+      "taskId": "04.T5",
+      "status": "done",
+      "startedAt": "2026-06-01T21:31:12.423Z",
+      "owner": "codex",
+      "leaseExpiresAt": "2026-06-01T23:31:12.423Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T21:38:27.049Z"
+    },
+    {
+      "runId": "20260601T213952Z-03-T2",
+      "taskId": "03.T2",
+      "status": "in_progress",
+      "startedAt": "2026-06-01T21:39:52.977Z",
+      "owner": "anima-mdev-20260601",
+      "leaseExpiresAt": "2026-06-01T23:39:52.977Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260601T214326Z-04-T6",
+      "taskId": "04.T6",
+      "status": "done",
+      "startedAt": "2026-06-01T21:43:26.065Z",
+      "owner": "codex",
+      "leaseExpiresAt": "2026-06-01T23:43:26.065Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T21:43:42.098Z"
+    },
+    {
+      "runId": "20260601T214401Z-04-T7",
+      "taskId": "04.T7",
+      "status": "done",
+      "startedAt": "2026-06-01T21:44:01.286Z",
+      "owner": "codex",
+      "leaseExpiresAt": "2026-06-01T23:44:01.286Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T21:51:35.018Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-01T21:27:42.523Z",
-    "updatedAt": "2026-06-01T21:27:42.523Z",
+    "createdAt": "2026-06-01T21:45:29.797Z",
+    "updatedAt": "2026-06-01T21:45:29.797Z",
     "taskIds": [
       "03.T2",
+      "04.T7",
       "03.T3",
-      "03.T4",
-      "10.T1"
+      "03.T4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "03.T2": "in-session",
+      "04.T7": "in-session",
       "03.T3": "in-session",
-      "03.T4": "in-session",
-      "10.T1": "in-session"
+      "03.T4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

@@ -2,7 +2,12 @@ use std::path::PathBuf;
 
 use epi_s5_epii_autoresearch_core::{
     ArtifactRef, EvaluationEvidence, EvidenceSourceRef, ImprovementDecision, ImprovementStore,
-    KernelEvidence, KernelTrajectoryRef, LoopState, PromoteRequest, ProposeRequest,
+    KernelEvidence, KernelTrajectoryRef, LoopState, PromoteRequest, PromotionDestination,
+    PromotionHenTimestamp, ProposeRequest,
+};
+use epi_s5_epii_review_core::{
+    GateKind, GovernanceLevel, GovernanceProfile, ResolutionActor, ReviewCategory, ReviewDecision,
+    ReviewPriority, ReviewResolveRequest, ReviewSource, ReviewStore, ReviewSubmission,
 };
 use serde_json::json;
 
@@ -327,17 +332,26 @@ fn evaluation_discards_challenger_when_baseline_wins() {
 fn promote_is_dry_run_hen_plan_for_kept_challenger() {
     let root = temp_store_root("promote_is_dry_run_hen_plan_for_kept_challenger");
     let vault = root.join("Idea");
-    let day_note = vault.join("Empty/Present/03-05-2026/daily-note.md");
+    let day_note = vault.join("Empty/Present/02-06-2026/daily-note.md");
     std::fs::create_dir_all(day_note.parent().unwrap()).unwrap();
     std::fs::write(&day_note, "# Day\n\nAutoresearch improvement record.\n").unwrap();
 
     let store = ImprovementStore::new(root.join(".epi/s5/autoresearch"));
+    let review_root = root.join(".epi/s5/review");
+    let approved_review_id = submit_review_resolution(
+        &review_root,
+        ReviewDecision::Approve,
+        ReviewCategory::StandardImprovement,
+        GateKind::Standard,
+        GovernanceLevel::Advisory,
+        Some("seeds"),
+    );
     let run = store
         .propose(ProposeRequest {
             target_family: "S".to_owned(),
             target_coordinate: "S5/S5'".to_owned(),
             direction: "promote accepted improvement through Hen".to_owned(),
-            source_review_item_id: Some("review-approved-1".to_owned()),
+            source_review_item_id: Some(approved_review_id.clone()),
             baseline: ArtifactRef::new("Idea/Bimba/Seeds/S/S5/S5-SPEC.md"),
         })
         .expect("proposal should persist");
@@ -359,11 +373,16 @@ fn promote_is_dry_run_hen_plan_for_kept_challenger() {
     let promotion = store
         .promote(PromoteRequest {
             run_id: run.run_id,
-            destination: "seeds".to_owned(),
-            approved_review_resolution_id: "resolution-1".to_owned(),
+            destination: PromotionDestination::SeedDeposit {
+                seed_path: "Idea/Bimba/Seeds/S/S5/S5-SPEC.md".to_owned(),
+            },
+            legacy_destination: Some("seeds".to_owned()),
+            approved_review_resolution_id: approved_review_id,
+            review_store_root: review_root,
             vault_root: vault,
             compiler_root: root.join("Body/S/S1/hen-compiler"),
             artifact_slug: "autoresearch-return-law".to_owned(),
+            requested_at: Some(PromotionHenTimestamp::new(2026, 6, 2, 8, 30, 0)),
             dry_run: true,
         })
         .expect("dry-run promotion should plan through Hen");
@@ -371,6 +390,12 @@ fn promote_is_dry_run_hen_plan_for_kept_challenger() {
     assert!(promotion.ok);
     assert!(promotion.dry_run);
     assert_eq!(promotion.promoted_path, None);
+    assert_eq!(
+        promotion.governance_category,
+        ReviewCategory::StandardImprovement
+    );
+    assert!(!promotion.rollback_plan.executable);
+    assert_eq!(promotion.legacy_destination.as_deref(), Some("seeds"));
     assert_eq!(
         promotion.compile_plan.ledger_entries,
         vec!["improvement.ledger"]
@@ -399,16 +424,140 @@ fn non_dry_run_promotion_is_blocked_until_review_and_compiler_mutation_are_wired
     let error = store
         .promote(PromoteRequest {
             run_id: "missing".to_owned(),
-            destination: "seeds".to_owned(),
+            destination: PromotionDestination::SeedDeposit {
+                seed_path: "Idea/Bimba/Seeds/S/S5/S5-SPEC.md".to_owned(),
+            },
+            legacy_destination: Some("seeds".to_owned()),
             approved_review_resolution_id: "resolution-1".to_owned(),
+            review_store_root: root.join(".epi/s5/review"),
             vault_root: root.join("Idea"),
             compiler_root: root.join("Body/S/S1/hen-compiler"),
             artifact_slug: "blocked".to_owned(),
+            requested_at: Some(PromotionHenTimestamp::new(2026, 6, 2, 0, 0, 0)),
             dry_run: false,
         })
         .expect_err("non-dry-run promotion must stay blocked");
 
     assert!(error.contains("non-dry-run autoresearch promotion"));
+}
+
+#[test]
+fn promotion_rejects_incompatible_destination_for_candidate_target() {
+    let root = temp_store_root("promotion_rejects_incompatible_destination_for_candidate_target");
+    let vault = root.join("Idea");
+    let day_note = vault.join("Empty/Present/02-06-2026/daily-note.md");
+    std::fs::create_dir_all(day_note.parent().unwrap()).unwrap();
+    std::fs::write(&day_note, "# Day\n\nTyped mismatch.\n").unwrap();
+    let review_root = root.join(".epi/s5/review");
+    let approved_review_id = submit_review_resolution(
+        &review_root,
+        ReviewDecision::Approve,
+        ReviewCategory::StandardImprovement,
+        GateKind::Standard,
+        GovernanceLevel::Advisory,
+        Some("anuttara:ontology"),
+    );
+    let store = ImprovementStore::new(root.join(".epi/s5/autoresearch"));
+    let run = kept_run(&store, Some(approved_review_id.clone()));
+
+    let error = store
+        .promote(PromoteRequest {
+            run_id: run.run_id,
+            destination: PromotionDestination::AnuttaraOntologyExtension {
+                axiom_target: "ql:UnsafeShortcut".to_owned(),
+            },
+            legacy_destination: Some("anuttara:ontology".to_owned()),
+            approved_review_resolution_id: approved_review_id,
+            review_store_root: review_root,
+            vault_root: vault,
+            compiler_root: root.join("Body/S/S1/hen-compiler"),
+            artifact_slug: "typed-mismatch".to_owned(),
+            requested_at: Some(PromotionHenTimestamp::new(2026, 6, 2, 0, 0, 0)),
+            dry_run: true,
+        })
+        .expect_err("candidate/destination mismatch must be rejected");
+
+    assert!(error.contains("promotion destination targets"));
+}
+
+#[test]
+fn promotion_requires_approved_review_resolution() {
+    let root = temp_store_root("promotion_requires_approved_review_resolution");
+    let vault = root.join("Idea");
+    let day_note = vault.join("Empty/Present/02-06-2026/daily-note.md");
+    std::fs::create_dir_all(day_note.parent().unwrap()).unwrap();
+    std::fs::write(&day_note, "# Day\n\nReview gate.\n").unwrap();
+    let store = ImprovementStore::new(root.join(".epi/s5/autoresearch"));
+    let run = kept_run(&store, None);
+
+    for decision in [ReviewDecision::Reject, ReviewDecision::Defer] {
+        let review_root = root.join(format!(".epi/s5/review-{decision:?}"));
+        let review_id = submit_review_resolution(
+            &review_root,
+            decision,
+            ReviewCategory::StandardImprovement,
+            GateKind::Standard,
+            GovernanceLevel::Advisory,
+            Some("seeds"),
+        );
+        let error = store
+            .promote(PromoteRequest {
+                run_id: run.run_id.clone(),
+                destination: PromotionDestination::SeedDeposit {
+                    seed_path: "Idea/Bimba/Seeds/S/S5/S5-SPEC.md".to_owned(),
+                },
+                legacy_destination: Some("seeds".to_owned()),
+                approved_review_resolution_id: review_id,
+                review_store_root: review_root,
+                vault_root: vault.clone(),
+                compiler_root: root.join("Body/S/S1/hen-compiler"),
+                artifact_slug: format!("review-{decision:?}"),
+                requested_at: Some(PromotionHenTimestamp::new(2026, 6, 2, 0, 0, 0)),
+                dry_run: true,
+            })
+            .expect_err("non-approved review must block promotion planning");
+        assert!(error.contains("not approve"));
+    }
+}
+
+#[test]
+fn promotion_requires_governance_category_compatible_with_destination() {
+    let root = temp_store_root("promotion_requires_governance_category_compatible");
+    let vault = root.join("Idea");
+    let day_note = vault.join("Empty/Present/02-06-2026/daily-note.md");
+    std::fs::create_dir_all(day_note.parent().unwrap()).unwrap();
+    std::fs::write(&day_note, "# Day\n\nGovernance mismatch.\n").unwrap();
+    let review_root = root.join(".epi/s5/review");
+    let review_id = submit_review_resolution(
+        &review_root,
+        ReviewDecision::Approve,
+        ReviewCategory::StandardImprovement,
+        GateKind::Standard,
+        GovernanceLevel::Advisory,
+        Some("world"),
+    );
+    let store = ImprovementStore::new(root.join(".epi/s5/autoresearch"));
+    let run = kept_run(&store, Some(review_id.clone()));
+
+    let error = store
+        .promote(PromoteRequest {
+            run_id: run.run_id,
+            destination: PromotionDestination::WorldPromotion {
+                world_path: "Idea/Worlds/S5/accepted.md".to_owned(),
+                source_seed_path: "Idea/Bimba/Seeds/S/S5/S5-SPEC.md".to_owned(),
+            },
+            legacy_destination: Some("world".to_owned()),
+            approved_review_resolution_id: review_id,
+            review_store_root: review_root,
+            vault_root: vault,
+            compiler_root: root.join("Body/S/S1/hen-compiler"),
+            artifact_slug: "governance-mismatch".to_owned(),
+            requested_at: Some(PromotionHenTimestamp::new(2026, 6, 2, 0, 0, 0)),
+            dry_run: true,
+        })
+        .expect_err("wrong governance category must block promotion planning");
+
+    assert!(error.contains("incompatible with destination category"));
 }
 
 fn temp_store_root(test_name: &str) -> std::path::PathBuf {
@@ -419,4 +568,81 @@ fn temp_store_root(test_name: &str) -> std::path::PathBuf {
     let _ = std::fs::remove_dir_all(&root);
     std::fs::create_dir_all(&root).expect("temp root");
     root
+}
+
+fn kept_run(
+    store: &ImprovementStore,
+    source_review_item_id: Option<String>,
+) -> epi_s5_epii_autoresearch_core::ImprovementRun {
+    let run = store
+        .propose(ProposeRequest {
+            target_family: "S".to_owned(),
+            target_coordinate: "S5/S5'".to_owned(),
+            direction: "promote accepted improvement through Hen".to_owned(),
+            source_review_item_id,
+            baseline: ArtifactRef::new("Idea/Bimba/Seeds/S/S5/S5-SPEC.md"),
+        })
+        .expect("proposal should persist");
+    store
+        .evaluate(
+            &run.run_id,
+            vec![EvaluationEvidence {
+                dimension: "return_law".to_owned(),
+                baseline_score: 0.55,
+                challenger_score: 0.88,
+                weight: 1.0,
+                notes: "Challenger routes accepted output through S1 Hen.".to_owned(),
+                source_refs: Vec::new(),
+                kernel_evidence: None,
+            }],
+        )
+        .expect("evaluation should persist")
+}
+
+fn submit_review_resolution(
+    review_root: &std::path::Path,
+    decision: ReviewDecision,
+    category: ReviewCategory,
+    gate_kind: GateKind,
+    level: GovernanceLevel,
+    promotion_destination: Option<&str>,
+) -> String {
+    let review_store = ReviewStore::new(review_root);
+    let item = review_store
+        .submit(ReviewSubmission {
+            source: ReviewSource::Autoresearch,
+            title: "Promote autoresearch candidate".to_owned(),
+            body: "Review the kept challenger before promotion planning.".to_owned(),
+            priority: ReviewPriority::Blocking,
+            coordinate_context: json!({"coordinate": "S5/S5'"}),
+            proposed_action: None,
+            requires_human: false,
+            kernel_visibility: None,
+            governance_profile: Some(GovernanceProfile {
+                category,
+                gate_kind,
+                governance_level: level,
+                required_actors: vec!["epii".to_owned()],
+                candidate_id: Some("candidate:promotion-test".to_owned()),
+                orchestration_id: Some("orchestration:promotion-test".to_owned()),
+                source_artifact_refs: vec!["autoresearch://challenger/test".to_owned()],
+                target_subsystem: Some("Epii".to_owned()),
+                vector_kind: Some("EpiiSpineMechanismRefinement".to_owned()),
+                promotion_destination: promotion_destination.map(str::to_owned),
+                source_actor_detail: Some("autoresearch".to_owned()),
+                stage_records: Vec::new(),
+            }),
+        })
+        .expect("review should submit");
+    review_store
+        .resolve(ReviewResolveRequest {
+            item_id: item.item_id.clone(),
+            decision,
+            rationale: "reviewed through real review store".to_owned(),
+            resolved_by: ResolutionActor::Human,
+            promotion_destination: promotion_destination.map(str::to_owned),
+            promoted_artifact: Some(json!({"artifact": "autoresearch://challenger/test"})),
+        })
+        .expect("review should resolve");
+    item.item_id
 }

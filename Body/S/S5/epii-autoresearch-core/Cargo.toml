@@ -5,11 +5,11 @@ edition = "2021"
 
 [dependencies]
 epi-s1-hen-compiler-core = { path = "../../S1/hen-compiler-core" }
+epi-s5-epii-review-core = { path = "../epii-review-core" }
 portal-core = { path = "../../S0/portal-core" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 uuid = { version = "1", features = ["v4"] }
 
 [dev-dependencies]
-epi-s5-epii-review-core = { path = "../epii-review-core" }
 tempfile = "3"

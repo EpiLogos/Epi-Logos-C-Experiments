@@ -89,6 +89,7 @@ name = "epi-s5-epii-autoresearch-core"
 version = "0.1.0"
 dependencies = [
  "epi-s1-hen-compiler-core",
+ "epi-s5-epii-review-core",
  "portal-core",
  "serde",
  "serde_json",
