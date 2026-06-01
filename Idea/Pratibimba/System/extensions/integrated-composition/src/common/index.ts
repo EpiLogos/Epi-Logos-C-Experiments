@@ -15,6 +15,9 @@ export * from './recognition-claim';
 export * from './graphiti-source-guard';
 export * from './epii-review-actions';
 export * from './epii-review-state';
+export * from './integrated-deep-links';
+export * from './workspace-persistence';
+export * from './omni-panel';
 
 // Browser-runtime helpers — re-exported here so plugin packages can import
 // everything from the package root, matching the m-extension-runtime pattern.

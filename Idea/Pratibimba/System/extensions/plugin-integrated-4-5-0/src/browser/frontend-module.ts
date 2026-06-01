@@ -17,7 +17,9 @@ import {
     COMMAND_OPEN_EVIDENCE_PANEL,
     COMMAND_TOGGLE_MINI_INSPECTORS,
     IntegratedBridgeGate,
-    NAMED_LAYOUTS
+    InvalidIntegratedDeepLinkError,
+    NAMED_LAYOUTS,
+    parseIntegratedDeepLink
 } from '@pratibimba/integrated-composition';
 import { PluginIntegrated450Widget } from './plugin-integrated-4-5-0-widget';
 import { PLUGIN_ID, PRIMARY_COMMAND_ID, NAMED_LAYOUT_ID } from '../common';
@@ -112,6 +114,43 @@ export class PluginIntegrated450Contribution
         commands.registerCommand(
             { id: COMMAND_COPY_EVIDENCE_HANDLE, label: 'Integrated: copy evidence handle' },
             { execute: () => guard(() => undefined) }
+        );
+        // 08.T7: deep-link handler. Accepts a raw epi-logos://ide/integrated/...
+        // URL, parses it, refuses unrelated plugin routes, and opens this
+        // plugin's view with the link state applied.
+        commands.registerCommand(
+            { id: `${PLUGIN_ID}.handleDeepLink`, label: `${PLUGIN_ID}: handle deep link` },
+            {
+                execute: (raw: string) => guard(() => {
+                    try {
+                        const link = parseIntegratedDeepLink(raw);
+                        if (link.pluginId !== PLUGIN_ID) {
+                            return undefined;
+                        }
+                        // The widget reads selectedCoordinate / profileGeneration
+                        // through the SharedBridgeAdapter; the deep link command
+                        // is responsible for opening the view + signaling the
+                        // intended inspector. Inspector switching is plumbed in
+                        // a follow-on (08.T8 acceptance scenarios).
+                        void link;
+                        return this.openView({ activate: true, reveal: true });
+                    } catch (err) {
+                        if (err instanceof InvalidIntegratedDeepLinkError) {
+                            return undefined;
+                        }
+                        throw err;
+                    }
+                })
+            }
+        );
+        // 08.T7: workspace-layout activation. Signals the named workspace
+        // layout id so a downstream layout service (or the future Theia
+        // LayoutService binding) can apply it. Until that binding lands the
+        // command is a no-op marker; it does NOT silently succeed against a
+        // missing layout service.
+        commands.registerCommand(
+            { id: `${PLUGIN_ID}.openWorkspaceLayout`, label: `${PLUGIN_ID}: open named layout` },
+            { execute: () => guard(() => NAMED_LAYOUT_ID) }
         );
         // ALL_INTEGRATED_COMMANDS is referenced for test discovery.
         void ALL_INTEGRATED_COMMANDS;

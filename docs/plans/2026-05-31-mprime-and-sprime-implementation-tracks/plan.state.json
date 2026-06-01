@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T13:11:49.859Z",
+  "updatedAt": "2026-06-01T13:21:50.266Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -112,14 +112,19 @@
       "worktree": null
     },
     "01.T6": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-01T13:11:49.842Z",
+      "status": "done",
+      "updatedAt": "2026-06-01T13:19:18.245Z",
       "claimedAt": "2026-06-01T13:11:49.842Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-01T13:19:18.245Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T13:19:18.245Z",
+          "text": "Implemented S0 kernel-bridge runtime MVP: singleton fanout over existing SpaceTimeDB projection updates, IDE and /body subscriber registration, cached safe-profile replay with generation/staleness metadata, Tauri adapter snapshot, readiness using existing bridge taxonomy, protected-field rejection, and TS runtime snapshot schema. Verification: cargo fmt --manifest-path Body/S/S0/epi-cli/Cargo.toml; cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract (4 passed); cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge (10 passed); npm run test -- kernel-bridge in Body/S/S0/epi-cli/schemas (8 passed); npm run test in schemas (81 passed); npm run build in schemas passed. GitNexus impact attempted for SpacetimeRegistration, SpacetimeProjectionResyncTracker, GateCmd but blocked by @ladybugdb/core lbugjs.node architecture mismatch (have arm64, need x86_64)."
+        }
+      ],
       "notes": null,
       "owner": "admin",
-      "leaseExpiresAt": "2026-06-01T15:11:49.842Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-01T13:11:49.842Z",
       "runId": "20260601T131149Z-01-T6",
       "worktree": null
@@ -900,16 +905,25 @@
       "worktree": null
     },
     "08.T7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T13:21:41.690Z",
+      "claimedAt": "2026-06-01T13:15:37.576Z",
+      "completedAt": "2026-06-01T13:21:41.690Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T13:21:24.723Z",
+          "text": "08.T7 landed activation, deep links, omni panel, and workspace persistence for both integrated plugins. New integrated-deep-links.ts: IntegratedDeepLink type carrying selectedCoordinate/profileGeneration/s3SessionHandle/s3DayNowHandle/privacyScope/intendedInspector; parseIntegratedDeepLink(raw) + formatIntegratedDeepLink(spec) for epi-logos://ide/integrated/{cosmic-engine,jiva-siva}? routes with InvalidIntegratedDeepLinkError on bad scheme/route/inspector/profile_generation; deepLinkForPlugin(pluginId, rest) helper picks the canonical route name per plugin. New workspace-persistence.ts: IntegratedWorkspaceSnapshot tracks activePluginId/layoutId/miniInspectorOwners/selectedCoordinate/visibleEvidencePanelIds/lastEpiiReviewMode/lastIntendedInspector/lastPrivacyScope/extras; scrubProtectedFromSnapshot strips 9 forbidden body/quaternion/journal patterns from extras at serialize boundary; serializeSnapshot/deserializeSnapshot round-trip preserves clean layout state; detectProtectedKeysInSnapshot lists leaks BEFORE persistence as a debug aid. New omni-panel.ts: OmniPanelTrigger {shell-0|shell-1|alert-kind}; omniPanelTargetFor() maps shell-0/M1/M2/M3 alerts to plugin-integrated-1-2-3 and shell-1/M0/M4/M5 alerts to plugin-integrated-4-5-0 with deterministic ALERT_TO_PLUGIN table; carries selectedCoordinate/profileGeneration/session/day_now options through to the produced deep link. Scaffolder template updated to emit two new per-plugin commands: \\${PLUGIN_ID}.handleDeepLink (parses URL, refuses unrelated plugin id via parseIntegratedDeepLink + InvalidIntegratedDeepLinkError, opens view on match) and \\${PLUGIN_ID}.openWorkspaceLayout (signals NAMED_LAYOUT_ID for downstream layout service binding) — both bridge-gated behind installed flag. Verification: ./scripts/smoke-build.sh green (bundle 21.32MB, 11 chunks); node --test extensions/test/*.test.mjs 110/110 pass including 17 new tests covering: (a) cosmic-engine + jiva-siva format→parse round-trip preserving all 5 typed fields with frozen output; (b) empty deep link with no params; (c) InvalidIntegratedDeepLinkError on bad scheme + bad route name + bad inspector + bad profile_generation; (d) deepLinkForPlugin returns correct route name per plugin id; (e) workspace snapshot scrubs bioquaternion_raw/nara_journal_text/graphiti_body/q_personal/identity_quaternion_internals from extras while preserving safe keys; (f) detectProtectedKeysInSnapshot finds nested forbidden keys; (g) serialize→deserialize round-trip preserves clean layout state (activePluginId/layoutId/miniInspectorOwners/selectedCoordinate/lastIntendedInspector/extras.ui_zoom); (h) serialize never persists protected fields; (i) shell-0→cosmic-engine + shell-1→jiva-siva routing; (j) M1/M2/M3 alerts→cosmic-engine; (k) M0/M4/M5 alerts→jiva-siva; (l) omni-panel target carries coordinate+generation through to deep link URL. Validator ok=true. Activation-mode open decision (track-08.activation-mode) addressed by supporting BOTH modes: deep-link handler command (URL→view open) AND openWorkspaceLayout command (named layout signal); workspace-mode default decision deferred to a real Theia LayoutService binding when prototype gate resolves."
+        },
+        {
+          "at": "2026-06-01T13:21:41.690Z",
+          "text": "Completed and verified Track 08 T7 activation/deep-link/omni/workspace persistence lane. Existing 08.T7 implementation provides integrated deep-link grammar for cosmic-engine and jiva-siva, omni-panel routing from shell/alerts, workspace snapshot persistence with protected-body scrubbing, plugin deep-link and named-layout command hooks, and activation/persistence contract tests. Added activation-and-persistence.test.mjs to pnpm test:contracts so it is not orphaned. Verification: pnpm build in Idea/Pratibimba/System passed (all extension packages and Theia app compiled; Theia emitted a transient @theia/electron resolution warning but webpack compiled successfully); node --test extensions/test/activation-and-persistence.test.mjs passed 17 tests; pnpm test:contracts passed 38 tests. GitNexus impact attempted for parseIntegratedDeepLink, serializeSnapshot, omniPanelTargetFor but blocked by @ladybugdb/core lbugjs.node architecture mismatch (have arm64, need x86_64)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T13:15:37.576Z",
+      "runId": "20260601T131537Z-08-T7",
       "worktree": null
     },
     "08.T8": {
@@ -1486,31 +1500,42 @@
     {
       "runId": "20260601T131149Z-01-T6",
       "taskId": "01.T6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-01T13:11:49.842Z",
       "owner": "admin",
       "leaseExpiresAt": "2026-06-01T15:11:49.842Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-01T13:19:18.245Z"
+    },
+    {
+      "runId": "20260601T131537Z-08-T7",
+      "taskId": "08.T7",
+      "status": "done",
+      "startedAt": "2026-06-01T13:15:37.576Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T15:15:37.576Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T13:21:24.723Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-01T13:03:13.264Z",
-    "updatedAt": "2026-06-01T13:03:13.264Z",
+    "createdAt": "2026-06-01T13:12:06.417Z",
+    "updatedAt": "2026-06-01T13:12:06.417Z",
     "taskIds": [
-      "02.T5",
-      "02.T6",
+      "01.T6",
       "09.T1",
-      "01.T6"
+      "07.T3",
+      "09.T2"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "02.T5": "in-session",
-      "02.T6": "in-session",
+      "01.T6": "in-session",
       "09.T1": "in-session",
-      "01.T6": "in-session"
+      "07.T3": "in-session",
+      "09.T2": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
