@@ -11,6 +11,10 @@ export * from './s5-review-actions';
 export * from './privacy-scrubber';
 export * from './consent-gate';
 export * from './jiva-siva-fields';
+export * from './recognition-claim';
+export * from './graphiti-source-guard';
+export * from './epii-review-actions';
+export * from './epii-review-state';
 
 // Browser-runtime helpers — re-exported here so plugin packages can import
 // everything from the package root, matching the m-extension-runtime pattern.

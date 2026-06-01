@@ -109,3 +109,62 @@
     padding: 1px 4px;
     border-radius: 2px;
 }
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-review-panel {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 320px;
+    max-height: 60%;
+    overflow: auto;
+    background-color: var(--theia-editorWidget-background, var(--theia-sideBar-background));
+    border: 1px solid var(--theia-sideBar-border);
+    border-radius: 4px;
+    padding: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    z-index: 10;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-mode-notify-pending {
+    border-color: var(--theia-warningForeground, #d4a14a);
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-review-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-review-header h3 {
+    margin: 0;
+    font-size: var(--theia-ui-font-size2);
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-review-summary {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 12px;
+    row-gap: 4px;
+    font-size: var(--theia-ui-font-size0);
+    margin: 0 0 12px;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-review-summary dt {
+    color: var(--theia-descriptionForeground);
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-review-actions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-review-actions li + li {
+    margin-top: 4px;
+}
+
+.integrated-widget-plugin-integrated-4-5-0 .jiva-epii-review-actions button {
+    width: 100%;
+    text-align: left;
+}

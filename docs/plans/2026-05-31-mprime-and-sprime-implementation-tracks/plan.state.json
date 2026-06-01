@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T13:02:30.917Z",
+  "updatedAt": "2026-06-01T13:11:49.859Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -112,16 +112,16 @@
       "worktree": null
     },
     "01.T6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-01T13:11:49.842Z",
+      "claimedAt": "2026-06-01T13:11:49.842Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T15:11:49.842Z",
+      "heartbeatAt": "2026-06-01T13:11:49.842Z",
+      "runId": "20260601T131149Z-01-T6",
       "worktree": null
     },
     "01.T7": {
@@ -253,29 +253,39 @@
       "worktree": null
     },
     "02.T5": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-01T12:47:20.869Z",
+      "status": "done",
+      "updatedAt": "2026-06-01T13:04:36.453Z",
       "claimedAt": "2026-06-01T12:47:20.869Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-01T13:04:36.453Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T13:04:36.453Z",
+          "text": "Implemented S2 epi ontology bridge: added Body/S/S2/ontology/epi.ttl OWL2 RL/SHACL source artifact without family labels, graph-services ontology module with parameterized n10s import/export/SHACL plans, GraphMeta OWL2_RL + SHACL reporting fact recording, and s2.graph.node Anuttara aliases sourced only from c_1_symbol/c_1_formulation_type/c_1_complete_formulation with s2.neo4j provenance. Added contract tests for ontology artifact/import plan/family-label guard and live Neo4j tests for GraphMeta fact recording plus M0 inspector payload round-trip from real S2 properties. Verification PASS: cargo fmt --manifest-path Body/S/S2/graph-services/Cargo.toml; cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml (71 unit passed, 3 ignored; all integration suites passed); cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml live_m0_inspector_payload_reads_anuttara_fields_from_s2_properties -- --ignored passed against live Neo4j; cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml live_ontology_bridge_records_owl_and_shacl_facts_in_graph_meta -- --ignored passed against live Neo4j; cargo run --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml -- graph doctor --json reported Neo4j/schema/APOC ready and n10s/owl2Rl blocked with zero n10s procedures, so no false green. GitNexus impact attempted for GraphMethodService but blocked by @ladybugdb/core lbugjs.node architecture mismatch (have arm64, need x86_64)."
+        }
+      ],
       "notes": null,
       "owner": "admin",
-      "leaseExpiresAt": "2026-06-01T14:47:20.869Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-01T12:47:20.869Z",
       "runId": "20260601T124720Z-02-T5",
       "worktree": null
     },
     "02.T6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T13:10:05.522Z",
+      "claimedAt": "2026-06-01T13:04:58.706Z",
+      "completedAt": "2026-06-01T13:10:05.522Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T13:10:05.522Z",
+          "text": "Implemented S2 GDS Option 1 overlay contract under Body/S/S2: added graph-services gds module with projection name s2_public_bimba_option1_v1, projection/privacy metadata, registered non-compat relationship type list, protected label exclusions (GraphitiEpisode/NaraBody/ProtectedLocalBody/PrivateProjection), algorithm descriptors for FastRP/PageRank/nodeSimilarity/Louvain/KNN, and GraphMethodService::gds_tangent_overlay that checks live gds.* procedures and returns a blocked, empty, no-canonical-write overlay when GDS is absent. Added gds_overlay_contract tests for public-only projection policy, no canonical graph write Cypher, blocked payload semantics, and live APOC-only Neo4j blocked overlay response. Updated RUNBOOK with GDS Option 1 contract. Verification PASS: cargo fmt --manifest-path Body/S/S2/graph-services/Cargo.toml; cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml (71 unit passed, 3 ignored; all integration suites passed incl new GDS tests); cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml live_gds_overlay_reports_blocked_in_apoc_only_local_topology -- --ignored passed against live Neo4j; prior graph doctor JSON showed gds status blocked with procedureCount=0, so no fabricated GDS recommendations. GitNexus impact attempted for GdsOverlayPayload but blocked by @ladybugdb/core lbugjs.node architecture mismatch (have arm64, need x86_64)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T13:04:58.706Z",
+      "runId": "20260601T130458Z-02-T6",
       "worktree": null
     },
     "02.T7": {
@@ -872,16 +882,21 @@
       "worktree": null
     },
     "08.T6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T13:11:23.839Z",
+      "claimedAt": "2026-06-01T13:05:53.590Z",
+      "completedAt": "2026-06-01T13:11:23.839Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T13:11:23.839Z",
+          "text": "08.T6 landed 4/5/0 Epii review + consent + canon-recognition hooks on top of 08.T5. New recognition-claim.ts: JivaSivaRecognitionClaim type + buildJivaSivaRecognitionClaim builder enforcing ten required fields (privacyBoundary, m4ProtectedSourceHandle, bedrockLinkHandle, activityResonanceTraces, s2EvidenceHandles, s3SessionHandle, s3DayNowHandle, s5TargetRoute, sourceClass, sourceSpecAnchors) with per-field JivaSivaRecognitionMissingFieldError. recognitionClaimToEnvelope maps the claim to a 4/5/0 IntegratedEvidenceEnvelope flagged requiresHumanFinalValidation=true. New graphiti-source-guard.ts: assertNotCanonicalS2Source throws GraphitiNotCanonicalError if a graphiti-memory envelope targets s5.review.target.canon, claims canonical S2 via isCanonical/s2Canonical/canonicalS2, or tags a registered S2 relationship type. New epii-review-actions.ts: five Epii actions (reviewRecognitionClaim/depositProtectedEvidence/requestAnimaConsentReview/openEpiiContinuity/dryRunCanonPromotion) routed to s5.review.recognition_claim.request, s5.evidence.deposit.protected, s5.consent.review.request, s5.continuity.open, s5.improve.canon.dry_run respectively. AgentDisposition enum + enforceAgentDispositionLimit: agents may defer/summarize on a human-required envelope; approve/reject/revise/promote throw HumanRequiredDispositionError. New epii-review-state.ts: EpiiReviewSurfaceState carries mode/reviewInboxCount/activeCandidateRoute/humanRequiredGateState/dryRunPromotionReadiness/continuityHint; CLOSED_EPII_REVIEW_STATE defaults to mode=closed and dryRunPromotionReadiness=awaiting-compiler-mutation-law (DSD-03 honest); withReviewInboxCount auto-summons via notify-pending on growth; withPanelMode transitions modes. EpiiReviewPanel React component renders only when state.mode!==closed, shows the five typed actions + summary fields. Widget extended: epiiReviewState defaults to closed, setEpiiReviewMode/setReviewInboxCount/handleEpiiAction hooks exposed; EpiiReviewPanel rendered alongside JivaSivaPanes. CSS for summonable panel with notify-pending border highlight. Verification: ./scripts/smoke-build.sh green (bundle 21.32MB, 11 chunks); node --test extensions/test/*.test.mjs 93/93 pass including 27 new tests: 10 per-required-field rejection tests for the recognition claim builder, claim→envelope cross-track field preservation with human-gate flag, AGENT_AUTO_DISPOSITIONS_ALLOWED_FOR_HUMAN_GATE exhaustiveness (defer+summarize only), defer/summarize permitted, approve/reject/revise/promote blocked on human gate, no-op on non-human envelopes, graphiti-memory→canon target blocked, graphiti-memory→isCanonical/s2Canonical/canonicalS2/registeredRelationshipType all blocked, m4-protected passes guard, Epii action method-name mapping, bridge_unavailable on null bridge, human_validation_required without gateway call, graphiti-source rejection through Epii action, CLOSED_EPII_REVIEW_STATE shape + frozen, withReviewInboxCount auto-notify on growth, withPanelMode transitions. Validator ok=true. Deferred: real Track 04 S5 DTOs (gateway methods compile against typed boundary; payload ready for real s5.review.recognition_claim.* / s5.evidence.deposit.protected / s5.consent.review.request / s5.continuity.* / s5.improve.canon.dry_run when Track 04 lands)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T13:05:53.590Z",
+      "runId": "20260601T130553Z-08-T6",
       "worktree": null
     },
     "08.T7": {
@@ -1431,11 +1446,12 @@
     {
       "runId": "20260601T124720Z-02-T5",
       "taskId": "02.T5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-01T12:47:20.869Z",
       "owner": "admin",
       "leaseExpiresAt": "2026-06-01T14:47:20.869Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-01T13:04:36.453Z"
     },
     {
       "runId": "20260601T125654Z-08-T5",
@@ -1446,12 +1462,41 @@
       "leaseExpiresAt": "2026-06-01T14:56:54.330Z",
       "worktree": null,
       "completedAt": "2026-06-01T13:02:30.885Z"
+    },
+    {
+      "runId": "20260601T130458Z-02-T6",
+      "taskId": "02.T6",
+      "status": "done",
+      "startedAt": "2026-06-01T13:04:58.706Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T15:04:58.706Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T13:10:05.522Z"
+    },
+    {
+      "runId": "20260601T130553Z-08-T6",
+      "taskId": "08.T6",
+      "status": "done",
+      "startedAt": "2026-06-01T13:05:53.590Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T15:05:53.590Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T13:11:23.839Z"
+    },
+    {
+      "runId": "20260601T131149Z-01-T6",
+      "taskId": "01.T6",
+      "status": "in_progress",
+      "startedAt": "2026-06-01T13:11:49.842Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T15:11:49.842Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-01T12:55:03.831Z",
-    "updatedAt": "2026-06-01T12:55:03.831Z",
+    "createdAt": "2026-06-01T13:03:13.264Z",
+    "updatedAt": "2026-06-01T13:03:13.264Z",
     "taskIds": [
       "02.T5",
       "02.T6",

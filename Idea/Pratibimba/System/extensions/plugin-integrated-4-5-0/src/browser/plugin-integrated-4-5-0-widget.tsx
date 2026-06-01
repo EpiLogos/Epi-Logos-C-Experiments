@@ -12,6 +12,9 @@ import {
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
 import {
+    CLOSED_EPII_REVIEW_STATE,
+    EpiiActionId,
+    EpiiReviewSurfaceState,
     checkJivaSivaPanes,
     CompositionCoordinator,
     ConsentAction,
@@ -19,8 +22,11 @@ import {
     findNamedLayout,
     IntegratedContributorRecord,
     IntegratedEmptyState,
-    buildEmptyState
+    buildEmptyState,
+    withPanelMode,
+    withReviewInboxCount
 } from '@pratibimba/integrated-composition';
+import { EpiiReviewPanel } from './epii-review-panel';
 import { JivaSivaPanes } from './jiva-siva-panes';
 import { PLUGIN_ID, CONTRIBUTOR_IDS } from '../common';
 
@@ -39,6 +45,8 @@ export class PluginIntegrated450Widget extends ReactWidget {
     protected contributorRecords: readonly IntegratedContributorRecord[] = [];
     protected currentProfile: MathemeHarmonicProfileBoundary | null = null;
     protected subscriptions: Disposable[] = [];
+    /** Epii review pane state — defaults to closed per 08.T6 deliverable 4. */
+    protected epiiReviewState: EpiiReviewSurfaceState = CLOSED_EPII_REVIEW_STATE;
 
     @postConstruct()
     protected init(): void {
@@ -75,6 +83,30 @@ export class PluginIntegrated450Widget extends ReactWidget {
     /** Hook for the S5 consent service to deliver records into the gate. */
     consentGateRef(): ConsentGate {
         return this.consentGate;
+    }
+
+    /** Summon / dismiss the Epii review panel (08.T6 deliverable 4). */
+    setEpiiReviewMode(mode: EpiiReviewSurfaceState['mode']): void {
+        this.epiiReviewState = withPanelMode(this.epiiReviewState, mode, Date.now());
+        this.update();
+    }
+
+    /** Track 04 / S5 push: refresh inbox count; auto-summon on growth. */
+    setReviewInboxCount(count: number): void {
+        this.epiiReviewState = withReviewInboxCount(this.epiiReviewState, count, Date.now());
+        this.update();
+    }
+
+    epiiReviewStateRef(): EpiiReviewSurfaceState {
+        return this.epiiReviewState;
+    }
+
+    protected handleEpiiAction(_action: EpiiActionId): void {
+        // Real Epii action routing happens in epii-review-actions.ts. The
+        // widget owns the UI dispatch; bridge wiring is deferred until the
+        // S5 service is plumbed (Track 04 T6+).
+        // For now the button click is a no-op visible in the UI — it does
+        // NOT silently fabricate a submission.
     }
 
     protected handleDeepOpen(action: ConsentAction): void {
@@ -125,6 +157,11 @@ export class PluginIntegrated450Widget extends ReactWidget {
                     m5Side={panes.m5Side}
                     onDeepOpen={action => this.handleDeepOpen(action)}
                     isActionPermitted={action => this.consentGate.isPermitted(action)}
+                />
+                <EpiiReviewPanel
+                    state={this.epiiReviewState}
+                    onAction={action => this.handleEpiiAction(action)}
+                    onDismiss={() => this.setEpiiReviewMode('closed')}
                 />
             </div>
         );
