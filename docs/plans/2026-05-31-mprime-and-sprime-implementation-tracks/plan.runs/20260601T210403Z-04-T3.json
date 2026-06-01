@@ -1,0 +1,35 @@
+{
+  "runId": "20260601T210403Z-04-T3",
+  "taskId": "04.T3",
+  "startedAt": "2026-06-01T21:04:03.115Z",
+  "owner": "admin",
+  "leaseExpiresAt": "2026-06-01T23:04:03.115Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T3",
+    "trackId": "04",
+    "tranche": "T3",
+    "title": "Orchestration State Machine and Cross-Cycle Continuity",
+    "effort": null,
+    "file": "04-s5-autoresearch-and-review-extension.md",
+    "path": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md",
+    "dependsOn": [
+      "04.T2"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

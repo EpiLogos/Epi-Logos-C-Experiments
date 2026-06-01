@@ -11,4 +11,5 @@ serde_json = "1"
 uuid = { version = "1", features = ["v4"] }
 
 [dev-dependencies]
+epi-s5-epii-review-core = { path = "../epii-review-core" }
 tempfile = "3"

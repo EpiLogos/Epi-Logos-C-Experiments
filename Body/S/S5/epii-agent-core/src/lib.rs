@@ -178,6 +178,7 @@ impl EpiiAgentAccess {
             }),
             requires_human: request.requires_human,
             kernel_visibility: None,
+            governance_profile: None,
         })?;
 
         let improvement_run = if request.deposit_type == DepositType::ImprovementRequest {

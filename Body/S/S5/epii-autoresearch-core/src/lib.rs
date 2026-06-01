@@ -11,8 +11,13 @@ use uuid::Uuid;
 
 pub mod inbox;
 pub mod recompose;
+pub mod spine;
 // inbox + recompose intentionally not re-exported — callers namespace via
 // `inbox::` / `recompose::` to keep the seam topology visible at import sites.
+pub use spine::{
+    ClosureKind, ContentTypeRegister, ImprovementCandidate, PromotionDestination, SensitivityClass,
+    SurfaceActor, SurfacingPipelineId, TargetSubsystem,
+};
 
 pub const KERNEL_EVIDENCE_PRIVACY: &str = "safe-public-current-kernel-tick";
 pub const KERNEL_EVIDENCE_COMPUTATION_SOURCE: &str = "portal-core::KernelProjection";
@@ -210,9 +215,15 @@ pub struct ImprovementRun {
     pub target_family: String,
     pub target_coordinate: String,
     pub direction: String,
+    #[serde(default)]
+    pub closure_kind: ClosureKind,
+    #[serde(default)]
+    pub ct_register: ContentTypeRegister,
     pub source_review_item_id: Option<String>,
     pub baseline: ArtifactRef,
     pub challenger: ArtifactRef,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub typed_candidate: Option<ImprovementCandidate>,
     pub loop_state: LoopState,
     pub evaluation: Option<EvaluationResult>,
     pub decision: Option<ImprovementDecision>,
@@ -242,6 +253,178 @@ pub struct ImproveStatus {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ImprovementHistory {
     pub runs: Vec<ImprovementRun>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct CandidateRecord {
+    pub candidate_id: String,
+    pub run_id: String,
+    pub candidate: ImprovementCandidate,
+    pub surfaced_at: u128,
+    pub updated_at: u128,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RouteStatus {
+    Open,
+    Blocked,
+    Resolved,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct RouteRecord {
+    pub route_id: String,
+    pub candidate_id: String,
+    pub run_id: String,
+    pub target_subsystem: TargetSubsystem,
+    pub queue: String,
+    pub closure_kind: ClosureKind,
+    pub ct_register: ContentTypeRegister,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cross_target_link: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub blocked_by_route_id: Option<String>,
+    pub status: RouteStatus,
+    pub created_at: u128,
+    pub updated_at: u128,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SurfacedCandidateReceipt {
+    pub candidate: CandidateRecord,
+    pub run: ImprovementRun,
+    pub routes: Vec<RouteRecord>,
+    pub suppressed_duplicate: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum OrchestrationState {
+    Queued,
+    InReview,
+    AwaitingUserValidation,
+    Retrying,
+    Integrating,
+    Verifying,
+    Promoted,
+    Discarded,
+    Abandoned,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ReviewStage {
+    Unsubmitted,
+    Submitted,
+    HumanReview,
+    Resolved,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RetryPolicy {
+    pub max_attempts: u8,
+    pub attempts: u8,
+    pub backoff_ms: u64,
+}
+
+impl Default for RetryPolicy {
+    fn default() -> Self {
+        Self {
+            max_attempts: 2,
+            attempts: 0,
+            backoff_ms: 300_000,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DiscardReason {
+    Superseded,
+    InsufficientEvidence,
+    TimeoutAbandoned,
+    HumanRejected,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct OrchestrationRecord {
+    pub orchestration_id: String,
+    pub candidate_id: String,
+    pub route_id: String,
+    pub improvement_run_id: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub review_item_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub promotion_plan_id: Option<String>,
+    pub state: OrchestrationState,
+    pub review_stage: ReviewStage,
+    pub retry_policy: RetryPolicy,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub discard_reason: Option<DiscardReason>,
+    pub created_at: u128,
+    pub updated_at: u128,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub deadline_at: Option<u128>,
+    pub last_transition_reason: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct CreateOrchestrationRequest {
+    pub candidate_id: String,
+    pub route_id: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub review_item_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timeout_after_ms: Option<u128>,
+    #[serde(default)]
+    pub retry_policy: RetryPolicy,
+    pub now_ms: u128,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct TransitionOrchestrationRequest {
+    pub orchestration_id: String,
+    pub next_state: OrchestrationState,
+    pub reason: String,
+    pub now_ms: u128,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub review_stage: Option<ReviewStage>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub discard_reason: Option<DiscardReason>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub promotion_plan_id: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct IntegrationVerificationEntry {
+    pub orchestration_id: String,
+    pub candidate_id: String,
+    pub route_id: String,
+    pub verify_after_ms: u128,
+    pub requirement: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ContinuityHint {
+    pub kind: String,
+    pub summary: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub candidate_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub route_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub orchestration_id: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct CrossCycleContinuity {
+    pub continuity_hints: Vec<ContinuityHint>,
+    pub pending_articulations: Vec<ContinuityHint>,
+    pub pending_integrations: Vec<ContinuityHint>,
+    pub user_validation_awaits: Vec<ContinuityHint>,
+    pub suppression_windows: Vec<ContinuityHint>,
+    pub verification_schedule: Vec<IntegrationVerificationEntry>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -293,6 +476,12 @@ pub struct ImprovementStore {
 struct ImprovementState {
     #[serde(default)]
     runs: Vec<ImprovementRun>,
+    #[serde(default)]
+    candidates: Vec<CandidateRecord>,
+    #[serde(default)]
+    routes: Vec<RouteRecord>,
+    #[serde(default)]
+    orchestrations: Vec<OrchestrationRecord>,
 }
 
 impl ImprovementStore {
@@ -307,18 +496,24 @@ impl ImprovementStore {
         let mut state = self.load_state()?;
         let now = now_ms();
         let run_id = Uuid::new_v4().to_string();
+        let challenger = ArtifactRef {
+            path: format!("autoresearch://challenger/{run_id}"),
+            coordinate: Some(request.target_coordinate.clone()),
+            kind: Some("improvement_challenger".to_owned()),
+        };
+        let typed_candidate =
+            typed_candidate_from_proposal(&run_id, &request, challenger.clone(), now)?;
         let run = ImprovementRun {
-            challenger: ArtifactRef {
-                path: format!("autoresearch://challenger/{run_id}"),
-                coordinate: Some(request.target_coordinate.clone()),
-                kind: Some("improvement_challenger".to_owned()),
-            },
+            challenger,
             run_id,
             target_family: request.target_family,
             target_coordinate: request.target_coordinate,
             direction: request.direction,
+            closure_kind: typed_candidate.closure_kind,
+            ct_register: typed_candidate.ct_register,
             source_review_item_id: request.source_review_item_id,
             baseline: request.baseline,
+            typed_candidate: Some(typed_candidate),
             loop_state: LoopState::Hypothesis,
             evaluation: None,
             decision: None,
@@ -328,6 +523,238 @@ impl ImprovementStore {
         state.runs.push(run.clone());
         self.save_state(&state)?;
         Ok(run)
+    }
+
+    pub fn surface_candidate(
+        &self,
+        mut candidate: ImprovementCandidate,
+    ) -> Result<SurfacedCandidateReceipt, String> {
+        validate_surface_candidate(&candidate)?;
+        let mut state = self.load_state()?;
+
+        if let Some(fingerprint) = candidate.observation_evidence.fingerprint.as_deref() {
+            if let Some(existing) = state.candidates.iter().find(|record| {
+                record.candidate.observation_evidence.fingerprint.as_deref() == Some(fingerprint)
+                    && record.candidate.observation_evidence.source_uri
+                        == candidate.observation_evidence.source_uri
+                    && record.candidate.surfacing_pipeline == candidate.surfacing_pipeline
+            }) {
+                let run = state
+                    .runs
+                    .iter()
+                    .find(|run| run.run_id == existing.run_id)
+                    .ok_or_else(|| {
+                        format!(
+                            "candidate {} references missing run {}",
+                            existing.candidate_id, existing.run_id
+                        )
+                    })?
+                    .clone();
+                let routes = state
+                    .routes
+                    .iter()
+                    .filter(|route| route.candidate_id == existing.candidate_id)
+                    .cloned()
+                    .collect::<Vec<_>>();
+                return Ok(SurfacedCandidateReceipt {
+                    candidate: existing.clone(),
+                    run,
+                    routes,
+                    suppressed_duplicate: true,
+                });
+            }
+        }
+
+        let now = now_ms();
+        let run_id = Uuid::new_v4().to_string();
+        let candidate_id = stable_candidate_id(&candidate, &run_id);
+        let challenger = candidate
+            .challenger_artifact
+            .clone()
+            .unwrap_or_else(|| ArtifactRef {
+                path: format!("autoresearch://challenger/{run_id}"),
+                coordinate: Some(candidate.propose.target_coordinate.clone()),
+                kind: Some("improvement_challenger".to_owned()),
+            });
+        candidate.challenger_artifact = Some(challenger.clone());
+
+        let run = ImprovementRun {
+            run_id: run_id.clone(),
+            target_family: candidate.propose.target_family.clone(),
+            target_coordinate: candidate.propose.target_coordinate.clone(),
+            direction: candidate.propose.direction.clone(),
+            closure_kind: candidate.closure_kind,
+            ct_register: candidate.ct_register,
+            source_review_item_id: candidate.propose.source_review_item_id.clone(),
+            baseline: candidate.propose.baseline.clone(),
+            challenger,
+            typed_candidate: Some(candidate.clone()),
+            loop_state: LoopState::Hypothesis,
+            evaluation: None,
+            decision: None,
+            created_at: now,
+            updated_at: now,
+        };
+        let record = CandidateRecord {
+            candidate_id: candidate_id.clone(),
+            run_id: run_id.clone(),
+            candidate,
+            surfaced_at: now,
+            updated_at: now,
+        };
+        state.runs.push(run.clone());
+        state.candidates.push(record.clone());
+        self.save_state(&state)?;
+
+        let routes =
+            self.route_candidate(&candidate_id, vec![record.candidate.target_subsystem])?;
+        Ok(SurfacedCandidateReceipt {
+            candidate: record,
+            run,
+            routes,
+            suppressed_duplicate: false,
+        })
+    }
+
+    pub fn route_candidate(
+        &self,
+        candidate_id: &str,
+        targets: Vec<TargetSubsystem>,
+    ) -> Result<Vec<RouteRecord>, String> {
+        if candidate_id.trim().is_empty() {
+            return Err("candidate_id is required".to_owned());
+        }
+        let mut state = self.load_state()?;
+        let candidate_record = state
+            .candidates
+            .iter()
+            .find(|record| record.candidate_id == candidate_id)
+            .ok_or_else(|| format!("candidate not found: {candidate_id}"))?
+            .clone();
+
+        let mut normalized_targets = if targets.is_empty() {
+            vec![candidate_record.candidate.target_subsystem]
+        } else {
+            targets
+        };
+        normalized_targets.sort_by_key(|target| target_rank(*target));
+        normalized_targets.dedup();
+
+        let now = now_ms();
+        let cross_target_link = (normalized_targets.len() > 1)
+            .then(|| format!("cross-target:{candidate_id}:{}", candidate_record.run_id));
+        let anuttara_route_id = normalized_targets
+            .contains(&TargetSubsystem::Anuttara)
+            .then(|| route_id_for(candidate_id, TargetSubsystem::Anuttara));
+
+        for target in &normalized_targets {
+            let route_id = route_id_for(candidate_id, *target);
+            if let Some(existing) = state
+                .routes
+                .iter_mut()
+                .find(|route| route.route_id == route_id)
+            {
+                if existing.cross_target_link.is_none() && cross_target_link.is_some() {
+                    existing.cross_target_link = cross_target_link.clone();
+                    existing.updated_at = now;
+                }
+                if existing.blocked_by_route_id.is_none()
+                    && *target != TargetSubsystem::Anuttara
+                    && anuttara_route_id.is_some()
+                {
+                    existing.blocked_by_route_id = anuttara_route_id.clone();
+                    existing.status = RouteStatus::Blocked;
+                    existing.updated_at = now;
+                }
+                continue;
+            }
+            let blocked_by_route_id =
+                if *target != TargetSubsystem::Anuttara && anuttara_route_id.is_some() {
+                    anuttara_route_id.clone()
+                } else {
+                    None
+                };
+            state.routes.push(RouteRecord {
+                route_id,
+                candidate_id: candidate_id.to_owned(),
+                run_id: candidate_record.run_id.clone(),
+                target_subsystem: *target,
+                queue: route_queue(*target).to_owned(),
+                closure_kind: candidate_record.candidate.closure_kind,
+                ct_register: candidate_record.candidate.ct_register,
+                cross_target_link: cross_target_link.clone(),
+                status: if blocked_by_route_id.is_some() {
+                    RouteStatus::Blocked
+                } else {
+                    RouteStatus::Open
+                },
+                blocked_by_route_id,
+                created_at: now,
+                updated_at: now,
+            });
+        }
+        self.save_state(&state)?;
+
+        let mut routes = state
+            .routes
+            .into_iter()
+            .filter(|route| route.candidate_id == candidate_id)
+            .filter(|route| normalized_targets.contains(&route.target_subsystem))
+            .collect::<Vec<_>>();
+        routes.sort_by_key(|route| target_rank(route.target_subsystem));
+        Ok(routes)
+    }
+
+    pub fn surface_aletheia_inbox(
+        &self,
+        inbox: &inbox::InboxStore,
+    ) -> Result<Vec<SurfacedCandidateReceipt>, String> {
+        let mut receipts = Vec::new();
+        for stored in inbox.list_pending()? {
+            let closure_kind = ClosureKind::from_inbox_wire(&stored.entry.closure_kind)?;
+            for (vector_index, direction) in stored.entry.improvement_vectors.iter().enumerate() {
+                let target_coordinate = vak_coordinate_label(&stored.entry.final_vak)?;
+                let request =
+                    ProposeRequest {
+                        target_family: "S".to_owned(),
+                        target_coordinate: target_coordinate.clone(),
+                        direction: direction.clone(),
+                        source_review_item_id: None,
+                        baseline: ArtifactRef {
+                            path: stored.entry.artifacts.first().cloned().unwrap_or_else(|| {
+                                format!("aletheia://inbox/{}/artifact", stored.id)
+                            }),
+                            coordinate: Some(target_coordinate),
+                            kind: Some("aletheia_disclosure_artifact".to_owned()),
+                        },
+                    };
+                let target = infer_target_subsystem(&request);
+                let surfaced_at = now_ms();
+                let mut candidate = ImprovementCandidate::from_propose(
+                    request,
+                    target,
+                    default_vector_for(target),
+                    SurfacingPipelineId::AletheiaDisclosure,
+                    spine::ObservationEvidence {
+                        source_uri: format!("aletheia://inbox/{}", stored.id),
+                        summary: observation_summary(&stored.entry, direction),
+                        observed_at: Some(surfaced_at),
+                        fingerprint: Some(format!(
+                            "aletheia:{}#V{}:{}",
+                            stored.id, vector_index, direction
+                        )),
+                    },
+                    surfaced_at,
+                    SurfaceActor::Aletheia,
+                    SensitivityClass::RequiresReview,
+                )?;
+                candidate.closure_kind = closure_kind;
+                candidate.ct_register = ContentTypeRegister::CT4b;
+                candidate.linkage.originating_inbox_entry = Some(stored.id.clone());
+                receipts.push(self.surface_candidate(candidate)?);
+            }
+        }
+        Ok(receipts)
     }
 
     pub fn evaluate(
@@ -403,6 +830,7 @@ impl ImprovementStore {
                     .to_owned(),
             );
         }
+        PromotionDestination::validate_legacy_destination(&request.destination)?;
         if request.approved_review_resolution_id.trim().is_empty() {
             return Err("approved_review_resolution_id is required".to_owned());
         }
@@ -499,6 +927,222 @@ impl ImprovementStore {
             runs.truncate(limit);
         }
         Ok(ImprovementHistory { runs })
+    }
+
+    pub fn candidates(&self) -> Result<Vec<CandidateRecord>, String> {
+        Ok(self.load_state()?.candidates)
+    }
+
+    pub fn routes(&self) -> Result<Vec<RouteRecord>, String> {
+        Ok(self.load_state()?.routes)
+    }
+
+    pub fn create_orchestration(
+        &self,
+        request: CreateOrchestrationRequest,
+    ) -> Result<OrchestrationRecord, String> {
+        if request.candidate_id.trim().is_empty() {
+            return Err("candidate_id is required".to_owned());
+        }
+        if request.route_id.trim().is_empty() {
+            return Err("route_id is required".to_owned());
+        }
+        let mut state = self.load_state()?;
+        let route = state
+            .routes
+            .iter()
+            .find(|route| {
+                route.route_id == request.route_id && route.candidate_id == request.candidate_id
+            })
+            .ok_or_else(|| {
+                format!(
+                    "route {} for candidate {} not found",
+                    request.route_id, request.candidate_id
+                )
+            })?
+            .clone();
+        if let Some(existing) = state
+            .orchestrations
+            .iter()
+            .find(|record| record.route_id == request.route_id)
+        {
+            return Ok(existing.clone());
+        }
+        let record = OrchestrationRecord {
+            orchestration_id: format!(
+                "orchestration:{}:{}",
+                sanitize_id_component(&request.candidate_id),
+                sanitize_id_component(&request.route_id)
+            ),
+            candidate_id: request.candidate_id,
+            route_id: request.route_id,
+            improvement_run_id: route.run_id,
+            review_item_id: request.review_item_id.clone(),
+            promotion_plan_id: None,
+            state: OrchestrationState::Queued,
+            review_stage: if request.review_item_id.is_some() {
+                ReviewStage::Submitted
+            } else {
+                ReviewStage::Unsubmitted
+            },
+            retry_policy: request.retry_policy,
+            discard_reason: None,
+            created_at: request.now_ms,
+            updated_at: request.now_ms,
+            deadline_at: request
+                .timeout_after_ms
+                .map(|timeout| request.now_ms.saturating_add(timeout)),
+            last_transition_reason: "created".to_owned(),
+        };
+        state.orchestrations.push(record.clone());
+        self.save_state(&state)?;
+        Ok(record)
+    }
+
+    pub fn transition_orchestration(
+        &self,
+        request: TransitionOrchestrationRequest,
+    ) -> Result<OrchestrationRecord, String> {
+        if request.orchestration_id.trim().is_empty() {
+            return Err("orchestration_id is required".to_owned());
+        }
+        if request.reason.trim().is_empty() {
+            return Err("transition reason is required".to_owned());
+        }
+        let mut state = self.load_state()?;
+        let record = state
+            .orchestrations
+            .iter_mut()
+            .find(|record| record.orchestration_id == request.orchestration_id)
+            .ok_or_else(|| format!("orchestration not found: {}", request.orchestration_id))?;
+        validate_orchestration_transition(record.state, request.next_state)?;
+        record.state = request.next_state;
+        if let Some(review_stage) = request.review_stage {
+            record.review_stage = review_stage;
+        }
+        if let Some(discard_reason) = request.discard_reason {
+            record.discard_reason = Some(discard_reason);
+        }
+        if let Some(promotion_plan_id) = request.promotion_plan_id {
+            if promotion_plan_id.trim().is_empty() {
+                return Err("promotion_plan_id must not be blank".to_owned());
+            }
+            record.promotion_plan_id = Some(promotion_plan_id);
+        }
+        if request.next_state == OrchestrationState::Retrying {
+            record.retry_policy.attempts = record.retry_policy.attempts.saturating_add(1);
+            if record.retry_policy.attempts > record.retry_policy.max_attempts {
+                return Err(format!(
+                    "retry attempts {} exceed max_attempts {}",
+                    record.retry_policy.attempts, record.retry_policy.max_attempts
+                ));
+            }
+        }
+        record.updated_at = request.now_ms;
+        record.last_transition_reason = request.reason;
+        let updated = record.clone();
+        self.save_state(&state)?;
+        Ok(updated)
+    }
+
+    pub fn apply_orchestration_timeouts(
+        &self,
+        now_ms: u128,
+    ) -> Result<Vec<SurfacedCandidateReceipt>, String> {
+        let mut state = self.load_state()?;
+        let mut stalled = Vec::new();
+        for record in &mut state.orchestrations {
+            if matches!(
+                record.state,
+                OrchestrationState::Promoted
+                    | OrchestrationState::Discarded
+                    | OrchestrationState::Abandoned
+            ) {
+                continue;
+            }
+            if record
+                .deadline_at
+                .is_some_and(|deadline| deadline <= now_ms)
+            {
+                record.state = OrchestrationState::Abandoned;
+                record.discard_reason = Some(DiscardReason::TimeoutAbandoned);
+                record.updated_at = now_ms;
+                record.last_transition_reason =
+                    "deadline elapsed; surfaced Epii-on-Epii meta candidate".to_owned();
+                stalled.push(record.clone());
+            }
+        }
+        self.save_state(&state)?;
+
+        let mut receipts = Vec::new();
+        for record in stalled {
+            receipts.push(self.surface_timeout_meta_candidate(&record, now_ms)?);
+        }
+        Ok(receipts)
+    }
+
+    pub fn orchestrations(&self) -> Result<Vec<OrchestrationRecord>, String> {
+        Ok(self.load_state()?.orchestrations)
+    }
+
+    pub fn cross_cycle_continuity(&self, now_ms: u128) -> Result<CrossCycleContinuity, String> {
+        let state = self.load_state()?;
+        Ok(cross_cycle_continuity_from_state(&state, now_ms))
+    }
+
+    fn surface_timeout_meta_candidate(
+        &self,
+        record: &OrchestrationRecord,
+        now_ms: u128,
+    ) -> Result<SurfacedCandidateReceipt, String> {
+        let candidate_record = self
+            .load_state()?
+            .candidates
+            .into_iter()
+            .find(|candidate| candidate.candidate_id == record.candidate_id)
+            .ok_or_else(|| format!("candidate not found: {}", record.candidate_id))?;
+        let request = ProposeRequest {
+            target_family: "S".to_owned(),
+            target_coordinate: "S5/Epii".to_owned(),
+            direction: format!(
+                "Investigate stalled autoresearch orchestration {} for route {}",
+                record.orchestration_id, record.route_id
+            ),
+            source_review_item_id: record.review_item_id.clone(),
+            baseline: ArtifactRef {
+                path: format!("autoresearch://orchestration/{}", record.orchestration_id),
+                coordinate: Some("S5/Epii".to_owned()),
+                kind: Some("orchestration_timeout".to_owned()),
+            },
+        };
+        let mut candidate = ImprovementCandidate::from_propose(
+            request,
+            TargetSubsystem::Epii,
+            spine::ImprovementVectorKind::EpiiSpineMechanismRefinement {
+                spine_phase: "orchestration-timeout".to_owned(),
+            },
+            SurfacingPipelineId::EpiiOnEpiiMeta,
+            spine::ObservationEvidence {
+                source_uri: format!("autoresearch://orchestration/{}", record.orchestration_id),
+                summary: format!(
+                    "Route {} stalled from candidate {}; original observation: {}",
+                    record.route_id,
+                    record.candidate_id,
+                    candidate_record.candidate.observation_evidence.summary
+                ),
+                observed_at: Some(now_ms),
+                fingerprint: Some(format!(
+                    "orchestration-timeout:{}:{}",
+                    record.orchestration_id, now_ms
+                )),
+            },
+            now_ms,
+            SurfaceActor::Epii,
+            SensitivityClass::RequiresReview,
+        )?;
+        candidate.closure_kind = candidate_record.candidate.closure_kind;
+        candidate.ct_register = candidate_record.candidate.ct_register;
+        Ok(self.surface_candidate(candidate)?)
     }
 
     fn state_path(&self) -> PathBuf {
@@ -633,6 +1277,319 @@ fn validate_proposal(request: &ProposeRequest) -> Result<(), String> {
     Ok(())
 }
 
+fn validate_surface_candidate(candidate: &ImprovementCandidate) -> Result<(), String> {
+    candidate.validate()?;
+    if candidate.closure_kind == ClosureKind::LegacyUnspecified {
+        return Err("surfaced candidates require explicit closure_kind".to_owned());
+    }
+    if candidate.ct_register == ContentTypeRegister::LegacyUnspecified {
+        return Err("surfaced candidates require explicit ct_register".to_owned());
+    }
+    Ok(())
+}
+
+fn stable_candidate_id(candidate: &ImprovementCandidate, fallback: &str) -> String {
+    candidate
+        .observation_evidence
+        .fingerprint
+        .as_deref()
+        .map(sanitize_id_component)
+        .filter(|value| !value.is_empty())
+        .map(|fingerprint| format!("candidate:{fingerprint}"))
+        .unwrap_or_else(|| format!("candidate:{fallback}"))
+}
+
+fn route_id_for(candidate_id: &str, target: TargetSubsystem) -> String {
+    format!(
+        "route:{}:{}",
+        sanitize_id_component(candidate_id),
+        route_queue(target)
+    )
+}
+
+fn sanitize_id_component(value: &str) -> String {
+    value
+        .chars()
+        .map(|ch| {
+            if ch.is_ascii_alphanumeric() || ch == '-' || ch == '_' {
+                ch
+            } else {
+                '-'
+            }
+        })
+        .collect::<String>()
+        .trim_matches('-')
+        .to_owned()
+}
+
+fn route_queue(target: TargetSubsystem) -> &'static str {
+    match target {
+        TargetSubsystem::Anuttara => "anuttara",
+        TargetSubsystem::Paramasiva => "paramasiva",
+        TargetSubsystem::Parashakti => "parashakti",
+        TargetSubsystem::Mahamaya => "mahamaya",
+        TargetSubsystem::Nara => "nara",
+        TargetSubsystem::Epii => "epii",
+    }
+}
+
+fn target_rank(target: TargetSubsystem) -> u8 {
+    match target {
+        TargetSubsystem::Anuttara => 0,
+        TargetSubsystem::Paramasiva => 1,
+        TargetSubsystem::Parashakti => 2,
+        TargetSubsystem::Mahamaya => 3,
+        TargetSubsystem::Nara => 4,
+        TargetSubsystem::Epii => 5,
+    }
+}
+
+fn observation_summary(entry: &inbox::InboxEntry, direction: &str) -> String {
+    let moirai = entry
+        .moirai_summary
+        .values()
+        .next()
+        .cloned()
+        .unwrap_or_else(|| "Aletheia disclosure surfaced an improvement vector".to_owned());
+    format!(
+        "{} | source={} day={} direction={}",
+        moirai, entry.source, entry.day_id, direction
+    )
+}
+
+fn vak_coordinate_label(vak: &portal_core::VakAddress) -> Result<String, String> {
+    serde_json::to_string(vak).map_err(|err| format!("serialize final_vak: {err}"))
+}
+
+fn validate_orchestration_transition(
+    current: OrchestrationState,
+    next: OrchestrationState,
+) -> Result<(), String> {
+    if current == next {
+        return Ok(());
+    }
+    let legal = match current {
+        OrchestrationState::Queued => matches!(
+            next,
+            OrchestrationState::InReview
+                | OrchestrationState::Discarded
+                | OrchestrationState::Abandoned
+        ),
+        OrchestrationState::InReview => matches!(
+            next,
+            OrchestrationState::AwaitingUserValidation
+                | OrchestrationState::Retrying
+                | OrchestrationState::Discarded
+                | OrchestrationState::Promoted
+        ),
+        OrchestrationState::AwaitingUserValidation => matches!(
+            next,
+            OrchestrationState::Integrating
+                | OrchestrationState::Retrying
+                | OrchestrationState::Discarded
+        ),
+        OrchestrationState::Retrying => {
+            matches!(
+                next,
+                OrchestrationState::InReview | OrchestrationState::Abandoned
+            )
+        }
+        OrchestrationState::Integrating => {
+            matches!(
+                next,
+                OrchestrationState::Verifying | OrchestrationState::Discarded
+            )
+        }
+        OrchestrationState::Verifying => matches!(
+            next,
+            OrchestrationState::Promoted
+                | OrchestrationState::Retrying
+                | OrchestrationState::Discarded
+        ),
+        OrchestrationState::Promoted
+        | OrchestrationState::Discarded
+        | OrchestrationState::Abandoned => false,
+    };
+    if legal {
+        Ok(())
+    } else {
+        Err(format!(
+            "illegal orchestration transition: {:?} -> {:?}",
+            current, next
+        ))
+    }
+}
+
+fn cross_cycle_continuity_from_state(
+    state: &ImprovementState,
+    now_ms: u128,
+) -> CrossCycleContinuity {
+    let mut pending_articulations = Vec::new();
+    let mut pending_integrations = Vec::new();
+    let mut user_validation_awaits = Vec::new();
+    let mut verification_schedule = Vec::new();
+
+    for record in &state.orchestrations {
+        match record.state {
+            OrchestrationState::Queued
+            | OrchestrationState::InReview
+            | OrchestrationState::Retrying => pending_articulations.push(continuity_hint(
+                "pending_articulation",
+                record,
+                "candidate is still being articulated through review/routing",
+            )),
+            OrchestrationState::AwaitingUserValidation => {
+                user_validation_awaits.push(continuity_hint(
+                    "user_validation_await",
+                    record,
+                    "candidate awaits explicit user validation before integration",
+                ))
+            }
+            OrchestrationState::Integrating => pending_integrations.push(continuity_hint(
+                "pending_integration",
+                record,
+                "candidate is integrating and must be carried into the next cycle",
+            )),
+            OrchestrationState::Verifying => {
+                verification_schedule.push(IntegrationVerificationEntry {
+                    orchestration_id: record.orchestration_id.clone(),
+                    candidate_id: record.candidate_id.clone(),
+                    route_id: record.route_id.clone(),
+                    verify_after_ms: now_ms.max(record.updated_at.saturating_add(60_000)),
+                    requirement: "verify integrated autoresearch route before promotion closure"
+                        .to_owned(),
+                })
+            }
+            OrchestrationState::Promoted
+            | OrchestrationState::Discarded
+            | OrchestrationState::Abandoned => {}
+        }
+    }
+
+    let suppression_windows = state
+        .candidates
+        .iter()
+        .filter_map(|record| {
+            record
+                .candidate
+                .observation_evidence
+                .fingerprint
+                .as_ref()
+                .map(|fingerprint| ContinuityHint {
+                    kind: "suppression_window".to_owned(),
+                    summary: format!(
+                        "fingerprint {} remains suppressed for source {}",
+                        fingerprint, record.candidate.observation_evidence.source_uri
+                    ),
+                    candidate_id: Some(record.candidate_id.clone()),
+                    route_id: None,
+                    orchestration_id: None,
+                })
+        })
+        .collect::<Vec<_>>();
+
+    let mut continuity_hints = Vec::new();
+    continuity_hints.extend(pending_articulations.clone());
+    continuity_hints.extend(pending_integrations.clone());
+    continuity_hints.extend(user_validation_awaits.clone());
+    continuity_hints.extend(suppression_windows.clone());
+    continuity_hints.extend(verification_schedule.iter().map(|entry| ContinuityHint {
+        kind: "integration_verification".to_owned(),
+        summary: format!(
+            "route {} requires verification after {}",
+            entry.route_id, entry.verify_after_ms
+        ),
+        candidate_id: Some(entry.candidate_id.clone()),
+        route_id: Some(entry.route_id.clone()),
+        orchestration_id: Some(entry.orchestration_id.clone()),
+    }));
+
+    CrossCycleContinuity {
+        continuity_hints,
+        pending_articulations,
+        pending_integrations,
+        user_validation_awaits,
+        suppression_windows,
+        verification_schedule,
+    }
+}
+
+fn continuity_hint(kind: &str, record: &OrchestrationRecord, summary: &str) -> ContinuityHint {
+    ContinuityHint {
+        kind: kind.to_owned(),
+        summary: summary.to_owned(),
+        candidate_id: Some(record.candidate_id.clone()),
+        route_id: Some(record.route_id.clone()),
+        orchestration_id: Some(record.orchestration_id.clone()),
+    }
+}
+
+fn typed_candidate_from_proposal(
+    run_id: &str,
+    request: &ProposeRequest,
+    challenger: ArtifactRef,
+    surfaced_at: u128,
+) -> Result<ImprovementCandidate, String> {
+    let target = infer_target_subsystem(request);
+    let vector = default_vector_for(target);
+    let mut candidate = spine::ImprovementCandidate::from_propose(
+        request.clone(),
+        target,
+        vector,
+        SurfacingPipelineId::EpiiOnEpiiMeta,
+        spine::ObservationEvidence {
+            source_uri: request.baseline.path.clone(),
+            summary: "ProposeRequest baseline promoted into typed spine evidence".to_owned(),
+            observed_at: Some(surfaced_at),
+            fingerprint: Some(run_id.to_owned()),
+        },
+        surfaced_at,
+        SurfaceActor::Epii,
+        SensitivityClass::PublicCurrent,
+    )?;
+    candidate.challenger_artifact = Some(challenger);
+    candidate.linkage.originating_review_item = request.source_review_item_id.clone();
+    Ok(candidate)
+}
+
+fn infer_target_subsystem(request: &ProposeRequest) -> TargetSubsystem {
+    let haystack = format!(
+        "{} {} {}",
+        request.target_family, request.target_coordinate, request.direction
+    )
+    .to_ascii_lowercase();
+    if haystack.contains("s0") || haystack.contains("m0") || haystack.contains("anuttara") {
+        TargetSubsystem::Anuttara
+    } else if haystack.contains("s1") || haystack.contains("m1") || haystack.contains("paramasiva")
+    {
+        TargetSubsystem::Paramasiva
+    } else if haystack.contains("s2") || haystack.contains("m2") || haystack.contains("parashakti")
+    {
+        TargetSubsystem::Parashakti
+    } else if haystack.contains("s3") || haystack.contains("m3") || haystack.contains("mahamaya") {
+        TargetSubsystem::Mahamaya
+    } else if haystack.contains("s4") || haystack.contains("m4") || haystack.contains("nara") {
+        TargetSubsystem::Nara
+    } else {
+        TargetSubsystem::Epii
+    }
+}
+
+fn default_vector_for(target: TargetSubsystem) -> spine::ImprovementVectorKind {
+    match target {
+        TargetSubsystem::Anuttara => spine::ImprovementVectorKind::AnuttaraShapeRefinement,
+        TargetSubsystem::Paramasiva => spine::ImprovementVectorKind::ParamasivaRetrievalGapFilling,
+        TargetSubsystem::Parashakti => {
+            spine::ImprovementVectorKind::ParashaktiKleinHandlingRefinement
+        }
+        TargetSubsystem::Mahamaya => spine::ImprovementVectorKind::MahamayaProcessRewardRefinement,
+        TargetSubsystem::Nara => spine::ImprovementVectorKind::NaraDialogueCorpusAddition,
+        TargetSubsystem::Epii => spine::ImprovementVectorKind::EpiiSpineMechanismRefinement {
+            spine_phase: "proposal".to_owned(),
+        },
+    }
+}
+
 fn weighted_score(
     evidence: &[EvaluationEvidence],
     score: impl Fn(&EvaluationEvidence) -> f64,
@@ -689,4 +1646,3 @@ fn now_ms() -> u128 {
         .unwrap_or_default()
         .as_millis()
 }
-

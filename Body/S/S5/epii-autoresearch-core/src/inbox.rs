@@ -150,17 +150,16 @@ impl InboxStore {
                 .and_then(|s| s.to_str())
                 .ok_or_else(|| format!("invalid filename: {}", path.display()))?
                 .to_string();
-            let content = fs::read_to_string(&path)
-                .map_err(|e| format!("read {}: {}", path.display(), e))?;
+            let content =
+                fs::read_to_string(&path).map_err(|e| format!("read {}: {}", path.display(), e))?;
             let mut line_index: usize = 0;
             for line in content.lines() {
                 let trimmed = line.trim();
                 if trimmed.is_empty() {
                     continue;
                 }
-                let entry: InboxEntry = serde_json::from_str(trimmed).map_err(|e| {
-                    format!("parse {}#L{}: {}", path.display(), line_index, e)
-                })?;
+                let entry: InboxEntry = serde_json::from_str(trimmed)
+                    .map_err(|e| format!("parse {}#L{}: {}", path.display(), line_index, e))?;
                 out.push(StoredInboxEntry {
                     id: format!("{session_id}#L{line_index}"),
                     entry,

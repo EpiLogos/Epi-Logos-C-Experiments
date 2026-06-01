@@ -41,6 +41,39 @@ pub enum ReviewPriority {
     Blocking,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ReviewCategory {
+    StandardImprovement,
+    DeploymentGate,
+    UserFinalValidation,
+    RecursiveSelfModification,
+    NaraAnimaPrimaryGate,
+    AletheiaCrystallisation,
+    CanonRecognitionPublicationGate,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GateKind {
+    Standard,
+    HumanFinal,
+    DeploymentGate,
+    RecursiveSelfModification,
+    AnimaPrimary,
+    PublicationGate,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GovernanceLevel {
+    Advisory,
+    HumanRequired,
+    DeploymentBlocking,
+    RecursiveLoadBearing,
+    PublicationBlocking,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ResolutionActor {
     Human,
@@ -102,6 +135,39 @@ pub struct ReviewProposedAction {
     pub payload: Option<Value>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReviewStageRecord {
+    pub stage: String,
+    pub actor: String,
+    pub at_ms: u128,
+    pub note: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GovernanceProfile {
+    pub category: ReviewCategory,
+    pub gate_kind: GateKind,
+    pub governance_level: GovernanceLevel,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub required_actors: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub candidate_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub orchestration_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub source_artifact_refs: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_subsystem: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vector_kind: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub promotion_destination: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_actor_detail: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub stage_records: Vec<ReviewStageRecord>,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ReviewSubmission {
     pub source: ReviewSource,
@@ -113,6 +179,8 @@ pub struct ReviewSubmission {
     pub requires_human: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kernel_visibility: Option<KernelReviewVisibility>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub governance_profile: Option<GovernanceProfile>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -128,6 +196,8 @@ pub struct ReviewInboxItem {
     pub requires_human: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kernel_visibility: Option<KernelReviewVisibility>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub governance_profile: Option<GovernanceProfile>,
     pub created_at: u128,
 }
 
@@ -217,6 +287,7 @@ impl ReviewStore {
             proposed_action: submission.proposed_action,
             requires_human: submission.requires_human,
             kernel_visibility: submission.kernel_visibility,
+            governance_profile: submission.governance_profile,
             created_at: now_ms(),
         };
         state.items.push(item.clone());
@@ -258,8 +329,7 @@ impl ReviewStore {
             .find(|item| item.item_id == request.item_id)
             .ok_or_else(|| format!("review item not found: {}", request.item_id))?;
 
-        if item.requires_human
-            && request.decision != ReviewDecision::Defer
+        if requires_human_resolution(item, request.decision)
             && request.resolved_by != ResolutionActor::Human
         {
             return Err(format!(
@@ -345,7 +415,73 @@ fn validate_submission(submission: &ReviewSubmission) -> Result<(), String> {
     if let Some(kernel_visibility) = &submission.kernel_visibility {
         validate_kernel_visibility(kernel_visibility)?;
     }
+    if let Some(governance) = &submission.governance_profile {
+        validate_governance_profile(governance)?;
+    }
     Ok(())
+}
+
+fn validate_governance_profile(profile: &GovernanceProfile) -> Result<(), String> {
+    if profile
+        .required_actors
+        .iter()
+        .any(|actor| actor.trim().is_empty())
+    {
+        return Err("governance required_actors must not contain blanks".to_owned());
+    }
+    if profile
+        .source_artifact_refs
+        .iter()
+        .any(|artifact| artifact.trim().is_empty())
+    {
+        return Err("governance source_artifact_refs must not contain blanks".to_owned());
+    }
+    if profile
+        .target_subsystem
+        .as_deref()
+        .is_some_and(|value| value.trim().is_empty())
+    {
+        return Err("governance target_subsystem must not be blank".to_owned());
+    }
+    if profile
+        .vector_kind
+        .as_deref()
+        .is_some_and(|value| value.trim().is_empty())
+    {
+        return Err("governance vector_kind must not be blank".to_owned());
+    }
+    Ok(())
+}
+
+fn requires_human_resolution(item: &ReviewInboxItem, decision: ReviewDecision) -> bool {
+    if decision == ReviewDecision::Defer {
+        return false;
+    }
+    if item.requires_human {
+        return true;
+    }
+    let Some(profile) = &item.governance_profile else {
+        return false;
+    };
+    matches!(
+        profile.category,
+        ReviewCategory::DeploymentGate
+            | ReviewCategory::UserFinalValidation
+            | ReviewCategory::RecursiveSelfModification
+            | ReviewCategory::CanonRecognitionPublicationGate
+    ) || matches!(
+        profile.gate_kind,
+        GateKind::HumanFinal
+            | GateKind::DeploymentGate
+            | GateKind::RecursiveSelfModification
+            | GateKind::PublicationGate
+    ) || matches!(
+        profile.governance_level,
+        GovernanceLevel::HumanRequired
+            | GovernanceLevel::DeploymentBlocking
+            | GovernanceLevel::RecursiveLoadBearing
+            | GovernanceLevel::PublicationBlocking
+    )
 }
 
 fn validate_kernel_visibility(visibility: &KernelReviewVisibility) -> Result<(), String> {

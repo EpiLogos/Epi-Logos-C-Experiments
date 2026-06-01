@@ -1,6 +1,8 @@
 use epi_s5_epii_autoresearch_core::inbox::{InboxEntry, InboxStore};
 #[allow(unused_imports)]
-use epi_s5_epii_autoresearch_core::recompose::{recompose_pass, RecomposeDecision, RecomposeOutput};
+use epi_s5_epii_autoresearch_core::recompose::{
+    recompose_pass, RecomposeDecision, RecomposeOutput,
+};
 use portal_core::{CpfState, CsDirection, CsField, VakAddress};
 use std::collections::BTreeMap;
 use tempfile::tempdir;
@@ -43,15 +45,16 @@ fn recompose_pass_produces_next_compose_hint_per_entry() {
 
     let outputs = recompose_pass(&store).unwrap();
     assert_eq!(outputs.len(), 1);
-    assert_eq!(
-        outputs[0].next_compose_hint.session_seed,
-        "agent:test:main"
-    );
+    assert_eq!(outputs[0].next_compose_hint.session_seed, "agent:test:main");
     assert!(outputs[0]
         .next_compose_hint
         .proposed_p0_questions
         .iter()
         .any(|q| q.contains("X")));
+    assert_eq!(
+        outputs[0].next_compose_hint.continuity_hints[0].kind,
+        "aletheia_next_compose"
+    );
 }
 
 #[test]

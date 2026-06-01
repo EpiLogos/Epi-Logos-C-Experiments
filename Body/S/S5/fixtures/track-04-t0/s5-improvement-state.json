@@ -1,0 +1,66 @@
+{
+  "runs": [
+    {
+      "run_id": "track-04-t0-improvement-kept",
+      "target_family": "S",
+      "target_coordinate": "S5/S5'",
+      "direction": "preserve review-gated autoresearch baseline behavior",
+      "source_review_item_id": "track-04-t0-review-open",
+      "baseline": {
+        "path": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md",
+        "coordinate": "S5/S5'",
+        "kind": "seed_spec"
+      },
+      "challenger": {
+        "path": "autoresearch://challenger/track-04-t0-improvement-kept",
+        "coordinate": "S5/S5'",
+        "kind": "improvement_challenger"
+      },
+      "loop_state": "deciding",
+      "evaluation": {
+        "winner": "challenger",
+        "baseline_score": 0.45,
+        "challenger_score": 0.82,
+        "evidence": [
+          {
+            "dimension": "review_gate_characterization",
+            "baseline_score": 0.45,
+            "challenger_score": 0.82,
+            "weight": 1.0,
+            "notes": "Fixture locks the current kept-run JSON shape before typed spine migration.",
+            "source_refs": [
+              {
+                "kind": "track_04_t0_fixture",
+                "uri": "Body/S/S5/fixtures/track-04-t0/s5-improvement-state.json",
+                "coordinate": "S5/S5'",
+                "summary": "Baseline persisted improvement state."
+              }
+            ]
+          }
+        ],
+        "rationale": "challenger wins by weighted evidence (0.4500 vs 0.8200)",
+        "evaluated_at": 1760000001000
+      },
+      "decision": "keep",
+      "created_at": 1760000000000,
+      "updated_at": 1760000001000
+    },
+    {
+      "run_id": "track-04-t0-improvement-pending",
+      "target_family": "S",
+      "target_coordinate": "S4/S4'",
+      "direction": "keep active-vector serialization stable",
+      "baseline": {
+        "path": "Body/S/S4/plugins/pleroma/capability-matrix.json"
+      },
+      "challenger": {
+        "path": "autoresearch://challenger/track-04-t0-improvement-pending",
+        "coordinate": "S4/S4'",
+        "kind": "improvement_challenger"
+      },
+      "loop_state": "hypothesis",
+      "created_at": 1760000002000,
+      "updated_at": 1760000002000
+    }
+  ]
+}

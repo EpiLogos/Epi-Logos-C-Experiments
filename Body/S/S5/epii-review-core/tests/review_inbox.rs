@@ -23,6 +23,7 @@ fn submit_persists_anima_review_item_and_lists_open_inbox() {
             proposed_action: None,
             requires_human: false,
             kernel_visibility: None,
+            governance_profile: None,
         })
         .expect("review item should submit");
 
@@ -57,6 +58,7 @@ fn human_required_review_cannot_be_resolved_by_agent() {
             proposed_action: None,
             requires_human: true,
             kernel_visibility: None,
+            governance_profile: None,
         })
         .expect("human-gated item should submit");
 
@@ -112,6 +114,7 @@ fn resolved_review_moves_to_history_with_resolution_record() {
             proposed_action: None,
             requires_human: false,
             kernel_visibility: None,
+            governance_profile: None,
         })
         .expect("item should submit");
 
@@ -187,6 +190,7 @@ fn review_items_surface_kernel_visibility_without_granting_judgement() {
             proposed_action: None,
             requires_human: false,
             kernel_visibility: Some(kernel_visibility),
+            governance_profile: None,
         })
         .expect("kernel visibility should submit");
 

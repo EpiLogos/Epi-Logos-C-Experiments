@@ -22,6 +22,7 @@ fn snapshot_reads_real_review_and_autoresearch_state() {
             proposed_action: None,
             requires_human: false,
             kernel_visibility: None,
+            governance_profile: None,
         })
         .expect("review deposit should persist");
 

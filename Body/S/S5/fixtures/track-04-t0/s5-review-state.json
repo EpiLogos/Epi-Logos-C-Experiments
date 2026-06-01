@@ -1,0 +1,53 @@
+{
+  "items": [
+    {
+      "item_id": "track-04-t0-review-open",
+      "source": "human_gate",
+      "title": "Approve S5 baseline characterization",
+      "body": "A human-required review item must not be approved by an agent.",
+      "priority": "blocking",
+      "status": "open",
+      "coordinate_context": {
+        "coordinate": "S5/S5'",
+        "fixture": "track-04-t0"
+      },
+      "requires_human": true,
+      "created_at": 1760000000000
+    },
+    {
+      "item_id": "track-04-t0-review-resolved",
+      "source": "aletheia",
+      "title": "Crystallise fixture note",
+      "body": "Resolved review state locks the current history JSON shape.",
+      "priority": "normal",
+      "status": "resolved",
+      "coordinate_context": {
+        "coordinate": "S5/S5'",
+        "fixture": "track-04-t0"
+      },
+      "proposed_action": {
+        "kind": "aletheia_crystallisation",
+        "target": {
+          "path": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md",
+          "coordinate": "S5/S5'"
+        },
+        "destination": "epii"
+      },
+      "requires_human": false,
+      "created_at": 1760000000500
+    }
+  ],
+  "resolutions": [
+    {
+      "item_id": "track-04-t0-review-resolved",
+      "decision": "revise",
+      "rationale": "Fixture keeps revise resolution serialization stable.",
+      "resolved_by": "epii",
+      "resolved_at": 1760000001500,
+      "promotion_destination": "S5/S5'",
+      "promoted_artifact": {
+        "path": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md"
+      }
+    }
+  ]
+}
