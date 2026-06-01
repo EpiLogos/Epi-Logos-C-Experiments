@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T21:51:35.033Z",
+  "updatedAt": "2026-06-01T22:00:00.691Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -1727,16 +1727,21 @@
       "worktree": null
     },
     "04.T8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T22:00:00.675Z",
+      "claimedAt": "2026-06-01T21:53:37.482Z",
+      "completedAt": "2026-06-01T22:00:00.675Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T22:00:00.675Z",
+          "text": "Implemented T8 non-Aletheia pipeline adapters in Body/S/S5/epii-autoresearch-core/src/adapters.rs with real report-file ingress for Anuttara SHACL failures, Paraśakti embedding metric drift, protected Nara dialogic voice signals, and Epii-on-Epii self-observation. Added ImprovementStore::surface_non_aletheia_report_file, surface_non_aletheia_report, and surface_epii_review_inconsistency_from_history; all route through canonical surface_candidate persistence/routing/suppression. External report timestamps use u64 JSON ingress with checked conversion to spine u128. Tests write real structured JSON reports or use real ReviewStore history: SHACL report routes to Anuttara and downstream Parashakti route blocks behind Anuttara; Paraśakti metric drift below threshold preserves metric evidence; Nara volume-only report produces no candidate while quality+drift with consent handle produces protected-local Nara candidate without raw body leakage; Epii-on-Epii review inconsistency creates recursive candidate and human gate rejects agent approval before promotion planning. GitNexus impact before edits: ImprovementStore LOW, ImprovementCandidate LOW. Verification PASS: cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --test non_aletheia_adapters 4/4; full cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml all suites pass including non_aletheia_adapters 4/4; cargo test --offline --manifest-path Body/S/S5/epii-agent-core/Cargo.toml passed agent_access 8/8 plus baseline fixture/doctests; cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml passed 9/9 plus doctests; git diff --check clean."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T21:53:37.482Z",
+      "runId": "20260601T215337Z-04-T8",
       "worktree": null
     },
     "04.T9": {
@@ -2321,26 +2326,36 @@
       "leaseExpiresAt": "2026-06-01T23:44:01.286Z",
       "worktree": null,
       "completedAt": "2026-06-01T21:51:35.018Z"
+    },
+    {
+      "runId": "20260601T215337Z-04-T8",
+      "taskId": "04.T8",
+      "status": "done",
+      "startedAt": "2026-06-01T21:53:37.482Z",
+      "owner": "codex",
+      "leaseExpiresAt": "2026-06-01T23:53:37.482Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T22:00:00.675Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-01T21:45:29.797Z",
-    "updatedAt": "2026-06-01T21:45:29.797Z",
+    "createdAt": "2026-06-01T21:53:19.231Z",
+    "updatedAt": "2026-06-01T21:53:19.231Z",
     "taskIds": [
       "03.T2",
-      "04.T7",
       "03.T3",
-      "03.T4"
+      "03.T4",
+      "10.T1"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "03.T2": "in-session",
-      "04.T7": "in-session",
       "03.T3": "in-session",
-      "03.T4": "in-session"
+      "03.T4": "in-session",
+      "10.T1": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
