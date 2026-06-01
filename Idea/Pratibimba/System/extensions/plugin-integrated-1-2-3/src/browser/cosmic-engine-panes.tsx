@@ -15,7 +15,10 @@ import * as React from 'react';
 import {
     MathemeHarmonicProfileBoundary
 } from '@pratibimba/m-extension-runtime';
-import { PaneAvailability } from '@pratibimba/integrated-composition';
+import {
+    IntegratedEvidenceProducerId,
+    PaneAvailability
+} from '@pratibimba/integrated-composition';
 
 interface PaneShellProps {
     readonly title: string;
@@ -23,6 +26,8 @@ interface PaneShellProps {
     readonly availability: PaneAvailability;
     readonly profile: MathemeHarmonicProfileBoundary | null;
     readonly children: React.ReactNode;
+    readonly evidenceProducerId: IntegratedEvidenceProducerId;
+    readonly onOpenInReview?: (producerId: IntegratedEvidenceProducerId) => void;
 }
 
 const PaneShell: React.FC<PaneShellProps> = ({
@@ -30,7 +35,9 @@ const PaneShell: React.FC<PaneShellProps> = ({
     extensionLabel,
     availability,
     profile,
-    children
+    children,
+    evidenceProducerId,
+    onOpenInReview
 }) => {
     return (
         <section className={`cosmic-pane cosmic-pane-${availability.paneId}`}>
@@ -42,7 +49,18 @@ const PaneShell: React.FC<PaneShellProps> = ({
                 </span>
             </header>
             {availability.allFieldsPresent ? (
-                <div className="cosmic-pane-body">{children}</div>
+                <div className="cosmic-pane-body">
+                    {children}
+                    {onOpenInReview ? (
+                        <button
+                            type="button"
+                            className="theia-button cosmic-pane-review"
+                            onClick={() => onOpenInReview(evidenceProducerId)}
+                        >
+                            Open in Review
+                        </button>
+                    ) : null}
+                </div>
             ) : (
                 <div className="cosmic-pane-blocker">
                     <p>
@@ -71,6 +89,7 @@ export interface CosmicEnginePanesProps {
     readonly m3CenterStage: PaneAvailability;
     readonly m2LeftStage: PaneAvailability;
     readonly m1RightInspector: PaneAvailability;
+    readonly onOpenInReview?: (producerId: IntegratedEvidenceProducerId) => void;
 }
 
 /**
@@ -83,7 +102,8 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
     profile,
     m3CenterStage,
     m2LeftStage,
-    m1RightInspector
+    m1RightInspector,
+    onOpenInReview
 }) => {
     const codon = readPayloadString(profile, 'codon_rotation_projection');
     const mahamaya = readPayloadString(profile, 'mahamaya');
@@ -101,6 +121,8 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
                 extensionLabel="M3 Mahamaya"
                 availability={m3CenterStage}
                 profile={profile}
+                evidenceProducerId="route-codon-projection-audit"
+                onOpenInReview={onOpenInReview}
             >
                 <dl>
                     <dt>codon_rotation_projection</dt>
@@ -114,6 +136,8 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
                 extensionLabel="M2 Parashakti"
                 availability={m2LeftStage}
                 profile={profile}
+                evidenceProducerId="m2-meaning-packet-trace"
+                onOpenInReview={onOpenInReview}
             >
                 <dl>
                     <dt>resonance72</dt>
@@ -129,6 +153,8 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
                 extensionLabel="M1 Paramasiva"
                 availability={m1RightInspector}
                 profile={profile}
+                evidenceProducerId="kernel-trace-handle"
+                onOpenInReview={onOpenInReview}
             >
                 <dl>
                     <dt>lens</dt>

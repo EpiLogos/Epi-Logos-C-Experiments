@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T12:45:54.562Z",
+  "updatedAt": "2026-06-01T12:55:03.844Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -253,16 +253,16 @@
       "worktree": null
     },
     "02.T5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-01T12:47:20.869Z",
+      "claimedAt": "2026-06-01T12:47:20.869Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:47:20.869Z",
+      "heartbeatAt": "2026-06-01T12:47:20.869Z",
+      "runId": "20260601T124720Z-02-T5",
       "worktree": null
     },
     "02.T6": {
@@ -836,16 +836,21 @@
       "worktree": null
     },
     "08.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T12:54:54.881Z",
+      "claimedAt": "2026-06-01T12:47:13.788Z",
+      "completedAt": "2026-06-01T12:54:54.881Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T12:54:54.881Z",
+          "text": "08.T4 landed 1-2-3 evidence/review/agent hooks on top of 08.T3 cosmic engine slice. New evidence-envelope.ts: IntegratedEvidenceEnvelope type carries envelopeId/producerId/rangeId/pluginId/profileGeneration/worldClockGeneration/s2ProvenanceHandles/s3SessionHandle/s3DayNowHandle/s5ReviewTarget/privacyClass/sourceSpecAnchors/requiresHumanFinalValidation/payload (08.T4 deliverable 4 — every cross-track field present). DEFAULT_REVIEW_TARGETS maps each producer to a typed s5.review.target.{canon,identity,model,routine,gap}. New evidence-producers.ts: five pure producers (cosmic-engine-snapshot, route-codon-projection-audit, m2-meaning-packet-trace, kernel-trace-handle, readiness-gap-report) each refuse to emit when required upstream fields are missing unless forceEmitOnGap=true. Each envelope sources s2 provenance from profile.payload.s2_provenance.handles and cites concrete source-spec anchor paths (M3/M2 specs + plan tranches). New s5-review-actions.ts: three action wrappers (openInReview, askEpiiToExplain, createImprovementCandidate) routed through bridge.invokeGatewayRpc with method names s5.review.request/s5.epii.explain.request/s5.improve.deposit and full envelope-payload mapping; return typed S5ActionResult with status one of submitted/s5_review_blocked/bridge_unavailable/human_validation_required/rejected_by_gateway — no silent success branch. New privacy-scrubber.ts: validateEvidenceEnvelopeForRange rejects M4 protected-local privacy class on any 1-2-3 envelope, rejects forbidden field patterns (q_personal, q_nara, bioquaternion_*, nara_journal/body/raw/private, graphiti_body/content/raw/episode_body, m4_protected/private/body/raw, personal_field_body/raw), rejects forbidden value markers (<protected:body>, <protected:journal>, <bioquaternion:raw:). 4/5/0 envelopes have a more relaxed but still non-trivial forbidden set (raw bioquaternion only, never opaque handles). Plugin-integrated-1-2-3 cosmic-engine-panes adds per-pane Open-in-Review button wired to producer ids (M3 → route-codon-projection-audit, M2 → m2-meaning-packet-trace, M1 → kernel-trace-handle); widget handleOpenInReview pipeline produces envelope → validates via scrubber → calls openInReview with optional liveBridge. Verification: ./scripts/smoke-build.sh green (bundle 21.32MB, all 11 chunks); node --test extensions/test/*.test.mjs 55/55 pass including 11 new evidence+action+privacy tests covering (a) every producer emits a frozen envelope with required cross-track fields including S2 provenance, (b) producer refuses to emit cosmic-engine snapshot when M3 field missing, (c) readiness-gap-report emits on missing fields, (d) scrubber rejects M4 protected privacy class, (e) scrubber rejects bioquaternion_raw payload, (f) scrubber rejects nested Graphiti journal entries, (g) scrubber rejects <protected:body> marker strings in arbitrary text, (h) openInReview returns bridge_unavailable when no bridge, (i) returns s5_review_blocked when gateway throws, (j) all three actions short-circuit on requiresHumanFinalValidation envelopes without calling gateway, (k) non-human-gated envelopes pass through to correct gateway method names. Validator ok=true. Deferred: real Track 04 DTOs (gateway calls compile against typed boundary; payload shape ready for real s5.review.* methods when Track 04 lands); observability event emission via integrated coordinator publish() (event-kind enum already declared in 08.T2, wiring producer → publish deferred to T5/T6 where shared cadence coordinator is plumbed)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T12:47:13.788Z",
+      "runId": "20260601T124713Z-08-T4",
       "worktree": null
     },
     "08.T5": {
@@ -1407,26 +1412,45 @@
       "leaseExpiresAt": "2026-06-01T14:37:02.000Z",
       "worktree": null,
       "completedAt": "2026-06-01T12:43:40.585Z"
+    },
+    {
+      "runId": "20260601T124713Z-08-T4",
+      "taskId": "08.T4",
+      "status": "done",
+      "startedAt": "2026-06-01T12:47:13.788Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:47:13.788Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T12:54:54.881Z"
+    },
+    {
+      "runId": "20260601T124720Z-02-T5",
+      "taskId": "02.T5",
+      "status": "in_progress",
+      "startedAt": "2026-06-01T12:47:20.869Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T14:47:20.869Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-01T12:43:50.210Z",
-    "updatedAt": "2026-06-01T12:43:50.210Z",
+    "createdAt": "2026-06-01T12:55:03.831Z",
+    "updatedAt": "2026-06-01T12:55:03.831Z",
     "taskIds": [
-      "02.T4",
-      "09.T1",
       "02.T5",
-      "02.T6"
+      "02.T6",
+      "09.T1",
+      "01.T6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "02.T4": "in-session",
-      "09.T1": "in-session",
       "02.T5": "in-session",
-      "02.T6": "in-session"
+      "02.T6": "in-session",
+      "09.T1": "in-session",
+      "01.T6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

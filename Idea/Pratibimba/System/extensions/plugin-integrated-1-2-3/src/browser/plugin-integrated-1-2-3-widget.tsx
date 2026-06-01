@@ -6,6 +6,7 @@ import { injectable, inject, postConstruct } from '@theia/core/shared/inversify'
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
     Disposable,
+    KernelBridgeAPI,
     MExtensionId,
     MathemeHarmonicProfileBoundary,
     SharedBridgeAdapter,
@@ -14,10 +15,15 @@ import {
 import {
     checkCosmicEnginePanes,
     CompositionCoordinator,
+    IntegratedEvidenceProducerId,
     findNamedLayout,
     IntegratedContributorRecord,
     IntegratedEmptyState,
-    buildEmptyState
+    PENDING_INTEGRATED_VIEW_STATE,
+    buildEmptyState,
+    openInReview,
+    produceEvidence,
+    validateEvidenceEnvelopeForRange
 } from '@pratibimba/integrated-composition';
 import { CosmicEnginePanes } from './cosmic-engine-panes';
 import { PLUGIN_ID, CONTRIBUTOR_IDS } from '../common';
@@ -36,6 +42,13 @@ export class PluginIntegrated123Widget extends ReactWidget {
     protected contributorRecords: readonly IntegratedContributorRecord[] = [];
     protected currentProfile: MathemeHarmonicProfileBoundary | null = null;
     protected subscriptions: Disposable[] = [];
+
+    /**
+     * Optional connector to a live KernelBridgeAPI. Until the kernel-bridge
+     * runtime ships (Track 01 T6) the bridge stays null and Open-in-Review
+     * resolves to `bridge_unavailable` rather than fabricating a result.
+     */
+    protected liveBridge: KernelBridgeAPI | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -67,6 +80,35 @@ export class PluginIntegrated123Widget extends ReactWidget {
     setContributors(records: readonly IntegratedContributorRecord[]): void {
         this.contributorRecords = records;
         this.update();
+    }
+
+    setLiveBridge(bridge: KernelBridgeAPI | null): void {
+        this.liveBridge = bridge;
+    }
+
+    protected async handleOpenInReview(
+        producerId: IntegratedEvidenceProducerId
+    ): Promise<void> {
+        const envelope = produceEvidence(
+            producerId,
+            {
+                view: PENDING_INTEGRATED_VIEW_STATE,
+                profile: this.currentProfile,
+                contributorReadinessIds: this.contributorRecords.map(r => r.extensionId)
+            },
+            `${Date.now()}:${producerId}`
+        );
+        if (!envelope) {
+            return;
+        }
+        try {
+            validateEvidenceEnvelopeForRange(envelope);
+        } catch {
+            // Drop the envelope on privacy violation; the scrubber test proves
+            // this path actually rejects forbidden payloads.
+            return;
+        }
+        void openInReview(this.liveBridge, envelope);
     }
 
     protected override render(): React.ReactNode {
@@ -106,6 +148,9 @@ export class PluginIntegrated123Widget extends ReactWidget {
                     m3CenterStage={panes.m3CenterStage}
                     m2LeftStage={panes.m2LeftStage}
                     m1RightInspector={panes.m1RightInspector}
+                    onOpenInReview={producerId =>
+                        void this.handleOpenInReview(producerId)
+                    }
                 />
             </div>
         );
