@@ -214,7 +214,7 @@ pub struct PointerWebRefreshPlan {
 }
 
 pub struct GraphMethodService<'a> {
-    client: &'a Neo4jClient,
+    pub(crate) client: &'a Neo4jClient,
 }
 
 impl<'a> GraphMethodService<'a> {
@@ -226,7 +226,7 @@ impl<'a> GraphMethodService<'a> {
         let trimmed = input.trim();
         let parsed = CoordinateArrayParser::parse_one(trimmed)?;
         let canonical = if trimmed == "#" {
-            "M".to_string()
+            "#".to_string()
         } else if trimmed.starts_with('#') && trimmed.len() == 2 {
             format!("M{}", parsed.ql_position.unwrap_or_default())
         } else {
@@ -455,6 +455,9 @@ impl<'a> GraphMethodService<'a> {
                     n.c_4_family AS family,
                     n.c_4_layer AS layer,
                     n.c_4_ql_position AS ql_position,
+                    n.c_1_symbol AS symbol,
+                    n.c_1_formulation_type AS formulation_type,
+                    n.c_1_complete_formulation AS complete_formulation,
                     collect(DISTINCT {
                       type: type(r),
                       direction: CASE WHEN startNode(r) = n THEN 'outbound' ELSE 'inbound' END,
@@ -620,7 +623,59 @@ fn known_row_json(row: &neo4rs::Row) -> Value {
         "layer": row.get::<String>("layer").unwrap_or_default(),
         "ql_position": row.get::<i64>("ql_position").unwrap_or(-1),
         "depth": row.get::<i64>("depth").ok(),
+        "anuttara": anuttara_fields_json(row),
     })
+}
+
+fn anuttara_fields_json(row: &neo4rs::Row) -> Value {
+    let fields = [
+        ("symbol", "c_1_symbol", row.get::<String>("symbol").ok()),
+        (
+            "formulation_type",
+            "c_1_formulation_type",
+            row.get::<String>("formulation_type").ok(),
+        ),
+        (
+            "complete_formulation",
+            "c_1_complete_formulation",
+            row.get::<String>("complete_formulation").ok(),
+        ),
+    ];
+    let present = fields
+        .iter()
+        .filter_map(|(alias, property, value)| {
+            let value = value.as_ref()?.trim();
+            if value.is_empty() {
+                return None;
+            }
+            Some((*alias, *property, value.to_owned()))
+        })
+        .collect::<Vec<_>>();
+    if present.is_empty() {
+        return Value::Null;
+    }
+
+    let mut values = serde_json::Map::new();
+    let mut provenance = serde_json::Map::new();
+    for (alias, property, value) in present {
+        values.insert(alias.to_owned(), json!(value));
+        provenance.insert(
+            alias.to_owned(),
+            json!({
+                "source": "s2.neo4j",
+                "status": "s2_supplied",
+                "property": property,
+                "ontologyProperty": match alias {
+                    "symbol" => "epi:hasSymbol",
+                    "formulation_type" => "epi:hasFormulationType",
+                    "complete_formulation" => "epi:hasCompleteFormulation",
+                    _ => "epi:unknown",
+                },
+            }),
+        );
+    }
+    values.insert("provenance".to_owned(), Value::Object(provenance));
+    Value::Object(values)
 }
 
 fn pointer_ref_values(refs: &BTreeMap<String, String>) -> Vec<String> {

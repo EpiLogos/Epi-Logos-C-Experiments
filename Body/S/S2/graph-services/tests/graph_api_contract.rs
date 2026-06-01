@@ -42,6 +42,11 @@ fn coordinate_resolution_canonicalizes_hash_without_legacy_property() {
     assert_eq!(resolved.canonical, "M2");
     assert!(resolved.compatibility_property.is_none());
 
+    let root = GraphMethodService::resolve_coordinate_string("#").unwrap();
+    assert_eq!(root.input, "#");
+    assert_eq!(root.canonical, "#");
+    assert!(root.compatibility_property.is_none());
+
     let resolved = GraphMethodService::resolve_coordinate_string("M4").unwrap();
     assert_eq!(resolved.canonical, "M4");
     assert!(resolved.compatibility_property.is_none());
@@ -318,4 +323,79 @@ async fn live_graph_methods_write_read_traverse_and_cleanup_test_owned_data() {
         ))
         .await
         .expect("cleanup test graph");
+}
+
+#[tokio::test]
+#[ignore] // requires Docker: docker compose -f docker-compose.epi-s2.yml up -d neo4j
+async fn live_m0_inspector_payload_reads_anuttara_fields_from_s2_properties() {
+    let config = Neo4jConfig::from_env();
+    let client = Neo4jClient::connect(&config).expect("connect to live Neo4j");
+    schema::create_schema(&client).await.expect("create schema");
+    let service = GraphMethodService::new(&client);
+    let suffix = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_nanos()
+        % 60_000;
+    let coordinate = format!("M0-{suffix}");
+
+    client
+        .run_query(
+            neo4rs::query(
+                "MERGE (n:Bimba:EpiGraphMethodTest {coordinate: $coordinate})
+                 SET n.c_2_uuid = $coordinate,
+                     n.c_1_name = 'Anuttara contract test',
+                     n.c_4_family = 'M',
+                     n.c_4_layer = 'M0',
+                     n.c_4_ql_position = 0,
+                     n.c_1_symbol = '@0 = ##',
+                     n.c_1_formulation_type = 'Anuttara syntax',
+                     n.c_1_complete_formulation = '@0 = ## -- Being/Knowing Embodied/Implicit Memory - Library'
+                 RETURN n.coordinate AS coordinate",
+            )
+            .param("coordinate", coordinate.clone()),
+        )
+        .await
+        .expect("create anuttara test node");
+
+    let payload = service
+        .node(GraphNodeRequest {
+            coordinate: coordinate.clone(),
+        })
+        .await
+        .expect("node method");
+    assert_eq!(payload["node"]["coordinate"], coordinate);
+    assert_eq!(payload["node"]["anuttara"]["symbol"], "@0 = ##");
+    assert_eq!(
+        payload["node"]["anuttara"]["formulation_type"],
+        "Anuttara syntax"
+    );
+    assert_eq!(
+        payload["node"]["anuttara"]["provenance"]["symbol"]["source"],
+        "s2.neo4j"
+    );
+    assert_eq!(
+        payload["node"]["anuttara"]["provenance"]["symbol"]["property"],
+        "c_1_symbol"
+    );
+    assert_eq!(
+        payload["node"]["anuttara"]["provenance"]["symbol"]["status"],
+        "s2_supplied"
+    );
+    assert_ne!(
+        payload["node"]["anuttara"]["symbol"],
+        "renderer-local-placeholder"
+    );
+
+    client
+        .run_query(
+            neo4rs::query(
+                "MATCH (n:EpiGraphMethodTest)
+                 WHERE n.coordinate = $coordinate OR n.coordinate STARTS WITH 'M0-ANUTTARA_CONTRACT_TEST_'
+                 DETACH DELETE n",
+            )
+                .param("coordinate", coordinate),
+        )
+        .await
+        .expect("cleanup anuttara test node");
 }

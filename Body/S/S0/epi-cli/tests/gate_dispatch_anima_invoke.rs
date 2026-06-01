@@ -83,13 +83,7 @@ fn cli_gate_dispatch_anima_invoke_patches_vak_and_queues_task() {
     // Verify the session VAK was patched by reading it back via
     // `gate sessions get` (the C2 follow-up subcommand).
     let get_out = run_epi(
-        &[
-            "gate",
-            "sessions",
-            "get",
-            "--session-id",
-            session_id,
-        ],
+        &["gate", "sessions", "get", "--session-id", session_id],
         &test_env,
     );
     assert!(

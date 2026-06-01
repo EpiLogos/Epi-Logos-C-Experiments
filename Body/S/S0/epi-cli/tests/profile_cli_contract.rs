@@ -10,8 +10,7 @@ use std::process::Command;
 
 fn epi_binary() -> std::path::PathBuf {
     // CARGO_BIN_EXE_<name> points at the just-built binary.
-    let path =
-        env!("CARGO_BIN_EXE_epi");
+    let path = env!("CARGO_BIN_EXE_epi");
     std::path::PathBuf::from(path)
 }
 
@@ -39,7 +38,10 @@ fn run_profile(args: &[&str]) -> Value {
 #[test]
 fn cli_profile_show_emits_real_portal_core_profile_with_canonical_fields() {
     let v = run_profile(&["show", "--cycle", "0", "--sub-tick", "0"]);
-    assert_eq!(v["source"], "portal_core::MathemeHarmonicProfile::from_tick");
+    assert_eq!(
+        v["source"],
+        "portal_core::MathemeHarmonicProfile::from_tick"
+    );
     assert!(v["cliVersion"].is_string());
 
     let profile = &v["profile"];

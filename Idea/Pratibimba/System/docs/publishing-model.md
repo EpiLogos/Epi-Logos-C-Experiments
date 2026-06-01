@@ -28,20 +28,28 @@ Two delivery modes, decided by ADR-05-001:
 
 All `@theia/*` packages are pinned to **`1.56.0`** at the workspace root. Override or upgrade is a coordinated change: bump every package in lockstep, run `pnpm install`, run `pnpm build`, smoke-test the readiness contribution.
 
-## Known native-module gaps (Node 24 host)
+## Native-module policy (Node 24 host)
 
-These dependencies have native build steps that fail under Node 24 in the dev environment:
+pnpm does not run arbitrary native build scripts by default. The Theia
+browser target still pulls a few optional native integrations through
+transitive packages, so the application owns explicit build-time policy for
+each one:
 
-- `keytar@7.2.0` — secret storage (used by `@theia/keymaps`, `@theia/userstorage`, etc.). Skipped via `pnpm onlyBuiltDependencies` allowlist.
-- `node-pty@0.11.0-beta24` — terminal pty. Skipped; `@theia/terminal` and `@theia/process` removed from `theia-app` deps until upstream node-pty supports Node ≥ 22.
-- `drivelist@9.2.4` — drive enumeration (used by `@theia/core/lib/node/env-variables`). Skipped; backend bundle has a missing-module warning on `drivelist/js/index.js`. The frontend bundle builds and renders correctly; the backend startup needs a Node 20/22 host (or these modules patched away) for full dev-server start.
+- `keytar@7.2.0` — secret storage. The browser application does not expose
+  native OS secret writes in Track 05 T1, so
+  `theia-app/webpack.config.js` maps the missing native binding to a safe
+  unavailable implementation.
+- `drivelist@9.2.4` — drive enumeration. The browser application does not
+  require host drive discovery, so the Theia native-webpack binding maps it to
+  an empty drive list.
+- `node-pty@0.11.0-beta24` — terminal pty. `@theia/terminal` and
+  `@theia/process` are intentionally absent from `theia-app` until terminal
+  support is explicitly in scope.
 
-Mitigations:
-
-- Pin Node 22 for backend startup in CI.
-- Or apply a webpack alias that maps `drivelist` to a stub (Track 05 T2 work).
-
-The browser bundle (the canonical 05.T1 verification artifact) is unaffected.
+`pnpm --dir Idea/Pratibimba/System build` must compile both the frontend and
+backend bundles successfully. `scripts/smoke-build.sh` fails on any non-zero
+Theia build exit and verifies the readiness extension chunk is present in the
+frontend artifact.
 
 ## Patches
 

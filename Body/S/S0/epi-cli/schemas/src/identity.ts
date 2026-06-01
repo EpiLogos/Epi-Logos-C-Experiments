@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CoordFamily } from "./enums.js";
+import { BimbaCoordinate } from "./validator.js";
 
 /**
  * Ring 1: HCIdentity — the 8-byte kernel.
@@ -8,7 +9,7 @@ import { CoordFamily } from "./enums.js";
  */
 export const HCIdentity = z.object({
   /** Primary key: "#", "#0"-"#5", "M4", "CF_TRIKA", "CPF", etc. */
-  coordinate: z.string().min(1),
+  bimbaCoordinate: BimbaCoordinate,
   /** 0-5 for positions, 255 (0xFF) for the # node */
   qlPosition: z.number().int().refine(
     (n) => (n >= 0 && n <= 5) || n === 255,

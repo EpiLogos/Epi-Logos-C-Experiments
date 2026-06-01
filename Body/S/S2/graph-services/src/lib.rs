@@ -11,9 +11,11 @@ mod coordinate;
 pub mod dataset_import;
 pub mod doctor;
 pub mod embeddings;
+pub mod gds;
 pub mod graph_api;
 pub mod link_enforcement;
 pub mod meta;
+pub mod ontology;
 pub mod pointers;
 pub mod relationship_manager;
 pub mod retrieval;
@@ -32,10 +34,17 @@ pub use coordinate::{
 };
 pub use dataset_import::DatasetImporter;
 pub use doctor::{
-    collect_report, render_human, render_status, DoctorReport, GraphState, RedisStackStatus,
+    collect_report, render_human, render_status, DoctorReport, GraphState, Owl2RlReadiness,
+    PrivacyProjectionReadiness, ProcedureReadiness, RedisStackStatus, SchemaReadiness,
     SemanticCacheStatus, ServiceStatus,
 };
 pub use embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
+pub use gds::{
+    algorithm_descriptors, blocked_overlay_payload, gds_procedure_count, option1_projection_plan,
+    GdsAlgorithmDescriptor, GdsOverlayNode, GdsOverlayPayload, GdsOverlayRequest,
+    GdsProjectionPlan, GDS_ALGORITHM_VERSIONS, GDS_EXCLUDED_LABELS, GDS_OPTION1_PROJECTION_NAME,
+    GDS_OPTION1_PROJECTION_VERSION, GDS_PRIVACY_BOUNDARY,
+};
 pub use graph_api::{
     CoordinateResolution, GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphParamValue,
     GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
@@ -45,6 +54,12 @@ pub use graph_api::{
 pub use link_enforcement::{LinkEnforcer, LinkValidationResult};
 pub use meta::{
     desired_meta, is_bootstrapped, read_graph_meta, seed_source_hash, write_graph_meta, GraphMeta,
+};
+pub use ontology::{
+    anuttara_property_mappings, epi_ontology_sha256, import_epi_ontology_with_n10s,
+    ontology_import_plan, record_ontology_bridge_facts, OntologyImportPlan,
+    OntologyPropertyMapping, EPI_ONTOLOGY_FORMAT, EPI_ONTOLOGY_TURTLE, EPI_ONTOLOGY_URI,
+    EPI_ONTOLOGY_VERSION_IRI, OWL2_RL_PROFILE, SHACL_REPORTING_MODE,
 };
 pub use pointers::{
     compute_pointer_web, kernel_coordinate_anchor_for, kernel_coordinate_anchor_from_parts,

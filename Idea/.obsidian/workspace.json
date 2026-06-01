@@ -11,24 +11,10 @@
             "id": "d16b355ec3018f88",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Bimba/Seeds/S/S-CODE-RESIDENCY-PLAN.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "S-CODE-RESIDENCY-PLAN"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -232,8 +218,9 @@
       "smart-connections:Smart Connections: Open random connection": false
     }
   },
-  "active": "71804f64b4afeacf",
+  "active": "d16b355ec3018f88",
   "lastOpenFiles": [
+    "Bimba/Seeds/S/S-CODE-RESIDENCY-PLAN.md",
     "Empty/Present/2026-05-13/daily-note.md",
     "Empty/Present/2026-05-13",
     "Empty/Present/_hermes-parity-temp/FR2-messaging-gateway-integration.deprecated.md",
@@ -262,7 +249,6 @@
     "Bimba/Seeds/S/S3/S3'/S3'-TRACEABILITY-INDEX.md",
     "Bimba/Seeds/S/S3/S3-TRACEABILITY-INDEX.md",
     "Bimba/Seeds/S/S-SOURCE-TRACEABILITY-INDEX.md",
-    "Bimba/Seeds/S/S-CODE-RESIDENCY-AUDIT.md",
     "Empty/Present/2026/04/W15/12",
     "Empty/Present/2026/04/W15",
     "Empty/Present/2026/04",

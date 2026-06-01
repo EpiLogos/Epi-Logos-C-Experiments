@@ -1,4 +1,22 @@
 {
+  "profileSchemaVersion": 1,
+  "profileProvenance": {
+    "owner": "portal-core",
+    "contract": "MathemeHarmonicProfile.public-current",
+    "source": "S0 kernel tick + portal-core harmonic/codon/Vimarsha projections",
+    "compatibility": {
+      "binaryAlias": "binary",
+      "mahamayaAlias": "mahamaya",
+      "policy": "binary and mahamaya serialize the same projection during IOD-04 migration"
+    }
+  },
+  "tickAddress": {
+    "cycle": 0,
+    "subTick": 0,
+    "tick12": 0,
+    "absoluteTick": 0,
+    "phase": "Descent"
+  },
   "tick": 0,
   "tick12": 0,
   "cycle": 0,
@@ -119,6 +137,34 @@
     "frameBreathingRole": "sq1-boundary-totality",
     "m3CodecProvenance": "portal-core::mahamaya address law; tarot/amino LUTs pending"
   },
+  "mahamaya": {
+    "mahamayaAddress64": 0,
+    "codon": "AAA",
+    "hexagram": "H01",
+    "lineChangeOperator": "H01.1",
+    "hexagramId": 0,
+    "upperTrigram": 0,
+    "lowerTrigram": 0,
+    "codonId": 0,
+    "nucleotideBits": [
+      0,
+      0,
+      0
+    ],
+    "dnaRnaPhase": "DNA",
+    "lineIndex": 0,
+    "lineChangeOperatorAddress": 0,
+    "m2VibrationIndex": 0,
+    "m2ToM3Symbol": 0,
+    "evolutionaryGap": false,
+    "tarotMinorId": null,
+    "tarotShadowCodon": null,
+    "aminoAcidCode": null,
+    "datasetLutState": "pending-dataset-lut",
+    "transcriptionState": "resolved",
+    "frameBreathingRole": "sq1-boundary-totality",
+    "m3CodecProvenance": "portal-core::mahamaya address law; tarot/amino LUTs pending"
+  },
   "codonRotationProjection": {
     "lens": 0,
     "mode": 0,
@@ -176,5 +222,7 @@
     "activeFrame": "00/00",
     "activeAgent": "Nous",
     "projection": "CF7 diatonic lemniscate overlay"
-  }
+  },
+  "s2Anchor": null,
+  "s3Anchor": null
 }

@@ -27,6 +27,28 @@ pub struct DatasetBranchReport {
     pub relations: usize,
     pub skipped_nodes: usize,
     pub skipped_relations: usize,
+    pub imported_nodes: Vec<String>,
+    pub imported_relations: Vec<String>,
+    pub skipped_node_details: Vec<DatasetSkip>,
+    pub skipped_relation_details: Vec<DatasetSkip>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetSkip {
+    pub item: String,
+    pub reason: String,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct DatasetNodeImportOutcome {
+    imported: Vec<String>,
+    skipped: Vec<DatasetSkip>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct DatasetRelationImportOutcome {
+    imported: Vec<String>,
+    skipped: Vec<DatasetSkip>,
 }
 
 impl DatasetImportReport {
@@ -54,7 +76,41 @@ impl DatasetImportReport {
             })
             .collect::<Vec<_>>()
             .join("\n");
-        format!("Dataset import complete:\n{}", lines)
+        let details =
+            self.branches
+                .iter()
+                .flat_map(|branch| {
+                    let mut branch_lines = Vec::new();
+                    branch_lines.push(format!("  [{}] {}", branch.branch_id, branch.label));
+                    branch_lines.extend(
+                        branch
+                            .imported_nodes
+                            .iter()
+                            .map(|coord| format!("    imported node: {coord}")),
+                    );
+                    branch_lines.extend(
+                        branch
+                            .imported_relations
+                            .iter()
+                            .map(|rel| format!("    imported relation: {rel}")),
+                    );
+                    branch_lines.extend(
+                        branch.skipped_node_details.iter().map(|skip| {
+                            format!("    skipped node: {} ({})", skip.item, skip.reason)
+                        }),
+                    );
+                    branch_lines.extend(branch.skipped_relation_details.iter().map(|skip| {
+                        format!("    skipped relation: {} ({})", skip.item, skip.reason)
+                    }));
+                    branch_lines
+                })
+                .collect::<Vec<_>>()
+                .join("\n");
+        if details.is_empty() {
+            format!("Dataset import complete:\n{}", lines)
+        } else {
+            format!("Dataset import complete:\n{}\nDetails:\n{}", lines, details)
+        }
     }
 }
 
@@ -82,14 +138,14 @@ impl<'a> DatasetImporter<'a> {
     /// Uses MERGE on coordinate to avoid duplicates with seed data.
     pub async fn import_nodes(&self, filename: &str) -> Result<usize, String> {
         let report = self.import_nodes_with_metadata(filename, None).await?;
-        Ok(report.0)
+        Ok(report.imported.len())
     }
 
     async fn import_nodes_with_metadata(
         &self,
         filename: &str,
         branch: Option<&DatasetBranch>,
-    ) -> Result<(usize, usize), String> {
+    ) -> Result<DatasetNodeImportOutcome, String> {
         let path = self.resolve_dataset_path(filename);
         let data = std::fs::read_to_string(&path)
             .map_err(|e| format!("read {}: {}", path.display(), e))?;
@@ -97,13 +153,15 @@ impl<'a> DatasetImporter<'a> {
         let nodes: Vec<Value> = serde_json::from_str(&sanitized)
             .map_err(|e| format!("parse {}: {}", path.display(), e))?;
 
-        let mut count = 0;
-        let mut skipped = 0;
+        let mut outcome = DatasetNodeImportOutcome::default();
         for node in &nodes {
             let raw_coord = match coordinate_from_node(node) {
                 Some(c) => c,
                 None => {
-                    skipped += 1;
+                    outcome.skipped.push(DatasetSkip {
+                        item: node_identity_hint(node),
+                        reason: "missing coordinate or filteredProps.bimbaCoordinate".into(),
+                    });
                     continue;
                 }
             };
@@ -118,11 +176,11 @@ impl<'a> DatasetImporter<'a> {
             ));
             if let Some(branch) = branch {
                 set_parts.push(format!(
-                    "n.c_3_dataset_branch = COALESCE(n.c_3_dataset_branch, '{}')",
+                    "n.c_3_dataset_branch = '{}'",
                     escape_cypher(branch.id)
                 ));
                 set_parts.push(format!(
-                    "n.c_3_dataset_branch_label = COALESCE(n.c_3_dataset_branch_label, '{}')",
+                    "n.c_3_dataset_branch_label = '{}'",
                     escape_cypher(branch.label)
                 ));
             }
@@ -261,9 +319,18 @@ impl<'a> DatasetImporter<'a> {
             );
 
             match self.client.run(&cypher).await {
-                Ok(_) => count += 1,
+                Ok(rows) if !rows.is_empty() => outcome.imported.push(coord.clone()),
+                Ok(_) => outcome.skipped.push(DatasetSkip {
+                    item: coord.clone(),
+                    reason: "Neo4j write returned no node confirmation".into(),
+                }),
                 Err(e) => {
-                    eprintln!("  warn: skip node '{}': {}", coord, e);
+                    let reason = e.to_string();
+                    eprintln!("  warn: skip node '{}': {}", coord, reason);
+                    outcome.skipped.push(DatasetSkip {
+                        item: coord.clone(),
+                        reason,
+                    });
                     continue;
                 }
             }
@@ -310,20 +377,20 @@ impl<'a> DatasetImporter<'a> {
                 }
             }
         }
-        Ok((count, skipped))
+        Ok(outcome)
     }
 
     /// Import a relations JSON file. Each entry becomes a Neo4j relationship.
     pub async fn import_relations(&self, filename: &str) -> Result<usize, String> {
         let report = self.import_relations_with_metadata(filename, None).await?;
-        Ok(report.0)
+        Ok(report.imported.len())
     }
 
     async fn import_relations_with_metadata(
         &self,
         filename: &str,
         branch: Option<&DatasetBranch>,
-    ) -> Result<(usize, usize), String> {
+    ) -> Result<DatasetRelationImportOutcome, String> {
         let path = self.resolve_dataset_path(filename);
         let data = std::fs::read_to_string(&path)
             .map_err(|e| format!("read {}: {}", path.display(), e))?;
@@ -342,20 +409,25 @@ impl<'a> DatasetImporter<'a> {
             raw
         };
 
-        let mut count = 0;
-        let mut skipped = 0;
+        let mut outcome = DatasetRelationImportOutcome::default();
         for rel in &rels {
             let raw_source = match relation_endpoint(rel, "source") {
                 Some(s) => s,
                 None => {
-                    skipped += 1;
+                    outcome.skipped.push(DatasetSkip {
+                        item: relation_identity_hint(rel),
+                        reason: "missing source endpoint".into(),
+                    });
                     continue;
                 }
             };
             let raw_target = match relation_endpoint(rel, "target") {
                 Some(t) => t,
                 None => {
-                    skipped += 1;
+                    outcome.skipped.push(DatasetSkip {
+                        item: relation_identity_hint(rel),
+                        reason: "missing target endpoint".into(),
+                    });
                     continue;
                 }
             };
@@ -365,10 +437,14 @@ impl<'a> DatasetImporter<'a> {
             let rel_type = match relation_type_from_value(rel) {
                 Some(t) => sanitize_rel_type(t),
                 None => {
-                    skipped += 1;
+                    outcome.skipped.push(DatasetSkip {
+                        item: relation_identity_hint(rel),
+                        reason: "missing relationship type".into(),
+                    });
                     continue;
                 }
             };
+            let relation_name = format!("{source} -[{rel_type}]-> {target}");
 
             let mut set_parts = Vec::new();
             set_parts.push(format!(
@@ -386,7 +462,7 @@ impl<'a> DatasetImporter<'a> {
             set_parts.push("r.c_3_created_at = COALESCE(r.c_3_created_at, datetime())".to_string());
             if let Some(branch) = branch {
                 set_parts.push(format!(
-                    "r.c_3_dataset_branch = COALESCE(r.c_3_dataset_branch, '{}')",
+                    "r.c_3_dataset_branch = '{}'",
                     escape_cypher(branch.id)
                 ));
             }
@@ -396,7 +472,8 @@ impl<'a> DatasetImporter<'a> {
             let cypher = format!(
                 "MATCH (s:Bimba {{coordinate: '{}'}}) \
                  MATCH (t:Bimba {{coordinate: '{}'}}) \
-                 MERGE (s)-[r:{}]->(t){}",
+                 MERGE (s)-[r:{}]->(t){} \
+                 RETURN s.coordinate AS source, t.coordinate AS target",
                 escape_cypher(&source),
                 escape_cypher(&target),
                 rel_type,
@@ -404,23 +481,36 @@ impl<'a> DatasetImporter<'a> {
             );
 
             match self.client.run(&cypher).await {
-                Ok(_) => count += 1,
+                Ok(rows) if !rows.is_empty() => outcome.imported.push(relation_name),
+                Ok(_) => outcome.skipped.push(DatasetSkip {
+                    item: relation_name,
+                    reason: "missing source or target node in graph".into(),
+                }),
                 Err(e) => {
+                    let reason = e.to_string();
                     eprintln!(
                         "  warn: skip rel {} -[{}]-> {}: {}",
-                        source, rel_type, target, e
+                        source, rel_type, target, reason
                     );
+                    outcome.skipped.push(DatasetSkip {
+                        item: relation_name,
+                        reason,
+                    });
                 }
             }
         }
-        Ok((count, skipped))
+        Ok(outcome)
     }
 
     /// Import all canonical datasets in dependency order.
     pub async fn import_all(&self) -> Result<String, String> {
-        self.import_branches(canonical_dataset_plan(Path::new(&self.datasets_dir)))
-            .await
-            .map(|report| report.render())
+        let report = self
+            .import_branches(canonical_dataset_plan(Path::new(&self.datasets_dir)))
+            .await?;
+        let labels_report = self
+            .import_labels_if_present("low-detail/bimba_labels.json")
+            .await?;
+        Ok(format!("{}\n{}", report.render(), labels_report))
     }
 
     pub async fn import_low_detail_all(&self) -> Result<String, String> {
@@ -456,23 +546,27 @@ impl<'a> DatasetImporter<'a> {
             if !self.resolve_dataset_path(branch.nodes_file).exists() {
                 continue;
             }
-            let (nodes, skipped_nodes) = self
+            let node_outcome = self
                 .import_nodes_with_metadata(branch.nodes_file, Some(&branch))
                 .await?;
-            let (relations, skipped_relations) = match branch.relations_file {
+            let relation_outcome = match branch.relations_file {
                 Some(rel_file) if self.resolve_dataset_path(rel_file).exists() => {
                     self.import_relations_with_metadata(rel_file, Some(&branch))
                         .await?
                 }
-                _ => (0, 0),
+                _ => DatasetRelationImportOutcome::default(),
             };
             report.push(DatasetBranchReport {
                 branch_id: branch.id.into(),
                 label: branch.label.into(),
-                nodes,
-                relations,
-                skipped_nodes,
-                skipped_relations,
+                nodes: node_outcome.imported.len(),
+                relations: relation_outcome.imported.len(),
+                skipped_nodes: node_outcome.skipped.len(),
+                skipped_relations: relation_outcome.skipped.len(),
+                imported_nodes: node_outcome.imported,
+                imported_relations: relation_outcome.imported,
+                skipped_node_details: node_outcome.skipped,
+                skipped_relation_details: relation_outcome.skipped,
             });
         }
         Ok(report)
@@ -765,6 +859,19 @@ pub fn relation_endpoint<'a>(rel: &'a Value, key: &str) -> Option<&'a str> {
             .or_else(|| map.get("id").and_then(|value| value.as_str())),
         _ => None,
     })
+}
+
+fn node_identity_hint(node: &Value) -> String {
+    node_text_property(node, &["name", "title", "label", "primaryDesignation"])
+        .map(|value| truncate_utf8(value, 96).to_string())
+        .unwrap_or_else(|| "<node-without-coordinate>".into())
+}
+
+fn relation_identity_hint(rel: &Value) -> String {
+    let source = relation_endpoint(rel, "source").unwrap_or("?");
+    let target = relation_endpoint(rel, "target").unwrap_or("?");
+    let rel_type = relation_type_from_value(rel).unwrap_or("?");
+    format!("{source} -[{rel_type}]-> {target}")
 }
 
 /// Escape single quotes for Cypher string literals
@@ -1258,6 +1365,60 @@ mod tests {
             .any(|branch| branch.id == "low-detail/parashakti"));
         assert!(plan.iter().any(|branch| branch.id == "parashakti-deep"));
         assert_eq!(deep_dataset_plan().len(), 6);
+    }
+
+    #[test]
+    fn canonical_plan_points_at_real_corpus_files() {
+        let repo_datasets = Path::new("../../../../docs/datasets");
+        let plan = canonical_dataset_plan(repo_datasets);
+
+        for branch in &plan {
+            assert!(
+                repo_datasets.join(branch.nodes_file).exists(),
+                "{} nodes file must exist at {}",
+                branch.id,
+                branch.nodes_file
+            );
+            if let Some(relations_file) = branch.relations_file {
+                assert!(
+                    repo_datasets.join(relations_file).exists(),
+                    "{} relations file must exist at {}",
+                    branch.id,
+                    relations_file
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn import_report_names_imports_and_skip_reasons_deterministically() {
+        let mut report = DatasetImportReport::default();
+        report.push(DatasetBranchReport {
+            branch_id: "anuttara-deep".into(),
+            label: "M0 Anuttara Deep".into(),
+            nodes: 1,
+            relations: 1,
+            skipped_nodes: 1,
+            skipped_relations: 1,
+            imported_nodes: vec!["M0".into()],
+            imported_relations: vec!["M0 -[CONTAINS]-> M0-1".into()],
+            skipped_node_details: vec![DatasetSkip {
+                item: "No coordinate".into(),
+                reason: "missing coordinate or filteredProps.bimbaCoordinate".into(),
+            }],
+            skipped_relation_details: vec![DatasetSkip {
+                item: "M0 -[?]-> ?".into(),
+                reason: "missing target endpoint".into(),
+            }],
+        });
+
+        let rendered = report.render();
+        assert!(rendered.contains("imported node: M0"));
+        assert!(rendered.contains("imported relation: M0 -[CONTAINS]-> M0-1"));
+        assert!(rendered.contains(
+            "skipped node: No coordinate (missing coordinate or filteredProps.bimbaCoordinate)"
+        ));
+        assert!(rendered.contains("skipped relation: M0 -[?]-> ? (missing target endpoint)"));
     }
 
     #[test]

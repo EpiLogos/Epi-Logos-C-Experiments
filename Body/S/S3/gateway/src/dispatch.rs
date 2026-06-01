@@ -252,8 +252,8 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "s5-prime.autoresearch-runtime",
             ),
             "s4.agent.query" | "s4.agent.notify" | "s4.agent.status" | "s4'.vak.evaluate"
-            | "s4'.orchestrate" | "s4'.psyche.state" | "s4'.psyche.update"
-            | "s4'.permission.get" => route(
+            | "s4'.orchestrate" | "s4'.mediation.route" | "s4'.psyche.state"
+            | "s4'.psyche.update" | "s4'.permission.get" => route(
                 method,
                 GatewayDispatchOwner::S4TaOntaAgent,
                 GatewayDispatchClass::TaOntaAgentRuntime,

@@ -1,0 +1,35 @@
+{
+  "runId": "20260601T121800Z-01-T5",
+  "taskId": "01.T5",
+  "startedAt": "2026-06-01T12:18:00.677Z",
+  "owner": "admin",
+  "leaseExpiresAt": "2026-06-01T14:18:00.677Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T5",
+    "trackId": "01",
+    "tranche": "T5",
+    "title": "Kernel Bridge Contract Package",
+    "effort": null,
+    "file": "01-kernel-bridge-and-s0-foundation.md",
+    "path": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md",
+    "dependsOn": [
+      "01.T4"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

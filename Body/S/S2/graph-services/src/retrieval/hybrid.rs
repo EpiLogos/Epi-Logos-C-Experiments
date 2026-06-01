@@ -373,7 +373,10 @@ impl<'a> HybridRetriever<'a> {
             .as_str()
             .expect("CsDirection serializes to JSON string")
             .to_string();
-        w.insert(format!("__cs_direction_value:{}", cs_direction_literal), 1.0);
+        w.insert(
+            format!("__cs_direction_value:{}", cs_direction_literal),
+            1.0,
+        );
         w
     }
 }

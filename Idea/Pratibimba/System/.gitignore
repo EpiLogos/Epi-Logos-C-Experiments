@@ -6,6 +6,7 @@ node_modules/
 **/gen-webpack.config.js
 **/gen-webpack.node.config.js
 **/webpack.config.js
+!theia-app/webpack.config.js
 **/secondary-window.html
 .theia/
 *.tsbuildinfo

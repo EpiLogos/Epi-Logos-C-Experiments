@@ -248,9 +248,108 @@ impl KernelTemporalProjection {
     }
 }
 
+pub const CURRENT_PROFILE_SCHEMA_VERSION: u16 = 1;
+
+fn default_profile_schema_version() -> u16 {
+    CURRENT_PROFILE_SCHEMA_VERSION
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeProfileProvenance {
+    pub owner: String,
+    pub contract: String,
+    pub source: String,
+    pub compatibility: MathemeProfileCompatibility,
+}
+
+impl MathemeProfileProvenance {
+    fn current_public() -> Self {
+        Self::default()
+    }
+}
+
+impl Default for MathemeProfileProvenance {
+    fn default() -> Self {
+        Self {
+            owner: "portal-core".to_owned(),
+            contract: "MathemeHarmonicProfile.public-current".to_owned(),
+            source: "S0 kernel tick + portal-core harmonic/codon/Vimarsha projections".to_owned(),
+            compatibility: MathemeProfileCompatibility::default(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeProfileCompatibility {
+    pub binary_alias: String,
+    pub mahamaya_alias: String,
+    pub policy: String,
+}
+
+impl Default for MathemeProfileCompatibility {
+    fn default() -> Self {
+        Self {
+            binary_alias: "binary".to_owned(),
+            mahamaya_alias: "mahamaya".to_owned(),
+            policy: "binary and mahamaya serialize the same projection during IOD-04 migration"
+                .to_owned(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeTickAddress {
+    pub cycle: u64,
+    pub sub_tick: u8,
+    pub tick12: u8,
+    pub absolute_tick: u64,
+    pub phase: KernelPhase,
+}
+
+impl MathemeTickAddress {
+    fn from_tick(tick: KernelTick, absolute_tick: u64, tick12: u8) -> Self {
+        Self {
+            cycle: tick.cycle,
+            sub_tick: tick.sub_tick,
+            tick12,
+            absolute_tick,
+            phase: tick.phase,
+        }
+    }
+}
+
+impl Default for MathemeTickAddress {
+    fn default() -> Self {
+        Self {
+            cycle: 0,
+            sub_tick: 0,
+            tick12: 0,
+            absolute_tick: 0,
+            phase: KernelPhase::Descent,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MathemeFutureAnchor {
+    pub coordinate: String,
+    pub readiness: String,
+    pub provenance: String,
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MathemeHarmonicProfile {
+    #[serde(default = "default_profile_schema_version")]
+    pub profile_schema_version: u16,
+    #[serde(default)]
+    pub profile_provenance: MathemeProfileProvenance,
+    #[serde(default)]
+    pub tick_address: MathemeTickAddress,
     pub tick: u64,
     pub tick12: u8,
     pub cycle: u64,
@@ -270,6 +369,7 @@ pub struct MathemeHarmonicProfile {
     pub elements: MathemeElementalProjection,
     pub planetary_chakral: MathemePlanetaryChakralProjection,
     pub binary: MathemeBinaryProjection,
+    pub mahamaya: MathemeBinaryProjection,
     pub codon_rotation_projection: CodonRotationProjection,
     pub q_cosmic: [f32; 4],
     pub resonance: Option<f32>,
@@ -280,6 +380,10 @@ pub struct MathemeHarmonicProfile {
     pub context_frames: MathemeContextFrameWebProjection,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vak_address: Option<VakAddress>,
+    #[serde(default)]
+    pub s2_anchor: Option<MathemeFutureAnchor>,
+    #[serde(default)]
+    pub s3_anchor: Option<MathemeFutureAnchor>,
 }
 
 impl MathemeHarmonicProfile {
@@ -305,8 +409,18 @@ impl MathemeHarmonicProfile {
                 .expect("tick-derived lens-mode maps into the codon-rotation surface");
         let q_cosmic = codon_charge_quaternion(codon_rotation_projection.codon_id);
         let vimarsha_reading = vimarsha_read_profile(tick, lens_mode);
+        let absolute_tick = tick.cycle * 12 + tick12 as u64;
+        let binary = MathemeBinaryProjection::from_clock(
+            degree360,
+            position,
+            resonance72.lens_anchor_index,
+            tick12 >= 6,
+        );
         Self {
-            tick: tick.cycle * 12 + tick12 as u64,
+            profile_schema_version: CURRENT_PROFILE_SCHEMA_VERSION,
+            profile_provenance: MathemeProfileProvenance::current_public(),
+            tick_address: MathemeTickAddress::from_tick(tick, absolute_tick, tick12),
+            tick: absolute_tick,
             tick12,
             cycle: tick.cycle,
             degree720,
@@ -329,12 +443,8 @@ impl MathemeHarmonicProfile {
             nodal_quartet: vimarsha_reading.nodal_quartet,
             elements: MathemeElementalProjection::from_position(position),
             planetary_chakral: MathemePlanetaryChakralProjection::from_diatonic(diatonic.as_ref()),
-            binary: MathemeBinaryProjection::from_clock(
-                degree360,
-                position,
-                resonance72.lens_anchor_index,
-                tick12 >= 6,
-            ),
+            binary: binary.clone(),
+            mahamaya: binary,
             codon_rotation_projection,
             q_cosmic,
             resonance: None,
@@ -349,6 +459,8 @@ impl MathemeHarmonicProfile {
             ),
             context_frames: MathemeContextFrameWebProjection::from_diatonic(diatonic.as_ref()),
             vak_address: None,
+            s2_anchor: None,
+            s3_anchor: None,
         }
     }
 

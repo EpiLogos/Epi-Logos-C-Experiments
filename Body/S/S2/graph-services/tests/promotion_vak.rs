@@ -47,10 +47,7 @@ fn promotion_plan_carries_vak_properties() {
         Some(&Value::String("Day".into()))
     );
     // ct serializes as a JSON array, not a string
-    assert_eq!(
-        plan.properties.get("ct"),
-        Some(&serde_json::json!(["CT2"]))
-    );
+    assert_eq!(plan.properties.get("ct"), Some(&serde_json::json!(["CT2"])));
 }
 
 #[test]

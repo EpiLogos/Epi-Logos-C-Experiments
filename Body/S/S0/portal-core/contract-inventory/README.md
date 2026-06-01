@@ -32,7 +32,7 @@ cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml pointer_web_ffi_contract
 
 See `track-01-baseline.json#readiness_blockers_carried_forward`. The most consequential for T1+ sequencing:
 
-- **IOD-04** — `MathemeHarmonicProfile.binary` versioning + `mahamaya` naming
+- **IOD-04** — resolved for S0 public-current schema v1: `binary` and `mahamaya` are explicit identical compatibility aliases with provenance
 - **S2/S3-pointer_anchor** — final certification + `depositionAnchor` ownership
 - **DCC-05** — audio bus / cymatic derivation ownership wording
 - **DSD-04** — SpaceTimeDB schema source for profile/world-clock/presence streams

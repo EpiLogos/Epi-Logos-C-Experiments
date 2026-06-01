@@ -114,6 +114,84 @@ const CF_NAMES: &[&str] = &[
 ];
 
 const VAK_NAMES: &[&str] = &["CPF", "CT", "CP", "CF", "CFP", "CS"];
+const SEED_REL_TYPES: &[&str] = &[
+    "GENERATES",
+    "ENTANGLES",
+    "INTERLEAVES",
+    "MANIFESTS",
+    "BEDROCK",
+    "INVERTS_TO",
+    "FAMILY_CONTAINS",
+    "REFLECTS_AS",
+    "OPERATES_IN",
+    "MOBIUS_RETURN",
+    "ANCHORED_TO",
+];
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SeedBaselineQuery {
+    pub name: &'static str,
+    pub cypher: &'static str,
+}
+
+pub fn seed_baseline_coordinates() -> Vec<String> {
+    let mut coordinates = Vec::new();
+    coordinates.push("#".to_string());
+    coordinates.extend((0..6usize).map(|pos| format!("#{pos}")));
+    coordinates.extend(WEAVE_COORDS.iter().map(|(coord, _)| (*coord).to_string()));
+    coordinates.extend(CF_NAMES.iter().map(|coord| (*coord).to_string()));
+    coordinates.extend(FAMILIES.iter().map(|family| format!("Family_{family}")));
+    for family in FAMILIES {
+        for pos in 0..6usize {
+            coordinates.push(format!("{family}{pos}"));
+            coordinates.push(format!("{family}{pos}'"));
+        }
+    }
+    coordinates.extend(VAK_NAMES.iter().map(|coord| (*coord).to_string()));
+    coordinates
+}
+
+pub fn seed_relationship_types() -> &'static [&'static str] {
+    SEED_REL_TYPES
+}
+
+pub fn seed_baseline_snapshot_queries() -> Vec<SeedBaselineQuery> {
+    vec![
+        SeedBaselineQuery {
+            name: "seed_node_group_counts",
+            cypher: "MATCH (n:Bimba)
+                     WHERE n.coordinate IN $coordinates
+                     RETURN count(DISTINCT n) AS seed_nodes,
+                            count(DISTINCT CASE WHEN n.coordinate = '#' THEN n END) AS root_nodes,
+                            count(DISTINCT CASE WHEN n.coordinate STARTS WITH '#' AND n.coordinate <> '#' THEN n END) AS psychoids,
+                            count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'Weave_' THEN n END) AS weaves,
+                            count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'CF_' THEN n END) AS context_frames,
+                            count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'Family_' THEN n END) AS family_meta_nodes,
+                            count(DISTINCT CASE WHEN n.c_4_layer = 'COORDINATE' THEN n END) AS family_coordinates,
+                            count(DISTINCT CASE WHEN n.c_4_layer = 'VAK' THEN n END) AS vak_nodes",
+        },
+        SeedBaselineQuery {
+            name: "seed_relationship_count",
+            cypher: "MATCH (a:Bimba)-[r]->(b:Bimba)
+                     WHERE a.coordinate IN $coordinates
+                       AND b.coordinate IN $coordinates
+                       AND type(r) IN $relationship_types
+                     RETURN count(DISTINCT r) AS seed_relationships",
+        },
+        SeedBaselineQuery {
+            name: "m_prime_smoke_nodes",
+            cypher: "MATCH (n:Bimba)
+                     WHERE n.coordinate IN ['M0', 'M1', 'M5', 'M0''', 'M1''', 'M5''', 'CF_FRACTAL', 'CPF']
+                     OPTIONAL MATCH (n)-[r]-(m:Bimba)
+                     RETURN n.coordinate AS coordinate,
+                            n.c_1_name AS name,
+                            n.c_4_family AS family,
+                            n.c_4_layer AS layer,
+                            count(DISTINCT r) AS relation_count
+                     ORDER BY coordinate",
+        },
+    ]
+}
 
 // ---------------------------------------------------------------------------
 // Helper: run a MERGE for a single node with multi-label support
@@ -415,13 +493,13 @@ while never ceasing to be itself.",
     }
 
     // ------------------------------------------------------------------
-    // Layer 3: VAK reflective coordinates — Bimba:Vak
+    // Layer 3: VAK reflective coordinates — Bimba:VakCoordinate
     // ------------------------------------------------------------------
     for (idx, name) in VAK_NAMES.iter().enumerate() {
         merge_node(
             client,
             name,
-            "Vak",
+            "VakCoordinate",
             name,
             "NONE",
             "VAK",
@@ -434,6 +512,23 @@ while never ceasing to be itself.",
         .await?;
         node_count += 1;
     }
+    client
+        .run_query(
+            query(
+                "MATCH (n:Bimba:Vak)
+             WHERE n.coordinate IN $coords
+             REMOVE n:Vak",
+            )
+            .param(
+                "coords",
+                VAK_NAMES
+                    .iter()
+                    .map(|coord| (*coord).to_string())
+                    .collect::<Vec<_>>(),
+            ),
+        )
+        .await
+        .map_err(|e| format!("remove stale Vak label failed: {}", e))?;
 
     // ==================================================================
     // RELATIONSHIPS

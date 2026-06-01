@@ -4,6 +4,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use epi_s3_gateway_contract::{
     SpacetimeProjectionPlan, SpacetimeProjectionRows, DEFAULT_GATEWAY_PORT,
+    SPACETIME_FULL_PROJECTION_TABLES, SPACETIME_LITE_PROJECTION_TABLES,
+    SPACETIME_PROJECTION_MODE_FULL, SPACETIME_PROJECTION_MODE_LITE,
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
     SPACETIME_PROJECTION_TABLES,
 };
@@ -30,6 +32,36 @@ pub struct BridgeEvent {
     pub table: String,
     pub payload: Value,
     pub timestamp_ms: u128,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "kebab-case")]
+pub enum SpacetimeProjectionConnectionState {
+    Connected,
+    ConnectionLost,
+    Reconnecting,
+    StaleProfile,
+    ResyncedProfileGeneration,
+    DegradedButSubscribable,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct SpacetimeProjectionUpdate {
+    pub state: SpacetimeProjectionConnectionState,
+    pub source: String,
+    pub profile_generation: Option<u64>,
+    pub stale_profile_generation: Option<u64>,
+    pub resynced_profile_generation: Option<u64>,
+    pub degraded_but_subscribable: bool,
+    pub context: Option<Value>,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct SpacetimeProjectionResyncTracker {
+    current_generation: Option<u64>,
+    stale_generation: Option<u64>,
+    reconnecting: bool,
 }
 
 pub struct SpacetimeBridge {
@@ -347,6 +379,94 @@ pub type SpacetimeSubscriptionPlan = SpacetimeProjectionPlan;
 pub struct SpacetimeProjectionSubscription {
     socket: WebSocketStream<MaybeTlsStream<TcpStream>>,
     agent_id: String,
+    resync: SpacetimeProjectionResyncTracker,
+}
+
+impl SpacetimeProjectionResyncTracker {
+    pub fn current_generation(&self) -> Option<u64> {
+        self.current_generation
+    }
+
+    pub fn mark_connection_lost(&mut self) -> SpacetimeProjectionUpdate {
+        self.stale_generation = self.current_generation;
+        self.reconnecting = false;
+        SpacetimeProjectionUpdate {
+            state: SpacetimeProjectionConnectionState::ConnectionLost,
+            source: SPACETIME_PROJECTION_SOURCE_NATIVE_WS.to_owned(),
+            profile_generation: self.current_generation,
+            stale_profile_generation: self.stale_generation,
+            resynced_profile_generation: None,
+            degraded_but_subscribable: false,
+            context: None,
+        }
+    }
+
+    pub fn mark_reconnecting(&mut self) -> SpacetimeProjectionUpdate {
+        self.stale_generation = self.stale_generation.or(self.current_generation);
+        self.reconnecting = true;
+        SpacetimeProjectionUpdate {
+            state: SpacetimeProjectionConnectionState::Reconnecting,
+            source: SPACETIME_PROJECTION_SOURCE_NATIVE_WS.to_owned(),
+            profile_generation: self.current_generation,
+            stale_profile_generation: self.stale_generation,
+            resynced_profile_generation: None,
+            degraded_but_subscribable: false,
+            context: None,
+        }
+    }
+
+    pub fn mark_degraded_but_subscribable(&mut self) -> SpacetimeProjectionUpdate {
+        self.stale_generation = self.stale_generation.or(self.current_generation);
+        SpacetimeProjectionUpdate {
+            state: SpacetimeProjectionConnectionState::DegradedButSubscribable,
+            source: SPACETIME_PROJECTION_SOURCE_NATIVE_WS.to_owned(),
+            profile_generation: self.current_generation,
+            stale_profile_generation: self.stale_generation,
+            resynced_profile_generation: None,
+            degraded_but_subscribable: true,
+            context: None,
+        }
+    }
+
+    pub fn observe_context(&mut self, context: Value) -> SpacetimeProjectionUpdate {
+        let generation = context
+            .pointer("/kernel/generation")
+            .and_then(Value::as_u64);
+        let state = if self.reconnecting {
+            if generation.is_some() && generation != self.stale_generation {
+                SpacetimeProjectionConnectionState::ResyncedProfileGeneration
+            } else {
+                SpacetimeProjectionConnectionState::StaleProfile
+            }
+        } else {
+            SpacetimeProjectionConnectionState::Connected
+        };
+        let resynced_generation = (state
+            == SpacetimeProjectionConnectionState::ResyncedProfileGeneration)
+            .then_some(generation)
+            .flatten();
+        let update = SpacetimeProjectionUpdate {
+            state,
+            source: context
+                .pointer("/spacetimedb/projectionSource")
+                .and_then(Value::as_str)
+                .unwrap_or(SPACETIME_PROJECTION_SOURCE_NATIVE_WS)
+                .to_owned(),
+            profile_generation: generation,
+            stale_profile_generation: self.stale_generation,
+            resynced_profile_generation: resynced_generation,
+            degraded_but_subscribable: false,
+            context: Some(context),
+        };
+        if update.resynced_profile_generation.is_some()
+            || update.state == SpacetimeProjectionConnectionState::Connected
+        {
+            self.current_generation = generation;
+            self.stale_generation = None;
+            self.reconnecting = false;
+        }
+        update
+    }
 }
 
 impl SpacetimeRegistration {
@@ -385,11 +505,13 @@ impl SpacetimeRegistration {
         let plan = self.subscription_plan("", "");
         let native_ready =
             plan.mode == SPACETIME_PROJECTION_SOURCE_NATIVE_WS && !plan.endpoint.is_empty();
+        let capability_facts = projection_capability_facts(native_ready, &plan);
         json!({
             "ok": true,
             "configured": true,
             "registrationMode": "live-reducer",
             "subscriptionMode": plan.mode,
+            "subscriptionProfile": plan.subscription_mode,
             "nativeSubscriptionReady": native_ready,
             "url": self.url,
             "database": self.database,
@@ -398,7 +520,10 @@ impl SpacetimeRegistration {
             "endpoint": self.endpoint,
             "protocolVersion": self.protocol_version,
             "projectionTables": SPACETIME_PROJECTION_TABLES,
+            "liteProjectionTables": SPACETIME_LITE_PROJECTION_TABLES,
+            "fullProjectionTables": SPACETIME_FULL_PROJECTION_TABLES,
             "projectionSubscriptionPlan": plan,
+            "capabilityFacts": capability_facts,
             "rawServiceHealth": "configured reducer target; live reducer calls are verified by gateway registration tests",
             "agentAccess": "agent/session surfaces register when sessions publish temporal context",
             "subscriptionReadiness": if native_ready {
@@ -424,6 +549,7 @@ impl SpacetimeRegistration {
             spacetimedb_websocket_endpoint(&self.url),
             self.database.clone(),
         )
+        .for_subscription_mode(subscription_mode_from_env())
         .for_session(session_key, agent_id)
     }
 
@@ -637,6 +763,7 @@ impl SpacetimeRegistration {
         Ok(SpacetimeProjectionSubscription {
             socket,
             agent_id: agent_id.to_owned(),
+            resync: SpacetimeProjectionResyncTracker::default(),
         })
     }
 
@@ -646,10 +773,30 @@ impl SpacetimeRegistration {
 }
 
 impl SpacetimeProjectionSubscription {
-    pub async fn next_context(&mut self) -> Result<Option<Value>, String> {
+    pub fn mark_connection_lost(&mut self) -> SpacetimeProjectionUpdate {
+        self.resync.mark_connection_lost()
+    }
+
+    pub fn mark_reconnecting(&mut self) -> SpacetimeProjectionUpdate {
+        self.resync.mark_reconnecting()
+    }
+
+    pub fn mark_degraded_but_subscribable(&mut self) -> SpacetimeProjectionUpdate {
+        self.resync.mark_degraded_but_subscribable()
+    }
+
+    pub async fn next_update(&mut self) -> Result<Option<SpacetimeProjectionUpdate>, String> {
         while let Some(message) = self.socket.next().await {
-            let message =
-                message.map_err(|err| format!("spacetimedb websocket receive failed: {err}"))?;
+            let message = match message {
+                Ok(message) => message,
+                Err(err) => {
+                    let update = self.resync.mark_connection_lost();
+                    return Err(format!(
+                        "spacetimedb websocket receive failed after {:?}: {err}",
+                        update.state
+                    ));
+                }
+            };
             if !message.is_text() {
                 continue;
             }
@@ -661,10 +808,15 @@ impl SpacetimeProjectionSubscription {
             if let Some(context) =
                 projection_context_from_subscription_message(&value, &self.agent_id)?
             {
-                return Ok(Some(context));
+                return Ok(Some(self.resync.observe_context(context)));
             }
         }
+        self.resync.mark_connection_lost();
         Ok(None)
+    }
+
+    pub async fn next_context(&mut self) -> Result<Option<Value>, String> {
+        Ok(self.next_update().await?.and_then(|update| update.context))
     }
 }
 
@@ -677,6 +829,13 @@ pub fn readiness_value(port: u16, state_root: &Path) -> Value {
             "registrationMode": "disabled",
             "reason": "set SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL to enable live projection",
             "projectionTables": SPACETIME_PROJECTION_TABLES,
+            "liteProjectionTables": SPACETIME_LITE_PROJECTION_TABLES,
+            "fullProjectionTables": SPACETIME_FULL_PROJECTION_TABLES,
+            "capabilityFacts": projection_capability_facts(
+                false,
+                &SpacetimeProjectionPlan::http_sql("", "")
+                    .for_subscription_mode(subscription_mode_from_env())
+            ),
             "rawServiceHealth": "not configured",
             "agentAccess": "not registered",
             "subscriptionReadiness": "disabled until SPACETIMEDB_URL or EPI_GATE_SPACETIME_URL is set",
@@ -699,6 +858,40 @@ fn spacetimedb_websocket_endpoint(url: &str) -> String {
     } else {
         url.trim_end_matches('/').to_owned()
     }
+}
+
+fn subscription_mode_from_env() -> &'static str {
+    match optional_env("EPI_SPACETIME_SUBSCRIPTION_PROFILE").as_deref() {
+        Some(SPACETIME_PROJECTION_MODE_FULL) => SPACETIME_PROJECTION_MODE_FULL,
+        _ => SPACETIME_PROJECTION_MODE_LITE,
+    }
+}
+
+fn projection_capability_facts(native_ready: bool, plan: &SpacetimeProjectionPlan) -> Value {
+    let full_mode = plan.subscription_mode == SPACETIME_PROJECTION_MODE_FULL;
+    json!({
+        "rawServiceConfigured": !plan.endpoint.is_empty(),
+        "nativeWebsocketPreferred": plan.mode == SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
+        "nativeWebsocketSubscribable": native_ready,
+        "httpSqlFallbackAvailable": true,
+        "liteProjectionSubscribable": plan.tables.iter().any(|table| table == "session_surface")
+            && plan.tables.iter().any(|table| table == "kairos_surface")
+            && plan.tables.iter().any(|table| table == "global_temporal_surface"),
+        "fullProjectionRequested": full_mode,
+        "presenceProjectionIncluded": full_mode && plan.tables.iter().any(|table| table == "agent_instance"),
+        "sharedEventProjectionIncluded": full_mode && plan.tables.iter().any(|table| table == "temporal_event"),
+        "kernelTraceProjectionIncluded": plan.tables.iter().any(|table| table == "session_surface"),
+        "temporalContextProjectionIncluded": plan.tables.iter().any(|table| table == "global_temporal_surface"),
+        "observabilityEventsIncluded": full_mode && plan.tables.iter().any(|table| table == "temporal_event"),
+        "privacySafePublicProjection": true,
+        "resyncStates": [
+            "connection-lost",
+            "reconnecting",
+            "stale-profile",
+            "resynced-profile-generation",
+            "degraded-but-subscribable"
+        ]
+    })
 }
 
 impl SpacetimePresence {

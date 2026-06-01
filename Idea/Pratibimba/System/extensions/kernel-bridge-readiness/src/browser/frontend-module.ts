@@ -1,16 +1,18 @@
-import { ContainerModule, interfaces } from '@theia/core/shared/inversify';
+import { ContainerModule, injectable, interfaces } from '@theia/core/shared/inversify';
 import { CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry } from '@theia/core/lib/common';
 import { WidgetFactory, FrontendApplicationContribution, bindViewContribution } from '@theia/core/lib/browser';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import { KernelBridgeReadinessWidget, KERNEL_BRIDGE_READINESS_SOURCE } from './readiness-widget';
 import { GatewayReadinessSource } from './gateway-readiness-source';
 import { KernelBridgeReadinessSource } from '../common/readiness-types';
+import { MinimalQuickAccessRegistry, MinimalQuickInputService } from './minimal-quick-input';
 
 export const KernelBridgeReadinessCommand = {
     id: 'pratibimba.kernel-bridge-readiness.open',
     label: 'Pratibimba: Show Kernel Bridge Readiness'
 };
 
+@injectable()
 export class KernelBridgeReadinessContribution
     extends AbstractViewContribution<KernelBridgeReadinessWidget>
     implements CommandContribution, MenuContribution, FrontendApplicationContribution
@@ -25,8 +27,8 @@ export class KernelBridgeReadinessContribution
     }
 
     async onStart(): Promise<void> {
-        // Pre-load the widget so the side area shows the readiness state on first activation.
-        await this.openView({ activate: false, reveal: false });
+        // Reveal the diagnostic pane on startup so readiness is visible without command-palette spelunking.
+        await this.openView({ activate: false, reveal: true });
     }
 
     override registerCommands(commands: CommandRegistry): void {
@@ -41,9 +43,18 @@ export class KernelBridgeReadinessContribution
     }
 }
 
-export default new ContainerModule(bind => {
+export default new ContainerModule((bind, _unbind, isBound) => {
+    if (!isBound(MinimalQuickAccessRegistry.SERVICE_ID)) {
+        bind(MinimalQuickAccessRegistry.SERVICE_ID).to(MinimalQuickAccessRegistry).inSingletonScope();
+    }
+    if (!isBound(MinimalQuickInputService.SERVICE_ID)) {
+        bind(MinimalQuickInputService.SERVICE_ID).to(MinimalQuickInputService).inSingletonScope();
+    }
+
     // Real source — gateway HTTP. No mock branch.
-    bind(GatewayReadinessSource).toSelf().inSingletonScope();
+    bind(GatewayReadinessSource)
+        .toDynamicValue(() => new GatewayReadinessSource())
+        .inSingletonScope();
     bind<KernelBridgeReadinessSource>(KERNEL_BRIDGE_READINESS_SOURCE).toService(GatewayReadinessSource);
 
     bind(KernelBridgeReadinessWidget).toSelf();

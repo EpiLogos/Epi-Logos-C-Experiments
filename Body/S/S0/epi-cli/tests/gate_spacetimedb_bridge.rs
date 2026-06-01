@@ -7,7 +7,10 @@ use std::thread;
 
 use epi_logos::gate::{
     sessions::SessionStore,
-    spacetimedb_bridge::{SpacetimeBridge, SpacetimePresence, SpacetimeRegistration},
+    spacetimedb_bridge::{
+        SpacetimeBridge, SpacetimePresence, SpacetimeProjectionConnectionState,
+        SpacetimeProjectionResyncTracker, SpacetimeRegistration,
+    },
     system,
 };
 use serde_json::json;
@@ -615,7 +618,8 @@ fn spacetimedb_registration_builds_native_subscription_projection_plan() {
         .with_env("EPI_GATEWAY_ID", "gateway-subscription-test")
         .with_env("EPI_GATEWAY_ENDPOINT", "ws://127.0.0.1:18794")
         .with_env("EPI_WORKSPACE_ROOT_HASH", "workspace-subscription-hash")
-        .with_env("EPI_SPACETIME_SUBSCRIPTION_MODE", "native-websocket");
+        .with_env("EPI_SPACETIME_SUBSCRIPTION_MODE", "native-websocket")
+        .with_env("EPI_SPACETIME_SUBSCRIPTION_PROFILE", "full");
     let gate_root = env.home.join(".epi").join("gate");
     let _guard = env.apply_to_process();
 
@@ -626,6 +630,7 @@ fn spacetimedb_registration_builds_native_subscription_projection_plan() {
     let readiness = registration.readiness_value();
 
     assert_eq!(plan.mode, "native-websocket");
+    assert_eq!(plan.subscription_mode, "full");
     assert_eq!(plan.endpoint, "ws://127.0.0.1:3000");
     assert_eq!(plan.database, "epi-logos-runtime");
     assert_eq!(plan.session_key, "agent:main:main");
@@ -635,22 +640,43 @@ fn spacetimedb_registration_builds_native_subscription_projection_plan() {
     assert_eq!(
         plan.tables,
         vec![
-            "gateway_instance",
-            "agent_instance",
-            "client_registration",
             "session_surface",
             "kairos_surface",
             "global_temporal_surface",
+            "gateway_instance",
+            "agent_instance",
+            "client_registration",
             "temporal_event"
         ]
     );
     assert_eq!(plan.sql_fallback_mode, "http-sql-poll");
 
     assert_eq!(readiness["subscriptionMode"], "native-websocket");
+    assert_eq!(readiness["subscriptionProfile"], "full");
     assert_eq!(readiness["nativeSubscriptionReady"], true);
+    assert_eq!(
+        readiness["capabilityFacts"]["nativeWebsocketSubscribable"],
+        true
+    );
+    assert_eq!(
+        readiness["capabilityFacts"]["httpSqlFallbackAvailable"],
+        true
+    );
+    assert_eq!(
+        readiness["capabilityFacts"]["fullProjectionRequested"],
+        true
+    );
+    assert_eq!(
+        readiness["capabilityFacts"]["observabilityEventsIncluded"],
+        true
+    );
     assert_eq!(
         readiness["projectionSubscriptionPlan"]["endpoint"],
         "ws://127.0.0.1:3000"
+    );
+    assert_eq!(
+        readiness["projectionSubscriptionPlan"]["subscriptionMode"],
+        "full"
     );
     assert_eq!(readiness["projectionSubscriptionPlan"]["sessionKey"], "");
     assert_eq!(
@@ -664,6 +690,33 @@ fn spacetimedb_registration_builds_native_subscription_projection_plan() {
             .len(),
         7
     );
+}
+
+#[test]
+fn spacetimedb_registration_defaults_to_lite_subscription_set_with_http_fallback() {
+    let env = temp_env()
+        .with_env("SPACETIMEDB_URL", "http://127.0.0.1:3000")
+        .with_env("EPI_SPACETIME_SUBSCRIPTION_MODE", "native-websocket");
+    let gate_root = env.home.join(".epi").join("gate");
+    let _guard = env.apply_to_process();
+    let registration = SpacetimeRegistration::from_env(18794, &gate_root)
+        .unwrap()
+        .expect("registration should be configured");
+    let plan = registration.subscription_plan("agent:main:main", "epii");
+
+    assert_eq!(plan.subscription_mode, "lite");
+    assert_eq!(
+        plan.tables,
+        vec![
+            "session_surface",
+            "kairos_surface",
+            "global_temporal_surface",
+        ]
+    );
+    assert_eq!(plan.sql_fallback_mode, "http-sql-poll");
+    assert!(plan.subscription_queries().iter().all(|query| {
+        !query.contains("gateway_instance") && !query.contains("client_registration")
+    }));
 }
 
 #[tokio::test]
@@ -824,6 +877,50 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
             ))
             .await
             .expect("send subscription update");
+        let resynced_kernel_projection_json =
+            kernel_projection_json.replace("\"generation\":11", "\"generation\":12");
+        socket
+            .send(Message::Text(
+                json!({
+                    "TransactionUpdateLight": {
+                        "update": {
+                            "tables": [{
+                                "table_name": "session_surface",
+                                "updates": [{
+                                    "inserts": [[
+                                        "agent:main:main",
+                                        "install-local",
+                                        "gateway-main",
+                                        "gateway-main:epii:session-main",
+                                        "07-05-2026",
+                                        "",
+                                        "",
+                                        "",
+                                        "/repo",
+                                        "/vault",
+                                        "loader-main",
+                                        "idle",
+                                        "[]",
+                                        "/vault/Empty/Present/07-05-2026/session-main/now.md",
+                                        "[[NOW session-main]]",
+                                        "/vault/Pratibimba/Self/Action/History/2026/05/W19/07",
+                                        "s3:gateway:temporal:session:session-main:now:md",
+                                        "s3:gateway:temporal:day:07-05-2026:context",
+                                        "day:07-05-2026:session:session-main",
+                                        "pratibimba-abcd1234",
+                                        "kairos-07-05-2026-session-main",
+                                        resynced_kernel_projection_json,
+                                        1778179300
+                                    ]]
+                                }]
+                            }]
+                        }
+                    }
+                })
+                .to_string(),
+            ))
+            .await
+            .expect("send resync subscription update");
     });
 
     let registration = SpacetimeRegistration {
@@ -839,11 +936,17 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
         .subscribe_projection("agent:main:main", "epii")
         .await
         .expect("native subscription should connect");
-    let context = subscription
-        .next_context()
+    let first_update = subscription
+        .next_update()
         .await
         .expect("subscription update should decode")
         .expect("context should hydrate");
+    assert_eq!(
+        first_update.state,
+        SpacetimeProjectionConnectionState::Connected
+    );
+    assert_eq!(first_update.profile_generation, Some(11));
+    let context = first_update.context.expect("first context");
 
     server.await.expect("server task");
     assert_eq!(
@@ -877,6 +980,83 @@ async fn spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape
         context["globalTemporal"]["graphitiSessionArcId"],
         "day:07-05-2026:session:session-main"
     );
+
+    let lost = subscription.mark_connection_lost();
+    assert_eq!(
+        lost.state,
+        SpacetimeProjectionConnectionState::ConnectionLost
+    );
+    assert_eq!(lost.stale_profile_generation, Some(11));
+    let reconnecting = subscription.mark_reconnecting();
+    assert_eq!(
+        reconnecting.state,
+        SpacetimeProjectionConnectionState::Reconnecting
+    );
+    let resynced = subscription
+        .next_update()
+        .await
+        .expect("resync update should decode")
+        .expect("resynced context should hydrate");
+    assert_eq!(
+        resynced.state,
+        SpacetimeProjectionConnectionState::ResyncedProfileGeneration
+    );
+    assert_eq!(resynced.stale_profile_generation, Some(11));
+    assert_eq!(resynced.resynced_profile_generation, Some(12));
+    assert_eq!(resynced.profile_generation, Some(12));
+}
+
+#[test]
+fn spacetimedb_resync_tracker_marks_stale_and_degraded_states_without_serving_stale_as_current() {
+    let mut tracker = SpacetimeProjectionResyncTracker::default();
+    let first = tracker.observe_context(json!({
+        "spacetimedb": { "projectionSource": "native-websocket" },
+        "kernel": { "generation": 7 }
+    }));
+    assert_eq!(first.state, SpacetimeProjectionConnectionState::Connected);
+    assert_eq!(tracker.current_generation(), Some(7));
+
+    let lost = tracker.mark_connection_lost();
+    assert_eq!(
+        lost.state,
+        SpacetimeProjectionConnectionState::ConnectionLost
+    );
+    assert_eq!(lost.stale_profile_generation, Some(7));
+    let reconnecting = tracker.mark_reconnecting();
+    assert_eq!(
+        reconnecting.state,
+        SpacetimeProjectionConnectionState::Reconnecting
+    );
+
+    let stale = tracker.observe_context(json!({
+        "spacetimedb": { "projectionSource": "native-websocket" },
+        "kernel": { "generation": 7 }
+    }));
+    assert_eq!(
+        stale.state,
+        SpacetimeProjectionConnectionState::StaleProfile
+    );
+    assert_eq!(stale.profile_generation, Some(7));
+    assert_eq!(stale.stale_profile_generation, Some(7));
+    assert_eq!(tracker.current_generation(), Some(7));
+
+    let degraded = tracker.mark_degraded_but_subscribable();
+    assert_eq!(
+        degraded.state,
+        SpacetimeProjectionConnectionState::DegradedButSubscribable
+    );
+    assert!(degraded.degraded_but_subscribable);
+
+    let resynced = tracker.observe_context(json!({
+        "spacetimedb": { "projectionSource": "native-websocket" },
+        "kernel": { "generation": 8 }
+    }));
+    assert_eq!(
+        resynced.state,
+        SpacetimeProjectionConnectionState::ResyncedProfileGeneration
+    );
+    assert_eq!(resynced.resynced_profile_generation, Some(8));
+    assert_eq!(tracker.current_generation(), Some(8));
 }
 
 fn assert_reducer(request: &(String, String, String), reducer: &str, payload: serde_json::Value) {

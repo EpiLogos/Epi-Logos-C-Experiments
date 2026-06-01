@@ -49,11 +49,17 @@ async fn sessions_patch_rpc_persists_vak_address_round_trip() {
 
     // Initially, the resolved record should have no vak_address.
     let initial: Value = client
-        .request("sessions.resolve", json!({ "sessionKey": "agent:main:main" }))
+        .request(
+            "sessions.resolve",
+            json!({ "sessionKey": "agent:main:main" }),
+        )
         .await
         .expect("initial resolve should succeed");
     assert!(
-        initial.get("vakAddress").map(|v| v.is_null()).unwrap_or(true),
+        initial
+            .get("vakAddress")
+            .map(|v| v.is_null())
+            .unwrap_or(true),
         "fresh session should have null vakAddress, got: {initial}"
     );
 
@@ -74,9 +80,7 @@ async fn sessions_patch_rpc_persists_vak_address_round_trip() {
     let record = patched
         .get("record")
         .expect("patch response includes record");
-    let vak_in_record = record
-        .get("vakAddress")
-        .expect("record carries vakAddress");
+    let vak_in_record = record.get("vakAddress").expect("record carries vakAddress");
     assert!(
         !vak_in_record.is_null(),
         "vakAddress should not be null after patch"
@@ -99,7 +103,10 @@ async fn sessions_patch_rpc_persists_vak_address_round_trip() {
     // record fields flat (with `runState` merged in) — not wrapped in
     // `record`, which is the sessions.patch envelope.
     let resolved: Value = client
-        .request("sessions.resolve", json!({ "sessionKey": "agent:main:main" }))
+        .request(
+            "sessions.resolve",
+            json!({ "sessionKey": "agent:main:main" }),
+        )
         .await
         .expect("post-patch resolve should succeed");
     let vak_resolved = resolved

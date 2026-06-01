@@ -74,6 +74,11 @@ fn deep_bimba_regional_properties_are_registered_before_import() {
         "t_5_next_evolution_phase",
         "q_1_theoretical_thesis",
         "m_5_lacanian_interface",
+        "c_1_inversion_dynamics",
+        "c_2_prime_attractor_logic",
+        "c_2_prime_harmonic_function",
+        "c_3_prime_stabilization",
+        "c_5_prime_resonance",
     ] {
         assert!(
             node_specs.iter().any(|spec| spec.key == key),

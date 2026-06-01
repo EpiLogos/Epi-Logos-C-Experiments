@@ -349,11 +349,15 @@ mod tests {
     #[test]
     fn readiness_severity_partitions_states() {
         assert_eq!(BridgeReadinessState::ReadyPublicCurrent.severity(), "ok");
-        assert_eq!(BridgeReadinessState::DegradedButReadable.severity(), "degraded");
+        assert_eq!(
+            BridgeReadinessState::DegradedButReadable.severity(),
+            "degraded"
+        );
         for s in BridgeReadinessState::all() {
             if !matches!(
                 s,
-                BridgeReadinessState::ReadyPublicCurrent | BridgeReadinessState::DegradedButReadable
+                BridgeReadinessState::ReadyPublicCurrent
+                    | BridgeReadinessState::DegradedButReadable
             ) {
                 assert_eq!(s.severity(), "blocked", "{s:?} should be blocked-severity");
             }
@@ -400,8 +404,15 @@ mod tests {
 
     #[test]
     fn run_profile_show_emits_real_portal_core_profile() {
-        let value = run(&ProfileCmd::Show { cycle: 0, sub_tick: 0 }).expect("show ok");
-        assert_eq!(value["source"], "portal_core::MathemeHarmonicProfile::from_tick");
+        let value = run(&ProfileCmd::Show {
+            cycle: 0,
+            sub_tick: 0,
+        })
+        .expect("show ok");
+        assert_eq!(
+            value["source"],
+            "portal_core::MathemeHarmonicProfile::from_tick"
+        );
         assert!(value["profile"]["tick"].is_number());
         assert_eq!(value["profile"]["privacyClass"], "public-current-context");
         assert!(value["profile"]["vakAddress"].is_null());
@@ -409,22 +420,53 @@ mod tests {
 
     #[test]
     fn run_profile_pointer_emits_36_cardinality_and_seven_cf() {
-        let value = run(&ProfileCmd::Pointer { cycle: 0, sub_tick: 0 }).expect("pointer ok");
+        let value = run(&ProfileCmd::Pointer {
+            cycle: 0,
+            sub_tick: 0,
+        })
+        .expect("pointer ok");
         assert_eq!(value["webCardinality"], 36);
         // contextFrames carries frameCount=7 per portal-core's
         // MathemeContextFrameWebProjection contract.
         assert_eq!(value["contextFrames"]["frameCount"], 7);
         // Role dictionaries cover the full TS-zod canonical sets.
-        assert_eq!(value["roleDictionaries"]["pointerRings"].as_array().unwrap().len(), 3);
-        assert_eq!(value["roleDictionaries"]["relationRoles"].as_array().unwrap().len(), 9);
-        assert_eq!(value["roleDictionaries"]["intervalRoles"].as_array().unwrap().len(), 6);
-        assert_eq!(value["roleDictionaries"]["contextFrameNotations"].as_array().unwrap().len(), 7);
+        assert_eq!(
+            value["roleDictionaries"]["pointerRings"]
+                .as_array()
+                .unwrap()
+                .len(),
+            3
+        );
+        assert_eq!(
+            value["roleDictionaries"]["relationRoles"]
+                .as_array()
+                .unwrap()
+                .len(),
+            9
+        );
+        assert_eq!(
+            value["roleDictionaries"]["intervalRoles"]
+                .as_array()
+                .unwrap()
+                .len(),
+            6
+        );
+        assert_eq!(
+            value["roleDictionaries"]["contextFrameNotations"]
+                .as_array()
+                .unwrap()
+                .len(),
+            7
+        );
     }
 
     #[test]
     fn run_profile_codon_calls_portal_core() {
         let value = run(&ProfileCmd::Codon { lens: 0, mode: 0 }).expect("codon ok");
-        assert_eq!(value["source"], "portal_core::codon_rotation_from_lens_mode");
+        assert_eq!(
+            value["source"],
+            "portal_core::codon_rotation_from_lens_mode"
+        );
         assert!(value["codonId"].is_number());
         assert!(value["rotation"].is_number());
         assert!(value["codonClass"].is_string());

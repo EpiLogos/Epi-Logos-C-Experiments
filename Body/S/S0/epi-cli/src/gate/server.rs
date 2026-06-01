@@ -1430,6 +1430,9 @@ async fn dispatch_rpc(
         "s4'.orchestrate" => anima::orchestrate(&frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
+        "s4'.mediation.route" => anima::mediation_route(state_root, &frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
         "s4'.psyche.state" => anima::psyche_state(state_root, &frame.params)
             .map(DispatchResult::immediate)
             .map_err(internal_error),

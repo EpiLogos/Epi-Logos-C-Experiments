@@ -12,8 +12,8 @@
 //! symbols. The CF7 overlay must not widen `HcPointerWeb36` to 37.
 
 use epi_logos::ffi::role_names::{
-    bedrock_role_name, context_frame_notation, helix_name, interval_role_name,
-    pointer_ring_name, ratio_role_name, relation_role_name,
+    bedrock_role_name, context_frame_notation, helix_name, interval_role_name, pointer_ring_name,
+    ratio_role_name, relation_role_name,
 };
 use epi_logos::ffi::{HcBedrockWeb7, HcContextFrameWeb7, HcPointerWeb36};
 use std::fs;
@@ -24,17 +24,16 @@ fn coordinate_ts() -> String {
         .join("schemas")
         .join("src")
         .join("coordinate.ts");
-    fs::read_to_string(&path).unwrap_or_else(|err| {
-        panic!("coordinate.ts unreadable at {path:?}: {err}")
-    })
+    fs::read_to_string(&path)
+        .unwrap_or_else(|err| panic!("coordinate.ts unreadable at {path:?}: {err}"))
 }
 
 /// Extracts the string literals between `z.enum([...])` headed by `name`.
 fn extract_zod_enum(ts: &str, name: &str) -> Vec<String> {
     let header = format!("export const {name} = z.enum([");
-    let start = ts.find(&header).unwrap_or_else(|| {
-        panic!("{name} not declared in coordinate.ts")
-    });
+    let start = ts
+        .find(&header)
+        .unwrap_or_else(|| panic!("{name} not declared in coordinate.ts"));
     let body_start = start + header.len();
     let rest = &ts[body_start..];
     let end = rest
@@ -42,7 +41,13 @@ fn extract_zod_enum(ts: &str, name: &str) -> Vec<String> {
         .unwrap_or_else(|| panic!("{name} zod enum unterminated"));
     let body = &rest[..end];
     body.split(',')
-        .map(|s| s.trim().trim_matches('"').trim().trim_matches('"').to_string())
+        .map(|s| {
+            s.trim()
+                .trim_matches('"')
+                .trim()
+                .trim_matches('"')
+                .to_string()
+        })
         .filter(|s| !s.is_empty() && !s.starts_with("//"))
         .collect()
 }
@@ -52,9 +57,16 @@ fn rust_relation_role_strings_match_ts_zod_canonical_set() {
     let ts = coordinate_ts();
     let expected = extract_zod_enum(&ts, "HCRelationRole");
     let rust: Vec<String> = (0u8..=8)
-        .map(|v| relation_role_name(v).expect("relation_role 0..=8 maps").to_string())
+        .map(|v| {
+            relation_role_name(v)
+                .expect("relation_role 0..=8 maps")
+                .to_string()
+        })
         .collect();
-    assert_eq!(rust, expected, "Rust relation_role names must equal TS zod literal order");
+    assert_eq!(
+        rust, expected,
+        "Rust relation_role names must equal TS zod literal order"
+    );
 }
 
 #[test]
@@ -64,7 +76,11 @@ fn rust_interval_role_strings_match_ts_zod_canonical_set() {
     // C sparse mapping order: 0,1,2,6,10,12 → none, semitone, whole_tone, tritone, totality_16_9, octave
     let rust: Vec<String> = [0u8, 1, 2, 6, 10, 12]
         .iter()
-        .map(|v| interval_role_name(*v).expect("interval_role maps").to_string())
+        .map(|v| {
+            interval_role_name(*v)
+                .expect("interval_role maps")
+                .to_string()
+        })
         .collect();
     assert_eq!(rust, expected);
 }
@@ -114,8 +130,19 @@ fn cf_notation_matches_ts_context_frame_ref_enum_set() {
     let ts = coordinate_ts();
     // HCContextFrameRef.notation is declared inline as z.enum([...]). Find the literal
     // CF strings by searching for the unique opening "(00/00)".
-    assert!(ts.contains("\"(00/00)\""), "(00/00) must appear in coordinate.ts");
-    let labels = ["(00/00)", "(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4.5/0)", "(5/0)"];
+    assert!(
+        ts.contains("\"(00/00)\""),
+        "(00/00) must appear in coordinate.ts"
+    );
+    let labels = [
+        "(00/00)",
+        "(0/1)",
+        "(0/1/2)",
+        "(0/1/2/3)",
+        "(4.0/1-4.4/5)",
+        "(4.5/0)",
+        "(5/0)",
+    ];
     for (idx, expected_label) in labels.iter().enumerate() {
         let actual = context_frame_notation(idx as u8).expect("cf_notation maps");
         assert_eq!(

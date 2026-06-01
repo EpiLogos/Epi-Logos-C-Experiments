@@ -3,7 +3,7 @@ import { CF_NAMES, VAK_NAMES, FAMILIES } from "./constants.js";
 import type { CoordLayer } from "./enums.js";
 
 export interface ParsedCoordinate {
-  coordinate: string;
+  bimbaCoordinate: string;
   layer: CoordLayer;
   family: string | null;
   qlPosition: number | null;
@@ -20,33 +20,33 @@ export function parseCoordinate(input: string): ParsedCoordinate | null {
 
   // # (hash alone)
   if (s === "#") {
-    return { coordinate: "#", layer: "PSYCHOID", family: null, qlPosition: null, inverted: false };
+    return { bimbaCoordinate: "#", layer: "PSYCHOID", family: null, qlPosition: null, inverted: false };
   }
 
   // Psychoids: #0-#5
   if (s.startsWith("#") && s.length === 2) {
     const d = parseInt(s[1], 10);
     if (!isNaN(d) && d >= 0 && d <= 5) {
-      return { coordinate: s, layer: "PSYCHOID", family: null, qlPosition: d, inverted: false };
+      return { bimbaCoordinate: s, layer: "PSYCHOID", family: null, qlPosition: d, inverted: false };
     }
     return null;
   }
 
   // Weaves: Weave_*
   if (s.startsWith("Weave_")) {
-    return { coordinate: s, layer: "WEAVE", family: null, qlPosition: null, inverted: false };
+    return { bimbaCoordinate: s, layer: "WEAVE", family: null, qlPosition: null, inverted: false };
   }
 
   // Context frames: CF_*
   const cfIdx = (CF_NAMES as readonly string[]).indexOf(s);
   if (cfIdx !== -1) {
-    return { coordinate: s, layer: "CONTEXT_FRAME", family: null, qlPosition: cfIdx, inverted: false };
+    return { bimbaCoordinate: s, layer: "CONTEXT_FRAME", family: null, qlPosition: cfIdx, inverted: false };
   }
 
   // VAK: CPF, CT, CP, CF, CFP, CS
   const vakIdx = (VAK_NAMES as readonly string[]).indexOf(s);
   if (vakIdx !== -1) {
-    return { coordinate: s, layer: "VAK", family: null, qlPosition: vakIdx, inverted: false };
+    return { bimbaCoordinate: s, layer: "VAK", family: null, qlPosition: vakIdx, inverted: false };
   }
 
   // Family coordinates: {F}{0-5} or {F}{0-5}'
@@ -56,7 +56,7 @@ export function parseCoordinate(input: string): ParsedCoordinate | null {
     const fam = base[0];
     const pos = parseInt(base[1], 10);
     if ((FAMILIES as readonly string[]).includes(fam) && !isNaN(pos) && pos >= 0 && pos <= 5) {
-      return { coordinate: s, layer: "COORDINATE", family: fam, qlPosition: pos, inverted };
+      return { bimbaCoordinate: s, layer: "COORDINATE", family: fam, qlPosition: pos, inverted };
     }
   }
 

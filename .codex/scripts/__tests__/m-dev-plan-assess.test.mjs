@@ -131,6 +131,31 @@ test("active in-progress task is the first task in the recommended route", () =>
   assert.ok(assessment.recommendedRoute.taskIds.includes("01.T1"));
 });
 
+test("in-progress work is a resumable work order, not a global stop", () => {
+  const { root, planFolder } = makePlanSet();
+  const claimed = run(["--plan", planFolder, "--claim", "01.T0", "--owner", "anima", "--lease-minutes", "45", "--write", "--no-git"], root);
+  assert.equal(claimed.state.tasks["01.T0"].owner, "anima");
+  assert.match(claimed.state.tasks["01.T0"].leaseExpiresAt, /^\d{4}-\d{2}-\d{2}T/);
+
+  const assessment = assessPlan({ cwd: root, planFolder, includeGit: false });
+  assert.deepEqual(assessment.hardStops, []);
+  assert.equal(assessment.stopReasons.length, 0);
+  assert.ok(assessment.softCautions.some((caution) => caution.includes("1 active task")));
+  assert.equal(assessment.workOrders[0].taskId, "01.T0");
+  assert.equal(assessment.workOrders[0].action, "resume");
+  assert.equal(assessment.workOrders[0].owner, "anima");
+});
+
+test("same owner claim renews an existing lease without duplicate run records", () => {
+  const { root, planFolder } = makePlanSet();
+  const claimed = run(["--plan", planFolder, "--claim", "01.T0", "--owner", "anima", "--lease-minutes", "15", "--write", "--no-git"], root);
+  const renewed = run(["--plan", planFolder, "--claim", "01.T0", "--owner", "anima", "--lease-minutes", "90", "--write", "--no-git"], root);
+  assert.equal(renewed.state.tasks["01.T0"].status, "in_progress");
+  assert.equal(renewed.state.tasks["01.T0"].owner, "anima");
+  assert.notEqual(renewed.state.tasks["01.T0"].leaseExpiresAt, claimed.state.tasks["01.T0"].leaseExpiresAt);
+  assert.equal(renewed.state.runs.filter((run) => run.taskId === "01.T0").length, 1);
+});
+
 test("claim and mark preserve state through the CLI runner", () => {
   const { root, planFolder } = makePlanSet();
   const initial = run(["--plan", planFolder, "--write", "--no-git"], root);

@@ -17,6 +17,7 @@ pub mod events;
 pub mod graph;
 pub mod graphiti;
 pub mod improve;
+pub mod kernel_bridge_runtime;
 pub mod lock;
 pub mod logs;
 pub mod models;

@@ -1,0 +1,102 @@
+@prefix epi: <https://epi-logos.org/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+epi: a owl:Ontology ;
+  rdfs:label "Epi-Logos S2 coordinate ontology" ;
+  owl:versionIRI <https://epi-logos.org/ontology/2026-06-01/s2-coordinate-bridge> ;
+  rdfs:comment "OWL2 RL profile for S2 coordinate classes, relation families, provenance anchors, and public Anuttara language fields." .
+
+epi:BimbaNode a owl:Class ;
+  rdfs:label "Bimba node" ;
+  rdfs:comment "Canonical Neo4j S2 coordinate node. Family identity is stored as properties such as c_4_family, not as family-specific labels." .
+
+epi:CoordinateNode a owl:Class ;
+  rdfs:subClassOf epi:BimbaNode ;
+  rdfs:label "Coordinate node" .
+
+epi:AnuttaraNode a owl:Class ;
+  rdfs:subClassOf epi:CoordinateNode ;
+  rdfs:label "Anuttara language node" ;
+  rdfs:comment "M0/Anuttara node carrying S2-owned symbol and formulation fields." .
+
+epi:SourceAnchor a owl:Class ;
+  rdfs:subClassOf prov:Entity ;
+  rdfs:label "Source anchor" .
+
+epi:SpecAnchor a owl:Class ;
+  rdfs:subClassOf epi:SourceAnchor ;
+  rdfs:label "Specification anchor" .
+
+epi:CodeAnchor a owl:Class ;
+  rdfs:subClassOf epi:SourceAnchor ;
+  rdfs:label "Code anchor" .
+
+epi:TestAnchor a owl:Class ;
+  rdfs:subClassOf epi:SourceAnchor ;
+  rdfs:label "Test anchor" .
+
+epi:RelationFamily a owl:Class ;
+  rdfs:label "Relation family" .
+
+epi:CoordinateRelation a owl:ObjectProperty ;
+  rdfs:label "coordinate relation" ;
+  rdfs:domain epi:BimbaNode ;
+  rdfs:range epi:BimbaNode .
+
+epi:contains a owl:ObjectProperty, owl:TransitiveProperty ;
+  rdfs:subPropertyOf epi:CoordinateRelation ;
+  rdfs:label "contains" .
+
+epi:partOf a owl:ObjectProperty, owl:TransitiveProperty ;
+  rdfs:subPropertyOf epi:CoordinateRelation ;
+  owl:inverseOf epi:contains ;
+  rdfs:label "part of" .
+
+epi:integratesInto a owl:ObjectProperty ;
+  rdfs:subPropertyOf epi:CoordinateRelation ;
+  rdfs:label "integrates into" .
+
+epi:hasLens a owl:ObjectProperty ;
+  rdfs:subPropertyOf epi:CoordinateRelation ;
+  rdfs:label "has lens" .
+
+epi:hasSymbol a owl:DatatypeProperty ;
+  rdfs:domain epi:AnuttaraNode ;
+  rdfs:range xsd:string ;
+  rdfs:label "symbol" ;
+  epi:neo4jProperty "c_1_symbol" .
+
+epi:hasFormulationType a owl:DatatypeProperty ;
+  rdfs:domain epi:AnuttaraNode ;
+  rdfs:range xsd:string ;
+  rdfs:label "formulation type" ;
+  epi:neo4jProperty "c_1_formulation_type" .
+
+epi:hasCompleteFormulation a owl:DatatypeProperty ;
+  rdfs:domain epi:AnuttaraNode ;
+  rdfs:range xsd:string ;
+  rdfs:label "complete formulation" ;
+  epi:neo4jProperty "c_1_complete_formulation" .
+
+epi:AnuttaraNodeShape a sh:NodeShape ;
+  sh:targetClass epi:AnuttaraNode ;
+  sh:property [
+    sh:path epi:hasSymbol ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+  sh:property [
+    sh:path epi:hasFormulationType ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+  sh:property [
+    sh:path epi:hasCompleteFormulation ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] .

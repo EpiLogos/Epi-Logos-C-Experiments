@@ -138,7 +138,16 @@ pub async fn build_semantic_document(
                         coalesce(n.c_1_description, '') AS description,
                         coalesce(toString(n.c_4_ql_position), '') AS ql_position,
                         q_keys AS q_keys,
-                        [k IN q_keys | coalesce(toString(n[k]), '')] AS q_values",
+                        [k IN q_keys |
+                            CASE
+                              WHEN n[k] IS NULL THEN ''
+                              WHEN valueType(n[k]) STARTS WITH 'LIST' THEN
+                                '[' + reduce(acc = '', item IN n[k] |
+                                  acc + CASE WHEN acc = '' THEN '' ELSE '; ' END + toString(item)
+                                ) + ']'
+                              ELSE toString(n[k])
+                            END
+                        ] AS q_values",
             )
             .param("coord", coordinate),
         )
@@ -194,6 +203,9 @@ pub async fn find_stale_nodes(
     let mut stale = Vec::new();
     for row in rows {
         let coordinate: String = row.get("coordinate").unwrap_or_default();
+        if !is_semantic_anchor_coordinate(&coordinate) {
+            continue;
+        }
         let current_hash: String = row.get("semantic_source_hash").unwrap_or_default();
         let current_version: String = row.get("semantic_embedding_version").unwrap_or_default();
         let current_embedding: Vec<f64> = row.get("semantic_embedding").unwrap_or_default();
@@ -323,7 +335,12 @@ async fn adjacent_coordinates(
     Ok(rows
         .iter()
         .filter_map(|row| row.get::<String>("coordinate").ok())
+        .filter(|coordinate| is_semantic_anchor_coordinate(coordinate))
         .collect())
+}
+
+fn is_semantic_anchor_coordinate(coordinate: &str) -> bool {
+    kernel_coordinate_anchor_for(coordinate).is_ok()
 }
 
 fn hash_text(text: &str) -> String {
@@ -346,5 +363,13 @@ mod tests {
     fn hash_text_is_stable() {
         assert_eq!(hash_text("hello"), hash_text("hello"));
         assert_ne!(hash_text("hello"), hash_text("hello!"));
+    }
+
+    #[test]
+    fn semantic_stale_scan_skips_family_meta_coordinates() {
+        assert!(is_semantic_anchor_coordinate("M4"));
+        assert!(is_semantic_anchor_coordinate("CF_FRACTAL"));
+        assert!(!is_semantic_anchor_coordinate("Family_C"));
+        assert!(!is_semantic_anchor_coordinate("Family_A"));
     }
 }

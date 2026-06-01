@@ -300,10 +300,8 @@ fn yaml_quote_summary(value: &str) -> String {
         // serde_yaml::to_string on a borrowed &str is infallible in practice;
         // if it ever fails fall back to a JSON-encoded double-quoted scalar,
         // which is YAML 1.2-compatible.
-        Err(_) => {
-            serde_json::to_string(value)
-                .unwrap_or_else(|_| format!("\"{}\"", value.replace('"', "\\\"")))
-        }
+        Err(_) => serde_json::to_string(value)
+            .unwrap_or_else(|_| format!("\"{}\"", value.replace('"', "\\\""))),
     }
 }
 
@@ -322,8 +320,8 @@ fn append_vak_lines(lines: &mut Vec<String>, vak: &VakAddress) {
     lines.push(format!("cpf: \"{cpf_literal}\""));
     lines.push("ct:".to_string());
     for item in &vak.ct {
-        let quoted = serde_json::to_string(item)
-            .expect("String serialization to JSON is infallible");
+        let quoted =
+            serde_json::to_string(item).expect("String serialization to JSON is infallible");
         lines.push(format!("  - {quoted}"));
     }
     lines.push(format!("cp: {}", vak.cp));

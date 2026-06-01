@@ -27,6 +27,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "echo 'unit tests via Theia smoke harness'"
+    "test": "pnpm build && node ../../scripts/verify-kernel-bridge-readiness-source.mjs"
   }
 }

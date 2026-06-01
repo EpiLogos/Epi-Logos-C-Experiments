@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const STATE_VERSION = 1;
 const STATUSES = new Set(["pending", "ready", "in_progress", "blocked", "review", "done"]);
+const DEFAULT_LEASE_MINUTES = 120;
 
 export function parseArgs(argv) {
   const args = {
@@ -25,6 +26,9 @@ export function parseArgs(argv) {
     subagents: false,
     inSession: false,
     parallel: false,
+    owner: null,
+    leaseMinutes: DEFAULT_LEASE_MINUTES,
+    worktree: null,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -43,6 +47,9 @@ export function parseArgs(argv) {
     else if (arg === "--subagents") args.subagents = true;
     else if (arg === "--in-session") args.inSession = true;
     else if (arg === "--parallel") args.parallel = true;
+    else if (arg === "--owner") args.owner = argv[++i];
+    else if (arg === "--lease-minutes") args.leaseMinutes = Number.parseInt(argv[++i], 10);
+    else if (arg === "--worktree") args.worktree = argv[++i];
     else if (!arg.startsWith("--") && !args.plan) args.plan = arg;
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -52,6 +59,9 @@ export function parseArgs(argv) {
   }
   if (args.mark && !args.status) {
     throw new Error("--mark requires --status");
+  }
+  if (!Number.isFinite(args.leaseMinutes) || args.leaseMinutes <= 0) {
+    throw new Error("--lease-minutes must be a positive integer");
   }
   return args;
 }
@@ -327,6 +337,11 @@ function reconcileState(index, state) {
       completedAt: existing.completedAt ?? null,
       evidence: Array.isArray(existing.evidence) ? existing.evidence : [],
       notes: existing.notes ?? null,
+      owner: existing.owner ?? null,
+      leaseExpiresAt: existing.leaseExpiresAt ?? null,
+      heartbeatAt: existing.heartbeatAt ?? null,
+      runId: existing.runId ?? null,
+      worktree: existing.worktree ?? null,
     };
   }
 
@@ -355,18 +370,40 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true 
   const dirtyOverlaps = readyTasks
     .map((task) => ({ taskId: task.id, files: overlappingDirtyFiles(task.writeScopes, dirtyFiles) }))
     .filter((entry) => entry.files.length > 0);
-  const stopReasons = [];
+  const now = new Date();
+  const staleActiveTasks = inProgressTasks.filter((task) => task.leaseExpiresAt && new Date(task.leaseExpiresAt) <= now);
+  const hardStops = [];
+  const softCautions = [];
+  const carryForwardRisks = [];
 
   if (inProgressTasks.length > 0) {
-    stopReasons.push(`There are ${inProgressTasks.length} task(s) already in progress. Resume or release them before claiming new work.`);
+    softCautions.push(
+      `${inProgressTasks.length} active task(s) already in progress; resume matching work orders before claiming fresh lanes.`,
+    );
   }
   if (reviewTasks.length > 0) {
-    stopReasons.push(`There are ${reviewTasks.length} task(s) in review. Finish review before starting new work.`);
+    softCautions.push(`${reviewTasks.length} task(s) in review; finish or requeue them before treating downstream work as done.`);
+  }
+  if (staleActiveTasks.length > 0) {
+    softCautions.push(`${staleActiveTasks.length} active task lease(s) appear stale and can be renewed by the same owner or requeued deliberately.`);
+  }
+  if (dirtyOverlaps.length > 0) {
+    softCautions.push(`${dirtyOverlaps.length} ready task(s) overlap dirty files; prefer resume, same-owner continuation, or isolated worktrees.`);
+  }
+
+  const blockedTasks = enrichedTasks.filter((task) => task.status === "blocked");
+  if (blockedTasks.length > 0) {
+    carryForwardRisks.push(`${blockedTasks.length} task(s) are blocked; keep building other lanes unless a dependency edge requires them.`);
+  }
+  const waitingTasks = enrichedTasks.filter((task) => task.computedStatus === "waiting");
+  if (waitingTasks.length > 0) {
+    carryForwardRisks.push(`${waitingTasks.length} task(s) are waiting on dependencies; reassess after each completed tranche.`);
   }
 
   const recommendedTask = readyTasks[0] ?? null;
   const parallelGroup = buildParallelGroup(readyTasks, dirtyFiles);
   const recommendedRoute = buildRecommendedRoute(enrichedTasks);
+  const workOrders = buildWorkOrders(recommendedRoute, dirtyOverlaps);
 
   return {
     version: STATE_VERSION,
@@ -380,11 +417,15 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true 
       ready: readyTasks.length,
       blockedByDependencies: enrichedTasks.filter((task) => task.computedStatus === "waiting").length,
     },
-    stopReasons,
+    hardStops,
+    softCautions,
+    carryForwardRisks,
+    stopReasons: hardStops,
     recommendedTask,
     recommendedRoute,
+    workOrders,
     parallelGroup,
-    parallelExecution: parallelGroup.length > 1 && stopReasons.length === 0,
+    parallelExecution: parallelGroup.length > 1 && hardStops.length === 0,
     dirtyFiles,
     dirtyOverlaps,
     tasks: enrichedTasks.map(({ body, ...task }) => task),
@@ -537,6 +578,11 @@ function enrichTask(task, state, taskById) {
     evidence: record.evidence ?? [],
     claimedAt: record.claimedAt ?? null,
     completedAt: record.completedAt ?? null,
+    owner: record.owner ?? null,
+    leaseExpiresAt: record.leaseExpiresAt ?? null,
+    heartbeatAt: record.heartbeatAt ?? null,
+    runId: record.runId ?? null,
+    worktree: record.worktree ?? null,
   };
 }
 
@@ -574,6 +620,38 @@ function buildParallelGroup(readyTasks, dirtyFiles, max = 3) {
     }
   }
   return group;
+}
+
+function buildWorkOrders(route, dirtyOverlaps) {
+  const dirtyByTask = new Map(dirtyOverlaps.map((entry) => [entry.taskId, entry.files]));
+  return route.tasks.map((task, index) => {
+    const dirtyFiles = dirtyByTask.get(task.id) ?? [];
+    const action = workOrderAction(task);
+    return {
+      order: index + 1,
+      taskId: task.id,
+      title: task.title,
+      action,
+      canStart: (action === "claim" || action === "resume") && dirtyFiles.length === 0,
+      status: task.status,
+      computedStatus: task.computedStatus,
+      modeHint: task.modeHint,
+      effortWeight: task.effortWeight,
+      owner: task.owner ?? null,
+      leaseExpiresAt: task.leaseExpiresAt ?? null,
+      worktree: task.worktree ?? null,
+      writeScopes: task.writeScopes,
+      dirtyFiles,
+      lane: `${task.trackId}:${task.writeScopes.map(stripGlob).join("+") || "unspecified"}`,
+    };
+  });
+}
+
+function workOrderAction(task) {
+  if (task.status === "in_progress" || task.status === "review") return "resume";
+  if (task.computedStatus === "ready") return "claim";
+  if (task.computedStatus === "waiting") return "wait";
+  return "skip";
 }
 
 function buildRecommendedRoute(tasks, { minTasks = 3, maxTasks = 5, weightBudget = 8 } = {}) {
@@ -780,30 +858,64 @@ function markActiveRoute(assessment) {
   return assessment.state.activeRoute;
 }
 
-function claimTask(planFolder, assessment, taskId) {
+function claimTask(planFolder, assessment, taskId, { owner = defaultOwner(), leaseMinutes = DEFAULT_LEASE_MINUTES, worktree = null } = {}) {
   const task = assessment.tasks.find((entry) => entry.id === taskId);
   if (!task) throw new Error(`Cannot claim unknown task: ${taskId}`);
+  if ((task.status === "in_progress" || task.status === "review") && task.owner === owner) {
+    return renewTaskLease(assessment.state, taskId, { owner, leaseMinutes, worktree });
+  }
   if (task.computedStatus !== "ready") {
     throw new Error(`Cannot claim ${taskId}: computed status is ${task.computedStatus}`);
   }
   const state = assessment.state;
   const now = new Date().toISOString();
+  const leaseExpiresAt = leaseExpiry(now, leaseMinutes);
   const runId = `${now.replace(/[-:]/g, "").replace(/\..+$/, "Z")}-${taskId.replace(".", "-")}`;
   state.tasks[taskId] = {
     ...(state.tasks[taskId] ?? {}),
     status: "in_progress",
     claimedAt: now,
     updatedAt: now,
+    heartbeatAt: now,
+    leaseExpiresAt,
+    owner,
+    worktree,
     runId,
     evidence: state.tasks[taskId]?.evidence ?? [],
   };
-  state.runs.push({ runId, taskId, status: "in_progress", startedAt: now });
+  state.runs.push({ runId, taskId, status: "in_progress", startedAt: now, owner, leaseExpiresAt, worktree });
   mkdirSync(join(planFolder, "plan.runs"), { recursive: true });
   writeFileSync(
     join(planFolder, "plan.runs", `${runId}.json`),
-    `${JSON.stringify({ runId, taskId, startedAt: now, task }, null, 2)}\n`,
+    `${JSON.stringify({ runId, taskId, startedAt: now, owner, leaseExpiresAt, worktree, task }, null, 2)}\n`,
   );
   return state;
+}
+
+function renewTaskLease(state, taskId, { owner, leaseMinutes, worktree }) {
+  const now = new Date().toISOString();
+  const leaseExpiresAt = leaseExpiry(now, leaseMinutes);
+  const existing = state.tasks[taskId] ?? {};
+  state.tasks[taskId] = {
+    ...existing,
+    owner,
+    worktree: worktree ?? existing.worktree ?? null,
+    heartbeatAt: now,
+    leaseExpiresAt,
+    updatedAt: now,
+  };
+  state.runs = (state.runs ?? []).map((run) =>
+    run.taskId === taskId && !run.completedAt ? { ...run, owner, leaseExpiresAt, heartbeatAt: now, worktree: worktree ?? run.worktree ?? null } : run,
+  );
+  return state;
+}
+
+function leaseExpiry(nowIso, leaseMinutes) {
+  return new Date(new Date(nowIso).getTime() + leaseMinutes * 60 * 1000).toISOString();
+}
+
+function defaultOwner() {
+  return process.env.M_DEV_OWNER || process.env.CODEX_SESSION_ID || process.env.USER || "m-dev";
 }
 
 function markTask(assessment, taskId, status, evidence) {
@@ -819,6 +931,8 @@ function markTask(assessment, taskId, status, evidence) {
     status,
     updatedAt: now,
     completedAt: status === "done" ? now : existing.completedAt ?? null,
+    leaseExpiresAt: status === "in_progress" || status === "review" ? existing.leaseExpiresAt ?? null : null,
+    heartbeatAt: status === "in_progress" || status === "review" ? now : existing.heartbeatAt ?? null,
     evidence: evidenceList,
   };
   state.runs = (state.runs ?? []).map((run) =>
@@ -835,9 +949,17 @@ function printHuman(assessment) {
   const lines = [];
   lines.push(`Plan: ${assessment.planFolder}`);
   lines.push(`Tasks: ${assessment.summary.totalTasks} total, ${assessment.summary.done} done, ${assessment.summary.ready} ready, ${assessment.summary.in_progress} in progress, ${assessment.summary.review} in review`);
-  if (assessment.stopReasons.length > 0) {
-    lines.push("Stop reasons:");
-    for (const reason of assessment.stopReasons) lines.push(`- ${reason}`);
+  if (assessment.hardStops.length > 0) {
+    lines.push("Hard stops:");
+    for (const reason of assessment.hardStops) lines.push(`- ${reason}`);
+  }
+  if (assessment.softCautions.length > 0) {
+    lines.push("Soft cautions:");
+    for (const reason of assessment.softCautions) lines.push(`- ${reason}`);
+  }
+  if (assessment.carryForwardRisks.length > 0) {
+    lines.push("Carry-forward risks:");
+    for (const reason of assessment.carryForwardRisks) lines.push(`- ${reason}`);
   }
   if (assessment.recommendedTask) {
     lines.push(`Recommended: ${assessment.recommendedTask.id} - ${assessment.recommendedTask.title}`);
@@ -853,6 +975,9 @@ function printHuman(assessment) {
   }
   if (assessment.state.activeRoute?.taskIds?.length > 0) {
     lines.push(`Active route: ${assessment.state.activeRoute.taskIds.join(" -> ")}`);
+  }
+  if (assessment.workOrders.length > 0) {
+    lines.push(`Work orders: ${assessment.workOrders.map((order) => `${order.taskId}:${order.action}`).join(", ")}`);
   }
   if (assessment.parallelGroup.length > 1) {
     lines.push(`Parallel-safe candidates: ${assessment.parallelGroup.map((task) => task.id).join(", ")}`);
@@ -879,7 +1004,11 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
   }
 
   if (args.claim) {
-    assessment.state = claimTask(planFolder, assessment, args.claim);
+    assessment.state = claimTask(planFolder, assessment, args.claim, {
+      owner: args.owner ?? defaultOwner(),
+      leaseMinutes: args.leaseMinutes,
+      worktree: args.worktree,
+    });
     writeAssessmentFiles(planFolder, assessment);
     assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
   }

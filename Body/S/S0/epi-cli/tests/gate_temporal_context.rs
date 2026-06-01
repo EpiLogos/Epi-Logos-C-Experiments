@@ -256,7 +256,9 @@ fn assert_safe_kernel_projection(value: &serde_json::Value) {
     assert!(profile["chromatic"]["note"].as_str().unwrap().len() > 0);
     assert!(profile["chromatic"]["xPrimeNote"].as_str().unwrap().len() > 0);
     assert!(profile["chromatic"]["mirrorNote"].as_str().unwrap().len() > 0);
-    assert_eq!(profile["binary"]["transcriptionState"], "pending-m3-codec");
+    assert_eq!(profile["profileSchemaVersion"], 1);
+    assert_eq!(profile["binary"], profile["mahamaya"]);
+    assert_eq!(profile["binary"]["transcriptionState"], "provisional-gap");
     assert!(
         value["kernel"].get("bioquaternion").is_none(),
         "gateway temporal context must not publish protected bioquaternion detail"

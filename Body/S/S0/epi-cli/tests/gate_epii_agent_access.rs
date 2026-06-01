@@ -333,8 +333,16 @@ async fn s5_epii_runtime_context_resolves_gateway_session_and_projection_readine
             > 0
     );
     assert_eq!(
+        context["temporal"]["kernel"]["harmonicProfile"]["profileSchemaVersion"],
+        1
+    );
+    assert_eq!(
+        context["temporal"]["kernel"]["harmonicProfile"]["binary"],
+        context["temporal"]["kernel"]["harmonicProfile"]["mahamaya"]
+    );
+    assert_eq!(
         context["temporal"]["kernel"]["harmonicProfile"]["binary"]["transcriptionState"],
-        "pending-m3-codec"
+        "provisional-gap"
     );
     assert!(
         context["temporal"]["kernel"].get("bioquaternion").is_none(),

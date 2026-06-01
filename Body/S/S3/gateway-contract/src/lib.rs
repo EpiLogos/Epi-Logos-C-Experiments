@@ -23,6 +23,8 @@ pub const GRAPHITI_INVOCATION_OWNER: &str = "S5 episodic invocation and arc gove
 pub const TEMPORAL_REDIS_NAMESPACE: &str = "s3:gateway:temporal";
 pub const SPACETIME_PROJECTION_SOURCE_HTTP_SQL: &str = "http-sql-poll";
 pub const SPACETIME_PROJECTION_SOURCE_NATIVE_WS: &str = "native-websocket";
+pub const SPACETIME_PROJECTION_MODE_LITE: &str = "lite";
+pub const SPACETIME_PROJECTION_MODE_FULL: &str = "full";
 
 pub const OMNIPANEL_SESSION_METADATA: &[&str] = &[
     "canonicalKey",
@@ -60,6 +62,20 @@ pub const SPACETIME_PROJECTION_TABLES: &[&str] = &[
     "session_surface",
     "kairos_surface",
     "global_temporal_surface",
+    "temporal_event",
+];
+pub const SPACETIME_LITE_PROJECTION_TABLES: &[&str] = &[
+    "session_surface",
+    "kairos_surface",
+    "global_temporal_surface",
+];
+pub const SPACETIME_FULL_PROJECTION_TABLES: &[&str] = &[
+    "session_surface",
+    "kairos_surface",
+    "global_temporal_surface",
+    "gateway_instance",
+    "agent_instance",
+    "client_registration",
     "temporal_event",
 ];
 
@@ -144,6 +160,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "s4.agent.status",
     "s4'.vak.evaluate",
     "s4'.orchestrate",
+    "s4'.mediation.route",
     "s4'.psyche.state",
     "s4'.psyche.update",
     "s4'.permission.get",
@@ -728,6 +745,7 @@ pub fn gateway_session_method_names() -> Vec<&'static str> {
 #[serde(rename_all = "camelCase")]
 pub struct SpacetimeProjectionPlan {
     pub mode: String,
+    pub subscription_mode: String,
     pub endpoint: String,
     pub database: String,
     pub session_key: String,
@@ -765,13 +783,14 @@ impl SpacetimeProjectionPlan {
     pub fn new(mode: impl Into<String>, endpoint: String, database: String) -> Self {
         Self {
             mode: mode.into(),
+            subscription_mode: SPACETIME_PROJECTION_MODE_LITE.to_owned(),
             endpoint,
             database,
             session_key: String::new(),
             agent_id: String::new(),
             coordinate_owner: "S3'".to_owned(),
             agent_access_owner: "S4/S5".to_owned(),
-            tables: SPACETIME_PROJECTION_TABLES
+            tables: SPACETIME_LITE_PROJECTION_TABLES
                 .iter()
                 .map(|table| (*table).to_owned())
                 .collect(),
@@ -789,6 +808,26 @@ impl SpacetimeProjectionPlan {
         self
     }
 
+    pub fn for_subscription_mode(mut self, subscription_mode: impl AsRef<str>) -> Self {
+        match subscription_mode.as_ref() {
+            SPACETIME_PROJECTION_MODE_FULL => {
+                self.subscription_mode = SPACETIME_PROJECTION_MODE_FULL.to_owned();
+                self.tables = SPACETIME_FULL_PROJECTION_TABLES
+                    .iter()
+                    .map(|table| (*table).to_owned())
+                    .collect();
+            }
+            _ => {
+                self.subscription_mode = SPACETIME_PROJECTION_MODE_LITE.to_owned();
+                self.tables = SPACETIME_LITE_PROJECTION_TABLES
+                    .iter()
+                    .map(|table| (*table).to_owned())
+                    .collect();
+            }
+        }
+        self
+    }
+
     pub fn subscribe_url(&self) -> String {
         format!(
             "{}/v1/database/{}/subscribe",
@@ -800,24 +839,27 @@ impl SpacetimeProjectionPlan {
     pub fn subscribe_multi_message(&self) -> Value {
         serde_json::json!({
             "SubscribeMulti": {
-                "query_strings": [
-                    format!(
-                        "SELECT * FROM session_surface WHERE session_key = {}",
-                        sql_string(&self.session_key)
-                    ),
-                    format!(
-                        "SELECT * FROM kairos_surface WHERE session_key = {}",
-                        sql_string(&self.session_key)
-                    ),
-                    format!(
-                        "SELECT * FROM global_temporal_surface WHERE session_key = {}",
-                        sql_string(&self.session_key)
-                    )
-                ],
+                "query_strings": self.subscription_queries(),
                 "request_id": 1,
                 "query_id": { "id": 1 }
             }
         })
+    }
+
+    pub fn subscription_queries(&self) -> Vec<String> {
+        let session_key = sql_string(&self.session_key);
+        self.tables
+            .iter()
+            .filter_map(|table| match table.as_str() {
+                "session_surface" | "kairos_surface" | "global_temporal_surface" => Some(format!(
+                    "SELECT * FROM {table} WHERE session_key = {session_key}"
+                )),
+                "temporal_event" => Some(format!(
+                    "SELECT * FROM temporal_event WHERE session_key = {session_key}"
+                )),
+                _ => None,
+            })
+            .collect()
     }
 }
 
@@ -1698,8 +1740,17 @@ mod tests {
         let message = plan.subscribe_multi_message();
 
         assert_eq!(plan.mode, "native-websocket");
+        assert_eq!(plan.subscription_mode, "lite");
         assert_eq!(plan.coordinate_owner, "S3'");
         assert_eq!(plan.agent_access_owner, "S4/S5");
+        assert_eq!(
+            plan.tables,
+            vec![
+                "session_surface",
+                "kairos_surface",
+                "global_temporal_surface",
+            ]
+        );
         assert_eq!(
             plan.subscribe_url(),
             "ws://127.0.0.1:3000/v1/database/epi-logos-runtime/subscribe"
@@ -1711,6 +1762,20 @@ mod tests {
             .iter()
             .any(|query| query
                 == "SELECT * FROM session_surface WHERE session_key = 'agent:main:main'"));
+
+        let full_plan = plan
+            .clone()
+            .for_subscription_mode(SPACETIME_PROJECTION_MODE_FULL);
+        assert_eq!(full_plan.subscription_mode, "full");
+        assert!(full_plan
+            .tables
+            .iter()
+            .any(|table| table == "temporal_event"));
+        assert!(full_plan
+            .subscription_queries()
+            .iter()
+            .any(|query| query
+                == "SELECT * FROM temporal_event WHERE session_key = 'agent:main:main'"));
 
         let update = json!({
             "SubscribeMultiApplied": {

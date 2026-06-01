@@ -1,22 +1,21 @@
 ---
-description: "Develop the next safe tranche from the active implementation plan set"
-disable-model-invocation: true
+description: "Autonomously develop the active implementation plan set"
 ---
 
 # `/m-dev`
 
-Run the active implementation plan set as a context-first route-development loop.
+Run the active implementation plan set as a context-first autopilot loop.
 
-This is the only user-facing command. Internally, `/m-dev` discovers the plan set, refreshes the index/state ledger, marks a short dependency-aware route through the work, builds context packs from the plan and source/spec files, then executes in the current session by default.
+This is the only user-facing command. Internally, `/m-dev` discovers the plan set, refreshes the index/state ledger, marks a short dependency-aware route through the work, converts it into work orders, builds context packs from the plan and source/spec files, then keeps executing until a real hard stop appears.
 
-Subagents are optional. Do not use them unless the user passes `--subagents`, asks for parallel work, or explicitly approves them after seeing the task.
+Subagents and worktrees are execution strategies, not extra user-facing commands. Use them when they make the current work order batch safer or faster; keep the ledger owned by the controller.
 
 ## Modes
 
-- **Default:** in-session execution by the current agent.
+- **Default:** autonomous in-session execution by the current agent, continuing through work orders while verification remains clean.
 - **`--route`:** explicitly mark the current recommended 3-5 task route. The command does this by default unless the user is only resetting or inspecting.
-- **`--subagents`:** use subagent-driven development for implementation/review.
-- **`--parallel`:** only with `--subagents`, and only for tasks the assessor marks parallel-safe after a second sanity check.
+- **`--subagents`:** allow subagent-driven implementation/review for suitable work orders.
+- **`--parallel`:** use only when work orders are independent by write scope, service state, schema/API boundary, and verification path.
 - **`--reset`:** reset `plan.state.json` to a clean pending ledger for the active plan set.
 
 ## Required Skills
@@ -25,8 +24,8 @@ Invoke only what applies:
 
 - Always use `superpowers:test-driven-development` before code changes.
 - Always use `superpowers:verification-before-completion` before marking done.
-- Use `superpowers:subagent-driven-development` only in `--subagents` mode.
-- Use `superpowers:dispatching-parallel-agents` only in `--parallel --subagents` mode.
+- Use `superpowers:subagent-driven-development` when the selected work-order batch benefits from fresh implementer/reviewer contexts.
+- Use `superpowers:dispatching-parallel-agents` only when multiple work orders are genuinely independent.
 
 If an Epi-Logos/VAK gate is available, run it before claiming implementation work.
 
@@ -54,35 +53,39 @@ The helper writes or refreshes:
 
 The assessment returns `recommendedRoute`: a 3-5 task route when enough work is available, shortened when tasks are too taxing or dependencies run out. Treat this route as the intended path for the session, not as a promise to finish everything regardless of verification.
 
+The assessment also returns `workOrders`: ordered `resume`, `claim`, `wait`, or `skip` actions. Work orders are the operational queue; route ids are the strategic path.
+
 Do not manually invent task state if the assessor can compute it.
 
-## Step 2 - Stop Conditions
+## Step 2 - Classify Risks
 
-Stop and report clearly if the assessment returns `stopReasons`.
+Read `hardStops`, `softCautions`, and `carryForwardRisks`.
 
-Also stop before implementation if:
+Stop only for hard stops:
 
-- The recommended task depends on a user-final decision that is not resolved.
-- The task is primarily an ADR/user-choice tranche and needs the user's choice before engineering.
-- The task overlaps unrelated dirty files.
-- The task requires destructive commands, external credentials, or a missing local service harness.
-- The plan set is ambiguous.
+- Destructive action is required and not explicitly approved.
+- External credentials or private user-final approval are required.
+- A privacy/user-final gate blocks the specific work order.
+- Verification cannot be made meaningful because the required harness/service does not exist and no captured-live fixture path is available.
+- Dirty files directly conflict with the same symbols/files the work order must edit and cannot be isolated in a worktree.
 
-If stopping, do not claim the task. Give the user the smallest useful next decision or unblocker.
+Do not stop for ordinary active leases, review items, dirty unrelated lanes, implementation-owner defaults, or downstream readiness gaps. Treat those as queue state: resume, requeue, isolate, or carry forward.
 
-## Step 3 - Read The Route
+## Step 3 - Read The Work Orders
 
-Use `recommendedRoute.tasks` as the path. Each route task includes:
+Use `workOrders` as the execution queue. Each work order includes:
 
+- `action`: `resume`, `claim`, `wait`, or `skip`.
+- `owner`, `leaseExpiresAt`, and `worktree` when a task is already owned.
 - `effortWeight`: small tasks are light; larger/week-scale tasks count heavier.
 - `modeHint`: `in-session`, `consider-subagents-if-approved`, or `split-before-execution`.
 - `dependsOn`, `writeScopes`, and computed status.
 
-Plan to work through the route in order. For a light route, continuing through 4-5 tasks is encouraged if verification remains clean. For a balanced route, aim for 3-4 tasks. For a heavy route, stop after the first task that needs splitting, user validation, or substantial review.
+Resume active work orders first. Then claim ready work orders. Skip or defer `wait` orders until their dependencies are done. For a light route, continuing through 4-5 tasks is encouraged if verification remains clean. For a balanced route, aim for 3-4 tasks. For a heavy route, split or subagent-review the heavy item rather than stopping the whole system.
 
 ## Step 4 - Build Each Context Pack
 
-Before claiming each task, generate the context pack for that route task:
+Before resuming or claiming each work order, generate the context pack:
 
 ```bash
 node .codex/scripts/m-dev-plan-assess.mjs --context <TASK_ID> --write --json $ARGUMENTS
@@ -106,9 +109,9 @@ If the context pack is thin, pause and gather missing context before implementat
 
 ## Step 5 - Select Work
 
-Default to the first task in `recommendedRoute.taskIds`. Continue to later route tasks only after the prior task is marked `done` or deliberately marked `review`/`blocked`.
+Default to the first `resume` or `claim` work order. Continue to later work orders after the prior task is marked `done`, `review`, or `blocked` with evidence.
 
-Use `parallelGroup` only in `--parallel --subagents` mode, and only if every task is genuinely independent:
+Use parallel execution only if every selected work order is genuinely independent:
 
 - No overlapping write scopes.
 - No shared schema/API/migration/lockfile/service boundary.
@@ -116,21 +119,21 @@ Use `parallelGroup` only in `--parallel --subagents` mode, and only if every tas
 - No shared fragile live service, port, fixture directory, or state store.
 - Each task can be reviewed and verified independently.
 
-When uncertain, execute only the recommended task in-session.
+When uncertain, execute sequentially or isolate in worktrees. Do not ask the user unless there is a hard stop.
 
 ## Step 6 - Claim Work
 
 Claim each selected task before implementation:
 
 ```bash
-node .codex/scripts/m-dev-plan-assess.mjs --claim <TASK_ID> --write --json $ARGUMENTS
+node .codex/scripts/m-dev-plan-assess.mjs --claim <TASK_ID> --owner <AGENT_OR_THREAD_ID> --lease-minutes 120 --write --json $ARGUMENTS
 ```
 
-If the claim fails, stop and report the assessor output. Do not bypass the claim check.
+If the same owner already holds the task, this renews the lease and resumes it. If another live owner holds the task, pick another safe work order unless it is stale and deliberately requeued.
 
 ## Step 7 - Execute
 
-### Default In-Session Execution
+### Default Autopilot Execution
 
 Work in the current session:
 
@@ -139,10 +142,11 @@ Work in the current session:
 3. Implement the smallest tranche-complete change.
 4. Run task-specific verification from the plan.
 5. Self-review against the task body, source specs, open decisions, and production-readiness rules.
+6. Mark the ledger, reassess, and continue to the next work order unless a hard stop appears.
 
 ### Optional Subagent Execution
 
-Only when `--subagents` is active, or when the user explicitly approves subagents after seeing a route task marked `consider-subagents-if-approved`:
+When the work-order batch is safe for subagents:
 
 1. Dispatch a fresh implementer subagent with the context pack and the exact required-reading list.
 2. Require the subagent to read/search the listed source/spec files before editing.
@@ -150,19 +154,19 @@ Only when `--subagents` is active, or when the user explicitly approves subagent
 4. Run code-quality review.
 5. Rework until reviews pass.
 
-Subagents must not update `plan.state.json`; the controller owns the ledger.
+Subagents must not update `plan.state.json`; the controller owns claims, leases, route state, and final marking.
 
 ## Step 8 - Verify Before Completion
 
 Verification must exercise real functionality for the task. Mock-only, placeholder, fake-review, demo-data, or fixture-only claims do not satisfy production readiness.
 
-Before claiming success, rerun:
+Before marking a task done, rerun:
 
 ```bash
 node .codex/scripts/m-dev-plan-assess.mjs --write --json $ARGUMENTS
 ```
 
-Confirm the task is still the claimed task and no new stop reason appeared.
+Confirm the task is still owned/resumable and no hard stop appeared.
 
 ## Step 9 - Update The Ledger
 

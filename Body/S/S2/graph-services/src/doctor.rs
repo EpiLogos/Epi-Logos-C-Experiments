@@ -57,9 +57,67 @@ pub struct GraphState {
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
+pub struct SchemaReadiness {
+    pub ok: bool,
+    pub status: String,
+    pub source: String,
+    pub schema_version: Option<String>,
+    pub q_schema_version: Option<String>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProcedureReadiness {
+    pub ok: bool,
+    pub status: String,
+    pub required: bool,
+    pub procedure_prefix: String,
+    pub checked_query: String,
+    pub procedure_count: i64,
+    pub example_procedures: Vec<String>,
+    pub fallback: Option<String>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Owl2RlReadiness {
+    pub ok: bool,
+    pub status: String,
+    pub depends_on: String,
+    pub procedure_prefix: String,
+    pub checked_query: String,
+    pub procedure_count: i64,
+    pub example_procedures: Vec<String>,
+    pub fallback: Option<String>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PrivacyProjectionReadiness {
+    pub ok: bool,
+    pub status: String,
+    pub projection_strategy: String,
+    pub requires_gds: bool,
+    pub protected_label_count: i64,
+    pub excluded_labels: Vec<String>,
+    pub fallback: Option<String>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DoctorReport {
     pub ok: bool,
     pub neo4j: ServiceStatus,
+    pub schema: SchemaReadiness,
+    pub apoc: ProcedureReadiness,
+    pub n10s: ProcedureReadiness,
+    pub owl2_rl: Owl2RlReadiness,
+    pub gds: ProcedureReadiness,
+    pub privacy_projection: PrivacyProjectionReadiness,
     pub redis: ServiceStatus,
     pub redis_stack: RedisStackStatus,
     pub semantic_cache: SemanticCacheStatus,
@@ -74,12 +132,49 @@ pub async fn collect_report(repo_root: &Path) -> DoctorReport {
     let (redis, redis_stack) = redis_status(&redis_config).await;
     let semantic_cache = semantic_cache_status(repo_root).await;
     let graph = graph_state(neo4j_client.as_ref()).await;
+    let schema = schema_readiness(&graph);
+    let apoc = procedure_readiness(
+        neo4j_client.as_ref(),
+        "apoc.",
+        "APOC is required by S2 dataset import label mutation; bootstrap the local Neo4j topology with APOC before running population flows.",
+    )
+    .await;
+    let n10s = procedure_readiness(
+        neo4j_client.as_ref(),
+        "n10s.",
+        "neosemantics (n10s) is required for ontology import/export and OWL readiness; keep S2 ontology consumers blocked until the Neo4j topology installs n10s.",
+    )
+    .await;
+    let owl2_rl = owl2_rl_readiness(neo4j_client.as_ref(), &n10s).await;
+    let gds = procedure_readiness(
+        neo4j_client.as_ref(),
+        "gds.",
+        "Graph Data Science is required for S2' topology overlays; keep GDS consumers blocked and use graph-only traversal until the Neo4j topology installs GDS.",
+    )
+    .await;
+    let privacy_projection = privacy_projection_readiness(neo4j_client.as_ref(), &gds).await;
 
-    let ok = neo4j.ok && redis.ok && redis_stack.ok && semantic_cache.ok && graph.ok;
+    let ok = neo4j.ok
+        && schema.ok
+        && apoc.ok
+        && n10s.ok
+        && owl2_rl.ok
+        && gds.ok
+        && privacy_projection.ok
+        && redis.ok
+        && redis_stack.ok
+        && semantic_cache.ok
+        && graph.ok;
 
     DoctorReport {
         ok,
         neo4j,
+        schema,
+        apoc,
+        n10s,
+        owl2_rl,
+        gds,
+        privacy_projection,
         redis,
         redis_stack,
         semantic_cache,
@@ -89,10 +184,21 @@ pub async fn collect_report(repo_root: &Path) -> DoctorReport {
 
 pub fn render_human(report: &DoctorReport) -> String {
     format!(
-        "Graph doctor\n  overall: {}\n  Neo4j: {} ({})\n  Redis: {} ({})\n  Redis Stack: {} (indexes: {})\n  Semantic cache: {} ({})\n  Graph: bootstrapped={} nodes={} indexed={} stale={} revision={}",
+        "Graph doctor\n  overall: {}\n  Neo4j: {} ({})\n  Schema: {}\n  APOC: {} (procedures: {})\n  n10s: {} (procedures: {})\n  OWL2 RL: {} (procedures: {})\n  GDS: {} (procedures: {})\n  Privacy projection: {} (protected labels: {})\n  Redis: {} ({})\n  Redis Stack: {} (indexes: {})\n  Semantic cache: {} ({})\n  Graph: bootstrapped={} nodes={} indexed={} stale={} revision={}",
         if report.ok { "healthy" } else { "degraded" },
         report.neo4j.status,
         report.neo4j.uri,
+        report.schema.status,
+        report.apoc.status,
+        report.apoc.procedure_count,
+        report.n10s.status,
+        report.n10s.procedure_count,
+        report.owl2_rl.status,
+        report.owl2_rl.procedure_count,
+        report.gds.status,
+        report.gds.procedure_count,
+        report.privacy_projection.status,
+        report.privacy_projection.protected_label_count,
         report.redis.status,
         report.redis.uri,
         if report.redis_stack.ok { "ready" } else { "not-ready" },
@@ -109,9 +215,15 @@ pub fn render_human(report: &DoctorReport) -> String {
 
 pub fn render_status(report: &DoctorReport) -> String {
     format!(
-        "S2 Status:\n  Neo4j: {} ({})\n  Redis: {} ({})\n  Redis Stack: {}\n  Semantic cache: {}\n  Graph: nodes={}, indexed={}, stale={}",
+        "S2 Status:\n  Neo4j: {} ({})\n  Schema: {}\n  APOC: {}\n  n10s: {}\n  OWL2 RL: {}\n  GDS: {}\n  Privacy projection: {}\n  Redis: {} ({})\n  Redis Stack: {}\n  Semantic cache: {}\n  Graph: nodes={}, indexed={}, stale={}",
         report.neo4j.status,
         report.neo4j.uri,
+        report.schema.status,
+        report.apoc.status,
+        report.n10s.status,
+        report.owl2_rl.status,
+        report.gds.status,
+        report.privacy_projection.status,
         report.redis.status,
         report.redis.uri,
         if report.redis_stack.ok { "ready" } else { "not-ready" },
@@ -120,6 +232,302 @@ pub fn render_status(report: &DoctorReport) -> String {
         report.graph.semantic_indexed_nodes,
         report.graph.stale_semantic_nodes,
     )
+}
+
+fn schema_readiness(graph: &GraphState) -> SchemaReadiness {
+    if !graph.ok {
+        return SchemaReadiness {
+            ok: false,
+            status: "blocked".into(),
+            source: "GraphMeta".into(),
+            schema_version: graph.schema_version.clone(),
+            q_schema_version: graph.q_schema_version.clone(),
+            error: graph
+                .error
+                .clone()
+                .or_else(|| Some("graph unavailable".into())),
+        };
+    }
+
+    let ok =
+        graph.meta_present && graph.schema_version.is_some() && graph.q_schema_version.is_some();
+    SchemaReadiness {
+        ok,
+        status: if ok { "ready" } else { "blocked" }.into(),
+        source: "GraphMeta".into(),
+        schema_version: graph.schema_version.clone(),
+        q_schema_version: graph.q_schema_version.clone(),
+        error: if ok {
+            None
+        } else {
+            Some("GraphMeta is missing schema_version or q_schema_version".into())
+        },
+    }
+}
+
+async fn procedure_readiness(
+    client: Option<&Neo4jClient>,
+    procedure_prefix: &str,
+    fallback: &str,
+) -> ProcedureReadiness {
+    let count_query = format!(
+        "SHOW PROCEDURES YIELD name WHERE name STARTS WITH '{}' RETURN count(name) AS c",
+        procedure_prefix
+    );
+    let checked_query = format!(
+        "SHOW PROCEDURES YIELD name WHERE name STARTS WITH '{}' RETURN name ORDER BY name LIMIT 8",
+        procedure_prefix
+    );
+    let Some(client) = client else {
+        return ProcedureReadiness {
+            ok: false,
+            status: "blocked".into(),
+            required: true,
+            procedure_prefix: procedure_prefix.into(),
+            checked_query,
+            procedure_count: 0,
+            example_procedures: Vec::new(),
+            fallback: Some(fallback.into()),
+            error: Some("neo4j unavailable".into()),
+        };
+    };
+
+    match procedure_count(client, &count_query).await {
+        Ok(count) => match client.run(&checked_query).await {
+            Ok(rows) => {
+                let example_procedures = row_strings(&rows, "name");
+                ProcedureReadiness {
+                    ok: count > 0,
+                    status: if count > 0 { "ready" } else { "blocked" }.into(),
+                    required: true,
+                    procedure_prefix: procedure_prefix.into(),
+                    checked_query,
+                    procedure_count: count,
+                    example_procedures,
+                    fallback: (count == 0).then(|| fallback.into()),
+                    error: None,
+                }
+            }
+            Err(err) => ProcedureReadiness {
+                ok: false,
+                status: "blocked".into(),
+                required: true,
+                procedure_prefix: procedure_prefix.into(),
+                checked_query,
+                procedure_count: 0,
+                example_procedures: Vec::new(),
+                fallback: Some(fallback.into()),
+                error: Some(err.to_string()),
+            },
+        },
+        Err(err) => ProcedureReadiness {
+            ok: false,
+            status: "blocked".into(),
+            required: true,
+            procedure_prefix: procedure_prefix.into(),
+            checked_query,
+            procedure_count: 0,
+            example_procedures: Vec::new(),
+            fallback: Some(fallback.into()),
+            error: Some(err),
+        },
+    }
+}
+
+async fn procedure_count(client: &Neo4jClient, count_query: &str) -> Result<i64, String> {
+    let rows = client
+        .run(count_query)
+        .await
+        .map_err(|err| err.to_string())?;
+    Ok(rows
+        .first()
+        .and_then(|row| row.get("c").ok())
+        .unwrap_or_default())
+}
+
+async fn owl2_rl_readiness(
+    client: Option<&Neo4jClient>,
+    n10s: &ProcedureReadiness,
+) -> Owl2RlReadiness {
+    let procedure_prefix = "n10s.inference.";
+    let count_query = format!(
+        "SHOW PROCEDURES YIELD name WHERE name STARTS WITH '{}' RETURN count(name) AS c",
+        procedure_prefix
+    );
+    let checked_query = format!(
+        "SHOW PROCEDURES YIELD name WHERE name STARTS WITH '{}' RETURN name ORDER BY name LIMIT 8",
+        procedure_prefix
+    );
+    let fallback = "OWL2 RL reasoning stays blocked until n10s inference procedures are installed and the epi ontology is loaded.";
+
+    if !n10s.ok {
+        return Owl2RlReadiness {
+            ok: false,
+            status: "blocked".into(),
+            depends_on: "n10s".into(),
+            procedure_prefix: procedure_prefix.into(),
+            checked_query,
+            procedure_count: 0,
+            example_procedures: Vec::new(),
+            fallback: Some(fallback.into()),
+            error: n10s
+                .error
+                .clone()
+                .or_else(|| Some("n10s unavailable".into())),
+        };
+    }
+
+    let Some(client) = client else {
+        return Owl2RlReadiness {
+            ok: false,
+            status: "blocked".into(),
+            depends_on: "n10s".into(),
+            procedure_prefix: procedure_prefix.into(),
+            checked_query,
+            procedure_count: 0,
+            example_procedures: Vec::new(),
+            fallback: Some(fallback.into()),
+            error: Some("neo4j unavailable".into()),
+        };
+    };
+
+    match procedure_count(client, &count_query).await {
+        Ok(count) => match client.run(&checked_query).await {
+            Ok(rows) => {
+                let example_procedures = row_strings(&rows, "name");
+                Owl2RlReadiness {
+                    ok: count > 0,
+                    status: if count > 0 { "ready" } else { "blocked" }.into(),
+                    depends_on: "n10s".into(),
+                    procedure_prefix: procedure_prefix.into(),
+                    checked_query,
+                    procedure_count: count,
+                    example_procedures,
+                    fallback: (count == 0).then(|| fallback.into()),
+                    error: None,
+                }
+            }
+            Err(err) => Owl2RlReadiness {
+                ok: false,
+                status: "blocked".into(),
+                depends_on: "n10s".into(),
+                procedure_prefix: procedure_prefix.into(),
+                checked_query,
+                procedure_count: 0,
+                example_procedures: Vec::new(),
+                fallback: Some(fallback.into()),
+                error: Some(err.to_string()),
+            },
+        },
+        Err(err) => Owl2RlReadiness {
+            ok: false,
+            status: "blocked".into(),
+            depends_on: "n10s".into(),
+            procedure_prefix: procedure_prefix.into(),
+            checked_query,
+            procedure_count: 0,
+            example_procedures: Vec::new(),
+            fallback: Some(fallback.into()),
+            error: Some(err),
+        },
+    }
+}
+
+async fn privacy_projection_readiness(
+    client: Option<&Neo4jClient>,
+    gds: &ProcedureReadiness,
+) -> PrivacyProjectionReadiness {
+    let excluded_labels = vec![
+        "GraphitiEpisode".to_string(),
+        "NaraBody".to_string(),
+        "ProtectedLocalBody".to_string(),
+        "PrivateProjection".to_string(),
+    ];
+    let fallback =
+        "GDS Option 1 privacy-safe overlays stay blocked; use canonical graph traversal without derived recommendation payloads.";
+
+    if !gds.ok {
+        return PrivacyProjectionReadiness {
+            ok: false,
+            status: "blocked".into(),
+            projection_strategy: "gds-option-1-public-coordinate-overlay".into(),
+            requires_gds: true,
+            protected_label_count: 0,
+            excluded_labels,
+            fallback: Some(fallback.into()),
+            error: gds.error.clone().or_else(|| Some("gds unavailable".into())),
+        };
+    }
+
+    let Some(client) = client else {
+        return PrivacyProjectionReadiness {
+            ok: false,
+            status: "blocked".into(),
+            projection_strategy: "gds-option-1-public-coordinate-overlay".into(),
+            requires_gds: true,
+            protected_label_count: 0,
+            excluded_labels,
+            fallback: Some(fallback.into()),
+            error: Some("neo4j unavailable".into()),
+        };
+    };
+
+    match protected_label_count(client, &excluded_labels).await {
+        Ok(protected_label_count) => PrivacyProjectionReadiness {
+            ok: protected_label_count == 0,
+            status: if protected_label_count == 0 {
+                "ready"
+            } else {
+                "blocked"
+            }
+            .into(),
+            projection_strategy: "gds-option-1-public-coordinate-overlay".into(),
+            requires_gds: true,
+            protected_label_count,
+            excluded_labels,
+            fallback: (protected_label_count > 0).then(|| {
+                "Remove protected-local labels from the projection candidate set before creating any GDS graph."
+                    .into()
+            }),
+            error: None,
+        },
+        Err(err) => PrivacyProjectionReadiness {
+            ok: false,
+            status: "blocked".into(),
+            projection_strategy: "gds-option-1-public-coordinate-overlay".into(),
+            requires_gds: true,
+            protected_label_count: 0,
+            excluded_labels,
+            fallback: Some(fallback.into()),
+            error: Some(err),
+        },
+    }
+}
+
+async fn protected_label_count(
+    client: &Neo4jClient,
+    excluded_labels: &[String],
+) -> Result<i64, String> {
+    let quoted = excluded_labels
+        .iter()
+        .map(|label| format!("'{}'", label.replace('\'', "\\'")))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let cypher = format!(
+        "MATCH (n) WHERE any(label IN labels(n) WHERE label IN [{}]) RETURN count(n) AS c",
+        quoted
+    );
+    let rows = client.run(&cypher).await.map_err(|err| err.to_string())?;
+    Ok(rows
+        .first()
+        .and_then(|row| row.get("c").ok())
+        .unwrap_or_default())
+}
+
+fn row_strings(rows: &[neo4rs::Row], key: &str) -> Vec<String> {
+    rows.iter()
+        .filter_map(|row| row.get::<String>(key).ok())
+        .collect()
 }
 
 async fn neo4j_status(config: &Neo4jConfig) -> (ServiceStatus, Option<Neo4jClient>) {
