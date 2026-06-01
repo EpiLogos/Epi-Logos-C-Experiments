@@ -112,7 +112,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         self.assertIn("day_id", lifecycle["transform_tool_result"]["inputs"])
         self.assertIn("portal.review_deposit", lifecycle["transform_tool_result"]["must_emit"])
 
-        for hook_name in ["PreToolCall", "PostToolCall", "TransformToolResult"]:
+        for hook_name in ["UserPromptSubmit", "PostToolUse"]:
             self.assertIn(hook_name, hooks["hooks"])
 
     def test_matrix_declares_typed_delegation_and_provider_profile_target(self):
@@ -186,6 +186,11 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
                     t["upstream_required"],
                     f"{t.get('name')} does not declare vak-evaluate upstream",
                 )
+                self.assertNotIn(
+                    "vak_profile",
+                    t,
+                    f"{t.get('name')} is a tool, not a skill; vak_profile belongs on skills[] only",
+                )
 
     def test_dispatch_tools_cover_anima_dispatch_surface(self):
         """The dispatch_tools list must include the four Anima dispatch entry points.
@@ -200,6 +205,111 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         missing = expected - names
         self.assertFalse(missing, f"dispatch_tools missing entries: {missing}")
 
+    def test_m5_4_governance_separates_deposit_from_review_resolution(self):
+        """M5-4 roles may surface review work without collapsing into Epii review authority."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        roles = matrix["m5_4_governance"]["review_surface_roles"]
+
+        for actor in ["anima", "aletheia"]:
+            with self.subTest(actor=actor):
+                self.assertIn("deposit_epii_inbox_item", roles[actor]["permitted_actions"])
+                self.assertIn("request_epii_validation", roles[actor]["permitted_actions"])
+                self.assertIn("resolve_epii_review_gate", roles[actor]["forbidden_actions"])
+                self.assertNotIn("resolve_epii_review_gate", roles[actor]["permitted_actions"])
+
+        self.assertIn("resolve_epii_review_gate", roles["epii_review"]["permitted_actions"])
+        self.assertIn(
+            "approve_user_final_validation_required_item",
+            roles["epii_review"]["forbidden_actions"],
+        )
+
+    def test_pi_can_prepare_bounded_runs_but_not_human_required_approval(self):
+        """Pi is the runtime/evidence dispatcher, not the human-required review approver."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        pi = matrix["m5_4_governance"]["review_surface_roles"]["pi"]
+
+        self.assertIn("prepare_agent_run_evidence", pi["permitted_actions"])
+        self.assertIn("dispatch_bounded_agent_run", pi["permitted_actions"])
+        self.assertIn("approve_human_required_review", pi["forbidden_actions"])
+        self.assertNotIn("approve_human_required_review", pi["permitted_actions"])
+
+    def test_recursive_self_review_requires_user_final_validation(self):
+        """Recursive agent self-review variants stay user-final, not self-approved."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        governance = matrix["m5_4_governance"]
+        roles = governance["review_surface_roles"]
+
+        for actor in ["sophia", "anima", "pi", "aletheia"]:
+            with self.subTest(actor=actor):
+                self.assertTrue(roles[actor]["recursive_self_review_requires_user_final_validation"])
+
+        epii_on_epii = governance["capacity_governance"]["epii_on_epii"]
+        self.assertTrue(epii_on_epii["recursive"])
+        for category in [
+            "sophia_on_sophia",
+            "anima_on_anima",
+            "pi_on_pi",
+            "aletheia_on_aletheia",
+        ]:
+            self.assertIn(category, epii_on_epii["review_categories"])
+        self.assertIn(
+            "recursive_self_modification",
+            epii_on_epii["user_final_validation_required_for"],
+        )
+
+    def test_m5_4_capacity_governance_defaults_are_encoded(self):
+        """Operational capacities carry their default lead and Nara's five gates."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        capacities = matrix["m5_4_governance"]["capacity_governance"]
+
+        for capacity in ["anuttara", "paramasiva", "parashakti", "mahamaya", "epii_on_epii"]:
+            with self.subTest(capacity=capacity):
+                self.assertEqual(capacities[capacity]["lead"], "sophia")
+
+        nara = capacities["nara"]
+        self.assertEqual(nara["lead"], "anima")
+        self.assertEqual(
+            nara["gates"],
+            [
+                "voice_identity",
+                "anti_frequency_bias",
+                "consent_privacy",
+                "pii_stripping",
+                "dialogue_quality",
+            ],
+        )
+
+    def test_agent_run_contract_captures_bounded_run_evidence_and_runtime_readiness(self):
+        """AgentRunEnvelope/Evidence must preserve refs, VAK, lineage, tests, and real runtime readiness."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        contract = matrix["agent_run_contract"]
+
+        self.assertEqual(contract["envelope_type"], "AgentRunEnvelope")
+        self.assertEqual(contract["evidence_type"], "AgentRunEvidence")
+        self.assertEqual(contract["vak_required_keys"], ["CPF", "CT", "CP", "CF", "CFP", "CS"])
+
+        required = {
+            "selected_refs",
+            "tool_stream_handles",
+            "diagnostics",
+            "changed_artifacts",
+            "tests",
+            "capability_calls",
+            "abort_retry_continue_state",
+            "actor_lineage",
+        }
+        self.assertTrue(required.issubset(set(contract["envelope_required_fields"])))
+        self.assertTrue(required.issubset(set(contract["evidence_required_fields"])))
+        self.assertIn("review_deposit_ref", contract["evidence_required_fields"])
+
+        runtime_smoke = contract["runtime_smoke"]
+        self.assertEqual(runtime_smoke["method"], "epi agent verify-runtime")
+        self.assertTrue(runtime_smoke["managed_runtime_required_when_provider_credentials_available"])
+        self.assertEqual(
+            runtime_smoke["provider_credentials_unavailable_readiness"],
+            "blocked_runtime_unavailable",
+        )
+        self.assertFalse(runtime_smoke["fake_success_for_unavailable_provider"])
 
     def test_every_skill_declares_vak_profile(self):
         """Each skill must carry operates_at_cf / serves_ct / ranges_cp profile fields."""

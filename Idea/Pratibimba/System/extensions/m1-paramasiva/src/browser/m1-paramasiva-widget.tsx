@@ -19,6 +19,7 @@ import {
     DECLARED_BLOCKERS,
     PRIVACY_CLASS
 } from '../common';
+import { M1ParamasivaExtensionBody } from './m1-paramasiva-extension-body';
 
 @injectable()
 export class M1ParamasivaWidget extends ReactWidget {
@@ -84,25 +85,11 @@ export class M1ParamasivaWidget extends ReactWidget {
                     declaredBlockers={DECLARED_BLOCKERS}
                     provenance={provenance}
                 />
-                <section className="mext-widget-detail">
-                    <h3>Profile snapshot</h3>
-                    {this.profile ? (
-                        <dl>
-                            <dt>Generation</dt>
-                            <dd>{this.profile.generation}</dd>
-                            <dt>Capabilities</dt>
-                            <dd>{this.profile.capabilities.join(', ') || '—'}</dd>
-                            <dt>Pointer anchor</dt>
-                            <dd>{this.profile.pointerAnchor ?? '—'}</dd>
-                        </dl>
-                    ) : (
-                        <p className="mext-widget-empty">
-                            No MathemeHarmonicProfile available yet. The kernel-bridge is the
-                            sole owner of this payload; this view will populate when the
-                            shared adapter receives a generation update.
-                        </p>
-                    )}
-                </section>
+                <M1ParamasivaExtensionBody
+                    profile={this.profile}
+                    readiness={this.readiness}
+                    context={this.context}
+                />
             </div>
         );
     }

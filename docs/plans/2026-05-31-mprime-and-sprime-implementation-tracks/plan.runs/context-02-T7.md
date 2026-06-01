@@ -1,101 +1,76 @@
-# M-Dev Context Pack - 01.T7
+# M-Dev Context Pack - 02.T7
 
-Generated: 2026-06-01T17:03:54.780Z
+Generated: 2026-06-01T17:18:20.941Z
 
 ## Task
 
-- **ID:** 01.T7
-- **Title:** Agentic Capability And Observability Feed
-- **Track:** 01-kernel-bridge-and-s0-foundation.md
+- **ID:** 02.T7
+- **Title:** Coordinate-native graph API parity
+- **Track:** 02-s2-bimba-map-population.md
 - **Computed status:** ready
-- **Write scopes:** Body/S/S0/**, Body/S/S4/plugins/pleroma/capability-matrix.json
+- **Write scopes:** Body/S/S2/**
 
 ## Required Reading
 
 Read these before implementation. Do not rely on the tranche summary alone.
 
-- `Body/S/S0/epi-cli/schemas/src/coordinate.ts`
-- `Body/S/S0/epi-cli/src/ffi/mod.rs`
-- `Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`
-- `Body/S/S0/epi-cli/tests/gate_spacetimedb_bridge.rs`
-- `Body/S/S0/epi-cli/tests/pointer_web_ffi_contract.rs`
-- `Body/S/S0/epi-lib/include/pointer_web.h`
-- `Body/S/S0/epi-lib/src/pointer_web.c`
-- `Body/S/S0/epi-lib/test/infrastructure/test_pointer_web.c`
-- `Body/S/S0/portal-core/src/codon_rotation_projection.rs`
-- `Body/S/S0/portal-core/src/events.rs`
-- `Body/S/S0/portal-core/src/kernel.rs`
-- `Body/S/S0/portal-core/src/nara_journal.rs`
-- `Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs`
-- `Body/S/S0/portal-core/src/personal_identity.rs`
-- `Body/S/S0/portal-core/tests/m_prime_shared_contracts.rs`
-- `Body/S/S0/portal-core/tests/vimarsha_reading.rs`
-- `Body/S/S4/plugins/pleroma/capability-matrix.json`
-- `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`
+- `Body/S/S2/external/bimba-mcp/`
+- `Body/S/S2/graph-schema/src/lib.rs`
+- `Body/S/S2/graph-services/src/dataset_import.rs`
+- `Body/S/S2/graph-services/src/graph_api.rs`
+- `Body/S/S2/graph-services/src/seed.rs`
 - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`
 - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`
+- `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`
+- `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`
+- `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`
+- `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`
+- `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`
+- `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`
 - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`
-- `Idea/Bimba/Seeds/S/S0/S0-CODON-ROTATION-PROJECTION-SPEC.md`
-- `Idea/Bimba/Seeds/S/S0/S0-HARMONIC-POINTER-WEB36-SPEC.md`
-- `docs/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md`
-- `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md`
+- `Idea/Bimba/Seeds/S/S2/S2-SPEC.md`
+- `docs/datasets`
+- `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md`
 - `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`
-- `docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md`
-- `docs/specs/S/S0-S0i-CLI-CORE.md`
+- `docs/specs/S/S2-S2i-GRAPH.md`
 
 ## Dependency Context
 
-- 01.T6 - `kernel-bridge` Runtime MVP (01-kernel-bridge-and-s0-foundation.md)
+- 02.T6 - GDS baseline projections and tangent overlays (gated by T2/T4) (02-s2-bimba-map-population.md)
 
 ## Track Source Specs
 
-- [[m5-prime-system-shape-and-tauri-ide-canon]] - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`, section 1.2 "M5-2 = S-family; M5-3 = M'-family; M5-4 = operational-capacities + agentic mediation", section 5 "The kernel-bridge foundational extension", section 8 "Implementation milestones", section 9 "Open implementation questions". This is the authority that M5-2 is the S-stack and that `kernel-bridge` is the M5-3/M5-4 access point into it.
-- [[M'-SYSTEM-SPEC]] - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`, "Shell vs Subsystem Architecture", "The Shell 0/1 Split IS the (0/1) Inversionary Parent", "Musical Instrument Ramification", "Required Shared Profile", "Harmonic Clock Integration Plan". This is the authority for the shared `MathemeHarmonicProfile` and for not allowing M' renderers to invent private clock/profile/codon mappings.
-- [[M'-TAURI-PORT-SPEC]] - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`, "Port Architecture", "Harmonic Profile Architecture Amendment", "S0' Command / Config / Readiness Membrane", "Current-State Gap Table", "Testing Contract". This is the authority for typed clients, readiness separation, and real local gateway/S2/S3 tests.
-- [[M'-PORTAL-SPEC]] - `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`, "Shared Runtime Law", "`/` Surface", "Agentic Execution / Inbox", "Implementation Rule". This is the authority that TUI and desktop mirror logical contracts, not widgets, and that `/` dispatches CLI/gateway/typed service calls instead of forking backend behavior.
-- [[S0-HARMONIC-POINTER-WEB36-SPEC]] - `Idea/Bimba/Seeds/S/S0/S0-HARMONIC-POINTER-WEB36-SPEC.md`, section A "Intent", section D "Canonical 36 Shape", section E "Seven Context Frames Are Overlay", section G "C Contract Shape", section H "Build Path", section J "Boundaries". This is the authority for Bedrock7, PointerWeb36, CF7, compact C descriptors, and real C arena/family-linked tests.
-- [[S0-CODON-ROTATION-PROJECTION-SPEC]] - `Idea/Bimba/Seeds/S/S0/S0-CODON-ROTATION-PROJECTION-SPEC.md`, "Purpose", "Cardinality Law", "Forward Map", "Reverse Map", "q_cosmic", "Tests". This is the authority for the 84-to-472 `(lens, mode) <-> (codon, rotation)` projection living in `portal-core`.
-- [[S0-S0i-CLI-CORE]] - `docs/specs/S/S0-S0i-CLI-CORE.md`, "Current State", "Kernel / QL Meta-Layer", "Reflected M0' / M1' Contract". This is the authority that S0/S0' is the executable kernel/CLI/lib ground and the upstream profile contract for graph, torus, clock, Nara, and Epii surfaces.
-- [[2026-05-19-kernel-mprime-harmonic-clock-integration-plan]] - `docs/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md`, "Current Implementation Baseline", "Tranche Order". This is supporting execution context for current profile fields and prior tranche sequencing.
-- [[2026-05-31-theia-ide-shell-and-m-plugin-architecture]] - `docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md`, section 4 "The kernel-bridge foundational extension", section 8.1 "Shared kernel-bridge instance", section 11 "Phase-1 implementation tranches", section 12 "Success criteria". This is supporting M5-3 consumer context, not a substitute for this S0/M5-2 track.
-
-Current implementation surfaces observed for this plan:
-
-- `Body/S/S0/epi-lib/include/pointer_web.h`, `Body/S/S0/epi-lib/src/pointer_web.c`, `Body/S/S0/epi-lib/test/infrastructure/test_pointer_web.c`
-- `Body/S/S0/portal-core/src/kernel.rs`, `Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs`, `Body/S/S0/portal-core/src/codon_rotation_projection.rs`, `Body/S/S0/portal-core/src/events.rs`, `Body/S/S0/portal-core/src/nara_journal.rs`, `Body/S/S0/portal-core/src/personal_identity.rs`
-- `Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`, `Body/S/S0/epi-cli/src/ffi/mod.rs`, `Body/S/S0/epi-cli/schemas/src/coordinate.ts`
-- `Body/S/S0/portal-core/tests/m_prime_shared_contracts.rs`, `Body/S/S0/portal-core/tests/vimarsha_reading.rs`, `Body/S/S0/epi-cli/tests/pointer_web_ffi_contract.rs`, `Body/S/S0/epi-cli/tests/gate_spacetimedb_bridge.rs`
+- [[m5-prime-system-shape-and-tauri-ide-canon]] - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`, especially "Section 1.2 M5-2 = S-family; M5-3 = M'-family; M5-4 = operational-capacities + agentic mediation", "Section 4.2 M0 + M5 integrated into the IDE shell itself", "Section 5.2 The kernel-bridge contribution", "Section 8 Implementation milestones", and "Section 9 Open implementation questions". Load-bearing commitment: M5-2 is the full S-stack, M5-3 is the Tauri/Theia app, and M5-4 is the operational-capacity/agentic mediation layer.
+- [[S2-SPEC]] - `Idea/Bimba/Seeds/S/S2/S2-SPEC.md`, especially "Status", "Current code reality", "Planning consequence", "A. S2 - Graph Body Base Technology", "B. S2' - QL Augmentation", "C. Cross-References", "Gaps", and "D. Key Architectural Decisions". Load-bearing commitment: S2 is raw Neo4j/graph/cache substrate; S2' is coordinate-aware graph/retrieval law.
+- [[S2-S2i-GRAPH]] - `docs/specs/S/S2-S2i-GRAPH.md`, especially "Architectural Role", "S2' Neosemantics, GDS, And Topology Contract", "Implementation Plan / Phase 8: n10s / GDS / Topology Enrichment", and "Verification Additions". Load-bearing commitment: every semantic vector is coordinate-anchored, n10s/OWL and GDS are graph law rather than UI garnish, and tests must prove real Neo4j/GDS behavior.
+- [[M'-SYSTEM-SPEC]] - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`, especially "Domain Language", "Canonical 0/1/4+2 Layout Discipline", "Minimum Live Loop", "Neo4j / Graphiti Boundary", and "Minimum Evolutionary Basis". Load-bearing commitment: M' reflects the M/Bimba topology without becoming a parallel coordinate system; Neo4j is canonical coordinate topology and Graphiti is episodic/protected memory.
+- [[M0'-SPEC]] - `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`, especially "Backend Contract Consumed", "Anuttara As Pre-Math Node Language", "Section M0'-3 Graph-Inference-GDS Delta", and "Readiness / Test Criteria". M0' needs S2 node facts, `symbol`/`formulation_type` provenance, OWL/SHACL/GDS readiness, and legacy `#` to M-family resolution.
+- [[M1'-SPEC]] - `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`, especially "Section 3 Backend Contract Consumed", "Section 13.1 Profile-to-Performance Stream", and "Section 14 Readiness / Test Criteria". M1' needs typed S2 relation traversal and harmonic pointer relation descriptors.
+- [[M2'-SPEC]] - `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`, especially "Section 3 Backend Contract Consumed", "Section 9.6 Routing Traces as Epii Learning Evidence", and "Section 10 Readiness / Test Criteria". M2' needs S2-governed correspondence provenance and graph-relational evidence without renderer constants.
+- [[M3'-SPEC]] - `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`, especially "Section 2 Backend Contract Consumed", "Section 7 The 472-State Modal-Inversion Landscape", and "Section 8.14 App Surface and Pipeline Hooks". M3' needs the graph/wheel surfaces to share canonical Neo4j substrate and backend-supplied symbolic/profile provenance.
+- [[M4'-SPEC]] - `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`, especially "Backend Contract Consumed", "Section 6.7 Cross-M Interface Seams And Promotion Law", "Section 7.11 Day Episodes, Artifact Graph, And Temporal Trajectory", and "Section 8 Readiness / Test Criteria". M4' needs public S2 coordinate anchors without leaking protected Nara/Graphiti bodies.
+- [[M5'-SPEC]] - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`, especially "Graph Namespace Model", "Backend Contract Consumed", "Relationship To Portal 0/1 And The 4+2 Layer", and "Readiness / Test Criteria". M5' needs namespace-aware graph access across `bimba`, `gnosis`, `etymology`, and governed protected handles.
+- [[M'-TAURI-PORT-SPEC]] - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`, especially "0-Side Graph Affordance", "Port Architecture", "Harmonic Profile Architecture Amendment", "Graphiti And S2 Graph Boundary", "Current-State Gap Table", and "Testing Contract". M5-3 needs S2-backed graph clients, profile/pointer anchors, and real local service tests.
+- Current implementation surface: `Body/S/S2/graph-schema/src/lib.rs` owns the schema constants, property registry, relationship registry, constraints, indexes, vector index, and compatibility law; `Body/S/S2/graph-services/src/seed.rs` owns coordinate-space seeding; `Body/S/S2/graph-services/src/dataset_import.rs` owns `docs/datasets` imports; `Body/S/S2/graph-services/src/graph_api.rs` owns parameterized graph methods, pointer-web refresh, and kernel-resonance writes; `Body/S/S2/external/bimba-mcp/` remains the external MCP-facing graph interface.
 
 ## Task Body
 
-8. **Tranche 7 - Agentic Capability And Observability Feed**
-
-   Deliverables:
-
-   - Expose bridge capabilities required by M5-4 agents: `readCurrentProfile`, `readPointerAnchor`, `readReadiness`, `subscribeObservability`, `invokeGatewayRpc`, `depositKernelObservation`, and `requestReviewEvidence`.
-   - Encode VAK/CF metadata from the profile/context-frame layer so agentic routing can see current CF/agent/function labels without reinterpreting the harmonic profile. Carry the canonical-prefix VAK keys (CPF/CT/CP/CF/CFP/CS) on every bridge artifact that crosses the M5-4 boundary — sessions.patch RPC envelopes carry `vak_address` (C1 chip, commit `19fbc8fc`); kernel observations, capability invocations, and review-deposit envelopes all carry the canonical-prefix keys end-to-end so downstream S5 surfacing pipelines (Track 04 Tranche 8 Epii-on-Epii pattern detector) can detect Möbius-seam drift, dispatch-tool mismatch, and capability-matrix violations against `Body/S/S4/plugins/pleroma/capability-matrix.json`.
-   - Emit structured observability events for connection transitions, profile generation changes, kernel profile observations, relation traversal events, readiness blockers, rejected capability invocations, and VAK route lineage (the sequence of `vak_evaluate -> anima_orchestrate -> dispatch_X` decisions and their `upstream_required` validation). Every event records the canonical-prefix VAK keys of the originating invocation so cross-cycle continuity (Track 04's `Khora compose → execution → Moirai rehear → Sophia witness → Aletheia routes → Epii recompose` traversal) is observable.
-   - Route review/evidence deposits to governed S5/S5' endpoints through gateway methods, not direct filesystem or graph writes. The `epi gate dispatch anima-invoke` CLI surface (D3 chip, commit `419aac5`) is the gateway-facing dispatch boundary; bridge capabilities reach Anima through it rather than reinventing the dispatch envelope.
-
-   Verification:
-
-   - Agent contract tests invoke bridge capabilities through the same gateway/auth boundary used by production clients, including the `epi gate dispatch anima-invoke` surface.
-   - Tests prove bounded methods cannot access protected Nara raw bodies, private identity hashes beyond handles, or unrestricted CLI/shell commands.
-   - Tests prove every bridge artifact crossing the M5-4 boundary carries canonical-prefix VAK keys (CPF/CT/CP/CF/CFP/CS); missing keys cause typed rejection at the gateway, not silent acceptance.
-   - Observability tests produce real bridge events from profile and connection changes, then assert Epii/autoresearch consumers receive typed events with source, generation, privacy, provenance, and VAK route lineage (the `vak_evaluate -> anima_orchestrate -> dispatch_X` decision chain). Tests assert the three-way parity test (`test_agent_capability_gates_anima_tools_matches_anima_md_tools`) remains green against any new event-emitting capability.
-   - Review-deposit tests prove evidence includes profile generation, pointer/context-frame anchor, session/DAY/NOW handle, canonical-prefix VAK keys, command lineage, and test output handle where applicable.
+8. **T7 - Coordinate-native graph API parity.**
+   Deliverables: make the Rust S2 graph-service methods and S0 `epi graph` adapter line up with the canonical API names; expose `s2.graph.query`, `s2.graph.node`, `s2.graph.traverse`, `s2.graph.pointer_web.compute`, `s2.graph.pointer_web.refresh`, `s2'.coordinate.resolve`, `s2'.retrieve`, `s2'.rerank`, and `s2'.enrich` through the chosen gateway boundary; include source/spec/code/test anchors, pointer-web descriptors, ontology readiness, GDS overlay handles, disclosure density, and namespace in response envelopes.
+   Verification: live API tests use Neo4j data seeded and imported by T3/T4; coordinate resolution, node lookup, relation traversal, GraphRAG retrieval, hybrid rerank, and enrichment all return real graph data with provenance; raw Cypher remains parameterized and read-only by default; M5-4 retrieval tests show Anima/Pi/Aletheia/Sophia can request coordinate pools without calling `bimba-mcp` as an internal dependency.
 
 ## Track Open Decisions
 
-- **Bridge host boundary:** Should the long-lived shared bridge instance be owned by Theia, by the Tauri Rust process, or by a Tauri service with Theia and `/body` adapters? The canon says foundational Theia extension, while section 5.4 requires the 0/1 surface and IDE to share one instance in the same Tauri app process.
-- **Theia deployment shape:** The Theia browser-mode-in-Tauri-webview prototype must confirm whether the bridge can run entirely in webview JS or needs a local service/process boundary.
-- **Profile versioning:** The specs name the profile fields but do not yet define a formal schema version, migration policy, or compatibility window for `binary` vs future `mahamaya` naming.
-- **S2/S3 anchor timing:** `pointerAnchor` has an S0 current shape, while final certification and `depositionAnchor` depend on S2/S3. The implementation must decide whether these are nullable fields, readiness-blocked fields, or separate anchor sub-objects.
-- **SpaceTimeDB schema source:** The exact table names and reducer contracts for profile/world-clock/presence/shared-archetype/coincidence/kernel-trace streams are referenced in canon, but this track still needs the definitive SpaceTimeDB schema source before implementation.
-- **Audio bus ownership wording:** Current specs say the kernel exposes profile fields and that M2-1' Vimarsha reading produces `audio_octet`/`nodal_quartet`, while current `portal-core` houses the Vimarsha function. The engineering boundary should be documented as "S0/portal-core implementation of the M2-1' reading function" or moved if another track owns it.
-- **Cymatic field derivation in bridge:** The Theia plan suggests the bridge derives cymatic field state from audio bus and personal/cosmic inputs. S0 boundaries say S0 does not own UI rendering or audio synthesis except through harmonic metadata. Decide whether bridge emits raw inputs only or a typed derived cymatic-state contract owned by M2/M4.
-- **Capability auth:** The exact auth model for M5-4 agent bridge capabilities is not settled. The bridge needs method-level allowlists, privacy checks, and session lineage before agents can use it operationally.
-- **Real integration harness:** The plan requires real local gateway/SpaceTimeDB integration tests. If the repo lacks a reproducible dev harness, create that harness before claiming native projection readiness.
+- Should production seed relationships expand the schema registry to include current seed relation types, or should `seed.rs` migrate to the smaller canonical relation set? Current tests intentionally reject ad hoc relationship types, while current seed code emits several unregistered graph-structural relationships.
+- What is the exact canonical handling of the root `#` node after `#0..#5` map into `M0..M5`? Current code preserves a `#` seed root while import/API migration paths convert `#` to `M`; this must be made explicit before dataset population is treated as canonical.
+- Which property names are canonical for Anuttara language fields: public aliases (`symbol`, `formulation_type`, `complete_formulation`) or coordinate-prefixed registry keys (`c_1_symbol`, `c_1_formulation_type`, `c_1_complete_formulation`)? M0' can display aliases, but S2 must own the storage/provenance contract.
+- Will the local Neo4j topology include n10s and GDS in the same service used by engineers, or should ontology/GDS run in optional profiles? The plan assumes doctor can report `blocked` honestly when plugins are absent.
+- Does S2 persist GDS outputs as derived nodes/properties, return them as ephemeral API overlays, or both? Canon says recommendations must not become canonical relations automatically.
+- When does Option 3 GDS enrichment supersede Option 1, and what evidence is required? Build Option 1 first unless a later canon decision changes the privacy boundary.
+- Which topology approach is production for non-orientable traversal: Approach A coordinate-duplication/preprocessing, or deferred B/C graph modeling? Build Approach A first unless contradicted by a companion architecture decision.
+- Is `bimba-mcp` staying purely external/MCP-facing, or must it be refactored to consume the Rust S2 graph-service contract to avoid divergent coordinate parser/schema behavior? Current TS parser still documents `#` syntax as deprecated/invalid, while Rust resolves `#` intentionally.
+- What is the destructive rebuild policy for local/dev graph population? Engineers need a safe, explicit path for wiping test-owned graph data without risking shared or user data.
+- What exact Graphiti/pratibimba handles may appear in S2 responses before S5 review? The line between public safe handles and protected-local episode data must be encoded before M5-4 agent retrieval is enabled.
 
 ## Decision Register Excerpt
 

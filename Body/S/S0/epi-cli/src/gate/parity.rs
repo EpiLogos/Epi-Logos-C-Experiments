@@ -423,6 +423,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "skills.update"
         | "s4'.vak.evaluate"
         | "s4'.orchestrate"
+        | "s4'.mediation.route"
         | "s4'.psyche.state"
         | "s4'.psyche.update"
         | "s4'.permission.get" => Some("s4'.*"),

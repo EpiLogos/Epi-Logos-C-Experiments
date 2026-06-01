@@ -8,6 +8,7 @@ use crate::{
     kernel_coordinate_anchor_from_parts, CoordinateArrayParser, KernelCoordinateAnchor,
     Neo4jClient, PointerWeb,
 };
+use crate::{GDS_OPTION1_PROJECTION_NAME, GDS_OPTION1_PROJECTION_VERSION, GDS_PRIVACY_BOUNDARY};
 use epi_s2_graph_schema::{
     GRAPHITI_ARC_ID_PROPERTY, KERNEL_RESONANCE_HELIX_PROPERTY, KERNEL_RESONANCE_INDEX_PROPERTY,
     KERNEL_RESONANCE_LABEL, KERNEL_RESONANCE_LENS_PROPERTY, KERNEL_RESONANCE_POSITION_PROPERTY,
@@ -438,6 +439,7 @@ impl<'a> GraphMethodService<'a> {
             .await
             .map_err(|err| format!("s2.graph.query failed: {err}"))?;
         Ok(json!({
+            "contract": graph_contract("s2.graph.query", None),
             "rowCount": rows.len(),
             "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
         }))
@@ -473,12 +475,14 @@ impl<'a> GraphMethodService<'a> {
             .map_err(|err| format!("s2.graph.node failed: {err}"))?;
         let Some(row) = rows.first() else {
             return Ok(json!({
+                "contract": graph_contract("s2.graph.node", Some(&resolved)),
                 "node": Value::Null,
                 "relations": [],
                 "resolution": resolved,
             }));
         };
         Ok(json!({
+            "contract": graph_contract("s2.graph.node", Some(&resolved)),
             "node": known_row_json(row),
             "relations": row.get::<Vec<BTreeMap<String, String>>>("relations").unwrap_or_default(),
             "resolution": resolved,
@@ -520,6 +524,7 @@ impl<'a> GraphMethodService<'a> {
             .await
             .map_err(|err| format!("s2.graph.traverse failed: {err}"))?;
         Ok(json!({
+            "contract": graph_contract("s2.graph.traverse", Some(&resolved)),
             "from": resolved,
             "depth": depth,
             "direction": request.direction,
@@ -538,6 +543,7 @@ impl<'a> GraphMethodService<'a> {
             .await
             .map_err(|err| format!("s2.graph.kernel_resonance.record failed: {err}"))?;
         Ok(json!({
+            "contract": graph_contract("s2.graph.kernel_resonance.record", Some(&plan.resolution)),
             "source": plan.resolution,
             "observation": {
                 "coordinate": plan.observation_coordinate,
@@ -565,6 +571,7 @@ impl<'a> GraphMethodService<'a> {
             .await
             .map_err(|err| format!("s2.graph.pointer_web.refresh failed: {err}"))?;
         Ok(json!({
+            "contract": graph_contract("s2.graph.pointer_web.refresh", Some(&plan.resolution)),
             "source": plan.resolution,
             "coordinate_anchor": plan.coordinate_anchor,
             "pointerWeb": plan.pointer_web,
@@ -624,6 +631,46 @@ fn known_row_json(row: &neo4rs::Row) -> Value {
         "ql_position": row.get::<i64>("ql_position").unwrap_or(-1),
         "depth": row.get::<i64>("depth").ok(),
         "anuttara": anuttara_fields_json(row),
+    })
+}
+
+pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -> Value {
+    let pointer_descriptors = resolution
+        .and_then(|resolved| {
+            kernel_coordinate_anchor_from_parts(
+                &resolved.canonical,
+                &resolved.input,
+                resolved.compatibility_property.clone(),
+            )
+            .ok()
+        })
+        .map(|anchor| anchor.pointer_web.harmonic_relation_descriptors)
+        .unwrap_or_default();
+    json!({
+        "method": method,
+        "namespace": "bimba",
+        "coordinateOwner": "S2/S2'",
+        "sourceAnchors": {
+            "spec": "docs/specs/S/S2-S2i-GRAPH.md",
+            "plan": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md#T7",
+            "code": "Body/S/S2/graph-services/src/graph_api.rs",
+            "pointerCode": "Body/S/S2/graph-services/src/pointers.rs",
+            "tests": ["Body/S/S2/graph-services/tests/graph_api_contract.rs"]
+        },
+        "pointerWebDescriptors": pointer_descriptors,
+        "ontologyReadiness": {
+            "n10sOwner": "S2/S2'",
+            "status": "reported-by-doctor-or-live-neo4j",
+            "fallback": "blocked_without_fabricated_ontology_claims"
+        },
+        "gdsOverlay": {
+            "projectionName": GDS_OPTION1_PROJECTION_NAME,
+            "projectionVersion": GDS_OPTION1_PROJECTION_VERSION,
+            "privacyBoundary": GDS_PRIVACY_BOUNDARY,
+            "canonicalWritePerformedByApiEnvelope": false
+        },
+        "disclosureDensity": "public-coordinate-topology",
+        "privacy": "protected-local Graphiti/Nara bodies are excluded from S2 public graph API payloads"
     })
 }
 

@@ -28,6 +28,24 @@ pub struct PointerWeb {
     pub position_refs: BTreeMap<String, String>,
     pub lens_refs: BTreeMap<String, String>,
     pub lens_inversion_refs: BTreeMap<String, String>,
+    pub harmonic_relation_descriptors: Vec<HarmonicPointerRelationDescriptor>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HarmonicPointerRelationDescriptor {
+    pub edge_id: String,
+    pub from_coordinate: String,
+    pub to_coordinate: String,
+    pub reason_code: String,
+    pub relation_law: String,
+    pub family: String,
+    pub mirror: String,
+    pub lens: String,
+    pub inversion: String,
+    pub context_frame: Option<String>,
+    pub source_anchor: String,
+    pub privacy_policy: String,
+    pub deposition_policy: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -266,6 +284,15 @@ pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
         .map(|lens| (format!("l{lens}_inv_ref"), format!("L{lens}'")))
         .collect::<BTreeMap<_, _>>();
 
+    let harmonic_relation_descriptors = harmonic_relation_descriptors(
+        &parsed.coordinate,
+        family,
+        sixfold_position,
+        &inversion_refs,
+        &lens_refs,
+        &reflective_refs,
+    );
+
     let pointer_count = family_refs.len()
         + reflective_refs.len()
         + inversion_refs.len()
@@ -285,7 +312,75 @@ pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
         position_refs,
         lens_refs,
         lens_inversion_refs,
+        harmonic_relation_descriptors,
     })
+}
+
+fn harmonic_relation_descriptors(
+    coordinate: &str,
+    family: Option<&str>,
+    sixfold_position: Option<u8>,
+    inversion_refs: &BTreeMap<String, String>,
+    lens_refs: &BTreeMap<String, String>,
+    reflective_refs: &BTreeMap<String, String>,
+) -> Vec<HarmonicPointerRelationDescriptor> {
+    let Some(position) = sixfold_position else {
+        return Vec::new();
+    };
+    let family = family.unwrap_or("M");
+    let inversion = inversion_refs
+        .get(&format!("{}_inv_ref", family.to_ascii_lowercase()))
+        .cloned()
+        .unwrap_or_else(|| format!("{family}{position}'"));
+    let lens = lens_refs
+        .get(&format!("l{position}_ref"))
+        .cloned()
+        .unwrap_or_else(|| format!("L{position}"));
+    let context_frame = reflective_refs
+        .get(match position {
+            0 => "cpf_ref",
+            1 => "ct_ref",
+            2 => "cp_ref",
+            3 => "cf_ref",
+            4 => "cfp_ref",
+            _ => "cs_ref",
+        })
+        .cloned();
+    vec![
+        HarmonicPointerRelationDescriptor {
+            edge_id: format!("s2.pointer.{coordinate}.inversion-spanda"),
+            from_coordinate: coordinate.to_owned(),
+            to_coordinate: inversion.clone(),
+            reason_code: "inversion_spanda".to_owned(),
+            relation_law: "X -> X' mirror crossing".to_owned(),
+            family: family.to_owned(),
+            mirror: inversion,
+            lens: lens.clone(),
+            inversion: "prime-toggle".to_owned(),
+            context_frame: context_frame.clone(),
+            source_anchor: "Body/S/S2/graph-services/src/pointers.rs::compute_pointer_web"
+                .to_owned(),
+            privacy_policy: "public-coordinate-topology-only".to_owned(),
+            deposition_policy: "read-only descriptor; downstream evidence deposit is S5-governed"
+                .to_owned(),
+        },
+        HarmonicPointerRelationDescriptor {
+            edge_id: format!("s2.pointer.{coordinate}.lens-anchor"),
+            from_coordinate: coordinate.to_owned(),
+            to_coordinate: lens,
+            reason_code: "lens_anchor".to_owned(),
+            relation_law: "coordinate position anchors MEF lens relation".to_owned(),
+            family: family.to_owned(),
+            mirror: format!("{family}{position}"),
+            lens: format!("L{position}"),
+            inversion: "none".to_owned(),
+            context_frame,
+            source_anchor: "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract".to_owned(),
+            privacy_policy: "public-coordinate-topology-only".to_owned(),
+            deposition_policy: "read-only descriptor; downstream evidence deposit is S5-governed"
+                .to_owned(),
+        },
+    ]
 }
 
 fn bimba_pitch_class(position: u8) -> u8 {

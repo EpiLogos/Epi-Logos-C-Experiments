@@ -17,7 +17,9 @@ import {
     EXTENSION_ID,
     PRIMARY_VIEW_ID,
     DECLARED_BLOCKERS,
-    PRIVACY_CLASS
+    PRIVACY_CLASS,
+    buildM2PrimeMeaningPacket,
+    M2PrimeMeaningPacket
 } from '../common';
 
 @injectable()
@@ -75,6 +77,7 @@ export class M2ParashaktiWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         const provenance = `privacy=${PRIVACY_CLASS} | generation=${this.context.profileGeneration ?? '—'} | pointer=${this.context.pointerAnchor ?? '—'}`;
+        const packet = this.profile ? this.safePacket(this.profile) : null;
         return (
             <div className="mext-widget-root">
                 <ReadinessBanner
@@ -85,25 +88,43 @@ export class M2ParashaktiWidget extends ReactWidget {
                     provenance={provenance}
                 />
                 <section className="mext-widget-detail">
-                    <h3>Profile snapshot</h3>
-                    {this.profile ? (
+                    <h3>M2PrimeMeaningPacket</h3>
+                    {packet ? (
                         <dl>
-                            <dt>Generation</dt>
-                            <dd>{this.profile.generation}</dd>
-                            <dt>Capabilities</dt>
-                            <dd>{this.profile.capabilities.join(', ') || '—'}</dd>
-                            <dt>Pointer anchor</dt>
-                            <dd>{this.profile.pointerAnchor ?? '—'}</dd>
+                            <dt>72 address</dt>
+                            <dd>{packet.address72}</dd>
+                            <dt>Audio bus</dt>
+                            <dd>{packet.cymaticSignature.audioOctetHz.map(hz => hz.toFixed(2)).join(' / ')}</dd>
+                            <dt>DET evidence</dt>
+                            <dd>{String(packet.detEvidence.finalClassificationAuthority)}</dd>
+                            <dt>Pending authorities</dt>
+                            <dd>{packet.pendingFields.join(', ') || '—'}</dd>
+                            <dt>Klein valence</dt>
+                            <dd>{String(packet.kleinFlip.surfaceValence)}</dd>
                         </dl>
                     ) : (
                         <p className="mext-widget-empty">
-                            No MathemeHarmonicProfile available yet. The kernel-bridge is the
-                            sole owner of this payload; this view will populate when the
-                            shared adapter receives a generation update.
+                            No complete public-current M2 packet available yet. The kernel-bridge
+                            owns the profile bus, S2 owns correspondence provenance, and unresolved
+                            fields stay pending rather than being filled with renderer folklore.
                         </p>
                     )}
                 </section>
             </div>
         );
+    }
+
+    protected safePacket(profile: MathemeHarmonicProfileBoundary): M2PrimeMeaningPacket | null {
+        try {
+            return buildM2PrimeMeaningPacket({
+                profile,
+                readiness: this.readiness,
+                context: this.context,
+                subject: 'tick',
+                emittedAt: Date.now()
+            });
+        } catch {
+            return null;
+        }
     }
 }

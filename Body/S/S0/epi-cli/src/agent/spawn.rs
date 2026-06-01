@@ -200,6 +200,12 @@ fn invoke_pi(plan: &PiLaunchPlan, json: bool) -> Result<String, String> {
 fn configure_tokio_command(plan: &PiLaunchPlan) -> TokioCommand {
     let mut command = TokioCommand::new("pi");
     command.args(&plan.args);
+    if let Ok(current_exe) = std::env::current_exe() {
+        command.env("EPI_CLI_BIN", &current_exe);
+    }
+    if let Some(path) = launch::path_with_current_exe_dir() {
+        command.env("PATH", path);
+    }
     command.env("EPI_REPO_ROOT", &plan.repo_root);
     command.env("EPI_AGENT_NAME", &plan.agent_id);
     command.env("EPI_AGENT_ID", &plan.agent_id);

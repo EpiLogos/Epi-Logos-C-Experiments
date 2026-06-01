@@ -5,6 +5,7 @@ use epi_s3_gateway_contract::{
     SPACETIME_PROJECTION_MODE_FULL, SPACETIME_PROJECTION_MODE_LITE,
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
 };
+use portal_core::VakAddress;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
@@ -15,6 +16,7 @@ pub const KERNEL_BRIDGE_RUNTIME_OWNER: &str = "S0/S0' kernel-bridge runtime";
 pub const KERNEL_BRIDGE_THEIA_ADAPTER: &str = "Theia KernelBridgeAPI dependency-injection adapter";
 pub const KERNEL_BRIDGE_TAURI_ADAPTER: &str = "Tauri 0/1 surface adapter";
 pub const KERNEL_BRIDGE_SAFE_PROFILE_PRIVACY: &str = "safe-public-current-kernel-tick";
+pub const KERNEL_BRIDGE_AGENT_PRIVACY: &str = "public_current_with_graph_provenance";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -85,6 +87,37 @@ pub struct KernelBridgeRuntimeEvent {
 pub struct KernelBridgeDeliveredEvent {
     pub consumer_id: String,
     pub event: KernelBridgeRuntimeEvent,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeVakContext {
+    pub vak_address: VakAddress,
+    pub route_lineage: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeCapabilityRequest {
+    pub method: String,
+    pub session_key: String,
+    pub params: Value,
+    pub profile_generation: Option<u64>,
+    pub provenance_handles: Vec<String>,
+    pub vak: Option<KernelBridgeVakContext>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeCapabilityReceipt {
+    pub method: String,
+    pub gateway_method: Option<String>,
+    pub session_key: String,
+    pub profile_generation: Option<u64>,
+    pub privacy_class: String,
+    pub provenance_handles: Vec<String>,
+    pub vak: KernelBridgeVakContext,
+    pub artifact: Value,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -219,6 +252,69 @@ impl KernelBridgeRuntime {
             .collect()
     }
 
+    pub fn invoke_capability(
+        &mut self,
+        request: KernelBridgeCapabilityRequest,
+    ) -> Result<KernelBridgeCapabilityReceipt, String> {
+        require_nonempty(&request.method, "method")?;
+        require_nonempty(&request.session_key, "session_key")?;
+        if !capability_names().contains(&request.method.as_str()) {
+            return Err(format!(
+                "kernel-bridge rejected unsupported capability {}",
+                request.method
+            ));
+        }
+        forbid_private_payload_keys(&request.params)?;
+
+        let vak = request.vak.ok_or_else(|| {
+            "kernel-bridge capability invocation requires canonical VAK context".to_owned()
+        })?;
+        require_route_lineage(&vak.route_lineage)?;
+
+        let gateway_method = gateway_method_for_capability(&request.method, &request.params)?;
+        let artifact = json!({
+            "capability": request.method,
+            "gatewayMethod": gateway_method,
+            "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
+            "source": KERNEL_BRIDGE_SOURCE,
+            "profileGeneration": request.profile_generation,
+            "vakAddress": canonical_vak_json(&vak.vak_address),
+            "routeLineage": vak.route_lineage.clone(),
+            "params": request.params,
+        });
+
+        let receipt = KernelBridgeCapabilityReceipt {
+            method: request.method.clone(),
+            gateway_method,
+            session_key: request.session_key.clone(),
+            profile_generation: request.profile_generation,
+            privacy_class: KERNEL_BRIDGE_AGENT_PRIVACY.to_owned(),
+            provenance_handles: request.provenance_handles,
+            vak: vak.clone(),
+            artifact,
+        };
+
+        let event = KernelBridgeRuntimeEvent {
+            kind: KernelBridgeRuntimeEventKind::Observability,
+            emitted_at_ms: now_ms()?,
+            source: KERNEL_BRIDGE_SOURCE.to_owned(),
+            profile_generation: receipt.profile_generation,
+            privacy_class: receipt.privacy_class.clone(),
+            payload: json!({
+                "event": "kernel_bridge.capability_invoked",
+                "method": receipt.method,
+                "gatewayMethod": receipt.gateway_method,
+                "sessionKey": receipt.session_key,
+                "provenanceHandles": receipt.provenance_handles,
+                "vakAddress": canonical_vak_json(&receipt.vak.vak_address),
+                "routeLineage": receipt.vak.route_lineage,
+            }),
+        };
+        self.fan_out(vec![event]);
+
+        Ok(receipt)
+    }
+
     pub fn snapshot(&self) -> Result<KernelBridgeRuntimeSnapshot, String> {
         Ok(KernelBridgeRuntimeSnapshot {
             runtime_owner: KERNEL_BRIDGE_RUNTIME_OWNER.to_owned(),
@@ -330,15 +426,6 @@ impl KernelBridgeRuntime {
     }
 
     fn readiness_payload(&self) -> Result<Value, String> {
-        let capabilities = [
-            "readCurrentProfile",
-            "readPointerAnchor",
-            "readReadiness",
-            "subscribeObservability",
-            "invokeGatewayRpc",
-            "depositKernelObservation",
-            "requestReviewEvidence",
-        ];
         Ok(json!({
             "state": if self.latest_profile.is_some() {
                 "ready_public_current"
@@ -355,7 +442,7 @@ impl KernelBridgeRuntime {
             } else {
                 json!(["s0.kernel-bridge.awaiting-safe-profile"])
             },
-            "capabilities": capabilities,
+            "capabilities": capability_names(),
             "subscriptionProfile": self.connection.mode.as_str(),
             "subscriptionMode": self.connection.subscription_mode,
             "upstreamSubscriptionCount": self.upstream_subscription_count,
@@ -364,6 +451,18 @@ impl KernelBridgeRuntime {
             "tauriAccessibleAdapter": KERNEL_BRIDGE_TAURI_ADAPTER,
         }))
     }
+}
+
+pub fn capability_names() -> &'static [&'static str] {
+    &[
+        "readCurrentProfile",
+        "readPointerAnchor",
+        "readReadiness",
+        "subscribeObservability",
+        "invokeGatewayRpc",
+        "depositKernelObservation",
+        "requestReviewEvidence",
+    ]
 }
 
 pub fn runtime_for_spacetimedb_plan(
@@ -379,6 +478,110 @@ pub fn runtime_for_spacetimedb_plan(
         _ => SPACETIME_PROJECTION_SOURCE_HTTP_SQL,
     };
     KernelBridgeRuntime::new(profile, mode)
+}
+
+pub fn end_to_end_acceptance_report(
+    snapshot: &KernelBridgeRuntimeSnapshot,
+    delivered_events: &[KernelBridgeDeliveredEvent],
+    evidence_event: &Value,
+    capability_receipt: &KernelBridgeCapabilityReceipt,
+) -> Value {
+    let profile_generation = snapshot.current_profile_generation;
+    let body_received_profile = delivered_events.iter().any(|delivered| {
+        delivered.consumer_id.starts_with("body:")
+            && delivered.event.kind == KernelBridgeRuntimeEventKind::Profile
+            && delivered.event.profile_generation == profile_generation
+    });
+    let theia_received_profile = delivered_events.iter().any(|delivered| {
+        delivered.consumer_id.starts_with("theia:")
+            && delivered.event.kind == KernelBridgeRuntimeEventKind::Profile
+            && delivered.event.profile_generation == profile_generation
+    });
+    let agent_receipt_matches = capability_receipt.profile_generation == profile_generation
+        && capability_receipt.gateway_method.as_deref()
+            == Some("s5.episodic.kernel_profile_observation.deposit");
+
+    json!({
+        "report": "track-01-t8-s0-to-surface-acceptance",
+        "profileGeneration": profile_generation,
+        "privacyClass": snapshot
+            .cached_profile
+            .as_ref()
+            .map(|profile| profile.privacy_class.clone())
+            .unwrap_or_else(|| KERNEL_BRIDGE_SAFE_PROFILE_PRIVACY.to_owned()),
+        "singleUpstreamSubscription": snapshot.upstream_subscription_count == 1,
+        "stages": [
+            {
+                "id": "s0_profile_compute",
+                "status": if snapshot.cached_profile.is_some() { "ready" } else { "blocked" },
+                "evidence": "portal_core::MathemeHarmonicProfile::from_tick"
+            },
+            {
+                "id": "s0_cli_gateway_payload",
+                "status": if snapshot.cached_profile.is_some() { "ready" } else { "blocked" },
+                "evidence": "epi profile show JSON / S0' profile dispatcher"
+            },
+            {
+                "id": "s3_projection_contract",
+                "status": if snapshot.connection.connected { "ready" } else { "blocked" },
+                "evidence": snapshot.connection.subscription_mode
+            },
+            {
+                "id": "kernel_bridge_runtime",
+                "status": if snapshot.current_profile_generation.is_some() { "ready" } else { "blocked" },
+                "evidence": "KernelBridgeRuntime shared fanout"
+            },
+            {
+                "id": "body_lite_client",
+                "status": if body_received_profile { "ready" } else { "blocked" },
+                "evidence": "body:* consumer received matching profile event"
+            },
+            {
+                "id": "theia_full_client",
+                "status": if theia_received_profile { "ready" } else { "blocked" },
+                "evidence": "theia:* consumer received matching profile event"
+            },
+            {
+                "id": "m5_4_agent_capability",
+                "status": if agent_receipt_matches { "ready" } else { "blocked" },
+                "evidence": capability_receipt.gateway_method
+            },
+            {
+                "id": "review_evidence_event",
+                "status": if evidence_event
+                    .pointer("/coordinateAnchor/coordinate_anchor/kernel/generation")
+                    == Some(&json!(profile_generation)) {
+                    "ready"
+                } else {
+                    "blocked"
+                },
+                "evidence": "portal_core::KernelProfileObservationEvent"
+            }
+        ],
+        "explicitBlockers": [
+            {
+                "id": "s3.native-spacetimedb-live-service",
+                "state": "blocked_if_not_started_by_operator",
+                "reason": "This acceptance report proves the local projection contract and kernel-bridge fanout; a production native SpaceTimeDB WebSocket process still requires the Track 03 live harness."
+            },
+            {
+                "id": "s5.persisted-review-deposit",
+                "state": "blocked_without_s5_persisted_store",
+                "reason": "M5-4 receives a governed deposit receipt and KernelProfileObservationEvent; persisted S5 review storage remains owned by Track 04/S5."
+            },
+            {
+                "id": "s2.live-pointer-certification",
+                "state": "degraded_without_live_s2_graph",
+                "reason": "S0 profile carries safe pointer anchors; live S2 graph certification is consumed through Track 02 contracts and remains separately reportable."
+            }
+        ],
+        "migrationPath": [
+            "Legacy clock/profile consumers call `epi profile show|pointer|readiness` first.",
+            "Shared clients subscribe through KernelBridgeRuntime / KernelBridgeAPI rather than direct SpaceTimeDB or portal-core imports.",
+            "Lite `/body` and full Theia clients compare profileGeneration and privacyClass from bridge events.",
+            "M5-4 capabilities deposit evidence through governed gateway methods, carrying VAK route lineage and profile generation."
+        ]
+    })
 }
 
 fn safe_cached_profile_from_context(
@@ -432,6 +635,73 @@ fn forbid_private_payload_keys(value: &Value) -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+fn require_route_lineage(route_lineage: &[String]) -> Result<(), String> {
+    let expected = ["vak_evaluate", "anima_orchestrate"];
+    for required in expected {
+        if !route_lineage.iter().any(|entry| entry == required) {
+            return Err(format!(
+                "kernel-bridge capability invocation missing VAK route lineage step {required}"
+            ));
+        }
+    }
+    if !route_lineage
+        .iter()
+        .any(|entry| entry.starts_with("dispatch_") || entry == "run_chain")
+    {
+        return Err(
+            "kernel-bridge capability invocation missing dispatch_X route lineage step".to_owned(),
+        );
+    }
+    Ok(())
+}
+
+fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<String>, String> {
+    match method {
+        "readCurrentProfile" | "readPointerAnchor" | "readReadiness" | "subscribeObservability" => {
+            Ok(None)
+        }
+        "invokeGatewayRpc" => {
+            let gateway_method = params
+                .get("gatewayMethod")
+                .and_then(Value::as_str)
+                .ok_or_else(|| "invokeGatewayRpc requires gatewayMethod".to_owned())?;
+            if !matches!(
+                gateway_method,
+                "s5'.epii.status"
+                    | "s5'.epii.runtime.context"
+                    | "s5'.epii.deposit"
+                    | "s5'.review.submit"
+                    | "s5'.review.inbox"
+                    | "s5.episodic.kernel_profile_observation.deposit"
+                    | "s5.episodic.kernel_resonance.deposit"
+            ) {
+                return Err(format!(
+                    "kernel-bridge invokeGatewayRpc rejected ungoverned gateway method {gateway_method}"
+                ));
+            }
+            Ok(Some(gateway_method.to_owned()))
+        }
+        "depositKernelObservation" => Ok(Some(
+            "s5.episodic.kernel_profile_observation.deposit".to_owned(),
+        )),
+        "requestReviewEvidence" => Ok(Some("s5'.review.submit".to_owned())),
+        _ => Err(format!(
+            "kernel-bridge rejected unsupported capability {method}"
+        )),
+    }
+}
+
+fn canonical_vak_json(vak: &VakAddress) -> Value {
+    json!({
+        "CPF": vak.cpf,
+        "CT": vak.ct,
+        "CP": vak.cp,
+        "CF": vak.cf,
+        "CFP": vak.cfp,
+        "CS": vak.cs,
+    })
 }
 
 fn connection_reason(update: &SpacetimeProjectionUpdate) -> String {

@@ -473,6 +473,252 @@
       "philosophical_alignment_request"
     ]
   },
+  "m5_4_governance": {
+    "coordinate": "M5-4'",
+    "canonical_vak_keys": [
+      "CPF",
+      "CT",
+      "CP",
+      "CF",
+      "CFP",
+      "CS"
+    ],
+    "review_surface_roles": {
+      "sophia": {
+        "permitted_actions": [
+          "lead_capacity_governance",
+          "curate_review_narrative",
+          "deposit_epii_inbox_item",
+          "request_user_final_validation"
+        ],
+        "forbidden_actions": [
+          "approve_recursive_self_review",
+          "bypass_epii_review_gate",
+          "promote_non_dry_run_mutation"
+        ],
+        "required_review_categories": [
+          "coherence_review",
+          "canon_alignment",
+          "recursive_self_review"
+        ],
+        "recursive_self_review_requires_user_final_validation": true
+      },
+      "anima": {
+        "permitted_actions": [
+          "deposit_epii_inbox_item",
+          "request_epii_validation",
+          "dispatch_bounded_agent_run",
+          "prepare_route_lineage"
+        ],
+        "forbidden_actions": [
+          "resolve_epii_review_gate",
+          "approve_human_required_review",
+          "promote_non_dry_run_mutation"
+        ],
+        "required_review_categories": [
+          "route_lineage",
+          "dispatch_tool_boundary",
+          "aesthetic_coherence"
+        ],
+        "recursive_self_review_requires_user_final_validation": true
+      },
+      "pi": {
+        "permitted_actions": [
+          "prepare_agent_run_evidence",
+          "dispatch_bounded_agent_run",
+          "run_runtime_smoke",
+          "prepare_dry_run_promotion_plan"
+        ],
+        "forbidden_actions": [
+          "approve_human_required_review",
+          "resolve_epii_review_gate",
+          "promote_non_dry_run_mutation"
+        ],
+        "required_review_categories": [
+          "runtime_evidence",
+          "test_evidence",
+          "promotion_readiness"
+        ],
+        "recursive_self_review_requires_user_final_validation": true
+      },
+      "aletheia": {
+        "permitted_actions": [
+          "deposit_epii_inbox_item",
+          "request_epii_validation",
+          "track_disclosure_delta",
+          "prepare_crystallisation_evidence"
+        ],
+        "forbidden_actions": [
+          "resolve_epii_review_gate",
+          "approve_human_required_review",
+          "promote_non_dry_run_mutation"
+        ],
+        "required_review_categories": [
+          "disclosure_delta",
+          "crystallisation_evidence",
+          "duplicate_observation_guard"
+        ],
+        "recursive_self_review_requires_user_final_validation": true
+      },
+      "epii_review": {
+        "permitted_actions": [
+          "resolve_epii_review_gate",
+          "accept_or_reject_validation",
+          "evaluate_improvement_request",
+          "approve_dry_run_promotion_plan"
+        ],
+        "forbidden_actions": [
+          "bypass_anima_dispatch_boundaries",
+          "approve_user_final_validation_required_item",
+          "mutate_raw_runtime_state_without_review_record"
+        ],
+        "required_review_categories": [
+          "review_gate_resolution",
+          "human_required_boundary",
+          "audit_record"
+        ],
+        "recursive_self_review_requires_user_final_validation": false
+      }
+    },
+    "capacity_governance": {
+      "anuttara": {
+        "lead": "sophia",
+        "review_categories": [
+          "axiom_translation",
+          "construction_not_training",
+          "load_bearing_grammar_change"
+        ],
+        "user_final_validation_required_for": [
+          "load_bearing_axiom_change",
+          "future_output_affecting_grammar_change"
+        ]
+      },
+      "paramasiva": {
+        "lead": "sophia",
+        "co_review": [
+          "epii_review"
+        ],
+        "review_categories": [
+          "cpt_rag_corpus_refresh",
+          "synthetic_proof_governance",
+          "checkpoint_promotion"
+        ],
+        "user_final_validation_required_for": [
+          "corpus_affecting_change",
+          "proof_model_behavior_change"
+        ]
+      },
+      "parashakti": {
+        "lead": "sophia",
+        "review_categories": [
+          "embedding_quality",
+          "lens_rotation_consistency",
+          "hot_swap_readiness"
+        ],
+        "user_final_validation_required_for": [
+          "load_bearing_embedding_retrain",
+          "lens_lora_introduction",
+          "new_edge_type_training"
+        ]
+      },
+      "mahamaya": {
+        "lead": "sophia",
+        "review_categories": [
+          "process_reward_drift",
+          "tier_asymmetric_gate",
+          "rollback_readiness"
+        ],
+        "user_final_validation_required_for": [
+          "runtime_learning_update",
+          "reward_model_behavior_change",
+          "deployment_gate"
+        ]
+      },
+      "nara": {
+        "lead": "anima",
+        "gates": [
+          "voice_identity",
+          "anti_frequency_bias",
+          "consent_privacy",
+          "pii_stripping",
+          "dialogue_quality"
+        ],
+        "review_categories": [
+          "protected_local_corpus",
+          "dialogic_voice_adapter",
+          "consent_and_revocation"
+        ],
+        "user_final_validation_required_for": [
+          "protected_personal_corpus_change",
+          "voice_identity_shift",
+          "privacy_boundary_change"
+        ]
+      },
+      "epii_on_epii": {
+        "lead": "sophia",
+        "recursive": true,
+        "review_categories": [
+          "sophia_on_sophia",
+          "anima_on_anima",
+          "pi_on_pi",
+          "aletheia_on_aletheia"
+        ],
+        "user_final_validation_required_for": [
+          "recursive_self_modification",
+          "governance_policy_change",
+          "future_review_behavior_change"
+        ]
+      }
+    }
+  },
+  "agent_run_contract": {
+    "envelope_type": "AgentRunEnvelope",
+    "evidence_type": "AgentRunEvidence",
+    "vak_required_keys": [
+      "CPF",
+      "CT",
+      "CP",
+      "CF",
+      "CFP",
+      "CS"
+    ],
+    "envelope_required_fields": [
+      "run_id",
+      "actor_lineage",
+      "selected_refs",
+      "tool_stream_handles",
+      "diagnostics",
+      "changed_artifacts",
+      "tests",
+      "capability_calls",
+      "abort_retry_continue_state",
+      "vak"
+    ],
+    "evidence_required_fields": [
+      "run_id",
+      "selected_refs",
+      "tool_stream_handles",
+      "diagnostics",
+      "changed_artifacts",
+      "tests",
+      "capability_calls",
+      "abort_retry_continue_state",
+      "actor_lineage",
+      "review_deposit_ref"
+    ],
+    "abort_retry_continue_states": [
+      "abort",
+      "retry",
+      "continue",
+      "blocked_runtime_unavailable"
+    ],
+    "runtime_smoke": {
+      "method": "epi agent verify-runtime",
+      "managed_runtime_required_when_provider_credentials_available": true,
+      "provider_credentials_unavailable_readiness": "blocked_runtime_unavailable",
+      "fake_success_for_unavailable_provider": false
+    }
+  },
   "forbidden_authority": [
     "resolve_epii_review_gate",
     "mutate_epii_identity_state",

@@ -17,7 +17,9 @@ import {
     EXTENSION_ID,
     PRIMARY_VIEW_ID,
     DECLARED_BLOCKERS,
-    PRIVACY_CLASS
+    PRIVACY_CLASS,
+    M3ProjectionSurface,
+    buildM3ProjectionSurface
 } from '../common';
 
 @injectable()
@@ -75,6 +77,7 @@ export class M3MahamayaWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         const provenance = `privacy=${PRIVACY_CLASS} | generation=${this.context.profileGeneration ?? '—'} | pointer=${this.context.pointerAnchor ?? '—'}`;
+        const surface = this.profile ? this.safeSurface(this.profile) : null;
         return (
             <div className="mext-widget-root">
                 <ReadinessBanner
@@ -85,25 +88,42 @@ export class M3MahamayaWidget extends ReactWidget {
                     provenance={provenance}
                 />
                 <section className="mext-widget-detail">
-                    <h3>Profile snapshot</h3>
-                    {this.profile ? (
+                    <h3>Codon projection</h3>
+                    {surface ? (
                         <dl>
-                            <dt>Generation</dt>
-                            <dd>{this.profile.generation}</dd>
-                            <dt>Capabilities</dt>
-                            <dd>{this.profile.capabilities.join(', ') || '—'}</dd>
-                            <dt>Pointer anchor</dt>
-                            <dd>{this.profile.pointerAnchor ?? '—'}</dd>
+                            <dt>Codon</dt>
+                            <dd>{String(surface.activeProjection.codon ?? '—')}</dd>
+                            <dt>Rotation</dt>
+                            <dd>{String(surface.activeProjection.rotation ?? '—')}</dd>
+                            <dt>DET source</dt>
+                            <dd>{String(surface.m30ProvenanceStrip.m2SourceIndex72 ?? '—')} → {String(surface.m30ProvenanceStrip.detResult64 ?? '—')}</dd>
+                            <dt>Wheel readiness</dt>
+                            <dd>{String(surface.wheelSummary.totalRotationalStates ?? 'pending')} states</dd>
+                            <dt>Pending authorities</dt>
+                            <dd>{surface.pendingFields.join(', ') || '—'}</dd>
                         </dl>
                     ) : (
                         <p className="mext-widget-empty">
-                            No MathemeHarmonicProfile available yet. The kernel-bridge is the
-                            sole owner of this payload; this view will populate when the
-                            shared adapter receives a generation update.
+                            No backend-provided M3 projection available yet. This renderer will
+                            not invent codon, Tarot, I-Ching, planetary, or reward-training
+                            authority locally.
                         </p>
                     )}
                 </section>
             </div>
         );
+    }
+
+    protected safeSurface(profile: MathemeHarmonicProfileBoundary): M3ProjectionSurface | null {
+        try {
+            return buildM3ProjectionSurface({
+                profile,
+                readiness: this.readiness,
+                context: this.context,
+                emittedAt: Date.now()
+            });
+        } catch {
+            return null;
+        }
     }
 }

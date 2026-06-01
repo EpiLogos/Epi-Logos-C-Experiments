@@ -1,9 +1,15 @@
 use epi_logos::gate::{
     kernel_bridge_runtime::{
-        runtime_for_spacetimedb_plan, KernelBridgeConsumerKind, KernelBridgeRuntimeEventKind,
-        KernelBridgeSubscriber, KernelBridgeSubscriptionProfile,
+        end_to_end_acceptance_report, runtime_for_spacetimedb_plan, KernelBridgeCapabilityRequest,
+        KernelBridgeConsumerKind, KernelBridgeRuntimeEventKind, KernelBridgeSubscriber,
+        KernelBridgeSubscriptionProfile, KernelBridgeVakContext,
     },
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
+};
+use epi_logos::profile::{run as run_profile_command, ProfileCmd};
+use portal_core::{
+    kernel_tick_from_epogdoon, CpfState, CsDirection, CsField, KernelProfileObservationEvent,
+    MathemeHarmonicProfile, VakAddress,
 };
 use serde_json::{json, Value};
 
@@ -216,6 +222,235 @@ fn kernel_bridge_runtime_rejects_private_profile_cache_fields() {
     assert!(err.contains("bioquaternion"), "{err}");
 }
 
+#[test]
+fn kernel_bridge_capability_invocation_requires_vak_lineage_and_gateway_boundary() {
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    runtime
+        .subscribe(KernelBridgeSubscriber {
+            id: "m5-4:agentic-control-room".to_owned(),
+            kind: KernelBridgeConsumerKind::IdeExtension,
+            requested_profile: KernelBridgeSubscriptionProfile::Lite,
+        })
+        .expect("subscriber");
+
+    let receipt = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: "depositKernelObservation".to_owned(),
+            session_key: "agent:anima:main".to_owned(),
+            params: json!({
+                "sourceCoordinate": "M2",
+                "profileGeneration": 12,
+                "coordinateAnchor": { "pointerAnchor": "pointer://s0/current" }
+            }),
+            profile_generation: Some(12),
+            provenance_handles: vec![
+                "profile:12".to_owned(),
+                "session:agent:anima:main".to_owned(),
+            ],
+            vak: Some(vak_context()),
+        })
+        .expect("governed kernel observation deposit receipt");
+
+    assert_eq!(
+        receipt.gateway_method.as_deref(),
+        Some("s5.episodic.kernel_profile_observation.deposit")
+    );
+    assert_eq!(receipt.vak.vak_address.cf, "(4.0/1-4.4/5)");
+    assert_eq!(
+        receipt.vak.route_lineage,
+        vec!["vak_evaluate", "anima_orchestrate", "dispatch_agent"]
+    );
+    assert_eq!(
+        receipt.privacy_class,
+        "public_current_with_graph_provenance"
+    );
+
+    let events = runtime.drain_consumer("m5-4:agentic-control-room");
+    assert!(events.iter().any(|event| {
+        event.kind == KernelBridgeRuntimeEventKind::Observability
+            && event.payload["event"] == "kernel_bridge.capability_invoked"
+            && event.payload["gatewayMethod"] == "s5.episodic.kernel_profile_observation.deposit"
+            && event.payload["vakAddress"]["CF"] == "(4.0/1-4.4/5)"
+    }));
+}
+
+#[test]
+fn kernel_bridge_capability_invocation_rejects_missing_vak_and_unsafe_payloads() {
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+
+    let missing_vak = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: "readCurrentProfile".to_owned(),
+            session_key: "agent:anima:main".to_owned(),
+            params: json!({}),
+            profile_generation: Some(1),
+            provenance_handles: vec!["profile:1".to_owned()],
+            vak: None,
+        })
+        .expect_err("M5-4 bridge crossings require canonical VAK keys");
+    assert!(
+        missing_vak.contains("canonical VAK context"),
+        "{missing_vak}"
+    );
+
+    let unsafe_payload = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: "invokeGatewayRpc".to_owned(),
+            session_key: "agent:anima:main".to_owned(),
+            params: json!({
+                "gatewayMethod": "shell.exec",
+                "rawNaraBody": "private text must not cross the bridge"
+            }),
+            profile_generation: Some(1),
+            provenance_handles: vec!["profile:1".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect_err("protected private payloads are refused before gateway dispatch");
+    assert!(unsafe_payload.contains("rawNaraBody"), "{unsafe_payload}");
+
+    let shell_method = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: "invokeGatewayRpc".to_owned(),
+            session_key: "agent:anima:main".to_owned(),
+            params: json!({ "gatewayMethod": "shell.exec" }),
+            profile_generation: Some(1),
+            provenance_handles: vec!["profile:1".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect_err("unrestricted gateway methods are not bridge capabilities");
+    assert!(
+        shell_method.contains("ungoverned gateway method"),
+        "{shell_method}"
+    );
+}
+
+#[test]
+fn track_01_t8_acceptance_report_uses_real_profile_and_names_remaining_blockers() {
+    let generation = 84;
+    let tick = kernel_tick_from_epogdoon(11, 7);
+    let real_profile = MathemeHarmonicProfile::from_tick(tick);
+    let cli_profile = run_profile_command(&ProfileCmd::Show {
+        cycle: 11,
+        sub_tick: 7,
+    })
+    .expect("real profile CLI dispatcher");
+    assert_eq!(
+        cli_profile["source"],
+        "portal_core::MathemeHarmonicProfile::from_tick"
+    );
+    assert_eq!(cli_profile["profile"]["tick"], real_profile.tick);
+    assert_eq!(cli_profile["profile"]["tick12"], real_profile.tick12);
+    assert_eq!(
+        cli_profile["profile"]["privacyClass"],
+        "public-current-context"
+    );
+
+    let mut runtime = runtime_for_spacetimedb_plan("full", "native-websocket");
+    runtime
+        .subscribe(KernelBridgeSubscriber {
+            id: "body:/body-lite-client".to_owned(),
+            kind: KernelBridgeConsumerKind::BodySurface,
+            requested_profile: KernelBridgeSubscriptionProfile::Lite,
+        })
+        .expect("body lite subscription");
+    runtime
+        .subscribe(KernelBridgeSubscriber {
+            id: "theia:m5-full-client".to_owned(),
+            kind: KernelBridgeConsumerKind::TestExtension,
+            requested_profile: KernelBridgeSubscriptionProfile::Full,
+        })
+        .expect("theia full subscription");
+
+    let delivered = runtime
+        .observe_projection_update(SpacetimeProjectionUpdate {
+            state: SpacetimeProjectionConnectionState::Connected,
+            source: "native-websocket".to_owned(),
+            profile_generation: Some(generation),
+            stale_profile_generation: None,
+            resynced_profile_generation: None,
+            degraded_but_subscribable: false,
+            context: Some(real_profile_projection_context(
+                generation,
+                &cli_profile["profile"],
+            )),
+        })
+        .expect("real profile projection update");
+
+    let receipt = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: "depositKernelObservation".to_owned(),
+            session_key: "agent:anima:main".to_owned(),
+            params: json!({
+                "sourceCoordinate": "M2",
+                "profileGeneration": generation,
+                "coordinateAnchor": {
+                    "pointerAnchor": real_profile.pointer_anchor.lens_anchor,
+                    "contextFrame": real_profile.context_frames.active_frame
+                }
+            }),
+            profile_generation: Some(generation),
+            provenance_handles: vec![
+                format!("profile:{generation}"),
+                "session:agent:anima:main".to_owned(),
+            ],
+            vak: Some(vak_context()),
+        })
+        .expect("governed deposit receipt");
+
+    let evidence_event = KernelProfileObservationEvent::from_profile(
+        "track-01-t8-observation",
+        "anima",
+        "agent:anima:main",
+        "pratibimba-test",
+        "01-06-2026",
+        "Idea/Empty/Present/01-06-2026/session/now.md",
+        "M2",
+        generation,
+        &real_profile,
+    )
+    .expect("real profile observation event");
+    let evidence_json = serde_json::to_value(evidence_event).expect("event JSON");
+    let snapshot = runtime.snapshot().expect("runtime snapshot");
+    let report = end_to_end_acceptance_report(&snapshot, &delivered, &evidence_json, &receipt);
+
+    assert_eq!(report["profileGeneration"], generation);
+    assert_eq!(report["singleUpstreamSubscription"], true);
+    assert!(stage_ready(&report, "s0_profile_compute"));
+    assert!(stage_ready(&report, "s0_cli_gateway_payload"));
+    assert!(stage_ready(&report, "kernel_bridge_runtime"));
+    assert!(stage_ready(&report, "body_lite_client"));
+    assert!(stage_ready(&report, "theia_full_client"));
+    assert!(stage_ready(&report, "m5_4_agent_capability"));
+    assert!(stage_ready(&report, "review_evidence_event"));
+    assert!(report["explicitBlockers"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|blocker| {
+            blocker["id"] == "s3.native-spacetimedb-live-service"
+                && blocker["state"] == "blocked_if_not_started_by_operator"
+        }));
+    assert!(report["explicitBlockers"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|blocker| {
+            blocker["id"] == "s5.persisted-review-deposit"
+                && blocker["state"] == "blocked_without_s5_persisted_store"
+        }));
+    for forbidden in [
+        "rawNaraBody",
+        "identityHashPreview",
+        "bioquaternion",
+        "privateIdentityData",
+    ] {
+        assert!(
+            !json_contains_string(&report, forbidden),
+            "acceptance report leaked protected field {forbidden}: {report}"
+        );
+    }
+}
+
 fn projection_update(
     state: SpacetimeProjectionConnectionState,
     generation: u64,
@@ -229,6 +464,20 @@ fn projection_update(
         degraded_but_subscribable: false,
         context: Some(projection_context(generation)),
     }
+}
+
+fn real_profile_projection_context(generation: u64, profile: &Value) -> Value {
+    json!({
+        "spacetimedb": { "projectionSource": "native-websocket" },
+        "kernel": {
+            "coordinateOwner": "S0/QL-meta",
+            "projectionOwner": "S3'",
+            "privacy": "safe-public-current-kernel-tick",
+            "computationSource": "portal_core::MathemeHarmonicProfile::from_tick",
+            "generation": generation,
+            "profile": profile
+        }
+    })
 }
 
 fn projection_context(generation: u64) -> Value {
@@ -265,6 +514,27 @@ fn projection_context(generation: u64) -> Value {
     })
 }
 
+fn vak_context() -> KernelBridgeVakContext {
+    KernelBridgeVakContext {
+        vak_address: VakAddress {
+            cpf: CpfState::Mechanistic,
+            ct: vec!["CT4a".to_owned()],
+            cp: "CP4.4".to_owned(),
+            cf: "(4.0/1-4.4/5)".to_owned(),
+            cfp: "CFP0".to_owned(),
+            cs: CsField {
+                code: "CS0".to_owned(),
+                direction: CsDirection::Day,
+            },
+        },
+        route_lineage: vec![
+            "vak_evaluate".to_owned(),
+            "anima_orchestrate".to_owned(),
+            "dispatch_agent".to_owned(),
+        ],
+    }
+}
+
 fn assert_profile_generation(
     events: &[epi_logos::gate::kernel_bridge_runtime::KernelBridgeRuntimeEvent],
     generation: u64,
@@ -275,4 +545,21 @@ fn assert_profile_generation(
             && event.payload["profile"]["generation"] == generation
             && event.payload["privacyClass"] == "safe-public-current-kernel-tick"
     }));
+}
+
+fn stage_ready(report: &Value, stage_id: &str) -> bool {
+    report["stages"].as_array().unwrap().iter().any(|stage| {
+        stage["id"].as_str() == Some(stage_id) && stage["status"].as_str() == Some("ready")
+    })
+}
+
+fn json_contains_string(value: &Value, needle: &str) -> bool {
+    match value {
+        Value::String(value) => value.contains(needle),
+        Value::Array(items) => items.iter().any(|item| json_contains_string(item, needle)),
+        Value::Object(items) => items
+            .values()
+            .any(|item| json_contains_string(item, needle)),
+        _ => false,
+    }
 }

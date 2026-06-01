@@ -167,6 +167,8 @@ describe("Kernel bridge contract package", () => {
         sessionKey: "agent:main:main",
         profileGeneration: 12,
         provenanceHandles: ["profile:12"],
+        vakAddress: sampleVakAddress(),
+        routeLineage: ["vak_evaluate", "anima_orchestrate", "dispatch_agent"],
       }),
     ).toThrow();
   });
@@ -183,6 +185,8 @@ describe("Kernel bridge contract package", () => {
         sessionKey: "agent:main:main",
         profileGeneration: 12,
         provenanceHandles: ["profile:12"],
+        vakAddress: sampleVakAddress(),
+        routeLineage: ["vak_evaluate", "anima_orchestrate", "dispatch_agent"],
       }),
     ).toThrow(/identityHashPreview/);
   });
@@ -195,7 +199,43 @@ describe("Kernel bridge contract package", () => {
       sessionKey: "agent:main:main",
       profileGeneration: 12,
       provenanceHandles: ["profile:12", "s2:pointer:M2"],
+      vakAddress: sampleVakAddress(),
+      routeLineage: ["vak_evaluate", "anima_orchestrate", "dispatch_agent"],
     });
     expect(envelope.method).toBe("readPointerAnchor");
+    expect(envelope.vakAddress.CF).toBe("(4.0/1-4.4/5)");
+  });
+
+  it("rejects M5-4 capability envelopes without canonical-prefix VAK keys", () => {
+    expect(() =>
+      validateKernelBridgeRpcEnvelope({
+        method: "readPointerAnchor",
+        params: { coordinate: "M2" },
+        privacyClass: "public_current_with_graph_provenance",
+        sessionKey: "agent:main:main",
+        profileGeneration: 12,
+        provenanceHandles: ["profile:12"],
+        vakAddress: {
+          cpf: "(4.0/1-4.4/5)",
+          ct: ["CT4a"],
+          cp: "CP4.4",
+          cf: "(4.0/1-4.4/5)",
+          cfp: "CFP0",
+          cs: { code: "CS0", direction: "Day" },
+        },
+        routeLineage: ["vak_evaluate", "anima_orchestrate", "dispatch_agent"],
+      }),
+    ).toThrow(/CPF|unrecognized_keys/i);
   });
 });
+
+function sampleVakAddress() {
+  return {
+    CPF: "(4.0/1-4.4/5)",
+    CT: ["CT4a"],
+    CP: "CP4.4",
+    CF: "(4.0/1-4.4/5)",
+    CFP: "CFP0",
+    CS: { code: "CS0", direction: "Day" },
+  };
+}

@@ -1,14 +1,14 @@
-# M-Dev Context Pack - 01.T7
+# M-Dev Context Pack - 01.T8
 
-Generated: 2026-06-01T17:03:54.780Z
+Generated: 2026-06-01T17:38:25.967Z
 
 ## Task
 
-- **ID:** 01.T7
-- **Title:** Agentic Capability And Observability Feed
+- **ID:** 01.T8
+- **Title:** End-To-End S0-To-Surface Acceptance Slice
 - **Track:** 01-kernel-bridge-and-s0-foundation.md
 - **Computed status:** ready
-- **Write scopes:** Body/S/S0/**, Body/S/S4/plugins/pleroma/capability-matrix.json
+- **Write scopes:** Body/S/S0/**
 
 ## Required Reading
 
@@ -30,7 +30,6 @@ Read these before implementation. Do not rely on the tranche summary alone.
 - `Body/S/S0/portal-core/src/personal_identity.rs`
 - `Body/S/S0/portal-core/tests/m_prime_shared_contracts.rs`
 - `Body/S/S0/portal-core/tests/vimarsha_reading.rs`
-- `Body/S/S4/plugins/pleroma/capability-matrix.json`
 - `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`
 - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`
 - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`
@@ -45,7 +44,7 @@ Read these before implementation. Do not rely on the tranche summary alone.
 
 ## Dependency Context
 
-- 01.T6 - `kernel-bridge` Runtime MVP (01-kernel-bridge-and-s0-foundation.md)
+- 01.T7 - Agentic Capability And Observability Feed (01-kernel-bridge-and-s0-foundation.md)
 
 ## Track Source Specs
 
@@ -68,22 +67,54 @@ Current implementation surfaces observed for this plan:
 
 ## Task Body
 
-8. **Tranche 7 - Agentic Capability And Observability Feed**
+9. **Tranche 8 - End-To-End S0-To-Surface Acceptance Slice**
 
    Deliverables:
 
-   - Expose bridge capabilities required by M5-4 agents: `readCurrentProfile`, `readPointerAnchor`, `readReadiness`, `subscribeObservability`, `invokeGatewayRpc`, `depositKernelObservation`, and `requestReviewEvidence`.
-   - Encode VAK/CF metadata from the profile/context-frame layer so agentic routing can see current CF/agent/function labels without reinterpreting the harmonic profile. Carry the canonical-prefix VAK keys (CPF/CT/CP/CF/CFP/CS) on every bridge artifact that crosses the M5-4 boundary — sessions.patch RPC envelopes carry `vak_address` (C1 chip, commit `19fbc8fc`); kernel observations, capability invocations, and review-deposit envelopes all carry the canonical-prefix keys end-to-end so downstream S5 surfacing pipelines (Track 04 Tranche 8 Epii-on-Epii pattern detector) can detect Möbius-seam drift, dispatch-tool mismatch, and capability-matrix violations against `Body/S/S4/plugins/pleroma/capability-matrix.json`.
-   - Emit structured observability events for connection transitions, profile generation changes, kernel profile observations, relation traversal events, readiness blockers, rejected capability invocations, and VAK route lineage (the sequence of `vak_evaluate -> anima_orchestrate -> dispatch_X` decisions and their `upstream_required` validation). Every event records the canonical-prefix VAK keys of the originating invocation so cross-cycle continuity (Track 04's `Khora compose → execution → Moirai rehear → Sophia witness → Aletheia routes → Epii recompose` traversal) is observable.
-   - Route review/evidence deposits to governed S5/S5' endpoints through gateway methods, not direct filesystem or graph writes. The `epi gate dispatch anima-invoke` CLI surface (D3 chip, commit `419aac5`) is the gateway-facing dispatch boundary; bridge capabilities reach Anima through it rather than reinventing the dispatch envelope.
+   - Demonstrate one local end-to-end slice: S0 computes profile -> S0' CLI/gateway exposes it -> SpaceTimeDB projection publishes it -> `kernel-bridge` receives it -> `/body` lite client and Theia full client consume the same generation -> M5-4 agent capability reads it and deposits review evidence.
+   - Produce an operator readiness report that explains any missing S2/S3/S5 dependencies as explicit blockers, not silent degraded behavior.
+   - Document the supported migration path from legacy clock/profile consumers to the shared bridge contract.
 
    Verification:
 
-   - Agent contract tests invoke bridge capabilities through the same gateway/auth boundary used by production clients, including the `epi gate dispatch anima-invoke` surface.
-   - Tests prove bounded methods cannot access protected Nara raw bodies, private identity hashes beyond handles, or unrestricted CLI/shell commands.
-   - Tests prove every bridge artifact crossing the M5-4 boundary carries canonical-prefix VAK keys (CPF/CT/CP/CF/CFP/CS); missing keys cause typed rejection at the gateway, not silent acceptance.
-   - Observability tests produce real bridge events from profile and connection changes, then assert Epii/autoresearch consumers receive typed events with source, generation, privacy, provenance, and VAK route lineage (the `vak_evaluate -> anima_orchestrate -> dispatch_X` decision chain). Tests assert the three-way parity test (`test_agent_capability_gates_anima_tools_matches_anima_md_tools`) remains green against any new event-emitting capability.
-   - Review-deposit tests prove evidence includes profile generation, pointer/context-frame anchor, session/DAY/NOW handle, canonical-prefix VAK keys, command lineage, and test output handle where applicable.
+   - E2E test starts required local services, drives a profile tick change, and asserts the same profile generation and privacy class across CLI, gateway, projection, bridge, lite client, full client, and agent capability reader.
+   - E2E test records at least one real `KernelProfileObservationEvent` or equivalent review evidence event with no protected data leakage.
+   - E2E test proves renderer/client code does not compute tick, codon, pointer, or CF values independently by comparing consumed values against S0/S0' payloads.
+   - Final acceptance requires all tests from Tranches 1-7 to pass in the implementation branch.
+
+## Dependencies
+
+- **Track 01 internal order:** C pointer authority precedes Rust profile completion; profile completion precedes CLI/gateway exposure; CLI/gateway exposure precedes SpaceTimeDB projection; projection and schemas precede Theia/Tauri bridge runtime; bridge runtime precedes M5-4 agent capability mediation.
+- **M5-3 Theia/Tauri surface track:** Needs the contract package and `kernel-bridge` API from this track before individual M-extensions or `/body` lite mode can consume live profile data safely.
+- **S2 pointer/graph track:** Needed for final `pointerAnchor` certification, coordinate relation provenance, namespace-aware graph anchors, and configurable correspondence law. Track 01 can expose S0 pointer anchors before S2 certification, but must label uncertified anchors honestly.
+- **S3 gateway/SpaceTimeDB/session track:** Needed for production deposition anchors, DAY/NOW/session binding, SpaceTimeDB table schema, native subscription lifecycle, and Graphiti protected-local projection handles.
+- **S4/S5 agent/review track:** Needed for governed capability auth, review inbox deposit methods, agent run lineage, and Epii/autoresearch consumption of bridge observability.
+- **M2/M3 data authority:** Needed for dataset-backed Tarot/amino/correspondence LUT provenance. Until materialized, profile fields must preserve `pending-dataset-lut` or equivalent honest readiness state.
+- **M4/Nara privacy track:** Needed for protected-local identity and journal projection classes. Track 01 must keep public-current profile fields safe even before M4 surfaces are complete.
+- **Theia/Tauri architectural prototype:** Needed to decide whether `kernel-bridge` lives purely as a Theia extension, a Tauri-owned singleton service with Theia adapter, or a hybrid. The API contract should be stable across that decision.
+
+## Open Decisions
+
+- **Bridge host boundary:** Should the long-lived shared bridge instance be owned by Theia, by the Tauri Rust process, or by a Tauri service with Theia and `/body` adapters? The canon says foundational Theia extension, while section 5.4 requires the 0/1 surface and IDE to share one instance in the same Tauri app process.
+- **Theia deployment shape:** The Theia browser-mode-in-Tauri-webview prototype must confirm whether the bridge can run entirely in webview JS or needs a local service/process boundary.
+- **Profile versioning:** The specs name the profile fields but do not yet define a formal schema version, migration policy, or compatibility window for `binary` vs future `mahamaya` naming.
+- **S2/S3 anchor timing:** `pointerAnchor` has an S0 current shape, while final certification and `depositionAnchor` depend on S2/S3. The implementation must decide whether these are nullable fields, readiness-blocked fields, or separate anchor sub-objects.
+- **SpaceTimeDB schema source:** The exact table names and reducer contracts for profile/world-clock/presence/shared-archetype/coincidence/kernel-trace streams are referenced in canon, but this track still needs the definitive SpaceTimeDB schema source before implementation.
+- **Audio bus ownership wording:** Current specs say the kernel exposes profile fields and that M2-1' Vimarsha reading produces `audio_octet`/`nodal_quartet`, while current `portal-core` houses the Vimarsha function. The engineering boundary should be documented as "S0/portal-core implementation of the M2-1' reading function" or moved if another track owns it.
+- **Cymatic field derivation in bridge:** The Theia plan suggests the bridge derives cymatic field state from audio bus and personal/cosmic inputs. S0 boundaries say S0 does not own UI rendering or audio synthesis except through harmonic metadata. Decide whether bridge emits raw inputs only or a typed derived cymatic-state contract owned by M2/M4.
+- **Capability auth:** The exact auth model for M5-4 agent bridge capabilities is not settled. The bridge needs method-level allowlists, privacy checks, and session lineage before agents can use it operationally.
+- **Real integration harness:** The plan requires real local gateway/SpaceTimeDB integration tests. If the repo lacks a reproducible dev harness, create that harness before claiming native projection readiness.
+
+## Success Criteria
+
+- S0 can compute Bedrock7, PointerWeb36, CF7, tick, profile, Vimarsha-read audio bus, codon-rotation, and `q_cosmic` through real C/Rust code with tests over actual data structures.
+- S0' exposes profile, pointer, context-frame, readiness, and bounded gateway surfaces through CLI/library/schema contracts consumed by TUI, Tauri, Theia, and agents.
+- `MathemeHarmonicProfile` is the only public-current profile contract used by M5-3 surfaces; no renderer or Theia extension reimplements tick, pointer, CF, codon, or audio-bus derivation.
+- The `kernel-bridge` provides one shared lite/full subscription layer with cache, reconnection, readiness, status, and observability streams.
+- M5-4 agents can use typed bridge capabilities with privacy, auth, session lineage, and review evidence boundaries.
+- Readiness reports distinguish health from usable capability and surface S2/S3/S5/pending-LUT/privacy blockers explicitly.
+- End-to-end tests prove a real profile generation flows from S0 through S0'/gateway/projection/bridge to `/body`, Theia, and agent capability consumers without private data leakage.
+- All verification for this track uses real functionality: C arena/family-linked coordinates, Rust profile/event serialization, actual FFI, compiled CLI/gateway paths, and local integration services where external projection behavior is claimed.
 
 ## Track Open Decisions
 
@@ -124,6 +155,8 @@ Current implementation surfaces observed for this plan:
 | IOD-13 | Nara vault/write service ownership | Implementation-owner | 03, 04, 05, 06, 07, 08 |
 | IOD-14 | Plugin activation, composition, and mini-mode model | Implementation-owner | 05, 07, 08 |
 | IOD-17 | `capability-matrix.json` as canonical agent-tool governance authority | Implementation-owner | 01, 04, 09 |
+| IOD-18 | Smart Connections via Hen `smart_env.rs` as canonical vault semantic-index reader | Implementation-owner | 03, 04, 05, 07, 09 |
+| IOD-19 | Hen as canonical vault-write gatekeeper (wikilink integrity, path soundness) | Implementation-owner | 03, 05, 07, 09 |
 | DSD-01 | Live local-service harness and CI sequencing | Dependency and sequencing | 01, 02, 03, 04, 05, 06, 07, 08 |
 | DSD-02 | Track 01-04 contract readiness before UI hardening | Dependency and sequencing | 05, 06, 07, 08 |
 | DSD-03 | Non-dry-run promotion waits for compiler mutation law | Dependency and sequencing | 04, 05, 07, 08 |
@@ -181,7 +214,7 @@ Current implementation surfaces observed for this plan:
 
 - **Resolution:** Theia-only as THE shell. No Tauri wrapper. Electron is canonical desktop deployment (confirmed by Theia documentation and ecosystem reference architectures — Gitpod, Eclipse Che, Coder); browser-mode is built from the same Theia codebase and optionally containerised per the canonical `theiaide` Docker pattern for headless/CI/shared deployment. Decision recorded in `m5-prime-system-shape-and-tauri-ide-canon.md` §0 thesis points 2-3, §2-§3.
 - **What this collapses:** Tauri composition prototype (Track 05 T2); single-vs-multi-webview question across surfaces (PRD-02); kernel-bridge host hybrid question (PRD-03); CSP-in-Tauri-webview verification; deep-link URL-scheme cross-app routing.
-- **What remains:** Electron build configuration (electron-builder for Squirrel/AppImage/dmg distributions); optional Docker browser-mode build for CI; the strategic VS Code Extension API borrow for `obsidian-md-vsc` per IOD-17.
+- **What remains:** Electron build configuration (electron-builder for Squirrel/AppImage/dmg distributions); optional Docker browser-mode build for CI. **No strategic VS Code Extension API borrows currently committed** — the earlier `obsidian-md-vsc` borrow was reversed once research surfaced that the extension is an Obsidian-app remote-control shim (via Advanced URI) not a vault renderer, requires a running Obsidian, and does not render wikilinks / parse vault structure / serve Smart Connections. S1 vault reach is now filesystem-direct-read + Hen-gateway-write per IOD-19; Smart Connections via Hen `smart_env.rs` per IOD-18.
 
 ### PRD-02 - ~~Single-webview navigation versus multi-webview persistence~~ **RESOLVED**
 
@@ -200,6 +233,7 @@ Current implementation surfaces observed for this plan:
 - **Options:** Recent stable Theia with Theia-native extensions; VS Code Extension API for compatibility; Yarn workspaces per Theia convention; `pnpm` per repo convention; isolated package manager; bundled static assets or supervised local server.
 - **Recommended default if safe:** Recent stable Theia, Theia-native extensions for `kernel-bridge` and M surfaces, in-tree `Idea/Pratibimba/System/extensions`, and a package-manager choice made by the Tauri/Theia prototype rather than assumed.
 - **Skill-vs-tool invariant (from VAK-as-Operational-Substrate landing):** Within the agent-capability layer (`Body/S/S4/plugins/pleroma/capability-matrix.json`), `vak_profile` is a skill-level concept: every `skills[]` entry has a matching `skills/<name>/SKILL.md` directory enforced by `test_matrix_maps_real_agents_skills_and_hooks`. `dispatch_tools[]` entries are tools not skills and carry no `vak_profile`. Theia extensions hosting skills (under `Idea/Pratibimba/System/extensions/*/skills/*/SKILL.md`) inherit this invariant; new agent capabilities added through Theia extensions must respect skill-vs-tool distinction at matrix-authoring time. See `IOD-17` for the broader governance authority.
+- **VS Code Extension API borrows — none currently committed.** Theia's dual-extension-API capability remains as an escape hatch but the earlier `obsidian-md-vsc` borrow was reversed (not a vault renderer; see IOD-19). M-extensions + integrated plugins + kernel-bridge + Canon Studio markdown editor + smart-connections-bridge sidebar + bimba-coordinate file-tree are all Theia-native. Future borrows must show clear ecosystem value before adoption.
 - **Validation path:** Build `kernel-bridge` plus `m0-anuttara` as Theia-native slices; verify workbench command/layout service activation; record Theia version/package manager/update cadence ADR; verify any Theia-extension-hosted skills respect the skill-vs-tool invariant via the live `test_matrix_maps_real_agents_skills_and_hooks` check.
 - **Consequence of delaying:** Track 07 package inventory and Track 08 composition contracts remain abstract and cannot be enforced by static checks.
 

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T15:52:28.401Z",
+  "updatedAt": "2026-06-01T17:55:34.464Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -130,29 +130,39 @@
       "worktree": null
     },
     "01.T7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T17:11:20.061Z",
+      "claimedAt": "2026-06-01T17:04:02.551Z",
+      "completedAt": "2026-06-01T17:11:20.061Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T17:11:20.061Z",
+          "text": "Extended the existing S0 kernel-bridge runtime rather than creating a parallel bridge: KernelBridgeRuntime now validates M5-4 capability invocations with canonical VakAddress context, route lineage (vak_evaluate -> anima_orchestrate -> dispatch_X/run_chain), safe privacy, private-payload rejection, and governed gateway-only targets for invokeGatewayRpc/depositKernelObservation/requestReviewEvidence. Added canonical-prefix VAK schema requirements to Body/S/S0/epi-cli/schemas/src/kernel-bridge.ts and tests proving lowercase/noncanonical keys are rejected. Also fixed managed PI launches to prepend the current epi binary directory to PATH and expose EPI_CLI_BIN so extension shellouts use the repo-built CLI rather than stale global installs. Verified: python3 -m unittest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py (16 OK); pnpm --dir Body/S/S0/epi-cli/schemas test (82 OK); cargo fmt --manifest-path Body/S/S0/epi-cli/Cargo.toml; CARGO_TARGET_DIR=/tmp/epi-cargo-target-s1-t7 cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract (6 OK); profile_cli_contract (6 OK); escalated reruns for socket-binding suites gate_epii_agent_access (8 OK, 1 ignored) and gate_spacetimedb_bridge (10 OK). GitNexus impact attempted for KernelBridgeRuntime/KernelBridgeRuntimeEvent/KernelBridgeRpcEnvelope but blocked by @ladybugdb/core lbugjs.node architecture mismatch."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T17:04:02.551Z",
+      "runId": "20260601T170402Z-01-T7",
       "worktree": null
     },
     "01.T8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T17:46:34.280Z",
+      "claimedAt": "2026-06-01T17:39:04.424Z",
+      "completedAt": "2026-06-01T17:46:34.280Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T17:46:34.280Z",
+          "text": "Added S0 kernel-bridge end_to_end_acceptance_report() that reports profile generation, privacy class, single upstream subscription, S0 profile compute, S0 CLI/gateway payload, S3 projection contract, kernel-bridge runtime, /body lite client, Theia full client, M5-4 capability receipt, real KernelProfileObservationEvent evidence, explicit live-service blockers, and legacy migration path. Extended kernel_bridge_runtime_contract with Track 01 T8 acceptance test using real portal_core::MathemeHarmonicProfile::from_tick, real epi profile dispatcher, real KernelBridgeRuntime fanout, real M5-4 governed deposit receipt, and real KernelProfileObservationEvent; no protected/private fields in report. GitNexus impact attempted for KernelBridgeRuntime but blocked by @ladybugdb/core lbugjs.node architecture mismatch. Verified: cargo fmt; CARGO_TARGET_DIR=/tmp/epi-cargo-target-s0-t8 cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract (7 passed); --test profile_cli_contract (6 passed); --test gate_parity_manifest (7 passed); --test gate_spacetimedb_bridge passed 10/10 with escalation because sandbox denied TcpListener loopback binds."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T17:39:04.424Z",
+      "runId": "20260601T173904Z-01-T8",
       "worktree": null
     },
     "02.T0": {
@@ -294,29 +304,39 @@
       "worktree": null
     },
     "02.T7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T17:30:46.139Z",
+      "claimedAt": "2026-06-01T17:19:02.087Z",
+      "completedAt": "2026-06-01T17:30:46.139Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T17:30:46.139Z",
+          "text": "Implemented coordinate-native S2 graph API parity gap by adding non-breaking contract envelopes to GraphMethodService responses and typed harmonic pointer relation descriptors to PointerWeb. Contract envelopes now carry method, bimba namespace, S2/S2' coordinate owner, source/spec/code/test anchors, ontology readiness metadata, GDS Option 1 overlay metadata, disclosure density, and protected-local privacy boundary. PointerWeb now exposes harmonic_relation_descriptors for inversion-spanda and lens-anchor relations with reason_code, relation_law, family/mirror/lens/inversion, source_anchor, privacy_policy, and S5-governed deposition_policy; pointer_count remains unchanged. Fixed S0 parity mapping for existing gateway method s4'.mediation.route so the S0 adapter manifest stays complete. Verified: cargo fmt --manifest-path Body/S/S2/graph-services/Cargo.toml; CARGO_TARGET_DIR=/tmp/epi-cargo-target-s2-t7 cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --test graph_api_contract (5 passed, 2 ignored live Neo4j tests); CARGO_TARGET_DIR=/tmp/epi-cargo-target-s2-t7 cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml pointer_web (filtered pointer-web lane passed); cargo fmt --manifest-path Body/S/S0/epi-cli/Cargo.toml; CARGO_TARGET_DIR=/tmp/epi-cargo-target-s2-t7-s0 cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_parity_manifest (7 passed); CARGO_TARGET_DIR=/tmp/epi-cargo-target-s2-t7-gateway cargo test --offline --manifest-path Body/S/S3/gateway/Cargo.toml --test dispatch_contract (6 passed). GitNexus impact attempted for GraphMethodService, GraphMethodParams, dispatch_graph_method, and coordinate_family_for_gateway_method but blocked by @ladybugdb/core lbugjs.node architecture mismatch."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T17:19:02.087Z",
+      "runId": "20260601T171902Z-02-T7",
       "worktree": null
     },
     "02.T8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T17:38:21.061Z",
+      "claimedAt": "2026-06-01T17:33:23.465Z",
+      "completedAt": "2026-06-01T17:38:21.061Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T17:38:21.061Z",
+          "text": "Added Body/S/S2/graph-services/src/consumption.rs exported m5_handoff_consumption_contract() with six M5-3/M5-4 consumer fixtures (M0 graph/Anuttara/GDS, M1 pointer relation walk, M2 correspondence provenance, M3 graph-wheel dual surface, M5 namespace viewer, M5-4 graph-backed context pool), kernel-bridge graph client readiness states, and forbidden client derivations for graph relations, OWL inference, GDS recommendations, codon/tarot/planetary mappings, and # to M resolution. Added tests/m5_handoff_contract.rs locking source/spec/code/test anchors, blocked GDS readiness, protected-local opaque handles, namespace boundaries, and family-in-properties/refs rather than labels. GitNexus impact attempted for GraphMethodService but blocked by @ladybugdb/core lbugjs.node architecture mismatch. Verified: CARGO_TARGET_DIR=/tmp/epi-cargo-target-s2-t8 cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml --test m5_handoff_contract (5 passed); --test graph_api_contract (5 passed, 2 ignored live Neo4j); full graph-services cargo test offline (all non-live tests passed; live service tests ignored)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T17:33:23.465Z",
+      "runId": "20260601T173323Z-02-T8",
       "worktree": null
     },
     "02.T9": {
@@ -333,20 +353,36 @@
       "worktree": null
     },
     "05.T0": {
-      "status": "done",
-      "updatedAt": "2026-05-31T23:37:42.363Z",
+      "status": "review",
+      "updatedAt": "2026-06-01T17:29:57.031Z",
       "claimedAt": "2026-05-31T23:34:37.774Z",
       "completedAt": "2026-05-31T23:37:42.363Z",
       "evidence": [
         {
           "at": "2026-05-31T23:37:42.363Z",
           "text": "Decision harness at Body/M/epi-tauri/decisions/{README.md, track-05-t0-runtime-baseline.json, adr-001-theia-runtime-mode.md, adr-002-single-vs-multi-webview.md, adr-003-bridge-ownership.md}. Inventory cross-references existing 06.T0 (renderer baseline), 07.T0 (extension contracts), 08.T0 (composition), 09.T0 (mediation) preflights — no duplication. Build topology captured: Tauri v2, Vite+React 19, Wry/WebKit, vitest+playwright, identifier com.epi-logos.desktop, 1520x960 transparent overlay window, devUrl 127.0.0.1:5173, plugins shell/dialog/fs/window-state, tokio+tokio-tungstenite. Three ADRs authored as Open (recommended defaults recorded): ADR-05-001 (PRD-01 Theia runtime mode -> browser-mode-in-webview first, supervised localhost fallback, Electron sidecar last resort), ADR-05-002 (PRD-02 single-vs-multi-webview -> multi-webview + tray/background for /body), ADR-05-003 (PRD-03 bridge ownership -> hybrid Tauri singleton + Theia-native KernelBridgeAPI adapter). Tranche dependency map (T1-T9): T1 can_start=true; T2 after ADRs; T3-T8 marked can_start=false with explicit upstream Track 01-04 blockers; T9 after T8. Local-dev topology names 9 services with explicit always_required gating per tranche, env vars (TAURI_DEV_HOST, EPILOGOS_NEO4J_URI, EPILOGOS_SEMANTIC_CACHE_REDIS_URL, EPI_GRAPH_LIVE). 7 blockers carried forward (PRD-01/02/03/04, DSD-02, spacetimedb-native-block, S5-persisted-stores). Verification: pnpm/npm vitest 17/17 + cargo 44/44 (verified at 06.T0; no source changes here)."
+        },
+        {
+          "at": "2026-06-01T16:43:14.828Z",
+          "text": "Architectural recast per m5-prime-system-shape-and-tauri-ide-canon.md §2-§3 Theia-only revision and Track 11 PRD-01/02/03 resolutions. The three ADRs T0 originally closed (Theia-runtime mode / single-vs-multi-webview / bridge-host) are now resolved differently: Theia-only with Electron canonical + browser-mode optional; layouts inside one Theia process; kernel-bridge as first-loaded Theia extension whose backend module connects to external Rust gateway via WS/JSON-RPC. Original done-work at commit dd985f7 carried a now-superseded architectural conclusion. Recast T0 deliverables per Track 05's updated body: Body/M/epi-tauri migration inventory (per-file map of typed clients → Theia services, domains/M{0..5}_* → contributions in matching M-extensions, Tauri Rust commands → Theia backend extensions or direct gateway reach), Theia version pin, package manager decision, Electron-builder configuration, optional Docker browser-mode build plan, local dev topology. Returning to review for re-execution against the new deliverables."
+        },
+        {
+          "at": "2026-06-01T17:02:46.818Z",
+          "text": "Recast T0 re-executed against post-canon deliverables by parallel m-dev thread admin-track05-theia. Migration inventory artifact: docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md — covers BOTH inheritance sources (Body/M/epi-tauri via prior track-06-baseline.json reference; Body/S/S3/epi-app per-file map newly produced). ADR set committed at Idea/Pratibimba/System/docs/decisions/: 05-004 (Electron-app target alongside browser-app), 05-005 (electron-builder config plan with per-OS targets dmg/zip/AppImage/nsis, signing+auto-update deferred), 05-006 (optional Docker browser-mode plan), 05-007 (local-dev topology + EPI_GATEWAY_URL contract + per-tranche service-requirement matrix), 05-008 (obsidian-md-vsc as embedded bundle), 05-009 (recast bridge for ADRs 001/002/003). Substrate-truth gate found T1-level work largely landed in Idea/Pratibimba/System (pnpm@10.25.0 workspace, Theia 1.56.0 pin via patches, 12 extension package skeletons, m-extension-runtime shared bridge contracts, smoke-build harness); genuine T0 forward work was the migration inventory + the six new ADRs. Source-A test baseline (vitest 17/17 → 21/21, cargo 44/44 → 49/49 at commit dd985f7) carried forward from prior T0 evidence; this thread does not re-run them since Body/M/epi-tauri is migration-source-only under canon. Track 01-04 dependency-gate map per downstream tranche included in inventory artifact."
+        },
+        {
+          "at": "2026-06-01T17:20:50.230Z",
+          "text": "Cross-cutting plan gap surfaced by user: Body/S/S0/epi-cli/src/app/mod.rs (epi app {launch,dev,build} + launch_command_for_repo used by epi up) still routes to cargo tauri against Body/M/epi-tauri. Two locked tests (app_source_targets_epi_tauri, app_bundle_targets_tauri_bundle). Neither Track 01 nor Track 05 names this re-wiring in tranche bodies. Disposition documented in plan.runs/migration-inventory.md under 'Cross-cutting finding: epi app and epi up need re-wiring'. Owner = active m-dev thread (Body/S/S0 writescope). Sub-task chip spawned for the active thread. This thread (admin-track05-theia) PAUSING at T0-review pending: (1) active thread's plan updates landing, (2) decision on which track owns the epi-cli/app re-wiring tranche, (3) ordering confirmed that the flip happens after 05.T1 lands theia-app/electron-app/. T1 NOT started this session."
+        },
+        {
+          "at": "2026-06-01T17:29:57.031Z",
+          "text": "Further canon revision 2026-06-01 evening: obsidian-md-vsc strategic borrow REVERSED per Track 11 IOD-18 + IOD-19. Research surfaced obsidian-md-vsc is an Obsidian-app remote-control shim (via Advanced URI) not a vault renderer; it does not render wikilinks, parse vault, serve Smart Connections, or operate without a running Obsidian. S1 vault reach now = filesystem-direct-read (Theia FS provider against /Idea) + Hen-gateway-write via new s1.vault.* gateway methods (per IOD-19, gated on Track 03 T6.5). Smart Connections semantic-neighbours via s1.semantic.* over Body/S/S1/hen-compiler-core/src/smart_env.rs (per IOD-18). epi-gnostic IS the RAG-anything substrate (production Python + Graphiti-integrated; not a future composition target). T0 re-execution by parallel thread admin-track05-theia at 2026-06-01T17:02 reflects pre-reversal recast; needs minor amendment to migration-inventory.md to drop obsidian-md-vsc registration scope and add Hen-substrate inheritance lines. ADR-05-008 marked SUPERSEDED with reversal note. Cross-cutting follow-up: Body/S/S0/epi-cli/src/app/mod.rs (epi app launch/dev/build) still routes to cargo tauri against Body/M/epi-tauri; needs Theia-redirect tracked as part of Track 05 migration scope or new cross-cutting task."
         }
       ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-06-01T17:29:57.031Z",
       "runId": null,
       "worktree": null
     },
@@ -373,20 +409,28 @@
       "worktree": null
     },
     "05.T2": {
-      "status": "done",
-      "updatedAt": "2026-06-01T10:23:48.493Z",
+      "status": "review",
+      "updatedAt": "2026-06-01T17:30:02.681Z",
       "claimedAt": "2026-06-01T10:16:51.903Z",
       "completedAt": "2026-06-01T10:23:48.493Z",
       "evidence": [
         {
           "at": "2026-06-01T10:23:48.493Z",
           "text": "Tauri composition prototype landed end-to-end, closing PRD-01 + PRD-02 + PRD-03 (the three ADRs left Open by 05.T0). ADR-05-001 amended Decision: Option 1 browser-mode-in-Wry via 'pratibimba://' custom URI scheme protocol. ADR-05-002 amended Decision: Option 2 multi-webview co-existence (separate WebviewWindow labelled pratibimba-ide, persists until dismissed). ADR-05-003 amended Decision (provisional): Option 3 hybrid Tauri singleton (AppState already exists) + Theia-native KernelBridgeAPI adapter (typed wiring lands with Track 01 T5). Files: Body/M/epi-tauri/src-tauri/src/commands/pratibimba.rs (summon/dismiss/status commands), Body/M/epi-tauri/src-tauri/src/lib.rs (registers register_uri_scheme_protocol('pratibimba', ...) handler, resolves Idea/Pratibimba/System/theia-app/lib/frontend/, MIME-types html/js/mjs/css/json/svg/png/jpg/woff/woff2/ttf/eot/map, rejects '..' traversal as 403, missing as 404; EPI_PRATIBIMBA_FRONTEND_DIR env override for tests), tauri.conf.json#csp extended with pratibimba: origin across default-src/img-src/style-src/script-src/worker-src/connect-src/font-src/child-src/frame-src (allows Workers, IndexedDB, gateway connect-src, blob: workers, AMD 'unsafe-eval'), Body/M/epi-tauri/src/services/pratibimbaClient.ts (typed summon/dismiss/status renderer client). Verification: cargo test src-tauri 49/49 (was 44, +5 new pratibimba_protocol tests: root→index.html, bundle.js correct MIME, path traversal 403, missing 404, full Theia MIME table); vitest 21/21 (+4 pratibimbaClient.test.ts: summon/dismiss/status invoke correct command, AppError surfacing); tsc --noEmit clean. Resource-use/CSP/IPC live-app measurements deferred to a desktop acceptance run; the protocol handler + command surface + CSP + client are all compile-and-test verified."
+        },
+        {
+          "at": "2026-06-01T16:43:25.126Z",
+          "text": "Deliverable fully superseded by m5-prime-system-shape-and-tauri-ide-canon.md §2-§3 Theia-only revision. Original T2 (Tauri Composition Prototype And Runtime Decision Gate, landed commit dd985f7) is obsolete — no Tauri wrapper in final architecture. Recast T2 per Track 05's updated body: Body/M/epi-tauri migration execution (services/* → Theia services; domains/M{0..5}_* → contributions in matching M-extensions; stores/* → Theia state-stores; src-tauri/* → Theia backend extensions or direct gateway reach) + 0/1 daily layout skeleton (Theia workspace named daily-0-1.layout with journal/agent-checkin/lightweight-cymatic/status-display contributions) + deep IDE layout skeleton (ide-deep.layout placeholders for M0/M5 chrome + omni-panel summon paths) + omni-panel as Theia contribution wrapping Command Registry. Absorbs substantive Track 06 work (Track 06 collapsed). Returning to review for re-execution against the new deliverables."
+        },
+        {
+          "at": "2026-06-01T17:30:02.681Z",
+          "text": "Further canon revision 2026-06-01 evening: obsidian-md-vsc strategic borrow REVERSED per Track 11 IOD-18 + IOD-19. T2 deliverables updated in Track 05 body: removed 'register obsidian-md-vsc as embedded VS Code extension' scope; added 'build vault-bridge Theia extension wrapping s1.vault.* + s1.semantic.* gateway methods' scope; T4.5 new sub-tranche covers Smart Connections sidebar + Canon Studio wikilink autocompletion. Track 05 T0-T9 bodies cleaned (no obsidian-md-vsc references except in disavowal context). Re-execute against the updated T2 deliverables which now: (a) build the migration map per file, (b) implement 0/1 + deep IDE layout skeletons via Theia Layout Restorer, (c) implement omni-panel as Theia Command Registry wrapper, (d) NO obsidian-md-vsc registration. Note: 05.T1 status=done — the Theia 1.56 skeleton + Electron + kernel-bridge-readiness work landed by parallel m-dev is unaffected by the obsidian-md-vsc reversal; that work stands."
         }
       ],
       "notes": null,
       "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-06-01T10:16:51.903Z",
+      "heartbeatAt": "2026-06-01T17:30:02.681Z",
       "runId": "20260601T101651Z-05-T2",
       "worktree": null
     },
@@ -500,14 +544,18 @@
       "worktree": null
     },
     "06.T1": {
-      "status": "blocked",
-      "updatedAt": "2026-05-31T23:43:02.871Z",
+      "status": "done",
+      "updatedAt": "2026-06-01T16:43:29.899Z",
       "claimedAt": "2026-05-31T23:42:19.180Z",
-      "completedAt": null,
+      "completedAt": "2026-06-01T16:43:29.899Z",
       "evidence": [
         {
           "at": "2026-05-31T23:43:02.871Z",
           "text": "Soft-gated on Track 01 T5 (kernel-bridge contract package). 06.T1's primary deliverable is a kernelBridgeClient + kernelBridgeStore consuming 'the shared Track 01 TypeScript contract for lite mode', and the body explicitly forbids inventing a parallel hand-authored MathemeHarmonicProfile/readiness/bridge contract outside the boundary mirror. Track 01 T5 has not landed (depends on 01.T1-T4), so no contract exists to consume. Releasing 06.T1 back to ready/blocked until 01.T5 lands; foundational route is to do 01.T1 next which unblocks the chain."
+        },
+        {
+          "at": "2026-06-01T16:43:29.899Z",
+          "text": "Released from blocked + absorbed into Track 05 T3. Track 01 T5 (kernel-bridge contract package) has landed (done 2026-06-01T12:24:12), removing the original soft-gate. Concurrently, Track 06 is collapsed into Track 05 per m5-prime-system-shape-and-tauri-ide-canon.md §2-§3 Theia-only revision — the work this tranche planned (lite kernel-bridge adapter in /body) is now part of Track 05 T3 (Kernel-Bridge Theia Extension) where lite/full subscription modes are layout-mode-driven inside one Theia process via Theia DI. Future bridge adapter work executes under Track 05 T3. Marking done with absorption evidence rather than retaining as blocked or running standalone implementation of a now-collapsed scope."
         }
       ],
       "notes": null,
@@ -689,42 +737,57 @@
       "worktree": null
     },
     "07.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T17:18:15.005Z",
+      "claimedAt": "2026-06-01T17:13:09.362Z",
+      "completedAt": "2026-06-01T17:18:15.005Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T17:18:15.005Z",
+          "text": "Implemented m1-paramasiva first slice in Idea/Pratibimba/System/extensions: added human-authored M1 profile clock model/body beside generated scaffold, wired widget to render profile tick12/degree720/SU2/phase/helix/position6/ratioRole/lensMode/CF-VAK projection, 84-state landscape from profile lens/context counts, exact audioOctet/nodalQuartet consumption, topology inspector that reads M1-5 values from profile payload rather than frontend constants, and relation-walk event construction emitting m1.walk.step plus m1.klein_flip.source. Relation-walk readiness remains s2_graph_blocked until real Track 02 typed harmonic relation descriptors arrive; no fake green. Verification: pnpm --dir Idea/Pratibimba/System --filter @pratibimba/m1-paramasiva build (tsc clean); node --test Idea/Pratibimba/System/extensions/test/m1-paramasiva-clock-instrument.test.mjs (7 passed against Body/S/S0/portal-core/contract-inventory/baseline-profile.json); pnpm --dir Idea/Pratibimba/System test:contracts (51 passed). GitNexus impact attempted for M1ParamasivaWidget, MathemeHarmonicProfileBoundary, and MPrimePerformanceEvent but blocked by @ladybugdb/core lbugjs.node architecture mismatch."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T17:13:09.362Z",
+      "runId": "20260601T171309Z-07-T4",
       "worktree": null
     },
     "07.T5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T17:52:04.263Z",
+      "claimedAt": "2026-06-01T17:48:47.031Z",
+      "completedAt": "2026-06-01T17:52:04.263Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T17:52:04.263Z",
+          "text": "Implemented m2-parashakti first slice in Idea/Pratibimba/System/extensions/m2-parashakti: M2PrimeMeaningPacket builder, deterministic profile-bus cymatic renderer, S2/Kerykeion provenance handles, pending-field discipline, M3 DET evidence-only boundary, Klein valence, and protected-M4 personal cymatic block. Widget now renders packet state instead of raw profile echo. Tests use real portal-core baseline profile fixture plus explicit S2/Kerykeion handles and prove all 72-address views are in [0,71], exact audioOctet/nodalQuartet consumption, correspondence-from-S2-or-pending discipline, no local M2 LUT folklore, M2->M3 evidence-only routing, and personal-Pratibimba block outside protected M4. Verification: pnpm --dir Idea/Pratibimba/System --filter @pratibimba/m2-parashakti build; node --test Idea/Pratibimba/System/extensions/test/m2-parashakti-meaning-packet.test.mjs (6/6); pnpm --dir Idea/Pratibimba/System test:contracts (57/57); pnpm --dir Idea/Pratibimba/System --filter @pratibimba/m2-parashakti test. GitNexus impact attempted for M2ParashaktiWidget and TRACK_08_CONTRIBUTION before edits but blocked by native module arch mismatch: lbugjs.node arm64 vs Node x86_64."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T17:48:47.031Z",
+      "runId": "20260601T174847Z-07-T5",
       "worktree": null
     },
     "07.T6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T17:55:34.451Z",
+      "claimedAt": "2026-06-01T17:52:33.358Z",
+      "completedAt": "2026-06-01T17:55:34.451Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T17:55:34.451Z",
+          "text": "Implemented m3-mahamaya first slice in Idea/Pratibimba/System/extensions/m3-mahamaya: backend-provided codon projection surface, 64/472 wheel summary validation from S2 authority payload, M3-0 provenance strip, flat/double-torus/Janus shared-depth views, read-only kernel trace events, and protected oracle scalar resolver that rejects artifact bodies. Widget now renders codon projection/provenance state instead of raw profile echo. Tests use real portal-core baseline profile fixture plus explicit S2 library/world-clock handles and prove 40 non-dual x7 + 24 dual x8 = 472, deterministic profile projection consumption, M3-0 DET/provenance rendering without private planetary/chakral interpretation, shared active facts across depth views, no frontend codon/Tarot/I-Ching/planetary/reward authority tables, and protected-local oracle body exclusion. Verification: pnpm --dir Idea/Pratibimba/System --filter @pratibimba/m3-mahamaya build; node --test Idea/Pratibimba/System/extensions/test/m3-mahamaya-codon-wheel.test.mjs (6/6); pnpm --dir Idea/Pratibimba/System test:contracts (63/63); pnpm --dir Idea/Pratibimba/System --filter @pratibimba/m3-mahamaya test. GitNexus impact attempted for M3MahamayaWidget and TRACK_08_CONTRIBUTION before edits but blocked by native module arch mismatch: lbugjs.node arm64 vs Node x86_64."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T17:52:33.358Z",
+      "runId": "20260601T175233Z-07-T6",
       "worktree": null
     },
     "07.T7": {
@@ -998,16 +1061,21 @@
       "worktree": null
     },
     "09.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T17:03:45.810Z",
+      "claimedAt": "2026-06-01T16:45:59.494Z",
+      "completedAt": "2026-06-01T17:03:45.810Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T17:03:45.810Z",
+          "text": "Extended Body/S/S4/plugins/pleroma/capability-matrix.json with M5-4 governance roles, capacity leads, recursive user-final validation flags, and AgentRunEnvelope/AgentRunEvidence contract. Added real unittest coverage for Anima/Aletheia deposit-only authority, Pi bounded-run authority, recursive self-review validation, Nara five gates, skill-vs-tool vak_profile separation, and runtime-smoke blocked readiness. Verified: python3 -m unittest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py (16 tests OK); cargo fmt; CARGO_TARGET_DIR=/tmp/epi-cargo-target-s0-agent-spawn cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test agent_spawn (14 tests OK); cargo build --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml. Real smoke Body/S/S0/epi-cli/target/debug/epi agent verify-runtime --json now reaches current repo CLI (stale PATH fixed) and reports provider/runtime Connection error as blocked readiness, not success."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "admin",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T16:45:59.494Z",
+      "runId": "20260601T164559Z-09-T2",
       "worktree": null
     },
     "09.T3": {
@@ -1546,30 +1614,111 @@
       "leaseExpiresAt": "2026-06-01T17:43:43.266Z",
       "worktree": null,
       "completedAt": "2026-06-01T15:47:48.121Z"
+    },
+    {
+      "runId": "20260601T164559Z-09-T2",
+      "taskId": "09.T2",
+      "status": "done",
+      "startedAt": "2026-06-01T16:45:59.494Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T18:45:59.494Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T17:03:45.810Z"
+    },
+    {
+      "runId": "20260601T170402Z-01-T7",
+      "taskId": "01.T7",
+      "status": "done",
+      "startedAt": "2026-06-01T17:04:02.551Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T19:04:02.551Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T17:11:20.061Z"
+    },
+    {
+      "runId": "20260601T171309Z-07-T4",
+      "taskId": "07.T4",
+      "status": "done",
+      "startedAt": "2026-06-01T17:13:09.362Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T19:13:09.362Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T17:18:15.005Z"
+    },
+    {
+      "runId": "20260601T171902Z-02-T7",
+      "taskId": "02.T7",
+      "status": "done",
+      "startedAt": "2026-06-01T17:19:02.087Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T19:19:02.087Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T17:30:46.139Z"
+    },
+    {
+      "runId": "20260601T173323Z-02-T8",
+      "taskId": "02.T8",
+      "status": "done",
+      "startedAt": "2026-06-01T17:33:23.465Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T19:33:23.465Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T17:38:21.061Z"
+    },
+    {
+      "runId": "20260601T173904Z-01-T8",
+      "taskId": "01.T8",
+      "status": "done",
+      "startedAt": "2026-06-01T17:39:04.424Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T19:39:04.424Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T17:46:34.280Z"
+    },
+    {
+      "runId": "20260601T174847Z-07-T5",
+      "taskId": "07.T5",
+      "status": "done",
+      "startedAt": "2026-06-01T17:48:47.031Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T19:48:47.031Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T17:52:04.263Z"
+    },
+    {
+      "runId": "20260601T175233Z-07-T6",
+      "taskId": "07.T6",
+      "status": "done",
+      "startedAt": "2026-06-01T17:52:33.358Z",
+      "owner": "admin",
+      "leaseExpiresAt": "2026-06-01T19:52:33.358Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T17:55:34.451Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-01T15:52:28.393Z",
-    "updatedAt": "2026-06-01T15:52:28.393Z",
+    "createdAt": "2026-06-01T17:48:02.980Z",
+    "updatedAt": "2026-06-01T17:48:02.980Z",
     "taskIds": [
-      "09.T2",
-      "01.T7",
-      "07.T4",
-      "02.T7"
+      "05.T0",
+      "05.T2",
+      "07.T5",
+      "07.T6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "09.T2": "in-session",
-      "01.T7": "in-session",
-      "07.T4": "in-session",
-      "02.T7": "in-session"
+      "05.T0": "in-session",
+      "05.T2": "in-session",
+      "07.T5": "in-session",
+      "07.T6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

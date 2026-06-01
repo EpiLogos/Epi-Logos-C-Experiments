@@ -35,6 +35,7 @@ fn spawn_exports_selected_agent_dir_to_pi() {
     assert!(captured_env.contains("CODEX_HOME="));
     assert!(captured_env.contains("EPI_GATE_STATE_ROOT="));
     assert!(captured_env.contains("EPI_GATE_SKILLS_PATHS="));
+    assert!(captured_env.contains("EPI_CLI_BIN="));
     assert!(captured_env.contains(&format!(
         "PI_CODING_AGENT_DIR={}",
         env.repo_root.join(".epi/agents/anima/agent").display()
@@ -239,6 +240,7 @@ fn verify_runtime_uses_minimal_pi_discovery_flags() {
     assert!(captured_env.contains("HOME="));
     assert!(captured_env.contains("EPI_AGENT_HOME="));
     assert!(captured_env.contains("EPI_AGENT_PLUGIN_RUNTIME_PATH="));
+    assert!(captured_env.contains("EPI_CLI_BIN="));
 
     assert!(
         out.stdout.contains("\"status\": \"ok\""),

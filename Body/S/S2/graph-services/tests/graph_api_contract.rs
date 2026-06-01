@@ -1,7 +1,7 @@
 use epi_s2_graph_services::{
-    schema, GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphQueryRequest,
-    GraphTraverseDirection, GraphTraverseRequest, KernelResonanceObservationRequest, Neo4jClient,
-    Neo4jConfig, PointerWebRefreshRequest,
+    graph_contract, schema, GraphMethodParams, GraphMethodService, GraphNodeRequest,
+    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    KernelResonanceObservationRequest, Neo4jClient, Neo4jConfig, PointerWebRefreshRequest,
 };
 use serde_json::json;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -76,6 +76,27 @@ fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
     assert_eq!(plan.coordinate_anchor.coordinate, "M2");
     assert_eq!(plan.coordinate_anchor.kernel.source, "s0.kernel");
     assert_eq!(plan.coordinate_anchor.pointer_web.pointer_count, 36);
+    assert_eq!(
+        plan.coordinate_anchor
+            .pointer_web
+            .harmonic_relation_descriptors
+            .len(),
+        2
+    );
+    assert_eq!(
+        plan.coordinate_anchor
+            .pointer_web
+            .harmonic_relation_descriptors[0]
+            .reason_code,
+        "inversion_spanda"
+    );
+    assert_eq!(
+        plan.coordinate_anchor
+            .pointer_web
+            .harmonic_relation_descriptors[0]
+            .privacy_policy,
+        "public-coordinate-topology-only"
+    );
     assert_eq!(
         plan.coordinate_anchor
             .pointer_web
@@ -157,6 +178,12 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
     assert_eq!(plan.resolution.canonical, "M2");
     assert_eq!(plan.pointer_web.coordinate, "M2");
     assert_eq!(plan.pointer_web.pointer_count, 36);
+    assert_eq!(plan.pointer_web.harmonic_relation_descriptors.len(), 2);
+    assert!(plan
+        .pointer_web
+        .harmonic_relation_descriptors
+        .iter()
+        .any(|descriptor| descriptor.reason_code == "lens_anchor"));
     let harmonic_pointer = plan
         .coordinate_anchor
         .harmonic_pointer
@@ -195,6 +222,32 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
     assert!(plan
         .cypher
         .contains("c_5_harmonic_pointer_anchor_json = $harmonic_pointer_anchor_json"));
+}
+
+#[test]
+fn graph_api_contract_envelope_carries_sources_namespace_gds_and_pointer_descriptors() {
+    let resolved = GraphMethodService::resolve_coordinate_string("#2").unwrap();
+    let contract = graph_contract("s2.graph.node", Some(&resolved));
+
+    assert_eq!(contract["method"], "s2.graph.node");
+    assert_eq!(contract["namespace"], "bimba");
+    assert_eq!(contract["coordinateOwner"], "S2/S2'");
+    assert_eq!(
+        contract["sourceAnchors"]["code"],
+        "Body/S/S2/graph-services/src/graph_api.rs"
+    );
+    assert_eq!(
+        contract["gdsOverlay"]["canonicalWritePerformedByApiEnvelope"],
+        false
+    );
+    assert_eq!(contract["disclosureDensity"], "public-coordinate-topology");
+    let descriptors = contract["pointerWebDescriptors"].as_array().unwrap();
+    assert_eq!(descriptors.len(), 2);
+    assert_eq!(descriptors[0]["from_coordinate"], "M2");
+    assert_eq!(
+        descriptors[0]["deposition_policy"],
+        "read-only descriptor; downstream evidence deposit is S5-governed"
+    );
 }
 
 #[tokio::test]

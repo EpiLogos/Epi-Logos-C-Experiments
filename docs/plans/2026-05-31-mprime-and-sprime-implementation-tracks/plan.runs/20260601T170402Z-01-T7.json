@@ -1,0 +1,36 @@
+{
+  "runId": "20260601T170402Z-01-T7",
+  "taskId": "01.T7",
+  "startedAt": "2026-06-01T17:04:02.551Z",
+  "owner": "admin",
+  "leaseExpiresAt": "2026-06-01T19:04:02.551Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T7",
+    "trackId": "01",
+    "tranche": "T7",
+    "title": "Agentic Capability And Observability Feed",
+    "effort": null,
+    "file": "01-kernel-bridge-and-s0-foundation.md",
+    "path": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md",
+    "dependsOn": [
+      "01.T6"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**",
+      "Body/S/S4/plugins/pleroma/capability-matrix.json"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

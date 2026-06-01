@@ -77,6 +77,18 @@ export const KERNEL_BRIDGE_CAPABILITY_NAMES = Object.freeze(
   KernelBridgeCapabilityName.options,
 );
 
+export const CanonicalVakAddress = z
+  .object({
+    CPF: z.string().min(1),
+    CT: z.array(z.string().min(1)).min(1),
+    CP: z.string().min(1),
+    CF: z.string().min(1),
+    CFP: z.string().min(1),
+    CS: z.record(z.unknown()),
+  })
+  .strict();
+export type CanonicalVakAddress = z.infer<typeof CanonicalVakAddress>;
+
 export const MathemeHarmonicProfile = z
   .object({
     profileSchemaVersion: z.literal(1),
@@ -214,6 +226,8 @@ export const KernelBridgeRpcEnvelope = z
     sessionKey: z.string().min(1),
     profileGeneration: z.number().int().nonnegative().nullable(),
     provenanceHandles: z.array(z.string()),
+    vakAddress: CanonicalVakAddress,
+    routeLineage: z.array(z.string().min(1)).min(3),
   })
   .strict()
   .superRefine((value, ctx) => {

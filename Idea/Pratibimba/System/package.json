@@ -14,7 +14,7 @@
     "start": "pnpm --dir theia-app start",
     "start:debug": "pnpm --dir theia-app start:debug",
     "test": "pnpm -r test && pnpm test:contracts",
-    "test:contracts": "node --test extensions/test/shared-bridge-fan-out.test.mjs extensions/test/activation-and-persistence.test.mjs extensions/test/m0-anuttara-inspector.test.mjs extensions/test/track-08-contribution-contract.test.mjs extensions/test/track-08-integrated-layout-contract.test.mjs extensions/test/validate-extension-contract-preflight.test.mjs extensions/test/validate-composition-contract-preflight.test.mjs",
+    "test:contracts": "node --test extensions/test/shared-bridge-fan-out.test.mjs extensions/test/activation-and-persistence.test.mjs extensions/test/m0-anuttara-inspector.test.mjs extensions/test/m1-paramasiva-clock-instrument.test.mjs extensions/test/m2-parashakti-meaning-packet.test.mjs extensions/test/m3-mahamaya-codon-wheel.test.mjs extensions/test/track-08-contribution-contract.test.mjs extensions/test/track-08-integrated-layout-contract.test.mjs extensions/test/validate-extension-contract-preflight.test.mjs extensions/test/validate-composition-contract-preflight.test.mjs",
     "lint": "pnpm -r lint"
   },
   "devDependencies": {

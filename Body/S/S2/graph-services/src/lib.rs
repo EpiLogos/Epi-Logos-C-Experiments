@@ -7,6 +7,7 @@ use neo4rs::{query, Graph, Query};
 use serde::{Deserialize, Serialize};
 
 pub mod bidirectional_sync;
+pub mod consumption;
 mod coordinate;
 pub mod dataset_import;
 pub mod doctor;
@@ -28,6 +29,9 @@ pub mod types;
 pub mod vault;
 
 pub use bidirectional_sync::{BidirectionalSyncer, ConflictResolution, SyncConflict};
+pub use consumption::{
+    m5_handoff_consumption_contract, FORBIDDEN_CLIENT_DERIVATIONS, M5_HANDOFF_CONTRACT_VERSION,
+};
 pub use coordinate::{
     cf_node_for_frame, convert_hash_to_m_family, extract_context_frames, wrap_context_frames,
     CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink,
@@ -46,8 +50,8 @@ pub use gds::{
     GDS_OPTION1_PROJECTION_VERSION, GDS_PRIVACY_BOUNDARY,
 };
 pub use graph_api::{
-    CoordinateResolution, GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphParamValue,
-    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    graph_contract, CoordinateResolution, GraphMethodParams, GraphMethodService, GraphNodeRequest,
+    GraphParamValue, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
     KernelResonanceObservationPlan, KernelResonanceObservationRequest, PointerWebRefreshPlan,
     PointerWebRefreshRequest,
 };
@@ -64,7 +68,8 @@ pub use ontology::{
 pub use pointers::{
     compute_pointer_web, kernel_coordinate_anchor_for, kernel_coordinate_anchor_from_parts,
     HarmonicBedrockAnchor, HarmonicContextFrameAnchor, HarmonicPointerAnchor,
-    HarmonicPointerWebAnchor, KernelAnchor, KernelCoordinateAnchor, PointerWeb, QvDataAnchor,
+    HarmonicPointerRelationDescriptor, HarmonicPointerWebAnchor, KernelAnchor,
+    KernelCoordinateAnchor, PointerWeb, QvDataAnchor,
 };
 pub use relationship_manager::{RelationshipManager, RelationshipWritePlan, POSITION_REL_TYPES};
 pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};
