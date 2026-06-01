@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-05-31T21:34:53.549Z",
-  "updatedAt": "2026-06-01T22:00:00.691Z",
+  "updatedAt": "2026-06-01T22:14:53.299Z",
   "tasks": {
     "01.T0": {
       "status": "done",
@@ -1745,16 +1745,21 @@
       "worktree": null
     },
     "04.T9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-01T22:14:53.282Z",
+      "claimedAt": "2026-06-01T22:06:17.967Z",
+      "completedAt": "2026-06-01T22:14:53.282Z",
+      "evidence": [
+        {
+          "at": "2026-06-01T22:14:53.282Z",
+          "text": "Implemented full persisted S5 spine acceptance harness in epii-agent-core plus day-folder Aletheia inbox alignment. Verification PASS: cargo test --offline --manifest-path Body/S/S5/epii-agent-core/Cargo.toml --test full_spine_acceptance (2/2); cargo test --offline --manifest-path Body/S/S5/epii-agent-core/Cargo.toml (agent_access 8/8, baseline 1/1, full_spine 2/2, doctests 0); cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml (all suites pass including inbox_contract 7/7 and surfacing/routing); cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml (9/9); git diff --check clean. Full-spine test uses real JSONL under Idea/Empty/Present/{day}, real report files, real persisted review/autoresearch stores, human-gate refusal assertions, typed dry-run promotion, continuity/M5 snapshot, protected Nara handle privacy, Anuttara-first blocking, Epii-on-Epii recursive history, and Tranche 0 fixture reload. GitNexus impact: InboxStore LOW; surface_aletheia_inbox HIGH due downstream tests/process, handled as narrow compatibility-safe contract correction; gitnexus detect_changes unavailable in this CLI (unknown command)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-01T22:06:17.967Z",
+      "runId": "20260601T220617Z-04-T9",
       "worktree": null
     },
     "03.T6.5": {
@@ -2336,6 +2341,16 @@
       "leaseExpiresAt": "2026-06-01T23:53:37.482Z",
       "worktree": null,
       "completedAt": "2026-06-01T22:00:00.675Z"
+    },
+    {
+      "runId": "20260601T220617Z-04-T9",
+      "taskId": "04.T9",
+      "status": "done",
+      "startedAt": "2026-06-01T22:06:17.967Z",
+      "owner": "codex",
+      "leaseExpiresAt": "2026-06-02T00:06:17.967Z",
+      "worktree": null,
+      "completedAt": "2026-06-01T22:14:53.282Z"
     }
   ],
   "activeRoute": {

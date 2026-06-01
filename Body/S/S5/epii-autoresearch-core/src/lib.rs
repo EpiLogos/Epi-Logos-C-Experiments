@@ -776,20 +776,22 @@ impl ImprovementStore {
             let closure_kind = ClosureKind::from_inbox_wire(&stored.entry.closure_kind)?;
             for (vector_index, direction) in stored.entry.improvement_vectors.iter().enumerate() {
                 let target_coordinate = vak_coordinate_label(&stored.entry.final_vak)?;
-                let request =
-                    ProposeRequest {
-                        target_family: "S".to_owned(),
-                        target_coordinate: target_coordinate.clone(),
-                        direction: direction.clone(),
-                        source_review_item_id: None,
-                        baseline: ArtifactRef {
-                            path: stored.entry.artifacts.first().cloned().unwrap_or_else(|| {
-                                format!("aletheia://inbox/{}/artifact", stored.id)
-                            }),
-                            coordinate: Some(target_coordinate),
-                            kind: Some("aletheia_disclosure_artifact".to_owned()),
-                        },
-                    };
+                let request = ProposeRequest {
+                    target_family: "S".to_owned(),
+                    target_coordinate: target_coordinate.clone(),
+                    direction: direction.clone(),
+                    source_review_item_id: None,
+                    baseline: ArtifactRef {
+                        path: stored
+                            .entry
+                            .artifacts
+                            .first()
+                            .cloned()
+                            .unwrap_or_else(|| aletheia_present_inbox_uri(&stored)),
+                        coordinate: Some(target_coordinate),
+                        kind: Some("aletheia_disclosure_artifact".to_owned()),
+                    },
+                };
                 let target = infer_target_subsystem(&request);
                 let surfaced_at = now_ms();
                 let mut candidate = ImprovementCandidate::from_propose(
@@ -798,7 +800,7 @@ impl ImprovementStore {
                     default_vector_for(target),
                     SurfacingPipelineId::AletheiaDisclosure,
                     spine::ObservationEvidence {
-                        source_uri: format!("aletheia://inbox/{}", stored.id),
+                        source_uri: aletheia_present_inbox_uri(&stored),
                         summary: observation_summary(&stored.entry, direction),
                         observed_at: Some(surfaced_at),
                         fingerprint: Some(format!(
@@ -1433,6 +1435,20 @@ fn observation_summary(entry: &inbox::InboxEntry, direction: &str) -> String {
     format!(
         "{} | source={} day={} direction={}",
         moirai, entry.source, entry.day_id, direction
+    )
+}
+
+fn aletheia_present_inbox_uri(stored: &inbox::StoredInboxEntry) -> String {
+    let session_id = stored
+        .id
+        .split_once("#L")
+        .map(|(session_id, _)| session_id)
+        .unwrap_or(stored.entry.session_id.as_str());
+    format!(
+        "vault://Idea/Empty/Present/{}/{}.jsonl#{}",
+        sanitize_id_component(&stored.entry.day_id),
+        session_id,
+        stored.id
     )
 }
 

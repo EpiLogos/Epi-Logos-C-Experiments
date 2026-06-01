@@ -1,19 +1,22 @@
 //! Inbox store — Rust-side receiver of Aletheia's JSONL handoff.
 //!
 //! C4 (TypeScript / Aletheia side) writes canonical
-//! `epii_autoresearch_inbox_entry` payloads as JSONL lines to
-//! `${VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl` using `appendFileSync`
-//! semantics — repeated invocations grow the file. C5 (this module) is the
-//! Rust-side consumer that reads the **exact same wire format**:
+//! `epii_autoresearch_inbox_entry` payloads as JSONL lines under the live
+//! daily inbox substrate, `${VAULT}/Empty/Present/{day_id}/${session_id}.jsonl`,
+//! using `appendFileSync` semantics — repeated invocations grow the file.
+//! C5 (this module) is the Rust-side consumer that reads the **exact same wire
+//! format**:
 //!
 //! - **Layer 1 — source of truth:** one file per session,
-//!   `${root}/${session_id}.jsonl`, one compact JSON object per non-empty line.
+//!   `${present_root}/{day_id}/${session_id}.jsonl`, one compact JSON object
+//!   per non-empty line. Legacy flat `${root}/${session_id}.jsonl` files remain
+//!   readable for migration fixtures, but new appends use the day folder.
 //! - **Layer 2 — store API:** `append` writes a new line to the session's
 //!   jsonl file with `appendFileSync`-equivalent semantics;
-//!   `list_pending` aggregates every entry across all session files, tagging
+//!   `list_pending` aggregates every entry across day/session files, tagging
 //!   each with a deterministic id `${session_id}#L${line_index}` where
-//!   `line_index` counts **non-empty** lines from 0. This makes ids stable
-//!   for the same file content and serves as the idempotency key for C6.
+//!   `line_index` counts **non-empty** lines from 0. This makes ids stable for
+//!   the same file content and serves as the idempotency key for C6.
 //!
 //! C6 will consume the `InboxStore` via `recompose_pass` to produce
 //! next-cycle compose hints — the Möbius return through the seam.
@@ -67,8 +70,8 @@ pub struct StoredInboxEntry {
 
 /// File-backed inbox over per-session JSONL files.
 ///
-/// Storage layout: `${root}/${session_id}.jsonl`, one compact JSON object
-/// per non-empty line.
+/// Storage layout: `${present_root}/{day_id}/${session_id}.jsonl`, one compact
+/// JSON object per non-empty line.
 pub struct InboxStore {
     root: PathBuf,
 }
@@ -81,9 +84,10 @@ impl InboxStore {
         Ok(Self { root })
     }
 
-    /// Append an entry to its session's JSONL file with semantics matching
+    /// Append an entry to its day/session JSONL file with semantics matching
     /// C4's `appendFileSync`: one compact JSON line, newline-terminated,
-    /// created if absent.
+    /// created if absent. The store root is the `Empty/Present` folder; the
+    /// entry's `day_id` selects the `{day}` child folder.
     ///
     /// Returns the deterministic id `${session_id}#L${line_index}`, where
     /// `line_index` is the 0-based index of this entry among non-empty lines
@@ -91,7 +95,11 @@ impl InboxStore {
     /// lines change, indexes among non-empty lines remain stable.
     pub fn append(&self, entry: InboxEntry) -> Result<String, String> {
         let session_id = entry.session_id.clone();
-        let path = self.root.join(format!("{session_id}.jsonl"));
+        let day_id = entry.day_id.clone();
+        let path = self
+            .root
+            .join(sanitize_path_component(&day_id))
+            .join(format!("{session_id}.jsonl"));
 
         if let Some(parent) = path.parent() {
             fs::create_dir_all(parent)
@@ -125,22 +133,40 @@ impl InboxStore {
         Ok(format!("{session_id}#L{prev_count}"))
     }
 
-    /// Aggregate every entry across all session JSONL files in `root`,
+    /// Aggregate every entry across all day/session JSONL files in `root`,
     /// returning each tagged with `${session_id}#L${line_index}`.
     ///
-    /// Deterministic ordering: session files are sorted lexicographically by
-    /// filename, then entries within each file in file order. The
-    /// `line_index` is the 0-based position among **non-empty** lines — blank
-    /// lines are skipped and do not consume indexes. Non-`.jsonl` files are
-    /// ignored. Parse failures surface as `Err` so a malformed entry cannot
-    /// be silently dropped.
+    /// Deterministic ordering: legacy root session files and one-level day
+    /// child session files are sorted lexicographically by path, then entries
+    /// within each file in file order. The `line_index` is the 0-based
+    /// position among **non-empty** lines — blank lines are skipped and do not
+    /// consume indexes. Non-`.jsonl` files are ignored. Parse failures surface
+    /// as `Err` so a malformed entry cannot be silently dropped.
     pub fn list_pending(&self) -> Result<Vec<StoredInboxEntry>, String> {
-        let mut paths: Vec<PathBuf> = fs::read_dir(&self.root)
+        let mut paths: Vec<PathBuf> = Vec::new();
+        for entry in fs::read_dir(&self.root)
             .map_err(|e| format!("read_dir {}: {}", self.root.display(), e))?
-            .filter_map(|res| res.ok())
-            .map(|entry| entry.path())
-            .filter(|p| p.extension().and_then(|s| s.to_str()) == Some("jsonl"))
-            .collect();
+        {
+            let path = entry
+                .map_err(|e| format!("read_dir {}: {}", self.root.display(), e))?
+                .path();
+            if path.extension().and_then(|s| s.to_str()) == Some("jsonl") {
+                paths.push(path);
+                continue;
+            }
+            if path.is_dir() {
+                for child in fs::read_dir(&path)
+                    .map_err(|e| format!("read_dir {}: {}", path.display(), e))?
+                {
+                    let child_path = child
+                        .map_err(|e| format!("read_dir {}: {}", path.display(), e))?
+                        .path();
+                    if child_path.extension().and_then(|s| s.to_str()) == Some("jsonl") {
+                        paths.push(child_path);
+                    }
+                }
+            }
+        }
         paths.sort();
 
         let mut out = Vec::new();
@@ -169,4 +195,19 @@ impl InboxStore {
         }
         Ok(out)
     }
+}
+
+fn sanitize_path_component(value: &str) -> String {
+    value
+        .chars()
+        .map(|ch| {
+            if ch.is_ascii_alphanumeric() || matches!(ch, '-' | '_' | '.') {
+                ch
+            } else {
+                '-'
+            }
+        })
+        .collect::<String>()
+        .trim_matches('-')
+        .to_owned()
 }

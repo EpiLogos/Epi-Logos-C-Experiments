@@ -80,6 +80,7 @@ version = "0.1.0"
 dependencies = [
  "epi-s5-epii-autoresearch-core",
  "epi-s5-epii-review-core",
+ "portal-core",
  "serde",
  "serde_json",
 ]
