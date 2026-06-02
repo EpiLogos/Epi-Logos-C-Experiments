@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T15:54:08.111Z",
+  "updatedAt": "2026-06-02T15:56:52.087Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -79,14 +79,19 @@
       "worktree": null
     },
     "01.T1": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-02T15:54:08.104Z",
+      "status": "done",
+      "updatedAt": "2026-06-02T15:56:36.861Z",
       "claimedAt": "2026-06-02T15:54:08.104Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-02T15:56:36.861Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T15:56:36.861Z",
+          "text": "0/1 daily + deep-IDE layout and state-preserving switch landed in shell extensions and pinned in M'-SYSTEM-SPEC.md (lines 87/100/139/149 daily-vs-4+2 boundary, parent-face discipline, OmniPanel / operator transparency) and M'-PORTAL-SPEC.md (57/59 surface separation 1=flow,/=operator,4+2=depth). Verification: node --test body-daily-vertical-slice.test.mjs + track-08-integrated-layout-contract.test.mjs + activation-and-persistence.test.mjs passed 33/33 (Steps 5-7 prove switch preserves sessionKey/DAY-NOW/profileGeneration/coordinate both directions = deep IDE summon/return; single upstream subscription across both layouts; recast guard keeps 0/1 owned by Theia extensions not Body/M/epi-tauri)."
+        }
+      ],
       "notes": null,
       "owner": "m-dev-mainloop",
-      "leaseExpiresAt": "2026-06-02T17:54:08.104Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-02T15:54:08.104Z",
       "runId": "20260602T155408Z-01-T1",
       "worktree": null
@@ -227,16 +232,16 @@
       "worktree": null
     },
     "03.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-02T15:56:52.076Z",
+      "claimedAt": "2026-06-02T15:56:52.076Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T17:56:52.076Z",
+      "heartbeatAt": "2026-06-02T15:56:52.076Z",
+      "runId": "20260602T155652Z-03-T0",
       "worktree": null
     },
     "03.T1": {
@@ -1209,31 +1214,41 @@
     {
       "runId": "20260602T155408Z-01-T1",
       "taskId": "01.T1",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-02T15:54:08.104Z",
       "owner": "m-dev-mainloop",
       "leaseExpiresAt": "2026-06-02T17:54:08.104Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T15:56:36.861Z"
+    },
+    {
+      "runId": "20260602T155652Z-03-T0",
+      "taskId": "03.T0",
+      "status": "in_progress",
+      "startedAt": "2026-06-02T15:56:52.076Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T17:56:52.076Z",
       "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T15:53:54.423Z",
-    "updatedAt": "2026-06-02T15:53:54.423Z",
+    "createdAt": "2026-06-02T15:56:44.335Z",
+    "updatedAt": "2026-06-02T15:56:44.335Z",
     "taskIds": [
-      "01.T1",
       "03.T0",
       "00.T2",
-      "02.T1"
+      "02.T1",
+      "04.T0"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "01.T1": "in-session",
       "03.T0": "in-session",
       "00.T2": "in-session",
-      "02.T1": "in-session"
+      "02.T1": "in-session",
+      "04.T0": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
