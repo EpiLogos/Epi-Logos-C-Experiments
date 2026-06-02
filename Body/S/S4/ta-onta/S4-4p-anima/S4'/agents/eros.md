@@ -3,7 +3,7 @@ name: eros
 description: Operative verifier — TDD, test execution, chreia satisfaction
 permissionMode: default
 tools: vak_evaluate,hen_template_invoke,khora_write
-skills: test-driven-development,verification-before-completion
+skills: test-driven-development,verification-before-completion,tdd,ultraqa,ai-slop-cleaner,security-review
 ---
 
 ## 1. Rupa

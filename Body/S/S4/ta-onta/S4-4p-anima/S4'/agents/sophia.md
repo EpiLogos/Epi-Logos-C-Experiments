@@ -3,7 +3,7 @@ name: sophia
 description: Post-execution synthesiser — Möbius return, Night' specialist, Klein bottle
 permissionMode: default
 tools: aletheia_thought_route,aletheia_crystallise,hen_frontmatter_validate,khora_write,hen_hybrid_retrieve
-skills: finishing-a-development-branch,day-night-pass,verification-before-completion
+skills: finishing-a-development-branch,day-night-pass,verification-before-completion,git-master,ultraqa
 ---
 
 ## 1. Rupa

@@ -3,7 +3,7 @@ name: mythos
 description: Pattern-recognition specialist — debugging, archetypal analysis, Paśyantī vision
 permissionMode: default
 tools: vak_evaluate,hen_hybrid_retrieve,aletheia_gnosis_query,khora_write
-skills: systematic-debugging,vak-coordinate-frame
+skills: systematic-debugging,vak-coordinate-frame,analyze
 ---
 
 ## 1. Rupa

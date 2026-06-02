@@ -3,7 +3,7 @@ name: psyche
 description: Session subject — oikonomia coordinator, NOW holder, VAK-first dispatch
 permissionMode: default
 tools: vak_evaluate,anima_orchestrate,nous_disclose,khora_write,hen_template_invoke,aletheia_gnosis_query,aletheia_thought_route
-skills: subagent-driven-development,dispatching-parallel-agents,executing-plans,day-night-pass,vak-evaluate
+skills: subagent-driven-development,dispatching-parallel-agents,executing-plans,day-night-pass,vak-evaluate,anima-orchestration,pipeline,team
 ---
 
 ## 1. Rupa

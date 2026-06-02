@@ -8,7 +8,7 @@ tools:
   - hen_hybrid_retrieve
 skills:
   - aletheia:gnosis-retrieve
-  - aletheia:repl
+  - repl
 ---
 
 ## 1. Rupa

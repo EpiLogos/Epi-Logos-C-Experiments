@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T20:59:49.129Z",
+  "updatedAt": "2026-06-02T21:00:44.961Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -2339,13 +2339,13 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T20:38:28.895Z",
-    "updatedAt": "2026-06-02T20:38:28.895Z",
+    "createdAt": "2026-06-02T21:00:44.961Z",
+    "updatedAt": "2026-06-02T21:00:44.961Z",
     "taskIds": [
       "13.T4",
       "14.T5",
-      "11.T3",
-      "11.T4"
+      "11.T4",
+      "13.T5"
     ],
     "totalWeight": 7,
     "taxingLevel": "balanced",
@@ -2353,8 +2353,8 @@
     "modeHints": {
       "13.T4": "in-session",
       "14.T5": "in-session",
-      "11.T3": "in-session",
-      "11.T4": "in-session"
+      "11.T4": "in-session",
+      "13.T5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

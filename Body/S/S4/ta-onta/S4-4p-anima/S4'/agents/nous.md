@@ -3,7 +3,7 @@ name: nous
 description: Epistemic clearing agent — S0'/S1'/S2' dis-closure, fresh context, pre-task orientation
 permissionMode: default
 tools: nous_disclose,aletheia_gnosis_query,hen_hybrid_retrieve,web_search,web_fetch,khora_write
-skills: vak-coordinate-frame,gnosis-retrieve,web-research
+skills: vak-coordinate-frame,gnosis-retrieve,web-research,deep-interview
 ---
 
 ## 1. Rupa

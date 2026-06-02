@@ -13,7 +13,9 @@ import {
   CANONICAL_TRIGGERS,
   safeParseVak,
   MOIRAI_HOST_CF,
+  agentForCf,
 } from "./modules/dispatch-validate.ts";
+import { nousRouteStop } from "./modules/nous-clearing.ts";
 import { planMoiraiNightPass, classifyMoiraiOutput, buildMoiraiVak } from "./modules/moirai-dispatch.ts";
 import { buildAnimaInvokePayload } from "./modules/anima-invoke-payload.ts";
 import { findSkillsForVak, type CapabilityMatrix } from "./modules/skill-registry.ts";
@@ -218,16 +220,6 @@ export async function animaExtension(api: ExtensionAPI) {
       vak_address: Type.Optional(Type.Any()),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const cfToAgent: Record<string, string> = {
-        "(0/1)": "logos",
-        "(0/1/2)": "eros",
-        "(0/1/2/3)": "mythos",
-        "(4.0/1-4.4/5)": "anima",
-        "(4.5/0)": "psyche",
-        "(5/0)": "sophia",
-        "(00/00)": "nous",
-      };
-
       // Resolve suggested_skills via matrix query when a full VAK is provided.
       // Falls back to undefined when vak_address is absent / malformed / matrix
       // is unavailable — orchestration is matrix-advisory, never matrix-gated.
@@ -243,7 +235,9 @@ export async function animaExtension(api: ExtensionAPI) {
         ? `\nsuggested_skills: ${suggestedSkills.length ? suggestedSkills.join(", ") : "(none match this VAK)"}`
         : "";
 
-      if (params.cf_code === "(00/00)") {
+      // Nous owns the clearing / dispatch-halt condition for CF ground (00/00).
+      const clearing = nousRouteStop({ cf: params.cf_code, cpf: params.cf_code });
+      if (clearing.action === "halt") {
         return {
           content: [
             {
@@ -260,7 +254,7 @@ export async function animaExtension(api: ExtensionAPI) {
         };
       }
 
-      const agent = cfToAgent[params.cf_code];
+      const agent = agentForCf(params.cf_code);
       if (!agent) {
         return {
           content: [

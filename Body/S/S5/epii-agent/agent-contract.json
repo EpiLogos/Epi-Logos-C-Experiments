@@ -87,5 +87,13 @@
       "implementation_request",
       "alignment_review"
     ]
+  },
+  "entitlement": {
+    "_doc": "epii is a peer pi_agent; its skill universe is its own resource package (epi-logos). Empty allow => inherit the full package (hard-gate degrades to all-of-package, never deny-all). Add to deny to gate a package skill out; add cross-package skills to allow to extend beyond the package. Parsed by ta-onta/shared/entitlement-loader.ts:parseAgentEntitlementFromContract.",
+    "skill_universe_roots": [
+      "Body/S/S5/plugins/epi-logos/skills"
+    ],
+    "skills": { "allow": [], "deny": [] },
+    "tools": { "allow": [], "deny": [] }
   }
 }

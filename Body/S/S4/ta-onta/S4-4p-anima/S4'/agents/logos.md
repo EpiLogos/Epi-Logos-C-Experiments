@@ -3,7 +3,7 @@ name: logos
 description: Architect-scoper — nomos boundary-setting, spec writing, scope definition
 permissionMode: default
 tools: vak_evaluate,hen_frontmatter_validate,khora_write,web_search,web_fetch
-skills: writing-plans,brainstorming,systematic-debugging,web-research
+skills: writing-plans,brainstorming,systematic-debugging,web-research,plan,ralplan,vak-coordinate-frame,deepsearch,ask-claude,ask-gemini
 ---
 
 ## 1. Rupa

@@ -67,32 +67,23 @@ fn pleroma_has_non_empty_skills() {
     );
 }
 
-/// Task 5: Body/S/S4/plugins/pleroma must have at least one agent ANIMA.md.
+/// Architecture truth: Pleroma is the SKILL layer only. It must NOT be the
+/// authority for agent definitions — those live under the ta-onta homes
+/// (S4-4p-anima/S4'/agents and S4-5p-aletheia/S5'/agents) and carry their own
+/// skill/tool entitlement frontmatter, which is the binding authority.
+///
+/// This test previously REQUIRED Pleroma to ship `agents/**/ANIMA.md`, which
+/// encoded the wrong architecture (Pleroma as agent authority). That legacy
+/// directory has now been DELETED, and this test asserts its ABSENCE: the
+/// binding agent-definition homes are the ta-onta pi-level homes, and Pleroma
+/// is the skill layer only. The skills assertion
+/// (`pleroma_has_non_empty_skills`) and the hooks assertions remain the
+/// load-bearing checks for the Pleroma skill bundle.
 #[test]
-fn pleroma_has_non_empty_agents() {
-    let agents_dir = pleroma_root().join("agents");
+fn pleroma_must_not_contain_agent_defs() {
     assert!(
-        agents_dir.exists(),
-        "Body/S/S4/plugins/pleroma/agents/ does not exist"
-    );
-
-    let agent_entries: Vec<_> = fs::read_dir(&agents_dir)
-        .unwrap_or_else(|err| panic!("failed to read {}: {err}", agents_dir.display()))
-        .filter_map(|e| e.ok())
-        .filter(|e| e.path().is_dir())
-        .collect();
-
-    assert!(
-        !agent_entries.is_empty(),
-        "Body/S/S4/plugins/pleroma/agents/ has no agent subdirectories"
-    );
-
-    let has_anima_md = agent_entries
-        .iter()
-        .any(|e| e.path().join("ANIMA.md").exists());
-    assert!(
-        has_anima_md,
-        "no ANIMA.md found in any Body/S/S4/plugins/pleroma/agents/ subdirectory"
+        !pleroma_root().join("agents").exists(),
+        "pleroma must not contain agent defs — agents live at the ta-onta pi-level homes"
     );
 }
 

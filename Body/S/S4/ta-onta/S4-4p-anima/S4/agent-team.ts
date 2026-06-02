@@ -33,15 +33,19 @@ import {
 	safeParseVak,
 } from "../modules/dispatch-validate.ts";
 import type { VakAddress } from "../../shared/vak_address.ts";
+import { computeAgentEntitlement, enumerateSkillUniverse, parseCommaList } from "../../shared/entitlement.ts";
+import { parseTeamEntitlements, type TeamEntitlement } from "../../shared/entitlement-loader.ts";
 
 // ── Types ────────────────────────────────────────
 
 interface AgentDef {
 	name: string;
 	description: string;
-	tools: string;
+	tools: string;        // BINDING tool allowlist (comma-separated). Empty => inherit team ceiling.
+	tools_deny: string;   // tool denylist (comma-separated). Deny beats allow. Absent => empty.
 	model: string;        // e.g. "sonnet", "opus", or "anthropic/claude-sonnet-4-6"
-	skills: string;       // comma-separated skill names (informational; loaded via plugin dirs)
+	skills: string;       // BINDING skill allowlist (comma-separated). Empty => inherit team ceiling.
+	skills_deny: string;  // skill denylist (comma-separated). Deny beats allow. Absent => empty.
 	permissionMode: string;
 	systemPrompt: string;
 	file: string;
@@ -108,8 +112,10 @@ function parseAgentFile(filePath: string): AgentDef | null {
 			name: frontmatter.name,
 			description: frontmatter.description || "",
 			tools: frontmatter.tools || "",
+			tools_deny: frontmatter.tools_deny || "",
 			model: frontmatter.model || "",
 			skills: frontmatter.skills || "",
+			skills_deny: frontmatter.skills_deny || "",
 			permissionMode: frontmatter.permissionMode || "",
 			systemPrompt: match[2].trim(),
 			file: filePath,
@@ -154,6 +160,7 @@ export default function (pi: ExtensionAPI) {
 	const agentStates: Map<string, AgentState> = new Map();
 	let allAgentDefs: AgentDef[] = [];
 	let teams: Record<string, string[]> = {};
+	let teamEntitlements: Record<string, TeamEntitlement> = {};
 	let activeTeamName = "";
 	let gridCols = 2;
 	let widgetCtx: any;
@@ -174,12 +181,16 @@ export default function (pi: ExtensionAPI) {
 		const teamsPath = join(cwd, ".pi", "agents", "teams.yaml");
 		if (existsSync(teamsPath)) {
 			try {
-				teams = parseTeamsYaml(readFileSync(teamsPath, "utf-8"));
+				const rawText = readFileSync(teamsPath, "utf-8");
+				teams = parseTeamsYaml(rawText);
+				teamEntitlements = parseTeamEntitlements(rawText);
 			} catch {
 				teams = {};
+				teamEntitlements = {};
 			}
 		} else {
 			teams = {};
+			teamEntitlements = {};
 		}
 
 		// If no teams defined, create a default "all" team
@@ -382,17 +393,46 @@ export default function (pi: ExtensionAPI) {
 			? `${state.def.systemPrompt}\n\n---\n\n## Current Session\n${sessionCtxLines.join("\n")}\n\nAll vault writes must use the now_path above as the session anchor. Reference [[NOW-${process.env.EPI_SESSION_ID}]] in any artifact you create.`
 			: state.def.systemPrompt;
 
-		// ── Skill injection ──────────────────────────────────────────────────────
-		// Load the content of each skill listed in the agent's `skills:` frontmatter
-		// and append it to the system prompt. Searched in two dirs in order:
+		// ── Entitlement hard-gate (skills + tools) ──────────────────────────────
+		// The two skill dirs are also the live SKILL universe sources:
 		//   1. S4'/skills/  — VAK skills (vak-evaluate, anima-orchestration, …)
 		//   2. plugins/pleroma/skills/  — shared pleroma skills (web-research, tdd, …)
-		const skillNames = state.def.skills.split(",").map((s: string) => s.trim()).filter(Boolean);
-		if (skillNames.length > 0) {
-			const animaSkillsDir = fileURLToPath(new URL("../S4'/skills", import.meta.url));
-			const pleromaSkillsDir = join((ctx as any).cwd || process.cwd(), "plugins", "pleroma", "skills");
+		const animaSkillsDir = fileURLToPath(new URL("../S4'/skills", import.meta.url));
+		const pleromaSkillsDir = join((ctx as any).cwd || process.cwd(), "plugins", "pleroma", "skills");
+
+		// Universe: published skills (live) + declared tools (the tool universe is
+		// the agent's own declared `tools:` set — empty agent.allow then inherits it).
+		const skillUniverse = enumerateSkillUniverse([animaSkillsDir, pleromaSkillsDir]);
+		const toolUniverse = parseCommaList(state.def.tools);
+		const eff = computeAgentEntitlement(
+			{ skills: skillUniverse, tools: toolUniverse },
+			teamEntitlements[activeTeamName],
+			{
+				skills: { allow: parseCommaList(state.def.skills), deny: parseCommaList(state.def.skills_deny) },
+				tools: { allow: [], deny: parseCommaList(state.def.tools_deny) },
+			},
+		);
+
+		// Visibility: report anything the agent requested but the gate blocked.
+		const requestedSkills = parseCommaList(state.def.skills);
+		const effSkillSet = new Set(eff.skills.effective);
+		const blockedSkills = requestedSkills.filter((s) => !effSkillSet.has(s));
+		const effToolSet = new Set(eff.tools.effective);
+		const blockedTools = toolUniverse.filter((t) => !effToolSet.has(t));
+		if (blockedSkills.length > 0 || blockedTools.length > 0) {
+			try {
+				ctx.ui?.notify?.(
+					`entitlement gate: blocked skills [${blockedSkills.join(", ")}] tools [${blockedTools.join(", ")}] for ${displayName(state.def.name)}`,
+					"info",
+				);
+			} catch {}
+		}
+
+		// ── Skill injection ──────────────────────────────────────────────────────
+		// Inject ONLY the entitled (effective) skills, loading each SKILL.md body.
+		if (eff.skills.effective.length > 0) {
 			const skillBlocks: string[] = [];
-			for (const skillName of skillNames) {
+			for (const skillName of eff.skills.effective) {
 				for (const base of [animaSkillsDir, pleromaSkillsDir]) {
 					const skillPath = join(base, skillName, "SKILL.md");
 					if (existsSync(skillPath)) {
@@ -413,7 +453,7 @@ export default function (pi: ExtensionAPI) {
 			"-p",
 			"--no-session",
 			...childPiRuntimeArgs(),
-			...(state.def.tools ? ["--tools", state.def.tools] : []),
+			...(eff.tools.effective.length > 0 ? ["--tools", eff.tools.effective.join(",")] : []),
 			...(model ? ["--model", model] : []),
 			"--thinking", "off",
 			"--append-system-prompt", fullSystemPrompt,

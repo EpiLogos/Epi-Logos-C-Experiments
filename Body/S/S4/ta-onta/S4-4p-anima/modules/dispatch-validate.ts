@@ -33,6 +33,21 @@ export const AGENT_CF: Record<string, CfLiteral> = {
 };
 
 /**
+ * Inverse of `AGENT_CF`: resolve the constitutional agent that owns a CF code.
+ *
+ * This is the single source of truth for CF → agent routing used by
+ * `anima_orchestrate`. Returns `undefined` for a CF outside the constitutional
+ * seven (callers surface an "unknown CF code" error).
+ */
+const CF_TO_AGENT: Record<string, string> = Object.fromEntries(
+  Object.entries(AGENT_CF).map(([agent, cf]) => [cf, agent]),
+);
+
+export function agentForCf(cf: string): string | undefined {
+  return CF_TO_AGENT[cf];
+}
+
+/**
  * Moirai subagent → host constitutional CF mapping.
  *
  * Klotho, Lachesis, Atropos are Aletheia subagents — NOT first-class

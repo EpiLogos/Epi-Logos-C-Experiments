@@ -2,6 +2,8 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
+import { computeDayId } from "./modules/temporal-frame.ts";
+import { dayArc, formatDayArcResult } from "./modules/graphiti-day-arc.ts";
 
 function injectSeedIntoQuestion(content: string, seedContent: string) {
   const heading = "## #0 Question";
@@ -79,14 +81,8 @@ export async function chronosExtension(api: ExtensionAPI) {
       }
 
       // Step 5: Open Graphiti day arc (non-fatal)
-      const dayId = new Date().toLocaleDateString("en-GB").replace(/\//g, "-");
-      const graphitiBase = process.env.GRAPHITI_URL ?? "http://localhost:37778";
-      fetch(`${graphitiBase}/arc/open`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ arc_id: `day:${dayId}`, arc_type: "day", ql_position: "ql0", cpf: "(00/00)", ct: 2, metadata: { day_id: dayId } }),
-        signal: AbortSignal.timeout(4000),
-      }).catch(() => {/* sidecar not running — non-fatal */});
+      const dayId = computeDayId();
+      void dayArc({ action: "open", dayId, timeoutMs: 4000 });
 
       return { content: [{ type: "text", text: result.stdout || "day-init complete" }] };
     },
@@ -139,14 +135,8 @@ export async function chronosExtension(api: ExtensionAPI) {
         "move", `path="${sourcePath}"`, `name="${destPath}"`,
       ], { encoding: "utf8" });
       // Close Graphiti day arc (non-fatal)
-      const dayId = (params.date || new Date().toLocaleDateString("en-GB").replace(/\//g, "-")).replace(/\//g, "-");
-      const graphitiBase = process.env.GRAPHITI_URL ?? "http://localhost:37778";
-      fetch(`${graphitiBase}/arc/close`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ arc_id: `day:${dayId}`, ql_position: "ql5", cpf: "(5/0)", ct: 1, metadata: { day_id: dayId } }),
-        signal: AbortSignal.timeout(4000),
-      }).catch(() => {/* sidecar not running — non-fatal */});
+      const dayId = (params.date || computeDayId()).replace(/\//g, "-");
+      void dayArc({ action: "close", dayId, timeoutMs: 4000 });
 
       return {
         content: [{ type: "text", text: move.stdout || move.stderr || `archived: ${sourcePath} → ${destPath}` }],
@@ -257,47 +247,13 @@ export async function chronosExtension(api: ExtensionAPI) {
       crystallisation: Type.Optional(Type.String({ description: "Sophia synthesis text for arc close metadata (arc close only)" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const dayId = params.day_id ?? new Date().toLocaleDateString("en-GB").replace(/\//g, "-");
-      const arcId = `day:${dayId}`;
-      const graphitiBase = process.env.GRAPHITI_URL ?? "http://localhost:37778";
-
-      try {
-        if (params.action === "open") {
-          const resp = await fetch(`${graphitiBase}/arc/open`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              arc_id: arcId,
-              arc_type: "day",
-              ql_position: "ql0",
-              cpf: "(00/00)",
-              ct: 2,
-              metadata: { ...(params.kairos_snapshot ?? {}), day_id: dayId },
-            }),
-            signal: AbortSignal.timeout(5000),
-          });
-          const body = await resp.text();
-          return { content: [{ type: "text", text: `day arc opened: ${arcId}\n${body}` }] };
-        } else {
-          const resp = await fetch(`${graphitiBase}/arc/close`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              arc_id: arcId,
-              ql_position: "ql5",
-              cpf: "(5/0)",
-              ct: 1,
-              metadata: { crystallisation: params.crystallisation ?? "", day_id: dayId },
-            }),
-            signal: AbortSignal.timeout(5000),
-          });
-          const body = await resp.text();
-          return { content: [{ type: "text", text: `day arc closed: ${arcId}\n${body}` }] };
-        }
-      } catch (e) {
-        // Non-fatal: graphiti sidecar may not be running
-        return { content: [{ type: "text", text: `chronos_graphiti_day_arc: graphiti not reachable (${e}) — skipped` }] };
-      }
+      const dayId = params.day_id ?? computeDayId();
+      const metadata =
+        params.action === "open"
+          ? (params.kairos_snapshot ?? {})
+          : { crystallisation: params.crystallisation ?? "" };
+      const result = await dayArc({ action: params.action, dayId, metadata });
+      return { content: [{ type: "text", text: formatDayArcResult(params.action, dayId, result) }] };
     },
   });
 
@@ -336,7 +292,7 @@ export async function chronosExtension(api: ExtensionAPI) {
         const stats = await statsResp.json() as Record<string, unknown>;
         const lastSunDecan = stats["last_sun_decan"] as string | undefined;
         const lastMoonDecan = stats["last_moon_decan"] as string | undefined;
-        const dayId = new Date().toLocaleDateString("en-GB").replace(/\//g, "-");
+        const dayId = computeDayId();
 
         if (sunDecan !== lastSunDecan) {
           // Close previous sun-decan arc, open new one

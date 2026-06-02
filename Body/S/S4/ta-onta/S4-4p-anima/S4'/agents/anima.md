@@ -3,7 +3,7 @@ name: anima
 description: The constitutional orchestrator and VAK grammar layer. Reads CS runtime state, routes CF codes to constitutional agents, and dispatches CFP thread types without collapsing Day/Night' into fixed agent identities.
 permissionMode: default
 tools: vak_evaluate,goal_prelude,anima_orchestrate,nous_disclose,dispatch_agent,dispatch_parallel_agents,dispatch_fusion_agents,dispatch_moirai_night_pass,anima_self_invoke,run_chain,subagent_create,subagent_continue,subagent_list,subagent_remove,tilldone
-skills: vak-coordinate-frame,vak-evaluate,anima-orchestration,day-night-pass,ouroboros,klein-mode
+skills: vak-coordinate-frame,vak-evaluate,anima-orchestration,day-night-pass,ouroboros,klein-mode,pipeline,team,ralph,darshana,ultrawork
 cf: "(4.0/1-4.4/5)"
 cpf: "(4.0/1-4.4/5)"
 ---
