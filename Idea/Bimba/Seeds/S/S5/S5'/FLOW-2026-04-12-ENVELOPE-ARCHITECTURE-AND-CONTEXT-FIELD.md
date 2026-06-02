@@ -56,7 +56,7 @@ This flow extends and should now be read together with:
 
 For tighter tabulation and machine-facing precision, pair this note with:
 
-- [FLOW-2026-04-11-S-COORDINATE-LATTICE-SCAFFOLD.csv](/Users/admin/Documents/Epi-Logos%20C%20Experiments/Idea/Empty/Present/FLOW-2026-04-11-S-COORDINATE-LATTICE-SCAFFOLD.csv)
+- [FLOW-2026-04-11-S-COORDINATE-LATTICE-SCAFFOLD.csv](/Users/admin/Documents/Epi-Logos%20C%20Experiments/Idea/Bimba/Seeds/S/FLOW-2026-04-11-S-COORDINATE-LATTICE-SCAFFOLD.csv)
 
 Its purpose is to define the next architectural seam:
 

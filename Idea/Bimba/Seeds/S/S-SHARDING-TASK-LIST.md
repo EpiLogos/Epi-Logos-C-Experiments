@@ -73,9 +73,9 @@ Files/code areas:
 - Source: `Body/M/epi-tauri/src/components/OmniPanel.tsx`
 - Source: `Body/M/epi-tauri/src/domains/ClockCosmos.tsx`
 - Source: `Body/M/epi-tauri/src-tauri/src/commands/clock.rs`
-- Source: `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`
-- Source: `Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md`
-- Source: `Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md`
+- Source: `Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`
+- Source: `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md`
+- Source: `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md`
 - Source: `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/2026-05-18-bimba-pointer-web-and-integration-spec.md`
 - Tests: `Body/S/S0/epi-lib/test/engine/test_kernel.c`
 - Tests: `Body/S/S0/portal-core/tests/kernel_math.rs`
@@ -320,8 +320,8 @@ Why first: until method families, gateway methods, command mirrors, Body paths, 
 
 Files/code areas:
 
-- Read: `Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md`
-- Read: `Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md`
+- Read: `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md`
+- Read: `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md`
 - Read/modify: `Body/S/S0/epi-cli/src/gate/parity.rs`
 - Create/modify only if useful: `Body/S/S0/epi-cli/src/gate/coordinate_parity.rs`
 - Test: `Body/S/S0/epi-cli/tests/gate_parity_manifest.rs`
@@ -749,7 +749,7 @@ Files/code areas:
 - `Body/S/S1/hen-compiler` vendor compatibility substrate
 - `Body/S/S4/ta-onta/S4-1p-hen`
 - `Body/S/S0/epi-cli/src/vault/`
-- `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`
+- `Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`
 - Tests: `Body/S/S0/epi-cli/tests/vault_*.rs`
 - Tests: future Hen/compiler tests under the S1 package
 

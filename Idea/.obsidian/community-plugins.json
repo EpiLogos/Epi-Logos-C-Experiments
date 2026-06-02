@@ -9,5 +9,6 @@
   "dataview",
   "obsidian-advanced-uri",
   "obsidian-local-rest-api",
-  "smart-connections"
+  "smart-connections",
+  "obsidian-tasks-plugin"
 ]

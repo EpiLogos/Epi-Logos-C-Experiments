@@ -9,9 +9,9 @@
 **Tech Stack:** TypeScript (PI extension API, `@mariozechner/pi-coding-agent`), existing `epi` CLI primitives, Redis (warm cache), Neo4j/Graphiti (cold artifacts), vendor `scripts/` Python processes for S1' baseline (retained, extended).
 
 **Reference documents:**
-- `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md` — 12-layer envelope, hot/warm/cold cost axis, residency map
-- `Idea/Empty/Present/FLOW-2026-04-22-SYSTEMS-RESIDENCY-AND-LATTICE-NAMING.md` — S/S' coordinate law
-- `Idea/Empty/Present/FLOW-2026-04-23-TRACK-B-PI-INTEGRATION-AUDIT.md` — current extension state and gap register
+- `Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md` — 12-layer envelope, hot/warm/cold cost axis, residency map
+- `Idea/Bimba/Seeds/S/FLOW-2026-04-22-SYSTEMS-RESIDENCY-AND-LATTICE-NAMING.md` — S/S' coordinate law
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/FLOW-2026-04-23-TRACK-B-PI-INTEGRATION-AUDIT.md` — current extension state and gap register
 - `vendors/claude-memory-compiler/AGENTS.md` — vendor spine spec (the source pattern)
 
 ---

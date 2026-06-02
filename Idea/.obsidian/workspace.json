@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "d01ea732de5d5dc6",
+        "id": "35d4997fa3a37bc0",
         "type": "tabs",
         "children": [
           {
-            "id": "0cf43abc8a71e47f",
+            "id": "4af70fc7c7793d3f",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -16,8 +16,57 @@
               "icon": "lucide-git-fork",
               "title": "Graph view"
             }
+          },
+          {
+            "id": "3e1ab8ab5ee15c81",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "terminal:terminal",
+              "state": {
+                "terminal:terminal": {
+                  "cwd": "/Users/admin/Documents/Epi-Logos C Experiments/Idea",
+                  "focus": false,
+                  "profile": {
+                    "args": [
+                      "-l",
+                      "-i",
+                      "-c",
+                      "source ~/.zshrc && exec zsh"
+                    ],
+                    "environment": [],
+                    "executable": "/bin/zsh",
+                    "followTheme": true,
+                    "name": "",
+                    "platforms": {
+                      "darwin": true
+                    },
+                    "pythonExecutable": "python3",
+                    "restoreHistory": false,
+                    "rightClickAction": "copyPaste",
+                    "successExitCodes": [
+                      "0",
+                      "SIGINT",
+                      "SIGTERM"
+                    ],
+                    "terminalOptions": {
+                      "documentOverride": null
+                    },
+                    "type": "integrated",
+                    "useWin32Conhost": true
+                  },
+                  "profileSourceId": "darwinIntegratedDefault",
+                  "serial": null,
+                  "userTitle": ""
+                }
+              },
+              "pinned": true,
+              "icon": "terminal",
+              "title": "Terminal: zsh"
+            }
           }
-        ]
+        ],
+        "stacked": true
       }
     ],
     "direction": "vertical"
@@ -74,7 +123,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 344.5
+    "width": 344.5,
+    "collapsed": true
   },
   "right": {
     "id": "12dca7c8af75488e",
@@ -172,7 +222,7 @@
             }
           },
           {
-            "id": "6f6fb3ce6eb69c6f",
+            "id": "3c748e43d95f3cb6",
             "type": "leaf",
             "state": {
               "type": "smart-connections-view",
@@ -180,23 +230,13 @@
               "icon": "smart-connections",
               "title": "Connections"
             }
-          },
-          {
-            "id": "7a253bd77227e4bc",
-            "type": "leaf",
-            "state": {
-              "type": "smart-lookup-view",
-              "state": {},
-              "icon": "smart-lookup",
-              "title": "Lookup"
-            }
           }
         ],
         "currentTab": 6
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "left-ribbon": {
@@ -214,42 +254,49 @@
       "obsidian-shellcommands:Shell commands: Custom variables": false,
       "obsidian-advanced-slides:Show Slide Preview": false,
       "smart-connections:Smart Connections: Open connections view": false,
-      "smart-connections:Smart Lookup: Open lookup view": false,
+      "smart-connections:Toggle Footer Connections": false,
       "smart-connections:Smart Connections: Open random connection": false
     }
   },
-  "active": "0cf43abc8a71e47f",
+  "active": "4af70fc7c7793d3f",
   "lastOpenFiles": [
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T175716Z-01-T6.json",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T175533Z-14-T0.json",
-    "Pratibimba/System/Subsystems/Nara/nara-ux-full-m4-branch-update.md.tmp.78107.664e66d33552",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T175211Z-10-T0.json",
-    "Pratibimba/System/Subsystems/epii/epii-ux-full-m5-branch.md",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T175110Z-07-T4.json",
-    "Bimba/World/Types/Coordinates/S/S1/S1.md",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T174953Z-06-T3.json",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T174918Z-13-T0.json",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T174903Z-07-T3.json",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T174829Z-09-T2.json",
-    "Pratibimba/System/Subsystems/Nara/nara-ux-full-m4-branch-update.md",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T174253Z-08-T2.json",
-    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T174142Z-05-T3.json",
-    "Bimba/World/Types/Coordinates/S/S'/S0'/S0'.md",
-    "Bimba/World/Types/Diagrams/Diagrams.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T215336Z-13-T5.json",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/15-m1-2-ananda-vortex-research.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T213545Z-11-T4.json",
+    "Bimba/Seeds/S/S4/S4'/Legacy/plans/skill-entitlement-resource-backlog.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/14-no-orphan-audit-and-release-gates.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "Bimba/Seeds/LEGACY-DOCS-MIGRATION-INDEX.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md.tmp.9902.49feed6c426e",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md.tmp.9902.f466f4b3fdf0",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md.tmp.9902.2e2b238e0532",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/00-overview-and-design-reconciliation.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-b-integrated-bimba-matrix.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-b-theia-shell-matrix.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-b-kernel-bridge-matrix.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-b-agentic-layer-matrix.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T202336Z-11-T3.json",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-a-m2-reconciliation-matrix.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-a-m4-reconciliation-matrix.md",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/plan.runs/20260602T201203Z-11-T2.json",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.state.json",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.index.json",
+    "Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs",
+    "Empty/Present/02-06-2026/20260602-201032-77ad76",
     "Bimba/World/Types/Artifacts/Artifacts.canvas",
-    "Bimba/World/Types/Artifacts/Artifacts.md",
-    "Bimba/World/CT1.md",
-    "Bimba/World/Types/Coordinates/S/S3/S3.md",
-    "Pratibimba/System/Subsystems/epii/README.md",
-    "Pratibimba/System/Subsystems/Nara/README.md",
-    "Pratibimba/System/Subsystems/Mahamaya/README.md",
-    "Pratibimba/System/Subsystems/Parashakti/README.md",
-    "Pratibimba/System/Subsystems/Paramasiva/README.md",
-    "Pratibimba/System/Subsystems/Anuttara/README.md",
-    "Pratibimba/System/Subsystems/README.md",
-    "Pratibimba/System/README.md",
-    "Bimba/Seeds/S/S1/S1'/S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL.md",
-    "Bimba/World/Types/TYPE-REGISTRY.md",
     "Bimba/World/Types/Datasets/Datasets.canvas",
     "Bimba/World/Types/Diagrams/Diagrams.canvas",
     "Bimba/World/Types/Runtime-Surfaces/Runtime-Surfaces.canvas",
@@ -257,13 +304,6 @@
     "Bimba/World/Types/Capabilities/Capabilities.canvas",
     "Bimba/World/Types/Agents/Agents.canvas",
     "Bimba/World/Types/Templates/Templates.canvas",
-    "Bimba/World/Types/Datasets/Datasets.md",
-    "Bimba/World/Types/Runtime-Surfaces/Runtime-Surfaces.md",
-    "Bimba/World/Types/Interfaces/Interfaces.md",
-    "Bimba/World/Types/Capabilities/Capabilities.md",
-    "Bimba/World/Types/Agents/Agents.md",
-    "Bimba/World/Types/Templates/Templates.md",
-    "Bimba/Seeds/S/Legacy/plans/orchestrator-prompt.md",
     "Bimba/Seeds/Legacy/to-c-dev-repo/canvases/QL Bimba Seed Mapping Planning - 2026-01-17.canvas",
     "Bimba/Seeds/Legacy/to-c-dev-repo/daily-templates/Daily Note Canvas Template.canvas",
     "Pratibimba/System/theia-app/lib/frontend/c1e38fd9e0e74ba58f7a.svg",

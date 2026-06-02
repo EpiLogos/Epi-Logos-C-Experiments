@@ -45,10 +45,10 @@ These documents are higher authority than the design spec. If you read the desig
 
 | Document | Authority over |
 |---|---|
-| `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md` | The 12-layer envelope shape; the `{family}_{n}_{semantic}` frontmatter key law; which fields are hot/warm/cold; layer ownership (S0..S5 / Khora / Hen / Pleroma / Chronos / Anima / Aletheia / Sophia) |
-| `Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md` | Coordinate-native API method shapes; what the gateway exposes; how agents are invoked |
-| `Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md` | Canonical TypeScript types — use these directly in `src/services/types.ts`. Do not invent parallel type names |
-| `Idea/Empty/Present/FLOW-2026-04-25-PI-AGENT-API-AUDIT.md` | Notes on which API methods are real vs aspirational |
+| `Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md` | The 12-layer envelope shape; the `{family}_{n}_{semantic}` frontmatter key law; which fields are hot/warm/cold; layer ownership (S0..S5 / Khora / Hen / Pleroma / Chronos / Anima / Aletheia / Sophia) |
+| `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md` | Coordinate-native API method shapes; what the gateway exposes; how agents are invoked |
+| `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md` | Canonical TypeScript types — use these directly in `src/services/types.ts`. Do not invent parallel type names |
+| `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/FLOW-2026-04-25-PI-AGENT-API-AUDIT.md` | Notes on which API methods are real vs aspirational |
 | `Idea/Bimba/Map/M0'.md` through `M5'.md` | The canonical M' coordinate seeds — what each domain *means* |
 | `Idea/Bimba/World/Daily-Note.md` | Canonical daily-note template with full QL frontmatter |
 

@@ -1059,10 +1059,10 @@ So the `pratibimba` namespace **is the 4/5/0 seam as data**, and M4.5 is the gat
 
 ## 13.3 M4-3's Lens-Routing IS a Position on the 72-Fold Resonance
 
-§3 makes M4-3 route patterns through MEF lens-positions (`L2.P3`, `L1·P2`, the transformation square `L2/L2'/L3/L3'`). That routing is not Nara-local bookkeeping. The MEF manifold is **12 lenses × 6 positions = 72**, and that 72 is the **same 72-fold Parashakti harmonic bridge** the bimba map sounds (see [[epii-ux-full-m5-branch]] §4). Therefore:
+§3 makes M4-3 route patterns through MEF lens-positions (`L2.P3`, `L1·P2`, the transformation square `L2/L2'/L3/L3'`). That routing is not Nara-local bookkeeping. The MEF manifold is **12 lenses × 6 positions = 72** — and per `M2'-SPEC` canon, that 72 is **one invariant addressed through six axes** (`12 lenses × 6 = 36 tattvas × 2 = 8 choirs × 9 names = 72`), the same 72-fold Parashakti field the bimba map sounds (see [[parashakti-ux-full-m2-branch]] §3 and [[epii-ux-full-m5-branch]] §4). Therefore:
 
-> **Every M4-3 lens-position reading is a coordinate on the same 72-fold grid the bimba map plays.**
-> When Nara reads a journal entry as `L2.P3`, it is naming a harmonic condition — and that condition is *audible* against the canonical field.
+> **Every M4-3 lens-position reading is one addressing of the same 72-invariant the bimba map plays.**
+> When Nara reads a journal entry as `L2.P3`, it is naming a harmonic condition — and that same cell *also* carries its tattva, decan, Shem angel, maqam mode, mantra, and planetary state, audible against the canonical field.
 
 This is what makes the **integrated 4/5/0 recognition surface** (§6.4) more than a split-screen. The personal cymatic field (Nara's `Q_composed`, rendered/sonified at #4.4.4.4) and the canonical bimba city-scape (Anuttara, M0) share the same Cl(4,2) algebra and the same `MathemeHarmonicProfile`. The GDS activity-resonance that lights up between them makes **tat tvam asi — "that thou art" — possible to see**: the user's lived field resonating against the structure of the whole. Self-knowledge and world-knowledge arrive as one image. **Jiva-is-Śiva made concrete.**
 
@@ -1110,4 +1110,8 @@ Or, in the shorter operational mantra:
 > **Do not update the identity-system branch. Update the protected personal-Pratibimba.**  
 > **Do not let oracle dialects drive the system. Let M4-3 integrate them.**  
 > **Do not teach by default. Let M4.5 open Epii when the user's need or interest asks for the map.**
+
+---
+
+*Counterparts (the full M-set): [[anuttara-ux-full-m0-branch]] (M0, integrated bimba view + ground), [[paramasiva-ux-full-m1-branch]] (M1, QL pedagogy + base physics), [[parashakti-ux-full-m2-branch]] (M2, frequency engine — serves this branch directly), [[mahamaya-ux-full-m3-branch]] (M3, symbolic-genetics — oracle/identity/transformation), [[epii-ux-full-m5-branch]] (M5, the paidagōgos / review pole). Seam: integrated-4-5-0 recognition plugin. Canonical spec: [[M4'-SPEC]].*
 

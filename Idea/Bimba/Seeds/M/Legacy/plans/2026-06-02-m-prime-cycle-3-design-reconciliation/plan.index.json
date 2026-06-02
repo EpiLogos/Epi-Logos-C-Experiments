@@ -1,0 +1,1939 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-02T21:54:37.904Z",
+  "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation",
+  "tracks": [
+    {
+      "id": "00",
+      "file": "00-KICKOFF-PROMPT.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/00-KICKOFF-PROMPT.md",
+      "title": "M' Cycle 3 — Design Reconciliation Kickoff Prompt",
+      "checksum": "1898abee872f7f5063c5d364fcdc1bc4640ce2c5d292ea177c9459ace7b888d3"
+    },
+    {
+      "id": "00",
+      "file": "00-overview-and-design-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/00-overview-and-design-reconciliation.md",
+      "title": "Cycle 3 — Design Reconciliation Overview",
+      "checksum": "d9daf373482dba7cce87f37d6294197b4178fea7d6c0b98a1ed2b81165e7e57c"
+    },
+    {
+      "id": "01",
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "title": "Track 01 — M0 Anuttara Reconciliation",
+      "checksum": "b08e33aced5164f83213b76b641f87c339447fbbc42c50c7abd7bfa98d3edba4"
+    },
+    {
+      "id": "02",
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "title": "Track 02 — M1 Paramaśiva Reconciliation",
+      "checksum": "523d5e6d09e82db6f25398b029099ca8c27e8167b1144c3d1557717d86c7071d"
+    },
+    {
+      "id": "03",
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "title": "Track 03 — M2 Paraśakti Reconciliation",
+      "checksum": "51cb170e76eb8357efa6eed41f3da152931af140b59db213d1751c13f0752d21"
+    },
+    {
+      "id": "04",
+      "file": "04-m3-mahamaya-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+      "title": "Track 04 — M3 Mahāmāyā Reconciliation",
+      "checksum": "47fa114a44ea6f6edb77ca691220aedaa5b6c24685471f432562b75b06a52f88"
+    },
+    {
+      "id": "05",
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "title": "Track 05 — M4 Nara Reconciliation",
+      "checksum": "c6f2cc98d20c49ad3965758892b0f182504847b626b002a890b996e2a62fe8c3"
+    },
+    {
+      "id": "06",
+      "file": "06-m5-epii-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "title": "Track 06 — M5 Epii Reconciliation",
+      "checksum": "2dccad6cc2e209acd631292fe7551381965e3d42c2a48a5f05366e24f480ab29"
+    },
+    {
+      "id": "07",
+      "file": "07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "title": "Track 07 — Integrated 1-2-3 Cosmic Engine Reconciliation",
+      "checksum": "4d200ed0327e94b2e9b292c02478426db9028682de2f795b863d0c0d0f80b06e"
+    },
+    {
+      "id": "08",
+      "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+      "title": "Track 08 — Integrated 4-5-0 Recognition Reconciliation",
+      "checksum": "78ba84dcec222580f703078e9e9fd9307819c5bef2b42e8955220462b8aefbd0"
+    },
+    {
+      "id": "09",
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "title": "Track 09 — Integrated Bimba-Graph Reconciliation",
+      "checksum": "62d543cec6ceac20ca5978ba6b302ef3976a81579f571658592680d1e613c7f1"
+    },
+    {
+      "id": "10",
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "title": "Track 10 — Kernel-Bridge / Profile-Contract Readiness Ledger",
+      "checksum": "b929db0726d9a1f49cb5f96453b7a738f39c877ab2708070cbfcda5ea05e5bd7"
+    },
+    {
+      "id": "11",
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "title": "Track 11 — Theia Shell / Surface Hosting",
+      "checksum": "6d2121243f095eb3a5136f26d387093291ff9bb5b32583c16b018f951c2509a1"
+    },
+    {
+      "id": "12",
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "title": "Track 12 — Agentic Layer (S4 ↔ S5) Ownership Closure — Pi + Anima + Subagents",
+      "checksum": "9a24ca3eddb0e7153372e508bc498ab8019e5769e14f96618e78b7465421249b"
+    },
+    {
+      "id": "13",
+      "file": "13-decision-register.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+      "title": "Track 13 — Decision Register",
+      "checksum": "07588613626829384ad371b849f0d4579dacf7b53f045a54f395811a8a2c76c1"
+    },
+    {
+      "id": "14",
+      "file": "14-no-orphan-audit-and-release-gates.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/14-no-orphan-audit-and-release-gates.md",
+      "title": "Track 14 — No-Orphan Audit + Release Gates",
+      "checksum": "e3f8b2f86248c7f629b1b361f3b801f4b7725a2e2abc451937e9afc1a33cd173"
+    },
+    {
+      "id": "15",
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "title": "Track 15 — UI Design Foundations",
+      "checksum": "6b2c91aa23e55b97d734edbe32dd44dec45f74d7c9cc005b27fc120dd64cfa6d"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "01.T1.1",
+      "trackId": "01",
+      "tranche": "T1.1",
+      "title": "M0-X' six-layer surface contract",
+      "effort": null,
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts",
+        "Body/S/S0/**",
+        "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+      ],
+      "body": "1. **1.1 — M0-X' six-layer surface contract** *(doc-ahead-landing)*\n\n   Patch `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md` to enumerate the six M0-X' data layers (M0-0' language, M0-1' QL-structure, M0-2' relations, M0-3' time/community, M0-4' personal, M0-5' pedagogy). Extend `Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts` with a `M0LayerView` discriminator. Wire M0-4' and M0-5' as bridged routes into `m4-nara` and `m5-epii` (deep-links only, no canon mutation).\n\n   Verification: `grep -nE \"M0-0'|M0-1'|M0-2'|M0-3'|M0-4'|M0-5'\" Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md` returns all six. `test -f Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts`. `cd Body/M/epi-theia && pnpm --filter @pratibimba/m0-anuttara build`."
+    },
+    {
+      "id": "01.T1.2",
+      "trackId": "01",
+      "tranche": "T1.2",
+      "title": "Decision: CRUD vs governed-route",
+      "effort": null,
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "dependsOn": [
+        "01.T1.1"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**"
+      ],
+      "body": "2. **1.2 — Decision: CRUD vs governed-route** *(contradiction-decision; routes to DR-M0-1)*\n\n   Either downgrade UX §7 `full CRUD` claim to `governed routed-write via M5 atelier` and patch the doc, or define `requestCanonMutation()` on `m-extension-runtime` routing through S2 graph-services with user final-validation. The current extension contract enforces `mutatesGraphCanon: false`.\n\n   Verification: decision-register row DR-M0-1 present; `grep -nE \"full CRUD|requestCanonMutation|governed routed-write\" Idea/Pratibimba/System/Subsystems/Anuttara/anuttara-ux-full-m0-branch.md` reflects the chosen patch."
+    },
+    {
+      "id": "01.T1.3",
+      "trackId": "01",
+      "tranche": "T1.3",
+      "title": "Decision: Anuttara source naming canon",
+      "effort": null,
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "dependsOn": [
+        "01.T1.2"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**"
+      ],
+      "body": "3. **1.3 — Decision: Anuttara source naming canon** *(contradiction-decision; routes to DR-M0-2)*\n\n   Publish the S2 normalized schema contract: `c_1_*` (raw exports) canonical; unprefixed `symbol`/`formulation_type` reserved as documented aliases only.\n\n   Verification: DR-M0-2 entry; `grep -n \"c_1_symbol\" Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md` after patch shows canonical-vs-alias note."
+    },
+    {
+      "id": "01.T1.4",
+      "trackId": "01",
+      "tranche": "T1.4",
+      "title": "Kernel-bridge profile-contract readiness ledger entries for M0",
+      "effort": null,
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "dependsOn": [
+        "01.T1.3"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**",
+        "Body/S/S0/portal-core/src/kernel.rs:797"
+      ],
+      "body": "4. **1.4 — Kernel-bridge profile-contract readiness ledger entries for M0** *(code-pending-closure; cross-link to Tranche 10)*\n\n   Pass-through to Tranche 10. The M0-affecting pending sites are: `dataset_lut_state = 'pending-dataset-lut'` (actually on `MathemeBinaryProjection`, not `MathemeBedrockProjection` — corrected by Wave-B 10.9) at `Body/S/S0/portal-core/src/kernel.rs:797`; `m3_codec_provenance = 'tarot/amino LUTs pending'` at kernel.rs:805; `kleinFlipState` absent from `MathemeHarmonicProfile` entirely. Closure belongs to Tranche 10, not greenfield M0 work.\n\n   Verification: `cargo check -p portal-core` succeeds; `grep -nE \"pending-dataset-lut|tarot/amino LUTs pending|kleinFlipState\" Body/S/S0/portal-core/src/kernel.rs` returns known sites; readiness ledger at `10-kernel-bridge-profile-contract.md` references M0 rows."
+    },
+    {
+      "id": "01.T1.5",
+      "trackId": "01",
+      "tranche": "T1.5",
+      "title": "M0-3' community + clock overlay surface",
+      "effort": null,
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "dependsOn": [
+        "01.T1.4"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**"
+      ],
+      "body": "5. **1.5 — M0-3' community + clock overlay surface** *(spec-ahead-integration)*\n\n   Add `m0.anuttara.communityClockOverlay` view to the m0-anuttara extension rendering GDS community + active-now clock overlay from S2/S3 projections — read-only, provenance-stated, no local clock. Depends on Wave-B integrated-bimba 09.6.\n\n   Verification: `grep -n \"communityClockOverlay\" Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts`; `cd Body/M/epi-theia && pnpm --filter @pratibimba/m0-anuttara build`; widget renders provenance-state `blocked` until S2 GDS payload wired."
+    },
+    {
+      "id": "01.T1.6",
+      "trackId": "01",
+      "tranche": "T1.6",
+      "title": "Image-assets-on-nodes contract + schema property",
+      "effort": null,
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "dependsOn": [
+        "01.T1.5"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**",
+        "Body/S/S2/graph-schema/src/lib.rs"
+      ],
+      "body": "6. **1.6 — Image-assets-on-nodes contract + schema property** *(no-orphan-fill; merges with Wave-B 09.3)*\n\n   Extend `Body/S/S2/graph-schema/src/lib.rs` `anuttara-language` namespace with `c_1_asset_uri` (StringList, public) + `c_1_asset_kind` (String) + provenance metadata. Patch `M0'-SPEC §Anuttara As Pre-Math Node Language`. Extend `m0-inspector.ts.languageFields` to render asset handles. Load-bearing schema change → user final-validation required.\n\n   Verification: `grep -n \"c_1_asset\" Body/S/S2/graph-schema/src/lib.rs` returns new declarations; `cargo check -p epi-s2-graph-schema` succeeds; inspector test renders new field with provenance-state."
+    },
+    {
+      "id": "01.T1.7",
+      "trackId": "01",
+      "tranche": "T1.7",
+      "title": "Kernel-S2 core-65 relations sync audit",
+      "effort": null,
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "dependsOn": [
+        "01.T1.6"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**"
+      ],
+      "body": "7. **1.7 — Kernel-S2 core-65 relations sync audit** *(code-pending-closure)*\n\n   Define an audit method on S2 graph-services (Cypher enumerating Neo4j relations vs kernel-declared 65) + projection into `M0GraphReadinessFact[]`. Mark `ready_public_current` only when audit reports zero kernel-core mismatches.\n\n   Verification: `grep -n \"M0_CORE_RELATIONS_COUNT\" Body/S/S0/epi-lib/include/m0.h` returns 65; `grep -rn \"core65Audit|core_65_audit|kernelCoreAudit\" Body/S/S2/graph-services/` returns method; inspector readinessFact row `kernel-core 65/65` present."
+    },
+    {
+      "id": "01.T1.8",
+      "trackId": "01",
+      "tranche": "T1.8",
+      "title": "Aligned-only note: anuttara-language layer is real",
+      "effort": null,
+      "file": "01-m0-anuttara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+      "dependsOn": [
+        "01.T1.7"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**"
+      ],
+      "body": "8. **1.8 — Aligned-only note: anuttara-language layer is real** *(aligned-only-note)*\n\n   The UX claim \"anuttara-language exists as a real content layer with a real contract\" is confirmed across all four corpora (schema lib.rs declares `anuttara-language` namespace at line 1414+; dataset covers 109 nodes; widget renders provenance-stated fields). Cross-reference only — no work required."
+    },
+    {
+      "id": "02.T2.1",
+      "trackId": "02",
+      "tranche": "T2.1",
+      "title": "Audit and downgrade residual M0-witness wording",
+      "effort": null,
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/S/S2/**",
+        "Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md §1.1"
+      ],
+      "body": "1. **2.1 — Audit and downgrade residual M0-witness wording** *(contradiction-decision; routes to DR-M1-1)*\n\n   Decision-register entry routing `Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md §1.1` to user final-validation. On validation, single-line patch replacing `M0 Anuttara witness-axis` with `M1-5 (the +1 parent) per M1'-SPEC §1`. Standing invariant.\n\n   Verification: `grep -n \"M0 Anuttara witness-axis\\|witness-axis\" Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md` returns no live-attribution matches after patch."
+    },
+    {
+      "id": "02.T2.2",
+      "trackId": "02",
+      "tranche": "T2.2",
+      "title": "Land `klein_flip` field + emitter on `MathemeHarmonicProfile`/`vimarsha_reading`",
+      "effort": null,
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "dependsOn": [
+        "02.T2.1"
+      ],
+      "writeScopes": [
+        "Body/S/S0/portal-core/src/kernel.rs",
+        "Body/S/S2/**"
+      ],
+      "body": "2. **2.2 — Land `klein_flip` field + emitter on `MathemeHarmonicProfile`/`vimarsha_reading`** *(code-pending-closure; cross-link to Tranche 10.2)*\n\n   Add `pub klein_flip: Option<KleinFlipEvent>` to `MathemeHarmonicProfile` in `Body/S/S0/portal-core/src/kernel.rs`. Detector in `vimarsha_read_profile` firing precisely at Lens N ↔ Lens N+3 (mod 12); contract test rejecting false positives on other lens transitions. Tranche 10.2 owns the kernel-bridge JSON emit completion.\n\n   Verification: `cargo check -p portal-core`; `cargo test -p portal-core klein_flip`; `grep -n klein_flip Body/S/S0/portal-core/src/kernel.rs Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs`."
+    },
+    {
+      "id": "02.T2.3",
+      "trackId": "02",
+      "tranche": "T2.3",
+      "title": "Wire Klein-flip + topology values into `m1.paramasiva.kleinTopology` view",
+      "effort": null,
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "dependsOn": [
+        "02.T2.2"
+      ],
+      "writeScopes": [
+        "Body/S/S2/**"
+      ],
+      "body": "3. **2.3 — Wire Klein-flip + topology values into `m1.paramasiva.kleinTopology` view** *(spec-ahead-integration)*\n\n   Populate `M1ProfileClockModel.topology` fields (`m1OriginKleinFlip`, `k2TritoneCrossing`, `hopfIdentity`, `doubleCoverDeg`, `torusGenus`) from real bridge values. Render `m1.paramasiva.kleinTopology` as a second widget body. Emit `OBSERVABILITY_EVENT_TYPES 'm1.klein_flip.source'` on event arrival.\n\n   Verification: `test -f Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-klein-topology-view.tsx`; widget test asserts `doubleCoverDeg===720` and `torusGenus===1`; observability event fires on synthetic profile with `klein_flip=Some(...)`."
+    },
+    {
+      "id": "02.T2.4",
+      "trackId": "02",
+      "tranche": "T2.4",
+      "title": "Verify `m1_performance_event_from_profile` + `MPrimePerformanceEvent` replay",
+      "effort": null,
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "dependsOn": [
+        "02.T2.3"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs::m1_performance_event_from_profile",
+        "Body/S/S2/**"
+      ],
+      "body": "4. **2.4 — Verify `m1_performance_event_from_profile` + `MPrimePerformanceEvent` replay** *(spec-ahead-integration)*\n\n   Confirm `Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs::m1_performance_event_from_profile` exists; produce `MPrimePerformanceEvent` envelope per audio-research file (event_id, session_id, tick fields, lens, mode, audio_octet_hz[8], nodal_quartet[4], klein_flip, privacy/deposition); replay-test asserts deterministic reconstruction.\n\n   Verification: `test -f Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs`; `grep -n m1_performance_event_from_profile` that file; `cargo test -p epi-cli m1_performance_event_replay`."
+    },
+    {
+      "id": "02.T2.5",
+      "trackId": "02",
+      "tranche": "T2.5",
+      "title": "Surface the single session-held # (Inversion_Operator) carrier",
+      "effort": null,
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "dependsOn": [
+        "02.T2.4"
+      ],
+      "writeScopes": [
+        "Body/S/S2/**"
+      ],
+      "body": "5. **2.5 — Surface the single session-held # (Inversion_Operator) carrier** *(code-pending-closure)*\n\n   Named contract on the M1 kernel-bridge exposing `invert(coordinate)` as a single session-held operator (no per-coordinate forks). Extension affordance reachable from `m1.startWalk`. M1'-SPEC §14 `(0/1)`-wiring readiness test landed.\n\n   Verification: `cargo check -p portal-core`; integration test `invert reaches the single session-held operator` passes; extension data-test selector `m1-invert-current-coordinate` round-trips."
+    },
+    {
+      "id": "02.T2.6",
+      "trackId": "02",
+      "tranche": "T2.6",
+      "title": "K² played-torus 3D surface — full Bevy/wgpu extension",
+      "effort": null,
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "dependsOn": [
+        "02.T2.5"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/m1-paramasiva-played-torus/**",
+        "Body/S/S2/**"
+      ],
+      "body": "6. **2.6 — K² played-torus 3D surface — full Bevy/wgpu extension** *(no-orphan-fill; DR-M1-2 VALIDATED)*\n\n   First-build M' product surface (anti-greenfield exception): `Body/M/epi-theia/extensions/m1-paramasiva-played-torus/` with Bevy/wgpu renderer consuming the landed math at `portal-core/src/{quaternion.rs, hopf.rs}` + `m1.h CL42_BASIS[6]` + `RING_QUATERNION_LUT[12]` + the **six Ananda vortex matrices** at `m1.c:22-114` (surfaced through profile bus per Tranche 10.10). M1 is a topological system — 2D never would have sufficed.\n\n   **Boundary contract (per Tranche 15 subagent research)**: the played-torus renders a **single K² only**. The downstream `K² × T²_Mahāmāyā` double-torus belongs to M3-5 (`M1'-SPEC.md:56, 64`); this build must NOT cross that boundary. Tranche 15.8 + 15.9 own the visual + tick choreography contracts.\n\n   **M1↔M2 Vimarśa-window contract**: `audio_octet[8]` particle emitters and `nodal_quartet[4]` satellite glyphs in the played-torus renderer are **windows onto M2-1' Vimarśa's writes**, never locally re-derived. `vimarsha_reading.rs:17-93` is the single source of truth; the renderer subscribes to the profile bus. This is the central M1↔M2 contract for cycle-3 (cross-link Tranche 03 substrate inheritance).\n\n   Verification: `test -d Body/M/epi-theia/extensions/m1-paramasiva-played-torus`; Bevy/wgpu toolchain declared in `package.json`; render-test asserts K² topology with `DOUBLE_COVER_DEG=720` and `TORUS_GENUS=1` from substrate; boundary-audit asserts no `T²_Mahāmāyā` rendering primitive in extension src (M3-5 territory); Vimarśa-window audit asserts `audio_octet`/`nodal_quartet` consumed via profile-bus subscription, not derived from local LUT lookups."
+    },
+    {
+      "id": "02.T2.7",
+      "trackId": "02",
+      "tranche": "T2.7",
+      "title": "Audit four-scale Cl(4,2) identity",
+      "effort": null,
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "dependsOn": [
+        "02.T2.6"
+      ],
+      "writeScopes": [
+        "Body/S/S2/**"
+      ],
+      "body": "7. **2.7 — Audit four-scale Cl(4,2) identity** *(spec-ahead-integration; cross-link to Tranche 10.7)*\n\n   Audit document asserting the same `Cl42_Basis_Entry` shape and `+2` signature is used at M1 ring, M3 codon, M4 personal, Kerykeion natal scales; identify any duplicated definition; name the Kerykeion natal scale owner (likely `M4'-SPEC` ↔ `personal_identity.rs`). Cross-cuts with kernel-bridge 10.7 — this tranche owns the M-side audit memo; 10.7 owns the kernel-side.\n\n   Verification: `grep -rn \"CL42_BASIS|Cl42_Basis_Entry|cl42_signature\" Body/S/S0/` enumerates exactly one source-of-truth; audit file lists four scales with code-paths."
+    },
+    {
+      "id": "02.T2.8",
+      "trackId": "02",
+      "tranche": "T2.8",
+      "title": "Resolve audio-research open question on `MathemeHarmonicProfile` type owner",
+      "effort": null,
+      "file": "02-m1-paramasiva-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/02-m1-paramasiva-reconciliation.md",
+      "dependsOn": [
+        "02.T2.7"
+      ],
+      "writeScopes": [
+        "Body/S/S0/portal-core/src/kernel.rs:346",
+        "Body/S/S2/**"
+      ],
+      "body": "8. **2.8 — Resolve audio-research open question on `MathemeHarmonicProfile` type owner** *(doc-ahead-landing)*\n\n   One-line update to `m1-prime-audio-generative-research.md §Open Research Questions` first item: canonical `MathemeHarmonicProfile` defined at `Body/S/S0/portal-core/src/kernel.rs:346`, re-exported via `portal-core/src/harmonic_profile.rs`.\n\n   Verification: `grep -n \"MathemeHarmonicProfile type defined\\|portal-core/src/kernel.rs\" Idea/Bimba/Seeds/M/M1'/m1-prime-audio-generative-research.md` shows resolved attribution."
+    },
+    {
+      "id": "03.T3.1",
+      "trackId": "03",
+      "tranche": "T3.1",
+      "title": "Klein-flip profile field closure",
+      "effort": null,
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**"
+      ],
+      "body": "1. **3.1 — Klein-flip profile field closure** *(code-pending-closure; cross-link to Tranches 02.2, 10.2)*\n\n   Pass-through: M1' (Track 02.2) produces `klein_flip` on `MathemeHarmonicProfile`; kernel-bridge (Track 10.2) emits it. M2' consumes — round-trip flip-return test asserting M2-side `kleinFlipFrame` consumer fires.\n\n   Verification: `cargo check -p portal-core && cargo test -p portal-core --test klein_flip_round_trip`; `grep -n klein_flip_state Body/S/S0/portal-core/src/kernel.rs` returns ≥1 hit; M2 meaning-packet consumes the field."
+    },
+    {
+      "id": "03.T3.2",
+      "trackId": "03",
+      "tranche": "T3.2",
+      "title": "F_routing carrier landing",
+      "effort": null,
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "dependsOn": [
+        "03.T3.1"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S0/portal-core/src/parashakti/f_routing.rs",
+        "Body/S/S3/**"
+      ],
+      "body": "2. **3.2 — F_routing carrier landing** *(no-orphan-fill; method-routing closure)*\n\n   Author `Body/S/S0/portal-core/src/parashakti/f_routing.rs` exposing `f_routing(intent, kerykeion, t) -> RoutingTrace { planetary_hour_ruler, active_decan, shem_pair, maqam_family/mode, mantra_index, asma_name, index72, det64 }`. Widget consumes via kernel-bridge `m2.routing_trace` observability event (slot already present). Anti-greenfield: this is method-routing closure over six landed LUTs, NOT new substrate.\n\n   Verification: `test -f Body/S/S0/portal-core/src/parashakti/f_routing.rs && cargo check -p portal-core`; deterministic-trace test for fixed `(intent, kerykeion, time)`; `index72` round-trips through six axis views."
+    },
+    {
+      "id": "03.T3.3",
+      "trackId": "03",
+      "tranche": "T3.3",
+      "title": "Six-axes address-view decoder",
+      "effort": null,
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "dependsOn": [
+        "03.T3.2"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**"
+      ],
+      "body": "3. **3.3 — Six-axes address-view decoder** *(spec-ahead-integration)*\n\n   Replace `meaning-packet.ts:220-228` six identical address-view stubs (all pointing at `profile.resonance72.lensAnchorIndex`) with per-axis decoders sourcing each LUT via kernel-bridge `m2.decodeAxisAt(address72, axis)`. Per-axis [0,71] round-trip test.\n\n   Verification: `grep -c \"sourceField: 'profile.resonance72\" Body/M/epi-theia/extensions/m2-parashakti/src/common/meaning-packet.ts` returns 1 (only MEF); five other axes have distinct `sourceField` entries; per-axis round-trip test passes."
+    },
+    {
+      "id": "03.T3.4",
+      "trackId": "03",
+      "tranche": "T3.4",
+      "title": "S2 graph-correspondence Theia adapter",
+      "effort": null,
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "dependsOn": [
+        "03.T3.3"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**"
+      ],
+      "body": "4. **3.4 — S2 graph-correspondence Theia adapter** *(spec-ahead-integration; cross-link to Tranche 09)*\n\n   Name kernel-bridge method `s2.parashaktiCorrespondences(address72)` returning `{decanFace, sacredSonic, planetaryChakral, earthObserverHandle}`. Integrated 1-2-3 plugin invokes it. Populate `s2.provenanceHandle` to unblock `packetBlockers` line 294.\n\n   Verification: `grep -n parashaktiCorrespondences Body/M/epi-theia/extensions/kernel-bridge/src/`; widget `pendingFields` no longer includes `s2.decanFace`/`s2.sacredSonic`/`s2.earthObserverHandle` on a routed packet; integration test against `parashakti-deep` dataset."
+    },
+    {
+      "id": "03.T3.5",
+      "trackId": "03",
+      "tranche": "T3.5",
+      "title": "Decision: planet-count + Earth-observer semantics (DCC-03)",
+      "effort": null,
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "dependsOn": [
+        "03.T3.4"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**"
+      ],
+      "body": "5. **3.5 — Decision: planet-count + Earth-observer semantics (DCC-03)** *(contradiction-decision; routes to DR-M2-1)*\n\n   Decision-register entry resolving Sun-as-identity-root (`M2_PLANET_LUT[10]` includes Sun + Earth listed as separate `EarthBodyState`) vs UX/spec §9.5 Earth-as-observer-ground for the 9:8 M2→M3 bridge. Recommend: keep `M2_PLANET_LUT[10]` (Sun as identity root) + separate `earth_observer_handle` kernel-bridge field (NOT a planet-LUT row); document 9 non-Sun × 8 chakras 9:8 epogdoon explicitly. Consolidates with kernel-bridge DR-KB-1 (Tranche 10.3).\n\n   Verification: user final-validation marker in decision register DR-M2-1; downstream `planetCountDecision: 'pending-DCC-03'` removed from `meaning-packet.ts:145`."
+    },
+    {
+      "id": "03.T3.6",
+      "trackId": "03",
+      "tranche": "T3.6",
+      "title": "Decision: six axes of 72 + overlays canon (M2 17th-lens question)",
+      "effort": "M2 17th-lens question",
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "dependsOn": [
+        "03.T3.5"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**"
+      ],
+      "body": "6. **3.6 — Decision: six axes of 72 + overlays canon (M2 17th-lens question)** *(contradiction-decision; routes to DR-M2-2)*\n\n   Decision-register entry ratifying: six addressing-axes of 72 (MEF, tattva, decan, Shem, maqam, DET-projection) + two sonic overlays (mantra 100, Asma'ul-Husna 99+1) + planetary keying via decan-link (planet LUT [10]). Downgrade UX doc §3 seventh row (mantra) from \"axis\" to \"overlay\". Split Theia `shem-asma` `M2AddressView` into separate `shem` and `asma`.\n\n   Verification: UX doc §3 patched to six-axes-plus-overlays; `meaning-packet.ts:50-54` `M2AddressView['name']` enum has `shem` and `asma` as separate entries; round-trip tests cover the asymmetry."
+    },
+    {
+      "id": "03.T3.7",
+      "trackId": "03",
+      "tranche": "T3.7",
+      "title": "Tuning-aware music-tech bridge (deferred CODE-PENDING)",
+      "effort": null,
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "dependsOn": [
+        "03.T3.6"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S0/portal-core/src/music_tech.rs",
+        "Body/S/S3/**"
+      ],
+      "body": "7. **3.7 — Tuning-aware music-tech bridge (deferred CODE-PENDING)** *(code-pending-closure; flagged not greenfield)*\n\n   Named integration blocker: `Body/S/S0/portal-core/src/music_tech.rs` MPE / MTS-ESP / Scala emitter for maqam intervals. `M2_MAQAM_DESC[72]` 24-TET interval patterns already in `.rodata`. Flagged not executed in cycle-3 unless promoted by user.\n\n   Verification: decision-register or follow-on tranche reference; `M2_MAQAM_DESC[72]` interval patterns surface in MPE/MTS-ESP test stream once promoted."
+    },
+    {
+      "id": "03.T3.8",
+      "trackId": "03",
+      "tranche": "T3.8",
+      "title": "Nara deposit-handle wiring",
+      "effort": null,
+      "file": "03-m2-parashakti-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/03-m2-parashakti-reconciliation.md",
+      "dependsOn": [
+        "03.T3.7"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**"
+      ],
+      "body": "8. **3.8 — Nara deposit-handle wiring** *(doc-ahead-landing; cross-extension; cross-link to Tranche 08)*\n\n   Ensure F_routing trace (3.2) emits an M4' deposit handle consumed by Nara surface. Most of this lands in integrated 4-5-0 plugin closure (Tranche 08) but M2-side must emit the handle.\n\n   Verification: `grep -n 'deposit_handle\\|m4.deposit' Body/S/S0/portal-core/src/parashakti/f_routing.rs` after 3.2 lands; integration test M4' journal receives the handle."
+    },
+    {
+      "id": "04.T4.1",
+      "trackId": "04",
+      "tranche": "T4.1",
+      "title": "Codon-rotation projection field contract audit",
+      "effort": null,
+      "file": "04-m3-mahamaya-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/S/S5/**"
+      ],
+      "body": "1. **4.1 — Codon-rotation projection field contract audit** *(code-pending-closure; audit-only)*\n\n   Audit whether current forward/reverse proportional projection IS the canonical kernel LUT per M3'-SPEC §7 or a placeholder. Extend round-trip tests on representative `(lens,mode) ↔ (codon,rotation)` cells. **No rebuild** — `codon_rotation_projection.rs` is materialized.\n\n   Verification: `cargo check -p portal-core && cargo test -p portal-core codon_rotation`; `grep 'dataset_lut_state'` for `materialized-kernel-lut` literal."
+    },
+    {
+      "id": "04.T4.2",
+      "trackId": "04",
+      "tranche": "T4.2",
+      "title": "M3' summonable inspectors + four depth-view modes",
+      "effort": null,
+      "file": "04-m3-mahamaya-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+      "dependsOn": [
+        "04.T4.1"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**"
+      ],
+      "body": "2. **4.2 — M3' summonable inspectors + four depth-view modes** *(doc-ahead-landing; closes O-1)*\n\n   Add the six summonable inspectors (dinucleotide-matrix, charge-quaternion w/ `pp+mm+mp+pm=4X` audit, 24-spoke + 12-deep ring-buffer, Major-Arcana/chromosome, DNA/RNA toggle, per-suit integral `84+96+88+92=360`) and four depth-view widget modes (Flat Clock Debug / Lens Annulus / Toroidal-World / Hopf Identity) over the existing `buildM3ProjectionSurface` contract.\n\n   Verification: `test -d Body/M/epi-theia/extensions/m3-mahamaya && grep -r 'dinucleotide\\|chargeQuaternion\\|twentyFourSpoke\\|majorArcana\\|dnaRnaPhase' Body/M/epi-theia/extensions/m3-mahamaya/src/`; assert **zero** hardcoded codon/hexagram/tarot mapping tables inside extension src (all reads via profile/bridge)."
+    },
+    {
+      "id": "04.T4.3",
+      "trackId": "04",
+      "tranche": "T4.3",
+      "title": "Clock-field angular/hop edge overlay rendering",
+      "effort": null,
+      "file": "04-m3-mahamaya-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+      "dependsOn": [
+        "04.T4.2"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**"
+      ],
+      "body": "3. **4.3 — Clock-field angular/hop edge overlay rendering** *(doc-ahead-landing)*\n\n   Render cross-clock angular relations (aspect/opposition/trine/square) and hop edges along the 384 line-change graph; codon wheel perturbs with tick advance. Renderer overlay only — substrate (`epi-lib/src/m3_clock_lut.c`) is landed.\n\n   Verification: `grep -r 'aspectEdge\\|hopGraph\\|lineChangeEdge\\|spokeLattice' Body/M/epi-theia/extensions/m3-mahamaya/src/`; widget render-test confirms tick redraw."
+    },
+    {
+      "id": "04.T4.4",
+      "trackId": "04",
+      "tranche": "T4.4",
+      "title": "TCT / Nine-of-Wands dataset reconciliation",
+      "effort": null,
+      "file": "04-m3-mahamaya-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+      "dependsOn": [
+        "04.T4.3"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**"
+      ],
+      "body": "4. **4.4 — TCT / Nine-of-Wands dataset reconciliation** *(contradiction-decision; routes to DR-M3-1)*\n\n   Decision-register entry confirming dataset reconciliation (move dataset value from 8 to 7, not code change). Runtime law (`classify_codon`, `test_m3.c`) is authoritative — TCT is 7-state non-dual. Name S2 import-time validator that rejects value 8 for TCT.\n\n   Verification: `grep -rn 'TCT' 13-decision-register.md`; `cargo test -p portal-core::codon::tests` confirms `classify_codon(0x35) == ImperfectPalindromic`."
+    },
+    {
+      "id": "04.T4.5",
+      "trackId": "04",
+      "tranche": "T4.5",
+      "title": "72→64 uniqueness/injectivity contract",
+      "effort": null,
+      "file": "04-m3-mahamaya-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+      "dependsOn": [
+        "04.T4.4"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**"
+      ],
+      "body": "5. **4.5 — 72→64 uniqueness/injectivity contract** *(contradiction-decision; routes to DR-M3-2)*\n\n   Decision-register entry naming uniqueness scope (per-cell vs per-cycle), gap-marker semantics, and profile-field shape (extend `evolutionaryGap` or add `det72to64Fold`). The `floor(idx72*8/9)` fold is deterministic but many-to-one — UI must not assume injectivity.\n\n   Verification: DR-M3-2 entry present; absence of `assert injectivity` patterns in `portal-core/tests/`."
+    },
+    {
+      "id": "04.T4.6",
+      "trackId": "04",
+      "tranche": "T4.6",
+      "title": "17th lens / 16+1 namespace split",
+      "effort": null,
+      "file": "04-m3-mahamaya-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+      "dependsOn": [
+        "04.T4.5"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**"
+      ],
+      "body": "6. **4.6 — 17th lens / 16+1 namespace split** *(contradiction-decision; routes to DR-M3-3)*\n\n   Decision-register entry namespace-splitting `M1_LENS` (12 chromatic anchors) vs `M3_LENS_STACK` (16+1 Mahamaya lens-stack from `M3'-SPEC §8.10`). Forbid silent merger. Lens Annulus inspector (4.2) naming follows decision.\n\n   Verification: DR-M3-3 entry present; `grep LENS_COUNT` returns only M1' anchors; no `M3_LENS_STACK_COUNT=17` introduced."
+    },
+    {
+      "id": "04.T4.7",
+      "trackId": "04",
+      "tranche": "T4.7",
+      "title": "Cl(4,2) one-algebra-four-scales handoff",
+      "effort": null,
+      "file": "04-m3-mahamaya-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+      "dependsOn": [
+        "04.T4.6"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**"
+      ],
+      "body": "7. **4.7 — Cl(4,2) one-algebra-four-scales handoff** *(aligned-only-note; cross-link to Tranches 02.7, 10.7)*\n\n   Note for Wave-B kernel-bridge / profile-contract: confirm `one Cl(4,2) algebra, four call-sites` (M1 ring · M3 codon · M4 personal · Kerykeion natal). Not M3-domain work; handoff only — M1 (Tranche 02.7) and kernel-bridge (Tranche 10.7) own the audit memo.\n\n   Verification: `grep -rn 'Quaternion\\|cl_4_2\\|cl42' Body/S/S0/portal-core/src/` returns one canonical type; audit memo lists four call-sites."
+    },
+    {
+      "id": "05.T5.1",
+      "trackId": "05",
+      "tranche": "T5.1",
+      "title": "Resonance + Conjugate-Form indicator rendering on Nara surface",
+      "effort": null,
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "1. **5.1 — Resonance + Conjugate-Form indicator rendering on Nara surface** *(spec-ahead-integration)*\n\n   Extend m4-nara to render resonance (numeric + Major/Minor/Shadow conjugate-form-character) on each `NaraArtifactEnvelope` and day summary. Obey §6.5 — no quaternion-dump, lean identity sidebar only.\n\n   Verification: `pnpm -C Body/M/epi-theia/extensions/m4-nara build`; `grep -n 'ConjugateFormCharacter\\|resonance' Body/M/epi-theia/extensions/m4-nara/src/`; new render tests including `pending-resonance` fallback."
+    },
+    {
+      "id": "05.T5.2",
+      "trackId": "05",
+      "tranche": "T5.2",
+      "title": "Nara DayContainer vault path alignment",
+      "effort": null,
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.10"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Empty/Present/{day_id}/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "2. **5.2 — Nara DayContainer vault path alignment** *(doc-ahead-landing; DR-M4-1 VALIDATED)*\n\n   Canonical path is `${VAULT_ROOT}/Idea/Empty/Present/{day_id}/` (the standing vault convention used by `epi vault day-init`). Both `M4'-SPEC §6.6` (`${VAULT}/Pratibimba/Nara/{day_id}/`) and `m4-nara/src/common/nara-surface.ts::dayContainerPath` (`${vaultRoot}/day/{dayId}/`) are drift to be patched to canonical.\n\n   Verification: `grep -n 'Empty/Present\\|dayContainerPath' Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts` reflects canonical path; `grep -n 'Empty/Present' Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md` reflects spec patch; `createNaraArtifact → readNaraDayContainer` round-trip passes on `Idea/Empty/Present/{day_id}/`."
+    },
+    {
+      "id": "05.T5.3",
+      "trackId": "05",
+      "tranche": "T5.3",
+      "title": "Graphiti runtime Nara relations insertion API",
+      "effort": null,
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.2"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "3. **5.3 — Graphiti runtime Nara relations insertion API** *(code-pending-closure)*\n\n   Add `nara_insert_relation(day_id, episode_handle, relation)` API on `graphiti-runtime` writing `:HAS_DAY` / `:CONTAINS_DAILY_NOTE` / `:PART_OF_DAY` / `:NEXT_IN_ARC` edges. Privacy-class enforcement.\n\n   Verification: `cargo check -p graphiti-runtime`; `cargo test -p graphiti-runtime --test nara_relations`; `grep -rn 'HAS_DAY\\|NEXT_IN_ARC' Body/S/S3/graphiti-runtime/src/`."
+    },
+    {
+      "id": "05.T5.4",
+      "trackId": "05",
+      "tranche": "T5.4",
+      "title": "`(q_b, q_p)` Bimba/Pratibimba decomposition of Q_composed",
+      "effort": null,
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.3"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "4. **5.4 — `(q_b, q_p)` Bimba/Pratibimba decomposition of Q_composed** *(code-pending-closure)*\n\n   `decompose_bioquaternion(q_composed) -> (q_b, q_p)` on `personal_identity.rs`. Unit test proves `(q_b, q_p)` is a **read of Q_composed**, not an independent input. Protected-local rendering hook on Theia.\n\n   Verification: `cargo check -p portal-core`; `cargo test -p portal-core personal_identity::bioquaternion_decomposition`."
+    },
+    {
+      "id": "05.T5.5",
+      "trackId": "05",
+      "tranche": "T5.5",
+      "title": "Psychoid-cymatic field solver + audio-cymatic driver (minimum-viable)",
+      "effort": "minimum-viable",
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.4"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "5. **5.5 — Psychoid-cymatic field solver + audio-cymatic driver (minimum-viable)** *(code-pending-closure)*\n\n   New `portal-core::psychoid_cymatic` module consuming `MathemeHarmonicProfile.audio_octet[8]` / `nodal_quartet[4]`. Emits **opaque renderer handle**, never raw field body via S3. Option-F vs Option-S decision point.\n\n   Verification: `cargo check -p portal-core`; `test -d Body/S/S0/portal-core/src/psychoid_cymatic` OR `grep -rn 'psychoid_cymatic' Body/S/S0/portal-core/src/`; `grep -rn 'psychoid\\|cymatic' Body/M/epi-theia/extensions/m4-nara/src/`."
+    },
+    {
+      "id": "05.T5.6",
+      "trackId": "05",
+      "tranche": "T5.6",
+      "title": "M4-0 birthdate encoding + six-layer identity branch",
+      "effort": null,
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.5"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "6. **5.6 — M4-0 birthdate encoding + six-layer identity branch** *(code-pending-closure)*\n\n   Birthdate-encoding module (mod6/inverse, mod12 MEF, lens-square, L2' elemental extraction, caps, evidence paths) in portal-core. **Absent layers as \"pending\", not fabricated** (Jungian/Gene Keys/Human Design return pending when not supplied).\n\n   Verification: `cargo check -p portal-core`; `cargo test -p portal-core m4_0_0_birthdate_encoding`; absence test confirms pending status for unsupplied layers."
+    },
+    {
+      "id": "05.T5.7",
+      "trackId": "05",
+      "tranche": "T5.7",
+      "title": "q_personal baseline + axis-lock + identity-hash + Vāma policy + 0/1 polarity",
+      "effort": null,
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.6"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "7. **5.7 — q_personal baseline + axis-lock + identity-hash + Vāma policy + 0/1 polarity** *(contradiction-decision; routes to DR-M4-2)*\n\n   Single decision-register row resolving `M4'-SPEC §7.13`'s five interrelated open questions: (1) `q_personal` Kerykeion-only baseline vs integrated q_Nara; (2) Cl(4,2) axis order `[w=Earth, x=Fire, y=Water, z=Air]` vs alternates; (3) identity-hash migration path PASU/BLAKE3 → quaternionic signature; (4) Vāma classifier policy (internal-mandatory but user-visible-opt-in vs contemplative-offering-only); (5) personal cymatic 0/1 polarity (cross-links Tranche 11.1 DR-TS-1).\n\n   Verification: DR-M4-2 committed; `grep -n 'axis_order\\|q_personal_baseline' Body/S/S0/portal-core/src/personal_identity.rs` reflects lock."
+    },
+    {
+      "id": "05.T5.8",
+      "trackId": "05",
+      "tranche": "T5.8",
+      "title": "Period reading trajectory reconstruction",
+      "effort": null,
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.7"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "8. **5.8 — Period reading trajectory reconstruction** *(doc-ahead-landing)*\n\n   `period_reading(day_range)` API on `nara_journal.rs` reconstructing Q_composed trajectory from Graphiti episodes + Chronos/Kairos handles + history. Preserves privacy. Emits Hopf-projected trajectory handle for psychoid renderer.\n\n   Verification: `cargo check -p portal-core`; `cargo test -p portal-core nara_journal::period_reading`; protected-local invariant test confirms no raw bodies returned."
+    },
+    {
+      "id": "05.T5.9",
+      "trackId": "05",
+      "tranche": "T5.9",
+      "title": "Identity-augment proposal lifecycle (M4 side)",
+      "effort": "M4 side",
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.8"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "9. **5.9 — Identity-augment proposal lifecycle (M4 side)** *(spec-ahead-integration)*\n\n   Adapter API + state machine `proposed → reviewed → accepted|rejected → applied` on `personal_identity.rs`. **Only `applied` mutates Q_identity.** Theia surface hook surfaces pending proposals read-only.\n\n   Verification: `cargo check -p portal-core`; `cargo test -p portal-core personal_identity::proposal_lifecycle`; contract test confirms only `applied` verdict mutates `Q_identity`."
+    },
+    {
+      "id": "05.T5.10",
+      "trackId": "05",
+      "tranche": "T5.10",
+      "title": "Connectivity-vs-bounded-access discriminator",
+      "effort": null,
+      "file": "05-m4-nara-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "dependsOn": [
+        "05.T5.1"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/**",
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "10. **5.10 — Connectivity-vs-bounded-access discriminator** *(code-pending-closure)*\n\n    Gateway contract test asserting live Graphiti / Neo4j / Redis / SpaceTimeDB ping is **not** a grant of bounded access for `nara.*` methods.\n\n    Verification: `cargo test -p gateway --test dispatch_contract` (extended); `grep -rn 'bounded_access\\|connectivity_check' Body/S/S3/gateway/src/` returns hits."
+    },
+    {
+      "id": "06.T6.1",
+      "trackId": "06",
+      "tranche": "T6.1",
+      "title": "Register `s5'.gnostic.*` over production epi-gnostic",
+      "effort": null,
+      "file": "06-m5-epii-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/S/S3/gateway",
+        "Body/S/S3/gateway-contract/src/lib.rs",
+        "Body/S/S5/epi-gnostic",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "1. **6.1 — Register `s5'.gnostic.*` over production epi-gnostic** *(code-pending-closure; gates 6.2)*\n\n   Add `s5'.gnostic.{ingest,query,notebook,status}` to `Body/S/S3/gateway-contract/src/lib.rs` + wire dispatch in `Body/S/S3/gateway` over existing `Body/S/S5/epi-gnostic` Python package and Aletheia CLI bridge. **Anti-greenfield: do NOT rebuild epi-gnostic.**\n\n   Verification: `grep -n \"s5'.gnostic\" Body/S/S3/gateway-contract/src/lib.rs` returns ≥4 methods; `cargo check -p gateway-contract`; `cargo check -p gateway`."
+    },
+    {
+      "id": "06.T6.2",
+      "trackId": "06",
+      "tranche": "T6.2",
+      "title": "Author `logos-atelier` Theia extension",
+      "effort": null,
+      "file": "06-m5-epii-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "dependsOn": [
+        "06.T6.1"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/logos-atelier/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "2. **6.2 — Author `logos-atelier` Theia extension** *(no-orphan-fill; depends on 6.1)*\n\n   Add `Body/M/epi-theia/extensions/logos-atelier/` `{package.json, src/common/atelier-surface.ts, src/browser/atelier-widget.tsx}` consuming `aletheia_gnosis_query` / `aletheia_crystallise` / `aletheia_thought_route` over the `etymology` graph namespace via Tranche 6.1's `s5'.gnostic.*` routes. Surface contract: scent-following pipeline root → cognate → drift → psychoid → pros-hen → Möbius write-back proposal.\n\n   Verification: `test -d Body/M/epi-theia/extensions/logos-atelier && test -f Body/M/epi-theia/extensions/logos-atelier/package.json`; `grep -n etymology Body/M/epi-theia/extensions/logos-atelier/src/common/atelier-surface.ts`."
+    },
+    {
+      "id": "06.T6.3",
+      "trackId": "06",
+      "tranche": "T6.3",
+      "title": "Six operational-capacity panes over `capacity_workflows.rs`",
+      "effort": null,
+      "file": "06-m5-epii-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "dependsOn": [
+        "06.T6.2"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/agentic-control-room/**",
+        "Body/S/S5/epii-autoresearch-core/src/capacity_workflows.rs",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "3. **6.3 — Six operational-capacity panes over `capacity_workflows.rs`** *(spec-ahead-integration; cross-link to Tranche 12.5)*\n\n   In `Body/M/epi-theia/extensions/agentic-control-room/`, add six per-capacity panes (Anuttara-construction, Paramaśiva-CPT/RAG, Paraśakti-graph-relational, Mahāmāyā-process-reward, Nara-Anima-dialogic, Epii-on-Epii) driven by existing `Body/S/S5/epii-autoresearch-core/src/capacity_workflows.rs`. Substrate audit only; extend Theia surface.\n\n   Verification: `grep -rn capacity_workflows Body/S/S5/epii-autoresearch-core/src`; `cargo check -p epii-autoresearch-core`; M5'-SPEC readiness criteria \"six end-to-end paths\" tests pass."
+    },
+    {
+      "id": "06.T6.4",
+      "trackId": "06",
+      "tranche": "T6.4",
+      "title": "Canon Studio + Backend Studio Theia extensions",
+      "effort": null,
+      "file": "06-m5-epii-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "dependsOn": [
+        "06.T6.3"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/backend-studio/**",
+        "Body/M/epi-theia/extensions/canon-studio/**",
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "4. **6.4 — Canon Studio + Backend Studio Theia extensions** *(doc-ahead-landing)*\n\n   Two named extensions:\n   - `Body/M/epi-theia/extensions/canon-studio/` — markdown editor + QL/bimba decoration + Smart Connections autocomplete via `s1'.semantic.*`; writes via Hen `s1'.vault.*`.\n   - `Body/M/epi-theia/extensions/backend-studio/` — declares LSP contributions (`rust-analyzer`/`clangd`/`pylsp`) per system-shape canon §1.2; surfaces `epi-lib` + `portal-core` + S1–S5 cores with provenance.\n\n   Verification: `test -d Body/M/epi-theia/extensions/canon-studio && test -d Body/M/epi-theia/extensions/backend-studio`; `grep -n \"s1'.vault\\|s1'.semantic\" Body/M/epi-theia/extensions/canon-studio/src/common/`; `grep -n \"rust-analyzer\\|clangd\\|pylsp\" Body/M/epi-theia/extensions/backend-studio/package.json`."
+    },
+    {
+      "id": "06.T6.5",
+      "trackId": "06",
+      "tranche": "T6.5",
+      "title": "Decision-register entries DR-M5-1 + DR-M1 wording consolidation",
+      "effort": null,
+      "file": "06-m5-epii-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "dependsOn": [
+        "06.T6.4"
+      ],
+      "writeScopes": [
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "5. **6.5 — Decision-register entries DR-M5-1 + DR-M1 wording consolidation** *(contradiction-decision; routes to DR-M5-1 + DR-M5-2)*\n\n   Two entries in Tranche 13:\n   - **DR-M5-1** (consolidates Wave-B Agentic DR-B-1) — reconcile `M5'-SPEC` row M5-4' (Pi as constitutional agent) with `capability-matrix.json constitutional_agents=[anima,eros,logos,mythos,nous,psyche,sophia]` (no Pi). Either extend constitutional_agents to include `pi` (and add `agent_capability_gates.pi`), or explicitly document ACR-governance-roles vs constitutional-roster as **distinct ontologies**.\n   - **DR-M5-2** — enforce `+1 = M1-5`, deprecate residual `M0-witness` wording from M5'-SPEC §M5'.6 and across the corpus. Sibling of DR-M1-1.\n\n   Verification: `test -f 13-decision-register.md`; `grep -n \"DR-M5-1\\|DR-M5-2\" 13-decision-register.md`."
+    },
+    {
+      "id": "06.T6.6",
+      "trackId": "06",
+      "tranche": "T6.6",
+      "title": "`anuttara_trace` orphan-fill referral",
+      "effort": null,
+      "file": "06-m5-epii-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "dependsOn": [
+        "06.T6.5"
+      ],
+      "writeScopes": [
+        "vendor/legacy/epi-tauri/**"
+      ],
+      "body": "6. **6.6 — `anuttara_trace` orphan-fill referral** *(no-orphan-fill; cross-link to Tranche 14)*\n\n   Defer carrier-assignment to Wave-A M0 (owns Anuttara substrate). Add cross-reference entry in no-orphan audit (Tranche 14) naming `anuttara_trace(output, sensitivity, depth)` as M5-claim with M0-substrate-owner requirement, read-only contemplative-offering only. Escalate to user final-validation if Wave-A M0 does not claim.\n\n   Verification: `grep -n anuttara_trace 14-no-orphan-audit-and-release-gates.md`."
+    },
+    {
+      "id": "07.T7.1",
+      "trackId": "07",
+      "tranche": "T7.1",
+      "title": "Integrated readiness gate against Wave-A pending profile fields",
+      "effort": null,
+      "file": "07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "1. **7.1 — Integrated readiness gate against Wave-A pending profile fields** *(spec-ahead-integration; cross-link to Wave-B Tranche 11.8)*\n\n   `plugin-integrated-1-2-3` declares typed `IntegratedReadiness` blocked-states consuming Wave-A pending markers (`klein_flip_state` from M1 02.2 / kernel-bridge 10.2; `resonance72` from kernel-bridge; six-axes-of-72 decoding from M2 03.3; `audio_octet[8]` / `nodal_quartet[4]` aligned but conditional on M1' performance event 02.4) via the shared `integrated-composition` contract. Extend, no rebuild.\n\n   Verification: `pnpm --filter @pratibimba/integrated-composition test`; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test`; fixture parity with kernel-bridge readiness ledger (`plan.runs/wave-b-kernel-bridge-matrix.md`)."
+    },
+    {
+      "id": "07.T7.2",
+      "trackId": "07",
+      "tranche": "T7.2",
+      "title": "137 = 64 + 72 + 1 composition assertion",
+      "effort": null,
+      "file": "07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "dependsOn": [
+        "07.T7.1"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "2. **7.2 — 137 = 64 + 72 + 1 composition assertion** *(spec-ahead-integration)*\n\n   Add composition-contract assertion that the plugin's stratification preserves the matheme spine: M3 codon (64) + M2 invariant (72) + M1-5 (+1) = 137. The `+1` parent attribution rendered in topology slot `parentAttribution` must read `M1-5`, **not** `M0-Anuttara-witness`. Cross-link to DR-M1-1 / DR-M5-2.\n\n   Verification: widget render-test asserts `parentAttribution === 'M1-5'`; `grep -n parentAttribution Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/` shows correct binding."
+    },
+    {
+      "id": "07.T7.3",
+      "trackId": "07",
+      "tranche": "T7.3",
+      "title": "Solar-anchor design principle integration",
+      "effort": null,
+      "file": "07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "dependsOn": [
+        "07.T7.2"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "3. **7.3 — Solar-anchor design principle integration** *(doc-ahead-landing; cross-link to Tranche 09.5)*\n\n   Plugin owns the **B-8 / B-9 / B-12** composition seam from Wave-B integrated-bimba: solar anchor + planetary placement + cross-surface edit propagation listener via kernel-bridge profile-tick events. Authored as the composition contract in `plugin-integrated-1-2-3/src/common/composition-contract.ts`.\n\n   Verification: `ls Body/M/epi-theia/extensions/plugin-integrated-1-2-3/`; `cd Body/M/epi-theia/extensions/plugin-integrated-1-2-3 && yarn build`; `test -f package.json && grep -n 'solar\\|planetary\\|propagation' src/common/composition-contract.ts`."
+    },
+    {
+      "id": "07.T7.4",
+      "trackId": "07",
+      "tranche": "T7.4",
+      "title": "Cl(4,2) one-algebra cross-pole assertion",
+      "effort": null,
+      "file": "07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "dependsOn": [
+        "07.T7.3"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S0/portal-core/src/quaternion.rs"
+      ],
+      "body": "4. **7.4 — Cl(4,2) one-algebra cross-pole assertion** *(aligned-only-note; cross-link to Tranches 02.7, 04.7, 10.7)*\n\n   Plugin contract notes that M1 ring quaternion, M3 codon quaternion, and M4 personal quaternion share **one Cl(4,2) algebra** at `Body/S/S0/portal-core/src/quaternion.rs`. Cross-rendering integrity depends on this. Audit owned by Tranches 02.7 / 10.7; this note encodes the dependency.\n\n   Verification: `grep -rn 'Quaternion\\|cl_4_2\\|cl42' Body/S/S0/portal-core/src/` returns one canonical type; plugin contract references the audit memo."
+    },
+    {
+      "id": "07.T7.5",
+      "trackId": "07",
+      "tranche": "T7.5",
+      "title": "Plugin layout claim against shell-0 (cosmic) decision",
+      "effort": null,
+      "file": "07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+      "dependsOn": [
+        "07.T7.4"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "5. **7.5 — Plugin layout claim against shell-0 (cosmic) decision** *(spec-ahead-integration; cross-link to Tranche 11.1 DR-TS-1)*\n\n   Plugin's `LayoutClaim` for shell-0 must match the DR-TS-1 resolution (intra-`daily-0-1`-toggle or third layout). No build until DR-TS-1 ratified.\n\n   Verification: DR-TS-1 row in `13-decision-register.md` marked validated; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test` asserts layout-claim against ratified shell shape."
+    },
+    {
+      "id": "08.T8.1",
+      "trackId": "08",
+      "tranche": "T8.1",
+      "title": "Privacy-first composition contract (no raw bodies cross plugin)",
+      "effort": "no raw bodies cross plugin",
+      "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "1. **8.1 — Privacy-first composition contract (no raw bodies cross plugin)** *(spec-ahead-integration)*\n\n   Composition contract asserts: M4 `ProtectedPersonalFieldInput` (`qIdentity`/`qTransit`/`qActivity`/`qComposed`) MUST cross to M5 review surfaces only as **opaque handles** with provenance-state — never raw quaternions, never audio_octet bodies. Cross-link to M4 Tranche 05.5 psychoid-cymatic renderer-handle invariant.\n\n   Verification: `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; contract test asserts plugin rejects raw `q_personal` payload at composition boundary."
+    },
+    {
+      "id": "08.T8.2",
+      "trackId": "08",
+      "tranche": "T8.2",
+      "title": "M2 → M4 deposit-handle reception",
+      "effort": null,
+      "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+      "dependsOn": [
+        "08.T8.1"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "2. **8.2 — M2 → M4 deposit-handle reception** *(spec-ahead-integration; depends on Tranche 03.8)*\n\n   Plugin receives the M4' deposit handle emitted by M2 F_routing (Tranche 03.2 → 03.8) and routes it into Nara journal via `nara_journal::deposit`. Privacy-class verified at handoff.\n\n   Verification: integration test M4' journal receives the handle on synthetic F_routing trace; `grep -n 'deposit_handle' Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/`."
+    },
+    {
+      "id": "08.T8.3",
+      "trackId": "08",
+      "tranche": "T8.3",
+      "title": "M5 recursive-self-review gate consumption",
+      "effort": null,
+      "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+      "dependsOn": [
+        "08.T8.2"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "3. **8.3 — M5 recursive-self-review gate consumption** *(spec-ahead-integration; cross-link to Tranche 12.4)*\n\n   Plugin surfaces identity-augment proposals (Tranche 05.9) through M5 review widget; ACR `enforceHumanGate` extended with `recursiveSelfReview` flag per Tranche 12.4 must gate `applied` verdict on user final-validation when actor is `sophia`/`anima`/`pi`/`aletheia`.\n\n   Verification: ACR contract test (`agentic-control-room/tests`) asserts `enforceHumanGate({decision:'approve', humanRequired:false, actorIsHuman:false, recursiveSelfReview:true, actor:'sophia'}).ok === false`; plugin integration test routes proposals through this gate."
+    },
+    {
+      "id": "08.T8.4",
+      "trackId": "08",
+      "tranche": "T8.4",
+      "title": "M5 → M0 pedagogical return (Möbius write-back)",
+      "effort": "Möbius write-back",
+      "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+      "dependsOn": [
+        "08.T8.3"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "4. **8.4 — M5 → M0 pedagogical return (Möbius write-back)** *(doc-ahead-landing; cross-link to Tranches 06.2, 01.1)*\n\n   Plugin owns the personal → pedagogical return path: recognized patterns crystallize through Logos Atelier (Tranche 06.2) into M0' M0-5' pedagogy layer (Tranche 01.1 M0-5' bridged route). No canon mutation — read-only contemplative offering anchored to M0 nodes.\n\n   Verification: integration test asserts pedagogical return surfaces in M0-5' deep-link without mutating canon; `grep -n 'pedagogy\\|atelier-return' Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/`."
+    },
+    {
+      "id": "08.T8.5",
+      "trackId": "08",
+      "tranche": "T8.5",
+      "title": "Plugin layout claim against shell-1 (personal) decision",
+      "effort": null,
+      "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+      "dependsOn": [
+        "08.T8.4"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "5. **8.5 — Plugin layout claim against shell-1 (personal) decision** *(spec-ahead-integration; cross-link to Tranche 11.1 DR-TS-1)*\n\n   Plugin's `LayoutClaim` for shell-1 personal + flow-writing surface must match the DR-TS-1 resolution. If DR-TS-1 ratifies daily-0-1 intra-layout toggle, plugin's contribution must declare its `availableInLayouts` cleanly. No build until DR-TS-1 ratified.\n\n   Verification: `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test` asserts layout-claim against ratified shell shape; OMNIPANEL_TABS cross-layout availability honored."
+    },
+    {
+      "id": "08.T8.6",
+      "trackId": "08",
+      "tranche": "T8.6",
+      "title": "0/1 cymatic polarity consumer",
+      "effort": null,
+      "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+      "dependsOn": [
+        "08.T8.5"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**"
+      ],
+      "body": "6. **8.6 — 0/1 cymatic polarity consumer** *(spec-ahead-integration; cross-link to Tranche 05.7 DR-M4-2)*\n\n   Plugin consumes the personal-cymatic 0/1 polarity decision from DR-M4-2 (clause 5: psychoid-engine 1-side personal / 0-side cosmic vs m5-prime-system-shape 0-side personal). Wire the chosen polarity through `MathemeHarmonicProfile.audio_octet` rendering boundary.\n\n   Verification: DR-M4-2 clause 5 ratified; widget render-test asserts polarity matches ratified canon; `grep -n 'cymatic_polarity\\|psychoid_polarity' Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/`."
+    },
+    {
+      "id": "09.T9.1",
+      "trackId": "09",
+      "tranche": "T9.1",
+      "title": "M0' six-layer surface contract — author per-layer routing model",
+      "effort": null,
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "1. **9.1 — M0' six-layer surface contract — author per-layer routing model** *(doc-ahead-landing; sibling of Tranche 01.1)*\n\n   Extend `m0-inspector.ts` model with discriminated layer enum `{lang, ql, rel, time, pers, pedag}` + six tab routes in widget. Single S2 query path shared across layers. Sibling of M0 Track 01.1 — M0 owns the spec patch; this tranche owns the integrated routing model that propagates across renderings.\n\n   Verification: `cd Body/M/epi-theia/extensions/m0-anuttara && yarn build`; `grep -E \"layer:.*'(lang|ql|rel|time|pers|pedag)'\" Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts`."
+    },
+    {
+      "id": "09.T9.2",
+      "trackId": "09",
+      "tranche": "T9.2",
+      "title": "Two-relation-families schema discriminator",
+      "effort": null,
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "dependsOn": [
+        "09.T9.1"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "2. **9.2 — Two-relation-families schema discriminator** *(contradiction-decision; routes to DR-IG-1)*\n\n   Decision register entry. If extend-schema chosen, add `c_1_relation_family` enum `{structural, correspondential, kernel_core, inferred, sync, compatibility}` to `RELATIONSHIP_PROPERTY_SPECS`. Populate via `dataset_import` + `sync_coordinator`. Current schema has structural skeleton in `RELATIONSHIP_TYPE_SPECS`; correspondential relations (`HAS_DECAN`, `HAS_MAQAM_FAMILY`, `RULED_BY`, `VORTEX_SPIRIT_AXIS`, etc.) land via `DatasetImporter::sanitize_rel_type` without a discriminator.\n\n   Verification: DR-IG-1 ratified; `cargo check -p epi-s2-graph-schema && cargo test -p epi-s2-graph-schema relation_family_enum_present`."
+    },
+    {
+      "id": "09.T9.3",
+      "trackId": "09",
+      "tranche": "T9.3",
+      "title": "Image-assets-on-nodes schema slot + dataset-import path",
+      "effort": null,
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "dependsOn": [
+        "09.T9.2"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "3. **9.3 — Image-assets-on-nodes schema slot + dataset-import path** *(no-orphan-fill; merges with Tranche 01.6)*\n\n   Add `c_1_asset_uri` (StringList, public) + `c_1_asset_kind` (String) to `GraphPropertySpec`. Extend `dataset_import.rs` field map to lift asset/seal/sigil/glyph keys. Add inspector render slot. Tranche 01.6 owns the M0 inspector-side; this tranche owns the schema property + dataset-import.\n\n   Verification: `cargo check -p epi-s2-graph-schema && cargo test -p epi-s2-graph-services dataset_import::asset_field_mapping`; `grep -n c_1_asset_uri Body/S/S2/graph-schema/src/lib.rs`."
+    },
+    {
+      "id": "09.T9.4",
+      "trackId": "09",
+      "tranche": "T9.4",
+      "title": "CRUD-vs-governed-route gateway extension",
+      "effort": null,
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "dependsOn": [
+        "09.T9.3"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S3/gateway-contract",
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "4. **9.4 — CRUD-vs-governed-route gateway extension** *(contradiction-decision; routes to DR-M0-1)*\n\n   On DR-M0-1 resolution: if (a) extend `Body/S/S3/gateway-contract` + `gateway/src/dispatch.rs` with `s2.graph.{create,update,delete}` backed by `PromotionPolicyDecision` enforcement; if (b) downgrade UX §7 to governed-route via S5 surfaces + pedagogy note on inspector.\n\n   Verification: `grep -nE 's2\\.graph\\.(create|update|delete)' Body/S/S3/gateway-contract/src/lib.rs`; `cargo check -p epi-s3-gateway && cargo test -p epi-s3-gateway dispatch::s2_graph_write_governed`."
+    },
+    {
+      "id": "09.T9.5",
+      "trackId": "09",
+      "tranche": "T9.5",
+      "title": "One-substrate / three-rendering integration plugin ownership",
+      "effort": null,
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "dependsOn": [
+        "09.T9.4"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "5. **9.5 — One-substrate / three-rendering integration plugin ownership** *(spec-ahead-integration; cross-link to Tranche 07.3)*\n\n   Author closing-tranche contract for `plugin-integrated-1-2-3` (Track 07.3) to explicitly own B-8, B-9, B-12: solar anchor, planetary placement, cross-surface edit propagation listener via kernel-bridge profile-tick events.\n\n   Verification: `ls Body/M/epi-theia/extensions/plugin-integrated-1-2-3/`; `cd Body/M/epi-theia/extensions/plugin-integrated-1-2-3 && yarn build`; composition contract names B-8/B-9/B-12 explicitly."
+    },
+    {
+      "id": "09.T9.6",
+      "trackId": "09",
+      "tranche": "T9.6",
+      "title": "M0-3' synchronic community + diachronic clock overlay",
+      "effort": null,
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "dependsOn": [
+        "09.T9.5"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "6. **9.6 — M0-3' synchronic community + diachronic clock overlay** *(spec-ahead-integration; sibling of Tranche 01.5)*\n\n   Wire `gds_tangent_overlay()` output through kernel-bridge into M0-3' panel distinguishing synchronic (community) vs diachronic (`world_clock` + Graphiti episode handles). Depends on M3 Track 04.3 (clock overlay rendering) + M5 episodic deposit.\n\n   Verification: `cargo check -p epi-s2-graph-services && cargo test -p epi-s2-graph-services gds::option1_projection_plan_present`; `grep -n 'M0-3' Body/M/epi-theia/extensions/m0-anuttara/src/browser/m0-anuttara-widget.tsx`."
+    },
+    {
+      "id": "09.T9.7",
+      "trackId": "09",
+      "tranche": "T9.7",
+      "title": "One-substrate / no-fork invariant codification",
+      "effort": null,
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "dependsOn": [
+        "09.T9.6"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "7. **9.7 — One-substrate / no-fork invariant codification** *(aligned-only-note)*\n\n   Codify the **B-8 non-fork invariant** as a cross-referenced note in `M0'-SPEC`, `M2'-SPEC`, `M3'-SPEC`, and the `plugin-integrated-1-2-3` contract. Single `:Bimba` label + `coordinate` property + one schema crate + one rendering composition seam. No code change.\n\n   Verification: `grep -n 'one substrate' Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`."
+    },
+    {
+      "id": "09.T9.8",
+      "trackId": "09",
+      "tranche": "T9.8",
+      "title": "Anuttara property naming round-trip",
+      "effort": null,
+      "file": "09-integrated-bimba-graph-reconciliation.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+      "dependsOn": [
+        "09.T9.7"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "8. **9.8 — Anuttara property naming round-trip** *(contradiction-decision; routes to DR-M0-2)*\n\n   Owns DR-M0-2 graph-services side. Either rename inspector keys to raw `c_1_symbol`/`c_1_complete_formulation`/`c_1_form`, or formalize normalization mapping in `OntologyPropertyMapping` + inspector provenance.\n\n   Verification: `cargo test -p epi-s2-graph-services ontology::anuttara_property_mappings_round_trip`; `grep -nE 'c_1_(symbol|complete_formulation|form)' Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts`."
+    },
+    {
+      "id": "10.T10.1",
+      "trackId": "10",
+      "tranche": "T10.1",
+      "title": "Profile-field readiness ledger (this document + matrix file)",
+      "effort": "this document + matrix file",
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "1. **10.1 — Profile-field readiness ledger (this document + matrix file)** *(code-pending-closure)*\n\n   This tranche document + `plan.runs/wave-b-kernel-bridge-matrix.md` together become cycle-3's canonical profile-field source of truth. Cross-referenced from `00-overview` and every Mn tranche depending on a profile field.\n\n   Verification: `test -f Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-b-kernel-bridge-matrix.md`; `test -f 10-kernel-bridge-profile-contract.md`."
+    },
+    {
+      "id": "10.T10.2",
+      "trackId": "10",
+      "tranche": "T10.2",
+      "title": "Land `MathemeHarmonicProfile.klein_flip` + bridge JSON emit",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.10"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "2. **10.2 — Land `MathemeHarmonicProfile.klein_flip` + bridge JSON emit** *(code-pending-closure; extends Tranche 02.2)*\n\n   Add `klein_flip` field to `MathemeHarmonicProfile` at `kernel.rs:346-387`. Populate from `vimarsha_reading.rs`. Emit at `kernel_bridge_runtime.rs:615-622`. Drop `kleinFlipState` from contract preflight M2 blocker list (Tranche 10.8).\n\n   Verification: `cargo check -p portal-core -p epi-cli && cargo test -p epi-cli --test kernel_bridge_runtime_contract`."
+    },
+    {
+      "id": "10.T10.3",
+      "trackId": "10",
+      "tranche": "T10.3",
+      "title": "DR-KB-1: planetary projection LUT cardinality",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.2"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "3. **10.3 — DR-KB-1: planetary projection LUT cardinality** *(contradiction-decision; consolidates DR-M2-1)*\n\n   Register the choice carried forward from M2 DCC-03 so cycle-4 can extend `MathemePlanetaryChakralProjection::from_diatonic` at `kernel.rs:664-736`. Current code: 8 bodies via 7-degree diatonic + Pluto fallback. M2'-SPEC §9.5: 10-planet + Earth-observer.\n\n   Verification: `grep -n 'DR-KB-1' 13-decision-register.md`."
+    },
+    {
+      "id": "10.T10.4",
+      "trackId": "10",
+      "tranche": "T10.4",
+      "title": "DR-KB-2: `depositionAnchor` typed-field vs bridge-DTO",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.3"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "4. **10.4 — DR-KB-2: `depositionAnchor` typed-field vs bridge-DTO** *(contradiction-decision)*\n\n   Decide whether `depositionAnchor` becomes a typed `MathemeHarmonicProfile` field or is formalized as a contract DTO via `types.ts`. Resolves Wave-A M5 code-pending row. Currently synthesized at bridge JSON edge at `kernel_bridge_runtime.rs:625-631`.\n\n   Verification: `grep -n 'DR-KB-2' 13-decision-register.md`."
+    },
+    {
+      "id": "10.T10.5",
+      "trackId": "10",
+      "tranche": "T10.5",
+      "title": "Audit `s2_anchor` / `s3_anchor` future-anchor placeholder fields",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.4"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "5. **10.5 — Audit `s2_anchor` / `s3_anchor` future-anchor placeholder fields** *(code-pending-closure)*\n\n   Either land emitters using cycle-2 S2/S3 anchor registries to populate `kernel.rs:384,386`, or downgrade to `#[deprecated]` and remove. No greenfield.\n\n   Verification: `cargo check -p portal-core && grep -n 's2_anchor\\|s3_anchor' Body/S/S0/portal-core/src/kernel.rs`."
+    },
+    {
+      "id": "10.T10.6",
+      "trackId": "10",
+      "tranche": "T10.6",
+      "title": "Bridge contract test: six-axes-of-72 carrier round-trip",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.5"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Body/S/S0/epi-cli/tests/kernel_bridge_runtime_contract.rs",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "6. **10.6 — Bridge contract test: six-axes-of-72 carrier round-trip** *(spec-ahead-integration)*\n\n   Verify `Body/S/S0/epi-cli/tests/kernel_bridge_runtime_contract.rs` exercises the `resonance72` carrier shape. Extend if transport check is missing. **Decoder is M2 extension work (Tranche 03.3); bridge only proves transport.**\n\n   Verification: `cargo test -p epi-cli --test kernel_bridge_runtime_contract`."
+    },
+    {
+      "id": "10.T10.7",
+      "trackId": "10",
+      "tranche": "T10.7",
+      "title": "Audit four-scale Cl(4,2) one-algebra identity in `kernel.rs`",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.6"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "7. **10.7 — Audit four-scale Cl(4,2) one-algebra identity in `kernel.rs`** *(spec-ahead-integration; cross-link to Tranches 02.7, 04.7)*\n\n   Audit memo confirming M1 ring / M3 codon / M4 personal / Kerykeion natal share ONE Cl(4,2) primitive. Touch points: `q_cosmic` kernel.rs:374, `codon_charge_quaternion` :410, `BioQuaternionState` events.rs:4, `slash_flip_bimba_prime` kernel.rs:1038.\n\n   Verification: `grep -rn 'Cl(4,2)\\|cl42\\|clifford' Body/S/S0/portal-core/src/ --include='*.rs'`; audit memo file at `plan.runs/10.7-cl42-four-scale-audit.md`."
+    },
+    {
+      "id": "10.T10.8",
+      "trackId": "10",
+      "tranche": "T10.8",
+      "title": "Update contract preflight blocker list after 10.2 lands",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.7"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json:315",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "8. **10.8 — Update contract preflight blocker list after 10.2 lands** *(doc-ahead-landing)*\n\n   Edit `Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json:315` to drop `kleinFlipState` from M2 blocker list. Add `kleinFlip` example to `MathemeHarmonicProfileBoundary` payload-narrowing examples.\n\n   Verification: `grep -n 'kleinFlipState' Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json` (no active hits after patch)."
+    },
+    {
+      "id": "10.T10.9",
+      "trackId": "10",
+      "tranche": "T10.9",
+      "title": "Correction: `dataset_lut_state` / `m3_codec_provenance` host struct",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.8"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "9. **10.9 — Correction: `dataset_lut_state` / `m3_codec_provenance` host struct** *(doc-ahead-landing)*\n\n   Wave-A M0 Tranche 01.4 attributed these literals to `MathemeBedrockProjection`; they actually live on `MathemeBinaryProjection` at `kernel.rs:797,805`. Record correction so M0/M3 closure tranches name the right struct.\n\n   Verification: decision-register-adjacent correction note references `kernel.rs:797`."
+    },
+    {
+      "id": "10.T10.10",
+      "trackId": "10",
+      "tranche": "T10.10",
+      "title": "Surface M1-2 ananda vortex state through the profile bus",
+      "effort": null,
+      "file": "10-kernel-bridge-profile-contract.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "dependsOn": [
+        "10.T10.1"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "10. **10.10 — Surface M1-2 ananda vortex state through the profile bus** *(code-pending-closure; new finding from Tranche 15 subagent research)*\n\n    Per the M1-2 ananda vortex research (`plan.runs/15-m1-2-ananda-vortex-research.md` finding #5), **no `vortex_*` field exists on `MathemeHarmonicProfile`** (`kernel.rs:346-387`). The vortex is implicit via `tick12 + position6 + helix + lens_mode` and IS read by M2 (`m2.h:307`) and M3 (`m3.h:966`), but is NOT surfaced through the profile bus. This is the **largest substrate→profile gap** in the M' spine — the played-torus renderer (Tranche 15.8) needs to consume vortex state via a typed handle, not reconstruct it from coordinates.\n\n    Add `pub ananda_vortex: AnandaVortexProjection` to `MathemeHarmonicProfile` exposing: `active_matrix_op: AnandaMatrixOp` (0-5 per `m1.h:735-756`), `active_cell: (u8, u8)` (12×12 indexed by tick12 × position6), `dr_ring_phase: { mahamaya_idx: u8, parashakti_idx: u8 }`, `cl42_signature_at_position: i8`. Anti-greenfield: the data is all already computed by `m1.c::m1_ananda_get` (m1.h:145, m1.c:297-345); this tranche only routes it through the profile bus.\n\n    Verification: `cargo check -p portal-core && cargo test -p portal-core --test ananda_vortex_projection_round_trip`; `grep -n ananda_vortex Body/S/S0/portal-core/src/kernel.rs` returns the field declaration; kernel-bridge JSON emit at `kernel_bridge_runtime.rs` surfaces the projection; Theia mirror in `kernel-bridge/src/common/types.ts` reflects the new handle; Tranche 15.8 renderer reads the typed handle, not raw coordinates."
+    },
+    {
+      "id": "11.T11.1",
+      "trackId": "11",
+      "tranche": "T11.1",
+      "title": "Shell-0/Shell-1/4+2/`/` separation reading (clarification, not contradiction)",
+      "effort": "clarification, not contradiction",
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "1. **11.1 — Shell-0/Shell-1/4+2/`/` separation reading (clarification, not contradiction)** *(doc-ahead-landing; DR-TS-1 VALIDATED)*\n\n   Spec is already counting it out cleanly: layout is `0/1` (one shell with a 0-cosmic side and a 1-personal side) + `4+2` (six depth layers) + `/` (OmniPanel operator membrane). Code's two layouts (`daily-0-1` for the 0/1 shell, `ide-deep` for the 4+2 depth) ARE the two surfaces. The 0/1 toggle is the side-switch within `daily-0-1` — `(0/1)` IS `#` applied to user context, same state seen from opposite faces. No third layout, no separate toggle-widget extension (unless wanted as UI polish). Cross-links DR-M4-2 clause 5 (0 cosmic / 1 personal — same polarity all the way down).\n\n   Verification: `pnpm --filter @pratibimba/pratibimba-layouts test` passes against current substrate; `daily-0-1` widget contributions partition cleanly into 0-side / 1-side renderings; spec patched to note the structural reading so the next reader doesn't re-litigate."
+    },
+    {
+      "id": "11.T11.2",
+      "trackId": "11",
+      "tranche": "T11.2",
+      "title": "Cross-layout intent routing T5 promotion",
+      "effort": null,
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [
+        "11.T11.1"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "2. **11.2 — Cross-layout intent routing T5 promotion** *(spec-ahead-integration)*\n\n   Wire each of the six M-extensions to consume `CrossLayoutIntent.requestedExtensionId` + `requestedContributionId`. Wire `OMNIPANEL_TABS.availableInLayouts` filter against `epi-logos.layout.active` preference. Extend, no rebuild.\n\n   Verification: `pnpm --filter @pratibimba/omnipanel-shell test`; `pnpm --filter @pratibimba/pratibimba-layouts test`; integration test in `acceptance-harness` \"OmniPanel intent → daily-0-1 → ide-deep with M3 codon preserved\"."
+    },
+    {
+      "id": "11.T11.3",
+      "trackId": "11",
+      "tranche": "T11.3",
+      "title": "Daily-layer widget ownership trace + ORPHAN closure",
+      "effort": null,
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [
+        "11.T11.2"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/<owner>/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "3. **11.3 — Daily-layer widget ownership trace + ORPHAN closure** *(no-orphan-fill)*\n\n   Trace `pratibimba.daily.{journal, agent-checkin, cymatic-placeholder, status-display}` (declared in `layout-types.ts:L52-58`) to either `body-lite-surface` contributions (rename/align) or a named owning extension. If no owner, either downgrade layout claim (remove from `expectedWidgets`) or land a `pratibimba-daily-widgets` extension (first-build allowed: no current owner of the named M' product surfaces).\n\n   Verification: Extension presence at `Body/M/epi-theia/extensions/<owner>/`; `validate-extension-contract-preflight.test.mjs` extended with `expectedWidgets` ↔ contributor mapping; `pnpm --filter @pratibimba/body-lite-surface test`."
+    },
+    {
+      "id": "11.T11.4",
+      "trackId": "11",
+      "tranche": "T11.4",
+      "title": "`smart-connections-sidebar` layout-claim code-pending marker",
+      "effort": null,
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [
+        "11.T11.3"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "4. **11.4 — `smart-connections-sidebar` layout-claim code-pending marker** *(code-pending-closure)*\n\n   Mark `pratibimba.smart-connections-sidebar` entry in `ide-deep.expectedWidgets` as code-pending with gating reference (Track 03 T6.5 per `MIGRATION-SOURCES.md`). Ensure layout-switcher does not throw on missing widget. Cross-link `MIGRATION-SOURCES.md`.\n\n   Verification: `pnpm --filter @pratibimba/pratibimba-layouts test` (layout-switcher tolerates pending widget)."
+    },
+    {
+      "id": "11.T11.5",
+      "trackId": "11",
+      "tranche": "T11.5",
+      "title": "Forbidden-direct-import lint enforcement against six M-extension source trees",
+      "effort": null,
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [
+        "11.T11.4"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "src/**/*.ts"
+      ],
+      "body": "5. **11.5 — Forbidden-direct-import lint enforcement against six M-extension source trees** *(spec-ahead-integration)*\n\n   Extend `Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs` to grep each Mn-extension `src/**/*.ts` for `forbiddenDirectImports` + fail on hit. Consume `07-t0` authority as-is.\n\n   Verification: `node Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs`; `node --test Body/M/epi-theia/extensions/test/validate-extension-contract-preflight.test.mjs`."
+    },
+    {
+      "id": "11.T11.6",
+      "trackId": "11",
+      "tranche": "T11.6",
+      "title": "Acceptance-harness cross-layout state-identity preservation assertion",
+      "effort": null,
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [
+        "11.T11.5"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "6. **11.6 — Acceptance-harness cross-layout state-identity preservation assertion** *(spec-ahead-integration)*\n\n   Extend `acceptance-harness/tests/topology.test.mjs` with end-to-end assertion: toggling `daily-0-1` ↔ `ide-deep` with selected M3 codon + active session + profile generation preserves `(coordinate, lens, mode, profileGeneration, sessionKey, dayNow)` per `layout-types.ts:L7-12` kernel-bridge DI singleton contract.\n\n   Verification: `pnpm --filter @pratibimba/acceptance-harness test`."
+    },
+    {
+      "id": "11.T11.7",
+      "trackId": "11",
+      "tranche": "T11.7",
+      "title": "Spec-side stale `Tauri implementation` wording audit",
+      "effort": null,
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [
+        "11.T11.6"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "7. **11.7 — Spec-side stale `Tauri implementation` wording audit** *(doc-ahead-landing)*\n\n   Audit `M'-SYSTEM-SPEC §Shell layer` L143 + `M'-TAURI-PORT-SPEC.md` for residual Tauri wording. Downgrade where substance still applies to Theia; retire where it does not. Parallel to M1 Tranche 02.1.\n\n   Verification: `grep -rn \"Tauri implementation\\|tauri-side\\|epi-tauri target\" Idea/Bimba/Seeds/M/*.md` returns nothing not explicitly deprecated."
+    },
+    {
+      "id": "11.T11.8",
+      "trackId": "11",
+      "tranche": "T11.8",
+      "title": "Integrated-plugin readiness gate against Wave-A profile-field pending markers",
+      "effort": null,
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [
+        "11.T11.7"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "8. **11.8 — Integrated-plugin readiness gate against Wave-A profile-field pending markers** *(spec-ahead-integration; cross-link to Tranches 07.1, 08.1)*\n\n   `plugin-integrated-1-2-3` + `plugin-integrated-4-5-0` each declare typed `IntegratedReadiness` blocked states consuming Wave-A pending-* markers (`klein_flip_state`, `resonance72`, `planetaryChakral`, `audio_octet`/`nodal_quartet`, cymatic field) via shared `integrated-composition` contract. Extension of existing package; no rebuild.\n\n   Verification: `pnpm --filter @pratibimba/integrated-composition test`; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test`; `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; fixture parity with kernel-bridge readiness ledger (Tranche 10.1)."
+    },
+    {
+      "id": "11.T11.9",
+      "trackId": "11",
+      "tranche": "T11.9",
+      "title": "Surface → extension → contract closure ledger",
+      "effort": null,
+      "file": "11-theia-shell-surface-hosting.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+      "dependsOn": [
+        "11.T11.8"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/contracts/surface-extension-contract-ledger.json",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "9. **11.9 — Surface → extension → contract closure ledger** *(no-orphan-fill)*\n\n   Single ledger JSON at `Body/M/epi-theia/extensions/contracts/surface-extension-contract-ledger.json` mapping every widget id in `pratibimba-layouts/src/common/layout-types.ts` to `(extension package, contract entry, status)`. Closes the shell-scope no-orphan audit (feeds Tranche 14).\n\n   Verification: `node --test Body/M/epi-theia/extensions/test/surface-extension-contract-ledger.test.mjs` (new sibling validator) asserts every `expectedWidgets` id has owner or code-pending marker."
+    },
+    {
+      "id": "12.T12.1",
+      "trackId": "12",
+      "tranche": "T12.1",
+      "title": "Pi + Anima + subagents architecture audit (replaces ACR-actor parity)",
+      "effort": "replaces ACR-actor parity",
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [],
+      "writeScopes": [],
+      "body": "1. **12.1 — Pi + Anima + subagents architecture audit (replaces ACR-actor parity)** *(doc-ahead-landing)*\n\n   Audit report at `plan.runs/12.1-pi-anima-subagents-architecture.md` documenting the canonical architecture: Pi (harness), Anima (main dispatcher), six Aletheia subagents (skill/system/service specialists invoked by Anima), six ta-onta carriers (system/service routing infrastructure, NOT agents). Map every actor / role currently in ACR `run-model.ts::AgenticActor` to one of these categories or to \"tangent — deprecate.\" Rewrite `M5'-SPEC §M5-4'` around the canonical architecture.\n\n   Verification: `grep -n 'AgenticActor' Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts` reflects collapsed union; `M5'-SPEC §M5-4'` patched."
+    },
+    {
+      "id": "12.T12.2",
+      "trackId": "12",
+      "tranche": "T12.2",
+      "title": "`s5'.gnostic.*` gateway-endpoint registration",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.13"
+      ],
+      "writeScopes": [
+        "Body/S/S3/gateway/src/**"
+      ],
+      "body": "2. **12.2 — `s5'.gnostic.*` gateway-endpoint registration** *(code-pending-closure; consolidates Tranche 06.1)*\n\n   Register `s5'.gnostic.{ingest, query, notebook, status}` in `Body/S/S3/gateway/src/` routing to `epi-gnostic/epi_gnostic/{cli.py, graphiti_service.py, wrapper.py}`. Anti-greenfield: production Python package landed; gateway only registers.\n\n   Verification: `grep -rn \"s5'.gnostic\\.\" Body/S/S3/gateway/src/` returns ≥4 method registrations; `cargo check -p epi-s3-gateway` clean; `pytest Body/S/S5/epi-gnostic/tests/test_enrichment.py -q` passes."
+    },
+    {
+      "id": "12.T12.3",
+      "trackId": "12",
+      "tranche": "T12.3",
+      "title": "`constitutional_agents` array audit and disposition",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.2"
+      ],
+      "writeScopes": [],
+      "body": "3. **12.3 — `constitutional_agents` array audit and disposition** *(contradiction-decision DOWNGRADED to audit; replaces orphan-fill)*\n\n   Per DR-M5-1: the `constitutional_agents=[anima, eros, logos, mythos, nous, psyche, sophia]` array is NOT a peer-agent ontology. Audit whether each name (1) is psyche-aspect rendering material surfaced through Anima — document as such, OR (2) is tangent — deprecate. There are no missing `.md` profiles to land for \"constitutional agents\" because there are no constitutional agents — there's Anima with optional psyche-aspect facets.\n\n   Verification: audit doc at `plan.runs/12.3-constitutional-agents-disposition.md`; `capability-matrix.json` patched per audit outcome; no orphan-fill of agent profiles."
+    },
+    {
+      "id": "12.T12.4",
+      "trackId": "12",
+      "tranche": "T12.4",
+      "title": "Recursive-self-review gate (relocated from ACR to Pi)",
+      "effort": "relocated from ACR to Pi",
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.3"
+      ],
+      "writeScopes": [
+        "Body/S/S4/pi-agent/lib/**"
+      ],
+      "body": "4. **12.4 — Recursive-self-review gate (relocated from ACR to Pi)** *(code-pending-closure)*\n\n   Recursive-self-review gating is a property of **Pi's review-routing**, not \"ACR enforceHumanGate.\" Pi enforces: when Anima reviews Anima-dispatched work, the review requires user final-validation. Implementation at `Body/S/S4/pi-agent/lib/` (or carrier-equivalent), not in the ACR extension.\n\n   Verification: contract test asserts `pi.enforceReviewGate({recursiveSelfReview: true, actor: 'anima'}).ok === false` requires user final-validation pass."
+    },
+    {
+      "id": "12.T12.5",
+      "trackId": "12",
+      "tranche": "T12.5",
+      "title": "Six operational-capacity views (audit; possibly Pi-monitoring repurpose)",
+      "effort": "audit; possibly Pi-monitoring repurpose",
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.4"
+      ],
+      "writeScopes": [],
+      "body": "5. **12.5 — Six operational-capacity views (audit; possibly Pi-monitoring repurpose)** *(spec-ahead-integration)*\n\n   The six per-capacity panes (Anuttara-construction, Paramaśiva-CPT/RAG, Paraśakti-graph-relational, Mahāmāyā-process-reward, Nara-Anima-dialogic, Epii-on-Epii) over `capacity_workflows.rs` are valid as **Pi runtime monitoring views** showing per-capacity dispatch traces. If retained, they live in the repurposed ACR-as-Pi-monitor surface (Tranche 12.14). If not retained, deprecate with `capacity_workflows.rs` substrate kept as canonical.\n\n   Verification: `grep -rn capacity_workflows Body/S/S5/epii-autoresearch-core/src`; per-capacity dispatch trace visible in Pi-monitor view OR audit doc explains why deferred."
+    },
+    {
+      "id": "12.T12.6",
+      "trackId": "12",
+      "tranche": "T12.6",
+      "title": "`MediatedRunEvidencePacket` field-parity closure",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.5"
+      ],
+      "writeScopes": [],
+      "body": "6. **12.6 — `MediatedRunEvidencePacket` field-parity closure** *(spec-ahead-integration)*\n\n   Extend `RunEvidenceEnvelope` to include all 16 spec fields (`profileGeneration`, `bridgeReadinessHandle`, `sessionKey`, `dayNowContext`, `currentProfile`, `graphContext`, `sessionRuntime`, `semanticCandidates`, `s5Refs`, `reviewId`, …). Run-evidence transport is canonical regardless of ACR's fate.\n\n   Verification: parity test compares `RunEvidenceEnvelope` keys vs `capability-matrix.json mediated_run_evidence_bridge.packet_required_fields` — set-equality assertion."
+    },
+    {
+      "id": "12.T12.7",
+      "trackId": "12",
+      "tranche": "T12.7",
+      "title": "Pi axiom-translation tooling (DR-B-2 land)",
+      "effort": "DR-B-2 land",
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.6"
+      ],
+      "writeScopes": [
+        "Body/S/S4/pi-agent/lib/axiom-translate.ts"
+      ],
+      "body": "7. **12.7 — Pi axiom-translation tooling (DR-B-2 land)** *(code-pending-closure)*\n\n   Implement `Body/S/S4/pi-agent/lib/axiom-translate.ts` consuming `epi-gnostic` OWL/SHACL (`import_epi_ontology_with_n10s` landed). Land in Pi capability list. Unblocks Logos Atelier scent-following root.\n\n   Verification: `test -f Body/S/S4/pi-agent/lib/axiom-translate.ts`; capability-matrix Pi gate-set includes axiom-translate; integration test bridges plain prose to OWL/SHACL."
+    },
+    {
+      "id": "12.T12.8",
+      "trackId": "12",
+      "tranche": "T12.8",
+      "title": "DEPRECATED",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.7"
+      ],
+      "writeScopes": [],
+      "body": "8. **12.8 — DEPRECATED** *(was: Pi-as-ACR-role decision)*\n\n   Resolved by DR-M5-1 clarification. There is no separate ACR-governance ontology to reconcile with constitutional-roster. Pi is the harness; Anima is the main agent; subagents are dispatched specialists. Tranche removed from execution sequence."
+    },
+    {
+      "id": "12.T12.9",
+      "trackId": "12",
+      "tranche": "T12.9",
+      "title": "Gateway handler audit for `dispatch_moirai_night_pass` + Aletheia Möbius routing",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.8"
+      ],
+      "writeScopes": [],
+      "body": "9. **12.9 — Gateway handler audit for `dispatch_moirai_night_pass` + Aletheia Möbius routing** *(spec-ahead-integration)*\n\n   Audit doc verifying `s4'.mediation.route` knows about `dispatch_moirai_night_pass` and chains into `aletheia/modules/moirai-rehear.ts` per Aletheia CONTRACT §Möbius + `janus-envelope.schema.json`. Moirai is one of the six Aletheia subagents — Anima dispatches it for the night-pass routing.\n\n   Verification: `grep -rn 'dispatch_moirai_night_pass' Body/S/S3/gateway/src/ Body/S/S4/ta-onta/anima/modules/` returns hits in BOTH; Pi-monitor view includes night-pass dispatch trace."
+    },
+    {
+      "id": "12.T12.10",
+      "trackId": "12",
+      "tranche": "T12.10",
+      "title": "Capability-parity live-assertion wiring (Pi gateway)",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.1"
+      ],
+      "writeScopes": [],
+      "body": "10. **12.10 — Capability-parity live-assertion wiring (Pi gateway)** *(spec-ahead-integration)*\n\n    Register gateway endpoint exposing capability list (`s4'.mediation.capabilities.list`); wire parity assertion against it at Pi startup (NOT ACR startup — Pi owns the capability gate).\n\n    Verification: `grep -rn 'capabilities.list' Body/S/S3/gateway/src/`; Pi-runtime test asserts parity at startup."
+    },
+    {
+      "id": "12.T12.11",
+      "trackId": "12",
+      "tranche": "T12.11",
+      "title": "TillDone substrate residency audit",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.10"
+      ],
+      "writeScopes": [
+        "Body/S/S4/ta-onta/pleroma/S2/tilldone.ts"
+      ],
+      "body": "11. **12.11 — TillDone substrate residency audit** *(code-pending-closure)*\n\n    Verify `Body/S/S4/ta-onta/pleroma/S2/tilldone.ts` exists; if missing, copy from vendor source or downgrade `body_path` claim in capability-matrix. TillDone is execution-backbone for the Pleroma carrier (system/service routing), not an agent.\n\n    Verification: `test -f 'Body/S/S4/ta-onta/pleroma/S2/tilldone.ts'` OR audit doc explains divergence."
+    },
+    {
+      "id": "12.T12.12",
+      "trackId": "12",
+      "tranche": "T12.12",
+      "title": "DEPRECATED",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.11"
+      ],
+      "writeScopes": [],
+      "body": "12. **12.12 — DEPRECATED** *(was: Aletheia-subagents-in-ACR-AgenticActor decision)*\n\n    Resolved by DR-B-3 + DR-M5-1 clarification. Subagents are Anima-dispatched specialists; they surface in Pi-monitor as dispatch traces, not as first-class actors. The `AgenticActor` union collapses to `pi` + `anima` + the six subagents-as-dispatched. Tranche removed from execution sequence."
+    },
+    {
+      "id": "12.T12.13",
+      "trackId": "12",
+      "tranche": "T12.13",
+      "title": "S4 ↔ S5 shared-intelligence seam runtime audit",
+      "effort": null,
+      "file": "12-agentic-layer-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+      "dependsOn": [
+        "12.T12.12"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/agentic-control-room/**"
+      ],
+      "body": "13. **12.13 — S4 ↔ S5 shared-intelligence seam runtime audit** *(code-pending-closure; cross-link to Tranches 10.x, 09.x)*\n\n    Audit report: (a) `GEMINI_EMBED_DIMS=3072` end-to-end Bimba+Gnosis; (b) `RELATES_TO_COORDINATE` cross-namespace edges land per `test_enrichment`; (c) `MathemeHarmonicProfile.resonance72` consumed by Aletheia gnosis-RAG via Pi. Straddles Tranche 10.x (resonance72) and 09.x (cross-namespace edges).\n\n    Verification: `pytest Body/S/S5/epi-gnostic/tests/test_enrichment.py::test_cross_namespace_edge_created -q` passes; `grep -rn 'EMBED_DIMS\\|embedding_dim' Body/S/S5/epi-gnostic/` returns single value.\n\n14. **12.14 (NEW) — ACR extension repurpose decision and execution** *(no-orphan-fill / first-build allowed for repurposed Pi-monitor)*\n\n    Audit `Body/M/epi-theia/extensions/agentic-control-room/` against the Pi+Anima+subagents canonical architecture. Two paths:\n\n    - **(a) Repurpose as Pi-runtime monitoring surface** — widgets render: dispatch trace (Pi → Anima → subagent invocations), run-evidence display (`MediatedRunEvidencePacket`), capability-parity check, capacity-workflow dispatch traces (Tranche 12.5). Rename extension to `pi-runtime-monitor` (or similar). Drop the \"constitutional-agents review panel\" framing entirely.\n    - **(b) Deprecate** — if no monitoring surface is wanted, mark the extension `@deprecated` and migrate any useful contracts (run-evidence types) into `pi-agent` or `m5-epii`.\n\n    Recommendation: (a). The substrate has real monitoring value once reframed.\n\n    Verification: extension renamed and refactored OR deprecated with migration notes; `grep -rn 'AgenticControlRoom\\|ACR' Body/M/epi-theia/extensions/` reflects the chosen path; M5'-SPEC §M5-4' references the Pi-monitor surface instead of ACR."
+    },
+    {
+      "id": "15.T15.1",
+      "trackId": "15",
+      "tranche": "T15.1",
+      "title": "Foundation principles registry",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md"
+      ],
+      "body": "1. **15.1 — Foundation principles registry** *(doc-ahead-landing)*\n\n   Author `Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md` enumerating the nine principles above as binding contracts. Every M-extension package.json references it via `contributes.uiFoundationPrincipleAdherence: true`.\n\n   Verification: `test -f Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md`; package-json validator extended to require the principle-adherence flag for any extension contributing to `widget.application-shell-{left,right,bottom}`."
+    },
+    {
+      "id": "15.T15.2",
+      "trackId": "15",
+      "tranche": "T15.2",
+      "title": "OmniPanel architecture as agentic membrane",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.12"
+      ],
+      "writeScopes": [],
+      "body": "2. **15.2 — OmniPanel architecture as agentic membrane** *(spec-ahead-integration; consolidates Tranche 12.14)*\n\n   Reframe `omnipanel-shell` extension as the agentic sidebar housing. Author the OmniPanel content model from the repurposed ACR substrate: `run-model.ts` → `omnipanel-runtime.ts`; ACR widgets → OmniPanel tabs (Pi Chat, Sessions, Dispatch Trace, Tool Stream, Evidence, Review, Gateway, Diagnostics). Sessions persist across `daily-0-1` ↔ `ide-deep` toggle. No modal review surfaces — Review tab is the landing surface.\n\n   Verification: `test -d Body/M/epi-theia/extensions/omnipanel-shell`; `grep -n 'omnipanel-runtime\\|PiChat\\|DispatchTrace' Body/M/epi-theia/extensions/omnipanel-shell/src/`; session-continuity test asserts session id and capability list survive the 0/1 ↔ 4+2 transitions."
+    },
+    {
+      "id": "15.T15.3",
+      "trackId": "15",
+      "tranche": "T15.3",
+      "title": "Left-sidebar activity-bar system",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.2"
+      ],
+      "writeScopes": [],
+      "body": "3. **15.3 — Left-sidebar activity-bar system** *(spec-ahead-integration)*\n\n   Wire activity-bar mode-switching for the left sidebar across both layouts. Modes for `daily-0-1`: Coordinate Tree · Bimba Graph Viewer · Canon Studio. Modes for `ide-deep`: add Backend Studio + Smart Connections. Theia's activity-bar contribution is the consumption path; no parallel widget shell.\n\n   Verification: `pnpm --filter @pratibimba/pratibimba-layouts test` asserts activity-bar registers exactly the named modes per layout; cross-layout state-identity preserves active activity-bar mode where the mode exists in both."
+    },
+    {
+      "id": "15.T15.4",
+      "trackId": "15",
+      "tranche": "T15.4",
+      "title": "Editor-area composition pattern for integrated plugins",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.3"
+      ],
+      "writeScopes": [
+        "Body/M/epi-theia/extensions/integrated-composition/src/common/composition-pattern.md"
+      ],
+      "body": "4. **15.4 — Editor-area composition pattern for integrated plugins** *(spec-ahead-integration; cross-link to Tranches 07, 08)*\n\n   Author `Body/M/epi-theia/extensions/integrated-composition/src/common/composition-pattern.md` documenting the composition-over-juxtaposition contract: integrated plugins compose three M-extensions into one editor surface, never three side-by-side panes. Geometric composition (cosmic 1-2-3 over the K² torus; personal 4-5-0 over the psychoid field) is normative. Subagent research (Tranche 15.8) feeds the M1-2 ananda vortex composition specifics.\n\n   Verification: `grep -rn 'composition-pattern\\|composition-contract' Body/M/epi-theia/extensions/plugin-integrated-{1-2-3,4-5-0}/src/`; integrated-composition contract test asserts side-by-side widget contributions are rejected at composition load."
+    },
+    {
+      "id": "15.T15.5",
+      "trackId": "15",
+      "tranche": "T15.5",
+      "title": "0/1 toggle gesture + lemniscate transition",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.4"
+      ],
+      "writeScopes": [],
+      "body": "5. **15.5 — 0/1 toggle gesture + lemniscate transition** *(no-orphan-fill; new affordance)*\n\n   Implement the cosmic ↔ personal toggle in `daily-0-1`:\n   - Keystroke: `cmd-period` (honours `.` as nesting operator — the toggle nests one face into the other)\n   - Title-bar affordance: small coin-flip icon at the layout chrome\n   - Transition: lemniscate animation — cosmic composition folds inward; personal composition emerges from the same fold. The `#` operator made visible as UI.\n   - State preservation: coordinate, lens, mode, session, day-now ALL survive the toggle (per DR-TS-1 ratification).\n\n   Verification: integration test asserts `cmd-period` triggers the toggle; visual-regression test confirms the lemniscate transition primitive; state-preservation test asserts six globals survive."
+    },
+    {
+      "id": "15.T15.6",
+      "trackId": "15",
+      "tranche": "T15.6",
+      "title": "Profile-tick clock + readiness inline rendering",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.5"
+      ],
+      "writeScopes": [],
+      "body": "6. **15.6 — Profile-tick clock + readiness inline rendering** *(spec-ahead-integration; consumes Tranche 10)*\n\n   Wire `MathemeHarmonicProfile` tick-advance event as the global UI clock. Every widget subscribes via the kernel-bridge profile subscription. Readiness state from the kernel-bridge readiness ledger renders inline on every data binding (border colour, pending badge, blocked overlay). No separate \"errors\" panel — provenance lives where the datum lives.\n\n   Verification: `grep -rn 'subscribeToProfileTick\\|onProfileAdvance' Body/M/epi-theia/extensions/`; profile-tick-driven render test asserts widget re-renders on tick advance with stable input; provenance-state inline rendering test passes for each readiness class."
+    },
+    {
+      "id": "15.T15.7",
+      "trackId": "15",
+      "tranche": "T15.7",
+      "title": "Bimba/Pratibimba state-persistence across toggle",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.6"
+      ],
+      "writeScopes": [],
+      "body": "7. **15.7 — Bimba/Pratibimba state-persistence across toggle** *(spec-ahead-integration; consumes DR-TS-1)*\n\n   Define and enforce the state contract that survives the 0/1 toggle and the `daily-0-1` ↔ `ide-deep` layout switch: `(coordinate, lens, mode, profileGeneration, sessionKey, dayNow)` plus active OmniPanel tab plus active activity-bar mode. The kernel-bridge DI singleton (per `layout-types.ts:7-12`) IS this contract; surface it in `omnipanel-runtime` + `pratibimba-layouts` as a typed `BimbaPratibimbaUiState`.\n\n   Verification: extension of `acceptance-harness/tests/topology.test.mjs` asserts every named state field survives both the 0/1 toggle AND the layout switch."
+    },
+    {
+      "id": "15.T15.8",
+      "trackId": "15",
+      "tranche": "T15.8",
+      "title": "M1-2 ananda vortex visual rendering on K²",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.7"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-lib/src/m1.c:22-114"
+      ],
+      "body": "8. **15.8 — M1-2 ananda vortex visual rendering on K²** *(spec-ahead-integration; consumes subagent research at `plan.runs/15-m1-2-ananda-vortex-research.md`)*\n\n   The Bevy/wgpu `m1-paramasiva-played-torus` extension (DR-M1-2 ratified; build pending — directory does not yet exist) renders the **six 12×12 mod-10 Ananda vortex matrices** (`ANANDA_BIMBA`, `ANANDA_PRATIBIMBA`, `ANANDA_SUM`, two `_DIFF`, `ANANDA_QUINTESSENCE` at `Body/S/S0/epi-lib/src/m1.c:22-114`) as a load-bearing component of the cosmic-1-2-3 composition surface. Concrete visual contract:\n\n   - **K² as the texture surface** carrying the active Ananda matrix as a 12×12 heatmap. Chromatic-longitude U = `position6`; fifths-meridian V = `tick12`. One luminous cell jumps per tick.\n   - **Six matrices stacked as a perspex cross-fade** keyed off `Ananda_Matrix_Op` (0-5 per `m1.h:735-756` Spanda↔Ananda parallel-track invariant). Each matrix is a glass layer; the active one is opaque, the others are translucent.\n   - **The two DR rings rendered as flow-streamlines on the torus surface**: `DR_RING_MAHAMAYA = {1,2,4,8,7,5}` (doubling) in gold ascending half; `DR_RING_PARASHAKTI = {3,6,9,3,6,9}` (tripling) in emerald descending half. The vortex literally *moves* as two diagonal sweeps — the substrate at `m1.c:122-123` IS the streamline data.\n   - **Cl(4,2) signature as colour-binary**: P0/P5 (sin/cos, signature -1) cool indigo halos; P1-P4 (tan/sec/cot/csc, +1) warm amber-vermilion. The +2 net signature becomes the over-cycle colour balance.\n   - **Reads-only contract**: the vortex matrices are `.rodata`; the renderer never mutates. Heatmap state derives entirely from `(tick12, position6, lens_mode, Ananda_Matrix_Op)`.\n\n   Verification: `test -d Body/M/epi-theia/extensions/m1-paramasiva-played-torus`; `grep -rn 'ANANDA_BIMBA\\|ANANDA_PRATIBIMBA\\|DR_RING_MAHAMAYA\\|DR_RING_PARASHAKTI' Body/M/epi-theia/extensions/m1-paramasiva-played-torus/src/`; render-test asserts active-matrix heatmap binds to `Ananda_Matrix_Op`; flow-streamline test asserts gold/emerald rings advance with tick."
+    },
+    {
+      "id": "15.T15.9",
+      "trackId": "15",
+      "tranche": "T15.9",
+      "title": "Tick choreography across the six matrices",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.8"
+      ],
+      "writeScopes": [],
+      "body": "9. **15.9 — Tick choreography across the six matrices** *(spec-ahead-integration; depends on 15.8 and 10.10)*\n\n   The profile-tick crosses six matrices simultaneously: `CL42_BASIS[6]` · `RING_QUATERNION_LUT[12]` · `QL_TRIG_TABLE[6]` · the six Ananda vortex matrices · `audio_octet[8]` · `nodal_quartet[4]`. **Single animation primitive carries the tick honestly**: `quat_slerp` of K² orientation across `RING_QUATERNION_LUT[12]` (`m1.h:493-523, 551-564`). One full 360° SO(3) revolution per 12 ticks; Hopf-fibre flag flips at tick 5→6 (Klein crossing; cross-link Tranche 02.2 `klein_flip` field landing); second 360° returns identity at tick 11→0 — the 720° SU(2) recognition (the `DOUBLE_COVER_DEG=720` invariant becomes visible).\n\n   Every other surface element derives from or rides on the slerp:\n   - Luminous Ananda cell jumps on each tick advance (Tranche 15.8)\n   - Gold/emerald DR streamlines advance one position per tick\n   - Cl(4,2) signature halos recolour as `position6` cycles\n   - Hopf-shadow phase tracks the slerp's S² projection\n   - Audio_octet[8] particle emitters fire at their indexed frequencies (windows onto M2-1' Vimarśa writes — never re-derived locally, see 02.X update)\n   - Nodal_quartet[4] satellites orbit the four nodal stress-points\n\n   At tick 5→6 the Klein-flip event fires on the profile bus (Tranche 02.2 landing); M2' cymatic surface subscribes (`M1'-SPEC.md:108`). UI choreography honors the event: Hopf-fibre flag flips visibly, the K² orientation transitions through its dimensional self-crossing, and the active Ananda matrix may cross-fade to its dual (`BIMBA ↔ PRATIBIMBA`) if the lens crossing aligns with `Ananda_Matrix_Op` advance.\n\n   Verification: profile-tick replay test produces deterministic visual state at any given `(tick12, degree720, lens_mode, Ananda_Matrix_Op)`; slerp-as-single-primitive audit confirms no parallel animation timer competes; Klein-flip test asserts tick 5→6 fires the bus event AND the visual flag flip; accessibility test allows pause/scrub of the tick for slow inspection."
+    },
+    {
+      "id": "15.T15.10",
+      "trackId": "15",
+      "tranche": "T15.10",
+      "title": "Status bar discipline",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.1"
+      ],
+      "writeScopes": [
+        "Idea/Empty/Present/{day_id}/**"
+      ],
+      "body": "10. **15.10 — Status bar discipline** *(doc-ahead-landing)*\n\n    Status bar surfaces: profile-tick state, day-now anchor, session id, gateway readiness, profile generation, active coordinate. Nothing else. No widget owns the day-now / session anchor — they consume it from the status bar's state thread. Day-now anchor follows the DR-M4-1 path `Idea/Empty/Present/{day_id}/`.\n\n    Verification: `grep -rn 'statusBarEntry\\|StatusBarContribution' Body/M/epi-theia/extensions/`; status-bar contribution audit confirms exactly the named six entries; no widget reads day-now / session except via the status-bar state thread."
+    },
+    {
+      "id": "15.T15.11",
+      "trackId": "15",
+      "tranche": "T15.11",
+      "title": "Dispatch genealogy as a first-class UI primitive",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.10"
+      ],
+      "writeScopes": [],
+      "body": "11. **15.11 — Dispatch genealogy as a first-class UI primitive** *(spec-ahead-integration; consumes Tranche 12.1)*\n\n    The OmniPanel Dispatch Trace and Tool Stream tabs render Pi → Anima → subagent invocation trees with provenance, timing, and capability gates. Same data folded differently in each tab (Trace is the tree; Stream is the time-ordered event list). Selectable nodes deep-link to evidence (Evidence tab) and to source (Backend Studio in `ide-deep`).\n\n    Verification: integration test asserts a synthetic Pi → Anima → Moirai dispatch renders correctly in both tabs with consistent ids; click-through from Trace → Evidence → Source works in `ide-deep`."
+    },
+    {
+      "id": "15.T15.12",
+      "trackId": "15",
+      "tranche": "T15.12",
+      "title": "Visual-regression harness for the 0/1 toggle + tick choreography",
+      "effort": null,
+      "file": "15-ui-design-foundations.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+      "dependsOn": [
+        "15.T15.11"
+      ],
+      "writeScopes": [],
+      "body": "12. **15.12 — Visual-regression harness for the 0/1 toggle + tick choreography** *(spec-ahead-integration)*\n\n    Extend `acceptance-harness` with a visual-regression suite covering: the lemniscate transition (15.5), the tick choreography across the six matrices (15.9), the integrated 1-2-3 composition (15.4 + 07), the integrated 4-5-0 composition (15.4 + 08). Frame-by-frame baselines stored in `acceptance-harness/fixtures/visual-regression/`.\n\n    Verification: `pnpm --filter @pratibimba/acceptance-harness test:visual` passes; baseline images committed; diff threshold documented.\n\n## Cycle 2 Substrate Inheritance\n\nConsume as-is — Theia activity-bar contribution slots; `application-shell` widget areas; `StatusBarContribution`; `KeybindingContribution`; `MenuContribution`. Repurpose — `agentic-control-room` substrate (`run-model.ts`, `acr-runtime-service.ts`, `parity.ts`) into `omnipanel-shell` / `omnipanel-runtime`. Cycle 2 Tracks 01 (Electron/Theia shell + OmniPanel) and 11 (Theia shell hosting) closed the substrate; Tranche 15 closes the UI grammar that uses it.\n\n## Anti-Greenfield Posture\n\nAll work in Tranche 15 either:\n- Consumes Theia platform conventions (activity-bar, status-bar, keybindings)\n- Repurposes ACR substrate (`run-model.ts` → `omnipanel-runtime.ts`)\n- Extends landed extensions (`omnipanel-shell`, `pratibimba-layouts`, `acceptance-harness`)\n- First-builds against M' product surface owners (the `m1-paramasiva-played-torus` Bevy/wgpu extension owns the M1-2 ananda vortex rendering; that first-build was already ratified by DR-M1-2 — Tranche 15 only consumes its surface, not its renderer engine)\n\nNo greenfield UI framework. No competing widget shell. The OmniPanel becomes what it always wanted to be; the ACR substrate becomes what it always was."
+    }
+  ]
+}

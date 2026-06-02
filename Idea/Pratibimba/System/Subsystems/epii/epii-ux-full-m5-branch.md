@@ -171,16 +171,14 @@ The MEF manifold is **12 lenses × 6 positions = 72**. The coordinate system sta
 - *"12 spanda ticks × 6 QL positions = 72"*
 - *"the 72-fold bridge connecting the Mahāmāyā binary system"*
 
-And `M5'-SPEC` names **M2 Parashakti as the 72-fold resonance / graph-and-lens substrate**. Therefore:
+And `M2'-SPEC` resolves this as canon: `12 lenses × 6 positions = 36 tattvas × 2 phases = 8 choirs × 9 names = 72`. Therefore:
 
-> **The 72-fold MEF×QL grid and the 72-fold Parashakti harmonic bridge are the same 72.**
-> Reading the bimba map through MEF×QL *is* sounding it.
+> **There is one 72-cell invariant, and MEF×QL is one of six addressing-axes onto it** (the others being tattva-phase, decan-face, the Shem angels, maqam mode, and planetary-chakral state — see [[parashakti-ux-full-m2-branch]]).
+> Reading the bimba map through MEF×QL *is* one way of addressing that invariant — and the invariant sounds.
 
 Every bimba coordinate already carries a QL position (its #0–#5 archetype) and a family (P/S/T/M/L/C). To read a node "through L3" (process/becoming) versus "through L2′" (alchemical charge) is to refract that position through one of the twelve lenses — and each of those 72 lens×position cells **is one of the 72 harmonic conditions** of the shared `MathemeHarmonicProfile`. The lens you read through *modulates the signal*. The map literally sounds different read through L0 than through L4.
 
-This is not metaphor laid on top — it is the same 72-fold object seen as **epistemics (MEF×QL)** and heard as **resonance (Parashakti harmonic)**.
-
-> **Open design fork (carried, not yet closed):** treat MEF-manifold and Parashakti-harmonic as *strictly identical* (the lens-reading and the sounding are one act) or as *isomorphic-but-distinct* (the harmonic as the felt-shadow of the epistemic grid, keeping M2-Parashakti and the MEF engine separable in implementation). This document assumes strict identity at the *conceptual* level; implementation may keep them separable.
+This is not metaphor laid on top — the MEF×QL grid and the Parashakti harmonic are the **same 72-invariant addressed two ways**: seen as **epistemics (MEF×QL)** and heard as **resonance (Parashakti harmonic)**. (Earlier scoping carried this as an open "strict-identity vs isomorphic" fork; the canon's own arithmetic resolves it: one invariant, six axes.)
 
 ## 4.2 The Teaching Surface (lens rotation)
 
@@ -449,4 +447,4 @@ The shorter operational mantra (the seam, read from Epii's pole):
 
 ---
 
-*Counterpart: [[nara-ux-full-m4-branch-update]]. Seam: integrated-4-5-0 recognition plugin (cycle-2 plan 09). Ground: [[anuttara-language-map]] (M0). Canonical spec: [[M5'-SPEC]].*
+*Counterparts: [[nara-ux-full-m4-branch-update]] (M4, Jiva pole). Integrated bimba view + base physics: [[anuttara-ux-full-m0-branch]] (M0), [[paramasiva-ux-full-m1-branch]] (M1). Frequency + Matter: [[parashakti-ux-full-m2-branch]] (M2), [[mahamaya-ux-full-m3-branch]] (M3). Seam: integrated-4-5-0 recognition plugin (cycle-2 plan 09). Canonical spec: [[M5'-SPEC]].*

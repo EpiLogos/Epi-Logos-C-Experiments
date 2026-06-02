@@ -52,6 +52,7 @@ Dialogical tasks are not failures. [[CPF]] `(00/00)` means proceed by clearing/d
 
 ## Open Gaps
 
+- Gateway session propagation is not yet proven by `Body/S/S0/epi-cli/tests/gate_khora_integration.rs`: `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_khora_integration -- --nocapture` currently creates Khora session state but fails to resolve `agent:main:main` in the S3 gateway session store.
 - Neo4j sync flush is not wired.
 - Secret materialisation via varlock/1Password is specified in legacy sources, but not fully proven in the inspected TypeScript tests.
 - Old `.pi/extensions/ta-onta/khora` references remain historical; Body-native paths are canonical for this repo.

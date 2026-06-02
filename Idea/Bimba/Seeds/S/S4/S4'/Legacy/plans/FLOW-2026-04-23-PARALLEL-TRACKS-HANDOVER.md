@@ -391,6 +391,6 @@ These are unresolved at time of handover and should be addressed before implemen
 
 ## RESIDENCY OF THIS DOCUMENT
 
-- **This file:** `Idea/Empty/Present/FLOW-2026-04-23-PARALLEL-TRACKS-HANDOVER.md`
+- **This file:** `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/FLOW-2026-04-23-PARALLEL-TRACKS-HANDOVER.md`
 - **Graduate to:** `Idea/Bimba/Seeds/` once Track B integration declaration is written and reviewed
 - **Related outputs:** Track B produces an integration declaration doc (new FLOW in `Present/`); Track C produces a cleanup backlog (new FLOW in `Present/`); Track A produces execution logs in `Pratibimba/Self/`

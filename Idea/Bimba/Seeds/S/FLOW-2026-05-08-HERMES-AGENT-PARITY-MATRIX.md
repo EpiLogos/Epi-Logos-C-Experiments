@@ -754,11 +754,11 @@ Four parallel threads, one report per thread. Threads are independent and may ru
 **Mandatory reading: Tier 1 (substrate — every thread, all of these):**
 
 1. This matrix file (`FLOW-2026-05-08-HERMES-AGENT-PARITY-MATRIX.md`) — *all of it*, including the Method-Level Substrate section.
-2. `Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md` — the 100-method coordinate-native API; especially the namespace section relevant to the thread plus the connect/agent.capabilities section, the gateway routing rules, and the wire protocol.
-3. `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md` — the 12-layer 118-field envelope; especially the layer ownership and compiler spine mapping.
-4. `Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md` — at minimum the SharedTypes (coordinate primitives + wire protocol) and EnvelopeTypes preamble; full type listing for the thread's namespace.
-5. `Idea/Empty/Present/FLOW-2026-04-24-ANIMA-EPII-ARCHITECTURE.md` — peer PI architecture, decoupled domain principle in agent context, three-surface tool architecture, S3' as unified temporal runtime.
-5a. `Idea/Empty/Present/FLOW-2026-04-22-SYSTEMS-RESIDENCY-AND-LATTICE-NAMING.md` — Section VIII Decoupled Domain Principle (the load-bearing invariant: domains publish/read only through envelope fields; envelope as anti-corruption layer; per-domain publish/read map).
+2. `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md` — the 100-method coordinate-native API; especially the namespace section relevant to the thread plus the connect/agent.capabilities section, the gateway routing rules, and the wire protocol.
+3. `Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md` — the 12-layer 118-field envelope; especially the layer ownership and compiler spine mapping.
+4. `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md` — at minimum the SharedTypes (coordinate primitives + wire protocol) and EnvelopeTypes preamble; full type listing for the thread's namespace.
+5. `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-ANIMA-EPII-ARCHITECTURE.md` — peer PI architecture, decoupled domain principle in agent context, three-surface tool architecture, S3' as unified temporal runtime.
+5a. `Idea/Bimba/Seeds/S/FLOW-2026-04-22-SYSTEMS-RESIDENCY-AND-LATTICE-NAMING.md` — Section VIII Decoupled Domain Principle (the load-bearing invariant: domains publish/read only through envelope fields; envelope as anti-corruption layer; per-domain publish/read map).
 6. `Body/S/S4/plugins/pleroma/.claude-plugin/plugin.json` and `Body/S/S4/plugins/pleroma/capability-matrix.json` — Anima's executive capability membrane (constitutional agents + skills typed by `layer` + `kind`).
 7. `Body/S/S5/plugins/epi-logos/.claude-plugin/plugin.json` and `Body/S/S5/epii-agent/agent-contract.json` — Epii's gateway methods, spines, accepted deposits, allowed requests, authority, forbidden authority, inbox contract, autoresearch contract.
 8. `Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md` — cross-level harmonisation map.

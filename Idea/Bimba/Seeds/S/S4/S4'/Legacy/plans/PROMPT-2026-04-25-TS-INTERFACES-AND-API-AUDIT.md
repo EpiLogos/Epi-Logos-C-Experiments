@@ -28,7 +28,7 @@ The orientation file is `[[FLOW 2026 04 24 ORIENTATION]]` — read it first, the
 
 ## Task 1: Audit the API Document
 
-Read `Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md` critically against:
+Read `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md` critically against:
 
 - The 115-field envelope schema (`[[FLOW 2026 04 22 ENVELOPE FIELD SCHEMA]]`) — does every field have an API method that populates it? Are there gaps?
 - The S/S' residency and naming law (`[[FLOW 2026 04 22 SYSTEMS RESIDENCY AND LATTICE NAMING]]`) — do the coordinate homes match? Did any methods land at the wrong coordinate?
@@ -76,12 +76,12 @@ Produce a prioritised next-moves list, not a full implementation plan. The goal 
 
 ## Read Order
 
-1. `Idea/Empty/Present/FLOW-2026-04-24-ORIENTATION.md`
-2. `Idea/Empty/Present/FLOW-2026-04-24-ANIMA-EPII-ARCHITECTURE.md`
-3. `Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md`
-4. `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`
-5. `Idea/Empty/Present/FLOW-2026-04-22-SYSTEMS-RESIDENCY-AND-LATTICE-NAMING.md`
-6. `Idea/Empty/Present/FLOW-2026-04-23-TRACK-B-PI-INTEGRATION-AUDIT.md`
+1. `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-ORIENTATION.md`
+2. `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-ANIMA-EPII-ARCHITECTURE.md`
+3. `Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md`
+4. `Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`
+5. `Idea/Bimba/Seeds/S/FLOW-2026-04-22-SYSTEMS-RESIDENCY-AND-LATTICE-NAMING.md`
+6. `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/FLOW-2026-04-23-TRACK-B-PI-INTEGRATION-AUDIT.md`
 7. `Idea/Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md` (updated S5' definition)
 8. `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md` (S4' with ta-onta detail)
 9. `Idea/Bimba/World/S1'Cx.md` (type-to-form system)

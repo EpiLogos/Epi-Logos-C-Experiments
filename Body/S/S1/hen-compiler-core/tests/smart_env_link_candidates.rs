@@ -2,22 +2,22 @@ use std::path::PathBuf;
 
 use epi_s1_hen_compiler_core::{suggest_link_candidates, LinkCandidateKind, LinkCandidateRequest};
 
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap()
-        .to_path_buf()
+/// Bounded Smart Env fixture vault built from REAL bge-micro-v2 embeddings extracted
+/// from the live `Idea/.smart-env/multi` store (see
+/// `tests/fixtures/generate_smart_env_fixture.py`).
+///
+/// The test deliberately does NOT scan the live vault: that store has grown past
+/// 410MB (mostly node_modules-derived `.ajson` files), which made
+/// `suggest_link_candidates`' O(N^2) block-similarity scan with a per-candidate
+/// filesystem stat run for >540s and be non-deterministic as the vault changed.
+/// The fixture keeps the test real, fast, and stable.
+fn fixture_vault() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/smart-env-vault")
 }
 
 #[test]
 fn suggest_link_candidates_uses_real_smart_env_fixtures() {
-    let vault_root = repo_root().join("Idea");
+    let vault_root = fixture_vault();
     let response = suggest_link_candidates(LinkCandidateRequest {
         vault_root: vault_root.clone(),
         note_path: PathBuf::from("Bimba/Seeds/S/S-AD-HOC-ROADMAP.md"),
@@ -57,7 +57,7 @@ fn suggest_link_candidates_uses_real_smart_env_fixtures() {
 
 #[test]
 fn suggest_link_candidates_filters_stale_paths_and_keeps_target_lines() {
-    let vault_root = repo_root().join("Idea");
+    let vault_root = fixture_vault();
     let response = suggest_link_candidates(LinkCandidateRequest {
         vault_root,
         note_path: PathBuf::from("Bimba/Seeds/S/S-AD-HOC-ROADMAP.md"),

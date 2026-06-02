@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T22:02:28.168Z",
+  "updatedAt": "2026-06-02T22:03:18.962Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -2377,8 +2377,8 @@
   ],
   "activeRoute": {
     "status": "empty",
-    "createdAt": "2026-06-02T22:02:28.168Z",
-    "updatedAt": "2026-06-02T22:02:28.168Z",
+    "createdAt": "2026-06-02T22:03:18.962Z",
+    "updatedAt": "2026-06-02T22:03:18.962Z",
     "taskIds": [],
     "totalWeight": 0,
     "taxingLevel": "light",

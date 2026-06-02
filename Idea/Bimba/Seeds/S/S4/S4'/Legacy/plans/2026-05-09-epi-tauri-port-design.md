@@ -1375,7 +1375,7 @@ reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-feature
 
 ## Part III.6 — Envelope Schema Compliance
 
-The Tauri app is one surface on the **canonical 12-layer envelope** defined in `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`. It must not invent local authority for facts the envelope owns. This Part is a thin alignment note — the envelope spec itself is the canon.
+The Tauri app is one surface on the **canonical 12-layer envelope** defined in `Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`. It must not invent local authority for facts the envelope owns. This Part is a thin alignment note — the envelope spec itself is the canon.
 
 ### 3.6.1 The twelve layers
 

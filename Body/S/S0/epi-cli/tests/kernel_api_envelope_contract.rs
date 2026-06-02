@@ -13,14 +13,14 @@ fn workspace() -> PathBuf {
 fn flow_api_envelope_and_ts_contract_name_kernel_temporal_projection() {
     let root = workspace();
     let envelope = fs::read_to_string(
-        root.join("Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md"),
+        root.join("Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md"),
     )
     .expect("envelope schema should be readable");
     let api =
-        fs::read_to_string(root.join("Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md"))
+        fs::read_to_string(root.join("Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md"))
             .expect("PI agent API should be readable");
     let ts = fs::read_to_string(
-        root.join("Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md"),
+        root.join("Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md"),
     )
     .expect("TS interface definitions should be readable");
     let tauri_ts = fs::read_to_string(root.join("vendor/legacy/epi-tauri/src/services/types.ts"))
