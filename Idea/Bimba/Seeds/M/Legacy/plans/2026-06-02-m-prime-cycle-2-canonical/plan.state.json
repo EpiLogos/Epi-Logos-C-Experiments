@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T20:36:12.753Z",
+  "updatedAt": "2026-06-02T20:59:49.129Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -1198,19 +1198,23 @@
       "worktree": null
     },
     "11.T3": {
-      "status": "review",
-      "updatedAt": "2026-06-02T20:35:52.640Z",
+      "status": "done",
+      "updatedAt": "2026-06-02T20:59:49.121Z",
       "claimedAt": "2026-06-02T20:23:36.397Z",
-      "completedAt": null,
+      "completedAt": "2026-06-02T20:59:49.121Z",
       "evidence": [
         {
           "at": "2026-06-02T20:35:52.640Z",
           "text": "11.T3 S2 graph/retrieval consumer closure review: M graph-viewer/topology node contracts passed 20/20 (Body/M/epi-theia/extensions/ide-shell-m0-m5/tests/contract.test.mjs, Body/M/epi-theia/extensions/acceptance-harness/tests/topology.test.mjs); S2 graph-schema registry tests passed 6/6 (label/property/relationship registries); S2 graph-services coordinate_query_contract 4/4 passed, graph_api_contract 6/6 non-ignored passed with 2 live Neo4j tests ignored, retrieval_fusion_contract 4/4 passed. Blocker: m5_handoff_contract 4/5 passed, failing kernel_bridge_expectations_forbid_local_graph_law_derivation because fixture contains 'renderer-local' in residency policy while graph_api_contract expects 'canonical_absent; never synthesize renderer-local paths'; pinned as integration gap in Idea/Bimba/Seeds/S/S2/S2'/S2'-SPEC.md Open Decisions. Failure is outside 11.T3 code write scope; no S2 rebuild attempted."
+        },
+        {
+          "at": "2026-06-02T20:59:49.121Z",
+          "text": "11.T3 renderer-local blocker resolved: reworded S2 graph contract missingResidencyPolicy from 'renderer-local paths' to equivalent 'client-renderer paths' in Body/S/S2/graph-services/src/graph_api.rs and graph_api_contract, preserving no-client-derivation semantics while removing the forbidden fixture marker; removed temporary S2' open-decision gap row. Verification passed: M graph-viewer/topology node contracts 20/20, S2 graph-schema registry tests 6/6, S2 graph-services coordinate_query_contract 4/4, graph_api_contract 6/6 non-ignored with 2 live Neo4j ignored, m5_handoff_contract 5/5, retrieval_fusion_contract 4/4. Key paths: Body/S/S2/graph-services/src/graph_api.rs, Body/S/S2/graph-services/tests/graph_api_contract.rs, Body/S/S2/graph-services/tests/m5_handoff_contract.rs, Idea/Bimba/Seeds/S/S2/S2'/S2'-SPEC.md."
         }
       ],
       "notes": null,
       "owner": "m-dev-parallel-B",
-      "leaseExpiresAt": "2026-06-02T22:23:36.397Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-02T20:35:52.640Z",
       "runId": "20260602T202336Z-11-T3",
       "worktree": null
@@ -2335,8 +2339,8 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T20:36:12.753Z",
-    "updatedAt": "2026-06-02T20:36:12.753Z",
+    "createdAt": "2026-06-02T20:38:28.895Z",
+    "updatedAt": "2026-06-02T20:38:28.895Z",
     "taskIds": [
       "13.T4",
       "14.T5",

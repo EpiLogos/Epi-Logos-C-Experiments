@@ -254,7 +254,7 @@ fn graph_api_contract_envelope_carries_sources_namespace_gds_and_pointer_descrip
     );
     assert_eq!(
         contract["residencyAuthority"]["missingResidencyPolicy"],
-        "canonical_absent; never synthesize renderer-local paths"
+        "canonical_absent; never synthesize client-renderer paths"
     );
 }
 

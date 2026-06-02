@@ -664,7 +664,7 @@ pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -
             "flatWorldForms": "Idea/Bimba/World/{Name}.md",
             "typeCanvasIndexes": "Idea/Bimba/World/Types/{Type}/{Type}.canvas",
             "coordinateSemanticAuthority": "Idea/Bimba/World/Types/Coordinates",
-            "missingResidencyPolicy": "canonical_absent; never synthesize renderer-local paths"
+            "missingResidencyPolicy": "canonical_absent; never synthesize client-renderer paths"
         },
         "pointerWebDescriptors": pointer_descriptors,
         "ontologyReadiness": {
