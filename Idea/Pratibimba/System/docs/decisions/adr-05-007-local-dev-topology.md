@@ -103,5 +103,5 @@ These map to the existing `extensions/kernel-bridge-readiness/src/common/readine
 ## Cross-references
 
 - [`Body/M/epi-tauri/decisions/track-05-t0-runtime-baseline.json#local_dev_topology`](../../../../Body/M/epi-tauri/decisions/track-05-t0-runtime-baseline.json) — predecessor topology (Tauri-era).
-- [docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md) — gateway contract source.
-- [docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-local-harness-topology.{md,json}](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-local-harness-topology.md) — cross-cutting local-harness topology.
+- [Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md) — gateway contract source.
+- [docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-local-harness-topology.{md,json}](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-local-harness-topology.md) — cross-cutting local-harness topology.

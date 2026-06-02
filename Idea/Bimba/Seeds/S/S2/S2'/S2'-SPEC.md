@@ -7,6 +7,9 @@ c_0_source_coordinates:
   - "[[S2-SPEC]]"
   - "[[S2-SHARD-INDEX]]"
   - "[[S2-TRACEABILITY-INDEX]]"
+  - "[[S2'-TRACEABILITY-INDEX]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
 ---
 
 # S2' Specification: Coordinate Graph Law, Retrieval, And Semantic Projection
@@ -14,6 +17,8 @@ c_0_source_coordinates:
 ## Canonical Status
 
 This file is the single authoritative S2' seed. S2 is the graph substrate; S2' is coordinate graph law: canonical Bimba/M coordinate resolution, retrieval, rerank/enrich, constraint registration/testing, GraphRAG, semantic cache, pointer-web provenance, and graph-sync intent from S1. S2' does not own temporal episodes or Epii review meaning.
+
+The S2' shards are harmonized against [[S-SHARD-HARMONIZATION-PROTOCOL]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]], and [[ARCHITECTURE-DIAGRAM-PACK#Diagram 4 Cross-System Coupling]]. They should be read as the concrete contracts over `Body/S/S2/graph-services` coordinate parsing, graph API, retrieval, semantic cache, pointer-web, kernel-resonance, and M5 handoff code, not as abstract summaries.
 
 VAK gate: `CPF=(4.0/1-4.4/5)`, `CT=CT1`, `CP=4.2`, `CF=(0/1/2/3) Mythos pattern under Logos`, `CFP=S2'`, `CS=CS2`.
 
@@ -27,6 +32,17 @@ VAK gate: `CPF=(4.0/1-4.4/5)`, `CT=CT1`, `CP=4.2`, `CF=(0/1/2/3) Mythos pattern 
 | `S2.3'` | semantic cache and GraphRAG | Redis semantic cache, `graph-services` |
 | `S2.4'` | pointer-web and kernel resonance projection | `s2.graph.pointer_web.*`, `s2.graph.kernel_resonance.record` |
 | `S2.5'` | graph-sync, enrichment, M' handoff | S1 graph-sync intent, M0'/M5' graph consumers |
+
+## Internal QL 0-5 Provenance
+
+| Internal coordinate | QL / build function | Canonical source anchor | Derivation status |
+|---|---|---|---|
+| [[S2.0']] | coordinate identity, graph/cache ground, namespace-safe root | `Idea/Bimba/World/Types/Coordinates/S/S'/S2'/S2'.md` `p0_grounds`; [[P0]], [[CT0]], [[L0]] / [[L5']] | direct World ontology |
+| [[S2.1']] | coordinate-native entity/relation schema and registry definitions | `S2'.md` `p1_definitions`; [[S2-SPEC]] schema sections | seed-side crystallisation from World graph law |
+| [[S2.2']] | retrieval operation, cache-aware orchestration, result-envelope law | `S2'.md` `p2_operations`; [[P2]], [[CT2]], [[L2]] / [[L3']] | direct World ontology plus seed crystallisation |
+| [[S2.3']] | Indra's Net / relation-pattern traversal validity | `S2'.md` `p3_patterns`; [[P3]], [[CT3]], [[L3]] / [[L2']] | direct World ontology |
+| [[S2.4']] | disclosure, rerank/enrich, cache lineage, namespace discipline, pointer evidence | `S2'.md` #5/#0 prose plus [[S2-SPEC]] disclosure/cache/pointer sections | seed-side crystallisation |
+| [[S2.5']] | context-pool return, graph evidence, M' and S5 review handoff | `S2'.md` `p5_integrations`; [[P5]], [[CT5]], [[L5]] / [[L0']] | direct World ontology plus seed crystallisation |
 
 ## Public APIs And Gateway Methods
 
@@ -69,12 +85,12 @@ S2' participates in Bimba coordinate identity, vault-source traceability, capabi
 
 | Source | mtime | Role |
 |---|---:|---|
-| `docs/specs/S/S2-S2i-GRAPH.md` | 2026-05-31 16:35:19 | newest formal graph spec |
-| `docs/plans/2026-03-10-semantic-graph-lifecycle.md` | 2026-03-10 11:56:43 | historical lifecycle |
-| `docs/plans/2026-05-17-bimba-map-ingestion-plan.md` | 2026-05-19 16:26:15 | Bimba ingestion decision |
-| `docs/plans/2026-05-19-s0-pi-boundary-and-s1-s2-graph-task-ledger.md` | 2026-05-22 14:33:34 | graph task ledger pressure |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md` | 2026-05-31 20:36:57 | nominal m-dev S2 track |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md` | 2026-06-02 00:17:57 | newest cross-cutting integration status |
+| `Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md` | 2026-05-31 16:35:19 | newest formal graph spec |
+| `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-semantic-graph-lifecycle.md` | 2026-03-10 11:56:43 | historical lifecycle |
+| `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-17-bimba-map-ingestion-plan.md` | 2026-05-19 16:26:15 | Bimba ingestion decision |
+| `Idea/Bimba/Seeds/S/S0/S0'/Legacy/plans/2026-05-19-s0-pi-boundary-and-s1-s2-graph-task-ledger.md` | 2026-05-22 14:33:34 | graph task ledger pressure |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md` | 2026-05-31 20:36:57 | nominal m-dev S2 track |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md` | 2026-06-02 00:17:57 | newest cross-cutting integration status |
 
 ## Substrate And Sibling Seeds
 

@@ -175,6 +175,18 @@ epi core knowing C0   # What is Bimba in each family?
 epi core knowing --family L  # What lens modes are available?
 ```
 
+### Before architecture/spec planning
+```bash
+# Start with coordinate and vault intelligence before raw filesystem search
+epi core knowing S1' --json
+epi vault search "M'-SYSTEM-SPEC"
+epi vault search-content "World/Types"
+epi vault read Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md
+epi vault link-suggest Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md --source-coordinate "S1'"
+```
+
+Use `Idea/Bimba/World/**` for crystallised definitions and stable architecture details. Use `Idea/Bimba/Seeds/**` for specs, plans, traceability, and legacy `/docs` migration mirrors. Treat `/docs/specs`, `/docs/plans`, and `/docs/resources` as source strata until they are linked or mirrored into Seeds.
+
 ### For deeper granularity
 The `epi core knowing` command gives S0' (pithy C-level) output. For deeper layers:
 - **S1' (Obsidian):** `epi vault read <note>` — markdown knowledge

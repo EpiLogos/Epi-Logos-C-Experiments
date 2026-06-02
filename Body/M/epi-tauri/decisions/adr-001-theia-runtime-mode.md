@@ -2,7 +2,7 @@
 
 **Status:** Decision — recorded by Track 05 T0, amended by Track 05 T2 (2026-06-01).
 **Selected option:** Option 1 — browser-mode Theia loaded directly into a Tauri WebviewWindow via the `pratibimba://` custom URI scheme protocol.
-**Decision register link:** `PRD-01` in `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`.
+**Decision register link:** `PRD-01` in `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`.
 **Affected tracks:** 01, 05, 06, 07, 08.
 
 ## Context
@@ -39,7 +39,7 @@ Build scripts, CSP, deep-link verification, Theia version pin, and extension tes
 
 ## Cross-references
 
-- `docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md` sections 1, 9.
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md` sections 1, 9.
 - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md` sections 3, 4, 5.
 - `Body/M/epi-tauri/contract-inventory/track-06-baseline.json` (current renderer baseline).
 - `Idea/Pratibimba/System/extensions/contracts/07-t0-extension-contract-preflight.json` (downstream extension shape).

@@ -1,0 +1,39 @@
+{
+  "runId": "20260602T151230Z-11-T0",
+  "taskId": "11.T0",
+  "startedAt": "2026-06-02T15:12:30.948Z",
+  "owner": "m-dev-claude",
+  "leaseExpiresAt": "2026-06-02T17:12:30.948Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T0",
+    "trackId": "11",
+    "tranche": "T0",
+    "title": "S0 Consumed Contract Closure For Shell And OmniPanel",
+    "effort": null,
+    "file": "11-s-consumed-substrate-closure-s0-s1-s2.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/11-s-consumed-substrate-closure-s0-s1-s2.md",
+    "dependsOn": [
+      "01.T0"
+    ],
+    "writeScopes": [
+      "Body/S/S0",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/S0/S0'/S0'-SPEC.md",
+      "Idea/Bimba/Seeds/S/S0/S0-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

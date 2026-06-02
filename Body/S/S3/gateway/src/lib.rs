@@ -1,8 +1,11 @@
 pub mod bootstrap;
+pub mod chat;
 pub mod dispatch;
 pub mod protocol;
 pub mod runtime;
 pub mod session_store;
+pub mod sessions;
+pub mod spacetime;
 pub mod subagents;
 pub mod transcripts;
 pub mod workspace;

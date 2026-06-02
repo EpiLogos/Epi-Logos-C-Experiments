@@ -53,5 +53,5 @@ The patch file `@theia__application-manager@1.56.0.patch` will be re-verified ag
 ## Cross-references
 
 - [m5-prime-system-shape-and-tauri-ide-canon.md §2-§3](../../../Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md) — Theia-only authority.
-- [11-open-architectural-decisions.md#PRD-01](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md) — PRD-01 resolution.
+- [11-open-architectural-decisions.md#PRD-01](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md) — PRD-01 resolution.
 - [Theia upstream releases — 1.56.0](https://github.com/eclipse-theia/theia/releases/tag/v1.56.0) — release notes (consult during T1 first build).

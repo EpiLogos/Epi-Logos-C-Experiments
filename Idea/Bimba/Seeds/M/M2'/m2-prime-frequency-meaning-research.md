@@ -10,11 +10,11 @@ Date: 2026-05-22
 - `docs/datasets/parashakti-deep/nodes-full-detail.json`
 - `docs/datasets/parashakti-deep/relations.json`
 - `docs/datasets/parashakti-deep/parashakti-planets.json`
-- `docs/epi-logos-kernel/physical-pole-stack-architecture.md`
-- `docs/epi-logos-kernel/ql-musical-derivation.md`
-- `docs/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md`
-- `docs/plans/CLOCK-AND-NARA-SPECS/15-m2-vibrational-matrix-portal-plugin.md`
-- `docs/plans/CLOCK-AND-NARA-SPECS/14-m3-knowing-dossier-portal-plugin.md`
+- `../M1'/physical-pole-stack-architecture.md`
+- `../M5'/ql-musical-derivation.md`
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md`
+- `Idea/Bimba/Seeds/M/M2'/Legacy/plans/CLOCK-AND-NARA-SPECS/15-m2-vibrational-matrix-portal-plugin.md`
+- `Idea/Bimba/Seeds/M/M3'/Legacy/plans/CLOCK-AND-NARA-SPECS/14-m3-knowing-dossier-portal-plugin.md`
 - `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`
 - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`
 - `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`

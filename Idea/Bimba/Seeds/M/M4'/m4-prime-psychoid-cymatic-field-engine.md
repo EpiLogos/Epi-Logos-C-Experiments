@@ -904,7 +904,7 @@ The Jiva-is-Śiva recognition becomes **computationally concrete**: the user's P
 
 The bimba map at S2 carries 17 declared relationship types (`REFERENCES`, `SOURCES`, `CONTAINS`, `PART_OF`, `ELABORATES`, `CONTRASTS`, `IMPLEMENTS`, `OPERATES_IN`, `REFLECTS_AS`, `INVERTS_TO`, `SUPPORTS`, `CRITIQUES`, `DERIVES_FROM`, `PROMOTES_TO`, `SYNCED_FROM`, + compat `POS0_LINKS_TO`, `POS5_INTEGRATES_INTO`). Seed creates `MANIFESTS` (72), `BEDROCK` (72), `INVERTS_TO` (36), `ANCHORED_TO` (1). Plus the 16-fold pointer-web as scalar-list properties.
 
-Neosemantics integration is explicitly deferred in `docs/plans/2026-03-08-knowing-graph-convergence-plan.md`. Clean greenfield. The integration plan:
+Neosemantics integration is explicitly deferred in `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-08-knowing-graph-convergence-plan.md`. Clean greenfield. The integration plan:
 
 **1. Define `epi:` namespace OWL ontology** for M0-M5 coordinate space:
 - `epi:Coordinate` (every Bimba node)
@@ -1135,14 +1135,14 @@ The system at this point coherently spans: the canonical M-coordinate structure 
 - `M2'-SPEC.md` (cymatic engine, planetary-chakral LUT, Klein-flip)
 - `M3'-SPEC.md` (clock + lens-stack + codon-quaternion)
 - `M0'-SPEC.md`, `m0-prime-anuttara-research.md` (M0' graph view + Anuttara research)
-- `docs/specs/M/M0-anuttara-language-architecture.md` (M0 as multi-level formal language runtime)
+- `Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md` (M0 as multi-level formal language runtime)
 - `Body/S/S0/epi-lib/include/m0.h`, `m0.c` (M0 kernel: Vimarsa ISA, M0_CORE_RELATIONS, archetypal LUT)
 - `Body/S/S2/graph-schema/src/lib.rs` (S2 schema, label specs, relationship specs, property semantics)
 - `Body/S/S2/graph-services/src/seed.rs` (BEDROCK / MANIFESTS / INVERTS_TO / ANCHORED_TO seed logic)
 - `Body/M/epi-tauri/src/domains/M0_Anuttara/BimbaMap2D.tsx`, `BimbaMap3D.tsx` (existing graph view stub)
 - `Body/S/S0/epi-cli/src/nara/pratibimba.rs` (PersonalNexus #4.4.4.4 init)
 - `docs/datasets/nara-deep/13-03-2026-claude-nara-thinking-marketing.md` (existing GDS + TDA research programme)
-- `docs/plans/2026-03-08-knowing-graph-convergence-plan.md` (neosemantics deferrals, schema convergence)
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-08-knowing-graph-convergence-plan.md` (neosemantics deferrals, schema convergence)
 - `docs/datasets/anuttara-deep/nodes-full-data.json`, `relations.json` (Anuttara dataset: 108 nodes, 1024 relations)
 - `2026-04-04-graphiti-unified-temporal-context-service.md` (Graphiti bi-temporal episodic store)
 - `S3-S3i-GATEWAY.md` (gateway plane + SpaceTimeDB Universal NOW plane)

@@ -76,7 +76,7 @@ Files/code areas:
 - Source: `Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md`
 - Source: `Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md`
 - Source: `Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md`
-- Source: `docs/specs/2026-05-18-bimba-pointer-web-and-integration-spec.md`
+- Source: `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/2026-05-18-bimba-pointer-web-and-integration-spec.md`
 - Tests: `Body/S/S0/epi-lib/test/engine/test_kernel.c`
 - Tests: `Body/S/S0/portal-core/tests/kernel_math.rs`
 - Tests: `Body/S/S0/portal-core/tests/kernel_clock_projection.rs`
@@ -205,7 +205,7 @@ Implementation result, 2026-05-19 first profile slice:
 
 Planning result, 2026-05-19 full integration map:
 
-- `docs/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md` now defines the next integrated path: Paramasiva tick as harmonic clock, Parashakti/M2 as 72-fold MEF-element-planetary-chakral vibrational field, Mahāmāyā/M3 as DNA-I-Ching-Tarot binary transcription engine, S2 as pointer/harmonic law of record, S3 as DAY/NOW/Graphiti deposition, and M' as the live instrument surface.
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md` now defines the next integrated path: Paramasiva tick as harmonic clock, Parashakti/M2 as 72-fold MEF-element-planetary-chakral vibrational field, Mahāmāyā/M3 as DNA-I-Ching-Tarot binary transcription engine, S2 as pointer/harmonic law of record, S3 as DAY/NOW/Graphiti deposition, and M' as the live instrument surface.
 - The plan explicitly treats the planetary-chakral-musical alignment as M2/M' profile data governed by S2, not as hardcoded renderer decoration.
 - The plan includes a parallel-session handoff prompt for producing the M' Tauri spec set against the new kernel files, Tauri v2 planning, and current `Body/M/epi-tauri` state.
 

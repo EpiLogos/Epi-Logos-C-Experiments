@@ -30,6 +30,17 @@ The VAK gate for this layer is `CPF=(4.0/1-4.4/5)`, `CT=CT1`, `CP=4.1`, `CF=(0/1
 | `S0.4'` | kernel/profile mirror | `Body/S/S0/portal-core/src/kernel.rs`, `Body/S/S0/epi-lib` |
 | `S0.5'` | bootstrap/return/audit surface | `epi up`, `epi portal`, `Body/S/S0/epi-cli/tests` |
 
+## Internal QL 0-5 Provenance
+
+| Internal coordinate | QL / build function | Canonical source anchor | Derivation status |
+|---|---|---|---|
+| [[S0.0']] | coordinate grammar, inversion law, root parsing, preferred-tool ground | `Idea/Bimba/World/Types/Coordinates/S/S'/S0'/S0'.md` `p0_grounds`; [[P0]], [[CT0]], [[L0]] / [[L5']] | direct World ontology plus seed crystallisation |
+| [[S0.1']] | family typing, category law, validator definitions | `S0'.md` `p1_definitions`; [[P1]], [[CT1]], [[L1]] / [[L4']] | direct World ontology |
+| [[S0.2']] | command semantics, routed operations, namespace action | `S0'.md` `p2_operations`; [[P2]], [[CT2]], [[L2]] / [[L3']] | direct World ontology |
+| [[S0.3']] | dossier process, reflective lookup, context-bearing execution | `S0'.md` `p3_patterns`; [[P3]], [[CT3]], [[L3]] / [[L2']] | direct World ontology |
+| [[S0.4']] | thread signatures, session identity, frame-aware runtime control | `S0'.md` #5/#0 prose plus [[S0-SPEC]] portal/runtime-state sections | seed-side crystallisation |
+| [[S0.5']] | baked self-knowledge, reflective synthesis, return to compiled ground | `S0'.md` `p5_integrations`; [[P5]], [[CT5]], [[L5]] / [[L0']] | direct World ontology plus seed crystallisation |
+
 ## Public APIs And Gateway Methods
 
 | Method family | Status | Owner rule |
@@ -56,6 +67,20 @@ Forbidden leakage: raw secrets, raw private profile fields, raw Nara identity, r
 
 Calls in from humans, PI agents, M' OmniPanel, kernel-bridge, test harnesses, and setup wizards. Calls out to S1 vault commands, S2 graph commands, S3 gateway runtime, S4 agent/permission surfaces, S5 review/autoresearch surfaces, and M' kernel/profile consumers. The seam invariant is that S0' exposes pass-through and readiness; it must not absorb domain semantics just because a command is executable here.
 
+## M' Shell Consumed Contract Closure - Cycle 2 T11.T0
+
+The M'-Theia shell consumes S0' only through the single `KernelBridgeAPI` boundary (one frontend/backend Theia extension pair at [[Idea/Pratibimba/System/extensions/kernel-bridge]]). The bridge backend connects to the S3 gateway WebSocket; S0/S0' methods are invoked through `KernelBridgeAPI.invokeCapability(request)` whose `request.method` resolves at the gateway. No M-extension may import raw S0' clients (Track 07 T0 contract preflight, [[Idea/Pratibimba/System/extensions/contracts/07-t0-extension-contract-preflight.md]]).
+
+| Closed S0' surface | M' read/sub call | Authority |
+|---|---|---|
+| Harmonic profile mirror | `cachedProfile` / `onProfile` | `portal-core::harmonic_profile`; pulled through S3 gateway |
+| Readiness mirror | `kernel-bridge-readiness` + nine-state taxonomy | S3 gateway `health` plus per-coordinate readiness witnesses; states fixed in `07-t0-readiness-capture-requirements.json` |
+| Command dispatch | `invokeCapability` returning `KernelBridgeCapabilityReceipt` | S0' method shape (`s0.command.exec`, `s0.command.completion`, S0' mirrors) reached through gateway |
+| Bridge status | `connectionStatus` / `onConnectionChange` | `kernel-bridge-backend-service::notifyConnectionStatus` over `EPI_GATEWAY_URL` |
+| Bounded execution | `s0.exec` only via `invokeCapability` | `s_4_permission_boundary` (S4'.capability_governance) gates before process spawn |
+
+Shell `1` flow-input vs `/` operator/debug separation is architectural: [[Idea/Pratibimba/System/extensions/body-lite-surface]] (shell `1`) routes typed `CrossLayoutIntent` payloads only and never calls `invokeCapability`; [[Idea/Pratibimba/System/extensions/omnipanel-shell]] (`/`) owns operator command catalog, capability dispatch, deep-link routing, and debug/observability. The privacy-class scan in `body-lite-surface.test.mjs` is the negative-test floor that prevents operator/debug payload classes from masquerading as Nara flow artifacts. 29/29 tests pass across the lite-surface contract plus the kernel-bridge Theia boundary plus the SharedBridgeAdapter fan-out as of 2026-06-02.
+
 ## Cross-Cutting Participation
 
 S0' participates in clock/profile projection, identity-safe kernel mirrors, Day/NOW path display, capability-matrix checks, Graphiti runtime readiness, vault path resolution, and consent/approval gates. It is the return membrane for every S layer.
@@ -73,13 +98,13 @@ S0' participates in clock/profile projection, identity-safe kernel mirrors, Day/
 
 | Source | mtime | Role |
 |---|---:|---|
-| `docs/specs/S/S0-S0i-CLI-CORE.md` | 2026-05-31 16:35:19 | newest formal S0/S0' CLI core spec |
-| `docs/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` | 2026-03-10 12:20:50 | historical QV/plugin command context |
-| `docs/specs/S/S_Series_Master_CLI_Architecture.md` | 2026-03-15 00:27:10 | S-series CLI bridge |
-| `docs/plans/2026-03-05-epi-cli-design.md` | 2026-03-05 14:45:32 | historical CLI design |
-| `docs/plans/2026-03-05-epi-cli-expansion.md` | 2026-03-05 15:56:24 | historical CLI expansion |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` | 2026-05-31 20:57:23 | nominal m-dev S0/kernel bridge owner |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/13-s-sprime-modularity-and-s0-membrane-cleanup.md` | 2026-06-01 23:57:36 | newest S0 membrane cleanup decision track |
+| `Idea/Bimba/Seeds/S/S0/S0'/Legacy/specs/S/S0-S0i-CLI-CORE.md` | 2026-05-31 16:35:19 | newest formal S0/S0' CLI core spec |
+| `Idea/Bimba/Seeds/S/S0/S0'/Legacy/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` | 2026-03-10 12:20:50 | historical QV/plugin command context |
+| `Idea/Bimba/Seeds/S/Legacy/specs/S/S_Series_Master_CLI_Architecture.md` | 2026-03-15 00:27:10 | S-series CLI bridge |
+| `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-05-epi-cli-design.md` | 2026-03-05 14:45:32 | historical CLI design |
+| `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-05-epi-cli-expansion.md` | 2026-03-05 15:56:24 | historical CLI expansion |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` | 2026-05-31 20:57:23 | nominal m-dev S0/kernel bridge owner |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/13-s-sprime-modularity-and-s0-membrane-cleanup.md` | 2026-06-01 23:57:36 | newest S0 membrane cleanup decision track |
 
 ## Substrate And Sibling Seeds
 

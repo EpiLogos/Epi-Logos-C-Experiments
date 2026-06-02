@@ -1,0 +1,35 @@
+{
+  "runId": "20260601T201429Z-08-T9",
+  "taskId": "08.T9",
+  "startedAt": "2026-06-01T20:14:29.526Z",
+  "owner": "codex",
+  "leaseExpiresAt": "2026-06-01T22:14:29.526Z",
+  "worktree": null,
+  "task": {
+    "id": "08.T9",
+    "trackId": "08",
+    "tranche": "T9",
+    "title": "Performance, Accessibility, Privacy Audit, And Release Gate",
+    "effort": null,
+    "file": "08-integrated-plugin-tracks.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md",
+    "dependsOn": [
+      "08.T8"
+    ],
+    "writeScopes": [
+      "Idea/Pratibimba/System/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

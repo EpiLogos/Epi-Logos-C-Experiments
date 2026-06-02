@@ -109,10 +109,10 @@ Post-cleanup trajectory:
 
 Docs still needing reconciliation after the commit gate:
 
-- `docs/plans/2026-03-23-nara-clock-canonical-runtime-implementation-plan.md` with the later `tick12`, `PortalClockState`, and portal-core extraction law.
-- `docs/plans/2026-03-30-critical-gap-resolution-plan.md` with current shared-clock and kernel vocabulary.
-- `docs/plans/CLOCK-AND-NARA-SPECS/09-cosmic-clock-plugin-tui-spec.md` with exact portal state fields and Earth-centred clock invariants.
-- `docs/plans/CLOCK-AND-NARA-SPECS/11-m1-m2-epogdoon-vibrational-bridge.md` with the shared `MathemeHarmonicProfile` and 72-fold resonance contract.
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-23-nara-clock-canonical-runtime-implementation-plan.md` with the later `tick12`, `PortalClockState`, and portal-core extraction law.
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-30-critical-gap-resolution-plan.md` with current shared-clock and kernel vocabulary.
+- `Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/09-cosmic-clock-plugin-tui-spec.md` with exact portal state fields and Earth-centred clock invariants.
+- `Idea/Bimba/Seeds/M/M1'/Legacy/plans/CLOCK-AND-NARA-SPECS/11-m1-m2-epogdoon-vibrational-bridge.md` with the shared `MathemeHarmonicProfile` and 72-fold resonance contract.
 - `docs/deep-epi-logos-binary-computational-nara-clock/ql_transcriptional_bridge.md` and `ql_clifford_consolidation.md` with the current Mahāmāyā/M3 runtime contract.
 - `Body/S/S5/plugins/epi-logos/resources/updated-ql-mef/non-dual-binary/binary-explication-complete-plan.md` so the binary proof-sequence becomes a stable reference layer.
 
@@ -128,8 +128,10 @@ Docs still needing reconciliation after the commit gate:
 - [[FLOW 2026 04 25 TS INTERFACE DEFINITIONS]] - shared typed contract.
 - [[FLOW 2026 05 06 SMART ENV HEN LINK CANDIDATE POOL]] - read-only Smart Env suggestion seam for [[Hen]] wikilink selection.
 - [[FLOW 2026 05 07 RUST DEPENDENCY COMPATIBILITY]] - Rust 1.89 compatibility override, portal image feature isolation, and Redis future-incompat note.
-- `docs/epi-logos-kernel/` - provisional kernel trio: operator, mental-pole mechanics, and physical-pole stack. Treat as active design input for the QL/MEF computational meta-layer.
-- `docs/specs/2026-05-18-bimba-pointer-web-and-integration-spec.md` - active S2/S5 coordinate-topology input for the 36-fold pointer web, deep import, pointer refresh, and embeddings work that must be joined to kernel resonance and qvdata rather than left as a graph-only concern.
+- `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md` (previously `docs/epi-logos-kernel/`) - foundational kernel spec: bioquaternionic JEPA-EBM operator, matheme, Paramaśiva's tick.
+- `Idea/Bimba/Seeds/M/M4'/mental-pole-mechanics.md` - mental-pole intelligence: LLM/EBM/Verifier bootstrap, 72-fold resonance vectors.
+- `Idea/Bimba/Seeds/M/M1'/physical-pole-stack-architecture.md` - physical-pole engine: torus, solar-chakral, codon-clock, Tauri v2 implementation.
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/2026-05-18-bimba-pointer-web-and-integration-spec.md` - active S2/S5 coordinate-topology input for the 36-fold pointer web, deep import, pointer refresh, and embeddings work that must be joined to kernel resonance and qvdata rather than left as a graph-only concern.
 - QL musical derivation / matheme instrument notes - active design input for the harmonic kernel and pointer-web lock-in. Treat the 12-note matheme, bimba/pratibimba helices, 1/3/5(+1) mirror progression, 12 lens anchors, 72 resonance manifold, 8+4 cymatic partition, spectral observer hierarchy, and 4:5:6 energy weighting as computational requirements to be folded into S0/S2/S3/S5/M contracts, not as decorative audio-language.
 
 ## Core Build Principle
@@ -179,7 +181,7 @@ Status: complete for the current tranche as of 2026-05-17. The remaining deeper 
 
 This tranche crossed from pointer/spec coverage into executable integration. Documentation-only changes did not complete it; completion is grounded in real implementation paths, configuration surfaces, and tests that exercise actual behavior or explicit credential-gated live paths.
 
-The Bimba dataset conversion/import itself is a separate focused session. It does not block graph method/schema work. Current Neo4j data is non-sensitive and may be treated as disposable implementation state; canonical important data lives in `docs/datasets/` until converted into the new coordinate-driven form. The immediate graph work is therefore:
+The Bimba dataset conversion/import itself is a separate focused session. It does not block graph method/schema work. Current Neo4j data is non-sensitive and may be treated as disposable implementation state; canonical important data lives in `Idea/Bimba/Map/datasets/` until converted into the new coordinate-driven form. The immediate graph work is therefore:
 
 - make graph methods really work through S2 services, S0 CLI mirrors, and gateway/API routes;
 - define and enforce coordinate-driven Neo4j schema/property law so graph node and relationship properties align with the Obsidian frontmatter coordinate approach;
@@ -382,7 +384,7 @@ Current implementation state:
 - Done: RedisVL bridge residency is now S3-owned through `Body/S/S3/redis-context`, while S2 graph semantic-cache contracts keep `s2:graph:semantic` separate from S3' temporal keys.
 - Done: S3 durable gateway session store residency is now `Body/S/S3/gateway`; S0 injects Pi/Khora runtime context into S3 session creation rather than owning session truth itself.
 - Done: S3 gateway now owns protocol frame construction and runtime run/event/chat state; S0 hosts the live WebSocket dispatch adapter and domain handlers.
-- Done: S2 graph-services now owns schema creation, coordinate seed entrypoints, graph metadata, graph semantic-cache contracts over S3 Redis runtime, vault frontmatter parsing/mapping/alignment helpers, canonical Bimba corpus import, relationship/link/sync/conflict services, semantic embedding refresh, graph doctor/readiness, retrieval query semantics, retrieval execution, tokenization, and pure hybrid fusion/ranking law, with S0 graph commands acting as Neo4j/CLI adapters. The importer understands the real `docs/datasets` shape: low-detail corpus, all six deep branches, BOM-stripped JSON, deep `filteredProps`, legacy `bimbaCoordinate`, `relType`, null relation endpoints, branch provenance, and skipped-count reporting.
+- Done: S2 graph-services now owns schema creation, coordinate seed entrypoints, graph metadata, graph semantic-cache contracts over S3 Redis runtime, vault frontmatter parsing/mapping/alignment helpers, canonical Bimba corpus import, relationship/link/sync/conflict services, semantic embedding refresh, graph doctor/readiness, retrieval query semantics, retrieval execution, tokenization, and pure hybrid fusion/ranking law, with S0 graph commands acting as Neo4j/CLI adapters. The importer understands the real `Idea/Bimba/Map/datasets` shape: low-detail corpus, all six deep branches, BOM-stripped JSON, deep `filteredProps`, legacy `bimbaCoordinate`, `relType`, null relation endpoints, branch provenance, and skipped-count reporting.
 - Done: S3 graphiti-runtime now owns Graphiti compatibility runtime adapter law; S0 gate graphiti is a passthrough and S5/S5' invocation/search/arc governance remains explicit.
 - Done: kernel resonance now has its first cross-layer implementation: S0/portal-core emits validated `KernelResonanceObservation`, S2 owns `:Bimba:KernelResonanceObservation` schema/properties/Neo4j write planning, S3/gateway routes `s2.graph.kernel_resonance.record`, and S3/Graphiti runtime owns `s5.episodic.kernel_resonance.deposit` with S5/S5' governance metadata.
 - Done: S3 gateway now owns the dispatch route ownership table for every advertised gateway method and extension route family; S0 consults that table while remaining the live executable server adapter. S0' command exec/completion now routes through that table as `s0-prime.command-surface`.

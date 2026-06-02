@@ -42,7 +42,8 @@ export const PATHS = {
     s5ImprovementState: resolve(REPO_ROOT, 'Body', 'S', 'S5', 'fixtures', 'track-04-t0', 's5-improvement-state.json'),
     s5BaselineFixture: resolve(
         REPO_ROOT,
-        'docs', 'plans', '2026-05-31-mprime-and-sprime-implementation-tracks', 'plan.runs',
+        'Idea', 'Bimba', 'Seeds', 'M', 'Legacy', 'plans',
+        '2026-05-31-mprime-and-sprime-implementation-tracks', 'plan.runs',
         '10-t2-s5-review-baseline-20260602T000502Z.json'
     )
 };
@@ -229,7 +230,7 @@ export function buildEvidencePacket(candidate, reviewItem) {
         coordinate: candidate.target_coordinate,
         artifactUri: candidate.baseline.path,
         specAnchor:
-            'docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/' +
+            'Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/' +
             '10-cross-cutting-integration-and-milestones.md#L207',
         codeAnchor: 'Body/S/S5/epii-review-core/src/lib.rs#requires_human_resolution',
         testAnchor:
@@ -440,7 +441,7 @@ export function runHarness() {
             review_governance_rust:
                 'Body/S/S5/epii-review-core/src/lib.rs (requires_human_resolution)',
             baseline_thread_k_10_t2:
-                'docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/' +
+                'Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/' +
                 'plan.runs/10-t2-s5-review-baseline-20260602T000502Z.json'
         },
         candidate: {

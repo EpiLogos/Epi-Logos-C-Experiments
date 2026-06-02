@@ -12,9 +12,9 @@
 
 > **Companion documents:**
 > - [`M2'-SPEC.md`](M2'-SPEC.md) - current domain authority: M2-1' reads the S0/M1 substrate and writes the shared 8+4 bus; M1' walks that output as melody
-> - [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) - especially §6.5 and §6.75, the 8+4 cymatic correspondence and 12 x 7 mode-tonic landscape
-> - [`physical-pole-stack-architecture.md`](../../../../../docs/epi-logos-kernel/physical-pole-stack-architecture.md) - the Tauri/Bevy/wgpu rendering substrate and Chladni equation surface
-> - [`epi-logos-kernel-spec.md`](../../../../../docs/epi-logos-kernel/epi-logos-kernel-spec.md) - the bioquaternionic JEPA-EBM operator over the full matheme
+> - [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) - especially §6.5 and §6.75, the 8+4 cymatic correspondence and 12 x 7 mode-tonic landscape
+> - [`physical-pole-stack-architecture.md`](../M1'/physical-pole-stack-architecture.md) - the Tauri/Bevy/wgpu rendering substrate and Chladni equation surface
+> - [`epi-logos-kernel-spec.md`](../M0'/epi-logos-kernel-spec.md) - the bioquaternionic JEPA-EBM operator over the full matheme
 > - [`M2'-SPEC.md`](M2'-SPEC.md) - current domain UI/backend contract for M2' as harmonic/correspondential profile surface
 
 > **Code anchors:** `epi-lib/include/m2.h` (72-invariant union, MEF/Tattva/Decan/Shem/Maqam/Asma/Mantra tables, DET M2->M3 projection), `epi-lib/include/m1.h` (QL processual constants inherited by M2), `epi-lib/include/m3.h` (64-codon bitboard, 40/24 codon classification, 472 rotational states), `physical-pole-stack-architecture.md` §5 (Chladni/wgpu rendering).

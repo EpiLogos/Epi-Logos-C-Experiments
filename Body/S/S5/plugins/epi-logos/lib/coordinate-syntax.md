@@ -22,7 +22,7 @@
 - Root: 0-5 (maps to M0-M5 branch)
 - Family prefix stripped: `M2-1` = `#2-1`
 - Arbitrary depth: `#2-1-0`, `#0-3-0/1-0`, `#4.4.3-4.0`
-- Dataset source: `docs/datasets/nodes_{branch}.json`
+- Dataset source: `Idea/Bimba/Map/datasets/nodes_{branch}.json`
 
 ### Special operators in sub-branches
 

@@ -13,19 +13,19 @@ This note records the source pool used to derive the current `[[S3]]` specificat
 
 ## Governing Canon
 
-- `docs/specs/S/S3-S3i-GATEWAY.md`
+- `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md`
   Current decisive split: `[[S3]]` as gateway control plane and `[[S3']]` as shared
   state plane.
-- `docs/specs/S/S-STACK-INTEGRATION.md`
+- `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md`
   Stack-wide placement of `[[S3]]` inside the larger S-layer architecture.
 
 ## Primary Planning Layer
 
-- `docs/plans/2026-03-07-s3-gateway-full-implementation.md`
+- `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-07-s3-gateway-full-implementation.md`
   Main implementation-intent plan for full gateway shape.
-- `docs/plans/2026-03-10-full-gateway-functionality-plan.md`
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-full-gateway-functionality-plan.md`
   Expanded target command surface and gateway responsibility envelope.
-- `docs/plans/2026-03-07-s3-electron-verification-notes.md`
+- `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-07-s3-electron-verification-notes.md`
   Parity-facing notes for client expectations around the gateway plane.
 
 ## Legacy and Genealogical Sources

@@ -1,0 +1,36 @@
+{
+  "runId": "20260601T094758Z-02-T1",
+  "taskId": "02.T1",
+  "startedAt": "2026-06-01T09:47:58.920Z",
+  "task": {
+    "id": "02.T1",
+    "trackId": "02",
+    "tranche": "T1",
+    "title": "Schema and relation-law convergence",
+    "effort": null,
+    "file": "02-s2-bimba-map-population.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md",
+    "dependsOn": [
+      "02.T0"
+    ],
+    "writeScopes": [
+      "Body/S/S2/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-05-31T23:53:02.210Z",
+        "text": "Schema and relation-law convergence applied to Body/S/S2/graph-schema/src/lib.rs: 8 seed-emitted structural relations added as canonical entries (GENERATES/ENTANGLES/INTERLEAVES with coordinate_home=C0 source_family=seed-topology; MANIFESTS/BEDROCK/FAMILY_CONTAINS/MOBIUS_RETURN with coordinate_home=M source_family=seed-topology; ANCHORED_TO with coordinate_home=CF) — RELATIONSHIP_TYPE_SPECS now 17->25, all compatibility=false. Deep-dataset relation convention recognized via NEW is_deep_dataset_relation_type() + classify_relationship_type() returning RelationshipTypeClass{Canonical,Compatibility,DeepDataset,Drift} — pattern (uppercase ASCII + digits + underscores, starts uppercase, no consecutive/trailing underscores) — covers the ~thousands of relation types in docs/datasets/{anuttara,paramasiva,parashakti,mahamaya,nara,epii}-deep/relations.json without per-instance registration. Two Anuttara fields added as canonical C1 node specs: c_1_symbol + c_1_formulation_type (Public disclosure, source_family=anuttara-language). NEW Body/S/S2/graph-schema/tests/track_02_t1_convergence.rs (5 tests) locks: every seed-emitted topology relation is canonical; deep-dataset samples (ARCHETYPAL_RESONANCE_*, MIRRORS_SVATANTRYA, ABHINAVAGUPTA_RESONANCE_07, ACHIEVES_SIVA_SHAKTI_UNITY) classify correctly; registered/lowercase/malformed strings do NOT capture; Anuttara c_1_symbol/c_1_formulation_type/c_1_complete_formulation are Public C1 nodes; AdHocRelation and relates_to classify as Drift. Verification: cargo test graph-schema 13+suites all green (including new 5/5); graph-services 68+sub-suites green (5 live-gated tests ignored without EPI_GRAPH_LIVE). validate_node_properties + validate_relationship_properties pass (existing tests). Carry-forward: live db.relationshipTypes() vs registry assertion deferred to T2 (needs running Neo4j harness); GDS overlay provenance field set deferred to T6 (n10s/GDS packaging IOD-07 unresolved); Anuttara field name vs c_*-prefix open decision still tracked as IOD-06."
+      },
+      {
+        "at": "2026-05-31T23:53:18.774Z",
+        "text": "Parked by user request to switch to ready Track 01 T2; existing S2 worktree changes preserved for later resume."
+      }
+    ],
+    "claimedAt": "2026-05-31T23:48:04.511Z",
+    "completedAt": "2026-05-31T23:53:02.210Z"
+  }
+}

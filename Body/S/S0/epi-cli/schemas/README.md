@@ -138,4 +138,4 @@ npm run build   # tsc → dist/
 - `epi-cli/src/graph/seed.rs` — Rust seeder (96 nodes + 187 relationships into Neo4j)
 - `epi-cli/src/graph/coordinate_array_parser.rs` — Rust coordinate parser (TS validator is a port)
 - `.pi/extensions/s_i/modules/ql_types/` — Existing Pi extension types (to be migrated to consume this package)
-- `docs/plans/2026-03-07-hc-zod-schema-design.md` — Design document
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-07-hc-zod-schema-design.md` — Design document

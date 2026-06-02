@@ -19,20 +19,20 @@ Primary canon used for [[S2']]:
 |---|---|---|
 | [[S2']] | `/Users/admin/Documents/Epi-Logos/Idea/Bimba/World/S2'.md` | Old world-level articulation of the graph API layer; used as genealogical night-side baseline |
 | [[S2'Cx]] | `/Users/admin/Documents/Epi-Logos/Idea/Bimba/World/S2'Cx.md` | Older C-manifestation material used to recover the intended graph-law morphology |
-| [[S2-S2i-GRAPH]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/S/S2-S2i-GRAPH.md` | Main direct authority for [[S2']] as the graph-law / GraphRAG contract surface |
-| [[S-STACK-INTEGRATION]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/S/S-STACK-INTEGRATION.md` | Stack-wide placement of the night-side graph law within the larger system |
-| [[2026-02-26-epi-logos-canonical-system-plan]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/resources/S/2026-02-26-epi-logos-canonical-system-plan.md` | Canonical planning layer for graph, plugin, and coordinate integration telos |
-| [[2026-03-07-s1-s2-implementation-plan]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/2026-03-07-s1-s2-implementation-plan.md` | Main bridge plan for how content law should become graph law |
-| [[2026-03-08-knowing-graph-convergence-plan]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/2026-03-08-knowing-graph-convergence-plan.md` | Core source for coordinate-aware retrieval, knowing, and graph convergence |
-| [[2026-03-10-semantic-graph-lifecycle]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/2026-03-10-semantic-graph-lifecycle.md` | Main lifecycle source for lawful graph artifact birth, update, and retrieval |
+| [[S2-S2i-GRAPH]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md` | Main direct authority for [[S2']] as the graph-law / GraphRAG contract surface |
+| [[S-STACK-INTEGRATION]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` | Stack-wide placement of the night-side graph law within the larger system |
+| [[2026-02-26-epi-logos-canonical-system-plan]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-26-epi-logos-canonical-system-plan.md` | Canonical planning layer for graph, plugin, and coordinate integration telos |
+| [[2026-03-07-s1-s2-implementation-plan]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S1/S1'/Legacy/plans/2026-03-07-s1-s2-implementation-plan.md` | Main bridge plan for how content law should become graph law |
+| [[2026-03-08-knowing-graph-convergence-plan]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-08-knowing-graph-convergence-plan.md` | Core source for coordinate-aware retrieval, knowing, and graph convergence |
+| [[2026-03-10-semantic-graph-lifecycle]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-semantic-graph-lifecycle.md` | Main lifecycle source for lawful graph artifact birth, update, and retrieval |
 
 Contextual/supporting reads consulted while resolving [[S2']]:
 
 | Source | Location | Why it mattered |
 |---|---|---|
-| [[2026-04-03-gnostic-rag-anything-migration-design]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/superpowers/specs/2026-04-03-gnostic-rag-anything-migration-design.md` | Important for the target-state `ql_graph` / GraphRAG migration horizon |
-| [[2026-04-04-neo4j-m-branch-coordinate-schema-population-design]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/superpowers/specs/2026-04-04-neo4j-m-branch-coordinate-schema-population-design.md` | Clarified lawful coordinate-node and relation population expectations |
-| [[2026-04-04-graphiti-unified-temporal-context-service]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Helped distinguish graph-law from adjacent temporal/context services |
+| [[2026-04-03-gnostic-rag-anything-migration-design]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S4/S4'/Legacy/superpowers/specs/2026-04-03-gnostic-rag-anything-migration-design.md` | Important for the target-state `ql_graph` / GraphRAG migration horizon |
+| [[2026-04-04-neo4j-m-branch-coordinate-schema-population-design]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S4/S4'/Legacy/superpowers/specs/2026-04-04-neo4j-m-branch-coordinate-schema-population-design.md` | Clarified lawful coordinate-node and relation population expectations |
+| [[2026-04-04-graphiti-unified-temporal-context-service]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Helped distinguish graph-law from adjacent temporal/context services |
 | `epi-cli/src/graph/retrieval/graphrag.rs`, `hybrid.rs`, `seed.rs`, `redis_cache.rs`, `semantic_cache.rs` | `/Users/admin/Documents/Epi-Logos C Experiments/epi-cli/src/graph/` | Implementation anchors consulted only as naming/retrieval sanity checks, not as doctrinal authority |
 | `epi-gnostic/epi_gnostic/config.py`, `wrapper.py`, `graphiti_service.py`, `cypher/00-bootstrap.cypher` | `/Users/admin/Documents/Epi-Logos C Experiments/epi-gnostic/` | Live graph-service surfaces used to validate that the spec trajectory had concrete engineering counterparts |
 | `.pi/extensions/ta-onta/pleroma/CONTRACT.md` and `extension.ts` | `/Users/admin/Documents/Epi-Logos C Experiments/.pi/extensions/ta-onta/pleroma/` | Used to keep orchestration/runtime tooling distinct from the graph-law layer itself |

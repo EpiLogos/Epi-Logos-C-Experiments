@@ -7,7 +7,7 @@
 //!    `GraphRelationshipTypeSpec` (compatibility: false) or an explicitly
 //!    listed compatibility entry. Drift fails.
 //! 2. **Deep-dataset class**: the convention used for relation types in
-//!    `docs/datasets/{*}-deep/relations.json` is recognised by
+//!    `Idea/Bimba/Map/datasets/{*}-deep/relations.json` is recognised by
 //!    `is_deep_dataset_relation_type` and classified as
 //!    `RelationshipTypeClass::DeepDataset` without per-instance registration.
 //! 3. **Anuttara node property contract**: `c_1_symbol`,
@@ -53,7 +53,7 @@ fn every_seed_emitted_relation_is_a_canonical_registry_entry() {
 
 #[test]
 fn deep_dataset_relation_convention_is_recognised_without_per_instance_registration() {
-    // Representative sample drawn from the docs/datasets/*-deep/relations.json corpus.
+    // Representative sample drawn from the Idea/Bimba/Map/datasets/*-deep/relations.json corpus.
     let samples = [
         "ARCHETYPAL_RESONANCE_ACTIVE_AGENCY",
         "ARCHETYPAL_RESONANCE_BLISSFUL_DANCE",

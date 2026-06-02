@@ -12,7 +12,7 @@ fn accepts_agent_proposed_registered_and_dynamic_coordinate_properties() {
             evidence_kind: "heading_summary".to_owned(),
             evidence_text: "S2 graph-services owns schema validation before Neo4j writes."
                 .to_owned(),
-            source_path: Some("docs/specs/S/S2-S2i-GRAPH.md".to_owned()),
+            source_path: Some("Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md".to_owned()),
             source_line: Some(42),
             proposed_by: "pi:pleroma".to_owned(),
             reasoning: Some("Operational S4/S2 boundary stated in the spec.".to_owned()),
@@ -54,7 +54,7 @@ fn accepts_non_leading_family_when_coordinate_prefix_and_evidence_are_valid() {
         evidence_text:
             "The S document explicitly compares the graph protocol to Bimba world templates."
                 .to_owned(),
-        source_path: Some("docs/specs/S/S2-S2i-GRAPH.md".to_owned()),
+        source_path: Some("Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md".to_owned()),
         source_line: Some(87),
         proposed_by: "pi:pleroma".to_owned(),
         reasoning: Some(
@@ -104,7 +104,7 @@ fn rejects_empty_evidence_and_wrong_registered_value_type() {
         value: json!("schema/protocol authority"),
         evidence_kind: "content_synthesis".to_owned(),
         evidence_text: "   ".to_owned(),
-        source_path: Some("docs/specs/S/S2-S2i-GRAPH.md".to_owned()),
+        source_path: Some("Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md".to_owned()),
         source_line: Some(18),
         proposed_by: "pi:pleroma".to_owned(),
         reasoning: None,
@@ -114,7 +114,7 @@ fn rejects_empty_evidence_and_wrong_registered_value_type() {
         value: json!(["not", "a", "string"]),
         evidence_kind: "content_synthesis".to_owned(),
         evidence_text: "The role is described as schema authority.".to_owned(),
-        source_path: Some("docs/specs/S/S2-S2i-GRAPH.md".to_owned()),
+        source_path: Some("Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md".to_owned()),
         source_line: Some(18),
         proposed_by: "pi:pleroma".to_owned(),
         reasoning: None,

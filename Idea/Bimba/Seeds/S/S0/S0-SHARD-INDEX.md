@@ -6,11 +6,18 @@ c_0_source_coordinates:
   - "[[S-SYSTEM-INDEX]]"
   - "[[S-SOURCE-TRACEABILITY-INDEX]]"
   - "[[S0-SPEC]]"
+  - "[[S0'-SPEC]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
 ---
 
 # S0/S0' Shard Index
 
 [[S0]] / [[S0']] is the executable ground and return surface. These shards make command, API, envelope, TypeScript, bootstrap, and test parity buildable without flattening higher-level ownership into S0.
+
+## Harmonization Standard
+
+Every shard below is now expected to follow [[S-SHARD-HARMONIZATION-PROTOCOL]]: it must name its canonical [[P]] / [[CT]] / [[L]] posture, cite [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]], point at the relevant [[World]] / MOC canvas under `Idea/Bimba/World/Types/Coordinates/S/**`, cite migrated legacy sources, and name real [[Body]] code/tests. [[S0]] shards should prove executable ground; [[S0']] shards should prove reflective command law, parity, permission, topology, context, or return evidence.
 
 ## Kernel Ground Shards
 

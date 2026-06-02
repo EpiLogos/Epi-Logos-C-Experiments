@@ -197,7 +197,7 @@ audit surfaces. Exits 0 if the plan parses cleanly.
    ```
 
 4. The harness launches the Theia process, parses stdout for `[ACCEPTANCE:<step-id>:<key>=<value>]` handles, and writes a JSON receipt to
-   `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/acceptance-receipt-<timestamp>.json`.
+   `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/acceptance-receipt-<timestamp>.json`.
 
 A passing receipt has every step recorded as `done` with the documented
 handles + `bridge-subscription-stable=true`.
@@ -243,3 +243,79 @@ payloads were refused; expected zero after a passing acceptance run.
 | Bridge subscription count > 1 after layout switch | DI singleton duplicated | File a bug; rerun smoke-build to confirm chunks didn't change |
 | Privacy-dropped count > 0 after passing acceptance run | Real privacy leak — investigate immediately | Inspect the offending widget's gateway response; do not ship |
 | `cargo test` fails offline | Crate registry cache missing | Run once with network: `cargo fetch --manifest-path <Cargo.toml>` |
+
+## 11. S/S' Modularity Update — 2026-06-02
+
+**Track 13 closed (2026-06-02).** S0 is now formally **the membrane**:
+operator CLI + gateway process bootstrap + named adapters into
+Body-native authorities. S0 does NOT carry downstream service law
+(route definitions, runtime handlers, graph mutation, governance
+policy, vault writes that bypass Hen, or capability-matrix law).
+
+### Routing rule for future work
+
+When planning a new feature or refactor, **route to the Body-native
+owner first** based on the surface:
+
+| Surface | Body-native owner | S0 touched only if... |
+|---------|-------------------|------------------------|
+| Vault read / write / rename / move / frontmatter / semantic | `Body/S/S1/hen-compiler-core` (via Hen-gateway `s1'.{vault,semantic}.*`) | New gateway adapter row in `Body/S/S0/epi-cli/src/gate/s1_hen.rs` |
+| Graph mutation, retrieval, semantic cache, doctor, sync | `Body/S/S2/graph-services` | New CLI parsing / render arm in `Body/S/S0/epi-cli/src/graph/mod.rs` (re-exports otherwise) |
+| Sessions, chat, channels, SpaceTimeDB subscription, dispatch routes | `Body/S/S3/{gateway, gateway-contract, epi-spacetime-module}` | Process host wiring in `Body/S/S0/epi-cli/src/gate/{server, spacetimedb_bridge}.rs` |
+| Anima / VAK / capability-matrix / dispatch tools / psyche | `Body/S/S4/{ta-onta, plugins/pleroma, pi-agent}` | Gateway adapter row in `Body/S/S0/epi-cli/src/gate/anima.rs` (must stamp `S4_AUTHORITY_ORIGIN`) |
+| Review submit / inbox / resolve / improvement propose / promote / Epii agent access / Graphiti deposit | `Body/S/S5/{epii-review-core, epii-autoresearch-core, epii-agent-core}` + `Body/S/S3/graphiti-runtime` | Thin adapter row in `Body/S/S0/epi-cli/src/gate/{review, improve, epii, graphiti}.rs` (must delegate, must not duplicate governance policy) |
+| CLI commands, device / cron / wizard / health / talk / voicewake / browser | `Body/S/S0/epi-cli` IS authority | All work lands here |
+
+**Test gate.** Any new S0 module under a law zone (`src/gate/`,
+`src/graph/`, `src/vault/`, `src/core/`) must pass the
+`s0_membrane_guardrails` axis 1 scanner. The module either (a) gets
+an inventory entry in
+`Body/S/S0/epi-cli/contract-inventory/s0-membrane-inventory.json`, or
+(b) carries a canonical `// S0 ADAPTER: Body/S/<...>` annotation, or
+(c) is a pure re-export (`pub use epi_s1_…` / `epi_s2_…` /
+`epi_s3_…` / `epi_s4_…` / `epi_s5_…` / `epi_kbase_…` / `epii_…` /
+`portal_core::…`), or (d) is in the `baseline_cli_glue_modules()`
+allowlist with a justification comment. A new law-zone module that is
+none of the above fails CI.
+
+### CI enforcement layer
+
+The canonical CI enforcement is the **`s0_membrane_guardrails` test
+suite** at `Body/S/S0/epi-cli/tests/s0_membrane_guardrails.rs` (8
+tests across four guardrail axes: downstream-law scanner, S4 schema
+detector, S5 schema detector, negative-fixture rejection) plus its
+two appended companions in `Body/S/S3/gateway/tests/dispatch_contract.rs`
+(`t9_route_ownership_cross_walk`) and
+`Body/S/S2/graph-services/tests/graph_runtime_extraction_contract.rs`
+(`t9_graph_law_types_do_not_resolve_to_epi_logos_graph_namespace`).
+
+If the guardrail suite is ever marked `#[ignore]` or removed, the
+entire S/S' modularity contract becomes a soft recommendation. Treat
+those tests as load-bearing.
+
+Run locally:
+
+```bash
+cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml \
+    --test s0_membrane_guardrails
+cargo test --offline --manifest-path Body/S/S3/gateway/Cargo.toml \
+    --test dispatch_contract
+cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml \
+    --test graph_runtime_extraction_contract
+```
+
+### Per-family modularity ledger
+
+For the full method-family-by-method-family ledger (current S0
+responsibility, Body-native authority, remaining compatibility shims,
+removal timetable), see
+[`Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/13-t10-modularity-report.md`](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/13-t10-modularity-report.md).
+
+### Follow-up backlog
+
+Track 13 closed with 10 catalogued follow-up tranches (FU-T6-A..E,
+FU-T7-A..B, FU-T8-A, FU-T9-A..B) — extractions that anima's 09.T7
+lane prevented during T6/T7, deferred Track 03 T6.5 surfaces, and
+inventory drift surfaced by T9. See §5 of the modularity report for
+ids + blockers.
+

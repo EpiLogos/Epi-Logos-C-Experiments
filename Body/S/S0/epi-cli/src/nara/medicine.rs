@@ -1,8 +1,8 @@
 //! Nara Medicine — Sympathetic medicine grounded in M2 Parashakti dataset
 //!
 //! All lookup tables are derived from the Parashakti deep dataset:
-//!   docs/datasets/parashakti-deep/nodes-full-detail.json
-//!   docs/datasets/parashakti-deep/relations.json
+//!   Idea/Bimba/Map/datasets/parashakti-deep/nodes-full-detail.json
+//!   Idea/Bimba/Map/datasets/parashakti-deep/relations.json
 //!
 //! # M0→M1→M2 Decan Chain (canonical architecture)
 //!
@@ -98,7 +98,7 @@ pub struct ZodiacDecanEntry {
 /// Sources (in order of field derivation):
 ///   - M0: epi-lib/src/m0.c ZODIACAL_LUT — sign, element, mode
 ///   - M1: epi-lib/src/m1.c ANANDA_BIMBA — ananda_harmonic = DR(sign × planet)
-///   - M2: docs/datasets/parashakti-deep/nodes-full-detail.json — ruling_planet, body_part, herb
+///   - M2: Idea/Bimba/Map/datasets/parashakti-deep/nodes-full-detail.json — ruling_planet, body_part, herb
 pub static ZODIAC_DECAN_TABLE: [ZodiacDecanEntry; 36] = [
     // ── Aries (sign=0, Fire/Cardinal) — ANANDA_BIMBA row 0 = all zeros ──
     // DR(0×anything)=0: the void-ground of pure initiatory fire, pre-numerical.

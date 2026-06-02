@@ -67,7 +67,7 @@ T1 deliverable: `Idea/Pratibimba/System/extensions/obsidian-md-vsc-bundle/` with
 
 - **What `obsidian-md-vsc` provides:** vault file tree, markdown rendering with wiki-links, backlinks, frontmatter parsing, daily-note conventions — the S1 vault reach.
 - **What Theia extensions consume from it:** VS Code-style commands (`obsidian.openLink`, `obsidian.openBacklinks`, etc.) invoked via Theia's `CommandRegistry`. M-extensions and the OmniPanel route file-open intents through these commands rather than implementing parallel vault logic.
-- **What gets dropped from the inheritance sources:** `Body/M/epi-tauri/src/services/vaultClient.ts`, all 13 `vault_*` Tauri commands, the entire `Body/M/epi-tauri/src-tauri/src/vault/` Rust module, and the source-B `Body/S/S3/epi-app/renderer/components/BacklinksPanel.tsx`. See [migration-inventory.md](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md) for the exhaustive disposition.
+- **What gets dropped from the inheritance sources:** `Body/M/epi-tauri/src/services/vaultClient.ts`, all 13 `vault_*` Tauri commands, the entire `Body/M/epi-tauri/src-tauri/src/vault/` Rust module, and the source-B `Body/S/S3/epi-app/renderer/components/BacklinksPanel.tsx`. See [migration-inventory.md](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md) for the exhaustive disposition.
 
 ### Privacy & boundary discipline
 
@@ -95,5 +95,5 @@ T1 deliverable: `Idea/Pratibimba/System/extensions/obsidian-md-vsc-bundle/` with
 ## Cross-references
 
 - [canon §0.1](../../../Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md) — VS Code extension borrow rule.
-- [11-open-architectural-decisions.md#IOD-17](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md) — capability-matrix governance.
+- [11-open-architectural-decisions.md#IOD-17](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md) — capability-matrix governance.
 - [`obsidian-md-vsc` upstream](https://marketplace.visualstudio.com/items?itemName=YuMianCheng.obsidian-md-vsc) — verify version at T1 first build.

@@ -5,7 +5,7 @@
 // Hardens the live-capture path the 10.T1 ledger fixture documents. The
 // canonical ledger at:
 //
-//   docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/
+//   Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/
 //     plan.runs/10-t1-profile-generation-ledger-20260601T234815Z.json
 //
 // was assembled from the four real-code-path test fixtures named in its
@@ -59,7 +59,7 @@ const REQUIRE_LIVE = process.env.EPI_LIVE_GATEWAY === '1';
 const EPI_BIN = resolve(REPO_ROOT, 'Body/S/S0/epi-cli/target/debug/epi');
 const PLAN_RUNS_DIR = resolve(
     REPO_ROOT,
-    'docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs',
+    'Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs',
 );
 
 function isoStampForFilename(d = new Date()) {

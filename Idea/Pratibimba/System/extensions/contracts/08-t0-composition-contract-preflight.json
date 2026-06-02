@@ -13,12 +13,12 @@
     "rationale": "Composition is dialectical synthesis (CF (0/1/2)) between the six individual extensions delivered by Track 07 and the integrated 1-2-3 / 4-5-0 plugins."
   },
   "sourceAnchors": [
-    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md",
-    "docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md",
-    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md",
-    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md",
-    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md",
-    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md",
+    "Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md",
     "Idea/Pratibimba/System/extensions/contracts/07-t0-extension-contract-preflight.json",
     "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
     "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",

@@ -2585,7 +2585,7 @@ pub fn relationship_spec(rel_type: &str) -> Result<&'static GraphRelationshipTyp
 
 /// Convention for deep-dataset relationship strings.
 ///
-/// `docs/datasets/{anuttara,paramasiva,parashakti,mahamaya,nara,epii}-deep/relations.json`
+/// `Idea/Bimba/Map/datasets/{anuttara,paramasiva,parashakti,mahamaya,nara,epii}-deep/relations.json`
 /// emit thousands of semantically rich relation types
 /// (`ARCHETYPAL_RESONANCE_ACTIVE_AGENCY`, `MIRRORS_SVATANTRYA`, ...). Per-instance
 /// registration is infeasible; instead Track 02 T1 declares a CLASS convention:

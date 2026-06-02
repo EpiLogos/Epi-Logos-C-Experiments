@@ -357,7 +357,7 @@ pub fn capacity_workflow_registry() -> Vec<CapacityWorkflowRegistryEntry> {
             ide_surface_anchor: "pratibimba://system/control-room/capacity/anuttara".to_owned(),
             source_spec_anchors: vec![
                 "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-anuttara-language-development.md#6".to_owned(),
-                "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md#tranche-8".to_owned(),
+                "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md#tranche-8".to_owned(),
             ],
             vector_kind: ImprovementVectorKind::AnuttaraAxiomElaboration {
                 axiom_class: "ql:LoadBearingAxiom".to_owned(),
@@ -425,7 +425,7 @@ pub fn capacity_workflow_registry() -> Vec<CapacityWorkflowRegistryEntry> {
             ide_surface_anchor: "pratibimba://system/control-room/capacity/parashakti".to_owned(),
             source_spec_anchors: vec![
                 "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-parashakti-graph-relational-ml.md#7".to_owned(),
-                "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md#t8".to_owned(),
+                "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md#t8".to_owned(),
             ],
             vector_kind: ImprovementVectorKind::ParashaktiEmbeddingRefresh {
                 embedding_kind: "lens-kge".to_owned(),
@@ -461,7 +461,7 @@ pub fn capacity_workflow_registry() -> Vec<CapacityWorkflowRegistryEntry> {
             ide_surface_anchor: "pratibimba://system/control-room/capacity/mahamaya".to_owned(),
             source_spec_anchors: vec![
                 "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md#6".to_owned(),
-                "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md#tranche-9".to_owned(),
+                "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md#tranche-9".to_owned(),
             ],
             vector_kind: ImprovementVectorKind::MahamayaProcessRewardRefinement,
             surfacing_pipeline: SurfacingPipelineId::MahamayaCalculation,

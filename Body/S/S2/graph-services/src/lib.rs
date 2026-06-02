@@ -18,6 +18,7 @@ pub mod doctor;
 pub mod embeddings;
 pub mod gds;
 pub mod graph_api;
+pub mod lifecycle;
 pub mod link_enforcement;
 pub mod meta;
 pub mod ontology;
@@ -58,6 +59,9 @@ pub use graph_api::{
     GraphParamValue, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
     KernelResonanceObservationPlan, KernelResonanceObservationRequest, PointerWebRefreshPlan,
     PointerWebRefreshRequest,
+};
+pub use lifecycle::{
+    live_graph_backed_evidence, maybe_refresh_semantic_embeddings, LiveGraphBackedEvidence,
 };
 pub use link_enforcement::{LinkEnforcer, LinkValidationResult};
 pub use meta::{

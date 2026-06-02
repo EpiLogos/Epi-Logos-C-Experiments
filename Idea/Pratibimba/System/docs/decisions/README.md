@@ -22,5 +22,5 @@ The pre-recast ADRs at [`Body/M/epi-tauri/decisions/`](../../../../Body/M/epi-ta
 
 Decisions in this directory are bound by:
 - [m5-prime-system-shape-and-tauri-ide-canon.md §2-§5](../../../Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md) (Theia-only authority)
-- [docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md) (decision register)
-- [docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md) (Track 05 plan body)
+- [Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md) (decision register)
+- [Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md) (Track 05 plan body)

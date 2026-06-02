@@ -7,7 +7,7 @@ use epi_s2_graph_services::{
 };
 
 #[tokio::test]
-#[ignore] // requires local Neo4j plus `epi graph import all` against docs/datasets
+#[ignore] // requires local Neo4j plus `epi graph import all` against Idea/Bimba/Map/datasets
 async fn imported_corpus_passes_s2_integrity_checks() {
     let client = Neo4jClient::connect(&Neo4jConfig::from_env()).expect("connect to live Neo4j");
 

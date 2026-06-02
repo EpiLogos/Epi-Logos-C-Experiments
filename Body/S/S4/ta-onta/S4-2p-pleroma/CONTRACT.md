@@ -12,6 +12,15 @@ Pleroma is the **execution substrate registry** — it owns the 7 bounded primit
 
 **What Pleroma does NOT own:** orchestration skills (→ Anima), evidence-acquisition skills (→ Aletheia), constitutional agents (→ Anima), Moirai agents (→ Aletheia).
 
+Pleroma must nevertheless make the vault-intelligence primitives available to agents. The `epi_cli` primitive is the bounded route for:
+
+- `epi core knowing <coordinate> --json` coordinate orientation.
+- `epi vault read/search/search-content/link-suggest` vault-native discovery.
+- `epi vault frontmatter-validate` and template/bootstrap checks when Hen asks for local verification.
+- `s1'.vault.*` gateway calls where the host exposes the gateway method surface.
+
+The primitive rule is: Pleroma exposes the executable route; Hen owns vault law; Anima decides when to invoke; Epii/Aletheia decide when material is promoted or reviewed. Pleroma must not replace vault discovery with local filesystem grep as the default agent behavior.
+
 ---
 
 ## PI Hook Seams
@@ -115,6 +124,7 @@ Items in `_staging/` require reassignment before Pleroma plugin creation:
 4. `notebooklm` primitive is explicitly temporary — retire when Gnosis quality benchmark passes
 5. Orchestration skills do not belong here — they belong in Anima
 6. Darshana REPL is owned by Anansi (Aletheia mode-function), staged in Pleroma only
+7. Vault-aware agents should prefer bounded `epi_cli` discovery (`epi core knowing`, `epi vault read/search/search-content/link-suggest`) before raw filesystem search for architecture/spec context
 
 ---
 

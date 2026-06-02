@@ -1,6 +1,6 @@
 # Migration sources for each extension
 
-This file is the operational index of which legacy source files each extension absorbs during the Track 05 migration. The full per-file rationale lives in [`docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md`](../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md); this file is the workspace-local pointer so agents looking at a given extension can find its sources without leaving the tree.
+This file is the operational index of which legacy source files each extension absorbs during the Track 05 migration. The full per-file rationale lives in [`Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md`](../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md); this file is the workspace-local pointer so agents looking at a given extension can find its sources without leaving the tree.
 
 T2 deliverable: every `Body/M/epi-tauri` source file is either (a) ported into a Theia destination listed below, or (b) marked retired with an explicit reason in the inventory.
 

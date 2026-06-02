@@ -1,0 +1,25 @@
+{
+  "runId": "20260531T215336Z-07-T0",
+  "taskId": "07.T0",
+  "startedAt": "2026-05-31T21:53:36.939Z",
+  "task": {
+    "id": "07.T0",
+    "trackId": "07",
+    "tranche": "T0",
+    "title": "Extension Contract Preflight",
+    "effort": null,
+    "file": "07-m-extension-individual-tracks.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/07-m-extension-individual-tracks.md",
+    "dependsOn": [],
+    "writeScopes": [
+      "pratibimba/system/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null
+  }
+}

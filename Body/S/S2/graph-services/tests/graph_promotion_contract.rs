@@ -36,7 +36,7 @@ fn valid_intent() -> S2GraphPromotionIntent {
             "value": "S2 graph-services owns schema validation before Neo4j writes.",
             "evidence_kind": "content_synthesis",
             "evidence_text": "The graph spec states that S2 is the schema/protocol boundary for graph promotion.",
-            "source_path": "docs/specs/S/S2-S2i-GRAPH.md",
+            "source_path": "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md",
             "source_line": 42,
             "proposed_by": "pi:pleroma",
             "reasoning": "The node is a technical coordinate doc, so the operational role should be agent-reasoned from the spec body rather than copied from frontmatter."
@@ -130,7 +130,7 @@ fn promotion_intent_rejects_unregistered_relation_candidate() {
 #[test]
 fn technical_promotion_requires_pi_agent_property_reasoning() {
     let mut intent = valid_intent();
-    intent.node.vault_path = "docs/specs/S/S2-S2i-GRAPH.md".to_owned();
+    intent.node.vault_path = "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md".to_owned();
     intent.property_proposals.clear();
 
     let err = SyncCoordinator::validate_promotion_intent(&intent).unwrap_err();

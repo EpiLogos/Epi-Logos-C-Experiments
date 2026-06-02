@@ -782,6 +782,1074 @@ pub fn gateway_session_method_names() -> Vec<&'static str> {
     methods
 }
 
+// =================== 13.T2 executable dispatch-plan contract ===================
+//
+// Track 13 Tranche T2 — Plan section 13.3 lines 73–91. The dispatch-plan
+// contract is the S3-owned **route law** that every gateway method MUST be
+// mapped against. It answers a single question per method: which substrate
+// owns the executable implementation?
+//
+// The original plan deliverable enumerates six dispatch kinds:
+//
+// 1. `S3 native handler` — implementation lives in `Body/S/S3/gateway` (or
+//    `Body/S/S3/graphiti-runtime` adjacent to it); S3 is its own authority.
+// 2. `S2 graph service adapter` — gateway forwards to `Body/S/S2/graph-services`
+//    or `Body/S/S2/graph-schema`.
+// 3. `S4 orchestration adapter` — gateway forwards to `Body/S/S4/ta-onta` (or
+//    the PI agent runtime via S4 anima/pleroma).
+// 4. `S5 governance adapter` — gateway forwards to `Body/S/S5/{epii-agent-core,
+//    epii-review-core, epii-autoresearch-core, epi-kbase-core, epi-gnostic, ...}`.
+// 5. `S0 product adapter` — surface intrinsic to the S0 product membrane
+//    (system/config/devices/skills/wizard/talk/etc.).
+// 6. `Missing` — declared in METHOD_NAMES but no executable home yet; carries
+//    a `needs_extraction_to` annotation so Track 13 follow-up tranches can
+//    target it.
+//
+// **Plan extension (13.T2 closure)**: 03.T6.5 introduced the `s1'.vault.*` and
+// `s1'.semantic.suggest_links` surface — an adapter onto the S1 Hen vault
+// gatekeeper. This pre-dates Track 13 but post-dates the six-kind enumeration
+// in the plan body. We surface it as the seventh kind `S1HenAdapter` and the
+// 13.T2 evidence flags it explicitly so future readers know the canonical
+// enumeration grew by one.
+//
+// The plan also tracks two methods that are currently routed through
+// `GatewayDispatchOwner::S0ProductAdapter` in the S3 gateway crate but whose
+// **execution body** lives in the S5 episodic / S5 epii surfaces in the
+// future. Those keep their CURRENT S0 product adapter classification here
+// because right now the gateway dispatch lands in S0 — Track 13 T7 owns the
+// graduation to S5 governance.
+//
+// **S0 is not allowed to maintain a parallel route table.** It MUST consume
+// this contract (or `GatewayDispatchRoute` in `epi_s3_gateway::dispatch`) and
+// MUST NOT re-classify a method on its own. The test
+// `s0_gate_server_dispatches_only_via_s3_route_metadata` in
+// `Body/S/S0/epi-cli/tests/gate_full_parity_contract.rs` enforces this.
+
+/// The six (plus one) dispatch kinds that classify every method in
+/// [`METHOD_NAMES`]. See module-level comment for the canonical enumeration.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum MethodDispatchKind {
+    /// `S3 native handler` — the implementation is owned by the S3 gateway
+    /// substrate itself (`Body/S/S3/gateway` and adjacent crates).
+    S3NativeHandler,
+    /// `S2 graph service adapter` — the gateway dispatches into the S2
+    /// graph-services / graph-schema authority.
+    S2GraphServiceAdapter,
+    /// `S4 orchestration adapter` — the gateway dispatches into the S4
+    /// ta-onta orchestration authority (or PI agent runtime).
+    S4OrchestrationAdapter,
+    /// `S5 governance adapter` — the gateway dispatches into one of the S5
+    /// governance crates (epii agent/review/improve/gnosis/kbase/episodic).
+    S5GovernanceAdapter,
+    /// `S0 product adapter` — the surface belongs to the S0 product membrane
+    /// (operator CLI, devices, system, config, skills, wizard, voice).
+    S0ProductAdapter,
+    /// `S1 Hen vault adapter` — 03.T6.5 vault gateway surface routing into
+    /// the S1 Hen vault gatekeeper. Plan extension beyond the original six
+    /// dispatch kinds, see module-level 13.T2 comment.
+    S1HenAdapter,
+    /// `Missing` — method appears in METHOD_NAMES but no executable home
+    /// exists yet. The `needs_extraction_to` annotation on
+    /// [`MethodDispatchPlanEntry`] names where the work is expected to land.
+    Missing,
+}
+
+impl MethodDispatchKind {
+    pub fn label(&self) -> &'static str {
+        match self {
+            Self::S3NativeHandler => "S3 native handler",
+            Self::S2GraphServiceAdapter => "S2 graph service adapter",
+            Self::S4OrchestrationAdapter => "S4 orchestration adapter",
+            Self::S5GovernanceAdapter => "S5 governance adapter",
+            Self::S0ProductAdapter => "S0 product adapter",
+            Self::S1HenAdapter => "S1 Hen vault adapter",
+            Self::Missing => "Missing",
+        }
+    }
+}
+
+/// One row of the executable dispatch-plan contract. Every method name in
+/// [`METHOD_NAMES`] MUST have exactly one corresponding entry in
+/// [`METHOD_DISPATCH_PLAN`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MethodDispatchPlanEntry {
+    /// The gateway method this entry classifies. MUST exist in
+    /// [`METHOD_NAMES`].
+    pub method: &'static str,
+    /// The kind of dispatch performed by the gateway for this method.
+    pub kind: MethodDispatchKind,
+    /// The Body-native authority crate / module path that ultimately
+    /// executes this method's law. For `S3NativeHandler` this points at the
+    /// S3 gateway runtime itself; for adapter kinds, at the target authority.
+    /// For `Missing`, this is the *planned* authority path or an empty hint.
+    pub authority_path: &'static str,
+    /// For `Missing` entries, the Track-13 (or follow-on) tranche where the
+    /// implementation should land. `None` for non-Missing entries.
+    pub needs_extraction_to: Option<&'static str>,
+}
+
+/// The S3-owned executable dispatch-plan. Every entry in [`METHOD_NAMES`]
+/// MUST have a row here.
+pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
+    // ----- S3 native handlers (gateway runtime surfaces) -----
+    MethodDispatchPlanEntry {
+        method: "connect",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::protocol",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "agent",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::dispatch (S4 ta-onta call-out wired via S3)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "agent.identity.get",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::dispatch",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "agent.wait",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::dispatch",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "agents.list",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::dispatch",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "channels.status",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (channel runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "channels.send",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (channel runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "channels.files.list",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (channel runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "channels.logout",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (channel runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "chat.history",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (chat runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "chat.abort",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (chat runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "chat.send",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (chat runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "chat.inject",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (chat runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "send",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway (session runtime, planned 13.T3 extraction)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.list",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.preview",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.resolve",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.run-state",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.patch",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.reset",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.delete",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.compact",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.fork",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.resume",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.import",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "sessions.tree",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::sessions",
+        needs_extraction_to: None,
+    },
+    // S3' temporal/spacetime surfaces are part of the S3 native handler set.
+    MethodDispatchPlanEntry {
+        method: "s3'.temporal.context",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::temporal + Body/S/S0/portal-core kernel",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s3'.temporal.subscribe",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::temporal subscription multiplex",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s3'.spacetime.subscribe",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::temporal subscription multiplex (spacetime alias)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s3'.kernel.envelope.publish",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway-contract::KERNEL_ENVELOPE_CONTRACT",
+        needs_extraction_to: None,
+    },
+    // Heartbeat/wake are S3 native runtime surfaces.
+    MethodDispatchPlanEntry {
+        method: "last-heartbeat",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::runtime",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "set-heartbeats",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::runtime",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "wake",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::runtime",
+        needs_extraction_to: None,
+    },
+
+    // ----- S2 graph service adapters -----
+    MethodDispatchPlanEntry {
+        method: "s2.graph.query",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2.graph.node",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2.graph.traverse",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2.graph.pointer_web.compute",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2.graph.pointer_web.refresh",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2.graph.kernel_resonance.record",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services + Body/S/S5/epi-kernel kernel arena",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.coordinate.cypher",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::coordinate",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.coordinate.ingest",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::coordinate",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.coordinate.analyse_resonance",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::resonance",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.coordinate.persist_analysis",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::resonance",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.coordinate.aggregate_resonance",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::resonance",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.constraint.list",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::constraint",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.constraint.register",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::constraint",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.constraint.test",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::constraint",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.coordinate.resolve",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::coordinate",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.retrieve",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::retrieval",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.rerank",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::retrieval",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2'.enrich",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::retrieval",
+        needs_extraction_to: None,
+    },
+
+    // ----- S4 orchestration adapters -----
+    MethodDispatchPlanEntry {
+        method: "s4.agent.query",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s4.agent.notify",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s4.agent.status",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s4'.vak.evaluate",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta/S4-4p-anima",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s4'.orchestrate",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta/S4-4p-anima",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s4'.mediation.route",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta/S4-4p-anima",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s4'.psyche.state",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta/S4-4p-anima",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s4'.psyche.update",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/ta-onta/S4-4p-anima",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s4'.permission.get",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/plugins/pleroma/capability-matrix.json",
+        needs_extraction_to: None,
+    },
+
+    // ----- S5 governance adapters -----
+    MethodDispatchPlanEntry {
+        method: "s5.trajectory.verify",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5.ebm.train",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5.ebm.export_state",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.anuttara.diagnose",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core (anuttara diagnostic)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.improve.status",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.improve.propose",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.improve.evaluate",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.improve.promote",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.improve.history",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-autoresearch-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.epii.status",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-agent-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.epii.deposit",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-agent-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.epii.runtime.context",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-agent-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.gnosis.context.retrieve",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-agent-core (gnosis context)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5.episodic.search",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S3/graphiti-runtime + Body/S/S5/epii-agent-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5.episodic.deposit",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S3/graphiti-runtime + Body/S/S5/epii-agent-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5.episodic.kernel_resonance.deposit",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S3/graphiti-runtime + Body/S/S5/epii-agent-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5.episodic.kernel_profile_observation.deposit",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S3/graphiti-runtime + Body/S/S5/epii-agent-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.review.inbox",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-review-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.review.submit",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-review-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.review.resolve",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-review-core",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s5'.review.history",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epii-review-core",
+        needs_extraction_to: None,
+    },
+
+    // ----- S1 Hen vault adapter (plan extension; see module-level comment) -----
+    MethodDispatchPlanEntry {
+        method: "s1'.vault.read_file",
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core (vault gatekeeper)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s1'.vault.write_file",
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core (vault gatekeeper)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s1'.vault.rename_file",
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core (vault gatekeeper)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s1'.vault.move_file",
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core (vault gatekeeper)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s1'.semantic.suggest_links",
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core (smart_env semantic reader)",
+        needs_extraction_to: None,
+    },
+
+    // ----- S0 product adapters (operator membrane surfaces) -----
+    MethodDispatchPlanEntry {
+        method: "browser.request",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/browser.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "web.login.start",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/auth.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "web.login.wait",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/auth.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "config.get",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/config.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "config.schema",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/config.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "config.set",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/config.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "config.patch",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/config.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "config.apply",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/config.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s0.command.exec",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/portal/command.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s0.command.completion",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/portal/command.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "cron.list",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/cron.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "cron.status",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/cron.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "cron.add",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/cron.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "cron.update",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/cron.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "cron.remove",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/cron.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "cron.run",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/cron.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "cron.runs",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/cron.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "device.pair.list",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/devices.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "device.pair.approve",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/devices.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "device.pair.reject",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/devices.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "device.token.rotate",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/devices.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "device.token.revoke",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/devices.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "exec.approval.request",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/approvals.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "exec.approval.resolve",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/approvals.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "exec.approvals.get",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/approvals.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "exec.approvals.set",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/approvals.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "exec.approvals.node.get",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/approvals.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "exec.approvals.node.set",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/approvals.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "logs.tail",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/logs.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "models.list",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/models.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "status",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "health",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "status.summary",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "health.snapshot",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "presence.list",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "skills.status",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/skills.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "skills.bins",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/skills.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "skills.install",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/skills.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "skills.update",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/skills.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "usage.status",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "usage.cost",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.pair.request",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.pair.list",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.pair.approve",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.pair.reject",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.pair.verify",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.rename",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.list",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.describe",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.invoke",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.invoke.result",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "node.event",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/nodes.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "system-presence",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "system-event",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/system.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "talk.mode",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice/talk runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "tts.status",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "tts.enable",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "tts.disable",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "tts.convert",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "tts.setProvider",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "tts.providers",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "voicewake.get",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "voicewake.set",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate (voice runtime)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "update.run",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/update.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "wizard.start",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/wizard.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "wizard.next",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/wizard.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "wizard.cancel",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/wizard.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "wizard.status",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-cli/src/gate/wizard.rs",
+        needs_extraction_to: None,
+    },
+];
+
+/// Return the executable dispatch-plan contract — every method that appears
+/// in [`METHOD_NAMES`] is mapped to a [`MethodDispatchKind`] here. S0 (and any
+/// other consumer) MUST consult this rather than maintaining its own table.
+pub fn method_dispatch_plan() -> &'static [MethodDispatchPlanEntry] {
+    METHOD_DISPATCH_PLAN
+}
+
+/// Find the dispatch-plan entry for a given method name. `None` indicates
+/// the method is not registered as part of the executable dispatch contract;
+/// callers SHOULD treat that as a hard error since the
+/// `every_method_has_dispatch_plan_entry` integrity test in the gateway
+/// crate forbids it.
+pub fn method_dispatch_plan_entry(method: &str) -> Option<&'static MethodDispatchPlanEntry> {
+    METHOD_DISPATCH_PLAN
+        .iter()
+        .find(|entry| entry.method == method)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SpacetimeProjectionPlan {
@@ -966,13 +2034,99 @@ impl SpacetimeProjectionPlan {
         event: impl Into<String>,
         payload: Value,
     ) -> SpacetimeSubscriptionLifecycleEnvelope {
+        self.lifecycle_envelope_for_method(SPACETIME_SUBSCRIBE_METHOD, event, payload)
+    }
+
+    /// 13.T4: emit a lifecycle envelope under EITHER `s3'.temporal.subscribe`
+    /// OR `s3'.spacetime.subscribe`. Both methods MUST emit envelopes of THIS
+    /// exact type — the S3-owned subscription registry is unified per the
+    /// 13.T4 contract. Callers are expected to pass one of
+    /// `SPACETIME_SUBSCRIBE_METHOD` or `SPACETIME_SUBSCRIBE_ALIAS_METHOD`;
+    /// other method strings are accepted verbatim so downstream introspection
+    /// can carry the method through unchanged.
+    pub fn lifecycle_envelope_for_method(
+        &self,
+        method: impl Into<String>,
+        event: impl Into<String>,
+        payload: Value,
+    ) -> SpacetimeSubscriptionLifecycleEnvelope {
         SpacetimeSubscriptionLifecycleEnvelope {
             event: event.into(),
-            method: SPACETIME_SUBSCRIBE_METHOD.to_owned(),
+            method: method.into(),
             session_key: self.session_key.clone(),
             subscription_mode: self.subscription_mode.clone(),
             projection_schema_version: self.projection_schema_version.clone(),
             payload,
+        }
+    }
+}
+
+/// 13.T4: the explicit fallback discipline. The S3-owned spacetime module
+/// MUST publish exactly one of these states when native subscription is
+/// unavailable. `SilentHttpFallback` is the negative space — it must NEVER be
+/// emitted; the silent-HTTP-fallback sentinel test in the gateway crate proves
+/// that no code path constructs this value. `FallbackActive` is the explicit
+/// degraded mode named in 03.T2 deliverable 5.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum SpacetimeFallbackPolicy {
+    /// Native WS subscription is configured and the projection plan binds it.
+    NativeWebsocket,
+    /// Native WS subscription has failed or is not configured AND the consumer
+    /// has been told explicitly. The runtime continues with HTTP SQL polling
+    /// but downstream consumers KNOW the projection source is degraded.
+    FallbackActive,
+    /// Subscription is disabled (no SPACETIMEDB_URL / EPI_GATE_SPACETIME_URL).
+    Disabled,
+}
+
+impl SpacetimeFallbackPolicy {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            SpacetimeFallbackPolicy::NativeWebsocket => SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
+            SpacetimeFallbackPolicy::FallbackActive => SPACETIME_FALLBACK_ACTIVE,
+            SpacetimeFallbackPolicy::Disabled => SPACETIME_FALLBACK_DISABLED,
+        }
+    }
+}
+
+/// 13.T4: the silent-HTTP-fallback sentinel. No code path inside the
+/// S3-owned spacetime module may emit this string as a `projectionSource` or
+/// as a `SpacetimeFallbackPolicy`. The gateway-side
+/// `spacetime::silent_fallback_refused()` returns this constant so callers can
+/// assert against it; the contract-level guard is that NO production code path
+/// ever returns it.
+pub const SPACETIME_SILENT_HTTP_FALLBACK_FORBIDDEN: &str = "silent-http-fallback-forbidden";
+pub const SPACETIME_FALLBACK_ACTIVE: &str = "fallback-active";
+pub const SPACETIME_FALLBACK_DISABLED: &str = "disabled";
+
+/// 13.T4: the canonical S3-owned subscription registry facts surfaced through
+/// gateway readiness. Both `s3'.temporal.subscribe` and `s3'.spacetime.subscribe`
+/// register under THIS schema; the registry is single-owner (S3), and the
+/// `envelope_type_name` is fixed to `SpacetimeSubscriptionLifecycleEnvelope`
+/// so downstream consumers can verify the envelope identity by name.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S3SubscriptionRegistryFacts {
+    pub coordinate_owner: String,
+    pub envelope_type_name: String,
+    pub temporal_method: String,
+    pub spacetime_alias_method: String,
+    pub fallback_policy: SpacetimeFallbackPolicy,
+    pub silent_fallback_forbidden_sentinel: String,
+    pub native_endpoint: Option<String>,
+}
+
+impl S3SubscriptionRegistryFacts {
+    pub fn new(fallback_policy: SpacetimeFallbackPolicy, native_endpoint: Option<String>) -> Self {
+        Self {
+            coordinate_owner: "S3'".to_owned(),
+            envelope_type_name: "SpacetimeSubscriptionLifecycleEnvelope".to_owned(),
+            temporal_method: SPACETIME_SUBSCRIBE_METHOD.to_owned(),
+            spacetime_alias_method: SPACETIME_SUBSCRIBE_ALIAS_METHOD.to_owned(),
+            fallback_policy,
+            silent_fallback_forbidden_sentinel: SPACETIME_SILENT_HTTP_FALLBACK_FORBIDDEN.to_owned(),
+            native_endpoint,
         }
     }
 }
@@ -3618,6 +4772,112 @@ mod tests {
                 assert_eq!(row["id"], 1);
             }
             other => panic!("expected Other variant, got {other:?}"),
+        }
+    }
+
+    // ====== 13.T2 dispatch-plan contract tests ======
+
+    #[test]
+    fn every_method_in_metadata_has_a_dispatch_plan_entry() {
+        let missing: Vec<&str> = METHOD_NAMES
+            .iter()
+            .copied()
+            .filter(|method| method_dispatch_plan_entry(method).is_none())
+            .collect();
+        assert!(
+            missing.is_empty(),
+            "METHOD_NAMES entries without a dispatch-plan row: {missing:?}"
+        );
+    }
+
+    #[test]
+    fn dispatch_plan_does_not_carry_methods_outside_metadata() {
+        let stray: Vec<&str> = METHOD_DISPATCH_PLAN
+            .iter()
+            .map(|entry| entry.method)
+            .filter(|method| !METHOD_NAMES.contains(method))
+            .collect();
+        assert!(
+            stray.is_empty(),
+            "dispatch-plan rows reference methods absent from METHOD_NAMES: {stray:?}"
+        );
+    }
+
+    #[test]
+    fn dispatch_plan_has_unique_method_rows() {
+        let mut seen = std::collections::HashSet::new();
+        for entry in METHOD_DISPATCH_PLAN {
+            assert!(
+                seen.insert(entry.method),
+                "duplicate dispatch-plan row for {}",
+                entry.method
+            );
+        }
+    }
+
+    #[test]
+    fn dispatch_plan_carries_all_six_canonical_kinds_or_extensions() {
+        // The plan body enumerates six kinds: S3 native handler, S2 graph
+        // service adapter, S4 orchestration adapter, S5 governance adapter,
+        // S0 product adapter, Missing. The plan-extension `S1HenAdapter`
+        // is permitted to surface alongside them per the module-level
+        // 13.T2 comment.
+        let mut s3 = 0;
+        let mut s2 = 0;
+        let mut s4 = 0;
+        let mut s5 = 0;
+        let mut s0 = 0;
+        let mut s1 = 0;
+        let mut missing = 0;
+        for entry in METHOD_DISPATCH_PLAN {
+            match entry.kind {
+                MethodDispatchKind::S3NativeHandler => s3 += 1,
+                MethodDispatchKind::S2GraphServiceAdapter => s2 += 1,
+                MethodDispatchKind::S4OrchestrationAdapter => s4 += 1,
+                MethodDispatchKind::S5GovernanceAdapter => s5 += 1,
+                MethodDispatchKind::S0ProductAdapter => s0 += 1,
+                MethodDispatchKind::S1HenAdapter => s1 += 1,
+                MethodDispatchKind::Missing => missing += 1,
+            }
+        }
+        assert!(s3 > 0, "expected at least one S3 native handler row");
+        assert!(s2 > 0, "expected at least one S2 graph adapter row");
+        assert!(s4 > 0, "expected at least one S4 orchestration row");
+        assert!(s5 > 0, "expected at least one S5 governance row");
+        assert!(s0 > 0, "expected at least one S0 product adapter row");
+        // S1 Hen adapter is a 13.T2 plan extension and 03.T6.5 introduced
+        // five vault/semantic methods; the count should be five.
+        assert_eq!(s1, 5, "expected exactly five s1' Hen vault rows");
+        // Missing is currently 0 because no Missing-status methods appear
+        // in METHOD_NAMES (parity.rs Missing records all live outside the
+        // shipped manifest). The variant must still be expressible.
+        assert_eq!(missing, 0);
+    }
+
+    #[test]
+    fn dispatch_plan_authority_paths_are_non_empty() {
+        for entry in METHOD_DISPATCH_PLAN {
+            assert!(
+                !entry.authority_path.is_empty(),
+                "dispatch plan entry for {} has empty authority_path",
+                entry.method
+            );
+        }
+    }
+
+    #[test]
+    fn dispatch_plan_missing_entries_carry_extraction_annotation() {
+        // If a future entry is added with kind=Missing, it MUST carry the
+        // `needs_extraction_to` annotation per the plan's "Missing with a
+        // needs_extraction_to annotation" rule (line 91 of 13.T2 plan body).
+        for entry in METHOD_DISPATCH_PLAN {
+            if matches!(entry.kind, MethodDispatchKind::Missing) {
+                assert!(
+                    entry.needs_extraction_to.is_some(),
+                    "Missing dispatch entry for {} must carry needs_extraction_to annotation",
+                    entry.method
+                );
+            }
         }
     }
 }

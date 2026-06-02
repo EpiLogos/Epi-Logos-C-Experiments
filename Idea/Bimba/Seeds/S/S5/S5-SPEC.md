@@ -575,6 +575,21 @@ Live:
 - Durable Epii autoresearch core and gateway `s5'.improve.*` methods, with dry-run S1' promotion planning.
 - Durable Epii agent-access core and gateway `s5'.epii.*` methods for status snapshots, read-only Gnosis/Nara/Graphiti observation, and Anima/Aletheia deposits.
 
+### M' Shell Consumed Contract Closure - Cycle 2 Track 12 T2
+
+Cycle 1 substrate inheritance: consumes the cycle 1 review/autoresearch/gnosis/agent cores already landed in `Body/S/S5`. This closure does not reopen generic S5/S5' implementation; it names only the surfaces already consumed by M' shell, M5 extension, integrated plugins, and shell alert widgets.
+
+| Consumed surface | Current live substrate | M' consumer | Closure status |
+|---|---|---|---|
+| Epii review inbox and human-required gate | `Body/S/S5/epii-review-core`, gateway `s5'.review.*`, `Idea/Pratibimba/System/extensions/m5-epii/src/common/epii-surface.ts` | M5 review queue, Agentic Control Room evidence submit, body review-alert badge | consume as-is for review item/read/resolve/defer; human-required approve/reject/revise/promote remains human-only |
+| Autoresearch improvement run and dry-run promotion | `Body/S/S5/epii-autoresearch-core`, gateway `s5'.improve.*`, `requestDryRunPromotion` in the M5 Epii surface | M5 spine-state inspector, canon-evolution browser, integrated plugin evidence serializers | consume as-is for queued/kept/discarded runs and dry-run promotion plans; non-dry-run mutation remains blocked by compiler mutation law |
+| Epii agent access and deposit bridge | `Body/S/S5/epii-agent-core`, gateway `s5'.epii.status` / `s5'.epii.deposit` | Anima/Aletheia deposits, M5 extension status, integrated review surfaces | consume as-is for status snapshot and deposit; provider-backed peer invocation and richer Epii tool access remain explicit blockers |
+| Gnosis/kbase/context retrieval | `Body/S/S5/epi-gnostic`, `Body/S/S5/epi-kbase-core`, `Body/S/S5/epi-kbase` | Epii orientation, M5 source/canon browser, S4 context economy | audit/verify for production convergence; do not rebuild under M' shell tracks |
+| Pedagogy / MEF / QL / teach surfaces | `Body/S/S5/plugins/epi-logos` skills/resources | Epii pedagogy, Nara/Epii teaching return, future `s5'.teach` / `s5'.explain` | extend only through explicit S5' method-family closure; current plugin body is consumable but gateway methods remain missing |
+| Shell review alerts | `Idea/Pratibimba/System/extensions/body-lite-surface/src/common/lite-surface-types.ts` review-alert badge contract | `/body` lite surface and shell alert badge | consume as-is for safe handles, privacy class enforcement, 60-char title clamp, and human-required defer-only action model |
+
+Remaining blockers are integration blockers, not first-build ownership claims: gateway prefix routing for non-review/improve/epii families, production Gnosis convergence, provider-backed Epii invocation, non-dry-run Hen mutation law, and the typed M' function API over existing `epi nara` surfaces.
+
 Partial / missing:
 
 - Local integration contract for the [[epi-logos plugin]] as the canonical S5/S5' resource and skill body.
@@ -690,8 +705,8 @@ S5 is the integral world boundary and S5' is Epii's user-position, review, gnosi
 | Required coverage | Canonical citations |
 |---|---|
 | World ontology | `Idea/Bimba/World/Types/Coordinates/S/S5/S5.md` mtime 2026-04-10 18:00:25; `Idea/Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md` mtime 2026-04-24 20:31:08; `Idea/Bimba/World/P5.md`, `P5'.md`, `L5.md`, `L5'.md`, `Thought.md`, `Seed.md` for return/promotion semantics |
-| docs/specs | `docs/specs/S/S5-S5i-SYNC.md` mtime 2026-05-31 16:35:19 historical/stub; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
-| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md` mtime 2026-05-31 20:56:45; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
+| docs/specs | `Idea/Bimba/Seeds/S/S5/S5'/Legacy/specs/S/S5-S5i-SYNC.md` mtime 2026-05-31 16:35:19 historical/stub; `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md` mtime 2026-05-31 20:56:45; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
 | Body substrate | `Body/S/S5/epii-agent-core/**`, `Body/S/S5/epii-agent/**`, `Body/S/S5/epii-review-core/**`, `Body/S/S5/epii-autoresearch-core/**`, `Body/S/S5/epi-gnostic/**`, `Body/S/S5/epi-kbase-core/**`, `Body/S/S5/plugins/epi-logos/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S0/epi-cli/src/gate/{epii,improve,review}.rs` |
 | sibling seeds | `S5-0-SPEC.md`..`S5-5-SPEC.md`, `S5'/S5'-SPEC.md`, `S5'/S5-0'-SPEC.md`..`S5'/S5-5'-SPEC.md`, `S5-SHARD-INDEX.md`, `S5-TRACEABILITY-INDEX.md`, `S5'/S5'-TRACEABILITY-INDEX.md` |
 | nominal tracks | Track 04 owns S5 autoresearch/review; Track 09 owns agentic capacity pressure; Track 13 later consolidates S5 adapters |

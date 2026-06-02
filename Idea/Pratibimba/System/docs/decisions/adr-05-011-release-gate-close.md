@@ -68,7 +68,7 @@ The release gate is closed when the following are simultaneously true:
 6. `cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml` — 6/6 passing (including human-gate test).
 7. `node Idea/Pratibimba/System/extensions/acceptance-harness/scripts/acceptance.mjs --dry-run` produces a parseable receipt with 7+ services and 7+ steps.
 
-When all of the above pass, the release gate is closed. The full live-services acceptance run (operator-driven, per operator-runbook.md) is the *operational* verification; it consumes the same plan and produces an `acceptance-receipt-<timestamp>.json` in `docs/plans/.../plan.runs/`.
+When all of the above pass, the release gate is closed. The full live-services acceptance run (operator-driven, per operator-runbook.md) is the *operational* verification; it consumes the same plan and produces an `acceptance-receipt-<timestamp>.json` in `Idea/Bimba/Seeds/M/Legacy/plans/.../plan.runs/`.
 
 ## Consequences
 
@@ -80,7 +80,7 @@ When all of the above pass, the release gate is closed. The full live-services a
 ## References
 
 - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md` §2–§5
-- `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md` Tranches T0–T9
-- `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` (PRD-01..04 resolved; IOD-17/18/19 live)
+- `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md` Tranches T0–T9
+- `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` (PRD-01..04 resolved; IOD-17/18/19 live)
 - `Idea/Pratibimba/System/docs/decisions/adr-05-001..010-*.md`
 - `Body/M/epi-tauri/DEPRECATED.md`

@@ -17,28 +17,28 @@ This file records the source corpus used to crystallise [[S4']] (Ta-Onta Extensi
 
 | Source | Location | Role in conclusion |
 |---|---|---|
-| [[S4-EXTENSION-ARCHITECTURE]] | `docs/specs/S/S4/S4-EXTENSION-ARCHITECTURE.md` | Canonical architecture spec; "Named Functions, Not Separate Systems"; 6-class model; relocation from S3-X' to S4-X' |
-| [[S4-TA-ONTA-EXTENSION-SPEC]] | `docs/specs/S/S4/S4-TA-ONTA-EXTENSION-SPEC.md` | Full extension spec; [[Darshana]] pre-processor; dis-closure modes; collapsible state machine |
-| [[S4-NOW-INTEGRATION-AND-ENVIRONMENT]] | `docs/specs/S/S4/S4-NOW-INTEGRATION-AND-ENVIRONMENT.md` | [[NOW]] as bounded execution identity; session-scoped Gnosis notebooks; bootstrap sequence; vault filesystem lifecycle; environment variable propagation; 1Password/varlock secrets |
-| [[ta-onta-anima-superpowers-vak-integration-spec]] | `docs/resources/S/ta-onta-anima-superpowers-vak-integration-spec.md` | CANONICAL [[VAK]] execution language; CPF/CT/CP/CF/CFP/CS as typed transition calculus; Ouroboros/Ralph master regimes; Klein topology |
-| [[VAK-SUPERPOWERS-INTEGRATION-SPEC]] | `docs/resources/S/VAK-SUPERPOWERS-INTEGRATION-SPEC.md` | Full S4-0' through S4-5' specification; CT template archetypes with CT4a/CT4b distinction; agent economic tastes; Aletheia function clusters with CF codes; Constitutional Progeny Principle; Rupa identity injection |
+| [[S4-EXTENSION-ARCHITECTURE]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-EXTENSION-ARCHITECTURE.md` | Canonical architecture spec; "Named Functions, Not Separate Systems"; 6-class model; relocation from S3-X' to S4-X' |
+| [[S4-TA-ONTA-EXTENSION-SPEC]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-TA-ONTA-EXTENSION-SPEC.md` | Full extension spec; [[Darshana]] pre-processor; dis-closure modes; collapsible state machine |
+| [[S4-NOW-INTEGRATION-AND-ENVIRONMENT]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-NOW-INTEGRATION-AND-ENVIRONMENT.md` | [[NOW]] as bounded execution identity; session-scoped Gnosis notebooks; bootstrap sequence; vault filesystem lifecycle; environment variable propagation; 1Password/varlock secrets |
+| [[ta-onta-anima-superpowers-vak-integration-spec]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/ta-onta-anima-superpowers-vak-integration-spec.md` | CANONICAL [[VAK]] execution language; CPF/CT/CP/CF/CFP/CS as typed transition calculus; Ouroboros/Ralph master regimes; Klein topology |
+| [[VAK-SUPERPOWERS-INTEGRATION-SPEC]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/VAK-SUPERPOWERS-INTEGRATION-SPEC.md` | Full S4-0' through S4-5' specification; CT template archetypes with CT4a/CT4b distinction; agent economic tastes; Aletheia function clusters with CF codes; Constitutional Progeny Principle; Rupa identity injection |
 
 ### Plans
 
 | Source | Location | Role in conclusion |
 |---|---|---|
-| [[2026-03-10-ta-onta-full-implementation]] | `docs/plans/2026-03-10-ta-onta-full-implementation.md` | CANONICAL implementation plan (3856 lines); all 6 extensions phase-by-phase; hook seams; tool registrations; dependency graph |
-| [[2026-03-07-s4-prime-pleroma-real-port-plan]] | `docs/plans/2026-03-07-s4-prime-pleroma-real-port-plan.md` | Pleroma real port; bounded primitives, Techne subagent, damage control |
-| [[2026-04-02-native-pi-epi-agent-convergence]] | `docs/plans/2026-04-02-native-pi-epi-agent-convergence.md` | Invalid CLI command audit; vault contact must be CLI-only; agent home topology |
-| [[2026-04-03-omx-pleroma-claw-runtime-migration]] | `docs/plans/2026-04-03-omx-pleroma-claw-runtime-migration.md` | Three-substrate architecture; authority split; plugins/pleroma/ as lasting authoring surface |
-| [[2026-04-04-graphiti-unified-temporal-context-service]] | `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Three temporal axes (calendar/astrological/spanda); decan boundary events; kairos snapshot fields; Redis NOW cache; episode data model |
+| [[2026-03-10-ta-onta-full-implementation]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-ta-onta-full-implementation.md` | CANONICAL implementation plan (3856 lines); all 6 extensions phase-by-phase; hook seams; tool registrations; dependency graph |
+| [[2026-03-07-s4-prime-pleroma-real-port-plan]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-07-s4-prime-pleroma-real-port-plan.md` | Pleroma real port; bounded primitives, Techne subagent, damage control |
+| [[2026-04-02-native-pi-epi-agent-convergence]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-02-native-pi-epi-agent-convergence.md` | Invalid CLI command audit; vault contact must be CLI-only; agent home topology |
+| [[2026-04-03-omx-pleroma-claw-runtime-migration]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-03-omx-pleroma-claw-runtime-migration.md` | Three-substrate architecture; authority split; plugins/pleroma/ as lasting authoring surface |
+| [[2026-04-04-graphiti-unified-temporal-context-service]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Three temporal axes (calendar/astrological/spanda); decan boundary events; kairos snapshot fields; Redis NOW cache; episode data model |
 
 ### Resources
 
 | Source | Location | Role in conclusion |
 |---|---|---|
-| [[2026-02-24-ta-onta-us003-us010-deep-grounding-implementation]] | `docs/resources/S/2026-02-24-ta-onta-us003-us010-deep-grounding-implementation.md` | Deep grounding for US003-US010 user stories |
-| [[2026-02-25-ta-onta-full-architecture-conformance-remediation-plan]] | `docs/resources/S/2026-02-25-ta-onta-full-architecture-conformance-remediation-plan.md` | Architecture conformance remediation across all 6 extensions |
+| [[2026-02-24-ta-onta-us003-us010-deep-grounding-implementation]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-24-ta-onta-us003-us010-deep-grounding-implementation.md` | Deep grounding for US003-US010 user stories |
+| [[2026-02-25-ta-onta-full-architecture-conformance-remediation-plan]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-25-ta-onta-full-architecture-conformance-remediation-plan.md` | Architecture conformance remediation across all 6 extensions |
 | [[ta-onta-dev-session]] | `docs/prompts/ta-onta-dev-session.md` | Developer onboarding prompt; extension structure, tool patterns, session workflow |
 | [[S4-4'-GOAL-PRELUDE-SPEC]] | `Idea/Bimba/Seeds/S/S4/S4'/S4-4'-GOAL-PRELUDE-SPEC.md` | `/goal` as dialogical VAK discovery surface; NOW-bound prelude artifact; transition boundary to GoalSpec, Chronos, Aletheia, and Epii |
 
@@ -60,8 +60,8 @@ This file records the source corpus used to crystallise [[S4']] (Ta-Onta Extensi
 | Specification | `.pi/extensions/ta-onta/pleroma/` | Semantic authority — CONTRACT.md, extension.ts, S2/S2'/M |
 | Executable Plugin | `plugins/pleroma/` | Claude Code plugin — plugin.json, 20+ skills, 7 agents, hooks, evals |
 | Staging | `_staging/pleroma-skills/`, `_staging/pleroma-evals/`, `_staging/pleroma-hooks/` | WIP holding — atomic + orchestration skills awaiting phase integration |
-| Authority Matrix | `docs/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md` | Formal authority assignment |
-| Port Matrix | `docs/specs/S/S4/2026-04-03-omx-pleroma-port-matrix.md` | Skill migration tracking |
+| Authority Matrix | `Idea/Bimba/Seeds/S/Legacy/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md` | Formal authority assignment |
+| Port Matrix | `Idea/Bimba/Seeds/S/Legacy/specs/S/S4/2026-04-03-omx-pleroma-port-matrix.md` | Skill migration tracking |
 | Bundle Test | `epi-cli/tests/pleroma_bundle.rs` | Validates plugin manifest, skills, agents, hooks present |
 
 ### Chronos Kairos Sources
@@ -70,7 +70,7 @@ This file records the source corpus used to crystallise [[S4']] (Ta-Onta Extensi
 |---|---|---|
 | kairos.rs | `epi-cli/src/vault/kairos.rs` | Rust CLI: kairos_status, kairos_fetch, kairos_show; 7-planet natal via kerykeion |
 | kairos-python-adapter.ts | `.pi/extensions/ta-onta/chronos/S3'/kairos-python-adapter.ts` | Three temporal modes (natal/realtime/kairotic); FR-3 compliance; KairosResult interface |
-| Graphiti temporal spec | `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Decan boundaries as episodic events; Redis cache; 3 temporal axes |
+| Graphiti temporal spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Decan boundaries as episodic events; Redis cache; 3 temporal axes |
 
 ### Old Repo / Deprecated
 

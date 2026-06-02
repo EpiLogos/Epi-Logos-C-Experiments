@@ -1,10 +1,17 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { assessPlan, buildIndex, discoverPlanFolder, parseTrackTasks, run } from "../m-dev-plan-assess.mjs";
+import {
+  assessPlan,
+  buildIndex,
+  discoverPlanFolder,
+  parseTrackTasks,
+  readActiveDevelopmentContext,
+  run,
+} from "../m-dev-plan-assess.mjs";
 
 function makePlanSet() {
   const root = mkdtempSync(join(tmpdir(), "m-dev-plan-"));
@@ -191,6 +198,54 @@ test("assesses ready tasks and recommends a ready tranche before later tranches"
   assert.equal(assessment.recommendedTask.computedStatus, "ready");
 });
 
+test("reads active development context from real session state and NOW files", () => {
+  const { root } = makePlanSet();
+  const nowPath = join(root, "Idea", "Empty", "Present", "02-06-2026", "20260602-120000-test01", "now.md");
+  mkdirSync(join(root, ".epi"), { recursive: true });
+  mkdirSync(join(root, "Idea", "Empty", "Present", "02-06-2026", "20260602-120000-test01"), { recursive: true });
+  writeFileSync(nowPath, "# NOW\n");
+  writeFileSync(join(root, "Idea", "Empty", "Present", "02-06-2026", "daily-note.md"), "# Daily\n");
+  writeFileSync(
+    join(root, ".epi", "session.json"),
+    JSON.stringify({
+      context: {
+        session_id: "20260602-120000-test01",
+        day_id: "02-06-2026",
+        now_path: nowPath,
+      },
+    }),
+  );
+
+  const context = readActiveDevelopmentContext(root, {});
+  assert.equal(context.source, ".epi/session.json");
+  assert.equal(context.dayId, "02-06-2026");
+  assert.equal(context.sessionId, "20260602-120000-test01");
+  assert.equal(context.nowPath, "Idea/Empty/Present/02-06-2026/20260602-120000-test01/now.md");
+  assert.equal(context.nowExists, true);
+  assert.equal(context.dailyNoteExists, true);
+});
+
+test("reads active development context from EPI_NOW_PATH when session state is absent", () => {
+  const { root } = makePlanSet();
+  const nowPath = join(root, "Idea", "Empty", "Present", "02-06-2026", "20260602-130000-env01", "now.md");
+  mkdirSync(join(root, "Idea", "Empty", "Present", "02-06-2026", "20260602-130000-env01"), { recursive: true });
+  writeFileSync(nowPath, "# NOW\n");
+
+  const context = readActiveDevelopmentContext(root, { EPI_NOW_PATH: nowPath });
+  assert.equal(context.source, "environment");
+  assert.equal(context.dayId, "02-06-2026");
+  assert.equal(context.sessionId, "20260602-130000-env01");
+  assert.equal(context.nowExists, true);
+});
+
+test("require-now records a hard stop when no active NOW exists", () => {
+  const { root, planFolder } = makePlanSet();
+  const assessment = assessPlan({ cwd: root, planFolder, includeGit: false, requireNow: true });
+  assert.equal(assessment.activeDevelopmentContext.source, "missing");
+  assert.equal(assessment.activeDevelopmentContext.nowExists, false);
+  assert.ok(assessment.hardStops.some((stop) => stop.includes("Active NOW context is required")));
+});
+
 test("builds a recommended 3-5 task route by simulating dependency completion", () => {
   const { root, planFolder } = makePlanSet();
   const assessment = assessPlan({ cwd: root, planFolder, includeGit: false });
@@ -261,6 +316,11 @@ test("claim and mark preserve state through the CLI runner", () => {
 
 test("context pack includes task body, source specs, dependencies, and decision context", () => {
   const { root, planFolder } = makePlanSet();
+  const nowPath = join(root, "Idea", "Empty", "Present", "02-06-2026", "20260602-140000-pack01", "now.md");
+  mkdirSync(join(root, ".epi"), { recursive: true });
+  mkdirSync(join(root, "Idea", "Empty", "Present", "02-06-2026", "20260602-140000-pack01"), { recursive: true });
+  writeFileSync(nowPath, "# NOW\n");
+  writeFileSync(join(root, ".epi", "session.json"), JSON.stringify({ context: { now_path: nowPath } }));
   writeFileSync(
     join(planFolder, "11-open-architectural-decisions.md"),
     `# Decisions
@@ -282,6 +342,9 @@ Resolve consent text.
   assert.equal(assessment.contextPack.taskId, "01.T1");
   assert.ok(assessment.contextPack.sourceFiles.includes("docs/plans/2026-05-31-example-tracks/11-open-architectural-decisions.md"));
   assert.ok(assessment.contextPack.sourceFiles.includes("Body/S/S0/bridge.rs"));
+  const contextPackBody = readFileSync(join(root, assessment.contextPack.path), "utf8");
+  assert.match(contextPackBody, /## Active Development Context/);
+  assert.match(contextPackBody, /NOW:\*\* Idea\/Empty\/Present\/02-06-2026\/20260602-140000-pack01\/now\.md \(present\)/);
 });
 
 test("reset clears task state without deleting the index", () => {

@@ -68,7 +68,7 @@ fn m0_fixture_carries_s2_owned_anuttara_gds_and_source_anchors() {
     assert_eq!(payload["gdsOverlay"]["canonicalWritePerformed"], false);
     assert_eq!(
         payload["contract"]["sourceAnchors"]["spec"],
-        "docs/specs/S/S2-S2i-GRAPH.md"
+        "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md"
     );
     assert_eq!(
         payload["contract"]["gdsOverlay"]["canonicalWritePerformedByApiEnvelope"],

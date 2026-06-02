@@ -651,8 +651,8 @@ pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -
         "namespace": "bimba",
         "coordinateOwner": "S2/S2'",
         "sourceAnchors": {
-            "spec": "docs/specs/S/S2-S2i-GRAPH.md",
-            "plan": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md#T7",
+            "spec": "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md",
+            "plan": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md#T7",
             "code": "Body/S/S2/graph-services/src/graph_api.rs",
             "pointerCode": "Body/S/S2/graph-services/src/pointers.rs",
             "tests": ["Body/S/S2/graph-services/tests/graph_api_contract.rs"]

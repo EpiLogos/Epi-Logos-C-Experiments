@@ -1,0 +1,37 @@
+{
+  "runId": "20260601T122420Z-02-T4",
+  "taskId": "02.T4",
+  "startedAt": "2026-06-01T12:24:20.684Z",
+  "owner": "admin",
+  "leaseExpiresAt": "2026-06-01T14:24:20.684Z",
+  "worktree": null,
+  "task": {
+    "id": "02.T4",
+    "trackId": "02",
+    "tranche": "T4",
+    "title": "Dataset population from existing corpus",
+    "effort": null,
+    "file": "02-s2-bimba-map-population.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md",
+    "dependsOn": [
+      "02.T3"
+    ],
+    "writeScopes": [
+      "Body/S/S2/**",
+      "docs/datasets",
+      "docs/datasets/low-detail/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

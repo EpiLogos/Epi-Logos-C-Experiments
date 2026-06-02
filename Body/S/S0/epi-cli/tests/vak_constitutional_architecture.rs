@@ -194,7 +194,7 @@ fn vak_runtime_surface_and_modules_are_wired() {
 fn vak_docs_clusters_and_primitives_exist() {
     let root = repo_root();
     for rel in [
-        "docs/plans/CLOCK-AND-NARA-SPECS/07-c-prime-vak-grammar-layer.md",
+        "Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/07-c-prime-vak-grammar-layer.md",
         "Idea/Empty/COORDINATE-MAP.md",
         "Body/S/S4/ta-onta/S4-5p-aletheia/clusters/anansi/RUPA.md",
         "Body/S/S4/ta-onta/S4-5p-aletheia/clusters/janus/RUPA.md",

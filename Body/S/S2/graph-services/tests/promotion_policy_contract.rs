@@ -60,7 +60,7 @@ fn thought_artifacts_route_to_thought_episode_surface() {
 
 #[test]
 fn s_stack_docs_request_s_property_intelligence() {
-    let decision = SyncCoordinator::classify_promotion_path("docs/specs/S/S2-S2i-GRAPH.md");
+    let decision = SyncCoordinator::classify_promotion_path("Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md");
 
     assert_eq!(decision.class, PromotionClass::TechnicalCoordinateDoc);
     assert_eq!(

@@ -122,7 +122,7 @@ pub enum GraphCmd {
         #[arg(short, long)]
         top_k: Option<usize>,
     },
-    /// Import Bimba namespace datasets from docs/datasets/
+    /// Import Bimba namespace datasets from Idea/Bimba/Map/datasets/
     Import {
         /// "all", "low-detail", "deep", a "*-deep" branch, or a dataset JSON path
         #[arg(default_value = "all")]
@@ -256,13 +256,19 @@ impl From<ConstraintSeverityArg> for epi_kernel_contract::ConstraintSeverity {
     }
 }
 
+// Compatibility re-export bundle: graph-law primitives owned by
+// `Body/S/S2/graph-services`, surfaced through `crate::graph::*` so the
+// CLI dispatch + lib consumers can keep importing through this façade.
+// New behavior MUST land in S2 — these names exist only as adapter seams.
 pub use epi_s2_graph_services::{
     fusion_rrf_results, gds_procedure_count, import_epi_ontology_with_n10s,
-    kernel_coordinate_anchor_from_parts, option1_projection_plan, parse_yaml_frontmatter,
+    kernel_coordinate_anchor_from_parts, live_graph_backed_evidence,
+    maybe_refresh_semantic_embeddings, option1_projection_plan, parse_yaml_frontmatter,
     seed::seed_baseline_coordinates, seed::seed_baseline_snapshot_queries,
     seed::seed_relationship_types, GraphMethodParams, GraphMethodService, GraphNodeRequest,
     GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
-    KernelResonanceObservationRequest, PointerWebRefreshRequest, RetrievalResult,
+    KernelResonanceObservationRequest, LiveGraphBackedEvidence, PointerWebRefreshRequest,
+    RetrievalResult,
 };
 
 fn compose_file_path() -> Result<String, String> {
@@ -1144,137 +1150,6 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                 anuttara::build_reflection_prompt(diag, coordinate.clone(), session_key.clone());
             serde_json::to_string_pretty(&prompt).map_err(|e| e.to_string())
         }
-    }
-}
-
-struct LiveGraphBackedEvidence {
-    seed_baseline_ok: bool,
-    dataset_nodes: i64,
-    relation_registry_ok: bool,
-    gds_available: bool,
-}
-
-async fn live_graph_backed_evidence(
-    client: &client::Neo4jClient,
-) -> Result<LiveGraphBackedEvidence, String> {
-    let dataset_rows = client
-        .run(
-            "MATCH (n:Bimba)
-             WHERE n.c_3_source_dataset IS NOT NULL
-             RETURN count(n) AS c",
-        )
-        .await
-        .map_err(|err| format!("dataset evidence query failed: {err}"))?;
-    let dataset_nodes = dataset_rows
-        .first()
-        .and_then(|row| row.get("c").ok())
-        .unwrap_or_default();
-
-    let rel_rows = client
-        .run("MATCH ()-[r]->() RETURN collect(DISTINCT type(r)) AS rel_types")
-        .await
-        .map_err(|err| format!("relationship evidence query failed: {err}"))?;
-    let rel_types: Vec<String> = rel_rows
-        .first()
-        .and_then(|row| row.get("rel_types").ok())
-        .unwrap_or_default();
-    let relation_registry_ok = rel_types.iter().all(|rel_type| {
-        !matches!(
-            epi_s2_graph_schema::classify_relationship_type(rel_type),
-            epi_s2_graph_schema::RelationshipTypeClass::Drift
-        )
-    });
-
-    let query_set = seed_baseline_snapshot_queries();
-    let counts_query = query_set
-        .iter()
-        .find(|query| query.name == "seed_node_group_counts")
-        .ok_or_else(|| "seed count query missing".to_owned())?;
-    let rel_query = query_set
-        .iter()
-        .find(|query| query.name == "seed_relationship_count")
-        .ok_or_else(|| "seed relationship query missing".to_owned())?;
-    let coordinates = seed_baseline_coordinates();
-    let count_rows = client
-        .run_query(query(counts_query.cypher).param("coordinates", coordinates.clone()))
-        .await
-        .map_err(|err| format!("seed evidence query failed: {err}"))?;
-    let rel_count_rows = client
-        .run_query(
-            query(rel_query.cypher)
-                .param("coordinates", coordinates)
-                .param(
-                    "relationship_types",
-                    seed_relationship_types()
-                        .iter()
-                        .map(|rel_type| (*rel_type).to_string())
-                        .collect::<Vec<_>>(),
-                ),
-        )
-        .await
-        .map_err(|err| format!("seed relationship evidence query failed: {err}"))?;
-    let row = count_rows
-        .first()
-        .ok_or_else(|| "seed evidence row missing".to_owned())?;
-    let seed_relationships = rel_count_rows
-        .first()
-        .and_then(|r| r.get::<i64>("seed_relationships").ok())
-        .unwrap_or_default();
-    let seed_baseline_ok = row.get::<i64>("seed_nodes").unwrap_or_default() == 102
-        && row.get::<i64>("root_nodes").unwrap_or_default() == 1
-        && row.get::<i64>("psychoids").unwrap_or_default() == 6
-        && row.get::<i64>("weaves").unwrap_or_default() == 4
-        && row.get::<i64>("context_frames").unwrap_or_default() == 7
-        && row.get::<i64>("family_meta_nodes").unwrap_or_default() == 6
-        && row.get::<i64>("family_coordinates").unwrap_or_default() == 72
-        && row.get::<i64>("vak_nodes").unwrap_or_default() == 6
-        && seed_relationships >= 306;
-
-    let gds_available = epi_s2_graph_services::gds_procedure_count(client)
-        .await
-        .unwrap_or_default()
-        > 0;
-
-    Ok(LiveGraphBackedEvidence {
-        seed_baseline_ok,
-        dataset_nodes,
-        relation_registry_ok,
-        gds_available,
-    })
-}
-
-async fn maybe_refresh_semantic_embeddings(client: &client::Neo4jClient) -> Result<String, String> {
-    let rows = client
-        .run(
-            "MATCH (n:Bimba)
-             WHERE n.c_5_embedding_version IS NOT NULL
-             RETURN count(n) AS c",
-        )
-        .await
-        .map_err(|e| format!("semantic index presence check failed: {}", e))?;
-    let indexed_count: i64 = rows
-        .first()
-        .and_then(|row| row.get("c").ok())
-        .unwrap_or_default();
-    if indexed_count == 0 {
-        return Ok(String::new());
-    }
-
-    let config = match embeddings::EmbeddingConfig::from_env() {
-        Ok(config) => config,
-        Err(_) => return Ok("Semantic embeddings skipped: GEMINI_API_KEY not set".into()),
-    };
-    let embedder = embeddings::GeminiEmbeddingClient::new(config);
-    let refreshed =
-        semantic::refresh_stale_embeddings(client, &embedder, meta::EMBEDDING_VERSION).await?;
-    if refreshed.is_empty() {
-        Ok("Semantic embeddings already aligned".into())
-    } else {
-        Ok(format!(
-            "Semantic embeddings refreshed for {} nodes: {}",
-            refreshed.len(),
-            refreshed.join(", ")
-        ))
     }
 }
 

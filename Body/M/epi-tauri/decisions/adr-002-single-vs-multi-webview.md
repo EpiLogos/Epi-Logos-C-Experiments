@@ -2,7 +2,7 @@
 
 **Status:** Decision — recorded by Track 05 T0, amended by Track 05 T2 (2026-06-01).
 **Selected option:** Option 2 — multi-webview co-existence. `/body` stays in the primary Tauri window; `/pratibimba/system` opens in a second `WebviewWindow` labelled `pratibimba-ide` and persists until explicitly dismissed.
-**Decision register link:** `PRD-02` in `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`.
+**Decision register link:** `PRD-02` in `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`.
 **Affected tracks:** 05, 06, 08.
 
 ## Context

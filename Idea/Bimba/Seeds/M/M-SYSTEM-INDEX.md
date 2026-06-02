@@ -18,7 +18,14 @@ This folder holds the canonical seed layer for [[M]] / [[M']] interface, visuali
 - [[M'-PORTAL-SPEC]] — shared `0` / `/` / `1` portal grammar for TUI and desktop, now expanded across the full [[M0']] through [[M5']] domain set.
 - [[M'-TAURI-PORT-SPEC]] — Tauri v2 port specification for the current Electron `epi-app`, preserving [[OmniPanel]] as the `/` surface and deepening [[Nara]], [[Epii]], agentic execution, inbox, and clock-platform targets.
 - `M0'/` through `M5'/` — per-domain [[M']] seed homes. Each folder carries its active domain spec, and may carry deeper techne/kernel-facing companion specs where the domain requires more than the short renderer contract can hold.
-- `docs/epi-logos-kernel/` — active kernel canon for the operator / physical-pole engine / mental-pole intelligence / musical instrument. Treat these as implementation authority for M' minimum shape, especially the Paramaśiva tick, Mahāmāyā codon-clock, Nara clock, Epii/Anuttara review loop, and musical/cymatic profile.
+- `M0'/epi-logos-kernel-spec.md` — foundational kernel canon: the bioquaternionic JEPA-EBM operator, Paramaśiva's tick, the eight-element traversal, physical/mental pole split.
+- `M0'/the-matheme-of-the-field-differential.md` — philosophical ground: the 0/1 threshold and the principle of sameness, explicated through differential calculus and Pratyabhijñā.
+- `M1'/physical-pole-stack-architecture.md` — physical-pole engine: torus (Paramaśiva #1-5), solar-chakral (#2-5), codon-clock (#3-5), Tauri v2/Bevy/wgpu implementation.
+- `M4'/mental-pole-mechanics.md` — mental-pole intelligence: 4'/5'/0' LLM/EBM/Verifier bootstrap protocol, 72-fold resonance vectors, dev-session disclosure loop.
+- `M5'/ql-musical-derivation.md` — original musical derivation: 12-note matheme, symmetries, 12 MEF lens-derived scales.
+- `M5'/ql-musical-derivation-v2.md` — v2: refined musical derivation with bimba/pratibimba helix terminology.
+- `M5'/ql-musical-derivation-v3.md` — v3: most comprehensive musical derivation through the QL 6-fold-of-layers.
+- `M5'/frontier-confirmations-and-refinements.md` — frontier meta-reflection: May 2026 EBM/JEPA landscape, Gemini Embedding 2, Pi polyvalent verification.
 - `docs/deep-epi-logos-binary-computational-nara-clock/` — active binary/Mahāmāyā and Nara-clock bridge work that must be reconciled into the shared M' profile before richer clock/cymatic rendering.
 
 ## Canonical Reading Links

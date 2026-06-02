@@ -13,18 +13,18 @@ This note records the source pool used to derive the current `[[S3']]` specifica
 
 ## Governing Canon
 
-- `docs/specs/S/S3-S3i-GATEWAY.md`
+- `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md`
   Decisive canonical source for the `[[S3]]` / `[[S3']]` two-plane architecture.
-- `docs/specs/S/S-STACK-INTEGRATION.md`
+- `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md`
   Broader stack placement of the night-side shared-state layer.
 
 ## Primary Planning Layer
 
-- `docs/plans/2026-03-07-s3-gateway-full-implementation.md`
+- `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-07-s3-gateway-full-implementation.md`
   Source for intended gateway-to-state-plane relationship.
-- `docs/plans/2026-03-10-full-gateway-functionality-plan.md`
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-full-gateway-functionality-plan.md`
   Expanded target shape of what the gateway emits toward the shared field.
-- `docs/plans/2026-03-23-nara-clock-canonical-runtime-implementation-plan.md`
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-23-nara-clock-canonical-runtime-implementation-plan.md`
   Important for understanding how `[[Nara]]`, temporal state, and shared runtime
   surfaces are meant to converge.
 

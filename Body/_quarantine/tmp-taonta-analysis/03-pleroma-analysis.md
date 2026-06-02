@@ -11,21 +11,21 @@
 
 | Document | Location | Role |
 |----------|----------|------|
-| S4' Pleroma Port Matrix | `docs/specs/S/S4/S4i-PLEROMA-PORT-MATRIX.md` | Classification of all capabilities |
-| Pleroma Canonical Brief | `docs/specs/S/S4/2026-03-08-pleroma-canonical-brief.md` | Identity and guardrails |
-| Superpowers Source Inventory | `docs/specs/S/S4/2026-03-08-superpowers-pleroma-source-inventory.md` | File-by-file upstream analysis |
-| PI Skills & Plugin Spec | `docs/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md` | S4/S4' architecture |
-| S2/S2' Graph Spec | `docs/specs/S/S2-S2i-GRAPH.md` | Neo4j/Redis schema and port map |
-| Ta-Onta Extension Spec | `docs/specs/S/S4/S4-TA-ONTA-EXTENSION-SPEC.md` | Package structure |
-| NOW Integration Spec | `docs/specs/S/S4/S4-NOW-INTEGRATION-AND-ENVIRONMENT.md` | Cross-layer NOW threading |
+| S4' Pleroma Port Matrix | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4i-PLEROMA-PORT-MATRIX.md` | Classification of all capabilities |
+| Pleroma Canonical Brief | `Idea/Bimba/Seeds/S/Legacy/specs/S/S4/2026-03-08-pleroma-canonical-brief.md` | Identity and guardrails |
+| Superpowers Source Inventory | `Idea/Bimba/Seeds/S/Legacy/specs/S/S4/2026-03-08-superpowers-pleroma-source-inventory.md` | File-by-file upstream analysis |
+| PI Skills & Plugin Spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md` | S4/S4' architecture |
+| S2/S2' Graph Spec | `Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md` | Neo4j/Redis schema and port map |
+| Ta-Onta Extension Spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-TA-ONTA-EXTENSION-SPEC.md` | Package structure |
+| NOW Integration Spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-NOW-INTEGRATION-AND-ENVIRONMENT.md` | Cross-layer NOW threading |
 | VAK-Superpowers Integration | `ARCHIVE-2026-02-25-taonta-install/VAK-SUPERPOWERS-INTEGRATION-SPEC.md` | VAK language spec + 66 USs |
 | Ta-Onta-Anima-Superpowers | `ARCHIVE-2026-02-25-taonta-install/ta-onta-anima-superpowers-vak-integration-spec.md` | Full system integration |
 | Orchestrator Spec | `ARCHIVE-2026-02-25-taonta-install/ORCHESTRATOR-SPEC.md` | Cross-plugin lifecycle |
 | Ouroboros Dev Spec | `ARCHIVE-2026-02-25-taonta-install/OUROBOROS_DEV_SPEC.md` | Dialogical protocol |
-| FR Layer Assignment Full | `docs/resources/S/2026-02-27-fr-layer-assignment-full.md` | Runtime home assignments |
-| Pleroma PI Primitives Plan | `docs/resources/S/2026-02-24-pleroma-pi-primitives-extension-port-plan.md` | PI extension port |
-| US-023..039 Wiring Plan | `docs/resources/S/2026-02-24-ta-onta-us023-us039-wiring-unlock-tranche-plan.md` | Dependency unlock |
-| PI Extensions Coordinate Arch | `docs/resources/S/2026-02-26-pi-extensions-coordinate-architecture.md` | Coordinate architecture |
+| FR Layer Assignment Full | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-27-fr-layer-assignment-full.md` | Runtime home assignments |
+| Pleroma PI Primitives Plan | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-24-pleroma-pi-primitives-extension-port-plan.md` | PI extension port |
+| US-023..039 Wiring Plan | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-24-ta-onta-us023-us039-wiring-unlock-tranche-plan.md` | Dependency unlock |
+| PI Extensions Coordinate Arch | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-26-pi-extensions-coordinate-architecture.md` | Coordinate architecture |
 | Staging artifacts | `_staging/pleroma-skills/`, `_staging/pleroma-evals/`, `_staging/pleroma-hooks/`, `_staging/plugin.json`, `_staging/settings.json` | Current parked content |
 
 ---

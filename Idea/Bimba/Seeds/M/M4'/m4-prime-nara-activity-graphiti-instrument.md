@@ -10,11 +10,11 @@
 
 > **Companion documents:**
 > - [`M4'-SPEC.md`](M4'-SPEC.md) - current M4' UI/backend domain contract
-> - [`M4-nara-personal-interface.md`](../../../../../docs/specs/M/M4-nara-personal-interface.md) - canonical M4 bimba/implementation spec, FR 2.4.0 through FR 2.4.13
-> - [`2026-04-04-graphiti-unified-temporal-context-service.md`](../../../../../docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md) - Graphiti Personal Episodic Context at #4.4.4.4
-> - [`00-canonical-invariants.md`](../../../../../docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md) - identity, clock, quaternion, oracle, planet, and privacy invariants
-> - [`HOPF-INTEGRATION-READ.md`](../../../../../docs/plans/CLOCK-AND-NARA-SPECS/HOPF-INTEGRATION-READ.md) - Hopf/quaternion and Nara-clock integration
-> - [`2026-03-11-epi-flow-design.md`](../../../../../docs/specs/M/2026-03-11-epi-flow-design.md) - daily FLOW journal substrate and typed entry flags
+> - [`M4-nara-personal-interface.md`](../../../../../Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-nara-personal-interface.md) - canonical M4 bimba/implementation spec, FR 2.4.0 through FR 2.4.13
+> - [`2026-04-04-graphiti-unified-temporal-context-service.md`](../../../../../Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md) - Graphiti Personal Episodic Context at #4.4.4.4
+> - [`00-canonical-invariants.md`](../../../../../Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md) - identity, clock, quaternion, oracle, planet, and privacy invariants
+> - [`HOPF-INTEGRATION-READ.md`](../../../../../Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/HOPF-INTEGRATION-READ.md) - Hopf/quaternion and Nara-clock integration
+> - [`2026-03-11-epi-flow-design.md`](../../../../../Idea/Bimba/Seeds/M/Legacy/specs/M/2026-03-11-epi-flow-design.md) - daily FLOW journal substrate and typed entry flags
 
 > **Dataset anchors:** [`docs/datasets/nara-deep/nodes-full-detail.json`](../../../../../docs/datasets/nara-deep/nodes-full-detail.json) has 100 Nara nodes; [`docs/datasets/nara-deep/relations.json`](../../../../../docs/datasets/nara-deep/relations.json) has 284 Nara relations. The root dataset names #4.0 through #4.5 as Mahamaya Identity Matrix, Sympathetic Medicine, Divinatory Frameworks, Mediating Transformation, Context & Lenses, and Epii Integration.
 

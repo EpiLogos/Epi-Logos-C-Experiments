@@ -39,12 +39,12 @@ node Idea/Pratibimba/System/extensions/test/s2-s5-baseline/capture-fixtures.mjs
 ```
 
 The script writes both fixtures into
-`docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/`
+`Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/`
 and prints a one-line summary.
 
 ## Why this matters
 
-Per `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md`
+Per `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md`
 lines 83-101, T2 demands:
 
 > S2 tests query real Neo4j state or the repository-provided graph-services harness and return coordinate-native payloads with relation types accepted by schema tests.

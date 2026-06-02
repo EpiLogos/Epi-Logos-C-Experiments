@@ -1,0 +1,1669 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-02T15:54:08.110Z",
+  "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical",
+  "tracks": [
+    {
+      "id": "00",
+      "file": "00-overview-and-m-prime-first-coverage.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/00-overview-and-m-prime-first-coverage.md",
+      "title": "Cycle 2 M' First Coverage Overview",
+      "checksum": "1466bf1a7a2a1134d815804226887d939f84453a5441949f9e7689c46d12ac26"
+    },
+    {
+      "id": "01",
+      "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "title": "Track 01 - Electron / Theia Shell, 0 / / / 1, And OmniPanel",
+      "checksum": "599a66eff5b31a1997e4121ca2ad7f5c5fb7f26862064253c2933169a7927198"
+    },
+    {
+      "id": "02",
+      "file": "02-m0-bimba-map-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/02-m0-bimba-map-extension.md",
+      "title": "Track 02 - M0' Bimba Map Extension",
+      "checksum": "799fda5f21b3b8c288c45374a6085c7265877b7218d7449d1e8121a963d9cafb"
+    },
+    {
+      "id": "03",
+      "file": "03-m1-paramasiva-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/03-m1-paramasiva-extension.md",
+      "title": "Track 03 - M1' Paramasiva Extension",
+      "checksum": "5d74ae91e80076db269834d74c59c5e0a07041a7371fb51e809a135613cc489d"
+    },
+    {
+      "id": "04",
+      "file": "04-m2-parashakti-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/04-m2-parashakti-extension.md",
+      "title": "Track 04 - M2' Parashakti Extension",
+      "checksum": "c3616f6abdca9942aa82c858cd2baf83869e99d664d21faa3915e6813f287324"
+    },
+    {
+      "id": "05",
+      "file": "05-m3-mahamaya-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/05-m3-mahamaya-extension.md",
+      "title": "Track 05 - M3' Mahamaya Extension",
+      "checksum": "ae5331e3d508a0543031cb782b0f48e8ebda791240b01a4a336238e63d73972f"
+    },
+    {
+      "id": "06",
+      "file": "06-m4-nara-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/06-m4-nara-extension.md",
+      "title": "Track 06 - M4' Nara Extension",
+      "checksum": "bcae5ede8f13764e91b1b052b60a6853433ff4e38ca40c9048952f081fd7d22f"
+    },
+    {
+      "id": "07",
+      "file": "07-m5-epii-extension-and-agentic-ide.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/07-m5-epii-extension-and-agentic-ide.md",
+      "title": "Track 07 - M5' Epii Extension And Agentic IDE",
+      "checksum": "29bfaf28c31f9fa66f2cb1d57f1c4c8441afe1ea11feda71ac0c506755815b15"
+    },
+    {
+      "id": "08",
+      "file": "08-integrated-1-2-3-cosmic-engine-plugin.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/08-integrated-1-2-3-cosmic-engine-plugin.md",
+      "title": "Track 08 - Integrated 1-2-3 Cosmic Engine Plugin",
+      "checksum": "38cb65a10b3712829557103091e380415c4b764a04e9a477c64c459dae18a22c"
+    },
+    {
+      "id": "09",
+      "file": "09-integrated-4-5-0-recognition-plugin.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/09-integrated-4-5-0-recognition-plugin.md",
+      "title": "Track 09 - Integrated 4-5-0 Recognition Plugin",
+      "checksum": "81b7387bcd56da5c85fadf34edd2856ec5d45a0ba493cc6b8e7cc88e61ed9900"
+    },
+    {
+      "id": "10",
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "title": "Track 10 - Ta-Onta Carriers, Constitutional Agents, And Aletheia",
+      "checksum": "ba7fe03b53cafa2bbffd703d4c83425814d90e49d26a5c8f9eb17bc3e800822a"
+    },
+    {
+      "id": "11",
+      "file": "11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "title": "Track 11 - Consumed S Substrate Closure: S0 / S1 / S2",
+      "checksum": "7759fb8632373a3b242b430c09d5dbc5490080c939f6181e4a57d08de392c1f2"
+    },
+    {
+      "id": "12",
+      "file": "12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "title": "Track 12 - Consumed S Substrate Closure: S3 / S4 / S5",
+      "checksum": "4de8672064223905958821e301cfe551f22b749013f1096b354b05142db4faca"
+    },
+    {
+      "id": "13",
+      "file": "13-gateway-method-completion-and-intent-routing.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/13-gateway-method-completion-and-intent-routing.md",
+      "title": "Track 13 - Gateway Method Completion And Intent Routing",
+      "checksum": "b28840015812a75a8b1e151487b03eb8e1377790523b2b1f65b12aa311816272"
+    },
+    {
+      "id": "14",
+      "file": "14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "title": "Track 14 - Open Decisions, Release Gates, And No-Orphan Audit",
+      "checksum": "0f30c25f92d2a0e92f5611dbcc34ea190dd3014f00544be797d85cefb191fd45"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "00.T0",
+      "trackId": "00",
+      "tranche": "T0",
+      "title": "M' Surface Ownership Matrix",
+      "effort": null,
+      "file": "00-overview-and-m-prime-first-coverage.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/00-overview-and-m-prime-first-coverage.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md",
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md",
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md"
+      ],
+      "body": "1. **T0 - M' Surface Ownership Matrix**\n\n   Canonical source: `Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md`, `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`\n   Cycle 1 substrate inheritance: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md` is the only cycle 1 closing artifact; every cycle 2 track must inherit from it rather than rediscovering landed work.\n\n   Deliverables:\n\n   - Map every M' surface to an owning cycle 2 track: Electron/Theia shell, `/body` `0/1`, `/` OmniPanel operator membrane, shell `1` flow-writing surface, M0-M5 subsystem pages, six extensions, `1-2-3`, `4-5-0`, Agentic Control Room, constitutional/ta-onta surfaces, review/autoresearch UX.\n   - Map every S/S' surface to either `consumed contract`, `integration gap`, or `already-landed substrate`.\n   - Fail the matrix if any carrier, constitutional agent, Aletheia subagent, extension, plugin, or shell surface is ambient.\n\n   Verification:\n\n   - `node .codex/scripts/m-dev-plan-assess.mjs --reset --write --json docs/plans/2026-06-02-m-prime-cycle-2-canonical`\n   - Every non-overview track below is referenced by this ownership matrix."
+    },
+    {
+      "id": "00.T1",
+      "trackId": "00",
+      "tranche": "T1",
+      "title": "Cycle 1 Substrate Inheritance Registry",
+      "effort": null,
+      "file": "00-overview-and-m-prime-first-coverage.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/00-overview-and-m-prime-first-coverage.md",
+      "dependsOn": [
+        "00.T0"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri",
+        "Body/S/S0",
+        "Body/S/S1",
+        "Body/S/S2",
+        "Body/S/S3",
+        "Body/S/S4",
+        "Body/S/S5",
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md",
+        "Idea/Bimba/Seeds/S/S-SOURCE-TRACEABILITY-INDEX.md",
+        "Idea/Pratibimba/System"
+      ],
+      "body": "2. **T1 - Cycle 1 Substrate Inheritance Registry**\n\n   Canonical source: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md`, `Idea/Bimba/Seeds/S/S-SOURCE-TRACEABILITY-INDEX.md`\n   Cycle 1 substrate inheritance: applies to `Body/S/S0`, `Body/S/S1`, `Body/S/S2`, `Body/S/S3`, `Body/S/S4`, `Body/S/S5`, `Idea/Pratibimba/System`, and `Body/M/epi-tauri`.\n\n   Deliverables:\n\n   - Register each cycle 1 landed surface as `consume as-is`, `audit/verify`, or `extend`.\n   - Record the explicit user caveat that Track 13 was still underway when cycle 1 was closed.\n   - Prevent cycle 2 tracks from claiming first-build ownership over already-landed substrate.\n\n   Verification:\n\n   - Every cycle 2 track includes a `Cycle 1 substrate inheritance:` line.\n   - No cycle 2 tranche describes major `S/S'` work as greenfield unless it is a real missing gap."
+    },
+    {
+      "id": "00.T2",
+      "trackId": "00",
+      "tranche": "T2",
+      "title": "M' First Execution Sequence",
+      "effort": null,
+      "file": "00-overview-and-m-prime-first-coverage.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/00-overview-and-m-prime-first-coverage.md",
+      "dependsOn": [
+        "00.T1"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri",
+        "Body/M/epi-tauri/**",
+        "Body/M/epi-tauri/DEPRECATED.md",
+        "Body/S/S0",
+        "Body/S/S0/epi-cli",
+        "Body/S/S0/epi-cli/src/gate/s1_hen.rs",
+        "Body/S/S0/epi-cli/src/vault",
+        "Body/S/S0/epi-lib",
+        "Body/S/S0/portal-core",
+        "Body/S/S1/hen-compiler-core",
+        "Body/S/S2/graph-schema",
+        "Body/S/S2/graph-services",
+        "Body/S/S2/ontology",
+        "Body/S/S3/epi-spacetime-module",
+        "Body/S/S3/gateway",
+        "Body/S/S3/gateway-contract",
+        "Body/S/S3/graphiti-runtime",
+        "Body/S/S4/pi-agent",
+        "Body/S/S4/plugins/pleroma",
+        "Body/S/S4/ta-onta",
+        "Body/S/S5",
+        "Body/S/S5/**",
+        "Body/S/S5/plugins/epi-logos",
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
+        "Idea/Empty/Present",
+        "Idea/Pratibimba/System",
+        "Idea/Pratibimba/System/**",
+        "Idea/Pratibimba/System/extensions/m5-epii"
+      ],
+      "body": "3. **T2 - M' First Execution Sequence**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`, `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 sequencing is historical evidence only and is not binding on cycle 2.\n\n   Deliverables:\n\n   - Define the opening sequence as: shell/runtime ownership, M0-M5 surfaces, integrated plugins, constitutional/agentic mediation, then substrate gap closure.\n   - Keep `S/S'` tracks dependency-driven and subordinate to actual M' integration failures.\n   - Explicitly forbid another pseudo-greenfield S-layer cycle.\n\n   Verification:\n\n   - `node .codex/scripts/m-dev-plan-assess.mjs --route --write --json docs/plans/2026-06-02-m-prime-cycle-2-canonical`\n   - The recommended route starts with M' ownership and only then consumed-substrate closure.\n\n## T0 Ownership Matrix\n\n### M' Product Surfaces\n\n| Surface family | Primary owner | Scope anchored here | Cycle 1 inheritance stance |\n|---|---|---|---|\n| Electron-hosted [[Theia]] shell, `0/1` parent faces, `/body`, `/`, deep IDE, packaging/runtime lifecycle | `01.T0` through `01.T6` | Real desktop runtime, layout switching, summon/return, `/` as operator membrane, release discipline | extend |\n| [[M0']] Bimba map subsystem | `02.T0` through `02.T4` | Readable graph, inspector depth, source traceability, route-to-action surfaces | extend |\n| [[M1']] Paramasiva subsystem | `03.T0` through `03.T4` | Played traversal, interval grammar, profile-to-performance stream, topology/pairing surfaces | extend |\n| [[M2']] Parashakti subsystem | `04.T0` through `04.T5` | Meaning packet, 72-fold correspondence tree, routing protocol, cymatic render, resonance inspector | extend |\n| [[M3']] Mahamaya subsystem | `05.T0` through `05.T5` | Clock-cosmos surface, codon rotation, multi-matrix inspector, Janus temporal doorway | extend |\n| [[M4']] Nara subsystem | `06.T0` through `06.T5` | Shell `1` flow-writing input, journal/daily/dream/oracle, protected field, quaternion source, dialogue governance | extend |\n| [[M5']] Epii subsystem | `07.T0` through `07.T5` | Library, canon studio, backend/frontend studios, Agentic Control Room, review/autoresearch UX | extend |\n| Integrated `1-2-3` cosmic engine plugin | `08.T0` through `08.T2` | Product surface over [[M1']], [[M2']], [[M3']] including shell `0` preview responsibility | extend |\n| Integrated `4-5-0` recognition plugin | `09.T0` through `09.T2` | Product surface over [[M4']], [[M5']], [[M0']] including shell `1` flow preview, `4+2` recognition depth, privacy, and review seams | extend |\n| ta-onta carriers, constitutional agents, Aletheia subagents | `10.T0` through `10.T18` | Explicit owner map for carriers, agents, deposits, review boundaries, and subagent roles | extend |\n| Gateway method map and intent-routing grammar | `13.T0` through `13.T5` | Product integration infrastructure for aliasing, operator command catalog, direct agent/session transparency, deep links, privacy/review interrupts | audit/verify then extend |\n| Open decisions, release gates, final no-orphan audit | `14.T0` through `14.T5` | IOD/PRD/UFV/DCC matrices, release gates, canonical no-orphan closure | audit/verify then extend |\n\n### Consumed S/S' Substrate Matrix\n\n| Substrate family | Classification in cycle 2 | Primary cycle 2 owner | Why it is not greenfield |\n|---|---|---|---|\n| [[S0]] / [[S0']] command membrane, kernel/profile bridge, CLI and schema surfaces | consumed contract | `11.T0` plus `13.T0`-`13.T5` for method parity | Cycle 1 already landed pointer/profile/bridge substrate and shell-facing contract packages |\n| [[S1]] / [[S1']] vault, DAY/NOW material plane, [[Hen]] compiler/write law | consumed contract | `11.T1`-`11.T2` | Cycle 1 already landed real vault writes, rename/move integrity, and Hen public surfaces |\n| [[S2]] / [[S2']] graph schema, retrieval, map services, semantic cache law | consumed contract | `11.T3`-`11.T4` | Cycle 1 already landed graph API parity, dataset population, retrieval, and M5 consumer contracts |\n| [[S3]] / [[S3']] gateway, sessions, SpaceTimeDB, Graphiti, temporal runtime | consumed contract | `12.T0` and `12.T3` | Cycle 1 already landed gateway contract freeze, runtime state authority, DAY/NOW/session projection, and lifecycle substrate |\n| [[S4]] / [[S4']] capability matrix, VAK/orchestration substrate, ta-onta runtime | consumed contract | `12.T1` with explicit ontology ownership in `10.T0`-`10.T18` | Cycle 1 already landed mediation, bounded runtime authority, VAK lineage, and capability-matrix parity |\n| [[S5]] / [[S5']] review, autoresearch, gnosis, pedagogy, Epii return law | consumed contract | `12.T2` plus product surfacing in `07.*`, `09.*`, `14.*` | Cycle 1 already landed review/autoresearch cores, IDE contracts, and agent-return routes |\n| Cross-coordinate gateway method catalog and product-native aliases | integration gap | `13.T0`-`13.T5` | Cycle 1 left parity and aliasing diffuse across shell, gateway, and review surfaces |\n| Generic S-layer rebuild work | forbidden except where a concrete M' blocker is named | `11.T4`, `12.T4`, and `00.T2` guardrails | Cycle 2 inherits substantial live substrate and must only close named consumption gaps |\n\n### No-Ambient Registry\n\n| Canonical family | Owning track/tranche | Constraint |\n|---|---|---|\n| Six ta-onta carriers: [[Khora]], [[Hen]], [[Pleroma]], [[Chronos]], [[Anima]], [[Aletheia]] | `10.T1`-`10.T6` | No carrier may remain implied by substrate alone |\n| Six constitutional agents: [[Nous]], [[Logos]], [[Eros]], [[Mythos]], [[Psyche]], [[Sophia]] | `10.T7`-`10.T12` | No constitutional role may remain dissolved into generic planning/execution/review language |\n| Six Aletheia subagents: [[Anansi]], [[Moirai]], [[Janus]], [[Mercurius]], [[Agora]], [[Zeithoven]] | `10.T13`-`10.T18` | No subagent may remain an uncited background capability |\n| [[Agentic Control Room]] and M5-4 operational capacities | `07.T4` | Product-facing mediation surfaces must be owned before ontology closure executes |\n| Canonical no-orphan proof across shells, subsystems, extensions, plugins, ontology, lifecycle, and methods | `14.T5` | Final route must fail if any canonical surface lacks an owner |\n| `0/1` versus `4+2` versus `/` separation | `01.*`, `06.*`, `09.*`, `13.*`, `14.T5` | Final route must fail if shell `1` flow, full `4+2` depth, or `/` operator transparency are collapsed into one another |\n\n## T1 Substrate Inheritance Register\n\n| Landed cycle 1 surface | Cycle 2 stance | Owning follow-on track |\n|---|---|---|\n| `Idea/Pratibimba/System/**` shell/runtime substrate | extend | `01.*` |\n| `Body/M/epi-tauri/**` | consume as migration-source-only evidence | `01.T0` |\n| `Body/S/S0` through `Body/S/S5` live substrate | consume as-is unless a real M' blocker appears | `11.*`, `12.*`, `13.*` |\n| Track 13 modularity cleanup carry-forward | audit/verify then extend | `11.*`, `12.*`, `13.*`, `14.*` |\n\nThe explicit user caveat from cycle 1 remains binding here: Track 13 was still underway at close, so cycle 2 inherits a live continuation lane rather than a clean-room baseline.\n\n### Cycle 1 Landing Classification Detail\n\n| Cycle 1 surface | Evidence anchor | Cycle 2 classification | Guardrail |\n|---|---|---|---|\n| S0/S0' pointer-web, profile, CLI, readiness, bridge contract, and governed capability invocation | `Body/S/S0/epi-lib`, `Body/S/S0/portal-core`, `Body/S/S0/epi-cli`, `Body/S/S3/gateway-contract`; cycle 1 close Track 01 | consume as-is, then extend only where M' shell/method parity exposes a blocker | `11.T0` and `13.*` may close consumed contract gaps; no generic S0 rebuild |\n| S1/S1' DAY/NOW, vault, semantic, rename/move, and Hen/write-law substrate | `Idea/Empty/Present`, `Body/S/S1/hen-compiler-core`, `Body/S/S0/epi-cli/src/vault`, `Body/S/S0/epi-cli/src/gate/s1_hen.rs`; cycle 1 close Track 03.6.5 and Track 13.8 | audit/verify then extend | preserve Hen/S1' authority; S0 may remain adapter only |\n| S2/S2' graph schema, dataset import, retrieval, ontology, GDS overlay readiness, API parity, and M5 consumption contracts | `Body/S/S2/graph-schema`, `Body/S/S2/graph-services`, `Body/S/S2/ontology`; cycle 1 close Track 02 | consume as-is for M0/M5 and extension surfaces; audit blocked plugin/environment items | missing n10s/GDS/semantic-cache pieces are environment/integration blockers, not greenfield graph ownership |\n| S3/S3' gateway, sessions, WebSocket multiplexer, SpaceTimeDB/shared-cosmos, Graphiti runtime, DAY/NOW/session projection, and soak/privacy evidence | `Body/S/S3/gateway-contract`, `Body/S/S3/gateway`, `Body/S/S3/epi-spacetime-module`, `Body/S/S3/graphiti-runtime`; cycle 1 close Track 03 | consume as-is | `12.T0`/`12.T3` may close shell/lifecycle consumption paths only |\n| S4/S4' capability matrix, VAK/orchestration, mediation route, ta-onta runtime, Aletheia disclosure metadata, and M5-4 mediation substrate | `Body/S/S4/pi-agent`, `Body/S/S4/plugins/pleroma`, `Body/S/S4/ta-onta`; cycle 1 close Tracks 07/08/09/13 | consume as-is, then extend through explicit carrier/agent/subagent ownership | ontology ownership belongs to `10.*`; no ambient constitutional role remains acceptable |\n| S5/S5' review/autoresearch stores, dry-run promotion, Epii access/deposit, gnosis/kbase hooks, IDE workbench contracts, and epi-logos plugin body | `Body/S/S5/**`, `Idea/Pratibimba/System/extensions/m5-epii`, `Body/S/S5/plugins/epi-logos`; cycle 1 close Track 04 and Track 09 | consume as-is for review/autoresearch/pedagogy consumers; extend only named missing method families | non-dry-run promotion, provider-backed Epii invocation, production Gnosis convergence, and missing teach/explain gateway methods stay explicit blockers |\n| Electron/Theia shell, M0/M5 chrome, `/body` daily slice, integrated plugins, M-extension contributions, and release-gate harnesses | `Idea/Pratibimba/System/**`; cycle 1 close Tracks 07/08/10 | extend | Cycle 2 is product-first M' development over landed substrate, not a new S-stack pass |\n| `Body/M/epi-tauri/**` migration source | `Body/M/epi-tauri/DEPRECATED.md`, decisions, contract inventory | consume as migration-source-only evidence | do not re-home runtime authority to deprecated Tauri code |\n| Track 13 S/S' modularity cleanup | cycle 1 close Track 13 with `5` pending tranches at close | audit/verify then extend | live continuation caveat applies; cycle 2 cannot claim a clean-room baseline while Track 13 carry-forward remains active |\n\nAnti-greenfield rule: any cycle 2 tranche touching `Body/S/S0` through `Body/S/S5`, `Idea/Pratibimba/System`, or `Body/M/epi-tauri` must phrase its work as `consume as-is`, `audit/verify`, or `extend`. A tranche may claim first-build ownership only for an M' product surface, a named carrier/agent/subagent owner, a method-routing closure, or a concrete integration blocker that the register above does not already classify as landed substrate.\n\n## T2 First Execution Sequence\n\n1. `00.*` establishes ownership, inheritance, and anti-greenfield guardrails.\n2. `01.T0` locks Electron-hosted [[Theia]] and preserves `Body/M/epi-tauri` as migration-source-only.\n3. `02.*` through `07.*` own the six M' subsystems as product surfaces.\n4. `08.*` and `09.*` own the integrated plugin compositions rather than leaving them as spillover from subsystem work.\n5. `07.T4` and `10.*` make M5-4 mediation plus carrier/agent/subagent ontology explicit.\n6. `11.*`, `12.*`, and `13.*` close only the consumed-substrate and method-routing gaps exposed by product ownership.\n7. `14.*` re-homes cross-cutting decisions, locks release gates, and performs the final no-orphan audit.\n\nThis sequence is load-bearing: cycle 2 starts from M' ownership, uses S/S' only as consumed infrastructure, and forbids another pseudo-greenfield S-layer pass."
+    },
+    {
+      "id": "01.T0",
+      "trackId": "01",
+      "tranche": "T0",
+      "title": "Electron / Theia Runtime Boundary",
+      "effort": null,
+      "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "dependsOn": [],
+      "writeScopes": [
+        "Body/M/epi-tauri",
+        "Body/M/epi-tauri/**",
+        "Body/M/epi-tauri/DEPRECATED.md",
+        "Body/S/S0/**",
+        "Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md",
+        "Idea/Pratibimba/System",
+        "Idea/Pratibimba/System/**",
+        "Idea/Pratibimba/System/README.md",
+        "Idea/Pratibimba/System/electron-app/**"
+      ],
+      "body": "1. **T0 - Electron / Theia Runtime Boundary**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`\n   Cycle 1 substrate inheritance: extends `Idea/Pratibimba/System/**` and preserves `Body/M/epi-tauri/**` as migration-source-only evidence.\n\n   Deliverables:\n\n   - Lock Electron-hosted Theia as the actual desktop runtime and `Body/M/epi-tauri` as migration-source-only.\n   - Name the process boundary, workspace/package layout, and runtime responsibilities of the shell.\n   - Keep a single kernel-bridge and a single gateway/runtime stream across the whole shell.\n\n   Substrate-truth note (2026-06-02):\n\n   - `Idea/Pratibimba/System/README.md` already names the Theia IDE surface as the active executable home for M5-3 and `Idea/Pratibimba/System/electron-app/` is already present.\n   - `Body/M/epi-tauri/DEPRECATED.md` already marks the Tauri tree as migration-source-only and explicitly forbids extending it.\n   - The genuine remaining gap for this tranche is not shell greenfield. It is the operational lock-in proof: final runtime boundary wording, `epi app`/launch-path rewiring away from the deprecated tree, runnable Electron verification, and explicit proof that one kernel-bridge plus one gateway/runtime authority serve the whole shell.\n   - Do not rebuild renderer/domain code from scratch. Port or re-home only what the migration inventory still marks as outstanding.\n\n   Verification:\n\n   - Theia/Electron app build passes in `Idea/Pratibimba/System`\n   - shell runtime tests prove one bridge instance and one gateway/runtime authority"
+    },
+    {
+      "id": "01.T1",
+      "trackId": "01",
+      "tranche": "T1",
+      "title": "0 / 1 Daily Layout And Deep IDE Layout",
+      "effort": null,
+      "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**",
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md"
+      ],
+      "body": "2. **T1 - 0 / 1 Daily Layout And Deep IDE Layout**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`, `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: extends the cycle 1 layout-mode skeleton and shared bridge fanout.\n\n   Deliverables:\n\n   - Own the `0/1` daily layout, the deep IDE layout, and state-preserving switching between them.\n   - Keep shell `0` and shell `1` as parent faces, not mini-subsystem clones.\n   - Define exactly what remains visible in the daily shell versus what belongs only in deep IDE.\n   - Preserve the surface separation: shell `1` carries the flow-writing universal input, `/` carries operator transparency, and `4+2` carries full subsystem depth.\n\n   Verification:\n\n   - layout persistence tests\n   - `/body` vertical slice tests\n   - deep IDE summon/return tests"
+    },
+    {
+      "id": "01.T2",
+      "trackId": "01",
+      "tranche": "T2",
+      "title": "OmniPanel Command Catalog And Intent Routing",
+      "effort": null,
+      "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "dependsOn": [
+        "01.T1"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**",
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md"
+      ],
+      "body": "3. **T2 - OmniPanel Command Catalog And Intent Routing**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`, `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`\n   Cycle 1 substrate inheritance: extends the cycle 1 OmniPanel shell and intent-routing work.\n\n   Deliverables:\n\n   - Own the full OmniPanel operator catalog: sessions, direct Pi/agent chat, skills, models, cron, config, logs, debug, nodes/devices, channels, readiness, gateway settings, tool traces, and runtime transparency.\n   - Own DAY/NOW/privacy/review/layout deep-link routing through `/` without turning `/` into the primary lived UX.\n   - Keep OmniPanel as operator membrane and not hidden backend authority, shell `1` replacement, or pseudo-Agentic Control Room.\n\n   Verification:\n\n   - OmniPanel contract tests\n   - deep-link and intent-routing tests\n   - command parity tests against gateway/S0 route tables"
+    },
+    {
+      "id": "01.T3",
+      "trackId": "01",
+      "tranche": "T3",
+      "title": "Shell `0` Parent Face",
+      "effort": null,
+      "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "dependsOn": [
+        "01.T2"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**",
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md"
+      ],
+      "body": "4. **T3 - Shell `0` Parent Face**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`, `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 shell `0`, integrated `1-2-3`, and shared profile/runtime stream work.\n\n   Deliverables:\n\n   - Own shell `0` as the structural/cosmic parent face over M1/M2/M3 outputs.\n   - Keep graph/clock/correspondence previews lean and current-coordinate-oriented.\n   - Define what shell `0` may preview from M0 without swallowing the full M0 subsystem.\n\n   Verification:\n\n   - shell `0` surface tests against live profile/runtime payloads\n   - integrated `1-2-3` preview tests"
+    },
+    {
+      "id": "01.T4",
+      "trackId": "01",
+      "tranche": "T4",
+      "title": "Shell `1` Parent Face",
+      "effort": null,
+      "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "dependsOn": [
+        "01.T3"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**",
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md"
+      ],
+      "body": "5. **T4 - Shell `1` Parent Face**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`, `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 shell `1`, Nara preview, review alerts, and Epii entry work.\n\n   Deliverables:\n\n   - Own shell `1` as the personal/world-return parent face over M4/M5 with M0 ground-data where needed.\n   - Make flow writing the universal input here: journal, prompt/chat initiation, task/reminder capture, calendar/day-note capture, highlight sendoff, and review/pedagogy entry.\n   - Keep journal, pedagogy, review alerts, and agent check-in explicit and bounded.\n   - Define which protected handles may surface here and which must stay deep-only.\n\n   Verification:\n\n   - shell `1` surface tests\n   - flow-writing universal input tests across Nara, Epii entry, task/day-note capture, and highlight sendoff\n   - privacy-block and review-notification tests"
+    },
+    {
+      "id": "01.T5",
+      "trackId": "01",
+      "tranche": "T5",
+      "title": "`/body` Summon, Return, And Background Lifecycle",
+      "effort": null,
+      "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "dependsOn": [
+        "01.T4"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**",
+        "Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md"
+      ],
+      "body": "6. **T5 - `/body` Summon, Return, And Background Lifecycle**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 summon/background lifecycle work and operator runbook evidence.\n\n   Deliverables:\n\n   - Own summon into deep IDE, return to `/body`, backgrounding, wake, reconnect, and status continuity.\n   - Define the user-visible lifecycle model for close, quit, sleep, reconnect, and alerts.\n\n   Verification:\n\n   - background lifecycle tests\n   - reconnect/resubscribe tests after gateway/runtime restart"
+    },
+    {
+      "id": "01.T6",
+      "trackId": "01",
+      "tranche": "T6",
+      "title": "Electron Packaging, Update, And Desktop Release Discipline",
+      "effort": null,
+      "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+      "dependsOn": [
+        "01.T5"
+      ],
+      "writeScopes": [
+        "Body/S/S0/**",
+        "Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md",
+        "Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md"
+      ],
+      "body": "7. **T6 - Electron Packaging, Update, And Desktop Release Discipline**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`, `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 built shell/runtime surfaces and alpha gates but did not foreground Electron packaging as an owned track.\n\n   Deliverables:\n\n   - Own Electron packaging, distribution, update channel, build artifact structure, and desktop release discipline.\n   - Define how desktop release evidence relates to alpha/beta/production readiness.\n\n   Verification:\n\n   - desktop build/package tests\n   - release-gate artifact checks"
+    },
+    {
+      "id": "02.T0",
+      "trackId": "02",
+      "tranche": "T0",
+      "title": "Readable Graph And Summonable Inspector",
+      "effort": null,
+      "file": "02-m0-bimba-map-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/02-m0-bimba-map-extension.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S2/**",
+        "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+        "Idea/Pratibimba/System/extensions/m0-anuttara"
+      ],
+      "body": "1. **T0 - Readable Graph And Summonable Inspector**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 Bimba-map population and M0 extension skeleton.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before subsystem-page ownership is executed.\n\n   Deliverables:\n\n   - Own the readable graph surface and summonable technical inspector for M0.\n   - Keep readable defaults primary and deep graph metadata summonable.\n   - Define the public/current versus deeper technical inspector boundary.\n\n   Verification:\n\n   - M0 extension tests in `Idea/Pratibimba/System/extensions/m0-anuttara`\n   - graph payload tests against live S2 services"
+    },
+    {
+      "id": "02.T1",
+      "trackId": "02",
+      "tranche": "T1",
+      "title": "Source Traceability And Coordinate Ground",
+      "effort": null,
+      "file": "02-m0-bimba-map-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/02-m0-bimba-map-extension.md",
+      "dependsOn": [
+        "02.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S2/**",
+        "Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md",
+        "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+        "Idea/Bimba/World/Types/{Type}/{Type}.canvas",
+        "Idea/Bimba/World/{Name}.md"
+      ],
+      "body": "2. **T1 - Source Traceability And Coordinate Ground**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 coordinate baseline and source-anchor work already landed through S2.\n\n   Deliverables:\n\n   - Own coordinate ground, source traceability, and map-to-source navigation.\n   - Keep every surfaced node linked back to canonical source anchors and graph provenance.\n   - Surface the diagram/MOC residency chain from `Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md` through flat `Idea/Bimba/World/{Name}.md` forms and `Idea/Bimba/World/Types/{Type}/{Type}.canvas` type indexes without inventing renderer-local registries.\n\n   Verification:\n\n   - source-traceability payload tests\n   - coordinate navigation tests\n   - M0 graph/source inspector proves diagram/MOC backlinks resolve through S1/S2-provided provenance, not hardcoded UI paths"
+    },
+    {
+      "id": "02.T2",
+      "trackId": "02",
+      "tranche": "T2",
+      "title": "Anuttara Node Language, Symbol, And Formulation Surface",
+      "effort": null,
+      "file": "02-m0-bimba-map-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/02-m0-bimba-map-extension.md",
+      "dependsOn": [
+        "02.T1"
+      ],
+      "writeScopes": [
+        "Body/S/S2/**",
+        "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+      ],
+      "body": "3. **T2 - Anuttara Node Language, Symbol, And Formulation Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 Anuttara symbol/formulation work already landed in the graph schema.\n\n   Deliverables:\n\n   - Own Anuttara symbol and formulation rendering inside M0.\n   - Keep it tied to S2 node/property truth instead of duplicated UI registries.\n\n   Verification:\n\n   - Anuttara node payload tests\n   - M0 rendering tests for symbol/formulation fields"
+    },
+    {
+      "id": "02.T3",
+      "trackId": "02",
+      "tranche": "T3",
+      "title": "Graph Inference And GDS Delta",
+      "effort": null,
+      "file": "02-m0-bimba-map-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/02-m0-bimba-map-extension.md",
+      "dependsOn": [
+        "02.T2"
+      ],
+      "writeScopes": [
+        "Body/S/S2/**",
+        "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+      ],
+      "body": "4. **T3 - Graph Inference And GDS Delta**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 SHACL/GDS/overlay substrate without pretending the M0 surface is already complete.\n\n   Deliverables:\n\n   - Own M0-facing graph inference and GDS overlay consumption.\n   - Define what M0 may render from public-only overlays and what remains backend-only.\n\n   Verification:\n\n   - GDS overlay tests\n   - M0 consumer tests over blocked/ready overlay states"
+    },
+    {
+      "id": "02.T4",
+      "trackId": "02",
+      "tranche": "T4",
+      "title": "M0 Routing Into Action And Deep Links",
+      "effort": null,
+      "file": "02-m0-bimba-map-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/02-m0-bimba-map-extension.md",
+      "dependsOn": [
+        "02.T3"
+      ],
+      "writeScopes": [
+        "Body/S/S2/**",
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+      ],
+      "body": "5. **T4 - M0 Routing Into Action And Deep Links**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`, `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 landed deep-link surfaces in shell/OmniPanel but did not give M0 routing explicit ownership.\n\n   Deliverables:\n\n   - Own how M0 nodes route into subsystem pages, OmniPanel commands, graph searches, and M5 workbench actions.\n   - Keep action routing provenance-bearing and namespace-aware.\n\n   Verification:\n\n   - M0 deep-link tests\n   - route provenance tests into M5 and integrated plugins"
+    },
+    {
+      "id": "03.T0",
+      "trackId": "03",
+      "tranche": "T0",
+      "title": "User-Facing Played Traversal Surface",
+      "effort": null,
+      "file": "03-m1-paramasiva-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/03-m1-paramasiva-extension.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**",
+        "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md"
+      ],
+      "body": "1. **T0 - User-Facing Played Traversal Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 M1 first-slice extension and profile substrate.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before subsystem-page ownership is executed.\n\n   Deliverables:\n\n   - Own the played traversal surface: current played coordinate, path phrase, interval movement, and audible/visible character.\n   - Keep it rooted in live profile and graph truth.\n\n   Verification:\n\n   - M1 extension tests\n   - profile-to-ui payload tests"
+    },
+    {
+      "id": "03.T1",
+      "trackId": "03",
+      "tranche": "T1",
+      "title": "Profile-To-Performance Stream",
+      "effort": null,
+      "file": "03-m1-paramasiva-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/03-m1-paramasiva-extension.md",
+      "dependsOn": [
+        "03.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**",
+        "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md"
+      ],
+      "body": "2. **T1 - Profile-To-Performance Stream**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 `MathemeHarmonicProfile` and kernel bridge landings.\n\n   Deliverables:\n\n   - Own the mapping from `MathemeHarmonicProfile` into M1 runtime/performance state.\n   - Define every required profile field consumed by M1.\n\n   Verification:\n\n   - profile stream tests against live profile payloads\n   - bridge consumer tests in the M1 extension"
+    },
+    {
+      "id": "03.T2",
+      "trackId": "03",
+      "tranche": "T2",
+      "title": "84-State Landscape, Pairing Families, And K²",
+      "effort": null,
+      "file": "03-m1-paramasiva-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/03-m1-paramasiva-extension.md",
+      "dependsOn": [
+        "03.T1"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**",
+        "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md"
+      ],
+      "body": "3. **T2 - 84-State Landscape, Pairing Families, And K²**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 never gave the full 84-state / pairing-family frame explicit top-level ownership.\n\n   Deliverables:\n\n   - Own the 84-state `(lens, mode)` landscape, six pairing families, and `K²` topology.\n   - Keep all names and pairings canonical across extension, shell, plugin, and pedagogy surfaces.\n\n   Verification:\n\n   - topology and pairing-family tests\n   - M1 payload tests used by `1-2-3`"
+    },
+    {
+      "id": "03.T3",
+      "trackId": "03",
+      "tranche": "T3",
+      "title": "Cl(4,2), Klein Flip, And Inspector Depth",
+      "effort": null,
+      "file": "03-m1-paramasiva-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/03-m1-paramasiva-extension.md",
+      "dependsOn": [
+        "03.T2"
+      ],
+      "writeScopes": [
+        "Body/S/S0/epi-cli/src/gate/**",
+        "Body/S/S3/**",
+        "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md"
+      ],
+      "body": "4. **T3 - Cl(4,2), Klein Flip, And Inspector Depth**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 mathematical substrate without forcing it into default UI.\n\n   Deliverables:\n\n   - Own the technical inspector depth around `Cl(4,2)`, Klein flip visibility, and topology explanation.\n   - Keep deep mathematical inspection summonable, not default.\n\n   Verification:\n\n   - inspector payload tests\n   - summonable depth tests in the extension/workbench"
+    },
+    {
+      "id": "04.T0",
+      "trackId": "04",
+      "tranche": "T0",
+      "title": "M2PrimeMeaningPacket And User Surface",
+      "effort": null,
+      "file": "04-m2-parashakti-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/04-m2-parashakti-extension.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**",
+        "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+      ],
+      "body": "1. **T0 - M2PrimeMeaningPacket And User Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 M2 first-slice extension and integrated `1-2-3` preview surfaces.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before subsystem-page ownership is executed.\n\n   Deliverables:\n\n   - Own the `M2PrimeMeaningPacket` and the primary M2 user-facing surface.\n   - Keep semantic, harmonic, astrological, and symbolic outputs tied to backend truth.\n\n   Verification:\n\n   - M2 extension tests\n   - payload tests against live profile/runtime data"
+    },
+    {
+      "id": "04.T1",
+      "trackId": "04",
+      "tranche": "T1",
+      "title": "Full 72-Fold Correspondence Tree",
+      "effort": null,
+      "file": "04-m2-parashakti-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/04-m2-parashakti-extension.md",
+      "dependsOn": [
+        "04.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**",
+        "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+      ],
+      "body": "2. **T1 - Full 72-Fold Correspondence Tree**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 did not own the full 72-fold correspondence tree as a top-level tranche family.\n\n   Deliverables:\n\n   - Own the 72-fold correspondence-tree surfaces and their inspector structure.\n   - Keep deep correspondence tables summonable, not always-on.\n\n   Verification:\n\n   - correspondence tree tests\n   - summonable inspector tests"
+    },
+    {
+      "id": "04.T2",
+      "trackId": "04",
+      "tranche": "T2",
+      "title": "Ficinian-Kerykeion Routing",
+      "effort": null,
+      "file": "04-m2-parashakti-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/04-m2-parashakti-extension.md",
+      "dependsOn": [
+        "04.T1"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**",
+        "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+      ],
+      "body": "3. **T2 - Ficinian-Kerykeion Routing**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`\n   Cycle 1 substrate inheritance: routing traces appeared as substrate/evidence, but not as an owned M2 surface.\n\n   Deliverables:\n\n   - Own the routing function, trace outputs, and what M2 renders from routed results.\n   - Define what downstream M3 and M5 consume from routing traces.\n\n   Verification:\n\n   - routing trace tests\n   - M2/M3/M5 contract tests for routed payloads"
+    },
+    {
+      "id": "04.T3",
+      "trackId": "04",
+      "tranche": "T3",
+      "title": "Cymatic / Audio Surface",
+      "effort": null,
+      "file": "04-m2-parashakti-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/04-m2-parashakti-extension.md",
+      "dependsOn": [
+        "04.T2"
+      ],
+      "writeScopes": [
+        "Body/S/S5/**",
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
+        "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+      ],
+      "body": "4. **T3 - Cymatic / Audio Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`, `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 audio-octet / nodal-quartet / profile substrate.\n\n   Deliverables:\n\n   - Own the cymatic render, audio bus inputs, and antinodal/nodal surface law.\n   - Keep the M2 surface dependent on backend-generated audio state rather than local derivation.\n\n   Verification:\n\n   - M2 audio/cymatic tests\n   - payload contract tests against profile state"
+    },
+    {
+      "id": "05.T0",
+      "trackId": "05",
+      "tranche": "T0",
+      "title": "Clock-Cosmos Primary Surface",
+      "effort": null,
+      "file": "05-m3-mahamaya-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/05-m3-mahamaya-extension.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri/**",
+        "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "1. **T0 - Clock-Cosmos Primary Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 M3 extension and shell `0` clock/runtime work.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before subsystem-page ownership is executed.\n\n   Deliverables:\n\n   - Own the primary clock-cosmos surface for M3.\n   - Keep it connected to live world-clock/kernel/runtime state rather than fixture-only views.\n\n   Verification:\n\n   - M3 extension tests\n   - world-clock consumption tests against live S3 projection"
+    },
+    {
+      "id": "05.T1",
+      "trackId": "05",
+      "tranche": "T1",
+      "title": "472-State Modal-Inversion Landscape",
+      "effort": null,
+      "file": "05-m3-mahamaya-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/05-m3-mahamaya-extension.md",
+      "dependsOn": [
+        "05.T0"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri/**",
+        "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S0/S0-CODON-ROTATION-PROJECTION-SPEC.md",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "2. **T1 - 472-State Modal-Inversion Landscape**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`, `Idea/Bimba/Seeds/S/S0/S0-CODON-ROTATION-PROJECTION-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 codon-rotation substrate and live projection paths.\n\n   Deliverables:\n\n   - Own the full 472-state modal-inversion landscape and bidirectional mapping.\n   - Keep the surface backed by backend-generated truth, not UI-local reconstruction.\n\n   Verification:\n\n   - codon rotation contract tests\n   - M3 payload tests"
+    },
+    {
+      "id": "05.T2",
+      "trackId": "05",
+      "tranche": "T2",
+      "title": "Multi-Matrix Inspector",
+      "effort": null,
+      "file": "05-m3-mahamaya-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/05-m3-mahamaya-extension.md",
+      "dependsOn": [
+        "05.T1"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri/**",
+        "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "3. **T2 - Multi-Matrix Inspector**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 surfaced only slices of the full M3 matrix architecture.\n\n   Deliverables:\n\n   - Own the summonable technical inspector for dinucleotide matrices, transformation matrices, tarot compression, and charge-space views.\n   - Keep technical depth summonable and provenance-bearing.\n\n   Verification:\n\n   - M3 inspector tests\n   - summonable depth tests"
+    },
+    {
+      "id": "05.T3",
+      "trackId": "05",
+      "tranche": "T3",
+      "title": "Janus Temporal Doorway And World-Clock Coupling",
+      "effort": null,
+      "file": "05-m3-mahamaya-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/05-m3-mahamaya-extension.md",
+      "dependsOn": [
+        "05.T2"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri/**",
+        "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+        "Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md",
+        "Idea/Pratibimba/System/**"
+      ],
+      "body": "4. **T3 - Janus Temporal Doorway And World-Clock Coupling**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`, `Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md`\n   Cycle 1 substrate inheritance: extends cycle 1 S3 shared-cosmos and gateway timing landings.\n\n   Deliverables:\n\n   - Own Janus temporal doorway behavior and its coupling to `world_clock`.\n   - Define what is kernel truth, S3 projection, and M3 render-specific transformation.\n\n   Verification:\n\n   - Janus coupling tests across kernel/S3/M3\n   - temporal doorway tests"
+    },
+    {
+      "id": "06.T0",
+      "trackId": "06",
+      "tranche": "T0",
+      "title": "Journal / Daily / Dream / Oracle Surface",
+      "effort": null,
+      "file": "06-m4-nara-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/06-m4-nara-extension.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri/**",
+        "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+        "Idea/Bimba/Seeds/M/M4'/m4-prime-nara-day-episodes-and-oracle-artifacts.md"
+      ],
+      "body": "1. **T0 - Journal / Daily / Dream / Oracle Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`, `Idea/Bimba/Seeds/M/M4'/m4-prime-nara-day-episodes-and-oracle-artifacts.md`\n   Cycle 1 substrate inheritance: extends cycle 1 Nara extension, shell `1`, and `4-5-0` preview work.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before subsystem-page ownership is executed.\n\n   Deliverables:\n\n   - Own Journal, Daily Note, Dream Journal, Oracle, flow editor, and highlight rail surfaces.\n   - Treat the shell `1` flow editor as the universal lived input for Nara functions, prompt/chat initiation, task/reminder/calendar capture, day-note capture, highlight sendoff, and review/pedagogy entry.\n   - Keep FLOW as frictionless CT0 capture and Daily Note as CT4b/Psyche organization; do not make the daily note the primary input surface.\n   - Keep shell preview versus full `4+2` subsystem depth explicit.\n\n   Verification:\n\n   - M4 extension tests\n   - shell `1` preview tests\n   - flow-to-artifact tests against real vault/day/NOW paths"
+    },
+    {
+      "id": "06.T1",
+      "trackId": "06",
+      "tranche": "T1",
+      "title": "Personal Quaternion And Kerykeion Source",
+      "effort": null,
+      "file": "06-m4-nara-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/06-m4-nara-extension.md",
+      "dependsOn": [
+        "06.T0"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri/**",
+        "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md"
+      ],
+      "body": "2. **T1 - Personal Quaternion And Kerykeion Source**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 personal-identity substrate and protected-handle rendering.\n\n   Deliverables:\n\n   - Own the M4-4-4-4 personal quaternion surface and Kerykeion source contract.\n   - Keep raw personal bodies out of public projection and canon surfaces.\n\n   Verification:\n\n   - personal quaternion tests\n   - protected-handle tests"
+    },
+    {
+      "id": "06.T2",
+      "trackId": "06",
+      "tranche": "T2",
+      "title": "Psychoid-Cymatic Field And Resonance Surface",
+      "effort": null,
+      "file": "06-m4-nara-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/06-m4-nara-extension.md",
+      "dependsOn": [
+        "06.T1"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri/**",
+        "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+        "Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md"
+      ],
+      "body": "3. **T2 - Psychoid-Cymatic Field And Resonance Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`, `Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md`\n   Cycle 1 substrate inheritance: extends cycle 1 resonance/profile substrate and privacy-first `4-5-0` work.\n\n   Deliverables:\n\n   - Own the psychoid-cymatic field, resonance computation, and summonable deep inspection.\n   - Keep the field provenance-bearing and privacy-safe.\n\n   Verification:\n\n   - field/render tests\n   - provenance/privacy tests"
+    },
+    {
+      "id": "06.T3",
+      "trackId": "06",
+      "tranche": "T3",
+      "title": "Day Episodes, Artifact Graph, And Dialogic Voice",
+      "effort": null,
+      "file": "06-m4-nara-extension.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/06-m4-nara-extension.md",
+      "dependsOn": [
+        "06.T2"
+      ],
+      "writeScopes": [
+        "Body/M/epi-tauri/**",
+        "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+        "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md"
+      ],
+      "body": "4. **T3 - Day Episodes, Artifact Graph, And Dialogic Voice**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`, `Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md`\n   Cycle 1 substrate inheritance: extends cycle 1 day-episode, voice-governance, and agentic mediation work.\n\n   Deliverables:\n\n   - Own day episodes, artifact graph, and dialogic voice pipeline surfaces.\n   - Route flow highlights and conversational turns into typed envelopes carrying source range, DAY/NOW/session, privacy class, coordinate handles, and review destination.\n   - Keep parser/dialogue split, consent, and M5 review boundary explicit.\n\n   Verification:\n\n   - day-episode tests\n   - dialogic voice governance tests"
+    },
+    {
+      "id": "07.T0",
+      "trackId": "07",
+      "tranche": "T0",
+      "title": "Sixfold M5 Surface Owner Map",
+      "effort": null,
+      "file": "07-m5-epii-extension-and-agentic-ide.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/07-m5-epii-extension-and-agentic-ide.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "1. **T0 - Sixfold M5 Surface Owner Map**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 M0/M5 chrome, workbench, and Agentic Control Room landings.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before the M5 product surface is executed.\n\n   Deliverables:\n\n   - Own the sixfold M5 surface map: M5-0 through M5-5.\n   - Keep shell/chrome versus extension/plugin responsibilities explicit.\n\n   Verification:\n\n   - M5 surface map tests in the workbench packages\n   - shell/workbench contract tests"
+    },
+    {
+      "id": "07.T1",
+      "trackId": "07",
+      "tranche": "T1",
+      "title": "Library / Gnosis Surface",
+      "effort": null,
+      "file": "07-m5-epii-extension-and-agentic-ide.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/07-m5-epii-extension-and-agentic-ide.md",
+      "dependsOn": [
+        "07.T0"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "2. **T1 - Library / Gnosis Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 gnosis and kbase substrate already consumed by M5.\n\n   Deliverables:\n\n   - Own the M5-0 library surface, Gnosis namespace, and kbase entry flows.\n   - Keep source/graph/review provenance explicit.\n\n   Verification:\n\n   - library/gnosis tests\n   - namespace payload tests"
+    },
+    {
+      "id": "07.T2",
+      "trackId": "07",
+      "tranche": "T2",
+      "title": "Canon Studio",
+      "effort": null,
+      "file": "07-m5-epii-extension-and-agentic-ide.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/07-m5-epii-extension-and-agentic-ide.md",
+      "dependsOn": [
+        "07.T1"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "3. **T2 - Canon Studio**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 canon editing and Hen-routed write path.\n\n   Deliverables:\n\n   - Own the M5-1 canon studio: edit, inspect, decorate, and review philosophy/canon files.\n   - Keep direct read / Hen write discipline explicit in the UX.\n\n   Verification:\n\n   - Canon Studio tests\n   - Hen write path tests"
+    },
+    {
+      "id": "07.T3",
+      "trackId": "07",
+      "tranche": "T3",
+      "title": "Backend / Frontend Studios",
+      "effort": null,
+      "file": "07-m5-epii-extension-and-agentic-ide.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/07-m5-epii-extension-and-agentic-ide.md",
+      "dependsOn": [
+        "07.T2"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "4. **T3 - Backend / Frontend Studios**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 workbench surfaces over the S-family and shell/runtime packages.\n\n   Deliverables:\n\n   - Own M5-2 backend studio and M5-3 frontend studio as visible, inspectable product surfaces.\n   - Keep file/source/graph/test provenance explicit in every surfaced task.\n\n   Verification:\n\n   - backend/front-end studio tests\n   - workbench provenance tests"
+    },
+    {
+      "id": "07.T4",
+      "trackId": "07",
+      "tranche": "T4",
+      "title": "Agentic Control Room And Operational Capacities",
+      "effort": null,
+      "file": "07-m5-epii-extension-and-agentic-ide.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/07-m5-epii-extension-and-agentic-ide.md",
+      "dependsOn": [
+        "07.T3"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/*.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "5. **T4 - Agentic Control Room And Operational Capacities**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`, `Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/*.md`\n   Cycle 1 substrate inheritance: extends cycle 1 Agentic Control Room and M5-4 mediation e2e work.\n\n   Deliverables:\n\n   - Own M5-4 as a product surface, not a hidden mediation subsystem.\n   - Own all six operational capacity surfacings, run views, evidence panes, and review gates.\n\n   Verification:\n\n   - M5-4 mediation tests\n   - operational capacity workflow tests"
+    },
+    {
+      "id": "07.T5",
+      "trackId": "07",
+      "tranche": "T5",
+      "title": "Logos Atelier, Canon Recognition, And Recursive Validation",
+      "effort": null,
+      "file": "07-m5-epii-extension-and-agentic-ide.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/07-m5-epii-extension-and-agentic-ide.md",
+      "dependsOn": [
+        "07.T4"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Bimba/Seeds/M/M5'/m5-prime-autoresearch-self-improvement-loop.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "6. **T5 - Logos Atelier, Canon Recognition, And Recursive Validation**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`, `Idea/Bimba/Seeds/M/M5'/m5-prime-autoresearch-self-improvement-loop.md`\n   Cycle 1 substrate inheritance: extends cycle 1 review/autoresearch spine and partial etymology surfaces.\n\n   Deliverables:\n\n   - Own M5-5 Logos Atelier, canon-recognition workbench, and recursive validation surfaces.\n   - Keep contradiction registers, `137`/`Jiva-is-Siva` review law, and user-final validation explicit.\n\n   Verification:\n\n   - Logos Atelier tests\n   - recursive validation and review-gate tests"
+    },
+    {
+      "id": "08.T0",
+      "trackId": "08",
+      "tranche": "T0",
+      "title": "Composition Contract",
+      "effort": null,
+      "file": "08-integrated-1-2-3-cosmic-engine-plugin.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/08-integrated-1-2-3-cosmic-engine-plugin.md",
+      "dependsOn": [
+        "03.T0",
+        "04.T0",
+        "05.T0"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "1. **T0 - Composition Contract**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 integrated plugin scaffolding and shell `0` previews.\n\n   Dependencies:\n\n   - `03.T0` M1 primary surface must be owned.\n   - `04.T0` M2 primary surface must be owned.\n   - `05.T0` M3 primary surface must be owned.\n\n   Deliverables:\n\n   - Own the composition contract between M1, M2, and M3 inside the integrated plugin.\n   - Define shared state, readiness, and provenance surfaces.\n\n   Verification:\n\n   - integrated plugin contract tests"
+    },
+    {
+      "id": "08.T1",
+      "trackId": "08",
+      "tranche": "T1",
+      "title": "Shell `0` Product Surface",
+      "effort": null,
+      "file": "08-integrated-1-2-3-cosmic-engine-plugin.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/08-integrated-1-2-3-cosmic-engine-plugin.md",
+      "dependsOn": [
+        "08.T0"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "2. **T1 - Shell `0` Product Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 shell `0` and `1-2-3` preview work.\n\n   Deliverables:\n\n   - Own the actual shell `0` product surface as rendered by the integrated plugin.\n   - Keep it lean, current-coordinate-oriented, and backed by live runtime state.\n\n   Verification:\n\n   - shell `0` integration tests"
+    },
+    {
+      "id": "08.T2",
+      "trackId": "08",
+      "tranche": "T2",
+      "title": "Evidence, Review, And Agent Hooks",
+      "effort": null,
+      "file": "08-integrated-1-2-3-cosmic-engine-plugin.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/08-integrated-1-2-3-cosmic-engine-plugin.md",
+      "dependsOn": [
+        "08.T1"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "3. **T2 - Evidence, Review, And Agent Hooks**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 evidence/review hook work.\n\n   Deliverables:\n\n   - Own all evidence/review/agent hooks exposed by the integrated plugin.\n   - Keep every surfaced claim tied back to backend provenance and S5 review law.\n\n   Verification:\n\n   - evidence hook tests\n   - review deposit tests"
+    },
+    {
+      "id": "09.T0",
+      "trackId": "09",
+      "tranche": "T0",
+      "title": "Composition Contract",
+      "effort": null,
+      "file": "09-integrated-4-5-0-recognition-plugin.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/09-integrated-4-5-0-recognition-plugin.md",
+      "dependsOn": [
+        "02.T0",
+        "06.T0",
+        "07.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
+        "Idea/Pratibimba/System/**",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "1. **T0 - Composition Contract**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 `4-5-0` scaffolding and shell `1` preview work.\n\n   Dependencies:\n\n   - `02.T0` M0 primary surface must be owned.\n   - `06.T0` M4 primary surface must be owned.\n   - `07.T0` M5 primary surface must be owned.\n\n   Deliverables:\n\n   - Own the composition contract between M4, M5, and M0 inside the integrated plugin.\n   - Define shared state, privacy, and provenance surfaces.\n   - Preserve the split between shell `1` preview and full `4+2` recognition depth: the plugin may preview flow, review, pedagogy, and Bimba-ground handles on shell `1`, but deep Nara/Epii/M0 workbench behavior belongs in the full subsystem layer.\n\n   Verification:\n\n   - integrated plugin contract tests"
+    },
+    {
+      "id": "09.T1",
+      "trackId": "09",
+      "tranche": "T1",
+      "title": "Shell `1` Product Surface",
+      "effort": null,
+      "file": "09-integrated-4-5-0-recognition-plugin.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/09-integrated-4-5-0-recognition-plugin.md",
+      "dependsOn": [
+        "09.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Pratibimba/System/**",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "2. **T1 - Shell `1` Product Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 shell `1` and lightweight M5-4 surfacing.\n\n   Deliverables:\n\n   - Own the actual shell `1` product surface as rendered by the integrated plugin.\n   - Make shell `1` the daily lived-return surface for flow writing, Nara continuity, Epii/pedagogy entry, review signals, and Bimba-ground handles.\n   - Keep journal, pedagogy, review, and Bimba-ground previews bounded and live.\n   - Keep OmniPanel out of this role; `/` may expose operator transparency for the same sessions/runs, but it is not the 4-5-0 lived UX.\n\n   Verification:\n\n   - shell `1` integration tests\n   - tests prove shell `1` preview and `4+2` depth are separate surfaces sharing state, not duplicate implementations"
+    },
+    {
+      "id": "09.T2",
+      "trackId": "09",
+      "tranche": "T2",
+      "title": "Privacy, Consent, Review, And Recognition Hooks",
+      "effort": null,
+      "file": "09-integrated-4-5-0-recognition-plugin.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/09-integrated-4-5-0-recognition-plugin.md",
+      "dependsOn": [
+        "09.T1"
+      ],
+      "writeScopes": [
+        "Body/S/S4/**",
+        "Body/S/S5/**",
+        "Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Pratibimba/System/**",
+        "Idea/Pratibimba/System/extensions/**"
+      ],
+      "body": "3. **T2 - Privacy, Consent, Review, And Recognition Hooks**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md`, `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 privacy/review/consent/recognition hook work.\n\n   Deliverables:\n\n   - Own privacy-first rendering, consent hooks, review deposits, and canon-recognition triggers.\n   - Keep all protected-field claims provenance-bearing and review-gated.\n\n   Verification:\n\n   - privacy/consent tests\n   - review and recognition tests"
+    },
+    {
+      "id": "10.T0",
+      "trackId": "10",
+      "tranche": "T0",
+      "title": "Carrier / Agent / Subagent Registry",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "07.T4"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md"
+      ],
+      "body": "1. **T0 - Carrier / Agent / Subagent Registry**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`, `AGENTS.md`\n   Cycle 1 substrate inheritance: extends cycle 1 capability matrix and mediation substrate without pretending the ontology is already plan-owned.\n\n   Dependencies:\n\n   - `07.T4` M5-4 Agentic Control Room must be owned before the carrier and constitutional registry is executed as a product surface.\n\n   Deliverables:\n\n   - Register all six carriers, six constitutional agents, and six Aletheia subagents as first-class owners in cycle 2.\n   - Map each one to the surfaces, deposits, and review boundaries it actually governs.\n\n   Verification:\n\n   - registry/contract tests across capability matrix and agent contracts"
+    },
+    {
+      "id": "10.T1",
+      "trackId": "10",
+      "tranche": "T1",
+      "title": "[[Khora]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T0"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-0'-SPEC.md"
+      ],
+      "body": "2. **T1 - [[Khora]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4-0'-SPEC.md`\n   Cycle 1 substrate inheritance: extends command/tool membrane and session-ground surfaces already landed.\n\n   Deliverables:\n\n   - Own Khora as command/tool membrane and session-ground carrier.\n\n   Verification:\n\n   - Khora carrier tests"
+    },
+    {
+      "id": "10.T2",
+      "trackId": "10",
+      "tranche": "T2",
+      "title": "[[Hen]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T1"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-1'-SPEC.md"
+      ],
+      "body": "3. **T2 - [[Hen]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4-1'-SPEC.md`\n   Cycle 1 substrate inheritance: extends S1/Hen write gate landings already present in cycle 1.\n\n   Deliverables:\n\n   - Own Hen’s S4-side carrier role into S1' without duplicating S1' authority.\n   - Make Hen's carrier contract explicitly consume S1' diagram/MOC law: architecture packs in `Seeds`, flat World definition forms, and `World/Types` MOC canvases.\n\n   Verification:\n\n   - Hen carrier interface tests\n   - carrier tests prove S4.1' routes agent artifact form requests to S1' residency/canvas law rather than writing ad hoc diagram or MOC files"
+    },
+    {
+      "id": "10.T3",
+      "trackId": "10",
+      "tranche": "T3",
+      "title": "[[Pleroma]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T2"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-2'-SPEC.md"
+      ],
+      "body": "4. **T3 - [[Pleroma]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4-2'-SPEC.md`\n   Cycle 1 substrate inheritance: extends capability-matrix parity and bounded runtime authority already landed.\n\n   Deliverables:\n\n   - Own Pleroma as the capability substrate, skill/plugin membrane, and bounded primitive registry.\n\n   Verification:\n\n   - capability matrix parity tests"
+    },
+    {
+      "id": "10.T4",
+      "trackId": "10",
+      "tranche": "T4",
+      "title": "[[Chronos]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T3"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-3'-SPEC.md"
+      ],
+      "body": "5. **T4 - [[Chronos]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4-3'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 temporal context and shared-cosmos substrate already landed under S3/S3'.\n\n   Deliverables:\n\n   - Own Chronos as the carrier interface to Day/NOW/Kairos/session runtime.\n\n   Verification:\n\n   - Chronos carrier tests"
+    },
+    {
+      "id": "10.T5",
+      "trackId": "10",
+      "tranche": "T5",
+      "title": "[[Anima]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T4"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md"
+      ],
+      "body": "6. **T5 - [[Anima]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 VAK/orchestration, route lineage, and M5-4 mediation e2e work.\n\n   Deliverables:\n\n   - Own Anima as dispatch/orchestration/Psyche carrier rather than leaving it dissolved into generic mediation.\n\n   Verification:\n\n   - Anima orchestration tests"
+    },
+    {
+      "id": "10.T6",
+      "trackId": "10",
+      "tranche": "T6",
+      "title": "[[Aletheia]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T5"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4-5'-SPEC.md"
+      ],
+      "body": "7. **T6 - [[Aletheia]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4-5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 disclosure metadata and expert-lineage handoff work.\n\n   Deliverables:\n\n   - Own Aletheia as crystallisation/review-trigger membrane and not the whole of S5 review law.\n\n   Verification:\n\n   - Aletheia deposit/disclosure tests"
+    },
+    {
+      "id": "10.T7",
+      "trackId": "10",
+      "tranche": "T7",
+      "title": "[[Nous]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T6"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "8. **T7 - [[Nous]]**\n\n   Canonical source: `AGENTS.md`\n   Cycle 1 substrate inheritance: no explicit cycle 1 owner existed.\n\n   Deliverables:\n\n   - Own epistemic clearing and dispatch halt conditions for Nous.\n\n   Verification:\n\n   - route-stop tests for clearing mode"
+    },
+    {
+      "id": "10.T8",
+      "trackId": "10",
+      "tranche": "T8",
+      "title": "[[Logos]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T7"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "9. **T8 - [[Logos]]**\n\n   Canonical source: `AGENTS.md`\n   Cycle 1 substrate inheritance: cycle 1 planning implied Logos but never named it.\n\n   Deliverables:\n\n   - Own scoping/boundary/definition outputs for Logos.\n\n   Verification:\n\n   - planning trace tests"
+    },
+    {
+      "id": "10.T9",
+      "trackId": "10",
+      "tranche": "T9",
+      "title": "[[Eros]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T8"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "10. **T9 - [[Eros]]**\n\n   Canonical source: `AGENTS.md`\n   Cycle 1 substrate inheritance: cycle 1 execution/testing implied Eros but never named it.\n\n   Deliverables:\n\n   - Own execution/verification route semantics for Eros.\n\n   Verification:\n\n   - verification-bound route tests"
+    },
+    {
+      "id": "10.T10",
+      "trackId": "10",
+      "tranche": "T10",
+      "title": "[[Mythos]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T9"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**"
+      ],
+      "body": "11. **T10 - [[Mythos]]**\n\n   Canonical source: `AGENTS.md`\n   Cycle 1 substrate inheritance: cycle 1 debugging/patterning implied Mythos but never named it.\n\n   Deliverables:\n\n   - Own pattern diagnosis and strange-attractor naming for Mythos.\n\n   Verification:\n\n   - pattern-classification tests"
+    },
+    {
+      "id": "10.T11",
+      "trackId": "10",
+      "tranche": "T11",
+      "title": "[[Psyche]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T10"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md"
+      ],
+      "body": "12. **T11 - [[Psyche]]**\n\n   Canonical source: `AGENTS.md`, `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`\n   Cycle 1 substrate inheritance: extends continuity and session-state surfaces landed in cycle 1.\n\n   Deliverables:\n\n   - Own continuity, NOW state, and handoff semantics for Psyche.\n\n   Verification:\n\n   - continuity tests across session/handoff flows"
+    },
+    {
+      "id": "10.T12",
+      "trackId": "10",
+      "tranche": "T12",
+      "title": "[[Sophia]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T11"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md"
+      ],
+      "body": "13. **T12 - [[Sophia]]**\n\n   Canonical source: `AGENTS.md`, `Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends review/autoresearch/recursive validation substrate already landed in cycle 1.\n\n   Deliverables:\n\n   - Own synthesis, recursive review, and anti-hoarding governance for Sophia.\n\n   Verification:\n\n   - recursive-governance tests"
+    },
+    {
+      "id": "10.T13",
+      "trackId": "10",
+      "tranche": "T13",
+      "title": "[[Anansi]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T12"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md"
+      ],
+      "body": "14. **T13 - [[Anansi]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`\n   Cycle 1 substrate inheritance: no explicit cycle 1 owner existed.\n\n   Deliverables:\n\n   - Own Anansi’s disclosure-lineage role.\n\n   Verification:\n\n   - lineage tests"
+    },
+    {
+      "id": "10.T14",
+      "trackId": "10",
+      "tranche": "T14",
+      "title": "[[Moirai]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T13"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md"
+      ],
+      "body": "15. **T14 - [[Moirai]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 referenced Moirai in evidence but not as a planned owner.\n\n   Deliverables:\n\n   - Own Moirai’s rehear / Night' handoff role.\n\n   Verification:\n\n   - rehear/handoff tests"
+    },
+    {
+      "id": "10.T15",
+      "trackId": "10",
+      "tranche": "T15",
+      "title": "[[Janus]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T14"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md"
+      ],
+      "body": "16. **T15 - [[Janus]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`, `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`\n   Cycle 1 substrate inheritance: Janus was visible through M3 law but not owned.\n\n   Deliverables:\n\n   - Own Janus as temporal doorway subagent.\n\n   Verification:\n\n   - doorway tests"
+    },
+    {
+      "id": "10.T16",
+      "trackId": "10",
+      "tranche": "T16",
+      "title": "[[Mercurius]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T15"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md"
+      ],
+      "body": "17. **T16 - [[Mercurius]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`\n   Cycle 1 substrate inheritance: no explicit cycle 1 owner existed.\n\n   Deliverables:\n\n   - Own Mercurius as translation/mediation subagent.\n\n   Verification:\n\n   - translation-lineage tests"
+    },
+    {
+      "id": "10.T17",
+      "trackId": "10",
+      "tranche": "T17",
+      "title": "[[Agora]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T16"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md"
+      ],
+      "body": "18. **T17 - [[Agora]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`\n   Cycle 1 substrate inheritance: no explicit cycle 1 owner existed.\n\n   Deliverables:\n\n   - Own Agora as public/disclosure staging subagent.\n\n   Verification:\n\n   - public/current render tests"
+    },
+    {
+      "id": "10.T18",
+      "trackId": "10",
+      "tranche": "T18",
+      "title": "[[Zeithoven]]",
+      "effort": null,
+      "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+      "dependsOn": [
+        "10.T17"
+      ],
+      "writeScopes": [
+        ".omx/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md"
+      ],
+      "body": "19. **T18 - [[Zeithoven]]**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`, `Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 autoresearch pattern work implied Zeithoven but did not name it.\n\n   Deliverables:\n\n   - Own Zeithoven as pattern-detection / improvement-context subagent.\n\n   Verification:\n\n   - autoresearch pattern tests with explicit subagent attribution"
+    },
+    {
+      "id": "11.T0",
+      "trackId": "11",
+      "tranche": "T0",
+      "title": "S0 Consumed Contract Closure For Shell And OmniPanel",
+      "effort": null,
+      "file": "11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S0",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S0/S0'/S0'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S0/S0-SPEC.md"
+      ],
+      "body": "1. **T0 - S0 Consumed Contract Closure For Shell And OmniPanel**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S0/S0-SPEC.md`, `Idea/Bimba/Seeds/S/S0/S0'/S0'-SPEC.md`\n   Cycle 1 substrate inheritance: consumes cycle 1 command/readiness/profile surfaces already landed in `Body/S/S0`.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked so this track stays subordinate to actual M' consumption.\n\n   Deliverables:\n\n   - Close only the S0 contracts the M' shell actually consumes: profile, readiness, command dispatch, bridge status, bounded execution.\n   - Distinguish shell `1` flow-input commands from `/` operator/debug commands in the S0 mirror and route table.\n   - Record any still-missing shell-breaking gaps explicitly.\n\n   Verification:\n\n   - shell/OmniPanel contract tests against S0 routes\n   - negative tests prove operator/debug commands do not masquerade as Nara flow artifacts"
+    },
+    {
+      "id": "11.T1",
+      "trackId": "11",
+      "tranche": "T1",
+      "title": "S1 / Hen Full Public Surface Closure",
+      "effort": null,
+      "file": "11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "dependsOn": [
+        "11.T0"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S1/S1'/S1'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S1/S1-SPEC.md",
+        "Idea/Bimba/World/Types/{Type}/{Type}.canvas",
+        "Idea/Bimba/World/{Name}.md"
+      ],
+      "body": "2. **T1 - S1 / Hen Full Public Surface Closure**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S1/S1-SPEC.md`, `Idea/Bimba/Seeds/S/S1/S1'/S1'-SPEC.md`\n   Cycle 1 substrate inheritance: consumes cycle 1 `s1'.vault.*`, `s1'.semantic.*`, and Track 13 Hen write-gate work.\n\n   Deliverables:\n\n   - Close the M' integration of the full Hen public surface: frontmatter, residency, compile, ledger, query, injection, semantic neighbors/search/by-block, wikilink edge cases.\n   - Explicitly include `artifact_evidence`, `graph_promotion`, `relation_inference`, and `property_intelligence` surfaces where M5 and editors depend on them.\n   - Close architecture-as-documentation residency: seed-level diagram packs in `Idea/Bimba/Seeds/**`, flat World definition forms in `Idea/Bimba/World/{Name}.md`, type/MOC canvases in `Idea/Bimba/World/Types/{Type}/{Type}.canvas`, and no permanent `World/Forms/` revival.\n   - Close agent discovery guidance: M-dev/Anima/Epii/Hen agents must use `epi core knowing` plus `epi vault read/search/search-content/link-suggest` before raw grep for architecture/spec context.\n\n   Verification:\n\n   - Hen public surface tests through shell/editor/agent consumers\n   - real fixture-vault tests create or update a valid Obsidian canvas/MOC, preserve wikilinks/frontmatter, and prove the flat World form plus Type canvas relationship\n   - protocol tests or docs checks prove the M-dev and Hen/Pleroma/Epi-Logos guidance names vault CLI discovery commands and the World-vs-Seeds residency split"
+    },
+    {
+      "id": "11.T2",
+      "trackId": "11",
+      "tranche": "T2",
+      "title": "CT0-CT5 Artifact Intake, T0-T5 Family Inference, Vault Bridge, Smart Connections Sidebar",
+      "effort": null,
+      "file": "11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "dependsOn": [
+        "11.T1"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S1/S1'/S1'-SPEC.md",
+        "Idea/Bimba/World/Daily-Note.md",
+        "Idea/Bimba/World/FLOW.md"
+      ],
+      "body": "3. **T2 - CT0-CT5 Artifact Intake, T0-T5 Family Inference, Vault Bridge, Smart Connections Sidebar**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S1/S1'/S1'-SPEC.md`, `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: consumes cycle 1 Day/NOW thought-route work and semantic surfaces already landed.\n\n   Deliverables:\n\n   - Close the CT0-CT5 artifact intake pipeline through Hen for M4/M5/review flows.\n   - Treat `Idea/Bimba/World/FLOW.md` as the CT0 free-writing template and `Idea/Bimba/World/Daily-Note.md` as the CT4b day-parent organizer for shell `1` flow capture.\n   - Ensure flow-originated prompt/chat, task/reminder/calendar capture, highlight sendoff, and review/pedagogy entry become real vault/session artifacts with DAY/NOW provenance.\n   - Close T0-T5 thought family inference where M' surfaces depend on it.\n   - Close the vault-bridge + Smart Connections sidebar integration as a product-facing consumer of S1'.\n   - Route diagram/MOC production through the same CT intake and graduation path: FLOW/Present evidence to Seeds architecture pack, World definition, Type MOC canvas, then S2/S5 promotion where applicable.\n\n   Verification:\n\n   - intake tests\n   - real fixture-vault tests for FLOW-to-daily-note/task/review artifacts\n   - thought-route tests\n   - sidebar/semantic neighbor integration tests\n   - intake tests cover architecture-diagram-pack and MOC canvas artifacts as real files, not mocked placeholders"
+    },
+    {
+      "id": "11.T3",
+      "trackId": "11",
+      "tranche": "T3",
+      "title": "S2 Consumed Contract Closure For Graph Viewers And Retrieval",
+      "effort": null,
+      "file": "11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "dependsOn": [
+        "11.T2"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S2/S2'/S2'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S2/S2-SPEC.md"
+      ],
+      "body": "4. **T3 - S2 Consumed Contract Closure For Graph Viewers And Retrieval**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S2/S2-SPEC.md`, `Idea/Bimba/Seeds/S/S2/S2'/S2'-SPEC.md`\n   Cycle 1 substrate inheritance: consumes cycle 1 graph schema, graph services, and graph consumer contracts already landed.\n\n   Deliverables:\n\n   - Close only the S2 graph/retrieval surfaces the M0/M5/extensions/plugins actually consume.\n   - Record any still-missing graph consumer contracts as explicit integration gaps, not general S2 rebuild work.\n\n   Verification:\n\n   - M0/M5/graph viewer consumer tests"
+    },
+    {
+      "id": "11.T4",
+      "trackId": "11",
+      "tranche": "T4",
+      "title": "Pi-Agent Relation-Inference Relay And No-New-S-Rebuild Guardrail",
+      "effort": null,
+      "file": "11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/11-s-consumed-substrate-closure-s0-s1-s2.md",
+      "dependsOn": [
+        "11.T3"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/Legacy/plans/**",
+        "Idea/Bimba/Seeds/S/S1/S1'/S1'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S2/S2'/S2'-SPEC.md"
+      ],
+      "body": "5. **T4 - Pi-Agent Relation-Inference Relay And No-New-S-Rebuild Guardrail**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S1/S1'/S1'-SPEC.md`, `Idea/Bimba/Seeds/S/S2/S2'/S2'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 landed pieces of this behavior but never foregrounded the relay explicitly.\n\n   Deliverables:\n\n   - Close the relation-inference relay where M5/agents consume S1/S2 inference output.\n   - Add a cycle-2 guardrail: no tranche here may reopen generic S0/S1/S2 implementation unless it is a real M' integration blocker.\n   - Add a legacy-to-seed promotion guardrail: load-bearing `/docs/specs`, `/docs/plans`, and `/docs/resources` material must gain a Seed-side mirror, pointer, or traceability entry before being treated as canonical.\n\n   Verification:\n\n   - relation-inference relay tests\n   - negative fixture/guardrail tests\n   - migration guardrail fails when a tranche cites `/docs/**` as authority without an owning `Idea/Bimba/Seeds/**` wikilink or traceability entry"
+    },
+    {
+      "id": "12.T0",
+      "trackId": "12",
+      "tranche": "T0",
+      "title": "S3 Consumed Contract Closure For Shell / Bridge / Runtime",
+      "effort": null,
+      "file": "12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "dependsOn": [
+        "01.T0"
+      ],
+      "writeScopes": [
+        "Body/S/S3",
+        "Idea/Bimba/Seeds/S/S3/S3'/S3'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S3/S3-SPEC.md"
+      ],
+      "body": "1. **T0 - S3 Consumed Contract Closure For Shell / Bridge / Runtime**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S3/S3-SPEC.md`, `Idea/Bimba/Seeds/S/S3/S3'/S3'-SPEC.md`\n   Cycle 1 substrate inheritance: consumes cycle 1 gateway, SpaceTimeDB, world-clock, and Graphiti runtime landings already present in `Body/S/S3`.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked so this track stays subordinate to actual M' consumption.\n\n   Deliverables:\n\n   - Close only the S3/S3' surfaces the shell, `/body`, OmniPanel, M3, M4, and M5 actually consume.\n   - Record any still-missing projection or lifecycle contracts as integration blockers.\n\n   Verification:\n\n   - shell/bridge runtime tests against live S3 projection"
+    },
+    {
+      "id": "12.T1",
+      "trackId": "12",
+      "tranche": "T1",
+      "title": "S4 Consumed Contract Closure For M5-4 And Constitutional Surfaces",
+      "effort": null,
+      "file": "12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "dependsOn": [
+        "12.T0"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S4/S4-SPEC.md"
+      ],
+      "body": "2. **T1 - S4 Consumed Contract Closure For M5-4 And Constitutional Surfaces**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S4/S4-SPEC.md`, `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`\n   Cycle 1 substrate inheritance: consumes cycle 1 capability matrix, mediation, and VAK/orchestration substrate already landed.\n\n   Deliverables:\n\n   - Close only the S4/S4' surfaces the Agentic Control Room, constitutional agents, and integrated review surfaces consume.\n   - Record any provider-backed or capability-gated gaps explicitly.\n\n   Verification:\n\n   - M5-4 and constitutional surface tests"
+    },
+    {
+      "id": "12.T2",
+      "trackId": "12",
+      "tranche": "T2",
+      "title": "S5 Consumed Contract Closure For Review / Autoresearch / Pedagogy",
+      "effort": null,
+      "file": "12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "dependsOn": [
+        "12.T1"
+      ],
+      "writeScopes": [
+        "Body/S/S5",
+        "Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S5/S5-SPEC.md"
+      ],
+      "body": "3. **T2 - S5 Consumed Contract Closure For Review / Autoresearch / Pedagogy**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S5/S5-SPEC.md`, `Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md`\n   Cycle 1 substrate inheritance: consumes cycle 1 review/autoresearch/gnosis/agent cores already landed in `Body/S/S5`.\n\n   Deliverables:\n\n   - Close only the S5/S5' surfaces the M5 extension, integrated plugins, and shell alerts actually consume.\n   - Record any missing review/autoresearch UX contracts as explicit blockers.\n\n   Verification:\n\n   - review/autoresearch/pedagogy consumer tests"
+    },
+    {
+      "id": "12.T3",
+      "trackId": "12",
+      "tranche": "T3",
+      "title": "Day / NOW / Session / Continuation Lifecycle Closure",
+      "effort": null,
+      "file": "12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "dependsOn": [
+        "12.T2"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/S/S3/S3'/S3'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md"
+      ],
+      "body": "4. **T3 - Day / NOW / Session / Continuation Lifecycle Closure**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S3/S3'/S3'-SPEC.md`, `Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md`, `Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 landed these lifecycles as substrate, but not as a single M' integration closure track.\n\n   Deliverables:\n\n   - Close the full M' consumption path for Day/NOW/session/Continuation.\n   - Keep lifecycle truth in S3/S4/S5 while making shell/extension/plugin dependencies explicit.\n\n   Verification:\n\n   - lifecycle tests across shell, M4, M5, review, and mediation surfaces"
+    },
+    {
+      "id": "12.T4",
+      "trackId": "12",
+      "tranche": "T4",
+      "title": "No-New-S-Rebuild Guardrail",
+      "effort": null,
+      "file": "12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/12-s-consumed-substrate-closure-s3-s4-s5.md",
+      "dependsOn": [
+        "12.T3"
+      ],
+      "writeScopes": [],
+      "body": "5. **T4 - No-New-S-Rebuild Guardrail**\n\n   Canonical source: all S3/S4/S5 seeds above\n   Cycle 1 substrate inheritance: explicit reaction to the cycle 1/first-draft cycle 2 planning failure.\n\n   Deliverables:\n\n   - Add a cycle-2 guardrail: no tranche here may reopen generic S3/S4/S5 implementation unless it is a real M' integration blocker.\n   - Force every missing item to be phrased as a consumed-surface gap.\n\n   Verification:\n\n   - negative fixture/guardrail tests\n   - no generic substrate-build language remains in this track"
+    },
+    {
+      "id": "13.T0",
+      "trackId": "13",
+      "tranche": "T0",
+      "title": "Full METHOD_NAMES Inventory",
+      "effort": null,
+      "file": "13-gateway-method-completion-and-intent-routing.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/13-gateway-method-completion-and-intent-routing.md",
+      "dependsOn": [
+        "01.T2"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md"
+      ],
+      "body": "1. **T0 - Full METHOD_NAMES Inventory**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md`\n   Cycle 1 substrate inheritance: extends cycle 1 parity manifests and gateway method family work.\n\n   Dependencies:\n\n   - `01.T2` OmniPanel operator catalog and intent routing surface must be owned before method completion is closed against the product.\n\n   Deliverables:\n\n   - Inventory the full method surface and classify it by owning coordinate and product consumer.\n\n   Verification:\n\n   - parity manifest tests"
+    },
+    {
+      "id": "13.T1",
+      "trackId": "13",
+      "tranche": "T1",
+      "title": "COVERED / STUBBED / DEFERRED Classification",
+      "effort": null,
+      "file": "13-gateway-method-completion-and-intent-routing.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/13-gateway-method-completion-and-intent-routing.md",
+      "dependsOn": [
+        "13.T0"
+      ],
+      "writeScopes": [],
+      "body": "2. **T1 - COVERED / STUBBED / DEFERRED Classification**\n\n   Canonical source: all S and S' seed specs above\n   Cycle 1 substrate inheritance: converts cycle 1 parity evidence into a cycle 2 canonical register.\n\n   Deliverables:\n\n   - Classify the whole method surface as `COVERED`, `STUBBED`, or `DEFERRED`.\n   - Tie every gap to an owning cycle 2 track.\n\n   Verification:\n\n   - classification drift tests"
+    },
+    {
+      "id": "13.T2",
+      "trackId": "13",
+      "tranche": "T2",
+      "title": "Product-Native Alias To Coordinate-Native Map",
+      "effort": null,
+      "file": "13-gateway-method-completion-and-intent-routing.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/13-gateway-method-completion-and-intent-routing.md",
+      "dependsOn": [
+        "13.T1"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md"
+      ],
+      "body": "3. **T2 - Product-Native Alias To Coordinate-Native Map**\n\n   Canonical source: `Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md`, `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: preserves compatibility work already landed in cycle 1.\n\n   Deliverables:\n\n   - Own the alias map between product-native names and coordinate-native owners.\n   - Keep clients from becoming hidden authority through naming drift.\n\n   Verification:\n\n   - alias translation tests"
+    },
+    {
+      "id": "13.T3",
+      "trackId": "13",
+      "tranche": "T3",
+      "title": "OmniPanel Operator Catalog",
+      "effort": null,
+      "file": "13-gateway-method-completion-and-intent-routing.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/13-gateway-method-completion-and-intent-routing.md",
+      "dependsOn": [
+        "13.T2"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md"
+      ],
+      "body": "4. **T3 - OmniPanel Operator Catalog**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 OmniPanel work already landed in shell and `/body`.\n\n   Deliverables:\n\n   - Own the full OmniPanel operator catalog over the classified method map: sessions, direct Pi/agent chat, gateway state, logs, readiness, tools, model/config, runtime diagnostics, and development transparency.\n   - Keep `/` as an operator membrane over existing coordinate-owned methods. It must not become hidden backend authority, shell `1` flow UX, or full M5-4 Agentic Control Room.\n\n   Verification:\n\n   - command catalog tests\n   - operator transparency tests prove `/` can inspect/control sessions and agent runs without owning lived flow or deep workbench state"
+    },
+    {
+      "id": "13.T4",
+      "trackId": "13",
+      "tranche": "T4",
+      "title": "DAY / NOW / Privacy / Review Intent Routing",
+      "effort": null,
+      "file": "13-gateway-method-completion-and-intent-routing.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/13-gateway-method-completion-and-intent-routing.md",
+      "dependsOn": [
+        "13.T3"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+        "Idea/Bimba/Seeds/S/S3/S3'/S3'-SPEC.md",
+        "Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md"
+      ],
+      "body": "5. **T4 - DAY / NOW / Privacy / Review Intent Routing**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`, `Idea/Bimba/Seeds/S/S3/S3'/S3'-SPEC.md`, `Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 shell and review notification work.\n\n   Deliverables:\n\n   - Own intent routing for DAY/NOW, privacy blocks, review interrupts, deep links, shell/layout switching, and flow-originated envelopes.\n   - Route flow-originated intents from shell `1` to the correct Nara/Epii/task/day-note/review destination while preserving privacy class, source range, session, and coordinate handles.\n   - Route operator-originated intents from `/` as transparent control/debug actions, not as lived Nara artifacts unless the user explicitly promotes them.\n\n   Verification:\n\n   - intent routing tests"
+    },
+    {
+      "id": "13.T5",
+      "trackId": "13",
+      "tranche": "T5",
+      "title": "Typed Delta Backlog And Method Drift Guardrail",
+      "effort": null,
+      "file": "13-gateway-method-completion-and-intent-routing.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/13-gateway-method-completion-and-intent-routing.md",
+      "dependsOn": [
+        "13.T4"
+      ],
+      "writeScopes": [],
+      "body": "6. **T5 - Typed Delta Backlog And Method Drift Guardrail**\n\n   Canonical source: all S and S' seed specs above\n   Cycle 1 substrate inheritance: extends cycle 1 parity and guardrail direction without reopening generic S work.\n\n   Deliverables:\n\n   - Own the typed delta backlog and add a guardrail so no new method appears without owner classification.\n\n   Verification:\n\n   - negative drift tests"
+    },
+    {
+      "id": "14.T0",
+      "trackId": "14",
+      "tranche": "T0",
+      "title": "IOD Matrix",
+      "effort": null,
+      "file": "14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "dependsOn": [
+        "00.T0"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md"
+      ],
+      "body": "1. **T0 - IOD Matrix**\n\n   Canonical source: `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`\n   Cycle 1 substrate inheritance: cycle 1 distributed IOD consequences across unrelated tracks.\n\n   Dependencies:\n\n   - `00.T0` M' surface ownership matrix must exist before cross-cutting decisions are re-homed.\n\n   Deliverables:\n\n   - Re-home every `IOD-*` item into a resolved-or-carry-forward matrix with explicit owning cycle 2 track.\n\n   Verification:\n\n   - no live `IOD-*` is ownerless"
+    },
+    {
+      "id": "14.T1",
+      "trackId": "14",
+      "tranche": "T1",
+      "title": "PRD Matrix",
+      "effort": null,
+      "file": "14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "dependsOn": [
+        "14.T0"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md",
+        "Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md"
+      ],
+      "body": "2. **T1 - PRD Matrix**\n\n   Canonical source: `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`, `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md`\n   Cycle 1 substrate inheritance: cycle 1 resolved some PRD items in canon but kept them diffuse in planning.\n\n   Deliverables:\n\n   - Re-home every `PRD-*` item and lock the already-settled shell/runtime decisions.\n\n   Verification:\n\n   - no contradictory PRD guidance remains in cycle 2"
+    },
+    {
+      "id": "14.T2",
+      "trackId": "14",
+      "tranche": "T2",
+      "title": "UFV Matrix",
+      "effort": null,
+      "file": "14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "dependsOn": [
+        "14.T1"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md",
+        "Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md"
+      ],
+      "body": "3. **T2 - UFV Matrix**\n\n   Canonical source: `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`, `Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 surfaced UFV decisions through alpha gates and review work but never owned them cleanly.\n\n   Deliverables:\n\n   - Re-home every `UFV-*` item into explicit owner tracks and gates.\n\n   Verification:\n\n   - human-required gates and review tests name UFV ownership explicitly"
+    },
+    {
+      "id": "14.T3",
+      "trackId": "14",
+      "tranche": "T3",
+      "title": "DCC Contradiction Register",
+      "effort": null,
+      "file": "14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "dependsOn": [
+        "14.T2"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+      ],
+      "body": "4. **T3 - DCC Contradiction Register**\n\n   Canonical source: `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`, `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 found contradictions but kept them dispersed.\n\n   Deliverables:\n\n   - Re-home every `DCC-*` contradiction into a visible owner map.\n   - Include contradictions where `/`, shell `1`, and full `4+2` depth have been treated as interchangeable UX surfaces.\n\n   Verification:\n\n   - no contradiction remains ambient"
+    },
+    {
+      "id": "14.T4",
+      "trackId": "14",
+      "tranche": "T4",
+      "title": "Release Gate Matrix",
+      "effort": null,
+      "file": "14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "dependsOn": [
+        "14.T3"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+      ],
+      "body": "5. **T4 - Release Gate Matrix**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`, `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md`\n   Cycle 1 substrate inheritance: extends the alpha/beta/production gate work already landed in cycle 1.\n\n   Deliverables:\n\n   - Own the alpha/beta/production release-gate matrix for the real M' product.\n   - Keep release evidence tied to real runtime/backing services.\n\n   Verification:\n\n   - release gate decision-tree tests\n   - runtime/readiness gate tests"
+    },
+    {
+      "id": "14.T5",
+      "trackId": "14",
+      "tranche": "T5",
+      "title": "No-Orphan Canonical Surface Audit",
+      "effort": null,
+      "file": "14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md",
+      "dependsOn": [
+        "14.T4"
+      ],
+      "writeScopes": [
+        "Idea/Bimba/Seeds/**",
+        "Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md",
+        "Idea/Bimba/Seeds/M/**",
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md",
+        "Idea/Bimba/Seeds/S/**"
+      ],
+      "body": "6. **T5 - No-Orphan Canonical Surface Audit**\n\n   Canonical source: `Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md`, `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md`\n   Cycle 1 substrate inheritance: explicit correction to the cycle 1 planning-frame failure.\n\n   Deliverables:\n\n   - Audit that every shell surface, subsystem surface, extension, plugin, carrier, constitutional agent, subagent, lifecycle, and method family named by canon has a cycle 2 owner.\n   - Audit that shell `0`, shell `1`, `/`, and `4+2` depth remain separate surfaces with explicit owners, shared-state contracts, and no duplicate authority.\n   - Audit that shell `1` flow-writing, Nara artifact routing, task/day-note capture, prompt/chat initiation, review entry, and Epii/pedagogy entry all have real owners and real verification paths.\n   - Audit that `/` remains operator transparency for sessions, direct Pi/agent chat, gateway state, logs, readiness, tools, and config rather than the primary lived UX.\n   - Audit that every durable architecture diagram, World definition form, and Type/MOC canvas named by `Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md` has an owner, consumer, and update path across S/S' and M'.\n   - Audit that load-bearing `/docs/specs`, `/docs/plans`, and `/docs/resources` files cited by cycle 2 have Seed-side mirrors, pointers, or traceability entries under `Idea/Bimba/Seeds/S/**` or `Idea/Bimba/Seeds/M/**`.\n\n   Verification:\n\n   - final no-orphan audit against all cycle 2 tracks\n   - assessor route and index contain no uncited canonical surface\n   - no-orphan audit fails if `0/1`, `4+2`, or `/` surface law is collapsed or ownerless\n   - no-orphan audit fails if shell `1` flow-writing lacks real vault/session/review/task verification\n   - no-orphan audit fails if an architecture diagram/MOC exists only as an ambient markdown/canvas artifact without S1'/S2/M' ownership\n   - no-orphan audit fails if a canonical decision depends on `/docs/**` without a vault wikilink path inside `Idea/Bimba/Seeds/**`"
+    }
+  ]
+}

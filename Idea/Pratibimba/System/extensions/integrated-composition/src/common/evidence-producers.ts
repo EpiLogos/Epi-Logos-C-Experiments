@@ -97,7 +97,7 @@ const cosmicEngineSnapshot: EnvelopeBuilder = (input, id) => {
         false,
         readProvenanceHandles(input.profile),
         [
-            'docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md#T3',
+            'Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md#T3',
             "Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md#4.4"
         ]
     );
@@ -123,7 +123,7 @@ const routeCodonProjectionAudit: EnvelopeBuilder = (input, id) => {
         readProvenanceHandles(input.profile),
         [
             "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md#7-the-472-state-modal-inversion-landscape",
-            'docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md#T7'
+            'Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md#T7'
         ]
     );
 };
@@ -170,7 +170,7 @@ const kernelTraceHandle: EnvelopeBuilder = (input, id) => {
         false,
         readProvenanceHandles(input.profile),
         [
-            'docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md#T7-agentic-capability-and-observability-feed'
+            'Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md#T7-agentic-capability-and-observability-feed'
         ]
     );
 };
@@ -200,7 +200,7 @@ const readinessGapReport: EnvelopeBuilder = (input, id) => {
         },
         false,
         readProvenanceHandles(input.profile),
-        ['docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md#T4']
+        ['Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md#T4']
     );
 };
 

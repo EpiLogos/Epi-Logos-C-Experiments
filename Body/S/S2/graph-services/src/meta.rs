@@ -73,10 +73,10 @@ fn dataset_hash_paths(root: &Path) -> Vec<PathBuf> {
     }
 
     let mut files = Vec::new();
-    walk(&root.join("docs/datasets"), &mut files);
-    files.push(root.join("docs/datasets/deep-property-map.md"));
+    walk(&root.join("Idea/Bimba/Map/datasets"), &mut files);
+    files.push(root.join("Idea/Bimba/Map/datasets/deep-property-map.md"));
     files.push(root.join(
-        "docs/datasets/migrations/2026-05-17-bimba-scaffold-to-bimba.cypher",
+        "Idea/Bimba/Map/datasets/migrations/2026-05-17-bimba-scaffold-to-bimba.cypher",
     ));
     files.sort();
     files.dedup();

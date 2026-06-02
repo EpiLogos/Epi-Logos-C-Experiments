@@ -110,7 +110,7 @@ async fn s0_mediation_adapter_rejects_dispatch_tools_without_upstream_vak_eviden
             json!({
                 "envelope": {
                     "taskText": "dispatch without VAK ground",
-                    "artifactRefs": ["docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/13-s-sprime-modularity-and-s0-membrane-cleanup.md"],
+                    "artifactRefs": ["Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/13-s-sprime-modularity-and-s0-membrane-cleanup.md"],
                     "coordinateContext": { "source": "13.T6", "track": "13.T6" },
                     "declaredWriteScope": ["Body/S/S4/**"],
                     "actorRequest": { "actor": "admin", "intent": "test ungrounded dispatch" },

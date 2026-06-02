@@ -24,7 +24,7 @@ vendor_protocols:
 
 **Status:** Canonical-structure spec for the Nara M4-4-4-4 protected-local content layer. Specifies the file-system layout, the day-as-episode architecture, the per-artifact Graphiti episode shape, and the integration of the Quaternal Tarot and Quaternal I-Ching oracle systems from `vendors/epi-logos/skills/`.
 
-**Reading order:** Read after `M4'-SPEC.md`, `m4-prime-nara-activity-graphiti-instrument.md` (the canonical M4 branch + activity-event envelope), `m4-prime-psychoid-cymatic-field-engine.md` (especially §6.8.4.C-F + §9 temporal integration), and the Graphiti unified temporal-context-service spec at `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md`.
+**Reading order:** Read after `M4'-SPEC.md`, `m4-prime-nara-activity-graphiti-instrument.md` (the canonical M4 branch + activity-event envelope), `m4-prime-psychoid-cymatic-field-engine.md` (especially §6.8.4.C-F + §9 temporal integration), and the Graphiti unified temporal-context-service spec at `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md`.
 
 ---
 
@@ -1065,7 +1065,7 @@ The skill is responsible for writing the artifact in canonical form (per §5.1 s
 - `Idea/Bimba/Seeds/M/M4'/m4-prime-nara-activity-graphiti-instrument.md` — M4 branch structure + activity-event envelope
 - `Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md` — cymatic field engine + temporal integration + input-modality pipelines
 - `Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md` — system-shape canon + Tauri-IDE architecture
-- `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` — Graphiti bi-temporal episodic store at #4.4.4.4
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` — Graphiti bi-temporal episodic store at #4.4.4.4
 
 ### Vendor skills + protocols (canonical oracle protocols)
 - `vendors/epi-logos/skills/quaternal-tarot/SKILL.md` — Quaternal Tarot skill

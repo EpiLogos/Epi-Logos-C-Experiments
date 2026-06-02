@@ -7,7 +7,7 @@ description: Rigorous M-coordinate dataset analysis workflow. Maps Neo4j Bimba n
 
 ## Purpose
 
-Translate the Neo4j Bimba ontology datasets (nodes + relations per M-branch) into refined Functional Requirements (sub-FRs) that extend the Pillar II section of the spec (`docs/specs/epi-logos-c-spec-gemini-03-03-2026.md`).
+Translate the Neo4j Bimba ontology datasets (nodes + relations per M-branch) into refined Functional Requirements (sub-FRs) that extend the Pillar II section of the spec (`Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/epi-logos-c-spec-gemini-03-03-2026.md`).
 
 Each M-branch (M0-M5) gets a sub-FR series: **FR 2.N.0 through FR 2.N.5**, where N is the M-coordinate index. These sub-FRs define the precise C memory structures, `.rodata` layouts, bitfield semantics, pointer topologies, and operational flows dictated by the ontological content of each branch.
 
@@ -15,18 +15,18 @@ Each M-branch (M0-M5) gets a sub-FR series: **FR 2.N.0 through FR 2.N.5**, where
 
 | Input | Location | Purpose |
 |-------|----------|---------|
-| **Node dataset** | `docs/datasets/nodes_{name}.json` | Every coordinate node in the M-branch with full ontological content |
-| **Relation dataset** | `docs/datasets/relations_{name}.json` | Every edge (HAS_INTERNAL_COMPONENT, EXHIBITS_META_PATTERN, etc.) |
-| **Existing M-plan** | `docs/plans/M{N}-C-architecture.md` | Previous architectural translation (starting point, not gospel) |
-| **Spec file** | `docs/specs/epi-logos-c-spec-gemini-03-03-2026.md` | The FR 2.N top-level requirement to be decomposed |
-| **Gemini chat** | `docs/specs/gemini-planning-full-chat-03-03-2026.md` | Full design evolution context (later = more aligned, but earlier has key details) |
+| **Node dataset** | `Idea/Bimba/Map/datasets/nodes_{name}.json` | Every coordinate node in the M-branch with full ontological content |
+| **Relation dataset** | `Idea/Bimba/Map/datasets/relations_{name}.json` | Every edge (HAS_INTERNAL_COMPONENT, EXHIBITS_META_PATTERN, etc.) |
+| **Existing M-plan** | `Idea/Bimba/Seeds/M/M{N}'/Legacy/plans/M{N}-C-architecture.md` | Previous architectural translation (starting point, not gospel) |
+| **Spec file** | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/epi-logos-c-spec-gemini-03-03-2026.md` | The FR 2.N top-level requirement to be decomposed |
+| **Gemini chat** | `Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/gemini-planning-full-chat-03-03-2026.md` | Full design evolution context (later = more aligned, but earlier has key details) |
 | **CLAUDE.md** | `CLAUDE.md` | Canonical architectural invariants and struct definitions |
 | **Bimba MCP** | Live Neo4j graph access | For cross-referencing and validating coordinate relationships |
 
 ## Output
 
 A single refined document per M-branch:
-- **Location:** `docs/plans/M{N}-C-architecture.md` (update in place)
+- **Location:** `Idea/Bimba/Seeds/M/M{N}'/Legacy/plans/M{N}-C-architecture.md` (update in place)
 - **Structure:** FR 2.N.0 through FR 2.N.5, each containing:
   - **Requirement** (what the C code MUST do)
   - **Ontological Ground** (which Bimba coordinates mandate this)
@@ -41,7 +41,7 @@ A single refined document per M-branch:
 ### Phase 1: Dataset Ingestion
 1. Read the full node dataset (`nodes_{name}.json`)
 2. Read the full relation dataset (`relations_{name}.json`)
-3. Read the existing M-plan (`docs/plans/M{N}-C-architecture.md`)
+3. Read the existing M-plan (`Idea/Bimba/Seeds/M/M{N}'/Legacy/plans/M{N}-C-architecture.md`)
 4. **Extract all `formulation` fields** — for every node in the dataset, collect the `formulation` string verbatim. Formulations are FIRST-CLASS inputs: they contain precise mathematical-symbolic notation that defines the OPERATIONAL nature of each branch. Nodes are not merely descriptive metadata — they hold specific formal language definitions. Group formulations by coordinate depth and identify their formal system type (operator lexicon, arithmetic reduction, concrescence algorithm, combinatorial permutation pattern, number-theoretic formula, pronominal grammar, polarity algebra, etc.).
 5. **Surface to user:** Summary of dataset shape — node count, relation count, max depth, relation type distribution — AND a collated formulation table (coordinate → formulation string → tentative formal system type). Identify any surprising or novel structures not captured in the existing plan.
 
@@ -74,7 +74,7 @@ A single refined document per M-branch:
 15. **Surface to user:** The topology diagram and flow narrative for validation.
 
 ### Phase 5: Document Assembly
-16. Update `docs/plans/M{N}-C-architecture.md` with the refined sub-FRs
+16. Update `Idea/Bimba/Seeds/M/M{N}'/Legacy/plans/M{N}-C-architecture.md` with the refined sub-FRs
 17. **Surface to user:** Final document diff for approval before writing.
 
 ## Formulation-Awareness

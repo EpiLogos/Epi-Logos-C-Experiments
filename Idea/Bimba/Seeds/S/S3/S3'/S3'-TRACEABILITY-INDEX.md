@@ -22,11 +22,11 @@ Primary canon used for [[S3']]:
 | Source | Location | Role in conclusion |
 |---|---|---|
 | [[S3-SPEC]] | `Idea/Bimba/Seeds/S/S3/S3-SPEC.md` | Current consolidated S3/S3' target shape |
-| [[S3-S3i-GATEWAY]] | `docs/specs/S/S3-S3i-GATEWAY.md` | Formal gateway/shared-state split |
+| [[S3-S3i-GATEWAY]] | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md` | Formal gateway/shared-state split |
 | [[2026-04-10-s3i-spec-traceability-index]] | `Idea/Bimba/Seeds/S/S3/S3'/2026-04-10-s3i-spec-traceability-index.md` | Earlier S3' traceability ledger |
-| [[2026-04-04-graphiti-unified-temporal-context-service]] | `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Graphiti and temporal context planning, now clarified as S3' architecture plus S5 use |
-| [[2026-03-23-nara-clock-canonical-runtime-implementation-plan]] | `docs/plans/2026-03-23-nara-clock-canonical-runtime-implementation-plan.md` | Nara clock runtime source relevant to temporal context |
-| [[2026-03-10-nara-runtime-full-plan]] | `docs/plans/2026-03-10-nara-runtime-full-plan.md` | Nara runtime source for temporal/shared state interactions |
+| [[2026-04-04-graphiti-unified-temporal-context-service]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Graphiti and temporal context planning, now clarified as S3' architecture plus S5 use |
+| [[2026-03-23-nara-clock-canonical-runtime-implementation-plan]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-23-nara-clock-canonical-runtime-implementation-plan.md` | Nara clock runtime source relevant to temporal context |
+| [[2026-03-10-nara-runtime-full-plan]] | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-10-nara-runtime-full-plan.md` | Nara runtime source for temporal/shared state interactions |
 
 Implementation and contract anchors:
 

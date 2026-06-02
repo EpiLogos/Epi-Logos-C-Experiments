@@ -94,8 +94,8 @@ Write a seed definition at the correct family path using CT4a structure.
 
 ### 2. Translate Spec to Seed
 
-Given a spec from `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/` or
-`/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/`:
+Given a spec from `Idea/Bimba/Seeds/**/Legacy/specs/` or
+`Idea/Bimba/Seeds/**/Legacy/plans/`:
 
 1. Read the spec fully
 2. Identify which coordinate(s) it addresses

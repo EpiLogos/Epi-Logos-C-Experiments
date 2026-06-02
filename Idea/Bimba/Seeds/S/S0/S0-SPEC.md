@@ -34,6 +34,35 @@ Pointer-web correction: the harmonic pointer web is now explicitly an S0/S0' C-l
 
 After the full S0-S5 pass, S0's return task is clearer: it must make the whole [[S-SYSTEM-INDEX]] executable. The [[API]], [[Envelope]], [[TypeScript]] interfaces, `epi` command tree, gateway method manifest, and test harness should converge so every accepted S/S' capability has a coordinate-native method, typed request/response shape, envelope field home, local command mirror where appropriate, and real-functionality verification.
 
+### M' Shell Consumed Contract Closure - Cycle 2 T11.T0
+
+This closure narrows the surface to **only what the M'-Theia shell actually consumes** from S0/S0'. It is not a re-statement of the full S0 API; it pins the consumed boundary so cycle 2 M' work stays subordinate to substrate already landed in `Body/S/S0`.
+
+**Consumption pattern.** The M' shell does not call S0 directly. It consumes through the single `KernelBridgeAPI` (one Theia frontend/backend extension pair at [[Idea/Pratibimba/System/extensions/kernel-bridge]]) which bridges to the S3 gateway WebSocket. S0-rooted capabilities reach M' as `invokeCapability` dispatches whose `method:` resolves to S0/S0' API methods at the gateway. No M-extension may import raw S0 clients (enforced by Track 07 T0 contract preflight, [[Idea/Pratibimba/System/extensions/contracts/07-t0-extension-contract-preflight.md]]).
+
+**Closed contract categories.**
+
+| Category | M' surface | S0/S0' home | Verification |
+|---|---|---|---|
+| Profile | `KernelBridgeAPI.cachedProfile` + `onProfile` | `portal-core::harmonic_profile`, `s5'.harmonic_profile` family routed via gateway | `kernel-bridge-theia-boundary.test.mjs` (backend-pushed events drive compiled singleton) |
+| Readiness | `kernel-bridge-readiness` extension + 9-state taxonomy | S3 gateway `health` method + per-coordinate readiness witnesses | Readiness taxonomy fixed in `07-t0-readiness-capture-requirements.json`; states `bridge_unavailable`, `profile_missing_field`, `s2_graph_blocked`, `s3_subscription_blocked`, `s5_review_blocked`, `authority_payload_missing`, `privacy_blocked`, `degraded_but_readable`, `ready_public_current` |
+| Command dispatch | `KernelBridgeAPI.invokeCapability(request)` returning `KernelBridgeCapabilityReceipt` | S0/S0' methods reached via `request.method` through gateway WebSocket | `compiled KernelBridgeAPI exposes frontend-safe S3 stream subscriptions` |
+| Bridge status | `KernelBridgeAPI.connectionStatus` + `onConnectionChange` | `kernel-bridge-backend-service::notifyConnectionStatus` over `EPI_GATEWAY_URL` | `kernel-bridge declares a Theia frontend and backend extension boundary` |
+| Bounded execution | `s0.exec` reached only through `invokeCapability`; never invoked from a renderer | `s_4_permission_boundary` (S4'.capability_governance) gates raw execution before process spawn (cf. Decision D.5) | Permission gate is S4' authority; shell layer test surface is that `s0.exec` is never importable inside an M-extension package |
+
+**Shell `1` flow-input vs `/` operator/debug separation.**
+
+| Shell surface | Extension | S0/M' command character | Architectural lock |
+|---|---|---|---|
+| Shell `1` (daily 0/1 flow input) | [[Idea/Pratibimba/System/extensions/body-lite-surface]] | Routes typed `CrossLayoutIntent` payloads only - never calls `invokeCapability`, never reads raw gateway streams. Four canonical intents: `pratibimba.body.openControlRoom`, `pratibimba.body.openReviewItem`, `pratibimba.body.openGraphNode`, `pratibimba.body.startProtectedEntry` | Intent-only contract is enforced by source (no kernel-bridge import on the lite surface) and by privacy-class scan: `LITE_SURFACE_FORBIDDEN_PRIVACY_CLASSES` reject every protected M4.4.4.4 / journal / oracle / Graphiti raw-body class |
+| `/` OmniPanel (operator membrane) | [[Idea/Pratibimba/System/extensions/omnipanel-shell]] | Operator/debug surface that owns command catalog, capability invocation, deep-link routing, and debug/observability commands. The only place outside the deep IDE receivers that may dispatch to `KERNEL_BRIDGE_API.invokeCapability` | OmniPanel is operator membrane only - not hidden backend authority, not shell `1` replacement, not pseudo Agentic Control Room (Track 01 T2 deliverable) |
+
+**Cross-surface lock.** Shell `1` flow artifacts (journal entry, task capture, day-note capture, highlight sendoff, review entry) become real vault/session artifacts through CT0-CT5 intake (Track 11 T2) - they do not pass through `/` operator/debug commands. The forbidden-fields privacy scan ([[Idea/Pratibimba/System/extensions/body-lite-surface/tests/body-lite-surface.test.mjs]]) is the negative-test floor that proves operator/debug payload classes cannot masquerade as Nara flow artifacts.
+
+**Verification evidence (2026-06-02).** `node --test extensions/body-lite-surface/tests/body-lite-surface.test.mjs extensions/test/kernel-bridge-theia-boundary.test.mjs extensions/test/shared-bridge-fan-out.test.mjs` returns 29/29 pass: lite-surface intent-only contract (18 forbidden-key × surface combinations + 4 typed-intent payload preservation tests) plus single Theia kernel-bridge boundary + single SharedBridgeAdapter fan-out to six M-extensions.
+
+**Still-missing shell-breaking gaps.** None at this tranche scope. The pre-existing `Gaps` table (§C) lists runtime-dispatch confirmations for `s0.exec`, `s0.tool_surface`, `s0.env`, `s0'.cmux.*`; those are gateway-routing tasks owned by Track 12 T0 (S3 consumed contract closure for shell/bridge/runtime) and S4 capability-governance, not shell-breaking from the M' consumption side.
+
 ## VAK Gate
 
 - CPF: `(4.0/1-4.4/5)` - full reflective lattice held as one dispatch field.
@@ -535,8 +564,8 @@ S0 is the executable command membrane and local return surface. It is not the to
 | Required coverage | Canonical citations |
 |---|---|
 | World ontology | `Idea/Bimba/World/Types/Coordinates/S/S0/S0.md` mtime 2026-04-10 17:50:37; `Idea/Bimba/World/Types/Coordinates/S/S'/S0'/S0'.md` mtime 2026-04-10 17:50:37; shared P/CT/L corpus enumerated in [[S-SYSTEM-INDEX]] |
-| docs/specs | `docs/specs/S/S0-S0i-CLI-CORE.md` mtime 2026-05-31 16:35:19; `docs/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` mtime 2026-03-10 12:20:50; `docs/specs/S/S_Series_Master_CLI_Architecture.md` mtime 2026-03-15 00:27:10; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
-| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` mtime 2026-05-31 20:57:23; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24 |
+| docs/specs | `Idea/Bimba/Seeds/S/S0/S0'/Legacy/specs/S/S0-S0i-CLI-CORE.md` mtime 2026-05-31 16:35:19; `Idea/Bimba/Seeds/S/S0/S0'/Legacy/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` mtime 2026-03-10 12:20:50; `Idea/Bimba/Seeds/S/Legacy/specs/S/S_Series_Master_CLI_Architecture.md` mtime 2026-03-15 00:27:10; `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` mtime 2026-05-31 20:57:23; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24 |
 | Body substrate | `Body/S/S0/epi-cli/**`, `Body/S/S0/portal-core/**`, `Body/S/S0/epi-lib/**`, `Body/S/epi-kernel-contract/**`, `Body/S/S3/gateway-contract/**`, `Body/S/S4/ta-onta/S4-0p-khora/**` |
 | sibling seeds | `S0-0-SPEC.md`..`S0-5-SPEC.md`, `S0'/S0'-SPEC.md`, `S0'/S0-0'-SPEC.md`..`S0'/S0-5'-SPEC.md`, `S0-SHARD-INDEX.md`, `S0-SOURCE-INDEX.md`, `S0-HARMONIC-POINTER-WEB36-SPEC.md`, `S0-CODON-ROTATION-PROJECTION-SPEC.md` |
 | nominal tracks | Track 01 owns S0/kernel-bridge foundation implementation; Track 13 owns later S0 membrane cleanup; Track 10 names cross-cutting readiness |

@@ -18,8 +18,8 @@
  *   tick12, strand, dr_ring, m1_ananda_value, m0_archetype,
  *   shadow_degree, polar_opposite, enneadic_chamber, chamber_day_night
  *
- * Source: docs/plans/CLOCK-AND-NARA-SPECS/09-cosmic-clock-plugin-tui-spec.md
- *         docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md
+ * Source: Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/09-cosmic-clock-plugin-tui-spec.md
+ *         Idea/Bimba/Seeds/M/Legacy/specs/M/2026-03-12-cosmic-clock-full-architecture.md
  */
 
 #include "m3.h"

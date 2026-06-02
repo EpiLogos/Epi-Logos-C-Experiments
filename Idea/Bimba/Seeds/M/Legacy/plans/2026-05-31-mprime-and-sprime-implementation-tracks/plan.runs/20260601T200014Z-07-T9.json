@@ -1,0 +1,35 @@
+{
+  "runId": "20260601T200014Z-07-T9",
+  "taskId": "07.T9",
+  "startedAt": "2026-06-01T20:00:14.112Z",
+  "owner": "codex",
+  "leaseExpiresAt": "2026-06-01T22:00:14.112Z",
+  "worktree": null,
+  "task": {
+    "id": "07.T9",
+    "trackId": "07",
+    "tranche": "T9",
+    "title": "Cross-Extension Handoff To Track 08",
+    "effort": null,
+    "file": "07-m-extension-individual-tracks.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/07-m-extension-individual-tracks.md",
+    "dependsOn": [
+      "07.T8"
+    ],
+    "writeScopes": [
+      "Idea/Pratibimba/System/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -41,7 +41,7 @@ fn semantic_cache_role_is_s2_graph_authority() {
     assert_eq!(role.redis_namespace, "s2:graph:semantic");
     assert_eq!(role.embedding_dimensions, 3072);
     assert_eq!(role.embedding_version, "q-semantic-v2-3072");
-    assert_eq!(role.q_schema_version, "q-prefix-v1");
+    assert_eq!(role.q_schema_version, "q-prefix-v2");
     assert!(!role.description.contains("session"));
 }
 

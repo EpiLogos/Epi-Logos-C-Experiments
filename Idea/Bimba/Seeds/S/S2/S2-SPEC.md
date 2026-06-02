@@ -20,6 +20,8 @@ c_0_source_coordinates:
   - "[[S2'Cx]]"
   - "[[alpha_quaternionic_integration_across_M_stack]]"
   - "[[m4-prime-psychoid-cymatic-field-engine]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
 ---
 
 # S2/S2' Specification: Graph Body and Coordinate-Aware Retrieval
@@ -27,6 +29,8 @@ c_0_source_coordinates:
 ## Status
 
 This is the consolidated S2-level master specification. It replaces the older scattered [[S2]], [[S2']], [[S2'Cx]], and S2-y/S2-y' files as the build reference for the graph/cache layer.
+
+Shard specs under [[S2-SHARD-INDEX]] now consume [[S-SHARD-HARMONIZATION-PROTOCOL]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]], and [[ARCHITECTURE-DIAGRAM-PACK#Diagram 4 Cross-System Coupling]] directly. Use those shards as architecture-as-documentation contracts over the current `Body/S/S2/graph-schema`, `Body/S/S2/graph-services`, `Body/S/S2/ontology`, `Body/S/S2/external/bimba-mcp`, and [[S0]] `epi graph` mirror surfaces.
 
 S2 is the graph body: raw shared [[Neo4j]] persistence, graph schema bootstrap, coordinate seed storage, raw [[Cypher]], graph sync operations, and graph-semantic cache law. [[Redis]] / RedisVL runtime residency belongs with [[S3]] / [[S3']] Redis context, while S2 owns the graph semantic-cache namespace, payload contract, retrieval use, and graph-context semantics over that runtime substrate.
 
@@ -589,8 +593,8 @@ S2 owns graph/cache substrate and S2' owns coordinate-aware retrieval law. It mu
 | Required coverage | Canonical citations |
 |---|---|
 | World ontology | `Idea/Bimba/World/Types/Coordinates/S/S2/S2.md` mtime 2026-04-10 17:50:14; `Idea/Bimba/World/Types/Coordinates/S/S'/S2'/S2'.md` mtime 2026-04-10 17:50:48; shared P/CT/L corpus enumerated in [[S-SYSTEM-INDEX]] |
-| docs/specs | `docs/specs/S/S2-S2i-GRAPH.md` mtime 2026-05-31 16:35:19; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
-| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md` mtime 2026-05-31 20:36:57; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
+| docs/specs | `Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md` mtime 2026-05-31 16:35:19; `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md` mtime 2026-05-31 20:36:57; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
 | Body substrate | `Body/S/S2/graph-schema/**`, `Body/S/S2/graph-services/**`, `Body/S/S2/ontology/**`, `Body/S/S2/external/bimba-mcp/**`, `Body/S/S0/epi-cli/src/graph/**`, `Body/S/S3/gateway-contract/**` |
 | sibling seeds | `S2-0-SPEC.md`..`S2-5-SPEC.md`, `S2'/S2'-SPEC.md`, `S2'/S2-0'-SPEC.md`..`S2'/S2-5'-SPEC.md`, `S2-SHARD-INDEX.md`, `S2-TRACEABILITY-INDEX.md`, `S2'/S2'-TRACEABILITY-INDEX.md` |
 | nominal tracks | Track 02 owns Bimba map population/API; Track 13.T5 hardens S0 graph adapters; Track 10 carries cross-cutting gates |

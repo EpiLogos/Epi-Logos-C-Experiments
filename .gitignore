@@ -92,3 +92,4 @@ secrets.env
 .codex/skills/
 .codex/agents/
 # but NOT .codex/ itself if it contains checked-in config (e.g. AGENTS.md is already tracked)
+.pnpm-store/

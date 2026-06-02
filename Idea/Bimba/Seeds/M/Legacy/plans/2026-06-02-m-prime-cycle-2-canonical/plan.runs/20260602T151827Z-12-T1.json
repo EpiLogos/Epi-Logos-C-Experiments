@@ -1,0 +1,36 @@
+{
+  "runId": "20260602T151827Z-12-T1",
+  "taskId": "12.T1",
+  "startedAt": "2026-06-02T15:18:27.188Z",
+  "owner": "m-dev-claude",
+  "leaseExpiresAt": "2026-06-02T17:18:27.188Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T1",
+    "trackId": "12",
+    "tranche": "T1",
+    "title": "S4 Consumed Contract Closure For M5-4 And Constitutional Surfaces",
+    "effort": null,
+    "file": "12-s-consumed-substrate-closure-s3-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/12-s-consumed-substrate-closure-s3-s4-s5.md",
+    "dependsOn": [
+      "12.T0"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md",
+      "Idea/Bimba/Seeds/S/S4/S4-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

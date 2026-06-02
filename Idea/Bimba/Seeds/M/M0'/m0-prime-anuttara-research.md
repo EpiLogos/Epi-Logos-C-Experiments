@@ -17,8 +17,8 @@
 - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`
 - `docs/datasets/anuttara-deep/nodes-full-data.json`
 - `docs/datasets/anuttara-deep/relations.json`
-- `docs/specs/M/M0-anuttara-language-architecture.md`
-- `docs/plans/CLOCK-AND-NARA-SPECS/12-anuttara-m0-languification.md`
+- `Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md`
+- `Idea/Bimba/Seeds/M/M0'/Legacy/plans/CLOCK-AND-NARA-SPECS/12-anuttara-m0-languification.md`
 - `Body/S/S0/epi-lib/include/m0.h`
 - `Body/S/S0/epi-lib/src/m0.c`
 - `Body/S/S0/epi-lib/test/m0/test_m0_init.c`

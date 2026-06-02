@@ -1,6 +1,6 @@
 #!/usr/bin/env -S npx tsx
 /**
- * validate-datasets.ts — Validates docs/datasets/ JSON files against Zod schemas.
+ * validate-datasets.ts — Validates Idea/Bimba/Map/datasets/ JSON files against Zod schemas.
  *
  * Checks:
  *   1. Every node in nodes_*.json has required fields (coordinate, name)
@@ -202,7 +202,7 @@ function main(): void {
   console.log(hr("═"));
   console.log("  EPI-LOGOS DATASET VALIDATION REPORT");
   console.log("  Schemas: @epi-logos/ql-schema (Zod)");
-  console.log("  Datasets: docs/datasets/nodes_*.json, relations_*.json");
+  console.log("  Datasets: Idea/Bimba/Map/datasets/nodes_*.json, relations_*.json");
   console.log(hr("═"));
 
   if (!existsSync(DATASETS_DIR)) {

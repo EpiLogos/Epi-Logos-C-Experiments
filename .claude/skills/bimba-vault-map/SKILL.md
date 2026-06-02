@@ -36,7 +36,7 @@ This skill delegates to the existing `bimba-populate` skill for Neo4j operations
 ```
 
 That skill handles:
-1. Reading JSON datasets from `docs/datasets/`
+1. Reading JSON datasets from `Idea/Bimba/Map/datasets/`
 2. Semantic apportionment to `{family}_{n}[_{sub_n}]*_{semantic}` properties
 3. Generating Cypher files to `epi-gnostic/cypher/generated/`
 4. Human-reviewed execution against Neo4j via `cypher-shell`
@@ -66,8 +66,8 @@ Forms in World/. Flag gaps where Neo4j has nodes with no vault representation.
 ## Dataset Locations
 
 ```
-/Users/admin/Documents/Epi-Logos C Experiments/docs/datasets/nodes_hash.json
-/Users/admin/Documents/Epi-Logos C Experiments/docs/datasets/relations_hash.json
+/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Map/datasets/nodes_hash.json
+/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Map/datasets/relations_hash.json
 ```
 
 ## M-Coordinate Mapping Skill

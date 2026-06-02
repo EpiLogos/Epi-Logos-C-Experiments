@@ -180,5 +180,5 @@ Per the envelope schema's own directive:
 | `[[FLOW 2026 04 23 PARALLEL TRACKS HANDOVER]]` | Track A (bimba populate) + Track B (spine port) handover |
 | `[[FLOW 2026 04 11 S COORDINATE LATTICE SCAFFOLD]]` | S/S' full lattice (84 coordinates with names) |
 | `COORDINATE-MAP.md` | Older coordinate map — partially outdated, use for historical context |
-| `docs/plans/2026-04-23-vendor-spine-pi-port.md` | The spine port plan (completed 2026-04-24) |
+| `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-23-vendor-spine-pi-port.md` | The spine port plan (completed 2026-04-24) |
 | `[[FLOW 2026 04 24 ANIMA EPII ARCHITECTURE]]` | Anima/Epii agent split, S3' temporal runtime, PI agent API as next work |

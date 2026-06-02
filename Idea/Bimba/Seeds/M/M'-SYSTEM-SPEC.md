@@ -442,17 +442,19 @@ M' development should be live with graph and episodic memory as soon as the subs
 
 Before a development run:
 
-1. Resolve the active coordinate(s) through [[epi core knowing]] and [[S2]] coordinate resolution.
-2. Read the relevant seed/spec nodes and source traceability.
-3. Query [[S2]] graph for current canonical node state and pointer-web profile.
-4. Query [[Graphiti]] session memory for recent implementation episodes, decisions, tests, and unresolved review items.
+1. Read [[ARCHITECTURE-DIAGRAM-PACK]] for the top-layer map, cross-cutting seams, privacy gates, method ownership, and [[M']] / [[S]] / [[S']] coupling.
+2. Read this [[M'-SYSTEM-SPEC]] for umbrella [[Theia]], [[KernelBridge]], layout, and profile/current-state law.
+3. Resolve the active coordinate(s) through [[epi core knowing]] and [[S2]] coordinate resolution.
+4. Read the relevant layer seed/spec nodes and source traceability: [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], or [[M5'-SPEC]].
+5. Query [[S2]] graph for current canonical node state and pointer-web profile.
+6. Query [[Graphiti]] session memory for recent implementation episodes, decisions, tests, and unresolved review items.
 
 During the run:
 
 1. Keep code changes in Body-owned homes and spec changes in Idea-owned homes.
 2. Update seed/spec files only when the coordinate vision or implementation law changes.
 3. Use real tests as the authority for implementation claims.
-4. Deposit high-signal session events to [[Graphiti]] with DAY/NOW, session key, coordinate, files touched, tests run, and next action.
+4. Deposit high-signal session events to [[Graphiti]] with [[Day]] / [[NOW]], session key, coordinate, files touched, tests run, and next action.
 
 After the run:
 
@@ -524,24 +526,39 @@ This file is the canonical umbrella seed for [[M']]. It owns the shared Pratibim
 | `Idea/Pratibimba/System/extensions/ide-shell-m0-m5` | current Theia source | shell topology and M0-M5 layout composition |
 | `Idea/Pratibimba/System/extensions/agentic-control-room` | current Theia source | M5-4 / S4 mediation window |
 | `Idea/Pratibimba/System/extensions/acceptance-harness` | current Theia source | top-layer readiness and layout acceptance substrate |
-| `docs/specs/M/M0-anuttara-language-architecture.md` | 2026-04-04 13:46:16 | historical M0 language canon, crystallised into [[M0'-SPEC]] |
-| `docs/specs/M/M1-paramasiva-mathematical-dna.md` | 2026-03-05 14:45:32 | historical M1 math/DNA canon, crystallised into [[M1'-SPEC]] |
-| `docs/specs/M/M2-parashakti-vibrational-architecture.md` | 2026-03-05 14:45:32 | historical M2 vibrational canon, crystallised into [[M2'-SPEC]] |
-| `docs/specs/M/M3-mahamaya-symbolic-transcription.md` | 2026-04-04 13:46:16 | historical M3 symbolic canon, crystallised into [[M3'-SPEC]] |
-| `docs/specs/M/M4-nara-personal-interface.md` | 2026-04-04 13:46:16 | historical M4 interface canon, crystallised into [[M4'-SPEC]] |
-| `docs/specs/M/M4-nara-subtle-body-map.md` | 2026-04-04 13:46:16 | historical subtle-body canon, crystallised into [[M4'-SPEC]] |
-| `docs/specs/M/M5-epii-holographic-integration.md` | 2026-03-05 14:45:32 | historical M5 Epii canon, crystallised into [[M5'-SPEC]] |
-| `docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md` | 2026-04-11 11:58:00 | clock/cosmos source for M1'/M2'/M3'/M4' |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md` | 2026-06-01 18:28:40 | Theia-only recast and shell track |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/07-m-extension-individual-tracks.md` | 2026-06-01 00:23:25 | M0'..M5' nominal extension track map |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md` | 2026-06-01 00:25:11 | integrated plugin track map |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` | 2026-06-02 00:16:51 | agentic control / capacity pressure |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md` | 2026-06-02 00:17:57 | readiness status, not canon |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` | 2026-06-02 00:14:24 | current decision register |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.index.json` / `plan.state.json` | 2026-06-02 11:40:41 | ledger only; used for nominal track ownership |
+| `Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md` | 2026-04-04 13:46:16 | historical M0 language canon, crystallised into [[M0'-SPEC]] |
+| `Idea/Bimba/Seeds/M/M1'/Legacy/specs/M/M1-paramasiva-mathematical-dna.md` | 2026-03-05 14:45:32 | historical M1 math/DNA canon, crystallised into [[M1'-SPEC]] |
+| `Idea/Bimba/Seeds/M/M2'/Legacy/specs/M/M2-parashakti-vibrational-architecture.md` | 2026-03-05 14:45:32 | historical M2 vibrational canon, crystallised into [[M2'-SPEC]] |
+| `Idea/Bimba/Seeds/M/M3'/Legacy/specs/M/M3-mahamaya-symbolic-transcription.md` | 2026-04-04 13:46:16 | historical M3 symbolic canon, crystallised into [[M3'-SPEC]] |
+| `Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-nara-personal-interface.md` | 2026-04-04 13:46:16 | historical M4 interface canon, crystallised into [[M4'-SPEC]] |
+| `Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-nara-subtle-body-map.md` | 2026-04-04 13:46:16 | historical subtle-body canon, crystallised into [[M4'-SPEC]] |
+| `Idea/Bimba/Seeds/M/M5'/Legacy/specs/M/M5-epii-holographic-integration.md` | 2026-03-05 14:45:32 | historical M5 Epii canon, crystallised into [[M5'-SPEC]] |
+| `Idea/Bimba/Seeds/M/Legacy/specs/M/2026-03-12-cosmic-clock-full-architecture.md` | 2026-04-11 11:58:00 | clock/cosmos source for M1'/M2'/M3'/M4' |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md` | 2026-06-01 18:28:40 | Theia-only recast and shell track |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/07-m-extension-individual-tracks.md` | 2026-06-01 00:23:25 | M0'..M5' nominal extension track map |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md` | 2026-06-01 00:25:11 | integrated plugin track map |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` | 2026-06-02 00:16:51 | agentic control / capacity pressure |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md` | 2026-06-02 00:17:57 | readiness status, not canon |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` | 2026-06-02 00:14:24 | current decision register |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.index.json` / `plan.state.json` | 2026-06-02 11:40:41 | ledger only; used for nominal track ownership |
 
 ### Shared Privacy And Data Law
 
 M' surfaces may render `MathemeHarmonicProfile`, pointer anchors, world-clock ticks, presence summaries, profile observation handles, review handles, and governed graph/profile projections. They must not render raw journal bodies, raw dream/oracle text, raw birth data, private identity hashes, PersonalNexus payloads, private Graphiti episode bodies, or protected Nara quaternion state outside its consent boundary.
 
 The umbrella profile bridge is therefore cross-cutting infrastructure. [[M0']] may show graph topology, [[M1']] may perform relation/harmonic routes, [[M2']] may interpret harmonic meaning, [[M3']] may transcribe symbolic clock/codon state, [[M4']] may hold protected lived interface, and [[M5']] may review/promote; none of them may fork the bridge or re-home the top-layer kernel.
+
+## Canonical Reading Protocol - M'
+
+Before any implementation orchestrator scopes [[M']] work, it must read:
+
+1. [[ARCHITECTURE-DIAGRAM-PACK]] for the full [[S]] / [[S']] / [[M']] map, [[KernelBridge]] seams, gateway methods, and cross-cutting privacy/consent concerns.
+2. This [[M'-SYSTEM-SPEC]] for top-layer Theia composition, one-shell/two-layout law, shared profile bridge, and PRD-01 `Body/M/epi-tauri` deprecation.
+3. The exact layer seed: [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], or [[M5'-SPEC]].
+4. The related sibling research specs and operational-capacity specs only after the layer seed fixes the internal M'/QL breakdown.
+
+The [[M']] specs already carry their detailed internal breakdowns. This umbrella and the diagram pack may summarise them, but must not invent new [[M0']]..[[M5']] subcoordinate semantics. New terms become canonical only after being crystallised in the owning layer seed or explicitly marked as open.
+
+## Wikilink And Source Discipline - M'
+
+The high-value [[M']] intelligence surface is the wikilink graph among [[M0']], [[M1']], [[M2']], [[M3']], [[M4']], [[M5']], [[KernelBridge]], [[MathemeHarmonicProfile]], [[Day]], [[NOW]], [[Graphiti]], [[Gnosis]], [[Nara]], [[Epii]], [[S0']], [[S2']], [[S3']], [[S4']], and [[S5']]. Use literal paths for code substrate and wikilinks for semantic entities. `Body/M/epi-tauri` remains a literal migration-source path, not a semantic authority link.

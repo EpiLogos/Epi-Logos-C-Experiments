@@ -1,8 +1,8 @@
 # Body/M/epi-tauri — DEPRECATED
 
 **Status:** Deprecated 2026-06-01 (evening) — migration-source-only.
-**Authority:** [Track 05 plan body](../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md) + [m5-prime-system-shape-and-tauri-ide-canon.md §2-§3](../../../Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md) (Theia-only revision).
-**Migration inventory:** [docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md](../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md)
+**Authority:** [Track 05 plan body](../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md) + [m5-prime-system-shape-and-tauri-ide-canon.md §2-§3](../../../Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md) (Theia-only revision).
+**Migration inventory:** [Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md](../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md)
 
 > ## Do not extend this tree.
 >

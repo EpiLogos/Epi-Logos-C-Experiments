@@ -31,8 +31,8 @@ Do not skim. Do not summarise from memory. Open and read the actual files.
 ### Step 2: DECIDE CANON — Flag conflicts
 
 - **Philosophical structure** (QL positions, Sanskrit stages, Bimba-Pratibimba) → old repo World/ files
-- **Implementation truth** (current substrate, what's built) → docs/specs/ + live code
-- **Design intent** (architectural decisions) → docs/plans/
+- **Implementation truth** (current substrate, what's built) → `Idea/Bimba/Seeds/**/Legacy/specs` + live code
+- **Design intent** (architectural decisions) → `Idea/Bimba/Seeds/**/Legacy/plans`
 - **Where sources conflict** → STOP. Present both versions to user. Do not silently choose.
 
 ### Step 3: CROSS-POLLINATE FROM S4'
@@ -161,12 +161,12 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 | OLD World | OLD: `Idea/Bimba/World/S4.md` | 70 |
 | OLD Seed | OLD: `Idea/Bimba/Seeds/S/S4/S4-S4-AGENT-RUNTIME-SYSTEM.md` | 1,018 |
 | OLD Seed | OLD: `Idea/Bimba/Seeds/S/S4/S4-X-LEVELS-AGENT-ORCHESTRATION.md` | 786 |
-| Spec | `docs/specs/S/S4-S4i-PI-AGENT.md` | 201 |
-| Spec | `docs/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md` | 841 |
-| Plan | `docs/plans/2026-03-06-s4-pi-agent-foundation.md` | 772 |
-| Plan | `docs/plans/2026-03-07-s4-plugin-foundation-phase1-phase2.md` | 330 |
-| Resource | `docs/resources/S/ta-onta-anima-superpowers-vak-integration-spec.md` | 513 |
-| Resource | `docs/resources/S/2026-02-23-pi-harness-customization-reference-for-ta-onta.md` | 425 |
+| Spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4-S4i-PI-AGENT.md` | 201 |
+| Spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md` | 841 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-06-s4-pi-agent-foundation.md` | 772 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-07-s4-plugin-foundation-phase1-phase2.md` | 330 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/ta-onta-anima-superpowers-vak-integration-spec.md` | 513 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-23-pi-harness-customization-reference-for-ta-onta.md` | 425 |
 | Live | `.pi/extensions/ta-onta/anima/extension.ts` | 352 |
 | Live | `.pi/extensions/ta-onta/anima/CONTRACT.md` | 200 |
 | Deprecated | `Idea/Bimba/World/s-deprecated/S4.md` | 70 |
@@ -176,15 +176,15 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 |--------|------|-------|
 | OLD World | OLD: `Idea/Bimba/World/S4'.md` | 137 |
 | OLD World | OLD: `Idea/Bimba/World/S4'Cx.md` | 362 |
-| Spec | `docs/specs/S/S4/S4-EXTENSION-ARCHITECTURE.md` | 418 |
-| Spec | `docs/specs/S/S4/S4-TA-ONTA-EXTENSION-SPEC.md` | 919 |
-| Spec | `docs/specs/S/S4/S4-NOW-INTEGRATION-AND-ENVIRONMENT.md` | 683 |
-| Plan | `docs/plans/2026-03-10-ta-onta-full-implementation.md` | 3,856 |
-| Plan | `docs/plans/2026-03-07-s4-prime-pleroma-real-port-plan.md` | 733 |
-| Plan | `docs/plans/2026-04-02-native-pi-epi-agent-convergence.md` | 619 |
-| Plan | `docs/plans/2026-04-03-omx-pleroma-claw-runtime-migration.md` | 388 |
-| Resource | `docs/resources/S/2026-02-24-ta-onta-us003-us010-deep-grounding-implementation.md` | 341 |
-| Resource | `docs/resources/S/2026-02-25-ta-onta-full-architecture-conformance-remediation-plan.md` | 299 |
+| Spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-EXTENSION-ARCHITECTURE.md` | 418 |
+| Spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-TA-ONTA-EXTENSION-SPEC.md` | 919 |
+| Spec | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-NOW-INTEGRATION-AND-ENVIRONMENT.md` | 683 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-ta-onta-full-implementation.md` | 3,856 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-07-s4-prime-pleroma-real-port-plan.md` | 733 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-02-native-pi-epi-agent-convergence.md` | 619 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-03-omx-pleroma-claw-runtime-migration.md` | 388 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-24-ta-onta-us003-us010-deep-grounding-implementation.md` | 341 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-25-ta-onta-full-architecture-conformance-remediation-plan.md` | 299 |
 | Prompt | `docs/prompts/ta-onta-dev-session.md` | 299 |
 | Live | `.pi/extensions/ta-onta/` (all 6 extension.ts + CONTRACT.md files) | ~3,000+ |
 | Deprecated | `Idea/Bimba/World/s-deprecated/S4'.md` | 137 |
@@ -197,13 +197,13 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 |--------|------|-------|
 | OLD World | OLD: `Idea/Bimba/World/S0.md` | ~70 |
 | OLD World | OLD: `Idea/Bimba/World/S0'Cx.md` | ~362 |
-| Spec | `docs/specs/S/S0-S0i-CLI-CORE.md` | 59 |
-| Spec | `docs/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` | 345 |
-| Spec | `docs/specs/S/S_Series_Master_CLI_Architecture.md` | 131 |
-| Plan | `docs/plans/2026-03-05-epi-cli-design.md` | 459 |
-| Plan | `docs/plans/2026-03-05-epi-cli-expansion.md` | 720 |
-| Plan | `docs/plans/2026-03-07-epi-logos-lib-packaging.md` | 720 |
-| Plan | `docs/plans/2026-03-07-qv-pipeline-plugin.md` | 1,114 |
+| Spec | `Idea/Bimba/Seeds/S/S0/S0'/Legacy/specs/S/S0-S0i-CLI-CORE.md` | 59 |
+| Spec | `Idea/Bimba/Seeds/S/S0/S0'/Legacy/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` | 345 |
+| Spec | `Idea/Bimba/Seeds/S/Legacy/specs/S/S_Series_Master_CLI_Architecture.md` | 131 |
+| Plan | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-05-epi-cli-design.md` | 459 |
+| Plan | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-05-epi-cli-expansion.md` | 720 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-07-epi-logos-lib-packaging.md` | 720 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-07-qv-pipeline-plugin.md` | 1,114 |
 | Dev | `docs/dev/S0'/README.md` | 384 |
 | Live | `epi-cli/src/` + `epi-lib/` | (Rust + C) |
 | Deprecated | `Idea/Bimba/World/s-deprecated/S0.md` | ~70 |
@@ -213,7 +213,7 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 |--------|------|-------|
 | OLD World | OLD: `Idea/Bimba/World/S0'.md` | ~137 |
 | Dev | `docs/dev/S0'/README.md` | 384 |
-| Resource | `docs/resources/S/2026-02-28-coordinate-type-system-and-reflection-families.md` | 606 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-28-coordinate-type-system-and-reflection-families.md` | 606 |
 | Live | `.pi/extensions/ta-onta/khora/extension.ts` | 217 |
 | Live | `.pi/extensions/ta-onta/khora/CONTRACT.md` | 161 |
 
@@ -223,12 +223,12 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 | Source | Path | Lines |
 |--------|------|-------|
 | OLD World | OLD: `Idea/Bimba/World/S1.md` | ~160 (BEST QUALITY) |
-| Spec | `docs/specs/S/S1-S1i-OBSIDIAN.md` | 428 |
-| Plan | `docs/plans/2026-03-07-s1-s2-implementation-plan.md` | 2,182 |
-| Plan | `docs/plans/2026-03-10-idea-tree-and-ct-templates.md` | 134 |
-| Plan | `docs/plans/2026-03-10-world-types-mirror.md` | 94 |
+| Spec | `Idea/Bimba/Seeds/S/S1/S1'/Legacy/specs/S/S1-S1i-OBSIDIAN.md` | 428 |
+| Plan | `Idea/Bimba/Seeds/S/S1/S1'/Legacy/plans/2026-03-07-s1-s2-implementation-plan.md` | 2,182 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-idea-tree-and-ct-templates.md` | 134 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-world-types-mirror.md` | 94 |
 | Resource | `docs/resources/TO-C-Dev-REPO/MOC planning/` | (all files) |
-| Resource | `docs/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` | 1,664 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` | 1,664 |
 | Live | `epi-cli/src/vault/` | (Rust) |
 
 **S1' (Content API — monadological mapping)**
@@ -245,14 +245,14 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 | Source | Path | Lines |
 |--------|------|-------|
 | OLD World | OLD: `Idea/Bimba/World/S2.md` | ~70 |
-| Spec | `docs/specs/S/S2-S2i-GRAPH.md` | 576 |
-| Plan | `docs/plans/2026-03-07-s1-s2-implementation-plan.md` | 2,182 |
-| Plan | `docs/plans/2026-03-08-knowing-graph-convergence-plan.md` | 336 |
-| Plan | `docs/plans/2026-03-10-semantic-graph-lifecycle.md` | 175 |
-| Resource | `docs/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` | 1,664 |
-| Superpowers | `docs/superpowers/specs/2026-04-03-gnostic-rag-anything-migration-design.md` | 247 |
-| Superpowers | `docs/superpowers/specs/2026-04-04-neo4j-m-branch-coordinate-schema-population-design.md` | 453 |
-| Plan | `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | 1,216 |
+| Spec | `Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md` | 576 |
+| Plan | `Idea/Bimba/Seeds/S/S1/S1'/Legacy/plans/2026-03-07-s1-s2-implementation-plan.md` | 2,182 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-08-knowing-graph-convergence-plan.md` | 336 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-semantic-graph-lifecycle.md` | 175 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` | 1,664 |
+| Superpowers | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/superpowers/specs/2026-04-03-gnostic-rag-anything-migration-design.md` | 247 |
+| Superpowers | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/superpowers/specs/2026-04-04-neo4j-m-branch-coordinate-schema-population-design.md` | 453 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | 1,216 |
 | Live | `epi-gnostic/` | (Python) |
 
 **S2' (Graph Traversal API)**
@@ -269,14 +269,14 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 | Source | Path | Lines |
 |--------|------|-------|
 | OLD World | OLD: `Idea/Bimba/World/S3.md` | ~70 |
-| Spec | `docs/specs/S/S3-S3i-GATEWAY.md` | 859 |
-| Plan | `docs/plans/2026-03-07-s3-gateway-full-implementation.md` | 943 |
-| Plan | `docs/plans/2026-03-10-full-gateway-functionality-plan.md` | 724 |
-| Plan | `docs/plans/2026-03-07-s3-electron-verification-notes.md` | 76 |
+| Spec | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md` | 859 |
+| Plan | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-07-s3-gateway-full-implementation.md` | 943 |
+| Plan | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-full-gateway-functionality-plan.md` | 724 |
+| Plan | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-07-s3-electron-verification-notes.md` | 76 |
 | Dev | `docs/dev/S3/README.md` | 252 |
-| Resource | `docs/resources/S/2026-02-11-omnipanel-gateway-parity-plan.md` | 409 |
-| Resource | `docs/resources/S/2026-02-17-omnipanel-gateway-state-architecture-plan.md` | 263 |
-| Resource | `docs/resources/S/VAK-HANDOVER.md` | 343 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-11-omnipanel-gateway-parity-plan.md` | 409 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-17-omnipanel-gateway-state-architecture-plan.md` | 263 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/VAK-HANDOVER.md` | 343 |
 | Live | `epi-cli/src/gate/` | (Rust) |
 
 **S3' (Gateway API)**
@@ -293,9 +293,9 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 | Source | Path | Lines |
 |--------|------|-------|
 | OLD World | OLD: `Idea/Bimba/World/S5.md` | ~70 |
-| Spec | `docs/specs/S/S5-S5i-SYNC.md` | 179 |
-| Resource | `docs/resources/S/2026-02-21-epii-corpus-ingestion-plan.md` | 1,723 |
-| Resource | `docs/resources/S/2026-02-21-epii-corpus-ingestion-design.md` | 330 |
+| Spec | `Idea/Bimba/Seeds/S/S5/S5'/Legacy/specs/S/S5-S5i-SYNC.md` | 179 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-21-epii-corpus-ingestion-plan.md` | 1,723 |
+| Resource | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-21-epii-corpus-ingestion-design.md` | 330 |
 
 **S5' (Pedagogical Crystallisation)**
 | Source | Path | Lines |
@@ -309,10 +309,10 @@ unless marked OLD: (which means `/Users/admin/Documents/Epi-Logos/`).
 
 | Source | Path | Lines |
 |--------|------|-------|
-| Stack integration | `docs/specs/S/S-STACK-INTEGRATION.md` | 172 |
-| Canonical system | `docs/resources/S/2026-02-26-epi-logos-canonical-system-plan.md` | 1,661 |
-| VAK integration | `docs/resources/S/VAK-SUPERPOWERS-INTEGRATION-SPEC.md` | 2,282 |
-| Type system | `docs/resources/S/2026-02-28-coordinate-type-system-and-reflection-families.md` | 606 |
+| Stack integration | `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` | 172 |
+| Canonical system | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-26-epi-logos-canonical-system-plan.md` | 1,661 |
+| VAK integration | `Idea/Bimba/Seeds/S/Legacy/resources/S/VAK-SUPERPOWERS-INTEGRATION-SPEC.md` | 2,282 |
+| Type system | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-28-coordinate-type-system-and-reflection-families.md` | 606 |
 | Coordinate map | OLD: `Idea/Empty/COORDINATE-MAP.md` | 309 |
 | Coord semantics | OLD: `Idea/Empty/coordinate-semantics.md` | 243 |
 | QL reference | `docs/resources/updated-ql-mef/epi_logos_coordinate_system.md` | 616 |

@@ -5,7 +5,7 @@
 **Working paper, QL / Epi-Logos project**
 **Date:** 2026-05-29
 **Sibling paper:** [`alpha_rasa_bridge_ql.md`](alpha_rasa_bridge_ql.md) — the α-rasa physical-symbolic bridge
-**Holding context:** [`docs/plans/CLOCK-AND-NARA-SPECS/TEMP-mahamaya-clock-aural-field-integration.md`](../../../../../docs/plans/CLOCK-AND-NARA-SPECS/TEMP-mahamaya-clock-aural-field-integration.md) — three-quaternion architecture, bioquaternion, Diamond-QL Vitruvian rendering, 9:8 epogdoon at the planetary-chakral bridge
+**Holding context:** [`Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/TEMP-mahamaya-clock-aural-field-integration.md`](../../../../../Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/TEMP-mahamaya-clock-aural-field-integration.md) — three-quaternion architecture, bioquaternion, Diamond-QL Vitruvian rendering, 9:8 epogdoon at the planetary-chakral bridge
 
 ---
 
@@ -578,7 +578,7 @@ The four-power table cross-reads to the four levels of speech (Supreme/Intuitive
 
 ##### §6.8.4.C Graphiti subgraph topology rooted at #4.4.4.4
 
-Per `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` §IX and §XVII, the Graphiti episodic store roots at #4.4.4.4 with a precise data model:
+Per `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` §IX and §XVII, the Graphiti episodic store roots at #4.4.4.4 with a precise data model:
 
 - **Root node**: `Pratibimba:PersonalNexus` carrying `{coordinate: "4.4.4.4", quintessence_hash, tick12_home, degree_home, sun_decan_natal, live_quaternion[4]}`. UUID = `derive_uuid(quintessence_hash + b"4.4.4.4")` (see §11.4 below for the quaternionic reframe of `quintessence_hash`).
 - **Single `BEDROCK` edge**: `(Pratibimba:PersonalNexus) -[:BEDROCK]→ (Bimba:Coordinate {coordinate:"#4"})`. This is the **only** edge into the canonical Bimba namespace from Graphiti. All other M0–M5 coordinate references are carried as scalar properties (`bimba_coordinate_ref`), not as graph edges. This is the structural privacy seal.
@@ -848,7 +848,7 @@ The Epi-Logos repo already commits to SpaceTimeDB at S3':
 - **`Body/S/S3/epi-spacetime-module/src/lib.rs`** — live WASM module pinning `spacetimedb = "=2.2.0"`, with `KairosSurface`, `SessionSurface`, `GlobalTemporalSurface` tables and reducers already defined
 - **`Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`** — Rust gateway client (REST + partially-built native WebSocket subscription stub gated behind `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket`)
 - **`Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`** — Tauri-side handle with `ClockPresenceRow` and `KairosSnapshot` shapes
-- **`docs/specs/S/S3-S3i-GATEWAY.md`** §III — canonical two-plane decision: **Plane A (Gateway)** = imperative RPC ("do X now"); **Plane B (Universal NOW)** = SpaceTimeDB declarative subscriptions ("show what is true for all participants right now")
+- **`Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md`** §III — canonical two-plane decision: **Plane A (Gateway)** = imperative RPC ("do X now"); **Plane B (Universal NOW)** = SpaceTimeDB declarative subscriptions ("show what is true for all participants right now")
 
 The work that remains is **completing the bridge** (REST → native WebSocket subscriptions), **adding the shared-cosmos tables** (world_clock, pratibimba_presence, shared_archetype_event, coincidence), and **reframing identity signatures as quaternionic** (per §11.4 below).
 
@@ -1162,8 +1162,8 @@ Past those three milestones, the architecture has been proved at the layer that 
 - `M4'-SPEC` §7 (personal-quaternion at M4-4-4-4)
 - `m4-prime-nara-activity-graphiti-instrument.md`: full M4-1 through M4-5 sub-coordinate structure, three-quaternion composition, activity-event envelope, lens-shelf at #4.4
 - `docs/datasets/nara-deep/nodes-full-detail.json`, `relations.json`: #4.4 lens definitions, #4.4.4 internal 6-fold structure, #4.4.4.4 lifeworld position
-- `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md`: Graphiti @ #4.4.4.4 canonical spec, PersonalNexus + BEDROCK edge, episode typing, Saga structure
-- `docs/specs/S/S3-S3i-GATEWAY.md`: canonical S3/S3' two-plane spec (gateway imperative + SpaceTimeDB declarative)
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md`: Graphiti @ #4.4.4.4 canonical spec, PersonalNexus + BEDROCK edge, episode typing, Saga structure
+- `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md`: canonical S3/S3' two-plane spec (gateway imperative + SpaceTimeDB declarative)
 - `Body/S/S3/epi-spacetime-module/src/lib.rs`: live SpaceTimeDB module with KairosSurface / SessionSurface / GlobalTemporalSurface and bind_* reducers
 - `Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`: Rust gateway client (REST + native WebSocket stub)
 - `Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`: Tauri-side handle with ClockPresenceRow / KairosSnapshot

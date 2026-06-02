@@ -1343,7 +1343,7 @@ fn knowing_hash_op(json: bool) -> color_eyre::Result<()> {
     });
 
     // Try loading rich data from nodes_hash.json
-    let dataset_path = project_root().map(|p| p.join("docs/datasets/low-detail/nodes_hash.json"));
+    let dataset_path = project_root().map(|p| p.join("Idea/Bimba/Map/datasets/low-detail/nodes_hash.json"));
     let mut root_description: Option<String> = None;
     let mut root_core_nature: Option<String> = None;
     let mut help_topics: Vec<(String, String, String)> = Vec::new(); // (coord, name, coreNature)
@@ -1564,7 +1564,7 @@ fn knowing_subbranch(raw: &str, json: bool) -> color_eyre::Result<()> {
     } else {
         dataset_filename(root.unwrap_or(0))
     };
-    let dataset_path = project_root().map(|p| p.join("docs/datasets").join(dataset_file));
+    let dataset_path = project_root().map(|p| p.join("Idea/Bimba/Map/datasets").join(dataset_file));
 
     let mut node_name: Option<String> = None;
     let mut node_essence: Option<String> = None;

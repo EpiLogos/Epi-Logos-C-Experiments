@@ -1,9 +1,92 @@
 use serde::{Deserialize, Serialize};
 
-use epi_s3_gateway_contract::SessionPatch;
+use epi_s3_gateway_contract::{
+    method_dispatch_plan, method_dispatch_plan_entry, MethodDispatchKind, MethodDispatchPlanEntry,
+    SessionPatch, METHOD_DISPATCH_PLAN, METHOD_NAMES,
+};
 use portal_core::VakAddress;
 
 use crate::{transcripts, SessionStore};
+
+// =============== 13.T2: S3-owned route ownership re-exports ===============
+//
+// Per Track 13 Tranche T2 (plan section 13.3 lines 73–91), S3 owns the
+// **route law** for every method in the gateway contract. The plan
+// articulates this with two complementary surfaces:
+//
+// 1. [`GatewayDispatchRoute`] / [`classify_method`] (already in this module)
+//    — the in-process route metadata consumed by the S0 gateway host process
+//    (server.rs) to determine ownership for an inbound RPC frame.
+// 2. [`MethodDispatchKind`] / [`MethodDispatchPlanEntry`] (in the
+//    `epi_s3_gateway_contract` crate) — the executable dispatch-plan
+//    contract that names, for every entry in `METHOD_NAMES`, exactly which
+//    substrate owns the law.
+//
+// These re-exports let downstream callers (S0 server.rs, the M3' kernel
+// bridge, etc.) reach both surfaces through the S3 gateway crate without
+// independently importing the contract crate — preserving the rule that S0
+// MUST NOT maintain a parallel route table.
+//
+// The staged extraction boundary: **S0 currently hosts the process, S3 owns
+// route law.** S0 is allowed to run the Tokio listener, the WebSocket
+// upgrade, and the per-frame dispatch loop in `gate::server::dispatch_rpc`;
+// it is NOT allowed to maintain a parallel route-ownership table.
+pub use epi_s3_gateway_contract::{
+    method_dispatch_plan as contract_method_dispatch_plan,
+    method_dispatch_plan_entry as contract_method_dispatch_plan_entry, MethodDispatchKind as DispatchKind,
+    MethodDispatchPlanEntry as DispatchPlanEntry,
+};
+
+/// Return the executable S3-owned dispatch-plan contract: for every method
+/// in [`METHOD_NAMES`], the substrate that owns the law and the authority
+/// path that executes it. This is the canonical surface that S0
+/// `gate::server::dispatch_rpc` MUST consult — and the only surface allowed
+/// to declare route ownership for product methods.
+pub fn dispatch_plan() -> &'static [MethodDispatchPlanEntry] {
+    method_dispatch_plan()
+}
+
+/// Look up the executable dispatch-plan entry for a method name. Returns
+/// `None` for methods absent from [`METHOD_NAMES`]; downstream callers (S0
+/// server.rs, observability tools, debug ops) MUST treat that as a contract
+/// violation.
+pub fn dispatch_plan_entry(method: &str) -> Option<&'static MethodDispatchPlanEntry> {
+    method_dispatch_plan_entry(method)
+}
+
+/// Resolve only the dispatch *kind* for a method name. Convenience helper for
+/// S0 dispatch logging and for hosts that need the substrate identity but
+/// not the full plan entry.
+pub fn dispatch_kind(method: &str) -> Option<MethodDispatchKind> {
+    method_dispatch_plan_entry(method).map(|entry| entry.kind)
+}
+
+/// Sanity surface used by `tests/dispatch_contract.rs`: enumerate every
+/// method that the legacy `classify_method` route table covers BUT the
+/// executable dispatch-plan does NOT. The two surfaces are required to agree
+/// 1:1 for product methods (the legacy table additionally accepts the
+/// `nara.*` prefix extension which the contract list does not enumerate).
+pub fn methods_in_route_table_missing_from_dispatch_plan() -> Vec<&'static str> {
+    METHOD_NAMES
+        .iter()
+        .copied()
+        .filter(|method| {
+            classify_method(method).is_some() && method_dispatch_plan_entry(method).is_none()
+        })
+        .collect()
+}
+
+/// Inverse of [`methods_in_route_table_missing_from_dispatch_plan`]: methods
+/// in the dispatch-plan that lack a [`GatewayDispatchRoute`]. Used by the
+/// regression test to assert S0 cannot dispatch a method the gateway crate's
+/// `classify_method` doesn't recognise.
+pub fn methods_in_dispatch_plan_missing_from_route_table() -> Vec<&'static str> {
+    METHOD_DISPATCH_PLAN
+        .iter()
+        .filter(|entry| classify_method(entry.method).is_none())
+        .map(|entry| entry.method)
+        .collect()
+}
 
 /// Request payload for `route_anima_invoke` — the multi-session endpoint that
 /// lets a constitutional agent (Anima today, Epii via the same mechanism per

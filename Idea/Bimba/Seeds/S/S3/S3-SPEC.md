@@ -21,6 +21,8 @@ c_0_source_coordinates:
   - "[[S3]]"
   - "[[S3']]"
   - "[[S3'Cx]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
   - "[[alpha_quaternionic_integration_across_M_stack]]"
   - "[[m4-prime-psychoid-cymatic-field-engine]]"
 ---
@@ -30,6 +32,8 @@ c_0_source_coordinates:
 ## Status
 
 This is the consolidated S3-level master specification. It replaces the older scattered [[S3]], [[S3']], [[S3'Cx]], and S3-y/S3-y' files as the build reference for the gateway/runtime layer.
+
+Architecture diagrams consumed by this spec and its shards are [[ARCHITECTURE-DIAGRAM-PACK#Diagram 1 System Landscape]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 4 Cross-System Coupling]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 5 Implementation Reality vs Canon]], and [[ARCHITECTURE-DIAGRAM-PACK#Diagram And MOC Residency Protocol]]. Shard-level work must follow [[S-SHARD-HARMONIZATION-PROTOCOL]] and keep the S3/S3' canvases under `Idea/Bimba/World/Types/Coordinates/S/**` as MOC/type surfaces rather than Seed substitutes.
 
 S3 is the imperative gateway control plane: [[WebSocket]] / [[RPC]] transport, protocol handshake, request/response frames, session authority, channel routing, chat/agent/config/cron/skills/device/node/browser/approval/log surfaces, event fanout, and [[OmniPanel]] / [[Epi-Claw Parity]] pressure.
 
@@ -52,6 +56,29 @@ Graphiti placement is likewise explicit: architecturally, [[Graphiti]] belongs a
 ## M' Consumer Surfaces
 
 S3/S3' is the temporal/runtime substrate behind [[M'-SYSTEM-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]]. The most direct anchors back into those consumers are [[Body/S/S3/gateway/src/lib.rs]], [[Body/S/S3/gateway/src/session_store.rs]], [[Body/S/S3/gateway-contract/src/lib.rs]], [[Body/S/S3/epi-spacetime-module/src/lib.rs]], [[Body/S/S3/graphiti-runtime/src/lib.rs]], and [[Body/S/S3/redis-context/src/lib.rs]].
+
+### M' Shell Consumed Contract Closure - Cycle 2 T12.T0
+
+This closure narrows the M' surface to **only what the M'-Theia shell, `/body` lite-surface, OmniPanel, and M3/M4/M5 extensions actually consume** from S3/S3'. It is not a re-statement of the full S3 method manifest; it pins the consumed boundary so cycle 2 work stays subordinate to substrate already landed in `Body/S/S3` (and the live S0-hosted gateway dispatch that consults S3 route ownership).
+
+**Consumption pattern.** All M' shell consumption flows through the single S3 gateway WebSocket bound by [[Idea/Pratibimba/System/extensions/kernel-bridge]]'s backend service (`createGatewayWebSocket` against `EPI_GATEWAY_URL`). M-extensions receive S3 state through the single `KernelBridgeAPI` singleton fanned out by `SharedBridgeAdapter` to six subscribers (Track 07 T1 verification). No M-extension may open its own gateway socket or import raw `gateway-contract` clients (Track 07 T0 contract preflight).
+
+**Closed S3/S3' surfaces.**
+
+| Surface | M'-shell consumer | S3/S3' authority | Verification |
+|---|---|---|---|
+| Gateway handshake | `kernel-bridge-backend-service` opens one WebSocket, performs `connect`, receives `session_key` / `session_id` / `day_id` / `now_id` / `now_path` / `workspace_root` / `temporal_state` | `Body/S/S3/gateway` `connect` (§A.connect, protocol v3) backed by `Body/S/S3/gateway/src/session_store.rs` | `kernel-bridge declares a Theia frontend and backend extension boundary` (asserts `createGatewayWebSocket` + `EPI_GATEWAY_URL` + `notifyConnectionStatus` / `notifyProfile` in backend source) |
+| Capability dispatch | `KernelBridgeAPI.invokeCapability(request)` carrying `{method, params}` | Gateway routes `request.method` against the parity manifest (`agent.capabilities`, `s3.session.*`, `s3.channel.*`, `s3.message.route`, plus delegated S0/S1/S2/S4/S5 method families) | `compiled KernelBridgeAPI exposes frontend-safe S3 stream subscriptions`; receipt shape coerced through `coerceCapabilityReceipt` |
+| Bridge status mirror | `connectionStatus` + `onConnectionChange` re-emit `KernelBridgeConnectionStatus` to renderer | `Body/S/S3/gateway` protocol frames + heartbeat plus backend `notifyConnectionStatus` | `single SharedBridgeAdapter fans out one upstream subscription to six extensions` + `observability publish propagates through one fan-out point` |
+| Profile mirror | `cachedProfile` + `onProfile` carry `KernelBridgeCachedProfile` (`s5'.harmonic_profile` snapshot + `portal-core::KernelTemporalProjection` safe public-current tick/pulse/energy) | Gateway routes `s5'.harmonic_profile` reads against S5 authority; safe kernel projection comes from `Body/S/S0/portal-core/src/kernel.rs` through `s3'.temporal.context` | `backend-pushed events drive the compiled KernelBridgeAPI singleton` |
+| SpaceTimeDB shared-cosmos subscriptions | `subscribeWorldClock`, `subscribePratibimbaPresence`, `subscribeSharedArchetypeEvents` | `Body/S/S3/gateway` opens one `v1.json.spacetimedb` `SubscribeMulti` loop against the projection tables `world_clock`, `pratibimba_presence` (RLS-filtered), `shared_archetype_event` (opt-in); 1 Hz `advance_world_clock`; per-instance reducers in `Body/S/S3/epi-spacetime-module` | `compiled KernelBridgeAPI drops forbidden private stream row bodies` (negative test: protected M4.4.4.4 / journal / oracle row bodies cannot leak through stream deltas to the renderer) |
+| Temporal context for `/body` and shell `1` | `s3'.temporal.context` resolves DAY/NOW/Kairos/Redis/SpaceTimeDB projection + history archive placement; consumed by body-lite-surface to anchor `sessionKey`, `dayNow`, `profileGeneration`, `coordinate` in `CrossLayoutIntent` payloads | `Body/S/S0/epi-cli/src/gate/temporal.rs` (live `epi gate temporal context`) + S3' contract in §B.temporal | `body-lite-surface.test.mjs` proves `BODY_DEEP_LINK_CONTEXT_FIELDS` enumerates the 8 contract fields and intent dispatch preserves the full payload list across the cross-layout switch |
+
+**Reconnect / resubscribe lifecycle.** The kernel-bridge backend owns reconnect after gateway restart; the renderer-side `KernelBridgeAPI` singleton replays cached profile + connection status to late subscribers with `stale: true` until the next live observation. The single fan-out point ensures one upstream resubscribe regardless of how many M-extensions are mounted (Track 01 T5 background lifecycle deliverable depends on this contract).
+
+**Verification evidence (2026-06-02).** `node --test extensions/test/kernel-bridge-theia-boundary.test.mjs extensions/test/shared-bridge-fan-out.test.mjs` returns 6/6 pass for the gateway-handshake, capability-dispatch, bridge-status, profile-mirror, and stream-subscription contracts. `body-lite-surface.test.mjs` (23/23) confirms the temporal-context payload preservation across the deep-link switch and the privacy floor blocking forbidden stream-row bodies.
+
+**Still-missing integration blockers.** None at this tranche scope from the M' consumption side. Open items remain at S3 dispatch home extraction (the live server still hosted in `Body/S/S0/epi-cli/src/gate` while consulting S3 route ownership), live SpaceTimeDB reducer registration outside test fixtures, and Graphiti runtime promotion - those are S3 dispatch/extraction tasks (Track 13 or a future S3 closure tranche), not M' consumption blockers.
 
 ## VAK Gate
 
@@ -699,8 +726,8 @@ S3 owns the gateway control plane; S3' owns temporal/shared state, Day/NOW/Kairo
 | Required coverage | Canonical citations |
 |---|---|
 | World ontology | `Idea/Bimba/World/Types/Coordinates/S/S3/S3.md` mtime 2026-04-10 21:43:47; `Idea/Bimba/World/Types/Coordinates/S/S'/S3'/S3'.md` mtime 2026-04-10 17:52:42; `Idea/Bimba/World/NOW.md` and `Daily-Note.md` for S3' temporal artifact semantics |
-| docs/specs | `docs/specs/S/S3-S3i-GATEWAY.md` mtime 2026-05-31 16:35:19; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
-| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
+| docs/specs | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md` mtime 2026-05-31 16:35:19; `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
 | Body substrate | `Body/S/S3/gateway-contract/**`, `Body/S/S3/gateway/**`, `Body/S/S3/redis-context/**`, `Body/S/S3/epi-spacetime-module/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S3/epi-app/**`, `Body/S/S0/epi-cli/src/gate/**` |
 | sibling seeds | `S3-0-SPEC.md`..`S3-5-SPEC.md`, `S3'/S3'-SPEC.md`, `S3'/S3-0'-SPEC.md`..`S3'/S3-5'-SPEC.md`, `S3-SHARD-INDEX.md`, `S3-TRACEABILITY-INDEX.md`, `S3'/S3'-TRACEABILITY-INDEX.md` |
 | nominal tracks | Track 03 owns gateway/SpaceTimeDB; Track 13 owns later S0 membrane extraction; Track 10 owns integration gates |

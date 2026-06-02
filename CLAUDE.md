@@ -1,5 +1,7 @@
 # Epi-Logos C Architecture: The Onto-Code Blueprint
 
+**See also:** [[AGENTS.md]] (agent dispatch), [[repo-ontology.md]] (vault structure), [[Idea/Bimba/World/World-Ontology.md]] (knowledge nexus)
+
 **Status:** Canonical Foundation Specification
 **Date:** 2026-03-01
 **Purpose:** Unified philosophical-technical specification for the Epi-Logos coordinate system in C

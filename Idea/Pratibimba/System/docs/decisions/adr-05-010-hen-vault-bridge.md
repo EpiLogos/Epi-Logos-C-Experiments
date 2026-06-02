@@ -1,7 +1,7 @@
 # ADR-05-010 — Hen vault-bridge architecture: Theia FS read + Hen-gateway write + Hen semantic-neighbours
 
 **Status:** Decided 2026-06-01 (evening)
-**Decision register:** [IOD-18](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md#IOD-18) (Smart Connections via Hen `smart_env.rs`), [IOD-19](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md#IOD-19) (Hen as vault-write gatekeeper)
+**Decision register:** [IOD-18](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md#IOD-18) (Smart Connections via Hen `smart_env.rs`), [IOD-19](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md#IOD-19) (Hen as vault-write gatekeeper)
 **Affected tracks:** 05 (this track), 03 (gateway surface), 07 (M-extensions that consume vault data), 09 (agentic mediation)
 **Replaces:** [ADR-05-008](./adr-05-008-obsidian-md-vsc.md) (`obsidian-md-vsc` — SUPERSEDED)
 **Gated on:** Track 03 T6.5 (gateway `s1'.vault.*` + `s1'.semantic.*` methods)
@@ -87,7 +87,7 @@ Same as ADR-05-008's discipline, retargeted at the new substrate:
 
 - [m5-prime-system-shape-and-tauri-ide-canon.md §0.3a / §0.3b / §1.1](../../../Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md) — canon updates supporting the reversal.
 - [M5'-SPEC.md Sixfold IDE Surface table](../../../Bimba/Seeds/M/M5'/M5'-SPEC.md) — updated to reflect Hen-vault-bridge.
-- [Track 03 T6.5](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md) — gateway-surface deliverable.
-- [Track 05 T4.5](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md) — Theia-side deliverable.
-- [IOD-18](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md#IOD-18), [IOD-19](../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md#IOD-19).
+- [Track 03 T6.5](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md) — gateway-surface deliverable.
+- [Track 05 T4.5](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md) — Theia-side deliverable.
+- [IOD-18](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md#IOD-18), [IOD-19](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md#IOD-19).
 - [ADR-05-008 — SUPERSEDED](./adr-05-008-obsidian-md-vsc.md).

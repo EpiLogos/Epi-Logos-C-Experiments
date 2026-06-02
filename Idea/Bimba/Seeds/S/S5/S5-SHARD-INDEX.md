@@ -8,11 +8,17 @@ c_0_source_coordinates:
   - "[[S5-TRACEABILITY-INDEX]]"
   - "[[S5'-TRACEABILITY-INDEX]]"
   - "[[S5-SPEC]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
 ---
 
 # S5/S5' Shard Index
 
 [[S5]] / [[S5']] owns world-return, [[Nara]] / [[M4]], [[Epii]] / [[M5]], review, [[Gnosis]], [[Graphiti]] usage, [[autoresearch]], and [[Möbius Return]]. These shards must explicitly demote the old S5 = sync/Notion story to secondary connector status.
+
+## Harmonization Standard
+
+All S5/S5' shard specs follow [[S-SHARD-HARMONIZATION-PROTOCOL]]. They must cite current [[Body]] substrates, migrated legacy sources, [[ARCHITECTURE-DIAGRAM-PACK#Diagram 1 System Landscape]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]], and [[ARCHITECTURE-DIAGRAM-PACK#Diagram 4 Cross-System Coupling]] when relevant. Matching MOC/type surfaces are `Idea/Bimba/World/Types/Coordinates/S/S5/S5.canvas` and `Idea/Bimba/World/Types/Coordinates/S/S'/S5'/S5'.canvas`; shard specs name these explicitly because Mermaid labels alone do not create Obsidian backlinks.
 
 ## Base Shards
 

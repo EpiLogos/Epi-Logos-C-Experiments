@@ -1,0 +1,35 @@
+{
+  "runId": "20260601T214326Z-04-T6",
+  "taskId": "04.T6",
+  "startedAt": "2026-06-01T21:43:26.065Z",
+  "owner": "codex",
+  "leaseExpiresAt": "2026-06-01T23:43:26.065Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T6",
+    "trackId": "04",
+    "tranche": "T6",
+    "title": "Epii Agent-Access and M5-4 Mediation Surface",
+    "effort": null,
+    "file": "04-s5-autoresearch-and-review-extension.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md",
+    "dependsOn": [
+      "04.T5"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

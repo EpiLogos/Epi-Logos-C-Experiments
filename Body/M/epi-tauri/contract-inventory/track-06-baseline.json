@@ -5,7 +5,7 @@
   "generated_at": "2026-06-01",
   "purpose": "Inventory current /body Tauri renderer + Rust shell contracts and behavior without changing implementation. Classifies every surface as production_foothold / compatibility_adapter / placeholder, and defines a migration ledger mapping current renderer state to future kernel-bridge state.",
   "purpose_anchors": [
-    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/06-zero-one-surface-evolution.md#tranche-0",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/06-zero-one-surface-evolution.md#tranche-0",
     "Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md#section-2-3-5.4-and-8",
     "Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md#current-state-gap-table"
   ],

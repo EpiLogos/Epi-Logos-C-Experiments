@@ -1,0 +1,27 @@
+{
+  "runId": "20260531T234804Z-02-T1",
+  "taskId": "02.T1",
+  "startedAt": "2026-05-31T23:48:04.511Z",
+  "task": {
+    "id": "02.T1",
+    "trackId": "02",
+    "tranche": "T1",
+    "title": "Schema and relation-law convergence",
+    "effort": null,
+    "file": "02-s2-bimba-map-population.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md",
+    "dependsOn": [
+      "02.T0"
+    ],
+    "writeScopes": [
+      "Body/S/S2/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null
+  }
+}

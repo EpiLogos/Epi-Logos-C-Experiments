@@ -17,10 +17,10 @@ This file records the source corpus used to crystallise [[S4]] (Agent Runtime) i
 
 | Source | Location | Role in conclusion |
 |---|---|---|
-| [[S4-S4i-PI-AGENT]] | `docs/specs/S/S4-S4i-PI-AGENT.md` | Current formal spec; defines [[S4]] as harness-agnostic agent runtime, [[S4']] as ta-onta content |
-| [[S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM]] | `docs/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md` | 7-phase plugin architecture; skill/plugin packaging, manifest format, cache semantics |
-| [[ta-onta-anima-superpowers-vak-integration-spec]] | `docs/resources/S/ta-onta-anima-superpowers-vak-integration-spec.md` | CANONICAL [[VAK]] execution language; 6 coordinate layers, agent economic tastes, CT/CF/CP/MEF alignment, Klein topology, Mobius return |
-| [[2026-02-23-pi-harness-customization-reference-for-ta-onta]] | `docs/resources/S/2026-02-23-pi-harness-customization-reference-for-ta-onta.md` | PI harness hook seams, extension API, tool registration patterns |
+| [[S4-S4i-PI-AGENT]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4-S4i-PI-AGENT.md` | Current formal spec; defines [[S4]] as harness-agnostic agent runtime, [[S4']] as ta-onta content |
+| [[S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4-S4i-PI-SKILLS-AND-PLUGIN-SYSTEM.md` | 7-phase plugin architecture; skill/plugin packaging, manifest format, cache semantics |
+| [[ta-onta-anima-superpowers-vak-integration-spec]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/ta-onta-anima-superpowers-vak-integration-spec.md` | CANONICAL [[VAK]] execution language; 6 coordinate layers, agent economic tastes, CT/CF/CP/MEF alignment, Klein topology, Mobius return |
+| [[2026-02-23-pi-harness-customization-reference-for-ta-onta]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-23-pi-harness-customization-reference-for-ta-onta.md` | PI harness hook seams, extension API, tool registration patterns |
 | [[Anima CONTRACT]] | `.pi/extensions/ta-onta/anima/CONTRACT.md` | Architectural contract; 14-agent roster (7 Anima + 7 Aletheia), CF dispatch rules, CFP thread types, CS runtime phases, key invariants |
 | [[Anima extension.ts]] | `.pi/extensions/ta-onta/anima/extension.ts` | Live implementation; VAK evaluate, anima_orchestrate, dispatch tools, agent-team/chain/subagent imports, hook wiring |
 
@@ -28,19 +28,19 @@ This file records the source corpus used to crystallise [[S4]] (Agent Runtime) i
 
 | Source | Location | Role in conclusion |
 |---|---|---|
-| [[2026-03-06-s4-pi-agent-foundation]] | `docs/plans/2026-03-06-s4-pi-agent-foundation.md` | Foundation plan; PI install/doctor, extension sync, agent directories, provider/model registry |
-| [[2026-03-07-s4-plugin-foundation-phase1-phase2]] | `docs/plans/2026-03-07-s4-plugin-foundation-phase1-phase2.md` | Plugin phases 1-2; manifest parser, local loading, validation CLI |
-| [[2026-04-02-native-pi-epi-agent-convergence]] | `docs/plans/2026-04-02-native-pi-epi-agent-convergence.md` | PI convergence; identified invalid CLI commands in extensions, PiLaunchMode enum, agent home topology |
-| [[2026-04-03-omx-pleroma-claw-runtime-migration]] | `docs/plans/2026-04-03-omx-pleroma-claw-runtime-migration.md` | Three-substrate architecture (PI → OMX → claw-rust), authority split, migration tasks |
+| [[2026-03-06-s4-pi-agent-foundation]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-06-s4-pi-agent-foundation.md` | Foundation plan; PI install/doctor, extension sync, agent directories, provider/model registry |
+| [[2026-03-07-s4-plugin-foundation-phase1-phase2]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-07-s4-plugin-foundation-phase1-phase2.md` | Plugin phases 1-2; manifest parser, local loading, validation CLI |
+| [[2026-04-02-native-pi-epi-agent-convergence]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-02-native-pi-epi-agent-convergence.md` | PI convergence; identified invalid CLI commands in extensions, PiLaunchMode enum, agent home topology |
+| [[2026-04-03-omx-pleroma-claw-runtime-migration]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-03-omx-pleroma-claw-runtime-migration.md` | Three-substrate architecture (PI → OMX → claw-rust), authority split, migration tasks |
 
 ### Cross-Cutting References
 
 | Source | Location | Role in conclusion |
 |---|---|---|
-| [[S-STACK-INTEGRATION]] | `docs/specs/S/S-STACK-INTEGRATION.md` | Toroidal stack flow S0→S5; [[S4]] positioned at #4 (Context/Agent) |
-| [[2026-02-26-epi-logos-canonical-system-plan]] | `docs/resources/S/2026-02-26-epi-logos-canonical-system-plan.md` | Canonical S4 = Gateway/Agent, S4' = VAK System; full module paths |
-| [[VAK-SUPERPOWERS-INTEGRATION-SPEC]] | `docs/resources/S/VAK-SUPERPOWERS-INTEGRATION-SPEC.md` | S4-0' through S4-5' full specification; Aletheia function cluster CF codes; dis-closure modes; Constitutional Progeny Principle; Darshana pre-processor |
-| [[2026-02-28-coordinate-type-system-and-reflection-families]] | `docs/resources/S/2026-02-28-coordinate-type-system-and-reflection-families.md` | S-family at #3 (Formal/Pattern) in foundational ordering; reflection family canonical ordering |
+| [[S-STACK-INTEGRATION]] | `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` | Toroidal stack flow S0→S5; [[S4]] positioned at #4 (Context/Agent) |
+| [[2026-02-26-epi-logos-canonical-system-plan]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-26-epi-logos-canonical-system-plan.md` | Canonical S4 = Gateway/Agent, S4' = VAK System; full module paths |
+| [[VAK-SUPERPOWERS-INTEGRATION-SPEC]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/VAK-SUPERPOWERS-INTEGRATION-SPEC.md` | S4-0' through S4-5' full specification; Aletheia function cluster CF codes; dis-closure modes; Constitutional Progeny Principle; Darshana pre-processor |
+| [[2026-02-28-coordinate-type-system-and-reflection-families]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-28-coordinate-type-system-and-reflection-families.md` | S-family at #3 (Formal/Pattern) in foundational ordering; reflection family canonical ordering |
 | [[epi_logos_coordinate_system]] | `docs/resources/updated-ql-mef/epi_logos_coordinate_system.md` | QL coordinate reference |
 | [[epi_logos_cheat_sheet]] | `docs/resources/updated-ql-mef/epi_logos_cheat_sheet.md` | QL cheatsheet |
 | [[COORDINATE-MAP]] | `Idea/Empty/COORDINATE-MAP.md` | Living coordinate map; S4 sub-coordinates, M-series agent mapping |

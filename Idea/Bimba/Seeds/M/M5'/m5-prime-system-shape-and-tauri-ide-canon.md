@@ -559,7 +559,7 @@ This is the canonical statement. Downstream work — the implementation-track pl
 - Live S' kernel + S-stack: [[Body/S/S0/epi-lib]] (12,160 LOC C kernel), [[Body/S/S0/portal-core]] (~4,500 LOC Rust mirror), [[Body/S/S2/graph-schema]] + [[Body/S/S2/graph-services]] (~15,800 LOC), [[Body/S/S3/gateway]] + [[Body/S/S3/gateway-contract]] + [[Body/S/S3/epi-spacetime-module]] + [[Body/S/S3/graphiti-runtime]], [[Body/S/S4/pi-agent]] + [[Body/S/S4/ta-onta]] + [[Body/S/S4/plugins/pleroma]], [[Body/S/S5/epii-autoresearch-core]] + [[Body/S/S5/epii-review-core]] + [[Body/S/S5/epii-agent-core]] + [[Body/S/S5/epii-agent]] + [[Body/S/S5/epi-gnostic]] + [[Body/S/S5/epi-kbase]] + [[Body/S/S5/epi-kbase-core]]
 - `Body/M/epi-tauri/` — Theia migration source (60 TSX + 42 Rust files: typed clients, M-domain components, Tauri Rust commands, stores, shell, OmniPanel)
 - `CLAUDE.md` §II-VI — coordinate architecture, context frames, Siva-Shakti polarity, memory arenas
-- `docs/superpowers/plans/2026-05-22-vak-as-operational-substrate.md` — completed VAK substrate work (10 chips closed; three-way parity test-locked); see `Body/S/S4/plugins/pleroma/capability-matrix.json` as canonical agent-tool governance authority
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/superpowers/plans/2026-05-22-vak-as-operational-substrate.md` — completed VAK substrate work (10 chips closed; three-way parity test-locked); see `Body/S/S4/plugins/pleroma/capability-matrix.json` as canonical agent-tool governance authority
 
 ### External
 - Theia IDE: `https://theia-ide.org/`, `https://github.com/eclipse-theia/theia`, Theia docs at `https://theia-ide.org/docs/`

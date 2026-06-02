@@ -19,6 +19,8 @@ c_0_source_coordinates:
   - "[[S-SOURCE-TRACEABILITY-INDEX]]"
   - "[[S4-TRACEABILITY-INDEX]]"
   - "[[S4'-TRACEABILITY-INDEX]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
   - "[[ta-onta-anima-superpowers-vak-integration-spec]]"
   - "[[VAK-SUPERPOWERS-INTEGRATION-SPEC]]"
   - "[[S4]]"
@@ -31,6 +33,8 @@ c_0_source_coordinates:
 ## Status
 
 This is the consolidated S4-level master specification. It replaces the older scattered [[S4]], [[S4']], [[S4'Cx]], and S4-y/S4-y' files as the build reference for the agent-runtime layer.
+
+Diagram consumption: this spec and its shards consume [[ARCHITECTURE-DIAGRAM-PACK#Ta-Onta Placement Invariant]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 4 Cross-System Coupling]], and [[ARCHITECTURE-DIAGRAM-PACK#Diagram And MOC Residency Protocol]]. Thin shard remediation follows [[S-SHARD-HARMONIZATION-PROTOCOL]].
 
 [[S4]] is the agent execution package: the managed [[PI Agent]] / harness-agnostic agent runtime where the system lives, acts, spawns, validates skills, manages provider/model/auth profiles, runs constitutional subagents, and carries the active task-world.
 
@@ -58,6 +62,35 @@ Within this S4' body, [[Pleroma]] must be treated as [[Anima]]'s executive capab
 ## M' Consumer Surfaces
 
 S4/S4' is consumed most directly by [[M5'-SPEC]] and the cross-cutting agent membrane in [[M'-SYSTEM-SPEC]]. The operative anchors for that surface are [[Body/S/S4/plugins/registry.jsonl]] and [[Body/S/S4/plugins/pleroma/capability-matrix.json]].
+
+### M' Shell Consumed Contract Closure - Cycle 2 T12.T1
+
+This closure narrows the M' surface to **only what M5-4 (Agentic Control Room), the constitutional actor set, and the integrated review surfaces actually consume** from S4/S4'. It is not a re-statement of the full S4 ta-onta API; it pins the consumed boundary so cycle 2 M' work stays subordinate to substrate already landed in `Body/S/S4`.
+
+**Consumption pattern.** M5-4 consumption flows through the same `KernelBridgeAPI.invokeCapability` channel as every other M-extension - the Agentic Control Room (M5-4) does **not** open private agent sockets. The IOD-17 capability matrix at `Body/S/S4/plugins/pleroma/capability-matrix.json` is the single source of truth for the dispatch tree the ide-shell-m0-m5 VAK selector renders and the ACR run-flow widget actuates. No M-extension imports raw S4 plugin internals.
+
+**Closed S4/S4' surfaces.**
+
+| Surface | M5-4 / constitutional consumer | S4/S4' authority | Verification |
+|---|---|---|---|
+| Capability matrix tree | `@pratibimba/ide-shell-m0-m5::parseCapabilityMatrix` reads the matrix file and projects dispatch tools / skills / VAK threads into the run-flow widget actor + route selector | `Body/S/S4/plugins/pleroma/capability-matrix.json` (IOD-17 authority; owner agent: `anima`; package role: `anima_executive_capability_membrane`) - constitutional agents `anima`, `eros`, `logos`, `mythos`, `nous`, `psyche`, `sophia`; dispatch tools `dispatch_agent`, `dispatch_parallel_agents`, etc. | `extensions/test/agentic-mediation-e2e/e2e.test.mjs` harness loads the real matrix through `PATHS.capabilityMatrix` and asserts `matrixDispatchTools` / `matrixSkills` parity against ACR run-model |
+| Mediation routing | ACR `acr-runtime-service` dispatches `invokeCapability({method: 'invokeGatewayRpc', params: {gatewayMethod: "s4'.mediation.route"}})`; never a direct fetch / WebSocket | S4' `s4'.mediation.route` (capability dispatch through gateway) backed by Pleroma capability-matrix + Anima VAK evaluation | `extensions/agentic-control-room/tests/run-flow.test.mjs` (run-tree state machine + tool stream + actor/route enforcement) |
+| Mediation capability listing | ACR may probe `s4'.mediation.capabilities.list` for actor/route options | S4' lists capabilities authorised by `s_4_permission_boundary` (S4.4' capability governance) per matrix | covered by `run-flow.test.mjs` capability-list path |
+| Constitutional actor set | Run-model enforces `actor in {anima, aletheia, pi, sophia, epii, human}` at dispatch and review boundaries | S4 spine division: Anima = dispatch spine; Epii = S5' return spine (separate PI agents); Aletheia, Pi, Sophia as ta-onta articulations | `evidence-envelope.test.mjs` + `human-gate.test.mjs` (actor normalization, human-required transition, evidence envelope shape) |
+| Human-required gate | `enforceHumanGate` ensures `humanRequired` candidates cannot auto-resolve at any non-human actor | S4'.capability_governance + S5 review governance (`Body/S/S5/epii-review-core/src/lib.rs::requires_human_resolution`) mirrored gateway-side by harness `GatewayDispatchContract` | `human-gate.test.mjs` (5/5) |
+| Evidence envelope to S5 review | `buildEvidenceEnvelope` produces the envelope ACR submits via `gatewayMethod: "s5'.review.submit"` | S5 review surface owns receipt verification; S4 produces the envelope shape | `evidence-envelope.test.mjs` |
+
+**Constitutional surface boundary.** Anima and Epii are distinct spine-bearing PI agents, not Anima-and-subagent. The ACR run-flow never resolves Epii review decisions through `s4'.mediation.route`; review/improvement decisions cross the boundary to S5 via `s5'.review.submit`. The constitutional actor set surfaced to M' is the canonical Pleroma membrane (`anima`, `aletheia`, `pi`, `sophia`, `epii`, `human`); other agent identities in registry.jsonl are not exposed to the M5-4 actor selector.
+
+**Verification evidence (2026-06-02).** ACR contract suite passes 8/8 (run-flow + evidence-envelope + human-gate). Capability-matrix parity (matrix file → dispatch-tools list → ide-shell render → ACR run-model actor enumeration) is closed via the e2e harness. 18/19 mediation tests pass at `node --test extensions/test/agentic-mediation-e2e/e2e.test.mjs extensions/agentic-control-room/tests/*.test.mjs`.
+
+**Recorded provider-backed / capability-gated gaps.**
+
+| Gap | Status | Owner |
+|---|---|---|
+| `extensions/test/agentic-mediation-e2e/harness.mjs:43-47` references the S5 review baseline fixture at `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/10-t2-s5-review-baseline-20260602T000502Z.json` but the file moved to `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/` during the seed-legacy migration; e2e test currently fails with ENOENT, breaking 1/19 in the mediation-e2e suite | substrate path stale - **out of 12.T1 spec write scope**; needs a Pratibimba-side test-harness path rebase (write scope `Idea/Pratibimba/System/extensions/test/agentic-mediation-e2e/harness.mjs`) | Track 13 substrate cleanup or a dedicated rebase tranche |
+| Live `s4'.mediation.capabilities.list` gateway exposure status | declared in IOD-17 and consumed by ACR if available; current run-flow falls through to matrix-static dispatch when gateway probe returns empty | S4 dispatch home extraction (Track 13) and S3 gateway routing |
+| Plugin registry visibility scope (Pleroma vs constitutional surface vs operator-only) | matrix authority is canonical; registry.jsonl exposure to OmniPanel is governed by `s_4_permission_boundary` | S4'.capability_governance + S3' channel layer |
 
 ## VAK Gate
 
@@ -675,8 +708,8 @@ S4 owns managed PI runtime and S4' owns ta-onta/API inhabitation law. VAK is the
 | Required coverage | Canonical citations |
 |---|---|
 | World ontology | `Idea/Bimba/World/Types/Coordinates/S/S4/S4.md` mtime 2026-04-10 19:15:19; `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md` mtime 2026-04-10 19:15:04; CT files `CT0.md`..`CT5.md` mtime 2026-03-10..2026-03-15 for VAK phase law |
-| docs/specs | `docs/specs/S/S4-S4i-PI-AGENT.md` mtime 2026-04-04 13:46:16; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
-| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24 |
+| docs/specs | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4-S4i-PI-AGENT.md` mtime 2026-04-04 13:46:16; `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24 |
 | Body substrate | `Body/S/S4/pi-agent/**`, `Body/S/S4/plugins/pleroma/**`, `Body/S/S4/ta-onta/**`, `Body/S/S0/epi-cli/src/agent/**`, `Body/S/S0/epi-cli/src/gate/anima.rs` |
 | sibling seeds | `S4-0-SPEC.md`..`S4-5-SPEC.md`, `S4'/S4'-SPEC.md`, `S4'/S4-0'-SPEC.md`..`S4'/S4-5'-SPEC.md`, `S4'/S4-4'-GOAL-PRELUDE-SPEC.md`, `S4-SHARD-INDEX.md`, `S4-TRACEABILITY-INDEX.md`, `S4'/S4'-TRACEABILITY-INDEX.md` |
 | nominal tracks | Track 09 owns mediation/governance; Track 10 carries cross-cutting gates |

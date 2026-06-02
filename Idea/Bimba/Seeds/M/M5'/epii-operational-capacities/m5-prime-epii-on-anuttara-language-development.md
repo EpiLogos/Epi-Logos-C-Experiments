@@ -499,7 +499,7 @@ These five plus this Anuttara spec cover Epii's operational capacities across al
 - `docs/datasets/anuttara-deep/anuttara-language-map.md` (the canonical Anuttara language map — 109 nodes, full symbol + formulation coverage)
 - `docs/datasets/anuttara-deep/nodes-full-data.json`, `relations.json` (the dataset: 108 nodes + 1024 relations)
 - `Body/S/S0/epi-lib/include/m0.h`, `m0.c` (M0 kernel substrate: Vimarsa ISA, M0_CORE_RELATIONS, archetypal LUT, six R-factor routes)
-- `docs/specs/M/M0-anuttara-language-architecture.md` (M0 as multi-level formal language runtime)
+- `Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md` (M0 as multi-level formal language runtime)
 - `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`, `m0-prime-anuttara-research.md` (M0' graph view + Anuttara research)
 - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md` (canonical M5' sixfold structure: Library / Philosophy / Backend / Frontend / Agentic / Logos Atelier)
 - `Idea/Bimba/Seeds/M/M5'/m5-prime-agentic-ide-research.md` (M5' agentic IDE research)
@@ -507,7 +507,7 @@ These five plus this Anuttara spec cover Epii's operational capacities across al
 - `Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md` (§11.4 quaternionic identity signatures; §6.8.4.B Vāma Śaktis as recognition-vocabulary parallel)
 - `Body/S/S2/graph-schema/src/lib.rs` (S2 schema with 17 relation types, label specs, property semantics)
 - `Body/S/S2/graph-services/src/seed.rs` (BEDROCK / MANIFESTS / INVERTS_TO / ANCHORED_TO seed logic)
-- `docs/plans/2026-03-08-knowing-graph-convergence-plan.md` (the three n10s deferrals)
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-08-knowing-graph-convergence-plan.md` (the three n10s deferrals)
 - `docs/datasets/nara-deep/13-03-2026-claude-nara-thinking-marketing.md` (existing GDS + TDA research programme)
 - M5-0 / M5-0' improvement-vector map (the subagent-produced sober positioning of ML/training work as one Epii capacity)
 

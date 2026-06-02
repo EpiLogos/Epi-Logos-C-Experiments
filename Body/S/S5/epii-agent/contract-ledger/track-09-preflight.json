@@ -4,7 +4,7 @@
   "produced_at": "2026-05-31",
   "tranche": "09.T0",
   "tranche_title": "Mediation Contract Preflight And VAK Baseline",
-  "plan_source": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md",
+  "plan_source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md",
   "scope_summary": "Inventory the current Anima/Sophia/Pi/Aletheia mediation surface, the live S5 epii-agent contract, the upstream track surfaces Track 09 will consume (Tracks 01/04/05/06/07/08), and the six operational-capacity route profiles. Every row is either backed by a live observation (CLI output, file parse, code path) or explicitly flagged as a readiness_blocker. No prose-only assumptions are recorded as ready.",
   "readiness_status_legend": {
     "authoritative": "Surface exists as live, test-locked code/CLI/file in the current repo and can be consumed today.",

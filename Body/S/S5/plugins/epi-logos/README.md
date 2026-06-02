@@ -26,6 +26,26 @@ epi-logos/
 
 `skills/using-epi-logos` is the bootstrap. Every other skill routes through it.
 
+## Vault-First Architecture Context
+
+For this repository, Epi-Logos work treats `Idea/` as the living knowledge body, not a passive notes folder.
+
+- `Idea/Bimba/World/` is the crystallised architecture surface: flat definition forms, coordinate synthesis documents, stable CT/P/L forms, and `World/Types/{Type}/{Type}.canvas` MOC/type indexes.
+- `Idea/Bimba/Seeds/` is the planning/spec/source surface: architecture packs, S/M shard specs, traceability indexes, promoted planning material, and migration mirrors for load-bearing `/docs/specs` and `/docs/plans` files.
+- `/docs/specs`, `/docs/plans`, and `/docs/resources` are legacy/source strata unless a Seed file explicitly cites or mirrors them.
+
+Agents using this plugin should discover architecture through the vault before treating the repository as a flat file tree:
+
+```bash
+epi core knowing S1' --json
+epi vault search "ARCHITECTURE-DIAGRAM-PACK"
+epi vault search-content "World/Types"
+epi vault read Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md
+epi vault link-suggest Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md --source-coordinate "S1'"
+```
+
+The goal is to let wikilinks do real work: plans, specs, diagrams, coordinate definitions, and development goals should become navigable from inside `Idea/` through Hen/S1' law, then graph-promotable through S2 when appropriate.
+
 ## SwarmVault Surface
 
 `skills/epi-logos-vault-compiler` is the primary skill for SwarmVault-backed writing work. It uses the repo-root `swarmvault.config.json` and `swarmvault.schema.md`, with generated vault artifacts under `Thought/Vault/`:

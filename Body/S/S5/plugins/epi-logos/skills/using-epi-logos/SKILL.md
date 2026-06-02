@@ -16,6 +16,16 @@ If the task touches any of the following, this skill runs first:
 - subjective/objective braiding
 - Thought artifact persistence, subagent handoff, or cross-session continuity
 
+## Active Day / NOW Binding
+
+For applicative development work, subagent handoff, artifact persistence, compression, or anything that will shape ongoing implementation, resolve the active work surface before writing durable context:
+
+1. Prefer the current `EPI_NOW_PATH` when it is present and points at an existing file.
+2. Otherwise read the repo-local `.epi/session.json` and use `context.now_path`.
+3. If neither exists, run or ask the orchestrator to run `epi agent session init` before persistence continues.
+
+The canonical live surface is `Idea/Empty/Present/{DD-MM-YYYY}/{sessionId}/now.md`; the day scaffold is `Idea/Empty/Present/{DD-MM-YYYY}/daily-note.md`. Do not create parallel session notes elsewhere. `/Self/Thought/*` artifacts remain valid, but they are routed reflections from the active NOW/day field, not a replacement for it.
+
 ## What Epi-Logos Is
 
 A guided field for coherent paradox. Not a flat prompt package, not a bag of unrelated lens snippets, not a rigid state machine. The plugin's job is to keep topology operative, hold positions and lenses in holographic relation, and treat `#` as source-condition rather than ordinary entry.

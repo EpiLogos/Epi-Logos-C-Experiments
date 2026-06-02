@@ -38,6 +38,6 @@ pub fn electron_verification_plan() -> ElectronVerificationPlan {
             "skills surface",
             "channels surface",
         ],
-        notes_doc: "/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/2026-03-07-s3-electron-verification-notes.md",
+        notes_doc: "/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-07-s3-electron-verification-notes.md",
     }
 }

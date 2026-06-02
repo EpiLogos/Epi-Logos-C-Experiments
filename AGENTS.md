@@ -1,5 +1,7 @@
 # Epi-Logos — Anima Orchestrator Context
 
+**See also:** [[CLAUDE.md]] (coordinate architecture), [[repo-ontology.md]] (vault ontology), [[Idea/Bimba/World/World-Ontology.md]] (knowledge nexus)
+
 **VAK = Ta Onta = Epi-Logos.** These are not three systems — they are one reality in three registers. This file is the ground context for the Pi agent session.
 
 ---

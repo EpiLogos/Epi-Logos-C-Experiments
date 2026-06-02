@@ -975,11 +975,18 @@ dependencies = [
 name = "epi-s3-gateway"
 version = "0.1.0"
 dependencies = [
+ "blake3",
  "epi-s3-gateway-contract",
+ "futures-util",
+ "hex",
  "portal-core",
+ "reqwest",
  "serde",
  "serde_json",
+ "sha2",
  "tokio",
+ "tokio-tungstenite",
+ "uuid",
 ]
 
 [[package]]

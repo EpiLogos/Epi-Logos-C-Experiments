@@ -40,7 +40,7 @@
 //!    with the `# DEPRECATED ROUTE` annotation pointing at the replacement
 //!    method name. See Track 03 T6.5 follow-up.
 //!
-//! See `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/13-t8-s1-vault-hen-evidence.md`
+//! See `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/13-t8-s1-vault-hen-evidence.md`
 //! for the full audit table.
 
 pub mod frontmatter;

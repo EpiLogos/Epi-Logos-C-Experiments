@@ -91,12 +91,12 @@ Before apportioning any node, read:
 **A2.1 — Find the dataset file**
 
 ```
-docs/datasets/anuttara-deep/    → M0
-docs/datasets/paramasiva-deep/  → M1
-docs/datasets/parashakti-deep/  → M2
-docs/datasets/mahamaya-deep/    → M3
-docs/datasets/nara-deep/        → M4
-docs/datasets/epii-deep/        → M5
+Idea/Bimba/Map/datasets/anuttara-deep/    → M0
+Idea/Bimba/Map/datasets/paramasiva-deep/  → M1
+Idea/Bimba/Map/datasets/parashakti-deep/  → M2
+Idea/Bimba/Map/datasets/mahamaya-deep/    → M3
+Idea/Bimba/Map/datasets/nara-deep/        → M4
+Idea/Bimba/Map/datasets/epii-deep/        → M5
 ```
 
 Try node files in order: `nodes-full-detail.json`, `nodes-full-details.json`, `nodes-full-data.json`.
@@ -224,8 +224,8 @@ After node branches are reviewed and approved, generate relations.
 
 **C1. Load relation files**
 
-For each branch: `docs/datasets/{branch-dir}/relations.json`
-Also: `docs/datasets/relations_hash.json` (root-level)
+For each branch: `Idea/Bimba/Map/datasets/{branch-dir}/relations.json`
+Also: `Idea/Bimba/Map/datasets/relations_hash.json` (root-level)
 
 **C2. For each relation:**
 

@@ -10,7 +10,7 @@ fn repo_root() -> PathBuf {
 /// Task 4: The OMX port matrix must exist and map all four capability families.
 #[test]
 fn omx_pleroma_port_matrix_exists() {
-    let matrix = repo_root().join("docs/specs/S/S4/2026-04-03-omx-pleroma-port-matrix.md");
+    let matrix = repo_root().join("Idea/Bimba/Seeds/S/Legacy/specs/S/S4/2026-04-03-omx-pleroma-port-matrix.md");
     let text = std::fs::read_to_string(&matrix)
         .unwrap_or_else(|err| panic!("failed to read {}: {err}", matrix.display()));
 
@@ -32,7 +32,7 @@ fn omx_pleroma_port_matrix_exists() {
 #[test]
 fn omx_pleroma_claw_authority_matrix_exists() {
     let matrix =
-        repo_root().join("docs/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md");
+        repo_root().join("Idea/Bimba/Seeds/S/Legacy/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md");
     let text = std::fs::read_to_string(&matrix)
         .unwrap_or_else(|err| panic!("failed to read {}: {err}", matrix.display()));
 
@@ -47,7 +47,7 @@ fn omx_pleroma_claw_authority_matrix_exists() {
 
 #[test]
 fn pleroma_port_matrix_lists_all_capability_families() {
-    let matrix = repo_root().join("docs/specs/S/S4/S4i-PLEROMA-PORT-MATRIX.md");
+    let matrix = repo_root().join("Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4/S4i-PLEROMA-PORT-MATRIX.md");
     let text = std::fs::read_to_string(&matrix)
         .unwrap_or_else(|err| panic!("failed to read {}: {err}", matrix.display()));
 

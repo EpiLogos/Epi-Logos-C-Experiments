@@ -1,6 +1,6 @@
 # Track 01 T0 — Baseline Contract Inventory
 
-This directory captures the S0/S0' baseline contract surface frozen by Track 01 Tranche 0 of the [2026-05-31 M'/S' implementation tracks](../../../../../docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md).
+This directory captures the S0/S0' baseline contract surface frozen by Track 01 Tranche 0 of the [2026-05-31 M'/S' implementation tracks](../../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md).
 
 ## Contents
 

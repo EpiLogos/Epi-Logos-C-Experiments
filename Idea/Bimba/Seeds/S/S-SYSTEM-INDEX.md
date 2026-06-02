@@ -48,6 +48,10 @@ The canonical source-routing map is [[S-SOURCE-TRACEABILITY-INDEX]]. It links th
 
 The current whole-system diagram pack is [[ARCHITECTURE-DIAGRAM-PACK]]. Use it before implementation planning when work crosses S/S', M', `/pratibimba/system`, or the M-dev track set. It records the current architecture invariant that [[S0]] is the command membrane and return surface, while coordinate-domain law belongs in the owning [[S1]]-[[S5]] modules.
 
+The flat [[World]] nexus for this architecture is [[World-Ontology]]. It should be read before treating any seed spec as a standalone plan, because it records the central distinction between [[World]] crystallisations, [[World/Types]] MOC/canvas surfaces, and [[Seeds]] planning/spec/source artifacts.
+
+Architecture residency is now explicit: [[World]] is the crystallised architecture surface, while [[Seeds]] is the planning/spec/source surface. Stable coordinate definitions, synthesis documents, and type/MOC canvases belong under `Idea/Bimba/World/**`; shard specs, traceability indexes, architecture packs, and promoted `/docs` material belong under `Idea/Bimba/Seeds/**`. Agents should use `epi core knowing` and `epi vault read/search/search-content/link-suggest` to discover these surfaces before falling back to raw filesystem search.
+
 The system image is: [[S0]] makes the system executable; [[S1]] makes it resident and typed in the vault; [[S2]] makes it graph/vector/cache real; [[S3]] makes it temporal and routed; [[S4]] makes it agentically inhabited; [[S5]] makes it world-facing and reflective. The prime branch makes each base technology carry [[Epi-Logos]] ontology.
 
 The agent image is now twofold. [[Anima]] is the dispatch spine of Epi-Logos in operation; [[Epii]] is the return spine of Epi-Logos in reflection. Both are PI-agent embodiments using the same spine grammar, but they are not the same agent and must not receive the same tool/skill permission surface.
@@ -287,23 +291,64 @@ The `Idea/Bimba/World` coordinate files are canonical source material for this u
 
 | Source | mtime | Status in this umbrella |
 |---|---:|---|
-| `docs/specs/S/S-STACK-INTEGRATION.md` | 2026-03-07 01:51:35 | historical S-stack synthesis, superseded by this seed/index where more specific |
-| `docs/specs/S/S_Series_Master_CLI_Architecture.md` | 2026-03-15 00:27:10 | historical CLI bridge and parity source |
-| `docs/specs/S/S0-S0i-CLI-CORE.md` | 2026-05-31 16:35:19 | crystallised into [[S0-SPEC]] and [[S0'-SPEC]] |
-| `docs/specs/S/S1-S1i-OBSIDIAN.md` | 2026-06-02 00:14:25 | crystallised into [[S1-SPEC]] and [[S1'-SPEC]]; newest S formal spec |
-| `docs/specs/S/S2-S2i-GRAPH.md` | 2026-05-31 16:35:19 | crystallised into [[S2-SPEC]] and [[S2'-SPEC]] |
-| `docs/specs/S/S3-S3i-GATEWAY.md` | 2026-05-31 16:35:19 | crystallised into [[S3-SPEC]] and [[S3'-SPEC]] |
-| `docs/specs/S/S4-S4i-PI-AGENT.md` | 2026-04-04 13:46:16 | crystallised into [[S4-SPEC]] and [[S4'-SPEC]] with later ta-onta/capability updates |
-| `docs/specs/S/S5-S5i-SYNC.md` | 2026-05-31 16:35:19 | historical sync framing; current S5 canon is Epii/review/autoresearch/world-return |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/00-overview-and-sequencing.md` | 2026-06-02 00:17:08 | implementation-track orientation only; seed canon wins on architecture |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` | 2026-05-31 20:57:23 | S0/S0' nominal track, not top-layer owner |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md` | 2026-05-31 20:36:57 | S2/S2' nominal track |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` | 2026-06-01 18:27:27 | S3/S3' nominal track |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md` | 2026-05-31 20:56:45 | S5/S5' nominal track |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` | 2026-06-02 00:16:51 | S4/S4' mediation and cross-agent capacity track |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md` | 2026-06-02 00:17:57 | cross-cutting status, not canon |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` | 2026-06-02 00:14:24 | decision register source |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/13-s-sprime-modularity-and-s0-membrane-cleanup.md` | 2026-06-01 23:57:36 | cleanup pressure; this seed resolves ownership boundaries |
-| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.index.json` / `plan.state.json` | 2026-06-02 11:40:41 | ledger only; cited for track ownership, not edited |
+| `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` | 2026-03-07 01:51:35 | historical S-stack synthesis, superseded by this seed/index where more specific |
+| `Idea/Bimba/Seeds/S/Legacy/specs/S/S_Series_Master_CLI_Architecture.md` | 2026-03-15 00:27:10 | historical CLI bridge and parity source |
+| `Idea/Bimba/Seeds/S/S0/S0'/Legacy/specs/S/S0-S0i-CLI-CORE.md` | 2026-05-31 16:35:19 | crystallised into [[S0-SPEC]] and [[S0'-SPEC]] |
+| `Idea/Bimba/Seeds/S/S1/S1'/Legacy/specs/S/S1-S1i-OBSIDIAN.md` | 2026-06-02 00:14:25 | crystallised into [[S1-SPEC]] and [[S1'-SPEC]]; newest S formal spec |
+| `Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md` | 2026-05-31 16:35:19 | crystallised into [[S2-SPEC]] and [[S2'-SPEC]] |
+| `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md` | 2026-05-31 16:35:19 | crystallised into [[S3-SPEC]] and [[S3'-SPEC]] |
+| `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/S/S4-S4i-PI-AGENT.md` | 2026-04-04 13:46:16 | crystallised into [[S4-SPEC]] and [[S4'-SPEC]] with later ta-onta/capability updates |
+| `Idea/Bimba/Seeds/S/S5/S5'/Legacy/specs/S/S5-S5i-SYNC.md` | 2026-05-31 16:35:19 | historical sync framing; current S5 canon is Epii/review/autoresearch/world-return |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/00-overview-and-sequencing.md` | 2026-06-02 00:17:08 | implementation-track orientation only; seed canon wins on architecture |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` | 2026-05-31 20:57:23 | S0/S0' nominal track, not top-layer owner |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md` | 2026-05-31 20:36:57 | S2/S2' nominal track |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` | 2026-06-01 18:27:27 | S3/S3' nominal track |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md` | 2026-05-31 20:56:45 | S5/S5' nominal track |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` | 2026-06-02 00:16:51 | S4/S4' mediation and cross-agent capacity track |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md` | 2026-06-02 00:17:57 | cross-cutting status, not canon |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` | 2026-06-02 00:14:24 | decision register source |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/13-s-sprime-modularity-and-s0-membrane-cleanup.md` | 2026-06-01 23:57:36 | cleanup pressure; this seed resolves ownership boundaries |
+| `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.index.json` / `plan.state.json` | 2026-06-02 11:40:41 | ledger only; cited for track ownership, not edited |
 
 Per hard scope, the plan/spec files above were not edited during this crystallisation pass. Where a plan is newer than an older seed fragment, the load-bearing architectural decision is represented here or in the layer seed; the plan remains an implementation track artifact.
+
+## Canonical Reading Protocol - S/S'
+
+Before any implementation orchestrator scopes S/S' work, it must read:
+
+1. [[ARCHITECTURE-DIAGRAM-PACK]] for the whole-system map, gateway method ownership, lifecycle seams, and cross-cutting concerns.
+2. This [[S-SYSTEM-INDEX]] for top-layer [[S]] / [[S']] ownership, shared kernel/profile boundaries, source coverage, and harmonisation deltas.
+3. The exact layer seed: [[S0-SPEC]], [[S1-SPEC]], [[S2-SPEC]], [[S3-SPEC]], [[S4-SPEC]], [[S5-SPEC]], [[S0'-SPEC]], [[S1'-SPEC]], [[S2'-SPEC]], [[S3'-SPEC]], [[S4'-SPEC]], or [[S5'-SPEC]].
+4. The subcoordinate shard specs only after the layer seed has fixed ownership.
+
+`docs/plans/**` and `docs/specs/**` are not first-read canon. They are cited evidence, historical fragments, or implementation tracks once the seed has named them. This is the guard against partial slices that implement whichever fragment a grep found first.
+
+## Internal QL Breakdown Source Rule
+
+Every S/S' internal 0-5 or QL breakdown must be traceable to one of these sources:
+
+| Coordinate | World ontology source | Seed crystal |
+|---|---|---|
+| [[S0]] / [[S0']] | `Idea/Bimba/World/Types/Coordinates/S/S0/S0.md`; `Idea/Bimba/World/Types/Coordinates/S/S'/S0'/S0'.md` | [[S0-SPEC]], [[S0'-SPEC]] |
+| [[S1]] / [[S1']] | `Idea/Bimba/World/Types/Coordinates/S/S1/S1.md`; `Idea/Bimba/World/Types/Coordinates/S/S'/S1'/S1'.md` | [[S1-SPEC]], [[S1'-SPEC]] |
+| [[S2]] / [[S2']] | `Idea/Bimba/World/Types/Coordinates/S/S2/S2.md`; `Idea/Bimba/World/Types/Coordinates/S/S'/S2'/S2'.md` | [[S2-SPEC]], [[S2'-SPEC]] |
+| [[S3]] / [[S3']] | `Idea/Bimba/World/Types/Coordinates/S/S3/S3.md`; `Idea/Bimba/World/Types/Coordinates/S/S'/S3'/S3'.md` | [[S3-SPEC]], [[S3'-SPEC]] |
+| [[S4]] / [[S4']] | `Idea/Bimba/World/Types/Coordinates/S/S4/S4.md`; `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md` | [[S4-SPEC]], [[S4'-SPEC]] |
+| [[S5]] / [[S5']] | `Idea/Bimba/World/Types/Coordinates/S/S5/S5.md`; `Idea/Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md` | [[S5-SPEC]], [[S5'-SPEC]] |
+
+The shared QL/VAK language is sourced from [[P]], [[P0]], [[P0']], [[P1]], [[P1']], [[P2]], [[P2']], [[P3]], [[P3']], [[P4]], [[P4']], [[P5]], [[P5']], [[CT0]], [[CT1]], [[CT2]], [[CT3]], [[CT4a]], [[CT4b]], [[CT5]], [[L0]], [[L0']], [[L1]], [[L1']], [[L2]], [[L2']], [[L3]], [[L3']], [[L4]], [[L4']], [[L5]], and [[L5']]. If a future seed edit introduces a new internal breakdown term not traceable to those files or to an existing sibling seed, it must mark the term as open rather than canonical.
+
+Row-level provenance rule: each internal S/S' 0-5 row must carry one of these derivation statuses when it is used for implementation scoping:
+
+| Status | Meaning |
+|---|---|
+| `direct World ontology` | The row is explicitly named or directly implied by the matching `Idea/Bimba/World/Types/Coordinates/S/**` coordinate file. |
+| `seed-side crystallisation` | The row crystallises World prose, older specs, and landed implementation contracts into a buildable S/S' surface; the owning seed must name its source coverage. |
+| `historical/superseded` | The row survives as genealogy but is not current build canon. |
+| `open` | The row is not settled enough for implementation authority and must not be silently promoted. |
+
+For S base specs, the existing `Internal 0-5 Breakdown` tables plus the 2026-06-02 `Canonical Source Lock` sections are the current row-level provenance surface. For standalone S' specs, the `Internal QL 0-5 Provenance` sections carry the same role.
+
+## Ta-Onta As S4' Rule
+
+[[ta-onta]] is the internal [[S4']] carrier set: [[S4.0']] [[Khora]], [[S4.1']] [[Hen]], [[S4.2']] [[Pleroma]], [[S4.3']] [[Chronos]], [[S4.4']] [[Anima]], and [[S4.5']] [[Aletheia]]. Treating [[ta-onta]] as a separate system, a loose plugin collection, or a peer layer beside [[S4']] is superseded historical framing. The [[VAK]] stack [[CPF]] / [[CT]] / [[CP]] / [[CF]] / [[CFP]] / [[CS]] is the vertical dispatch grammar that moves through those carriers.

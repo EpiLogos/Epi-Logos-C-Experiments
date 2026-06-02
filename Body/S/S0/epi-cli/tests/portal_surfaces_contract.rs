@@ -39,6 +39,80 @@ fn portal_surface_registry_collects_gateway_parity_without_forking_method_truth(
         .metadata
         .iter()
         .any(|item| item.contains("epii-agent-core")));
+
+    // Track 13 T1: portal readiness reports now render the explicit parity
+    // status, the authority_path, the adapter_path, and the extraction_task
+    // so the operator can see at-a-glance whether S0 is the law or membrane.
+    assert!(
+        epii.metadata
+            .iter()
+            .any(|item| item.starts_with("status: ")),
+        "gateway parity surface should expose status: line; got {:?}",
+        epii.metadata
+    );
+    assert!(
+        epii.metadata
+            .iter()
+            .any(|item| item.starts_with("authority_path: ")),
+        "gateway parity surface should expose authority_path: line; got {:?}",
+        epii.metadata
+    );
+    assert!(
+        epii.metadata
+            .iter()
+            .any(|item| item.starts_with("adapter_path: ")),
+        "gateway parity surface should expose adapter_path: line; got {:?}",
+        epii.metadata
+    );
+    assert!(
+        epii.metadata
+            .iter()
+            .any(|item| item.starts_with("extraction_task: ")),
+        "gateway parity surface should expose extraction_task: line; got {:?}",
+        epii.metadata
+    );
+    assert!(
+        epii.metadata
+            .iter()
+            .any(|item| item.starts_with("allowed_s0_responsibilities: ")),
+        "gateway parity surface should expose allowed_s0_responsibilities: line; got {:?}",
+        epii.metadata
+    );
+
+    // The s4'.* parity record is now an explicit Adapter (Track 13 T1):
+    // verify the rendered status label changed accordingly.
+    let s4_prime = surfaces
+        .iter()
+        .find(|surface| surface.id == "gateway.s4'.*")
+        .expect("s4' gateway parity surface should be visible");
+    assert!(
+        s4_prime
+            .metadata
+            .iter()
+            .any(|item| item == "status: Adapter"),
+        "s4'.* should be labeled Adapter in portal status; got {:?}",
+        s4_prime.metadata
+    );
+    assert!(
+        s4_prime.label.contains("Adapter"),
+        "s4'.* portal label should include Adapter status; got {}",
+        s4_prime.label
+    );
+
+    // The s3.* parity record is a CompatibilityAdapter under the new
+    // vocabulary (server.rs is a temporary live host, but the parity ledger
+    // describes its adapter shape).
+    let s3 = surfaces
+        .iter()
+        .find(|surface| surface.id == "gateway.s3.*")
+        .expect("s3.* gateway parity surface should be visible");
+    assert!(
+        s3.metadata
+            .iter()
+            .any(|item| item == "status: CompatibilityAdapter"),
+        "s3.* should be labeled CompatibilityAdapter; got {:?}",
+        s3.metadata
+    );
 }
 
 #[test]

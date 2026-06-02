@@ -12,7 +12,7 @@ c_0_source_coordinates: ["M2-0", "M2-1", "M2-2", "M2-3", "M2-4", "M2-5", "M3-0",
 **Supersedes:** Prior informal M-branch notes in MEMORY.md
 **Seeds:** `/Idea/Bimba/World/` tabulation files for M and M' coordinate Forms
 **Companion datasets:** `[[docs/datasets/parashakti-deep/nodes-full-detail.json]]`, `[[docs/datasets/mahamaya-deep/nodes-full-detail.json]]`
-**Companion specs:** `[[docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md]]`, `[[docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md]]`, `[[docs/datasets/mahamaya-deep/fibonacci-60-pisano-integration.md]]`
+**Companion specs:** `[[Idea/Bimba/Seeds/M/Legacy/specs/M/2026-03-12-cosmic-clock-full-architecture.md]]`, `[[Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md]]`, `[[docs/datasets/mahamaya-deep/fibonacci-60-pisano-integration.md]]`
 
 ---
 
@@ -76,7 +76,7 @@ The epogdoon (`9:8`) encodes this architecture as a single ratio:
 - **Topological formula:** `4×6 + 2×6 = 6×6 = 36` positions. Genus 6 → genus 12 through 72-fold coverage → zodiacal resonance
 - **Six integrated lenses** within M2-1, each containing six subsystems
 - **doubleCoveragePrinciple:** "Śiva is Earth and Earth is Śiva" — the M2-1 lens system is where the light/shadow polarity of `M2-3` (Decans) originates
-- **M' expression:** The 16-lens matrix in the clock (`lens_segment[16]` in `Clock_Degree_Node`) is M2-1 expressed as pre-baked LUT; `[[docs/plans/CLOCK-AND-NARA-SPECS/02-16-lenses-backbone-temporal.md]]`
+- **M' expression:** The 16-lens matrix in the clock (`lens_segment[16]` in `Clock_Degree_Node`) is M2-1 expressed as pre-baked LUT; `[[Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/02-16-lenses-backbone-temporal.md]]`
 
 ### M2-2 — 36 Tattvas System
 - **Name (dataset):** 36 Tattvas System
@@ -105,7 +105,7 @@ The epogdoon (`9:8`) encodes this architecture as a single ratio:
 - Each node carries `bodyPart` property (anatomical zone string)
 - Shadow pole: same body zone, blocked/excessive expression
 - **Resonances:** Kabbalistic 72 Names of God, Tarot Minor Arcana (decan-pip correspondence), Ayurvedic herbalism
-- **M' expression:** `DECAN_BODY_PARTS[36]` and `DECAN_HERBS[36]` in `medicine.rs`; `DECAN_TABLE[72]` (light+shadow, future); shadow pole → `ObstructedExpression` in oracle payload; canonical in `[[docs/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md §10]]`
+- **M' expression:** `DECAN_BODY_PARTS[36]` and `DECAN_HERBS[36]` in `medicine.rs`; `DECAN_TABLE[72]` (light+shadow, future); shadow pole → `ObstructedExpression` in oracle payload; canonical in `[[Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/00-canonical-invariants.md §10]]`
 
 ### M2-4 — Vibrational Arena of Archetypal Powers
 - **Name (dataset):** Parashakti — Vibrational Arena of Archetypal Powers
@@ -346,7 +346,7 @@ The M' layer is the coded Pratibimba of the M map above. Currently in C (`epi-li
 6. **Rotational state nodes** — 512 `RotationalState` nodes (`64 × 8`) not persisted in dataset; generate via `rotational_state_protocol.txt`
 7. **M2-3 `M2-3-{sign}-{decan}` coordinate paths** — exact sign+decan indexing not yet canonically mapped in code
 8. **`#4.4.4.4` Graphiti integration** — PersonalNexus node in Neo4j (same db as Bimba/Gnosis) fully spec'd; implementation partial
-9. **`VIBRATIONAL_TEMPLATE[72]`** — the 72-fold half-decan bridge (M1×M2 overlap) — future build artifact per `[[docs/plans/CLOCK-AND-NARA-SPECS/11-m1-m2-epogdoon-vibrational-bridge.md]]`
+9. **`VIBRATIONAL_TEMPLATE[72]`** — the 72-fold half-decan bridge (M1×M2 overlap) — future build artifact per `[[Idea/Bimba/Seeds/M/M1'/Legacy/plans/CLOCK-AND-NARA-SPECS/11-m1-m2-epogdoon-vibrational-bridge.md]]`
 
 **Seeds this document plants for `/Idea/Bimba/World/`:**
 - `M2` Type folder with Forms for M2-0 through M2-5 (data-grounded from parashakti-deep)

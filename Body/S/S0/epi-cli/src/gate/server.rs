@@ -3,7 +3,17 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use epi_s3_gateway::dispatch::classify_method;
+// 13.T2: route ownership lives entirely in S3 (`epi_s3_gateway::dispatch` and
+// the executable dispatch-plan contract at `epi_s3_gateway_contract::
+// METHOD_DISPATCH_PLAN`). S0 hosts the gateway process — the Tokio listener,
+// the WebSocket upgrade, the per-frame dispatch loop — but it MUST NOT
+// maintain a parallel route-ownership table. Both imports below come from
+// the S3 crate; the staged extraction boundary is "S0 hosts the process,
+// S3 owns route law." See `Body/S/S0/epi-cli/src/gate/parity.rs` (canonical
+// method `s3.*`, allowed_s0_responsibilities) and the 13.T2 evidence file at
+// `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/
+// plan.runs/13-t2-s3-dispatch-extraction-evidence.md`.
+use epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry};
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -1582,14 +1592,27 @@ async fn dispatch_rpc(
             super::nara::dispatch_nara(method, &frame.params).map(DispatchResult::immediate)
         }
         _ => {
+            // Route ownership AND dispatch-kind both come from S3 — S0 never
+            // synthesises either. If a method lands here, S3's route table
+            // recognised it (so the substrate is known) but no in-process
+            // gateway adapter implements it yet; the dispatch-plan kind tells
+            // the operator which substrate is expected to own the work.
+            let kind_hint = dispatch_plan_entry(&frame.method)
+                .map(|entry| format!(" (dispatch-plan kind: {})", entry.kind.label()))
+                .unwrap_or_default();
             let message = route
                 .map(|route| {
                     format!(
-                        "{} is routed by {} but has no executable gateway adapter",
-                        frame.method, route.route_id
+                        "{} is routed by {} but has no executable gateway adapter{}",
+                        frame.method, route.route_id, kind_hint
                     )
                 })
-                .unwrap_or_else(|| format!("{} is not implemented yet", frame.method));
+                .unwrap_or_else(|| {
+                    format!(
+                        "{} is not implemented yet{}",
+                        frame.method, kind_hint
+                    )
+                });
             Err(("unimplemented".to_owned(), message))
         }
     }

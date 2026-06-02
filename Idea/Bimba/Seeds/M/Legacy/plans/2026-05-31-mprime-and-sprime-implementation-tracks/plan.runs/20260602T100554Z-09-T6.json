@@ -1,0 +1,38 @@
+{
+  "runId": "20260602T100554Z-09-T6",
+  "taskId": "09.T6",
+  "startedAt": "2026-06-02T10:05:54.573Z",
+  "owner": "anima-09T6-fresh",
+  "leaseExpiresAt": "2026-06-02T12:05:54.573Z",
+  "worktree": null,
+  "task": {
+    "id": "09.T6",
+    "trackId": "09",
+    "tranche": "T6",
+    "title": "Training And Runtime Capacity Slices: Paramasiva And Mahamaya (gated by corpus manifests, training metric reports, runtime integration APIs, and Track 04 promotion planning)",
+    "effort": "gated by corpus manifests, training metric reports, runtime integration APIs, and Track 04 promotion planning",
+    "file": "09-agentic-mediation-and-operational-capacities.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md",
+    "dependsOn": [
+      "09.T5"
+    ],
+    "writeScopes": [
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**",
+      "Idea/Pratibimba/System/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

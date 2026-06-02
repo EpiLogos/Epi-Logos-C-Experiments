@@ -22,9 +22,9 @@ Primary canon used for [[S1']]:
 | [[S1-TEMPLATE-PRINCIPLES]] | `/Users/admin/Documents/Epi-Logos/Idea/Bimba/Seeds/S/S1/S1'/S1-TEMPLATE-PRINCIPLES.md` | Core template doctrine: [[CT]], [[CT']], [[Daily Note]] as metatemplate, [[NOW]] paradigm |
 | [[S1-STRUCTURE-PROPOSAL]] | `/Users/admin/Documents/Epi-Logos/Idea/Bimba/Seeds/S/S1/S1'/S1-STRUCTURE-PROPOSAL.md` | Deterministic S1' structural map, CT/CT' matrix, [[CT4b']] as master temporal template |
 | [[S1-CONTEXT-OPERATIONS]] | `/Users/admin/Documents/Epi-Logos/Idea/Bimba/Seeds/S/S1/S1'/S1-CONTEXT-OPERATIONS.md` | Time-period file operations and homebase/context architecture |
-| [[S1-S1i-OBSIDIAN]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/S/S1-S1i-OBSIDIAN.md` | Current formal spec tying content API, vault ontology, and S1/S1' law together |
+| [[S1-S1i-OBSIDIAN]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S1/S1'/Legacy/specs/S/S1-S1i-OBSIDIAN.md` | Current formal spec tying content API, vault ontology, and S1/S1' law together |
 | [[COORDINATE-MAP]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Empty/COORDINATE-MAP.md` | Living bridge document confirming intended coordinate assignment and target-state framing |
-| [[2026-02-22-bimba-data-foundation-harmonization]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` | Shared filesystem/path/template lineage contract used as target-state system law |
+| [[2026-02-22-bimba-data-foundation-harmonization]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` | Shared filesystem/path/template lineage contract used as target-state system law |
 
 Contextual/supporting reads consulted while resolving [[S1']]:
 
@@ -33,7 +33,7 @@ Contextual/supporting reads consulted while resolving [[S1']]:
 | `.pi/extensions/ta-onta/hen/CONTRACT.md` | `/Users/admin/Documents/Epi-Logos C Experiments/.pi/extensions/ta-onta/hen/CONTRACT.md` | Confirmed intended Hen-side ownership and vocabulary |
 | `.pi/extensions/ta-onta/hen/S1'/frontmatter_schema.ts` | `/Users/admin/Documents/Epi-Logos C Experiments/.pi/extensions/ta-onta/hen/S1'/frontmatter_schema.ts` | Canonical frontmatter-key law for target-state persisted content |
 | `.pi/extensions/ta-onta/hen/S1'/templates/*.md` | `/Users/admin/Documents/Epi-Logos C Experiments/.pi/extensions/ta-onta/hen/S1'/templates/` | Minimal live template surfaces; used only as sanity checks for naming, not as spec authority |
-| `docs/plans/2026-03-07-s1-s2-implementation-plan.md` | `/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/2026-03-07-s1-s2-implementation-plan.md` | Supplemental integration plan connecting [[S1']] to [[S2']] |
+| `Idea/Bimba/Seeds/S/S1/S1'/Legacy/plans/2026-03-07-s1-s2-implementation-plan.md` | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S1/S1'/Legacy/plans/2026-03-07-s1-s2-implementation-plan.md` | Supplemental integration plan connecting [[S1']] to [[S2']] |
 
 ## #5 Integration
 

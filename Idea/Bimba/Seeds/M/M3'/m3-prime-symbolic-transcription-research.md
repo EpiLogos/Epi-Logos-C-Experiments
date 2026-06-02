@@ -18,7 +18,7 @@
 - `Body/S/S0/portal-core/src/codon.rs`
 - `Body/M/epi-tauri/src-tauri/src/oracle/iching.rs`
 - `Body/M/epi-tauri/src-tauri/src/oracle/tarot.rs`
-- Boundary anchors: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`, `Idea/Bimba/Seeds/M/M2'/m2-prime-parashakti-cymatic-engine.md`, `Body/S/S0/epi-lib/include/m2.h`, `Body/S/S0/epi-lib/src/m2.c`, `Body/S/S0/epi-lib/test/m2/test_m2.c`, and relevant sections of `docs/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md`.
+- Boundary anchors: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`, `Idea/Bimba/Seeds/M/M2'/m2-prime-parashakti-cymatic-engine.md`, `Body/S/S0/epi-lib/include/m2.h`, `Body/S/S0/epi-lib/src/m2.c`, `Body/S/S0/epi-lib/test/m2/test_m2.c`, and relevant sections of `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-19-kernel-mprime-harmonic-clock-integration-plan.md`.
 
 ## M3' Operational Surface Summary
 

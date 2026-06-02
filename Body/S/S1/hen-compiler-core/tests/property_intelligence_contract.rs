@@ -4,7 +4,7 @@ use epi_s1_hen_compiler_core::property_intelligence::build_property_intelligence
 #[test]
 fn property_intelligence_request_carries_full_coordinate_schema_scope() {
     let evidence = collect_artifact_evidence(
-        "docs/specs/S/S2-S2i-GRAPH.md",
+        "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md",
         "---\ncoordinate: S2\ntitle: Graph\n---\n# Graph\n\nLinks [[M2']] and [[Q4]].",
     )
     .unwrap();

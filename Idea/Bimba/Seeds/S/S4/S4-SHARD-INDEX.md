@@ -8,11 +8,22 @@ c_0_source_coordinates:
   - "[[S4-TRACEABILITY-INDEX]]"
   - "[[S4'-TRACEABILITY-INDEX]]"
   - "[[S4-SPEC]]"
+  - "[[S4'-SPEC]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
 ---
 
 # S4/S4' Shard Index
 
 [[S4]] / [[S4']] owns PI agent runtime and [[Anima]] inhabitation law. These shards must make [[VAK]], permissions, [[Psyche]], team/subagent semantics, thought routing, [[Aletheia]] membrane, and [[Sophia]] return implementation-ready.
+
+## Harmonization Standard
+
+Every shard in this lane consumes [[S-SHARD-HARMONIZATION-PROTOCOL]], [[ARCHITECTURE-DIAGRAM-PACK#Ta-Onta Placement Invariant]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]], and the paired [[World/Types]] canvases at `Idea/Bimba/World/Types/Coordinates/S/S4/S4.canvas` and `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.canvas`. The lane distinction is:
+
+- [[S4.0]]-[[S4.5]] describe the base [[S4]] runtime mechanics.
+- [[S4.0']]-[[S4.5']] describe the internal [[ta-onta]] carriers [[Khora]], [[Hen]], [[Pleroma]], [[Chronos]], [[Anima]], and [[Aletheia]].
+- [[S4.1']] is the explicit residency law for architecture-as-documentation: crystallised definitions and stable architecture state in [[World]], planning/spec/source material in [[Seeds]], and MOC/canvas residency in [[World/Types]].
 
 ## Base Shards
 

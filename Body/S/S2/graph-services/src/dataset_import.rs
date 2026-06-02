@@ -1359,7 +1359,7 @@ mod tests {
 
     #[test]
     fn canonical_plan_covers_low_detail_and_deep_branches() {
-        let plan = canonical_dataset_plan(Path::new("../../../../docs/datasets"));
+        let plan = canonical_dataset_plan(Path::new("../../../../Idea/Bimba/Map/datasets"));
         assert!(plan
             .iter()
             .any(|branch| branch.id == "low-detail/parashakti"));
@@ -1369,7 +1369,7 @@ mod tests {
 
     #[test]
     fn canonical_plan_points_at_real_corpus_files() {
-        let repo_datasets = Path::new("../../../../docs/datasets");
+        let repo_datasets = Path::new("../../../../Idea/Bimba/Map/datasets");
         let plan = canonical_dataset_plan(repo_datasets);
 
         for branch in &plan {

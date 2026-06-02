@@ -1,0 +1,38 @@
+{
+  "runId": "20260602T005749Z-09-T4",
+  "taskId": "09.T4",
+  "startedAt": "2026-06-02T00:57:49.177Z",
+  "owner": "anima-09T4-fresh",
+  "leaseExpiresAt": "2026-06-02T02:57:49.177Z",
+  "worktree": null,
+  "task": {
+    "id": "09.T4",
+    "trackId": "09",
+    "tranche": "T4",
+    "title": "Operational Capacity Workflow Registry And S5 Mediation Adapter (gated by Track 04 typed candidates and route queues)",
+    "effort": "gated by Track 04 typed candidates and route queues",
+    "file": "09-agentic-mediation-and-operational-capacities.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md",
+    "dependsOn": [
+      "09.T3"
+    ],
+    "writeScopes": [
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**",
+      "Idea/Pratibimba/System/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

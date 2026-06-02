@@ -9,7 +9,7 @@ use support::temp_env;
 fn envelope() -> Value {
     json!({
         "taskText": "coordinate the implementation route",
-        "artifactRefs": ["docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/context-09-T1.md"],
+        "artifactRefs": ["Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/context-09-T1.md"],
         "coordinateContext": {
             "source": "m-dev",
             "track": "09.T1"

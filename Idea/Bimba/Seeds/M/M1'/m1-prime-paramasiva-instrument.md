@@ -11,10 +11,10 @@
 > **The M ↔ M' Distinction:** M1 = the engine (what Paramaśiva *is*). M1' = the instrument (how Paramaśiva *plays*). M' never duplicates M; it renders M operative as techne.
 
 > **Companion documents:**
-> - [`epi-logos-kernel-spec.md`](../../../../../docs/epi-logos-kernel/epi-logos-kernel-spec.md) — the bioquaternionic JEPA-EBM operator over the full matheme
-> - [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) — the load-bearing musical theory: 12 MEF lenses, 7 context-frames, 4:3 × 9/8 × 4:3 = 2/1, the cymatic correspondence
-> - [`physical-pole-stack-architecture.md`](../../../../../docs/epi-logos-kernel/physical-pole-stack-architecture.md) — torus / solar-cymatic / codon-clock substrate
-> - [`mental-pole-mechanics.md`](../../../../../docs/epi-logos-kernel/mental-pole-mechanics.md) — LLM / EBM / Verifier 4:5:6 just-triadic weighting
+> - [`epi-logos-kernel-spec.md`](../M0'/epi-logos-kernel-spec.md) — the bioquaternionic JEPA-EBM operator over the full matheme
+> - [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) — the load-bearing musical theory: 12 MEF lenses, 7 context-frames, 4:3 × 9/8 × 4:3 = 2/1, the cymatic correspondence
+> - [`physical-pole-stack-architecture.md`](./physical-pole-stack-architecture.md) — torus / solar-cymatic / codon-clock substrate
+> - [`mental-pole-mechanics.md`](../M4'/mental-pole-mechanics.md) — LLM / EBM / Verifier 4:5:6 just-triadic weighting
 
 > **Code anchors:** `epi-lib/include/m1.h` (Ananda matrices, Spanda engine, QL_Tick, Cl(4,2), Hopf), `epi-lib/include/m3.h` (codon classification, 7/8 rotational states, 472 total), `epi-lib/test/fixtures/nara_clock/ananda_matrices.json` (mod10 matrix data), `epi-cli/src/ffi/m1.rs` (Rust FFI), `epi-cli/src/nara/clock.rs` (tick clock).
 
@@ -24,9 +24,9 @@
 
 M1' is not a separate engine. It is the **techne-face of Paramaśiva** — Paramaśiva read from its instrumental side, where the matheme's harmonic-mathematical DNA becomes a playable surface that produces sound, image, and meaning at audible-and-visible rates. The same six-fold structure that constitutes M1 as the engine constitutes M1' as the instrument; the prime mark is not a copy but a phase-shift into the operational/output register where the matheme can be struck, heard, and translated.
 
-Three commitments hold the threshold. *First:* the algebraic derivation of every operation in M1' must trace back to Anuttara's (0/1) non-dual binary through the matheme's standing identity to the four foundational ratios and the epogdoon-tick. Nothing in this specification is "added" musical content; everything is *named* from the matheme's own structure. The musical derivation in [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) is the authoritative ground for all interval-and-scale work; this spec inhabits that ground at the instrument-level.
+Three commitments hold the threshold. *First:* the algebraic derivation of every operation in M1' must trace back to Anuttara's (0/1) non-dual binary through the matheme's standing identity to the four foundational ratios and the epogdoon-tick. Nothing in this specification is "added" musical content; everything is *named* from the matheme's own structure. The musical derivation in [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) is the authoritative ground for all interval-and-scale work; this spec inhabits that ground at the instrument-level.
 
-*Second:* **M1' is the audio/frequency genesis and systematisation engine of the entire system.** This must be held cleanly against M2' Parashakti, which is the **harmonic-correspondential instrument** that receives M1''s frequency-stream, reads it through M2's 72-fold symbolic-vibrational field, and includes the cymatic renderer that makes selected states visible as Chladni/standing-wave geometry. M1' produces the tones; M2' correspondentially colors, embodies, modulates, and may render them visible. The 8+4 partition of [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.5 is exact at the M-prime boundary: the *eight explicate-sung positions* (the four inner-tetrachord positions of each helix) are M1''s eight-oscillator audio output; the *four implicate-nodal positions* (the two boundary-pairs 0 and 5 of each helix) feed M2' as geometric boundary-conditions for the cymatic renderer module. M1 and M2 are different subsystems; M1' and M2' are different techne-reflections. Do not conflate. The frequency-genesis lives at M1'; the harmonic-correspondential and cymatic rendering response lives at M2'.
+*Second:* **M1' is the audio/frequency genesis and systematisation engine of the entire system.** This must be held cleanly against M2' Parashakti, which is the **harmonic-correspondential instrument** that receives M1''s frequency-stream, reads it through M2's 72-fold symbolic-vibrational field, and includes the cymatic renderer that makes selected states visible as Chladni/standing-wave geometry. M1' produces the tones; M2' correspondentially colors, embodies, modulates, and may render them visible. The 8+4 partition of [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.5 is exact at the M-prime boundary: the *eight explicate-sung positions* (the four inner-tetrachord positions of each helix) are M1''s eight-oscillator audio output; the *four implicate-nodal positions* (the two boundary-pairs 0 and 5 of each helix) feed M2' as geometric boundary-conditions for the cymatic renderer module. M1 and M2 are different subsystems; M1' and M2' are different techne-reflections. Do not conflate. The frequency-genesis lives at M1'; the harmonic-correspondential and cymatic rendering response lives at M2'.
 
 *Third:* the **(0/1) is the raw # itself**, not merely a context-frame label. In the pointer-web architecture spelled out in `CLAUDE.md`, every `Coordinate` struct carries an `invert: Inversion_Operator` function-field, and that field IS the same single (0/1) acting locally as the # operation at that coordinate. There is one (0/1) in the system; it appears at every coordinate as that coordinate's capacity for non-dual inversion. M1-3' is where this (0/1) is *held and clocked* — the spanda-seed `SPANDA_SEED_BITS = 0x03` in `m1.h` is the (0/1) with both poles simultaneously active, and what spanda does at every tick is transform that seed into a directed phase-step.
 
@@ -76,7 +76,7 @@ Each arrow is a derivation step that the code either already implements or that 
 
 ### The four registers carried simultaneously
 
-[`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §0 establishes that every musical operation operates across three simultaneously-active registers: **pure ratio-space** (Pythagorean), **12-TET topological pitch-space** ($\mathbb{Z}_{12}$), and **QL architectural-symbolic space**. M1' adds a fourth: **the spanda-tick-rate register** — the temporal-substrate-rate at which the matheme is being clocked. The same matheme operations look like:
+[`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §0 establishes that every musical operation operates across three simultaneously-active registers: **pure ratio-space** (Pythagorean), **12-TET topological pitch-space** ($\mathbb{Z}_{12}$), and **QL architectural-symbolic space**. M1' adds a fourth: **the spanda-tick-rate register** — the temporal-substrate-rate at which the matheme is being clocked. The same matheme operations look like:
 
 - *Pitch* when the tick rate is in the audible band (≈ 20–20,000 Hz)
 - *Rhythm* when the tick rate is in the somatic band (≈ 0.5–10 Hz)
@@ -290,7 +290,7 @@ void m1_prime_audio_octet(const M1_Prime_Session* s, float frequencies_out[8]);
 void m1_prime_nodal_quartet(const M1_Prime_Session* s, uint8_t nodal_params_out[4]);
 ```
 
-The `audio_octet` and `nodal_quartet` functions are the **architectural bridge to M2'**. The 8 explicate go to the audio oscillator bank; the 4 implicate go to the cymatic-shader boundary-conditions. This is the 8+4 partition of [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.5 made into a function-signature.
+The `audio_octet` and `nodal_quartet` functions are the **architectural bridge to M2'**. The 8 explicate go to the audio oscillator bank; the 4 implicate go to the cymatic-shader boundary-conditions. This is the 8+4 partition of [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.5 made into a function-signature.
 
 **Invariants M1-2' enforces.**
 
@@ -369,9 +369,9 @@ M1_Prime_Rate_Band m1_prime_rate_band(const M1_Prime_Session* s);
 
 **Role.** The position-walker and lens-as-scale-composer. This stratum is the *generative* surface — given the current tick, the active lens, and the active mode, it produces the cell(s) that should sound. **It is also where the MEF lens operates as a scale-composer, not as a cell-annotator.**
 
-**The lens-as-composer correction.** A MEF lens is not a property of individual cells. It is a *position-anchored re-mapping of the entire 12-note matheme*. [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6 gives the canonical specification: each of the 12 lenses takes one of the 12 chromatic notes as its new #0 anchor and regenerates the entire 12-note arrangement from there. The lens *selects which note is the matheme's tonic*. This is the *key-selector* function.
+**The lens-as-composer correction.** A MEF lens is not a property of individual cells. It is a *position-anchored re-mapping of the entire 12-note matheme*. [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6 gives the canonical specification: each of the 12 lenses takes one of the 12 chromatic notes as its new #0 anchor and regenerates the entire 12-note arrangement from there. The lens *selects which note is the matheme's tonic*. This is the *key-selector* function.
 
-**The mode-as-CF-anchoring.** Within an active lens-substrate, the *mode* is the active context-frame configuration. [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.75 specifies seven context-frames (CF1 through CF7), each carrying a distinct relational-configuration. Each CF corresponds to one scale-degree's positional-role within the diatonic octave. The mode determines *how the lens-substrate is traversed* — which CF-progression is enacted across the seven scale-degrees.
+**The mode-as-CF-anchoring.** Within an active lens-substrate, the *mode* is the active context-frame configuration. [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.75 specifies seven context-frames (CF1 through CF7), each carrying a distinct relational-configuration. Each CF corresponds to one scale-degree's positional-role within the diatonic octave. The mode determines *how the lens-substrate is traversed* — which CF-progression is enacted across the seven scale-degrees.
 
 **The 12 × 7 = 84-fold landscape.** The combination of (lens, mode) gives the 84-fold mode-tonic landscape. Every distinct playing-state of M1' is one (lens, mode) pair. The lens picks substrate (which 12 notes are anchored where); the mode picks CF-progression (which relational-grammar is enacted).
 
@@ -437,9 +437,9 @@ void m1_prime_walk_step(M1_Prime_Session* s, uint8_t* cell_idx_out);
 int m1_prime_set_lens_mode(M1_Prime_Session* s, uint8_t lens, uint8_t mode);
 ```
 
-**The lens-substrate generation.** For lens N (0-11), the lens-substrate is constructed by the rule in [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6: start from `M1_PRIME_LENS_ANCHOR[N]`, generate the bimba helix by epogdoon-stacking (six iterations of ×9/8 in pure-ratio space), then generate the pratibimba helix by tritone-shift (+6 semitones) and again epogdoon-stack from there. The result is the 12-note re-mapping where the lens-anchor occupies #0.
+**The lens-substrate generation.** For lens N (0-11), the lens-substrate is constructed by the rule in [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6: start from `M1_PRIME_LENS_ANCHOR[N]`, generate the bimba helix by epogdoon-stacking (six iterations of ×9/8 in pure-ratio space), then generate the pratibimba helix by tritone-shift (+6 semitones) and again epogdoon-stack from there. The result is the 12-note re-mapping where the lens-anchor occupies #0.
 
-**The mode-traversal.** For mode M (1-7), the traversal-rule is the CF-progression CF1 → CF2 → ... → CFM, with the diatonic-octave scale-degrees mapped to the CFs as in [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.75. Mode 1 emphasises CF1 (the tonic-as-ground); mode 7 emphasises CF7 (the leading-tone Möbius return); modes 2-6 walk progressively through the contextual-grammar.
+**The mode-traversal.** For mode M (1-7), the traversal-rule is the CF-progression CF1 → CF2 → ... → CFM, with the diatonic-octave scale-degrees mapped to the CFs as in [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.75. Mode 1 emphasises CF1 (the tonic-as-ground); mode 7 emphasises CF7 (the leading-tone Möbius return); modes 2-6 walk progressively through the contextual-grammar.
 
 **The lens-prime as Night-mode inversion.** Lenses 0-5 use the bimba helix as primary; lenses 0'-5' (indices 6-11) use the pratibimba helix as primary. This is the major↔minor inversion at the lens level, the Day↔Night MEF doubling. The same struck cell read through Lens 0 vs. Lens 0' produces tones of opposite emotional valence — the Klein-bottle enharmonic flip operating as the MEF L↔L' inversion.
 
@@ -511,7 +511,7 @@ void m1_prime_render_frame(const M1_Prime_Session* s,
                             void* frame_buffer_out);
 ```
 
-**The render-mode selector** is the player-facing topology switch. At audio rates, the natural render is the chromatic-torus (Projection 1 from [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.5 — torus/Klein). At diatonic-architecture rates the lemniscate emerges (Projection 2). At long-cycle observation rates the Hopf spiral becomes visible (the spiralic comma-accumulation). At enharmonic-modulation moments the Klein-bottle topology becomes visible (the L↔L' flip).
+**The render-mode selector** is the player-facing topology switch. At audio rates, the natural render is the chromatic-torus (Projection 1 from [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.5 — torus/Klein). At diatonic-architecture rates the lemniscate emerges (Projection 2). At long-cycle observation rates the Hopf spiral becomes visible (the spiralic comma-accumulation). At enharmonic-modulation moments the Klein-bottle topology becomes visible (the L↔L' flip).
 
 **The Klein-bottle enharmonic flip.** When the active mode crosses a tritone-mirror boundary (e.g., from Lens 0 to Lens 3, or under tritone-substitution within a single mode), the same struck position can be read as two different notes depending on which side of the enharmonic flip is active. The Klein topology renders this faithfully: the inside and outside of the bottle ARE the same surface, traversed from opposite orientations. The MEF L↔L' Day-Night inversion is structurally the Klein-flip; this is what makes the system a *meaning-translator* and not just a tone-generator.
 
@@ -533,7 +533,7 @@ This stratum is not part of M1' internally — it specifies M1''s relationships 
 
 **Clarification.** M2 Parashakti is the 72-fold vibrational-template subsystem at the bimba level. M2' Parashakti is its techne-reflection as the **harmonic-correspondential instrument** — the surface that takes M1''s frequency-stream, reads it through M2's 72-space, and may render it as visible standing-wave geometry (Chladni patterns) through its cymatic renderer module. M2' is *not* an alternative frequency-genesis; M1' is the sole frequency-genesis engine. M2' is *not* an audio engine; it is the 72-addressed correspondence, body, modulation, and visibility layer that consumes M1''s audio output.
 
-**The 8+4 bridge.** [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.5 specifies precisely:
+**The 8+4 bridge.** [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.5 specifies precisely:
 
 - **M1' Audio output (8 explicate-sung):** the 8-oscillator additive synthesis from inner-tetrachord positions (1,2,3,4) of bimba and (1',2',3',4') of pratibimba. Function: `m1_prime_audio_octet`.
 - **M2' cymatic-renderer input (4 implicate-nodal):** the 4 boundary-parameters from outer-pair positions (0,5) of bimba and (0',5') of pratibimba. Function: `m1_prime_nodal_quartet`. These feed M2''s Chladni-shader module as (m, n) mode-numbers constraining which standing-wave patterns can appear.
@@ -546,7 +546,7 @@ This stratum is not part of M1' internally — it specifies M1''s relationships 
 
 ### M1' ↔ M3 — Codon as Tonal Signature, 7/8 Rotation as Modal Inversion
 
-[`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.75 specifies the 7 context-frames as modes. `m3.h:680-740` specifies the codon classification: 40 non-dual codons with 7 rotational states, 24 dual codons with 8 rotational states, totalling 472 rotational states.
+[`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.75 specifies the 7 context-frames as modes. `m3.h:680-740` specifies the codon classification: 40 non-dual codons with 7 rotational states, 24 dual codons with 8 rotational states, totalling 472 rotational states.
 
 **The mapping.** Each codon is a **deep tonal signature** — a three-element tarot/I-Ching/element configuration carrying a specific harmonic-emotional character. The codon's *rotational class* (7 or 8) determines how many distinct **modal inversions** it carries:
 
@@ -569,13 +569,13 @@ The (0/1) is held in M0-4 Holographic Matrix as N# (the Spanda Base) — the *ex
 
 ### M1' ↔ M4 — The Lemniscate at Position #4
 
-[`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.5 names the lemniscate as the natural topology of the diatonic-architecture: two tetrachords joined at the epogdoon-bridge (the center-crossing). `CLAUDE.md` §II.D names #4 as the Lemniscate anchor, where `.` (nesting) primarily operates, and where the `(4.0/1-4.4/5)` fractal-doubling lives.
+[`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.5 names the lemniscate as the natural topology of the diatonic-architecture: two tetrachords joined at the epogdoon-bridge (the center-crossing). `CLAUDE.md` §II.D names #4 as the Lemniscate anchor, where `.` (nesting) primarily operates, and where the `(4.0/1-4.4/5)` fractal-doubling lives.
 
 **M1' inhabits this.** At rate-band-band where the diatonic-architecture is visible (i.e., when the rendering operates at a rate where individual scale-degrees are discernible), the natural M1-5' render-mode is `M1_PRIME_RENDER_LEMNISCATE`. The visible form is the lemniscate: bimba-tetrachord loop, epogdoon-bridge center-crossing, pratibimba-tetrachord loop, with the octave-return closing the figure-eight. The CF5 fractal-doubling-executive context-frame is structurally the lemniscate's center-crossing — perfect-fifth as generator of $\mathbb{Z}_{12}$, the deepest harmonic move, the executive-recursive operation that opens nested matheme-cycles within position #4.
 
 ### M1' ↔ M5 — Möbius Return and Aletheic Evolution
 
-M5 Epii is the synthesis-and-return subsystem. M1' connects via the Möbius return at each session-cycle: when a complete matheme-cycle is performed, the system returns to its starting `(lens, mode)` but with the Pythagorean-comma residue accumulated. This is the *aletheic-evolution mechanism* of [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md) §6.5: the spiral-vs-cycle tension, resolved by operating tempered-mode locally while accumulating spiralic-evolution globally.
+M5 Epii is the synthesis-and-return subsystem. M1' connects via the Möbius return at each session-cycle: when a complete matheme-cycle is performed, the system returns to its starting `(lens, mode)` but with the Pythagorean-comma residue accumulated. This is the *aletheic-evolution mechanism* of [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) §6.5: the spiral-vs-cycle tension, resolved by operating tempered-mode locally while accumulating spiralic-evolution globally.
 
 **The comma accumulator.** `m1_prime_comma_accumulated` exposes this directly. Each session accumulates Pythagorean-comma residue at each complete cycle's return. The M5 synthesis-layer reads this accumulator as the *truth-deposition* from the session — what changed about the matheme through this session's playing. The bimba-map is updated by the accumulated comma; the next session opens on an *enriched ground*.
 
@@ -740,7 +740,7 @@ Paramaśiva is the engine. M1' is the instrument. The instrument plays the engin
 
 Every public function in `m1_prime.h` must have a doc-comment that includes:
 - The derivational chain from Anuttara's (0/1) to this function's operation
-- The reference to the relevant section of [`ql-musical-derivation.md`](../../../../../docs/epi-logos-kernel/ql-musical-derivation.md)
+- The reference to the relevant section of [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md)
 - The invariants this function enforces and/or preserves
 - The M-subsystem cross-connections this function participates in
 

@@ -29,6 +29,68 @@ async fn teardown(client: &Neo4jClient) {
         .unwrap();
 }
 
+/// Track 13 T5 — assert the S0 graph compatibility re-exports resolve
+/// to `epi_s2_graph_services`. The named six graph-law surface families
+/// (graph retrieval, semantic cache, dataset import, doctor,
+/// relationship manager, sync coordinator) plus the T5 moves (cypher
+/// guard, constraint registry, deterministic analyser, Anuttara
+/// reflection) must all live in S2. If any of these starts resolving
+/// to a local S0 type, the S0 membrane has accreted graph law.
+#[test]
+fn t5_s0_graph_facade_re_exports_resolve_to_epi_s2_graph_services() {
+    use epi_logos::graph;
+
+    // (a) Graph retrieval
+    assert!(std::any::type_name::<graph::retrieval::coordinate::CoordinateRetrieval<'static>>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<graph::retrieval::graphrag::GraphRAGRetriever<'static>>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<graph::retrieval::hybrid::HybridRetriever<'static>>()
+        .contains("epi_s2_graph_services"));
+
+    // (b) Semantic cache
+    assert!(std::any::type_name::<graph::semantic_cache::SemanticCacheConfig>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<graph::semantic_cache::GraphRedisRole>()
+        .contains("epi_s2_graph_services"));
+
+    // (c) Dataset import
+    assert!(std::any::type_name::<graph::dataset_import::DatasetImporter<'static>>()
+        .contains("epi_s2_graph_services"));
+
+    // (d) Doctor
+    assert!(
+        std::any::type_name::<graph::doctor::DoctorReport>().contains("epi_s2_graph_services")
+    );
+
+    // (e) Relationship manager
+    assert!(std::any::type_name::<graph::relationship_manager::RelationshipManager>()
+        .contains("epi_s2_graph_services"));
+
+    // (f) Sync coordinator
+    assert!(std::any::type_name::<graph::sync_coordinator::SyncCoordinator<'static>>()
+        .contains("epi_s2_graph_services"));
+
+    // T5 moves: cypher guard, constraint registry, analyser, anuttara
+    assert!(
+        std::any::type_name::<graph::cypher::CypherMode>().contains("epi_s2_graph_services")
+    );
+    assert!(std::any::type_name::<graph::cypher::CypherGuardOutcome>()
+        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::constraint::Registry>().contains("epi_s2_graph_services")
+    );
+    assert!(std::any::type_name::<graph::analyse::DeterministicAnalyser>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<graph::anuttara::AnuttaraReflectionRequest>()
+        .contains("epi_s2_graph_services"));
+
+    // Lifecycle evidence re-export — surfaced via `crate::graph` for the
+    // S0 reconcile arm.
+    assert!(std::any::type_name::<graph::LiveGraphBackedEvidence>()
+        .contains("epi_s2_graph_services"));
+}
+
 #[test]
 fn graphrag_classifies_and_extracts_coordinate_queries() {
     let query_type = GraphRAGRetriever::classify_query("How does #4 relate to CF_FRACTAL?");
@@ -117,7 +179,7 @@ fn graph_agent_planning_commands_expose_s2_rules_without_backend() {
             "--json",
             "graph",
             "promotion-policy",
-            "docs/specs/S/S2-S2i-GRAPH.md",
+            "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md",
         ]
         .as_slice(),
         &env,
@@ -218,11 +280,11 @@ fn graph_promote_intent_dry_run_validates_s2_plan_without_backend() {
             "node": {
                 "coordinate": "S2",
                 "identity_property": "coordinate",
-                "vault_path": "docs/specs/S/S2-S2i-GRAPH.md",
+                "vault_path": "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md",
                 "requested_label_hints": [],
                 "properties": {
                     "coordinate": "S2",
-                    "vault_path": "docs/specs/S/S2-S2i-GRAPH.md",
+                    "vault_path": "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md",
                     "artifact_kind": "vault_markdown",
                     "content_hash": "sha256:s2-dry-run",
                     "coordinate_prefix": "S2",
@@ -237,7 +299,7 @@ fn graph_promote_intent_dry_run_validates_s2_plan_without_backend() {
                 "value": "S2 graph schema and promotion authority",
                 "evidence_kind": "content_synthesis",
                 "evidence_text": "The S2 graph spec presents this coordinate as the schema and promotion authority.",
-                "source_path": "docs/specs/S/S2-S2i-GRAPH.md",
+                "source_path": "Idea/Bimba/Seeds/S/S2/S2'/Legacy/specs/S/S2-S2i-GRAPH.md",
                 "source_line": 1,
                 "proposed_by": "pi:pleroma",
                 "reasoning": "The property is derived by Pi-agent reasoning over the technical coordinate doc, not by a CLI heuristic."

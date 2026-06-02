@@ -188,13 +188,42 @@ impl PortalSurfaceProvider for GatewayParityProvider {
                     })
                     .or_else(|| record.cli_mirror.map(split_command))
                     .unwrap_or_default();
-                let status = format!("{:?}", record.status);
+                let status_label = record.status.label();
+
+                // Per Track 13 T1: portal readiness reports MUST surface the
+                // explicit parity classification (adapter vs compatibility
+                // shim vs temporary live host vs canonical native) plus the
+                // Body-native authority path and the extraction task, so the
+                // operator can see at-a-glance whether S0 is the law or a
+                // membrane over the law.
+                let mut metadata = vec![
+                    format!("owner: {}", record.owner),
+                    format!("status: {}", status_label),
+                    format!("status_detail: {}", record.status.describe_for_portal()),
+                    format!("body: {}", record.body_path),
+                    format!("tests: {}", record.test_evidence.join(", ")),
+                ];
+                if let Some(authority) = record.authority_path {
+                    metadata.push(format!("authority_path: {authority}"));
+                }
+                if let Some(adapter) = record.adapter_path {
+                    metadata.push(format!("adapter_path: {adapter}"));
+                }
+                if let Some(task) = record.extraction_task {
+                    metadata.push(format!("extraction_task: {task}"));
+                }
+                if !record.allowed_s0_responsibilities.is_empty() {
+                    metadata.push(format!(
+                        "allowed_s0_responsibilities: {}",
+                        record.allowed_s0_responsibilities.join("; ")
+                    ));
+                }
 
                 PortalSurface {
                     id: format!("gateway.{}", record.canonical_method),
                     coordinate: coordinate_for(record.canonical_method, record.owner),
                     kind: PortalSurfaceKind::GatewayMethod,
-                    label: format!("{} ({})", record.canonical_method, status),
+                    label: format!("{} ({})", record.canonical_method, status_label),
                     command_hint: record
                         .live_gateway_method
                         .or(record.cli_mirror)
@@ -211,11 +240,7 @@ impl PortalSurfaceProvider for GatewayParityProvider {
                     }],
                     source: PortalSurfaceSource::GatewayParity,
                     trust_tier: "builtin".to_string(),
-                    metadata: vec![
-                        format!("owner: {}", record.owner),
-                        format!("body: {}", record.body_path),
-                        format!("tests: {}", record.test_evidence.join(", ")),
-                    ],
+                    metadata,
                 }
             })
             .collect()

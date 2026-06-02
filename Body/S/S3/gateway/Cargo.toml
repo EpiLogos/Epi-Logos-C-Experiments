@@ -15,6 +15,17 @@ portal-core = { path = "../../S0/portal-core" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["process", "sync"] }
+uuid = { version = "1", features = ["v4"] }
+
+# 13.T4: SpaceTimeDB native subscription / HTTP reducer client / fallback policy
+# all live in the S3 spacetime module (gateway/src/spacetime.rs). These deps
+# previously belonged to S0; moving them here decouples the membrane.
+futures-util = "0.3"
+tokio-tungstenite = "0.24"
+reqwest = { version = "0.12", features = ["json", "blocking"] }
+sha2 = "0.10"
+blake3 = "1"
+hex = "0.4"
 
 [dev-dependencies]
 epi-s3-graphiti-runtime = { path = "../graphiti-runtime" }

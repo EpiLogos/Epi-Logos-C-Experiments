@@ -5,39 +5,51 @@ c_1_ct_type: "CT1"
 c_0_source_coordinates:
   - "[[S4-SPEC]]"
   - "[[S-SYSTEM-INDEX]]"
+  - "[[S4'-SPEC]]"
+  - "[[S4'-TRACEABILITY-INDEX]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
 ---
 
 # S4.5' Shard: Aletheia Membrane
 
-## Intent
+## Canonical Role
 
-Own the [[Aletheia]] carrier of [[S4.5']] inside [[ta-onta]]: UX membrane, thought/T-bucket handling, crystallisation trigger, [[Sophia]] disclosure, Night' return handling, and [[Epii]] review handoff.
+[[S4.5']] is the [[Aletheia]] carrier of [[S4']]: [[P5]] / [[CT5]] truth-disclosure membrane, thought/T-bucket handling, [[Sophia]] disclosure, Night' return handling, crystallisation trigger, and review handoff toward [[S5']] [[Epii]].
 
-This is not the whole [[S5]] world-return system. It is S5/S5' return pressure internalized inside S4' so agent outputs can become reviewable, crystallisable, and handoff-ready.
+## Source And Diagram Anchors
 
-## Build Scope
+- Umbrella and local authority: [[S4'-SPEC]], [[S4-SPEC]], [[S4'-TRACEABILITY-INDEX]], [[S4-5-SPEC]], [[S5'-SPEC]], [[S4-4'-GOAL-PRELUDE-SPEC]].
+- Diagram anchors: [[ARCHITECTURE-DIAGRAM-PACK#Ta-Onta Placement Invariant]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]], [[ARCHITECTURE-DIAGRAM-PACK#Diagram 4 Cross-System Coupling]].
+- World/MOC anchors: [[S4']], [[Aletheia]], `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.canvas`.
+- Migrated sources: [[S4-TA-ONTA-EXTENSION-SPEC]], [[S4-NOW-INTEGRATION-AND-ENVIRONMENT]], [[2026-03-10-ta-onta-full-implementation]], [[2026-04-04-graphiti-unified-temporal-context-service]], [[2026-05-21-agent-led-coordinate-promotion-policy]].
 
-- Produce reviewable crystallisations.
-- Route human-visible notices.
-- Send meaning-review material to S5' inbox when required.
+## Current Body Reality
 
-## API / Envelope / TS
+The live Aletheia carrier is `Body/S/S4/ta-onta/S4-5p-aletheia/extension.ts`, `CONTRACT.md`, `modules/gate-trigger.ts`, `modules/thought-vak.ts`, `modules/sophia-ingest.ts`, `modules/hen-integration.ts`, `modules/coordinate-loop.ts`, and `S5'/skills/**`. It registers session promotion, Gnosis ingest/query/notebook, thought route, crystallise, seed refresh, enrichment/status, episodic record/search/arc tools, Mobius arc, thought ingestion, and `epii_invoke_anima`.
 
-- Supports `s4'.thought.*`, `s4'.crystallise`, `s4'.notify_user`.
-- Produces crystallisation layer material.
+Tests: `z_cycle_smoke.test.ts`, `gate_trigger.test.ts`, `sophia_ingest.test.ts`, and `thought_route_vak.test.ts`. The Janus envelope schema and Aletheia gates sit under `Body/S/S4/ta-onta/S4-5p-aletheia/S5'/**`.
 
-## Implementation Hooks
+## Build Contract
 
-- `.pi/extensions/ta-onta/aletheia/`.
-- Aletheia extension.
-- Sophia disclosure path.
-- Epii review inbox bridge.
-- Night' and Moirai-mode handoff surfaces.
+Aletheia receives review pressure from [[Sophia]] and [[Psyche]], routes thoughts into T/T' surfaces, prepares reviewable crystallisations, and hands deep evaluation to [[Epii]]. It must not absorb [[S5']] governance. Every crystallisation must carry source artifacts, [[VAK]] address, session/day/NOW, privacy/review class, and whether it is a trigger, draft, or approved promotion candidate.
+
+The Z-thread role is rehear, not recompose. Recomposition/autoresearch belongs to [[Epii]], even when Aletheia supplies Gnosis, Moirai, or Night' material.
+
+## API / Envelope / Implementation Hooks
+
+- Target families: `s4'.thought.*`, `s4'.crystallise`, `s4'.notify_user`.
+- PI mirrors: `aletheia_thought_route`, `aletheia_crystallise`, `aletheia_session_promote`, `aletheia_seed_refresh`, `aletheia_gnosis_*`, `aletheia_episodic_*`, `epii_invoke_anima`.
+- Review envelope includes session lineage, source artifacts, T-bucket, Gnosis notebook, [[VAK]] address, and target coordinate.
+- Night' handoff uses Moirai through [[Anima]] dispatch rather than direct Aletheia self-routing.
 
 ## Test Obligations
 
-- Crystallisation creates typed disclosure.
-- Review-required output routes to Epii inbox target.
+- `thought_route_vak.test.ts` proves VAK-bearing thought artifacts route correctly.
+- `sophia_ingest.test.ts` proves Sophia disclosure ingestion.
+- `gate_trigger.test.ts` proves gate classification semantics.
+- `z_cycle_smoke.test.ts` proves compose/perform/rehear/recompose seam wiring does not regress.
+- Review-required material must assert Epii handoff, not auto-promotion.
 
 ## Z-Thread Rehear-Phase Role
 
@@ -63,6 +75,12 @@ Aletheia receives [[Sophia]]'s session-end disclosure, curates the T/T' artifact
 | [[Zeithoven]] | generates the next-form; hands score to next compose | recompose |
 
 The deeper work (Sophia/Darshana/Zeithoven autoresearch execution) delegates to [[Epii]]; Aletheia owns the membrane between Anima's session-scoped run and Epii's cross-session improvement.
+
+## Open Gaps
+
+- Sophia post-execution hook and Moirai Night' dispatch remain closure blockers for the full Z-cycle round trip.
+- Provider-backed `epii_invoke_anima` reciprocity is present as a surface but not yet a complete S5' review lane.
+- `s4'.notify_user` remains under-specified relative to the tool surfaces already present.
 
 ## Boundaries
 

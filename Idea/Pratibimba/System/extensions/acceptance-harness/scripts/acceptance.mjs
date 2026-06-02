@@ -153,7 +153,7 @@ async function main() {
         handles,
         result: timedOut ? 'timed-out' : exitCode === 0 ? 'pass' : 'fail'
     };
-    const outDir = resolve(REPO_ROOT, 'docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs');
+    const outDir = resolve(REPO_ROOT, 'Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs');
     try {
         mkdirSync(outDir, { recursive: true });
     } catch { /* exists */ }

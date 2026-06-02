@@ -24,20 +24,20 @@ Primary canon used for [[S5]]:
 |---|---|---|
 | [[S5-SPEC]] | `Idea/Bimba/Seeds/S/S5/S5-SPEC.md` | Current consolidated world-boundary and Epii return law |
 | [[S-SOURCE-TRACEABILITY-INDEX]] | `Idea/Bimba/Seeds/S/S-SOURCE-TRACEABILITY-INDEX.md` | Cross-level source routing |
-| [[S5-S5i-SYNC]] | `docs/specs/S/S5-S5i-SYNC.md` | Older sync/Notion genealogy; useful but superseded as total S5 definition |
-| [[M4-nara-personal-interface]] | `docs/specs/M/M4-nara-personal-interface.md` | Nara/M4 personal interface source for S5 surfaces |
-| [[M4-nara-subtle-body-map]] | `docs/specs/M/M4-nara-subtle-body-map.md` | Nara subtle-body map source |
-| [[M5-epii-holographic-integration]] | `docs/specs/M/M5-epii-holographic-integration.md` | Epii/M5 integration source for S5' crossing |
-| [[2026-03-10-nara-runtime-full-plan]] | `docs/plans/2026-03-10-nara-runtime-full-plan.md` | Full Nara runtime planning |
-| [[2026-03-23-nara-clock-canonical-runtime-implementation-plan]] | `docs/plans/2026-03-23-nara-clock-canonical-runtime-implementation-plan.md` | Nara clock runtime source |
+| [[S5-S5i-SYNC]] | `Idea/Bimba/Seeds/S/S5/S5'/Legacy/specs/S/S5-S5i-SYNC.md` | Older sync/Notion genealogy; useful but superseded as total S5 definition |
+| [[M4-nara-personal-interface]] | `Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-nara-personal-interface.md` | Nara/M4 personal interface source for S5 surfaces |
+| [[M4-nara-subtle-body-map]] | `Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-nara-subtle-body-map.md` | Nara subtle-body map source |
+| [[M5-epii-holographic-integration]] | `Idea/Bimba/Seeds/M/M5'/Legacy/specs/M/M5-epii-holographic-integration.md` | Epii/M5 integration source for S5' crossing |
+| [[2026-03-10-nara-runtime-full-plan]] | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-10-nara-runtime-full-plan.md` | Full Nara runtime planning |
+| [[2026-03-23-nara-clock-canonical-runtime-implementation-plan]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-23-nara-clock-canonical-runtime-implementation-plan.md` | Nara clock runtime source |
 
 World-return and knowledge sources:
 
 | Source | Location | Why it mattered |
 |---|---|---|
-| [[2026-02-21-epii-corpus-ingestion-design]] | `docs/resources/S/2026-02-21-epii-corpus-ingestion-design.md` | Epii corpus ingestion design |
-| [[2026-02-21-epii-corpus-ingestion-plan]] | `docs/resources/S/2026-02-21-epii-corpus-ingestion-plan.md` | Epii corpus ingestion implementation plan |
-| [[2026-04-04-graphiti-unified-temporal-context-service]] | `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | S5 usage/governance of S3' Graphiti architecture |
+| [[2026-02-21-epii-corpus-ingestion-design]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-21-epii-corpus-ingestion-design.md` | Epii corpus ingestion design |
+| [[2026-02-21-epii-corpus-ingestion-plan]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-21-epii-corpus-ingestion-plan.md` | Epii corpus ingestion implementation plan |
+| [[2026-04-04-graphiti-unified-temporal-context-service]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | S5 usage/governance of S3' Graphiti architecture |
 | `docs/plans/CLOCK-AND-NARA-SPECS/` | `docs/plans/CLOCK-AND-NARA-SPECS/` | Nara clock, QL, VAK C-substrate, and golden-thread corpus |
 | `epi-gnostic/` | `epi-gnostic/` | Current Gnosis/RAG-Anything/Graphiti implementation evidence |
 | `epi-cli/src/nara/` | `epi-cli/src/nara/` | Current Nara/M' command evidence |

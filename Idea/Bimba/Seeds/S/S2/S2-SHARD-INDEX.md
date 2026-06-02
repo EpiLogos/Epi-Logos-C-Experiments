@@ -7,11 +7,17 @@ c_0_source_coordinates:
   - "[[S-SOURCE-TRACEABILITY-INDEX]]"
   - "[[S2-TRACEABILITY-INDEX]]"
   - "[[S2-SPEC]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
 ---
 
 # S2/S2' Shard Index
 
 [[S2]] / [[S2']] owns graph, vector, Redis semantic cache, and coordinate-aware retrieval. These shards must recover concrete lifecycle detail: `q_*` extraction, semantic-document hashing, embedding version drift, changed-node refresh, RedisVL, and strict Redis namespace separation from [[S3']].
+
+## Harmonization Status
+
+All listed shards are expected to satisfy [[S-SHARD-HARMONIZATION-PROTOCOL]]: explicit [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]] and [[ARCHITECTURE-DIAGRAM-PACK#Diagram 4 Cross-System Coupling]] consumption, current [[Body]] code/test evidence, migrated legacy source anchors, [[World]] / MOC references, open gaps, and hard boundaries against adjacent coordinates. The matching MOC/canvas surfaces are `Idea/Bimba/World/Types/Coordinates/S/S2/S2.canvas` and `Idea/Bimba/World/Types/Coordinates/S/S'/S2'/S2'.canvas`.
 
 ## Base Shards
 

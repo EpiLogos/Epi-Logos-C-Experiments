@@ -1,0 +1,36 @@
+{
+  "runId": "20260601T220617Z-04-T9",
+  "taskId": "04.T9",
+  "startedAt": "2026-06-01T22:06:17.967Z",
+  "owner": "codex",
+  "leaseExpiresAt": "2026-06-02T00:06:17.967Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T9",
+    "trackId": "04",
+    "tranche": "T9",
+    "title": "Full Spine Acceptance Scenario",
+    "effort": null,
+    "file": "04-s5-autoresearch-and-review-extension.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md",
+    "dependsOn": [
+      "04.T8"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**",
+      "Idea/Bimba/Seeds/S/S5/S5'/Legacy/specs/S/S5-S5i-SYNC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

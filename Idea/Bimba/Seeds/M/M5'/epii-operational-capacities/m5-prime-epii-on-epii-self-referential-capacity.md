@@ -726,8 +726,8 @@ The `M5'-SPEC` §10 references that Shell `1` previews Epii through agent entry,
 - `Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md` (the M-stack integration context that grounds the position-5 nature)
 - M5-0 / M5-0' improvement-vector map (the subagent-produced sober positioning of CPT+RAG as Epii's position-5 ML/training paradigm, with the synthetic-encyclopedic register and crystallised-bimba-map-corpus framing)
 - `CLAUDE.md` (the ur-process: Human = Ontological Vision + Final Validation; AI = Technical Translation + Implementation + Educational Guidance; the construction-not-training discipline)
-- `docs/specs/M/M5-epii-holographic-integration.md` (the holographic-integration framing of M5 as throwable skin)
-- `docs/plans/2026-03-07-m5-epii-design.md` (the prior M5 design plan)
+- `Idea/Bimba/Seeds/M/M5'/Legacy/specs/M/M5-epii-holographic-integration.md` (the holographic-integration framing of M5 as throwable skin)
+- `Idea/Bimba/Seeds/M/M5'/Legacy/plans/2026-03-07-m5-epii-design.md` (the prior M5 design plan)
 
 ---
 

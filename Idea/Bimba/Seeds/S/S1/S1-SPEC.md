@@ -13,6 +13,8 @@ c_0_source_coordinates:
   - "[[FLOW 2026 04 25 PI AGENT API AUDIT]]"
   - "[[S-SYSTEM-INDEX]]"
   - "[[S-SOURCE-TRACEABILITY-INDEX]]"
+  - "[[ARCHITECTURE-DIAGRAM-PACK]]"
+  - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
   - "[[S1]]"
   - "[[S1']]"
   - "[[S1'Cx]]"
@@ -23,6 +25,8 @@ c_0_source_coordinates:
 ## Status
 
 This is the consolidated S1-level master specification. It replaces the older scattered [[S1]], [[S1']], [[S1'Cx]], and S1-y/S1-y' files as the build reference for the vault layer.
+
+Diagram anchors consumed by this specification: [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]] for S/S' ownership, [[ARCHITECTURE-DIAGRAM-PACK#Diagram And MOC Residency Protocol]] for [[World]] / [[World/Types]] / [[Seeds]] residency, and [[ARCHITECTURE-DIAGRAM-PACK#Diagram 4 Cross-System Coupling]] for M' and agent consumption of vault law.
 
 S1 is the material [[Obsidian]] / filesystem substrate of [[Idea]]. It owns addressability: markdown files, folders, canvases, attachments, frontmatter text, wikilinks, and the concrete residency zones under [[Bimba]], [[Empty]], and [[Pratibimba]].
 
@@ -929,8 +933,8 @@ S1 is the material vault/form substrate; S1' is Hen compiler, schema, and reside
 | Required coverage | Canonical citations |
 |---|---|
 | World ontology | `Idea/Bimba/World/Types/Coordinates/S/S1/S1.md` mtime 2026-04-10 17:50:54; `Idea/Bimba/World/Types/Coordinates/S/S'/S1'/S1'.md` mtime 2026-04-10 17:50:54; `Idea/Bimba/World/Daily-Note.md`, `NOW.md`, `Thought.md`, `Task-Spec.md`, `Pattern-Note.md`, `Prompt.md`, `Seed.md`, `FLOW.md`, `Integration-Preview.md` mtime range 2026-03-10..2026-04-11 |
-| docs/specs | `docs/specs/S/S1-S1i-OBSIDIAN.md` mtime 2026-06-02 00:14:25; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35; `docs/specs/S/S_Series_Master_CLI_Architecture.md` mtime 2026-03-15 00:27:10 |
-| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
+| docs/specs | `Idea/Bimba/Seeds/S/S1/S1'/Legacy/specs/S/S1-S1i-OBSIDIAN.md` mtime 2026-06-02 00:14:25; `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35; `Idea/Bimba/Seeds/S/Legacy/specs/S/S_Series_Master_CLI_Architecture.md` mtime 2026-03-15 00:27:10 |
+| docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
 | Body substrate | `Body/S/S1/hen-compiler-core/**`, `Body/S/S1/hen-compiler/**`, `Body/S/S0/epi-cli/src/vault/**`, `Body/S/S0/epi-cli/src/gate/s1_hen.rs`, `Idea/Empty/Present/**`, `Idea/Bimba/World/**` |
 | sibling seeds | `S1-0-SPEC.md`..`S1-5-SPEC.md`, `S1'/S1'-SPEC.md`, `S1'/S1-0'-SPEC.md`..`S1'/S1-5'-SPEC.md`, `S1-SHARD-INDEX.md`, `S1-TRACEABILITY-INDEX.md`, `S1'/S1'-TRACEABILITY-INDEX.md` |
 | nominal tracks | no standalone S1 track in the current m-dev ledger; Track 13.T8 audits the S1/Hen boundary; Track 09 consumes Hen for mediation |

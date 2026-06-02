@@ -2,7 +2,7 @@
 
 **Status:** Decision (provisional) — recorded by Track 05 T0, amended by Track 05 T2 (2026-06-01).
 **Selected option:** Option 3 — hybrid Tauri-singleton + Theia-native `KernelBridgeAPI` adapter. The Rust singleton lives in `epi-tauri`'s `AppState`; `/body` consumes via Tauri `invoke`; Theia consumes via a `kernel-bridge` Theia extension (Track 01 T5 — pending) that proxies the same singleton.
-**Decision register link:** `PRD-03` in `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`.
+**Decision register link:** `PRD-03` in `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md`.
 **Affected tracks:** 01, 03, 05, 06, 07, 08.
 
 ## Context

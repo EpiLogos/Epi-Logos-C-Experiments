@@ -5,8 +5,8 @@
   "generated_at": "2026-06-01",
   "purpose": "Inventory current Body/M/epi-tauri build/command/event/service-client surfaces, author the three load-bearing ADRs (Theia runtime mode / single-vs-multi-webview / bridge ownership), map Theia plan tranches to Track 01-04 dependency gates, and define the local-dev topology for M5-3 tests.",
   "purpose_anchors": [
-    "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md#tranche-0",
-    "docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md#tranche-0",
+    "Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md",
     "Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md#section-3-4-5"
   ],
 

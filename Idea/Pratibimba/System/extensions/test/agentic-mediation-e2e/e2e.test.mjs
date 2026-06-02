@@ -1,7 +1,7 @@
 // 10.T8 — M5-4 Agentic Mediation End-To-End acceptance test.
 //
 // Closes the cross-cutting verification in
-// docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md
+// Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md
 // lines 207-226.
 //
 // All driving logic lives in ./harness.mjs (so both this test file AND

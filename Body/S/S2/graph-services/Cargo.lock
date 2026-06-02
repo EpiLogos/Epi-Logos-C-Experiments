@@ -291,6 +291,7 @@ dependencies = [
 name = "epi-s2-graph-services"
 version = "0.1.0"
 dependencies = [
+ "epi-kernel-contract",
  "epi-s1-hen-compiler-core",
  "epi-s2-graph-schema",
  "epi-s3-gateway-contract",

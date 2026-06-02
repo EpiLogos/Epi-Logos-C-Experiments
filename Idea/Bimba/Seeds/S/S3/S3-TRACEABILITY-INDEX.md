@@ -22,23 +22,23 @@ Primary canon used for [[S3]]:
 | Source | Location | Role in conclusion |
 |---|---|---|
 | [[S3-SPEC]] | `Idea/Bimba/Seeds/S/S3/S3-SPEC.md` | Current consolidated gateway/temporal-state build reference |
-| [[S3-S3i-GATEWAY]] | `docs/specs/S/S3-S3i-GATEWAY.md` | Formal S3/S3' gateway and state-plane split |
+| [[S3-S3i-GATEWAY]] | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md` | Formal S3/S3' gateway and state-plane split |
 | [[S-SOURCE-TRACEABILITY-INDEX]] | `Idea/Bimba/Seeds/S/S-SOURCE-TRACEABILITY-INDEX.md` | Cross-level canonical source routing |
 | [[2026-04-10-s3-spec-traceability-index]] | `Idea/Bimba/Seeds/S/S3/2026-04-10-s3-spec-traceability-index.md` | Earlier traceability ledger; retained as genealogy |
-| [[2026-03-07-s3-gateway-full-implementation]] | `docs/plans/2026-03-07-s3-gateway-full-implementation.md` | Main gateway implementation-intent plan |
-| [[2026-03-10-full-gateway-functionality-plan]] | `docs/plans/2026-03-10-full-gateway-functionality-plan.md` | Expanded target command/API surface |
-| [[2026-03-10-gateway-verification-matrix]] | `docs/plans/2026-03-10-gateway-verification-matrix.md` | Gateway verification source |
-| [[2026-04-04-graphiti-unified-temporal-context-service]] | `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Graphiti temporal-context planning, re-read through the current S3'/S5 split |
+| [[2026-03-07-s3-gateway-full-implementation]] | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-07-s3-gateway-full-implementation.md` | Main gateway implementation-intent plan |
+| [[2026-03-10-full-gateway-functionality-plan]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-full-gateway-functionality-plan.md` | Expanded target command/API surface |
+| [[2026-03-10-gateway-verification-matrix]] | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-10-gateway-verification-matrix.md` | Gateway verification source |
+| [[2026-04-04-graphiti-unified-temporal-context-service]] | `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` | Graphiti temporal-context planning, re-read through the current S3'/S5 split |
 
 Contextual/supporting sources:
 
 | Source | Location | Why it mattered |
 |---|---|---|
-| [[2026-02-11-omnipanel-gateway-gap-analysis-elevation-plan]] | `docs/resources/S/2026-02-11-omnipanel-gateway-gap-analysis-elevation-plan.md` | Older OmniPanel/gateway gap pressure |
-| [[2026-02-11-omnipanel-gateway-parity-plan]] | `docs/resources/S/2026-02-11-omnipanel-gateway-parity-plan.md` | Gateway parity genealogy |
-| [[2026-02-17-omnipanel-gateway-state-architecture-plan]] | `docs/resources/S/2026-02-17-omnipanel-gateway-state-architecture-plan.md` | Prior gateway/state split source |
-| [[2026-03-07-s3-gateway-parity-discharge]] | `docs/plans/2026-03-07-s3-gateway-parity-discharge.md` | Parity discharge planning |
-| [[2026-03-09-s3-gateway-merge-cleanup]] | `docs/plans/2026-03-09-s3-gateway-merge-cleanup.md` | Gateway merge/cleanup planning |
+| [[2026-02-11-omnipanel-gateway-gap-analysis-elevation-plan]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-11-omnipanel-gateway-gap-analysis-elevation-plan.md` | Older OmniPanel/gateway gap pressure |
+| [[2026-02-11-omnipanel-gateway-parity-plan]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-11-omnipanel-gateway-parity-plan.md` | Gateway parity genealogy |
+| [[2026-02-17-omnipanel-gateway-state-architecture-plan]] | `Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-17-omnipanel-gateway-state-architecture-plan.md` | Prior gateway/state split source |
+| [[2026-03-07-s3-gateway-parity-discharge]] | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/plans/2026-03-07-s3-gateway-parity-discharge.md` | Parity discharge planning |
+| [[2026-03-09-s3-gateway-merge-cleanup]] | `Idea/Bimba/Seeds/S/S3/Legacy/plans/2026-03-09-s3-gateway-merge-cleanup.md` | Gateway merge/cleanup planning |
 | `epi-cli/src/gate/*` | `epi-cli/src/gate/` | Live gateway implementation evidence |
 | `epi-spacetime-module/src/lib.rs` | `epi-spacetime-module/src/lib.rs` | Current shared-state projection evidence |
 

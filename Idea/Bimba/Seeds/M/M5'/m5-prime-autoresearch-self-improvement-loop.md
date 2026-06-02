@@ -103,10 +103,10 @@ Authoritative for S5/S5' (replaces older scattered S5/S5'/S5'Cx files). Key sect
 
 ### §1.4 Plans the loop already inherits from
 
-- `docs/plans/2026-04-23-vendor-spine-pi-port.md`: the 4-seam ledger/compiler/inject architecture; S5/S5' contribution slot for "gnosis query handler, improvement loop state, T-bucket digest" (line 41); `s5/` ledger channel for "crystallisation / improvement events"
-- `docs/plans/2026-05-19-vak-musical-execution-z-thread.md`: Z-thread musical execution; assigns S5 Epii ownership of "recomposition/autoresearch intake" (line 7); architectural source for the `MusicalDiagnostic`/`RehearingEnvelope` test invocations in `improvement_loop.rs:911-1032`
-- `docs/superpowers/plans/2026-05-22-vak-as-operational-substrate.md`: Möbius seam wired Anima→Aletheia→Epii; Tasks C5-C8 (lines 1581-1792) define the *exact* shape of `inbox.rs`, `recompose_pass`, and `NextComposeHint`. **This plan is the direct progenitor of the live inbox/recompose files.**
-- `docs/plans/2026-05-21-agent-led-coordinate-promotion-policy.md`: agent-led promotion policy (related to autoresearch's keep/discard → promotion stage)
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-23-vendor-spine-pi-port.md`: the 4-seam ledger/compiler/inject architecture; S5/S5' contribution slot for "gnosis query handler, improvement loop state, T-bucket digest" (line 41); `s5/` ledger channel for "crystallisation / improvement events"
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-19-vak-musical-execution-z-thread.md`: Z-thread musical execution; assigns S5 Epii ownership of "recomposition/autoresearch intake" (line 7); architectural source for the `MusicalDiagnostic`/`RehearingEnvelope` test invocations in `improvement_loop.rs:911-1032`
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/superpowers/plans/2026-05-22-vak-as-operational-substrate.md`: Möbius seam wired Anima→Aletheia→Epii; Tasks C5-C8 (lines 1581-1792) define the *exact* shape of `inbox.rs`, `recompose_pass`, and `NextComposeHint`. **This plan is the direct progenitor of the live inbox/recompose files.**
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-21-agent-led-coordinate-promotion-policy.md`: agent-led promotion policy (related to autoresearch's keep/discard → promotion stage)
 
 ### §1.5 Conventions inherited (the spine respects these as load-bearing constraints)
 
@@ -168,7 +168,7 @@ The autoresearch spine is structurally a **four-phase loop** that cycles continu
 
 Each phase is concretely specified in §3-§7 below. The spine itself is the **continuous-operation discipline** that drives the four phases through the live cores, the six sibling capacities, the existing governance gates, and the integration hooks. None of the phases are speculative; each binds to existing infrastructure or fills a documented gap with a deliberate proposal.
 
-The Z-cycle (Anima session_end → Aletheia membrane → Epii autoresearch → recompose → next-cycle compose hint, per `docs/superpowers/plans/2026-05-22-vak-as-operational-substrate.md`) is the **canonical surfacing chain** for one class of input — Aletheia's JSONL handoff after a session. The full spine generalises this: Aletheia's chain is one of several surfacing pipelines, each feeding the same routing-orchestration-integration sequence.
+The Z-cycle (Anima session_end → Aletheia membrane → Epii autoresearch → recompose → next-cycle compose hint, per `Idea/Bimba/Seeds/S/S4/S4'/Legacy/superpowers/plans/2026-05-22-vak-as-operational-substrate.md`) is the **canonical surfacing chain** for one class of input — Aletheia's JSONL handoff after a session. The full spine generalises this: Aletheia's chain is one of several surfacing pipelines, each feeding the same routing-orchestration-integration sequence.
 
 ---
 
@@ -930,11 +930,11 @@ Each sibling should add a brief cross-reference to this spine spec, noting that 
 
 ### Plans (inherited as architectural source)
 
-- `docs/plans/2026-04-23-vendor-spine-pi-port.md` — 4-seam ledger/compiler/inject architecture
-- `docs/plans/2026-05-19-vak-musical-execution-z-thread.md` — Z-thread musical execution
-- `docs/superpowers/plans/2026-05-22-vak-as-operational-substrate.md` — Möbius seam wiring; direct progenitor of inbox.rs/recompose.rs
-- `docs/plans/2026-05-21-agent-led-coordinate-promotion-policy.md` — promotion policy
-- `docs/plans/2026-03-07-m5-epii-design.md`, `2026-03-07-m5-epii-implementation.md` — foundational M5/Epii design
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-23-vendor-spine-pi-port.md` — 4-seam ledger/compiler/inject architecture
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-19-vak-musical-execution-z-thread.md` — Z-thread musical execution
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/superpowers/plans/2026-05-22-vak-as-operational-substrate.md` — Möbius seam wiring; direct progenitor of inbox.rs/recompose.rs
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-05-21-agent-led-coordinate-promotion-policy.md` — promotion policy
+- `Idea/Bimba/Seeds/M/M5'/Legacy/plans/2026-03-07-m5-epii-design.md`, `2026-03-07-m5-epii-implementation.md` — foundational M5/Epii design
 
 ### CLAUDE.md (load-bearing ur-process)
 

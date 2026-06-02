@@ -13,7 +13,7 @@
 `vendors/oh-my-codex/` is the **Codex-facing runtime substrate** for the Pleroma OMX fork.
 It is not the semantic authority for Pleroma capabilities — ta-onta specs fill that role.
 
-Authority split: `docs/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md`
+Authority split: `Idea/Bimba/Seeds/S/Legacy/specs/S/S4/2026-04-03-omx-pleroma-claw-authority-matrix.md`
 
 ## What Is Vendored
 

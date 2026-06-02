@@ -8,8 +8,8 @@ Date: 2026-05-22
 Local sources consulted:
 
 - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`
-- `docs/specs/M/M5-epii-holographic-integration.md`
-- `docs/plans/2026-03-07-m5-epii-design.md`
+- `Idea/Bimba/Seeds/M/M5'/Legacy/specs/M/M5-epii-holographic-integration.md`
+- `Idea/Bimba/Seeds/M/M5'/Legacy/plans/2026-03-07-m5-epii-design.md`
 - `Body/S/S0/epi-lib/include/m5.h`
 - `Body/S/S0/epi-lib/src/m5.c`
 - `Body/M/epi-tauri/src/domains/M5_Epii/EpiiDashboard.tsx`

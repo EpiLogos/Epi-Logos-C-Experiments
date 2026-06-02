@@ -1,0 +1,35 @@
+{
+  "runId": "20260601T214401Z-04-T7",
+  "taskId": "04.T7",
+  "startedAt": "2026-06-01T21:44:01.286Z",
+  "owner": "codex",
+  "leaseExpiresAt": "2026-06-01T23:44:01.286Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T7",
+    "trackId": "04",
+    "tranche": "T7",
+    "title": "M5-3 IDE/Workbench Contract Surface",
+    "effort": null,
+    "file": "04-s5-autoresearch-and-review-extension.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md",
+    "dependsOn": [
+      "04.T6"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

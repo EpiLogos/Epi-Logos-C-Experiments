@@ -8,6 +8,11 @@ import { fileURLToPath } from "node:url";
 const STATE_VERSION = 1;
 const STATUSES = new Set(["pending", "ready", "in_progress", "blocked", "review", "done"]);
 const DEFAULT_LEASE_MINUTES = 120;
+const PLAN_DISCOVERY_DIRS = [
+  ["Idea", "Bimba", "Seeds", "M", "Legacy", "plans"],
+  ["Idea", "Bimba", "Seeds", "S", "Legacy", "plans"],
+  ["docs", "plans"],
+];
 
 export function parseArgs(argv) {
   const args = {
@@ -29,6 +34,7 @@ export function parseArgs(argv) {
     owner: null,
     leaseMinutes: DEFAULT_LEASE_MINUTES,
     worktree: null,
+    requireNow: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -50,6 +56,7 @@ export function parseArgs(argv) {
     else if (arg === "--owner") args.owner = argv[++i];
     else if (arg === "--lease-minutes") args.leaseMinutes = Number.parseInt(argv[++i], 10);
     else if (arg === "--worktree") args.worktree = argv[++i];
+    else if (arg === "--require-now") args.requireNow = true;
     else if (!arg.startsWith("--") && !args.plan) args.plan = arg;
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -78,13 +85,13 @@ export function discoverPlanFolder(cwd, explicitPlan) {
   const active = readActivePlanPointer(cwd);
   if (active) return active;
 
-  const docsPlans = join(cwd, "docs", "plans");
-  if (!existsSync(docsPlans)) {
-    throw new Error("Could not discover plan folder: docs/plans does not exist and no explicit plan was provided.");
+  const discoveryRoots = PLAN_DISCOVERY_DIRS.map((parts) => join(cwd, ...parts)).filter((path) => existsSync(path));
+  if (discoveryRoots.length === 0) {
+    throw new Error("Could not discover plan folder: no Seed or docs plan roots exist and no explicit plan was provided.");
   }
 
-  const candidates = readdirSync(docsPlans)
-    .map((name) => join(docsPlans, name))
+  const candidates = discoveryRoots
+    .flatMap((root) => readdirSync(root).map((name) => join(root, name)))
     .filter((path) => statSync(path).isDirectory())
     .filter((path) => {
       const files = readdirSync(path).filter((file) => /^\d{2}-.+\.md$/.test(file));
@@ -94,7 +101,7 @@ export function discoverPlanFolder(cwd, explicitPlan) {
     .sort((a, b) => b.mtimeMs - a.mtimeMs || b.path.localeCompare(a.path));
 
   if (candidates.length === 0) {
-    throw new Error("Could not discover plan folder: no numbered plan-set folders found under docs/plans.");
+    throw new Error("Could not discover plan folder: no numbered plan-set folders found under Seed or docs plan roots.");
   }
   return candidates[0].path;
 }
@@ -102,6 +109,8 @@ export function discoverPlanFolder(cwd, explicitPlan) {
 function readActivePlanPointer(cwd) {
   const paths = [
     join(cwd, "plan.active.json"),
+    join(cwd, "Idea", "Bimba", "Seeds", "M", "Legacy", "plans", "plan.active.json"),
+    join(cwd, "Idea", "Bimba", "Seeds", "S", "Legacy", "plans", "plan.active.json"),
     join(cwd, "docs", "plans", "plan.active.json"),
     join(cwd, ".codex", "m-dev.active.json"),
   ];
@@ -286,8 +295,8 @@ function trackHeuristicScopes(trackId) {
     "07": ["Idea/Pratibimba/System/extensions/**"],
     "08": ["Idea/Pratibimba/System/extensions/**"],
     "09": ["Body/S/S4/**", "Body/S/S5/**", "Idea/Pratibimba/System/extensions/**", "Idea/Pratibimba/System/**"],
-    "10": [".omx/**", "docs/plans/**"],
-    "11": ["docs/plans/**"],
+    "10": [".omx/**", "Idea/Bimba/Seeds/M/Legacy/plans/**", "Idea/Bimba/Seeds/S/Legacy/plans/**"],
+    "11": ["Idea/Bimba/Seeds/M/Legacy/plans/**", "Idea/Bimba/Seeds/S/Legacy/plans/**"],
   };
   return scopesByTrack[trackId] ?? [];
 }
@@ -375,7 +384,51 @@ function reconcileState(index, state) {
   return nextState;
 }
 
-export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true } = {}) {
+export function readActiveDevelopmentContext(cwd = process.cwd(), env = process.env) {
+  const sessionPath = join(cwd, ".epi", "session.json");
+  const session = readJsonIfPresent(sessionPath);
+  const context = session?.context ?? {};
+  const rawNowPath = env.EPI_NOW_PATH || context.now_path || context.nowPath || null;
+  const nowPath = rawNowPath ? normalizeContextPath(cwd, rawNowPath) : null;
+  const nowExists = nowPath ? existsSync(nowPath) : false;
+  const inferred = nowPath ? inferPresentIdentity(nowPath) : {};
+  const dayId = env.EPI_DAY_ID || context.day_id || context.dayId || inferred.dayId || null;
+  const sessionId = env.EPI_SESSION_ID || context.session_id || context.sessionId || inferred.sessionId || null;
+  const dailyNotePath = dayId ? normalizeContextPath(cwd, join("Idea", "Empty", "Present", dayId, "daily-note.md")) : null;
+
+  return {
+    source: session ? ".epi/session.json" : rawNowPath ? "environment" : "missing",
+    sessionStatePath: existsSync(sessionPath) ? relative(cwd, sessionPath) : null,
+    sessionId,
+    dayId,
+    nowPath: nowPath ? relative(cwd, nowPath) : null,
+    nowExists,
+    dailyNotePath: dailyNotePath ? relative(cwd, dailyNotePath) : null,
+    dailyNoteExists: dailyNotePath ? existsSync(dailyNotePath) : false,
+  };
+}
+
+function readJsonIfPresent(path) {
+  if (!existsSync(path)) return null;
+  try {
+    return JSON.parse(readFileSync(path, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function normalizeContextPath(cwd, path) {
+  return isAbsolute(path) ? path : resolve(cwd, path);
+}
+
+function inferPresentIdentity(path) {
+  const normalized = path.replaceAll("\\", "/");
+  const match = normalized.match(/(?:^|\/)Empty\/Present\/([^/]+)\/([^/]+)\/now\.md$/);
+  if (!match) return {};
+  return { dayId: match[1], sessionId: match[2] };
+}
+
+export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true, requireNow = false } = {}) {
   const index = buildIndex(planFolder, cwd);
   const state = reconcileState(index, loadState(planFolder));
   const taskById = new Map(index.tasks.map((task) => [task.id, task]));
@@ -395,6 +448,19 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true 
   const hardStops = [];
   const softCautions = [];
   const carryForwardRisks = [];
+  const activeDevelopmentContext = readActiveDevelopmentContext(cwd);
+
+  if (requireNow && !activeDevelopmentContext.nowExists) {
+    hardStops.push(
+      "Active NOW context is required; run `epi agent session init` or export EPI_NOW_PATH before m-dev execution.",
+    );
+  } else if (!activeDevelopmentContext.nowExists) {
+    softCautions.push("No active NOW context detected; development evidence may not land in Idea/Empty/Present.");
+  } else if (!activeDevelopmentContext.dailyNoteExists) {
+    softCautions.push(
+      `Active NOW is present but daily note is missing at ${activeDevelopmentContext.dailyNotePath}; run \`epi vault day-init\` if the day scaffold should be explicit.`,
+    );
+  }
 
   if (inProgressTasks.length > 0) {
     softCautions.push(
@@ -446,6 +512,7 @@ export function assessPlan({ cwd = process.cwd(), planFolder, includeGit = true 
     workOrders,
     parallelGroup,
     parallelExecution: parallelGroup.length > 1 && hardStops.length === 0,
+    activeDevelopmentContext,
     dirtyFiles,
     dirtyOverlaps,
     tasks: enrichedTasks.map(({ body, ...task }) => task),
@@ -493,6 +560,13 @@ Generated: ${generatedAt}
 - **Track:** ${indexedTask.file}
 - **Computed status:** ${task.computedStatus}
 - **Write scopes:** ${task.writeScopes.join(", ") || "unspecified"}
+
+## Active Development Context
+
+- **Day:** ${assessment.activeDevelopmentContext.dayId ?? "missing"}
+- **Session:** ${assessment.activeDevelopmentContext.sessionId ?? "missing"}
+- **NOW:** ${assessment.activeDevelopmentContext.nowPath ?? "missing"} (${assessment.activeDevelopmentContext.nowExists ? "present" : "missing"})
+- **Daily note:** ${assessment.activeDevelopmentContext.dailyNotePath ?? "missing"} (${assessment.activeDevelopmentContext.dailyNoteExists ? "present" : "missing"})
 
 ## Required Reading
 
@@ -981,6 +1055,9 @@ function printHuman(assessment) {
     lines.push("Carry-forward risks:");
     for (const reason of assessment.carryForwardRisks) lines.push(`- ${reason}`);
   }
+  lines.push(
+    `Active NOW: ${assessment.activeDevelopmentContext.nowPath ?? "missing"} (${assessment.activeDevelopmentContext.nowExists ? "present" : "missing"})`,
+  );
   if (assessment.recommendedTask) {
     lines.push(`Recommended: ${assessment.recommendedTask.id} - ${assessment.recommendedTask.title}`);
   } else {
@@ -1015,12 +1092,13 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
     mkdirSync(join(planFolder, "plan.runs"), { recursive: true });
     writeFileSync(join(planFolder, "plan.state.json"), `${JSON.stringify(resetState(), null, 2)}\n`);
   }
-  let assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
+  const assess = () => assessPlan({ cwd, planFolder, includeGit: !args.noGit, requireNow: args.requireNow });
+  let assessment = assess();
 
   if (args.route) {
     markActiveRoute(assessment);
     writeAssessmentFiles(planFolder, assessment);
-    assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
+    assessment = assess();
   }
 
   if (args.claim) {
@@ -1030,13 +1108,13 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
       worktree: args.worktree,
     });
     writeAssessmentFiles(planFolder, assessment);
-    assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
+    assessment = assess();
   }
 
   if (args.mark) {
     assessment.state = markTask(assessment, args.mark, args.status, args.evidence);
     writeAssessmentFiles(planFolder, assessment);
-    assessment = assessPlan({ cwd, planFolder, includeGit: !args.noGit });
+    assessment = assess();
   }
 
   if (args.context) {

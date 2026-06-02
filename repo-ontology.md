@@ -1,5 +1,7 @@
 # Repo Ontology
 
+**See also:** [[CLAUDE.md]] (C architecture), [[AGENTS.md]] (agent dispatch), [[Idea/Bimba/World/World-Ontology.md]] (knowledge nexus)
+
 This document is the root architectural authority for how the repository's implementation roots and `Idea/` ontology roots relate to each other.
 
 ## First Principle

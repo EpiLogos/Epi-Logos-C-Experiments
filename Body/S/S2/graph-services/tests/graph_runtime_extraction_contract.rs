@@ -1,7 +1,8 @@
 use epi_s2_graph_services::{
     desired_meta, seed_source_hash, ConflictResolution, CoordinateRetrieval, DatasetImporter,
     DoctorReport, GraphMeta, GraphRAGRetriever, GraphRedisRole, HybridRetriever,
-    LinkValidationResult, RelationshipManager, SemanticDocument, SyncResult,
+    LinkValidationResult, LiveGraphBackedEvidence, RelationshipManager, SemanticCacheConfig,
+    SemanticDocument, SyncCoordinator, SyncResult,
 };
 use epi_s3_redis_context::CacheTier;
 
@@ -107,4 +108,164 @@ fn semantic_doctor_and_dataset_import_types_are_s2_owned() {
     assert!(semantic_type.contains("epi_s2_graph_services"));
     assert!(doctor_type.contains("epi_s2_graph_services"));
     assert!(importer_type.contains("epi_s2_graph_services"));
+}
+
+/// Track 13 T5 — S2 graph adapter hardening ownership test.
+///
+/// Asserts that the six named graph-law surface families (graph
+/// retrieval, semantic cache, dataset import, doctor, relationship
+/// manager, sync coordinator) resolve to `epi_s2_graph_services`, plus
+/// the modules moved out of S0 by T5 (cypher guard, constraint
+/// registry, deterministic analyser, Anuttara reflection, lifecycle
+/// evidence). If any of these starts resolving to a local S0 type, the
+/// graph membrane has regressed and the assertion fails loudly.
+#[test]
+fn t5_graph_law_types_resolve_to_epi_s2_graph_services() {
+    // (a) Graph retrieval
+    assert!(std::any::type_name::<CoordinateRetrieval<'static>>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<GraphRAGRetriever<'static>>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<HybridRetriever<'static>>().contains("epi_s2_graph_services"));
+
+    // (b) Semantic cache
+    assert!(std::any::type_name::<SemanticCacheConfig>().contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<GraphRedisRole>().contains("epi_s2_graph_services"));
+
+    // (c) Dataset import
+    assert!(std::any::type_name::<DatasetImporter<'static>>().contains("epi_s2_graph_services"));
+
+    // (d) Doctor
+    assert!(std::any::type_name::<DoctorReport>().contains("epi_s2_graph_services"));
+
+    // (e) Relationship manager
+    assert!(std::any::type_name::<RelationshipManager>().contains("epi_s2_graph_services"));
+
+    // (f) Sync coordinator
+    assert!(std::any::type_name::<SyncCoordinator<'static>>().contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<SyncResult>().contains("epi_s2_graph_services"));
+
+    // T5 moves: cypher guard, constraint registry, analyser, anuttara
+    assert!(std::any::type_name::<epi_s2_graph_services::cypher::CypherMode>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<epi_s2_graph_services::cypher::CypherGuardOutcome>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<epi_s2_graph_services::constraint::Registry>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<epi_s2_graph_services::analyse::DeterministicAnalyser>()
+        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<epi_s2_graph_services::anuttara::AnuttaraReflectionRequest>()
+        .contains("epi_s2_graph_services"));
+
+    // Lifecycle evidence shape — used by S0 `graph reconcile` arm.
+    assert!(std::any::type_name::<LiveGraphBackedEvidence>().contains("epi_s2_graph_services"));
+}
+
+/// Track 13 T9 — graph ownership regression test (negative guard).
+///
+/// Per plan body line 226: "Add graph ownership tests that fail if
+/// S2-owned types resolve to `epi_logos::graph::*` implementations
+/// instead of `epi_s2_graph_services::*`."
+///
+/// T5 already proves the positive direction (every law type resolves
+/// into `epi_s2_graph_services`). This test adds the explicit negative
+/// guard: every named graph-law family MUST NOT resolve to a type whose
+/// canonical name lives under `epi_logos::graph::*`. If a future refactor
+/// accidentally re-introduces a local S0 type with the same identifier
+/// but a different canonical path, the assertion fires.
+#[test]
+fn t9_graph_law_types_do_not_resolve_to_epi_logos_graph_namespace() {
+    // Helper: assert a type name does NOT live under `epi_logos::graph`.
+    fn assert_not_s0_graph(type_name: &str, family: &str) {
+        assert!(
+            !type_name.contains("epi_logos::graph"),
+            "T9 regression: {family} resolved to S0-local type `{type_name}` \
+             under `epi_logos::graph::*`. Graph law MUST live in \
+             `epi_s2_graph_services`. The named-adapter façade at \
+             `Body/S/S0/epi-cli/src/graph/` is a pure re-export — any S0-local \
+             definition that shadows an S2 type is a violation."
+        );
+    }
+
+    // (a) Graph retrieval
+    assert_not_s0_graph(
+        std::any::type_name::<CoordinateRetrieval<'static>>(),
+        "graph retrieval (CoordinateRetrieval)",
+    );
+    assert_not_s0_graph(
+        std::any::type_name::<GraphRAGRetriever<'static>>(),
+        "graph retrieval (GraphRAGRetriever)",
+    );
+    assert_not_s0_graph(
+        std::any::type_name::<HybridRetriever<'static>>(),
+        "graph retrieval (HybridRetriever)",
+    );
+
+    // (b) Semantic cache
+    assert_not_s0_graph(
+        std::any::type_name::<SemanticCacheConfig>(),
+        "semantic cache (SemanticCacheConfig)",
+    );
+    assert_not_s0_graph(
+        std::any::type_name::<GraphRedisRole>(),
+        "semantic cache (GraphRedisRole)",
+    );
+
+    // (c) Dataset import
+    assert_not_s0_graph(
+        std::any::type_name::<DatasetImporter<'static>>(),
+        "dataset import (DatasetImporter)",
+    );
+
+    // (d) Doctor
+    assert_not_s0_graph(
+        std::any::type_name::<DoctorReport>(),
+        "doctor (DoctorReport)",
+    );
+
+    // (e) Relationship manager
+    assert_not_s0_graph(
+        std::any::type_name::<RelationshipManager>(),
+        "relationship manager (RelationshipManager)",
+    );
+
+    // (f) Sync coordinator
+    assert_not_s0_graph(
+        std::any::type_name::<SyncCoordinator<'static>>(),
+        "sync coordinator (SyncCoordinator)",
+    );
+    assert_not_s0_graph(
+        std::any::type_name::<SyncResult>(),
+        "sync coordinator (SyncResult)",
+    );
+
+    // (g) T5-moved modules: cypher guard, constraint registry, analyser,
+    // anuttara reflection — these were physically moved out of S0; any
+    // re-introduction would surface here.
+    assert_not_s0_graph(
+        std::any::type_name::<epi_s2_graph_services::cypher::CypherMode>(),
+        "T5 (cypher::CypherMode)",
+    );
+    assert_not_s0_graph(
+        std::any::type_name::<epi_s2_graph_services::cypher::CypherGuardOutcome>(),
+        "T5 (cypher::CypherGuardOutcome)",
+    );
+    assert_not_s0_graph(
+        std::any::type_name::<epi_s2_graph_services::constraint::Registry>(),
+        "T5 (constraint::Registry)",
+    );
+    assert_not_s0_graph(
+        std::any::type_name::<epi_s2_graph_services::analyse::DeterministicAnalyser>(),
+        "T5 (analyse::DeterministicAnalyser)",
+    );
+    assert_not_s0_graph(
+        std::any::type_name::<epi_s2_graph_services::anuttara::AnuttaraReflectionRequest>(),
+        "T5 (anuttara::AnuttaraReflectionRequest)",
+    );
+
+    // (h) Lifecycle evidence shape — S0 graph reconcile arm depends on it.
+    assert_not_s0_graph(
+        std::any::type_name::<LiveGraphBackedEvidence>(),
+        "lifecycle evidence (LiveGraphBackedEvidence)",
+    );
 }

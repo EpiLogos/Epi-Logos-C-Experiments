@@ -700,10 +700,10 @@ dataset
 - `Idea/Bimba/Seeds/M/M4'/ql-unit-vama-shaktis-vameshvari.md` (the Vāma Śaktis QL unit at #4.4.5: Jñāna/Kriyā parent 0/1; six positions Vāma-śakti → Khecarī → Gocarī → Dikcarī → Bhūcarī → Vāmeśvarī; descending/ascending passes; Muṇḍa/Daṇḍa cross-reading; the canonical contemplative vocabulary Nara's anima-Vāk register draws on)
 - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md` (canonical M5' sixfold structure: Library / Philosophy / Backend / Frontend / Agentic / Logos Atelier; the namespaced graph model; the agentic-IDE-as-conversational-engagement philosophy; privacy boundary between Nara and Epii)
 - `Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-anuttara-language-development.md` (convention-setting sibling: §0-§12 structure, family framing, M5-0 / M5-1 / M5-2 / M5-3 / M5-4 / M5-5 surface roles, construction-not-training discipline as transposable spirit)
-- `docs/plans/2026-04-04-graphiti-unified-temporal-context-service.md` (Graphiti bi-temporal episodic store at #4.4.4.4 via single BEDROCK edge to canonical #4; protected-local namespace rules; the substrate the consent-gated exchanges originate from before entering the corpus pipeline)
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-04-04-graphiti-unified-temporal-context-service.md` (Graphiti bi-temporal episodic store at #4.4.4.4 via single BEDROCK edge to canonical #4; protected-local namespace rules; the substrate the consent-gated exchanges originate from before entering the corpus pipeline)
 - `Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md` (§6.7-§6.8 M4 branch + Vāma Śaktis + Graphiti subgraph topology; the cross-M Cl(4,2) algebra context that grounds q_personal as not-a-metaphor)
 - M5-0 / M5-0' improvement-vector map subagent report (position-paradigm mapping: position-4 = narrow QLoRA on personal/anima-Vāk dialogic voice + optional DPO; the canonical ML paradigm this spec specifies the operational capacity around)
-- `docs/specs/M/M4-nara-personal-interface.md` (canonical M4 bimba/implementation spec; FR 2.4.0 through FR 2.4.13)
+- `Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-nara-personal-interface.md` (canonical M4 bimba/implementation spec; FR 2.4.0 through FR 2.4.13)
 - `Body/S/S0/epi-cli/src/nara/identity.rs`, `oracle.rs`, `weights.rs`, `wind.rs` (the Rust substrate the Nara backend operates over; the BLAKE3 identity, the elemental profiles, the Kerykeion wind binding)
 - `graphiti-runtime/src/lib.rs` (the protected Graphiti deposit payloads and identity-mutation rejection that the consent gate operates within)
 

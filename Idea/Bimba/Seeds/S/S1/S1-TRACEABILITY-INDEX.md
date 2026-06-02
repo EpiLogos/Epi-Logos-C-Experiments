@@ -19,11 +19,11 @@ Primary canon used for [[S1]]:
 |---|---|---|
 | [[S1]] | `/Users/admin/Documents/Epi-Logos/Idea/Bimba/World/S1.md` | Old high-level form; baseline articulation of [[S1]] as [[Obsidian]] / [[Material Container]] |
 | [[S1-Obsidian-Seed-Research]] | `/Users/admin/Documents/Epi-Logos/Idea/Bimba/Seeds/S/S1/S1-Obsidian-Seed-Research.md` | Main target-state seed grounding for the sixfold anatomy and [[Bimba-Pratibimba]] interpretation |
-| [[S1-S1i-OBSIDIAN]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/specs/S/S1-S1i-OBSIDIAN.md` | Current formal spec for vault ontology, [[World]] / [[World Types Mirror]] split, and S1/S1' contractual intent |
+| [[S1-S1i-OBSIDIAN]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S1/S1'/Legacy/specs/S/S1-S1i-OBSIDIAN.md` | Current formal spec for vault ontology, [[World]] / [[World Types Mirror]] split, and S1/S1' contractual intent |
 | [[COORDINATE-MAP]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Empty/COORDINATE-MAP.md` | Living bridge document confirming intended coordinate assignment: [[S1]] = [[Obsidian]] / material container |
-| [[2026-03-10-idea-tree-and-ct-templates]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/2026-03-10-idea-tree-and-ct-templates.md` | Canonical [[Idea]] tree and template-authority target shape |
-| [[2026-03-10-world-types-mirror]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/plans/2026-03-10-world-types-mirror.md` | Ordered ontology mirror law; clarified [[World]] vs [[Types]] |
-| [[2026-02-22-bimba-data-foundation-harmonization]] | `/Users/admin/Documents/Epi-Logos C Experiments/docs/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` | Filesystem ontology, promotion flow, and residency rules used as system-level authority |
+| [[2026-03-10-idea-tree-and-ct-templates]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-idea-tree-and-ct-templates.md` | Canonical [[Idea]] tree and template-authority target shape |
+| [[2026-03-10-world-types-mirror]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-10-world-types-mirror.md` | Ordered ontology mirror law; clarified [[World]] vs [[Types]] |
+| [[2026-02-22-bimba-data-foundation-harmonization]] | `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/S/Legacy/resources/S/2026-02-22-bimba-data-foundation-harmonization.md` | Filesystem ontology, promotion flow, and residency rules used as system-level authority |
 
 Contextual/supporting reads consulted while resolving [[S1]]:
 

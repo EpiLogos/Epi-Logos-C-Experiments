@@ -10,9 +10,11 @@
 
 Hen is the **content authority** for the entire ta-onta system. It owns the vault topology (Bimba/Present/Pratibimba split), the CT template system (archetypes CT0-CT5 and their instantiation), frontmatter schema enforcement (126 canonical keys, `{family}_{n}_{semantic}` format only), wikilink breadcrumbs, the NOW folder structure, and the vault-to-graph sync bridge. All vault mutations are structured by Hen even when the write primitive is Khora's.
 
-`Idea/Bimba/World` is the canonical authority for flat template forms and reusable artifact-library files consumed by Templater and Hen runtime resolution.
+`Idea/Bimba/World` is the canonical authority for crystallised forms: flat definition files, reusable artifact-library files consumed by Templater and Hen runtime resolution, full coordinate synthesis docs, and stable architecture-as-documentation. Forms live flat at `Idea/Bimba/World/{Name}.md`; the obsolete `World/Forms/` layout must not be revived.
 
-`Idea/Bimba/World/Types` is the ordered ontology mirror. Its hierarchy follows the core coordinate sequence:
+`Idea/Bimba/Seeds` is the canonical authority for planning/spec/source material: shard specs, architecture diagram packs, traceability indexes, migration mirrors for load-bearing `/docs/specs` and `/docs/plans` content, and developmental material that has not yet crystallised into `World`.
+
+`Idea/Bimba/World/Types` is the ordered ontology mirror and MOC/canvas residency surface. Type folders contain MOC canvases at `Idea/Bimba/World/Types/{Type}/{Type}.canvas` plus type-specific incubation material; any canonical form referenced by those canvases still resolves back to flat `World/{Name}.md` or a cited Seed source. Its hierarchy follows the core coordinate sequence:
 
 `# -> #0-#5 -> C..M with nested inversion branches -> reflective language nested through the C-sequence -> type authorities`
 
@@ -41,6 +43,21 @@ Hen treats the `World/Types` nesting protocol as **canonical but derived**, not 
 - `Idea/Pratibimba/Self` is the reflective runtime surface for bootstrap and self-facing markdown state; Hen does not create a separate agent root alongside it.
 
 This prevents the vault hierarchy, the Rust CLI, and the graph seed from drifting into subtly different ontologies.
+
+## Vault Intelligence Protocol
+
+Hen expects agents to use the vault as an intelligent discovery surface before treating files as inert paths.
+
+Required agent behavior:
+
+- Use `epi core knowing <coordinate> --json` for coordinate orientation before cross-system planning or implementation.
+- Use `epi vault read`, `epi vault search`, `epi vault search-content`, and `epi vault link-suggest` to discover canonical specs, plans, definitions, and related wikilinks inside `Idea/`.
+- Use `Idea/Bimba/World/**` first for crystallised definitions and architecture state.
+- Use `Idea/Bimba/Seeds/**` next for planning, source traceability, shard specs, and legacy `/docs` migration mirrors.
+- Use `/docs/specs`, `/docs/plans`, and `/docs/resources` as historical/source material unless a Seed file explicitly cites or mirrors them.
+- Route governed writes through `s1'.vault.*` when available. `epi vault` direct write commands are bootstrap/operator mirrors and must not become the agentic write path for wikilink-bearing canonical content.
+
+When a `/docs` artifact is still load-bearing, Hen should produce or request a Seed-side mirror/index entry so future agents can follow wikilinks from the vault root instead of rediscovering context with raw grep.
 
 ---
 

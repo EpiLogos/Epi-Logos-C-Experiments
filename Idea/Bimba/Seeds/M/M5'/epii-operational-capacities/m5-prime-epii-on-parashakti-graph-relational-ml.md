@@ -693,7 +693,7 @@ These four plus the existing Anuttara spec and this Paraśakti spec cover Epii's
 - `Body/S/S2/graph-schema/src/lib.rs` (S2 schema: 17 canonical relation types, label specs, property semantics; `c_5_embedding` 3072-dim with `EMBEDDING_VERSION: q-semantic-v2-3072`; the property-family this spec extends with `c_5_kge_embedding_rotate`, `c_5_rgcn_embedding`, `c_5_fastrp_embedding`)
 - `Body/S/S2/graph-services/src/seed.rs` (BEDROCK / MANIFESTS / INVERTS_TO / ANCHORED_TO seed logic — the canonical edge types Paraśakti's training graph carries)
 - `docs/datasets/nara-deep/13-03-2026-claude-nara-thinking-marketing.md:136-192` (user's three-phase GDS research programme — FastRP / Node2Vec / GraphSAGE / TDA with QL-proportional relationship weights: mod6 / depth / cross-subsystem weight classes)
-- `docs/plans/2026-03-08-knowing-graph-convergence-plan.md` (n10s integration deferrals that bear on R-GCN relation-type alphabet evolution)
+- `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-08-knowing-graph-convergence-plan.md` (n10s integration deferrals that bear on R-GCN relation-type alphabet evolution)
 - M5-0 / M5-0' improvement-vector map (subagent-produced sober positioning of ML/training work as one Epii capacity per subsystem — graph-relational ML located at position 2)
 - KGE references: Bordes et al. 2013 (TransE); Lin et al. 2015 (TransR); Trouillon et al. 2016 (ComplEx); Sun et al. 2019 (RotatE)
 - R-GCN reference: Schlichtkrull et al. 2018 (Modeling Relational Data with Graph Convolutional Networks)

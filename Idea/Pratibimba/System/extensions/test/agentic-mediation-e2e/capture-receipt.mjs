@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 10.T8 capture-receipt — drives the e2e harness (the SAME logic the
 // .test.mjs asserts against) and writes the structured receipt + summary
-// to docs/plans/.../plan.runs/.
+// to Idea/Bimba/Seeds/M/Legacy/plans/.../plan.runs/.
 //
 // Receipt:  plan.runs/10-t8-agentic-mediation-e2e-<ts>.json
 // Summary:  plan.runs/10-t8-agentic-mediation-e2e-summary.md

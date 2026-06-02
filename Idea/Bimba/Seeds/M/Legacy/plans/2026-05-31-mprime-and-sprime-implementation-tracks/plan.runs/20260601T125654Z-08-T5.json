@@ -1,0 +1,35 @@
+{
+  "runId": "20260601T125654Z-08-T5",
+  "taskId": "08.T5",
+  "startedAt": "2026-06-01T12:56:54.330Z",
+  "owner": "admin",
+  "leaseExpiresAt": "2026-06-01T14:56:54.330Z",
+  "worktree": null,
+  "task": {
+    "id": "08.T5",
+    "trackId": "08",
+    "tranche": "T5",
+    "title": "4/5/0 Privacy-First Composition Slice",
+    "effort": null,
+    "file": "08-integrated-plugin-tracks.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md",
+    "dependsOn": [
+      "08.T4"
+    ],
+    "writeScopes": [
+      "Idea/Pratibimba/System/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}
