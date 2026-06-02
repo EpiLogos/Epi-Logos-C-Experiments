@@ -1,4 +1,5 @@
 use std::fs;
+use std::path::PathBuf;
 
 use epi_logos::gate::{omnipanel, parity};
 
@@ -26,9 +27,20 @@ fn omnipanel_contract_surfaces_alias_team_and_cmux_metadata() {
 
 #[test]
 fn rust_manifest_covers_required_methods_declared_by_electron_panel_parity() {
-    let parity_path = "/Users/admin/Documents/Epi-Logos/Idea/Pratibimba/System/src/renderer/components/omni/contracts/panelRpcParity.ts";
+    // Repo-relative resolution: epi-cli/Cargo.toml is at Body/S/S0/epi-cli,
+    // so we walk up four levels to repo root then into the Theia surface.
+    let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .and_then(|p| p.parent())
+        .and_then(|p| p.parent())
+        .and_then(|p| p.parent())
+        .expect("repo root")
+        .to_path_buf();
+    let parity_path = repo_root.join(
+        "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/contracts/panelRpcParity.ts",
+    );
     let content =
-        fs::read_to_string(parity_path).expect("panel parity contract should be readable");
+        fs::read_to_string(&parity_path).expect("panel parity contract should be readable");
     let methods = parity::method_names();
 
     for method in extract_methods(&content) {

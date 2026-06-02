@@ -61,9 +61,9 @@ The user's existing Obsidian desktop app continues to run independently for auth
 | Smart Connections data | `Idea/.smart-env/multi/*.ajson` | **Landed** — user's existing Obsidian + Smart Connections produces these. |
 | `graph_promotion.rs`, `property_intelligence.rs`, `relation_inference.rs`, `artifact_evidence.rs` | `Body/S/S1/hen-compiler-core/src/` | **Landed** — production surfaces that `s1'.vault.*` will compose. |
 | `s1'.vault.*` + `s1'.semantic.*` gateway methods | `Body/S/S3/gateway` | **NOT YET LANDED** — Track 03 T6.5 deliverable, active thread's writescope. |
-| `vault-bridge` Theia extension | `Idea/Pratibimba/System/extensions/vault-bridge/` | **NOT YET LANDED** — Track 05 T4.5 deliverable, gated on Track 03 T6.5. |
-| `smart-connections-sidebar` Theia contribution | `Idea/Pratibimba/System/extensions/smart-connections-sidebar/` | **NOT YET LANDED** — Track 05 T4.5 deliverable. |
-| Canon Studio extension | `Idea/Pratibimba/System/extensions/canon-studio/` | **NOT YET LANDED** — Track 05 T4 deliverable (T4.5 extends with autocompletion). |
+| `vault-bridge` Theia extension | `Body/M/epi-theia/extensions/vault-bridge/` | **NOT YET LANDED** — Track 05 T4.5 deliverable, gated on Track 03 T6.5. |
+| `smart-connections-sidebar` Theia contribution | `Body/M/epi-theia/extensions/smart-connections-sidebar/` | **NOT YET LANDED** — Track 05 T4.5 deliverable. |
+| Canon Studio extension | `Body/M/epi-theia/extensions/canon-studio/` | **NOT YET LANDED** — Track 05 T4 deliverable (T4.5 extends with autocompletion). |
 | `epi-gnostic` Python + Graphiti substrate | [`Body/S/S5/epi-gnostic/`](../../../../Body/S/S5/epi-gnostic/) | **Landed** — production. Treated as RAG-anything substrate that downstream Track 04 / Track 09 surfaces consume; not a Track 05 composition target. |
 
 ## Consequences

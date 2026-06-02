@@ -907,17 +907,19 @@ ${questions || "<!-- No questions carried forward -->"}
 
   // ── Tool: aletheia_ingest ────────────────────────────────────────
   // C4 / Möbius seam TS handoff. Reads the Sophia disclosure JSONL written
-  // by Khora's session_shutdown (C2), fuses it with optional Moirai outputs
-  // (C3), and writes ONE epii_autoresearch_inbox_entry JSONL line to
-  // ${EPILOGOS_VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl. That file
-  // is the bridge surface consumed by Epii-autoresearch-core (C5/C6).
+  // by Khora's session_shutdown (C2) from the session's NOW folder, fuses it
+  // with optional Moirai outputs (C3), and writes ONE
+  // epii_autoresearch_inbox_entry JSONL line to
+  // ${EPILOGOS_VAULT}/Empty/Present/{day_id}/{session_id}.jsonl. That file is
+  // the bridge surface consumed by Epii-autoresearch-core (C5 InboxStore /
+  // C6 recompose_pass) which uses the matching `{vault}/Empty/Present` root.
   api.registerTool({
     name: "aletheia_ingest",
     label: "Aletheia Ingest",
     description: "C4 Möbius seam TS handoff: ingest the Sophia session-end disclosure for the given session " +
       "and (optionally) the three Moirai summaries, compose the canonical " +
       "epii_autoresearch_inbox_entry payload, and append it as a JSONL line to " +
-      "${EPILOGOS_VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl. That JSONL is what " +
+      "${EPILOGOS_VAULT}/Empty/Present/{day_id}/{session_id}.jsonl. That JSONL is what " +
       "Epii-autoresearch-core (C5 InboxStore / C6 recompose_pass) reads.",
     parameters: Type.Object({
       session_id: Type.String({ description: "Session whose Sophia disclosure to ingest" }),

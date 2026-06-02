@@ -101,9 +101,11 @@ The T' archive folders at `Idea/Pratibimba/Self/Thought/T0/` through `T5/` are t
 
 ### `Idea/Pratibimba/System`
 
-`System` is the reflective mirror of deployed or packaged system domains. It can hold mirrors such as `epi-app`, package-image related material, and subsystem-facing structure.
+`System` is the **architectural / UX design surface** for the user-facing app. It holds `docs/` (ADRs, operator runbooks, dependency model, naming) and `Subsystems/` (M-domain design notes). It is reflective material — design-time discourse — and is **not** an executable source tree.
 
-`System/Subsystems` exists for bounded domains of the M' electron app and adjacent system-level surfaces. It is a partitioning root for subsystem-specific reflective material, not a replacement for the executable source trees.
+The executable Theia/Electron application that this design surface describes lives at `Body/M/epi-theia/`. The legacy Tauri shell it superseded is preserved as a migration baseline at `vendor/legacy/epi-tauri/`.
+
+`System/Subsystems` partitions design notes by M-coordinate (Anuttara, Paramasiva, Parashakti, Mahamaya, Nara, epii) for cross-cutting widget / extension specification — paired one-to-one with the `Body/M/epi-theia/extensions/m{0..5}-*` runtime packages.
 
 ## Frontmatter Key Law — C-Family as Ontological Default
 

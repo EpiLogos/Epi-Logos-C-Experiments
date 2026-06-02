@@ -3,11 +3,11 @@
 **Status:** Decided 2026-06-01
 **Decision register:** PRD-01 (resolved by canon), PRD-04 (Theia API/version/PM/composition)
 **Affected tracks:** 05, 07, 08
-**Predecessor:** [ADR-001](../../../../Body/M/epi-tauri/decisions/adr-001-theia-runtime-mode.md) (Tauri-runtime mode — superseded)
+**Predecessor:** [ADR-001](../../../../vendor/legacy/epi-tauri/decisions/adr-001-theia-runtime-mode.md) (Tauri-runtime mode — superseded)
 
 ## Context
 
-`Idea/Pratibimba/System/theia-app/package.json` currently declares `"target": "browser"`. The canon recast ([m5-prime-system-shape-and-tauri-ide-canon.md §2-§3](../../../Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md)) names Electron as the **canonical desktop distribution** with the browser bundle retained for CI / Docker / optional headless deployment.
+`Body/M/epi-theia/theia-app/package.json` currently declares `"target": "browser"`. The canon recast ([m5-prime-system-shape-and-tauri-ide-canon.md §2-§3](../../../Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md)) names Electron as the **canonical desktop distribution** with the browser bundle retained for CI / Docker / optional headless deployment.
 
 The pre-recast ADR-001 selected a Tauri-webview-loads-Theia-browser-bundle path with the `pratibimba://` custom URI protocol. That decision was prototype-resolved by commit `dd985f7` at Track 05 T2. Canon §2-§3 has since retired the Tauri wrapper entirely — leaving the question: which Theia delivery target is canonical?
 

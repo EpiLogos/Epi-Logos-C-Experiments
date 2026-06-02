@@ -85,7 +85,7 @@ fn app_source_dir(repo_root: &Path) -> PathBuf {
     if let Some(path) = std::env::var_os("EPI_APP_SOURCE_DIR") {
         return PathBuf::from(path);
     }
-    repo_root.join("Idea/Pratibimba/System/electron-app")
+    repo_root.join("Body/M/epi-theia/electron-app")
 }
 
 fn app_bundle_path(repo_root: &Path) -> PathBuf {
@@ -134,7 +134,7 @@ mod tests {
             .expect("repo root");
         let app_source = app_source_dir(repo_root);
         assert!(
-            app_source.ends_with("Idea/Pratibimba/System/electron-app"),
+            app_source.ends_with("Body/M/epi-theia/electron-app"),
             "expected Theia electron-app source, got {}",
             app_source.display()
         );

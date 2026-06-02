@@ -52,9 +52,9 @@ function writeSophiaDisclosure(session_id: string, vectors: string[], artifacts:
     improvement_vectors: vectors,
     handoff_target: "aletheia_ingest",
   };
-  const sophiaDir = join(TMP, "Pratibimba", "Sophia", "inbox");
-  mkdirSync(sophiaDir, { recursive: true });
-  writeFileSync(join(sophiaDir, `${session_id}.jsonl`), JSON.stringify(disclosure) + "\n");
+  const nowDir = join(TMP, "Empty", "Present", "22-05-2026", session_id);
+  mkdirSync(nowDir, { recursive: true });
+  writeFileSync(join(nowDir, "sophia-disclosure.jsonl"), JSON.stringify(disclosure) + "\n");
 }
 
 describe("Z-cycle smoke — TS upstream seam (sophia-fire → aletheia-ingest)", () => {
@@ -72,8 +72,8 @@ describe("Z-cycle smoke — TS upstream seam (sophia-fire → aletheia-ingest)",
       throw new Error(`expected ok, got: ${result.reason}`);
     }
 
-    // Verify Epii inbox file landed
-    const epiiPath = join(TMP, "Pratibimba", "Epii", "inbox", `${session_id}.jsonl`);
+    // Verify Epii inbox file landed (per-session JSONL at day level)
+    const epiiPath = join(TMP, "Empty", "Present", "22-05-2026", `${session_id}.jsonl`);
     assert.ok(existsSync(epiiPath), "Epii inbox file created");
 
     const content = readFileSync(epiiPath, "utf8");
@@ -110,9 +110,9 @@ describe("Z-cycle smoke — TS upstream seam (sophia-fire → aletheia-ingest)",
       improvement_vectors: ["open chat ended without commitment"],
       handoff_target: "aletheia_ingest",
     };
-    const sophiaDir = join(TMP, "Pratibimba", "Sophia", "inbox");
-    mkdirSync(sophiaDir, { recursive: true });
-    writeFileSync(join(sophiaDir, `${session_id}.jsonl`), JSON.stringify(dialogicalDisclosure) + "\n");
+    const nowDir = join(TMP, "Empty", "Present", "22-05-2026", session_id);
+    mkdirSync(nowDir, { recursive: true });
+    writeFileSync(join(nowDir, "sophia-disclosure.jsonl"), JSON.stringify(dialogicalDisclosure) + "\n");
 
     const result = aletheiaIngestSophia({
       session_id,
@@ -121,7 +121,7 @@ describe("Z-cycle smoke — TS upstream seam (sophia-fire → aletheia-ingest)",
     });
     if (!result.ok) throw new Error(result.reason);
 
-    const epiiPath = join(TMP, "Pratibimba", "Epii", "inbox", `${session_id}.jsonl`);
+    const epiiPath = join(TMP, "Empty", "Present", "22-05-2026", `${session_id}.jsonl`);
     const entry = JSON.parse(readFileSync(epiiPath, "utf8").trim());
     assert.equal(entry.final_vak.cpf, "(00/00)");
     assert.equal(entry.final_vak.cf, "(00/00)");

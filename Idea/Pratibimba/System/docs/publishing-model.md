@@ -46,7 +46,7 @@ each one:
   `@theia/process` are intentionally absent from `theia-app` until terminal
   support is explicitly in scope.
 
-`pnpm --dir Idea/Pratibimba/System build` must compile both the frontend and
+`pnpm --dir Body/M/epi-theia build` must compile both the frontend and
 backend bundles successfully. `scripts/smoke-build.sh` fails on any non-zero
 Theia build exit and verifies the readiness extension chunk is present in the
 frontend artifact.

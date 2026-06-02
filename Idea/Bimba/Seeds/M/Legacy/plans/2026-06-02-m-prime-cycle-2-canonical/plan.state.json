@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T16:30:49.669Z",
+  "updatedAt": "2026-06-02T16:42:47.756Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -120,16 +120,21 @@
       "worktree": null
     },
     "01.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:39:43.588Z",
+      "claimedAt": "2026-06-02T16:38:00.423Z",
+      "completedAt": "2026-06-02T16:39:43.588Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:39:43.588Z",
+          "text": "Shell 0 structural/cosmic parent face over M1/M2/M3 outputs landed (plugin-integrated-1-2-3 + cosmic-engine slice, now under Body/M/epi-theia/extensions after Pratibimba/System->epi-theia migration). Specs pin all deliverables: M'-PORTAL-SPEC 38/55/66/123 (integrated preview, lean current-coordinate, M0' not swallowed = selected-coordinate orientation only) + M'-SYSTEM-SPEC 83 ('open the app, see the state of things' lean surface). Verification: node --test cosmic-engine-slice + jiva-siva-slice 18/18 (integrated 1-2-3 preview); m2-parashakti-meaning-packet + m3-mahamaya-codon-wheel 13/13 (shell-0 surface vs live profile/runtime payloads); M1 7/7 prior."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:38:00.423Z",
+      "runId": "20260602T163800Z-01-T3",
       "worktree": null
     },
     "01.T4": {
@@ -397,16 +402,16 @@
       "worktree": null
     },
     "05.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-02T16:42:47.752Z",
+      "claimedAt": "2026-06-02T16:42:47.752Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:42:47.752Z",
+      "heartbeatAt": "2026-06-02T16:42:47.752Z",
+      "runId": "20260602T164247Z-05-T1",
       "worktree": null
     },
     "05.T2": {
@@ -436,16 +441,21 @@
       "worktree": null
     },
     "06.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:40:49.482Z",
+      "claimedAt": "2026-06-02T16:40:06.602Z",
+      "completedAt": "2026-06-02T16:40:49.482Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:40:49.482Z",
+          "text": "M4 Journal/Daily/Dream/Oracle/flow-editor/highlight-rail surfaces owned (m4-nara extension under Body/M/epi-theia); shell 1 flow as universal CT0 lived input, FLOW-primary vs 'day container is not the daily note' (CT4b artifact), shell-preview-vs-4+2 depth all pinned in M4'-SPEC.md (37-38 surfaces, 83 shell-1 entry, 265 day-container/daily-note distinction, 73/240 preview-vs-depth). Verification: node --test m4-nara-day-container + jiva-siva-slice 16/16 incl. 'creates real Nara artifact files and renders DayContainer tree from persisted store' = flow-to-artifact against real temp vault/dayId/NOW paths (no mocks); jiva-siva = shell-1 4-5-0 recognition preview."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:40:06.602Z",
+      "runId": "20260602T164006Z-06-T0",
       "worktree": null
     },
     "06.T1": {
@@ -566,16 +576,21 @@
       "worktree": null
     },
     "08.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:42:25.787Z",
+      "claimedAt": "2026-06-02T16:41:37.009Z",
+      "completedAt": "2026-06-02T16:42:25.787Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:42:25.787Z",
+          "text": "Integrated 1-2-3 plugin composition contract (M1/M2/M3 shared state, readiness, provenance) owned in Body/M/epi-theia/extensions plugin-integrated-1-2-3 + integrated-composition; pinned in M'-SYSTEM-SPEC.md 514 ('plugins compose layers; they do not rewrite layer canon') + 100 (shell 0 integrated parent-level preview of M1/M2/M3). Verification: node --test validate-composition-contract-preflight + track-08-contribution-contract + integrated-state-coordinator + integrated-plugin-arbitration 27/27; cosmic-engine-slice + jiva-siva-slice 18/18 prior. Note: M'-SYSTEM-SPEC lines 45/528 still cite Idea/Pratibimba/System paths now stale post epi-theia migration (track-13 spec-maintenance, not 08.T0 scope)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:41:37.009Z",
+      "runId": "20260602T164137Z-08-T0",
       "worktree": null
     },
     "08.T1": {
@@ -1348,26 +1363,65 @@
       "leaseExpiresAt": "2026-06-02T18:25:26.189Z",
       "worktree": null,
       "completedAt": "2026-06-02T16:28:27.238Z"
+    },
+    {
+      "runId": "20260602T163800Z-01-T3",
+      "taskId": "01.T3",
+      "status": "done",
+      "startedAt": "2026-06-02T16:38:00.423Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:38:00.423Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:39:43.588Z"
+    },
+    {
+      "runId": "20260602T164006Z-06-T0",
+      "taskId": "06.T0",
+      "status": "done",
+      "startedAt": "2026-06-02T16:40:06.602Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:40:06.602Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:40:49.482Z"
+    },
+    {
+      "runId": "20260602T164137Z-08-T0",
+      "taskId": "08.T0",
+      "status": "done",
+      "startedAt": "2026-06-02T16:41:37.009Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:41:37.009Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:42:25.787Z"
+    },
+    {
+      "runId": "20260602T164247Z-05-T1",
+      "taskId": "05.T1",
+      "status": "in_progress",
+      "startedAt": "2026-06-02T16:42:47.752Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:42:47.752Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T16:30:49.669Z",
-    "updatedAt": "2026-06-02T16:30:49.669Z",
+    "createdAt": "2026-06-02T16:42:33.678Z",
+    "updatedAt": "2026-06-02T16:42:33.678Z",
     "taskIds": [
-      "08.T0",
       "04.T1",
-      "06.T0",
-      "01.T3"
+      "03.T2",
+      "05.T1",
+      "07.T0"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "08.T0": "in-session",
       "04.T1": "in-session",
-      "06.T0": "in-session",
-      "01.T3": "in-session"
+      "03.T2": "in-session",
+      "05.T1": "in-session",
+      "07.T0": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

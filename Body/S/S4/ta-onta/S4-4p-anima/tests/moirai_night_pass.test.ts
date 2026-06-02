@@ -11,7 +11,7 @@ describe("Moirai Night' pass plan", () => {
   it("dispatches all three Moirai as CFP3 F-Thread with proper Night' positions", () => {
     const plan = planMoiraiNightPass({
       session_id: "agent:test:main",
-      disclosure_path: "/vault/Sophia/inbox/x.jsonl",
+      disclosure_path: "/vault/Empty/Present/22-05-2026/agent:session/sophia-disclosure.jsonl",
     });
     assert.equal(plan.cfp, "CFP3");
     assert.equal(plan.cs_direction, "Night'");
@@ -25,11 +25,11 @@ describe("Moirai Night' pass plan", () => {
   it("each task brief references both the disclosure path and session_id", () => {
     const plan = planMoiraiNightPass({
       session_id: "agent:verify:42",
-      disclosure_path: "/vault/Sophia/inbox/x.jsonl",
+      disclosure_path: "/vault/Empty/Present/22-05-2026/agent:session/sophia-disclosure.jsonl",
     });
     for (const dispatch of plan.dispatches) {
       assert.ok(
-        dispatch.task.includes("/vault/Sophia/inbox/x.jsonl"),
+        dispatch.task.includes("/vault/Empty/Present/22-05-2026/agent:session/sophia-disclosure.jsonl"),
         `${dispatch.agent} task should reference disclosure path`,
       );
       assert.ok(
@@ -57,7 +57,7 @@ describe("Moirai Night' pass post-refactor invariants", () => {
   it("planMoiraiNightPass output is byte-stable across the refactor", () => {
     const plan = planMoiraiNightPass({
       session_id: "agent:refactor:check",
-      disclosure_path: "/vault/Sophia/inbox/x.jsonl",
+      disclosure_path: "/vault/Empty/Present/22-05-2026/agent:session/sophia-disclosure.jsonl",
     });
     assert.equal(plan.cfp, "CFP3");
     assert.equal(plan.cs_direction, "Night'");

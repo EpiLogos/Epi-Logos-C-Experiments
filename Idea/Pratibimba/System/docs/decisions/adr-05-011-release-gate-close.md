@@ -7,13 +7,13 @@
 
 ## Context
 
-Track 05 began with `Body/M/epi-tauri` as the user-facing IDE surface (Vite + React 19 + Tauri 2). Tranches T0–T2 inventoried the existing surface, decided Theia browser-mode + Electron as the canonical runtime (ADR-05-001), and migrated the OmniPanel + layouts + kernel-bridge to the `Idea/Pratibimba/System/` workspace. Tranches T3–T7 brought the six M-extension widgets, the two integrated plugins, the cross-layout intent dispatcher, and the omnipanel-shell live. Tranche T8 (Thread A) and earlier tranches (Tracks 03 + 04) verified the end-to-end agentic flow.
+Track 05 began with `vendor/legacy/epi-tauri` as the user-facing IDE surface (Vite + React 19 + Tauri 2). Tranches T0–T2 inventoried the existing surface, decided Theia browser-mode + Electron as the canonical runtime (ADR-05-001), and migrated the OmniPanel + layouts + kernel-bridge to the `Idea/Pratibimba/System/` workspace. Tranches T3–T7 brought the six M-extension widgets, the two integrated plugins, the cross-layout intent dispatcher, and the omnipanel-shell live. Tranche T8 (Thread A) and earlier tranches (Tracks 03 + 04) verified the end-to-end agentic flow.
 
 Tranche T9 closes the release gate.
 
 ## Decision
 
-**The Theia-only shell (`Idea/Pratibimba/System/`) IS the canonical Epi-Logos IDE surface for M5-3.** `Body/M/epi-tauri` is tombstoned (per its `DEPRECATED.md`). The Electron build is the user-facing product; the browser-mode build exists for CI / Docker / headless parity.
+**The Theia-only shell (`Idea/Pratibimba/System/`) IS the canonical Epi-Logos IDE surface for M5-3.** `vendor/legacy/epi-tauri` is tombstoned (per its `DEPRECATED.md`). The Electron build is the user-facing product; the browser-mode build exists for CI / Docker / headless parity.
 
 This ADR makes the following invariants binding:
 
@@ -61,19 +61,19 @@ Per the Track 05 plan body T8 hard rule, any review item with `humanRequired ===
 The release gate is closed when the following are simultaneously true:
 
 1. `pnpm -r build` succeeds across all workspace packages.
-2. `bash Idea/Pratibimba/System/scripts/smoke-build.sh` produces a 21+ MB bundle with chunks for all extensions (currently 16+: kernel-bridge, kernel-bridge-readiness, m-extension-runtime, pratibimba-layouts, omnipanel-shell, m0..m5 (×6), integrated-composition, plugin-integrated-1-2-3, plugin-integrated-4-5-0, ide-shell-m0-m5, agentic-control-room, acceptance-harness).
+2. `bash Body/M/epi-theia/scripts/smoke-build.sh` produces a 21+ MB bundle with chunks for all extensions (currently 16+: kernel-bridge, kernel-bridge-readiness, m-extension-runtime, pratibimba-layouts, omnipanel-shell, m0..m5 (×6), integrated-composition, plugin-integrated-1-2-3, plugin-integrated-4-5-0, ide-shell-m0-m5, agentic-control-room, acceptance-harness).
 3. `pnpm --filter @pratibimba/ide-shell-m0-m5 test` — 17/17 passing.
 4. `pnpm --filter @pratibimba/agentic-control-room test` — 14/14 passing.
 5. `pnpm --filter @pratibimba/acceptance-harness test` — 11/11 passing.
 6. `cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml` — 6/6 passing (including human-gate test).
-7. `node Idea/Pratibimba/System/extensions/acceptance-harness/scripts/acceptance.mjs --dry-run` produces a parseable receipt with 7+ services and 7+ steps.
+7. `node Body/M/epi-theia/extensions/acceptance-harness/scripts/acceptance.mjs --dry-run` produces a parseable receipt with 7+ services and 7+ steps.
 
 When all of the above pass, the release gate is closed. The full live-services acceptance run (operator-driven, per operator-runbook.md) is the *operational* verification; it consumes the same plan and produces an `acceptance-receipt-<timestamp>.json` in `Idea/Bimba/Seeds/M/Legacy/plans/.../plan.runs/`.
 
 ## Consequences
 
 - **Track 05 closes.** Subsequent tranches operating on the IDE shell (T4.5 vault-bridge, future hardening) work against this ADR.
-- **Body/M/epi-tauri is frozen.** All new IDE-surface work goes through `Idea/Pratibimba/System/`.
+- **vendor/legacy/epi-tauri is frozen** (was `Body/M/epi-tauri` until the 2026-06-02 reorg). All new IDE-surface work goes through `Body/M/epi-theia/` (executable) with design discourse in `Idea/Pratibimba/System/` (docs + Subsystems).
 - **The kernel-bridge is the only network surface.** Direct `fetch` / `WebSocket` from any new extension is a regression.
 - **The capability matrix governs.** Adding a new agentic capability requires editing `Body/S/S4/plugins/pleroma/capability-matrix.json` first; UI + gateway changes follow.
 
@@ -83,4 +83,4 @@ When all of the above pass, the release gate is closed. The full live-services a
 - `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md` Tranches T0–T9
 - `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` (PRD-01..04 resolved; IOD-17/18/19 live)
 - `Idea/Pratibimba/System/docs/decisions/adr-05-001..010-*.md`
-- `Body/M/epi-tauri/DEPRECATED.md`
+- `vendor/legacy/epi-tauri/DEPRECATED.md`

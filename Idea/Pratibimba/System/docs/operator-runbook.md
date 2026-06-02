@@ -1,20 +1,27 @@
 # Pratibimba System Operator Runbook
 
-**Status:** Canonical (Track 05 T9)
+**Status:** Canonical (Track 05 T9), reorg-updated 2026-06-02
 **Audience:** Developers + operators running the Theia-based Pratibimba System locally, in CI, or in Docker.
 **Authoritative ADR:** [ADR-05-011 — Track 05 release gate close](./decisions/adr-05-011-release-gate-close.md)
+
+> **2026-06-02 layout note.** The executable application moved from
+> `Idea/Pratibimba/System/` (where it was a vault-resident workspace)
+> to `Body/M/epi-theia/` (proper code home). This runbook reflects the
+> new layout. `Idea/Pratibimba/System/` retains the **design surface
+> only** — `docs/` (you are here) and `Subsystems/` (M-domain design
+> notes). The legacy Tauri shell moved to `vendor/legacy/epi-tauri/`.
 
 ## Quick reference
 
 | Task | Command |
 |------|---------|
-| Install workspace dependencies | `cd Idea/Pratibimba/System && pnpm install` |
-| Build everything | `cd Idea/Pratibimba/System && pnpm -r build` |
-| Smoke-build the Theia bundle | `bash Idea/Pratibimba/System/scripts/smoke-build.sh` |
-| Run all package tests | `cd Idea/Pratibimba/System && pnpm test` |
-| Start Theia in browser mode | `cd Idea/Pratibimba/System && pnpm --dir theia-app start` |
-| Start Theia in Electron mode (canonical user-facing build) | `cd Idea/Pratibimba/System && pnpm --filter @pratibimba/electron-app start` |
-| Run acceptance harness (dry-run) | `node Idea/Pratibimba/System/extensions/acceptance-harness/scripts/acceptance.mjs --dry-run` |
+| Install workspace dependencies | `cd Body/M/epi-theia && pnpm install` |
+| Build everything | `cd Body/M/epi-theia && pnpm -r build` |
+| Smoke-build the Theia bundle | `bash Body/M/epi-theia/scripts/smoke-build.sh` |
+| Run all package tests | `cd Body/M/epi-theia && pnpm test` |
+| Start Theia in browser mode | `cd Body/M/epi-theia && pnpm --dir theia-app start` |
+| Start Theia in Electron mode (canonical user-facing build) | `cd Body/M/epi-theia && pnpm --filter @pratibimba/electron-app start` |
+| Run acceptance harness (dry-run) | `node Body/M/epi-theia/extensions/acceptance-harness/scripts/acceptance.mjs --dry-run` |
 | Run acceptance harness (live, browser) | Start services per §2; then `node ...acceptance.mjs --browser` |
 | Run acceptance harness (live, Electron) | Start services per §2; then `node ...acceptance.mjs --electron` |
 
@@ -23,7 +30,7 @@
 ### Workspace layout
 
 ```
-Idea/Pratibimba/System/
+Body/M/epi-theia/
   theia-app/                     # Browser-mode entry (CI + Docker headless)
   electron-app/                  # Electron entry (canonical user-facing)
   extensions/
@@ -48,7 +55,7 @@ Idea/Pratibimba/System/
 
 ```bash
 # Install (top-level — uses pnpm workspaces)
-cd Idea/Pratibimba/System
+cd Body/M/epi-theia
 pnpm install
 
 # Build a single extension
@@ -70,7 +77,7 @@ pnpm test:contracts
 ## 2. Local service topology
 
 The Pratibimba System depends on the following external services. Per
-`Body/M/epi-tauri/decisions/track-05-t0-runtime-baseline.json` and the
+`vendor/legacy/epi-tauri/decisions/track-05-t0-runtime-baseline.json` and the
 acceptance harness plan (`extensions/acceptance-harness/src/common/acceptance-plan.ts`):
 
 | Service | Purpose | Start command | Default endpoint | Required for |
@@ -96,7 +103,7 @@ Environment variables the live build respects:
 ### Electron mode (canonical user-facing build)
 
 ```bash
-cd Idea/Pratibimba/System
+cd Body/M/epi-theia
 pnpm --filter @pratibimba/electron-app start
 ```
 
@@ -109,7 +116,7 @@ Expected behavior:
 ### Browser mode (CI + Docker headless parity)
 
 ```bash
-cd Idea/Pratibimba/System
+cd Body/M/epi-theia
 pnpm --dir theia-app start
 ```
 
@@ -180,7 +187,7 @@ The acceptance harness extension (`@pratibimba/acceptance-harness`) provides:
 ### Dry-run (CI-safe, no services required)
 
 ```bash
-node Idea/Pratibimba/System/extensions/acceptance-harness/scripts/acceptance.mjs --dry-run
+node Body/M/epi-theia/extensions/acceptance-harness/scripts/acceptance.mjs --dry-run
 ```
 
 Produces a JSON receipt to stdout listing the services + steps + privacy
@@ -193,7 +200,7 @@ audit surfaces. Exits 0 if the plan parses cleanly.
 3. Run the harness:
 
    ```bash
-   node Idea/Pratibimba/System/extensions/acceptance-harness/scripts/acceptance.mjs --browser
+   node Body/M/epi-theia/extensions/acceptance-harness/scripts/acceptance.mjs --browser
    ```
 
 4. The harness launches the Theia process, parses stdout for `[ACCEPTANCE:<step-id>:<key>=<value>]` handles, and writes a JSON receipt to

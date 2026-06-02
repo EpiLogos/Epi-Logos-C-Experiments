@@ -23,7 +23,7 @@ fn flow_api_envelope_and_ts_contract_name_kernel_temporal_projection() {
         root.join("Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md"),
     )
     .expect("TS interface definitions should be readable");
-    let tauri_ts = fs::read_to_string(root.join("Body/M/epi-tauri/src/services/types.ts"))
+    let tauri_ts = fs::read_to_string(root.join("vendor/legacy/epi-tauri/src/services/types.ts"))
         .expect("Tauri TS types should be readable");
 
     for expected in [

@@ -310,7 +310,7 @@
       "path": "Body/S/S0/epi-cli/src/app/mod.rs",
       "classification": "cli-adapter",
       "parity_status": "Adapter",
-      "authority_path": "Idea/Pratibimba/System/electron-app",
+      "authority_path": "Body/M/epi-theia/electron-app",
       "adapter_path": "Body/S/S0/epi-cli/src/app/mod.rs",
       "extraction_task": null,
       "allowed_s0_responsibilities": ["operator-facing app-launcher membrane (epi app launch/dev/build)"]
@@ -410,9 +410,9 @@
     },
     {
       "id": "F",
-      "path": "Body/M/epi-tauri/",
-      "symbol": "entire tree marked DEPRECATED.md migration-source-only",
-      "preserves": "pre-Theia canon Tauri shell",
+      "path": "vendor/legacy/epi-tauri/",
+      "symbol": "entire tree relocated to vendor/legacy (was Body/M/epi-tauri), DEPRECATED migration-source-only",
+      "preserves": "pre-Theia canon Tauri shell as historical baseline",
       "removal_trigger": "spacetime stub respec to Theia + no S0 callers route here",
       "risk": "low-medium"
     },

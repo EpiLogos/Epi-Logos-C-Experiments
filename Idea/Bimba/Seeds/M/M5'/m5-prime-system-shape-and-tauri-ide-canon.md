@@ -23,6 +23,20 @@ depends_on:
 
 **Status:** M5'-level canon-clarification spec. Consolidates architectural decisions surfaced through recent thinking-work into a coherent shape-canon that downstream specs reference rather than re-articulate.
 
+> **2026-06-02 path-relocation amendment.** The path references in this
+> spec are preserved as a snapshot of the decision moment. Since this
+> document was written:
+> - `Body/M/epi-tauri/` → `vendor/legacy/epi-tauri/` (frozen migration baseline; do not extend)
+> - The Theia executable shell moved from `Idea/Pratibimba/System/` → `Body/M/epi-theia/` (proper code home, outside the vault)
+> - `Idea/Pratibimba/System/` retains only the **design surface** — `docs/` (ADRs + operator runbook) and `Subsystems/` (M-domain design notes); it is no longer an executable workspace.
+>
+> The architectural decisions in this spec are unchanged. Mentally
+> substitute the new paths when reading the body below. Where this spec
+> says "the Theia shell at `Idea/Pratibimba/System/`" the executable is
+> now at `Body/M/epi-theia/`; where it says "migration source
+> `Body/M/epi-tauri/`" the historical baseline is now at
+> `vendor/legacy/epi-tauri/`.
+
 **Reading order:** This is the foundational app-architecture canon for the M5'/M'/Tauri/IDE layer. Read after `M5'-SPEC.md` and `CLAUDE.md` §II-VI; before drafting or updating any spec that touches the Tauri-app architecture, the IDE shell, the plugin-app boundary, or the M5-2/3/4 trinitarian breakdown.
 
 ---

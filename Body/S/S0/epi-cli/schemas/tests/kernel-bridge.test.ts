@@ -13,7 +13,7 @@ import {
   MathemeHarmonicProfile,
   validateKernelBridgeRpcEnvelope,
 } from "../src/kernel-bridge.js";
-import { KERNEL_BRIDGE_REQUIRED_CAPABILITIES } from "../../../../../../Idea/Pratibimba/System/extensions/m-extension-runtime/src/common/bridge-api.js";
+import { KERNEL_BRIDGE_REQUIRED_CAPABILITIES } from "../../../../../../Body/M/epi-theia/extensions/m-extension-runtime/src/common/bridge-api.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "../../../../../..");

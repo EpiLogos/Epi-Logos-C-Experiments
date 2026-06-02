@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "taskId": "07.T0",
+  "policy": "Track 07 T0 does not invent bridge payloads. Each degraded or blocked readiness state must later be captured from the owning upstream integration test or harness before UI truth claims are allowed.",
+  "requirements": [
+    {
+      "readinessState": "bridge_unavailable",
+      "sourceTrack": "01",
+      "sourceTranche": "T6/T7",
+      "captureCommand": "Run the Track 01 bridge runtime test with the bridge intentionally stopped, then export the shared adapter readiness payload.",
+      "futureFixturePath": "Body/M/epi-theia/extensions/test/fixtures/bridge_unavailable.capture.json",
+      "requiredFields": [
+        "bridge_readiness",
+        "connection_state",
+        "profile_generation"
+      ]
+    },
+    {
+      "readinessState": "profile_missing_field",
+      "sourceTrack": "01",
+      "sourceTranche": "T5/T7",
+      "captureCommand": "Run the Track 01 profile contract test with one extension-required field omitted by compatibility projection and capture the typed blocker payload.",
+      "futureFixturePath": "Body/M/epi-theia/extensions/test/fixtures/profile_missing_field.capture.json",
+      "requiredFields": [
+        "profile_generation",
+        "missing_field",
+        "compatibility_window"
+      ]
+    },
+    {
+      "readinessState": "s2_graph_blocked",
+      "sourceTrack": "02",
+      "sourceTranche": "T7/T8",
+      "captureCommand": "Run the Track 02 graph parity test with graph law or provenance unavailable and capture the blocked graph-read payload.",
+      "futureFixturePath": "Body/M/epi-theia/extensions/test/fixtures/s2_graph_blocked.capture.json",
+      "requiredFields": [
+        "selected_coordinate",
+        "s2_anchor",
+        "graph_readiness"
+      ]
+    },
+    {
+      "readinessState": "s3_subscription_blocked",
+      "sourceTrack": "03",
+      "sourceTranche": "T5",
+      "captureCommand": "Run the Track 03 consumption slice with the shared subscription path unavailable and capture the stream-readiness payload.",
+      "futureFixturePath": "Body/M/epi-theia/extensions/test/fixtures/s3_subscription_blocked.capture.json",
+      "requiredFields": [
+        "session_key",
+        "stream_topology",
+        "connection_state"
+      ]
+    },
+    {
+      "readinessState": "s5_review_blocked",
+      "sourceTrack": "04",
+      "sourceTranche": "T6/T7",
+      "captureCommand": "Run the Track 04 review DTO test with review or improve storage unavailable and capture the typed review blocker payload.",
+      "futureFixturePath": "Body/M/epi-theia/extensions/test/fixtures/s5_review_blocked.capture.json",
+      "requiredFields": [
+        "s5_review_evidence_id",
+        "governance_gate",
+        "review_readiness"
+      ]
+    },
+    {
+      "readinessState": "authority_payload_missing",
+      "sourceTrack": "02",
+      "sourceTranche": "T8",
+      "captureCommand": "Run the owner-track contract with the required graph/profile/review payload unavailable and record the typed missing-authority payload.",
+      "futureFixturePath": "Body/M/epi-theia/extensions/test/fixtures/authority_payload_missing.capture.json",
+      "requiredFields": [
+        "authority_key",
+        "missing_reason",
+        "selected_coordinate"
+      ]
+    },
+    {
+      "readinessState": "privacy_blocked",
+      "sourceTrack": "03/04",
+      "sourceTranche": "T4/T6",
+      "captureCommand": "Run the privacy-boundary integration lane with protected content requested from an unsafe surface and capture the privacy-denied payload.",
+      "futureFixturePath": "Body/M/epi-theia/extensions/test/fixtures/privacy_blocked.capture.json",
+      "requiredFields": [
+        "privacy_class",
+        "denied_capability",
+        "safe_handle"
+      ]
+    },
+    {
+      "readinessState": "degraded_but_readable",
+      "sourceTrack": "10",
+      "sourceTranche": "T0/T3",
+      "captureCommand": "Run the cross-track integration harness with a known degraded upstream dependency and capture the read-only but still safe bridge payload.",
+      "futureFixturePath": "Body/M/epi-theia/extensions/test/fixtures/degraded_but_readable.capture.json",
+      "requiredFields": [
+        "profile_generation",
+        "degraded_reason",
+        "allowed_actions"
+      ]
+    }
+  ]
+}

@@ -8,7 +8,7 @@
 //! exist on this surface.
 //!
 //! The readiness command implements the 9-state taxonomy declared in
-//! `Idea/Pratibimba/System/extensions/contracts/07-t0-extension-contract-preflight.json#readinessTaxonomy`
+//! `Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json#readinessTaxonomy`
 //! so the gateway/Theia/Tauri renderer all share one definition.
 
 use clap::Subcommand;

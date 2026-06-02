@@ -1,14 +1,27 @@
 // Aletheia Sophia ingest (C4 / Möbius seam TS handoff).
 //
 // At session end, Khora's `session_shutdown` lifecycle handler fires a Sophia
-// disclosure (C2) to ${EPILOGOS_VAULT}/Pratibimba/Sophia/inbox/${session_id}.jsonl.
-// Moirai (C3) optionally produces three short summaries (klotho / lachesis /
-// atropos). C4 closes the seam at the TS layer: Aletheia reads the Sophia
-// disclosure, fuses it with the (optional) Moirai outputs via the pure
-// `routeToEpiiInbox` factory, and writes ONE JSONL line to
-// ${EPILOGOS_VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl. That JSONL is
-// the bridge surface that Epii-autoresearch-core (C5: Rust InboxStore, C6:
-// recompose_pass) will consume.
+// disclosure (C2) to
+// `${EPILOGOS_VAULT}/Empty/Present/{day_id}/{session_id}/sophia-disclosure.jsonl`
+// — i.e. into the session's own NOW folder. Moirai (C3) optionally produces
+// three short summaries (klotho / lachesis / atropos). C4 closes the seam at
+// the TS layer: Aletheia reads the per-session Sophia disclosure, fuses it
+// with the (optional) Moirai outputs via the pure `routeToEpiiInbox` factory,
+// and APPENDS ONE JSONL line to the **per-session Epii inbox file** at
+// `${EPILOGOS_VAULT}/Empty/Present/{day_id}/{session_id}.jsonl` (the day
+// folder IS the Epii inbox surface; each session is one file in it). The
+// Rust C5 consumer `Body/S/S5/epii-autoresearch-core/src/inbox.rs`
+// (`InboxStore`) reads the **exact same wire format** — its `root` is
+// `${vault}/Empty/Present` and it composes the same `{day_id}/{session_id}.jsonl`
+// path. The schema is the contract; any divergence is a wire break.
+//
+// Reorg 2026-06-02: the old per-session flat inboxes at
+// `Pratibimba/Sophia/inbox/` and `Pratibimba/Epii/inbox/` were retired —
+// agent inboxes are not first-class vault residents anymore. Sophia
+// disclosures live inside the session's NOW subfolder; the Epii per-session
+// JSONL sits at the day level alongside the session subfolder (Rust C5
+// InboxStore already enforces this — `Pratibimba/Epii/inbox` writes are
+// rejected at the source).
 //
 // `routeToEpiiInbox` is PURE — no I/O. `aletheiaIngestSophia` performs the
 // read/write file orchestration so the lifecycle/tool surfaces can stay thin.
@@ -94,7 +107,14 @@ export function aletheiaIngestSophia(input: {
     return { ok: false, reason: "EPILOGOS_VAULT not set" };
   }
 
-  const sophiaPath = join(vaultRoot, "Pratibimba", "Sophia", "inbox", `${input.session_id}.jsonl`);
+  const sophiaPath = join(
+    vaultRoot,
+    "Empty",
+    "Present",
+    input.day_id,
+    input.session_id,
+    "sophia-disclosure.jsonl",
+  );
   if (!existsSync(sophiaPath)) {
     return { ok: false, reason: "no Sophia disclosure for session" };
   }
@@ -120,9 +140,9 @@ export function aletheiaIngestSophia(input: {
     moirai_outputs: input.moirai_outputs ?? {},
   });
 
-  const epiiInboxDir = join(vaultRoot, "Pratibimba", "Epii", "inbox");
-  mkdirSync(epiiInboxDir, { recursive: true });
-  const epiiInboxPath = join(epiiInboxDir, `${input.session_id}.jsonl`);
+  const dayDir = join(vaultRoot, "Empty", "Present", input.day_id);
+  mkdirSync(dayDir, { recursive: true });
+  const epiiInboxPath = join(dayDir, `${input.session_id}.jsonl`);
   appendFileSync(epiiInboxPath, JSON.stringify(payload) + "\n", "utf8");
   return { ok: true, path: epiiInboxPath, payload };
 }

@@ -3,8 +3,10 @@
 // Pure-factory tests for `routeToEpiiInbox`. The factory composes the
 // canonical `epii_autoresearch_inbox_entry` payload from a Sophia disclosure
 // plus optional Moirai outputs — the Möbius seam TS handoff that
-// Epii-autoresearch-core (C5/C6) will consume from
-// ${EPILOGOS_VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl.
+// Epii-autoresearch-core (C5/C6) consumes from
+// `${EPILOGOS_VAULT}/Empty/Present/{day_id}/{session_id}.jsonl` (per-session
+// JSONL in the day folder, matching the Rust InboxStore wire format;
+// post-2026-06-02 reorg, `Pratibimba/Epii/inbox/` is retired).
 
 import { describe, it, beforeEach, afterEach } from "node:test";
 import { strict as assert } from "node:assert";
@@ -178,9 +180,13 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
     rmSync(workDir, { recursive: true, force: true });
   });
 
+  function sophiaDisclosurePath(session_id: string, day_id: string): string {
+    return join(workDir, "Empty", "Present", day_id, session_id, "sophia-disclosure.jsonl");
+  }
+
   function seedSophia(session_id: string, day_id: string, extra?: { artifacts?: string[]; improvement_vectors?: string[] }): void {
-    const inboxDir = join(workDir, "Pratibimba", "Sophia", "inbox");
-    mkdirSync(inboxDir, { recursive: true });
+    const nowDir = join(workDir, "Empty", "Present", day_id, session_id);
+    mkdirSync(nowDir, { recursive: true });
     const disclosure = {
       kind: "sophia_session_end_disclosure",
       session_id,
@@ -198,7 +204,7 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
       handoff_target: "aletheia_ingest",
     };
     writeFileSync(
-      join(inboxDir, `${session_id}.jsonl`),
+      join(nowDir, "sophia-disclosure.jsonl"),
       JSON.stringify(disclosure) + "\n",
       "utf8",
     );
@@ -264,8 +270,8 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
   it("picks the LAST non-empty JSONL line if multiple disclosures landed", () => {
     const session_id = "agent:multi:1";
     const day_id = "29-05-2026";
-    const inboxDir = join(workDir, "Pratibimba", "Sophia", "inbox");
-    mkdirSync(inboxDir, { recursive: true });
+    const nowDir = join(workDir, "Empty", "Present", day_id, session_id);
+    mkdirSync(nowDir, { recursive: true });
 
     const earlier = {
       kind: "sophia_session_end_disclosure",
@@ -289,7 +295,7 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
       improvement_vectors: ["v-latest"],
     };
     writeFileSync(
-      join(inboxDir, `${session_id}.jsonl`),
+      join(nowDir, "sophia-disclosure.jsonl"),
       JSON.stringify(earlier) + "\n" + JSON.stringify(latest) + "\n\n",
       "utf8",
     );
@@ -332,8 +338,8 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
     assert.equal(second.ok, true, `second ingest should succeed: ${JSON.stringify(second)}`);
     if (!second.ok) return;
 
-    // Both invocations write to the same per-session Epii inbox file.
-    assert.equal(first.path, second.path, "same session_id → same Epii inbox path");
+    // Both invocations write to the same per-session Epii inbox file at day level.
+    assert.equal(first.path, second.path, "same session_id → same Epii inbox path (per-session JSONL in day folder)");
 
     const raw = readFileSync(second.path, "utf8");
     const lines = raw.trim().split("\n");
@@ -359,9 +365,9 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
     // common "no Sophia at all" case (no synthesis was attempted).
     const session_id = "agent:empty-sophia:1";
     const day_id = "29-05-2026";
-    const inboxDir = join(workDir, "Pratibimba", "Sophia", "inbox");
-    mkdirSync(inboxDir, { recursive: true });
-    writeFileSync(join(inboxDir, `${session_id}.jsonl`), "\n   \n\n", "utf8");
+    const nowDir = join(workDir, "Empty", "Present", day_id, session_id);
+    mkdirSync(nowDir, { recursive: true });
+    writeFileSync(join(nowDir, "sophia-disclosure.jsonl"), "\n   \n\n", "utf8");
 
     const result = aletheiaIngestSophia({
       session_id,
@@ -379,8 +385,8 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
     // lifecycle handler — so tool surfaces can surface the reason.
     const session_id = "agent:bad-tail:1";
     const day_id = "29-05-2026";
-    const inboxDir = join(workDir, "Pratibimba", "Sophia", "inbox");
-    mkdirSync(inboxDir, { recursive: true });
+    const nowDir = join(workDir, "Empty", "Present", day_id, session_id);
+    mkdirSync(nowDir, { recursive: true });
     const validDisclosure = {
       kind: "sophia_session_end_disclosure",
       session_id,
@@ -398,7 +404,7 @@ describe("aletheiaIngestSophia (end-to-end file I/O)", () => {
       handoff_target: "aletheia_ingest",
     };
     writeFileSync(
-      join(inboxDir, `${session_id}.jsonl`),
+      join(nowDir, "sophia-disclosure.jsonl"),
       JSON.stringify(validDisclosure) + "\n" + "{ invalid json" + "\n",
       "utf8",
     );

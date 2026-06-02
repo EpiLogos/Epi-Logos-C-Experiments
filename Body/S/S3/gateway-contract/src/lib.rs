@@ -2335,7 +2335,7 @@ fn classify_subscription_message(message: &Value) -> SpacetimeMessageKind {
 // =============== 03.T5 kernel-bridge stream contract ================
 //
 // The TypeScript-facing stream contract consumed by the Theia kernel-bridge
-// extension (`Idea/Pratibimba/System/extensions/kernel-bridge/`) and the
+// extension (`Body/M/epi-theia/extensions/kernel-bridge/`) and the
 // `/body` shell layout. Both consumers receive the same envelope shapes via
 // serde-JSON over the gateway WebSocket multiplex; there is no Tauri-native
 // alternative (PRD-01 obviated it).

@@ -1,6 +1,6 @@
 # Pratibimba System — Decision Records
 
-Architectural decision records (ADRs) for `Idea/Pratibimba/System/` (the Theia surface at `/pratibimba/system`). These supersede the original Track-05-T0 ADRs at `Body/M/epi-tauri/decisions/` which were authored before the Theia-only canon recast.
+Architectural decision records (ADRs) for `Idea/Pratibimba/System/` (the Theia surface at `/pratibimba/system`). These supersede the original Track-05-T0 ADRs at `vendor/legacy/epi-tauri/decisions/` which were authored before the Theia-only canon recast.
 
 ## Index
 
@@ -16,7 +16,7 @@ Architectural decision records (ADRs) for `Idea/Pratibimba/System/` (the Theia s
 
 ## Predecessor ADRs (historical record)
 
-The pre-recast ADRs at [`Body/M/epi-tauri/decisions/`](../../../../Body/M/epi-tauri/decisions/) remain in place as historical record. They answered the PRD-01/02/03 questions assuming a Tauri wrapper; canon §2-§3 has since closed those questions differently (no Tauri wrapper; one Theia process; kernel-bridge as Theia extension). See ADR-05-009 for the explicit recast bridge.
+The pre-recast ADRs at [`vendor/legacy/epi-tauri/decisions/`](../../../../vendor/legacy/epi-tauri/decisions/) remain in place as historical record. They answered the PRD-01/02/03 questions assuming a Tauri wrapper; canon §2-§3 has since closed those questions differently (no Tauri wrapper; one Theia process; kernel-bridge as Theia extension). See ADR-05-009 for the explicit recast bridge.
 
 ## Authority
 

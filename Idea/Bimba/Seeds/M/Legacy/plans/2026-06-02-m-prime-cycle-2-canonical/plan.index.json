@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-02T16:30:49.443Z",
+  "generatedAt": "2026-06-02T16:42:47.755Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical",
   "tracks": [
     {
@@ -567,9 +567,10 @@
         "01.T0"
       ],
       "writeScopes": [
-        "Body/M/epi-tauri/**",
+        "Body/M/epi-theia/**",
         "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
-        "Idea/Pratibimba/System/**"
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
       ],
       "body": "1. **T0 - Clock-Cosmos Primary Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 M3 extension and shell `0` clock/runtime work.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before subsystem-page ownership is executed.\n\n   Deliverables:\n\n   - Own the primary clock-cosmos surface for M3.\n   - Keep it connected to live world-clock/kernel/runtime state rather than fixture-only views.\n\n   Verification:\n\n   - M3 extension tests\n   - world-clock consumption tests against live S3 projection"
     },
@@ -585,10 +586,11 @@
         "05.T0"
       ],
       "writeScopes": [
-        "Body/M/epi-tauri/**",
+        "Body/M/epi-theia/**",
         "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
         "Idea/Bimba/Seeds/S/S0/S0-CODON-ROTATION-PROJECTION-SPEC.md",
-        "Idea/Pratibimba/System/**"
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
       ],
       "body": "2. **T1 - 472-State Modal-Inversion Landscape**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`, `Idea/Bimba/Seeds/S/S0/S0-CODON-ROTATION-PROJECTION-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 codon-rotation substrate and live projection paths.\n\n   Deliverables:\n\n   - Own the full 472-state modal-inversion landscape and bidirectional mapping.\n   - Keep the surface backed by backend-generated truth, not UI-local reconstruction.\n\n   Verification:\n\n   - codon rotation contract tests\n   - M3 payload tests"
     },
@@ -604,9 +606,10 @@
         "05.T1"
       ],
       "writeScopes": [
-        "Body/M/epi-tauri/**",
+        "Body/M/epi-theia/**",
         "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
-        "Idea/Pratibimba/System/**"
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
       ],
       "body": "3. **T2 - Multi-Matrix Inspector**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`\n   Cycle 1 substrate inheritance: cycle 1 surfaced only slices of the full M3 matrix architecture.\n\n   Deliverables:\n\n   - Own the summonable technical inspector for dinucleotide matrices, transformation matrices, tarot compression, and charge-space views.\n   - Keep technical depth summonable and provenance-bearing.\n\n   Verification:\n\n   - M3 inspector tests\n   - summonable depth tests"
     },
@@ -622,10 +625,11 @@
         "05.T2"
       ],
       "writeScopes": [
-        "Body/M/epi-tauri/**",
+        "Body/M/epi-theia/**",
         "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
         "Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md",
-        "Idea/Pratibimba/System/**"
+        "Idea/Pratibimba/System/**",
+        "vendor/legacy/epi-tauri/**"
       ],
       "body": "4. **T3 - Janus Temporal Doorway And World-Clock Coupling**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md`, `Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md`\n   Cycle 1 substrate inheritance: extends cycle 1 S3 shared-cosmos and gateway timing landings.\n\n   Deliverables:\n\n   - Own Janus temporal doorway behavior and its coupling to `world_clock`.\n   - Define what is kernel truth, S3 projection, and M3 render-specific transformation.\n\n   Verification:\n\n   - Janus coupling tests across kernel/S3/M3\n   - temporal doorway tests"
     },
@@ -641,9 +645,9 @@
         "01.T0"
       ],
       "writeScopes": [
-        "Body/M/epi-tauri/**",
         "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
-        "Idea/Bimba/Seeds/M/M4'/m4-prime-nara-day-episodes-and-oracle-artifacts.md"
+        "Idea/Bimba/Seeds/M/M4'/m4-prime-nara-day-episodes-and-oracle-artifacts.md",
+        "vendor/legacy/epi-tauri/**"
       ],
       "body": "1. **T0 - Journal / Daily / Dream / Oracle Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`, `Idea/Bimba/Seeds/M/M4'/m4-prime-nara-day-episodes-and-oracle-artifacts.md`\n   Cycle 1 substrate inheritance: extends cycle 1 Nara extension, shell `1`, and `4-5-0` preview work.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before subsystem-page ownership is executed.\n\n   Deliverables:\n\n   - Own Journal, Daily Note, Dream Journal, Oracle, flow editor, and highlight rail surfaces.\n   - Treat the shell `1` flow editor as the universal lived input for Nara functions, prompt/chat initiation, task/reminder/calendar capture, day-note capture, highlight sendoff, and review/pedagogy entry.\n   - Keep FLOW as frictionless CT0 capture and Daily Note as CT4b/Psyche organization; do not make the daily note the primary input surface.\n   - Keep shell preview versus full `4+2` subsystem depth explicit.\n\n   Verification:\n\n   - M4 extension tests\n   - shell `1` preview tests\n   - flow-to-artifact tests against real vault/day/NOW paths"
     },
@@ -659,8 +663,8 @@
         "06.T0"
       ],
       "writeScopes": [
-        "Body/M/epi-tauri/**",
-        "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md"
+        "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+        "vendor/legacy/epi-tauri/**"
       ],
       "body": "2. **T1 - Personal Quaternion And Kerykeion Source**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 personal-identity substrate and protected-handle rendering.\n\n   Deliverables:\n\n   - Own the M4-4-4-4 personal quaternion surface and Kerykeion source contract.\n   - Keep raw personal bodies out of public projection and canon surfaces.\n\n   Verification:\n\n   - personal quaternion tests\n   - protected-handle tests"
     },
@@ -676,9 +680,9 @@
         "06.T1"
       ],
       "writeScopes": [
-        "Body/M/epi-tauri/**",
         "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
-        "Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md"
+        "Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md",
+        "vendor/legacy/epi-tauri/**"
       ],
       "body": "3. **T2 - Psychoid-Cymatic Field And Resonance Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`, `Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md`\n   Cycle 1 substrate inheritance: extends cycle 1 resonance/profile substrate and privacy-first `4-5-0` work.\n\n   Deliverables:\n\n   - Own the psychoid-cymatic field, resonance computation, and summonable deep inspection.\n   - Keep the field provenance-bearing and privacy-safe.\n\n   Verification:\n\n   - field/render tests\n   - provenance/privacy tests"
     },
@@ -694,9 +698,9 @@
         "06.T2"
       ],
       "writeScopes": [
-        "Body/M/epi-tauri/**",
         "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
-        "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md"
+        "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md",
+        "vendor/legacy/epi-tauri/**"
       ],
       "body": "4. **T3 - Day Episodes, Artifact Graph, And Dialogic Voice**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md`, `Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md`\n   Cycle 1 substrate inheritance: extends cycle 1 day-episode, voice-governance, and agentic mediation work.\n\n   Deliverables:\n\n   - Own day episodes, artifact graph, and dialogic voice pipeline surfaces.\n   - Route flow highlights and conversational turns into typed envelopes carrying source range, DAY/NOW/session, privacy class, coordinate handles, and review destination.\n   - Keep parser/dialogue split, consent, and M5 review boundary explicit.\n\n   Verification:\n\n   - day-episode tests\n   - dialogic voice governance tests"
     },
@@ -712,8 +716,8 @@
         "01.T0"
       ],
       "writeScopes": [
-        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Body/M/epi-theia/extensions/**",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
       ],
       "body": "1. **T0 - Sixfold M5 Surface Owner Map**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 M0/M5 chrome, workbench, and Agentic Control Room landings.\n\n   Dependencies:\n\n   - `01.T0` Electron / Theia runtime boundary must be locked before the M5 product surface is executed.\n\n   Deliverables:\n\n   - Own the sixfold M5 surface map: M5-0 through M5-5.\n   - Keep shell/chrome versus extension/plugin responsibilities explicit.\n\n   Verification:\n\n   - M5 surface map tests in the workbench packages\n   - shell/workbench contract tests"
     },
@@ -729,8 +733,8 @@
         "07.T0"
       ],
       "writeScopes": [
-        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Body/M/epi-theia/extensions/**",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
       ],
       "body": "2. **T1 - Library / Gnosis Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 gnosis and kbase substrate already consumed by M5.\n\n   Deliverables:\n\n   - Own the M5-0 library surface, Gnosis namespace, and kbase entry flows.\n   - Keep source/graph/review provenance explicit.\n\n   Verification:\n\n   - library/gnosis tests\n   - namespace payload tests"
     },
@@ -746,8 +750,8 @@
         "07.T1"
       ],
       "writeScopes": [
-        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Body/M/epi-theia/extensions/**",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
       ],
       "body": "3. **T2 - Canon Studio**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 canon editing and Hen-routed write path.\n\n   Deliverables:\n\n   - Own the M5-1 canon studio: edit, inspect, decorate, and review philosophy/canon files.\n   - Keep direct read / Hen write discipline explicit in the UX.\n\n   Verification:\n\n   - Canon Studio tests\n   - Hen write path tests"
     },
@@ -763,8 +767,8 @@
         "07.T2"
       ],
       "writeScopes": [
-        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Body/M/epi-theia/extensions/**",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
       ],
       "body": "4. **T3 - Backend / Frontend Studios**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 workbench surfaces over the S-family and shell/runtime packages.\n\n   Deliverables:\n\n   - Own M5-2 backend studio and M5-3 frontend studio as visible, inspectable product surfaces.\n   - Keep file/source/graph/test provenance explicit in every surfaced task.\n\n   Verification:\n\n   - backend/front-end studio tests\n   - workbench provenance tests"
     },
@@ -780,9 +784,9 @@
         "07.T3"
       ],
       "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
         "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
-        "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/*.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/*.md"
       ],
       "body": "5. **T4 - Agentic Control Room And Operational Capacities**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`, `Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/*.md`\n   Cycle 1 substrate inheritance: extends cycle 1 Agentic Control Room and M5-4 mediation e2e work.\n\n   Deliverables:\n\n   - Own M5-4 as a product surface, not a hidden mediation subsystem.\n   - Own all six operational capacity surfacings, run views, evidence panes, and review gates.\n\n   Verification:\n\n   - M5-4 mediation tests\n   - operational capacity workflow tests"
     },
@@ -798,9 +802,9 @@
         "07.T4"
       ],
       "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
         "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
-        "Idea/Bimba/Seeds/M/M5'/m5-prime-autoresearch-self-improvement-loop.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Idea/Bimba/Seeds/M/M5'/m5-prime-autoresearch-self-improvement-loop.md"
       ],
       "body": "6. **T5 - Logos Atelier, Canon Recognition, And Recursive Validation**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`, `Idea/Bimba/Seeds/M/M5'/m5-prime-autoresearch-self-improvement-loop.md`\n   Cycle 1 substrate inheritance: extends cycle 1 review/autoresearch spine and partial etymology surfaces.\n\n   Deliverables:\n\n   - Own M5-5 Logos Atelier, canon-recognition workbench, and recursive validation surfaces.\n   - Keep contradiction registers, `137`/`Jiva-is-Siva` review law, and user-final validation explicit.\n\n   Verification:\n\n   - Logos Atelier tests\n   - recursive validation and review-gate tests"
     },
@@ -818,8 +822,8 @@
         "05.T0"
       ],
       "writeScopes": [
-        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Body/M/epi-theia/extensions/**",
+        "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md"
       ],
       "body": "1. **T0 - Composition Contract**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 integrated plugin scaffolding and shell `0` previews.\n\n   Dependencies:\n\n   - `03.T0` M1 primary surface must be owned.\n   - `04.T0` M2 primary surface must be owned.\n   - `05.T0` M3 primary surface must be owned.\n\n   Deliverables:\n\n   - Own the composition contract between M1, M2, and M3 inside the integrated plugin.\n   - Define shared state, readiness, and provenance surfaces.\n\n   Verification:\n\n   - integrated plugin contract tests"
     },
@@ -835,8 +839,8 @@
         "08.T0"
       ],
       "writeScopes": [
-        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Body/M/epi-theia/extensions/**",
+        "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md"
       ],
       "body": "2. **T1 - Shell `0` Product Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 shell `0` and `1-2-3` preview work.\n\n   Deliverables:\n\n   - Own the actual shell `0` product surface as rendered by the integrated plugin.\n   - Keep it lean, current-coordinate-oriented, and backed by live runtime state.\n\n   Verification:\n\n   - shell `0` integration tests"
     },
@@ -852,8 +856,8 @@
         "08.T1"
       ],
       "writeScopes": [
-        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
-        "Idea/Pratibimba/System/extensions/**"
+        "Body/M/epi-theia/extensions/**",
+        "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
       ],
       "body": "3. **T2 - Evidence, Review, And Agent Hooks**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 evidence/review hook work.\n\n   Deliverables:\n\n   - Own all evidence/review/agent hooks exposed by the integrated plugin.\n   - Keep every surfaced claim tied back to backend provenance and S5 review law.\n\n   Verification:\n\n   - evidence hook tests\n   - review deposit tests"
     },
@@ -871,11 +875,11 @@
         "07.T0"
       ],
       "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
         "Body/S/S4/**",
         "Body/S/S5/**",
         "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
-        "Idea/Pratibimba/System/**",
-        "Idea/Pratibimba/System/extensions/**"
+        "Idea/Pratibimba/System/**"
       ],
       "body": "1. **T0 - Composition Contract**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 `4-5-0` scaffolding and shell `1` preview work.\n\n   Dependencies:\n\n   - `02.T0` M0 primary surface must be owned.\n   - `06.T0` M4 primary surface must be owned.\n   - `07.T0` M5 primary surface must be owned.\n\n   Deliverables:\n\n   - Own the composition contract between M4, M5, and M0 inside the integrated plugin.\n   - Define shared state, privacy, and provenance surfaces.\n   - Preserve the split between shell `1` preview and full `4+2` recognition depth: the plugin may preview flow, review, pedagogy, and Bimba-ground handles on shell `1`, but deep Nara/Epii/M0 workbench behavior belongs in the full subsystem layer.\n\n   Verification:\n\n   - integrated plugin contract tests"
     },
@@ -891,11 +895,11 @@
         "09.T0"
       ],
       "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
         "Body/S/S4/**",
         "Body/S/S5/**",
         "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
-        "Idea/Pratibimba/System/**",
-        "Idea/Pratibimba/System/extensions/**"
+        "Idea/Pratibimba/System/**"
       ],
       "body": "2. **T1 - Shell `1` Product Surface**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 shell `1` and lightweight M5-4 surfacing.\n\n   Deliverables:\n\n   - Own the actual shell `1` product surface as rendered by the integrated plugin.\n   - Make shell `1` the daily lived-return surface for flow writing, Nara continuity, Epii/pedagogy entry, review signals, and Bimba-ground handles.\n   - Keep journal, pedagogy, review, and Bimba-ground previews bounded and live.\n   - Keep OmniPanel out of this role; `/` may expose operator transparency for the same sessions/runs, but it is not the 4-5-0 lived UX.\n\n   Verification:\n\n   - shell `1` integration tests\n   - tests prove shell `1` preview and `4+2` depth are separate surfaces sharing state, not duplicate implementations"
     },
@@ -911,12 +915,12 @@
         "09.T1"
       ],
       "writeScopes": [
+        "Body/M/epi-theia/extensions/**",
         "Body/S/S4/**",
         "Body/S/S5/**",
         "Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md",
         "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
-        "Idea/Pratibimba/System/**",
-        "Idea/Pratibimba/System/extensions/**"
+        "Idea/Pratibimba/System/**"
       ],
       "body": "3. **T2 - Privacy, Consent, Review, And Recognition Hooks**\n\n   Canonical source: `Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md`, `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`\n   Cycle 1 substrate inheritance: extends cycle 1 privacy/review/consent/recognition hook work.\n\n   Deliverables:\n\n   - Own privacy-first rendering, consent hooks, review deposits, and canon-recognition triggers.\n   - Keep all protected-field claims provenance-bearing and review-gated.\n\n   Verification:\n\n   - privacy/consent tests\n   - review and recognition tests"
     },

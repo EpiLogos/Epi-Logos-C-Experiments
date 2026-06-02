@@ -188,7 +188,7 @@
       "schema_doc": "Idea/Empty/Present/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md",
       "ts_interface_doc": "Idea/Empty/Present/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md",
       "pi_agent_api_doc": "Idea/Empty/Present/FLOW-2026-04-24-PI-AGENT-API-v0.1.md",
-      "tauri_types_mirror": "Body/M/epi-tauri/src/services/types.ts",
+      "tauri_types_mirror": "vendor/legacy/epi-tauri/src/services/types.ts",
       "named_fields": [
         "c_0_kernel_projection",
         "c_3_kernel_tick",

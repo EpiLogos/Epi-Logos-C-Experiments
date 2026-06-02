@@ -5,7 +5,7 @@
  * and is locked at runtime by the Rust unit tests in `profile::tests`.
  *
  * The 9-state taxonomy is canon — declared first in
- * `Idea/Pratibimba/System/extensions/contracts/07-t0-extension-contract-preflight.json#readinessTaxonomy.states_inherited_from_07`
+ * `Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json#readinessTaxonomy.states_inherited_from_07`
  * and inherited by Track 05 / 06 / 09 surfaces.
  */
 import { z } from "zod";

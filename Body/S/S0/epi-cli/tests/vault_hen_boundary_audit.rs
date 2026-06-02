@@ -52,12 +52,12 @@ fn t8_governed_rename_leaves_no_orphan_wikilinks() {
     //   Bimba/Seeds/M/M2/Inbound1.md          <- plain [[Source]]
     //   Bimba/Seeds/M/M2/Inbound2.md          <- aliased + heading anchor
     //   Pratibimba/Self/Thought/T0/Thought.md <- two refs in one note
-    //   Idea/Pratibimba/System/extensions/Untouched.md <- control note,
-    //                                             must NOT change
+    //   Body/M/epi-theia/extensions/Untouched.md <- control note,
+    //                                          must NOT change
     for sub in [
         "Bimba/Seeds/M/M2",
         "Pratibimba/Self/Thought/T0",
-        "Idea/Pratibimba/System/extensions",
+        "Body/M/epi-theia/extensions",
     ] {
         fs::create_dir_all(vault.join(sub)).unwrap();
     }
@@ -83,7 +83,7 @@ fn t8_governed_rename_leaves_no_orphan_wikilinks() {
     .unwrap();
     let untouched = "References [[Bimba/Seeds/M/M3]] which is a sibling, NOT Source.\n";
     fs::write(
-        vault.join("Idea/Pratibimba/System/extensions/Untouched.md"),
+        vault.join("Body/M/epi-theia/extensions/Untouched.md"),
         untouched,
     )
     .unwrap();
@@ -181,7 +181,7 @@ fn t8_governed_rename_leaves_no_orphan_wikilinks() {
 
     // Control note — was not referencing Source; must remain byte-identical.
     let untouched_after = fs::read_to_string(
-        vault.join("Idea/Pratibimba/System/extensions/Untouched.md"),
+        vault.join("Body/M/epi-theia/extensions/Untouched.md"),
     )
     .unwrap();
     assert_eq!(

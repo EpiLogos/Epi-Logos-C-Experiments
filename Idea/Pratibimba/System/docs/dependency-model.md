@@ -40,7 +40,7 @@ How extensions and integrated plugins depend on each other and on the foundation
 1. Every package depends on `@theia/core` and its required Theia siblings (`@theia/editor`, `@theia/filesystem`, etc.).
 2. Foundation packages depend on **no other `@pratibimba/*` package**.
 3. Individual M-extensions depend on foundation packages and on the eventual `@pratibimba/kernel-bridge` (Track 01 T5). They do NOT depend on each other.
-4. Integrated plugins depend on the individual extensions they compose, plus the shared composition contract (`Idea/Pratibimba/System/shared`).
+4. Integrated plugins depend on the individual extensions they compose, plus the shared composition contract (`Body/M/epi-theia/shared`).
 5. No extension depends on another extension's `lib/browser/*` directly; they communicate through shared interfaces in `@pratibimba/shared-*` packages or through the kernel-bridge.
 
 ## Theia compatibility

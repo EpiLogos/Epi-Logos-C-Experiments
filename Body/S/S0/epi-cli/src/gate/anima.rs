@@ -85,7 +85,7 @@ const SUPPORTED_THREAD_MODES: &[&str] = &["single", "session"];
 /// final authority over what writes are permitted; this list is only the
 /// gateway pre-filter.
 const SUPPORTED_WRITE_SCOPES: &[&str] = &[
-    "Body/M/epi-tauri/",
+    "Body/M/epi-theia/",
     "Body/S/S4/",
     "Body/S/S5/",
     "Idea/Pratibimba/System/",

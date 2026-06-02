@@ -34,7 +34,7 @@ The user's Obsidian app continues to run independently for authoring. Theia and 
 
 ## Context
 
-The Tauri inheritance source (`Body/M/epi-tauri/src/services/vaultClient.ts` + `src-tauri/src/vault/*.rs`) provided an Obsidian-vault adapter. The recast canon (§0.1) names `obsidian-md-vsc` as the canonical S1 vault reach — eliminating the parallel TS/Rust adapter.
+The Tauri inheritance source (`vendor/legacy/epi-tauri/src/services/vaultClient.ts` + `src-tauri/src/vault/*.rs`) provided an Obsidian-vault adapter. The recast canon (§0.1) names `obsidian-md-vsc` as the canonical S1 vault reach — eliminating the parallel TS/Rust adapter.
 
 Theia hosts VS Code extensions natively via its `@theia/plugin` infrastructure (the [`@theia/plugin-ext-vscode`](https://www.npmjs.com/package/@theia/plugin-ext-vscode) and `@theia/plugin-dev` packages). The decision is **how** `obsidian-md-vsc` is bundled and **what surface** it exposes to Theia extensions.
 
@@ -52,7 +52,7 @@ T1 commits the source acquisition strategy:
 | (b) Install via Open VSX at runtime | Rejected — runtime install requires network; we want offline-first first launch. |
 | (c) Submodule the upstream repo | Rejected — submodule overhead exceeds benefit for a single embedded plugin. |
 
-T1 deliverable: `Idea/Pratibimba/System/extensions/obsidian-md-vsc-bundle/` with:
+T1 deliverable: `Body/M/epi-theia/extensions/obsidian-md-vsc-bundle/` with:
 - `package.json` declaring it as a Theia plugin (`"theiaPlugin"` activation) or a VS Code extension fragment (depending on `obsidian-md-vsc`'s actual packaging — verified at T1 first build).
 - `dist/` or `extension.vsix` carrying the upstream extension content.
 - A README pinning the upstream version, commit SHA, and license.
@@ -67,7 +67,7 @@ T1 deliverable: `Idea/Pratibimba/System/extensions/obsidian-md-vsc-bundle/` with
 
 - **What `obsidian-md-vsc` provides:** vault file tree, markdown rendering with wiki-links, backlinks, frontmatter parsing, daily-note conventions — the S1 vault reach.
 - **What Theia extensions consume from it:** VS Code-style commands (`obsidian.openLink`, `obsidian.openBacklinks`, etc.) invoked via Theia's `CommandRegistry`. M-extensions and the OmniPanel route file-open intents through these commands rather than implementing parallel vault logic.
-- **What gets dropped from the inheritance sources:** `Body/M/epi-tauri/src/services/vaultClient.ts`, all 13 `vault_*` Tauri commands, the entire `Body/M/epi-tauri/src-tauri/src/vault/` Rust module, and the source-B `Body/S/S3/epi-app/renderer/components/BacklinksPanel.tsx`. See [migration-inventory.md](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md) for the exhaustive disposition.
+- **What gets dropped from the inheritance sources:** `vendor/legacy/epi-tauri/src/services/vaultClient.ts`, all 13 `vault_*` Tauri commands, the entire `vendor/legacy/epi-tauri/src-tauri/src/vault/` Rust module, and the source-B `Body/S/S3/epi-app/renderer/components/BacklinksPanel.tsx`. See [migration-inventory.md](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/migration-inventory.md) for the exhaustive disposition.
 
 ### Privacy & boundary discipline
 

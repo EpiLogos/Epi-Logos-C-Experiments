@@ -3,7 +3,7 @@
 **Status:** Decided 2026-06-01
 **Decision register:** DSD-01 (live local-service harness)
 **Affected tracks:** 05, 01 (kernel-bridge), 03 (gateway/STDB), 02 (graph), 04 (S5)
-**Predecessor:** [`Body/M/epi-tauri/decisions/track-05-t0-runtime-baseline.json#local_dev_topology`](../../../../Body/M/epi-tauri/decisions/track-05-t0-runtime-baseline.json) — partially captured the topology under the pre-recast assumption that Tauri owned the renderer.
+**Predecessor:** [`vendor/legacy/epi-tauri/decisions/track-05-t0-runtime-baseline.json#local_dev_topology`](../../../../vendor/legacy/epi-tauri/decisions/track-05-t0-runtime-baseline.json) — partially captured the topology under the pre-recast assumption that Tauri owned the renderer.
 
 ## Context
 
@@ -102,6 +102,6 @@ These map to the existing `extensions/kernel-bridge-readiness/src/common/readine
 
 ## Cross-references
 
-- [`Body/M/epi-tauri/decisions/track-05-t0-runtime-baseline.json#local_dev_topology`](../../../../Body/M/epi-tauri/decisions/track-05-t0-runtime-baseline.json) — predecessor topology (Tauri-era).
+- [`vendor/legacy/epi-tauri/decisions/track-05-t0-runtime-baseline.json#local_dev_topology`](../../../../vendor/legacy/epi-tauri/decisions/track-05-t0-runtime-baseline.json) — predecessor topology (Tauri-era).
 - [Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md) — gateway contract source.
 - [docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-local-harness-topology.{md,json}](../../../../Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-t0-local-harness-topology.md) — cross-cutting local-harness topology.

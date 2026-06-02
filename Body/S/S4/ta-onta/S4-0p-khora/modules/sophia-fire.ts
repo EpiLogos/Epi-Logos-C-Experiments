@@ -89,7 +89,14 @@ export function clearAllPendingSophia(): void {
 
 /**
  * Fire the Sophia disclosure: build the canonical envelope and append it to
- * ${EPILOGOS_VAULT}/Pratibimba/Sophia/inbox/${session_id}.jsonl.
+ * `${EPILOGOS_VAULT}/Empty/Present/{day_id}/{session_id}/sophia-disclosure.jsonl`.
+ *
+ * The disclosure lives **inside the session's own NOW folder** rather than a
+ * parallel flat inbox under `Pratibimba/Sophia/`. This keeps every artifact
+ * for a session bounded by the same day/now scope: the NOW folder IS the
+ * session's working drawer, and the disclosure is just one more line in it.
+ * (Reorg 2026-06-02 — the old `Pratibimba/Sophia/inbox/` flat directory was
+ * removed; agent inboxes are not first-class vault residents anymore.)
  *
  * Contract: `closure_kind` is the load-bearing discriminator distinguishing
  * deliberate rehear ("rehear" — `khora_session_close` was called, signalled
@@ -100,9 +107,7 @@ export function clearAllPendingSophia(): void {
  *
  * `final_vak` defaults to `rehearPhaseVakAddress()`. For the force_closed
  * branch we additionally attempt a best-effort read of the live SessionRecord
- * via `epi gate sessions get` (added alongside `patch` in this change — the
- * C1 follow-up at 19fbc8fc made sessions.patch persist `vak_address` and
- * sessions.resolve return it). If that read returns a valid VakAddress, we
+ * via `epi gate sessions get`. If that read returns a valid VakAddress, we
  * use it as `final_vak` — truthfully reporting where the session was when
  * killed. Silent fallback to rehearPhase if the gateway read fails for any
  * reason (CLI absent, gateway not running, parse error, etc.).
@@ -137,9 +142,9 @@ export function fireSophiaDisclosure(input: {
   if (!vaultRoot) {
     return { ok: false, reason: "EPILOGOS_VAULT not set" };
   }
-  const inboxDir = join(vaultRoot, "Pratibimba", "Sophia", "inbox");
-  mkdirSync(inboxDir, { recursive: true });
-  const inboxPath = join(inboxDir, `${input.session_id}.jsonl`);
+  const nowDir = join(vaultRoot, "Empty", "Present", input.day_id, input.session_id);
+  mkdirSync(nowDir, { recursive: true });
+  const inboxPath = join(nowDir, "sophia-disclosure.jsonl");
   appendFileSync(inboxPath, JSON.stringify(disclosure) + "\n", "utf8");
   return { ok: true, path: inboxPath };
 }
