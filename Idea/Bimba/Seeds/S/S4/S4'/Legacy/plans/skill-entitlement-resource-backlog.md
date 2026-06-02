@@ -15,10 +15,12 @@ skill from another repo into the owning ta-onta/pleroma skill root; one is net-n
 ## Planned skills → source → target root
 
 **Status update (2026-06-02):** All resources with a real backing SKILL.md have been ported into
-the injectable roots. The two aletheia gnosis tools (`gnosis-retrieve`, `thought-distil`) remain
-genuinely missing — no real SKILL.md exists in either repo or any source location. The entitlement
-universe grew: anima `S4'/skills` 13→14 (+`darshana`), `plugins/pleroma/skills` 15→23 (+8). Both
-entitlement tests stay green (`entitlement_universe.test.ts`, `entitlement_contract.test.ts`).
+the injectable roots, and the two aletheia gnosis skills (`gnosis-retrieve`, `thought-distil`) —
+which had no resource to port anywhere — have now been **authored from scratch**, grounded in the
+Aletheia CONTRACT.md (gnosis-retrieve gates `aletheia_gnosis_query`; thought-distil gates
+`aletheia_crystallise`). The backlog is fully closed. The entitlement universe grew: anima
+`S4'/skills` 13→14 (+`darshana`), `plugins/pleroma/skills` 15→23 (+8), aletheia `S5'/skills`
++2 (`gnosis-retrieve`, `thought-distil`). All entitlement + activation tests stay green.
 
 | Skill | Declared on agent(s) | Source used (real SKILL.md) | Landed target root | Status |
 |---|---|---|---|---|
@@ -33,8 +35,8 @@ entitlement tests stay green (`entitlement_universe.test.ts`, `entitlement_contr
 | `darshana` | anima | PRIOR repo `Epi-Logos/Idea/epi-claw/skills/repl` (the Darshana REPL — ships `darshana.py`) | `Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/darshana` (SKILL.md authored as `name: darshana` + `darshana.py`) | ✅ PORTED |
 | `repl` (refresh) | anansi (S5') | PRIOR repo `Epi-Logos/Idea/epi-claw/skills/repl/darshana.py` | `Body/S/S4/ta-onta/S4-5p-aletheia/S5'/skills/repl/darshana.py` (added missing script; repo SKILL.md kept) | ✅ REFRESHED |
 | `ouroboros` (eval) | anima, psyche | prior `Epi-Logos/Idea/epi-claw/skills/ouroboros` is the OLDER ralph-tui/tmux "Consensual Self-Surgery" conception (16k) | already at `Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/ouroboros` (refined `port-and-refine` Lemniscate version, 6.6k) | ⏭️ LEFT AS-IS (existing is the deliberately refined repo-canon; not a thinner version of the same — do not overwrite) |
-| `aletheia:gnosis-retrieve` | nous (`gnosis-retrieve`), anansi, moirai | — NONE. No real SKILL.md anywhere. Searched: prior repo `epi-claw/{skills,extensions/pleroma/skills,modules/aletheia/skills}`, this repo `.codex/{skills,omx-runtime/skills}`, `vendors/*/skills`, `S4-2p-pleroma/staged/pleroma-skills/**`, full-repo filename + content grep. Only aspirational references in `CONTRACT.md` (`gnosis-retrieve.md`) and agent specs. | aletheia `S5'/skills/gnosis-retrieve` (backing dir name = colon-suffix) | ❌ NOT FOUND — net-new, needs development (no real resource to port; no stub created) |
-| `aletheia:thought-distil` | moirai | — NONE. Same search as above; only `CONTRACT.md` aspirational `thought-distil.md`. | aletheia `S5'/skills/thought-distil` | ❌ NOT FOUND — net-new, needs development (no real resource; no stub created) |
+| `aletheia:gnosis-retrieve` | nous (`gnosis-retrieve`), anansi, moirai | Authored from scratch (no resource existed to port) — grounded in `CONTRACT.md`: gates the raw `aletheia_gnosis_query` hybrid (vector+graph+Redis) tool with provenance discipline. | `Body/S/S4/ta-onta/S4-5p-aletheia/S5'/skills/gnosis-retrieve/SKILL.md` | ✅ DEVELOPED |
+| `aletheia:thought-distil` | moirai | Authored from scratch — grounded in `CONTRACT.md`: gates `aletheia_crystallise` for the Night' rehear distillation of T-bucket / `{NOW}/thoughts` patterns into Bimba-canonical form; routes to Epii, no auto-promotion. | `Body/S/S4/ta-onta/S4-5p-aletheia/S5'/skills/thought-distil/SKILL.md` | ✅ DEVELOPED |
 
 Notes:
 - **Namespace resolution:** `aletheia:gnosis-retrieve` / `aletheia:thought-distil` use the `aletheia:`
