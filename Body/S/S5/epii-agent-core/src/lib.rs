@@ -2,8 +2,9 @@ use std::path::{Path, PathBuf};
 
 use epi_s5_epii_autoresearch_core::{
     ArtifactRef, CandidateRecord, ContinuityHint, CrossCycleContinuity, ImprovementCandidate,
-    ImprovementRun, ImprovementStore, ImprovementVector, OrchestrationRecord, PromoteRequest,
-    PromotionPlan, ProposeRequest, RouteRecord, SurfacedCandidateReceipt, TargetSubsystem,
+    ImprovementRun, ImprovementStore, ImprovementVector, M2PrimeMeaningPacket, OrchestrationRecord,
+    PromoteRequest, PromotionPlan, ProposeRequest, RouteRecord, SurfacedCandidateReceipt,
+    TargetSubsystem,
 };
 use epi_s5_epii_review_core::{
     GovernanceLevel, ReviewCategory, ReviewHistory, ReviewInbox, ReviewInboxFilter,
@@ -173,6 +174,8 @@ pub struct M5CandidateDetailDto {
     pub review_required: bool,
     pub closure_kind: String,
     pub ct_register: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub m2_meaning_packet: Option<M2PrimeMeaningPacket>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -936,6 +939,7 @@ fn candidate_detail_dto(record: &CandidateRecord) -> Result<M5CandidateDetailDto
         review_required,
         closure_kind: format!("{:?}", candidate.closure_kind),
         ct_register: format!("{:?}", candidate.ct_register),
+        m2_meaning_packet: candidate.m2_meaning_packet.clone(),
     })
 }
 

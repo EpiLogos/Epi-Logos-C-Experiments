@@ -80,8 +80,11 @@ function worldClock() {
             bodyAllowed: false
         }),
         worldClockHandle: 's3://world-clock/2026-06-01T00:00:00Z',
+        generation: 42,
         tick: baselineProfile.tick,
-        degree720: baselineProfile.degree720
+        degree720: baselineProfile.degree720,
+        source: 's3.world_clock',
+        subscriptionMode: 'native-websocket'
     });
 }
 
@@ -150,6 +153,36 @@ test('flat wheel, double-torus world-clock, and Janus views share one active tic
         assert.equal(flat[key], janus[key], `${key} diverged between flat and janus`);
     }
     assert.equal(torus.worldClockHandle, 's3://world-clock/2026-06-01T00:00:00Z');
+    assert.equal(torus.worldClockGeneration, 42);
+    assert.equal(torus.worldClockSource, 's3.world_clock');
+    assert.equal(torus.subscriptionMode, 'native-websocket');
+    assert.equal(torus.tickMatchesProfile, true);
+    assert.equal(torus.degree720MatchesProfile, true);
+});
+
+test('primary M3 surface binds S3 world_clock generation and blocks drift from kernel profile', () => {
+    const model = surface();
+    const projectionEvent = model.observabilityEvents.find(event => event.type === 'm3.codon_projection');
+    assert.equal(projectionEvent.payload.worldClock.state, 's3_world_clock_bound');
+    assert.equal(projectionEvent.payload.worldClock.generation, 42);
+    assert.equal(projectionEvent.payload.worldClock.worldClockHandle, 's3://world-clock/2026-06-01T00:00:00Z');
+    assert.equal(projectionEvent.payload.worldClock.source, 's3.world_clock');
+    assert.equal(projectionEvent.payload.worldClock.subscriptionMode, 'native-websocket');
+    assert.equal(projectionEvent.payload.worldClock.tickMatchesProfile, true);
+    assert.equal(projectionEvent.payload.worldClock.degree720MatchesProfile, true);
+
+    const drifted = surface({
+        worldClock: Object.freeze({
+            ...worldClock(),
+            tick: baselineProfile.tick + 1
+        })
+    });
+    assert.equal(drifted.readiness.surfaceReady, false);
+    assert.equal(drifted.readiness.state, 'authority_payload_missing');
+    assert.match(
+        drifted.readiness.blockers.join('\n'),
+        /world_clock tick does not match current kernel profile tick/
+    );
 });
 
 test('m3-mahamaya source contains no frontend codon, tarot, I-Ching, planetary, or reward authority tables', () => {

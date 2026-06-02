@@ -45,6 +45,8 @@ Any orchestrator, m-dev-adjacent process, or agentic implementation run must rea
 
 Reading shortcut prohibition: do not grep a plan fragment first, do not treat an `epi` command name as ontology, and do not relocate a shared kernel/profile concern into [[S0]] or [[M0']] because it is easiest to execute or display there. Use [[S-SHARD-HARMONIZATION-PROTOCOL]] when a shard is thin, underlinked, or stale relative to current [[Body]] substrate.
 
+For the Hen-governed path from live diagram/spec evidence into [[World/Types]] MOCs, flat [[World]] crystallisations, and [[S2]] graph-promotion intent, use [[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]].
+
 ## Internal QL Breakdown Provenance
 
 The internal QL breakdowns in the S seeds are not invented in this pack. They are sourced from three existing strata:
@@ -432,6 +434,8 @@ Present/FLOW or implementation evidence
 Any M-dev tranche that changes system shape should either update an existing durable diagram/MOC artifact or record why no diagram delta was needed. The no-orphan audit must treat missing diagram/MOC ownership as an architecture documentation gap, not as optional polish.
 
 Spec consumption rule: every umbrella or shard spec that relies on a diagram must explicitly link the relevant heading anchor, for example [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]]. Mermaid node labels are not enough. The owning shard or traceability index must also name the matching [[World/Types]] canvas when one exists.
+
+Crystallisation rule: if a diagram stabilises a durable concept, the concept should be reflected into flat [[World]] and the matching [[World/Types]] MOC/type index through [[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]]. Do not move the Seed diagram pack itself into [[World/Types]] just because it is visually useful.
 
 ## Future Refinement Order
 

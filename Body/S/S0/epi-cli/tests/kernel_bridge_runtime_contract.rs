@@ -1,8 +1,9 @@
 use epi_logos::gate::{
     kernel_bridge_runtime::{
-        end_to_end_acceptance_report, runtime_for_spacetimedb_plan, KernelBridgeCapabilityRequest,
-        KernelBridgeConsumerKind, KernelBridgeRuntimeEventKind, KernelBridgeSubscriber,
-        KernelBridgeSubscriptionProfile, KernelBridgeVakContext,
+        end_to_end_acceptance_report, m1_performance_event_from_profile,
+        runtime_for_spacetimedb_plan, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
+        KernelBridgeRuntimeEventKind, KernelBridgeSubscriber, KernelBridgeSubscriptionProfile,
+        KernelBridgeVakContext, M1_PROFILE_TO_PERFORMANCE_STREAM,
     },
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
 };
@@ -322,6 +323,72 @@ fn kernel_bridge_capability_invocation_rejects_missing_vak_and_unsafe_payloads()
         shell_method.contains("ungoverned gateway method"),
         "{shell_method}"
     );
+}
+
+#[test]
+fn m1_profile_to_performance_event_uses_real_matheme_profile_fields_without_renderer_derivation() {
+    let generation = 91;
+    let tick = kernel_tick_from_epogdoon(13, 0);
+    let profile = MathemeHarmonicProfile::from_tick(tick);
+    let event = m1_performance_event_from_profile(generation, &profile);
+
+    assert_eq!(event["event"], "m1.profile_to_performance");
+    assert_eq!(event["stream"], M1_PROFILE_TO_PERFORMANCE_STREAM);
+    assert_eq!(event["profileGeneration"], generation);
+    assert_eq!(
+        event["profileSchemaVersion"],
+        profile.profile_schema_version
+    );
+    assert_eq!(event["tick"]["tick"], profile.tick);
+    assert_eq!(event["tick"]["tick12"], profile.tick12);
+    assert_eq!(event["harmonic"]["audioOctet"][0], profile.audio_octet[0]);
+    assert_eq!(
+        event["harmonic"]["nodalQuartet"][2]["qlPosition"],
+        profile.nodal_quartet[2].ql_position
+    );
+    assert_eq!(
+        event["pointerAnchor"]["lensAnchor"],
+        profile.pointer_anchor.lens_anchor
+    );
+    assert_eq!(
+        event["diatonic"]["contextFrame"],
+        profile
+            .diatonic
+            .as_ref()
+            .expect("tick 0 has diatonic context")
+            .context_frame
+    );
+    assert_eq!(
+        event["depositionAnchor"]["mahamayaAddress64"],
+        json!(profile.mahamaya.mahamaya_address64)
+    );
+    assert_eq!(event["lensMode"]["lens"], profile.lens_mode.lens);
+    assert_eq!(event["lensMode"]["mode"], profile.lens_mode.mode);
+    assert_eq!(
+        event["performanceState"]["tempoClock"],
+        "kernel-tick-not-renderer-frame"
+    );
+    assert_eq!(
+        event["performanceState"]["rendererDerivationAllowed"],
+        false
+    );
+    for field in [
+        "tick",
+        "harmonic",
+        "pointerAnchor",
+        "diatonic",
+        "depositionAnchor",
+        "lensMode",
+    ] {
+        assert!(
+            event["requiredProfileFields"]
+                .as_array()
+                .expect("required fields array")
+                .iter()
+                .any(|value| value == field),
+            "missing required M1 profile field {field}"
+        );
+    }
 }
 
 #[test]

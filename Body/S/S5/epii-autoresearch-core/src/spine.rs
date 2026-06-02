@@ -29,6 +29,7 @@ pub enum ImprovementVectorKind {
     ParashaktiLensLoRARefinement { lens_id: u8 },
     ParashaktiNewEdgeTypeIntegration { edge_type: String },
     ParashaktiKleinHandlingRefinement,
+    ParashaktiMeaningPacketSurface { profile_id: String },
     MahamayaProcessRewardRefinement,
     MahamayaFederatedRoundExecution,
     MahamayaSymbolicProgramPromotion { program_id: String },
@@ -56,7 +57,8 @@ impl ImprovementVectorKind {
             Self::ParashaktiEmbeddingRefresh { .. }
             | Self::ParashaktiLensLoRARefinement { .. }
             | Self::ParashaktiNewEdgeTypeIntegration { .. }
-            | Self::ParashaktiKleinHandlingRefinement => TargetSubsystem::Parashakti,
+            | Self::ParashaktiKleinHandlingRefinement
+            | Self::ParashaktiMeaningPacketSurface { .. } => TargetSubsystem::Parashakti,
             Self::MahamayaProcessRewardRefinement
             | Self::MahamayaFederatedRoundExecution
             | Self::MahamayaSymbolicProgramPromotion { .. }
@@ -169,6 +171,100 @@ pub struct ObservationEvidence {
     pub fingerprint: Option<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct M2PrimeMeaningPacket {
+    pub source_profile_id: String,
+    pub index72: u8,
+    pub address_views: M2AddressViews,
+    pub mef_semantic_frame: M2MefSemanticFrame,
+    pub elemental_medium_frame: M2ElementalMediumFrame,
+    pub planetary_chakral_frame: M2PlanetaryChakralFrame,
+    pub sacred_sonic_frame: M2SacredSonicFrame,
+    pub maqam_mode_frame: M2MaqamModeFrame,
+    pub cymatic_signature: M2CymaticSignature,
+    pub m3_projection_evidence: M2M3ProjectionEvidence,
+    pub provenance: Vec<M2ProvenanceRef>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub pending_fields: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct M2AddressViews {
+    pub legacy_resonance_index: u8,
+    pub lens_anchor_index: u8,
+    pub lens_anchor: String,
+    pub position: u8,
+    pub helix_bit: u8,
+    pub phase: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct M2MefSemanticFrame {
+    pub lens_mode_lens: u8,
+    pub lens_mode_mode: String,
+    pub vak_register: String,
+    pub klein_flip_state: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct M2ElementalMediumFrame {
+    pub p_position_element: String,
+    pub l2_prime_element: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct M2PlanetaryChakralFrame {
+    pub body_id: String,
+    pub centre_id: String,
+    pub chakra_role: String,
+    pub element: String,
+    pub musical_role: String,
+    pub ratio_role: String,
+    pub mode_scale_colour: String,
+    pub provenance: String,
+    pub configurability_status: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct M2SacredSonicFrame {
+    pub shem_name: String,
+    pub asma_name: String,
+    pub mantra: String,
+    pub decan_face: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct M2MaqamModeFrame {
+    pub family: String,
+    pub mode: String,
+    pub tuning_path: String,
+    pub diatonic_note: String,
+    pub diatonic_degree: u8,
+    pub diatonic_mode: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct M2CymaticSignature {
+    pub audio_octet: [f64; 8],
+    pub nodal_quartet: [f64; 4],
+    pub ratio_role: String,
+    pub bus_source: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct M2M3ProjectionEvidence {
+    pub det_index64: u8,
+    pub compression_law: String,
+    pub evidence_uri: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct M2ProvenanceRef {
+    pub source: String,
+    pub uri: String,
+    pub status: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CandidateLinkage {
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -193,6 +289,8 @@ pub struct ImprovementCandidate {
     pub originating_kernel_evidence: Option<KernelEvidence>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vak_keys: Option<CanonicalVakKeys>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub m2_meaning_packet: Option<M2PrimeMeaningPacket>,
     pub linkage: CandidateLinkage,
     pub surfaced_at: u128,
     pub surfaced_by: SurfaceActor,
@@ -222,6 +320,7 @@ impl ImprovementCandidate {
             challenger_artifact: None,
             originating_kernel_evidence: None,
             vak_keys: None,
+            m2_meaning_packet: None,
             linkage: CandidateLinkage {
                 originating_inbox_entry: None,
                 originating_review_item: None,
@@ -497,6 +596,9 @@ fn validate_vector_fields(vector_kind: &ImprovementVectorKind) -> Result<(), Str
         }
         ImprovementVectorKind::ParashaktiNewEdgeTypeIntegration { edge_type } => {
             validate_non_blank(edge_type, "edge_type")
+        }
+        ImprovementVectorKind::ParashaktiMeaningPacketSurface { profile_id } => {
+            validate_non_blank(profile_id, "profile_id")
         }
         ImprovementVectorKind::MahamayaSymbolicProgramPromotion { program_id } => {
             validate_non_blank(program_id, "program_id")

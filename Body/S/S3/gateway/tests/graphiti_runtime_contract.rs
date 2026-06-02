@@ -182,6 +182,29 @@ fn graphiti_kernel_profile_observation_payload_carries_s2_anchor_without_private
     assert_eq!(payload["metadata"]["runtime_owner"], "S3'");
     assert_eq!(payload["metadata"]["invocation_owner"], "S5/S5'");
     assert_eq!(
+        payload["metadata"]["profile_to_performance_stream"]["stream"],
+        "S0.kernel-bridge.m1-profile-to-performance"
+    );
+    assert_eq!(
+        payload["metadata"]["profile_to_performance_stream"]["consumer"],
+        "M1'/Paramasiva"
+    );
+    assert_eq!(
+        payload["metadata"]["profile_to_performance_stream"]["tempo_authority"],
+        "kernel-tick-not-renderer-frame"
+    );
+    assert_eq!(
+        payload["metadata"]["profile_to_performance_stream"]["renderer_derivation_allowed"],
+        false
+    );
+    assert!(
+        payload["metadata"]["profile_to_performance_stream"]["required_profile_fields"]
+            .as_array()
+            .expect("required_profile_fields")
+            .iter()
+            .any(|field| field == "lensMode")
+    );
+    assert_eq!(
         payload["metadata"]["coordinate_anchor"]["coordinate_anchor"]["harmonic_pointer"]
             ["pointer_anchor"]["lens_anchor"],
         "L2"

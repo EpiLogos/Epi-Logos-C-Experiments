@@ -1,0 +1,18 @@
+{
+	"nodes":[
+		{"id":"title","type":"text","text":"# Runtime Surfaces\n\nSemantic MOC for live execution, stores, bridges, sessions, and managed agent homes.","x":0,"y":0,"width":600,"height":150},
+		{"id":"moc","type":"file","file":"Bimba/World/Types/Runtime-Surfaces/Runtime-Surfaces.md","x":0,"y":200,"width":420,"height":80},
+		{"id":"s0","type":"file","file":"Bimba/World/Types/Coordinates/S/S0/S0.md","x":480,"y":120,"width":320,"height":70},
+		{"id":"s2","type":"file","file":"Bimba/World/Types/Coordinates/S/S2/S2.md","x":480,"y":210,"width":320,"height":70},
+		{"id":"s3","type":"file","file":"Bimba/World/Types/Coordinates/S/S3/S3.md","x":480,"y":300,"width":320,"height":70},
+		{"id":"s4","type":"file","file":"Bimba/World/Types/Coordinates/S/S4/S4.md","x":480,"y":390,"width":320,"height":70},
+		{"id":"s5","type":"file","file":"Bimba/World/Types/Coordinates/S/S5/S5.md","x":480,"y":480,"width":320,"height":70}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"moc","toNode":"s0"},
+		{"id":"e2","fromNode":"moc","toNode":"s2"},
+		{"id":"e3","fromNode":"moc","toNode":"s3"},
+		{"id":"e4","fromNode":"moc","toNode":"s4"},
+		{"id":"e5","fromNode":"moc","toNode":"s5"}
+	]
+}

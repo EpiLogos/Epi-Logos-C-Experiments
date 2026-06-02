@@ -9,7 +9,7 @@
 
 use neo4rs::query;
 
-use crate::{embeddings, gds, meta, semantic, seed, Neo4jClient};
+use crate::{embeddings, gds, meta, seed, semantic, Neo4jClient};
 
 /// Structured view of the live graph evidence used by `graph reconcile`.
 #[derive(Debug, Clone, Copy)]

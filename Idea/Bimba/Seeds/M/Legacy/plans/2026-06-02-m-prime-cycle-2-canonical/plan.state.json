@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T15:56:52.087Z",
+  "updatedAt": "2026-06-02T16:28:27.243Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -40,16 +40,21 @@
       "worktree": null
     },
     "00.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T15:59:14.031Z",
+      "claimedAt": "2026-06-02T15:58:12.247Z",
+      "completedAt": "2026-06-02T15:59:14.031Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T15:59:14.031Z",
+          "text": "M' First Execution Sequence defined and load-bearing in 00-overview-and-m-prime-first-coverage.md lines 147-158 (00 guardrails -> 01 runtime -> 02-07 subsystem surfaces -> 08/09 integrated plugins -> 07.T4/10 mediation+agent ontology -> 11/12/13 consumed-substrate closure -> 14 no-orphan audit); anti-greenfield forbidden at line 157 and guardrail table line 107; S/S' kept dependency-driven/subordinate. Verification: m-dev-plan-assess.mjs --route --write --json returns route ['00.T2','02.T1','04.T0','01.T2'] leading with M' ownership tracks (00/M0/M2/shell), not substrate-closure tracks 11/12/13."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T15:58:12.247Z",
+      "runId": "20260602T155812Z-00-T2",
       "worktree": null
     },
     "01.T0": {
@@ -97,16 +102,21 @@
       "worktree": null
     },
     "01.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:11:01.145Z",
+      "claimedAt": "2026-06-02T16:08:30.918Z",
+      "completedAt": "2026-06-02T16:11:01.145Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:11:01.145Z",
+          "text": "OmniPanel operator catalog (chat/channels/sessions/nodes/models/skills/cron/logs/config/debug with per-layout visibility) + CrossLayoutIntent deep-link envelope landed in omnipanel-shell extension and Body/S/S0/epi-cli/src/gate/omnipanel.rs; membrane discipline (/ as S0' command/config/readiness centre, not 4+2 replacement / not pseudo-ACR vs M5-4') pinned in M'-PORTAL-SPEC.md (39,57,100-106,140,187). Verification: cargo test gate_omnipanel_contract 2/2 (contract surfaces + rust_manifest_covers_required_methods_declared_by_electron_panel_parity = command parity vs gateway/S0 route tables); deep-link/layout routing covered by activation-and-persistence.test.mjs within the 33/33 layout batch. Note: gate_omnipanel_contract.rs reads panelRpcParity.ts via a cross-repo absolute path (/Users/admin/Documents/Epi-Logos/...) while local copies exist under omnipanel-shell + Body/S/S3/epi-app -- pre-existing S0-lane fragility, passes today."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:08:30.918Z",
+      "runId": "20260602T160830Z-01-T2",
       "worktree": null
     },
     "01.T3": {
@@ -180,29 +190,43 @@
       "worktree": null
     },
     "02.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:13:31.385Z",
+      "claimedAt": "2026-06-02T16:04:58.071Z",
+      "completedAt": "2026-06-02T16:13:31.385Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:08:12.446Z",
+          "text": "M0 coordinate ground + source traceability + map-to-source navigation owned by S2/S1 and surfaced via provenanced node anchors (m0-inspector.ts reads anchors from graphNode, never hardcoded UI paths). Pinned in M0'-SPEC.md Backend Contract Consumed (S2 source traceability + new diagram/MOC residency-chain bullet: ARCHITECTURE-DIAGRAM-PACK -> World/{Name}.md -> World/Types/{Type}/{Type}.canvas, surfaced as provenanced anchors not renderer-local registry). Verification: cargo test graph-schema track_02_t1_convergence 5/5 + code_provenance_properties 1/1 + coordinate_prefix_properties 4/4; node --test m0-anuttara-inspector.test.mjs 6/6 (backlinks/anchors resolve through S2 provenance, canonical-absence over placeholders)."
+        },
+        {
+          "at": "2026-06-02T16:13:31.385Z",
+          "text": "S2 source traceability and coordinate ground payload added via graph_api source_traceability_anchors + node anchors and M0' residency-chain contract; verification: cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml --test graph_api_contract passed 6/6 non-ignored tests (2 live Neo4j tests ignored), covering source-traceability payload, coordinate canonicalization, graph contract anchors, pointer web, and kernel resonance."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:04:58.071Z",
+      "runId": "20260602T160458Z-02-T1",
       "worktree": null
     },
     "02.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:15:28.349Z",
+      "claimedAt": "2026-06-02T16:14:53.461Z",
+      "completedAt": "2026-06-02T16:15:28.349Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:15:28.349Z",
+          "text": "Anuttara symbol/formulation rendering owned in M0 (m0-inspector.ts languageFields read symbol/formulation_type/complete_formulation from S2 node properties, canonical-absence not placeholders) and tied to S2 truth (c_1_symbol/c_1_formulation_type/c_1_complete_formulation canonical on C1, no duplicated UI registry). Pinned in M0'-SPEC.md 'Anuttara As Pre-Math Node Language' (graph view reads properties, does not invent them; missing field = readiness/provenance state). Verification: node --test m0-anuttara-inspector.test.mjs 6/6 (incl. 'missing Anuttara syntax fields render as canonical absence, not placeholders'); cargo test graph-schema track_02_t1_convergence anuttara_language_node_properties_are_canonical_on_c1 within 5/5."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:14:53.461Z",
+      "runId": "20260602T161453Z-02-T2",
       "worktree": null
     },
     "02.T3": {
@@ -232,29 +256,43 @@
       "worktree": null
     },
     "03.T0": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-02T15:56:52.076Z",
+      "status": "done",
+      "updatedAt": "2026-06-02T15:57:53.176Z",
       "claimedAt": "2026-06-02T15:56:52.076Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-02T15:57:53.176Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T15:57:53.176Z",
+          "text": "M1 played-traversal surface (played coordinate=pitch, relation=interval, traversal=phrase, audible/visible character) landed in m1-paramasiva extension and pinned in M1'-SPEC.md (35-37 walk-as-melody, 41 never-invents-pitch sourced from MathemeHarmonicProfile, 68-71 torus/traversal-timeline/route-preview, 78-80 S2 relation law + S3 temporal projection). Verification: node --test m1-paramasiva-clock-instrument.test.mjs passed 7/7 — relation walk blocked until S2 typed harmonic descriptors present (graph truth), preserves exact profile Hz + Klein source event on tritone flip (audible character), topology inspector reads from profile payload (profile-to-ui), no frontend substrate-law numeric constants."
+        }
+      ],
       "notes": null,
       "owner": "m-dev-mainloop",
-      "leaseExpiresAt": "2026-06-02T17:56:52.076Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-02T15:56:52.076Z",
       "runId": "20260602T155652Z-03-T0",
       "worktree": null
     },
     "03.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:25:08.985Z",
+      "claimedAt": "2026-06-02T16:11:24.994Z",
+      "completedAt": "2026-06-02T16:25:08.985Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:14:30.535Z",
+          "text": "MathemeHarmonicProfile -> M1 runtime/performance mapping owned via Body/S/S0/portal-core/src/harmonic_profile.rs + gate/kernel_bridge_runtime.rs profile stream; every required profile field defined in M1'-SPEC.md §4 (tick: tick12/degree720/degree360/su2Layer/phase/position6; harmonic: ratio role/audio_octet[8]/nodal_quartet[4]) plus the MPrimePerformanceEvent profile-to-performance stream (line 102). Verification: cargo test kernel_bridge_runtime_contract 7/7 + profile_cli_contract 6/6 (profile stream vs live payloads); node --test m1-paramasiva-clock-instrument + shared-bridge-fan-out + kernel-bridge-theia-boundary 13/13 (M1 bridge consumer). Note: one transient compile collision (candidate_from_parashakti_meaning_packet) from concurrent 04.T0 edit cleared on re-run."
+        },
+        {
+          "at": "2026-06-02T16:25:08.985Z",
+          "text": "M1 profile-to-performance stream landed: S0 kernel_bridge_runtime now publishes S0.kernel-bridge.m1-profile-to-performance via m1_performance_event_from_profile using real portal_core::MathemeHarmonicProfile fields (tick, harmonic/audio_octet/nodal_quartet, pointerAnchor, diatonic, depositionAnchor, lensMode) with rendererDerivationAllowed=false; S3 Graphiti kernel-profile observation metadata now preserves metadata.profile_to_performance_stream for M1'/Paramasiva; M1'-SPEC.md names the concrete S0/S3 contract. Verification: cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract passed 8/8; cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test graphiti_runtime_contract passed 6/6. GitNexus impact: KernelBridgeRuntime LOW, kernel_profile_observation_deposit_payload CRITICAL direct S3/gateway path handled additively with contract coverage; post-cleanup detect_changes medium aggregate due shared active worktree lanes."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:11:24.994Z",
+      "runId": "20260602T161124Z-03-T1",
       "worktree": null
     },
     "03.T2": {
@@ -284,16 +322,21 @@
       "worktree": null
     },
     "04.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:16:55.596Z",
+      "claimedAt": "2026-06-02T16:06:23.049Z",
+      "completedAt": "2026-06-02T16:16:55.596Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:16:55.596Z",
+          "text": "M2PrimeMeaningPacket and S5 user surface landed: Body/S/S5/epii-autoresearch-core now builds a strict backend-derived M2PrimeMeaningPacket from persisted Parashakti profile reports, Body/S/S5/epii-agent-core exposes it on m2_meaning_packet workbench candidate details, and Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md names the S5 non-derivation boundary; verification passed cargo test --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml (58/58) and cargo test --manifest-path Body/S/S5/epii-agent-core/Cargo.toml (12/12), with targeted profile/user-surface tests 5/5 and 9/9."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-04",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:06:23.049Z",
+      "runId": "20260602T160623Z-04-T0",
       "worktree": null
     },
     "04.T1": {
@@ -336,16 +379,21 @@
       "worktree": null
     },
     "05.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T16:28:27.238Z",
+      "claimedAt": "2026-06-02T16:25:26.189Z",
+      "completedAt": "2026-06-02T16:28:27.238Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:28:27.238Z",
+          "text": "M3 clock-cosmos primary surface now binds the shared S3 world_clock stream: m3-mahamaya buildM3ProjectionSurface carries s3_world_clock_bound state with worldClockHandle, generation, source, subscriptionMode, tick, and degree720 into observability payloads and the M3-5 double-torus world-clock view; readiness blocks with authority_payload_missing when S3 world_clock tick/degree720 diverges from the current kernel profile, preventing a renderer-private clock fork. M3'-SPEC.md documents the concrete binding and drift policy. Verification: pnpm --dir Idea/Pratibimba/System/extensions/m3-mahamaya build passed; node --test Idea/Pratibimba/System/extensions/test/m3-mahamaya-codon-wheel.test.mjs passed 7/7 including S3 world_clock generation binding and drift-blocking coverage. GitNexus impact: buildM3ProjectionSurface LOW; detect_changes HIGH aggregate due shared dirty S0/S2/S5 lanes, with expected M3 BuildM3ProjectionSurface flows covered by the focused contract."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T16:25:26.189Z",
+      "runId": "20260602T162526Z-05-T0",
       "worktree": null
     },
     "05.T1": {
@@ -1224,35 +1272,107 @@
     {
       "runId": "20260602T155652Z-03-T0",
       "taskId": "03.T0",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-02T15:56:52.076Z",
       "owner": "m-dev-mainloop",
       "leaseExpiresAt": "2026-06-02T17:56:52.076Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-02T15:57:53.176Z"
+    },
+    {
+      "runId": "20260602T155812Z-00-T2",
+      "taskId": "00.T2",
+      "status": "done",
+      "startedAt": "2026-06-02T15:58:12.247Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T17:58:12.247Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T15:59:14.031Z"
+    },
+    {
+      "runId": "20260602T160458Z-02-T1",
+      "taskId": "02.T1",
+      "status": "done",
+      "startedAt": "2026-06-02T16:04:58.071Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:04:58.071Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:08:12.446Z"
+    },
+    {
+      "runId": "20260602T160623Z-04-T0",
+      "taskId": "04.T0",
+      "status": "done",
+      "startedAt": "2026-06-02T16:06:23.049Z",
+      "owner": "m-dev-parallel-04",
+      "leaseExpiresAt": "2026-06-02T18:06:23.049Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:16:55.596Z"
+    },
+    {
+      "runId": "20260602T160830Z-01-T2",
+      "taskId": "01.T2",
+      "status": "done",
+      "startedAt": "2026-06-02T16:08:30.918Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:08:30.918Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:11:01.145Z"
+    },
+    {
+      "runId": "20260602T161124Z-03-T1",
+      "taskId": "03.T1",
+      "status": "done",
+      "startedAt": "2026-06-02T16:11:24.994Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:11:24.994Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:14:30.535Z"
+    },
+    {
+      "runId": "20260602T161453Z-02-T2",
+      "taskId": "02.T2",
+      "status": "done",
+      "startedAt": "2026-06-02T16:14:53.461Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:14:53.461Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:15:28.349Z"
+    },
+    {
+      "runId": "20260602T162526Z-05-T0",
+      "taskId": "05.T0",
+      "status": "done",
+      "startedAt": "2026-06-02T16:25:26.189Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:25:26.189Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:28:27.238Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T15:56:44.335Z",
-    "updatedAt": "2026-06-02T15:56:44.335Z",
+    "createdAt": "2026-06-02T16:14:38.910Z",
+    "updatedAt": "2026-06-02T16:14:38.910Z",
     "taskIds": [
-      "03.T0",
-      "00.T2",
-      "02.T1",
-      "04.T0"
+      "04.T0",
+      "05.T0",
+      "08.T0",
+      "02.T2"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "03.T0": "in-session",
-      "00.T2": "in-session",
-      "02.T1": "in-session",
-      "04.T0": "in-session"
+      "04.T0": "in-session",
+      "05.T0": "in-session",
+      "08.T0": "in-session",
+      "02.T2": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }

@@ -122,10 +122,8 @@ fn semantic_doctor_and_dataset_import_types_are_s2_owned() {
 #[test]
 fn t5_graph_law_types_resolve_to_epi_s2_graph_services() {
     // (a) Graph retrieval
-    assert!(std::any::type_name::<CoordinateRetrieval<'static>>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<GraphRAGRetriever<'static>>()
-        .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<CoordinateRetrieval<'static>>().contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<GraphRAGRetriever<'static>>().contains("epi_s2_graph_services"));
     assert!(std::any::type_name::<HybridRetriever<'static>>().contains("epi_s2_graph_services"));
 
     // (b) Semantic cache
@@ -146,16 +144,26 @@ fn t5_graph_law_types_resolve_to_epi_s2_graph_services() {
     assert!(std::any::type_name::<SyncResult>().contains("epi_s2_graph_services"));
 
     // T5 moves: cypher guard, constraint registry, analyser, anuttara
-    assert!(std::any::type_name::<epi_s2_graph_services::cypher::CypherMode>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<epi_s2_graph_services::cypher::CypherGuardOutcome>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<epi_s2_graph_services::constraint::Registry>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<epi_s2_graph_services::analyse::DeterministicAnalyser>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<epi_s2_graph_services::anuttara::AnuttaraReflectionRequest>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<epi_s2_graph_services::cypher::CypherMode>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<epi_s2_graph_services::cypher::CypherGuardOutcome>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<epi_s2_graph_services::constraint::Registry>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<epi_s2_graph_services::analyse::DeterministicAnalyser>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<epi_s2_graph_services::anuttara::AnuttaraReflectionRequest>()
+            .contains("epi_s2_graph_services")
+    );
 
     // Lifecycle evidence shape — used by S0 `graph reconcile` arm.
     assert!(std::any::type_name::<LiveGraphBackedEvidence>().contains("epi_s2_graph_services"));

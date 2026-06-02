@@ -1,0 +1,16 @@
+{
+	"nodes":[
+		{"id":"title","type":"text","text":"# Capabilities\n\nSemantic MOC for tools, skills, plugins, permissions, and gateway-exposed powers.","x":0,"y":0,"width":560,"height":150},
+		{"id":"moc","type":"file","file":"Bimba/World/Types/Capabilities/Capabilities.md","x":0,"y":200,"width":380,"height":80},
+		{"id":"s0","type":"file","file":"Bimba/World/Types/Coordinates/S/S0/S0.md","x":440,"y":130,"width":320,"height":70},
+		{"id":"s3","type":"file","file":"Bimba/World/Types/Coordinates/S/S3/S3.md","x":440,"y":220,"width":320,"height":70},
+		{"id":"s4p","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md","x":440,"y":310,"width":320,"height":70},
+		{"id":"s5p","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md","x":440,"y":400,"width":320,"height":70}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"moc","toNode":"s0"},
+		{"id":"e2","fromNode":"moc","toNode":"s3"},
+		{"id":"e3","fromNode":"moc","toNode":"s4p"},
+		{"id":"e4","fromNode":"moc","toNode":"s5p"}
+	]
+}

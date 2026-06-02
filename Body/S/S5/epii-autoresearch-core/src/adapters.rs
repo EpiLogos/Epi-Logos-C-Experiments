@@ -4,7 +4,12 @@ use std::path::Path;
 use epi_s5_epii_review_core::ReviewHistory;
 use serde::{Deserialize, Serialize};
 
-use crate::spine::{ClosureKind, ContentTypeRegister, ImprovementVectorKind, ObservationEvidence};
+use crate::spine::{
+    ClosureKind, ContentTypeRegister, ImprovementVectorKind, M2AddressViews, M2CymaticSignature,
+    M2ElementalMediumFrame, M2M3ProjectionEvidence, M2MaqamModeFrame, M2MefSemanticFrame,
+    M2PlanetaryChakralFrame, M2PrimeMeaningPacket, M2ProvenanceRef, M2SacredSonicFrame,
+    ObservationEvidence,
+};
 use crate::{
     ArtifactRef, ImprovementCandidate, ImprovementStore, ProposeRequest, SensitivityClass,
     SurfaceActor, SurfacedCandidateReceipt, SurfacingPipelineId, TargetSubsystem,
@@ -16,6 +21,7 @@ pub enum NonAletheiaPipelineReport {
     AnuttaraShaclFailure(AnuttaraShaclFailureReport),
     ParamasivaCorpusRefresh(ParamasivaCorpusRefreshReport),
     ParashaktiEmbeddingDrift(ParashaktiEmbeddingDriftReport),
+    ParashaktiMeaningPacketProfile(ParashaktiMeaningPacketProfileReport),
     MahamayaRuntimeTraining(MahamayaRuntimeTrainingReport),
     NaraDialogicVoiceSignal(NaraDialogicVoiceSignalReport),
     EpiiSelfObservation(EpiiSelfObservationReport),
@@ -41,6 +47,17 @@ pub struct ParashaktiEmbeddingDriftReport {
     pub current_value: f64,
     pub minimum_acceptable_value: f64,
     pub window_id: String,
+    pub observed_at_ms: u64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fingerprint: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ParashaktiMeaningPacketProfileReport {
+    pub profile_uri: String,
+    pub profile: serde_json::Value,
+    pub s2_graph_law_uri: String,
+    pub kerykeion_context_uri: String,
     pub observed_at_ms: u64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub fingerprint: Option<String>,
@@ -157,6 +174,9 @@ impl ImprovementStore {
             }
             NonAletheiaPipelineReport::ParashaktiEmbeddingDrift(report) => {
                 candidate_from_parashakti_drift(report)?
+            }
+            NonAletheiaPipelineReport::ParashaktiMeaningPacketProfile(report) => {
+                Some(candidate_from_parashakti_meaning_packet(report)?)
             }
             NonAletheiaPipelineReport::MahamayaRuntimeTraining(report) => {
                 candidate_from_mahamaya_runtime_training(report)?
@@ -323,6 +343,61 @@ fn candidate_from_parashakti_drift(
     candidate.closure_kind = ClosureKind::Rehear;
     candidate.ct_register = ContentTypeRegister::CT4b;
     Ok(Some(candidate))
+}
+
+fn candidate_from_parashakti_meaning_packet(
+    report: ParashaktiMeaningPacketProfileReport,
+) -> Result<ImprovementCandidate, String> {
+    require_non_blank(&report.profile_uri, "profile_uri")?;
+    require_non_blank(&report.s2_graph_law_uri, "s2_graph_law_uri")?;
+    require_non_blank(&report.kerykeion_context_uri, "kerykeion_context_uri")?;
+    let packet = meaning_packet_from_profile(&report)?;
+    let profile_id = packet.source_profile_id.clone();
+    let index72 = packet.index72;
+    let mut candidate = ImprovementCandidate::from_propose(
+        ProposeRequest {
+            target_family: "M".to_owned(),
+            target_coordinate: "M2/Parashakti".to_owned(),
+            direction: format!(
+                "Surface M2PrimeMeaningPacket for profile {profile_id} at index72 {index72} without renderer-local derivation"
+            ),
+            source_review_item_id: None,
+            baseline: ArtifactRef {
+                path: report.profile_uri.clone(),
+                coordinate: Some("M2/Parashakti".to_owned()),
+                kind: Some("m2_prime_meaning_packet_profile".to_owned()),
+            },
+        },
+        TargetSubsystem::Parashakti,
+        ImprovementVectorKind::ParashaktiMeaningPacketSurface { profile_id },
+        SurfacingPipelineId::ParashaktiRelational,
+        ObservationEvidence {
+            source_uri: report.profile_uri.clone(),
+            summary: format!(
+                "M2PrimeMeaningPacket index72={} lens={} mode={} ratio={} s2_provenance={}",
+                packet.index72,
+                packet.address_views.lens_anchor,
+                packet.maqam_mode_frame.mode,
+                packet.cymatic_signature.ratio_role,
+                report.s2_graph_law_uri
+            ),
+            observed_at: Some(u128::from(report.observed_at_ms)),
+            fingerprint: Some(report.fingerprint.unwrap_or_else(|| {
+                format!(
+                    "parashakti-meaning-packet:{}:{}",
+                    packet.source_profile_id, packet.index72
+                )
+            })),
+        },
+        u128::from(report.observed_at_ms),
+        SurfaceActor::Epii,
+        SensitivityClass::PublicCurrent,
+    )?;
+    candidate.closure_kind = ClosureKind::Rehear;
+    candidate.ct_register = ContentTypeRegister::CT4b;
+    candidate.m2_meaning_packet = Some(packet);
+    candidate.validate()?;
+    Ok(candidate)
 }
 
 fn candidate_from_paramasiva_corpus_refresh(
@@ -580,10 +655,160 @@ fn candidate_from_epii_self_observation(
     Ok(candidate)
 }
 
+fn meaning_packet_from_profile(
+    report: &ParashaktiMeaningPacketProfileReport,
+) -> Result<M2PrimeMeaningPacket, String> {
+    let profile = &report.profile;
+    let source_profile_id = required_string(profile, "/profileId")?;
+    let index72 = required_u8(profile, "/resonance72/index72", 71)?;
+    Ok(M2PrimeMeaningPacket {
+        source_profile_id: source_profile_id.clone(),
+        index72,
+        address_views: M2AddressViews {
+            legacy_resonance_index: required_u8(profile, "/resonance72/legacyResonanceIndex", 71)?,
+            lens_anchor_index: required_u8(profile, "/resonance72/lensAnchorIndex", 11)?,
+            lens_anchor: required_string(profile, "/resonance72/lensAnchor")?,
+            position: required_u8(profile, "/resonance72/position", 5)?,
+            helix_bit: required_u8(profile, "/resonance72/helixBit", 1)?,
+            phase: required_string(profile, "/resonance72/phase")?,
+        },
+        mef_semantic_frame: M2MefSemanticFrame {
+            lens_mode_lens: required_u8(profile, "/lensMode/lens", 11)?,
+            lens_mode_mode: required_string(profile, "/lensMode/mode")?,
+            vak_register: required_string(profile, "/diatonic/vakRegister")?,
+            klein_flip_state: required_bool(profile, "/kleinFlipState")?,
+        },
+        elemental_medium_frame: M2ElementalMediumFrame {
+            p_position_element: required_string(profile, "/elements/pPositionElement")?,
+            l2_prime_element: required_string(profile, "/elements/l2PrimeElement")?,
+        },
+        planetary_chakral_frame: M2PlanetaryChakralFrame {
+            body_id: required_string(profile, "/planetaryChakral/bodyId")?,
+            centre_id: required_string(profile, "/planetaryChakral/centreId")?,
+            chakra_role: required_string(profile, "/planetaryChakral/chakraRole")?,
+            element: required_string(profile, "/planetaryChakral/element")?,
+            musical_role: required_string(profile, "/planetaryChakral/musicalRole")?,
+            ratio_role: required_string(profile, "/planetaryChakral/ratioRole")?,
+            mode_scale_colour: required_string(profile, "/planetaryChakral/modeScaleColour")?,
+            provenance: required_string(profile, "/planetaryChakral/provenance")?,
+            configurability_status: required_string(
+                profile,
+                "/planetaryChakral/configurabilityStatus",
+            )?,
+        },
+        sacred_sonic_frame: M2SacredSonicFrame {
+            shem_name: required_string(profile, "/sacredSonic/shemName")?,
+            asma_name: required_string(profile, "/sacredSonic/asmaName")?,
+            mantra: required_string(profile, "/sacredSonic/mantra")?,
+            decan_face: required_string(profile, "/sacredSonic/decanFace")?,
+        },
+        maqam_mode_frame: M2MaqamModeFrame {
+            family: required_string(profile, "/maqamMode/family")?,
+            mode: required_string(profile, "/maqamMode/mode")?,
+            tuning_path: required_string(profile, "/maqamMode/tuningPath")?,
+            diatonic_note: required_string(profile, "/diatonic/note")?,
+            diatonic_degree: required_u8(profile, "/diatonic/degree", 7)?,
+            diatonic_mode: required_string(profile, "/diatonic/mode")?,
+        },
+        cymatic_signature: M2CymaticSignature {
+            audio_octet: required_f64_array_8(profile, "/harmonic/audio_octet")?,
+            nodal_quartet: required_f64_array_4(profile, "/harmonic/nodal_quartet")?,
+            ratio_role: required_string(profile, "/harmonic/ratio_role")?,
+            bus_source: "M2-1' Vimarsha shared profile bus".to_owned(),
+        },
+        m3_projection_evidence: M2M3ProjectionEvidence {
+            det_index64: required_u8(profile, "/m3Projection/detIndex64", 63)?,
+            compression_law: "72x8/9=64".to_owned(),
+            evidence_uri: required_string(profile, "/m3Projection/evidenceUri")?,
+        },
+        provenance: vec![
+            M2ProvenanceRef {
+                source: "profile".to_owned(),
+                uri: report.profile_uri.clone(),
+                status: "live_runtime_payload".to_owned(),
+            },
+            M2ProvenanceRef {
+                source: "s2_graph_law".to_owned(),
+                uri: report.s2_graph_law_uri.clone(),
+                status: "canonical_correspondence_authority".to_owned(),
+            },
+            M2ProvenanceRef {
+                source: "kerykeion".to_owned(),
+                uri: report.kerykeion_context_uri.clone(),
+                status: "time_keyed_context".to_owned(),
+            },
+        ],
+        pending_fields: Vec::new(),
+    })
+}
+
 fn require_non_blank(value: &str, label: &str) -> Result<(), String> {
     if value.trim().is_empty() {
         Err(format!("{label} is required"))
     } else {
         Ok(())
     }
+}
+
+fn required_string(value: &serde_json::Value, pointer: &str) -> Result<String, String> {
+    let string = value
+        .pointer(pointer)
+        .and_then(serde_json::Value::as_str)
+        .ok_or_else(|| format!("profile field {pointer} is required"))?;
+    require_non_blank(string, pointer)?;
+    Ok(string.to_owned())
+}
+
+fn required_bool(value: &serde_json::Value, pointer: &str) -> Result<bool, String> {
+    value
+        .pointer(pointer)
+        .and_then(serde_json::Value::as_bool)
+        .ok_or_else(|| format!("profile field {pointer} is required"))
+}
+
+fn required_u8(value: &serde_json::Value, pointer: &str, max: u8) -> Result<u8, String> {
+    let number = value
+        .pointer(pointer)
+        .and_then(serde_json::Value::as_u64)
+        .ok_or_else(|| format!("profile field {pointer} is required"))?;
+    let narrowed =
+        u8::try_from(number).map_err(|_| format!("profile field {pointer} exceeds u8"))?;
+    if narrowed > max {
+        return Err(format!("profile field {pointer} must be <= {max}"));
+    }
+    Ok(narrowed)
+}
+
+fn required_f64_array_8(value: &serde_json::Value, pointer: &str) -> Result<[f64; 8], String> {
+    let values = required_f64_vec(value, pointer, 8)?;
+    Ok([
+        values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7],
+    ])
+}
+
+fn required_f64_array_4(value: &serde_json::Value, pointer: &str) -> Result<[f64; 4], String> {
+    let values = required_f64_vec(value, pointer, 4)?;
+    Ok([values[0], values[1], values[2], values[3]])
+}
+
+fn required_f64_vec(
+    value: &serde_json::Value,
+    pointer: &str,
+    len: usize,
+) -> Result<Vec<f64>, String> {
+    let values = value
+        .pointer(pointer)
+        .and_then(serde_json::Value::as_array)
+        .ok_or_else(|| format!("profile field {pointer} is required"))?;
+    if values.len() != len {
+        return Err(format!("profile field {pointer} must contain {len} values"));
+    }
+    values
+        .iter()
+        .map(|value| {
+            value
+                .as_f64()
+                .ok_or_else(|| format!("profile field {pointer} must contain numbers"))
+        })
+        .collect()
 }

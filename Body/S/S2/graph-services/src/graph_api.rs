@@ -622,14 +622,16 @@ fn coordinate_fragment(value: &str) -> String {
 }
 
 fn known_row_json(row: &neo4rs::Row) -> Value {
+    let coordinate = row.get::<String>("coordinate").unwrap_or_default();
     json!({
-        "coordinate": row.get::<String>("coordinate").unwrap_or_default(),
+        "coordinate": coordinate,
         "uuid": row.get::<String>("uuid").unwrap_or_default(),
         "name": row.get::<String>("name").unwrap_or_default(),
         "family": row.get::<String>("family").unwrap_or_default(),
         "layer": row.get::<String>("layer").unwrap_or_default(),
         "ql_position": row.get::<i64>("ql_position").unwrap_or(-1),
         "depth": row.get::<i64>("depth").ok(),
+        "anchors": source_traceability_anchors(&coordinate),
         "anuttara": anuttara_fields_json(row),
     })
 }
@@ -657,6 +659,13 @@ pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -
             "pointerCode": "Body/S/S2/graph-services/src/pointers.rs",
             "tests": ["Body/S/S2/graph-services/tests/graph_api_contract.rs"]
         },
+        "residencyAuthority": {
+            "diagramPack": "Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md",
+            "flatWorldForms": "Idea/Bimba/World/{Name}.md",
+            "typeCanvasIndexes": "Idea/Bimba/World/Types/{Type}/{Type}.canvas",
+            "coordinateSemanticAuthority": "Idea/Bimba/World/Types/Coordinates",
+            "missingResidencyPolicy": "canonical_absent; never synthesize renderer-local paths"
+        },
         "pointerWebDescriptors": pointer_descriptors,
         "ontologyReadiness": {
             "n10sOwner": "S2/S2'",
@@ -672,6 +681,109 @@ pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -
         "disclosureDensity": "public-coordinate-topology",
         "privacy": "protected-local Graphiti/Nara bodies are excluded from S2 public graph API payloads"
     })
+}
+
+pub fn source_traceability_anchors(coordinate: &str) -> Value {
+    let diagram_pack = "Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md";
+    let m0_spec = "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md";
+    let graph_api_code = "Body/S/S2/graph-services/src/graph_api.rs";
+    let graph_api_test = "Body/S/S2/graph-services/tests/graph_api_contract.rs";
+    let coordinate_authority = "Idea/Bimba/World/Types/Coordinates";
+    let canonical = coordinate.trim();
+    let world_path = if canonical.is_empty() {
+        None
+    } else {
+        Some(format!("Idea/Bimba/World/{canonical}.md"))
+    };
+    let type_canvas_path = coordinate_type_canvas_path(canonical);
+    let world_status = match &world_path {
+        Some(path) if path_exists(path) => "s2_resolved",
+        Some(_) => "canonical_absent",
+        None => "canonical_absent",
+    };
+    let type_canvas_status = match &type_canvas_path {
+        Some(path) if path_exists(path) => "s2_resolved",
+        Some(_) => "canonical_absent",
+        None => "canonical_absent",
+    };
+
+    json!({
+        "source": {
+            "path": diagram_pack,
+            "status": path_status(diagram_pack),
+            "provenance": "S2 diagram/MOC residency authority"
+        },
+        "spec": {
+            "path": m0_spec,
+            "status": path_status(m0_spec),
+            "provenance": "M0' source-traceability contract"
+        },
+        "code": {
+            "path": graph_api_code,
+            "status": path_status(graph_api_code),
+            "provenance": "S2 graph API payload builder"
+        },
+        "test": {
+            "path": graph_api_test,
+            "status": path_status(graph_api_test),
+            "provenance": "S2 source-traceability payload contract"
+        },
+        "residencyChain": [
+            {
+                "kind": "architecture-diagram-pack",
+                "path": diagram_pack,
+                "status": path_status(diagram_pack)
+            },
+            {
+                "kind": "flat-world-form",
+                "path": world_path,
+                "status": world_status
+            },
+            {
+                "kind": "type-canvas-index",
+                "path": type_canvas_path,
+                "status": type_canvas_status
+            },
+            {
+                "kind": "coordinate-semantic-authority",
+                "path": coordinate_authority,
+                "status": path_status(coordinate_authority)
+            }
+        ],
+        "policy": {
+            "owner": "S2/S1",
+            "rendererLocalRegistryAllowed": false,
+            "missingResidency": "canonical_absent"
+        }
+    })
+}
+
+fn path_exists(path: &str) -> bool {
+    if std::path::Path::new(path).exists() {
+        return true;
+    }
+    let manifest_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+    manifest_dir
+        .ancestors()
+        .any(|ancestor| ancestor.join(path).exists())
+}
+
+fn path_status(path: &str) -> &'static str {
+    if path_exists(path) {
+        "s2_resolved"
+    } else {
+        "canonical_absent"
+    }
+}
+
+fn coordinate_type_canvas_path(coordinate: &str) -> Option<String> {
+    let family = coordinate.chars().next()?.to_ascii_uppercase();
+    if !matches!(family, 'C' | 'L' | 'M' | 'P' | 'S') {
+        return None;
+    }
+    Some(format!(
+        "Idea/Bimba/World/Types/Coordinates/{family}/{coordinate}/{coordinate}.canvas"
+    ))
 }
 
 fn anuttara_fields_json(row: &neo4rs::Row) -> Value {

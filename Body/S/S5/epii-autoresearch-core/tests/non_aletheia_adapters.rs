@@ -98,6 +98,51 @@ fn parashakti_metric_drift_report_preserves_metric_evidence() {
 }
 
 #[test]
+fn parashakti_live_profile_report_surfaces_m2_prime_meaning_packet() {
+    let root = temp_root("parashakti-meaning-packet");
+    let store = ImprovementStore::new(root.join("s5/epii-autoresearch"));
+    let report_path = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .expect("S5 parent")
+        .join("fixtures/track-04-t0/m2-live-profile-runtime-report.json");
+
+    let surfaced = store
+        .surface_non_aletheia_report_file(&report_path)
+        .expect("adapter should read persisted profile report")
+        .expect("profile report should surface");
+    let candidate = surfaced.candidate.candidate;
+    let packet = candidate
+        .m2_meaning_packet
+        .expect("Parashakti profile report carries M2PrimeMeaningPacket");
+
+    assert_eq!(candidate.target_subsystem, TargetSubsystem::Parashakti);
+    assert_eq!(
+        packet.source_profile_id,
+        "m2-profile-20260602T160623Z-000144"
+    );
+    assert_eq!(packet.index72, 71);
+    assert_eq!(packet.address_views.lens_anchor_index, 11);
+    assert_eq!(packet.elemental_medium_frame.p_position_element, "agni");
+    assert_eq!(packet.elemental_medium_frame.l2_prime_element, "vayu");
+    assert_eq!(packet.planetary_chakral_frame.body_id, "venus");
+    assert_eq!(packet.planetary_chakral_frame.ratio_role, "9/8_epogdoon");
+    assert_eq!(packet.sacred_sonic_frame.shem_name, "Mumiah");
+    assert_eq!(
+        packet.maqam_mode_frame.tuning_path,
+        "MPE+MTS-ESP quarter-tone metadata"
+    );
+    assert_eq!(packet.cymatic_signature.audio_octet.len(), 8);
+    assert_eq!(packet.cymatic_signature.nodal_quartet.len(), 4);
+    assert_eq!(packet.cymatic_signature.audio_octet[7], 1.0);
+    assert_eq!(packet.m3_projection_evidence.det_index64, 63);
+    assert_eq!(packet.pending_fields.len(), 0);
+    assert!(packet
+        .provenance
+        .iter()
+        .any(|source| source.status == "live_runtime_payload"));
+}
+
+#[test]
 fn nara_adapter_requires_quality_signal_not_volume_alone_and_keeps_handles_opaque() {
     let root = temp_root("nara-adapter");
     let store = ImprovementStore::new(root.join("s5/epii-autoresearch"));

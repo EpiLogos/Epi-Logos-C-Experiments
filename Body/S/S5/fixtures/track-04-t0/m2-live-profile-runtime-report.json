@@ -1,0 +1,66 @@
+{
+  "adapter": "parashakti_meaning_packet_profile",
+  "profile_uri": "run://kernel/m2-profile/20260602T160623Z/tick-000144",
+  "s2_graph_law_uri": "graph://bimba/M2/correspondence-law/version/cycle-2",
+  "kerykeion_context_uri": "run://kairos/kerykeion/2026-06-02T16:06:23Z",
+  "observed_at_ms": 1780416383000,
+  "fingerprint": "m2-prime-profile-000144",
+  "profile": {
+    "profileId": "m2-profile-20260602T160623Z-000144",
+    "resonance72": {
+      "index72": 71,
+      "legacyResonanceIndex": 5,
+      "lensAnchorIndex": 11,
+      "lensAnchor": "L5'",
+      "position": 5,
+      "helixBit": 1,
+      "phase": "ascent"
+    },
+    "elements": {
+      "pPositionElement": "agni",
+      "l2PrimeElement": "vayu"
+    },
+    "planetaryChakral": {
+      "bodyId": "venus",
+      "centreId": "anahata",
+      "chakraRole": "harmonic_bridge",
+      "element": "apas",
+      "musicalRole": "neutral_third_colour",
+      "ratioRole": "9/8_epogdoon",
+      "modeScaleColour": "rast_family_quarter_tone",
+      "provenance": "graph://bimba/M2/planetary-chakral/venus-anahata",
+      "configurabilityStatus": "s2_graph_law_authoritative"
+    },
+    "diatonic": {
+      "degree": 6,
+      "note": "F# +50c",
+      "mode": "CF7",
+      "vakRegister": "CT2/CP4.2"
+    },
+    "harmonic": {
+      "ratio_role": "9/8_epogdoon",
+      "audio_octet": [0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0],
+      "nodal_quartet": [1.0, 0.5, 0.25, 0.125]
+    },
+    "lensMode": {
+      "lens": 11,
+      "mode": "CF7"
+    },
+    "kleinFlipState": true,
+    "sacredSonic": {
+      "shemName": "Mumiah",
+      "asmaName": "Al-Badi",
+      "mantra": "Om Aim Hrim",
+      "decanFace": "Pisces III shadow/light doubled"
+    },
+    "maqamMode": {
+      "family": "rast",
+      "mode": "Rast Panjgah",
+      "tuningPath": "MPE+MTS-ESP quarter-tone metadata"
+    },
+    "m3Projection": {
+      "detIndex64": 63,
+      "evidenceUri": "graph://bimba/M2/det-projection/index72-71"
+    }
+  }
+}

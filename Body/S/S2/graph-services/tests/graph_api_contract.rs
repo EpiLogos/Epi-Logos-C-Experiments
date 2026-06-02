@@ -1,6 +1,6 @@
 use epi_s2_graph_services::{
-    graph_contract, schema, GraphMethodParams, GraphMethodService, GraphNodeRequest,
-    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    graph_contract, schema, source_traceability_anchors, GraphMethodParams, GraphMethodService,
+    GraphNodeRequest, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
     KernelResonanceObservationRequest, Neo4jClient, Neo4jConfig, PointerWebRefreshRequest,
 };
 use serde_json::json;
@@ -248,6 +248,50 @@ fn graph_api_contract_envelope_carries_sources_namespace_gds_and_pointer_descrip
         descriptors[0]["deposition_policy"],
         "read-only descriptor; downstream evidence deposit is S5-governed"
     );
+    assert_eq!(
+        contract["residencyAuthority"]["diagramPack"],
+        "Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md"
+    );
+    assert_eq!(
+        contract["residencyAuthority"]["missingResidencyPolicy"],
+        "canonical_absent; never synthesize renderer-local paths"
+    );
+}
+
+#[test]
+fn source_traceability_anchors_resolve_world_chain_without_renderer_registry() {
+    let anchors = source_traceability_anchors("M0");
+
+    assert_eq!(
+        anchors["source"]["path"],
+        "Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md"
+    );
+    assert_eq!(anchors["source"]["status"], "s2_resolved");
+    assert_eq!(
+        anchors["spec"]["path"],
+        "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+    );
+    assert_eq!(anchors["policy"]["rendererLocalRegistryAllowed"], false);
+    assert_eq!(anchors["policy"]["missingResidency"], "canonical_absent");
+
+    let chain = anchors["residencyChain"]
+        .as_array()
+        .expect("residency chain");
+    assert!(chain.iter().any(|entry| {
+        entry["kind"] == "flat-world-form"
+            && entry["path"] == "Idea/Bimba/World/M0.md"
+            && entry["status"] == "canonical_absent"
+    }));
+    assert!(chain.iter().any(|entry| {
+        entry["kind"] == "type-canvas-index"
+            && entry["path"] == "Idea/Bimba/World/Types/Coordinates/M/M0/M0.canvas"
+            && entry["status"] == "canonical_absent"
+    }));
+    assert!(chain.iter().any(|entry| {
+        entry["kind"] == "coordinate-semantic-authority"
+            && entry["path"] == "Idea/Bimba/World/Types/Coordinates"
+            && entry["status"] == "s2_resolved"
+    }));
 }
 
 #[tokio::test]

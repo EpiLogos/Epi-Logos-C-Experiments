@@ -65,6 +65,7 @@ Six commitments hold this domain:
 - [[M2']] supplies the 72-vibration signature that M2-5' DET-projects to the 64-bit input M3 classifies.
 - [[M2']] / M2-5 supplies planetary/chakral source metadata for M3-0 reception provenance. M3' may show the public/current handle and evidence, but never raw Nara bioquaternion or protected personal interpretation.
 - [[S3]] / [[S3']] and the kernel-bridge supply the shared `world_clock` / profile subscription used by the default surface, the `m3-mahamaya` extension, and the integrated 1-2-3 plugin. M3' does not open a second private clock subscription.
+- The `m3-mahamaya` primary surface binds that shared S3 stream as `s3_world_clock_bound` in [[Idea/Pratibimba/System/extensions/m3-mahamaya/src/common/codon-wheel.ts|buildM3ProjectionSurface]]: `worldClockHandle`, generation, source, subscription mode, tick, and `degree720` travel with the active profile/codon facts. If S3 `world_clock` tick or `degree720` diverges from the current kernel profile, readiness must fall to `authority_payload_missing` rather than rendering a forked clock.
 - [[M5']] may consume M3 kernel-trace evidence for process-reward RL and pathway archaeology. M3' is only a renderer/inspector of those trace handles; it does not train, mutate, or promote calculation pathways.
 
 ## §3 — Required `MathemeHarmonicProfile` Fields

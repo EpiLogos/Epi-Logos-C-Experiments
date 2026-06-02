@@ -4,8 +4,10 @@ use neo4rs::query;
 use serde::Serialize;
 
 use crate::meta;
+use crate::seed::{
+    seed_baseline_coordinates, seed_baseline_snapshot_queries, seed_relationship_types,
+};
 use crate::semantic;
-use crate::seed::{seed_baseline_coordinates, seed_baseline_snapshot_queries, seed_relationship_types};
 use crate::{Neo4jClient, Neo4jConfig};
 use crate::{SemanticCacheClient, SemanticCacheConfig, SemanticCacheHealth};
 use epi_s3_redis_context::{RedisCache, RedisConfig};
@@ -788,22 +790,22 @@ async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
             q_schema_version: None,
             semantic_indexed_nodes: 0,
             stale_semantic_nodes: 0,
-                managed_versions: ManagedVersionsReport {
-                    desired: desired_snapshot.clone(),
-                    live: default_live.clone(),
-                    drift: managed_version_drift(
-                        &default_live,
-                        &desired_snapshot,
-                        GraphBackedEvidence {
-                            seed_baseline_ok: false,
-                            dataset_nodes: 0,
-                            relation_registry_ok: false,
-                            gds_available: false,
-                        },
-                    ),
-                },
-                error: Some("neo4j unavailable".into()),
-            };
+            managed_versions: ManagedVersionsReport {
+                desired: desired_snapshot.clone(),
+                live: default_live.clone(),
+                drift: managed_version_drift(
+                    &default_live,
+                    &desired_snapshot,
+                    GraphBackedEvidence {
+                        seed_baseline_ok: false,
+                        dataset_nodes: 0,
+                        relation_registry_ok: false,
+                        gds_available: false,
+                    },
+                ),
+            },
+            error: Some("neo4j unavailable".into()),
+        };
     };
 
     let node_count = match client.run("MATCH (n:Bimba) RETURN count(n) AS c").await {
@@ -1027,12 +1029,16 @@ fn managed_version_drift(
         } else if graph_backed.relation_registry_ok {
             "graph-backed".into()
         } else {
-            drift_state(&live.relation_registry_hash, &desired.relation_registry_hash)
+            drift_state(
+                &live.relation_registry_hash,
+                &desired.relation_registry_hash,
+            )
         },
         kernel_relations: drift_state(&live.kernel_source_hash, &desired.kernel_source_hash),
         semantic_embedding: drift_state(&live.embedding_version, &desired.embedding_version),
         q_schema: drift_state(&live.q_schema_version, &desired.q_schema_version),
-        ontology: if live.ontology_version_iri.is_empty() || live.ontology_turtle_sha256.is_empty() {
+        ontology: if live.ontology_version_iri.is_empty() || live.ontology_turtle_sha256.is_empty()
+        {
             "missing".into()
         } else if live.ontology_version_iri == desired.ontology_version_iri
             && live.ontology_turtle_sha256 == desired.ontology_turtle_sha256
@@ -1044,7 +1050,10 @@ fn managed_version_drift(
         gds: if !graph_backed.gds_available && live.gds_projection_version.is_empty() {
             "blocked-by-topology".into()
         } else {
-            drift_state(&live.gds_projection_version, &desired.gds_projection_version)
+            drift_state(
+                &live.gds_projection_version,
+                &desired.gds_projection_version,
+            )
         },
     }
 }
@@ -1119,11 +1128,16 @@ async fn graph_backed_evidence(client: &Neo4jClient) -> Result<GraphBackedEviden
         && seed_row.get::<i64>("weaves").unwrap_or_default() == 4
         && seed_row.get::<i64>("context_frames").unwrap_or_default() == 7
         && seed_row.get::<i64>("family_meta_nodes").unwrap_or_default() == 6
-        && seed_row.get::<i64>("family_coordinates").unwrap_or_default() == 72
+        && seed_row
+            .get::<i64>("family_coordinates")
+            .unwrap_or_default()
+            == 72
         && seed_row.get::<i64>("vak_nodes").unwrap_or_default() == 6
         && seed_relationships >= 306;
 
-    let gds_count = crate::gds::gds_procedure_count(client).await.unwrap_or_default();
+    let gds_count = crate::gds::gds_procedure_count(client)
+        .await
+        .unwrap_or_default();
 
     Ok(GraphBackedEvidence {
         seed_baseline_ok,

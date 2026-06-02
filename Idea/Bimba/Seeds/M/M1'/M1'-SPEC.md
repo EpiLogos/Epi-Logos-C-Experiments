@@ -77,7 +77,9 @@ This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recogni
 
 - [[S2]] pointer web is the relation law of record. Every walk-step is an S2 relation traversal.
 - [[S0]] kernel profile ([[MathemeHarmonicProfile]] at [[Body/S/S0/portal-core/src/harmonic_profile.rs]]) provides tick12, degree720, [[SU(2)]] layer, phase, position6, chromatic substrate, ratio role, square mirror law, diatonic [[CF]]/[[VAK]] projection, and resonance72. The 8+4 `audio_octet`/`nodal_quartet` bus is written into the shared profile by [[M2-1']] [[Vimarśa]] reading at [[Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs]]. **M1' uses `audio_octet` to sound the current coordinate; it never computes pitch locally and never owns or re-synthesizes the bus.**
+- [[S0]] publishes the deterministic profile-to-performance bridge event as `S0.kernel-bridge.m1-profile-to-performance` through [[Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs|kernel_bridge_runtime::m1_performance_event_from_profile]]. This event is the public-current handoff from `MathemeHarmonicProfile` into M1' performance state; renderers consume it and must not replace it with renderer-local pitch, tempo, or nodal derivation.
 - [[S3]] temporal projection provides session/DAY/NOW context for traversal records and optional deposition.
+- [[S3]] kernel-profile observation deposits preserve the same handoff as `metadata.profile_to_performance_stream`, naming M1'/Paramasiva as consumer, the six required profile fields, kernel-tick tempo authority, and `renderer_derivation_allowed = false`.
 - M1' never uses animation frame count as clock authority. The walk-tempo is settable but always references the kernel-tick rate, not wall-clock frames.
 
 ## §4 — Required [[MathemeHarmonicProfile]] Fields

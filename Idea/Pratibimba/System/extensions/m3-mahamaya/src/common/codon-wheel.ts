@@ -31,8 +31,11 @@ export interface M3LibrarySummary {
 export interface M3WorldClockPayload {
     readonly provenanceHandle: M3ProvenanceHandle;
     readonly worldClockHandle: string;
+    readonly generation: number;
     readonly tick: number;
     readonly degree720: number;
+    readonly source: 's3.world_clock';
+    readonly subscriptionMode: 'native-websocket' | 'http-sql-poll' | 'compatibility';
 }
 
 export interface M3ProjectionSurfaceInput {
@@ -81,6 +84,7 @@ export function buildM3ProjectionSurface(input: M3ProjectionSurfaceInput): M3Pro
 
     const wheelSummary = buildWheelSummary(input.library);
     const activeFacts = activeProjectionFacts(payload, mahamaya, projection);
+    const worldClockBinding = buildWorldClockBinding(activeFacts, input.worldClock);
     const pendingFields = surfacePendingFields(input, mahamaya, projection);
     const provenance = provenanceHandles(input);
     const blockers = surfaceBlockers(input, pendingFields);
@@ -91,6 +95,7 @@ export function buildM3ProjectionSurface(input: M3ProjectionSurfaceInput): M3Pro
         coordinateContext: input.context.canonicalMCoordinate ?? "M3'",
         evidenceHandle: input.kernelTraceHandle?.handle ?? input.library?.provenanceHandle.handle ?? 'pending:m3.kernel-trace',
         provenanceHandles: provenance.map(handle => handle.handle),
+        worldClock: worldClockBinding,
         ...activeFacts,
         rewardTrainingAuthority: 'outside-renderer',
         protectedArtifactBodyLoaded: false
@@ -104,7 +109,7 @@ export function buildM3ProjectionSurface(input: M3ProjectionSurfaceInput): M3Pro
         activeProjection: freezeRecord(activeFacts),
         wheelSummary,
         m30ProvenanceStrip: buildM30Provenance(payload, mahamaya),
-        depthViews: buildDepthViews(payload, activeFacts, input.worldClock),
+        depthViews: buildDepthViews(payload, activeFacts, worldClockBinding),
         provenance: Object.freeze(provenance),
         pendingFields: Object.freeze(pendingFields),
         readiness: Object.freeze({
@@ -234,7 +239,7 @@ function buildM30Provenance(
 function buildDepthViews(
     payload: Readonly<Record<string, unknown>>,
     activeFacts: Readonly<Record<string, unknown>>,
-    worldClock: M3WorldClockPayload | undefined
+    worldClock: Readonly<Record<string, unknown>>
 ): Readonly<Record<string, Readonly<Record<string, unknown>>>> {
     const common = {
         tick: activeFacts.tick,
@@ -253,13 +258,46 @@ function buildDepthViews(
         doubleTorusWorldClock: freezeRecord({
             viewMode: 'm3-5-double-torus-world-clock',
             ...common,
-            worldClockHandle: worldClock?.worldClockHandle ?? null
+            worldClockHandle: worldClock.worldClockHandle,
+            worldClockGeneration: worldClock.generation,
+            worldClockSource: worldClock.source,
+            subscriptionMode: worldClock.subscriptionMode,
+            tickMatchesProfile: worldClock.tickMatchesProfile,
+            degree720MatchesProfile: worldClock.degree720MatchesProfile
         }),
         janusOverlay: freezeRecord({
             viewMode: 'janus-bidirectional-read-only',
             ...common,
             orientation: stringValue(objectValue(payload.m3Trace)?.janusOrientation) ?? 'pending-backend-trace'
         })
+    });
+}
+
+function buildWorldClockBinding(
+    activeFacts: Readonly<Record<string, unknown>>,
+    worldClock: M3WorldClockPayload | undefined
+): Readonly<Record<string, unknown>> {
+    if (!worldClock) {
+        return freezeRecord({
+            state: 'missing_s3_world_clock',
+            worldClockHandle: null,
+            generation: null,
+            source: null,
+            subscriptionMode: null,
+            tickMatchesProfile: false,
+            degree720MatchesProfile: false
+        });
+    }
+    return freezeRecord({
+        state: 's3_world_clock_bound',
+        worldClockHandle: worldClock.worldClockHandle,
+        generation: worldClock.generation,
+        source: worldClock.source,
+        subscriptionMode: worldClock.subscriptionMode,
+        tick: worldClock.tick,
+        degree720: worldClock.degree720,
+        tickMatchesProfile: worldClock.tick === activeFacts.tick,
+        degree720MatchesProfile: worldClock.degree720 === activeFacts.degree720
     });
 }
 
@@ -288,6 +326,15 @@ function surfaceBlockers(input: M3ProjectionSurfaceInput, pendingFields: readonl
         blockers.push('Track 02 M3 library summary does not satisfy 40x7 + 24x8 = 472');
     }
     if (!input.worldClock) blockers.push('Track 03 world_clock handle missing');
+    if (input.worldClock && input.worldClock.tick !== numberValue(input.profile.payload.tick)) {
+        blockers.push('Track 03 world_clock tick does not match current kernel profile tick');
+    }
+    if (
+        input.worldClock &&
+        input.worldClock.degree720 !== numberValue(input.profile.payload.degree720)
+    ) {
+        blockers.push('Track 03 world_clock degree720 does not match current kernel profile degree720');
+    }
     if (pendingFields.includes('profile.rotationalStateCount')) {
         blockers.push('Track 01 profile rotational state fields missing');
     }

@@ -277,6 +277,20 @@ pub fn kernel_profile_observation_deposit_payload(
         "vault_now_path": vault_now_path,
         "coordinate_anchor": coordinate_anchor,
         "harmonic_medium": "portal-core::MathemeHarmonicProfile",
+        "profile_to_performance_stream": {
+            "stream": "S0.kernel-bridge.m1-profile-to-performance",
+            "consumer": "M1'/Paramasiva",
+            "required_profile_fields": [
+                "tick",
+                "harmonic",
+                "pointerAnchor",
+                "diatonic",
+                "depositionAnchor",
+                "lensMode"
+            ],
+            "tempo_authority": "kernel-tick-not-renderer-frame",
+            "renderer_derivation_allowed": false
+        },
         "kernel_owner": "S0",
         "graph_owner": "S2",
         "runtime_owner": "S3'",

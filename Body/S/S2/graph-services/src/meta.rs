@@ -75,9 +75,9 @@ fn dataset_hash_paths(root: &Path) -> Vec<PathBuf> {
     let mut files = Vec::new();
     walk(&root.join("Idea/Bimba/Map/datasets"), &mut files);
     files.push(root.join("Idea/Bimba/Map/datasets/deep-property-map.md"));
-    files.push(root.join(
-        "Idea/Bimba/Map/datasets/migrations/2026-05-17-bimba-scaffold-to-bimba.cypher",
-    ));
+    files.push(
+        root.join("Idea/Bimba/Map/datasets/migrations/2026-05-17-bimba-scaffold-to-bimba.cypher"),
+    );
     files.sort();
     files.dedup();
     files
@@ -93,7 +93,12 @@ pub fn dataset_source_hash() -> String {
             continue;
         }
         saw_any = true;
-        hasher.update(path.strip_prefix(&root).unwrap_or(&path).to_string_lossy().as_bytes());
+        hasher.update(
+            path.strip_prefix(&root)
+                .unwrap_or(&path)
+                .to_string_lossy()
+                .as_bytes(),
+        );
         let mut file = match fs::File::open(&path) {
             Ok(file) => file,
             Err(_) => continue,
@@ -207,7 +212,10 @@ pub async fn write_graph_meta(client: &Neo4jClient, meta: &GraphMeta) -> Result<
                 "ontology_turtle_sha256",
                 meta.ontology_turtle_sha256.as_str(),
             )
-            .param("gds_projection_version", meta.gds_projection_version.as_str())
+            .param(
+                "gds_projection_version",
+                meta.gds_projection_version.as_str(),
+            )
             .param("graph_revision", meta.graph_revision),
         )
         .await
@@ -232,7 +240,11 @@ pub fn desired_meta(schema_version: &str, next_revision: i64) -> GraphMeta {
     }
 }
 
-pub fn applied_meta(schema_version: &str, next_revision: i64, current: Option<&GraphMeta>) -> GraphMeta {
+pub fn applied_meta(
+    schema_version: &str,
+    next_revision: i64,
+    current: Option<&GraphMeta>,
+) -> GraphMeta {
     let desired = desired_meta(schema_version, next_revision);
     let mut applied = desired.clone();
     if let Some(current) = current {

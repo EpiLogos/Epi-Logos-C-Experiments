@@ -5,7 +5,7 @@ use epi_s3_gateway_contract::{
     SPACETIME_PROJECTION_MODE_FULL, SPACETIME_PROJECTION_MODE_LITE,
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
 };
-use portal_core::VakAddress;
+use portal_core::{MathemeHarmonicProfile, VakAddress};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
@@ -17,6 +17,7 @@ pub const KERNEL_BRIDGE_THEIA_ADAPTER: &str = "Theia KernelBridgeAPI dependency-
 pub const KERNEL_BRIDGE_TAURI_ADAPTER: &str = "Tauri 0/1 surface adapter";
 pub const KERNEL_BRIDGE_SAFE_PROFILE_PRIVACY: &str = "safe-public-current-kernel-tick";
 pub const KERNEL_BRIDGE_AGENT_PRIVACY: &str = "public_current_with_graph_provenance";
+pub const M1_PROFILE_TO_PERFORMANCE_STREAM: &str = "S0.kernel-bridge.m1-profile-to-performance";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -581,6 +582,66 @@ pub fn end_to_end_acceptance_report(
             "Lite `/body` and full Theia clients compare profileGeneration and privacyClass from bridge events.",
             "M5-4 capabilities deposit evidence through governed gateway methods, carrying VAK route lineage and profile generation."
         ]
+    })
+}
+
+pub fn m1_performance_event_from_profile(
+    profile_generation: u64,
+    profile: &MathemeHarmonicProfile,
+) -> Value {
+    json!({
+        "event": "m1.profile_to_performance",
+        "stream": M1_PROFILE_TO_PERFORMANCE_STREAM,
+        "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
+        "source": "portal_core::MathemeHarmonicProfile",
+        "profileGeneration": profile_generation,
+        "profileSchemaVersion": profile.profile_schema_version,
+        "privacyClass": profile.privacy_class,
+        "requiredProfileFields": [
+            "tick",
+            "harmonic",
+            "pointerAnchor",
+            "diatonic",
+            "depositionAnchor",
+            "lensMode"
+        ],
+        "tick": {
+            "tick": profile.tick,
+            "tick12": profile.tick12,
+            "cycle": profile.cycle,
+            "degree720": profile.degree720,
+            "kernelTickAuthority": "portal_core::kernel_tick_from_epogdoon"
+        },
+        "harmonic": {
+            "phase": profile.phase,
+            "position6": profile.position6,
+            "helix": profile.helix,
+            "ratioRole": profile.ratio_role,
+            "audioOctet": profile.audio_octet,
+            "nodalQuartet": profile.nodal_quartet
+        },
+        "pointerAnchor": profile.pointer_anchor,
+        "diatonic": profile.diatonic,
+        "depositionAnchor": {
+            "sourceCoordinate": profile.pointer_anchor.source_coordinate,
+            "resonance72Index": profile.resonance72.lens_anchor_index,
+            "mahamayaAddress64": profile.mahamaya.mahamaya_address64,
+            "s3Method": "s5.episodic.kernel_profile_observation.deposit",
+            "privacyBoundary": "public-current-context-to-protected-local-episodic-memory"
+        },
+        "lensMode": {
+            "lens": profile.lens_mode.lens,
+            "mode": profile.lens_mode.mode,
+            "codonId": profile.codon_rotation_projection.codon_id,
+            "rotation": profile.codon_rotation_projection.rotation,
+            "codonClass": profile.codon_rotation_projection.codon_class
+        },
+        "performanceState": {
+            "tempoClock": "kernel-tick-not-renderer-frame",
+            "pitchAuthority": "portal_core::MathemeHarmonicProfile.audio_octet",
+            "nodalConstraintAuthority": "portal_core::MathemeHarmonicProfile.nodal_quartet",
+            "rendererDerivationAllowed": false
+        }
     })
 }
 

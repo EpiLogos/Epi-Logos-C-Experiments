@@ -1,0 +1,18 @@
+{
+	"nodes":[
+		{"id":"title","type":"text","text":"# Templates\n\nSemantic MOC for CT forms and Hen template resolution.","x":0,"y":0,"width":520,"height":150},
+		{"id":"moc","type":"file","file":"Bimba/World/Types/Templates/Templates.md","x":0,"y":200,"width":360,"height":80},
+		{"id":"ct0","type":"file","file":"Bimba/World/CT0.md","x":420,"y":120,"width":260,"height":70},
+		{"id":"ct1","type":"file","file":"Bimba/World/CT1.md","x":420,"y":210,"width":260,"height":70},
+		{"id":"ct4b","type":"file","file":"Bimba/World/CT4b.md","x":420,"y":300,"width":260,"height":70},
+		{"id":"daily","type":"file","file":"Bimba/World/Daily-Note.md","x":420,"y":390,"width":260,"height":70},
+		{"id":"now","type":"file","file":"Bimba/World/NOW.md","x":420,"y":480,"width":260,"height":70}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"moc","toNode":"ct0"},
+		{"id":"e2","fromNode":"moc","toNode":"ct1"},
+		{"id":"e3","fromNode":"moc","toNode":"ct4b"},
+		{"id":"e4","fromNode":"moc","toNode":"daily"},
+		{"id":"e5","fromNode":"moc","toNode":"now"}
+	]
+}

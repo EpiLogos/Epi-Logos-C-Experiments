@@ -2,6 +2,7 @@ use epi_s5_epii_agent_core::{
     validate_m5_artifact_uri, DepositArtifact, DepositRequest, DepositType, EpiiAgentAccess,
     M5ArtifactNamespace, TypedCandidateDepositRequest,
 };
+use epi_s5_epii_autoresearch_core::adapters::NonAletheiaPipelineReport;
 use epi_s5_epii_autoresearch_core::spine::{
     ClosureKind, ContentTypeRegister, ImprovementVectorKind, ObservationEvidence,
 };
@@ -422,6 +423,52 @@ fn m5_workbench_snapshot_serializes_real_state_with_namespace_refs_and_no_body_l
     assert!(!workbench_json.contains("protected-review-body"));
     assert!(!workbench_json.contains("protected-candidate-body"));
     assert!(!workbench_json.contains("kernel-trajectory-secret"));
+}
+
+#[test]
+fn m2_user_surface_exposes_backend_derived_meaning_packet() {
+    let root = temp_root("m2-user-surface");
+    let improve_store = ImprovementStore::new(root.join("s5/epii-autoresearch"));
+    let report_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .expect("S5 parent")
+        .join("fixtures/track-04-t0/m2-live-profile-runtime-report.json");
+    let report: NonAletheiaPipelineReport =
+        serde_json::from_str(&std::fs::read_to_string(report_path).expect("fixture reads"))
+            .expect("fixture is a real report payload");
+
+    improve_store
+        .surface_non_aletheia_report(report)
+        .expect("profile report should surface")
+        .expect("meaning packet should persist");
+
+    let workbench = EpiiAgentAccess::new(&root)
+        .m5_workbench_snapshot()
+        .expect("workbench should read real persisted candidate");
+    let detail = workbench
+        .candidate_details
+        .iter()
+        .find(|detail| detail.target_subsystem == TargetSubsystem::Parashakti)
+        .expect("Parashakti candidate detail");
+    let packet = detail
+        .m2_meaning_packet
+        .as_ref()
+        .expect("M2 user surface includes meaning packet");
+    let workbench_json = serde_json::to_string(&workbench).expect("workbench json");
+
+    assert_eq!(packet.index72, 71);
+    assert_eq!(
+        packet.cymatic_signature.nodal_quartet,
+        [1.0, 0.5, 0.25, 0.125]
+    );
+    assert_eq!(
+        packet.planetary_chakral_frame.provenance,
+        "graph://bimba/M2/planetary-chakral/venus-anahata"
+    );
+    assert!(workbench_json.contains("\"m2_meaning_packet\""));
+    assert!(workbench_json.contains("run://kernel/m2-profile/20260602T160623Z/tick-000144"));
+    assert!(!workbench_json.contains("placeholder"));
+    assert!(!workbench_json.contains("protected-journal-body"));
 }
 
 #[test]

@@ -111,6 +111,10 @@ M2PrimeMeaningPacket {
 
 Every field must be derived from live profile state, [[M2]] `.rodata`, [[S2]] graph law, [[Kerykeion]]/[[Kairos]] state, or declared pending/provenance status. The packet is the canonical M2' event annotation for portal rendering, music-tech output, and [[M3]] handoff; it is also the safe routing-trace atom [[Epii]] may learn over as described in [[m5-prime-epii-on-parashakti-graph-relational-ml]].
 
+### §4.2 — S5 / Epii User-Surface Ownership
+
+The governed S5 surface exposes `M2PrimeMeaningPacket` as a first-class `m2_meaning_packet` field on Parāśakti candidate detail DTOs rather than as renderer prose. The S5 adapter accepts only backend profile reports carrying `profileId`, `resonance72`, `elements`, `planetaryChakral`, `diatonic`, `harmonic.audio_octet[8]`, `harmonic.nodal_quartet[4]`, `lensMode`, `kleinFlipState`, `sacredSonic`, `maqamMode`, and `m3Projection`; missing fields are errors, not locally filled defaults. Its provenance list must name the live profile/runtime payload, S2 graph-law authority, and Kerykeion/Kairos context so the user-facing panel stays tied to backend truth.
+
 ## §5 — Privacy Boundary
 
 M2' may show public canonical correspondences and safe-current active profile data. It must not hardcode or expose private tradition-sensitive mapping choices in renderer code. Exact planetary/chakral/codon correspondences come from [[S2]] graph law and profile metadata. Personal resonance observations are protected-local unless explicitly promoted through governed [[S5']]/[[S1']] review.

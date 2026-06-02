@@ -208,7 +208,14 @@ async fn s5_improve_gateway_promote_returns_dry_run_hen_plan() {
                 "body": "Epii accepts this dry-run promotion path.",
                 "priority": "high",
                 "coordinate_context": {"coordinate": "S5/S5'"},
-                "requires_human": false
+                "requires_human": false,
+                "governance_profile": {
+                    "category": "standard_improvement",
+                    "gate_kind": "standard",
+                    "governance_level": "advisory",
+                    "target_subsystem": "Epii",
+                    "promotion_destination": "seeds"
+                }
             }),
         )
         .await
@@ -221,7 +228,8 @@ async fn s5_improve_gateway_promote_returns_dry_run_hen_plan() {
                 "item_id": review_item_id,
                 "decision": "approve",
                 "rationale": "Approved for dry-run promotion planning.",
-                "resolved_by": "epii"
+                "resolved_by": "epii",
+                "promotion_destination": "seeds"
             }),
         )
         .await
@@ -232,11 +240,24 @@ async fn s5_improve_gateway_promote_returns_dry_run_hen_plan() {
             "s5'.improve.promote",
             json!({
                 "run_id": run_id,
-                "destination": "seeds",
+                "destination": {
+                    "kind": "seed_deposit",
+                    "seed_path": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md"
+                },
+                "legacy_destination": "seeds",
                 "approved_review_resolution_id": review_item_id,
+                "review_store_root": gate_root.join("s5/epii-review"),
                 "vault_root": vault,
                 "compiler_root": gate_root.join("fixture-compiler"),
                 "artifact_slug": "gateway-autoresearch",
+                "requested_at": {
+                    "year": 2026,
+                    "month": 5,
+                    "day": 3,
+                    "hour": 8,
+                    "minute": 30,
+                    "second": 0
+                },
                 "dry_run": true
             }),
         )
@@ -301,8 +322,13 @@ async fn s5_improve_gateway_promote_requires_approved_epii_review() {
             "s5'.improve.promote",
             json!({
                 "run_id": run_id,
-                "destination": "seeds",
+                "destination": {
+                    "kind": "seed_deposit",
+                    "seed_path": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md"
+                },
+                "legacy_destination": "seeds",
                 "approved_review_resolution_id": "missing-review-item",
+                "review_store_root": gate_root.join("s5/epii-review"),
                 "vault_root": vault,
                 "compiler_root": gate_root.join("fixture-compiler"),
                 "artifact_slug": "blocked-without-review",

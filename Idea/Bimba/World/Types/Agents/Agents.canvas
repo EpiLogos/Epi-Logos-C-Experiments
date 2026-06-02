@@ -1,0 +1,15 @@
+{
+	"nodes":[
+		{"id":"title","type":"text","text":"# Agents\n\nSemantic MOC for constitutional agents, ta-onta carriers, and return agents.","x":0,"y":0,"width":560,"height":150},
+		{"id":"moc","type":"file","file":"Bimba/World/Types/Agents/Agents.md","x":0,"y":200,"width":360,"height":80},
+		{"id":"s4","type":"file","file":"Bimba/World/Types/Coordinates/S/S4/S4.md","x":440,"y":160,"width":320,"height":70},
+		{"id":"s4p","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md","x":440,"y":250,"width":320,"height":70},
+		{"id":"s5p","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md","x":440,"y":340,"width":320,"height":70},
+		{"id":"note","type":"text","text":"[[Anima]] dispatches; [[Epii]] returns; [[Hen]] governs artifact form.","x":440,"y":450,"width":360,"height":120}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"moc","toNode":"s4"},
+		{"id":"e2","fromNode":"moc","toNode":"s4p"},
+		{"id":"e3","fromNode":"moc","toNode":"s5p"}
+	]
+}

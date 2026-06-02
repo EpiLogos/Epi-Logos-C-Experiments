@@ -7,6 +7,7 @@ c_0_related_coordinates:
   - "[[S-SYSTEM-INDEX]]"
   - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
   - "[[S-HARMONIZATION-RUN-2026-06-02]]"
+  - "[[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]]"
 ---
 
 # World Ontology — System Knowledge Nexus
@@ -68,7 +69,24 @@ Architecture diagrams are consumed through Seed specs, but their durable meaning
 - Specs that rely on diagrams must link heading anchors such as [[ARCHITECTURE-DIAGRAM-PACK#Diagram 2 S S Deep Structure]] and [[ARCHITECTURE-DIAGRAM-PACK#Diagram And MOC Residency Protocol]].
 - [[S1']] / [[Hen]] owns the law that decides whether an artifact is a [[World]] crystallisation, a [[Seeds]] source/spec, a [[World/Types]] MOC, or a temporal [[Present]] artifact.
 
-This is the central braid for the current question: [[World-Ontology]] provides the ontology hub, [[ARCHITECTURE-DIAGRAM-PACK]] provides the diagram surface, [[S-SHARD-HARMONIZATION-PROTOCOL]] provides shard quality law, and [[World/Types]] provides the MOC/canvas topology.
+This is the central braid for the current question: [[World-Ontology]] provides the ontology hub, [[ARCHITECTURE-DIAGRAM-PACK]] provides the diagram surface, [[S-SHARD-HARMONIZATION-PROTOCOL]] provides shard quality law, [[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]] provides Hen's crystallisation workflow, and [[World/Types]] provides the MOC/canvas topology.
+
+## Semantic Type Roots
+
+[[World/Types]] now exposes semantic type roots as graph-evidence incubation surfaces alongside the coordinate mirror. They cross-link coordinates; they do not replace coordinate authority.
+
+| Type Root | Role |
+| --- | --- |
+| [[Artifacts]] | Reusable artifact forms and artifact families |
+| [[Templates]] | [[CT]] forms and Hen template resolution |
+| [[Agents]] | Constitutional agents, ta-onta carriers, and return agents |
+| [[Capabilities]] | Tools, skills, plugins, permission gates, and capability matrix entries |
+| [[Interfaces]] | CLI, RPC, gateway, UI, envelope, and API surfaces |
+| [[Runtime-Surfaces]] | Live processes, stores, bridges, sessions, and managed agent homes |
+| [[Diagrams]] | Seed diagram packs and [[World/Types]] visual MOC governance |
+| [[Datasets]] | Graph, corpus, cache, source, and contract-ledger datasets |
+
+The current registry is [[TYPE-REGISTRY]]. Folder ancestry is graph-significant evidence, but [[S2]] remains the authority that validates labels, properties, and relationships.
 
 ---
 

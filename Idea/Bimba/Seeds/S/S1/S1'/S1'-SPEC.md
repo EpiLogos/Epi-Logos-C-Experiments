@@ -25,8 +25,8 @@ The VAK gate is `CPF=(4.0/1-4.4/5)`, `CT=CT1`, `CP=4.1->4.2`, `CF=(0/1) Logos wi
 
 | Coordinate | Canonical surface | Current substrate |
 |---|---|---|
-| `S1.0'` | vault zone and residency law | `hen-compiler-core/src/residency.rs`, vault path commands |
-| `S1.1'` | frontmatter and CT identity | `hen-compiler-core/src/frontmatter.rs`, `epi-cli/src/vault/frontmatter.rs` |
+| `S1.0'` | vault zone and residency law | `hen-compiler-core/src/lib.rs` compile residency planning, S0 gateway Hen vault handlers, and [[S1-0'-SPEC]] |
+| `S1.1'` | frontmatter and CT identity | `hen-compiler-core/src/lib.rs` frontmatter validation law, S0 vault frontmatter tests, and [[S1-1'-SPEC]] |
 | `S1.2'` | template/write law | `epi-cli/src/vault/templates.rs`, Hen invocation contracts |
 | `S1.3'` | compile/ledger/query/injection | `hen-compiler-core/src/lib.rs`, vendor compiler scripts |
 | `S1.4'` | Day/NOW context materialisation | `epi-cli/src/vault/paths.rs`, `Idea/Empty/Present/{day}/{now}/now.md` |
@@ -78,6 +78,8 @@ S1' gives agents a hard residency distinction:
 - `Idea/Bimba/World/**` is the crystallised architecture surface. Flat `World/{Name}.md` files hold stable forms, definitions, coordinate synthesis documents, and canonical architecture statements. `World/Types/{Type}/{Type}.canvas` files hold type/MOC indexes and deeper canvas structure. `World/Forms/` is obsolete.
 - `Idea/Bimba/Seeds/**` is the planning/spec/source surface. It holds shard specs, architecture packs, traceability indexes, source-route files, implementation plans promoted from `/docs`, and developmental material not yet crystallised into World.
 - `/docs/specs`, `/docs/plans`, and `/docs/resources` are legacy/source strata. When they remain load-bearing, S1' should require a Seed-side mirror, pointer, or traceability entry so future agents can use vault wikilinks rather than raw filesystem search.
+
+The operational protocol for moving from live evidence to [[Seeds]], [[World/Types]], flat [[World]], and [[S2]] graph-promotion intent is [[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]].
 
 M-dev, Anima, Epii, and Hen-powered agents should use `epi core knowing` plus `epi vault read/search/search-content/link-suggest` before scoping cross-system work. The vault is the discovery surface; `rg` is a code/source fallback, not the primary architecture navigator.
 

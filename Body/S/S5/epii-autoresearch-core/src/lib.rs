@@ -20,8 +20,8 @@ pub mod spine;
 // inbox + recompose intentionally not re-exported — callers namespace via
 // `inbox::` / `recompose::` to keep the seam topology visible at import sites.
 pub use spine::{
-    ClosureKind, ContentTypeRegister, ImprovementCandidate, PromotionDestination, SensitivityClass,
-    SurfaceActor, SurfacingPipelineId, TargetSubsystem,
+    ClosureKind, ContentTypeRegister, ImprovementCandidate, M2PrimeMeaningPacket,
+    PromotionDestination, SensitivityClass, SurfaceActor, SurfacingPipelineId, TargetSubsystem,
 };
 
 pub const KERNEL_EVIDENCE_PRIVACY: &str = "safe-public-current-kernel-tick";
