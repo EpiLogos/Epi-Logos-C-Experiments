@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T16:28:27.243Z",
+  "updatedAt": "2026-06-02T16:30:49.669Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -1352,27 +1352,26 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T16:14:38.910Z",
-    "updatedAt": "2026-06-02T16:14:38.910Z",
+    "createdAt": "2026-06-02T16:30:49.669Z",
+    "updatedAt": "2026-06-02T16:30:49.669Z",
     "taskIds": [
-      "04.T0",
-      "05.T0",
       "08.T0",
-      "02.T2"
+      "04.T1",
+      "06.T0",
+      "01.T3"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "04.T0": "in-session",
-      "05.T0": "in-session",
       "08.T0": "in-session",
-      "02.T2": "in-session"
+      "04.T1": "in-session",
+      "06.T0": "in-session",
+      "01.T3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }
