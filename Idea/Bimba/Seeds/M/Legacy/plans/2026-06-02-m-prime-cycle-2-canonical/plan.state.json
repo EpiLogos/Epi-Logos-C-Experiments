@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T21:44:05.789Z",
+  "updatedAt": "2026-06-02T22:02:28.168Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -1400,34 +1400,43 @@
       "worktree": null
     },
     "13.T4": {
-      "status": "review",
-      "updatedAt": "2026-06-02T19:16:48.105Z",
+      "status": "done",
+      "updatedAt": "2026-06-02T21:53:16.492Z",
       "claimedAt": "2026-06-02T19:01:56.113Z",
-      "completedAt": null,
+      "completedAt": "2026-06-02T21:53:16.492Z",
       "evidence": [
         {
           "at": "2026-06-02T19:16:48.105Z",
           "text": "13.T4 intent routing closure: added DAY/NOW/privacy/review routing contract to Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md plus S3' intent envelope projection and S5' review routing gates; parser audit verified 13/13 required fields, 6/6 portal routes, 3/3 forbidden routes, 10/10 S3 projection fields, 6/6 S5 gate rows, 0 failures; node intent/review bundle passed 59/59 across Body/M/epi-theia extension contract/evidence/review tests. S0 cargo named bundle passed gate_epii_review 4/4, gate_mediation_route 5/5, gate_sessions_patch_vak 3/3; gate_temporal_context has 2/2 real assertion failures at Body/S/S0/epi-cli/tests/gate_temporal_context.rs:261 expecting provisional-gap but runtime returns resolved, with live Redis test ignored; this is outside 13.T4 write scope and pinned for owning S0 temporal-context lane."
+        },
+        {
+          "at": "2026-06-02T21:53:16.492Z",
+          "text": "Review blocker cleared by real reruns: S0 gate_temporal_context 2/2 passed with live Redis 1 ignored after local-server escalation; gate_epii_review 4/4, gate_mediation_route 5/5, gate_sessions_patch_vak 3/3 passed under same S0 target. Prior 13.T4 evidence remains valid: spec parser 13/13 fields, 6/6 portal routes, 3/3 forbidden routes, 10/10 S3 projection fields, 6/6 S5 gate rows; Body/M epi-theia node intent/review bundle 59/59. No code changes required."
         }
       ],
       "notes": null,
       "owner": "m-dev-parallel-B",
-      "leaseExpiresAt": "2026-06-02T21:01:56.113Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-02T19:16:48.105Z",
       "runId": "20260602T190156Z-13-T4",
       "worktree": null
     },
     "13.T5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T21:59:31.245Z",
+      "claimedAt": "2026-06-02T21:53:36.445Z",
+      "completedAt": "2026-06-02T21:59:31.245Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T21:59:31.245Z",
+          "text": "13.T5 typed-delta and method-drift guardrail verified: S0/S3 parity negative drift bundle 23/23 passed (gate_full_parity_contract 9/9 incl fake S0-only method rejection and no independent S0 route table; gate_parity_manifest 11/11 incl every product method has coordinate mapping and Track13 provenance fields; gate_method_parity 3/3 real gateway state mutation surfaces); typed-delta route 1/1 passed via gate_spacetimedb_bridge::spacetimedb_subscription_emits_typed_delta_with_routable_table_identity. Key paths Body/S/S0/epi-cli/tests/{gate_full_parity_contract.rs,gate_parity_manifest.rs,gate_method_parity.rs,gate_spacetimedb_bridge.rs}; Body/S/S0/epi-cli/src/gate/parity.rs; Body/S/S3/gateway-contract."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T21:53:36.445Z",
+      "runId": "20260602T215336Z-13-T5",
       "worktree": null
     },
     "14.T0": {
@@ -1521,19 +1530,23 @@
       "worktree": null
     },
     "14.T5": {
-      "status": "review",
-      "updatedAt": "2026-06-02T19:30:25.658Z",
+      "status": "done",
+      "updatedAt": "2026-06-02T22:02:18.223Z",
       "claimedAt": "2026-06-02T19:28:45.063Z",
-      "completedAt": null,
+      "completedAt": "2026-06-02T22:02:18.223Z",
       "evidence": [
         {
           "at": "2026-06-02T19:30:25.658Z",
           "text": "14.T5 no-orphan canonical surface audit: added T5 No-Orphan Audit Result to Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md; parser verified 8 covered canonical surface rows, 6 named blockers, required shell 0/shell 1/deep 4+2/operator transparency/World Type-MOC/docs traceability phrases, 0 parser failures; assessor route confirmed ledger state 77 done, 2 review (11.T1, 13.T4), 4 pending downstream (11.T2, 11.T3, 11.T4, 13.T5), 1 in_progress during audit. Verdict is review-blocked/not clean: 11.T1 Hen smart-env semantic-neighbor blocker and 13.T4 S0 temporal-context assertion prevent final no-orphan closure; downstream Track 11 and 13 items remain dependency-blocked."
+        },
+        {
+          "at": "2026-06-02T22:02:18.223Z",
+          "text": "14.T5 final no-orphan audit closed: audit parser passed 9 required closure phrases, 5 stale blocker phrases absent, 138 table rows parsed in Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md; assessor before mark showed 83 done, 1 review (14.T5), 0 pending, 0 ready, 0 in_progress, 0 blocked, 0 blockedByDependencies. Supporting real verification already landed in ledger: Track 11 closure through 11.T4 including S1 16/16 and S2 21/21 promotion-policy contracts; Track 13 closure through 13.T5 including S0 temporal 2/2, review 4/4, mediation 5/5, session VAK 3/3, method drift 23/23, typed delta 1/1. Key paths: 14-open-decisions-release-gates-and-no-orphan-audit.md, plan.state.json, plan.index.json, Body/S/S0/epi-cli/tests/gate_full_parity_contract.rs, Body/S/S2/graph-services/tests/promotion_policy_contract.rs."
         }
       ],
       "notes": null,
       "owner": "m-dev-parallel-B",
-      "leaseExpiresAt": "2026-06-02T21:28:45.063Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-02T19:30:25.658Z",
       "runId": "20260602T192845Z-14-T5",
       "worktree": null
@@ -2350,31 +2363,29 @@
       "leaseExpiresAt": "2026-06-02T23:35:45.807Z",
       "worktree": null,
       "completedAt": "2026-06-02T21:44:05.780Z"
+    },
+    {
+      "runId": "20260602T215336Z-13-T5",
+      "taskId": "13.T5",
+      "status": "done",
+      "startedAt": "2026-06-02T21:53:36.445Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T23:53:36.445Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T21:59:31.245Z"
     }
   ],
   "activeRoute": {
-    "status": "active",
-    "createdAt": "2026-06-02T21:00:44.961Z",
-    "updatedAt": "2026-06-02T21:00:44.961Z",
-    "taskIds": [
-      "13.T4",
-      "14.T5",
-      "11.T4",
-      "13.T5"
-    ],
-    "totalWeight": 7,
-    "taxingLevel": "balanced",
+    "status": "empty",
+    "createdAt": "2026-06-02T22:02:28.168Z",
+    "updatedAt": "2026-06-02T22:02:28.168Z",
+    "taskIds": [],
+    "totalWeight": 0,
+    "taxingLevel": "light",
     "weightBudget": 8,
-    "modeHints": {
-      "13.T4": "in-session",
-      "14.T5": "in-session",
-      "11.T4": "in-session",
-      "13.T5": "in-session"
-    },
+    "modeHints": {},
     "rationale": [
-      "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 7/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "No pending task is dependency-ready under the current ledger."
     ]
   }
 }
