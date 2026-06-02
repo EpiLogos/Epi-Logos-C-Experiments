@@ -1,0 +1,40 @@
+{
+  "name": "@pratibimba/omnipanel-shell",
+  "version": "0.1.0",
+  "description": "The canonical `/` command membrane for the Pratibimba System Theia shell. Wraps Theia's CommandRegistry into the OmniPanel surface — summons commands across both workspace layouts, routes layout-summon intents, and shows kernel-bridge readiness inline. Migration target for Body/S/S3/epi-app/renderer/components/OmniPanel.tsx + omni/* sub-tree and the Tauri OmniPanel.tsx slim port. Track 05 T2 scaffold; T5 promotes to full cross-layout intent routing.",
+  "license": "MIT",
+  "files": ["lib", "src", "style"],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "keywords": ["theia-extension", "epi-logos", "pratibimba", "omnipanel", "command-membrane"],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@pratibimba/pratibimba-layouts": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "framer-motion": "^12.29.0",
+    "date-fns": "^4.1.0",
+    "zustand": "^4.4.7",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build"
+  }
+}

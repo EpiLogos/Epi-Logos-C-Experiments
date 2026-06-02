@@ -1,0 +1,28 @@
+{
+  "name": "@pratibimba/pratibimba-layouts",
+  "version": "0.1.0",
+  "description": "Workspace-layout contributions for the Pratibimba System Theia shell. Provides daily-0-1.layout (first-mounted lean free-flow layout) and ide-deep.layout (summoned heavy IDE workbench) plus a LayoutSwitcher service that toggles between them via Theia's LayoutRestorer / ApplicationShell. Track 05 T2 deliverable.",
+  "license": "MIT",
+  "files": ["lib", "src"],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "keywords": ["theia-extension", "epi-logos", "pratibimba", "layouts"],
+  "dependencies": {
+    "@theia/core": "1.56.0"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build"
+  }
+}

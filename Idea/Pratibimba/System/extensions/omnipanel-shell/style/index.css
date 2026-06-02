@@ -1,0 +1,126 @@
+/* OmniPanel Theia widget styles — Track 05 T2 scaffold.
+ *
+ * Style port from Body/S/S3/epi-app/renderer/components/omni/* (which uses
+ * Tailwind + shadcn primitives) lands as wholesale port during T2 → T5.
+ * The temporary styles below are Theia-native sufficient to render the
+ * scaffold; final styles are absorbed during the omni/ui/* wholesale port.
+ */
+
+.pratibimba-omnipanel {
+    height: 100%;
+    overflow: hidden;
+}
+
+.pratibimba-omnipanel__root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--theia-editor-background);
+    color: var(--theia-editor-foreground);
+}
+
+.pratibimba-omnipanel__header {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--theia-editorWidget-border);
+    flex-shrink: 0;
+}
+
+.pratibimba-omnipanel__layout-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pratibimba-omnipanel__layout-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--theia-descriptionForeground);
+}
+
+.pratibimba-omnipanel__layout-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--theia-button-border);
+    background: var(--theia-button-secondaryBackground);
+    color: var(--theia-button-secondaryForeground);
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.pratibimba-omnipanel__layout-btn:hover:not(:disabled) {
+    background: var(--theia-button-secondaryHoverBackground);
+}
+
+.pratibimba-omnipanel__layout-btn--active {
+    background: var(--theia-button-background);
+    color: var(--theia-button-foreground);
+    border-color: var(--theia-button-background);
+}
+
+.pratibimba-omnipanel__layout-btn:disabled {
+    opacity: 0.7;
+    cursor: default;
+}
+
+.pratibimba-omnipanel__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--theia-editorWidget-border);
+    flex-shrink: 0;
+    overflow-x: auto;
+}
+
+.pratibimba-omnipanel__tab {
+    padding: 8px 14px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--theia-foreground);
+    cursor: pointer;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.pratibimba-omnipanel__tab:hover {
+    background: var(--theia-list-hoverBackground);
+}
+
+.pratibimba-omnipanel__tab--active {
+    border-bottom-color: var(--theia-focusBorder);
+    color: var(--theia-focusBorder);
+}
+
+.pratibimba-omnipanel__content {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+}
+
+.pratibimba-omnipanel__tab-title {
+    margin-top: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.pratibimba-omnipanel__migration-note {
+    background: var(--theia-editorInfo-background, transparent);
+    border-left: 3px solid var(--theia-editorInfo-foreground, var(--theia-focusBorder));
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.pratibimba-omnipanel__migration-note code {
+    background: var(--theia-textBlockQuote-background);
+    padding: 1px 4px;
+    border-radius: 2px;
+}
+
+.pratibimba-omnipanel__migration-detail {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    line-height: 1.5;
+}

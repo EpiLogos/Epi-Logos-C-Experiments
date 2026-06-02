@@ -22,6 +22,7 @@ Turn the settled M'/S' canon into an engineering build program:
 - [[2026-05-31-theia-ide-shell-and-m-plugin-architecture]] - `docs/plans/2026-05-31-theia-ide-shell-and-m-plugin-architecture.md`
 - [[alpha_quaternionic_integration_across_M_stack]] - `Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md`, especially section 11
 - [[m5-prime-autoresearch-self-improvement-loop]] and the six `epii-operational-capacities` specs under `Idea/Bimba/Seeds/M/M5'/`
+- [[S4-5-SPEC]] and [[S4-5'-SPEC]] under `Idea/Bimba/Seeds/S/S4/`, plus the live Aletheia contract/agent/cluster files under `Body/S/S4/ta-onta/S4-5p-aletheia/`. These are the authority for Aletheia's differentiated subagents, tool/skill expertise, Moirai Night' modes, thought/crystallisation routing, and S4.5 -> S5 disclosure lineage.
 - [[S0-S0i-CLI-CORE]], [[S2-S2i-GRAPH]], [[S3-S3i-GATEWAY]], and [[S5-S5i-SYNC]] under `docs/specs/S/`
 - [[2026-05-22-vak-as-operational-substrate]] - `docs/superpowers/plans/2026-05-22-vak-as-operational-substrate.md` (all 10 chips closed; three-way parity `capability-matrix.json` ↔ runtime ↔ `anima.md` test-locked by `test_agent_capability_gates_anima_tools_matches_anima_md_tools`). This is the upstream-completed work that Tracks 01 / 04 / 09 extend rather than restart. See `IOD-17` in Track 11 for governance authority.
 - The implementation surfaces under `Body/S/S0`, `Body/S/S2`, `Body/S/S3`, `Body/S/S5`, and `Body/M/epi-tauri`. The canonical agent-tool governance artifact is `Body/S/S4/plugins/pleroma/capability-matrix.json` with mirror views at `Body/S/S4/pi-agent/agents/anima.md` frontmatter and runtime `animaDefaultTools`; `Body/S/S4/ta-onta/S4-4p-anima/CONTRACT.md` is historical context (8-tool inventory, stale relative to the test-locked 15-tool parity) — not authority.
@@ -34,13 +35,14 @@ Turn the settled M'/S' canon into an engineering build program:
 | [[02-s2-bimba-map-population]] | M5-2 | Neo4j/bimba-map schema convergence, population, n10s/GDS readiness, coordinate-native graph APIs | M0/M5 graph views, 4/5/0, evidence |
 | [[03-s3-gateway-and-spacetimedb]] | M5-2 | Gateway RPC/event parity, native SpaceTimeDB subscriptions, shared-cosmos/session stream | Kernel bridge, `/body`, Theia, agents |
 | [[04-s5-autoresearch-and-review-extension]] | M5-2 | Typed S5 candidates, routes, review gates, continuity, dry-run promotion, frontend-safe DTOs | Agentic Control Room, M5 extension, plugins |
-| [[05-tauri-ide-shell-and-pratibimba-system]] | M5-3 | One Tauri app with `/body` plus Theia `/pratibimba/system`, M0/M5 IDE chrome, bridge adapter | Tracks 07-09 |
-| [[06-zero-one-surface-evolution]] | M5-3 | Existing `/body` shell evolves into lite bridge consumer with review alerts and IDE intents | Daily flow, deep links, 4/5/0 |
+| [[05-tauri-ide-shell-and-pratibimba-system]] | M5-3 | **Theia-only shell** at [[/pratibimba/system]] with 0/1 daily layout + deep IDE layout; M0/M5 IDE chrome; kernel-bridge as first-loaded Theia extension (backend module → external [[Body/S/S3/gateway]] over WS/JSON-RPC); Electron canonical desktop + browser-mode optional for CI/Docker. Per canon §2-§3 Theia-only revision; PRD-01/02/03 resolved. | Tracks 07-09 |
+| [[06-zero-one-surface-evolution]] | M5-3 | **Collapsed into Track 05** as the 0/1-daily-layout-build sub-tranche. Existing [[Body/M/epi-tauri]] code is migration source (typed clients → Theia services; M-domain components → contributions in matching M-extensions; Tauri Rust commands → Theia backend extensions or direct gateway reach). Retained as historical context for Evolution-Not-Replacement discipline + service-client inventory. | — (work executes under Track 05) |
 | [[07-m-extension-individual-tracks]] | M5-3 | Six individual Theia M extensions, each consuming bridge/S-stack contracts | Integrated plugins, evidence, control room |
 | [[08-integrated-plugin-tracks]] | M5-3 | Integrated 1-2-3 cosmic-engine plugin and 4/5/0 user-experience plugin | Review/evidence, agentic mediation |
 | [[09-agentic-mediation-and-operational-capacities]] | M5-4 | VAK routing, Anima orchestration, bounded agent runs, six operational-capacity workflows | `/body`, Theia Control Room, S5 review |
 | [[10-cross-cutting-integration-and-milestones]] | Cross-cutting | Integration ladder, demos, alpha gate, and dependency proof points | All tracks |
 | [[11-open-architectural-decisions]] | Cross-cutting | Decision register for prototype, implementation-owner, user-final, dependency, and canon-drift questions | All tracks |
+| [[13-s-sprime-modularity-and-s0-membrane-cleanup]] | Cross-cutting / post-alpha | S0 membrane cleanup, Body-native service ownership extraction, parity recast, and guardrails across S1/S2/S3/S4/S5 | Post-alpha replan, future M-dev routing |
 
 ## Architectural Keystones
 
@@ -50,6 +52,7 @@ Turn the settled M'/S' canon into an engineering build program:
 - **S2 Owns Graph Law:** Graph viewers, coordinate trees, GDS overlays, and graph evidence consume S2 APIs and must not reconstruct coordinate law locally.
 - **S5 Owns Governance State:** Review, autoresearch, routing, gates, evidence, dry-run promotion, and continuity are persisted S5 state; UI counts and agent claims must come from real DTOs.
 - **M5-4 Is Governed Mediation:** Agents route through VAK/Anima and bounded capabilities. Human-required, deployment, recursive, privacy, and user-final gates are not bypassable.
+- **Aletheia Is Differentiated Lineage, Not A Flat Label:** S5 may keep coarse `Aletheia` source compatibility, but M5-4 acceptance must preserve the S4.5 specialist lineage for Anansi, Moirai modes, Janus, Mercurius, Agora, Zeithoven, tool refs, skill refs, namespace refs, DAY/NOW/session refs, readiness, and privacy class.
 - **Privacy Is A Release Gate:** Protected Nara/Graphiti bodies, raw identity data, private profile internals, and protected personal fields remain local/protected unless governed capabilities explicitly open safe handles.
 - **Real Functionality Tests Only:** Mock-only tests, fake review counts, placeholder panels, and handcrafted happy-path backend payloads do not satisfy readiness.
 
@@ -115,7 +118,7 @@ Immediate engineering tranches:
 
 - Track 07 T0-T10: shared extension contracts and first real contributions for `m0-anuttara`, `m1-paramasiva`, `m2-parashakti`, `m3-mahamaya`, `m4-nara`, and `m5-epii`.
 - Track 08 T0-T9: integrated plugin composition contracts, 1-2-3 cosmic engine, 4/5/0 protected recognition surface, evidence hooks, deep links, performance/accessibility/privacy gates.
-- Track 09 T5-T10: Anuttara/Parashakti deterministic capacity slices, Paramasiva/Mahamaya training-runtime slices, Nara Anima-primary voice governance, Epii-on-Epii recursive governance, `/body` and Theia mediation surfaces, and full M5-4 release gate.
+- Track 09 T5-T10: Anuttara/Parashakti deterministic capacity slices, Paramasiva/Mahamaya training-runtime slices, Nara Anima-primary voice governance, Epii-on-Epii recursive governance, Aletheia expert-lineage handoff, `/body` and Theia mediation surfaces, and full M5-4 release gate.
 - Track 10 T6-T9: six-extension acceptance, integrated plugin acceptance, M5-4 E2E, full alpha gate and replan.
 
 Primary demo:
@@ -126,7 +129,27 @@ Exit criteria:
 
 - All six subsystem tracks have first real bridge-backed contributions.
 - Both integrated plugins compose individual extension contracts rather than duplicating backend or extension logic.
-- All six operational capacities have at least one real mediated readiness path into S5 review/autoresearch.
+- All six operational capacities have at least one real mediated readiness path into S5 review/autoresearch, and Aletheia disclosures carry differentiated expert lineage rather than generic source-only provenance.
+
+### Phase 4 - S/S' Modularity Cleanup And S0 Membrane Hardening
+
+Immediate engineering tranches:
+
+- Track 13 T0-T1: inventory S0's current downstream touchpoints and recast ambiguous `Mirror`/`Compatibility` parity into explicit adapter, compatibility, temporary-host, or missing states.
+- Track 13 T2-T4: move S3 dispatch, gateway runtime, and SpaceTimeDB subscription law behind S3-owned route/runtime contracts while preserving `epi gate` as the operator membrane.
+- Track 13 T5-T8: harden S2 graph, S4 orchestration, S5 governance, and S1/Hen write-gate boundaries so S0 forwards to Body-native owners instead of duplicating service law.
+- Track 13 T9-T10: add cross-layer guardrails, release-gate evidence, and runbook updates so future `/m-dev` work routes to S1/S2/S3/S4/S5 owners first and to S0 only for CLI/process/adapter responsibilities.
+
+Primary demo:
+
+- The same alpha scenario still runs through `epi`, but route ownership, graph law, gateway runtime law, orchestration law, and review/autoresearch law are proven by Body-native owner tests; S0 presents the operator membrane without duplicating downstream service authority.
+
+Exit criteria:
+
+- Every S0 adapter has a Body-native authority path and test evidence.
+- No ambiguous `Mirror` status remains without adapter/extraction semantics.
+- S3 gateway and SpaceTimeDB subscription law are no longer split across S0 and S3 without an explicit temporary-host record.
+- Future `/m-dev` work orders route implementation to S1/S2/S3/S4/S5 owners first, and to S0 only for CLI, startup, compatibility, or gateway-adapter work.
 
 ## Dependencies
 
@@ -163,6 +186,13 @@ flowchart TD
   Plugins --> Alpha
   Body --> Alpha
   Ide --> Alpha
+
+  Alpha --> Cleanup["Track 13 S/S' Modularity Cleanup"]
+  S0 --> Cleanup
+  S2 --> Cleanup
+  S3 --> Cleanup
+  S5 --> Cleanup
+  Agents --> Cleanup
 ```
 
 Critical dependency edges:
@@ -172,6 +202,7 @@ Critical dependency edges:
 - Track 04 typed S5 state precedes Agentic Control Room, M5 extension, integrated-plugin evidence hooks, and operational M5-4 authority.
 - Track 05 runtime decisions precede Track 07/08 package skeletons, deep links, workspace persistence, and one-app acceptance.
 - Track 09 can start contract and registry work early, but operational agent runs wait for S5 governance and bridge capabilities.
+- Track 13 should run after alpha/replan evidence exists, but T13.T0/T13.T1 inventory and parity recast may start earlier if they do not conflict with active Track 03 S3 extraction work.
 
 ## Immediate Actionable Work
 
@@ -183,6 +214,7 @@ The first implementation sprint should avoid pretty surfaces and attack the seam
 - Reconcile S2 schema/seed relation gaps, `#` root mapping, and baseline coordinate-native graph payloads.
 - Extend S5 typed candidate/review/evidence DTOs so Theia and agents have real state to display and deposit into.
 - Build the first shared bridge subscriber that can feed both `/body` lite mode and a Theia test extension from one source.
+- After alpha evidence stabilizes, run Track 13 to prevent S0's current gateway/graph/orchestration compatibility adapters from fossilizing as duplicate S1/S2/S3/S4/S5 service implementations.
 
 ## Open Decisions
 
@@ -209,3 +241,4 @@ Deferred canon-drift questions such as M0/M1 `+1`, M3 `16+1`, M2 planet-count se
 - Every M5-4 workflow routes through VAK/Anima, bounded capabilities, persisted S5 evidence/review, and explicit human/privacy gates.
 - All release gates require real local services or captured-live fixtures generated by those services; mock-only and placeholder implementation paths are not accepted.
 - Open decisions are surfaced with validation paths and consequences, not silently resolved inside individual tracks.
+- The post-alpha cleanup phase proves S0 remains the pass-through membrane while S1/S2/S3/S4/S5 Body-native owners retain service authority.

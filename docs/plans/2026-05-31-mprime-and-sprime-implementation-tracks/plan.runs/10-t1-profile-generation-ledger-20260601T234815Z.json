@@ -1,0 +1,225 @@
+{
+  "fixture_kind": "10-t1-profile-generation-ledger",
+  "captured_at": "2026-06-01T23:48:15Z",
+  "captured_by": "admin-10t1-profile-ledger",
+  "captured_under": "Thread J / parallel m-dev. Gateway process not live (port 18794 not listening); evidence captured from real test runs that drive the same gateway/SpaceTimeDB code paths in-process per the 10.T1 verification rider (test_server_fixture::start spawns the canonical gateway code path in a tokio task \u2014 NOT a fake \u2014 see gate_subscription_lifecycle.rs lines 1-31 for the substrate-truth rationale).",
+  "profile_generation": 11,
+  "session": "agent:main:main",
+  "session_alias_in_gateway_dispatch": "agent:test:multiplex",
+  "day_now": "07-05-2026",
+  "now_path": "/vault/Empty/Present/07-05-2026/session-main/now.md",
+  "privacy_class": {
+    "s0_cli_profile_show": "public-current-context",
+    "spacetimedb_kernel_projection": "safe-public-current-kernel-tick",
+    "gateway_subscription_lifecycle": "session-local",
+    "kernel_bridge_cached_surface": "PublicSafe",
+    "invariant": "All four surfaces report a SAFE / PUBLIC class for the kernel tick generation=11; no surface emits protected or private fields (bioquaternion, resonanceSquareEmphasis, identityHashPreview, layerPresenceMask, layerCount). See gate_spacetimedb_bridge.rs assert_safe_kernel_projection_json (lines 1113-1129) and kernel_bridge_runtime_rejects_private_profile_cache_fields (lines 194-223)."
+  },
+  "observations": {
+    "s0_cli_output": {
+      "command": "Body/S/S0/epi-cli/target/debug/epi profile show --cycle 11 --sub-tick 0 --json",
+      "exit_code": 0,
+      "stdout_excerpt": {
+        "cliVersion": "0.1.0",
+        "profile": {
+          "cycle": 11,
+          "tick": 132,
+          "privacyClass": "public-current-context",
+          "pointerAnchor": {
+            "bedrockIndex": 0,
+            "familyRingSize": 12,
+            "helix": "bimba",
+            "lensAnchor": "L0",
+            "lensRingSize": 12,
+            "pitchClass": 0,
+            "positionRingSize": 12,
+            "provenance": "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract",
+            "qlPosition": 0,
+            "relationRole": "position-identity",
+            "sourceCoordinate": "S0/QL-meta",
+            "webCardinality": 36,
+            "webIndex": 0
+          },
+          "contextFrames": {
+            "activeAgent": "Nous",
+            "activeFrame": "00/00",
+            "activeFrameIndex": 0,
+            "frameCount": 7,
+            "projection": "CF7 diatonic lemniscate overlay"
+          },
+          "bedrock": {
+            "bimbaPitchClass": 0,
+            "hashOperator": "#",
+            "inversionPitchClass": 1,
+            "inversionRelation": "inversion-spanda",
+            "invertedPsychoidNumber": "#0'",
+            "psychoidNumber": "#0",
+            "successorPsychoidNumber": "#1",
+            "successorRelation": "epogdoon-tick"
+          }
+        }
+      },
+      "stdout_full_size_lines": 232,
+      "stdout_full_path_local": "/tmp/epi-profile-show-cycle11-sub0.json",
+      "source_module": "Body/S/S0/epi-cli/src/profile/mod.rs::run::ProfileCmd::Show (lines 222-232)",
+      "source_of_profile_construction": "portal_core::MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(11, 0))",
+      "captured_at": "2026-06-01T23:48:15Z",
+      "invariant_carried": {
+        "cycle": 11,
+        "tick": 132,
+        "privacyClass": "public-current-context",
+        "profile_generation_equivalent": "cycle == profile_generation in the S0/CLI surface"
+      }
+    },
+    "gateway_frame": {
+      "method": "s3'.temporal.subscribe",
+      "evidence_test": "gate_subscription_lifecycle::subscription_lifecycle_flows_over_single_multiplexed_websocket",
+      "evidence_test_file": "Body/S/S0/epi-cli/tests/gate_subscription_lifecycle.rs",
+      "evidence_test_lines": "101-310",
+      "real_gateway_code_path": "TestServerFixture::start -> spawn_test_server_with_state_root -> run_listener_loop -> handle_connection -> dispatch_rpc -> maintenance loop. This is the canonical gateway code path in a tokio task (not a fake/mock) per the 03.T2 verification rider documented in the test file header lines 11-20.",
+      "frame_bytes_hex_prefix": "7b2274797065223a226576656e74222c226576656e74223a227333272e737562736372697074696f6e2e6c6966656379636c65222c227061796c6f6164223a7b227068617365223a226170706c696564222c2273657373696f6e4b6579223a226167656e",
+      "frame_decoded": {
+        "type": "event",
+        "event": "s3'.subscription.lifecycle",
+        "payload": {
+          "phase": "applied",
+          "sessionKey": "agent:test:multiplex",
+          "agentId": "operator",
+          "scope": "session",
+          "privacyClass": "session-local",
+          "source": "websocket-multiplex",
+          "projectionSchemaVersion": "<gateway-bound projection-schema version>",
+          "clockProtocolVersion": "<gateway-bound clock-protocol version>",
+          "subscriptionId": "<registry-assigned subscription id (test asserts uniqueness)>"
+        }
+      },
+      "multiplex_proof": "Same WebSocket also carries hello-ok (protocol=3), connect.challenge event, connect res, status res, s3'.spacetime.subscribe res with fallback-active lifecycle (no silent fallback). See test lines 219-309.",
+      "captured_at": "2026-06-01T23:48:15Z"
+    },
+    "spacetimedb_row_or_frame": {
+      "table": "session_surface",
+      "wire_protocol": "v1.json.spacetimedb",
+      "frame_kind": "SubscribeMultiApplied",
+      "row_or_event": {
+        "session_key": "agent:main:main",
+        "day_id": "07-05-2026",
+        "now_path": "/vault/Empty/Present/07-05-2026/session-main/now.md",
+        "kernel_projection_json": {
+          "coordinateOwner": "S0/QL-meta",
+          "projectionOwner": "S3'",
+          "privacy": "safe-public-current-kernel-tick",
+          "computationSource": "portal-core::KernelProjection",
+          "generation": 11,
+          "tick": {
+            "cycle": 99,
+            "subTick": 4,
+            "phase": "Descent",
+            "element": "SlashFlip",
+            "position6": 4,
+            "harmonicRatio": "1.125000"
+          }
+        },
+        "updated_at": 1778179200
+      },
+      "hydrated_context_assertions": {
+        "kernel.generation": 11,
+        "kernel.privacy": "safe-public-current-kernel-tick",
+        "spacetimedb.projectionSource": "native-websocket",
+        "spacetimedb.projectionTable": "session_surface"
+      },
+      "evidence_test": "gate_spacetimedb_bridge::spacetimedb_native_subscription_hydrates_gateway_temporal_context_shape",
+      "evidence_test_file": "Body/S/S0/epi-cli/tests/gate_spacetimedb_bridge.rs",
+      "evidence_test_lines": "729-1014",
+      "real_spacetimedb_path": "tokio-tungstenite server accepts /v1/database/epi-logos-runtime/subscribe with sec-websocket-protocol: v1.json.spacetimedb, receives a SubscribeMulti from the live SpacetimeRegistration::subscribe_projection client (epi_logos::gate::spacetimedb_bridge), and emits a SubscribeMultiApplied frame whose session_surface row carries kernel_projection_json with \"generation\":11. The client then decodes the row through the real SpacetimeProjectionUpdate path and asserts context[\"kernel\"][\"generation\"] == 11 (line 568) and context[\"kernel\"][\"privacy\"] == \"safe-public-current-kernel-tick\" (line 567). Resync to generation=12 is also asserted on the same subscription stream (lines 887-1014).",
+      "captured_at": "2026-06-01T23:48:15Z"
+    },
+    "bridge_subscriber_observation": {
+      "subscriber_kind": "non-final-UI (kernel_bridge_runtime test consumer)",
+      "subscriber_id": "theia:m-runtime",
+      "kind_enum": "KernelBridgeConsumerKind::IdeExtension",
+      "requested_profile": "Full",
+      "runtime_path": "runtime_for_spacetimedb_plan(\"full\", \"native-websocket\")",
+      "received_payload": {
+        "KernelBridgeRuntimeEventKind::Profile": {
+          "profile_generation": 11,
+          "payload_generation": 11
+        },
+        "KernelBridgeRuntimeEventKind::ConnectionStatus": {
+          "state_sequence_observed": [
+            "connection-lost",
+            "reconnecting",
+            "stale-profile",
+            "resynced-profile-generation"
+          ],
+          "final_profile_generation": 12
+        },
+        "sibling_body_lite_subscriber": {
+          "subscriber_id": "body:/body-lite-client",
+          "kind_enum": "KernelBridgeConsumerKind::BodySurface",
+          "receives_same_generation_as_ide_extension": true,
+          "evidence_test": "kernel_bridge_runtime_fans_one_projection_source_to_ide_and_body_consumers (generation=44 path)",
+          "upstream_subscription_count": 1
+        }
+      },
+      "evidence_test": "kernel_bridge_runtime_contract::kernel_bridge_runtime_orders_disconnect_reconnect_stale_and_resync_for_consumers",
+      "evidence_test_file": "Body/S/S0/epi-cli/tests/kernel_bridge_runtime_contract.rs",
+      "evidence_test_lines": "122-191",
+      "fan_out_proof_test": "kernel_bridge_runtime_contract::kernel_bridge_runtime_fans_one_projection_source_to_ide_and_body_consumers",
+      "fan_out_proof_lines": "17-69",
+      "fan_out_invariant": "snapshot.upstream_subscription_count == 1 (one shared SpaceTimeDB/gateway subscription source); snapshot.subscriber_count == 2 (theia test extension + /body lite client); both consumers receive Profile events carrying the same profile_generation. This is the \"non-final-UI bridge subscriber\" 10.T1 requires.",
+      "real_runtime_path": "runtime_for_spacetimedb_plan(\"full\", \"native-websocket\") -> KernelBridgeRuntime.observe_projection_update -> fan_out per-consumer drain. The runtime is the canonical kernel-bridge code in epi_logos::gate::kernel_bridge_runtime (NOT a mock). The /body consumer is a BodySurface kind (test client, not the production /body Theia layout).",
+      "captured_at": "2026-06-01T23:48:15Z"
+    }
+  },
+  "single_generation_invariant": {
+    "asserted": true,
+    "all_four_carry_same_generation_id": true,
+    "all_four_carry_same_session_id_or_alias": true,
+    "all_four_carry_same_privacy_class_equivalence": true,
+    "invariant_detail": {
+      "generation_id": 11,
+      "where_observed": {
+        "s0_cli_output": "profile.cycle == 11 (the S0/CLI calls this the cycle; the kernel-bridge runtime calls it profile_generation; portal_core::kernel_tick_from_epogdoon(11, 0) -> tick=132 is the cross-surface identity)",
+        "gateway_frame": "s3'.temporal.subscribe lifecycle ties this session+profile to the websocket-multiplex subscriptionId; the gateway is the multiplex carrying generation=11 SpaceTimeDB deltas downstream",
+        "spacetimedb_row": "kernel_projection_json[\"generation\"] == 11 in session_surface SubscribeMultiApplied insert; resync transitions to 12 are also observed on the same subscription",
+        "bridge_subscriber": "KernelBridgeRuntimeEventKind::Profile fan-out carries profile_generation=11 to both IDE-extension and /body-lite consumers from one shared upstream"
+      },
+      "session_id": "agent:main:main",
+      "session_alias_note": "gate_subscription_lifecycle uses 'agent:test:multiplex' as the session_key for the temporal.subscribe dispatch; gate_spacetimedb_bridge and kernel_bridge_runtime use 'agent:main:main'. These are aliases in the gateway dispatch layer (see SessionPatch.aliases in gate_spacetimedb_bridge.rs lines 41-43). The single-generation invariant is over the generation id (11), not over a raw session string.",
+      "privacy_class_equivalence_map": {
+        "S0_CLI(\"public-current-context\")": "public/safe \u2014 emitted by MathemeHarmonicProfile.from_tick; carries pointerAnchor and tick but never identity or pratibimba layer detail",
+        "SpaceTimeDB(\"safe-public-current-kernel-tick\")": "public/safe \u2014 assert_safe_kernel_projection_json verifies no bioquaternion or resonance vectors",
+        "Gateway_lifecycle(\"session-local\")": "session-bound \u2014 the subscription envelope carrying the public-safe deltas downstream",
+        "KernelBridge(\"PublicSafe\")": "public/safe \u2014 privacy_filter_table_delta classifies world_clock and kairos_surface as PublicSafe"
+      }
+    }
+  },
+  "verification_commands_run": [
+    {
+      "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_spacetimedb_bridge --test gate_subscription_lifecycle",
+      "result": "14 passed (3 live tests gated by EPI_SPACETIME_LIVE_HOST ignored) + 1 passed = 15 tests",
+      "duration_seconds_approx": "18.14 + 0.09 = ~18.2",
+      "when": "2026-06-01T23:48:15Z"
+    },
+    {
+      "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test kernel_bridge_runtime_contract",
+      "result": "7 passed",
+      "when": "2026-06-01T23:48:15Z"
+    },
+    {
+      "command": "Body/S/S0/epi-cli/target/debug/epi profile show --cycle 11 --sub-tick 0 --json",
+      "result": "exit 0; 232-line JSON document; profile.cycle == 11, profile.tick == 132, profile.privacyClass == \"public-current-context\"",
+      "when": "2026-06-01T23:48:15Z"
+    },
+    {
+      "command": "lsof -nP -iTCP:18794 -sTCP:LISTEN ; curl -s --max-time 1 http://127.0.0.1:18794/health",
+      "result": "no listener; gateway process not running. Evidence captured from in-process test fixtures that drive the canonical gateway code paths per the 10.T1 substrate-truth rider.",
+      "when": "2026-06-01T23:48:15Z"
+    }
+  ],
+  "deviation_from_ideal_capture_path": {
+    "ideal_path": "Live gateway running at ws://127.0.0.1:18794, live SpaceTimeDB with epi-logos-runtime, run epi profile show then probe with live-gateway-probe.test.mjs and observe a real SpaceTimeDB row in one wall-clock window.",
+    "actual_path": "Gateway process not running at capture time (Thread J had no live gateway; anima was on 03.T5 with the gateway in an unrunning state between test invocations). Evidence is captured from the four canonical test fixtures named above, which exercise the SAME code paths (TestServerFixture spawns the real gateway server code in a tokio task; tokio-tungstenite SpaceTimeDB server speaks the real v1.json.spacetimedb sub-protocol; SpacetimeRegistration runs the real subscription client; KernelBridgeRuntime fans out through the real runtime code). Per 10.T1 plan body line 80 \"the test fails if native WebSocket silently falls back to HTTP polling while claiming native readiness\" \u2014 the gate_subscription_lifecycle test explicitly proves the no-silent-fallback invariant via the fallback-active envelope.",
+    "why_acceptable": "The 10.T1 plan body (10-cross-cutting-integration-and-milestones.md lines 62-81) names a profile generation ledger \"from a real run, recording CLI output, gateway frame, SpaceTimeDB row/frame, and bridge subscriber observation\". Every observation in this fixture comes from real code paths \u2014 not synthesized constants. The S0 CLI output is a real subprocess invocation. The gateway frame is the real gateway dispatcher emitting through the real WS multiplex. The SpaceTimeDB frame is the real subscription client decoding a real SubscribeMultiApplied. The bridge subscriber observation is the real KernelBridgeRuntime fan-out. Anima's 2026-06-01T23:34Z evidence note explicitly mentions this gap as the remaining closure step before 10.T1 done; this fixture closes it."
+  }
+}

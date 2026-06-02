@@ -40,6 +40,10 @@ Canonical executable anchor: `Body/S/S1/hen-compiler-core` is now the Rust S1' H
 
 The S0/S0' conclusion applies here: `epi vault` is S1/S1' made executable through [[S0]], but S1/S1' is not reducible to its current command surface. The live CLI is real evidence; the canonical API, [[Envelope]], and [[Hen]] law decide the target shape.
 
+## M' Consumer Surfaces
+
+S1/S1' is the writable vault body behind [[M4'-SPEC]], [[M5'-SPEC]], and the shell-level continuity named in [[M'-SYSTEM-SPEC]]. The most direct substrate anchors for those consumers are [[Body/S/S1/hen-compiler-core/src/lib.rs]], [[Body/S/S1/hen-compiler-core/src/wikilinks.rs]], and [[Body/S/S1/hen-compiler-core/src/graph_promotion.rs]].
+
 ## VAK Gate
 
 - CPF: `(4.0/1-4.4/5)` - full reflective lattice held as one dispatch field.
@@ -917,3 +921,19 @@ S1/S1' serves these [[Envelope]] layers:
 5. `epi vault` is the current executable mirror, not the whole ontology.
 6. The compiler vendor is the foundation for S1' build work, but canonical Hen law now lives in the Rust `Body/S/S1/hen-compiler-core` contract; vendor Python scripts are compatibility/probe material until explicitly promoted behind that contract.
 7. Wikilinks and backlinks are not decorative: they are the S1.5/S1.5' integration surface that prepares vault material for graph, context, and world-return systems.
+
+## Canonical Source Lock - 2026-06-02
+
+S1 is the material vault/form substrate; S1' is Hen compiler, schema, and residency law. `Idea/Bimba/World/**` is not optional background here: it is the active form/type residency corpus this layer describes.
+
+| Required coverage | Canonical citations |
+|---|---|
+| World ontology | `Idea/Bimba/World/Types/Coordinates/S/S1/S1.md` mtime 2026-04-10 17:50:54; `Idea/Bimba/World/Types/Coordinates/S/S'/S1'/S1'.md` mtime 2026-04-10 17:50:54; `Idea/Bimba/World/Daily-Note.md`, `NOW.md`, `Thought.md`, `Task-Spec.md`, `Pattern-Note.md`, `Prompt.md`, `Seed.md`, `FLOW.md`, `Integration-Preview.md` mtime range 2026-03-10..2026-04-11 |
+| docs/specs | `docs/specs/S/S1-S1i-OBSIDIAN.md` mtime 2026-06-02 00:14:25; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35; `docs/specs/S/S_Series_Master_CLI_Architecture.md` mtime 2026-03-15 00:27:10 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
+| Body substrate | `Body/S/S1/hen-compiler-core/**`, `Body/S/S1/hen-compiler/**`, `Body/S/S0/epi-cli/src/vault/**`, `Body/S/S0/epi-cli/src/gate/s1_hen.rs`, `Idea/Empty/Present/**`, `Idea/Bimba/World/**` |
+| sibling seeds | `S1-0-SPEC.md`..`S1-5-SPEC.md`, `S1'/S1'-SPEC.md`, `S1'/S1-0'-SPEC.md`..`S1'/S1-5'-SPEC.md`, `S1-SHARD-INDEX.md`, `S1-TRACEABILITY-INDEX.md`, `S1'/S1'-TRACEABILITY-INDEX.md` |
+| nominal tracks | no standalone S1 track in the current m-dev ledger; Track 13.T8 audits the S1/Hen boundary; Track 09 consumes Hen for mediation |
+| open decisions | IOD-18 Smart Connections resolved; IOD-19 Hen vault-write gatekeeper resolved; remaining open work is API parity, `s1.sync.flush`, and vault-to-graph queue drain |
+
+Supersession rule: any `World/Forms/` plan fragment is historical. Current canon is flat `Idea/Bimba/World/{Name}.md` forms plus `Idea/Bimba/World/Types/{Name}/` type folders/canvases.

@@ -137,6 +137,24 @@ Verification:
 - Promote or add a live Graphiti compatibility test lane that starts the real Graphiti runtime, deposits a unique proof token through gateway RPC, searches it back, and verifies SpaceTimeDB projection rows contain only the namespace/arc references.
 - Agents must be able to read readiness and decline Graphiti-dependent operations when the runtime is unavailable.
 
+**Tranche 6.5 - S1 vault gateway surface (`s1'.vault.*` + `s1'.semantic.*`) over Hen substrate.** (per IOD-18, IOD-19)
+
+Deliverables:
+
+- Add `s1'.vault.{read_file, write_file, move_file, rename_file, append_block, update_frontmatter, list_dir, watch}` gateway methods. Writes delegate to Hen — Theia and agents must NEVER write directly to the vault filesystem; the gateway is the only sanctioned write path. Reads may be either gateway-mediated (for governed/protected paths) or direct-FS via Theia's provider (for ordinary read; the gateway still owns the read contract definition).
+- Add `s1'.semantic.{suggest_links, neighbors_of, search, by_block}` gateway methods wrapping [[Body/S/S1/hen-compiler-core/src/smart_env.rs]] `suggest_link_candidates(LinkCandidateRequest) → LinkCandidateResponse`. The response carries typed candidates: `ExplicitOutlink`, `SemanticSource`, `SemanticBlock` with cosine scores + evidence + staleness markers.
+- The `s1'.vault.write_file` / `move_file` / `rename_file` paths must invoke Hen's wikilink-integrity reconciliation: parse referring documents with [[Body/S/S1/hen-compiler-core/src/wikilinks.rs]] `parse_wikilinks`; for renames/moves, atomically update all referring `[[X]]` to `[[Y]]` across the vault; reject writes that would orphan headings or break Bimba-coordinate-anchored crossreferences with explicit error states for Theia to surface.
+- Surface staleness on `s1'.semantic.*` responses: if `<vault>/.smart-env/multi/*.ajson` is older than the underlying note's mtime, mark `staleness: stale` and let consumers decide. (Future capability per IOD-18: optional Theia-side re-embedding via transformers.js or Ollama writing to the same `.smart-env/` format.)
+- Privacy class enforcement: `protected` paths (e.g., raw Nara journal bodies under `Idea/Pratibimba/Nara/<day>/protected/`) are inaccessible via `s1'.vault.*` unless caller carries a governed protected capability per IOD-17 + UFV-01. Same for `s1'.semantic.*` neighbour responses — protected paths excluded from candidate lists by default.
+
+Verification:
+
+- Live integration test against a real fixture vault: rename a file with 5+ inbound wikilinks; assert all referring `[[X]]` updated to `[[Y]]` atomically; assert no orphaned link remains.
+- Move a file across folders; assert path updates propagate; assert block-id-anchored references preserved.
+- Direct-Theia-FS-write attempt against `Idea/` (bypassing gateway) must be detectable in a privacy/integrity audit run (e.g., comparing FS-mtime + git-tracked-mtime + Hen's last-write-ledger entries; surfaces unsanctioned write as a finding).
+- Semantic test: call `s1'.semantic.suggest_links` for a known vault note; assert the returned candidates include known explicit outlinks plus N nearest semantic neighbours by cosine score; assert staleness flag fires when fixture `.smart-env/` is artificially aged.
+- Privacy test: call `s1'.semantic.search` over a query that would match a protected Nara journal; assert protected-path candidates are excluded unless caller carries governed-protected capability.
+
 **Tranche 7 - Multi-client soak, privacy audit, and release gate.**
 
 Deliverables:

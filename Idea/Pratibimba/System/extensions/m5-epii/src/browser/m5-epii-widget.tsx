@@ -17,7 +17,8 @@ import {
     EXTENSION_ID,
     PRIMARY_VIEW_ID,
     DECLARED_BLOCKERS,
-    PRIVACY_CLASS
+    PRIVACY_CLASS,
+    buildM5EpiiSurface
 } from '../common';
 
 @injectable()
@@ -75,6 +76,14 @@ export class M5EpiiWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         const provenance = `privacy=${PRIVACY_CLASS} | generation=${this.context.profileGeneration ?? '—'} | pointer=${this.context.pointerAnchor ?? '—'}`;
+        const epiiSurface = this.profile
+            ? buildM5EpiiSurface({
+                profile: this.profile,
+                readiness: this.readiness,
+                context: this.context,
+                emittedAt: Date.now()
+            })
+            : null;
         return (
             <div className="mext-widget-root">
                 <ReadinessBanner
@@ -100,6 +109,28 @@ export class M5EpiiWidget extends ReactWidget {
                             No MathemeHarmonicProfile available yet. The kernel-bridge is the
                             sole owner of this payload; this view will populate when the
                             shared adapter receives a generation update.
+                        </p>
+                    )}
+                </section>
+                <section className="mext-widget-detail">
+                    <h3>S5 Review and Spine</h3>
+                    {epiiSurface?.readiness.surfaceReady ? (
+                        <dl>
+                            <dt>Open reviews</dt>
+                            <dd>{String(epiiSurface.reviewWorkbench.open ?? 0)}</dd>
+                            <dt>Human gates</dt>
+                            <dd>{String(epiiSurface.reviewWorkbench.humanRequired ?? 0)}</dd>
+                            <dt>Dry-run plans</dt>
+                            <dd>{String(epiiSurface.reviewWorkbench.dryRunPlans ?? 0)}</dd>
+                            <dt>Artifact refs</dt>
+                            <dd>{epiiSurface.canonEvolutionBrowser.length}</dd>
+                        </dl>
+                    ) : (
+                        <p className="mext-widget-empty">
+                            Waiting for bridge-provided S5 review/autoresearch state.
+                            This surface renders review handles, dry-run plans, recursive
+                            gates, and artifact namespace refs; agents cannot finalize
+                            human-required or recursive gates.
                         </p>
                     )}
                 </section>

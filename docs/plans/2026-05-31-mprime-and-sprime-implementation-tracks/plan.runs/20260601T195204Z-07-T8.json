@@ -1,0 +1,35 @@
+{
+  "runId": "20260601T195204Z-07-T8",
+  "taskId": "07.T8",
+  "startedAt": "2026-06-01T19:52:04.167Z",
+  "owner": "codex",
+  "leaseExpiresAt": "2026-06-01T21:52:04.167Z",
+  "worktree": null,
+  "task": {
+    "id": "07.T8",
+    "trackId": "07",
+    "tranche": "T8",
+    "title": "`m5-epii` First Slice And Deepening Path",
+    "effort": null,
+    "file": "07-m-extension-individual-tracks.md",
+    "path": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/07-m-extension-individual-tracks.md",
+    "dependsOn": [
+      "07.T7"
+    ],
+    "writeScopes": [
+      "Idea/Pratibimba/System/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

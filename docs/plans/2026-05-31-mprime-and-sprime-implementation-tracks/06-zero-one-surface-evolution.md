@@ -1,4 +1,12 @@
-# Track 06 - Zero/One Surface Evolution Implementation Plan
+# Track 06 - Zero/One Daily Layout (collapsed into Track 05)
+
+> **STATUS (2026-06-01):** Tranches **T2-T8 superseded by Track 05 T2** per canon recast — see [[05-tauri-ide-shell-and-pratibimba-system]] preamble and §Architectural Keystones ("Existing Theia Plan Fold-In"). The ledger marks T2-T8 as `done` with evidence pointing at 05.T2 because the helper has no `superseded` status. **T0 and T1 are retained as historical record** — they landed real Tauri-side substrate work before the canon recast and stay `done` with their original evidence.
+>
+> **COLLAPSED into Track 05 per [[m5-prime-system-shape-and-tauri-ide-canon]] §2-§3 Theia-only revision.** The 0/1 daily surface is no longer a separate Tauri product; it is a **workspace layout mode inside the single Theia shell at [[/pratibimba/system]]**. The deliverables of this track are absorbed into Track 05 as the "0/1 daily layout build" sub-tranche set. The Evolution-Not-Replacement discipline still applies: existing [[Body/M/epi-tauri]] components are migration source into Theia frontend contributions — typed clients become Theia services, M-domain components become contributions in matching M-extensions, Tauri Rust commands either become Theia backend extensions or reach [[Body/S/S3/gateway]] directly. **Read this track as historical context for the Evolution-Not-Replacement discipline + service-client inventory + privacy boundaries; execute the work under Track 05.**
+
+---
+
+The original framing follows (preserved for the catalog of `Body/M/epi-tauri` migration-source items, which Track 05 inherits):
 
 This track evolves the existing `Body/M/epi-tauri` lightweight Tauri 0/1 daily surface into the lite consumer of the M5-2 S/S' stack and the launch surface for `/pratibimba/system`. It is not a greenfield frontend plan and not an IDE duplication plan: keep the useful `/body` shell, services, stores, Tauri commands, and tests, then replace local approximations with shared kernel-bridge, gateway, SpaceTimeDB, S2 graph, Nara, and S5 review contracts as those upstream tracks land.
 

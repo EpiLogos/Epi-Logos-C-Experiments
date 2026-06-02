@@ -14,7 +14,9 @@ use crate::{
 #[serde(rename_all = "snake_case", tag = "adapter")]
 pub enum NonAletheiaPipelineReport {
     AnuttaraShaclFailure(AnuttaraShaclFailureReport),
+    ParamasivaCorpusRefresh(ParamasivaCorpusRefreshReport),
     ParashaktiEmbeddingDrift(ParashaktiEmbeddingDriftReport),
+    MahamayaRuntimeTraining(MahamayaRuntimeTrainingReport),
     NaraDialogicVoiceSignal(NaraDialogicVoiceSignalReport),
     EpiiSelfObservation(EpiiSelfObservationReport),
 }
@@ -39,6 +41,49 @@ pub struct ParashaktiEmbeddingDriftReport {
     pub current_value: f64,
     pub minimum_acceptable_value: f64,
     pub window_id: String,
+    pub observed_at_ms: u64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fingerprint: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ParamasivaCorpusRefreshReport {
+    pub manifest_uri: String,
+    pub corpus_segment: String,
+    pub retrieval_metric_name: String,
+    pub current_metric_value: f64,
+    pub maximum_acceptable_value: f64,
+    pub new_derivational_tokens: usize,
+    pub synthetic_proof_review_uri: String,
+    pub gds_augmentation_uri: String,
+    pub observed_at_ms: u64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fingerprint: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum MahamayaRuntimeTier {
+    Sandbox,
+    FederatedAggregate,
+    GeneticProgram,
+    RewardModel,
+    RuntimePolicy,
+    PathwayTemplate,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MahamayaRuntimeTrainingReport {
+    pub report_uri: String,
+    pub training_round_id: String,
+    pub tier: MahamayaRuntimeTier,
+    pub reward_metric_name: String,
+    pub current_reward_score: f64,
+    pub minimum_reward_score: f64,
+    pub pathway_diversity_score: f64,
+    pub minimum_pathway_diversity: f64,
+    pub rollback_handle: String,
+    pub integration_impact_uri: String,
     pub observed_at_ms: u64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub fingerprint: Option<String>,
@@ -107,8 +152,14 @@ impl ImprovementStore {
             NonAletheiaPipelineReport::AnuttaraShaclFailure(report) => {
                 Some(candidate_from_anuttara_shacl(report)?)
             }
+            NonAletheiaPipelineReport::ParamasivaCorpusRefresh(report) => {
+                candidate_from_paramasiva_corpus_refresh(report)?
+            }
             NonAletheiaPipelineReport::ParashaktiEmbeddingDrift(report) => {
                 candidate_from_parashakti_drift(report)?
+            }
+            NonAletheiaPipelineReport::MahamayaRuntimeTraining(report) => {
+                candidate_from_mahamaya_runtime_training(report)?
             }
             NonAletheiaPipelineReport::NaraDialogicVoiceSignal(report) => {
                 candidate_from_nara_signal(report)?
@@ -267,6 +318,155 @@ fn candidate_from_parashakti_drift(
         },
         u128::from(report.observed_at_ms),
         SurfaceActor::Epii,
+        SensitivityClass::RequiresReview,
+    )?;
+    candidate.closure_kind = ClosureKind::Rehear;
+    candidate.ct_register = ContentTypeRegister::CT4b;
+    Ok(Some(candidate))
+}
+
+fn candidate_from_paramasiva_corpus_refresh(
+    report: ParamasivaCorpusRefreshReport,
+) -> Result<Option<ImprovementCandidate>, String> {
+    require_non_blank(&report.manifest_uri, "manifest_uri")?;
+    require_non_blank(&report.corpus_segment, "corpus_segment")?;
+    require_non_blank(&report.retrieval_metric_name, "retrieval_metric_name")?;
+    require_non_blank(
+        &report.synthetic_proof_review_uri,
+        "synthetic_proof_review_uri",
+    )?;
+    require_non_blank(&report.gds_augmentation_uri, "gds_augmentation_uri")?;
+    let has_metric_drift = report.current_metric_value > report.maximum_acceptable_value;
+    let has_corpus_growth = report.new_derivational_tokens > 0;
+    if !(has_metric_drift || has_corpus_growth) {
+        return Ok(None);
+    }
+    let mut candidate = ImprovementCandidate::from_propose(
+        ProposeRequest {
+            target_family: "M".to_owned(),
+            target_coordinate: "M1/Paramasiva".to_owned(),
+            direction: format!(
+                "Review Paramasiva corpus refresh for {} with {}={:.4} against {:.4}",
+                report.corpus_segment,
+                report.retrieval_metric_name,
+                report.current_metric_value,
+                report.maximum_acceptable_value
+            ),
+            source_review_item_id: None,
+            baseline: ArtifactRef {
+                path: report.manifest_uri.clone(),
+                coordinate: Some("M1/Paramasiva".to_owned()),
+                kind: Some("paramasiva_corpus_manifest".to_owned()),
+            },
+        },
+        TargetSubsystem::Paramasiva,
+        if has_corpus_growth {
+            ImprovementVectorKind::ParamasivaCorpusAddition {
+                corpus_segment: report.corpus_segment.clone(),
+            }
+        } else {
+            ImprovementVectorKind::ParamasivaRetrievalGapFilling
+        },
+        SurfacingPipelineId::ParamasivaDerivational,
+        ObservationEvidence {
+            source_uri: report.manifest_uri.clone(),
+            summary: format!(
+                "{}={:.4} max {:.4}; new_derivational_tokens={}; synthetic_proof={}",
+                report.retrieval_metric_name,
+                report.current_metric_value,
+                report.maximum_acceptable_value,
+                report.new_derivational_tokens,
+                report.synthetic_proof_review_uri
+            ),
+            observed_at: Some(u128::from(report.observed_at_ms)),
+            fingerprint: Some(report.fingerprint.unwrap_or_else(|| {
+                format!(
+                    "paramasiva-corpus:{}:{}",
+                    report.corpus_segment, report.observed_at_ms
+                )
+            })),
+        },
+        u128::from(report.observed_at_ms),
+        SurfaceActor::Sophia,
+        SensitivityClass::RequiresReview,
+    )?;
+    candidate.closure_kind = ClosureKind::Rehear;
+    candidate.ct_register = ContentTypeRegister::CT4b;
+    Ok(Some(candidate))
+}
+
+fn candidate_from_mahamaya_runtime_training(
+    report: MahamayaRuntimeTrainingReport,
+) -> Result<Option<ImprovementCandidate>, String> {
+    require_non_blank(&report.report_uri, "report_uri")?;
+    require_non_blank(&report.training_round_id, "training_round_id")?;
+    require_non_blank(&report.reward_metric_name, "reward_metric_name")?;
+    require_non_blank(&report.rollback_handle, "rollback_handle")?;
+    require_non_blank(&report.integration_impact_uri, "integration_impact_uri")?;
+    let has_reward_drift = report.current_reward_score < report.minimum_reward_score;
+    let has_diversity_drift = report.pathway_diversity_score < report.minimum_pathway_diversity;
+    if !(has_reward_drift || has_diversity_drift) {
+        return Ok(None);
+    }
+    let vector_kind = match report.tier {
+        MahamayaRuntimeTier::FederatedAggregate => {
+            ImprovementVectorKind::MahamayaFederatedRoundExecution
+        }
+        MahamayaRuntimeTier::GeneticProgram => {
+            ImprovementVectorKind::MahamayaSymbolicProgramPromotion {
+                program_id: report.training_round_id.clone(),
+            }
+        }
+        MahamayaRuntimeTier::PathwayTemplate => {
+            ImprovementVectorKind::MahamayaPathwayPatternIntegration {
+                pattern: report.training_round_id.clone(),
+            }
+        }
+        MahamayaRuntimeTier::Sandbox
+        | MahamayaRuntimeTier::RewardModel
+        | MahamayaRuntimeTier::RuntimePolicy => {
+            ImprovementVectorKind::MahamayaProcessRewardRefinement
+        }
+    };
+    let mut candidate = ImprovementCandidate::from_propose(
+        ProposeRequest {
+            target_family: "M".to_owned(),
+            target_coordinate: "M3/Mahamaya".to_owned(),
+            direction: format!(
+                "Review Mahamaya {:?} runtime learning update {} with rollback {}",
+                report.tier, report.training_round_id, report.rollback_handle
+            ),
+            source_review_item_id: None,
+            baseline: ArtifactRef {
+                path: report.report_uri.clone(),
+                coordinate: Some("M3/Mahamaya".to_owned()),
+                kind: Some("mahamaya_runtime_training_report".to_owned()),
+            },
+        },
+        TargetSubsystem::Mahamaya,
+        vector_kind,
+        SurfacingPipelineId::MahamayaCalculation,
+        ObservationEvidence {
+            source_uri: report.report_uri.clone(),
+            summary: format!(
+                "{}={:.4} min {:.4}; pathway_diversity={:.4} min {:.4}; rollback={}",
+                report.reward_metric_name,
+                report.current_reward_score,
+                report.minimum_reward_score,
+                report.pathway_diversity_score,
+                report.minimum_pathway_diversity,
+                report.rollback_handle
+            ),
+            observed_at: Some(u128::from(report.observed_at_ms)),
+            fingerprint: Some(report.fingerprint.unwrap_or_else(|| {
+                format!(
+                    "mahamaya-runtime:{:?}:{}",
+                    report.tier, report.training_round_id
+                )
+            })),
+        },
+        u128::from(report.observed_at_ms),
+        SurfaceActor::Sophia,
         SensitivityClass::RequiresReview,
     )?;
     candidate.closure_kind = ClosureKind::Rehear;

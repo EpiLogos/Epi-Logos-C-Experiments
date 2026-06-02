@@ -4,11 +4,11 @@ use std::process::Command;
 
 #[derive(Subcommand)]
 pub enum AppCmd {
-    /// Launch the built Epi-Logos Tauri app
+    /// Launch the built Epi-Logos Theia Electron app
     Launch,
-    /// Run the Tauri app in dev mode (cargo tauri dev)
+    /// Run the Theia Electron app in dev mode (pnpm run dev)
     Dev,
-    /// Build the Tauri app (cargo tauri build)
+    /// Build and package the Theia Electron app (pnpm run dist:dir)
     Build,
 }
 
@@ -35,7 +35,7 @@ pub fn dispatch(cmd: &AppCmd) {
         }
         AppCmd::Dev => {
             let source = app_source_dir(&repo_root);
-            let status = cargo_tauri_command(&source, "dev").status();
+            let status = pnpm_app_command(&source, "dev").status();
             match status {
                 Ok(s) if !s.success() => std::process::exit(s.code().unwrap_or(1)),
                 Err(e) => {
@@ -48,7 +48,7 @@ pub fn dispatch(cmd: &AppCmd) {
         }
         AppCmd::Build => {
             let source = app_source_dir(&repo_root);
-            let status = cargo_tauri_command(&source, "build").status();
+            let status = pnpm_app_command(&source, "dist:dir").status();
             match status {
                 Ok(s) if !s.success() => std::process::exit(s.code().unwrap_or(1)),
                 Err(e) => {
@@ -85,16 +85,28 @@ fn app_source_dir(repo_root: &Path) -> PathBuf {
     if let Some(path) = std::env::var_os("EPI_APP_SOURCE_DIR") {
         return PathBuf::from(path);
     }
-    repo_root.join("Body/M/epi-tauri")
+    repo_root.join("Idea/Pratibimba/System/electron-app")
 }
 
 fn app_bundle_path(repo_root: &Path) -> PathBuf {
-    app_source_dir(repo_root).join("src-tauri/target/release/bundle/macos/Epi-Logos.app")
+    if let Some(path) = std::env::var_os("EPI_APP_BUNDLE_PATH") {
+        return PathBuf::from(path);
+    }
+    let dist_subpath = if cfg!(target_os = "macos") {
+        "dist/mac/Pratibimba System.app"
+    } else if cfg!(target_os = "linux") {
+        "dist/linux-unpacked"
+    } else if cfg!(target_os = "windows") {
+        "dist/win-unpacked"
+    } else {
+        "dist"
+    };
+    app_source_dir(repo_root).join(dist_subpath)
 }
 
-fn cargo_tauri_command(source_dir: &Path, subcmd: &str) -> Command {
-    let mut command = Command::new("cargo");
-    command.arg("tauri").arg(subcmd).current_dir(source_dir);
+fn pnpm_app_command(source_dir: &Path, script: &str) -> Command {
+    let mut command = Command::new("pnpm");
+    command.arg("run").arg(script).current_dir(source_dir);
     command
 }
 
@@ -106,7 +118,7 @@ pub fn launch_command_for_repo(repo_root: &Path) -> Command {
         cmd.arg(bundle);
         cmd
     } else {
-        cargo_tauri_command(&app_source_dir(repo_root), "dev")
+        pnpm_app_command(&app_source_dir(repo_root), "dev")
     }
 }
 
@@ -116,27 +128,37 @@ mod tests {
     use std::path::Path;
 
     #[test]
-    fn app_source_targets_epi_tauri() {
+    fn app_source_targets_theia_electron() {
         let repo_root = Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent()
             .expect("repo root");
         let app_source = app_source_dir(repo_root);
         assert!(
-            app_source.ends_with("Body/M/epi-tauri"),
-            "expected epi-tauri source, got {}",
+            app_source.ends_with("Idea/Pratibimba/System/electron-app"),
+            "expected Theia electron-app source, got {}",
             app_source.display()
         );
     }
 
     #[test]
-    fn app_bundle_targets_tauri_bundle() {
+    fn app_bundle_targets_electron_dist() {
         let repo_root = Path::new(env!("CARGO_MANIFEST_DIR"))
             .parent()
             .expect("repo root");
         let bundle = app_bundle_path(repo_root);
+        let expected_tail = if cfg!(target_os = "macos") {
+            "dist/mac/Pratibimba System.app"
+        } else if cfg!(target_os = "linux") {
+            "dist/linux-unpacked"
+        } else if cfg!(target_os = "windows") {
+            "dist/win-unpacked"
+        } else {
+            "dist"
+        };
         assert!(
-            bundle.ends_with("src-tauri/target/release/bundle/macos/Epi-Logos.app"),
-            "expected Tauri macOS bundle, got {}",
+            bundle.ends_with(expected_tail),
+            "expected electron-builder dist output ending in {}, got {}",
+            expected_tail,
             bundle.display()
         );
     }

@@ -18,6 +18,7 @@ export * from './epii-review-state';
 export * from './integrated-deep-links';
 export * from './workspace-persistence';
 export * from './omni-panel';
+export * from './release-gate';
 
 // Browser-runtime helpers — re-exported here so plugin packages can import
 // everything from the package root, matching the m-extension-runtime pattern.

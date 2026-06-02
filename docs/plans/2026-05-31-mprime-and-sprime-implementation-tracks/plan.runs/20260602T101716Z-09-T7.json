@@ -1,0 +1,38 @@
+{
+  "runId": "20260602T101716Z-09-T7",
+  "taskId": "09.T7",
+  "startedAt": "2026-06-02T10:17:16.374Z",
+  "owner": "anima-09T7-fresh",
+  "leaseExpiresAt": "2026-06-02T12:17:16.374Z",
+  "worktree": null,
+  "task": {
+    "id": "09.T7",
+    "trackId": "09",
+    "tranche": "T7",
+    "title": "Nara Anima-Primary Voice Governance Workflow (gated by M4/Nara consent artifacts, protected-local policy, and Track 06/07 Nara surfaces)",
+    "effort": "gated by M4/Nara consent artifacts, protected-local policy, and Track 06/07 Nara surfaces",
+    "file": "09-agentic-mediation-and-operational-capacities.md",
+    "path": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md",
+    "dependsOn": [
+      "09.T6"
+    ],
+    "writeScopes": [
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**",
+      "Idea/Pratibimba/System/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

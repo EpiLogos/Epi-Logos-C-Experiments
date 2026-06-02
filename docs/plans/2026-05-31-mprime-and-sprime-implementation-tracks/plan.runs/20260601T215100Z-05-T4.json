@@ -1,0 +1,81 @@
+{
+  "tranche": "05.T4",
+  "owner": "admin-track05-finishing",
+  "completedAt": "2026-06-01T21:51:00Z",
+  "deliverables": {
+    "extension_package": "Idea/Pratibimba/System/extensions/ide-shell-m0-m5/",
+    "package_name": "@pratibimba/ide-shell-m0-m5",
+    "frontend_module": "lib/browser/frontend-module.js",
+    "widgets": [
+      "BimbaGraphViewerWidget (pratibimba.ide-shell.bimba-graph-viewer)",
+      "CanonStudioWidget (pratibimba.ide-shell.canon-studio)",
+      "AgenticControlRoomWidget (pratibimba.ide-shell.agentic-control-room)",
+      "CoordinateTreeWidget (pratibimba.ide-shell.coordinate-tree)",
+      "LogosAtelierWidget (pratibimba.ide-shell.logos-atelier)",
+      "EvidencePaneWidget (pratibimba.ide-shell.evidence-pane)",
+      "ReviewPaneWidget (pratibimba.ide-shell.review-pane)",
+      "AutoresearchPaneWidget (pratibimba.ide-shell.autoresearch-pane)"
+    ],
+    "intent_target_commands_registered": [
+      "pratibimba.ide-shell-m0-m5.canon-studio.open",
+      "pratibimba.ide-shell-m0-m5.bimba-graph.open",
+      "pratibimba.ide-shell-m0-m5.agentic-control-room.open",
+      "pratibimba.ide-shell-m0-m5.evidence-panel.open"
+    ],
+    "gateway_methods_routed_via_KERNEL_BRIDGE_API.invokeCapability": [
+      "s2.graph.node",
+      "s2'.coordinate.resolve",
+      "s5'.review.inbox",
+      "s5'.improve.history"
+    ],
+    "vault_bridge_gate": {
+      "command_id": "vault-bridge.s1prime.vault.write_file",
+      "behavior_until_t4_5": "Canon Studio save rejects with 'no vault-bridge registered'",
+      "adr_reference": "Idea/Pratibimba/System/docs/decisions/adr-05-010-hen-vault-bridge.md"
+    },
+    "capability_matrix_source": "Body/S/S4/plugins/pleroma/capability-matrix.json (IOD-17)"
+  },
+  "verification": {
+    "package_tests": {
+      "command": "pnpm --filter @pratibimba/ide-shell-m0-m5 test",
+      "result": "17/17 passing",
+      "coverage": [
+        "Real capability-matrix.json parse + dispatch_tools/skills surfacing",
+        "Privacy gate refuses all 8 FORBIDDEN_PRIVACY_CLASSES",
+        "Privacy gate accepts all 4 ALLOWED_PRIVACY_CLASSES + unset",
+        "S2 subgraph reader handles bare + enveloped artifacts + non-objects",
+        "Widget IDs align with IDE_DEEP_DESCRIPTOR.expectedWidgets prefix",
+        "Intent target IDs align with CrossLayoutIntentDispatcher routing",
+        "Wikilink + QL + M + S + context-frame coordinate decorations",
+        "Vault-bridge gate rejects without command + accepts with command",
+        "Vault-bridge command id matches ADR 05-010"
+      ]
+    },
+    "smoke_build": {
+      "command": "bash Idea/Pratibimba/System/scripts/smoke-build.sh",
+      "bundle_size_bytes": 21322227,
+      "bundle_size_mb": 21.32,
+      "ide_shell_m0_m5_chunk": "extensions_ide-shell-m0-m5_lib_browser_frontend-module_js.js (113KB)",
+      "total_extension_chunks": 18,
+      "result": "smoke build passed"
+    }
+  },
+  "lane_discipline": {
+    "files_under_my_lane": [
+      "Idea/Pratibimba/System/extensions/ide-shell-m0-m5/** (all 17 files NEW)",
+      "Idea/Pratibimba/System/theia-app/package.json (added @pratibimba/ide-shell-m0-m5 dependency)",
+      "Idea/Pratibimba/System/scripts/smoke-build.sh (appended ide-shell-m0-m5 build step + chunk prefix)"
+    ],
+    "files_not_touched": [
+      "Body/S/** (untouched)",
+      "Body/M/epi-tauri/** (untouched)",
+      "Idea/Pratibimba/System/extensions/test/** (Thread C's lane)",
+      ".codex/scripts/m-dev-plan-assess.mjs (Thread B's lane)"
+    ]
+  },
+  "findings_for_other_threads": [
+    "T4.5 (vault-bridge extension) will register the vault-bridge.s1prime.vault.write_file command — Canon Studio's save flow will then route through it. The widget already wires this via IdeShellM0M5Config.vaultBridgeAvailable / vaultBridgeWrite.",
+    "Capability matrix loader uses fetch('./capability-matrix.json') at runtime. The Theia browser/electron-app build pipelines should copy Body/S/S4/plugins/pleroma/capability-matrix.json into the served static assets (or a follow-up tranche should add that step). Tests rebind via IdeShellM0M5Config.loadCapabilityMatrix() so the contract is fixture-driven for now.",
+    "All gateway calls flow through KERNEL_BRIDGE_API.invokeCapability with method='invokeGatewayRpc' — no direct fetch/WebSocket from any ide-shell widget."
+  ]
+}

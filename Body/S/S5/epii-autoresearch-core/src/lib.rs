@@ -13,6 +13,7 @@ use serde_json::Value;
 use uuid::Uuid;
 
 pub mod adapters;
+pub mod capacity_workflows;
 pub mod inbox;
 pub mod recompose;
 pub mod spine;
@@ -300,6 +301,20 @@ pub struct SurfacedCandidateReceipt {
     pub run: ImprovementRun,
     pub routes: Vec<RouteRecord>,
     pub suppressed_duplicate: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct AletheiaLineageSurfaceReceipt {
+    pub surfaced: SurfacedCandidateReceipt,
+    pub lineage: inbox::DisclosureLineage,
+    pub safe_source_uri: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct AletheiaInboxSurfaceRecord {
+    surfaced: SurfacedCandidateReceipt,
+    lineage: Option<inbox::DisclosureLineage>,
+    safe_source_uri: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -771,8 +786,37 @@ impl ImprovementStore {
         &self,
         inbox: &inbox::InboxStore,
     ) -> Result<Vec<SurfacedCandidateReceipt>, String> {
+        Ok(self
+            .surface_aletheia_inbox_records(inbox)?
+            .into_iter()
+            .map(|record| record.surfaced)
+            .collect())
+    }
+
+    pub fn surface_aletheia_lineage_inbox(
+        &self,
+        inbox: &inbox::InboxStore,
+    ) -> Result<Vec<AletheiaLineageSurfaceReceipt>, String> {
+        Ok(self
+            .surface_aletheia_inbox_records(inbox)?
+            .into_iter()
+            .filter_map(|record| {
+                record.lineage.map(|lineage| AletheiaLineageSurfaceReceipt {
+                    surfaced: record.surfaced,
+                    lineage,
+                    safe_source_uri: record.safe_source_uri,
+                })
+            })
+            .collect())
+    }
+
+    fn surface_aletheia_inbox_records(
+        &self,
+        inbox: &inbox::InboxStore,
+    ) -> Result<Vec<AletheiaInboxSurfaceRecord>, String> {
         let mut receipts = Vec::new();
         for stored in inbox.list_pending()? {
+            let safe_source_uri = aletheia_present_inbox_uri(&stored);
             let closure_kind = ClosureKind::from_inbox_wire(&stored.entry.closure_kind)?;
             for (vector_index, direction) in stored.entry.improvement_vectors.iter().enumerate() {
                 let target_coordinate = vak_coordinate_label(&stored.entry.final_vak)?;
@@ -794,18 +838,24 @@ impl ImprovementStore {
                 };
                 let target = infer_target_subsystem(&request);
                 let surfaced_at = now_ms();
+                let lineage_fingerprint = stored
+                    .entry
+                    .disclosure_lineage
+                    .as_ref()
+                    .map(|lineage| lineage.lineage_id.as_str())
+                    .unwrap_or("legacy-lineage");
                 let mut candidate = ImprovementCandidate::from_propose(
                     request,
                     target,
                     default_vector_for(target),
                     SurfacingPipelineId::AletheiaDisclosure,
                     spine::ObservationEvidence {
-                        source_uri: aletheia_present_inbox_uri(&stored),
+                        source_uri: safe_source_uri.clone(),
                         summary: observation_summary(&stored.entry, direction),
                         observed_at: Some(surfaced_at),
                         fingerprint: Some(format!(
-                            "aletheia:{}#V{}:{}",
-                            stored.id, vector_index, direction
+                            "aletheia:{}#V{}:{}:{}",
+                            stored.id, vector_index, direction, lineage_fingerprint
                         )),
                     },
                     surfaced_at,
@@ -815,7 +865,11 @@ impl ImprovementStore {
                 candidate.closure_kind = closure_kind;
                 candidate.ct_register = ContentTypeRegister::CT4b;
                 candidate.linkage.originating_inbox_entry = Some(stored.id.clone());
-                receipts.push(self.surface_candidate(candidate)?);
+                receipts.push(AletheiaInboxSurfaceRecord {
+                    surfaced: self.surface_candidate(candidate)?,
+                    lineage: stored.entry.disclosure_lineage.clone(),
+                    safe_source_uri: safe_source_uri.clone(),
+                });
             }
         }
         Ok(receipts)
@@ -1432,9 +1486,22 @@ fn observation_summary(entry: &inbox::InboxEntry, direction: &str) -> String {
         .next()
         .cloned()
         .unwrap_or_else(|| "Aletheia disclosure surfaced an improvement vector".to_owned());
+    let lineage = entry
+        .disclosure_lineage
+        .as_ref()
+        .map(|lineage| {
+            format!(
+                " lineage={} source_subagent={} privacy={} readiness={}",
+                lineage.lineage_id,
+                lineage.source_subagent,
+                lineage.privacy_class,
+                lineage.readiness
+            )
+        })
+        .unwrap_or_default();
     format!(
-        "{} | source={} day={} direction={}",
-        moirai, entry.source, entry.day_id, direction
+        "{} | source={} day={} direction={}{}",
+        moirai, entry.source, entry.day_id, direction, lineage
     )
 }
 

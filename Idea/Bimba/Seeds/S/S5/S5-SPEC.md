@@ -47,6 +47,10 @@ The 2026-05-30 M'/Nara integration adds canon-recognition pressure to S5': Epii 
 
 This is the newest and least-settled S-level. The older [[Notion]] / dashboard files preserve useful #5 intuition, but the current architecture is broader: [[Notion]] is one possible S5 manifestation, not the coordinate itself.
 
+## M' Consumer Surfaces
+
+S5/S5' is the most direct S-side substrate for [[M4'-SPEC]], [[M5'-SPEC]], and the return surface named in [[M'-SYSTEM-SPEC]]. The primary code anchors back into those consumers are [[Body/S/S5/epi-gnostic/epi_gnostic/cli.py]], [[Body/S/S5/epi-kbase/src/index.ts]], [[Body/S/S5/epi-kbase-core/src/lib.rs]], [[Body/S/S5/epii-review-core/src/lib.rs]], [[Body/S/S5/epii-autoresearch-core/src/lib.rs]], and [[Body/S/S5/epii-agent-core/src/lib.rs]].
+
 ## VAK Gate
 
 - CPF: `(4.0/1-4.4/5)` - autonomous spec/build pass with synthesis/return emphasis.
@@ -678,3 +682,19 @@ S5/S5' serves:
 13. The S5 build must be production-first: real ingestion, real retrieval, real embeddings, real graph/vector stores, real review states, and real improvement evaluations. Mock-only tests would be misleading at this layer.
 
 14. Completion of S5/S5' returns the whole S-level pass to [[S0]] / [[S0']]: command shape, API routing, bootstrap, test harness, and audit trail must be made executable.
+
+## Canonical Source Lock - 2026-06-02
+
+S5 is the integral world boundary and S5' is Epii's user-position, review, gnosis, episodic, and improvement law. Notion/n8n/webhook sync is secondary connector genealogy, not the present spine.
+
+| Required coverage | Canonical citations |
+|---|---|
+| World ontology | `Idea/Bimba/World/Types/Coordinates/S/S5/S5.md` mtime 2026-04-10 18:00:25; `Idea/Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md` mtime 2026-04-24 20:31:08; `Idea/Bimba/World/P5.md`, `P5'.md`, `L5.md`, `L5'.md`, `Thought.md`, `Seed.md` for return/promotion semantics |
+| docs/specs | `docs/specs/S/S5-S5i-SYNC.md` mtime 2026-05-31 16:35:19 historical/stub; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md` mtime 2026-05-31 20:56:45; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
+| Body substrate | `Body/S/S5/epii-agent-core/**`, `Body/S/S5/epii-agent/**`, `Body/S/S5/epii-review-core/**`, `Body/S/S5/epii-autoresearch-core/**`, `Body/S/S5/epi-gnostic/**`, `Body/S/S5/epi-kbase-core/**`, `Body/S/S5/plugins/epi-logos/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S0/epi-cli/src/gate/{epii,improve,review}.rs` |
+| sibling seeds | `S5-0-SPEC.md`..`S5-5-SPEC.md`, `S5'/S5'-SPEC.md`, `S5'/S5-0'-SPEC.md`..`S5'/S5-5'-SPEC.md`, `S5-SHARD-INDEX.md`, `S5-TRACEABILITY-INDEX.md`, `S5'/S5'-TRACEABILITY-INDEX.md` |
+| nominal tracks | Track 04 owns S5 autoresearch/review; Track 09 owns agentic capacity pressure; Track 13 later consolidates S5 adapters |
+| open decisions | provider-backed Epii invocation, gateway prefix routing, Graphiti HTTP wrapper demotion, M' typed API surface, non-dry-run promotion, human review gates |
+
+Supersession rule: old S5 sync-only fragments are historical. Current canon is Epii/review/autoresearch/gnosis/Graphiti/world-return governance with privacy gates.

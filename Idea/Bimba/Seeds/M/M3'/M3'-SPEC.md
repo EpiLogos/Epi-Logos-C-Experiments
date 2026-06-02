@@ -25,6 +25,10 @@ depends_on:
 
 > **Authority boundary.** Clock substrate lives at [[S0]] / `portal-core`; the Vimarśa audio bus is produced by [[M2-1']] and carried in the shared profile; codon classification lives below [[M3']] in the [[M3]]/[[S0]] codec path. M3' is the clock/transcription/wheel renderer that consumes those contracts. It does not own the audio bus or invent codon-classification math locally.
 
+## Canonical Substrate Anchors
+
+[[M3']] should be read with the symbolic-clock substrate in view: [[Body/S/S0/epi-lib/include/m3.h]] (983 LOC [[Mahāmāyā]] codon/hexagram/tarot/quaternion-charge header), [[Body/S/S0/epi-lib/src/m3.c]] (1042 LOC C implementation), [[Body/S/S0/epi-lib/src/m3_clock_lut.c]] (749 LOC `CLOCK_DEGREE_LUT[360]` + the 384 line-change graph + 24-spoke lattice), [[Body/S/S0/portal-core/src/mahamaya.rs]] (Rust mirror for Mahāmāyā state), [[Body/S/S0/portal-core/src/codon.rs]] (codon types + nucleotide arithmetic), [[Body/S/S0/portal-core/src/codon_rotation_projection.rs]] (the 472-state landscape: 84 (lens, mode) → (codon, rotation) projection — the load-bearing §7 map), [[Body/S/S0/portal-core/src/rotational.rs]] (rotational composition algebra), [[Body/S/S0/portal-core/src/oracle_lut.rs]] (oracle/tarot lookup), and [[Body/S/S0/portal-core/src/transcription.rs]] (transcription-state machinery). [[M3']] is the clock/wheel renderer; these files are the engine.
+
 ## §0/1 — What [[M3']] Is
 
 [[M3']] is the **clock/cosmos and symbolic transcription surface**. It renders [[Paramaśiva]]'s tick as the operational clock for the whole stack and [[Mahāmāyā]] as DNA/I-Ching/Tarot binary transcription. It is the visible-and-audible face of the matheme's time-and-symbol axis.
@@ -53,8 +57,8 @@ Six commitments hold this domain:
 
 ## §2 — Backend Contract Consumed
 
-- [[S0]] kernel profile is clock authority: Paramaśiva tick drives every visual/audio/transcription state. M3' uses `audio_octet[8]` and `nodal_quartet[4]` from the shared profile; it does not synthesise.
-- [[M3]] codec backend supplies integer address laws and LUT-backed details for codon, hexagram, line-change operator, [[Tarot]], and amino-acid mappings.
+- [[S0]] kernel profile is clock authority: [[Paramaśiva]] tick drives every visual/audio/transcription state. M3' uses `audio_octet[8]` and `nodal_quartet[4]` from the shared profile (written by [[M2-1']] [[Vimarśa]] at [[Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs]]); it does not synthesise.
+- [[M3]] codec backend supplies integer address laws and LUT-backed details for codon, hexagram, line-change operator, [[Tarot]], and amino-acid mappings — live at [[Body/S/S0/epi-lib/include/m3.h]] / [[Body/S/S0/epi-lib/src/m3.c]] / [[Body/S/S0/epi-lib/src/m3_clock_lut.c]] with Rust mirror at [[Body/S/S0/portal-core/src/mahamaya.rs]].
 - [[S2]] graph law supplies configurable correspondence metadata and pointer-anchor canonicality.
 - [[S3]] supplies DAY/NOW/session/deposition anchors for clock observations, Nara casts, and Graphiti episodes.
 - [[M1']] supplies the active `(lens, mode)` cell that M3' projects into `(codon, rotation)` per §7.
@@ -157,7 +161,7 @@ For the player, this means: the lens-mode selector at M1' navigates the *normal*
 
 ### Implementation note
 
-The forward and reverse maps must live in the kernel/profile contract as part of `MathemeHarmonicProfile.codonRotationProjection`, NOT in M3' renderer code. M3' displays the projection; the backend computes it from the M2/M3 codec path. The canonical spec of the map itself is a kernel concern that ought to land in `S0-HARMONIC-POINTER-WEB36-SPEC` as an addendum or in a dedicated `S0-CODON-ROTATION-PROJECTION-SPEC` once the LUT is materialised. Until then, M3's `codonRotationProjection` field carries `datasetLutState: pending-dataset-lut` and the projection panel renders the honest gap.
+The forward and reverse maps must live in the kernel/profile contract as part of `MathemeHarmonicProfile.codonRotationProjection`, NOT in [[M3']] renderer code. [[M3']] displays the projection; the backend computes it from the [[M2]]/[[M3]] codec path — the canonical materialisation site is [[Body/S/S0/portal-core/src/codon_rotation_projection.rs]] composing with [[Body/S/S0/portal-core/src/rotational.rs]] and [[Body/S/S0/portal-core/src/codon.rs]]. The canonical spec of the map itself is a kernel concern that ought to land in `S0-HARMONIC-POINTER-WEB36-SPEC` as an addendum or in a dedicated `S0-CODON-ROTATION-PROJECTION-SPEC` once the LUT is fully materialised. Until then, [[M3']]'s `codonRotationProjection` field carries `datasetLutState: pending-dataset-lut` and the projection panel renders the honest gap.
 
 ## §7.5 — Surface Philosophy: Conversational Default, Technical on Request
 
@@ -173,7 +177,7 @@ M3' renders far more than a codon-tarot wheel. The [[Bimba]] [[M3]] layer carrie
 
 ### §8.1 The 2-Bit Nucleotide Logic (Polarity ⊕ Mobility)
 
-[[Body/S/S0/epi-lib/include/m3.h|m3.h]] FR 2.3.1: each nucleotide is 2 bits, with bit 0 = polarity (Yin/Yang) and bit 1 = mobility (Moving/Resting):
+[[Body/S/S0/epi-lib/include/m3.h|m3.h]] FR 2.3.1 (with Rust mirror at [[Body/S/S0/portal-core/src/codon.rs]]): each nucleotide is 2 bits, with bit 0 = polarity (Yin/Yang) and bit 1 = mobility (Moving/Resting):
 
 | Nuc | 2-bit | I-Ching value | Line type | Tarot suit | Element |
 |-----|-------|----|-----------|---------|------|
@@ -266,7 +270,7 @@ This is what makes M3' the *symbolic-elemental-quaternionic projection* of the m
 
 ### §8.5 The Rotational Composition Algebra (Pair-Composition)
 
-The 472 rotational states are not codon rotations (cyclic permutations of n1, n2, n3). They are computed via the **pair-composition algebra** on the 16-pair dinucleotide matrix.
+The 472 rotational states are not codon rotations (cyclic permutations of n1, n2, n3). They are computed via the **pair-composition algebra** on the 16-pair dinucleotide matrix — implemented at [[Body/S/S0/portal-core/src/rotational.rs]] and projected into the 84↔472 map at [[Body/S/S0/portal-core/src/codon_rotation_projection.rs]].
 
 For each codon (n1, n2, n3):
 
@@ -499,3 +503,19 @@ The 2026-05-31 canon update absorbs four additional M3' deltas: M3-0 as 72→64 
 - [[m4-prime-psychoid-cymatic-field-engine]] §10.2 labels L3/L3' with causal-Aristotelian/process-causal language, while the current MEF table assigns causal law to L1, processual becoming to L3, and chronological arc to L3'. M3' keeps Janus as temporal-processual orientation without relocating causal law.
 - The "17th lens" / "16+1" wording remains unresolved. M3' treats the law as 16 lens positions plus a Level-0 / Fibonacci-Pisano meta-position until M0'/M3'/M4' companion specs converge.
 - The exact kernel/profile home for `codonRotationProjection`, M3-0 provenance, kernel-trace handles, and Janus-bidirectional trace shape remains unapplied. Candidate homes remain `S0-HARMONIC-POINTER-WEB36-SPEC`, a dedicated S0 codon-rotation/provenance spec, or M3 codec data with S2 graph provenance.
+
+## Canonical Source Lock - 2026-06-02
+
+M3' is Mahamaya symbolic transcription: clock/cosmos/codon wheel, 64-address law, 472 rotational states, and 72->64 provenance. It consumes M1'/M2' profiles and emits symbolic addresses, not private Nara bodies.
+
+| Required coverage | Canonical citations |
+|---|---|
+| docs/specs | `docs/specs/M/M3-mahamaya-symbolic-transcription.md` mtime 2026-04-04 13:46:16; `docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md` mtime 2026-04-11 11:58:00; `docs/specs/M/2026-03-13-epi-logos-ux-arc-spec.md` mtime 2026-04-04 13:46:16 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` mtime 2026-05-31 20:57:23; `02-s2-bimba-map-population.md` mtime 2026-05-31 20:36:57; `03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `07-m-extension-individual-tracks.md` mtime 2026-06-01 00:23:25 (`07-T6`); `08-integrated-plugin-tracks.md` mtime 2026-06-01 00:25:11; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51 |
+| Body substrate | `Body/S/S0/epi-lib/**`, `Body/S/S2/graph-services/**`, `Body/S/S3/gateway-contract/**`; `Body/M/epi-tauri/**` only as deprecated migration-source evidence |
+| Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m3-mahamaya/**`, `m-extension-runtime/**`, `kernel-bridge/**`, `plugin-integrated-1-2-3/**` |
+| sibling seeds | `M'-SYSTEM-SPEC.md`, `M3'/m3-prime-symbolic-transcription-research.md`, `M3'/alpha_rasa_bridge_ql.md`, `alpha_quaternionic_integration_across_M_stack.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md` |
+| nominal tracks | Track 07.T6 M3' extension; Track 08 integrated plugin; Track 01 codon/profile; Track 02 symbolic library; Track 03 world clock; Track 09 Mahamaya capacity |
+| open decisions | TCT/Nine of Wands mismatch, 17th lens wording, 72->64 uniqueness scope, Janus/provenance home, codonRotationProjection ownership |
+
+World coordinate note: M3' uses shared World `P/P'`, `CT`, and `L/L'` lens corpora through the umbrella specs; no M-specific World coordinate markdown exists yet.

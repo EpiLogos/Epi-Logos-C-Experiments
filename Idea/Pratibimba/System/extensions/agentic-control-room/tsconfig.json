@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "composite": true,
+    "jsx": "react"
+  },
+  "references": [
+    { "path": "../kernel-bridge" },
+    { "path": "../pratibimba-layouts" },
+    { "path": "../m-extension-runtime" },
+    { "path": "../ide-shell-m0-m5" }
+  ],
+  "include": ["src"]
+}

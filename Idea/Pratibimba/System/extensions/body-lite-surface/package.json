@@ -1,0 +1,38 @@
+{
+  "name": "@pratibimba/body-lite-surface",
+  "version": "0.1.0",
+  "description": "Track 09 T9b — /body lite-surface mediation contributions. Pairs with the deep Agentic Control Room (Thread A 05.T8 @pratibimba/agentic-control-room): review-alert badge, agent check-in widget, safe-source-handle row, and four typed deep-link intent commands that punch from the 0/1 daily layout into the deep IDE via the OmniPanel CrossLayoutIntentDispatcher (Track 05 T5). Activates only in the 0/1 daily layout; safe-handle-only privacy discipline.",
+  "license": "MIT",
+  "files": ["lib", "src", "style"],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "keywords": ["theia-extension", "epi-logos", "body-lite-surface", "pratibimba", "track-09-t9b"],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@pratibimba/kernel-bridge": "workspace:*",
+    "@pratibimba/pratibimba-layouts": "workspace:*",
+    "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/omnipanel-shell": "workspace:*",
+    "@pratibimba/agentic-control-room": "workspace:*",
+    "@pratibimba/ide-shell-m0-m5": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build && node --test tests/body-lite-surface.test.mjs"
+  }
+}

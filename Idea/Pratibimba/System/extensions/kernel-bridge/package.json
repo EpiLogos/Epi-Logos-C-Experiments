@@ -1,0 +1,35 @@
+{
+  "name": "@pratibimba/kernel-bridge",
+  "version": "0.1.0",
+  "description": "First-loaded Theia extension that bridges the Pratibimba System frontend to the external Body/S/S0/epi-cli gate runtime (port 18794). Backend module connects via WebSocket/JSON-RPC; frontend publishes KernelBridgeAPI through Theia DI to downstream M-extensions, OmniPanel, and the agentic control room. Tracks Track 01 kernel_bridge_runtime.rs contract — KernelBridgeRuntimeEvent (ConnectionStatus | Readiness | Profile | Observability), KernelBridgeCachedProfile, KernelBridgeCapabilityRequest/Receipt with VAK context, lite/full subscription modes. Track 05 T3.",
+  "license": "MIT",
+  "files": ["lib", "src", "style"],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module",
+      "backend": "lib/node/backend-module"
+    }
+  ],
+  "keywords": ["theia-extension", "epi-logos", "kernel-bridge", "pratibimba"],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@pratibimba/pratibimba-layouts": "workspace:*",
+    "@pratibimba/m-extension-runtime": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build"
+  }
+}

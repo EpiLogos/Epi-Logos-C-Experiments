@@ -22,6 +22,17 @@ pub fn pasu_get(vault_root: &Path, field: &str) -> Result<String, String> {
         .ok_or_else(|| format!("key '{key}' not found in PASU.md frontmatter"))
 }
 
+/// Set a PASU.md frontmatter field via direct `fs::write`.
+///
+/// **IOD-19 / ADR-05-010 boundary note:** This is a **deprecated-local**
+/// frontmatter mutation. The replacement is `s1'.vault.update_frontmatter`
+/// (see `crate::gate::s1_hen` module docstring line 24 — DEFERRED until Hen
+/// exposes the surface). PASU.md mutation is scoped to the user's own
+/// `Pratibimba/Self/PASU.md` and carries no inbound wikilink risk, but it
+/// still touches frontmatter and should ultimately route through Hen for
+/// frontmatter-shape governance per ADR-05-010 §2 (capability 2). Until
+/// then this helper stays direct-FS, used only by the local
+/// `epi vault pasu set` operator command.
 pub fn pasu_set(vault_root: &Path, field: &str, value: &str) -> Result<String, String> {
     let key = field_to_key(field)?;
     let path = pasu_path(vault_root);

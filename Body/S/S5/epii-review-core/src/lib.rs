@@ -272,6 +272,10 @@ impl ReviewStore {
         }
     }
 
+    pub fn root_path(&self) -> &Path {
+        &self.root
+    }
+
     pub fn submit(&self, submission: ReviewSubmission) -> Result<ReviewInboxItem, String> {
         validate_submission(&submission)?;
 

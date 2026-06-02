@@ -32,6 +32,7 @@ fn sample_entry(session_id: &str, vectors: Vec<&str>, artifacts: Vec<&str>) -> I
         moirai_summary: BTreeMap::new(),
         artifacts: artifacts.into_iter().map(String::from).collect(),
         closure_kind: "rehear".into(),
+        disclosure_lineage: None,
     }
 }
 

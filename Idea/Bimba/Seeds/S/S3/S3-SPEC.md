@@ -49,6 +49,10 @@ Redis ownership must be clear here: S3 owns the Redis runtime substrate and Redi
 
 Graphiti placement is likewise explicit: architecturally, [[Graphiti]] belongs at S3/S3' as the temporal episodic memory architecture. S5/S5' owns how Graphiti is invoked, searched, governed, reflected, and used by [[Aletheia]] / [[Epii]]. The current `epi-graphiti` FastAPI process is a wrapper around the `graphiti-core` Python library for Rust/HTTP/Docker convenience; it is not a necessary architectural sidecar and should not be preserved as the target shape.
 
+## M' Consumer Surfaces
+
+S3/S3' is the temporal/runtime substrate behind [[M'-SYSTEM-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]]. The most direct anchors back into those consumers are [[Body/S/S3/gateway/src/lib.rs]], [[Body/S/S3/gateway/src/session_store.rs]], [[Body/S/S3/gateway-contract/src/lib.rs]], [[Body/S/S3/epi-spacetime-module/src/lib.rs]], [[Body/S/S3/graphiti-runtime/src/lib.rs]], and [[Body/S/S3/redis-context/src/lib.rs]].
+
 ## VAK Gate
 
 - CPF: `(4.0/1-4.4/5)` - full reflective lattice held as one dispatch field.
@@ -687,3 +691,19 @@ S3/S3' serves these [[Envelope]] layers:
 5. [[SpacetimeDB]] is the target Universal NOW shared-state host; current bridge code is not full live integration yet.
 6. [[Graphiti]] is architecturally S3/S3' temporal episodic memory; S5/S5' owns invocation, usage, search, governance, and reflective meaning.
 7. Session identity is a gateway authority, while session inhabitation and reasoning are S4/S4'.
+
+## Canonical Source Lock - 2026-06-02
+
+S3 owns the gateway control plane; S3' owns temporal/shared state, Day/NOW/Kairos projections, SpaceTimeDB subscription law, and Graphiti runtime boundary. Product RPC names may remain live, but coordinate ownership is canonical here and in [[ARCHITECTURE-DIAGRAM-PACK]].
+
+| Required coverage | Canonical citations |
+|---|---|
+| World ontology | `Idea/Bimba/World/Types/Coordinates/S/S3/S3.md` mtime 2026-04-10 21:43:47; `Idea/Bimba/World/Types/Coordinates/S/S'/S3'/S3'.md` mtime 2026-04-10 17:52:42; `Idea/Bimba/World/NOW.md` and `Daily-Note.md` for S3' temporal artifact semantics |
+| docs/specs | `docs/specs/S/S3-S3i-GATEWAY.md` mtime 2026-05-31 16:35:19; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
+| Body substrate | `Body/S/S3/gateway-contract/**`, `Body/S/S3/gateway/**`, `Body/S/S3/redis-context/**`, `Body/S/S3/epi-spacetime-module/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S3/epi-app/**`, `Body/S/S0/epi-cli/src/gate/**` |
+| sibling seeds | `S3-0-SPEC.md`..`S3-5-SPEC.md`, `S3'/S3'-SPEC.md`, `S3'/S3-0'-SPEC.md`..`S3'/S3-5'-SPEC.md`, `S3-SHARD-INDEX.md`, `S3-TRACEABILITY-INDEX.md`, `S3'/S3'-TRACEABILITY-INDEX.md` |
+| nominal tracks | Track 03 owns gateway/SpaceTimeDB; Track 13 owns later S0 membrane extraction; Track 10 owns integration gates |
+| open decisions | WebSocket surface, SpaceTimeDB auth/RLS, world-clock cadence, Graphiti runtime boundary, Theia subscription ownership, production fallback |
+
+Supersession rule: older plugin-loader readings of S3' are genealogy. Current canon is gateway plus live shared temporal state.

@@ -14,7 +14,7 @@
     "start": "pnpm --dir theia-app start",
     "start:debug": "pnpm --dir theia-app start:debug",
     "test": "pnpm -r test && pnpm test:contracts",
-    "test:contracts": "node --test extensions/test/shared-bridge-fan-out.test.mjs extensions/test/activation-and-persistence.test.mjs extensions/test/m0-anuttara-inspector.test.mjs extensions/test/m1-paramasiva-clock-instrument.test.mjs extensions/test/m2-parashakti-meaning-packet.test.mjs extensions/test/m3-mahamaya-codon-wheel.test.mjs extensions/test/track-08-contribution-contract.test.mjs extensions/test/track-08-integrated-layout-contract.test.mjs extensions/test/validate-extension-contract-preflight.test.mjs extensions/test/validate-composition-contract-preflight.test.mjs",
+    "test:contracts": "node --test extensions/test/shared-bridge-fan-out.test.mjs extensions/test/kernel-bridge-theia-boundary.test.mjs extensions/test/activation-and-persistence.test.mjs extensions/test/m0-anuttara-inspector.test.mjs extensions/test/m1-paramasiva-clock-instrument.test.mjs extensions/test/m2-parashakti-meaning-packet.test.mjs extensions/test/m3-mahamaya-codon-wheel.test.mjs extensions/test/m4-nara-day-container.test.mjs extensions/test/m5-epii-review-surface.test.mjs extensions/test/track-08-contribution-contract.test.mjs extensions/test/track-08-integrated-layout-contract.test.mjs extensions/test/validate-extension-contract-preflight.test.mjs extensions/test/validate-composition-contract-preflight.test.mjs extensions/test/integrated-release-gate.test.mjs extensions/test/six-extension-acceptance.test.mjs extensions/test/e2e-six-ext/live-gateway-probe.test.mjs extensions/test/perf/budgets.test.mjs extensions/test/a11y/coverage.test.mjs extensions/test/privacy-audit/forbidden-fields.test.mjs extensions/test/release-gate/decision-tree.test.mjs extensions/body-lite-surface/tests/body-lite-surface.test.mjs extensions/test/body-daily-vertical-slice/body-daily-vertical-slice.test.mjs extensions/test/agentic-mediation-e2e/e2e.test.mjs",
     "lint": "pnpm -r lint"
   },
   "devDependencies": {
@@ -35,5 +35,8 @@
       "@theia/application-manager@1.56.0": "patches/@theia__application-manager@1.56.0.patch"
     }
   },
-  "packageManager": "pnpm@10.25.0"
+  "packageManager": "pnpm@10.25.0",
+  "dependencies": {
+    "@parcel/watcher-darwin-arm64": "2.5.1"
+  }
 }

@@ -11,7 +11,8 @@ import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
-    parseExtensionRoute
+    parseExtensionRoute,
+    registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M5EpiiWidget } from './m5-epii-widget';
 import {
@@ -72,6 +73,20 @@ export class M5EpiiContribution
                     return this.openView({ activate: true, reveal: true });
                 }
             }
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'review',
+            'M5 Epii: Open Review Item',
+            () => this.openView({ activate: true, reveal: true })
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'evidence-deposit',
+            'M5 Epii: Deposit Review Evidence',
+            () => this.openView({ activate: true, reveal: true })
         );
     }
 }

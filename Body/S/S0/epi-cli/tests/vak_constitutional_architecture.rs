@@ -3,9 +3,12 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 fn repo_root() -> PathBuf {
+    // Track-13.T6: the epi-cli crate lives at `Body/S/S0/epi-cli/`, so the
+    // repository root is four ancestors up (epi-cli → S0 → S → Body → repo).
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap()
+        .ancestors()
+        .nth(4)
+        .expect("epi-cli crate should live under Body/S/S0")
         .to_path_buf()
 }
 

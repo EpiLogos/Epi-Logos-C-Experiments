@@ -97,6 +97,15 @@ fn doctor_json_reports_graph_and_semantic_sections() {
     assert!(payload["graph"].is_object());
     assert!(payload["graph"]["semanticIndexedNodes"].is_number());
     assert!(payload["graph"]["staleSemanticNodes"].is_number());
+    assert!(payload["graph"]["managedVersions"].is_object());
+    assert!(payload["graph"]["managedVersions"]["desired"].is_object());
+    assert!(payload["graph"]["managedVersions"]["live"].is_object());
+    assert!(payload["graph"]["managedVersions"]["drift"].is_object());
+    assert!(payload["graph"]["managedVersions"]["desired"]["datasetSourceHash"].is_string());
+    assert!(payload["graph"]["managedVersions"]["desired"]["relationRegistryHash"].is_string());
+    assert!(payload["graph"]["managedVersions"]["desired"]["kernelSourceHash"].is_string());
+    assert!(payload["graph"]["managedVersions"]["desired"]["ontologyVersionIri"].is_string());
+    assert!(payload["graph"]["managedVersions"]["desired"]["gdsProjectionVersion"].is_string());
 }
 
 #[test]

@@ -1,0 +1,104 @@
+{
+  "tranche": "05.T9",
+  "owner": "admin-track05-finishing",
+  "completedAt": "2026-06-01T22:20:00Z",
+  "deliverables": {
+    "extension_package": "Idea/Pratibimba/System/extensions/acceptance-harness/",
+    "package_name": "@pratibimba/acceptance-harness",
+    "theia_side_acceptance_runner": "AcceptanceRunner (singleton via ACCEPTANCE_RUNNER DI token)",
+    "node_side_driver_script": "Idea/Pratibimba/System/extensions/acceptance-harness/scripts/acceptance.mjs",
+    "release_adr": "Idea/Pratibimba/System/docs/decisions/adr-05-011-release-gate-close.md",
+    "operator_runbook": "Idea/Pratibimba/System/docs/operator-runbook.md",
+    "widgets": [
+      "HarnessControlWidget (pratibimba.acceptance.harness-control) — operator-driven trigger + step log + bridge-subscription stability surface"
+    ],
+    "acceptance_plan_steps": [
+      "boot.kernel-bridge",
+      "layout.switch-to-deep-ide",
+      "graph.open-s2-node",
+      "review.open-s5-candidate",
+      "evidence.deposit",
+      "layout.switch-back-to-daily",
+      "shutdown.clean"
+    ],
+    "acceptance_plan_services": [
+      "gateway (always required)",
+      "spacetimedb (always required)",
+      "neo4j (always required)",
+      "redis (always required)",
+      "s5_persisted_stores (always required)",
+      "theia_electron (always required — canonical)",
+      "theia_browser (optional — CI/Docker parity)"
+    ]
+  },
+  "verification": {
+    "package_tests": {
+      "command": "pnpm --filter @pratibimba/acceptance-harness test",
+      "result": "11/11 passing",
+      "coverage": [
+        "topology (8): every step targets a canonical layout; plan names required services from runtime baseline (gateway, spacetimedb, neo4j, redis, s5_persisted_stores, theia_electron); browser-mode is optional; step ids cover all 7 T9 verification ops; layout round-trip asserts bridge subscription unchanged; privacy audit covers every chrome surface; widget id namespace; handle prefix",
+        "acceptance-plan dry-run (3): --dry-run --browser produces parseable receipt; --dry-run --electron mode switch; every service has a real start command"
+      ]
+    },
+    "all_three_new_extensions_tests": {
+      "ide_shell_m0_m5": "17/17 passing (T4 contract + canon-studio save routing)",
+      "agentic_control_room": "14/14 passing (T8 human-gate + evidence envelope + capability parity)",
+      "acceptance_harness": "11/11 passing (T9 topology + dry-run)",
+      "total": "42/42 passing"
+    },
+    "substrate_truth_gate": {
+      "epii_review_core": "cargo test --offline 6/6 passing — incl. human_required_review_cannot_be_resolved_by_agent",
+      "epii_autoresearch_core": "cargo test --offline 19/19 passing across all integration test files"
+    },
+    "smoke_build": {
+      "command": "bash Idea/Pratibimba/System/scripts/smoke-build.sh",
+      "bundle_size_bytes": 21323852,
+      "bundle_size_mb": 21.32,
+      "total_extension_chunks": 22,
+      "chunks_for_track_05_t4_t8_t9": [
+        "extensions_ide-shell-m0-m5_lib_browser_frontend-module_js.js (98KB)",
+        "extensions_ide-shell-m0-m5_lib_common_capability-matrix-types_js-... (16KB)",
+        "extensions_agentic-control-room_lib_browser_frontend-module_js.js (42KB)",
+        "extensions_acceptance-harness_lib_browser_frontend-module_js.js (36KB)"
+      ],
+      "result": "smoke build passed"
+    },
+    "acceptance_dry_run": {
+      "command": "node Idea/Pratibimba/System/extensions/acceptance-harness/scripts/acceptance.mjs --dry-run",
+      "result": "dry-run receipt parses cleanly; 7 services and 7 steps surfaced; privacy audit surfaces enumerated"
+    },
+    "whole_workspace_build": {
+      "command": "pnpm -r build (from Idea/Pratibimba/System/)",
+      "result": "all packages including theia-app webpack bundle compiled successfully"
+    }
+  },
+  "release_gate_invariants_closed_by_adr_05_011": [
+    "One Theia process, two layouts (daily-0-1 + ide-deep) — verified by layout switch round-trip test",
+    "Kernel-bridge first-loaded, single source of truth — every gateway call routes through KERNEL_BRIDGE_API.invokeCapability; capability allow-list enforces",
+    "Vault-bridge gatekeeper (IOD-19) — Canon Studio rejects save with 'no vault-bridge registered' until T4.5 lands the vault-bridge extension",
+    "Smart Connections via Hen smart_env.rs (IOD-18) — no client-side Obsidian coupling",
+    "Capability matrix is single-source-of-truth (IOD-17) — three-way parity (matrix ↔ UI ↔ gateway) asserted",
+    "Human-required gates BLOCK agent transitions — verified UI side (3/3 human-gate tests pass) and gateway side (cargo test human_required_review_cannot_be_resolved_by_agent passes)",
+    "Privacy audit refuses protected payloads on every surface — 8 forbidden classes refused; data-test=*-privacy-dropped counters surface for headless inspection"
+  ],
+  "lane_discipline": {
+    "files_under_my_lane": [
+      "Idea/Pratibimba/System/extensions/acceptance-harness/** (12 new files)",
+      "Idea/Pratibimba/System/docs/decisions/adr-05-011-release-gate-close.md (NEW)",
+      "Idea/Pratibimba/System/docs/operator-runbook.md (NEW)",
+      "Idea/Pratibimba/System/theia-app/package.json (added @pratibimba/acceptance-harness dep)",
+      "Idea/Pratibimba/System/scripts/smoke-build.sh (appended acceptance-harness build step + chunk prefix)"
+    ],
+    "files_not_touched": [
+      "Body/S/** (read-only verification via cargo test --offline)",
+      "Body/M/epi-tauri/** (tombstoned — only read for runtime baseline service list)",
+      "Idea/Pratibimba/System/extensions/test/** (Thread C's lane)",
+      ".codex/scripts/m-dev-plan-assess.mjs (Thread B's lane)"
+    ]
+  },
+  "findings_for_other_threads": [
+    "The live acceptance run (live services + Electron build) is operator-driven; the script at extensions/acceptance-harness/scripts/acceptance.mjs handles attach + handle parsing + receipt emission. Thread C's 07.T10 + 08.T9 acceptance tests can consume this script as a sub-process.",
+    "The acceptance plan is data (TRACK_05_T9_ACCEPTANCE_PLAN in lib/common/acceptance-plan.js). Other tracks adding services or steps should extend the plan rather than fork it — keep IOD-17 single-source-of-truth invariant.",
+    "ADR-05-011 closes PRD-01..04. Track 11's open-architectural-decisions.md should be updated to reflect the closure (Thread B's lane includes plan hygiene — flagging here)."
+  ]
+}

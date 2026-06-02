@@ -1,0 +1,80 @@
+/* IDE Shell M0/M5 — Track 05 T4 chrome styling. Mirrors the M-extension widget
+   conventions so the deep IDE layout has a consistent visual rhythm. */
+
+.ide-shell-widget {
+    padding: 0.75rem;
+    overflow-y: auto;
+}
+
+.ide-shell-widget-root {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ide-shell-widget-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--theia-editorWidget-border, #444);
+    padding-bottom: 0.5rem;
+}
+
+.ide-shell-widget-header h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.ide-shell-widget-detail dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 0.75rem;
+    margin: 0;
+}
+
+.ide-shell-widget-detail dt {
+    font-weight: 600;
+    opacity: 0.75;
+}
+
+.ide-shell-widget-empty {
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.ide-shell-error {
+    color: var(--theia-errorForeground, #f48771);
+}
+
+.ide-shell-bridge-pending {
+    padding: 1rem;
+    border: 1px dashed var(--theia-editorWidget-border, #444);
+    border-radius: 4px;
+}
+
+.ide-shell-canon-textarea {
+    width: 100%;
+    font-family: var(--theia-editor-font-family, monospace);
+    font-size: 0.9rem;
+}
+
+.ide-shell-save-ok {
+    color: var(--theia-successBackground, #4ec9b0);
+}
+
+.ide-shell-save-rejected {
+    color: var(--theia-warningForeground, #cca700);
+    font-weight: 600;
+}
+
+.ide-shell-human-required {
+    color: var(--theia-warningForeground, #cca700);
+    border-left: 3px solid var(--theia-warningForeground, #cca700);
+    padding-left: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.ide-shell-evidence-fields {
+    margin-top: 0.25rem;
+    margin-left: 1rem;
+}

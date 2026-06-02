@@ -30,6 +30,7 @@ pub mod protocol;
 pub mod review;
 pub mod runs;
 pub mod runtime;
+pub mod s1_hen;
 pub mod secrets;
 pub mod server;
 pub mod session_store;

@@ -1,0 +1,134 @@
+/* Track 09 T9b — body-lite-surface widget styling. */
+
+.body-lite-widget {
+    padding: 8px 12px;
+    color: var(--theia-foreground);
+    background: var(--theia-editor-background);
+    font-size: var(--theia-ui-font-size1);
+}
+
+.body-lite-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 4px;
+    background: var(--theia-sideBar-background);
+}
+
+.body-lite-card header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.body-lite-badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: var(--theia-badge-background);
+    color: var(--theia-badge-foreground);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.body-lite-title {
+    font-size: 13px;
+}
+
+.body-lite-empty {
+    margin: 0;
+    color: var(--theia-descriptionForeground);
+    font-style: italic;
+}
+
+.body-lite-latest,
+.body-lite-cta,
+.body-lite-cta-inline,
+.body-lite-handle {
+    border: 1px solid var(--theia-button-border, transparent);
+    background: var(--theia-button-secondaryBackground);
+    color: var(--theia-button-secondaryForeground);
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.body-lite-cta {
+    background: var(--theia-button-background);
+    color: var(--theia-button-foreground);
+}
+
+.body-lite-cta:hover,
+.body-lite-cta-inline:hover,
+.body-lite-latest:hover,
+.body-lite-handle:hover {
+    background: var(--theia-button-hoverBackground);
+}
+
+.body-lite-latest-title {
+    display: block;
+}
+
+.body-lite-human-required {
+    display: inline-block;
+    margin-top: 2px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: var(--theia-inputValidation-warningBackground);
+    color: var(--theia-inputValidation-warningForeground);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.body-lite-run-list,
+.body-lite-handle-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.body-lite-run-list li,
+.body-lite-handle-list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.body-lite-run-route {
+    font-weight: 600;
+}
+
+.body-lite-run-actor {
+    color: var(--theia-descriptionForeground);
+}
+
+.body-lite-run-capacity {
+    color: var(--theia-textLink-foreground);
+}
+
+.body-lite-run-id {
+    font-family: var(--theia-ui-font-family-monospace);
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    margin-left: auto;
+}
+
+.body-lite-handle-kind {
+    font-family: var(--theia-ui-font-family-monospace);
+    font-size: 10px;
+    color: var(--theia-textLink-foreground);
+    margin-right: 6px;
+    text-transform: uppercase;
+}

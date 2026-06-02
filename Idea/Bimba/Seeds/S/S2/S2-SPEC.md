@@ -36,6 +36,10 @@ The 2026-05-30 M0/Mahāmāyā pass extends S2' with formal graph semantics and g
 
 [[Gnosis]] / [[RAG-Anything]] and [[Graphiti]] are not S2 owners. They use the S2 substrate, but Graphiti's temporal episodic architecture belongs to [[S3']] and its invocation/usage governance belongs to [[S5]] / [[S5']]. S2 must keep the substrate clean enough that those systems can share it without collapsing their laws into the database layer.
 
+## M' Consumer Surfaces
+
+S2/S2' is read directly by [[M'-SYSTEM-SPEC]], [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]]. The most immediate graph-law anchors for those surfaces are [[Body/S/S2/graph-schema/src/lib.rs]], [[Body/S/S2/graph-services/src/schema.rs]], [[Body/S/S2/graph-services/src/coordinate.rs]], [[Body/S/S2/graph-services/src/retrieval/coordinate.rs]], and [[Body/S/S2/graph-services/src/retrieval/graphrag.rs]].
+
 ## VAK Gate
 
 - CPF: `(4.0/1-4.4/5)` - full reflective lattice held as one dispatch field.
@@ -577,3 +581,19 @@ S2/S2' serves these [[Envelope]] layers:
 5. `bimba-mcp` is the current S2' external-systems query interface layer and must be treated as more than a helper script, but it is not the PI agent's internal graph organ.
 6. `epi graph` is a real S2 command mirror, but CLI command names are not final coordinate-native API names.
 7. The S1/S2 sync blocker is critical: without queue drain, vault law and graph law remain manually bridged rather than systemically integrated.
+
+## Canonical Source Lock - 2026-06-02
+
+S2 owns graph/cache substrate and S2' owns coordinate-aware retrieval law. It must not be inflated into temporal session identity, Graphiti invocation policy, or S5 review governance.
+
+| Required coverage | Canonical citations |
+|---|---|
+| World ontology | `Idea/Bimba/World/Types/Coordinates/S/S2/S2.md` mtime 2026-04-10 17:50:14; `Idea/Bimba/World/Types/Coordinates/S/S'/S2'/S2'.md` mtime 2026-04-10 17:50:48; shared P/CT/L corpus enumerated in [[S-SYSTEM-INDEX]] |
+| docs/specs | `docs/specs/S/S2-S2i-GRAPH.md` mtime 2026-05-31 16:35:19; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md` mtime 2026-05-31 20:36:57; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
+| Body substrate | `Body/S/S2/graph-schema/**`, `Body/S/S2/graph-services/**`, `Body/S/S2/ontology/**`, `Body/S/S2/external/bimba-mcp/**`, `Body/S/S0/epi-cli/src/graph/**`, `Body/S/S3/gateway-contract/**` |
+| sibling seeds | `S2-0-SPEC.md`..`S2-5-SPEC.md`, `S2'/S2'-SPEC.md`, `S2'/S2-0'-SPEC.md`..`S2'/S2-5'-SPEC.md`, `S2-SHARD-INDEX.md`, `S2-TRACEABILITY-INDEX.md`, `S2'/S2'-TRACEABILITY-INDEX.md` |
+| nominal tracks | Track 02 owns Bimba map population/API; Track 13.T5 hardens S0 graph adapters; Track 10 carries cross-cutting gates |
+| open decisions | IOD-05 canonical `#` mapping, IOD-06 Anuttara naming/provenance, IOD-07 n10s/GDS packaging, IOD-08 Graphiti boundary, Redis S2/S3 namespace split |
+
+Supersession rule: older fragments that collapse graph storage, Graphiti runtime, and review usage into one graph layer are historical. Current canon separates S2 graph law, S3' temporal episodic runtime, and S5/S5' usage governance.

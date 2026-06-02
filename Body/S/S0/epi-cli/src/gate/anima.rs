@@ -1,3 +1,39 @@
+//! S0 gateway adapter to the S4/S4' Anima orchestration authority.
+//!
+//! ## Adapter contract (Track-13.T6 closure)
+//!
+//! This module is a *thin adapter* into the S4/S4' orchestration authority.
+//! All mediation-route law, VAK evaluation, capability-matrix enforcement,
+//! and dispatch-tool gating below is a mirror of S4-owned canon. The
+//! authoritative sources are:
+//!
+//! - `Body/S/S4/plugins/pleroma/capability-matrix.json` — `dispatch_tools[*]`,
+//!   `constitutional_agents`, `forbidden_authority`, `agent_capability_gates`,
+//!   `agent_run_contract.vak_required_keys`.
+//! - `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts` —
+//!   `AGENT_CF` (CF→agent), `MOIRAI_HOST_CF`, `validateFusionDispatch`,
+//!   `validateParallelDispatch`, `dispatchGuardrails`.
+//! - `Body/S/S4/plugins/pleroma/skills/vak-evaluate/SKILL.md` and
+//!   `Body/S/S4/plugins/pleroma/skills/anima-orchestration/SKILL.md` — skill
+//!   contracts the adapter advertises.
+//! - `Body/S/S4/pi-agent/agents/anima.md` — Anima identity, CF, allowed tools.
+//!
+//! Constants tagged `S4_AUTHORITY` below MUST stay in sync with those
+//! sources. Any drift is a Track-13 follow-up tranche to extract into S4
+//! and consume by FFI; see the IOD-17 follow-up note on
+//! `s4'.mediation.capabilities.list`.
+//!
+//! ## Persistence classification
+//!
+//! Two JSONL files are appended under the gate state root:
+//!
+//! - `s4/agent-events.jsonl` — **S3 session telemetry**: gateway-side
+//!   accepted/delivered receipts for `s4.agent.query` / `s4.agent.notify`.
+//!   Not authoritative mediation evidence; lives next to the session store.
+//! - `s4/mediation-routes.jsonl` — **S4 orchestration evidence**: the
+//!   adapter's record of every `s4'.mediation.route` decision dispatched
+//!   through this gateway. Tagged with `s4_authority_origin` so it is
+//!   never confused with an S4-internal second store.
 use portal_core::{CpfState, CsDirection, CsField, VakAddress};
 use serde_json::{json, Map, Value};
 use std::fs::{self, OpenOptions};
@@ -13,7 +49,18 @@ const PLEROMA_ROOT: &str = "Body/S/S4/plugins/pleroma";
 const VAK_EVALUATE_SKILL: &str = "vak-evaluate";
 const ANIMA_ORCHESTRATION_SKILL: &str = "anima-orchestration";
 const MEDIATION_ROUTE_METHOD: &str = "s4'.mediation.route";
+
+/// S4_AUTHORITY: mirror of `MOIRAI_HOST_CF` in
+/// `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts` (klotho →
+/// (0/1/2), lachesis → (4.0/1-4.4/5), atropos → (5/0)). The literal CF
+/// values are duplicated here because dispatch_moirai_night_pass routing
+/// must be enforceable at the S0 gateway edge before the S4 plugin
+/// receives the call. Drift = Track-13 follow-up.
 const MOIRAI_HOST_CF: &[&str] = &["(0/1/2)", "(4.0/1-4.4/5)", "(5/0)"];
+
+/// S4_AUTHORITY: mirror of `capability-matrix.json:dispatch_tools[*].name`.
+/// Membership defines which tool names carry the `upstream_required:
+/// ["vak-evaluate"]` gate at the gateway edge. Drift = Track-13 follow-up.
 const DISPATCH_TOOLS: &[&str] = &[
     "dispatch_agent",
     "dispatch_parallel_agents",
@@ -22,14 +69,32 @@ const DISPATCH_TOOLS: &[&str] = &[
     "anima_self_invoke",
     "run_chain",
 ];
+
+/// S0_GATEWAY: locally enforced CFP set. Subset of the canonical VAK
+/// grammar declared by `capability-matrix.json:agent_run_contract.vak_required_keys`
+/// expanded with CFP0..CFP4 thread modes. Pure gateway pre-validation —
+/// S4 plugin re-validates on receipt.
 const SUPPORTED_CFP: &[&str] = &["CFP0", "CFP1", "CFP2", "CFP3", "CFP4"];
+
+/// S0_GATEWAY: thread modes the gateway accepts in envelope
+/// `requestedThreadMode` until runtime verification expands the set.
 const SUPPORTED_THREAD_MODES: &[&str] = &["single", "session"];
+
+/// S0_GATEWAY: declared-write-scope prefixes the gateway will route. S4'
+/// capacity governance (`m5_4_governance.capacity_governance`) holds the
+/// final authority over what writes are permitted; this list is only the
+/// gateway pre-filter.
 const SUPPORTED_WRITE_SCOPES: &[&str] = &[
     "Body/M/epi-tauri/",
     "Body/S/S4/",
     "Body/S/S5/",
     "Idea/Pratibimba/System/",
 ];
+
+/// Stable provenance tag stamped onto every payload this adapter returns so
+/// callers (and the parity manifest) can verify S0 is acting as an S4
+/// adapter, not as a second authority store.
+const S4_AUTHORITY_ORIGIN: &str = "Body/S/S4 (capability-matrix.json + ta-onta/S4-4p-anima)";
 
 pub fn vak_evaluate(params: &Value) -> Result<Value, String> {
     let task = required_str(params, "task")?;
@@ -138,10 +203,12 @@ pub fn mediation_route(state_root: impl AsRef<Path>, params: &Value) -> Result<V
             "source": "anima.mediation_route",
             "routeLaw": "vak_evaluate -> anima_orchestrate -> dispatch_agent",
             "persisted": true,
+            "s4AuthorityOrigin": S4_AUTHORITY_ORIGIN,
         },
         "capability": {
             "gatewayMethod": MEDIATION_ROUTE_METHOD,
             "baseBridge": "epi gate dispatch anima-invoke",
+            "s4AuthorityOrigin": S4_AUTHORITY_ORIGIN,
         },
         "authority": authority(),
         "timestampMs": current_time_ms()?,
@@ -279,6 +346,10 @@ fn capability(skill: &str, skill_path: &Path) -> Value {
     })
 }
 
+/// S4_AUTHORITY: the `forbidden` list mirrors
+/// `capability-matrix.json:forbidden_authority`. The boolean flags mirror
+/// the Anima `m5_4_governance.review_surface_roles.anima` action set.
+/// Source-of-truth: `Body/S/S4/plugins/pleroma/capability-matrix.json`.
 pub fn authority() -> Value {
     json!({
         "mayDispatch": true,
@@ -290,9 +361,13 @@ pub fn authority() -> Value {
             "mutate_epii_identity_state",
             "bypass_epii_inbox"
         ],
+        "s4AuthorityOrigin": S4_AUTHORITY_ORIGIN,
     })
 }
 
+/// S3 session telemetry: gateway acceptance/delivery receipts for
+/// `s4.agent.query` / `s4.agent.notify`. NOT authoritative mediation
+/// evidence; lives next to the S3 session store at `<state_root>/s4/`.
 fn append_agent_event(state_root: impl AsRef<Path>, event: &Value) -> Result<(), String> {
     let path = state_root.as_ref().join("s4").join("agent-events.jsonl");
     if let Some(parent) = path.parent() {
@@ -307,6 +382,11 @@ fn append_agent_event(state_root: impl AsRef<Path>, event: &Value) -> Result<(),
     writeln!(file, "{line}").map_err(|err| err.to_string())
 }
 
+/// S4 orchestration evidence: the adapter's record of every
+/// `s4'.mediation.route` decision dispatched through this gateway. Tagged
+/// with `s4AuthorityOrigin` in the payload so it cannot be confused with
+/// any S4-internal store. NOT a second authority — re-derivable from the
+/// envelope + S4 capability matrix at any time.
 fn append_mediation_decision(state_root: impl AsRef<Path>, event: &Value) -> Result<(), String> {
     let path = state_root
         .as_ref()
@@ -390,6 +470,16 @@ fn has_upstream_vak_evidence(params: &Value, envelope: &Value) -> bool {
         .any(|value| value.as_str() == Some("vak-evaluate"))
 }
 
+/// S4_AUTHORITY: mirrors the dispatch-routing law expressed across
+/// `Body/S/S4/ta-onta/S4-4p-anima/extension.ts` (CFP fanout) and the
+/// Anima skill contract in
+/// `Body/S/S4/plugins/pleroma/skills/anima-orchestration/SKILL.md`.
+/// Outcome names are S0 adapter labels for the S4-owned routing decision;
+/// the S4 plugin re-derives the same routing from VAK + dispatch tool on
+/// receipt. Track-13 follow-up: once S4 exposes
+/// `s4'.mediation.capabilities.list` over the gateway (IOD-17), this
+/// function should call it and return the S4-canonical outcome verbatim
+/// rather than re-derive it here.
 fn route_outcome(
     cpf: &str,
     cf: &str,
@@ -435,6 +525,13 @@ fn route_outcome(
     Ok("PiDispatch")
 }
 
+/// S4_AUTHORITY: agent-name selection mirrors the constitutional roster
+/// declared in `Body/S/S4/pi-agent/agents/teams.yaml` and the
+/// `agent_capability_gates` block of `capability-matrix.json`. The
+/// Anima/Sophia/Aletheia special-cases below match the
+/// `agent_capability_gates` entries. Track-13 follow-up: see
+/// `route_outcome` — once IOD-17 exposes the S4 mediation surface, this
+/// table collapses into a thin pass-through.
 fn route_agent_for_outcome(outcome: &str, cf: &str) -> String {
     match outcome {
         "UserBrainstormRequired" | "NousRequired" => "nous".to_owned(),
@@ -663,6 +760,10 @@ fn state_root_age_ms(state_root: &Path, now_ms: u128) -> Result<u128, String> {
     Ok(now_ms.saturating_sub(started_ms))
 }
 
+/// S4_AUTHORITY: mirror of
+/// `capability-matrix.json:constitutional_agents` minus the `anima`
+/// orchestrator itself (which queries this list for its team
+/// composition). Drift = Track-13 follow-up.
 fn constitutional_agents() -> Value {
     json!(["nous", "logos", "eros", "mythos", "psyche", "sophia"])
 }

@@ -42,6 +42,21 @@ This boundary is operationally strict: [[M]] remains the canonical [[Bimba]] coo
 
 The [[S]] layers provide bodies and protocols. M' arranges their appearance and use.
 
+The current cross-system diagram pack is [[ARCHITECTURE-DIAGRAM-PACK]]. Use it as the architecture bridge before any implementation-plan or M-dev pass that touches [[M']], [[S/S']], [[/pratibimba/system]], the six M extensions, integrated plugins, or [[M5-4]] mediation. The pack preserves the critical invariant that [[M]] is the ontological [[Bimba]] map and [[M']] is coded [[Pratibimba]] expression, while [[S0]] remains a command membrane over coordinate-owned modules.
+
+## Canonical Code Navigation
+
+The M' corpus should function as navigation into the substrate it describes, not as a layer that requires separate audit reports to rediscover the code. Read each prime-domain spec with its canonical anchors one click away:
+
+| Surface | Primary spec | Canonical code anchors |
+|---|---|---|
+| [[M0']] | [[M0'-SPEC]] | [[Body/S/S0/epi-lib/include/m0.h]], [[Body/S/S0/epi-lib/src/m0.c]], [[Body/S/S0/portal-core/src/kernel.rs]] |
+| [[M1']] | [[M1'-SPEC]] | [[Body/S/S0/epi-lib/include/m1.h]], [[Body/S/S0/epi-lib/src/m1.c]], [[Body/S/S0/portal-core/src/state.rs]], [[Body/S/S0/portal-core/src/events.rs]], [[Body/S/S0/portal-core/src/harmonic_profile.rs]] |
+| [[M2']] | [[M2'-SPEC]] | [[Body/S/S0/epi-lib/include/m2.h]], [[Body/S/S0/epi-lib/src/m2.c]], [[Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs]] |
+| [[M3']] | [[M3'-SPEC]] | [[Body/S/S0/epi-lib/include/m3.h]], [[Body/S/S0/epi-lib/src/m3.c]], [[Body/S/S0/epi-lib/src/m3_clock_lut.c]], [[Body/S/S0/portal-core/src/codon_rotation_projection.rs]], [[Body/S/S0/portal-core/src/mahamaya.rs]] |
+| [[M4']] | [[M4'-SPEC]] | [[Body/S/S0/epi-lib/include/m4.h]], [[Body/S/S0/epi-lib/src/m4.c]], [[Body/S/S0/portal-core/src/nara_journal.rs]], [[Body/S/S0/portal-core/src/personal_identity.rs]] |
+| [[M5']] | [[M5'-SPEC]] | [[Body/S/S0/epi-lib/include/m5.h]], [[Body/S/S0/epi-lib/src/m5.c]], [[Body/S/S5/epi-gnostic/epi_gnostic/cli.py]], [[Body/S/S5/epi-kbase/src/index.ts]], [[Body/S/S5/epi-kbase-core/src/lib.rs]], [[Body/S/S5/epii-autoresearch-core/src/lib.rs]], [[Body/S/S5/epii-review-core/src/lib.rs]], [[Body/S/S5/epii-agent-core/src/lib.rs]] |
+
 ## Domain Language
 
 Use the six M' domains consistently:
@@ -480,3 +495,53 @@ The minimum integral bootstrapping basis is reached when:
 - M' surfaces can show the difference between planned, implemented, tested, live, and review-pending states.
 
 At that point the system can begin evolving itself coherently: not by magic automation, but by keeping its map, code, memory, review, and musical clock in one inspectable loop.
+
+## Top-Layer Crystal - M' Umbrella Canon - 2026-06-02
+
+This file is the canonical umbrella seed for [[M']]. It owns the shared Pratibimba/Theia/kernel-bridge architecture that spans [[M0']] through [[M5']]. No individual M' layer may absorb these shared obligations just because it is the nearest visible coordinate.
+
+### Umbrella Authority Boundary
+
+| Shared surface | Canonical owner | Layer guard |
+|---|---|---|
+| Theia-only Pratibimba System | this file plus `Idea/Pratibimba/System/**` | `Body/M/epi-tauri` is migration-source-only under PRD-01 |
+| one shell / two layouts | `ide-shell-m0-m5`, `pratibimba-layouts`, this umbrella | M0' and M5' may consume shell state but do not own the shell |
+| KernelBridge singleton | `extensions/kernel-bridge`, `extensions/m-extension-runtime`, this umbrella | bridge/profile/current state is top-layer M' infrastructure, not M0' graph UI |
+| shared profile/current projections | [[S0']], [[S3']], [[S5']], this umbrella | M' panels consume safe projections and may deposit observations; they do not expose raw protected data |
+| M0'..M5' extension contracts | layer specs plus `extensions/m0-anuttara`..`m5-epii` | layer specs own domain law; umbrella owns composition and cross-layer seams |
+| integrated plugin surfaces | `plugin-integrated-1-2-3`, `plugin-integrated-4-5-0`, `integrated-composition` | plugins compose layers; they do not rewrite layer canon |
+| Agentic Control Room | [[M5']] plus [[S4']] capability governance | agent mediation remains governed by S4/S5 review law |
+
+### Top-Layer Source Coverage
+
+| Source | mtime | Canonical role |
+|---|---:|---|
+| `Idea/Pratibimba/System/package.json` | 2026-06-02 11:14 | current Theia workspace/package surface |
+| `Idea/Pratibimba/System/pnpm-workspace.yaml` | 2026-06-01 19:36 | extension workspace membership |
+| `Idea/Pratibimba/System/extensions/kernel-bridge` | current Theia source | first-loaded bridge, singleton API, connection/profile/current events |
+| `Idea/Pratibimba/System/extensions/m-extension-runtime` | current Theia source | common runtime bridge API, extension event contracts, protected-field rules |
+| `Idea/Pratibimba/System/extensions/m0-anuttara`..`m5-epii` | current Theia source | six M' layer implementation surfaces |
+| `Idea/Pratibimba/System/extensions/ide-shell-m0-m5` | current Theia source | shell topology and M0-M5 layout composition |
+| `Idea/Pratibimba/System/extensions/agentic-control-room` | current Theia source | M5-4 / S4 mediation window |
+| `Idea/Pratibimba/System/extensions/acceptance-harness` | current Theia source | top-layer readiness and layout acceptance substrate |
+| `docs/specs/M/M0-anuttara-language-architecture.md` | 2026-04-04 13:46:16 | historical M0 language canon, crystallised into [[M0'-SPEC]] |
+| `docs/specs/M/M1-paramasiva-mathematical-dna.md` | 2026-03-05 14:45:32 | historical M1 math/DNA canon, crystallised into [[M1'-SPEC]] |
+| `docs/specs/M/M2-parashakti-vibrational-architecture.md` | 2026-03-05 14:45:32 | historical M2 vibrational canon, crystallised into [[M2'-SPEC]] |
+| `docs/specs/M/M3-mahamaya-symbolic-transcription.md` | 2026-04-04 13:46:16 | historical M3 symbolic canon, crystallised into [[M3'-SPEC]] |
+| `docs/specs/M/M4-nara-personal-interface.md` | 2026-04-04 13:46:16 | historical M4 interface canon, crystallised into [[M4'-SPEC]] |
+| `docs/specs/M/M4-nara-subtle-body-map.md` | 2026-04-04 13:46:16 | historical subtle-body canon, crystallised into [[M4'-SPEC]] |
+| `docs/specs/M/M5-epii-holographic-integration.md` | 2026-03-05 14:45:32 | historical M5 Epii canon, crystallised into [[M5'-SPEC]] |
+| `docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md` | 2026-04-11 11:58:00 | clock/cosmos source for M1'/M2'/M3'/M4' |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md` | 2026-06-01 18:28:40 | Theia-only recast and shell track |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/07-m-extension-individual-tracks.md` | 2026-06-01 00:23:25 | M0'..M5' nominal extension track map |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/08-integrated-plugin-tracks.md` | 2026-06-01 00:25:11 | integrated plugin track map |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` | 2026-06-02 00:16:51 | agentic control / capacity pressure |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md` | 2026-06-02 00:17:57 | readiness status, not canon |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` | 2026-06-02 00:14:24 | current decision register |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.index.json` / `plan.state.json` | 2026-06-02 11:40:41 | ledger only; used for nominal track ownership |
+
+### Shared Privacy And Data Law
+
+M' surfaces may render `MathemeHarmonicProfile`, pointer anchors, world-clock ticks, presence summaries, profile observation handles, review handles, and governed graph/profile projections. They must not render raw journal bodies, raw dream/oracle text, raw birth data, private identity hashes, PersonalNexus payloads, private Graphiti episode bodies, or protected Nara quaternion state outside its consent boundary.
+
+The umbrella profile bridge is therefore cross-cutting infrastructure. [[M0']] may show graph topology, [[M1']] may perform relation/harmonic routes, [[M2']] may interpret harmonic meaning, [[M3']] may transcribe symbolic clock/codon state, [[M4']] may hold protected lived interface, and [[M5']] may review/promote; none of them may fork the bridge or re-home the top-layer kernel.

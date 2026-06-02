@@ -311,6 +311,39 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         )
         self.assertFalse(runtime_smoke["fake_success_for_unavailable_provider"])
 
+    def test_mediated_run_capability_allowlists_cover_s1_s5_evidence_bridge(self):
+        """09.T3 evidence bridge allowlists must distinguish retrieval, deposits, and user-final writes."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        bridge = matrix["m5_4_governance"]["mediated_run_evidence_bridge"]
+
+        self.assertEqual(bridge["packet_type"], "MediatedRunEvidencePacket")
+        self.assertEqual(
+            bridge["required_sources"],
+            [
+                "s0.current_profile",
+                "s2.graph_services",
+                "s3.gateway",
+                "s1.semantic.suggest_links",
+                "s5.persisted_store",
+            ],
+        )
+        self.assertIn("Graphiti protected handles only; no protected bodies", bridge["privacy_guards"])
+        self.assertIn("directFsVaultWrite", bridge["forbidden_capabilities"])
+
+        allowlists = bridge["capability_allowlists"]
+        for actor in ["sophia", "aletheia"]:
+            with self.subTest(actor=actor):
+                self.assertIn("s1.semantic.suggest_links", allowlists[actor])
+                self.assertIn("s1.semantic.neighbors_of", allowlists[actor])
+                self.assertIn("s1.vault.read_file", allowlists[actor])
+                self.assertNotIn("s1.vault.append_block", allowlists[actor])
+
+        self.assertIn("s1.vault.append_block", allowlists["pi"])
+        for capability in ["s1.vault.write_file", "s1.vault.move_file", "s1.vault.rename_file"]:
+            with self.subTest(capability=capability):
+                self.assertIn(capability, bridge["user_final_validation_required"])
+                self.assertNotIn(capability, allowlists["pi"])
+
     def test_every_skill_declares_vak_profile(self):
         """Each skill must carry operates_at_cf / serves_ct / ranges_cp profile fields."""
         matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())

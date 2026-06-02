@@ -1,14 +1,14 @@
 # M-Dev Context Pack - 05.T0
 
-Generated: 2026-05-31T23:34:38.135Z
+Generated: 2026-06-01T17:54:46.858Z
 
 ## Task
 
 - **ID:** 05.T0
-- **Title:** Runtime Baseline, Decision Harness, And Contract Map
+- **Title:** Runtime Baseline, Migration Inventory, And Contract Map
 - **Track:** 05-tauri-ide-shell-and-pratibimba-system.md
-- **Computed status:** in_progress
-- **Write scopes:** Body/M/epi-tauri, Body/M/epi-tauri/**, Idea/Pratibimba/System/**
+- **Computed status:** review
+- **Write scopes:** Body/M/epi-tauri, Body/M/epi-tauri/**, Body/S/S3/gateway, Idea/Pratibimba/System/**, src/components/CommandPalette.tsx, src/components/OmniPanel.tsx, src/domains/M{0..5}_*/*, src/services/*.ts, src/stores/*
 
 ## Required Reading
 
@@ -22,6 +22,7 @@ Read these before implementation. Do not rely on the tranche summary alone.
 - `Body/M/epi-tauri/src/domains/M5_Epii/EpiiDashboard.tsx`
 - `Body/M/epi-tauri/src/services/types.ts`
 - `Body/M/epi-tauri/src/shell/Shell.tsx`
+- `Body/S/S3/gateway`
 - `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`
 - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`
 - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`
@@ -37,6 +38,9 @@ Read these before implementation. Do not rely on the tranche summary alone.
 - `src/components/CommandPalette.tsx`
 - `src/components/OmniPanel.tsx`
 - `src/domains/MPrime_Subsystems/MPrimeSubsystemPage.tsx`
+- `src/domains/M{0..5}_*/*`
+- `src/services/*.ts`
+- `src/stores/*`
 - `src/stores/uiStore.ts`
 
 ## Dependency Context
@@ -67,35 +71,39 @@ Current implementation surface observed for this plan:
 
 ## Task Body
 
-1. **T0 - Runtime Baseline, Decision Harness, And Contract Map.**
+1. **T0 - Runtime Baseline, Migration Inventory, And Contract Map.**
 
    Deliverables:
 
-   - Inventory current `Body/M/epi-tauri` build, command/event, service-client, hotkey, workspace, M5, and MPrime subsystem surfaces without changing behavior.
-   - Create the implementation ADR set for the three unresolved choices: Theia browser-mode versus local-server/Electron fallback, single versus multi-webview, and bridge ownership.
-   - Map the existing Theia plan tranches to Track 01-04 dependency gates and identify which work can start before live S0/S2/S3/S5 contracts are complete.
-   - Define the local development topology for M5-3 tests: Tauri app, Theia dev server or bundled Theia app, local gateway, local SpaceTimeDB, local Neo4j/Redis, and S5 persisted test stores.
+   - Inventory `Body/M/epi-tauri` as migration source: enumerate every React component, store, typed service client, hotkey, workspace definition, M5 page, MPrime subsystem page, OmniPanel/command palette surface, and Tauri Rust command/event module that must be translated into Theia idioms. Record this inventory as a per-file map: `src/services/*.ts` → Theia frontend services; `src/stores/*` → Theia state-store equivalents (Theia preferences / workspace storage / DI-scoped state); `src/domains/M{0..5}_*/*` → contributions inside the matching `m{0..5}-*` Theia extension; `src/components/OmniPanel.tsx` and `src/components/CommandPalette.tsx` → Theia command-membrane contribution; `src-tauri/{commands,gateway,graph,temporal,vault,agents,atelier,clock,library,oracle}/*` → either Theia backend modules (where the logic must stay co-located with the Theia process) or direct gateway-reach (where Track 03's `Body/S/S3/gateway` is the canonical home).
+   - Decide and record the Theia version pin against current Theia stable release, Node version, and `@theia/electron` compatibility. Capture the pin in the workspace `package.json` and an ADR.
+   - Decide the package manager. The Theia ecosystem leans Yarn workspaces; the existing `Body/M/epi-tauri` uses pnpm. Choose explicitly and record the decision plus migration plan for the imported lockfile content.
+   - Plan the Electron-builder configuration: app id, signing, auto-update channel (deferred is acceptable), per-OS targets, file inclusion, and how the Theia browser bundle is reused inside the Electron build.
+   - Plan the optional Docker browser-mode build for CI / headless use: Dockerfile structure, port exposure, headless gateway endpoint expectations.
+   - Define the local development topology: Theia dev server, external `Body/S/S3/gateway` Rust process, local SpaceTimeDB, local Neo4j/Redis, S5 persisted test stores. Document the startup ordering and the readiness contract Theia uses to confirm each substrate is reachable.
+   - Map each downstream tranche to Track 01-04 dependency gates and identify which work can start before live S0/S2/S3/S5 contracts are complete.
 
    Verification:
 
-   - `pnpm --dir Body/M/epi-tauri test` passes against the current renderer tests before M5-3 changes begin.
-   - `cargo test --manifest-path Body/M/epi-tauri/src-tauri/Cargo.toml` passes or records existing failures with owners before M5-3 changes begin.
-   - ADRs name the selected prototype commands, ports, CSP requirements, service dependencies, and pass/fail criteria before any Theia embedding code is merged.
+   - `pnpm --dir Body/M/epi-tauri test` passes against current renderer tests, capturing the migration baseline.
+   - `cargo test --manifest-path Body/M/epi-tauri/src-tauri/Cargo.toml` passes or records existing failures with owners before migration begins.
+   - The migration map enumerates every existing source file with a target Theia location or an explicit "lift to gateway" / "delete" disposition.
+   - Theia version pin, package-manager decision, Electron-builder plan, and optional Docker plan are committed as ADRs before T1 begins.
    - No Theia tranche is marked unblocked unless its Track 01-04 dependency contract is either implemented or represented as an explicit readiness-blocked state.
 
 ## Track Open Decisions
 
-- **Theia runtime mode:** Can Theia browser-mode run directly inside Tauri's Wry/WebKit webview with required workers, IndexedDB, asset paths, CSP, and extension-host behavior? If not, is the production fallback local-server-in-webview or Theia Electron sidecar?
-- **Single versus multi-webview:** Should IDE summon navigate the existing webview, open a second Tauri window/webview, or keep `/body` in tray/background with Theia foregrounded? The canon prefers persistent co-existence, but implementation must prove state and resource behavior.
-- **Bridge ownership:** Is the long-lived shared bridge owned by the Tauri Rust process, by a Theia first-loaded extension, or by a hybrid Tauri singleton with Theia and `/body` adapters? The API should be stable before this is finalized.
-- **Theia version pin and update cadence:** The existing Theia plan mentions "1.50+" as an example, but implementation must verify the current stable release and choose an update cadence.
-- **Package manager:** Theia convention often favors Yarn workspaces, while the current Tauri app uses `pnpm`. Decide whether `Idea/Pratibimba/System` follows Theia convention, repo convention, or an explicitly isolated package manager.
-- **Build composition strategy:** Decide whether Tauri bundles Theia static assets, supervises a local Theia server, or embeds/supervises a sidecar. This affects bundle size, CSP, offline behavior, startup time, and security review.
-- **Extension host model:** Decide whether all 6+2 extensions are in-tree Theia-native packages for phase 1, whether any use VS Code Extension API, and how external plugin publishing would be introduced later.
-- **Workspace and state persistence:** Decide which state belongs to Theia workspace storage, Tauri app state, S3 session state, S5 review state, S1/vault files, or bridge cache.
-- **IDE terminal and shell access:** Theia normally provides terminal/task features; Epi-Logos needs bounded agent/task execution. Decide whether a local terminal is available to users, agents, both, or neither in phase 1.
+- **Theia runtime mode — RESOLVED:** Electron is the canonical desktop distribution (via `@theia/electron` + `electron-builder`). The standard Theia browser bundle is retained for CI / optional Docker headless / future shared deployment. No Tauri wrapper, no webview embedding question.
+- **Single versus multi-webview — RESOLVED:** One Theia process, one renderer, two workspace layout modes (`daily-0-1.layout` and `ide-deep.layout`) switched via Theia's `Layout Restorer` / `Workspace` services. No cross-webview state question.
+- **Bridge ownership — RESOLVED:** The kernel-bridge is a first-loaded Theia extension. Its backend module is the only Theia-side connection to the external `Body/S/S3/gateway` Rust process; its frontend module publishes `KernelBridgeAPI` through Theia DI to both layouts.
+- **Build composition strategy — RESOLVED:** Electron-builder produces the canonical desktop bundle reusing the standard Theia browser bundle inside the Electron renderer. The browser bundle alone is deployable for CI / Docker headless.
+- **Extension host model — RESOLVED:** Theia-native throughout. No VS Code Extension API borrows currently committed (the earlier `obsidian-md-vsc` borrow was reversed per IOD-19 once research surfaced it as Obsidian-app remote-control rather than vault renderer). The dual-extension-API capability remains as escape hatch; future borrows must justify the dependency through PRD-04.
+- **Theia version pin and update cadence — OPEN:** T0 must verify the current Theia stable release against Node version and `@theia/electron` compatibility, pin in `package.json`, and choose an update cadence.
+- **Package manager — OPEN:** Theia convention often favors Yarn workspaces; the migration source `Body/M/epi-tauri` uses pnpm. T0 must decide explicitly for `Idea/Pratibimba/System`.
+- **Workspace and state persistence — OPEN:** Decide which state belongs to Theia workspace storage, Theia preferences, S3 session state, S5 review state, S1/vault files, or kernel-bridge cache.
+- **IDE terminal and shell access — OPEN:** Theia normally provides terminal/task features; Epi-Logos needs bounded agent/task execution. Decide whether a local terminal is available to users, agents, both, or neither in phase 1.
 - **Source of deep M-extension ownership:** Track 05 owns the shell, registry, and first real contribution slices, but deeper M1/M2/M3/M4 subsystem renderers may require follow-on tracks once backend contracts mature.
-- **Current source gap:** The source specs define the desired Theia shell and M5' workbench, but they do not yet provide a definitive Theia/Tauri embedding proof, bridge-host decision, or SpaceTimeDB table/stream shape for Theia beyond upstream track contracts.
+- **Current source gap:** The source specs define the desired Theia shell and M5' workbench, but deeper M-subsystem renderer specs and SpaceTimeDB table/stream shapes for Theia beyond upstream track contracts remain to be elaborated.
 
 ## Decision Register Excerpt
 
@@ -105,9 +113,9 @@ Current implementation surface observed for this plan:
 | UFV-02 | User-final validation threshold for recursive or corpus-affecting changes | User-final validation | 04, 05, 07, 08 |
 | UFV-03 | Menubar/background lifecycle semantics | User-final validation | 05, 06, 08 |
 | UFV-04 | Daily-flow review interruption and default lightweight agent | User-final validation | 04, 06, 07, 08 |
-| PRD-01 | Theia browser-mode in Tauri versus local-server/Electron fallback | Prototype-resolved | 01, 05, 06, 07, 08 |
-| PRD-02 | Single-webview navigation versus multi-webview persistence | Prototype-resolved | 05, 06, 08 |
-| PRD-03 | Kernel-bridge host boundary | Prototype-resolved | 01, 03, 05, 06, 07, 08 |
+| PRD-01 | ~~Theia browser-mode in Tauri versus local-server/Electron fallback~~ **Resolved: Theia-only, Electron-primary (no Tauri wrapper)** | Resolved | — |
+| PRD-02 | ~~Single-webview navigation versus multi-webview persistence~~ **Resolved: Theia Layout Restorer / Workspace service handles layout switching inside one process** | Resolved | — |
+| PRD-03 | ~~Kernel-bridge host boundary~~ **Resolved: first-loaded Theia extension; backend module connects to external Rust gateway via WS/JSON-RPC** | Resolved | — |
 | PRD-04 | Theia extension API, version, package manager, and build composition | Prototype-resolved | 05, 07, 08 |
 | IOD-01 | S3 single WebSocket surface: physical multiplexing versus app-level manager | Implementation-owner | 01, 03, 05, 06, 07, 08 |
 | IOD-02 | SpaceTimeDB auth/RLS and privacy discipline | Implementation-owner | 03, 04, 05, 06, 08 |
@@ -124,6 +132,8 @@ Current implementation surface observed for this plan:
 | IOD-13 | Nara vault/write service ownership | Implementation-owner | 03, 04, 05, 06, 07, 08 |
 | IOD-14 | Plugin activation, composition, and mini-mode model | Implementation-owner | 05, 07, 08 |
 | IOD-17 | `capability-matrix.json` as canonical agent-tool governance authority | Implementation-owner | 01, 04, 09 |
+| IOD-18 | Smart Connections via Hen `smart_env.rs` as canonical vault semantic-index reader | Implementation-owner | 03, 04, 05, 07, 09 |
+| IOD-19 | Hen as canonical vault-write gatekeeper (wikilink integrity, path soundness) | Implementation-owner | 03, 05, 07, 09 |
 | DSD-01 | Live local-service harness and CI sequencing | Dependency and sequencing | 01, 02, 03, 04, 05, 06, 07, 08 |
 | DSD-02 | Track 01-04 contract readiness before UI hardening | Dependency and sequencing | 05, 06, 07, 08 |
 | DSD-03 | Non-dry-run promotion waits for compiler mutation law | Dependency and sequencing | 04, 05, 07, 08 |
@@ -177,35 +187,20 @@ Current implementation surface observed for this plan:
 - **Validation path:** S5 DTO tests for alert category/priority; `/body` UX tests for passive versus interrupting alerts; human-gate tests proving no agent approval affordance appears for human-required reviews.
 - **Consequence of delaying:** Shell `1` can show safe review counts and readiness, but should not expose default agent promises or interruption behavior as final UX.
 
-### PRD-01 - Theia browser-mode in Tauri versus local-server/Electron fallback
+### PRD-01 - ~~Theia browser-mode in Tauri versus local-server/Electron fallback~~ **RESOLVED**
 
-- **Question:** Can Theia browser-mode run directly inside Tauri v2 Wry/WebKit with workers, IndexedDB, asset paths, CSP, extension-host behavior, WebSockets, and IPC, or does production require a supervised localhost server or Electron sidecar?
-- **Why it matters:** This decides bundle shape, security review, offline behavior, startup time, port management, process supervision, and whether the IDE is truly one Tauri product rather than a second app.
-- **Affected tracks:** 01, 05, 06, 07, 08.
-- **Options:** Bundled browser-mode assets in Tauri webview; Tauri-supervised local Theia server loaded in webview; Tauri-spawned Theia Electron sidecar.
-- **Recommended default if safe:** Prototype browser-mode-in-webview first; fallback to supervised localhost browser-mode if direct asset loading fails; treat Electron sidecar as last resort.
-- **Validation path:** One-to-two day prototype that launches Tauri, opens `/body`, summons a real Theia workbench, activates a readiness contribution, exercises workers/IndexedDB/CSP/WebSocket/IPC, and records an ADR.
-- **Consequence of delaying:** Build scripts, CSP, deep-link verification, Theia version pin, and extension test harnesses remain unstable.
+- **Resolution:** Theia-only as THE shell. No Tauri wrapper. Electron is canonical desktop deployment (confirmed by Theia documentation and ecosystem reference architectures — Gitpod, Eclipse Che, Coder); browser-mode is built from the same Theia codebase and optionally containerised per the canonical `theiaide` Docker pattern for headless/CI/shared deployment. Decision recorded in `m5-prime-system-shape-and-tauri-ide-canon.md` §0 thesis points 2-3, §2-§3.
+- **What this collapses:** Tauri composition prototype (Track 05 T2); single-vs-multi-webview question across surfaces (PRD-02); kernel-bridge host hybrid question (PRD-03); CSP-in-Tauri-webview verification; deep-link URL-scheme cross-app routing.
+- **What remains:** Electron build configuration (electron-builder for Squirrel/AppImage/dmg distributions); optional Docker browser-mode build for CI. **No strategic VS Code Extension API borrows currently committed** — the earlier `obsidian-md-vsc` borrow was reversed once research surfaced that the extension is an Obsidian-app remote-control shim (via Advanced URI) not a vault renderer, requires a running Obsidian, and does not render wikilinks / parse vault structure / serve Smart Connections. S1 vault reach is now filesystem-direct-read + Hen-gateway-write per IOD-19; Smart Connections via Hen `smart_env.rs` per IOD-18.
 
-### PRD-02 - Single-webview navigation versus multi-webview persistence
+### PRD-02 - ~~Single-webview navigation versus multi-webview persistence~~ **RESOLVED**
 
-- **Question:** Should IDE summon navigate the existing webview, open a second Tauri webview/window, or keep `/body` in menubar/background while Theia foregrounds?
-- **Why it matters:** The canon prefers persistent co-existence; implementation must prove state preservation, resource use, bridge identity, and user lifecycle semantics.
-- **Affected tracks:** 05, 06, 08.
-- **Options:** Single-webview navigation with persisted restore; multi-window/multi-webview co-existence; tray/background `/body` plus Theia foreground.
-- **Recommended default if safe:** Multi-webview with `/body` capable of tray/background persistence, provided the prototype proves shared bridge identity and acceptable resource behavior.
-- **Validation path:** Tauri e2e opens `/body`, summons IDE, verifies both surfaces share profile generation/session/review notifications, closes IDE, and verifies `/body` resumes without duplicate subscriptions.
-- **Consequence of delaying:** Menubar/background, deep links, workspace persistence, and integrated plugin multi-window tests cannot close.
+- **Resolution:** Obviated by PRD-01. Single Theia process, two workspace layout modes (0/1 daily + deep IDE), switched via Theia's built-in `Layout Restorer` / `Workspace` service. No cross-webview persistence problem because there's no webview-across-apps split. Inside the deep IDE layout, Theia handles its own multi-pane / multi-editor / multi-window UX natively.
 
-### PRD-03 - Kernel-bridge host boundary
+### PRD-03 - ~~Kernel-bridge host boundary~~ **RESOLVED**
 
-- **Question:** Is the long-lived shared bridge owned by Theia as first-loaded extension, by the Tauri Rust process, or by a Tauri singleton service with Theia and `/body` adapters?
-- **Why it matters:** All M-extension and `/body` consumers need one profile/session/subscription identity, but canon simultaneously names `kernel-bridge` as first-loaded Theia extension and requires `/body` lite mode to share the same instance.
-- **Affected tracks:** 01, 03, 05, 06, 07, 08.
-- **Options:** Pure Theia extension host; Tauri-owned service exposed to Theia and `/body`; hybrid Tauri singleton plus Theia-native adapter/API.
-- **Recommended default if safe:** Hybrid Tauri singleton plus stable Theia-native `KernelBridgeAPI` adapter, because it best satisfies one-app shared instance, `/body` lite mode, and Theia DI consumption.
-- **Validation path:** Contract tests for `KernelBridgeAPI`; service tests proving one S3/SpaceTimeDB subscription fans out to `/body` and Theia; background upgrade/downgrade tests; ADR before downstream extension APIs freeze.
-- **Consequence of delaying:** Tracks 06-08 can define against an API seam, but cannot finalize subscription economy, background behavior, or performance/privacy claims.
+- **Resolution:** Kernel-bridge is a first-loaded Theia extension. Its frontend module publishes `KernelBridgeAPI` through Theia DI to all M-extensions and integrated plugins. Its backend module connects to the external [[Body/S/S3/gateway]] Rust process via WebSocket/JSON-RPC (the canonical Theia pattern for backend services — same as every LSP integration). Both the 0/1 daily layout and the deep IDE layout share the same bridge instance because there is one Theia process. The Rust gateway is the substrate-of-substrate and stays where it is; the bridge is the thin TS proxy.
+- **What this resolves:** No Tauri-singleton hybrid; no cross-process subscription multiplexing; no `/body`-vs-Theia bridge-host ambiguity; one subscription source fans out via Theia DI inside one process. Language divergence stays at the substrate boundary (TS at shell, Rust + C in gateway/kernel).
 
 ### PRD-04 - Theia extension API, version, package manager, and build composition
 
@@ -215,6 +210,7 @@ Current implementation surface observed for this plan:
 - **Options:** Recent stable Theia with Theia-native extensions; VS Code Extension API for compatibility; Yarn workspaces per Theia convention; `pnpm` per repo convention; isolated package manager; bundled static assets or supervised local server.
 - **Recommended default if safe:** Recent stable Theia, Theia-native extensions for `kernel-bridge` and M surfaces, in-tree `Idea/Pratibimba/System/extensions`, and a package-manager choice made by the Tauri/Theia prototype rather than assumed.
 - **Skill-vs-tool invariant (from VAK-as-Operational-Substrate landing):** Within the agent-capability layer (`Body/S/S4/plugins/pleroma/capability-matrix.json`), `vak_profile` is a skill-level concept: every `skills[]` entry has a matching `skills/<name>/SKILL.md` directory enforced by `test_matrix_maps_real_agents_skills_and_hooks`. `dispatch_tools[]` entries are tools not skills and carry no `vak_profile`. Theia extensions hosting skills (under `Idea/Pratibimba/System/extensions/*/skills/*/SKILL.md`) inherit this invariant; new agent capabilities added through Theia extensions must respect skill-vs-tool distinction at matrix-authoring time. See `IOD-17` for the broader governance authority.
+- **VS Code Extension API borrows — none currently committed.** Theia's dual-extension-API capability remains as an escape hatch but the earlier `obsidian-md-vsc` borrow was reversed (not a vault renderer; see IOD-19). M-extensions + integrated plugins + kernel-bridge + Canon Studio markdown editor + smart-connections-bridge sidebar + bimba-coordinate file-tree are all Theia-native. Future borrows must show clear ecosystem value before adoption.
 - **Validation path:** Build `kernel-bridge` plus `m0-anuttara` as Theia-native slices; verify workbench command/layout service activation; record Theia version/package manager/update cadence ADR; verify any Theia-extension-hosted skills respect the skill-vs-tool invariant via the live `test_matrix_maps_real_agents_skills_and_hooks` check.
 - **Consequence of delaying:** Track 07 package inventory and Track 08 composition contracts remain abstract and cannot be enforced by static checks.
 

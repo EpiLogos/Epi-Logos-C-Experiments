@@ -1,0 +1,311 @@
+{
+  "fixture_kind": "10-t2-s2-graph-baseline",
+  "captured_at": "2026-06-02T00:05:02.924Z",
+  "captured_via": "cargo test --offline + source-driven extraction of seed.rs and graph-schema/src/lib.rs",
+  "substrate_anchors": {
+    "graph_schema": "Body/S/S2/graph-schema/src/lib.rs",
+    "graph_services_lib": "Body/S/S2/graph-services/src/lib.rs",
+    "graph_services_seed": "Body/S/S2/graph-services/src/seed.rs",
+    "graph_services_dataset_import": "Body/S/S2/graph-services/src/dataset_import.rs"
+  },
+  "cargo_test_summary": {
+    "ok": true,
+    "label": "s2-graph-services",
+    "manifestPath": "Body/S/S2/graph-services/Cargo.toml",
+    "passed": 157,
+    "failed": 0,
+    "ignored": 11
+  },
+  "canonical_coordinate_nodes": [
+    {
+      "coordinate": "M0",
+      "id_provenance": {
+        "scheme": "uuid-v5",
+        "namespace": "e9110605-0000-4000-8000-000000000001",
+        "input_bytes": "M0",
+        "code_path": "Body/S/S2/graph-services/src/seed.rs::coord_uuid"
+      },
+      "psychoid_name": "Anuttara",
+      "namespace": [
+        "Bimba",
+        "Psychoid"
+      ],
+      "properties_set_by_seed": [
+        "coordinate",
+        "c_2_uuid",
+        "c_1_name",
+        "c_4_family",
+        "c_4_layer",
+        "c_4_ql_position",
+        "c_4_topo_mode",
+        "c_4_weave_state",
+        "c_4_inversion_state",
+        "c_4_flags"
+      ],
+      "c_4_family": "M",
+      "c_4_layer": "COORDINATE",
+      "c_4_topo_mode": "ZERO_SPHERE",
+      "source_anchor": "docs/architecture/COORDINATE-MAP.md (M-family M0 entry)",
+      "spec_anchor": "Idea/Bimba/Seeds/M/M0/M0-SPEC.md",
+      "code_anchor": "Body/S/S2/graph-services/src/seed.rs::seed_coordinate_space",
+      "test_anchor": "Body/S/S2/graph-services/tests/seed_contract.rs::seed_baseline_query_set_covers_m_prime_smoke_consumers"
+    },
+    {
+      "coordinate": "M1",
+      "id_provenance": {
+        "scheme": "uuid-v5",
+        "namespace": "e9110605-0000-4000-8000-000000000001",
+        "input_bytes": "M1",
+        "code_path": "Body/S/S2/graph-services/src/seed.rs::coord_uuid"
+      },
+      "psychoid_name": "Paramasiva",
+      "namespace": [
+        "Bimba",
+        "Psychoid"
+      ],
+      "properties_set_by_seed": [
+        "coordinate",
+        "c_2_uuid",
+        "c_1_name",
+        "c_4_family",
+        "c_4_layer",
+        "c_4_ql_position",
+        "c_4_topo_mode",
+        "c_4_weave_state",
+        "c_4_inversion_state",
+        "c_4_flags"
+      ],
+      "c_4_family": "M",
+      "c_4_layer": "COORDINATE",
+      "c_4_topo_mode": "TORUS",
+      "source_anchor": "docs/architecture/COORDINATE-MAP.md (M-family M1 entry)",
+      "spec_anchor": "Idea/Bimba/Seeds/M/M1/M1-SPEC.md",
+      "code_anchor": "Body/S/S2/graph-services/src/seed.rs::seed_coordinate_space",
+      "test_anchor": "Body/S/S2/graph-services/tests/seed_contract.rs::seed_baseline_query_set_covers_m_prime_smoke_consumers"
+    },
+    {
+      "coordinate": "M2",
+      "id_provenance": {
+        "scheme": "uuid-v5",
+        "namespace": "e9110605-0000-4000-8000-000000000001",
+        "input_bytes": "M2",
+        "code_path": "Body/S/S2/graph-services/src/seed.rs::coord_uuid"
+      },
+      "psychoid_name": "Parashakti",
+      "namespace": [
+        "Bimba",
+        "Psychoid"
+      ],
+      "properties_set_by_seed": [
+        "coordinate",
+        "c_2_uuid",
+        "c_1_name",
+        "c_4_family",
+        "c_4_layer",
+        "c_4_ql_position",
+        "c_4_topo_mode",
+        "c_4_weave_state",
+        "c_4_inversion_state",
+        "c_4_flags"
+      ],
+      "c_4_family": "M",
+      "c_4_layer": "COORDINATE",
+      "c_4_topo_mode": "TORUS",
+      "source_anchor": "docs/architecture/COORDINATE-MAP.md (M-family M2 entry)",
+      "spec_anchor": "Idea/Bimba/Seeds/M/M2/M2-SPEC.md",
+      "code_anchor": "Body/S/S2/graph-services/src/seed.rs::seed_coordinate_space",
+      "test_anchor": "Body/S/S2/graph-services/tests/seed_contract.rs::seed_baseline_query_set_covers_m_prime_smoke_consumers"
+    },
+    {
+      "coordinate": "M3",
+      "id_provenance": {
+        "scheme": "uuid-v5",
+        "namespace": "e9110605-0000-4000-8000-000000000001",
+        "input_bytes": "M3",
+        "code_path": "Body/S/S2/graph-services/src/seed.rs::coord_uuid"
+      },
+      "psychoid_name": "Mahamaya",
+      "namespace": [
+        "Bimba",
+        "Psychoid"
+      ],
+      "properties_set_by_seed": [
+        "coordinate",
+        "c_2_uuid",
+        "c_1_name",
+        "c_4_family",
+        "c_4_layer",
+        "c_4_ql_position",
+        "c_4_topo_mode",
+        "c_4_weave_state",
+        "c_4_inversion_state",
+        "c_4_flags"
+      ],
+      "c_4_family": "M",
+      "c_4_layer": "COORDINATE",
+      "c_4_topo_mode": "TORUS",
+      "source_anchor": "docs/architecture/COORDINATE-MAP.md (M-family M3 entry)",
+      "spec_anchor": "Idea/Bimba/Seeds/M/M3/M3-SPEC.md",
+      "code_anchor": "Body/S/S2/graph-services/src/seed.rs::seed_coordinate_space",
+      "test_anchor": "Body/S/S2/graph-services/tests/seed_contract.rs::seed_baseline_query_set_covers_m_prime_smoke_consumers"
+    },
+    {
+      "coordinate": "M4",
+      "id_provenance": {
+        "scheme": "uuid-v5",
+        "namespace": "e9110605-0000-4000-8000-000000000001",
+        "input_bytes": "M4",
+        "code_path": "Body/S/S2/graph-services/src/seed.rs::coord_uuid"
+      },
+      "psychoid_name": "Nara",
+      "namespace": [
+        "Bimba",
+        "Psychoid"
+      ],
+      "properties_set_by_seed": [
+        "coordinate",
+        "c_2_uuid",
+        "c_1_name",
+        "c_4_family",
+        "c_4_layer",
+        "c_4_ql_position",
+        "c_4_topo_mode",
+        "c_4_weave_state",
+        "c_4_inversion_state",
+        "c_4_flags"
+      ],
+      "c_4_family": "M",
+      "c_4_layer": "COORDINATE",
+      "c_4_topo_mode": "LEMNISCATE",
+      "source_anchor": "docs/architecture/COORDINATE-MAP.md (M-family M4 entry)",
+      "spec_anchor": "Idea/Bimba/Seeds/M/M4/M4-SPEC.md",
+      "code_anchor": "Body/S/S2/graph-services/src/seed.rs::seed_coordinate_space",
+      "test_anchor": "Body/S/S2/graph-services/tests/seed_contract.rs::seed_baseline_query_set_covers_m_prime_smoke_consumers"
+    },
+    {
+      "coordinate": "M5",
+      "id_provenance": {
+        "scheme": "uuid-v5",
+        "namespace": "e9110605-0000-4000-8000-000000000001",
+        "input_bytes": "M5",
+        "code_path": "Body/S/S2/graph-services/src/seed.rs::coord_uuid"
+      },
+      "psychoid_name": "Epii",
+      "namespace": [
+        "Bimba",
+        "Psychoid"
+      ],
+      "properties_set_by_seed": [
+        "coordinate",
+        "c_2_uuid",
+        "c_1_name",
+        "c_4_family",
+        "c_4_layer",
+        "c_4_ql_position",
+        "c_4_topo_mode",
+        "c_4_weave_state",
+        "c_4_inversion_state",
+        "c_4_flags"
+      ],
+      "c_4_family": "M",
+      "c_4_layer": "COORDINATE",
+      "c_4_topo_mode": "ZERO_SPHERE",
+      "source_anchor": "docs/architecture/COORDINATE-MAP.md (M-family M5 entry)",
+      "spec_anchor": "Idea/Bimba/Seeds/M/M5/M5-SPEC.md",
+      "code_anchor": "Body/S/S2/graph-services/src/seed.rs::seed_coordinate_space",
+      "test_anchor": "Body/S/S2/graph-services/tests/seed_contract.rs::seed_baseline_query_set_covers_m_prime_smoke_consumers"
+    }
+  ],
+  "accepted_relation_registry": [
+    "REFERENCES",
+    "SOURCES",
+    "CONTAINS",
+    "PART_OF",
+    "ELABORATES",
+    "CONTRASTS",
+    "IMPLEMENTS",
+    "OPERATES_IN",
+    "REFLECTS_AS",
+    "INVERTS_TO",
+    "SUPPORTS",
+    "CRITIQUES",
+    "DERIVES_FROM",
+    "PROMOTES_TO",
+    "SYNCED_FROM",
+    "POS0_LINKS_TO",
+    "POS5_INTEGRATES_INTO",
+    "GENERATES",
+    "ENTANGLES",
+    "INTERLEAVES",
+    "MANIFESTS",
+    "BEDROCK",
+    "FAMILY_CONTAINS",
+    "MOBIUS_RETURN",
+    "ANCHORED_TO"
+  ],
+  "seed_relationship_types": [
+    "GENERATES",
+    "ENTANGLES",
+    "INTERLEAVES",
+    "MANIFESTS",
+    "BEDROCK",
+    "INVERTS_TO",
+    "FAMILY_CONTAINS",
+    "REFLECTS_AS",
+    "OPERATES_IN",
+    "MOBIUS_RETURN",
+    "ANCHORED_TO"
+  ],
+  "schema_test_pass": true,
+  "hash_root_mapping_resolution": {
+    "status": "resolved",
+    "canonical_root": "#",
+    "legacy_alias_axis": [
+      "#0",
+      "#1",
+      "#2",
+      "#3",
+      "#4",
+      "#5"
+    ],
+    "legacy_alias_targets": [
+      "M0",
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5"
+    ],
+    "evidence_anchor": "Body/S/S2/graph-services/tests/seed_contract.rs::live_seed_baseline_is_idempotent_and_queryable_by_coordinate_api (L87-L105)",
+    "rule": "Root \"#\" stays canonical (resolution.canonical == \"#\"); legacy \"#N\" coordinates resolve to M-family (\"#4\" -> \"M4\") while still being seeded as nodes so old queries do not break."
+  },
+  "relation_type_divergence_resolution": {
+    "status": "resolved",
+    "seed_emits": [
+      "GENERATES",
+      "ENTANGLES",
+      "INTERLEAVES",
+      "MANIFESTS",
+      "BEDROCK",
+      "INVERTS_TO",
+      "FAMILY_CONTAINS",
+      "REFLECTS_AS",
+      "OPERATES_IN",
+      "MOBIUS_RETURN",
+      "ANCHORED_TO"
+    ],
+    "schema_accepts_total": 25,
+    "seed_subset_of_schema": true,
+    "evidence_anchor": "Body/S/S2/graph-services/tests/schema_creation_contract.rs::coordinate_property_registry_covers_nodes_and_relationships"
+  },
+  "verification_commands": [
+    "cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml"
+  ],
+  "downstream_consumers": [
+    "/body (M0 Anuttara Inspector, M5 Epii Review surface)",
+    "Theia shell (graph traversal panel)",
+    "M-extensions (m0-anuttara-inspector, m5-epii-review-surface)",
+    "integrated plugins (plugin-integrated-4-5-0 graph payloads)",
+    "M5-4 agents (epii-agent-core, recompose pass)"
+  ]
+}

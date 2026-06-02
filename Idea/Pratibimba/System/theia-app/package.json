@@ -24,7 +24,10 @@
     "@theia/variable-resolver": "1.56.0",
     "@theia/workspace": "1.56.0",
     "@pratibimba/kernel-bridge-readiness": "workspace:*",
+    "@pratibimba/kernel-bridge": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/pratibimba-layouts": "workspace:*",
+    "@pratibimba/omnipanel-shell": "workspace:*",
     "@pratibimba/m0-anuttara": "workspace:*",
     "@pratibimba/m1-paramasiva": "workspace:*",
     "@pratibimba/m2-parashakti": "workspace:*",
@@ -33,7 +36,11 @@
     "@pratibimba/m5-epii": "workspace:*",
     "@pratibimba/integrated-composition": "workspace:*",
     "@pratibimba/plugin-integrated-1-2-3": "workspace:*",
-    "@pratibimba/plugin-integrated-4-5-0": "workspace:*"
+    "@pratibimba/plugin-integrated-4-5-0": "workspace:*",
+    "@pratibimba/ide-shell-m0-m5": "workspace:*",
+    "@pratibimba/agentic-control-room": "workspace:*",
+    "@pratibimba/acceptance-harness": "workspace:*",
+    "@pratibimba/body-lite-surface": "workspace:*"
   },
   "devDependencies": {
     "@theia/cli": "1.56.0",

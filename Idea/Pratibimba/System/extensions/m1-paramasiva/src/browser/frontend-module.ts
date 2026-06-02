@@ -11,7 +11,8 @@ import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
-    parseExtensionRoute
+    parseExtensionRoute,
+    registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M1ParamasivaWidget } from './m1-paramasiva-widget';
 import {
@@ -72,6 +73,13 @@ export class M1ParamasivaContribution
                     return this.openView({ activate: true, reveal: true });
                 }
             }
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'schema',
+            'M1 Paramasiva: Open Schema Walk',
+            () => this.openView({ activate: true, reveal: true })
         );
     }
 }

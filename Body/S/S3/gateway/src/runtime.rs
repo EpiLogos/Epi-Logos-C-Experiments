@@ -21,6 +21,40 @@ struct GatewayRuntimeInner {
     chat_runs: Mutex<ChatRunRegistry>,
     chat_processes: Mutex<HashMap<String, Arc<AsyncMutex<tokio::process::Child>>>>,
     aborted_chat_runs: Mutex<HashSet<String>>,
+    subscriptions: Mutex<HashMap<String, GatewaySubscriptionRecord>>,
+}
+
+/// Per-gateway record of an active live subscription (s3'.temporal.subscribe or
+/// s3'.spacetime.subscribe). Keys the auth-bound subscription identity so
+/// lifecycle/delta events emitted onto the shared GatewayEvent broadcast can be
+/// correlated by consumers and replayed/reaped per session or agent.
+///
+/// `source` distinguishes `websocket-multiplex` (the canonical client-facing
+/// single-WS path) from `http-sql-fallback` (the explicit degraded mode named
+/// in 03.T2 deliverable 5). `privacy_class` carries the M5-4 stream-metadata
+/// privacy gate downstream consumers must honour.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct GatewaySubscriptionRecord {
+    pub subscription_id: String,
+    pub method: String,
+    pub connection_id: u64,
+    pub session_key: String,
+    pub agent_id: String,
+    pub scope: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub query_id: Option<String>,
+    pub privacy_class: String,
+    pub source: String,
+    pub day_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub vault_now_path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub graphiti_namespace_ref: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub graphiti_arc_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub projection_source: Option<String>,
+    pub opened_at_ms: u64,
 }
 
 pub struct GatewayEventSubscription {
@@ -224,5 +258,59 @@ impl GatewayRuntimeState {
             .lock()
             .expect("gateway runtime aborted chat lock should not poison")
             .remove(run_id)
+    }
+
+    /// Register a live subscription record. Returns the previous record under
+    /// the same subscription_id, if any (the caller can use this to detect a
+    /// resubscribe-on-same-id pattern).
+    pub fn register_subscription(
+        &self,
+        record: GatewaySubscriptionRecord,
+    ) -> Option<GatewaySubscriptionRecord> {
+        self.inner
+            .subscriptions
+            .lock()
+            .expect("gateway runtime subscriptions lock should not poison")
+            .insert(record.subscription_id.clone(), record)
+    }
+
+    /// Drop a subscription record. Returns the removed record so consumers can
+    /// emit a closed lifecycle event with full identity metadata.
+    pub fn unregister_subscription(
+        &self,
+        subscription_id: &str,
+    ) -> Option<GatewaySubscriptionRecord> {
+        self.inner
+            .subscriptions
+            .lock()
+            .expect("gateway runtime subscriptions lock should not poison")
+            .remove(subscription_id)
+    }
+
+    /// All currently-tracked subscription records (any session, any agent,
+    /// either source). Order is unspecified; sort externally if needed.
+    pub fn active_subscriptions(&self) -> Vec<GatewaySubscriptionRecord> {
+        self.inner
+            .subscriptions
+            .lock()
+            .expect("gateway runtime subscriptions lock should not poison")
+            .values()
+            .cloned()
+            .collect()
+    }
+
+    /// Subscriptions filtered to a single session, sorted by opened_at_ms.
+    pub fn subscriptions_for_session(&self, session_key: &str) -> Vec<GatewaySubscriptionRecord> {
+        let mut records = self
+            .inner
+            .subscriptions
+            .lock()
+            .expect("gateway runtime subscriptions lock should not poison")
+            .values()
+            .filter(|record| record.session_key == session_key)
+            .cloned()
+            .collect::<Vec<_>>();
+        records.sort_by(|left, right| left.opened_at_ms.cmp(&right.opened_at_ms));
+        records
     }
 }

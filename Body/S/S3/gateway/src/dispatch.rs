@@ -69,6 +69,10 @@ pub enum GatewayDispatchOwner {
     S5EpiiAgent,
     S5Autoresearch,
     S0ProductAdapter,
+    /// 03.T6.5: S1 vault gateway surface backed by Hen (canonical
+    /// vault-write gatekeeper per IOD-19; canonical semantic-index reader
+    /// per IOD-18).
+    S1HenGateway,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -93,6 +97,10 @@ pub enum GatewayDispatchClass {
     NodeSurface,
     SkillSurface,
     ProductCompatibility,
+    /// 03.T6.5: vault read/write through Hen; semantic suggest via
+    /// Hen's smart_env reader.
+    VaultGateway,
+    SemanticSurface,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -153,13 +161,34 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "S4/S5",
                 "s3.gateway.agent-runtime",
             ),
-            "s3'.temporal.context" => route(
+            "s3'.temporal.context"
+            | "s3'.temporal.subscribe"
+            | "s3'.spacetime.subscribe" => route(
                 method,
                 GatewayDispatchOwner::S3TemporalGateway,
                 GatewayDispatchClass::TemporalContext,
                 "S3'",
                 "S4/S5",
                 "s3-prime.temporal-context",
+            ),
+            "s1'.vault.read_file"
+            | "s1'.vault.write_file"
+            | "s1'.vault.rename_file"
+            | "s1'.vault.move_file" => route(
+                method,
+                GatewayDispatchOwner::S1HenGateway,
+                GatewayDispatchClass::VaultGateway,
+                "S1'",
+                "S4/S5",
+                "s1-prime.vault-gateway",
+            ),
+            "s1'.semantic.suggest_links" => route(
+                method,
+                GatewayDispatchOwner::S1HenGateway,
+                GatewayDispatchClass::SemanticSurface,
+                "S1'",
+                "S4/S5",
+                "s1-prime.semantic-surface",
             ),
             "s2.graph.query"
             | "s2.graph.node"

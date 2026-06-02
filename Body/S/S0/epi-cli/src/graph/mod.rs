@@ -1,4 +1,5 @@
 use clap::{Subcommand, ValueEnum};
+use neo4rs::query;
 
 pub mod alignment_validator;
 pub mod analyse;
@@ -39,6 +40,12 @@ pub enum GraphCmd {
     Update,
     /// Compare current managed state to desired state and align if needed
     Reconcile,
+    /// Reload the S2 ontology bridge into Neo4j via n10s when available
+    #[command(name = "reload-ontology")]
+    ReloadOntology,
+    /// Create or refresh the S2 Option 1 GDS projection when GDS is available
+    #[command(name = "refresh-gds")]
+    RefreshGds,
     /// Bootstrap the local graph development stack and RedisVL environment
     #[command(name = "bootstrap-dev")]
     BootstrapDev {
@@ -250,9 +257,11 @@ impl From<ConstraintSeverityArg> for epi_kernel_contract::ConstraintSeverity {
 }
 
 pub use epi_s2_graph_services::{
-    fusion_rrf_results, kernel_coordinate_anchor_from_parts, parse_yaml_frontmatter,
-    GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphQueryRequest,
-    GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
+    fusion_rrf_results, gds_procedure_count, import_epi_ontology_with_n10s,
+    kernel_coordinate_anchor_from_parts, option1_projection_plan, parse_yaml_frontmatter,
+    seed::seed_baseline_coordinates, seed::seed_baseline_snapshot_queries,
+    seed::seed_relationship_types, GraphMethodParams, GraphMethodService, GraphNodeRequest,
+    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
     KernelResonanceObservationRequest, PointerWebRefreshRequest, RetrievalResult,
 };
 
@@ -311,7 +320,11 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
             }
             let schema_result = schema::create_schema(&client).await?;
             let seed_result = seed::seed_coordinate_space(&client).await?;
-            meta::write_graph_meta(&client, &meta::desired_meta(schema::SCHEMA_VERSION, 1)).await?;
+            meta::write_graph_meta(
+                &client,
+                &meta::applied_meta(schema::SCHEMA_VERSION, 1, None),
+            )
+            .await?;
             Ok(format!(
                 "Init bootstrapped graph\n\n{}\n\n{}",
                 schema_result, seed_result
@@ -326,7 +339,11 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
             }
             let schema_result = schema::create_schema(&client).await?;
             let seed_result = seed::seed_coordinate_space(&client).await?;
-            meta::write_graph_meta(&client, &meta::desired_meta(schema::SCHEMA_VERSION, 1)).await?;
+            meta::write_graph_meta(
+                &client,
+                &meta::applied_meta(schema::SCHEMA_VERSION, 1, None),
+            )
+            .await?;
             Ok(format!(
                 "Bootstrap complete\n\n{}\n\n{}",
                 schema_result, seed_result
@@ -338,13 +355,18 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                 .map_err(|e| format!("connect failed: {}", e))?;
             let schema_result = schema::create_schema(&client).await?;
             let seed_result = seed::seed_coordinate_space(&client).await?;
-            let current_revision = meta::read_graph_meta(&client)
-                .await?
+            let current_meta = meta::read_graph_meta(&client).await?;
+            let current_revision = current_meta
+                .as_ref()
                 .map(|m| m.graph_revision)
                 .unwrap_or_default();
             meta::write_graph_meta(
                 &client,
-                &meta::desired_meta(schema::SCHEMA_VERSION, current_revision + 1),
+                &meta::applied_meta(
+                    schema::SCHEMA_VERSION,
+                    current_revision + 1,
+                    current_meta.as_ref(),
+                ),
             )
             .await?;
             let semantic_result = maybe_refresh_semantic_embeddings(&client).await?;
@@ -362,51 +384,211 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
             let config = client::Neo4jConfig::from_env();
             let client = client::Neo4jClient::connect(&config)
                 .map_err(|e| format!("connect failed: {}", e))?;
-            let desired_hash = meta::seed_source_hash();
             let current_meta = meta::read_graph_meta(&client).await?;
             let bootstrapped = meta::is_bootstrapped(&client).await?;
+            let desired_meta = meta::desired_meta(
+                schema::SCHEMA_VERSION,
+                current_meta
+                    .as_ref()
+                    .map(|meta| meta.graph_revision)
+                    .unwrap_or_default(),
+            );
+            let graph_backed = live_graph_backed_evidence(&client).await?;
 
             if !bootstrapped {
                 let schema_result = schema::create_schema(&client).await?;
                 let seed_result = seed::seed_coordinate_space(&client).await?;
-                meta::write_graph_meta(&client, &meta::desired_meta(schema::SCHEMA_VERSION, 1))
-                    .await?;
+                meta::write_graph_meta(
+                    &client,
+                    &meta::applied_meta(schema::SCHEMA_VERSION, 1, None),
+                )
+                .await?;
                 return Ok(format!(
                     "Reconcile bootstrapped empty graph\n\n{}\n\n{}",
                     schema_result, seed_result
                 ));
             }
 
+            let structural_aligned = graph_backed.seed_baseline_ok
+                && graph_backed.relation_registry_ok
+                && current_meta
+                    .as_ref()
+                    .map(|meta| {
+                        meta.schema_version == schema::SCHEMA_VERSION
+                            && meta.embedding_version == meta::EMBEDDING_VERSION
+                            && meta.q_schema_version == meta::Q_SCHEMA_VERSION
+                    })
+                    .unwrap_or(false);
+            let mut manual_drift = Vec::new();
+            if graph_backed.dataset_nodes == 0 {
+                manual_drift.push("dataset");
+            }
             if current_meta
                 .as_ref()
                 .map(|meta| {
-                    meta.seed_source_hash == desired_hash
-                        && meta.schema_version == schema::SCHEMA_VERSION
-                        && meta.embedding_version == meta::EMBEDDING_VERSION
-                        && meta.q_schema_version == meta::Q_SCHEMA_VERSION
+                    meta.ontology_version_iri.is_empty() || meta.ontology_turtle_sha256.is_empty()
                 })
-                .unwrap_or(false)
+                .unwrap_or(true)
             {
-                return Ok("Reconcile: graph already aligned".into());
+                manual_drift.push("ontology");
+            }
+            if graph_backed.gds_available
+                && current_meta
+                    .as_ref()
+                    .map(|meta| meta.gds_projection_version.is_empty())
+                    .unwrap_or(true)
+            {
+                manual_drift.push("gds");
+            }
+            if structural_aligned {
+                return if manual_drift.is_empty() {
+                    Ok("Reconcile: graph already aligned".into())
+                } else {
+                    Ok(format!(
+                        "Reconcile: structural state aligned; manual drift remains for {}. Use `graph import all`, ontology reload, and GDS projection refresh before release.",
+                        manual_drift.join(", ")
+                    ))
+                };
             }
 
             let schema_result = schema::create_schema(&client).await?;
             let seed_result = seed::seed_coordinate_space(&client).await?;
-            let current_revision = current_meta.map(|m| m.graph_revision).unwrap_or_default();
+            let current_revision = current_meta
+                .as_ref()
+                .map(|m| m.graph_revision)
+                .unwrap_or_default();
             meta::write_graph_meta(
                 &client,
-                &meta::desired_meta(schema::SCHEMA_VERSION, current_revision + 1),
+                &meta::applied_meta(
+                    schema::SCHEMA_VERSION,
+                    current_revision + 1,
+                    current_meta.as_ref(),
+                ),
             )
             .await?;
             let semantic_result = maybe_refresh_semantic_embeddings(&client).await?;
+            let post_meta = meta::read_graph_meta(&client).await?;
+            let post_graph_backed = live_graph_backed_evidence(&client).await?;
+            let mut remaining_manual_drift = Vec::new();
+            if post_graph_backed.dataset_nodes == 0 {
+                remaining_manual_drift.push("dataset");
+            }
+            if post_meta
+                .as_ref()
+                .map(|meta| {
+                    meta.ontology_version_iri.is_empty() || meta.ontology_turtle_sha256.is_empty()
+                })
+                .unwrap_or(true)
+            {
+                remaining_manual_drift.push("ontology");
+            }
+            if post_graph_backed.gds_available
+                && post_meta
+                    .as_ref()
+                    .map(|meta| meta.gds_projection_version.is_empty())
+                    .unwrap_or(true)
+            {
+                remaining_manual_drift.push("gds");
+            }
+            let drift_summary = if remaining_manual_drift.is_empty() {
+                String::new()
+            } else {
+                format!(
+                    "\n\nManual drift remains for {}. Re-import datasets and refresh ontology/GDS state before treating the graph as release-ready.",
+                    remaining_manual_drift.join(", ")
+                )
+            };
             Ok(format!(
-                "Reconcile applied updates\n\n{}\n\n{}",
+                "Reconcile applied updates{}\n\n{}\n\n{}",
+                drift_summary,
                 schema_result,
                 [seed_result, semantic_result]
                     .into_iter()
                     .filter(|item| !item.is_empty())
                     .collect::<Vec<_>>()
                     .join("\n\n")
+            ))
+        }
+        GraphCmd::ReloadOntology => {
+            let config = client::Neo4jConfig::from_env();
+            let client = client::Neo4jClient::connect(&config)
+                .map_err(|e| format!("connect failed: {}", e))?;
+            let current_revision = meta::read_graph_meta(&client)
+                .await?
+                .as_ref()
+                .map(|meta| meta.graph_revision)
+                .unwrap_or_default();
+            import_epi_ontology_with_n10s(&client).await?;
+            let current_meta = meta::read_graph_meta(&client).await?;
+            meta::write_graph_meta(
+                &client,
+                &meta::applied_meta(
+                    schema::SCHEMA_VERSION,
+                    current_revision + 1,
+                    current_meta.as_ref(),
+                ),
+            )
+            .await?;
+            Ok("Ontology bridge reloaded and GraphMeta updated".into())
+        }
+        GraphCmd::RefreshGds => {
+            let config = client::Neo4jConfig::from_env();
+            let client = client::Neo4jClient::connect(&config)
+                .map_err(|e| format!("connect failed: {}", e))?;
+            let gds_count = gds_procedure_count(&client).await?;
+            if gds_count == 0 {
+                return Err(
+                    "GDS procedures are unavailable; graph doctor must remain blocked until the Neo4j topology installs GDS.".into(),
+                );
+            }
+
+            let plan = option1_projection_plan();
+            let rows = client
+                .run_query(
+                    query(&plan.graph_list_cypher)
+                        .param("projection_name", plan.projection_name.as_str()),
+                )
+                .await
+                .map_err(|err| format!("gds graph list failed: {err}"))?;
+            let projection_exists = rows.iter().any(|row| {
+                row.get::<String>("graphName")
+                    .map(|name| name == plan.projection_name)
+                    .unwrap_or(false)
+            });
+
+            let summary = if projection_exists {
+                "GDS projection already present".to_owned()
+            } else {
+                let node_projection = plan
+                    .included_labels
+                    .first()
+                    .cloned()
+                    .ok_or_else(|| "GDS plan missing node projection".to_owned())?;
+                client
+                    .run_query(
+                        query(&plan.project_cypher)
+                            .param("projection_name", plan.projection_name.as_str())
+                            .param("node_projection", node_projection)
+                            .param("relationship_projection", plan.relationship_types.clone()),
+                    )
+                    .await
+                    .map_err(|err| format!("gds graph project failed: {err}"))?;
+                "GDS projection created".to_owned()
+            };
+
+            let current_meta = meta::read_graph_meta(&client).await?;
+            let next_revision = current_meta
+                .as_ref()
+                .map(|meta| meta.graph_revision + 1)
+                .unwrap_or(1);
+            let mut applied =
+                meta::applied_meta(schema::SCHEMA_VERSION, next_revision, current_meta.as_ref());
+            applied.gds_projection_version =
+                meta::desired_meta(schema::SCHEMA_VERSION, next_revision).gds_projection_version;
+            meta::write_graph_meta(&client, &applied).await?;
+            Ok(format!(
+                "{}: {} ({})",
+                summary, plan.projection_name, plan.projection_version
             ))
         }
         GraphCmd::BootstrapDev { dry_run } => {
@@ -658,7 +840,7 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
 
             let importer = dataset_import::DatasetImporter::new(&neo4j, &datasets_dir);
 
-            if dataset == "all" {
+            let output = if dataset == "all" {
                 importer.import_all().await
             } else if dataset == "low-detail" {
                 importer.import_low_detail_all().await
@@ -683,7 +865,23 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                     "Unknown dataset: {} (expected 'all', 'low-detail', 'deep', '*-deep', nodes*.json, or relations*.json)",
                     dataset
                 ))
-            }
+            }?;
+
+            let current_meta = meta::read_graph_meta(&neo4j).await?;
+            let next_revision = current_meta
+                .as_ref()
+                .map(|meta| meta.graph_revision + 1)
+                .unwrap_or(1);
+            meta::write_graph_meta(
+                &neo4j,
+                &meta::applied_meta_with_dataset(
+                    schema::SCHEMA_VERSION,
+                    next_revision,
+                    current_meta.as_ref(),
+                ),
+            )
+            .await?;
+            Ok(output)
         }
 
         GraphCmd::SeedNara => {
@@ -947,6 +1145,102 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
             serde_json::to_string_pretty(&prompt).map_err(|e| e.to_string())
         }
     }
+}
+
+struct LiveGraphBackedEvidence {
+    seed_baseline_ok: bool,
+    dataset_nodes: i64,
+    relation_registry_ok: bool,
+    gds_available: bool,
+}
+
+async fn live_graph_backed_evidence(
+    client: &client::Neo4jClient,
+) -> Result<LiveGraphBackedEvidence, String> {
+    let dataset_rows = client
+        .run(
+            "MATCH (n:Bimba)
+             WHERE n.c_3_source_dataset IS NOT NULL
+             RETURN count(n) AS c",
+        )
+        .await
+        .map_err(|err| format!("dataset evidence query failed: {err}"))?;
+    let dataset_nodes = dataset_rows
+        .first()
+        .and_then(|row| row.get("c").ok())
+        .unwrap_or_default();
+
+    let rel_rows = client
+        .run("MATCH ()-[r]->() RETURN collect(DISTINCT type(r)) AS rel_types")
+        .await
+        .map_err(|err| format!("relationship evidence query failed: {err}"))?;
+    let rel_types: Vec<String> = rel_rows
+        .first()
+        .and_then(|row| row.get("rel_types").ok())
+        .unwrap_or_default();
+    let relation_registry_ok = rel_types.iter().all(|rel_type| {
+        !matches!(
+            epi_s2_graph_schema::classify_relationship_type(rel_type),
+            epi_s2_graph_schema::RelationshipTypeClass::Drift
+        )
+    });
+
+    let query_set = seed_baseline_snapshot_queries();
+    let counts_query = query_set
+        .iter()
+        .find(|query| query.name == "seed_node_group_counts")
+        .ok_or_else(|| "seed count query missing".to_owned())?;
+    let rel_query = query_set
+        .iter()
+        .find(|query| query.name == "seed_relationship_count")
+        .ok_or_else(|| "seed relationship query missing".to_owned())?;
+    let coordinates = seed_baseline_coordinates();
+    let count_rows = client
+        .run_query(query(counts_query.cypher).param("coordinates", coordinates.clone()))
+        .await
+        .map_err(|err| format!("seed evidence query failed: {err}"))?;
+    let rel_count_rows = client
+        .run_query(
+            query(rel_query.cypher)
+                .param("coordinates", coordinates)
+                .param(
+                    "relationship_types",
+                    seed_relationship_types()
+                        .iter()
+                        .map(|rel_type| (*rel_type).to_string())
+                        .collect::<Vec<_>>(),
+                ),
+        )
+        .await
+        .map_err(|err| format!("seed relationship evidence query failed: {err}"))?;
+    let row = count_rows
+        .first()
+        .ok_or_else(|| "seed evidence row missing".to_owned())?;
+    let seed_relationships = rel_count_rows
+        .first()
+        .and_then(|r| r.get::<i64>("seed_relationships").ok())
+        .unwrap_or_default();
+    let seed_baseline_ok = row.get::<i64>("seed_nodes").unwrap_or_default() == 102
+        && row.get::<i64>("root_nodes").unwrap_or_default() == 1
+        && row.get::<i64>("psychoids").unwrap_or_default() == 6
+        && row.get::<i64>("weaves").unwrap_or_default() == 4
+        && row.get::<i64>("context_frames").unwrap_or_default() == 7
+        && row.get::<i64>("family_meta_nodes").unwrap_or_default() == 6
+        && row.get::<i64>("family_coordinates").unwrap_or_default() == 72
+        && row.get::<i64>("vak_nodes").unwrap_or_default() == 6
+        && seed_relationships >= 306;
+
+    let gds_available = epi_s2_graph_services::gds_procedure_count(client)
+        .await
+        .unwrap_or_default()
+        > 0;
+
+    Ok(LiveGraphBackedEvidence {
+        seed_baseline_ok,
+        dataset_nodes,
+        relation_registry_ok,
+        gds_available,
+    })
 }
 
 async fn maybe_refresh_semantic_embeddings(client: &client::Neo4jClient) -> Result<String, String> {

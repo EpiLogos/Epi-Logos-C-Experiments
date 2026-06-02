@@ -818,6 +818,51 @@ impl SpacetimeProjectionSubscription {
     pub async fn next_context(&mut self) -> Result<Option<Value>, String> {
         Ok(self.next_update().await?.and_then(|update| update.context))
     }
+
+    /// Typed delta surface — 03.T3 deliverable. Reads the next SpaceTimeDB
+    /// subscription frame off the native WebSocket and decodes it into a
+    /// `SpacetimeProjectionDelta` so consumers can dispatch on
+    /// `message_kind` (InitialSubscription / SubscribeMultiApplied /
+    /// TransactionUpdate / TransactionUpdateLight) and on per-surface table
+    /// identity (KairosSurface / WorldClock / SessionSurface / etc.). Skips
+    /// non-text and Unknown frames; surfaces decoder errors instead of
+    /// silently dropping them.
+    pub async fn next_delta(
+        &mut self,
+    ) -> Result<Option<epi_s3_gateway_contract::SpacetimeProjectionDelta>, String> {
+        while let Some(message) = self.socket.next().await {
+            let message = match message {
+                Ok(message) => message,
+                Err(err) => {
+                    self.resync.mark_connection_lost();
+                    return Err(format!(
+                        "spacetimedb websocket receive failed during next_delta: {err}"
+                    ));
+                }
+            };
+            if !message.is_text() {
+                continue;
+            }
+            let raw = message
+                .to_text()
+                .map_err(|err| format!("spacetimedb text frame failed: {err}"))?;
+            let value = serde_json::from_str::<Value>(raw)
+                .map_err(|err| format!("spacetimedb websocket frame was not JSON: {err}"))?;
+            let delta = epi_s3_gateway_contract::SpacetimeProjectionDelta::from_subscription_message(
+                &value,
+            )?;
+            if matches!(
+                delta.message_kind,
+                epi_s3_gateway_contract::SpacetimeMessageKind::Unknown
+            ) {
+                // IdentityToken/Ping/server-control — skip and read the next.
+                continue;
+            }
+            return Ok(Some(delta));
+        }
+        self.resync.mark_connection_lost();
+        Ok(None)
+    }
 }
 
 pub fn readiness_value(port: u16, state_root: &Path) -> Value {
@@ -1165,6 +1210,134 @@ impl SpacetimePresence {
         )
     }
 
+    // =================== 03.T4 shared-cosmos reducer calls ===================
+
+    /// Advance the authoritative shared world_clock. The gateway is the
+    /// source of truth: this is invoked at the configured cadence after
+    /// Kerykeion/Nara computes the new tick state. Inherits idempotent
+    /// retry from `post_reducer`.
+    pub fn advance_world_clock(
+        &self,
+        gateway_id: &str,
+        tick: u64,
+        source_now_ms: u64,
+        dominant_aspect: u8,
+        clock_kind: &str,
+        kerykeion_state_hash: &str,
+    ) -> Result<(), String> {
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(clock_kind, "clock_kind")?;
+        self.post_reducer(
+            "advance_world_clock",
+            json!([
+                gateway_id,
+                tick,
+                source_now_ms,
+                dominant_aspect,
+                clock_kind,
+                kerykeion_state_hash,
+            ]),
+        )
+    }
+
+    /// Bind a public-safe pratibimba_presence row. Refuses any raw identity
+    /// input — the caller MUST pre-derive the BLAKE3 fingerprints via
+    /// `quintessence_hash_blake3`.
+    pub fn bind_pratibimba_presence(
+        &self,
+        identity_handle: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        session_key: &str,
+        day_id: &str,
+        quintessence_hash: &str,
+        aspect_grid_cell: u32,
+        present: bool,
+    ) -> Result<(), String> {
+        require_nonempty(identity_handle, "identity_handle")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(day_id, "day_id")?;
+        require_nonempty(quintessence_hash, "quintessence_hash")?;
+        self.post_reducer(
+            "bind_pratibimba_presence",
+            json!([
+                identity_handle,
+                installation_id,
+                gateway_id,
+                session_key,
+                day_id,
+                quintessence_hash,
+                aspect_grid_cell,
+                present,
+            ]),
+        )
+    }
+
+    /// Publish an opt-in shared archetype event. `opt_in_consent` is the
+    /// gate; passing `false` causes the reducer to refuse with a panic on
+    /// the SpaceTimeDB host (surfacing as HTTP 500 on the client). Callers
+    /// must verify consent before invoking.
+    pub fn publish_shared_archetype_event(
+        &self,
+        installation_id: &str,
+        gateway_id: &str,
+        publisher_identity_handle: &str,
+        day_id: &str,
+        aspect_grid_cell: u32,
+        event_kind: &str,
+        payload: Value,
+        opt_in_consent: bool,
+    ) -> Result<(), String> {
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        require_nonempty(publisher_identity_handle, "publisher_identity_handle")?;
+        require_nonempty(day_id, "day_id")?;
+        require_nonempty(event_kind, "event_kind")?;
+        if !opt_in_consent {
+            return Err(
+                "publish_shared_archetype_event requires opt_in_consent = true".to_owned(),
+            );
+        }
+        self.post_reducer(
+            "publish_shared_archetype_event",
+            json!([
+                installation_id,
+                gateway_id,
+                publisher_identity_handle,
+                day_id,
+                aspect_grid_cell,
+                event_kind,
+                payload.to_string(),
+                opt_in_consent,
+            ]),
+        )
+    }
+
+    /// Run a coincidence-detection pass for the given day + grid cell.
+    /// `min_participants` must be >= 2.
+    pub fn detect_coincidences(
+        &self,
+        day_id: &str,
+        aspect_grid_cell: u32,
+        min_participants: u32,
+    ) -> Result<(), String> {
+        require_nonempty(day_id, "day_id")?;
+        if min_participants < 2 {
+            return Err("detect_coincidences min_participants must be >= 2".to_owned());
+        }
+        self.post_reducer(
+            "detect_coincidences",
+            json!([day_id, aspect_grid_cell, min_participants]),
+        )
+    }
+
+    /// Publish the module_version singleton (one-shot on registration).
+    pub fn publish_module_version(&self, gateway_id: &str) -> Result<(), String> {
+        require_nonempty(gateway_id, "gateway_id")?;
+        self.post_reducer("publish_module_version", json!([gateway_id]))
+    }
+
     pub fn publish_presence(&self, hash: &str, tick12: u8) -> Result<(), String> {
         require_nonempty(hash, "hash")?;
         self.publish_temporal_event(
@@ -1253,30 +1426,96 @@ impl SpacetimePresence {
     }
 
     fn post_reducer(&self, reducer: &str, payload: Value) -> Result<(), String> {
+        self.post_reducer_with_retry(reducer, payload, default_reducer_retry_policy())
+    }
+
+    /// Reducer post with bounded idempotent retry — 03.T3 deliverable: bind
+    /// reducer calls must tolerate transient network/5xx failures without
+    /// silently losing surface bindings, and must surface persistent failure
+    /// observably (final error carries the last status + body). All reducers
+    /// in the epi-spacetime-module are pure inserts/upserts keyed by
+    /// subject-identity (gateway_id, session_key, kairos_snapshot_id, …) so
+    /// they are safe to replay.
+    pub fn post_reducer_with_retry(
+        &self,
+        reducer: &str,
+        payload: Value,
+        policy: ReducerRetryPolicy,
+    ) -> Result<(), String> {
         let url = format!(
             "{}/v1/database/{}/call/{}",
             self.url, self.database, reducer
         );
-        let reducer_name = reducer.to_owned();
-        let response = run_blocking_http(move || {
-            BlockingClient::new()
-                .post(&url)
-                .json(&payload)
-                .send()
-                .map_err(|err| format!("spacetimedb {reducer_name} request failed: {err}"))
-        })?;
-
-        if response.status().is_success() {
-            return Ok(());
+        let mut attempts: u32 = 0;
+        let mut last_error: String = String::new();
+        loop {
+            attempts += 1;
+            let reducer_name = reducer.to_owned();
+            let url_attempt = url.clone();
+            let payload_attempt = payload.clone();
+            let response = run_blocking_http(move || {
+                BlockingClient::new()
+                    .post(&url_attempt)
+                    .json(&payload_attempt)
+                    .send()
+                    .map_err(|err| {
+                        format!("spacetimedb {reducer_name} request failed: {err}")
+                    })
+            });
+            match response {
+                Ok(response) => {
+                    let status = response.status();
+                    if status.is_success() {
+                        return Ok(());
+                    }
+                    let body = response
+                        .text()
+                        .unwrap_or_else(|_| "<unreadable body>".to_owned());
+                    last_error = format!(
+                        "spacetimedb {reducer} request failed: {status} {body}"
+                    );
+                    // 4xx (other than 408/429) is not retryable — these are
+                    // contract violations the caller must fix.
+                    let retryable = status.is_server_error()
+                        || status.as_u16() == 408
+                        || status.as_u16() == 429;
+                    if !retryable {
+                        return Err(last_error);
+                    }
+                }
+                Err(err) => {
+                    last_error = err;
+                }
+            }
+            if attempts >= policy.max_attempts {
+                return Err(format!(
+                    "{last_error} (gave up after {attempts} attempt(s))",
+                ));
+            }
+            std::thread::sleep(policy.backoff(attempts));
         }
+    }
+}
 
-        let status = response.status();
-        let body = response
-            .text()
-            .unwrap_or_else(|_| "<unreadable body>".to_owned());
-        Err(format!(
-            "spacetimedb {reducer} request failed: {status} {body}"
-        ))
+/// Retry policy for reducer posts. Bounded attempts with linear backoff so
+/// transient failures (e.g. SpaceTimeDB still booting, momentary 503) recover
+/// without unbounded blocking.
+#[derive(Debug, Clone, Copy)]
+pub struct ReducerRetryPolicy {
+    pub max_attempts: u32,
+    pub base_backoff_ms: u64,
+}
+
+impl ReducerRetryPolicy {
+    pub fn backoff(&self, attempt: u32) -> std::time::Duration {
+        std::time::Duration::from_millis(self.base_backoff_ms.saturating_mul(attempt as u64))
+    }
+}
+
+fn default_reducer_retry_policy() -> ReducerRetryPolicy {
+    ReducerRetryPolicy {
+        max_attempts: 3,
+        base_backoff_ms: 50,
     }
 }
 
@@ -1747,4 +1986,21 @@ fn now_ms() -> Result<u128, String> {
         .duration_since(UNIX_EPOCH)
         .map_err(|err| err.to_string())?
         .as_millis())
+}
+
+/// 03.T4: derive the canonical quintessence_hash. Per the deliverable, the
+/// `quintessence_hash` is a BLAKE3 indexing fingerprint over canonical
+/// quaternionic bytes + caps — NOT the identity itself. Callers must build
+/// the canonical byte sequence (deterministic ordering) before invoking.
+/// The output is hex-encoded for stable transport over JSON RPC.
+pub fn quintessence_hash_blake3(canonical_quaternionic_bytes: &[u8]) -> String {
+    blake3::hash(canonical_quaternionic_bytes).to_hex().to_string()
+}
+
+/// 03.T4: derive a public-safe `identity_handle` from raw identity bytes via
+/// BLAKE3. The handle is a one-way fingerprint suitable for use as the
+/// primary key of `pratibimba_presence` — the raw identity NEVER leaves the
+/// caller's process.
+pub fn identity_handle_blake3(canonical_identity_bytes: &[u8]) -> String {
+    blake3::hash(canonical_identity_bytes).to_hex().to_string()
 }

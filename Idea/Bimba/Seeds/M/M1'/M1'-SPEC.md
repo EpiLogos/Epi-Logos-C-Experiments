@@ -26,6 +26,10 @@ companion_spec: "[[m1-prime-paramasiva-instrument]]"
 
 > **Companion long-form.** The deep architectural derivation lives at [[m1-prime-paramasiva-instrument]] ([`m1-prime-paramasiva-instrument.md`](m1-prime-paramasiva-instrument.md)). This spec is the canonical M1' domain authority; the companion is the philosophical-mathematical derivation that grounds it. Where they disagree, this spec is authoritative.
 
+## Canonical Substrate Anchors
+
+The [[M1']] instrument should always stay visibly tied to its substrate: [[Body/S/S0/epi-lib/include/m1.h]] (853 LOC — the [[Paramaśiva]] / [[Hopf]] / [[K²]] / 720° tick mathematics header), [[Body/S/S0/epi-lib/src/m1.c]] (436 LOC C implementation), [[Body/S/S0/portal-core/src/kernel.rs]] (M1 facets: [[Hopf]], [[K²]], toroidal recognition), [[Body/S/S0/portal-core/src/harmonic_profile.rs]] (the shared [[MathemeHarmonicProfile]] type), [[Body/S/S0/portal-core/src/hopf.rs]] ([[Hopf bundle]] projection), [[Body/S/S0/portal-core/src/quaternion.rs]] ([[SU(2)]] / [[Cl(4,2)]] quaternion math), [[Body/S/S0/portal-core/src/state.rs]] (session-held state including the single [[Psychoid_Hash|`#` operator]]), and [[Body/S/S0/portal-core/src/events.rs]] (clock tick events the walker subscribes to). These are the live engine; M1' is the playable instrument over them.
+
 ## §0/1 — What [[M1']] Is
 
 [[M1']] is **relational movement as the audible face of [[Paramaśiva]]**. It renders the kernel's 12-state integer ring and 720° [[SU(2)]] double-cover as lived movement through graph law: torus/path traversal, coordinate walking, relation inspection, the walked path made into melody.
@@ -55,7 +59,7 @@ M1' is the same six positions re-read as how-it-walks rather than what-it-is. Th
 
 ### M1-5 As The +1 Of The 137 Architecture
 
-[[M1]] receives the prior [[Anuttara]] `0/1` from [[M0]] and defines the `1/1 = 100%` parent through toroidal recognition. In the alpha-quaternionic reading, [[M1-5]] carries the **+1** in `137 = 64 + 72 + 1`: `DOUBLE_COVER_DEG = 720`, `TORUS_GENUS = 1`, `RING_QUATERNION_LUT[12]`, and the [[Hopf bundle]] are the [[Paramaśiva]] parent as playable toroidal culmination (per [[alpha_quaternionic_integration_across_M_stack]] §7.2 and [[alpha_rasa_bridge_ql]] §11).
+[[M1]] receives the prior [[Anuttara]] `0/1` from [[M0]] and defines the `1/1 = 100%` parent through toroidal recognition. In the alpha-quaternionic reading, [[M1-5]] carries the **+1** in `137 = 64 + 72 + 1`: `DOUBLE_COVER_DEG = 720`, `TORUS_GENUS = 1`, `RING_QUATERNION_LUT[12]`, and the [[Hopf bundle]] are the [[Paramaśiva]] parent as playable toroidal culmination (per [[alpha_quaternionic_integration_across_M_stack]] §7.2 and [[alpha_rasa_bridge_ql]] §11). The constants live in [[Body/S/S0/epi-lib/include/m1.h]] and are mirrored into the runtime by [[Body/S/S0/portal-core/src/hopf.rs]] / [[Body/S/S0/portal-core/src/quaternion.rs]].
 
 This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recognition site. The double-torus formalism belongs downstream at [[M3-5]], where [[Mahāmāyā]]'s wheel is read as `K² × T²_Mahāmāya`. [[M0]] is the prior ground M1 receives from; M0 is not the +1 term.
 
@@ -72,7 +76,7 @@ This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recogni
 ## §3 — Backend Contract Consumed
 
 - [[S2]] pointer web is the relation law of record. Every walk-step is an S2 relation traversal.
-- [[S0]] kernel profile ([[MathemeHarmonicProfile]]) provides tick12, degree720, [[SU(2)]] layer, phase, position6, chromatic substrate, ratio role, square mirror law, diatonic [[CF]]/[[VAK]] projection, and resonance72. The 8+4 `audio_octet`/`nodal_quartet` bus is written into the shared profile by [[M2-1']] [[Vimarśa]] reading. **M1' uses `audio_octet` to sound the current coordinate; it never computes pitch locally and never owns or re-synthesizes the bus.**
+- [[S0]] kernel profile ([[MathemeHarmonicProfile]] at [[Body/S/S0/portal-core/src/harmonic_profile.rs]]) provides tick12, degree720, [[SU(2)]] layer, phase, position6, chromatic substrate, ratio role, square mirror law, diatonic [[CF]]/[[VAK]] projection, and resonance72. The 8+4 `audio_octet`/`nodal_quartet` bus is written into the shared profile by [[M2-1']] [[Vimarśa]] reading at [[Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs]]. **M1' uses `audio_octet` to sound the current coordinate; it never computes pitch locally and never owns or re-synthesizes the bus.**
 - [[S3]] temporal projection provides session/DAY/NOW context for traversal records and optional deposition.
 - M1' never uses animation frame count as clock authority. The walk-tempo is settable but always references the kernel-tick rate, not wall-clock frames.
 
@@ -91,7 +95,7 @@ M1' can expose route and relation metadata but not private traversal motives, ra
 
 ## §6 — Visual / Audio Interaction Model
 
-- **Visual:** torus/path line advances according to profile tick and pointer relation law; selected path segments are coloured by relation category, helix phase, and current (lens, mode) anchoring; the played torus surface (M1-5' Topology Analyzer) renders the walk as motion on a genus-1 surface with Klein-bottle flip-visualisation at tritone-mirror crossings.
+- **Visual:** torus/path line advances according to profile tick and pointer relation law; selected path segments are coloured by relation category, helix phase, and current (lens, mode) anchoring; the played torus surface ([[M1-5']] Topology Analyzer) renders the walk as motion on a genus-1 surface with [[Klein|Klein-bottle]] flip-visualisation at tritone-mirror crossings.
 - **Audio:** movement is rendered as intervallic traversal where relation changes map to profile ratio roles; M1' uses backend `audio_octet` and `harmonic.ratio_role` only. The walked sequence becomes a melody whose intervals are exactly the relation-types of the traversed graph edges.
 - **Interaction:** user stepping or agent stepping requests the next coordinate through S2 and receives an updated profile; no local hidden clock is created. Striking a node by direct selection (skipping the relation traversal) sounds the node's profile pitch without producing a walk-step.
 
@@ -208,9 +212,9 @@ K² = T² with bimba ↔ pratibimba conjugation as non-orientable identification
 
 The Klein-flip the M1' surface enacts at tritone-mirror crossings (Lens N ↔ Lens N+3, see §6) IS the local rendering of this global non-orientability. The 84-state `(lens, mode)` landscape, the 472-state `(codon, rotation)` modal-inversion surface, and the [[M2]] 72-fold correspondence-tree are all **stratifications of [[K²]]** — different sampling-densities of the same surface.
 
-### M1' renders the played form of K²
+### [[M1']] renders the played form of [[K²]]
 
-The [[M1-5']] Topology Analyzer (per the M1' bimba inner-stratum table) is the surface that makes [[K²]] visible-and-audible as the played instrument-form. The quaternionic state (RING_QUATERNION_LUT in [[Body/S/S0/epi-lib/include/m1.h|m1.h]]) at each ring-position is a point in S³ that double-covers SO(3) rotations of K². The [[Hopf bundle]] `S³ → S² → S¹` projects from the quaternion through K² to the played phase.
+The [[M1-5']] Topology Analyzer (per the [[M1']] [[Bimba|bimba]] inner-stratum table) is the surface that makes [[K²]] visible-and-audible as the played instrument-form. The quaternionic state (RING_QUATERNION_LUT in [[Body/S/S0/epi-lib/include/m1.h|m1.h]], computed via [[Body/S/S0/portal-core/src/quaternion.rs]]) at each ring-position is a point in [[S³]] that double-covers SO(3) rotations of [[K²]]. The [[Hopf bundle]] `S³ → S² → S¹` projects from the quaternion through [[K²]] to the played phase via [[Body/S/S0/portal-core/src/hopf.rs]].
 
 ## §11 — The [[Cl(4,2)]] Clifford Algebra as the Substrate
 
@@ -355,3 +359,19 @@ The 2026-05-31 absorption adds four further load-bearing constraints:
 2. **Graph-law generation only**: generative output must be S2-candidate-set selection with audit trail, never random note production.
 3. **Kernel-bridge rendering**: the future IDE surface consumes shared S-stack state through the kernel-bridge and never forks M1 substrate constants into frontend authority.
 4. **Epii corpus governance**: M5 CPT/RAG/GDS work may deepen Paramaśiva fluency but cannot supersede this M1' runtime canon without explicit reviewed spec promotion.
+
+## Canonical Source Lock - 2026-06-02
+
+M1' is the playable relation/harmonic instrument and route-performance layer. It consumes profile/current state from the M' top layer but does not own audio genesis where that belongs to M2'/S0 profile law.
+
+| Required coverage | Canonical citations |
+|---|---|
+| docs/specs | `docs/specs/M/M1-paramasiva-mathematical-dna.md` mtime 2026-03-05 14:45:32; `docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md` mtime 2026-04-11 11:58:00; `docs/specs/M/2026-03-11-epi-flow-design.md` mtime 2026-03-11 12:12:01 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` mtime 2026-05-31 20:57:23; `05-tauri-ide-shell-and-pratibimba-system.md` mtime 2026-06-01 18:28:40; `07-m-extension-individual-tracks.md` mtime 2026-06-01 00:23:25 (`07-T4`); `08-integrated-plugin-tracks.md` mtime 2026-06-01 00:25:11; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51 |
+| Body substrate | `Body/S/S0/epi-lib/**`, `Body/S/S2/graph-services/**`, `Body/S/S3/gateway-contract/**`; `Body/M/epi-tauri/**` only as deprecated migration-source evidence |
+| Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m1-paramasiva/**`, `m-extension-runtime/**`, `kernel-bridge/**`, `plugin-integrated-1-2-3/**` |
+| sibling seeds | `M'-SYSTEM-SPEC.md`, `M1'/m1-prime-paramasiva-instrument.md`, `M1'/m1-prime-audio-generative-research.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md`, `alpha_quaternionic_integration_across_M_stack.md` |
+| nominal tracks | Track 07.T4 M1' extension; Track 08 integrated 1-2-3 plugin; Track 01 profile/audio foundation; Track 09 Paramasiva capacity |
+| open decisions | audio-genesis wording, profile owner, K2/Klein/two-torus terminology, route event replay contract, `+1` parent normalisation |
+
+World coordinate note: M1' uses the shared `Idea/Bimba/World/P*`, `CT*`, and `L*` corpora as positional/lens law. No M-specific World coordinate markdown exists yet.

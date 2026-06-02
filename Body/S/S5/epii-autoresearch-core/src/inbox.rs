@@ -29,6 +29,75 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
+const ANANSI_AGENT: &str = include_str!("../../../S4/ta-onta/S4-5p-aletheia/S5'/agents/anansi.md");
+const MOIRAI_AGENT: &str = include_str!("../../../S4/ta-onta/S4-5p-aletheia/S5'/agents/moirai.md");
+const JANUS_AGENT: &str = include_str!("../../../S4/ta-onta/S4-5p-aletheia/S5'/agents/janus.md");
+const MERCURIUS_AGENT: &str =
+    include_str!("../../../S4/ta-onta/S4-5p-aletheia/S5'/agents/mercurius.md");
+const AGORA_AGENT: &str = include_str!("../../../S4/ta-onta/S4-5p-aletheia/S5'/agents/agora.md");
+const ZEITHOVEN_AGENT: &str =
+    include_str!("../../../S4/ta-onta/S4-5p-aletheia/S5'/agents/zeithoven.md");
+const ANANSI_RUPA: &str =
+    include_str!("../../../S4/ta-onta/S4-5p-aletheia/clusters/anansi/RUPA.md");
+const MOIRAI_RUPA: &str =
+    include_str!("../../../S4/ta-onta/S4-5p-aletheia/clusters/moirai/RUPA.md");
+const JANUS_RUPA: &str = include_str!("../../../S4/ta-onta/S4-5p-aletheia/clusters/janus/RUPA.md");
+const MERCURIUS_RUPA: &str =
+    include_str!("../../../S4/ta-onta/S4-5p-aletheia/clusters/mercurius/RUPA.md");
+const AGORA_RUPA: &str = include_str!("../../../S4/ta-onta/S4-5p-aletheia/clusters/agora/RUPA.md");
+const ZEITHOVEN_RUPA: &str =
+    include_str!("../../../S4/ta-onta/S4-5p-aletheia/clusters/zeithoven/RUPA.md");
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum MoiraiMode {
+    Klotho,
+    Lachesis,
+    Atropos,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct DisclosureLineageStage {
+    pub specialist: String,
+    pub stage: String,
+    #[serde(default)]
+    pub tool_refs: Vec<String>,
+    #[serde(default)]
+    pub skill_refs: Vec<String>,
+    #[serde(default)]
+    pub evidence_handles: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct DisclosureLineage {
+    pub lineage_id: String,
+    pub source_subagent: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub moirai_mode: Option<MoiraiMode>,
+    #[serde(default)]
+    pub stages: Vec<DisclosureLineageStage>,
+    #[serde(default)]
+    pub tool_refs: Vec<String>,
+    #[serde(default)]
+    pub skill_refs: Vec<String>,
+    #[serde(default)]
+    pub gate_refs: Vec<String>,
+    #[serde(default)]
+    pub namespace_refs: Vec<String>,
+    pub privacy_class: String,
+    pub readiness: String,
+    pub day_id: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub now_path: Option<String>,
+    pub session_id: String,
+    #[serde(default)]
+    pub parent_session_refs: Vec<String>,
+    #[serde(default)]
+    pub child_session_refs: Vec<String>,
+    #[serde(default)]
+    pub evidence_handles: Vec<String>,
+}
+
 /// Canonical inbox entry as handed off by Aletheia.
 ///
 /// Mirrors `EpiiInboxEntry` in `Body/S/S4/ta-onta/S4-5p-aletheia/modules/
@@ -55,6 +124,8 @@ pub struct InboxEntry {
     /// interrupted-flow salvage.
     #[serde(default = "default_closure_kind")]
     pub closure_kind: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub disclosure_lineage: Option<DisclosureLineage>,
 }
 
 fn default_closure_kind() -> String {
@@ -94,6 +165,17 @@ impl InboxStore {
     /// in the file. The id is stable for the same file content; if blank
     /// lines change, indexes among non-empty lines remain stable.
     pub fn append(&self, entry: InboxEntry) -> Result<String, String> {
+        if self
+            .root
+            .to_string_lossy()
+            .contains("Pratibimba/Epii/inbox")
+        {
+            return Err(
+                "new Aletheia writes must use canonical Idea/Empty/Present/{day_id}/{session_id}.jsonl"
+                    .to_owned(),
+            );
+        }
+        validate_inbox_entry(&entry)?;
         let session_id = entry.session_id.clone();
         let day_id = entry.day_id.clone();
         let path = self
@@ -186,6 +268,9 @@ impl InboxStore {
                 }
                 let entry: InboxEntry = serde_json::from_str(trimmed)
                     .map_err(|e| format!("parse {}#L{}: {}", path.display(), line_index, e))?;
+                validate_inbox_entry(&entry).map_err(|err| {
+                    format!("validate {}#L{}: {}", path.display(), line_index, err)
+                })?;
                 out.push(StoredInboxEntry {
                     id: format!("{session_id}#L{line_index}"),
                     entry,
@@ -195,6 +280,89 @@ impl InboxStore {
         }
         Ok(out)
     }
+}
+
+pub fn validate_inbox_entry(entry: &InboxEntry) -> Result<(), String> {
+    if entry.kind != "epii_autoresearch_inbox_entry" {
+        return Err(format!("unsupported inbox kind: {}", entry.kind));
+    }
+    if let Some(lineage) = &entry.disclosure_lineage {
+        validate_disclosure_lineage(lineage)?;
+    }
+    Ok(())
+}
+
+pub fn validate_disclosure_lineage(lineage: &DisclosureLineage) -> Result<(), String> {
+    require_non_blank(&lineage.lineage_id, "lineage_id")?;
+    require_non_blank(&lineage.source_subagent, "source_subagent")?;
+    require_known_specialist(&lineage.source_subagent)?;
+    require_non_blank(&lineage.privacy_class, "privacy_class")?;
+    require_non_blank(&lineage.readiness, "readiness")?;
+    require_non_blank(&lineage.day_id, "day_id")?;
+    require_non_blank(&lineage.session_id, "session_id")?;
+    if lineage.stages.is_empty() {
+        return Err("disclosure lineage stages are required".to_owned());
+    }
+    for value in lineage
+        .tool_refs
+        .iter()
+        .chain(lineage.skill_refs.iter())
+        .chain(lineage.gate_refs.iter())
+        .chain(lineage.namespace_refs.iter())
+        .chain(lineage.evidence_handles.iter())
+    {
+        require_non_blank(value, "lineage refs")?;
+    }
+    for stage in &lineage.stages {
+        require_known_specialist(&stage.specialist)?;
+        require_non_blank(&stage.stage, "stage")?;
+        if stage.tool_refs.is_empty() {
+            return Err(format!("stage {} requires tool_refs", stage.stage));
+        }
+        if stage.skill_refs.is_empty() {
+            return Err(format!("stage {} requires skill_refs", stage.stage));
+        }
+        for value in stage
+            .tool_refs
+            .iter()
+            .chain(stage.skill_refs.iter())
+            .chain(stage.evidence_handles.iter())
+        {
+            require_non_blank(value, "stage refs")?;
+        }
+    }
+    Ok(())
+}
+
+pub fn known_aletheia_specialist(name: &str) -> Option<(&'static str, &'static str)> {
+    match name {
+        "anansi" => Some((ANANSI_AGENT, ANANSI_RUPA)),
+        "moirai" => Some((MOIRAI_AGENT, MOIRAI_RUPA)),
+        "janus" => Some((JANUS_AGENT, JANUS_RUPA)),
+        "mercurius" => Some((MERCURIUS_AGENT, MERCURIUS_RUPA)),
+        "agora" => Some((AGORA_AGENT, AGORA_RUPA)),
+        "zeithoven" => Some((ZEITHOVEN_AGENT, ZEITHOVEN_RUPA)),
+        _ => None,
+    }
+}
+
+fn require_known_specialist(name: &str) -> Result<(), String> {
+    let Some((agent, rupa)) = known_aletheia_specialist(name) else {
+        return Err(format!("unknown Aletheia specialist: {name}"));
+    };
+    if agent.trim().is_empty() || rupa.trim().is_empty() {
+        return Err(format!(
+            "Aletheia specialist {name} lacks validation source"
+        ));
+    }
+    Ok(())
+}
+
+fn require_non_blank(value: &str, field: &str) -> Result<(), String> {
+    if value.trim().is_empty() {
+        return Err(format!("{field} must not be blank"));
+    }
+    Ok(())
 }
 
 fn sanitize_path_component(value: &str) -> String {

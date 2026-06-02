@@ -11,7 +11,8 @@ import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
-    parseExtensionRoute
+    parseExtensionRoute,
+    registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M3MahamayaWidget } from './m3-mahamaya-widget';
 import {
@@ -72,6 +73,13 @@ export class M3MahamayaContribution
                     return this.openView({ activate: true, reveal: true });
                 }
             }
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'codon',
+            'M3 Mahamaya: Open Codon Rotation',
+            () => this.openView({ activate: true, reveal: true })
         );
     }
 }

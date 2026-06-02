@@ -25,6 +25,15 @@ pub const SPACETIME_PROJECTION_SOURCE_HTTP_SQL: &str = "http-sql-poll";
 pub const SPACETIME_PROJECTION_SOURCE_NATIVE_WS: &str = "native-websocket";
 pub const SPACETIME_PROJECTION_MODE_LITE: &str = "lite";
 pub const SPACETIME_PROJECTION_MODE_FULL: &str = "full";
+pub const SPACETIME_CLOCK_PROTOCOL_VERSION: &str = "2026-06-01.s3-clock-v1";
+// 03.T4: bumped from v1 → v2 because the shared-cosmos schema now includes
+// world_clock_tick, coincidence_tick, and module_version. The
+// epi-spacetime-module crate carries identically-versioned constants so
+// drift between host and module is observable via the module_version row.
+pub const SPACETIME_PROJECTION_SCHEMA_VERSION: &str = "2026-06-02.s3-projection-v2";
+pub const SPACETIME_REDUCER_ABI_VERSION: &str = "2026-06-02.s3-reducer-v2";
+pub const SPACETIME_SUBSCRIBE_METHOD: &str = "s3'.temporal.subscribe";
+pub const SPACETIME_SUBSCRIBE_ALIAS_METHOD: &str = "s3'.spacetime.subscribe";
 
 pub const OMNIPANEL_SESSION_METADATA: &[&str] = &[
     "canonicalKey",
@@ -63,6 +72,13 @@ pub const SPACETIME_PROJECTION_TABLES: &[&str] = &[
     "kairos_surface",
     "global_temporal_surface",
     "temporal_event",
+    "world_clock",
+    "world_clock_tick",
+    "pratibimba_presence",
+    "shared_archetype_event",
+    "coincidence",
+    "coincidence_tick",
+    "module_version",
 ];
 pub const SPACETIME_LITE_PROJECTION_TABLES: &[&str] = &[
     "session_surface",
@@ -77,6 +93,23 @@ pub const SPACETIME_FULL_PROJECTION_TABLES: &[&str] = &[
     "agent_instance",
     "client_registration",
     "temporal_event",
+    "world_clock",
+    "world_clock_tick",
+    "pratibimba_presence",
+    "shared_archetype_event",
+    "coincidence",
+    "coincidence_tick",
+    "module_version",
+];
+
+pub const SPACETIME_SUBSCRIPTION_LIFECYCLE_EVENTS: &[&str] = &[
+    "requested",
+    "applied",
+    "delta",
+    "resync",
+    "error",
+    "closed",
+    "fallback-active",
 ];
 
 pub const METHOD_NAMES: &[&str] = &[
@@ -165,6 +198,14 @@ pub const METHOD_NAMES: &[&str] = &[
     "s4'.psyche.update",
     "s4'.permission.get",
     "s3'.temporal.context",
+    "s3'.temporal.subscribe",
+    "s3'.spacetime.subscribe",
+    // 03.T6.5: S1 vault gateway surface.
+    "s1'.vault.read_file",
+    "s1'.vault.write_file",
+    "s1'.vault.rename_file",
+    "s1'.vault.move_file",
+    "s1'.semantic.suggest_links",
     "s5'.improve.status",
     "s5'.improve.propose",
     "s5'.improve.evaluate",
@@ -754,6 +795,9 @@ pub struct SpacetimeProjectionPlan {
     pub agent_access_owner: String,
     pub tables: Vec<String>,
     pub sql_fallback_mode: String,
+    pub clock_protocol_version: String,
+    pub projection_schema_version: String,
+    pub reducer_abi_version: String,
 }
 
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -761,6 +805,30 @@ pub struct SpacetimeProjectionRows {
     pub session: Option<Value>,
     pub kairos: Option<Value>,
     pub global: Option<Value>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SpacetimeReadinessContract {
+    pub gateway_websocket_health: String,
+    pub reducer_registration_health: String,
+    pub native_subscription_readiness: String,
+    pub active_fallback_mode: String,
+    pub graphiti_runtime_compatibility_mode: String,
+    pub clock_protocol_version: String,
+    pub projection_schema_version: String,
+    pub reducer_abi_version: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SpacetimeSubscriptionLifecycleEnvelope {
+    pub event: String,
+    pub method: String,
+    pub session_key: String,
+    pub subscription_mode: String,
+    pub projection_schema_version: String,
+    pub payload: Value,
 }
 
 impl SpacetimeProjectionPlan {
@@ -795,6 +863,9 @@ impl SpacetimeProjectionPlan {
                 .map(|table| (*table).to_owned())
                 .collect(),
             sql_fallback_mode: SPACETIME_PROJECTION_SOURCE_HTTP_SQL.to_owned(),
+            clock_protocol_version: SPACETIME_CLOCK_PROTOCOL_VERSION.to_owned(),
+            projection_schema_version: SPACETIME_PROJECTION_SCHEMA_VERSION.to_owned(),
+            reducer_abi_version: SPACETIME_REDUCER_ABI_VERSION.to_owned(),
         }
     }
 
@@ -857,9 +928,52 @@ impl SpacetimeProjectionPlan {
                 "temporal_event" => Some(format!(
                     "SELECT * FROM temporal_event WHERE session_key = {session_key}"
                 )),
+                // 03.T4: pratibimba_presence has a session_key column.
+                "pratibimba_presence" => Some(format!(
+                    "SELECT * FROM pratibimba_presence WHERE session_key = {session_key}"
+                )),
+                // 03.T4: shared-cosmos tables are keyed by gateway_id / day_id /
+                // identity_handle — not by session_key — so they subscribe
+                // without a WHERE clause. Per-day or per-cell visibility is
+                // enforced at the consumer side (and via SpaceTimeDB RLS when
+                // it lands, per IOD-02).
+                "world_clock"
+                | "world_clock_tick"
+                | "shared_archetype_event"
+                | "coincidence"
+                | "coincidence_tick"
+                | "module_version" => Some(format!("SELECT * FROM {table}")),
                 _ => None,
             })
             .collect()
+    }
+
+    pub fn readiness_contract(&self) -> SpacetimeReadinessContract {
+        SpacetimeReadinessContract {
+            gateway_websocket_health: "reported-by-gateway".to_owned(),
+            reducer_registration_health: "reported-by-spacetimedb".to_owned(),
+            native_subscription_readiness: self.mode.clone(),
+            active_fallback_mode: self.sql_fallback_mode.clone(),
+            graphiti_runtime_compatibility_mode: GRAPHITI_RUNTIME_AUTHORITY.to_owned(),
+            clock_protocol_version: self.clock_protocol_version.clone(),
+            projection_schema_version: self.projection_schema_version.clone(),
+            reducer_abi_version: self.reducer_abi_version.clone(),
+        }
+    }
+
+    pub fn lifecycle_envelope(
+        &self,
+        event: impl Into<String>,
+        payload: Value,
+    ) -> SpacetimeSubscriptionLifecycleEnvelope {
+        SpacetimeSubscriptionLifecycleEnvelope {
+            event: event.into(),
+            method: SPACETIME_SUBSCRIBE_METHOD.to_owned(),
+            session_key: self.session_key.clone(),
+            subscription_mode: self.subscription_mode.clone(),
+            projection_schema_version: self.projection_schema_version.clone(),
+            payload,
+        }
     }
 }
 
@@ -895,6 +1009,910 @@ impl SpacetimeProjectionRows {
 
         Ok(rows)
     }
+}
+
+/// The SpaceTimeDB subscription message kind. 03.T3 typed-delta surface:
+/// consumers branch on this to handle the lifecycle phases explicitly rather
+/// than treating every payload as the same "rows". `Unknown` covers
+/// IdentityToken/Ping/server-control frames the consumer should ignore.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum SpacetimeMessageKind {
+    InitialSubscription,
+    SubscribeMultiApplied,
+    TransactionUpdate,
+    TransactionUpdateLight,
+    Unknown,
+}
+
+/// A row delta for one of the projection tables, tagged by table identity so
+/// downstream consumers (Theia kernel-bridge, gateway lifecycle multiplex,
+/// debugging tools) can route by surface without re-parsing table names.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case", tag = "table")]
+pub enum SpacetimeTableDelta {
+    SessionSurface { row: Value },
+    KairosSurface { row: Value },
+    GlobalTemporalSurface { row: Value },
+    WorldClock { row: Value },
+    PratibimbaPresence { row: Value },
+    SharedArchetypeEvent { row: Value },
+    Coincidence { row: Value },
+    GatewayInstance { row: Value },
+    AgentInstance { row: Value },
+    ClientRegistration { row: Value },
+    TemporalEvent { row: Value },
+    // 03.T4 audit/version surfaces.
+    WorldClockTick { row: Value },
+    CoincidenceTick { row: Value },
+    ModuleVersion { row: Value },
+    #[serde(rename = "other")]
+    Other { table_name: String, row: Value },
+}
+
+impl SpacetimeTableDelta {
+    /// Construct a delta from a raw `table_name` + row payload. Unknown table
+    /// names fall back to `Other`, preserving the original `table_name` so
+    /// debug tooling can still surface the table identity.
+    pub fn from_table_name(table_name: &str, row: Value) -> Self {
+        match table_name {
+            "session_surface" => SpacetimeTableDelta::SessionSurface { row },
+            "kairos_surface" => SpacetimeTableDelta::KairosSurface { row },
+            "global_temporal_surface" => SpacetimeTableDelta::GlobalTemporalSurface { row },
+            "world_clock" => SpacetimeTableDelta::WorldClock { row },
+            "pratibimba_presence" => SpacetimeTableDelta::PratibimbaPresence { row },
+            "shared_archetype_event" => SpacetimeTableDelta::SharedArchetypeEvent { row },
+            "coincidence" => SpacetimeTableDelta::Coincidence { row },
+            "gateway_instance" => SpacetimeTableDelta::GatewayInstance { row },
+            "agent_instance" => SpacetimeTableDelta::AgentInstance { row },
+            "client_registration" => SpacetimeTableDelta::ClientRegistration { row },
+            "temporal_event" => SpacetimeTableDelta::TemporalEvent { row },
+            // 03.T4 audit/version surfaces.
+            "world_clock_tick" => SpacetimeTableDelta::WorldClockTick { row },
+            "coincidence_tick" => SpacetimeTableDelta::CoincidenceTick { row },
+            "module_version" => SpacetimeTableDelta::ModuleVersion { row },
+            other => SpacetimeTableDelta::Other {
+                table_name: other.to_owned(),
+                row,
+            },
+        }
+    }
+}
+
+/// The typed delta surface returned by `SpacetimeProjectionSubscription`.
+/// Carries the message kind explicitly so consumers can distinguish initial
+/// snapshot (full table state) from steady-state updates (incremental rows).
+/// `inserts` and `deletes` are typed by surface; unknown tables are preserved
+/// as `SpacetimeTableDelta::Other` rather than silently dropped.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SpacetimeProjectionDelta {
+    pub message_kind: SpacetimeMessageKind,
+    pub inserts: Vec<SpacetimeTableDelta>,
+    pub deletes: Vec<SpacetimeTableDelta>,
+}
+
+impl SpacetimeProjectionDelta {
+    pub fn empty(message_kind: SpacetimeMessageKind) -> Self {
+        Self {
+            message_kind,
+            inserts: Vec::new(),
+            deletes: Vec::new(),
+        }
+    }
+
+    /// Decode a single SpaceTimeDB subscription frame into a typed delta.
+    /// Recognises InitialSubscription, SubscribeMultiApplied,
+    /// TransactionUpdate, and TransactionUpdateLight. For unknown or
+    /// non-delta frames (IdentityToken, server pings) returns
+    /// `(SpacetimeMessageKind::Unknown, empty inserts/deletes)`.
+    pub fn from_subscription_message(message: &Value) -> Result<Self, String> {
+        let message_kind = classify_subscription_message(message);
+        if matches!(message_kind, SpacetimeMessageKind::Unknown) {
+            return Ok(Self::empty(message_kind));
+        }
+        let Some(update) = subscription_database_update(message) else {
+            return Ok(Self::empty(message_kind));
+        };
+        let tables = update
+            .get("tables")
+            .and_then(Value::as_array)
+            .ok_or_else(|| "spacetimedb subscription update missing tables".to_owned())?;
+        let mut inserts = Vec::new();
+        let mut deletes = Vec::new();
+        for table in tables {
+            let table_name = table
+                .get("table_name")
+                .or_else(|| table.get("tableName"))
+                .and_then(Value::as_str)
+                .unwrap_or_default()
+                .to_owned();
+            let updates = match table.get("updates").and_then(Value::as_array) {
+                Some(arr) => arr,
+                None => continue,
+            };
+            for update_entry in updates {
+                if let Some(rows) = update_entry.get("inserts").and_then(Value::as_array) {
+                    for row in rows {
+                        inserts
+                            .push(SpacetimeTableDelta::from_table_name(&table_name, row.clone()));
+                    }
+                }
+                if let Some(rows) = update_entry.get("deletes").and_then(Value::as_array) {
+                    for row in rows {
+                        deletes
+                            .push(SpacetimeTableDelta::from_table_name(&table_name, row.clone()));
+                    }
+                }
+            }
+        }
+        Ok(Self {
+            message_kind,
+            inserts,
+            deletes,
+        })
+    }
+
+    /// Convenience: does the delta carry the first `KairosSurface` insert?
+    /// 03.T3 verification rider invokes `bind_kairos_surface` and expects the
+    /// `KairosSurface` delta to round-trip within 100 ms.
+    pub fn first_kairos_insert(&self) -> Option<&Value> {
+        self.inserts.iter().find_map(|delta| match delta {
+            SpacetimeTableDelta::KairosSurface { row } => Some(row),
+            _ => None,
+        })
+    }
+}
+
+fn classify_subscription_message(message: &Value) -> SpacetimeMessageKind {
+    if message.get("InitialSubscription").is_some() {
+        SpacetimeMessageKind::InitialSubscription
+    } else if message.get("SubscribeMultiApplied").is_some() {
+        SpacetimeMessageKind::SubscribeMultiApplied
+    } else if message.get("TransactionUpdateLight").is_some() {
+        SpacetimeMessageKind::TransactionUpdateLight
+    } else if message.get("TransactionUpdate").is_some() {
+        SpacetimeMessageKind::TransactionUpdate
+    } else {
+        SpacetimeMessageKind::Unknown
+    }
+}
+
+// =============== 03.T5 kernel-bridge stream contract ================
+//
+// The TypeScript-facing stream contract consumed by the Theia kernel-bridge
+// extension (`Idea/Pratibimba/System/extensions/kernel-bridge/`) and the
+// `/body` shell layout. Both consumers receive the same envelope shapes via
+// serde-JSON over the gateway WebSocket multiplex; there is no Tauri-native
+// alternative (PRD-01 obviated it).
+//
+// The kernel-bridge maintains an in-process row cache PER session_key and
+// emits these envelopes to downstream M-extensions through Theia DI. Privacy
+// filtering happens at the gateway boundary via `privacy_filter_*` helpers
+// below so protected-reference-only rows cannot accidentally cross with
+// hidden detail attached.
+
+/// Connection state to the gateway from the kernel-bridge's perspective.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum KernelBridgeConnectionState {
+    Connecting,
+    Connected,
+    Disconnected,
+    Reconnecting,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeConnectionStatus {
+    pub gateway_id: String,
+    pub state: KernelBridgeConnectionState,
+    pub protocol_version: u32,
+    pub clock_protocol_version: String,
+    /// 03.T6: surface the Graphiti runtime status so agents can decide
+    /// whether episodic operations (s5.episodic.*) are available before
+    /// invoking them. `Available` means the runtime answered its health
+    /// probe; `Degraded` means the gateway reached it but with a non-ok
+    /// status; `Unavailable` means no response within the probe timeout.
+    pub graphiti_runtime_status: GraphitiRuntimeStatus,
+    pub at_ms: u64,
+}
+
+/// 03.T6: typed status of the Graphiti runtime (the HTTP compatibility
+/// adapter at port 37778 currently). Surfaced through the gateway readiness
+/// AND through every subscription metadata envelope so consumers don't have
+/// to make a separate readiness call to know whether episodic operations
+/// will succeed.
+///
+/// Per IOD-08 the native-library boundary is unresolved; this enum is the
+/// CURRENT compatibility-mode status, not a commitment to runtime shape.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum GraphitiRuntimeStatus {
+    Available,
+    Degraded,
+    Unavailable,
+}
+
+/// Subscription lifecycle from the kernel-bridge's perspective — mirrors the
+/// SPACETIME_SUBSCRIPTION_LIFECYCLE_EVENTS phase enumeration.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeSubscriptionStatus {
+    pub subscription_id: String,
+    pub method: String,
+    pub session_key: String,
+    pub phase: String,
+    pub source: String,
+    pub privacy_class: String,
+    /// 03.T6: Graphiti runtime status at the time this subscription
+    /// envelope was emitted. Agents subscribing to KairosSurface +
+    /// GlobalTemporalSurface use this to gate s5.episodic.* invocations
+    /// without a separate readiness round-trip.
+    pub graphiti_runtime_status: GraphitiRuntimeStatus,
+    pub at_ms: u64,
+}
+
+/// 03.T6: typed envelope for routing S5/S5' Graphiti invocation through
+/// the gateway RPC layer (instead of consumers reaching Graphiti directly).
+/// Carries the explicit session/day/NOW/namespace/privacy axes named in
+/// the deliverable so the gateway can refuse requests that don't supply
+/// them, and so downstream tools can route by namespace.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GraphitiInvocationEnvelope {
+    pub session_key: String,
+    pub day_id: String,
+    pub now_path: String,
+    pub namespace_ref: String,
+    pub session_arc_id: String,
+    pub privacy_class: GraphitiPrivacyClass,
+    /// `agent_id` is the invoking agent identity (`epii`, `nara`, …) —
+    /// surfaced for audit/provenance, not for authorisation.
+    pub agent_id: String,
+}
+
+/// 03.T6: Graphiti invocation privacy classification. `ProtectedEpisodic`
+/// means the body contains personal episodic memory that MUST NOT be
+/// persisted to SpaceTimeDB or any other public projection — only the
+/// `session_arc_id` + `namespace_ref` references cross the gateway
+/// boundary. `PublicProvenance` means a provenance event that can be
+/// safely persisted as a reference.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum GraphitiPrivacyClass {
+    ProtectedEpisodic,
+    PublicProvenance,
+}
+
+/// 03.T6: refuse a SpaceTimeDB row payload if it carries any field that
+/// would leak Graphiti episode body content into the public projection.
+/// Returns `Ok(())` when the row is safe (only references); `Err` naming
+/// the offending field when an episode body field is present.
+///
+/// The forbidden field names are the ones used in the Graphiti
+/// compatibility surface (`Body/S/S3/graphiti-runtime/src/lib.rs`): any
+/// raw `episode_id` + body, raw `episode`, `episode_body`, `memory_body`,
+/// `protected_payload`, or `journal_text`. SAFE references are
+/// `graphiti_namespace_ref` and `graphiti_session_arc_id` only.
+pub fn assert_no_graphiti_body_in_row(row: &Value) -> Result<(), String> {
+    let forbidden = [
+        "episode_id",
+        "episode",
+        "episode_body",
+        "memory_body",
+        "protected_payload",
+        "journal_text",
+        "dream_body",
+        "raw_episode",
+    ];
+    let Value::Object(map) = row else {
+        return Ok(());
+    };
+    for field in forbidden {
+        if map.contains_key(field) {
+            return Err(format!(
+                "Graphiti episode body field `{field}` must not be persisted to SpaceTimeDB; only `graphiti_namespace_ref` and `graphiti_session_arc_id` references are safe (see 03.T6 IOD-08)"
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// Privacy classification — applied at the gateway boundary before a row
+/// crosses to the kernel-bridge. Downstream consumers may further restrict
+/// but MUST NOT loosen.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum KernelBridgePrivacyClass {
+    PublicSafe,
+    ProtectedReferenceOnly,
+    OptInShared,
+}
+
+/// One row in the kernel-bridge's latest-row cache. `surface` matches the
+/// `SpacetimeTableDelta` variant identity; `row` carries the post-privacy
+/// payload (NOT the raw native-WS row).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeCachedSurface {
+    pub surface: String,
+    pub privacy_class: KernelBridgePrivacyClass,
+    pub row: Value,
+    pub updated_at_ms: u64,
+}
+
+/// Snapshot of the kernel-bridge's row cache for a single session at a
+/// single point in time. Emitted on (re)connection and after a resync.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeLatestRowCache {
+    pub session_key: String,
+    pub surfaces: Vec<KernelBridgeCachedSurface>,
+}
+
+/// A typed delta emitted to the kernel-bridge after privacy filtering.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeDelta {
+    pub subscription_id: String,
+    pub session_key: String,
+    pub message_kind: SpacetimeMessageKind,
+    pub inserts: Vec<KernelBridgeCachedSurface>,
+    pub deletes: Vec<KernelBridgeCachedSurface>,
+}
+
+/// Resync envelope — emitted after the kernel-bridge reconnects and the
+/// gateway has recovered the projection generation. Carries the recovered
+/// surfaces so the consumer can re-render without polling.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeResync {
+    pub subscription_id: String,
+    pub session_key: String,
+    pub stale_profile_generation: Option<u64>,
+    pub recovered_profile_generation: u64,
+    pub recovered_surfaces: Vec<KernelBridgeCachedSurface>,
+}
+
+/// Protocol mismatch — emitted when the kernel-bridge detects that any of
+/// the gateway's announced version constants diverge from what the local
+/// build expects. Downstream consumers MUST refuse to render data that
+/// crossed a mismatched protocol.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeProtocolMismatch {
+    pub local_projection_schema_version: String,
+    pub remote_projection_schema_version: String,
+    pub local_reducer_abi_version: String,
+    pub remote_reducer_abi_version: String,
+    pub local_clock_protocol_version: String,
+    pub remote_clock_protocol_version: String,
+    pub at_ms: u64,
+}
+
+/// The top-level stream contract. Every event the kernel-bridge consumes
+/// from the gateway WS multiplex serialises into this enum. `kind`
+/// (serde-internal-tag) is the discriminator the TypeScript side switches on.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case", tag = "kind", content = "body")]
+pub enum KernelBridgeStreamEvent {
+    ConnectionStatus(KernelBridgeConnectionStatus),
+    SubscriptionStatus(KernelBridgeSubscriptionStatus),
+    LatestRowCache(KernelBridgeLatestRowCache),
+    Delta(KernelBridgeDelta),
+    Resync(KernelBridgeResync),
+    ProtocolMismatch(KernelBridgeProtocolMismatch),
+}
+
+/// The kernel-bridge API contract — methods Theia consumers invoke against
+/// the bridge frontend service. Each variant maps to a gateway RPC the
+/// bridge translates and forwards. The bridge owns the WS connection and
+/// the row cache; M-extensions consume via Theia DI.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case", tag = "method", content = "params")]
+pub enum KernelBridgeApiRequest {
+    SubscribeWorldClock {
+        #[serde(rename = "gatewayId")]
+        gateway_id: String,
+    },
+    SubscribePratibimbaPresence {
+        #[serde(rename = "sessionKey")]
+        session_key: String,
+    },
+    SubscribeSharedArchetypeEvent {
+        #[serde(rename = "dayId")]
+        day_id: String,
+        #[serde(rename = "aspectGridCellFilter")]
+        aspect_grid_cell_filter: Option<u32>,
+    },
+    SubscribeKairosSurface {
+        #[serde(rename = "sessionKey")]
+        session_key: String,
+    },
+    SubscribeGlobalTemporalSurface {
+        #[serde(rename = "sessionKey")]
+        session_key: String,
+    },
+    InvokeGatewayRpc {
+        #[serde(rename = "gatewayMethod")]
+        gateway_method: String,
+        #[serde(rename = "gatewayParams")]
+        gateway_params: Value,
+    },
+    ObserveConnectionState,
+}
+
+/// Privacy classification for a known surface. Used by the gateway to
+/// decide which fields cross to the kernel-bridge.
+pub fn surface_privacy_class(surface: &str) -> KernelBridgePrivacyClass {
+    match surface {
+        // Personal/protected surfaces — only fingerprints/handles cross.
+        "pratibimba_presence" => KernelBridgePrivacyClass::ProtectedReferenceOnly,
+        // Opt-in surfaces — caller must have asserted consent.
+        "shared_archetype_event" | "coincidence" => KernelBridgePrivacyClass::OptInShared,
+        // Public-safe operational surfaces.
+        _ => KernelBridgePrivacyClass::PublicSafe,
+    }
+}
+
+/// 03.T5: privacy filter for a typed table delta crossing the gateway →
+/// kernel-bridge boundary. Strips fields per the surface's privacy class:
+///
+/// - `ProtectedReferenceOnly` (pratibimba_presence): emits ONLY
+///   `identity_handle` + `day_id` + `aspect_grid_cell` + `present`. The
+///   `quintessence_hash` is a fingerprint but still a derived identity
+///   shape, so it stays behind the gateway. `session_key`,
+///   `installation_id`, and `gateway_id` are correlation handles consumers
+///   don't need.
+///
+/// - `OptInShared` (shared_archetype_event, coincidence): emits the safe
+///   subset — no `installation_id`, no `gateway_id`, no raw `payload_json`.
+///   `event_kind` + `aspect_grid_cell` + `day_id` + `publisher_identity_handle`
+///   (which is already a BLAKE3 fingerprint) cross.
+///
+/// - `PublicSafe`: row passes through unmodified.
+///
+/// The input may be a positional array (live SpaceTimeDB native WS shape) or
+/// an object (synthetic test shape); both are normalised to an object using
+/// the surface's known column layout before filtering.
+pub fn privacy_filter_table_delta(delta: &SpacetimeTableDelta) -> KernelBridgeCachedSurface {
+    let (surface_name, raw_row) = match delta {
+        SpacetimeTableDelta::SessionSurface { row } => ("session_surface", row),
+        SpacetimeTableDelta::KairosSurface { row } => ("kairos_surface", row),
+        SpacetimeTableDelta::GlobalTemporalSurface { row } => ("global_temporal_surface", row),
+        SpacetimeTableDelta::WorldClock { row } => ("world_clock", row),
+        SpacetimeTableDelta::PratibimbaPresence { row } => ("pratibimba_presence", row),
+        SpacetimeTableDelta::SharedArchetypeEvent { row } => ("shared_archetype_event", row),
+        SpacetimeTableDelta::Coincidence { row } => ("coincidence", row),
+        SpacetimeTableDelta::GatewayInstance { row } => ("gateway_instance", row),
+        SpacetimeTableDelta::AgentInstance { row } => ("agent_instance", row),
+        SpacetimeTableDelta::ClientRegistration { row } => ("client_registration", row),
+        SpacetimeTableDelta::TemporalEvent { row } => ("temporal_event", row),
+        SpacetimeTableDelta::WorldClockTick { row } => ("world_clock_tick", row),
+        SpacetimeTableDelta::CoincidenceTick { row } => ("coincidence_tick", row),
+        SpacetimeTableDelta::ModuleVersion { row } => ("module_version", row),
+        SpacetimeTableDelta::Other { table_name, row } => (table_name.as_str(), row),
+    };
+    let privacy_class = surface_privacy_class(surface_name);
+    let normalised = normalise_row_to_object(surface_name, raw_row);
+    let filtered = match privacy_class {
+        KernelBridgePrivacyClass::ProtectedReferenceOnly => filter_protected_row(&normalised),
+        KernelBridgePrivacyClass::OptInShared => filter_opt_in_row(&normalised),
+        KernelBridgePrivacyClass::PublicSafe => normalised,
+    };
+    KernelBridgeCachedSurface {
+        surface: surface_name.to_owned(),
+        privacy_class,
+        row: filtered,
+        updated_at_ms: 0,
+    }
+}
+
+/// Convert a raw row payload — which may be a JSON array (live SpaceTimeDB
+/// native-WS positional shape), a JSON object (synthetic/test shape OR live
+/// InitialSubscription shape), or a JSON-encoded string of either form —
+/// into a normalised object using the schema column order for the named
+/// surface.
+fn normalise_row_to_object(surface: &str, raw: &Value) -> Value {
+    // Resolve the row to an inner Value, peeling off the JSON-string wrapper
+    // that SpaceTimeDB 2.2's wire format applies to some row payloads.
+    let inner = match raw {
+        Value::String(s) => match serde_json::from_str::<Value>(s) {
+            Ok(parsed) => parsed,
+            Err(_) => return raw.clone(),
+        },
+        other => other.clone(),
+    };
+    // Object-shaped rows (live InitialSubscription, synthetic tests) pass
+    // through unchanged — column names are already present.
+    if matches!(inner, Value::Object(_)) {
+        return inner;
+    }
+    let Value::Array(array) = inner else {
+        return raw.clone();
+    };
+    let columns: &[&str] = match surface {
+        "pratibimba_presence" => &[
+            "identity_handle",
+            "installation_id",
+            "gateway_id",
+            "session_key",
+            "day_id",
+            "quintessence_hash",
+            "aspect_grid_cell",
+            "privacy_class",
+            "present",
+            "updated_at",
+        ],
+        "shared_archetype_event" => &[
+            "event_id",
+            "installation_id",
+            "gateway_id",
+            "publisher_identity_handle",
+            "day_id",
+            "aspect_grid_cell",
+            "event_kind",
+            "payload_json",
+            "privacy_class",
+            "created_at",
+        ],
+        "coincidence" => &[
+            "coincidence_id",
+            "day_id",
+            "aspect_grid_cell",
+            "participant_identity_handles",
+            "confidence_score",
+            "related_event_ids",
+            "detected_at",
+        ],
+        "world_clock" => &[
+            "gateway_id",
+            "tick",
+            "source_now_ms",
+            "dominant_aspect",
+            "clock_kind",
+            "kerykeion_state_hash",
+            "clock_protocol_version",
+            "kerykeion_version",
+            "updated_at",
+        ],
+        // For surfaces we don't carry an explicit column map for, return the
+        // raw array — consumers know the per-surface schema.
+        _ => return raw.clone(),
+    };
+    let mut object = serde_json::Map::new();
+    for (idx, column) in columns.iter().enumerate() {
+        if let Some(value) = array.get(idx) {
+            object.insert((*column).to_owned(), value.clone());
+        }
+    }
+    Value::Object(object)
+}
+
+fn filter_protected_row(row: &Value) -> Value {
+    let Value::Object(map) = row else {
+        return row.clone();
+    };
+    let safe_keys = [
+        "identity_handle",
+        "day_id",
+        "aspect_grid_cell",
+        "present",
+        "privacy_class",
+        "updated_at",
+    ];
+    let mut filtered = serde_json::Map::new();
+    for key in safe_keys {
+        if let Some(value) = map.get(key) {
+            filtered.insert(key.to_owned(), value.clone());
+        }
+    }
+    Value::Object(filtered)
+}
+
+fn filter_opt_in_row(row: &Value) -> Value {
+    let Value::Object(map) = row else {
+        return row.clone();
+    };
+    // Strip raw correlation fields + raw payload_json (which may carry
+    // arbitrary publisher-supplied content) — keep the safe public-shared
+    // subset.
+    let strip = ["installation_id", "gateway_id", "payload_json"];
+    let mut filtered = map.clone();
+    for key in strip {
+        filtered.remove(key);
+    }
+    Value::Object(filtered)
+}
+
+/// 03.T5: detect a protocol mismatch between local and remote module-version
+/// reporting. Returns `Some(KernelBridgeProtocolMismatch)` when any of the
+/// version triple drifts; `None` when versions align.
+pub fn detect_protocol_mismatch(
+    remote_projection_schema_version: &str,
+    remote_reducer_abi_version: &str,
+    remote_clock_protocol_version: &str,
+    at_ms: u64,
+) -> Option<KernelBridgeProtocolMismatch> {
+    let projection_match = remote_projection_schema_version == SPACETIME_PROJECTION_SCHEMA_VERSION;
+    let reducer_match = remote_reducer_abi_version == SPACETIME_REDUCER_ABI_VERSION;
+    let clock_match = remote_clock_protocol_version == SPACETIME_CLOCK_PROTOCOL_VERSION;
+    if projection_match && reducer_match && clock_match {
+        return None;
+    }
+    Some(KernelBridgeProtocolMismatch {
+        local_projection_schema_version: SPACETIME_PROJECTION_SCHEMA_VERSION.to_owned(),
+        remote_projection_schema_version: remote_projection_schema_version.to_owned(),
+        local_reducer_abi_version: SPACETIME_REDUCER_ABI_VERSION.to_owned(),
+        remote_reducer_abi_version: remote_reducer_abi_version.to_owned(),
+        local_clock_protocol_version: SPACETIME_CLOCK_PROTOCOL_VERSION.to_owned(),
+        remote_clock_protocol_version: remote_clock_protocol_version.to_owned(),
+        at_ms,
+    })
+}
+
+// ============= 03.T7 release gate =============
+//
+// Track 03 release-gate criteria, expressed as contract types so the
+// gateway can self-report whether the gates are open and the kernel-bridge
+// can refuse to advertise capabilities that have not yet passed their
+// gate.
+
+/// 03.T7: production fallback policy. By default HTTP SQL polling is a
+/// development-only degraded mode; production requires explicit operator
+/// opt-in via the `EPI_GATE_ALLOW_PRODUCTION_HTTP_FALLBACK=1` env var.
+/// The gateway surfaces the active policy on every readiness probe so
+/// downstream consumers (kernel-bridge, M-extensions, alert dashboards)
+/// can refuse to render data that crossed an undeclared fallback.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum ProductionFallbackPolicy {
+    /// Default: HTTP SQL polling is permitted only for local development;
+    /// any production environment refuses to use it.
+    DevelopmentOnly,
+    /// Operator-opted-in: HTTP SQL polling is permitted as a visible
+    /// degraded mode, with an explicit `fallback-active` lifecycle event
+    /// on every subscription that uses it.
+    OperatorOptIn,
+}
+
+/// 03.T7: detect the active fallback policy from the environment. Defaults
+/// to `DevelopmentOnly`; flips to `OperatorOptIn` when
+/// `EPI_GATE_ALLOW_PRODUCTION_HTTP_FALLBACK=1`.
+pub fn detect_production_fallback_policy() -> ProductionFallbackPolicy {
+    match std::env::var("EPI_GATE_ALLOW_PRODUCTION_HTTP_FALLBACK") {
+        Ok(value) if value == "1" || value.eq_ignore_ascii_case("true") => {
+            ProductionFallbackPolicy::OperatorOptIn
+        }
+        _ => ProductionFallbackPolicy::DevelopmentOnly,
+    }
+}
+
+/// 03.T7: forbidden field names that MUST NOT appear in any SpaceTimeDB
+/// row serialised to the public projection or in any Graphiti search
+/// result envelope. The privacy audit harness scans live row payloads for
+/// these strings and fails the release gate if any are present.
+pub const PRIVACY_FORBIDDEN_FIELD_NAMES: &[&str] = &[
+    // From 03.T6 (Graphiti episode bodies).
+    "episode_id",
+    "episode",
+    "episode_body",
+    "memory_body",
+    "protected_payload",
+    "journal_text",
+    "dream_body",
+    "raw_episode",
+    // From the alpha spec privacy invariants (Nara personal mandala).
+    "raw_birth_data",
+    "birth_data",
+    "dream_content",
+    "profile_hash_preview",
+    "layer_mask",
+    "personal_nexus_body",
+    "personalnexus_body",
+    "personal_nexus",
+    // Catch-all for raw identity that should only ever cross as a
+    // BLAKE3 fingerprint.
+    "raw_identity",
+    "raw_quaternionic_bytes",
+];
+
+/// 03.T7: scan a serialised row payload (as a JSON Value, or any value
+/// renderable to a String via Display) for forbidden field names. Returns
+/// the list of forbidden fields found; empty list means the row is safe.
+///
+/// The scan is intentionally string-based (rather than walking JSON
+/// structurally) so it catches forbidden fields buried in
+/// arbitrary-shape payload_json blobs that the gateway has not pre-typed.
+pub fn scan_for_forbidden_privacy_fields(payload: &str) -> Vec<&'static str> {
+    let mut hits = Vec::new();
+    for field in PRIVACY_FORBIDDEN_FIELD_NAMES {
+        // Match `"field"` to avoid false positives from prefix/substring
+        // matches (e.g. `episode_id` matching inside `non_episode_id_field`).
+        let needle = format!("\"{field}\"");
+        if payload.contains(&needle) {
+            hits.push(*field);
+        }
+    }
+    hits
+}
+
+/// 03.T7: Track 03 release-gate criteria, machine-readable. The release
+/// gate is *open* when every required field is true.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Track03ReleaseGateReport {
+    pub multi_subscriber_clock_within_tolerance: bool,
+    pub bind_kairos_p95_under_100ms: bool,
+    pub reconnect_recovers_latest_state: bool,
+    pub privacy_audit_no_forbidden_fields: bool,
+    pub production_fallback_policy: ProductionFallbackPolicy,
+    pub graphiti_runtime_status: GraphitiRuntimeStatus,
+    pub projection_schema_version: String,
+    pub reducer_abi_version: String,
+    pub clock_protocol_version: String,
+}
+
+impl Track03ReleaseGateReport {
+    pub fn is_open(&self) -> bool {
+        self.multi_subscriber_clock_within_tolerance
+            && self.bind_kairos_p95_under_100ms
+            && self.reconnect_recovers_latest_state
+            && self.privacy_audit_no_forbidden_fields
+    }
+}
+
+// ============= 03.T6.5 S1 vault gateway surface =============
+//
+// The gateway is the canonical write gatekeeper for the Obsidian vault per
+// IOD-19. Theia and agents NEVER write directly to the vault filesystem —
+// they invoke `s1'.vault.{read_file, write_file, move_file, rename_file}`
+// and the gateway delegates to Hen (the S1 compiler) which enforces
+// wikilink integrity, path soundness, and the protected-path privacy class.
+//
+// `s1'.semantic.suggest_links` wraps Hen's `suggest_link_candidates` so the
+// kernel-bridge and M-extensions can consume the same typed candidate
+// payload (ExplicitOutlink / SemanticSource / SemanticBlock) via gateway
+// RPC instead of reading the smart_env JSON directly.
+
+/// 03.T6.5: privacy classification for a vault path. `Public` means
+/// ordinary vault content (notes, blocks, frontmatter). `Protected` means
+/// content under `Idea/Pratibimba/Nara/<day>/protected/...` — Nara journal
+/// bodies, dream bodies, raw birth data — which MUST NOT be exposed
+/// through s1'.vault.* or s1'.semantic.* unless the caller carries the
+/// governed protected capability per UFV-01 + IOD-17.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum S1VaultPathPrivacyClass {
+    Public,
+    Protected,
+}
+
+/// 03.T6.5: classify a vault-relative path. Returns `Protected` when the
+/// path lies under any `Idea/Pratibimba/Nara/<day>/protected/...` segment;
+/// `Public` otherwise. Paths are normalised to forward-slash form before
+/// matching so Windows-style separators are accepted on caller's behalf.
+pub fn classify_vault_path_privacy(vault_relative_path: &str) -> S1VaultPathPrivacyClass {
+    let normalised = vault_relative_path.replace('\\', "/");
+    let trimmed = normalised.trim_start_matches('/');
+    // Match the alpha-spec invariant: any `Nara/<day>/protected` segment
+    // marks the rest of the path as protected, regardless of depth.
+    if trimmed
+        .split('/')
+        .collect::<Vec<_>>()
+        .windows(3)
+        .any(|window| window[0] == "Nara" && window[2] == "protected")
+    {
+        return S1VaultPathPrivacyClass::Protected;
+    }
+    // Also catch the direct `Idea/Pratibimba/Nara/<day>/protected/...` form
+    // as the canonical vault root layout.
+    if trimmed.contains("Pratibimba/Nara/") && trimmed.contains("/protected/") {
+        return S1VaultPathPrivacyClass::Protected;
+    }
+    S1VaultPathPrivacyClass::Public
+}
+
+/// 03.T6.5: a wikilink reference inside a markdown document, located so
+/// rename/move reconciliation can rewrite it atomically.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1WikilinkReference {
+    pub source_path: String,
+    pub target_title: String,
+    pub line_index: usize,
+    pub byte_start: usize,
+    pub byte_end: usize,
+}
+
+/// 03.T6.5: the result of a vault rename or move. Carries the list of
+/// referring documents that were reconciled (their `[[X]]` updated to
+/// `[[Y]]`) and any documents that were refused because the rename would
+/// orphan a heading or break a Bimba-coordinate anchor.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1VaultRenameReceipt {
+    pub from_path: String,
+    pub to_path: String,
+    pub reconciled_documents: Vec<String>,
+    pub reconciled_link_count: usize,
+    pub refusals: Vec<S1VaultRenameRefusal>,
+}
+
+/// 03.T6.5: a refusal carried in `S1VaultRenameReceipt.refusals` when the
+/// rename would break a wikilink the gateway cannot safely rewrite (e.g.,
+/// heading anchor `[[X#heading]]` and the heading no longer exists in the
+/// destination).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1VaultRenameRefusal {
+    pub source_path: String,
+    pub reason: S1VaultRenameRefusalReason,
+    pub detail: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum S1VaultRenameRefusalReason {
+    OrphanHeading,
+    OrphanBlockAnchor,
+    BimbaCoordinateBreak,
+    ProtectedPath,
+}
+
+/// 03.T6.5: typed candidate kind from Hen's `LinkCandidateKind`. Mirrored
+/// in the gateway contract so consumers don't need to depend on the Hen
+/// crate directly to consume the semantic response.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum S1SemanticCandidateKind {
+    ExplicitOutlink,
+    SemanticSource,
+    SemanticBlock,
+}
+
+/// 03.T6.5: one semantic link candidate.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1SemanticCandidate {
+    pub target_path: String,
+    pub wikilink_title: String,
+    pub score: f32,
+    pub kind: S1SemanticCandidateKind,
+    pub evidence_source_path: String,
+    pub evidence_lines: Option<(usize, usize)>,
+    pub stale: bool,
+    pub privacy_class: S1VaultPathPrivacyClass,
+}
+
+/// 03.T6.5: a `s1'.semantic.suggest_links` response. Carries staleness so
+/// consumers can decide whether to act on the candidates or refresh.
+/// `staleness` aggregates per-candidate `stale` flags into a single
+/// kernel-bridge-friendly state.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1SemanticResponse {
+    pub seed_sources: Vec<String>,
+    pub candidates: Vec<S1SemanticCandidate>,
+    pub warnings: Vec<String>,
+    pub staleness: S1SemanticStaleness,
+    pub smart_env_index_path: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum S1SemanticStaleness {
+    /// Every candidate's underlying source was indexed after the note's
+    /// last mtime — the index is current.
+    Current,
+    /// At least one candidate's underlying source has been modified since
+    /// it was last indexed — consumer may want to refresh.
+    Stale,
+    /// The smart_env index could not be located at all (e.g., the vault
+    /// hasn't been indexed yet) — consumer should treat candidates as
+    /// best-effort and refresh before acting.
+    NoIndex,
 }
 
 fn subscription_database_update(message: &Value) -> Option<&Value> {
@@ -1744,6 +2762,16 @@ mod tests {
         assert_eq!(plan.coordinate_owner, "S3'");
         assert_eq!(plan.agent_access_owner, "S4/S5");
         assert_eq!(
+            plan.clock_protocol_version,
+            SPACETIME_CLOCK_PROTOCOL_VERSION
+        );
+        assert_eq!(
+            plan.projection_schema_version,
+            SPACETIME_PROJECTION_SCHEMA_VERSION
+        );
+        assert!(METHOD_NAMES.contains(&SPACETIME_SUBSCRIBE_METHOD));
+        assert!(METHOD_NAMES.contains(&SPACETIME_SUBSCRIBE_ALIAS_METHOD));
+        assert_eq!(
             plan.tables,
             vec![
                 "session_surface",
@@ -1771,11 +2799,87 @@ mod tests {
             .tables
             .iter()
             .any(|table| table == "temporal_event"));
+        for shared_table in [
+            "world_clock",
+            "pratibimba_presence",
+            "shared_archetype_event",
+            "coincidence",
+        ] {
+            assert!(
+                SPACETIME_PROJECTION_TABLES.contains(&shared_table),
+                "{shared_table} should be in the complete projection table contract"
+            );
+            assert!(
+                full_plan.tables.iter().any(|table| table == shared_table),
+                "{shared_table} should be available in full subscription mode"
+            );
+        }
         assert!(full_plan
             .subscription_queries()
             .iter()
             .any(|query| query
                 == "SELECT * FROM temporal_event WHERE session_key = 'agent:main:main'"));
+        assert!(full_plan
+            .subscription_queries()
+            .iter()
+            .any(|query| query == "SELECT * FROM world_clock"));
+        // 03.T4: shared_archetype_event is keyed by day_id + publisher_identity_handle,
+        // not by session_key. The subscription has no WHERE clause; consumer-side
+        // and SpaceTimeDB RLS handle visibility.
+        assert!(full_plan
+            .subscription_queries()
+            .iter()
+            .any(|query| query == "SELECT * FROM shared_archetype_event"));
+        assert!(full_plan
+            .subscription_queries()
+            .iter()
+            .any(|query| query == "SELECT * FROM coincidence"));
+        // 03.T4 audit/version surfaces.
+        assert!(full_plan
+            .subscription_queries()
+            .iter()
+            .any(|query| query == "SELECT * FROM world_clock_tick"));
+        assert!(full_plan
+            .subscription_queries()
+            .iter()
+            .any(|query| query == "SELECT * FROM coincidence_tick"));
+        assert!(full_plan
+            .subscription_queries()
+            .iter()
+            .any(|query| query == "SELECT * FROM module_version"));
+
+        let readiness = full_plan.readiness_contract();
+        assert_eq!(
+            readiness.projection_schema_version,
+            SPACETIME_PROJECTION_SCHEMA_VERSION
+        );
+        assert_eq!(
+            readiness.clock_protocol_version,
+            SPACETIME_CLOCK_PROTOCOL_VERSION
+        );
+        assert_eq!(
+            readiness.active_fallback_mode,
+            SPACETIME_PROJECTION_SOURCE_HTTP_SQL
+        );
+
+        for event in [
+            "requested",
+            "applied",
+            "delta",
+            "resync",
+            "error",
+            "closed",
+            "fallback-active",
+        ] {
+            assert!(SPACETIME_SUBSCRIPTION_LIFECYCLE_EVENTS.contains(&event));
+        }
+        let envelope = full_plan.lifecycle_envelope("requested", json!({"scope":"full"}));
+        assert_eq!(envelope.method, SPACETIME_SUBSCRIBE_METHOD);
+        assert_eq!(envelope.session_key, "agent:main:main");
+        assert_eq!(
+            envelope.projection_schema_version,
+            SPACETIME_PROJECTION_SCHEMA_VERSION
+        );
 
         let update = json!({
             "SubscribeMultiApplied": {
@@ -1821,5 +2925,699 @@ mod tests {
             session["kernel_projection_json"],
             r#"{"privacy":"safe-public-current-kernel-tick","tick":{"element":"SlashFlip"}}"#
         );
+    }
+
+    #[test]
+    fn typed_delta_decodes_initial_subscription_with_kairos_insert_and_routes_by_table_identity() {
+        let message = json!({
+            "InitialSubscription": {
+                "database_update": {
+                    "tables": [
+                        {
+                            "table_name": "kairos_surface",
+                            "updates": [{
+                                "inserts": [{"kairos_snapshot_id": "kairos-test-1", "available": true}]
+                            }]
+                        },
+                        {
+                            "table_name": "session_surface",
+                            "updates": [{
+                                "inserts": [{"session_key": "agent:main:main", "day_id": "07-05-2026"}]
+                            }]
+                        }
+                    ]
+                }
+            }
+        });
+        let delta = SpacetimeProjectionDelta::from_subscription_message(&message).unwrap();
+        assert_eq!(delta.message_kind, SpacetimeMessageKind::InitialSubscription);
+        assert_eq!(delta.inserts.len(), 2);
+        assert!(delta.deletes.is_empty());
+
+        // KairosSurface insert is routable by surface identity.
+        let kairos = delta
+            .first_kairos_insert()
+            .expect("KairosSurface insert must be tagged by surface");
+        assert_eq!(kairos["kairos_snapshot_id"], "kairos-test-1");
+        assert_eq!(kairos["available"], true);
+
+        // SessionSurface insert is also typed correctly.
+        let has_session = delta.inserts.iter().any(|delta| matches!(
+            delta,
+            SpacetimeTableDelta::SessionSurface { row } if row["session_key"] == "agent:main:main"
+        ));
+        assert!(has_session, "SessionSurface insert must be typed");
+    }
+
+    #[test]
+    fn typed_delta_handles_transaction_update_with_inserts_and_deletes() {
+        let message = json!({
+            "TransactionUpdate": {
+                "status": {
+                    "Committed": {
+                        "tables": [{
+                            "table_name": "world_clock",
+                            "updates": [{
+                                "inserts": [{"world_clock_id": "clock-1", "tick": 42}],
+                                "deletes": [{"world_clock_id": "clock-0", "tick": 41}]
+                            }]
+                        }]
+                    }
+                }
+            }
+        });
+        let delta = SpacetimeProjectionDelta::from_subscription_message(&message).unwrap();
+        assert_eq!(delta.message_kind, SpacetimeMessageKind::TransactionUpdate);
+        assert_eq!(delta.inserts.len(), 1);
+        assert_eq!(delta.deletes.len(), 1);
+        assert!(matches!(
+            delta.inserts[0],
+            SpacetimeTableDelta::WorldClock { .. }
+        ));
+        assert!(matches!(
+            delta.deletes[0],
+            SpacetimeTableDelta::WorldClock { .. }
+        ));
+    }
+
+    #[test]
+    fn typed_delta_classifies_subscribe_multi_applied_and_transaction_update_light() {
+        let multi = json!({
+            "SubscribeMultiApplied": {
+                "update": {"tables": []}
+            }
+        });
+        let delta = SpacetimeProjectionDelta::from_subscription_message(&multi).unwrap();
+        assert_eq!(delta.message_kind, SpacetimeMessageKind::SubscribeMultiApplied);
+
+        let light = json!({
+            "TransactionUpdateLight": {
+                "update": {"tables": []}
+            }
+        });
+        let delta = SpacetimeProjectionDelta::from_subscription_message(&light).unwrap();
+        assert_eq!(
+            delta.message_kind,
+            SpacetimeMessageKind::TransactionUpdateLight
+        );
+    }
+
+    #[test]
+    fn typed_delta_treats_unknown_message_kinds_as_unknown_with_empty_delta() {
+        let identity_token = json!({"IdentityToken": {"identity": "abc"}});
+        let delta = SpacetimeProjectionDelta::from_subscription_message(&identity_token).unwrap();
+        assert_eq!(delta.message_kind, SpacetimeMessageKind::Unknown);
+        assert!(delta.inserts.is_empty() && delta.deletes.is_empty());
+    }
+
+    #[test]
+    fn kernel_bridge_stream_event_round_trips_through_serde_for_every_variant() {
+        let events = vec![
+            KernelBridgeStreamEvent::ConnectionStatus(KernelBridgeConnectionStatus {
+                gateway_id: "gateway-main".to_owned(),
+                state: KernelBridgeConnectionState::Connected,
+                protocol_version: 3,
+                clock_protocol_version: SPACETIME_CLOCK_PROTOCOL_VERSION.to_owned(),
+                graphiti_runtime_status: GraphitiRuntimeStatus::Available,
+                at_ms: 1_000,
+            }),
+            KernelBridgeStreamEvent::SubscriptionStatus(KernelBridgeSubscriptionStatus {
+                subscription_id: "sub-1".to_owned(),
+                method: SPACETIME_SUBSCRIBE_METHOD.to_owned(),
+                session_key: "agent:main:main".to_owned(),
+                phase: "applied".to_owned(),
+                source: "websocket-multiplex".to_owned(),
+                privacy_class: "session-local".to_owned(),
+                graphiti_runtime_status: GraphitiRuntimeStatus::Available,
+                at_ms: 1_001,
+            }),
+            KernelBridgeStreamEvent::Delta(KernelBridgeDelta {
+                subscription_id: "sub-1".to_owned(),
+                session_key: "agent:main:main".to_owned(),
+                message_kind: SpacetimeMessageKind::SubscribeMultiApplied,
+                inserts: vec![KernelBridgeCachedSurface {
+                    surface: "kairos_surface".to_owned(),
+                    privacy_class: KernelBridgePrivacyClass::PublicSafe,
+                    row: json!({"kairos_snapshot_id": "k1"}),
+                    updated_at_ms: 1_010,
+                }],
+                deletes: vec![],
+            }),
+            KernelBridgeStreamEvent::Resync(KernelBridgeResync {
+                subscription_id: "sub-1".to_owned(),
+                session_key: "agent:main:main".to_owned(),
+                stale_profile_generation: Some(7),
+                recovered_profile_generation: 8,
+                recovered_surfaces: vec![],
+            }),
+            KernelBridgeStreamEvent::ProtocolMismatch(KernelBridgeProtocolMismatch {
+                local_projection_schema_version: SPACETIME_PROJECTION_SCHEMA_VERSION.to_owned(),
+                remote_projection_schema_version: "ancient".to_owned(),
+                local_reducer_abi_version: SPACETIME_REDUCER_ABI_VERSION.to_owned(),
+                remote_reducer_abi_version: "ancient".to_owned(),
+                local_clock_protocol_version: SPACETIME_CLOCK_PROTOCOL_VERSION.to_owned(),
+                remote_clock_protocol_version: "ancient".to_owned(),
+                at_ms: 1_020,
+            }),
+        ];
+        for event in events {
+            let json = serde_json::to_value(&event).expect("event must serialise");
+            // External tag is the `kind` field for the kebab-case discriminator.
+            assert!(
+                json.get("kind").and_then(Value::as_str).is_some(),
+                "every kernel-bridge event must carry a `kind` discriminator: {json}"
+            );
+            let decoded: KernelBridgeStreamEvent =
+                serde_json::from_value(json).expect("event must deserialise");
+            assert_eq!(event, decoded);
+        }
+    }
+
+    #[test]
+    fn privacy_filter_strips_quintessence_hash_from_pratibimba_presence() {
+        // Live native-WS row arrives as a positional array.
+        let delta = SpacetimeTableDelta::PratibimbaPresence {
+            row: json!([
+                "handle-fingerprint",
+                "install-xyz",
+                "gateway-xyz",
+                "agent:user:main",
+                "07-05-2026",
+                "quint-fingerprint",
+                42_u32,
+                "public-safe-fingerprint-only",
+                true,
+                1_780_000_000_u64,
+            ]),
+        };
+        let cached = privacy_filter_table_delta(&delta);
+        assert_eq!(cached.surface, "pratibimba_presence");
+        assert_eq!(
+            cached.privacy_class,
+            KernelBridgePrivacyClass::ProtectedReferenceOnly
+        );
+        let row = cached.row;
+        assert_eq!(row["identity_handle"], "handle-fingerprint");
+        assert_eq!(row["day_id"], "07-05-2026");
+        assert_eq!(row["aspect_grid_cell"], 42);
+        assert_eq!(row["present"], true);
+        // Correlation handles MUST be stripped at the boundary.
+        assert!(
+            row.get("session_key").is_none(),
+            "session_key must not cross to frontend: {row}"
+        );
+        assert!(
+            row.get("installation_id").is_none(),
+            "installation_id must not cross to frontend: {row}"
+        );
+        assert!(
+            row.get("gateway_id").is_none(),
+            "gateway_id must not cross to frontend: {row}"
+        );
+        // quintessence_hash is a derived fingerprint but still identity-shaped —
+        // keep it gateway-side per the deliverable privacy invariant.
+        assert!(
+            row.get("quintessence_hash").is_none(),
+            "quintessence_hash must not cross to frontend: {row}"
+        );
+    }
+
+    #[test]
+    fn privacy_filter_strips_payload_json_and_correlation_from_shared_archetype_event() {
+        let delta = SpacetimeTableDelta::SharedArchetypeEvent {
+            row: json!([
+                123_u64,
+                "install-secret",
+                "gateway-secret",
+                "publisher-handle",
+                "07-05-2026",
+                42_u32,
+                "shared.dream.symbol",
+                r#"{"raw_publisher_content":"hidden"}"#,
+                "public-opt-in-archetype",
+                1_780_000_001_u64,
+            ]),
+        };
+        let cached = privacy_filter_table_delta(&delta);
+        assert_eq!(cached.privacy_class, KernelBridgePrivacyClass::OptInShared);
+        let row = cached.row;
+        assert_eq!(row["event_kind"], "shared.dream.symbol");
+        assert_eq!(row["publisher_identity_handle"], "publisher-handle");
+        assert_eq!(row["day_id"], "07-05-2026");
+        // payload_json carries publisher-supplied content — strip at boundary.
+        assert!(
+            row.get("payload_json").is_none(),
+            "payload_json must not cross: {row}"
+        );
+        assert!(
+            row.get("installation_id").is_none(),
+            "installation_id must not cross: {row}"
+        );
+        assert!(
+            row.get("gateway_id").is_none(),
+            "gateway_id must not cross: {row}"
+        );
+    }
+
+    #[test]
+    fn privacy_filter_passes_public_safe_surfaces_through_unmodified() {
+        let delta = SpacetimeTableDelta::WorldClock {
+            row: json!([
+                "gateway-main",
+                100_u64,
+                1_780_000_000_000_u64,
+                3_u8,
+                "regular",
+                "kerykeion-hash",
+                SPACETIME_CLOCK_PROTOCOL_VERSION,
+                "kerykeion-gateway-fed-v1",
+                1_780_000_000_u64,
+            ]),
+        };
+        let cached = privacy_filter_table_delta(&delta);
+        assert_eq!(cached.surface, "world_clock");
+        assert_eq!(cached.privacy_class, KernelBridgePrivacyClass::PublicSafe);
+        let row = cached.row;
+        assert_eq!(row["tick"], 100);
+        assert_eq!(row["gateway_id"], "gateway-main");
+        assert_eq!(row["clock_kind"], "regular");
+    }
+
+    #[test]
+    fn detect_protocol_mismatch_returns_none_when_versions_align() {
+        let result = detect_protocol_mismatch(
+            SPACETIME_PROJECTION_SCHEMA_VERSION,
+            SPACETIME_REDUCER_ABI_VERSION,
+            SPACETIME_CLOCK_PROTOCOL_VERSION,
+            42,
+        );
+        assert!(result.is_none(), "aligned versions must not flag mismatch");
+    }
+
+    #[test]
+    fn detect_protocol_mismatch_flags_any_version_drift() {
+        let mismatch = detect_protocol_mismatch(
+            "different-projection-schema",
+            SPACETIME_REDUCER_ABI_VERSION,
+            SPACETIME_CLOCK_PROTOCOL_VERSION,
+            777,
+        )
+        .expect("drift on projection schema must flag");
+        assert_eq!(
+            mismatch.local_projection_schema_version,
+            SPACETIME_PROJECTION_SCHEMA_VERSION
+        );
+        assert_eq!(
+            mismatch.remote_projection_schema_version,
+            "different-projection-schema"
+        );
+        assert_eq!(mismatch.at_ms, 777);
+    }
+
+    #[test]
+    fn kernel_bridge_api_request_serialises_with_method_discriminator() {
+        let request = KernelBridgeApiRequest::SubscribeWorldClock {
+            gateway_id: "gateway-main".to_owned(),
+        };
+        let json = serde_json::to_value(&request).unwrap();
+        assert_eq!(json["method"], "subscribe-world-clock");
+        assert_eq!(json["params"]["gatewayId"], "gateway-main");
+
+        let request = KernelBridgeApiRequest::SubscribeSharedArchetypeEvent {
+            day_id: "07-05-2026".to_owned(),
+            aspect_grid_cell_filter: Some(42),
+        };
+        let json = serde_json::to_value(&request).unwrap();
+        assert_eq!(json["method"], "subscribe-shared-archetype-event");
+        assert_eq!(json["params"]["dayId"], "07-05-2026");
+        assert_eq!(json["params"]["aspectGridCellFilter"], 42);
+
+        let request = KernelBridgeApiRequest::ObserveConnectionState;
+        let json = serde_json::to_value(&request).unwrap();
+        assert_eq!(json["method"], "observe-connection-state");
+    }
+
+    #[test]
+    fn graphiti_runtime_status_round_trips_through_kernel_bridge_envelopes() {
+        // ConnectionStatus must carry graphiti_runtime_status.
+        let connection = KernelBridgeConnectionStatus {
+            gateway_id: "gateway-main".to_owned(),
+            state: KernelBridgeConnectionState::Connected,
+            protocol_version: 3,
+            clock_protocol_version: SPACETIME_CLOCK_PROTOCOL_VERSION.to_owned(),
+            graphiti_runtime_status: GraphitiRuntimeStatus::Available,
+            at_ms: 1_000,
+        };
+        let json = serde_json::to_value(&connection).unwrap();
+        assert_eq!(json["graphitiRuntimeStatus"], "available");
+
+        // SubscriptionStatus likewise.
+        let subscription = KernelBridgeSubscriptionStatus {
+            subscription_id: "sub-1".to_owned(),
+            method: SPACETIME_SUBSCRIBE_METHOD.to_owned(),
+            session_key: "agent:main:main".to_owned(),
+            phase: "applied".to_owned(),
+            source: "websocket-multiplex".to_owned(),
+            privacy_class: "session-local".to_owned(),
+            graphiti_runtime_status: GraphitiRuntimeStatus::Unavailable,
+            at_ms: 1_001,
+        };
+        let json = serde_json::to_value(&subscription).unwrap();
+        assert_eq!(json["graphitiRuntimeStatus"], "unavailable");
+
+        // All three variants of GraphitiRuntimeStatus must serialise to
+        // the kebab-case discriminator the TypeScript side switches on.
+        for (status, expected) in [
+            (GraphitiRuntimeStatus::Available, "available"),
+            (GraphitiRuntimeStatus::Degraded, "degraded"),
+            (GraphitiRuntimeStatus::Unavailable, "unavailable"),
+        ] {
+            let json = serde_json::to_value(&status).unwrap();
+            assert_eq!(json, expected);
+        }
+    }
+
+    #[test]
+    fn graphiti_invocation_envelope_carries_required_axes_in_camel_case() {
+        let envelope = GraphitiInvocationEnvelope {
+            session_key: "agent:main:main".to_owned(),
+            day_id: "07-05-2026".to_owned(),
+            now_path: "/vault/Empty/Present/07-05-2026/session-main/now.md".to_owned(),
+            namespace_ref: "pratibimba-local".to_owned(),
+            session_arc_id: "day:07-05-2026:session:session-main".to_owned(),
+            privacy_class: GraphitiPrivacyClass::ProtectedEpisodic,
+            agent_id: "epii".to_owned(),
+        };
+        let json = serde_json::to_value(&envelope).unwrap();
+        assert_eq!(json["sessionKey"], "agent:main:main");
+        assert_eq!(json["dayId"], "07-05-2026");
+        assert_eq!(
+            json["nowPath"],
+            "/vault/Empty/Present/07-05-2026/session-main/now.md"
+        );
+        assert_eq!(json["namespaceRef"], "pratibimba-local");
+        assert_eq!(json["sessionArcId"], "day:07-05-2026:session:session-main");
+        assert_eq!(json["privacyClass"], "protected-episodic");
+        assert_eq!(json["agentId"], "epii");
+
+        let public = GraphitiInvocationEnvelope {
+            privacy_class: GraphitiPrivacyClass::PublicProvenance,
+            ..envelope
+        };
+        let json = serde_json::to_value(&public).unwrap();
+        assert_eq!(json["privacyClass"], "public-provenance");
+    }
+
+    #[test]
+    fn assert_no_graphiti_body_in_row_accepts_safe_reference_only_rows() {
+        // A SessionSurface-shaped row: only the references cross.
+        let safe_row = json!({
+            "session_key": "agent:main:main",
+            "day_id": "07-05-2026",
+            "graphiti_namespace_ref": "pratibimba-local",
+            "graphiti_arc_id": "day:07-05-2026:session:session-main",
+        });
+        assert!(assert_no_graphiti_body_in_row(&safe_row).is_ok());
+
+        // A GlobalTemporalSurface-shaped row likewise.
+        let safe_global = json!({
+            "surface_key": "global",
+            "day_id": "07-05-2026",
+            "graphiti_namespace_ref": "pratibimba-local",
+            "graphiti_session_arc_id": "day:07-05-2026:session:session-main",
+        });
+        assert!(assert_no_graphiti_body_in_row(&safe_global).is_ok());
+    }
+
+    #[test]
+    fn assert_no_graphiti_body_in_row_refuses_every_episode_body_field() {
+        for forbidden in [
+            "episode_id",
+            "episode",
+            "episode_body",
+            "memory_body",
+            "protected_payload",
+            "journal_text",
+            "dream_body",
+            "raw_episode",
+        ] {
+            let row = json!({
+                "session_key": "agent:main:main",
+                forbidden: "should-not-be-here",
+            });
+            let result = assert_no_graphiti_body_in_row(&row);
+            assert!(
+                result.is_err(),
+                "row containing `{forbidden}` must be refused"
+            );
+            let err = result.unwrap_err();
+            assert!(
+                err.contains(forbidden),
+                "error must name the offending field `{forbidden}`: {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn classify_vault_path_marks_nara_protected_under_any_day() {
+        // Canonical layout: Idea/Pratibimba/Nara/<day>/protected/...
+        let protected = [
+            "Idea/Pratibimba/Nara/07-05-2026/protected/journal.md",
+            "Idea/Pratibimba/Nara/01-01-2026/protected/dream/2026-01-01.md",
+            "Pratibimba/Nara/07-05-2026/protected/birth-data.md",
+            // Windows-style separator must normalise.
+            "Idea\\Pratibimba\\Nara\\07-05-2026\\protected\\journal.md",
+            // Leading slash form.
+            "/Idea/Pratibimba/Nara/07-05-2026/protected/journal.md",
+        ];
+        for path in protected {
+            assert_eq!(
+                classify_vault_path_privacy(path),
+                S1VaultPathPrivacyClass::Protected,
+                "path {path} must be classified Protected"
+            );
+        }
+    }
+
+    #[test]
+    fn classify_vault_path_treats_non_protected_nara_paths_as_public() {
+        let public = [
+            // Public-safe Nara surfaces (not under /protected/).
+            "Idea/Pratibimba/Nara/07-05-2026/now.md",
+            "Idea/Pratibimba/Nara/07-05-2026/oracle/draw.md",
+            // Other vault content.
+            "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+            "Idea/Empty/Present/07-05-2026/session-1/now.md",
+            // Edge: a path that *contains* protected as a substring but
+            // not as a positional Nara/<day>/protected segment.
+            "Idea/Other/protected-but-not-nara.md",
+        ];
+        for path in public {
+            assert_eq!(
+                classify_vault_path_privacy(path),
+                S1VaultPathPrivacyClass::Public,
+                "path {path} must be classified Public"
+            );
+        }
+    }
+
+    #[test]
+    fn s1_vault_rename_receipt_round_trips_through_serde() {
+        let receipt = S1VaultRenameReceipt {
+            from_path: "Idea/A.md".to_owned(),
+            to_path: "Idea/B.md".to_owned(),
+            reconciled_documents: vec![
+                "Idea/Index.md".to_owned(),
+                "Idea/Other.md".to_owned(),
+            ],
+            reconciled_link_count: 5,
+            refusals: vec![S1VaultRenameRefusal {
+                source_path: "Idea/Refused.md".to_owned(),
+                reason: S1VaultRenameRefusalReason::OrphanHeading,
+                detail: "heading `#Foo` no longer exists in B.md".to_owned(),
+            }],
+        };
+        let json = serde_json::to_value(&receipt).unwrap();
+        assert_eq!(json["fromPath"], "Idea/A.md");
+        assert_eq!(json["reconciledLinkCount"], 5);
+        assert_eq!(json["refusals"][0]["reason"], "orphan-heading");
+        let decoded: S1VaultRenameReceipt = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, receipt);
+    }
+
+    #[test]
+    fn s1_semantic_response_carries_typed_candidates_with_staleness_and_privacy() {
+        let response = S1SemanticResponse {
+            seed_sources: vec!["Idea/Seed.md".to_owned()],
+            candidates: vec![
+                S1SemanticCandidate {
+                    target_path: "Idea/A.md".to_owned(),
+                    wikilink_title: "A".to_owned(),
+                    score: 0.92,
+                    kind: S1SemanticCandidateKind::SemanticBlock,
+                    evidence_source_path: "Idea/A.md".to_owned(),
+                    evidence_lines: Some((12, 18)),
+                    stale: false,
+                    privacy_class: S1VaultPathPrivacyClass::Public,
+                },
+                S1SemanticCandidate {
+                    target_path: "Idea/Pratibimba/Nara/07-05-2026/protected/dream.md".to_owned(),
+                    wikilink_title: "Dream".to_owned(),
+                    score: 0.85,
+                    kind: S1SemanticCandidateKind::SemanticSource,
+                    evidence_source_path: "Idea/Pratibimba/Nara/07-05-2026/protected/dream.md".to_owned(),
+                    evidence_lines: None,
+                    stale: true,
+                    privacy_class: S1VaultPathPrivacyClass::Protected,
+                },
+            ],
+            warnings: vec![],
+            staleness: S1SemanticStaleness::Stale,
+            smart_env_index_path: Some(".smart-env/multi/index.ajson".to_owned()),
+        };
+        let json = serde_json::to_value(&response).unwrap();
+        assert_eq!(json["candidates"][0]["kind"], "semantic-block");
+        assert_eq!(json["candidates"][0]["privacyClass"], "public");
+        assert_eq!(json["candidates"][1]["privacyClass"], "protected");
+        assert_eq!(json["candidates"][1]["stale"], true);
+        assert_eq!(json["staleness"], "stale");
+        let decoded: S1SemanticResponse = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, response);
+    }
+
+    #[test]
+    fn scan_for_forbidden_privacy_fields_catches_every_canonical_invariant() {
+        for field in PRIVACY_FORBIDDEN_FIELD_NAMES {
+            let payload = format!(r#"{{"safe":"ok","{field}":"should-not-be-here"}}"#);
+            let hits = scan_for_forbidden_privacy_fields(&payload);
+            assert!(
+                hits.contains(field),
+                "field {field} must be detected in {payload}"
+            );
+        }
+    }
+
+    #[test]
+    fn scan_for_forbidden_privacy_fields_does_not_false_positive_on_substring_matches() {
+        // `episode_id` is forbidden as a top-level key; a different key
+        // ending in `_episode_id` must NOT trip the scan.
+        let safe = r#"{"safe":"ok","other_episode_id_field":"reference-handle"}"#;
+        let hits = scan_for_forbidden_privacy_fields(safe);
+        assert!(
+            hits.is_empty(),
+            "substring match must not false-positive; hits={hits:?}"
+        );
+    }
+
+    #[test]
+    fn scan_for_forbidden_privacy_fields_accepts_safe_reference_only_payloads() {
+        let safe = r#"{
+            "session_key": "agent:main:main",
+            "day_id": "07-05-2026",
+            "graphiti_namespace_ref": "pratibimba-local",
+            "graphiti_arc_id": "day:07-05-2026:session:session-main",
+            "identity_handle": "blake3-fingerprint-hex",
+            "quintessence_hash": "blake3-quaternionic-hex"
+        }"#;
+        let hits = scan_for_forbidden_privacy_fields(safe);
+        assert!(
+            hits.is_empty(),
+            "safe row with only references and fingerprints must pass; hits={hits:?}"
+        );
+    }
+
+    #[test]
+    fn production_fallback_policy_defaults_to_development_only_without_opt_in() {
+        // Clear the env first so the default is observed.
+        std::env::remove_var("EPI_GATE_ALLOW_PRODUCTION_HTTP_FALLBACK");
+        assert_eq!(
+            detect_production_fallback_policy(),
+            ProductionFallbackPolicy::DevelopmentOnly
+        );
+        std::env::set_var("EPI_GATE_ALLOW_PRODUCTION_HTTP_FALLBACK", "1");
+        assert_eq!(
+            detect_production_fallback_policy(),
+            ProductionFallbackPolicy::OperatorOptIn
+        );
+        std::env::set_var("EPI_GATE_ALLOW_PRODUCTION_HTTP_FALLBACK", "TRUE");
+        assert_eq!(
+            detect_production_fallback_policy(),
+            ProductionFallbackPolicy::OperatorOptIn
+        );
+        std::env::set_var("EPI_GATE_ALLOW_PRODUCTION_HTTP_FALLBACK", "no");
+        assert_eq!(
+            detect_production_fallback_policy(),
+            ProductionFallbackPolicy::DevelopmentOnly
+        );
+        std::env::remove_var("EPI_GATE_ALLOW_PRODUCTION_HTTP_FALLBACK");
+    }
+
+    #[test]
+    fn track03_release_gate_open_requires_every_criterion_true() {
+        let mut report = Track03ReleaseGateReport {
+            multi_subscriber_clock_within_tolerance: true,
+            bind_kairos_p95_under_100ms: true,
+            reconnect_recovers_latest_state: true,
+            privacy_audit_no_forbidden_fields: true,
+            production_fallback_policy: ProductionFallbackPolicy::DevelopmentOnly,
+            graphiti_runtime_status: GraphitiRuntimeStatus::Available,
+            projection_schema_version: SPACETIME_PROJECTION_SCHEMA_VERSION.to_owned(),
+            reducer_abi_version: SPACETIME_REDUCER_ABI_VERSION.to_owned(),
+            clock_protocol_version: SPACETIME_CLOCK_PROTOCOL_VERSION.to_owned(),
+        };
+        assert!(report.is_open(), "all gates true => open");
+        // Each individual criterion gates the open state.
+        for flip in [
+            |r: &mut Track03ReleaseGateReport| {
+                r.multi_subscriber_clock_within_tolerance = false;
+            },
+            |r: &mut Track03ReleaseGateReport| {
+                r.bind_kairos_p95_under_100ms = false;
+            },
+            |r: &mut Track03ReleaseGateReport| {
+                r.reconnect_recovers_latest_state = false;
+            },
+            |r: &mut Track03ReleaseGateReport| {
+                r.privacy_audit_no_forbidden_fields = false;
+            },
+        ] {
+            let mut clone = report.clone();
+            flip(&mut clone);
+            assert!(
+                !clone.is_open(),
+                "flipping a single criterion to false must close the gate"
+            );
+        }
+        // Production fallback policy and graphiti status do NOT directly
+        // gate the release — they are operator-facing context, not pass/fail
+        // criteria. Verify that change.
+        report.production_fallback_policy = ProductionFallbackPolicy::OperatorOptIn;
+        assert!(
+            report.is_open(),
+            "production fallback policy is operator context, not a gate"
+        );
+    }
+
+    #[test]
+    fn typed_delta_preserves_unknown_table_identity_via_other_variant() {
+        let message = json!({
+            "SubscribeMultiApplied": {
+                "update": {
+                    "tables": [{
+                        "table_name": "future_table_not_yet_modelled",
+                        "updates": [{"inserts": [{"id": 1}]}]
+                    }]
+                }
+            }
+        });
+        let delta = SpacetimeProjectionDelta::from_subscription_message(&message).unwrap();
+        assert_eq!(delta.inserts.len(), 1);
+        match &delta.inserts[0] {
+            SpacetimeTableDelta::Other { table_name, row } => {
+                assert_eq!(table_name, "future_table_not_yet_modelled");
+                assert_eq!(row["id"], 1);
+            }
+            other => panic!("expected Other variant, got {other:?}"),
+        }
     }
 }

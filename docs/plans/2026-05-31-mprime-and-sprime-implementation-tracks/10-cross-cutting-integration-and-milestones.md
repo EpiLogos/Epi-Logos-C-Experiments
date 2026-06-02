@@ -20,6 +20,7 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
 - [[M'-SYSTEM-SPEC]] - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`, "Shell vs Subsystem Architecture", "Required Shared MathemeHarmonicProfile", "Neo4j / Graphiti Boundary", and "Minimum Live Loop". This is the authority for shared profile, shell/subsystem separation, graph/memory boundaries, and minimum end-to-end loop.
 - [[M'-TAURI-PORT-SPEC]] - `Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md`, "Port Architecture", "Harmonic Profile Architecture Amendment", "Graphiti And S2 Graph Boundary", and "Testing Contract". This is the authority for typed Tauri clients, readiness states, and mock-free desktop testing.
 - [[S0-S0i-CLI-CORE]] - `docs/specs/S/S0-S0i-CLI-CORE.md`, [[S2-S2i-GRAPH]] - `docs/specs/S/S2-S2i-GRAPH.md`, [[S3-S3i-GATEWAY]] - `docs/specs/S/S3-S3i-GATEWAY.md`, and [[S5-S5i-SYNC]] - `docs/specs/S/S5-S5i-SYNC.md`. These are the implementation-spec anchors for the S' substrate lanes.
+- [[S4-5-SPEC]] / [[S4-5'-SPEC]] under `Idea/Bimba/Seeds/S/S4/` and the live `Body/S/S4/ta-onta/S4-5p-aletheia/` contract/agent/cluster files. These are the cross-track authority for Aletheia differentiated expert lineage when M5-4 and S5 claim Aletheia disclosure readiness.
 - [[01-kernel-bridge-and-s0-foundation]], [[02-s2-bimba-map-population]], [[03-s3-gateway-and-spacetimedb]], [[04-s5-autoresearch-and-review-extension]], [[05-tauri-ide-shell-and-pratibimba-system]], [[06-zero-one-surface-evolution]], [[07-m-extension-individual-tracks]], [[08-integrated-plugin-tracks]], [[09-agentic-mediation-and-operational-capacities]], and [[11-open-architectural-decisions]] in this folder.
 
 ## Architectural Keystones
@@ -29,6 +30,7 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
 - **Native Live Path Before Rich UX:** The S3 native SpaceTimeDB WebSocket path, gateway stream contract, and reconnect/resync semantics must be proven before rich live rendering claims are accepted.
 - **S2 Graph Law Before Graph UI Authority:** M0/M5 graph views, coordinate trees, GDS overlays, and plugin graph backdrops consume S2 payloads. They do not construct coordinate law or graph topology locally.
 - **S5 Review Before Agentic Authority:** M5-4 action surfaces cannot become operational until S5 candidates, routes, review gates, evidence envelopes, and dry-run promotion plans are real persisted state.
+- **Aletheia Lineage Before Aletheia Surfacing:** Any integration milestone that claims Aletheia disclosure readiness must show differentiated S4.5 lineage from real persisted records: specialist/mode, tool refs, skill refs, namespace refs, DAY/NOW/session, readiness, and privacy class. A generic `Aletheia` source label alone is not enough.
 - **Decision Gates Are Build Gates:** Theia runtime mode, bridge host ownership, WebSocket topology, profile schema versioning, graph root mapping, and privacy storage choices block dependent implementation rather than being left as implicit engineering taste.
 - **Mock-Free Completion:** Captured-real fixtures may accelerate UI tests, but every milestone that claims live behavior must run against real local services or a repository-provided live harness.
 - **Degraded States Are Product Behavior:** Missing S2 GDS, missing n10s, absent M3 LUTs, disconnected SpaceTimeDB, blocked private projection, or unavailable S5 routes must render as typed readiness blockers, not placeholder content.
@@ -124,23 +126,28 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
 
 5. **T4 - `/body` Daily Surface Vertical Slice.**
 
+   > **Recast 2026-06-01:** Per the Theia-only canon revision (Track 05 §1–§3) and the Body/M/epi-tauri DEPRECATED tombstone, `/body` now lives as the 0/1 daily-layout mode inside the single Theia shell at `Idea/Pratibimba/System`. The 0/1 surface is realised by the `omnipanel-shell` + `pratibimba-layouts` extensions; bridge lite-mode is the `KERNEL_BRIDGE_API.subscribe` path published by the kernel-bridge extension. This tranche is a vertical-slice acceptance test over those existing extensions — not a build of new Body/M/epi-tauri code.
+
    Deliverables:
 
-   - Evolve the current lightweight `Body/M/epi-tauri` shell so Shell 0 and Shell 1 consume bridge lite mode for profile, graph readiness, Nara/protected handles, review notifications, and IDE intent routing.
-   - Implement the `/` command membrane for bridge readiness, open IDE, open review item, open graph node, and start protected entry.
-   - Add a deep-link or command path from `/body` into `/pratibimba/system` that preserves session, DAY/NOW, profile generation, and selected coordinate.
-   - Surface degraded substrate states in the daily UI without synthetic graph/review/profile data.
+   - Verify the 0/1 daily layout (via `Idea/Pratibimba/System/extensions/omnipanel-shell/` + `pratibimba-layouts/`) consumes the kernel-bridge lite mode for profile, graph readiness, Nara/protected handles, review notifications, and IDE intent routing — Shell 0 and Shell 1 here are layout regions inside the Theia shell, not separate processes.
+   - Implement the `/` command membrane for bridge readiness, open IDE, open review item, open graph node, and start protected entry (as Theia commands registered by the relevant M-extensions; many already exist per Thread A's `extensions/ide-shell-m0-m5/` intent targets).
+   - Add a deep-link or command path from the 0/1 daily layout into the deep IDE layout that preserves session, DAY/NOW, profile generation, and selected coordinate (via Theia's `Layout Restorer` + `WorkspaceService` — Track 05 T5 landed the layout-switch primitive).
+   - Bind the daily rotation contract from [[11-open-architectural-decisions#IOD-13---Nara-vaultwrite-service-ownership]]: `Idea/Empty/Present/` keeps the active Day plus immediately previous Day for crossover continuity, while older Day/NOW/session material is archived under `Idea/Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/` and surfaced to `/body`, M4 Nara, M5 Library, Graphiti, Gateway, S5, and Pi only as privacy-filtered handles/envelopes.
+   - Surface degraded substrate states in the daily layout without synthetic graph/review/profile data.
 
    Dependencies:
 
    - T3 bridge shared-consumer acceptance.
-   - Track 06 Tranches T0-T8.
-   - Track 05 Tranche T5 for deep-link and lifecycle decisions.
+   - Track 05 Tranche T5 (layout-switch primitive, done).
+   - Track 05 Tranche T4 (M0/M5 chrome, done) for the IDE-side deep-link target.
+   - Track 06 deliverables — absorbed into Track 05 T2 per canon recast; no separate Track 06 work required.
 
    Verification:
 
-   - Tauri e2e test opens `/body`, observes a live profile generation and readiness state, receives a real review or readiness notification, invokes IDE intent, and returns without duplicate bridge subscriptions.
-   - Privacy test proves `/body` shows protected handles/summaries only and does not persist private Nara or Graphiti bodies into shared state.
+   - Playwright/puppeteer e2e test opens the Theia shell in 0/1 daily layout, observes a live profile generation and readiness state, receives a real review or readiness notification, invokes IDE intent, switches to deep IDE layout, and returns without duplicate bridge subscriptions (assert `KERNEL_BRIDGE_API.snapshot.upstreamSubscriptionCount === 1` across both layouts).
+   - Rotation test creates at least three real Day folders, proves only active+previous remain in `Idea/Empty/Present/`, proves the older Day is archived to `Idea/Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/`, and proves the bridge/profile payload carries archive handles without protected Nara or Graphiti body text.
+   - Privacy test proves the 0/1 daily layout shows protected handles/summaries only and does not persist private Nara or Graphiti bodies into shared Theia workspace state.
 
 6. **T5 - Theia Shell And M0/M5 Workbench Vertical Slice.**
 
@@ -208,6 +215,7 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
    - Route a real candidate or work item through VAK evaluation, Anima orchestration, bounded agent capability selection, tool/run stream, evidence deposition, review gate, and dry-run promotion plan.
    - Expose this flow in Theia Agentic Control Room and a lightweight `/body` notification/continuation affordance.
    - Connect Sophia/Anima/Pi/Aletheia roles to S5 review/autoresearch state, S0/S2/S3 context, and user-final-validation gates without granting unrestricted shell/backend authority.
+   - Include the Track 09 T8.5 Aletheia expert-lineage handoff before claiming any Aletheia disclosure path complete.
 
    Dependencies:
 
@@ -219,6 +227,7 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
    Verification:
 
    - A real S5 candidate is routed, acted on within bounded capability policy, records tool/test/evidence references, and lands in a governed review state.
+   - A real Aletheia disclosure reloads from persisted `Idea/Empty/Present/{day}` JSONL with differentiated specialist/mode lineage, safe source URIs, and no protected body leakage.
    - Human-required review gates cannot be approved, rejected, revised, or promoted by agents.
    - Agent payloads include source/spec/code/test anchors, profile generation, S2/S3 handles, privacy class, and review id.
 
@@ -229,6 +238,7 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
     - Run the full local alpha scenario: S0 computes profile, S2 serves graph, S3 streams live state, S5 serves review/autoresearch, `/body` consumes lite mode, Theia consumes full mode, six M extensions activate, both integrated plugins run acceptance slices, and M5-4 records evidence.
     - Produce the operator runbook for service startup, test lanes, privacy audit, degraded modes, known blockers, and expected demos.
     - Produce the alpha readiness report with passed milestones, failed milestones, deferred decisions, and next implementation tranches.
+    - Feed [[13-s-sprime-modularity-and-s0-membrane-cleanup]] by listing every S0 adapter, compatibility shim, temporary live host, and duplicated-service-law surface that must be recast before beta hardening.
     - Update the implementation plan folder if the alpha reveals sequencing errors, but do not rewrite canon.
 
     Dependencies:
@@ -238,7 +248,7 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
 
     Verification:
 
-    - A repeatable command or documented harness starts the local stack, launches the app, exercises `/body`, summons Theia, opens graph/review/extension/plugin/agent surfaces, records evidence, and shuts down cleanly.
+   - A repeatable command or documented harness starts the local stack, launches the app, exercises `/body`, summons Theia, opens graph/review/extension/plugin/agent surfaces, records evidence, includes differentiated Aletheia disclosure lineage, and shuts down cleanly.
     - Privacy audit checks Tauri state, Theia workspace state, S3 rows/frames, S2 payloads, S5 evidence, logs, and observability events for forbidden protected fields.
     - The report identifies any remaining work as a concrete tranche with owner track, upstream dependency, and test gate.
 
@@ -251,6 +261,7 @@ Deliver an integration milestone plan that keeps S/S' wiring close to the beginn
 - **Review dependency:** Track 04 typed S5 DTOs and gates are upstream of Agentic Control Room, M5 extension, integrated plugin evidence, and all agentic operational authority.
 - **Theia dependency:** Track 05 runtime decision gates are upstream of Track 07/08 packaging, deep links, workspace persistence, and IDE acceptance.
 - **Privacy dependency:** M4/Nara privacy and Graphiti boundaries are upstream of 4/5/0, protected evidence, personal-field handles, and agent payload policies.
+- **Cleanup dependency:** Track 13 begins after T9 unless T13.T0/T13.T1 run early as non-conflicting inventory/parity work that does not touch active Track 03 gateway extraction files.
 
 ## Open Decisions
 

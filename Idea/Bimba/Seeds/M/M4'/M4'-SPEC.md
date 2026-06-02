@@ -24,6 +24,10 @@ depends_on:
 
 [[M4']] is [[Nara]]: journal, [[DAY/NOW]] lived context, dream, oracle, highlight, and personal [[Pratibimba]] continuity. It receives the harmonic clock as lived condition without exposing protected identity.
 
+## Canonical Substrate Anchors
+
+[[M4']] should keep its protected-local substrate visible in the prose itself: [[Body/S/S0/epi-lib/include/m4.h]] (772 LOC [[Nara]] header — personal-identity, day-as-episode, [[Q_identity]] / [[Q_transit]] / [[Q_activity]] / [[Q_composed]] declarations), [[Body/S/S0/epi-lib/src/m4.c]] (673 LOC C implementation), [[Body/S/S0/portal-core/src/nara_journal.rs]] (466 LOC Rust journal/day-container/artifact runtime), [[Body/S/S0/portal-core/src/personal_identity.rs]] (403 LOC — [[M4-4-4-4]] personal-quaternion store, [[Kerykeion]] natal-chart binding, elemental balance), [[Body/S/S0/portal-core/src/transcription.rs]] (transcription handles into [[Mahāmāyā]] codon evidence), [[Body/S/S3/graphiti-runtime/src/lib.rs]] (the [[Graphiti]] episodic memory the [[M4]] personal-field consumes from with privacy gates), and [[Body/M/epi-tauri/src/domains/M4_Nara]] (existing [[Nara]] rendering surface — migration source per Track 05 recast). The protected-local boundary is enforced by [[Body/S/S0/portal-core/src/personal_identity.rs]] and the [[Graphiti]] privacy classes; [[M4']] is the lived surface over them.
+
 ## Companion Spec
 
 - [[m4-prime-nara-activity-graphiti-instrument]] specifies M4' as the protected activity-graph instrument: #4.0 identity/quintessence, #4.1 somatic-medicinal readout, #4.2 oracle service, #4.3 transformation processor, #4.4 [[Graphiti]]/lens/NLP surface, and #4.5 [[Epii]]/[[Sophia]] review gate.
@@ -39,10 +43,10 @@ depends_on:
 ## Backend Contract Consumed
 
 - [[S3]] / [[Khora]] owns [[DAY/NOW]]/session path and write authority.
-- [[Graphiti]] stores episodic Nara memory under protected-local namespace rules.
-- [[S0]] / [[S3]] profile projection provides safe public-current harmonic context.
+- [[Graphiti]] stores episodic [[Nara]] memory under protected-local namespace rules, implemented at [[Body/S/S3/graphiti-runtime/src/lib.rs]].
+- [[S0]] / [[S3]] profile projection provides safe public-current harmonic context — the [[Nara]] runtime side lives at [[Body/S/S0/portal-core/src/nara_journal.rs]] and [[Body/S/S0/portal-core/src/personal_identity.rs]].
 - [[S2]] pointer anchor links public coordinate law without absorbing journal bodies.
-- [[S4]] / [[S5]] agent invocation paths handle governed sendoff and review.
+- [[S4]] / [[S5]] agent invocation paths handle governed sendoff and review through [[Anima]] / [[Aletheia]] / [[Pi]] / [[Epii]] / [[Sophia]] capacities.
 
 ## Required `MathemeHarmonicProfile` Fields
 
@@ -103,13 +107,13 @@ M4-4-4-4   Personal Pratibimba                 (identity / elemental-quintessenc
 
 The fourfold #4 nesting is the *lemniscate-at-the-lemniscate-at-the-lemniscate-at-the-lemniscate* — the matheme's #4 fractal-doubling executive recursed four levels into Nara's interpretive substrate. Per `CLAUDE.md` §II.D, position #4 is the Lemniscate / Context-Frame anchor; the fourfold nesting carries the `(4.0/1-4.4/5)` fractal-doubling context-frame at its deepest recursive instantiation.
 
-**What lives at M4-4-4-4**:
+**What lives at [[M4-4-4-4]]**:
 
 - The user's **identity-quintessence** — the personal-form that holds the user as this-specific-individual rather than a generic ego
 - The **elemental-temperament-signature** — the user's Earth/Fire/Water/Air balance derived from birth chart + somatic-temperament + Jungian-function-stack
-- The **personal-quaternion** — the identity-side component in the same [[Cl(4,2)]] Clifford algebra as [[M1]]'s SU(2) ring-quaternion and [[M3]]'s codon-quaternion-in-charge-space
+- The **personal-quaternion** — the identity-side component in the same [[Cl(4,2)]] [[Quaternal|Clifford]] algebra as [[M1]]'s [[SU(2)]] ring-quaternion (at [[Body/S/S0/portal-core/src/quaternion.rs]]) and [[M3]]'s codon-quaternion-in-charge-space (at [[Body/S/S0/portal-core/src/mahamaya.rs]])
 
-The personal-quaternion is **not a metaphor**. It is a literal quaternion in the system's substrate algebra, computable from real astrological data and used as one component of the user's operative location in the matheme.
+The personal-quaternion is **not a metaphor**. It is a literal quaternion in the system's substrate algebra ([[Cl(4,2)]] shared with [[Paramaśiva]] / [[Mahāmāyā]]), computable from real astrological data, persisted at [[Body/S/S0/portal-core/src/personal_identity.rs]], and used as one component of the user's operative location in the [[matheme]].
 
 ### §7.2 [[Kerykeion]] as the Personal-Quaternion Source
 
@@ -201,15 +205,15 @@ This is what makes Nara not analogically-connected to the cosmos but **structura
 
 ### §7.5 Required Backend Contract Additions
 
-For M4-4-4-4 / personal-quaternion to be operative, the backend must expose:
+For [[M4-4-4-4]] / personal-quaternion to be operative, the backend must expose:
 
-- **`PersonalIdentityProfile.q_personal`** — unit quaternion (4 × f32) from natal data, persisted at M4-4-4-4
-- **`PersonalIdentityProfile.natal_chart_handle`** — reference to the KerykeionResult that produced q_personal
+- **`PersonalIdentityProfile.q_personal`** — unit quaternion (4 × f32) from natal data, persisted at [[M4-4-4-4]] via [[Body/S/S0/portal-core/src/personal_identity.rs]]
+- **`PersonalIdentityProfile.natal_chart_handle`** — reference to the [[KerykeionResult]] that produced q_personal
 - **`PersonalIdentityProfile.elemental_balance`** — explicit (Earth/Fire/Water/Air) weights summing to 1.0 for human-readable display
-- **`MathemeHarmonicProfile.q_cosmic`** — current cosmic codon-quaternion at this tick (computed in the kernel)
+- **`MathemeHarmonicProfile.q_cosmic`** — current cosmic codon-quaternion at this tick (computed in the kernel via [[Body/S/S0/portal-core/src/mahamaya.rs]] / [[Body/S/S0/portal-core/src/codon.rs]])
 - **`MathemeHarmonicProfile.resonance`** — `q_personal · q_cosmic(t)` precomputed at every tick
 
-The PASU.md birth-data file becomes the canonical source for natal-chart input. The KerykeionResult is the authoritative astrological data. The quaternion derivation lives at the kernel layer (in the same module as `m3_eval_to_quat`), exposing the computed q_personal through the shared profile.
+The PASU.md birth-data file becomes the canonical source for natal-chart input. The [[KerykeionResult]] is the authoritative astrological data. The quaternion derivation lives at the kernel layer (in the same module as `m3_eval_to_quat` in [[Body/S/S0/epi-lib/src/m3.c]] / [[Body/S/S0/portal-core/src/mahamaya.rs]]), exposing the computed q_personal through the shared profile.
 
 ### §7.6 Privacy Boundary for M4-4-4-4
 
@@ -258,7 +262,7 @@ All identity layers emit traceable layer outputs with determinate artifacts, ind
 
 ### §7.11 Day Episodes, Artifact Graph, And Temporal Trajectory
 
-The [[Graphiti]] topology at #4.4.4.4 is [[PersonalNexus]] -> [[DayContainer]] -> artifact children, with the single canonical [[BEDROCK]] edge from `Pratibimba:PersonalNexus` to canonical `#4` and scalar coordinate refs everywhere else. M4' extends the existing Graphiti law from [[2026-04-04-graphiti-unified-temporal-context-service]] with `:HAS_DAY`, `:CONTAINS_DAILY_NOTE`, `:PART_OF_DAY`, and `:NEXT_IN_ARC` relationships from [[m4-prime-nara-day-episodes-and-oracle-artifacts]]. The day container is not the daily note; the daily note is one possible artifact within the day.
+The [[Graphiti]] topology at [[M4-4-4-4|#4.4.4.4]] is [[PersonalNexus]] -> [[DayContainer]] -> artifact children, with the single canonical [[BEDROCK]] edge from `Pratibimba:PersonalNexus` to canonical `#4` and scalar coordinate refs everywhere else. The Graphiti runtime is at [[Body/S/S3/graphiti-runtime/src/lib.rs]]; the [[Nara]] consumer side at [[Body/S/S0/portal-core/src/nara_journal.rs]]. [[M4']] extends the existing Graphiti law from [[2026-04-04-graphiti-unified-temporal-context-service]] with `:HAS_DAY`, `:CONTAINS_DAILY_NOTE`, `:PART_OF_DAY`, and `:NEXT_IN_ARC` relationships from [[m4-prime-nara-day-episodes-and-oracle-artifacts]]. The day container is not the daily note; the daily note is one possible artifact within the day.
 
 Every artifact is NOW-stamped and privacy-classed. Period readings reconstruct [[Q_composed]] from the artifact timeseries and real [[Chronos]]/[[Kairos]]/[[Graphiti]]/history handles, then render trajectory through the psychoid field. The trajectory is not a static report: [[M4-3]] carries the phase-history and `(p, q)` torus-knot classification, [[M4-4]] roots the episodes and lens readings, and [[M4-5]] decides whether any pattern becomes reviewed canon or remains protected history.
 
@@ -293,3 +297,19 @@ M4' has two inference paths that must not collapse. The parser path is [[Pi]]-ag
 - Tests prove M5' voice-tuning corpus inclusion requires explicit consent records, PII stripping, Anima admission, adapter provenance, and rollback-capable deployment state before any Nara dialogue adapter is used.
 - Tests prove Nara distinguishes raw service connectivity from actual bounded agent access.
 - Readiness is blocked until S3 deposition shape includes profile observation anchors and Graphiti privacy class.
+
+## Canonical Source Lock - 2026-06-02
+
+M4' is Nara, the protected lived interface: Day/NOW, journal, dream, oracle, highlights, personal Pratibimba, Graphiti handles, and consent-governed personal field surfaces.
+
+| Required coverage | Canonical citations |
+|---|---|
+| docs/specs | `docs/specs/M/M4-nara-personal-interface.md` mtime 2026-04-04 13:46:16; `docs/specs/M/M4-nara-subtle-body-map.md` mtime 2026-04-04 13:46:16; `docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md` mtime 2026-04-11 11:58:00; `docs/specs/M/2026-03-13-epi-logos-ux-arc-spec.md` mtime 2026-04-04 13:46:16 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `04-s5-autoresearch-and-review-extension.md` mtime 2026-05-31 20:56:45; `07-m-extension-individual-tracks.md` mtime 2026-06-01 00:23:25 (`07-T7`); `08-integrated-plugin-tracks.md` mtime 2026-06-01 00:25:11; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51 |
+| Body substrate | `Body/S/S0/epi-lib/**`, `Body/S/S1/hen-compiler-core/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S5/epii-review-core/**`; `Body/M/epi-tauri/**` only as deprecated migration-source evidence |
+| Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m4-nara/**`, `m-extension-runtime/**`, `kernel-bridge/**`, `plugin-integrated-4-5-0/**` |
+| sibling seeds | `M'-SYSTEM-SPEC.md`, `M4'/m4-prime-nara-integration-research.md`, `m4-prime-nara-day-episodes-and-oracle-artifacts.md`, `m4-prime-nara-activity-graphiti-instrument.md`, `m4-prime-psychoid-cymatic-field-engine.md`, `nara-m4-0-identity-branch-integration-map.md`, `nara-m4-0-0-birthdate-encoding-spec.md`, `ql-unit-vama-shaktis-vameshvari.md` |
+| nominal tracks | Track 07.T7 M4' extension; Track 08 integrated 4-5-0 plugin; Track 03 Graphiti/DAY; Track 04 review; Track 09 Nara voice |
+| open decisions | `q_personal` naming, axis order, identity hash migration, Vama classifier status, Nara vault owner, consent gates, profile observation deposition shape |
+
+World coordinate note: M4' consumes S1/S3 World artifact forms (`Daily-Note.md`, `NOW.md`, `Thought.md`) and shared World P/CT/L lens corpora through umbrella specs; no M-specific World coordinate markdown exists yet.

@@ -17,7 +17,8 @@ import {
     EXTENSION_ID,
     PRIMARY_VIEW_ID,
     DECLARED_BLOCKERS,
-    PRIVACY_CLASS
+    PRIVACY_CLASS,
+    buildM4NaraSurface
 } from '../common';
 
 @injectable()
@@ -75,6 +76,14 @@ export class M4NaraWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         const provenance = `privacy=${PRIVACY_CLASS} | generation=${this.context.profileGeneration ?? '—'} | pointer=${this.context.pointerAnchor ?? '—'}`;
+        const naraSurface = this.profile
+            ? buildM4NaraSurface({
+                profile: this.profile,
+                readiness: this.readiness,
+                context: this.context,
+                emittedAt: Date.now()
+            })
+            : null;
         return (
             <div className="mext-widget-root">
                 <ReadinessBanner
@@ -100,6 +109,27 @@ export class M4NaraWidget extends ReactWidget {
                             No MathemeHarmonicProfile available yet. The kernel-bridge is the
                             sole owner of this payload; this view will populate when the
                             shared adapter receives a generation update.
+                        </p>
+                    )}
+                </section>
+                <section className="mext-widget-detail">
+                    <h3>Nara DayContainer</h3>
+                    {naraSurface?.readiness.surfaceReady ? (
+                        <dl>
+                            <dt>Day</dt>
+                            <dd>{String(naraSurface.daySummary.dayId ?? '—')}</dd>
+                            <dt>Artifacts</dt>
+                            <dd>{naraSurface.artifactTree.length}</dd>
+                            <dt>Graphiti episodes</dt>
+                            <dd>{naraSurface.graphitiBrowser.length}</dd>
+                            <dt>Privacy</dt>
+                            <dd>{naraSurface.privacyClass}</dd>
+                        </dl>
+                    ) : (
+                        <p className="mext-widget-empty">
+                            Waiting for a bridge-provided Nara DayContainer handle payload.
+                            Protected journal, dream, oracle, and Graphiti bodies stay local;
+                            this surface renders handles, scalar refs, readiness, and lineage.
                         </p>
                     )}
                 </section>

@@ -3,6 +3,31 @@ mod support;
 use serde_json::json;
 use support::TestGatewayClient;
 
+/// 13.T7 store-location guard: the S0 autoresearch gate adapter must persist
+/// the S5 `ImprovementStore` under `<state_root>/s5/epii-autoresearch` and
+/// read the linked review store at `<state_root>/s5/epii-review`. Pins the
+/// boundary layout so refactors that try to move S5 governance state under
+/// another gate-root subtree fail loudly.
+#[test]
+fn gate_improve_store_subpath_is_stable_at_s0_s5_boundary() {
+    use epi_logos::gate::{improve, review};
+    use std::path::PathBuf;
+
+    assert_eq!(improve::STORE_SUBPATH, ["s5", "epii-autoresearch"]);
+    let improvement_path = improve::improvement_store_path(PathBuf::from("/tmp/state-root"));
+    assert_eq!(
+        improvement_path,
+        PathBuf::from("/tmp/state-root/s5/epii-autoresearch"),
+        "S5 autoresearch store must live under <state_root>/s5/epii-autoresearch"
+    );
+
+    // The promote gate cross-reads the review store; confirm both share the
+    // same canonical S5 root so governance pre-checks read what the S5 core
+    // wrote.
+    let review_path = review::review_store_path(PathBuf::from("/tmp/state-root"));
+    assert_eq!(review_path.parent(), improvement_path.parent());
+}
+
 #[tokio::test]
 async fn s5_improve_gateway_runs_generalized_autoresearch_loop() {
     let mut client = TestGatewayClient::connected_with_temp_store(18911).await;

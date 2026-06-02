@@ -131,6 +131,8 @@ The vault directory tree maps directly to the coordinate system:
 | Thought artifact | `Pratibimba/Self/Thought/T{0-5}/` | ARCHIVED |
 | Session archive | `Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/` | ARCHIVED |
 
+Temporal retention rule: `Empty/Present/` is a two-Day working window. The active Day and the immediately previous Day remain in `Present` for task/file crossover and agentic runtime continuity; days older than that are archived under `Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/`. Archive exchange surfaces use handles/envelopes unless a protected-local capability explicitly opens body text.
+
 ### World Forms vs World Types
 
 Hen/S1' treats `Bimba/World` and `Bimba/World/Types` as two distinct but linked authorities:
@@ -399,7 +401,7 @@ epi vault archive-day <date>               -- rotate Day -> Pratibimba archive
 - `epi vault day-init` — create Day folder (`{DD-MM-YYYY}/daily-note.md`)
 - `epi vault now-init` — create NOW folder (`{YYYYMMDD-HHmmss-sessionId}/now.md`)
 - Session ID propagation for NOW folder naming
-- `epi vault archive-day` — rotate Day -> `Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/`
+- `epi vault archive-day` — snapshot Day -> `Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/`; retention pruning keeps only active+previous Day in `Empty/Present/`
 
 ### Phase 5: Vault -> S2' Sync Bridge
 

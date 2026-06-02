@@ -1,0 +1,45 @@
+{
+  "runId": "20260602T103207Z-09-T8.5",
+  "taskId": "09.T8.5",
+  "startedAt": "2026-06-02T10:32:07.724Z",
+  "owner": "anima-09T85-fresh",
+  "leaseExpiresAt": "2026-06-02T12:32:07.724Z",
+  "worktree": null,
+  "task": {
+    "id": "09.T8.5",
+    "trackId": "09",
+    "tranche": "T8.5",
+    "title": "Aletheia Expert-Lineage Handoff And S5 Disclosure Metadata (gated by Track 04 T9, Track 09 T2/T3/T8, and S4.5 Aletheia substrate)",
+    "effort": "gated by Track 04 T9, Track 09 T2/T3/T8, and S4.5 Aletheia substrate",
+    "file": "09-agentic-mediation-and-operational-capacities.md",
+    "path": "docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md",
+    "dependsOn": [
+      "04.T9",
+      "09.T2",
+      "09.T3",
+      "09.T8"
+    ],
+    "writeScopes": [
+      "Body/S/S4/**",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/S5'/agents/*.md",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/sophia-ingest.ts",
+      "Body/S/S5/**",
+      "Idea/Bimba/Seeds/S/S4/**",
+      "Idea/Empty/Present/{day_id}/{session_id}.jsonl",
+      "Idea/Pratibimba/System/**",
+      "Idea/Pratibimba/System/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

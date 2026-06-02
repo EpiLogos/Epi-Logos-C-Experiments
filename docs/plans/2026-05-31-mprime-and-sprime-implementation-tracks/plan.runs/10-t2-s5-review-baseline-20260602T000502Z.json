@@ -1,0 +1,372 @@
+{
+  "fixture_kind": "10-t2-s5-review-baseline",
+  "captured_at": "2026-06-02T00:05:02.927Z",
+  "captured_via": "cargo test --offline against epii-{review,autoresearch,agent}-core crates + load Body/S/S5/fixtures/track-04-t0/*.json",
+  "substrate_anchors": {
+    "review_core_lib": "Body/S/S5/epii-review-core/src/lib.rs",
+    "autoresearch_core_lib": "Body/S/S5/epii-autoresearch-core/src/lib.rs",
+    "autoresearch_core_spine": "Body/S/S5/epii-autoresearch-core/src/spine.rs",
+    "agent_core_lib": "Body/S/S5/epii-agent-core/src/lib.rs",
+    "persisted_review_state": "Body/S/S5/fixtures/track-04-t0/s5-review-state.json",
+    "persisted_improvement_state": "Body/S/S5/fixtures/track-04-t0/s5-improvement-state.json"
+  },
+  "cargo_test_summary": [
+    {
+      "ok": true,
+      "label": "s5-epii-review-core",
+      "manifestPath": "Body/S/S5/epii-review-core/Cargo.toml",
+      "passed": 9,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "ok": true,
+      "label": "s5-epii-autoresearch-core",
+      "manifestPath": "Body/S/S5/epii-autoresearch-core/Cargo.toml",
+      "passed": 46,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "ok": true,
+      "label": "s5-epii-agent-core",
+      "manifestPath": "Body/S/S5/epii-agent-core/Cargo.toml",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "samples": {
+    "candidate": {
+      "id": "track-04-t0-improvement-kept",
+      "captured_at": "2026-06-02T00:05:02.926Z",
+      "shape": {
+        "schema_version": 1,
+        "propose": {
+          "target_family": "S",
+          "target_coordinate": "S5/S5'",
+          "direction": "preserve review-gated autoresearch baseline behavior",
+          "baseline": {
+            "path": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md",
+            "coordinate": "S5/S5'",
+            "kind": "seed_spec"
+          }
+        },
+        "target_subsystem": "Stack",
+        "vector_kind": {
+          "kind": "preserve_review_gated_baseline"
+        },
+        "surfacing_pipeline": "aletheia_jsonl",
+        "observation_evidence": {
+          "source_uri": "Body/S/S5/fixtures/track-04-t0/s5-improvement-state.json",
+          "summary": "Baseline persisted improvement state.",
+          "observed_at": 1760000001000
+        },
+        "closure_kind": "legacy_unspecified",
+        "ct_register": "legacy_unspecified",
+        "challenger_artifact": {
+          "path": "autoresearch://challenger/track-04-t0-improvement-kept",
+          "coordinate": "S5/S5'",
+          "kind": "improvement_challenger"
+        },
+        "linkage": {
+          "originating_review_item": "track-04-t0-review-open"
+        },
+        "surfaced_at": 1760000000000,
+        "surfaced_by": "aletheia",
+        "sensitivity_class": "internal"
+      },
+      "verification": "Body/S/S5/epii-autoresearch-core/tests/spine_schema.rs::typed_candidate_round_trips_without_replacing_propose_request"
+    },
+    "route_queue_entry": {
+      "id": "route::track-04-t0-improvement-kept",
+      "captured_at": "2026-06-02T00:05:02.926Z",
+      "shape": {
+        "run_id": "track-04-t0-improvement-kept",
+        "target_subsystem": "Stack",
+        "target_coordinate": "S5/S5'",
+        "surfacing_pipeline": "aletheia_jsonl",
+        "status": "pending_review",
+        "created_at": 1760000000000,
+        "updated_at": 1760000001000
+      },
+      "verification": "Body/S/S5/epii-autoresearch-core/tests/surfacing_routing.rs::multi_target_routing_splits_routes_without_duplicating_run_id"
+    },
+    "review_item": {
+      "id": "track-04-t0-review-open",
+      "captured_at": "2026-06-02T00:05:02.926Z",
+      "human_gate_required": true,
+      "shape": {
+        "item_id": "track-04-t0-review-open",
+        "source": "human_gate",
+        "title": "Approve S5 baseline characterization",
+        "body": "A human-required review item must not be approved by an agent.",
+        "priority": "blocking",
+        "status": "open",
+        "coordinate_context": {
+          "coordinate": "S5/S5'",
+          "fixture": "track-04-t0"
+        },
+        "requires_human": true,
+        "created_at": 1760000000000
+      },
+      "verification": "Body/S/S5/epii-review-core/tests/review_inbox.rs::submit_persists_anima_review_item_and_lists_open_inbox"
+    },
+    "governance_gate": {
+      "captured_at": "2026-06-02T00:05:02.926Z",
+      "shape": {
+        "kind": "human_gate",
+        "governance_level": "blocking",
+        "review_category": "characterization_lock",
+        "requires_human_resolution": true,
+        "blocks_agent_approval": true,
+        "counts": {
+          "pending_human_validations": 1,
+          "deferred_items": 0,
+          "resolved_items": 1
+        }
+      },
+      "verification": "Body/S/S5/epii-review-core/tests/review_governance.rs::agent_can_defer_but_not_approve_recursive_user_final_or_deployment_gates"
+    },
+    "evidence_envelope": {
+      "captured_at": "2026-06-02T00:05:02.926Z",
+      "shape": {
+        "run_id": "track-04-t0-improvement-kept",
+        "evidence": [
+          {
+            "dimension": "review_gate_characterization",
+            "baseline_score": 0.45,
+            "challenger_score": 0.82,
+            "weight": 1,
+            "notes": "Fixture locks the current kept-run JSON shape before typed spine migration.",
+            "source_refs": [
+              {
+                "kind": "track_04_t0_fixture",
+                "uri": "Body/S/S5/fixtures/track-04-t0/s5-improvement-state.json",
+                "coordinate": "S5/S5'",
+                "summary": "Baseline persisted improvement state."
+              }
+            ]
+          }
+        ],
+        "evaluation": {
+          "winner": "challenger",
+          "baseline_score": 0.45,
+          "challenger_score": 0.82,
+          "rationale": "challenger wins by weighted evidence (0.4500 vs 0.8200)",
+          "evaluated_at": 1760000001000
+        }
+      },
+      "verification": "Body/S/S5/epii-autoresearch-core/tests/baseline_state_fixture.rs::tranche_04_t0_fixture_survives_typed_schema_migration_boundary"
+    },
+    "dry_run_promotion": {
+      "captured_at": "2026-06-02T00:05:02.926Z",
+      "shape": {
+        "run_id": "track-04-t0-review-resolved",
+        "destination": "S5/S5'",
+        "governance_category": "aletheia_crystallisation",
+        "approved_review_resolution_id": "track-04-t0-review-resolved",
+        "ok": true,
+        "dry_run": true,
+        "promoted_path": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md",
+        "compile_artifacts": [],
+        "compile_errors": [],
+        "rollback_executable": true,
+        "rollback_reason": ""
+      },
+      "verification": "Body/S/S5/epii-agent-core/tests/agent_access.rs::m5_promotion_dry_run_returns_filtered_dto_from_real_review_and_improvement_state"
+    },
+    "frontend_safe_dto": {
+      "captured_at": "2026-06-02T00:05:02.926Z",
+      "shape": {
+        "schema_version": 1,
+        "review_pane": {
+          "open_items": [
+            {
+              "item_id": "track-04-t0-review-open",
+              "title": "Approve S5 baseline characterization",
+              "source": "human_gate",
+              "status": "open",
+              "priority": "blocking",
+              "requires_human": true,
+              "artifact_refs": [],
+              "readiness": "awaiting_human_gate",
+              "created_at": 1760000000000
+            }
+          ],
+          "deferred_items": [],
+          "resolved_items": [
+            {
+              "item_id": "track-04-t0-review-resolved",
+              "title": "Crystallise fixture note",
+              "source": "aletheia",
+              "status": "resolved",
+              "priority": "normal",
+              "requires_human": false,
+              "artifact_refs": [
+                {
+                  "uri": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md",
+                  "namespace": "vault",
+                  "label": "Crystallised seed spec",
+                  "coordinate": "S5/S5'",
+                  "kind": "seed_spec",
+                  "privacy": "public",
+                  "readiness": "promoted",
+                  "review_required": false
+                }
+              ],
+              "readiness": "resolved",
+              "created_at": 1760000000500
+            }
+          ],
+          "pending_human_validations": [
+            {
+              "kind": "human_gate",
+              "governance_level": "blocking",
+              "review_category": "characterization_lock",
+              "requires_human_resolution": true,
+              "blocks_agent_approval": true,
+              "counts": {
+                "pending_human_validations": 1,
+                "deferred_items": 0,
+                "resolved_items": 1
+              }
+            }
+          ]
+        },
+        "spine_state": {
+          "active_count": 1,
+          "total_runs": 2,
+          "keep_count": 1,
+          "discard_count": 0,
+          "kernel_evidence_count": 0,
+          "orchestration_summary": {
+            "active": 0,
+            "completed": 0,
+            "failed": 0
+          }
+        },
+        "route_queues": [
+          {
+            "run_id": "track-04-t0-improvement-kept",
+            "target_subsystem": "Stack",
+            "target_coordinate": "S5/S5'",
+            "surfacing_pipeline": "aletheia_jsonl",
+            "status": "pending_review",
+            "created_at": 1760000000000,
+            "updated_at": 1760000001000
+          }
+        ],
+        "candidate_details": [
+          {
+            "candidate_id": "track-04-t0-improvement-kept",
+            "run_id": "track-04-t0-improvement-kept",
+            "target_subsystem": "Stack",
+            "vector_kind": "preserve_review_gated_baseline",
+            "surfacing_pipeline": "aletheia_jsonl",
+            "source_artifact": {
+              "uri": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md",
+              "namespace": "vault",
+              "label": "baseline seed spec",
+              "coordinate": "S5/S5'",
+              "kind": "seed_spec",
+              "privacy": "public",
+              "readiness": "ready",
+              "review_required": true
+            },
+            "baseline_artifact": {
+              "uri": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md",
+              "namespace": "vault",
+              "label": "baseline seed spec",
+              "coordinate": "S5/S5'",
+              "kind": "seed_spec",
+              "privacy": "public",
+              "readiness": "ready",
+              "review_required": true
+            },
+            "challenger_artifact": {
+              "uri": "autoresearch://challenger/track-04-t0-improvement-kept",
+              "namespace": "improvement",
+              "label": "autoresearch challenger",
+              "coordinate": "S5/S5'",
+              "kind": "improvement_challenger",
+              "privacy": "public",
+              "readiness": "evaluated",
+              "review_required": true
+            },
+            "observation_summary": "challenger wins by weighted evidence (0.4500 vs 0.8200)",
+            "sensitivity_class": "internal",
+            "readiness": "awaiting_review",
+            "review_required": true,
+            "closure_kind": "legacy_unspecified",
+            "ct_register": "legacy_unspecified"
+          }
+        ],
+        "continuity_hints": [],
+        "promotion_dry_run_results": [
+          {
+            "run_id": "track-04-t0-review-resolved",
+            "destination": "S5/S5'",
+            "governance_category": "aletheia_crystallisation",
+            "approved_review_resolution_id": "track-04-t0-review-resolved",
+            "ok": true,
+            "dry_run": true,
+            "promoted_path": "Idea/Bimba/Seeds/S/S5/S5-SPEC.md",
+            "compile_artifacts": [],
+            "compile_errors": [],
+            "rollback_executable": true,
+            "rollback_reason": ""
+          }
+        ],
+        "compatibility_aliases": [],
+        "gateway_methods": [
+          "s5'.epii.workbench.snapshot",
+          "s5'.epii.workbench.promotion_dry_run"
+        ]
+      },
+      "verification": "Body/S/S5/epii-agent-core/tests/agent_access.rs::m5_workbench_snapshot_serializes_real_state_with_namespace_refs_and_no_body_leakage"
+    }
+  },
+  "persist_reload_invariant": {
+    "asserted": true,
+    "round_trip_lossless": true,
+    "failures": []
+  },
+  "privacy_invariants": {
+    "forbidden_fields_checked": [
+      "q_b",
+      "q_p",
+      "birth_date",
+      "birth_time",
+      "birth_place",
+      "natal_chart",
+      "protected_natal_data",
+      "journal_body",
+      "journal_text",
+      "dream_body",
+      "dream_text",
+      "oracle_interpretation_body",
+      "oracle_body",
+      "graphiti_body",
+      "graphiti_episode_body",
+      "identity_raw",
+      "identity_private",
+      "private_identity_data"
+    ],
+    "forbidden_fields_count": 18,
+    "forbidden_fields_present_in_frontend_safe_dto": [],
+    "asserted_absent": true
+  },
+  "verification_commands": [
+    "cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml",
+    "cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml",
+    "cargo test --offline --manifest-path Body/S/S5/epii-agent-core/Cargo.toml"
+  ],
+  "downstream_consumers": [
+    "/body lite (m5-epii-review-surface)",
+    "Theia shell (Review pane, Promotion preview)",
+    "M-extensions (m5-epii-review-surface)",
+    "integrated plugins (plugin-integrated-4-5-0 review/governance payloads)",
+    "M5-4 agents (epii-agent-core m5_workbench_snapshot, m5_promotion_dry_run)"
+  ]
+}

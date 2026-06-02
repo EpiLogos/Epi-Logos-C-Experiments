@@ -23,13 +23,17 @@ depends_on:
 
 Per [[alpha_quaternionic_integration_across_M_stack]] §0.1 and §7.1, [[M0]] remains the prior `0/1` ground that [[M1]] receives from; it is not the `+1` parent in the `137 = 64 + 72 + 1` spine. M0' may render that prior-ground status, but any inspection of the `+1` parent, 4π toroidal recognition, or 1→2→3 manifestational spine routes onward to [[M1']]/[[M2']]/[[M3']] rather than being absorbed into the M0' graph surface.
 
+## Canonical Substrate Anchors
+
+Read [[M0']] with the graph substrate immediately at hand: [[Body/S/S0/epi-lib/include/m0.h]] (568 LOC [[Anuttara]] header), [[Body/S/S0/epi-lib/src/m0.c]] (831 LOC), [[Body/S/S0/epi-lib/include/ontology.h]] (337 LOC ontology declarations), [[Body/S/S0/portal-core/src/kernel.rs]] (where M0 facets sit at the top of the kernel surface), and [[Body/S/S2/graph-schema]] (the M0 anchor in the schema authority). These files are the live substrate; M0' is the playable [[Bimba]] view over them, not their owner.
+
 ## Surface Philosophy: Readable Graph, Technical-Inspector Summonable
 
 Per [[M'-SYSTEM-SPEC]] "Default Surface" subsection. Default M0' surface is the readable graph with selected-coordinate inspector showing position-character (Truth at #0, Word at #2, etc. per v3 Name-content), Gebser register, and route options. Relation-family edge metadata, full pointer-web summary, source-spec-code-test anchor enumeration, and graph-namespace audit are **summonable** — surfaced when the user asks "trace the source of this", when a deposition needs anchor-evidence, or when an agent-run requires the full graph context for a task. The agent mediates technical depth conversationally.
 
 ## `#` Coordinates Are M-Family Coordinates
 
-Legacy `#` coordinates are [[M]]-family coordinates in the current system, not a second graph namespace. `#0..#5` map to the [[M0]]..[[M5]] coordinate family, and nested legacy coordinates such as `#4.4.4.4` map to canonical M-family nesting such as [[M4-4-4-4]]. The [[Bimba|bimba]] map is the [[M-stack]] made graph-visible; M0' is the [[Pratibimba]] graph affordance over that data, not a new owner or mutator of the M topology.
+Legacy `#` coordinates are [[M]]-family coordinates in the current system, not a second graph namespace. `#0..#5` map to the [[M0]]..[[M5]] coordinate family, and nested legacy coordinates such as `#4.4.4.4` map to canonical M-family nesting such as [[M4-4-4-4]]. The [[Bimba|bimba]] map is the [[M-stack]] made graph-visible; M0' is the [[Pratibimba]] graph affordance over that data, not a new owner or mutator of the M topology. The substrate of record for that topology is [[Body/S/S2/graph-schema]] in concert with [[Body/S/S0/epi-lib/include/m0.h]]; M0' renders what those declare.
 
 M0' must preserve compatibility with legacy `#` notation at search, selection, and wikilink boundaries, but all resolved graph identity should land on the canonical M coordinate branch. Any [[S2]] migration or parser that treats `#` as arbitrary invalid syntax is wrong; any renderer that forks `#` and `M` into parallel graph trees is also wrong.
 
@@ -48,7 +52,7 @@ M0' must preserve compatibility with legacy `#` notation at search, selection, a
 - [[S2]] exposes Anuttara syntax fields with provenance back to the raw export names in [[anuttara-language-map]], especially `c_1_symbol` and `c_1_complete_formulation`. M0' may consume normalized fields such as `symbol`, `formulation_type`, or `complete_formulation`, but it must show their source/provenance status rather than treating renamed fields as renderer-owned data.
 - [[S2]] owns [[neosemantics]]/[[OWL]], [[SHACL]], [[Graph Data Science|GDS]], inferred relation, and [[kernel-sync]] status. M0' displays these as governed graph facts or readiness blockers; it does not run local inference, synthesize GDS recommendations, or decide relation law.
 - [[S0]] / [[S3]] expose the shared `MathemeHarmonicProfile` for the active tick and selected coordinate.
-- [[S0]] kernel substrate remains authoritative for compiled M0 language/runtime facts such as the [[Vimarśa|Vimarsa]] ISA, archetypal LUTs, and [[M0_CORE_RELATIONS|`M0_CORE_RELATIONS[65]`]]; M0' may display audited S2 projections of these facts but must not derive or patch them.
+- [[S0]] kernel substrate remains authoritative for compiled [[M0]] language/runtime facts such as the [[Vimarśa|Vimarsa]] ISA, archetypal LUTs, and [[M0_CORE_RELATIONS|`M0_CORE_RELATIONS[65]`]] — all encoded in [[Body/S/S0/epi-lib/include/m0.h]] / [[Body/S/S0/epi-lib/src/m0.c]] / [[Body/S/S0/epi-lib/include/ontology.h]] and exposed through [[Body/S/S0/portal-core/src/kernel.rs]]; M0' may display audited S2 projections of these facts but must not derive or patch them.
 - [[S2]] pointer law binds the profile to the selected coordinate: family refs, mirror refs, lens refs, inversion refs, [[VAK]]/[[CF]] refs, and harmonic relation metadata.
 - [[S3]] deposition anchor gives DAY/NOW/session context when the selected coordinate has live observations or [[Graphiti]] episodes.
 
@@ -58,9 +62,9 @@ M0' is the graph-facing [[Anuttara]] surface. At the node level, Anuttara is a p
 
 The graph view reads these properties; it does not invent them. Missing `symbol`, `formulation_type`, or `complete_formulation` is a readiness/provenance state, not a reason for the client to synthesize placeholders. Per [[anuttara-language-map]], root [[M0]] and [[M0']] carrying no symbol is canonical absence, not extraction failure.
 
-## The 0-Side Mahāmāyā Graph View
+## The 0-Side [[Mahāmāyā]] Graph View
 
-The M0' graph view is also [[Mahāmāyā]]'s structural rendering on the 0 side of the M' layout. [[M3']] renders Mahāmāyā temporally as clock-wheel; M0' renders the same canonical [[Neo4j]] substrate structurally as graph. These are two affordances over the same nodes, not rival maps.
+The [[M0']] graph view is also [[Mahāmāyā]]'s structural rendering on the 0 side of the [[M']] layout. [[M3']] renders [[Mahāmāyā]] temporally as clock-wheel; M0' renders the same canonical [[Neo4j]] substrate structurally as graph. These are two affordances over the same nodes, not rival maps. The shared substrate root is [[Body/S/S2/graph-schema]] feeding both surfaces.
 
 Build-facing affordances:
 
@@ -76,7 +80,7 @@ M0' absorbs the prior-ground clarification only as graph-surface law: [[M0]] is 
 
 ## §M0'-2 Inferential-Language Delta
 
-M0' presents [[Anuttara]] syntax as a source-provenanced language surface. The raw language map in [[anuttara-language-map]] gives complete-formulation coverage and canonical absences; [[m5-prime-epii-on-anuttara-language-development]] defines how [[Epii]] develops that language through construction, not training; [[m5-prime-autoresearch-self-improvement-loop]] defines how improvement candidates are surfaced and governed. M0' may expose "open in [[M5]]" routes for language-development, [[OWL]]/[[SHACL]] construction, and [[Logos Atelier]] archaeology, but it must not let the graph view mutate Anuttara canon directly.
+M0' presents [[Anuttara]] syntax as a source-provenanced language surface. The raw language map in [[anuttara-language-map]] gives complete-formulation coverage and canonical absences; [[m5-prime-epii-on-anuttara-language-development]] defines how [[Epii]] develops that language through construction, not training; [[m5-prime-autoresearch-self-improvement-loop]] defines how improvement candidates are surfaced and governed. M0' may expose "open in [[M5]]" routes for language-development, [[OWL]]/[[SHACL]] construction, and [[Logos Atelier]] archaeology, but it must not let the graph view mutate [[Anuttara]] canon directly. Language-construction work flows through [[Body/S/S0/epi-lib/include/ontology.h]] and the [[Epii]] surfaces at [[M5-0']] / [[M5-5']]; M0' only routes the user there.
 
 ## §M0'-3 Graph-Inference-GDS Delta
 
@@ -128,3 +132,19 @@ M0' may show public-current graph topology and safe profile facts. It must not e
 - Tests prove M5 language-development and autoresearch actions launched from M0' are route/review actions only and cannot mutate Anuttara node canon directly from the graph view.
 - Tests prove protected Graphiti or Nara payloads are absent from public graph/profile projections.
 - Visual/audio readiness states distinguish `missing_profile`, `ready_public_current`, `blocked_private_projection`, and `blocked_pointer_law`.
+
+## Canonical Source Lock - 2026-06-02
+
+M0' is Anuttara graph/source visibility, not the M' umbrella kernel. The shared Theia shell, KernelBridge singleton, and profile/current stream are owned by [[M'-SYSTEM-SPEC]] and consumed by M0'.
+
+| Required coverage | Canonical citations |
+|---|---|
+| docs/specs | `docs/specs/M/M0-anuttara-language-architecture.md` mtime 2026-04-04 13:46:16; `docs/specs/M/2026-03-11-hypertile-portal-design.md` mtime 2026-03-12 02:00:57; `docs/specs/M/HMS-quaternionic-overlay.md` mtime 2026-03-11 12:03:47 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/05-tauri-ide-shell-and-pratibimba-system.md` mtime 2026-06-01 18:28:40; `07-m-extension-individual-tracks.md` mtime 2026-06-01 00:23:25 (`07-T3`); `08-integrated-plugin-tracks.md` mtime 2026-06-01 00:25:11; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24 |
+| Body substrate | `Body/S/S0/epi-lib/**`, `Body/S/S0/portal-core/**`, `Body/S/S2/graph-services/**`, `Body/S/S2/graph-schema/**`, `Body/S/S3/gateway-contract/**`; `Body/M/epi-tauri/**` only as deprecated migration-source evidence |
+| Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m0-anuttara/**`, `kernel-bridge/**`, `m-extension-runtime/**`, `ide-shell-m0-m5/**`, `acceptance-harness/**` |
+| sibling seeds | `M'-SYSTEM-SPEC.md`, `M0'/m0-prime-anuttara-research.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-anuttara-language-development.md`, `alpha_quaternionic_integration_across_M_stack.md` |
+| nominal tracks | Track 07.T3 M0' extension; Track 05.T4 shell bridge; Track 08 integrated plugin seams; Track 09 Anuttara capacity |
+| open decisions | `M0` versus `M1` `+1` parent mapping, `#` root mapping, Anuttara naming/provenance, n10s/GDS/OWL/SHACL packaging |
+
+World coordinate note: there is no canonical `Idea/Bimba/World/Types/Coordinates/M/**` markdown corpus yet. M0' therefore cites the shared `Idea/Bimba/World/P*`, `CT*`, and `L*` corpora through [[M'-SYSTEM-SPEC]] and [[S-SYSTEM-INDEX]] rather than inventing an M-world file.

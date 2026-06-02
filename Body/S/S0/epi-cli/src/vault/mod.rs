@@ -1,3 +1,48 @@
+//! # S0 vault helpers — IOD-19 / ADR-05-010 boundary audit (Track 13 T8)
+//!
+//! Per [ADR-05-010](../../../../../../Idea/Pratibimba/System/docs/decisions/adr-05-010-hen-vault-bridge.md)
+//! and the IOD-19 decision (Hen as vault-write gatekeeper), the S1' gateway
+//! methods `s1'.vault.{read_file, write_file, rename_file, move_file}` and
+//! `s1'.semantic.suggest_links` are the canonical vault-write surface for
+//! Theia, M-extensions, agents, and integrated plugins. They are implemented
+//! in [`crate::gate::s1_hen`] and dispatched via the S3 gateway
+//! ([`Body/S/S3/gateway/src/dispatch.rs`](../../../../S3/gateway/src/dispatch.rs)
+//! lines 174-192, Track 03 T6.5 — **LANDED**).
+//!
+//! The S0 epi-cli helpers below predate that boundary and fall into three
+//! classes:
+//!
+//! 1. **`obsidian-cli` shells** (Create / FrontmatterSet / FrontmatterDelete /
+//!    Move / Delete) — *deprecated for agentic / Theia use*. They remain only
+//!    as **operator-local terminal escape hatches** for users running
+//!    `obsidian-cli` against a desktop Obsidian instance. Agents and the
+//!    Theia `vault-bridge` extension MUST route through `s1'.vault.*` per
+//!    ADR-05-010 §2. See per-arm `# DEPRECATED ROUTE` comments below.
+//!
+//! 2. **Direct-filesystem writes for managed scaffolding** (NowWrite,
+//!    ThoughtRoute, DayInit, NowInit, FlowInit, ArchiveDay, pasu::pasu_set,
+//!    kairos::kairos_fetch). These are **local bootstrap / fast-path
+//!    operations** that the S0 CLI owns — they create scaffolded structures
+//!    rather than mutating existing wikilink-bearing content. They are
+//!    **governed-local** writes: not routed through Hen because they
+//!    instantiate fresh templates (no inbound wikilinks to reconcile).
+//!    EXCEPTION: `ArchiveDay::fs::rename(day_folder, history_path)` *can*
+//!    leave orphaned wikilinks if any day-folder note has inbound `[[X]]`
+//!    references from elsewhere in the vault. Per ADR-05-010 §2 it should
+//!    route through `s1'.vault.move_file` once Hen exposes a directory-move
+//!    surface (see `// TODO(IOD-19):` comment on `archive_day`).
+//!
+//! 3. **Frontmatter mutations** (FrontmatterSet / FrontmatterDelete via
+//!    obsidian-cli, pasu::pasu_set via direct fs::write). These need
+//!    `s1'.vault.update_frontmatter`, which is **DEFERRED** per
+//!    [`crate::gate::s1_hen`] module docstring lines 23-24. Until that
+//!    Hen-side surface lands, these helpers stay direct-FS / obsidian-cli
+//!    with the `# DEPRECATED ROUTE` annotation pointing at the replacement
+//!    method name. See Track 03 T6.5 follow-up.
+//!
+//! See `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/13-t8-s1-vault-hen-evidence.md`
+//! for the full audit table.
+
 pub mod frontmatter;
 pub mod kairos;
 pub mod pasu;
@@ -252,6 +297,12 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
             content,
             vault,
         } => {
+            // DEPRECATED ROUTE (IOD-19 / ADR-05-010): obsidian-cli `create`
+            // bypasses Hen wikilink integrity. Replacement: dispatch through
+            // `s1'.vault.write_file` (gate::s1_hen::write_file). Theia
+            // vault-bridge and agents MUST use the gateway path. This arm is
+            // retained only as a local terminal escape hatch for operators
+            // running against a desktop Obsidian instance.
             let mut args = vec!["create", note.as_str()];
             if let Some(v) = vault {
                 args.extend(["-v", v.as_str()]);
@@ -321,6 +372,11 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
             value,
             vault,
         } => {
+            // DEPRECATED ROUTE (IOD-19 / ADR-05-010): obsidian-cli frontmatter
+            // edits bypass Hen frontmatter governance. Replacement:
+            // `s1'.vault.update_frontmatter` — DEFERRED in
+            // `gate::s1_hen` module docstring (line 24). Once Hen exposes the
+            // surface, route through `gate::s1_hen::update_frontmatter`.
             let mut args = vec![
                 "frontmatter",
                 note.as_str(),
@@ -340,6 +396,15 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
             new_path,
             vault,
         } => {
+            // DEPRECATED ROUTE (IOD-19 / ADR-05-010): obsidian-cli `move` does
+            // NOT atomically reconcile inbound `[[X]]` references. Replacement
+            // (LANDED): `s1'.vault.move_file` →
+            // `gate::s1_hen::rename_or_move_file`, which rewrites every
+            // inbound wikilink via Hen's `parse_wikilinks` + the atomic
+            // rename receipt. See test
+            // `tests/gate_s1_vault_surface.rs::rename_file_reconciles_all_inbound_wikilinks_atomically`
+            // and the T8 fixture-vault wikilink-integrity test
+            // `tests/vault_hen_boundary_audit.rs`.
             let mut args = vec!["move", note.as_str(), new_path.as_str()];
             if let Some(v) = vault {
                 args.extend(["-v", v.as_str()]);
@@ -347,6 +412,12 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
             obsidian_cli(&args)
         }
         VaultCmd::Delete { note, vault } => {
+            // DEPRECATED ROUTE (IOD-19 / ADR-05-010): obsidian-cli `delete`
+            // does not surface dangling-wikilink warnings. Replacement
+            // (DEFERRED): `s1'.vault.delete_file` (not yet exposed in
+            // `gate::s1_hen`). Until then, callers should
+            // `s1'.semantic.suggest_links` against the note's inbound
+            // wikilinks to detect orphans before invoking.
             let mut args = vec!["delete", note.as_str()];
             if let Some(v) = vault {
                 args.extend(["-v", v.as_str()]);
@@ -386,6 +457,8 @@ pub fn dispatch(cmd: &VaultCmd) -> Result<String, String> {
             obsidian_cli(&args)
         }
         VaultCmd::FrontmatterDelete { note, key, vault } => {
+            // DEPRECATED ROUTE (IOD-19 / ADR-05-010): see FrontmatterSet.
+            // Replacement: `s1'.vault.update_frontmatter` — DEFERRED.
             let mut args = vec![
                 "frontmatter",
                 note.as_str(),
@@ -600,6 +673,16 @@ fn active_now_path() -> PathBuf {
         .unwrap_or_else(|_| vault_root().join("Empty").join("Present").join("NOW.md"))
 }
 
+/// Write a freshly-rendered template body to a vault path.
+///
+/// **IOD-19 / ADR-05-010 boundary note:** This is a **governed-local** write
+/// — it scaffolds a brand-new artifact (Daily / NOW / Thought / Flow) from
+/// a template, so there are no inbound `[[X]]` references to reconcile and
+/// no Hen wikilink integrity contract is at risk. It is therefore safe to
+/// stay direct-FS. Once `s1'.vault.write_file` (LANDED in
+/// `gate::s1_hen::write_file`) is wired through the Theia vault-bridge
+/// extension (Track 05 T4.5), the bridge can call it for templated writes
+/// too — but the S0 CLI path is fast-bootstrap and pre-dates the boundary.
 fn write_rendered_template(path: &Path, body: &str) -> Result<(), String> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)
@@ -724,6 +807,24 @@ fn flow_init(now_override: Option<&str>) -> Result<String, String> {
     ))
 }
 
+/// Archive a day folder into the History tree.
+///
+/// **IOD-19 / ADR-05-010 boundary note:** This direct `fs::rename` on the
+/// day-folder *can* leave orphaned `[[X]]` wikilinks if any note inside the
+/// day folder is referenced from elsewhere in the vault. Per ADR-05-010 §2,
+/// directory-level moves should reconcile inbound wikilinks via
+/// `s1'.vault.move_file`. The current Hen surface
+/// ([`crate::gate::s1_hen::rename_or_move_file`]) handles **file-level**
+/// renames atomically with full wikilink rewrite; a **directory-level**
+/// move surface (`s1'.vault.move_directory` with per-file recursion) is
+/// DEFERRED in the gateway dispatch (`Body/S/S3/gateway/src/dispatch.rs`
+/// classifier). Until that surface lands, archive_day stays local-only,
+/// guarded by the `c_5_reflection_complete: true` discipline check below
+/// and the `--plan` mode which prints SOURCE→DEST without touching FS.
+///
+/// TODO(IOD-19): when the gateway exposes `s1'.vault.move_directory`,
+/// replace the `fs::rename(&source, &target)` call with a recursive Hen
+/// dispatch so per-file wikilink integrity is preserved across the archive.
 fn archive_day(date: &str, plan: bool, force: bool) -> Result<String, String> {
     let day = NaiveDate::parse_from_str(date, "%d-%m-%Y")
         .map_err(|err| format!("invalid archive date {date:?}: {err}"))?;

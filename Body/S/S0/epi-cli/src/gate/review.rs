@@ -1,10 +1,40 @@
-use std::path::Path;
+//! S0 gate adapter for the S5 review surface.
+//!
+//! 13.T7 audit (2026-06-02): every public function in this module is a
+//! **thin adapter** over `epi_s5_epii_review_core::ReviewStore`. Governance
+//! policy (priority ranking, kernel-visibility constraints, human-gate
+//! requirements, governance profile validation) lives entirely in S5
+//! (`Body/S/S5/epii-review-core/src/lib.rs`). S0 is responsible only for:
+//!
+//! - deserialising gateway JSON params into S5 DTOs;
+//! - selecting the S5 store root under `state_root/s5/epii-review` (see the
+//!   `STORE_SUBPATH` constant — `review_store_path` is used by the
+//!   `gate_epii_store_layout` test to keep the root stable);
+//! - re-serialising S5 results for the gateway frame.
+//!
+//! No S5 DTO construction, no governance decisions, no business logic.
+
+use std::path::{Path, PathBuf};
 
 use epi_s5_epii_review_core::{
     ReviewInboxFilter, ReviewResolveRequest, ReviewSource, ReviewStatus, ReviewStore,
     ReviewSubmission,
 };
 use serde_json::{json, Value};
+
+/// Canonical subpath under `state_root` where the S5 review store persists.
+/// Exposed so external store-location tests can pin the gate root layout.
+pub const STORE_SUBPATH: [&str; 2] = ["s5", "epii-review"];
+
+/// Resolve the S5 review store root under the given gate `state_root`.
+/// Sole source of truth for the review store location at the S0/S5 boundary.
+pub fn review_store_path(state_root: impl AsRef<Path>) -> PathBuf {
+    let mut path = state_root.as_ref().to_path_buf();
+    for segment in STORE_SUBPATH {
+        path.push(segment);
+    }
+    path
+}
 
 pub fn submit(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
     let submission: ReviewSubmission =
@@ -40,5 +70,5 @@ pub fn history(state_root: impl AsRef<Path>, limit: Option<usize>) -> Result<Val
 }
 
 fn store(state_root: impl AsRef<Path>) -> ReviewStore {
-    ReviewStore::new(state_root.as_ref().join("s5").join("epii-review"))
+    ReviewStore::new(review_store_path(state_root))
 }

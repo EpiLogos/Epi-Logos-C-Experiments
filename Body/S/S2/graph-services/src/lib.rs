@@ -6,9 +6,13 @@ use std::sync::Arc;
 use neo4rs::{query, Graph, Query};
 use serde::{Deserialize, Serialize};
 
+pub mod analyse;
+pub mod anuttara;
 pub mod bidirectional_sync;
+pub mod constraint;
 pub mod consumption;
 mod coordinate;
+pub mod cypher;
 pub mod dataset_import;
 pub mod doctor;
 pub mod embeddings;
@@ -57,7 +61,9 @@ pub use graph_api::{
 };
 pub use link_enforcement::{LinkEnforcer, LinkValidationResult};
 pub use meta::{
-    desired_meta, is_bootstrapped, read_graph_meta, seed_source_hash, write_graph_meta, GraphMeta,
+    applied_meta, applied_meta_with_dataset, dataset_source_hash, desired_meta, is_bootstrapped,
+    kernel_source_hash, manual_drift_fields, read_graph_meta, relation_registry_hash,
+    seed_source_hash, structural_state_aligned, write_graph_meta, GraphMeta,
 };
 pub use ontology::{
     anuttara_property_mappings, epi_ontology_sha256, import_epi_ontology_with_n10s,

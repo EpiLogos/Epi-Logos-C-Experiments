@@ -31,6 +31,37 @@ nodeConfig.config.plugins.push(
     )
 );
 
+// Node-only modules pulled into the FRONTEND bundle by extensions that
+// accidentally import them in `common/` files (e.g. `@pratibimba/m4-nara`'s
+// `common/nara-surface.ts` → `node:fs/promises`, `node:path`). Stub them to
+// `false` in the frontend resolve.fallback and redirect node:-prefixed
+// imports to the empty stub. Matches the equivalent treatment in
+// `electron-app/webpack.config.js`.
+const nodeStub = path.resolve(stubs, 'drivelist-bindings.js');
+for (const cfg of configs) {
+    cfg.resolve = cfg.resolve || {};
+    cfg.resolve.fallback = Object.assign({}, cfg.resolve.fallback, {
+        fs: false,
+        'fs/promises': false,
+        path: false,
+        os: false,
+        crypto: false,
+        stream: false,
+        child_process: false,
+        net: false,
+        tls: false,
+        http: false,
+        https: false,
+        url: false,
+        zlib: false
+    });
+    cfg.plugins = cfg.plugins || [];
+    cfg.plugins.push(new webpack.NormalModuleReplacementPlugin(
+        /^node:(fs|fs\/promises|path|os|crypto|stream|child_process|net|tls|http|https|url|zlib|util|events|buffer|assert)$/,
+        nodeStub
+    ));
+}
+
 module.exports = [
     ...configs,
     nodeConfig.config

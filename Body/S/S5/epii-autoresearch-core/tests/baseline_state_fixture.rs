@@ -65,6 +65,7 @@ fn tranche_04_t0_aletheia_jsonl_fixture_path_recomposes_with_human_gate() {
         moirai_summary: BTreeMap::from([("atropos".to_owned(), "fixture sealed".to_owned())]),
         artifacts: vec!["Body/S/S5/fixtures/track-04-t0/s5-review-state.json".to_owned()],
         closure_kind: "rehear".to_owned(),
+        disclosure_lineage: None,
     };
 
     let id = inbox.append(entry).expect("append real JSONL");

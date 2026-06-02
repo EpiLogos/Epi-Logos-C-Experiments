@@ -1,0 +1,37 @@
+{
+  "name": "@pratibimba/acceptance-harness",
+  "version": "0.1.0",
+  "description": "Track 05 T9 — Full Theia-shell acceptance harness and release gate. Builds (a) a repeatable Node-driven acceptance script that boots real services (gateway, SpaceTimeDB, Neo4j/Redis, S5 stores), launches the Theia shell, exercises the kernel-bridge + OmniPanel + ide-shell-m0-m5 + agentic-control-room surfaces, and shuts down cleanly; (b) a Theia-side acceptance contribution that the headless run drives; (c) the operator runbook; (d) ADR-05-011 release ADR.",
+  "license": "MIT",
+  "files": ["lib", "src", "style", "scripts"],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "keywords": ["theia-extension", "epi-logos", "acceptance-harness", "pratibimba"],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@pratibimba/kernel-bridge": "workspace:*",
+    "@pratibimba/pratibimba-layouts": "workspace:*",
+    "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/ide-shell-m0-m5": "workspace:*",
+    "@pratibimba/agentic-control-room": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build && node --test tests/topology.test.mjs tests/acceptance-plan.test.mjs"
+  }
+}

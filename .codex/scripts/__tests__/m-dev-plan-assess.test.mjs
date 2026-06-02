@@ -81,6 +81,98 @@ test("parses T and Tranche task headings with dependencies and write scopes", ()
   assert.deepEqual(tasks[1].dependsOn, ["02.T0", "02.T1"]);
 });
 
+test("parses bare bold tranche headings used by Track 03", () => {
+  const track = {
+    id: "03",
+    file: "03-s3.md",
+    path: "docs/plans/example/03-s3.md",
+    title: "Track 03",
+  };
+  const content = `# Track 03
+
+## Tranches
+
+**Tranche 1 - Projection contract freeze.**
+
+Work in \`Body/S/S3/gateway-contract\`.
+
+**Tranche 6.5 - S1 vault gateway surface.**
+
+Work in \`Body/S/S3/gateway\`.
+`;
+  const tasks = parseTrackTasks(track, content);
+  assert.equal(tasks.length, 2);
+  assert.equal(tasks[0].id, "03.T1");
+  assert.equal(tasks[0].title, "Projection contract freeze");
+  assert.equal(tasks[1].id, "03.T6.5");
+  assert.equal(tasks[1].title, "S1 vault gateway surface");
+});
+
+test("parses bold tranche titles that contain single asterisks inside backticks", () => {
+  // Regression: Track 03 T6.5 in 03-s3-gateway-and-spacetimedb.md has a title
+  // like `s1'.vault.*` + `s1'.semantic.*` — single asterisks inside backticks.
+  // The earlier `[^*\n]+` regex stopped at the first internal `*` and silently
+  // dropped the heading. We now allow single asterisks while still terminating
+  // on the closing `**`. Trailing inline content after the closing `**` (e.g.
+  // `(per IOD-18, IOD-19)`) must not block the match either.
+  const track = {
+    id: "03",
+    file: "03-s3.md",
+    path: "docs/plans/example/03-s3.md",
+    title: "Track 03",
+  };
+  const content = `# Track 03
+
+## Tranches
+
+**Tranche 6 - Graphiti runtime compatibility and temporal reference bridge.**
+
+Work in \`Body/S/S3/graphiti-runtime\`.
+
+**Tranche 6.5 - S1 vault gateway surface (\`s1'.vault.*\` + \`s1'.semantic.*\`) over Hen substrate.** (per IOD-18, IOD-19)
+
+Work in \`Body/S/S3/gateway\`.
+
+**Tranche 7 - Multi-client soak.**
+
+Work in \`Body/S/S3/gateway\`.
+`;
+  const tasks = parseTrackTasks(track, content);
+  assert.equal(tasks.length, 3);
+  const ids = tasks.map((task) => task.id);
+  assert.deepEqual(ids, ["03.T6", "03.T6.5", "03.T7"]);
+  const t65 = tasks.find((task) => task.id === "03.T6.5");
+  assert.ok(t65.title.includes("S1 vault gateway surface"));
+  assert.ok(t65.title.includes("`s1'.vault.*`"));
+});
+
+test("parses markdown tranche headings used by Track 04", () => {
+  const track = {
+    id: "04",
+    file: "04-s5.md",
+    path: "docs/plans/example/04-s5.md",
+    title: "Track 04",
+  };
+  const content = `# Track 04
+
+## Tranches
+
+### Tranche 0 — Baseline Characterization and Compatibility Map
+
+Work in \`Body/S/S5/epii-agent-core\`.
+
+### Tranche 1 — Typed Spine Core Schema
+
+Work in \`Body/S/S5/epii-autoresearch-core\`.
+`;
+  const tasks = parseTrackTasks(track, content);
+  assert.equal(tasks.length, 2);
+  assert.equal(tasks[0].id, "04.T0");
+  assert.equal(tasks[0].title, "Baseline Characterization and Compatibility Map");
+  assert.equal(tasks[1].id, "04.T1");
+  assert.equal(tasks[1].title, "Typed Spine Core Schema");
+});
+
 test("builds index and adds sequential dependencies within each track", () => {
   const { root, planFolder } = makePlanSet();
   const index = buildIndex(planFolder, root);

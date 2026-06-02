@@ -669,6 +669,132 @@
           "future_review_behavior_change"
         ]
       }
+    },
+    "mediated_run_evidence_bridge": {
+      "packet_type": "MediatedRunEvidencePacket",
+      "required_sources": [
+        "s0.current_profile",
+        "s2.graph_services",
+        "s3.gateway",
+        "s1.semantic.suggest_links",
+        "s5.persisted_store"
+      ],
+      "packet_required_fields": [
+        "candidateId",
+        "coordinate",
+        "sourceAnchor",
+        "graphAnchor",
+        "reviewId",
+        "testAnchor",
+        "profileGeneration",
+        "bridgeReadinessHandle",
+        "sessionKey",
+        "dayNowContext",
+        "currentProfile",
+        "graphContext",
+        "sessionRuntime",
+        "semanticCandidates",
+        "s5Refs"
+      ],
+      "capability_allowlists": {
+        "sophia": [
+          "readCurrentProfile",
+          "readPointerAnchor",
+          "readGraphContext",
+          "subscribeRunEvents",
+          "invokeGatewayRpc",
+          "depositReviewEvidence",
+          "requestDryRunPromotion",
+          "s1.semantic.suggest_links",
+          "s1.semantic.neighbors_of",
+          "s1.semantic.search",
+          "s1.semantic.by_block",
+          "s1.vault.read_file"
+        ],
+        "aletheia": [
+          "readCurrentProfile",
+          "readPointerAnchor",
+          "readGraphContext",
+          "subscribeRunEvents",
+          "invokeGatewayRpc",
+          "depositReviewEvidence",
+          "requestDryRunPromotion",
+          "s1.semantic.suggest_links",
+          "s1.semantic.neighbors_of",
+          "s1.semantic.search",
+          "s1.semantic.by_block",
+          "s1.vault.read_file"
+        ],
+        "pi": [
+          "readCurrentProfile",
+          "readPointerAnchor",
+          "readGraphContext",
+          "subscribeRunEvents",
+          "invokeGatewayRpc",
+          "depositReviewEvidence",
+          "requestDryRunPromotion",
+          "s1.semantic.suggest_links",
+          "s1.semantic.neighbors_of",
+          "s1.semantic.search",
+          "s1.semantic.by_block",
+          "s1.vault.read_file",
+          "s1.vault.append_block"
+        ],
+        "anima": [
+          "readCurrentProfile",
+          "readPointerAnchor",
+          "readGraphContext",
+          "subscribeRunEvents",
+          "invokeGatewayRpc",
+          "depositReviewEvidence",
+          "requestDryRunPromotion",
+          "s1.semantic.suggest_links",
+          "s1.semantic.neighbors_of",
+          "s1.semantic.search",
+          "s1.semantic.by_block",
+          "s1.vault.read_file"
+        ],
+        "human": [
+          "readCurrentProfile",
+          "readPointerAnchor",
+          "readGraphContext",
+          "subscribeRunEvents",
+          "invokeGatewayRpc",
+          "depositReviewEvidence",
+          "requestDryRunPromotion",
+          "s1.semantic.suggest_links",
+          "s1.semantic.neighbors_of",
+          "s1.semantic.search",
+          "s1.semantic.by_block",
+          "s1.vault.read_file",
+          "s1.vault.append_block",
+          "s1.vault.write_file",
+          "s1.vault.move_file",
+          "s1.vault.rename_file",
+          "s1.vault.update_frontmatter"
+        ]
+      },
+      "user_final_validation_required": [
+        "s1.vault.write_file",
+        "s1.vault.move_file",
+        "s1.vault.rename_file",
+        "s1.vault.update_frontmatter",
+        "non_dry_run_promotion",
+        "canon_affecting_write"
+      ],
+      "forbidden_capabilities": [
+        "directFsVaultWrite",
+        "protectedBodyReadWithoutGovernedCapability",
+        "resolve_epii_review_gate",
+        "approve_human_required_review"
+      ],
+      "privacy_guards": [
+        "Graphiti protected handles only; no protected bodies",
+        "Nara protected-local bodies never enter evidence packets",
+        "SpaceTimeDB live rows may be referenced by runtime ref, not mocked for live claims",
+        "Semantic candidates must carry LinkCandidateResponse provenance",
+        "S5 refs must point at persisted store DTOs"
+      ]
     }
   },
   "agent_run_contract": {

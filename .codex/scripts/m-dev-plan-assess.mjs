@@ -155,19 +155,17 @@ function firstHeading(content) {
 }
 
 export function parseTrackTasks(track, content) {
-  const taskPattern = /^\s*(\d+)\.\s+\*\*(?:(?:Tranche|T)\s*)?(\d+)\s*[-–]\s*([^*\n]+)\*\*/gm;
-  const matches = Array.from(content.matchAll(taskPattern));
+  const matches = collectTaskHeadingMatches(content);
   return matches.map((match, index) => {
-    const trancheNumber = Number.parseInt(match[2], 10);
-    const start = match.index ?? 0;
-    const end = index + 1 < matches.length ? matches[index + 1].index ?? content.length : content.length;
+    const start = match.index;
+    const end = index + 1 < matches.length ? matches[index + 1].index : content.length;
     const body = content.slice(start, end).trim();
-    const rawTitle = normalizeTitle(match[3]);
-    const id = `${track.id}.T${trancheNumber}`;
+    const rawTitle = normalizeTitle(match.title);
+    const id = `${track.id}.T${match.tranche}`;
     return {
       id,
       trackId: track.id,
-      tranche: `T${trancheNumber}`,
+      tranche: `T${match.tranche}`,
       title: rawTitle,
       effort: extractEffort(rawTitle),
       file: track.file,
@@ -177,6 +175,28 @@ export function parseTrackTasks(track, content) {
       body,
     };
   });
+}
+
+function collectTaskHeadingMatches(content) {
+  const patterns = [
+    // Existing plan style: 1. **T0 - Title** or 1. **Tranche 0 - Title**
+    // Title body allows single asterisks (e.g., inside backticks like `s1'.vault.*`)
+    // but stops at the closing **.
+    /^\s*\d+\.\s+\*\*(?:(?:Tranche|T)\s*)?(\d+(?:\.\d+)?)\s*[-–—]\s*((?:[^*\n]|\*(?!\*))+?)\*\*/gm,
+    // Track 03 style: **Tranche 1 - Title**
+    /^\s*\*\*(?:Tranche|T)\s*(\d+(?:\.\d+)?)\s*[-–—]\s*((?:[^*\n]|\*(?!\*))+?)\*\*/gm,
+    // Track 04 style: ### Tranche 0 — Title
+    /^\s*#{2,6}\s+(?:Tranche|T)\s*(\d+(?:\.\d+)?)\s*[-–—]\s*(.+?)\s*#*\s*$/gm,
+  ];
+  return patterns
+    .flatMap((pattern) =>
+      Array.from(content.matchAll(pattern), (match) => ({
+        index: match.index ?? 0,
+        tranche: match[1],
+        title: match[2],
+      })),
+    )
+    .sort((a, b) => a.index - b.index);
 }
 
 function normalizeTitle(raw) {
@@ -265,7 +285,7 @@ function trackHeuristicScopes(trackId) {
     "06": ["Body/M/epi-tauri/**"],
     "07": ["Idea/Pratibimba/System/extensions/**"],
     "08": ["Idea/Pratibimba/System/extensions/**"],
-    "09": ["Body/S/S4/**", "Body/S/S5/**", "Body/M/epi-tauri/**", "Idea/Pratibimba/System/**"],
+    "09": ["Body/S/S4/**", "Body/S/S5/**", "Idea/Pratibimba/System/extensions/**", "Idea/Pratibimba/System/**"],
     "10": [".omx/**", "docs/plans/**"],
     "11": ["docs/plans/**"],
   };
@@ -299,7 +319,7 @@ function addSequentialDependencies(tasks) {
 }
 
 function trancheNumber(task) {
-  return Number.parseInt(task.tranche.replace(/^T/, ""), 10);
+  return Number.parseFloat(task.tranche.replace(/^T/, ""));
 }
 
 export function loadState(planFolder) {

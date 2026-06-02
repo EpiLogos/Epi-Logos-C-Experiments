@@ -11,7 +11,11 @@
 
 These are user-validated architectural decisions that landed during the review pass and propagate into the findings, next-actions, and sign-off criteria below.
 
-### §0.1 S1 substrate reach via embedded `obsidian-md-vsc` — confirmed
+### §0.1 S1 substrate reach via embedded `obsidian-md-vsc` — ⚠️ REVERSED (kept here as historical record)
+
+> **Reversal — 2026-06-01 evening:** Research subagent surfaced that `willasm.obsidian-md-vsc` is an Obsidian-app remote-control shim via Advanced URI, NOT a vault renderer. It does not render wikilinks, parse vault structure, serve Smart Connections, or operate without a running Obsidian. The original §0.1 decision below is superseded by **§0.1-bis** (next subsection) which records the corrected S1 architecture: filesystem-direct-read via Theia FS provider + Hen-gateway-write via `s1'.vault.*` for wikilink integrity + Smart Connections via `s1'.semantic.*` over `Body/S/S1/hen-compiler-core/src/smart_env.rs`. See Track 11 IOD-18 (Smart Connections via Hen smart_env) and IOD-19 (Hen as vault-write gatekeeper) for the codified replacements; see `Idea/Pratibimba/System/docs/decisions/adr-05-008-obsidian-md-vsc.md` with full reversal note.
+
+**Original §0.1 (historical, superseded):**
 
 **Decision:** S1 (Obsidian/vault — canonical knowledge filesystem, canon §1.2) is reached into and rendered through the [`willasm.obsidian-md-vsc`](https://marketplace.visualstudio.com/items?itemName=willasm.obsidian-md-vsc) VS Code Extension Marketplace extension, hosted as a Theia VS Code-API extension inside `/pratibimba/system`.
 

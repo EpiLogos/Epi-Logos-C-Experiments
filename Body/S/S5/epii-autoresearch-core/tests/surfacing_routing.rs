@@ -40,6 +40,7 @@ fn inbox_entry(session_id: &str, vectors: Vec<&str>) -> InboxEntry {
         )]),
         artifacts: vec!["vault://Pratibimba/Epii/session-arc.md".to_owned()],
         closure_kind: "rehear".to_owned(),
+        disclosure_lineage: None,
     }
 }
 

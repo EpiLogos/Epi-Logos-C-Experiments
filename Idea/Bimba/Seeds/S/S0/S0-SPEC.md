@@ -26,6 +26,10 @@ The old files remain useful for the sixfold coordinate intuition, but their S0' 
 
 S0/S0' is both first and last. It is first because every higher layer must become executable here. It is last because every incomplete higher-layer system eventually returns to S0/S0' as command shape, runtime method, test harness, bootstrap surface, and audit trail. Current code gaps in [[S1]] through [[S5']] are therefore not all S0 failures; many are future returns that will solidify as those levels are specified.
 
+## M' Consumer Surfaces
+
+S0/S0' is consumed directly by [[M'-SYSTEM-SPEC]], [[M0'-SPEC]], [[M1'-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]]. The clearest code anchors back into those surfaces are [[Body/S/S0/epi-lib/include/m0.h]], [[Body/S/S0/epi-lib/include/m1.h]], [[Body/S/S0/epi-lib/include/m2.h]], [[Body/S/S0/epi-lib/include/m3.h]], [[Body/S/S0/epi-lib/include/m4.h]], [[Body/S/S0/epi-lib/include/m5.h]], [[Body/S/S0/portal-core/src/kernel.rs]], [[Body/S/S0/portal-core/src/harmonic_profile.rs]], [[Body/S/S0/portal-core/src/mahamaya.rs]], [[Body/S/S0/portal-core/src/nara_journal.rs]], and [[Body/S/S0/portal-core/src/personal_identity.rs]].
+
 Pointer-web correction: the harmonic pointer web is now explicitly an S0/S0' C-level ontology before it is an S2 graph projection. [[S0-HARMONIC-POINTER-WEB36-SPEC]] defines the next law as `Bedrock7 -> Web36 -> CF7`: `Bedrock7 = # + #0..#5`, `36 = 12 family ring + 12 QL-position ring + 12 MEF-lens ring`, and CF7 is the separate diatonic/lemniscatic context overlay. `#` is the raw same-position X/X' inversion act, X+Y=5 is mirror, 5->0 is Mobius return, and every family coordinate derives bedrock identity from one raw psychoid number. S2 graph fields and M' presentation surfaces consume this C authority rather than defining private pointer semantics.
 
 After the full S0-S5 pass, S0's return task is clearer: it must make the whole [[S-SYSTEM-INDEX]] executable. The [[API]], [[Envelope]], [[TypeScript]] interfaces, `epi` command tree, gateway method manifest, and test harness should converge so every accepted S/S' capability has a coordinate-native method, typed request/response shape, envelope field home, local command mirror where appropriate, and real-functionality verification.
@@ -523,3 +527,19 @@ When sharding this consolidated spec into executable sub-level build docs, use t
 | `S0-5'-SPEC.md` | reflective return, cleanup, logs, bootstrap summary |
 
 Cross-level shard guard: use [[S-SYSTEM-INDEX]] beside every shard so local S0 implementation work does not accidentally override ownership decisions made in [[S1-SPEC]], [[S2-SPEC]], [[S3-SPEC]], [[S4-SPEC]], or [[S5-SPEC]].
+
+## Canonical Source Lock - 2026-06-02
+
+S0 is the executable command membrane and local return surface. It is not the top-layer kernel owner. Kernel/profile bridge facts that span S0, S3, S5, and M' are owned by [[S-SYSTEM-INDEX]], [[S0'-SPEC]], [[S3'-SPEC]], [[S5'-SPEC]], and [[M'-SYSTEM-SPEC]] together.
+
+| Required coverage | Canonical citations |
+|---|---|
+| World ontology | `Idea/Bimba/World/Types/Coordinates/S/S0/S0.md` mtime 2026-04-10 17:50:37; `Idea/Bimba/World/Types/Coordinates/S/S'/S0'/S0'.md` mtime 2026-04-10 17:50:37; shared P/CT/L corpus enumerated in [[S-SYSTEM-INDEX]] |
+| docs/specs | `docs/specs/S/S0-S0i-CLI-CORE.md` mtime 2026-05-31 16:35:19; `docs/specs/S/S0-QV-PIPELINE-AND-PLUGIN.md` mtime 2026-03-10 12:20:50; `docs/specs/S/S_Series_Master_CLI_Architecture.md` mtime 2026-03-15 00:27:10; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` mtime 2026-05-31 20:57:23; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24 |
+| Body substrate | `Body/S/S0/epi-cli/**`, `Body/S/S0/portal-core/**`, `Body/S/S0/epi-lib/**`, `Body/S/epi-kernel-contract/**`, `Body/S/S3/gateway-contract/**`, `Body/S/S4/ta-onta/S4-0p-khora/**` |
+| sibling seeds | `S0-0-SPEC.md`..`S0-5-SPEC.md`, `S0'/S0'-SPEC.md`, `S0'/S0-0'-SPEC.md`..`S0'/S0-5'-SPEC.md`, `S0-SHARD-INDEX.md`, `S0-SOURCE-INDEX.md`, `S0-HARMONIC-POINTER-WEB36-SPEC.md`, `S0-CODON-ROTATION-PROJECTION-SPEC.md` |
+| nominal tracks | Track 01 owns S0/kernel-bridge foundation implementation; Track 13 owns later S0 membrane cleanup; Track 10 names cross-cutting readiness |
+| open decisions | IOD-04 profile versioning, DCC-05 audio/cymatic ownership wording, S0 monolith/membrane cleanup, command/API parity naming |
+
+Supersession rule: if older fragments describe S0 as the whole stack or kernel totality, they are historical. Current canon is command executability, typed mirrors, approval-aware process execution, profile projection, and audit return.

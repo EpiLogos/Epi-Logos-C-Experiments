@@ -1,0 +1,86 @@
+{
+  "tranche": "05.T8",
+  "owner": "admin-track05-finishing",
+  "completedAt": "2026-06-01T22:05:00Z",
+  "deliverables": {
+    "extension_package": "Idea/Pratibimba/System/extensions/agentic-control-room/",
+    "package_name": "@pratibimba/agentic-control-room",
+    "frontend_module": "lib/browser/frontend-module.js",
+    "runtime_service": "AgenticControlRoomRuntimeService (singleton via ACR_RUNTIME_SERVICE DI token)",
+    "widgets": [
+      "RunFlowWidget (pratibimba.acr.run-tree) — hosts run tree, tool stream, diagnostics, abort/retry/continue, evidence deposition, review decision controls"
+    ],
+    "intent_target_command_registered": "pratibimba.agentic-control-room.run-flow.open",
+    "gateway_methods_routed_via_KERNEL_BRIDGE_API.invokeCapability": [
+      "s4'.mediation.route (dispatch route + actor)",
+      "s5'.review.submit (review transition)"
+    ],
+    "human_gate_enforcement": {
+      "ui_side": "enforceHumanGate() called BEFORE bridge.invokeCapability for any approve/reject/revise on a humanRequired candidate; defer is always allowed; agentic actors are blocked with humanGateBlocks entry",
+      "gateway_side_verified_by_substrate": "Body/S/S5/epii-review-core/tests/review_inbox.rs::human_required_review_cannot_be_resolved_by_agent (passed via cargo test --offline)"
+    },
+    "evidence_envelope_fields": [
+      "candidateId",
+      "coordinate",
+      "artifactUri",
+      "sourceAnchor",
+      "specAnchor",
+      "codeAnchor",
+      "testAnchor",
+      "graphAnchor",
+      "reviewId",
+      "profileGeneration",
+      "bridgeReadinessHandle",
+      "sessionKey",
+      "dayNowContext",
+      "privacyClass"
+    ]
+  },
+  "verification": {
+    "package_tests": {
+      "command": "pnpm --filter @pratibimba/agentic-control-room test",
+      "result": "14/14 passing",
+      "coverage": [
+        "human-gate (3): non-human-required passes all decisions+actors; human-required+agent blocks approve/reject/revise + allows defer; human-required+human passes all",
+        "evidence-envelope (5): default null fields; missingEvidenceFields lists all required; fully populated reports no missing; partial reports only missing; privacy class defaults+override",
+        "run-flow (6): capability parity asserts equal sets; flags missing-from-UI; flags missing-from-gateway; real capability-matrix.json yields >=5 dispatch tools; parity vs. shadow gateway flags the dropped tool; ACR widget IDs use pratibimba.acr.* namespace"
+      ]
+    },
+    "substrate_truth_gate": {
+      "command": "cargo test --offline --manifest-path Body/S/S5/epii-review-core/Cargo.toml",
+      "result": "6/6 passing (incl. review_inbox suite 4/4 with human-gate enforcement test)",
+      "human_gate_test_name": "human_required_review_cannot_be_resolved_by_agent"
+    },
+    "three_way_parity_verified": {
+      "matrix": "Body/S/S4/plugins/pleroma/capability-matrix.json parsed by parseCapabilityMatrix(); dispatch_tools surfaced via dispatchToolNames()",
+      "ui": "AgenticControlRoomWidget renders capability tree from the matrix; RunFlowWidget routes via the same dispatch_tools",
+      "gateway": "s4'.mediation.route + s5'.review.submit are dispatched through KERNEL_BRIDGE_API.invokeCapability — capability allow-list ['invokeGatewayRpc'] enforces it; gateway-side ownership in Body/S/S3/gateway/src/dispatch.rs:254-256 routes 's4'.vak.evaluate'|'s4'.orchestrate'|'s4'.mediation.route' to S5EpiiAgent"
+    },
+    "smoke_build": {
+      "command": "bash Idea/Pratibimba/System/scripts/smoke-build.sh",
+      "bundle_size_bytes": 21323118,
+      "bundle_size_mb": 21.32,
+      "agentic_control_room_chunk": "extensions_agentic-control-room_lib_browser_frontend-module_js.js (42KB)",
+      "ide_shell_m0_m5_chunk": "extensions_ide-shell-m0-m5_lib_browser_frontend-module_js.js (98KB)",
+      "result": "smoke build passed"
+    }
+  },
+  "lane_discipline": {
+    "files_under_my_lane": [
+      "Idea/Pratibimba/System/extensions/agentic-control-room/** (all 11 files NEW)",
+      "Idea/Pratibimba/System/theia-app/package.json (added @pratibimba/agentic-control-room dependency)",
+      "Idea/Pratibimba/System/scripts/smoke-build.sh (appended agentic-control-room build step + chunk prefix)"
+    ],
+    "files_not_touched": [
+      "Body/S/** (read-only verification via cargo test --offline)",
+      "Body/M/epi-tauri/** (untouched)",
+      "Idea/Pratibimba/System/extensions/test/** (Thread C's lane)",
+      "Idea/Pratibimba/System/extensions/ide-shell-m0-m5/** (T4-locked; consumed via dep declaration only)"
+    ]
+  },
+  "findings_for_other_threads": [
+    "The gateway must expose `s4'.mediation.capabilities.list` (or equivalent) for the IDE Shell to assert the matrix↔gateway bijection automatically at runtime. Currently the matrix is the source-of-truth on both sides; parity is asserted in unit tests via dispatchToolNames(matrix). Recommend Track 09/Track 11 add a gateway capability-list method so the parity becomes live, not just spec-time.",
+    "The runtime service ACR_RUNTIME_SERVICE is bound as a singleton inside the agentic-control-room frontend module. The ide-shell-m0-m5 chrome's AgenticControlRoomWidget (T4) and this extension's RunFlowWidget (T8) share state because both inject from the same Theia DI container — confirmed by the smoke-build chunk presence of both extensions.",
+    "Human-gate parity is now testable end-to-end: cargo test (gateway side) + node --test (UI side) both refuse agent transitions on humanRequired candidates. T9 should add an integration test that drives both sides in one process to assert the rejection symmetry on a single candidate."
+  ]
+}

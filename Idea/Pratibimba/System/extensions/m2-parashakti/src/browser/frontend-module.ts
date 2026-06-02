@@ -11,7 +11,8 @@ import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
-    parseExtensionRoute
+    parseExtensionRoute,
+    registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M2ParashaktiWidget } from './m2-parashakti-widget';
 import {
@@ -72,6 +73,13 @@ export class M2ParashaktiContribution
                     return this.openView({ activate: true, reveal: true });
                 }
             }
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'resonance',
+            'M2 Parashakti: Open Resonance Packet',
+            () => this.openView({ activate: true, reveal: true })
         );
     }
 }

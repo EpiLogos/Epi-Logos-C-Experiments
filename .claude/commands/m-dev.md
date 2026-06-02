@@ -107,6 +107,42 @@ The process must carry forward:
 
 If the context pack is thin, pause and gather missing context before implementation. Do not compensate with ceremony.
 
+## Step 4.5 - Substrate-Truth Gate
+
+Before claiming or resuming, **read the live state of the substrate that the active work order names**. Compare it against the work order's deliverables. The plan is a hypothesis about what is still to do; the `/Body/` substrate is ground truth.
+
+### Architecture-Corpus Gate
+
+For cross-system work, read the seed-level architecture corpus before treating a task as local. At minimum, consult `Idea/Bimba/Seeds/ARCHITECTURE-DIAGRAM-PACK.md`, `Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md`, `Idea/Bimba/Seeds/S/S-SOURCE-TRACEABILITY-INDEX.md`, and `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md`.
+
+Preserve these invariants:
+
+- The coordinate system is the modular system. Do not let convenience package residency override coordinate ownership.
+- `S0` is the command membrane and executable return surface. It may parse, route, invoke, validate, audit, and report. It must not become the source authority for S2 graph law, S3 gateway/temporal law, S4 agent law, or S5 review/autoresearch law.
+- `M` is the Bimba ontological map. `M'` is coded Pratibimba expression. Treat legacy `M0..M5` implementation labels and `#` dataset labels through that inversion guard.
+- `/pratibimba/system` is the active M' Theia shell authority. `Body/M/epi-tauri` is migration-source-only unless a later explicit decision reactivates it.
+
+The M' specs and S' specs carry direct wikilinks into the substrate — `[[Body/S/S0/epi-lib/include/m{n}.h]]`, `[[Body/S/S0/portal-core/src/...]]`, `[[Body/S/S2/graph-schema]]`, `[[Body/S/S2/graph-services]]`, `[[Body/S/S3/gateway]]`, `[[Body/S/S3/gateway-contract]]`, `[[Body/S/S5/epii-autoresearch-core]]`, `[[Body/S/S4/plugins/pleroma/capability-matrix.json]]`, etc. Follow them. The spec corpus is the navigation layer into the code; use it.
+
+For each work order:
+
+1. Identify the `Body/S/...` / `Body/M/...` paths the deliverable names (explicitly or via spec wikilinks).
+2. Read or `ls`/`wc -l`/grep the actual files. Note LOC counts, test coverage, module composition.
+3. Triage the deliverable against the live state:
+   - **Landed.** The substrate already carries the deliverable. Halt and flag the task for recast — do not redo. Mark `--status review` with evidence pointing at the landed substrate; surface to the user that the tranche needs reframing as drift-audit or extension work rather than first-time build.
+   - **Partial.** The substrate carries some of the deliverable. Narrow the work order to the genuine gap; do not rebuild the landed portion.
+   - **Forward.** The substrate does not yet carry the deliverable. Proceed.
+4. Honour prior plans whose state the current track inherits. If a tranche reads as first-time work but a prior dated plan in `docs/plans/` already executed that work (and the live code reflects it), inherit and extend rather than re-execute.
+
+Specific patterns to watch for:
+- **Schema/seed/import tranches** that assume an empty graph when `Body/S/S2/graph-services/src/{seed,dataset_import}.rs` and `docs/datasets/*-deep/` already populated it.
+- **Gateway-skeleton tranches** that assume a fresh build when `Body/S/S3/gateway/src/` and `Body/S/S3/gateway-contract/src/lib.rs` are already production.
+- **Kernel/profile tranches** that assume bare metal when `Body/S/S0/epi-lib/src/m{0..5}.c` and `Body/S/S0/portal-core/src/kernel.rs` already compute the substrate.
+- **S5 core tranches** that assume new cores when `Body/S/S5/epii-{autoresearch,review,agent}-core/src/lib.rs` are live.
+- **VAK / dispatch tranches** that assume new governance when `Body/S/S4/plugins/pleroma/capability-matrix.json` is the test-locked canonical authority (per Track 11 IOD-17).
+
+Make the disposition explicit before any code is written. Substrate-truth before plan-truth.
+
 ## Step 5 - Select Work
 
 Default to the first `resume` or `claim` work order. Continue to later work orders after the prior task is marked `done`, `review`, or `blocked` with evidence.

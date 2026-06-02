@@ -11,7 +11,8 @@ import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
-    parseExtensionRoute
+    parseExtensionRoute,
+    registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M4NaraWidget } from './m4-nara-widget';
 import {
@@ -72,6 +73,13 @@ export class M4NaraContribution
                     return this.openView({ activate: true, reveal: true });
                 }
             }
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'journal',
+            'M4 Nara: Start Journal Entry',
+            () => this.openView({ activate: true, reveal: true })
         );
     }
 }

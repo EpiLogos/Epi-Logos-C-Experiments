@@ -96,3 +96,5 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
         bridgeAdapterSymbol: 'SHARED_BRIDGE_ADAPTER'
     })
 });
+
+export * from './epii-surface';

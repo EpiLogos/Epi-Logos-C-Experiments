@@ -46,6 +46,8 @@ Current residency correction: the first Body-native move has happened. Active pa
 
 The canonical source-routing map is [[S-SOURCE-TRACEABILITY-INDEX]]. It links the current S/S' specs to older `/docs` plans, resources, and specs so implementation agents can recover deeper planning detail without treating current code drift as authority.
 
+The current whole-system diagram pack is [[ARCHITECTURE-DIAGRAM-PACK]]. Use it before implementation planning when work crosses S/S', M', `/pratibimba/system`, or the M-dev track set. It records the current architecture invariant that [[S0]] is the command membrane and return surface, while coordinate-domain law belongs in the owning [[S1]]-[[S5]] modules.
+
 The system image is: [[S0]] makes the system executable; [[S1]] makes it resident and typed in the vault; [[S2]] makes it graph/vector/cache real; [[S3]] makes it temporal and routed; [[S4]] makes it agentically inhabited; [[S5]] makes it world-facing and reflective. The prime branch makes each base technology carry [[Epi-Logos]] ontology.
 
 The agent image is now twofold. [[Anima]] is the dispatch spine of Epi-Logos in operation; [[Epii]] is the return spine of Epi-Logos in reflection. Both are PI-agent embodiments using the same spine grammar, but they are not the same agent and must not receive the same tool/skill permission surface.
@@ -250,3 +252,58 @@ The next build wave should produce a system where:
 3. Extract [[S3]] gateway/session/Redis-context modules and add product-to-coordinate gateway parity tests.
 4. Stabilise actual [[S4]] PI-agent invocation/access so the compiler and autoresearch spines are reachable by agents.
 5. Build [[S5']] review/autoresearch modules as Epii capabilities, then return to [[S0]] with full-stack bootstrap/proof tests.
+
+## Top-Layer Crystal - S/S' Umbrella Canon - 2026-06-02
+
+This index is the canonical umbrella seed for the whole [[S/S']] substrate. It is not a tranche plan. It is the top-layer source that prevents shared kernel/profile, coordinate-family, and cross-cutting law from being collapsed into [[S0]] merely because [[S0]] is the command membrane.
+
+### Top-Layer Authority Boundary
+
+| Surface | Canonical owner | Non-owner guard |
+|---|---|---|
+| S/S' coordinate family | this file plus `Idea/Bimba/World/Types/Coordinates/S/**` | no individual S layer may redefine the family map |
+| command executability | [[S0]] / [[S0']] | S0 does not own vault, graph, gateway, agent, review, or M' domain law |
+| vault/form residency | [[S1]] / [[S1']] | S1 does not own temporal semantics or graph truth |
+| graph/cache topology | [[S2]] / [[S2']] | S2 does not own Day/NOW session identity or Graphiti invocation policy |
+| gateway/runtime/time projection | [[S3]] / [[S3']] | S3 does not own agent reasoning or protected Nara content |
+| PI/ta-onta runtime | [[S4]] / [[S4']] | S4 does not own Epii's separate S5' user-position |
+| world-return/review/improvement | [[S5]] / [[S5']] | S5 does not absorb command/runtime substrate |
+| kernel/profile bridge | S/S' umbrella plus [[S0']], [[S3']], [[S5']], and [[M'-SYSTEM-SPEC]] | kernel is a cross-layer profile substrate, not an S0 coordinate dumping ground |
+
+### World Ontology Corpus Lifted Into Seed Canon
+
+The `Idea/Bimba/World` coordinate files are canonical source material for this umbrella. They define the coordinate ontology that the specs below crystallise into buildable contracts.
+
+| Corpus | Files | mtime signal | Canonical role |
+|---|---|---:|---|
+| S base ontology | `Idea/Bimba/World/Types/Coordinates/S/S0/S0.md`, `S1/S1.md`, `S2/S2.md`, `S3/S3.md`, `S4/S4.md`, `S5/S5.md` | 2026-04-10 17:50:14..21:43:47 | original S0-S5 coordinate definitions |
+| S' prime ontology | `Idea/Bimba/World/Types/Coordinates/S/S'/S0'/S0'.md`, `S1'/S1'.md`, `S2'/S2'.md`, `S3'/S3'.md`, `S4'/S4'.md`, `S5'/S5'.md` | 2026-04-10 17:50:37..2026-04-24 20:31:08 | inverted/prime coordinate definitions and ta-onta/Epii law |
+| P / P' positional series | `Idea/Bimba/World/P.md`, `P0.md`, `P0'.md`, `P1.md`, `P1'.md`, `P2.md`, `P2'.md`, `P3.md`, `P3'.md`, `P4.md`, `P4'.md`, `P5.md`, `P5'.md` | 2026-04-11 00:38:15..01:01:49 | QL position and inversion semantics for layer diagrams |
+| CT / VAK context family | `Idea/Bimba/World/CT0.md`, `CT1.md`, `CT2.md`, `CT3.md`, `CT4a.md`, `CT4b.md`, `CT5.md` | 2026-03-10 12:24:51..2026-03-15 00:29:32 | CT0-CT5 / CT4a / CT4b context-frame law |
+| L / L' lens corpus | `Idea/Bimba/World/L0.md`..`L5.md`, `L0'.md`..`L5'.md`, `L0-0.md`..`L5-5'.md`, `L0.0.md`..`L5.5.md` | 2026-03-12 02:10:36..2026-04-11 09:58:12 | lens, Night/Klein, and sublens semantics used by VAK/MEF surfaces |
+| World artifact forms | `Idea/Bimba/World/Daily-Note.md`, `NOW.md`, `Thought.md`, `Task-Spec.md`, `Pattern-Note.md`, `Prompt.md`, `Seed.md`, `FLOW.md`, `Integration-Preview.md` | 2026-03-10 12:24:51..2026-04-11 | S1/S1' form residency and Day/NOW artifact law |
+
+### Canonical Source Coverage
+
+| Source | mtime | Status in this umbrella |
+|---|---:|---|
+| `docs/specs/S/S-STACK-INTEGRATION.md` | 2026-03-07 01:51:35 | historical S-stack synthesis, superseded by this seed/index where more specific |
+| `docs/specs/S/S_Series_Master_CLI_Architecture.md` | 2026-03-15 00:27:10 | historical CLI bridge and parity source |
+| `docs/specs/S/S0-S0i-CLI-CORE.md` | 2026-05-31 16:35:19 | crystallised into [[S0-SPEC]] and [[S0'-SPEC]] |
+| `docs/specs/S/S1-S1i-OBSIDIAN.md` | 2026-06-02 00:14:25 | crystallised into [[S1-SPEC]] and [[S1'-SPEC]]; newest S formal spec |
+| `docs/specs/S/S2-S2i-GRAPH.md` | 2026-05-31 16:35:19 | crystallised into [[S2-SPEC]] and [[S2'-SPEC]] |
+| `docs/specs/S/S3-S3i-GATEWAY.md` | 2026-05-31 16:35:19 | crystallised into [[S3-SPEC]] and [[S3'-SPEC]] |
+| `docs/specs/S/S4-S4i-PI-AGENT.md` | 2026-04-04 13:46:16 | crystallised into [[S4-SPEC]] and [[S4'-SPEC]] with later ta-onta/capability updates |
+| `docs/specs/S/S5-S5i-SYNC.md` | 2026-05-31 16:35:19 | historical sync framing; current S5 canon is Epii/review/autoresearch/world-return |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/00-overview-and-sequencing.md` | 2026-06-02 00:17:08 | implementation-track orientation only; seed canon wins on architecture |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` | 2026-05-31 20:57:23 | S0/S0' nominal track, not top-layer owner |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/02-s2-bimba-map-population.md` | 2026-05-31 20:36:57 | S2/S2' nominal track |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` | 2026-06-01 18:27:27 | S3/S3' nominal track |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/04-s5-autoresearch-and-review-extension.md` | 2026-05-31 20:56:45 | S5/S5' nominal track |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` | 2026-06-02 00:16:51 | S4/S4' mediation and cross-agent capacity track |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/10-cross-cutting-integration-and-milestones.md` | 2026-06-02 00:17:57 | cross-cutting status, not canon |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md` | 2026-06-02 00:14:24 | decision register source |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/13-s-sprime-modularity-and-s0-membrane-cleanup.md` | 2026-06-01 23:57:36 | cleanup pressure; this seed resolves ownership boundaries |
+| `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.index.json` / `plan.state.json` | 2026-06-02 11:40:41 | ledger only; cited for track ownership, not edited |
+
+Per hard scope, the plan/spec files above were not edited during this crystallisation pass. Where a plan is newer than an older seed fragment, the load-bearing architectural decision is represented here or in the layer seed; the plan remains an implementation track artifact.

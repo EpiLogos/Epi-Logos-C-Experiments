@@ -13,3 +13,4 @@ export * from './shared-bridge';
 export { ReadinessBanner } from '../browser/readiness-banner';
 export type { ReadinessBannerProps } from '../browser/readiness-banner';
 export { SHARED_BRIDGE_ADAPTER } from '../browser/frontend-module';
+export { registerIntentTarget } from '../browser/intent-target-registration';

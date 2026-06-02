@@ -1,9 +1,11 @@
 use std::path::Path;
 
+use neo4rs::query;
 use serde::Serialize;
 
 use crate::meta;
 use crate::semantic;
+use crate::seed::{seed_baseline_coordinates, seed_baseline_snapshot_queries, seed_relationship_types};
 use crate::{Neo4jClient, Neo4jConfig};
 use crate::{SemanticCacheClient, SemanticCacheConfig, SemanticCacheHealth};
 use epi_s3_redis_context::{RedisCache, RedisConfig};
@@ -41,6 +43,52 @@ pub struct SemanticCacheStatus {
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
+pub struct ManagedVersionSnapshot {
+    pub graph_revision: i64,
+    pub schema_version: String,
+    pub seed_source_hash: String,
+    pub dataset_source_hash: String,
+    pub relation_registry_hash: String,
+    pub kernel_source_hash: String,
+    pub embedding_version: String,
+    pub q_schema_version: String,
+    pub ontology_version_iri: String,
+    pub ontology_turtle_sha256: String,
+    pub gds_projection_version: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ManagedVersionDrift {
+    pub schema: String,
+    pub seed: String,
+    pub dataset: String,
+    pub relation_registry: String,
+    pub kernel_relations: String,
+    pub semantic_embedding: String,
+    pub q_schema: String,
+    pub ontology: String,
+    pub gds: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ManagedVersionsReport {
+    pub desired: ManagedVersionSnapshot,
+    pub live: ManagedVersionSnapshot,
+    pub drift: ManagedVersionDrift,
+}
+
+#[derive(Debug, Clone, Copy)]
+struct GraphBackedEvidence {
+    seed_baseline_ok: bool,
+    dataset_nodes: i64,
+    relation_registry_ok: bool,
+    gds_available: bool,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GraphState {
     pub ok: bool,
     pub bootstrapped: bool,
@@ -52,6 +100,7 @@ pub struct GraphState {
     pub q_schema_version: Option<String>,
     pub semantic_indexed_nodes: i64,
     pub stale_semantic_nodes: i64,
+    pub managed_versions: ManagedVersionsReport,
     pub error: Option<String>,
 }
 
@@ -712,6 +761,21 @@ async fn semantic_cache_status(repo_root: &Path) -> SemanticCacheStatus {
 }
 
 async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
+    let desired_versions = meta::desired_meta(epi_s2_graph_schema::SCHEMA_VERSION, 0);
+    let default_live = ManagedVersionSnapshot {
+        graph_revision: 0,
+        schema_version: String::new(),
+        seed_source_hash: String::new(),
+        dataset_source_hash: String::new(),
+        relation_registry_hash: String::new(),
+        kernel_source_hash: String::new(),
+        embedding_version: String::new(),
+        q_schema_version: String::new(),
+        ontology_version_iri: String::new(),
+        ontology_turtle_sha256: String::new(),
+        gds_projection_version: String::new(),
+    };
+    let desired_snapshot = managed_version_snapshot(&desired_versions);
     let Some(client) = client else {
         return GraphState {
             ok: false,
@@ -724,8 +788,22 @@ async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
             q_schema_version: None,
             semantic_indexed_nodes: 0,
             stale_semantic_nodes: 0,
-            error: Some("neo4j unavailable".into()),
-        };
+                managed_versions: ManagedVersionsReport {
+                    desired: desired_snapshot.clone(),
+                    live: default_live.clone(),
+                    drift: managed_version_drift(
+                        &default_live,
+                        &desired_snapshot,
+                        GraphBackedEvidence {
+                            seed_baseline_ok: false,
+                            dataset_nodes: 0,
+                            relation_registry_ok: false,
+                            gds_available: false,
+                        },
+                    ),
+                },
+                error: Some("neo4j unavailable".into()),
+            };
     };
 
     let node_count = match client.run("MATCH (n:Bimba) RETURN count(n) AS c").await {
@@ -745,6 +823,20 @@ async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
                 q_schema_version: None,
                 semantic_indexed_nodes: 0,
                 stale_semantic_nodes: 0,
+                managed_versions: ManagedVersionsReport {
+                    desired: desired_snapshot.clone(),
+                    live: default_live.clone(),
+                    drift: managed_version_drift(
+                        &default_live,
+                        &desired_snapshot,
+                        GraphBackedEvidence {
+                            seed_baseline_ok: false,
+                            dataset_nodes: 0,
+                            relation_registry_ok: false,
+                            gds_available: false,
+                        },
+                    ),
+                },
                 error: Some(format!("graph count failed: {}", err)),
             }
         }
@@ -764,9 +856,40 @@ async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
                 q_schema_version: None,
                 semantic_indexed_nodes: 0,
                 stale_semantic_nodes: 0,
+                managed_versions: ManagedVersionsReport {
+                    desired: desired_snapshot.clone(),
+                    live: default_live.clone(),
+                    drift: managed_version_drift(
+                        &default_live,
+                        &desired_snapshot,
+                        GraphBackedEvidence {
+                            seed_baseline_ok: false,
+                            dataset_nodes: 0,
+                            relation_registry_ok: false,
+                            gds_available: false,
+                        },
+                    ),
+                },
                 error: Some(err),
             }
         }
+    };
+    let graph_backed = graph_backed_evidence(client)
+        .await
+        .unwrap_or(GraphBackedEvidence {
+            seed_baseline_ok: false,
+            dataset_nodes: 0,
+            relation_registry_ok: false,
+            gds_available: false,
+        });
+    let live_snapshot = graph_meta
+        .as_ref()
+        .map(managed_version_snapshot)
+        .unwrap_or_else(|| default_live.clone());
+    let managed_versions = ManagedVersionsReport {
+        desired: desired_snapshot.clone(),
+        live: live_snapshot.clone(),
+        drift: managed_version_drift(&live_snapshot, &desired_snapshot, graph_backed),
     };
 
     let indexed_rows = match client
@@ -794,6 +917,7 @@ async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
                     .map(|meta| meta.q_schema_version.clone()),
                 semantic_indexed_nodes: 0,
                 stale_semantic_nodes: 0,
+                managed_versions: managed_versions.clone(),
                 error: Some(format!("semantic index count failed: {}", err)),
             }
         }
@@ -822,6 +946,7 @@ async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
                         .map(|meta| meta.q_schema_version.clone()),
                     semantic_indexed_nodes,
                     stale_semantic_nodes: 0,
+                    managed_versions: managed_versions.clone(),
                     error: Some(err),
                 }
             }
@@ -845,6 +970,217 @@ async fn graph_state(client: Option<&Neo4jClient>) -> GraphState {
             .map(|meta| meta.q_schema_version.clone()),
         semantic_indexed_nodes,
         stale_semantic_nodes,
+        managed_versions,
         error: None,
+    }
+}
+
+fn managed_version_snapshot(meta: &meta::GraphMeta) -> ManagedVersionSnapshot {
+    ManagedVersionSnapshot {
+        graph_revision: meta.graph_revision,
+        schema_version: meta.schema_version.clone(),
+        seed_source_hash: meta.seed_source_hash.clone(),
+        dataset_source_hash: meta.dataset_source_hash.clone(),
+        relation_registry_hash: meta.relation_registry_hash.clone(),
+        kernel_source_hash: meta.kernel_source_hash.clone(),
+        embedding_version: meta.embedding_version.clone(),
+        q_schema_version: meta.q_schema_version.clone(),
+        ontology_version_iri: meta.ontology_version_iri.clone(),
+        ontology_turtle_sha256: meta.ontology_turtle_sha256.clone(),
+        gds_projection_version: meta.gds_projection_version.clone(),
+    }
+}
+
+fn drift_state(live: &str, desired: &str) -> String {
+    if live.is_empty() {
+        "missing".into()
+    } else if live == desired {
+        "aligned".into()
+    } else {
+        "drift".into()
+    }
+}
+
+fn managed_version_drift(
+    live: &ManagedVersionSnapshot,
+    desired: &ManagedVersionSnapshot,
+    graph_backed: GraphBackedEvidence,
+) -> ManagedVersionDrift {
+    ManagedVersionDrift {
+        schema: drift_state(&live.schema_version, &desired.schema_version),
+        seed: if live.seed_source_hash == desired.seed_source_hash {
+            "aligned".into()
+        } else if graph_backed.seed_baseline_ok {
+            "graph-backed".into()
+        } else {
+            drift_state(&live.seed_source_hash, &desired.seed_source_hash)
+        },
+        dataset: if live.dataset_source_hash == desired.dataset_source_hash {
+            "aligned".into()
+        } else if graph_backed.dataset_nodes > 0 {
+            "graph-backed".into()
+        } else {
+            drift_state(&live.dataset_source_hash, &desired.dataset_source_hash)
+        },
+        relation_registry: if live.relation_registry_hash == desired.relation_registry_hash {
+            "aligned".into()
+        } else if graph_backed.relation_registry_ok {
+            "graph-backed".into()
+        } else {
+            drift_state(&live.relation_registry_hash, &desired.relation_registry_hash)
+        },
+        kernel_relations: drift_state(&live.kernel_source_hash, &desired.kernel_source_hash),
+        semantic_embedding: drift_state(&live.embedding_version, &desired.embedding_version),
+        q_schema: drift_state(&live.q_schema_version, &desired.q_schema_version),
+        ontology: if live.ontology_version_iri.is_empty() || live.ontology_turtle_sha256.is_empty() {
+            "missing".into()
+        } else if live.ontology_version_iri == desired.ontology_version_iri
+            && live.ontology_turtle_sha256 == desired.ontology_turtle_sha256
+        {
+            "aligned".into()
+        } else {
+            "drift".into()
+        },
+        gds: if !graph_backed.gds_available && live.gds_projection_version.is_empty() {
+            "blocked-by-topology".into()
+        } else {
+            drift_state(&live.gds_projection_version, &desired.gds_projection_version)
+        },
+    }
+}
+
+async fn graph_backed_evidence(client: &Neo4jClient) -> Result<GraphBackedEvidence, String> {
+    let dataset_rows = client
+        .run(
+            "MATCH (n:Bimba)
+             WHERE n.c_3_source_dataset IS NOT NULL
+             RETURN count(n) AS c",
+        )
+        .await
+        .map_err(|err| format!("dataset evidence query failed: {err}"))?;
+    let dataset_nodes = dataset_rows
+        .first()
+        .and_then(|row| row.get("c").ok())
+        .unwrap_or_default();
+
+    let rel_rows = client
+        .run("MATCH ()-[r]->() RETURN collect(DISTINCT type(r)) AS rel_types")
+        .await
+        .map_err(|err| format!("relationship evidence query failed: {err}"))?;
+    let rel_types: Vec<String> = rel_rows
+        .first()
+        .and_then(|row| row.get("rel_types").ok())
+        .unwrap_or_default();
+    let relation_registry_ok = rel_types.iter().all(|rel_type| {
+        !matches!(
+            epi_s2_graph_schema::classify_relationship_type(rel_type),
+            epi_s2_graph_schema::RelationshipTypeClass::Drift
+        )
+    });
+
+    let seed_queries = seed_baseline_snapshot_queries();
+    let count_query = seed_queries
+        .iter()
+        .find(|query| query.name == "seed_node_group_counts")
+        .ok_or_else(|| "seed count query missing".to_owned())?;
+    let rel_query = seed_queries
+        .iter()
+        .find(|query| query.name == "seed_relationship_count")
+        .ok_or_else(|| "seed relationship query missing".to_owned())?;
+    let coordinates = seed_baseline_coordinates();
+    let seed_rows = client
+        .run_query(query(count_query.cypher).param("coordinates", coordinates.clone()))
+        .await
+        .map_err(|err| format!("seed evidence query failed: {err}"))?;
+    let seed_rel_rows = client
+        .run_query(
+            query(rel_query.cypher)
+                .param("coordinates", coordinates)
+                .param(
+                    "relationship_types",
+                    seed_relationship_types()
+                        .iter()
+                        .map(|rel_type| (*rel_type).to_string())
+                        .collect::<Vec<_>>(),
+                ),
+        )
+        .await
+        .map_err(|err| format!("seed relationship evidence query failed: {err}"))?;
+    let seed_row = seed_rows
+        .first()
+        .ok_or_else(|| "seed evidence row missing".to_owned())?;
+    let seed_relationships = seed_rel_rows
+        .first()
+        .and_then(|row| row.get::<i64>("seed_relationships").ok())
+        .unwrap_or_default();
+    let seed_baseline_ok = seed_row.get::<i64>("seed_nodes").unwrap_or_default() == 102
+        && seed_row.get::<i64>("root_nodes").unwrap_or_default() == 1
+        && seed_row.get::<i64>("psychoids").unwrap_or_default() == 6
+        && seed_row.get::<i64>("weaves").unwrap_or_default() == 4
+        && seed_row.get::<i64>("context_frames").unwrap_or_default() == 7
+        && seed_row.get::<i64>("family_meta_nodes").unwrap_or_default() == 6
+        && seed_row.get::<i64>("family_coordinates").unwrap_or_default() == 72
+        && seed_row.get::<i64>("vak_nodes").unwrap_or_default() == 6
+        && seed_relationships >= 306;
+
+    let gds_count = crate::gds::gds_procedure_count(client).await.unwrap_or_default();
+
+    Ok(GraphBackedEvidence {
+        seed_baseline_ok,
+        dataset_nodes,
+        relation_registry_ok,
+        gds_available: gds_count > 0,
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn managed_version_drift_prefers_graph_backed_legacy_evidence_over_false_missing() {
+        let desired = ManagedVersionSnapshot {
+            graph_revision: 0,
+            schema_version: "schema".into(),
+            seed_source_hash: "seed-new".into(),
+            dataset_source_hash: "dataset-new".into(),
+            relation_registry_hash: "registry-new".into(),
+            kernel_source_hash: "kernel-new".into(),
+            embedding_version: "embed".into(),
+            q_schema_version: "q".into(),
+            ontology_version_iri: "ontology".into(),
+            ontology_turtle_sha256: "ttl".into(),
+            gds_projection_version: "gds-new".into(),
+        };
+        let live = ManagedVersionSnapshot {
+            graph_revision: 2,
+            schema_version: "schema".into(),
+            seed_source_hash: "seed-old".into(),
+            dataset_source_hash: String::new(),
+            relation_registry_hash: String::new(),
+            kernel_source_hash: String::new(),
+            embedding_version: "embed".into(),
+            q_schema_version: "q".into(),
+            ontology_version_iri: "ontology".into(),
+            ontology_turtle_sha256: "ttl".into(),
+            gds_projection_version: String::new(),
+        };
+
+        let drift = managed_version_drift(
+            &live,
+            &desired,
+            GraphBackedEvidence {
+                seed_baseline_ok: true,
+                dataset_nodes: 1882,
+                relation_registry_ok: true,
+                gds_available: false,
+            },
+        );
+
+        assert_eq!(drift.seed, "graph-backed");
+        assert_eq!(drift.dataset, "graph-backed");
+        assert_eq!(drift.relation_registry, "graph-backed");
+        assert_eq!(drift.gds, "blocked-by-topology");
+        assert_eq!(drift.ontology, "aligned");
     }
 }

@@ -55,6 +55,10 @@ Within this S4' body, [[Pleroma]] must be treated as [[Anima]]'s executive capab
 
 [[Anima]] and [[Epii]] should therefore be implemented as distinct spine-bearing PI agents. [[Anima]] is the dispatch spine: it evaluates VAK, selects agents/skills, invokes bounded S-layer tools, and hands reviewable outputs to [[Epii]]. [[Epii]] is not a subagent of Anima; it is the S5' return spine. Anima may request Epii review or deposit inbox items, but it must not resolve Epii review/improvement decisions itself.
 
+## M' Consumer Surfaces
+
+S4/S4' is consumed most directly by [[M5'-SPEC]] and the cross-cutting agent membrane in [[M'-SYSTEM-SPEC]]. The operative anchors for that surface are [[Body/S/S4/plugins/registry.jsonl]] and [[Body/S/S4/plugins/pleroma/capability-matrix.json]].
+
 ## VAK Gate
 
 - CPF: `(4.0/1-4.4/5)` - autonomous spec/build pass across the full reflective lattice.
@@ -663,3 +667,19 @@ S4/S4' serves:
 9. Current `epi agent` commands are evidence of real runtime capability. They are not sufficient by themselves; the shard pass must close API parity, envelope population, and test coverage.
 
 10. S4 is the inversion partner of [[S1]]. S1 gives content material addressability; S4 gives agentic inhabitation of that material through Psyche and Anima.
+
+## Canonical Source Lock - 2026-06-02
+
+S4 owns managed PI runtime and S4' owns ta-onta/API inhabitation law. VAK is the vertical dispatch grammar; ta-onta carriers are the horizontal S-folds. They are coupled but not interchangeable.
+
+| Required coverage | Canonical citations |
+|---|---|
+| World ontology | `Idea/Bimba/World/Types/Coordinates/S/S4/S4.md` mtime 2026-04-10 19:15:19; `Idea/Bimba/World/Types/Coordinates/S/S'/S4'/S4'.md` mtime 2026-04-10 19:15:04; CT files `CT0.md`..`CT5.md` mtime 2026-03-10..2026-03-15 for VAK phase law |
+| docs/specs | `docs/specs/S/S4-S4i-PI-AGENT.md` mtime 2026-04-04 13:46:16; `docs/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24 |
+| Body substrate | `Body/S/S4/pi-agent/**`, `Body/S/S4/plugins/pleroma/**`, `Body/S/S4/ta-onta/**`, `Body/S/S0/epi-cli/src/agent/**`, `Body/S/S0/epi-cli/src/gate/anima.rs` |
+| sibling seeds | `S4-0-SPEC.md`..`S4-5-SPEC.md`, `S4'/S4'-SPEC.md`, `S4'/S4-0'-SPEC.md`..`S4'/S4-5'-SPEC.md`, `S4'/S4-4'-GOAL-PRELUDE-SPEC.md`, `S4-SHARD-INDEX.md`, `S4-TRACEABILITY-INDEX.md`, `S4'/S4'-TRACEABILITY-INDEX.md` |
+| nominal tracks | Track 09 owns mediation/governance; Track 10 carries cross-cutting gates |
+| open decisions | thin VAK response, incomplete S4/S4' API bridge, Sophia/Night' crystallisation, Epii reciprocal invocation, capability-matrix route authority |
+
+Supersession rule: any fragment that treats Anima, ta-onta, and constitutional agents as separate systems is historical. Current canon is one PI runtime with S4' carrier law and VAK dispatch grammar.

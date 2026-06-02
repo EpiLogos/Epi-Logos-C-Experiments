@@ -3,6 +3,24 @@ mod support;
 use serde_json::json;
 use support::TestGatewayClient;
 
+/// 13.T7 store-location guard: the S0 review gate adapter must persist the
+/// S5 `ReviewStore` under `<state_root>/s5/epii-review`. Pins the boundary
+/// layout so refactors that try to move S5 governance state under another
+/// gate-root subtree fail loudly.
+#[test]
+fn gate_review_store_subpath_is_stable_at_s0_s5_boundary() {
+    use epi_logos::gate::review;
+    use std::path::PathBuf;
+
+    assert_eq!(review::STORE_SUBPATH, ["s5", "epii-review"]);
+    let path = review::review_store_path(PathBuf::from("/tmp/state-root"));
+    assert_eq!(
+        path,
+        PathBuf::from("/tmp/state-root/s5/epii-review"),
+        "S5 review store must live under <state_root>/s5/epii-review at the S0/S5 boundary"
+    );
+}
+
 #[tokio::test]
 async fn s5_review_gateway_persists_inbox_and_resolutions() {
     let mut client = TestGatewayClient::connected_with_temp_store(18901).await;

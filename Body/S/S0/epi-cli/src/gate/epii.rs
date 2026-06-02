@@ -1,3 +1,32 @@
+//! S0 gate adapter for the S5 Epii agent surface and the Gnosis/kbase
+//! "epi techne" boundary.
+//!
+//! 13.T7 audit (2026-06-02):
+//!
+//! - `status`, `deposit`, `runtime_context` are **thin adapters** over
+//!   `epi_s5_epii_agent_core::EpiiAgentAccess` plus already-S3/S2-owned
+//!   session/temporal/spacetimedb helpers. No S5 DTO construction in S0.
+//! - `gnosis_context_retrieve` is the S0-exposed `epi techne` surface for
+//!   read-only Gnosis/kbase queries. Per the plan: S0 may expose
+//!   `epi techne`/compatibility commands, **S5 owns governance**, **S2 owns
+//!   storage substrate**. The capability envelope returned here is the only
+//!   governance fragment S0 is permitted to embed, and it is declarative
+//!   (read-only, no decisions). The `governance_owner: "S5'"` and
+//!   `storage_substrate: "S2"` markers in every response make the boundary
+//!   explicit at the wire.
+//! - `world_return_status` / `gnosis_status` / `nara_status` /
+//!   `graphiti_status` assemble **observational** envelopes (not policy);
+//!   they re-attach the S3'/S5'/S2 ownership markers but make no governance
+//!   decisions.
+//!
+//! Follow-up flag (anima's lane, 09.T7 active):
+//! - `capability_envelope` encodes the per-agent capability matrix
+//!   (`mayMutateIdentity`, `mayPromoteInterpretation`, `requiresEpiiReview`)
+//!   inline in S0. This is S5 governance policy and should move into
+//!   `epii-agent-core` as `EpiiAgentAccess::capability_envelope(agent_id)`.
+//!   Do not move during anima's active edit on 09.T7 — flagged for a
+//!   follow-up task. S0 will then delegate to that helper.
+
 use std::path::Path;
 
 use epi_s3_gateway_contract::{GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY};
@@ -135,6 +164,9 @@ pub fn user_orientation() -> Value {
     })
 }
 
+// 13.T7 follow-up: this S5 governance policy currently lives in S0 only.
+// Extract into `epii-agent-core::EpiiAgentAccess::capability_envelope` when
+// anima's 09.T7 lane on Body/S/S5/** clears. S0 will then delegate.
 fn capability_envelope(agent_id: &str) -> Value {
     match agent_id {
         "epii" => json!({

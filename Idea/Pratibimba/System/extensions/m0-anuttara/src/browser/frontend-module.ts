@@ -11,7 +11,8 @@ import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
-    parseExtensionRoute
+    parseExtensionRoute,
+    registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M0AnuttaraWidget } from './m0-anuttara-widget';
 import {
@@ -72,6 +73,15 @@ export class M0AnuttaraContribution
                     return this.openView({ activate: true, reveal: true });
                 }
             }
+        );
+        // Track 05 T5 intent target — CrossLayoutIntentDispatcher routes
+        // "open-graph-node" here.
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'graph',
+            'M0 Anuttara: Open Graph Node',
+            () => this.openView({ activate: true, reveal: true })
         );
     }
 }

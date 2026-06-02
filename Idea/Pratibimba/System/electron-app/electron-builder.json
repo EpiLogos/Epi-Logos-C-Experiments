@@ -1,0 +1,29 @@
+{
+  "appId": "org.epi-logos.pratibimba-system",
+  "productName": "Pratibimba System",
+  "directories": {
+    "buildResources": "build",
+    "output": "dist"
+  },
+  "files": [
+    "lib/**/*",
+    "src-gen/**/*",
+    "package.json"
+  ],
+  "mac": {
+    "category": "public.app-category.developer-tools",
+    "target": ["dir"],
+    "hardenedRuntime": false,
+    "gatekeeperAssess": false,
+    "identity": null
+  },
+  "linux": {
+    "category": "Development",
+    "target": ["dir"]
+  },
+  "win": {
+    "target": ["dir"]
+  },
+  "publish": null,
+  "asar": false
+}

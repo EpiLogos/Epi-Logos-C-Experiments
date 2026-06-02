@@ -25,6 +25,10 @@ companion_spec: "[[m2-prime-parashakti-cymatic-engine]]"
 
 > **Companion long-form.** The deep architectural derivation lives at [[m2-prime-parashakti-cymatic-engine]]. The frequency-to-meaning research pass lives at [[m2-prime-frequency-meaning-research]]. This spec is the canonical M2' domain authority.
 
+## Canonical Substrate Anchors
+
+The [[Paraśakti|Parashakti]] surface should resolve directly into its implementation anchors: [[Body/S/S0/epi-lib/include/m2.h]] (642 LOC — 72-fold invariants, [[MEF]] matrix, [[Discrete Epistemic Transform|DET]] declarations, the maqam/Shem/Asma/mantra/planet LUT shapes), [[Body/S/S0/epi-lib/src/m2.c]] (1092 LOC C implementation including `.rodata` LUT contents), [[Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs]] (the [[M2-1']] [[Vimarśa]] bus-writing function — per DCC-05 / IOD-17, [[Body/S/S0/portal-core]] hosts the [[M2-1']] Vimarśa kernel-substrate implementation while [[M2']]-SPEC retains specification authority), [[Body/S/S0/portal-core/src/spanda.rs]] ([[Spanda]] pulsation primitives), and [[Body/S/S0/portal-core/src/aspect.rs]] (aspect/correspondence dispatching). M2' is the correspondential renderer over this substrate.
+
 ## §0/1 — What [[M2']] Is
 
 [[M2']] is **[[Paraśakti|Parāśakti]] read from the playable correspondence side**. It is the harmonic-correspondential resolver that reads the [[S0]]/[[M1]] [[Prakāśa]] substrate through [[M2-1']] [[Vimarśa]], writes the shared 8+4 bus, and renders that signal across the 72-fold field — as [[MEF]] lens-anchored material response, elemental medium, decanic face, sacred name modulation, maqam/mantra modal colour, planetary-chakral runtime, and visible Chladni standing-wave geometry. [[M1']] walks this output as melody; M2' is the reading surface that makes it correspondentially audible and visible.
@@ -33,7 +37,7 @@ The cymatic renderer is essential but is now named correctly: it is a **module w
 
 Three commitments hold this domain:
 
-1. **M2' preserves the 72-invariant.** Every M2' surface (lens material, chakra sphere, decan face, cymatic Chladni pattern) is addressable in canonical 72-space: `12 lenses × 6 positions = 36 tattvas × 2 phases = 8 choirs × 9 names = 72`. This is the **72** in the system's `137 = 64 + 72 + 1` architecture, the [[Paraśakti]] bridge between [[M1]]'s +1 parent and [[M3]]'s 64-fold binary substrate. The [[Body/S/S0/epi-lib/include/m2.h|M2 header]] enforces this at compile time; M2' inherits the invariant.
+1. **[[M2']] preserves the 72-invariant.** Every M2' surface (lens material, chakra sphere, decan face, cymatic Chladni pattern) is addressable in canonical 72-space: `12 lenses × 6 positions = 36 tattvas × 2 phases = 8 choirs × 9 names = 72`. This is the **72** in the system's `137 = 64 + 72 + 1` architecture, the [[Paraśakti]] bridge between [[M1]]'s +1 parent and [[M3]]'s 64-fold binary substrate. The [[Body/S/S0/epi-lib/include/m2.h|M2 header]] and [[Body/S/S0/epi-lib/src/m2.c]] enforce this at compile time via `_Static_assert`s; M2' inherits the invariant.
 2. **M2' is the L ↔ L' meaning-translator surface.** When the walk crosses a tritone-mirror lens-pair boundary (Lens N ↔ Lens N+3, signalled by [[M1']] per [[M1'-SPEC]] §6), M2' enacts the **[[Klein bottle|Klein-bottle]] enharmonic flip**: same struck pitch, opposite emotional valence, opposite surface colour, opposite material response. This is the structural mechanism by which the instrument plays *meanings* and not just tones. See §7 below.
 3. **M2' is the bridge surface toward [[M3]]/[[M3']], but not the codon classifier.** The [[Body/S/S0/epi-lib/include/m2.h|M2 header]] defines the [[Discrete Epistemic Transform]] (DET): `M2_TO_M3_CYMATIC_PROJECTION[72]`, `transduce_vibration_to_symbol`, and the 72 → 64 epogdoon compression `72 × 8 / 9 = 64`. M2' renders the 72-correspondential profile and produces the standing-wave signature that M3/M3' projects into 64-bit codon-rotation. M2' does not classify codons; M3'/[[M3'-SPEC]] §7 owns that surface.
 
@@ -66,7 +70,7 @@ Register disambiguation: `12 × 6 = 72` is the canonical M2 space; `12 × 7 = 84
 
 ## §3 — Backend Contract Consumed
 
-- [[S0]] / kernel profile supplies tick, chromatic harmonic state, diatonic projection, `resonance72`, and elemental projection as [[Prakāśa]] substrate. [[M2-1']] performs the [[Vimarśa]] reading that writes `audio_octet[8]` and `nodal_quartet[4]` into the shared profile; renderer panels consume those fields and never re-derive pitch locally.
+- [[S0]] / kernel profile supplies tick, chromatic harmonic state, diatonic projection, `resonance72`, and elemental projection as [[Prakāśa]] substrate. [[M2-1']] performs the [[Vimarśa]] reading at [[Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs]] that writes `audio_octet[8]` and `nodal_quartet[4]` into the shared profile (defined in [[Body/S/S0/portal-core/src/harmonic_profile.rs]]); renderer panels consume those fields and never re-derive pitch locally.
 - [[S2]] graph law supplies configurable planetary/chakral/musical correspondences and source provenance. Exact tradition-sensitive mappings come from S2, not from renderer constants.
 - [[S3]] supplies DAY/NOW/session context when a harmonic observation is deposited.
 - [[M1']] signals tritone-mirror lens transitions for Klein-flip enactment (see §7).
@@ -129,9 +133,9 @@ The 12 [[MEF]] lenses pair into **6 tritone-mirror lens-pairs** (per [[ql-musica
 
 Topologically this is the **[[Klein bottle|Klein-bottle]] move**: inside and outside are the same surface, traversed from opposite orientations. Musically it is the major ↔ minor enharmonic flip, the Day ↔ Night [[MEF]] inversion, the L ↔ L' phase-shift.
 
-### M2' enacts it
+### [[M2']] enacts it
 
-When `profile.lensMode.lens` transitions from N to N+3 (mod 12), or any tritone-mirror crossing on the lens-pair table, [[M1']] fires the `kleinFlipState` signal (see [[M1'-SPEC]] §6). M2' consumes this signal and **inverts its surface valence on every active panel**:
+When `profile.lensMode.lens` transitions from N to N+3 (mod 12), or any tritone-mirror crossing on the lens-pair table, [[M1']] fires the `kleinFlipState` signal (see [[M1'-SPEC]] §6). [[M2']] consumes this signal and **inverts its surface valence on every active panel** — the [[Klein]] non-orientable identification made operative at the renderer:
 
 - **Lens resonance surface** (M2-1'): material colour, roughness, damping, elasticity, particle affinity, and lens-tension all invert. The same struck cell now reads with opposite emotional-material register.
 - **Element panel** (M2-2'): the P-position element / L2' element-bearing pair swaps roles if applicable to the crossing; chakra phase flips its descent/ascent reading.
@@ -403,3 +407,19 @@ The canon-update pass of 2026-05-31 adds four explicit M2' deltas:
 2. **Routing trace law**: [[Ficinian-Kerykeion routing|Ficinian-Kerykeion]] traversals may feed [[Epii]]'s graph-relational ML only as provenance-safe derived evidence; [[Embeddings]] and [[Lens-LoRAs]] remain rebuildable, governed, and non-canonical.
 3. **IDE placement law**: the [[m2-parashakti]] extension and integrated [[1-2-3]] plugin expose M2' through the [[kernel-bridge]]; duplicate direct [[S-stack]] wiring inside M2' panels is non-canonical.
 4. **Open-question discipline**: unresolved tensions in audio ownership, planetary-count semantics, active mantra/maqam synthesis, and M3 final classification remain explicit §9.8 open questions until their owning specs close them.
+
+## Canonical Source Lock - 2026-06-02
+
+M2' is the harmonic-correspondential meaning engine. It preserves the 72 invariant and hands governed meaning packets to M3', M4', M5', and S5 review surfaces.
+
+| Required coverage | Canonical citations |
+|---|---|
+| docs/specs | `docs/specs/M/M2-parashakti-vibrational-architecture.md` mtime 2026-03-05 14:45:32; `docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md` mtime 2026-04-11 11:58:00; `docs/specs/M/HMS-quaternionic-overlay.md` mtime 2026-03-11 12:03:47 |
+| docs/plans | `docs/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` mtime 2026-05-31 20:57:23; `02-s2-bimba-map-population.md` mtime 2026-05-31 20:36:57; `03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `07-m-extension-individual-tracks.md` mtime 2026-06-01 00:23:25 (`07-T5`); `08-integrated-plugin-tracks.md` mtime 2026-06-01 00:25:11; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51 |
+| Body substrate | `Body/S/S0/epi-lib/**`, `Body/S/S2/graph-services/**`, `Body/S/S3/gateway-contract/**`; `Body/M/epi-tauri/**` only as deprecated migration-source evidence |
+| Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m2-parashakti/**`, `m-extension-runtime/**`, `kernel-bridge/**`, `plugin-integrated-1-2-3/**` |
+| sibling seeds | `M'-SYSTEM-SPEC.md`, `M2'/m2-prime-parashakti-cymatic-engine.md`, `M2'/m2-prime-frequency-meaning-research.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-parashakti-graph-relational-ml.md`, `alpha_quaternionic_integration_across_M_stack.md` |
+| nominal tracks | Track 07.T5 M2' extension; Track 08 integrated 1-2-3 plugin; Track 01 profile/audio; Track 02 mapping; Track 03 Kerykeion/world-clock; Track 09 Parashakti capacity |
+| open decisions | audio ownership, planet/Earth observer count, mantra/maqam synthesis, M3 classification handoff, 72->64 provenance scope |
+
+World coordinate note: M2' uses shared World `P/P'`, `CT`, and `L/L'` lens corpora through the umbrella specs; no M-specific World coordinate markdown exists yet.

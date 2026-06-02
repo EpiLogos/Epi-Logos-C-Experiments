@@ -447,6 +447,7 @@ fn aletheia_entry(session_id: &str) -> InboxEntry {
         )]),
         artifacts: vec!["vault://Idea/Bimba/Seeds/S/S5/S5-SPEC.md".to_owned()],
         closure_kind: "rehear".to_owned(),
+        disclosure_lineage: None,
     }
 }
 

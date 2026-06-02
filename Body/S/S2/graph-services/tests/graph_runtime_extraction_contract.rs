@@ -23,16 +23,34 @@ fn graph_meta_and_sync_contracts_are_s2_owned() {
     assert_eq!(meta.schema_version, "test-schema");
     assert_eq!(meta.graph_revision, 7);
     assert!(!seed_source_hash().is_empty());
+    assert!(!meta.dataset_source_hash.is_empty());
+    assert!(!meta.relation_registry_hash.is_empty());
+    assert!(!meta.kernel_source_hash.is_empty());
+    assert_eq!(
+        meta.ontology_version_iri,
+        epi_s2_graph_services::EPI_ONTOLOGY_VERSION_IRI
+    );
+    assert_eq!(
+        meta.gds_projection_version,
+        epi_s2_graph_services::GDS_OPTION1_PROJECTION_VERSION
+    );
 
     let explicit = GraphMeta {
         graph_id: "test".into(),
         schema_version: "schema".into(),
         seed_source_hash: "hash".into(),
+        dataset_source_hash: "dataset".into(),
+        relation_registry_hash: "registry".into(),
+        kernel_source_hash: "kernel".into(),
         embedding_version: "embedding".into(),
         q_schema_version: "q".into(),
+        ontology_version_iri: "ontology".into(),
+        ontology_turtle_sha256: "ttl".into(),
+        gds_projection_version: "gds".into(),
         graph_revision: 1,
     };
     assert_eq!(explicit.embedding_version, "embedding");
+    assert_eq!(explicit.dataset_source_hash, "dataset");
 
     let sync = SyncResult {
         coordinate: "M5".into(),

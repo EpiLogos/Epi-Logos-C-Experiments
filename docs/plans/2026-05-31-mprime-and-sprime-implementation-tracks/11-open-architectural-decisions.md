@@ -2,6 +2,18 @@
 
 This register consolidates the open architectural decisions surfaced across Tracks 01-08 and the M5'/alpha canon. It is a build-control artifact: each item names the decision still needed, why it matters, which tracks are blocked or shaped by it, the viable options, the safest default where the sources support one, the validation path, and the cost of leaving it unresolved. Defaults here are implementation defaults, not canon rewrites.
 
+## Recent resolutions log (as of 2026-06-01)
+
+The Track 05/06/07/08 parallel pass closed or hardened the following entries. Per-entry status lines below carry the citation; this log is the index.
+
+- **PRD-01, PRD-02, PRD-03, PRD-04** — Resolved by [ADR-05-011 release-gate close](../../../Idea/Pratibimba/System/docs/decisions/adr-05-011-release-gate-close.md) (Thread A, 2026-06-01T22:20Z) anchored on ADRs 05-001..010. Track 05 T9 release gate closed: `pnpm -r build` green; 42/42 extension tests passing (`@pratibimba/ide-shell-m0-m5` 17/17 + `@pratibimba/agentic-control-room` 14/14 + `@pratibimba/acceptance-harness` 11/11); 21+ MB smoke-build bundle; substrate `cargo test --offline` 6/6 (`epii-review-core`) + 19/19 (`epii-autoresearch-core`). Evidence: `plan.runs/20260601T215100Z-05-T4.json`, `20260601T220500Z-05-T8.json`, `20260601T222000Z-05-T9.json`.
+- **IOD-12** (Observability schema ownership) — Binding per Thread C's release-gate decision tree at Track 08.T9 (`plan.runs/08-t9-perf-a11y-privacy-report.md`). The integrated-composition release-gate module is the canonical schema host; privacy/perf/a11y test suites (`extensions/test/privacy-audit/forbidden-fields.test.mjs`, `perf/budgets.test.mjs`, `a11y/coverage.test.mjs`, `release-gate/decision-tree.test.mjs`) consume one shared schema and 18 forbidden keys × 6 surfaces = 108 placements all block release.
+- **IOD-17** (capability-matrix three-way parity) — Live as spec-time assertion in `extensions/agentic-control-room/tests/run-flow.test.mjs::parity over the real capability-matrix.json` plus `Body/S/S3/gateway/tests/dispatch_contract.rs` (gateway side) and `tests/canon-studio-save-routing.test.mjs` plus `tests/contract.test.mjs` in `@pratibimba/ide-shell-m0-m5` (UI side). Three-way parity (matrix ↔ UI ↔ gateway) verified across 42/42 tests. Live runtime parity check still recommended (Thread A finding #2 — expose `s4'.mediation.capabilities.list` on the gateway).
+- **IOD-18** (Smart Connections via Hen `smart_env.rs`) — Binding per [ADR-05-010](../../../Idea/Pratibimba/System/docs/decisions/adr-05-010-hen-vault-bridge.md) and ADR-05-011 §4. No client-side Obsidian plugin coupling; semantic-neighbours route through Hen-gateway `s1'.semantic.*` (gated on Track 03 T6.5).
+- **IOD-19** (Hen vault-write gatekeeper) — Binding per ADR-05-010 and ADR-05-011 §3. Canon Studio routes every save through `vault-bridge.s1prime.vault.write_file`; until T4.5 lands the vault-bridge extension, saves are rejected with the canonical reason `no vault-bridge registered` — verified by `tests/canon-studio-save-routing.test.mjs::vault-bridge write throws "no vault-bridge registered" before T4.5`.
+
+The remaining entries (IOD-01..14 except IOD-12, all UFV, DSD, and DCC entries) remain open as recorded below.
+
 ## Goal
 
 Keep every unresolved implementation-shaping choice visible before engineering work hardens around it. This register gives each decision an owner category, affected tracks, safe default where the sources support one, validation path, and consequence of delay, so teams can proceed behind explicit readiness seams instead of silently resolving canon, privacy, runtime, or substrate questions.
@@ -16,9 +28,9 @@ Keep every unresolved implementation-shaping choice visible before engineering w
 
 ## Tranches
 
-- **Decision wave 0 - Prototype gates:** Resolve or explicitly defer `PRD-01` through `PRD-04` before Theia runtime, bridge ownership, and extension APIs harden.
+- **Decision wave 0 - Prototype gates:** Resolve or explicitly defer `PRD-01` through `PRD-04` before Theia runtime, bridge ownership, and extension APIs harden. **Status (2026-06-01): PRD-01..04 all resolved by ADR-05-011; this wave is closed.**
 - **Decision wave 1 - Substrate contracts:** Resolve `IOD-01` through `IOD-09` before live S0/S2/S3/S5 substrate claims become downstream dependencies.
-- **Decision wave 2 - Surface and composition contracts:** Resolve `IOD-10` through `IOD-14` and `IOD-17` before deep links, shell chrome, observability, Nara write paths, agent-tool governance extensions, and integrated plugin composition freeze.
+- **Decision wave 2 - Surface and composition contracts:** Resolve `IOD-10` through `IOD-14`, `IOD-17`, `IOD-18`, and `IOD-19` before deep links, shell chrome, observability, Nara write paths, agent-tool governance extensions, integrated plugin composition, vault semantic-index surfaces, and vault-write paths freeze.
 - **Decision wave 3 - User-final validation:** Resolve `UFV-01` through `UFV-04` before privacy, review interruption, background lifecycle, recursive/corpus-affecting changes, or default lightweight agents become user-facing production behavior.
 - **Decision wave 4 - Deferred canon contradictions:** Carry `DCC-01` through `DCC-06` as visible provenance/readiness notes until canon review or user-final validation resolves them.
 
@@ -41,10 +53,10 @@ The decision index and grouped entries below are the active open-decision set fo
 | UFV-02 | User-final validation threshold for recursive or corpus-affecting changes | User-final validation | 04, 05, 07, 08 |
 | UFV-03 | Menubar/background lifecycle semantics | User-final validation | 05, 06, 08 |
 | UFV-04 | Daily-flow review interruption and default lightweight agent | User-final validation | 04, 06, 07, 08 |
-| PRD-01 | Theia browser-mode in Tauri versus local-server/Electron fallback | Prototype-resolved | 01, 05, 06, 07, 08 |
-| PRD-02 | Single-webview navigation versus multi-webview persistence | Prototype-resolved | 05, 06, 08 |
-| PRD-03 | Kernel-bridge host boundary | Prototype-resolved | 01, 03, 05, 06, 07, 08 |
-| PRD-04 | Theia extension API, version, package manager, and build composition | Prototype-resolved | 05, 07, 08 |
+| PRD-01 | ~~Theia browser-mode in Tauri versus local-server/Electron fallback~~ **Resolved: Theia-only, Electron-primary (no Tauri wrapper)** | Resolved | — |
+| PRD-02 | ~~Single-webview navigation versus multi-webview persistence~~ **Resolved: Theia Layout Restorer / Workspace service handles layout switching inside one process** | Resolved | — |
+| PRD-03 | ~~Kernel-bridge host boundary~~ **Resolved: first-loaded Theia extension; backend module connects to external Rust gateway via WS/JSON-RPC** | Resolved | — |
+| PRD-04 | ~~Theia extension API, version, package manager, and build composition~~ **Resolved: Theia 1.56 + pnpm workspaces + electron-app canonical / theia-app browser CI (ADR-05-011)** | Resolved | — |
 | IOD-01 | S3 single WebSocket surface: physical multiplexing versus app-level manager | Implementation-owner | 01, 03, 05, 06, 07, 08 |
 | IOD-02 | SpaceTimeDB auth/RLS and privacy discipline | Implementation-owner | 03, 04, 05, 06, 08 |
 | IOD-03 | `world_clock` source of truth and cadence | Implementation-owner | 01, 03, 05, 06, 08 |
@@ -56,10 +68,12 @@ The decision index and grouped entries below are the active open-decision set fo
 | IOD-09 | S5 state storage and `ReviewSource` metadata | Implementation-owner | 04, 05, 06, 07, 08 |
 | IOD-10 | Deep-link URI grammar and intent acknowledgement | Implementation-owner | 05, 06, 07, 08 |
 | IOD-11 | Shell chrome versus individual extension ownership | Implementation-owner | 05, 07, 08 |
-| IOD-12 | Observability schema ownership | Implementation-owner | 01, 04, 05, 06, 07, 08 |
+| IOD-12 | Observability schema ownership — **Binding (Track 08.T9, 2026-06-01)** | Implementation-owner (Resolved) | 01, 04, 05, 06, 07, 08 |
 | IOD-13 | Nara vault/write service ownership | Implementation-owner | 03, 04, 05, 06, 07, 08 |
 | IOD-14 | Plugin activation, composition, and mini-mode model | Implementation-owner | 05, 07, 08 |
-| IOD-17 | `capability-matrix.json` as canonical agent-tool governance authority | Implementation-owner | 01, 04, 09 |
+| IOD-17 | `capability-matrix.json` as canonical agent-tool governance authority — **Binding spec-time (ADR-05-011 §5, Track 05.T8)** | Implementation-owner (Resolved spec-time; runtime parity follow-up) | 01, 04, 09 |
+| IOD-18 | Smart Connections via Hen `smart_env.rs` as canonical vault semantic-index reader — **Binding (ADR-05-010 / ADR-05-011 §4)** | Implementation-owner (Resolved) | 03, 04, 05, 07, 09 |
+| IOD-19 | Hen as canonical vault-write gatekeeper (wikilink integrity, path soundness) — **Binding (ADR-05-010 / ADR-05-011 §3); Canon Studio rejects writes until T4.5** | Implementation-owner (Resolved) | 03, 05, 07, 09 |
 | DSD-01 | Live local-service harness and CI sequencing | Dependency and sequencing | 01, 02, 03, 04, 05, 06, 07, 08 |
 | DSD-02 | Track 01-04 contract readiness before UI hardening | Dependency and sequencing | 05, 06, 07, 08 |
 | DSD-03 | Non-dry-run promotion waits for compiler mutation law | Dependency and sequencing | 04, 05, 07, 08 |
@@ -117,44 +131,31 @@ The decision index and grouped entries below are the active open-decision set fo
 
 ## Prototype-Resolved Decisions
 
-### PRD-01 - Theia browser-mode in Tauri versus local-server/Electron fallback
+### PRD-01 - ~~Theia browser-mode in Tauri versus local-server/Electron fallback~~ **RESOLVED**
 
-- **Question:** Can Theia browser-mode run directly inside Tauri v2 Wry/WebKit with workers, IndexedDB, asset paths, CSP, extension-host behavior, WebSockets, and IPC, or does production require a supervised localhost server or Electron sidecar?
-- **Why it matters:** This decides bundle shape, security review, offline behavior, startup time, port management, process supervision, and whether the IDE is truly one Tauri product rather than a second app.
-- **Affected tracks:** 01, 05, 06, 07, 08.
-- **Options:** Bundled browser-mode assets in Tauri webview; Tauri-supervised local Theia server loaded in webview; Tauri-spawned Theia Electron sidecar.
-- **Recommended default if safe:** Prototype browser-mode-in-webview first; fallback to supervised localhost browser-mode if direct asset loading fails; treat Electron sidecar as last resort.
-- **Validation path:** One-to-two day prototype that launches Tauri, opens `/body`, summons a real Theia workbench, activates a readiness contribution, exercises workers/IndexedDB/CSP/WebSocket/IPC, and records an ADR.
-- **Consequence of delaying:** Build scripts, CSP, deep-link verification, Theia version pin, and extension test harnesses remain unstable.
+- **Resolution:** Theia-only as THE shell. No Tauri wrapper. Electron is canonical desktop deployment (confirmed by Theia documentation and ecosystem reference architectures — Gitpod, Eclipse Che, Coder); browser-mode is built from the same Theia codebase and optionally containerised per the canonical `theiaide` Docker pattern for headless/CI/shared deployment. Decision recorded in `m5-prime-system-shape-and-tauri-ide-canon.md` §0 thesis points 2-3, §2-§3.
+- **What this collapses:** Tauri composition prototype (Track 05 T2); single-vs-multi-webview question across surfaces (PRD-02); kernel-bridge host hybrid question (PRD-03); CSP-in-Tauri-webview verification; deep-link URL-scheme cross-app routing.
+- **What remains:** Electron build configuration (electron-builder for Squirrel/AppImage/dmg distributions); optional Docker browser-mode build for CI. **No strategic VS Code Extension API borrows currently committed** — the earlier `obsidian-md-vsc` borrow was reversed once research surfaced that the extension is an Obsidian-app remote-control shim (via Advanced URI) not a vault renderer, requires a running Obsidian, and does not render wikilinks / parse vault structure / serve Smart Connections. S1 vault reach is now filesystem-direct-read + Hen-gateway-write per IOD-19; Smart Connections via Hen `smart_env.rs` per IOD-18.
 
-### PRD-02 - Single-webview navigation versus multi-webview persistence
+### PRD-02 - ~~Single-webview navigation versus multi-webview persistence~~ **RESOLVED**
 
-- **Question:** Should IDE summon navigate the existing webview, open a second Tauri webview/window, or keep `/body` in menubar/background while Theia foregrounds?
-- **Why it matters:** The canon prefers persistent co-existence; implementation must prove state preservation, resource use, bridge identity, and user lifecycle semantics.
-- **Affected tracks:** 05, 06, 08.
-- **Options:** Single-webview navigation with persisted restore; multi-window/multi-webview co-existence; tray/background `/body` plus Theia foreground.
-- **Recommended default if safe:** Multi-webview with `/body` capable of tray/background persistence, provided the prototype proves shared bridge identity and acceptable resource behavior.
-- **Validation path:** Tauri e2e opens `/body`, summons IDE, verifies both surfaces share profile generation/session/review notifications, closes IDE, and verifies `/body` resumes without duplicate subscriptions.
-- **Consequence of delaying:** Menubar/background, deep links, workspace persistence, and integrated plugin multi-window tests cannot close.
+- **Resolution:** Obviated by PRD-01. Single Theia process, two workspace layout modes (0/1 daily + deep IDE), switched via Theia's built-in `Layout Restorer` / `Workspace` service. No cross-webview persistence problem because there's no webview-across-apps split. Inside the deep IDE layout, Theia handles its own multi-pane / multi-editor / multi-window UX natively.
 
-### PRD-03 - Kernel-bridge host boundary
+### PRD-03 - ~~Kernel-bridge host boundary~~ **RESOLVED**
 
-- **Question:** Is the long-lived shared bridge owned by Theia as first-loaded extension, by the Tauri Rust process, or by a Tauri singleton service with Theia and `/body` adapters?
-- **Why it matters:** All M-extension and `/body` consumers need one profile/session/subscription identity, but canon simultaneously names `kernel-bridge` as first-loaded Theia extension and requires `/body` lite mode to share the same instance.
-- **Affected tracks:** 01, 03, 05, 06, 07, 08.
-- **Options:** Pure Theia extension host; Tauri-owned service exposed to Theia and `/body`; hybrid Tauri singleton plus Theia-native adapter/API.
-- **Recommended default if safe:** Hybrid Tauri singleton plus stable Theia-native `KernelBridgeAPI` adapter, because it best satisfies one-app shared instance, `/body` lite mode, and Theia DI consumption.
-- **Validation path:** Contract tests for `KernelBridgeAPI`; service tests proving one S3/SpaceTimeDB subscription fans out to `/body` and Theia; background upgrade/downgrade tests; ADR before downstream extension APIs freeze.
-- **Consequence of delaying:** Tracks 06-08 can define against an API seam, but cannot finalize subscription economy, background behavior, or performance/privacy claims.
+- **Resolution:** Kernel-bridge is a first-loaded Theia extension. Its frontend module publishes `KernelBridgeAPI` through Theia DI to all M-extensions and integrated plugins. Its backend module connects to the external [[Body/S/S3/gateway]] Rust process via WebSocket/JSON-RPC (the canonical Theia pattern for backend services — same as every LSP integration). Both the 0/1 daily layout and the deep IDE layout share the same bridge instance because there is one Theia process. The Rust gateway is the substrate-of-substrate and stays where it is; the bridge is the thin TS proxy.
+- **What this resolves:** No Tauri-singleton hybrid; no cross-process subscription multiplexing; no `/body`-vs-Theia bridge-host ambiguity; one subscription source fans out via Theia DI inside one process. Language divergence stays at the substrate boundary (TS at shell, Rust + C in gateway/kernel).
 
-### PRD-04 - Theia extension API, version, package manager, and build composition
+### PRD-04 - ~~Theia extension API, version, package manager, and build composition~~ **RESOLVED**
 
+- **Status (as of 2026-06-01):** Resolved by [ADR-05-011](../../../Idea/Pratibimba/System/docs/decisions/adr-05-011-release-gate-close.md) (release-gate close), anchored on ADR-05-005 (Theia 1.56 + pnpm workspaces) and ADR-05-006 (electron-app canonical + theia-app browser-mode for CI/Docker parity). All workspace packages green under `pnpm -r build`; 16+ extension chunks in the 21+ MB smoke-build bundle; 42/42 cross-extension tests passing. The Tauri-build-composition strand of the question is obviated (no Tauri wrapper) — see also the consolidated PRD-01..03 resolutions and `Body/M/epi-tauri/DEPRECATED.md`.
 - **Question:** Which Theia release, extension API style, package manager, and Tauri build composition are production for `/pratibimba/system`?
 - **Why it matters:** All six individual extensions and two integrated plugins depend on a stable build and contribution model before package skeletons, activation tests, and CI can be meaningful.
 - **Affected tracks:** 05, 07, 08.
 - **Options:** Recent stable Theia with Theia-native extensions; VS Code Extension API for compatibility; Yarn workspaces per Theia convention; `pnpm` per repo convention; isolated package manager; bundled static assets or supervised local server.
 - **Recommended default if safe:** Recent stable Theia, Theia-native extensions for `kernel-bridge` and M surfaces, in-tree `Idea/Pratibimba/System/extensions`, and a package-manager choice made by the Tauri/Theia prototype rather than assumed.
 - **Skill-vs-tool invariant (from VAK-as-Operational-Substrate landing):** Within the agent-capability layer (`Body/S/S4/plugins/pleroma/capability-matrix.json`), `vak_profile` is a skill-level concept: every `skills[]` entry has a matching `skills/<name>/SKILL.md` directory enforced by `test_matrix_maps_real_agents_skills_and_hooks`. `dispatch_tools[]` entries are tools not skills and carry no `vak_profile`. Theia extensions hosting skills (under `Idea/Pratibimba/System/extensions/*/skills/*/SKILL.md`) inherit this invariant; new agent capabilities added through Theia extensions must respect skill-vs-tool distinction at matrix-authoring time. See `IOD-17` for the broader governance authority.
+- **VS Code Extension API borrows — none currently committed.** Theia's dual-extension-API capability remains as an escape hatch but the earlier `obsidian-md-vsc` borrow was reversed (not a vault renderer; see IOD-19). M-extensions + integrated plugins + kernel-bridge + Canon Studio markdown editor + smart-connections-bridge sidebar + bimba-coordinate file-tree are all Theia-native. Future borrows must show clear ecosystem value before adoption.
 - **Validation path:** Build `kernel-bridge` plus `m0-anuttara` as Theia-native slices; verify workbench command/layout service activation; record Theia version/package manager/update cadence ADR; verify any Theia-extension-hosted skills respect the skill-vs-tool invariant via the live `test_matrix_maps_real_agents_skills_and_hooks` check.
 - **Consequence of delaying:** Track 07 package inventory and Track 08 composition contracts remain abstract and cannot be enforced by static checks.
 
@@ -270,8 +271,9 @@ The decision index and grouped entries below are the active open-decision set fo
 - **Validation path:** Command/view inventory before build; Theia activation tests with no duplicate central ownership; UI tests proving one review queue and one coordinate selection authority.
 - **Consequence of delaying:** Track 07 and Track 08 may implement overlapping panes that later require churn.
 
-### IOD-12 - Observability schema ownership
+### IOD-12 - Observability schema ownership — **RESOLVED (Binding)**
 
+- **Status (as of 2026-06-01):** Binding per Thread C's Track 08.T9 release-gate audit (`plan.runs/08-t9-perf-a11y-privacy-report.md`). Canonical schema lives in `Idea/Pratibimba/System/extensions/integrated-composition/lib/common/release-gate.js` (`INTEGRATED_PERFORMANCE_BUDGETS`, `INTEGRATED_ACCESSIBILITY_EXPECTATIONS`, the privacy-audit forbidden-keys set, and the alpha/beta/production/blocked decision tree). 99/99 `pnpm -r test:contracts` pass against this schema; 18 forbidden keys × 6 surfaces × test enforcement = 108 placements blocking release on any violation. The Track 01 bridge/Track 04 S5 split recommended in the original default is preserved (Track 01 owns transport envelope; Track 04 owns review/autoresearch meaning) and the integrated-composition module is the registration surface.
 - **Question:** Does the canonical observability event schema live in Track 01 `kernel-bridge`, Track 04 S5, a shared gateway contract, or individual extension packages?
 - **Why it matters:** Kernel-bridge observations feed S5 autoresearch, extension evidence, readiness reports, and M5-4 actions. If each surface invents events, review evidence cannot be compared or routed.
 - **Affected tracks:** 01, 04, 05, 06, 07, 08.
@@ -282,13 +284,14 @@ The decision index and grouped entries below are the active open-decision set fo
 
 ### IOD-13 - Nara vault/write service ownership
 
+- **Binding note (2026-06-02):** The canonical archive root for Day/NOW/session history is `Idea/Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/`, matching the existing vault topology and the live `Idea/Pratibimba/Self/Action/History/2026/.gitkeep` scaffold. `Idea/Empty/Present/` remains the temporal working window, not the archive: runtime rotation must keep exactly the active Day plus the immediately previous Day available in `Present` for task/file crossover, while days older than that are materialized under `History/{YYYY}/{MM}/{DD}/`. Archival handles, not protected bodies, are what S3/Gateway, S4/Pi, S5 review/autoresearch, M4 Nara, M5 Library, and Graphiti-facing surfaces exchange.
 - **Question:** Which service writes Nara artifacts, day episodes, highlights, dreams, oracle artifacts, Graphiti episodes, and protected handles: Theia service, Tauri Rust command, S3 gateway method, or hybrid `nara-vault-service`?
 - **Why it matters:** Shell `1`, `m4-nara`, S5 deposits, and 4/5/0 recognition must share DAY/NOW/session/profile/privacy lineage and protected-local guarantees.
-- **Affected tracks:** 03, 04, 05, 06, 07, 08.
+- **Affected tracks:** 03, 04, 05, 06, 07, 08, 09, 10.
 - **Options:** Tauri Rust vault commands; Theia service; S3 gateway method; hybrid service with local protected store and gateway/S5 deposit handles.
-- **Recommended default if safe:** Hybrid local-first `nara-vault-service` behind Tauri commands and Theia adapter, with S3/S5 receiving only handles/envelopes according to privacy class.
-- **Validation path:** Filesystem-backed vault tests in temp canonical layout; Graphiti handle integration tests; S5 deposit envelope tests; privacy scans for protected bodies.
-- **Consequence of delaying:** Shell `1` and M4 can create local drafts, but cross-surface review/deep-link and 4/5/0 recognition cannot be considered production.
+- **Recommended default if safe:** Hybrid local-first `nara-vault-service` behind Theia adapter and S3/Gateway session APIs, with Hen/S1' enforcing path soundness. It writes Day/NOW artifacts in `Empty/Present/{DD-MM-YYYY}/`, snapshots archive material to `Pratibimba/Self/Action/History/{YYYY}/{MM}/{DD}/`, keeps only active+previous Day in `Present`, and exposes archive handles/envelopes to S3/S5/M surfaces according to privacy class.
+- **Validation path:** Filesystem-backed vault tests in temp canonical layout; rotation tests proving active+previous days remain in `Present` and older days land in `History/{YYYY}/{MM}/{DD}/`; Graphiti handle integration tests; S5 deposit envelope tests; Gateway/Pi session lineage tests; privacy scans for protected bodies.
+- **Consequence of delaying:** Shell `1` and M4 can create local drafts, but cross-day continuity, night handover, cross-surface review/deep-link, M5 Library recall, and 4/5/0 recognition cannot be considered production.
 
 ### IOD-14 - Plugin activation, composition, and mini-mode model
 
@@ -300,8 +303,9 @@ The decision index and grouped entries below are the active open-decision set fo
 - **Validation path:** Layout claim contract tests; Theia command/layout e2e; conflict tests; persistence tests proving protected bodies are not stored in workspace state.
 - **Consequence of delaying:** Integrated plugins can only be planned as isolated pages, not composable M5-3 workbench surfaces.
 
-### IOD-17 - `capability-matrix.json` as canonical agent-tool governance authority
+### IOD-17 - `capability-matrix.json` as canonical agent-tool governance authority — **RESOLVED (Binding spec-time)**
 
+- **Status (as of 2026-06-01):** Binding per [ADR-05-011 §5](../../../Idea/Pratibimba/System/docs/decisions/adr-05-011-release-gate-close.md). Three-way parity (matrix ↔ UI ↔ gateway) is enforced as spec-time assertion in `extensions/agentic-control-room/tests/run-flow.test.mjs::parity over the real capability-matrix.json` (14/14 passing), `extensions/ide-shell-m0-m5/tests/contract.test.mjs` (17/17 passing, including real capability-matrix.json parse + dispatch_tools/skills surfacing), and gateway-side `Body/S/S3/gateway/tests/dispatch_contract.rs`. Gate-vs-dispatch distinction and `upstream_required: ["vak-evaluate"]` invariants verified. **Follow-up still recommended:** expose `s4'.mediation.capabilities.list` (or equivalent) on the gateway so parity becomes a live runtime check rather than spec-time only — flagged in Thread A finding #2 (`plan.runs/20260601T220500Z-05-T8.json`).
 - **Question:** Where does canonical authority for agent tool surfaces (which tools each agent carries, which tools are gate-only, which require upstream VAK evaluation) live, and how is drift between matrix / runtime / agent.md prevented?
 - **Why it matters:** Per the VAK-as-Operational-Substrate landing (`docs/superpowers/plans/2026-05-22-vak-as-operational-substrate.md`, all 10 chips closed including the final parity test at commit `a664b51`), `Body/S/S4/plugins/pleroma/capability-matrix.json` carries `agent_capability_gates` (per-agent tool surfaces), `dispatch_tools[]` (with `upstream_required: ["vak-evaluate"]` invariants), and is enforced as canonical against the runtime `animaDefaultTools` and `Body/S/S4/pi-agent/agents/anima.md` frontmatter by `test_agent_capability_gates_anima_tools_matches_anima_md_tools`. Tracks 01 / 04 / 09 all touch agent-tool governance and must not invent parallel authorities. The gate-vs-dispatch distinction is operationally load-bearing: `nous_disclose` is gate-only (capability-matrix governance, not a dispatch tool); `dispatch_*` tools are gated on real prior VAK evaluation, not advisory.
 - **Affected tracks:** 01 (Tranche 7 observability event schema + canonical-prefix VAK keys), 04 (Tranche 1 typed schema including `closure_kind` and `CT4a`/`CT4b`), 09 (entire mediation surface).
@@ -309,6 +313,29 @@ The decision index and grouped entries below are the active open-decision set fo
 - **Recommended default if safe:** Matrix is sole canonical governance authority. The three-way parity test (`test_agent_capability_gates_anima_tools_matches_anima_md_tools`) is the enforcement mechanism. `anima.md` frontmatter `tools:` and runtime `animaDefaultTools` are mirror views — any drift from the matrix fails CI immediately. Gate-vs-dispatch distinction preserved: gate-only tools (e.g., `nous_disclose`) appear in `agent_capability_gates.*.tools` but not in `dispatch_tools[]`; dispatch tools appear in both, each carrying `upstream_required: ["vak-evaluate"]`. The `vak_profile` field is a skill-level concept attached to `skills[]` entries (each with a matching `skills/<name>/SKILL.md` per `test_matrix_maps_real_agents_skills_and_hooks`); `dispatch_tools[]` entries are tools not skills and carry no `vak_profile`.
 - **Validation path:** Extend `test_capability_matrix.py` to cover any new gate/dispatch entries added by Tracks 01/04/09; verify the existing three-way parity test remains green; verify M5-4 governance metadata extensions (Track 09 T2) preserve gate-vs-dispatch distinction and `upstream_required` invariants; verify Track 01 Tranche 7 observability events carry canonical-prefix VAK keys and dispatch-tool lineage; verify Track 04 typed candidate schema honours `closure_kind` discriminator (C4 chip, `d1c89ab`) and `CT4a`/`CT4b` distinction (E1↔E2 chip, `9abc13f`).
 - **Consequence of delaying:** Tracks 01 / 04 / 09 risk inventing parallel agent-tool surfaces that drift from the test-locked parity. Future agents added without matrix-first authoring break the three-way parity test and silently expand the authority surface.
+
+### IOD-18 - Smart Connections via Hen `smart_env.rs` as canonical vault semantic-index reader — **RESOLVED (Binding)**
+
+- **Status (as of 2026-06-01):** Binding per [ADR-05-010](../../../Idea/Pratibimba/System/docs/decisions/adr-05-010-hen-vault-bridge.md) (Hen vault-bridge architecture) and [ADR-05-011 §4](../../../Idea/Pratibimba/System/docs/decisions/adr-05-011-release-gate-close.md) (release-gate close). `Body/S/S1/hen-compiler-core/src/smart_env.rs` is canonical substrate; semantic-neighbours surface through Hen-gateway `s1'.semantic.{suggest_links,neighbors_of,search,by_block}` consumed via the `vault-bridge` Theia extension. No client-side Obsidian plugin coupling. ADR-05-008 (`obsidian-md-vsc`) is superseded. The `s1'.semantic.*` gateway methods themselves remain gated on Track 03 T6.5 — that delivery is the live-runtime hardening of this resolved decision.
+- **Question:** What is the canonical substrate for vault semantic-neighbour retrieval inside Theia (and inside the agent layer), and how does it interact with the user's existing Obsidian + Smart Connections workflow?
+- **Why it matters:** Vault-semantic search is foundational for M5-0 Library / Gnostic Namespace retrieval, M5-5 Logos Atelier constellations, Canon Studio wikilink autocompletion, and agent retrieval pools across Anuttara language work + Paramaśiva CPT/RAG + Logos archaeology. Re-implementing it would (a) duplicate substrate already in production at `Body/S/S1/hen-compiler-core/src/smart_env.rs` (614 LOC, reads `<vault>/.smart-env/multi/*.ajson` and returns typed `LinkCandidateResponse`), (b) require the user to maintain two semantic indices that drift, and (c) ignore the user's existing local-BGE-micro-v2 embedding workflow inside Obsidian (Smart Connections v4.1.7, no API keys, no external server, on-device).
+- **Why earlier `obsidian-md-vsc` was wrong:** Research surfaced that `willasm.obsidian-md-vsc` is an Obsidian-app remote-control shim via Advanced URI; it does NOT render wikilinks, parse vault, serve Smart Connections data, or operate without a running Obsidian. Misidentified as a vault renderer in the original §0.1 / IOD-17 decision; that decision is reversed.
+- **Affected tracks:** 03 (new `s1'.semantic.*` gateway tranche), 04 (S5 surface DTOs reference Smart Connections substrate; agent retrieval pools include semantic candidates as evidence), 05 (Theia `smart-connections-bridge` sidebar contribution + Canon Studio wikilink autocompletion), 07 (Logos Atelier M5-5 extension consumes neighbour data), 09 (M5-4 agent capabilities grant `s1'.semantic.*` per role).
+- **Options:** (a) Build parallel embedding system inside Theia. (b) Inherit Smart Connections via Hen `smart_env.rs` and expose through gateway. (c) Build a Hen-independent `.ajson` reader. (d) Run a local re-embedding fallback (transformers.js / Ollama) when Obsidian unavailable.
+- **Recommended default if safe:** **Option (b)** — inherit. `Body/S/S1/hen-compiler-core/src/smart_env.rs` is production substrate; expose via `s1'.semantic.{suggest_links,neighbors_of,search,by_block}` gateway methods; Theia frontend consumes via kernel-bridge. Smart Connections semantic-input feeds the M5-0 gnostic pipeline (epi-gnostic IS the RAG-anything system). Re-embedding fallback (Option d) is optional future capability — write to the same `.smart-env/` format so Smart Connections inside Obsidian picks up Theia-side embeddings on next run.
+- **Validation path:** Gateway integration test that calls `s1'.semantic.suggest_links` over a real populated `<vault>/.smart-env/multi/*.ajson` and returns expected typed `LinkCandidateResponse` with semantic scores; Theia smart-connections-bridge sidebar test against real gateway; staleness-flag test (vault changed since last Smart Connections index run); privacy-class test (protected `pratibimba` content not exposed via semantic-neighbours without governed capability).
+- **Consequence of delaying:** Track 05 Canon Studio wikilink autocompletion + Logos Atelier constellation discovery + agent semantic retrieval all blocked behind a missing gateway surface. M5-0 Library remains a pure read of epi-gnostic without Smart Connections semantic-input.
+
+### IOD-19 - Hen as canonical vault-write gatekeeper (wikilink integrity, path soundness) — **RESOLVED (Binding)**
+
+- **Status (as of 2026-06-01):** Binding per [ADR-05-010](../../../Idea/Pratibimba/System/docs/decisions/adr-05-010-hen-vault-bridge.md) and [ADR-05-011 §3](../../../Idea/Pratibimba/System/docs/decisions/adr-05-011-release-gate-close.md). Canon Studio (`@pratibimba/ide-shell-m0-m5`) routes every save through the `vault-bridge.s1prime.vault.write_file` command. Until T4.5 lands the vault-bridge Theia extension, the gate stub correctly rejects all writes with the canonical reason `no vault-bridge registered`, verified by `tests/canon-studio-save-routing.test.mjs::vault-bridge write throws "no vault-bridge registered" before T4.5` (part of 17/17 passing). The substrate (Hen `wikilinks.rs`, `graph_promotion.rs`, `relation_inference.rs`, `property_intelligence.rs`, `artifact_evidence.rs`) is landed and production-grade per ADR-05-010 substrate-truth table; the gateway-method surface `s1'.vault.*` remains the Track 03 T6.5 deliverable that closes the live-runtime side of this resolved decision.
+- **Question:** When Theia or an agent writes to the vault (philosophy file edit, Canon Studio save, agent-produced draft, Logos Atelier crystallisation, m4-nara journal append), what mediates the write so wikilink integrity, path soundness, rename-tracking, and structural invariants are preserved?
+- **Why it matters:** The vault is a wiki-linked knowledge graph; naive filesystem writes can break `[[X]]` references on rename, orphan headings, leave stale backlinks, drop block ids, or move files without updating Bimba-coordinate-anchored crossreferences. Hen-compiler-core already carries the wikilink parser ([[Body/S/S1/hen-compiler-core/src/wikilinks.rs]] — `Wikilink` struct with raw/target/alias/line/column/context; `WikilinkTarget` enum; `parse_wikilinks()`), plus `relation_inference.rs`, `property_intelligence.rs`, `artifact_evidence.rs`, and `graph_promotion.rs` as the broader write-discipline substrate. The Python Hen infrastructure at [[Body/S/S1/hen-compiler]] runs the higher-level compile-plan flow over those primitives.
+- **Affected tracks:** 03 (new `s1'.vault.*` gateway tranche fronting Hen write methods), 05 (Canon Studio saves + Logos Atelier writes + M4-Nara journal writes route through gateway not direct FS), 07 (m4-nara extension write path), 09 (agent vault writes are bounded capabilities requiring `s1'.vault.*` allowlist).
+- **Options:** (a) Direct filesystem writes from Theia (current Theia default). (b) Route all vault writes through gateway `s1'.vault.*` methods which delegate to Hen. (c) Theia-side wikilink reconciliation library duplicating Hen's wikilinks.rs. (d) Read-only Theia, all writes Obsidian-side only.
+- **Recommended default if safe:** **Option (b)** — route vault writes through Hen-gateway. Hen already has the wikilink parser + relation-inference + property-intelligence; the broader compile-plan flow (per S1 spec) is the right place for write-discipline. The gateway `s1'.vault.{write_file,move_file,rename_file,append_block,update_frontmatter}` methods front Hen; Theia and agents both reach through them. Bypasses (read-direct, write-through-Hen) keep performance acceptable while preserving structural soundness. Per IOD-17 capability matrix, agent write capabilities are gated; per UFV-02 user-final validation thresholds, recursive / canon-affecting writes require human approval.
+- **Validation path:** Integration test renaming a file with inbound wikilinks: `s1'.vault.rename_file` updates all referring `[[X]]` to `[[Y]]` atomically; tests for cross-vault-path moves preserving headings; tests for block-id-anchored references; tests proving direct-Theia-FS-write fails wikilink-integrity-check (it should — Theia must use gateway). Live tests against [[/Idea]] vault fixture in a temp clone.
+- **Consequence of delaying:** Canon Studio, Logos Atelier, and m4-nara write paths all risk silent wikilink rot; agents allowed direct FS write create canon-corruption opportunities; rename-with-references becomes a manual user task instead of an automatable governed write.
 
 ## Dependency And Sequencing Decisions
 
