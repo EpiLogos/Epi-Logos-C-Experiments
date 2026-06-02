@@ -78,6 +78,7 @@ S2' participates in Bimba coordinate identity, vault-source traceability, capabi
 |---|---|---|
 | `#` vs M coordinate namespace | resolved | legacy `#` resolves into M-family coordinate projections, not a second namespace |
 | coordinate/bimbaCoordinate naming drift | open | S2' must expose provenance and validation until normalized |
+| kernel-bridge residency policy wording | integration gap | `Body/S/S2/graph-services/tests/graph_api_contract.rs` expects `canonical_absent; never synthesize renderer-local paths`, while `Body/S/S2/graph-services/tests/m5_handoff_contract.rs` rejects any handoff fixture containing `renderer-local`; reconcile the S2/M5 consumer fixture wording without weakening the no-client-derivation rule |
 | Graphiti vs graph topology | resolved | Graphiti is temporal episodic runtime; S2' graph truth changes only through reviewed promotion |
 | plan back-reference edits | blocked by scope | This seed supersedes newer plan fragments; docs/plans were not edited |
 

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T20:07:47.427Z",
+  "updatedAt": "2026-06-02T20:36:12.753Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -1180,29 +1180,39 @@
       "worktree": null
     },
     "11.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T20:23:12.939Z",
+      "claimedAt": "2026-06-02T20:12:03.998Z",
+      "completedAt": "2026-06-02T20:23:12.939Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T20:23:12.939Z",
+          "text": "11.T2 closure verified with real tests: S0 vault_commands 19/19 passed (Body/S/S0/epi-cli/tests/vault_commands.rs: FLOW.md day artifact, daily/NOW scaffolding, T0-T5 thought-route artifacts, Smart Env CLI link-suggest, archive-day guard); S1 smart_env_link_candidates 2/2 passed (Body/S/S1/hen-compiler-core/tests/smart_env_link_candidates.rs using bounded real Smart Env fixture vault); M/Theia node sidebar/evidence surfaces 32/32 passed (Body/M/epi-theia/extensions/agentic-control-room/tests/evidence-envelope.test.mjs and Body/M/epi-theia/extensions/body-lite-surface/tests/body-lite-surface.test.mjs carrying s1.semantic.suggest_links, DAY/NOW, review/privacy contexts). Canonical substrate paths checked: Idea/Bimba/World/FLOW.md CT0, Idea/Bimba/World/Daily-Note.md CT4b, Idea/Bimba/Seeds/S/S1/S1'/S1'-SPEC.md, Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T20:12:03.998Z",
+      "runId": "20260602T201203Z-11-T2",
       "worktree": null
     },
     "11.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-06-02T20:35:52.640Z",
+      "claimedAt": "2026-06-02T20:23:36.397Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-06-02T20:35:52.640Z",
+          "text": "11.T3 S2 graph/retrieval consumer closure review: M graph-viewer/topology node contracts passed 20/20 (Body/M/epi-theia/extensions/ide-shell-m0-m5/tests/contract.test.mjs, Body/M/epi-theia/extensions/acceptance-harness/tests/topology.test.mjs); S2 graph-schema registry tests passed 6/6 (label/property/relationship registries); S2 graph-services coordinate_query_contract 4/4 passed, graph_api_contract 6/6 non-ignored passed with 2 live Neo4j tests ignored, retrieval_fusion_contract 4/4 passed. Blocker: m5_handoff_contract 4/5 passed, failing kernel_bridge_expectations_forbid_local_graph_law_derivation because fixture contains 'renderer-local' in residency policy while graph_api_contract expects 'canonical_absent; never synthesize renderer-local paths'; pinned as integration gap in Idea/Bimba/Seeds/S/S2/S2'/S2'-SPEC.md Open Decisions. Failure is outside 11.T3 code write scope; no S2 rebuild attempted."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T22:23:36.397Z",
+      "heartbeatAt": "2026-06-02T20:35:52.640Z",
+      "runId": "20260602T202336Z-11-T3",
       "worktree": null
     },
     "11.T4": {
@@ -2301,30 +2311,50 @@
       "leaseExpiresAt": "2026-06-02T21:28:45.063Z",
       "worktree": null,
       "completedAt": "2026-06-02T19:30:25.658Z"
+    },
+    {
+      "runId": "20260602T201203Z-11-T2",
+      "taskId": "11.T2",
+      "status": "done",
+      "startedAt": "2026-06-02T20:12:03.998Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T22:12:03.998Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T20:23:12.939Z"
+    },
+    {
+      "runId": "20260602T202336Z-11-T3",
+      "taskId": "11.T3",
+      "status": "review",
+      "startedAt": "2026-06-02T20:23:36.397Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T22:23:36.397Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T20:35:52.640Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T20:07:47.427Z",
-    "updatedAt": "2026-06-02T20:07:47.427Z",
+    "createdAt": "2026-06-02T20:36:12.753Z",
+    "updatedAt": "2026-06-02T20:36:12.753Z",
     "taskIds": [
       "13.T4",
       "14.T5",
-      "11.T2",
-      "11.T3"
+      "11.T3",
+      "11.T4"
     ],
-    "totalWeight": 8,
+    "totalWeight": 7,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "13.T4": "in-session",
       "14.T5": "in-session",
-      "11.T2": "in-session",
-      "11.T3": "in-session"
+      "11.T3": "in-session",
+      "11.T4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 4 task(s) with total effort weight 7/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }

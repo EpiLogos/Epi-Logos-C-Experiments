@@ -1,0 +1,40 @@
+{
+  "runId": "20260602T201203Z-11-T2",
+  "taskId": "11.T2",
+  "startedAt": "2026-06-02T20:12:03.998Z",
+  "owner": "m-dev-parallel-B",
+  "leaseExpiresAt": "2026-06-02T22:12:03.998Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T2",
+    "trackId": "11",
+    "tranche": "T2",
+    "title": "CT0-CT5 Artifact Intake, T0-T5 Family Inference, Vault Bridge, Smart Connections Sidebar",
+    "effort": null,
+    "file": "11-s-consumed-substrate-closure-s0-s1-s2.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/11-s-consumed-substrate-closure-s0-s1-s2.md",
+    "dependsOn": [
+      "11.T1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/S1/S1'/S1'-SPEC.md",
+      "Idea/Bimba/World/Daily-Note.md",
+      "Idea/Bimba/World/FLOW.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}
