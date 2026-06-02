@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T16:42:47.756Z",
+  "updatedAt": "2026-06-02T16:45:02.849Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -402,14 +402,19 @@
       "worktree": null
     },
     "05.T1": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-02T16:42:47.752Z",
+      "status": "done",
+      "updatedAt": "2026-06-02T16:44:44.301Z",
       "claimedAt": "2026-06-02T16:42:47.752Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-02T16:44:44.301Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T16:44:44.301Z",
+          "text": "Full 472-state modal-inversion landscape + bidirectional (lens,mode)<->(codon,rotation) mapping owned by backend (portal-core/src/codon_rotation_projection.rs §7 map) and rendered by m3-mahamaya (Body/M/epi-theia); backend-truth discipline (no UI-local codon/tarot/I-Ching tables) pinned in M3'-SPEC.md 24/41/51/78/99-100 (landscape+bidirectional) and 26/83/91 (no local mapping generation). Verification: node --test m3-mahamaya-codon-wheel 7/7 (incl. '40x7+24x8=472', 'same profile -> same backend codon projection', 'no frontend authority tables'); cargo test portal-core codon 6/6 + codon_rotation_lut_materializes_the_472_state_surface + resonance codon-charge; C test_m3_codon_class 32/32."
+        }
+      ],
       "notes": null,
       "owner": "m-dev-mainloop",
-      "leaseExpiresAt": "2026-06-02T18:42:47.752Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-02T16:42:47.752Z",
       "runId": "20260602T164247Z-05-T1",
       "worktree": null
@@ -498,16 +503,16 @@
       "worktree": null
     },
     "07.T0": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-02T16:45:02.840Z",
+      "claimedAt": "2026-06-02T16:45:02.840Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:45:02.840Z",
+      "heartbeatAt": "2026-06-02T16:45:02.840Z",
+      "runId": "20260602T164502Z-07-T0",
       "worktree": null
     },
     "07.T1": {
@@ -1397,22 +1402,32 @@
     {
       "runId": "20260602T164247Z-05-T1",
       "taskId": "05.T1",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-02T16:42:47.752Z",
       "owner": "m-dev-mainloop",
       "leaseExpiresAt": "2026-06-02T18:42:47.752Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T16:44:44.301Z"
+    },
+    {
+      "runId": "20260602T164502Z-07-T0",
+      "taskId": "07.T0",
+      "status": "in_progress",
+      "startedAt": "2026-06-02T16:45:02.840Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T18:45:02.840Z",
       "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T16:42:33.678Z",
-    "updatedAt": "2026-06-02T16:42:33.678Z",
+    "createdAt": "2026-06-02T16:44:51.695Z",
+    "updatedAt": "2026-06-02T16:44:51.695Z",
     "taskIds": [
       "04.T1",
       "03.T2",
-      "05.T1",
-      "07.T0"
+      "07.T0",
+      "09.T0"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -1420,8 +1435,8 @@
     "modeHints": {
       "04.T1": "in-session",
       "03.T2": "in-session",
-      "05.T1": "in-session",
-      "07.T0": "in-session"
+      "07.T0": "in-session",
+      "09.T0": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
