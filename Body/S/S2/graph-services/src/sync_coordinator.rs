@@ -448,6 +448,30 @@ impl<'a> SyncCoordinator<'a> {
                 "Bimba World files usually lead with q_* and c_* properties, but PI must reason over the full coordinate schema",
             );
         }
+        if normalized.starts_with("Idea/Bimba/Seeds/")
+            && (normalized.contains("/Legacy/specs/S/")
+                || normalized.contains("/Legacy/resources/S/"))
+        {
+            return promotion_policy_decision(
+                PromotionClass::TechnicalCoordinateDoc,
+                PromotionTargetSurface::Neo4jCoordinateGraph,
+                true,
+                &["s", "c"],
+                "Seed-mirrored S/S' legacy technical docs require PI property reasoning before graph promotion",
+            );
+        }
+        if normalized.starts_with("Idea/Bimba/Seeds/")
+            && (normalized.contains("/Legacy/specs/M/")
+                || normalized.contains("/Legacy/resources/M/"))
+        {
+            return promotion_policy_decision(
+                PromotionClass::TechnicalCoordinateDoc,
+                PromotionTargetSurface::Neo4jCoordinateGraph,
+                true,
+                &["m", "c"],
+                "Seed-mirrored M/M' legacy technical docs require PI property reasoning before graph promotion",
+            );
+        }
         if normalized.starts_with("Idea/Bimba/Seeds/") {
             return promotion_policy_decision(
                 PromotionClass::CanonicalBimbaSeed,

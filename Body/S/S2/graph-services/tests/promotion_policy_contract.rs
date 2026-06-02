@@ -82,6 +82,9 @@ fn s_stack_docs_request_s_property_intelligence() {
 #[test]
 fn m_prime_docs_request_m_property_intelligence() {
     let decision = SyncCoordinator::classify_promotion_path("docs/specs/M/M4-prime-runtime.md");
+    let mirrored_decision = SyncCoordinator::classify_promotion_path(
+        "Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-prime-runtime.md",
+    );
 
     assert_eq!(decision.class, PromotionClass::TechnicalCoordinateDoc);
     assert_eq!(
@@ -96,6 +99,12 @@ fn m_prime_docs_request_m_property_intelligence() {
     assert!(decision
         .coordinate_property_families
         .contains(&"q".to_owned()));
+    assert_eq!(
+        mirrored_decision.class,
+        PromotionClass::TechnicalCoordinateDoc
+    );
+    assert!(mirrored_decision.requires_intelligent_properties);
+    assert_eq!(mirrored_decision.leading_property_families, vec!["m", "c"]);
 }
 
 #[test]

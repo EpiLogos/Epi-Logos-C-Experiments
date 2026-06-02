@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T21:00:44.961Z",
+  "updatedAt": "2026-06-02T21:44:05.789Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -1220,16 +1220,21 @@
       "worktree": null
     },
     "11.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T21:44:05.780Z",
+      "claimedAt": "2026-06-02T21:35:45.807Z",
+      "completedAt": "2026-06-02T21:44:05.780Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T21:44:05.780Z",
+          "text": "S1 Hen relation/property/promotion contracts 16/16 passed (Body/S/S1/hen-compiler-core tests relation_inference_contract, property_intelligence_contract, graph_promotion_intent); S2 promotion/policy/property/lifecycle contracts 21/21 passed (Body/S/S2/graph-services tests graph_promotion_contract, promotion_policy_contract, property_proposal_contract, hen_promotion_lifecycle); cycle-2 legacy-doc guardrail checked 84 canonical tasks with 0 violations and negative docs/specs fixture rejected unless Idea/Bimba/Seeds traceability present; fixed Body/S/S2/graph-services/src/sync_coordinator.rs Seed-mirrored Legacy/specs|resources S/M classification."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T21:35:45.807Z",
+      "runId": "20260602T213545Z-11-T4",
       "worktree": null
     },
     "12.T0": {
@@ -2335,6 +2340,16 @@
       "leaseExpiresAt": "2026-06-02T22:23:36.397Z",
       "worktree": null,
       "completedAt": "2026-06-02T20:35:52.640Z"
+    },
+    {
+      "runId": "20260602T213545Z-11-T4",
+      "taskId": "11.T4",
+      "status": "done",
+      "startedAt": "2026-06-02T21:35:45.807Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T23:35:45.807Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T21:44:05.780Z"
     }
   ],
   "activeRoute": {
