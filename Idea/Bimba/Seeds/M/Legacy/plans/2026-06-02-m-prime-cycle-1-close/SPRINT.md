@@ -171,6 +171,10 @@
 
 ## Lessons Crystallised
 
+- **Release gate inheritance.** Cycle 2 treats the Cycle 1 alpha/beta/production gate as a standing matrix, not a fresh rebuild. Alpha is allowed only when named upstream/runtime blockers are explicit and privacy/review law remains clean; beta requires real S0/S3/S5-backed acceptance for the tested path with no alpha blocker on that path; production requires clean privacy, accessibility, performance, upstream readiness, and acceptance evidence with no unowned canonical surface.
+- **Release evidence owners.** The inherited gate evidence is anchored in the real release/readiness suites: `Body/M/epi-theia/extensions/test/release-gate/decision-tree.test.mjs`, `integrated-release-gate.test.mjs`, `privacy-audit/forbidden-fields.test.mjs`, `a11y/coverage.test.mjs`, `perf/budgets.test.mjs`, kernel-bridge readiness checks, and S0/S3/S5 gateway/readiness tests. Ledger evidence must name counts and paths; screenshots, mock payloads, or generic "ready" labels do not satisfy the gate.
+- **Cycle 1 final status.** Track 10.T9 closed as alpha, not production. Its named carry-forward blockers were dry-run harness status, non-live gateway portions, earlier operational-capacity maturity, protected-surface `private_blocked` rendering, and Track 13 modularity cleanup. Cycle 2 may retire those blockers only with real runtime/backing-service evidence, not by deleting the labels.
+
 - The cycle 1 ledger was organized around visible surface tranches, so carriers, constitutional agents, and method families appeared as background assumptions instead of first-class work owners.
 - Track-level success often came from real substrate landing inside S0/S3/S5/S4, but the plan language kept describing local slices instead of the whole cross-layer contract those slices were actually serving.
 - Cycle 1 treated M5-3/M5-4, OmniPanel, and the integrated plugins as product surfaces; the seed canon now makes them governance-bearing system coordinates that need their own tranches.

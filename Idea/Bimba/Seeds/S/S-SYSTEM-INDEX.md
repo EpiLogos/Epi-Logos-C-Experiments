@@ -146,9 +146,32 @@ No implementation should be considered complete until these four views agree:
 
 The live gateway manifest may remain product/runtime-native during transition. The build target is coordinate-native API parity with typed CLI mirrors where local execution is appropriate.
 
+## Product-Native Alias To Coordinate-Native Map
+
+Track 13 T2 owns the product-name to coordinate-owner map consumed by the M' `/` surface, gateway clients, and CLI mirrors. Product-native aliases are ergonomic entrypoints only: they may select a command, panel, or RPC route, but they do not become semantic owners. When a product alias spans multiple coordinates, the transport owner, meaning owner, and human-review owner must remain visible in the envelope.
+
+| Product-native alias | Coordinate-native owner | Client authority limit |
+|---|---|---|
+| `connect`, gateway overview, connection settings | `connect` / `s3.*` ([[S3]]) | Compatibility adapter for handshake and readiness; clients may display connection state but not invent capability law. |
+| `sessions.*`, `session_surface`, session list/select/resolve/preview/patch/reset/delete/compact/fork/resume/import | `s3.session.*` ([[S3]]) plus `s3'.temporal.*` where DAY/NOW is involved | Session truth stays in the gateway/session store; UI aliases may request operations but must preserve session key, DAY/NOW, and branch lineage. |
+| `channels.*`, external delivery, cron/automation routing | `s3.channel.*` / `s3'.temporal.*` ([[S3]]/[[S3']]) | Product schedules and delivery settings are transport/temporal surfaces, not Nara journal or Epii review authority. |
+| `chat.*`, `send`, direct Pi/agent chat | `s3.message.route` for transport, `s4.agent.*` / `s4'.*` for agent execution | Chat aliases may route messages and display tool streams; agent capability, VAK routing, and permission boundaries remain S4/S4'. |
+| `exec.approval.*`, `epi`, command execution, logs, raw config/readiness | `s0.exec`, `s0.tool_surface`, `s0.env` ([[S0]]/[[S0']]) | `/` may expose command/config controls, but backend behavior must route through S0 command or typed service calls. |
+| `epi vault`, vault read/write/search/template/frontmatter/backlinks/sync | `s1.*` / `s1'.*` ([[S1]]/[[S1']]) | Vault aliases may offer file operations; structural write law, frontmatter, compile plans, and wikilink integrity remain Hen/S1'. |
+| `epi graph`, graph explorer, coordinate lookup, pointer web | `s2.graph.*` / `s2'.*` ([[S2]]/[[S2']]) | Graph UI/CLI aliases may query and visualize; schema, coordinate resolution, retrieval, rerank, and enrichment stay S2/S2'. |
+| runtime tick, temporal context, SpaceTimeDB bridge, Kairos projection | `s3'.temporal/day/kairos/presence/context` ([[S3']]) | Product surfaces consume safe temporal projection handles and must not treat local clock widgets as temporal authority. |
+| `epi agent`, `skills.*`, plugin registry, agent status/query/notify | `s4.agent.*` ([[S4]]) with `s4'.*` for VAK/team/orchestration | Skill and agent aliases expose capability surfaces; they may not bypass VAK, permission, team, or Psyche state boundaries. |
+| `s4'.vak.evaluate`, `s4'.orchestrate`, Anima/Pleroma routing | `s4'.*` ([[S4']]) | Product aliases may invoke deterministic routing/adapters; provider-backed execution and recursive governance remain owner-gated. |
+| `epi techne gnosis`, `epi kbase`, `epi vimarsa`, Bimba meaning lookup | `s5.gnostic.*`, `s5.bimba.*`, `s5'.kbase.*`, `s5'.gnosis.*` ([[S5]]/[[S5']]) | Retrieval aliases expose handles and summaries; Epii governance owns interpretation, review, and promotion. |
+| `s5.episodic.*`, Graphiti session memory search/deposit | `s5.episodic.*` with S3' runtime owner and S5/S5' invocation governance | Product aliases may search/deposit governed memory handles, not raw protected bodies or canonical graph mutations. |
+| `epi nara`, portal clock/oracle/medicine, `s5.m.*` | `s5.m.*` ([[S5]]/[[M']]) with M4/M' UI ownership | Nara/M' aliases stay protected-local or handle-only unless UFV/privacy gates explicitly allow more. |
+| `s5'.review.*`, `s5'.improve.*`, `s5'.epii.*` | [[S5']] Epii review/autoresearch/agent-access | Review/improve aliases may submit, defer, summarize, and expose status; human-required approval, non-dry-run mutation, and canon promotion remain gated. |
+
 ## Implementation Parity Matrix
 
 This is the first implementation-facing parity pass. It is family-level on purpose: the canonical row-per-method table lives in [[FLOW 2026 04 25 TS INTERFACE DEFINITIONS]], while this index records where each method family currently lands in code, what proves it, and what must move before development can proceed without ambiguity.
+
+Cycle 2 note: the parity matrix below preserves the historical status vocabulary used by the first pass. The active `COVERED` / `STUBBED` / `DEFERRED` cycle-2 classification is the register immediately after the matrix; it incorporates the later landed S5 review/autoresearch, S3/S5 Graphiti split, and gateway lifecycle evidence.
 
 Status vocabulary:
 
@@ -176,9 +199,35 @@ Status vocabulary:
 | `s5.m.*` | [[S5]] / [[M']] | 10, 12 | `epi nara`, FFI to `epi-lib`, portal clock/oracle/medicine surfaces | `Body/S/S0/epi-cli/src/nara/`, `ffi/`, `portal/`, `Body/S/S0/epi-lib` | `nara_*`, `portal_clock_state.rs`, C tests under `Body/S/S0/epi-lib/test` | mirror | Keep Nara as S5/M4 operator surface and expose typed PI-agent access for Epii |
 | `s5'.mef.*`, `s5'.ql.*` | [[S5']] | 10, 12 | specified in API/TS; philosophy/plugin resources now have first local package scaffold | `Body/S/S5/plugins/epi-logos`, `Body/S/S0/epi-cli/src/core/knowing` | `test_epii_agent_contract.py`, `agent_plugins.rs`, `core_knowing.rs` | partial | Expand epi-logos plugin resources into QL/MEF evaluator tests and Epii runtime binding |
 | `s5'.kbase.*`, `s5'.gnosis.*` | [[S5']] | 6, 10, 11 | kbase/vimarsa/gnosis surfaces; no Epii governance service yet | `Body/S/S0/epi-cli/src/kbase/`, `vimarsa/`, `techne/gnosis`, `Body/S/S5/epi-gnostic` | `gnosis_commands.rs`, graph/kbase-adjacent tests | partial | Implement Epii strategy/governance layer over raw S2/S5 retrieval services |
-| `s5'.improve.*` | [[S5']] | 11, 12 | specified in API/TS; no local autoresearch module yet | target `Body/S/S5/autoresearch` | none | missing | Build baseline/challenger/evaluation/promotion state machine through S1' compiler law |
-| `s5'.review.*` | [[S5']] | 10, 11 | specified in API/TS/envelope; no persistence/inbox service yet | target Epii review module under `Body/S/S5` plus S4 handoff integration | none | missing | Implement review inbox persistence and Anima/Aletheia handoff path; human judgement remains gated |
+| `s5'.improve.*` | [[S5']] | 11, 12 | Epii autoresearch core, improvement history, dry-run promotion planning, and gateway improve routes | `Body/S/S5/epii-autoresearch-core`, `Body/S/S0/epi-cli/src/gate/improve.rs` | `epii_recursive_spine_inspector.rs`, `gate_epii_improve.rs`, `m5-epii-review-surface.test.mjs` | current | Keep non-dry-run mutation blocked until compiler mutation law and UFV gates are accepted |
+| `s5'.review.*` | [[S5']] | 10, 11 | durable review inbox, resolution history, human-required guard, and gateway review routes | `Body/S/S5/epii-review-core`, `Body/S/S0/epi-cli/src/gate/review.rs` | `review_governance.rs`, `gate_epii_review.rs`, `m5-epii-review-surface.test.mjs` | current | Preserve human-required judgement gates and Anima/Aletheia handoff provenance |
 | `s5'.explain`, `s5'.teach`, `s5'.seed.generate` | [[S5']] | 10, 11, 12 | specified in TS; seed generation partially mirrored by vault/templates | `Body/S/S0/epi-cli/src/vault/templates.rs`, target epi-logos/Epii package | `idea_tree_templates.rs`, `vault_paths_templates.rs` | partial | Bind pedagogy/seed generation to Epii agent and compiler-governed artifact creation |
+
+## Cycle 2 Method Classification Register
+
+Track 13 T1 classifies the current gateway/API method surface as `COVERED`, `STUBBED`, or `DEFERRED` for cycle 2 planning. `COVERED` means real code and tests cover the consumed M' contract even if the executable adapter is still physically hosted in S0. `STUBBED` means there is usable substrate or specification, but the coordinate-native gateway/API surface is incomplete and must remain owner-gated. `DEFERRED` means the method family is intentionally held behind a later tranche, user-final gate, provider/live-service proof, or compiler mutation law.
+
+| Method family | Cycle 2 class | Gap owner | Classification basis |
+|---|---|---|---|
+| `connect`, `agent.capabilities` | `STUBBED` | 13.T2 / 13.T5 | Product gateway connect is tested, but coordinate-native capability naming and drift guard remain the Track 13 alias/backlog work. |
+| `s0.exec`, `s0.tool_surface`, `s0.env` | `COVERED` | 11.T0 / 13.T5 | S0 command, env, bootstrap, cmux, and return surfaces are live CLI mirrors with tests; later Track 13 only guards newly named methods. |
+| `s1.read/write/search/template/frontmatter/backlinks/sync` | `COVERED` | 11.T1 / 13.T5 | Vault read/write/search/frontmatter behavior is real through S0/S1 mirrors; Track 11 owns consumed S1 closure and Track 13 guards naming drift. |
+| `s1'.type/form/canvas/residency/compile/ledger/query/injection` | `STUBBED` | 11.T1 / 11.T2 | Hen/compiler substrate exists, but full public compiler authority, CT intake, family inference, and write discipline remain Track 11 closure work. |
+| `s2.graph.query/node/traverse` | `COVERED` | 11.T3 / 13.T5 | Graph query/node/traverse are real S0 mirrors over S2 services; Track 11.T3 owns consumed graph-viewer closure before this becomes final coordinate-native API. |
+| `s2'.retrieve/rerank/enrich/coordinate.resolve` | `STUBBED` | 11.T3 / 13.T2 | Retrieval/rerank/enrich work exists across graph services and external MCP, but the internal coordinate-native route table is not yet a single authority. |
+| `s3.session.*`, `s3.channel.*`, `s3.message.route` | `COVERED` | 12.T3 / 13.T4 | Session, channel, chat, and lifecycle tests cover the consumed contract; Track 13.T4 owns product intent routing/deep-link grammar. |
+| `s3'.temporal/day/kairos/presence/context` | `COVERED` | 12.T0 / 12.T3 / 13.T4 | Temporal context, Day/NOW, Redis/runtime, SpaceTimeDB bridge, and session continuity have real tests; Track 13.T4 owns intent routing over those handles. |
+| `s4.agent.query/notify/status` | `COVERED` | 12.T1 / 13.T3 | Agent query/notify/status and gateway S4 coordinate surfaces are live enough for consumed M' use; OmniPanel/operator catalog remains Track 13.T3. |
+| `s4'.vak/team/cs/orchestrate/thought/crystallise/notify_user/context/psyche/goal/permission` | `STUBBED` | 12.T1 / 10.T11 / 13.T3 | VAK/team/Psyche/permission surfaces have real first-pass code, but provider-backed Anima execution and full operator catalog remain owner-gated. |
+| `s5.gnostic.ingest/query/status` | `STUBBED` | 12.T2 / 13.T5 | Gnosis command/service mirrors exist, but full Body-native Python environment and service availability proof remain deferred in the S5 closure notes. |
+| `s5.episodic.*` | `STUBBED` | 12.T0 / 12.T2 / 13.T4 | Graphiti runtime ownership is split correctly between S3' runtime and S5 invocation governance; live Graphiti proof and routing polish remain guarded. |
+| `s5.bimba.*` | `COVERED` | 12.T2 / 13.T5 | Bimba navigation and graph/kbase meaning-use are backed by S0 core, graph retrieval, and S5 status surfaces for current consumed use. |
+| `s5.m.*` | `COVERED` | 12.T2 / 14.T2 | Nara/M' operator surfaces, FFI/portal clock, and privacy/review constraints are covered for safe consumed use; UFV gates keep protected behavior blocked. |
+| `s5'.mef.*`, `s5'.ql.*` | `DEFERRED` | 12.T2 / 13.T5 | Plugin resources exist, but evaluator/runtime binding and method families are deliberately future Epii pedagogy work. |
+| `s5'.kbase.*`, `s5'.gnosis.*` | `STUBBED` | 12.T2 / 13.T5 | Retrieval surfaces exist, but Epii governance over kbase/gnosis strategy remains incomplete and must not be treated as a native review authority. |
+| `s5'.improve.*` | `COVERED` | 12.T2 / 14.T2 | Epii autoresearch core, improvement state, dry-run promotion planning, and human-required gates are live; non-dry-run mutation remains blocked by UFV/compiler law. |
+| `s5'.review.*` | `COVERED` | 12.T2 / 14.T2 | Durable review inbox, resolution history, human-required guard, M5 DTOs, and S0 gateway review routes are live and tested. |
+| `s5'.explain`, `s5'.teach`, `s5'.seed.generate` | `DEFERRED` | 12.T2 / 13.T5 | Teaching/seed generation are specified and partially mirrored, but Epii runtime binding and compiler-governed artifact creation remain future-gated. |
 
 ### Parity Conclusions
 
@@ -186,7 +235,7 @@ Status vocabulary:
 2. S2 and S3 are the biggest residency mismatches: both have substantial real Rust code inside `Body/S/S0/epi-cli`, and both should be extracted before new feature work deepens the wrong ownership.
 3. S4 has strong CLI/runtime foundations, but actual PI-agent invocation/access must be tested separately from install/config/spawn helpers.
 4. S4/S4' has enough runtime material to become [[Anima]]'s dispatch spine, but [[Pleroma]] still needs to be audited as the baseline Anima capability package: extension primitives, skills, agents, hooks, and bounded toolsets should be separated deliberately.
-5. S5 has useful world-return foundations, especially Nara and Gnosis, but S5' is mostly specification: Epii review, autoresearch, MEF/QL governance, and pedagogy still need real modules and an actual separate PI-agent embodiment.
+5. S5 has useful world-return foundations, especially Nara, Gnosis, Epii review, and autoresearch. MEF/QL governance, pedagogy, and non-dry-run seed/canon mutation still need runtime binding, compiler law, and human-final gates before they can be treated as final public authority.
 6. The first executable parity artifact should be generated from the TypeScript method table plus `gate/parity.rs`, then checked by tests. Hand-maintaining two method lists will drift.
 
 ## Command Surface Reconciliation

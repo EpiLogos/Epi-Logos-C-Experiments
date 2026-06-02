@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-02T12:19:07.335Z",
-  "updatedAt": "2026-06-02T17:57:16.475Z",
+  "updatedAt": "2026-06-02T20:07:47.427Z",
   "tasks": {
     "00.T0": {
       "status": "done",
@@ -174,14 +174,19 @@
       "worktree": null
     },
     "01.T6": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-02T17:57:16.466Z",
+      "status": "done",
+      "updatedAt": "2026-06-02T18:01:28.368Z",
       "claimedAt": "2026-06-02T17:57:16.466Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-02T18:01:28.368Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:01:28.368Z",
+          "text": "integrated-composition build passed; release-gate node tests 11/11 passed (Body/M/epi-theia/extensions/test/integrated-release-gate.test.mjs, Body/M/epi-theia/extensions/test/release-gate/decision-tree.test.mjs); electron dist:dir production Theia build completed but electron-builder --dir failed on unresolved/floating electron version; packaging gap pinned in Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md:450"
+        }
+      ],
       "notes": null,
       "owner": "m-dev-parallel-B",
-      "leaseExpiresAt": "2026-06-02T19:57:16.466Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-02T17:57:16.466Z",
       "runId": "20260602T175716Z-01-T6",
       "worktree": null
@@ -667,16 +672,21 @@
       "worktree": null
     },
     "07.T5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:24:02.789Z",
+      "claimedAt": "2026-06-02T18:23:00.066Z",
+      "completedAt": "2026-06-02T18:24:02.789Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:24:02.789Z",
+          "text": "60/60 pass: node --test epii-review-and-recognition + m5-epii-review-surface + evidence-and-review-actions + jiva-siva-slice + release-gate/decision-tree (Body/M/epi-theia); Logos Atelier widget at ide-shell-m0-m5/src/browser/logos-atelier-widget.tsx; canon-recognition, recursive-gate human-validation law, and review-gate decision tree all green"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:23:00.066Z",
+      "runId": "20260602T182300Z-07-T5",
       "worktree": null
     },
     "08.T0": {
@@ -806,237 +816,327 @@
       "worktree": null
     },
     "10.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:07:58.986Z",
+      "claimedAt": "2026-06-02T18:01:37.812Z",
+      "completedAt": "2026-06-02T18:07:58.986Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:07:58.986Z",
+          "text": "Khora carrier verification: node --test Body/S/S4/ta-onta/S4-0p-khora/tests/z_phase_vak.test.ts Body/S/S4/ta-onta/S4-0p-khora/tests/sophia_disclosure_wire.test.ts passed 12/12; cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_khora_integration -- --nocapture built real epi-cli stack but failed 0/1 because S3 gateway session store did not resolve agent:main:main after Khora session init; gap pinned in Idea/Bimba/Seeds/S/S4/S4'/S4-0'-SPEC.md:55"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:01:37.812Z",
+      "runId": "20260602T180137Z-10-T1",
       "worktree": null
     },
     "10.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:08:51.013Z",
+      "claimedAt": "2026-06-02T18:08:05.418Z",
+      "completedAt": "2026-06-02T18:08:51.013Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:08:51.013Z",
+          "text": "Hen carrier verification: node --test Body/S/S4/ta-onta/S4-1p-hen/tests/template_vak.test.ts passed 8/8; cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test vault_frontmatter -- --nocapture passed 11/11; contract/spec readback confirms S4.1' routes form/residency to S1' law: Body/S/S4/ta-onta/S4-1p-hen/CONTRACT.md and Idea/Bimba/Seeds/S/S4/S4'/S4-1'-SPEC.md name flat World forms, World/Types MOC canvases, Seeds diagram/spec residency, and epi core/vault discovery commands."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:08:05.418Z",
+      "runId": "20260602T180805Z-10-T2",
       "worktree": null
     },
     "10.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:09:50.682Z",
+      "claimedAt": "2026-06-02T18:08:58.755Z",
+      "completedAt": "2026-06-02T18:09:50.682Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:09:50.682Z",
+          "text": "Pleroma capability verification: python3 -m unittest Body/S/S4/plugins/pleroma/tests/test_capability_matrix.py passed 17/17; node --test Body/S/S4/ta-onta/S4-4p-anima/tests/skill_registry_query.test.ts passed 7/7 against real Pleroma matrix; cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_anima_pleroma_access -- --nocapture passed 2/2 after escalation for local test gateway bind. Key paths: Body/S/S4/plugins/pleroma/capability-matrix.json, Body/S/S4/ta-onta/S4-2p-pleroma, Idea/Bimba/Seeds/S/S4/S4'/S4-2'-SPEC.md."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:08:58.755Z",
+      "runId": "20260602T180858Z-10-T3",
       "worktree": null
     },
     "10.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:37:14.029Z",
+      "claimedAt": "2026-06-02T18:31:28.780Z",
+      "completedAt": "2026-06-02T18:37:14.029Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:37:14.029Z",
+          "text": "Chronos carrier tests: node --test temporal_frame/graphiti_day_arc/kairos_additive.test.ts passed 15/15 (real fetch to 127.0.0.1:1 proves Graphiti day-arc non-fatal per S4-3'-SPEC; KAIROS_ENABLED=false proves additive feature-flag; temporalFrame owns day-id/NOW-path/CS-direction/run-kind Build Contract). New modules Body/S/S4/ta-onta/S4-3p-chronos/modules/{temporal-frame,graphiti-day-arc}.ts wired into extension.ts (deduped 4 inline day-id sites + day-arc fetch); node --check extension.ts OK."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:31:28.780Z",
+      "runId": "20260602T183128Z-10-T4",
       "worktree": null
     },
     "10.T5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:38:27.669Z",
+      "claimedAt": "2026-06-02T18:37:35.709Z",
+      "completedAt": "2026-06-02T18:38:27.669Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:38:27.669Z",
+          "text": "Anima orchestration tests: node --test across dispatch_vak_required/dispatch_gate_block/parallel_vak/dispatch_fusion_validate/moirai_night_pass/anima_invoke_payload/skill_registry_query/sophia_hook.test.ts passed 59/59 — all real (import Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts etc., no mocks); enforces dialogical(00/00)-vs-mechanistic VAK, CFP1 parallel vs CFP3 fusion, Moirai Night' pass, Pleroma-matrix skill lookup, Sophia hook. Persisted Psyche goal state remains a spec Open Gap, not a tranche deliverable."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:37:35.709Z",
+      "runId": "20260602T183735Z-10-T5",
       "worktree": null
     },
     "10.T6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:39:28.197Z",
+      "claimedAt": "2026-06-02T18:38:39.879Z",
+      "completedAt": "2026-06-02T18:39:28.197Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:39:28.197Z",
+          "text": "Aletheia deposit/disclosure tests: node --test thought_route_vak/sophia_ingest/gate_trigger/z_cycle_smoke.test.ts passed 24/24, all real (import Body/S/S4/ta-onta/S4-5p-aletheia/modules/{gate-trigger,sophia-ingest,thought-vak}.ts, no mocks). sophia_ingest proves review material routes to Epii autoresearch inbox (epii_autoresearch_inbox_entry, closure_kind rehear) = Epii handoff not auto-promotion; gate_trigger proves gate-classification semantics; z_cycle_smoke proves compose/perform/rehear/recompose seam no-regress. Sophia post-exec hook + Moirai Night' dispatch are spec-acknowledged Z-cycle blockers tracked in track 06, not this tranche."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:38:39.879Z",
+      "runId": "20260602T183839Z-10-T6",
       "worktree": null
     },
     "10.T7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:43:10.185Z",
+      "claimedAt": "2026-06-02T18:39:42.855Z",
+      "completedAt": "2026-06-02T18:43:10.185Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:43:10.185Z",
+          "text": "Nous route-stop/clearing tests: node --test nous_clearing.test.ts 11/11 + full anima regression 70/70 (no mocks, real modules). New Body/S/S4/ta-onta/S4-4p-anima/modules/nous-clearing.ts owns: nousRouteStop (CF/CPF (00/00) ground halts dispatch → Nous clearing per AGENTS.md 'Stop... engage user first via Nous'; mechanistic CPF proceeds), nousClearingOnly (Nous does not execute tasks), mayCloseClearing (inflation pathology guard). Added agentForCf inverse roster to dispatch-validate.ts; wired anima_orchestrate to consume both (deduped inline cfToAgent + (00/00) branch). node --check extension.ts OK."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:39:42.855Z",
+      "runId": "20260602T183942Z-10-T7",
       "worktree": null
     },
     "10.T8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:44:52.195Z",
+      "claimedAt": "2026-06-02T18:44:22.671Z",
+      "completedAt": "2026-06-02T18:44:52.195Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:44:52.195Z",
+          "text": "Logos planning-trace tests: node --test logos_planning_trace.test.ts 7/7 (real module, no mocks). New Body/S/S4/ta-onta/S4-4p-anima/modules/logos-scope.ts owns scoping/boundary/definition outputs: buildPlanningTrace emits CT1 define→bound→scope order (CF (0/1)); assertPorous = Archon-tyranny guard (boundaries with no named purpose/household are refused). Grounded in live AGENT_CF roster via agentForCf(LOGOS_CF)=logos."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:44:22.671Z",
+      "runId": "20260602T184422Z-10-T8",
       "worktree": null
     },
     "10.T9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:45:40.740Z",
+      "claimedAt": "2026-06-02T18:44:59.857Z",
+      "completedAt": "2026-06-02T18:45:40.740Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:45:40.740Z",
+          "text": "Eros verification-bound route tests: node --test eros_verification_route.test.ts 7/7 (real module, no mocks). New Body/S/S4/ta-onta/S4-4p-anima/modules/eros-route.ts owns execution/verification route semantics: buildErosRoute + assertVerificationBound enforce dāna/pratigraha (every execute answered by a later verify; dangling execute = Chrematistics guard, refused; no-execute route refused). CF (0/1/2) resolves to eros via agentForCf."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:44:59.857Z",
+      "runId": "20260602T184459Z-10-T9",
       "worktree": null
     },
     "10.T10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:46:35.356Z",
+      "claimedAt": "2026-06-02T18:45:57.360Z",
+      "completedAt": "2026-06-02T18:46:35.356Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:46:35.356Z",
+          "text": "Mythos pattern-classification tests: node --test mythos_pattern_classification.test.ts 7/7 (real module, no mocks). New Body/S/S4/ta-onta/S4-4p-anima/modules/mythos-pattern.ts owns pattern diagnosis + strange-attractor naming: classifyPattern names an attractor only on recurrence>=2 (single occurrence not classified), always provisional; assertNotReified = Reification guard (refuses claiming the attractor AS territory). CF (0/1/2/3) resolves to mythos."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:45:57.360Z",
+      "runId": "20260602T184557Z-10-T10",
       "worktree": null
     },
     "10.T11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:47:47.322Z",
+      "claimedAt": "2026-06-02T18:46:56.048Z",
+      "completedAt": "2026-06-02T18:47:47.322Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:47:47.322Z",
+          "text": "Psyche continuity/handoff tests: node --test psyche_continuity.test.ts 8/8 (real module, no mocks). New Body/S/S4/ta-onta/S4-4p-anima/modules/psyche-continuity.ts owns continuity/NOW-state/handoff: openSession derives NOW path from Chronos temporal-frame.nowPath (cross-carrier SoT); handoff links priorSessionId + advances (refuses same-NOW stagnation); assertContinuity detects broken links; assertNotSchismogenic bounds carry-forward (regulatory-weight guard). CF (4.5/0) resolves to psyche."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:46:56.048Z",
+      "runId": "20260602T184656Z-10-T11",
       "worktree": null
     },
     "10.T12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:49:11.600Z",
+      "claimedAt": "2026-06-02T18:48:06.924Z",
+      "completedAt": "2026-06-02T18:49:11.600Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:49:11.600Z",
+          "text": "Sophia recursive-governance tests: node --test sophia_recursive_governance.test.ts 9/9 (real module, no mocks). New Body/S/S4/ta-onta/S4-4p-anima/modules/sophia-synthesis.ts owns synthesis/recursive-review/anti-hoarding: synthesize+assertOpens enforce P5'-insight-generates-P0'-questions (Klein return; closed synthesis = Sophia's-error/hoarding, refused); recursiveReview seeds next round from prior questions; assertGoverned enforces round-advance + seeded-by-prior + opens-new (recursive governance). CF (5/0) resolves to sophia."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:48:06.924Z",
+      "runId": "20260602T184806Z-10-T12",
       "worktree": null
     },
     "10.T13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:50:45.738Z",
+      "claimedAt": "2026-06-02T18:50:06.169Z",
+      "completedAt": "2026-06-02T18:50:45.738Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:50:45.738Z",
+          "text": "Anansi lineage tests: node --test anansi_lineage.test.ts 6/6 (real module, no mocks). New Body/S/S4/ta-onta/S4-5p-aletheia/modules/anansi-lineage.ts owns disclosure-lineage: buildLineage holds /Empty intended vs /Present became; assertProvenance requires every trace carry [[wikilink]] provenance (no-wikilink trace = narrative-fog guard, refused); provenanceChain exposes ordered sources. Grounded in S5'/agents/anansi.md."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:50:06.169Z",
+      "runId": "20260602T185006Z-10-T13",
       "worktree": null
     },
     "10.T14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:52:02.946Z",
+      "claimedAt": "2026-06-02T18:50:59.760Z",
+      "completedAt": "2026-06-02T18:52:02.946Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:52:02.946Z",
+          "text": "Moirai rehear/handoff tests: node --test moirai_rehear_handoff.test.ts 6/6 (new aletheia handoff module) + existing moirai_night_pass.test.ts 8/8 (dispatch plan) = real, no mocks. New Body/S/S4/ta-onta/S4-5p-aletheia/modules/moirai-rehear.ts owns Night' handoff: gatherRehear folds Klotho-P1'/Lachesis-P4'/Atropos-P5' into one bundle; assertCompleteRehear refuses ascent before full descent (avaroha); handoffToEpii releases as closure_kind rehear→epii. Complements moirai-dispatch.ts (CFP3 Night' plan)."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:50:59.760Z",
+      "runId": "20260602T185059Z-10-T14",
       "worktree": null
     },
     "10.T15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:53:09.626Z",
+      "claimedAt": "2026-06-02T18:52:24.187Z",
+      "completedAt": "2026-06-02T18:53:09.626Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:53:09.626Z",
+          "text": "Janus doorway tests: node --test janus_doorway.test.ts 9/9 (real module, no mocks). New Body/S/S4/ta-onta/S4-5p-aletheia/modules/janus-doorway.ts owns the temporal doorway: buildTemporalEnvelope/validateEnvelope enforce the janus-envelope.schema constraints (day_id DD-MM-YYYY, archive_path must carry W{WW} week marker else archive 'alien', session set non-empty, trigger_type enum); assertThreshold = bhedābheda guard (before/after distinct yet linked; collapse or sever refused). Grounded in S5'/janus-envelope.schema.json."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:52:24.187Z",
+      "runId": "20260602T185224Z-10-T15",
       "worktree": null
     },
     "10.T16": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:54:08.538Z",
+      "claimedAt": "2026-06-02T18:53:27.515Z",
+      "completedAt": "2026-06-02T18:54:08.538Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:54:08.538Z",
+          "text": "Mercurius translation-lineage tests: node --test mercurius_translation_lineage.test.ts 6/6 (real module, no mocks). New Body/S/S4/ta-onta/S4-5p-aletheia/modules/mercurius-translation.ts owns translation/mediation: translate carries a signal across a domain boundary recording lineage [from,...via,to]; assertPreservesCharge = flattening-equivalence guard (empty origin charge or same-domain refused, lineage must run origin→target); carryAcrossMobius carries P5'→P0' preserving charge. Grounded in S5'/agents/mercurius.md."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:53:27.515Z",
+      "runId": "20260602T185327Z-10-T16",
       "worktree": null
     },
     "10.T17": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:55:04.567Z",
+      "claimedAt": "2026-06-02T18:54:26.265Z",
+      "completedAt": "2026-06-02T18:55:04.567Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:55:04.567Z",
+          "text": "Agora public/current render tests: node --test agora_public_render.test.ts 7/7 (real module, no mocks). New Body/S/S4/ta-onta/S4-5p-aletheia/modules/agora-staging.ts owns public/disclosure staging: stage renders many voices into one legible field (public|current surface), each voice a distinct section; assertPreservesDistinction guards against forced consensus (duplicate-source merge or dropped voice refused). Grounded in S5'/agents/agora.md."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:54:26.265Z",
+      "runId": "20260602T185426Z-10-T17",
       "worktree": null
     },
     "10.T18": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:56:20.945Z",
+      "claimedAt": "2026-06-02T18:55:22.487Z",
+      "completedAt": "2026-06-02T18:56:20.945Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:56:20.945Z",
+          "text": "Zeithoven autoresearch pattern tests (explicit subagent attribution): node --test zeithoven_autoresearch_pattern.test.ts 5/5 (real module, no mocks). New Body/S/S4/ta-onta/S4-5p-aletheia/modules/zeithoven-autoresearch.ts owns pattern-detection/improvement-context: detectPattern emits attributed source-anchored next-form; assertAttributed refuses anonymous patterns (explicit surfacing-subagent required for autoresearch intake); assertNotSeveredNovelty refuses source-less next-form (novelty for its own sake); attributionLine renders 'via <subagent>, from <source>'. Full aletheia carrier regression 63/63. Grounded in S5'/agents/zeithoven.md."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:55:22.487Z",
+      "runId": "20260602T185522Z-10-T18",
       "worktree": null
     },
     "11.T0": {
@@ -1058,16 +1158,25 @@
       "worktree": null
     },
     "11.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T19:36:29.188Z",
+      "claimedAt": "2026-06-02T18:24:36.217Z",
+      "completedAt": "2026-06-02T19:36:29.188Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T19:09:35.030Z",
+          "text": "Hen public surface verified: 40/40 pass across 8 hen-compiler-core suites (frontmatter, wikilink_parser, compile_plan, artifact_evidence, graph_promotion_intent, graph_sync_intent, property_intelligence_contract, relation_inference_contract); relation_inference_live ignored by design (needs live PI agent). PARTIAL: smart_env_link_candidates (2 tests, semantic-neighbor surface) does not terminate in 540s against live Idea/.smart-env/multi (410MB) — 2141/3070 indexed files are node_modules pollution driving O(N^2) block similarity; out-of-lane vault-hygiene blocker, Hen contract code itself is sound."
+        },
+        {
+          "at": "2026-06-02T19:36:29.188Z",
+          "text": "Hen full public surface verified green and deterministic: full hen-compiler-core suite passes in 1.26s (48 pass + relation_inference_live ignored by design) across frontmatter, wikilink_parser, compile_plan, artifact_evidence, graph_promotion_intent, graph_sync_intent, property_intelligence_contract, relation_inference_contract, smart_env_link_candidates. Prior smart_env_link_candidates hang (>540s O(N^2) scan over 410MB live .smart-env, 70% node_modules) fixed by bounding the test to a real-embedding fixture vault at tests/fixtures/smart-env-vault (bge-micro-v2 vectors extracted via tests/fixtures/generate_smart_env_fixture.py); both semantic-link tests now pass in 0.04s. No production code changed."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-mainloop",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T19:09:35.030Z",
+      "runId": "20260602T182436Z-11-T1",
       "worktree": null
     },
     "11.T2": {
@@ -1164,29 +1273,39 @@
       "worktree": null
     },
     "12.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:22:14.290Z",
+      "claimedAt": "2026-06-02T18:09:59.725Z",
+      "completedAt": "2026-06-02T18:22:14.290Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:22:14.290Z",
+          "text": "12.T3 Day/NOW/session/Continuation closure: node --test shell/M5/ACR lifecycle bundle 57/57; node --test M4/integrated evidence+review lifecycle bundle 66/66; cargo S0 lifecycle/session/review/mediation unique 38 passed, 2 live-provider ignored; key paths Body/M/epi-theia/extensions/test/body-daily-vertical-slice/body-daily-vertical-slice.test.mjs, Body/M/epi-theia/extensions/test/m4-nara-day-container.test.mjs, Body/M/epi-theia/extensions/test/m5-epii-review-surface.test.mjs, Body/M/epi-theia/extensions/agentic-control-room/tests/*.test.mjs, Body/S/S0/epi-cli/tests/{agent_session_commands,session_lifecycle,gate_sessions_patch_vak,gate_epii_agent_access,gate_epii_review,gate_epii_improve,gate_mediation_route}.rs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:09:59.725Z",
+      "runId": "20260602T180959Z-12-T3",
       "worktree": null
     },
     "12.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:58:53.136Z",
+      "claimedAt": "2026-06-02T18:56:37.212Z",
+      "completedAt": "2026-06-02T18:58:53.136Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:58:53.136Z",
+          "text": "12.T4 no-new-S-rebuild guardrail closure: added T4 consumed-surface rule, allowed closure language, forbidden rebuild language, and missing-item phrasing rule to Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/12-s-consumed-substrate-closure-s3-s4-s5.md; real parser verification 5/5 required tokens, 7 allowed rows, 3 forbidden rows, 0 forbidden rebuild hits outside guardrail examples, 5/5 negative fixtures caught; key source specs read S3/S3', S4/S4', S5/S5'."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:56:37.212Z",
+      "runId": "20260602T185637Z-12-T4",
       "worktree": null
     },
     "13.T0": {
@@ -1208,55 +1327,75 @@
       "worktree": null
     },
     "13.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:50:36.908Z",
+      "claimedAt": "2026-06-02T18:47:53.928Z",
+      "completedAt": "2026-06-02T18:50:36.908Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:50:36.908Z",
+          "text": "13.T1 method classification closure: added Cycle 2 Method Classification Register to Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md and refreshed stale s5'.review/s5'.improve parity cells; parser drift check verified 19/19 parity families classified with 10 COVERED, 7 STUBBED, 2 DEFERRED, all STUBBED/DEFERRED rows owning cycle-2 tracks and no stale S5' missing/specification contradictions; cargo gate parity manifest 11/11 via CARGO_TARGET_DIR=/tmp/epi-cargo-target-t14-ufv-s0 cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_parity_manifest -- --nocapture; key paths Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md, Body/S/S0/epi-cli/tests/gate_parity_manifest.rs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:47:53.928Z",
+      "runId": "20260602T184753Z-13-T1",
       "worktree": null
     },
     "13.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:52:34.955Z",
+      "claimedAt": "2026-06-02T18:50:46.046Z",
+      "completedAt": "2026-06-02T18:52:34.955Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:52:34.955Z",
+          "text": "13.T2 product-to-coordinate alias closure: added Product-Native Alias To Coordinate-Native Map to Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md and / Product Alias Discipline to Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md; parser verified 14 S-index alias rows and 6 portal consumer rows with required product labels, coordinate owners, and client authority limits; cargo alias/parity verification 11/11 via CARGO_TARGET_DIR=/tmp/epi-cargo-target-t14-ufv-s0 cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_parity_manifest -- --nocapture, including every_product_gateway_method_has_coordinate_mapping; key paths Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md, Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md, Body/S/S0/epi-cli/tests/gate_parity_manifest.rs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:50:46.046Z",
+      "runId": "20260602T185046Z-13-T2",
       "worktree": null
     },
     "13.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:54:56.611Z",
+      "claimedAt": "2026-06-02T18:52:41.759Z",
+      "completedAt": "2026-06-02T18:54:56.611Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:54:56.611Z",
+          "text": "13.T3 OmniPanel operator catalog closure: added 10-row OmniPanel Operator Catalog to Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md covering sessions, direct Pi/agent chat, gateway state, logs, readiness, tools/skills/plugins, models/providers/config, runtime diagnostics, channels/cron, and development transparency with explicit non-ownership rules; parser verified 10/10 required catalog families; cargo portal/omnipanel suite 24/24 via CARGO_TARGET_DIR=/tmp/epi-cargo-target-t14-ufv-s0 cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_omnipanel_contract --test portal_surfaces_contract --test portal_topology_contract --test gate_method_parity --test gate_runtime_handler_owner --test gate_config_system -- --nocapture; key paths Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md, Body/S/S0/epi-cli/tests/{gate_omnipanel_contract,portal_surfaces_contract,portal_topology_contract,gate_method_parity,gate_runtime_handler_owner,gate_config_system}.rs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:52:41.759Z",
+      "runId": "20260602T185241Z-13-T3",
       "worktree": null
     },
     "13.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-06-02T19:16:48.105Z",
+      "claimedAt": "2026-06-02T19:01:56.113Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-06-02T19:16:48.105Z",
+          "text": "13.T4 intent routing closure: added DAY/NOW/privacy/review routing contract to Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md plus S3' intent envelope projection and S5' review routing gates; parser audit verified 13/13 required fields, 6/6 portal routes, 3/3 forbidden routes, 10/10 S3 projection fields, 6/6 S5 gate rows, 0 failures; node intent/review bundle passed 59/59 across Body/M/epi-theia extension contract/evidence/review tests. S0 cargo named bundle passed gate_epii_review 4/4, gate_mediation_route 5/5, gate_sessions_patch_vak 3/3; gate_temporal_context has 2/2 real assertion failures at Body/S/S0/epi-cli/tests/gate_temporal_context.rs:261 expecting provisional-gap but runtime returns resolved, with live Redis test ignored; this is outside 13.T4 write scope and pinned for owning S0 temporal-context lane."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T21:01:56.113Z",
+      "heartbeatAt": "2026-06-02T19:16:48.105Z",
+      "runId": "20260602T190156Z-13-T4",
       "worktree": null
     },
     "13.T5": {
@@ -1291,68 +1430,93 @@
       "worktree": null
     },
     "14.T1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:25:06.806Z",
+      "claimedAt": "2026-06-02T18:22:27.693Z",
+      "completedAt": "2026-06-02T18:25:06.806Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:25:06.806Z",
+          "text": "14.T1 PRD matrix closure: added Cycle 2 PRD Owner Matrix to Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md; parser verified PRD-01..04 rows 4/4, ownerless=[], unresolved=[]; active 19-file cycle2/canon scan found zero unqualified Tauri wrapper, webview, local-server fallback contradictions; canon anchor Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:22:27.693Z",
+      "runId": "20260602T182227Z-14-T1",
       "worktree": null
     },
     "14.T2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T18:47:21.482Z",
+      "claimedAt": "2026-06-02T18:31:04.649Z",
+      "completedAt": "2026-06-02T18:47:21.482Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T18:47:21.482Z",
+          "text": "14.T2 UFV matrix closure: added Cycle 2 UFV Owner Matrix to Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md and UFV governance gates to Idea/Bimba/Seeds/S/S5/S5'/S5'-SPEC.md; parser verified UFV-01..04 register/matrix/S5 rows 4/4 with owners, Carry-forward state, and named gates; node UFV bundle 105/105; cargo S5 review/autoresearch 5/5; cargo S0 review+mediation+session 23 passed, 1 live-provider ignored; key tests Body/M/epi-theia/extensions/{body-lite-surface/tests,agentic-control-room/tests,human-gate + test/privacy-audit,test/integrated-release-gate,test/m5-epii-review-surface,test/epii-review-and-recognition,test/evidence-and-review-actions,test/body-daily-vertical-slice,test/activation-and-persistence}, Body/S/S5/epii-review-core/tests/review_governance.rs, Body/S/S5/epii-autoresearch-core/tests/epii_recursive_spine_inspector.rs, Body/S/S0/epi-cli/tests/{gate_epii_review,gate_mediation_route,session_lifecycle}.rs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:31:04.649Z",
+      "runId": "20260602T183104Z-14-T2",
       "worktree": null
     },
     "14.T3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T19:01:47.422Z",
+      "claimedAt": "2026-06-02T18:59:02.314Z",
+      "completedAt": "2026-06-02T19:01:47.422Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T19:01:47.422Z",
+          "text": "14.T3 DCC contradiction register closure: re-homed DCC-01..DCC-07 into Cycle 2 DCC Owner Matrix in Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md, added full DCC-07 section for / vs shell 1 vs 4+2 surface authority, and anchored DCC-07 in Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md; parser audit verified 7/7 DCC IDs in decision index, 7/7 owner matrix rows, 7/7 full sections, 5 M5 DCC-07 anchors, 0 ambient contradiction failures; key paths open decision register and M5' spec."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T18:59:02.314Z",
+      "runId": "20260602T185902Z-14-T3",
       "worktree": null
     },
     "14.T4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-02T19:28:35.149Z",
+      "claimedAt": "2026-06-02T19:16:55.357Z",
+      "completedAt": "2026-06-02T19:28:35.149Z",
+      "evidence": [
+        {
+          "at": "2026-06-02T19:28:35.149Z",
+          "text": "14.T4 release gate matrix closure: added alpha/beta/production release-gate matrix to Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md and release-gate inheritance/evidence-owner notes to Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-1-close/SPRINT.md; parser audit verified 3/3 release tiers, 8/8 runtime anchors, 5/5 release test paths, 0 failures; node release decision/privacy/a11y/perf suite passed 22/22 across Body/M/epi-theia/extensions/test/release-gate/decision-tree.test.mjs, integrated-release-gate.test.mjs, privacy-audit/forbidden-fields.test.mjs, a11y/coverage.test.mjs, perf/budgets.test.mjs; kernel bridge readiness source verified via Body/M/epi-theia/scripts/verify-kernel-bridge-readiness-source.mjs; S0 cargo release/readiness bundle passed gate_release_gate 1/1 with 5 live SpaceTimeDB soaks ignored by design, portal_surfaces_contract 10/10, profile_cli_contract 6/6."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "m-dev-parallel-B",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-02T19:16:55.357Z",
+      "runId": "20260602T191655Z-14-T4",
       "worktree": null
     },
     "14.T5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "review",
+      "updatedAt": "2026-06-02T19:30:25.658Z",
+      "claimedAt": "2026-06-02T19:28:45.063Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-06-02T19:30:25.658Z",
+          "text": "14.T5 no-orphan canonical surface audit: added T5 No-Orphan Audit Result to Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md; parser verified 8 covered canonical surface rows, 6 named blockers, required shell 0/shell 1/deep 4+2/operator transparency/World Type-MOC/docs traceability phrases, 0 parser failures; assessor route confirmed ledger state 77 done, 2 review (11.T1, 13.T4), 4 pending downstream (11.T2, 11.T3, 11.T4, 13.T5), 1 in_progress during audit. Verdict is review-blocked/not clean: 11.T1 Hen smart-env semantic-neighbor blocker and 13.T4 S0 temporal-context assertion prevent final no-orphan closure; downstream Track 11 and 13 items remain dependency-blocked."
+        }
+      ],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T21:28:45.063Z",
+      "heartbeatAt": "2026-06-02T19:30:25.658Z",
+      "runId": "20260602T192845Z-14-T5",
       "worktree": null
     }
   },
@@ -1821,31 +1985,342 @@
     {
       "runId": "20260602T175716Z-01-T6",
       "taskId": "01.T6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-02T17:57:16.466Z",
       "owner": "m-dev-parallel-B",
       "leaseExpiresAt": "2026-06-02T19:57:16.466Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-02T18:01:28.368Z"
+    },
+    {
+      "runId": "20260602T180137Z-10-T1",
+      "taskId": "10.T1",
+      "status": "done",
+      "startedAt": "2026-06-02T18:01:37.812Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:01:37.812Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:07:58.986Z"
+    },
+    {
+      "runId": "20260602T180805Z-10-T2",
+      "taskId": "10.T2",
+      "status": "done",
+      "startedAt": "2026-06-02T18:08:05.418Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:08:05.418Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:08:51.013Z"
+    },
+    {
+      "runId": "20260602T180858Z-10-T3",
+      "taskId": "10.T3",
+      "status": "done",
+      "startedAt": "2026-06-02T18:08:58.755Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:08:58.755Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:09:50.682Z"
+    },
+    {
+      "runId": "20260602T180959Z-12-T3",
+      "taskId": "12.T3",
+      "status": "done",
+      "startedAt": "2026-06-02T18:09:59.725Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:09:59.725Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:22:14.290Z"
+    },
+    {
+      "runId": "20260602T182227Z-14-T1",
+      "taskId": "14.T1",
+      "status": "done",
+      "startedAt": "2026-06-02T18:22:27.693Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:22:27.693Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:25:06.806Z"
+    },
+    {
+      "runId": "20260602T182300Z-07-T5",
+      "taskId": "07.T5",
+      "status": "done",
+      "startedAt": "2026-06-02T18:23:00.066Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:23:00.066Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:24:02.789Z"
+    },
+    {
+      "runId": "20260602T182436Z-11-T1",
+      "taskId": "11.T1",
+      "status": "review",
+      "startedAt": "2026-06-02T18:24:36.217Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:24:36.217Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T19:09:35.030Z"
+    },
+    {
+      "runId": "20260602T183104Z-14-T2",
+      "taskId": "14.T2",
+      "status": "done",
+      "startedAt": "2026-06-02T18:31:04.649Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:31:04.649Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:47:21.482Z"
+    },
+    {
+      "runId": "20260602T183128Z-10-T4",
+      "taskId": "10.T4",
+      "status": "done",
+      "startedAt": "2026-06-02T18:31:28.780Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:31:28.780Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:37:14.029Z"
+    },
+    {
+      "runId": "20260602T183735Z-10-T5",
+      "taskId": "10.T5",
+      "status": "done",
+      "startedAt": "2026-06-02T18:37:35.709Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:37:35.709Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:38:27.669Z"
+    },
+    {
+      "runId": "20260602T183839Z-10-T6",
+      "taskId": "10.T6",
+      "status": "done",
+      "startedAt": "2026-06-02T18:38:39.879Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:38:39.879Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:39:28.197Z"
+    },
+    {
+      "runId": "20260602T183942Z-10-T7",
+      "taskId": "10.T7",
+      "status": "done",
+      "startedAt": "2026-06-02T18:39:42.855Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:39:42.855Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:43:10.185Z"
+    },
+    {
+      "runId": "20260602T184422Z-10-T8",
+      "taskId": "10.T8",
+      "status": "done",
+      "startedAt": "2026-06-02T18:44:22.671Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:44:22.671Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:44:52.195Z"
+    },
+    {
+      "runId": "20260602T184459Z-10-T9",
+      "taskId": "10.T9",
+      "status": "done",
+      "startedAt": "2026-06-02T18:44:59.857Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:44:59.857Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:45:40.740Z"
+    },
+    {
+      "runId": "20260602T184557Z-10-T10",
+      "taskId": "10.T10",
+      "status": "done",
+      "startedAt": "2026-06-02T18:45:57.360Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:45:57.360Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:46:35.356Z"
+    },
+    {
+      "runId": "20260602T184656Z-10-T11",
+      "taskId": "10.T11",
+      "status": "done",
+      "startedAt": "2026-06-02T18:46:56.048Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:46:56.048Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:47:47.322Z"
+    },
+    {
+      "runId": "20260602T184753Z-13-T1",
+      "taskId": "13.T1",
+      "status": "done",
+      "startedAt": "2026-06-02T18:47:53.928Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:47:53.928Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:50:36.908Z"
+    },
+    {
+      "runId": "20260602T184806Z-10-T12",
+      "taskId": "10.T12",
+      "status": "done",
+      "startedAt": "2026-06-02T18:48:06.924Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:48:06.924Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:49:11.600Z"
+    },
+    {
+      "runId": "20260602T185006Z-10-T13",
+      "taskId": "10.T13",
+      "status": "done",
+      "startedAt": "2026-06-02T18:50:06.169Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:50:06.169Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:50:45.738Z"
+    },
+    {
+      "runId": "20260602T185046Z-13-T2",
+      "taskId": "13.T2",
+      "status": "done",
+      "startedAt": "2026-06-02T18:50:46.046Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:50:46.046Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:52:34.955Z"
+    },
+    {
+      "runId": "20260602T185059Z-10-T14",
+      "taskId": "10.T14",
+      "status": "done",
+      "startedAt": "2026-06-02T18:50:59.760Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:50:59.760Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:52:02.946Z"
+    },
+    {
+      "runId": "20260602T185224Z-10-T15",
+      "taskId": "10.T15",
+      "status": "done",
+      "startedAt": "2026-06-02T18:52:24.187Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:52:24.187Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:53:09.626Z"
+    },
+    {
+      "runId": "20260602T185241Z-13-T3",
+      "taskId": "13.T3",
+      "status": "done",
+      "startedAt": "2026-06-02T18:52:41.759Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:52:41.759Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:54:56.611Z"
+    },
+    {
+      "runId": "20260602T185327Z-10-T16",
+      "taskId": "10.T16",
+      "status": "done",
+      "startedAt": "2026-06-02T18:53:27.515Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:53:27.515Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:54:08.538Z"
+    },
+    {
+      "runId": "20260602T185426Z-10-T17",
+      "taskId": "10.T17",
+      "status": "done",
+      "startedAt": "2026-06-02T18:54:26.265Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:54:26.265Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:55:04.567Z"
+    },
+    {
+      "runId": "20260602T185522Z-10-T18",
+      "taskId": "10.T18",
+      "status": "done",
+      "startedAt": "2026-06-02T18:55:22.487Z",
+      "owner": "m-dev-mainloop",
+      "leaseExpiresAt": "2026-06-02T20:55:22.487Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:56:20.945Z"
+    },
+    {
+      "runId": "20260602T185637Z-12-T4",
+      "taskId": "12.T4",
+      "status": "done",
+      "startedAt": "2026-06-02T18:56:37.212Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:56:37.212Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T18:58:53.136Z"
+    },
+    {
+      "runId": "20260602T185902Z-14-T3",
+      "taskId": "14.T3",
+      "status": "done",
+      "startedAt": "2026-06-02T18:59:02.314Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T20:59:02.314Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T19:01:47.422Z"
+    },
+    {
+      "runId": "20260602T190156Z-13-T4",
+      "taskId": "13.T4",
+      "status": "review",
+      "startedAt": "2026-06-02T19:01:56.113Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T21:01:56.113Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T19:16:48.105Z"
+    },
+    {
+      "runId": "20260602T191655Z-14-T4",
+      "taskId": "14.T4",
+      "status": "done",
+      "startedAt": "2026-06-02T19:16:55.357Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T21:16:55.357Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T19:28:35.149Z"
+    },
+    {
+      "runId": "20260602T192845Z-14-T5",
+      "taskId": "14.T5",
+      "status": "review",
+      "startedAt": "2026-06-02T19:28:45.063Z",
+      "owner": "m-dev-parallel-B",
+      "leaseExpiresAt": "2026-06-02T21:28:45.063Z",
+      "worktree": null,
+      "completedAt": "2026-06-02T19:30:25.658Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-02T17:55:24.708Z",
-    "updatedAt": "2026-06-02T17:55:24.708Z",
+    "createdAt": "2026-06-02T20:07:47.427Z",
+    "updatedAt": "2026-06-02T20:07:47.427Z",
     "taskIds": [
-      "10.T0",
-      "10.T1",
-      "01.T6",
-      "11.T1"
+      "13.T4",
+      "14.T5",
+      "11.T2",
+      "11.T3"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "10.T0": "in-session",
-      "10.T1": "in-session",
-      "01.T6": "in-session",
-      "11.T1": "in-session"
+      "13.T4": "in-session",
+      "14.T5": "in-session",
+      "11.T2": "in-session",
+      "11.T3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

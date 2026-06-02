@@ -83,6 +83,22 @@ The M'-Theia shell consumes S3/S3' through one gateway WebSocket bound by [[Idea
 
 Reconnect / resubscribe: the kernel-bridge backend owns reconnect after gateway restart; the renderer-side `KernelBridgeAPI` singleton replays cached profile + connection status to late subscribers with `stale: true` until the next live observation. One SharedBridgeAdapter fan-out means one upstream resubscribe per gateway recovery regardless of how many extensions are mounted. 6/6 boundary + fan-out tests pass; `compiled KernelBridgeAPI drops forbidden private stream row bodies` is the privacy floor preventing protected M4.4.4.4 / journal / oracle row bodies from reaching the renderer.
 
+## M' Intent Envelope Projection - Cycle 2 T13.T4
+
+S3' owns the temporal/session projection fields carried by M' cross-surface intents. M' may route an intent from shell `1`, `/`, or the deep `4+2` layout, but it must not strip the S3' context that proves when, where, and under which gateway session the intent originated.
+
+| Envelope field | S3' source | Projection rule |
+|---|---|---|
+| `sessionKey` | gateway session record / kernel-bridge cached profile | Required for every cross-layout intent; reconnect replay may mark it stale but may not omit it. |
+| `dayNow` | DAY/NOW temporal context | Required for shell `1`, Nara, review, Epii, task, and day-note routes. |
+| `profileGeneration` | kernel temporal projection generation | Preserved when the route uses harmonic/profile evidence or review alerts. |
+| `sourceRange` | renderer/source handle over an S1 artifact or shell text selection | S3' carries it as a handle only; S1/Hen owns mutation and S5 owns review meaning. |
+| `coordinate` | selected coordinate in the kernel/profile/portal projection | Preserved for graph, canon, Epii, review, and agentic-control-room routes. |
+| `reviewId`, `improvementId`, `artifactUri` | S5/S1 handles carried through the S3' envelope | Passed through without reinterpretation so review/canon panes can prove provenance. |
+| `origin_surface`, `target_surface` | M' portal routing metadata | Carried as product routing metadata; S3' does not grant authority based on these labels. |
+
+Operator-originated `/` intents still use S3' session/run handles, but their default target is `operator-control`. They become Nara/DAY/review artifacts only when a promotion/acknowledgement state is present in the envelope. This preserves the `DCC-07` surface distinction while allowing one Theia shell and one kernel bridge to move between surfaces.
+
 ## Cross-Cutting Participation
 
 S3' is the center of Day/NOW/session/Continuation, clock projection, Graphiti runtime, identity-safe temporal context, SpaceTimeDB presence, gateway event vocabulary, and M' subscription mode (`lite` vs `full`).

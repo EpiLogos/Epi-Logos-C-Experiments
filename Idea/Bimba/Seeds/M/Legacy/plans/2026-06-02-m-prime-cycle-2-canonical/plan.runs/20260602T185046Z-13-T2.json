@@ -1,0 +1,36 @@
+{
+  "runId": "20260602T185046Z-13-T2",
+  "taskId": "13.T2",
+  "startedAt": "2026-06-02T18:50:46.046Z",
+  "owner": "m-dev-parallel-B",
+  "leaseExpiresAt": "2026-06-02T20:50:46.046Z",
+  "worktree": null,
+  "task": {
+    "id": "13.T2",
+    "trackId": "13",
+    "tranche": "T2",
+    "title": "Product-Native Alias To Coordinate-Native Map",
+    "effort": null,
+    "file": "13-gateway-method-completion-and-intent-routing.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/13-gateway-method-completion-and-intent-routing.md",
+    "dependsOn": [
+      "13.T1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+      "Idea/Bimba/Seeds/S/S-SYSTEM-INDEX.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "runId": "20260602T185426Z-10-T17",
+  "taskId": "10.T17",
+  "startedAt": "2026-06-02T18:54:26.265Z",
+  "owner": "m-dev-mainloop",
+  "leaseExpiresAt": "2026-06-02T20:54:26.265Z",
+  "worktree": null,
+  "task": {
+    "id": "10.T17",
+    "trackId": "10",
+    "tranche": "T17",
+    "title": "[[Agora]]",
+    "effort": null,
+    "file": "10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/10-ta-onta-carriers-constitutional-agents-and-aletheia.md",
+    "dependsOn": [
+      "10.T16"
+    ],
+    "writeScopes": [
+      ".omx/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/S4/S4'/S4'-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

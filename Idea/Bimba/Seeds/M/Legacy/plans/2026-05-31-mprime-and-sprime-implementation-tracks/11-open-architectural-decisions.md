@@ -37,7 +37,7 @@ Keep every unresolved implementation-shaping choice visible before engineering w
 - **Decision wave 1 - Substrate contracts:** Resolve `IOD-01` through `IOD-09` before live S0/S2/S3/S5 substrate claims become downstream dependencies.
 - **Decision wave 2 - Surface and composition contracts:** Resolve `IOD-10` through `IOD-14`, `IOD-17`, `IOD-18`, and `IOD-19` before deep links, shell chrome, observability, Nara write paths, agent-tool governance extensions, integrated plugin composition, vault semantic-index surfaces, and vault-write paths freeze.
 - **Decision wave 3 - User-final validation:** Resolve `UFV-01` through `UFV-04` before privacy, review interruption, background lifecycle, recursive/corpus-affecting changes, or default lightweight agents become user-facing production behavior.
-- **Decision wave 4 - Deferred canon contradictions:** Carry `DCC-01` through `DCC-06` as visible provenance/readiness notes until canon review or user-final validation resolves them.
+- **Decision wave 4 - Deferred canon contradictions:** Carry `DCC-01` through `DCC-07` as visible provenance/readiness notes until canon review or user-final validation resolves them.
 
 ## Dependencies
 
@@ -91,6 +91,7 @@ The decision index and grouped entries below are the active open-decision set fo
 | DCC-04 | M4 identity quaternion naming, axis order, and 0/1 polarity | Deferred canon contradiction | 06, 07, 08 |
 | DCC-05 | Audio bus and cymatic derivation ownership wording | Deferred canon contradiction | 01, 07, 08 |
 | DCC-06 | Alpha section cross-reference drift | Deferred canon contradiction | 07, 08 |
+| DCC-07 | `/` operator surface, shell `1`, and full `4+2` depth treated as interchangeable UX | Deferred canon contradiction | 01, 06, 07, 09, 13, 14 |
 
 ## Cycle 2 IOD Owner Matrix
 
@@ -115,6 +116,42 @@ Track 14 T0 re-homes every `IOD-*` implementation-owner decision into an explici
 | IOD-17 | 07.T4 / 10.T0 | Carry-forward | Agentic Control Room owns capability-matrix consumption; carrier/agent registry must preserve three-way matrix/UI/gateway parity for runtime exposure. |
 | IOD-18 | 11.T1 / 11.T2 | Carry-forward | S1/Hen public-surface and CT intake closure own Smart Connections via Hen `smart_env.rs`, not client-side Obsidian plugin coupling. |
 | IOD-19 | 11.T1 / 11.T2 | Carry-forward | S1/Hen public-surface and CT intake closure own vault-write gatekeeping, wikilink integrity, and path soundness. |
+
+## Cycle 2 PRD Owner Matrix
+
+Track 14 T1 re-homes every `PRD-*` prototype decision into explicit cycle 2 ownership. These PRD items are resolved, not active blockers: current cycle 2 guidance is the matrix below plus the `PRD-01` through `PRD-04` resolution paragraphs in this register and the canonical shell/runtime law in [[m5-prime-system-shape-and-tauri-ide-canon]]. Historical `plan.runs/context-*` captures may still quote pre-resolution "Prototype-resolved" wording; they are evidence snapshots, not live guidance.
+
+| ID | Cycle 2 owner | State | Locked shell/runtime rule |
+| --- | --- | --- | --- |
+| PRD-01 | 01.T0 / 01.T6, audited by 14.T5 | Resolved | Theia is the only shell; Electron is the canonical desktop deployment; browser-mode is secondary CI/headless/shared deployment; no Tauri wrapper or local-server fallback may be reopened as product architecture. |
+| PRD-02 | 01.T1 / 01.T2, with 12.T3 as lifecycle guard | Resolved | One Theia process owns two workspace layout modes (`0/1` daily and deep IDE); layout switching is Theia Layout Restorer / Workspace state, not cross-webview or cross-app persistence. |
+| PRD-03 | 01.T3 / 01.T4, with 12.T0 and 13.T2-T4 as S3 guards | Resolved | Kernel-bridge is the first-loaded Theia extension; its backend talks to the external S3 gateway over WS/JSON-RPC and fans one bridge instance to all M extensions and integrated plugins. |
+| PRD-04 | 01.T5 / 07.T0 / 08.T0, audited by 14.T4 | Resolved | Theia 1.56, pnpm workspaces, Theia-native M extensions/integrated plugins, `electron-app` primary desktop target, and `theia-app` browser target remain the build/composition basis; VS Code API borrows require future explicit justification. |
+
+## Cycle 2 UFV Owner Matrix
+
+Track 14 T2 re-homes every `UFV-*` user-final-validation decision into explicit cycle 2 owners and test gates. UFV items are not ambient UX caveats: they either remain user-final questions, or they are enforced as blocked/local-only/read-only/human-required behavior until the user accepts the policy. S5' remains the review authority; M' surfaces may expose counts, handles, and defer/summarize affordances but may not auto-resolve a human-required gate.
+
+| ID | Cycle 2 owner | State | Required gate / verification path |
+| --- | --- | --- | --- |
+| UFV-01 | 06.T3 / 08.T2, with 14.T4 release-gate audit | Carry-forward | Privacy and consent copy stays user-final; until accepted, protected-local, shared-archetype, audio, and review-visibility surfaces are blocked/local-only. Verify via `body-lite-surface.test.mjs`, `privacy-audit/forbidden-fields.test.mjs`, `integrated-release-gate.test.mjs`, and S5 DTO privacy checks in `m5-epii-review-surface.test.mjs`. |
+| UFV-02 | 07.T5 / 08.T2 / S5' review gates, audited by 14.T4 | Carry-forward | Recursive, corpus-affecting, deployment, canon-promotion, and protected-personal changes require human approval; agents may defer/summarize but cannot approve/reject/revise/promote human-required items. Verify via `m5-epii-review-surface.test.mjs`, `epii-review-and-recognition.test.mjs`, `evidence-and-review-actions.test.mjs`, `Body/S/S5/epii-review-core/tests/review_governance.rs`, and `Body/S/S5/epii-autoresearch-core/tests/epii_recursive_spine_inspector.rs`. |
+| UFV-03 | 01.T6 / 06.T7, with 12.T3 lifecycle guard | Carry-forward | Electron/Theia close, quit, sleep, wake, notification, hotkey, crash-recovery, and "IDE closed but `/body` lives" behavior remains prototype-only until user-final lifecycle semantics are accepted. Verify bridge/session continuity with `body-daily-vertical-slice.test.mjs`, `activation-and-persistence.test.mjs`, and `Body/S/S0/epi-cli/tests/session_lifecycle.rs`. |
+| UFV-04 | 06.T2 / 07.T5 / S5' alert routing, audited by 14.T4 | Carry-forward | Shell `1` uses neutral S5-routed agent check-in and priority review alerts; no default agent promise or interrupting review behavior is final until user-final acceptance. Human-required/security/privacy/deployment gates may interrupt; routine evidence remains passive. Verify via `body-lite-surface.test.mjs`, `agentic-control-room/tests/human-gate.test.mjs`, `gate_epii_review.rs`, and `gate_mediation_route.rs`. |
+
+## Cycle 2 DCC Owner Matrix
+
+Track 14 T3 re-homes every `DCC-*` contradiction into explicit cycle 2 ownership. DCC items are not release blockers by default; they are provenance/readiness obligations. Implementations may proceed behind the recommended default only when UI copy, evidence envelopes, or readiness state keep the contradiction visible and prevent silent canon harmonisation.
+
+| ID | Cycle 2 owner | State | Visibility / readiness rule |
+| --- | --- | --- | --- |
+| DCC-01 | 07.T5 / 08.T2 / M5' canon, audited by 14.T5 | Carry-forward | Teach M1 as the operational `+1` parent while preserving the M0 witness-axis wording as source contradiction; canon-review evidence must cite M5' and alpha sources before promotion. |
+| DCC-02 | 05.T4 / 08.T0, audited by 14.T5 | Carry-forward | M3 renders 16 lens positions plus Level-0/meta-position unless canon review resolves "17th lens"; UI/evidence copy must preserve the provenance note. |
+| DCC-03 | 04.T3 / 08.T0, audited by 14.T5 | Carry-forward | M2 may render non-planetary meaning slices, but full planetary/chakral readiness stays blocked or provenance-split until backend profile law supplies the authoritative fields. |
+| DCC-04 | 06.T3 / 09.T0 / S5' privacy review, audited by 14.T5 | Carry-forward | M4 exposes handles, privacy classes, and readiness only; raw identity-quaternion names, axis order, and numeric internals stay blocked from public UI until kernel/privacy law resolves. |
+| DCC-05 | 01.T3 / 04.T4 / 06.T5, audited by 14.T5 | Carry-forward | S0/portal-core may emit validated bus/profile inputs; M2/M4 own derived cymatic/audio presentation, and renderer-local authoritative derivation remains forbidden. |
+| DCC-06 | 07.T5 / 08.T2 / S5' evidence source-anchor checks | Carry-forward | Cite file plus exact heading text for alpha material; missing or renumbered section references must be preserved as drift notes rather than silently rewritten. |
+| DCC-07 | 01.T1 / 06.T2 / 07.T5 / 09.T0 / 13.T3 / 13.T4, audited by 14.T5 | Carry-forward | `/` remains operator transparency/control/debug; shell `1` remains lived daily flow and Nara/Epii preview; full `4+2` remains deep subsystem depth. Deep links and review intents may bridge them, but no surface may claim another surface's authority or artifact class by default. |
 
 ## User-Final-Validation Required
 
@@ -146,7 +183,7 @@ Track 14 T0 re-homes every `IOD-*` implementation-owner decision into an explici
 - **Options:** Always quit on close; minimize to tray by default; ask once and persist preference; expose explicit "sleep app" and "quit app" commands.
 - **Recommended default if safe:** Ask once on first close after IDE summon, persist the preference, and always expose visible connection/readiness state plus explicit sleep and quit commands.
 - **Validation path:** Desktop e2e for close/foreground/background/wake flows; bridge subscription upgrade/downgrade tests; reconnect tests after gateway/SpaceTimeDB restart while backgrounded.
-- **Consequence of delaying:** Track 06 T7 and deep-link/session continuity cannot be finalized, and multi-webview behavior remains only a prototype claim.
+- **Consequence of delaying:** Track 06 T7 and deep-link/session continuity cannot be finalized, and Electron/Theia background-window lifecycle behavior remains only a prototype claim.
 
 ### UFV-04 - Daily-flow review interruption and default lightweight agent
 
@@ -495,6 +532,16 @@ Track 14 T0 re-homes every `IOD-*` implementation-owner decision into an explici
 - **Recommended default if safe:** Cite file plus exact heading text, and route missing/renumbered references to the discoverable heading or companion spec while preserving a note of the drift.
 - **Validation path:** Documentation lint/checklist before implementation handoff; S5 evidence source-anchor tests where applicable.
 - **Consequence of delaying:** Low runtime impact, but review artifacts become harder to verify and canon contradictions are easier to hide accidentally.
+
+### DCC-07 - `/` operator surface, shell `1`, and full `4+2` depth treated as interchangeable UX
+
+- **Question:** How should implementations prevent `/` operator transparency, shell `1` lived daily flow, and the full `4+2` subsystem depth from being treated as the same UX surface?
+- **Why it matters:** M' can bridge these surfaces through one Theia shell and one kernel bridge, but collapsing their authority would route debug/control actions as lived Nara artifacts, daily-flow previews as full Epii/canon workbench claims, or deep subsystem review as lightweight shell interruption.
+- **Affected tracks:** 01, 06, 07, 09, 13, 14.
+- **Options:** Hard separate all three with no cross-links; allow deep links but preserve explicit origin/authority metadata; collapse them into one OmniPanel-driven workspace; defer all cross-surface routing.
+- **Recommended default if safe:** Allow deep links and review intents only when the envelope preserves `origin_surface`, `target_surface`, privacy class, session/NOW, source range, coordinate handles, and promotion/acknowledgement state. `/` remains operator/debug/control, shell `1` remains lived daily flow, and `4+2` remains deep subsystem depth.
+- **Validation path:** OmniPanel catalog checks; intent-routing tests; final no-orphan audit proving `/`, shell `1`, shell `0`, and `4+2` have distinct owners, shared-state contracts, and no duplicate authority.
+- **Consequence of delaying:** Cross-surface links can remain prototype-only, but production UX cannot claim that operator commands, daily Nara artifacts, and deep Epii/canon workbench actions are interchangeable.
 
 ## Success Criteria
 

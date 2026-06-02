@@ -118,6 +118,68 @@ It must preserve the full operator breadth already present in the current Electr
 
 The `/` surface must not fork backend behavior. It dispatches existing CLI commands, gateway RPC methods, or typed service calls. Product-native method names may remain, but each must have coordinate parity against S/S' ownership.
 
+### `/` Product Alias Discipline
+
+The `/` surface consumes the Track 13 T2 alias map in [[S-SYSTEM-INDEX]]. OmniPanel, TUI command palettes, gateway clients, and agent/tool displays may show product-native names because those are ergonomic for operators, but every action must retain its coordinate-native owner in the request/response envelope. Product aliases are therefore command labels, not authority labels.
+
+| `/` product label | Coordinate owner retained in envelope | Portal rule |
+|---|---|---|
+| gateway/connect/readiness | `connect`, `s3.*`, `s3'.*` | Show live connection, health, session, and temporal projection state without treating the panel as S3 authority. |
+| sessions/channels/chat/send | `s3.session.*`, `s3.channel.*`, `s3.message.route` plus `s4.*` when an agent acts | Route transport through S3 and agent execution through S4/S4'; preserve session, DAY/NOW, source, and branch lineage handles. |
+| command execution/logs/config/models/providers | `s0.exec`, `s0.tool_surface`, `s0.env` | Keep `/` as S0' operator membrane; do not duplicate backend command logic in UI code. |
+| vault/graph/kbase/gnosis/Graphiti | `s1.*`/`s1'.*`, `s2.*`/`s2'.*`, `s5.*`/`s5'.*` with S3' runtime where applicable | Surface handles, provenance, and readiness; do not collapse storage substrate, retrieval service, and review governance into one product-owned API. |
+| skills/plugins/agent/VAK/Anima | `s4.agent.*`, `s4'.*` | Expose capability and routing controls while preserving VAK, permission, team, Psyche, and provider-backed execution gates. |
+| Nara/Epii/review/improve | `s5.m.*`, `s5'.review.*`, `s5'.improve.*`, `s5'.epii.*` | Let shell `1` and M5 surfaces consume counts, handles, and defer/summarize affordances; never expose human-required approval or non-dry-run mutation as a product shortcut. |
+
+### OmniPanel Operator Catalog
+
+Track 13 T3 pins the `/` operator catalog over the classified method map. This catalog is available from both the TUI command centre and desktop OmniPanel. It is intentionally an operator membrane: it can inspect, configure, invoke, and route existing coordinate-owned methods, but it must not become the shell `1` lived-flow UX, the M5-4 Agentic Control Room, or a hidden backend authority.
+
+| Catalog family | Required operator affordances | Coordinate owner / tested substrate | Explicit non-ownership rule |
+|---|---|---|---|
+| Connection and gateway readiness | gateway overview, connect/reconnect status, service health, degraded-mode labels | `connect`, `s3.*`, `s3'.*`; `gate_omnipanel_contract.rs`, `portal_surfaces_contract.rs`, kernel-bridge readiness tests | `/` reports gateway truth; it does not define S3 readiness or replace service health contracts. |
+| Sessions and run state | list, select, resolve, preview, patch, run-state, reset, delete, compact, fork, resume, import, transcript handles | `s3.session.*`; `gate_sessions.rs`, `session_lifecycle.rs`, `portal_surfaces_contract.rs` | `/` can inspect/control session records, but it must not write DAY/NOW artifacts as lived Nara content unless explicitly promoted. |
+| Direct chat and tool stream | direct Pi/agent chat, chat history/send/abort, live tool/run output, branch/session lineage | `s3.message.route`, `s4.agent.*`; `gate_chat*.rs`, `gate_runtime_handler_owner.rs`, `gate_mediation_route.rs` | `/` transports and displays agent exchange; it does not bypass S4 VAK/permission routing or become the deep workbench. |
+| Models, providers, keys, and settings | model list/defaults, provider auth state, key management, raw config schema edit/apply/update | `s0.env`, `s0.tool_surface`, `s4.agent.*`; `gate_config_system.rs`, `gate_method_parity.rs`, `agent_models.rs` | `/` edits operator configuration; it does not make model choice an M5 review or Nara identity decision. |
+| Skills, plugins, tools, and capability surfaces | skill surfacing, enablement, install, plugin registry, allowed tools, capability matrix view | `s4.agent.*`, `s4'.*`; `agent_plugins.rs`, `agent_extensions_ta_onta.rs`, `gate_anima_pleroma_access.rs` | `/` exposes capability controls; it cannot invent dispatch tools or sidestep VAK/Pleroma authority. |
+| Logs, diagnostics, and runtime transparency | logs, debug RPC, runtime diagnostics, gateway handler owner, readiness blockers, S0/S3/S4/S5 status | `s0.tool_surface`, `s3.*`, `s4.*`, `s5'.*`; `gate_runtime_handler_owner.rs`, `s0_membrane_guardrails.rs`, `portal_topology_contract.rs` | `/` makes runtime state inspectable; it must not re-host S2/S3/S4/S5 implementation logic. |
+| Vault, graph, kbase, and Gnosis command access | command links into vault, graph, retrieval, kbase, vimarsa, gnosis, pointer-web, source handles | `s1.*`, `s1'.*`, `s2.*`, `s2'.*`, `s5.*`, `s5'.*`; `vault_*`, `graph_*`, `gnosis_commands.rs`, `gate_parity_manifest.rs` | `/` launches/searches by handle and provenance; it does not own storage, graph schema, or interpretation. |
+| Review, improve, and human gates | review inbox counts, submit/defer/summarize affordances, improvement status/history, dry-run promotion status | `s5'.review.*`, `s5'.improve.*`, `s5'.epii.*`; `gate_epii_review.rs`, `gate_epii_improve.rs`, `review_governance.rs` | `/` can surface review state, but human-required approval, rejection, revision, promotion, and non-dry-run mutation stay outside product shortcuts. |
+| Cron, automation, channels, and external delivery | cron setup, automation registry, channel status, external delivery controls | `s3.channel.*`, `s3'.temporal.*`; `gate_channels_cron_voice.rs`, `gate_subscription_lifecycle.rs` | `/` schedules and routes transport actions; it does not transform routine automation into lived flow or review decisions. |
+| Development transparency and handoff | task/run handles, worktree/fork lineage, diagnostics, test evidence handles, promotion readiness | `s3.session.*`, `s4.agent.*`, `s5'.review.*`; `agent_session_commands.rs`, `agent_team_cli_contract.rs`, `gate_subagent_spawn.rs` | `/` may inspect and hand off; deep task execution, graph context, source editing, and evidence review remain M5-4/Epii territory. |
+
+### DAY / NOW / Privacy / Review Intent Routing
+
+Track 13 T4 pins the cross-surface intent grammar. An intent is not just a UI click; it is a typed envelope that preserves origin, target, privacy, session, source, and coordinate authority while the Theia shell changes layout or routes into a deeper workbench. The portal may initiate the gesture, but S3' owns temporal/session projection and S5' owns review/privacy governance.
+
+Required envelope fields:
+
+| Field | Owner | Rule |
+|---|---|---|
+| `origin_surface` | M' portal | One of `shell-0`, `shell-1`, `/`, or `4+2`; used to prevent operator/debug actions from becoming lived artifacts by accident. |
+| `target_surface` | M' portal | One of `nara`, `epii`, `task`, `day-note`, `review`, `canon`, `graph`, `agentic-control-room`, `operator-control`, or `layout-switch`. |
+| `sessionKey`, `dayNow`, `profileGeneration` | S3' | Preserved from the kernel-bridge/deep-link context; no route may drop DAY/NOW/session lineage. |
+| `privacyClass` | S5' with M4/Nara policy | Must be safe for the target surface before dispatch; protected-local/private bodies route only as handles or are blocked. |
+| `sourceRange`, `artifactUri`, `coordinate`, `reviewId`, `improvementId` | S1/S2/S3/S5 by target | Preserve source range, artifact handle, coordinate handle, and review/improvement ids so downstream panes can prove provenance. |
+| `promotionState` / `acknowledgementState` | S5' / M' | Distinguishes preview, acknowledged route, review deposit, and explicit promotion into a lived artifact. |
+
+Routing rules:
+
+| Origin | Target | Allowed route | Required preservation |
+|---|---|---|---|
+| shell `1` flow text, selected range, or highlight | `nara`, `day-note`, `task`, `review`, or `epii` | Flow-originated envelope may route to Nara/DAY capture, task handoff, S5 review, or Epii pedagogy/review surface | `privacyClass`, `sourceRange`, `sessionKey`, `dayNow`, `coordinate`, `artifactUri`, and review/improvement handles when present |
+| shell `1` review alert | `review` or `epii` | Human-required/security/privacy/deployment alerts may interrupt; routine evidence remains passive unless opened | `reviewId`, `privacyClass`, `requires_human`, `sessionKey`, and `dayNow` |
+| safe source handle row | `graph`, `canon`, `review`, `agentic-control-room`, or `epii` | Deep link may summon the deep `4+2` workbench pane while preserving the source handle | `artifactUri`, `coordinate`, `reviewId`, `privacyClass`, and source namespace |
+| `/` command, debug RPC, session control, direct Pi/agent chat | `operator-control` | Operator-originated intent stays transparent control/debug/readiness unless the user explicitly promotes it | `origin_surface='/'`, command/method owner, session/run handles, and `promotionState='operator-only'` |
+| `/` explicit promotion action | `nara`, `day-note`, `review`, or `task` | Promotion requires an explicit user action that changes artifact class and records provenance | prior operator handle, new target artifact class, acknowledgement, privacy class, and review state when applicable |
+| layout switch / summon / return | `layout-switch` or deep `4+2` pane | Theia layout switching may reveal target panes without mutating source truth | stable bridge identity, `sessionKey`, `dayNow`, selected coordinate, and connection/readiness state |
+
+Forbidden routes:
+
+- `/` may not write journal/DAY/NOW/Nara artifacts unless `promotionState` records an explicit promotion.
+- Shell `1` may not approve, reject, revise, promote, or publish human-required review items.
+- Deep `4+2` panes may not treat protected shell `1` source bodies as canonical graph/canon facts without S5 review and privacy clearance.
+
 ## `0` Surface
 
 The `0` surface is the structural/cosmic parent face. It is the lean integrated preview of the 1-2-3 systems: relation movement, harmonic/correspondential matrix, and clock/cosmos transcription. It includes selected-coordinate orientation, but it is not the full M0' map subsystem.

@@ -87,3 +87,42 @@ This is **not** a rebuild track. It exists only to close the real M' integration
 
    - negative fixture/guardrail tests
    - no generic substrate-build language remains in this track
+
+## T4 No-New-S-Rebuild Guardrail
+
+This track is now closed under a consumed-surface rule: every future `12.*`
+claim must start from the already-landed S3/S4/S5 substrate and may only
+describe work as M' consumption, verification, routing, lifecycle closure, or a
+named integration blocker. A tranche may not re-open generic S3/S4/S5
+implementation work just because a seed spec names a larger canonical surface.
+
+### Allowed Closure Language
+
+| Allowed phrase family | Required anchor | Example shape |
+|---|---|---|
+| `consume as-is` / `closed as consume-as-is` | a current M' consumer plus a live Body/S path or named test | M5 review queue consumes `Body/S/S5/epii-review-core` through the existing gateway review methods |
+| `audit/verify` | a named existing contract plus the test or parser that proves it | verify S3 temporal context payload preservation in the shell deep-link tests |
+| `extend` | an M' integration blocker that names the caller, callee, privacy class, and owner | extend only the gateway route for a missing `s5'.teach` method after S5' remains owner |
+| `integration blocker` / `consumed-surface gap` | concrete consumer path and owner | `s4'.mediation.capabilities.list` exposure is a capability-list integration blocker, not a generic S4 rebuild |
+
+### Forbidden Rebuild Language
+
+The following language is invalid in Track 12 unless it is quoted as a negative
+fixture inside this guardrail section or immediately paired with a concrete M'
+integration blocker:
+
+| Forbidden phrase family | Why it is invalid here | Required rewrite |
+|---|---|---|
+| `build S3/S4/S5 from scratch`, `greenfield S3/S4/S5`, `new S3/S4/S5 substrate` | cycle 1 already landed the S3/S4/S5 substrate consumed by this track | name the consumed M' surface and the missing contract |
+| `implement the whole gateway/runtime/agent/review stack` | collapses S3, S4, and S5 ownership back into ambient substrate work | split into the exact shell, ACR, review, or lifecycle consumer gap |
+| `replace the S3/S4/S5 architecture` | bypasses the canonical seed and ownership ledger | open an explicit architectural decision in Track 14 instead |
+
+### Missing-Item Phrasing Rule
+
+Every unresolved item in Track 12 must use this shape:
+
+`<consumer surface> cannot yet consume <S3/S4/S5 owned contract> because <specific blocker>; owner=<track/tranche or coordinate>; verification=<real test/parser>.`
+
+This keeps lifecycle truth in S3/S4/S5, keeps product ownership in M', and
+prevents "missing substrate" from becoming a disguised invitation to rebuild an
+already-landed S layer.

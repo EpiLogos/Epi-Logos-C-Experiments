@@ -82,6 +82,32 @@ Explicit blockers: provider-backed Epii-to-Anima invocation, gateway routing bey
 
 S5' participates in user-final validation, consent gates, Graphiti governance, Day/NOW review deposition, capability matrix, Epii/Anima reciprocity, kbase/gnosis, canonical seed evolution, and the Möbius return to S0.
 
+### Cycle 2 UFV Governance Gates
+
+The Cycle 2 `UFV-*` matrix in `11-open-architectural-decisions.md` is binding for S5' review surfaces: S5' may report, defer, summarize, and route human-required items, but it must not expose agent approval, rejection, revision, promotion, or protected-data publication as final behavior before the relevant user-final validation is accepted.
+
+| UFV item | S5' ownership | Required review gate |
+|---|---|---|
+| `UFV-01` | privacy/consent review visibility | protected-local, shared-archetype, audio, protected-open, and review-visibility actions stay blocked or local-only until consent copy is user-final; tests cover S5 DTO privacy and integrated privacy audit paths |
+| `UFV-02` | recursive/corpus-affecting authority | recursive self-modification, corpus-affecting changes, deployment gates, non-dry-run canon promotion, and protected-personal changes require `requires_human`; review tests must prove agents can defer/summarize but cannot approve/reject/revise/promote |
+| `UFV-03` | lifecycle evidence routing | close/quit/sleep/wake/crash-recovery claims stay prototype-only until desktop lifecycle semantics are user-final; S5' consumes only session/continuity evidence handles |
+| `UFV-04` | alert routing and default actor neutrality | shell review alerts may interrupt only for human-required/security/privacy/deployment gates; routine evidence remains passive and default agent presentation remains neutral until accepted |
+
+### Cycle 2 Intent And Review Routing Gates
+
+Track 13 T4 binds S5' to the M' intent envelope for review, privacy, and promotion decisions. S5' does not own shell layout switching and does not convert operator commands into lived artifacts; it owns whether a routed item may become review evidence, a human-required alert, an improvement run, or a canon/promotion candidate.
+
+| Routed intent class | S5' gate | Allowed S5' behavior |
+|---|---|---|
+| shell `1` flow-originated review candidate | `privacyClass` safe for review plus source handle present | Create or open a review item; defer/summarize for agents; preserve DAY/NOW/session/source range. |
+| shell `1` human-required alert | `requires_human` or security/privacy/deployment/canon-promotion class | Interrupt as priority alert; block agent approve/reject/revise/promote actions. |
+| shell `1` routine evidence | non-interrupting evidence class | Surface passive count/handle only unless the user opens review or promotes the evidence. |
+| `/` operator-originated control/debug action | `origin_surface='/'` and no explicit promotion state | Keep as operator-control/readiness/debug; do not create Nara/DAY artifacts or review items by default. |
+| `/` explicit promotion into review/task/day-note | promotion/acknowledgement state plus privacy class | Accept as review/task/day-note candidate only with original operator handle retained as provenance. |
+| deep `4+2` Epii/canon/ACR route | privacy-safe handle plus review/canon authority | Open the appropriate Epii/review/canon workbench surface; mutation and publication remain review-gated. |
+
+The hard rule is unchanged: S5' may report, defer, summarize, and route, but agents may not approve, reject, revise, publish, or promote human-required items. Cross-surface intent routing expands how review evidence reaches S5'; it does not weaken review law.
+
 ## Open Decisions And Resolution Status
 
 | Decision | Status | Current resolution |
