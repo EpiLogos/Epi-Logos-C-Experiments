@@ -1,0 +1,37 @@
+{
+  "runId": "20260602T175716Z-01-T6",
+  "taskId": "01.T6",
+  "startedAt": "2026-06-02T17:57:16.466Z",
+  "owner": "m-dev-parallel-B",
+  "leaseExpiresAt": "2026-06-02T19:57:16.466Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T6",
+    "trackId": "01",
+    "tranche": "T6",
+    "title": "Electron Packaging, Update, And Desktop Release Discipline",
+    "effort": null,
+    "file": "01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/01-electron-theia-shell-0-slash-1-and-omnipanel.md",
+    "dependsOn": [
+      "01.T5"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**",
+      "Idea/Bimba/Seeds/M/M'-TAURI-PORT-SPEC.md",
+      "Idea/Bimba/Seeds/M/M5'/m5-prime-system-shape-and-tauri-ide-canon.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

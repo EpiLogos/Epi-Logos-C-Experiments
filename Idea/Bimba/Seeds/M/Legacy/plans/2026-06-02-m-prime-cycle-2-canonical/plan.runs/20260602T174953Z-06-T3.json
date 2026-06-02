@@ -1,0 +1,37 @@
+{
+  "runId": "20260602T174953Z-06-T3",
+  "taskId": "06.T3",
+  "startedAt": "2026-06-02T17:49:53.740Z",
+  "owner": "m-dev-mainloop",
+  "leaseExpiresAt": "2026-06-02T19:49:53.740Z",
+  "worktree": null,
+  "task": {
+    "id": "06.T3",
+    "trackId": "06",
+    "tranche": "T3",
+    "title": "Day Episodes, Artifact Graph, And Dialogic Voice",
+    "effort": null,
+    "file": "06-m4-nara-extension.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/06-m4-nara-extension.md",
+    "dependsOn": [
+      "06.T2"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+      "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

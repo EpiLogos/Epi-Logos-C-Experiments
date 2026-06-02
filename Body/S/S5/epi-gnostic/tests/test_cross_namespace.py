@@ -26,7 +26,7 @@ async def test_unified_vector_graph_query():
             "  coordinate_family: 'M', "
             "  assignment_method: 'direct'}) "
             "WITH g "
-            "MATCH (b:BimbaCoordinate {bimbaCoordinate: '#1'}) "
+            "MATCH (b:Bimba {coordinate: '#1'}) "
             "MERGE (g)-[:MAPS_TO_COORDINATE {confidence: 1.0, method: 'direct'}]->(b)"
         )
 
@@ -34,10 +34,10 @@ async def test_unified_vector_graph_query():
     async with driver.session(database="neo4j") as session:
         result = await session.run(
             "MATCH (n:gnostic {entity_id: 'xns_test_1'}) "
-            "OPTIONAL MATCH (n)-[r:MAPS_TO_COORDINATE|RESONATES_WITH]->(b:BimbaCoordinate) "
+            "OPTIONAL MATCH (n)-[r:MAPS_TO_COORDINATE|RESONATES_WITH]->(b:Bimba) "
             "RETURN n.entity_name AS name, n.bimba_coordinate AS coord, "
             "n.coordinate_family AS family, "
-            "collect({target: b.bimbaCoordinate, rel: type(r), conf: r.confidence}) AS links"
+            "collect({target: b.coordinate, rel: type(r), conf: r.confidence}) AS links"
         )
         record = await result.single()
         assert record is not None

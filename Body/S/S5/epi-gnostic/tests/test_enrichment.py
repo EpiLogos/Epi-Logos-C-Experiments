@@ -102,7 +102,7 @@ async def _fetch_edge(
     """Return properties of all edges of *rel_type* from the node."""
     cypher = (
         f"MATCH (n:`{workspace}` {{vector_id: $vid}})-[r:{rel_type}]->(bc) "
-        f"RETURN properties(r) AS rprops, bc.bimbaCoordinate AS coord"
+        f"RETURN properties(r) AS rprops, bc.coordinate AS coord"
     )
     async with driver.session(database=NEO4J_DB) as session:
         cursor = await session.run(cypher, vid=vector_id)
@@ -184,7 +184,7 @@ async def test_direct_assignment_sets_properties(enricher):
 
 @_skip_neo4j
 async def test_cross_namespace_edge_created(enricher):
-    """assign_direct creates a MAPS_TO_COORDINATE edge to the BimbaCoordinate node."""
+    """assign_direct creates a MAPS_TO_COORDINATE edge to the :Bimba coordinate node."""
     coord_enricher, ws, drv = enricher
     vid = f"test-edge-{uuid.uuid4().hex[:8]}"
 

@@ -17,7 +17,8 @@ fn aletheia_scaffold_exists() {
 
 fn repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap()
+        .ancestors()
+        .nth(4)
+        .expect("epi-cli manifest should live under Body/S/S0/epi-cli")
         .to_path_buf()
 }

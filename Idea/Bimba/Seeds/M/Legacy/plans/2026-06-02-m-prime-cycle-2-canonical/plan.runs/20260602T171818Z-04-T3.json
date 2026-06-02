@@ -1,0 +1,37 @@
+{
+  "runId": "20260602T171818Z-04-T3",
+  "taskId": "04.T3",
+  "startedAt": "2026-06-02T17:18:18.829Z",
+  "owner": "m-dev-parallel-B",
+  "leaseExpiresAt": "2026-06-02T19:18:18.829Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T3",
+    "trackId": "04",
+    "tranche": "T3",
+    "title": "Cymatic / Audio Surface",
+    "effort": null,
+    "file": "04-m2-parashakti-extension.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/04-m2-parashakti-extension.md",
+    "dependsOn": [
+      "04.T2"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**",
+      "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
+      "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

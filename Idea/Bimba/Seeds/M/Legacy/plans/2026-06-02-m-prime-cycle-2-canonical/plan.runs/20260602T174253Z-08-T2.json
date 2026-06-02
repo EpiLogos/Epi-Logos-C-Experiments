@@ -1,0 +1,36 @@
+{
+  "runId": "20260602T174253Z-08-T2",
+  "taskId": "08.T2",
+  "startedAt": "2026-06-02T17:42:53.593Z",
+  "owner": "m-dev-mainloop",
+  "leaseExpiresAt": "2026-06-02T19:42:53.593Z",
+  "worktree": null,
+  "task": {
+    "id": "08.T2",
+    "trackId": "08",
+    "tranche": "T2",
+    "title": "Evidence, Review, And Agent Hooks",
+    "effort": null,
+    "file": "08-integrated-1-2-3-cosmic-engine-plugin.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/08-integrated-1-2-3-cosmic-engine-plugin.md",
+    "dependsOn": [
+      "08.T1"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

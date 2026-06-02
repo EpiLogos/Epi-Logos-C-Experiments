@@ -1,0 +1,37 @@
+{
+  "runId": "20260602T171732Z-02-T4",
+  "taskId": "02.T4",
+  "startedAt": "2026-06-02T17:17:32.484Z",
+  "owner": "m-dev-parallel-B",
+  "leaseExpiresAt": "2026-06-02T19:17:32.484Z",
+  "worktree": null,
+  "task": {
+    "id": "02.T4",
+    "trackId": "02",
+    "tranche": "T4",
+    "title": "M0 Routing Into Action And Deep Links",
+    "effort": null,
+    "file": "02-m0-bimba-map-extension.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/02-m0-bimba-map-extension.md",
+    "dependsOn": [
+      "02.T3"
+    ],
+    "writeScopes": [
+      "Body/S/S2/**",
+      "Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md",
+      "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

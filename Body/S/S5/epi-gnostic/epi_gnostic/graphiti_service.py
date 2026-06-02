@@ -389,7 +389,7 @@ async def identity_event(req: IdentityEventRequest):
         await session.run(
             """
             MATCH (pn:Pratibimba:PersonalNexus {coordinate: '4.4.4.4'})
-            MATCH (bc:BimbaCoordinate {coordinate: '#4'})
+            MATCH (bc:Bimba {coordinate: '#4'})
             MERGE (pn)-[:BEDROCK]->(bc)
             """,
         )

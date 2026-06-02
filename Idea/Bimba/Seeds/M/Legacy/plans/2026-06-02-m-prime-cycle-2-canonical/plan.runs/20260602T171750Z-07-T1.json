@@ -1,0 +1,36 @@
+{
+  "runId": "20260602T171750Z-07-T1",
+  "taskId": "07.T1",
+  "startedAt": "2026-06-02T17:17:50.047Z",
+  "owner": "m-dev-mainloop",
+  "leaseExpiresAt": "2026-06-02T19:17:50.047Z",
+  "worktree": null,
+  "task": {
+    "id": "07.T1",
+    "trackId": "07",
+    "tranche": "T1",
+    "title": "Library / Gnosis Surface",
+    "effort": null,
+    "file": "07-m5-epii-extension-and-agentic-ide.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/07-m5-epii-extension-and-agentic-ide.md",
+    "dependsOn": [
+      "07.T0"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -71,22 +71,21 @@ Architecture diagrams are consumed through Seed specs, but their durable meaning
 
 This is the central braid for the current question: [[World-Ontology]] provides the ontology hub, [[ARCHITECTURE-DIAGRAM-PACK]] provides the diagram surface, [[S-SHARD-HARMONIZATION-PROTOCOL]] provides shard quality law, [[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]] provides Hen's crystallisation workflow, and [[World/Types]] provides the MOC/canvas topology.
 
-## Semantic Type Roots
+## Coordinate-Native Artifact And Template Systems
 
-[[World/Types]] now exposes semantic type roots as graph-evidence incubation surfaces alongside the coordinate mirror. They cross-link coordinates; they do not replace coordinate authority.
+[[World/Types]] must not bypass the systems that already own artifact and template formation.
 
-| Type Root | Role |
-| --- | --- |
-| [[Artifacts]] | Reusable artifact forms and artifact families |
-| [[Templates]] | [[CT]] forms and Hen template resolution |
-| [[Agents]] | Constitutional agents, ta-onta carriers, and return agents |
-| [[Capabilities]] | Tools, skills, plugins, permission gates, and capability matrix entries |
-| [[Interfaces]] | CLI, RPC, gateway, UI, envelope, and API surfaces |
-| [[Runtime-Surfaces]] | Live processes, stores, bridges, sessions, and managed agent homes |
-| [[Diagrams]] | Seed diagram packs and [[World/Types]] visual MOC governance |
-| [[Datasets]] | Graph, corpus, cache, source, and contract-ledger datasets |
+| Concern | Canonical Home | World Rule |
+| --- | --- | --- |
+| [[CT]] templates | `World/Types/Coordinates/C/C1/C1'/CT/**` and flat [[World]] CT forms | [[Hen]] resolves templates from CT law; no sibling `Templates` root should supersede it. |
+| [[T]] / [[T′]] artifacts | `World/Types/Coordinates/T/**` and `Idea/Pratibimba/Self/Thought/**` | Thought artifacts are T/T′ instantiations; no sibling `Artifacts` root should supersede them. |
+| Coordinate crystallisations | `World/Types/Coordinates/**` | MOCs/canvases incubate coordinate topology before graduation. |
+| Stable architecture definitions | flat `World/{Name}.md` | Graduated forms become canonical here and backlink their type-source MOC/canvas plus Seed evidence. |
+| Semantic views | [[TYPE-REGISTRY]] crosswalks | Agents, capabilities, interfaces, runtime surfaces, diagrams, and datasets are inferred views over coordinates unless a Seed protocol proves a new root. |
 
-The current registry is [[TYPE-REGISTRY]]. Folder ancestry is graph-significant evidence, but [[S2]] remains the authority that validates labels, properties, and relationships.
+Folder ancestry is graph-significant evidence, but [[S2]] remains the authority that validates labels, properties, and relationships. The current registry is [[TYPE-REGISTRY]].
+
+Graduation rule: a coordinate file in [[World/Types]] is `incubating_type_index`; a stable flat file in [[World]] is `crystallised_world_form`; the original type-local file remains a `type_moc_pointer` rather than a duplicate canonical definition. This gives Hen a deterministic way to promote links across `/World` without losing the coordinate ancestry that produced them.
 
 ---
 

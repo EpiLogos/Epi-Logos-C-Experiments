@@ -23,7 +23,7 @@ This protocol makes [[Hen]] operationally literate in the existing [[World]] / [
 | --- | --- | --- |
 | Seed evidence | `Idea/Bimba/Seeds/**` | Specs, plans, architecture packs, traceability, migrated legacy material |
 | Flat crystallisation | `Idea/Bimba/World/{Name}.md` | Stable definitions, reusable forms, synthesis docs, architecture-as-documentation |
-| Type incubation / MOC | `Idea/Bimba/World/Types/**` | Type indexes, coordinate mirrors, semantic MOCs, canvases, graph-type evidence |
+| Type incubation / MOC | `Idea/Bimba/World/Types/**` | Coordinate mirrors, same-name MOCs, canvases, graph-type evidence |
 | Temporal work | `Idea/Empty/Present/**` | Session/day/FLOW/NOW work before promotion |
 | Runtime reflection | `Idea/Pratibimba/**` | System/self reflective runtime surfaces |
 
@@ -35,7 +35,7 @@ Use this loop for architecture and development documentation:
 
 1. Capture live evidence in [[FLOW]], [[NOW]], code review notes, tests, or implementation artifacts.
 2. Update the owning [[Seeds]] spec, shard, traceability index, and diagram anchor.
-3. Run or simulate `s1'.residency.resolve` to decide whether the artifact remains Seed evidence, becomes a flat [[World]] crystallisation, or updates a [[World/Types]] MOC.
+3. Run or simulate `s1'.residency.resolve` to decide whether the artifact remains Seed evidence, becomes a flat [[World]] crystallisation, or updates a coordinate-native [[World/Types]] MOC.
 4. If type-local structure is affected, update or create the same-name `{Type}.md` and `{Type}.canvas` pair under [[World/Types]].
 5. If the definition stabilises, crystallise the durable definition into flat [[World]] and backlink the Seed evidence and type MOC.
 6. Hen emits graph-promotion intent with path, wikilinks, frontmatter, source hashes, type ancestry, sibling canvas evidence, and requested label/property hints.
@@ -52,6 +52,8 @@ These surfaces are required by the protocol. Some are target-state and must be t
 | `s1'.type.index` | Plans or audits a type-index MOC | Target-state |
 | `s1'.moc.ensure` | Ensures same-name `.md` / `.canvas` pair for a type authority | Target-state |
 | `s1'.canvas.create_or_update` | Creates or updates Obsidian canvas MOCs with source backlinks | Target-state |
+| `s1'.world.graduate` | Promotes a stable coordinate crystallisation into flat [[World]] | Target-state |
+| `s1'.world.link_infer` | Infers related [[World]] links from source coordinates, wikilinks, Seeds, and type ancestry | Target-state |
 | `s1'.graph.intent.world_types` | Emits [[World/Types]] ancestry evidence for [[S2]] | Target-state over existing `GraphPromotionIntent` substrate |
 
 ## MOC Index Rule
@@ -63,6 +65,19 @@ Every type-authority folder under [[World/Types]] should contain:
 - Explicit scope, exclusions, coordinate crosswalk, Seed evidence, graph-label intent, and open gaps.
 
 Container-only folders should be marked as containers in [[TYPE-REGISTRY]] or a local README. Silent container/type ambiguity is not allowed.
+
+Do not use the MOC rule to create parallel roots for concerns already owned by coordinates. [[CT]] template law lives under `Coordinates/C/C1/C1'/CT/**`; [[T]] / [[T′]] artifact law lives under `Coordinates/T/**` and `Idea/Pratibimba/Self/Thought/**`. Semantic views such as agents, capabilities, interfaces, runtime surfaces, diagrams, and datasets should be inferred from owning coordinates unless a Seed protocol explicitly promotes a new root.
+
+## Crystallisation States
+
+| State | Location | Meaning |
+| --- | --- | --- |
+| `seed_evidence` | `Idea/Bimba/Seeds/**` | Plans, specs, diagrams, source traces, and migrated legacy evidence. |
+| `incubating_type_index` | `Idea/Bimba/World/Types/Coordinates/**/{Name}/{Name}.md` plus `{Name}.canvas` | Coordinate-local MOC/canvas topology and graph-promotion evidence. |
+| `crystallised_world_form` | `Idea/Bimba/World/{Name}.md` | Stable canonical architecture-as-documentation. |
+| `type_moc_pointer` | Original `World/Types/**/{Name}.md` after graduation | Thin coordinate pointer, topology map, and evidence index, not a duplicate definition. |
+
+A flat [[World]] crystallisation must include source coordinates, Seed evidence links, type-source path, canvas path, and related World wikilinks. Hen should use those fields plus wikilinks/frontmatter/source hashes to infer discoverable links across `/World`.
 
 ## Diagram Rule
 
@@ -84,9 +99,12 @@ Hen should extract:
 - `type_coordinate`
 - `sibling_canvas_path`
 - `crystallisation_state`
+- `world_form_path`
+- `type_source_path`
+- `seed_evidence_paths`
 - source/backlink evidence
 
-S2 decides what becomes registered Neo4j labels, properties, and relationships. Desired labels such as `WorldType`, `CoordinateType`, `SemanticType`, `MocIndex`, or `CanvasMoc` require explicit graph-schema registration before use.
+S2 decides what becomes registered Neo4j labels, properties, and relationships. Desired labels such as `WorldType`, `CoordinateType`, `MocIndex`, or `CanvasMoc` require explicit graph-schema registration before use. `SemanticType` is a derived/query view unless [[S2]] explicitly registers it.
 
 ## Agent Workflow
 
@@ -99,10 +117,11 @@ Agents working on architecture or documentation should:
 5. Update Seeds first when the architecture is still live.
 6. Update [[World/Types]] MOCs when type topology changes.
 7. Update flat [[World]] only when the definition is stable enough to crystallise.
+8. When graduating from [[World/Types]] to flat [[World]], keep the type-local file as a MOC/source pointer and add enough backlinks for inference across `/World`.
 
 ## Open Gaps
 
 - `epi vault` discovery needs a default-vault/doctor/timeout workflow before it can be treated as mandatory in all sessions.
-- Hen does not yet produce complete [[World/Types]] ancestry evidence in `GraphPromotionIntent`.
+- Hen does not yet produce complete [[World/Types]] ancestry evidence or flat-World graduation evidence in `GraphPromotionIntent`.
 - S2 does not yet register all desired type/MOC labels.
 - Coordinate family MOCs outside [[S]] remain mostly scaffolded.

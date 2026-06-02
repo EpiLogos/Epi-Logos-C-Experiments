@@ -2,7 +2,8 @@
 
 Runs after RAG-Anything extracts entities into the :gnostic namespace.
 Assigns bimba coordinates and creates cross-namespace edges to
-:BimbaCoordinate nodes that already exist in Neo4j.
+:Bimba coordinate nodes (matched by the ``coordinate`` property) that
+already exist in Neo4j.
 """
 
 from __future__ import annotations
@@ -32,8 +33,8 @@ class CoordinateEnricher:
     ----------
     driver:
         An open ``neo4j.AsyncDriver`` connected to the Neo4j instance that
-        holds both the ``:gnostic`` workspace nodes and the ``:BimbaCoordinate``
-        nodes.
+        holds both the ``:gnostic`` workspace nodes and the ``:Bimba``
+        coordinate nodes.
     database:
         The Neo4j database name (default ``"neo4j"``).
     workspace:
@@ -64,7 +65,7 @@ class CoordinateEnricher:
 
         Sets ``bimba_coordinate``, ``coordinate_family``, and
         ``assignment_method="direct"`` on the node, and creates a
-        ``MAPS_TO_COORDINATE`` edge to the matching ``:BimbaCoordinate`` node.
+        ``MAPS_TO_COORDINATE`` edge to the matching ``:Bimba`` coordinate node.
 
         Parameters
         ----------
@@ -84,7 +85,7 @@ class CoordinateEnricher:
             f"    n.coordinate_family = $family, "
             f"    n.assignment_method = 'direct' "
             f"WITH n "
-            f"MATCH (bc:BimbaCoordinate {{bimbaCoordinate: $coord}}) "
+            f"MATCH (bc:Bimba {{coordinate: $coord}}) "
             f"MERGE (n)-[r:MAPS_TO_COORDINATE]->(bc) "
             f"SET r.confidence = 1.0, r.method = 'direct' "
             f"RETURN n"
@@ -158,7 +159,7 @@ class CoordinateEnricher:
         for coord, conf in pairs:
             edge_cypher = (
                 f"MATCH (n:`{ws}` {{vector_id: $vid}}) "
-                f"MATCH (bc:BimbaCoordinate {{bimbaCoordinate: $coord}}) "
+                f"MATCH (bc:Bimba {{coordinate: $coord}}) "
                 f"MERGE (n)-[r:RESONATES_WITH]->(bc) "
                 f"SET r.confidence = $conf, r.method = 'llm_classified'"
             )

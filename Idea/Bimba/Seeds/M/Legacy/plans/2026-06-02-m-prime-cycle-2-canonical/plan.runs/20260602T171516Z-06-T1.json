@@ -1,0 +1,36 @@
+{
+  "runId": "20260602T171516Z-06-T1",
+  "taskId": "06.T1",
+  "startedAt": "2026-06-02T17:15:16.336Z",
+  "owner": "m-dev-parallel-B",
+  "leaseExpiresAt": "2026-06-02T19:15:16.336Z",
+  "worktree": null,
+  "task": {
+    "id": "06.T1",
+    "trackId": "06",
+    "tranche": "T1",
+    "title": "Personal Quaternion And Kerykeion Source",
+    "effort": null,
+    "file": "06-m4-nara-extension.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/06-m4-nara-extension.md",
+    "dependsOn": [
+      "06.T0"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

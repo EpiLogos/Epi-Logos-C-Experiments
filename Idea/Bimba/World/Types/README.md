@@ -9,7 +9,7 @@ Flat `Idea/Bimba/World/*.md` remains the crystallised form library. [[Seeds]] re
 | Surface | Authority | Examples |
 | --- | --- | --- |
 | [[World]] | Crystallised definitions, reusable forms, stable architecture-as-documentation | [[World-Ontology]], [[CT0]], [[NOW]], [[Seed]], [[Task-Spec]] |
-| [[World/Types]] | Type-local MOCs, canvases, coordinate mirrors, semantic typology, incubation evidence | [[Types.canvas]], `Coordinates/S/S1/S1.canvas`, [[Artifacts]], [[Templates]], [[Diagrams]] |
+| [[World/Types]] | Type-local MOCs, canvases, coordinate mirrors, and incubation evidence | [[Types.canvas]], `Coordinates/S/S1/S1.canvas`, `Coordinates/C/C1/C1'/CT/**`, `Coordinates/T/**` |
 | [[Seeds]] | Specs, plans, diagram packs, traceability, migrated legacy source evidence | [[ARCHITECTURE-DIAGRAM-PACK]], [[S-SYSTEM-INDEX]], [[S-SHARD-HARMONIZATION-PROTOCOL]] |
 
 `World/Forms/` is obsolete and must not be revived.
@@ -37,22 +37,33 @@ Older references to a top-level `Root/#` or `Coordinates/C/C'/CT` should be read
 
 Prime S-family MOCs are canonical under `Coordinates/S/S'/S0'` through `S5'`. Any nested `Coordinates/S/S1/S1'`-style branch is an alias or scaffold until a Seed protocol explicitly promotes it.
 
-## Semantic Type Roots
+## Coordinate-Native Type Roots
 
-Semantic roots complement the coordinate mirror; they do not replace coordinate authority.
+Semantic categories must not become parallel folder authorities when a canonical coordinate system already owns them.
 
-| Root | Purpose |
-| --- | --- |
-| [[Artifacts]] | Reusable artifact forms and artifact-family classification |
-| [[Templates]] | [[CT]] forms and Hen template resolution |
-| [[Agents]] | Constitutional agents, ta-onta carriers, and return agents |
-| [[Capabilities]] | Tools, skills, plugins, permissions, and capability matrix entries |
-| [[Interfaces]] | CLI, RPC, gateway, UI, envelope, and API surfaces |
-| [[Runtime-Surfaces]] | Live processes, stores, bridges, sessions, and managed agent homes |
-| [[Diagrams]] | Seed diagram packs and World/Types MOC/canvas governance |
-| [[Datasets]] | Graph, corpus, cache, source, and contract-ledger datasets |
+| Concern | Canonical Type Home | Notes |
+| --- | --- | --- |
+| Hen templates and CT artifacts | `Coordinates/C/C1/C1'/CT/**` | [[CT0]]-[[CT5]] and their concrete families are the template law. Do not create a sibling `Templates` root. |
+| Thought artifacts and T/T' records | `Coordinates/T/**` plus `Idea/Pratibimba/Self/Thought/**` | [[T-family]] names living planes of thought; [[T′-family]] names instantiated artifacts. Do not create a sibling `Artifacts` root. |
+| Agents and capabilities | `Coordinates/S/S4/**`, `Coordinates/S/S'/S4'/**`, and [[M5]] / [[M5']] routes | Constitutional agents, [[VAK]], tools, plugins, and permissions are coordinate views over S4/S4' and M' surfaces. |
+| Interfaces and runtime surfaces | `Coordinates/S/S0/**`, `S3/**`, `S4/**`, `S5/**`, and [[M']] routes | CLI, gateway, sessions, stores, envelopes, and bridges should be inferred from owning coordinates and code evidence. |
+| Diagrams and MOCs | [[Seeds]] diagram packs plus same-name `.canvas` files under coordinate MOCs | Live architecture diagrams remain Seed evidence; stable type canvases live here. |
+| Datasets and graph surfaces | `Coordinates/S/S2/**`, `S5/**`, and graph-schema Seeds | Graph, corpus, cache, source, and ledger datasets require [[S2]] schema validation before labels become graph state. |
 
-Deferred roots such as `Workflows`, `Properties`, and `Relations` should wait until the first semantic roots and the [[Hen]] / [[S2]] graph-promotion law are verified.
+If a useful semantic view such as `Interfaces` or `Agents` is needed, make it a query, index, or flat [[World]] synthesis that links back to the owning coordinates. Do not mint a new top-level `World/Types/{SemanticRoot}` unless a Seed protocol proves that no coordinate-native home exists.
+
+## Graduation To Flat World
+
+Coordinate crystallisation starts in [[World/Types]] and graduates into flat [[World]] only when the definition becomes stable enough to serve as canonical architecture-as-documentation.
+
+| State | Location | Rule |
+| --- | --- | --- |
+| `incubating_type_index` | `World/Types/Coordinates/**/{Name}/{Name}.md` and `{Name}.canvas` | Type-local MOC, canvas, crosswalk, and graph-evidence gathering. |
+| `crystallised_world_form` | `World/{Name}.md` | Stable canonical definition with source coordinates, Seed evidence, type-source backlink, canvas backlink, and related World links. |
+| `type_moc_pointer` | Original `World/Types/**/{Name}.md` | Remains as MOC/topology pointer after graduation; it should not duplicate the flat World definition. |
+| `seed_evidence` | `Seeds/**` | Plans, specs, diagrams, traces, and migrated legacy files that justify the crystallisation. |
+
+Hen should prioritise the flat [[World]] file for canonical meaning after graduation, then use the type-local MOC/canvas for coordinate ancestry and visual topology.
 
 ## Folder-To-Graph Law
 
@@ -65,7 +76,7 @@ The lawful flow is:
 3. [[S2]] validates labels, properties, and relationships against graph-schema registries.
 4. Only registered labels/properties/relationships become Neo4j state.
 
-Useful target properties include `q_4_type_family`, `q_4_type_path`, `q_3_canvas_path`, `q_5_crystallisation_state`, `coordinate_parent`, and `coordinate_axis`. Useful target labels such as `WorldType`, `CoordinateType`, `SemanticType`, `MocIndex`, or `CanvasMoc` require explicit [[S2]] schema registration before use.
+Useful target properties include `q_4_type_family`, `q_4_type_path`, `q_3_canvas_path`, `q_5_crystallisation_state`, `coordinate_parent`, `coordinate_axis`, `world_form_path`, `type_source_path`, and `seed_evidence_paths`. Useful target labels such as `WorldType`, `CoordinateType`, `MocIndex`, or `CanvasMoc` require explicit [[S2]] schema registration before use. `SemanticType` should be treated as a derived/query label, not a folder-authority label, unless [[S2]] explicitly registers it.
 
 ## Crystallisation Loop
 
@@ -78,6 +89,6 @@ Diagrams remain in [[Seeds]] while architecture is live. Stable definitions crys
 ## Operational Gaps
 
 - `s1'.residency.resolve`, `s1'.type.index`, `s1'.moc.ensure`, and `s1'.canvas.create_or_update` are specified by the workflow but not yet complete as public gateway/tool surfaces.
-- Hen promotion intent does not yet expose full `World/Types` ancestry evidence.
+- Hen promotion intent does not yet expose full `World/Types` ancestry evidence or flat-World graduation evidence.
 - S2 schema does not yet register all desired type/MOC labels.
 - Non-S coordinate family MOCs are still mostly scaffolded.

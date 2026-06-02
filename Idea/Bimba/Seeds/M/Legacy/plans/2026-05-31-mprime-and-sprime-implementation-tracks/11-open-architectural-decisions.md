@@ -92,6 +92,30 @@ The decision index and grouped entries below are the active open-decision set fo
 | DCC-05 | Audio bus and cymatic derivation ownership wording | Deferred canon contradiction | 01, 07, 08 |
 | DCC-06 | Alpha section cross-reference drift | Deferred canon contradiction | 07, 08 |
 
+## Cycle 2 IOD Owner Matrix
+
+Track 14 T0 re-homes every `IOD-*` implementation-owner decision into an explicit cycle 2 owner. Resolved decisions stay cited to the tranche that closed them; open decisions are carried forward to the tranche that must either resolve them or keep them visibly gated. No `IOD-*` item should remain only as an ambient caveat in the legacy affected-track columns above.
+
+| ID | Cycle 2 owner | State | Closure or carry-forward rule |
+| --- | --- | --- | --- |
+| IOD-01 | 13.T2 / 13.T3 / 13.T4 | Resolved | S3 route table, runtime extraction, and SpaceTimeDB bridge closure own the single client-facing gateway stream; downstream shell tranches consume the S3-owned contract. |
+| IOD-02 | 12.T3, with 13.T4 as product intent consumer | Carry-forward | Day/NOW/session lifecycle closure must keep SpaceTimeDB identity, protected handles, and privacy discipline explicit before intent routing can treat shared rows as production-safe. |
+| IOD-03 | 05.T3, with 12.T3 as lifecycle guard | Carry-forward | Janus/world-clock coupling owns render-facing cadence; S3/S4/S5 lifecycle closure must preserve authoritative tick versus display interpolation. |
+| IOD-04 | 11.T0, with 12.T3 as compatibility guard | Carry-forward | S0 profile contract closure owns the profile schema surface; lifecycle closure must continue to block renderer-local `binary`/`mahamaya` alias drift. |
+| IOD-05 | 02.T1 / 02.T2, with 11.T3 as S2 closure guard | Carry-forward | M0 coordinate ground and Anuttara language closure own the root/provenance display; S2 consumed closure must preserve canonical `#`/`M` mapping without silent rewrite. |
+| IOD-06 | 02.T2, with 11.T3 as S2 closure guard | Carry-forward | Anuttara node language closure owns display/provenance fields; S2 closure must ensure storage keys and aliases remain traceable. |
+| IOD-07 | 02.T3, with 11.T3 as S2 closure guard | Carry-forward | Graph inference/GDS delta owns the derived-overlay behavior; S2 closure must keep n10s/GDS readiness and persistence policy visible. |
+| IOD-08 | 12.T0 / 12.T2 | Resolved | S3 consumed closure owns Graphiti runtime substrate; S5 consumed closure owns governance/review usage and keeps S2 as storage substrate. |
+| IOD-09 | 12.T2 | Resolved | S5 consumed closure owns review/autoresearch state layout and first production JSON-backed persistence. |
+| IOD-10 | 13.T4 | Carry-forward | DAY/NOW/privacy/review intent routing must own deep-link URI grammar, acknowledgement, source range, session, and coordinate handle preservation. |
+| IOD-11 | 01.T1 / 01.T2, audited by 14.T5 | Carry-forward | Shell layout and OmniPanel catalog closure own chrome boundaries; final no-orphan audit must prove `/`, shell `1`, shell `0`, and `4+2` depth do not collapse. |
+| IOD-12 | 08.T2 | Resolved | Integrated evidence/review/agent hooks own the shared observability schema consumed by release gates. |
+| IOD-13 | 06.T3, with 11.T1 / 11.T2 as Hen public-surface guards | Carry-forward | Nara day episodes and dialogic voice own the product path; S1/Hen closure must keep vault writes, semantic suggestions, and protected paths governed. |
+| IOD-14 | 08.T0 / 09.T0, with 10.T0 and 14.T5 as registry/audit guards | Carry-forward | Integrated composition contracts own plugin activation at the product layer; carrier/agent registry and no-orphan audit must keep mini-mode and activation authority explicit. |
+| IOD-17 | 07.T4 / 10.T0 | Carry-forward | Agentic Control Room owns capability-matrix consumption; carrier/agent registry must preserve three-way matrix/UI/gateway parity for runtime exposure. |
+| IOD-18 | 11.T1 / 11.T2 | Carry-forward | S1/Hen public-surface and CT intake closure own Smart Connections via Hen `smart_env.rs`, not client-side Obsidian plugin coupling. |
+| IOD-19 | 11.T1 / 11.T2 | Carry-forward | S1/Hen public-surface and CT intake closure own vault-write gatekeeping, wikilink integrity, and path soundness. |
+
 ## User-Final-Validation Required
 
 ### UFV-01 - Privacy and consent copy

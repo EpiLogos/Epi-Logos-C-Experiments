@@ -1,0 +1,36 @@
+{
+  "runId": "20260602T164903Z-02-T3",
+  "taskId": "02.T3",
+  "startedAt": "2026-06-02T16:49:03.682Z",
+  "owner": "m-dev-mainloop",
+  "leaseExpiresAt": "2026-06-02T18:49:03.682Z",
+  "worktree": null,
+  "task": {
+    "id": "02.T3",
+    "trackId": "02",
+    "tranche": "T3",
+    "title": "Graph Inference And GDS Delta",
+    "effort": null,
+    "file": "02-m0-bimba-map-extension.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/02-m0-bimba-map-extension.md",
+    "dependsOn": [
+      "02.T2"
+    ],
+    "writeScopes": [
+      "Body/S/S2/**",
+      "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

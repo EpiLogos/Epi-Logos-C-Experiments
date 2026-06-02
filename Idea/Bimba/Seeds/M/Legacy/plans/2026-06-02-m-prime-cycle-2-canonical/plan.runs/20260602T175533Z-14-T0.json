@@ -1,0 +1,35 @@
+{
+  "runId": "20260602T175533Z-14-T0",
+  "taskId": "14.T0",
+  "startedAt": "2026-06-02T17:55:33.517Z",
+  "owner": "m-dev-parallel-B",
+  "leaseExpiresAt": "2026-06-02T19:55:33.517Z",
+  "worktree": null,
+  "task": {
+    "id": "14.T0",
+    "trackId": "14",
+    "tranche": "T0",
+    "title": "IOD Matrix",
+    "effort": null,
+    "file": "14-open-decisions-release-gates-and-no-orphan-audit.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonical/14-open-decisions-release-gates-and-no-orphan-audit.md",
+    "dependsOn": [
+      "00.T0"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/11-open-architectural-decisions.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

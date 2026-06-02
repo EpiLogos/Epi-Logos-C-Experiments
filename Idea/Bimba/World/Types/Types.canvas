@@ -1,6 +1,6 @@
 {
 	"nodes":[
-		{"id":"title","type":"text","text":"# Types\n\nMaster MOC for [[World/Types]]: coordinate mirror plus semantic type roots.","x":0,"y":0,"width":540,"height":150},
+		{"id":"title","type":"text","text":"# Types\n\nMaster MOC for [[World/Types]]: coordinate-native mirror, CT/T systems, and graduation into flat [[World]].","x":0,"y":0,"width":540,"height":150},
 		{"id":"readme","type":"file","file":"Bimba/World/Types/README.md","x":0,"y":200,"width":360,"height":80},
 		{"id":"registry","type":"file","file":"Bimba/World/Types/TYPE-REGISTRY.md","x":0,"y":310,"width":360,"height":80},
 		{"id":"world","type":"file","file":"Bimba/World/World-Ontology.md","x":0,"y":420,"width":360,"height":80},
@@ -20,15 +20,11 @@
 		{"id":"s5","type":"file","file":"Bimba/World/Types/Coordinates/S/S5/S5.md","x":460,"y":1160,"width":340,"height":70},
 		{"id":"s5p","type":"file","file":"Bimba/World/Types/Coordinates/S/S'/S5'/S5'.md","x":460,"y":1250,"width":340,"height":70},
 
-		{"id":"semantic_title","type":"text","text":"## Semantic Type Roots\n\nSemantic roots cross-link coordinates; they do not replace coordinate authority.","x":900,"y":0,"width":480,"height":130},
-		{"id":"artifacts","type":"file","file":"Bimba/World/Types/Artifacts/Artifacts.md","x":900,"y":170,"width":360,"height":70},
-		{"id":"templates","type":"file","file":"Bimba/World/Types/Templates/Templates.md","x":900,"y":260,"width":360,"height":70},
-		{"id":"agents","type":"file","file":"Bimba/World/Types/Agents/Agents.md","x":900,"y":350,"width":360,"height":70},
-		{"id":"capabilities","type":"file","file":"Bimba/World/Types/Capabilities/Capabilities.md","x":900,"y":440,"width":360,"height":70},
-		{"id":"interfaces","type":"file","file":"Bimba/World/Types/Interfaces/Interfaces.md","x":900,"y":530,"width":360,"height":70},
-		{"id":"runtime","type":"file","file":"Bimba/World/Types/Runtime-Surfaces/Runtime-Surfaces.md","x":900,"y":620,"width":360,"height":70},
-		{"id":"diagrams","type":"file","file":"Bimba/World/Types/Diagrams/Diagrams.md","x":900,"y":710,"width":360,"height":70},
-		{"id":"datasets","type":"file","file":"Bimba/World/Types/Datasets/Datasets.md","x":900,"y":800,"width":360,"height":70}
+		{"id":"systems_title","type":"text","text":"## Coordinate-Native Systems\n\nDo not create parallel Artifacts/Templates roots. CT owns templates; T/T' owns thought artifacts; semantic views are inferred from coordinates.","x":900,"y":0,"width":520,"height":150},
+		{"id":"ct","type":"text","text":"[[CT]] template law\n\nPath: `Coordinates/C/C1/C1'/CT/**`\n\nCT0 Seed, CT1 Prompt, CT2 Task-Spec, CT3 Pattern-Note, CT4a Integration-Preview, CT4b Daily-Note/NOW, CT5 Thought.","x":900,"y":190,"width":480,"height":190},
+		{"id":"t","type":"text","text":"[[T]] / [[T′]] artifact law\n\nPath: `Coordinates/T/**`\nRuntime archive: `Idea/Pratibimba/Self/Thought/**`\n\nT0 Questions, T1 Traces, T2 Challenges, T3 Patterns, T4 Discoveries, T5 Insights.","x":900,"y":420,"width":480,"height":190},
+		{"id":"graduation","type":"text","text":"Graduation rule\n\n1. Incubate in `World/Types/Coordinates/**` with MOC + canvas.\n2. Crystallise stable meaning into flat `World/{Name}.md`.\n3. Leave the type-local file as topology/source pointer.\n4. Link Seed evidence, canvas path, source coordinate, and related World forms.","x":900,"y":650,"width":480,"height":220},
+		{"id":"semantic_views","type":"text","text":"Semantic views\n\nAgents, capabilities, interfaces, runtime surfaces, diagrams, and datasets are coordinate-derived indexes unless a Seed protocol proves a new root is necessary.","x":900,"y":920,"width":480,"height":140}
 	],
 	"edges":[
 		{"id":"e1","fromNode":"readme","toNode":"registry"},
@@ -46,13 +42,9 @@
 		{"id":"e13","fromNode":"s","toNode":"s4p"},
 		{"id":"e14","fromNode":"s","toNode":"s5"},
 		{"id":"e15","fromNode":"s","toNode":"s5p"},
-		{"id":"e16","fromNode":"registry","toNode":"artifacts"},
-		{"id":"e17","fromNode":"registry","toNode":"templates"},
-		{"id":"e18","fromNode":"registry","toNode":"agents"},
-		{"id":"e19","fromNode":"registry","toNode":"capabilities"},
-		{"id":"e20","fromNode":"registry","toNode":"interfaces"},
-		{"id":"e21","fromNode":"registry","toNode":"runtime"},
-		{"id":"e22","fromNode":"registry","toNode":"diagrams"},
-		{"id":"e23","fromNode":"registry","toNode":"datasets"}
+		{"id":"e16","fromNode":"registry","toNode":"ct"},
+		{"id":"e17","fromNode":"registry","toNode":"t"},
+		{"id":"e18","fromNode":"registry","toNode":"graduation"},
+		{"id":"e19","fromNode":"registry","toNode":"semantic_views"}
 	]
 }

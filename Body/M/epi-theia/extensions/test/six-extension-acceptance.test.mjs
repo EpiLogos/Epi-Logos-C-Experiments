@@ -59,6 +59,22 @@ const context = Object.freeze({
     privacyClass: 'protected_local_handle_only'
 });
 
+// One self-consistent kernel frame, shared by profile() and worldClock() so the
+// two can never drift (a drift between them was the original M3 surface blocker).
+// Derived per portal-core kernel.rs MathemeHarmonicProfile::from_tick for
+// KernelTick { cycle: 0, sub_tick: 4 }: tick12 = 4, degree720 = tick12 * 60 = 240,
+// degree360 = degree720 % 360 = 240, absoluteTick = cycle * 12 + tick12 = 4, and
+// tick = absoluteTick = 4. position6 (= tick12 % 6 = 4) and su2Layer (degree720 < 360
+// => double-cover) below already match this frame.
+const kernelFrame = Object.freeze({
+    tick: 4,
+    tick12: 4,
+    cycle: 0,
+    degree720: 240,
+    degree360: 240,
+    tickAddress: Object.freeze({ cycle: 0, subTick: 4, tick12: 4, absoluteTick: 4, phase: 'Descent' })
+});
+
 function profile(generation, payload = {}) {
     return Object.freeze({
         generation,
@@ -68,8 +84,7 @@ function profile(generation, payload = {}) {
             ...baselineProfile,
             pointerAnchor: { lensRingSize: 12 },
             contextFrames: { frameCount: 7, activeFrame: 'CF-acceptance', activeAgent: 'anima' },
-            tick12: 4,
-            degree720: 240,
+            ...kernelFrame,
             su2Layer: 'double-cover',
             phase: 'waxing',
             helix: 'right',
@@ -180,8 +195,10 @@ function worldClock() {
             bodyAllowed: false
         }),
         worldClockHandle: 's3://world-clock/2026-06-01T00:00:00Z',
-        tick: baselineProfile.tick,
-        degree720: baselineProfile.degree720
+        // Same kernel frame as profile(): buildM3ProjectionSurface blocks the surface
+        // unless world_clock tick/degree720 equal the current profile's.
+        tick: kernelFrame.tick,
+        degree720: kernelFrame.degree720
     });
 }
 
