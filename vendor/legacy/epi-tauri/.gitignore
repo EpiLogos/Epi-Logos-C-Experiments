@@ -1,5 +1,0 @@
-node_modules/
-target/
-dist/
-*.tsbuildinfo
-.DS_Store
