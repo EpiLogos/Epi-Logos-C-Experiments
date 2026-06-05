@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {"id":"sb","type":"file","file":"Square B.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"l1","type":"text","text":"# L1 Causal\nP1 cause-question (Mind).","x":-540,"y":300,"width":260,"height":160},
+    {"id":"l4","type":"text","text":"# L4 Phenomenological\nP4 lived experience (Son).","x":-260,"y":300,"width":260,"height":160},
+    {"id":"l4p","type":"text","text":"# L4' Scientific\nP1' methodology (Need).","x":20,"y":300,"width":260,"height":160},
+    {"id":"l1p","type":"text","text":"# L1' Phenomenal\nP4' felt-typology (Love).","x":300,"y":300,"width":260,"height":160},
+    {"id":"csq2","type":"text","text":"# Corresponds to C-sq2\nMiddle mirror (1,4)+(1',4').","x":-340,"y":520,"width":300,"height":160},
+    {"id":"earthing","type":"text","text":"# Earthing Square\nL1·L4·L4' Earth; L1' Water.","x":-20,"y":520,"width":300,"height":160},
+    {"id":"encounter","type":"text","text":"# Encounter Axis\nL4 ↔ L1' (lived ↔ observed).","x":280,"y":520,"width":300,"height":160}
+  ],
+  "edges": [
+    {"id":"e-sb-l1","fromNode":"sb","fromSide":"bottom","toNode":"l1","toSide":"top","label":"holds"},
+    {"id":"e-sb-l4","fromNode":"sb","fromSide":"bottom","toNode":"l4","toSide":"top","label":"holds"},
+    {"id":"e-sb-l4p","fromNode":"sb","fromSide":"bottom","toNode":"l4p","toSide":"top","label":"holds"},
+    {"id":"e-sb-l1p","fromNode":"sb","fromSide":"bottom","toNode":"l1p","toSide":"top","label":"holds"},
+    {"id":"e-sb-csq2","fromNode":"sb","fromSide":"bottom","toNode":"csq2","toSide":"top","label":"corresponds to"},
+    {"id":"e-sb-earth","fromNode":"sb","fromSide":"bottom","toNode":"earthing","toSide":"top","label":"element"},
+    {"id":"e-sb-enc","fromNode":"sb","fromSide":"bottom","toNode":"encounter","toSide":"top","label":"runtime entry"}
+  ]
+}

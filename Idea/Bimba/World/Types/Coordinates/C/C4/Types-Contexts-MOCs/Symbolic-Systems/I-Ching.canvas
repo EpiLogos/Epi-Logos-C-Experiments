@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {"id":"iching","type":"file","file":"I-Ching.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"hex","type":"text","text":"# 64 Hexagrams\n= 64 codon-quaternions","x":-460,"y":280,"width":300,"height":140},
+    {"id":"lines","type":"text","text":"# 384 Lines\n360 dynamic + 24 palindromic\nLines 1→6 = [[P0]]→[[P5]]","x":-80,"y":280,"width":340,"height":160},
+    {"id":"nuclear","type":"text","text":"# Nuclear Hexagram\n[[P4]] lemniscate sub-reading","x":340,"y":280,"width":300,"height":140},
+    {"id":"trigrams","type":"text","text":"# Trigrams\nUpper = mental-pole\nLower = physical-pole","x":-460,"y":-280,"width":300,"height":140},
+    {"id":"compass","type":"text","text":"# Dual Compass\nFu Xi (Early Heaven) +\nKing Wen (Later Heaven)","x":-80,"y":-280,"width":300,"height":140},
+    {"id":"wuxing","type":"text","text":"# Wu Xing\nFive-phase elemental cycle\n[[L2']] alchemical-elemental","x":340,"y":-280,"width":300,"height":140},
+    {"id":"codon","type":"file","file":"Codon.md","x":-460,"y":520,"width":260,"height":120},
+    {"id":"nuc","type":"file","file":"Nucleotide.md","x":-80,"y":520,"width":260,"height":120}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"iching","fromSide":"bottom","toNode":"hex","toSide":"top","label":"="},
+    {"id":"e2","fromNode":"iching","fromSide":"bottom","toNode":"lines","toSide":"top","label":"384"},
+    {"id":"e3","fromNode":"iching","fromSide":"bottom","toNode":"nuclear","toSide":"top","label":"P4"},
+    {"id":"e4","fromNode":"trigrams","fromSide":"bottom","toNode":"iching","toSide":"top","label":"poles"},
+    {"id":"e5","fromNode":"compass","fromSide":"bottom","toNode":"iching","toSide":"top","label":"ordering"},
+    {"id":"e6","fromNode":"wuxing","fromSide":"bottom","toNode":"iching","toSide":"top","label":"element"},
+    {"id":"e7","fromNode":"hex","fromSide":"bottom","toNode":"codon","toSide":"top","label":"substrate"},
+    {"id":"e8","fromNode":"lines","fromSide":"bottom","toNode":"nuc","toSide":"top","label":"6/7/8/9"}
+  ]
+}

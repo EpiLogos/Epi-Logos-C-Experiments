@@ -1,0 +1,20 @@
+{
+  "nodes": [
+    {"id": "title", "type": "text", "text": "# P1 — Mind\n\nDay-face of #1. *What?* — first explicit emergence; identical-FOR-itself.", "x": -200, "y": -300, "width": 460, "height": 140},
+    {"id": "self", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P1/P1.md", "x": -100, "y": -100, "width": 280, "height": 80},
+    {"id": "psychoid", "type": "text", "text": "[[Psychoid-1|#1]] — raw charge", "x": -440, "y": 60, "width": 240, "height": 70},
+    {"id": "p4", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P4/P4.md", "x": 200, "y": 60, "width": 240, "height": 70},
+    {"id": "p1p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P1/P1'/P1'.md", "x": -440, "y": 180, "width": 240, "height": 70},
+    {"id": "l1", "type": "text", "text": "[[L1]] · [[L4']] — lens pair", "x": 200, "y": 180, "width": 240, "height": 70},
+    {"id": "sqb", "type": "text", "text": "[[Square B]] — Cause-Experience axis", "x": -100, "y": 320, "width": 280, "height": 70},
+    {"id": "mind", "type": "text", "text": "[[Mind]] — Thought family", "x": -440, "y": 320, "width": 240, "height": 70}
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "self", "toNode": "psychoid", "label": "refracts"},
+    {"id": "e2", "fromNode": "self", "toNode": "p4", "label": "QL-pair (1+4)"},
+    {"id": "e3", "fromNode": "self", "toNode": "p1p", "label": "Möbius D1"},
+    {"id": "e4", "fromNode": "self", "toNode": "l1", "label": "lens"},
+    {"id": "e5", "fromNode": "self", "toNode": "sqb", "label": "pole of"},
+    {"id": "e6", "fromNode": "self", "toNode": "mind", "label": "Thought family"}
+  ]
+}

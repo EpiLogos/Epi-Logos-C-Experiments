@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"c3","type":"file","file":"C3.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"moc-canvases","type":"text","text":"# MOC Canvas Forms\nReusable MOC visual patterns.","x":-700,"y":300,"width":300,"height":160},
+    {"id":"diagrams","type":"text","text":"# Architecture Diagram Forms\nStable diagram forms after Seed evidence settles.","x":-350,"y":300,"width":300,"height":160},
+    {"id":"workflows","type":"text","text":"# Workflow Patterns\nReusable process/workflow patterns.","x":0,"y":300,"width":300,"height":160},
+    {"id":"ideal-canvas","type":"text","text":"# Ideal Canvas Templates\nCanvas structures agents can instantiate through Hen.","x":350,"y":300,"width":300,"height":160},
+    {"id":"ideal-diagram","type":"text","text":"# Ideal Diagram Templates\nDiagram structures linked to Seed specs and World forms.","x":700,"y":300,"width":300,"height":160}
+  ],
+  "edges": [
+    {"id":"e-c3-moc","fromNode":"c3","fromSide":"bottom","toNode":"moc-canvases","toSide":"top","label":"indexes"},
+    {"id":"e-c3-diagrams","fromNode":"c3","fromSide":"bottom","toNode":"diagrams","toSide":"top","label":"visualises"},
+    {"id":"e-c3-workflows","fromNode":"c3","fromSide":"bottom","toNode":"workflows","toSide":"top","label":"processes"},
+    {"id":"e-c3-canvas","fromNode":"c3","fromSide":"bottom","toNode":"ideal-canvas","toSide":"top","label":"templates"},
+    {"id":"e-c3-diagram-template","fromNode":"c3","fromSide":"bottom","toNode":"ideal-diagram","toSide":"top","label":"templates"}
+  ]
+}

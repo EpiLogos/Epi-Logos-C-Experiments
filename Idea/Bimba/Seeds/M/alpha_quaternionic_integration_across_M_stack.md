@@ -55,9 +55,9 @@ The M-family (subsystem / consciousness-domain) and S-family (stack / technology
 | M0 Anuttara | 0/1 ground | S0 Terminal / kernel | The kernel substrate; `MathemeHarmonicProfile`; the prior ground M1 receives |
 | M1 Paramaśiva | Toroidal recognition (+1 parent) | S1 Obsidian / vault | Canonical-knowledge vault; the immutable-structural register |
 | M2 Paraśakti | 72-fold vibrational bridge | S2 Neo4j | Correspondence-tree graph; pointer-web; 72-invariant union |
-| M3 Mahāmāyā | 64-codon binary substrate | S3 PAI / Gateway | Live session, transit feed, world-clock; **Universal NOW plane** hosted via SpaceTimeDB |
-| M4 Nara | Personal identity / lived context | S4 Claude / agent layer | Protected-personal episodic memory; Graphiti namespace at #4.4.4.4 |
-| M5 Epii | Review / integration / canon | S5 Notion | Structured knowledge writing; reviewed-canonical promotion target |
+| M3 Mahāmāyā | 64-codon binary substrate | S3 Gateway Control Plane | Live session, transit feed, world-clock; **Universal NOW plane** hosted via SpaceTimeDB |
+| M4 Nara | Personal identity / lived context | S4 Agent Runtime | Protected-personal episodic memory; Graphiti namespace at #4.4.4.4 |
+| M5 Epii | Review / integration / canon | S5 Integral World Boundary | Structured knowledge writing, gnostic return, reviewed-canonical promotion target |
 
 This integration document therefore spans both M and S families. The M3-5 cosmic-wheel synthesis is what gets **hosted as live shared state at S3'** (Universal NOW plane); the #4.4.4.4 Personal Pratibimba composition is what gets **stored as protected episodic memory at S4** (Graphiti-Pratibimba namespace). When we say "this is M3-5" we are also saying "this needs S3' Universal NOW hosting"; when we say "this is #4.4.4.4" we are also saying "this needs S4 protected-episodic storage." No "this is S-side, out of scope" — the M and S families co-implicate at every coordinate.
 

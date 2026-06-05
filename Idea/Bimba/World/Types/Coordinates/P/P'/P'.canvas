@@ -1,0 +1,24 @@
+{
+  "nodes": [
+    {"id": "title", "type": "text", "text": "# P' — Night Arc\n\nSix Night positions co-equal with Day P-positions; Möbius partners across the Klein twist.", "x": -200, "y": -340, "width": 480, "height": 160},
+    {"id": "self", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P'/P'.md", "x": -100, "y": -120, "width": 280, "height": 80},
+    {"id": "p0p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P0/P0'/P0'.md", "x": -640, "y": 60, "width": 200, "height": 70},
+    {"id": "p1p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P1/P1'/P1'.md", "x": -400, "y": 60, "width": 200, "height": 70},
+    {"id": "p2p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P2/P2'/P2'.md", "x": -160, "y": 60, "width": 200, "height": 70},
+    {"id": "p3p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P3/P3'/P3'.md", "x": 80, "y": 60, "width": 200, "height": 70},
+    {"id": "p4p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P4/P4'/P4'.md", "x": 320, "y": 60, "width": 200, "height": 70},
+    {"id": "p5p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P5/P5'/P5'.md", "x": 560, "y": 60, "width": 200, "height": 70},
+    {"id": "p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P.md", "x": -440, "y": 220, "width": 260, "height": 80},
+    {"id": "lprime", "type": "text", "text": "[[L']] — Night-arc lens family", "x": 200, "y": 220, "width": 260, "height": 70}
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "self", "toNode": "p0p", "label": "Night"},
+    {"id": "e2", "fromNode": "self", "toNode": "p1p", "label": "Night"},
+    {"id": "e3", "fromNode": "self", "toNode": "p2p", "label": "Night"},
+    {"id": "e4", "fromNode": "self", "toNode": "p3p", "label": "Night"},
+    {"id": "e5", "fromNode": "self", "toNode": "p4p", "label": "Night"},
+    {"id": "e6", "fromNode": "self", "toNode": "p5p", "label": "Night"},
+    {"id": "e7", "fromNode": "self", "toNode": "p", "label": "Day arc"},
+    {"id": "e8", "fromNode": "self", "toNode": "lprime", "label": "sibling Night"}
+  ]
+}

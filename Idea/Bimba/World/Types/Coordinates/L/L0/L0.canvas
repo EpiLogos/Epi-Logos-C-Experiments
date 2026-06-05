@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"l0","type":"file","file":"L0.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"anchor","type":"text","text":"# Anchor\nJung–Pauli psychoid number — integers as archetypes.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid #0\nBindu, zero-ness, Ground-Implicate.","x":-130,"y":300,"width":280,"height":160},
+    {"id":"square","type":"text","text":"# Square A\nP0+P5 Speech-Number axis.","x":180,"y":300,"width":280,"height":160},
+    {"id":"mobius","type":"text","text":"# Möbius Partner\nL5' Divine Logos. L0 ↔ L5'.","x":490,"y":300,"width":280,"height":160},
+    {"id":"element","type":"text","text":"# Element\nAether (via L2').","x":-280,"y":520,"width":280,"height":140},
+    {"id":"skills","type":"text","text":"# Skills\nepi-logos:etymological-archaeology, apply-cmea.","x":50,"y":520,"width":320,"height":140}
+  ],
+  "edges": [
+    {"id":"e0-anchor","fromNode":"l0","fromSide":"bottom","toNode":"anchor","toSide":"top","label":"anchored by"},
+    {"id":"e0-psy","fromNode":"l0","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts"},
+    {"id":"e0-sq","fromNode":"l0","fromSide":"bottom","toNode":"square","toSide":"top","label":"member of"},
+    {"id":"e0-mob","fromNode":"l0","fromSide":"bottom","toNode":"mobius","toSide":"top","label":"Möbius pair"},
+    {"id":"e0-el","fromNode":"l0","fromSide":"bottom","toNode":"element","toSide":"top","label":"element"},
+    {"id":"e0-sk","fromNode":"l0","fromSide":"bottom","toNode":"skills","toSide":"top","label":"engages"}
+  ]
+}

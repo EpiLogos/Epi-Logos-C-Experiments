@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    {"id":"root","type":"file","file":"Relations.md","x":0,"y":0,"width":420,"height":240},
+    {"id":"fam-a","type":"file","file":"Family A — Adjacent-Identity.md","x":-820,"y":-280,"width":280,"height":120},
+    {"id":"fam-b","type":"file","file":"Family B — Offset-Transition.md","x":-820,"y":-100,"width":280,"height":120},
+    {"id":"fam-c","type":"file","file":"Family C — Converse-Mirror.md","x":-820,"y":80,"width":280,"height":120},
+    {"id":"fam-d1","type":"file","file":"Family D1 — Same-Position Cross.md","x":820,"y":-340,"width":280,"height":120},
+    {"id":"fam-d2t","type":"file","file":"Family D2-Transform.md","x":820,"y":-180,"width":280,"height":120},
+    {"id":"fam-d2r","type":"file","file":"Family D2-Require.md","x":820,"y":-20,"width":280,"height":120},
+    {"id":"fam-d2c","type":"file","file":"Family D2-Complete.md","x":820,"y":140,"width":280,"height":120},
+    {"id":"fam-d3","type":"file","file":"Family D3 — Helix-Invariance.md","x":820,"y":300,"width":280,"height":120},
+    {"id":"squares","type":"file","file":"Squares.md","x":0,"y":380,"width":340,"height":120},
+    {"id":"phys-pole","type":"text","text":"# Within-pass — Physical-Pole-Trinity\nMatheme positions 1, 2, 3.\nA/B/C operate inside one helix.","x":-820,"y":260,"width":280,"height":140},
+    {"id":"ment-pole","type":"text","text":"# Cross-pass / Inverse-pass — Mental-Pole-Trinity\nMatheme positions 4, 5, 0.\nD1/D2/D3 articulate the helix-pair invariance.","x":820,"y":460,"width":280,"height":140}
+  ],
+  "edges": [
+    {"id":"e-root-a","fromNode":"root","fromSide":"left","toNode":"fam-a","toSide":"right","label":"parents"},
+    {"id":"e-root-b","fromNode":"root","fromSide":"left","toNode":"fam-b","toSide":"right","label":"parents"},
+    {"id":"e-root-c","fromNode":"root","fromSide":"left","toNode":"fam-c","toSide":"right","label":"parents"},
+    {"id":"e-root-d1","fromNode":"root","fromSide":"right","toNode":"fam-d1","toSide":"left","label":"parents"},
+    {"id":"e-root-d2t","fromNode":"root","fromSide":"right","toNode":"fam-d2t","toSide":"left","label":"parents"},
+    {"id":"e-root-d2r","fromNode":"root","fromSide":"right","toNode":"fam-d2r","toSide":"left","label":"parents"},
+    {"id":"e-root-d2c","fromNode":"root","fromSide":"right","toNode":"fam-d2c","toSide":"left","label":"parents"},
+    {"id":"e-root-d3","fromNode":"root","fromSide":"right","toNode":"fam-d3","toSide":"left","label":"parents"},
+    {"id":"e-root-sq","fromNode":"root","fromSide":"bottom","toNode":"squares","toSide":"top","label":"indexes"},
+    {"id":"e-a-phys","fromNode":"fam-c","fromSide":"bottom","toNode":"phys-pole","toSide":"top","label":"3:3 partition"},
+    {"id":"e-d-ment","fromNode":"fam-d3","fromSide":"bottom","toNode":"ment-pole","toSide":"top","label":"3:3 partition"}
+  ]
+}

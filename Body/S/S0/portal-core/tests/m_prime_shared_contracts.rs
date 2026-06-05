@@ -35,6 +35,63 @@ fn codon_rotation_lut_materializes_the_472_state_surface() {
 }
 
 #[test]
+fn codon_rotation_projection_is_canonical_kernel_lut_not_placeholder() {
+    // 04.T4.1 audit: the forward/reverse proportional projection IS the canonical
+    // materialized kernel LUT (M3'-SPEC §7), not a placeholder. Every emitted
+    // projection must self-declare the materialized state and the 84<->472 provenance,
+    // and its stored reverse anchor must agree with the forward (lens, mode) key.
+    for lens in 0..12 {
+        for mode in 0..7 {
+            let projection = codon_rotation_from_lens_mode(lens, mode)
+                .expect("all 84 lens-mode cells materialize a projection");
+            assert_eq!(
+                projection.dataset_lut_state, "materialized-kernel-lut",
+                "lens {lens} mode {mode} must report the materialized kernel LUT, not a pending placeholder"
+            );
+            assert!(
+                projection.provenance.contains("84") && projection.provenance.contains("472"),
+                "projection provenance must name the 84<->472 surface LUT, got {:?}",
+                projection.provenance
+            );
+            // Stored reverse anchor (computed at emit time) round-trips to the forward key.
+            assert_eq!(
+                (projection.reverse_lens, projection.reverse_mode),
+                (lens, mode),
+                "stored reverse anchor must equal the forward lens-mode key"
+            );
+            assert!(projection.surface_index < 472);
+            assert!(projection.codon_id < 64);
+            assert!(projection.rotation < projection.rotational_state_count);
+        }
+    }
+}
+
+#[test]
+fn every_surface_cell_reverse_addresses_a_lens_mode() {
+    // 04.T4.1 audit, reverse direction: extend round-trip coverage to ALL 472
+    // (codon, rotation) surface cells (the forward test only touches 84 of them).
+    // Every materialized cell must reverse-map into a valid lens-mode anchor, and
+    // out-of-domain (codon, rotation) inputs must reject rather than alias.
+    let surface = codon_rotation_surface();
+    assert_eq!(surface.len(), 472);
+    for cell in &surface {
+        let anchor = lens_mode_from_codon_rotation(cell.codon_id, cell.rotation)
+            .expect("every materialized surface cell reverse-maps to a lens-mode anchor");
+        assert!(anchor.lens < 12, "reverse lens out of range for cell {}", cell.surface_index);
+        assert!(anchor.mode < 7, "reverse mode out of range for cell {}", cell.surface_index);
+        assert_eq!(
+            cell.rotation_degrees,
+            cell.rotation as u16 * 45,
+            "rotation degrees must stay the canonical 45-degree octave step"
+        );
+    }
+    // Domain guards: an over-range codon and an over-range rotation both reject.
+    assert!(lens_mode_from_codon_rotation(64, 0).is_none());
+    let last = surface.last().expect("non-empty surface");
+    assert!(lens_mode_from_codon_rotation(last.codon_id, last.rotational_state_count).is_none());
+}
+
+#[test]
 fn shared_m_prime_event_contracts_serialize_without_private_body_leakage() {
     let relation = RelationDescriptor::new(
         "rel-1",

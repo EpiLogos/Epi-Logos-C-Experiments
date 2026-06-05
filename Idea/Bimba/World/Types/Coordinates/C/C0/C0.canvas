@@ -1,0 +1,13 @@
+{
+  "nodes": [
+    {"id":"c0","type":"file","file":"C0.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"coordinate-roots","type":"text","text":"# Coordinate Roots\nRoot coordinate authorities and source-condition anchors.","x":-420,"y":300,"width":300,"height":160},
+    {"id":"ontology-roots","type":"text","text":"# Ontology Roots\nSource ontologies and root naming systems.","x":0,"y":300,"width":300,"height":160},
+    {"id":"source-namespaces","type":"text","text":"# Source Namespaces\nCanonical namespaces used by Hen and S2 evidence.","x":420,"y":300,"width":300,"height":160}
+  ],
+  "edges": [
+    {"id":"e-c0-roots","fromNode":"c0","fromSide":"bottom","toNode":"coordinate-roots","toSide":"top","label":"grounds"},
+    {"id":"e-c0-ontology","fromNode":"c0","fromSide":"bottom","toNode":"ontology-roots","toSide":"top","label":"grounds"},
+    {"id":"e-c0-namespaces","fromNode":"c0","fromSide":"bottom","toNode":"source-namespaces","toSide":"top","label":"grounds"}
+  ]
+}

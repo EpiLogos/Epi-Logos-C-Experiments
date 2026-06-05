@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {"id":"sc","type":"file","file":"Square C.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"l2","type":"text","text":"# L2 Logical\nP2 catuṣkoṭi (Word).","x":-540,"y":300,"width":260,"height":160},
+    {"id":"l3","type":"text","text":"# L3 Processual\nP3 concrescence (Logos).","x":-260,"y":300,"width":260,"height":160},
+    {"id":"l3p","type":"text","text":"# L3' Chronological\nP2' Aion / dialectic (Sacrifice).","x":20,"y":300,"width":260,"height":160},
+    {"id":"l2p","type":"text","text":"# L2' Alchemical-Elemental\nP3' element-bearing lens (Decision).","x":300,"y":300,"width":280,"height":160},
+    {"id":"csq3","type":"text","text":"# C-sq3 == A-sq2\nMidpoint self-mirror invariant.","x":-340,"y":520,"width":300,"height":160},
+    {"id":"elements","type":"text","text":"# Most elementally diverse\nAir·Water·Fire·Aether.","x":-20,"y":520,"width":300,"height":160},
+    {"id":"tarot","type":"text","text":"# [[Tarot]] home\nsquare_basin: \"C\".","x":280,"y":520,"width":280,"height":160}
+  ],
+  "edges": [
+    {"id":"e-sc-l2","fromNode":"sc","fromSide":"bottom","toNode":"l2","toSide":"top","label":"holds"},
+    {"id":"e-sc-l3","fromNode":"sc","fromSide":"bottom","toNode":"l3","toSide":"top","label":"holds"},
+    {"id":"e-sc-l3p","fromNode":"sc","fromSide":"bottom","toNode":"l3p","toSide":"top","label":"holds"},
+    {"id":"e-sc-l2p","fromNode":"sc","fromSide":"bottom","toNode":"l2p","toSide":"top","label":"holds"},
+    {"id":"e-sc-csq3","fromNode":"sc","fromSide":"bottom","toNode":"csq3","toSide":"top","label":"corresponds to"},
+    {"id":"e-sc-el","fromNode":"sc","fromSide":"bottom","toNode":"elements","toSide":"top","label":"elements"},
+    {"id":"e-sc-tar","fromNode":"sc","fromSide":"bottom","toNode":"tarot","toSide":"top","label":"symbolic home"}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"sq","type":"file","file":"Squares.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"sa","type":"file","file":"Square A.md","x":-540,"y":300,"width":300,"height":180},
+    {"id":"sb","type":"file","file":"Square B.md","x":-80,"y":300,"width":300,"height":180},
+    {"id":"sc","type":"file","file":"Square C.md","x":380,"y":300,"width":300,"height":180},
+    {"id":"klein","type":"text","text":"# Klein V₄ Rule\nEach Square = P-pair summing to 5 + two Day + two Night lenses.","x":-260,"y":540,"width":340,"height":160},
+    {"id":"corresp","type":"text","text":"# C-Family Correspondence\nC-sq1→Square A; C-sq2→Square B; C-sq3→Square C.","x":160,"y":540,"width":340,"height":160}
+  ],
+  "edges": [
+    {"id":"e-sq-a","fromNode":"sq","fromSide":"bottom","toNode":"sa","toSide":"top","label":"holds"},
+    {"id":"e-sq-b","fromNode":"sq","fromSide":"bottom","toNode":"sb","toSide":"top","label":"holds"},
+    {"id":"e-sq-c","fromNode":"sq","fromSide":"bottom","toNode":"sc","toSide":"top","label":"holds"},
+    {"id":"e-sq-klein","fromNode":"sq","fromSide":"bottom","toNode":"klein","toSide":"top","label":"obeys"},
+    {"id":"e-sq-corresp","fromNode":"sq","fromSide":"bottom","toNode":"corresp","toSide":"top","label":"corresponds via C-family"}
+  ]
+}

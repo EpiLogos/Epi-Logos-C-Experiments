@@ -85,8 +85,9 @@ pub use relationship_manager::{RelationshipManager, RelationshipWritePlan, POSIT
 pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};
 pub use retrieval_query::{
     classify_query, disclosure_for_query_type, extract_coordinate_mentions, fusion_rrf_results,
-    fusion_weighted_results, infer_positions, tokenize_query, DisclosureLevel, GraphRetrievalQuery,
-    HybridFusionConfig, QueryType, RetrievalMode, RetrievalResult,
+    fusion_weighted_results, infer_positions, tokenize_query, CoordinateSearchScope,
+    DisclosureLevel, GraphRetrievalQuery, HybridFusionConfig, QueryType, RetrievalMode,
+    RetrievalResult,
 };
 pub use semantic::SemanticDocument;
 pub use sync_coordinator::{

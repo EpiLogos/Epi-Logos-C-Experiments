@@ -115,7 +115,7 @@ The old base sequence remains structurally useful:
 |---|---|
 | [[S4.0]] Event Ground | Agent bootstrap, hooks, session start/end, runtime visibility |
 | [[S4.1]] Agent Identity | Managed agent definitions, provider/model/auth profiles, constitutional agent identity |
-| [[S4.2]] Skill/Tool Operations | Skills, commands, tools, permission boundary, Techne helper roles |
+| [[S4.2]] Skill/Tool Operations | Skills, commands, tools, permission boundary, Pleroma-Techne atomic skills repository |
 | [[S4.3]] Thread Patterns | Base/P/C/F/L/B/Z execution shapes and team/chain/subagent primitives |
 | [[S4.4]] Runtime Context | [[Psyche]], [[NOW]] inhabitation, active task, subtasks, artifacts, continuity |
 | [[S4.5]] Subagent Orchestration | Multi-agent coordination, synthesis, durable team records, agent lineage |
@@ -315,7 +315,7 @@ S4 contributes primarily to Lived-Environs and Execution fields:
 | `s_4_run_local_continuity` | [[S4.4]] | [[Psyche]] | Warm continuity across turns |
 | `t_1_live_trace_stream` | [[S4.4]] / [[T]] | [[Psyche]] | Live trace, not post-hoc summary |
 | `p_3_agent_sequence_position` | [[S4.4]] | [[Anima]] arc | Nous -> Logos -> Eros -> Mythos -> Psyche -> Sophia |
-| `s_4_helper_roles` | [[S4.2]] | [[Pleroma]] / helper definitions | [[Techne]], [[Darshana]], [[Anansi]] if active |
+| `s_4_pleroma_techne_classes` | [[S4.2]] | [[Pleroma]] / Techne atomic-skills repository | Techne classes stewarded by Aletheia subagent guardians (e.g. Darshana / Anansi-class coordinate-mapping techne) |
 
 Fields enforced by S4 but specified elsewhere:
 

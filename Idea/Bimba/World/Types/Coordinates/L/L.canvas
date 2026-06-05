@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"l","type":"file","file":"L.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"day","type":"text","text":"# Day Lenses\nL0 Quaternal, L1 Causal, L2 Logical, L3 Processual, L4 Phenomenological, L5 Para Vāk.","x":-460,"y":300,"width":300,"height":180},
+    {"id":"night","type":"file","file":"L'/L'.md","x":-80,"y":300,"width":300,"height":180},
+    {"id":"squares","type":"text","text":"# Three Klein V₄ Squares\nA: L0/L5/L5'/L0' — P0+P5\nB: L1/L4/L4'/L1' — P1+P4\nC: L2/L3/L3'/L2' — P2+P3","x":340,"y":300,"width":320,"height":180},
+    {"id":"element","type":"text","text":"# Element-Bearing\nL2' assigns Earth/Water/Air/Fire/Aether/Mineral to all coordinates.","x":-180,"y":540,"width":320,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid Refractions\nEach Ln refracts the Pn-position; each Ln' refracts Pn'.","x":220,"y":540,"width":320,"height":160}
+  ],
+  "edges": [
+    {"id":"e-l-day","fromNode":"l","fromSide":"bottom","toNode":"day","toSide":"top","label":"day arc"},
+    {"id":"e-l-night","fromNode":"l","fromSide":"bottom","toNode":"night","toSide":"top","label":"night arc"},
+    {"id":"e-l-squares","fromNode":"l","fromSide":"bottom","toNode":"squares","toSide":"top","label":"clusters into"},
+    {"id":"e-l-element","fromNode":"l","fromSide":"bottom","toNode":"element","toSide":"top","label":"element via L2'"},
+    {"id":"e-l-psychoid","fromNode":"l","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts P/P'"}
+  ]
+}

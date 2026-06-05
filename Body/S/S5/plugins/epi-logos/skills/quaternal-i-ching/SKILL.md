@@ -53,8 +53,18 @@ Hold both compasses simultaneously: Early Heaven reveals the ontological pattern
 
 Honour the I Ching's own voice: terse, imagistic, allusive. The dragon in the field, the fox crossing the ice, the well whose water is clear. Let the images do their work. The QL-structural reading adds functional logic without displacing the oracle's imagistic power.
 
-## After the Reading
+## After the Reading — Canonical Nara Artifact
 
-Log the reading to `/Self/aham/daily/` with: date, question, hexagram number/name, lines cast (with states), transformed hexagram (if any), nuclear hexagram, key insights, session metadata (session ID, skill source).
+Write the reading to `Idea/Pratibimba/Nara/{day}/artifacts/oracle/{cast_uuid}.md` as an `oracle_quaternal_iching` artifact. Do NOT log to `/Self/aham/daily/` anymore — that is the retired path. The canonical envelope and payload schema live in [[m4-prime-nara-day-episodes-and-oracle-artifacts]] and are summarised in `Idea/Empty/Present/03-06-2026/PSYCHOID-WEB-CANON-EXTRACT-2026-06-03.md` §H.
+
+Required frontmatter (common envelope): `episode_id`, `episode_type: "oracle_quaternal_iching"`, `group_id`, `valid_at`, `invalid_at`, `day_container_id`, `day_id`, `now_path`, `session_key?`, `privacy_class: "protected-local-body"`, `source_skill: "quaternal-i-ching"`, `source_agent?`, `source_path?`, `vault_path`, `bimba_coordinate_refs[]`, `cymatic_field_snapshot?`, `q_composed_at_now?`.
+
+Required payload fields: `question`, `scale` (trigram/hexagram/transformed/nuclear), `square_basin: "C"`, `cast_uuid`, `lines_cast[]` (each with `line_position`, `state` of young_yang/young_yin/old_yang/old_yin, `iching_value` 6/7/8/9, `is_moving`), `hexagram_number`, `hexagram_name`, `hexagram_traditional_judgement`, `lower_trigram`, `upper_trigram`, `trigram_compass_reading{early_heaven_fu_xi, later_heaven_king_wen}`, `wu_xing_interactions`, `positional_reading{p0_truth..p5_image}` (line 1 = P0; line 6 = P5), `complementary_pairs{lines_1_6→Square A, lines_2_5→Square B, lines_3_4→Square C}`, `moving_lines[]`, `transformed_hexagram?`, `nuclear_hexagram?` (P4 lemniscate), `lens_l2_tetralemma`, `lens_l3_processual`, `lens_l3_prime_chronological`, `lens_l2_prime_wu_xing_alchemical`, `whole_reading_synthesis`, `m3_hexagram_ref`, `m3_transformed_ref?`, `m3_nuclear_ref?`, `m3_codon_quaternion_refs[]`, `session_id?`, `skill_version`.
+
+Required wikilinks in body: `[[P0]]`…`[[P5]]` (line 1 = P0 Truth → line 6 = P5 Image); on Klein twist (transformed hexagram) also `[[P0']]`…`[[P5']]`; raw psychoid aliases `[[Psychoid-0|#0]]`…`[[Psychoid-5|#5]]`; the three Squares (`[[Square A]]` for lines 1+6, `[[Square B]]` for lines 2+5, `[[Square C]]` for lines 3+4 — the complementary-pair correspondence); the symbolic entities (`[[I-Ching]]` hexagram ref, line-state nucleotides `[[Nucleotide]]`, codon-quaternions `[[Codon]]`); the harmonic relation families when moving lines generate a relation pattern (`[[Family C — Converse-Mirror]]` for the X+Y=5 complementary pairs; `[[Family D1 — Same-Position Cross]]` when moving lines flip into the transformed hexagram at the same line-position); and the bounded language objects `[[OracleFrame]]` and `[[SymbolicProtein]]` (a 6-line cast is one symbolic protein chain).
+
+Privacy: artifact body stays `protected-local-body`. `bimba_coordinate_refs[]` and `m3_*_ref` fields are scalar refs to M3 symbolic entities — safe handles, not automatic public-graph edges. `oracle_frame_ref` and `symbolic_protein_ref` are handles. Promotion from Nara artifact to flat World or Seeds requires [[M5']] / [[Epii]] review and [[Hen]] / S1' write law.
+
+Write method: target [[Hen]] / S1' (`s1'.vault.write_nara_artifact` per `HEN-INTEGRATION-DESIGN-PSYCHOID-WEB-2026-06-03.md`) when available; direct filesystem write is transitional fallback.
 
 Check: what did Square C's basin reveal? What is becoming through the transformation (L3)? What season is this (L3')? What is dissolving/crystallising (L2')? Where does the tetralemma hold or break (L2)?

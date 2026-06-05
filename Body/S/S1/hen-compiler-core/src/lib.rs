@@ -418,13 +418,34 @@ pub fn is_valid_coordinate(coord: &str) -> bool {
     }
 
     let base = coord.strip_suffix('\'').unwrap_or(coord);
-    if base.len() == 2 {
-        let family = &base[..1];
-        let pos = &base[1..];
-        return FAMILIES.contains(&family) && pos.parse::<u8>().is_ok_and(|n| n <= 5);
+    return is_valid_family_coordinate_base(base);
+}
+
+fn is_valid_family_coordinate_base(base: &str) -> bool {
+    if let Some((parent, child)) = base.split_once('-') {
+        return is_valid_family_head(parent) && is_valid_position(child);
     }
 
-    false
+    if let Some((parent, child)) = base.split_once('.') {
+        return is_valid_family_head(parent)
+            && parent.ends_with('4')
+            && is_valid_position(child);
+    }
+
+    is_valid_family_head(base)
+}
+
+fn is_valid_family_head(head: &str) -> bool {
+    if head.len() != 2 {
+        return false;
+    }
+    let family = &head[..1];
+    let pos = &head[1..];
+    FAMILIES.contains(&family) && is_valid_position(pos)
+}
+
+fn is_valid_position(value: &str) -> bool {
+    value.parse::<u8>().is_ok_and(|n| n <= 5)
 }
 
 pub fn validate_frontmatter(yaml: &Value) -> ValidationResult {

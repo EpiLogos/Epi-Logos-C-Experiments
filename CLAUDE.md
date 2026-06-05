@@ -57,7 +57,7 @@ Every family manifests the #0-#5 archetypes through its specific domain:
 | Family | Letter | Domain | #0 | #1 | #2 | #3 | #4 | #5 |
 |--------|--------|--------|----|----|----|----|----|----|
 | **Position** | P | Functional semantics | P0 Ground | P1 Definition | P2 Operation | P3 Pattern | P4 Context | P5 Integration |
-| **Stack** | S | Technology layers | S0 Terminal | S1 Obsidian | S2 Neo4j | S3 PAI | S4 Claude | S5 Notion |
+| **Stack** | S | Technology layers | S0 Terminal/CLI/C Ground | S1 Obsidian/Material Container | S2 GraphDB Substrate (Neo4j + Redis) | S3 Gateway Control Plane | S4 Agent Runtime | S5 Integral World Boundary |
 | **Thought** | T | Artifacts/cognition | T0 Seed | T1 Spec | T2 Form | T3 Process | T4 Pattern | T5 Insight |
 | **Subsystem** | M | Consciousness domains | M0 Anuttara | M1 Paramasiva | M2 Parashakti | M3 Mahamaya | M4 Nara | M5 Epii |
 | **Lens** | L | Epistemic modes | L0 Literal | L1 Functional | L2 Structural | L3 Archetypal | L4 Paradigmatic | L5 Integral |
@@ -67,6 +67,26 @@ Every family manifests the #0-#5 archetypes through its specific domain:
 - Its raw archetype (#0-#5) as **foundation**
 - Its family letter (P, S, T, M, L, C) as **domain**
 - Inversion capability (# operation producing P0', S3', C5', etc.)
+
+**S-Stack canonical reference (per `Idea/Bimba/World/Types/Coordinates/S/Sn.md`):**
+
+- **S0 Terminal / CLI / C Ground** — filesystem + process + command + build + C; `Body/S/S0/{epi-lib, portal-core, epi-cli, epi-kernel-contract}`
+- **S1 Obsidian / Material Container** — vault, markdown, frontmatter, wikilinks; `World/Types/Empty/Pratibimba` residency law; `Body/S/S1/hen-compiler-core`
+- **S2 GraphDB Substrate** — raw Neo4j + Redis as shared infrastructure (no coordinate semantics; semantics route through S2'); `Body/S/S2/{graph-schema, graph-services}`
+- **S3 Gateway Control Plane** — gateway RPC + session authority + runtime control + OmniPanel parity; `Body/S/S3/{gateway, gateway-contract}`; also hosts spacetime + redis-context at S3'. **PAI is retired genealogy** per S3 canon ("Older PAI, plugin, and harness readings remain part of the genealogy of the coordinate, but they are no longer the target shape").
+- **S4 Agent Runtime** — PI Agent (migrating to claw-rust); ta-onta carriers at S4'; 14-agent roster (Anima 7 constitutional + Aletheia 7 specialist subagents); VAK execution language; `Body/S/S4/{pi-agent, ta-onta, plugins}`. **"Claude" is retired label** — the substrate is harness-agnostic agent runtime.
+- **S5 Integral World Boundary** — world-exchange and world-return: external connectors (Notion/n8n/Telegram/webhooks — currently outward, partially implemented) + knowledge-return (Gnostic via RAG-Anything + Graphiti as episodic memory — currently most landed). **Notion is one optional manifestation, not the whole layer.** Aletheia (S4-5') actualises S5 via Gnostic + Graphiti.
+
+**Ta-onta carrier ↔ S-layer actualisation map** (per S4-SPEC + S0/S1/S3/S5 canonical):
+
+- **Khora (S4-0', CPF Polarity Gate)** actualises S0 bootstrap + environment + canonical write authority
+- **Hen (S4-1', CT Semantic Phase-Type)** actualises S0 file substrate AND S1' semantic/template/coordinate authority
+- **Pleroma (S4-2', CP Incubation Coordinate)** actualises S0 skill projection + bounded execution primitives
+- **Chronos (S4-3', CF Archetypal Operator)** actualises S0 temporal invocation + S3 cron lifecycle
+- **Anima (S4-4', CFP Nesting Algebra)** actualises S0 dispatch + S3 orchestration; hosts 7 constitutional agents (Anima/Nous/Logos/Eros/Mythos/Psyche/Sophia)
+- **Aletheia (S4-5', CS Path Operator)** is a MODE of Sophia/Psyche/Anima during crystallisation, NOT a peer agent; actualises S0 verification + S5 world-return; 7 Aletheia subagents (Techne + Anansi + Moirai + Janus + Mercurius + Agora + Zeithoven) dispatched BY Anima during this mode
+
+**Substrate-residency vs conceptual-coordinate**: a module's physical location does NOT necessarily match its conceptual coordinate. Example: `Body/S/S3/graphiti-runtime/` physically resides at S3 but conceptually actualises S5 (world-return via Aletheia). The S-coordinate is the conceptual law; physical residency is the convenience location.
 
 ### D. The Four Topological Modalities
 
@@ -523,3 +543,47 @@ To check whether embeddings exist, inspect `.gitnexus/meta.json` — the `stats.
 | Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
 
 <!-- gitnexus:end -->
+
+# SwarmVault — Dev Knowledge Compiler
+
+**See also:** [[epi-dev-vault/swarmvault.schema.md]] (entity/relation policy), [[.claude/skills/swarmvault/SKILL.md]] (per-task workflow).
+
+`epi-dev-vault/` is a SwarmVault 3.x workspace that compiles **development knowledge** — task ledgers, source provenance, graph reports, candidate entities, context packs, and review bundles — into a queryable wiki+graph at `epi-dev-vault/wiki/`. It is a **sidecar** to the canonical Bimba vault at `Idea/`, not a replacement.
+
+## Canon Law (non-negotiable)
+
+- **Canon = `Idea/Bimba/`, `Idea/Pratibimba/`, `Idea/Empty/`.** Hen (S1' compiler) is the only authority that writes canonical Forms, Types, MOC canvases, or Pratibimba reflections into those trees.
+- **SwarmVault is a sidecar dev compiler.** It reads from `Idea/` as managed sources, compiles dev-meaningful pages into `epi-dev-vault/wiki/`, and proposes candidate entities/relations into `epi-dev-vault/wiki/candidates/`.
+- **SwarmVault NEVER writes into `Idea/`.** Candidate promotion to canon goes through Hen with explicit review. The schema's `Canon Boundary` section enforces this; lint must reject any attempted write.
+
+## When to use SwarmVault
+
+| Intent | Command | Why |
+|--------|---------|-----|
+| Recall prior decisions / context | `swarmvault query "<concept>"` | Wiki+graph answer before grepping the repo |
+| Get full context on an entity | `swarmvault context "<entity-id>"` | Cross-source aggregation, backlinks, freshness |
+| Track a unit of dev work | `swarmvault task add/update/finish` | Records goal, evidence, changed paths, coordinates, decisions, candidate wikilinks |
+| Ingest a new spec/plan/doc | `swarmvault source add <path>` or `swarmvault ingest <path>` | Registers as a managed source so re-runs stay in sync |
+| Build/refresh the dev wiki | `swarmvault compile` (or `--approve` for review-only) | Compiles raw → wiki + graph + candidates |
+| Walk the proposed entity bundle | `swarmvault review` | Accept/reject/defer candidates before they go active |
+| Build a token-bounded context pack | `swarmvault context build` | Hands a focused brief to a subagent |
+| Pre-commit health check | `swarmvault lint` | Enforces tag/wikilink/frontmatter schema rules |
+
+## Tag / Wikilink / Frontmatter Policy
+
+Three layers, strict roles. **Full vocabulary lives in [[epi-dev-vault/swarmvault.schema.md]]** — this is the summary.
+
+- **Tags = facets only.** Allowed vocabulary: `status`, `lifecycle`, `review_state`, `source_kind`, `risk`, `coord_family`. **Never tag named entities** (no `#Hen`, `#S1'`, `#Epii`, `#cosmic-clock`).
+- **Wikilinks = entity mentions.** Any Coordinate (`[[M4-3]]`, `[[S4-5']]`, `[[cpf]]`), Subsystem, Agent, Tool, Spec/Plan/Decision, or Concept becomes a `[[wikilink]]` in agent-authored bodies. Liberal use is required.
+- **Frontmatter = typed relations.** Required keys: `c_0_source_coordinates`, `c_0_related_coordinates`, `dev_entities`, `dev_relations`, `dev_changed_paths`, `dev_decisions`. Relation types: `owns`, `implements`, `depends_on`, `blocks`, `evidences`, `supersedes`, `proposes`, `contradicts`. (`mentions` is compiler-derived; do not write by hand.)
+
+## Subagent contract
+
+Every subagent (Anima children, Aletheia subagents, external Claude/Codex/Cursor instances) that performs non-trivial dev work MUST:
+
+1. Before starting — `swarmvault query` or `swarmvault context` for prior work on the target.
+2. While working — `swarmvault task add/update` to record goal, evidence, changed paths, coordinates, decisions, unresolved questions.
+3. When finishing — `swarmvault task finish` and `swarmvault lint` before claiming completion.
+4. Never write into `Idea/` directly. If new canonical entities are proposed, they land in `epi-dev-vault/wiki/candidates/` with `review_state: candidate` and a `proposes` relation; Hen handles canon promotion in a separate workflow.
+
+See [[.claude/skills/swarmvault/SKILL.md]] for the per-task decision flow.

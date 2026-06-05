@@ -1,243 +1,219 @@
+---
+coordinate: "C/P/S/T/M/L"
+c_4_artifact_role: "coordinate-semantics-bridge"
+c_1_ct_type: "CT1"
+c_3_updated_at: "2026-06-02"
+c_0_source_coordinates:
+  - "[[World-Ontology]]"
+  - "[[CLAUDE.md]]"
+  - "[[repo-ontology.md]]"
+  - "[[S-SYSTEM-INDEX]]"
+  - "[[TYPE-REGISTRY]]"
+---
+
 # Coordinate Semantics Reference
 
-## Overview
+## Status
 
-This document defines the comprehensive 6-coordinate natural language reference that all Moirai agents embed in their system prompts. Each coordinate type (C, P, M, S, T, L) carries semantic meaning through its position number, with additional inversion modes (Day/Night and Prime/Unprime) that modify interpretation.
+This file is a harmonised bridge for the original coordinate-language definitions that lived in [[Idea/Empty]]. It is useful as a natural-language glossary, but it is not the highest authority for current system residency.
 
----
+Canonical authority now resolves as:
 
-## C-Coordinate (Category)
+1. [[CLAUDE.md]] for the root `#` inversion mechanism, raw archetypes, families, operators, and reflective coordinates.
+2. [[repo-ontology.md]] for vault residency, frontmatter key law, [[T]] / [[T′]] thought lifecycle, and [[wikilink law]].
+3. [[World-Ontology]] for the flat [[World]] nexus and coordinate-to-document navigation.
+4. [[S-SYSTEM-INDEX]] and level specs for current S/S′ implementation reality.
+5. [[World/Types]] for coordinate-native ontology/MOC incubation before graph promotion.
 
-The **Category** coordinate defines the ontological category or type of an entity - what fundamental kind of thing it is.
-
-### Natural Language Definitions
-
-- **C0: Ground/Source** - The unmanifest, pure potential (Bimba root). Raw, undifferentiated being before any form or category emerges. This is the source domain from which all specific categories arise.
-
-- **C1: Presence/Form** - Essential nature, the thing itself. The fundamental, irreducible nature of an entity - what makes it what it is at the most basic level of existence.
-
-- **C2: Entity/Unit** - Atomic instances, individual units. Concrete, discrete entities that instantiate a category. Individual things, not abstract types or collections.
-
-- **C3: Process/Flow** - Transformation, methods, operations. Dynamic sequences, operations, flows, and transformations. Things that happen, change, or describe how something moves or evolves.
-
-- **C4: Type/Pattern** - Formal structures, archetypes. Abstract patterns, schemas, and templates that describe kinds of things. The formal structure or blueprint.
-
-- **C5: Integration/Reflection** - Synthesis, Pratibimba instances. Unified wholes that integrate multiple aspects; reflections and operational instances. The emergent synthesis that brings things together.
+[[Idea/Empty]] remains the temporal working surface. Durable coordinate definitions should graduate into flat [[World]] and/or coordinate MOCs under [[World/Types]].
 
 ---
 
-## P-Coordinate (Position)
+## Root Law: `#` Before Families
 
-The **Position** coordinate defines the semantic level or layer of an entity's meaning - from ground truth to integrated understanding.
+The current canon keeps the original intuition but sharpens its order:
 
-### Natural Language Definitions
+- [[#]] is the inversion act itself: the non-dual operation that turns any coordinate `X` into `X′`.
+- [[#0]]-[[#5]] are raw archetypal positions before family differentiation.
+- [[P]], [[S]], [[T]], [[M]], [[L]], and [[C]] are six family manifestations of those raw positions.
+- Reflective coordinates such as [[CPF]], [[CT]], [[CP]], [[CF]], [[CFP]], and [[CS]] are held in `()` as execution/context matrices.
 
-- **P0: Ground** - Foundations, raw connections, adjacency. The basic substrate of connection; what two things relate to without interpretation. Direct, unmediated proximity or reference.
+The old habit of treating [[C0]]-[[C5]] as the top level is now corrected: [[C]] is the Category-family manifestation of the raw [[#0]]-[[#5]] sequence, not the root sequence itself.
 
-- **P1: Definition** - Materials, substances, boundaries, what something IS. The intrinsic properties, components, and boundaries that constitute the entity. Its material or essential definition.
+## Raw Position Semantics
 
-- **P2: Operation** - Processes, methods, how something WORKS. The operational logic, procedures, affordances, and mechanisms. How the entity functions, transforms, or enables actions.
+These definitions preserve the useful original phrasing while aligning with current canon:
 
-- **P3: Pattern** - Structures, archetypes, formal templates. The recurring patterns, shapes, and formal structures that the entity embodies. What templates or archetypal forms it instantiates.
+| Raw Position | Core Meaning | Natural-Language Definition |
+| --- | --- | --- |
+| [[#0]] | Ground / Source | The unmanifest ground, raw potential, immediate adjacency, or source before interpretation. |
+| [[#1]] | Definition / Form | Boundary, material, name, or essential form: what something is. |
+| [[#2]] | Operation / Entity | Action, method, affordance, and the concrete unit through which something works. |
+| [[#3]] | Pattern / Process | Recurrence, symbolic shape, transformation, anomaly, or processual flow. |
+| [[#4]] | Context / Type | Situated field, formal type, environment, and lemniscate nesting frame. |
+| [[#5]] | Integration / Reflection | Synthesis, return, outcome, wholeness, and Pratibimba reflection. |
 
-- **P4: Context** - Situations, temporal/spatial placement, environment. The surrounding circumstances, temporal location, spatial placement, and environmental factors that situate the entity.
-
-- **P5: Integration** - Synthesis, wholeness, outcomes. The unified perspective that integrates all other positions; results, emergent properties, and holistic understanding.
-
----
-
-## M-Coordinate (Subsystem)
-
-The **Subsystem** coordinate defines which metaphysical or computational domain an entity belongs to - the system architecture that organizes knowledge and operation.
-
-### Natural Language Definitions
-
-- **M0: Anuttara** - The unsurpassable ground, proto-logical. The deepest logical foundation; the irreducible ground from which all logical systems derive. The unsurpassable base of being.
-
-- **M1: Paramasiva** - Definition engine, quaternal logic. The system responsible for defining, naming, and establishing formal structures. Logic systems that establish boundaries and categories.
-
-- **M2: Parashakti** - Operation/vibration, cosmic imagination (GraphRAG home). The dynamic, operational domain where ideas, queries, and transformations live. The imagination that generates possibilities through graph structure.
-
-- **M3: Mahamaya** - Symbolic transcription, universal language. The system of symbols, language, representation, and transcription that makes thought communicable and shareable.
-
-- **M4: Nara** - Personal interface, embodied context. The individual, localized perspective; personal context, embodied experience, and user-specific frames.
-
-- **M5: Epii** - Synthesis orchestration, integration. The orchestration layer that coordinates across all subsystems; brings disparate elements into unified action and deployment.
+The same sixfold sequence repeats in every family. Family names tell us the domain; the number tells us the archetypal position.
 
 ---
 
-## S-Coordinate (Stack)
+## C-Family: Category / Ontological Foundation
 
-The **Stack** coordinate defines which technological or infrastructural layer an entity exists within - the stack of technologies that implements the system.
+The [[C]] family describes the categorical being of an artifact or entity. It is also the default frontmatter-key family under [[repo-ontology.md]].
 
-### Natural Language Definitions
+| Coordinate | Current Canon | Recovered Original Definition |
+| --- | --- | --- |
+| [[C0]] | [[Bimba]] / Ground / Source | Canonical source, unmanifest ground, origin, provenance, and source-coordinate field. |
+| [[C1]] | Form / Definition | Essential nature, shape, boundary, and the thing's self-definition. |
+| [[C2]] | Entity / Operation | Atomic instance, concrete unit, session id, uuid, parent-child entity relation. |
+| [[C3]] | Process / Canvas | Dynamic flow, transformation, created/updated process markers, canvas/workspace movement. |
+| [[C4]] | Type / Context | Formal structure, template kind, artifact role, invocation kind, and contextual classification. |
+| [[C5]] | [[Pratibimba]] / Integration | Reflected instance, synthesis, completion, verification, and return-to-ground. |
 
-- **S0: Source/Data** - Raw data layer, Anuttara models. The foundational data structures and raw models; unprocessed, pure data without operational context.
+Frontmatter rule: use `c_{n}_{semantic}` for most artifact properties. Use non-C prefixes only when the fact is genuinely domain-specific, such as `t_0_thought_type` or `m_4_nara_domain`.
 
-- **S1: Content** - File system, Obsidian vault. The persistent file-based storage; the vault of documents, notes, and human-written content.
+## P-Family: Position / Functional Semantics
 
-- **S2: Graph** - Neo4j, GraphRAG (THIS IS WHERE MOIRAI DWELL). The semantic graph layer where connections, relationships, and contextual understanding live. The domain of Moirai agents' primary operation.
+The [[P]] family describes where a concept sits in the generic functional sequence.
 
-- **S3: Plugin** - PAI infrastructure, Claude Code plugins. The extensible plugin layer; PAI-based agents, Claude Code plugins, and user-facing capabilities built on the platform.
+| Coordinate | Current Canon | Recovered Original Definition |
+| --- | --- | --- |
+| [[P0]] | Ground | Foundations, raw connection, adjacency, and direct relation before interpretation. |
+| [[P1]] | Definition | Material, substance, boundary, and what something is. |
+| [[P2]] | Operation | Procedure, method, mechanism, affordance, and how something works. |
+| [[P3]] | Pattern | Recurring form, structure, archetype, or anomaly-bearing pattern. |
+| [[P4]] | Context | Situation, environment, temporal/spatial placement, and surrounding field. |
+| [[P5]] | Integration | Synthesis, outcome, wholeness, and the perspective that gathers the sequence. |
 
-- **S4: Session** - Runtime context, conversation state. The ephemeral, in-memory runtime state; active conversations, session context, and transient computations.
+## S-Family: Stack / Technology Layers
 
-- **S5: Cloud** - Distributed deployment, messaging platforms. The distributed, networked layer; cloud deployment, inter-agent messaging, and remote collaboration infrastructure.
+The [[S]] family has shifted most since the original file. Current canon follows the Body/S and S/S′ specs, not the older Moirai/Cloud stack.
 
----
+| Coordinate | Current Canon | Current Meaning |
+| --- | --- | --- |
+| [[S0]] / [[S0′]] | Terminal / command membrane | CLI, shell, process execution, tool surface, env, test harnesses, typed command law. |
+| [[S1]] / [[S1′]] | Vault / [[Hen]] compiler law | Filesystem/vault residency, frontmatter, [[CT]] templates, wikilinks, MOCs, graduation path. |
+| [[S2]] / [[S2′]] | Graph / retrieval substrate | [[Neo4j]], semantic cache, vector/retrieval law, coordinate graph schema, link/query validation. |
+| [[S3]] / [[S3′]] | Gateway / temporal runtime | Gateway, sessions, channels, [[Day]], [[NOW]], [[Kairos]], presence, [[Graphiti]] runtime. |
+| [[S4]] / [[S4′]] | PI runtime / [[Anima]] | Providers, agents, skills, tools, permissions, [[VAK]], constitutional dispatch, capability law. |
+| [[S5]] / [[S5′]] | [[Epii]] / world return | Review, autoresearch, [[Gnosis]], [[Nara]], pedagogy, improvement, promotion, meaning-return governance. |
 
-## T-Coordinate (Thought)
+Historical note: older references to S3 as generic plugin/PAI, S4 as session, or S5 as cloud/Notion should now be read as precursor language. The current stack is command -> vault -> graph -> gateway/time -> PI agents -> Epii/world-return.
 
-The **Thought** coordinate defines the epistemic stance or inquiry mode - how we approach and organize thinking about a domain.
+## T-Family: Thought / Artifact Cognition
 
-### Natural Language Definitions
+The [[T]] family now follows the [[repo-ontology.md]] thought lifecycle. It is not a generic artifact folder taxonomy and should not be replaced by a top-level `World/Types/Artifacts` root.
 
-- **T0: Questions/Assumptions** - Inquiry, what we don't know. The question space; what we're asking, what assumptions underlie our thinking, areas of uncertainty.
+| Coordinate | Current Canon | Recovered Original Definition |
+| --- | --- | --- |
+| [[T0]] | Questions | Assumptions, inquiry, uncertainty, and what is being asked. |
+| [[T1]] | Traces | Evidence, lacunae, missing links, and what points toward an answer. |
+| [[T2]] | Challenges | Problems, opportunities, constraints, affordances, and friction. |
+| [[T3]] | Patterns | Regularities, anomalies, structures, and recurring forms. |
+| [[T4]] | Discoveries | Findings, concealments, revelations, and what has become visible. |
+| [[T5]] | Insights | Integrated understanding, synthesis, and knowledge that can return to action. |
 
-- **T1: Traces/Lacunae** - Evidence, gaps, what's missing. The evidence space; traces that point to answers, gaps where information is absent, missing connections.
+[[T′]] names instantiated thoughts: a concrete T3′ pattern-note, T5′ insight, or T0′ question arising in a session and linked back through `c_0_source_coordinates`.
 
-- **T2: Challenges/Affordances** - Problems, opportunities. The problem/opportunity space; obstacles to overcome, constraints, and possibilities for action.
+Historical note: older `T0 Seed -> T5 Insight` language survives best as a CT/artifact-production resonance, not as the current T-family authority. [[CT]] handles content-type/template law; [[T]] handles the living planes of thought.
 
-- **T3: Patterns/Anomalies** - Regularities, exceptions. The pattern space; recurring structures that enable understanding, deviations that signal new patterns, and anomalies that demand explanation.
+## M-Family: Subsystem / Consciousness Domains
 
-- **T4: Discovery/Concealment** - Findings, what's hidden. The discovery space; what has been found and revealed, what remains hidden or concealed, insights gained.
+The [[M]] family names the six constitutional subsystems and their M′ user-facing reflections.
 
-- **T5: Insight/Integration** - Understanding, synthesis. The understanding space; coherent comprehension, unifying principles, and integrated knowledge that makes sense across domains.
+| Coordinate | Current Canon | Recovered Original Definition |
+| --- | --- | --- |
+| [[M0]] | [[Anuttara]] | Unsurpassable ground, proto-logical foundation, prior witness-axis. |
+| [[M1]] | [[Paramasiva]] | Definition engine, form-giving logic, naming, formal boundary establishment. |
+| [[M2]] | [[Parashakti]] | Operation, vibration, graph/imagination, transformative possibility. |
+| [[M3]] | [[Mahamaya]] | Symbolic transcription, language, representation, universal codec. |
+| [[M4]] | [[Nara]] | Personal interface, embodied context, localized perspective, lived frame. |
+| [[M5]] | [[Epii]] | Synthesis orchestration, integration, pedagogy, review, and world-return. |
 
----
+Anima maps these coordinates into constitutional dispatch functions: [[Nous]], [[Logos]], [[Eros]], [[Mythos]], [[Psyche]], and [[Sophia]].
 
-## L-Coordinate (Lens)
+## L-Family: Lens / Epistemic Modes
 
-The **Lens** coordinate defines the perceptual or analytical lens applied - which "angle" or mode of perception structures interpretation.
+The [[L]] family is the perceptual or analytical lens. The original file's language remains valuable if folded into the current names.
 
-### Natural Language Definitions
-
-- **L0: Naive/Direct** - Unfiltered perception. Direct, immediate, unfiltered observation; what appears without interpretation or analysis.
-
-- **L1: Analytical/Structural** - Breaking down, examining parts. Decomposition and structural analysis; how things break down into components and how those parts relate.
-
-- **L2: Operational/Procedural** - How-to, methods. Procedural understanding; the steps, methods, and sequences needed to accomplish goals.
-
-- **L3: Archetypal/Symbolic** - Patterns, deeper meanings. Symbolic and archetypal interpretation; deeper patterns, universal symbols, mythic structures.
-
-- **L4: Contextual/Situated** - Environment, circumstances. Contextual framing; how surroundings, history, culture, and circumstances shape meaning.
-
-- **L5: Integrative/Holistic** - Unified view, synthesis. Holistic comprehension; the unified perspective that encompasses and reconciles all other lenses into coherent understanding.
-
----
-
-## Day/Night Inversions (Mode)
-
-The **Mode** property modifies interpretation by toggling between outward-active and inward-receptive orientations. Applies to **M**, **T**, and **L** coordinates.
-
-### Mode Semantics
-
-- **Day Mode** (default) - Outward, manifest, explicit, active
-  - M-coordinates in day mode: System actively operating, generating
-  - T-coordinates in day mode: Seeking, questioning, discovering actively
-  - L-coordinates in day mode: Actively analyzing, interpreting, applying
-
-- **Night Mode** - Inward, potential, implicit, receptive
-  - M-coordinates in night mode: System at rest, receptive, potential
-  - T-coordinates in night mode: Resting in mystery, implicit understanding
-  - L-coordinates in night mode: Receptive perception, intuitive knowing, implicit wisdom
-
-### Notation
-
-- Property in node: `{coord}_mode` (string: "day" or "night")
-- Default mode is "day" when not specified
-- Example: A thought in night mode might be `T2_night` - receptive to challenges and opportunities rather than actively seeking them
-
----
-
-## Prime (') Inversion
-
-The **Prime** marker (`'`) indicates the Pratibimba aspect (reflected, instantiated, operational) of a coordinate, as opposed to the Bimba aspect (original, canonical, source). Applies to **all** coordinate types (C, P, M, S, T, L).
-
-### Prime Semantics
-
-- **Unprime** (default, no `'` marker) - **Bimba aspect**
-  - Canonical, original, source truth
-  - Abstract, archetypal, universal
-  - The template or blueprint
-  - Example: `S2` = Graph layer canonical structure
-
-- **Prime** (`'` suffix) - **Pratibimba aspect**
-  - Reflected, instantiated, operational instance
-  - Concrete, particular, localized
-  - The lived experience or implementation
-  - Example: `S2'` = Graph layer as actually operating, the specific instance running now
-
-### Notation and Storage
-
-- Coordinate string syntax: Append `'` to coordinate string (e.g., `S2'`, `P3'`, `C3-P2'`, `M2'-S3-L5`)
-- Property in node: `{coord}_is_prime` (boolean)
-- Multi-coordinate examples:
-  - `C3-P2-M2'-S2` = C3 and P2 are unprime (Bimba), M2 is prime (Pratibimba), S2 is unprime
-  - `T5'-L3'` = Both T5 and L3 are in their Pratibimba (reflected) aspect
-
-### Practical Interpretation
-
-The unprime/prime distinction enables:
-- **Schema vs. Instance**: `M3` (the symbol system itself) vs. `M3'` (a specific symbol invocation)
-- **Template vs. Execution**: `L2` (the procedural method) vs. `L2'` (the procedure being executed right now)
-- **Archetype vs. Expression**: `C4` (the formal pattern) vs. `C4'` (a particular expression of that pattern)
+| Coordinate | Current Canon | Recovered Original Definition |
+| --- | --- | --- |
+| [[L0]] | Literal / Direct | Surface reading, immediate perception, direct appearance before interpretation. |
+| [[L1]] | Functional / Analytical | Use, decomposition, parts, relation, and working analysis. |
+| [[L2]] | Structural / Operational | Method, procedure, architecture, and how components hold together. |
+| [[L3]] | Archetypal / Symbolic | Symbol, mythic pattern, deep form, and strange-attractor recognition. |
+| [[L4]] | Paradigmatic / Situated | Context, circumstance, worldview, ecology, and field-condition. |
+| [[L5]] | Integral / Holistic | Unified view, reconciliation, synthesis, and whole-system comprehension. |
 
 ---
 
-## Coordinate Combinations
+## Prime / Inversion
 
-Coordinates can combine to express rich semantic positions. Full coordinates use the pattern:
+The prime marker (`′` or `'`) indicates the inverted or Pratibimba aspect produced by applying [[#]] to a coordinate.
 
-```
-[C{n}]-[P{n}]-[M{n}]-[S{n}]-[T{n}]-[L{n}][']
+| Aspect | Meaning | Example |
+| --- | --- | --- |
+| Unprime | Bimba, canonical, source, archetypal, template-side | [[S2]] as graph substrate law |
+| Prime | Pratibimba, reflected, instantiated, operational, lived | [[S2′]] as coordinate-aware retrieval/sync behavior |
+
+Prime applies to every coordinate family: [[P′]], [[S′]], [[T′]], [[M′]], [[L′]], and [[C′]]. It is not merely "implementation" in a narrow software sense; it is the mirror phase where canonical form becomes situated expression.
+
+## Day / Night Mode
+
+Day/Night remains useful as an interpretive mode, especially across [[M]], [[T]], and [[L]], but it should not be treated as a universal stored property unless the owning spec defines it.
+
+| Mode | Meaning |
+| --- | --- |
+| Day | Outward, active, manifest, explicit, operational, seeking. |
+| Night | Inward, receptive, implicit, potential, resting, letting-pattern-emerge. |
+
+Night′ questions and Day/Night passes belong to agent workflow and MEF/QL interpretation. They should be documented in the owning Seed or agent protocol when used.
+
+## Reflective Coordinates In `()`
+
+The reflective coordinates are execution/context matrices, not ordinary family positions.
+
+| Coordinate | Function | Canonical Frame Affinity |
+| --- | --- | --- |
+| [[CPF]] | Category-Position-Frame; cross-coordinate context mapping and polarity gate | `(00/00)` / `(0/1)` |
+| [[CT]] | Content-Type; artifact/template/process freeze | [[S1]] / [[S1′]] and `Coordinates/C/C1/C1'/CT/**` |
+| [[CP]] | Context-Position; positional frame instantiation | `P0`-`P5` and `(4.0/1-4.4/5)` |
+| [[CF]] | Context-Frame; #4 lemniscate nesting and constitutional dispatch | [[S4′]] / [[Anima]] |
+| [[CFP]] | Context-Frame-Position; nested frame operation / thread weaving | agent/thread execution |
+| [[CS]] | Context-System; system-wide contextual state and sequence | orchestration, session, and environment |
+
+[[CT]] is especially important for current Hen work: templates and artifacts must route through the CT system rather than through invented sibling folders.
+
+## Combination Syntax
+
+Coordinates can combine to express rich positions:
+
+```text
+C{n}-P{n}-M{n}-S{n}-T{n}-L{n}
 ```
 
-### Examples
+Examples:
 
-- **C3-P2-M2-S3-T5-L5**: Process/Flow (C3), in Operation (P2), within Parashakti (M2), at Plugin layer (S3), through Integration (T5), via Holistic lens (L5) - describes a complete plugin operation with integrated understanding
+- `S1′-CT2-T3` means a Hen/vault-side instantiated task-spec or pattern-bearing artifact.
+- `M4′-S3′-T0` means a user-facing temporal/session question surface.
+- `S5′-T5-L5` means an Epii-governed world-return insight read integrally.
 
-- **P1-M2'-S2'**: Definition (P1) within Parashakti's operational instance (M2'), within the active Graph layer (S2') - describes the operational definition of an entity in the running graph
+Use wikilinks when writing these into vault artifacts: [[S1′]], [[CT2]], [[T3]], [[M4′]], [[L5]].
 
-- **S2-T3**: The Graph layer (S2) through the Pattern lens (T3) - describing the patterns and structures that emerge in the knowledge graph
+## Graph And Residency Use
 
----
+When querying or syncing the graph:
 
-## Embedding in Agent System Prompts
-
-All Moirai agents embed this reference in their system prompts with context-specific guidance:
-
-1. **Klotho** (Creation/Binding) emphasizes:
-   - Category selection (C-coordinates): What kind of thing should exist?
-   - Ground-to-Integration progression (P0→P5): Building complete entities
-   - Bimba aspect (unprime): Creating canonical structures
-
-2. **Lachesis** (Measurement/Traversal) emphasizes:
-   - Thought modes (T-coordinates): How do we understand relationships?
-   - Context lens (L-coordinates): From which angle to perceive?
-   - Day mode operations: Active measuring and navigation
-
-3. **Atropos** (Cutting/Integration) emphasizes:
-   - Subsystem coordination (M-coordinates): Which domains must align?
-   - Stack layers (S-coordinates): How do layers integrate?
-   - Night mode receptivity: Letting wholeness emerge from cutting away
-
----
-
-## Usage in Graph Queries
-
-When querying the knowledge graph, use these semantic meanings to:
-
-1. **Filter by coordinate type**: Find all Category nodes by searching `c_.*`
-2. **Understand relationship types**: Relationships often encode the position (`POS2_LINKS_TO` = Position 2 connections)
-3. **Interpret subsystem membership**: `M2` nodes live in the imagination/operational domain; traverse differently
-4. **Apply mode sensitivity**: Queries in night mode may want dormant connections; day mode wants active ones
-5. **Resolve Bimba/Pratibimba ambiguity**: Use prime filter (`{coord}_is_prime`) when both aspects matter
-
----
+1. Use coordinate family and position as evidence, not arbitrary labels.
+2. Preserve `coordinate` as the Bimba ground reference, not a normal frontmatter property.
+3. Preserve `c_0_source_coordinates` as a `string[]` linking Pratibimba artifacts back to multiple Bimba sources.
+4. Use [[World/Types]] path ancestry as graph-promotion evidence only after [[S2]] schema validation.
+5. Graduate stable coordinate definitions from [[World/Types]] into flat [[World]], leaving the type-local file as a MOC/source pointer.
 
 ## See Also
 
-- `coordinate-syntax.md` - Formal syntax and regex patterns for coordinates
-- `.claude/plugins/epi-moirai/INDEX.md` - Moirai agent API and integration patterns
-- `.ralph-tui/progress.md` - Implementation progress and codebase patterns
+- [[World-Ontology]]
+- [[TYPE-REGISTRY]]
+- [[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]]
+- [[S-SYSTEM-INDEX]]
+- [[ARCHITECTURE-DIAGRAM-PACK]]

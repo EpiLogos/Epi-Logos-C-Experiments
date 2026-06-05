@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {"id":"rp","type":"file","file":"ReadingPosition.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"parent","type":"text","text":"# Parent\n[[OracleFrame]]","x":-440,"y":300,"width":260,"height":140},
+    {"id":"binds","type":"text","text":"# Binds to\n[[P0]]–[[P5]]\n[[P0']]–[[P5']]","x":-150,"y":300,"width":280,"height":160},
+    {"id":"sources","type":"text","text":"# Source systems\n[[Tarot]] · [[I-Ching]] · [[Codon]]","x":160,"y":300,"width":280,"height":160},
+    {"id":"orient","type":"text","text":"# Orientation\nupright · reversed · rotational_indexed","x":440,"y":300,"width":280,"height":160}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"rp","fromSide":"bottom","toNode":"parent","toSide":"top","label":"belongs to"},
+    {"id":"e2","fromNode":"rp","fromSide":"bottom","toNode":"binds","toSide":"top","label":"binds"},
+    {"id":"e3","fromNode":"rp","fromSide":"bottom","toNode":"sources","toSide":"top","label":"sources"},
+    {"id":"e4","fromNode":"rp","fromSide":"bottom","toNode":"orient","toSide":"top","label":"states"}
+  ]
+}

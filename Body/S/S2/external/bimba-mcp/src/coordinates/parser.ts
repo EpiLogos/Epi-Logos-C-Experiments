@@ -4,13 +4,15 @@
  * Handles all valid coordinate syntax patterns:
  * - Type letter prefix: C, P, M, S, T, L (required)
  * - Primary number: single or multi-digit
- * - Separators: both '-' (hyphen) and '.' (dot) accepted
+ * - Separators: '-' for ordinary branch descent; '.' only after a 4 segment
  * - Repeatable path segments: M1-3-4, S2-3-4-5
- * - Context frames in parentheses: M1-3-4.(0000), S2.(session-id)
+ * - Canonical context frames in parentheses: M1-3-4.(00/00), S2-(0/1)
  * - Prime marker: trailing ' for Pratibimba aspect
  *
  * @see coordinate-syntax.md for syntax rules
  */
+
+import { isCanonicalCoordinateSyntax, convertHashToMFamily } from './syntax.js';
 
 /**
  * Parsed coordinate representation
@@ -28,23 +30,22 @@ export interface ParsedCoordinate {
  * Pattern breakdown:
  * - ([CPMSLT]) - Coordinate type letter (required)
  * - (\d+) - Primary number (can be multi-digit)
- * - (?:[-.](\d+))* - Optional separator + numbers (repeatable)
- * - (?:\.\([^)]+\))? - Optional context frame in ()
+ * - branch segments are scanner-validated so '.' is only valid after a 4 segment
+ * - parenthesized context frames must be canonical CF literals
  * - (')? - Optional prime marker
  */
-const COORDINATE_REGEX_FLEXIBLE = /^([CPMSLT])(\d+)(?:[-.]\d+)*(?:\.\([^)]+\))?(')?$/;
 
 /**
  * Parse a coordinate string into a structured object
  *
- * Returns null if the coordinate is invalid or uses deprecated '#' syntax.
+ * Returns null if the coordinate is invalid.
+ * Converts legacy '#' syntax to 'M' family.
  * Supports:
  * - Simple: P2, M3
- * - Ranges: M2-5, S3.4
+ * - Ranges: M2-5, S3-4
  * - Paths: M1-3-4, S2-3-4-5
- * - Context frames: M1-3-4.(0000), S2.(session-123)
+ * - Context frames: M1-3-4.(00/00), S2-(0/1)
  * - Prime: M2', S3'
- * - Combined: C3-P2-M2'.(ref:uuid)
  *
  * @param input - Coordinate string to parse
  * @returns ParsedCoordinate object or null if invalid
@@ -54,26 +55,23 @@ export function parseCoordinate(input: string): ParsedCoordinate | null {
     return null;
   }
 
-  // Reject deprecated '#' prefix syntax
-  if (input.startsWith('#')) {
-    console.warn(`[Coordinate] Deprecated hash syntax '#' used: ${input}. Use letter prefix instead (e.g., 'P2' not '#2').`);
-    return null;
-  }
+  // Convert legacy '#' syntax to canonical M family
+  const normalizedInput = convertHashToMFamily(input);
 
-  // Check basic structure
-  if (!COORDINATE_REGEX_FLEXIBLE.test(input)) {
+  if (!isCanonicalCoordinateSyntax(normalizedInput)) {
     return null;
   }
 
   // Extract type letter
-  const typeMatch = input.match(/^([CPMSLT])/);
+  const typeMatch = normalizedInput.match(/^([CPMSLT])/);
   if (!typeMatch) {
     return null;
   }
   const type = typeMatch[1] as 'C' | 'P' | 'M' | 'S' | 'T' | 'L';
 
   // Extract segments (all numbers after type letter, separated by - or .)
-  const segmentsMatch = input.match(/^[CPMSLT]([\d.\-]+)/);
+  // For bare family root, there are no segments
+  const segmentsMatch = normalizedInput.match(/^[CPMSLT]([\d.\-]+)/);
   let segments: number[] = [];
   if (segmentsMatch && segmentsMatch[1]) {
     const segmentStr = segmentsMatch[1];
@@ -82,12 +80,12 @@ export function parseCoordinate(input: string): ParsedCoordinate | null {
     segments = parts.map(p => parseInt(p, 10)).filter(n => !isNaN(n));
   }
 
-  // Extract context frame
-  const contextMatch = input.match(/\.\(([^)]+)\)/);
+  // Extract first canonical context frame, whether branch-separated by '-' or '.'
+  const contextMatch = normalizedInput.match(/[-.]\(([^)]+)\)/);
   const contextFrame = contextMatch ? contextMatch[1] : undefined;
 
   // Check for prime marker
-  const isPrime = input.endsWith("'");
+  const isPrime = normalizedInput.endsWith("'");
 
   return {
     type,
@@ -108,12 +106,8 @@ export function isValidCoordinate(input: string): boolean {
     return false;
   }
 
-  // Reject deprecated '#' syntax
-  if (input.startsWith('#')) {
-    return false;
-  }
-
-  return COORDINATE_REGEX_FLEXIBLE.test(input);
+  const normalizedInput = convertHashToMFamily(input);
+  return isCanonicalCoordinateSyntax(normalizedInput);
 }
 
 /**
@@ -122,16 +116,17 @@ export function isValidCoordinate(input: string): boolean {
  * Canonical form:
  * - Uses hyphen '-' as separator
  * - Segments sorted and deduplicated
- * - Context frame preserved with leading dot
+ * - Context frame preserved with '-' unless it follows a 4 segment
  * - Prime marker at the end
  *
- * Example: P2.1-3.(ctx)' → P1-2-3.(ctx)'
+ * Example: P2-1-3-(0/1)' → P1-2-3-(0/1)'
  *
  * @param input - Coordinate string to normalize
  * @returns Canonical coordinate string, or original if invalid
  */
 export function normalizeCoordinate(input: string): string {
-  const parsed = parseCoordinate(input);
+  const normalizedInput = convertHashToMFamily(input);
+  const parsed = parseCoordinate(normalizedInput);
   if (!parsed) {
     return input;
   }
@@ -141,11 +136,14 @@ export function normalizeCoordinate(input: string): string {
 
   // Add unique segments sorted numerically
   const uniqueSegments = Array.from(new Set(parsed.segments)).sort((a, b) => a - b);
-  normalized += uniqueSegments.map(s => s.toString()).join('-');
+  if (uniqueSegments.length > 0) {
+    normalized += uniqueSegments.map(s => s.toString()).join('-');
+  }
 
   // Add context frame if present
   if (parsed.contextFrame) {
-    normalized += `.(${parsed.contextFrame})`;
+    const lastSegment = uniqueSegments[uniqueSegments.length - 1];
+    normalized += `${lastSegment === 4 ? '.' : '-'}(${parsed.contextFrame})`;
   }
 
   // Add prime marker if present
@@ -169,6 +167,8 @@ export function extractContextFrame(input: string): string | null {
     return null;
   }
 
-  const match = input.match(/\.\(([^)]+)\)/);
+  const normalizedInput = convertHashToMFamily(input);
+  const match = normalizedInput.match(/[-.]\(([^)]+)\)/);
   return match && match[1] ? match[1] : null;
 }
+

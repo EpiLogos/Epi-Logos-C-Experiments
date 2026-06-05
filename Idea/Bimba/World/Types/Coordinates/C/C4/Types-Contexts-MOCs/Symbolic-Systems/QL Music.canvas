@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {"id":"music","type":"file","file":"QL Music.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"chrom","type":"text","text":"# Chromatic Basis\nGenerator 9/8 (epogdoon)\n6+6 helices → 12 notes","x":-560,"y":280,"width":300,"height":160},
+    {"id":"fifths","type":"text","text":"# Fifths Basis\nGenerator 3/2 (perfect fifth)\n6+6 helices → 12 notes","x":-220,"y":280,"width":300,"height":160},
+    {"id":"ratios","type":"text","text":"# Foundational Ratios\n1/1, 4/3, 3/4, 3/2,\n2/3, 16/9, 9/8, 2/1","x":140,"y":280,"width":300,"height":160},
+    {"id":"partition","type":"text","text":"# 8 + 4\n8 = Barry-Harris bebop scales\n4 = CF chromatic-passing cuts","x":480,"y":280,"width":300,"height":160},
+    {"id":"sqA","type":"text","text":"# [[Square A]]\nOuter mirror — (0,5)","x":-560,"y":-280,"width":260,"height":140},
+    {"id":"sqB","type":"text","text":"# [[Square B]]\nMiddle mirror — (1,4)","x":-260,"y":-280,"width":260,"height":140},
+    {"id":"sqC","type":"text","text":"# [[Square C]]\nInner mirror — (2,3) midpoint","x":40,"y":-280,"width":260,"height":140},
+    {"id":"m5","type":"text","text":"# [[M5]] Epii\nSynthesis authority\nposition #5 of 6-fold","x":340,"y":-280,"width":300,"height":140}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"music","fromSide":"bottom","toNode":"chrom","toSide":"top","label":"basis 1"},
+    {"id":"e2","fromNode":"music","fromSide":"bottom","toNode":"fifths","toSide":"top","label":"basis 2"},
+    {"id":"e3","fromNode":"music","fromSide":"bottom","toNode":"ratios","toSide":"top","label":"derive"},
+    {"id":"e4","fromNode":"music","fromSide":"bottom","toNode":"partition","toSide":"top","label":"partition"},
+    {"id":"e5","fromNode":"sqA","fromSide":"bottom","toNode":"music","toSide":"top"},
+    {"id":"e6","fromNode":"sqB","fromSide":"bottom","toNode":"music","toSide":"top"},
+    {"id":"e7","fromNode":"sqC","fromSide":"bottom","toNode":"music","toSide":"top"},
+    {"id":"e8","fromNode":"m5","fromSide":"bottom","toNode":"music","toSide":"top","label":"synthesises"}
+  ]
+}

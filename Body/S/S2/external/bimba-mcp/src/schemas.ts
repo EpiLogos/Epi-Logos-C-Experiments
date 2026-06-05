@@ -7,6 +7,7 @@
 
 import { z } from 'zod';
 import type { GraphResult } from './schemas/graph.js';
+import { isCanonicalCoordinateSyntax } from './coordinates/syntax.js';
 
 // Re-export graph schemas for convenience
 export * from './schemas/graph.js';
@@ -32,15 +33,17 @@ export type { GraphRerankInput, RankedResult, GraphRerankOutput, RerankStats } f
 export const CoordinateTypeSchema = z.enum(['P', 'C', 'M', 'S', 'T', 'L']);
 
 /**
- * Bimba coordinate pattern following the canonical regex:
- * ^([CPMSLT])(\d+)(?:[-.](\d+))*(?:\.\([^)]+\))?(')?$
+ * Bimba coordinate syntax:
+ * - '-' for ordinary branch descent
+ * - '.' only after a 4 segment
+ * - parenthesized context frames limited to canonical CF literals
  */
 export const CoordinateSchema = z.string()
-  .regex(
-    /^[CPMSLT]\d+(?:[-.]\d+)*(?:\.\([^)]+\))?'?$/,
-    'Invalid coordinate format. Must match pattern like P2, M2-5, S2.4, M1-3-4.(0000), S2\''
+  .refine(
+    isCanonicalCoordinateSyntax,
+    'Invalid coordinate format. Must match canonical syntax like P2, M2-5, S2-4, M1-3-4.(00/00), S2\''
   )
-  .describe('Bimba coordinate (e.g., P2, M2-5, S2.4, M1-3-4.(0000), S2\')');
+  .describe('Bimba coordinate (e.g., P2, M2-5, S2-4, M1-3-4.(00/00), S2\')');
 
 // =============================================================================
 // Tool Input Schemas

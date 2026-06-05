@@ -33,6 +33,12 @@ Status taxonomy per claim:
 - The 72 is **one invariant, six addressing-axes** (MEF×QL · tattva · decan · Shem · maqam · DET-projection); mantra (100) and Asma'ul-Husna (99+1) are sonic overlays; planet LUT (10) is keying via decan-link, not a seventh 72-axis.
 - Shell separation is load-bearing: shell `0` (cosmic 1-2-3) · shell `1` (personal 4-5-0 + flow-writing) · `4+2` depth · `/` OmniPanel — never collapse.
 - Cl(4,2) runs at four scales (M1 ring · M3 codon · M4 personal · Kerykeion natal) — verify it is one algebra in code (kernel-bridge audit owns the proof).
+- Hen owns Pi/vault entity-candidate compilation: dangling wikilinks and Obsidian root-created notes enter Empty candidate residency, promote through coordinate-native World/Types incubation, and graduate into flat World only after review. Smart Env suggests; Hen writes; S2 syncs.
+- The C layer is the semantic typology authority inside World/Types: templates route through C1/CT, entities/properties/tags through C2, canvases/diagrams through C3, type/MOC authorities through C4, and World graduation through C5.
+- **Third Spanda Equation is the canonical matheme spine** (ratified 2026-06-04 per DR-M3-6): `137 = [8(8+9) − 9] + 1 + 9` in five equivalent forms (Mersenne `(2^7−1)+1+9` · Binary `2^7+9` · Octave-field `8(8+9)+1` · Spanda-bridge `64+2(36)+1` · M-stack `M_3(64)+M_2(72)+M_1(1)`). Execution-order trace: `64+72=136 → −9 → 127=M_7 → +1 → 128=2^7 → +9 → 137 → +δ → 137.035999…`. The 127 Mersenne substrate (with prime-index `31 = M_5`) is structurally `M_5 → M_7` at the actional-Archetype-7 layer — it is the canonical evidence that the +1 attribution is M1-5's K² topological-necessity. Canonical source: [`Idea/Bimba/Seeds/M/ql_m0_m3_third_spanda_integral_quilting_v2.md`](../../ql_m0_m3_third_spanda_integral_quilting_v2.md).
+- **Translation rule `9_M2 = 8_M3 + 1_M1` is canonical matheme law** (ratified per DR-IG-7): the M2 9-fold wholeness-gap projects to M3's 8-fold transcriptional gap plus the M1 parent unit. Recurs as QCD `3 ⊗ 3̄ = 8 ⊕ 1`. Whenever an 8-gap appears at M3, the reading must locate the M1 +1 that restores M2 wholeness.
+- **VAK is the operational language** (ratified per DR-VAK-3): the six VAK Context Frame families (CPF/CT/CP/CF/CFP/CS) wired in [`vak.h`](../../../../../Body/S/S0/epi-lib/include/vak.h) · [`vak_address.rs`](../../../../../Body/S/S0/portal-core/src/vak_address.rs) · [Anima `extension.ts`](../../../../../Body/S/S4/ta-onta/S4-4p-anima/extension.ts) ARE the system's language at the constitutional layer. The diatonic-scale-as-CF-progression is canonical operational truth carried by `MathemeDiatonicContext` at [`kernel.rs`](../../../../../Body/S/S0/portal-core/src/kernel.rs); music theory derivations live across M1-M4; M0-5 Śakti runtime is the foundational musical-linguistic capability within shakti-as-experiencer.
+- **The kernel IS a bioquaternionic JEPA-EBM operator** (ratified per DR-MP-1, DR-MP-2, DR-MP-3): per [`epi-logos-kernel-spec.md`](../../M0'/epi-logos-kernel-spec.md) frontmatter, the kernel predicts in latent representation space (the bimba map as the manifold itself), evaluates by energy not by autoregressive likelihood, and learns through context-target prediction whose objective is energy-minimization. **The 4'-5'-0' mental-pole triplet IS the canonical AI architecture**: 4' (#-layer / Nara) = **LLM** (traversal-voice), 5' ({lens}-layer / Epii) = **EBM** (energy-evaluation across 12 MEF lenses / 72 fine-grained positions, gradient $\nabla_{q_p} E_{\text{total}}$ driving Möbius descent step $q_p^{(n+1)} = q_p^{(n)} - \log(9/8) \cdot \nabla E$), 0' (R-layer / Anuttara) = **Verifier** (R-virtue constraint-checker reading `VIRTUE_LUT[9]` Parameśvara virtues; raises questions in symbolic-coordinate strings rather than passing-or-failing). The 1-2-3 physical pole (engine) and 4-5-0 mental pole (intelligence) are two complementary aspects of one operation; the matheme operates at developmental scale exactly as it operates at tick scale. **Cycle 3 is where the canonical AI architecture is wired into the build**: per-track tranches operationalize each position (M5 6.8-10 EBM-resonance-predictor; M4 5.20-21 LLM-traversal-voice + Anuttara-symbolic-parse skill; M0 1.10-11 Verifier-R-virtue-constraint-checker + symbolic-coordinate-string emission). Canonical sources: [`epi-logos-kernel-spec.md`](../../M0'/epi-logos-kernel-spec.md), [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md).
 
 ## Master Alignment Matrix (digest)
 
@@ -74,7 +80,7 @@ Cycle 3 closes in this dependency order:
 | DR-M2-1 (DCC-03) | Planet-count + Earth-observer semantics for the 9:8 M2→M3 bridge | M2 |
 | DR-M2-2 | Six axes of 72 + overlays canonicalisation (the M2 17th-lens-shaped question) | M2 |
 | DR-M3-1 | TCT / Nine-of-Wands cardinality (dataset 8 vs runtime 7) | M3 |
-| DR-M3-2 | 72→64 epogdoon uniqueness/injectivity scope + gap-marker contract | M3 |
+| DR-M3-2 | 72→64 epogdoon identity with M2 planetary 9:8; no profile-field decision | M3 |
 | DR-M3-3 | 17th-lens / 16+1 namespace split (M1_LENS 12 vs M3_LENS_STACK 16+1) | M3 |
 | DR-M4-1 | DayContainer vault path (`Pratibimba/Nara/{day_id}/` vs `day/{dayId}/`) | M4 |
 | DR-M4-2 | q_personal baseline + Cl(4,2) axis order + Vāma classifier policy + 0/1 cymatic polarity | M4 |
@@ -85,6 +91,8 @@ Cycle 3 closes in this dependency order:
 | DR-KB-2 | `depositionAnchor` typed profile field vs bridge-synthesized DTO | Kernel-bridge |
 | DR-TS-1 | Shell-0/Shell-1/4+2/`/` separation: intra-layout toggle vs third layout | Theia shell |
 | DR-IG-1 | Two-relation-families schema discriminator (`c_1_relation_family`) | Integrated bimba |
+| DR-S1-4 | Hen entity-candidate lifecycle from Empty to Types to World | S1' / Hen |
+| DR-S1-5 | C-layer semantic typology as World/Types authority | S1' / Hen |
 
 Each row is fully developed in `13-decision-register.md` with affected files, recommended resolution, and the verification command that closes the row.
 

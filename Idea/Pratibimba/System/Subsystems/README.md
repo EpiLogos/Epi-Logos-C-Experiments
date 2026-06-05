@@ -20,6 +20,19 @@ This folder is the UX/system documentation index for the six [[M']] subsystem fa
 | [[Nara]] | [[M4']] | [[M4'-SPEC]] | `Body/M/epi-theia/extensions/m4-nara` |
 | [[Epii]] | [[M5']] | [[M5'-SPEC]] | `Body/M/epi-theia/extensions/m5-epii` |
 
+## Context Frames
+
+The subsystem CF assignment follows the diatonic VAK grammar in [[M'-SYSTEM-SPEC]] and should not be inferred locally by each UX file.
+
+| Subsystem | CF | Register |
+| --- | --- | --- |
+| [[Anuttara]] | `(00/00)` | ground, canonical bimba substrate, pre-articulate coordinate field |
+| [[Paramasiva]] | `(0/1)` | first articulation, tick/inversion law, Paramaśiva parent physics |
+| [[Parashakti]] | `(0/1/2)` | operative frequency-flow, 72-fold Vimarśa/correspondential bridge |
+| [[Mahamaya]] | `(0/1/2/3)` | tetradic pattern closure, binary transcription, clock/phase-portrait surface |
+| [[Nara]] | `(4.0/1-4.4/5)` with M4.5 as `(4.5/0)` bridge | recursive personal household, #4.4.4.4 living field, review crossing toward Epii |
+| [[Epii]] | `(5/0)` | integration, pedagogy, canon review, return pressure |
+
 ## Authoring Rule
 
 These folders are not implementation homes. They document the subsystem architecture, UX intention, diagram links, and source/spec provenance. Runtime work belongs in `Body/M/epi-theia`; canonical planning belongs in [[Seeds]].

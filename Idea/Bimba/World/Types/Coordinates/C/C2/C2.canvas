@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"c2","type":"file","file":"C2.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"candidates","type":"text","text":"# Entity Candidates\nEmpty-captured candidates awaiting classification.","x":-700,"y":300,"width":300,"height":160},
+    {"id":"entities","type":"text","text":"# Entities\nCanonical entity classes and reviewed forms.","x":-350,"y":300,"width":300,"height":160},
+    {"id":"properties","type":"text","text":"# Properties\nCoordinate-lawful frontmatter/property forms.","x":0,"y":300,"width":300,"height":160},
+    {"id":"tags","type":"text","text":"# Tags\nFacet tags, never primary identity.","x":350,"y":300,"width":300,"height":160},
+    {"id":"relations","type":"text","text":"# Relation Fields\nReview-gated relation evidence for S2.","x":700,"y":300,"width":300,"height":160}
+  ],
+  "edges": [
+    {"id":"e-c2-candidates","fromNode":"c2","fromSide":"bottom","toNode":"candidates","toSide":"top","label":"captures"},
+    {"id":"e-c2-entities","fromNode":"c2","fromSide":"bottom","toNode":"entities","toSide":"top","label":"classifies"},
+    {"id":"e-c2-properties","fromNode":"c2","fromSide":"bottom","toNode":"properties","toSide":"top","label":"articulates"},
+    {"id":"e-c2-tags","fromNode":"c2","fromSide":"bottom","toNode":"tags","toSide":"top","label":"facets"},
+    {"id":"e-c2-relations","fromNode":"c2","fromSide":"bottom","toNode":"relations","toSide":"top","label":"evidence"}
+  ]
+}

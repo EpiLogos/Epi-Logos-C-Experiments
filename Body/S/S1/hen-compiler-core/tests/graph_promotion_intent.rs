@@ -135,6 +135,52 @@ fn promotion_intent_preserves_snake_case_legacy_coordinate_property() {
 }
 
 #[test]
+fn promotion_intent_accepts_prime_branch_coordinates_and_derives_cluster_metadata() {
+    let intent = GraphPromotionIntent::from_markdown(
+        "Idea/Bimba/World/Types/Coordinates/S/S4/S4'/S4.4'.md",
+        "---\ncoordinate: S4.4'\ntitle: Agentic Inhabitation Law\n---\nVAK execution grammar.",
+    )
+    .unwrap();
+
+    assert_eq!(intent.node.coordinate, "S4.4'");
+    assert_eq!(
+        intent.node.properties.get("coordinate_prefix").unwrap(),
+        "S4'"
+    );
+    assert_eq!(
+        intent.node.properties.get("coordinate_parent").unwrap(),
+        "S4'"
+    );
+    assert_eq!(
+        intent.node.properties.get("coordinate_namespace").unwrap(),
+        "S"
+    );
+    assert_eq!(intent.node.properties.get("coordinate_axis").unwrap(), "prime");
+
+    let lens = GraphPromotionIntent::from_markdown(
+        "Idea/Bimba/World/Types/Coordinates/L/L2/L2'/L2-3'.md",
+        "---\ncoordinate: L2-3'\ntitle: Chronological Arc\n---\nNight lens branch.",
+    )
+    .unwrap();
+    assert_eq!(lens.node.properties.get("coordinate_prefix").unwrap(), "L2'");
+    assert_eq!(lens.node.properties.get("coordinate_parent").unwrap(), "L2'");
+
+    let m_prime = GraphPromotionIntent::from_markdown(
+        "Idea/Bimba/Seeds/M/M5'/agentic-control-room.md",
+        "---\ncoordinate: M5-4'\ntitle: Agentic Control Room\n---\nM' affordance.",
+    )
+    .unwrap();
+    assert_eq!(
+        m_prime.node.properties.get("coordinate_parent").unwrap(),
+        "M5'"
+    );
+    assert_eq!(
+        m_prime.node.properties.get("coordinate_namespace").unwrap(),
+        "M"
+    );
+}
+
+#[test]
 fn legacy_coordinate_equal_to_canonical_does_not_request_compatibility_migration() {
     let intent = GraphPromotionIntent::from_markdown(
         "Idea/Empty/current.md",

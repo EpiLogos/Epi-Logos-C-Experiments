@@ -231,11 +231,11 @@ async function syncGraphToVault(
   try {
     // Query all nodes from Neo4j
     const connectionManager = getNeo4jConnectionManager();
-    const baseQuery = 'MATCH (node) RETURN node.uuid as uuid, node.title as title, node.file_path as file_path, node.updated_at as updated_at LIMIT 1000';
+    const baseQuery = 'MATCH (node:Bimba) RETURN coalesce(node.c_2_uuid, node.uuid) as uuid, coalesce(node.c_1_name, node.title) as title, coalesce(node.s_1_vault_path, node.file_path) as file_path, node.updated_at as updated_at LIMIT 1000';
     let query: string = baseQuery;
 
     if (coordinateFilter) {
-      query = `MATCH (node) WHERE node.coordinate STARTS WITH $coordinatePrefix RETURN node.uuid as uuid, node.title as title, node.file_path as file_path, node.updated_at as updated_at LIMIT 1000`;
+      query = `MATCH (node:Bimba) WHERE node.coordinate STARTS WITH $coordinatePrefix RETURN coalesce(node.c_2_uuid, node.uuid) as uuid, coalesce(node.c_1_name, node.title) as title, coalesce(node.s_1_vault_path, node.file_path) as file_path, node.updated_at as updated_at LIMIT 1000`;
     }
 
     const records = await connectionManager.executeRead<Record<string, unknown>>(
@@ -343,7 +343,7 @@ async function detectConflicts(
 
       // Check if node exists and compare timestamps
       const nodeResult = await connectionManager.executeRead<Record<string, unknown>>(
-        'MATCH (node {uuid: $uuid}) RETURN node.updated_at as updated_at',
+        'MATCH (node:Bimba) WHERE node.uuid = $uuid OR node.c_2_uuid = $uuid RETURN node.updated_at as updated_at',
         { uuid }
       );
 
@@ -491,16 +491,28 @@ function matchesCoordinateFilter(coordinate: string, filter: string): boolean {
 async function getNodeByUUID(uuid: string): Promise<Record<string, unknown> | null> {
   const connectionManager = getNeo4jConnectionManager();
   const records = await connectionManager.executeRead<Record<string, unknown>>(
-    'MATCH (node {uuid: $uuid}) RETURN node',
+    'MATCH (node:Bimba) WHERE node.uuid = $uuid OR node.c_2_uuid = $uuid RETURN node',
     { uuid }
   );
 
   if (records.length === 0) return null;
 
-  const nodeData = records[0]?.['node'] as Record<string, unknown> | undefined;
+  const nodeData = records[0]?.['node'] as { properties?: Record<string, unknown>; labels?: string[] } | Record<string, unknown> | undefined;
   if (!nodeData) return null;
 
-  return nodeData;
+  const properties = (nodeData && typeof nodeData === 'object' && 'properties' in nodeData && nodeData.properties && typeof nodeData.properties === 'object')
+    ? (nodeData.properties as Record<string, unknown>)
+    : (nodeData as Record<string, unknown>);
+
+  return {
+    ...properties,
+    uuid: properties['c_2_uuid'] ?? properties['uuid'],
+    title: properties['c_1_name'] ?? properties['title'] ?? properties['name'],
+    coordinate: properties['coordinate'],
+    file_path: properties['s_1_vault_path'] ?? properties['file_path'],
+    content: properties['c_5_content'] ?? properties['content'] ?? '',
+    properties: properties,
+  };
 }
 
 /**
@@ -516,11 +528,14 @@ async function createGraphNode(
   const coordinate = frontmatter['coordinate'] as string | undefined;
 
   const query = `
-    CREATE (node {
+    CREATE (node:Bimba {
       uuid: $uuid,
+      c_2_uuid: $uuid,
       title: $title,
+      c_1_name: $title,
       coordinate: $coordinate,
       content: $body,
+      c_5_content: $body,
       created_at: datetime(),
       updated_at: datetime()
     })
@@ -551,10 +566,13 @@ async function updateGraphNode(
   const coordinate = frontmatter['coordinate'] as string | undefined;
 
   const query = `
-    MATCH (node {uuid: $uuid})
+    MATCH (node:Bimba)
+    WHERE node.uuid = $uuid OR node.c_2_uuid = $uuid
     SET node.title = $title,
+        node.c_1_name = $title,
         node.coordinate = $coordinate,
         node.content = $body,
+        node.c_5_content = $body,
         node.updated_at = datetime()
     RETURN node
   `;
@@ -584,7 +602,7 @@ async function createRelationshipsFromLinks(sourceUuid: string, body: string): P
     if (targetTitle) {
       // Find target node by title
       const records = await connectionManager.executeRead<Record<string, unknown>>(
-        'MATCH (node {title: $title}) RETURN node.uuid as uuid LIMIT 1',
+        'MATCH (node:Bimba) WHERE node.title = $title OR node.c_1_name = $title RETURN coalesce(node.c_2_uuid, node.uuid) as uuid LIMIT 1',
         { title: targetTitle }
       );
 
@@ -594,8 +612,10 @@ async function createRelationshipsFromLinks(sourceUuid: string, body: string): P
           // Create REFERENCES relationship
           await connectionManager.executeWrite(
             `
-            MATCH (source {uuid: $sourceUuid})
-            MATCH (target {uuid: $targetUuid})
+            MATCH (source:Bimba)
+            WHERE source.uuid = $sourceUuid OR source.c_2_uuid = $sourceUuid
+            MATCH (target:Bimba)
+            WHERE target.uuid = $targetUuid OR target.c_2_uuid = $targetUuid
             MERGE (source)-[rel:REFERENCES]->(target)
             SET rel.created_at = datetime()
             RETURN rel

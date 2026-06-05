@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"c","type":"file","file":"C.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"c0","type":"file","file":"C0/C0.md","x":-620,"y":300,"width":300,"height":180},
+    {"id":"c1","type":"file","file":"C1/C1.md","x":-250,"y":300,"width":300,"height":180},
+    {"id":"c2","type":"file","file":"C2/C2.md","x":120,"y":300,"width":300,"height":180},
+    {"id":"c3","type":"file","file":"C3/C3.md","x":490,"y":300,"width":300,"height":180},
+    {"id":"c4","type":"file","file":"C4/C4.md","x":-250,"y":560,"width":300,"height":180},
+    {"id":"c5","type":"file","file":"C5/C5.md","x":120,"y":560,"width":300,"height":180}
+  ],
+  "edges": [
+    {"id":"e-c-c0","fromNode":"c","fromSide":"bottom","toNode":"c0","toSide":"top","label":"source"},
+    {"id":"e-c-c1","fromNode":"c","fromSide":"bottom","toNode":"c1","toSide":"top","label":"form"},
+    {"id":"e-c-c2","fromNode":"c","fromSide":"bottom","toNode":"c2","toSide":"top","label":"entity"},
+    {"id":"e-c-c3","fromNode":"c","fromSide":"bottom","toNode":"c3","toSide":"top","label":"process"},
+    {"id":"e-c-c4","fromNode":"c","fromSide":"bottom","toNode":"c4","toSide":"top","label":"type"},
+    {"id":"e-c-c5","fromNode":"c","fromSide":"bottom","toNode":"c5","toSide":"top","label":"crystallise"}
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"of","type":"file","file":"OracleFrame.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"composes","type":"text","text":"# Composes\n[[ReadingPosition]]\n[[TranscriptionalClockPacket]]\n[[SymbolicProtein]]","x":-440,"y":300,"width":280,"height":180},
+    {"id":"deck","type":"text","text":"# Deck handle\n[[NaraDeckContext]]","x":-130,"y":300,"width":260,"height":160},
+    {"id":"sys","type":"text","text":"# Used by\n[[Tarot]] · [[I-Ching]]","x":160,"y":300,"width":260,"height":160},
+    {"id":"runtime","type":"text","text":"# Runtime hosts\n[[S3]] · [[S4]]","x":440,"y":300,"width":260,"height":160},
+    {"id":"m3","type":"text","text":"# Engine\n[[M3]] Mahamaya","x":-260,"y":520,"width":260,"height":140},
+    {"id":"m4","type":"text","text":"# Inhabitant\n[[M4]] Nara — protected-local body","x":40,"y":520,"width":300,"height":140}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"of","fromSide":"bottom","toNode":"composes","toSide":"top","label":"composes"},
+    {"id":"e2","fromNode":"of","fromSide":"bottom","toNode":"deck","toSide":"top","label":"binds"},
+    {"id":"e3","fromNode":"of","fromSide":"bottom","toNode":"sys","toSide":"top","label":"used by"},
+    {"id":"e4","fromNode":"of","fromSide":"bottom","toNode":"runtime","toSide":"top","label":"hosted at"},
+    {"id":"e5","fromNode":"of","fromSide":"bottom","toNode":"m3","toSide":"top","label":"engine"},
+    {"id":"e6","fromNode":"of","fromSide":"bottom","toNode":"m4","toSide":"top","label":"inhabits"}
+  ]
+}

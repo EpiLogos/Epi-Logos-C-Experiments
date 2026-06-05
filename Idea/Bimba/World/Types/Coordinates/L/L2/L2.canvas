@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"l2","type":"file","file":"L2.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"anchor","type":"text","text":"# Anchor\nNāgārjuna catuṣkoṭi tetralemma.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid #2\nMythic / Two-ness / Polar-Operation.","x":-130,"y":300,"width":280,"height":160},
+    {"id":"square","type":"text","text":"# Square C\nP2+P3 Logic-Process axis.","x":180,"y":300,"width":280,"height":160},
+    {"id":"mobius","type":"text","text":"# Möbius Partner\nL3' Chronological. L2 ↔ L3'.","x":490,"y":300,"width":280,"height":160},
+    {"id":"element","type":"text","text":"# Element\nAir (via L2').","x":-280,"y":520,"width":280,"height":140},
+    {"id":"skills","type":"text","text":"# Skills\napply-tetralemma (primary), apply-cmea.","x":50,"y":520,"width":320,"height":140}
+  ],
+  "edges": [
+    {"id":"e2-anchor","fromNode":"l2","fromSide":"bottom","toNode":"anchor","toSide":"top","label":"anchored by"},
+    {"id":"e2-psy","fromNode":"l2","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts"},
+    {"id":"e2-sq","fromNode":"l2","fromSide":"bottom","toNode":"square","toSide":"top","label":"member of"},
+    {"id":"e2-mob","fromNode":"l2","fromSide":"bottom","toNode":"mobius","toSide":"top","label":"Möbius pair"},
+    {"id":"e2-el","fromNode":"l2","fromSide":"bottom","toNode":"element","toSide":"top","label":"element"},
+    {"id":"e2-sk","fromNode":"l2","fromSide":"bottom","toNode":"skills","toSide":"top","label":"engages"}
+  ]
+}

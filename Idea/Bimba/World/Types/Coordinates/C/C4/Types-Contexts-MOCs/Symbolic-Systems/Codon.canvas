@@ -1,0 +1,25 @@
+{
+  "nodes": [
+    {"id":"codon","type":"file","file":"Codon.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"nondual","type":"text","text":"# 40 Non-Dual\n7 rotational states each\n= 280","x":-460,"y":280,"width":260,"height":140},
+    {"id":"dual","type":"text","text":"# 24 Dual\n8 rotational states each\n= 192","x":-120,"y":280,"width":260,"height":140},
+    {"id":"total","type":"text","text":"# 472 Rotational States\n280 + 192","x":220,"y":280,"width":260,"height":140},
+    {"id":"quat","type":"text","text":"# (pp, mm, mp, pm) ∈ Cl(4,2)\npp+mm+mp+pm = 4X","x":-460,"y":-300,"width":340,"height":140},
+    {"id":"elem","type":"text","text":"# Elemental Quaternion\nW=Earth, X=Fire,\nY=Water, Z=Air","x":-60,"y":-300,"width":260,"height":160},
+    {"id":"shared","type":"text","text":"# Shared Cl(4,2)\n[[M1]] ring-quaternion,\n[[M3]] codon-quaternion,\n[[M4]] personal-quaternion","x":260,"y":-300,"width":300,"height":160},
+    {"id":"nuc","type":"file","file":"Nucleotide.md","x":-460,"y":520,"width":260,"height":120},
+    {"id":"tarot","type":"file","file":"Tarot.md","x":-120,"y":520,"width":260,"height":120},
+    {"id":"iching","type":"file","file":"I-Ching.md","x":220,"y":520,"width":260,"height":120}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"codon","fromSide":"bottom","toNode":"nondual","toSide":"top","label":"split"},
+    {"id":"e2","fromNode":"codon","fromSide":"bottom","toNode":"dual","toSide":"top","label":"split"},
+    {"id":"e3","fromNode":"codon","fromSide":"bottom","toNode":"total","toSide":"top","label":"="},
+    {"id":"e4","fromNode":"quat","fromSide":"bottom","toNode":"codon","toSide":"top","label":"evaluates to"},
+    {"id":"e5","fromNode":"elem","fromSide":"bottom","toNode":"codon","toSide":"top","label":"carries"},
+    {"id":"e6","fromNode":"shared","fromSide":"bottom","toNode":"codon","toSide":"top","label":"shares algebra"},
+    {"id":"e7","fromNode":"nuc","fromSide":"top","toNode":"codon","toSide":"bottom","label":"× 3"},
+    {"id":"e8","fromNode":"codon","fromSide":"bottom","toNode":"tarot","toSide":"top","label":"compresses to"},
+    {"id":"e9","fromNode":"codon","fromSide":"bottom","toNode":"iching","toSide":"top","label":"compresses to"}
+  ]
+}

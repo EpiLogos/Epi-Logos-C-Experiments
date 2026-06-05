@@ -39,8 +39,18 @@ The square is the router. This skill refers back to Square C, not to sibling ski
 
 The Tarot's own voice is imagistic, symbolic, and allusive. Honour this: let the images speak before the structural analysis arrives. The QL-structural reading adds functional logic, dialectical relationship, and transformation structure — these should be offered clearly but without displacing the cards' own imagistic power.
 
-## After the Reading
+## After the Reading — Canonical Nara Artifact
 
-Log the reading to `/Self/aham/daily/` with: date, question, spread type (Sphere/Torus/Klein), cards drawn with positions, key insights, session metadata (session ID, skill source).
+Write the reading to `Idea/Pratibimba/Nara/{day}/artifacts/oracle/{cast_uuid}.md` as an `oracle_quaternal_tarot` artifact. Do NOT log to `/Self/aham/daily/` anymore — that is the retired path. The canonical envelope and payload schema live in [[m4-prime-nara-day-episodes-and-oracle-artifacts]] and are summarised in `Idea/Empty/Present/03-06-2026/PSYCHOID-WEB-CANON-EXTRACT-2026-06-03.md` §H.
+
+Required frontmatter (common envelope): `episode_id`, `episode_type: "oracle_quaternal_tarot"`, `group_id`, `valid_at`, `invalid_at`, `day_container_id`, `day_id`, `now_path`, `session_key?`, `privacy_class: "protected-local-body"`, `source_skill: "quaternal-tarot"`, `source_agent?`, `source_path?`, `vault_path`, `bimba_coordinate_refs[]`, `cymatic_field_snapshot?`, `q_composed_at_now?`.
+
+Required payload fields: `question`, `spread_scale` (sphere/torus/klein), `square_basin: "C"`, `cast_uuid`, `cards_drawn[]`, `positional_reading{p0..p5, p4_lemniscate_sub?}`, `night_arc{p0'..p5'}?` (Klein only), `complementary_pairs{p0_p5, p1_p4, p2_p3}`, `three_level_per_card{}`, `lens_l2_tetralemma`, `lens_l3_processual`, `lens_l3_prime_chronological`, `lens_l2_prime_alchemical`, `whole_reading_synthesis`, `m3_tarot_card_refs[]`, `session_id?`, `skill_version`.
+
+Required wikilinks in body: the spread positions `[[P0]]`…`[[P5]]` (and `[[P0']]`…`[[P5']]` on Klein scale); the raw psychoid aliases `[[Psychoid-0|#0]]`…`[[Psychoid-5|#5]]`; the Square C lenses `[[L2]]`, `[[L3]]`, `[[L3']]`, `[[L2']]`; the symbolic entities drawn (`[[Tarot]]` card refs, codon refs); the harmonic relation family when a complementary pair or moving-line pattern makes it obvious (`[[Family C — Converse-Mirror]]` for any X+Y=5 pair); and the bounded language objects `[[OracleFrame]]` (and `[[SymbolicProtein]]` if more than one packet is present in the spread).
+
+Privacy: artifact body stays `protected-local-body`. `bimba_coordinate_refs[]` are scalar refs to M3 symbolic entities — safe handles, not automatic public-graph edges. `oracle_frame_ref` and `symbolic_protein_ref` are handles. Promotion from Nara artifact to flat World or Seeds requires [[M5']] / [[Epii]] review and [[Hen]] / S1' write law.
+
+Write method: target [[Hen]] / S1' (`s1'.vault.write_nara_artifact` per `HEN-INTEGRATION-DESIGN-PSYCHOID-WEB-2026-06-03.md`) when available; direct filesystem write is transitional fallback.
 
 Check: what did Square C's basin reveal as the primary transformation? What is dissolving (L2'), what is becoming (L3), what season is this (L3'), and where does the logic hold or break (L2)?

@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {"id":"main","type":"file","file":"Hash.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"p0","type":"file","file":"#0/Psychoid-0.md","x":-720,"y":320,"width":240,"height":140},
+    {"id":"p1","type":"file","file":"#1/Psychoid-1.md","x":-432,"y":420,"width":240,"height":140},
+    {"id":"p2","type":"file","file":"#2/Psychoid-2.md","x":-144,"y":520,"width":240,"height":140},
+    {"id":"p3","type":"file","file":"#3/Psychoid-3.md","x":144,"y":520,"width":240,"height":140},
+    {"id":"p4","type":"file","file":"#4/Psychoid-4.md","x":432,"y":420,"width":240,"height":140},
+    {"id":"p5","type":"file","file":"#5/Psychoid-5.md","x":720,"y":320,"width":240,"height":140},
+    {"id":"primed","type":"text","text":"# Primed Helix\nApplying # to the unprimed wells produces the primed helix {#0', #1', #2', #3', #4', #5'} — the pratibimba face. Same substrate, conjugate reading.","x":-420,"y":-280,"width":340,"height":200},
+    {"id":"families","type":"text","text":"# Relation Grammar\n# enacts:\n- [[Family A — Adjacent-Identity]] (within)\n- [[Family B — Offset-Transition]] (within)\n- [[Family C — Converse-Mirror]] (within)\n- [[Family D1 — Same-Position Cross]] (cross)\n- [[Family D2-Transform]] / [[Family D2-Require]] / [[Family D2-Complete]] (cross)\n- [[Family D3 — Helix-Invariance]] (within-primed)","x":80,"y":-300,"width":380,"height":260}
+  ],
+  "edges": [
+    {"id":"e-main-p0","fromNode":"main","fromSide":"bottom","toNode":"p0","toSide":"top","label":"acts upon"},
+    {"id":"e-main-p1","fromNode":"main","fromSide":"bottom","toNode":"p1","toSide":"top","label":"acts upon"},
+    {"id":"e-main-p2","fromNode":"main","fromSide":"bottom","toNode":"p2","toSide":"top","label":"acts upon"},
+    {"id":"e-main-p3","fromNode":"main","fromSide":"bottom","toNode":"p3","toSide":"top","label":"acts upon"},
+    {"id":"e-main-p4","fromNode":"main","fromSide":"bottom","toNode":"p4","toSide":"top","label":"acts upon"},
+    {"id":"e-main-p5","fromNode":"main","fromSide":"bottom","toNode":"p5","toSide":"top","label":"acts upon"},
+    {"id":"e-main-primed","fromNode":"main","fromSide":"top","toNode":"primed","toSide":"bottom","label":"produces X'"},
+    {"id":"e-main-families","fromNode":"main","fromSide":"top","toNode":"families","toSide":"bottom","label":"enacts as"}
+  ]
+}

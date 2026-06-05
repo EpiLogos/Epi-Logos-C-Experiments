@@ -1,0 +1,25 @@
+{
+  "nodes": [
+    {"id":"nuc","type":"file","file":"Nucleotide.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"a","type":"text","text":"# A — 0x00\nOld-Yin · 6\nCups · Water","x":-560,"y":280,"width":240,"height":160},
+    {"id":"t","type":"text","text":"# T — 0x01\nOld-Yang · 9\nWands · Fire","x":-280,"y":280,"width":240,"height":160},
+    {"id":"c","type":"text","text":"# C — 0x02\nYoung-Yin · 7\nPentacles · Earth","x":0,"y":280,"width":240,"height":160},
+    {"id":"g","type":"text","text":"# G — 0x03\nYoung-Yang · 8\nSwords · Air","x":280,"y":280,"width":240,"height":160},
+    {"id":"pair","type":"text","text":"# Base Pairing\nXOR 0x01:\nA↔T, C↔G","x":-280,"y":-280,"width":280,"height":140},
+    {"id":"phase","type":"text","text":"# DNA/RNA Phase Toggle\nPolarity XOR → T↔U","x":40,"y":-280,"width":280,"height":140},
+    {"id":"pp","type":"text","text":"# pp-Charge ∫ = 360\nPer-suit closure","x":360,"y":-280,"width":260,"height":140},
+    {"id":"codon","type":"file","file":"Codon.md","x":-280,"y":520,"width":260,"height":120},
+    {"id":"l2p","type":"text","text":"# [[L2']]\nAlchemical-Elemental anchor","x":40,"y":520,"width":260,"height":120}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"nuc","fromSide":"bottom","toNode":"a","toSide":"top"},
+    {"id":"e2","fromNode":"nuc","fromSide":"bottom","toNode":"t","toSide":"top"},
+    {"id":"e3","fromNode":"nuc","fromSide":"bottom","toNode":"c","toSide":"top"},
+    {"id":"e4","fromNode":"nuc","fromSide":"bottom","toNode":"g","toSide":"top"},
+    {"id":"e5","fromNode":"pair","fromSide":"bottom","toNode":"nuc","toSide":"top","label":"XOR"},
+    {"id":"e6","fromNode":"phase","fromSide":"bottom","toNode":"nuc","toSide":"top","label":"phase"},
+    {"id":"e7","fromNode":"pp","fromSide":"bottom","toNode":"nuc","toSide":"top","label":"closure"},
+    {"id":"e8","fromNode":"a","fromSide":"bottom","toNode":"codon","toSide":"top","label":"× 3"},
+    {"id":"e9","fromNode":"g","fromSide":"bottom","toNode":"l2p","toSide":"top","label":"elemental"}
+  ]
+}

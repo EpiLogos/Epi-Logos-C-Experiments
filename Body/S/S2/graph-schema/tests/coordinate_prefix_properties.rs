@@ -82,3 +82,32 @@ fn coordinate_semantics_registry_is_agent_complete() {
 
     assert!(coordinate_semantic_registry_authority_paths().contains(&"repo-ontology.md"));
 }
+
+#[test]
+fn coordinate_semantics_registry_names_m5_and_mef_scope_law() {
+    let families = coordinate_semantic_family_specs();
+    let find = |prefix: &str| {
+        families
+            .iter()
+            .find(|family| family.prefix == prefix)
+            .unwrap_or_else(|| panic!("{prefix} semantic family missing"))
+    };
+
+    let p = find("p");
+    assert!(p.semantic_domain.contains("P contains P'"));
+    assert!(p.inverted_axis.contains("implicit Klein inversion"));
+
+    let l = find("l");
+    assert!(l.semantic_domain.contains("12fold"));
+    assert!(l.direct_axis.contains("L0-L5"));
+    assert!(l.inverted_axis.contains("L0'-L5'"));
+
+    let s = find("s");
+    assert!(s.semantic_domain.contains("system spine"));
+    assert!(s.inverted_axis.contains("S0'-S5'"));
+
+    let m = find("m");
+    assert!(m.direct_axis.contains("full Bimba map"));
+    assert!(m.inverted_axis.contains("M'"));
+    assert!(m.inverted_axis.contains("Pratibimba"));
+}

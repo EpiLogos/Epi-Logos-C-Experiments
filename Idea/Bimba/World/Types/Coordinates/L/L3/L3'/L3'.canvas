@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"l3p","type":"file","file":"L3'.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"anchor","type":"text","text":"# Anchor\nHegel dialectic + Jung Aion.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid #2 (Night)\nSacrifice / operational-shadow.","x":-130,"y":300,"width":280,"height":160},
+    {"id":"square","type":"text","text":"# Square C\nP2+P3 Logic-Process axis.","x":180,"y":300,"width":280,"height":160},
+    {"id":"mobius","type":"text","text":"# Möbius Partner\nL2 Logical. L2 ↔ L3'.","x":490,"y":300,"width":280,"height":160},
+    {"id":"element","type":"text","text":"# Element\nFire (via L2').","x":-280,"y":520,"width":280,"height":140},
+    {"id":"skills","type":"text","text":"# Skills\napply-tetralemma, apply-cmea.","x":50,"y":520,"width":320,"height":140}
+  ],
+  "edges": [
+    {"id":"e3p-anchor","fromNode":"l3p","fromSide":"bottom","toNode":"anchor","toSide":"top","label":"anchored by"},
+    {"id":"e3p-psy","fromNode":"l3p","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts"},
+    {"id":"e3p-sq","fromNode":"l3p","fromSide":"bottom","toNode":"square","toSide":"top","label":"member of"},
+    {"id":"e3p-mob","fromNode":"l3p","fromSide":"bottom","toNode":"mobius","toSide":"top","label":"Möbius pair"},
+    {"id":"e3p-el","fromNode":"l3p","fromSide":"bottom","toNode":"element","toSide":"top","label":"element"},
+    {"id":"e3p-sk","fromNode":"l3p","fromSide":"bottom","toNode":"skills","toSide":"top","label":"engages"}
+  ]
+}

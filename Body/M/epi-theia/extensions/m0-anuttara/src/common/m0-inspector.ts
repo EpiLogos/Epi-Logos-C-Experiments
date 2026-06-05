@@ -3,6 +3,10 @@ import {
     MathemeHarmonicProfileBoundary,
     MExtensionReadinessSnapshot
 } from '@pratibimba/m-extension-runtime';
+import { M0_LAYER_VIEWS, M0LayerView } from './m0-layers';
+
+export { M0_LAYER_VIEWS };
+export type { M0LayerView };
 
 const M0_PRIVACY_CLASS = 'public_current_with_graph_provenance';
 
@@ -51,6 +55,7 @@ export interface M0InspectorModel {
         readonly namespace: string | null;
         readonly badges: readonly string[];
     };
+    readonly layerViews: readonly M0LayerView[];
     readonly languageFields: readonly M0ProvenancedField[];
     readonly anchors: readonly M0ProvenancedField[];
     readonly pointerSummary: M0ProvenancedField;
@@ -150,6 +155,7 @@ export function buildM0InspectorModel(input: {
             namespace,
             badges: Object.freeze(nodeBadges(input.graphNode, namespace))
         }),
+        layerViews: M0_LAYER_VIEWS,
         languageFields: Object.freeze([
             field('symbol', 'Symbol', properties?.symbol, 'canonical_absent'),
             field(

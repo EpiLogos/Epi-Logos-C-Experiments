@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"l2p","type":"file","file":"L2'.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"anchor","type":"text","text":"# Anchor\nAlchemy + Jung's Transcendent Function.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid #3 (Night)\nDecision / krisis.","x":-130,"y":300,"width":280,"height":160},
+    {"id":"square","type":"text","text":"# Square C\nP2+P3 Logic-Process axis.","x":180,"y":300,"width":280,"height":160},
+    {"id":"mobius","type":"text","text":"# Möbius Partner\nL3 Processual. L3 ↔ L2'.","x":490,"y":300,"width":280,"height":160},
+    {"id":"element","type":"text","text":"# Element-Bearing\nAssigns Earth/Water/Air/Fire/Aether/Mineral to all coordinates. Self = Aether.","x":-280,"y":520,"width":320,"height":160},
+    {"id":"skills","type":"text","text":"# Skills\napply-cmea (diagnostic), apply-tetralemma.","x":80,"y":520,"width":320,"height":160}
+  ],
+  "edges": [
+    {"id":"e2p-anchor","fromNode":"l2p","fromSide":"bottom","toNode":"anchor","toSide":"top","label":"anchored by"},
+    {"id":"e2p-psy","fromNode":"l2p","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts"},
+    {"id":"e2p-sq","fromNode":"l2p","fromSide":"bottom","toNode":"square","toSide":"top","label":"member of"},
+    {"id":"e2p-mob","fromNode":"l2p","fromSide":"bottom","toNode":"mobius","toSide":"top","label":"Möbius pair"},
+    {"id":"e2p-el","fromNode":"l2p","fromSide":"bottom","toNode":"element","toSide":"top","label":"element-bearing"},
+    {"id":"e2p-sk","fromNode":"l2p","fromSide":"bottom","toNode":"skills","toSide":"top","label":"engages"}
+  ]
+}

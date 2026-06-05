@@ -9,6 +9,8 @@ c_0_source_coordinates:
   - "[[S1-TRACEABILITY-INDEX]]"
   - "[[ARCHITECTURE-DIAGRAM-PACK]]"
   - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
+  - "[[FLOW-2026-06-03-HEN-ENTITY-CAPTURE-LIFECYCLE]]"
+  - "[[FLOW-2026-06-03-C-LAYER-TYPOLOGY-AND-MOC-WORKFLOW]]"
 ---
 
 # S1' Specification: Hen Compiler, Vault Write Law, And Residency
@@ -30,7 +32,7 @@ The VAK gate is `CPF=(4.0/1-4.4/5)`, `CT=CT1`, `CP=4.1->4.2`, `CF=(0/1) Logos wi
 | `S1.2'` | template/write law | `epi-cli/src/vault/templates.rs`, Hen invocation contracts |
 | `S1.3'` | compile/ledger/query/injection | `hen-compiler-core/src/lib.rs`, vendor compiler scripts |
 | `S1.4'` | Day/NOW context materialisation | `epi-cli/src/vault/paths.rs`, `Idea/Empty/Present/{day}/{now}/now.md` |
-| `S1.5'` | return, backlinks, graph-sync, promotion handoff | `hen-compiler-core/src/wikilinks.rs`, graph-sync intent tests |
+| `S1.5'` | return, backlinks, graph-sync, promotion handoff | `hen-compiler-core/src/wikilinks.rs`, Smart Env suggestion intake, graph-sync intent tests |
 
 ## Internal QL 0-5 Provenance
 
@@ -49,6 +51,9 @@ The VAK gate is `CPF=(4.0/1-4.4/5)`, `CT=CT1`, `CP=4.1->4.2`, `CF=(0/1) Logos wi
 |---|---|---|
 | `s1'.vault.read_file`, `write_file`, `rename_file`, `move_file` | native in current gateway method list | S1' owns write safety and residency; S3 transports |
 | `s1'.semantic.suggest_links` | native in method list | Hen/Smart Connections semantic suggestions; no private graph mutation |
+| `s1'.entity.capture`, `classify`, `promote_to_type` | target-state | Hen owns dangling/root-created entity capture before type incubation |
+| `s1'.type.classify_c_layer` | target-state | Hen resolves the owning C semantic authority before folder/type placement |
+| `s1'.world.graduate` | target-state | Hen promotes stable type-local crystallisations to flat World forms |
 | `s1.*` / `epi vault *` | mirror | S0 CLI exposes; S1/S1' own file law |
 | `CompilerInvocation`, `SpineJob`, ledger append/query/injection | native seed contract, partial substrate | Hen owns contract; S4/S5 agents may execute bounded jobs |
 
@@ -60,6 +65,7 @@ The VAK gate is `CPF=(4.0/1-4.4/5)`, `CT=CT1`, `CP=4.1->4.2`, `CF=(0/1) Logos wi
 | `CompilerInvocation` | local operational; may cite protected sources by handle | source selection -> ledger channel -> dry-run plan -> review -> mutation if approved |
 | Day/NOW material paths | public-current handles, protected bodies | day init -> now init -> session writes -> archive/promote |
 | semantic link candidates | public-current or protected-local by source | index read -> candidate scoring -> human/agent selection -> write through Hen |
+| entity candidates | public-current until source evidence requires protection | dangling wikilink/root loose note -> Empty candidate -> coordinate/type classification -> World/Types incubation -> flat World graduation |
 
 S1' may store private artifacts, but it must expose only handles and privacy classes to M'/S5 unless consent/review permits deeper disclosure.
 
@@ -83,6 +89,35 @@ The operational protocol for moving from live evidence to [[Seeds]], [[World/Typ
 
 M-dev, Anima, Epii, and Hen-powered agents should use `epi core knowing` plus `epi vault read/search/search-content/link-suggest` before scoping cross-system work. The vault is the discovery surface; `rg` is a code/source fallback, not the primary architecture navigator.
 
+## Empty Entity Capture And Wikilink Intelligence
+
+S1' inherits the older [[Empty]] node-resolution canon and makes it explicit for Hen:
+
+1. New or dangling `[[wikilinks]]` must not become anonymous graph nodes or ad hoc root files. Hen treats them as `entity_candidate` artifacts.
+2. If Obsidian creates a loose note at the vault root, Hen should detect it and move it into `Idea/Empty/` or a day/session-local `Idea/Empty/Present/{DD-MM-YYYY}/entities/` inbox before further mutation.
+3. Candidate frontmatter stays coordinate-lawful: `coordinate`, `c_4_artifact_role: "entity-candidate"`, `c_1_ct_type`, `c_0_source_coordinates`, `c_1_aliases`, `c_5_crystallisation_state`, `s_1_vault_path`, and review/provenance fields using canonical `{family}_{position}_{semantic}` keys.
+4. Smart Connections / Smart Env is only a read-only ranking source. It suggests existing-note, alias, block, and source-neighbour evidence; Hen decides which wikilinks are written and which relation candidates are forwarded for review.
+5. mdbase-style collections and Entity Notes-style aliases should be represented through canonical frontmatter and wikilink pages, not through tags as primary entities.
+6. Classification promotes candidates into coordinate-native `Idea/Bimba/World/Types/Coordinates/**` incubation. It does not resurrect a top-level semantic `Types/Entities` authority unless a Seed protocol explicitly ratifies that root.
+7. Stable forms graduate into flat `Idea/Bimba/World/{Name}.md`; the type-local file remains a MOC/source pointer with backlinks to the Empty candidate, Seed evidence, canvas path, and graph-promotion intent.
+
+This lifecycle is specified in [[FLOW-2026-06-03-HEN-ENTITY-CAPTURE-LIFECYCLE]] and operationalised by [[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]].
+
+## C-Layer Typology Authority
+
+S1' treats `Idea/Bimba/World/Types/Coordinates/C/**` as the primary semantic typology for World/Types:
+
+- [[C0]]: source/ground roots and namespaces.
+- [[C1]]: forms, definitions, ideal markdown forms, and [[CT]] template law.
+- [[C2]]: entity candidates, entities, aliases, properties, tags, and relation-field evidence.
+- [[C3]]: MOC canvas forms, architecture diagram forms, workflows, process canvases, ideal canvas and diagram templates.
+- [[C4]]: type authorities, context frames, folder MOC patterns, Dataview/query indexes, and residency classes.
+- [[C5]]: World-form graduation, integration forms, graduation receipts, and Pratibimba/archive handoff.
+
+Hen must classify artifacts through C before creating semantic type folders. Other coordinate families qualify the artifact after C establishes the category.
+
+This workflow is specified in [[FLOW-2026-06-03-C-LAYER-TYPOLOGY-AND-MOC-WORKFLOW]].
+
 ## Open Decisions And Resolution Status
 
 | Decision | Status | Current resolution |
@@ -90,6 +125,8 @@ M-dev, Anima, Epii, and Hen-powered agents should use `epi core knowing` plus `e
 | vendor compiler vs Rust Hen | resolved | Rust `hen-compiler-core` is canon; vendor Python remains probe/compatibility |
 | non-dry-run compiler mutation | open | blocked until review/promotion law is complete |
 | direct Theia vault writes | resolved canonically | reads may be direct; writes go through `s1'.vault.*`/Hen |
+| dangling/root entity lifecycle | proposed | DR-S1-4 routes Empty capture, Smart Env suggestion, World/Types incubation, and flat World graduation |
+| C-layer semantic typology | proposed | CCT-15 materialises C0-C5 semantic MOC structure and `s1'.type.classify_c_layer` |
 | plan back-reference edits | blocked by scope | This seed supersedes newer plan fragments; docs/plans were not edited in this run |
 
 ## Source Coverage

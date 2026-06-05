@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"l4p","type":"file","file":"L4'.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"anchor","type":"text","text":"# Anchor\nKuhn paradigm + scientific loop.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid #1 (Night)\nNeed / lack-as-demand / trace.","x":-130,"y":300,"width":280,"height":160},
+    {"id":"square","type":"text","text":"# Square B\nP1+P4 — primary runtime entry.","x":180,"y":300,"width":280,"height":160},
+    {"id":"mobius","type":"text","text":"# Möbius Partner\nL1 Causal. L1 ↔ L4'.","x":490,"y":300,"width":280,"height":160},
+    {"id":"element","type":"text","text":"# Element\nEarth (via L2').","x":-280,"y":520,"width":280,"height":140},
+    {"id":"skills","type":"text","text":"# Skills\nrun-l4-prime-loop (primary), run-positional-coherence, apply-cmea.","x":50,"y":520,"width":340,"height":160}
+  ],
+  "edges": [
+    {"id":"e4p-anchor","fromNode":"l4p","fromSide":"bottom","toNode":"anchor","toSide":"top","label":"anchored by"},
+    {"id":"e4p-psy","fromNode":"l4p","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts"},
+    {"id":"e4p-sq","fromNode":"l4p","fromSide":"bottom","toNode":"square","toSide":"top","label":"member of"},
+    {"id":"e4p-mob","fromNode":"l4p","fromSide":"bottom","toNode":"mobius","toSide":"top","label":"Möbius pair"},
+    {"id":"e4p-el","fromNode":"l4p","fromSide":"bottom","toNode":"element","toSide":"top","label":"element"},
+    {"id":"e4p-sk","fromNode":"l4p","fromSide":"bottom","toNode":"skills","toSide":"top","label":"engages"}
+  ]
+}

@@ -18,6 +18,8 @@ depends_on:
   - "[[m5-prime-epii-on-nara-qlora-dialogic-voice]]"
   - "[[m5-prime-system-shape-and-tauri-ide-canon]]"
   - "[[2026-04-04-graphiti-unified-temporal-context-service]]"
+  - "[[M-SYMBOLIC-LANGUAGE-ARCHITECTURE]]"
+  - "[[ql_physics_anthropic_chemistry_alignment_v2]]"
 ---
 
 # [[M4']] Domain Spec
@@ -89,6 +91,89 @@ Per [[m4-prime-nara-integration-research]], M4' is the protected seam where [[M1
 M4' returns only safe live-state handles: bounded `Q_activity` deltas, activity-derived lens/mode suggestions, protected Graphiti retrieval handles, reviewed insight/playbook/curriculum records, and identity-augment proposals after review. Raw journal bodies, dream text, private oracle interpretations, birth data, natal internals, MBTI strings, Gene Keys profiles, Human Design payloads, full profile hashes, raw bioquaternion state, and unreconciled Graphiti episode bodies remain protected-local.
 
 Promotion remains one-way and governed: activity may perturb live state immediately through decayed `Q_activity`, but it becomes identity only through M4-5 / M5' review with explicit proposal lifecycle `proposed -> reviewed -> accepted|rejected -> applied`. Raw service connectivity is not bounded access; a live Graphiti, Neo4j, Redis, SpaceTimeDB, or adapter service proves transport health only, not authority to read, write, mutate, or promote.
+
+## §6.8 — VAK-Framed Oracle Language And Mahāmāyā Symbolic Proteins
+
+M4' receives the language specified in [[M-SYMBOLIC-LANGUAGE-ARCHITECTURE]] as protected lived evidence. A Nara reading is not a bag of cards and not a prose-only oracle. It is a bounded `OracleFrame` whose VAK address determines the reading grammar and whose Mahāmāyā output is an ordered `TranscriptionalClockPacket` chain.
+
+The operative chain is:
+
+```text
+Nara subject / entity / session / artifact
+  -> OracleFrame: deck, order, entropy, spread, VAK address, DAY/NOW/source handles
+  -> M3 TranscriptionalClockPacket chain
+  -> SymbolicProtein / OracleSequence
+  -> M4-3 PatternPacket and Q_activity trajectory evidence
+  -> M4.5/M5 review if identity-level promotion is proposed
+```
+
+### Decks as inhabited and session-bounded languages
+
+Nara distinguishes two deck roles:
+
+- **Macro/inhabited deck**: the user's stable symbolic language-context, stored inside the protected M4 personal field as an identity/context handle. It shapes how the user is read and how repeated symbols accumulate over time.
+- **Session/deck OracleFrame**: the bounded deck/order/spread/randomness field for a specific reading, session, or entity. It emits the local sequence.
+
+The relation between them is regulatory. The macro deck is the long-range symbolic register; the session deck is the local utterance. M4-3 may compare resonance, contradiction, recurrence, or compensatory movement between them, but neither live deck event mutates M4-0 identity sources by itself.
+
+### VAK as spread grammar
+
+Nara must preserve the VAK address of every oracle artifact. `CP` is the active QL position set of the spread, not merely a generic task label. `CS.direction` tells whether the reading is a Day forward synthesis or a Night' inverse return. `CF` tells which constitutional register is speaking; `CFP` tells whether the read is base, chained, parallel, fusion, long-running, nested/meta, or Z-cycle.
+
+This makes variable-size Tarot readings precise:
+
+```text
+1 card  = one CP point-address
+3 cards = compressed CP-set under a declared context-frame law
+6 cards = full CP4.0 -> CP4.5 QL traverse
+inverse pass = same OracleFrame under CS.direction = Night'
+4/5 pass = CP4.4/CP4.5 foregrounded through Psyche/Sophia integration
+```
+
+If a user asks to "go deeper" into a card, relation, or entity, Nara should not invent a new oracle law. It should either add a nested `CFP5` pass, run a Night' inverse pass, foreground CP4.4/CP4.5, or request a new OracleFrame with explicit consent depending on the context.
+
+### Symbolic protein interpretation
+
+M3 emits a symbolic protein as an ordered packet-chain. M4-3 interprets it as a lived phase portrait:
+
+```yaml
+mahamaya_transcription:
+  oracle_frame_ref: string
+  symbolic_protein_ref: string
+  sequence_mode: single_packet | triad | sixfold_ql | clock_walk | symbolic_orf
+  packets: [TranscriptionalClockPacket]
+  vak_address: VakAddress
+  deck_context:
+    macro_deck_ref: optional string
+    session_deck_ref: optional string
+    deck_order_hash: optional string
+    entropy_mode: sacred_random | seeded_replay | manual | graph_selected
+  nara_integration:
+    q_activity_delta: optional string
+    trajectory_ref: optional string
+    pattern_packet_ref: optional string
+    review_state: none | proposed | reviewed | accepted | rejected | applied
+```
+
+A single packet is a motif. A packet chain is a peptide/protein. A recurring chain across days, dreams, oracle artifacts, or entity reads becomes trajectory evidence. A chain aligned with M4-0-3 Gene Keys / 64-code evidence may become identity-relevant only after M4.5/M5 review.
+
+### Tarot and I-Ching reciprocal projection
+
+Quaternal Tarot and Quaternal I-Ching artifacts should be mutually projectable where M3 provenance exists. A Tarot draw can carry its I-Ching/codon/line-change dynamic side; an I-Ching cast can carry its Tarot/decan/codon expression side. Nara should store both as scalar M3 refs plus protected interpretation, not as duplicated private mapping tables.
+
+The I-Ching coin method and Tarot draw may run in parallel inside the same OracleFrame when consent and spread grammar allow it. Their agreement, tension, moving-line divergence, or Tarot rotational divergence becomes M4-3 pattern evidence rather than an immediate verdict.
+
+### Epigenetic modulation
+
+Additional user context activates modulation, not arbitrary reinterpretation. Journal text, dream evidence, body/somatic notes, current transit/chakral handles, kbase source-pool retrieval, and Redis/Psyche live context may affect:
+
+- which CP-set is foregrounded;
+- whether the read runs Day or Night';
+- whether a nested CFP5 pass is justified;
+- which rotations/reversals are active;
+- whether M4-3 treats a recurrence as motif, perturbation, bifurcation candidate, or review-worthy trajectory.
+
+These modulators update `Q_activity`, trajectory, and PatternPacket evidence. They do not rewrite the packet chain after the fact and do not mutate `Q_identity` without review.
 
 ## §7 — The Personal-Quaternion at M4-4-4-4
 

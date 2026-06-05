@@ -9,6 +9,7 @@ c_0_source_coordinates:
   - "[[S4'-TRACEABILITY-INDEX]]"
   - "[[ARCHITECTURE-DIAGRAM-PACK]]"
   - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
+  - "[[M-SYMBOLIC-LANGUAGE-ARCHITECTURE]]"
 ---
 
 # S4' Specification: Anima, VAK, Ta-Onta, And Capability Governance
@@ -22,6 +23,21 @@ Diagram consumption: S4' consumes [[ARCHITECTURE-DIAGRAM-PACK#Ta-Onta Placement 
 Placement invariant: [[ta-onta]] is the internal [[S4']] carrier set, not a separate system. [[S4.0']] [[Khora]], [[S4.1']] [[Hen]], [[S4.2']] [[Pleroma]], [[S4.3']] [[Chronos]], [[S4.4']] [[Anima]], and [[S4.5']] [[Aletheia]] are S4' sublayers. The [[VAK]] fields [[CPF]], [[CT]], [[CP]], [[CF]], [[CFP]], and [[CS]] are the vertical dispatch grammar operating through those carriers, not a replacement naming scheme for them.
 
 VAK gate: `CPF=(4.0/1-4.4/5)`, `CT=CT4`, `CP=4.4 context`, `CF=(4.5/0) Psyche with Anima`, `CFP=S4'`, `CS=CS4`.
+
+### VAK Reading-Frame Law
+
+Oracle, Tarot, I-Ching, and Mahāmāyā transcription events are first-class VAK-addressed language events. S4' does not interpret their symbolic content; it frames their execution economy before M3 transcribes and M4 integrates.
+
+For reading frames:
+
+- `CPF` declares whether the reading is dialogical/user-engaged or autonomous/mechanistic.
+- `CT` declares artifact/content type.
+- `CP` declares the active QL position set of the spread; it is the authority for whether the read is a single point, compressed triad, sixfold traverse, inverse pass, or 4/5 depth pass.
+- `CF` routes the constitutional handling mode.
+- `CFP` declares thread/spread topology, including nested/meta sub-readings.
+- `CS` declares Context Sequence and Day/Night' traversal direction.
+
+Variable-size Tarot readings must not be coerced into six positions. The runtime `reading_frame.positions[]` / `OracleFrame.vak_address.cp[]` is authoritative for cardinality. Optional P4 lemniscate sub-readings are nested CP frames, not extra top-level cards. Night' inverse readings are the same frame traversed backward through `CS.direction = Night'`.
 
 ## Submodules And Subcoordinates
 
@@ -64,6 +80,7 @@ Six constitutional agents: [[Nous]] `(0000)`, [[Logos]] `(0/1)`, [[Eros]] `(0/1/
 | Shape/event | Privacy | Lifecycle |
 |---|---|---|
 | VAK evaluation envelope (`cpf`, `ct`, `cp`, `cf`, `cfp`, `cs`) | public-current unless task refs protected | evaluate -> route -> dispatch -> deposit |
+| OracleFrame / reading-frame VAK envelope | mixed; protected when subject/deck/session refs are personal | evaluate -> bind DAY/NOW/Psyche/source handles -> M3 transcription -> M4 PatternPacket -> optional M5 review |
 | capability-matrix entry | public-current/operator | declare -> test parity -> runtime gate -> audit |
 | Psyche state | local operational/protected handles | read NOW/session -> update context -> handoff/deposit |
 | Aletheia crystallisation envelope | mixed; review-gated | observe -> classify -> deposit to S5/Epii or S1 seed |

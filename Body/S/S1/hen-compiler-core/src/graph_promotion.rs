@@ -48,6 +48,14 @@ struct LegacyCoordinateEvidence {
     coordinate: String,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct CoordinatePromotionMetadata {
+    prefix: String,
+    parent: Option<String>,
+    namespace: String,
+    axis: String,
+}
+
 impl GraphPromotionIntent {
     pub fn from_markdown(source_path: impl Into<String>, markdown: &str) -> Result<Self, String> {
         let evidence = collect_artifact_evidence(source_path, markdown)?;
@@ -108,10 +116,24 @@ impl GraphPromotionIntent {
         if let Some(title) = &evidence.title {
             properties.insert("title".to_owned(), serde_json::Value::String(title.clone()));
         }
-        if let Some(prefix) = coordinate_prefix(&coordinate) {
+        if let Some(metadata) = coordinate_promotion_metadata(&coordinate) {
             properties.insert(
                 "coordinate_prefix".to_owned(),
-                serde_json::Value::String(prefix),
+                serde_json::Value::String(metadata.prefix),
+            );
+            if let Some(parent) = metadata.parent {
+                properties.insert(
+                    "coordinate_parent".to_owned(),
+                    serde_json::Value::String(parent),
+                );
+            }
+            properties.insert(
+                "coordinate_namespace".to_owned(),
+                serde_json::Value::String(metadata.namespace),
+            );
+            properties.insert(
+                "coordinate_axis".to_owned(),
+                serde_json::Value::String(metadata.axis),
             );
         }
         properties.insert(
@@ -245,12 +267,37 @@ fn artifact_kind_name(kind: &ArtifactKind) -> &str {
     }
 }
 
-fn coordinate_prefix(coordinate: &str) -> Option<String> {
-    coordinate
-        .split('/')
-        .next()
-        .filter(|prefix| !prefix.is_empty())
-        .map(str::to_owned)
+fn coordinate_promotion_metadata(coordinate: &str) -> Option<CoordinatePromotionMetadata> {
+    let first_segment = coordinate.split('/').next()?.trim();
+    if first_segment.is_empty() {
+        return None;
+    }
+
+    let prime = first_segment.ends_with('\'');
+    let unprimed = first_segment.strip_suffix('\'').unwrap_or(first_segment);
+    let parent_base = unprimed
+        .split_once('-')
+        .map(|(parent, _)| parent)
+        .or_else(|| unprimed.split_once('.').map(|(parent, _)| parent));
+    let prefix = match parent_base {
+        Some(parent) if prime => format!("{parent}'"),
+        Some(parent) => parent.to_owned(),
+        None => first_segment.to_owned(),
+    };
+    let namespace = prefix.chars().next()?.to_string();
+
+    Some(CoordinatePromotionMetadata {
+        parent: parent_base.map(|parent| {
+            if prime {
+                format!("{parent}'")
+            } else {
+                parent.to_owned()
+            }
+        }),
+        prefix,
+        namespace,
+        axis: if prime { "prime" } else { "direct" }.to_owned(),
+    })
 }
 
 fn is_promotion_coordinate(coordinate: &str) -> bool {

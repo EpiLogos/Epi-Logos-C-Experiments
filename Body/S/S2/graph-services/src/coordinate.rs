@@ -55,6 +55,15 @@ const CF_NAMES: &[&str] = &[
     "CF_SYNTHESIS",
     "CF_MOBIUS",
 ];
+const CF_LITERALS: &[&str] = &[
+    "(00/00)",
+    "(0/1)",
+    "(0/1/2)",
+    "(0/1/2/3)",
+    "(4.0/1-4.4/5)",
+    "(4.5/0)",
+    "(5/0)",
+];
 const VAK_NAMES: &[&str] = &["CPF", "CT", "CP", "CF", "CFP", "CS"];
 
 pub struct CoordinateArrayParser;
@@ -119,6 +128,22 @@ impl CoordinateArrayParser {
                 layer: CoordLayer::ContextFrame,
                 family: None,
                 ql_position: Some(idx),
+                inverted: false,
+                sub_positions: Vec::new(),
+                sub_segments: Vec::new(),
+                depth: 0,
+                separator: None,
+                is_lens: false,
+            });
+        }
+
+        if let Some(idx) = CF_LITERALS.iter().position(|&literal| literal == trimmed) {
+            return Ok(ParsedCoordinate {
+                raw: trimmed.into(),
+                coordinate: trimmed.into(),
+                layer: CoordLayer::ContextFrame,
+                family: None,
+                ql_position: Some(idx as u8),
                 inverted: false,
                 sub_positions: Vec::new(),
                 sub_segments: Vec::new(),
@@ -330,8 +355,9 @@ pub fn cf_node_for_frame(literal: &str) -> Option<&'static str> {
         "0/1" => Some("CF_BINARY"),
         "0/1/2" => Some("CF_TRIKA"),
         "0/1/2/3" => Some("CF_QUATERNAL"),
+        "4.0/1-4.4/5" => Some("CF_FRACTAL"),
+        "4.5/0" | "4/5/0" => Some("CF_SYNTHESIS"),
         "5/0" => Some("CF_MOBIUS"),
-        "4/5/0" => Some("CF_SYNTHESIS"),
         // Any lemniscate-anchored stage: starts with "4." or is the full fractal frame.
         s if s.starts_with("4.") && s.contains('/') => Some("CF_FRACTAL"),
         _ => None,
@@ -384,8 +410,9 @@ pub fn extract_context_frames(coord: &str) -> Vec<String> {
 ///   `(0/1/2)`        — Mod 3 (Trika)
 ///   `(0/1/2/3)`      — Mod 4 (Three Plus One)
 ///   `(4.0/1-4.4/5)`  — Mod 4/6 (Fractal doubling — dash *inside* parens stays atomic)
+///   `(4.5/0)`        — Psyche synthesis
 ///   `(5/0)`          — Mod 6 (Möbius return)
-///   `(4/5/0)`        — late-add synthesis frame
+///   `(4/5/0)`        — legacy synthesis alias
 pub fn wrap_context_frames(coord: &str) -> String {
     coord
         .split('-')
@@ -567,6 +594,18 @@ mod tests {
     }
 
     #[test]
+    fn parses_all_canonical_parenthesized_context_frame_literals() {
+        for (idx, literal) in CF_LITERALS.iter().enumerate() {
+            let parsed = CoordinateArrayParser::parse_one(literal)
+                .unwrap_or_else(|err| panic!("failed to parse {literal}: {err}"));
+            assert_eq!(parsed.layer, CoordLayer::ContextFrame);
+            assert_eq!(parsed.ql_position, Some(idx as u8));
+            assert_eq!(parsed.coordinate, *literal);
+            assert!(parsed.sub_segments.is_empty());
+        }
+    }
+
+    #[test]
     fn parses_lens_coordinate() {
         let p = CoordinateArrayParser::parse_one("M-0").unwrap();
         assert_eq!(p.layer, CoordLayer::Lens);
@@ -617,6 +656,8 @@ mod tests {
         assert_eq!(cf_node_for_frame("(0/1)"), Some("CF_BINARY"));
         assert_eq!(cf_node_for_frame("(0/1/2)"), Some("CF_TRIKA"));
         assert_eq!(cf_node_for_frame("(0/1/2/3)"), Some("CF_QUATERNAL"));
+        assert_eq!(cf_node_for_frame("(4.0/1-4.4/5)"), Some("CF_FRACTAL"));
+        assert_eq!(cf_node_for_frame("(4.5/0)"), Some("CF_SYNTHESIS"));
         assert_eq!(cf_node_for_frame("(5/0)"), Some("CF_MOBIUS"));
         assert_eq!(cf_node_for_frame("(4/5/0)"), Some("CF_SYNTHESIS"));
         // All lemniscate-anchored fractal stages bind to CF_FRACTAL
@@ -624,8 +665,6 @@ mod tests {
         assert_eq!(cf_node_for_frame("(4.0/1/2)"), Some("CF_FRACTAL"));
         assert_eq!(cf_node_for_frame("(4.0/1/2/3)"), Some("CF_FRACTAL"));
         assert_eq!(cf_node_for_frame("(4.4/5)"), Some("CF_FRACTAL"));
-        assert_eq!(cf_node_for_frame("(4.5/0)"), Some("CF_FRACTAL"));
-        assert_eq!(cf_node_for_frame("(4.0/1-4.4/5)"), Some("CF_FRACTAL"));
         // Without parens still works
         assert_eq!(cf_node_for_frame("0/1"), Some("CF_BINARY"));
         // Unknown frame returns None
@@ -651,7 +690,7 @@ mod tests {
 
     /// All canonical mod-N context frames — including the Mod 4/6 fractal
     /// `(4.0/1-4.4/5)` (dash *inside* parens, must stay one atomic segment)
-    /// and the later-added `(4/5/0)` synthesis frame. Embedded in family coords.
+    /// and the canonical `(4.5/0)` synthesis frame. Embedded in family coords.
     #[test]
     fn parses_all_canonical_mod_frames_embedded() {
         let cases: &[(&str, &[&str])] = &[
@@ -660,9 +699,10 @@ mod tests {
             ("M0-(0/1/2)", &["(0/1/2)"]),             // Mod 3
             ("M0-(0/1/2/3)", &["(0/1/2/3)"]),         // Mod 4
             ("M0-(4.0/1-4.4/5)", &["(4.0/1-4.4/5)"]), // Mod 4/6 fractal
+            ("M0-(4.5/0)", &["(4.5/0)"]),             // Psyche synthesis
             ("M3-5-(5/0)-99", &["5", "(5/0)", "99"]), // Mod 6 Möbius
-            ("M0-(4/5/0)", &["(4/5/0)"]),             // late-add synthesis
-            ("M2-3-(4/5/0)-1", &["3", "(4/5/0)", "1"]),
+            ("M0-(4/5/0)", &["(4/5/0)"]),             // legacy synthesis alias
+            ("M2-3-(4.5/0)-1", &["3", "(4.5/0)", "1"]),
         ];
         for (coord, expected_segs) in cases {
             let p = CoordinateArrayParser::parse_one(coord)

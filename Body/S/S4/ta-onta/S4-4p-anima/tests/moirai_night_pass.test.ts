@@ -4,6 +4,7 @@ import {
   planMoiraiNightPass,
   classifyMoiraiOutput,
   buildMoiraiVak,
+  defaultM5CoordinateClusters,
   MOIRAI_HOST_CF,
 } from "../modules/moirai-dispatch.ts";
 
@@ -51,9 +52,56 @@ describe("Moirai Night' pass plan", () => {
     assert.equal(byAgent.lachesis, "P4'");
     assert.equal(byAgent.atropos, "P5'");
   });
+
+  it("threads coordinate cluster law into every Moirai task brief", () => {
+    const plan = planMoiraiNightPass({
+      session_id: "agent:coords:1",
+      disclosure_path: "/x.jsonl",
+      coordinate_clusters: [
+        {
+          owner: "M5-2",
+          scope: "S/S'",
+          prefixes: ["S", "S'"],
+          role: "system spine",
+        },
+        {
+          owner: "M5-3",
+          scope: "M'",
+          prefixes: ["M'"],
+          role: "Pratibimba expression",
+        },
+        {
+          owner: "M5-4",
+          scope: "S4/S5 agentic protocols",
+          prefixes: ["S4", "S4'", "S5", "S5'"],
+          role: "agentic protocol mediation",
+        },
+      ],
+    });
+
+    for (const dispatch of plan.dispatches) {
+      assert.match(dispatch.task, /M5-2.*S\/S'/);
+      assert.match(dispatch.task, /M5-3.*M'/);
+      assert.match(dispatch.task, /M5-4.*S4\/S5/);
+      assert.match(dispatch.task, /coordinate property/);
+      assert.match(dispatch.task, /node clusters/);
+    }
+  });
 });
 
 describe("Moirai Night' pass post-refactor invariants", () => {
+  it("default M5 coordinate clusters cover system spine expression and agent protocols", () => {
+    const clusters = defaultM5CoordinateClusters();
+    assert.equal(clusters.length, 3);
+    assert.deepEqual(
+      clusters.map((cluster) => cluster.owner),
+      ["M5-2", "M5-3", "M5-4"],
+    );
+    assert.deepEqual(clusters[0].prefixes, ["S", "S'"]);
+    assert.deepEqual(clusters[1].prefixes, ["M'"]);
+    assert.deepEqual(clusters[2].prefixes, ["S4", "S4'", "S5", "S5'"]);
+  });
+
   it("planMoiraiNightPass output is byte-stable across the refactor", () => {
     const plan = planMoiraiNightPass({
       session_id: "agent:refactor:check",

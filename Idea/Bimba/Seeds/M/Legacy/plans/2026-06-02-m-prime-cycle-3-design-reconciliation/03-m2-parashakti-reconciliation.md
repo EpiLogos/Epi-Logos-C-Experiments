@@ -2,6 +2,10 @@
 
 Reconciles [[M2']] across the four corpora. The harmonic-correspondential instrument is well-grounded: `m2.h` enforces the 72-invariant via `_Static_assert` and lands all six 72-cardinality LUTs (MEF, tattva, decan, Shem, maqam, M2→M3 cymatic projection) plus the planet-LUT[10], Asma 99+1, mantra 100. `vimarsha_reading.rs` implements M2-1' Vimarśa correctly, producing `audio_octet[8]` + `nodal_quartet[4]`. The Theia extension's meaning-packet builder lands the full `M2PrimeMeaningPacket` shape with cymatic frame, deterministic standing-wave, and personal-scope blocking. The chief gaps are: the F_routing carrier (every LUT and Kerykeion CLI landed, but no chained-traversal function in portal-core) and the S2 graph-correspondence kernel-bridge adapter.
 
+## Total-Shape Architecture (Phase A)
+
+Canonical total-shape document for M2' (all six addressing axes + F_routing + cymatic engine): [`Idea/Bimba/Seeds/M/M2'/M2-ARCHITECTURE.md`](Idea/Bimba/Seeds/M/M2'/M2-ARCHITECTURE.md) (734 lines). Profile-bus projection `ParashaktiMeaningProjection` per Tranche 10.M2; Earth-at-centre is documented semantics on the planetary axis, not a separate projection. DR-M2-3 owns F_routing carrier signature. M1↔M2 Vimarśa-window boundary: M2-1' is the canonical writer at `vimarsha_reading.rs:17-93`; M1 reads (never re-derives). M2↔M3 epogdoon 9:8 PASSES.
+
 ## Source Specs and Matrix
 
 - Canonical: `Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`, `Idea/Pratibimba/System/Subsystems/Parashakti/parashakti-ux-full-m2-branch.md`
@@ -38,11 +42,11 @@ Consume as-is — `epi-lib/include/m2.h` six 72-cardinality LUTs + planet-LUT[10
 
    Verification: `grep -n parashaktiCorrespondences Body/M/epi-theia/extensions/kernel-bridge/src/`; widget `pendingFields` no longer includes `s2.decanFace`/`s2.sacredSonic`/`s2.earthObserverHandle` on a routed packet; integration test against `parashakti-deep` dataset.
 
-5. **3.5 — Decision: planet-count + Earth-observer semantics (DCC-03)** *(contradiction-decision; routes to DR-M2-1)*
+5. **3.5 — Execute DR-M2-1: planet-count + Earth-at-centre semantics** *(doc-ahead-landing; DR-M2-1 VALIDATED)*
 
-   Decision-register entry resolving Sun-as-identity-root (`M2_PLANET_LUT[10]` includes Sun + Earth listed as separate `EarthBodyState`) vs UX/spec §9.5 Earth-as-observer-ground for the 9:8 M2→M3 bridge. Recommend: keep `M2_PLANET_LUT[10]` (Sun as identity root) + separate `earth_observer_handle` kernel-bridge field (NOT a planet-LUT row); document 9 non-Sun × 8 chakras 9:8 epogdoon explicitly. Consolidates with kernel-bridge DR-KB-1 (Tranche 10.3).
+   Strip `planetCountDecision: 'pending-DCC-03'` from `meaning-packet.ts:145` and document the ratified semantics in M2'-SPEC §9.5 plus the cymatic-engine companion: `M2_PLANET_LUT[10]` is canon and **Earth is the 10th planet as observer-centre**, not a separate handle on top of a 10-planet list. The 9:8 epogdoon is 9 non-Earth planets to 8 chakras, with Earth as the clock/map centre. Consolidates with DR-KB-1 / Tranche 10.3 as a doc-ahead downgrade; no new bridge field is required.
 
-   Verification: user final-validation marker in decision register DR-M2-1; downstream `planetCountDecision: 'pending-DCC-03'` removed from `meaning-packet.ts:145`.
+   Verification: downstream `planetCountDecision: 'pending-DCC-03'` removed from `meaning-packet.ts:145`; `grep -n "Earth.*centre\|10th planet" Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md` reflects the ratified semantics.
 
 6. **3.6 — Decision: six axes of 72 + overlays canon (M2 17th-lens question)** *(contradiction-decision; routes to DR-M2-2)*
 
@@ -61,3 +65,9 @@ Consume as-is — `epi-lib/include/m2.h` six 72-cardinality LUTs + planet-LUT[10
    Ensure F_routing trace (3.2) emits an M4' deposit handle consumed by Nara surface. Most of this lands in integrated 4-5-0 plugin closure (Tranche 08) but M2-side must emit the handle.
 
    Verification: `grep -n 'deposit_handle\|m4.deposit' Body/S/S0/portal-core/src/parashakti/f_routing.rs` after 3.2 lands; integration test M4' journal receives the handle.
+
+9. **3.9 — M2'-SPEC §9.8 open-question cleanup** *(doc-ahead-landing; DR-M2-1 VALIDATED)*
+
+   Remove the planet-count open question from M2'-SPEC §9.8 now that DR-M2-1 has closed it. Cross-link §9.8 to §9.5 Earth-at-centre semantics instead of leaving DCC-03 as a live decision.
+
+   Verification: `grep -n "DCC-03\|planet-count" Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md` returns only historical/caveated references; §9.5 names Earth as centre / 10th planet.

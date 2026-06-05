@@ -25,7 +25,7 @@ Consume as-is — `MathemeHarmonicProfile` struct (kernel.rs:346-387); resonance
 | `pointerAnchor` | ALIGNED | M0'-SPEC, M5'-SPEC | n/a |
 | `depositionAnchor` | **SPEC-AHEAD** | M5'-SPEC | DR-KB-2 decision (10.4) |
 | `mahamaya` dual-alias | ALIGNED | M3'-SPEC §8.13 (IOD-04) | n/a |
-| `planetaryChakral` LUT cardinality | **CONTRADICTION** | M2'-SPEC §9.5 | DR-KB-1 decision (10.3) consolidating DR-M2-1 |
+| `planetaryChakral` LUT cardinality | DOC-AHEAD (DR-KB-1 / DR-M2-1 VALIDATED) | M2'-SPEC §9.5 | Document Earth-at-centre; no new bridge field |
 | `VakAddress` carrier | ALIGNED | M0'-SPEC, M5'-SPEC | n/a |
 | `s2_anchor` / `s3_anchor` | **CODE-PENDING** | placeholder Option<MathemeFutureAnchor> never populated | Tranche 10.5 (audit + populate or remove) |
 | `dataset_lut_state` pending literal | CODE-PENDING (downstream dataset) | M3'-SPEC §2 | Wave-A M0 1.4 (host struct: `MathemeBinaryProjection`, NOT Bedrock — see 10.9) |
@@ -47,11 +47,11 @@ Consume as-is — `MathemeHarmonicProfile` struct (kernel.rs:346-387); resonance
 
    Verification: `cargo check -p portal-core -p epi-cli && cargo test -p epi-cli --test kernel_bridge_runtime_contract`.
 
-3. **10.3 — DR-KB-1: planetary projection LUT cardinality** *(contradiction-decision; consolidates DR-M2-1)*
+3. **10.3 — Execute DR-KB-1: planetary projection LUT cardinality** *(doc-ahead-landing; consolidates DR-M2-1)*
 
-   Register the choice carried forward from M2 DCC-03 so cycle-4 can extend `MathemePlanetaryChakralProjection::from_diatonic` at `kernel.rs:664-736`. Current code: 8 bodies via 7-degree diatonic + Pluto fallback. M2'-SPEC §9.5: 10-planet + Earth-observer.
+   Record that the substrate cardinality is already canon: `M2_PLANET_LUT[10]`, with Earth as the 10th planet / observer-centre. The bridge does not add a separate `earth_observer_handle`; it documents Earth-at-centre semantics on the planetary axis projection and removes stale pending decision markers.
 
-   Verification: `grep -n 'DR-KB-1' 13-decision-register.md`.
+   Verification: `grep -n 'Earth.*centre\|10th planet' Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md`; kernel-bridge readiness ledger no longer describes a separate EarthObserverHandle blocker.
 
 4. **10.4 — DR-KB-2: `depositionAnchor` typed-field vs bridge-DTO** *(contradiction-decision)*
 
@@ -93,6 +93,58 @@ Consume as-is — `MathemeHarmonicProfile` struct (kernel.rs:346-387); resonance
 
     Per the M1-2 ananda vortex research (`plan.runs/15-m1-2-ananda-vortex-research.md` finding #5), **no `vortex_*` field exists on `MathemeHarmonicProfile`** (`kernel.rs:346-387`). The vortex is implicit via `tick12 + position6 + helix + lens_mode` and IS read by M2 (`m2.h:307`) and M3 (`m3.h:966`), but is NOT surfaced through the profile bus. This is the **largest substrate→profile gap** in the M' spine — the played-torus renderer (Tranche 15.8) needs to consume vortex state via a typed handle, not reconstruct it from coordinates.
 
-    Add `pub ananda_vortex: AnandaVortexProjection` to `MathemeHarmonicProfile` exposing: `active_matrix_op: AnandaMatrixOp` (0-5 per `m1.h:735-756`), `active_cell: (u8, u8)` (12×12 indexed by tick12 × position6), `dr_ring_phase: { mahamaya_idx: u8, parashakti_idx: u8 }`, `cl42_signature_at_position: i8`. Anti-greenfield: the data is all already computed by `m1.c::m1_ananda_get` (m1.h:145, m1.c:297-345); this tranche only routes it through the profile bus.
+    Add `pub ananda_vortex: AnandaVortexProjection` to `MathemeHarmonicProfile` exposing: `active_matrix_op: AnandaMatrixOp` (0-5 per `m1.h:735-756`), `active_cell: (u8, u8)` (12×12 indexed by tick12 × position6), `active_cell_value: AnandaVortexCell`, `dr_ring_phase: { mahamaya_idx: u8, parashakti_idx: u8 }`, `cl42_signature_at_position: i8`, `ring_quaternion`, `helix_sheet`, and `klein_flip_at_this_tick`.
 
-    Verification: `cargo check -p portal-core && cargo test -p portal-core --test ananda_vortex_projection_round_trip`; `grep -n ananda_vortex Body/S/S0/portal-core/src/kernel.rs` returns the field declaration; kernel-bridge JSON emit at `kernel_bridge_runtime.rs` surfaces the projection; Theia mirror in `kernel-bridge/src/common/types.ts` reflects the new handle; Tranche 15.8 renderer reads the typed handle, not raw coordinates.
+    **Corrected payload law:** `AnandaVortexCell` must carry both faces of the Vortex Modulae CSV: raw/no-digi-root affine values and digit-root recursive values. Required fields: `family`, `row_k`, `position_p`, `raw_value`, `raw_bimba`, `raw_pratibimba`, `raw_sum`, `raw_delta`, `dr_value`, `dr_bimba`, `dr_pratibimba`, `dr_sum`, optional `rule_value`, and optional `skeleton_event` (`Hit36`, `Hit64`, `Hit72`, `Ratio64Over36`, `Additive137`, `IdentityReturn4Plus2`). Anti-greenfield with correction: the DR face is already present in `m1.c:22-114`, but the current `m1_ananda_get` implementation at `m1.c:297-345` is a 10×10 `%10` runtime core and does not faithfully expose the CSV's six 12×12 raw+DR family faces. This tranche must either compile from the CSV or implement exact formulas with tests against CSV spot rows before routing through the profile bus.
+
+    Verification: `cargo check -p portal-core && cargo test -p portal-core --test ananda_vortex_projection_round_trip`; add a C-side CSV-fidelity test asserting `7X+1` raw p=5/p=9 yields `36/64`, `8X+0` raw p=8/p=9 yields `64/72`, the matching DR faces are `9/1` and `1/9`, and the `Additive137` skeleton event only appears from `64+72+1`; `grep -n ananda_vortex Body/S/S0/portal-core/src/kernel.rs` returns the field declaration; kernel-bridge JSON emit at `kernel_bridge_runtime.rs` surfaces the projection; Theia mirror in `kernel-bridge/src/common/types.ts` reflects the new handle; Tranche 15.8 renderer reads the typed handle, not raw coordinates.
+
+## Phase-B Domain Sub-Tranches (18 new profile-bus fields)
+
+The Phase-B cross-boundary verifier surfaced 18 new profile-bus fields from the eight total-shape architecture documents. They are sub-tranched by domain. All are **anti-greenfield surfacings** of already-computed substrate; none invents new computation.
+
+### 10.M0 — M0' Profile Projections *(code-pending-closure; depends on M0-ARCHITECTURE.md §4)*
+
+Add `pub anuttara_layer: AnuttaraLayerProjection` to `MathemeHarmonicProfile` exposing the six M0-X' data-layer readiness facts and the active-layer discriminator. Anti-greenfield: data computed by `Body/S/S2/graph-services/src/{ontology.rs, gds.rs, sync_coordinator.rs}`; this surfaces the layer-presence bitmask + `KernelCoreAuditState` for the 65-relation sync.
+
+Verification: `grep -n anuttara_layer Body/S/S0/portal-core/src/kernel.rs`; `cargo test -p portal-core --test anuttara_layer_projection`.
+
+### 10.M1 — M1' Profile Projections *(code-pending-closure; depends on M1-ARCHITECTURE.md §4 + DR-M1-3)*
+
+Six new fields: `klein_flip: KleinFlipEvent` (per DR-IG-2 / Tranche 10.2), `inversion_operator: InversionOperatorHandle` (DR-M1-3 — single session-held `#`), `canonical_source_handle: M1_0_CanonicalSourceHandle`, `instance_handle: M1_1_InstanceHandle` (Hen-routed per DR-M1-4), `ql_flowering: M1_4_QLFloweringProjection`, `m1_topology: M1TopologyProjection` (includes `torus_knot_phase` per DR-IG-4 SSOT, `double_cover_deg: 720`, `torus_genus: 1`, `hopf_identity: bool`).
+
+Verification: `cargo test -p portal-core --test m1_profile_projections_round_trip`; bridge JSON surfaces all six.
+
+### 10.M2 — M2' Profile Projections *(code-pending-closure; depends on M2-ARCHITECTURE.md §4)*
+
+One new field: `parashakti_meaning: ParashaktiMeaningProjection` (six-axis decoders + cymatic frame + meaning-packet state). Earth-at-centre is documented semantics on the planetary axis projection per DR-M2-1 / DR-KB-1; it is not a separate `EarthObserverHandle` projection. Anti-greenfield: M2 LUTs in `m2.h` + Vimarsha reading at `vimarsha_reading.rs:17-93` + Kerykeion CLI at `epi-cli/src/nara/wind.rs` already compute the data.
+
+Verification: `cargo test -p portal-core --test parashakti_meaning_projection`; `grep -n earth_observer_handle Body/S/S0/portal-core/src/kernel.rs` returns no live new-field mandate.
+
+### 10.M3 — M3' Profile Projections *(code-pending-closure; depends on M3-ARCHITECTURE.md §4 + DR-M3-4 + Tranche 4.10)*
+
+Two required fields: `transcription_packet: TranscriptionalClockPacket` (per DR-M3-4 / Tranche 4.8 — deterministic Mahāmāyā reading chain from kernel clock → VAK-addressed OracleFrame → M3-5 lens aperture → 384-line-change → codon → matrix-paths × polarities → 7/8 rotational → DNA/RNA → #3-4.0 Tarot → amino/operator) and `m3_lens_stack: MahamayaLensStack` (16+1 lens-stack per DR-M3-3). DR-M3-2 does **not** add `DetFoldState`; the 72→64 relation is documented as the M2/M3 9:8 epogdoon cross-reference.
+
+Two new language-architecture handles: `oracle_frame: OracleFrameProjection` and `symbolic_protein: SymbolicProteinProjection` (per `M-SYMBOLIC-LANGUAGE-ARCHITECTURE` / Tranche 4.11). `OracleFrameProjection` carries subject, deck manifest/order hash, entropy mode/provenance, spread grammar, `VakAddress`, CP position refs, DAY/NOW, Redis/Psyche, kbase/source-pool, and graph provenance handles. `SymbolicProteinProjection` carries sequence id, frame id, sequence mode, packet refs, Tarot/I-Ching/codon sequence refs, modulators, and optional Nara PatternPacket handle. These handles are transport/provenance surfaces; they do not expose protected interpretation bodies.
+
+One optional inspector field: `coupling_flow_alignment: CouplingFlowAlignment` (per `full_theoretical_alignments_ql_physics.md` / Tranche 4.10). This field carries register labels and source-warranted display facts only: `symbolic_skeletons` (`64+72+1`, `64+2(36)+1`, `128+8+1`, `64/36=(4/3)^2`, `0,4,2,2,9`, `8+1`), `physics_descent` (`G_SM -> D_mu -> g_i -> RG -> EW -> alpha_EM` plus QCD underbody), `measurement_faces` (cited/backend-provided display values such as low-energy `alpha_EM(0)^-1` and electroweak-scale `alpha_EM(M_Z)^-1`), and `recognition_context` (Nara/Epii handoff handles). It MUST NOT compute physical constants or RG flow in the renderer or bridge.
+
+Verification: `cargo test -p portal-core --test m3_profile_projections`; `grep -rn 'TranscriptionalClockPacket\|OracleFrame\|SymbolicProtein\|MahamayaLensStack\|CouplingFlowAlignment' Body/S/S0/portal-core/src/`; JSON/TS mirror test asserts the caveat string distinguishing `137` integer skeleton from `137.035999...` measurement-face.
+
+### 10.M4 — M4' Profile Projections *(code-pending-closure; depends on M4-ARCHITECTURE.md §4 + DR-M4-3)*
+
+One field with protected-handle sub-fields: `personal_pole: PersonalPoleProjection` exposing `bioquaternion: OpaqueProtectedHandle<BioQuaternion>`, `q_personal_resonance: f32 [0,1]`, `q_composed_handle: OpaqueProtectedHandle<QComposed>`, `pattern_packet_handle: OpaqueProtectedHandle<PatternPacket>` (per CCT-7), `oracle_frame_handle: OpaqueProtectedHandle<OracleFrame>`, `symbolic_protein_handle: OpaqueProtectedHandle<SymbolicProtein>`, `deck_context_handle: OpaqueProtectedHandle<NaraDeckContext>`, `torus_knot_phase: f32` (cross-reference DR-IG-4 SSOT — M4 reads, never owns), `vama_recognition: OpaqueProtectedHandle<VamaState>` (per DR-M4-2 clause 4 + DR-M4-3 strict invariant). Privacy contract: **no raw bodies cross the bus**; resonance metric is the only scalar.
+
+Verification: `cargo test -p portal-core --test personal_pole_projection_privacy`; profile bus test asserts opacity per DR-M4-3 and confirms deck context / symbolic protein handles do not expose protected interpretation bodies.
+
+### 10.M5 — M5' Profile Projections *(code-pending-closure; depends on M5-ARCHITECTURE.md §4 + DR-MP-2)*
+
+Three new fields: `epii_review_workbench: EpiiReviewWorkbenchProjection` (six operational-capacity governance lanes + recursive-self-review gate state per Tranche 12.4), `canon_recognition_anchor: CanonRecognitionAnchor` (137 = 64 + 72 + 1 attribution chain through to Logos Atelier), and `learned_predictor_checkpoint_ref: Option<String>` per DR-MP-2 (versioned EBM checkpoint reference — surfaces the active EBM-Epii checkpoint id so renderers can label "EBM v0.3" or "pending: no checkpoint loaded"; bootstrap-Phase-1 fallback is `None` with zero-gradient kernel path per Tranche 6.10).
+
+Verification: `cargo test -p portal-core --test m5_profile_projections`; `grep -n "canon_recognition_anchor\|learned_predictor_checkpoint_ref" Body/S/S0/portal-core/src/kernel.rs`; bootstrap-Phase-1 fallback test asserts `learned_predictor_checkpoint_ref: None` is valid (kernel runs in zero-gradient corpus-accumulation mode).
+
+### 10.IG — Integrated Plugin Profile Projections *(spec-ahead-integration; depends on INTEGRATED-1-2-3 §4 + INTEGRATED-4-5-0 §4)*
+
+Three fields surfacing composition state: `cosmic_composition_state: CosmicCompositionState` (1-2-3 plugin composition mount-points + composition load status), `personal_pole: PersonalPoleProjection` / `psychoid_field` handle consumed through the DR-M4-3 opaque boundary (dipyramid + Hopf-linked tori at personal scale per DR-IG-6), and `canon_recognition_stream: Vec<CanonRecognitionEvent>` (4-5-0 Möbius write-back stream from Logos Atelier back to M0-5' pedagogy).
+
+Verification: `cargo test -p portal-core --test integrated_plugin_projections`; both integrated plugin extensions consume the projections at composition load.

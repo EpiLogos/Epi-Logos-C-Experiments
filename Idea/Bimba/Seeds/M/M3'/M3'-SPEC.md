@@ -12,16 +12,19 @@ depends_on:
   - "[[M2'-SPEC]]"
   - "[[alpha_rasa_bridge_ql]]"
   - "[[m3-prime-symbolic-transcription-research]]"
+  - "[[full_theoretical_alignments_ql_physics]]"
   - "[[alpha_quaternionic_integration_across_M_stack]]"
   - "[[m4-prime-psychoid-cymatic-field-engine]]"
   - "[[m5-prime-epii-on-mahamaya-process-reward-rl]]"
   - "[[m4-prime-nara-day-episodes-and-oracle-artifacts]]"
   - "[[m5-prime-system-shape-and-tauri-ide-canon]]"
+  - "[[M-SYMBOLIC-LANGUAGE-ARCHITECTURE]]"
+  - "[[ql_physics_anthropic_chemistry_alignment_v2]]"
 ---
 
 # [[M3']] Domain Spec — [[Mahāmāyā]] as Clock-Cosmos and Codon-Rotation Surface
 
-> **M ↔ M' distinction.** [[M3]] is [[Mahāmāyā]] — the binary symbolic transcription engine: 64 DNA codons, 64 [[I-Ching]] hexagrams, 384 line-change operators, 472 rotational codon states, 56+8 [[Tarot]] compression, [[M2]] → [[M3]] epogdoon compression. [[M3']] is that engine made playable: clock-pulse surface, codon-tarot wheel, sonic/cymatic timing, and the **codon-rotation projection of [[M1']] / [[M2-1']] 84-state (lens, mode) playing landscape into the 472-state (codon, rotation) modal-inversion surface**.
+> **M ↔ M' distinction.** [[M3]] is [[Mahāmāyā]] — the binary symbolic transcription engine and measurement-world grammar: 64 DNA codons, 64 [[I-Ching]] hexagrams, 384 line-change operators, 472 rotational codon states, 56+8 [[Tarot]] compression, [[M2]] → [[M3]] epogdoon compression, and the M# relational passage from system/partner/interaction/event/world/invariant. [[M3']] is that engine made playable: clock-pulse surface, codon-tarot wheel, sonic/cymatic timing, coupling-flow / measurement-face inspector, and the **codon-rotation projection of [[M1']] / [[M2-1']] 84-state (lens, mode) playing landscape into the 472-state (codon, rotation) modal-inversion surface**.
 
 > **Authority boundary.** Clock substrate lives at [[S0]] / `portal-core`; the Vimarśa audio bus is produced by [[M2-1']] and carried in the shared profile; codon classification lives below [[M3']] in the [[M3]]/[[S0]] codec path. M3' is the clock/transcription/wheel renderer that consumes those contracts. It does not own the audio bus or invent codon-classification math locally.
 
@@ -43,6 +46,7 @@ Six commitments hold this domain:
 4. **[[M3-0]] is the reception/transduction threshold.** [[Paraśakti]]'s 72-fold vibration, including [[M2-5]] planetary/chakral evidence, compresses through the 9:8 DET into [[Mahāmāyā]]'s 64-bit binary substrate. M3' renders the transduction provenance and gap-state; it does not infer private chakral meaning locally.
 5. **[[M3-5]] is the co-foliated world-clock synthesis.** The double-torus [[K²]] × [[T²_Mahāmāyā]] lives at M3-5 as the visible cosmic-wheel rendering downstream of [[M1-5]]'s single-torus 4π recognition and [[M2]]'s 72-fold bridge. M3' must not relocate the +1 parent or collapse M3-5 back into M1-5.
 6. **M3' has three app placements over one substrate.** The default wheel, the standalone `m3-mahamaya` [[Theia]] extension, and the integrated 1-2-3 cosmic-engine plugin all consume the same kernel/profile/[[SpaceTimeDB]] stream via the kernel-bridge named in [[m5-prime-system-shape-and-tauri-ide-canon]].
+7. **The physics bridge is a register-disciplined inspector, not a claim engine.** Per [[full_theoretical_alignments_ql_physics]], M3' may show the shared skeletons `137 = 64 + 72 + 1 = 64 + 2(36) + 1 = 128 + 8 + 1`, `0,4,2,2,9`, and the Standard Model coupling-flow descent as a symbolic/physics alignment surface. It must always distinguish exact QL symbolic arithmetic from measured physics values such as `alpha_EM(0)^-1 ~= 137.036` and `alpha_EM(M_Z)^-1 ~= 128`.
 
 ## §1 — User-Facing Surface
 
@@ -52,6 +56,7 @@ Six commitments hold this domain:
 - **M3-0 transduction provenance strip**: the M2 72-index, M2-5 planetary/chakral source handle, DET `floor(index72 * 8 / 9)` result, 64-address, gap/readiness state, and codon-quaternion summary. This strip is evidence display, not interpretation of the user's private body state.
 - **Solar/cosmos panel**: planetary/chakral projection inherited from M2 profile metadata.
 - **M3-5 double-torus world-clock view**: a depth mode showing the co-foliation of [[K²]] audio-genesis substrate with [[T²_Mahāmāyā]] inscription × lens substrate, using the same active tick/codon/lens data as the flat wheel.
+- **Coupling-flow / measurement-face inspector**: a summonable technical panel showing the `Anuttara -> Paramasiva -> Parashakti -> Spanda -> Mahāmāyā -> Nara -> Epii` descent, the physics stack `G_SM -> D_mu -> (g3,g2,gY) -> RG -> EW breaking -> e(mu) -> alpha_EM(mu) -> alpha_EM(0)`, and the Mahāmāyā measurement-world status of the active packet. This is an explanatory/provenance surface; it does not compute physical constants.
 - **Cymatic/audio pulse panel**: sounded/nodal role, chromatic note, diatonic CF/VAK projection, pending audio-driver readiness. M3' consumes the shared-profile `audio_octet` for sounded-position display and `nodal_quartet` for boundary-display on the wheel; those fields are the M2-1' Vimarśa reading of the S0/M1 substrate.
 - **Graph/wheel dual surface selector**: M3' acknowledges both Mahāmāyā renderings on the 0 side: the clock-wheel temporal-cosmological rendering and the M0' bimba-map graph structural rendering. Both consume the same canonical Neo4j nodes; neither may fork Mahāmāyā into a separate substrate.
 
@@ -77,6 +82,7 @@ Six commitments hold this domain:
 - `audio_octet[8]` and `nodal_quartet[4]` for pulse display and standing-wave rendering.
 - `lensMode` and **`codonRotationProjection`**: the `(codon, rotation)` cell on the 472-state surface that the current `(lens, mode)` maps to.
 - `pointerAnchor` and `depositionAnchor` for canonical coordinate and DAY/NOW binding.
+- `couplingFlowAlignment` (optional / inspector-only until typed): register discipline for `symbolic_skeleton`, `physics_descent`, `measurement_face`, and `recognition_context`, derived from backend/static spec facts and current packet provenance, not from renderer-local physics calculations.
 
 ## §4 — Privacy Boundary
 
@@ -103,6 +109,8 @@ Oracle artifacts from [[m4-prime-nara-day-episodes-and-oracle-artifacts]] may ca
 - Tests prove M3' can resolve scalar Tarot/I-Ching/codon references from protected Nara artifacts without loading protected-local artifact bodies.
 - Tests prove kernel-bridge consumption is shared across default M3' surface, `m3-mahamaya` extension, and integrated 1-2-3 plugin: one backend profile stream, no duplicate private clock.
 - Tests prove pipeline/developer overlays render only backend-provided kernel-trace, gap-honesty, and Janus-bidirectionality evidence; no renderer-local reward, training, or pathway-promotion logic is present.
+- Tests prove the coupling-flow / measurement-face inspector renders register labels (`symbolic_skeleton`, `physics_reference`, `measurement_face`, `recognition_context`) and the caveat distinguishing `137` integer skeleton from `137.035999...` low-energy measurement-face.
+- Tests prove M3' contains no renderer-local Standard Model, RG-flow, QCD-correction, electroweak-mixing, or measured-constant calculation logic; those values are profile/spec/citation facts only.
 - Readiness is blocked by the kernel profile tranche until M3 codec fields, codon-class fields, codon-rotation-projection field, and M2 resonance fields are present.
 
 ## §7 — The 472-State Modal-Inversion Landscape and the `(lens, mode) ↔ (codon, rotation)` Map
@@ -469,6 +477,392 @@ The kernel-bridge is the only live-data conduit for these app surfaces. It suppl
 
 [[m5-prime-epii-on-mahamaya-process-reward-rl]] adds an [[M5]] operational capacity over [[Mahāmāyā]]'s calculation pathways: process-reward RL, federated learning, symbolic-genetic synthesis, and pathway archaeology. That capacity lives at M5, not at M3'. M3' may expose developer/pipeline overlays for kernel traces, gap-honesty, [[Janus]]-bidirectionality, and pathway provenance, but reward computation, training, governance, and runtime promotion remain outside the renderer.
 
+## §8.15 Integrated Reading / Transcription Clock Chain
+
+The full Mahāmāyā reading engine is not a loose association between clock, codon, Tarot, and amino-acid tables. It is a deterministic chain that starts at the shared clock/profile, passes through the M3 lens and line-change machinery, and emits a symbolic-transcription packet that Nara can integrate without mutating identity-system sources.
+
+The executable chain is:
+
+```text
+MathemeHarmonicProfile / kernel tick
+  -> degree720, degree360, tick12, q_cosmic, m2_vibration_index
+  -> M3-5 clock aperture: M3_LENS_STACK[0..15] + growth/meta aperture
+  -> walk state: degree360 | amino24 | zodiac12 | spanda12 | decan36 |
+                 hexagram64 | enneadic9 | seasonal4 | lineChange384
+  -> if lineChange384: slot = 0..383,
+                       hexagram_id = floor(slot / 6),
+                       active_line = slot % 6,
+                       target_hexagram_id = hexagram_id ^ (1 << active_line),
+                       line_change_operator = hexagram_id * 6 + active_line
+  -> base codon: 6-bit hexagram/codon address using A=00, T=01, C=10, G=11
+  -> codon quaternion: pp/mm/mp/pm over I-Ching values 6/9/7/8
+  -> matrix generation: #3-3-2-{0,1,2} × polarity {negative, positive}
+  -> rotational composition: 8 raw pair-composition slots -> effective 7 or 8
+  -> transcription: DNA codon -> optional RNA T->U form -> amino/operator
+  -> #3-4.0 reflection: DNA form + Tarot expression + amino/operator join
+  -> TranscriptionalClockPacket for M3', Nara M4-3, and M5 trace/review
+```
+
+### Clock aperture namespaces
+
+The chain keeps three "lens" surfaces separate:
+
+- **`M2_MEF_LENS`**: the 12 Vimarśa / chromatic MEF lens positions in the 72-fold M2 field. The `LENS_COUNT=12` constant in `codon_rotation_projection.rs` belongs here.
+- **`M3_LENS_STACK`**: the 16 static Mahāmāyā clock apertures over the 360° / 720° field. These are frequency-filter shells and reading apertures for M3-5, not replacements for the M2 MEF lenses.
+- **`M3_LENS_STACK_GROWTH`**: the +1 Fibonacci/Pisano dynamic-growth aperture. It is the Level-0/meta reading aperture over the 16 static apertures, not a seventeenth static lens silently merged into `LENS_COUNT`.
+
+The Lens Annulus view must render this namespace split explicitly. A 12×7 `(lens, mode)` modal surface may project into the 472 codon-rotation surface, but it does not exhaust the 16+1 Mahāmāyā clock-aperture stack.
+
+### Six generated codon states per base codon
+
+Each base codon/hexagram can surface through six generated states because the graph-side `YIELDS_CODON` grammar is:
+
+```text
+64 base hexagrams × 3 matrix paths × 2 polarities = 384 generated codon states
+```
+
+The matrix paths are the canonical Mahāmāyā gauge triad:
+
+```text
+#3-3-2-0  Complementarity / Watson-Crick / Clifford reversion / Śiva
+#3-3-2-1  Movement / purine-pyrimidine / grade involution / Śakti
+#3-3-2-2  Resonance / keto-amino / conjugation / Spanda
+```
+
+The C/Rust rotational algebra is the executable pair-composition form of this grammar. For a codon `(n1,n2,n3)`, it evaluates `first_pair=(n1,n2)` and `last_pair=(n2,n3)`, generates four negative-valence and four positive-valence rotations, sorts by rotational value, and then collapses to 7 effective states when the codon has a symmetry axis. That is why the reading space is exactly:
+
+```text
+40 non-dual codons × 7 rotations + 24 dual codons × 8 rotations = 472
+```
+
+The Bimba dataset mirror must be validated against this deterministic rule. The current graph audit shows the intended `YIELDS_CODON` grammar, but resonance-path coverage is short of the full 384 generated states; any missing generated edges are to be regenerated from the matrix law and marked by provenance, not hand-filled.
+
+### Transcription, RNA potential, and amino/operator joins
+
+The transcription layer has two distinct meanings that must not be collapsed:
+
+- **Formal DNA/RNA transcription**: T-containing DNA codons have RNA potential by selective `T -> U` substitution. This yields the 64 DNA codons plus 37 T-containing RNA variants, with the 27 T-free codons shared/dark across the DNA/RNA display, for a 101-form surface. `ATG -> AUG` is the Start governance bridge; `TAA/TAG/TGA -> UAA/UAG/UGA` are Stop governance bridges.
+- **Runtime polarity phase**: the current `rna_phase` style polarity toggle in the kernel profile is a phase operation over the 2-bit nucleotide encoding. It may be rendered as a Mahāmāyā polarity/RNA-phase affordance, but it is not the same thing as the exact selective `T -> U` transcription table.
+
+Authoritative amino/operator translation is graph-backed through the Bimba `TRANSLATES_TO` relation into `#3-3-4-*` amino/operator nodes. Runtime translation tables are only authoritative after they reconcile with the Bimba table and the standard Start/Stop governance above. Until that reconciliation lands, M3' may show amino/operator facts only with provenance and readiness flags.
+
+### Tarot as sequence-language, not isolated decoration
+
+The active `#3-4.0-*` reflection nodes are the join-key where the generated codon becomes readable as a symbolic language:
+
+```text
+#3-4.0-*  REFLECTS_DNA_FORM       -> #3-2-* codon reflection
+#3-4.0-*  GOVERNS_TAROT_EXPRESSION -> #3-4-* Tarot expression
+#3-4.0-*  TRANSLATES_TO            -> #3-3-4-* amino/operator
+```
+
+The 56+8 Minor Arcana exact-cover remains the compression law for single packet display. A genuinely "protein-like" Mahāmāyā reading, however, is not one card and not one codon. It is an ordered chain of `TranscriptionalClockPacket`s around a clock walk. In an ORF-style mode the chain may use Start/Stop operators to delimit a symbolic peptide; in oracle, identity, or Nara trajectory modes it may instead preserve the whole walk as a codon/Tarot/amino motif sequence.
+
+### Packet contract for downstream consumers
+
+M3' should expose the integrated result as a structured packet before it renders prose:
+
+```yaml
+TranscriptionalClockPacket:
+  clock:
+    degree720: number
+    degree360: number
+    walk_type: degree360 | amino24 | zodiac12 | spanda12 | decan36 | hexagram64 | enneadic9 | seasonal4 | lineChange384
+    line_change_slot: optional number
+    hexagram_id: number
+    active_line: optional number
+    target_hexagram_id: optional number
+    line_change_operator: optional number
+
+  aperture:
+    m2_mef_lens: optional number
+    m3_lens_segments: [number]
+    m3_growth_aperture: optional string
+    namespace_state: resolved | provisional
+
+  codon:
+    codon_id: number
+    dna_codon: string
+    nucleotide_bits: [number, number, number]
+    i_ching_values: [number, number, number]
+    quaternion_pp_mm_mp_pm: [number, number, number, number]
+
+  generation:
+    matrix_path: complementarity | movement | resonance
+    polarity: negative | positive
+    generated_codon: string
+    rotational_index: number
+    rotational_state_count: 7 | 8
+    rotational_degrees: number
+
+  transcription:
+    rna_codon: optional string
+    transcription_state: dna_only | rna_potential | start | stop | shared_dark
+    amino_or_operator: optional string
+    translation_provenance: graph | runtime_reconciled | pending_reconciliation
+
+  expression:
+    tarot_reflection_node: optional string
+    tarot_card: optional string
+    hexagram_label: optional string
+    graph_provenance: [string]
+
+  vak:
+    cpf: string
+    ct: [string]
+    cp: [string]
+    cf: string
+    cfp: string
+    cs:
+      code: string
+      direction: Day | Night'
+
+  oracle_frame:
+    frame_id: optional string
+    subject_ref: optional string
+    deck_manifest_id: optional string
+    deck_order_hash: optional string
+    entropy_mode: sacred_random | seeded_replay | manual | graph_selected
+    spread_grammar: optional string
+    cp_position_ref: optional string
+
+  readiness:
+    dataset_lut_state: materialized | pending_dataset_lut | provisional_gap
+    warnings: [string]
+```
+
+Nara receives this packet as symbolic-transcription evidence. M3' remains responsible for the clock/codon/Tarot/amino provenance; M4-3 is responsible for cross-dialect integration; M4-0 identity-system sources are never mutated by a live transcription packet.
+
+### §8.15.1 VAK-Framed Tarot / Codon Language
+
+The Tarot surface is a sequence-language over Mahāmāyā codons, not an illustration layer. The active `#3-4.0-*` decan/reflection nodes are the readable face of the generated codon state; the hexagram supplies line-state dynamics; the amino/operator join supplies sequence function; the card supplies imaginal/decanic/elemental expression. M3 emits the unified token and never treats Tarot, I-Ching, codon, and amino/operator as four unrelated lookups.
+
+Every reading that crosses into Nara must therefore arrive through an `OracleFrame`:
+
+```text
+deck/frame/order/randomness/spread
+  + VAK address
+  + clock walk
+  -> TranscriptionalClockPacket chain
+```
+
+The `vak.cp` field is the bridge between a Tarot spread and QL semantics. A six-card spread can bind all six positions `CP4.0..CP4.5`; a three-card spread is an explicit compressed CP-set; a one-card reading is a single CP point-address. The spread's number of cards is not the grammar. The CP-set and CS direction are the grammar.
+
+Examples:
+
+```text
+single motif:
+  cp = [CP4.3], cs = CS3 Day
+  => one packet read as pattern-signal
+
+triadic operational read:
+  cp = [CP4.1, CP4.2, CP4.4], cs = CS2 Day
+  => definition -> operation -> context
+
+sixfold QL read:
+  cp = [CP4.0, CP4.1, CP4.2, CP4.3, CP4.4, CP4.5], cs = CS0 Day
+  => full traverse / symbolic peptide
+
+inverse pass:
+  same OracleFrame, cs.direction = Night'
+  => return-reading from integration/context back toward ground
+
+4/5 depth pass:
+  cp foreground = [CP4.4, CP4.5], cf = (4.5/0) or (5/0)
+  => lived-context and integration pass for Nara/Psyche/Sophia review
+```
+
+This makes the reading deterministic without making it rigid. Random draw/cast chooses the event tokens inside the bounded OracleFrame; VAK determines the utterance-form; M3 deterministically transcribes each token into codon/hexagram/Tarot/amino/operator packets; M4-3 determines lived relevance.
+
+### §8.15.2 Symbolic Proteins
+
+A "protein" in this system is an ordered packet-chain emitted by the clock/read grammar. The exact object name may be `SymbolicProtein`, `TranscriptionSequence`, or `OracleSequence` at implementation time, but the required shape is:
+
+```yaml
+SymbolicProtein:
+  sequence_id: string
+  frame_id: string
+  sequence_mode: single_packet | triad | sixfold_ql | clock_walk | symbolic_orf
+  packets: [TranscriptionalClockPacket]
+  tarot_sequence:
+    - card_ref: string
+      position_ref: string
+      orientation: upright | reversed | rotational_indexed
+      cp: string
+      cs_direction: Day | Night'
+  iching_sequence:
+    - hexagram_id: number
+      line_states: [6 | 7 | 8 | 9]
+      changing_mask: number
+      result_hexagram_id: optional number
+  codon_sequence:
+    - dna_codon: string
+      generated_state: string
+      rotational_index: number
+      amino_or_operator: optional string
+  modulators:
+    identity_context: optional string
+    journal_context: optional string
+    transit_context: optional string
+    dream_context: optional string
+    kbase_context: optional string
+  nara_pattern_packet_ref: optional string
+```
+
+Single-packet output is a motif. A triad is a compressed CP-set. A sixfold QL reading is a full context-sequence. A clock walk is a temporal chain around M3-5. A symbolic ORF may use Start/Stop operators where the amino/operator table and graph provenance support it. The M3 responsibility is to emit the chain with provenance, readiness, and VAK address; the Nara responsibility is to interpret the chain as a lived pattern without mutating identity sources.
+
+### §8.15.3 V2 Chemistry / Anthropic Alignment As Transcription Warrant
+
+[[ql_physics_anthropic_chemistry_alignment_v2]] gives the expanded psychoid-mathematical warrant for why the M3 language must keep number, chemistry, and recognition in one chain. The relevant runtime consequence is not that the renderer computes physics. The consequence is that the symbolic language has a precise 12 -> 72 -> 64 -> recognition descent:
+
+```text
+M0-3 twelve archetypal number field
+  -> M1-2 mod12 vortex rows
+  -> M2 zodiac/decan/element field: 4 elements x 3 modes = 12; 12 x 3 = 36; doubled = 72
+  -> M3 DET reception: 72-source -> 64-address
+  -> M3 codon-quaternion / Tarot / amino/operator packet
+  -> M4 recognition and trajectory
+```
+
+The carbon/oxygen lock is the chemical witness of this grammar: carbon carries `3 x 4 = 12` at the nuclear level and `2 + 4` at the electronic valence level, while oxygen gives octet completion. M3 should surface this in the coupling-flow / chemistry inspector as psychoid-symbolic alignment, especially when a packet chain crosses elemental/decanic thresholds, but it must keep the readout as provenance and explanation rather than renderer-local physical calculation.
+
+## §8.16 Strange-Attractor / Coupling-Flow / Measurement-Face Discipline
+
+[[full_theoretical_alignments_ql_physics]] is now the canonical research warrant for how the Mahāmāyā surface talks about physics-adjacent alignment. The central rule is register discipline: M3' can render exact symbolic skeletons, deterministic transcription packets, and measured-physics reference faces together, but it must not collapse them into a false derivation.
+
+The three-register split is mandatory:
+
+| Register | M3' may render | M3' must not claim |
+|---|---|---|
+| **QL symbolic mathematics** | exact vortex / transcription skeletons such as `64+72+1`, `64+2(36)+1`, `128+8+1`, `0,4,2,2,9`, `V_7^1(9)/V_7^1(5)=64/36=(4/3)^2` | that the renderer has numerically derived physical constants |
+| **Physics** | standard reference stack `G_SM -> D_mu -> (g3,g2,gY) -> RG flow -> EW breaking -> e(mu) -> alpha_EM(mu) -> alpha_EM(0)`, plus QCD underbody `SU(3)c -> 8+1 -> proton -> hydrogen spectrum` | that QL replaces field theory, renormalization, spectroscopy, or experiment |
+| **Psychoid bridge** | Pauli/Jung/World-Clock convergence and symbolic-number support for `137` as a shared skeleton | that all registers are identical or interchangeable |
+
+M# / Mahāmāyā is the measurement-world grammar:
+
+```text
+M0 = I            chosen system / local frame / initial field state
+M1 = You          partner field / conjugate excitation / scattering partner
+M2 = You and I    interaction vertex / amplitude / relation
+M3 = They         event, product, objective symbolic world
+M4 = We           effective field, atom, hadron, ensemble, spectrum-context
+M5 = We-I         recognized invariant / reproducible law / measured constant
+```
+
+This is why `alpha_EM(0)^-1 ~= 137.036` is treated as a Mahāmāyā value in the app: it is the observed, screened, vacuum-dressed, low-energy measurement-face. Nara is the recognition/apparatus register in which that number is experimentally and cognitively recognized; Nara does not own the gauge equation.
+
+The complete alignment stack M3' may display is:
+
+```text
+00 -> 0/1 -> x -> n
+  -> O# / X# / N# / M# / #
+  -> V_k^0,V_k^1
+  -> G_SM
+  -> D_mu
+  -> (g3,g2,gY)
+  -> alpha_i(mu)
+  -> alpha_EM(0)^-1
+```
+
+In M-layer terms:
+
+```text
+Anuttara   (00/00)       source-code / phase-space ground
+Paramasiva (0/1)         parent slash, tick, inversion, coupling-body, vortex arithmetic
+Parashakti (0/1/2)       field variable, 72-fold frequency, running-flow analogue
+Spanda     (0/1/2 as n)  computable pulse: N(n=1) = 0,4,2,2,9/7
+Mahamaya   (0/1/2/3)     measurement-world phase portrait: binary transcription packet
+Nara       4.x           lived recognition/apparatus: oracle, journal, body, experiment analogue
+Epii       (5/0)         reviewed return: canon, teaching, process-review
+```
+
+The exact stack M3' should surface for `137` is:
+
+```text
+137 = 64 + 72 + 1
+72  = 2 * 36
+137 = 64 + 2(36) + 1
+128 = 2 * 64
+137 = 128 + 8 + 1
+```
+
+with the source events kept explicit:
+
+```text
+64 = V_8^0(8)
+72 = V_8^0(9)
+137 = 64 + 72 + 1
+
+64/36 = V_7^1(9) / V_7^1(5) = (4/3)^2
+C_F(QCD) = 4/3
+
+3 tensor anti-3 = 8 + 1
+alpha_EM(M_Z)^-1 ~= 128
+alpha_EM(0)^-1 ~= 137.036
+```
+
+The exact stack M3' should surface for `0,4,2,2,9` is:
+
+```text
+Spanda:       N(n=1) = 0,4,2,2,9/7
+Electroweak: 0 = photon mass line
+              4 = B,W1,W2,W3 pre-broken gauge fields
+              2 = W+,W- charged pair
+              2 = A,Z neutral mixed pair
+QCD:          9 = 8 + 1 octet/singlet completion
+```
+
+These are **alignment displays** and **reading provenance**, not renderer calculations.
+
+The dynamical-systems warrant is useful only if the levels are kept distinct. M3' may use "strange attractor" language for bounded nonlinear recurrence, phase-portraiting, and symbolic trajectory geometry; it must not claim mathematical chaos unless the backend has actual time-series evidence such as positive Lyapunov exponents, fractal/correlation dimension, or observed bifurcation structure.
+
+External research warrant, 2026-06-03:
+
+- The mathematical baseline: a strange attractor is an attracting set in phase space with complicated invariant structure; the term is tied to Ruelle/Takens and Lorenz-type dynamics, not to any arbitrary recurring symbol. Source: [Encyclopedia of Mathematics — Strange attractor](https://encyclopediaofmath.org/wiki/Strange_attractor).
+- The physics baseline: the fine-structure constant is a running electromagnetic coupling; NIST explicitly notes the low-energy `1/137` value and the high-energy drift toward about `1/128`. Source: [NIST fine-structure constant](https://physics.nist.gov/cuu/Constants/alpha.html).
+- The electroweak baseline: PDG gives the electroweak mixing relation `e = g sin(theta_W)` and photon field `A_mu = B_mu cos(theta_W) + W3_mu sin(theta_W)`, and gives `alpha_hat^(5)(M_Z)^-1 = 127.930 +/- 0.008` with hadronic vacuum-polarization contribution to `alpha(M_Z)`. Source: [PDG 2024 Electroweak Model](https://pdg.lbl.gov/2024/reviews/rpp2024-rev-standard-model.pdf).
+- The QCD baseline: PDG gives the strong-coupling RGE, asymptotic freedom, and the world average `alpha_s(M_Z^2)=0.1180 +/- 0.0009`. Source: [PDG 2024 Quantum Chromodynamics](https://pdg.lbl.gov/2024/reviews/rpp2024-rev-qcd.pdf).
+- The global-gauge caution: sixfold Standard Model seams such as hypercharge quantization and `n/6` classes exist in specific global-group analyses; they are physics research surfaces, not settled QL derivations. Source: [Hashimoto/Matsunaga/Yamamoto, arXiv:1302.0669](https://arxiv.org/abs/1302.0669).
+
+The M-system dynamical reading is therefore:
+
+```text
+M0 / (00/00)      canonical graph / phase-space ground / source-code matrix
+M1 / (0/1)        parent slash / coupling-function / tick / single-torus +1
+M2 / (0/1/2)      running-flow analogue: 72-fold frequency field, M2-0 Fibonacci seed,
+                  M2-5 solar-chakral epogdoon gate and live planetary/chakral state
+M3 / (0/1/2/3)    phase-portrait surface: 64-fold binary matter, transcription packet,
+                  384 line-change operator graph, M3-5 clock/attractor renderer
+M4 / 4.x          lived phase-space: Nara's body, oracle, journal, trajectory, and review
+M5 / (5/0)        reviewed return: Epii process evidence, canon recognition, teaching
+```
+
+This does not mean QL derives Standard Model couplings. It means the same *kind* of reading is now available at the system level: the invariant law is not a single measured number or a single card. The invariant is the generative flow/organization; the visible facts are scale-specific phase portraits.
+
+For Mahāmāyā this means:
+
+- **M3-0** is the reception/boundary-condition node. It receives the M2 flow into the M3 quaternionic codon substrate: `72-source -> DET -> 64-address -> codon quaternion`.
+- **M3-5** is the phase-space renderer. The 360°/720° clock is the surface on which the generated codon/Tarot/amino packets recur, diverge, converge, and become readable as bounded trajectory.
+- **`TranscriptionalClockPacket`** is a Poincaré-section style symbolic slice: one clocked section of the larger trajectory, not the attractor as such.
+- **A packet chain** is the closest current M3 representation of an attractor trace. Recurrence, motif return, rotational divergence, Start/Stop bracketing, and cross-lens reappearance become the observable symbolic geometry.
+- **M4-3** decides whether the packet chain is clinically/lived-system relevant. M3 does not decide whether a recurrence is an identity claim, a body pattern, a teaching threshold, or noise.
+- **Coupling-flow inspector** decides nothing; it shows which register each displayed number belongs to: `symbolic_skeleton`, `physics_descent`, `measurement_face`, or `recognition_context`.
+
+The implementation consequence is an explicit rigor flag on any attractor language:
+
+```yaml
+dynamical_rigor:
+  level: symbolic_phase_portrait | measured_nonlinear_dynamics
+  evidence:
+    packet_chain: optional
+    recurrence_window: optional
+    bifurcation_candidate: optional
+    lyapunov_or_dimension_metric: optional
+  caveat: required
+```
+
+Until measured nonlinear evidence exists, the default is `symbolic_phase_portrait`. This still gives Nara a powerful relational grammar: bounded recurrence, basin of attraction, perturbation, bifurcation candidate, and phase portrait. It prevents the lazy move of turning "strange attractor" into a vibe-label.
+
 ## §9 — How M3' Renders This Multi-Layer Architecture
 
 M3' exposes the full multi-matrix surface as a coherent user-facing wheel + matrix-inspectors. Key panels added beyond the basic clock + codon wheel:
@@ -482,6 +876,8 @@ M3' exposes the full multi-matrix surface as a coherent user-facing wheel + matr
 - **Four render-view modes**: Flat Clock Debug, Lens Annulus, Toroidal, and Hopf Identity, all backed by the same M3 profile fields.
 - **Janus orientation overlay**: bidirectional look-back / look-forward modulation for codon-rotation state.
 - **M3-0 provenance strip**: M2-5 source handle, 72-index, DET result, active 64-address, codon-quaternion summary, and gap/readiness state.
+- **Transcription clock-chain inspector**: ordered `TranscriptionalClockPacket` chain showing clock slot, M3 aperture, line-change operator, generated codon state, rotation, RNA/amino/operator join, Tarot reflection, graph provenance, and readiness warnings.
+- **Attractor trace inspector**: symbolic phase-portrait view over packet chains, showing recurrence windows, basin labels, perturbation events, bifurcation candidates, and the `dynamical_rigor` flag.
 - **M3-5 co-foliation inspector**: shows the active [[K²]] audio-genesis coordinate and [[T²_Mahāmāyā]] inscription/lens coordinate as two readings of the same wheel-state.
 - **Oracle reference resolver**: opens safe canonical M3 Tarot/I-Ching/codon library details from scalar artifact references without loading protected Nara artifact bodies.
 - **Kernel-trace / pathway overlay**: developer-only inspector for backend-provided trace, gap-honesty, Janus-bidirectionality, and M5 pathway-provenance evidence.

@@ -113,6 +113,72 @@ impl GraphRetrievalQuery {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CoordinateSearchScope {
+    BimbaMap,
+    PratibimbaExpression,
+    TechnicalStack,
+    ExplicitPrefixes(Vec<String>),
+}
+
+impl CoordinateSearchScope {
+    pub fn from_query_text(query_text: &str) -> Self {
+        let lower = query_text.to_lowercase();
+        let mentions = extract_coordinate_mentions(query_text);
+
+        if lower.contains("s/s'")
+            || lower.contains("technical stack")
+            || lower.contains("system spine")
+            || mentions
+                .iter()
+                .any(|coordinate| coordinate.starts_with('S'))
+        {
+            return Self::TechnicalStack;
+        }
+
+        if lower.contains("m'")
+            || lower.contains("electron")
+            || lower.contains("pratibimba")
+            || mentions
+                .iter()
+                .any(|coordinate| coordinate.starts_with('M') && coordinate.contains('\''))
+        {
+            return Self::PratibimbaExpression;
+        }
+
+        Self::BimbaMap
+    }
+
+    pub fn scope_id(&self) -> &'static str {
+        match self {
+            Self::BimbaMap => "bimba_map",
+            Self::PratibimbaExpression => "pratibimba_expression",
+            Self::TechnicalStack => "technical_stack",
+            Self::ExplicitPrefixes(_) => "explicit_prefixes",
+        }
+    }
+
+    pub fn prefixes(&self) -> &[String] {
+        match self {
+            Self::ExplicitPrefixes(prefixes) => prefixes,
+            _ => &[],
+        }
+    }
+
+    pub fn matches_coordinate(&self, coordinate: &str) -> bool {
+        match self {
+            Self::BimbaMap => true,
+            Self::PratibimbaExpression => {
+                coordinate == "M'" || (coordinate.starts_with('M') && coordinate.contains('\''))
+            }
+            Self::TechnicalStack => coordinate == "S" || coordinate.starts_with('S'),
+            Self::ExplicitPrefixes(prefixes) => prefixes
+                .iter()
+                .any(|prefix| coordinate == prefix || coordinate.starts_with(prefix)),
+        }
+    }
+}
+
 pub fn classify_query(query_text: &str) -> QueryType {
     let lower = query_text.trim().to_lowercase();
     if lower.starts_with("what is") || lower.starts_with("what's") || lower.starts_with("what are")

@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"pp","type":"file","file":"PatternPacket.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"interprets","type":"text","text":"# Interprets\n[[SymbolicProtein]]","x":-440,"y":300,"width":260,"height":140},
+    {"id":"author","type":"text","text":"# Author\n[[M4]]-3 integration","x":-150,"y":300,"width":260,"height":140},
+    {"id":"review","type":"text","text":"# Review lifecycle\nnone→proposed→reviewed→accepted|rejected→applied","x":150,"y":300,"width":360,"height":160},
+    {"id":"gate","type":"text","text":"# Gate\n[[M5']] · [[Epii]]","x":540,"y":300,"width":260,"height":140},
+    {"id":"surf","type":"text","text":"# Surfaces\nstrange-attractor; (p,q) torus-knot;\nQ_activity-trajectory","x":-150,"y":520,"width":340,"height":180}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"pp","fromSide":"bottom","toNode":"interprets","toSide":"top","label":"interprets"},
+    {"id":"e2","fromNode":"pp","fromSide":"bottom","toNode":"author","toSide":"top","label":"authored by"},
+    {"id":"e3","fromNode":"pp","fromSide":"bottom","toNode":"review","toSide":"top","label":"lifecycle"},
+    {"id":"e4","fromNode":"pp","fromSide":"bottom","toNode":"gate","toSide":"top","label":"gated by"},
+    {"id":"e5","fromNode":"pp","fromSide":"bottom","toNode":"surf","toSide":"top","label":"surfaces"}
+  ]
+}

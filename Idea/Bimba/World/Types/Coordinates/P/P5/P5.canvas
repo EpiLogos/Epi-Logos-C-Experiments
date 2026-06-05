@@ -1,0 +1,20 @@
+{
+  "nodes": [
+    {"id": "title", "type": "text", "text": "# P5 — Image\n\nDay-face of #5. *Why-for?* — manifest synthesis; samāveśa as pratyabhijñā.", "x": -200, "y": -300, "width": 460, "height": 140},
+    {"id": "self", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P5/P5.md", "x": -100, "y": -100, "width": 280, "height": 80},
+    {"id": "psychoid", "type": "text", "text": "[[Psychoid-5|#5]] — raw charge", "x": -440, "y": 60, "width": 240, "height": 70},
+    {"id": "p0", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P0/P0.md", "x": 200, "y": 60, "width": 240, "height": 70},
+    {"id": "p5p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P5/P5'/P5'.md", "x": -440, "y": 180, "width": 240, "height": 70},
+    {"id": "l5", "type": "text", "text": "[[L5]] · [[L0']] — lens pair", "x": 200, "y": 180, "width": 240, "height": 70},
+    {"id": "sqa", "type": "text", "text": "[[Square A]] — Speech-Number axis", "x": -100, "y": 320, "width": 280, "height": 70},
+    {"id": "image", "type": "text", "text": "[[Image]] — Thought family", "x": -440, "y": 320, "width": 240, "height": 70}
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "self", "toNode": "psychoid", "label": "refracts"},
+    {"id": "e2", "fromNode": "self", "toNode": "p0", "label": "Möbius return (5→0)"},
+    {"id": "e3", "fromNode": "self", "toNode": "p5p", "label": "D1 cross"},
+    {"id": "e4", "fromNode": "self", "toNode": "l5", "label": "lens"},
+    {"id": "e5", "fromNode": "self", "toNode": "sqa", "label": "pole of"},
+    {"id": "e6", "fromNode": "self", "toNode": "image", "label": "Thought family"}
+  ]
+}

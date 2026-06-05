@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"sa","type":"file","file":"Square A.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"l0","type":"text","text":"# L0 Quaternal\nP0 question-mode (Truth).","x":-540,"y":300,"width":260,"height":160},
+    {"id":"l5","type":"text","text":"# L5 Para Vāk\nP5 speech-synthesis (Image).","x":-260,"y":300,"width":260,"height":160},
+    {"id":"l5p","type":"text","text":"# L5' Divine Logos\nP0' Night refraction (Play).","x":20,"y":300,"width":260,"height":160},
+    {"id":"l0p","type":"text","text":"# L0' Archetypal-Numerical\nP5' Night refraction (Work).","x":300,"y":300,"width":260,"height":160},
+    {"id":"csq1","type":"text","text":"# Corresponds to C-sq1\nOuter mirror; 16/9 totality.","x":-260,"y":520,"width":300,"height":160},
+    {"id":"aether","type":"text","text":"# Aetheric Ring\nAll four lenses element=Aether.","x":80,"y":520,"width":300,"height":160}
+  ],
+  "edges": [
+    {"id":"e-sa-l0","fromNode":"sa","fromSide":"bottom","toNode":"l0","toSide":"top","label":"holds"},
+    {"id":"e-sa-l5","fromNode":"sa","fromSide":"bottom","toNode":"l5","toSide":"top","label":"holds"},
+    {"id":"e-sa-l5p","fromNode":"sa","fromSide":"bottom","toNode":"l5p","toSide":"top","label":"holds"},
+    {"id":"e-sa-l0p","fromNode":"sa","fromSide":"bottom","toNode":"l0p","toSide":"top","label":"holds"},
+    {"id":"e-sa-csq1","fromNode":"sa","fromSide":"bottom","toNode":"csq1","toSide":"top","label":"corresponds to"},
+    {"id":"e-sa-ae","fromNode":"sa","fromSide":"bottom","toNode":"aether","toSide":"top","label":"element"}
+  ]
+}

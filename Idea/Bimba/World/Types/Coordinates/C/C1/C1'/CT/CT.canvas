@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {"id":"ct","type":"file","file":"CT.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"ct0","type":"file","file":"CT0/CT0.md","x":-700,"y":300,"width":260,"height":150},
+    {"id":"ct1","type":"file","file":"CT1/CT1.md","x":-400,"y":300,"width":260,"height":150},
+    {"id":"ct2","type":"file","file":"CT2/CT2.md","x":-100,"y":300,"width":260,"height":150},
+    {"id":"ct3","type":"file","file":"CT3/CT3.md","x":200,"y":300,"width":260,"height":150},
+    {"id":"ct4a","type":"file","file":"CT4a/CT4a.md","x":500,"y":300,"width":260,"height":150},
+    {"id":"ct4b","type":"file","file":"CT4b/CT4b.md","x":-250,"y":520,"width":260,"height":150},
+    {"id":"ct5","type":"file","file":"CT5/CT5.md","x":50,"y":520,"width":260,"height":150}
+  ],
+  "edges": [
+    {"id":"e-ct-ct0","fromNode":"ct","fromSide":"bottom","toNode":"ct0","toSide":"top","label":"seed"},
+    {"id":"e-ct-ct1","fromNode":"ct","fromSide":"bottom","toNode":"ct1","toSide":"top","label":"prompt"},
+    {"id":"e-ct-ct2","fromNode":"ct","fromSide":"bottom","toNode":"ct2","toSide":"top","label":"task"},
+    {"id":"e-ct-ct3","fromNode":"ct","fromSide":"bottom","toNode":"ct3","toSide":"top","label":"pattern"},
+    {"id":"e-ct-ct4a","fromNode":"ct","fromSide":"bottom","toNode":"ct4a","toSide":"top","label":"preview"},
+    {"id":"e-ct-ct4b","fromNode":"ct","fromSide":"bottom","toNode":"ct4b","toSide":"top","label":"daily/now"},
+    {"id":"e-ct-ct5","fromNode":"ct","fromSide":"bottom","toNode":"ct5","toSide":"top","label":"thought"}
+  ]
+}

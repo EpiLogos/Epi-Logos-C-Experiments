@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {"id":"c4","type":"file","file":"C4.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"authorities","type":"text","text":"# Type Authorities\nFolders that classify or incubate forms.","x":-520,"y":300,"width":300,"height":160},
+    {"id":"contexts","type":"text","text":"# Context Frames\nContextual typing and VAK/CF links.","x":-170,"y":300,"width":300,"height":160},
+    {"id":"moc-patterns","type":"text","text":"# Folder MOC Patterns\nSame-name md/canvas authority pattern.","x":180,"y":300,"width":300,"height":160},
+    {"id":"residency","type":"text","text":"# Residency Classes\nSeed, Empty, Types, World, Pratibimba routing.","x":530,"y":300,"width":300,"height":160}
+  ],
+  "edges": [
+    {"id":"e-c4-authorities","fromNode":"c4","fromSide":"bottom","toNode":"authorities","toSide":"top","label":"authorises"},
+    {"id":"e-c4-contexts","fromNode":"c4","fromSide":"bottom","toNode":"contexts","toSide":"top","label":"contextualises"},
+    {"id":"e-c4-mocs","fromNode":"c4","fromSide":"bottom","toNode":"moc-patterns","toSide":"top","label":"indexes"},
+    {"id":"e-c4-residency","fromNode":"c4","fromSide":"bottom","toNode":"residency","toSide":"top","label":"routes"}
+  ]
+}

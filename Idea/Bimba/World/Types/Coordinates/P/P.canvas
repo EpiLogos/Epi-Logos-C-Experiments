@@ -1,0 +1,26 @@
+{
+  "nodes": [
+    {"id": "title", "type": "text", "text": "# P — Position Family\n\nQL positional articulation of the psychoid wells. Six Day + six Night positions; Möbius-pair invariant Day P_n ↔ Night P_(5-n)'.", "x": -200, "y": -360, "width": 480, "height": 180},
+    {"id": "self", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P.md", "x": -100, "y": -120, "width": 280, "height": 80},
+    {"id": "p0", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P0/P0.md", "x": -640, "y": 60, "width": 200, "height": 70},
+    {"id": "p1", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P1/P1.md", "x": -400, "y": 60, "width": 200, "height": 70},
+    {"id": "p2", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P2/P2.md", "x": -160, "y": 60, "width": 200, "height": 70},
+    {"id": "p3", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P3/P3.md", "x": 80, "y": 60, "width": 200, "height": 70},
+    {"id": "p4", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P4/P4.md", "x": 320, "y": 60, "width": 200, "height": 70},
+    {"id": "p5", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P5/P5.md", "x": 560, "y": 60, "width": 200, "height": 70},
+    {"id": "pprime", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P'/P'.md", "x": -100, "y": 220, "width": 280, "height": 80},
+    {"id": "psychoids", "type": "text", "text": "[[Psychoids]] — raw charges #0–#5", "x": -440, "y": 360, "width": 260, "height": 70},
+    {"id": "l", "type": "text", "text": "[[L]] — MEF lens family (sibling)", "x": 200, "y": 360, "width": 260, "height": 70}
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "self", "toNode": "p0", "label": "Day"},
+    {"id": "e2", "fromNode": "self", "toNode": "p1", "label": "Day"},
+    {"id": "e3", "fromNode": "self", "toNode": "p2", "label": "Day"},
+    {"id": "e4", "fromNode": "self", "toNode": "p3", "label": "Day"},
+    {"id": "e5", "fromNode": "self", "toNode": "p4", "label": "Day"},
+    {"id": "e6", "fromNode": "self", "toNode": "p5", "label": "Day"},
+    {"id": "e7", "fromNode": "self", "toNode": "pprime", "label": "Night arc"},
+    {"id": "e8", "fromNode": "self", "toNode": "psychoids", "label": "refracts"},
+    {"id": "e9", "fromNode": "self", "toNode": "l", "label": "sibling axis"}
+  ]
+}

@@ -26,12 +26,28 @@ Container-only folders are allowed, but they should be explicit containers rathe
 
 ## Coordinate Mirror
 
-The coordinate mirror follows the core coordinate sequence under `Coordinates/{C,P,L,S,T,M}`. The [[S]] / [[S']] branch is currently the most materialised branch, with same-name `.md` and `.canvas` pairs for [[S0]]-[[S5]] and [[S0']]-[[S5']].
+The coordinate mirror follows the core coordinate sequence under `Coordinates/{C,P,L,S,T,M}`. The [[S]] / [[S']] branch is the most system-architecture-materialised branch; the [[C]] branch is now the primary semantic typology branch.
+
+## C-Layer Typology Authority
+
+`Coordinates/C/**` is where coordinate becomes language, type, and semantic category. Other coordinate families qualify a thing; the C layer says what kind of thing it is.
+
+| C coordinate | Semantic authority | Base home |
+| --- | --- | --- |
+| [[C0]] | Source / Ground | `Coordinates/C/C0/Source-Ground/**` |
+| [[C1]] | Forms / Templates | `Coordinates/C/C1/Forms-And-Templates/**` and `Coordinates/C/C1/C1'/CT/**` |
+| [[C2]] | Entities / Properties / Tags | `Coordinates/C/C2/Entities-Properties-Tags/**` |
+| [[C3]] | Processes / Canvases / Diagrams | `Coordinates/C/C3/Processes-Canvases-Diagrams/**` |
+| [[C4]] | Types / Contexts / MOCs | `Coordinates/C/C4/Types-Contexts-MOCs/**` |
+| [[C5]] | Crystallisations / Pratibimba | `Coordinates/C/C5/Crystallisations-Pratibimba/**` |
+
+Semantic view roots such as `Templates`, `Entities`, `Properties`, `Tags`, `Diagrams`, `Canvases`, or `Artifacts` should be C-native folders or query views, not top-level `World/Types` peers.
 
 The C-reflective ladder follows the paired-branch law in the current Hen contract:
 
 - `Coordinates/C/C1/C1'/CT` for [[CT]] law.
 - `Coordinates/C/C3/C3'/CF` for [[CF]] and context-frame law.
+- `Coordinates/C/C0/C0'/CPF`, `C2/C2'/CFP`, `C4/C4'/CP`, and `C5/C5'/CS` exist as current scaffolds but require a Cycle 3 C-prime audit before their folder ancestry is graph-authoritative.
 
 Older references to a top-level `Root/#` or `Coordinates/C/C'/CT` should be read as historical shorthand unless those folders are explicitly created and linked by a later coordinate-completion pass. Current root psychoid ordering lives under `Psychoids/#/#0` through `#5`.
 
@@ -44,13 +60,17 @@ Semantic categories must not become parallel folder authorities when a canonical
 | Concern | Canonical Type Home | Notes |
 | --- | --- | --- |
 | Hen templates and CT artifacts | `Coordinates/C/C1/C1'/CT/**` | [[CT0]]-[[CT5]] and their concrete families are the template law. Do not create a sibling `Templates` root. |
+| Entity candidates, aliases, properties, tags, relation fields | `Coordinates/C/C2/Entities-Properties-Tags/**` | C2 is the semantic home for entity articulation after Empty capture. Do not create sibling `Entities` or `Properties` roots. |
+| Ideal canvas forms and architecture diagram forms | `Coordinates/C/C3/Processes-Canvases-Diagrams/**` | Live diagrams remain Seed evidence; reusable canvas/diagram forms are C3 type forms. |
+| Type authorities and MOC patterns | `Coordinates/C/C4/Types-Contexts-MOCs/**` | C4 decides whether a folder is a type authority, container, or incubation surface. |
+| World graduation / Pratibimba handoff | `Coordinates/C/C5/Crystallisations-Pratibimba/**` | C5 records graduation and reflection/archive forms. |
 | Thought artifacts and T/T' records | `Coordinates/T/**` plus `Idea/Pratibimba/Self/Thought/**` | [[T-family]] names living planes of thought; [[T′-family]] names instantiated artifacts. Do not create a sibling `Artifacts` root. |
 | Agents and capabilities | `Coordinates/S/S4/**`, `Coordinates/S/S'/S4'/**`, and [[M5]] / [[M5']] routes | Constitutional agents, [[VAK]], tools, plugins, and permissions are coordinate views over S4/S4' and M' surfaces. |
 | Interfaces and runtime surfaces | `Coordinates/S/S0/**`, `S3/**`, `S4/**`, `S5/**`, and [[M']] routes | CLI, gateway, sessions, stores, envelopes, and bridges should be inferred from owning coordinates and code evidence. |
 | Diagrams and MOCs | [[Seeds]] diagram packs plus same-name `.canvas` files under coordinate MOCs | Live architecture diagrams remain Seed evidence; stable type canvases live here. |
 | Datasets and graph surfaces | `Coordinates/S/S2/**`, `S5/**`, and graph-schema Seeds | Graph, corpus, cache, source, and ledger datasets require [[S2]] schema validation before labels become graph state. |
 
-If a useful semantic view such as `Interfaces` or `Agents` is needed, make it a query, index, or flat [[World]] synthesis that links back to the owning coordinates. Do not mint a new top-level `World/Types/{SemanticRoot}` unless a Seed protocol proves that no coordinate-native home exists.
+If a useful semantic view such as `Interfaces` or `Agents` is needed, make it a query, index, C-native type view, or flat [[World]] synthesis that links back to the owning coordinates. Do not mint a new top-level `World/Types/{SemanticRoot}` unless a Seed protocol proves that no coordinate-native home exists.
 
 ## Graduation To Flat World
 
@@ -86,9 +106,12 @@ Use this loop for architecture work:
 
 Diagrams remain in [[Seeds]] while architecture is live. Stable definitions crystallise into flat [[World]]. MOC canvases and type-local topology live here.
 
+Use [[FLOW-2026-06-03-C-LAYER-TYPOLOGY-AND-MOC-WORKFLOW]] for C-layer classification and MOC maintenance. Use [[FLOW-2026-06-03-HEN-ENTITY-CAPTURE-LIFECYCLE]] for Empty entity capture.
+
 ## Operational Gaps
 
 - `s1'.residency.resolve`, `s1'.type.index`, `s1'.moc.ensure`, and `s1'.canvas.create_or_update` are specified by the workflow but not yet complete as public gateway/tool surfaces.
 - Hen promotion intent does not yet expose full `World/Types` ancestry evidence or flat-World graduation evidence.
 - S2 schema does not yet register all desired type/MOC labels.
-- Non-S coordinate family MOCs are still mostly scaffolded.
+- C-prime folder ancestry needs audit before [[CPF]] / [[CT]] / [[CP]] / [[CF]] / [[CFP]] / [[CS]] can be treated as graph-authoritative from folders alone.
+- P/L/T/M coordinate family MOCs are still mostly scaffolded.

@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"tarot","type":"file","file":"Tarot.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"minor","type":"text","text":"# Minor Arcana\n56 cards = 4 suits × 14 ranks\n48 single-codon + 8 dual-codon courts = 64 codons","x":-460,"y":280,"width":320,"height":160},
+    {"id":"major","type":"text","text":"# Major Arcana\n22 autosomes + 2 Transcendent (X/Y)\n= 24 sex/autosome cards","x":-60,"y":280,"width":320,"height":160},
+    {"id":"rot","type":"text","text":"# Rotational States\n7 (non-dual) or 8 (dual) modal inversions per card","x":340,"y":280,"width":320,"height":160},
+    {"id":"squareC","type":"text","text":"# [[Square C]]\nConverse-mirror operation basin","x":-460,"y":-280,"width":300,"height":120},
+    {"id":"codon","type":"file","file":"Codon.md","x":-60,"y":-280,"width":300,"height":120},
+    {"id":"nuc","type":"file","file":"Nucleotide.md","x":340,"y":-280,"width":300,"height":120}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"tarot","fromSide":"bottom","toNode":"minor","toSide":"top","label":"56"},
+    {"id":"e2","fromNode":"tarot","fromSide":"bottom","toNode":"major","toSide":"top","label":"24"},
+    {"id":"e3","fromNode":"tarot","fromSide":"bottom","toNode":"rot","toSide":"top","label":"per-card"},
+    {"id":"e4","fromNode":"squareC","fromSide":"bottom","toNode":"tarot","toSide":"top","label":"basin"},
+    {"id":"e5","fromNode":"codon","fromSide":"bottom","toNode":"tarot","toSide":"top","label":"substrate"},
+    {"id":"e6","fromNode":"nuc","fromSide":"bottom","toNode":"tarot","toSide":"top","label":"suit map"}
+  ]
+}

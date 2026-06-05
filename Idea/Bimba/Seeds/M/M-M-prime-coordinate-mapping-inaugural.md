@@ -54,7 +54,9 @@ The epogdoon (`9:8`) encodes this architecture as a single ratio:
 
 ## §2 — M2 (Parashakti): The Six Vibrational Coordinates
 
-**M2 root** = "Parashakti" — vibrational processing layer bridging [[Paramasiva]] structural foundations with [[Mahamaya]] symbolic intelligence. contextFrame: `(0/1/2/3)`.
+**M2 root** = "Parashakti" — vibrational processing layer bridging [[Paramasiva]] structural foundations with [[Mahamaya]] symbolic intelligence. contextFrame: `(0/1/2)`.
+
+Context-frame correction, 2026-06-03: M2 is the operative frequency-flow frame `(0/1/2)`. M3 is the tetradic pattern/transcription frame `(0/1/2/3)`. Do not promote M2 root to the M3 frame merely because its 72-fold output is compressed into Mahāmāyā's 64-fold substrate.
 
 ### M2-0 — Archetypal Numerical Ground
 - **Name (dataset):** Archetypal Numerical Ground
@@ -76,7 +78,7 @@ The epogdoon (`9:8`) encodes this architecture as a single ratio:
 - **Topological formula:** `4×6 + 2×6 = 6×6 = 36` positions. Genus 6 → genus 12 through 72-fold coverage → zodiacal resonance
 - **Six integrated lenses** within M2-1, each containing six subsystems
 - **doubleCoveragePrinciple:** "Śiva is Earth and Earth is Śiva" — the M2-1 lens system is where the light/shadow polarity of `M2-3` (Decans) originates
-- **M' expression:** The 16-lens matrix in the clock (`lens_segment[16]` in `Clock_Degree_Node`) is M2-1 expressed as pre-baked LUT; `[[Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/02-16-lenses-backbone-temporal.md]]`
+- **M' expression:** M2-1 is the 12 MEF lens-anchor / 72-addressing surface. The 16+1 clock-aperture stack belongs to M3-5 / Mahāmāyā's synthesis wheel, even when it is rendered as `lens_segment[16]` on clock-degree nodes. The two lens namespaces must remain distinct.
 
 ### M2-2 — 36 Tattvas System
 - **Name (dataset):** 36 Tattvas System

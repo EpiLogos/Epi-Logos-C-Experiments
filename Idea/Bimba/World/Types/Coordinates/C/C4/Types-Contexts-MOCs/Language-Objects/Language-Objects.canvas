@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {"id":"main","type":"file","file":"Language-Objects.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"of","type":"text","text":"# [[OracleFrame]]\nBounded reading envelope.","x":-540,"y":300,"width":260,"height":140},
+    {"id":"rp","type":"text","text":"# [[ReadingPosition]]\nTyped position inside a frame.","x":-260,"y":300,"width":260,"height":140},
+    {"id":"tcp","type":"text","text":"# [[TranscriptionalClockPacket]]\nM3 per-tick packet.","x":20,"y":300,"width":280,"height":140},
+    {"id":"sp","type":"text","text":"# [[SymbolicProtein]]\nOrdered packet-chain.","x":320,"y":300,"width":260,"height":140},
+    {"id":"ndc","type":"text","text":"# [[NaraDeckContext]]\nMacro vs session deck.","x":-260,"y":500,"width":260,"height":140},
+    {"id":"pp","type":"text","text":"# [[PatternPacket]]\nM4-3 interpretation surface.","x":20,"y":500,"width":280,"height":140},
+    {"id":"m3","type":"text","text":"# Engine\n[[M3]] Mahamaya emits.","x":-260,"y":700,"width":260,"height":140},
+    {"id":"m4","type":"text","text":"# Inhabitant\n[[M4]] Nara owns lived.","x":40,"y":700,"width":260,"height":140}
+  ],
+  "edges": [
+    {"id":"e-lo-of","fromNode":"main","fromSide":"bottom","toNode":"of","toSide":"top","label":"indexes"},
+    {"id":"e-lo-rp","fromNode":"main","fromSide":"bottom","toNode":"rp","toSide":"top","label":"indexes"},
+    {"id":"e-lo-tcp","fromNode":"main","fromSide":"bottom","toNode":"tcp","toSide":"top","label":"indexes"},
+    {"id":"e-lo-sp","fromNode":"main","fromSide":"bottom","toNode":"sp","toSide":"top","label":"indexes"},
+    {"id":"e-lo-ndc","fromNode":"main","fromSide":"bottom","toNode":"ndc","toSide":"top","label":"indexes"},
+    {"id":"e-lo-pp","fromNode":"main","fromSide":"bottom","toNode":"pp","toSide":"top","label":"indexes"},
+    {"id":"e-lo-m3","fromNode":"main","fromSide":"bottom","toNode":"m3","toSide":"top","label":"engine"},
+    {"id":"e-lo-m4","fromNode":"main","fromSide":"bottom","toNode":"m4","toSide":"top","label":"inhabitant"}
+  ]
+}

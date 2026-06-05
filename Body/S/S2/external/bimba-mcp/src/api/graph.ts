@@ -13,6 +13,42 @@ import { chunkDocument } from '../chunking/contextual.js';
 import { readFile } from 'fs/promises';
 import { join } from 'node:path';
 import { resolvePresentRoot } from '../repo-paths.js';
+import { convertHashToMFamily } from '../coordinates/syntax.js';
+
+// =============================================================================
+// Helper for Node Property Translation
+// =============================================================================
+
+export function mapNeo4jNode(nodeData: unknown): NodeRef | null {
+  if (!nodeData || typeof nodeData !== 'object') {
+    return null;
+  }
+
+  const obj = nodeData as Record<string, unknown>;
+  const rawProperties = (typeof obj['properties'] === 'object' && obj['properties'] !== null)
+    ? (obj['properties'] as Record<string, unknown>)
+    : {};
+
+  const properties: Record<string, unknown> = {
+    ...rawProperties,
+    uuid: rawProperties['c_2_uuid'] ?? rawProperties['uuid'],
+    title: rawProperties['c_1_name'] ?? rawProperties['title'] ?? rawProperties['name'] ?? `Node at ${rawProperties['coordinate']}`,
+    coordinate: rawProperties['coordinate'],
+    file_path: rawProperties['s_1_vault_path'] ?? rawProperties['file_path'],
+  };
+
+  const uuid = typeof properties['uuid'] === 'string' ? properties['uuid'] : '';
+  const labels = Array.isArray(obj['labels']) ? (obj['labels'] as string[]) : [];
+  const file_path = typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined;
+
+  return {
+    uuid,
+    labels,
+    properties,
+    file_path,
+  };
+}
+
 
 // =============================================================================
 // Coordinate Filtering
@@ -109,13 +145,16 @@ export async function queryByCoordinate(
     throw new Error('Not connected to Neo4j');
   }
 
+  // Normalize coordinate (e.g. hash to M)
+  const normalizedCoordinate = convertHashToMFamily(coordinate);
+
   try {
     const startTime = Date.now();
-    const { condition, params } = coordinateToFilter(coordinate);
+    const { condition, params } = coordinateToFilter(normalizedCoordinate);
 
-    // Build base query for nodes
+    // Build base query for nodes (querying canonical :Bimba label)
     let query = `
-      MATCH (node:Position)
+      MATCH (node:Bimba)
       ${condition ? `WHERE ${condition}` : ''}
       RETURN node
       LIMIT $limit
@@ -132,40 +171,20 @@ export async function queryByCoordinate(
       queryParams
     );
 
-    // Convert records to NodeRef objects
+    // Convert records to NodeRef objects using mapNeo4jNode
     const nodeList: (NodeRef | null)[] = records
       .map((record) => {
         const nodeData = record['node'];
-        if (!nodeData || typeof nodeData !== 'object') {
-          return null;
-        }
-
-        const obj = nodeData as Record<string, unknown>;
-
-        const properties = (typeof obj['properties'] === 'object' && obj['properties'] !== null)
-          ? (obj['properties'] as Record<string, unknown>)
-          : {};
-
-        // Add nested position arrays if requested
-        if (includeNested) {
-          // Extract nested position properties (p0_*, p1_*, etc.)
-          for (const [key, value] of Object.entries(properties)) {
+        const mapped = mapNeo4jNode(nodeData);
+        if (mapped && includeNested) {
+          // Keep nested position properties
+          for (const [key, value] of Object.entries(mapped.properties)) {
             if (key.match(/^p\d+_/)) {
-              properties[key] = value;
+              mapped.properties[key] = value;
             }
           }
         }
-
-        const uuid = typeof obj['uuid'] === 'string' ? obj['uuid'] : '';
-        const labels = Array.isArray(obj['labels']) ? (obj['labels'] as string[]) : [];
-        const file_path = typeof obj['file_path'] === 'string' ? obj['file_path'] : undefined;
-
-        return {
-          uuid,
-          labels,
-          properties,
-          file_path,
-        };
+        return mapped;
       });
 
     const nodes: NodeRef[] = nodeList.filter((node): node is NodeRef => node !== null);
@@ -176,7 +195,7 @@ export async function queryByCoordinate(
     const result: GraphResult = {
       nodes,
       edges: [], // Edges would be populated if we queried relationships
-      coordinate: coordinate === '#' ? undefined : coordinate,
+      coordinate: normalizedCoordinate === '#' ? undefined : normalizedCoordinate,
       sync_status: 'synced',
       query,
       execution_time_ms: executionTime,
@@ -201,12 +220,15 @@ export async function queryByQLCoordinate(
   coordinate: string,
   limit = 100
 ): Promise<GraphResult> {
+  // Normalize legacy hash coordinate if present
+  const normalized = convertHashToMFamily(coordinate);
+
   // Ensure it looks like a QL coordinate
-  if (!coordinate.match(/^[CP]\d+/)) {
-    throw new Error('Invalid QL coordinate format. Must start with C or P followed by numbers');
+  if (!normalized.match(/^[CPMSLT]\d+/)) {
+    throw new Error('Invalid QL coordinate format. Must start with a coordinate type letter followed by numbers');
   }
 
-  return queryByCoordinate(coordinate, false, limit);
+  return queryByCoordinate(normalized, false, limit);
 }
 
 // =============================================================================
@@ -277,11 +299,12 @@ export async function traverse(
     // Use Cypher path traversal to find all paths from start node
     // Returns paths of varying lengths from start to reachable nodes
     const query = `
-      MATCH path = (start:Position {uuid: $startUuid})-[rel:*1..${maxDepth}]->(target:Position)
+      MATCH path = (start:Bimba)-[rel:*1..${maxDepth}]->(target:Bimba)
+      WHERE start.c_2_uuid = $startUuid OR start.uuid = $startUuid
       ${relFilter}
       RETURN {
-        nodes: [n IN nodes(path) | {uuid: n.uuid, labels: labels(n), properties: properties(n)}],
-        edges: [e IN relationships(path) | {source_uuid: startNode(e).uuid, target_uuid: endNode(e).uuid, rel_type: type(e), properties: properties(e)}],
+        nodes: [n IN nodes(path) | {uuid: coalesce(n.c_2_uuid, n.uuid), labels: labels(n), properties: properties(n)}],
+        edges: [e IN relationships(path) | {source_uuid: coalesce(startNode(e).c_2_uuid, startNode(e).uuid), target_uuid: coalesce(endNode(e).c_2_uuid, endNode(e).uuid), rel_type: type(e), properties: properties(e)}],
         length: length(path)
       } AS path_data
       LIMIT $pathLimit
@@ -314,17 +337,27 @@ export async function traverse(
       for (const n of nodesRaw) {
         if (!n || typeof n !== 'object') continue;
         const nodeObj = n as Record<string, unknown>;
-        const uuid = typeof nodeObj['uuid'] === 'string' ? nodeObj['uuid'] : '';
+        
+        const rawProperties = typeof nodeObj['properties'] === 'object' && nodeObj['properties'] !== null
+          ? (nodeObj['properties'] as Record<string, unknown>)
+          : {};
+        
+        const properties: Record<string, unknown> = {
+          ...rawProperties,
+          uuid: rawProperties['c_2_uuid'] ?? rawProperties['uuid'] ?? nodeObj['uuid'],
+          title: rawProperties['c_1_name'] ?? rawProperties['title'] ?? rawProperties['name'],
+          coordinate: rawProperties['coordinate'],
+          file_path: rawProperties['s_1_vault_path'] ?? rawProperties['file_path'],
+        };
+
+        const uuid = typeof properties['uuid'] === 'string' ? properties['uuid'] : '';
         if (!uuid) continue;
         nodeSet.add(uuid);
         nodeList.push({
           uuid,
           labels: Array.isArray(nodeObj['labels']) ? (nodeObj['labels'] as string[]) : [],
-          properties:
-            typeof nodeObj['properties'] === 'object' && nodeObj['properties'] !== null
-              ? (nodeObj['properties'] as Record<string, unknown>)
-              : {},
-          file_path: undefined,
+          properties,
+          file_path: typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined,
         });
       }
       const nodes = nodeList;
@@ -438,9 +471,10 @@ export async function traversePositions(
 
     // Start with the root node
     const startQuery = `
-      MATCH (start:Position {uuid: $startUuid})
+      MATCH (start:Bimba)
+      WHERE start.c_2_uuid = $startUuid OR start.uuid = $startUuid
       RETURN {
-        uuid: start.uuid,
+        uuid: coalesce(start.c_2_uuid, start.uuid),
         labels: labels(start),
         properties: properties(start)
       } AS node
@@ -455,10 +489,20 @@ export async function traversePositions(
     }
 
     const startNode = startRecords[0]?.['node'] as Record<string, unknown>;
+    const rawStartProps = typeof startNode?.['properties'] === 'object' ? (startNode.properties as Record<string, unknown>) : {};
+    const startProperties: Record<string, unknown> = {
+      ...rawStartProps,
+      uuid: rawStartProps['c_2_uuid'] ?? rawStartProps['uuid'] ?? startNode?.['uuid'],
+      title: rawStartProps['c_1_name'] ?? rawStartProps['title'] ?? rawStartProps['name'],
+      coordinate: rawStartProps['coordinate'],
+      file_path: rawStartProps['s_1_vault_path'] ?? rawStartProps['file_path'],
+    };
+
     const startNodeRef: NodeRef = {
-      uuid: typeof startNode?.['uuid'] === 'string' ? startNode.uuid : startUuid,
+      uuid: typeof startProperties['uuid'] === 'string' ? startProperties.uuid : startUuid,
       labels: Array.isArray(startNode?.['labels']) ? (startNode.labels as string[]) : [],
-      properties: typeof startNode?.['properties'] === 'object' ? (startNode.properties as Record<string, unknown>) : {},
+      properties: startProperties,
+      file_path: typeof startProperties['file_path'] === 'string' ? startProperties.file_path : undefined,
     };
 
     // Build the traversal path by following position sequence
@@ -476,9 +520,11 @@ export async function traversePositions(
       // Query for nodes connected via this position's relationship type
       const posQuery = `
         UNWIND $nodeUuids AS current_uuid
-        MATCH (current:Position {uuid: current_uuid})-[rel:${posInfo.relType}]->(next:Position)
+        MATCH (current:Bimba)
+        WHERE current.c_2_uuid = current_uuid OR current.uuid = current_uuid
+        MATCH (current)-[rel:${posInfo.relType}]->(next:Bimba)
         RETURN DISTINCT {
-          uuid: next.uuid,
+          uuid: coalesce(next.c_2_uuid, next.uuid),
           labels: labels(next),
           properties: properties(next)
         } AS node
@@ -496,14 +542,23 @@ export async function traversePositions(
 
       for (const record of posRecords) {
         const nodeData = record['node'] as Record<string, unknown>;
-        const uuid = typeof nodeData?.['uuid'] === 'string' ? nodeData.uuid : '';
+        const rawProps = typeof nodeData?.['properties'] === 'object' ? (nodeData.properties as Record<string, unknown>) : {};
+        const properties: Record<string, unknown> = {
+          ...rawProps,
+          uuid: rawProps['c_2_uuid'] ?? rawProps['uuid'] ?? nodeData?.['uuid'],
+          title: rawProps['c_1_name'] ?? rawProps['title'] ?? rawProps['name'],
+          coordinate: rawProps['coordinate'],
+          file_path: rawProps['s_1_vault_path'] ?? rawProps['file_path'],
+        };
+        const uuid = typeof properties['uuid'] === 'string' ? properties.uuid : '';
 
         if (uuid && !allFoundUuids.has(uuid)) {
           allFoundUuids.add(uuid);
           const nodeRef: NodeRef = {
             uuid,
             labels: Array.isArray(nodeData?.['labels']) ? (nodeData.labels as string[]) : [],
-            properties: typeof nodeData?.['properties'] === 'object' ? (nodeData.properties as Record<string, unknown>) : {},
+            properties,
+            file_path: typeof properties['file_path'] === 'string' ? properties.file_path : undefined,
           };
           positionNodes.push(nodeRef);
           nextNodeUuids.push(uuid);
@@ -606,17 +661,18 @@ export async function context(
       positionFilter = `AND any(rel IN relationships(path) WHERE startNode(rel).coordinate STARTS WITH ${posList})`;
     }
 
-    // Query to get entity and its context
+    // Query to get entity and its context from canonical :Bimba nodes
     const query = `
-      MATCH path = (entity:Position {uuid: $entityUuid})-[rel:*1..${traversalDepth}]->(neighbor:Position)
+      MATCH path = (entity:Bimba)-[rel:*1..${traversalDepth}]->(neighbor:Bimba)
+      WHERE entity.c_2_uuid = $entityUuid OR entity.uuid = $entityUuid
       ${positionFilter}
       WITH entity, neighbor, path, rel
       RETURN {
-        entity: {uuid: entity.uuid, labels: labels(entity), properties: properties(entity)},
-        neighbor: {uuid: neighbor.uuid, labels: labels(neighbor), properties: properties(neighbor)},
+        entity: {uuid: coalesce(entity.c_2_uuid, entity.uuid), labels: labels(entity), properties: properties(entity)},
+        neighbor: {uuid: coalesce(neighbor.c_2_uuid, neighbor.uuid), labels: labels(neighbor), properties: properties(neighbor)},
         path_data: {
-          nodes: [n IN nodes(path) | {uuid: n.uuid, labels: labels(n), properties: properties(n)}],
-          edges: [e IN relationships(path) | {source_uuid: startNode(e).uuid, target_uuid: endNode(e).uuid, rel_type: type(e), properties: properties(e)}],
+          nodes: [n IN nodes(path) | {uuid: coalesce(n.c_2_uuid, n.uuid), labels: labels(n), properties: properties(n)}],
+          edges: [e IN relationships(path) | {source_uuid: coalesce(startNode(e).c_2_uuid, startNode(e).uuid), target_uuid: coalesce(endNode(e).c_2_uuid, endNode(e).uuid), rel_type: type(e), properties: properties(e)}],
           length: length(path)
         },
         rel_type: type(rel)
@@ -651,10 +707,19 @@ export async function context(
       if (!entityNode) {
         const entityData = result['entity'] as Record<string, unknown>;
         if (entityData && typeof entityData === 'object') {
+          const rawProps = typeof entityData['properties'] === 'object' && entityData['properties'] !== null ? (entityData['properties'] as Record<string, unknown>) : {};
+          const properties: Record<string, unknown> = {
+            ...rawProps,
+            uuid: rawProps['c_2_uuid'] ?? rawProps['uuid'] ?? entityData['uuid'],
+            title: rawProps['c_1_name'] ?? rawProps['title'] ?? rawProps['name'],
+            coordinate: rawProps['coordinate'],
+            file_path: rawProps['s_1_vault_path'] ?? rawProps['file_path'],
+          };
           entityNode = {
-            uuid: typeof entityData['uuid'] === 'string' ? entityData['uuid'] : '',
+            uuid: typeof properties['uuid'] === 'string' ? properties['uuid'] : '',
             labels: Array.isArray(entityData['labels']) ? (entityData['labels'] as string[]) : [],
-            properties: typeof entityData['properties'] === 'object' && entityData['properties'] !== null ? (entityData['properties'] as Record<string, unknown>) : {},
+            properties,
+            file_path: typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined,
           };
         }
       }
@@ -662,12 +727,22 @@ export async function context(
       // Extract neighbor
       const neighborData = result['neighbor'] as Record<string, unknown>;
       if (neighborData && typeof neighborData === 'object') {
-        const neighborUuid = typeof neighborData['uuid'] === 'string' ? neighborData['uuid'] : '';
+        const rawProps = typeof neighborData['properties'] === 'object' && neighborData['properties'] !== null ? (neighborData['properties'] as Record<string, unknown>) : {};
+        const properties: Record<string, unknown> = {
+          ...rawProps,
+          uuid: rawProps['c_2_uuid'] ?? rawProps['uuid'] ?? neighborData['uuid'],
+          title: rawProps['c_1_name'] ?? rawProps['title'] ?? rawProps['name'],
+          coordinate: rawProps['coordinate'],
+          file_path: rawProps['s_1_vault_path'] ?? rawProps['file_path'],
+        };
+        const neighborUuid = typeof properties['uuid'] === 'string' ? properties['uuid'] : '';
+
         if (neighborUuid && !neighborMap.has(neighborUuid)) {
           neighborMap.set(neighborUuid, {
             uuid: neighborUuid,
             labels: Array.isArray(neighborData['labels']) ? (neighborData['labels'] as string[]) : [],
-            properties: typeof neighborData['properties'] === 'object' && neighborData['properties'] !== null ? (neighborData['properties'] as Record<string, unknown>) : {},
+            properties,
+            file_path: typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined,
           });
         }
       }
@@ -680,12 +755,21 @@ export async function context(
         for (const n of nodesRaw) {
           if (!n || typeof n !== 'object') continue;
           const nodeObj = n as Record<string, unknown>;
-          const uuid = typeof nodeObj['uuid'] === 'string' ? nodeObj['uuid'] : '';
+          const rawProps = typeof nodeObj['properties'] === 'object' && nodeObj['properties'] !== null ? (nodeObj['properties'] as Record<string, unknown>) : {};
+          const properties: Record<string, unknown> = {
+            ...rawProps,
+            uuid: rawProps['c_2_uuid'] ?? rawProps['uuid'] ?? nodeObj['uuid'],
+            title: rawProps['c_1_name'] ?? rawProps['title'] ?? rawProps['name'],
+            coordinate: rawProps['coordinate'],
+            file_path: rawProps['s_1_vault_path'] ?? rawProps['file_path'],
+          };
+          const uuid = typeof properties['uuid'] === 'string' ? properties['uuid'] : '';
           if (!uuid) continue;
           nodeList.push({
             uuid,
             labels: Array.isArray(nodeObj['labels']) ? (nodeObj['labels'] as string[]) : [],
-            properties: typeof nodeObj['properties'] === 'object' && nodeObj['properties'] !== null ? (nodeObj['properties'] as Record<string, unknown>) : {},
+            properties,
+            file_path: typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined,
           });
         }
 
@@ -724,7 +808,8 @@ export async function context(
 
       // Track relationship type for position organization
       const relType = typeof result['rel_type'] === 'string' ? result['rel_type'] : '';
-      const neighbor = neighborMap.get(typeof (result['neighbor'] as Record<string, unknown>)['uuid'] === 'string' ? ((result['neighbor'] as Record<string, unknown>)['uuid'] as string) : '');
+      const nodeUuidVal = typeof (result['neighbor'] as Record<string, unknown>)?.['uuid'] === 'string' ? ((result['neighbor'] as Record<string, unknown>)['uuid'] as string) : '';
+      const neighbor = neighborMap.get(nodeUuidVal);
 
       if (neighbor && relType) {
         // Extract position from rel_type (e.g., POS0_LINKS_TO -> position 0)
@@ -845,9 +930,10 @@ export async function spec(
     // First, try to find the entity by UUID if it looks like one, otherwise by title
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(entityName);
 
+    // Querying canonical :Bimba label
     const entityQuery = isUuid
-      ? 'MATCH (entity:Position {uuid: $entityName}) RETURN entity'
-      : 'MATCH (entity:Position {title: $entityName}) RETURN entity LIMIT 1';
+      ? 'MATCH (entity:Bimba) WHERE entity.c_2_uuid = $entityName OR entity.uuid = $entityName RETURN entity'
+      : 'MATCH (entity:Bimba) WHERE entity.c_1_name = $entityName OR entity.title = $entityName RETURN entity LIMIT 1';
 
     const entityRecords = await connectionManager.executeRead<Record<string, unknown>>(
       entityQuery,
@@ -863,40 +949,44 @@ export async function spec(
       throw new Error(`Invalid entity data for "${entityName}"`);
     }
 
-    const entityObj = entityData as Record<string, unknown>;
-    const uuid = typeof entityObj['uuid'] === 'string' ? entityObj['uuid'] : '';
-    const title = typeof entityObj['title'] === 'string' ? entityObj['title'] : '';
-    const filePath = typeof entityObj['file_path'] === 'string' ? entityObj['file_path'] : undefined;
+    const mappedEntity = mapNeo4jNode(entityData);
+    if (!mappedEntity) {
+      throw new Error(`Failed to map entity data for "${entityName}"`);
+    }
+
+    const uuid = mappedEntity.uuid;
+    const title = typeof mappedEntity.properties['title'] === 'string' ? mappedEntity.properties['title'] : entityName;
+    const filePath = mappedEntity.file_path;
 
     // Extract coordinates from properties
-    const properties = typeof entityObj['properties'] === 'object' && entityObj['properties'] !== null
-      ? (entityObj['properties'] as Record<string, unknown>)
-      : {};
+    const properties = mappedEntity.properties;
 
     const coordinates: CoordinateSpec = {
-      C: typeof properties['C'] === 'number' ? properties['C'] : undefined,
-      P: typeof properties['P'] === 'number' ? properties['P'] : undefined,
-      M: typeof properties['M'] === 'number' ? properties['M'] : undefined,
-      S: typeof properties['S'] === 'number' ? properties['S'] : undefined,
-      T: typeof properties['T'] === 'number' ? properties['T'] : undefined,
-      L: typeof properties['L'] === 'number' ? properties['L'] : undefined,
+      C: typeof properties['C'] === 'number' ? properties['C'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'C' ? properties['c_4_ql_position'] : undefined),
+      P: typeof properties['P'] === 'number' ? properties['P'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'P' ? properties['c_4_ql_position'] : undefined),
+      M: typeof properties['M'] === 'number' ? properties['M'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'M' ? properties['c_4_ql_position'] : undefined),
+      S: typeof properties['S'] === 'number' ? properties['S'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'S' ? properties['c_4_ql_position'] : undefined),
+      T: typeof properties['T'] === 'number' ? properties['T'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'T' ? properties['c_4_ql_position'] : undefined),
+      L: typeof properties['L'] === 'number' ? properties['L'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'L' ? properties['c_4_ql_position'] : undefined),
     };
 
-    // Extract content summary (use description if available, otherwise truncate content)
+    // Extract content summary (use description/c_1_description if available, otherwise truncate content/c_5_content)
     const contentSummary =
-      typeof properties['description'] === 'string'
-        ? properties['description']
-        : typeof properties['content'] === 'string'
-          ? (properties['content'] as string).substring(0, 500)
-          : title;
+      typeof properties['c_1_description'] === 'string'
+        ? properties['c_1_description']
+        : typeof properties['description'] === 'string'
+          ? properties['description']
+          : typeof properties['c_5_content'] === 'string'
+            ? (properties['c_5_content'] as string).substring(0, 500)
+            : typeof properties['content'] === 'string'
+              ? (properties['content'] as string).substring(0, 500)
+              : title;
 
     // Extract position arrays
     const positionArrays: Record<string, string[]> = {};
-    if (typeof properties === 'object' && properties !== null) {
-      for (const [key, value] of Object.entries(properties)) {
-        if (key.match(/^p\d+_/) && Array.isArray(value)) {
-          positionArrays[key] = value as string[];
-        }
+    for (const [key, value] of Object.entries(properties)) {
+      if (key.match(/^p\d+_/) && Array.isArray(value)) {
+        positionArrays[key] = value as string[];
       }
     }
 
@@ -916,12 +1006,13 @@ export async function spec(
       return result;
     }
 
-    // Query for connected entities (neighbors up to 2 hops)
+    // Query for connected entities (neighbors up to 2 hops) using canonical :Bimba label
     const connectedQuery = `
-      MATCH path = (entity:Position {uuid: $uuid})-[rel:*1..2]->(neighbor:Position)
+      MATCH path = (entity:Bimba)-[rel:*1..2]->(neighbor:Bimba)
+      WHERE entity.c_2_uuid = $uuid OR entity.uuid = $uuid
       WITH entity, neighbor, path, relationships(path)[-1] AS lastRel
       RETURN {
-        neighbor: {uuid: neighbor.uuid, labels: labels(neighbor), properties: properties(neighbor)},
+        neighbor: {uuid: coalesce(neighbor.c_2_uuid, neighbor.uuid), labels: labels(neighbor), properties: properties(neighbor)},
         rel_type: type(lastRel),
         properties: properties(lastRel)
       } AS result
@@ -989,18 +1080,11 @@ export async function spec(
 
       const posGroup = connectedByPositionMap.get(posNumber);
       if (posGroup && posGroup.entities.length < maxConnectedPerPosition) {
-        const neighborUuid = typeof neighborData['uuid'] === 'string' ? neighborData['uuid'] : '';
-        const neighborLabels = Array.isArray(neighborData['labels']) ? (neighborData['labels'] as string[]) : [];
-        const neighborProperties = typeof neighborData['properties'] === 'object' && neighborData['properties'] !== null
-          ? (neighborData['properties'] as Record<string, unknown>)
-          : {};
+        const mappedNeighbor = mapNeo4jNode(neighborData);
+        if (!mappedNeighbor) continue;
 
         const connectedEntity: ConnectedEntity = {
-          node: {
-            uuid: neighborUuid,
-            labels: neighborLabels,
-            properties: neighborProperties,
-          },
+          node: mappedNeighbor,
           rel_type: relType,
           properties: typeof result['properties'] === 'object' && result['properties'] !== null
             ? (result['properties'] as Record<string, unknown>)
@@ -1116,11 +1200,11 @@ async function performGraphSearch(
 
   // Query nodes and count relationships (degree) for scoring
   const graphQuery = `
-    MATCH (node:Position)
+    MATCH (node:Bimba)
     ${coordinateFilterCondition ? `WHERE ${coordinateFilterCondition}` : ''}
     WITH node, size(()--(node)) AS degree
     RETURN {
-      node: {uuid: node.uuid, labels: labels(node), properties: properties(node)},
+      node: {uuid: coalesce(node.c_2_uuid, node.uuid), labels: labels(node), properties: properties(node)},
       degree: degree
     } AS result
     ORDER BY degree DESC
@@ -1144,23 +1228,18 @@ async function performGraphSearch(
     const degree = typeof result['degree'] === 'number' ? result['degree'] : 0;
     const degreeScore = Math.min(1.0, degree / maxDegree);
 
+    const mapped = mapNeo4jNode(nodeData);
+    if (!mapped) continue;
+
     // Also check if query keywords appear in node title or description
-    const title = typeof nodeData['properties'] === 'object' && nodeData['properties'] !== null
-      ? typeof (nodeData['properties'] as Record<string, unknown>)['title'] === 'string'
-        ? ((nodeData['properties'] as Record<string, unknown>)['title'] as string).toLowerCase()
-        : ''
+    const title = typeof mapped.properties['title'] === 'string'
+      ? mapped.properties['title'].toLowerCase()
       : '';
 
     const keywordMatch = keywords.some((k) => title.includes(k)) ? 0.2 : 0;
 
-    const uuid = typeof nodeData['uuid'] === 'string' ? nodeData['uuid'] : '';
-    const labels = Array.isArray(nodeData['labels']) ? (nodeData['labels'] as string[]) : [];
-    const properties = typeof nodeData['properties'] === 'object' && nodeData['properties'] !== null
-      ? (nodeData['properties'] as Record<string, unknown>)
-      : {};
-
     results.push({
-      node: { uuid, labels, properties },
+      node: mapped,
       score: Math.min(1.0, degreeScore + keywordMatch),
     });
   }
@@ -1185,14 +1264,14 @@ async function performChunkAwareSearch(
   const queryLower = query.toLowerCase();
   const keywords = queryLower.split(/\s+/).filter((k) => k.length > 0);
 
-  // Query both Position nodes and Chunk nodes
+  // Query both Bimba nodes and Chunk nodes
   const graphQuery = `
     MATCH (node)
-    WHERE (node:Position OR node:Chunk)
+    WHERE (node:Bimba OR node:Chunk)
     ${coordinateFilterCondition ? `AND ${coordinateFilterCondition}` : ''}
     WITH node, size(()--(node)) AS degree, labels(node) AS nodeLabels
     RETURN {
-      node: {uuid: node.uuid, labels: nodeLabels, properties: properties(node)},
+      node: {uuid: coalesce(node.c_2_uuid, node.uuid), labels: nodeLabels, properties: properties(node)},
       degree: degree,
       nodeLabels: nodeLabels
     } AS result
@@ -1215,22 +1294,23 @@ async function performChunkAwareSearch(
     const nodeLabels = result['nodeLabels'] as string[];
     if (!nodeData || typeof nodeData !== 'object') continue;
 
+    const mapped = mapNeo4jNode(nodeData);
+    if (!mapped) continue;
+
     const isChunk = nodeLabels?.includes('Chunk');
     const degree = typeof result['degree'] === 'number' ? result['degree'] : 0;
     const degreeScore = Math.min(1.0, degree / maxDegree);
 
     // Check keyword match in node content/title
-    const title = typeof nodeData['properties'] === 'object' && nodeData['properties'] !== null
-      ? typeof (nodeData['properties'] as Record<string, unknown>)['title'] === 'string'
-        ? ((nodeData['properties'] as Record<string, unknown>)['title'] as string).toLowerCase()
-        : ''
+    const title = typeof mapped.properties['title'] === 'string'
+      ? mapped.properties['title'].toLowerCase()
       : '';
 
-    const content = typeof nodeData['properties'] === 'object' && nodeData['properties'] !== null
-      ? typeof (nodeData['properties'] as Record<string, unknown>)['raw_content'] === 'string'
-        ? ((nodeData['properties'] as Record<string, unknown>)['raw_content'] as string).toLowerCase()
-        : ''
-      : '';
+    const content = typeof mapped.properties['raw_content'] === 'string'
+      ? mapped.properties['raw_content'].toLowerCase()
+      : typeof mapped.properties['content'] === 'string'
+        ? mapped.properties['content'].toLowerCase()
+        : '';
 
     const keywordMatch = keywords.some((k) => title.includes(k) || content.includes(k)) ? 0.2 : 0;
 
@@ -1240,11 +1320,9 @@ async function performChunkAwareSearch(
       score = Math.min(1.0, score * 1.1); // Slight boost for chunks
     }
 
-    const uuid = typeof nodeData['uuid'] === 'string' ? nodeData['uuid'] : '';
-    const labels = Array.isArray(nodeData['labels']) ? (nodeData['labels'] as string[]) : [];
-    const properties = typeof nodeData['properties'] === 'object' && nodeData['properties'] !== null
-      ? (nodeData['properties'] as Record<string, unknown>)
-      : {};
+    const uuid = mapped.uuid;
+    const labels = mapped.labels;
+    const properties = mapped.properties;
 
     const chunkMetadata = isChunk ? {
       chunk_uuid: uuid,
@@ -1266,16 +1344,29 @@ async function performChunkAwareSearch(
     for (const result of results) {
       if (result.isChunk && result.chunkMetadata?.parent_uuid) {
         const parentQuery = `
-          MATCH (parent:Position {uuid: $parentUuid})
+          MATCH (parent:Bimba)
+          WHERE parent.c_2_uuid = $parentUuid OR parent.uuid = $parentUuid
           OPTIONAL MATCH (parent)-[r:CONTAINS]->(chunk {uuid: $chunkUuid})
           OPTIONAL MATCH (parent)-[r:CONTAINS]->(prevChunk:Chunk)
             WHERE prevChunk.sequence_num = $sequenceNum - 1
           OPTIONAL MATCH (parent)-[r:CONTAINS]->(nextChunk:Chunk)
             WHERE nextChunk.sequence_num = $sequenceNum + 1
           RETURN {
-            parent: {uuid: parent.uuid, title: parent.title, file_path: parent.file_path},
-            prevChunk: {uuid: prevChunk.uuid, sequence_num: prevChunk.sequence_num, raw_content: prevChunk.raw_content},
-            nextChunk: {uuid: nextChunk.uuid, sequence_num: nextChunk.sequence_num, raw_content: nextChunk.raw_content}
+            parent: {
+              uuid: coalesce(parent.c_2_uuid, parent.uuid),
+              title: coalesce(parent.c_1_name, parent.title, parent.name),
+              file_path: coalesce(parent.s_1_vault_path, parent.file_path)
+            },
+            prevChunk: {
+              uuid: coalesce(prevChunk.uuid, prevChunk.c_2_uuid),
+              sequence_num: prevChunk.sequence_num,
+              raw_content: prevChunk.raw_content
+            },
+            nextChunk: {
+              uuid: coalesce(nextChunk.uuid, nextChunk.c_2_uuid),
+              sequence_num: nextChunk.sequence_num,
+              raw_content: nextChunk.raw_content
+            }
           } AS expandedData
         `;
 
@@ -1607,7 +1698,8 @@ export async function disclosure(
 
     // Query for the entity
     const entityQuery = `
-      MATCH (n:Position {uuid: $uuid})
+      MATCH (n:Bimba)
+      WHERE n.c_2_uuid = $uuid OR n.uuid = $uuid
       RETURN n
     `;
 
@@ -1648,17 +1740,23 @@ export async function disclosure(
       };
     }
 
-    const obj = nodeData as Record<string, unknown>;
+    const mapped = mapNeo4jNode(nodeData);
+    if (!mapped) {
+      return {
+        entity_uuid: entityUuid,
+        level: clampedLevel,
+        max_level: 5,
+        disclosed: { error: 'Invalid entity data' },
+        retrieval_time_ms: Date.now() - startTime,
+      };
+    }
 
-    // Extract entity properties
-    const uuid = typeof obj['uuid'] === 'string' ? obj['uuid'] : '';
-    const title = typeof obj['title'] === 'string' ? obj['title'] : 'Untitled';
-    const filePath = typeof obj['file_path'] === 'string' ? obj['file_path'] : undefined;
-    const coordinate = typeof obj['coordinate'] === 'string' ? obj['coordinate'] : undefined;
-    const content = typeof obj['content'] === 'string' ? obj['content'] : '';
-    const properties = (typeof obj['properties'] === 'object' && obj['properties'] !== null)
-      ? (obj['properties'] as Record<string, unknown>)
-      : {};
+    const uuid = mapped.uuid;
+    const title = typeof mapped.properties['title'] === 'string' ? mapped.properties['title'] : 'Untitled';
+    const filePath = mapped.file_path;
+    const coordinate = typeof mapped.properties['coordinate'] === 'string' ? mapped.properties['coordinate'] : undefined;
+    const content = typeof mapped.properties['c_5_content'] === 'string' ? mapped.properties['c_5_content'] : (typeof mapped.properties['content'] === 'string' ? mapped.properties['content'] : '');
+    const properties = mapped.properties;
 
     // Build disclosed information based on level
     const disclosed: Record<string, unknown> = {};
@@ -1800,10 +1898,11 @@ async function getConnectedEntitiesByPosition(
     const relType = relTypes[position] || `POS${position}_LINKS_TO`;
 
     const query = `
-      MATCH (entity:Position {uuid: $uuid})-[rel:${relType}]-(connected:Position)
+      MATCH (entity:Bimba)-[rel:${relType}]-(connected:Bimba)
+      WHERE entity.c_2_uuid = $uuid OR entity.uuid = $uuid
       RETURN {
-        uuid: connected.uuid,
-        title: connected.title,
+        uuid: coalesce(connected.c_2_uuid, connected.uuid),
+        title: coalesce(connected.c_1_name, connected.title, connected.name, 'Untitled'),
         rel_type: type(rel)
       } AS conn
       LIMIT $limit
@@ -1841,7 +1940,8 @@ async function getFullContext(
   try {
     // Query for entities within 2 hops
     const query = `
-      MATCH path = (start:Position {uuid: $uuid})-[rel:*1..2]-(target:Position)
+      MATCH path = (start:Bimba)-[rel:*1..2]-(target:Bimba)
+      WHERE start.c_2_uuid = $uuid OR start.uuid = $uuid
       WITH target, min(length(path)) AS depth
       RETURN DISTINCT target, depth
       ORDER BY depth
@@ -1861,11 +1961,11 @@ async function getFullContext(
       const target = record['target'];
       const depth = record['depth'];
 
-      if (!target || typeof target !== 'object') return;
-      const targetObj = target as Record<string, unknown>;
+      const mappedTarget = mapNeo4jNode(target);
+      if (!mappedTarget) return;
 
-      const uuid = typeof targetObj['uuid'] === 'string' ? targetObj['uuid'] : '';
-      const title = typeof targetObj['title'] === 'string' ? targetObj['title'] : 'Untitled';
+      const uuid = mappedTarget.uuid;
+      const title = typeof mappedTarget.properties['title'] === 'string' ? mappedTarget.properties['title'] : 'Untitled';
       const depthNum = typeof depth === 'number' ? depth : 1;
 
       if (uuid && depthNum) {
@@ -1875,7 +1975,7 @@ async function getFullContext(
         depthLayers[depthNum].push({ uuid, title });
 
         // Track position if available
-        const p = targetObj['p_position'];
+        const p = mappedTarget.properties['p_position'] ?? mappedTarget.properties['c_4_ql_position'];
         if (typeof p === 'number' && p >= 0 && p <= 5) {
           positionsCovered.add(p);
         }
@@ -1942,13 +2042,14 @@ export async function embed(
 
         const result = await connectionManager.executeWrite<Record<string, unknown>>(
           `
-          MATCH (n {uuid: $uuid})
+          MATCH (n)
+          WHERE n.uuid = $uuid OR n.c_2_uuid = $uuid
           SET n.embedding = $embedding,
               n.embedding_dimensions = $dimensions,
               n.embedding_task_type = $taskType,
               n.embedding_model = $model,
               n.embedding_generated_at = datetime()
-          RETURN n.uuid as uuid
+          RETURN coalesce(n.c_2_uuid, n.uuid) as uuid
           `,
           {
             uuid: storeFor,
@@ -2129,11 +2230,11 @@ export async function chunk(input: GraphChunkInput): Promise<GraphChunkResult> {
   const connectionManager = getNeo4jConnectionManager();
 
   // Find parent document by file_path first
-  const documentResult = await connectionManager.executeRead<{ uuid: string; coordinates: string[] }>(
+  const documentResult = await connectionManager.executeRead<Record<string, unknown>>(
     `
-    MATCH (doc {file_path: $filePath})
-    RETURN doc.uuid as uuid,
-           [doc.C, doc.P, doc.M, doc.S, doc.T, doc.L] as coordinates
+    MATCH (doc:Bimba)
+    WHERE doc.s_1_vault_path = $filePath OR doc.file_path = $filePath
+    RETURN doc
     LIMIT 1
     `,
     { filePath: input.file_path }
@@ -2143,12 +2244,21 @@ export async function chunk(input: GraphChunkInput): Promise<GraphChunkResult> {
     throw new Error(`Document not found for path: ${input.file_path}`);
   }
 
-  const parentUuid = documentResult[0]?.uuid;
-  const parentCoordinates = documentResult[0]?.coordinates ?? [];
-
-  if (!parentUuid) {
-    throw new Error('Failed to get parent UUID');
+  const mappedDoc = mapNeo4jNode(documentResult[0]?.['doc']);
+  if (!mappedDoc) {
+    throw new Error(`Failed to map parent document for path: ${input.file_path}`);
   }
+
+  const parentUuid = mappedDoc.uuid;
+  const props = mappedDoc.properties;
+  const parentCoordinates = [
+    props['C'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'C' ? props['c_4_ql_position'] : undefined),
+    props['P'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'P' ? props['c_4_ql_position'] : undefined),
+    props['M'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'M' ? props['c_4_ql_position'] : undefined),
+    props['S'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'S' ? props['c_4_ql_position'] : undefined),
+    props['T'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'T' ? props['c_4_ql_position'] : undefined),
+    props['L'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'L' ? props['c_4_ql_position'] : undefined),
+  ];
 
   // Read file from vault
   const vaultPath = join(resolvePresentRoot(), input.file_path);
@@ -2178,16 +2288,19 @@ export async function chunk(input: GraphChunkInput): Promise<GraphChunkResult> {
     const chunkUuid = chunk.chunk_id;
     chunkUuids.push(chunkUuid);
 
-    // Create or update chunk node
+    // Create or update chunk node using canonical :Bimba labels and c_2_uuid
     const chunkCreateResult = await connectionManager.executeWrite<{
       created: boolean;
     }>(
       `
-      MERGE (c:Chunk:Content {uuid: $uuid})
+      MERGE (c:Bimba:Chunk:Content {uuid: $uuid})
       ON CREATE SET
+        c.c_2_uuid = $uuid,
+        c.s_1_vault_path = $filePath,
         c.file_path = $filePath,
         c.parent_uuid = $parentUuid,
         c.sequence_num = $seqNum,
+        c.c_5_content = $rawContent,
         c.raw_content = $rawContent,
         c.contextualized_content = $contextualizedContent,
         c.context = $context,
@@ -2206,6 +2319,7 @@ export async function chunk(input: GraphChunkInput): Promise<GraphChunkResult> {
         c.created_at = datetime(),
         c.updated_at = datetime()
       ON MATCH SET
+        c.c_5_content = $rawContent,
         c.raw_content = $rawContent,
         c.contextualized_content = $contextualizedContent,
         c.context = $context,
@@ -2250,8 +2364,10 @@ export async function chunk(input: GraphChunkInput): Promise<GraphChunkResult> {
     // Create CONTAINS relationship from parent to chunk
     const relResult = await connectionManager.executeWrite<Record<string, unknown>>(
       `
-      MATCH (parent {uuid: $parentUuid})
-      MATCH (child {uuid: $childUuid})
+      MATCH (parent:Bimba)
+      WHERE parent.c_2_uuid = $parentUuid OR parent.uuid = $parentUuid
+      MATCH (child:Bimba)
+      WHERE child.c_2_uuid = $childUuid OR child.uuid = $childUuid
       MERGE (parent)-[:CONTAINS]->(child)
       RETURN 1
       `,

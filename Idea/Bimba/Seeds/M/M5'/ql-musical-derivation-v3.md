@@ -1,18 +1,37 @@
 ---
 coordinate: "M5'"
 status: "kernel-canon"
-updated: "2026-05-31"
+updated: "2026-06-04"
 domain: "musical-derivation"
 description: "Version 3 — the most comprehensive musical derivation. Two-part structure: Part I covers the first five layers of the QL 6-fold-of-layers (Gebser structures, ontological unit, social-power unit, L-lenses, context-frames), Part II covers the musical derivation at position #5. The matheme reading itself aloud through all its accumulated meaning-layers simultaneously."
 depends_on:
   - "[[epi-logos-kernel-spec]]"
   - "[[ql-musical-derivation]]"
   - "[[ql-musical-derivation-v2]]"
+vak_substrate_carriers:
+  c_kernel: "Body/S/S0/epi-lib/include/vak.h (lines 35-58: VAK_FAMILY_CPF/CT/CP/CF/CFP/CS constants + VAK_Instruction 5-byte struct; lines 78-104: execute_vak_instruction + vak_register_handler dispatch)"
+  c_semantic_handlers: "Body/S/S0/epi-lib/src/m0.c (lines 689-753: m0_vak_cpf/ct/cp/cf/cfp/cs semantic handlers — CF invokes Vimarsa operators, CFP traces R-factor weave, CS fires M5 Logos arc closure)"
+  rust_portal_core: "Body/S/S0/portal-core/src/vak_address.rs (lines 1-59: CfPosition enum with all 8 canonical CF positions including Outer4Parent (4.0/1-4.4/5); VakAddress typed struct carrying all six coordinates)"
+  rust_diatonic_context: "Body/S/S0/portal-core/src/kernel.rs::MathemeDiatonicContext (kernel-side carrier for the diatonic-as-CF-progression mapping ratified by DR-VAK-3)"
+  typescript_anima: "Body/S/S4/ta-onta/S4-4p-anima/extension.ts (lines 206-283: anima_orchestrate maps CF code to constitutional agent; vak_evaluate assigns 6-tuple; dispatch_* tools enforce CFP-specific routing)"
+canonical_status_note: "Per DR-VAK-3 (cycle-3 design-reconciliation register, 2026-06-04): VAK is the operational language of the system, not metadata over labels. The diatonic-scale-as-CF-progression is canonical operational truth — the kernel carrier MathemeDiatonicContext is the substrate-side realization. Music theory derivations execute through VAK across M1-M4 (M1 intervals + 9/8 epogdoon + 12-position SU(2) ring · M2 72-fold harmonic-correspondential field · M3 472-state modal-inversion landscape + Trika matrices · M4 personal-resonance via q_personal · q_cosmic). M0-5 Sakti runtime stages (Library/Bimba/Pratibimba/Language/Stories/Techne) are the foundational musical-linguistic capability within shakti-as-experiencer; VAK is the grammar through which that ontology speaks."
+canonical_cf_diatonic_mapping:
+  - "C tonic (00/00) Nous / Para"
+  - "D (0/1) Logos / Madhyama-nomos"
+  - "E (0/1/2) Eros / Madhyama-chreia"
+  - "F (0/1/2/3) Mythos / Pasyanti"
+  - "G perfect-fifth (4.0/1-4.4/5) Anima/Psyche / Madhyama-oikonomia"
+  - "A (4.5/0) Psyche / partial-Aletheia bridge"
+  - "B leading-tone (5/0) Sophia / Spanda-Shakti"
+  - "C' octave (00/00) enriched Mobius return"
+canonical_source_diatonic_spec: "[[M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/07-c-prime-vak-grammar-layer]] §Diatonic Interpretation (CF Grammar As Audible Scale) — kernel-canon ratified 2026-06-04 per DR-VAK-3"
 ---
 
 # The Quaternal Logic Musical Derivation — v3
 
 *The matheme reading itself aloud as music — derived through the QL 6-fold-of-layers that gives the archetypal numbers their full suite of meanings.*
+
+> **VAK substrate cross-reference (added 2026-06-04 per DR-VAK-3):** The musical derivation below is **operationally realized** in the kernel through the VAK Context Frame Coordinate System. The six VAK families (CPF/CT/CP/CF/CFP/CS) are wired in C ([`vak.h:35-58`](Body/S/S0/epi-lib/include/vak.h)), Rust ([`vak_address.rs:1-59`](Body/S/S0/portal-core/src/vak_address.rs)), and TypeScript ([Anima extension.ts:206-283](Body/S/S4/ta-onta/S4-4p-anima/extension.ts)). The diatonic-scale-as-CF-progression mapping is carried by the kernel-side `MathemeDiatonicContext` struct in [`kernel.rs`](Body/S/S0/portal-core/src/kernel.rs); the canonical mapping spec lives at [`07-c-prime-vak-grammar-layer.md` §Diatonic Interpretation](../M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/07-c-prime-vak-grammar-layer.md). The derivations below are the **theoretical articulation** of what the substrate already executes; VAK is the operational language, not labels imposed over it.
 
 ---
 

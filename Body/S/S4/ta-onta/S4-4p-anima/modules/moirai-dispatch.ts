@@ -30,6 +30,36 @@ import type { VakAddress } from "../../shared/vak_address.ts";
  */
 export type MoiraiAgent = "klotho" | "lachesis" | "atropos";
 
+export interface MoiraiCoordinateCluster {
+  owner: string;
+  scope: string;
+  prefixes: string[];
+  role: string;
+}
+
+export function defaultM5CoordinateClusters(): MoiraiCoordinateCluster[] {
+  return [
+    {
+      owner: "M5-2",
+      scope: "S/S'",
+      prefixes: ["S", "S'"],
+      role: "system spine",
+    },
+    {
+      owner: "M5-3",
+      scope: "M'",
+      prefixes: ["M'"],
+      role: "Pratibimba expression",
+    },
+    {
+      owner: "M5-4",
+      scope: "S4/S5 agentic protocols",
+      prefixes: ["S4", "S4'", "S5", "S5'"],
+      role: "agentic protocol mediation",
+    },
+  ];
+}
+
 export interface MoiraiDispatchPlan {
   cfp: "CFP3";                              // parallel-fold, three-way Night' pass
   cs_direction: "Night'";                   // analytic synthesis direction
@@ -55,9 +85,11 @@ export interface MoiraiDispatchPlan {
 export function planMoiraiNightPass(input: {
   session_id: string;
   disclosure_path: string;
+  coordinate_clusters?: MoiraiCoordinateCluster[];
 }): MoiraiDispatchPlan {
+  const clusterBrief = formatCoordinateClusterBrief(input.coordinate_clusters ?? []);
   const t = (kind: string) =>
-    `Night' pass: read ${input.disclosure_path} and report ${kind} for session ${input.session_id}`;
+    `Night' pass: read ${input.disclosure_path} and report ${kind} for session ${input.session_id}${clusterBrief}`;
   return {
     cfp: "CFP3",
     cs_direction: "Night'",
@@ -67,6 +99,17 @@ export function planMoiraiNightPass(input: {
       { agent: "atropos", night_position: "P5'", task: t("crystallisations (P5' Insight)") },
     ],
   };
+}
+
+function formatCoordinateClusterBrief(clusters: MoiraiCoordinateCluster[]): string {
+  if (clusters.length === 0) return "";
+  const rendered = clusters
+    .map(
+      (cluster) =>
+        `${cluster.owner} ${cluster.scope} [${cluster.prefixes.join(", ")}] as ${cluster.role}`,
+    )
+    .join("; ");
+  return `; coordinate property and node clusters: ${rendered}`;
 }
 
 /**

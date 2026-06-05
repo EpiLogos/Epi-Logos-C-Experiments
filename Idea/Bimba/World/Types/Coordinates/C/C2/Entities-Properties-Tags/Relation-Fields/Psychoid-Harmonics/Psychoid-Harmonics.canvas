@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {"id": "main", "type": "file", "file": "Psychoid-Harmonics.md", "x": 0, "y": 0, "width": 360, "height": 220},
+    {"id": "src", "type": "text", "text": "# Archetypal source\n[[Psychoids/#/Relations]]", "x": -440, "y": 0, "width": 280, "height": 100},
+    {"id": "s2", "type": "text", "text": "# [[S2]] review\nCandidate → graph label", "x": 460, "y": 0, "width": 280, "height": 100},
+    {"id": "abc", "type": "text", "text": "# Within-pass\n[[Family-A-Adjacent-Identity-schema]]\n[[Family-B-Offset-Transition-schema]]\n[[Family-C-Converse-Mirror-schema]]", "x": -300, "y": 300, "width": 320, "height": 180},
+    {"id": "d", "type": "text", "text": "# Cross-pass\n[[Family-D1-Same-Position-Cross-schema]]\n[[Family-D2-Transform-schema]]\n[[Family-D2-Require-schema]]\n[[Family-D2-Complete-schema]]\n[[Family-D3-Helix-Invariance-schema]]", "x": 50, "y": 300, "width": 360, "height": 220}
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "main", "fromSide": "left", "toNode": "src", "toSide": "right", "label": "schemas-of"},
+    {"id": "e2", "fromNode": "main", "fromSide": "right", "toNode": "s2", "toSide": "left", "label": "promotes-via"},
+    {"id": "e3", "fromNode": "main", "fromSide": "bottom", "toNode": "abc", "toSide": "top", "label": "ABC"},
+    {"id": "e4", "fromNode": "main", "fromSide": "bottom", "toNode": "d", "toSide": "top", "label": "D1/D2/D3"}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"ndc","type":"file","file":"NaraDeckContext.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"macro","type":"text","text":"# Macro / inhabited deck\nM4-0 identity layer.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"session","type":"text","text":"# Session deck\nBound to [[OracleFrame]].","x":-130,"y":300,"width":280,"height":160},
+    {"id":"mediator","type":"text","text":"# Mediator\n[[M4]]-3 integration.","x":180,"y":300,"width":260,"height":140},
+    {"id":"review","type":"text","text":"# Review gate\n[[M5']] · [[Epii]]","x":440,"y":300,"width":260,"height":140},
+    {"id":"systems","type":"text","text":"# Substrates\n[[Tarot]] · [[I-Ching]]","x":-150,"y":520,"width":280,"height":140}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"ndc","fromSide":"bottom","toNode":"macro","toSide":"top","label":"holds"},
+    {"id":"e2","fromNode":"ndc","fromSide":"bottom","toNode":"session","toSide":"top","label":"holds"},
+    {"id":"e3","fromNode":"ndc","fromSide":"bottom","toNode":"mediator","toSide":"top","label":"mediated by"},
+    {"id":"e4","fromNode":"ndc","fromSide":"bottom","toNode":"review","toSide":"top","label":"gated by"},
+    {"id":"e5","fromNode":"ndc","fromSide":"bottom","toNode":"systems","toSide":"top","label":"substrates"}
+  ]
+}

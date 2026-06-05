@@ -38,6 +38,7 @@ import {
   type SemanticSearchOutput,
   type GetContextOutput,
   type ListCoordinatesOutput,
+  type BimbaNode,
   type TelegramToolMessage,
   type TelegramGetRecentMessagesOutput,
   type GraphQueryOutput,
@@ -51,9 +52,12 @@ import {
 } from './schemas.js';
 import type { GraphTraverseOutput, ContextResult, SpecResult, CoordinateFilter, DisclosureResult, GraphTraversePositionsOutput, GraphAdminOutput } from './schemas/graph.js';
 import { GraphTraversePositionsInputSchema, GraphAdminInputSchema } from './schemas/graph.js';
+import { isCanonicalCoordinateSyntax } from './coordinates/syntax.js';
+import { parseCoordinate } from './coordinates/parser.js';
 
-import { queryByCoordinate, traverse, traversePositions, context, spec, search, disclosure, embed, embedBatch, validate, chunk, rerank, admin } from './api/graph.js';
+import { queryByCoordinate, traverse, traversePositions, context, spec, search, disclosure, embed, embedBatch, validate, chunk, rerank, admin, mapNeo4jNode } from './api/graph.js';
 import { sync } from './api/sync.js';
+import { getNeo4jConnectionManager } from './db/neo4j.js';
 import { loadTelegramConfig } from './telegram/config.js';
 import { TelegramService } from './telegram/service.js';
 import type { TelegramCachedMessage } from './telegram/types.js';
@@ -77,53 +81,200 @@ async function resolveCoordinate(
   includeChildren: boolean,
   _depth: number
 ): Promise<ResolveCoordinateOutput> {
-  // TODO: MCP-002 - Implement Neo4j connection and query
-  return {
-    node: {
-      coordinate,
-      title: `Node at ${coordinate}`,
-      type: coordinate.charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
-    },
-    children: includeChildren ? [] : undefined,
-    path: [coordinate],
+  const result = await queryByCoordinate(coordinate, true, 1);
+  if (result.nodes.length === 0) {
+    throw new Error(`Coordinate not found: ${coordinate}`);
+  }
+
+  const nodeRef = result.nodes[0]!;
+  
+  const bimbaNode: BimbaNode = {
+    coordinate: nodeRef.properties['coordinate'] as string ?? coordinate,
+    title: nodeRef.properties['title'] as string ?? `Node at ${coordinate}`,
+    description: nodeRef.properties['description'] as string ?? nodeRef.properties['c_1_description'] as string ?? undefined,
+    type: coordinate.charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
+    properties: nodeRef.properties,
   };
+
+  let children: BimbaNode[] | undefined;
+  if (includeChildren) {
+    const childrenResult = await queryByCoordinate(`${coordinate}-`, true, 100);
+    children = childrenResult.nodes.map(n => ({
+      coordinate: n.properties['coordinate'] as string,
+      title: n.properties['title'] as string ?? `Node at ${n.properties['coordinate']}`,
+      description: n.properties['description'] as string ?? n.properties['c_1_description'] as string ?? undefined,
+      type: (n.properties['coordinate'] as string).charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
+      properties: n.properties,
+    })) as BimbaNode[];
+  }
+
+  const segments = coordinate.split('-');
+  const path: string[] = [];
+  let current = '';
+  for (const segment of segments) {
+    current = current ? `${current}-${segment}` : segment;
+    path.push(current);
+  }
+
+  return {
+    node: bimbaNode,
+    children,
+    path,
+  };
+}
+
+function parseCoordinateFilter(coordinateStr: string): CoordinateFilter {
+  const parsed = parseCoordinate(coordinateStr);
+  if (!parsed) return {};
+  
+  const filter: CoordinateFilter = {};
+  const segmentVal = parsed.segments[0];
+  if (segmentVal !== undefined) {
+    filter[parsed.type] = segmentVal;
+  }
+  if (parsed.isPrime) {
+    filter[`${parsed.type}_is_prime` as keyof CoordinateFilter] = true as any;
+  } else {
+    filter[`${parsed.type}_is_prime` as keyof CoordinateFilter] = false as any;
+  }
+  return filter;
 }
 
 async function semanticSearch(
   query: string,
   limit: number,
-  _coordinateFilter?: string
+  coordinateFilter?: string
 ): Promise<SemanticSearchOutput> {
-  // TODO: MCP-003 - Implement semantic search with embeddings
+  const searchResult = await search(
+    query,
+    limit,
+    coordinateFilter ? parseCoordinateFilter(coordinateFilter) : undefined,
+    'hybrid_rrf',
+    true,
+    true
+  );
+
+  const results = searchResult.results.map(r => {
+    const nodeRef = r.node;
+    const bimbaNode: BimbaNode = {
+      coordinate: nodeRef.properties['coordinate'] as string ?? `Node at ${nodeRef.uuid}`,
+      title: nodeRef.properties['title'] as string ?? `Node at ${nodeRef.uuid}`,
+      description: nodeRef.properties['description'] as string ?? nodeRef.properties['c_1_description'] as string ?? undefined,
+      type: (nodeRef.properties['coordinate'] as string ?? 'M').charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
+      properties: nodeRef.properties,
+    };
+    return {
+      node: bimbaNode,
+      score: r.score,
+      snippet: r.chunk_content,
+    };
+  });
+
   return {
-    results: [],
-    total_count: 0,
-    query_coordinate: undefined,
+    results,
+    total_count: results.length,
+    query_coordinate: coordinateFilter,
   };
-  // Suppress unused variable warning for query/limit in stub
-  void query;
-  void limit;
 }
 
 async function getContext(
   coordinate: string,
   contextType: 'structural' | 'semantic' | 'full'
 ): Promise<GetContextOutput> {
-  // TODO: MCP-002/MCP-003 - Implement context retrieval
   const response: GetContextOutput = { coordinate };
 
+  const connectionManager = getNeo4jConnectionManager();
+  
+  const nodeResult = await queryByCoordinate(coordinate, true, 1);
+  if (nodeResult.nodes.length === 0) {
+    throw new Error(`Coordinate not found: ${coordinate}`);
+  }
+  const mainNodeRef = nodeResult.nodes[0]!;
+
   if (contextType === 'structural' || contextType === 'full') {
+    let parentNode: BimbaNode | undefined;
+    const lastDash = coordinate.lastIndexOf('-');
+    if (lastDash > 0) {
+      const parentCoord = coordinate.substring(0, lastDash);
+      const parentResult = await queryByCoordinate(parentCoord, true, 1);
+      if (parentResult.nodes.length > 0) {
+        const pn = parentResult.nodes[0]!;
+        parentNode = {
+          coordinate: pn.properties['coordinate'] as string ?? parentCoord,
+          title: pn.properties['title'] as string ?? `Node at ${parentCoord}`,
+          description: pn.properties['description'] as string ?? pn.properties['c_1_description'] as string ?? undefined,
+          type: parentCoord.charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
+          properties: pn.properties,
+        };
+      }
+    }
+
+    const childrenResult = await queryByCoordinate(`${coordinate}-`, true, 100);
+    const children = childrenResult.nodes.map(n => ({
+      coordinate: n.properties['coordinate'] as string,
+      title: n.properties['title'] as string ?? `Node at ${n.properties['coordinate']}`,
+      description: n.properties['description'] as string ?? n.properties['c_1_description'] as string ?? undefined,
+      type: (n.properties['coordinate'] as string).charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
+      properties: n.properties,
+    })) as BimbaNode[];
+
+    let siblings: BimbaNode[] = [];
+    if (lastDash > 0) {
+      const parentCoord = coordinate.substring(0, lastDash);
+      const siblingsResult = await queryByCoordinate(`${parentCoord}-`, true, 100);
+      siblings = siblingsResult.nodes
+        .filter(n => n.properties['coordinate'] !== coordinate)
+        .map(n => ({
+          coordinate: n.properties['coordinate'] as string,
+          title: n.properties['title'] as string ?? `Node at ${n.properties['coordinate']}`,
+          description: n.properties['description'] as string ?? n.properties['c_1_description'] as string ?? undefined,
+          type: (n.properties['coordinate'] as string).charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
+          properties: n.properties,
+        })) as BimbaNode[];
+    }
+
     response.structural_context = {
-      parent: undefined,
-      siblings: [],
-      children: [],
+      parent: parentNode,
+      siblings,
+      children,
     };
   }
 
   if (contextType === 'semantic' || contextType === 'full') {
+    const relatedResult = await connectionManager.executeRead<Record<string, unknown>>(
+      `
+      MATCH (node:Bimba)-[r]-(related:Bimba)
+      WHERE node.coordinate = $coordinate
+      RETURN {
+        node: {uuid: coalesce(related.c_2_uuid, related.uuid), labels: labels(related), properties: properties(related)},
+        rel_type: type(r)
+      } AS result
+      LIMIT 50
+      `,
+      { coordinate }
+    );
+
+    const related = relatedResult.map(record => {
+      const res = record['result'] as Record<string, unknown>;
+      const nodeData = res['node'];
+      const mapped = mapNeo4jNode(nodeData);
+      if (!mapped) return null;
+      return {
+        coordinate: mapped.properties['coordinate'] as string ?? `Node at ${mapped.uuid}`,
+        title: mapped.properties['title'] as string ?? `Node at ${mapped.uuid}`,
+        description: mapped.properties['description'] as string ?? mapped.properties['c_1_description'] as string ?? undefined,
+        type: (mapped.properties['coordinate'] as string ?? 'M').charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
+        properties: mapped.properties,
+      };
+    }).filter((n): n is NonNullable<typeof n> => n !== null) as BimbaNode[];
+
     response.semantic_context = {
-      related: [],
-      tags: [],
+      related,
+      tags: typeof mainNodeRef.properties['tags'] === 'string'
+        ? [mainNodeRef.properties['tags']]
+        : Array.isArray(mainNodeRef.properties['tags'])
+          ? mainNodeRef.properties['tags'].map(t => String(t))
+          : [],
     };
   }
 
@@ -132,18 +283,60 @@ async function getContext(
 
 async function listCoordinates(
   type?: 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
-  _parent?: string,
+  parent?: string,
   limit?: number
 ): Promise<ListCoordinatesOutput> {
-  // TODO: MCP-002 - Implement coordinate listing from Neo4j
+  const connectionManager = getNeo4jConnectionManager();
+  
+  let query = 'MATCH (node:Bimba) ';
+  const conditions: string[] = [];
+  const params: Record<string, unknown> = { limit: limit ?? 20 };
+
+  if (type) {
+    conditions.push('node.coordinate STARTS WITH $type');
+    params['type'] = type;
+  }
+
+  if (parent) {
+    conditions.push('node.coordinate STARTS WITH $parent AND node.coordinate <> $parent');
+    params['parent'] = parent;
+  }
+
+  if (conditions.length > 0) {
+    query += `WHERE ${conditions.join(' AND ')} `;
+  }
+
+  query += 'RETURN {uuid: coalesce(node.c_2_uuid, node.uuid), labels: labels(node), properties: properties(node)} AS result LIMIT $limit';
+
+  const records = await connectionManager.executeRead<Record<string, unknown>>(query, params);
+
+  const coordinates = records.map(record => {
+    const res = record['result'];
+    const mapped = mapNeo4jNode(res);
+    if (!mapped) return null;
+    return {
+      coordinate: mapped.properties['coordinate'] as string ?? `Node at ${mapped.uuid}`,
+      title: mapped.properties['title'] as string ?? `Node at ${mapped.uuid}`,
+      description: mapped.properties['description'] as string ?? mapped.properties['c_1_description'] as string ?? undefined,
+      type: (mapped.properties['coordinate'] as string ?? 'M').charAt(0) as 'P' | 'C' | 'M' | 'S' | 'T' | 'L',
+      properties: mapped.properties,
+    };
+  }).filter((n): n is NonNullable<typeof n> => n !== null) as BimbaNode[];
+
+  let countQuery = 'MATCH (node:Bimba) ';
+  if (conditions.length > 0) {
+    countQuery += `WHERE ${conditions.join(' AND ')} `;
+  }
+  countQuery += 'RETURN count(node) as count';
+
+  const countRecords = await connectionManager.executeRead<{ count: number }>(countQuery, params);
+  const total_count = typeof countRecords[0]?.['count'] === 'number' ? countRecords[0]['count'] : coordinates.length;
+
   return {
-    coordinates: [],
-    total_count: 0,
-    has_more: false,
+    coordinates,
+    total_count,
+    has_more: total_count > coordinates.length,
   };
-  // Suppress unused variable warning in stub
-  void type;
-  void limit;
 }
 
 async function graphQuery(
@@ -210,17 +403,15 @@ async function graphDisclosure(
 // Coordinate Validation
 // =============================================================================
 
-const COORDINATE_REGEX = /^[CPMSLT]\d+(?:[-.]\d+)*(?:\.\([^)]+\))?'?$/;
-
 function isValidCoordinate(coordinate: string): boolean {
-  return COORDINATE_REGEX.test(coordinate);
+  return isCanonicalCoordinateSyntax(coordinate);
 }
 
 function validateCoordinate(coordinate: string): void {
   if (!isValidCoordinate(coordinate)) {
     throw new McpError(
       ErrorCode.InvalidParams,
-      `Invalid Bimba coordinate format: "${coordinate}". Expected format: [CPMSLT]N[-N]* (e.g., M2, S2-3, P2.4)`
+      `Invalid Bimba coordinate format: "${coordinate}". Expected canonical syntax like M2, S2-3, S4.0, or M1-3-4.(00/00)`
     );
   }
 }

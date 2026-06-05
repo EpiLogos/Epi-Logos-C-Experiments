@@ -7,6 +7,9 @@ coordinate: "M3'"
 source_context:
   - M3'-SPEC.md
   - m3-prime-symbolic-transcription-research.md
+  - full_theoretical_alignments_ql_physics.md
+  - M-SYMBOLIC-LANGUAGE-ARCHITECTURE.md
+  - ql_physics_anthropic_chemistry_alignment_v2.md
   - alpha_quaternionic_integration_across_M_stack.md
   - alpha_rasa_bridge_ql.md
   - 2026-06-02-m-prime-cycle-2-canonical (plans 05, 08, 06)
@@ -21,7 +24,7 @@ This document articulates Mahāmāyā (M3) as **the symbolic-genetics parsing sy
 
 The corrected, spec-grounded view:
 
-> **M3 (engine) is the binary symbolic-transcription engine** — 64 DNA codons, 64 I-Ching hexagrams, 384 line-change operators, 472 rotational states, 56+8 Tarot compression, the 72→64 epogdoon reception. **M3' (renderer) is that engine made playable** — the clock-pulse surface, the codon-tarot wheel, and the codon-rotation projection of the 84-state `(lens, mode)` landscape into the 472-state `(codon, rotation)` modal-inversion surface. In app UX, M3' is **the integrated parser of the symbolic genetics of any given thing**, visualised as the 360° clock-field.
+> **M3 (engine) is the binary symbolic-transcription engine and measurement-world grammar** — 64 DNA codons, 64 I-Ching hexagrams, 384 line-change operators, 472 rotational states, 56+8 Tarot compression, the 72→64 epogdoon reception, and the M# passage from relation to event to measured invariant. **M3' (renderer) is that engine made playable** — the clock-pulse surface, the codon-tarot wheel, the codon-rotation projection of the 84-state `(lens, mode)` landscape into the 472-state `(codon, rotation)` modal-inversion surface, and the coupling-flow / measurement-face inspector. In app UX, M3' is **the integrated parser of the symbolic genetics of any given thing**, visualised as the 360° clock-field.
 
 This clarifies six points:
 
@@ -31,6 +34,7 @@ This clarifies six points:
 4. **"Cymatics" at M3 is the clock-field-as-live-data-structure** — nodes pinned by clock geometry, cross-clock relations via hops / traversal / angular relations. The matter-crystallisation of M2's continuous standing-wave.
 5. **Specifics matter** — the 2-bit nucleotide logic, the dinucleotide matrix, the four-charge quaternion, the 56+8 exact cover, the suit-integrals summing to 360.
 6. **It serves Nara** as oracle (tarot/I-Ching casts), as identity (the Gene-Keys/64-code bridge), and as the Janus transformation-doorway.
+7. **It keeps the physics bridge honest.** It can show `137 = 64+72+1 = 64+2(36)+1 = 128+8+1` as symbolic skeleton and show `alpha_EM(0)^-1 ~= 137.036` as low-energy measurement-face, but it never says the UI has derived physics from QL.
 
 ---
 
@@ -66,6 +70,117 @@ This is the system-UX heart of M3': **parse any identity or entity into its symb
 - **The 72→64 reception (M3-0).** M2's 72-fold vibration compresses through the DET `floor(index72 × 8/9) = 64` into the codon address — the frequency→matter transduction. M3' renders the provenance chain (72-source → DET → 64-address → nucleotide triplet → codon-quaternion); it does not reverse-engineer private meaning.
 
 So "the symbolic genetics of any given thing" is well-defined: an entity → an I-Ching-value triplet → a codon → a Cl(4,2) elemental-quaternion → a tarot card + hexagram + line-change signature. The parse is the same operation whether the "thing" is a user's identity (the Gene-Keys/64-code bridge at M4-0) or a bimba node or a cast.
+
+Mahāmāyā is also the system's **measurement-world grammar**. The UX can expose this as a relation ladder:
+
+```text
+M0 = I            chosen system / local frame
+M1 = You          partner field / conjugate excitation
+M2 = You and I    interaction vertex / relation
+M3 = They         event / product / objective symbolic world
+M4 = We           effective world / spectrum-context
+M5 = We-I         recognized invariant / measured constant
+```
+
+This is the bridge to the physics-alignment material: a measured constant is not the same thing as a symbolic skeleton, but both can be shown in one disciplined reading if the register is visible.
+
+## 3.1 The Reading / Transcription Clock Chain
+
+The app-facing reading must surface the whole transcription chain, not just the final Tarot card. Mahāmāyā's parser runs in this order:
+
+```text
+kernel tick / MathemeHarmonicProfile
+  -> degree720 + degree360 + q_cosmic + M2 72-source
+  -> M3-5 clock aperture: 16 static lens segments + 1 growth/meta aperture
+  -> clock walk: degree360, amino24, zodiac12, spanda12, decan36,
+                 hexagram64, enneadic9, seasonal4, or lineChange384
+  -> for lineChange384: hexagram = slot / 6, active line = slot % 6,
+                        target hexagram = hexagram ^ (1 << line)
+  -> base codon / hexagram address from A=00, T=01, C=10, G=11
+  -> codon quaternion from the 6/9/7/8 nucleotide values
+  -> generated codon state: 3 matrix paths × 2 polarities
+  -> 7-or-8 rotational state through pair-composition algebra
+  -> DNA/RNA transcription state + amino/operator join
+  -> #3-4.0 Tarot-expression reflection
+  -> TranscriptionalClockPacket
+```
+
+The 16+1 clock-aperture stack must be named `M3_LENS_STACK`; it is not the `LENS_COUNT=12` chromatic/MEF surface used by the codon-rotation projection. That 12-count is the M2-facing modal surface; the 16+1 stack is the Mahāmāyā clock-aperture surface. The UX should let both be inspected, but never merge them or describe the 16+1 stack as a newly discovered "17th lens."
+
+The six generated codon states come from `64 × 3 matrix paths × 2 polarities = 384`, which is the same cardinality as the complete line-change space. The visible 472 modal-inversion surface is then the effective rotation surface: `40 × 7 + 24 × 8`. This gives the user an exact reason why the same codon can present through several generated/rotational modes while still remaining one canonical codon address.
+
+For "protein/genetic information" readings, the card is only the readable face of a packet. The genuine Mahāmāyā sequence-language is an ordered chain of `TranscriptionalClockPacket`s around the clock. In a strict transcription mode, Start/Stop governance can delimit an ORF-like symbolic peptide (`ATG/AUG`, `TAA/TAG/TGA` to `UAA/UAG/UGA`). In Nara/oracle/identity modes, the system usually preserves the whole walk as a codon → Tarot → amino/operator motif sequence with provenance. The codon is the system's symbolic transcription unit; the protein is the ordered packet-chain that the bounded reading frame emits.
+
+Every such reading must be VAK-addressed. `CPF` declares dialogical/autonomous polarity; `CT` declares content/artifact register; `CP` declares the active QL position set; `CF` declares constitutional handling mode; `CFP` declares thread/nesting topology; `CS` declares Day or Night' traversal direction. A six-card spread can bind `CP4.0..CP4.5`; a three-card spread is an explicit compressed CP-set; a one-card reading is a single CP point-address. The number of cards is the surface cardinality; the CP-set and CS direction are the grammar.
+
+The runtime envelope is the `OracleFrame`: subject, deck manifest, deck order hash, entropy mode/provenance, spread grammar, VAK address, DAY/NOW handle, Redis/Psyche live context handle, kbase/source-pool handle, and graph provenance. M3 consumes that frame, emits the transcription chain, and leaves lived integration to Nara.
+
+Graph-backed joins remain source-of-truth:
+
+```text
+YIELDS_CODON             #3-1 hexagram -> generated codon state
+REFLECTS_DNA_FORM        #3-4.0 reflection -> #3-2 codon reflection
+GOVERNS_TAROT_EXPRESSION #3-4.0 reflection -> #3-4 Tarot expression
+TRANSLATES_TO            #3-2 / #3-4.0 -> #3-3-4 amino/operator
+HAS_RNA_POTENTIAL        RNA form -> DNA codon reflection
+TRANSCRIBES_TO           DNA/RNA transcription variant
+```
+
+If the graph mirror is incomplete, M3' renders the missing edge as a readiness/provenance state and, where the deterministic law is known, regenerates the candidate from the matrix law for review. It does not invent local Tarot/codon/amino mappings.
+
+## 3.2 Strange-Attractor Reading Discipline
+
+The strange-attractor frame gives Mahāmāyā a deeper relational language, but it must be used with precision. A `TranscriptionalClockPacket` is not "the attractor." It is one clocked section through the field — a symbolic phase portrait. A packet chain is an attractor trace only in the operational sense: a bounded recurrence pattern across clock slots, lens apertures, codon rotations, Tarot expressions, and amino/operators.
+
+The UX rule:
+
+```text
+single packet       = motif
+packet chain        = trajectory / codon-weave
+recurring chain     = symbolic attractor trace
+reviewed recurrence = Nara trajectory evidence
+measured chaos      = only when quantitative nonlinear metrics exist
+```
+
+This lets M3' show patterns without overclaiming. It may label basin, perturbation, recurrence, bifurcation candidate, and phase-portrait slice; it may not claim "mathematical strange attractor" unless the system has actual nonlinear-dynamics evidence. Default rigor is `symbolic_phase_portrait`.
+
+The 0-1-2-3 relation now reads cleanly:
+
+```text
+Anuttara   (00/00)      phase-space ground / canonical graph
+Paramasiva (0/1)        parent slash, tick, inversion, coupling-function
+Parashakti (0/1/2)      running-flow analogue: 72-fold frequency and epogdoon gate
+Mahamaya   (0/1/2/3)    phase-portrait surface: binary transcription and clock packet
+Nara       4.x          lived phase-space where recurrence becomes personal evidence
+Epii       (5/0)        reviewed return / teaching / canon integration
+```
+
+In this reading, **M3-0** is the reception boundary where M2 flow becomes codon substrate, and **M3-5** is the renderer where packet chains become visible as trajectory on the clock. The real bridge to Nara is not "a card means X"; it is "this bounded packet-chain recurs through body, oracle, dream, journal, and identity-evidence with this provenance and this rigor flag."
+
+## 3.3 Coupling-Flow / Measurement-Face Inspector
+
+The new theoretical alignment work gives M3' one additional summonable surface: the **coupling-flow / measurement-face inspector**. It is not default tarot UX. It is a technical/pedagogical overlay for moments when we want to see how the symbolic-genetic reading sits beside the physics bridge without pretending they are the same register.
+
+The inspector has four lanes:
+
+```text
+Symbolic skeleton    137 = 64+72+1 = 64+2(36)+1 = 128+8+1
+                     64/36 = (4/3)^2
+                     0,4,2,2,9
+
+Physics descent      G_SM -> D_mu -> (g3,g2,gY) -> RG flow
+                     -> electroweak breaking -> e(mu) -> alpha_EM(mu)
+                     -> QED/QCD/hydrogen spectrum
+
+Measurement face     alpha_EM(0)^-1 ~= 137.036
+                     alpha_EM(M_Z)^-1 ~= 128
+                     alpha_s(M_Z) as QCD-running reference
+
+Recognition/Nara     where this packet-chain appears as oracle, identity,
+                     journal/body trajectory, or reviewed evidence
+```
+
+The visible caveat is part of the design: **`137` is the exact integer skeleton; `137.035999...` is the dressed, low-energy, experimental measurement-face.** The inspector may show the `7X+1` row generating `36/64`, the `8X+0` row generating `64/72`, the QCD `8+1`, and the electroweak `0,4,2,2` alignment. It may not claim a numerical derivation of the fine-structure constant. That restraint is not timidity; it is what keeps the bridge faithful enough to build with.
 
 ---
 
@@ -141,6 +256,12 @@ M4-3 Transform   ←  the 384 line-change graph + Janus doorway: what line is mo
                     in the same Cl(4,2) — resonance is computable
 ```
 
+The actual handoff object is the `TranscriptionalClockPacket`: clock slot, M3 lens aperture, codon/hexagram, matrix path, polarity, rotational state, RNA/transcription state, Tarot reflection, amino/operator, graph provenance, VAK address, OracleFrame handle, and readiness warnings. Nara M4-3 integrates a chain of these packets into a `PatternPacket`; it does not let a live packet rewrite M4-0 identity-system sources.
+
+Tarot and I-Ching are reciprocal projections of the same Mahāmāyā address space. A Tarot draw can carry its I-Ching/codon/line-change dynamic side; an I-Ching cast can carry its Tarot/decan/codon expression side. The M3 UX should therefore show the cross-projection when provenance is available instead of treating the two oracle protocols as separate engines.
+
+When the coupling-flow inspector is active, Nara remains the recognition/apparatus lane. M3 shows the packet-chain and register labels; M4 decides whether recurrence matters for the person's lived trajectory; M5/Epii reviews whether the pattern is canonically teachable or operationally useful.
+
 In the integrated 4/5/0 / 1-2-3 surfaces, the user's identity-genetics is one node pinned on the clock-field, and its angular relations to the active transit/cast are the reading. The oracle is not a separate module — it is the clock-field queried for a moment, returned as the symbolic genetics of *now* for *this person*. (Protected-local: M3' resolves scalar references from Nara artifacts without loading protected artifact bodies.)
 
 ---
@@ -172,6 +293,7 @@ Held open-questions tracked from M3'-SPEC §10.1: the TCT/Nine-of-Wands dataset 
 
 ```text
 M3 parses the symbolic genetics of any given thing into codon / hexagram / tarot / Cl(4,2).
+M3 marks the measurement-world register: symbolic skeleton, physics descent, measurement face, recognition.
 The visualisation is the 360° clock and its lenses.
 The "cymatics" is the clock-field as live data-structure — nodes pinned by clock geometry,
   cross-clock relations as angular / hop / traversal edges, perturbing as the tick turns.

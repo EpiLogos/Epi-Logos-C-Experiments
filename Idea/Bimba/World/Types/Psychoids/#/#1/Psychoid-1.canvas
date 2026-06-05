@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"main","type":"file","file":"Psychoid-1.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"ppair","type":"text","text":"# P/P' refraction\nDay: [[P1]] [[Mind]] — identical-FOR-itself, vital-connection\nNight: [[P1']] [[Need]] — lack-as-demand, factical-constraint","x":-460,"y":300,"width":320,"height":180},
+    {"id":"lpair","type":"text","text":"# L/L' refraction\n[[L1]] Causal (Aristotle / Icchā Śakti / Will) ↔ [[L4']] Scientific (Kuhn + loop)\nElement: Earth / Water","x":-100,"y":340,"width":320,"height":180},
+    {"id":"mbranch","type":"text","text":"# M branch\n[[M1]] Paramasiva — the consciousness-domain subsystem refracting #1 as first explicit definition.","x":260,"y":300,"width":280,"height":180},
+    {"id":"relations","type":"text","text":"# Relation participation\nCarries A-family adjacent-identity rule.\n[[Family A — Adjacent-Identity]] (0,1)\n[[Family B — Offset-Transition]] (1,2)\n[[Family C — Converse-Mirror]] (1,4) tritone\n[[Family D1 — Same-Position Cross]] (1,1')\nSquares: [[A-sq1]], [[B-sq1]], [[C-sq2]] → [[Square B]]","x":-460,"y":-300,"width":360,"height":240},
+    {"id":"daynight","type":"text","text":"# Day/Night faces\nSquare-B pole: 1+4=5.\nKlein-twist Möbius pair: [[P1]] ↔ [[P4']] — definition ↔ care.\nTotem, spell, name — vital-connection without relation.","x":80,"y":-300,"width":360,"height":220}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"main","fromSide":"bottom","toNode":"ppair","toSide":"top","label":"refracts as"},
+    {"id":"e2","fromNode":"main","fromSide":"bottom","toNode":"lpair","toSide":"top","label":"refracts as"},
+    {"id":"e3","fromNode":"main","fromSide":"bottom","toNode":"mbranch","toSide":"top","label":"refracts as"},
+    {"id":"e4","fromNode":"main","fromSide":"top","toNode":"relations","toSide":"bottom","label":"participates in"},
+    {"id":"e5","fromNode":"main","fromSide":"top","toNode":"daynight","toSide":"bottom","label":"holds twin faces"}
+  ]
+}

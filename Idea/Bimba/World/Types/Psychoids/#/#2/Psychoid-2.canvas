@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"main","type":"file","file":"Psychoid-2.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"ppair","type":"text","text":"# P/P' refraction\nDay: [[P2]] [[Word]] — active process, energic operation\nNight: [[P2']] [[Sacrifice]] — cost-of-action, operational shadow","x":-460,"y":300,"width":320,"height":180},
+    {"id":"lpair","type":"text","text":"# L/L' refraction\n[[L2]] Logical (Nāgārjuna catuṣkoṭi) ↔ [[L3']] Chronological (Hegel / Aion)\nElement: Air / Aether","x":-100,"y":340,"width":320,"height":180},
+    {"id":"mbranch","type":"text","text":"# M branch\n[[M2]] Parashakti — the consciousness-domain subsystem refracting #2 as polar-operation / mythic energy.","x":260,"y":300,"width":280,"height":180},
+    {"id":"relations","type":"text","text":"# Relation participation\nCarries B-family offset-transition rule.\n[[Family A — Adjacent-Identity]] (2,3)\n[[Family B — Offset-Transition]] (1,2)\n[[Family C — Converse-Mirror]] (2,3) — midpoint self-mirror\n[[Family D1 — Same-Position Cross]] (2,2')\nSquares: [[B-sq1]], [[A-sq2]] == [[C-sq3]] basis-invariant → [[Square C]]","x":-460,"y":-320,"width":380,"height":260},
+    {"id":"daynight","type":"text","text":"# Day/Night faces\nSquare-C pole: 2+3=5.\nKlein-twist Möbius pair: [[P2]] ↔ [[P3']] — operation ↔ challenge-pattern.\nPolarity (not duality): two charges in operational tension.","x":80,"y":-300,"width":360,"height":220}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"main","fromSide":"bottom","toNode":"ppair","toSide":"top","label":"refracts as"},
+    {"id":"e2","fromNode":"main","fromSide":"bottom","toNode":"lpair","toSide":"top","label":"refracts as"},
+    {"id":"e3","fromNode":"main","fromSide":"bottom","toNode":"mbranch","toSide":"top","label":"refracts as"},
+    {"id":"e4","fromNode":"main","fromSide":"top","toNode":"relations","toSide":"bottom","label":"participates in"},
+    {"id":"e5","fromNode":"main","fromSide":"top","toNode":"daynight","toSide":"bottom","label":"holds twin faces"}
+  ]
+}

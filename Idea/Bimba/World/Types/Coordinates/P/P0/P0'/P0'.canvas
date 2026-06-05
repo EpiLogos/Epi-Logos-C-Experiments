@@ -1,0 +1,18 @@
+{
+  "nodes": [
+    {"id": "title", "type": "text", "text": "# P0' — Play\n\nNight-face of #0. Autotelic-freedom (scholè); invisible-ground-of-the-social.", "x": -200, "y": -300, "width": 460, "height": 140},
+    {"id": "self", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P0/P0'/P0'.md", "x": -100, "y": -100, "width": 280, "height": 80},
+    {"id": "psychoid", "type": "text", "text": "[[Psychoid-0|#0]] — raw charge", "x": -440, "y": 60, "width": 240, "height": 70},
+    {"id": "p5", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P5/P5.md", "x": 200, "y": 60, "width": 240, "height": 70},
+    {"id": "p0", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P0/P0.md", "x": -440, "y": 180, "width": 240, "height": 70},
+    {"id": "l0p", "type": "text", "text": "[[L0']] · [[L5]] — lens pair", "x": 200, "y": 180, "width": 240, "height": 70},
+    {"id": "play", "type": "text", "text": "[[Play]] — Thought family (primordial)", "x": -100, "y": 320, "width": 320, "height": 70}
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "self", "toNode": "psychoid", "label": "refracts"},
+    {"id": "e2", "fromNode": "self", "toNode": "p5", "label": "Möbius (5-n)'"},
+    {"id": "e3", "fromNode": "self", "toNode": "p0", "label": "D1 same-position"},
+    {"id": "e4", "fromNode": "self", "toNode": "l0p", "label": "lens"},
+    {"id": "e5", "fromNode": "self", "toNode": "play", "label": "Thought family"}
+  ]
+}

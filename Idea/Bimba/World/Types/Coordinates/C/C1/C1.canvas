@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {"id":"c1","type":"file","file":"C1.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"forms","type":"text","text":"# Forms\nReusable form classes and flat World form sources.","x":-520,"y":300,"width":300,"height":160},
+    {"id":"definitions","type":"text","text":"# Definitions\nDefinition classes and authoring patterns.","x":-170,"y":300,"width":300,"height":160},
+    {"id":"ct","type":"file","file":"C1'/CT/CT.canvas","x":180,"y":300,"width":300,"height":160},
+    {"id":"ideal-markdown","type":"text","text":"# Ideal Markdown Forms\nCanonical markdown structure before flat World graduation.","x":530,"y":300,"width":300,"height":160}
+  ],
+  "edges": [
+    {"id":"e-c1-forms","fromNode":"c1","fromSide":"bottom","toNode":"forms","toSide":"top","label":"forms"},
+    {"id":"e-c1-definitions","fromNode":"c1","fromSide":"bottom","toNode":"definitions","toSide":"top","label":"defines"},
+    {"id":"e-c1-ct","fromNode":"c1","fromSide":"bottom","toNode":"ct","toSide":"top","label":"templates"},
+    {"id":"e-c1-ideal","fromNode":"c1","fromSide":"bottom","toNode":"ideal-markdown","toSide":"top","label":"authors"}
+  ]
+}

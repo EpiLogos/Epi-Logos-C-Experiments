@@ -40,3 +40,17 @@ For BOTH and NEITHER moves where the dualism is between source and reflection (o
 State what the most productive paradox or reframing turned out to be, and what next move it unlocks. If the tetralemma dissolved the binary cleanly, say what clarified. If SILENCE is genuinely necessary, say what must stay open and why.
 
 Check the Square C companions: What is L3 showing about what is becoming through the contradiction? What is L3' showing about the historical arc — is this a recurring impasse with precedent? What is L2' showing about what is dissolving and what is crystallising as a result of the tetralemmic work? These are not post-hoc annotations — they are the basin within which the tetralemma moved.
+
+## Vault Linking (when filesystem access exists)
+
+When this skill persists an artifact (Thought entry, plan, summary, oracle reading, design note), include wikilinks to the World/Types psychoid web at `Idea/Bimba/World/Types/`. Canonical vocabulary:
+
+- Raw psychoid wells: `[[Psychoid-0|#0]]` … `[[Psychoid-5|#5]]`
+- Position coordinates: `[[P0]]`…`[[P5]]` / `[[P0']]`…`[[P5']]`
+- Lens coordinates: `[[L0]]`…`[[L5]]` / `[[L0']]`…`[[L5']]`
+- Klein V₄ Squares: `[[Square A]]` / `[[Square B]]` / `[[Square C]]`
+- Relation families: `[[Family A — Adjacent-Identity]]`, `[[Family B — Offset-Transition]]`, `[[Family C — Converse-Mirror]]`, `[[Family D1 — Same-Position Cross]]`, `[[Family D2-Transform]]`, `[[Family D2-Require]]`, `[[Family D2-Complete]]`, `[[Family D3 — Helix-Invariance]]`
+- Symbolic systems: `[[Tarot]]` · `[[I-Ching]]` · `[[Codon]]` · `[[Nucleotide]]` · `[[QL Music]]`
+- Language objects: `[[OracleFrame]]` · `[[ReadingPosition]]` · `[[TranscriptionalClockPacket]]` · `[[SymbolicProtein]]` · `[[NaraDeckContext]]` · `[[PatternPacket]]`
+
+Hen residency: target [[Hen]] / S1' write methods when available; direct filesystem writes are transitional fallback. See `Idea/Empty/Present/03-06-2026/HEN-INTEGRATION-DESIGN-PSYCHOID-WEB-2026-06-03.md` for the gateway design and `PSYCHOID-WEB-CANON-EXTRACT-2026-06-03.md` for the canonical wikilink vocabulary in full.

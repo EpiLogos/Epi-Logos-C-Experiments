@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"main","type":"file","file":"Psychoid-4.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"ppair","type":"text","text":"# P/P' refraction\nDay: [[P4]] [[Son]] — incarnation, identical-WITH-itself\nNight: [[P4']] [[Love]] — holding-relation, sorge","x":-460,"y":300,"width":320,"height":180},
+    {"id":"lpair","type":"text","text":"# L/L' refraction\n[[L4]] Phenomenological (Heidegger Dasein) ↔ [[L1']] Phenomenal (Jung's functions)\nElement: Earth / Water\nPrimary subjective-entry-aperture","x":-100,"y":340,"width":320,"height":180},
+    {"id":"mbranch","type":"text","text":"# M branch\n[[M4]] Nara — the consciousness-domain subsystem refracting #4 as lived/contextual lemniscate.","x":260,"y":300,"width":280,"height":180},
+    {"id":"relations","type":"text","text":"# Relation participation\nORIGINATES D1 same-position cross grammar.\n[[Family A — Adjacent-Identity]] (4,5)\n[[Family B — Offset-Transition]] (3,4)\n[[Family C — Converse-Mirror]] (1,4) tritone\n[[Family D1 — Same-Position Cross]] (4,4')\nSquares: [[A-sq3]], [[B-sq2]], [[C-sq2]] → [[Square B]]","x":-460,"y":-320,"width":380,"height":260},
+    {"id":"daynight","type":"text","text":"# Day/Night faces — LEMNISCATE ANCHOR\nSquare-B pole: 1+4=5.\nKlein-twist Möbius pair: [[P4]] ↔ [[P1']] — incarnation ↔ need.\nLemniscate topology; cf coordinate fires; () operator ignites.\nFractal-doubling (4.0/1 – 4.4/5) generates internal 6-fold.","x":80,"y":-320,"width":380,"height":260}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"main","fromSide":"bottom","toNode":"ppair","toSide":"top","label":"refracts as"},
+    {"id":"e2","fromNode":"main","fromSide":"bottom","toNode":"lpair","toSide":"top","label":"refracts as"},
+    {"id":"e3","fromNode":"main","fromSide":"bottom","toNode":"mbranch","toSide":"top","label":"refracts as"},
+    {"id":"e4","fromNode":"main","fromSide":"top","toNode":"relations","toSide":"bottom","label":"originates / participates"},
+    {"id":"e5","fromNode":"main","fromSide":"top","toNode":"daynight","toSide":"bottom","label":"holds twin faces"}
+  ]
+}

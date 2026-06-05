@@ -7,6 +7,8 @@ source_context:
   - M4'-SPEC.md
   - Quaternal Tarot Protocol
   - Quaternal I Ching Protocol
+  - M-SYMBOLIC-LANGUAGE-ARCHITECTURE.md
+  - ql_physics_anthropic_chemistry_alignment_v2.md
   - Nara M4-0 Identity Branch discussions
   - Epii M5 pedagogical/canon-surface discussion
 ---
@@ -412,6 +414,31 @@ PatternPacket:
     dream: optional
     mahamaya: optional
 
+  mahamaya_transcription:
+    packets: optional [TranscriptionalClockPacket]
+    oracle_frame_ref: optional string
+    symbolic_protein_ref: optional string
+    sequence_mode: none | single_packet | triad | sixfold_ql | clock_walk | symbolic_orf
+    vak_address: optional VakAddress
+    deck_context:
+      macro_deck_ref: optional string
+      session_deck_ref: optional string
+      deck_order_hash: optional string
+      entropy_mode: sacred_random | seeded_replay | manual | graph_selected
+    start_stop_state: not_applicable | open_chain | start_found | stop_found | bounded_sequence
+    graph_provenance: optional [scalar_refs]
+    readiness_warnings: optional [string]
+
+  attractor_dynamics:
+    rigor_level: symbolic_phase_portrait | measured_nonlinear_dynamics
+    basin_label: optional string
+    recurrence_window: optional string
+    perturbation_sources: optional [M4-1 | M4-2 | M4-4 | M3]
+    bifurcation_candidate: optional boolean
+    containment_state: stable | intensified | overloaded | review_required
+    quantitative_metrics: optional
+    caveat: required
+
   body_integration:
     m4_1_signal: optional
     practice_hint: optional
@@ -438,6 +465,120 @@ This separates:
 - activity from identity;
 - Nara reflection from Epii teaching;
 - private data from safe handles.
+
+## 3.5 Mahāmāyā TranscriptionalClockPacket Ingress
+
+When M4-2 or M3' supplies a Mahāmāyā reading, M4-3 receives it as a structured `TranscriptionalClockPacket` chain, not as a loose Tarot note. The packet is the bridge from the binary clock system into Nara's living transformation logic.
+
+The read is always bounded by an `OracleFrame`: subject/entity/session, deck manifest, deck order hash, entropy mode/provenance, spread grammar, VAK address, DAY/NOW handle, Redis/Psyche live-context handle where available, kbase/source-pool handle where available, and graph provenance. VAK is the execution address of the reading, not an interpretation tag. `CP` declares the active QL position set; `CS.direction` declares Day or Night' traversal; `CFP` declares whether the read is base, chained, parallel, fusion, long-running, nested/meta, or Z-cycle.
+
+The packet carries:
+
+```text
+clock slot / degree720 / degree360
+M3_LENS_STACK aperture and optional M2_MEF_LENS projection
+hexagram_id / active_line / line_change_operator / target_hexagram_id
+DNA codon / generated codon / matrix path / polarity / rotational state
+RNA potential or Start/Stop transcription state
+Tarot reflection through #3-4.0
+amino acid or operator through #3-3-4
+graph provenance and readiness warnings
+```
+
+This gives Nara a precise way to read the "protein/genetic information" of a user, entity, question, or symbolic event: not by treating one card as the whole protein, but by reading an ordered sequence of Mahāmāyā packets around a clock walk or spread grammar. A single packet is a motif. A packet chain is the symbolic peptide / codon-weave / protein. A reviewed recurring chain may become trajectory evidence.
+
+Variable-size Tarot is handled by the VAK/CP frame, not by forcing every reading into six cards:
+
+```text
+1 card  = one CP point-address
+3 cards = compressed CP-set under a declared context-frame law
+6 cards = full CP4.0 -> CP4.5 traverse
+Klein/inverse pass = CS.direction = Night'
+4/5 depth pass = CP4.4/CP4.5 foregrounded through Psyche/Sophia integration
+```
+
+Nara distinguishes a user's macro/inhabited deck from the local session deck. The macro deck is a protected identity/context handle that describes the user's long-range symbolic register. The session deck and its order/randomness form the bounded local utterance. M4-3 reads the resonance or tension between the two; it does not let either overwrite identity-source branches.
+
+The Nara integration rule is:
+
+```text
+TranscriptionalClockPacket chain
+  -> M4-3 cross-dialect PatternPacket
+  -> Q_activity delta / trajectory annotation
+  -> #4.4.4.4 protected personal-Pratibimba update
+  -> optional M4.5 review / Epii map relay
+```
+
+It does **not** run:
+
+```text
+TranscriptionalClockPacket -> M4-0 identity-system mutation
+```
+
+M4-0-3 (Gene Keys / Mahāmāyā 64-code bridge) supplies stable identity-system evidence for comparison. M4-3 may compare a live codon/Tarot/amino chain against that stable background, but it cannot overwrite the identity-system layer. The result is a relation between stable identity evidence and live symbolic transcription, not a replacement of one by the other.
+
+Nara should preserve the Mahāmāyā namespace split:
+
+```text
+M2_MEF_LENS     12-lens Vimarśa/chromatic addressing in the 72-fold field
+M3_LENS_STACK   16 static + 1 growth/meta Mahāmāyā clock apertures
+M4 PatternPacket lens-position
+                the QL/MEF route by which Nara integrates the packet into lived meaning
+```
+
+This is the clean bridge: Mahāmāyā supplies the deterministic binary/transcriptional sequence; Nara supplies the protected personal-context integration.
+
+## 3.6 Strange Attractor / Contained-Chaos Integration
+
+M4-3 can now use strange-attractor language, but only as a disciplined relational model. The point is not to claim the psyche has been mathematically proven chaotic. The point is to give Nara a sharper grammar for bounded recurrence, perturbation, bifurcation, containment, and phase-portrait evidence.
+
+Nara's layered model:
+
+```text
+Autopoietic layer  what persists
+  M4-0 identity-system evidence + #4.4.4.4 protected personal organization
+
+Dissipative layer  what changes
+  M4-1 body/transit openness + M4-4 life/dream/journal evidence
+  where crisis, fatigue, desire, grief, practice, and timing can amplify perturbations
+
+Attractor layer    what recurs as geometry
+  M4-2 symbolic events + M3 TranscriptionalClockPacket chains
+  where Tarot/I Ching/codon/amino/dream motifs become phase-portrait slices
+```
+
+M4-3 is the integrator between these layers. It asks:
+
+```text
+Is this packet/motif a one-off symbolic event?
+Is it recurring across a meaningful time window?
+Does the body-field support or veto the interpretation?
+Is the recurrence intensifying toward a bifurcation candidate?
+Is the container strong enough for interpretation, or should Nara route to grounding?
+Should M4.5 open review, teaching, or consent-gated Epii relay?
+```
+
+The rigor rule is mandatory:
+
+```text
+symbolic_phase_portrait       default; pattern recurrence with qualitative/provenance evidence
+measured_nonlinear_dynamics   only if actual quantitative metrics exist
+```
+
+So a dream image, Tarot card, codon chain, or body sensation may be treated as a phase-portrait slice of a lived trajectory. It must not be treated as proof of a literal mathematical strange attractor unless the system has measurements. This protects the user and keeps the system intellectually clean.
+
+The M1/M2/M3 relations matter here:
+
+```text
+M1-0 / M1-5  parent law and +1 toroidal recognition: the invariant slash/tick field
+M2-0 / M2-5  Fibonacci seed and 72-flow/epogdoon gate: the running frequency corridor
+M3-0 / M3-5  quaternionic reception and clock renderer: the symbolic phase portrait
+M4-1         body as open/dissipative evidence
+M4-2         oracle as symbolic perturbation
+M4-3         attractor integration and containment decision
+```
+
+This is the relational dynamic of the 0-1-2-3 system *on Nara*: the universal clock and transcription engine become personally meaningful only when M4-3 can relate them to body, lived evidence, recurrence, and review.
 
 ---
 
@@ -778,6 +919,60 @@ Stored as protected personal-Pratibimba insight.
 M4-0 identity-system files remain unchanged.
 ```
 
+## 8.7 M3 Mahāmāyā ↔ M4-3
+
+Mahāmāyā supplies the deterministic symbolic-transcription sequence. M4-3 supplies the contextual integration.
+
+Example:
+
+```text
+M3 emits a clock-walk chain:
+lineChange384 slot -> hexagram/codon -> matrix path -> rotational state
+                  -> RNA potential / amino-operator -> Tarot reflection
+
+M4-3 compares that chain against:
+M4-0-3 stable Gene Keys / 64-code evidence
+M4-1 present transit and body signal
+M4-4 journal/dream/life evidence
+
+Correct conclusion: recurring codon/Tarot/amino motif is active in the personal field.
+Incorrect conclusion: the user's identity-system genetics changed.
+```
+
+The result is a `PatternPacket` with `mahamaya_transcription` evidence and a possible `Q_activity` or trajectory effect. The update target remains #4.4.4.4; the review threshold remains M4.5.
+
+## 8.8 M1/M2/M3 ↔ M4-3
+
+The 0-1-2-3 system enters Nara as a layered dynamical chain:
+
+```text
+M1-0  immutable harmonic source / .rodata archetypes
+M1-5  +1 toroidal recognition, SU(2) double-cover, parent tick/slash
+
+M2-0  Fibonacci / 72-invariant seed
+M2-5  planetary-chakral runtime and 9:8 DET gate into 64
+
+M3-0  quaternionic reception of M2 into codon matter
+M3-5  360°/720° clock renderer and symbolic phase-space
+
+M4-3  Nara's integration layer: relates the above to body, oracle, journal,
+      recurrence, containment, and review
+```
+
+Example:
+
+```text
+M1 tick + M2-5 transit selects a 72-state field.
+M3-0 receives it as a 64-address codon quaternion.
+M3-5 renders packet recurrence across the clock.
+M4-1 checks whether the body-field can carry the interpretation.
+M4-2 supplies or receives an oracle dialect event.
+M4-3 evaluates recurrence, basin, perturbation, and bifurcation-candidate status.
+M4.5 decides whether the pattern is reviewed, taught, or left as protected observation.
+```
+
+This is why M4-3 is not merely "process tracking." It is the dynamical systems seam where universal recurrence becomes lived, protected, and reviewable.
+
 ---
 
 # 9. Nara Event Grammar
@@ -820,6 +1015,10 @@ M4-4 :: L4.P2 :: journal :: sentence-span :: repeated avoidance :: PatternPacket
 
 ```text
 M4-2 :: L2.P3 :: I Ching :: moving line :: BOTH contradiction :: PatternPacket#19 :: Q_activity delta :: #4.4.4.4 :: explain threshold
+```
+
+```text
+M4-2/M3 :: L3.P4 :: Mahāmāyā :: TranscriptionalClockPacket chain :: codon/Tarot/amino motif recurrence :: PatternPacket#21 :: trajectory annotation :: #4.4.4.4 :: map threshold
 ```
 
 ```text
@@ -963,6 +1162,8 @@ m4_domain: M4-0 | M4-1 | M4-2 | M4-3 | M4-4 | M4-5
 root_lens: optional
 active_square: optional
 pattern_packet_id: optional
+mahamaya_packet_refs: optional list
+mahamaya_sequence_mode: optional
 review_state: none | proposed | reviewed | accepted | rejected | applied
 teaching_threshold: none | explain | map | canon | curriculum
 ```
@@ -974,6 +1175,8 @@ M4-3 should include services for:
 ```text
 LensPositionRouter
 DialectResonanceMapper
+MahamayaTranscriptionPacketIngestor
+AttractorDynamicsIntegrator
 ContradictionDetector
 BodyEvidenceCorrelator
 DreamJournalRecurrenceTracker
@@ -1011,6 +1214,8 @@ Deep M4-Nara panel:
 PatternPackets
 Graphiti trajectory
 Oracle inspectors
+Mahāmāyā transcription chain inspector
+Attractor dynamics / recurrence inspector
 Dream/journal recurrence
 M4-1 body correlations
 M4-3 transformation arcs
@@ -1114,4 +1319,3 @@ Or, in the shorter operational mantra:
 ---
 
 *Counterparts (the full M-set): [[anuttara-ux-full-m0-branch]] (M0, integrated bimba view + ground), [[paramasiva-ux-full-m1-branch]] (M1, QL pedagogy + base physics), [[parashakti-ux-full-m2-branch]] (M2, frequency engine — serves this branch directly), [[mahamaya-ux-full-m3-branch]] (M3, symbolic-genetics — oracle/identity/transformation), [[epii-ux-full-m5-branch]] (M5, the paidagōgos / review pole). Seam: integrated-4-5-0 recognition plugin. Canonical spec: [[M4'-SPEC]].*
-

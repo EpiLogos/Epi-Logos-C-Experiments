@@ -438,3 +438,17 @@ After drafting any section, run through these in order. Each item is a fix-or-fl
 **After drafting.** Module 7 (self-review checklist) as a pass. Then Module 6 (worked passages) as tonal calibration if any section is sounding tinny.
 
 **For a second pass on existing draft.** Open the section; run the self-review; identify the worst three offenders; rewrite those passages first (not the whole section), then re-evaluate. The skill prefers focused surgery to wholesale re-writing — the architecture of the existing draft is correct; the voice and reference texture are what need raising.
+
+## Vault Linking (when filesystem access exists)
+
+When this skill persists an artifact (Thought entry, plan, summary, oracle reading, design note), include wikilinks to the World/Types psychoid web at `Idea/Bimba/World/Types/`. Canonical vocabulary:
+
+- Raw psychoid wells: `[[Psychoid-0|#0]]` … `[[Psychoid-5|#5]]`
+- Position coordinates: `[[P0]]`…`[[P5]]` / `[[P0']]`…`[[P5']]`
+- Lens coordinates: `[[L0]]`…`[[L5]]` / `[[L0']]`…`[[L5']]`
+- Klein V₄ Squares: `[[Square A]]` / `[[Square B]]` / `[[Square C]]`
+- Relation families: `[[Family A — Adjacent-Identity]]`, `[[Family B — Offset-Transition]]`, `[[Family C — Converse-Mirror]]`, `[[Family D1 — Same-Position Cross]]`, `[[Family D2-Transform]]`, `[[Family D2-Require]]`, `[[Family D2-Complete]]`, `[[Family D3 — Helix-Invariance]]`
+- Symbolic systems: `[[Tarot]]` · `[[I-Ching]]` · `[[Codon]]` · `[[Nucleotide]]` · `[[QL Music]]`
+- Language objects: `[[OracleFrame]]` · `[[ReadingPosition]]` · `[[TranscriptionalClockPacket]]` · `[[SymbolicProtein]]` · `[[NaraDeckContext]]` · `[[PatternPacket]]`
+
+Hen residency: target [[Hen]] / S1' write methods when available; direct filesystem writes are transitional fallback. See `Idea/Empty/Present/03-06-2026/HEN-INTEGRATION-DESIGN-PSYCHOID-WEB-2026-06-03.md` for the gateway design and `PSYCHOID-WEB-CANON-EXTRACT-2026-06-03.md` for the canonical wikilink vocabulary in full.

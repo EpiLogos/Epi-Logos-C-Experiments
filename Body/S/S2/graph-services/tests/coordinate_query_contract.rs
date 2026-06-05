@@ -1,6 +1,6 @@
 use epi_s2_graph_services::{
-    CoordLayer, CoordinateArrayParser, GraphRetrievalQuery, QueryType, RetrievalMode,
-    RetrievalResult,
+    CoordLayer, CoordinateArrayParser, CoordinateSearchScope, GraphRetrievalQuery, QueryType,
+    RetrievalMode, RetrievalResult,
 };
 
 #[test]
@@ -57,6 +57,28 @@ fn graph_retrieval_query_contract_classifies_mentions_and_positions() {
 
     let inferred = GraphRetrievalQuery::from_text("How does the foundation context integrate?");
     assert_eq!(inferred.inferred_positions, vec![0, 4, 5]);
+}
+
+#[test]
+fn coordinate_search_scope_bounds_stack_mprime_and_bimba_queries() {
+    let technical = CoordinateSearchScope::from_query_text(
+        "bounded technical stack search for S/S' graph CRUD and S5' improvement",
+    );
+    assert_eq!(technical.scope_id(), "technical_stack");
+    assert!(technical.matches_coordinate("S2-3"));
+    assert!(technical.matches_coordinate("S5-5'"));
+    assert!(!technical.matches_coordinate("M5-2"));
+
+    let pratibimba =
+        CoordinateSearchScope::from_query_text("M' electron app expression for M5-4' agents");
+    assert_eq!(pratibimba.scope_id(), "pratibimba_expression");
+    assert!(pratibimba.matches_coordinate("M5-4'"));
+    assert!(!pratibimba.matches_coordinate("M5-4"));
+
+    let bimba = CoordinateSearchScope::from_query_text("full bimba map query around M5-2");
+    assert_eq!(bimba.scope_id(), "bimba_map");
+    assert!(bimba.matches_coordinate("M5-2"));
+    assert!(bimba.matches_coordinate("#4"));
 }
 
 #[test]

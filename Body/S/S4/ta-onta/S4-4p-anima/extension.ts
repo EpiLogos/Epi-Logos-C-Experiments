@@ -16,7 +16,12 @@ import {
   agentForCf,
 } from "./modules/dispatch-validate.ts";
 import { nousRouteStop } from "./modules/nous-clearing.ts";
-import { planMoiraiNightPass, classifyMoiraiOutput, buildMoiraiVak } from "./modules/moirai-dispatch.ts";
+import {
+  planMoiraiNightPass,
+  classifyMoiraiOutput,
+  buildMoiraiVak,
+  defaultM5CoordinateClusters,
+} from "./modules/moirai-dispatch.ts";
 import { buildAnimaInvokePayload } from "./modules/anima-invoke-payload.ts";
 import { findSkillsForVak, type CapabilityMatrix } from "./modules/skill-registry.ts";
 import { isValidVakAddress, type VakAddress } from "../shared/vak_address.ts";
@@ -538,6 +543,7 @@ export async function animaExtension(api: ExtensionAPI) {
       const plan = planMoiraiNightPass({
         session_id: params.session_id,
         disclosure_path: params.disclosure_path,
+        coordinate_clusters: defaultM5CoordinateClusters(),
       });
 
       // Build a CFP3/Night' VAK address per Moirai via `buildMoiraiVak`. Each

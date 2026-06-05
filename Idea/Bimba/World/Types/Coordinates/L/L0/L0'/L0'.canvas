@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"l0p","type":"file","file":"L0'.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"anchor","type":"text","text":"# Anchor\nJung–Pauli / von Franz number-archetypes.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid #5 (Night)\nWork / public-completion.","x":-130,"y":300,"width":280,"height":160},
+    {"id":"square","type":"text","text":"# Square A\nP0+P5 Speech-Number axis.","x":180,"y":300,"width":280,"height":160},
+    {"id":"mobius","type":"text","text":"# Möbius Partner\nL5 Para Vāk. L5 ↔ L0'.","x":490,"y":300,"width":280,"height":160},
+    {"id":"element","type":"text","text":"# Element\nAether (via L2').","x":-280,"y":520,"width":280,"height":140},
+    {"id":"skills","type":"text","text":"# Skills\netymological-archaeology, apply-cmea.","x":50,"y":520,"width":320,"height":140}
+  ],
+  "edges": [
+    {"id":"e0p-anchor","fromNode":"l0p","fromSide":"bottom","toNode":"anchor","toSide":"top","label":"anchored by"},
+    {"id":"e0p-psy","fromNode":"l0p","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts"},
+    {"id":"e0p-sq","fromNode":"l0p","fromSide":"bottom","toNode":"square","toSide":"top","label":"member of"},
+    {"id":"e0p-mob","fromNode":"l0p","fromSide":"bottom","toNode":"mobius","toSide":"top","label":"Möbius pair"},
+    {"id":"e0p-el","fromNode":"l0p","fromSide":"bottom","toNode":"element","toSide":"top","label":"element"},
+    {"id":"e0p-sk","fromNode":"l0p","fromSide":"bottom","toNode":"skills","toSide":"top","label":"engages"}
+  ]
+}

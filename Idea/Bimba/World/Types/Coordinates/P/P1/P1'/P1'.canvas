@@ -1,0 +1,18 @@
+{
+  "nodes": [
+    {"id": "title", "type": "text", "text": "# P1' — Need\n\nNight-face of #1. Lack-as-demand; factical-constraint; the trace.", "x": -200, "y": -300, "width": 460, "height": 140},
+    {"id": "self", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P1/P1'/P1'.md", "x": -100, "y": -100, "width": 280, "height": 80},
+    {"id": "psychoid", "type": "text", "text": "[[Psychoid-1|#1]] — raw charge", "x": -440, "y": 60, "width": 240, "height": 70},
+    {"id": "p4", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P4/P4.md", "x": 200, "y": 60, "width": 240, "height": 70},
+    {"id": "p1", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P1/P1.md", "x": -440, "y": 180, "width": 240, "height": 70},
+    {"id": "l1p", "type": "text", "text": "[[L1']] · [[L4]] — lens pair", "x": 200, "y": 180, "width": 240, "height": 70},
+    {"id": "need", "type": "text", "text": "[[Need]] / Traces — Thought family", "x": -100, "y": 320, "width": 320, "height": 70}
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "self", "toNode": "psychoid", "label": "refracts"},
+    {"id": "e2", "fromNode": "self", "toNode": "p4", "label": "Möbius (5-n)'"},
+    {"id": "e3", "fromNode": "self", "toNode": "p1", "label": "D1 same-position"},
+    {"id": "e4", "fromNode": "self", "toNode": "l1p", "label": "lens"},
+    {"id": "e5", "fromNode": "self", "toNode": "need", "label": "Thought family"}
+  ]
+}

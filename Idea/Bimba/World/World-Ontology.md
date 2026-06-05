@@ -8,6 +8,8 @@ c_0_related_coordinates:
   - "[[S-SHARD-HARMONIZATION-PROTOCOL]]"
   - "[[S-HARMONIZATION-RUN-2026-06-02]]"
   - "[[S1'-WORLD-TYPES-CRYSTALLIZATION-PROTOCOL]]"
+  - "[[coordinate-semantics]]"
+  - "[[COORDINATE-MAP]]"
 ---
 
 # World Ontology — System Knowledge Nexus
@@ -77,7 +79,11 @@ This is the central braid for the current question: [[World-Ontology]] provides 
 
 | Concern | Canonical Home | World Rule |
 | --- | --- | --- |
+| [[C]] semantic typology | `World/Types/Coordinates/C/**` | C is where coordinate becomes language/type: [[C1]] templates/forms, [[C2]] entities/properties/tags, [[C3]] canvases/diagrams/processes, [[C4]] type/MOC authority, [[C5]] graduation/reflection. |
 | [[CT]] templates | `World/Types/Coordinates/C/C1/C1'/CT/**` and flat [[World]] CT forms | [[Hen]] resolves templates from CT law; no sibling `Templates` root should supersede it. |
+| Entity/property/tag forms | `World/Types/Coordinates/C/C2/Entities-Properties-Tags/**` | Empty-captured entities, aliases, tags, property forms, and relation-field evidence are C2 concerns before S2 graph validation. |
+| Canvas and diagram forms | `World/Types/Coordinates/C/C3/Processes-Canvases-Diagrams/**` | Live diagrams remain Seed evidence; reusable canvas/diagram forms and ideal canvas structures are C3 type forms. |
+| Type/MOC authority | `World/Types/Coordinates/C/C4/Types-Contexts-MOCs/**` | C4 decides whether a folder is a type authority, context view, Dataview index, or residency class. |
 | [[T]] / [[T′]] artifacts | `World/Types/Coordinates/T/**` and `Idea/Pratibimba/Self/Thought/**` | Thought artifacts are T/T′ instantiations; no sibling `Artifacts` root should supersede them. |
 | Coordinate crystallisations | `World/Types/Coordinates/**` | MOCs/canvases incubate coordinate topology before graduation. |
 | Stable architecture definitions | flat `World/{Name}.md` | Graduated forms become canonical here and backlink their type-source MOC/canvas plus Seed evidence. |
@@ -108,6 +114,12 @@ Graduation rule: a coordinate file in [[World/Types]] is `incubating_type_index`
 | [[M]] | Consciousness domains | [[M0]] Anuttara → [[M5]] Epii |
 | [[L]] | Epistemic modes | [[L0]] Literal → [[L5]] Integral |
 | [[C]] | Ontological foundation | [[C0]] Bimba → [[C5]] Pratibimba |
+
+### Coordinate Semantics Recovery
+
+The older [[coordinate-semantics]] and [[COORDINATE-MAP]] files in [[Idea/Empty]] have been harmonised as bridge artifacts rather than competing authorities. They preserve useful original natural-language definitions: [[#0]] as ground/source, [[#1]] as definition/form, [[#2]] as operation/entity, [[#3]] as pattern/process, [[#4]] as context/type and lemniscate nesting, and [[#5]] as integration/reflection. Current canon should reuse that explanatory language while keeping authority in [[World]], [[World/Types]], [[Seeds]], and the Body-backed S/S′ specs.
+
+Important correction: older S-stack language that treated [[S3]] as generic plugin/PAI, [[S4]] as session, or [[S5]] as cloud/Notion is now historical. The active stack is [[S0]] command, [[S1]] vault/Hen, [[S2]] graph, [[S3]] gateway/time, [[S4]] PI agents/Anima, and [[S5]] Epii/world-return.
 
 ### Reflective Coordinates — The Matrix in `()`
 

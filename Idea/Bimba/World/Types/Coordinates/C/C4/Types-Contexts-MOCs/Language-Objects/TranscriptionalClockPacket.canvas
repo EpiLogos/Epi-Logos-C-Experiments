@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"tcp","type":"file","file":"TranscriptionalClockPacket.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"emit","type":"text","text":"# Emit\n[[M3]] Mahamaya engine","x":-440,"y":300,"width":260,"height":140},
+    {"id":"recv","type":"text","text":"# Receive\n[[M4]] Nara — evidence","x":-150,"y":300,"width":260,"height":140},
+    {"id":"chain","type":"text","text":"# Aggregates into\n[[SymbolicProtein]]","x":150,"y":300,"width":260,"height":140},
+    {"id":"frame","type":"text","text":"# Bound to\n[[OracleFrame]]","x":440,"y":300,"width":260,"height":140},
+    {"id":"subst","type":"text","text":"# Symbolic substrate\n[[Codon]] · [[Nucleotide]]\n[[Tarot]] · [[I-Ching]]","x":-150,"y":520,"width":280,"height":180}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"tcp","fromSide":"bottom","toNode":"emit","toSide":"top","label":"emitted by"},
+    {"id":"e2","fromNode":"tcp","fromSide":"bottom","toNode":"recv","toSide":"top","label":"received by"},
+    {"id":"e3","fromNode":"tcp","fromSide":"bottom","toNode":"chain","toSide":"top","label":"aggregates into"},
+    {"id":"e4","fromNode":"tcp","fromSide":"bottom","toNode":"frame","toSide":"top","label":"bound to"},
+    {"id":"e5","fromNode":"tcp","fromSide":"bottom","toNode":"subst","toSide":"top","label":"refs"}
+  ]
+}

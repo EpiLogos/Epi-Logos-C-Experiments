@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"lp","type":"file","file":"L'.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"l0p","type":"text","text":"# L0'\nArchetypal-Numerical (Jung–Pauli / von Franz). Refracts P0'.","x":-540,"y":300,"width":260,"height":160},
+    {"id":"l1p","type":"text","text":"# L1'\nPhenomenal (Jung's psychic functions). Refracts P1'.","x":-260,"y":300,"width":260,"height":160},
+    {"id":"l2p","type":"text","text":"# L2'\nAlchemical-Elemental — element-bearing lens. Refracts P2'.","x":20,"y":300,"width":260,"height":160},
+    {"id":"l3p","type":"text","text":"# L3'\nChronological (Hegel / Aion). Refracts P3'.","x":300,"y":300,"width":260,"height":160},
+    {"id":"l4p","type":"text","text":"# L4'\nScientific (Kuhn paradigm). Refracts P4'.","x":580,"y":300,"width":260,"height":160},
+    {"id":"l5p","type":"text","text":"# L5'\nDivine Logos (Johannine + Epi-Logos). Refracts P5'.","x":860,"y":300,"width":260,"height":160}
+  ],
+  "edges": [
+    {"id":"e-lp-0","fromNode":"lp","fromSide":"bottom","toNode":"l0p","toSide":"top","label":"holds"},
+    {"id":"e-lp-1","fromNode":"lp","fromSide":"bottom","toNode":"l1p","toSide":"top","label":"holds"},
+    {"id":"e-lp-2","fromNode":"lp","fromSide":"bottom","toNode":"l2p","toSide":"top","label":"holds"},
+    {"id":"e-lp-3","fromNode":"lp","fromSide":"bottom","toNode":"l3p","toSide":"top","label":"holds"},
+    {"id":"e-lp-4","fromNode":"lp","fromSide":"bottom","toNode":"l4p","toSide":"top","label":"holds"},
+    {"id":"e-lp-5","fromNode":"lp","fromSide":"bottom","toNode":"l5p","toSide":"top","label":"holds"}
+  ]
+}

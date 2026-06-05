@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"l3","type":"file","file":"L3.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"anchor","type":"text","text":"# Anchor\nWhitehead / Bergson / Lacan.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid #3\nMental-Rational / Three-ness / Perspectival-Pattern.","x":-130,"y":300,"width":280,"height":160},
+    {"id":"square","type":"text","text":"# Square C\nP2+P3 Logic-Process axis.","x":180,"y":300,"width":280,"height":160},
+    {"id":"mobius","type":"text","text":"# Möbius Partner\nL2' Alchemical-Elemental. L3 ↔ L2'.","x":490,"y":300,"width":280,"height":160},
+    {"id":"element","type":"text","text":"# Element\nWater (via L2').","x":-280,"y":520,"width":280,"height":140},
+    {"id":"skills","type":"text","text":"# Skills\nrun-positional-coherence, run-l4-prime-loop.","x":50,"y":520,"width":320,"height":140}
+  ],
+  "edges": [
+    {"id":"e3-anchor","fromNode":"l3","fromSide":"bottom","toNode":"anchor","toSide":"top","label":"anchored by"},
+    {"id":"e3-psy","fromNode":"l3","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts"},
+    {"id":"e3-sq","fromNode":"l3","fromSide":"bottom","toNode":"square","toSide":"top","label":"member of"},
+    {"id":"e3-mob","fromNode":"l3","fromSide":"bottom","toNode":"mobius","toSide":"top","label":"Möbius pair"},
+    {"id":"e3-el","fromNode":"l3","fromSide":"bottom","toNode":"element","toSide":"top","label":"element"},
+    {"id":"e3-sk","fromNode":"l3","fromSide":"bottom","toNode":"skills","toSide":"top","label":"engages"}
+  ]
+}

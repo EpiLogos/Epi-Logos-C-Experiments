@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"sp","type":"file","file":"SymbolicProtein.md","x":0,"y":0,"width":380,"height":220},
+    {"id":"motif","type":"text","text":"# Motif → Protein\nOne packet = motif. Chain = peptide/protein.","x":-440,"y":300,"width":300,"height":160},
+    {"id":"packets","type":"text","text":"# Composed of\n[[TranscriptionalClockPacket]]","x":-130,"y":300,"width":280,"height":160},
+    {"id":"frame","type":"text","text":"# Parent\n[[OracleFrame]]","x":180,"y":300,"width":260,"height":140},
+    {"id":"pat","type":"text","text":"# Interpreted by\n[[PatternPacket]] (M4-3)","x":460,"y":300,"width":280,"height":160},
+    {"id":"recip","type":"text","text":"# Reciprocal projections\n[[Tarot]] · [[I-Ching]] over [[Codon]]","x":-150,"y":520,"width":340,"height":160}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"sp","fromSide":"bottom","toNode":"motif","toSide":"top","label":"defines"},
+    {"id":"e2","fromNode":"sp","fromSide":"bottom","toNode":"packets","toSide":"top","label":"composed of"},
+    {"id":"e3","fromNode":"sp","fromSide":"bottom","toNode":"frame","toSide":"top","label":"parent"},
+    {"id":"e4","fromNode":"sp","fromSide":"bottom","toNode":"pat","toSide":"top","label":"interpreted by"},
+    {"id":"e5","fromNode":"sp","fromSide":"bottom","toNode":"recip","toSide":"top","label":"projects via"}
+  ]
+}

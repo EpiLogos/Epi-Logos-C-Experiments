@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {"id":"c5","type":"file","file":"C5.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"world-forms","type":"text","text":"# World Forms\nFlat World crystallisations after review.","x":-520,"y":300,"width":300,"height":160},
+    {"id":"integrations","type":"text","text":"# Integration Forms\nSynthesis and cross-coordinate integration forms.","x":-170,"y":300,"width":300,"height":160},
+    {"id":"receipts","type":"text","text":"# Graduation Receipts\nEvidence of Types -> World promotion.","x":180,"y":300,"width":300,"height":160},
+    {"id":"archives","type":"text","text":"# Reflection Archives\nPratibimba/archive handoff forms.","x":530,"y":300,"width":300,"height":160}
+  ],
+  "edges": [
+    {"id":"e-c5-world","fromNode":"c5","fromSide":"bottom","toNode":"world-forms","toSide":"top","label":"crystallises"},
+    {"id":"e-c5-integrations","fromNode":"c5","fromSide":"bottom","toNode":"integrations","toSide":"top","label":"integrates"},
+    {"id":"e-c5-receipts","fromNode":"c5","fromSide":"bottom","toNode":"receipts","toSide":"top","label":"verifies"},
+    {"id":"e-c5-archives","fromNode":"c5","fromSide":"bottom","toNode":"archives","toSide":"top","label":"reflects"}
+  ]
+}

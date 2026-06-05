@@ -45,6 +45,21 @@ M0' must preserve compatibility with legacy `#` notation at search, selection, a
 - Playable graph affordance: selecting or traversing a node can sound or pulse the current profile from [[world_clock]] / shared [[MathemeHarmonicProfile|profile state]], but it never computes its own clock.
 - Structural status badges distinguish planned, implemented, tested, live, and review-pending nodes.
 
+## The Six M0-X' Data Layers
+
+The M0' surface is not a single flat graph view; it is six addressable data layers over the same canonical [[Neo4j]] substrate. Each layer is a read/route affordance, never a canon owner — the substrate of record stays [[Body/S/S2/graph-schema]] in concert with [[Body/S/S0/epi-lib/include/m0.h]]. The [[M0InspectorModel]] carries these as a `M0LayerView` discriminator (`Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts`).
+
+| Layer | Key | Surface role | Bridge |
+|---|---|---|---|
+| **M0-0'** | `language` | Pre-math node language — `symbol`, `formulation_type`, `complete_formulation` projections (per *Anuttara As Pre-Math Node Language* below). | local |
+| **M0-1'** | `ql-structure` | QL-structure: family/mirror/lens/inversion pointer-web, position-character, Gebser register from S2 pointer law. | local |
+| **M0-2'** | `relations` | Relation field: typed edges with `c_1_relation_family` discriminator `{structural, correspondential, kernel_core, inferred, sync, compatibility}` — structural and correspondential edges never collapse. | local |
+| **M0-3'** | `time-community` | Time/community overlay: GDS community + active-now clock overlay read-only from S2/S3 projections (no renderer-local clock). | local |
+| **M0-4'** | `personal` | Personal route: deep-link into [[M4']] [[Nara]] for the selected coordinate's personal/Kerykeion context — bridged, no canon mutation. | `m4-nara` |
+| **M0-5'** | `pedagogy` | Pedagogy route: deep-link into [[M5']] [[Epii]] atelier for the selected coordinate's review/teaching context — bridged, no canon mutation. | `m5-epii` |
+
+M0-4' and M0-5' are **bridged routes only**: M0' emits an `epi-logos://ide/{extensionId}{routePath}` deep-link into the owning M4'/M5' surface and never mutates canon or renders the personal/pedagogy payload locally. Layers M0-0' through M0-3' render on the M0' graph surface itself with S2/S3 provenance; missing payloads are canonical-absence/readiness states, not client placeholders.
+
 ## Backend Contract Consumed
 
 - [[S2]] graph services are the graph authority: canonical nodes, typed relations, pointer web, graph geometry, and source traceability.

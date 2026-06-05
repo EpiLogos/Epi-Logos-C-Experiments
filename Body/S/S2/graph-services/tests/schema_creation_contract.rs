@@ -31,15 +31,15 @@ fn coordinate_property_registry_covers_nodes_and_relationships() {
     assert!(node_specs.iter().any(|spec| spec.key == "coordinate"));
     assert!(node_specs
         .iter()
-        .any(|spec| spec.key == POINTER_WEB_JSON_PROPERTY && spec.coordinate_home == "S2.5"));
+        .any(|spec| spec.key == POINTER_WEB_JSON_PROPERTY && spec.coordinate_home == "S2-5"));
     assert!(node_specs
         .iter()
-        .any(|spec| spec.key == POINTER_COUNT_PROPERTY && spec.coordinate_home == "S2.5"));
+        .any(|spec| spec.key == POINTER_COUNT_PROPERTY && spec.coordinate_home == "S2-5"));
     assert!(node_specs
         .iter()
-        .any(|spec| spec.key == POINTER_FAMILY_REFS_PROPERTY && spec.coordinate_home == "S2.5"));
+        .any(|spec| spec.key == POINTER_FAMILY_REFS_PROPERTY && spec.coordinate_home == "S2-5"));
     assert!(node_specs.iter().any(|spec| {
-        spec.key == POINTER_HARMONIC_ANCHOR_JSON_PROPERTY && spec.coordinate_home == "S2.5"
+        spec.key == POINTER_HARMONIC_ANCHOR_JSON_PROPERTY && spec.coordinate_home == "S2-5"
     }));
 
     assert!(rel_specs.iter().any(|spec| spec.key == "c_2_relation_type"));
@@ -96,22 +96,22 @@ fn kernel_resonance_observation_schema_is_coordinate_driven() {
     assert_eq!(KERNEL_RESONANCE_RELATION, "HAS_KERNEL_RESONANCE");
     assert!(node_specs
         .iter()
-        .any(|spec| spec.key == KERNEL_RESONANCE_INDEX_PROPERTY && spec.coordinate_home == "S2.5"));
+        .any(|spec| spec.key == KERNEL_RESONANCE_INDEX_PROPERTY && spec.coordinate_home == "S2-5"));
     assert!(node_specs
         .iter()
-        .any(|spec| spec.key == KERNEL_RESONANCE_SCORE_PROPERTY && spec.coordinate_home == "S2.5"));
+        .any(|spec| spec.key == KERNEL_RESONANCE_SCORE_PROPERTY && spec.coordinate_home == "S2-5"));
     assert!(node_specs
         .iter()
-        .any(|spec| spec.key == KERNEL_TICK_PROPERTY && spec.coordinate_home == "S0.5"));
+        .any(|spec| spec.key == KERNEL_TICK_PROPERTY && spec.coordinate_home == "S0-5"));
     assert!(node_specs
         .iter()
-        .any(|spec| spec.key == SESSION_KEY_PROPERTY && spec.coordinate_home == "S3.0"));
+        .any(|spec| spec.key == SESSION_KEY_PROPERTY && spec.coordinate_home == "S3-0"));
     assert!(node_specs
         .iter()
-        .any(|spec| spec.key == GRAPHITI_ARC_ID_PROPERTY && spec.coordinate_home == "S3.5"));
+        .any(|spec| spec.key == GRAPHITI_ARC_ID_PROPERTY && spec.coordinate_home == "S3-5"));
     assert!(rel_specs
         .iter()
-        .any(|spec| spec.key == KERNEL_RESONANCE_INDEX_PROPERTY && spec.coordinate_home == "S2.5"));
+        .any(|spec| spec.key == KERNEL_RESONANCE_INDEX_PROPERTY && spec.coordinate_home == "S2-5"));
     assert!(RELATIONSHIP_INDEXES
         .iter()
         .any(|cypher| cypher.contains(KERNEL_RESONANCE_RELATION)

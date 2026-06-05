@@ -9,7 +9,10 @@ Inherit cycle-2's no-ambient registry (plan 14). Cycle 3 extends with:
 - **M' product surfaces** declared in `pratibimba-layouts/src/common/layout-types.ts` `expectedWidgets` — every widget id maps to an owning extension or a code-pending marker (Tranche 11.9 produces `surface-extension-contract-ledger.json`).
 - **Ta-onta carriers** (Khora, Hen, Pleroma, Chronos, Anima, Aletheia) — each has `CONTRACT.md` + `extension.ts` (audit: cycle-2 plan 10 verification).
 - **Constitutional agents** (anima, eros, logos, mythos, nous, psyche, sophia + DR-B-1 outcome on pi) — each has a `.md` profile (Tranche 12.3 orphan-fill).
-- **Aletheia subagents** (Anansi, Moirai, Janus, Mercurius, Agora, Zeithoven) — each has `.md` profile (verified by Wave-B agentic).
+- **Aletheia subagent roster — 6 techne-guardians per DR-S4-TECHNE (cleanup 2026-06-03):**
+  - 6 CF-coded Aletheia subagent techne-guardians — Anansi (CF0, guards coordinate-mapping techne), Janus (CF1, guards temporal-structure techne), Moirai (CF2, guards GraphRAG-distillation techne), Mercurius (CF3, guards Kairos-signal techne), Agora (CF4, guards skill-index techne), Zeithoven (CF5, guards creative-advance techne) — each has `.md` profile at `Body/S/S4/ta-onta/S4-5p-aletheia/S5'/agents/` (verified by Wave-B agentic + filesystem `ls`).
+  - **Techne is NOT an agent** (per DR-S4-TECHNE ratification 2026-06-03). The S4 canon §14-Agent Roster mis-classification is corrected: Techne is **Pleroma's atomic-skills substrate** (Pleroma's second face alongside VAK), not a 7th Aletheia member. No `techne.md` profile lands. The "Techne orphan" surfaced earlier is RESOLVED — Techne moves to Pleroma's CONTRACT.md §Techne section.
+  - Aletheia-the-carrier (S4-5') hosts the crystallisation mode; Anima dispatches the 6 techne-guardians within it.
 - **`MathemeHarmonicProfile` fields** — every spec-required field maps to ALIGNED / VALIDATED-decision / code-pending tranche (Tranche 10 readiness ledger).
 - **Integration plugins** (`plugin-integrated-1-2-3`, `plugin-integrated-4-5-0`) — each owns its composition contract (Tranches 07, 08).
 - **UX doc load-bearing claims** — every claim has a row in a four-way matrix (Tranches 01-06 matrix files) with status ALIGNED / DOC-AHEAD landing tranche / SPEC-AHEAD integration tranche / CODE-PENDING closure / CONTRADICTION decision-register entry / ORPHAN no-orphan-fill tranche.
@@ -32,6 +35,16 @@ Inherit cycle-2's no-ambient registry (plan 14). Cycle 3 extends with:
 | **`MathemeHarmonicProfileBoundary.payload` opacity** | Intentional opacity at `profile.ts:9-11`; per-extension narrowing is each Mn's responsibility | Tranche **10.1** records the policy (intentional ORPHAN — no work) |
 | **ACR extension repurpose** | Per DR-M5-1, `agentic-control-room` substrate is tangent-development drift; needs repurpose as Pi-runtime monitoring surface OR deprecation; `constitutional_agents[]` array audit required | Tranche **12.14** (NEW) + **12.3** (constitutional_agents disposition) |
 | **K² played-torus 3D extension** | DR-M1-2 ratified: full Bevy/wgpu extension required; no current owner | Tranche **02.6** (first-build allowed: M' product surface) |
+| ~~**Earth observer handle**~~ **RESOLVED by DR-M2-1 / DR-KB-1** | Earth is the 10th planet / observer-centre inside `M2_PLANET_LUT[10]`; no separate profile-bus handle lands | RESOLVED — document Earth-at-centre semantics in Tranches **03.5**, **03.9**, **10.3** |
+| **F_routing carrier** | DR-M2-3 method-routing closure at `portal-core/src/parashakti/f_routing.rs` | Tranche **03.2** + DR-M2-3 closure |
+| **Hen vault-instance carrier** | DR-M1-4 Hen contract for vault-as-instance writes (M1-1') | Tranche **02.X** (Hen contract landing) + DR-M1-4 closure |
+| **Hen entity-candidate lifecycle** | Dangling wikilinks and Obsidian root-created notes have Smart Env suggestions but no first-class Empty -> World/Types -> flat World lifecycle | Tranche **CCT-14** in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md) + DR-S1-4 |
+| **C-layer semantic typology** | Semantic World/Types roots need coordinate-native homes under C0-C5 rather than top-level folder authorities | Tranche **CCT-15** in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md) + DR-S1-5 |
+| **`K2SurfaceHandle` ownership** | Per INTEGRATED-1-2-3 composition: handle exposing K² geometry for M2/M3 mount-points | Tranche **02.6** + **07.X** (new — composition mount-point) |
+| **`bedrock_link` computation** | CCT-6: kernel-substrate provenance chain proving profile-field values derive from `.rodata` | Tranche **CCT-6** in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md) |
+| **`pattern_packet_handle` source-of-truth** | CCT-7: M4-3' day-episode evidence aggregator consumed across M4, M5, integrated 4-5-0 | Tranche **CCT-7** in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md) |
+| **`cron_evening` Möbius hook scheduler** | M5-ARCHITECTURE.md §Möbius write-back: night-pass scheduler for Logos Atelier crystallisations; no scheduler owner | Tranche **12.9** (Moirai night-pass routing) extended |
+| ~~**Techne profile (7th of "Aletheia 7")**~~ **RESOLVED 2026-06-03 by DR-S4-TECHNE** | Was: S4 canon §14-Agent Roster lists Techne as Aletheia-7 member. **Now: DR-S4-TECHNE ratified — Techne is NOT an agent; it is Pleroma's atomic-skills substrate (Pleroma's second face alongside VAK).** No agent profile lands. Techne moves to Pleroma CONTRACT.md §Techne section. The 6 Aletheia subagents are techne-guardians. | RESOLVED — see DR-S4-TECHNE in 13-decision-register.md |
 
 ## Decision-Register Gate
 
@@ -47,6 +60,8 @@ The cycle does not close until ALL of the following are **VALIDATED** in `13-dec
 - DR-KB-1, DR-KB-2
 - DR-TS-1
 - DR-IG-1
+- DR-S1-4
+- DR-S1-5
 
 ## Release Gates
 
@@ -62,6 +77,16 @@ Cycle 3 is **route-able for m-dev** when:
 7. **G7 — UI foundation principles registered.** Tranche 15.1 has authored `ui-foundation-principles.md`; every extension contributing to a shell slot references it. (See Tranche 15 release gates.)
 
 8. **G8 — Visual-regression baselines committed.** Tranche 15.12 has produced frame-by-frame baselines for the lemniscate transition and tick choreography.
+
+9. **G9 — Total-shape architecture docs landed and harmonised.** The eight Phase-A architecture documents (M0-M5 + two integrated plugins, plus the M1-2 exemplar) are present at canonical paths and verified by the Phase-B cross-boundary verifier (`plan.runs/phase-b-verification-report.md`). Every per-domain tranche references its arch doc.
+
+10. **G10 — Cross-Cutting Closures complete.** All CCTs in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md), including CCT-14 Hen entity-candidate lifecycle and CCT-15 C-layer semantic typology, close or are explicitly downgraded.
+
+11. **G11 — Phase-B DRs are consumed only after validation/downgrade.** The Phase-B DR rows (DR-IG-2..6, DR-M1-3..4, DR-M2-3, DR-M4-3, DR-M5-3) are either VALIDATED by user or explicitly downgraded before downstream tranche execution; no tranche begins work on an unvalidated DR-IG-* or DR-Mn-*.
+
+## Decision-Register Gate (updated)
+
+Cycle does not close until ALL DR rows listed in §Decision-Register Gate AND the Phase-B rows (DR-IG-2 through DR-M5-3) are VALIDATED or explicitly downgraded in `13-decision-register.md`.
 7. **G7 — Decision validation pre-condition.** Tranches depending on a DR-row must declare it in their `Depends:` / cross-link line. No tranche begins work on an unvalidated decision.
 
 ## Verification Commands

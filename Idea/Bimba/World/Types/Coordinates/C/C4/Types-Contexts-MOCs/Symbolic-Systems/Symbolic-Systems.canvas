@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {"id":"moc","type":"file","file":"Symbolic-Systems.md","x":0,"y":0,"width":420,"height":240},
+    {"id":"tarot","type":"file","file":"Tarot.md","x":-720,"y":320,"width":260,"height":140},
+    {"id":"iching","type":"file","file":"I-Ching.md","x":-380,"y":320,"width":260,"height":140},
+    {"id":"codon","type":"file","file":"Codon.md","x":-40,"y":320,"width":260,"height":140},
+    {"id":"nucleotide","type":"file","file":"Nucleotide.md","x":300,"y":320,"width":260,"height":140},
+    {"id":"qlmusic","type":"file","file":"QL Music.md","x":640,"y":320,"width":260,"height":140},
+    {"id":"m3","type":"text","text":"# [[M3]] Mahamaya\nSource authority — symbolic transcription engine.","x":-380,"y":-300,"width":300,"height":140},
+    {"id":"m4","type":"text","text":"# [[M4]] Nara\nUsage authority — oracle frames + packet chains.","x":80,"y":-300,"width":300,"height":140}
+  ],
+  "edges": [
+    {"id":"e-moc-tarot","fromNode":"moc","fromSide":"bottom","toNode":"tarot","toSide":"top","label":"defines"},
+    {"id":"e-moc-iching","fromNode":"moc","fromSide":"bottom","toNode":"iching","toSide":"top","label":"defines"},
+    {"id":"e-moc-codon","fromNode":"moc","fromSide":"bottom","toNode":"codon","toSide":"top","label":"defines"},
+    {"id":"e-moc-nuc","fromNode":"moc","fromSide":"bottom","toNode":"nucleotide","toSide":"top","label":"defines"},
+    {"id":"e-moc-music","fromNode":"moc","fromSide":"bottom","toNode":"qlmusic","toSide":"top","label":"defines"},
+    {"id":"e-m3-moc","fromNode":"m3","fromSide":"bottom","toNode":"moc","toSide":"top","label":"source authority"},
+    {"id":"e-m4-moc","fromNode":"m4","fromSide":"bottom","toNode":"moc","toSide":"top","label":"usage authority"}
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    {"id":"l5p","type":"file","file":"L5'.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"anchor","type":"text","text":"# Anchor\nJohannine + Epi-Logos divine-speech.","x":-440,"y":300,"width":280,"height":160},
+    {"id":"psychoid","type":"text","text":"# Psychoid #0 (Night)\nPlay / autotelic-freedom.","x":-130,"y":300,"width":280,"height":160},
+    {"id":"square","type":"text","text":"# Square A\nP0+P5 Speech-Number axis.","x":180,"y":300,"width":280,"height":160},
+    {"id":"mobius","type":"text","text":"# Möbius Partner\nL0 Quaternal. L0 ↔ L5'.","x":490,"y":300,"width":280,"height":160},
+    {"id":"element","type":"text","text":"# Element\nAether (via L2').","x":-280,"y":520,"width":280,"height":140},
+    {"id":"skills","type":"text","text":"# Skills\netymological-archaeology, engage-encounter-axis.","x":50,"y":520,"width":340,"height":140}
+  ],
+  "edges": [
+    {"id":"e5p-anchor","fromNode":"l5p","fromSide":"bottom","toNode":"anchor","toSide":"top","label":"anchored by"},
+    {"id":"e5p-psy","fromNode":"l5p","fromSide":"bottom","toNode":"psychoid","toSide":"top","label":"refracts"},
+    {"id":"e5p-sq","fromNode":"l5p","fromSide":"bottom","toNode":"square","toSide":"top","label":"member of"},
+    {"id":"e5p-mob","fromNode":"l5p","fromSide":"bottom","toNode":"mobius","toSide":"top","label":"Möbius pair"},
+    {"id":"e5p-el","fromNode":"l5p","fromSide":"bottom","toNode":"element","toSide":"top","label":"element"},
+    {"id":"e5p-sk","fromNode":"l5p","fromSide":"bottom","toNode":"skills","toSide":"top","label":"engages"}
+  ]
+}

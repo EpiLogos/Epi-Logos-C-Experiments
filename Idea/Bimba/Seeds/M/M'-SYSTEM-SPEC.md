@@ -25,6 +25,8 @@ depends_on:
   - "[[m4-prime-psychoid-cymatic-field-engine]]"
   - "[[m4-prime-nara-day-episodes-and-oracle-artifacts]]"
   - "[[m5-prime-system-shape-and-tauri-ide-canon]]"
+  - "[[M-SYMBOLIC-LANGUAGE-ARCHITECTURE]]"
+  - "[[ql_physics_anthropic_chemistry_alignment_v2]]"
 ---
 
 # [[M']] System Spec
@@ -69,6 +71,34 @@ Use the six M' domains consistently:
 | [[M3']] | clock/cosmos platform | DAY/NOW, solar/kairos clock, sonic/cymatic timing | [[S0]] harmonic pulse, [[S3']] temporal projection |
 | [[M4']] | Nara | journal, daily note, dream, oracle, personal Pratibimba | [[S3']] session/DAY/NOW, [[S5]] Nara/Gnosis, protected local graph |
 | [[M5']] | Epii | pedagogy, archaeology, review, autoresearch, agentic execution | [[S4]] PI agents, [[S5']] review/autoresearch, [[S1']] compiler |
+
+### Cross-System Symbolic Language: VAK-Framed Mahāmāyā Transcription Into Nara
+
+The parent M' surface now carries one cross-system language architecture, specified in [[M-SYMBOLIC-LANGUAGE-ARCHITECTURE]]. The operative sentence is:
+
+```text
+VAK-addressed context
+  -> bounded OracleFrame / deck / clock
+  -> Mahāmāyā codon-hexagram-Tarot-amino transcription
+  -> ordered packet-chain / symbolic protein
+  -> Nara PatternPacket, Q_activity, trajectory, and reviewed identity evidence
+```
+
+This is not a decorative correspondence table. The codon is the system's symbolic transcription unit: the point where I-Ching line state, Tarot expression, elemental quaternion, and amino/operator translation become one language. A single card/codon is a motif; an ordered chain of `TranscriptionalClockPacket`s is the symbolic peptide/protein that Nara can read for a bounded subject, entity, session, artifact, or relationship.
+
+VAK is the economy that frames each utterance. `CPF` sets consent/dialogical polarity; `CT` names the content register; `CP` names the active QL position set of the spread; `CF` names the constitutional function / agentic register; `CFP` names thread/nesting form; `CS` names the Day or Night' sequence-direction. This lets Tarot readings scale without losing QL semantics:
+
+```text
+single-card pull = one CP point-address
+three-card read  = compressed CP-set with explicit context-frame law
+six-card read    = full CP4.0 -> CP4.5 traverse
+inverse pass     = same OracleFrame under CS.direction = Night'
+4/5 depth pass   = CP4.4/CP4.5 foregrounded through Psyche/Sophia integration
+```
+
+The deck is a bounded alphabet, not a skin. User-inhabited macro decks belong to the protected Nara identity/context field; session decks belong to the local OracleFrame. Deck manifest, deck order, reversals, spread grammar, entropy mode, entropy provenance, and graph/source handles are regulatory conditions over transcription. Sacred randomness gives the living event; seeded replay gives testability, review, and audit.
+
+The psychoid-mathematical register is inherited from [[ql_physics_anthropic_chemistry_alignment_v2]]. M0-3's twelve archetypal number-language, M1-2's mod12 vortex arithmetic, M2's 4-elements-in-3-modes zodiacal/decanic field, M3's 64/384/472 transcription engine, and M4's recognition surface are one descent of the language. The carbon lock `C12 = 3 x 4` plus electronic `2 + 4` is treated as the chemistry-level witness of the same 3/4 problem that the reading system works symbolically through elements, decans, and codon-quaternions.
 
 ### Shell vs Subsystem Architecture
 
@@ -290,6 +320,22 @@ For Lens 0:
 | 8 | C' | `(00/00)` enriched | [[Nous]] / Para Vāk | octave return, renewed ground |
 
 This gives [[M2']] and [[M3']] the harmonic grammar for mode, scale, rhythm, clock, and cymatic display, while giving [[M5']] the [[VAK]]/agent language for execution. Modal rotation means a different CF becomes the tonal centre: [[Ionian]] grounds in [[Nous]], [[Dorian]] in [[Logos]], [[Phrygian]] in [[Eros]], [[Lydian]] in [[Mythos]], [[Mixolydian]] in the [[Anima]]/[[Psyche]] executive, [[Aeolian]] in the Psyche bridge, and [[Locrian]] in [[Sophia]]'s return pressure.
+
+### Subsystem CF Assignment
+
+The six subsystem faces inherit the CF sequence as a structural grammar, not as decorative labels:
+
+| Subsystem | CF | Operational reading |
+|-----------|----|---------------------|
+| [[M0']] / [[Anuttara]] | `(00/00)` | canonical bimba ground, the pre-articulate coordinate field and graph phase-space |
+| [[M1']] / [[Paramaśiva]] | `(0/1)` | first articulation: tick, inversion operator, parent coupling/slash, M1-5 single-torus +1 |
+| [[M2']] / [[Paraśakti]] | `(0/1/2)` | operative flow: 72-fold Vimarśa/correspondence, M2-0 Fibonacci seed, M2-5 epogdoon gate |
+| [[M3']] / [[Mahāmāyā]] | `(0/1/2/3)` | pattern closure: binary transcription, codon/hexagram/Tarot phase-portrait, M3-0 reception and M3-5 clock |
+| [[M4']] / [[Nara]] | `(4.0/1-4.4/5)` | recursive personal household: M4-1 body, M4-2 symbolic events, M4-3 transformation intelligence, #4.4.4.4 protected field |
+| [[M4.5]] bridge | `(4.5/0)` | session/review crossing: Nara-to-Epii relay, continuity, consent, evaluative promotion |
+| [[M5']] / [[Epii]] | `(5/0)` | integration and return: pedagogy, canon review, Sophia pressure, renewed ground |
+
+This resolves the Nara "and/or" ambiguity: full Nara is the recursive M4 household frame `(4.0/1-4.4/5)`; M4.5 is the `(4.5/0)` bridge where that household exposes reviewable handles to Epii. M4.5 is a seam, not a license for live activity to bypass #4.4.4.4 or mutate M4-0.
 
 The portal should never treat this as decorative labelling. When a coordinate is rendered musically or routed agentically, the current mode/CF should be visible as part of the same harmonic profile that carries helix, position, ratio, square, resonance, and element.
 

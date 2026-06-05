@@ -1,6 +1,6 @@
 use crate::{
     fusion_rrf_results, fusion_weighted_results, infer_positions, tokenize_query,
-    HybridFusionConfig,
+    CoordinateSearchScope, HybridFusionConfig,
 };
 use neo4rs::query;
 
@@ -150,17 +150,20 @@ impl<'a> HybridRetriever<'a> {
             .map(i64::from)
             .collect();
         let lower_query = query_text.trim().to_lowercase();
+        let scope = CoordinateSearchScope::from_query_text(query_text);
+        let scope_predicate = graph_search_scope_predicate("n", &scope);
 
         // NOTE: This legacy Cypher still reads `c_4_*` / `c_1_*` properties from the
         // Bimba graph. Canonical VAK bias keys (`cf`, `cp`, `ct`, `cs_direction`) are
         // emitted by `vak_bias_weights` below — do not conflate the two vocabularies.
-        let q = query(
+        let cypher = format!(
             "MATCH (n:Bimba)
+             WHERE {scope_predicate}
              WITH n,
                   size([token IN $tokens WHERE token <> '' AND toLower(n.coordinate) CONTAINS token]) AS coord_hits,
                   size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_1_name, '')) CONTAINS token]) AS name_hits,
                   size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_4_family, '')) CONTAINS token]) AS family_hits,
-                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_4_layer, '')) CONTAINS token]) AS layer_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(toString(coalesce(n.c_4_layer, ''))) CONTAINS token]) AS layer_hits,
                   size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_0_essence, '')) CONTAINS token]) AS essence_hits,
                   size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_1_description, '')) CONTAINS token]) AS desc_hits,
                   CASE
@@ -186,11 +189,14 @@ impl<'a> HybridRetriever<'a> {
                     n.c_4_ql_position AS ql_position,
                     score AS score
              ORDER BY score DESC, coordinate ASC
-             LIMIT $top_k",
-        )
+             LIMIT $top_k"
+        );
+        let q = query(&cypher)
         .param("tokens", tokens.clone())
         .param("positions", position_hints)
         .param("raw_query", lower_query)
+        .param("scope_id", scope.scope_id())
+        .param("scope_prefixes", scope.prefixes().to_vec())
         .param("top_k", top_k as i64);
 
         let rows = self
@@ -381,6 +387,25 @@ impl<'a> HybridRetriever<'a> {
     }
 }
 
+fn graph_search_scope_predicate(alias: &str, scope: &CoordinateSearchScope) -> String {
+    match scope {
+        CoordinateSearchScope::BimbaMap => "true".to_owned(),
+        CoordinateSearchScope::PratibimbaExpression => {
+            format!(
+                "({alias}.coordinate = \"M'\" OR ({alias}.coordinate STARTS WITH 'M' AND {alias}.coordinate CONTAINS \"'\"))"
+            )
+        }
+        CoordinateSearchScope::TechnicalStack => {
+            format!("{alias}.coordinate STARTS WITH 'S'")
+        }
+        CoordinateSearchScope::ExplicitPrefixes(_) => {
+            format!(
+                "any(prefix IN $scope_prefixes WHERE {alias}.coordinate = prefix OR {alias}.coordinate STARTS WITH prefix)"
+            )
+        }
+    }
+}
+
 fn read_score(row: &neo4rs::Row, key: &str) -> f64 {
     row.get::<f64>(key)
         .unwrap_or_else(|_| row.get::<i64>(key).unwrap_or(0) as f64)
@@ -392,7 +417,7 @@ fn read_score(row: &neo4rs::Row, key: &str) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{Neo4jClient, Neo4jConfig};
+    use crate::{CoordinateSearchScope, Neo4jClient, Neo4jConfig};
 
     /// Helper: create a dummy Neo4jClient (connect is sync so it just builds
     /// a driver handle; tests that only call pure methods never hit the wire).
@@ -548,5 +573,21 @@ mod tests {
         // P3 score: 0.5*0.9 + 0.5*0.7*1.5 = 0.45 + 0.525 = 0.975
         let p3 = fused.iter().find(|r| r.coordinate == "P3").unwrap();
         assert!((p3.score - 0.975).abs() < 1e-9);
+    }
+
+    #[test]
+    fn graph_search_scope_predicate_bounds_coordinate_families() {
+        let technical = graph_search_scope_predicate("n", &CoordinateSearchScope::TechnicalStack);
+        assert!(technical.contains("n.coordinate STARTS WITH 'S'"));
+        assert!(!technical.contains("STARTS WITH 'M'"));
+
+        let pratibimba =
+            graph_search_scope_predicate("n", &CoordinateSearchScope::PratibimbaExpression);
+        assert!(pratibimba.contains("n.coordinate STARTS WITH 'M'"));
+        assert!(pratibimba.contains("n.coordinate CONTAINS"));
+        assert!(!pratibimba.contains("n.coordinate = 'M5-4'"));
+
+        let bimba = graph_search_scope_predicate("n", &CoordinateSearchScope::BimbaMap);
+        assert_eq!(bimba, "true");
     }
 }

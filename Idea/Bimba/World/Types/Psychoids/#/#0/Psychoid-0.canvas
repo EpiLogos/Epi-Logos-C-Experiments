@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"id":"main","type":"file","file":"Psychoid-0.md","x":0,"y":0,"width":360,"height":220},
+    {"id":"ppair","type":"text","text":"# P/P' refraction\nDay: [[P0]] [[Truth]] — irrepresentable ground\nNight: [[P0']] [[Play]] — autotelic-freedom, invisible-ground-of-the-social","x":-460,"y":300,"width":320,"height":180},
+    {"id":"lpair","type":"text","text":"# L/L' refraction\n[[L0]] Quaternal (Jung–Pauli psychoid number) ↔ [[L5']] Divine Logos (Johannine Arche)\nElement: Aether","x":-100,"y":340,"width":320,"height":180},
+    {"id":"mbranch","type":"text","text":"# M branch\n[[M0]] Anuttara — the consciousness-domain subsystem refracting #0 as ground-implicate / canonical write authority.","x":260,"y":300,"width":280,"height":180},
+    {"id":"relations","type":"text","text":"# Relation participation\n[[Family A — Adjacent-Identity]] (0,1)\n[[Family B — Offset-Transition]] (5,0) cycle-close\n[[Family C — Converse-Mirror]] (0,5) outer mirror\n[[Family D1 — Same-Position Cross]] (0,0')\nSquares: [[A-sq1]], [[C-sq1]] → [[Square A]]","x":-460,"y":-280,"width":360,"height":220},
+    {"id":"daynight","type":"text","text":"# Day/Night faces\nRatio 1/1 — unison ground.\nKlein-twist Möbius pair: [[P0]] ↔ [[P5']].\nBoth faces are the same well read from two sides.","x":80,"y":-280,"width":360,"height":200}
+  ],
+  "edges": [
+    {"id":"e1","fromNode":"main","fromSide":"bottom","toNode":"ppair","toSide":"top","label":"refracts as"},
+    {"id":"e2","fromNode":"main","fromSide":"bottom","toNode":"lpair","toSide":"top","label":"refracts as"},
+    {"id":"e3","fromNode":"main","fromSide":"bottom","toNode":"mbranch","toSide":"top","label":"refracts as"},
+    {"id":"e4","fromNode":"main","fromSide":"top","toNode":"relations","toSide":"bottom","label":"participates in"},
+    {"id":"e5","fromNode":"main","fromSide":"top","toNode":"daynight","toSide":"bottom","label":"holds twin faces"}
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "nodes": [
+    {"id": "title", "type": "text", "text": "# P2 — Word\n\nDay-face of #2. *How?* — energic operation; world as field of forces.", "x": -200, "y": -300, "width": 460, "height": 140},
+    {"id": "self", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P2/P2.md", "x": -100, "y": -100, "width": 280, "height": 80},
+    {"id": "psychoid", "type": "text", "text": "[[Psychoid-2|#2]] — raw charge", "x": -440, "y": 60, "width": 240, "height": 70},
+    {"id": "p3", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P3/P3.md", "x": 200, "y": 60, "width": 240, "height": 70},
+    {"id": "p2p", "type": "file", "file": "Bimba/World/Types/Coordinates/P/P2/P2'/P2'.md", "x": -440, "y": 180, "width": 240, "height": 70},
+    {"id": "l2", "type": "text", "text": "[[L2]] · [[L3']] — lens pair", "x": 200, "y": 180, "width": 240, "height": 70},
+    {"id": "sqc", "type": "text", "text": "[[Square C]] — Logic-Process axis", "x": -100, "y": 320, "width": 280, "height": 70},
+    {"id": "word", "type": "text", "text": "[[Word]] — Thought family", "x": -440, "y": 320, "width": 240, "height": 70}
+  ],
+  "edges": [
+    {"id": "e1", "fromNode": "self", "toNode": "psychoid", "label": "refracts"},
+    {"id": "e2", "fromNode": "self", "toNode": "p3", "label": "QL-pair (2+3)"},
+    {"id": "e3", "fromNode": "self", "toNode": "p2p", "label": "Möbius D1"},
+    {"id": "e4", "fromNode": "self", "toNode": "l2", "label": "lens"},
+    {"id": "e5", "fromNode": "self", "toNode": "sqc", "label": "pole of"},
+    {"id": "e6", "fromNode": "self", "toNode": "word", "label": "Thought family"}
+  ]
+}

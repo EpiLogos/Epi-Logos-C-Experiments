@@ -1,0 +1,1 @@
+{"nodes":[{"id":"ct2","type":"file","file":"CT2.md","x":0,"y":0,"width":360,"height":220},{"id":"task","type":"text","text":"# Task Spec\nConcrete task-spec template family lives in `Task-Spec/`.","x":0,"y":300,"width":320,"height":150}],"edges":[{"id":"e-ct2-task","fromNode":"ct2","fromSide":"bottom","toNode":"task","toSide":"top","label":"concrete"}]}
