@@ -93,3 +93,25 @@ secrets.env
 .codex/agents/
 # but NOT .codex/ itself if it contains checked-in config (e.g. AGENTS.md is already tracked)
 .pnpm-store/
+
+# SwarmVault dev-knowledge sidecar — transient state only; schema, wiki, candidates, config are committed
+epi-dev-vault/state/
+epi-dev-vault/raw/
+epi-dev-vault/inbox/
+epi-dev-vault/agent/
+# User requested broad ignores
+.codex/
+.claude/
+epi-dev-vault/
+/vendor/
+agents.md
+AGENTS.md
+claude.md
+CLAUDE.md
+mcp.json
+.gitignore
+.gitmodules
+/docs/
+/src/
+/tools/
+continuation.md
