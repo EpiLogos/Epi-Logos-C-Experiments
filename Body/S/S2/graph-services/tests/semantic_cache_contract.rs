@@ -5,14 +5,17 @@ use epi_s2_graph_services::{
     GraphRedisRole, SearchPayload, SemanticCacheConfig, SemanticCacheHealth,
     SemanticCacheMatchStrategy, SemanticDocument, StorePayload,
 };
-use epi_s3_redis_context::REDISVL_SERVICE_RELATIVE_PATH;
+use epi_s3_redis_context::{RedisRuntimeRole, REDISVL_SERVICE_RELATIVE_PATH};
 
 #[test]
 fn semantic_cache_contract_is_s2_graph_cache_not_gateway_temporal_context() {
     let role = GraphRedisRole::semantic_cache();
+    let runtime = RedisRuntimeRole::local_runtime();
 
     assert_eq!(role.coordinate_owner, "S2");
+    assert_eq!(runtime.runtime_owner, "S3");
     assert_eq!(role.redis_namespace, "s2:graph:semantic");
+    assert_eq!(runtime.graph_semantic_namespace, role.redis_namespace);
     assert_eq!(role.cache_name, "epi_semantic_cache");
     assert_eq!(
         role.embedding_dimensions,
@@ -24,6 +27,7 @@ fn semantic_cache_contract_is_s2_graph_cache_not_gateway_temporal_context() {
     );
     assert_eq!(role.q_schema_version, epi_s2_graph_schema::Q_SCHEMA_VERSION);
     assert!(role.description.contains("graph retrieval"));
+    assert!(runtime.description.contains("S3 Redis runtime substrate"));
     assert!(!role.description.contains("session"));
 }
 
@@ -117,13 +121,13 @@ fn semantic_document_text_includes_safe_kernel_coordinate_anchor() {
     assert_eq!(doc.coordinate, "M2");
     assert_eq!(doc.coordinate_anchor.coordinate, "M2");
     assert!(doc.text.contains("kernel_source: s0.kernel"));
-    assert!(doc.text.contains("pointer_web_count: 36"));
+    assert!(doc.text.contains("coordinate_reference_count: 36"));
     assert!(doc
         .text
         .contains("harmonic_profile: portal-core::MathemeHarmonicProfile"));
     assert!(doc.text.contains("harmonic_bedrock: #2/#2'"));
     assert!(doc.text.contains("harmonic_pointer_lens: L2"));
-    assert!(doc.text.contains("pointer_family_refs:"));
+    assert!(doc.text.contains("coordinate_family_refs:"));
     assert!(doc.text.contains("m_ref=M2"));
     assert!(doc.text.contains("qvdata_source: epi core knowing"));
 }

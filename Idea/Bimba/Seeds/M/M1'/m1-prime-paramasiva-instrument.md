@@ -11,7 +11,7 @@
 > **The M ↔ M' Distinction:** M1 = the engine (what Paramaśiva *is*). M1' = the instrument (how Paramaśiva *plays*). M' never duplicates M; it renders M operative as techne.
 
 > **Companion documents:**
-> - [`epi-logos-kernel-spec.md`](../M0'/epi-logos-kernel-spec.md) — the bioquaternionic JEPA-EBM operator over the full matheme
+> - [`epi-logos-kernel-spec.md`](../epi-logos-kernel-spec.md) — the bioquaternionic JEPA-EBM operator over the full matheme
 > - [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) — the load-bearing musical theory: 12 MEF lenses, 7 context-frames, 4:3 × 9/8 × 4:3 = 2/1, the cymatic correspondence
 > - [`physical-pole-stack-architecture.md`](./physical-pole-stack-architecture.md) — torus / solar-cymatic / codon-clock substrate
 > - [`mental-pole-mechanics.md`](../M4'/mental-pole-mechanics.md) — LLM / EBM / Verifier 4:5:6 just-triadic weighting

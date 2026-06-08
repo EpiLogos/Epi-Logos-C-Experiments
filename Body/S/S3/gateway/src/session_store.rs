@@ -1,8 +1,11 @@
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use serde_json::{Map, Value};
+
+use epi_s3_redis_context::{CacheTier, RedisCache, RedisConfig, RedisKey};
 
 use super::{bootstrap, subagents, transcripts, workspace};
 
@@ -19,6 +22,13 @@ pub struct CreateSessionContext {
 
 pub struct SessionStore {
     gate_root: PathBuf,
+    redis: Mutex<Option<RedisCache>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RedisRuntimeWrite {
+    pub key: RedisKey,
+    pub value: String,
 }
 
 impl SessionStore {
@@ -26,7 +36,35 @@ impl SessionStore {
         let gate_root = gate_root.as_ref().to_path_buf();
         fs::create_dir_all(gate_root.join("sessions")).map_err(|err| err.to_string())?;
         fs::create_dir_all(gate_root.join("transcripts")).map_err(|err| err.to_string())?;
-        Ok(Self { gate_root })
+        Ok(Self {
+            gate_root,
+            redis: Mutex::new(None),
+        })
+    }
+
+    /// Create a SessionStore with Redis caching. Falls back to file-only
+    /// if Redis is unavailable — the store is always functional.
+    pub fn with_redis(gate_root: impl AsRef<Path>) -> Result<Self, String> {
+        let store = Self::new(gate_root)?;
+        let rt = tokio::runtime::Handle::try_current()
+            .map_err(|_| "no tokio runtime active — cannot connect to Redis".to_string())?;
+        match rt.block_on(RedisCache::connect(&RedisConfig::from_env())) {
+            Ok(cache) => {
+                eprintln!(
+                    "[gateway] Redis connected OK ({})",
+                    std::env::var("EPILOGOS_REDIS_URI")
+                        .unwrap_or_else(|_| "redis://localhost:6379".into())
+                );
+                *store.redis.lock().map_err(|err| err.to_string())? = Some(cache);
+            }
+            Err(err) => {
+                eprintln!(
+                    "[gateway] Redis unavailable ({}), session store is file-only",
+                    err
+                );
+            }
+        }
+        Ok(store)
     }
 
     pub fn create(&self, canonical_key: &str) -> Result<SessionRecord, String> {
@@ -188,6 +226,62 @@ impl SessionStore {
         transcripts::transcript_path(&self.gate_root, canonical_key)
     }
 
+    pub fn cached_session_state_key(session_id: &str) -> RedisKey {
+        RedisKey::session_state(session_id)
+    }
+
+    pub fn runtime_cache_writes_for_record(
+        record: &SessionRecord,
+    ) -> Result<Vec<RedisRuntimeWrite>, String> {
+        let record_json = serde_json::to_string(record).map_err(|err| err.to_string())?;
+        let session_summary = serde_json::json!({
+            "canonicalKey": record.canonical_key,
+            "sessionId": record.session_id,
+            "dayId": record.day_id,
+            "activeAgentId": record.active_agent_id,
+            "vaultNowPath": record.vault_now_path,
+            "runtimeCwd": record.runtime_cwd,
+            "vaultRoot": record.vault_root,
+            "sourceSessionKey": record.source_session_key,
+            "sourceSessionKind": record.source_session_kind,
+            "updatedAtMs": record.updated_at_ms,
+        })
+        .to_string();
+        let mut writes = vec![
+            RedisRuntimeWrite {
+                key: RedisKey::from_logical(
+                    CacheTier::Active,
+                    format!("s3:gateway:session:record:{}", record.canonical_key),
+                ),
+                value: record_json,
+            },
+            RedisRuntimeWrite {
+                key: RedisKey::session_state(&record.session_id),
+                value: session_summary.clone(),
+            },
+            RedisRuntimeWrite {
+                key: RedisKey::agent_orientation(&record.active_agent_id, &record.session_id),
+                value: session_summary.clone(),
+            },
+        ];
+        if let Some(day_id) = record.day_id.as_deref() {
+            writes.push(RedisRuntimeWrite {
+                key: RedisKey::from_logical(
+                    CacheTier::Warm,
+                    format!("s3:gateway:temporal:day:{day_id}:context"),
+                ),
+                value: serde_json::json!({
+                    "dayId": day_id,
+                    "sessionKey": record.canonical_key,
+                    "sessionId": record.session_id,
+                    "vaultNowPath": record.vault_now_path,
+                })
+                .to_string(),
+            });
+        }
+        Ok(writes)
+    }
+
     pub fn patch(&self, identifier: &str, patch: SessionPatch) -> Result<SessionRecord, String> {
         let canonical_key = self.resolve(identifier)?.canonical_key;
         self.update(&canonical_key, |record| {
@@ -313,6 +407,80 @@ impl SessionStore {
         Ok(record)
     }
 
+    // ── Redis tiered cache ───────────────────────────────────────────
+
+    /// Cache session state in the Hot tier (TTL 300s).
+    /// No-op if Redis is unavailable or no tokio runtime is active.
+    pub fn cache_session_state(
+        &mut self,
+        session_id: &str,
+        state_json: &str,
+    ) -> Result<(), String> {
+        let mut guard = self.redis.lock().map_err(|err| err.to_string())?;
+        if let Some(ref mut redis) = *guard {
+            let key = Self::cached_session_state_key(session_id);
+            tokio::runtime::Handle::try_current()
+                .map_err(|_| "no tokio runtime".to_string())?
+                .block_on(redis.set_key(&key, state_json))
+                .map_err(|e| e.to_string())
+        } else {
+            Ok(())
+        }
+    }
+
+    /// Load cached session state.
+    /// Returns `None` if the key is absent, Redis is unavailable,
+    /// or no tokio runtime is active.
+    pub fn load_cached_session_state(
+        &mut self,
+        session_id: &str,
+    ) -> Result<Option<String>, String> {
+        let mut guard = self.redis.lock().map_err(|err| err.to_string())?;
+        if let Some(ref mut redis) = *guard {
+            let key = Self::cached_session_state_key(session_id);
+            tokio::runtime::Handle::try_current()
+                .map_err(|_| "no tokio runtime".to_string())?
+                .block_on(redis.get_key(&key))
+                .map_err(|e| e.to_string())
+        } else {
+            Ok(None)
+        }
+    }
+
+    /// Cache a bimba coordinate lookup in the Cold tier (TTL 86400s).
+    pub fn cache_coordinate(&mut self, bimba_coord: &str, json_value: &str) -> Result<(), String> {
+        let mut guard = self.redis.lock().map_err(|err| err.to_string())?;
+        if let Some(ref mut redis) = *guard {
+            tokio::runtime::Handle::try_current()
+                .map_err(|_| "no tokio runtime".to_string())?
+                .block_on(redis.cache_coordinate(bimba_coord, json_value, CacheTier::Cold))
+                .map_err(|e| e.to_string())
+        } else {
+            Ok(())
+        }
+    }
+
+    /// Report whether the Redis connection is healthy.
+    /// Returns `false` if Redis was never connected.
+    pub fn redis_healthy(&mut self) -> bool {
+        let Ok(mut guard) = self.redis.lock() else {
+            return false;
+        };
+        guard.as_mut().map_or(false, |r| {
+            tokio::runtime::Handle::try_current()
+                .ok()
+                .and_then(|rt| rt.block_on(r.health_check()).ok())
+                .unwrap_or(false)
+        })
+    }
+
+    pub fn has_redis(&self) -> bool {
+        self.redis
+            .lock()
+            .map(|guard| guard.is_some())
+            .unwrap_or(false)
+    }
+
     fn update<F>(&self, canonical_key: &str, mutate: F) -> Result<SessionRecord, String>
     where
         F: FnOnce(&mut SessionRecord) -> Result<(), String>,
@@ -335,6 +503,24 @@ impl SessionStore {
         record.updated_at_ms = now_ms()?;
         let payload = serde_json::to_string_pretty(&record).map_err(|err| err.to_string())?;
         fs::write(path, payload).map_err(|err| err.to_string())?;
+        self.flush_runtime_cache_for_record(&record)?;
+        Ok(())
+    }
+
+    fn flush_runtime_cache_for_record(&self, record: &SessionRecord) -> Result<(), String> {
+        let mut guard = self.redis.lock().map_err(|err| err.to_string())?;
+        let Some(redis) = guard.as_mut() else {
+            return Ok(());
+        };
+        let writes = Self::runtime_cache_writes_for_record(record)?;
+        let handle = tokio::runtime::Handle::try_current().map_err(|_| {
+            "no tokio runtime active — cannot write Redis session cache".to_string()
+        })?;
+        for write in writes {
+            handle
+                .block_on(redis.set_key(&write.key, &write.value))
+                .map_err(|err| err.to_string())?;
+        }
         Ok(())
     }
 }

@@ -5,8 +5,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 use crate::{
-    kernel_coordinate_anchor_from_parts, CoordinateArrayParser, KernelCoordinateAnchor,
-    Neo4jClient, PointerWeb,
+    canonical_harmonic_bimba_relations, kernel_coordinate_anchor_from_parts, CoordinateArrayParser,
+    CoordinateReferenceProjection, HarmonicBimbaRelation, KernelCoordinateAnchor, Neo4jClient,
 };
 use crate::{GDS_OPTION1_PROJECTION_NAME, GDS_OPTION1_PROJECTION_VERSION, GDS_PRIVACY_BOUNDARY};
 use epi_s2_graph_schema::{
@@ -209,7 +209,22 @@ pub struct PointerWebRefreshRequest {
 pub struct PointerWebRefreshPlan {
     pub resolution: CoordinateResolution,
     pub coordinate_anchor: KernelCoordinateAnchor,
-    pub pointer_web: PointerWeb,
+    pub coordinate_reference_projection: CoordinateReferenceProjection,
+    pub deprecation_notice: String,
+    pub cypher: String,
+    pub params: GraphMethodParams,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HarmonicRelationMaterializationRequest {
+    pub timestamp_ms: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct HarmonicRelationMaterializationPlan {
+    pub namespace: String,
+    pub relation_count: usize,
+    pub relations: Vec<HarmonicBimbaRelation>,
     pub cypher: String,
     pub params: GraphMethodParams,
 }
@@ -367,9 +382,10 @@ impl<'a> GraphMethodService<'a> {
             &resolution.input,
             resolution.compatibility_property.clone(),
         )?;
-        let pointer_web = coordinate_anchor.pointer_web.clone();
-        let pointer_web_json =
-            serde_json::to_string(&pointer_web).map_err(|err| err.to_string())?;
+        let coordinate_reference_projection =
+            coordinate_anchor.coordinate_reference_projection.clone();
+        let pointer_web_json = serde_json::to_string(&coordinate_reference_projection)
+            .map_err(|err| err.to_string())?;
         let harmonic_pointer_anchor_json = coordinate_anchor
             .harmonic_pointer
             .as_ref()
@@ -382,13 +398,13 @@ impl<'a> GraphMethodService<'a> {
             "source_input": resolution.input,
             "pointer_web_json": pointer_web_json,
             "harmonic_pointer_anchor_json": harmonic_pointer_anchor_json,
-            "pointer_count": pointer_web.pointer_count as i64,
-            "family_refs": pointer_ref_values(&pointer_web.family_refs),
-            "reflective_refs": pointer_ref_values(&pointer_web.reflective_refs),
-            "inversion_refs": pointer_ref_values(&pointer_web.inversion_refs),
-            "position_refs": pointer_ref_values(&pointer_web.position_refs),
-            "lens_refs": pointer_ref_values(&pointer_web.lens_refs),
-            "lens_inversion_refs": pointer_ref_values(&pointer_web.lens_inversion_refs),
+            "pointer_count": coordinate_reference_projection.reference_count as i64,
+            "family_refs": pointer_ref_values(&coordinate_reference_projection.family_refs),
+            "reflective_refs": pointer_ref_values(&coordinate_reference_projection.reflective_refs),
+            "inversion_refs": pointer_ref_values(&coordinate_reference_projection.inversion_refs),
+            "position_refs": pointer_ref_values(&coordinate_reference_projection.position_refs),
+            "lens_refs": pointer_ref_values(&coordinate_reference_projection.lens_refs),
+            "lens_inversion_refs": pointer_ref_values(&coordinate_reference_projection.lens_inversion_refs),
             "timestamp_ms": request.timestamp_ms as i64,
         }))?;
         let cypher = format!(
@@ -425,7 +441,30 @@ impl<'a> GraphMethodService<'a> {
         Ok(PointerWebRefreshPlan {
             resolution,
             coordinate_anchor,
-            pointer_web,
+            coordinate_reference_projection,
+            deprecation_notice:
+                "deprecated compatibility projection; consume S2 Neo4j relations instead".to_owned(),
+            cypher,
+            params,
+        })
+    }
+
+    pub fn harmonic_relation_materialization_plan(
+        request: &HarmonicRelationMaterializationRequest,
+    ) -> Result<HarmonicRelationMaterializationPlan, String> {
+        if request.timestamp_ms == 0 {
+            return Err("timestamp_ms is required for harmonic relation materialization".into());
+        }
+        let relations = canonical_harmonic_bimba_relations();
+        let params = GraphMethodParams::from_json(json!({
+            "timestamp_ms": request.timestamp_ms as i64,
+        }))?;
+        let cypher = harmonic_relation_materialization_cypher(&relations);
+
+        Ok(HarmonicRelationMaterializationPlan {
+            namespace: "bimba".to_owned(),
+            relation_count: relations.len(),
+            relations,
             cypher,
             params,
         })
@@ -574,11 +613,120 @@ impl<'a> GraphMethodService<'a> {
             "contract": graph_contract("s2.graph.pointer_web.refresh", Some(&plan.resolution)),
             "source": plan.resolution,
             "coordinate_anchor": plan.coordinate_anchor,
-            "pointerWeb": plan.pointer_web,
+            "coordinateReferenceProjection": plan.coordinate_reference_projection,
+            "deprecatedPointerWeb": {
+                "status": "deprecated_compatibility_only",
+                "notice": plan.deprecation_notice
+            },
             "rowCount": rows.len(),
             "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
         }))
     }
+
+    pub async fn materialize_harmonic_relations(
+        &self,
+        request: HarmonicRelationMaterializationRequest,
+    ) -> Result<Value, String> {
+        let plan = Self::harmonic_relation_materialization_plan(&request)?;
+        let rows = self
+            .client
+            .run_query(plan.params.apply_to_query(query(&plan.cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.harmonic_relations.materialize failed: {err}"))?;
+        Ok(json!({
+            "contract": graph_contract("s2.graph.harmonic_relations.materialize", None),
+            "namespace": plan.namespace,
+            "relationCount": plan.relation_count,
+            "relations": plan.relations,
+            "rowCount": rows.len(),
+            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+        }))
+    }
+}
+
+fn harmonic_relation_materialization_cypher(relations: &[HarmonicBimbaRelation]) -> String {
+    let relation_maps = relations
+        .iter()
+        .map(|relation| {
+            format!(
+                "{{edge_id: '{}', source_coordinate: '{}', target_coordinate: '{}', relation_type: '{}', harmonic_family: '{}', harmonic_register: '{}', harmonic_depth: {}, harmonic_d_face: '{}', harmonic_base_pair: '{}', harmonic_active_lenses: [{}], harmonic_primary_anchor: '{}', harmonic_interval_signature: '{}', source_anchor: '{}'}}",
+                cypher_literal(&relation.edge_id),
+                cypher_literal(&relation.source_coordinate),
+                cypher_literal(&relation.target_coordinate),
+                cypher_literal(&relation.relation_type),
+                cypher_literal(&relation.harmonic_family),
+                cypher_literal(&relation.harmonic_register),
+                relation.harmonic_depth,
+                cypher_literal(&relation.harmonic_d_face),
+                cypher_literal(&relation.harmonic_base_pair),
+                relation
+                    .harmonic_active_lenses
+                    .iter()
+                    .map(|lens| format!("'{}'", cypher_literal(lens)))
+                    .collect::<Vec<_>>()
+                    .join(", "),
+                cypher_literal(&relation.harmonic_primary_anchor),
+                cypher_literal(&relation.harmonic_interval_signature),
+                cypher_literal(&relation.source_anchor),
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(",\n  ");
+    let merge_blocks = [
+        "ADJACENTLY_ARTICULATES",
+        "MIRRORS_COMPLEMENT",
+        "CROSSES_KNOWING_LIMIT",
+        "INVERTS_THROUGH_FIRST",
+        "INVERTS_THROUGH_SECOND",
+        "INVERTS_THROUGH_PAIR",
+    ]
+    .iter()
+    .map(|relation_type| {
+        format!(
+            "FOREACH (_ IN CASE WHEN rel.relation_type = '{relation_type}' THEN [1] ELSE [] END |
+  MERGE (source)-[edge:{relation_type} {{c_2_edge_id: rel.edge_id}}]->(target)
+  SET {set_clause}
+)",
+            set_clause = harmonic_relation_set_clause("edge"),
+        )
+    })
+    .collect::<Vec<_>>()
+    .join("\n");
+
+    format!(
+        "UNWIND [
+  {relation_maps}
+] AS rel
+MATCH (source:Bimba {{coordinate: rel.source_coordinate}})
+MATCH (target:Bimba {{coordinate: rel.target_coordinate}})
+{merge_blocks}
+RETURN count(rel) AS relation_count"
+    )
+}
+
+fn harmonic_relation_set_clause(edge: &str) -> String {
+    [
+        format!("{edge}.c_0_source_coordinate = source.coordinate"),
+        format!("{edge}.c_0_target_coordinate = target.coordinate"),
+        format!("{edge}.c_1_relation_family = rel.harmonic_family"),
+        format!("{edge}.c_2_relation_type = rel.relation_type"),
+        format!("{edge}.c_2_edge_id = rel.edge_id"),
+        format!("{edge}.c_3_created_at = datetime({{epochMillis: $timestamp_ms}})"),
+        format!("{edge}.c_4_harmonic_family = rel.harmonic_family"),
+        format!("{edge}.c_4_harmonic_register = rel.harmonic_register"),
+        format!("{edge}.c_4_harmonic_depth = rel.harmonic_depth"),
+        format!("{edge}.c_4_harmonic_d_face = rel.harmonic_d_face"),
+        format!("{edge}.c_4_harmonic_base_pair = rel.harmonic_base_pair"),
+        format!("{edge}.c_4_harmonic_active_lenses = rel.harmonic_active_lenses"),
+        format!("{edge}.c_4_harmonic_primary_anchor = rel.harmonic_primary_anchor"),
+        format!("{edge}.c_5_harmonic_interval_signature = rel.harmonic_interval_signature"),
+        format!("{edge}.c_4_provenance = rel.source_anchor"),
+    ]
+    .join(",\n      ")
+}
+
+fn cypher_literal(value: &str) -> String {
+    value.replace('\\', "\\\\").replace('\'', "\\'")
 }
 
 fn kernel_resonance_index(lens: u8, ascent_helix: bool, position: u8) -> Result<i64, String> {
@@ -636,18 +784,7 @@ fn known_row_json(row: &neo4rs::Row) -> Value {
     })
 }
 
-pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -> Value {
-    let pointer_descriptors = resolution
-        .and_then(|resolved| {
-            kernel_coordinate_anchor_from_parts(
-                &resolved.canonical,
-                &resolved.input,
-                resolved.compatibility_property.clone(),
-            )
-            .ok()
-        })
-        .map(|anchor| anchor.pointer_web.harmonic_relation_descriptors)
-        .unwrap_or_default();
+pub fn graph_contract(method: &str, _resolution: Option<&CoordinateResolution>) -> Value {
     json!({
         "method": method,
         "namespace": "bimba",
@@ -666,7 +803,16 @@ pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -
             "coordinateSemanticAuthority": "Idea/Bimba/World/Types/Coordinates",
             "missingResidencyPolicy": "canonical_absent; never synthesize client-renderer paths"
         },
-        "pointerWebDescriptors": pointer_descriptors,
+        "deprecatedPointerWeb": {
+            "status": "deprecated_compatibility_only",
+            "replacement": "s2.graph.harmonic_relations.materialize + s2.graph.traverse",
+            "reason": "S2 pointer_web is a coordinate reference projection, not the S0 HC_PointerWeb36 or the Bimba relation substrate"
+        },
+        "harmonicRelations": {
+            "source": "s2.graph.harmonic_relations.materialize",
+            "namespace": "bimba",
+            "materialization": "Neo4j Bimba edges between P/P' source coordinates and L/L' target coordinates"
+        },
         "ontologyReadiness": {
             "n10sOwner": "S2/S2'",
             "status": "reported-by-doctor-or-live-neo4j",

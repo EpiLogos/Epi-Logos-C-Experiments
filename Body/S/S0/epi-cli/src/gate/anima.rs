@@ -300,6 +300,7 @@ pub fn psyche_state(state_root: impl AsRef<Path>, params: &Value) -> Result<Valu
     Ok(json!({
         "owner": "S4'",
         "sessionKey": session_key,
+        "handles": psyche_handles(&session_key)?,
         "state": state,
     }))
 }
@@ -310,6 +311,7 @@ pub fn psyche_update(state_root: impl AsRef<Path>, params: &Value) -> Result<Val
         .get("patch")
         .and_then(Value::as_object)
         .ok_or_else(|| "patch must be an object".to_owned())?;
+    validate_psyche_patch(patch)?;
     let mut state = read_psyche_state(state_root.as_ref(), &session_key)?;
     merge_psyche_patch(&mut state, patch);
     state["updatedAtMs"] = json!(current_time_ms()?);
@@ -317,6 +319,7 @@ pub fn psyche_update(state_root: impl AsRef<Path>, params: &Value) -> Result<Val
     Ok(json!({
         "owner": "S4'",
         "sessionKey": session_key,
+        "handles": psyche_handles(&session_key)?,
         "state": state,
     }))
 }
@@ -682,10 +685,30 @@ fn default_psyche_state() -> Result<Value, String> {
         "currentTask": Value::Null,
         "currentSubtasks": [],
         "activeArtifactSet": [],
+        "carryForward": [],
         "visibilityStance": "observable",
         "runLocalContinuity": {},
         "updatedAtMs": current_time_ms()?,
     }))
+}
+
+fn psyche_handles(session_key: &str) -> Result<Value, String> {
+    let handle = epi_s3_gateway_contract::PsycheRuntimeHandle::for_session(session_key);
+    serde_json::to_value(handle).map_err(|err| err.to_string())
+}
+
+fn validate_psyche_patch(patch: &Map<String, Value>) -> Result<(), String> {
+    let max =
+        epi_s3_gateway_contract::PsycheRuntimeHandle::for_session("bound").max_carry_forward_items;
+    if let Some(carry_forward) = patch.get("carryForward").and_then(Value::as_array) {
+        if carry_forward.len() > max {
+            return Err(format!(
+                "carry-forward exceeds Psyche runtime bound ({}/{max})",
+                carry_forward.len()
+            ));
+        }
+    }
+    Ok(())
 }
 
 fn merge_psyche_patch(state: &mut Value, patch: &Map<String, Value>) {
@@ -695,6 +718,7 @@ fn merge_psyche_patch(state: &mut Value, patch: &Map<String, Value>) {
             "currentTask",
             "currentSubtasks",
             "activeArtifactSet",
+            "carryForward",
             "visibilityStance",
             "runLocalContinuity",
         ] {

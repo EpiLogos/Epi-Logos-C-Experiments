@@ -71,6 +71,7 @@ fn s2_graph_methods_route_to_graph_service_authority() {
         "s2.graph.query",
         "s2.graph.node",
         "s2.graph.traverse",
+        "s2.graph.harmonic_relations.materialize",
         "s2.graph.pointer_web.compute",
         "s2.graph.pointer_web.refresh",
         "s2.graph.kernel_resonance.record",
@@ -313,10 +314,9 @@ mod t9_route_ownership_cross_walk {
                 {
                     k += 1;
                 }
-                let is_match_arm = (k + 1 < bytes.len()
-                    && bytes[k] == b'='
-                    && bytes[k + 1] == b'>')
-                    || (k < bytes.len() && bytes[k] == b'|');
+                let is_match_arm =
+                    (k + 1 < bytes.len() && bytes[k] == b'=' && bytes[k + 1] == b'>')
+                        || (k < bytes.len() && bytes[k] == b'|');
                 if is_match_arm
                     && !raw.is_empty()
                     && raw
@@ -403,14 +403,12 @@ mod t9_route_ownership_cross_walk {
 
     #[test]
     fn route_ownership_cross_walk_method_names_vs_s3_dispatch_vs_s0_dispatch() {
-        let method_names: std::collections::BTreeSet<&str> =
-            METHOD_NAMES.iter().copied().collect();
+        let method_names: std::collections::BTreeSet<&str> = METHOD_NAMES.iter().copied().collect();
         let server_src = s0_server_source();
         let raw_s0 = extract_s0_dispatched_methods(&server_src);
         let internal: std::collections::BTreeSet<&str> =
             internal_state_tags().iter().copied().collect();
-        let s3_only: std::collections::BTreeSet<&str> =
-            s3_only_methods().iter().copied().collect();
+        let s3_only: std::collections::BTreeSet<&str> = s3_only_methods().iter().copied().collect();
 
         let s0_dispatched: std::collections::BTreeSet<String> = raw_s0
             .into_iter()

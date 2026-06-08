@@ -31,10 +31,10 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use epi_s1_hen_compiler_core::wikilinks::{parse_wikilinks, WikilinkTarget};
 use epi_s1_hen_compiler_core::{
     suggest_link_candidates, LinkCandidate, LinkCandidateKind, LinkCandidateRequest,
 };
-use epi_s1_hen_compiler_core::wikilinks::{parse_wikilinks, WikilinkTarget};
 use epi_s3_gateway_contract::{
     classify_vault_path_privacy, S1SemanticCandidate, S1SemanticCandidateKind, S1SemanticResponse,
     S1SemanticStaleness, S1VaultPathPrivacyClass, S1VaultRenameReceipt, S1VaultRenameRefusal,
@@ -91,8 +91,8 @@ pub fn read_file(params: &Value) -> Result<Value, String> {
     refuse_if_protected_without_capability(&path, params)?;
     let vault_root = resolve_vault_root(params)?;
     let absolute = vault_root.join(&path);
-    let contents = fs::read_to_string(&absolute)
-        .map_err(|err| format!("read `{path}` failed: {err}"))?;
+    let contents =
+        fs::read_to_string(&absolute).map_err(|err| format!("read `{path}` failed: {err}"))?;
     Ok(json!({
         "path": path,
         "contents": contents,
@@ -203,7 +203,9 @@ pub fn rename_or_move_file(params: &Value) -> Result<Value, String> {
     // remains Hen — keep this here even when empty so future Hen-side
     // additions of WikilinkTarget variants automatically improve coverage.
     let _suppress_unused = |t: &WikilinkTarget| match t {
-        WikilinkTarget::Path(_) | WikilinkTarget::Heading(_) | WikilinkTarget::PathHeading { .. } => {}
+        WikilinkTarget::Path(_)
+        | WikilinkTarget::Heading(_)
+        | WikilinkTarget::PathHeading { .. } => {}
     };
     let _ = _suppress_unused;
 
@@ -233,10 +235,7 @@ pub fn suggest_links(params: &Value) -> Result<Value, String> {
                 .collect()
         })
         .unwrap_or_default();
-    let limit = params
-        .get("limit")
-        .and_then(|v| v.as_u64())
-        .unwrap_or(16) as usize;
+    let limit = params.get("limit").and_then(|v| v.as_u64()).unwrap_or(16) as usize;
     let include_stale = params
         .get("includeStale")
         .and_then(|v| v.as_bool())
@@ -259,11 +258,15 @@ pub fn suggest_links(params: &Value) -> Result<Value, String> {
             let response = S1SemanticResponse {
                 seed_sources: vec![],
                 candidates: vec![],
-                warnings: vec![format!("smart_env index not present at {}/.smart-env/multi", vault_root.display())],
+                warnings: vec![format!(
+                    "smart_env index not present at {}/.smart-env/multi",
+                    vault_root.display()
+                )],
                 staleness: S1SemanticStaleness::NoIndex,
                 smart_env_index_path: None,
             };
-            return serde_json::to_value(&response).map_err(|err| format!("serialize response: {err}"));
+            return serde_json::to_value(&response)
+                .map_err(|err| format!("serialize response: {err}"));
         }
         Err(err) => return Err(format!("hen suggest_link_candidates failed: {err}")),
     };

@@ -1242,6 +1242,7 @@ async fn dispatch_rpc(
         "s2.graph.query"
         | "s2.graph.node"
         | "s2.graph.traverse"
+        | "s2.graph.harmonic_relations.materialize"
         | "s2.graph.pointer_web.compute"
         | "s2.graph.pointer_web.refresh"
         | "s2.graph.kernel_resonance.record"
@@ -1607,12 +1608,7 @@ async fn dispatch_rpc(
                         frame.method, route.route_id, kind_hint
                     )
                 })
-                .unwrap_or_else(|| {
-                    format!(
-                        "{} is not implemented yet{}",
-                        frame.method, kind_hint
-                    )
-                });
+                .unwrap_or_else(|| format!("{} is not implemented yet{}", frame.method, kind_hint));
             Err(("unimplemented".to_owned(), message))
         }
     }
@@ -2972,30 +2968,29 @@ async fn dispatch_spacetime_subscribe(
     let registration = SpacetimeRegistration::from_env(port, state_root)
         .map_err(|err| format!("spacetimedb registration probe failed: {err}"))?;
 
-    let (plan_json, source, fallback_active, projection_mode) = if let Some(registration) =
-        registration.as_ref()
-    {
-        let plan = registration.subscription_plan(&session_key, &agent_id);
-        let plan_value = serde_json::to_value(&plan)
-            .map_err(|err| format!("serialize subscription plan: {err}"))?;
-        let source = if plan.mode.as_str()
-            == epi_s3_gateway_contract::SPACETIME_PROJECTION_SOURCE_NATIVE_WS
-        {
-            "websocket-multiplex"
+    let (plan_json, source, fallback_active, projection_mode) =
+        if let Some(registration) = registration.as_ref() {
+            let plan = registration.subscription_plan(&session_key, &agent_id);
+            let plan_value = serde_json::to_value(&plan)
+                .map_err(|err| format!("serialize subscription plan: {err}"))?;
+            let source = if plan.mode.as_str()
+                == epi_s3_gateway_contract::SPACETIME_PROJECTION_SOURCE_NATIVE_WS
+            {
+                "websocket-multiplex"
+            } else {
+                "http-sql-fallback"
+            };
+            let fallback = source == "http-sql-fallback";
+            let mode = plan.subscription_mode.clone();
+            (Some(plan_value), source.to_owned(), fallback, Some(mode))
         } else {
-            "http-sql-fallback"
+            (
+                None::<Value>,
+                "http-sql-fallback".to_owned(),
+                true,
+                None::<String>,
+            )
         };
-        let fallback = source == "http-sql-fallback";
-        let mode = plan.subscription_mode.clone();
-        (Some(plan_value), source.to_owned(), fallback, Some(mode))
-    } else {
-        (
-            None::<Value>,
-            "http-sql-fallback".to_owned(),
-            true,
-            None::<String>,
-        )
-    };
 
     let subscription_id = uuid::Uuid::new_v4().to_string();
     let opened_at_ms = now_ms() as u64;
@@ -3013,12 +3008,14 @@ async fn dispatch_spacetime_subscribe(
         vault_now_path: vault_now_path.clone(),
         graphiti_namespace_ref: graphiti_namespace_ref.clone(),
         graphiti_arc_id: graphiti_arc_id.clone(),
-        projection_source: Some(if fallback_active {
-            "http-sql-poll"
-        } else {
-            "native-websocket"
-        }
-        .to_owned()),
+        projection_source: Some(
+            if fallback_active {
+                "http-sql-poll"
+            } else {
+                "native-websocket"
+            }
+            .to_owned(),
+        ),
         opened_at_ms,
     };
     runtime.register_subscription(record);

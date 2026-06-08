@@ -117,7 +117,10 @@ fn t8_governed_rename_leaves_no_orphan_wikilinks() {
         reconciled_docs.len()
     );
     assert!(
-        receipt["refusals"].as_array().map(|a| a.is_empty()).unwrap_or(false),
+        receipt["refusals"]
+            .as_array()
+            .map(|a| a.is_empty())
+            .unwrap_or(false),
         "refusals must be empty for an all-public rename; got: {receipt}"
     );
 
@@ -156,14 +159,12 @@ fn t8_governed_rename_leaves_no_orphan_wikilinks() {
 
     // Positive assertions — the NEW title appears with every anchor form
     // preserved (plain, alias, heading-anchor).
-    let inbound1 =
-        fs::read_to_string(vault.join("Bimba/Seeds/M/M2/Inbound1.md")).unwrap();
+    let inbound1 = fs::read_to_string(vault.join("Bimba/Seeds/M/M2/Inbound1.md")).unwrap();
     assert!(
         inbound1.contains("[[Origin]]"),
         "Inbound1 must contain [[Origin]] after rename: {inbound1:?}"
     );
-    let inbound2 =
-        fs::read_to_string(vault.join("Bimba/Seeds/M/M2/Inbound2.md")).unwrap();
+    let inbound2 = fs::read_to_string(vault.join("Bimba/Seeds/M/M2/Inbound2.md")).unwrap();
     assert!(
         inbound2.contains("[[Origin|the source]]"),
         "Inbound2 alias must rewrite to [[Origin|the source]]: {inbound2:?}"
@@ -172,18 +173,15 @@ fn t8_governed_rename_leaves_no_orphan_wikilinks() {
         inbound2.contains("[[Origin#Section]]"),
         "Inbound2 heading anchor must rewrite to [[Origin#Section]]: {inbound2:?}"
     );
-    let thought =
-        fs::read_to_string(vault.join("Pratibimba/Self/Thought/T0/Thought.md")).unwrap();
+    let thought = fs::read_to_string(vault.join("Pratibimba/Self/Thought/T0/Thought.md")).unwrap();
     assert!(
         thought.contains("[[Origin]]") && thought.contains("[[Origin|other-alias]]"),
         "Thought must contain both rewritten forms of Source: {thought:?}"
     );
 
     // Control note — was not referencing Source; must remain byte-identical.
-    let untouched_after = fs::read_to_string(
-        vault.join("Body/M/epi-theia/extensions/Untouched.md"),
-    )
-    .unwrap();
+    let untouched_after =
+        fs::read_to_string(vault.join("Body/M/epi-theia/extensions/Untouched.md")).unwrap();
     assert_eq!(
         untouched_after, untouched,
         "Untouched.md must remain byte-identical; sibling-coordinate links must not be touched"

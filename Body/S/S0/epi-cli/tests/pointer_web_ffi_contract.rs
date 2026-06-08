@@ -1,9 +1,13 @@
 use epi_logos::ffi::tagged;
 use epi_logos::ffi::{
     CoordinateArena, CoordinateFamily, EpiLib, HolographicCoordinate, HC_BEDROCK_HASH_OPERATOR,
-    HC_BEDROCK_INVERTED_PSYCHOID, HC_BEDROCK_PSYCHOID_NUMBER, HC_HELIX_BIMBA, HC_HELIX_PRATIBIMBA,
-    HC_INTERVAL_OCTAVE, HC_INTERVAL_SEMITONE, HC_INTERVAL_TOTALITY_16_9, HC_INTERVAL_TRITONE,
-    HC_INTERVAL_WHOLE_TONE, HC_REL_EPOGDOON_TICK, HC_REL_INVERSION_SPANDA, HC_REL_LENS_ANCHOR,
+    HC_BEDROCK_INVERTED_PSYCHOID, HC_BEDROCK_PSYCHOID_NUMBER, HC_D_FACE_BOTH, HC_D_FACE_LEFT,
+    HC_D_FACE_NONE, HC_D_FACE_RIGHT, HC_HARMONIC_FAMILY_A, HC_HARMONIC_FAMILY_B,
+    HC_HARMONIC_FAMILY_C, HC_HELIX_BIMBA, HC_HELIX_PRATIBIMBA, HC_INTERVAL_OCTAVE,
+    HC_INTERVAL_SEMITONE, HC_INTERVAL_TOTALITY_16_9, HC_INTERVAL_TRITONE, HC_INTERVAL_WHOLE_TONE,
+    HC_REL_ADJACENTLY_ARTICULATES, HC_REL_CROSSES_KNOWING_LIMIT, HC_REL_EPOGDOON_TICK,
+    HC_REL_INVERSION_SPANDA, HC_REL_INVERTS_THROUGH_FIRST, HC_REL_INVERTS_THROUGH_PAIR,
+    HC_REL_INVERTS_THROUGH_SECOND, HC_REL_LENS_ANCHOR, HC_REL_MIRRORS_COMPLEMENT,
     HC_REL_MIRROR_XY5, HC_REL_MOBIUS_RETURN,
 };
 use std::ptr;
@@ -194,4 +198,93 @@ fn ffi_pointer_web_exposes_twelve_mef_lens_anchors_and_cf7_overlay() {
     assert_eq!(cf.frame[6].diatonic_degree, 7);
     assert_eq!(cf.frame[6].ql_position, 5);
     assert_eq!(cf.frame[6].pitch_class, 11);
+}
+
+#[test]
+fn ffi_exposes_corrected_harmonic_family_grammar() {
+    let epi = EpiLib::new();
+
+    assert_eq!(
+        epi.harmonic_families_for_pair(0, 1),
+        vec![HC_HARMONIC_FAMILY_A]
+    );
+    assert_eq!(
+        epi.harmonic_families_for_pair(0, 5),
+        vec![HC_HARMONIC_FAMILY_B]
+    );
+    assert_eq!(
+        epi.harmonic_families_for_pair(5, 0),
+        vec![HC_HARMONIC_FAMILY_C]
+    );
+    assert_eq!(
+        epi.harmonic_families_for_pair(2, 3),
+        vec![HC_HARMONIC_FAMILY_A, HC_HARMONIC_FAMILY_B]
+    );
+
+    assert_eq!(epi.harmonic_family_name(HC_HARMONIC_FAMILY_A), "A");
+    assert_eq!(epi.harmonic_family_name(HC_HARMONIC_FAMILY_B), "B");
+    assert_eq!(epi.harmonic_family_name(HC_HARMONIC_FAMILY_C), "C");
+    assert_eq!(
+        epi.harmonic_register_name_for_family(HC_HARMONIC_FAMILY_A),
+        "Being"
+    );
+    assert_eq!(
+        epi.harmonic_register_name_for_family(HC_HARMONIC_FAMILY_B),
+        "Becoming"
+    );
+    assert_eq!(
+        epi.harmonic_register_name_for_family(HC_HARMONIC_FAMILY_C),
+        "KnowingUnknowing"
+    );
+}
+
+#[test]
+fn ffi_exposes_d_faces_and_semantic_relation_names() {
+    let epi = EpiLib::new();
+
+    assert_eq!(epi.harmonic_d_face(false, false), HC_D_FACE_NONE);
+    assert_eq!(epi.harmonic_d_face(true, false), HC_D_FACE_LEFT);
+    assert_eq!(epi.harmonic_d_face(false, true), HC_D_FACE_RIGHT);
+    assert_eq!(epi.harmonic_d_face(true, true), HC_D_FACE_BOTH);
+    assert_eq!(epi.harmonic_depth_for_d_face(HC_D_FACE_NONE), 2);
+    assert_eq!(epi.harmonic_depth_for_d_face(HC_D_FACE_LEFT), 3);
+    assert_eq!(epi.harmonic_depth_for_d_face(HC_D_FACE_RIGHT), 3);
+    assert_eq!(epi.harmonic_depth_for_d_face(HC_D_FACE_BOTH), 4);
+
+    assert_eq!(
+        epi.harmonic_relation_type_name(HC_REL_ADJACENTLY_ARTICULATES),
+        "ADJACENTLY_ARTICULATES"
+    );
+    assert_eq!(
+        epi.harmonic_relation_type_name(HC_REL_MIRRORS_COMPLEMENT),
+        "MIRRORS_COMPLEMENT"
+    );
+    assert_eq!(
+        epi.harmonic_relation_type_name(HC_REL_CROSSES_KNOWING_LIMIT),
+        "CROSSES_KNOWING_LIMIT"
+    );
+    assert_eq!(
+        epi.harmonic_relation_type(HC_HARMONIC_FAMILY_A, HC_D_FACE_NONE),
+        HC_REL_ADJACENTLY_ARTICULATES
+    );
+    assert_eq!(
+        epi.harmonic_relation_type(HC_HARMONIC_FAMILY_B, HC_D_FACE_NONE),
+        HC_REL_MIRRORS_COMPLEMENT
+    );
+    assert_eq!(
+        epi.harmonic_relation_type(HC_HARMONIC_FAMILY_C, HC_D_FACE_NONE),
+        HC_REL_CROSSES_KNOWING_LIMIT
+    );
+    assert_eq!(
+        epi.harmonic_relation_type(HC_HARMONIC_FAMILY_A, HC_D_FACE_LEFT),
+        HC_REL_INVERTS_THROUGH_FIRST
+    );
+    assert_eq!(
+        epi.harmonic_relation_type(HC_HARMONIC_FAMILY_A, HC_D_FACE_RIGHT),
+        HC_REL_INVERTS_THROUGH_SECOND
+    );
+    assert_eq!(
+        epi.harmonic_relation_type(HC_HARMONIC_FAMILY_A, HC_D_FACE_BOTH),
+        HC_REL_INVERTS_THROUGH_PAIR
+    );
 }

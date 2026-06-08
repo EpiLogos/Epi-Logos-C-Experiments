@@ -16,9 +16,10 @@ fn flow_api_envelope_and_ts_contract_name_kernel_temporal_projection() {
         root.join("Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md"),
     )
     .expect("envelope schema should be readable");
-    let api =
-        fs::read_to_string(root.join("Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md"))
-            .expect("PI agent API should be readable");
+    let api = fs::read_to_string(
+        root.join("Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md"),
+    )
+    .expect("PI agent API should be readable");
     let ts = fs::read_to_string(
         root.join("Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md"),
     )

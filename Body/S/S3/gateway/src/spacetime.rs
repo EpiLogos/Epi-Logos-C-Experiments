@@ -473,9 +473,10 @@ impl SpacetimeProjectionSubscription {
                 .map_err(|err| format!("spacetimedb text frame failed: {err}"))?;
             let value = serde_json::from_str::<Value>(raw)
                 .map_err(|err| format!("spacetimedb websocket frame was not JSON: {err}"))?;
-            let delta = epi_s3_gateway_contract::SpacetimeProjectionDelta::from_subscription_message(
-                &value,
-            )?;
+            let delta =
+                epi_s3_gateway_contract::SpacetimeProjectionDelta::from_subscription_message(
+                    &value,
+                )?;
             if matches!(
                 delta.message_kind,
                 epi_s3_gateway_contract::SpacetimeMessageKind::Unknown
@@ -939,9 +940,7 @@ impl SpacetimePresence {
         require_nonempty(day_id, "day_id")?;
         require_nonempty(event_kind, "event_kind")?;
         if !opt_in_consent {
-            return Err(
-                "publish_shared_archetype_event requires opt_in_consent = true".to_owned(),
-            );
+            return Err("publish_shared_archetype_event requires opt_in_consent = true".to_owned());
         }
         self.post_reducer(
             "publish_shared_archetype_event",
@@ -1096,9 +1095,7 @@ impl SpacetimePresence {
                     .post(&url_attempt)
                     .json(&payload_attempt)
                     .send()
-                    .map_err(|err| {
-                        format!("spacetimedb {reducer_name} request failed: {err}")
-                    })
+                    .map_err(|err| format!("spacetimedb {reducer_name} request failed: {err}"))
             });
             match response {
                 Ok(response) => {
@@ -1109,9 +1106,7 @@ impl SpacetimePresence {
                     let body = response
                         .text()
                         .unwrap_or_else(|_| "<unreadable body>".to_owned());
-                    last_error = format!(
-                        "spacetimedb {reducer} request failed: {status} {body}"
-                    );
+                    last_error = format!("spacetimedb {reducer} request failed: {status} {body}");
                     // 4xx (other than 408/429) is not retryable — these are
                     // contract violations the caller must fix.
                     let retryable = status.is_server_error()
@@ -1231,18 +1226,14 @@ pub fn projection_context_from_sql_result(
         "",
     );
     let active_agent_id = row_string(session_row, "active_agent_id", "activeAgentId", "");
-    let resource_loader_id =
-        row_string(session_row, "resource_loader_id", "resourceLoaderId", "");
+    let resource_loader_id = row_string(session_row, "resource_loader_id", "resourceLoaderId", "");
     let runtime_cwd = row_string(session_row, "runtime_cwd", "runtimeCwd", "");
-    let source_session_key =
-        row_string(session_row, "source_session_key", "sourceSessionKey", "");
+    let source_session_key = row_string(session_row, "source_session_key", "sourceSessionKey", "");
     let source_session_kind =
         row_string(session_row, "source_session_kind", "sourceSessionKind", "");
     let graphiti_namespace_ref = pratibimba_anchor_ref.clone();
-    let _kairos_snapshot_id =
-        row_string(session_row, "kairos_snapshot_id", "kairosSnapshotId", "");
-    let session_id =
-        session_id_from_now_path(&now_path).unwrap_or_else(|| session_key.to_owned());
+    let _kairos_snapshot_id = row_string(session_row, "kairos_snapshot_id", "kairosSnapshotId", "");
+    let session_id = session_id_from_now_path(&now_path).unwrap_or_else(|| session_key.to_owned());
     let global_surface_key = global_row
         .map(|row| row_string(row, "surface_key", "surfaceKey", ""))
         .unwrap_or_else(|| {
@@ -1635,7 +1626,9 @@ fn require_nonempty(value: &str, field: &str) -> Result<(), String> {
 /// indexing fingerprint over canonical quaternionic bytes + caps — NOT the
 /// identity itself. Hex-encoded for stable transport over JSON RPC.
 pub fn quintessence_hash_blake3(canonical_quaternionic_bytes: &[u8]) -> String {
-    blake3::hash(canonical_quaternionic_bytes).to_hex().to_string()
+    blake3::hash(canonical_quaternionic_bytes)
+        .to_hex()
+        .to_string()
 }
 
 /// 03.T4: derive a public-safe `identity_handle` from raw identity bytes via

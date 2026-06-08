@@ -4,6 +4,7 @@ fn gateway_method_manifest_is_complete() {
     assert!(methods.contains(&"chat.send"));
     assert!(methods.contains(&"skills.install"));
     assert!(methods.contains(&"sessions.compact"));
+    assert!(methods.contains(&"s2.graph.harmonic_relations.materialize"));
     assert!(methods.contains(&"s2.graph.pointer_web.compute"));
     assert!(methods.contains(&"s2.graph.pointer_web.refresh"));
     assert!(methods.contains(&"s2.graph.kernel_resonance.record"));
@@ -13,7 +14,7 @@ fn gateway_method_manifest_is_complete() {
 }
 
 #[tokio::test]
-async fn pointer_web_compute_dispatch_is_s2_owned_without_neo4j_connection() {
+async fn pointer_web_compute_dispatch_is_deprecated_projection_without_neo4j_connection() {
     let value = epi_logos::gate::graph::dispatch_graph_method(
         "s2.graph.pointer_web.compute",
         &serde_json::json!({ "coordinate": "#2" }),
@@ -23,8 +24,18 @@ async fn pointer_web_compute_dispatch_is_s2_owned_without_neo4j_connection() {
 
     assert_eq!(value["resolution"]["canonical"], "M2");
     assert_eq!(value["coordinate_anchor"]["kernel"]["source"], "s0.kernel");
-    assert_eq!(value["pointerWeb"]["pointer_count"], 36);
-    assert_eq!(value["pointerWeb"]["family_refs"]["m_ref"], "M2");
+    assert_eq!(
+        value["coordinateReferenceProjection"]["reference_count"],
+        36
+    );
+    assert_eq!(
+        value["coordinateReferenceProjection"]["family_refs"]["m_ref"],
+        "M2"
+    );
+    assert_eq!(
+        value["deprecatedPointerWeb"]["status"],
+        "deprecated_compatibility_only"
+    );
 }
 
 #[test]
@@ -285,8 +296,8 @@ fn non_s0_method_with_s0_adapter_has_body_native_authority_path() {
     let mut checked = 0_usize;
 
     for record in records {
-        let is_s0_method = record.canonical_method.starts_with("s0.")
-            || record.canonical_method == "s0.*";
+        let is_s0_method =
+            record.canonical_method.starts_with("s0.") || record.canonical_method == "s0.*";
 
         // Records where S0 truly is the authority can legitimately skip
         // authority_path; everything else must declare one when an adapter
@@ -350,5 +361,8 @@ fn temporary_live_host_status_is_used_for_known_transitional_runtimes() {
     use epi_logos::gate::parity::CoordinateParityStatus;
     let host = CoordinateParityStatus::TemporaryLiveHost;
     assert_eq!(host.label(), "TemporaryLiveHost");
-    assert!(host.describe_for_portal().to_lowercase().contains("temporary"));
+    assert!(host
+        .describe_for_portal()
+        .to_lowercase()
+        .contains("temporary"));
 }

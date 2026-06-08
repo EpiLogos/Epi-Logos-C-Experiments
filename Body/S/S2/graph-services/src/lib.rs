@@ -57,7 +57,8 @@ pub use gds::{
 pub use graph_api::{
     graph_contract, source_traceability_anchors, CoordinateResolution, GraphMethodParams,
     GraphMethodService, GraphNodeRequest, GraphParamValue, GraphQueryRequest,
-    GraphTraverseDirection, GraphTraverseRequest, KernelResonanceObservationPlan,
+    GraphTraverseDirection, GraphTraverseRequest, HarmonicRelationMaterializationPlan,
+    HarmonicRelationMaterializationRequest, KernelResonanceObservationPlan,
     KernelResonanceObservationRequest, PointerWebRefreshPlan, PointerWebRefreshRequest,
 };
 pub use lifecycle::{
@@ -76,11 +77,14 @@ pub use ontology::{
     EPI_ONTOLOGY_VERSION_IRI, OWL2_RL_PROFILE, SHACL_REPORTING_MODE,
 };
 pub use pointers::{
-    compute_pointer_web, kernel_coordinate_anchor_for, kernel_coordinate_anchor_from_parts,
-    HarmonicBedrockAnchor, HarmonicContextFrameAnchor, HarmonicPointerAnchor,
-    HarmonicPointerRelationDescriptor, HarmonicPointerWebAnchor, KernelAnchor,
-    KernelCoordinateAnchor, PointerWeb, QvDataAnchor,
+    canonical_harmonic_bimba_relations, compute_coordinate_reference_projection,
+    kernel_coordinate_anchor_for, kernel_coordinate_anchor_from_parts,
+    CoordinateReferenceProjection, HarmonicBedrockAnchor, HarmonicBimbaRelation,
+    HarmonicContextFrameAnchor, HarmonicPointerAnchor, HarmonicPointerWebAnchor, KernelAnchor,
+    KernelCoordinateAnchor, QvDataAnchor,
 };
+#[allow(deprecated)]
+pub use pointers::{compute_pointer_web, PointerWeb};
 pub use relationship_manager::{RelationshipManager, RelationshipWritePlan, POSITION_REL_TYPES};
 pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};
 pub use retrieval_query::{
@@ -210,8 +214,7 @@ impl GraphRedisRole {
             embedding_dimensions: epi_s2_graph_schema::SEMANTIC_EMBEDDING_DIMENSIONS,
             embedding_version: epi_s2_graph_schema::EMBEDDING_VERSION,
             q_schema_version: epi_s2_graph_schema::Q_SCHEMA_VERSION,
-            description:
-                "Redis Stack semantic cache for S2 graph retrieval over Neo4j/Bimba coordinates",
+            description: "S2 graph retrieval payload semantics over the S3-owned Redis runtime",
         }
     }
 }

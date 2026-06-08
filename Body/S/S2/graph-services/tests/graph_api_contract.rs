@@ -1,7 +1,8 @@
 use epi_s2_graph_services::{
     graph_contract, schema, source_traceability_anchors, GraphMethodParams, GraphMethodService,
     GraphNodeRequest, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
-    KernelResonanceObservationRequest, Neo4jClient, Neo4jConfig, PointerWebRefreshRequest,
+    HarmonicRelationMaterializationRequest, KernelResonanceObservationRequest, Neo4jClient,
+    Neo4jConfig, PointerWebRefreshRequest,
 };
 use serde_json::json;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -75,31 +76,15 @@ fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
     assert_eq!(plan.tritone_square, 2);
     assert_eq!(plan.coordinate_anchor.coordinate, "M2");
     assert_eq!(plan.coordinate_anchor.kernel.source, "s0.kernel");
-    assert_eq!(plan.coordinate_anchor.pointer_web.pointer_count, 36);
     assert_eq!(
         plan.coordinate_anchor
-            .pointer_web
-            .harmonic_relation_descriptors
-            .len(),
-        2
+            .coordinate_reference_projection
+            .reference_count,
+        36
     );
     assert_eq!(
         plan.coordinate_anchor
-            .pointer_web
-            .harmonic_relation_descriptors[0]
-            .reason_code,
-        "inversion_spanda"
-    );
-    assert_eq!(
-        plan.coordinate_anchor
-            .pointer_web
-            .harmonic_relation_descriptors[0]
-            .privacy_policy,
-        "public-coordinate-topology-only"
-    );
-    assert_eq!(
-        plan.coordinate_anchor
-            .pointer_web
+            .coordinate_reference_projection
             .family_refs
             .get("m_ref")
             .map(String::as_str),
@@ -107,7 +92,7 @@ fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
     );
     assert_eq!(
         plan.coordinate_anchor
-            .pointer_web
+            .coordinate_reference_projection
             .lens_inversion_refs
             .get("l2_inv_ref")
             .map(String::as_str),
@@ -176,14 +161,12 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
     .expect("valid pointer web refresh plan");
 
     assert_eq!(plan.resolution.canonical, "M2");
-    assert_eq!(plan.pointer_web.coordinate, "M2");
-    assert_eq!(plan.pointer_web.pointer_count, 36);
-    assert_eq!(plan.pointer_web.harmonic_relation_descriptors.len(), 2);
-    assert!(plan
-        .pointer_web
-        .harmonic_relation_descriptors
-        .iter()
-        .any(|descriptor| descriptor.reason_code == "lens_anchor"));
+    assert_eq!(plan.coordinate_reference_projection.coordinate, "M2");
+    assert_eq!(plan.coordinate_reference_projection.reference_count, 36);
+    assert_eq!(
+        plan.deprecation_notice,
+        "deprecated compatibility projection; consume S2 Neo4j relations instead"
+    );
     let harmonic_pointer = plan
         .coordinate_anchor
         .harmonic_pointer
@@ -198,7 +181,7 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
         "position-identity"
     );
     assert_eq!(
-        plan.pointer_web
+        plan.coordinate_reference_projection
             .family_refs
             .get("m_ref")
             .map(String::as_str),
@@ -225,6 +208,63 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
 }
 
 #[test]
+fn harmonic_relation_materialization_plan_creates_real_bimba_edges_for_positions_and_lenses() {
+    let plan = GraphMethodService::harmonic_relation_materialization_plan(
+        &HarmonicRelationMaterializationRequest {
+            timestamp_ms: 1_779_000_002_000,
+        },
+    )
+    .expect("valid harmonic relation materialization plan");
+
+    assert_eq!(plan.namespace, "bimba");
+    assert_eq!(plan.relation_count, 36);
+    assert_eq!(
+        plan.params.get_integer("timestamp_ms"),
+        Some(1_779_000_002_000)
+    );
+    assert!(!plan.cypher.contains("c_5_pointer_web_json"));
+    assert!(plan
+        .cypher
+        .contains("MATCH (source:Bimba {coordinate: rel.source_coordinate})"));
+    assert!(plan
+        .cypher
+        .contains("MATCH (target:Bimba {coordinate: rel.target_coordinate})"));
+    assert!(plan.cypher.contains(
+        "MERGE (source)-[edge:ADJACENTLY_ARTICULATES {c_2_edge_id: rel.edge_id}]->(target)"
+    ));
+    assert!(plan
+        .cypher
+        .contains("MERGE (source)-[edge:MIRRORS_COMPLEMENT {c_2_edge_id: rel.edge_id}]->(target)"));
+    assert!(plan.cypher.contains(
+        "MERGE (source)-[edge:CROSSES_KNOWING_LIMIT {c_2_edge_id: rel.edge_id}]->(target)"
+    ));
+    assert!(plan.cypher.contains(
+        "MERGE (source)-[edge:INVERTS_THROUGH_PAIR {c_2_edge_id: rel.edge_id}]->(target)"
+    ));
+
+    assert!(plan.relations.iter().any(|relation| {
+        relation.source_coordinate == "P0"
+            && relation.target_coordinate == "L1"
+            && relation.relation_type == "ADJACENTLY_ARTICULATES"
+    }));
+    assert!(plan.relations.iter().any(|relation| {
+        relation.source_coordinate == "P0'"
+            && relation.target_coordinate == "L1"
+            && relation.relation_type == "INVERTS_THROUGH_FIRST"
+    }));
+    assert!(plan.relations.iter().any(|relation| {
+        relation.source_coordinate == "P0"
+            && relation.target_coordinate == "L1'"
+            && relation.relation_type == "INVERTS_THROUGH_SECOND"
+    }));
+    assert!(plan.relations.iter().any(|relation| {
+        relation.source_coordinate == "P0'"
+            && relation.target_coordinate == "L1'"
+            && relation.relation_type == "INVERTS_THROUGH_PAIR"
+    }));
+}
+
+#[test]
 fn graph_api_contract_envelope_carries_sources_namespace_gds_and_pointer_descriptors() {
     let resolved = GraphMethodService::resolve_coordinate_string("#2").unwrap();
     let contract = graph_contract("s2.graph.node", Some(&resolved));
@@ -241,12 +281,13 @@ fn graph_api_contract_envelope_carries_sources_namespace_gds_and_pointer_descrip
         false
     );
     assert_eq!(contract["disclosureDensity"], "public-coordinate-topology");
-    let descriptors = contract["pointerWebDescriptors"].as_array().unwrap();
-    assert_eq!(descriptors.len(), 2);
-    assert_eq!(descriptors[0]["from_coordinate"], "M2");
     assert_eq!(
-        descriptors[0]["deposition_policy"],
-        "read-only descriptor; downstream evidence deposit is S5-governed"
+        contract["deprecatedPointerWeb"]["status"],
+        "deprecated_compatibility_only"
+    );
+    assert_eq!(
+        contract["harmonicRelations"]["source"],
+        "s2.graph.harmonic_relations.materialize"
     );
     assert_eq!(
         contract["residencyAuthority"]["diagramPack"],
@@ -351,8 +392,18 @@ async fn live_graph_methods_write_read_traverse_and_cleanup_test_owned_data() {
         .await
         .expect("refresh pointer web");
     assert_eq!(refreshed["source"]["canonical"], source);
-    assert_eq!(refreshed["pointerWeb"]["coordinate"], source);
-    assert_eq!(refreshed["pointerWeb"]["pointer_count"], 18);
+    assert_eq!(
+        refreshed["coordinateReferenceProjection"]["coordinate"],
+        source
+    );
+    assert_eq!(
+        refreshed["coordinateReferenceProjection"]["reference_count"],
+        18
+    );
+    assert_eq!(
+        refreshed["deprecatedPointerWeb"]["status"],
+        "deprecated_compatibility_only"
+    );
     assert_eq!(refreshed["rowCount"], 1);
     let pointer_rows = client
         .run(&format!(

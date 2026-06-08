@@ -213,7 +213,7 @@ Decan seal images, angel sigils, planet glyphs, tarot cards — currently scatte
 
 ### §3.6 Epi-logos kernel spec
 
-`Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md` — the canonical kernel spec the m0.h/m0.c substrate compiles from. Provides the FR-numbering (FR 2.0.0 Vimarśa, FR 2.0.1 Spanda Discriminator, FR 2.0.2 Void Arithmetic, FR 2.0.3 Archetypal Number Language, FR 2.0.4 QL Stack, FR 2.0.5 Śiva-Śakti, FR 2.0.6 R-Factor Routing, FR 2.0.X Cross-Branch Edges) — every section of §2.1 traces to this spec.
+`Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md` — the canonical kernel spec the m0.h/m0.c substrate compiles from. Provides the FR-numbering (FR 2.0.0 Vimarśa, FR 2.0.1 Spanda Discriminator, FR 2.0.2 Void Arithmetic, FR 2.0.3 Archetypal Number Language, FR 2.0.4 QL Stack, FR 2.0.5 Śiva-Śakti, FR 2.0.6 R-Factor Routing, FR 2.0.X Cross-Branch Edges) — every section of §2.1 traces to this spec.
 
 ---
 

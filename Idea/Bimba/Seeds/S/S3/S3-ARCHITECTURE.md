@@ -1,7 +1,7 @@
 ---
 title: "S3 Gateway Control Plane Architecture — Gateway, Temporal, Runtime: Total Shape, Substrate Map, Contract Surface, Cleanup Plan"
 label_correction: "Working title used 'PAI' (now retired per S3 canon at Idea/Bimba/World/Types/Coordinates/S/S3/S3.md). Canonical label is Gateway Control Plane. All substrate findings, file:line citations, LOC counts, refactor proposals in this doc remain valid. PAI = genealogy of coordinate, not target shape."
-substrate_residency_note: "Body/S/S3/graphiti-runtime/ physically lives under S3 but conceptually actualises S5 (Integral World Boundary, via Aletheia world-return). redis-context shares between S2 (raw substrate) and S3' (SpacetimeDB-presence). Cycle-3 cleanup tranches in Tranche 17 group by physical residency for refactor scope; conceptual S-coordinate is the canon authority."
+substrate_residency_note: "Body/S/S3/graphiti-runtime/ physically lives under S3 but conceptually actualises S5 (Integral World Boundary, via Aletheia world-return). redis-context physically and operationally lives under S3; S2 owns graph/cache semantics and namespace use over the S3 runtime, while S3' owns SpacetimeDB-presence and temporal context. Cycle-3 cleanup tranches in Tranche 17 group by physical residency for refactor scope; conceptual S-coordinate is the canon authority."
 coordinate: "S3 / S3'"
 status: "canonical-architecture-spec"
 created: 2026-06-03

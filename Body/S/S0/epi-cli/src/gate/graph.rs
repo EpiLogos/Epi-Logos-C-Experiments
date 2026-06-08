@@ -4,8 +4,9 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use crate::graph::client::{Neo4jClient, Neo4jConfig};
 use crate::graph::{
     kernel_coordinate_anchor_from_parts, GraphMethodParams, GraphMethodService, GraphNodeRequest,
-    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
-    KernelResonanceObservationRequest, PointerWebRefreshRequest, RetrievalResult,
+    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    HarmonicRelationMaterializationRequest, HybridFusionConfig, KernelResonanceObservationRequest,
+    PointerWebRefreshRequest, RetrievalResult,
 };
 
 pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value, String> {
@@ -22,11 +23,16 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
             &resolution.input,
             resolution.compatibility_property.clone(),
         )?;
-        let pointer_web = coordinate_anchor.pointer_web.clone();
+        let coordinate_reference_projection =
+            coordinate_anchor.coordinate_reference_projection.clone();
         return Ok(json!({
             "resolution": resolution,
             "coordinate_anchor": coordinate_anchor,
-            "pointerWeb": pointer_web,
+            "coordinateReferenceProjection": coordinate_reference_projection,
+            "deprecatedPointerWeb": {
+                "status": "deprecated_compatibility_only",
+                "replacement": "s2.graph.harmonic_relations.materialize + s2.graph.traverse"
+            },
         }));
     }
 
@@ -101,6 +107,17 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
                         .get("graphitiArcId")
                         .and_then(|value| value.as_str())
                         .map(str::to_owned),
+                })
+                .await
+        }
+        "s2.graph.harmonic_relations.materialize" => {
+            let timestamp_ms = params
+                .get("timestampMs")
+                .and_then(|value| value.as_u64())
+                .unwrap_or_else(current_epoch_millis);
+            service
+                .materialize_harmonic_relations(HarmonicRelationMaterializationRequest {
+                    timestamp_ms,
                 })
                 .await
         }

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 pub mod redis_cache;
 
-pub use redis_cache::{CacheTier, RedisCache, RedisConfig};
+pub use redis_cache::{CacheTier, RedisCache, RedisConfig, RedisKey};
 
 pub const REDIS_RUNTIME_OWNER: &str = "S3";
 pub const REDISVL_BRIDGE_OWNER: &str = "S3 Redis runtime substrate";

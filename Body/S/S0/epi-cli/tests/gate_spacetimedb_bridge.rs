@@ -1609,11 +1609,16 @@ async fn spacetimedb_subscription_emits_typed_delta_with_routable_table_identity
 
     // Insert side: kairos + session, typed by surface.
     assert_eq!(delta.inserts.len(), 2, "two inserts expected");
-    let has_kairos = delta.inserts.iter().any(|delta| matches!(
-        delta,
-        SpacetimeTableDelta::KairosSurface { row } if row["kairos_snapshot_id"] == "kairos-rt-1"
-    ));
-    assert!(has_kairos, "KairosSurface insert must be typed and routable");
+    let has_kairos = delta.inserts.iter().any(|delta| {
+        matches!(
+            delta,
+            SpacetimeTableDelta::KairosSurface { row } if row["kairos_snapshot_id"] == "kairos-rt-1"
+        )
+    });
+    assert!(
+        has_kairos,
+        "KairosSurface insert must be typed and routable"
+    );
 
     let has_session = delta.inserts.iter().any(|delta| matches!(
         delta,
@@ -1623,10 +1628,10 @@ async fn spacetimedb_subscription_emits_typed_delta_with_routable_table_identity
 
     // Delete side: world_clock — proves the decoder doesn't drop deletes.
     assert_eq!(delta.deletes.len(), 1, "one delete expected");
-    assert!(matches!(
-        delta.deletes[0],
-        SpacetimeTableDelta::WorldClock { .. }
-    ), "WorldClock delete must be typed");
+    assert!(
+        matches!(delta.deletes[0], SpacetimeTableDelta::WorldClock { .. }),
+        "WorldClock delete must be typed"
+    );
 
     // Convenience accessor: first_kairos_insert should fast-path the common case.
     assert!(
@@ -1660,7 +1665,8 @@ fn reducer_post_retries_503_then_succeeds_with_idempotent_replay() {
                 if read == 0 || header.trim().is_empty() {
                     break;
                 }
-                if let Some(value) = header.strip_prefix("content-length: ")
+                if let Some(value) = header
+                    .strip_prefix("content-length: ")
                     .or_else(|| header.strip_prefix("Content-Length: "))
                 {
                     content_length = value.trim().parse::<usize>().unwrap_or(0);
@@ -1680,10 +1686,7 @@ fn reducer_post_retries_503_then_succeeds_with_idempotent_replay() {
         }
     });
 
-    let client = SpacetimePresence::for_database(
-        &format!("http://{address}"),
-        "epi-logos-runtime",
-    );
+    let client = SpacetimePresence::for_database(&format!("http://{address}"), "epi-logos-runtime");
     let result = client.post_reducer_with_retry(
         "heartbeat_gateway",
         json!(["gateway-rt"]),
@@ -1693,7 +1696,10 @@ fn reducer_post_retries_503_then_succeeds_with_idempotent_replay() {
         },
     );
 
-    assert!(result.is_ok(), "retry should succeed on 3rd attempt: {result:?}");
+    assert!(
+        result.is_ok(),
+        "retry should succeed on 3rd attempt: {result:?}"
+    );
     assert_eq!(
         attempts.load(std::sync::atomic::Ordering::SeqCst),
         3,
@@ -1735,7 +1741,12 @@ fn decode_kairos_row(row: &serde_json::Value) -> LiveKairosColumns {
             .unwrap_or_default()
             .to_owned()
     };
-    let take_bool = |idx: usize| -> bool { array.get(idx).and_then(|value| value.as_bool()).unwrap_or(false) };
+    let take_bool = |idx: usize| -> bool {
+        array
+            .get(idx)
+            .and_then(|value| value.as_bool())
+            .unwrap_or(false)
+    };
     // Schema order from KairosSurface in
     // Body/S/S3/epi-spacetime-module/src/lib.rs (see #[reducer]
     // bind_kairos_surface): kairos_snapshot_id, installation_id, gateway_id,
@@ -1768,8 +1779,8 @@ async fn spacetimedb_live_kairos_round_trip_arrives_within_100ms() {
 
     let host =
         std::env::var("EPI_SPACETIME_LIVE_HOST").unwrap_or_else(|_| "http://127.0.0.1:3000".into());
-    let database = std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into());
+    let database =
+        std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into());
 
     let env = temp_env()
         .with_env("SPACETIMEDB_URL", host.clone())
@@ -1877,9 +1888,7 @@ async fn spacetimedb_live_kairos_round_trip_arrives_within_100ms() {
         .expect("observed_at must be set when row is found")
         .duration_since(before_bind)
         .as_millis();
-    eprintln!(
-        "[LIVE] bind_kairos_surface -> typed KairosSurface delta in {elapsed_ms} ms"
-    );
+    eprintln!("[LIVE] bind_kairos_surface -> typed KairosSurface delta in {elapsed_ms} ms");
 
     assert_eq!(columns.snapshot_id, snapshot_id);
     assert_eq!(columns.session_key, session_key);
@@ -1913,8 +1922,8 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
 
     let host =
         std::env::var("EPI_SPACETIME_LIVE_HOST").unwrap_or_else(|_| "http://127.0.0.1:3000".into());
-    let database = std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into());
+    let database =
+        std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into());
 
     let env = temp_env()
         .with_env("SPACETIMEDB_URL", host.clone())
@@ -1953,14 +1962,11 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
 
     // Drain each subscriber's initial snapshot.
     for sub in subscribers.iter_mut() {
-        let _ = tokio::time::timeout(
-            std::time::Duration::from_millis(2000),
-            sub.next_delta(),
-        )
-        .await
-        .expect("initial frame")
-        .expect("initial decode")
-        .expect("initial delta");
+        let _ = tokio::time::timeout(std::time::Duration::from_millis(2000), sub.next_delta())
+            .await
+            .expect("initial frame")
+            .expect("initial decode")
+            .expect("initial delta");
     }
 
     // Now advance the world_clock at 1 Hz cadence five times and collect when
@@ -1970,8 +1976,7 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
     // a quiet local host the spread should be well under that).
     let client = SpacetimePresence::for_database(&host, &database);
 
-    let mut tick_observed_at: Vec<Vec<std::time::Instant>> =
-        (0..4).map(|_| Vec::new()).collect();
+    let mut tick_observed_at: Vec<Vec<std::time::Instant>> = (0..4).map(|_| Vec::new()).collect();
 
     for tick in 1..=5u64 {
         let before_tick = std::time::Instant::now();
@@ -1993,14 +1998,12 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
                 if std::time::Instant::now() >= deadline {
                     panic!("subscriber {idx} did not observe tick {tick} within 1s of issue");
                 }
-                let next = tokio::time::timeout(
-                    std::time::Duration::from_millis(500),
-                    sub.next_delta(),
-                )
-                .await
-                .expect("delta read")
-                .expect("delta")
-                .expect("delta present");
+                let next =
+                    tokio::time::timeout(std::time::Duration::from_millis(500), sub.next_delta())
+                        .await
+                        .expect("delta read")
+                        .expect("delta")
+                        .expect("delta present");
                 let saw_world_clock = next.inserts.iter().any(|delta| {
                     if let SpacetimeTableDelta::WorldClock { row } = delta {
                         let array: Vec<serde_json::Value> = match row {
@@ -2082,8 +2085,8 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
 
     let host =
         std::env::var("EPI_SPACETIME_LIVE_HOST").unwrap_or_else(|_| "http://127.0.0.1:3000".into());
-    let database = std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into());
+    let database =
+        std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into());
 
     let env = temp_env()
         .with_env("SPACETIMEDB_URL", host.clone())
@@ -2104,9 +2107,8 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
     // Three publishers each derive their own identity_handle via BLAKE3 and
     // publish an opt-in archetype event on the same aspect_grid_cell.
     for idx in 0..3u32 {
-        let identity_handle = identity_handle_blake3(
-            format!("test-identity-{day_id}-{idx}").as_bytes(),
-        );
+        let identity_handle =
+            identity_handle_blake3(format!("test-identity-{day_id}-{idx}").as_bytes());
         // Pre-derive quintessence_hash so the presence row never carries raw
         // quaternionic data — only the canonical fingerprint.
         let _quintessence_hash =
@@ -2158,9 +2160,7 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
     let deadline = before_detect + std::time::Duration::from_millis(3000);
     let mut observed_coincidence = false;
     let mut observed_tick = false;
-    while !(observed_coincidence && observed_tick)
-        && std::time::Instant::now() < deadline
-    {
+    while !(observed_coincidence && observed_tick) && std::time::Instant::now() < deadline {
         let next = tokio::time::timeout(
             std::time::Duration::from_millis(1000),
             subscription.next_delta(),
@@ -2179,10 +2179,15 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
                         }
                         _ => Vec::new(),
                     };
-                    let row_day = array.get(1).and_then(|value| value.as_str()).unwrap_or_default();
+                    let row_day = array
+                        .get(1)
+                        .and_then(|value| value.as_str())
+                        .unwrap_or_default();
                     let row_cell = array.get(2).and_then(|value| value.as_u64()).unwrap_or(0);
-                    let participants_serialised =
-                        array.get(3).and_then(|value| value.as_str()).unwrap_or_default();
+                    let participants_serialised = array
+                        .get(3)
+                        .and_then(|value| value.as_str())
+                        .unwrap_or_default();
                     if row_day == day_id && row_cell as u32 == aspect_grid_cell {
                         let participant_count = participants_serialised
                             .split(',')
@@ -2203,11 +2208,13 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
                         }
                         _ => Vec::new(),
                     };
-                    let row_day = array.get(1).and_then(|value| value.as_str()).unwrap_or_default();
+                    let row_day = array
+                        .get(1)
+                        .and_then(|value| value.as_str())
+                        .unwrap_or_default();
                     if row_day == day_id {
                         let new_count = array.get(2).and_then(|v| v.as_u64()).unwrap_or(0);
-                        let participants_count =
-                            array.get(3).and_then(|v| v.as_u64()).unwrap_or(0);
+                        let participants_count = array.get(3).and_then(|v| v.as_u64()).unwrap_or(0);
                         assert_eq!(new_count, 1, "tick should show 1 new coincidence");
                         assert_eq!(participants_count, 3, "3 distinct participants expected");
                         observed_tick = true;
@@ -2218,7 +2225,10 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
         }
     }
 
-    assert!(observed_coincidence, "coincidence row must arrive on the subscribed multiplex");
+    assert!(
+        observed_coincidence,
+        "coincidence row must arrive on the subscribed multiplex"
+    );
     assert!(observed_tick, "coincidence_tick audit row must arrive");
 }
 
@@ -2270,8 +2280,8 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
 
     let host =
         std::env::var("EPI_SPACETIME_LIVE_HOST").unwrap_or_else(|_| "http://127.0.0.1:3000".into());
-    let database = std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into());
+    let database =
+        std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into());
 
     let env = temp_env()
         .with_env("SPACETIMEDB_URL", host.clone())
@@ -2437,11 +2447,15 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
         }
     }
     assert!(
-        recovered_cache.iter().any(|cached| cached.surface == "world_clock"),
+        recovered_cache
+            .iter()
+            .any(|cached| cached.surface == "world_clock"),
         "recovered cache must include world_clock from live deltas"
     );
     assert!(
-        recovered_cache.iter().any(|cached| cached.surface == "kairos_surface"),
+        recovered_cache
+            .iter()
+            .any(|cached| cached.surface == "kairos_surface"),
         "recovered cache must include kairos_surface from live deltas"
     );
     // The recovered world_clock row carries tick=42 (the one we bound) —
@@ -2454,7 +2468,10 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
         .iter()
         .find(|cached| {
             cached.surface == "world_clock"
-                && cached.row.get("gateway_id").and_then(serde_json::Value::as_str)
+                && cached
+                    .row
+                    .get("gateway_id")
+                    .and_then(serde_json::Value::as_str)
                     == Some(gateway_id.as_str())
         })
         .map(|cached| &cached.row)
@@ -2545,8 +2562,7 @@ async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb(
         "graphiti_namespace_ref": namespace_ref,
         "graphiti_arc_id": format!("day:{day_id}:session:{session_key}"),
     });
-    assert_no_graphiti_body_in_row(&safe_row)
-        .expect("reference-only row must be accepted");
+    assert_no_graphiti_body_in_row(&safe_row).expect("reference-only row must be accepted");
 
     // Conversely, if someone tried to leak the episode body into a
     // SpaceTimeDB row, the contract MUST refuse it.
@@ -2605,10 +2621,7 @@ fn reducer_post_surfaces_4xx_immediately_without_retry() {
         stream.flush().expect("flush");
     });
 
-    let client = SpacetimePresence::for_database(
-        &format!("http://{address}"),
-        "epi-logos-runtime",
-    );
+    let client = SpacetimePresence::for_database(&format!("http://{address}"), "epi-logos-runtime");
     let result = client.post_reducer_with_retry(
         "heartbeat_gateway",
         json!(["bad-gateway-id"]),

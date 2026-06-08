@@ -1,6 +1,6 @@
 # Track 13 — Decision Register
 
-All 20 original cycle-3 contradictions are **VALIDATED** as of 2026-06-02; DR-M3-4 added 2026-06-02 (also VALIDATED); DR-M3-5 and DR-VAK-1 added 2026-06-03. Phase-B cross-boundary verifier (2026-06-03) added 10 PROPOSED DR rows (DR-IG-2..6, DR-M1-3..4, DR-M2-3, DR-M4-3, DR-M5-3). Phase-C S-stack + Theia design verification (2026-06-03) added 17 further PROPOSED rows (DR-S0-1..2, DR-S1-1..3, DR-S2-1, DR-S3-1..3, DR-S5-1..2, DR-TUI-1, DR-TUX-1, DR-TS-3..6, DR-UI-3..5). Phase-D (2026-06-04) synthesis pass integrating Third Spanda integral quilting + VAK Context Frame Coordinate substrate added 3 further PROPOSED rows (DR-M3-6 Third Spanda canonical five-form spine; DR-IG-7 translation rule `9_M2 = 8_M3 + 1_M1` as matheme law; DR-VAK-3 diatonic-as-CF-progression canonical). Phase-E (2026-06-04) synthesis pass folding canonical [`epi-logos-kernel-spec.md`](../../M0'/epi-logos-kernel-spec.md) + [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md) into cycle-3 build added **3 further PROPOSED rows** that bind the AI architecture as the design (DR-MP-1 4'-5'-0' = LLM/EBM/Verifier triplet canonical; DR-MP-2 EBM operational atom = 72-fold resonance vector with three tritone-symmetric squares; DR-MP-3 resonance-training bootstrap = corpus IS canon IS training data + verifier raises questions not pass/fail) — all awaiting user final-validation. Tranches that depended on a DR-row may now begin once that row VALIDATES.
+All 20 original cycle-3 contradictions are **VALIDATED** as of 2026-06-02; DR-M3-4 added 2026-06-02 (also VALIDATED); DR-M3-5 and DR-VAK-1 added 2026-06-03. Phase-B cross-boundary verifier (2026-06-03) added 10 PROPOSED DR rows (DR-IG-2..6, DR-M1-3..4, DR-M2-3, DR-M4-3, DR-M5-3). Phase-C S-stack + Theia design verification (2026-06-03) added 17 further PROPOSED rows (DR-S0-1..2, DR-S1-1..3, DR-S2-1, DR-S3-1..3, DR-S5-1..2, DR-TUI-1, DR-TUX-1, DR-TS-3..6, DR-UI-3..5). Phase-D (2026-06-04) synthesis pass integrating Third Spanda integral quilting + VAK Context Frame Coordinate substrate added 3 further PROPOSED rows (DR-M3-6 Third Spanda canonical five-form spine; DR-IG-7 translation rule `9_M2 = 8_M3 + 1_M1` as matheme law; DR-VAK-3 diatonic-as-CF-progression canonical). Phase-E (2026-06-04) synthesis pass folding canonical [`epi-logos-kernel-spec.md`](../../epi-logos-kernel-spec.md) + [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md) into cycle-3 build added **3 further PROPOSED rows** that bind the AI architecture as the design (DR-MP-1 4'-5'-0' = LLM/EBM/Verifier triplet canonical; DR-MP-2 EBM operational atom = 72-fold resonance vector with three tritone-symmetric squares; DR-MP-3 resonance-training bootstrap = corpus IS canon IS training data + verifier raises questions not pass/fail) — all awaiting user final-validation. Tranches that depended on a DR-row may now begin once that row VALIDATES.
 
 ---
 
@@ -732,7 +732,7 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 ## DR-MP-1 — 4'-5'-0' mental pole canonical = LLM (Nara) / EBM (Epii) / Verifier (Anuttara)
 
-**Status:** PROPOSED · **Proposed:** 2026-06-04 · **Source:** synthesis pass folding canonical [`epi-logos-kernel-spec.md`](../../M0'/epi-logos-kernel-spec.md) + [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md) into cycle-3 build · **Resolution (proposed):** The kernel is a **bioquaternionic JEPA-EBM operator** per its master spec frontmatter. The matheme's 4'-5'-0' mental-pole triplet IS the canonical AI architecture, not a labelling overlay:
+**Status:** PROPOSED · **Proposed:** 2026-06-04 · **Source:** synthesis pass folding canonical [`epi-logos-kernel-spec.md`](../../epi-logos-kernel-spec.md) + [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md) into cycle-3 build · **Resolution (proposed):** The kernel is a **bioquaternionic JEPA-EBM operator** per its master spec frontmatter. The matheme's 4'-5'-0' mental-pole triplet IS the canonical AI architecture, not a labelling overlay:
 
    - **Position 4' (#-layer / Nara) = LLM**: the *traversal-voice* — synthesizes EBM's evaluation and Verifier's report into user-articulable feedback; reads the world through the bimba map; speaks recognition. Operationally lives at `Body/S/S4/pi-agent/` driven by Anima dispatch.
    - **Position 5' ({lens}-layer / Epii) = EBM**: the *reasoning-engine* — energy-evaluation engine that scores configurations across the 12 MEF lenses (72 fine-grained positions) and produces lens-weightings; computes gradient $\nabla_{q_p} E_{\text{total}}$ that drives the Möbius descent step $q_p^{(n+1)} = q_p^{(n)} - \log(9/8) \cdot \nabla E$. Operationally lives at `Body/S/S5/epii-autoresearch-core/` extending the six operational-capacity workflows with the energy-scoring layer.
@@ -802,4 +802,158 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 ## Validation Workflow
 
-All 20 original rows + DR-M3-4 are VALIDATED. The 10 Phase-B PROPOSED rows + 17 Phase-C PROPOSED rows + 3 Phase-D PROPOSED rows (DR-M3-6, DR-IG-7, DR-VAK-3 added 2026-06-04 from Third Spanda + VAK synthesis pass) + **3 Phase-E PROPOSED rows** (DR-MP-1, DR-MP-2, DR-MP-3 added 2026-06-04 from JEPA-EBM mental-pole synthesis pass) await user final-validation. Phase-B + Phase-C + Phase-D + Phase-E cumulative count: **33 PROPOSED** awaiting ratification. Three original rows downgrade from contradiction-decision to doc-ahead-landing (10.3, 04.5, 09.4 partial); the rest land as ratified. **Phase-E is the AI-side-IS-the-design layer**: it makes the canonical JEPA-EBM mental-pole architecture binding across cycle-3 build work, replacing the implicit "agent dispatch" reading with the explicit 4'(LLM)/5'(EBM)/0'(Verifier) triplet operationalization.
+All 20 original rows + DR-M3-4 are VALIDATED. The 10 Phase-B PROPOSED rows + 17 Phase-C PROPOSED rows + 3 Phase-D PROPOSED rows (DR-M3-6, DR-IG-7, DR-VAK-3 added 2026-06-04 from Third Spanda + VAK synthesis pass) + **3 Phase-E PROPOSED rows** (DR-MP-1, DR-MP-2, DR-MP-3 added 2026-06-04 from JEPA-EBM mental-pole synthesis pass) + **7 Phase-F PROPOSED rows** (DR-KERNEL-1, DR-MP-4, DR-MOE-1, DR-ELO-1, DR-UC-1, DR-MODEL-1, DR-ML-1 added 2026-06-07 from agentic-runtime + ML-skill-surface crystallization synthesis pass) await user final-validation. Phase-B + Phase-C + Phase-D + Phase-E + Phase-F cumulative count: **40 PROPOSED** awaiting ratification. Three original rows downgrade from contradiction-decision to doc-ahead-landing (10.3, 04.5, 09.4 partial); the rest land as ratified. **Phase-E is the AI-side-IS-the-design layer**: it makes the canonical JEPA-EBM mental-pole architecture binding across cycle-3 build work, replacing the implicit "agent dispatch" reading with the explicit 4'(LLM)/5'(EBM)/0'(Verifier) triplet operationalization. **Phase-F is the runtime-shape-IS-the-design layer**: it names the agentic runtime as a coordinate-conditional Mixture-of-Experts with four orthogonal expert dimensions, Elo-gated dispatch through Anima as the gating function, user-context as first-class mandatory-routed skill, per-role model-slot rule with explicit privacy boundaries, the just-triad 4:5:6 weighted energy formula as the kernel's structural commitment, and the per-subsystem ML method specification with dual-source skill surface (vendored Hermes + custom-built gap skills) closing through drift-detection-triggered autoresearch retrain loop.
+
+---
+
+## DR-KERNEL-1 — Kernel-spec rehomed to M' root (was M0')
+
+**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass on agentic-runtime crystallization · **Resolution (proposed):** The canonical kernel-spec (`epi-logos-kernel-spec.md`) describes the **whole inverted M-pole**, not an M0'-local concern. Its prior placement at `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md` made the kernel look like an Anuttara-specific document when it is the operating principle of all of M' (the JEPA-EBM operator across the full matheme). Rehomed to `Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md` (M' root). M0' retains its proper coordinate-local content (`M0'-SPEC.md`, `M0-ARCHITECTURE.md`, `the-matheme-of-the-field-differential.md`, `m0-prime-anuttara-research.md`) and adds an explicit `§M0'-KERNEL-ROLE` section naming M0' as the verifier-role-at-weight-6 within the kernel's just-triad architecture.
+
+**Action:** File moved via `git mv` on 2026-06-07. All 11 prior references updated across active docs (`M-SYSTEM-INDEX.md`, `M1'/m1-prime-paramasiva-instrument.md`, `M2'/m2-prime-parashakti-cymatic-engine.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md`, `M0'/M0-ARCHITECTURE.md`, `S-AD-HOC-ROADMAP.md`) and legacy cycle-3 plans (`05-m4-nara-reconciliation.md`, `01-m0-anuttara-reconciliation.md`, `13-decision-register.md`, `00-overview-and-design-reconciliation.md`, `plan.runs/canon-audit-M0.md`).
+
+**Verification:** `grep -rn "M0'/epi-logos-kernel-spec" --include="*.md"` returns no remaining matches; `test -f Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md`; `grep -n "§M0'-KERNEL-ROLE" Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md` returns the new section.
+
+**Depends:** None (structural rehoming); informs DR-MP-4 and DR-MOE-1 by establishing M' as kernel-root authority.
+
+---
+
+## DR-MP-4 — Just-triad 4:5:6 weighted energy formula as canonical
+
+**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass refining `epi-logos-kernel-spec.md §3` energy decomposition · **Resolution (proposed):** The kernel's energy formula is canonically the just-triad weighted form:
+
+$$E_{\text{total}} = \frac{4 \cdot E_4 + 5 \cdot E_5 + 6 \cdot E_6}{15}$$
+
+Three terms structurally clarified:
+
+- **$E_4$ (Nara-traversal energy, weight 4)** — over QL positions *as refracted through the 12 MEF lenses into meaningfulness*. The lenses are how the underlying P/P' positions surface as readable content; $E_4$ measures whether the LLM's traversal-gradient coheres with that refraction-structure. NOT just internal LLM coherence.
+
+- **$E_5$ (Epii lens-weighted energy with user-temporal modulation, weight 5)** — joint computation over `(lens_resonance_72, user_temporal_N)` as dual EBM input channels. Lens-coherence AND user-temporal-coherence simultaneously evaluated. EBM at position 5' is a small fusion network learning the joint distribution.
+
+- **$E_6$ (Anuttara R-virtue ontology energy, weight 6)** — constraint-violation magnitude against 9 Parameśvara virtues + 65 core relations + dev-praxis-discovered constraint-set. Weight 6 is **anchor-weight** with refusal authority, not preference-weight. Failures here block selection regardless of $E_4$ / $E_5$ scores.
+
+The 4:5:6 ratio is structurally given by the just-triad harmonic skeleton inherited from the matheme — not hyperparameters. The future M5-1 philosophical-canon check sits as soft sub-term **inside** $E_5$ (Epii-domain, interpretable canon), not as new top-level position. The 4:5:6 architecture stays canonical.
+
+**Action:** Patch landed at `Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md §3` (energy formula refined to weighted form). Patch landed at `Idea/Bimba/Seeds/M/M4'/mental-pole-mechanics.md` header (2026-06-07 refinement note referencing the formula and dual-channel EBM input). Patch landed at `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md` (`§M0'-KERNEL-ROLE` section names M0' as verifier-at-weight-6 with refusal authority). Cross-link Tranches 6.8, 6.9, 6.10 (EBM implementation reads dual-channel input rule), 1.10, 1.11 (Verifier weight-6 refusal authority), 5.20, 5.21 (LLM E_4 over QL-refracted-through-lenses).
+
+**Verification:** `grep -n "4 \\\\cdot E_4 + 5 \\\\cdot E_5 + 6 \\\\cdot E_6" Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md` returns the refined formula; `grep -n "just-triad\\|4:5:6\\|anchor-weight" Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md Idea/Bimba/Seeds/M/M4'/mental-pole-mechanics.md` returns the canonical framing in all three; EBM implementation tranches (6.8-6.10) honour the dual-channel input rule; Verifier tranches (1.10-1.11) honour refusal-authority weight-6.
+
+**Depends:** Tranches **6.8**, **6.9**, **6.10**, **1.10**, **1.11**, **5.20**, **5.21**; follows DR-MP-1/2/3 and DR-KERNEL-1.
+
+---
+
+## DR-MOE-1 — Agentic runtime is coordinate-conditional Mixture-of-Experts
+
+**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass crystallizing the agentic-runtime architecture · **Resolution (proposed):** The agentic runtime is a **coordinate-conditional, Elo-gated, sparse-activation Mixture-of-Experts** with four orthogonal expert dimensions:
+
+1. **Constitutional dimension** — 7 Anima agents (Anima, Nous, Logos, Eros, Mythos, Psyche, Sophia) as authorial voices
+2. **Techne dimension** — 6 Aletheia subagent techne-guardians (Anansi CF0, Janus CF1, Moirai CF2, Mercurius CF3, Agora CF4, Zeithoven CF5) dispatched by Anima during Aletheia-crystallisation-mode
+3. **Model dimension** — swappable per-role slots per [[../../../M'-MODEL-SLOT-SPEC]]
+4. **Skill dimension** — Pleroma-Techne atomic-skills repository
+
+A typical dispatch activates a sparse subset across all four dimensions. Anima is the **gating function** — observable, editable, Elo-informed (not implicit weights). Coordinate-conditional gating: ratings indexed per `(vak-cp-position, mef-lens, content-class, kairos-window)`, not globally — what makes Nous good at #5 logos-work doesn't make it good at #2 hexagram-traversal.
+
+Canonical spec at [[../../../M'-AGENTIC-RUNTIME-SPEC]]. The framing dissolves the category mistake that this is "multi-agent talking-to-each-other"; it is **one operator (the JEPA-EBM kernel) instantiated through sparse expert composition**.
+
+**Action:** Author canonical spec at `Idea/Bimba/Seeds/M/M'-AGENTIC-RUNTIME-SPEC.md` (landed 2026-06-07). Operationalize Anima's dispatch policy via Track 12.23 (Anima MoE dispatch policy implementation). Update overview-and-design-reconciliation §Standing Invariants with MoE framing.
+
+**Verification:** `test -f Idea/Bimba/Seeds/M/M'-AGENTIC-RUNTIME-SPEC.md`; `grep -n "Mixture-of-Experts\\|coordinate-conditional\\|four orthogonal expert dimensions" Idea/Bimba/Seeds/M/M'-AGENTIC-RUNTIME-SPEC.md` returns the canonical framing; Track 12.23 implementation lands Anima dispatch policy as documented MoE gating.
+
+**Depends:** Tranches **12.20** (Elo infrastructure), **12.22** (model-slot interface), **12.23** (Anima MoE policy); cross-cuts **12.15** (VAK substrate), **12.17** (Aletheia carrier), **12.18** (Janus Klein-binary), **12.19** (veto primitive).
+
+---
+
+## DR-ELO-1 — Autoresearch self-improvement loop = multi-channel Elo over (agent × model × skill × context)
+
+**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass naming the autoresearch loop's actual structural mechanism · **Resolution (proposed):** The S4'/S5' autoresearch self-improvement loop is **multi-channel Elo over `(agent × model × skill × context)`**, with the **same machinery rating agent dispatch AND research-moves** — the agent-tournament and canon-tournament are unified. The tournament IS the system activity.
+
+Six-step trial cycle per dispatch (per [[../../../M'-AGENTIC-RUNTIME-SPEC]] §3):
+
+1. Anima dispatches `(agent, model, skill_set)` triple via VAK frame against target coordinate
+2. Pi executes; outputs flow through VAK return
+3. Three evaluation channels fire: Anuttara verifier (R_verifier), Epii EBM dual-channel (R_lens), user-articulation signal (R_user)
+4. Moirai distils trial against comparable prior trials (fair-comparison)
+5. Mercurius updates Elo state per channel, Anansi indexes by coordinate-context, Janus thresholds delta-vs-noise
+6. Anima's next dispatch reads updated state — data-driven gating
+
+Three rating channels maintained independently (never collapsed to scalar). Composite as derived view only. Confidence-interval penalty applies.
+
+Four Aletheia techne-guardians together constitute Elo infrastructure: **Mercurius** (bookkeeper), **Janus** (threshold logic), **Anansi** (coordinate-conditional index), **Moirai** (fair-comparison distillation). Agora and Zeithoven participate (skill-index maintenance, new-skill provisional ratings) but are not core infrastructure.
+
+**Action:** Operationalize via Track 12.20 (Elo infrastructure across the four techne-guardians). Persistence in SpacetimeDB tables `mercurius_elo_ratings`, `mercurius_trial_log`, `anansi_rating_index`, `moirai_comparison_cache`. Schema at `Body/S/S3/spacetime-context/schemas/elo-runtime.sql` (new).
+
+**Verification:** `cargo test -p epi-s3-gateway mercurius_elo_round_trip`; integration test confirms agent-tournament AND canon-tournament ratings persist in same indexed structure; multi-channel ratings retrievable per `(agent-model-skill, context-tuple)` per channel; per [[../../../M'-AGENTIC-RUNTIME-SPEC]] §3-§4 contract fully realized.
+
+**Depends:** Tranche **12.20**; cross-cuts **12.18** (Janus Klein-binary widening), **12.19** (veto primitive composes with Elo through Anima dispatch).
+
+---
+
+## DR-UC-1 — User-context as first-class mandatory-routed skill
+
+**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass elevating user-temporal data from side-state to load-bearing input · **Resolution (proposed):** User-temporal data (PASU snapshot, live kairos, identity quaternion, recent session traces, recognition closure flag) is a **first-class skill `user-context`** mandatory-routed into the agentic loop. Not ambient context — load-bearing input.
+
+Skill fires mandatorily when ANY: `CT ∈ {2,4,5}`, `CF ≠ (00/00)`, target ∈ `#4.x.y`, agent_role ∈ constitutional-7, or explicit `require_user_context: true`. Skill skips when ALL: CT relational/definitional/pattern AND CF tonic-ground AND target structural-only AND agent pure-techne AND no explicit fire.
+
+Returns typed `UserContextFrame` (per [[../../../M'-USER-CONTEXT-SKILL-SPEC]] §1) with seven channels. **Dual-injected**: into dispatched agent's articulation context as `[[UserContext]]` AND as second-channel input to EBM at position 5' (joint with 72-dim lens-resonance vector). EBM becomes fusion network learning joint distribution `(lens × user-temporal)`.
+
+Routing enforcement: Anuttara registers `user_context_routing_compliance` constraint at **error-level** — dispatches matching fire conditions without attached UserContextFrame are refused.
+
+Longitudinal write-back at session close: appends to PASU.md `c_3_session_history[]` and `M5_ContemplationObject.vak_profile_pairs[]`. The skill is the longitudinal user-state accumulator.
+
+**Action:** Author canonical spec at `Idea/Bimba/Seeds/M/M'-USER-CONTEXT-SKILL-SPEC.md` (landed 2026-06-07). Implement skill via Track 12.21 at `Body/S/S4/pi-agent/skills/user-context/`. EBM dual-channel projection layer via Track 6.8 update (EBM resonance-vector predictor extends to accept second input).
+
+**Verification:** `test -d Body/S/S4/pi-agent/skills/user-context`; `cargo test -p epi-s3-gateway user_context_routing_compliance`; integration test confirms dual-injection (agent receives `[[UserContext]]`, EBM receives second channel); longitudinal write-back tests confirm PASU.md and M5_ContemplationObject updated at session close.
+
+**Depends:** Tranche **12.21** (skill implementation); Tranche **6.8** (EBM dual-channel projection extension); cross-cuts Tranche **4.6** (existing Kerykeion adapter populates kairos field), **5.11** (M4-3 Nara integration), **19** (Track 19 contemplation-surface integration owns M5_ContemplationObject).
+
+---
+
+## DR-MODEL-1 — Per-role model-slot rule (local-default / cloud-opt-in / null)
+
+**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass making model swappability per-role explicit · **Resolution (proposed):** Each role-slot in the Pi-Agent harness has exactly **three valid states**: **local-default** (privacy-first structural commitment, no content leaves device), **cloud-opt-in** (explicit per-dispatch-class consent with named scope), **null** (no model assigned, dispatches fail-soft with notice).
+
+Slot defaults per [[../../../M'-MODEL-SLOT-SPEC]] §2-§4:
+
+- `nara_parser` → local-default Gemma 4 12B Unified Q4 via Ollama/llama.cpp (MLX once stable). Fallback: `null` (no silent degradation to cloud).
+- `epii_judge` → cloud-opt-in Pro-class (Claude Opus / Gemini 3.1 Pro / GPT-5.2-class) with `consent_scope: vector-only-derived-signal` (privacy already solved upstream since input is derived signal not raw content).
+- `aletheia.{anansi, mercurius, agora}` → local-default smaller models (lookup/index/bookkeeping is light).
+- `aletheia.{janus}` → local-default Gemma 4 12B (threshold logic wants medium reasoning + JSON reliability).
+- `aletheia.{moirai, zeithoven}` → cloud-opt-in Pro-class (GraphRAG-distillation, creative-advance want strong reasoning; data is already derived or no user content involved).
+
+Verifier enforces privacy boundaries via two registered constraints (both error-level): `slot_privacy_boundary_compliance` (content-class must be within slot consent_scope), `slot_fallback_compliance` (slots configured local-default must resolve to local-default or null, never silently to cloud-opt-in).
+
+The structural commitment: **privacy boundary is enforced at the slot**, not at an extra gate. Raw content goes to slots that hold it locally by configuration; derived signal goes to slots that may be cloud-opt-in because privacy was solved upstream.
+
+**Action:** Author canonical spec at `Idea/Bimba/Seeds/M/M'-MODEL-SLOT-SPEC.md` (landed 2026-06-07). Implement CLI surface via Track 12.22 at `Body/S/S0/epi-cli/src/slot.rs`. Register verifier constraints via `pi register-constraint`. Pi-Agent harness exposes `pi_slot_resolve({slot_name, dispatch_context})`.
+
+**Verification:** `test -f Idea/Bimba/Seeds/M/M'-MODEL-SLOT-SPEC.md`; `cargo test -p epi-cli slot_list_round_trip`; `cargo test -p epi-s3-gateway slot_privacy_boundary_compliance`; `cargo test -p epi-s3-gateway slot_fallback_compliance`; `epi slot test nara_parser` confirms local Gemma reachable; integration test confirms cloud-opt-in UI gate fires with frictional confirmation.
+
+**Depends:** Tranche **12.22** (Pi-Agent model-slot interface); cross-cuts **12.23** (Anima dispatch policy reads slot resolution).
+
+---
+
+## DR-ML-1 — Per-subsystem ML method + dual-source skill surface (vendored Hermes + custom-built)
+
+**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass naming the ML/MLOps skill surface per M-subsystem, integrating Hermes Agent catalog vendoring with custom-built gap skills · **Resolution (proposed):** Each M-subsystem has a **primary ML method that fits its coordinate semantics** (not assigned, structurally entailed):
+
+- **M0 Anuttara** → Symbolic constraint discovery → proof-theoretic
+- **M1 Paramaśiva** → Geometric DL / equivariant networks (quaternion-respecting)
+- **M2 Parashakti** → Energy-based modeling (the EBM proper, 72-fold)
+- **M3 Mahāmāyā** → Discrete combinatorial / structured prediction
+- **M4 Nara** → Local LoRA on Gemma 4 12B (privacy-first)
+- **M5 Epii** → Judge-loops + distillation + preference learning (alphaproof-shaped)
+- **S4'/S5' Aletheia** → Cross-cutting orchestration ML (multi-channel Elo, fair-comparison distillation, drift-detection, creative-skill-creation)
+
+Skill surface is **dual-source**: ~13 vendored Hermes skills (1:1 compatible with Claude Code skills, drop-in via Agora vendoring) + custom-built skills covering the five core gaps the catalog leaves: **`mlx-lora`** (Apple-Silicon native LoRA — critical since we're on Darwin), **`epii-distillation`** (Pro→local-Gemma teacher-student pipeline), **`parashakti-ebm-head`** (72-dim tritone-symmetric dual-channel EBM training), **`aletheia-elo-rating`** (multi-channel Bradley-Terry/TrueSkill update math), **`aletheia-drift-detection`** (retrain-trigger orchestrator — the autoresearch loop's keystone). Plus per-subsystem domain-specific skills composing vendored capability into per-subsystem methods.
+
+Residency rule per [[../../../M'-ML-SKILL-SURFACE-SPEC]] §4: vendored Hermes skills under `Body/S/S4/pi-agent/skills/hermes/{name}/`; custom skills under per-subsystem residency (M0/M1/M3 substrate-resident at `Body/S/S0/epi-lib/skills/{subsystem}/`, M2/M5 autoresearch-resident at `Body/S/S5/epii-autoresearch-core/skills/` and `Body/S/S5/plugins/epi-logos/skills/`, M4 Nara harness-resident at `Body/S/S4/pi-agent/skills/nara/`, Aletheia infra at `Body/S/S4/ta-onta/S4-5p-aletheia/skills/`).
+
+**The autoresearch self-improvement loop closes through drift-detection-triggered retraining** (per [[../../../M'-ML-SKILL-SURFACE-SPEC]] §5): Mercurius's Elo state IS the drift signal; `aletheia-drift-detection` watches rating arcs; threshold breach (rating-trend, veto-pattern, coverage, verifier-violation) triggers a diagnose → compose-task → queue-for-Anima sequence; Anima dispatches the appropriate retrain ML skill; retrained artifact registers with provisional Elo and recalibrates through use. Developer-in-the-loop checkpoints for high-impact retrains (canon-impacting LoRA, major EBM refresh, constraint-set revision); low-impact retrains proceed autonomously.
+
+Two workflows for adding skills: **vendoring** (Agora CF4 — `epi skill vendor <name>` clones upstream Hermes SKILL.md into `hermes/` namespace), **creative-advance** (Zeithoven CF5 — `epi skill propose <description>` drafts SKILL.md for developer review; `epi skill scaffold` generates directory structure under correct per-subsystem residency).
+
+**Action:** Author canonical spec at `Idea/Bimba/Seeds/M/M'-ML-SKILL-SURFACE-SPEC.md` (landed 2026-06-07). Operationalize via Track 12.24 (ML skill surface vendoring + custom-build sequencing). Phase the build: Phase-1 vendor priority-13 Hermes skills; Phase-2 build five core gap skills; Phase-3 build per-subsystem domain skills; Phase-4 wire drift-detection retrain loop. CLI surface at `Body/S/S0/epi-cli/src/skill.rs` (new). Skill-registry persistence in SpacetimeDB `agora_skill_index` table (schema at `Body/S/S3/spacetime-context/schemas/skill-registry.sql`, new).
+
+**Verification:** `test -f Idea/Bimba/Seeds/M/M'-ML-SKILL-SURFACE-SPEC.md`; `epi skill list --source vendored` returns vendored Hermes catalog; `epi skill list --source custom` returns custom-built; `epi skill list --subsystem M4` returns M4 Nara skills; `agora_refresh_skill_index` populates registry; drift-detection daemon runs and produces calibration trial entries on seeded drift fixture; per-subsystem ML method documented in each M-coordinate spec.
+
+**Depends:** Tranche **12.24**; cross-cuts **12.20** (Mercurius/Janus/Anansi/Moirai Elo infrastructure produces the rating state drift-detection watches), **12.21** (user-context skill is one consumer of the trained EBM dual-channel head), **12.22** (model-slot interface provides target slots for retrained artifacts), **12.23** (Anima MoE dispatch routes ML skill invocations); follows DR-ELO-1, DR-MOE-1, DR-MP-4.

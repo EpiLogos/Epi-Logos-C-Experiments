@@ -139,17 +139,29 @@ The two factors of the bioquaternion are both populated: $q_b$ from Element I, $
 
 $$E = \|q_b - q_p\|^2$$
 
-This single scalar decomposes across the three meta-layers:
+This single scalar decomposes across the three meta-layers of the mental pole, with weights inherited from the just-triad 4:5:6 (not chosen as hyperparameters but structurally given by the harmonic skeleton):
 
-$$E_{\text{total}} = E_\# + \sum_{\ell \in \text{lenses}} w_\ell E_\ell + E_R$$
+$$E_{\text{total}} = \frac{4 \cdot E_4 + 5 \cdot E_5 + 6 \cdot E_6}{15}$$
 
-where $E_\#$ is the Nara-energy (how far the user-state has drifted from elemental baseline), $E_\ell$ for each lens is the Epii-lens-energy (how well the configuration scores under that lens), and $E_R$ is the Anuttara-axiom-energy (how well the configuration satisfies the seven R-virtues as constraints). The lens-weightings $w_\ell$ are the modulation that determines which lenses dominate the current evaluation.
+where:
 
-The Möbius-descent step is:
+- $E_4$ (Nara-traversal energy, weight **4**) is the energy of the proposed traversal-direction against the QL positions *as refracted through the 12 MEF lenses into meaningfulness*. The lenses are how the underlying P/P' positions surface as readable content; $E_4$ measures whether the LLM's traversal-gradient coheres with that refraction-structure at the engaged coordinate.
 
-$$q_p^{(n+1)} = q_p^{(n)} - \log(9/8) \cdot \nabla_{q_p} E_{\text{total}}$$
+- $E_5$ (Epii lens-weighted energy with user-temporal modulation, weight **5**) is the joint computation over `(lens_resonance_72, user_temporal_N)` — the 72-dim lens-resonance vector AND the user-context channel as parallel inputs. The EBM at position 5' is a small fusion network learning this joint distribution. User-context entering as second channel makes the energy genuinely personalised: a configuration can be lens-coherent yet user-temporally incoherent, and $E_5$ holds both readings.
+
+- $E_6$ (Anuttara R-virtue ontology energy, weight **6**) is the constraint-violation magnitude against the 9 Parameśvara virtues + 65 core relations + the growing constraint-set discovered through dev praxis. Weight 6 is anchor-weight, not preference-weight: failures here are structural-ontological violations the verifier can refuse, regardless of how favourably $E_4$ and $E_5$ score.
+
+The 4:5:6 ratio sums to 15 (the just-triad denominator); the heaviest weight sits at $E_6$ because the verifier *contains the unified-trinity of the physical-pole as its anchor-content* — position 0' is what holds the standing 1:1 identity in place across the gradient step.
+
+The Möbius-descent step is then:
+
+$$q_p^{(n+1)} = q_p^{(n)} - \log(9/8) \cdot \nabla_{q_p}\!\left[\frac{4 \cdot E_4 + 5 \cdot E_5 + 6 \cdot E_6}{15}\right]$$
 
 The step-size is the **epogdoon** — one whole-tone of harmonic progress in the latent space. Not a tunable hyperparameter; the mathematical-musical quantum inherited from the matheme. Six such steps complete a major-second sequence; six more close the whole-tone scale's traversal; twelve ticks complete the double-covered cycle of descent-and-ascent.
+
+The 4:5:6 weighting is similarly structural — inherited from the just-triad's harmonic skeleton, not free parameters. The future M5-1 philosophical-canon check (Epii at sub-position #1, planned for a later development cycle) sits as a soft sub-term *inside* $E_5$ rather than as a new top-level position, because canon is interpretable (Epii-domain) rather than formal (Anuttara-domain). The 4:5:6 architecture stays canonical.
+
+The agentic-runtime architecture that instantiates this energy formula at dispatch time — coordinate-conditional Mixture-of-Experts with Elo-gated dispatch through Anima — is specified at [[M'-AGENTIC-RUNTIME-SPEC]]. The user-context channel that feeds $E_5$ as second input is specified at [[M'-USER-CONTEXT-SKILL-SPEC]]. The model-slot rule that determines which models instantiate the LLM role per slot (Gemma 4 12B Unified Q4 for Nara-parsing by default, Pro-class for Epii-judge, etc.) is specified at [[M'-MODEL-SLOT-SPEC]].
 
 ### Ratio-face: 3:3 as the 1-2-3 / 4-5-0 split
 

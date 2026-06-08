@@ -210,7 +210,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s2.graph.*",
         owner: "S2",
         status: CoordinateParityStatus::Adapter,
-        live_gateway_method: Some("s2.graph.query / s2.graph.node / s2.graph.traverse / s2.graph.pointer_web.compute / s2.graph.pointer_web.refresh / s2.graph.kernel_resonance.record"),
+        live_gateway_method: Some("s2.graph.query / s2.graph.node / s2.graph.traverse / s2.graph.harmonic_relations.materialize / s2.graph.pointer_web.compute(deprecated) / s2.graph.pointer_web.refresh(deprecated) / s2.graph.kernel_resonance.record"),
         cli_mirror: Some("epi graph"),
         body_path: "Body/S/S0/epi-cli/src/graph",
         test_evidence: &[
@@ -610,6 +610,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         "s2.graph.query"
         | "s2.graph.node"
         | "s2.graph.traverse"
+        | "s2.graph.harmonic_relations.materialize"
         | "s2.graph.pointer_web.compute"
         | "s2.graph.pointer_web.refresh" => Some("s2.graph.*"),
         "s2.graph.kernel_resonance.record" => Some("s2.graph.*"),
@@ -671,9 +672,9 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "cron.runs" | "models.list" | "status" | "health" | "status.summary"
         | "health.snapshot" | "presence.list" | "usage.status" | "usage.cost"
         | "system-presence" | "system-event" => Some("s3'.*"),
-        "s3'.temporal.context"
-        | "s3'.temporal.subscribe"
-        | "s3'.spacetime.subscribe" => Some("s3'.temporal.*"),
+        "s3'.temporal.context" | "s3'.temporal.subscribe" | "s3'.spacetime.subscribe" => {
+            Some("s3'.temporal.*")
+        }
         "device.pair.list"
         | "device.pair.approve"
         | "device.pair.reject"

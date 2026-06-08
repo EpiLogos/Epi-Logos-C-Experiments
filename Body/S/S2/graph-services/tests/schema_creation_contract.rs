@@ -1,10 +1,11 @@
 use epi_s2_graph_services::schema::{
     coordinate_node_property_specs, coordinate_relationship_property_specs, create_schema,
-    validate_node_properties, validate_relationship_properties, CONSTRAINTS,
-    GRAPHITI_ARC_ID_PROPERTY, INDEXES, KERNEL_RESONANCE_INDEX_PROPERTY, KERNEL_RESONANCE_LABEL,
-    KERNEL_RESONANCE_RELATION, KERNEL_RESONANCE_SCORE_PROPERTY, KERNEL_TICK_PROPERTY,
-    POINTER_COUNT_PROPERTY, POINTER_FAMILY_REFS_PROPERTY, POINTER_HARMONIC_ANCHOR_JSON_PROPERTY,
-    POINTER_WEB_JSON_PROPERTY, RELATIONSHIP_INDEXES, SESSION_KEY_PROPERTY, VECTOR_INDEX,
+    relationship_spec, relationship_types, validate_node_properties,
+    validate_relationship_properties, CONSTRAINTS, GRAPHITI_ARC_ID_PROPERTY, INDEXES,
+    KERNEL_RESONANCE_INDEX_PROPERTY, KERNEL_RESONANCE_LABEL, KERNEL_RESONANCE_RELATION,
+    KERNEL_RESONANCE_SCORE_PROPERTY, KERNEL_TICK_PROPERTY, POINTER_COUNT_PROPERTY,
+    POINTER_FAMILY_REFS_PROPERTY, POINTER_HARMONIC_ANCHOR_JSON_PROPERTY, POINTER_WEB_JSON_PROPERTY,
+    RELATIONSHIP_INDEXES, SESSION_KEY_PROPERTY, VECTOR_INDEX,
 };
 
 #[test]
@@ -62,6 +63,58 @@ fn coordinate_property_registry_covers_nodes_and_relationships() {
     assert!(rel_specs
         .iter()
         .all(|spec| !spec.coordinate_home.is_empty()));
+}
+
+#[test]
+fn harmonic_relationship_types_are_semantic_canonical_not_generic() {
+    let rel_types = relationship_types();
+
+    for rel_type in [
+        "ADJACENTLY_ARTICULATES",
+        "MIRRORS_COMPLEMENT",
+        "CROSSES_KNOWING_LIMIT",
+        "INVERTS_THROUGH_FIRST",
+        "INVERTS_THROUGH_SECOND",
+        "INVERTS_THROUGH_PAIR",
+    ] {
+        assert!(
+            rel_types.contains(&rel_type),
+            "{rel_type} must be registered"
+        );
+        assert!(
+            relationship_spec(rel_type).is_ok(),
+            "{rel_type} must resolve"
+        );
+    }
+
+    assert!(!rel_types.contains(&"HAS_HARMONIC_RELATION"));
+    assert!(relationship_spec("HAS_HARMONIC_RELATION").is_err());
+}
+
+#[test]
+fn harmonic_coordinate_property_registry_covers_required_surface() {
+    let rel_specs = coordinate_relationship_property_specs();
+
+    for key in [
+        "c_4_harmonic_family",
+        "c_4_harmonic_register",
+        "c_4_harmonic_d_face",
+        "c_4_harmonic_base_pair",
+        "c_4_harmonic_primary_anchor",
+        "c_5_harmonic_interval_signature",
+    ] {
+        assert!(
+            rel_specs.iter().any(|spec| spec.key == key),
+            "{key} missing"
+        );
+    }
+
+    assert!(rel_specs
+        .iter()
+        .any(|spec| spec.key == "c_4_harmonic_depth"));
+    assert!(rel_specs
+        .iter()
+        .any(|spec| spec.key == "c_4_harmonic_active_lenses"));
 }
 
 #[test]

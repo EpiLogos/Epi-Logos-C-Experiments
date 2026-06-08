@@ -119,7 +119,10 @@ fn session_store_round_trips_vak_address() {
 
     // Initially no vak_address.
     let initial = store.resolve(key).expect("load initial");
-    assert!(initial.vak_address.is_none(), "fresh session has no VAK yet");
+    assert!(
+        initial.vak_address.is_none(),
+        "fresh session has no VAK yet"
+    );
 
     // Patch with a VAK address.
     let addr = VakAddress {
@@ -144,11 +147,65 @@ fn session_store_round_trips_vak_address() {
     assert_eq!(loaded.vak_address.as_ref(), Some(&addr));
     assert_eq!(loaded.vak_address.as_ref().unwrap().cf, "(0/1)");
     assert_eq!(loaded.vak_address.as_ref().unwrap().cs.code, "CS1");
-    assert_eq!(loaded.vak_address.as_ref().unwrap().cs.direction, CsDirection::Day);
+    assert_eq!(
+        loaded.vak_address.as_ref().unwrap().cs.direction,
+        CsDirection::Day
+    );
 
     // Patch with None should NOT clear (semantics: Some(addr) sets, None means "no update").
     let null_patch = SessionPatch::default();
     store.patch(key, null_patch).expect("null patch");
     let still_loaded = store.resolve(key).expect("load after null patch");
-    assert_eq!(still_loaded.vak_address.as_ref(), Some(&addr), "null patch must not clear");
+    assert_eq!(
+        still_loaded.vak_address.as_ref(),
+        Some(&addr),
+        "null patch must not clear"
+    );
+}
+
+#[test]
+fn session_state_cache_key_uses_the_s3_tiered_runtime_key_for_read_and_write() {
+    let key = SessionStore::cached_session_state_key("20260608-120000-main");
+
+    assert_eq!(
+        key.as_str(),
+        "cache:hot:s3:gateway:temporal:session:20260608-120000-main:state"
+    );
+    assert_eq!(
+        key.logical_key(),
+        "s3:gateway:temporal:session:20260608-120000-main:state"
+    );
+}
+
+#[test]
+fn session_record_runtime_cache_plan_covers_active_hot_and_warm_layers() {
+    let gate_root = temp_gate_root("runtime-cache-plan");
+    let store = SessionStore::new(&gate_root).unwrap();
+    let record = store
+        .create_with_context(
+            "agent:main:main",
+            CreateSessionContext {
+                session_id: Some("20260608-120000-main".to_owned()),
+                day_id: Some("08-06-2026".to_owned()),
+                vault_now_path: Some(
+                    "/vault/Empty/Present/08-06-2026/20260608-120000-main/now.md".to_owned(),
+                ),
+                runtime_cwd: Some("/repo".to_owned()),
+                vault_root: Some("/vault".to_owned()),
+            },
+        )
+        .unwrap();
+
+    let writes = SessionStore::runtime_cache_writes_for_record(&record).unwrap();
+    let keys = writes
+        .iter()
+        .map(|write| write.key.as_str())
+        .collect::<Vec<_>>();
+
+    assert!(keys.contains(&"cache:active:s3:gateway:session:record:agent:main:main"));
+    assert!(keys.contains(&"cache:hot:s3:gateway:temporal:session:20260608-120000-main:state"));
+    assert!(keys.contains(&"cache:warm:s3:gateway:temporal:day:08-06-2026:context"));
+    assert!(writes
+        .iter()
+        .any(|write| write.value.contains("\"canonical_key\"")));
 }

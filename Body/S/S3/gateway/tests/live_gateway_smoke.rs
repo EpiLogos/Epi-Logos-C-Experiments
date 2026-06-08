@@ -23,9 +23,9 @@
 use std::fs;
 
 use epi_s3_gateway::{
-    chat, sessions,
+    chat,
     session_store::{CreateSessionContext, SessionStore},
-    transcripts,
+    sessions, transcripts,
 };
 use tempfile::tempdir;
 
@@ -125,9 +125,7 @@ fn s3_runtime_preserves_alpha_state_root_layout() {
     let transcript_path = transcripts::transcript_path(&gate_root, "agent:main:main");
     assert_eq!(
         transcript_path,
-        gate_root
-            .join("transcripts")
-            .join("agent_main_main.jsonl"),
+        gate_root.join("transcripts").join("agent_main_main.jsonl"),
         "transcript path must match alpha layout"
     );
     assert!(transcript_path.exists());

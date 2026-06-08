@@ -55,8 +55,7 @@ async fn next_text(
         if !message.is_text() {
             continue;
         }
-        return serde_json::from_str(message.to_text().expect("text frame"))
-            .expect("json frame");
+        return serde_json::from_str(message.to_text().expect("text frame")).expect("json frame");
     }
 }
 
@@ -117,11 +116,15 @@ async fn subscription_lifecycle_flows_over_single_multiplexed_websocket() {
         .as_array()
         .expect("features.methods must be advertised");
     assert!(
-        methods.iter().any(|method| method == "s3'.temporal.subscribe"),
+        methods
+            .iter()
+            .any(|method| method == "s3'.temporal.subscribe"),
         "methods catalog must include s3'.temporal.subscribe"
     );
     assert!(
-        methods.iter().any(|method| method == "s3'.spacetime.subscribe"),
+        methods
+            .iter()
+            .any(|method| method == "s3'.spacetime.subscribe"),
         "methods catalog must include s3'.spacetime.subscribe"
     );
 
@@ -256,9 +259,7 @@ async fn subscription_lifecycle_flows_over_single_multiplexed_websocket() {
     let mut spacetime_sub_id: Option<String> = None;
     let deadline = Instant::now() + Duration::from_secs(8);
     while Instant::now() < deadline
-        && !(fallback_active_seen
-            && spacetime_requested_seen
-            && spacetime_result.is_some())
+        && !(fallback_active_seen && spacetime_requested_seen && spacetime_result.is_some())
     {
         let frame = next_text(&mut socket).await;
         match frame.get("type").and_then(Value::as_str) {

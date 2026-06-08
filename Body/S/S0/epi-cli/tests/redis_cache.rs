@@ -1,5 +1,6 @@
 use epi_logos::graph::redis_cache::{CacheTier, RedisCache, RedisConfig};
 use epi_s3_gateway_contract::RedisTemporalContextRole;
+use epi_s3_redis_context::RedisKey;
 
 #[test]
 fn test_cache_tier_ttls() {
@@ -21,17 +22,21 @@ fn session_now_redis_key_is_s3_temporal_context_not_graph_cache() {
 
     assert_eq!(
         role.session_now_key("test-session-123"),
-        "s3:gateway:temporal:session:test-session-123:now:md"
+        "cache:hot:s3:gateway:temporal:session:test-session-123:now:md"
     );
     assert_eq!(
         role.day_context_key("07-05-2026"),
-        "s3:gateway:temporal:day:07-05-2026:context"
+        "cache:warm:s3:gateway:temporal:day:07-05-2026:context"
     );
     assert_eq!(
         role.agent_orientation_key("epii", "test-session-123"),
-        "s3:gateway:temporal:agent:epii:session:test-session-123:orientation"
+        "cache:hot:s3:gateway:temporal:agent:epii:session:test-session-123:orientation"
     );
     assert_eq!(role.ttl_seconds, CacheTier::Hot.ttl_seconds());
+    assert_eq!(
+        RedisKey::session_now("test-session-123").as_str(),
+        "cache:hot:s3:gateway:temporal:session:test-session-123:now:md"
+    );
 }
 
 #[tokio::test]
@@ -76,9 +81,15 @@ async fn test_redis_coordinate_cache() {
         .await
         .unwrap();
 
-    let val = cache.get("coord:#4").await.unwrap();
+    let val = cache
+        .get("cache:warm:s2:coordinate:lookup:legacy:#4")
+        .await
+        .unwrap();
     assert!(val.is_some());
 
     // Cleanup
-    cache.delete("coord:#4").await.unwrap();
+    cache
+        .delete("cache:warm:s2:coordinate:lookup:legacy:#4")
+        .await
+        .unwrap();
 }

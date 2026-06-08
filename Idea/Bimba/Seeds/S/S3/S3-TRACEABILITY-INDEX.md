@@ -48,7 +48,7 @@ Conclusions drawn for [[S3]]:
 
 - [[S3]] owns imperative gateway transport, protocol, sessions, channels, routing, parity, and event fanout.
 - [[S3']] owns temporal/shared-state grounding: [[Chronos]], [[Day]], [[NOW]], [[Kairos]], Redis-backed live context, presence, and state projection.
-- [[Redis]] is allowed here because S3' owns temporal contextual grounding, while S2 owns graph/cache substrate use.
+- [[Redis]] is allowed here because S3 owns the runtime substrate, S3' owns temporal contextual grounding over it, and S2 owns graph/cache semantics plus namespace use only.
 - [[Graphiti]] is architecturally S3' temporal episodic runtime/library, not a required sidecar. S5/S5' owns invocation, search, arc governance, and reflective meaning.
 - Older OmniPanel and state-architecture plans remain important genealogy, but the current coordinate law is the build target.
 

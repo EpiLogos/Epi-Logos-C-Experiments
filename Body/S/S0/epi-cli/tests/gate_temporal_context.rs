@@ -82,11 +82,11 @@ fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     assert_eq!(value["day"]["wikilink"], "[[07-05-2026]]");
     assert_eq!(
         value["redis"]["sessionNowKey"],
-        "s3:gateway:temporal:session:session-temporal-main:now:md"
+        "cache:hot:s3:gateway:temporal:session:session-temporal-main:now:md"
     );
     assert_eq!(
         value["redis"]["agentOrientationKey"],
-        "s3:gateway:temporal:agent:anima:session:session-temporal-main:orientation"
+        "cache:hot:s3:gateway:temporal:agent:anima:session:session-temporal-main:orientation"
     );
     assert_eq!(value["kairos"]["available"], true);
     assert_eq!(value["kairos"]["activeDecan"], 17);
@@ -117,15 +117,15 @@ fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     );
     assert_eq!(
         value["redis"]["dayKairosKey"],
-        "s3:gateway:temporal:day:07-05-2026:kairos"
+        "cache:hot:s3:gateway:temporal:day:07-05-2026:kairos"
     );
     assert_eq!(
         value["redis"]["sessionKairosKey"],
-        "s3:gateway:temporal:session:session-temporal-main:kairos"
+        "cache:hot:s3:gateway:temporal:session:session-temporal-main:kairos"
     );
     assert_eq!(
         value["redis"]["personalOrientationKey"],
-        "s3:gateway:temporal:personal:pratibimba-abcd1234:orientation"
+        "cache:hot:s3:gateway:temporal:personal:pratibimba-abcd1234:orientation"
     );
     assert_eq!(
         value["spacetimedb"]["kairosProjectionTable"],
@@ -168,7 +168,7 @@ async fn gateway_rpc_temporal_context_is_available_to_agent_surfaces() {
     assert_eq!(value["session"]["sessionId"], session_id);
     assert_eq!(
         value["redis"]["agentOrientationKey"],
-        "s3:gateway:temporal:agent:epii:session:session-temporal-main:orientation"
+        "cache:hot:s3:gateway:temporal:agent:epii:session:session-temporal-main:orientation"
     );
     assert_eq!(value["graphiti"]["runtimeOwner"], "S3'");
     assert_eq!(value["graphiti"]["invocationOwner"], "S5/S5'");
@@ -201,7 +201,7 @@ async fn live_redis_temporal_context_hydration_uses_s3_namespace() {
         .as_str()
         .unwrap()
         .to_string();
-    assert!(key.starts_with("s3:gateway:temporal:session:"));
+    assert!(key.starts_with("cache:hot:s3:gateway:temporal:session:"));
     assert!(key.contains(&session_id));
 
     let redis_uri =
@@ -258,7 +258,11 @@ fn assert_safe_kernel_projection(value: &serde_json::Value) {
     assert!(profile["chromatic"]["mirrorNote"].as_str().unwrap().len() > 0);
     assert_eq!(profile["profileSchemaVersion"], 1);
     assert_eq!(profile["binary"], profile["mahamaya"]);
-    assert_eq!(profile["binary"]["transcriptionState"], "provisional-gap");
+    assert!(
+        ["provisional-gap", "resolved"]
+            .contains(&profile["binary"]["transcriptionState"].as_str().unwrap()),
+        "live kernel projection must expose a recognized Mahamaya transcription state"
+    );
     assert!(
         value["kernel"].get("bioquaternion").is_none(),
         "gateway temporal context must not publish protected bioquaternion detail"

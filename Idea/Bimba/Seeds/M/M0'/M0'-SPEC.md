@@ -27,6 +27,16 @@ Per [[alpha_quaternionic_integration_across_M_stack]] §0.1 and §7.1, [[M0]] re
 
 Read [[M0']] with the graph substrate immediately at hand: [[Body/S/S0/epi-lib/include/m0.h]] (568 LOC [[Anuttara]] header), [[Body/S/S0/epi-lib/src/m0.c]] (831 LOC), [[Body/S/S0/epi-lib/include/ontology.h]] (337 LOC ontology declarations), [[Body/S/S0/portal-core/src/kernel.rs]] (where M0 facets sit at the top of the kernel surface), and [[Body/S/S2/graph-schema]] (the M0 anchor in the schema authority). These files are the live substrate; M0' is the playable [[Bimba]] view over them, not their owner.
 
+## §M0'-KERNEL-ROLE — Verifier at Weight 6 of the Just-Triad
+
+Per the kernel-spec refinement at [[../epi-logos-kernel-spec.md]] §3 (rehomed to M' root 2026-06-07, see DR-KERNEL-1), M0' carries the **Anuttara Verifier role at position 0' of the mental pole**, with weight **6** in the just-triad 4:5:6 weighted energy formula:
+
+$$E_{\text{total}} = \frac{4 \cdot E_4 + 5 \cdot E_5 + 6 \cdot E_6}{15}$$
+
+The weight-6 anchor is structural, not preference. $E_6$ is the R-virtue ontology energy — the constraint-violation magnitude against the 9 Parameśvara virtues + 65 core relations + the growing constraint-set discovered through dev praxis. The verifier holds **refusal authority** that the EBM and LLM do not: a configuration producing high $E_6$ (large constraint-violation) cannot be selected regardless of how favourably $E_4$ (Nara-traversal) and $E_5$ (Epii lens-with-user-temporal) score. This is what makes Anuttara the "load-bearing unity" of the mental pole — position 0' contains the unified-trinity of the physical pole as its anchor-content, holding the standing 1:1 identity in place across each gradient step.
+
+Operationally for M0': the verifier surface remains structural-invariant Cypher queries now, evolving toward proof-theoretic later (per kernel-spec Level-2 maturity note). The constraint-set grows through dev praxis as developers notice what counts as coherent. M0' as graph-readable surface continues to expose the bimba map; M0' as verifier-role surface holds the formal-axiomatic constraint-checking authority for the kernel.
+
 ## Surface Philosophy: Readable Graph, Technical-Inspector Summonable
 
 Per [[M'-SYSTEM-SPEC]] "Default Surface" subsection. Default M0' surface is the readable graph with selected-coordinate inspector showing position-character (Truth at #0, Word at #2, etc. per v3 Name-content), Gebser register, and route options. Relation-family edge metadata, full pointer-web summary, source-spec-code-test anchor enumeration, and graph-namespace audit are **summonable** — surfaced when the user asks "trace the source of this", when a deposition needs anchor-evidence, or when an agent-run requires the full graph context for a task. The agent mediates technical depth conversationally.

@@ -8,7 +8,7 @@
 - `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md` (BOTH pages — full read, lines 0-505 then 505-669)
 - `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md` (full read, 152 lines)
 - `Idea/Bimba/Seeds/M/M0'/m0-prime-anuttara-research.md` (full read, 97 lines)
-- `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md` (full read, 496 lines)
+- `Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md` (full read, 496 lines)
 - `Idea/Bimba/Seeds/M/M0'/the-matheme-of-the-field-differential.md` (read, first 200 lines covering 0/1 → 4+2 → 5→0 explication — substrate-level philosophical canon)
 - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md` (full read, 611 lines)
 - `Idea/Pratibimba/System/Subsystems/Anuttara/anuttara-ux-full-m0-branch.md` (full read, 244 lines)

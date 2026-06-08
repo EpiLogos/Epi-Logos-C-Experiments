@@ -977,6 +977,7 @@ version = "0.1.0"
 dependencies = [
  "blake3",
  "epi-s3-gateway-contract",
+ "epi-s3-redis-context",
  "futures-util",
  "hex",
  "portal-core",

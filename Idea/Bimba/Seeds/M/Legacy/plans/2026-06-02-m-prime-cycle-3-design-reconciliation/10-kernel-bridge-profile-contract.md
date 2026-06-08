@@ -12,6 +12,10 @@ The shared M' data spine. The `MathemeHarmonicProfile` struct at `Body/S/S0/port
 
 Consume as-is — `MathemeHarmonicProfile` struct (kernel.rs:346-387); resonance72 projection (lines 366, 605-628); `CODON_ROTATION_SURFACE_COUNT=472` codon-rotation (`codon_rotation_projection.rs:9`); `audio_octet[8]`/`nodal_quartet[4]` (kernel.rs:367-368 ← `vimarsha_reading.rs`); `pointerAnchor` (kernel.rs:379, 847-886); typed Theia mirror; readiness 9-state taxonomy; 7-capability allow-list; 3-table stream whitelist; opaque `MathemeHarmonicProfileBoundary.payload` (policy-correct — per-extension narrowing). Cycle 2 Tracks 11-12 closed S0/S1/S2 + S3/S4/S5 substrate; cycle 3 closes profile-field readiness over it.
 
+## Redis Residency Preflight
+
+Before normal Track 10 profile-bus work resumes, pass the pre-Cycle-3 Redis residency cleanup at [[../../../../S/S3/S3-REDIS-RUNTIME-SPEC]]. Kernel/profile projections that mention DAY/NOW, Redis/Psyche, kbase/source-pool, coordinate lookup, Graphiti, or semantic retrieval handles must reference S3-owned Redis runtime handles. [[S0]] may mirror or forward those handles at the CLI/RPC edge, but it must not hydrate Redis directly or hand-build Redis temporal keys.
+
 ## Profile-Field Readiness Ledger (digest — full matrix in plan.runs/)
 
 | Field | Status | Owning Spec | Unblock Path |

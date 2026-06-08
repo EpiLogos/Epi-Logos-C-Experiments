@@ -48,6 +48,7 @@ fn public_current_profile_serializes_versioned_bridge_shape_without_protected_fi
         "bedrock",
         "pointerAnchor",
         "contextFrames",
+        "harmonicGrammar",
     ] {
         assert!(
             json.get(required).is_some(),
@@ -99,6 +100,59 @@ fn public_profile_contract_covers_all_12_ticks_and_pointer_web_invariants() {
         );
         assert_eq!(profile.binary, profile.mahamaya);
     }
+}
+
+#[test]
+fn public_profile_exposes_corrected_lens_harmonic_grammar() {
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(3, 2));
+    let json = serde_json::to_value(&profile).expect("profile serializes");
+    let grammar = &json["harmonicGrammar"];
+
+    assert_eq!(grammar["positionSubstance"], "P/P'=0");
+    assert_eq!(grammar["lensRefraction"], "L/L'=/");
+    assert_eq!(grammar["harmonicRelation"], "A/B/C+D=1");
+    assert_eq!(grammar["basePair"], "L2/L3");
+    assert_eq!(grammar["primaryAnchor"], "Day");
+    assert_eq!(grammar["dFace"], "NONE");
+    assert_eq!(grammar["depth"], 2);
+    assert_eq!(grammar["families"][0]["family"], "A");
+    assert_eq!(grammar["families"][0]["register"], "Being");
+    assert_eq!(
+        grammar["families"][0]["relationType"],
+        "ADJACENTLY_ARTICULATES"
+    );
+    assert_eq!(grammar["families"][1]["family"], "B");
+    assert_eq!(grammar["families"][1]["register"], "Becoming");
+    assert_eq!(grammar["families"][1]["relationType"], "MIRRORS_COMPLEMENT");
+}
+
+#[test]
+fn public_profile_covers_directed_a_b_c_family_pairs_across_ticks() {
+    let cases = [
+        (0, "L0/L1", "A", "Being", "ADJACENTLY_ARTICULATES"),
+        (1, "L1/L2", "C", "KnowingUnknowing", "CROSSES_KNOWING_LIMIT"),
+        (3, "L3/L4", "C", "KnowingUnknowing", "CROSSES_KNOWING_LIMIT"),
+        (5, "L5/L0", "C", "KnowingUnknowing", "CROSSES_KNOWING_LIMIT"),
+    ];
+
+    for (tick12, base_pair, family, register, relation_type) in cases {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(1, tick12));
+        let grammar =
+            serde_json::to_value(&profile).expect("profile serializes")["harmonicGrammar"].clone();
+
+        assert_eq!(grammar["basePair"], base_pair);
+        assert_eq!(grammar["families"][0]["family"], family);
+        assert_eq!(grammar["families"][0]["register"], register);
+        assert_eq!(grammar["families"][0]["relationType"], relation_type);
+    }
+
+    let mirror = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(1, 6));
+    let grammar =
+        serde_json::to_value(&mirror).expect("profile serializes")["harmonicGrammar"].clone();
+    assert_eq!(grammar["basePair"], "L0/L5");
+    assert_eq!(grammar["families"][0]["family"], "B");
+    assert_eq!(grammar["families"][0]["register"], "Becoming");
+    assert_eq!(grammar["families"][0]["relationType"], "MIRRORS_COMPLEMENT");
 }
 
 #[test]

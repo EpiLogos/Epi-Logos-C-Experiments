@@ -21,10 +21,10 @@ use std::time::{Duration, Instant};
 
 use epi_logos::gate::spacetimedb_bridge::{SpacetimePresence, SpacetimeRegistration};
 use epi_s3_gateway_contract::{
-    detect_production_fallback_policy, scan_for_forbidden_privacy_fields,
+    detect_production_fallback_policy, scan_for_forbidden_privacy_fields, GraphitiRuntimeStatus,
     ProductionFallbackPolicy, SpacetimeTableDelta, Track03ReleaseGateReport,
-    GraphitiRuntimeStatus, SPACETIME_CLOCK_PROTOCOL_VERSION,
-    SPACETIME_PROJECTION_SCHEMA_VERSION, SPACETIME_REDUCER_ABI_VERSION,
+    SPACETIME_CLOCK_PROTOCOL_VERSION, SPACETIME_PROJECTION_SCHEMA_VERSION,
+    SPACETIME_REDUCER_ABI_VERSION,
 };
 use serde_json::json;
 use support::temp_env;
@@ -34,8 +34,7 @@ fn live_host() -> String {
 }
 
 fn live_database() -> String {
-    std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into())
+    std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into())
 }
 
 fn live_test_env() -> support::TestEnv {
@@ -295,9 +294,7 @@ async fn release_gate_bind_kairos_p95_under_100ms() {
                 if let SpacetimeTableDelta::KairosSurface { row } = delta {
                     let array: Vec<serde_json::Value> = match row {
                         serde_json::Value::Array(items) => items.clone(),
-                        serde_json::Value::String(s) => {
-                            serde_json::from_str(s).unwrap_or_default()
-                        }
+                        serde_json::Value::String(s) => serde_json::from_str(s).unwrap_or_default(),
                         serde_json::Value::Object(map) => {
                             return map
                                 .get("kairos_snapshot_id")
@@ -383,9 +380,10 @@ async fn release_gate_reconnect_does_not_replay_consumed_deltas() {
             .unwrap_or_else(|_| panic!("first tick"))
             .expect("decode")
             .expect("delta");
-        saw_first = next.inserts.iter().any(|delta| {
-            matches!(delta, SpacetimeTableDelta::WorldClock { .. })
-        });
+        saw_first = next
+            .inserts
+            .iter()
+            .any(|delta| matches!(delta, SpacetimeTableDelta::WorldClock { .. }));
     }
     assert!(saw_first, "first tick must arrive before reconnect");
 
@@ -410,17 +408,13 @@ async fn release_gate_reconnect_does_not_replay_consumed_deltas() {
     let mut seen_ticks: HashMap<String, u64> = HashMap::new();
     let deadline = Instant::now() + Duration::from_millis(8000);
     while seen_ticks.get(&gateway_id).is_none() && Instant::now() < deadline {
-        let next = match tokio::time::timeout(
-            Duration::from_millis(3000),
-            recovered.next_delta(),
-        )
-        .await
-        {
-            Ok(Ok(Some(delta))) => delta,
-            Ok(Ok(None)) => break,
-            Ok(Err(err)) => panic!("recovered delta decode failed: {err}"),
-            Err(_) => continue, // per-frame timeout; outer deadline still applies
-        };
+        let next =
+            match tokio::time::timeout(Duration::from_millis(3000), recovered.next_delta()).await {
+                Ok(Ok(Some(delta))) => delta,
+                Ok(Ok(None)) => break,
+                Ok(Err(err)) => panic!("recovered delta decode failed: {err}"),
+                Err(_) => continue, // per-frame timeout; outer deadline still applies
+            };
         for delta in &next.inserts {
             if let SpacetimeTableDelta::WorldClock { row } = delta {
                 let (gw, tick) = parse_world_clock(row);

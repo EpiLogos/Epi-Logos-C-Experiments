@@ -71,10 +71,7 @@ async fn handler_owner_sentinel_propagates_through_live_gateway() {
     // (1Password-CLI / varlock secret resolution is an S0 process concern).
     // We assert only that the dispatch succeeds and returns the channels
     // surface; the handler-owner sentinel does NOT apply here.
-    let channels = client
-        .request("channels.status", json!({}))
-        .await
-        .unwrap();
+    let channels = client.request("channels.status", json!({})).await.unwrap();
     assert!(
         channels.get("channels").is_some(),
         "channels.status must return the channels surface"

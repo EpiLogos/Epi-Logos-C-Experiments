@@ -29,6 +29,10 @@
 
 Consume as-is — `Body/S/S4/pi-agent` (Pi harness); `Body/S/S4/ta-onta/{khora, hen, pleroma, chronos, anima, aletheia}` (six carriers); `Body/S/S4/ta-onta/aletheia/S5'/agents/` (six subagent .md profiles + janus-envelope.schema.json); `Body/S/S5/epi-gnostic`; `Body/S/S5/epi-kbase`. Audit-and-repurpose — `Body/M/epi-theia/extensions/agentic-control-room/` + `capability-matrix.json constitutional_agents[]`.
 
+## Redis/Psyche/Kbase Residency Preflight
+
+Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis residency cleanup at [[../../../../S/S3/S3-REDIS-RUNTIME-SPEC]]. Agentic dispatch evidence, Psyche continuity, kbase/Gnosis retrieval, and source-pool references must carry S3-owned Redis runtime handles rather than raw Redis clients or raw protected bodies. [[Psyche]] owns continuity law; [[S3]] owns the hot/active runtime state; [[S5]] owns kbase/source meaning; [[S0]] remains only the adapter.
+
 ## Tranches
 
 1. **12.1 — Pi + Anima + subagents architecture audit (replaces ACR-actor parity)** *(doc-ahead-landing)*
@@ -167,3 +171,100 @@ Consume as-is — `Body/S/S4/pi-agent` (Pi harness); `Body/S/S4/ta-onta/{khora, 
     Patch `Body/S/S5/plugins/epi-logos/skills/aletheia-orchestration/SKILL.md` (or current orchestration contract) to specify: (1) every dispatched facet discloses an angle; never concludes; (2) Anima is the only synthesis authority; (3) any facet may return `veto` instead of `disclosure`; (4) veto handling protocol; (5) veto patterns persist and inform future dispatch; (6) over-frequent vetoes from one facet flag dispatch logic as miscalibrated (concrete threshold: 3+ vetoes per facet per session → emit `aletheia.dispatch.miscalibrated` observability event). Cross-link: the constitutional-agents array audit in Track 12.3 confirms Anima's authorship — these aspect names are voice-rendering, not peer agents.
 
     Verification: `cargo check -p epi-s3-gateway`; `cargo test -p epi-s3-gateway aletheia_veto_log_persists`; round-trip test confirms a veto blocks synthesis and triggers the configured re-dispatch / defer / escalate path; `grep -nE 'aletheia_veto|FacetReturn|disclosure.*veto' Body/S/S5/plugins/epi-logos/skills/aletheia-orchestration/SKILL.md` returns the contract update; miscalibration observability event fires on a fixture with 3 vetoes from the same facet.
+
+20. **12.20 — Elo-bookkeeping infrastructure across Mercurius / Janus / Anansi / Moirai** *(spec-ahead-integration; depends on 12.18, 12.19; DR-ELO-1 bound; canonical spec at [[../../../M'-AGENTIC-RUNTIME-SPEC]] §3-§4)*
+
+    Operationalize the S4'/S5' autoresearch self-improvement loop as multi-channel Elo over `(agent × model × skill × context)` indexed by `(vak-cp-position, mef-lens, content-class, kairos-window)`. The same machinery rates agent dispatch AND research-moves; the tournament IS the system activity.
+
+    Four Aletheia techne-guardians together constitute the Elo infrastructure:
+
+    - **Mercurius (CF3)** — Elo bookkeeper. Maintains rating tables per channel (R_verifier, R_lens, R_user), per `(agent-model-skill, context)` tuple. Computes Elo updates on completion of each trial. Exposes ratings to Anima's dispatch policy. New module: `Body/S/S4/ta-onta/S4-5p-aletheia/modules/mercurius-elo.ts` with tools `mercurius_record_trial({trial_id, dispatch, outcomes})`, `mercurius_query_ratings({agent, context_tuple, channel})`, `mercurius_update_elo({trial_id})`.
+    - **Janus (CF1)** — threshold logic. Decides whether a `(verifier_pass, lens_delta, user_delta)` is real signal vs noise. Extends Janus's existing CF1+CF(0/1) Klein-binary widening (Track 12.18) — Janus already runs prospective/retrospective weighting; now also runs threshold on Elo deltas calibrated per trial-class. New tool: `janus_threshold_elo_delta({delta, trial_class})`.
+    - **Anansi (CF0)** — coordinate-conditional index. Maintains the rating-index structure keyed by `(vak-cp-position, mef-lens, content-class, kairos-window)`. Resolves dispatch queries to the right rating-set; handles partitioning for O(log N) lookup. New module: `Body/S/S4/ta-onta/S4-5p-aletheia/modules/anansi-elo-index.ts` with `anansi_index_rating({rating_record})`, `anansi_resolve_context({context_query})`.
+    - **Moirai (CF2)** — fair-comparison distillation. GraphRAGs recent trial-history to find genuinely comparable prior trials; refuses updates where no comparable prior exists. Klotho spins (trial-recording), Lachesis measures (similarity), Atropos cuts (update-decision). New module: `Body/S/S4/ta-onta/S4-5p-aletheia/modules/moirai-fair-comparison.ts` with `moirai_distil_comparison({trial_id})`, `moirai_similarity_score({trial_a, trial_b})`.
+
+    Multi-channel rating, never collapsed to scalar. Composite ratings exist as derived view only. Confidence-interval penalty applies: `effective_rating = R - α·σ(R)`. Bootstrap behaviour: uniform 1500 Elo with confidence-interval-penalty-dominated dispatch until ~100 trials per context-class accumulate.
+
+    Persistence: SpacetimeDB tables `mercurius_elo_ratings`, `mercurius_trial_log`, `anansi_rating_index`, `moirai_comparison_cache`. Schema in `Body/S/S3/spacetime-context/schemas/elo-runtime.sql` (new).
+
+    Verification: `cargo test -p epi-s3-gateway mercurius_elo_round_trip` (dispatch → trial → outcomes → rating update); `cargo test -p epi-s3-gateway moirai_refuses_uncalibrated_update`; `grep -nE 'mercurius_record_trial|janus_threshold_elo|anansi_index_rating|moirai_distil_comparison' Body/S/S4/ta-onta/S4-5p-aletheia/modules/` returns the four new module surfaces; integration test confirms agent-tournament and canon-tournament ratings persist in the same indexed structure; observability events fire on rating updates and threshold misses.
+
+21. **12.21 — `user-context` skill implementation with mandatory routing** *(spec-ahead-integration; depends on 12.15; DR-UC-1 bound; canonical spec at [[../../../M'-USER-CONTEXT-SKILL-SPEC]])*
+
+    Land the `user-context` skill as a first-class participant in the agentic loop. The skill fires mandatorily under specified VAK conditions (CT ∈ {2,4,5}, CF ≠ (00/00), target ∈ #4.x.y, agent_role ∈ constitutional-7, or explicit `require_user_context`), returns a typed `UserContextFrame`, and is dual-injected: into the dispatched agent's articulation context as `[[UserContext]]` AND as second-channel input to the EBM at position 5'.
+
+    Skill location: `Body/S/S4/pi-agent/skills/user-context/{SKILL.md, index.ts, schema.json}` (new). The skill follows Pleroma-Techne atomic-skill contract.
+
+    UserContextFrame schema (TypeScript, also JSON-schema): seven channels — `pasu` (birth-date, birth-location, natal-chart-path, jungian, gene-keys, human-design, quintessence_hash, quintessence_clock, last_wound), `kairos` (planet_degrees[10], transits_active, decan_window, moon_phase, epoch_marker), `identity` (q_identity, q_personal, tick12, exact_degree_720, phase), `recent_sessions`, `active_dev_goals`, `recognized` flag, provenance metadata.
+
+    Routing enforcement: Anuttara registers `user_context_routing_compliance` constraint at `severity: error-level` (blocks dispatch). `pi register-constraint user_context_routing_compliance constraints/user_context_routing_compliance.cypher`.
+
+    Longitudinal write-back at session close: appends to `Idea/Pratibimba/Self/PASU.md` (`c_3_session_history` array) and `M5_ContemplationObject.vak_profile_pairs[]`. Kairos field populated via existing `kairos-python-adapter.ts` at `chronos/S3'/` (Task 4.6). Performance budget: <100ms per fire warm-cache, <250ms cold-cache.
+
+    EBM integration: position-5' EBM input becomes `(lens_resonance_72, user_temporal_N)` with `user_temporal_N` a ~25-30-dim projection of the frame. Projection layer learned alongside the EBM head; lives at `Body/S/S5/epii-autoresearch-core/src/ebm_user_projection.py` (new).
+
+    Verification: `test -d Body/S/S4/pi-agent/skills/user-context`; round-trip test confirms skill fires on matching VAK frame and skips on non-matching frame; `cargo test -p epi-s3-gateway user_context_routing_compliance` confirms verifier refuses non-attached dispatch; integration test confirms dual-injection (agent receives `[[UserContext]]`, EBM receives second channel); longitudinal write-back appends to PASU.md and M5_ContemplationObject.
+
+22. **12.22 — Pi-Agent model-slot configuration interface** *(spec-ahead-integration; DR-MODEL-1 bound; canonical spec at [[../../../M'-MODEL-SLOT-SPEC]])*
+
+    Land the per-role model-slot rule. Each slot has three valid states (local-default / cloud-opt-in / null) configured in `~/.epi-logos/config.toml`. Anima's dispatch policy reads slot state at dispatch time; Anuttara verifier enforces privacy boundaries.
+
+    Slots: `nara_parser`, `epii_judge`, `aletheia.{anansi,janus,moirai,mercurius,agora,zeithoven}`. Defaults per slot per [[../../../M'-MODEL-SLOT-SPEC]] §2-§4 (Nara-parser → local-default Gemma 4 12B Unified Q4; Epii-judge → cloud-opt-in Pro-class; per-Aletheia-subagent defaults per techne-domain).
+
+    CLI surface at `Body/S/S0/epi-cli/src/slot.rs` (new): `epi slot list`, `epi slot show <name>`, `epi slot set <name> --state <state> --provider <p> --model <m>`, `epi slot disable <name>`, `epi slot test <name>`.
+
+    Verifier constraints (new, registered via `pi register-constraint`):
+    - `slot_privacy_boundary_compliance` (error-level) — dispatches must not route content of class X to a slot whose consent_scope doesn't cover X
+    - `slot_fallback_compliance` (error-level) — slots configured `local-default` must resolve to either `local-default` or `null`, never silently to `cloud-opt-in`
+
+    Pi-Agent harness reads slot config at startup and per-dispatch; exposes `pi_slot_resolve({slot_name, dispatch_context})` → `(model_ref, state, fallback_action)`.
+
+    Cloud-opt-in UI gate: when user enables cloud routing for a slot whose default is local, surface frictional confirmation with privacy implication ("Enabling cloud routing for Nara-parser means your journal entries and dream content will be sent to {provider}. Type 'I understand' to confirm.").
+
+    Verification: `cargo test -p epi-cli slot_list_round_trip`; `cargo test -p epi-s3-gateway slot_privacy_boundary_compliance` (constraint blocks scope violations); `cargo test -p epi-s3-gateway slot_fallback_compliance` (silent degradation is refused); `epi slot test nara_parser` confirms local Gemma reachable; integration test confirms cloud-opt-in UI gate fires with frictional confirmation; existing Pi-Agent dispatches honour resolved slot model.
+
+23. **12.23 — Anima MoE dispatch policy implementation** *(spec-ahead-integration; depends on 12.20, 12.21, 12.22; DR-MOE-1 bound; canonical spec at [[../../../M'-AGENTIC-RUNTIME-SPEC]] §5)*
+
+    Operationalize Anima's dispatch policy as the gating function of the coordinate-conditional MoE. Policy is observable, editable, Elo-informed. Reads at dispatch time: candidate `(agent, model, skill_set)` triples (constitutional-role-fit × model-availability × skill-applicability); Mercurius rating-state per `(vak-cp-position, mef-lens, content-class, kairos-window)`; user-context state (if skill fired); slot resolution per Track 12.22.
+
+    Policy module location: `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts` (new) — replaces ad-hoc dispatch logic with the documented MoE policy. Composite-weighting, confidence-penalty (α), and recency-bias parameters configurable per session via `~/.epi-logos/config.toml`.
+
+    Bootstrap behaviour: uniform-rating fallback prefers (a) constitutional-role fit, (b) skill-applicability, (c) model-availability, (d) coverage-priority. Transition to Elo-dominated dispatch is smooth; no hard cutoff.
+
+    Per-dispatch trace: every gating decision recorded as `DispatchTrace` event into Pi monitoring view (per Track 12.14 Pi-runtime-monitor) — candidate set, rating lookup keys, composite scores, selection rationale, fallback applications. Surfaces in `pi-runtime-monitor` extension widget as the MoE-gating audit panel.
+
+    Aletheia mode dispatch: when task requires Aletheia-crystallisation-mode, Anima dispatches one or more techne-guardians per (12.18, 12.19) with veto handling. Guardian-selection itself is Elo-informed (Mercurius rates per `(guardian × task-class × context)`).
+
+    Per-session override: `epi session start --override-policy <policy-file>` allows explicit per-dispatch overrides bypassing Elo (useful during onboarding before ratings accumulate).
+
+    Verification: `cargo test -p epi-s3-gateway anima_dispatch_policy_bootstrap` (uniform-rating fallback hits documented heuristics); `cargo test -p epi-s3-gateway anima_dispatch_policy_elo_informed` (with seeded Mercurius state, dispatch selects highest-rated candidate); integration test confirms DispatchTrace events emitted per dispatch and visible in `pi-runtime-monitor`; `grep -nE 'dispatch-policy|gating|composite_rating' Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts` returns the documented policy module; round-trip test confirms Aletheia-mode dispatch composes with veto primitive and Elo updates flow back to Mercurius after trial completion.
+
+24. **12.24 — ML skill surface: vendor priority-13 Hermes + build 5 core gaps + per-subsystem domain skills + drift-detection retrain loop** *(spec-ahead-integration; depends on 12.20, 12.21, 12.22, 12.23; DR-ML-1 bound; canonical spec at [[../../../M'-ML-SKILL-SURFACE-SPEC]])*
+
+    Land the per-subsystem ML method as concrete skill surface across the system. Four phases, sequenced:
+
+    **Phase 1 — Vendor priority-13 Hermes skills** *(Agora CF4 owns)*. In order: huggingface-hub, huggingface-accelerate, peft-fine-tuning, unsloth, fine-tuning-with-trl, simpo-training, weights-and-biases, pytorch-lightning, nemo-curator, serving-llms-vllm, llama-cpp, evaluating-llms-harness, dspy. All land at `Body/S/S4/pi-agent/skills/hermes/{name}/` per residency rule. Each vendoring: clone upstream SKILL.md + scripts/references/assets, validate frontmatter against Claude Code Skills standard, record `provenance.yaml` (upstream commit hash, vendoring timestamp), register with Agora's skill-index. New module: `Body/S/S4/ta-onta/S4-5p-aletheia/modules/agora-vendoring.ts` with tools `agora_vendor_skill({name})`, `agora_list_upstream({source})`, `agora_preview_skill({name})`, `agora_verify_skill({name})`, `agora_refresh_skill({name})`.
+
+    **Phase 2 — Build 5 core gap skills** *(distributed ownership per subsystem)*:
+    - **`mlx-lora`** at `Body/S/S4/pi-agent/skills/custom/mlx-lora/` (Pi-Agent harness-resident because cross-subsystem). Mirror `unsloth` pattern with `mlx-lm` backend. Scripts: train.py, merge.py, quantize.py, eval.py. Config schema: axolotl-compatible YAML so configs reuse across runtimes.
+    - **`epii-distillation`** at `Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/`. Pro→local teacher-student pipeline. Scripts: distill_dataset_gen.py (with multi-channel annotation: lens-coherence, verifier-pass, user-articulation simulation), distill_train.py (composes peft + unsloth OR mlx-lora + custom multi-channel preservation loss), distill_eval.py.
+    - **`parashakti-ebm-head`** at `Body/S/S5/epii-autoresearch-core/skills/parashakti/ebm-head/`. The 72-dim tritone-symmetric dual-channel EBM. Scripts: train.py (pytorch-lightning host), architecture.py (three sub-heads per square + cross-square attention), loss.py (MSE + λ_square·square_emphasis + λ_mirror·mirror_consistency + λ_user·user_temporal_consistency), eval.py (per-square accuracy, mirror-consistency, user-temporal-correlation), serve.py (checkpoint export for kernel-runtime).
+    - **`aletheia-elo-rating`** at `Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom/elo-rating/`. Multi-channel Bradley-Terry / TrueSkill update math. Scripts: bradley_terry_update.py, trueskill_update.py (alternative for small samples), confidence_interval.py, query.py, audit.py. State in SpacetimeDB `mercurius_elo_ratings` table per Track 12.20.
+    - **`aletheia-drift-detection`** at `Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom/drift-detection/`. The autoresearch loop's keystone. Scripts: watch.py (daemon monitoring Mercurius rating tables), diagnose.py (drift→retrain-action mapping), compose_task.py (produces Pi task spec for retrain), dispatch.py (queues for Anima with calibration provenance). Drift conditions per [[../../../M'-ML-SKILL-SURFACE-SPEC]] §5: rating-trend (δ=100 Elo over N=50 trials), veto-pattern (3+ vetoes per facet × 3+ consecutive sessions), coverage (no trials in 30 days), verifier-violation (3× baseline).
+
+    **Phase 3 — Per-subsystem domain skills**:
+    - **M0 Anuttara**: `anuttara-constraint-discovery` (composes dspy + lm-eval-harness; surfaces candidate Cypher constraints from trials), `anuttara-symbolic-parse` *(already specified Track 5.21 — landing in same phase)*, `anuttara-lean-bridge` *(future, Level-2)*
+    - **M1 Paramaśiva**: `paramasiva-quaternion-projection` (learned bioquaternion-to-EBM-input with `|q|=1` preservation), `paramasiva-topology-eval` (K² topology invariant checks)
+    - **M2 Parashakti**: `parashakti-corpus-curation` (nemo-curator + co-authored resonance annotations → EBM training pairs), `parashakti-72dim-eval` (square accuracy + mirror-consistency + user-temporal-correlation tracking via wandb)
+    - **M3 Mahāmāyā**: `mahamaya-hexagram-trajectory` (peft + instructor for typed-enumerated hexagram transitions), `mahamaya-codon-pattern` (structured-prediction on 360+24 backbone)
+    - **M4 Nara**: `nara-journal-parser` (wraps Nara-parser slot + structured-output for journal entries — archetypal tags, mood signatures, theme extraction), `nara-dream-parser` (analogous, with M2/M3 decan/planet/chakra bridges), `nara-voice-training` (LoRA pipeline composing mlx-lora on Darwin OR peft+unsloth on Linux+CUDA, with user-context-aware data prep)
+    - **M5 Epii**: `epii-canon-coherence-judge` (multi-model judge dispatch via dspy), `epii-autoresearch-orchestrator` (alphaproof-pattern outer loop: propose → judge → Elo → escalate → deposit), `epii-preference-learning` (Mercurius Elo state → simpo-training preference pairs)
+    - **Aletheia cross-cutting**: `aletheia-creative-skill-creation` (Zeithoven's skill-proposal via dspy), `aletheia-skill-vendoring` (Agora's vendoring orchestration, factored out of Phase-1 module)
+
+    **Phase 4 — Wire drift-detection retrain loop end-to-end**. `aletheia-drift-detection` daemon active in production; rating-trend drift on `(Nara, gemma-12b-q4, journal-parser)` produces calibration task dispatching `nara-voice-training`; rating-trend drift on `(Parashakti EBM)` outputs produces calibration task dispatching `parashakti-ebm-head` retrain on accumulated new trials; verifier-violation drift produces task dispatching `anuttara-constraint-discovery` OR developer review. Developer-in-the-loop CLI: `epi review-retrain <retrain-id>` (staged provisional artifact + diff + metrics + sample outputs), `epi promote-retrain <retrain-id>` (deploys to slot), `epi reject-retrain <retrain-id>` (records rejection as drift-calibration signal).
+
+    **CLI surface** at `Body/S/S0/epi-cli/src/skill.rs` (new): `epi skill list [--source vendored|custom] [--subsystem M0..M5]`, `epi skill show <name>`, `epi skill vendor <name>`, `epi skill propose <description>`, `epi skill scaffold <name>`, `epi skill register <name>`, `epi skill refresh <name>` (vendored-skill update check). Plus retrain-review CLI in same module.
+
+    **Persistence** in SpacetimeDB tables: `agora_skill_index` (registry of all skills with frontmatter, residency, dependencies, current rating), `aletheia_retrain_queue` (calibration tasks awaiting Anima dispatch), `aletheia_retrain_history` (completed retrain runs with metrics + ratification status). Schema at `Body/S/S3/spacetime-context/schemas/skill-registry.sql` (new) and `Body/S/S3/spacetime-context/schemas/retrain-loop.sql` (new).
+
+    Verification: `epi skill list --source vendored` returns 13 Hermes skills after Phase 1; `epi skill list --source custom --subsystem M4` returns M4 Nara skills after Phase 3; `cargo test -p epi-s3-gateway agora_skill_index_round_trip`; `cargo test -p epi-s3-gateway aletheia_drift_detection_seeded_fixture` (with seeded rating-drift, daemon produces calibration task with correct retrain-action mapping); integration test runs full loop: seeded drift → diagnose → compose-task → dispatch → retrain (mocked ML skill) → register-provisional → recalibrate; `test -d Body/S/S4/pi-agent/skills/hermes && test -d Body/S/S4/pi-agent/skills/custom && test -d Body/S/S5/epii-autoresearch-core/skills/parashakti && test -d Body/S/S5/plugins/epi-logos/skills/custom && test -d Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom`; `epi skill show mlx-lora` returns canonical SKILL.md after Phase 2; `epi review-retrain <fixture-id>` shows staged provisional artifact with metrics.

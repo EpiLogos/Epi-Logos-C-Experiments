@@ -139,6 +139,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "s2.graph.query",
     "s2.graph.node",
     "s2.graph.traverse",
+    "s2.graph.harmonic_relations.materialize",
     "s2.graph.pointer_web.compute",
     "s2.graph.pointer_web.refresh",
     "s2.graph.kernel_resonance.record",
@@ -1094,7 +1095,6 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S3/gateway::runtime",
         needs_extraction_to: None,
     },
-
     // ----- S2 graph service adapters -----
     MethodDispatchPlanEntry {
         method: "s2.graph.query",
@@ -1110,6 +1110,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
     },
     MethodDispatchPlanEntry {
         method: "s2.graph.traverse",
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s2.graph.harmonic_relations.materialize",
         kind: MethodDispatchKind::S2GraphServiceAdapter,
         authority_path: "Body/S/S2/graph-services",
         needs_extraction_to: None,
@@ -1204,7 +1210,6 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S2/graph-services::retrieval",
         needs_extraction_to: None,
     },
-
     // ----- S4 orchestration adapters -----
     MethodDispatchPlanEntry {
         method: "s4.agent.query",
@@ -1260,7 +1265,6 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S4/plugins/pleroma/capability-matrix.json",
         needs_extraction_to: None,
     },
-
     // ----- S5 governance adapters -----
     MethodDispatchPlanEntry {
         method: "s5.trajectory.verify",
@@ -1388,7 +1392,6 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S5/epii-review-core",
         needs_extraction_to: None,
     },
-
     // ----- S1 Hen vault adapter (plan extension; see module-level comment) -----
     MethodDispatchPlanEntry {
         method: "s1'.vault.read_file",
@@ -1420,7 +1423,6 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S1/hen-compiler-core (smart_env semantic reader)",
         needs_extraction_to: None,
     },
-
     // ----- S0 product adapters (operator membrane surfaces) -----
     MethodDispatchPlanEntry {
         method: "browser.request",
@@ -2185,23 +2187,54 @@ pub enum SpacetimeMessageKind {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case", tag = "table")]
 pub enum SpacetimeTableDelta {
-    SessionSurface { row: Value },
-    KairosSurface { row: Value },
-    GlobalTemporalSurface { row: Value },
-    WorldClock { row: Value },
-    PratibimbaPresence { row: Value },
-    SharedArchetypeEvent { row: Value },
-    Coincidence { row: Value },
-    GatewayInstance { row: Value },
-    AgentInstance { row: Value },
-    ClientRegistration { row: Value },
-    TemporalEvent { row: Value },
+    SessionSurface {
+        row: Value,
+    },
+    KairosSurface {
+        row: Value,
+    },
+    GlobalTemporalSurface {
+        row: Value,
+    },
+    WorldClock {
+        row: Value,
+    },
+    PratibimbaPresence {
+        row: Value,
+    },
+    SharedArchetypeEvent {
+        row: Value,
+    },
+    Coincidence {
+        row: Value,
+    },
+    GatewayInstance {
+        row: Value,
+    },
+    AgentInstance {
+        row: Value,
+    },
+    ClientRegistration {
+        row: Value,
+    },
+    TemporalEvent {
+        row: Value,
+    },
     // 03.T4 audit/version surfaces.
-    WorldClockTick { row: Value },
-    CoincidenceTick { row: Value },
-    ModuleVersion { row: Value },
+    WorldClockTick {
+        row: Value,
+    },
+    CoincidenceTick {
+        row: Value,
+    },
+    ModuleVersion {
+        row: Value,
+    },
     #[serde(rename = "other")]
-    Other { table_name: String, row: Value },
+    Other {
+        table_name: String,
+        row: Value,
+    },
 }
 
 impl SpacetimeTableDelta {
@@ -2288,14 +2321,18 @@ impl SpacetimeProjectionDelta {
             for update_entry in updates {
                 if let Some(rows) = update_entry.get("inserts").and_then(Value::as_array) {
                     for row in rows {
-                        inserts
-                            .push(SpacetimeTableDelta::from_table_name(&table_name, row.clone()));
+                        inserts.push(SpacetimeTableDelta::from_table_name(
+                            &table_name,
+                            row.clone(),
+                        ));
                     }
                 }
                 if let Some(rows) = update_entry.get("deletes").and_then(Value::as_array) {
                     for row in rows {
-                        deletes
-                            .push(SpacetimeTableDelta::from_table_name(&table_name, row.clone()));
+                        deletes.push(SpacetimeTableDelta::from_table_name(
+                            &table_name,
+                            row.clone(),
+                        ));
                     }
                 }
             }
@@ -3358,33 +3395,112 @@ impl RedisTemporalContextRole {
     }
 
     pub fn session_now_key(&self, session_id: &str) -> String {
-        format!("{}:session:{}:now:md", self.redis_namespace, session_id)
+        format!(
+            "cache:hot:{}:session:{}:now:md",
+            self.redis_namespace, session_id
+        )
     }
 
     pub fn day_context_key(&self, day_id: &str) -> String {
-        format!("{}:day:{}:context", self.redis_namespace, day_id)
+        format!("cache:warm:{}:day:{}:context", self.redis_namespace, day_id)
     }
 
     pub fn day_kairos_key(&self, day_id: &str) -> String {
-        format!("{}:day:{}:kairos", self.redis_namespace, day_id)
+        format!("cache:hot:{}:day:{}:kairos", self.redis_namespace, day_id)
     }
 
     pub fn session_kairos_key(&self, session_id: &str) -> String {
-        format!("{}:session:{}:kairos", self.redis_namespace, session_id)
+        format!(
+            "cache:hot:{}:session:{}:kairos",
+            self.redis_namespace, session_id
+        )
     }
 
     pub fn personal_orientation_key(&self, anchor_id: &str) -> String {
         format!(
-            "{}:personal:{}:orientation",
+            "cache:hot:{}:personal:{}:orientation",
             self.redis_namespace, anchor_id
         )
     }
 
     pub fn agent_orientation_key(&self, agent_id: &str, session_id: &str) -> String {
         format!(
-            "{}:agent:{}:session:{}:orientation",
+            "cache:hot:{}:agent:{}:session:{}:orientation",
             self.redis_namespace, agent_id, session_id
         )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PsycheRuntimeHandle {
+    pub coordinate_owner: &'static str,
+    pub continuity_owner: &'static str,
+    pub redis_state_key: String,
+    pub protected_body_policy: &'static str,
+    pub max_carry_forward_items: usize,
+}
+
+impl PsycheRuntimeHandle {
+    pub fn for_session(session_id: &str) -> Self {
+        Self {
+            coordinate_owner: "S3",
+            continuity_owner: "S4/Psyche",
+            redis_state_key: format!("cache:active:s3:gateway:psyche:session:{session_id}:state"),
+            protected_body_policy:
+                "return Redis/Psyche handles and summaries; do not expose raw protected bodies",
+            max_carry_forward_items: 12,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KbaseSourceRuntimeHandle {
+    pub coordinate_owner: &'static str,
+    pub semantic_owner: &'static str,
+    pub kbase_ref_key: String,
+    pub source_pool_ref_key: String,
+    pub protected_body_policy: &'static str,
+}
+
+impl KbaseSourceRuntimeHandle {
+    pub fn new(handle_id: &str, source_hash: &str) -> Self {
+        Self {
+            coordinate_owner: "S3",
+            semantic_owner: "S5/Gnosis",
+            kbase_ref_key: format!("cache:warm:s5:kbase:ref:{handle_id}"),
+            source_pool_ref_key: format!("cache:warm:s5:source-pool:ref:{source_hash}"),
+            protected_body_policy:
+                "store source manifests and retrieval package refs; raw protected bodies require explicit hot-local TTL",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CoordinateLookupCacheHandle {
+    pub coordinate_owner: &'static str,
+    pub graph_owner: &'static str,
+    pub coordinate_snapshot_key: String,
+    pub invalidates_by: Vec<&'static str>,
+}
+
+impl CoordinateLookupCacheHandle {
+    pub fn new(graph_revision: &str, coordinate: &str) -> Self {
+        Self {
+            coordinate_owner: "S3",
+            graph_owner: "S2",
+            coordinate_snapshot_key: format!(
+                "cache:cold:s2:coordinate:lookup:{graph_revision}:{coordinate}"
+            ),
+            invalidates_by: vec![
+                "graph_revision",
+                "embedding_version",
+                "q_schema_version",
+                "source_hash",
+            ],
+        }
     }
 }
 
@@ -3703,30 +3819,82 @@ mod tests {
         assert_eq!(role.ttl_seconds, 300);
         assert_eq!(
             role.session_now_key("test-session-123"),
-            "s3:gateway:temporal:session:test-session-123:now:md"
+            "cache:hot:s3:gateway:temporal:session:test-session-123:now:md"
         );
         assert_eq!(
             role.day_context_key("07-05-2026"),
-            "s3:gateway:temporal:day:07-05-2026:context"
+            "cache:warm:s3:gateway:temporal:day:07-05-2026:context"
         );
         assert_eq!(
             role.day_kairos_key("07-05-2026"),
-            "s3:gateway:temporal:day:07-05-2026:kairos"
+            "cache:hot:s3:gateway:temporal:day:07-05-2026:kairos"
         );
         assert_eq!(
             role.session_kairos_key("test-session-123"),
-            "s3:gateway:temporal:session:test-session-123:kairos"
+            "cache:hot:s3:gateway:temporal:session:test-session-123:kairos"
         );
         assert_eq!(
             role.personal_orientation_key("pratibimba-abcd1234"),
-            "s3:gateway:temporal:personal:pratibimba-abcd1234:orientation"
+            "cache:hot:s3:gateway:temporal:personal:pratibimba-abcd1234:orientation"
         );
         assert_eq!(
             role.agent_orientation_key("anima", "test-session-123"),
-            "s3:gateway:temporal:agent:anima:session:test-session-123:orientation"
+            "cache:hot:s3:gateway:temporal:agent:anima:session:test-session-123:orientation"
         );
         assert!(role.description.contains("session"));
         assert!(!role.description.contains("graph retrieval"));
+    }
+
+    #[test]
+    fn psyche_runtime_handle_contract_uses_s3_active_layer_without_raw_bodies() {
+        let handle = PsycheRuntimeHandle::for_session("session-main");
+
+        assert_eq!(handle.coordinate_owner, "S3");
+        assert_eq!(handle.continuity_owner, "S4/Psyche");
+        assert_eq!(
+            handle.redis_state_key,
+            "cache:active:s3:gateway:psyche:session:session-main:state"
+        );
+        assert_eq!(handle.max_carry_forward_items, 12);
+        assert!(handle.protected_body_policy.contains("handles"));
+        assert!(handle
+            .protected_body_policy
+            .contains("do not expose raw protected bodies"));
+    }
+
+    #[test]
+    fn kbase_source_runtime_handle_contract_uses_s3_warm_layer_refs() {
+        let handle = KbaseSourceRuntimeHandle::new("gnosis-pack-42", "sha256-deadbeef");
+
+        assert_eq!(handle.coordinate_owner, "S3");
+        assert_eq!(handle.semantic_owner, "S5/Gnosis");
+        assert_eq!(
+            handle.kbase_ref_key,
+            "cache:warm:s5:kbase:ref:gnosis-pack-42"
+        );
+        assert_eq!(
+            handle.source_pool_ref_key,
+            "cache:warm:s5:source-pool:ref:sha256-deadbeef"
+        );
+        assert!(handle
+            .protected_body_policy
+            .contains("raw protected bodies require explicit hot-local TTL"));
+    }
+
+    #[test]
+    fn coordinate_lookup_cache_handle_contract_uses_cold_layer_invalidation_axes() {
+        let handle = CoordinateLookupCacheHandle::new("graph-rev-17", "M4.4.4.4");
+
+        assert_eq!(handle.coordinate_owner, "S3");
+        assert_eq!(handle.graph_owner, "S2");
+        assert_eq!(
+            handle.coordinate_snapshot_key,
+            "cache:cold:s2:coordinate:lookup:graph-rev-17:M4.4.4.4"
+        );
+        assert!(handle.invalidates_by.contains(&"graph_revision"));
+        assert!(handle.invalidates_by.contains(&"embedding_version"));
+        assert!(handle.invalidates_by.contains(&"q_schema_version"));
+        assert!(handle.invalidates_by.contains(&"source_hash"));
     }
 
     #[test]
@@ -4104,7 +4272,10 @@ mod tests {
             }
         });
         let delta = SpacetimeProjectionDelta::from_subscription_message(&message).unwrap();
-        assert_eq!(delta.message_kind, SpacetimeMessageKind::InitialSubscription);
+        assert_eq!(
+            delta.message_kind,
+            SpacetimeMessageKind::InitialSubscription
+        );
         assert_eq!(delta.inserts.len(), 2);
         assert!(delta.deletes.is_empty());
 
@@ -4162,7 +4333,10 @@ mod tests {
             }
         });
         let delta = SpacetimeProjectionDelta::from_subscription_message(&multi).unwrap();
-        assert_eq!(delta.message_kind, SpacetimeMessageKind::SubscribeMultiApplied);
+        assert_eq!(
+            delta.message_kind,
+            SpacetimeMessageKind::SubscribeMultiApplied
+        );
 
         let light = json!({
             "TransactionUpdateLight": {
@@ -4580,10 +4754,7 @@ mod tests {
         let receipt = S1VaultRenameReceipt {
             from_path: "Idea/A.md".to_owned(),
             to_path: "Idea/B.md".to_owned(),
-            reconciled_documents: vec![
-                "Idea/Index.md".to_owned(),
-                "Idea/Other.md".to_owned(),
-            ],
+            reconciled_documents: vec!["Idea/Index.md".to_owned(), "Idea/Other.md".to_owned()],
             reconciled_link_count: 5,
             refusals: vec![S1VaultRenameRefusal {
                 source_path: "Idea/Refused.md".to_owned(),
@@ -4619,7 +4790,8 @@ mod tests {
                     wikilink_title: "Dream".to_owned(),
                     score: 0.85,
                     kind: S1SemanticCandidateKind::SemanticSource,
-                    evidence_source_path: "Idea/Pratibimba/Nara/07-05-2026/protected/dream.md".to_owned(),
+                    evidence_source_path: "Idea/Pratibimba/Nara/07-05-2026/protected/dream.md"
+                        .to_owned(),
                     evidence_lines: None,
                     stale: true,
                     privacy_class: S1VaultPathPrivacyClass::Protected,

@@ -78,6 +78,11 @@ async fn s4_coordinate_agent_psyche_and_permission_surfaces_are_gateway_callable
         .expect("Psyche state should be readable");
 
     assert_eq!(initial_psyche["owner"], "S4'");
+    assert_eq!(
+        initial_psyche["handles"]["redisStateKey"],
+        "cache:active:s3:gateway:psyche:session:s4:anima:runtime:state"
+    );
+    assert_eq!(initial_psyche["handles"]["continuityOwner"], "S4/Psyche");
     assert_eq!(initial_psyche["state"]["visibilityStance"], "observable");
     assert_eq!(
         initial_psyche["state"]["currentSubtasks"]
@@ -111,6 +116,10 @@ async fn s4_coordinate_agent_psyche_and_permission_surfaces_are_gateway_callable
         updated["state"]["runLocalContinuity"]["phase"],
         "s4-tranche"
     );
+    assert_eq!(
+        updated["handles"]["protectedBodyPolicy"],
+        "return Redis/Psyche handles and summaries; do not expose raw protected bodies"
+    );
 
     let reread = client
         .request(
@@ -123,6 +132,26 @@ async fn s4_coordinate_agent_psyche_and_permission_surfaces_are_gateway_callable
         .expect("Psyche update should persist through the gateway state store");
 
     assert_eq!(reread["state"]["currentSubtasks"][2], "permission boundary");
+
+    let oversized = client
+        .request(
+            "s4'.psyche.update",
+            json!({
+                "sessionKey": "s4:anima:runtime",
+                "patch": {
+                    "carryForward": [
+                        "one", "two", "three", "four", "five", "six", "seven",
+                        "eight", "nine", "ten", "eleven", "twelve", "thirteen"
+                    ]
+                },
+            }),
+        )
+        .await
+        .expect_err("Psyche update must reject oversized carry-forward");
+
+    assert!(oversized
+        .message
+        .contains("carry-forward exceeds Psyche runtime bound"));
 
     let permission = client
         .request(

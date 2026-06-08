@@ -41,6 +41,10 @@ The previously-separate tranches REMAIN as reference rows; cross-link from each 
 
 Tranche 18 depends on **17.6** (split `Body/S/S0/portal-core/src/kernel.rs`) landing first. The split produces per-projection files that 18.1 then makes typed at the JSON edge. Attempting 18 before 17.6 forces 1,266-LOC kernel.rs edits in the same PR — too wide blast radius.
 
+## Redis Residency Preflight
+
+Tranche 18 also depends on the pre-Cycle-3 Redis residency cleanup at [[../../../../S/S3/S3-REDIS-RUNTIME-SPEC]]. Typed JSON handles for OracleFrame, SymbolicProtein, DAY/NOW, Redis/Psyche, kbase/source-pool, coordinate lookup, and semantic retrieval must serialize S3-owned runtime handles. They must not imply [[S2]] owns Redis service code or that [[S0]] performs direct Redis hydration.
+
 ## Tranches
 
 1. **18.1 — Typed JSON shape extraction** *(code-pending-closure; foundational)*

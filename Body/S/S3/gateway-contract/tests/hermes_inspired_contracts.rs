@@ -92,12 +92,18 @@ fn s3_subscription_registry_facts_name_unified_envelope_and_forbid_silent_fallba
         "13.T4 mandates ONE envelope type for both subscribe methods"
     );
     assert_eq!(facts.temporal_method, SPACETIME_SUBSCRIBE_METHOD);
-    assert_eq!(facts.spacetime_alias_method, SPACETIME_SUBSCRIBE_ALIAS_METHOD);
+    assert_eq!(
+        facts.spacetime_alias_method,
+        SPACETIME_SUBSCRIBE_ALIAS_METHOD
+    );
     assert_eq!(
         facts.silent_fallback_forbidden_sentinel,
         SPACETIME_SILENT_HTTP_FALLBACK_FORBIDDEN
     );
-    assert_eq!(facts.fallback_policy, SpacetimeFallbackPolicy::NativeWebsocket);
+    assert_eq!(
+        facts.fallback_policy,
+        SpacetimeFallbackPolicy::NativeWebsocket
+    );
     assert_ne!(
         SPACETIME_SILENT_HTTP_FALLBACK_FORBIDDEN, SPACETIME_FALLBACK_ACTIVE,
         "silent-HTTP-fallback sentinel must not collide with the legitimate fallback-active mode"

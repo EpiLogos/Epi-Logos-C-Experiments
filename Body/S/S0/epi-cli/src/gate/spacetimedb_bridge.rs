@@ -42,15 +42,14 @@ use super::{
 // =============================================================================
 
 pub use s3_spacetime::{
-    agent_instance_id, agent_kind, assert_no_silent_fallback_in_value,
-    capability_surface_hash, day_wikilink, fallback_active_envelope,
-    fallback_policy_for_plan, global_temporal_surface_key, identity_handle_blake3,
-    kairos_snapshot_id, lifecycle_envelope_from_update, projection_context_from_sql_result,
-    projection_context_from_subscription_message, quintessence_hash_blake3,
-    redis_global_context_key, silent_fallback_refused, string_at, ReducerRetryPolicy,
-    SpacetimePresence, SpacetimeProjectionConnectionState, SpacetimeProjectionResyncTracker,
-    SpacetimeProjectionSubscription, SpacetimeProjectionUpdate, SpacetimeRegistration,
-    SpacetimeSubscriptionPlan,
+    agent_instance_id, agent_kind, assert_no_silent_fallback_in_value, capability_surface_hash,
+    day_wikilink, fallback_active_envelope, fallback_policy_for_plan, global_temporal_surface_key,
+    identity_handle_blake3, kairos_snapshot_id, lifecycle_envelope_from_update,
+    projection_context_from_sql_result, projection_context_from_subscription_message,
+    quintessence_hash_blake3, redis_global_context_key, silent_fallback_refused, string_at,
+    ReducerRetryPolicy, SpacetimePresence, SpacetimeProjectionConnectionState,
+    SpacetimeProjectionResyncTracker, SpacetimeProjectionSubscription, SpacetimeProjectionUpdate,
+    SpacetimeRegistration, SpacetimeSubscriptionPlan,
 };
 
 // =============================================================================
@@ -249,8 +248,7 @@ impl SpacetimeBridge {
             optional_env("EPI_INSTALLATION_ID").unwrap_or_else(|| "install-local".to_owned());
         let gateway_id =
             optional_env("EPI_GATEWAY_ID").unwrap_or_else(|| "gateway-main".to_owned());
-        let redis_global_context =
-            redis_global_context_key(&installation_id, &gateway_id, day_id);
+        let redis_global_context = redis_global_context_key(&installation_id, &gateway_id, day_id);
         let payload = json!({
             "coordinateOwner": "S3'",
             "agentAccessOwner": "S4/S5",
@@ -371,9 +369,13 @@ pub fn register_session_agent(
     let record = store.resolve(session_key)?;
     let temporal_context =
         temporal::context_for_record(state_root, &record, &record.active_agent_id);
-    let agent_instance =
-        agent_instance_id(&registration.gateway_id, &record.active_agent_id, &record.session_id);
-    let capability_surface = capability_surface_hash(&record.active_agent_id, &record.canonical_key);
+    let agent_instance = agent_instance_id(
+        &registration.gateway_id,
+        &record.active_agent_id,
+        &record.session_id,
+    );
+    let capability_surface =
+        capability_surface_hash(&record.active_agent_id, &record.canonical_key);
 
     let client = registration.client();
     client.register_agent(

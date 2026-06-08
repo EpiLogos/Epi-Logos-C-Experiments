@@ -1,15 +1,19 @@
 use redis::{aio::MultiplexedConnection, AsyncCommands, Client};
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum CacheTier {
-    Hot,  // TTL 300s — active graph retrieval artifacts
-    Warm, // TTL 3600s — recent graph extractions
-    Cold, // TTL 86400s — Bimba canonical forms
+    Live,   // TTL 30s — process liveness and heartbeat facts
+    Active, // TTL 1800s — active session lifecycle state
+    Hot,    // TTL 300s — NOW and agent-orientation facts
+    Warm,   // TTL 3600s — recent day/source/retrieval context
+    Cold,   // TTL 86400s — coordinate and manifest snapshots
 }
 
 impl CacheTier {
     pub fn ttl_seconds(&self) -> u64 {
         match self {
+            CacheTier::Live => 30,
+            CacheTier::Active => 1800,
             CacheTier::Hot => 300,
             CacheTier::Warm => 3600,
             CacheTier::Cold => 86400,
@@ -18,10 +22,140 @@ impl CacheTier {
 
     pub fn prefix(&self) -> &'static str {
         match self {
+            CacheTier::Live => "cache:live",
+            CacheTier::Active => "cache:active",
             CacheTier::Hot => "cache:hot",
             CacheTier::Warm => "cache:warm",
             CacheTier::Cold => "cache:cold",
         }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RedisKey {
+    tier: CacheTier,
+    logical_key: String,
+    full_key: String,
+}
+
+impl RedisKey {
+    pub fn from_logical(tier: CacheTier, logical_key: impl Into<String>) -> Self {
+        let logical_key = logical_key.into();
+        let full_key = format!("{}:{}", tier.prefix(), logical_key);
+        Self {
+            tier,
+            logical_key,
+            full_key,
+        }
+    }
+
+    pub fn session_now(session_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Hot,
+            "s3:gateway:temporal",
+            &["session", session_id, "now", "md"],
+        )
+    }
+
+    pub fn session_state(session_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Hot,
+            "s3:gateway:temporal",
+            &["session", session_id, "state"],
+        )
+    }
+
+    pub fn day_context(day_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Warm,
+            "s3:gateway:temporal",
+            &["day", day_id, "context"],
+        )
+    }
+
+    pub fn day_kairos(day_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Hot,
+            "s3:gateway:temporal",
+            &["day", day_id, "kairos"],
+        )
+    }
+
+    pub fn session_kairos(session_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Hot,
+            "s3:gateway:temporal",
+            &["session", session_id, "kairos"],
+        )
+    }
+
+    pub fn agent_orientation(agent_id: &str, session_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Hot,
+            "s3:gateway:temporal",
+            &["agent", agent_id, "session", session_id, "orientation"],
+        )
+    }
+
+    pub fn personal_orientation(anchor_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Hot,
+            "s3:gateway:temporal",
+            &["personal", anchor_id, "orientation"],
+        )
+    }
+
+    pub fn psyche_state(session_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Active,
+            "s3:gateway:psyche",
+            &["session", session_id, "state"],
+        )
+    }
+
+    pub fn kbase_ref(handle_id: &str) -> Self {
+        Self::from_segments(CacheTier::Warm, "s5:kbase", &["ref", handle_id])
+    }
+
+    pub fn source_pool_ref(source_hash: &str) -> Self {
+        Self::from_segments(CacheTier::Warm, "s5:source-pool", &["ref", source_hash])
+    }
+
+    pub fn coordinate_lookup_snapshot(graph_revision: &str, coordinate: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Cold,
+            "s2:coordinate",
+            &["lookup", graph_revision, coordinate],
+        )
+    }
+
+    pub fn semantic_retrieval_ref(graph_revision: &str, query_hash: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Warm,
+            "s2:graph:semantic",
+            &["retrieval", graph_revision, query_hash],
+        )
+    }
+
+    pub fn tier(&self) -> CacheTier {
+        self.tier
+    }
+
+    pub fn logical_key(&self) -> &str {
+        &self.logical_key
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.full_key
+    }
+
+    fn from_segments(tier: CacheTier, namespace: &str, segments: &[&str]) -> Self {
+        let mut logical_key = String::from(namespace);
+        for segment in segments {
+            logical_key.push(':');
+            logical_key.push_str(segment);
+        }
+        Self::from_logical(tier, logical_key)
     }
 }
 
@@ -62,14 +196,24 @@ impl RedisCache {
         self.conn.get(key).await
     }
 
+    pub async fn get_key(&mut self, key: &RedisKey) -> Result<Option<String>, redis::RedisError> {
+        self.get(key.as_str()).await
+    }
+
     pub async fn set_tiered(
         &mut self,
         key: &str,
         value: &str,
         tier: CacheTier,
     ) -> Result<(), redis::RedisError> {
-        let full_key = format!("{}:{}", tier.prefix(), key);
-        self.conn.set_ex(&full_key, value, tier.ttl_seconds()).await
+        self.set_key(&RedisKey::from_logical(tier, key), value)
+            .await
+    }
+
+    pub async fn set_key(&mut self, key: &RedisKey, value: &str) -> Result<(), redis::RedisError> {
+        self.conn
+            .set_ex(key.as_str(), value, key.tier().ttl_seconds())
+            .await
     }
 
     pub async fn set_with_ttl(
@@ -92,9 +236,11 @@ impl RedisCache {
         json_value: &str,
         tier: CacheTier,
     ) -> Result<(), redis::RedisError> {
-        let key = format!("coord:{}", bimba_coordinate);
-        self.set_with_ttl(&key, json_value, tier.ttl_seconds())
-            .await
+        let key = RedisKey::from_logical(
+            tier,
+            format!("s2:coordinate:lookup:legacy:{bimba_coordinate}"),
+        );
+        self.set_key(&key, json_value).await
     }
 }
 

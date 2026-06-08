@@ -18,9 +18,9 @@ const VAK_REFS: &[(&str, &str)] = &[
 const VAK_NAMES: &[&str] = &["CPF", "CT", "CP", "CF", "CFP", "CS"];
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct PointerWeb {
+pub struct CoordinateReferenceProjection {
     pub coordinate: String,
-    pub pointer_count: usize,
+    pub reference_count: usize,
     pub primary_reflective_context: Option<String>,
     pub family_refs: BTreeMap<String, String>,
     pub reflective_refs: BTreeMap<String, String>,
@@ -28,24 +28,28 @@ pub struct PointerWeb {
     pub position_refs: BTreeMap<String, String>,
     pub lens_refs: BTreeMap<String, String>,
     pub lens_inversion_refs: BTreeMap<String, String>,
-    pub harmonic_relation_descriptors: Vec<HarmonicPointerRelationDescriptor>,
 }
 
+#[deprecated(
+    note = "S2 PointerWeb was a compatibility projection, not the S0 HC_PointerWeb36. Use CoordinateReferenceProjection."
+)]
+pub type PointerWeb = CoordinateReferenceProjection;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct HarmonicPointerRelationDescriptor {
+pub struct HarmonicBimbaRelation {
     pub edge_id: String,
-    pub from_coordinate: String,
-    pub to_coordinate: String,
-    pub reason_code: String,
-    pub relation_law: String,
-    pub family: String,
-    pub mirror: String,
-    pub lens: String,
-    pub inversion: String,
-    pub context_frame: Option<String>,
+    pub source_coordinate: String,
+    pub target_coordinate: String,
+    pub relation_type: String,
+    pub harmonic_family: String,
+    pub harmonic_register: String,
+    pub harmonic_depth: u8,
+    pub harmonic_d_face: String,
+    pub harmonic_base_pair: String,
+    pub harmonic_active_lenses: Vec<String>,
+    pub harmonic_primary_anchor: String,
+    pub harmonic_interval_signature: String,
     pub source_anchor: String,
-    pub privacy_policy: String,
-    pub deposition_policy: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -72,7 +76,7 @@ pub struct KernelCoordinateAnchor {
     pub projection_boundary: String,
     pub kernel: KernelAnchor,
     pub harmonic_pointer: Option<HarmonicPointerAnchor>,
-    pub pointer_web: PointerWeb,
+    pub coordinate_reference_projection: CoordinateReferenceProjection,
     pub qvdata: QvDataAnchor,
 }
 
@@ -140,7 +144,8 @@ pub fn kernel_coordinate_anchor_from_parts(
     source_input: &str,
     compatibility_property: Option<String>,
 ) -> Result<KernelCoordinateAnchor, String> {
-    let pointer_web = compute_pointer_web(canonical_coordinate)?;
+    let coordinate_reference_projection =
+        compute_coordinate_reference_projection(canonical_coordinate)?;
     let harmonic_pointer = compute_harmonic_pointer_anchor(canonical_coordinate)?;
     Ok(KernelCoordinateAnchor {
         coordinate: canonical_coordinate.to_owned(),
@@ -155,7 +160,7 @@ pub fn kernel_coordinate_anchor_from_parts(
             safe_projection: "KernelTemporalProjection / KernelResonanceObservation".to_owned(),
         },
         harmonic_pointer,
-        pointer_web,
+        coordinate_reference_projection,
         qvdata: QvDataAnchor {
             source: "epi core knowing".to_owned(),
             coordinate: canonical_coordinate.to_owned(),
@@ -242,7 +247,9 @@ pub fn compute_harmonic_pointer_anchor(
     }))
 }
 
-pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
+pub fn compute_coordinate_reference_projection(
+    coordinate: &str,
+) -> Result<CoordinateReferenceProjection, String> {
     let parsed = CoordinateArrayParser::parse_one(coordinate)?;
     let ql_position = parsed.ql_position;
     let sixfold_position = ql_position.filter(|position| *position <= 5);
@@ -284,25 +291,16 @@ pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
         .map(|lens| (format!("l{lens}_inv_ref"), format!("L{lens}'")))
         .collect::<BTreeMap<_, _>>();
 
-    let harmonic_relation_descriptors = harmonic_relation_descriptors(
-        &parsed.coordinate,
-        family,
-        sixfold_position,
-        &inversion_refs,
-        &lens_refs,
-        &reflective_refs,
-    );
-
-    let pointer_count = family_refs.len()
+    let reference_count = family_refs.len()
         + reflective_refs.len()
         + inversion_refs.len()
         + position_refs.len()
         + lens_refs.len()
         + lens_inversion_refs.len();
 
-    Ok(PointerWeb {
+    Ok(CoordinateReferenceProjection {
         coordinate: parsed.coordinate,
-        pointer_count,
+        reference_count,
         primary_reflective_context: sixfold_position
             .and_then(|position| VAK_NAMES.get(position as usize))
             .map(|value| (*value).to_owned()),
@@ -312,75 +310,150 @@ pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
         position_refs,
         lens_refs,
         lens_inversion_refs,
-        harmonic_relation_descriptors,
     })
 }
 
-fn harmonic_relation_descriptors(
-    coordinate: &str,
-    family: Option<&str>,
-    sixfold_position: Option<u8>,
-    inversion_refs: &BTreeMap<String, String>,
-    lens_refs: &BTreeMap<String, String>,
-    reflective_refs: &BTreeMap<String, String>,
-) -> Vec<HarmonicPointerRelationDescriptor> {
-    let Some(position) = sixfold_position else {
-        return Vec::new();
-    };
-    let family = family.unwrap_or("M");
-    let inversion = inversion_refs
-        .get(&format!("{}_inv_ref", family.to_ascii_lowercase()))
-        .cloned()
-        .unwrap_or_else(|| format!("{family}{position}'"));
-    let lens = lens_refs
-        .get(&format!("l{position}_ref"))
-        .cloned()
-        .unwrap_or_else(|| format!("L{position}"));
-    let context_frame = reflective_refs
-        .get(match position {
-            0 => "cpf_ref",
-            1 => "ct_ref",
-            2 => "cp_ref",
-            3 => "cf_ref",
-            4 => "cfp_ref",
-            _ => "cs_ref",
-        })
-        .cloned();
-    vec![
-        HarmonicPointerRelationDescriptor {
-            edge_id: format!("s2.pointer.{coordinate}.inversion-spanda"),
-            from_coordinate: coordinate.to_owned(),
-            to_coordinate: inversion.clone(),
-            reason_code: "inversion_spanda".to_owned(),
-            relation_law: "X -> X' mirror crossing".to_owned(),
-            family: family.to_owned(),
-            mirror: inversion,
-            lens: lens.clone(),
-            inversion: "prime-toggle".to_owned(),
-            context_frame: context_frame.clone(),
-            source_anchor: "Body/S/S2/graph-services/src/pointers.rs::compute_pointer_web"
+#[deprecated(
+    note = "S2 PointerWeb was a compatibility projection, not the S0 HC_PointerWeb36. Use compute_coordinate_reference_projection."
+)]
+#[allow(deprecated)]
+pub fn compute_pointer_web(coordinate: &str) -> Result<PointerWeb, String> {
+    compute_coordinate_reference_projection(coordinate)
+}
+
+pub fn canonical_harmonic_bimba_relations() -> Vec<HarmonicBimbaRelation> {
+    let base_rows = [
+        (
+            "A",
+            "Being",
+            "ADJACENTLY_ARTICULATES",
+            [(0, 1), (2, 3), (4, 5)],
+        ),
+        (
+            "B",
+            "Becoming",
+            "MIRRORS_COMPLEMENT",
+            [(0, 5), (1, 4), (2, 3)],
+        ),
+        (
+            "C",
+            "KnowingUnknowing",
+            "CROSSES_KNOWING_LIMIT",
+            [(1, 2), (3, 4), (5, 0)],
+        ),
+    ];
+    let mut relations = Vec::new();
+
+    for (family, register, relation_type, pairs) in base_rows {
+        for (first, second) in pairs {
+            let base_pair = format!("L{first}/L{second}");
+            let active_lenses = vec![format!("L{first}"), format!("L{second}")];
+            let signature = interval_signature(family);
+            relations.push(harmonic_bimba_relation(
+                &format!("P{first}"),
+                &format!("L{second}"),
+                relation_type,
+                family,
+                register,
+                2,
+                "NONE",
+                &base_pair,
+                active_lenses.clone(),
+                "Day",
+                signature,
+            ));
+            relations.push(harmonic_bimba_relation(
+                &format!("P{first}'"),
+                &format!("L{second}"),
+                "INVERTS_THROUGH_FIRST",
+                "D",
+                "Inversion",
+                3,
+                "D_LEFT",
+                &base_pair,
+                vec![format!("L{first}'"), format!("L{second}")],
+                "Night",
+                "D-left: X'/Y",
+            ));
+            relations.push(harmonic_bimba_relation(
+                &format!("P{first}"),
+                &format!("L{second}'"),
+                "INVERTS_THROUGH_SECOND",
+                "D",
+                "Inversion",
+                3,
+                "D_RIGHT",
+                &base_pair,
+                vec![format!("L{first}"), format!("L{second}'")],
+                "Night",
+                "D-right: X/Y'",
+            ));
+            relations.push(harmonic_bimba_relation(
+                &format!("P{first}'"),
+                &format!("L{second}'"),
+                "INVERTS_THROUGH_PAIR",
+                "D",
+                "Inversion",
+                4,
+                "D_BOTH",
+                &base_pair,
+                vec![format!("L{first}'"), format!("L{second}'")],
+                "Night",
+                "D-both: X'/Y'",
+            ));
+        }
+    }
+
+    relations
+}
+
+#[allow(clippy::too_many_arguments)]
+fn harmonic_bimba_relation(
+    source_coordinate: &str,
+    target_coordinate: &str,
+    relation_type: &str,
+    harmonic_family: &str,
+    harmonic_register: &str,
+    harmonic_depth: u8,
+    harmonic_d_face: &str,
+    harmonic_base_pair: &str,
+    harmonic_active_lenses: Vec<String>,
+    harmonic_primary_anchor: &str,
+    harmonic_interval_signature: &str,
+) -> HarmonicBimbaRelation {
+    HarmonicBimbaRelation {
+        edge_id: format!(
+            "s2.harmonic.{harmonic_family}.{source_coordinate}.{target_coordinate}.{}",
+            relation_type.to_ascii_lowercase()
+        ),
+        source_coordinate: source_coordinate.to_owned(),
+        target_coordinate: target_coordinate.to_owned(),
+        relation_type: relation_type.to_owned(),
+        harmonic_family: harmonic_family.to_owned(),
+        harmonic_register: harmonic_register.to_owned(),
+        harmonic_depth,
+        harmonic_d_face: harmonic_d_face.to_owned(),
+        harmonic_base_pair: harmonic_base_pair.to_owned(),
+        harmonic_active_lenses,
+        harmonic_primary_anchor: harmonic_primary_anchor.to_owned(),
+        harmonic_interval_signature: harmonic_interval_signature.to_owned(),
+        source_anchor:
+            "Body/S/S2/graph-services/src/pointers.rs::canonical_harmonic_bimba_relations"
                 .to_owned(),
-            privacy_policy: "public-coordinate-topology-only".to_owned(),
-            deposition_policy: "read-only descriptor; downstream evidence deposit is S5-governed"
-                .to_owned(),
-        },
-        HarmonicPointerRelationDescriptor {
-            edge_id: format!("s2.pointer.{coordinate}.lens-anchor"),
-            from_coordinate: coordinate.to_owned(),
-            to_coordinate: lens,
-            reason_code: "lens_anchor".to_owned(),
-            relation_law: "coordinate position anchors MEF lens relation".to_owned(),
-            family: family.to_owned(),
-            mirror: format!("{family}{position}"),
-            lens: format!("L{position}"),
-            inversion: "none".to_owned(),
-            context_frame,
-            source_anchor: "S0 Bedrock7/PointerWeb36/CF7 harmonic pointer contract".to_owned(),
-            privacy_policy: "public-coordinate-topology-only".to_owned(),
-            deposition_policy: "read-only descriptor; downstream evidence deposit is S5-governed"
-                .to_owned(),
-        },
-    ]
+    }
+}
+
+fn interval_signature(family: &str) -> &'static str {
+    match family {
+        "A" => "chromatic:whole-tone; fifths:perfect-fourth",
+        "B" => {
+            "chromatic:minor-seventh/tritone/whole-tone; fifths:perfect-fifth/minor-third/major-seventh"
+        }
+        "C" => {
+            "chromatic:whole-tone-with-cycle-close-minor-third; fifths:perfect-fourth-with-cycle-close-minor-second"
+        }
+        _ => "inversion-face",
+    }
 }
 
 fn bimba_pitch_class(position: u8) -> u8 {
@@ -442,10 +515,10 @@ mod tests {
 
     #[test]
     fn context_frame_seven_does_not_enter_sixfold_mirror_projection() {
-        let pointer_web = compute_pointer_web("CF_MOBIUS").unwrap();
+        let pointer_web = compute_coordinate_reference_projection("CF_MOBIUS").unwrap();
 
         assert_eq!(pointer_web.coordinate, "CF_MOBIUS");
-        assert_eq!(pointer_web.pointer_count, 18);
+        assert_eq!(pointer_web.reference_count, 18);
         assert!(pointer_web.family_refs.is_empty());
         assert!(pointer_web.inversion_refs.is_empty());
         assert_eq!(pointer_web.primary_reflective_context, None);
@@ -453,7 +526,7 @@ mod tests {
 
     #[test]
     fn inversion_refs_are_same_position_prime_not_xy5_mirror() {
-        let pointer_web = compute_pointer_web("M2").unwrap();
+        let pointer_web = compute_coordinate_reference_projection("M2").unwrap();
 
         assert_eq!(
             pointer_web
@@ -473,7 +546,7 @@ mod tests {
 
     #[test]
     fn lens_inversion_refs_are_full_twelve_lens_ring() {
-        let pointer_web = compute_pointer_web("M2").unwrap();
+        let pointer_web = compute_coordinate_reference_projection("M2").unwrap();
 
         assert_eq!(
             pointer_web
@@ -489,5 +562,44 @@ mod tests {
                 .map(String::as_str),
             Some("L5'")
         );
+    }
+
+    #[test]
+    fn harmonic_relations_use_corrected_semantic_relation_type_set() {
+        let relations = canonical_harmonic_bimba_relations();
+        let relation_types = relations
+            .iter()
+            .map(|descriptor| descriptor.relation_type.as_str())
+            .collect::<Vec<_>>();
+
+        assert!(relation_types.contains(&"ADJACENTLY_ARTICULATES"));
+        assert!(relation_types.contains(&"MIRRORS_COMPLEMENT"));
+        assert!(relation_types.contains(&"CROSSES_KNOWING_LIMIT"));
+        assert!(relation_types.contains(&"INVERTS_THROUGH_FIRST"));
+        assert!(relation_types.contains(&"INVERTS_THROUGH_SECOND"));
+        assert!(relation_types.contains(&"INVERTS_THROUGH_PAIR"));
+        assert!(!relation_types.contains(&"HAS_HARMONIC_RELATION"));
+    }
+
+    #[test]
+    fn harmonic_relations_include_coordinate_driven_properties() {
+        let relations = canonical_harmonic_bimba_relations();
+
+        assert_eq!(relations.len(), 36);
+        assert!(relations.iter().any(|relation| {
+            relation.source_coordinate == "P2"
+                && relation.target_coordinate == "L3"
+                && relation.harmonic_family == "A"
+        }));
+        for descriptor in &relations {
+            assert!(!descriptor.harmonic_family.is_empty());
+            assert!(!descriptor.harmonic_register.is_empty());
+            assert!(descriptor.harmonic_depth >= 2);
+            assert!(!descriptor.harmonic_d_face.is_empty());
+            assert!(!descriptor.harmonic_base_pair.is_empty());
+            assert!(!descriptor.harmonic_active_lenses.is_empty());
+            assert!(!descriptor.harmonic_primary_anchor.is_empty());
+            assert!(!descriptor.harmonic_interval_signature.is_empty());
+        }
     }
 }

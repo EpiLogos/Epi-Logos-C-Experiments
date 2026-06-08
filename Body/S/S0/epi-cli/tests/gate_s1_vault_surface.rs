@@ -34,11 +34,7 @@ fn rename_file_reconciles_all_inbound_wikilinks_atomically() {
     // anchor, plain title, and a path-qualified form.
     fs::write(vault.join("A.md"), "# A\n\nSource note.\n").unwrap();
     fs::create_dir_all(vault.join("Notes")).unwrap();
-    fs::write(
-        vault.join("Notes/Ref1.md"),
-        "A plain reference to [[A]].\n",
-    )
-    .unwrap();
+    fs::write(vault.join("Notes/Ref1.md"), "A plain reference to [[A]].\n").unwrap();
     fs::write(
         vault.join("Notes/Ref2.md"),
         "An aliased reference: [[A|the-source]].\n",
@@ -86,8 +82,14 @@ fn rename_file_reconciles_all_inbound_wikilinks_atomically() {
     // Verify the actual file contents — every `[[A]]` is now `[[B]]`,
     // and the unrelated note was not touched.
     let ref1 = fs::read_to_string(vault.join("Notes/Ref1.md")).unwrap();
-    assert!(ref1.contains("[[B]]"), "Ref1 plain ref must become [[B]]: {ref1:?}");
-    assert!(!ref1.contains("[[A]]"), "Ref1 must no longer contain [[A]]: {ref1:?}");
+    assert!(
+        ref1.contains("[[B]]"),
+        "Ref1 plain ref must become [[B]]: {ref1:?}"
+    );
+    assert!(
+        !ref1.contains("[[A]]"),
+        "Ref1 must no longer contain [[A]]: {ref1:?}"
+    );
 
     let ref2 = fs::read_to_string(vault.join("Notes/Ref2.md")).unwrap();
     assert!(
@@ -108,7 +110,10 @@ fn rename_file_reconciles_all_inbound_wikilinks_atomically() {
     );
 
     let ref5 = fs::read_to_string(vault.join("Notes/Ref5.md")).unwrap();
-    assert!(ref5.contains("[[B]]"), "Ref5 plain ref must become [[B]]: {ref5:?}");
+    assert!(
+        ref5.contains("[[B]]"),
+        "Ref5 plain ref must become [[B]]: {ref5:?}"
+    );
     assert!(
         ref5.contains("[[B|second]]"),
         "Ref5 second aliased ref must be preserved: {ref5:?}"
@@ -170,7 +175,10 @@ fn read_file_refuses_protected_path_without_governed_capability() {
     });
     let result = s1_hen::read_file(&params_with_cap).expect("read with cap must succeed");
     assert_eq!(result["privacyClass"], "public");
-    assert!(result["contents"].as_str().unwrap().contains("Protected journal"));
+    assert!(result["contents"]
+        .as_str()
+        .unwrap()
+        .contains("Protected journal"));
 }
 
 #[test]

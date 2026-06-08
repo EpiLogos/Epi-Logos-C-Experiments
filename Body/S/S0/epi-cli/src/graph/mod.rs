@@ -266,9 +266,9 @@ pub use epi_s2_graph_services::{
     maybe_refresh_semantic_embeddings, option1_projection_plan, parse_yaml_frontmatter,
     seed::seed_baseline_coordinates, seed::seed_baseline_snapshot_queries,
     seed::seed_relationship_types, GraphMethodParams, GraphMethodService, GraphNodeRequest,
-    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
-    KernelResonanceObservationRequest, LiveGraphBackedEvidence, PointerWebRefreshRequest,
-    RetrievalResult,
+    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    HarmonicRelationMaterializationRequest, HybridFusionConfig, KernelResonanceObservationRequest,
+    LiveGraphBackedEvidence, PointerWebRefreshRequest, RetrievalResult,
 };
 
 fn compose_file_path() -> Result<String, String> {

@@ -41,54 +41,69 @@ fn t5_s0_graph_facade_re_exports_resolve_to_epi_s2_graph_services() {
     use epi_logos::graph;
 
     // (a) Graph retrieval
-    assert!(std::any::type_name::<graph::retrieval::coordinate::CoordinateRetrieval<'static>>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<graph::retrieval::graphrag::GraphRAGRetriever<'static>>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<graph::retrieval::hybrid::HybridRetriever<'static>>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::retrieval::coordinate::CoordinateRetrieval<'static>>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<graph::retrieval::graphrag::GraphRAGRetriever<'static>>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<graph::retrieval::hybrid::HybridRetriever<'static>>()
+            .contains("epi_s2_graph_services")
+    );
 
     // (b) Semantic cache
-    assert!(std::any::type_name::<graph::semantic_cache::SemanticCacheConfig>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<graph::semantic_cache::GraphRedisRole>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::semantic_cache::SemanticCacheConfig>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<graph::semantic_cache::GraphRedisRole>()
+            .contains("epi_s2_graph_services")
+    );
 
     // (c) Dataset import
-    assert!(std::any::type_name::<graph::dataset_import::DatasetImporter<'static>>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::dataset_import::DatasetImporter<'static>>()
+            .contains("epi_s2_graph_services")
+    );
 
     // (d) Doctor
-    assert!(
-        std::any::type_name::<graph::doctor::DoctorReport>().contains("epi_s2_graph_services")
-    );
+    assert!(std::any::type_name::<graph::doctor::DoctorReport>().contains("epi_s2_graph_services"));
 
     // (e) Relationship manager
-    assert!(std::any::type_name::<graph::relationship_manager::RelationshipManager>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::relationship_manager::RelationshipManager>()
+            .contains("epi_s2_graph_services")
+    );
 
     // (f) Sync coordinator
-    assert!(std::any::type_name::<graph::sync_coordinator::SyncCoordinator<'static>>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::sync_coordinator::SyncCoordinator<'static>>()
+            .contains("epi_s2_graph_services")
+    );
 
     // T5 moves: cypher guard, constraint registry, analyser, anuttara
-    assert!(
-        std::any::type_name::<graph::cypher::CypherMode>().contains("epi_s2_graph_services")
-    );
+    assert!(std::any::type_name::<graph::cypher::CypherMode>().contains("epi_s2_graph_services"));
     assert!(std::any::type_name::<graph::cypher::CypherGuardOutcome>()
         .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<graph::constraint::Registry>().contains("epi_s2_graph_services"));
     assert!(
-        std::any::type_name::<graph::constraint::Registry>().contains("epi_s2_graph_services")
+        std::any::type_name::<graph::analyse::DeterministicAnalyser>()
+            .contains("epi_s2_graph_services")
     );
-    assert!(std::any::type_name::<graph::analyse::DeterministicAnalyser>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<graph::anuttara::AnuttaraReflectionRequest>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::anuttara::AnuttaraReflectionRequest>()
+            .contains("epi_s2_graph_services")
+    );
 
     // Lifecycle evidence re-export — surfaced via `crate::graph` for the
     // S0 reconcile arm.
-    assert!(std::any::type_name::<graph::LiveGraphBackedEvidence>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::LiveGraphBackedEvidence>().contains("epi_s2_graph_services")
+    );
 }
 
 #[test]

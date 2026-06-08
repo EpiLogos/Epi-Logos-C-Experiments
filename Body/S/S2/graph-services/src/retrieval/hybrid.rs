@@ -192,12 +192,12 @@ impl<'a> HybridRetriever<'a> {
              LIMIT $top_k"
         );
         let q = query(&cypher)
-        .param("tokens", tokens.clone())
-        .param("positions", position_hints)
-        .param("raw_query", lower_query)
-        .param("scope_id", scope.scope_id())
-        .param("scope_prefixes", scope.prefixes().to_vec())
-        .param("top_k", top_k as i64);
+            .param("tokens", tokens.clone())
+            .param("positions", position_hints)
+            .param("raw_query", lower_query)
+            .param("scope_id", scope.scope_id())
+            .param("scope_prefixes", scope.prefixes().to_vec())
+            .param("top_k", top_k as i64);
 
         let rows = self
             .client

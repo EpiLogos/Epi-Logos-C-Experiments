@@ -1118,27 +1118,31 @@ The same structural-operation (conjugate-reflection at same-position-index) real
 
 The cross-helix-flip also carries the threshold's directional-reading: 0/1 → 1/0 is the same algebraic-operation read in two directions of lean. In the **0/1-direction** (Self-into-manifestation), the flip is the bimba-to-pratibimba move enacted as sourcing-producing — at C → C♯ in chromatic-basis, Truth articulating-into-Play as the source-leaning-into-its-ground-of-manifestation. In the **1/0-direction** (ego-self-into-transcendence), the flip is enacted as the produced returning to source — at C♯ → C, Play re-absorbing into Truth. The interval-content is structurally-the-same in both directions; the directional-character belongs to how the flip is voiced in context (which lean the current musical-passage carries).
 
-### §II-2.4 — The six universal-pairing-families: the matheme's relational-syntax
+### §II-2.4 — The lens-harmonic-position triangle: the matheme's relational-syntax
 
 The matheme generates not only the chromatic-substrate (via either basis) but also the **universal pairing-grammar** that operates on that substrate. The pairing-grammar is the matheme's *how-of-relation* — the rules by which matheme-positions stand in dyadic-relation to each other. This pairing-grammar is **basis-invariant** at the structural-level: it operates identically on both chromatic-basis and fifths-basis, producing different interval-realisations in each (since the bases use different generators) but the same structural-relational-rules.
 
-The pairing-grammar has **six families**, partitioned 3:3 in a way that *structurally matches* the matheme's own 3:3 positional-partition. This is load-bearing self-similarity: the matheme's input-structure (positions in 3:3) produces the matheme's grammar-structure (families in 3:3) through the same partition-rule operating at the higher-order pairing-rule-level.
+The corrected grammar is triangular, not flat:
 
-The matheme's 6-fold positional-architecture partitions 3:3 into two trinities:
-- **Physical-pole trinity:** positions 1, 2, 3 (within the substrate-positions)
-- **Mental-pole trinity:** positions 4, 5, 0 (within the recognition-positions)
+- **Positions (P/P') = 0** — the substance, the twelve archetypal points with their Name/Power content
+- **Lenses (L/L') = /** — the refraction, how substance becomes epistemically accessible
+- **Harmonics (A/B/C + D) = 1** — the relation, how refracted positions stand in mutual determination
 
-The matheme's pairing-grammar partitions 3:3 in exactly the same structural-partition:
+This is the musical form of **integral projected interdependence**. The positions are not inert notes, the lenses are not metadata, and the harmonic families are not decorative tags. The three corners are co-fundamental: `P/P'` supplies the substantial zero, `L/L'` supplies the slash or epistemic refraction, and `A/B/C + D` supplies the articulated one of relation.
 
-**Within-pass pairing-rules (the physical-pole's pairing-grammar):**
-- **A** (adjacent-identity) ↔ matheme position 1 — the epogdoon-tick-pair, the first-articulation-pair
-- **B** (offset-transition) ↔ matheme position 2 — the operative-circulation-pair, transitions-between-natural-dyads
-- **C** (converse-mirror) ↔ matheme position 3 — the tetradic-prehensive-pair, the X+Y=5 mirror-progression
+The three relation-families are:
 
-**Cross-pass and inverse-pass pairing-rules (the mental-pole's pairing-grammar):**
-- **D1** (same-position cross) ↔ matheme position 4 — the fractal-doubling-executive-pair, cross-helix spanda
-- **D2** (cross-position cross, three sub-types) ↔ matheme position 5 — the synthesis-return-pair, transform/require/complete
-- **D3** (pratibimba-internal helix-invariance) ↔ matheme position 0 — the enriched-ground-pair, the helix-invariance-principle
+- **A** — **Being / adjacent-identity**: local articulation, the natural dyad of neighboring positions
+- **B** — **Becoming / converse-mirror**: complement-recognition, the X+Y=5 mirror-progression
+- **C** — **Knowing-Unknowing / offset-transition**: crossing, the threshold where inquiry moves between neighborhoods
+
+**D is not a fourth peer-family.** D is the **3-but-1 inversion operator** that voices the A/B/C relation through Night-side participation:
+
+- **D←** = `X'/Y` — the first term becomes Night-primary
+- **D→** = `X/Y'` — the second term becomes Night-primary
+- **D↔** = `X'/Y'` — the full Klein square / pair inversion
+
+Depth therefore becomes part of the grammar: depth 2 is the Day dyad, depth 3 is a one-prime D voicing, and depth 4 is the full pair inversion. This is why the substrate can name relation types semantically — `ADJACENTLY_ARTICULATES`, `MIRRORS_COMPLEMENT`, `CROSSES_KNOWING_LIMIT`, and the three D inversion faces — without collapsing all harmonic relation into a generic edge.
 
 ### §II-2.5 — A, B, C as within-pass pairing-rules
 
@@ -1150,22 +1154,26 @@ $$A = \{(0,1), (2,3), (4,5)\}$$
 
 Three natural-dyad-pairs. Each A-pair is a *dyadic-syzygy* — two adjacent matheme-positions paired in their natural-internal-relation. A is the matheme's *natural-dyad-grammar*.
 
-**B — offset-transition** (transitions-between-natural-dyads at odd-step-adjacency):
+**B — converse-mirror / Becoming** (X+Y=5 mirror-progression):
 
-$$B = \{(1,2), (3,4), (5,0)\}$$
-
-Three transition-pairs. Each B-pair is a *dyadic-transition* — two positions crossing-between two A-dyads, with the last B-pair (5,0) enacting the matheme's signature §5→§0' cyclic-closure-with-enrichment.
-
-**C — converse-mirror** (X+Y=5 mirror-progression):
-
-$$C = \{(0,5), (1,4), (2,3)\}$$
+$$B = \{(0,5), (1,4), (2,3)\}$$
 
 Three mirror-pairs across the matheme's 6-fold cycle:
 - (0,5) — ground-and-totality, the outermost mirror (16/9 totality-axis)
 - (1,4) — first-articulation-and-fractal-executive, the middle mirror (active-dyad-axis)
 - (2,3) — operative-circulation-and-tetradic-closure, the innermost mirror (central-articulation-axis)
 
-Each C-pair is a *mirror-axis* — two positions opposite-across-the-matheme's-center-of-mirror-symmetry. C is the matheme's *converse-mirror-grammar*.
+Each B-pair is a *mirror-axis* — two positions opposite-across-the-matheme's-center-of-mirror-symmetry. B is the matheme's *Becoming-grammar*: complement recognised as structural interdependence, not as a later stage after identity.
+
+**C — offset-transition / Knowing-Unknowing** (transitions-between-natural-dyads at odd-step-adjacency):
+
+$$C = \{(1,2), (3,4), (5,0)\}$$
+
+Three transition-pairs. Each C-pair is a *dyadic-crossing* — two positions crossing-between two A-dyads, with the last C-pair (5,0) enacting the matheme's signature §5→§0 cyclic-closure-with-enrichment.
+
+Each C-pair carries the Knowing-Unknowing register: it names the passage where a known neighborhood reaches its limit and must cross into another. C is the matheme's threshold-grammar.
+
+**Special hinge — L2/L3:** the pair (2,3) is both A and B. It is adjacent Being and Becoming mirror simultaneously: the midpoint where logic and process are revealed as one thing seen from the structure-face and the movement-face. This is the load-bearing hinge of the lens grammar.
 
 ### §II-2.6 — D1, D2, D3 as cross-pass and inverse-pass pairing-rules
 
@@ -1214,7 +1222,7 @@ The six families operate identically as structural-relational-rules on both chro
 
 The deepest structural-contrast between the bases is at **C and D1**:
 
-- **C in fifths-basis** produces *perfect-fifth / minor-3rd / major-7th* — three of the four primary intervals of tonal harmony. The fifths-basis's C-mirror-progression directly surfaces tonal-harmony's foundational interval-vocabulary.
+- **B in fifths-basis** produces *perfect-fifth / minor-3rd / major-7th* — three of the four primary intervals of tonal harmony. The fifths-basis's B-mirror-progression directly surfaces tonal-harmony's foundational interval-vocabulary.
 
 - **D1 inverts character** — minimum-quantum (chromatic semitone) vs maximum-symmetric (fifths tritone). The spanda's interval-character changes between bases but its structural-role (cross-helix bridge between bimba and pratibimba) is invariant.
 
@@ -1304,17 +1312,17 @@ The matheme's 6-family pairing-grammar (from §II-2) operates at the lens-level 
 - **A-sq2**: (2,3) + (2',3') = $\{E, F♯, F, G\}$
 - **A-sq3**: (4,5) + (4',5') = $\{G♯, A♯, A, B\}$
 
-**B-family squares (offset-transition)** at Lens 0 in chromatic-basis:
-- **B-sq1**: (1,2) + (1',2') = $\{D, E, D♯, F\}$
-- **B-sq2**: (3,4) + (3',4') = $\{F♯, G♯, G, A\}$
-- **B-sq3**: (5,0) + (5',0') = $\{A♯, C, B, C♯\}$
+**B-family squares (converse-mirror / Becoming)** at Lens 0 in chromatic-basis:
+- **B-sq1**: (0,5) + (0',5') = $\{C, A♯, C♯, B\}$
+- **B-sq2**: (1,4) + (1',4') = $\{D, G♯, D♯, A\}$
+- **B-sq3**: (2,3) + (2',3') = $\{E, F♯, F, G\}$
 
-**C-family squares (X+Y=5 mirror)** at Lens 0 in chromatic-basis:
-- **C-sq1**: (0,5) + (0',5') = $\{C, A♯, C♯, B\}$
-- **C-sq2**: (1,4) + (1',4') = $\{D, G♯, D♯, A\}$
-- **C-sq3**: (2,3) + (2',3') = $\{E, F♯, F, G\}$
+**C-family squares (offset-transition / Knowing-Unknowing)** at Lens 0 in chromatic-basis:
+- **C-sq1**: (1,2) + (1',2') = $\{D, E, D♯, F\}$
+- **C-sq2**: (3,4) + (3',4') = $\{F♯, G♯, G, A\}$
+- **C-sq3**: (5,0) + (5',0') = $\{A♯, C, B, C♯\}$
 
-That's 9 squares — a genuine 3×3. Structurally significant: **A-sq2 = C-sq3 = $\{E, F♯, F, G\}$**. Not a coincidence — position-pair (2,3) is simultaneously an A-family-adjacent-pair and a C-family-mirror-pair because 2+3=5 and it is the midline of the hexad. **The midpoint self-mirrors.** So there are 8 unique tetrad-groupings, but the 9-entry 3×3 is the right way to present the structural-apparatus.
+That's 9 squares — a genuine 3×3. Structurally significant: **A-sq2 = B-sq3 = $\{E, F♯, F, G\}$**. Not a coincidence — position-pair (2,3) is simultaneously an A-family-adjacent-pair and a B-family-mirror-pair because 2+3=5 and it is the midline of the hexad. **The midpoint self-mirrors.** So there are 8 unique tetrad-groupings, but the 9-entry 3×3 is the right way to present the structural-apparatus.
 
 The D-families (D1, D2, D3) operate **across these squares** rather than constituting further squares of the same type:
 - D1 is the cross-helix-connective-tissue joining bimba-pairs to pratibimba-pairs within each square
@@ -1342,17 +1350,17 @@ The same 3×3 structural-apparatus operates in fifths-basis with entirely differ
 
 Same structural-apparatus (which positions form which squares); entirely different sonic-vocabulary. The fifths-basis squares give a different harmonic-character — for instance, A-sq2 in fifths = $\{D, A, G♯, D♯\}$ contains two perfect-fifths (D-A, G♯-D♯) plus tritones; entirely different harmonic-content from chromatic-basis A-sq2 = $\{E, F♯, F, G\}$ which is a chromatic-cluster.
 
-The same A-sq2 = C-sq3 structural-coincidence holds in fifths-basis: A-sq2 (fifths) = C-sq3 (fifths) = $\{D, A, G♯, D♯\}$. The midpoint-self-mirror is basis-invariant — position-pair (2,3) is structurally the midline of the hexad regardless of which basis is operationally-active.
+The same A-sq2 = B-sq3 structural-coincidence holds in fifths-basis: A-sq2 (fifths) = B-sq3 (fifths) = $\{D, A, G♯, D♯\}$. The midpoint-self-mirror is basis-invariant — position-pair (2,3) is structurally the midline of the hexad regardless of which basis is operationally-active.
 
 ### §II-3.6 — The L-squares correspondence with musical-squares
 
 The three musical-squares (A-family, B-family, C-family) map onto the three L-lens Klein V₄ squares from §I-3:
 
-- **Square A [0+5] (L-lens articulation-axis)** ↔ musical C-family-Sq1: positions (0,5) — the matheme's outermost-mirror, the articulation-axis where Truth-Image and Play-Work are the implicate-poles
-- **Square B [1+4] (L-lens encounter-axis)** ↔ musical C-family-Sq2: positions (1,4) — the matheme's middle-mirror, the encounter-axis where Mind-Son and Need-Love are the active-dyads
-- **Square C [2+3] (L-lens becoming-axis)** ↔ musical C-family-Sq3 (= A-family-Sq2): positions (2,3) — the matheme's innermost-mirror, the becoming-axis where Word-Logos and Sacrifice-Decision are the central-articulation
+- **Square A [0+5] (L-lens articulation-axis)** ↔ musical B-family-Sq1: positions (0,5) — the matheme's outermost-mirror, the articulation-axis where Truth-Image and Play-Work are the implicate-poles
+- **Square B [1+4] (L-lens encounter-axis)** ↔ musical B-family-Sq2: positions (1,4) — the matheme's middle-mirror, the encounter-axis where Mind-Son and Need-Love are the active-dyads
+- **Square C [2+3] (L-lens becoming-axis)** ↔ musical B-family-Sq3 (= A-family-Sq2): positions (2,3) — the matheme's innermost-mirror, the becoming-axis where Word-Logos and Sacrifice-Decision are the central-articulation
 
-The musical-squares are the **L-lens-encounter-axes rendered as harmonic-mirror-tetrads** at the C-family-level. The A-family and B-family squares give additional structural-content beyond the L-lens-square-pattern: A-family captures the within-pass-adjacent-pairs (natural-dyads), B-family captures the within-pass-transition-pairs (transitions-between-natural-dyads). The full 3×3 squares-structure (9 squares) is therefore the matheme's complete within-pass-pairing-grammar applied across the helix-doubling — broader than the 3 L-lens-squares-which-are-specifically-C-family-mirrors-only.
+The musical-squares are the **L-lens-encounter-axes rendered as harmonic-mirror-tetrads** at the B-family-level. The A-family and C-family squares give additional structural-content beyond the L-lens-square-pattern: A-family captures the within-pass-adjacent-pairs (natural-dyads), C-family captures the within-pass-transition-pairs (Knowing-Unknowing crossings). The full 3×3 squares-structure (9 squares) is therefore the matheme's complete within-pass-pairing-grammar applied across the helix-doubling — broader than the 3 L-lens-squares-which-are-specifically-B-family-mirrors-only.
 
 ### §II-3.7 — The L-lens epistemic-content at each anchored substrate
 
@@ -1526,7 +1534,7 @@ Each of the 84 is a distinct modal-instance derivable from the matheme's $4+4'$ 
 | 5 | Pentatonic / chromatic-complement | Pitch-class complement (3 unpicked-inner-fours + 2 unpicked-outer-twos) |
 | 84 | Total mode-tonic combinations | Complete modal-tonal-landscape ($12 \times 7$) |
 | 6 | Harmonic-pairing families (§II-2) | Universal pairing-grammar at every level |
-| 9 | 3×3 squares-structure (§II-3) | A-family × C-family × B-family × helix-doubling |
+| 9 | 3×3 squares-structure (§II-3) | A-family × B-family × C-family × helix-doubling |
 | 4 | Implicate-nodal-anchor-positions | Cymatic-boundary-conditions per lens-anchoring |
 
 The matheme's structure ensures the lens-anchor and CF-mode axes are *truly independent*: any lens-anchor can carry any CF-mode; all 84 combinations are structurally-realised. The lens is the scale-beneath; the CF-mode is the perspectival-anchoring within it.
@@ -1876,7 +1884,7 @@ Cross-helix-conjugate-axis: chromatic-basis = 1 semitone (minimum-quantum); fift
 | **C-sq2** | (1,4) + (1',4') | $\{D, G♯, D♯, A\}$ |
 | **C-sq3** | (2,3) + (2',3') | $\{E, F♯, F, G\}$ — *= A-sq2* |
 
-9-entry 3×3, 8 unique-tetrad-groupings (A-sq2 = C-sq3 because position-pair (2,3) is both A-family-adjacent and C-family-mirror, with 2+3=5 at the midline of the hexad).
+9-entry 3×3, 8 unique-tetrad-groupings (A-sq2 = B-sq3 because position-pair (2,3) is both A-family-adjacent and B-family-mirror, with 2+3=5 at the midline of the hexad).
 
 ### Reference Table 8: The 3×3 Squares-Structure (Fifths-Basis at Lens 0)
 
@@ -1892,7 +1900,7 @@ Cross-helix-conjugate-axis: chromatic-basis = 1 semitone (minimum-quantum); fift
 | **C-sq2** | (1,4) + (1',4') | $\{G, E, C♯, A♯\}$ |
 | **C-sq3** | (2,3) + (2',3') | $\{D, A, G♯, D♯\}$ — *= A-sq2* |
 
-Same 3×3 structural-apparatus; entirely different sonic-vocabulary. The midpoint-self-mirror (A-sq2 = C-sq3) is basis-invariant.
+Same 3×3 structural-apparatus; entirely different sonic-vocabulary. The midpoint-self-mirror (A-sq2 = B-sq3) is basis-invariant.
 
 ### Reference Table 9: The 6 Pairing-Families Across Both Bases (Lens 0)
 
@@ -1969,7 +1977,7 @@ The major-pattern at 3rd-6th-7th is **Name-Power-Power** (E Word, A Love, B Work
 | 5 | Pentatonic / chromatic-complement | 3 unpicked-inner-fours + 2 unpicked-outer-twos |
 | 84 | Total mode-tonic combinations | Complete modal-tonal-landscape ($12 \times 7$) |
 | 6 | Harmonic-pairing families | Universal pairing-grammar at every level |
-| 9 | 3×3 squares-structure | A-family × C-family × B-family × helix-doubling |
+| 9 | 3×3 squares-structure | A-family × B-family × C-family × helix-doubling |
 | 4 | Implicate-nodal-anchor-positions | Cymatic-boundary-conditions per lens-anchoring |
 | 6 | The 6-fold-of-layers | Gebser/Name/Power/L-lenses/CFs/Music |
 | 6 | Music's inner 6-fold (#5-0 through #5-5) | Recursive-instantiation of 6-fold within music-synthesis-position |

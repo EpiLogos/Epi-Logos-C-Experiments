@@ -11,7 +11,7 @@ Canonical total-shape document for M0' (all six M0-X' data layers): [`Idea/Bimba
 ## Source Specs and Matrix
 
 - Canonical: `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`, `Idea/Pratibimba/System/Subsystems/Anuttara/anuttara-ux-full-m0-branch.md`
-- Companions: `Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md`, `Idea/Bimba/Seeds/M/M0'/m0-prime-anuttara-research.md`, `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md`
+- Companions: `Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md`, `Idea/Bimba/Seeds/M/M0'/m0-prime-anuttara-research.md`, `Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md`
 - Full row-level reconciliation: `plan.runs/wave-a-m0-reconciliation-matrix.md`
 
 ## Cycle 2 Substrate Inheritance
@@ -74,7 +74,7 @@ Consume as-is — `Body/S/S2/graph-schema/src/lib.rs` relation registries (M0_CO
 
 10. **1.10 — Verifier-Anuttara position 0' R-virtue constraint-checker** *(code-pending-closure; routes to DR-MP-1; cross-link Tranches 6.8, 12, 19.6)*
 
-    Land the canonical **Verifier at position 0'/Anuttara** as the formal-axiomatic constraint-checker over the R-virtues + 65 core relations + 9 Parameśvara virtues. Per [`mental-pole-mechanics.md §7`](../../M4'/mental-pole-mechanics.md) and [`epi-logos-kernel-spec.md §7`](../../M0'/epi-logos-kernel-spec.md): the Verifier ensures any recognized state respects the R-virtues that the matheme is committed to; the LLM (4'/Nara) speaks recognition, the EBM (5'/Epii) scores energy, the Verifier (0'/Anuttara) guarantees structural coherence.
+    Land the canonical **Verifier at position 0'/Anuttara** as the formal-axiomatic constraint-checker over the R-virtues + 65 core relations + 9 Parameśvara virtues. Per [`mental-pole-mechanics.md §7`](../../M4'/mental-pole-mechanics.md) and [`epi-logos-kernel-spec.md §7`](../../epi-logos-kernel-spec.md): the Verifier ensures any recognized state respects the R-virtues that the matheme is committed to; the LLM (4'/Nara) speaks recognition, the EBM (5'/Epii) scores energy, the Verifier (0'/Anuttara) guarantees structural coherence.
 
     New module at [`Body/S/S0/epi-lib/src/m0_verifier.c`](../../../../../Body/S/S0/epi-lib/src/m0_verifier.c) (with header at [`m0_verifier.h`](../../../../../Body/S/S0/epi-lib/include/m0_verifier.h)) exposing:
     - `m0_verifier_check_state(const KernelState* state, M0VerifierReport* out)` — checks state against `VIRTUE_LUT[9]` (Parameśvara virtues at [m0.h:163](../../../../../Body/S/S0/epi-lib/include/m0.h)) + `M0_CORE_RELATIONS[65]` (canonical-relation skeleton at [m0.h:526](../../../../../Body/S/S0/epi-lib/include/m0.h)) + the four-syntax-layers (3 speech / 5 relationship / 7 action / 9 completion per Track 19.9). Returns NOT pass/fail boolean but a `M0VerifierReport` carrying `virtue_witness_vector: u16` (9-bit witness vector + per-virtue score) + `unsatisfied_constraints: Vec<SymbolicCoordinateString>` + `coherence_score: f32`.

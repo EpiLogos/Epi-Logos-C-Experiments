@@ -13,7 +13,9 @@ depends_on:
 
 ## Bootstrap Specification for LLM/EBM/Verifier as Aletheic Co-Evolution Through Dev Praxis
 
-> **Companion document to `epi-logos-kernel-spec.md` and `physical-pole-stack-architecture.md`.** Where the kernel spec gave the operator and the physical-pole architecture gave the engine, this document gives the **intelligence** — the 4'-5'-0' triplet of the second-pass 3:3 as the LLM (Nara), EBM (Epii), and Verifier (Anuttara), specified as a co-evolutionary protocol bootstrapped through dev praxis with the Pi agent.
+> **Companion document to `../epi-logos-kernel-spec.md` (now at M' root) and `physical-pole-stack-architecture.md`.** Where the kernel spec gives the operator and the physical-pole architecture gives the engine, this document gives the **intelligence** — the 4'-5'-0' triplet of the second-pass 3:3 as the LLM (Nara), EBM (Epii), and Verifier (Anuttara), specified as a co-evolutionary protocol bootstrapped through dev praxis with the Pi agent.
+
+> **2026-06-07 refinement:** The energy formula in §5 is now the explicit just-triad weighted form `(4·E_4 + 5·E_5 + 6·E_6)/15` per the kernel-spec refinement. The EBM at position 5' takes **two input channels** — the 72-dim lens-resonance vector AND the UserContextFrame projection from the mandatory-routed `user-context` skill (see [[M'-USER-CONTEXT-SKILL-SPEC]]). The agentic runtime that dispatches this stack is a coordinate-conditional MoE with Elo-gated dispatch through Anima (see [[M'-AGENTIC-RUNTIME-SPEC]]). Model-slot policy per role (local-default Gemma 4 12B Unified for Nara-parser; Pro-class cloud-opt-in for Epii-judge) is specified at [[M'-MODEL-SLOT-SPEC]].
 
 ---
 
@@ -384,7 +386,7 @@ The EBM is structurally a learned function from input-embedding to 72-vector. It
 
 A small transformer-based model with the following shape:
 
-- **Input encoder**: pre-trained sentence-embedding model (e.g., `bge-small`, `gte-small`, or similar — small enough for fast inference, capable of handling document-length inputs via sliding-window if needed). Produces a fixed-dimension embedding (typically 384 or 768 dims) per input.
+- **Input encoder**: **Gemini Embedding 2** as canonical multimodal substrate — 3072-dim native, Matryoshka-truncatable to 1536/768 dims for fast inference paths. Accessed via API per `M'-USER-CONTEXT-SKILL-SPEC` cloud-opt-in scope policy. Handles document-length inputs natively at the canonical embedding scale (no sliding-window required). (Per 2026-06-07 kernel-canon commitment across [[../M'-AGENTIC-RUNTIME-SPEC]], [[../M'-USER-CONTEXT-SKILL-SPEC]], [[../M'-ML-SKILL-SURFACE-SPEC]] — earlier draft naming `bge-small`/`gte-small` at 384-768 dims was example-list text not amended when the 2026-06-07 substrate refinement note at line 18 was added.)
 - **Resonance head**: a small transformer encoder (2-4 layers, modest hidden dimension — 256 or 512) operating on the input embedding plus learned position-embeddings for the 72 output dimensions.
 - **Output projection**: linear layer projecting to 72 scalars, with sigmoid activation to keep each output in [0, 1].
 

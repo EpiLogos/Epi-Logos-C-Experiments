@@ -33,8 +33,8 @@ use crate::{transcripts, SessionStore};
 // it is NOT allowed to maintain a parallel route-ownership table.
 pub use epi_s3_gateway_contract::{
     method_dispatch_plan as contract_method_dispatch_plan,
-    method_dispatch_plan_entry as contract_method_dispatch_plan_entry, MethodDispatchKind as DispatchKind,
-    MethodDispatchPlanEntry as DispatchPlanEntry,
+    method_dispatch_plan_entry as contract_method_dispatch_plan_entry,
+    MethodDispatchKind as DispatchKind, MethodDispatchPlanEntry as DispatchPlanEntry,
 };
 
 /// Return the executable S3-owned dispatch-plan contract: for every method
@@ -244,9 +244,7 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "S4/S5",
                 "s3.gateway.agent-runtime",
             ),
-            "s3'.temporal.context"
-            | "s3'.temporal.subscribe"
-            | "s3'.spacetime.subscribe" => route(
+            "s3'.temporal.context" | "s3'.temporal.subscribe" | "s3'.spacetime.subscribe" => route(
                 method,
                 GatewayDispatchOwner::S3TemporalGateway,
                 GatewayDispatchClass::TemporalContext,
@@ -276,6 +274,7 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
             "s2.graph.query"
             | "s2.graph.node"
             | "s2.graph.traverse"
+            | "s2.graph.harmonic_relations.materialize"
             | "s2.graph.pointer_web.compute"
             | "s2.graph.pointer_web.refresh"
             | "s2.graph.kernel_resonance.record"
@@ -363,9 +362,15 @@ pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
                 "S5",
                 "s5-prime.autoresearch-runtime",
             ),
-            "s4.agent.query" | "s4.agent.notify" | "s4.agent.status" | "s4'.vak.evaluate"
-            | "s4'.orchestrate" | "s4'.mediation.route" | "s4'.psyche.state"
-            | "s4'.psyche.update" | "s4'.permission.get" => route(
+            "s4.agent.query"
+            | "s4.agent.notify"
+            | "s4.agent.status"
+            | "s4'.vak.evaluate"
+            | "s4'.orchestrate"
+            | "s4'.mediation.route"
+            | "s4'.psyche.state"
+            | "s4'.psyche.update"
+            | "s4'.permission.get" => route(
                 method,
                 GatewayDispatchOwner::S4TaOntaAgent,
                 GatewayDispatchClass::TaOntaAgentRuntime,

@@ -603,7 +603,7 @@ These siblings collectively cover Epii's operational capacities across all six s
 - `Body/S/S0/epi-lib/include/m0.h`, `m3.h` (cross-referenced kernel substrate — M0 Anuttara substrate for SHACL-validation provenance; M3 substrate for cross-subsystem theoretical references)
 - `Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md` (Anuttara as multi-level formal language runtime — the theory-corpus substrate that governs the GDS-augmentation pipeline's SHACL validation gates)
 - `../M5'/ql-musical-derivation.md` (the load-bearing QL musical-mathematical derivation — 12 MEF lenses, 7 context-frames, 4:3 × 9/8 × 4:3 = 2/1, the cymatic correspondence; the matheme's own musical-mathematical articulation that Paramaśiva's CPT must preserve register-fidelity to above all)
-- `../../M0'/epi-logos-kernel-spec.md` (bioquaternionic JEPA-EBM operator over the full matheme — corpus baseline content)
+- `../../epi-logos-kernel-spec.md` (bioquaternionic JEPA-EBM operator over the full matheme — corpus baseline content)
 - `Body/S/S2/graph-schema/src/lib.rs` (S2 schema with relation types — substrate for GDS path-finding over the bimba-map)
 - `Body/S/S2/graph-services/src/seed.rs` (BEDROCK / MANIFESTS / INVERTS_TO / ANCHORED_TO seed logic — relation semantics that GDS-augmentation respects)
 - M5-0 / M5-0' improvement-vector map subagent report (the sober positioning of position-1 paradigm as CPT + RAG with GDS-augmentation, distinct from sibling positions' paradigms)

@@ -66,8 +66,10 @@ impl SemanticDocument {
             coordinate_anchor.kernel.safe_projection
         ));
         lines.push(format!(
-            "pointer_web_count: {}",
-            coordinate_anchor.pointer_web.pointer_count
+            "coordinate_reference_count: {}",
+            coordinate_anchor
+                .coordinate_reference_projection
+                .reference_count
         ));
         if let Some(harmonic_pointer) = &coordinate_anchor.harmonic_pointer {
             lines.push(format!(
@@ -84,11 +86,15 @@ impl SemanticDocument {
                 harmonic_pointer.pointer_anchor.lens_anchor
             ));
         }
-        lines.push("pointer_family_refs:".into());
+        lines.push("coordinate_family_refs:".into());
         lines.extend(
-            pointer_ref_values(&coordinate_anchor.pointer_web.family_refs)
-                .into_iter()
-                .map(|item| format!("- {item}")),
+            pointer_ref_values(
+                &coordinate_anchor
+                    .coordinate_reference_projection
+                    .family_refs,
+            )
+            .into_iter()
+            .map(|item| format!("- {item}")),
         );
         lines.push(format!(
             "qvdata_source: {}",

@@ -115,11 +115,8 @@ fn spacetime_envelope_unification_native_fallback_reconnect_resync_share_one_env
         "spacetimedb": { "projectionSource": "native-websocket" },
         "kernel": { "generation": 9 }
     }));
-    let native_envelope = lifecycle_envelope_from_update(
-        &plan,
-        SPACETIME_SUBSCRIBE_METHOD,
-        &native_update,
-    );
+    let native_envelope =
+        lifecycle_envelope_from_update(&plan, SPACETIME_SUBSCRIBE_METHOD, &native_update);
     assert_eq!(native_envelope.event, "connected");
     assert_eq!(native_envelope.method, SPACETIME_SUBSCRIBE_METHOD);
 
@@ -145,9 +142,11 @@ fn spacetime_envelope_unification_native_fallback_reconnect_resync_share_one_env
     // 3. RECONNECT lifecycle: connection-lost → reconnecting both project
     //    through the same envelope type.
     let lost = tracker.mark_connection_lost();
-    assert_eq!(lost.state, SpacetimeProjectionConnectionState::ConnectionLost);
-    let lost_envelope =
-        lifecycle_envelope_from_update(&plan, SPACETIME_SUBSCRIBE_METHOD, &lost);
+    assert_eq!(
+        lost.state,
+        SpacetimeProjectionConnectionState::ConnectionLost
+    );
+    let lost_envelope = lifecycle_envelope_from_update(&plan, SPACETIME_SUBSCRIBE_METHOD, &lost);
     assert_eq!(lost_envelope.event, "connection-lost");
 
     let reconnecting = tracker.mark_reconnecting();

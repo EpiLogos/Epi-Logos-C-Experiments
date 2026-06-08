@@ -7,6 +7,7 @@ pub mod session_store;
 pub mod sessions;
 pub mod spacetime;
 pub mod subagents;
+pub mod temporal_context;
 pub mod transcripts;
 pub mod workspace;
 

@@ -1,8 +1,9 @@
 use serde_json::{json, Value};
 
 use crate::{
-    blocked_overlay_payload, graph_contract, kernel_coordinate_anchor_from_parts,
-    CoordinateResolution, GraphMethodService, PointerWebRefreshRequest,
+    blocked_overlay_payload, graph_contract, CoordinateReferenceProjection, CoordinateResolution,
+    GraphMethodService, HarmonicBimbaRelation, HarmonicRelationMaterializationRequest,
+    PointerWebRefreshRequest,
 };
 
 pub const M5_HANDOFF_CONTRACT_VERSION: &str = "2026-06-01.02-T8";
@@ -23,15 +24,11 @@ pub fn m5_handoff_consumption_contract() -> Result<Value, String> {
         coordinate: "#2".to_owned(),
         timestamp_ms: 1_779_000_001_555,
     })?;
-    let graph_anchor = kernel_coordinate_anchor_from_parts(
-        &node_resolution.canonical,
-        &node_resolution.input,
-        node_resolution.compatibility_property.clone(),
+    let relation_plan = GraphMethodService::harmonic_relation_materialization_plan(
+        &HarmonicRelationMaterializationRequest {
+            timestamp_ms: 1_779_000_002_000,
+        },
     )?;
-    let descriptors = graph_anchor
-        .pointer_web
-        .harmonic_relation_descriptors
-        .clone();
     let gds_overlay = blocked_overlay_payload(
         &node_resolution.canonical,
         "GDS procedures are unavailable in the baseline local topology; consumers must render blocked readiness, not fabricate recommendations.",
@@ -54,8 +51,9 @@ pub fn m5_handoff_consumption_contract() -> Result<Value, String> {
                 "s2.graph.query",
                 "s2.graph.node",
                 "s2.graph.traverse",
-                "s2.graph.pointer_web.compute",
-                "s2.graph.pointer_web.refresh",
+                "s2.graph.harmonic_relations.materialize",
+                "s2.graph.pointer_web.compute (deprecated compatibility projection)",
+                "s2.graph.pointer_web.refresh (deprecated compatibility projection)",
                 "s2.graph.kernel_resonance.record",
                 "s2'.coordinate.resolve",
                 "s2'.retrieve",
@@ -71,7 +69,7 @@ pub fn m5_handoff_consumption_contract() -> Result<Value, String> {
                 "blocked_protected_namespace"
             ],
             "forbiddenClientDerivations": FORBIDDEN_CLIENT_DERIVATIONS,
-            "rule": "clients render supplied payloads and readiness states; S2/S2' owns graph law, ontology readiness, GDS overlays, pointer descriptors, and legacy # to M resolution"
+            "rule": "clients render supplied payloads and readiness states; S2/S2' owns graph law, ontology readiness, GDS overlays, harmonic relation materialization, and legacy # to M resolution"
         },
         "consumerContracts": [
             {
@@ -84,15 +82,15 @@ pub fn m5_handoff_consumption_contract() -> Result<Value, String> {
             {
                 "surface": "M1'",
                 "purpose": "relation walker",
-                "requiredFixtures": ["m1_pointer_relation_walk"],
-                "mustRender": ["coordinate_anchor", "pointerWeb", "harmonic_relation_descriptors"],
+                "requiredFixtures": ["m1_relation_walk"],
+                "mustRender": ["coordinate_anchor", "coordinateReferenceProjection", "deprecatedPointerWeb"],
                 "mustNotDerive": ["graph_relations", "codon_mapping"]
             },
             {
                 "surface": "M2'",
                 "purpose": "correspondence provenance",
                 "requiredFixtures": ["m2_correspondence_provenance"],
-                "mustRender": ["relationDescriptors", "provenance", "sourceAnchors"],
+                "mustRender": ["relationMaterialization", "provenance", "sourceAnchors"],
                 "mustNotDerive": ["tarot_mapping", "planetary_mapping", "graph_relations"]
             },
             {
@@ -120,8 +118,8 @@ pub fn m5_handoff_consumption_contract() -> Result<Value, String> {
         "sampleResponseFixtures": sample_response_fixtures(
             &node_resolution,
             &pointer_plan.coordinate_anchor,
-            &pointer_plan.pointer_web,
-            descriptors,
+            &pointer_plan.coordinate_reference_projection,
+            relation_plan.relations,
             serde_json::to_value(gds_overlay).map_err(|err| err.to_string())?,
         )
     }))
@@ -130,8 +128,8 @@ pub fn m5_handoff_consumption_contract() -> Result<Value, String> {
 fn sample_response_fixtures(
     node_resolution: &CoordinateResolution,
     coordinate_anchor: &crate::KernelCoordinateAnchor,
-    pointer_web: &crate::PointerWeb,
-    relation_descriptors: Vec<crate::HarmonicPointerRelationDescriptor>,
+    coordinate_reference_projection: &CoordinateReferenceProjection,
+    harmonic_relations: Vec<HarmonicBimbaRelation>,
     gds_overlay: Value,
 ) -> Value {
     json!([
@@ -180,31 +178,35 @@ fn sample_response_fixtures(
             }
         },
         {
-            "id": "m1_pointer_relation_walk",
+            "id": "m1_relation_walk",
             "capturedFrom": "GraphMethodService::pointer_web_refresh_plan",
             "method": "s2.graph.pointer_web.refresh",
             "payload": {
                 "contract": graph_contract("s2.graph.pointer_web.refresh", Some(node_resolution)),
                 "source": node_resolution,
                 "coordinate_anchor": coordinate_anchor,
-                "pointerWeb": pointer_web,
-                "relationWalk": {
-                    "source": "S2 pointer descriptors",
-                    "steps": relation_descriptors
+                "coordinateReferenceProjection": coordinate_reference_projection,
+                "deprecatedPointerWeb": {
+                    "status": "deprecated_compatibility_only",
+                    "replacement": "s2.graph.harmonic_relations.materialize + s2.graph.traverse"
                 }
             }
         },
         {
             "id": "m2_correspondence_provenance",
-            "capturedFrom": "S2 pointer descriptors and graph contract source anchors",
+            "capturedFrom": "S2 harmonic relation materialization and graph contract source anchors",
             "method": "s2.graph.traverse",
             "payload": {
                 "contract": graph_contract("s2.graph.traverse", Some(node_resolution)),
-                "relationDescriptors": relation_descriptors,
+                "relationMaterialization": {
+                    "source": "s2.graph.harmonic_relations.materialize",
+                    "relationCount": harmonic_relations.len(),
+                    "sample": harmonic_relations
+                },
                 "provenance": {
                     "relationLawOwner": "S2/S2'",
-                    "sourceAnchor": "Body/S/S2/graph-services/src/pointers.rs::compute_pointer_web",
-                    "clientMappingPolicy": "render-only"
+                    "sourceAnchor": "Body/S/S2/graph-services/src/pointers.rs::canonical_harmonic_bimba_relations",
+                    "clientMappingPolicy": "consume Neo4j relations; do not rederive graph law locally"
                 }
             }
         },
