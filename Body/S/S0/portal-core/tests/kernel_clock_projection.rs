@@ -1,6 +1,7 @@
 use portal_core::{
-    update_from_cast, update_kairos_full, update_quintessence_quaternion, KairosState,
-    KernelElement, KernelPhase, KernelTemporalProjection, PortalClockState,
+    update_from_cast, update_kairos_full, update_quintessence_quaternion, E4PersonalInputs,
+    E5HarmonicInputs, E6VerifierInputs, KairosState, KernelElement, KernelPhase,
+    KernelTemporalProjection, PortalClockState,
 };
 
 fn near(a: f32, b: f32) -> bool {
@@ -9,6 +10,14 @@ fn near(a: f32, b: f32) -> bool {
 
 fn near_quat(a: [f32; 4], b: [f32; 4]) -> bool {
     a.iter().zip(b.iter()).all(|(a, b)| near(*a, *b))
+}
+
+fn default_energy_inputs() -> (E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs) {
+    (
+        E4PersonalInputs::default(),
+        E5HarmonicInputs::default(),
+        E6VerifierInputs::default(),
+    )
 }
 
 #[test]
@@ -27,7 +36,8 @@ fn oracle_cast_refreshes_kernel_projection_from_clock_state() {
     assert_eq!(kernel.harmonic_pulse.ratio_den, 4);
     assert_eq!(kernel.bioquaternion.q_b, state.quintessence_quaternion);
     assert_eq!(kernel.bioquaternion.q_p, state.composed_quaternion);
-    assert!(kernel.energy.total_energy > 0.0);
+    assert!(kernel.energy.bimba_pratibimba_energy > 0.0);
+    assert!(near(kernel.energy.total_energy, 0.0));
 }
 
 #[test]
@@ -64,7 +74,8 @@ fn kairos_and_quintessence_updates_recompose_kernel_projection() {
         state.kernel_projection.bioquaternion.q_b,
         state.quintessence_quaternion
     ));
-    assert!(state.kernel_projection.energy.total_energy > 0.0);
+    assert!(state.kernel_projection.energy.bimba_pratibimba_energy > 0.0);
+    assert!(near(state.kernel_projection.energy.total_energy, 0.0));
 }
 
 #[test]
@@ -84,11 +95,12 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
     assert_eq!(json["kernel_projection"]["harmonic_pulse"]["ratio_den"], 4);
     assert!(json["kernel_projection"]["bioquaternion"].is_object());
     assert!(
-        json["kernel_projection"]["energy"]["total_energy"]
+        json["kernel_projection"]["energy"]["bimba_pratibimba_energy"]
             .as_f64()
             .unwrap()
             > 0.0
     );
+    assert_eq!(json["kernel_projection"]["energy"]["total_energy"], 0.0);
 
     let decoded: PortalClockState =
         serde_json::from_value(json).expect("PortalClockState should deserialize from IPC JSON");
@@ -221,14 +233,16 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
 
 #[test]
 fn kernel_harmonic_profile_maps_tick_to_diatonic_cf_when_pitch_is_sounded() {
+    let (e_4_inputs, e_5_inputs, e_6_inputs) = default_energy_inputs();
     let projection = portal_core::KernelProjection::from_clock_state(
         9,
         10,
         [1.0, 0.0, 0.0, 0.0],
         [1.0, 0.0, 0.0, 0.0],
         None,
-        None,
-        0.0,
+        &e_4_inputs,
+        &e_5_inputs,
+        &e_6_inputs,
     );
     let public = KernelTemporalProjection::from_kernel_projection(11, &projection);
     let json = serde_json::to_value(public).unwrap();
@@ -335,14 +349,16 @@ fn kernel_harmonic_profile_covers_chromatic_resonance_and_rendering_invariants()
     let mut lens_anchor_indexes = std::collections::BTreeSet::new();
 
     for tick12 in 0..12 {
+        let (e_4_inputs, e_5_inputs, e_6_inputs) = default_energy_inputs();
         let projection = portal_core::KernelProjection::from_clock_state(
             3,
             tick12,
             [1.0, 0.0, 0.0, 0.0],
             [1.0, 0.0, 0.0, 0.0],
             None,
-            None,
-            0.0,
+            &e_4_inputs,
+            &e_5_inputs,
+            &e_6_inputs,
         );
         let profile =
             KernelTemporalProjection::from_kernel_projection(1, &projection).harmonic_profile;

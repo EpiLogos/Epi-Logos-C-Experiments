@@ -1,8 +1,10 @@
 use epi_s2_graph_services::{
-    graph_contract, schema, source_traceability_anchors, GraphMethodParams, GraphMethodService,
-    GraphNodeRequest, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
-    HarmonicRelationMaterializationRequest, KernelResonanceObservationRequest, Neo4jClient,
-    Neo4jConfig, PointerWebRefreshRequest,
+    core_65_audit_payload, core_65_audit_plan, graph_contract, kernel_core_readiness_fact,
+    kernel_declared_core_relation_count, schema, source_traceability_anchors, Core65AuditSummary,
+    GraphMethodParams, GraphMethodService, GraphNodeRequest, GraphQueryRequest,
+    GraphTraverseDirection, GraphTraverseRequest, HarmonicRelationMaterializationRequest,
+    KernelResonanceObservationRequest, Neo4jClient, Neo4jConfig, PointerWebRefreshRequest,
+    CORE65_AUDIT_METHOD, KERNEL_CORE_RELATION_FAMILY,
 };
 use serde_json::json;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -262,6 +264,71 @@ fn harmonic_relation_materialization_plan_creates_real_bimba_edges_for_positions
             && relation.target_coordinate == "L1'"
             && relation.relation_type == "INVERTS_THROUGH_PAIR"
     }));
+}
+
+#[test]
+fn core65_audit_plan_reads_kernel_declared_count_and_queries_neo4j_family() {
+    assert_eq!(kernel_declared_core_relation_count().unwrap(), 65);
+
+    let plan = core_65_audit_plan().expect("core 65 audit plan");
+
+    assert_eq!(plan.method, CORE65_AUDIT_METHOD);
+    assert_eq!(plan.kernel_declared_count, 65);
+    assert_eq!(plan.relation_family, KERNEL_CORE_RELATION_FAMILY);
+    assert_eq!(
+        plan.params.get_string("relation_family"),
+        Some("kernel_core")
+    );
+    assert_eq!(plan.params.get_integer("declared_count"), Some(65));
+    assert!(plan.cypher.contains("MATCH ()-[r]->()"));
+    assert!(plan
+        .cypher
+        .contains("r.c_1_relation_family = $relation_family"));
+    assert_eq!(
+        plan.params.get_string("kernel_source_token"),
+        Some("M0_CORE_RELATIONS")
+    );
+    assert!(plan.cypher.contains("observed_count"));
+}
+
+#[test]
+fn core65_readiness_projection_only_marks_ready_when_zero_mismatches() {
+    let ready = Core65AuditSummary::from_observation(
+        65,
+        65,
+        vec!["HAS_COMPONENT".to_owned()],
+        vec!["HAS_COMPONENT".to_owned()],
+        vec!["#0".to_owned()],
+        vec!["#0-0".to_owned()],
+    );
+    let ready_fact = kernel_core_readiness_fact(&ready);
+    assert_eq!(ready_fact.id, "kernel-core");
+    assert_eq!(ready_fact.state, "canonical");
+    assert!(ready_fact.canonical);
+    assert!(ready_fact.summary.contains("kernel-core 65/65"));
+
+    let blocked = Core65AuditSummary::from_observation(
+        65,
+        64,
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+    );
+    let blocked_fact = kernel_core_readiness_fact(&blocked);
+    assert_eq!(blocked_fact.state, "blocked");
+    assert!(!blocked_fact.canonical);
+    assert_eq!(blocked.mismatch_count, 1);
+
+    let ready_payload = core_65_audit_payload(graph_contract(CORE65_AUDIT_METHOD, None), ready);
+    assert_eq!(ready_payload["readiness"]["status"], "ready_public_current");
+    assert_eq!(
+        ready_payload["m0GraphReadinessFacts"][0]["id"],
+        "kernel-core"
+    );
+
+    let blocked_payload = core_65_audit_payload(graph_contract(CORE65_AUDIT_METHOD, None), blocked);
+    assert_eq!(blocked_payload["readiness"]["status"], "s2_graph_blocked");
 }
 
 #[test]

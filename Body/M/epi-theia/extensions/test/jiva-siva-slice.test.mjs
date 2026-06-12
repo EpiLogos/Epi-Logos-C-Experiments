@@ -190,6 +190,50 @@ test('4/5/0 envelope with bioquaternion_raw still fails the scrubber', () => {
     );
 });
 
+test('4/5/0 composition boundary rejects raw q_personal ProtectedPersonalFieldInput payload', () => {
+    const rawProtectedPersonalField = Object.freeze({
+        envelopeId: 'env-450-raw-q-personal',
+        emittedAt: 1,
+        producerId: 'cosmic-engine-snapshot',
+        rangeId: '4-5-0',
+        pluginId: 'plugin-integrated-4-5-0',
+        profileGeneration: 1,
+        worldClockGeneration: 1,
+        s2ProvenanceHandles: ['s2://provenance/handle'],
+        s3SessionHandle: 's3://session/handle',
+        s3DayNowHandle: 's3://day-now/handle',
+        s5ReviewTarget: {
+            targetKind: 's5.review.target.routine',
+            targetId: 's5.review.routine.fixture',
+            reason: 'fixture'
+        },
+        privacyClass: 'protected_local_handle_only',
+        sourceSpecAnchors: [
+            'DR-M4-3',
+            'M4 Tranche 05.5 psychoid-cymatic renderer-handle invariant'
+        ],
+        requiresHumanFinalValidation: true,
+        payload: Object.freeze({
+            q_personal: Object.freeze({
+                qIdentity: [1, 0, 0, 0],
+                qTransit: [0, 1, 0, 0],
+                qActivity: [0, 0, 1, 0],
+                qComposed: [0, 0, 0, 1],
+                audio_octet: [0, 1, 0, 1, 0, 1, 0, 1]
+            })
+        })
+    });
+
+    assert.throws(
+        () => validateEvidenceEnvelopeForRange(rawProtectedPersonalField),
+        error =>
+            error instanceof PrivacyViolationError &&
+            error.violations.some(v => v.includes('q_personal')) &&
+            error.violations.some(v => v.includes('q_personal.qIdentity')) &&
+            error.violations.some(v => v.includes('q_personal.audio_octet'))
+    );
+});
+
 test('4/5/0 envelope with opaque protected handle passes the scrubber', () => {
     // Opaque handles (Graphiti episode IDs etc.) are LEGAL in 4/5/0 — only
     // raw body content is forbidden. This is what distinguishes 4/5/0 from
@@ -219,6 +263,44 @@ test('4/5/0 envelope with opaque protected handle passes the scrubber', () => {
         })
     });
     assert.doesNotThrow(() => validateEvidenceEnvelopeForRange(safe450));
+});
+
+test('4/5/0 composition boundary accepts only opaque M4 handles with provenance-state', () => {
+    const safeProtectedPersonalFieldProjection = Object.freeze({
+        envelopeId: 'env-450-safe-m4-handles',
+        emittedAt: 1,
+        producerId: 'cosmic-engine-snapshot',
+        rangeId: '4-5-0',
+        pluginId: 'plugin-integrated-4-5-0',
+        profileGeneration: 1,
+        worldClockGeneration: 1,
+        s2ProvenanceHandles: ['s2://provenance/handle'],
+        s3SessionHandle: 's3://session/handle',
+        s3DayNowHandle: 's3://day-now/handle',
+        s5ReviewTarget: {
+            targetKind: 's5.review.target.routine',
+            targetId: 's5.review.routine.fixture',
+            reason: 'fixture'
+        },
+        privacyClass: 'protected_local_handle_only',
+        sourceSpecAnchors: [
+            'DR-M4-3',
+            'M4 Tranche 05.5 psychoid-cymatic renderer-handle invariant'
+        ],
+        requiresHumanFinalValidation: true,
+        payload: Object.freeze({
+            protectedPersonalFieldHandles: Object.freeze({
+                qIdentityHandle: 'm4://protected/qIdentity/opaque',
+                qTransitHandle: 'm4://protected/qTransit/opaque',
+                qActivityHandle: 'm4://protected/qActivity/opaque',
+                qComposedHandle: 'm4://protected/qComposed/opaque',
+                provenanceState: 'deterministic-lower-fidelity',
+                invariant: 'M4 Tranche 05.5 psychoid-cymatic renderer-handle'
+            })
+        })
+    });
+
+    assert.doesNotThrow(() => validateEvidenceEnvelopeForRange(safeProtectedPersonalFieldProjection));
 });
 
 // ---- No-local-tables discipline -----------------------------------------

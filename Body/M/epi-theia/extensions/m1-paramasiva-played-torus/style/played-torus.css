@@ -1,0 +1,44 @@
+.m1-played-torus-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.m1-played-torus-surface {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(220px, 320px);
+  gap: 16px;
+  align-items: stretch;
+  padding: 16px;
+}
+
+.m1-played-torus-canvas {
+  width: 100%;
+  min-height: 420px;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--theia-contrastBorder);
+  background: var(--theia-editor-background);
+}
+
+.m1-played-torus-readout {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 12px;
+  align-content: start;
+}
+
+.m1-played-torus-readout dt {
+  font-weight: 600;
+}
+
+.m1-played-torus-readout dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+  .m1-played-torus-surface {
+    grid-template-columns: 1fr;
+  }
+}

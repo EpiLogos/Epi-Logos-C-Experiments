@@ -5,10 +5,12 @@ import {
     KERNEL_BRIDGE_API,
     type KernelBridgeAPI
 } from '@pratibimba/kernel-bridge';
+import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import { decorateCoordinates } from '../common/decorations';
 import { VAULT_BRIDGE_WRITE_COMMAND } from '../common/vault-bridge-gate';
 import { IdeShellBridgeGate } from './bridge-gate';
+import { PrivacyDropFeed } from './services/privacy-drop-feed';
 
 /**
  * Result returned by Canon Studio save attempts. Per IOD-19, vault writes are
@@ -49,6 +51,9 @@ export class CanonStudioWidget extends ReactWidget {
     @inject(KERNEL_BRIDGE_API)
     protected readonly bridge!: KernelBridgeAPI;
 
+    @inject(PrivacyDropFeed)
+    protected readonly privacyDropFeed!: PrivacyDropFeed;
+
     protected uri: string | null = null;
     protected content: string = '';
     protected dirty: boolean = false;
@@ -72,6 +77,7 @@ export class CanonStudioWidget extends ReactWidget {
 
     openFile(uri: string, initialContent: string, privacyClass?: string): void {
         if (!isPrivacySafe(privacyClass)) {
+            this.recordPrivacyDrop(privacyClass);
             this.lastSaveResult = {
                 ok: false,
                 reason: `canon-studio: refused to open file with privacy class "${privacyClass}"`,
@@ -84,6 +90,14 @@ export class CanonStudioWidget extends ReactWidget {
         this.content = initialContent;
         this.dirty = false;
         this.update();
+    }
+
+    protected get privacyDropped(): number {
+        return this.privacyDropFeed.aggregate.byWidget[this.id] ?? 0;
+    }
+
+    protected recordPrivacyDrop(privacyClass: string | null | undefined): void {
+        this.privacyDropFeed.record(this.id, privacyClass as string);
     }
 
     setContent(content: string): void {
@@ -158,9 +172,20 @@ export class CanonStudioWidget extends ReactWidget {
             <div className="ide-shell-widget-root" data-test="canon-studio-root">
                 <header className="ide-shell-widget-header">
                     <h3>{CanonStudioWidget.LABEL}</h3>
+                    <BridgeReadinessBadge
+                        bridge={this.bridge}
+                        bindingKey="vault-bridge.s1prime.vault.write_file"
+                    />
+                    <BridgeReadinessBadge
+                        bridge={this.bridge}
+                        bindingKey="s1'.semantic.suggest"
+                    />
                     <span data-test="canon-studio-uri">{this.uri ?? '(no file open)'}</span>
                     <span data-test="canon-studio-dirty">
                         {this.dirty ? 'dirty' : 'clean'}
+                    </span>
+                    <span data-test="canon-studio-privacy-dropped">
+                        privacy-dropped: {this.privacyDropped}
                     </span>
                 </header>
                 <section className="ide-shell-widget-detail">

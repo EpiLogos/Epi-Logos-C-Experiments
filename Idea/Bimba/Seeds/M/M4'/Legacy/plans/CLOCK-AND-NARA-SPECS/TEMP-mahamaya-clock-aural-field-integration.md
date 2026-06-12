@@ -286,7 +286,7 @@ The conversational-default UX philosophy holds: this is the user's *living self-
 
 ### What we need to find / design
 
-1. **The Diamond-QL shape** — confirmed (per user 2026-05-29): the shape lives outside the repo as a simple **diamond / double-square-base pyramid**. Standard octahedron-like solid (two square-based pyramids joined at their square bases), giving 6 vertices + 8 triangular faces + 12 edges. Maps naturally onto the 6 matheme positions (vertices) with the 12 MEF lenses or 12 chromatic notes potentially on the 12 edges. The "diamond" character makes it the natural figure for the personal-aural-Vitruvian rendering — the user's body-axis stands along the vertical axis (root-chakra at bottom-vertex, crown-chakra at top-vertex), with heart-chakra at the equatorial-square-base centre, planetary/chakral positions distributed around the equatorial square + at the top/bottom vertices.
+1. **The Diamond-QL shape** — confirmed (per user 2026-05-29): the shape lives outside the repo as a simple **diamond / double-square-base pyramid**. DR-IG-6 corrects the renderer mapping to the full 6+6 P/P' geometry: 2 apex poles P5/P5', 4 top/base vertices P1-P4, 4 inverted-base vertices P1'-P4' interleaved by mirror law `x + y' = 5`, plus the central axis-point P0/P0' (not a vertex). Maps the named P/P' anchors onto the personal-aural-Vitruvian field, with the 12 MEF lenses or 12 chromatic notes potentially on the shell relations. The "diamond" character makes it the natural figure for the personal-aural-Vitruvian rendering — the user's body-axis stands along the pole-to-pole axis, with the central axis-point at the equatorial-square-base centre and planetary/chakral positions distributed through the top/base and inverted-base anchors.
 
 2. **Chakral-planetary-bodily bridge at Parashakti's Earth point** — per the session-thread's note, "at the earth point bridge the solar and bodily systems at the level of spirit." Need to locate M2-5's earth-point structure and the solar↔bodily bridging mechanism. The 7 chakras × 10 planets × elemental-correspondences from M2-5 carry this; how they project onto a Vitruvian-figure-of-the-archetypal-self needs design.
 
@@ -504,8 +504,8 @@ The 9 cosmic frequencies entering the 8 embodied chakras IS the epogdoon-conjuga
 
 ### §6.8 Diamond geometry correction (octahedron = double-square-base pyramid)
 
-Double-square-base pyramid (octahedron) topology:
-- **6 vertices** — natural mapping: 6 matheme positions (P0..P5)
+Double-square-base pyramid renderer topology, DR-IG-6 corrected:
+- **Full 6+6 P/P' anchors** — 2 apex poles P5/P5', 4 top/base vertices P1-P4, 4 inverted-base vertices P1'-P4' interleaved by mirror law `x + y' = 5`, plus the central axis-point P0/P0' as the white/black 0/1 ground (not a shell vertex)
 - **12 edges** — natural mapping: 12 MEF lenses (each edge connects two positions; the 6×5/2 = 15 possible edges minus 3 inversion-pairs = 12)
 - **8 faces** — natural mapping: 8 chakras
 

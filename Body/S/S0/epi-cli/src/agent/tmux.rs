@@ -1,7 +1,19 @@
+use crate::agent::launch;
 use crate::agent::runtime::PiLaunchPlan;
 use crate::agent::{AgentLayout, TmuxCmd, DEFAULT_PI_AGENT_ID};
-use serde::Serialize;
+use crate::gate::session_store::slug as session_slug;
+use crate::gate::sessions::{SessionPatch, SessionStore};
+use epi_s3_gateway_contract::{
+    TerminalBinding, TerminalLease as GatewayTerminalLease, TerminalStatus,
+};
+use serde::{Deserialize, Serialize};
+use std::ffi::OsString;
+use std::fs;
+use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::time::{SystemTime, UNIX_EPOCH};
+
+const DEFAULT_LEASE_TTL_SECONDS: u64 = 12 * 60 * 60;
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -10,6 +22,31 @@ struct TmuxReport {
     session_name: String,
     agent_id: String,
     command: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    session_key: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    terminal_binding: Option<TerminalBindingReport>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TerminalLease {
+    pub session_key: String,
+    pub tmux_session_name: String,
+    pub tmux_window_id: String,
+    pub tmux_pane_id: String,
+    pub created_at: u128,
+    pub lease_ttl_seconds: u64,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct TerminalBindingReport {
+    session_key: String,
+    tmux_session_name: String,
+    tmux_window_id: String,
+    tmux_pane_id: String,
+    terminal_lease: TerminalLease,
 }
 
 pub fn run(cmd: &TmuxCmd, json: bool) -> Result<String, String> {
@@ -29,6 +66,8 @@ pub fn run(cmd: &TmuxCmd, json: bool) -> Result<String, String> {
                     session_name,
                     agent_id: layout.agent_id,
                     command: "tmux attach-session".to_owned(),
+                    session_key: None,
+                    terminal_binding: None,
                 },
                 json,
             )
@@ -47,6 +86,8 @@ pub fn run(cmd: &TmuxCmd, json: bool) -> Result<String, String> {
                     session_name,
                     agent_id: layout.agent_id,
                     command: "tmux has-session".to_owned(),
+                    session_key: None,
+                    terminal_binding: None,
                 },
                 json,
             )
@@ -63,6 +104,8 @@ pub fn run(cmd: &TmuxCmd, json: bool) -> Result<String, String> {
                     session_name,
                     agent_id: layout.agent_id,
                     command: "tmux kill-session".to_owned(),
+                    session_key: None,
+                    terminal_binding: None,
                 },
                 json,
             )
@@ -71,8 +114,97 @@ pub fn run(cmd: &TmuxCmd, json: bool) -> Result<String, String> {
 }
 
 pub(super) fn run_plan(plan: &PiLaunchPlan, json: bool) -> Result<String, String> {
+    let session_key = allocate_session_key(plan);
+    let lease = create_session(plan, &session_key)?;
+    inject_runtime_command(&lease.tmux_pane_id, &launch::pi_command_argv(plan))?;
+    patch_gateway_session(plan, &lease)?;
+
+    render(
+        TmuxReport {
+            status: "running".to_owned(),
+            session_name: lease.tmux_session_name.clone(),
+            agent_id: plan.agent_id.clone(),
+            command: launch::pi_command_argv(plan).join(" "),
+            session_key: Some(session_key.clone()),
+            terminal_binding: Some(TerminalBindingReport {
+                session_key,
+                tmux_session_name: lease.tmux_session_name.clone(),
+                tmux_window_id: lease.tmux_window_id.clone(),
+                tmux_pane_id: lease.tmux_pane_id.clone(),
+                terminal_lease: lease,
+            }),
+        },
+        json,
+    )
+}
+
+pub fn create_session(plan: &PiLaunchPlan, session_key: &str) -> Result<TerminalLease, String> {
     let session_name = tmux_session_name(&plan.repo_root, &plan.agent_id);
-    ensure_session(&session_name, plan, &plan.agent_id, Some(plan), json)
+    let lease_id = session_key.to_owned();
+    let extra_env = [
+        ("EPI_GATE_SESSION_KEY", session_key.to_owned()),
+        ("EPI_TERMINAL_LEASE_ID", lease_id),
+    ];
+    if !has_session(&session_name)? {
+        let mut command = tmux_command();
+        command
+            .arg("new-session")
+            .arg("-d")
+            .arg("-s")
+            .arg(&session_name)
+            .arg("-c")
+            .arg(plan.repo_root.display().to_string());
+        for (key, value) in launch::plan_env(plan, &extra_env) {
+            command.env(key, value);
+        }
+        run_command(command)?;
+    }
+    set_session_environment(&session_name, plan, &extra_env)?;
+
+    let tmux_window_id = display_message(&session_name, "#{window_id}")?;
+    let tmux_pane_id = display_message(&session_name, "#{pane_id}")?;
+    let lease = TerminalLease {
+        session_key: session_key.to_owned(),
+        tmux_session_name: session_name,
+        tmux_window_id,
+        tmux_pane_id,
+        created_at: now_ms()?,
+        lease_ttl_seconds: DEFAULT_LEASE_TTL_SECONDS,
+    };
+    write_lease(&plan.gate_state_root, &lease)?;
+    Ok(lease)
+}
+
+pub fn attach_session(session_key: &str, gate_root: impl AsRef<Path>) -> Result<(), String> {
+    let lease = read_lease(gate_root, session_key)?;
+    run_tmux(["attach-session", "-t", &lease.tmux_session_name])
+}
+
+pub fn kill_session(session_key: &str, gate_root: impl AsRef<Path>) -> Result<(), String> {
+    let lease = read_lease(gate_root, session_key)?;
+    if has_session(&lease.tmux_session_name)? {
+        run_tmux(["kill-session", "-t", &lease.tmux_session_name])?;
+    }
+    Ok(())
+}
+
+pub fn list_active_leases(gate_root: impl AsRef<Path>) -> Result<Vec<TerminalLease>, String> {
+    let dir = lease_dir(gate_root);
+    if !dir.exists() {
+        return Ok(Vec::new());
+    }
+    let now = now_ms()?;
+    let mut leases = Vec::new();
+    for entry in fs::read_dir(dir).map_err(|err| err.to_string())? {
+        let entry = entry.map_err(|err| err.to_string())?;
+        let content = fs::read_to_string(entry.path()).map_err(|err| err.to_string())?;
+        let lease: TerminalLease = serde_json::from_str(&content).map_err(|err| err.to_string())?;
+        if lease_expires_at(&lease) > now {
+            leases.push(lease);
+        }
+    }
+    leases.sort_by(|left, right| left.session_key.cmp(&right.session_key));
+    Ok(leases)
 }
 
 fn ensure_session(
@@ -117,6 +249,8 @@ fn ensure_session(
             session_name: session_name.to_owned(),
             agent_id: agent_id.to_owned(),
             command: "tmux new-session".to_owned(),
+            session_key: None,
+            terminal_binding: None,
         },
         json,
     )
@@ -197,9 +331,7 @@ fn run_command(mut command: Command) -> Result<(), String> {
 }
 
 fn tmux_command() -> Command {
-    std::env::var_os("EPI_AGENT_TMUX_BIN")
-        .map(Command::new)
-        .unwrap_or_else(|| Command::new("tmux"))
+    Command::new(resolve_tmux_binary().unwrap_or_else(|| OsString::from("tmux")))
 }
 
 fn render(report: TmuxReport, json: bool) -> Result<String, String> {
@@ -211,4 +343,171 @@ fn render(report: TmuxReport, json: bool) -> Result<String, String> {
             report.status, report.session_name, report.agent_id
         ))
     }
+}
+
+fn allocate_session_key(plan: &PiLaunchPlan) -> String {
+    std::env::var("EPI_GATE_SESSION_KEY")
+        .ok()
+        .filter(|value| !value.trim().is_empty())
+        .unwrap_or_else(|| {
+            let surface = plan.role.as_deref().unwrap_or("main");
+            format!("agent:{}:{surface}", plan.agent_id)
+        })
+}
+
+fn set_session_environment(
+    session_name: &str,
+    plan: &PiLaunchPlan,
+    extra_env: &[(&str, String)],
+) -> Result<(), String> {
+    for (key, value) in launch::plan_env(plan, extra_env) {
+        let value = value.to_string_lossy().to_string();
+        let mut command = tmux_command();
+        command
+            .arg("set-environment")
+            .arg("-t")
+            .arg(session_name)
+            .arg(&key)
+            .arg(value);
+        run_command(command)?;
+    }
+    Ok(())
+}
+
+fn display_message(target: &str, format: &str) -> Result<String, String> {
+    let output = tmux_command()
+        .arg("display-message")
+        .arg("-p")
+        .arg("-t")
+        .arg(target)
+        .arg(format)
+        .output()
+        .map_err(|err| format!("failed to run tmux: {err}"))?;
+    if !output.status.success() {
+        return Err(format!("tmux exited with status {}", output.status));
+    }
+    let value = String::from_utf8_lossy(&output.stdout).trim().to_owned();
+    if value.is_empty() {
+        Err(format!("tmux returned empty value for {format}"))
+    } else {
+        Ok(value)
+    }
+}
+
+fn inject_runtime_command(pane_id: &str, argv: &[String]) -> Result<(), String> {
+    let Some((program, args)) = argv.split_first() else {
+        return Err("missing PI runtime command".to_owned());
+    };
+    send_literal(pane_id, program)?;
+    for arg in args {
+        run_tmux(["send-keys", "-t", pane_id, "Space"])?;
+        send_literal(pane_id, &shell_single_quote(arg))?;
+    }
+    run_tmux(["send-keys", "-t", pane_id, "Enter"])
+}
+
+fn send_literal(pane_id: &str, text: &str) -> Result<(), String> {
+    let mut command = tmux_command();
+    command
+        .arg("send-keys")
+        .arg("-t")
+        .arg(pane_id)
+        .arg("-l")
+        .arg("--")
+        .arg(text);
+    run_command(command)
+}
+
+fn patch_gateway_session(plan: &PiLaunchPlan, lease: &TerminalLease) -> Result<(), String> {
+    let store = SessionStore::new(&plan.gate_state_root)?;
+    store.ensure(&lease.session_key)?;
+    store.patch(
+        &lease.session_key,
+        SessionPatch {
+            active_agent_id: Some(plan.agent_id.clone()),
+            runtime_cwd: Some(Some(plan.repo_root.display().to_string())),
+            terminal_binding: Some(Some(TerminalBinding {
+                terminal_identifier: Some(format!(
+                    "tmux:{}:{}",
+                    lease.tmux_session_name, lease.tmux_pane_id
+                )),
+                session_anchor: Some(lease.tmux_session_name.clone()),
+                tmux_pane_id: Some(lease.tmux_pane_id.clone()),
+                attached_session_key: Some(lease.session_key.clone()),
+                terminal_status: Some(TerminalStatus::Attached),
+                lease: Some(GatewayTerminalLease {
+                    lease_owner: Some(format!("pi.{}", plan.agent_id)),
+                    lease_purpose: Some("interactive-session".to_owned()),
+                    lease_expires_at_ms: Some(lease_expires_at(lease)),
+                }),
+                capture_policy: None,
+            })),
+            ..Default::default()
+        },
+    )?;
+    Ok(())
+}
+
+fn write_lease(gate_root: impl AsRef<Path>, lease: &TerminalLease) -> Result<(), String> {
+    let dir = lease_dir(gate_root);
+    fs::create_dir_all(&dir).map_err(|err| err.to_string())?;
+    let payload = serde_json::to_string_pretty(lease).map_err(|err| err.to_string())?;
+    fs::write(
+        dir.join(format!("{}.json", session_slug(&lease.session_key))),
+        payload,
+    )
+    .map_err(|err| err.to_string())
+}
+
+fn read_lease(gate_root: impl AsRef<Path>, session_key: &str) -> Result<TerminalLease, String> {
+    let path = lease_dir(gate_root).join(format!("{}.json", session_slug(session_key)));
+    let content = fs::read_to_string(path).map_err(|err| err.to_string())?;
+    serde_json::from_str(&content).map_err(|err| err.to_string())
+}
+
+fn lease_dir(gate_root: impl AsRef<Path>) -> PathBuf {
+    gate_root.as_ref().join("terminal-leases")
+}
+
+fn lease_expires_at(lease: &TerminalLease) -> u128 {
+    lease.created_at + u128::from(lease.lease_ttl_seconds) * 1000
+}
+
+fn now_ms() -> Result<u128, String> {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_millis())
+        .map_err(|err| err.to_string())
+}
+
+fn resolve_tmux_binary() -> Option<OsString> {
+    if let Some(path) = std::env::var_os("EPI_AGENT_TMUX_BIN") {
+        return Some(path);
+    }
+    let path = std::env::var_os("PATH")?;
+    std::env::split_paths(&path)
+        .map(|dir| dir.join("tmux"))
+        .find(|candidate| candidate.is_file())
+        .map(|candidate| candidate.into_os_string())
+}
+
+fn shell_single_quote(value: &str) -> String {
+    if value.is_empty() {
+        return "''".to_owned();
+    }
+    if value.chars().all(|ch| {
+        ch.is_ascii_alphanumeric() || matches!(ch, '-' | '_' | '/' | '.' | ':' | '=' | ',')
+    }) {
+        return value.to_owned();
+    }
+    let mut quoted = String::from("'");
+    for ch in value.chars() {
+        if ch == '\'' {
+            quoted.push_str("'\\''");
+        } else {
+            quoted.push(ch);
+        }
+    }
+    quoted.push('\'');
+    quoted
 }

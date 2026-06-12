@@ -40,11 +40,11 @@ related_tranches:
 
 | # | Sub-coordinate | Surface | Register |
 |---|---|---|---|
-| M5-0' | Gnostic Library | The `bimba ↔ gnosis` substrate as ontology-the-system-embodies (synchronic) | What holds |
+| M5-0' | Gnostic Library | The `bimba ↔ gnosis` substrate as ontology-the-system-embodies (synchronic) — **Gnostic Library substrate; RAG context grounding; documentary content the operational capacities reason over** | What holds |
 | M5-1' | Canon Studio | Philosophy / canon edit + QL/bimba decoration + Smart Connections wikilink autocomplete (diachronic) | What developed |
 | M5-2' | Backend Studio | The S-family stack made inspectable + agent-editable via LSP + governed tasks/tests/evidence (`siva-`) | Construction |
 | M5-3' | IDE Shell + Playable Bimba | The single Theia shell itself (0/1 daily + 4+2 deep); the playable bimba in dev/engagement modes (`-shakti`) | Engagement |
-| M5-4' | Pi-runtime monitoring (OmniPanel) | Pi/Anima/Aletheia/Sophia dispatch monitoring, six operational-capacity lanes, review/evidence/gateway/diagnostics — the `/` operator made into an agentic membrane (`siva-shakti`) | The unity |
+| M5-4' | Pi-runtime monitoring (OmniPanel) | Pi/Anima/Aletheia/Sophia dispatch monitoring, six operational-capacity lanes, review/evidence/gateway/diagnostics — the `/` operator made into an agentic membrane (`siva-shakti`). **Canonical home for operational capacities, skills, capability matrix — six-capacity workflow registry (`capacity_workflows.rs`) and siva-shakti operational register** (per [[33-harmonic-energy-channel-handoff]] §1.4). | The unity |
 | M5-5' | Logos Atelier | Scent-following etymology: root → cognate → drift → psychoid charge → pros-hen → Möbius write-back over the `etymology` graph namespace | Möbius reactivation |
 
 The Epii IDE's central claim — substantiated against `Body/S/S5/{epi-gnostic, epii-autoresearch-core, epii-review-core, epii-agent-core, epii-agent}`, `Body/S/S4/{ta-onta, pi-agent, plugins/pleroma}`, and the live `Body/S/S3/gateway-contract/src/lib.rs:209-225` method registry — is that **the agentic-pedagogical IDE is not a thing to be built; it is the integration view of the things already landed**, plus a small set of named gateway registrations and Theia extensions that bridge them. This document is the total shape of that integration.

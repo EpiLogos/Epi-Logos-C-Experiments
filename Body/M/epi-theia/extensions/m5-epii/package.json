@@ -23,6 +23,8 @@
   ],
   "dependencies": {
     "@theia/core": "1.56.0",
+    "@pratibimba/ide-shell-m0-m5": "workspace:*",
+    "@pratibimba/integrated-composition": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -37,6 +39,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build"
+    "test": "pnpm build && node --test tests/contemplation-object-viewer.test.mjs"
   }
 }

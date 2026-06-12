@@ -1,8 +1,9 @@
 use portal_core::{
     harmonic_ratio_fraction_for_sub_tick, kernel_energy_evaluate, kernel_resonance_index,
     kernel_resonance_square_emphasis, kernel_tick_from_epogdoon, slash_flip_bimba_prime,
-    BioQuaternionState, HarmonicPulse, KernelElement, KernelPhase, KernelProjection,
-    KernelResonanceObservation, ResonanceVector72, EPOGDOON_DEN, EPOGDOON_NUM,
+    BioQuaternionState, E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs, HarmonicPulse,
+    KernelElement, KernelPhase, KernelProjection, KernelResonanceObservation, ResonanceVector72,
+    EPOGDOON_DEN, EPOGDOON_NUM,
 };
 use std::collections::BTreeSet;
 
@@ -80,14 +81,16 @@ fn rust_resonance_indexing_is_total_over_valid_72_fold_domain() {
 #[test]
 fn rust_energy_and_tick_contract_are_computable() {
     let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0]);
-    let mut observed = ResonanceVector72::default();
-    let target = ResonanceVector72::default();
-    observed.values[0] = 1.0;
+    let e_4_inputs = E4PersonalInputs::default();
+    let e_5_inputs = E5HarmonicInputs::default();
+    let e_6_inputs = E6VerifierInputs::default();
 
-    let energy = kernel_energy_evaluate(&state, Some(&observed), Some(&target), 0.25);
+    let energy = kernel_energy_evaluate(&state, &e_4_inputs, &e_5_inputs, &e_6_inputs);
     assert!(near(energy.bimba_pratibimba_energy, 2.0));
-    assert!(near(energy.lens_energy, 1.0 / 72.0));
-    assert!(near(energy.total_energy, 2.0 + (1.0 / 72.0) + 0.25));
+    assert!(near(energy.e_4_personal_energy, 0.0));
+    assert!(near(energy.e_5_harmonic_energy, 0.0));
+    assert!(near(energy.e_6_verifier_energy, 0.0));
+    assert!(near(energy.total_energy, 0.0));
 
     let tick0 = kernel_tick_from_epogdoon(3, 0);
     let tick6 = kernel_tick_from_epogdoon(3, 6);
@@ -131,14 +134,18 @@ fn rust_harmonic_pulse_is_deterministic_from_kernel_tick() {
 
 #[test]
 fn rust_kernel_projection_can_emit_validated_resonance_observations() {
+    let e_4_inputs = E4PersonalInputs::default();
+    let e_5_inputs = E5HarmonicInputs::default();
+    let e_6_inputs = E6VerifierInputs::default();
     let projection = KernelProjection::from_clock_state(
         7,
         9,
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         None,
-        None,
-        0.125,
+        &e_4_inputs,
+        &e_5_inputs,
+        &e_6_inputs,
     );
 
     let observation = KernelResonanceObservation::from_projection(

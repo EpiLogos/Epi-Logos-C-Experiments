@@ -1,0 +1,35 @@
+{
+  "runId": "20260611T170125Z-32-T32.13",
+  "taskId": "32.T32.13",
+  "startedAt": "2026-06-11T17:01:25.760Z",
+  "owner": "codex-m-dev-32-t32-13",
+  "leaseExpiresAt": "2026-06-11T19:01:25.760Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.13",
+    "trackId": "32",
+    "tranche": "T32.13",
+    "title": "Onboarding completion ledger",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.12"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/onboarding-completion-ledger.json"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

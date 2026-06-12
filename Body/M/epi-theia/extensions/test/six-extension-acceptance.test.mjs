@@ -110,7 +110,11 @@ function profile(generation, payload = {}) {
             ],
             resonance72: { ...baselineProfile.resonance72, handle: 's2://resonance72/18' },
             planetaryChakral: { sun: 'heart', earthObserver: 'ground' },
-            kleinFlipState: 'L-to-L-prime',
+            kleinFlip: {
+                kind: 'm2CymaticValenceInvert',
+                valenceBefore: 'primary',
+                valenceAfter: 'inverted'
+            },
             correspondence72: { handle: 's2://m2/correspondence/18' },
             cymaticFrame: { frameHandle: 's3://world-clock/frame/3', audioBusHandle: 's0://audio-bus/88' },
             codon_rotation_projection: { codon: 42, rotation: 3, scalarRef: 'm3://codon/42#r3' },

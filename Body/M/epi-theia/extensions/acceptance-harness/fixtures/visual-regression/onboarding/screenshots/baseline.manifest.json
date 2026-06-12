@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/onboarding",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "note": "PNG bytes are captured by the acceptance harness on first green run. DOM snapshots are the committed structural baseline.",
+  "captureRecipe": {
+    "command": "node scripts/acceptance.mjs --capture-baseline --suite onboarding",
+    "settleEvent": "[ACCEPTANCE:onboarding:ready]"
+  },
+  "screenshotsCaptured": false
+}

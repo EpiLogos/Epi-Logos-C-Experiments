@@ -34,6 +34,7 @@
 #include "m0.h"
 #include "m2.h"
 #include "m3.h"
+#include "m_canonical.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -47,16 +48,21 @@
  * C=Earth=Pentacles=Sensation, G=Air=Swords=Thinking.
  * =================================================================== */
 
-#define M4_ELEM_WATER   0   /* Adenine  — Cups — Feeling     (Yin)  */
-#define M4_ELEM_FIRE    1   /* Thymine  — Wands — Intuition  (Yang) */
-#define M4_ELEM_EARTH   2   /* Cytosine — Pentacles — Sensation (Yin) */
-#define M4_ELEM_AIR     3   /* Guanine  — Swords — Thinking  (Yang) */
+/* Canonical L2' element IDs (see m_canonical.h). The nucleotide↔element
+ * identity is preserved (A=Water, T=Fire, C=Earth, G=Air) but the numeric
+ * IDs are now the L2' canonical ordering, NOT the historical 0-3 sequence. */
+#define M4_ELEM_WATER   ELEMENT_WATER   /* Adenine  — Cups — Feeling     (Yin)  — canonical 2 */
+#define M4_ELEM_FIRE    ELEMENT_FIRE    /* Thymine  — Wands — Intuition  (Yang) — canonical 4 */
+#define M4_ELEM_EARTH   ELEMENT_EARTH   /* Cytosine — Pentacles — Sensation (Yin) — canonical 1 */
+#define M4_ELEM_AIR     ELEMENT_AIR     /* Guanine  — Swords — Thinking  (Yang) — canonical 3 */
 
-/* Nucleotide-to-element consistency check */
-_Static_assert(M3_NUC_A == M4_ELEM_WATER,  "Elemental Throughline: A must be Water(0)");
-_Static_assert(M3_NUC_T == M4_ELEM_FIRE,   "Elemental Throughline: T must be Fire(1)");
-_Static_assert(M3_NUC_C == M4_ELEM_EARTH,  "Elemental Throughline: C must be Earth(2)");
-_Static_assert(M3_NUC_G == M4_ELEM_AIR,    "Elemental Throughline: G must be Air(3)");
+/* Nucleotide-to-element consistency check — routed through the canonical
+ * throughline mapping rather than raw integer equality, since nucleotide
+ * IDs (A=0..G=3) no longer coincide with canonical element IDs. */
+_Static_assert(m4_nuc_to_elem(M3_NUC_A) == M4_ELEM_WATER, "Elemental Throughline: A must be Water");
+_Static_assert(m4_nuc_to_elem(M3_NUC_T) == M4_ELEM_FIRE,  "Elemental Throughline: T must be Fire");
+_Static_assert(m4_nuc_to_elem(M3_NUC_C) == M4_ELEM_EARTH, "Elemental Throughline: C must be Earth");
+_Static_assert(m4_nuc_to_elem(M3_NUC_G) == M4_ELEM_AIR,   "Elemental Throughline: G must be Air");
 
 
 /* ===================================================================
@@ -252,7 +258,7 @@ void m4_identity_augment(M4_Identity_Matrix* id,
  * FR 2.4.11: M4_Temporal_Now — The Lived Moment
  *
  * Composes M1/M2/M3 clock with planetary preemption slots.
- * Works at 0 planets (stub mode) through 7 planets (full).
+ * Works at 0 planets (stub mode) through 10 planets (full mod-10 relay).
  * =================================================================== */
 
 typedef struct {
@@ -261,9 +267,10 @@ typedef struct {
     uint32_t            chronos_epoch;  /* Unix seconds */
 
     uint16_t planet_degrees[10];        /* All 10 planets (Planet_Id order from m2.h) */
-    uint8_t  planet_valid;              /* Bitmask: which planets have data */
-    uint8_t  _pad[1];                   /* Alignment pad after 7→10 expansion */
+    uint16_t planet_valid;              /* 10-bit mask: which planets have data */
 } M4_Temporal_Now;
+
+#define M4_PLANET_VALID_ALL ((uint16_t)((1u << M2_PLANET_COUNT) - 1u))
 
 static inline M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
     M4_Temporal_Now now;
@@ -272,6 +279,25 @@ static inline M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
     now.chronos_epoch = epoch;
     for (int i = 0; i < 10; i++) now.planet_degrees[i] = 0;
     now.planet_valid = 0x00;
+    return now;
+}
+
+static inline void m4_temporal_now_set_planets(M4_Temporal_Now* now,
+                                                const uint16_t planet_degrees[M2_PLANET_COUNT],
+                                                uint16_t planet_valid) {
+    if (now == NULL || planet_degrees == NULL) return;
+    for (int i = 0; i < (int)M2_PLANET_COUNT; i++) {
+        now->planet_degrees[i] = planet_degrees[i] % 720u;
+    }
+    now->planet_valid = (uint16_t)(planet_valid & M4_PLANET_VALID_ALL);
+}
+
+static inline M4_Temporal_Now m4_snapshot_now_with_planets(uint16_t degree,
+                                                           uint32_t epoch,
+                                                           const uint16_t planet_degrees[M2_PLANET_COUNT],
+                                                           uint16_t planet_valid) {
+    M4_Temporal_Now now = m4_snapshot_now(degree, epoch);
+    m4_temporal_now_set_planets(&now, planet_degrees, planet_valid);
     return now;
 }
 
@@ -695,6 +721,25 @@ static inline void m4_mobius_return(M4_Epii_Integration* epii,
 
 
 /* ===================================================================
+ * M4_Session_Frame — Session-context inheritance at open
+ *
+ * Opening a session inherits three things together: the lived moment
+ * (kairos), who is present (identity), and the cards drawn at that
+ * moment (tarot_psyche_anchor). The draw is NOT a lifecycle event and
+ * does nothing mechanically — it conditions the contemplation. Seeded
+ * from kairos so the same moment recalls the same draw; the randomness
+ * across moments is the necessary openness.
+ * =================================================================== */
+
+typedef struct {
+    uint64_t        kairos;              /* Inherited moment (RNG seed source) */
+    M4_Identity_Matrix* identity;       /* Inherited identity (caller-owned) */
+    M4_Tarot_Draw   tarot_psyche_anchor;/* Cards drawn at open — context, not event */
+    bool            opened;             /* True once m4_session_open succeeds */
+} M4_Session_Frame;
+
+
+/* ===================================================================
  * PCO: M4_PersonalContextOverlay — The complete heap struct
  * =================================================================== */
 
@@ -764,6 +809,13 @@ int m4_cast_iching(M4_Sacred_Random* rng, uint16_t cast_degree,
                    M4_IChing_Cast* out);
 int m4_draw_tarot(M4_Sacred_Random* rng, uint8_t count, uint16_t cast_degree,
                   M4_Tarot_Draw* out);
+
+/* Open a session: inherit kairos + identity, draw the conditioning cards.
+ * Seeds the RNG deterministically from kairos (mixed with identity) so the
+ * same moment recalls the same draw. Returns 0 on success, <0 on error.
+ * The drawn cards land in out->tarot_psyche_anchor as session context. */
+int m4_session_open(M4_Identity_Matrix* identity, uint64_t kairos,
+                    M4_Session_Frame* out);
 
 /* Consent-gated true random */
 bool m4_sacred_random(M4_Sacred_Random* rng, uint8_t* buf, size_t len);

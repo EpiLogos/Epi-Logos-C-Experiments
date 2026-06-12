@@ -11,6 +11,7 @@ import {
   KernelBridgeRpcEnvelope,
   KernelBridgeRuntimeSnapshot,
   MathemeHarmonicProfile,
+  TranscriptionalClockPacket,
   validateKernelBridgeRpcEnvelope,
 } from "../src/kernel-bridge.js";
 import { KERNEL_BRIDGE_REQUIRED_CAPABILITIES } from "../../../../../../Body/M/epi-theia/extensions/m-extension-runtime/src/common/bridge-api.js";
@@ -55,6 +56,7 @@ describe("Kernel bridge contract package", () => {
       "invokeGatewayRpc",
       "depositKernelObservation",
       "requestReviewEvidence",
+      "s2.parashaktiCorrespondences",
     ]);
     expect(KERNEL_BRIDGE_CAPABILITY_NAMES).toEqual([
       ...KERNEL_BRIDGE_REQUIRED_CAPABILITIES,
@@ -227,6 +229,114 @@ describe("Kernel bridge contract package", () => {
       }),
     ).toThrow(/CPF|unrecognized_keys/i);
   });
+
+  it("parses a single-card CP point without coercing it into a sixfold frame", () => {
+    const packet = TranscriptionalClockPacket.parse(
+      transcriptionalPacket({
+        oracleFrame: oracleFrame({
+          frameId: "frame:single:P2",
+          spreadScale: "single-card",
+          positions: [position("P2", 0, "CP4.2")],
+        }),
+        cpPositionRef: "CP4.2",
+      }),
+    );
+    expect(packet.oracleFrame.positions).toHaveLength(1);
+    expect(packet.cpPositionRef).toBe("CP4.2");
+  });
+
+  it("parses a three-card compressed CP-set as three actual positions", () => {
+    const packet = TranscriptionalClockPacket.parse(
+      transcriptionalPacket({
+        oracleFrame: oracleFrame({
+          frameId: "frame:triad:P1-P2-P3",
+          spreadScale: "compressed-triad",
+          positions: [
+            position("P1", 0, "CP4.1"),
+            position("P2", 1, "CP4.2"),
+            position("P3", 2, "CP4.3"),
+          ],
+        }),
+        cpPositionRef: "CP4.2",
+      }),
+    );
+    expect(packet.oracleFrame.spreadScale).toBe("compressed-triad");
+    expect(packet.oracleFrame.positions.map((p) => p.cpPositionRef)).toEqual([
+      "CP4.1",
+      "CP4.2",
+      "CP4.3",
+    ]);
+  });
+
+  it("parses sixfold CP traverse complementary pairs from declared position pairs", () => {
+    const packet = TranscriptionalClockPacket.parse(
+      transcriptionalPacket({
+        oracleFrame: oracleFrame({
+          frameId: "frame:sixfold:P0-P5",
+          spreadScale: "sixfold-ql-traverse",
+          positions: [
+            position("P0", 0, "CP4.0"),
+            position("P1", 1, "CP4.1"),
+            position("P2", 2, "CP4.2"),
+            position("P3", 3, "CP4.3"),
+            position("P4", 4, "CP4.4"),
+            position("P5", 5, "CP4.5"),
+          ],
+          complementaryPairs: [
+            ["P0", "P5"],
+            ["P1", "P4"],
+            ["P2", "P3"],
+          ],
+        }),
+        cpPositionRef: "CP4.0",
+      }),
+    );
+    expect(packet.oracleFrame.positions).toHaveLength(6);
+    expect(packet.oracleFrame.complementaryPairs).toEqual([
+      ["P0", "P5"],
+      ["P1", "P4"],
+      ["P2", "P3"],
+    ]);
+  });
+
+  it("parses a Night' inverse pass without prose-derived complementary pairs", () => {
+    const packet = TranscriptionalClockPacket.parse(
+      transcriptionalPacket({
+        oracleFrame: oracleFrame({
+          frameId: "frame:night-prime:P5-P0",
+          spreadScale: "night-inverse-pass",
+          traversalDirection: "night-prime",
+          positions: [
+            position("P5", 0, "CP4.5"),
+            position("P4", 1, "CP4.4"),
+            position("P3", 2, "CP4.3"),
+            position("P2", 3, "CP4.2"),
+            position("P1", 4, "CP4.1"),
+            position("P0", 5, "CP4.0"),
+          ],
+          complementaryPairs: [["P5", "P0"]],
+        }),
+        cpPositionRef: "CP4.5",
+      }),
+    );
+    expect(packet.oracleFrame.traversalDirection).toBe("night-prime");
+    expect(packet.oracleFrame.complementaryPairs).toEqual([["P5", "P0"]]);
+  });
+
+  it("rejects packets whose cpPositionRef is absent from reading_frame.positions[]", () => {
+    expect(() =>
+      TranscriptionalClockPacket.parse(
+        transcriptionalPacket({
+          oracleFrame: oracleFrame({
+            frameId: "frame:single:P0",
+            spreadScale: "single-card",
+            positions: [position("P0", 0, "CP4.0")],
+          }),
+          cpPositionRef: "CP4.5",
+        }),
+      ),
+    ).toThrow(/positions/);
+  });
 });
 
 function sampleVakAddress() {
@@ -237,5 +347,36 @@ function sampleVakAddress() {
     CF: "(4.0/1-4.4/5)",
     CFP: "CFP0",
     CS: { code: "CS0", direction: "Day" },
+  };
+}
+
+function position(key: string, ordinal: number, cpPositionRef: string) {
+  return {
+    key,
+    ordinal,
+    cpPositionRef,
+    vak: sampleVakAddress(),
+  };
+}
+
+function oracleFrame(overrides = {}) {
+  return {
+    frameId: "frame:single:P0",
+    spreadScale: "single-card",
+    positions: [position("P0", 0, "CP4.0")],
+    complementaryPairs: [],
+    ...overrides,
+  };
+}
+
+function transcriptionalPacket(overrides = {}) {
+  return {
+    packetId: "tcp:test",
+    profileGeneration: 12,
+    vak: sampleVakAddress(),
+    oracleFrame: oracleFrame(),
+    cpPositionRef: "CP4.0",
+    provenanceHandles: ["profile:12"],
+    ...overrides,
   };
 }

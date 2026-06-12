@@ -263,56 +263,77 @@ Add `pub personal_pole: Option<PersonalPoleProjection>` to `MathemeHarmonicProfi
 /// Public-current profiles MUST have `personal_pole: None` — strict invariant
 /// enforced by `assert!(profile.privacy_class == PublicCurrentContext
 ///                       || profile.personal_pole.is_some())` at profile-build.
+/// ══════════════════════════════════════════════════════════════════════════
+/// DR-M4-3 STRICT INVARIANT — no raw bodies cross the bus.
+///
+/// Sensitive fields (quaternions, bioquaternion state, pattern packets,
+/// Vāma recognition) are `OpaqueProtectedHandle<...>` values — NEVER raw
+/// `[f32; 4]` or body structs. The profile bus exposes handles only;
+/// decomposition `(q_b, q_p)` is reachable through the handle at the
+/// protected-local consumer side but never via the bus directly.
+///
+/// Public-safe fields (resonance scalar, elemental balance, torus-knot
+/// phase) MAY be surfaced as plain typed values.
+/// ══════════════════════════════════════════════════════════════════════════
 pub struct PersonalPoleProjection {
     /// The natal-baseline personal quaternion (Kerykeion-derived per DR-M4-2 clause 1).
     /// Lifted from `PersonalIdentityProfile.q_personal` (personal_identity.rs:104).
-    /// Surfaced so the cymatic renderer never re-derives from natal data.
-    pub q_personal: [f32; 4],
+    /// Opaque handle — the raw quaternion body never crosses the bus.
+    pub q_personal: OpaqueProtectedHandle<[f32; 4]>,
 
     /// The live composed quaternion `Q_identity · Q_transit · Q_activity`
     /// (personal_identity.rs:177-186). Drives the psychoid field's medium-tuning.
-    pub q_composed: [f32; 4],
+    /// Opaque handle — the raw quaternion body never crosses the bus.
+    pub q_composed: OpaqueProtectedHandle<[f32; 4]>,
 
     /// The current Q_transit (somatic / astrological / temporal current at this tick).
     /// Read from M2/M4-1 sources via the activity-state effect chain.
-    pub q_transit: [f32; 4],
+    /// Opaque handle — the raw quaternion body never crosses the bus.
+    pub q_transit: OpaqueProtectedHandle<[f32; 4]>,
 
     /// The current Q_activity (live perturbation; decays per qActivityPolicy).
     /// Read from M4-3' PatternPacket emissions (when a packet has fired in this tick window).
-    pub q_activity: [f32; 4],
+    /// Opaque handle — the raw quaternion body never crosses the bus.
+    pub q_activity: OpaqueProtectedHandle<[f32; 4]>,
 
     /// The bimba/pratibimba decomposition reading of Q_composed.
     /// Computed via the proposed `decompose_bioquaternion(q_composed) -> (q_b, q_p)`
     /// per M4'-SPEC §7.3a — NOT independent input. Equivalent to the (q_b, q_p)
     /// substrate consumed by KernelEvalState (kernel.rs:155, 164-170).
-    pub bioquaternion: BioQuaternionState,
+    /// Opaque handle — the raw body state never crosses the bus.
+    pub bioquaternion: OpaqueProtectedHandle<BioQuaternionState>,
 
     /// The personal resonance with the current cosmic state.
     /// signed_dot, score, conjugate_form_character per PersonalResonance
     /// (personal_identity.rs:143-175). Already computed at kernel.rs:486
     /// — this surfaces it as a typed sub-record instead of three loose fields.
+    /// PUBLIC-SAFE: scalar metric, non-sensitive. Surfaced directly.
     pub resonance: PersonalResonance,
 
     /// The elemental balance (Earth/Fire/Water/Air weights summing to 1.0)
     /// from PersonalIdentityProfile.elemental_balance (personal_identity.rs:79-99).
     /// Surfaced for the lean identity sidebar's percentage bars.
+    /// PUBLIC-SAFE: aggregate percentages, non-sensitive. Surfaced directly.
     pub elemental_balance: ElementalBalance,
 
     /// The most recent PatternPacket handle from M4-3', if a packet has fired
     /// in this tick's activity window. Handle-only — the packet body lives
     /// protected-local under the M4-3 engine state.
-    pub pattern_packet_handle: Option<String>,
+    /// Opaque handle — the raw packet body never crosses the bus.
+    pub pattern_packet_handle: OpaqueProtectedHandle<Option<String>>,
 
     /// The (p, q) torus-knot phase coordinates for the identity trajectory
     /// per M4'-SPEC §7.3a / §7.11. Computed via Hopf projection from
     /// q_composed onto S². Two unit floats; the renderer threads them through
     /// the breath torus / cosmic torus / villarceau bundles (psychoid §7.2).
+    /// PUBLIC-SAFE: geometric projection angles, non-sensitive. Surfaced directly.
     pub torus_knot_phase: TorusKnotPhase,
 
     /// The currently-active Vāma śakti recognition (internal classifier output).
     /// User-visible only on contemplative-engagement deepening per DR-M4-2 clause 4.
     /// `None` when classifier is below confidence threshold or feature off.
-    pub vama_recognition: Option<VamaRecognition>,
+    /// Opaque handle — the raw recognition body never crosses the bus.
+    pub vama_recognition: OpaqueProtectedHandle<Option<VamaRecognition>>,
 }
 
 pub struct TorusKnotPhase {
@@ -385,7 +406,7 @@ This is the M' product surface owned at M4-5'. The render contract follows `m4-p
 
 **§5.3.1 Geometric scaffold (§7 of psychoid spec)**
 
-- **Dipyramid + full 6+6 P/P' mapping (DR-IG-6 corrected)** — the renderer carries 2 apex poles (P5/P5'), 4 top/base vertices (P1-P4), 4 inverted-base vertices (P1'-P4') interleaved by mirror law `x + y' = 5`, and 1 central axis-point (P0/P0', not a vertex) projected through the pole-to-pole axis. The geometric scaffold is the bounding shell of the psychoid field; it must not be read as "6 vertices = 6 QL positions." Rendered as faint geometric wireframe (the bounding shell, not a frame around a figure). Vertical apex-to-apex = head-top-to-base-of-spine; equatorial half-base = arm-span / 2.
+- **Dipyramid + full 6+6 P/P' mapping (DR-IG-6 corrected)** — the renderer carries 2 apex poles (P5/P5'), 4 top/base vertices (P1-P4), 4 inverted-base vertices (P1'-P4') interleaved by mirror law `x + y' = 5`, and 1 central axis-point (P0/P0', not a vertex) projected through the pole-to-pole axis. The mirror law keeps P0/P0' on the axis rather than assigning it to either base. The geometric scaffold is the bounding shell of the psychoid field; it must not be read as "6 vertices = 6 QL positions." Rendered as faint geometric wireframe (the bounding shell, not a frame around a figure). Vertical apex-to-apex = head-top-to-base-of-spine; equatorial half-base = arm-span / 2.
 - **Vertical sushumna axis** — central thread carrying chakra assemblage points (vertebrae of a luminous spine). Position-fixed; tilts only with macro-orientation gestures.
 - **Equatorial plane at heart-level** — the elemental-quaternion belt: four equatorial vertices render the four elemental colours per §5.3.4 below.
 - **Polar caps** — Aether-cap at crown radiates violet-luminous when scalar-positive cap active; Mineral-cap at root radiates gold-crystalline when scalar-negative cap dominant.

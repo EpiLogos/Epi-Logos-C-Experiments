@@ -44,6 +44,7 @@ Inherit cycle-2's no-ambient registry (plan 14). Cycle 3 extends with:
 | **`bedrock_link` computation** | CCT-6: kernel-substrate provenance chain proving profile-field values derive from `.rodata` | Tranche **CCT-6** in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md) |
 | **`pattern_packet_handle` source-of-truth** | CCT-7: M4-3' day-episode evidence aggregator consumed across M4, M5, integrated 4-5-0 | Tranche **CCT-7** in [`16-cross-cutting-closures.md`](16-cross-cutting-closures.md) |
 | **`cron_evening` Möbius hook scheduler** | M5-ARCHITECTURE.md §Möbius write-back: night-pass scheduler for Logos Atelier crystallisations; no scheduler owner | Tranche **12.9** (Moirai night-pass routing) extended |
+| **`anuttara_pentadic_trace` profile field** | 0/1 -> 5 hinge, paired Mahamaya 15s, `24*15=360`, `72*5=360`, and 384 line-change relation are canonical but need one typed runtime carrier | **10.P5** + **Track 36.1-36.7**; consumers: **4.14**, **24.18**, **29.15**, **25/26** recognition handoff |
 | ~~**Techne profile (7th of "Aletheia 7")**~~ **RESOLVED 2026-06-03 by DR-S4-TECHNE** | Was: S4 canon §14-Agent Roster lists Techne as Aletheia-7 member. **Now: DR-S4-TECHNE ratified — Techne is NOT an agent; it is Pleroma's atomic-skills substrate (Pleroma's second face alongside VAK).** No agent profile lands. Techne moves to Pleroma CONTRACT.md §Techne section. The 6 Aletheia subagents are techne-guardians. | RESOLVED — see DR-S4-TECHNE in 13-decision-register.md |
 
 ## Decision-Register Gate
@@ -67,11 +68,11 @@ The cycle does not close until ALL of the following are **VALIDATED** in `13-dec
 
 Cycle 3 is **route-able for m-dev** when:
 
-1. **G1 — Overview routed.** `node .codex/scripts/m-dev-plan-assess.mjs --reset --write --json --require-now <plan_folder>` returns clean ledger with all 16 tranches indexed (00-overview plus 01-15).
+1. **G1 — Overview routed.** `node .codex/scripts/m-dev-plan-assess.mjs --reset --write --json --require-now <plan_folder>` returns clean ledger with all active tranche files indexed. **Tranche-bearing files** (must appear in `plan.index.json`): 01-12, 15, 17-19, 21-32, 34, 36 — note 24/25/29 use `### Tranche NN.x —` headings (format normalised 2026-06-09; bare `### NN.x —` headings are NOT parsed by the assessor) and 34 carries Tranches 34.1/34.2. **Planning handoffs** (intentionally NOT indexed; they amend parent docs instead): 33 (amendments applied to tracks 04/05/06/08/09/10/12/16/17 in the 2026-06-09 working tree) and 35 (amendments NOT yet applied; see its §2 numbering note before applying). Reference docs 13/14/16/20 are not tranche queues. CAUTION: `--reset` wipes task statuses — use plain `--write` for re-index unless a true reset is intended.
 2. **G2 — Every matrix file present.** `for f in plan.runs/wave-{a-m{0,1,2,3,4,5},b-{kernel-bridge,theia-shell,agentic-layer,integrated-bimba}}-{reconciliation-,}matrix.md; do test -f "$f"; done` returns clean.
 3. **G3 — Every load-bearing UX claim classified.** Per-subsystem matrix files account for every claim in each UX doc; orphan rows above route to a tranche.
 4. **G4 — Every CONTRADICTION has a decision row.** Tranche 13 has 20+ rows covering every CONTRADICTION surfaced by Wave A or Wave B.
-5. **G5 — Every CODE-PENDING has a closing tranche.** Tranches 10.x for profile-spine; per-subsystem tranches for domain-pending; Tranche 12 for agentic-layer pending; Tranche 09 for graph-substrate pending. No silent pending markers.
+5. **G5 — Every CODE-PENDING has a closing tranche.** Tranches 10.x for profile-spine; per-subsystem tranches for domain-pending; Tranche 12 for agentic-layer pending; Tranche 09 for graph-substrate pending; Track 36 for `anuttara_pentadic_trace` and the 0/1->5 runtime hinge. No silent pending markers.
 6. **G6 — Anti-greenfield posture verified.** No tranche touching `Body/S/S0`-`S5`, `Idea/Pratibimba/System`, or `Body/M/epi-tauri` is phrased as first-build except for explicitly allowed M' product surfaces (Logos Atelier, Canon Studio, Backend Studio, psychoid renderer, F_routing carrier, M1 played-K²-torus Bevy/wgpu extension per DR-M1-2, repurposed OmniPanel runtime per Tranche 15.2, daily-layer widgets if Tranche 11.3 chooses build-path).
 
 7. **G7 — UI foundation principles registered.** Tranche 15.1 has authored `ui-foundation-principles.md`; every extension contributing to a shell slot references it. (See Tranche 15 release gates.)
@@ -119,10 +120,10 @@ When all gates pass and every DR-row is VALIDATED, the cycle-3 plan set is ready
 
 ```
 Decisions (13)
-  → Profile-spine (10)
-    → Per-domain (01-06, parallel where decisions permit)
-      → Integrated composition (07, 08, 09)
+  → Profile-spine (10 + 36.1-36.2)
+    → Per-domain (01-06 + 36.3/36.5/36.6, parallel where decisions permit)
+      → Integrated composition (07, 08, 09 + 36.4-36.5)
         → Shell + agentic closure (11, 12)
-          → No-orphan audit re-run (14)
+          → No-orphan audit re-run (14 + 36.7)
             → cycle-3 closed; cycle-4 inherits substrate
 ```

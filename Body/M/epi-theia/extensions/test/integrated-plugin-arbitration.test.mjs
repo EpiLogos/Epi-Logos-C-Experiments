@@ -15,19 +15,27 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const {
-    CompositionCoordinator,
+    CompositionCoordinator
+} = require('../integrated-composition/lib/common/composition-coordinator.js');
+const {
     COSMIC_ENGINE_LAYOUT,
     JIVA_SIVA_LAYOUT,
-    buildEmptyState,
     findNamedLayout,
-    NAMED_LAYOUTS,
+    NAMED_LAYOUTS
+} = require('../integrated-composition/lib/common/layout-claim.js');
+const { buildEmptyState } = require('../integrated-composition/lib/common/empty-state.js');
+const {
     ALL_INTEGRATED_COMMANDS,
     COMMAND_OPEN_COSMIC_ENGINE,
     COMMAND_OPEN_JIVA_SIVA
-} = require('../integrated-composition/lib/common/index.js');
+} = require('../integrated-composition/lib/common/commands.js');
 const { IntegratedBridgeGate } = require('../integrated-composition/lib/browser/bridge-gate.js');
 const { SharedBridgeAdapter } = require('../m-extension-runtime/lib/common/shared-bridge.js');
 
@@ -229,6 +237,17 @@ test('integrated bridge gate starts detached and flips with bridge status', () =
         onObservabilityEvent: () => ({ dispose: () => {} })
     };
     adapter.attachBridge(recording);
+});
+
+test('integrated bridge gate consumes the shared bridge-readiness primitive', () => {
+    const source = readFileSync(
+        resolve(__dirname, '..', 'integrated-composition', 'src', 'browser', 'bridge-gate.ts'),
+        'utf8'
+    );
+    assert.match(source, /classifyReadiness/);
+    assert.match(source, /BridgeReadinessBadge/);
+    assert.match(source, /useBridgeReadiness/);
+    assert.doesNotMatch(source, /bridge_unavailable[\s\S]*profile_missing_field[\s\S]*s2_graph_blocked[\s\S]*ready_public_current/);
 });
 
 test('integrated commands surface is exactly the five named by 08.T1', () => {

@@ -14,6 +14,7 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 // `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/
 // plan.runs/13-t2-s3-dispatch-extraction-evidence.md`.
 use epi_s3_gateway::dispatch::{classify_method, dispatch_plan_entry};
+use epi_s3_gateway_contract::TerminalBinding;
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -37,6 +38,7 @@ use super::cron;
 use super::devices;
 use super::epii;
 use super::events::GatewayEvent;
+use super::gnostic;
 use super::graph;
 use super::graphiti;
 use super::improve;
@@ -425,6 +427,21 @@ async fn dispatch_rpc(
             let identifier = session_identifier(&frame.params)?;
             // Snapshot before-state for provenance diff
             let before = store.resolve(&identifier).ok();
+            let terminal_binding = frame
+                .params
+                .get("terminalBinding")
+                .map(|value| {
+                    if value.is_null() {
+                        Ok(None)
+                    } else {
+                        serde_json::from_value::<TerminalBinding>(value.clone())
+                            .map(Some)
+                            .map_err(|err| {
+                                invalid_params_error(format!("invalid terminalBinding: {err}"))
+                            })
+                    }
+                })
+                .transpose()?;
             let patch = SessionPatch {
                 aliases: frame.params.get("aliases").and_then(|value| {
                     value.as_array().map(|items| {
@@ -561,6 +578,7 @@ async fn dispatch_rpc(
                     .params
                     .get("cmuxPaneId")
                     .map(|value| value.as_str().map(str::to_owned)),
+                terminal_binding,
                 model_override: frame
                     .params
                     .get("modelOverride")
@@ -1246,6 +1264,7 @@ async fn dispatch_rpc(
         | "s2.graph.pointer_web.compute"
         | "s2.graph.pointer_web.refresh"
         | "s2.graph.kernel_resonance.record"
+        | "s2.parashaktiCorrespondences"
         | "s2'.coordinate.resolve"
         | "s2'.retrieve"
         | "s2'.rerank"
@@ -1581,6 +1600,21 @@ async fn dispatch_rpc(
                 .map_err(internal_error)
         }
         "s5'.gnosis.context.retrieve" => epii::gnosis_context_retrieve(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.ingest" => gnostic::ingest(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.query" => gnostic::query(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.notebook" => gnostic::notebook(&frame.params)
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.status" => gnostic::status()
+            .map(DispatchResult::immediate)
+            .map_err(internal_error),
+        "s5'.gnostic.models" => gnostic::models()
             .map(DispatchResult::immediate)
             .map_err(internal_error),
         "s5'.epii.deposit" => epii::deposit(state_root, &frame.params)

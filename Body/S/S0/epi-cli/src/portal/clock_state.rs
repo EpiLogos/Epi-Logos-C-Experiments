@@ -1,6 +1,6 @@
 use std::sync::{Arc, Mutex};
 
-use portal_core::KernelProjection;
+use portal_core::{E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs, KernelProjection};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ORACLE FACES
@@ -593,8 +593,9 @@ pub fn sync_kernel_projection(s: &mut PortalClockState) {
         s.quintessence_quaternion,
         s.composed_quaternion,
         None,
-        None,
-        0.0,
+        &E4PersonalInputs::default(),
+        &E5HarmonicInputs::default(),
+        &E6VerifierInputs::default(),
     );
 }
 

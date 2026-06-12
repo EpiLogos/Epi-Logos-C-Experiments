@@ -12,6 +12,7 @@ pub mod bidirectional_sync;
 pub mod constraint;
 pub mod consumption;
 mod coordinate;
+pub mod core65_audit;
 pub mod cypher;
 pub mod dataset_import;
 pub mod doctor;
@@ -40,6 +41,11 @@ pub use consumption::{
 pub use coordinate::{
     cf_node_for_frame, convert_hash_to_m_family, extract_context_frames, wrap_context_frames,
     CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink,
+};
+pub use core65_audit::{
+    core_65_audit_payload, core_65_audit_plan, kernel_core_readiness_fact,
+    kernel_declared_core_relation_count, Core65AuditPlan, Core65AuditSummary, M0GraphReadinessFact,
+    CORE65_AUDIT_METHOD, KERNEL_CORE_RELATION_FAMILY,
 };
 pub use dataset_import::DatasetImporter;
 pub use doctor::{
@@ -71,10 +77,10 @@ pub use meta::{
     seed_source_hash, structural_state_aligned, write_graph_meta, GraphMeta,
 };
 pub use ontology::{
-    anuttara_property_mappings, epi_ontology_sha256, import_epi_ontology_with_n10s,
-    ontology_import_plan, record_ontology_bridge_facts, OntologyImportPlan,
-    OntologyPropertyMapping, EPI_ONTOLOGY_FORMAT, EPI_ONTOLOGY_TURTLE, EPI_ONTOLOGY_URI,
-    EPI_ONTOLOGY_VERSION_IRI, OWL2_RL_PROFILE, SHACL_REPORTING_MODE,
+    ananda_vortex_property_mappings, anuttara_property_mappings, epi_ontology_sha256,
+    import_epi_ontology_with_n10s, ontology_import_plan, record_ontology_bridge_facts,
+    OntologyImportPlan, OntologyPropertyMapping, EPI_ONTOLOGY_FORMAT, EPI_ONTOLOGY_TURTLE,
+    EPI_ONTOLOGY_URI, EPI_ONTOLOGY_VERSION_IRI, OWL2_RL_PROFILE, SHACL_REPORTING_MODE,
 };
 pub use pointers::{
     canonical_harmonic_bimba_relations, compute_coordinate_reference_projection,

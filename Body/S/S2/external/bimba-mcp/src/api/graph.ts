@@ -2018,6 +2018,7 @@ export async function embed(
   try {
     // Create embedding client
     const client = new GeminiEmbeddingClient();
+    const model = client.getModelVersion();
 
     // Generate embedding
     const vector = await client.embedText(text, taskType, dimensions);
@@ -2056,7 +2057,7 @@ export async function embed(
             embedding: embeddingJson,
             dimensions,
             taskType,
-            model: 'models/text-embedding-004',
+            model,
           }
         );
 
@@ -2074,7 +2075,7 @@ export async function embed(
       text,
       vector,
       dimensions,
-      model: 'models/text-embedding-004',
+      model,
       task_type: taskType,
       stored,
       store_entity_uuid: storeEntityUuid,
@@ -2124,6 +2125,7 @@ export async function embedBatch(
   try {
     // Create embedding client
     const client = new GeminiEmbeddingClient();
+    const model = client.getModelVersion();
 
     // Generate batch embeddings
     const vectors = await client.embedBatch(texts, taskType, dimensions);
@@ -2165,7 +2167,7 @@ export async function embedBatch(
               embedding: embeddingJson,
               dimensions,
               taskType,
-              model: 'models/text-embedding-004',
+              model,
             }
           );
 
@@ -2183,7 +2185,7 @@ export async function embedBatch(
         text,
         vector,
         dimensions,
-        model: 'models/text-embedding-004',
+        model,
         task_type: taskType,
         stored,
         store_entity_uuid: storeEntityUuid,

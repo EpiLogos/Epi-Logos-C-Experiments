@@ -1,6 +1,6 @@
 use crate::aspect::compute_aspects;
 use crate::codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
-use crate::kernel::KernelProjection;
+use crate::kernel::{E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs, KernelProjection};
 use crate::quaternion::{derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize};
 use crate::spanda::quantize_to_spanda_substage;
 use crate::transcription::DEGREE_TO_HEXAGRAM;
@@ -31,14 +31,18 @@ fn recompute_composed_quaternion_state(state: &mut PortalClockState) {
 }
 
 pub fn sync_kernel_projection(state: &mut PortalClockState) {
+    let e_4_inputs = E4PersonalInputs::default();
+    let e_5_inputs = E5HarmonicInputs::default();
+    let e_6_inputs = E6VerifierInputs::default();
     state.kernel_projection = KernelProjection::from_clock_state(
         state.generation / 12,
         state.tick12,
         state.quintessence_quaternion,
         state.composed_quaternion,
         None,
-        None,
-        0.0,
+        &e_4_inputs,
+        &e_5_inputs,
+        &e_6_inputs,
     );
 }
 

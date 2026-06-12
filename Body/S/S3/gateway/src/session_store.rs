@@ -9,7 +9,9 @@ use epi_s3_redis_context::{CacheTier, RedisCache, RedisConfig, RedisKey};
 
 use super::{bootstrap, subagents, transcripts, workspace};
 
-pub use epi_s3_gateway_contract::{SessionPatch, SessionRecord};
+pub use epi_s3_gateway_contract::{
+    SessionPatch, SessionRecord, TerminalBinding, TerminalCaptureMode, TerminalStatus,
+};
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct CreateSessionContext {
@@ -106,6 +108,7 @@ impl SessionStore {
             cmux_workspace: None,
             cmux_surface: None,
             cmux_pane_id: None,
+            terminal_binding: None,
             active_agent_id: canonical_key.to_owned(),
             subagent_lineage: Vec::new(),
             workspace_root: workspace::derive_workspace_root(&self.gate_root, canonical_key, &[])
@@ -244,6 +247,7 @@ impl SessionStore {
             "vaultRoot": record.vault_root,
             "sourceSessionKey": record.source_session_key,
             "sourceSessionKind": record.source_session_kind,
+            "terminalBinding": record.terminal_binding,
             "updatedAtMs": record.updated_at_ms,
         })
         .to_string();
@@ -381,6 +385,15 @@ impl SessionStore {
             }
             if let Some(cmux_pane_id) = patch.cmux_pane_id {
                 record.cmux_pane_id = cmux_pane_id;
+            }
+            if let Some(terminal_binding) = patch.terminal_binding {
+                validate_terminal_binding_patch(
+                    &canonical_key,
+                    record.terminal_binding.as_ref(),
+                    terminal_binding.as_ref(),
+                    now_ms()?,
+                )?;
+                record.terminal_binding = terminal_binding;
             }
             if let Some(model_override) = patch.model_override {
                 record.model_override = model_override;
@@ -641,6 +654,7 @@ fn copy_camel_aliases(object: &mut Map<String, Value>) {
         ("cmux_workspace", "cmuxWorkspace"),
         ("cmux_surface", "cmuxSurface"),
         ("cmux_pane_id", "cmuxPaneId"),
+        ("terminal_binding", "terminalBinding"),
         ("active_agent_id", "activeAgentId"),
         ("subagent_lineage", "subagentLineage"),
         ("workspace_root", "workspaceRoot"),
@@ -690,6 +704,89 @@ fn string_array(value: Option<&Value>) -> Vec<String> {
                 .collect()
         })
         .unwrap_or_default()
+}
+
+fn validate_terminal_binding_patch(
+    target_session_key: &str,
+    current: Option<&TerminalBinding>,
+    next: Option<&TerminalBinding>,
+    now_ms: u128,
+) -> Result<(), String> {
+    let Some(binding) = next else {
+        return Ok(());
+    };
+
+    let active_terminal =
+        binding.tmux_pane_id.is_some() || binding.terminal_status == Some(TerminalStatus::Attached);
+    if active_terminal && binding.attached_session_key.as_deref() != Some(target_session_key) {
+        return Err(format!(
+            "terminal binding for {target_session_key} must set attachedSessionKey to the target session before attaching a tmux pane"
+        ));
+    }
+
+    validate_terminal_lease_extension(current, binding)?;
+    validate_terminal_capture_policy(binding, now_ms)?;
+    Ok(())
+}
+
+fn validate_terminal_lease_extension(
+    current: Option<&TerminalBinding>,
+    next: &TerminalBinding,
+) -> Result<(), String> {
+    let Some(next_lease) = next.lease.as_ref() else {
+        return Ok(());
+    };
+    let Some(next_expires_at) = next_lease.lease_expires_at_ms else {
+        return Ok(());
+    };
+    let current_expires_at = current
+        .and_then(|binding| binding.lease.as_ref())
+        .and_then(|lease| lease.lease_expires_at_ms)
+        .unwrap_or(0);
+
+    if next_expires_at > current_expires_at
+        && (blank(next_lease.lease_owner.as_deref()) || blank(next_lease.lease_purpose.as_deref()))
+    {
+        return Err(
+            "terminal binding lease extensions require leaseOwner and leasePurpose".to_owned(),
+        );
+    }
+
+    Ok(())
+}
+
+fn validate_terminal_capture_policy(binding: &TerminalBinding, now_ms: u128) -> Result<(), String> {
+    let Some(capture_policy) = binding.capture_policy.as_ref() else {
+        return Ok(());
+    };
+    if capture_policy.mode == TerminalCaptureMode::MetadataOnly {
+        return Ok(());
+    }
+
+    if capture_policy.max_lines.is_none() || blank(capture_policy.redaction_policy.as_deref()) {
+        return Err(
+            "terminal capture beyond metadata-only requires capturePolicy.maxLines and capturePolicy.redactionPolicy"
+                .to_owned(),
+        );
+    }
+
+    let non_expired_lease = binding
+        .lease
+        .as_ref()
+        .and_then(|lease| lease.lease_expires_at_ms)
+        .map(|lease_expires_at_ms| lease_expires_at_ms > now_ms)
+        .unwrap_or(false);
+    if !non_expired_lease {
+        return Err(
+            "terminal capture beyond metadata-only requires a non-expired lease".to_owned(),
+        );
+    }
+
+    Ok(())
+}
+
+fn blank(value: Option<&str>) -> bool {
+    value.map(str::trim).unwrap_or("").is_empty()
 }
 
 fn now_ms() -> Result<u128, String> {

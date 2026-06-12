@@ -21,6 +21,7 @@ fn main() {
         .file("../epi-lib/src/pointer_web.c")
         // M-branches
         .file("../epi-lib/src/m0.c")
+        .file("../epi-lib/src/m0_verifier.c")
         .file("../epi-lib/src/m1.c")
         .file("../epi-lib/src/m2.c")
         .file("../epi-lib/src/m3.c")

@@ -89,3 +89,47 @@ Consume as-is — `Body/S/S2/graph-schema/src/lib.rs` 65-relation registry + `an
    Implementation targets: `Body/S/S1/hen-compiler-core/src/graph_promotion.rs`, Hen artifact evidence collection, S2 `sync_coordinator` property proposal guidance, and S3 gateway receipts for `s1'.type.classify_c_layer`, `s1'.entity.promote_to_type`, and `s1'.world.graduate`. Smart Env remains read-only evidence; it must not mutate graph canon directly.
 
    Verification: `cargo test --offline --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test c_layer_typology_classification`; `cargo test --offline --manifest-path Body/S/S1/hen-compiler-core/Cargo.toml --test entity_candidate_lifecycle`; graph-promotion fixture for a C2 entity candidate includes `type_coordinate = C2`, aliases, candidate state, and accepted wikilinks; fixture for a C5 graduation receipt includes source C authority path and flat World target.
+
+13. **9.13 — `epi canon coord` depth ladder + canon-CLI surface family** *(spec-ahead-integration; depends on Tranche 5.23, DR-M4-4, CCT-16, CCT-15; cross-link Tranche 17.28, Track 11)*
+
+    Land the token-lean canon distribution surface that makes the q_ wisdom-curation economy (per Tranche 6.12) usable: a single CLI primitive that reads concatenated `q_*_{i?}_*` content properties + `qm_*_{i?}_*` provenance from Bimba and returns canonical packets at four depth rungs. This is the "pithy foundation" the cycle-3 synthesis identified as load-bearing for every agent dispatch — currently the canon delivery path is `CLAUDE.md` auto-injection (~9k tokens unconditionally), `bimba-mcp.spec_retrieve` (MCP-only), and `epi core knowing` (the live exemplar, but framed as an inspector not a canon portal). This tranche unifies them under a canonical CLI surface family.
+
+    **CLI surface family** (lives at [`Body/S/S0/epi-cli/src/canon/`](../../../../../Body/S/S0/epi-cli/src/canon/) — new module *extending* the existing `core knowing` engine, NOT greenfield):
+
+    ```
+    epi canon coord <COORD> --depth <pithy|qv-detail|relational|seed> [--json]
+    epi canon kernel [--json]
+    epi canon agent <path> --section <sattva|frame|capability|rupa|ontology|temporal> [--json]
+    epi canon residency [--target idea|hen]
+    epi canon kit <role> [--json]
+    ```
+
+    **Depth ladder semantics** (consume the Tranche 5.23 vocabulary; render via locality-aware concatenation per CCT-16 semantic.rs update):
+
+    - **`pithy`** — concatenation of `q_5_*_*` + `q_5'_*_*` + `q_1_*_*` + `q_1'_*_*` (the kernel essence — definition + integration archetypes, both phases). Target: ~80 tokens. Used by agent dispatch envelopes (per Tranche 12.26 two-call pattern).
+    - **`qv-detail`** — all `q_*_*` and `q_*'_*` content properties for the node, ordered per Tranche 5.23 concatenation contract. Target: ~250-500 tokens depending on density.
+    - **`relational`** — `pithy` + the node's `q_4_{i?}_locality_signature` expanded with one-hop adjacent-node pithy excerpts (the locality layer per Tranche 5.23). Target: ~400-800 tokens. Used for context-rich agent dispatch where neighbourhood matters.
+    - **`seed`** — raw seed file from [`Idea/Bimba/Seeds/`](../../) for the coordinate. Target: variable, can be 2k-15k tokens. Used for canon-development pair-work.
+
+    **Additional canon surfaces:**
+
+    - `epi canon kernel` — emits the ~1.5k-token universal canon kernel: the `#` operator definition, the 6×6 family matrix (P/S/T/M/L/C × #0..#5) with pithy per cell, the 7 CF roots, the residency law summary. Built by concatenating `pithy` of the kernel coordinates (per the `bimba-vault-map` canonical seed). Designed to REPLACE roughly half of `CLAUDE.md`'s unconditional auto-injection (M-branch status, planet model, 72-fold bridge, anuttara languification become on-demand).
+    - `epi canon agent <path> --section <s>` — the per-agent ANIMA.md 6-section slicer. Sections per [`anima/S4'/agents/`](../../../../../Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/) convention: `rupa`, `ontology`, `frame`, `temporal`, `capability`, `sattva`. Used by Anima subagent dispatch for the per-agent canon delivery contract (per the cycle-3 synthesis: `epi canon kernel` + `epi canon agent X --section sattva` is the two-call dispatch pattern).
+    - `epi canon residency` — prints the 3-bullet canon-boundary contract per [`bimba-vault-validate/SKILL.md`](../../../../../.claude/skills/bimba-vault-validate/SKILL.md) residency law: canon = `Idea/Bimba/`, `Idea/Pratibimba/`, `Idea/Empty/`; Hen is the only authority that writes canonical Forms; agents NEVER write directly. Cheap, prevents per-agent re-derivation.
+    - `epi canon kit <role>` — composite surface for one agent role (`hen`, `chronos`, `aletheia`, `epii`, `anima`, `sophia`, `psyche`, `nous`, `logos`, `eros`, `mythos`): kernel + relevant family pithy + the role's ANIMA.md `sattva` section + residency. The context-pack delivery contract for any subagent spawn.
+
+    **Implementation targets** (anti-greenfield: extend existing engines):
+    - `Body/S/S0/epi-cli/src/canon/mod.rs` — new module wrapping the existing `knowing::build_family_dossier_with_mode` engine; routes by subcommand to per-depth renderers.
+    - `Body/S/S0/epi-cli/src/canon/coord.rs` — the depth-ladder renderer; reads from Bimba via the gateway's `s2'.coordinate.resolve` method (per Track 11 / Theia parity) with fallback to direct Neo4j on gateway absence.
+    - `Body/S/S0/epi-cli/src/canon/kernel.rs` — kernel composition; pre-rendered cache at `~/.epi-logos/canon/kernel.cache.json` invalidated on `graph_revision` bump (per CCT-16(v)).
+    - `Body/S/S0/epi-cli/src/canon/agent.rs` — per-agent ANIMA.md slicer; reads from [`anima/S4'/agents/`](../../../../../Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/) directly (vault read, no graph hit).
+    - `Body/S/S0/epi-cli/src/canon/residency.rs` + `kit.rs` — composite/literal surfaces.
+    - Clap subcommand wiring in `epi-cli/src/main.rs` adding `Canon` arm peer to `Vault`, `Graph`, `Gate`, `Nara`.
+
+    **Decoupling from CLAUDE.md auto-injection** (downstream benefit, NOT this tranche's scope but enabled): once `epi canon` is live, [`CLAUDE.md`](../../../../../CLAUDE.md) can be reorganised so the unconditional auto-load is ~1.5k tokens (kernel-equivalent) and the rest becomes on-demand. That repackaging is a separate cycle-3-or-cycle-4 follow-up tranche; this tranche's acceptance does NOT depend on it.
+
+    **Acceptance gate:** `epi canon coord S3 --depth pithy` returns concatenated `q_5_*` + `q_5'_*` + `q_1_*` + `q_1'_*` content from the S3 Bimba node in under 100 tokens; `epi canon coord S3 --depth relational` includes the `q_4_{i?}_locality_signature` and one-hop adjacent pithy; `epi canon kernel` returns under 2k tokens; `epi canon agent anima/sophia --section sattva` returns Sophia's Sattva section from her ANIMA.md; `epi canon residency` prints the 3-bullet contract; `epi canon kit hen` returns the composite kit. Output for the same query is byte-identical to `bimba-mcp.spec_retrieve` (per Tranche 17.28 parity contract).
+
+    Verification: `cargo test -p epi-cli --test canon_coord_depth_ladder` asserts each rung's token budget within tolerance and content shape; `cargo test -p epi-cli --test canon_kernel_under_2k_tokens`; `cargo test -p epi-cli --test canon_agent_section_slice` against fixture ANIMA.md; `cargo test -p epi-cli --test canon_residency_literal_output`; `cargo test -p epi-cli --test canon_kit_composite` returns expected kit shape for `hen` and `aletheia` roles; integration test `cargo test -p epi-cli --test canon_matches_bimba_mcp` confirms byte-identity with the MCP surface (gates against Tranche 17.28).
+
+    Cross-track hooks: Tranche **5.23** defines the vocabulary this CLI reads; Tranche **17.28** mirrors this CLI as the MCP wire format; CCT-16(v) provides the `graph_revision` invalidation signal for the kernel cache; Tranche **6.12** is the upstream wisdom loop whose accepted proposals appear in this CLI's output; Track **11** (Theia shell) should consume this CLI rather than duplicate the rendering.

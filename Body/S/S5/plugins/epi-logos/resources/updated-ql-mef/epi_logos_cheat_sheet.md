@@ -25,7 +25,7 @@ Self-Identity as **(No)Name** (Śiva / Prakāśa / Aham) and **Power** (Śakti /
 | **P2** | How? | Dynamis / Operation | Word | Mythic (2-dim) | L2 ↔ L3' | Air | /Self/Thought/Challenges/ | ./? |
 | **P3** | Who/Which? | Pattern / Identity | Logos | Mental-Rational (3-dim) | L3 ↔ L2' | Water | /Self/Thought/Patterns/ | ./? |
 | **P4** | Where/When? | Context / Horizon | Son | Integral (4-dim) **[LEMNISCATE]** | L4 ↔ L1' | Earth | /Self/Thought/Discovery/ | ./? |
-| **P5** | Why-for? | Synthesis / Integration | Image | Supermental / Samāveśa **[MÖBIUS]** | L5 ↔ L0' | Aether | /Self/Thought/Insight/ | ./? |
+| **P5** | Why-for? | Quintessence — Synthesis / Integration | Image | Supermental / Samāveśa **[MÖBIUS]** | L5 ↔ L0' | Salt | /Self/Thought/Insight/ | ./? |
 
 ### Night Positions (Klein Bottle — Non-Orientable, Implicate)
 
@@ -36,7 +36,7 @@ Self-Identity as **(No)Name** (Śiva / Prakāśa / Aham) and **Power** (Śakti /
 | **P2'** | How? → Obstruction | Shadow of Dynamic / Blockers | Sacrifice | /Self/Thought/Presence/ | . |
 | **P3'** | Who? → Hidden Pattern | Recurrence beneath recognition | Decision | /Self/Thought/Temporality/ | . |
 | **P4'** | Where? → Missed Context | Expanding horizons / Discovery **[LEMNISCATE⁻¹]** | Love | /Self/Thought/Care/ | . |
-| **P5'** | Why-for? → Crystallization | Insight from Night arc **[KLEIN RETURN]** | Work | /Self/Thought/Releasement/ | . |
+| **P5'** | Why-for? → Crystallization | Insight from Night arc — Quintessence **[KLEIN RETURN]** | Work | /Self/Thought/Releasement/ | . |
 
 ### Klein Phase Map
 ```
@@ -153,12 +153,12 @@ Phase B (Night,.): P0' → P1' → P2' → P3' → P4' → P5'
 
 | Sub | Element | Character |
 |-----|---------|-----------|
-| L2-0' | Aether | Quintessence, fifth element |
+| L2-0' | Aether | Fifth element — *prima materia* and *ultima materia*; psychoid ground of transformation |
 | L2-1' | Earth | Stability, grounding, material |
 | L2-2' | Water | Flow, emotion, transformation |
 | L2-3' | Air | Intellect, communication, movement |
 | L2-4' | Fire | Transformation, will, purification |
-| L2-5' | Mineral | Crystallized result of transformation |
+| L2-5' | Salt | Crystallized result of transformation — the fixed body (formerly tabulated as Mineral) |
 
 #### L3' — Chronological | Hegel / Aion / Dialectic of Spirit | Fire
 

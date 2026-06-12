@@ -5,8 +5,10 @@ import {
     KERNEL_BRIDGE_API,
     type KernelBridgeAPI
 } from '@pratibimba/kernel-bridge';
+import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import { IdeShellBridgeGate } from './bridge-gate';
+import { PrivacyDropFeed } from './services/privacy-drop-feed';
 
 /**
  * Bimba coordinate tree — Track 05 T4.
@@ -31,9 +33,12 @@ export class CoordinateTreeWidget extends ReactWidget {
     @inject(KERNEL_BRIDGE_API)
     protected readonly bridge!: KernelBridgeAPI;
 
+    @inject(PrivacyDropFeed)
+    protected readonly privacyDropFeed!: PrivacyDropFeed;
+
     protected root: CoordinateNode | null = null;
     protected error: string | null = null;
-    protected privacyDropped: number = 0;
+    activeCoordinate: string | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -56,7 +61,7 @@ export class CoordinateTreeWidget extends ReactWidget {
                 vak: null
             });
             if (!isPrivacySafe(receipt.privacyClass)) {
-                this.privacyDropped += 1;
+                this.recordPrivacyDrop(receipt.privacyClass);
                 this.root = null;
                 this.error = `Privacy class "${receipt.privacyClass}" rejected by ide-shell gate`;
             } else {
@@ -70,6 +75,14 @@ export class CoordinateTreeWidget extends ReactWidget {
             this.error = err instanceof Error ? err.message : String(err);
         }
         this.update();
+    }
+
+    protected get privacyDropped(): number {
+        return this.privacyDropFeed.aggregate.byWidget[this.id] ?? 0;
+    }
+
+    protected recordPrivacyDrop(privacyClass: string | null | undefined): void {
+        this.privacyDropFeed.record(this.id, privacyClass as string);
     }
 
     protected override render(): React.ReactNode {
@@ -88,6 +101,10 @@ export class CoordinateTreeWidget extends ReactWidget {
             <div className="ide-shell-widget-root" data-test="coordinate-tree-root">
                 <header className="ide-shell-widget-header">
                     <h3>{CoordinateTreeWidget.LABEL}</h3>
+                    <BridgeReadinessBadge
+                        bridge={this.bridge}
+                        bindingKey="s2'.coordinate.resolve"
+                    />
                 </header>
                 <section className="ide-shell-widget-detail">
                     {this.error !== null && (

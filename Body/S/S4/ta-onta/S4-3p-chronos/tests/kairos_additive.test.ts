@@ -1,6 +1,9 @@
 import { describe, it, afterEach } from "node:test";
 import { strict as assert } from "node:assert";
-import { fetchKairosData } from "../S3'/kairos-python-adapter.ts";
+import { mkdtemp, writeFile, chmod, rm, mkdir } from "node:fs/promises";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+import { fetchKairosData, mercurius_kairos_now } from "../S3'/kairos-python-adapter.ts";
 
 // Per S4-3'-SPEC §"Test Obligations": "Kairos tests should prove
 // feature-flag/additive behavior and no hard dependency when data is absent."
@@ -20,9 +23,15 @@ const PARAMS = {
 
 describe("Chronos Kairos — additive feature flag", () => {
   const prior = process.env.KAIROS_ENABLED;
+  const priorPath = process.env.PATH;
+  const priorChartPath = process.env.KAIROS_TEST_CHART_PATH;
   afterEach(() => {
     if (prior === undefined) delete process.env.KAIROS_ENABLED;
     else process.env.KAIROS_ENABLED = prior;
+    if (priorPath === undefined) delete process.env.PATH;
+    else process.env.PATH = priorPath;
+    if (priorChartPath === undefined) delete process.env.KAIROS_TEST_CHART_PATH;
+    else process.env.KAIROS_TEST_CHART_PATH = priorChartPath;
   });
 
   it("KAIROS_ENABLED=false short-circuits with the disabled error (no subprocess)", async () => {
@@ -42,5 +51,47 @@ describe("Chronos Kairos — additive feature flag", () => {
       assert.doesNotMatch(err.message, /ENOENT|no such file|chart/i);
       return true;
     });
+  });
+
+  it("mercurius_kairos_now returns M4_Temporal_Now with ten canonical planet slots", async () => {
+    const root = await mkdtemp(join(tmpdir(), "kairos-mercurius-"));
+    try {
+      const chartOutputPath = "Pratibimba/Self/natal-chart.json";
+      const chartPath = join(root, chartOutputPath);
+      await mkdir(join(root, "Pratibimba", "Self"), { recursive: true });
+
+      const bin = join(root, "bin");
+      await mkdir(bin);
+      const epiPath = join(bin, "epi");
+      const chart = {
+        sun_degree: 11,
+        moon_degree: 22,
+        planet_degrees: [11, 22, 33, 44, 55, 66, 77, 88, 99, 111],
+        planet_valid: 0x03ff,
+      };
+      await writeFile(
+        epiPath,
+        `#!/bin/sh\nprintf '%s' '${JSON.stringify(chart)}' > "$KAIROS_TEST_CHART_PATH"\n`,
+      );
+      await chmod(epiPath, 0o755);
+
+      process.env.KAIROS_TEST_CHART_PATH = chartPath;
+      process.env.PATH = `${bin}:${priorPath ?? ""}`;
+
+      const now = await mercurius_kairos_now({
+        ...PARAMS,
+        vault_root: root,
+        chart_output_path: chartOutputPath,
+        chronos_epoch: 1780000000,
+      });
+
+      assert.equal(now.degree, 11);
+      assert.equal(now.chronos_epoch, 1780000000);
+      assert.deepEqual(now.planet_degrees, [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]);
+      assert.equal(now.planet_valid, 0x03ff);
+      assert.equal(now.planet_degrees.length, 10);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 });

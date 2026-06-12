@@ -1,0 +1,35 @@
+{
+  "runId": "20260611T191817Z-29-T29.13",
+  "taskId": "29.T29.13",
+  "startedAt": "2026-06-11T19:18:17.440Z",
+  "owner": "codex-m-dev-29-t29-13",
+  "leaseExpiresAt": "2026-06-11T21:18:17.440Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.13",
+    "trackId": "29",
+    "tranche": "T29.13",
+    "title": "M4 protected-local boundary enforcement extended to geometric slots *(spec-ahead-integration; closes IP-15 + DR-M4-3 geometric enforcement)*",
+    "effort": null,
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "29.T29.12"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/composition-coordinator.ts::enforceProtectedLocalBoundary()"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

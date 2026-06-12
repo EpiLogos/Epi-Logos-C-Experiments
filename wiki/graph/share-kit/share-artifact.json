@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-06-12T21:54:58.921Z",
+  "vaultName": "Epi-Logos C Experiments",
+  "tagline": "A local-first map of Epi-Logos C Experiments: 0 sources compiled into 1 graph nodes and 5 wiki pages.",
+  "overview": {
+    "sources": 0,
+    "nodes": 1,
+    "edges": 0,
+    "pages": 5,
+    "communities": 1
+  },
+  "firstPartyOverview": {
+    "nodes": 1,
+    "edges": 0,
+    "pages": 5,
+    "communities": 1
+  },
+  "highlights": {
+    "topHubs": [
+      {
+        "nodeId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+        "degree": 0
+      }
+    ],
+    "bridgeNodes": [
+      {
+        "nodeId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+        "bridgeScore": 0
+      }
+    ],
+    "surprisingConnections": [],
+    "suggestedQuestions": [
+      "What sources would strengthen community Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...?",
+      "What connects Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr... to the rest of the vault?"
+    ]
+  },
+  "knowledgeGaps": [
+    "1 of 1 communities have 2 or fewer nodes — the graph may be fragmented."
+  ],
+  "shortPost": "I scanned Epi-Logos C Experiments with SwarmVault: 0 sources -> 5 wiki pages, 1 graph nodes, 0 edges.\nTop hubs: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr....\nThe graph is ready for its first surprising connection.\nEverything stays local. Try: npm install -g @swarmvaultai/cli && swarmvault quickstart ./your-repo",
+  "relatedNodeIds": [
+    "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+  ],
+  "relatedPageIds": [
+    "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+  ],
+  "relatedSourceIds": []
+}

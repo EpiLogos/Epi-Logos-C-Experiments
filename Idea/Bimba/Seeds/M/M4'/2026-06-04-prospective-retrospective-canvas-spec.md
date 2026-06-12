@@ -600,9 +600,9 @@ The briefing skill is a markdown skill that drives an inscription routine:
 |------|--------|------|---------|
 | `Body/S/S4/ta-onta/S4-0p-khora/modules/z-phase-vak.ts:36` | `direction: "Day"` → `sense: "prospective"` (alias `direction` kept for 1 release) | Rename | §1.2 |
 | `Body/S/S4/ta-onta/S4-4p-anima/modules/moirai-dispatch.ts:65,97` | `cs_direction: "Night'"` → `cs_sense: "retrospective"` (alias kept) | Rename | §1.2 |
-| `Body/S/S4/ta-onta/S4-0p-khora/modules/flow-watcher.ts` | New module — tranche-complete detection (explicit marker, quiet timer, file-open rhythm) | New | §3.2 |
-| `Body/S/S4/ta-onta/S4-0p-khora/extension.ts` | Add `khora_write_highlighted_inscription` primitive; wire `chronos_reentry` hook | Extension | §3.4, §3.5 |
-| `Body/S/S4/ta-onta/S4-3p-chronos/extension.ts` | Add `chronos_response_orbit` and `chronos_reentry` primitives | Extension | §3.3, §3.5 |
+| `Body/S/S4/ta-onta/S4-0p-khora/modules/flow-watcher.ts` | Landed module — tranche-complete detection (`tranche.complete.explicit`, `tranche.complete.quiet`, `tranche.complete.rhythm`) with 2s debounce, configurable marker, frontmatter quiet-duration parsing, inode-aware file-reentry handling | New | §3.2 |
+| `Body/S/S4/ta-onta/S4-0p-khora/extension.ts` | Landed `khora_write_highlighted_inscription` primitive and registered the Khora flow-watcher against session NOW + daily-note FS activity | Extension | §3.4, §3.5 |
+| `Body/S/S4/ta-onta/S4-3p-chronos/extension.ts` | Landed `chronos_response_orbit` and `chronos_reentry` primitives; response orbits schedule via `gate cron add`, re-entry writes retrospective surfacing through `khora_write_highlighted_inscription` | Extension | §3.3, §3.5 |
 | `Body/S/S4/ta-onta/S4-5p-aletheia/modules/janus-doorway.ts` | Add `janus_track_spreads`, `janus_evaluate_aliveness`, `janus_spread_resolved`, `janus_weight_session` | Extension | §4.2, §4.3 |
 
 **Gateway + SpacetimeDB (S3):**

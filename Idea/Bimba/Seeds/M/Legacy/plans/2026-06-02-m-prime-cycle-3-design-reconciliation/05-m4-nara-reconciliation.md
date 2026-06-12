@@ -162,6 +162,98 @@ Consume as-is — `personal_identity.rs::PersonalResonance` + `compose_personal_
 
     Verification: `test -f Body/S/S4/pi-agent/skills/anuttara-symbolic-parse/SKILL.md`; round-trip test: Verifier emits `#R0-0/1/A-T7-pending?` → LLM parses via skill → articulates response → response routes through Anima back to Verifier for re-check; contract test asserts the LLM cannot bypass the skill for raw symbolic-coordinate-string inputs.
 
+22. **5.22 — Nara LoRA + E_4 personal-energy substrate (Stream F of [[33-harmonic-energy-channel-handoff.md]] §2.6)** *(code-pending-closure; cross-link Tranche 6.10/6.11 Stream B, Tranche 6.10 Stream D, Tranche 12.24 Phase 2 Stream C; ML-Skill-Surface §3.1 + §3.2 + §7.1)*
+
+    Stand up the Nara skill family and the `E_4` personal-energy channel that the kernel's restructured `kernel_energy_evaluate` (Stream B) will consume and that the Riemannian Möbius descent (Stream D) will autograd through. E_4 is the personal/Nara substrate per the locked decision in [[33-harmonic-energy-channel-handoff.md]] frontmatter `dev_decisions`: "E_4 = personal/Nara substrate (PASU + kairos + q_personal + q_identity + planet_degrees + oracle charges + Nara-LoRA-adapted user content). Final." This tranche delivers the skill scaffold + struct + scalar-compute + autograd path + Apple-Silicon LoRA path + LoRA-adaptation pipeline behind a hard local-only privacy gate.
+
+    **Scaffold Nara skill family** at `Body/S/S4/ta-onta/S4-x/skills/{nara-voice-training, nara-journal-parser, mlx-lora}/` per [[M'-ML-SKILL-SURFACE-SPEC]] §4 residency rules. The exact S4 subpath (S4-4'-anima vs S4-5'-aletheia vs a dedicated S4-x carrier) is verified at scope-capture time against the residency table; the skill family name and the three component skills are fixed per [[M'-ML-SKILL-SURFACE-SPEC]] §3.1 + §3.2. `mlx-lora` is the custom-built Apple Silicon path per §3.1; `nara-voice-training` and `nara-journal-parser` are the corpus-handling skills per §3.2.
+
+    **Define `E4PersonalInputs` struct** (in the same crate that hosts the restructured `kernel_energy_evaluate` per Stream B) carrying:
+    - **PASU snapshot** — `q_identity[4]`, `q_personal[4]`, `birth_date`, `birth_location`, and the remaining PASU.md fields (`c_0_natal_chart_path`, `c_2_jungian`, `c_3_gene_keys`, `c_4_human_design`, `c_5_quintessence_hash`, `c_5_quintessence_clock`, `c_4_last_wound`) as a typed snapshot read at evaluation time. The struct holds the read; it does NOT mutate PASU.
+    - **Live kairotic state** — `planet_degrees[10]` (canonical mod-10 Sun[0]–Pluto[9] per MEMORY canon), current oracle charges (`pp/mm/mp/pn` per Stream A `m3_compute_charges` FFI), `tarot_psyche_anchor_signature`, and the kairos window identifier.
+    - **Nara-LoRA checkpoint reference** — path + version + privacy-class assertion (`local-only`). The struct carries a reference, not the weights themselves.
+
+    **Implement `compute_e_4_personal_energy(state, inputs) -> f32`** as the canonical scalar producer:
+    - Run the Nara-LoRA forward pass over the proposed configuration (the kernel's `state` argument — the candidate `(q_b, q_p)` configuration and any associated MathemeHarmonicProfile fields the personal channel reads).
+    - Evaluate the LoRA-adapted output against the PASU substrate carried by `inputs` — scalar evaluation measuring personal coherence ("does this configuration cohere with WHO this person is at THIS kairotic moment", per the handoff §1.1 E_4 amendment).
+    - Return the `f32` scalar that `kernel_energy_evaluate` weights at coefficient 4 in the canonical 4:5:6 / 15 combination.
+
+    **Implement autograd path through the forward pass** so Stream D's `kernel_energy_gradient` can compute `∇E_4` by Rust-native autograd through the Nara-LoRA forward pass. The handoff §1.2 §7.5 spec is explicit: "∇E_4: autograd through the Rust-native Nara-LoRA forward pass. E_4 is a scalar function of LoRA-adapted output evaluated against PASU substrate; the forward pass is differentiable end-to-end." Implementation language follows the locked decision: Rust-native default via `burn` or `candle`; PyO3+PyTorch fallback only as documented (file DR-EBM-IMPL — or a sibling DR-NARA-IMPL — at the decision point, not preemptively).
+
+    **Apple Silicon path via `mlx-lora` skill** — custom-built per [[M'-ML-SKILL-SURFACE-SPEC]] §3.1, dispatched when the runtime detects an Apple Silicon target. The skill wraps the MLX-based LoRA inference path so the Rust-native forward pass can route through MLX on Apple hardware while preserving the autograd contract above. The choice of MLX vs `burn`/`candle` is a runtime-target decision recorded in the kernel's per-tick provenance; it is NOT a privacy-class change (local-only holds on every path).
+
+    **LoRA-adaptation pipeline** — corpus = user's journal + dream record + phone writings (the corpus enumerated in handoff §1.1 E_4 amendment: "Nara-LoRA-adapted content (journal / dream / phone-writings corpus)"). Training trigger: `pi nara train-lora` CLI command in `epi-cli`. The pipeline reads the corpus from local-only sources, runs LoRA adaptation against the Nara base model, and writes the resulting checkpoint to a local-only path that `E4PersonalInputs.lora_checkpoint` references by version. Cache and checkpoint versioning mirror Stream C's pattern (per-document hash, model version key), all under the local-only privacy gate.
+
+    **Privacy gate — local-only, non-negotiable.** ALL Nara LoRA training and inference is `local-only` per [[M'-MODEL-SLOT-SPEC]]. The training pipeline refuses cloud routing; the inference path refuses cloud routing; the checkpoint write path refuses any non-local destination. Gate is asserted at the skill entry (analogous to Stream E's cloud-opt-in gate, but here the gate REFUSES cloud unconditionally — no opt-in available). The refusal points the user at the local-only privacy commitment in [[M'-MODEL-SLOT-SPEC]] rather than at an opt-in CLI.
+
+    **Independence + downstream blocks (per handoff §2.6):**
+    - **No upstream dependencies.** This tranche's execution does not require any other Stream A–H to land first. Canon-spec amendments needed alongside: none beyond §1; ML-Skill-Surface §3.1 / §3.2 already commits to `mlx-lora` + the Nara skill family.
+    - **Blocks Stream B** — the kernel.rs `total_energy` restructure (Tranche 6.10 / 6.11) needs `E4PersonalInputs` + `compute_e_4_personal_energy` to fill in the E_4 channel. Acceptable for Stream B to land first in stub-zero mode and to be re-wired against this tranche's outputs.
+    - **Blocks Stream D** — the Riemannian Möbius descent step (Tranche 6.10 Stream D) needs the autograd path through the Nara-LoRA forward pass to compute `∇E_4`. Stream D cannot land without this.
+
+    **Decisions already locked (cite handoff frontmatter dev_decisions):** E_4 = personal/Nara substrate (final); Rust-native default with PyO3+PyTorch as documented fallback only (DR-EBM-IMPL / DR-NARA-IMPL recorded at decision-point, not preemptively); all hyperparameters / thresholds from `~/.epi-logos/config.toml` — no hardcoded numbers; local-only privacy class for ALL Nara LoRA training and inference per M'-MODEL-SLOT-SPEC.
+
+    Verification (planning-tranche level — m-dev process verifies on execution): scope captured matches every bullet of handoff §2.6; struct field list matches PASU.md fields; `planet_degrees` is mod-10 (Sun[0]–Pluto[9]) per MEMORY canon, not [7] or [9]; autograd-path bullet cross-references mental-pole-mechanics §7.5 ∇E_4 line; Apple Silicon path names `mlx-lora` per ML-Skill-Surface §3.1; LoRA-adaptation pipeline names the journal/dream/phone-writings corpus; local-only privacy gate cites [[M'-MODEL-SLOT-SPEC]]; dependency block names Stream B + Stream D as blocked-downstream and explicitly states no upstream blockers.
+
+23. **5.23 — `q_` content vocabulary canonicalisation + `q_4_{i?}_locality_signature` extension** *(spec-ahead-integration; depends on DR-S1-6, DR-M4-4, CCT-16; cross-link Tranches 6.12, 9.13)*
+
+    Codify the `q_*_{i?}_*` content vocabulary that already exists implicitly in [`Body/S/S2/graph-schema/src/lib.rs:1340-1395`](../../../../../Body/S/S2/graph-schema/src/lib.rs) (`q_1_theoretical_thesis`, `q_2_sophia_logos_dialectic`, `q_2_instantiation_mode`, `q_3_dialectical_movement`, `q_4_historical_diagnosis`, `q_5_integration_template`, `q_5_conjunctive_threshold`) and the dataset-import fallback rule at [`dataset_import.rs:1525-1537`](../../../../../Body/S/S2/graph-services/src/dataset_import.rs) (unknown `q_*` → `q_5_*` bucket) as a canonical Form. Extend with the new **`q_4_{i?}_locality_signature`** key — the locality slot per the cycle-3 synthesis: a node's quintessence is not isolate but carries its key relations + immediate neighbourhood context, and `#4` (Context/Type archetype) is the right position for this.
+
+    **Canonical vocabulary table** (consume existing schema declaration + extend with locality):
+
+    | Key | Archetype | Function |
+    |---|---|---|
+    | `q_1_{i?}_theoretical_thesis` | #1 Definition | The node's essential thesis |
+    | `q_2_{i?}_sophia_logos_dialectic` | #2 Operation | Dialectical movement at this position |
+    | `q_2_{i?}_instantiation_mode` | #2 Operation | How the node instantiates |
+    | `q_3_{i?}_dialectical_movement` | #3 Pattern | Processual unfolding |
+    | `q_4_{i?}_historical_diagnosis` | #4 Context | Historical/genealogical reading |
+    | **`q_4_{i?}_locality_signature`** | **#4 Context** | **NEW — key-relations + neighbourhood essence** |
+    | `q_5_{i?}_integration_template` | #5 Integration | Integrative template |
+    | `q_5_{i?}_conjunctive_threshold` | #5 Integration | Conjunction/threshold point |
+    | `q_5_{i?}_*` (fallback) | #5 Integration | Unknown `q_` keys → `q_5_*` bucket per dataset-import law |
+
+    Each key may appear in both canonical (`q_5_integration_template`) and inverted (`q_5'_integration_template`) forms per DR-S1-6. The canonical Form lives at `Idea/Bimba/Seeds/M/q-vocabulary-canon.md` (new — created by this tranche) and is loaded by `hen_frontmatter_validate` as the authoritative key whitelist for the `q_` / `qm_` families. Unknown `q_*` keys → ERROR not silent drop (per the frontmatter-key law in MEMORY.md).
+
+    **Locality signature shape** (per refinement in the synthesis pass): `q_4_{i?}_locality_signature` is a structured string (or YAML sub-block) carrying (a) the node's parent in the family tree (e.g., `parent: M4-3`), (b) lateral siblings at the same `c_4_ql_position` (e.g., `lateral: [M4-2, M4-4]`), (c) key inversions (e.g., `inversion: M4-3'`), (d) cross-namespace resonances above a confidence threshold (e.g., `resonates: [M3-5#0.81, S3#0.74]`, harvested from `RESONATES_WITH` edges per Tranche 6.12 mechanism (iv)). The signature is NOT a free-text description; it is a structured graph-reference compression that the semantic-doc builder can flatten into embedding text. Locality is recomputed by the Tranche 6.12 wisdom loop when the node's neighbourhood graph mutates (detected via `graph_revision` per CCT-16(v)).
+
+    **Semantic-doc concatenation update:** [`semantic.rs:138-156`](../../../../../Body/S/S2/graph-services/src/semantic.rs) currently concatenates all keys starting with `q_` into the embedded document. Extend the order to: `q_1_*` → `q_1'_*` → `q_2_*` → `q_2'_*` → ... → `q_5_*` → `q_5'_*`, with the `q_4_{i?}_locality_signature` flattened to include adjacent-node pithy excerpts (one-hop neighbourhood text). This makes the locality layer carry semantic weight in the embedding without bloating the per-node token budget — adjacent text is included only via the locality signature's expansion, not via duplication of neighbour `q_*` content.
+
+    **Anti-greenfield commitment:** the `q_*` content vocabulary already exists in `graph-schema/src/lib.rs:1340-1395` and the dataset-import fallback already operationalises q_5 as the integration bucket. This tranche *audits* both, *codifies* the implicit law as a canonical Form, *extends* with the single new `q_4_{i?}_locality_signature` key, and *extends* the semantic-doc concatenation order. No new q_ positions invented; no q_ content properties WRITTEN by this tranche (Tranche 6.12 is the producer).
+
+    Verification: `test -f Idea/Bimba/Seeds/M/q-vocabulary-canon.md`; `cargo test -p epi-s2-graph-schema --test q_vocabulary_canon_loaded` asserts the canon Form parses and lints the schema declarations; `cargo test -p epi-s2-graph-services --test semantic_doc_includes_locality_signature` asserts `q_4_{i?}_locality_signature` participation in the embedded doc; `cargo test -p epi-s2-graph-services --test q_5_fallback_bucket_law` asserts unknown q_ → q_5; `cargo test -p hen-compiler-core --test q_vocabulary_unknown_key_rejection` asserts unknown q_-family keys raise ERROR.
+
+    Cross-track hooks: Tranche **6.12** (the wisdom loop produces values for these keys); Tranche **9.13** (the canon CLI reads them); CCT-16 (the substrate that makes the keys survive sync); DR-M4-4 (the namespace this vocabulary operates within); DR-S1-6 (the key shape this vocabulary follows).
+
+24. **5.24 — Stamp Level 0 Fibonacci Ground coordinates into NOW.md frontmatter** *(spec-update + Khora write-path; lands [[35-fibonacci-ground-level-0-temporal-substrate]] §2.1; routes to DR-FIB-1 + DR-FIB-2 + DR-FIB-5; depends on Tranche 4.15)*
+
+    Extend the NOW frontmatter schema established by 5.19 with four Level 0 Fibonacci Ground keys, stamped by Khora at NOW.md write time (`session_start` and every `tranche.complete.*` event per T19.11):
+
+    ```yaml
+    c_3_fibonacci_position: 0..59      # Position on the 60-fold Fibonacci Ground (#2-0)
+    c_3_fibonacci_digit: 0..9          # Pisano-period digit at this position
+    c_3_tick12: 0..11                  # M1 spanda heartbeat — derived (fib_pos / 5)
+    c_3_backbone_index: 0..23          # Lens 7 anchor — nearest 15° backbone node
+    ```
+
+    Write-path edits (Khora write authority): `Body/S/S4/ta-onta/S4-0p-khora` NOW-frontmatter builder reads current `M4_Temporal_Now` (`m4_snapshot_now()` via FFI) and emits the four keys — `c_3_fibonacci_position` from Sun degree (kairos cache) via the existing `clock.rs` projection; `c_3_fibonacci_digit` from `pisano_digit_lut[fib_pos]` (LUT landed by 4.15); `c_3_tick12 = fib_pos / 5`; `c_3_backbone_index = (fib_pos * 24) / 60`. `Idea/Bimba/World/NOW.md` template declares all four keys alongside the 5.19 keys (`c_3_tranche_mode`, `c_3_response_orbit`, `c_3_klein_weighting`, `c_3_briefing_emitted`). `Body/S/S1/hen-compiler-core` frontmatter schema registers the four keys with integer ranges; out-of-range is a Hen lint ERROR.
+
+    Why this matters: every NOW.md becomes a Fibonacci-grounded trace; Graphiti `HAS_DAY` edges can carry `fibonacci_position` so `nara_journal::period_reading(day_range)` walks episodes in ground-coordinate order. Live render and episodic inscription reconcile by ontological role (DR-FIB-5) — no synchronisation contract.
+
+    Verification: `grep -nE 'c_3_fibonacci_position|c_3_fibonacci_digit|c_3_tick12|c_3_backbone_index' Idea/Bimba/World/NOW.md`; Khora unit-test fixture writes NOW.md with non-zero ground coordinates from a known kairos Sun degree; `cargo test -p hen-compiler-core` schema test asserts `c_3_fibonacci_position: 60` returns ERROR.
+
+25. **5.25 — `KairosFrame` discriminated union + atomic migration of all M4 consumers** *(code-pending-closure; lands [[35-fibonacci-ground-level-0-temporal-substrate]] §1.3 + §2.5 as ONE tranche; routes to DR-FIB-3; cross-link T19.12 affirmed-as-is, 24.19)*
+
+    Single atomic tranche — the struct refactor and the consumer migration must land together (splitting them leaves `m4.c` callers reading a removed flat field). Replace flat `M4_Temporal_Now.planet_degrees[10]` ([`m4.h:258-276`](Body/S/S0/epi-lib/include/m4.h:258)) with the `KairosFrame` discriminated union per handoff §1.3: `KairosFrameKind { NATAL, REALTIME, KAIROTIC }`; `KairosFrame { kind, captured_at_ns, decays_at_ns, planet_degrees[10], pp, mm, mp, pn, _pad }` with `_Static_assert(sizeof == 64)` (one L1 line); `M4_Temporal_Now { natal, realtime, kairotic, kairotic_active, … existing fields }`; inline accessor `m4_planet_degrees_live()` (kairotic-if-active else realtime, never NULL).
+
+    Consumer migration table (handoff §2.5, semantic check per row): `medicine.c` → `m4_planet_degrees_live()` (live); `oracle.c` → `now->kairotic.planet_degrees` (explicit — oracle charges pp/mm/mp/pn are set only on KAIROTIC, 4h decay window); `identity.c` → `now->natal.planet_degrees` (explicit); Anima janus-weighting FFI → live accessor; Mercurius relay / T19.12 populator → writes `now->realtime.planet_degrees` + `captured_at_ns`; `nara/clock.rs` unchanged (reads kairos cache directly, predates KairosFrame); 24.19 portal markers read `natal` AND live.
+
+    GitNexus discipline: `gitnexus_impact({target: "M4_Temporal_Now", direction: "upstream"})` and `gitnexus_impact({target: "m4_snapshot_now", direction: "upstream"})` BEFORE the edit; every d=1 caller must appear in the migration table or the tranche stops and reports the gap.
+
+    Test contract (handoff §2.5): `m4_kairos_frame_natal_persists_across_session`; `m4_kairos_frame_kairotic_decays` (`kairotic_active = 0` past `decays_at_ns`); `m4_planet_degrees_live_precedence`; all existing M4 tests green post-migration (no value-level behavior change for default natal+realtime flows).
+
+    Verification: `grep -rn 'now->planet_degrees' Body/S/S0/epi-lib/src/m4 Body/S/S4/ta-onta` returns zero hits; `make -C Body/S/S0/epi-lib test`; `cargo test -p epi-lib m4_kairos`.
+
 ## Track 19 Cross-Reference
 
 Track 19 (Contemplation Surface Integration) consumes M4 substrate at **T19.4**: new `m4_session_open(M4_Identity_Matrix*, uint64_t kairos, M4_Session_Frame* out)` calls existing `m4_draw_tarot()` at [m4.h:765-766](Body/S/S0/epi-lib/include/m4.h:765) so a tarot draw becomes session-context inheritance (alongside kairos and identity), not lifecycle event. The randomness IS the necessary openness (Moirai's touch making the session genuine encounter rather than replay). Optional plumbing fix alongside: wire `M4_Temporal_Now.planet_degrees[10]` population from the existing Kerykeion adapter at [`Body/S/S4/ta-onta/S4-3p-chronos/S3'/kairos-python-adapter.ts`](../../../../../../../Body/S/S4/ta-onta/S4-3p-chronos/S3'/kairos-python-adapter.ts) — currently [`m4.h:268-276`](Body/S/S0/epi-lib/include/m4.h:268) `m4_snapshot_now()` zeroes the field; adapter chain exists, populator is the gap. See [`19-contemplation-surface-integration.md`](19-contemplation-surface-integration.md).

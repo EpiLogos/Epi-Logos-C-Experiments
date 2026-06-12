@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T203608Z-21-T21.13",
+  "taskId": "21.T21.13",
+  "startedAt": "2026-06-10T20:36:08.801Z",
+  "owner": "codex-m-dev-21-t21-13",
+  "leaseExpiresAt": "2026-06-10T22:36:08.801Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.13",
+    "trackId": "21",
+    "tranche": "T21.13",
+    "title": "Syntax-Layer Reader sub-panels (Arch 3 speech / 5 relationship / 7 action / 9 completion)",
+    "effort": "Arch 3 speech / 5 relationship / 7 action / 9 completion",
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.12"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/syntax-layers/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

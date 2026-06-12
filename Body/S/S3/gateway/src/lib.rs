@@ -9,6 +9,7 @@ pub mod spacetime;
 pub mod subagents;
 pub mod temporal_context;
 pub mod transcripts;
+pub mod verifier;
 pub mod workspace;
 
 pub use runtime::{GatewayEventSubscription, GatewayRuntimeState};

@@ -14,6 +14,7 @@ The kernel-bridge JSON shape at `Body/S/S0/epi-cli/src/gate/kernel_bridge_runtim
 - M1-2-ANANDA-VORTEX-ARCHITECTURE.md §4.3 (AnandaVortexProjection)
 - M-SYMBOLIC-LANGUAGE-ARCHITECTURE.md (OracleFrame / SymbolicProtein / VAK reading-frame language)
 - DR-VAK-1 (active VAK order and reading-frame authority)
+- PASU.md + M0-3-8 MonoPoly dialectic + M0-4.4.0-(4.4/5) relational grammar (general being-pattern live-state layer)
 
 ## Consolidation Map
 
@@ -25,6 +26,8 @@ This tranche replaces (consolidates and executes) the following previously-separ
 | Tranche 10.4 | `s2_anchor` / `s3_anchor` populate-or-remove | 18.6 below |
 | Tranche 10.10 | `ananda_vortex: AnandaVortexProjection` | 18.3 below |
 | Tranche 10.M0..10.M5 | per-domain projections (6 fields) | 18.4 below |
+| Tranche 10.PASU | `pasu_being_pattern: PasuBeingPatternProjection` | 18.10 below |
+| Tranche 10.AW | `anuttara_witness: AnuttaraWitnessProjection` | 18.11 below |
 | Tranche 04.11 | `OracleFrame`, `ReadingPosition`, `SymbolicProtein` | 18.4 below |
 | Tranche 05.11 | Nara deck-context / symbolic-protein handles | 18.4 below |
 | Tranche 12.15 | VAK reading-frame evaluator contract | 18.4 below |
@@ -137,15 +140,88 @@ Tranche 18 also depends on the pre-Cycle-3 Redis residency cleanup at [[../../..
 
    Verification: `cargo test -p portal-core --test graph_handle_projection`; M0' inspector consumes typed graph handle.
 
+10. **18.10 — Land typed PASU / BeingPattern live-state JSON edge** *(code-pending-closure; consolidates Tranche 10.PASU)*
+
+   Add `pasu_being_pattern: Option<PasuBeingPatternProjection>` to `MathemeHarmonicProfile` and the 18.1 typed JSON shape. The shape is the cross-stack contract for "every thing is a being" without making live state into canon.
+
+   Required discriminated unions:
+   ```ts
+   export type MonoPolyOperator =
+       | 'Mono'
+       | 'Poly'
+       | 'ActuallyMany'
+       | 'PotentiallyOne'
+       | 'ActualisingOne'
+       | 'PotentiatingMany'
+       | 'MonoPoly';
+
+   export type PerspectiveRole =
+       | 'FirstPerson'
+       | 'SecondPerson'
+       | 'FirstPersonPlural'
+       | 'ThirdPerson'
+       | 'CollectiveWe'
+       | 'IntegralWeI';
+
+   export type NaraFamilyRole =
+       | 'Father'
+       | 'Mother'
+       | 'Son'
+       | 'Daughter'
+       | 'Tao'
+       | 'IntegralConsciousness';
+   ```
+
+   Required projection fields: `entityRef`, `stableIdentity`, `liveState`, `observerAnchor`, `clockAddress`, `monopolyOperator`, `perspectiveRole`, optional `naraFamilyRole`, `m2M3Relation`, `bioquaternionHandles`, `elementalWeights`, `relationEdges`, and `verifierRefs`.
+
+   Live-state/canon discipline:
+   - `stableIdentity.graphAnchor` is a Neo4j/S2 canonical handle.
+   - `liveState` carries SpaceTimeDB row id, stream generation, Redis/Psyche, DAY/NOW, and Graphiti episode refs.
+   - `relationEdges` are live edges unless an M5 review + M0 witness promotes a candidate to canon.
+   - `ActualisingOne` is serialized with `reviewRisk: 'forced-unification'`; renderers may display it, but neither bridge nor renderer may canonize it.
+   - `PerspectiveRole` is a required feature for ML and rendering; consumers must not collapse I/You/They/We/We-I into a generic entity relation.
+
+   Verification: `cargo test -p portal-core --test pasu_being_pattern_projection_privacy`; `cargo test -p portal-core --test pasu_monopoly_perspective_modes`; `cargo test -p epi-cli --test kernel_bridge_runtime_typed_json`; TS fixture asserts all seven `MonoPolyOperator` variants and all six `PerspectiveRole` variants round-trip; Graphiti/SpaceTimeDB replay fixture asserts `ActualisingOne` emits review-risk and cannot mutate graph canon; renderer no-local-table test asserts M2/M3 relation edges come from `pasuBeingPattern.m2M3Relation`.
+
+11. **18.11 — Land typed Anuttara witness JSON edge** *(code-pending-closure; consolidates Tranche 10.AW; depends on Track 01 §1.10/1.12/1.13)*
+
+   Add `anuttara_witness: Option<AnuttaraWitnessProjection>` to `MathemeHarmonicProfile` and the 18.1 typed JSON shape — the emit-only carrier of M0's 4/5/0 verification weight (never a gate).
+
+   Required shape:
+   ```ts
+   export type RFactorBand = 'pravritti' | 'nivritti';
+   export interface RFactorPathStep {
+       readonly rFactor: number;            // 0..5; 0xFF = R# Freedom (parent)
+       readonly baseRoute: string;          // 'O#' | 'X#' | 'N#' | 'M#' | 'Nara' | 'Siva' | 'Shakti'
+       readonly band: RFactorBand;
+       readonly position: number;           // fret 0..5
+       readonly isTurn: boolean;            // true at the (@#) Beauty→Life pivot
+   }
+   export interface AnuttaraWitnessProjection {
+       readonly virtueWitnessVector: number;   // 9-bit (VIRTUE_LUT[9])
+       readonly syntaxWitnessVector: number;   // 4-bit (Archetype 3/5/7/9)
+       readonly rfactorPath: readonly RFactorPathStep[];
+       readonly bandBalance: { readonly pravrittiDepth: number; readonly nivrittiDepth: number;
+                               readonly reachedTurn: boolean; readonly returned: boolean };
+       readonly palindromeState: { readonly normalFormSymmetric: boolean; readonly mirrorNormalForm: string };
+       readonly openQuestions: readonly string[];   // symbolic-coordinate-strings (1.11 EBNF)
+       readonly coherenceScore: number;
+   }
+   ```
+
+   Discipline: emit-only — no consumer path may gate on `anuttaraWitness` (only the human gate + M5 review may block, per 08/12); `openQuestions` are the Law-6 query-objects (clickable in 21, routed to contemplation 19.6); `rfactorPath` is the read-only source for the 25 fretboard engine; the projection is the EBM feature-family the 26 witness engine learns over.
+
+   Verification: `cargo test -p portal-core --test anuttara_witness_projection`; `cargo test -p epi-cli --test kernel_bridge_runtime_typed_json` fixture includes `anuttaraWitness`; TS fixture asserts the 9-bit + 4-bit vectors, both `RFactorBand` variants, and the `(@#)` turn flag round-trip; non-blocking test asserts no consumer gates on the field.
+
 ## Acceptance Gate
 
 Tranche 18 closes when:
-- All nine 18.x rows land
+- All eleven 18.x rows land
 - `cargo test -p portal-core -p epi-cli -p gateway -p gateway-contract` clean
 - All eight M-extensions + two integrated plugin extensions build clean
 - Theia kernel-bridge contract preflight (`07-t0-extension-contract-preflight.json`) reflects typed shapes
 - `grep -rn "Record<string, unknown>" Body/M/epi-theia/extensions/kernel-bridge/src/common/types.ts` returns only the documented opaque-payload boundary (per S0-ARCH §10.5 — per-extension narrowing is M-extension owned)
-- The 10.x sub-tranches in [`10-kernel-bridge-profile-contract.md`](10-kernel-bridge-profile-contract.md) are cross-referenced as "executed by Tranche 18"
+- The 10.x sub-tranches in [`10-kernel-bridge-profile-contract.md`](10-kernel-bridge-profile-contract.md), including 10.PASU and 10.AW, are cross-referenced as "executed by Tranche 18"
 
 ## Why This Lands First
 

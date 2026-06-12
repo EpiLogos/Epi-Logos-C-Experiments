@@ -194,6 +194,24 @@ _Static_assert(sizeof(M4_Container_Entry) == 4,
 bool m4_sacred_random(M4_Sacred_Random* rng, uint8_t* buf, size_t len) {
     if (!rng || !buf || len == 0) return false;
     if (!rng->consent_granted) return false;
+
+    /* Deterministic mode: a non-zero session_nonce fixes the stream
+     * (splitmix64 keyed on the nonce). This is how a kairos moment recalls
+     * the same draw — the seed is the moment. A zero nonce falls through to
+     * true random: the live oracle's necessary openness. */
+    if (rng->session_nonce != 0) {
+        uint64_t state = rng->session_nonce;
+        for (size_t i = 0; i < len; i++) {
+            state += 0x9E3779B97F4A7C15ULL;
+            uint64_t z = state;
+            z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9ULL;
+            z = (z ^ (z >> 27)) * 0x94D049BB133111EBULL;
+            z = z ^ (z >> 31);
+            buf[i] = (uint8_t)(z & 0xFFu);
+        }
+        return true;
+    }
+
 #ifdef __APPLE__
     arc4random_buf(buf, len);
 #else
@@ -452,6 +470,64 @@ int m4_draw_tarot(M4_Sacred_Random* rng, uint8_t count, uint16_t cast_degree,
 
 
 /* ===================================================================
+ * API: m4_session_open — Inherit kairos + identity, draw conditioning cards
+ *
+ * The session frame inherits three things at once: the moment (kairos),
+ * who is present (identity), and the cards drawn at that moment. The draw
+ * does nothing mechanically — it conditions the contemplation. Seeded from
+ * kairos (mixed with identity) so the same moment recalls the same draw;
+ * different moments open different draws. That openness is the point.
+ * =================================================================== */
+
+int m4_session_open(M4_Identity_Matrix* identity, uint64_t kairos,
+                    M4_Session_Frame* out) {
+    if (!identity || !out) return -1;
+
+    memset(out, 0, sizeof(M4_Session_Frame));
+    out->kairos = kairos;
+    out->identity = identity;
+
+    /* Count derived from identity: one card per populated layer, a standard
+     * three-card spread when identity is bare. Clamped to the tarot range. */
+    uint8_t count = m4_identity_layer_count(identity);
+    if (count == 0) count = 3;
+    if (count > 12) count = 12;
+
+    /* Cast degree derived from identity: its quintessence fingerprint once
+     * computed, else the numerological key. Both fold to the 0-719 wheel. */
+    uint16_t cast_degree;
+    if (identity->computed) {
+        cast_degree = (uint16_t)((((uint16_t)identity->quintessence_hash[0] << 8) |
+                                  (uint16_t)identity->quintessence_hash[1]) % 720u);
+    } else {
+        cast_degree = (uint16_t)(identity->numerological_key % 720u);
+    }
+
+    /* Seed the RNG from kairos, mixed with identity so the same moment +
+     * same person recalls the same draw. A non-zero seed engages the
+     * deterministic stream in m4_sacred_random. */
+    uint64_t seed = kairos;
+    seed ^= (uint64_t)identity->numerological_key * 0x9E3779B97F4A7C15ULL;
+    if (identity->computed) {
+        uint64_t h = 0;
+        for (int i = 0; i < 8; i++) {
+            h = (h << 8) | (uint64_t)identity->quintessence_hash[i];
+        }
+        seed ^= h;
+    }
+    if (seed == 0) seed = 0x9E3779B97F4A7C15ULL;   /* never fall to non-deterministic path */
+
+    M4_Sacred_Random rng = { .consent_granted = true, .session_nonce = seed };
+
+    int rc = m4_draw_tarot(&rng, count, cast_degree, &out->tarot_psyche_anchor);
+    if (rc != 0) return rc;
+
+    out->opened = true;
+    return 0;
+}
+
+
+/* ===================================================================
  * API: m4_verify — Boot-time .rodata verification
  * =================================================================== */
 
@@ -478,11 +554,13 @@ bool m4_verify(void) {
         }
     }
 
-    /* Elemental Throughline: nucleotide == element index */
-    if (M3_NUC_A != M4_ELEM_WATER) return false;
-    if (M3_NUC_T != M4_ELEM_FIRE)  return false;
-    if (M3_NUC_C != M4_ELEM_EARTH) return false;
-    if (M3_NUC_G != M4_ELEM_AIR)   return false;
+    /* Elemental Throughline: nucleotide maps to canonical L2' element ID.
+     * Routed through m4_nuc_to_elem (not raw equality) since nucleotide IDs
+     * (A=0..G=3) no longer coincide with canonical element IDs. */
+    if (m4_nuc_to_elem(M3_NUC_A) != M4_ELEM_WATER) return false;
+    if (m4_nuc_to_elem(M3_NUC_T) != M4_ELEM_FIRE)  return false;
+    if (m4_nuc_to_elem(M3_NUC_C) != M4_ELEM_EARTH) return false;
+    if (m4_nuc_to_elem(M3_NUC_G) != M4_ELEM_AIR)   return false;
 
     /* Lens registry populated */
     for (int i = 0; i < 6; i++) {

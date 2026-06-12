@@ -1,0 +1,35 @@
+{
+  "runId": "20260611T191820Z-27-T27.4",
+  "taskId": "27.T27.4",
+  "startedAt": "2026-06-11T19:18:20.897Z",
+  "owner": "codex-m-dev-27-t27-4",
+  "leaseExpiresAt": "2026-06-11T21:18:20.897Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.4",
+    "trackId": "27",
+    "tranche": "T27.4",
+    "title": "Tool Stream tab — time-ordered tool-call event list",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.3"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/LogsPanel.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

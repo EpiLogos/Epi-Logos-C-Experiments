@@ -24,6 +24,7 @@ pub struct OntologyImportPlan {
     pub shacl_report_cypher: String,
     pub fact_cypher: String,
     pub anuttara_properties: Vec<OntologyPropertyMapping>,
+    pub ananda_vortex_properties: Vec<OntologyPropertyMapping>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -64,6 +65,23 @@ pub fn anuttara_property_mappings() -> Vec<OntologyPropertyMapping> {
     ]
 }
 
+pub fn ananda_vortex_property_mappings() -> Vec<OntologyPropertyMapping> {
+    vec![
+        OntologyPropertyMapping {
+            alias: "ananda_vortex_handle".to_owned(),
+            neo4j_property: "m_1_2_ananda_vortex_handle".to_owned(),
+            ontology_property: "epi:hasAnandaVortexHandle".to_owned(),
+            disclosure: "public-profile-bus-typed-handle".to_owned(),
+        },
+        OntologyPropertyMapping {
+            alias: "ananda_vortex_cell".to_owned(),
+            neo4j_property: "m_1_2_ananda_vortex_cell".to_owned(),
+            ontology_property: "epi:hasAnandaVortexCell".to_owned(),
+            disclosure: "public-profile-bus-typed-handle".to_owned(),
+        },
+    ]
+}
+
 pub fn ontology_import_plan() -> OntologyImportPlan {
     OntologyImportPlan {
         ontology_uri: EPI_ONTOLOGY_URI.to_owned(),
@@ -73,8 +91,9 @@ pub fn ontology_import_plan() -> OntologyImportPlan {
         import_cypher: "CALL n10s.rdf.import.inline($rdf, $format, {handleVocabUris: 'MAP', keepLangTag: false, keepCustomDataTypes: true}) YIELD terminationStatus, triplesLoaded, triplesParsed RETURN terminationStatus, triplesLoaded, triplesParsed".to_owned(),
         export_cypher: "CALL n10s.rdf.export.cypher($cypher, $format, {handleVocabUris: 'MAP'}) YIELD subject, predicate, object, isLiteral, literalType, literalLang RETURN subject, predicate, object, isLiteral, literalType, literalLang".to_owned(),
         shacl_report_cypher: "CALL n10s.validation.shacl.validate() YIELD focusNode, nodeType, severity, resultPath, value, message RETURN focusNode, nodeType, severity, resultPath, value, message".to_owned(),
-        fact_cypher: "MERGE (m:GraphMeta {graph_id: $graph_id}) SET m.epi_ontology_uri = $ontology_uri, m.epi_ontology_version_iri = $version_iri, m.epi_ontology_sha256 = $turtle_sha256, m.owl2_rl_profile = $owl2_rl_profile, m.shacl_reporting_mode = $shacl_reporting_mode, m.anuttara_property_contract = $anuttara_property_contract, m.epi_ontology_checked_at = datetime() RETURN m.graph_id AS graph_id, m.epi_ontology_sha256 AS turtle_sha256".to_owned(),
+        fact_cypher: "MERGE (m:GraphMeta {graph_id: $graph_id}) SET m.epi_ontology_uri = $ontology_uri, m.epi_ontology_version_iri = $version_iri, m.epi_ontology_sha256 = $turtle_sha256, m.owl2_rl_profile = $owl2_rl_profile, m.shacl_reporting_mode = $shacl_reporting_mode, m.anuttara_property_contract = $anuttara_property_contract, m.profile_handle_contract = $profile_handle_contract, m.epi_ontology_checked_at = datetime() RETURN m.graph_id AS graph_id, m.epi_ontology_sha256 AS turtle_sha256".to_owned(),
         anuttara_properties: anuttara_property_mappings(),
+        ananda_vortex_properties: ananda_vortex_property_mappings(),
     }
 }
 
@@ -82,6 +101,8 @@ pub async fn record_ontology_bridge_facts(client: &Neo4jClient) -> Result<(), St
     let plan = ontology_import_plan();
     let contract =
         serde_json::to_string(&plan.anuttara_properties).map_err(|err| err.to_string())?;
+    let profile_handle_contract =
+        serde_json::to_string(&plan.ananda_vortex_properties).map_err(|err| err.to_string())?;
     client
         .run_query(
             query(&plan.fact_cypher)
@@ -91,7 +112,8 @@ pub async fn record_ontology_bridge_facts(client: &Neo4jClient) -> Result<(), St
                 .param("turtle_sha256", plan.turtle_sha256.as_str())
                 .param("owl2_rl_profile", OWL2_RL_PROFILE)
                 .param("shacl_reporting_mode", SHACL_REPORTING_MODE)
-                .param("anuttara_property_contract", contract.as_str()),
+                .param("anuttara_property_contract", contract.as_str())
+                .param("profile_handle_contract", profile_handle_contract.as_str()),
         )
         .await
         .map_err(|err| format!("record ontology bridge facts failed: {err}"))?;

@@ -1,0 +1,36 @@
+{
+  "runId": "20260611T174055Z-27-T27.2",
+  "taskId": "27.T27.2",
+  "startedAt": "2026-06-11T17:40:55.799Z",
+  "owner": "codex-m-dev-27-t27-2",
+  "leaseExpiresAt": "2026-06-11T19:40:55.799Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.2",
+    "trackId": "27",
+    "tranche": "T27.2",
+    "title": "Sessions tab — session manager mapped to `agent:epii:main`",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.13"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/SessionsPanel.tsx",
+      "Idea/Empty/Present/{YYYY}/{MM}/W{WW}/{DD}/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -23,6 +23,7 @@
   ],
   "dependencies": {
     "@theia/core": "1.56.0",
+    "@pratibimba/integrated-composition": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -37,6 +38,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build"
+    "test": "node --test test/widget-registry.test.mjs && pnpm build"
   }
 }

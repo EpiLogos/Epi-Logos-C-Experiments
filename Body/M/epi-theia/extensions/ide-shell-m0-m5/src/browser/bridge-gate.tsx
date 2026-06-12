@@ -1,5 +1,40 @@
 import * as React from 'react';
 import type { KernelBridgeAPI } from '@pratibimba/kernel-bridge';
+import {
+    BridgeReadinessBadge,
+    classifyReadiness,
+    readinessFromEvent,
+    snapshotReadinessFromBridge,
+    type BridgeReadinessBinding,
+    type BridgeReadinessSource
+} from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
+
+const ProfileTickContext = React.createContext<{ tickGeneration: number }>({ tickGeneration: 0 });
+
+export function useProfileTick(): number {
+    return React.useContext(ProfileTickContext).tickGeneration;
+}
+
+interface ProfileTickRenderBoundaryProps {
+    readonly children: React.ReactNode;
+}
+
+function ProfileTickRenderBoundary({ children }: ProfileTickRenderBoundaryProps): React.ReactElement {
+    const tickGeneration = useProfileTick();
+    return (
+        <>
+            {React.Children.map(children, child => {
+                if (!React.isValidElement(child)) {
+                    return child;
+                }
+                return React.cloneElement(
+                    child as React.ReactElement<Record<string, unknown>>,
+                    { 'data-profile-tick-generation': tickGeneration }
+                );
+            })}
+        </>
+    );
+}
 
 /**
  * Bridge gate — gates every IDE Shell widget on kernel-bridge readiness.
@@ -25,6 +60,8 @@ interface BridgeGateState {
     connected: boolean;
     profileGeneration: number | null;
     reason: string;
+    readiness: BridgeReadinessBinding;
+    tickGeneration: number;
 }
 
 export class IdeShellBridgeGate extends React.Component<IdeShellBridgeGateProps, BridgeGateState> {
@@ -35,19 +72,46 @@ export class IdeShellBridgeGate extends React.Component<IdeShellBridgeGateProps,
         this.state = {
             connected: props.bridge.connectionStatus.connected,
             profileGeneration: props.bridge.cachedProfile?.generation ?? null,
-            reason: props.bridge.connectionStatus.reason
+            reason: props.bridge.connectionStatus.reason,
+            readiness: classifyReadiness(
+                snapshotReadinessFromBridge(props.bridge as unknown as BridgeReadinessSource),
+                'ide-shell.bridge'
+            ),
+            tickGeneration: 0
         };
     }
 
     override componentDidMount(): void {
         this.disposers.push(
             this.props.bridge.onConnectionChange(status => {
-                this.setState({ connected: status.connected, reason: status.reason });
+                this.setState({
+                    connected: status.connected,
+                    reason: status.reason,
+                    readiness: classifyReadiness(
+                        snapshotReadinessFromBridge(this.props.bridge as unknown as BridgeReadinessSource),
+                        'ide-shell.bridge'
+                    )
+                });
             })
         );
         this.disposers.push(
             this.props.bridge.onProfile(profile => {
-                this.setState({ profileGeneration: profile.generation });
+                this.setState(previous => ({
+                    profileGeneration: profile.generation,
+                    readiness: classifyReadiness(
+                        snapshotReadinessFromBridge(this.props.bridge as unknown as BridgeReadinessSource),
+                        'ide-shell.bridge'
+                    ),
+                    tickGeneration: previous.tickGeneration + 1
+                }));
+            })
+        );
+        this.disposers.push(
+            this.props.bridge.onEvent(event => {
+                const readiness = readinessFromEvent(event, 'ide-shell.bridge');
+                if (readiness) {
+                    this.setState({ readiness });
+                }
             })
         );
     }
@@ -60,24 +124,39 @@ export class IdeShellBridgeGate extends React.Component<IdeShellBridgeGateProps,
     }
 
     override render(): React.ReactNode {
-        const ready = this.state.connected && this.state.profileGeneration !== null;
-        if (!ready) {
+        const bridgeUnavailable = this.state.readiness.readinessId === 'bridge_unavailable';
+        if (bridgeUnavailable) {
             return (
-                <div className="ide-shell-bridge-pending" data-test="ide-shell-bridge-pending">
-                    <h3>{this.props.widgetLabel}</h3>
-                    <p>
-                        Awaiting kernel-bridge readiness. Connected:{' '}
-                        <code data-test="bridge-connected">{this.state.connected ? 'yes' : 'no'}</code>
-                        {' | '}
-                        Profile generation:{' '}
-                        <code data-test="bridge-profile-generation">
-                            {this.state.profileGeneration ?? 'pending'}
-                        </code>
-                    </p>
-                    <p className="ide-shell-pending-reason">{this.state.reason}</p>
-                </div>
+                <ProfileTickContext.Provider value={{ tickGeneration: this.state.tickGeneration }}>
+                    <div className="ide-shell-bridge-pending" data-test="ide-shell-bridge-pending">
+                        <h3>
+                            {this.props.widgetLabel}
+                            <BridgeReadinessBadge
+                                bindingKey="ide-shell.bridge"
+                                bridge={this.props.bridge as unknown as BridgeReadinessSource}
+                                readiness={this.state.readiness}
+                            />
+                        </h3>
+                        <p>
+                            Awaiting kernel-bridge readiness. Connected:{' '}
+                            <code data-test="bridge-connected">{this.state.connected ? 'yes' : 'no'}</code>
+                            {' | '}
+                            Profile generation:{' '}
+                            <code data-test="bridge-profile-generation">
+                                {this.state.profileGeneration ?? 'pending'}
+                            </code>
+                        </p>
+                        <p className="ide-shell-pending-reason">{this.state.reason}</p>
+                    </div>
+                </ProfileTickContext.Provider>
             );
         }
-        return <>{this.props.children}</>;
+        return (
+            <ProfileTickContext.Provider value={{ tickGeneration: this.state.tickGeneration }}>
+                <ProfileTickRenderBoundary>
+                    {this.props.children}
+                </ProfileTickRenderBoundary>
+            </ProfileTickContext.Provider>
+        );
     }
 }

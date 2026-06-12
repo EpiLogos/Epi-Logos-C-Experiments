@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T194114Z-26-T26.11",
+  "taskId": "26.T26.11",
+  "startedAt": "2026-06-10T19:41:14.344Z",
+  "owner": "codex-m-dev-26-t26-11",
+  "leaseExpiresAt": "2026-06-10T21:41:14.344Z",
+  "worktree": null,
+  "task": {
+    "id": "26.T26.11",
+    "trackId": "26",
+    "tranche": "T26.11",
+    "title": "`m5.epii.recognitionLayer` composition slot in `plugin-integrated-4-5-0`",
+    "effort": null,
+    "file": "26-m5-epii-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md",
+    "dependsOn": [
+      "26.T26.10"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/recognition-layer-slot.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

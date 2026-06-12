@@ -224,6 +224,65 @@ static void test_sub_branch_structs(void) {
 
 
 /* ===================================================================
+ * CONTEMPLATION OBJECT CONTRACT
+ * =================================================================== */
+
+static void test_contemplation_object_contract(void) {
+    M5_Q_BioQuaternion_Tick q_tick = {0};
+    q_tick.tick = 7;
+    q_tick.w = 1.0;
+    TEST("q trajectory tick set", q_tick.tick == 7);
+    TEST("q trajectory w set", q_tick.w == 1.0);
+
+    M5_Codon_Trace codons[2] = {
+        { .codon = 9, .label = "Additive137", .m3_route = "m3-mahamaya/codon/9" },
+        { .codon = 45, .label = "KaprekarPedagogyHit", .m3_route = "m3-mahamaya/codon/45" }
+    };
+    M5_Vak_Profile_Pair pair = {
+        .dispatch = "Pi+Anima",
+        .profile_generation = 26,
+        .profile_anchor = "profile://26.7/session",
+        .acr_route = "acr://dispatch/pi-anima"
+    };
+    M5_Skeleton_Event events[2] = {
+        { .name = "Additive137" },
+        { .name = "KaprekarPedagogyHit" }
+    };
+    M5_ContemplationObject object = {0};
+    object.session_id = "session-26-12";
+    object.kairos_at_open.planet_degrees[0] = 108;
+    object.kairos_at_close.planet_degrees[0] = 144;
+    object.tarot_psyche_anchor.drawn[0] = 3;
+    object.tarot_psyche_anchor.draw_count = 1;
+    object.q_composed_trajectory = &q_tick;
+    object.q_composed_trajectory_count = 1;
+    object.codon_trace = codons;
+    object.codon_trace_count = 2;
+    object.vak_profile_pairs = &pair;
+    object.vak_profile_pair_count = 1;
+    object.m1_charge_state = (M5_ArchNineChargeState){ .pp = 3, .nn = 3, .np = 3, .pn = 3, .outer = 3 };
+    object.m1_2_skeleton_events_fired = events;
+    object.m1_2_skeleton_event_count = 2;
+    object.four_syntax_compliance_seeds[0].prompt = "speech-3";
+    object.four_syntax_compliance_seeds[1].prompt = "relationship-5";
+    object.four_syntax_compliance_seeds[2].prompt = "action-7";
+    object.four_syntax_compliance_seeds[3].prompt = "completion-9";
+
+    TEST("contemplation session id", strcmp(object.session_id, "session-26-12") == 0);
+    TEST("contemplation uses M4 kairos", object.kairos_at_open.planet_degrees[0] == 108);
+    TEST("contemplation uses M4 tarot draw", object.tarot_psyche_anchor.drawn[0] == 3);
+    TEST("contemplation codon count", object.codon_trace_count == 2);
+    TEST("contemplation vak generation", object.vak_profile_pairs[0].profile_generation == 26);
+    TEST("contemplation arch-nine invariant",
+         object.m1_charge_state.pp + object.m1_charge_state.nn +
+         object.m1_charge_state.np + object.m1_charge_state.pn ==
+         4 * object.m1_charge_state.outer);
+    TEST("contemplation syntax seed count", M5_CONTEMPLATION_SYNTAX_SEED_COUNT == 4);
+    TEST("contemplation syntax completion", strcmp(object.four_syntax_compliance_seeds[3].prompt, "completion-9") == 0);
+}
+
+
+/* ===================================================================
  * M5_ROOT + SUB-FSMs
  * =================================================================== */
 
@@ -560,6 +619,7 @@ int main(void) {
     test_logos_fsm_types();
     test_quintessential_view();
     test_sub_branch_structs();
+    test_contemplation_object_contract();
     test_m5_root_and_subfsms();
     test_m5_init_teardown();
     test_m5_advance_logos();

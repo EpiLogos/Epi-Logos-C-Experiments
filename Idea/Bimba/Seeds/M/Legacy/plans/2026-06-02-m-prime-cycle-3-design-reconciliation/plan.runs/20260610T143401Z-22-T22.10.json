@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T143401Z-22-T22.10",
+  "taskId": "22.T22.10",
+  "startedAt": "2026-06-10T14:34:01.750Z",
+  "owner": "codex-m-dev-22-t22-10",
+  "leaseExpiresAt": "2026-06-10T16:34:01.750Z",
+  "worktree": null,
+  "task": {
+    "id": "22.T22.10",
+    "trackId": "22",
+    "tranche": "T22.10",
+    "title": "Standalone vs composed dispatch contract",
+    "effort": null,
+    "file": "22-m1-paramasiva-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/22-m1-paramasiva-frontend-deep.md",
+    "dependsOn": [
+      "22.T22.1"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/common/surface-dispatch.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -1,5 +1,8 @@
 use epi_s3_gateway::{CreateSessionContext, SessionStore};
-use epi_s3_gateway_contract::SessionPatch;
+use epi_s3_gateway_contract::{
+    SessionPatch, TerminalBinding, TerminalCaptureMode, TerminalCapturePolicy, TerminalLease,
+    TerminalStatus,
+};
 
 fn temp_gate_root(name: &str) -> std::path::PathBuf {
     let mut root = std::env::temp_dir();
@@ -161,6 +164,141 @@ fn session_store_round_trips_vak_address() {
         Some(&addr),
         "null patch must not clear"
     );
+}
+
+#[test]
+fn session_store_persists_and_reloads_terminal_binding() {
+    let gate_root = temp_gate_root("terminal-binding");
+    let store = SessionStore::new(&gate_root).unwrap();
+    store.create("agent:main:main").unwrap();
+
+    let binding = TerminalBinding {
+        terminal_identifier: Some("terminal:main".to_owned()),
+        session_anchor: Some("agent:main:main".to_owned()),
+        tmux_pane_id: Some("%12".to_owned()),
+        attached_session_key: Some("agent:main:main".to_owned()),
+        terminal_status: Some(TerminalStatus::Attached),
+        lease: Some(TerminalLease {
+            lease_owner: Some("operator".to_owned()),
+            lease_purpose: Some("interactive-session".to_owned()),
+            lease_expires_at_ms: Some(4_102_444_800_000),
+        }),
+        capture_policy: Some(TerminalCapturePolicy {
+            mode: TerminalCaptureMode::Transcript,
+            max_lines: Some(500),
+            redaction_policy: Some("secrets-and-pii".to_owned()),
+        }),
+    };
+
+    store
+        .patch(
+            "agent:main:main",
+            SessionPatch {
+                terminal_binding: Some(Some(binding.clone())),
+                ..SessionPatch::default()
+            },
+        )
+        .unwrap();
+
+    let reloaded = SessionStore::new(&gate_root)
+        .unwrap()
+        .resolve("agent:main:main")
+        .unwrap();
+    assert_eq!(reloaded.terminal_binding.as_ref(), Some(&binding));
+
+    let row = epi_s3_gateway::sessions::session_row(&reloaded);
+    assert_eq!(
+        row["terminalBinding"]["terminalIdentifier"],
+        "terminal:main"
+    );
+    assert_eq!(row["terminalBinding"]["sessionAnchor"], "agent:main:main");
+}
+
+#[test]
+fn terminal_binding_patch_refuses_active_authority_without_matching_session_anchor() {
+    let gate_root = temp_gate_root("terminal-binding-refusal");
+    let store = SessionStore::new(&gate_root).unwrap();
+    store.create("agent:main:main").unwrap();
+
+    let error = store
+        .patch(
+            "agent:main:main",
+            SessionPatch {
+                terminal_binding: Some(Some(TerminalBinding {
+                    terminal_identifier: Some("terminal:main".to_owned()),
+                    session_anchor: Some("agent:main:main".to_owned()),
+                    tmux_pane_id: Some("%12".to_owned()),
+                    attached_session_key: Some("agent:other:main".to_owned()),
+                    terminal_status: Some(TerminalStatus::Attached),
+                    ..TerminalBinding::default()
+                })),
+                ..SessionPatch::default()
+            },
+        )
+        .unwrap_err();
+
+    assert!(error.contains("attachedSessionKey"));
+}
+
+#[test]
+fn terminal_binding_capture_requires_policy_and_live_lease() {
+    let gate_root = temp_gate_root("terminal-binding-capture");
+    let store = SessionStore::new(&gate_root).unwrap();
+    store.create("agent:main:main").unwrap();
+
+    let missing_policy = store
+        .patch(
+            "agent:main:main",
+            SessionPatch {
+                terminal_binding: Some(Some(TerminalBinding {
+                    terminal_identifier: Some("terminal:main".to_owned()),
+                    session_anchor: Some("agent:main:main".to_owned()),
+                    attached_session_key: Some("agent:main:main".to_owned()),
+                    terminal_status: Some(TerminalStatus::Attached),
+                    lease: Some(TerminalLease {
+                        lease_owner: Some("operator".to_owned()),
+                        lease_purpose: Some("interactive-session".to_owned()),
+                        lease_expires_at_ms: Some(4_102_444_800_000),
+                    }),
+                    capture_policy: Some(TerminalCapturePolicy {
+                        mode: TerminalCaptureMode::Stream,
+                        max_lines: None,
+                        redaction_policy: None,
+                    }),
+                    ..TerminalBinding::default()
+                })),
+                ..SessionPatch::default()
+            },
+        )
+        .unwrap_err();
+    assert!(missing_policy.contains("capturePolicy.maxLines"));
+
+    let expired_lease = store
+        .patch(
+            "agent:main:main",
+            SessionPatch {
+                terminal_binding: Some(Some(TerminalBinding {
+                    terminal_identifier: Some("terminal:main".to_owned()),
+                    session_anchor: Some("agent:main:main".to_owned()),
+                    attached_session_key: Some("agent:main:main".to_owned()),
+                    terminal_status: Some(TerminalStatus::Attached),
+                    lease: Some(TerminalLease {
+                        lease_owner: Some("operator".to_owned()),
+                        lease_purpose: Some("interactive-session".to_owned()),
+                        lease_expires_at_ms: Some(1),
+                    }),
+                    capture_policy: Some(TerminalCapturePolicy {
+                        mode: TerminalCaptureMode::Stream,
+                        max_lines: Some(100),
+                        redaction_policy: Some("secrets-and-pii".to_owned()),
+                    }),
+                    ..TerminalBinding::default()
+                })),
+                ..SessionPatch::default()
+            },
+        )
+        .unwrap_err();
+    assert!(expired_lease.contains("non-expired lease"));
 }
 
 #[test]

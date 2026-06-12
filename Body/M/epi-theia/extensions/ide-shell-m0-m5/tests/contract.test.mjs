@@ -56,6 +56,19 @@ const CAPABILITY_MATRIX_PATH = resolve(
     'capability-matrix.json'
 );
 
+const SOURCE_ROOT = resolve(__dirname, '..', 'src', 'browser');
+
+const INLINE_READINESS_BINDINGS = Object.freeze({
+    'bimba-graph-viewer-widget.tsx': ['s2.graph.node'],
+    'coordinate-tree-widget.tsx': ["s2'.coordinate.resolve"],
+    'evidence-pane-widget.tsx': ["s5'.review.history"],
+    'review-pane-widget.tsx': ["s5'.review.inbox"],
+    'autoresearch-pane-widget.tsx': ["s5'.improve.history"],
+    'logos-atelier-widget.tsx': ['aletheia_gnosis_query', 'aletheia_crystallise'],
+    'canon-studio-widget.tsx': ['vault-bridge.s1prime.vault.write_file', "s1'.semantic.suggest"],
+    'agentic-control-room-widget.tsx': ['capability-matrix', 'agentic-control-room.route']
+});
+
 test('parses the real capability-matrix.json from Body/S/S4/plugins/pleroma', () => {
     const raw = JSON.parse(readFileSync(CAPABILITY_MATRIX_PATH, 'utf8'));
     const matrix = parseCapabilityMatrix(raw);
@@ -174,6 +187,11 @@ test('IDE_SHELL_INTENT_TARGETS match the dispatcher contribution ids', () => {
     assert.equal(IDE_SHELL_INTENT_TARGETS.BIMBA_GRAPH, 'bimba-graph');
     assert.equal(IDE_SHELL_INTENT_TARGETS.AGENTIC_CONTROL_ROOM, 'agentic-control-room');
     assert.equal(IDE_SHELL_INTENT_TARGETS.EVIDENCE_PANEL, 'evidence-panel');
+    assert.equal(IDE_SHELL_INTENT_TARGETS.COORDINATE_TREE, 'coordinate-tree');
+    assert.equal(IDE_SHELL_INTENT_TARGETS.LOGOS_ATELIER, 'logos-atelier');
+    assert.equal(IDE_SHELL_INTENT_TARGETS.REVIEW_PANE, 'review-pane');
+    assert.equal(IDE_SHELL_INTENT_TARGETS.AUTORESEARCH_PANE, 'autoresearch-pane');
+    assert.equal(Object.keys(IDE_SHELL_INTENT_TARGETS).length, 8);
     assert.equal(EXTENSION_ID, 'ide-shell-m0-m5');
 });
 
@@ -196,6 +214,52 @@ test('decorateCoordinates detects QL archetypes, M/S coordinates, wikilinks, and
     assert.ok(kinds.includes('s-coordinate'), 'detects S2/S3 coordinates');
     assert.ok(kinds.includes('wikilink'), 'detects [[wikilinks]]');
     assert.ok(kinds.includes('context-frame'), 'detects (4.0/1-4.4/5) and (5/0)');
+});
+
+test('every IDE shell bridge-bound widget renders an inline BridgeReadinessBadge for its binding keys', () => {
+    for (const [fileName, bindingKeys] of Object.entries(INLINE_READINESS_BINDINGS)) {
+        const source = readFileSync(resolve(SOURCE_ROOT, fileName), 'utf8');
+        assert.match(source, /BridgeReadinessBadge/, `${fileName} must consume the shared badge`);
+        for (const bindingKey of bindingKeys) {
+            assert.ok(
+                source.includes(`bindingKey="${bindingKey}"`) ||
+                source.includes(`bindingKey={'${bindingKey}'}`) ||
+                source.includes(`bindingKey={\"${bindingKey}\"}`),
+                `${fileName} must render an inline badge for ${bindingKey}`
+            );
+        }
+    }
+});
+
+test('IdeShellBridgeGate uses the shared readiness primitive and only wraps bridge_unavailable', () => {
+    const source = readFileSync(resolve(SOURCE_ROOT, 'bridge-gate.tsx'), 'utf8');
+    assert.match(source, /classifyReadiness/);
+    assert.match(source, /BridgeReadinessBadge/);
+    assert.match(source, /subscribeObservability|onEvent/);
+    assert.match(source, /readinessId === 'bridge_unavailable'/);
+    assert.doesNotMatch(source, /profile_missing_field[^?;{}]*ide-shell-bridge-pending/s);
+});
+
+test('Smart Connections sidebar stub is registered as a Track 03 T6.5 code-pending surface', () => {
+    const stubSource = readFileSync(
+        resolve(SOURCE_ROOT, 'smart-connections', 'smart-connections-sidebar-stub.tsx'),
+        'utf8'
+    );
+    assert.match(stubSource, /SmartConnectionsSidebarStub/);
+    assert.match(stubSource, /pratibimba\.smart-connections-sidebar/);
+    assert.match(stubSource, /ReadinessBanner/);
+    assert.match(stubSource, /code-pending/);
+    assert.match(stubSource, /Track 03 T6\.5/);
+    assert.match(stubSource, /Track 17\/18/);
+    assert.match(stubSource, /MIGRATION-SOURCES\.md/);
+    assert.match(stubSource, /pending-extension/);
+    assert.match(stubSource, /Awaiting Track 03 T6\.5/);
+    assert.match(stubSource, /codePendingMarker:\s*'track_03_t6_5'/);
+
+    const frontendSource = readFileSync(resolve(SOURCE_ROOT, 'frontend-module.ts'), 'utf8');
+    assert.match(frontendSource, /SmartConnectionsSidebarStub/);
+    assert.match(frontendSource, /SmartConnectionsSidebarStubContribution/);
+    assert.match(frontendSource, /bindViewContribution\(bind, SmartConnectionsSidebarStubContribution\)/);
 });
 
 test('decorateCoordinates returns empty for plain prose', () => {

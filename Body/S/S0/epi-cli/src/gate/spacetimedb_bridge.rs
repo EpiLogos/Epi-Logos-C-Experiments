@@ -228,6 +228,7 @@ impl SpacetimeBridge {
             "cmuxWorkspace": record.cmux_workspace,
             "cmuxSurface": record.cmux_surface,
             "cmuxPaneId": record.cmux_pane_id,
+            "terminalBinding": temporal_context["terminal"]["binding"].clone(),
         });
 
         if let Some(alias) = now_alias {
@@ -249,7 +250,7 @@ impl SpacetimeBridge {
         let gateway_id =
             optional_env("EPI_GATEWAY_ID").unwrap_or_else(|| "gateway-main".to_owned());
         let redis_global_context = redis_global_context_key(&installation_id, &gateway_id, day_id);
-        let payload = json!({
+        let mut payload = json!({
             "coordinateOwner": "S3'",
             "agentAccessOwner": "S4/S5",
             "surfaceKey": global_temporal_surface_key(&installation_id, &gateway_id, &record.canonical_key),
@@ -281,6 +282,12 @@ impl SpacetimeBridge {
             },
             "privacy": "safe-live-projection",
         });
+        if let Some(fragment) = temporal_context
+            .pointer("/terminal/statusFragment")
+            .filter(|value| !value.is_null())
+        {
+            payload["terminal"] = fragment.clone();
+        }
 
         self.append(
             "global_temporal_surface",

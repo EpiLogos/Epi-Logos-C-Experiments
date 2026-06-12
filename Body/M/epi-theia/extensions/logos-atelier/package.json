@@ -1,0 +1,43 @@
+{
+  "name": "@pratibimba/logos-atelier",
+  "version": "0.1.0",
+  "description": "Standalone Logos Atelier Theia surface for etymology scent-following through Anima-dispatched Aletheia crystallisation mode.",
+  "license": "MIT",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "main": "lib/common/atelier-surface.js",
+  "types": "lib/common/atelier-surface.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/atelier-widget"
+    }
+  ],
+  "keywords": [
+    "theia-extension",
+    "epi-logos",
+    "logos-atelier",
+    "etymology",
+    "aletheia"
+  ],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@pratibimba/kernel-bridge": "workspace:*",
+    "@pratibimba/m-extension-runtime": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build && node --test tests/atelier-surface.test.mjs"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "runId": "20260610T172934Z-05-T5.12",
+  "taskId": "05.T5.12",
+  "startedAt": "2026-06-10T17:29:34.015Z",
+  "owner": "codex-m-dev-05-t5-12",
+  "leaseExpiresAt": "2026-06-10T19:29:34.015Z",
+  "worktree": null,
+  "task": {
+    "id": "05.T5.12",
+    "trackId": "05",
+    "tranche": "T5.12",
+    "title": "DR-IG-6 dipyramid geometry sweep for psychoid renderer spec",
+    "effort": null,
+    "file": "05-m4-nara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+    "dependsOn": [
+      "05.T5.11"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

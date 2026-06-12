@@ -13,6 +13,7 @@
  *   - `coordinate-tree`       (pratibimba.ide-shell.coordinate-tree)
  *   - `logos-atelier`         (pratibimba.ide-shell.logos-atelier)
  *   - `review-pane`           (pratibimba.ide-shell.review-pane)
+ *   - `autoresearch-pane`     (pratibimba.ide-shell.autoresearch-pane)
  *
  * Widget ids align with the IDE_DEEP_DESCRIPTOR.expectedWidgets entries:
  *   pratibimba.ide-shell.bimba-graph-viewer
@@ -22,6 +23,7 @@
  *   pratibimba.ide-shell.logos-atelier
  *   pratibimba.ide-shell.evidence-pane
  *   pratibimba.ide-shell.review-pane
+ *   pratibimba.ide-shell.autoresearch-pane
  */
 
 export const EXTENSION_ID = 'ide-shell-m0-m5' as const;
@@ -45,7 +47,15 @@ export const IDE_SHELL_INTENT_TARGETS = {
     /** Resolved as `pratibimba.ide-shell-m0-m5.agentic-control-room.open`. */
     AGENTIC_CONTROL_ROOM: 'agentic-control-room',
     /** Resolved as `pratibimba.ide-shell-m0-m5.evidence-panel.open`. */
-    EVIDENCE_PANEL: 'evidence-panel'
+    EVIDENCE_PANEL: 'evidence-panel',
+    /** Resolved as `pratibimba.ide-shell-m0-m5.coordinate-tree.open`. */
+    COORDINATE_TREE: 'coordinate-tree',
+    /** Resolved as `pratibimba.ide-shell-m0-m5.logos-atelier.open`. */
+    LOGOS_ATELIER: 'logos-atelier',
+    /** Resolved as `pratibimba.ide-shell-m0-m5.review-pane.open`. */
+    REVIEW_PANE: 'review-pane',
+    /** Resolved as `pratibimba.ide-shell-m0-m5.autoresearch-pane.open`. */
+    AUTORESEARCH_PANE: 'autoresearch-pane'
 } as const;
 
 /**

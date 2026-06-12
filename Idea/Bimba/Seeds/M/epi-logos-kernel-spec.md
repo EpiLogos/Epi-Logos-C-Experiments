@@ -1,5 +1,5 @@
 ---
-coordinate: "M0'"
+coordinate: "M'"
 status: "kernel-canon"
 updated: "2026-05-19"
 domain: "foundational-kernel-spec"
@@ -145,9 +145,9 @@ $$E_{\text{total}} = \frac{4 \cdot E_4 + 5 \cdot E_5 + 6 \cdot E_6}{15}$$
 
 where:
 
-- $E_4$ (Nara-traversal energy, weight **4**) is the energy of the proposed traversal-direction against the QL positions *as refracted through the 12 MEF lenses into meaningfulness*. The lenses are how the underlying P/P' positions surface as readable content; $E_4$ measures whether the LLM's traversal-gradient coheres with that refraction-structure at the engaged coordinate.
+- $E_4$ (Nara personal-resonance energy, weight **4**) is the energy of the proposed pratibimba against the user's personal-substrate at the engaged coordinate. Nara IS the M4 personal/identity/kairos subsystem; $E_4$ reads against `PASU` (`q_identity[4]`, `q_personal[4]`, birth-anchored quaternion fields), live `planet_degrees[10]`, oracle charges (`pp/mm/mp/pn`), and Nara-LoRA-adapted content (journal / dream / phone-writings corpus). The energy measures whether the proposed configuration coheres with WHO this person is at THIS kairotic moment. Per [[M'-ML-SKILL-SURFACE-SPEC]] §7.1, $E_4$ is served by the M4 Nara skill family (`nara-voice-training`, `nara-journal-parser`, `mlx-lora`).
 
-- $E_5$ (Epii lens-weighted energy with user-temporal modulation, weight **5**) is the joint computation over `(lens_resonance_72, user_temporal_N)` — the 72-dim lens-resonance vector AND the user-context channel as parallel inputs. The EBM at position 5' is a small fusion network learning this joint distribution. User-context entering as second channel makes the energy genuinely personalised: a configuration can be lens-coherent yet user-temporally incoherent, and $E_5$ holds both readings.
+- $E_5$ (Epii harmonic-substrate energy, weight **5**) is the multi-channel computation over the full harmonic substrate carried by `MathemeHarmonicProfile` — `lens_resonance_72` + `audio_octet[8]` + `nodal_quartet[4]` + `planetary_chakral` + `mahamaya` + `codon_rotation_projection` + `q_cosmic`, each as a parallel channel into the N-channel EBM at position 5'. The 72-fold IS the operational atom of the harmonic substrate; the 12 MEF lenses are one decomposition. $E_5$ measures whether the proposed configuration coheres with the harmonic-mathematical structure of reality. User-personal data does NOT enter $E_5$ (it enters $E_4$); the separation is structural — personal coherence vs harmonic coherence are different questions. Per [[M'-ML-SKILL-SURFACE-SPEC]] §7.1, $E_5$ is served by the M2 Parashakti skill family (`parashakti-ebm-head`, `parashakti-corpus-curation`) and M5 Epii (`epii-distillation`, `epii-preference-learning`).
 
 - $E_6$ (Anuttara R-virtue ontology energy, weight **6**) is the constraint-violation magnitude against the 9 Parameśvara virtues + 65 core relations + the growing constraint-set discovered through dev praxis. Weight 6 is anchor-weight, not preference-weight: failures here are structural-ontological violations the verifier can refuse, regardless of how favourably $E_4$ and $E_5$ score.
 
@@ -159,9 +159,9 @@ $$q_p^{(n+1)} = q_p^{(n)} - \log(9/8) \cdot \nabla_{q_p}\!\left[\frac{4 \cdot E_
 
 The step-size is the **epogdoon** — one whole-tone of harmonic progress in the latent space. Not a tunable hyperparameter; the mathematical-musical quantum inherited from the matheme. Six such steps complete a major-second sequence; six more close the whole-tone scale's traversal; twelve ticks complete the double-covered cycle of descent-and-ascent.
 
-The 4:5:6 weighting is similarly structural — inherited from the just-triad's harmonic skeleton, not free parameters. The future M5-1 philosophical-canon check (Epii at sub-position #1, planned for a later development cycle) sits as a soft sub-term *inside* $E_5$ rather than as a new top-level position, because canon is interpretable (Epii-domain) rather than formal (Anuttara-domain). The 4:5:6 architecture stays canonical.
+The 4:5:6 weighting is similarly structural — inherited from the just-triad's harmonic skeleton, not free parameters. The future M5-1 philosophical-canon check (Epii at sub-position #1, planned for a later development cycle) sits as one of the multi-channel inputs to $E_5$ alongside the harmonic substrate channels, because canon is interpretable (Epii-domain) rather than formal (Anuttara-domain). The 4:5:6 architecture stays canonical; channel-set within $E_5$ is the system's learning/experimentation degree of freedom.
 
-The agentic-runtime architecture that instantiates this energy formula at dispatch time — coordinate-conditional Mixture-of-Experts with Elo-gated dispatch through Anima — is specified at [[M'-AGENTIC-RUNTIME-SPEC]]. The user-context channel that feeds $E_5$ as second input is specified at [[M'-USER-CONTEXT-SKILL-SPEC]]. The model-slot rule that determines which models instantiate the LLM role per slot (Gemma 4 12B Unified Q4 for Nara-parsing by default, Pro-class for Epii-judge, etc.) is specified at [[M'-MODEL-SLOT-SPEC]].
+The agentic-runtime architecture that instantiates this energy formula at dispatch time — coordinate-conditional Mixture-of-Experts with Elo-gated dispatch through Anima — is specified at [[M'-AGENTIC-RUNTIME-SPEC]]. The user-context substrate that feeds $E_4$ personal-resonance (via the Nara skill family) is specified at [[M'-USER-CONTEXT-SKILL-SPEC]]. The model-slot rule that determines which models instantiate the LLM role per slot (Gemma 4 12B Unified Q4 for Nara-parsing by default, Pro-class for Epii-judge, etc.) is specified at [[M'-MODEL-SLOT-SPEC]].
 
 ### Ratio-face: 3:3 as the 1-2-3 / 4-5-0 split
 

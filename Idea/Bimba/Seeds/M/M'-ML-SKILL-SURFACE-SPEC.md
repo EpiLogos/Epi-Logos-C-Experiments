@@ -290,11 +290,11 @@ The keystone of the autoresearch self-improvement loop. Mercurius's Elo state IS
 
 1. **Trial accumulation** (per [[M'-AGENTIC-RUNTIME-SPEC]] §3) — every dispatch records to Mercurius's `mercurius_trial_log`; ratings update per channel per `(agent-model-skill, context-tuple)`.
 
-2. **Drift watch** — `aletheia-drift-detection` daemon (custom gap #3.5) reads rolling-window rating statistics. Drift conditions:
-   - **Rating-trend drift**: rating for a tuple drops by ≥δ over N trials (default: δ=100 Elo, N=50 trials)
-   - **Veto-pattern drift**: Janus reports ≥3 vetoes per session for the same facet across ≥3 consecutive sessions (per Track 12.19 miscalibration signal)
-   - **Coverage drift**: a context-class has no trials for ≥T days (default: T=30 days) — coverage gap requiring exploration dispatch
-   - **Verifier-violation drift**: Anuttara constraint violations for a constraint-name exceed baseline by ≥k× (default: k=3)
+2. **Drift watch** — `aletheia-drift-detection` daemon (custom gap #3.5) reads rolling-window rating statistics. Drift conditions are all gated by config-resolved thresholds (no hardcoded numeric defaults in code; see no-hardcoding lock at the end of this section):
+   - **Rating-trend drift**: rating for a tuple drops by ≥δ over N trials, where `δ = config.aletheia.drift_detection.delta_elo` and `N = config.aletheia.drift_detection.min_trials`
+   - **Veto-pattern drift**: Janus reports ≥`config.aletheia.drift_detection.veto_count_per_facet` vetoes per session for the same facet across ≥`config.aletheia.drift_detection.veto_consecutive_sessions` consecutive sessions (per Track 12.19 miscalibration signal)
+   - **Coverage drift**: a context-class has no trials for ≥T days, where `T = config.aletheia.drift_detection.coverage_days` — coverage gap requiring exploration dispatch
+   - **Verifier-violation drift**: Anuttara constraint violations for a constraint-name exceed baseline by ≥k×, where `k = config.aletheia.drift_detection.verifier_violation_multiplier`
 
 3. **Diagnose** — `aletheia-drift-detection`'s `diagnose.py` maps the drift signal to a candidate retrain action:
    - Rating-trend drift on `(Nara, gemma-12b-q4, journal-parser)` → `nara-voice-training` LoRA refresh
@@ -314,6 +314,24 @@ The keystone of the autoresearch self-improvement loop. Mercurius's Elo state IS
 8. **Recalibrate through use** — subsequent dispatches accumulate trials for the new artifact; rating narrows; drift-watch resumes on the new artifact.
 
 The loop never stops. It runs at runtime speed; no batch boundaries, no external evaluator. The system gets sharper by doing.
+
+### No-hardcoding lock for drift-detection and Elo thresholds
+
+ALL thresholds in the drift-detection loop (δ, N, T, k, α, retry counts, severity weights, veto-count thresholds, consecutive-session counts, seed Elo, bootstrap trial-count, confidence σ, Bradley-Terry / TrueSkill hyperparameters) resolve from `~/.epi-logos/config.toml` `[aletheia.drift_detection]` and `[aletheia.elo]` sections. No numeric defaults are pinned in code. Canonical config-key vocabulary (referenced by Track 12.20, 12.23, and 12.24 Phase 2 implementations):
+
+- `config.aletheia.drift_detection.delta_elo` — rating-trend Elo-drop threshold (δ)
+- `config.aletheia.drift_detection.min_trials` — rolling-window trial count (N)
+- `config.aletheia.drift_detection.coverage_days` — coverage-gap window in days (T)
+- `config.aletheia.drift_detection.verifier_violation_multiplier` — verifier-violation multiplier over baseline (k)
+- `config.aletheia.drift_detection.veto_count_per_facet` — per-session veto threshold per facet
+- `config.aletheia.drift_detection.veto_consecutive_sessions` — consecutive-session veto threshold
+- `config.aletheia.drift_detection.severity_weights.*` — per-invariant severity weights for the E_6 surrogate
+- `config.aletheia.elo.seed_rating` — uniform-Elo seed value (formerly hardcoded 1500)
+- `config.aletheia.elo.confidence_penalty_alpha` — confidence-interval penalty α in `effective_rating = R − α·σ(R)`
+- `config.aletheia.elo.bootstrap_trials` — bootstrap trial-count threshold per context-class
+- `config.aletheia.elo.bootstrap_sigma` — bootstrap confidence-σ
+
+Documented suggested defaults live in this spec's deployment notes and in the config-loader's documented-defaults table — not in source code. The daemon and Mercurius updater refuse to start if any required key is missing. Implementation that pins any numeric constant in code (rather than loading from config) fails tranche acceptance per Tracks 12.20 / 12.23 / 12.24 Phase 2 and per [[Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/33-harmonic-energy-channel-handoff]] §2.7 (Stream G).
 
 ### Developer-in-the-loop checkpoints
 

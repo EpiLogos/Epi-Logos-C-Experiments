@@ -16,6 +16,8 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
     border-bottom: 1px solid var(--theia-editorWidget-border, #444);
     padding-bottom: 0.5rem;
 }
@@ -77,4 +79,110 @@
 .ide-shell-evidence-fields {
     margin-top: 0.25rem;
     margin-left: 1rem;
+}
+
+/* === Autoresearch pane — Task 28.T28.10 === */
+
+.ide-shell-dry-run-badge {
+    margin-left: auto;
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--theia-errorForeground, #f48771);
+    border-radius: 3px;
+    color: var(--theia-errorForeground, #f48771);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ide-shell-autoresearch-as-concept {
+    margin: 0.5rem 0;
+    padding: 0.5rem 0.6rem;
+    border-left: 3px solid var(--theia-focusBorder, #007acc);
+    background: var(--theia-editorWidget-background, rgba(255, 255, 255, 0.03));
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.ide-shell-autoresearch-as-concept .ide-shell-forbidden-authority {
+    margin: 0.4rem 0 0;
+    font-size: 0.72rem;
+    opacity: 0.8;
+}
+
+.ide-shell-mobius-pass-ribbon {
+    margin: 0.5rem 0;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    background: var(--theia-titleBar-activeBackground, rgba(0, 122, 204, 0.08));
+}
+
+.ide-shell-mobius-pass-ribbon-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+}
+
+.ide-shell-mobius-pass-number {
+    font-weight: 700;
+}
+
+.ide-shell-mobius-pass-stages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0.4rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ide-shell-mobius-stage {
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--theia-panel-border, #444);
+    border-radius: 10px;
+    font-size: 0.68rem;
+    opacity: 0.6;
+}
+
+.ide-shell-mobius-stage-active {
+    border-color: var(--theia-focusBorder, #007acc);
+    color: var(--theia-focusBorder, #007acc);
+    font-weight: 700;
+    opacity: 1;
+}
+
+.ide-shell-capacity-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+    font-size: 0.78rem;
+}
+
+.ide-shell-capacity-filter label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.ide-shell-capacity-chip {
+    font-size: 0.7rem;
+    opacity: 0.75;
+}
+
+.ide-shell-gold-badge {
+    margin: 0 0.4rem;
+    padding: 0.05rem 0.45rem;
+    border: 1px solid #d4af37;
+    border-radius: 3px;
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.ide-shell-gold-badge:hover {
+    background: rgba(212, 175, 55, 0.3);
 }

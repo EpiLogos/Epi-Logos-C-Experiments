@@ -1,0 +1,35 @@
+{
+  "runId": "20260611T172519Z-27-T27.13",
+  "taskId": "27.T27.13",
+  "startedAt": "2026-06-11T17:25:19.780Z",
+  "owner": "codex-m-dev-27-t27-13",
+  "leaseExpiresAt": "2026-06-11T19:25:19.780Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.13",
+    "trackId": "27",
+    "tranche": "T27.13",
+    "title": "Acceptance-harness OmniPanel-tab traversal end-to-end",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.12"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/acceptance-harness/tests/topology.test.mjs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

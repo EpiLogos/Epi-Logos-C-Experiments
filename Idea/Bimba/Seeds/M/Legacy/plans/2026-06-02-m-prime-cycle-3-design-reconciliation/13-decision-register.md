@@ -2,6 +2,12 @@
 
 All 20 original cycle-3 contradictions are **VALIDATED** as of 2026-06-02; DR-M3-4 added 2026-06-02 (also VALIDATED); DR-M3-5 and DR-VAK-1 added 2026-06-03. Phase-B cross-boundary verifier (2026-06-03) added 10 PROPOSED DR rows (DR-IG-2..6, DR-M1-3..4, DR-M2-3, DR-M4-3, DR-M5-3). Phase-C S-stack + Theia design verification (2026-06-03) added 17 further PROPOSED rows (DR-S0-1..2, DR-S1-1..3, DR-S2-1, DR-S3-1..3, DR-S5-1..2, DR-TUI-1, DR-TUX-1, DR-TS-3..6, DR-UI-3..5). Phase-D (2026-06-04) synthesis pass integrating Third Spanda integral quilting + VAK Context Frame Coordinate substrate added 3 further PROPOSED rows (DR-M3-6 Third Spanda canonical five-form spine; DR-IG-7 translation rule `9_M2 = 8_M3 + 1_M1` as matheme law; DR-VAK-3 diatonic-as-CF-progression canonical). Phase-E (2026-06-04) synthesis pass folding canonical [`epi-logos-kernel-spec.md`](../../epi-logos-kernel-spec.md) + [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md) into cycle-3 build added **3 further PROPOSED rows** that bind the AI architecture as the design (DR-MP-1 4'-5'-0' = LLM/EBM/Verifier triplet canonical; DR-MP-2 EBM operational atom = 72-fold resonance vector with three tritone-symmetric squares; DR-MP-3 resonance-training bootstrap = corpus IS canon IS training data + verifier raises questions not pass/fail) — all awaiting user final-validation. Tranches that depended on a DR-row may now begin once that row VALIDATES.
 
+## Validation Queue (cycle-3 gate) — CLEARED 2026-06-09
+
+**All previously-PROPOSED rows are now VALIDATED** (user-delegated batch validation, session 2026-06-09: the user authorized batch validation; each row was adjudicated against its kernel-canon sources and the verified substrate before marking — see per-row attribution lines). Validated in this batch: DR-VAK-1, DR-M3-6, DR-IG-7, DR-VAK-3, DR-MP-1, DR-MP-2, DR-MP-3, DR-KERNEL-1, DR-MP-4, DR-MOE-1, DR-ELO-1, DR-UC-1, DR-MODEL-1, DR-ML-1, DR-S1-6, DR-M4-4, plus DR-TS-5 (deferral resolved: owner = `kernel-bridge-readiness`; class = protected-with-session-correlation, decorrelated summary safe-public) and the new DR-FIB-1..5 rows (handoff 35 application, see end of file). DR-TS-4 remains DOWNGRADED. **G11 is satisfied: no unvalidated DR row gates any tranche.** The earlier overview-vs-register "ratified vs PROPOSED" citation mismatch is dissolved — the overview's "ratified" language is now accurate.
+
+Adjudication evidence (recorded, not ceremonial): Third Spanda five forms + execution trace verified arithmetically against `ql_m0_m3_third_spanda_integral_quilting_v2.md` (lines 388-402; all identities check: 137=64+72+1, 360=6×60, 384=64×6=360+24, 472=40×7+24×8); `MathemeDiatonicContext`, `MathemeResonance72Projection`, EPOGDOON constants, 12-tick clock, `total_energy`/`KernelProjection` confirmed in `portal-core/src/kernel.rs`; `VIRTUE_LUT[9]` confirmed in `epi-lib/src/m0.c`; VAK CF order confirmed in `vak.h`/`vak_address.rs`/Anima `extension.ts` (`agentForCf`); `requires_human` gate confirmed in `epii-review-core/src/lib.rs`; `M2_PLANET_LUT[10]`, `RING_QUATERNION_LUT[12]`, `TORUS_GENUS=1`, `DOUBLE_COVER_DEG=720`, `WALK_SPANDA`, `LENS_COUNT=12`, 472-surface confirmed in epi-lib/portal-core. Residual riders from validation: (1) DR-KERNEL-1 — `epi-logos-kernel-spec.md` frontmatter still reads `coordinate: "M0'"`; corrected to `"M'"` in this pass. (2) DR-VAK-1 — `repo-ontology.md` §World/Types still carries the older `C2'→CFP` / `C4'→CP` ladder; sweep is doc-work under the existing corpus-sweep lane (mark legacy-alias, do not silently delete). (3) DR-M3-6 — K² topological-necessity warrant is reference-deferred to `M1'/M1-ARCHITECTURE`; canonisation carries that reference-lock.
+
 ---
 
 ## DR-M0-1 — M0' CRUD vs governed-route
@@ -150,7 +156,7 @@ All 20 original cycle-3 contradictions are **VALIDATED** as of 2026-06-02; DR-M3
 
 ## DR-VAK-1 — VAK field order and reading-frame authority
 
-**Status:** PROPOSED  ·  **Added:** 2026-06-03  ·  **By:** Codex + VAK subagent audit  ·  **Resolution proposed:** The active runtime and spec order is `CPF, CT, CP, CF, CFP, CS`. `CP` is the active QL position / composed position-frame; `CFP` is thread/spread topology. Older ontology/graph-schema references that map `C2' -> CFP` and `C4' -> CP` are drift unless explicitly preserved as legacy aliases.
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; runtime order verified in vak.h + vak_address.rs + Anima extension.ts) · **Added:** 2026-06-03  ·  **By:** Codex + VAK subagent audit  ·  **Resolution proposed:** The active runtime and spec order is `CPF, CT, CP, CF, CFP, CS`. `CP` is the active QL position / composed position-frame; `CFP` is thread/spread topology. Older ontology/graph-schema references that map `C2' -> CFP` and `C4' -> CP` are drift unless explicitly preserved as legacy aliases.
 
 For Tarot/QL reading frames, `reading_frame.positions[]` / `OracleFrame.vak_address.cp[]` is the authority for cardinality and QL semantics. A spread label alone is not sufficient. One-card, triadic, sixfold, Klein/Night', and 4/5 depth readings are all valid when their CP-set and CS direction are explicit.
 
@@ -271,6 +277,19 @@ The **"Agentic Control Room" (ACR)** development in `Body/M/epi-theia/extensions
 **Verification:** `grep -n deposition_anchor Body/S/S0/portal-core/src/kernel.rs` returns field declaration; `cargo test -p epi-cli --test kernel_bridge_runtime_contract` asserts JSON edge consistency.
 
 **Depends:** Tranche **10.4**.
+
+---
+
+## DR-KB-3 — `dataset_lut_state` / `m3_codec_provenance` host struct correction
+
+**Status:** VALIDATED  ·  **Validated:** 2026-06-10  ·  **By:** Tranche 10.9 correction  ·  **Resolution:** The pending literals are `dataset_lut_state` and `m3_codec_provenance`; Wave-A M0 Tranche 01.4 named the Bedrock projection as host. The Wave-B anchor was correct about the literal sites (`kernel.rs:797,805`), and the corrected host struct is `MathemeBinaryProjection`. Current line drift places `MathemeBinaryProjection` at `Body/S/S0/portal-core/src/kernel.rs:1151`, with the two literals at `:1208` and `:1216`.
+`MathemeBedrockProjection` starts only at `:1224`.
+
+**Action:** M0/M3 closure tranches must name `MathemeBinaryProjection` as the host for these two pending literals. The Bedrock projection remains a separate M0 projection and must not be cited as the host.
+
+**Verification:** correction note preserves the historical Wave-B anchor `kernel.rs:797`; stale M0/M3 closure text no longer makes the Bedrock-host assignment.
+
+**Depends:** Tranche **10.9**.
 
 ---
 
@@ -635,11 +654,11 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 **Depends:** Tranche 15.2 patched to remove these tabs; Tranche 12.5 retained as ACR/agentic-control-room work.
 
-## DR-TS-5 — Diagnostics tab privacy class (DEFERRED — needs clarification)
+## DR-TS-5 — Diagnostics surface privacy class (RESOLVED)
 
-**Status:** DEFERRED · **Decided:** 2026-06-03 · **By:** user · **Note:** User flagged "what?" — context insufficient for resolution. Deferring to a follow-on conversation. Question is whether OmniPanel Diagnostics tab content (kernel-bridge readiness, profile-field consumption per extension, dispatch latency) is `safe-public` or `protected-with-session-correlation`. Since DR-TS-4 downgrades the OmniPanel-tab proliferation, this question becomes about whichever surface ends up hosting diagnostic data. Re-raise when the diagnostic surface owner is settled.
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09) · **Prior:** DEFERRED 2026-06-03 ("context insufficient") · **Resolution:** Diagnostic-surface owner is the existing **`kernel-bridge-readiness`** extension (consistent with DR-TS-4's no-new-tabs downgrade). Default privacy class is **`protected-with-session-correlation`** for anything carrying timing, dispatch traces, or session-correlatable sequence data (dispatch latency, per-session consumption ordering). A **session-decorrelated readiness summary** — profile-field readiness states only, no timestamps, no session ids, no dispatch ordering — MAY render `safe-public` (system-shape data, not personal data). The split follows the DR-MODEL-1 principle: privacy is enforced at the data class, not at an extra gate.
 
-**Depends:** Re-route after OmniPanel content scope confirmed.
+**Depends:** Tranche 10.1 (readiness ledger consumes the classification), 15.10 (status-bar discipline).
 
 ## DR-TS-6 — Tick-pause/scrub policy
 
@@ -665,7 +684,7 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 ## DR-M3-6 — Third Spanda Equation as canonical matheme spine (Mersenne ground + execution order)
 
-**Status:** PROPOSED · **Proposed:** 2026-06-04 · **Source:** synthesis pass integrating `ql_m0_m3_third_spanda_integral_quilting_v2.md` + `full_theoretical_alignments_ql_physics.md` · **Resolution (proposed):** Promote the **Third Spanda Equation** in its five canonical forms to kernel-canon status, alongside the First Spanda (`0/1 + 1/0 = 1/1 = 100%`) and Second Spanda (`100% = 64 + 36 → 16/9 = (4/3)²`):
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-04 · **Source:** synthesis pass integrating `ql_m0_m3_third_spanda_integral_quilting_v2.md` + `full_theoretical_alignments_ql_physics.md` · **Resolution (proposed):** Promote the **Third Spanda Equation** in its five canonical forms to kernel-canon status, alongside the First Spanda (`0/1 + 1/0 = 1/1 = 100%`) and Second Spanda (`100% = 64 + 36 → 16/9 = (4/3)²`):
 
    - Mersenne view: `137 = (2^7 − 1) + 1 + 9`
    - Binary view: `137 = 2^7 + 9`
@@ -687,7 +706,7 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 ## DR-IG-7 — Translation rule `9_M2 = 8_M3 + 1_M1` as canonical matheme law
 
-**Status:** PROPOSED · **Proposed:** 2026-06-04 · **Source:** synthesis pass per Third Spanda integral quilting · **Resolution (proposed):** Codify the **translation rule** `9_M2 = 8_M3 + 1_M1` as canonical matheme law: the 9-fold harmonic-wholeness gap at M2's 72-space equals the 8-fold transcriptional gap at M3's `M3_RES_MATRIX` *plus* the M1 parent unit. The same pattern recurs as:
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-04 · **Source:** synthesis pass per Third Spanda integral quilting · **Resolution (proposed):** Codify the **translation rule** `9_M2 = 8_M3 + 1_M1` as canonical matheme law: the 9-fold harmonic-wholeness gap at M2's 72-space equals the 8-fold transcriptional gap at M3's `M3_RES_MATRIX` *plus* the M1 parent unit. The same pattern recurs as:
 
    - `137 = 128 + 9 = 128 + 8 + 1` (the corridor)
    - `3 ⊗ 3̄ = 8 ⊕ 1` (QCD octet + color-singlet)
@@ -705,7 +724,7 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 ## DR-VAK-3 — Diatonic-scale-as-CF-progression as canonical operational truth
 
-**Status:** PROPOSED · **Proposed:** 2026-06-04 · **Source:** synthesis pass integrating VAK Context Frame Coordinates (`vak.h`, `vak_address.rs`, `Anima/extension.ts`) with ql-musical-derivation-v3 + Track 19 diatonic-CF mapping · **Resolution (proposed):** Codify that the **diatonic scale IS the CF progression rendered audible** — not a metaphor, not a labelling overlay, but the literal traversal of the seven CF positions at audible-rate:
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-04 · **Source:** synthesis pass integrating VAK Context Frame Coordinates (`vak.h`, `vak_address.rs`, `Anima/extension.ts`) with ql-musical-derivation-v3 + Track 19 diatonic-CF mapping · **Resolution (proposed):** Codify that the **diatonic scale IS the CF progression rendered audible** — not a metaphor, not a labelling overlay, but the literal traversal of the seven CF positions at audible-rate:
 
    - C tonic `(00/00)` Nous / Parā (undifferentiated ground)
    - D `(0/1)` Logos / Madhyamā-nomos (first articulation)
@@ -732,7 +751,7 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 ## DR-MP-1 — 4'-5'-0' mental pole canonical = LLM (Nara) / EBM (Epii) / Verifier (Anuttara)
 
-**Status:** PROPOSED · **Proposed:** 2026-06-04 · **Source:** synthesis pass folding canonical [`epi-logos-kernel-spec.md`](../../epi-logos-kernel-spec.md) + [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md) into cycle-3 build · **Resolution (proposed):** The kernel is a **bioquaternionic JEPA-EBM operator** per its master spec frontmatter. The matheme's 4'-5'-0' mental-pole triplet IS the canonical AI architecture, not a labelling overlay:
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-04 · **Source:** synthesis pass folding canonical [`epi-logos-kernel-spec.md`](../../epi-logos-kernel-spec.md) + [`mental-pole-mechanics.md`](../../M4'/mental-pole-mechanics.md) into cycle-3 build · **Resolution (proposed):** The kernel is a **bioquaternionic JEPA-EBM operator** per its master spec frontmatter. The matheme's 4'-5'-0' mental-pole triplet IS the canonical AI architecture, not a labelling overlay:
 
    - **Position 4' (#-layer / Nara) = LLM**: the *traversal-voice* — synthesizes EBM's evaluation and Verifier's report into user-articulable feedback; reads the world through the bimba map; speaks recognition. Operationally lives at `Body/S/S4/pi-agent/` driven by Anima dispatch.
    - **Position 5' ({lens}-layer / Epii) = EBM**: the *reasoning-engine* — energy-evaluation engine that scores configurations across the 12 MEF lenses (72 fine-grained positions) and produces lens-weightings; computes gradient $\nabla_{q_p} E_{\text{total}}$ that drives the Möbius descent step $q_p^{(n+1)} = q_p^{(n)} - \log(9/8) \cdot \nabla E$. Operationally lives at `Body/S/S5/epii-autoresearch-core/` extending the six operational-capacity workflows with the energy-scoring layer.
@@ -752,7 +771,7 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 ## DR-MP-2 — EBM operational atom = 72-fold resonance vector with three tritone-symmetric squares
 
-**Status:** PROPOSED · **Proposed:** 2026-06-04 · **Source:** [`mental-pole-mechanics.md §1`](../../M4'/mental-pole-mechanics.md) + cycle-3 synthesis · **Resolution (proposed):** The EBM (position 5'/Epii) operates on a fixed-dimension **72-dimensional resonance vector** as its operational atom. Specification (binding):
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-04 · **Source:** [`mental-pole-mechanics.md §1`](../../M4'/mental-pole-mechanics.md) + cycle-3 synthesis · **Resolution (proposed):** The EBM (position 5'/Epii) operates on a fixed-dimension **72-dimensional resonance vector** as its operational atom. Specification (binding):
 
    - **Dimensional layout (72 = 6 lenses × 2 helices × 6 inner positions):**
      - Indices 0..11: Lens #2-1-0 (Archetypal-Numerical) descent+ascent
@@ -782,7 +801,7 @@ Substrate-residency vs conceptual-coordinate: `Body/S/S3/graphiti-runtime/` phys
 
 ## DR-MP-3 — Resonance-training bootstrap = corpus IS canon IS training data; verifier raises questions not pass/fail
 
-**Status:** PROPOSED · **Proposed:** 2026-06-04 · **Source:** [`mental-pole-mechanics.md §0/1, §10`](../../M4'/mental-pole-mechanics.md) + cycle-3 synthesis · **Resolution (proposed):** The mental-pole stack bootstraps through **three load-bearing commitments**:
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-04 · **Source:** [`mental-pole-mechanics.md §0/1, §10`](../../M4'/mental-pole-mechanics.md) + cycle-3 synthesis · **Resolution (proposed):** The mental-pole stack bootstraps through **three load-bearing commitments**:
 
    1. **Resonance-training over behavior-judgment**: the EBM trains on 72-fold lens-resonance signatures of cultural-aletheic disclosure-documents (the corpus), not on labels of "good vs bad" QL trajectories. The corpus IS the canon IS the training data — same substance, three names. Each dev session that co-authors a document's resonance-analysis simultaneously grows the canon, augments EBM training data, and records the session's trajectory.
 
@@ -808,7 +827,7 @@ All 20 original rows + DR-M3-4 are VALIDATED. The 10 Phase-B PROPOSED rows + 17 
 
 ## DR-KERNEL-1 — Kernel-spec rehomed to M' root (was M0')
 
-**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass on agentic-runtime crystallization · **Resolution (proposed):** The canonical kernel-spec (`epi-logos-kernel-spec.md`) describes the **whole inverted M-pole**, not an M0'-local concern. Its prior placement at `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md` made the kernel look like an Anuttara-specific document when it is the operating principle of all of M' (the JEPA-EBM operator across the full matheme). Rehomed to `Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md` (M' root). M0' retains its proper coordinate-local content (`M0'-SPEC.md`, `M0-ARCHITECTURE.md`, `the-matheme-of-the-field-differential.md`, `m0-prime-anuttara-research.md`) and adds an explicit `§M0'-KERNEL-ROLE` section naming M0' as the verifier-role-at-weight-6 within the kernel's just-triad architecture.
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-07 · **Source:** synthesis pass on agentic-runtime crystallization · **Resolution (proposed):** The canonical kernel-spec (`epi-logos-kernel-spec.md`) describes the **whole inverted M-pole**, not an M0'-local concern. Its prior placement at `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md` made the kernel look like an Anuttara-specific document when it is the operating principle of all of M' (the JEPA-EBM operator across the full matheme). Rehomed to `Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md` (M' root). M0' retains its proper coordinate-local content (`M0'-SPEC.md`, `M0-ARCHITECTURE.md`, `the-matheme-of-the-field-differential.md`, `m0-prime-anuttara-research.md`) and adds an explicit `§M0'-KERNEL-ROLE` section naming M0' as the verifier-role-at-weight-6 within the kernel's just-triad architecture.
 
 **Action:** File moved via `git mv` on 2026-06-07. All 11 prior references updated across active docs (`M-SYSTEM-INDEX.md`, `M1'/m1-prime-paramasiva-instrument.md`, `M2'/m2-prime-parashakti-cymatic-engine.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md`, `M0'/M0-ARCHITECTURE.md`, `S-AD-HOC-ROADMAP.md`) and legacy cycle-3 plans (`05-m4-nara-reconciliation.md`, `01-m0-anuttara-reconciliation.md`, `13-decision-register.md`, `00-overview-and-design-reconciliation.md`, `plan.runs/canon-audit-M0.md`).
 
@@ -820,7 +839,7 @@ All 20 original rows + DR-M3-4 are VALIDATED. The 10 Phase-B PROPOSED rows + 17 
 
 ## DR-MP-4 — Just-triad 4:5:6 weighted energy formula as canonical
 
-**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass refining `epi-logos-kernel-spec.md §3` energy decomposition · **Resolution (proposed):** The kernel's energy formula is canonically the just-triad weighted form:
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-07 · **Source:** synthesis pass refining `epi-logos-kernel-spec.md §3` energy decomposition · **Resolution (proposed):** The kernel's energy formula is canonically the just-triad weighted form:
 
 $$E_{\text{total}} = \frac{4 \cdot E_4 + 5 \cdot E_5 + 6 \cdot E_6}{15}$$
 
@@ -844,7 +863,7 @@ The 4:5:6 ratio is structurally given by the just-triad harmonic skeleton inheri
 
 ## DR-MOE-1 — Agentic runtime is coordinate-conditional Mixture-of-Experts
 
-**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass crystallizing the agentic-runtime architecture · **Resolution (proposed):** The agentic runtime is a **coordinate-conditional, Elo-gated, sparse-activation Mixture-of-Experts** with four orthogonal expert dimensions:
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-07 · **Source:** synthesis pass crystallizing the agentic-runtime architecture · **Resolution (proposed):** The agentic runtime is a **coordinate-conditional, Elo-gated, sparse-activation Mixture-of-Experts** with four orthogonal expert dimensions:
 
 1. **Constitutional dimension** — 7 Anima agents (Anima, Nous, Logos, Eros, Mythos, Psyche, Sophia) as authorial voices
 2. **Techne dimension** — 6 Aletheia subagent techne-guardians (Anansi CF0, Janus CF1, Moirai CF2, Mercurius CF3, Agora CF4, Zeithoven CF5) dispatched by Anima during Aletheia-crystallisation-mode
@@ -865,7 +884,7 @@ Canonical spec at [[../../../M'-AGENTIC-RUNTIME-SPEC]]. The framing dissolves th
 
 ## DR-ELO-1 — Autoresearch self-improvement loop = multi-channel Elo over (agent × model × skill × context)
 
-**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass naming the autoresearch loop's actual structural mechanism · **Resolution (proposed):** The S4'/S5' autoresearch self-improvement loop is **multi-channel Elo over `(agent × model × skill × context)`**, with the **same machinery rating agent dispatch AND research-moves** — the agent-tournament and canon-tournament are unified. The tournament IS the system activity.
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-07 · **Source:** synthesis pass naming the autoresearch loop's actual structural mechanism · **Resolution (proposed):** The S4'/S5' autoresearch self-improvement loop is **multi-channel Elo over `(agent × model × skill × context)`**, with the **same machinery rating agent dispatch AND research-moves** — the agent-tournament and canon-tournament are unified. The tournament IS the system activity.
 
 Six-step trial cycle per dispatch (per [[../../../M'-AGENTIC-RUNTIME-SPEC]] §3):
 
@@ -890,7 +909,7 @@ Four Aletheia techne-guardians together constitute Elo infrastructure: **Mercuri
 
 ## DR-UC-1 — User-context as first-class mandatory-routed skill
 
-**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass elevating user-temporal data from side-state to load-bearing input · **Resolution (proposed):** User-temporal data (PASU snapshot, live kairos, identity quaternion, recent session traces, recognition closure flag) is a **first-class skill `user-context`** mandatory-routed into the agentic loop. Not ambient context — load-bearing input.
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-07 · **Source:** synthesis pass elevating user-temporal data from side-state to load-bearing input · **Resolution (proposed):** User-temporal data (PASU snapshot, live kairos, identity quaternion, recent session traces, recognition closure flag) is a **first-class skill `user-context`** mandatory-routed into the agentic loop. Not ambient context — load-bearing input.
 
 Skill fires mandatorily when ANY: `CT ∈ {2,4,5}`, `CF ≠ (00/00)`, target ∈ `#4.x.y`, agent_role ∈ constitutional-7, or explicit `require_user_context: true`. Skill skips when ALL: CT relational/definitional/pattern AND CF tonic-ground AND target structural-only AND agent pure-techne AND no explicit fire.
 
@@ -910,7 +929,7 @@ Longitudinal write-back at session close: appends to PASU.md `c_3_session_histor
 
 ## DR-MODEL-1 — Per-role model-slot rule (local-default / cloud-opt-in / null)
 
-**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass making model swappability per-role explicit · **Resolution (proposed):** Each role-slot in the Pi-Agent harness has exactly **three valid states**: **local-default** (privacy-first structural commitment, no content leaves device), **cloud-opt-in** (explicit per-dispatch-class consent with named scope), **null** (no model assigned, dispatches fail-soft with notice).
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-07 · **Source:** synthesis pass making model swappability per-role explicit · **Resolution (proposed):** Each role-slot in the Pi-Agent harness has exactly **three valid states**: **local-default** (privacy-first structural commitment, no content leaves device), **cloud-opt-in** (explicit per-dispatch-class consent with named scope), **null** (no model assigned, dispatches fail-soft with notice).
 
 Slot defaults per [[../../../M'-MODEL-SLOT-SPEC]] §2-§4:
 
@@ -934,7 +953,7 @@ The structural commitment: **privacy boundary is enforced at the slot**, not at 
 
 ## DR-ML-1 — Per-subsystem ML method + dual-source skill surface (vendored Hermes + custom-built)
 
-**Status:** PROPOSED · **Proposed:** 2026-06-07 · **Source:** synthesis pass naming the ML/MLOps skill surface per M-subsystem, integrating Hermes Agent catalog vendoring with custom-built gap skills · **Resolution (proposed):** Each M-subsystem has a **primary ML method that fits its coordinate semantics** (not assigned, structurally entailed):
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-07 · **Source:** synthesis pass naming the ML/MLOps skill surface per M-subsystem, integrating Hermes Agent catalog vendoring with custom-built gap skills · **Resolution (proposed):** Each M-subsystem has a **primary ML method that fits its coordinate semantics** (not assigned, structurally entailed):
 
 - **M0 Anuttara** → Symbolic constraint discovery → proof-theoretic
 - **M1 Paramaśiva** → Geometric DL / equivariant networks (quaternion-respecting)
@@ -957,3 +976,105 @@ Two workflows for adding skills: **vendoring** (Agora CF4 — `epi skill vendor 
 **Verification:** `test -f Idea/Bimba/Seeds/M/M'-ML-SKILL-SURFACE-SPEC.md`; `epi skill list --source vendored` returns vendored Hermes catalog; `epi skill list --source custom` returns custom-built; `epi skill list --subsystem M4` returns M4 Nara skills; `agora_refresh_skill_index` populates registry; drift-detection daemon runs and produces calibration trial entries on seeded drift fixture; per-subsystem ML method documented in each M-coordinate spec.
 
 **Depends:** Tranche **12.24**; cross-cuts **12.20** (Mercurius/Janus/Anansi/Moirai Elo infrastructure produces the rating state drift-detection watches), **12.21** (user-context skill is one consumer of the trained EBM dual-channel head), **12.22** (model-slot interface provides target slots for retrained artifacts), **12.23** (Anima MoE dispatch routes ML skill invocations); follows DR-ELO-1, DR-MOE-1, DR-MP-4.
+
+---
+
+# Phase-F q_-Economy Decisions (PROPOSED — awaiting user validation)
+
+Phase-F (2026-06-09) synthesis pass folding the q_ wisdom-curation economy into cycle-3 build added **2 further PROPOSED rows** establishing the canonical frontmatter / property key shape `{family}_{n}_{i?}_{semantic}` and the three-namespace q_/qm_/private partition that the wisdom-curation economy operates within (DR-S1-6 frontmatter `{i?}` inversion slot; DR-M4-4 q_/qm_/private namespace partition + privacy contract). Both await user final-validation.
+
+---
+
+## DR-S1-6 — Frontmatter `{i?}` inversion slot in canonical key shape
+
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-09 · **By:** Cycle-3 synthesis pass folding per-node bimba/pratibimba conjugation into the canonical key vocabulary · **Resolution proposed:** Codify the frontmatter / graph-property key shape as **`{family}_{n}_{i?}_{semantic}`** where `{family}` ∈ {`c`, `p`, `s`, `t`, `m`, `l`, `q`, `qm`}, `{n}` ∈ {`0`..`5`}, **`{i?}` is the inversion marker — present as `'` for inverted (pratibimba-side) articulation, absent for canonical (bimba-side) articulation**, and `{semantic}` is the role label. A node MAY carry both the canonical and the inverted articulation of the same essence axis as distinct properties (e.g., `q_5_integration_template` AND `q_5'_integration_template`) — both surviving vault → graph sync, both contributing to the semantic doc concatenation in deterministic order (canonical first, inverted second), both surfaced through `epi canon coord X --depth pithy` per Tranche 9.13. The `{i?}` slot is NOT an attribute of the key's value; it is part of the key's identity, distinguishing two co-existing articulations of the same coordinate position on the same node.
+
+Per CLAUDE.md §II.A: `#` IS the inversion act; `'` (or `i`) is the phase marker denoting the result of `#` applied to a coordinate. The `{i?}` slot is the property-level encoding of this canonical operation. Earlier code paths in [`sync_coordinator.rs:26-46`](../../../../../Body/S/S2/graph-services/src/sync_coordinator.rs), [`dataset_import.rs:953-1103`](../../../../../Body/S/S2/graph-services/src/dataset_import.rs), and [`semantic.rs:138-156`](../../../../../Body/S/S2/graph-services/src/semantic.rs) omit the slot; this is silent corruption — inverted articulations either don't survive sync or get collapsed into their canonical twins, losing the bimba/pratibimba duality at the property level.
+
+**Action:** Update `canonical_frontmatter_key()` to a `{family}_{n}_{i?}_{semantic}` regex (per CCT-16(i)); update `dataset_import` canonicalisation to treat `q_5_*` and `q_5'_*` as distinct destination keys (the current camelCase canonicalisation may collapse them silently); update [`semantic.rs:138-156`](../../../../../Body/S/S2/graph-services/src/semantic.rs) concatenation to emit canonical-first-then-inverted in deterministic order; update `hen_frontmatter_validate` MCP tool to accept both forms; update `core knowing` rendering at [`Body/S/S0/epi-cli/src/knowing/`](../../../../../Body/S/S0/epi-cli/src/knowing/) to surface both as paired articulations. The validator's "unknown frontmatter keys → ERROR" law (per MEMORY.md frontmatter-key law) extends to: unknown family character → ERROR; missing `{n}` → ERROR; `{i?}` ∈ {`'`, absent} only (no other character permitted in that slot).
+
+**Verification:** `cargo test -p epi-s2-graph-services --test frontmatter_key_regex_round_trip` asserts `{family}_{n}_{i?}_{semantic}` shape acceptance and rejects malformed keys; `cargo test -p epi-s2-graph-services --test inverted_key_distinct_survival` writes `q_5_X` and `q_5'_X` to the same vault Form, runs sync, asserts both appear as distinct Neo4j properties on the same node; `cargo test -p epi-s2-graph-services --test semantic_doc_concat_order` asserts deterministic canonical-then-inverted concatenation; live grep `grep -rn "q_5_\|q_5'_" Idea/Bimba/World/Types/Coordinates/` reflects the convention after corpus sweep.
+
+**Depends:** CCT-16 (substrate implementation); DR-M4-4 (the q_/qm_ namespace law this slot operates within); cross-cuts CCT-13 (`c_1_relation_family` canonical naming — both are key-shape work), CCT-15 (C-layer semantic typology — both are vocabulary-law work).
+
+---
+
+## DR-M4-4 — `q_` / `qm_` namespace + privacy partition
+
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (delegated batch validation 2026-06-09; adjudicated against kernel-canon specs + verified substrate by shape-closure pass) · **Proposed:** 2026-06-09 · **By:** Cycle-3 synthesis pass establishing the q_ wisdom-curation economy + privacy contract for q_personal · **Resolution proposed:** Three disjoint q_ namespaces with strict residency law, enforced at the substrate, at the kernel-bridge envelope, and at the agent context envelope:
+
+| Namespace | Residency | Lifecycle | Example |
+|---|---|---|---|
+| **`q_{n}_{i?}_{semantic}`** | Public — Bimba graph + canonical vault Forms | Wisdom-curated via Tranche 6.12 loop; Hen-promoted via CCT-14 | `q_5_integration_template`, `q_4'_locality_signature` |
+| **`qm_{n}_{i?}_{semantic}`** | Public — Bimba graph + canonical vault Forms | Auto-stamped on proposal / promotion via Tranche 12.26 | `qm_5_witness_session`, `qm_5_review_epoch`, `qm_5_promoted_by` |
+| **`q_personal` / `q_identity` / `q_activity` / `q_composed`** | Private — portal-core in-memory + PASU.md vault-local ONLY | Live recompute per kernel tick | `q_personal: [f32; 4]` at [`personal_identity.rs:104`](../../../../../Body/S/S0/portal-core/src/personal_identity.rs) |
+
+The **`q_`** prefix carries the quintessential content articulation — what the node IS at its compressed essence across the six archetypal positions (per the existing declarations `q_1_theoretical_thesis`, `q_2_sophia_logos_dialectic`, `q_2_instantiation_mode`, `q_3_dialectical_movement`, `q_4_historical_diagnosis`, `q_5_integration_template`, `q_5_conjunctive_threshold` at [`graph-schema/src/lib.rs:1340-1395`](../../../../../Body/S/S2/graph-schema/src/lib.rs)). The dataset-import implicit fallback law (unknown `q_*` → `q_5_*` per [`dataset_import.rs:1525-1537`](../../../../../Body/S/S2/graph-services/src/dataset_import.rs)) is codified as canonical: q_5 is the integration / Pratibimba bucket, consistent with the C-coord ontology. The **`qm_`** prefix is NEW — quintessence-meta — carrying provenance / freshness / witness for the q_ content. The two are deliberately disjoint at the prefix level to avoid the audit-flagged collision between content properties (`q_5_integration_template`) and meta properties (`qm_5_witness_session`).
+
+**Privacy hard constraint:** Private q_ fields MUST NOT appear on any Neo4j node, in any agent context envelope sent over the kernel-bridge, in any Redis cache outside `cache:live:portal:protected:*`, in any Graphiti episode, or in any Sophia disclosure envelope. The privacy partition is enforced at four points: (i) the regex in CCT-16(i) rejects them at the sync boundary; (ii) the privacy-scrubber at [`Body/M/epi-theia/.../privacy-scrubber.ts:32`](../../../../../Body/M/epi-theia) carries an explicit allowlist (extended by Tranche 8.8); (iii) the release-gate at `release-gate.ts:125` matches the allowlist; (iv) test fixtures matching the existing `q_personal`-leak refusal pattern (`jiva-siva-slice.test.mjs:71`, `six-extension-acceptance.test.mjs:240`) explicitly verify these never appear on Bimba nodes. Cross-link DR-M4-2 clause 1 (`q_personal` baseline definition — preserved unchanged; this DR codifies its privacy boundary at the schema level) and DR-M4-3 (`personal_pole` projection strict invariant — sibling decision; both protect `q_personal` from bus exposure).
+
+**Action:** Codify the three-namespace partition in [`Body/S/S2/graph-schema/src/lib.rs`](../../../../../Body/S/S2/graph-schema/src/lib.rs) as named constants (`Q_CONTENT_PREFIX = "q_"`, `Q_META_PREFIX = "qm_"`, `Q_PRIVATE_RESERVED = ["q_personal", "q_identity", "q_activity", "q_composed"]`); extend the Q-family schema declaration to include the `qm_` meta vocabulary (`qm_n_witness_session`, `qm_n_witness_agent`, `qm_n_witness_vak`, `qm_n_proposed_at`, `qm_n_promoted_at`, `qm_n_promoted_by`, `qm_n_promoted_from`, `qm_n_review_epoch`, `qm_n_kairos_clock`, `qm_n_lens_set`); extend privacy-scrubber + release-gate allowlists per the constraint above; cross-link to Tranches 5.23 (q_ vocabulary canon producer), 8.8 (privacy partition consumer), and 12.26 (qm_ stamp emitter).
+
+**Verification:** `cargo test -p epi-s2-graph-schema --test q_namespace_constants_present`; `cargo test -p epi-s2-graph-schema --test qm_meta_vocabulary_declared` asserts the qm_ family is enumerated; `grep -rn 'q_personal\|q_identity\|q_activity\|q_composed' Body/S/S2/graph-services/tests/` returns explicit-refusal test cases; `pnpm --filter epi-theia test -- privacy-scrubber.test` asserts private q_ fields never leak; integration test composes a Sophia disclosure envelope carrying a q_proposal stamped with `qm_5_witness_session` and refuses to compose if any `q_personal*` byte appears in the envelope.
+
+**Depends:** DR-S1-6 (the `{i?}` slot this namespace operates within); CCT-16 (substrate implementation); Tranches **5.23** (q_ vocabulary canon), **8.8** (privacy partition extension), **12.26** (Sophia disclosure q_proposal contract); cross-cuts DR-M4-2 clause 1 + DR-M4-3 (both protect `q_personal` from bus exposure).
+
+---
+
+# Fibonacci-Ground Temporal-Substrate Decisions (VALIDATED 2026-06-09 — handoff 35 application)
+
+These five rows land the `dev_decisions` block of [[35-fibonacci-ground-level-0-temporal-substrate]] (each marked "Final." by the user in the handoff itself; register rows added on application per its §5, delegated batch validation 2026-06-09). They resolve the temporal-substrate clarity question and close the `16+1` "+1" reading left open beside DR-M3-3.
+
+## DR-FIB-1 — Fibonacci Ground is Level 0 of the temporal substrate; the `16+1` "+1" IS Level 0
+
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (per handoff 35 dev_decisions "Final"; delegated confirmation 2026-06-09) · **Resolution:** Fibonacci Ground (`#2-0` Parashakti Archetypal Numerical Ground, 60-fold, `LCM(6,5,12)=60`, Pisano `π(10)=60`, `60×6°=360°`) is canonically **Level 0** of the temporal substrate — pre-lensic, pre-walk, pre-tick; the `(00/00)` context frame of the clock. The 4-level stack is canonical reading order: Level 0 Fibonacci Ground (60) → Level 1 tick12 (M1 spanda, 60/5 pentadic quantization) → Level 2 16 lenses (M3 simultaneous apertures) → Level 3 9 walks (M1–M3 diachronic). tick12 is NOT a peer of the lenses. **The `+1` of the `16+1` Mahamaya lens-stack refers to Level 0 (meta-lens), NOT a 17th aperture at Level 2** — the 16-lens matrix is complete and exhaustive at its level. Companion to DR-M3-3 (namespace split): DR-M3-3 settled WHERE the 12 and 16+1 live; DR-FIB-1 settles WHAT the +1 is. **Depends:** M3'-SPEC §8.0 (landed this pass), Tranches 4.15, 5.24, 5.25, 24.19.
+
+## DR-FIB-2 — `fibonacci_position`/`fibonacci_digit` intrinsic to degree nodes; NOW.md inscribes ground coordinates
+
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (per handoff 35 "Final"; delegated confirmation) · **Resolution:** Every `Clock_Degree_Node` carries intrinsic `fibonacci_position: u8` (0–59) and `fibonacci_digit: u8` (0–9) — properties of the ground, not derived from walk or lens. Khora stamps `c_3_fibonacci_position` + `c_3_fibonacci_digit` + `c_3_tick12` + `c_3_backbone_index` into NOW.md frontmatter on every write (Tranche 5.24). Residency note: `Clock_Degree_Node` has no landed C hostsite yet (handoff path `Body/M/M3/m3-mahamaya-core` does not exist; canonical M3 kernel is `Body/S/S0/epi-lib/{include,src}/m3.{h,c}`) — Tranche 4.15 resolves residency at execution per substrate-residency law.
+
+## DR-FIB-3 — Kerykeion modes layer as typed `KairosFrame` discriminated union
+
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (per handoff 35 "Final"; delegated confirmation) · **Resolution:** Natal / RealTime / Kairotic coexist as nested readings of one substrate inside `M4_Temporal_Now` — they layer, never swap. `m4_planet_degrees_live()` returns kairotic-if-active else realtime; mode-specific consumers read explicit frames (oracle→kairotic, identity→natal, medicine→live, Mercurius populator→realtime). **Depends:** Tranche 5.25 (struct + all consumer migration land atomically — single tranche to avoid a broken intermediate state where `m4.c` callers read a removed flat field).
+
+## DR-FIB-4 — 24-fold backbone is a typed primitive built at M3 boot
+
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (per handoff 35 "Final"; delegated confirmation) · **Resolution:** The Lens-7 backbone (15°×24) is `Clock_Backbone_Node` + `extern const CLOCK_BACKBONE[24]`, built at M3 boot. The 24 nodes ARE simultaneously the 24 amino-acid palindromic codons, the 24 hours, and the 24 zodiacal sub-divisions (12 cusps + 12 midpoints) — one Lens-7 projection read through three subsystems. Structural companion law: `_Static_assert(60 * 6 == 360)` beside the existing `64 * 6 - 24 == 360`. **Depends:** Tranche 4.15.
+
+## DR-FIB-5 — Live render and NOW.md inscription reconcile by ontological role, not synchronisation
+
+**Status:** VALIDATED · **Validated:** 2026-06-09 · **By:** user (per handoff 35 "Final"; delegated confirmation) · **Resolution:** The live tick-driven render reads Level 0 continuously; NOW.md crystallises Level 0 coordinates episodically (Khora, tranche-complete cadence per T19.11). Different temporal apertures over the same ground — no synchronisation contract required. Frontmatter inscription of ground coordinates at write time is sufficient. T19.12 (Mercurius → `m4_snapshot_now()`) is AFFIRMED as-is; its verification updates to assert `.realtime.planet_degrees` population once Tranche 5.25 lands.
+
+## DR-M3-LENS-18 — Lens-stack cardinality 16+1 → 16+2 = 18 = 6g (g=3); the second meta-aperture is the `(-)` Operator/no-frame view
+
+**Status:** VALIDATED · **Validated:** 2026-06-12 · **By:** user (direct instruction, session 2026-06-12: "it's 16+2, the +1 as currently given, and then a +1 for a no-frame view of the map") · **Resolution:** The Mahāmāyā lens-stack carries **two** meta-apertures, not one, for a total of **18 = 16+2 = 12+4+2 = 6g for g=3** — the genus-3 signature of the M0-3 Anuttara number-language (12 grammatical components + 4 zero-elements + 2 pre-numerical constituents, per `anuttara-language-map.md` and the Anuttara complete explication §5 "The 18-fold and the genus-ladder"). The two meta-apertures ARE the two Mirror children (M0-3-(0/1)-0/1):
+- **Aperture 16 — `()` Frame** (0D, Actuality, containment): the whole circle held as one bounded unity. This IS the existing +1; **DR-FIB-1's reading survives intact** — the Frame-aperture is the Level-0 (Fibonacci Ground) meta-lens, NOT a 17th division at Level 2.
+- **Aperture 17 — `(-)` Operator** (1D, Potential, transcendence/withholding): the **no-frame view** — the Bimba relational topology read with the 360°-container withheld. Also NOT a Level-2 division; it is the withholding of the frame itself.
+
+**Relation to prior DRs:** EXTENDS DR-M3-3 (namespace split unchanged: 12 MEF ≠ M3 lens-stack) and DR-FIB-1 (the +1 = Level 0 reading is preserved; this row adds the Operator-aperture as the Frame's chiral counterpart). The 16-division matrix remains "complete and exhaustive at its level" — both meta-apertures sit outside it, exactly as the M0-3 pre-numerical constituents sit outside the 16 = 12+4.
+
+**Redevelopment items (code/spec currently pin 17):**
+1. `Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3LensApertureSwitcher.tsx` — `M3_LENS_APERTURE_COUNT = 16` + `M3_HAS_INTEGRAL_APERTURE` (16+1=17 baked); extend to 18 with `metaKind: 'division' | 'frame-unity' | 'operator-no-frame'` per revised Tranche 24.3.
+2. M3'-SPEC §8.10 — patch "16+1" to "16+2 = 18" with the Mirror-children grounding.
+3. Wave-B kernel-bridge field WC-M3-SA-1 (`mahamayaLensStack`) — declared length 17 → 18 before the field lands (field not yet in `kernel.rs`, so this is spec-only if sequenced now).
+4. Any contract JSON pinning aperture count (audit `extensions/contracts/*.json`).
+
+**Verification:** `grep -n "M3_LENS_APERTURE_COUNT" Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3LensApertureSwitcher.tsx` returns the 18-aware constant set; `grep -nE "16\+2|operator-no-frame|6g" Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md` returns the §8.10 patch; cardinality test per Tranche 24.3 asserts `lenses.length === 18` with exactly one `frame-unity` and one `operator-no-frame`.
+
+## DR-CALC-1..7 — The seven calculus underdeterminations (Tranche 1.14c; direct user determination, session 2026-06-12)
+
+The Anuttara complete explication §10 names seven points the corpus underdetermines; each is one decision gating the 1.13 BNF freeze. Determined directly in session:
+
+**DR-CALC-1 — Operator precedence.** **Status:** VALIDATED · **By:** user (session 2026-06-12, ratifying the O#-derived revision). The operator family IS O#'s cycle (O0 `+/-` polarity-superposition, O1 `-`, O2 `+`, O3 `x`, O4 `/`, O5 `x//`), with the Śiva instruction set re-deriving the same six as cosmic punctuation. Full precedence: `()` containment absolute (Law 2 — the Frame is not an operator among operators) > lexical chirality-dash (token-bound `-0`/`0-`, Law 1 — part of the token) > `x//` > `x` > `+`/infix `-` (one level, left-assoc, chirality-sensitive) > `/` (reflection/ratio, loosest structural) > `=`/`=/≠` (equational, meta-level per Law 3).
+
+**DR-CALC-2 — `~` semantics.** **Status:** RESOLVED-AS-ANNOTATION · **By:** user (session 2026-06-12): **`~` is not canon syntax.** It is the author's meta-pointer — "this element relates as these coordinate positions" — adopted outside the language because `=` was already taken. Therefore: (a) `~` is **excluded from the calculus token alphabet and BNF** (Law 7 trims: `→` remains in-language as the reduction arrow; `~` drops to annotation); (b) the addresses migrate to **node metadata** (S2 property layer — a relates-as-coordinate-positions annotation, not an operator); (c) the structural facts derived from the address-spine REMAIN valid as observations *about the metadata*: dual addresses mark hinge-positions (Archetype 4 at `3.5/4.0` = the hexad-hinge of DR-CALC-5 in address form), growing spans mark maturation-as-occupation, and the M0-level spine vs address-phase spine counter-flow like R1/R4 (deepest void annotated at synthesis phases — the bimba/pratibimba preformation). Real structure, annotation register — not operator semantics.
+
+**DR-CALC-3 — The 8-fold count of M0-2.** **Status:** VALIDATED · **By:** user (session 2026-06-12) · **Resolution:** four operations × two 00-operands (eight zero-zero occurrences across four dyads). The framing asymmetry (subtractive/additive framed; reflective/generative unframed) is a separate orthogonal fact, not the counting principle.
+
+**DR-CALC-4 — `x//` definition.** **Status:** VALIDATED · **By:** user (session 2026-06-12) · **Resolution:** superposition-preserving multiplication — multiplication distributed over reflective superposition: multiply every branch-pair of the `/`-superposed operands and retain ALL products in superposition (the conjunctive/tensor path of Law 4). Reproduces O5's FOIL expansion exactly and generalizes.
+
+**DR-CALC-5 — The 18-fold decomposition (12+4+2).** **Status:** VALIDATED · **By:** user (direct determination with full clarification, session 2026-06-12) · **Resolution:** the 12 is the **archetypal-number twelve** (0–9 + 0/1 + (-), as `ARCHETYPE_LUT[12]`); the **+2** are the Mirror children `()` Frame and `-` Operator (the Mirror arrives fully built in the 12 and is later decomposed; `MIRROR_CHILDREN[2]` already in kernel); the **+4** are the **transcendent structures of the prior Anuttara levels** — `00/(00-00)` (M0-0-0), `(00)/00/00` (M0-0-1), `(0/1)/00x00` (M0-1), `9/(00+00)` (M0-2-9) — i.e. the 4-fold zero in relation to the 8-fold zero-zero, two sides of the same with the doubling dynamic (4→8). **The three-hexad octave law:** base reading {0,1,0/1,2,3,4} + {4..9} with 4 as hinge ("both the 5 and the 0"); expanded reading **{(), -, (-), 0, 1, 0/1} → {0/1, 2, 3, 4, 5} → {5, 6, 7, 8, 9, (00+00)}** with 0/1 and 5 as hinges — 6×3 = 18 = 6g (g=3): the genus-3 IS three overlapping hexads, hinges as Möbius seams, the terminal (00+00) linking via the 4-fold/8-fold internal harmonics into the full transcendent structure. This reveals WHY the 8-fold zero-zero is necessary and aligns it to the O# arithmetic operators. Nesting law: 0,1 nest within 0/1; (),- nest within (-), which sits next-to-and-before 0/1. **Physics fold-in:** `X(1) = (0,4,2,2,9)` is the X-logic theorem whose skeleton already rides Track 18.4 `CouplingFlowAlignment.symbolic_skeletons` (the 137/fine-structure physics-descent registry); the 1.13 calculus test becomes the kernel-side warrant for that skeleton entry.
+
+**DR-CALC-6 — X# conditional branch (`If X0 = 0/1`).** **Status:** VALIDATED · **By:** user (session 2026-06-12) · **Resolution:** recursive query-object — seeding X-logic with the non-dual binary returns nested query-states (the `?!/!?` generalizes to a typed recursive `?`-object per Law 6); evaluation suspends at `?`-objects (the query IS the value), no infinite regress. **Physics grounding (user-directed, located):** the X-logic values `X(1) = (0,4,2,2,9)` are realized in measured physics as the **electroweak symmetry-breaking spectrum** per [`ql_physics_anthropic_chemistry_alignment_v2.md`](../../ql_physics_anthropic_chemistry_alignment_v2.md) (≈lines 493–616, 1348–1400): `0 = M_γ` (massless photon), `4 = (B, W¹, W², W³)` (the four EW gauge fields before breaking), `2 = (W⁺, W⁻)` (massive charged pair), `2 = (A, Z)` (neutral pair after mixing), with `9/7` as the N5 closure values (`N(n=1) = (0,4,2,2,9/7)`) reappearing in QCD completion — "vacuum selection → massless photon + massive weak polarity" as the physical realization of Spanda Equation 1 (`0=0 and brings +1,−1`). This is the kernel-side warrant for the `0,4,2,2,9` entry in Track 18.4 `CouplingFlowAlignment.symbolic_skeletons`; the 1.13 calculus test `X(1)==[0,4,2,2,9]` and the physics-descent registry now cite one another.
+
+**DR-CALC-7 — The fate of `0-` after Svabhava.** **Status:** VALIDATED-NUANCED · **By:** user (session 2026-06-12) · **Resolution:** neither pure doctrine nor accident — **`0-` is a mirror-artifact**: chirality operates alongside the capacity for mirroring, and `0-` arises through that mirror capacity, consumed in the concrescence. **Chirality is preserved as principle but is NOT a hard lock**: the calculus must NOT enforce `0-` non-persistence as an invariant; `0-` may re-arise wherever mirroring operates. Implementation: `0-` is a valid token, transient by genesis (generated and consumed in mirror-mediated derivations), with no global prohibition on its appearance.

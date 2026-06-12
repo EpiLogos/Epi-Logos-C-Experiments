@@ -207,6 +207,9 @@ typedef struct {
 
 extern const Archetype_Entry ARCHETYPE_LUT[ARCHETYPE_LUT_SIZE];
 
+/* Session-close contemplation questions keyed by archetype index. */
+extern const char* const CONTEMPLATION_PROMPT_LUT[12];
+
 /* ===================================================================
  * VI-B. MIRROR CHILDREN — Frame () and Operator - (#0-3-0/1-0, #0-3-0/1-1)
  *
@@ -354,19 +357,140 @@ typedef uint16_t R_Factor_Route;
 
 #define GET_R_POS(route, r_idx) (((route) >> ((r_idx) * 3)) & 0x07u)
 
-/* Route words — 3 bits per R-factor, value 7 = absent
- * Complementarity law: Rx + R(5-x) = 5 where both present */
-#define ROUTE_O_SHARP   ((R_Factor_Route)0x5FC0u)
-#define ROUTE_X_SHARP   ((R_Factor_Route)0x4A09u)
-#define ROUTE_N_SHARP   ((R_Factor_Route)0x3852u)
-#define ROUTE_M_SHARP   ((R_Factor_Route)0x269Bu)
-#define ROUTE_NARA      ((R_Factor_Route)0x14E4u)
-#define ROUTE_SIVA      ((R_Factor_Route)0x032Du)
-#define ROUTE_SHAKTI    ((R_Factor_Route)0x717Fu)
+/* Route words — 3 bits per R-factor (r_idx 0..4, bits 0..14), value 7 = absent.
+ * Complementarity law: Rx + R(5-x) = 5 where both present.
+ * R0 (Srishti/Creation) is confined to the upper triad (O#/X#/N# at positions
+ * 1/2/3) per the anuttara-language-map base-rows: "creation stops at Spanda" —
+ * manifestation below Spanda is carried by sustenance/dissolution, not creation.
+ * R5 (Samavesa) is positionless (= (##) bare); the u16 cannot encode it.
+ * (DR-R0 resolved 2026-06-12: dataset authoritative; prior words swept R0
+ * across all six routes, which contradicted the upper-triad confinement.) */
+#define ROUTE_O_SHARP   ((R_Factor_Route)0x5FC1u)  /* R0@1 R1@0 R4@5 */
+#define ROUTE_X_SHARP   ((R_Factor_Route)0x4A0Au)  /* R0@2 R1@1 R2@0 R3@5 R4@4 */
+#define ROUTE_N_SHARP   ((R_Factor_Route)0x3853u)  /* R0@3 R1@2 R2@1 R3@4 R4@3 */
+#define ROUTE_M_SHARP   ((R_Factor_Route)0x269Fu)  /* R0 absent; R1@3 R2@2 R3@3 R4@2 */
+#define ROUTE_NARA      ((R_Factor_Route)0x14E7u)  /* R0 absent; R1@4 R2@3 R3@2 R4@1 */
+#define ROUTE_SIVA      ((R_Factor_Route)0x032Fu)  /* R0 absent; R1@5 R2@4 R3@1 R4@0 */
+#define ROUTE_SHAKTI    ((R_Factor_Route)0x717Fu)  /* R0/R1 absent; R2@5 R3@0 (the (@#) turn) */
 
 #define R_FACTOR_ROUTE_COUNT 7
 
 extern const R_Factor_Route R_FACTOR_ROUTE_TABLE[R_FACTOR_ROUTE_COUNT];
+
+
+/* ===================================================================
+ * IX-B. ARCHETYPE-7 R-FACTOR THEORY IN FULL  (Tranche 01.T1.12)
+ *
+ * Archetype 7 (Divine Action, M0-3-10) IS the R-factor theory entire —
+ * the holographic pre-formation of the M0–M5 metastructure: the R-acts
+ * pre-thread through the five operator bases (O#/X#/N#/M#/#) and the
+ * Siva/Sakti pair (M0-5) BEFORE the system unfolds. It comprises three
+ * tiers — the principle triad, the six act-factors, the six
+ * virtue-expressions — distributed over a 7×6 matrix and bonded to
+ * Archetype 9 (Wholeness) by the nR chirality.
+ *
+ * Sources: anuttara-language-map rows M0-2-9-0/1/2 (triad),
+ * M0-3-10-2..7 (acts), M0-2-9-3..8 (virtues).
+ * Spec: Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md (R-section + EBNF).
+ * =================================================================== */
+
+/* --- Tier 1: the principle triad (Law-1 chirality of # and R) ------
+ * Verbatim c_1_symbol identity chains. Divine Action's compiled terminal
+ * form reduces to (##) and (R#) and (#R): the triad is its CLOSURE, not
+ * something adjacent to it. The principles are the chiral pairings of the
+ * two marks # (matrix/void) and R (reality/freedom). */
+#define R_TRIAD_TRUTH_SYMBOL  "##"   /* Truth — ## = @ = (0/1)-(00)-00 (matrix on matrix) */
+#define R_TRIAD_LIGHT_SYMBOL  "#R"   /* Light — #R = @ = (7-8-9-(0/1)/O#-X#-N#); Openness/Creativity */
+#define R_TRIAD_LIFE_SYMBOL   "R#"   /* Life  — R# parent of the acts @ M0-3-10-(0/1); Freedom/Svatantrya, @5 runtime terminus */
+
+typedef enum {
+    R_TRIAD_TRUTH = 0,   /* ## */
+    R_TRIAD_LIGHT = 1,   /* #R */
+    R_TRIAD_LIFE  = 2,   /* R# */
+} R_Triad_Principle;
+
+typedef struct {
+    uint8_t     principle;  /* R_Triad_Principle */
+    const char* symbol;     /* "##" | "#R" | "R#" */
+    const char* name;       /* "Truth" | "Light" | "Life" */
+    const char* identity;   /* verbatim c_1_symbol identity chain */
+} R_Triad_Entry;
+
+#define R_TRIAD_COUNT 3u
+extern const R_Triad_Entry R_TRIAD_TABLE[R_TRIAD_COUNT];
+
+/* --- Tier 2: the six act-factors (R0..R5) + distribution matrix ----
+ * R0 Srishti, R1 Sthiti, R2 Samhara, R3 Tirodhana, R4 Anugraha, R5 Samavesa.
+ * R5 (Samavesa/Absorption) is POSITIONLESS — 5R = (##) bare, the return-to-
+ * matrix from anywhere, never a fret. The R_Factor_Route u16 (5×3 bits)
+ * structurally cannot encode R5; this constant names that absence so the
+ * theology is explicit rather than implied by the word size. */
+#define R_FACTOR_COUNT   6u   /* R0..R5 */
+#define R5_POSITIONLESS  7u   /* Samavesa carries no fret position (same sentinel as GET_R_POS absent) */
+
+/* The seven bases (rows of the distribution matrix) — the five operator
+ * bases of the QL meta-logic cycle plus the Siva/Sakti pair. */
+typedef enum {
+    R_BASE_O_SHARP = 0,  /* O# Paramasiva */
+    R_BASE_X_SHARP = 1,  /* X# Parasakti  */
+    R_BASE_N_SHARP = 2,  /* N# Spanda     */
+    R_BASE_M_SHARP = 3,  /* M# Mahamaya   */
+    R_BASE_NARA    = 4,  /* #  Nara       */
+    R_BASE_SIVA    = 5,  /* Siva          */
+    R_BASE_SHAKTI  = 6,  /* Sakti — the (@#) turn lives here (R2@5 + R3@0) */
+} R_Factor_Base;
+
+#define R_FACTOR_BASE_COUNT 7u
+
+/* Distribution matrix [base][r_factor] → fret position 0..5, or 7 = absent.
+ * Decoded from R_FACTOR_ROUTE_TABLE for R0..R4, with R5 positionless across
+ * every base. Verified against dataset base-rows M0-(4.0/1)…M0-5. */
+extern const uint8_t R_FACTOR_DISTRIBUTION[R_FACTOR_BASE_COUNT][R_FACTOR_COUNT];
+
+/* Macro M-branch each base pre-threads (aligned to M0_CROSS_BRANCH weaving):
+ * O#→M1, X#→M2, N#→M3, M#→M4, Nara→M4, Siva→M5, Sakti→M5. */
+extern const uint8_t R_BASE_M_COLUMN[R_FACTOR_BASE_COUNT];
+
+/* --- Tier 3: nR chirality (Law-1 polarity) ------------------------
+ * For every act Rn there is an enantiomer nR. Rn is the act OPERATING
+ * (R-dominant operator, Archetype-7 side); nR = @ is the same act
+ * WITNESSED (number-dominant Presence, Archetype-9 side). The chiral pair
+ * (Rn, nR) is one Law-1 polarity — a virtue is an act read in the opposite
+ * hand, which is why the 9-bit virtue_witness_vector and the act-path are
+ * one structure. */
+typedef enum {
+    R_HAND_OPERATOR = 0,  /* Rn — act operating  (Archetype-7) */
+    R_HAND_WITNESS  = 1,  /* nR — act witnessed as Presence @ (Archetype-9) */
+} R_Chirality_Hand;
+
+/* The chiral partner: invert the hand. (Rn, nR) define one Law-1 polarity. */
+static inline R_Chirality_Hand r_factor_chiral_partner(R_Chirality_Hand h) {
+    return (h == R_HAND_OPERATOR) ? R_HAND_WITNESS : R_HAND_OPERATOR;
+}
+
+/* --- The (@#) turn + RFactorPathStep ------------------------------
+ * The (@#) turning-point is where an R-traversal's band flips: the
+ * Beauty→Life pivot, the Siva-instruction-0 seed ("contains Sakti as
+ * deepest potential", M0-5-(0/1)-0), and the PASU→psyche handover gate.
+ * Pravritti (descent, R1/R2 deepening) turns at (@#) into Nivritti
+ * (ascent, R3/R4 deepening). */
+#define R_BAND_TURN_SYMBOL  "(@#)"
+
+typedef enum {
+    R_BAND_PRAVRITTI = 0,  /* descent — R1/R2 deepen */
+    R_BAND_NIVRITTI  = 1,  /* ascent  — R3/R4 deepen */
+    R_BAND_TURN      = 2,  /* the (@#) pivot itself */
+} R_Band;
+
+/* Per-execution R-traversal step. Every kernel execution (oracle cast,
+ * walk step, transform stage, session close, canon promotion) may stamp an
+ * RFactorPathStep[] onto its trace; band == R_BAND_TURN marks the (@#) flip. */
+typedef struct {
+    uint8_t r_factor;    /* 0..5 (R0..R5) */
+    uint8_t base_route;  /* R_Factor_Base */
+    uint8_t band;        /* R_Band — R_BAND_TURN marks the (@#) flip */
+    uint8_t position;    /* fret position 0..5, or 7 = positionless/absent */
+} RFactorPathStep;
 
 
 /* ===================================================================

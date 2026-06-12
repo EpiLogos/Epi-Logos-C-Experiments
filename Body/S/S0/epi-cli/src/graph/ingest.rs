@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use epi_kernel_contract::{IngestionSession, IngestionStatus, KernelTickEnvelope};
-use portal_core::KernelProjection;
+use portal_core::{E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs, KernelProjection};
 
 pub const ENV_INGEST_HOME: &str = "EPILOGOS_INGEST_HOME";
 
@@ -68,8 +68,9 @@ pub fn open_session(
         [1.0, 0.0, 0.0, 0.0],
         [1.0, 0.0, 0.0, 0.0],
         None,
-        None,
-        0.0,
+        &E4PersonalInputs::default(),
+        &E5HarmonicInputs::default(),
+        &E6VerifierInputs::default(),
     );
     let envelope = KernelTickEnvelope::from_kernel_projection(0, &projection)
         .with_session_key(session_key)
@@ -143,8 +144,9 @@ mod tests {
             [1.0, 0.0, 0.0, 0.0],
             [0.5, 0.5, 0.5, 0.5],
             None,
-            None,
-            0.0,
+            &E4PersonalInputs::default(),
+            &E5HarmonicInputs::default(),
+            &E6VerifierInputs::default(),
         );
         let envelope = KernelTickEnvelope::from_kernel_projection(1, &projection);
         let updated = record_step(
@@ -174,8 +176,9 @@ mod tests {
             [1.0, 0.0, 0.0, 0.0],
             [0.5, 0.5, 0.5, 0.5],
             None,
-            None,
-            0.0,
+            &E4PersonalInputs::default(),
+            &E5HarmonicInputs::default(),
+            &E6VerifierInputs::default(),
         );
         let envelope = KernelTickEnvelope::from_kernel_projection(1, &projection);
         assert!(record_step(

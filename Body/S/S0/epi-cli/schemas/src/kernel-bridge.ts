@@ -68,6 +68,7 @@ export const KernelBridgeCapabilityName = z.enum([
   "invokeGatewayRpc",
   "depositKernelObservation",
   "requestReviewEvidence",
+  "s2.parashaktiCorrespondences",
 ]);
 export type KernelBridgeCapabilityName = z.infer<
   typeof KernelBridgeCapabilityName
@@ -88,6 +89,133 @@ export const CanonicalVakAddress = z
   })
   .strict();
 export type CanonicalVakAddress = z.infer<typeof CanonicalVakAddress>;
+
+export const OracleSpreadScale = z.enum([
+  "single-card",
+  "compressed-triad",
+  "sixfold-ql-traverse",
+  "night-inverse-pass",
+  "depth-4-5-pass",
+  "clock-walk",
+  "symbolic-orf",
+]);
+export type OracleSpreadScale = z.infer<typeof OracleSpreadScale>;
+
+export const OracleTraversalDirection = z.enum([
+  "day",
+  "night",
+  "night-prime",
+  "inverse",
+  "clockwise",
+  "counterclockwise",
+]);
+export type OracleTraversalDirection = z.infer<
+  typeof OracleTraversalDirection
+>;
+
+export const ReadingPosition = z
+  .object({
+    key: z.string().min(1),
+    ordinal: z.number().int().nonnegative(),
+    cpPositionRef: z.string().min(1),
+    label: z.string().min(1).optional(),
+    vak: CanonicalVakAddress.optional(),
+  })
+  .strict();
+export type ReadingPosition = z.infer<typeof ReadingPosition>;
+
+export const OracleFrame = z
+  .object({
+    frameId: z.string().min(1),
+    spreadScale: OracleSpreadScale,
+    positions: z.array(ReadingPosition).min(1),
+    traversalDirection: OracleTraversalDirection.optional(),
+    complementaryPairs: z.array(z.tuple([z.string().min(1), z.string().min(1)])).default([]),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    const keys = new Set<string>();
+    for (const position of value.positions) {
+      if (keys.has(position.key)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `OracleFrame positions must use unique keys; duplicate ${position.key}`,
+          path: ["positions"],
+        });
+      }
+      keys.add(position.key);
+    }
+    for (const [left, right] of value.complementaryPairs) {
+      if (!keys.has(left) || !keys.has(right)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `OracleFrame complementary pair ${left}/${right} must reference declared positions`,
+          path: ["complementaryPairs"],
+        });
+      }
+    }
+  });
+export type OracleFrame = z.infer<typeof OracleFrame>;
+export const ReadingFrame = OracleFrame;
+export type ReadingFrame = OracleFrame;
+
+export const OracleSequenceCodon = z
+  .object({
+    ordinal: z.number().int().nonnegative(),
+    symbol: z.string().min(1),
+    cpPositionRef: z.string().min(1),
+    vak: CanonicalVakAddress.optional(),
+  })
+  .strict();
+export type OracleSequenceCodon = z.infer<typeof OracleSequenceCodon>;
+
+export const OracleSequence = z
+  .object({
+    sequenceId: z.string().min(1),
+    frameId: z.string().min(1),
+    codons: z.array(OracleSequenceCodon).min(1),
+  })
+  .strict();
+export type OracleSequence = z.infer<typeof OracleSequence>;
+
+export const SymbolicProtein = z
+  .object({
+    proteinId: z.string().min(1),
+    sequence: OracleSequence,
+    readingFrame: OracleFrame,
+    startPositionRef: z.string().min(1).optional(),
+    stopPositionRef: z.string().min(1).optional(),
+  })
+  .strict();
+export type SymbolicProtein = z.infer<typeof SymbolicProtein>;
+
+export const TranscriptionalClockPacket = z
+  .object({
+    packetId: z.string().min(1),
+    profileGeneration: z.number().int().nonnegative().nullable(),
+    vak: CanonicalVakAddress,
+    oracleFrame: OracleFrame,
+    cpPositionRef: z.string().min(1),
+    oracleSequence: OracleSequence.optional(),
+    symbolicProtein: SymbolicProtein.optional(),
+    provenanceHandles: z.array(z.string().min(1)).default([]),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    const positionRefs = new Set(
+      value.oracleFrame.positions.map((position) => position.cpPositionRef),
+    );
+    if (!positionRefs.has(value.cpPositionRef)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "TranscriptionalClockPacket cpPositionRef must bind to reading_frame.positions[]",
+        path: ["cpPositionRef"],
+      });
+    }
+  });
+export type TranscriptionalClockPacket = z.infer<
+  typeof TranscriptionalClockPacket
+>;
 
 export const MathemeHarmonicProfile = z
   .object({
@@ -134,6 +262,8 @@ export const MathemeHarmonicProfile = z
       z.array(z.record(z.unknown())),
       z.record(z.unknown()),
     ]),
+    kleinFlip: z.unknown().nullable().optional(),
+    harmonicGrammar: z.unknown().optional(),
     s2Anchor: z.unknown().nullable(),
     s3Anchor: z.unknown().nullable(),
     vakAddress: z.unknown().nullable().optional(),

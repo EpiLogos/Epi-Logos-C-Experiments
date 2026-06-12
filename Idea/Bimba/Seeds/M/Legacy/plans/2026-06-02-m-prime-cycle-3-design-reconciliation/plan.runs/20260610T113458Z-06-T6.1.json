@@ -1,0 +1,36 @@
+{
+  "runId": "20260610T113458Z-06-T6.1",
+  "taskId": "06.T6.1",
+  "startedAt": "2026-06-10T11:34:58.545Z",
+  "owner": "codex-m-dev-06-t6-1",
+  "leaseExpiresAt": "2026-06-10T13:34:58.545Z",
+  "worktree": null,
+  "task": {
+    "id": "06.T6.1",
+    "trackId": "06",
+    "tranche": "T6.1",
+    "title": "Register `s5'.gnostic.*` over production epi-gnostic",
+    "effort": null,
+    "file": "06-m5-epii-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+    "dependsOn": [],
+    "writeScopes": [
+      "Body/S/S3/gateway",
+      "Body/S/S3/gateway-contract/src/lib.rs",
+      "Body/S/S5/epi-gnostic",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "runId": "20260610T224326Z-19-T19.11",
+  "taskId": "19.T19.11",
+  "startedAt": "2026-06-10T22:43:26.777Z",
+  "owner": "codex-m-dev-19-t19-11",
+  "leaseExpiresAt": "2026-06-11T00:43:26.777Z",
+  "worktree": null,
+  "task": {
+    "id": "19.T19.11",
+    "trackId": "19",
+    "tranche": "T19.11",
+    "title": "Temporal control plane: Khora flow-watcher + Chronos response-orbit + chronos_reentry",
+    "effort": null,
+    "file": "19-contemplation-surface-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/19-contemplation-surface-integration.md",
+    "dependsOn": [
+      "19.T19.10"
+    ],
+    "writeScopes": [
+      "Body/S/S4/ta-onta/S4-0p-khora/modules/flow-watcher.ts",
+      "Body/S/S4/ta-onta/S4-3p-chronos/extension.ts",
+      "Idea/Bimba/Seeds/M/M4'/2026-06-04-prospective-retrospective-canvas-spec.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -238,7 +238,7 @@ void m2_prime_medium_from_chakra(uint8_t chakra,
 
 1. Elemental medium constants are range-bounded and stable under repeated frame evaluation.
 2. `P-position element` and `L2' element-bearing value` remain distinct fields, matching the existing M2' domain spec.
-3. Earth remains the geocentric observer/clock anchor, not an ordinary planet row in `M2_PLANET_LUT`.
+3. `M2_PLANET_LUT[10]` is canon: Earth is the 10th planet as geocentric observer/clock centre, and the `9:8` epogdoon counts the nine non-Earth planets against eight chakral or nodal reception points.
 4. If graph-law provenance for a correspondence is absent, the medium is marked pending rather than hardcoded.
 
 ### §2.M2-3' - Harmonic-Correspondential Modulator

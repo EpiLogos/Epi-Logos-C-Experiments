@@ -18,8 +18,11 @@ import {
     PRIMARY_VIEW_ID,
     DECLARED_BLOCKERS,
     PRIVACY_CLASS,
-    buildM4NaraSurface
+    buildM4NaraSurface,
+    type NaraDayContainer
 } from '../common';
+import { CanvasEditorSurface, createCanvasEditorModel } from './canvas-editor';
+import { HighlightService } from './services/highlight-service';
 
 @injectable()
 export class M4NaraWidget extends ReactWidget {
@@ -28,6 +31,9 @@ export class M4NaraWidget extends ReactWidget {
 
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
+
+    @inject(HighlightService)
+    protected readonly highlightService!: HighlightService;
 
     protected readiness: MExtensionReadinessSnapshot = PENDING_M_READINESS;
     protected profile: MathemeHarmonicProfileBoundary | null = null;
@@ -84,6 +90,10 @@ export class M4NaraWidget extends ReactWidget {
                 emittedAt: Date.now()
             })
             : null;
+        const canvasModel = createCanvasEditorModel({
+            dayContainer: readProfileDayContainer(this.profile),
+            context: this.context
+        });
         return (
             <div className="mext-widget-root">
                 <ReadinessBanner
@@ -115,16 +125,30 @@ export class M4NaraWidget extends ReactWidget {
                 <section className="mext-widget-detail">
                     <h3>Nara DayContainer</h3>
                     {naraSurface?.readiness.surfaceReady ? (
-                        <dl>
-                            <dt>Day</dt>
-                            <dd>{String(naraSurface.daySummary.dayId ?? '—')}</dd>
-                            <dt>Artifacts</dt>
-                            <dd>{naraSurface.artifactTree.length}</dd>
-                            <dt>Graphiti episodes</dt>
-                            <dd>{naraSurface.graphitiBrowser.length}</dd>
-                            <dt>Privacy</dt>
-                            <dd>{naraSurface.privacyClass}</dd>
-                        </dl>
+                        <>
+                            <dl>
+                                <dt>Day</dt>
+                                <dd>{String(naraSurface.daySummary.dayId ?? '—')}</dd>
+                                <dt>Artifacts</dt>
+                                <dd>{naraSurface.artifactTree.length}</dd>
+                                <dt>Graphiti episodes</dt>
+                                <dd>{naraSurface.graphitiBrowser.length}</dd>
+                                <dt>Resonance</dt>
+                                <dd>{formatResonance(naraSurface.daySummary.resonance)}</dd>
+                                <dt>Privacy</dt>
+                                <dd>{naraSurface.privacyClass}</dd>
+                            </dl>
+                            <aside className="m4-nara-identity-sidebar" aria-label="Nara artifact resonance">
+                                <ul>
+                                    {naraSurface.artifactTree.map(artifact => (
+                                        <li key={String(artifact.artifactHandle)}>
+                                            <span>{String(artifact.title ?? artifact.kind ?? 'Artifact')}</span>
+                                            <strong>{formatResonance(artifact.resonance)}</strong>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </aside>
+                        </>
                     ) : (
                         <p className="mext-widget-empty">
                             Waiting for a bridge-provided Nara DayContainer handle payload.
@@ -133,7 +157,41 @@ export class M4NaraWidget extends ReactWidget {
                         </p>
                     )}
                 </section>
+                <CanvasEditorSurface
+                    model={canvasModel}
+                    highlightService={this.highlightService}
+                    bridge={this.bridge}
+                />
             </div>
         );
     }
+}
+
+function readProfileDayContainer(profile: MathemeHarmonicProfileBoundary | null): NaraDayContainer | null {
+    const payload = objectValue(profile?.payload.m4NaraDayContainer);
+    if (!payload || typeof payload.dayId !== 'string' || !Array.isArray(payload.artifactTree)) {
+        return null;
+    }
+    return payload as unknown as NaraDayContainer;
+}
+
+function formatResonance(value: unknown): string {
+    const record = objectValue(value);
+    if (!record || record.state === 'pending-resonance') {
+        return 'pending-resonance';
+    }
+    const numeric = typeof record.numeric === 'number' && Number.isFinite(record.numeric)
+        ? record.numeric.toFixed(3)
+        : null;
+    const form = typeof record.conjugateFormCharacter === 'string'
+        ? record.conjugateFormCharacter
+        : null;
+    return numeric && form ? `${numeric} ${form}` : 'pending-resonance';
+}
+
+function objectValue(value: unknown): Readonly<Record<string, unknown>> | undefined {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+        return undefined;
+    }
+    return value as Readonly<Record<string, unknown>>;
 }

@@ -3,7 +3,7 @@ coordinate: "M'"
 status: "kernel-canon"
 updated: "2026-06-07"
 domain: "user-context-skill-contract"
-description: "User-temporal data as a first-class skill mandatory-routed into the agentic loop. UserContextFrame contract, fire/skip conditions, dual injection (agent context + EBM second-channel input), longitudinal write-back to PASU and M5_ContemplationObject."
+description: "User-temporal data as a first-class skill mandatory-routed into the agentic loop. UserContextFrame contract, fire/skip conditions, E_4 personal-resonance substrate consumer + articulation-time agent-context consumer, longitudinal write-back to PASU and M5_ContemplationObject."
 depends_on:
   - "[[epi-logos-kernel-spec]]"
   - "[[M4'/mental-pole-mechanics]]"
@@ -22,7 +22,7 @@ depends_on:
 
 The earlier reading of M5_ContemplationObject's `vak_profile_pairs[]` and the Kerykeion live-kairos data as "ambient context modulating dispatch behaviour" understated their structural role. User-temporal coherence is not a flavour — it is one of the three load-bearing evaluation channels (alongside lens-coherence and Anuttara-ontology). A dispatch can be lens-coherent (symbolically holds together) but user-temporally incoherent (the kairos is wrong for this person now, or the natal signature reads it inverted), and the system needs a clean place to register that second incoherence with real weight.
 
-The structural move is to elevate user-temporal data from side-state to a first-class skill — `user-context` — that fires mandatorily under specified VAK conditions, returns a typed `UserContextFrame`, and feeds two consumers simultaneously: the dispatched agent's articulation context (so the agent's voice incorporates it) AND the EBM's second-channel input (so energy computation includes user-temporal as a load-bearing term).
+The structural move is to elevate user-temporal data from side-state to a first-class skill — `user-context` — that fires mandatorily under specified VAK conditions, returns a typed `UserContextFrame`, and feeds two consumers with distinct structural roles: the E_4 personal-resonance computation at the kernel mental-pole via the M4 Nara skill family (the load-bearing energy-layer consumer, per [[33-harmonic-energy-channel-handoff]] §1.3) AND the dispatched agent's articulation context (so the agent's voice incorporates it at articulation-time only). The harmonic-substrate energy E_5 does NOT take user-personal data — it reads against the multi-channel `MathemeHarmonicProfile`.
 
 Three commitments hold the threshold. *First:* **user-context is a skill, not ambient state** — invoked through the same dispatch protocol as any other skill, with explicit fire/skip conditions and a typed return contract. *Second:* **routing is mandatory, not advisory** — Anuttara verifier refuses to score dispatches that should have user-context but don't. *Third:* **the skill writes back longitudinally** — at session end, the skill updates PASU.md and M5_ContemplationObject with what was learned about user-state in this session, making it the longitudinal accumulator the system already informally has.
 
@@ -126,9 +126,9 @@ Both fire and skip can be explicitly overridden per dispatch by setting `user_co
 
 ---
 
-## §3 — Dual Injection
+## §3 — UserContextFrame Consumers
 
-The UserContextFrame returned by the skill goes to two consumers simultaneously, by structural commitment:
+User-personal data is structurally a single-consumer thing at the energy layer: it feeds E_4 (the personal-energy term). User-articulation may also flow into LLM context (Consumer 1) for surface-level voice modulation, but that is articulation-time only, not energy-computation. Per [[33-harmonic-energy-channel-handoff]] §1.3 — superseding the prior dual-injection framing — the frame has one structural energy-layer consumer (E_4 personal-resonance via the M4 Nara skill family) and one articulation-time consumer (the dispatched agent's input context).
 
 ### Consumer 1: dispatched agent's context
 
@@ -143,23 +143,17 @@ SYSTEM context augmentation:
   except where the user has explicitly asked.
 ```
 
-The convention is that the agent's voice incorporates user-context implicitly — the kairos shapes the timbre, the recent_sessions shape the continuity, the active_dev_goals shape the focus. The agent does not present the frame to the user; it lets the frame inform the articulation.
+The convention is that the agent's voice incorporates user-context implicitly — the kairos shapes the timbre, the recent_sessions shape the continuity, the active_dev_goals shape the focus. The agent does not present the frame to the user; it lets the frame inform the articulation. This is articulation-time only and is independent of the energy-layer consumer below.
 
-### Consumer 2: EBM second-channel input
+### §3.2 — Consumer 2: E_4 personal-resonance substrate
 
-The frame is passed to the EBM at position 5' as the second input channel, parallel to the 72-dim lens-resonance vector. The EBM's input becomes:
+The UserContextFrame is consumed by the E_4 personal-resonance computation at the kernel mental-pole. The frame's typed fields (`planet_degrees[10]`, `q_identity[4]`, `q_personal[4]`, `tick12`, `exact_degree_720`, `tarot_psyche_anchor_signature`, `session_locus_stamp`, oracle charges) feed the Nara skill family (`nara-voice-training`, `nara-journal-parser`, `mlx-lora`) which produces the E_4 scalar against the proposed configuration. E_4 measures personal coherence — does this configuration cohere with WHO this person is at THIS kairotic moment.
 
-```
-ebm_input = (lens_resonance_72, user_temporal_N)
-```
+Per [[epi-logos-kernel-spec]] §3 and [[M4'/mental-pole-mechanics]] §5/§7, E_4 is structurally separate from E_5 (Epii harmonic-substrate energy, which reads against the multi-channel `MathemeHarmonicProfile` and does NOT take user-personal data). The 4:5:6 weighted-just-triad combination of E_4, E_5, E_6 lands at the kernel's total energy. Per [[M'-ML-SKILL-SURFACE-SPEC]] §7.1, the M4 Nara skill family is the canonical E_4 producer.
 
-where `user_temporal_N` is a ~25-30-dim projection of the frame: `planet_degrees[10]`, `q_identity[4]`, `q_personal[4]`, `tick12 (1-dim normalised)`, `exact_degree_720 (1-dim normalised)`, `tarot_psyche_anchor_signature[~4-6 dims]`, `session_locus_stamp[~2-4 dims]`. The exact projection layer is learned alongside the EBM head; the projection's role is to map the frame's typed fields into a fixed-dimension vector the EBM can consume.
+### Why personal-coherence is its own energy term
 
-The EBM's small fusion network (3-10M params, sitting on Gemini Embedding 2 substrate) takes both vectors and outputs the joint energy contribution. This is what makes E_lens-user a genuinely joint computation — the EBM learns the joint distribution `(lens_resonance × user_temporal)` through accumulated trials, supervised by user-articulation signal at session boundaries.
-
-### Why both consumers, not one
-
-The reason the frame goes to both consumers and not just to the EBM is that lens-coherence and user-articulation are different things. The EBM evaluates structural energy; the agent's voice articulates recognition. Each needs the user-context for its own reason. Routing the frame only to the EBM would leave the agent's articulation generic; routing only to the agent would leave the energy computation user-blind. The structural commitment is that user-temporal is load-bearing at both layers of the mental pole.
+The reason user-personal data feeds E_4 rather than threading into E_5 is that personal coherence and harmonic coherence are different questions. The EBM at position 5' evaluates the harmonic-mathematical structure of reality (lens-resonance + audio_octet + nodal_quartet + planetary_chakral + mahamaya + codon_rotation_projection + q_cosmic). The Nara skill family at position 4' evaluates whether the configuration coheres with the specific person at the specific kairotic moment. A configuration can be harmonically coherent yet personally incoherent (wrong kairos, inverted natal reading); a configuration can be personally coherent yet harmonically incoherent (the person's recognition does not yet meet the substrate's invariants). Both readings matter, and the 4:5:6 weighting holds them in canonical proportion. Articulation-time injection into the dispatched agent's context (Consumer 1) is a parallel, non-energy use of the same frame for voice-modulation only.
 
 ---
 
@@ -270,9 +264,9 @@ The error-level severity is intentional: user-context is structurally load-beari
 
 The user-context skill makes user-temporal a first-class participant in the agentic loop. Not ambient flavour, not side-state — a typed UserContextFrame returned by a mandatory-routed skill, fed simultaneously to the dispatched agent's articulation context and to the EBM's second input channel, written back longitudinally to PASU and M5_ContemplationObject at session close.
 
-This is what makes the system actually personalised rather than just symbolically thorough. A reading can be lens-coherent (the symbolic structure holds together) but user-temporally incoherent (wrong kairos for this person now, inverted natal reading). Without user-context as load-bearing input, the system can't register the second incoherence with the weight it actually carries. With user-context as load-bearing input, the EBM learns the joint distribution of (lens × user-temporal) coherence; the agent's articulation incorporates the user's situation as its native medium; the recognition that lands is the user's recognition, not a generic one.
+This is what makes the system actually personalised rather than just symbolically thorough. A reading can be harmonically coherent (the multi-channel `MathemeHarmonicProfile` substrate holds together, scored by E_5) but personally incoherent (wrong kairos for this person now, inverted natal reading — scored by E_4). Without user-context as load-bearing E_4 input via the Nara skill family, the system can't register the personal-incoherence with the weight it actually carries. With user-context as load-bearing E_4 input, Nara-LoRA learns the personal-resonance scalar against PASU + kairos; the agent's articulation, at articulation-time, incorporates the user's situation as its native medium; the recognition that lands is the user's recognition, not a generic one.
 
-The verifier enforces the routing because the structural commitment is real. The skill is the longitudinal accumulator because user-state is real continuity. The dual injection is the architectural commitment that the agent's voice and the EBM's evaluation are not separate concerns — they are two faces of the same recognition, and both need to know who is reading and when.
+The verifier enforces the routing because the structural commitment is real. The skill is the longitudinal accumulator because user-state is real continuity. The two-consumer pattern is the architectural commitment that personal-coherence (E_4 at the kernel mental-pole) and personal-articulation (the dispatched agent's voice) are both real — distinct in structural role, both fed by the same typed frame, neither collapsed into harmonic-substrate energy E_5.
 
 ---
 

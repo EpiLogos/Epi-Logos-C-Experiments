@@ -1,0 +1,20 @@
+[package]
+name = "gemini-embedding"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+mock-api = []
+
+[dependencies]
+blake3 = "1.5"
+reqwest = { version = "0.12", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["sync", "time"] }
+toml = "0.8"
+
+[dev-dependencies]
+tempfile = "3"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time"] }

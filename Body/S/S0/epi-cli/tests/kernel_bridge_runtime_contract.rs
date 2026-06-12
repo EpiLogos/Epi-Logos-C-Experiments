@@ -1,16 +1,21 @@
 use epi_logos::gate::{
+    graph::dispatch_graph_method,
     kernel_bridge_runtime::{
-        end_to_end_acceptance_report, m1_performance_event_from_profile,
-        runtime_for_spacetimedb_plan, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
+        end_to_end_acceptance_report, extract_typed_json, m1_performance_event_from_profile,
+        runtime_for_spacetimedb_plan, typed_json_performance_event_from_profile,
+        typed_json_profile_event_payload, KernelBridgeCapabilityRequest, KernelBridgeConsumerKind,
+        KernelBridgePerformanceEventJsonShape, KernelBridgeProfileJsonShape,
         KernelBridgeRuntimeEventKind, KernelBridgeSubscriber, KernelBridgeSubscriptionProfile,
-        KernelBridgeVakContext, M1_PROFILE_TO_PERFORMANCE_STREAM,
+        KernelBridgeVakContext, OracleFrame, OracleSpreadScale, OracleTraversalDirection,
+        ReadingPosition, TranscriptionalClockPacket, M1_PROFILE_TO_PERFORMANCE_STREAM,
     },
     spacetimedb_bridge::{SpacetimeProjectionConnectionState, SpacetimeProjectionUpdate},
 };
 use epi_logos::profile::{run as run_profile_command, ProfileCmd};
 use portal_core::{
-    kernel_tick_from_epogdoon, CpfState, CsDirection, CsField, KernelProfileObservationEvent,
-    MathemeHarmonicProfile, VakAddress,
+    kernel_tick_from_epogdoon, CpfState, CsDirection, CsField, EventPrivacyClass,
+    KernelProfileObservationEvent, KleinFlipEvent, MPrimePerformanceEvent, MathemeHarmonicProfile,
+    VakAddress, Valence,
 };
 use serde_json::{json, Value};
 
@@ -192,6 +197,93 @@ fn kernel_bridge_runtime_orders_disconnect_reconnect_stale_and_resync_for_consum
 }
 
 #[test]
+fn transcriptional_clock_packet_serializes_authoritative_oracle_frames() {
+    let single = transcriptional_packet(
+        "tcp:single",
+        OracleSpreadScale::SingleCard,
+        vec![reading_position("P2", 0, "CP4.2")],
+        vec![],
+        None,
+        "CP4.2",
+    );
+    let single_json = serde_json::to_value(&single).expect("single serializes");
+    assert_eq!(single_json["oracleFrame"]["spreadScale"], "single-card");
+    assert_eq!(
+        single_json["oracleFrame"]["positions"]
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+    assert_eq!(single_json["cpPositionRef"], "CP4.2");
+
+    let triad = transcriptional_packet(
+        "tcp:triad",
+        OracleSpreadScale::CompressedTriad,
+        vec![
+            reading_position("P1", 0, "CP4.1"),
+            reading_position("P2", 1, "CP4.2"),
+            reading_position("P3", 2, "CP4.3"),
+        ],
+        vec![],
+        None,
+        "CP4.2",
+    );
+    assert_eq!(triad.oracle_frame.positions.len(), 3);
+
+    let sixfold = transcriptional_packet(
+        "tcp:sixfold",
+        OracleSpreadScale::SixfoldQlTraverse,
+        vec![
+            reading_position("P0", 0, "CP4.0"),
+            reading_position("P1", 1, "CP4.1"),
+            reading_position("P2", 2, "CP4.2"),
+            reading_position("P3", 3, "CP4.3"),
+            reading_position("P4", 4, "CP4.4"),
+            reading_position("P5", 5, "CP4.5"),
+        ],
+        vec![
+            ["P0".to_owned(), "P5".to_owned()],
+            ["P1".to_owned(), "P4".to_owned()],
+            ["P2".to_owned(), "P3".to_owned()],
+        ],
+        None,
+        "CP4.0",
+    );
+    let sixfold_json = serde_json::to_value(&sixfold).expect("sixfold serializes");
+    assert_eq!(
+        sixfold_json["oracleFrame"]["complementaryPairs"],
+        json!([["P0", "P5"], ["P1", "P4"], ["P2", "P3"]])
+    );
+
+    let night_prime = transcriptional_packet(
+        "tcp:night-prime",
+        OracleSpreadScale::NightInversePass,
+        vec![
+            reading_position("P5", 0, "CP4.5"),
+            reading_position("P4", 1, "CP4.4"),
+            reading_position("P3", 2, "CP4.3"),
+            reading_position("P2", 3, "CP4.2"),
+            reading_position("P1", 4, "CP4.1"),
+            reading_position("P0", 5, "CP4.0"),
+        ],
+        vec![["P5".to_owned(), "P0".to_owned()]],
+        Some(OracleTraversalDirection::NightPrime),
+        "CP4.5",
+    );
+    let night_prime_json = serde_json::to_value(&night_prime).expect("night serializes");
+    assert_eq!(
+        night_prime_json["oracleFrame"]["traversalDirection"],
+        "night-prime"
+    );
+    assert_eq!(night_prime_json["oracleFrame"]["positions"][0]["key"], "P5");
+    assert_eq!(
+        night_prime_json["oracleFrame"]["complementaryPairs"],
+        json!([["P5", "P0"]])
+    );
+}
+
+#[test]
 fn kernel_bridge_runtime_rejects_private_profile_cache_fields() {
     let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
     runtime
@@ -273,6 +365,69 @@ fn kernel_bridge_capability_invocation_requires_vak_lineage_and_gateway_boundary
             && event.payload["gatewayMethod"] == "s5.episodic.kernel_profile_observation.deposit"
             && event.payload["vakAddress"]["CF"] == "(4.0/1-4.4/5)"
     }));
+}
+
+#[test]
+fn kernel_bridge_names_s2_parashakti_correspondence_capability() {
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+
+    let receipt = runtime
+        .invoke_capability(KernelBridgeCapabilityRequest {
+            method: "s2.parashaktiCorrespondences".to_owned(),
+            session_key: "theia:m2-parashakti".to_owned(),
+            params: json!({ "address72": 17 }),
+            profile_generation: Some(72),
+            provenance_handles: vec!["profile:72".to_owned()],
+            vak: Some(vak_context()),
+        })
+        .expect("s2 parashakti correspondences should be a named bridge capability");
+
+    assert_eq!(
+        receipt.gateway_method.as_deref(),
+        Some("s2.parashaktiCorrespondences")
+    );
+    assert_eq!(receipt.artifact["params"]["address72"], 17);
+    assert_eq!(
+        receipt.provenance_handles,
+        vec!["profile:72".to_owned()],
+        "bridge receipt preserves inbound provenance until the S2 adapter returns its own handle"
+    );
+}
+
+#[tokio::test]
+async fn s2_parashakti_correspondences_uses_parashakti_deep_dataset() {
+    let artifact =
+        dispatch_graph_method("s2.parashaktiCorrespondences", &json!({ "address72": 17 }))
+            .await
+            .expect("parashakti-deep correspondence adapter should resolve without Neo4j");
+
+    assert_eq!(artifact["address72"], 17);
+    assert_eq!(artifact["provenanceHandle"]["source"], "s2");
+    assert!(artifact["provenanceHandle"]["handle"]
+        .as_str()
+        .expect("handle string")
+        .contains("parashakti-deep/address72/17"));
+    assert!(artifact["decanFace"]["coordinate"]
+        .as_str()
+        .expect("decan coordinate")
+        .starts_with("#2-3"));
+    assert!(artifact["decanFace"]["dataset"]
+        .as_str()
+        .expect("decan dataset")
+        .contains("parashakti-deep/nodes-full-detail.json"));
+    assert!(artifact["sacredSonic"]["coordinate"]
+        .as_str()
+        .expect("sonic coordinate")
+        .starts_with("#2-4"));
+    assert!(artifact["planetaryChakral"]["planetaryMode"].is_string());
+    assert_eq!(
+        artifact["planetaryChakral"]["earthObserverHandle"],
+        artifact["earthObserverHandle"]
+    );
+    assert!(artifact["earthObserverHandle"]
+        .as_str()
+        .expect("earth observer handle")
+        .contains("address72/17"));
 }
 
 #[test]
@@ -379,6 +534,7 @@ fn m1_profile_to_performance_event_uses_real_matheme_profile_fields_without_rend
         "diatonic",
         "depositionAnchor",
         "lensMode",
+        "kleinFlip",
     ] {
         assert!(
             event["requiredProfileFields"]
@@ -388,6 +544,193 @@ fn m1_profile_to_performance_event_uses_real_matheme_profile_fields_without_rend
                 .any(|value| value == field),
             "missing required M1 profile field {field}"
         );
+    }
+}
+
+#[test]
+fn m1_performance_event_replay_reconstructs_m_prime_performance_event_deterministically() {
+    let generation = 137;
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(13, 6));
+    let event = m1_performance_event_from_profile(generation, &profile);
+
+    let replay: MPrimePerformanceEvent =
+        serde_json::from_value(event["mPrimePerformanceEvent"].clone())
+            .expect("bridge event exposes replayable MPrimePerformanceEvent envelope");
+    let replay_again: MPrimePerformanceEvent =
+        serde_json::from_value(event["mPrimePerformanceEvent"].clone())
+            .expect("bridge event replay is deterministic");
+
+    assert_eq!(replay, replay_again);
+    assert_eq!(
+        replay.event_id,
+        format!("m1-performance-{generation}-{}", profile.tick)
+    );
+    assert_eq!(
+        replay.session_id,
+        format!("kernel-bridge-profile-generation-{generation}")
+    );
+    assert_eq!(replay.tick, profile.tick);
+    assert_eq!(event["tick"]["tick12"], profile.tick12);
+    assert_eq!(event["tick"]["degree720"], profile.degree720);
+    assert_eq!(event["tick"]["su2Layer"], profile.su2_layer);
+    assert_eq!(event["tick"]["position6"], profile.position6);
+    assert_eq!(replay.lens, profile.lens_mode.lens);
+    assert_eq!(replay.mode, profile.lens_mode.mode);
+    assert_eq!(replay.audio_octet_hz, profile.audio_octet);
+    assert_eq!(
+        replay.nodal_quartet,
+        profile.nodal_quartet.clone().map(|node| (node.m, node.n))
+    );
+    assert!(
+        replay.klein_flip,
+        "tick12 6 profile carries the M1 tritone-crossing Klein flip into replay"
+    );
+    assert_eq!(replay.privacy, EventPrivacyClass::PublicCurrentContext);
+    assert_eq!(
+        replay.deposition_policy,
+        event["depositionAnchor"]["s3Method"]
+            .as_str()
+            .expect("bridge event carries deposition method")
+    );
+    assert_eq!(
+        serde_json::to_value(&replay).expect("replay envelope serializes"),
+        event["mPrimePerformanceEvent"]
+    );
+}
+
+#[test]
+fn typed_json_performance_edge_emits_all_klein_flip_variant_kinds() {
+    let cases = [
+        (6, "m1TritoneCrossing"),
+        (7, "m2CymaticValenceInvert"),
+        (8, "m3CodonRotationCross"),
+    ];
+
+    for (tick12, expected_kind) in cases {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(13, tick12));
+        let shape = typed_json_performance_event_from_profile(100 + u64::from(tick12), &profile);
+        let value = serde_json::to_value(&shape).expect("typed performance shape serializes");
+
+        assert_eq!(value["kleinFlip"]["kind"], expected_kind);
+
+        let extracted: KernelBridgePerformanceEventJsonShape =
+            extract_typed_json(&value, "klein flip performance event")
+                .expect("typed performance shape round trips through JSON");
+        let event = extracted
+            .klein_flip
+            .as_ref()
+            .expect("profile tick emits a klein flip event");
+        assert_eq!(kernel_bridge_klein_flip_kind(event), expected_kind);
+    }
+}
+
+#[test]
+fn typed_json_extracts_profile_and_performance_shapes_without_raw_value_contracts() {
+    let generation = 92;
+    let tick = kernel_tick_from_epogdoon(13, 1);
+    let profile = MathemeHarmonicProfile::from_tick(tick);
+    let performance_shape = typed_json_performance_event_from_profile(generation, &profile);
+    let performance_value =
+        serde_json::to_value(&performance_shape).expect("typed performance shape serializes");
+    let extracted_performance: KernelBridgePerformanceEventJsonShape =
+        extract_typed_json(&performance_value, "m1 performance event")
+            .expect("typed performance shape round trips through JSON");
+
+    assert_eq!(extracted_performance.profile_generation, generation);
+    assert_eq!(extracted_performance.tick.tick12, profile.tick12);
+    assert_eq!(
+        extracted_performance.deposition_anchor.resonance72_index,
+        profile.resonance72.lens_anchor_index,
+        "performance transport preserves the 72-carrier address without decoding it"
+    );
+    assert_eq!(
+        extracted_performance
+            .harmonic
+            .nodal_quartet
+            .get(2)
+            .expect("nodal quartet position")
+            .ql_position,
+        profile.nodal_quartet[2].ql_position
+    );
+    assert_eq!(
+        extracted_performance.deposition_anchor.s3_method,
+        "s5.episodic.kernel_profile_observation.deposit"
+    );
+    assert!(
+        !extracted_performance
+            .performance_state
+            .renderer_derivation_allowed
+    );
+
+    let profile_json =
+        serde_json::to_value(&profile).expect("real MathemeHarmonicProfile serializes");
+    let mut runtime = runtime_for_spacetimedb_plan("lite", "native-websocket");
+    runtime
+        .observe_projection_update(SpacetimeProjectionUpdate {
+            state: SpacetimeProjectionConnectionState::Connected,
+            source: "native-websocket".to_owned(),
+            profile_generation: Some(generation),
+            stale_profile_generation: None,
+            resynced_profile_generation: None,
+            degraded_but_subscribable: false,
+            context: Some(real_profile_projection_context(generation, &profile_json)),
+        })
+        .expect("projection update");
+    let snapshot = runtime.snapshot().expect("snapshot");
+    let cached = snapshot.cached_profile.as_ref().expect("cached profile");
+    let profile_payload =
+        typed_json_profile_event_payload(cached).expect("typed profile payload can be extracted");
+    let profile_value = serde_json::to_value(&profile_payload).expect("profile payload serializes");
+    let extracted_profile: KernelBridgeProfileJsonShape =
+        extract_typed_json(&profile_value, "kernel bridge profile")
+            .expect("typed profile shape round trips through JSON");
+
+    assert_eq!(extracted_profile.generation, generation);
+    assert_eq!(
+        extracted_profile.privacy_class,
+        "safe-public-current-kernel-tick"
+    );
+    assert_eq!(
+        extracted_profile.profile["computationSource"],
+        "portal_core::MathemeHarmonicProfile::from_tick"
+    );
+    assert_eq!(
+        extracted_profile.profile["profile"]["resonance72"],
+        json!({
+            "legacyResonanceIndex": profile.resonance72.legacy_resonance_index,
+            "lensAnchorIndex": profile.resonance72.lens_anchor_index,
+            "baseLens": profile.resonance72.base_lens,
+            "helixBit": profile.resonance72.helix_bit,
+            "lensAnchor": profile.resonance72.lens_anchor,
+            "position": profile.resonance72.position,
+        }),
+        "bridge profile transport round-trips the six-axis resonance72 carrier shape"
+    );
+}
+
+fn kernel_bridge_klein_flip_kind(event: &KleinFlipEvent) -> &'static str {
+    match event {
+        KleinFlipEvent::M1TritoneCrossing { tick12, lens_pair } => {
+            assert_eq!((*tick12, *lens_pair), (6, (0, 6)));
+            "m1TritoneCrossing"
+        }
+        KleinFlipEvent::M2CymaticValenceInvert {
+            valence_before,
+            valence_after,
+        } => {
+            assert_eq!(
+                (*valence_before, *valence_after),
+                (Valence::Primary, Valence::Inverted)
+            );
+            "m2CymaticValenceInvert"
+        }
+        KleinFlipEvent::M3CodonRotationCross {
+            codon_before,
+            codon_after,
+        } => {
+            assert_ne!(codon_before, codon_after);
+            "m3CodonRotationCross"
+        }
     }
 }
 
@@ -599,6 +942,42 @@ fn vak_context() -> KernelBridgeVakContext {
             "anima_orchestrate".to_owned(),
             "dispatch_agent".to_owned(),
         ],
+    }
+}
+
+fn transcriptional_packet(
+    packet_id: &str,
+    spread_scale: OracleSpreadScale,
+    positions: Vec<ReadingPosition>,
+    complementary_pairs: Vec<[String; 2]>,
+    traversal_direction: Option<OracleTraversalDirection>,
+    cp_position_ref: &str,
+) -> TranscriptionalClockPacket {
+    TranscriptionalClockPacket {
+        packet_id: packet_id.to_owned(),
+        profile_generation: Some(23),
+        vak: vak_context().vak_address,
+        oracle_frame: OracleFrame {
+            frame_id: format!("frame:{packet_id}"),
+            spread_scale,
+            positions,
+            traversal_direction,
+            complementary_pairs,
+        },
+        cp_position_ref: cp_position_ref.to_owned(),
+        oracle_sequence: None,
+        symbolic_protein: None,
+        provenance_handles: vec!["profile:generation:23".to_owned()],
+    }
+}
+
+fn reading_position(key: &str, ordinal: u8, cp_position_ref: &str) -> ReadingPosition {
+    ReadingPosition {
+        key: key.to_owned(),
+        ordinal,
+        cp_position_ref: cp_position_ref.to_owned(),
+        label: None,
+        vak: Some(vak_context().vak_address),
     }
 }
 

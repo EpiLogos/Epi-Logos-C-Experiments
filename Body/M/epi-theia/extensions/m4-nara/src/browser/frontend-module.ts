@@ -1,19 +1,37 @@
 // Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
 import { ContainerModule, injectable, interfaces, inject } from '@theia/core/shared/inversify';
-import { CommandContribution, CommandRegistry } from '@theia/core/lib/common';
+import { CommandContribution, CommandRegistry, CommandService } from '@theia/core/lib/common';
 import {
     WidgetFactory,
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import { PreferenceService, PreferenceScope } from '@theia/core/lib/browser/preferences';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
+    ColdStartOrchestrator,
     parseExtensionRoute,
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
+import {
+    OPEN_PASU_WIZARD_COMMAND,
+    PASU_SKIPPED_PREFERENCE,
+    PasuWizardMode,
+    createPasuIdentityGate,
+    launchPasuWizard,
+    runPasuWizardComplete,
+    runPasuWizardSkip
+} from './onboarding/identity-wizard';
+import { M4NaraCanvasEditorWidget } from './canvas-editor';
+import { HighlightService } from './services/highlight-service';
+import { LensApplicationWidget } from './widgets/lens-application';
+import { LogosCycleWidget } from './widgets/logos-cycle';
+import { AmbientStateStripWidget } from './widgets/ambient-state-strip';
+import { TuningBarWidget } from './widgets/tuning-bar';
+import { KairosDisplayWidget } from './widgets/kairos-display';
 import { M4NaraWidget } from './m4-nara-widget';
 import {
     EXTENSION_ID,
@@ -85,6 +103,237 @@ export class M4NaraContribution
 }
 
 @injectable()
+export class M4LensApplicationContribution
+    extends AbstractViewContribution<LensApplicationWidget>
+    implements CommandContribution, FrontendApplicationContribution
+{
+    static readonly OPEN_COMMAND_ID = `${EXTENSION_ID}.openLensApplication`;
+
+    constructor() {
+        super({
+            widgetId: LensApplicationWidget.ID,
+            widgetName: LensApplicationWidget.LABEL,
+            defaultWidgetOptions: { area: 'main' },
+            toggleCommandId: M4LensApplicationContribution.OPEN_COMMAND_ID
+        });
+    }
+
+    async onStart(): Promise<void> {
+        // Registered without auto-opening; composition or command routing opens it.
+    }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        commands.registerCommand(
+            { id: M4LensApplicationContribution.OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open lens application` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+    }
+}
+
+@injectable()
+export class M4LogosCycleContribution
+    extends AbstractViewContribution<LogosCycleWidget>
+    implements CommandContribution, FrontendApplicationContribution
+{
+    static readonly OPEN_COMMAND_ID = `${EXTENSION_ID}.openLogosCycle`;
+
+    constructor() {
+        super({
+            widgetId: LogosCycleWidget.ID,
+            widgetName: LogosCycleWidget.LABEL,
+            defaultWidgetOptions: { area: 'main' },
+            toggleCommandId: M4LogosCycleContribution.OPEN_COMMAND_ID
+        });
+    }
+
+    async onStart(): Promise<void> {
+        // Registered without auto-opening; composition or command routing opens it.
+    }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        commands.registerCommand(
+            { id: M4LogosCycleContribution.OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open logos cycle` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'logos',
+            'M4 Nara: Logos Cycle',
+            () => this.openView({ activate: true, reveal: true })
+        );
+    }
+}
+
+@injectable()
+export class M4AmbientStateStripContribution
+    extends AbstractViewContribution<AmbientStateStripWidget>
+    implements CommandContribution, FrontendApplicationContribution
+{
+    static readonly OPEN_COMMAND_ID = `${EXTENSION_ID}.openAmbientStateStrip`;
+
+    constructor() {
+        super({
+            widgetId: AmbientStateStripWidget.ID,
+            widgetName: AmbientStateStripWidget.LABEL,
+            defaultWidgetOptions: { area: 'top' },
+            toggleCommandId: M4AmbientStateStripContribution.OPEN_COMMAND_ID
+        });
+    }
+
+    async onStart(): Promise<void> {
+        // Registered without auto-opening; composition or command routing opens it.
+    }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        commands.registerCommand(
+            { id: M4AmbientStateStripContribution.OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open ambient state strip` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+    }
+}
+
+@injectable()
+export class M4TuningBarContribution
+    extends AbstractViewContribution<TuningBarWidget>
+    implements CommandContribution, FrontendApplicationContribution
+{
+    static readonly OPEN_COMMAND_ID = `${EXTENSION_ID}.openTuningBar`;
+
+    constructor() {
+        super({
+            widgetId: TuningBarWidget.ID,
+            widgetName: TuningBarWidget.LABEL,
+            defaultWidgetOptions: { area: 'main' },
+            toggleCommandId: M4TuningBarContribution.OPEN_COMMAND_ID
+        });
+    }
+
+    async onStart(): Promise<void> {
+        // Registered without auto-opening; composition or command routing opens it.
+    }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        commands.registerCommand(
+            { id: M4TuningBarContribution.OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open tuning bar` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+    }
+}
+
+@injectable()
+export class M4KairosWheelContribution
+    extends AbstractViewContribution<KairosDisplayWidget>
+    implements CommandContribution, FrontendApplicationContribution
+{
+    static readonly OPEN_COMMAND_ID = `${EXTENSION_ID}.openKairosWheel`;
+
+    constructor() {
+        super({
+            widgetId: KairosDisplayWidget.ID,
+            widgetName: KairosDisplayWidget.LABEL,
+            defaultWidgetOptions: { area: 'main' },
+            toggleCommandId: M4KairosWheelContribution.OPEN_COMMAND_ID
+        });
+    }
+
+    async onStart(): Promise<void> {
+        // Registered without auto-opening; composition or command routing opens it.
+    }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        commands.registerCommand(
+            { id: M4KairosWheelContribution.OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open kairos wheel` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+    }
+}
+
+/**
+ * Task 32.2 — PASU-absence detection orchestration.
+ *
+ * Registers the `m4.openPasuWizard` command and installs a pre-stage-6 identity
+ * gate on the {@link ColdStartOrchestrator} (32.1). When the readiness gate
+ * clears, the orchestrator fires the gate, which probes `nara.pasu.show` and —
+ * if PASU is absent — suspends the optional kairos stage and opens the PASU
+ * wizard (widget owned by Tranche 25.4). Wizard skip/completion resumes stage 6.
+ *
+ * This contribution owns only the orchestration: the wizard UI, its steps, and
+ * its per-step skip affordances belong to 25.4, which registers its launcher via
+ * {@link setPasuWizardLauncher}.
+ */
+@injectable()
+export class M4IdentityWizardContribution
+    implements CommandContribution, FrontendApplicationContribution
+{
+    @inject(ColdStartOrchestrator)
+    protected readonly orchestrator!: ColdStartOrchestrator;
+
+    @inject(SharedBridgeAdapter)
+    protected readonly adapter!: SharedBridgeAdapter;
+
+    @inject(PreferenceService)
+    protected readonly preferences!: PreferenceService;
+
+    @inject(CommandService)
+    protected readonly commands!: CommandService;
+
+    private gateDisposable?: { dispose(): void };
+
+    registerCommands(commands: CommandRegistry): void {
+        commands.registerCommand(
+            { id: OPEN_PASU_WIZARD_COMMAND, label: `${EXTENSION_ID}: open PASU identity wizard` },
+            { execute: (args?: { mode?: PasuWizardMode }) => this.openWizard(args?.mode ?? 'full') }
+        );
+    }
+
+    onStart(): void {
+        this.gateDisposable = this.orchestrator.registerStage6Gate(
+            createPasuIdentityGate({
+                invokeGatewayRpc: (method, params) => this.adapter.invokeGatewayRpc(method, params),
+                suspendStage6: () => this.orchestrator.suspendStage6(),
+                resumeStage6: mode => this.orchestrator.resumeStage6(mode),
+                openWizard: mode => {
+                    void this.commands.executeCommand(OPEN_PASU_WIZARD_COMMAND, { mode });
+                }
+            })
+        );
+    }
+
+    onStop(): void {
+        this.gateDisposable?.dispose();
+        this.gateDisposable = undefined;
+    }
+
+    private openWizard(mode: PasuWizardMode): void {
+        const resolveServices = {
+            setPreference: (key: string, value: unknown) =>
+                this.preferences.set(key, value, PreferenceScope.User),
+            getSkippedSteps: () => this.preferences.get<string[]>(PASU_SKIPPED_PREFERENCE, []),
+            resumeStage6: (resumeMode: Parameters<ColdStartOrchestrator['resumeStage6']>[0]) =>
+                this.orchestrator.resumeStage6(resumeMode)
+        };
+
+        const launched = launchPasuWizard({
+            mode,
+            skip: () => runPasuWizardSkip(resolveServices),
+            complete: () => runPasuWizardComplete(resolveServices)
+        });
+
+        if (!launched) {
+            // 25.4 wizard launcher not registered — never trap cold-start; the
+            // orchestrator advances stage 6 on the FR-3 graceful stub.
+            this.orchestrator.resumeStage6('fr3-stub');
+        }
+    }
+}
+
+@injectable()
 class M4NaraPublisher implements MObservabilityPublisher {
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
@@ -105,15 +354,68 @@ class M4NaraPublisher implements MObservabilityPublisher {
 }
 
 export default new ContainerModule(bind => {
+    bind(HighlightService).toSelf().inSingletonScope();
     bind(M4NaraWidget).toSelf();
+    bind(M4NaraCanvasEditorWidget).toSelf();
+    bind(LensApplicationWidget).toSelf();
+    bind(LogosCycleWidget).toSelf();
+    bind(AmbientStateStripWidget).toSelf();
+    bind(TuningBarWidget).toSelf();
+    bind(KairosDisplayWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M4NaraWidget.ID,
             createWidget: () => createWidget(ctx.container)
         }))
         .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: LensApplicationWidget.ID,
+            createWidget: () => createLensApplicationWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: LogosCycleWidget.ID,
+            createWidget: () => createLogosCycleWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: AmbientStateStripWidget.ID,
+            createWidget: () => createAmbientStateStripWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: TuningBarWidget.ID,
+            createWidget: () => createTuningBarWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: KairosDisplayWidget.ID,
+            createWidget: () => createKairosDisplayWidget(ctx.container)
+        }))
+        .inSingletonScope();
     bindViewContribution(bind, M4NaraContribution);
     bind(FrontendApplicationContribution).toService(M4NaraContribution);
+    bindViewContribution(bind, M4LensApplicationContribution);
+    bind(FrontendApplicationContribution).toService(M4LensApplicationContribution);
+    bindViewContribution(bind, M4LogosCycleContribution);
+    bind(FrontendApplicationContribution).toService(M4LogosCycleContribution);
+    bindViewContribution(bind, M4AmbientStateStripContribution);
+    bind(FrontendApplicationContribution).toService(M4AmbientStateStripContribution);
+    bindViewContribution(bind, M4TuningBarContribution);
+    bind(FrontendApplicationContribution).toService(M4TuningBarContribution);
+    bindViewContribution(bind, M4KairosWheelContribution);
+    bind(FrontendApplicationContribution).toService(M4KairosWheelContribution);
+
+    // Task 32.2 — PASU-absence detection orchestration. Registers the
+    // m4.openPasuWizard command and the pre-stage-6 identity gate.
+    bind(M4IdentityWizardContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(M4IdentityWizardContribution);
+    bind(FrontendApplicationContribution).toService(M4IdentityWizardContribution);
 
     bind(M4NaraPublisher).toSelf().inSingletonScope();
     bind(M4_NARA_PUBLISHER).toService(
@@ -129,4 +431,34 @@ function createWidget(container: interfaces.Container): M4NaraWidget {
     const child = container.createChild();
     child.bind(M4NaraWidget).toSelf();
     return child.get(M4NaraWidget);
+}
+
+function createLensApplicationWidget(container: interfaces.Container): LensApplicationWidget {
+    const child = container.createChild();
+    child.bind(LensApplicationWidget).toSelf();
+    return child.get(LensApplicationWidget);
+}
+
+function createLogosCycleWidget(container: interfaces.Container): LogosCycleWidget {
+    const child = container.createChild();
+    child.bind(LogosCycleWidget).toSelf();
+    return child.get(LogosCycleWidget);
+}
+
+function createAmbientStateStripWidget(container: interfaces.Container): AmbientStateStripWidget {
+    const child = container.createChild();
+    child.bind(AmbientStateStripWidget).toSelf();
+    return child.get(AmbientStateStripWidget);
+}
+
+function createTuningBarWidget(container: interfaces.Container): TuningBarWidget {
+    const child = container.createChild();
+    child.bind(TuningBarWidget).toSelf();
+    return child.get(TuningBarWidget);
+}
+
+function createKairosDisplayWidget(container: interfaces.Container): KairosDisplayWidget {
+    const child = container.createChild();
+    child.bind(KairosDisplayWidget).toSelf();
+    return child.get(KairosDisplayWidget);
 }

@@ -31,6 +31,43 @@
     "lens": 0,
     "mode": 0
   },
+  "kleinFlip": null,
+  "anandaVortex": {
+    "activeMatrixOp": "bimba",
+    "activeCell": [
+      0,
+      0
+    ],
+    "activeCellValue": {
+      "family": "bimba",
+      "rowK": 0,
+      "positionP": 0,
+      "rawValue": 0,
+      "rawBimba": 0,
+      "rawPratibimba": 1,
+      "rawSum": 1,
+      "rawDelta": 1,
+      "drValue": 0,
+      "drBimba": 0,
+      "drPratibimba": 1,
+      "drSum": 1,
+      "ruleValue": null,
+      "skeletonEvent": null
+    },
+    "drRingPhase": {
+      "mahamayaIdx": 1,
+      "parashaktiIdx": 3
+    },
+    "cl42SignatureAtPosition": -1,
+    "ringQuaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "helixSheet": 0,
+    "kleinFlipAtThisTick": false
+  },
   "chromatic": {
     "position": 0,
     "pitchClass": 0,
@@ -223,6 +260,35 @@
     "activeAgent": "Nous",
     "projection": "CF7 diatonic lemniscate overlay"
   },
-  "s2Anchor": null,
-  "s3Anchor": null
+  "harmonicGrammar": {
+    "positionSubstance": "P/P'=0",
+    "lensRefraction": "L/L'=/",
+    "harmonicRelation": "A/B/C+D=1",
+    "basePair": "L0/L1",
+    "activeLenses": [
+      "L0",
+      "L1"
+    ],
+    "primaryAnchor": "Day",
+    "dFace": "NONE",
+    "depth": 2,
+    "families": [
+      {
+        "family": "A",
+        "register": "Being",
+        "relationType": "ADJACENTLY_ARTICULATES",
+        "intervalSignature": "chromatic:whole-tone; fifths:perfect-fourth"
+      }
+    ]
+  },
+  "s2Anchor": {
+    "coordinate": "M0",
+    "readiness": "cycle-2-s2-coordinate-anchor",
+    "provenance": "Body/S/S2/graph-services/src/pointers.rs::kernel_coordinate_anchor_for"
+  },
+  "s3Anchor": {
+    "coordinate": "M0",
+    "readiness": "cycle-2-s3-profile-observation-anchor",
+    "provenance": "Body/S/S0/portal-core/src/events/kernel_events.rs::KernelProfileObservationEvent::from_profile"
+  }
 }

@@ -5,12 +5,15 @@ import {
     MExtensionMiniMode,
     REQUIRED_OBSERVABILITY_PAYLOAD_FIELDS
 } from '@pratibimba/m-extension-runtime';
+import type { PrimitiveReadinessState } from '@pratibimba/integrated-composition/design-primitives';
 
 export * from './m0-inspector';
+export type M0PrimitiveReadinessState = PrimitiveReadinessState;
 
 export const EXTENSION_ID = 'm0-anuttara';
 export const PRIMARY_VIEW_ID = 'm0.anuttara.languageMap';
-export const ALL_VIEW_IDS = ["m0.anuttara.languageMap","m0.anuttara.owlShaclInspector","m0.anuttara.rVirtuePanel"] as const;
+export const COMMUNITY_CLOCK_OVERLAY_VIEW_ID = 'm0.anuttara.communityClockOverlay';
+export const ALL_VIEW_IDS = ["m0.anuttara.languageMap","m0.anuttara.owlShaclInspector","m0.anuttara.rVirtuePanel",COMMUNITY_CLOCK_OVERLAY_VIEW_ID] as const;
 export const OPEN_COMMAND_ID = 'm0.openCoordinate';
 export const READ_ONLY_COMMAND_ID = 'm0.openCoordinate.readOnly';
 export const DEPOSIT_ONLY_COMMAND_ID = 'm0.openCoordinate.depositOnly';

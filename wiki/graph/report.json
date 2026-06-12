@@ -1,0 +1,134 @@
+{
+  "generatedAt": "2026-06-12T21:54:58.918Z",
+  "graphHash": "886b24da195cbb98c9f8108f9b5529295cb4eac59fc6c77b6ec9efba12c5192f",
+  "overview": {
+    "nodes": 1,
+    "edges": 0,
+    "pages": 5,
+    "communities": 1
+  },
+  "firstPartyOverview": {
+    "nodes": 1,
+    "edges": 0,
+    "pages": 5,
+    "communities": 1
+  },
+  "sourceClassBreakdown": {
+    "first_party": {
+      "sources": 0,
+      "pages": 0,
+      "nodes": 0
+    },
+    "third_party": {
+      "sources": 0,
+      "pages": 0,
+      "nodes": 0
+    },
+    "resource": {
+      "sources": 0,
+      "pages": 0,
+      "nodes": 0
+    },
+    "generated": {
+      "sources": 0,
+      "pages": 0,
+      "nodes": 0
+    }
+  },
+  "warnings": [
+    "Non-first-party material accounts for 100.0% of graph nodes."
+  ],
+  "benchmark": {
+    "generatedAt": "2026-06-08T15:08:51.358Z",
+    "stale": true,
+    "summary": {
+      "questionCount": 3,
+      "uniqueVisitedNodes": 0,
+      "finalContextTokens": 233,
+      "naiveCorpusTokens": 1,
+      "avgReduction": -232,
+      "reductionRatio": -232
+    },
+    "questionCount": 3,
+    "byClass": {
+      "first_party": {
+        "sourceCount": 0,
+        "pageCount": 0,
+        "nodeCount": 0,
+        "godNodeCount": 0,
+        "finalContextTokens": 0,
+        "naiveCorpusTokens": 0,
+        "reductionRatio": 0
+      },
+      "third_party": {
+        "sourceCount": 0,
+        "pageCount": 0,
+        "nodeCount": 0,
+        "godNodeCount": 0,
+        "finalContextTokens": 0,
+        "naiveCorpusTokens": 0,
+        "reductionRatio": 0
+      },
+      "resource": {
+        "sourceCount": 0,
+        "pageCount": 0,
+        "nodeCount": 0,
+        "godNodeCount": 0,
+        "finalContextTokens": 0,
+        "naiveCorpusTokens": 0,
+        "reductionRatio": 0
+      },
+      "generated": {
+        "sourceCount": 0,
+        "pageCount": 0,
+        "nodeCount": 0,
+        "godNodeCount": 0,
+        "finalContextTokens": 0,
+        "naiveCorpusTokens": 0,
+        "reductionRatio": 0
+      }
+    }
+  },
+  "godNodes": [],
+  "bridgeNodes": [],
+  "thinCommunities": [
+    {
+      "id": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+      "nodeCount": 1,
+      "pageId": "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "path": "graph/communities/memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1.md",
+      "title": "Community: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr..."
+    }
+  ],
+  "surprisingConnections": [],
+  "groupPatterns": [],
+  "suggestedQuestions": [
+    "What sources would strengthen community Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...?",
+    "What connects Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr... to the rest of the vault?"
+  ],
+  "communityPages": [
+    {
+      "id": "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "path": "graph/communities/memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1.md",
+      "title": "Community: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr..."
+    }
+  ],
+  "recentResearchSources": [],
+  "contradictions": [],
+  "communityCohesion": [],
+  "knowledgeGaps": {
+    "isolatedNodes": [
+      {
+        "nodeId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+        "type": "memory_task"
+      }
+    ],
+    "thinCommunityCount": 1,
+    "ambiguousEdgeRatio": 0,
+    "warnings": [
+      "1 of 1 communities have 2 or fewer nodes — the graph may be fragmented."
+    ]
+  }
+}

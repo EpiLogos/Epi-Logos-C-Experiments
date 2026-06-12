@@ -27,7 +27,10 @@ fn baseline_profile_fixture_is_real_code_generated_and_byte_stable() {
     let tick = kernel_tick_from_epogdoon(0, 0);
     let profile = MathemeHarmonicProfile::from_tick(tick);
 
-    assert!(profile.vak_address.is_none(), "baseline fixture must not carry a VAK address");
+    assert!(
+        profile.vak_address.is_none(),
+        "baseline fixture must not carry a VAK address"
+    );
     assert_eq!(
         profile.privacy_class,
         ProfilePrivacyClass::PublicCurrentContext,

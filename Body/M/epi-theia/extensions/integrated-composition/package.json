@@ -6,10 +6,36 @@
   "files": ["lib", "src", "style"],
   "main": "lib/common/index.js",
   "types": "lib/common/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/common/index.d.ts",
+      "default": "./lib/common/index.js"
+    },
+    "./recursive-self-review-gate": {
+      "types": "./lib/common/recursive-self-review-gate.d.ts",
+      "default": "./lib/common/recursive-self-review-gate.js"
+    },
+    "./epii-review-state": {
+      "types": "./lib/common/epii-review-state.d.ts",
+      "default": "./lib/common/epii-review-state.js"
+    },
+    "./design-primitives": {
+      "types": "./lib/browser/design-primitives/index.d.ts",
+      "default": "./lib/browser/design-primitives/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "design-primitives": ["lib/browser/design-primitives/index.d.ts"],
+      "recursive-self-review-gate": ["lib/common/recursive-self-review-gate.d.ts"],
+      "epii-review-state": ["lib/common/epii-review-state.d.ts"]
+    }
+  },
   "keywords": ["theia-extension", "epi-logos", "integrated-plugin", "composition"],
   "dependencies": {
     "@theia/core": "1.56.0",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "katex": "^0.16.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -23,6 +49,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build"
+    "test": "pnpm build && node --test tests/*.test.mjs"
   }
 }

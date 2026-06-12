@@ -21,6 +21,20 @@ import {
     M3ProjectionSurface,
     buildM3ProjectionSurface
 } from '../common';
+import {
+    M3CosmicWheelBridgeContext,
+    M3CosmicWheelRenderService
+} from './components/M3CosmicWheelRenderService';
+import {
+    ThirdSpandaMathemeProofPanel,
+    couplingFlowAlignmentFromProfilePayload
+} from './components/ThirdSpandaMathemeProofPanel';
+import { M3PentadicRelationInspector } from './components/M3PentadicRelationInspector';
+import { M3SummonableInspectors } from './components/M3SummonableInspectors';
+import { M3DepthViewModes } from './components/M3DepthViewModes';
+import { M3ClockFieldEdgeOverlay } from './components/M3ClockFieldEdgeOverlay';
+import { M3ProfileTickProvider } from './context/M3ProfileTickContext';
+import { M3ReadinessProvider } from './context/M3ReadinessContext';
 
 @injectable()
 export class M3MahamayaWidget extends ReactWidget {
@@ -78,39 +92,72 @@ export class M3MahamayaWidget extends ReactWidget {
     protected override render(): React.ReactNode {
         const provenance = `privacy=${PRIVACY_CLASS} | generation=${this.context.profileGeneration ?? '—'} | pointer=${this.context.pointerAnchor ?? '—'}`;
         const surface = this.profile ? this.safeSurface(this.profile) : null;
+        const couplingFlowAlignment = couplingFlowAlignmentFromProfilePayload(this.profile?.payload);
         return (
-            <div className="mext-widget-root">
-                <ReadinessBanner
-                    extensionId={EXTENSION_ID}
-                    extensionLabel={M3MahamayaWidget.LABEL}
-                    snapshot={this.readiness}
-                    declaredBlockers={DECLARED_BLOCKERS}
-                    provenance={provenance}
-                />
-                <section className="mext-widget-detail">
-                    <h3>Codon projection</h3>
-                    {surface ? (
-                        <dl>
-                            <dt>Codon</dt>
-                            <dd>{String(surface.activeProjection.codon ?? '—')}</dd>
-                            <dt>Rotation</dt>
-                            <dd>{String(surface.activeProjection.rotation ?? '—')}</dd>
-                            <dt>DET source</dt>
-                            <dd>{String(surface.m30ProvenanceStrip.m2SourceIndex72 ?? '—')} → {String(surface.m30ProvenanceStrip.detResult64 ?? '—')}</dd>
-                            <dt>Wheel readiness</dt>
-                            <dd>{String(surface.wheelSummary.totalRotationalStates ?? 'pending')} states</dd>
-                            <dt>Pending authorities</dt>
-                            <dd>{surface.pendingFields.join(', ') || '—'}</dd>
-                        </dl>
-                    ) : (
-                        <p className="mext-widget-empty">
-                            No backend-provided M3 projection available yet. This renderer will
-                            not invent codon, Tarot, I-Ching, planetary, or reward-training
-                            authority locally.
-                        </p>
-                    )}
-                </section>
-            </div>
+            <M3ReadinessProvider surface={surface} readiness={this.readiness}>
+                <M3ProfileTickProvider bridge={this.bridge} surface={surface}>
+                    <div className="mext-widget-root">
+                        <ReadinessBanner
+                            extensionId={EXTENSION_ID}
+                            extensionLabel={M3MahamayaWidget.LABEL}
+                            snapshot={this.readiness}
+                            declaredBlockers={DECLARED_BLOCKERS}
+                            provenance={provenance}
+                        />
+                        <section className="mext-widget-detail">
+                            <h3>Codon projection</h3>
+                            {surface ? (
+                                <M3CosmicWheelBridgeContext.Provider value={this.bridge}>
+                            <M3CosmicWheelRenderService
+                                mode="full"
+                                surface={surface}
+                                profilePayload={this.profile?.payload}
+                                readiness={this.readiness}
+                            />
+                                </M3CosmicWheelBridgeContext.Provider>
+                            ) : (
+                                <p className="mext-widget-empty">
+                                    No backend-provided M3 projection available yet. This renderer will
+                                    not invent codon, Tarot, I-Ching, planetary, or reward-training
+                                    authority locally.
+                                </p>
+                            )}
+                        </section>
+                        {surface && (
+                            <section className="mext-widget-detail">
+                                <ThirdSpandaMathemeProofPanel
+                                    surface={surface}
+                                    couplingFlowAlignment={couplingFlowAlignment}
+                                />
+                            </section>
+                        )}
+                        {surface && (
+                            <section className="mext-widget-detail">
+                                <M3PentadicRelationInspector
+                                    profilePayload={this.profile?.payload}
+                                    readiness={this.readiness}
+                                />
+                            </section>
+                        )}
+                        {surface && (
+                            <section className="mext-widget-detail">
+                                <M3DepthViewModes surface={surface} />
+                            </section>
+                        )}
+                        {surface && (
+                            <section className="mext-widget-detail">
+                                <M3ClockFieldEdgeOverlay surface={surface} />
+                            </section>
+                        )}
+                        <section className="mext-widget-detail">
+                            <M3SummonableInspectors
+                                profilePayload={this.profile?.payload}
+                                readiness={this.readiness}
+                            />
+                        </section>
+                    </div>
+                </M3ProfileTickProvider>
+            </M3ReadinessProvider>
         );
     }
 

@@ -766,6 +766,12 @@ static inline void m3_compute_charges(
     *pn_out = (int8_t)(X + Y - Z);
 }
 
+/* FFI-exportable non-inline wrapper for Rust / foreign callers.
+   Definition in m3.c. */
+void m3_compute_charges_ffi(
+    uint8_t codon6bit,
+    int8_t *pp_out, int8_t *nn_out, int8_t *np_out, int8_t *pn_out);
+
 /* Compile-time verification: TTT 4X invariant (pp+nn+np+pn = 4*outer) */
 _Static_assert((9+9+9) + (9-9-9) + (9-9+9) + (9+9-9) == 4*9,
     "m3_compute_charges 4X invariant must hold for TTT codon");
@@ -932,6 +938,34 @@ bool     m3_verify(void);
 /* Structural law: 360 dynamic degrees + 24 palindromic backbone = 64×6 LINE_CHANGES */
 _Static_assert(360 + 24 == 64 * 6,
     "Clock topology: 360 degree nodes + 24 backbone = 384 = 64 hexagrams x 6 lines");
+_Static_assert(64 * 6 - 24 == 360,
+    "Clock topology: 64 hexagrams x 6 lines - 24 backbone = 360 degree nodes");
+_Static_assert(60 * 6 == 360,
+    "Fibonacci ground period × 6°/step = full clock");
+
+typedef struct {
+    uint16_t degree;
+    uint8_t  backbone_index;
+    uint8_t  hour_of_day;
+    uint8_t  zodiac_sign;
+    uint8_t  is_cusp;
+    uint8_t  amino_acid_idx;
+    uint8_t  is_palindromic;
+    uint8_t  _pad[4];
+} Clock_Backbone_Node;
+
+_Static_assert(sizeof(Clock_Backbone_Node) == 12,
+    "Clock_Backbone_Node must be exactly 12 bytes");
+_Static_assert(24 % 12 == 0, "24 backbone nodes must evenly contain 12 zodiac nodes");
+_Static_assert(12 % 4 == 0, "12 zodiac nodes must evenly contain 4 cardinal nodes");
+_Static_assert(360 % 24 == 0, "360 degree nodes must evenly span 24 backbone intervals");
+
+#ifdef M3_BUILDING_SOURCE
+extern Clock_Backbone_Node CLOCK_BACKBONE[24];
+#else
+extern const Clock_Backbone_Node CLOCK_BACKBONE[24];
+#endif
+void m3_build_backbone(void);
 
 typedef struct {
     /* Identity */

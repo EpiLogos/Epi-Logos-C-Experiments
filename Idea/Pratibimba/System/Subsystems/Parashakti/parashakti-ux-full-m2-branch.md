@@ -23,11 +23,11 @@ This document articulates Parashakti (M2) as the **harmonic-correspondential ins
 
 The corrected, canon-grounded view:
 
-> **There is one 72-cell invariant, and the symbolic systems are six addressing-axes onto it:** `12 lenses × 6 positions = 36 tattvas × 2 phases = 8 choirs × 9 names = 72`. This is the **72** in `137 = 64 + 72 + 1` — the Paraśakti bridge between M1's +1 parent and M3's 64-fold matter. So a single cell is *simultaneously* a lens-position, an element-phase, a decan-face, an angel, a maqam mode, a mantra frequency, and a planetary-chakral state. Parashakti is the instrument that makes one cell speak in seven tongues — and **sounds it**.
+> **There is one 72-cell invariant, and the symbolic systems are six addressing-axes onto it:** MEF lens-position, tattva phase, decan face, Shem name, maqam mode, and DET projection. This is the **72** in `137 = 64 + 72 + 1` — the Paraśakti bridge between M1's +1 parent and M3's 64-fold matter. Mantra 100 and Asma'ul-Husna 99+1 are sonic overlays routed onto that invariant, and planetary keying is read through the decan-linked `M2_PLANET_LUT[10]`. Parashakti is the instrument that makes one cell speak through six axes, two overlays, and the live planetary key — and **sounds it**.
 
 This clarifies five points:
 
-1. **One invariant, six axes** — not "MEF equals the resonance," but one 72-space addressed six ways. The angels are one axis.
+1. **One invariant, six axes plus overlays** — not "MEF equals the resonance," but one 72-space addressed six ways. The Shem angels are one axis; mantra and Asma are overlays.
 2. **M2 is the frequency-space; M3 is the Matter.** M2' produces the audio bus; M3' is the matter that frequency organises into form. Venus's 9:8 epogdoon is the compressor.
 3. **The symbolic correspondences are graph edges** (the M0-2' relation-web), not hardcoded tables — which is what keeps the surface dynamic and extensible.
 4. **The instrument plays *meanings*, not tones** — via the Klein L↔L' enharmonic flip (the meaning-translator).
@@ -66,10 +66,13 @@ Each axis addresses the same 72-space through a different correspondence-system.
 (lens, mode)  →  ┌─ MEF lens-position      M2-1   12 × 6 = 72       the epistemic address
                  ├─ Tattva phase           M2-2   36 × 2 = 72       element / phase
                  ├─ Decan face             M2-3   36 × 2 = 72       zodiacal light/shadow
-                 ├─ Shem name-pair         M2-4   8 choirs × 9 = 72  THE ANGELS
+                 ├─ Shem name              M2-4   8 choirs × 9 = 72  THE ANGELS
                  ├─ Maqam mode             M2-4   10 families = 72   Arabic modal (24-TET)
-                 ├─ Mantra entry           M2-4   50 + 50 = 100      Matrika/Malini phonemes
-                 └─ Planetary-chakral      M2-5   10-planet LUT      Cousto-frequency / chakra
+                 └─ DET projection         M2-5   72 → 64            cymatic bitboard evidence
+
+sonic overlays:    Mantra entry           M2-4   50 + 50 = 100      Matrika/Malini phonemes
+                   Asma'ul-Husna          M2-4   99 + 1             36 internal / 64 projective
+planetary keying:  Decan-linked planet    M2-5   M2_PLANET_LUT[10]  Cousto-frequency / chakra
 ```
 
 ## 3.1 The Shem-ha-Mephorash — the angels
@@ -85,12 +88,12 @@ each name carries (choir, position, element_id, decan_link, planet_link, meaning
 
 The angels are therefore **not a separate symbolic module** — they are one addressing-axis onto the 72-invariant, computed from decan (which is computed from planetary degree). The angel-pair of the active decan is always derivable from the live Kerykeion state.
 
-## 3.2 The other sacred-sonic axes
+## 3.2 The other sacred-sonic axis and overlays
 
 - **Maqam** — 10 Arabic modal families (Rast/Bayati/Sikah/Hijaz/Nahawand/Ajam/Kurd/Saba/Nawa Athar + Independent) = 72 modes at 24-TET, each planet-ruled. A parallel 24-station **spiritual maqamat** (Tawba…Riḍā × 3 levels = 72) gives the contemplative-station correspondence.
-- **Mantra** — Matrika (50, descent/Bimba) + Malini (50, ascent/Pratibimba); Sanskrit phonemes spanning **144 Hz (Muladhara) → 432 Hz (Sahasrara)** — the chakra-activation gradient.
-- **Asma'ul-Husna** — 99+1 names, split 36 MEF-internal / 64 M3-projective by routing-mask (Jalal/Kamal/Jamal + the hidden Al-Ism al-A'zham).
-- **Planet LUT** — 10 planets with Cousto cosmic-octave frequencies, chakra, element, phase. **Venus carries the 9:8 epogdoon** — the beauty-operator that compresses 72-space to 64-space.
+- **Mantra overlay** — Matrika (50, descent/Bimba) + Malini (50, ascent/Pratibimba); Sanskrit phonemes spanning **144 Hz (Muladhara) → 432 Hz (Sahasrara)** — the chakra-activation gradient routed onto 72-space, not a seventh axis.
+- **Asma'ul-Husna overlay** — 99+1 names, split 36 MEF-internal / 64 M3-projective by routing-mask (Jalal/Kamal/Jamal + the hidden Al-Ism al-A'zham); routed separately from the Shem 72 axis.
+- **Planet LUT keying** — 10 planets with Cousto cosmic-octave frequencies, chakra, element, phase, keyed by decan-link. **Venus carries the 9:8 epogdoon** — the beauty-operator that compresses 72-space to 64-space.
 
 ---
 

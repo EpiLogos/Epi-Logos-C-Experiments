@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "onboarding/cold-start-ledger",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "stageSequence": [
+    "initializing",
+    "awaiting-bridge",
+    "awaiting-handshake",
+    "awaiting-readiness",
+    "kairos-enablement",
+    "dismissed"
+  ],
+  "readinessSnapshots": {
+    "bridgeUnavailable": {
+      "fetchedAt": 1000,
+      "state": "bridge_unavailable",
+      "reason": "Gateway fixture has not exposed the kernel bridge yet.",
+      "profileGeneration": null,
+      "bridgeReachable": false,
+      "blockerIds": ["s0.kernel-bridge.unavailable"]
+    },
+    "bridgeReachable": {
+      "fetchedAt": 2000,
+      "state": "profile_missing_field",
+      "reason": "Bridge reachable; waiting for S2/S3 handshake.",
+      "profileGeneration": null,
+      "bridgeReachable": true,
+      "blockerIds": ["s0.kernel-bridge.awaiting-safe-profile"]
+    },
+    "blockedReadiness": {
+      "fetchedAt": 3000,
+      "state": "s2_graph_blocked",
+      "reason": "S2 graph fixture has not delivered a readable M profile.",
+      "profileGeneration": null,
+      "bridgeReachable": true,
+      "blockerIds": ["s2.graph.pending"]
+    },
+    "renderableReadiness": {
+      "fetchedAt": 4000,
+      "state": "degraded_but_readable",
+      "reason": "Cold-start can render while non-critical surfaces catch up.",
+      "profileGeneration": 1,
+      "bridgeReachable": true,
+      "blockerIds": ["s5.review.degraded"]
+    },
+    "readyPublicCurrent": {
+      "fetchedAt": 5000,
+      "state": "ready_public_current",
+      "reason": "Public-current profile reads are available.",
+      "profileGeneration": 1,
+      "bridgeReachable": true,
+      "blockerIds": []
+    }
+  },
+  "connectionStatuses": {
+    "detached": {
+      "connected": false,
+      "mode": "detached",
+      "reason": "bridge_unavailable"
+    },
+    "bridgeOnly": {
+      "connected": false,
+      "mode": "bridge",
+      "reason": "awaiting-s2-s3-handshake"
+    },
+    "connected": {
+      "connected": true,
+      "mode": "gateway",
+      "reason": "gateway-ready",
+      "profileGeneration": 1
+    }
+  },
+  "walkthrough": {
+    "mountsAfterStage": "dismissed",
+    "steps": [
+      { "id": "walkthrough.0-1-toggle", "anchor": "layout-toggle" },
+      { "id": "walkthrough.omnipanel", "anchor": "omnipanel" },
+      { "id": "walkthrough.activity-bar", "anchor": "activity-bar" },
+      { "id": "walkthrough.status-bar", "anchor": "status-bar" },
+      { "id": "walkthrough.day-now-anchor", "anchor": "day-now" },
+      { "id": "walkthrough.cosmic-personal", "anchor": "cosmic-personal" }
+    ]
+  },
+  "firstSessionAffordance": {
+    "id": "first-session.start",
+    "command": "khora.session_start",
+    "surfacesAfterWalkthrough": true
+  }
+}

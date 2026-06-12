@@ -252,7 +252,7 @@ Per the QL site `ql-bipyramid-torus-v20.jsx` research (`alpha_quaternionic_integ
 ### §7.1 The diamond/bipyramid bounding shell
 
 - **Dipyramid + full 6+6 P/P' mapping** (deliberately non-regular — apex height ≠ half-base, per the QL site research; corrected by DR-IG-6)
-- Position anchors: 2 apex poles P5/P5', 4 top/base vertices P1-P4, 4 inverted-base vertices P1'-P4' interleaved by pairing rule **x + y' = 5**, and 1 central axis-point P0/P0' (white/black = 0/1 ground) projected through the pole-to-pole axis
+- Position anchors: 2 apex poles P5/P5', 4 top/base vertices P1-P4, 4 inverted-base vertices P1'-P4' interleaved by mirror law **x + y' = 5**, and 1 central axis-point P0/P0' (white/black = 0/1 ground) projected through the pole-to-pole axis
 - The geometry carries 12 named QL positions (6 + 6') without treating P0/P0' as a vertex and without collapsing the 8 base positions into a 4-vertex square
 - The dipyramid is the **bounding shell** of the psychoid field, not a frame around a figure
 - Renders faint, geometric, as field-container

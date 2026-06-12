@@ -38,11 +38,19 @@ const FORBIDDEN_FIELD_PATTERNS_BY_RANGE: Record<
         /^personal_field_(body|raw)/i
     ],
     '4-5-0': [
-        // The 4/5/0 envelope still rejects bare bioquaternion bodies — only
-        // opaque Graphiti handles are allowed (per 08.T0 sharedRules).
+        // The 4/5/0 envelope is allowed to carry protected-local handles, but
+        // DR-M4-3 forbids the body/quaternion side of ProtectedPersonalFieldInput
+        // from crossing into M5 review. M4 Tranche 05.5's renderer-handle
+        // invariant is therefore enforced here at the plugin boundary.
+        /^q_personal/i,
+        /^q(identity|transit|activity|composed)$/i,
+        /^audio(_octet|Octet)$/i,
         /^bioquaternion_raw$/i,
         /^graphiti_body$/i,
-        /^nara_raw$/i
+        /^nara_raw$/i,
+        /^raw_(quaternion|audio|body)$/i,
+        /^m4_(protected|private|body|raw)$/i,
+        /^personal_field_(body|raw)$/i
     ]
 };
 

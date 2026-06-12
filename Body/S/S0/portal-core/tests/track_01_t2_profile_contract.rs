@@ -25,8 +25,24 @@ fn public_current_profile_serializes_versioned_bridge_shape_without_protected_fi
     assert_eq!(json["position6"], 4);
     assert_eq!(json["privacyClass"], "public-current-context");
     assert_eq!(json["binary"], json["mahamaya"]);
-    assert!(json["s2Anchor"].is_null());
-    assert!(json["s3Anchor"].is_null());
+    assert_eq!(json["s2Anchor"]["coordinate"], "M4'");
+    assert_eq!(
+        json["s2Anchor"]["readiness"],
+        "cycle-2-s2-coordinate-anchor"
+    );
+    assert_eq!(
+        json["s2Anchor"]["provenance"],
+        "Body/S/S2/graph-services/src/pointers.rs::kernel_coordinate_anchor_for"
+    );
+    assert_eq!(json["s3Anchor"]["coordinate"], "M4'");
+    assert_eq!(
+        json["s3Anchor"]["readiness"],
+        "cycle-2-s3-profile-observation-anchor"
+    );
+    assert_eq!(
+        json["s3Anchor"]["provenance"],
+        "Body/S/S0/portal-core/src/events/kernel_events.rs::KernelProfileObservationEvent::from_profile"
+    );
 
     for required in [
         "phase",
@@ -99,6 +115,34 @@ fn public_profile_contract_covers_all_12_ticks_and_pointer_web_invariants() {
             ProfilePrivacyClass::PublicCurrentContext
         );
         assert_eq!(profile.binary, profile.mahamaya);
+    }
+}
+
+#[test]
+fn public_profile_populates_s2_s3_future_anchors_from_cycle2_surfaces() {
+    for tick12 in 0..12 {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(5, tick12));
+        let expected_coordinate = if tick12 < 6 {
+            format!("M{}", tick12 % 6)
+        } else {
+            format!("M{}'", tick12 % 6)
+        };
+
+        let s2_anchor = profile.s2_anchor.as_ref().expect("S2 anchor is populated");
+        assert_eq!(s2_anchor.coordinate, expected_coordinate);
+        assert_eq!(s2_anchor.readiness, "cycle-2-s2-coordinate-anchor");
+        assert_eq!(
+            s2_anchor.provenance,
+            "Body/S/S2/graph-services/src/pointers.rs::kernel_coordinate_anchor_for"
+        );
+
+        let s3_anchor = profile.s3_anchor.as_ref().expect("S3 anchor is populated");
+        assert_eq!(s3_anchor.coordinate, expected_coordinate);
+        assert_eq!(s3_anchor.readiness, "cycle-2-s3-profile-observation-anchor");
+        assert_eq!(
+            s3_anchor.provenance,
+            "Body/S/S0/portal-core/src/events/kernel_events.rs::KernelProfileObservationEvent::from_profile"
+        );
     }
 }
 

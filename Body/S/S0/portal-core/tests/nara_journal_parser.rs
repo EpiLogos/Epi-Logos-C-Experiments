@@ -15,8 +15,19 @@ fn valid_input(kind: NaraActivityKind, body: &str) -> NaraJournalParseInput {
         matheme_handle: "matheme-profile-118".to_owned(),
         raw_body_handle: "protected://nara/activity-1".to_owned(),
         body: body.to_owned(),
+        category: None,
         source_ref: Some("[[Daily Note]]".to_owned()),
         kairos_snapshot: Some("kairos://snapshot/118".to_owned()),
+    }
+}
+
+fn valid_highlight_input(category: &str) -> NaraJournalParseInput {
+    NaraJournalParseInput {
+        category: Some(category.to_owned()),
+        ..valid_input(
+            NaraActivityKind::Highlight,
+            "Highlight from reading: Lens 3 at position 2.",
+        )
     }
 }
 
@@ -119,6 +130,18 @@ fn empty_body_returns_an_explicit_parse_error() {
 
 #[test]
 fn dream_oracle_and_highlight_inputs_remain_distinguished() {
+    let highlight_categories = [
+        "daily-note",
+        "oracle",
+        "dream",
+        "expand",
+        "recognition",
+        "prospective-surfacing",
+        "retrospective-surfacing",
+        "kairos-touch",
+        "somatic-mark",
+        "live-spread",
+    ];
     let dream = NaraJournalParser::parse(valid_input(
         NaraActivityKind::Dream,
         "Dream fragment with M1-2 and moon-water residue.",
@@ -134,6 +157,14 @@ fn dream_oracle_and_highlight_inputs_remain_distinguished() {
         "Highlight from reading: Lens 3 at position 2.",
     ))
     .expect("highlight parse succeeds");
+    let categorized_highlights = highlight_categories
+        .iter()
+        .map(|category| {
+            let parsed = NaraJournalParser::parse(valid_highlight_input(category))
+                .expect("categorized highlight parse succeeds");
+            (category, parsed)
+        })
+        .collect::<Vec<_>>();
 
     assert_eq!(
         dream.symbolic_observation.detected_activity_kind,
@@ -162,6 +193,26 @@ fn dream_oracle_and_highlight_inputs_remain_distinguished() {
     assert_eq!(
         highlight.activity_event.state_effect,
         ActivityStateEffect::EphemeralContextOnly
+    );
+    assert_eq!(categorized_highlights.len(), 10);
+    for (category, parsed) in categorized_highlights {
+        assert_eq!(
+            parsed.symbolic_observation.detected_activity_kind,
+            NaraActivityKind::Highlight
+        );
+        assert_eq!(parsed.activity_event.category.as_deref(), Some(*category));
+        assert_eq!(
+            parsed.activity_event.state_effect,
+            ActivityStateEffect::EphemeralContextOnly
+        );
+    }
+    assert_eq!(
+        serde_json::to_value(NaraActivityKind::FileReentry).expect("variant serializes"),
+        "FileReentry"
+    );
+    assert_eq!(
+        serde_json::to_value(NaraActivityKind::TrancheComplete).expect("variant serializes"),
+        "TrancheComplete"
     );
 }
 

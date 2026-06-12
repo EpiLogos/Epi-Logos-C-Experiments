@@ -87,7 +87,7 @@ $$
 \alpha^{-1}(m_W) \approx 128 = 64 \times 2.
 $$
 
-This is **the doubled Mahāmāyā shell** — the 64 codon matrix in its bimba/pratibimba doubling, before the 72-fold Paraśakti articulation and the +1 parent become operative. In M-stack terms, this is the state where only M3 (and its primed reflection M3') are visible, without M2's Paraśakti-bridge rendering the field as readable correspondence and without M0's witness-axis holding the whole as one identity.
+This is **the doubled Mahāmāyā shell** — the 64 codon matrix in its bimba/pratibimba doubling, before the 72-fold Paraśakti articulation and the +1 return become operative. In M-stack terms, this is the state where only M3 (and its primed reflection M3') are visible, without M2's Paraśakti-bridge rendering the field as readable correspondence and without the 1/1 element from the First Spanda re-entering to close the whole as one identity.
 
 The corridor
 
@@ -97,11 +97,11 @@ $$
 
 is therefore the system's own developmental corridor:
 
-- **128 = 64 × 2** — high-energy / un-bridged: M3's 64-codon doubled shell without M2's 72-fold vibrational play and without M0's parent witness; pure binary symbolic transcription
-- **137 = 64 + 72 + 1** — low-energy / fully-bridged: M3 codon matrix + M2 Paraśakti correspondence-tree + M0 Anuttara witness-axis; the full system at its atomic dressing
+- **128 = 64 × 2** — high-energy / un-bridged: M3's 64-codon doubled shell without M2's 72-fold vibrational play and without the 1/1 return from the First Spanda; pure binary symbolic transcription
+- **137 = 64 + 72 + 1** — low-energy / fully-bridged: M3 codon matrix + M2 Paraśakti correspondence-tree + the 1/1 element returning from the First Spanda; the full system at its atomic dressing
 - **137.035999177…** — the measured physical value: the residue $\delta(0) \approx 0.036$ is the dressing by which physical-real refuses to collapse into a flat integer while still constellating it
 
-The system *is* this corridor. Without M2's 72-fold correspondence-tree rendering Mahāmāyā as actually-vibrational, M3 alone is the pre-screened binary shell. Without M0's witness-axis as the +1 holding the whole, the bridged 64+72 is just two layered counts. With all three, the system articulates the integer psychoid attractor that physics measures.
+The system *is* this corridor. Without M2's 72-fold correspondence-tree rendering Mahāmāyā as actually-vibrational, M3 alone is the pre-screened binary shell. Without the 1/1 element returning from the First Spanda to close the bridge, 64+72 is just two layered counts. With all three, the system articulates the integer psychoid attractor that physics measures.
 
 ### §1.2 Why this is not numerology added afterward
 

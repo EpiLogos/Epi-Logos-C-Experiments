@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T225749Z-32-T32.10",
+  "taskId": "32.T32.10",
+  "startedAt": "2026-06-10T22:57:49.784Z",
+  "owner": "codex-m-dev-32-t32-10",
+  "leaseExpiresAt": "2026-06-11T00:57:49.784Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.10",
+    "trackId": "32",
+    "tranche": "T32.10",
+    "title": "Kairos enablement onboarding",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.1"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/onboarding/kairos-enablement-step.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

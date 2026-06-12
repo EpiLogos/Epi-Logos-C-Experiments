@@ -33,6 +33,8 @@ canonical_source_diatonic_spec: "[[M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/07-c-pr
 
 > **VAK substrate cross-reference (added 2026-06-04 per DR-VAK-3):** The musical derivation below is **operationally realized** in the kernel through the VAK Context Frame Coordinate System. The six VAK families (CPF/CT/CP/CF/CFP/CS) are wired in C ([`vak.h:35-58`](Body/S/S0/epi-lib/include/vak.h)), Rust ([`vak_address.rs:1-59`](Body/S/S0/portal-core/src/vak_address.rs)), and TypeScript ([Anima extension.ts:206-283](Body/S/S4/ta-onta/S4-4p-anima/extension.ts)). The diatonic-scale-as-CF-progression mapping is carried by the kernel-side `MathemeDiatonicContext` struct in [`kernel.rs`](Body/S/S0/portal-core/src/kernel.rs); the canonical mapping spec lives at [`07-c-prime-vak-grammar-layer.md` §Diatonic Interpretation](../M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/07-c-prime-vak-grammar-layer.md). The derivations below are the **theoretical articulation** of what the substrate already executes; VAK is the operational language, not labels imposed over it.
 
+> **Correction pass (2026-06-11):** Harmonic-family labels harmonised to the corrected grammar throughout — **A = Being / adjacent-articulation · B = Becoming / converse-mirror · C = Knowing-Unknowing / offset-transition** (per the S5 canon excerpt `Body/S/S5/plugins/epi-logos/resources/canon/ql-musical-derivation-v3.md`). §II-3.5 and Reference Tables 7–8 previously carried the pre-correction B/C labels; they now match §II-2.5 and §II-3.4. Additionally: position **#5/#5′ is designated Quintessence**, and the sixth element-designation is **Salt** (formerly tabulated as Mineral; Aether's former "(Quintessence)" gloss is retired in favour of the position-5 designation).
+
 ---
 
 ## §0/1 — Threshold: The Matheme and Its Six Layers of Self-Determination
@@ -431,7 +433,7 @@ The Night-complement of L1. Where L1 maps the *objective-structure* of causation
 
 **L2' — Alchemical-Elemental (Night, #2') — THE ELEMENT-BEARING LENS** — *Root: Alchemy, Transcendent Function; Element: Aether; Möbius Return: L2' → L3*
 
-L2' is designated **the element-bearing lens** because it assigns elemental-charges to all other coordinates. The four-classical-elements (Earth, Water, Air, Fire) plus Aether (Quintessence) plus Mineral (crystallised end-product of alchemical *opus*) represent fundamental-modes-of-being-and-transformation. Jung understood alchemy as projected-psychology; the *Transcendent Function* is the psychological-equivalent of the alchemical *coniunctio*.
+L2' is designated **the element-bearing lens** because it assigns elemental-charges to all other coordinates. The four-classical-elements (Earth, Water, Air, Fire) plus Aether plus **Salt** (crystallised end-product of the alchemical *opus*, the fixed body; formerly tabulated as Mineral) represent fundamental-modes-of-being-and-transformation. Jung understood alchemy as projected-psychology; the *Transcendent Function* is the psychological-equivalent of the alchemical *coniunctio*.
 
 **L3' — Chronological (Night, #3')** — *Root: Hegel, Aion, Dialectic of Spirit; Element: Fire; Möbius Return: L3' → L2*
 
@@ -490,7 +492,7 @@ Critical structural-point: **at position #3 of the QL 6-fold-of-layers, the math
 The 12 L-lenses are anchored at the 12 matheme-positions (6 Day-positions, 6 Night-positions) — but at position #3, this anchoring is **abstract-positional**, not yet note-specific. Each lens carries:
 
 - A specific philosophical-tradition (Aristotle for L1, Nāgārjuna for L2, Whitehead for L3, Heidegger for L4, etc.)
-- A specific element-association (Earth, Water, Air, Fire, Aether, Mineral)
+- A specific element-association (Earth, Water, Air, Fire, Aether, Salt)
 - A specific Möbius-return-pair (L0→L5', L1→L4', etc.)
 - A 6-fold inner-breakdown (.0 through .5) received from the P4-lemniscate
 
@@ -1338,15 +1340,15 @@ The same 3×3 structural-apparatus operates in fifths-basis with entirely differ
 - **A-sq2**: (2,3) + (2',3') = $\{D, A, G♯, D♯\}$
 - **A-sq3**: (4,5) + (4',5') = $\{E, B, A♯, F\}$
 
-**B-family squares** at Lens 0 in fifths-basis:
-- **B-sq1**: (1,2) + (1',2') = $\{G, D, C♯, G♯\}$
-- **B-sq2**: (3,4) + (3',4') = $\{A, E, D♯, A♯\}$
-- **B-sq3**: (5,0) + (5',0') = $\{B, C, F, F♯\}$
+**B-family squares (converse-mirror / Becoming)** at Lens 0 in fifths-basis:
+- **B-sq1**: (0,5) + (0',5') = $\{C, B, F♯, F\}$
+- **B-sq2**: (1,4) + (1',4') = $\{G, E, C♯, A♯\}$
+- **B-sq3**: (2,3) + (2',3') = $\{D, A, G♯, D♯\}$
 
-**C-family squares** at Lens 0 in fifths-basis:
-- **C-sq1**: (0,5) + (0',5') = $\{C, B, F♯, F\}$
-- **C-sq2**: (1,4) + (1',4') = $\{G, E, C♯, A♯\}$
-- **C-sq3**: (2,3) + (2',3') = $\{D, A, G♯, D♯\}$
+**C-family squares (offset-transition / Knowing-Unknowing)** at Lens 0 in fifths-basis:
+- **C-sq1**: (1,2) + (1',2') = $\{G, D, C♯, G♯\}$
+- **C-sq2**: (3,4) + (3',4') = $\{A, E, D♯, A♯\}$
+- **C-sq3**: (5,0) + (5',0') = $\{B, C, F, F♯\}$
 
 Same structural-apparatus (which positions form which squares); entirely different sonic-vocabulary. The fifths-basis squares give a different harmonic-character — for instance, A-sq2 in fifths = $\{D, A, G♯, D♯\}$ contains two perfect-fifths (D-A, G♯-D♯) plus tritones; entirely different harmonic-content from chromatic-basis A-sq2 = $\{E, F♯, F, G\}$ which is a chromatic-cluster.
 
@@ -1391,7 +1393,7 @@ The 8-fold-scale at each lens-anchoring is the **architectural-cardinality**; th
 
 Before #5-4, the music's content at #5-3 is:
 - 12 lens-anchored 8-fold-scales (each 8-fold-scale carries 8 sounded-positions plus 4 anchor-positions for cymatic-rendering)
-- The 3×3 squares-structure (9 squares per basis, with the A-sq2=C-sq3 structural-coincidence at the midpoint)
+- The 3×3 squares-structure (9 squares per basis, with the A-sq2=B-sq3 structural-coincidence at the midpoint)
 - The 6 universal-pairing-families operating across all this content
 
 The diatonic-instantiation (cutting 7-note-progressions from 8-fold-scales) and the modal-anchorings (major/minor and the 7 modes) emerge at #5-4 when the CF-grammar operates. This is the proper sequencing: 8-fold-scales at #5-3 (architectural-cardinality at the lens-level); diatonics at #5-4 (perspectival-instantiation at the CF-level).
@@ -1792,13 +1794,13 @@ At #5-5 the matheme recognises itself as a **complete self-articulating-system**
 | #2 bimba | **Word** — active process, energic operation | **Sacrifice** — cost-of-action, operational-shadow | Mythic | E | D |
 | #3 bimba | **Logos** — perspectival pattern, ordering | **Decision** — cutting-choice, pattern-as-cut | Mental-Rational | F♯ | A |
 | #4 bimba | **Son** — incarnation, personal-context | **Love** — holding-relation, contextual-embrace | Integral | G♯ | E |
-| #5 bimba | **Image** — manifest synthesis, named-being | **Work** — public-completion, exoteric-manifestation | Supermental | A♯ | B |
+| #5 bimba | **Image** — manifest synthesis, named-being; **Quintessence** | **Work** — public-completion, exoteric-manifestation | Supermental | A♯ | B |
 | #0' pratibimba | Truth (at pratibimba) | Play (at pratibimba) | Archaic | C♯ | F♯ |
 | #1' pratibimba | Mind (at pratibimba) | Need (at pratibimba) | Magic | D♯ | C♯ |
 | #2' pratibimba | Word (at pratibimba) | Sacrifice (at pratibimba) | Mythic | F | G♯ |
 | #3' pratibimba | Logos (at pratibimba) | Decision (at pratibimba) | Mental-Rational | G | D♯ |
 | #4' pratibimba | Son (at pratibimba) | Love (at pratibimba) | Integral | A | A♯ |
-| #5' pratibimba | Image (at pratibimba) | Work (at pratibimba) | Supermental | B | F |
+| #5' pratibimba | Image (at pratibimba); **Quintessence** | Work (at pratibimba) | Supermental | B | F |
 
 ### Reference Table 3: The 12 MEF Lenses with Epistemic-Content
 
@@ -1875,14 +1877,14 @@ Cross-helix-conjugate-axis: chromatic-basis = 1 semitone (minimum-quantum); fift
 | Family | Pair (matheme-positions) | Square notes |
 |--------|---------------------------|--------------|
 | **A-sq1** | (0,1) + (0',1') | $\{C, D, C♯, D♯\}$ |
-| **A-sq2** | (2,3) + (2',3') | $\{E, F♯, F, G\}$ — *also C-sq3 (midpoint self-mirror)* |
+| **A-sq2** | (2,3) + (2',3') | $\{E, F♯, F, G\}$ — *also B-sq3 (midpoint self-mirror)* |
 | **A-sq3** | (4,5) + (4',5') | $\{G♯, A♯, A, B\}$ |
-| **B-sq1** | (1,2) + (1',2') | $\{D, E, D♯, F\}$ |
-| **B-sq2** | (3,4) + (3',4') | $\{F♯, G♯, G, A\}$ |
-| **B-sq3** | (5,0) + (5',0') | $\{A♯, C, B, C♯\}$ |
-| **C-sq1** | (0,5) + (0',5') | $\{C, A♯, C♯, B\}$ |
-| **C-sq2** | (1,4) + (1',4') | $\{D, G♯, D♯, A\}$ |
-| **C-sq3** | (2,3) + (2',3') | $\{E, F♯, F, G\}$ — *= A-sq2* |
+| **B-sq1** | (0,5) + (0',5') | $\{C, A♯, C♯, B\}$ |
+| **B-sq2** | (1,4) + (1',4') | $\{D, G♯, D♯, A\}$ |
+| **B-sq3** | (2,3) + (2',3') | $\{E, F♯, F, G\}$ — *= A-sq2* |
+| **C-sq1** | (1,2) + (1',2') | $\{D, E, D♯, F\}$ |
+| **C-sq2** | (3,4) + (3',4') | $\{F♯, G♯, G, A\}$ |
+| **C-sq3** | (5,0) + (5',0') | $\{A♯, C, B, C♯\}$ |
 
 9-entry 3×3, 8 unique-tetrad-groupings (A-sq2 = B-sq3 because position-pair (2,3) is both A-family-adjacent and B-family-mirror, with 2+3=5 at the midline of the hexad).
 
@@ -1891,14 +1893,14 @@ Cross-helix-conjugate-axis: chromatic-basis = 1 semitone (minimum-quantum); fift
 | Family | Pair | Square notes |
 |--------|------|--------------|
 | **A-sq1** | (0,1) + (0',1') | $\{C, G, F♯, C♯\}$ |
-| **A-sq2** | (2,3) + (2',3') | $\{D, A, G♯, D♯\}$ — *also C-sq3* |
+| **A-sq2** | (2,3) + (2',3') | $\{D, A, G♯, D♯\}$ — *also B-sq3* |
 | **A-sq3** | (4,5) + (4',5') | $\{E, B, A♯, F\}$ |
-| **B-sq1** | (1,2) + (1',2') | $\{G, D, C♯, G♯\}$ |
-| **B-sq2** | (3,4) + (3',4') | $\{A, E, D♯, A♯\}$ |
-| **B-sq3** | (5,0) + (5',0') | $\{B, C, F, F♯\}$ |
-| **C-sq1** | (0,5) + (0',5') | $\{C, B, F♯, F\}$ |
-| **C-sq2** | (1,4) + (1',4') | $\{G, E, C♯, A♯\}$ |
-| **C-sq3** | (2,3) + (2',3') | $\{D, A, G♯, D♯\}$ — *= A-sq2* |
+| **B-sq1** | (0,5) + (0',5') | $\{C, B, F♯, F\}$ |
+| **B-sq2** | (1,4) + (1',4') | $\{G, E, C♯, A♯\}$ |
+| **B-sq3** | (2,3) + (2',3') | $\{D, A, G♯, D♯\}$ — *= A-sq2* |
+| **C-sq1** | (1,2) + (1',2') | $\{G, D, C♯, G♯\}$ |
+| **C-sq2** | (3,4) + (3',4') | $\{A, E, D♯, A♯\}$ |
+| **C-sq3** | (5,0) + (5',0') | $\{B, C, F, F♯\}$ |
 
 Same 3×3 structural-apparatus; entirely different sonic-vocabulary. The midpoint-self-mirror (A-sq2 = B-sq3) is basis-invariant.
 
@@ -1907,8 +1909,8 @@ Same 3×3 structural-apparatus; entirely different sonic-vocabulary. The midpoin
 | Family | Pairs | Chromatic intervals | Fifths intervals | Position correspondence |
 |--------|-------|---------------------|-------------------|--------------------------|
 | **A** | (0,1)(2,3)(4,5) | Whole-tone × 3 | Perfect 5th × 3 | #1 (first-articulation) |
-| **B** | (1,2)(3,4)(5,0) | WT × 2 + minor 3rd at cycle-close | P4 × 2 + minor 2nd at cycle-close | #2 (operative-circulation) |
-| **C** | (0,5)(1,4)(2,3) | Minor 7th, tritone, WT (1/3/5 WT-progression) | Major 7th, minor 3rd, perfect 5th | #3 (tetradic-prehensive) |
+| **B** | (0,5)(1,4)(2,3) | Minor 7th, tritone, WT (1/3/5 WT-progression) | Major 7th, minor 3rd, perfect 5th | #3 (tetradic-prehensive) |
+| **C** | (1,2)(3,4)(5,0) | WT × 2 + minor 3rd at cycle-close | P4 × 2 + minor 2nd at cycle-close | #2 (operative-circulation) |
 | **D1** | (n, n') all n | Minor 2nd × 6 | Tritone × 6 | #4 (fractal-doubling-executive) |
 | **D2-transform** | (n, (n+1)') | Minor 3rd uniform | Minor 2nd + tritone at close | #5 (synthesis-progressive) |
 | **D2-require** | (n, (n-1)') | Minor 2nd uniform | Minor 2nd + perfect 4th at boundary | #5 (synthesis-regressive) |

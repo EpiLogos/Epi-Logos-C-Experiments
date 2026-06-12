@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "onboarding/pasu-prepopulated",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "pasuRpc": "nara.pasu.show",
+  "pasuPresent": true,
+  "wizardMountExpected": false,
+  "expectedStageAfterReadiness": "kairos-enablement",
+  "record": {
+    "path": "Idea/Pratibimba/Self/PASU.md",
+    "frontmatter": {
+      "birth-date": "1988-04-23",
+      "birth-location": "London, UK",
+      "natal-chart": "protected-local-fixture",
+      "jungian": "protected-local-fixture",
+      "gene-keys": "protected-local-fixture",
+      "human-design": "protected-local-fixture"
+    }
+  }
+}

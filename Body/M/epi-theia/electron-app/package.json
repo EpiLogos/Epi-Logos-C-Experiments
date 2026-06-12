@@ -38,7 +38,11 @@
     "@pratibimba/m5-epii": "workspace:*",
     "@pratibimba/integrated-composition": "workspace:*",
     "@pratibimba/plugin-integrated-1-2-3": "workspace:*",
-    "@pratibimba/plugin-integrated-4-5-0": "workspace:*"
+    "@pratibimba/plugin-integrated-4-5-0": "workspace:*",
+    "@pratibimba/ide-shell-m0-m5": "workspace:*",
+    "@pratibimba/agentic-control-room": "workspace:*",
+    "@pratibimba/acceptance-harness": "workspace:*",
+    "@pratibimba/body-lite-surface": "workspace:*"
   },
   "devDependencies": {
     "@theia/cli": "1.56.0",
@@ -52,6 +56,7 @@
     "clean": "theia clean && rimraf lib src-gen dist",
     "watch": "EPI_SKIP_FFMPEG_REPLACE=1 theia build --watch --mode development",
     "start": "EPI_SKIP_FFMPEG_REPLACE=1 theia start",
+    "start:debug": "EPI_SKIP_FFMPEG_REPLACE=1 theia start --inspect",
     "dev": "pnpm run build && pnpm run start",
     "package:dir": "electron-builder --dir",
     "package": "electron-builder",

@@ -15,6 +15,8 @@ import {
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M5EpiiWidget } from './m5-epii-widget';
+import { ResonanceEbmService } from './services/resonance-ebm-service';
+import { ContemplationObjectService } from './services/contemplation-object-service';
 import {
     EXTENSION_ID,
     OPEN_COMMAND_ID,
@@ -112,6 +114,8 @@ class M5EpiiPublisher implements MObservabilityPublisher {
 }
 
 export default new ContainerModule(bind => {
+    bind(ResonanceEbmService).toSelf().inSingletonScope();
+    bind(ContemplationObjectService).toSelf().inSingletonScope();
     bind(M5EpiiWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({

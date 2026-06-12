@@ -1,87 +1,131 @@
 /**
- * OmniPanel typed contracts shared between the OmniPanel Theia widget,
- * downstream panel contributions, and any cross-extension consumers.
+ * Shared OmniPanel runtime contracts.
  *
- * The OmniPanel is the canonical `/` command membrane per canon §2-§3 and
- * the migration target for:
- * - `Body/S/S3/epi-app/renderer/components/OmniPanel.tsx` (~960 LOC, the
- *   production Electron OmniPanel with chat/contracts/layout/panels/ui
- *   sub-tree) — the *wholesale port source*.
- * - `Body/M/epi-tauri/src/components/OmniPanel.tsx` (281 LOC slim Tauri
- *   port) — superseded by the Electron source's depth.
- * - `Body/M/epi-tauri/src/components/CommandPalette.tsx` — folded into
- *   `Pratibimba: OmniPanel Toggle` + `Pratibimba: OmniPanel Find` commands.
- *
- * Track 05 T2 lands the scaffold + Theia widget skeleton. T5 promotes it
- * to canonical cross-layout intent routing per the new T5 deliverables.
+ * The eight-tab surface is the DR-WC-OP-1 collapse map: legacy overview,
+ * channel, node, model, skill, cron, settings, instance, and debug surfaces
+ * are represented through the canonical runtime tabs below.
  */
 
 export const OMNIPANEL_WIDGET_ID = 'pratibimba.omnipanel.shell';
 export const OMNIPANEL_WIDGET_LABEL = 'OmniPanel';
 
-/**
- * Identifiers for the panels the production OmniPanel exposes. These
- * correspond 1:1 with the `Body/S/S3/epi-app/renderer/components/omni/panels/*`
- * tree that lands as wholesale port at T2/T5.
- */
 export type OmniPanelTabId =
-    | 'overview'
-    | 'chat'
-    | 'channels'
+    | 'pi-chat'
     | 'sessions'
-    | 'nodes'
-    | 'models'
-    | 'skills'
-    | 'cron'
-    | 'logs'
-    | 'config'
-    | 'settings'
-    | 'instances'
-    | 'debug';
+    | 'dispatch-trace'
+    | 'tool-stream'
+    | 'evidence'
+    | 'review'
+    | 'gateway'
+    | 'diagnostics';
 
 export interface OmniPanelTab {
     readonly id: OmniPanelTabId;
     readonly label: string;
-    /**
-     * Theia widget id this tab opens when activated. Null for tabs that
-     * only render inline content inside the OmniPanel itself.
-     */
-    readonly widgetId: string | null;
-    /**
-     * The layout(s) this tab is visible in. The OmniPanel shell hides
-     * tabs that the active layout does not advertise (e.g. logs/debug
-     * remain visible across both layouts; deep-IDE-specific tabs hide
-     * in the 0/1 daily layout).
-     */
-    readonly availableInLayouts: ReadonlyArray<'daily-0-1' | 'ide-deep'>;
+    readonly icon: string;
+    readonly extensionId: string;
+    readonly priority: number;
+}
+
+export interface OmniPanelManifest {
+    readonly tabs: readonly OmniPanelTab[];
+    readonly defaultTab: string;
+}
+
+export interface OmniPanelState {
+    readonly activeTab: string;
+    readonly collapsed: boolean;
+}
+
+export interface OmniPanelDisposable {
+    dispose(): void;
+}
+
+export interface OmniPanelProfileTickEvent {
+    readonly generation: number | null;
+    readonly profile: unknown | null;
+    readonly advanced: boolean;
+    readonly emittedAt: number;
+}
+
+export type OmniPanelProfileTickListener = (event: OmniPanelProfileTickEvent) => void;
+
+export interface OmniPanelRuntimeApi {
+    readonly state: OmniPanelState;
+    readonly onProfileTick: (listener: OmniPanelProfileTickListener) => OmniPanelDisposable;
+    activateTab(tabId: string): OmniPanelState;
+    deactivateTab(): OmniPanelState;
+    toggleCollapse(): OmniPanelState;
+    getManifest(): OmniPanelManifest;
+    useProfileTick(listener: OmniPanelProfileTickListener): OmniPanelDisposable;
 }
 
 /**
- * Initial tab manifest. Final population happens during the wholesale
- * port from `Body/S/S3/epi-app/renderer/components/omni/panels/`. The
- * shape here matches what the production OmniPanel already exposes so
- * downstream wiring can target it without waiting for the port to land.
+ * Canonical eight-tab OmniPanel declaration set.
  */
-export const OMNIPANEL_TABS: ReadonlyArray<OmniPanelTab> = [
-    { id: 'overview',  label: 'Overview',  widgetId: null, availableInLayouts: ['daily-0-1', 'ide-deep'] },
-    { id: 'chat',      label: 'Chat',      widgetId: null, availableInLayouts: ['daily-0-1', 'ide-deep'] },
-    { id: 'channels',  label: 'Channels',  widgetId: null, availableInLayouts: ['ide-deep'] },
-    { id: 'sessions',  label: 'Sessions',  widgetId: null, availableInLayouts: ['ide-deep'] },
-    { id: 'nodes',     label: 'Nodes',     widgetId: null, availableInLayouts: ['ide-deep'] },
-    { id: 'models',    label: 'Models',    widgetId: null, availableInLayouts: ['ide-deep'] },
-    { id: 'skills',    label: 'Skills',    widgetId: null, availableInLayouts: ['ide-deep'] },
-    { id: 'cron',      label: 'Cron',      widgetId: null, availableInLayouts: ['ide-deep'] },
-    { id: 'logs',      label: 'Logs',      widgetId: null, availableInLayouts: ['daily-0-1', 'ide-deep'] },
-    { id: 'config',    label: 'Config',    widgetId: null, availableInLayouts: ['ide-deep'] },
-    { id: 'settings',  label: 'Settings',  widgetId: null, availableInLayouts: ['daily-0-1', 'ide-deep'] },
-    { id: 'instances', label: 'Instances', widgetId: null, availableInLayouts: ['ide-deep'] },
-    { id: 'debug',     label: 'Debug',     widgetId: null, availableInLayouts: ['ide-deep'] }
-];
+export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
+    {
+        id: 'pi-chat',
+        label: 'Pi Chat',
+        icon: 'message-square',
+        extensionId: '@pratibimba/omnipanel-shell',
+        priority: 10
+    },
+    {
+        id: 'sessions',
+        label: 'Sessions',
+        icon: 'history',
+        extensionId: '@pratibimba/omnipanel-shell',
+        priority: 20
+    },
+    {
+        id: 'dispatch-trace',
+        label: 'Dispatch Trace',
+        icon: 'route',
+        extensionId: '@pratibimba/agentic-control-room',
+        priority: 30
+    },
+    {
+        id: 'tool-stream',
+        label: 'Tool Stream',
+        icon: 'terminal-square',
+        extensionId: '@pratibimba/agentic-control-room',
+        priority: 40
+    },
+    {
+        id: 'evidence',
+        label: 'Evidence',
+        icon: 'archive',
+        extensionId: '@pratibimba/ide-shell-m0-m5',
+        priority: 50
+    },
+    {
+        id: 'review',
+        label: 'Review',
+        icon: 'badge-check',
+        extensionId: '@pratibimba/m5-epii',
+        priority: 60
+    },
+    {
+        id: 'gateway',
+        label: 'Gateway',
+        icon: 'plug-zap',
+        extensionId: '@pratibimba/kernel-bridge',
+        priority: 70
+    },
+    {
+        id: 'diagnostics',
+        label: 'Diagnostics',
+        icon: 'activity',
+        extensionId: '@pratibimba/kernel-bridge',
+        priority: 80
+    }
+] as const);
+
+export const OMNIPANEL_DEFAULT_TAB: OmniPanelTabId = 'pi-chat';
 
 /**
- * Cross-layout intent envelope — T5 deliverable. Recorded here at T2 so
- * downstream consumers can type-check against the final shape even before
- * intent routing is implemented.
+ * Cross-layout intent envelope, preserved for existing deep-link consumers.
  */
 export interface CrossLayoutIntent {
     readonly coordinate: string | null;

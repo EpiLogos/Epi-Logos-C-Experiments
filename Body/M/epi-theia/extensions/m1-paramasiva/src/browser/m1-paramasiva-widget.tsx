@@ -89,6 +89,7 @@ export class M1ParamasivaWidget extends ReactWidget {
                     profile={this.profile}
                     readiness={this.readiness}
                     context={this.context}
+                    onObservabilityEvent={event => this.bridge.publish(event)}
                 />
             </div>
         );

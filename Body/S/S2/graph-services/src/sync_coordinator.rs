@@ -364,6 +364,27 @@ impl PromotionPlan {
         );
     }
 
+    pub fn attach_ananda_vortex(&mut self, vortex: &portal_core::AnandaVortexProjection) {
+        self.properties.insert(
+            "m_1_2_ananda_vortex_handle".to_owned(),
+            Value::String("profile.ananda_vortex".to_owned()),
+        );
+        self.properties.insert(
+            "m_1_2_ananda_vortex_active_op".to_owned(),
+            serde_json::to_value(vortex.active_matrix_op)
+                .expect("AnandaMatrixOp serialization is infallible"),
+        );
+        self.properties.insert(
+            "m_1_2_ananda_vortex_cell".to_owned(),
+            serde_json::json!([vortex.active_cell.0, vortex.active_cell.1]),
+        );
+        self.properties.insert(
+            "m_1_2_ananda_vortex_payload".to_owned(),
+            serde_json::to_value(vortex)
+                .expect("AnandaVortexProjection serialization is infallible"),
+        );
+    }
+
     pub fn node_upsert_cypher(&self) -> String {
         let label_clause = if self.labels.is_empty() {
             String::new()

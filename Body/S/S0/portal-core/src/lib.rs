@@ -6,11 +6,13 @@ pub mod harmonic_profile;
 pub mod hopf;
 pub mod kernel;
 pub mod mahamaya;
+pub mod music_tech;
 pub mod nara_journal;
 pub mod oracle_lut;
 pub mod parashakti;
 pub mod personal_identity;
 pub mod quaternion;
+pub mod rfactor;
 pub mod rotational;
 pub mod spanda;
 pub mod state;
@@ -29,6 +31,10 @@ pub use nara_journal::*;
 pub use parashakti::*;
 pub use personal_identity::*;
 pub use quaternion::{derive_bifurcation, derive_walk_mode, quat_mul, quat_normalize};
+pub use rfactor::{
+    parse_namespace, Band, Base, Chirality, RFactorPathStep, RParseError, RToken, Triad,
+    R_FACTOR_DISTRIBUTION,
+};
 pub use rotational::{generate_rotational_states, RotationalState};
 pub use spanda::{quantize_to_spanda_substage, spanda_invert};
 pub use state::{

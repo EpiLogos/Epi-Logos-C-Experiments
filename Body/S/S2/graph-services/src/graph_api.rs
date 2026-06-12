@@ -4,6 +4,7 @@ use neo4rs::{query, Query};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
+use crate::core65_audit::{core_65_audit_payload, core_65_audit_plan, Core65AuditSummary};
 use crate::{
     canonical_harmonic_bimba_relations, kernel_coordinate_anchor_from_parts, CoordinateArrayParser,
     CoordinateReferenceProjection, HarmonicBimbaRelation, KernelCoordinateAnchor, Neo4jClient,
@@ -641,6 +642,55 @@ impl<'a> GraphMethodService<'a> {
             "rowCount": rows.len(),
             "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
         }))
+    }
+
+    pub async fn core_65_audit(&self) -> Result<Value, String> {
+        let plan = core_65_audit_plan()?;
+        let rows = self
+            .client
+            .run_query(plan.params.apply_to_query(query(&plan.cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.core65.audit failed: {err}"))?;
+        let summary = rows
+            .first()
+            .map(|row| {
+                Core65AuditSummary::from_observation(
+                    row.get::<i64>("declared_count")
+                        .ok()
+                        .and_then(|count| usize::try_from(count).ok())
+                        .unwrap_or(plan.kernel_declared_count),
+                    row.get::<i64>("observed_count")
+                        .ok()
+                        .and_then(|count| usize::try_from(count).ok())
+                        .unwrap_or_default(),
+                    row.get::<Vec<String>>("relation_types").unwrap_or_default(),
+                    row.get::<Vec<String>>("neo4j_types").unwrap_or_default(),
+                    row.get::<Vec<String>>("source_coordinates")
+                        .unwrap_or_default(),
+                    row.get::<Vec<String>>("target_coordinates")
+                        .unwrap_or_default(),
+                )
+            })
+            .unwrap_or_else(|| {
+                Core65AuditSummary::from_observation(
+                    plan.kernel_declared_count,
+                    0,
+                    Vec::new(),
+                    Vec::new(),
+                    Vec::new(),
+                    Vec::new(),
+                )
+            });
+
+        Ok(core_65_audit_payload(
+            graph_contract("s2.graph.core65.audit", None),
+            summary,
+        ))
+    }
+
+    #[allow(non_snake_case)]
+    pub async fn core65Audit(&self) -> Result<Value, String> {
+        self.core_65_audit().await
     }
 }
 

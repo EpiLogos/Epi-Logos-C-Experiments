@@ -8,11 +8,11 @@ Both compositions pull from their three constituent M-extensions per 15.4; both 
 
 - **Canonical UX intent:** `Idea/Pratibimba/System/Subsystems/Paramasiva/paramasiva-ux-full-m1-branch.md` §§5b.1-5b.10 (vortex visible heartbeat on K²), `Idea/Pratibimba/System/Subsystems/Mahamaya/mahamaya-ux-full-m3-branch.md` §0 axiom + §7.5 alive-and-tarot-like default, `Idea/Pratibimba/System/Subsystems/Nara/nara-ux-full-m4-branch-update.md` §6.4 Integrated 4/5/0 Recognition Surface + §13.5 The One Loop, `Idea/Pratibimba/System/Subsystems/Parashakti/parashakti-ux-full-m2-branch.md` §8 Parashakti-serves-Nara, `Idea/Pratibimba/System/Subsystems/Anuttara/anuttara-ux-full-m0-branch.md` §3 one-substrate-three-renderings, `Idea/Pratibimba/System/Subsystems/epii/epii-ux-full-m5-branch.md` §2.6 scent-following Atelier
 - **Canonical seed:** `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md` §"Shell layer" L91-149, `Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ENGINE-ARCHITECTURE.md` (899 LOC), `Idea/Bimba/Seeds/M/INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md` (838 LOC), `Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md` §6.7 `Q_composed = Q_identity · Q_transit · Q_activity ∈ S³` + §7 137 spine, `Idea/Bimba/Seeds/M/4-5-0-CONTEMPLATION-INTEGRATION-PLAN.md`, `Idea/Bimba/Seeds/M/M1'/M1-2-ANANDA-VORTEX-ARCHITECTURE.md` §5 K² texture surface + §6 tick choreography
-- **Stage-1 Wave-C foundations consumed (read all for composition data inputs):** Track 21 (M0 contemplative panels + Anuttara grounding for under-layer of 4-5-0), Track 22 (M1 played K² torus + ananda vortex), Track 23 (M2 cymatic frequencies on K² surface), Track 24 (M3 codon-rotation projecting onto lens-ring cells), Track 25 (M4 Nara journal + personal cymatic Hopf-tori at personal scale), Track 26 (M5 recognition layer + EBM 72-dim resonance grid + WisdomDeltaInspector + Q_composed)
+- **Stage-1 Wave-C foundations consumed (read all for composition data inputs):** Track 21 (M0 contemplative panels + Anuttara grounding for under-layer of 4-5-0), Track 22 (M1 played K² torus + ananda vortex), Track 23 (M2 cymatic frequencies on K² surface), Track 24 (M3 codon-rotation projecting onto lens-ring cells), Track 25 (M4 Nara journal + personal cymatic Hopf-tori at personal scale), Track 26 (M5 recognition layer + EBM 72-dim resonance grid + WisdomDeltaInspector + Q_composed), Track 36 (Anuttara pentadic runtime trace overlay and 4-5-0 recognition handoff)
 - **Substrate evidence:** `Body/M/epi-theia/extensions/integrated-composition/src/common/{composition-coordinator.ts, layout-claim.ts, profile-field-checker.ts, jiva-siva-fields.ts, consent-gate.ts, epii-review-actions.ts, epii-review-state.ts, privacy-scrubber.ts, recognition-claim.ts, evidence-envelope.ts, evidence-producers.ts, integrated-state.ts, state-coordinator.ts, integrated-deep-links.ts, s5-review-actions.ts, omni-panel.ts, graphiti-source-guard.ts, workspace-persistence.ts, release-gate.ts, empty-state.ts, commands.ts, index.ts}` (24 source files); `Body/M/epi-theia/extensions/integrated-composition/src/browser/{bridge-gate.ts, integrated-empty-state.tsx, index.ts}`; `Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/{common/index.ts, browser/{cosmic-engine-panes.tsx, plugin-integrated-1-2-3-widget.tsx, frontend-module.ts}}`; `Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/{common/index.ts, browser/{jiva-siva-panes.tsx, epii-review-panel.tsx, plugin-integrated-4-5-0-widget.tsx, frontend-module.ts}}`; `Body/M/epi-theia/extensions/contracts/08-t0-composition-contract-preflight.{md,json}`
 - **Contract preflight:** `Body/M/epi-theia/extensions/contracts/08-t0-composition-contract-preflight.{md,json}` (composition contract authority — `IntegratedSurfaceContribution`, `IntegratedViewPart`, `IntegratedMiniInspector`, `IntegratedEvidenceProducer`, `IntegratedLayoutClaim`, `IntegratedReadiness`)
 - **Full row-level wave-C reconciliation:** `plan.runs/wave-c-integrated-plugins-composition-matrix.md` (17 rows; DR-WC-IP-1..5 + CP-WC-IP-1..9 + OW-WC-IP-1..3)
-- **Cross-references (consumed verbatim, NOT re-authored):** **07** Tranches 7.1-7.9; **08** Tranches 8.1-8.7; **10** Tranches 10.2 (klein_flip) / 10.10 (ananda_vortex) / 10.M4 (PersonalPoleProjection) / 10.M5 (canon_recognition_stream); **11** Tranches 11.6 (state-identity) / 11.8 (integrated-plugin readiness gate) / 11.10 (canvas-editor) / 11.11 (highlight categories) / 11.12 (ambient strip + tuning bar); **15** Tranches 15.1 (foundation principles) / 15.2 (OmniPanel) / 15.4 (composition pattern) / 15.5 (lemniscate toggle) / 15.6 (profile-tick clock) / 15.7 (BimbaPratibimbaUiState) / 15.8 (ananda K² visual contract) / 15.9 (tick choreography slerp) / 15.10 (status bar discipline) / 15.11 (dispatch genealogy) / 15.12 (visual regression harness); **18** Tranches 18.2 (shared three-variant `KleinFlipEvent`); **19** Tranches 19.6 (contemplation RPC) / 19.7 (close-path wire) / 19.8 (Kaprekar LEAN) / 19.9 (7-8-9 spine); **21-26** Wave-C stage-1 outputs
+- **Cross-references (consumed verbatim, NOT re-authored):** **07** Tranches 7.1-7.9; **08** Tranches 8.1-8.7; **10** Tranches 10.2 (klein_flip) / 10.10 (ananda_vortex) / 10.P5 (AnuttaraPentadicRuntimeTrace) / 10.M4 (PersonalPoleProjection) / 10.M5 (canon_recognition_stream); **11** Tranches 11.6 (state-identity) / 11.8 (integrated-plugin readiness gate) / 11.10 (canvas-editor) / 11.11 (highlight categories) / 11.12 (ambient strip + tuning bar); **15** Tranches 15.1 (foundation principles) / 15.2 (OmniPanel) / 15.4 (composition pattern) / 15.5 (lemniscate toggle) / 15.6 (profile-tick clock) / 15.7 (BimbaPratibimbaUiState) / 15.8 (ananda K² visual contract) / 15.9 (tick choreography slerp) / 15.10 (status bar discipline) / 15.11 (dispatch genealogy) / 15.12 (visual regression harness); **18** Tranches 18.2 (shared three-variant `KleinFlipEvent`); **19** Tranches 19.6 (contemplation RPC) / 19.7 (close-path wire) / 19.8 (Kaprekar LEAN) / 19.9 (7-8-9 spine); **21-26** Wave-C stage-1 outputs; **36** Tranches 36.4-36.6
 
 ## Cycle 2 Substrate Inheritance
 
@@ -64,6 +64,7 @@ Both compositions reject side-by-side juxtaposition contributions at composition
 - Single `ProfileTickSubscription` drives all three poles via `useCompositionProfile()` React hook (DR-WC-IP-4).
 - Single `KleinFlipEvent` subscription drives the three-pole choreography at tick 5→6 (M1 fold + M2 valence invert + M3 axis flip — per DR-IG-3).
 - 137 = 64 + 72 + 1 matheme spine renders as visual annotation overlay (29.8): 64-side label on M3 lens-ring (lower-half cells); 72-side label on M2 cymatic surface (upper hemisphere); +1 bridge labelled `9_{M_2} = 8_{M_3} + 1_{M_1}` between them; 7-8-9 spine at over-cycle scale; Mersenne `127 = 2^7 - 1` in proof mode only.
+- `AnuttaraPentadicRuntimeTrace` renders as a live profile overlay (29.15 / Track 36.4): 0/1 substrate marker on the M1 tick surface, 5-degree quantum on the M2 texture, Mahamaya address64/codon on the M3 lens-ring, and the 4/5/6 hinge label at the Klein-flip boundary.
 
 **What cosmic composition NEVER does:** mutate the substrate; open a parallel profile subscription; render local codon tables; recompute K² geometry; recompute ananda vortex values; render a fourth pole.
 
@@ -111,7 +112,7 @@ Per 15.4 verification ("composition-contract test asserts side-by-side widget co
 
 ## Tranches
 
-### 29.1 — Composition slot taxonomy extension: `IntegratedGeometricSlot` enum + `GeometricCompositionCoordinator` *(spec-ahead-integration; DR-WC-IP-1 ratifying decision)*
+### Tranche 29.1 — Composition slot taxonomy extension: `IntegratedGeometricSlot` enum + `GeometricCompositionCoordinator` *(spec-ahead-integration; DR-WC-IP-1 ratifying decision)*
 
 Extend `Body/M/epi-theia/extensions/integrated-composition/src/common/layout-claim.ts` with a peer enum `IntegratedGeometricSlot = 'surface' | 'texture' | 'cell-state' | 'grounding' | 'left-composition' | 'center-composition' | 'right-composition' | 'composition-ambient' | 'composition-status'`. New `IntegratedGeometricClaim` shape (peer to `IntegratedLayoutClaim` widget-region) carrying `extensionId`, `geometricSlot`, `priority`, `handleClass: 'opaque-handle' | 'public-summary' | 'visual-state' | 'raw-quaternion' | 'raw-audio-octet' | 'plaintext-journal' | 'graphiti-episode-body' | 'raw-natal-chart' | 'k2-surface-handle' | 'cymatic-mount-point' | 'codon-rotation-export' | 'psychoid-renderer-handle' | 'recognition-surface' | 'r-virtue-witness'`, `privacyClass`, `reason`. New `GeometricCompositionCoordinator` peer class to existing `CompositionCoordinator` (does NOT replace; both coordinators run; widget-region arbitrates IDE pane layout; geometric arbitrates editor-area composition surface contract). New named geometric layouts: `COSMIC_ENGINE_GEOMETRIC_LAYOUT` ({surfaceOwner: 'm1-paramasiva-played-torus', textureOwner: 'm2-parashakti', cellStateOwner: 'm3-mahamaya', groundingOwner: 'm0-anuttara' | null}) and `JIVA_SIVA_GEOMETRIC_LAYOUT` ({leftCompOwner: 'm4-nara', centerCompOwner: 'm4-nara', rightCompOwner: 'm5-epii', groundingOwner: 'm0-anuttara', ambientOwners: ['m4-nara', 'chronos-relay'], statusOwners: ['m4-nara', 'm5-epii']}).
 
@@ -119,7 +120,7 @@ Extend `Body/M/epi-theia/extensions/integrated-composition/src/common/layout-cla
 
 Verification: `grep -nE 'IntegratedGeometricSlot|GeometricCompositionCoordinator|COSMIC_ENGINE_GEOMETRIC_LAYOUT|JIVA_SIVA_GEOMETRIC_LAYOUT' Body/M/epi-theia/extensions/integrated-composition/src/common/layout-claim.ts` returns the new symbols; `pnpm --filter @pratibimba/integrated-composition test`; new test `composition-coordinator.geometric.test.mjs` asserts (a) geometric-claim arbitration grants surface to m1-played-torus, texture to m2, cell-state to m3 under cosmic layout; (b) personal layout grants left+center to m4-nara, right to m5-epii; (c) raw-body handleClass on geometric slots is rejected with named provenance; (d) widget-region coordinator and geometric coordinator do not arbitrate each other's slots; cross-link 22.2 named owner authority.
 
-### 29.2 — Cosmic 1-2-3 composition geometry: K²-surface + cymatic-texture + codon-cell-state composition *(spec-ahead-integration; DR-WC-IP-2 ratifying; CP-WC-IP-1/2/3 consumers)*
+### Tranche 29.2 — Cosmic 1-2-3 composition geometry: K²-surface + cymatic-texture + codon-cell-state composition *(spec-ahead-integration; DR-WC-IP-2 ratifying; CP-WC-IP-1/2/3 consumers)*
 
 Extend `Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/plugin-integrated-1-2-3-widget.tsx` body to mount the geometric composition geometry. New component `<CosmicEngineComposition />` replaces the three-pane render in `cosmic-engine-panes.tsx::CosmicEnginePanes` AS THE EDITOR AREA RENDER. `cosmic-engine-panes.tsx` panes are RETAINED but downgraded to mini-inspector mode per existing `miniInspectorOwners` (per `COSMIC_ENGINE_LAYOUT.miniInspectorOwners`).
 
@@ -137,7 +138,7 @@ New file: `Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmi
 
 Verification: `test -f Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmic-engine-composition.tsx`; `cd Body/M/epi-theia/extensions/plugin-integrated-1-2-3 && pnpm build && pnpm test`; render test asserts ONE editor surface mounted (no three-pane juxtaposition); slot-presence test asserts `surface` slot occupied by m1-played-torus, `texture` by m2-parashakti, `cell-state` by m3-mahamaya; `grep -nE 'CosmicEngineComposition|K2PlayedTorusSurface|CymaticTextureMount|CodonCellStateProjection' Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/` returns the new symbols; blocker fallback test asserts `IntegratedEmptyState` renders when `pending-k2-surface` is present.
 
-### 29.3 — Personal 4-5-0 composition geometry: Nara journal LEFT + personal cymatic CENTER + Mahamaya recognition RIGHT + Anuttara grounding UNDER *(spec-ahead-integration; DR-WC-IP-3 ratifying; CP-WC-IP-4/5/6 consumers)*
+### Tranche 29.3 — Personal 4-5-0 composition geometry: Nara journal LEFT + personal cymatic CENTER + Mahamaya recognition RIGHT + Anuttara grounding UNDER *(spec-ahead-integration; DR-WC-IP-3 ratifying; CP-WC-IP-4/5/6 consumers)*
 
 Extend `Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/plugin-integrated-4-5-0-widget.tsx` body to mount the four-slot personal composition geometry. New component `<PersonalRecognitionComposition />` replaces the three-pane render in `jiva-siva-panes.tsx::JivaSivaPanes` AS THE EDITOR AREA RENDER. `jiva-siva-panes.tsx` panes are RETAINED but downgraded to mini-inspector mode per `JIVA_SIVA_LAYOUT.miniInspectorOwners`.
 
@@ -157,7 +158,7 @@ New file: `Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/perso
 
 Verification: `test -f Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx`; `cd Body/M/epi-theia/extensions/plugin-integrated-4-5-0 && pnpm build && pnpm test`; render test asserts ONE editor surface with four geometric slots (no three-pane juxtaposition); protected-local invariant test asserts no raw quaternion / no raw body crosses; slot-presence test asserts left + center owned by m4-nara, right by m5-epii, grounding by m0-anuttara; `grep -nE 'PersonalRecognitionComposition|NaraJournalLeftSlot|PersonalCymaticCenterSlot|MahamayaRecognitionRightSlot|AnuttaraGroundingPanel' Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/` returns the new symbols; consent-gate boundary test asserts deep actions remain consent-gated.
 
-### 29.4 — Shared `ProfileTickSubscription` primitive: one subscription per composition *(spec-ahead-integration; DR-WC-IP-4 ratifying)*
+### Tranche 29.4 — Shared `ProfileTickSubscription` primitive: one subscription per composition *(spec-ahead-integration; DR-WC-IP-4 ratifying)*
 
 New file `Body/M/epi-theia/extensions/integrated-composition/src/common/profile-tick-subscription.ts` exporting:
 
@@ -189,7 +190,7 @@ Audit lint (29.4-companion): extend `Body/M/epi-theia/extensions/scripts/validat
 
 Verification: `test -f Body/M/epi-theia/extensions/integrated-composition/src/common/profile-tick-subscription.ts`; `test -f Body/M/epi-theia/extensions/integrated-composition/src/browser/composition-profile-context.tsx`; `pnpm --filter @pratibimba/integrated-composition test`; new test `composition-profile-context.test.mjs` asserts (a) opening the provider creates exactly one subscription; (b) two `useCompositionProfile()` consumers receive the same profile snapshot per render cycle; (c) unmount disposes the subscription; (d) lint scan against plugin src returns zero direct `bridge.onProfile` calls.
 
-### 29.5 — Typed `IntegratedReadiness` envelope + kernel-bridge readiness ledger parity *(spec-ahead-integration; closes 11.8; consumes Track 10 readiness ledger)*
+### Tranche 29.5 — Typed `IntegratedReadiness` envelope + kernel-bridge readiness ledger parity *(spec-ahead-integration; closes 11.8; consumes Track 10 readiness ledger)*
 
 New file `Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-readiness.ts` exporting:
 
@@ -230,7 +231,7 @@ Plugin widgets consume the envelope: when `overall === 'blocked'`, render `Integ
 
 Verification: `test -f Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-readiness.ts`; `pnpm --filter @pratibimba/integrated-composition test`; new fixture-parity test `integrated-readiness-ledger-parity.test.mjs` asserts every `compositionBlockers[].id` value is present in the kernel-bridge readiness ledger fixture; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test` + `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; new test asserts that toggling profile-field absence (e.g., `klein_flip` set to undefined) propagates to the matching `compositionBlockers[].id` within one render cycle; closes 11.8.
 
-### 29.6 — Composition-load juxtaposition rejection: hard fail at load, graceful at runtime *(spec-ahead-integration; closes 15.4 verification; DR-WC-IP-5)*
+### Tranche 29.6 — Composition-load juxtaposition rejection: hard fail at load, graceful at runtime *(spec-ahead-integration; closes 15.4 verification; DR-WC-IP-5)*
 
 New file `Body/M/epi-theia/extensions/integrated-composition/src/common/composition-load.ts` exporting:
 
@@ -275,7 +276,7 @@ When load succeeds with degraded slots (a granted slot's contributor is blocked 
 
 Verification: `test -f Body/M/epi-theia/extensions/integrated-composition/src/common/composition-load.ts`; `pnpm --filter @pratibimba/integrated-composition test`; new test `composition-load.test.mjs` asserts (a) `side-by-side` slot rejection at load with named contributor; (b) widget-only-no-claim rejection at load; (c) raw-body handleClass rejection at load on personal layout; (d) graceful runtime degrade when granted slot's profile field absent; closes 15.4 verification "composition-contract test asserts side-by-side widget contributions are rejected at composition load".
 
-### 29.7 — Klein-flip three-pole composition choreography *(spec-ahead-integration; closes Track 07 §7.7 DR-IG-3; CP-WC-IP-8 consumer)*
+### Tranche 29.7 — Klein-flip three-pole composition choreography *(spec-ahead-integration; closes Track 07 §7.7 DR-IG-3; CP-WC-IP-8 consumer)*
 
 New file `Body/M/epi-theia/extensions/integrated-composition/src/common/klein-flip-choreography.ts` exporting:
 
@@ -303,7 +304,7 @@ Personal composition (4-5-0) has its own Klein-sense choreography (per DR-M4-2 c
 
 Verification: `test -f Body/M/epi-theia/extensions/integrated-composition/src/common/klein-flip-choreography.ts`; `pnpm --filter @pratibimba/integrated-composition test`; new test `klein-flip-choreography.test.mjs` asserts (a) synthetic `KleinFlipEvent` fires three handle-method calls; (b) all three calls fire within the same microtask; (c) `composition.kleinflip.choreography.start` event emitted within 1ms of bus event; (d) `composition.kleinflip.choreography.end` event emitted after 200ms; visual-regression baseline (cross-link 29.12) captures the three-pole simultaneous animation; closes Track 07 §7.7 DR-IG-3 composition wiring.
 
-### 29.8 — 137 = 64 + 72 + 1 visual matheme overlay on cosmic composition *(spec-ahead-integration; closes Track 07 §7.2 visual contract; cross-link 19.8 + 19.9)*
+### Tranche 29.8 — 137 = 64 + 72 + 1 visual matheme overlay on cosmic composition *(spec-ahead-integration; closes Track 07 §7.2 visual contract; cross-link 19.8 + 19.9)*
 
 New file `Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/matheme-137-overlay.tsx` exporting `<Matheme137Overlay surfaceHandle={k2} />`. The overlay renders the Third Spanda Equation spine as labelled bridges on the cosmic composition surface (NOT on a separate pane — annotation layer on the K² torus surface itself):
 
@@ -319,7 +320,7 @@ Render-test asserts `parentAttribution === 'M1-5'` per Track 07 §7.2 (`+1` pare
 
 Verification: `test -f Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/matheme-137-overlay.tsx`; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test`; new test `matheme-137-overlay.test.mjs` asserts (a) the four canonical-form strings render on hover; (b) `parentAttribution === 'M1-5'`; (c) `9_{M_2} = 8_{M_3} + 1_{M_1}` bridge label present; (d) 7-8-9 spine orbits render when profile `m1_2_skeleton_events_fired` includes `Additive137`; (e) Mersenne annotation hidden by default, visible in proof mode; (f) `KaprekarPedagogyHit` consumer fires the chip; `grep -rn "matheme-137-overlay\|9_M2 = 8_M3 + 1_M1\|parentAttribution\|Additive137\|KaprekarPedagogyHit" Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/` returns the symbolic-skeleton wiring (overlay strings, not local computation); closes Track 07 §7.2 composition wiring.
 
-### 29.9 — Contemplation RPC flow: LLM/EBM/Verifier across 4-5-0 slots *(spec-ahead-integration; closes 19.6 / 19.7 composition path; cross-link 26.13)*
+### Tranche 29.9 — Contemplation RPC flow: LLM/EBM/Verifier across 4-5-0 slots *(spec-ahead-integration; closes 19.6 / 19.7 composition path; cross-link 26.13)*
 
 Extend `Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx` (29.3) to wire `contemplate_session_close(ContemplationObject) → wisdom_delta` from Track 19.6 across the four geometric slots. New companion file `Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/contemplation-flow-director.tsx` exporting `<ContemplationFlowDirector />`.
 
@@ -338,7 +339,7 @@ Composition emits `composition.contemplation.complete` observability event when 
 
 Verification: `test -f Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/contemplation-flow-director.tsx`; `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; new test `contemplation-flow-director.test.mjs` asserts (a) synthetic `m5.session.contemplation.complete` event triggers canvas inscription with `recognition` category; (b) WisdomDeltaInspector mounts on right slot with wisdom_delta byte trail; (c) virtue lamps animate from dim to lit per 9-bit vector; (d) symbolic-coordinate strings render as clickable chips; (e) gauge-trio bars fill per coverage; (f) `composition.contemplation.complete` event emitted; integration test against synthetic ContemplationObject produces full slot-update sequence; cross-link 19.6 RPC + 19.7 close-path + 26.13 WisdomDeltaInspector + 11.11 highlight categories.
 
-### 29.10 — Composition-state persistence + cross-layout state preservation *(spec-ahead-integration; closes 15.7 composition-extension)*
+### Tranche 29.10 — Composition-state persistence + cross-layout state preservation *(spec-ahead-integration; closes 15.7 composition-extension)*
 
 Extend `Body/M/epi-theia/extensions/integrated-composition/src/common/workspace-persistence.ts` with the composition-state shape:
 
@@ -378,7 +379,7 @@ Extend `acceptance-harness/tests/topology.test.mjs` (per 11.6) with a new sub-te
 
 Verification: `pnpm --filter @pratibimba/integrated-composition test`; new test `composition-state-persistence.test.mjs` asserts (a) round-trip persistence of all 12 fields; (b) state survives `daily-0-1` ↔ `ide-deep` toggle; (c) state survives cosmic ↔ personal 0/1 toggle; (d) `qComposedSnapshotId` is always opaque handle (never raw bytes — privacy invariant); (e) restart re-reads state correctly; `pnpm --filter @pratibimba/acceptance-harness test`; cross-link 11.6 + 15.7 + 25.6 (personal cymatic state) + 26.1 (EBM state).
 
-### 29.11 — Composition observability event vocabulary + OmniPanel Dispatch Trace wiring *(spec-ahead-integration; closes OW-WC-IP-1; cross-link 15.11)*
+### Tranche 29.11 — Composition observability event vocabulary + OmniPanel Dispatch Trace wiring *(spec-ahead-integration; closes OW-WC-IP-1; cross-link 15.11)*
 
 New file `Body/M/epi-theia/extensions/integrated-composition/src/common/composition-events.ts` exporting the composition event vocabulary:
 
@@ -422,7 +423,7 @@ Both compositions emit on relevant state changes:
 
 Verification: `test -f Body/M/epi-theia/extensions/integrated-composition/src/common/composition-events.ts`; `pnpm --filter @pratibimba/integrated-composition test`; new test `composition-events.test.mjs` asserts (a) all 14 event types are emitted under their named conditions; (b) OmniPanel Dispatch Trace consumes the events and renders them; (c) click-through from event → Evidence opens snapshot; cross-link 15.11 dispatch genealogy.
 
-### 29.12 — Visual-regression fixtures for both compositions *(spec-ahead-integration; closes OW-WC-IP-2; cross-link 15.12)*
+### Tranche 29.12 — Visual-regression fixtures for both compositions *(spec-ahead-integration; closes OW-WC-IP-2; cross-link 15.12)*
 
 Extend `Body/M/epi-theia/extensions/acceptance-harness/fixtures/visual-regression/` with two new fixture directories:
 
@@ -446,7 +447,7 @@ Frame-by-frame baselines committed under `Body/M/epi-theia/extensions/acceptance
 
 Verification: `pnpm --filter @pratibimba/acceptance-harness test:visual`; baselines committed; `test -d Body/M/epi-theia/extensions/acceptance-harness/fixtures/visual-regression/integrated-1-2-3 && test -d Body/M/epi-theia/extensions/acceptance-harness/fixtures/visual-regression/integrated-4-5-0`; diff threshold honoured; closes 15.12 cross-link for the two integrated-composition scopes.
 
-### 29.13 — M4 protected-local boundary enforcement extended to geometric slots *(spec-ahead-integration; closes IP-15 + DR-M4-3 geometric enforcement)*
+### Tranche 29.13 — M4 protected-local boundary enforcement extended to geometric slots *(spec-ahead-integration; closes IP-15 + DR-M4-3 geometric enforcement)*
 
 Extend `Body/M/epi-theia/extensions/integrated-composition/src/common/composition-coordinator.ts::enforceProtectedLocalBoundary()` to operate on `IntegratedGeometricClaim`s in addition to widget-region claims. The extended check rejects:
 
@@ -468,7 +469,7 @@ Cross-link 8.1 (privacy-first composition contract) — DR-M4-3 ratifying decisi
 
 Verification: `pnpm --filter @pratibimba/integrated-composition test`; new test `enforce-protected-local-geometric.test.mjs` asserts each of the five forbidden `handleClass` values is rejected when declared on each of the six personal geometric slots — 30 rejection cases total — each with the named-provenance error string; allow-list test asserts the 8 allowed `handleClass` values pass through; integration test through `compositionLoad()` confirms the rejection rejects the whole composition mount.
 
-### 29.14 — Composition deep-link routes + cross-layout intent integration *(spec-ahead-integration; closes OW-WC-IP-3; cross-link 11.2 / TS-11)*
+### Tranche 29.14 — Composition deep-link routes + cross-layout intent integration *(spec-ahead-integration; closes OW-WC-IP-3; cross-link 11.2 / TS-11)*
 
 Extend `Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-deep-links.ts` with two composition routes:
 
@@ -504,6 +505,86 @@ Wave-C deep links (e.g., from `m1-paramasiva.openWalkAt(tick=5, family=3)` in 22
 
 Verification: `test -f Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-deep-links.ts`; `grep -n "cosmicComposition\|personalComposition\|COMPOSITION_ROUTES\|CompositionIntent" Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-deep-links.ts` returns the new symbols; acceptance-harness intent-routing test traverses both routes; new test `composition-intent.test.mjs` asserts (a) intent dispatch routes to the correct composition widget; (b) state hints pre-load the composition's persisted state; (c) intent emitted from Pi Chat surfaces in OmniPanel Dispatch Trace per 15.11.
 
+### Tranche 29.15 — Pentadic runtime trace overlay across 1-2-3 and 4-5-0 *(spec-ahead-integration; consumes 10.P5 + Track 36.4-36.6)*
+
+Extend the shared `integrated-composition` substrate with a typed overlay/readiness channel for `AnuttaraPentadicRuntimeTrace`.
+
+Common-side substrate:
+
+```ts
+export interface IntegratedPentadicTraceOverlay {
+    readonly trace: AnuttaraPentadicRuntimeTrace;
+    readonly generation: number;
+    readonly readiness: IntegratedReadinessAggregate;
+    readonly cosmicSlots: {
+        readonly tickSurface: 'm1-paramasiva-played-torus';
+        readonly frequencyTexture: 'm2-parashakti';
+        readonly codonCellState: 'm3-mahamaya';
+    };
+    readonly personalSlots: {
+        readonly grounding: 'm0-anuttara';
+        readonly qHandleConsumer: 'm4-nara';
+        readonly recognitionConsumer: 'm5-epii';
+    };
+}
+```
+
+- **Files to extend:**
+  - `Body/M/epi-theia/extensions/integrated-composition/src/common/profile-tick-subscription.ts` — include the trace in the single profile-tick envelope.
+  - `Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-readiness.ts` — add trace pending/blocker aggregation.
+  - `Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmic-engine-composition.tsx` — render the 0/1 marker, 5-degree quantum, 72-index, 64-address, and codon as one live overlay.
+  - `Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx` — pass trace handles into M4/M5 slots and show M0 grounding witness.
+  - `Body/M/epi-theia/extensions/integrated-composition/src/common/composition-events.ts` — emit `composition.pentadic_trace.advance` when the trace generation changes.
+
+- **Cosmic rules:** M1, M2, and M3 must read the same trace generation. The overlay fails readiness if K2 tick, M2 resonance72, and M3 codon cell disagree with the trace payload. No renderer-local 72->64 conversion.
+
+- **Personal rules:** M4 receives `qComposedHandle` and public-safe trace addresses only. M5 receives the feature-family id `anuttara_pentadic_runtime_trace` plus `learnedPredictorCheckpointRef`. M0 grounding receives the 0/1 substrate marker and R-virtue witness state. No raw quaternion/model feature body crosses the bus.
+
+Verification: `pnpm --filter @pratibimba/integrated-composition test`; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test`; `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; tests assert a single profile subscription, trace-generation equality across cosmic slots, protected-local rejection on personal raw bodies, `composition.pentadic_trace.advance` emission, and no production local derivation of 72->64 / 24x15 / 360+24.
+
+### Tranche 29.16 — Inhabited Bimba live entity field overlay *(spec-ahead-integration; consumes 10.PASU + 18.10 + 25.22)*
+
+Extend the integrated composition substrate so the Bimba map can be literally inhabited by live `PasuBeingPatternProjection` entities without making live state canonical.
+
+Common-side substrate:
+
+```ts
+export interface InhabitedBimbaEntityState {
+    readonly entityRef: BeingEntityRef;
+    readonly stableIdentity: CanonicalIdentityHandle;
+    readonly liveState: LiveStateHandle;
+    readonly clockAddress: BeingPatternClockAddress;
+    readonly monopolyOperator: MonoPolyOperator;
+    readonly perspectiveRole: PerspectiveRole;
+    readonly naraFamilyRole?: NaraFamilyRole;
+    readonly elementalWeights: ElementalWeightProjection;
+    readonly relationEdges: readonly BeingPatternRelationEdge[];
+    readonly reviewRisk: 'none' | 'forced-unification' | 'privacy-boundary' | 'canon-candidate';
+}
+```
+
+Files to extend:
+- `Body/M/epi-theia/extensions/integrated-composition/src/common/composition-events.ts` — add `composition.being_pattern.observed`, `composition.being_pattern.projected`, `composition.being_pattern.relation_edge`, `composition.being_pattern.review_candidate`.
+- `Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-readiness.ts` — add blockers for `pending-pasu-being-pattern`, `pending-spacetime-live-state`, `pending-monopoly-operator`, `pending-perspective-role`.
+- `Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmic-engine-composition.tsx` — render public-safe entity markers in the 3D Earth-centred solar/clock field, using backend-supplied `m2M3Relation` edges for planetary/lens aspects.
+- `Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx` — pass the current entity's `PasuBeingPatternProjection` to M4's `M4BeingPatternPerspectiveCard` (25.22) and M5's recognition layer.
+- `Body/M/epi-theia/extensions/integrated-composition/src/common/graphiti-source-guard.ts` — ensure Graphiti episode refs remain protected handles when used as live-state provenance.
+
+Stream law:
+- S2/Neo4j is the canonical identity/ontology graph. Composition reads graph anchors but never writes graph canon.
+- S3/SpaceTimeDB carries live presence and current entity state. Composition subscribes to live-state handles and drops stale generations.
+- Graphiti carries protected episodic provenance. Composition can show handles and public-safe summaries only.
+- Redis/Psyche, DAY, and NOW carry runtime temporal state. Composition must serialize handles, not construct temporal keys locally.
+- M5/Epii + M0 verifier are the only promotion path from live pattern candidate to canon.
+
+Visual law:
+- Cosmic composition renders the many as many: public-safe `Poly` and `ActuallyMany` entities may co-exist around the clock field without clustering into one symbolic object.
+- `PotentiallyOne` may render as a suggested shared contour; `ActualisingOne` renders as a warning/review candidate; `MonoPoly` renders as a held many-in-one only when verified.
+- Personal composition renders perspective explicitly: I, You, You-and-I, They, We, We-I. Optional Nara family overlay is visual context, not identity assignment.
+- Earth remains the observer-centre for the solar/clock projection. The 9-orbiter visual derives from Earth-centred M2 projection while respecting the canonical M2 LUT.
+
+Verification: `pnpm --filter @pratibimba/integrated-composition test`; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test`; `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; replay fixture asserts `EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted`; protected-local test asserts Graphiti bodies and raw quaternions never cross; canon-boundary test asserts no S2 mutation from composition; visual fixture covers `Mono`, `Poly`, `ActualisingOne`, and `MonoPoly` states.
+
 ## Cross-Track Cross-References (summary)
 
 | Tranche | Cross-links to |
@@ -522,14 +603,16 @@ Verification: `test -f Body/M/epi-theia/extensions/integrated-composition/src/co
 | 29.12 | 15.12 (visual-regression harness), 22.13 (M1 visual-regression), 23.16 (M2), 24.16 (M3), 25.20 (M4), 26.16 (M5) |
 | 29.13 | 08.1 (privacy-first composition contract), DR-M4-3 (no raw bodies cross), DR-M4-2 (polarity 0=cosmic / 1=personal), 25.18 (privacy chrome) |
 | 29.14 | 11.2 (cross-layout intent routing), TS-11 (CrossLayoutIntent envelope), 15.2 (OmniPanel Pi Chat), DR-TS-1 (composition in daily-0-1), 22.1 (Spanda walk navigator deep link), 24.X (M3 codon deep link) |
+| 29.15 | 10.P5 (AnuttaraPentadicRuntimeTrace), 21 (M0 grounding), 22 (M1 K2 tick surface), 23 (M2 resonance texture), 24.18 (M3 pentadic inspector), 25 (M4 protected Q handles), 26 (M5 EBM recognition), 36.4-36.6 |
+| 29.16 | 10.PASU (PasuBeingPatternProjection), 18.10 (typed PASU JSON edge), 25.22 (M4 perspective/family consumer), M0-3-8 (MonoPoly), M0-4.4.0-(4.4/5) (personhood grammar), S2 Neo4j graph anchors, S3 SpaceTimeDB live state, Graphiti protected provenance, Redis/NOW/DAY temporal handles, 26 (M5 review/EBM recognition) |
 
 ## Anti-Greenfield Posture
 
 Every Track 29 tranche either:
 
-- **Extends** landed `integrated-composition` substrate — 29.1 extends `layout-claim.ts`, 29.4 adds `profile-tick-subscription.ts`, 29.5 adds `integrated-readiness.ts`, 29.6 adds `composition-load.ts`, 29.7 adds `klein-flip-choreography.ts`, 29.10 extends `workspace-persistence.ts`, 29.11 adds `composition-events.ts`, 29.13 extends `composition-coordinator.ts::enforceProtectedLocalBoundary()`, 29.14 extends `integrated-deep-links.ts`.
-- **Extends** landed `plugin-integrated-1-2-3` widget body — 29.2 adds `cosmic-engine-composition.tsx`, 29.8 adds `matheme-137-overlay.tsx`. Existing `cosmic-engine-panes.tsx` retained for mini-inspector mode.
-- **Extends** landed `plugin-integrated-4-5-0` widget body — 29.3 adds `personal-recognition-composition.tsx`, 29.9 adds `contemplation-flow-director.tsx`. Existing `jiva-siva-panes.tsx` and `epii-review-panel.tsx` retained for mini-inspector mode.
+- **Extends** landed `integrated-composition` substrate — 29.1 extends `layout-claim.ts`, 29.4 adds `profile-tick-subscription.ts`, 29.5 adds `integrated-readiness.ts`, 29.6 adds `composition-load.ts`, 29.7 adds `klein-flip-choreography.ts`, 29.10 extends `workspace-persistence.ts`, 29.11 adds `composition-events.ts`, 29.13 extends `composition-coordinator.ts::enforceProtectedLocalBoundary()`, 29.14 extends `integrated-deep-links.ts`, 29.15 extends `profile-tick-subscription.ts`, `integrated-readiness.ts`, and `composition-events.ts` for the pentadic trace overlay, and 29.16 extends `composition-events.ts`, `integrated-readiness.ts`, and `graphiti-source-guard.ts` for the inhabited Bimba live entity field.
+- **Extends** landed `plugin-integrated-1-2-3` widget body — 29.2 adds `cosmic-engine-composition.tsx`, 29.8 adds `matheme-137-overlay.tsx`, 29.15 overlays the pentadic trace on the same composition surface, and 29.16 adds public-safe live entity markers to the Earth-centred clock/solar field. Existing `cosmic-engine-panes.tsx` retained for mini-inspector mode.
+- **Extends** landed `plugin-integrated-4-5-0` widget body — 29.3 adds `personal-recognition-composition.tsx`, 29.9 adds `contemplation-flow-director.tsx`, 29.15 passes pentadic trace handles into M4/M5 recognition and M0 grounding, and 29.16 passes `PasuBeingPatternProjection` into the M4 perspective/family card and M5 review layer. Existing `jiva-siva-panes.tsx` and `epii-review-panel.tsx` retained for mini-inspector mode.
 - **Consumes** named M' product surface owners — the `m1-paramasiva-played-torus` extension owns the K² surface (DR-M1-2 / 22.2), the `m2-parashakti` extension owns the cymatic mount (23.10), the `m3-mahamaya` extension owns the codon-rotation export (24.13), the `m4-nara` extension owns the canvas (11.10) + ambient strip (11.12) + tuning bar (11.12) + personal cymatic (25.6) + kairos display (25.15) + Mercurius indicator (25.16) + time-axis switcher (25.17) + session-close ceremony (25.19), the `m5-epii` extension owns the recognition layer (26.11) + WisdomDeltaInspector (26.13), the `m0-anuttara` extension owns the virtue witness grounding (Track 21 + 19.6 Verifier).
 - **Extends** landed `acceptance-harness` — 29.12 extends visual-regression fixtures.
 

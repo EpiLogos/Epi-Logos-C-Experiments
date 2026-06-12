@@ -13,6 +13,9 @@ use epi_logos::gate::{
     },
     system,
 };
+use epi_s3_gateway_contract::{
+    TerminalBinding, TerminalCaptureMode, TerminalCapturePolicy, TerminalLease, TerminalStatus,
+};
 use serde_json::json;
 use support::{temp_env, TestGatewayClient};
 
@@ -53,6 +56,23 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
                 cmux_workspace: Some(Some("epi-team-alpha".to_owned())),
                 cmux_surface: Some(Some("leader".to_owned())),
                 cmux_pane_id: Some(Some("pane-main".to_owned())),
+                terminal_binding: Some(Some(TerminalBinding {
+                    terminal_identifier: Some("tmux:epi-team-alpha:%terminal-main".to_owned()),
+                    session_anchor: Some("epi-team-alpha".to_owned()),
+                    tmux_pane_id: Some("%terminal-main".to_owned()),
+                    attached_session_key: Some("agent:main:main".to_owned()),
+                    terminal_status: Some(TerminalStatus::Attached),
+                    lease: Some(TerminalLease {
+                        lease_owner: Some("pi.anima".to_owned()),
+                        lease_purpose: Some("interactive-session".to_owned()),
+                        lease_expires_at_ms: Some(1_785_000_000_000),
+                    }),
+                    capture_policy: Some(TerminalCapturePolicy {
+                        mode: TerminalCaptureMode::Transcript,
+                        max_lines: Some(80),
+                        redaction_policy: Some("test-redactor".to_owned()),
+                    }),
+                })),
                 ..Default::default()
             },
         )
@@ -99,7 +119,6 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
     bridge.publish_m_clock_placeholder("M0").unwrap();
 
     let events = bridge.drain_test_events().unwrap();
-
     assert!(events.iter().any(|event| {
         event.kind == "gateway_registration"
             && event.table == "gateway_instance"
@@ -139,12 +158,21 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["diagnostics"][0]["severity"] == "info"
             && event.payload["teamId"] == "team-alpha"
             && event.payload["cmuxWorkspace"] == "epi-team-alpha"
+            && event.payload["terminalBinding"]["provider"] == "tmux"
+            && event.payload["terminalBinding"]["terminalStatus"] == "attached"
+            && event.payload["terminalBinding"]["tmuxPaneId"] == "%terminal-main"
+            && event.payload["terminalBinding"]["leaseExpiresAtMs"].as_u64()
+                == Some(1_785_000_000_000)
+            && event.payload["terminalBinding"]["capturePolicy"]["mode"] == "transcript"
+            && event.payload["terminalBinding"]["capturePolicy"]["redactionPolicy"] == "configured"
+            && event.payload["terminalBinding"]["rawPaneBodyIncluded"] == false
+            && event.payload["terminalBinding"].get("leaseOwner").is_none()
             && event.payload["dayId"] == "07-03-2026"
             && event.payload["vaultNowPath"] == "/vault/Empty/Present/07-03-2026/main/now.md"
             && event.payload["redisTemporalContext"]["sessionNowKey"]
-                == "s3:gateway:temporal:session:main:now:md"
+                == "cache:hot:s3:gateway:temporal:session:main:now:md"
             && event.payload["redisTemporalContext"]["sessionKairosKey"]
-                == "s3:gateway:temporal:session:main:kairos"
+                == "cache:hot:s3:gateway:temporal:session:main:kairos"
             && event.payload["kairos"]["privacy"] == "public-current-transit-only"
             && event.payload["kernel"]["privacy"] == "safe-public-current-kernel-tick"
             && event.payload["kernel"]["projectionOwner"] == "S3'"
@@ -179,7 +207,7 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["nowPath"] == "/vault/Empty/Present/07-03-2026/main/now.md"
             && event.payload["nowLineageKey"] == "agent:main:main"
             && event.payload["redis"]["dayContextKey"]
-                == "s3:gateway:temporal:day:07-03-2026:context"
+                == "cache:warm:s3:gateway:temporal:day:07-03-2026:context"
             && event.payload["redis"]["globalContextKey"]
                 == "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026"
             && event.payload["graphiti"]["sessionArcId"] == "day:07-03-2026:session:main"
@@ -187,6 +215,12 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["kernel"]["tick"]["harmonicRatio"]
                 .as_str()
                 .is_some()
+            && event.payload["terminal"]["provider"] == "tmux"
+            && event.payload["terminal"]["status"] == "attached"
+            && event.payload["terminal"]["leaseExpiresAtMs"].as_u64() == Some(1_785_000_000_000)
+            && event.payload["terminal"]["capturePolicy"]["mode"] == "transcript"
+            && event.payload["terminal"]["rawPaneBodyIncluded"] == false
+            && event.payload["terminal"].get("tmuxPaneId").is_none()
             && event.payload["privacy"] == "safe-live-projection"
     }));
     assert!(events.iter().any(|event| {
@@ -266,8 +300,8 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[now]]",
             "Idea/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "graphiti-main",
             "pratibimba-abcd1234",
             "kairos-07-03-2026-main",
@@ -312,8 +346,8 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "[[now]]",
             "agent:main:main",
             "Idea/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026",
             "pratibimba-abcd1234",
             "graphiti-main",
@@ -1236,7 +1270,7 @@ async fn gateway_rpc_publishes_bridge_events_for_real_state_changes() {
             && event.payload["cmuxWorkspace"] == "epi-team-bravo"
             && event.payload["dayId"] == "07-03-2026"
             && event.payload["redisTemporalContext"]["dayContextKey"]
-                == "s3:gateway:temporal:day:07-03-2026:context"
+                == "cache:warm:s3:gateway:temporal:day:07-03-2026:context"
             && event.payload["spacetimedb"].is_null()
             && event.payload["kairos"]["privacy"] == "public-current-transit-only"
     }));
@@ -1388,8 +1422,8 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[Empty/Present/07-03-2026/main/now|NOW main]]",
             "/vault/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "day:07-03-2026:session:main",
             "",
             "kairos-07-03-2026-main",
@@ -1447,8 +1481,8 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "[[Empty/Present/07-03-2026/main/now|NOW main]]",
             "agent:main:main",
             "/vault/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "s3:gateway:temporal:global:install-live-test:gateway-live-test:day:07-03-2026",
             "",
             "day:07-03-2026:session:main",

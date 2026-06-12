@@ -1,0 +1,36 @@
+{
+  "runId": "20260611T191836Z-32-T32.14",
+  "taskId": "32.T32.14",
+  "startedAt": "2026-06-11T19:18:36.309Z",
+  "owner": "codex-m-dev-32-t32-14",
+  "leaseExpiresAt": "2026-06-11T21:18:36.309Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.14",
+    "trackId": "32",
+    "tranche": "T32.14",
+    "title": "Acceptance harness onboarding fixtures",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.13"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/acceptance-harness/tests/**",
+      "scripts/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

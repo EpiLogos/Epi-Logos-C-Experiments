@@ -37,6 +37,9 @@ export interface KernelBridgeAPI {
     /** capability: requestReviewEvidence */
     requestReviewEvidence(handle: string): Promise<unknown>;
 
+    /** capability: s2.parashaktiCorrespondences */
+    parashaktiCorrespondences(address72: number): Promise<unknown>;
+
     /** subscription: onMathemeHarmonicProfile */
     onMathemeHarmonicProfile(listener: (profile: MathemeHarmonicProfileBoundary) => void): Disposable;
 
@@ -60,7 +63,8 @@ export const KERNEL_BRIDGE_REQUIRED_CAPABILITIES = Object.freeze([
     'subscribeObservability',
     'invokeGatewayRpc',
     'depositKernelObservation',
-    'requestReviewEvidence'
+    'requestReviewEvidence',
+    's2.parashaktiCorrespondences'
 ] as const);
 
 export const KERNEL_BRIDGE_REQUIRED_SUBSCRIPTIONS = Object.freeze([

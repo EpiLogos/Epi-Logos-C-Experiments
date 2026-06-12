@@ -1,4 +1,14 @@
-import { Disposable, SharedBridgeAdapter } from '@pratibimba/m-extension-runtime';
+import * as React from 'react';
+import type { Disposable } from '@pratibimba/m-extension-runtime/lib/common/bridge-api';
+import { SharedBridgeAdapter } from '@pratibimba/m-extension-runtime/lib/common/shared-bridge';
+import {
+    type BridgeReadinessBinding,
+    type BridgeReadinessSource,
+    BridgeReadinessBadge,
+    classifyReadiness,
+    snapshotReadinessFromBridge,
+    useBridgeReadiness
+} from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
 
 /**
  * Bridge availability gate consumed by the two integrated plugin
@@ -15,16 +25,26 @@ export class IntegratedBridgeGate {
     private listeners = new Set<(attached: boolean) => void>();
     private cachedAttached = false;
     private bridgeSubscription: Disposable | null = null;
+    private readinessSubscription: Disposable | null = null;
+    private readiness: BridgeReadinessBinding;
+    readonly useBridgeReadiness = useBridgeReadiness;
 
     constructor(private readonly bridge: SharedBridgeAdapter) {
+        this.readiness = classifyReadiness(snapshotReadinessFromBridge(this.readinessSource), 'integrated.bridge');
         this.bridgeSubscription = this.bridge.onConnectionStatus(status => {
-            const nextAttached = status.connected && status.mode !== 'detached';
-            if (nextAttached !== this.cachedAttached) {
-                this.cachedAttached = nextAttached;
-                for (const listener of this.listeners) {
-                    listener(this.cachedAttached);
-                }
-            }
+            this.updateAttached(status.connected && status.mode !== 'detached');
+        });
+        this.readinessSubscription = this.bridge.onReadiness(snapshot => {
+            this.readiness = classifyReadiness(snapshot, 'integrated.bridge');
+            this.updateAttached(this.readiness.readinessId !== 'bridge_unavailable');
+        });
+    }
+
+    renderBadge(bindingKey: string = 'integrated.bridge'): React.ReactNode {
+        return React.createElement(BridgeReadinessBadge, {
+            bridge: this.readinessSource,
+            bindingKey,
+            readiness: bindingKey === this.readiness.bindingKey ? this.readiness : undefined
         });
     }
 
@@ -45,6 +65,21 @@ export class IntegratedBridgeGate {
     dispose(): void {
         this.bridgeSubscription?.dispose();
         this.bridgeSubscription = null;
+        this.readinessSubscription?.dispose();
+        this.readinessSubscription = null;
         this.listeners.clear();
+    }
+
+    private updateAttached(nextAttached: boolean): void {
+        if (nextAttached !== this.cachedAttached) {
+            this.cachedAttached = nextAttached;
+            for (const listener of this.listeners) {
+                listener(this.cachedAttached);
+            }
+        }
+    }
+
+    private get readinessSource(): BridgeReadinessSource {
+        return this.bridge as unknown as BridgeReadinessSource;
     }
 }

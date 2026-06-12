@@ -14,6 +14,9 @@
  * Real wiring lands at Track 05 T3 (kernel-bridge extension) which will
  * publish typed Theia DI services consumed via React context — at that
  * point the `window.sPrime` shim is replaced with DI access.
+ *
+ * @deprecated TODO: remove after OmniPanel reads runtime state through
+ * SharedBridgeAdapter / KERNEL_BRIDGE_API.invokeGatewayRpc only.
  */
 
 const NOOP_UNSUB = () => {

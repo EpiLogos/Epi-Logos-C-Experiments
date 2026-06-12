@@ -130,7 +130,7 @@ fn template_and_day_now_commands_write_real_files() {
     );
     assert!(day.stdout.contains("daily-note.md"));
     assert!(vault_root
-        .join("Empty/Present/10-03-2026/daily-note.md")
+        .join("Empty/Present/2026/03/W11/10/daily-note.md")
         .exists());
 
     let now = run_epi(
@@ -201,7 +201,7 @@ fn template_and_day_now_commands_write_real_files() {
     );
 
     // archive-day --plan prints paths without moving
-    let daily_note = vault_root.join("Empty/Present/10-03-2026/daily-note.md");
+    let daily_note = vault_root.join("Empty/Present/2026/03/W11/10/daily-note.md");
     let mut content = fs::read_to_string(&daily_note).unwrap();
     content = content.replace("---\n", "---\nc_5_reflection_complete: true\n");
     // Only replace the first occurrence (the closing ---)
@@ -904,7 +904,7 @@ fn vault_root_autodetects_idea_in_repo_root() {
     );
     assert!(
         idea_dir
-            .join("Empty/Present/04-04-2026/daily-note.md")
+            .join("Empty/Present/2026/04/W14/04/daily-note.md")
             .exists(),
         "daily-note must be in repo_root/Idea, got stdout: {}",
         result.stdout

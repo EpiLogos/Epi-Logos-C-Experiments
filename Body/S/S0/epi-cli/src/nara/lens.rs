@@ -22,7 +22,7 @@
 //!   Square C: L2, L3, L2', L3'  — Logical ↔ Processual ↔ Alchemical-Elemental ↔ Chronological
 //!
 //! Square C is the elemental square: L2' (Alchemical-Elemental) carries
-//! {Aether, Earth, Water, Air, Fire, Mineral} at sub-positions 0'-5'.
+//! {Aether, Earth, Water, Air, Fire, Salt} at sub-positions 0'-5'.
 
 use serde::Serialize;
 
@@ -115,7 +115,7 @@ pub const LENS_SUBPOSITIONS: [[&str; 6]; 12] = [
         "Extroversion",
     ],
     // L2' Alchemical-Elemental  ← THE ELEMENT-BEARING LENS
-    ["Aether", "Earth", "Water", "Air", "Fire", "Mineral"],
+    ["Aether", "Earth", "Water", "Air", "Fire", "Salt"],
     // L3' Chronological
     ["Spirit", "Spring", "Summer", "Autumn", "Winter", "Life"],
     // L4' Scientific
@@ -260,7 +260,7 @@ pub const KLEIN_SQUARE_NAMES: [[&str; 4]; 3] = [
 // ── Element System via L2' ───────────────────────────────────────────────────
 
 /// Primary element per lens, derived through the L2' (Alchemical-Elemental) path.
-/// L2' sub-positions: 0=Aether, 1=Earth, 2=Water, 3=Air, 4=Fire, 5=Mineral
+/// L2' sub-positions: 0=Aether, 1=Earth, 2=Water, 3=Air, 4=Fire, 5=Salt
 ///
 /// Mapping to m2.h Element_Id: AKASHA=0, VAYU=1, AGNI=2, APAS=3, PRITHVI=4
 /// (Aether→AKASHA=0, Air→VAYU=1, Fire→AGNI=2, Water→APAS=3, Earth→PRITHVI=4)

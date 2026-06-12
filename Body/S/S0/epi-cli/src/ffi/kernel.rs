@@ -85,4 +85,37 @@ extern "C" {
         r_energy: f32,
     ) -> KernelEnergy;
     pub fn kernel_tick_from_epogdoon(cycle: u64, sub_tick: u8) -> KernelTick;
+    /// M3 codon charge computation via FFI.
+    /// pp = X+Y+Z, nn = X-Y-Z, np = X-Y+Z, pn = X+Y-Z
+    /// where X,Y,Z are nucleotide I-Ching values.
+    pub fn m3_compute_charges_ffi(
+        codon6bit: u8,
+        pp_out: *mut i8,
+        nn_out: *mut i8,
+        np_out: *mut i8,
+        pn_out: *mut i8,
+    );
+}
+
+/// M3 codon charges returned by FFI.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct M3CodonCharges {
+    pub pp: i8,
+    pub nn: i8,
+    pub np: i8,
+    pub pn: i8,
+}
+
+/// Safe wrapper over `m3_compute_charges_ffi`.
+/// Returns (pp, nn, np, pn) = (X+Y+Z, X-Y-Z, X-Y+Z, X+Y-Z)
+/// where X,Y,Z are the I-Ching values of the three nucleotides.
+pub fn compute_codon_charges(codon6bit: u8) -> M3CodonCharges {
+    let mut pp: i8 = 0;
+    let mut nn: i8 = 0;
+    let mut np: i8 = 0;
+    let mut pn: i8 = 0;
+    unsafe {
+        m3_compute_charges_ffi(codon6bit, &mut pp, &mut nn, &mut np, &mut pn);
+    }
+    M3CodonCharges { pp, nn, np, pn }
 }

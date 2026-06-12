@@ -8,7 +8,13 @@
   },
   "references": [
     {
+      "path": "../integrated-composition"
+    },
+    {
       "path": "../m-extension-runtime"
+    },
+    {
+      "path": "../ide-shell-m0-m5"
     }
   ],
   "include": [

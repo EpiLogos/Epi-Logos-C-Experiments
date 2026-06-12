@@ -8,6 +8,7 @@
  */
 
 #include "m0.h"
+#include "m2.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -155,10 +156,13 @@ const DivineAct_Entry DIVINE_ACT_LUT[7] = {
  *
  * Every entry has a Compiled_Formulation with source string.
  *
- * Sub-table assignments (test-authoritative):
- *   [7]  = number 5 (Vak/Sacred Speech)   -> ZODIACAL (12 entries)
- *   [9]  = number 7 (Dynamic Harmony)     -> MONOPOLY (7 entries)
- *   [11] = number 9 (Divine Action)       -> DIVINE   (7 entries)
+ * Sub-table assignments (canonical, fixed 2026-03-07, verified 2026-06-10):
+ *   [5]  = number 3 (Vak/Cit — Sacred Speech)     -> ZODIACAL (12 entries)
+ *   [7]  = number 5 (Dynamic Harmony / Mono-Poly)  -> MONOPOLY  (7 entries)
+ *   [9]  = number 7 (Divine Action / Ananda-Tandava) -> DIVINE_ACT (7 entries)
+ *   [11] = number 9 (Paramesvara / Wholeness)      -> VIRTUE     (9 entries)
+ *
+ * Fix doc: Body/S/S0/epi-lib/docs/m0-archetype-lut-ordering-fix.md
  * ============================================================================= */
 
 /* ARCHETYPE_LUT — 12-fold number language.
@@ -327,6 +331,66 @@ const Archetype_Entry ARCHETYPE_LUT[ARCHETYPE_LUT_SIZE] = {
     },
 };
 
+/* Session-close contemplation questions keyed by archetype index. */
+const char* const CONTEMPLATION_PROMPT_LUT[12] = {
+    "", /* CONTEMPLATION_PROMPT_LUT[0] */
+    "", /* CONTEMPLATION_PROMPT_LUT[1] */
+    "", /* CONTEMPLATION_PROMPT_LUT[2] */
+    "Did your speech articulate identity or just signal? Where did naming become performance?", /* CONTEMPLATION_PROMPT_LUT[3] */
+    "", /* CONTEMPLATION_PROMPT_LUT[4] */
+    "Did unity-multiplicity hold or did one side eat the other? Where was the mercurial crossroads refused?", /* CONTEMPLATION_PROMPT_LUT[5] */
+    "", /* CONTEMPLATION_PROMPT_LUT[6] */
+    "Did the four causes integrate or did one dominate? Which act was missing?", /* CONTEMPLATION_PROMPT_LUT[7] */
+    "", /* CONTEMPLATION_PROMPT_LUT[8] */
+    "Did the cycle complete in wholeness or close prematurely? Which virtue went unwitnessed?", /* CONTEMPLATION_PROMPT_LUT[9] */
+    "", /* CONTEMPLATION_PROMPT_LUT[10] */
+    "", /* CONTEMPLATION_PROMPT_LUT[11] */
+};
+
+/* =============================================================================
+ * M0/M2 PARITY BRIDGES - three minimal LUT lifts, not the full Anuttara lift.
+ * ============================================================================= */
+
+/* M0 archetype index -> M2 zodiacal operator start index.
+ * Only the Vak/Cit archetype currently owns SUB_TABLE_ZODIACAL; it opens the M2
+ * decanic zodiac at index 0 (Aries D1 light). Other archetypes use 0xFF. */
+const uint8_t M0_M2_ZODIACAL_BRIDGE[ARCHETYPE_LUT_SIZE] = {
+    0xFFu, 0xFFu, 0xFFu, 0xFFu, 0xFFu, 0u,
+    0xFFu, 0xFFu, 0xFFu, 0xFFu, 0xFFu, 0xFFu
+};
+
+/* M0 archetype index -> M2 personal planet.
+ * This is the psychoid extension path: archetypal numbers 1-7 bridge to the
+ * classical Sun-through-Saturn planetary sequence now; Uranus/Neptune/Pluto
+ * remain reserved for a future M2-5 transpersonal completion. */
+const uint8_t PSYCHOID_PLANETARY_CORRESPONDENCE[ARCHETYPE_LUT_SIZE] = {
+    0xFFu, 0xFFu, 0xFFu,
+    PLANET_SUN, PLANET_MOON, PLANET_MERCURY, PLANET_VENUS,
+    PLANET_MARS, PLANET_JUPITER, PLANET_SATURN,
+    0xFFu, 0xFFu
+};
+
+/* M0 archetype index -> M2 tattvic element.
+ *
+ * Rationale:
+ * - SUB_TABLE_NONE maps to Akasha: an unqualified symbolic space with no
+ *   specialized operative sub-table.
+ * - SUB_TABLE_ZODIACAL maps to Vayu: Vak as the moving breath/wind that carries
+ *   the twelve zodiacal operators.
+ * - SUB_TABLE_MONOPOLY maps to Agni: the dynamic Mono/Poly exchange as
+ *   transmuting fire.
+ * - SUB_TABLE_DIVINE maps to Apas: the seven acts as a flowing sequence of
+ *   manifestation, concealment, grace, and return.
+ * - SUB_TABLE_VIRTUE maps to Prithvi: virtues as the stabilized, embodied fruit
+ *   of the M0 cycle.
+ */
+const uint8_t ALCHEMICAL_TO_TATTVIC[ARCHETYPE_LUT_SIZE] = {
+    ELEMENT_ID_AKASHA,  ELEMENT_ID_AKASHA,  ELEMENT_ID_AKASHA,
+    ELEMENT_ID_AKASHA,  ELEMENT_ID_AKASHA,  ELEMENT_ID_VAYU,
+    ELEMENT_ID_AKASHA,  ELEMENT_ID_AGNI,    ELEMENT_ID_AKASHA,
+    ELEMENT_ID_APAS,    ELEMENT_ID_AKASHA,  ELEMENT_ID_PRITHVI
+};
+
 /* =============================================================================
  * FR 2.0.4: QL META-LOGIC STACK — 5 frames
  * ============================================================================= */
@@ -490,6 +554,92 @@ const Shakti_Entry SHAKTI_TABLE[SHAKTI_TABLE_SIZE] = {
 const R_Factor_Route R_FACTOR_ROUTE_TABLE[R_FACTOR_ROUTE_COUNT] = {
     ROUTE_O_SHARP, ROUTE_X_SHARP, ROUTE_N_SHARP, ROUTE_M_SHARP,
     ROUTE_NARA, ROUTE_SIVA, ROUTE_SHAKTI
+};
+
+/* DR-R0 (resolved 2026-06-12): pin the R-factor distribution to the
+ * anuttara-language-map base-rows so the upper-triad confinement cannot
+ * silently drift back to the old full-sweep words. Archetype-7 law. */
+
+/* R0 (Creation) confined to the upper triad O#/X#/N# at positions 1/2/3 ... */
+_Static_assert(GET_R_POS(ROUTE_O_SHARP, 0) == 1u, "R0 sits at O# position 1");
+_Static_assert(GET_R_POS(ROUTE_X_SHARP, 0) == 2u, "R0 sits at X# position 2");
+_Static_assert(GET_R_POS(ROUTE_N_SHARP, 0) == 3u, "R0 sits at N# position 3");
+/* ... and absent (7) from Spanda down: creation does not act below N#. */
+_Static_assert(GET_R_POS(ROUTE_M_SHARP, 0) == 7u, "R0 absent from M# (creation stops at Spanda)");
+_Static_assert(GET_R_POS(ROUTE_NARA,    0) == 7u, "R0 absent from Nara");
+_Static_assert(GET_R_POS(ROUTE_SIVA,    0) == 7u, "R0 absent from Siva");
+_Static_assert(GET_R_POS(ROUTE_SHAKTI,  0) == 7u, "R0 absent from Shakti");
+
+/* Per-fret complementarity Rx + R(5-x) = 5 where both present: the two
+ * full-spine double-courses (R1/R4 sustenance-grace, R2/R3 dissolution-veiling). */
+#define R0_RFACTOR_COMPL_R1R4(route) \
+    _Static_assert(GET_R_POS(route, 1) + GET_R_POS(route, 4) == 5u, "R1 + R4 = 5 (" #route ")")
+#define R0_RFACTOR_COMPL_R2R3(route) \
+    _Static_assert(GET_R_POS(route, 2) + GET_R_POS(route, 3) == 5u, "R2 + R3 = 5 (" #route ")")
+R0_RFACTOR_COMPL_R1R4(ROUTE_O_SHARP);  /* R2/R3 absent at O# */
+R0_RFACTOR_COMPL_R1R4(ROUTE_X_SHARP);  R0_RFACTOR_COMPL_R2R3(ROUTE_X_SHARP);
+R0_RFACTOR_COMPL_R1R4(ROUTE_N_SHARP);  R0_RFACTOR_COMPL_R2R3(ROUTE_N_SHARP);
+R0_RFACTOR_COMPL_R1R4(ROUTE_M_SHARP);  R0_RFACTOR_COMPL_R2R3(ROUTE_M_SHARP);
+R0_RFACTOR_COMPL_R1R4(ROUTE_NARA);     R0_RFACTOR_COMPL_R2R3(ROUTE_NARA);
+R0_RFACTOR_COMPL_R1R4(ROUTE_SIVA);     R0_RFACTOR_COMPL_R2R3(ROUTE_SIVA);
+R0_RFACTOR_COMPL_R2R3(ROUTE_SHAKTI);   /* the (@#) turn: R2@5 + R3@0 = 5 */
+#undef R0_RFACTOR_COMPL_R1R4
+#undef R0_RFACTOR_COMPL_R2R3
+
+/* =============================================================================
+ * IX-B: ARCHETYPE-7 R-FACTOR THEORY IN FULL (Tranche 01.T1.12)
+ *
+ * The principle triad, the 7×6 distribution matrix, and the base→M column
+ * map. The act-factors themselves are already carried by DIVINE_ACT_LUT
+ * (R# parent + R0..R5); these tables land the triad and the distribution.
+ * ============================================================================= */
+
+/* Tier 1 — the principle triad (verbatim c_1_symbol identity chains,
+ * anuttara-language-map rows M0-2-9-0/1/2). */
+const R_Triad_Entry R_TRIAD_TABLE[R_TRIAD_COUNT] = {
+    { .principle = R_TRIAD_TRUTH, .symbol = R_TRIAD_TRUTH_SYMBOL, .name = "Truth",
+      .identity = "## = @ = (0/1)-(00)-00" },                 /* matrix on matrix; structure's lineage to void */
+    { .principle = R_TRIAD_LIGHT, .symbol = R_TRIAD_LIGHT_SYMBOL, .name = "Light",
+      .identity = "#R = @ = (7-8-9-(0/1)/O#-X#-N#)" },        /* Openness/Creativity; the 7-8-9 spine */
+    { .principle = R_TRIAD_LIFE,  .symbol = R_TRIAD_LIFE_SYMBOL,  .name = "Life",
+      .identity = "R# = parent of the acts @ M0-3-10-(0/1) = @5 (Sakti Techne)" }, /* Freedom/Svatantrya */
+};
+
+/* Tier 2 — distribution matrix [base][R0..R5] → fret position, 7 = absent.
+ * Decoded from R_FACTOR_ROUTE_TABLE (R0..R4) + R5 positionless throughout.
+ *
+ *   Base          R0  R1  R2  R3  R4  R5
+ *   O# Paramasiva  1   0   —   —   5   —
+ *   X# Parasakti   2   1   0   5   4   —
+ *   N# Spanda      3   2   1   4   3   —
+ *   M# Mahamaya    —   3   2   3   2   —
+ *   #  Nara        —   4   3   2   1   —
+ *   Siva           —   5   4   1   0   —
+ *   Sakti          —   —   5   0   —   —          (— = R5_POSITIONLESS = 7) */
+const uint8_t R_FACTOR_DISTRIBUTION[R_FACTOR_BASE_COUNT][R_FACTOR_COUNT] = {
+    /* O# */ { 1, 0, 7, 7, 5, R5_POSITIONLESS },
+    /* X# */ { 2, 1, 0, 5, 4, R5_POSITIONLESS },
+    /* N# */ { 3, 2, 1, 4, 3, R5_POSITIONLESS },
+    /* M# */ { 7, 3, 2, 3, 2, R5_POSITIONLESS },
+    /* #  */ { 7, 4, 3, 2, 1, R5_POSITIONLESS },
+    /* Si */ { 7, 5, 4, 1, 0, R5_POSITIONLESS },
+    /* Sk */ { 7, 7, 5, 0, 7, R5_POSITIONLESS },
+};
+
+/* The R0..R4 columns of R_FACTOR_DISTRIBUTION are the route words read the
+ * other way; pin them so the matrix cannot drift from R_FACTOR_ROUTE_TABLE. */
+_Static_assert(GET_R_POS(ROUTE_O_SHARP, 0) == 1u, "matrix O#/R0 == route O#/R0");
+_Static_assert(GET_R_POS(ROUTE_SHAKTI, 3) == 0u, "matrix Sakti/R3 == route Shakti/R3 (the (@#) turn)");
+
+/* Macro M-branch each base pre-threads (aligned to M0_CROSS_BRANCH weaving). */
+const uint8_t R_BASE_M_COLUMN[R_FACTOR_BASE_COUNT] = {
+    1u, /* O#    → M1 Paramasiva  */
+    2u, /* X#    → M2 Parasakti   */
+    3u, /* N#    → M3 Mahamaya     */
+    4u, /* M#    → M4 Nara         */
+    4u, /* Nara  → M4 Nara         */
+    5u, /* Siva  → M5 Epii         */
+    5u, /* Sakti → M5 Epii         */
 };
 
 /* =============================================================================

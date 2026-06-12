@@ -1,0 +1,36 @@
+{
+  "runId": "20260609T212929Z-01-T1.6",
+  "taskId": "01.T1.6",
+  "startedAt": "2026-06-09T21:29:29.824Z",
+  "owner": "codex-m-dev-01-t1-6",
+  "leaseExpiresAt": "2026-06-09T23:29:29.824Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T1.6",
+    "trackId": "01",
+    "tranche": "T1.6",
+    "title": "Image-assets-on-nodes contract + schema property",
+    "effort": null,
+    "file": "01-m0-anuttara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+    "dependsOn": [
+      "01.T1.5"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**",
+      "Body/S/S2/graph-schema/src/lib.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

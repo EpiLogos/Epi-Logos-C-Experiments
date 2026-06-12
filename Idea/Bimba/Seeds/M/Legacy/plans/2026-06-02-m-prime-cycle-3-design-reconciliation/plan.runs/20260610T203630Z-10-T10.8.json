@@ -1,0 +1,38 @@
+{
+  "runId": "20260610T203630Z-10-T10.8",
+  "taskId": "10.T10.8",
+  "startedAt": "2026-06-10T20:36:30.632Z",
+  "owner": "codex-m-dev-10-t10-8",
+  "leaseExpiresAt": "2026-06-10T22:36:30.632Z",
+  "worktree": null,
+  "task": {
+    "id": "10.T10.8",
+    "trackId": "10",
+    "tranche": "T10.8",
+    "title": "Update contract preflight blocker list after 10.2 lands",
+    "effort": null,
+    "file": "10-kernel-bridge-profile-contract.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+    "dependsOn": [
+      "10.T10.7"
+    ],
+    "writeScopes": [
+      ".omx/**",
+      "Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json:315",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

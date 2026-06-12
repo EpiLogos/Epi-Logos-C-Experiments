@@ -896,6 +896,10 @@ Each sibling should add a brief cross-reference to this spine spec, noting that 
 
 - `Idea/Bimba/Seeds/S/S5/autoresearch-loop-seed.md` — the S-side seed working paper mirroring this M-side articulation from the implementation-register
 
+### §14.5 Operational / typed-VAK view of the spine (evolver / DGM integration)
+
+The four-phase spine specified in §2–§7 is the **structural / phase-flow view** of the autoresearch loop. Its operational / typed-VAK view — i.e., how each evolver / Darwinian-Gödel-Machine loop step decomposes into a typed VAK invocation `(CPF, CT, CP, CF, CFP, CS)` over existing primitives — is captured in cycle-3 plan-tranche **Tranche 12.25** at [[../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5]] (search: "12.25 — Evolver / DGM integration as typed VAK choreography"). The tranche's full 10-row integration mapping (Sample parent / Sample stepping-stone parent / Mutate-propose / Score / Admissibility gate / Promotion / Crossover / Stepping-stone archive / Cross-cycle differential signal / Recognition-closure) names each evolver-step's existing primitive and its VAK address per the S4' VAK reading-frame law. Tranche 12.25's spec deliverable is the canonical operational reference for how the spine **runs** as choreography over the live cores cited in §1.1, while this M5' document remains canonical for the spine's **structure** and four-phase flow. The two views are non-overlapping; the tranche cites this document as the structural ground, and this document cites the tranche as the operational expansion. See also: [[../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/33-harmonic-energy-channel-handoff]] §2.8 for the originating handoff scope and the locked decisions (frontmatter `dev_decisions` block) that the tranche inherits without re-debate.
+
 ---
 
 ## Sources

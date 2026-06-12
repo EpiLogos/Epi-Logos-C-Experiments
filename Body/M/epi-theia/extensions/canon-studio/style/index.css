@@ -1,0 +1,63 @@
+.canon-studio-root {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100%;
+  background: var(--theia-editor-background);
+  color: var(--theia-editor-foreground);
+}
+
+.canon-studio-toolbar,
+.canon-studio-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--theia-panel-border);
+}
+
+.canon-studio-footer {
+  border-top: 1px solid var(--theia-panel-border);
+  border-bottom: 0;
+}
+
+.canon-studio-uri {
+  flex: 1;
+  font-family: var(--theia-ui-font-family);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.canon-studio-state {
+  color: var(--theia-descriptionForeground);
+}
+
+.canon-studio-monaco-host,
+.canon-studio-fallback {
+  min-height: 420px;
+  width: 100%;
+}
+
+.canon-studio-fallback {
+  resize: none;
+  padding: 16px;
+  border: 0;
+  background: var(--theia-editor-background);
+  color: var(--theia-editor-foreground);
+  font: var(--theia-code-font-size) var(--theia-code-font-family);
+}
+
+.canon-decoration-ql-coordinate {
+  background: rgba(95, 179, 255, 0.18);
+  border-bottom: 1px solid rgba(95, 179, 255, 0.65);
+}
+
+.canon-decoration-bimba-coordinate {
+  background: rgba(185, 215, 110, 0.18);
+  border-bottom: 1px solid rgba(185, 215, 110, 0.65);
+}
+
+.canon-decoration-wikilink {
+  background: rgba(214, 168, 255, 0.16);
+  border-bottom: 1px solid rgba(214, 168, 255, 0.65);
+}

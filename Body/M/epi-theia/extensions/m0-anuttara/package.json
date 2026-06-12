@@ -23,7 +23,9 @@
   ],
   "dependencies": {
     "@theia/core": "1.56.0",
+    "@pratibimba/integrated-composition": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/pratibimba-layouts": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -37,6 +39,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build"
+    "test": "pnpm build && node --test ../test/m0-anuttara-inspector.test.mjs ../test/m0-anuttara-mode-toggle.test.mjs ../test/m0-anuttara-lazy-node-browser.test.mjs ../test/m0-anuttara-void-structure-ring.test.mjs ../test/m0-anuttara-parity-bridge-reader.test.mjs"
   }
 }

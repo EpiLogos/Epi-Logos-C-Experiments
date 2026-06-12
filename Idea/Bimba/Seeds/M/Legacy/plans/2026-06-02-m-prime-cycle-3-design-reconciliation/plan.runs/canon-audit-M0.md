@@ -59,7 +59,7 @@
 
 ### 01.4 — Kernel-bridge profile-contract readiness ledger entries for M0 *(cross-link to Tranche 10)*
 - **Status:** ALIGNED (with own internal correction noted)
-- **Cited:** `10-kernel-bridge-profile-contract.md:86-90` (Tranche 10.9 "Correction: `dataset_lut_state` / `m3_codec_provenance` host struct" — these literals live on `MathemeBinaryProjection` not `MathemeBedrockProjection`); `M0'-SPEC.md:120-135` (Readiness / Test Criteria)
+- **Cited:** `10-kernel-bridge-profile-contract.md:86-90` (Tranche 10.9 "Correction: `dataset_lut_state` / `m3_codec_provenance` host struct" — host is `MathemeBinaryProjection`); `M0'-SPEC.md:120-135` (Readiness / Test Criteria)
 - **Current framing in tranche:** Pass-through to Tranche 10; names exact pending sites with line numbers, and self-corrects Wave-A's misattribution via Tranche 10.9.
 - **Recommendation:** KEEP-AS-IS
 - **Recommendation detail:** Correctly downgraded to a code-pending-closure cross-link, not a greenfield item. Self-correction discipline is good.

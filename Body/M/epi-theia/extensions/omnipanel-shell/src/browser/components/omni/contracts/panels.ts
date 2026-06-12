@@ -7,10 +7,11 @@ export type OmniPanelDefinition = {
 
 export const PRIMARY_PANELS: OmniPanelDefinition[] = [
   { id: 'chat', label: 'Chat' },
-  { id: 'workspace', label: 'Workspace' },
-  { id: 'overview', label: 'Overview' },
-  { id: 'channels', label: 'Channels' },
   { id: 'sessions', label: 'Sessions' },
+  { id: 'dispatch-trace', label: 'Trace' },
+  { id: 'tool-stream', label: 'Stream' },
+  { id: 'evidence', label: 'Evidence' },
+  { id: 'workspace', label: 'Workspace' },
 ];
 
 export const ADVANCED_PANELS: OmniPanelDefinition[] = [
@@ -18,6 +19,7 @@ export const ADVANCED_PANELS: OmniPanelDefinition[] = [
   { id: 'instances', label: 'Instances' },
   { id: 'nodes', label: 'Nodes' },
   { id: 'debug', label: 'Debug' },
+  { id: 'diagnostics', label: 'Diagnostics' },
   { id: 'logs', label: 'Logs' },
 ];
 
@@ -25,6 +27,12 @@ export const ALL_PANELS: OmniPanelDefinition[] = [...PRIMARY_PANELS, ...ADVANCED
 const GATEWAY_PANEL_IDS = new Set<GatewayPanel>([
   'chat',
   'workspace',
+  'dispatch-trace',
+  'tool-stream',
+  'evidence',
+  'review',
+  'gateway',
+  'diagnostics',
   'models',
   'overview',
   'channels',

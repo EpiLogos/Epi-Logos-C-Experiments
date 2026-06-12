@@ -10,7 +10,6 @@ import {
     CROSS_LAYOUT_INTENT_DISPATCHER,
     CrossLayoutIntentDispatcher
 } from './cross-layout-intent-dispatcher';
-import { LayoutStatusBarContribution } from './layout-status-bar';
 
 export default new ContainerModule(bind => {
     bind(PratibimbaLayoutSwitcher).toSelf().inSingletonScope();
@@ -28,8 +27,4 @@ export default new ContainerModule(bind => {
     bind(CrossLayoutIntentDispatcher).toSelf().inSingletonScope();
     bind(CROSS_LAYOUT_INTENT_DISPATCHER).toService(CrossLayoutIntentDispatcher);
     bind(CommandContribution).toService(CrossLayoutIntentDispatcher);
-
-    // Status-bar layout indicator — always-visible UI for layout switching.
-    bind(LayoutStatusBarContribution).toSelf().inSingletonScope();
-    bind(FrontendApplicationContribution).toService(LayoutStatusBarContribution);
 });

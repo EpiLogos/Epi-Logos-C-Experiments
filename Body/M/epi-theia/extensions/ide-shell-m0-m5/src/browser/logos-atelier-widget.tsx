@@ -5,8 +5,10 @@ import {
     KERNEL_BRIDGE_API,
     type KernelBridgeAPI
 } from '@pratibimba/kernel-bridge';
+import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import { IdeShellBridgeGate } from './bridge-gate';
+import { PrivacyDropFeed } from './services/privacy-drop-feed';
 
 /**
  * Logos Atelier — Track 05 T4.
@@ -44,11 +46,13 @@ export class LogosAtelierWidget extends ReactWidget {
     @inject(KERNEL_BRIDGE_API)
     protected readonly bridge!: KernelBridgeAPI;
 
+    @inject(PrivacyDropFeed)
+    protected readonly privacyDropFeed!: PrivacyDropFeed;
+
     protected currentTerm: string = '';
     protected stages: Record<string, AtelierStageState> = Object.fromEntries(
         ATELIER_STAGES.map(s => [s.id, { notes: '', provenanceHandles: [] }])
     );
-    protected privacyDropped: number = 0;
     protected lastError: string | null = null;
 
     @postConstruct()
@@ -73,13 +77,30 @@ export class LogosAtelierWidget extends ReactWidget {
         }
     }
 
+    prepopulateMobiusWriteBack(artifactUri: string, privacyClass?: string | null): void {
+        if (!isPrivacySafe(privacyClass)) {
+            this.recordPrivacyDrop(privacyClass);
+            this.lastError = `Privacy class "${privacyClass}" rejected by Logos Atelier`;
+            this.update();
+            return;
+        }
+        const stage = this.stages.L5;
+        const writeBackLine = `Mobius write-back artifact: ${artifactUri}`;
+        if (stage && !stage.notes.includes(writeBackLine)) {
+            const notes = stage.notes ? `${stage.notes}\n${writeBackLine}` : writeBackLine;
+            this.stages.L5 = { ...stage, notes };
+        }
+        this.attachProvenance('L5', artifactUri, privacyClass ?? undefined);
+        this.update();
+    }
+
     /**
      * Attach a gateway provenance handle to a stage. Used when the user adds
      * an autoresearch citation or graph-node reference to the exploration.
      */
     attachProvenance(stageId: string, handle: string, privacyClass?: string): void {
         if (!isPrivacySafe(privacyClass)) {
-            this.privacyDropped += 1;
+            this.recordPrivacyDrop(privacyClass);
             this.lastError = `Privacy class "${privacyClass}" rejected by Logos Atelier`;
             this.update();
             return;
@@ -89,6 +110,14 @@ export class LogosAtelierWidget extends ReactWidget {
             stage.provenanceHandles = [...stage.provenanceHandles, handle];
             this.update();
         }
+    }
+
+    protected get privacyDropped(): number {
+        return this.privacyDropFeed.aggregate.byWidget[this.id] ?? 0;
+    }
+
+    protected recordPrivacyDrop(privacyClass: string | null | undefined): void {
+        this.privacyDropFeed.record(this.id, privacyClass as string);
     }
 
     protected override render(): React.ReactNode {
@@ -104,6 +133,14 @@ export class LogosAtelierWidget extends ReactWidget {
             <div className="ide-shell-widget-root" data-test="logos-atelier-root">
                 <header className="ide-shell-widget-header">
                     <h3>{LogosAtelierWidget.LABEL}</h3>
+                    <BridgeReadinessBadge
+                        bridge={this.bridge}
+                        bindingKey="aletheia_gnosis_query"
+                    />
+                    <BridgeReadinessBadge
+                        bridge={this.bridge}
+                        bindingKey="aletheia_crystallise"
+                    />
                 </header>
                 <section className="ide-shell-widget-detail">
                     <label>

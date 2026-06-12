@@ -1,0 +1,33 @@
+{
+  "runId": "20260609T205711Z-08-T8.1",
+  "taskId": "08.T8.1",
+  "startedAt": "2026-06-09T20:57:11.555Z",
+  "owner": "codex-m-dev",
+  "leaseExpiresAt": "2026-06-09T22:57:11.555Z",
+  "worktree": null,
+  "task": {
+    "id": "08.T8.1",
+    "trackId": "08",
+    "tranche": "T8.1",
+    "title": "Privacy-first composition contract (no raw bodies cross plugin)",
+    "effort": "no raw bodies cross plugin",
+    "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+    "dependsOn": [],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

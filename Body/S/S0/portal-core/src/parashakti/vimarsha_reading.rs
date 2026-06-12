@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::codon_rotation_projection::{codon_rotation_from_lens_mode, MathemeLensMode};
+use crate::events::{KleinFlipEvent, Valence};
 use crate::kernel::{harmonic_ratio_fraction_for_sub_tick, KernelTick, MathemeNodalConstraint};
 
 const C3_HZ: f32 = 130.812_79;
@@ -12,6 +13,7 @@ const MODE_INTERVALS: [u8; 7] = [0, 2, 4, 5, 7, 9, 11];
 pub struct VimarshaReading {
     pub audio_octet: [f32; 8],
     pub nodal_quartet: [MathemeNodalConstraint; 4],
+    pub klein_flip: Option<KleinFlipEvent>,
 }
 
 pub fn vimarsha_read_profile(tick: KernelTick, lens_mode: MathemeLensMode) -> VimarshaReading {
@@ -23,6 +25,7 @@ pub fn vimarsha_read_profile(tick: KernelTick, lens_mode: MathemeLensMode) -> Vi
     let surface = codon_rotation_from_lens_mode(lens_mode.lens, lens_mode.mode)
         .expect("valid lens-mode maps into the codon-rotation surface");
 
+    let current_codon = surface.codon_id;
     VimarshaReading {
         audio_octet: audio_octet(
             tick12,
@@ -32,7 +35,35 @@ pub fn vimarsha_read_profile(tick: KernelTick, lens_mode: MathemeLensMode) -> Vi
             epogdoon_texture,
             surface.rotation_degrees,
         ),
-        nodal_quartet: nodal_quartet(tick12, lens_mode, surface.codon_id, surface.rotation),
+        nodal_quartet: nodal_quartet(tick12, lens_mode, current_codon, surface.rotation),
+        klein_flip: klein_flip_event(tick12, lens_mode, current_codon),
+    }
+}
+
+fn klein_flip_event(
+    tick12: u8,
+    lens_mode: MathemeLensMode,
+    current_codon: u8,
+) -> Option<KleinFlipEvent> {
+    match tick12 % 12 {
+        6 => Some(KleinFlipEvent::M1TritoneCrossing {
+            tick12,
+            lens_pair: (0, 6),
+        }),
+        7 => Some(KleinFlipEvent::M2CymaticValenceInvert {
+            valence_before: Valence::Primary,
+            valence_after: Valence::Inverted,
+        }),
+        8 => {
+            let previous_lens = lens_mode.lens.saturating_sub(1);
+            let previous = codon_rotation_from_lens_mode(previous_lens, lens_mode.mode)
+                .expect("adjacent lens-mode maps into the codon-rotation surface");
+            Some(KleinFlipEvent::M3CodonRotationCross {
+                codon_before: previous.codon_id,
+                codon_after: current_codon,
+            })
+        }
+        _ => None,
     }
 }
 

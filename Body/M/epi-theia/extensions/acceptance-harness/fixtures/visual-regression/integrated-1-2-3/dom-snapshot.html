@@ -1,0 +1,59 @@
+<!--
+  Visual-regression DOM baseline — visual-regression/integrated-1-2-3
+  Composition: plugin-integrated-1-2-3 (cosmic-engine.integrated)
+  Active layout: daily-0-1
+  Privacy class: protected-local-synthetic-fixture
+
+  Deterministic structural baseline. The harness diffs the live render's
+  data-* skeleton (owner -> slot, OmniPanel tab order, mini-mode ids) against
+  this tree. No protected user payloads appear here.
+-->
+<div class="epi-composition-root"
+     data-fixture-id="visual-regression/integrated-1-2-3"
+     data-plugin-id="plugin-integrated-1-2-3"
+     data-named-layout="cosmic-engine.integrated"
+     data-range-id="1-2-3"
+     data-active-layout="daily-0-1"
+     data-bridge-connected="true"
+     data-session-key="agent:epii:main"
+     data-day-now="2026-06-11">
+
+  <section class="epi-slot epi-slot--center-stage"
+           data-slot="center-stage"
+           data-owner="m3-mahamaya"
+           data-mini-mode="codon-provenance">
+    <h2 class="epi-slot__title">Cosmic Wheel</h2>
+    <div class="epi-widget" data-extension="m3-mahamaya" data-empty-state="false"></div>
+  </section>
+
+  <aside class="epi-slot epi-slot--side-panel"
+         data-slot="side-panel"
+         data-owner="m1-paramasiva"
+         data-mini-mode="lens-walk">
+    <h2 class="epi-slot__title">Torus / Path / Audio-Walk Inspector</h2>
+    <div class="epi-widget" data-extension="m1-paramasiva" data-empty-state="false"></div>
+  </aside>
+
+  <section class="epi-slot epi-slot--evidence-panel"
+           data-slot="evidence-panel"
+           data-owner="m2-parashakti"
+           data-mini-mode="meaning-packet">
+    <h2 class="epi-slot__title">Meaning Packet / DET Evidence</h2>
+    <div class="epi-widget" data-extension="m2-parashakti" data-empty-state="false"></div>
+  </section>
+
+  <nav class="epi-omnipanel"
+       data-widget-id="pratibimba.omnipanel.shell"
+       data-active-tab="pi-chat">
+    <ul class="epi-omnipanel__tabs">
+      <li class="epi-omnipanel__tab is-active" data-tab="pi-chat">Pi Chat</li>
+      <li class="epi-omnipanel__tab" data-tab="sessions">Sessions</li>
+      <li class="epi-omnipanel__tab" data-tab="dispatch-trace">Dispatch Trace</li>
+      <li class="epi-omnipanel__tab" data-tab="tool-stream">Tool Stream</li>
+      <li class="epi-omnipanel__tab" data-tab="evidence">Evidence</li>
+      <li class="epi-omnipanel__tab" data-tab="review">Review</li>
+      <li class="epi-omnipanel__tab" data-tab="gateway">Gateway</li>
+      <li class="epi-omnipanel__tab" data-tab="diagnostics">Diagnostics</li>
+    </ul>
+  </nav>
+</div>

@@ -1,5 +1,6 @@
 // Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
-import { ContainerModule, injectable, interfaces, inject } from '@theia/core/shared/inversify';
+import * as React from 'react';
+import { ContainerModule, injectable, interfaces, inject, postConstruct } from '@theia/core/shared/inversify';
 import { CommandContribution, CommandRegistry } from '@theia/core/lib/common';
 import {
     WidgetFactory,
@@ -7,7 +8,10 @@ import {
     bindViewContribution
 } from '@theia/core/lib/browser';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
+import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
+    Disposable,
+    MathemeHarmonicProfileBoundary,
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
@@ -15,6 +19,13 @@ import {
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M1ParamasivaWidget } from './m1-paramasiva-widget';
+import {
+    kleinFlipEventFromProfile,
+    M1KleinFlipEventBar,
+    M1KleinFlipEventStrip,
+    M1_KLEIN_FLIP_EVENT_STRIP_VIEW_ID,
+    mergeKleinFlipEventTrail
+} from './m1-klein-flip-event-strip';
 import {
     EXTENSION_ID,
     OPEN_COMMAND_ID,
@@ -104,12 +115,70 @@ class M1ParamasivaPublisher implements MObservabilityPublisher {
     }
 }
 
+@injectable()
+export class M1KleinFlipEventStripWidget extends ReactWidget {
+    static readonly ID = M1_KLEIN_FLIP_EVENT_STRIP_VIEW_ID;
+    static readonly LABEL = 'M1 — Klein-flip event strip';
+
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
+    protected profile: MathemeHarmonicProfileBoundary | null = null;
+    protected events: M1KleinFlipEventBar[] = [];
+    protected subscriptions: Disposable[] = [];
+
+    @postConstruct()
+    protected init(): void {
+        this.id = M1KleinFlipEventStripWidget.ID;
+        this.title.label = M1KleinFlipEventStripWidget.LABEL;
+        this.title.caption = M1KleinFlipEventStripWidget.LABEL;
+        this.title.closable = true;
+        this.addClass('mext-widget');
+        this.addClass('mext-widget-' + EXTENSION_ID);
+        this.subscriptions.push(
+            this.bridge.onProfile(profile => {
+                this.profile = profile;
+                const nextEvent = profile
+                    ? kleinFlipEventFromProfile(profile, this.events.length, Date.now())
+                    : null;
+                this.events = mergeKleinFlipEventTrail(this.events, nextEvent).slice(-32);
+                this.update();
+            })
+        );
+    }
+
+    override dispose(): void {
+        for (const sub of this.subscriptions) {
+            try {
+                sub.dispose();
+            } catch {
+                // best-effort
+            }
+        }
+        super.dispose();
+    }
+
+    protected override render(): React.ReactNode {
+        return React.createElement(M1KleinFlipEventStrip, {
+            profile: this.profile,
+            events: this.events
+        });
+    }
+}
+
 export default new ContainerModule(bind => {
     bind(M1ParamasivaWidget).toSelf();
+    bind(M1KleinFlipEventStripWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M1ParamasivaWidget.ID,
             createWidget: () => createWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: M1KleinFlipEventStripWidget.ID,
+            createWidget: () => createKleinFlipEventStripWidget(ctx.container)
         }))
         .inSingletonScope();
     bindViewContribution(bind, M1ParamasivaContribution);
@@ -129,4 +198,10 @@ function createWidget(container: interfaces.Container): M1ParamasivaWidget {
     const child = container.createChild();
     child.bind(M1ParamasivaWidget).toSelf();
     return child.get(M1ParamasivaWidget);
+}
+
+function createKleinFlipEventStripWidget(container: interfaces.Container): M1KleinFlipEventStripWidget {
+    const child = container.createChild();
+    child.bind(M1KleinFlipEventStripWidget).toSelf();
+    return child.get(M1KleinFlipEventStripWidget);
 }

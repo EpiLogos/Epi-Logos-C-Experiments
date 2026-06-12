@@ -43,15 +43,15 @@
 //! See `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/plan.runs/13-t8-s1-vault-hen-evidence.md`
 //! for the full audit table.
 
+pub mod day;
 pub mod frontmatter;
 pub mod kairos;
 pub mod pasu;
 pub mod paths;
 pub mod templates;
 
-use crate::vault::paths::{
-    archive_day_path, day_folder, day_note_path, now_note_path, thought_note_path,
-};
+use crate::vault::day::{day_folder_for_date, ensure_day_folder_for_now};
+use crate::vault::paths::{archive_day_path, day_folder, now_note_path, thought_note_path};
 use crate::vault::templates::{
     render_template, render_template_with_vak_and_summary, TemplateRenderContext,
 };
@@ -693,16 +693,8 @@ fn write_rendered_template(path: &Path, body: &str) -> Result<(), String> {
 
 fn day_init(now_override: Option<&str>) -> Result<String, String> {
     let now = parse_now(now_override)?;
-    let path = day_note_path(&vault_root(), now);
-    let context = TemplateRenderContext {
-        template_type: "daily-note".to_string(),
-        coordinate: None,
-        session_id: None,
-        now,
-    };
-    let body = render_template(&context, &repo_root(), &home_root())?;
-    write_rendered_template(&path, &body)?;
-    Ok(format!("created {}", path.display()))
+    let receipt = ensure_day_folder_for_now(&vault_root(), &repo_root(), &home_root(), now)?;
+    Ok(format!("created {}", receipt.daily_note_path.display()))
 }
 
 fn now_init(session_id: &str, now_override: Option<&str>) -> Result<String, String> {
@@ -829,10 +821,7 @@ fn archive_day(date: &str, plan: bool, force: bool) -> Result<String, String> {
     let day = NaiveDate::parse_from_str(date, "%d-%m-%Y")
         .map_err(|err| format!("invalid archive date {date:?}: {err}"))?;
     let vr = vault_root();
-    let source = vr
-        .join("Empty")
-        .join("Present")
-        .join(day.format("%d-%m-%Y").to_string());
+    let source = day_folder_for_date(&vr, day);
     let target = archive_day_path(&vr, day);
     if !source.exists() {
         return Err(format!("day folder not found: {}", source.display()));

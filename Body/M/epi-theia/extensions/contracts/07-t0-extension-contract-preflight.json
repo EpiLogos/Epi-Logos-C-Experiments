@@ -123,6 +123,24 @@
       "epi-logos://ide/m4-nara/artifact?artifact_id=<handle>&day_now=<handle>"
     ]
   },
+  "MathemeHarmonicProfileBoundary": {
+    "payloadNarrowingExamples": [
+      {
+        "field": "kleinFlip",
+        "consumer": "m2-parashakti",
+        "payloadPath": "payload.kleinFlip",
+        "narrowing": "Treat as an object-valued profile event; when `kind` is `m2CymaticValenceInvert`, M2 renders inverted surface valence, otherwise primary.",
+        "examplePayload": {
+          "kleinFlip": {
+            "kind": "m2CymaticValenceInvert",
+            "source": "profile.kleinFlip"
+          }
+        },
+        "fallback": "If absent, M2 reports `pending-kleinFlip` and keeps primary surface valence."
+      }
+    ],
+    "rule": "The bridge keeps `payload` opaque at the shared boundary; each M-extension narrows only the fields declared by its contract and readiness checks."
+  },
   "extensions": [
     {
       "id": "m0-anuttara",
@@ -130,7 +148,8 @@
       "viewIds": [
         "m0.anuttara.languageMap",
         "m0.anuttara.owlShaclInspector",
-        "m0.anuttara.rVirtuePanel"
+        "m0.anuttara.rVirtuePanel",
+        "m0.anuttara.communityClockOverlay"
       ],
       "command": {
         "open": "m0.openCoordinate",
@@ -193,7 +212,9 @@
       "viewIds": [
         "m1.paramasiva.clockInstrument",
         "m1.paramasiva.kleinTopology",
-        "m1.paramasiva.audioBusInspector"
+        "m1.paramasiva.audioBusInspector",
+        "m1.paramasiva.cl42SignatureInspector",
+        "m1.paramasiva.kleinFlipEventStrip"
       ],
       "command": {
         "open": "m1.startWalk",
@@ -312,7 +333,7 @@
       ],
       "firstSlicePriority": "M2PrimeMeaningPacket viewer plus deterministic cymatic renderer driven by profile bus and proven correspondence payloads.",
       "blockers": [
-        "Track 01 resonance72, planetary-chakral, audio bus, and kleinFlipState fields",
+        "Track 01 resonance72, planetary-chakral, and audio bus fields",
         "Track 02 correspondence provenance and mapping law",
         "Track 03 Kerykeion and world_clock provider path"
       ]
@@ -387,7 +408,9 @@
       "viewIds": [
         "m4.nara.dayContainer",
         "m4.nara.graphitiBrowser",
-        "m4.nara.personalField"
+        "m4.nara.personalField",
+        "m4.nara.lensApplication",
+        "m4.nara.logosCycle"
       ],
       "command": {
         "open": "m4.openArtifact",
@@ -432,14 +455,16 @@
           "neo4j-driver"
         ]
       },
-      "privacyClass": "protected_local_handle_only",
+      "privacyClass": "protected_local",
       "observabilityEventTypes": [
         "m4.artifact.created",
         "m4.privacy.blocked"
       ],
       "track08Exports": [
         "M4ArtifactHandleChip",
-        "M4RecognitionMiniView"
+        "M4RecognitionMiniView",
+        "M4LensCard",
+        "M4LogosStageRing"
       ],
       "firstSlicePriority": "Protected Nara DayContainer and Graphiti browser with handle-only deep links and explicit consent/privacy gates.",
       "blockers": [

@@ -5,7 +5,12 @@ use epi_s3_gateway_contract::{
     SPACETIME_PROJECTION_MODE_FULL, SPACETIME_PROJECTION_MODE_LITE,
     SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
 };
-use portal_core::{MathemeHarmonicProfile, VakAddress};
+use portal_core::{
+    KernelPhase, KleinFlipEvent, MPrimePerformanceEvent, MathemeDiatonicContext,
+    MathemeHarmonicProfile, MathemeNodalConstraint, MathemePointerAnchorProjection,
+    ProfilePrivacyClass, RelationDescriptor, RelationFamily, VakAddress,
+};
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
@@ -64,6 +69,104 @@ pub struct KernelBridgeCachedProfile {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeProfileJsonShape {
+    pub generation: u64,
+    pub cached_at_ms: u128,
+    pub stale: bool,
+    pub staleness_ms: u128,
+    pub privacy_class: String,
+    pub profile: Value,
+}
+
+impl From<&KernelBridgeCachedProfile> for KernelBridgeProfileJsonShape {
+    fn from(profile: &KernelBridgeCachedProfile) -> Self {
+        Self {
+            generation: profile.generation,
+            cached_at_ms: profile.cached_at_ms,
+            stale: profile.stale,
+            staleness_ms: profile.staleness_ms,
+            privacy_class: profile.privacy_class.clone(),
+            profile: profile.profile.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgePerformanceTickJsonShape {
+    pub tick: u64,
+    pub tick12: u8,
+    pub cycle: u64,
+    pub degree720: u16,
+    pub su2_layer: String,
+    pub position6: u8,
+    pub kernel_tick_authority: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgePerformanceHarmonicJsonShape {
+    pub phase: KernelPhase,
+    pub position6: u8,
+    pub helix: String,
+    pub ratio_role: String,
+    pub audio_octet: [f32; 8],
+    pub nodal_quartet: [MathemeNodalConstraint; 4],
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeDepositionAnchorJsonShape {
+    pub source_coordinate: String,
+    pub resonance72_index: usize,
+    pub mahamaya_address64: Option<u8>,
+    pub s3_method: String,
+    pub privacy_boundary: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgeLensModeJsonShape {
+    pub lens: u8,
+    pub mode: u8,
+    pub codon_id: u8,
+    pub rotation: u8,
+    pub codon_class: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgePerformanceStateJsonShape {
+    pub tempo_clock: String,
+    pub pitch_authority: String,
+    pub nodal_constraint_authority: String,
+    pub renderer_derivation_allowed: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KernelBridgePerformanceEventJsonShape {
+    pub event: String,
+    pub stream: String,
+    pub runtime_owner: String,
+    pub source: String,
+    pub profile_generation: u64,
+    pub profile_schema_version: u16,
+    pub privacy_class: ProfilePrivacyClass,
+    pub required_profile_fields: Vec<String>,
+    pub tick: KernelBridgePerformanceTickJsonShape,
+    pub harmonic: KernelBridgePerformanceHarmonicJsonShape,
+    pub pointer_anchor: MathemePointerAnchorProjection,
+    pub diatonic: Option<MathemeDiatonicContext>,
+    pub deposition_anchor: KernelBridgeDepositionAnchorJsonShape,
+    pub lens_mode: KernelBridgeLensModeJsonShape,
+    pub klein_flip: Option<KleinFlipEvent>,
+    pub m_prime_performance_event: MPrimePerformanceEvent,
+    pub performance_state: KernelBridgePerformanceStateJsonShape,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum KernelBridgeRuntimeEventKind {
     ConnectionStatus,
@@ -95,6 +198,92 @@ pub struct KernelBridgeDeliveredEvent {
 pub struct KernelBridgeVakContext {
     pub vak_address: VakAddress,
     pub route_lineage: Vec<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum OracleSpreadScale {
+    SingleCard,
+    CompressedTriad,
+    SixfoldQlTraverse,
+    NightInversePass,
+    #[serde(rename = "depth-4-5-pass")]
+    Depth45Pass,
+    ClockWalk,
+    SymbolicOrf,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum OracleTraversalDirection {
+    Day,
+    Night,
+    NightPrime,
+    Inverse,
+    Clockwise,
+    Counterclockwise,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ReadingPosition {
+    pub key: String,
+    pub ordinal: u8,
+    pub cp_position_ref: String,
+    pub label: Option<String>,
+    pub vak: Option<VakAddress>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OracleFrame {
+    pub frame_id: String,
+    pub spread_scale: OracleSpreadScale,
+    pub positions: Vec<ReadingPosition>,
+    pub traversal_direction: Option<OracleTraversalDirection>,
+    pub complementary_pairs: Vec<[String; 2]>,
+}
+
+pub type ReadingFrame = OracleFrame;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OracleSequenceCodon {
+    pub ordinal: u16,
+    pub symbol: String,
+    pub cp_position_ref: String,
+    pub vak: Option<VakAddress>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OracleSequence {
+    pub sequence_id: String,
+    pub frame_id: String,
+    pub codons: Vec<OracleSequenceCodon>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SymbolicProtein {
+    pub protein_id: String,
+    pub sequence: OracleSequence,
+    pub reading_frame: OracleFrame,
+    pub start_position_ref: Option<String>,
+    pub stop_position_ref: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TranscriptionalClockPacket {
+    pub packet_id: String,
+    pub profile_generation: Option<u64>,
+    pub vak: VakAddress,
+    pub oracle_frame: OracleFrame,
+    pub cp_position_ref: String,
+    pub oracle_sequence: Option<OracleSequence>,
+    pub symbolic_protein: Option<SymbolicProtein>,
+    pub provenance_handles: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -416,13 +605,14 @@ impl KernelBridgeRuntime {
         &self,
         profile: &KernelBridgeCachedProfile,
     ) -> Result<KernelBridgeRuntimeEvent, String> {
+        let payload = typed_json_profile_event_payload(profile)?;
         Ok(KernelBridgeRuntimeEvent {
             kind: KernelBridgeRuntimeEventKind::Profile,
             emitted_at_ms: now_ms()?,
             source: KERNEL_BRIDGE_SOURCE.to_owned(),
             profile_generation: Some(profile.generation),
             privacy_class: profile.privacy_class.clone(),
-            payload: serde_json::to_value(profile).map_err(|err| err.to_string())?,
+            payload: serde_json::to_value(payload).map_err(|err| err.to_string())?,
         })
     }
 
@@ -463,6 +653,7 @@ pub fn capability_names() -> &'static [&'static str] {
         "invokeGatewayRpc",
         "depositKernelObservation",
         "requestReviewEvidence",
+        "s2.parashaktiCorrespondences",
     ]
 }
 
@@ -589,60 +780,154 @@ pub fn m1_performance_event_from_profile(
     profile_generation: u64,
     profile: &MathemeHarmonicProfile,
 ) -> Value {
-    json!({
-        "event": "m1.profile_to_performance",
-        "stream": M1_PROFILE_TO_PERFORMANCE_STREAM,
-        "runtimeOwner": KERNEL_BRIDGE_RUNTIME_OWNER,
-        "source": "portal_core::MathemeHarmonicProfile",
-        "profileGeneration": profile_generation,
-        "profileSchemaVersion": profile.profile_schema_version,
-        "privacyClass": profile.privacy_class,
-        "requiredProfileFields": [
-            "tick",
-            "harmonic",
-            "pointerAnchor",
-            "diatonic",
-            "depositionAnchor",
-            "lensMode"
+    serde_json::to_value(typed_json_performance_event_from_profile(
+        profile_generation,
+        profile,
+    ))
+    .expect("KernelBridgePerformanceEventJsonShape serializes")
+}
+
+pub fn typed_json_profile_event_payload(
+    profile: &KernelBridgeCachedProfile,
+) -> Result<KernelBridgeProfileJsonShape, String> {
+    let raw = serde_json::to_value(KernelBridgeProfileJsonShape::from(profile))
+        .map_err(|err| err.to_string())?;
+    extract_typed_json(&raw, "kernel bridge profile event")
+}
+
+pub fn typed_json_performance_event_from_profile(
+    profile_generation: u64,
+    profile: &MathemeHarmonicProfile,
+) -> KernelBridgePerformanceEventJsonShape {
+    KernelBridgePerformanceEventJsonShape {
+        event: "m1.profile_to_performance".to_owned(),
+        stream: M1_PROFILE_TO_PERFORMANCE_STREAM.to_owned(),
+        runtime_owner: KERNEL_BRIDGE_RUNTIME_OWNER.to_owned(),
+        source: "portal_core::MathemeHarmonicProfile".to_owned(),
+        profile_generation,
+        profile_schema_version: profile.profile_schema_version,
+        privacy_class: profile.privacy_class,
+        required_profile_fields: vec![
+            "tick".to_owned(),
+            "harmonic".to_owned(),
+            "pointerAnchor".to_owned(),
+            "diatonic".to_owned(),
+            "depositionAnchor".to_owned(),
+            "lensMode".to_owned(),
+            "kleinFlip".to_owned(),
         ],
-        "tick": {
-            "tick": profile.tick,
-            "tick12": profile.tick12,
-            "cycle": profile.cycle,
-            "degree720": profile.degree720,
-            "kernelTickAuthority": "portal_core::kernel_tick_from_epogdoon"
+        tick: KernelBridgePerformanceTickJsonShape {
+            tick: profile.tick,
+            tick12: profile.tick12,
+            cycle: profile.cycle,
+            degree720: profile.degree720,
+            su2_layer: profile.su2_layer.clone(),
+            position6: profile.position6,
+            kernel_tick_authority: "portal_core::kernel_tick_from_epogdoon".to_owned(),
         },
-        "harmonic": {
-            "phase": profile.phase,
-            "position6": profile.position6,
-            "helix": profile.helix,
-            "ratioRole": profile.ratio_role,
-            "audioOctet": profile.audio_octet,
-            "nodalQuartet": profile.nodal_quartet
+        harmonic: KernelBridgePerformanceHarmonicJsonShape {
+            phase: profile.phase,
+            position6: profile.position6,
+            helix: profile.helix.clone(),
+            ratio_role: profile.ratio_role.clone(),
+            audio_octet: profile.audio_octet,
+            nodal_quartet: profile.nodal_quartet.clone(),
         },
-        "pointerAnchor": profile.pointer_anchor,
-        "diatonic": profile.diatonic,
-        "depositionAnchor": {
-            "sourceCoordinate": profile.pointer_anchor.source_coordinate,
-            "resonance72Index": profile.resonance72.lens_anchor_index,
-            "mahamayaAddress64": profile.mahamaya.mahamaya_address64,
-            "s3Method": "s5.episodic.kernel_profile_observation.deposit",
-            "privacyBoundary": "public-current-context-to-protected-local-episodic-memory"
+        pointer_anchor: profile.pointer_anchor.clone(),
+        diatonic: profile.diatonic.clone(),
+        deposition_anchor: KernelBridgeDepositionAnchorJsonShape {
+            source_coordinate: profile.pointer_anchor.source_coordinate.clone(),
+            resonance72_index: profile.resonance72.lens_anchor_index,
+            mahamaya_address64: profile.mahamaya.mahamaya_address64,
+            s3_method: "s5.episodic.kernel_profile_observation.deposit".to_owned(),
+            privacy_boundary: "public-current-context-to-protected-local-episodic-memory"
+                .to_owned(),
         },
-        "lensMode": {
-            "lens": profile.lens_mode.lens,
-            "mode": profile.lens_mode.mode,
-            "codonId": profile.codon_rotation_projection.codon_id,
-            "rotation": profile.codon_rotation_projection.rotation,
-            "codonClass": profile.codon_rotation_projection.codon_class
+        lens_mode: KernelBridgeLensModeJsonShape {
+            lens: profile.lens_mode.lens,
+            mode: profile.lens_mode.mode,
+            codon_id: profile.codon_rotation_projection.codon_id,
+            rotation: profile.codon_rotation_projection.rotation,
+            codon_class: profile.codon_rotation_projection.codon_class.clone(),
         },
-        "performanceState": {
-            "tempoClock": "kernel-tick-not-renderer-frame",
-            "pitchAuthority": "portal_core::MathemeHarmonicProfile.audio_octet",
-            "nodalConstraintAuthority": "portal_core::MathemeHarmonicProfile.nodal_quartet",
-            "rendererDerivationAllowed": false
-        }
+        klein_flip: profile.klein_flip,
+        m_prime_performance_event: m_prime_performance_event_from_profile(
+            profile_generation,
+            profile,
+        ),
+        performance_state: KernelBridgePerformanceStateJsonShape {
+            tempo_clock: "kernel-tick-not-renderer-frame".to_owned(),
+            pitch_authority: "portal_core::MathemeHarmonicProfile.audio_octet".to_owned(),
+            nodal_constraint_authority: "portal_core::MathemeHarmonicProfile.nodal_quartet"
+                .to_owned(),
+            renderer_derivation_allowed: false,
+        },
+    }
+}
+
+fn m_prime_performance_event_from_profile(
+    profile_generation: u64,
+    profile: &MathemeHarmonicProfile,
+) -> MPrimePerformanceEvent {
+    let deposition_method = "s5.episodic.kernel_profile_observation.deposit";
+    let relation_descriptor = RelationDescriptor::new(
+        format!("m1-profile-relation-{profile_generation}-{}", profile.tick),
+        relation_family_for_position(profile.position6),
+        profile.pointer_anchor.lens_anchor.clone(),
+        format!("matheme-profile-{profile_generation}"),
+        profile.pointer_anchor.pitch_class as i8,
+        profile.ratio_role.clone(),
+        profile.klein_flip.is_some(),
+    )
+    .expect("profile-derived M' relation descriptor is valid");
+
+    MPrimePerformanceEvent::new(
+        format!("m1-performance-{profile_generation}-{}", profile.tick),
+        format!("kernel-bridge-profile-generation-{profile_generation}"),
+        profile.tick,
+        "kernel-bridge-runtime",
+        profile.pointer_anchor.source_coordinate.clone(),
+        profile.pointer_anchor.lens_anchor.clone(),
+        relation_descriptor,
+        profile.lens_mode.lens,
+        profile.lens_mode.mode,
+        profile.audio_octet,
+        profile.nodal_quartet.clone().map(|node| (node.m, node.n)),
+        intended_chromagram_from_profile(profile),
+    )
+    .map(|mut event| {
+        event.deposition_policy = deposition_method.to_owned();
+        event
     })
+    .expect("profile-derived MPrimePerformanceEvent is valid")
+}
+
+fn relation_family_for_position(position6: u8) -> RelationFamily {
+    match position6 {
+        0 => RelationFamily::A,
+        1 => RelationFamily::B,
+        2 => RelationFamily::C,
+        3 => RelationFamily::D1,
+        4 => RelationFamily::D2,
+        _ => RelationFamily::D3,
+    }
+}
+
+fn intended_chromagram_from_profile(profile: &MathemeHarmonicProfile) -> [f32; 12] {
+    let mut chromagram = [0.0; 12];
+    let pitch_class = profile.chromatic.pitch_class as usize;
+    if pitch_class < chromagram.len() {
+        chromagram[pitch_class] = 1.0;
+    }
+    chromagram
+}
+
+pub fn extract_typed_json<T>(value: &Value, label: &str) -> Result<T, String>
+where
+    T: DeserializeOwned,
+{
+    serde_json::from_value(value.clone())
+        .map_err(|err| format!("kernel-bridge typed_json extraction failed for {label}: {err}"))
 }
 
 fn safe_cached_profile_from_context(
@@ -748,6 +1033,7 @@ fn gateway_method_for_capability(method: &str, params: &Value) -> Result<Option<
             "s5.episodic.kernel_profile_observation.deposit".to_owned(),
         )),
         "requestReviewEvidence" => Ok(Some("s5'.review.submit".to_owned())),
+        "s2.parashaktiCorrespondences" => Ok(Some("s2.parashaktiCorrespondences".to_owned())),
         _ => Err(format!(
             "kernel-bridge rejected unsupported capability {method}"
         )),

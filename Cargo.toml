@@ -1,0 +1,26 @@
+[workspace]
+resolver = "2"
+members = [
+    "Body/S/S0/epi-lib",
+    "Body/S/S0/gemini-embedding",
+    "Body/S/S0/portal-core",
+    "Body/S/S0/settings",
+    "Body/S/S2/graph-schema",
+]
+exclude = [
+    "Body/S/S0/epi-cli",
+    "Body/S/S0/epi-cli/vendor/quantette",
+    "Body/S/S0/epi-cli/vendor/redis",
+    "Body/S/S1/hen-compiler-core",
+    "Body/S/S2/graph-services",
+    "Body/S/S3/epi-spacetime-module",
+    "Body/S/S3/gateway",
+    "Body/S/S3/gateway-contract",
+    "Body/S/S3/graphiti-runtime",
+    "Body/S/S3/redis-context",
+    "Body/S/S5/epi-kbase-core",
+    "Body/S/S5/epii-agent-core",
+    "Body/S/S5/epii-autoresearch-core",
+    "Body/S/S5/epii-review-core",
+    "Body/S/epi-kernel-contract",
+]

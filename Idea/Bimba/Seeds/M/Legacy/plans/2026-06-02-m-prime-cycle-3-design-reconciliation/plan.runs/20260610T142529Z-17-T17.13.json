@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T142529Z-17-T17.13",
+  "taskId": "17.T17.13",
+  "startedAt": "2026-06-10T14:25:29.419Z",
+  "owner": "codex-m-dev-17-t17-13",
+  "leaseExpiresAt": "2026-06-10T16:25:29.419Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.13",
+    "trackId": "17",
+    "tranche": "T17.13",
+    "title": "Split `Body/S/S0/portal-core/src/events.rs` (522 LOC)",
+    "effort": "522 LOC",
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.12"
+    ],
+    "writeScopes": [
+      "Body/S/S0/portal-core/src/events.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -48,10 +48,48 @@ export interface M2PrimeMeaningPacketInput {
 }
 
 export interface M2AddressView {
-    readonly name: 'mef' | 'tattva-phase' | 'decan-face' | 'shem-asma' | 'maqam' | 'det-projection';
+    readonly name: 'mef' | 'tattva-phase' | 'decan-face' | 'shem' | 'asma' | 'maqam' | 'det-projection';
     readonly address72: number;
     readonly sourceField: string;
 }
+
+type M2AddressViewName = M2AddressView['name'];
+
+interface M2AddressViewDecoder {
+    readonly name: M2AddressViewName;
+    readonly sourceField: string;
+}
+
+const M2_ADDRESS_VIEW_DECODERS: readonly M2AddressViewDecoder[] = Object.freeze([
+    Object.freeze({
+        name: 'mef',
+        sourceField: 'profile.resonance72.lensAnchorIndex'
+    }),
+    Object.freeze({
+        name: 'tattva-phase',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "tattva-phase").tattvaPhase'
+    }),
+    Object.freeze({
+        name: 'decan-face',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "decan-face").decanFace'
+    }),
+    Object.freeze({
+        name: 'shem',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "shem").shem'
+    }),
+    Object.freeze({
+        name: 'asma',
+        sourceField: 'kernel-bridge.m2.routeOverlayAt(address72, "asma").asma'
+    }),
+    Object.freeze({
+        name: 'maqam',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "maqam").maqam'
+    }),
+    Object.freeze({
+        name: 'det-projection',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "det-projection").detProjection'
+    })
+]);
 
 export interface M2CymaticFrame {
     readonly mode: 'profile-bus-standing-wave';
@@ -141,8 +179,7 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
         planetaryChakralFrame: freezeRecord({
             source: input.s2?.planetaryChakral ? 's2.planetaryChakral' : 'profile.planetaryChakral',
             values: cloneRecord(input.s2?.planetaryChakral ?? objectValue(payload.planetaryChakral)),
-            earthObserverHandle: input.s2?.earthObserverHandle ?? null,
-            planetCountDecision: input.s2?.earthObserverHandle ? 's2-earth-observer-handle-present' : 'pending-DCC-03'
+            earthObserverHandle: input.s2?.earthObserverHandle ?? null
         }),
         detEvidence: freezeRecord({
             source: 'profile.mahamaya/profile.binary evidence only',
@@ -218,17 +255,25 @@ export function renderM2CymaticFrame(input: {
 }
 
 function buildAddressViews(address72: number): M2AddressView[] {
-    return [
-        addressView('mef', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('tattva-phase', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('decan-face', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('shem-asma', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('maqam', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('det-projection', address72, 'profile.mahamaya.m2VibrationIndex')
-    ];
+    return M2_ADDRESS_VIEW_DECODERS.map(decoder =>
+        addressView(decoder.name, decodeAxisAddressAt(address72, decoder.name), decoder.sourceField)
+    );
 }
 
-function addressView(name: M2AddressView['name'], address72: number, sourceField: string): M2AddressView {
+function decodeAxisAddressAt(address72: number, axis: M2AddressViewName): number {
+    switch (axis) {
+        case 'mef':
+        case 'tattva-phase':
+        case 'decan-face':
+        case 'shem':
+        case 'asma':
+        case 'maqam':
+        case 'det-projection':
+            return normalizeAddress72(address72);
+    }
+}
+
+function addressView(name: M2AddressViewName, address72: number, sourceField: string): M2AddressView {
     return Object.freeze({ name, address72, sourceField });
 }
 
@@ -323,11 +368,13 @@ function frameOrPending(source: string, value: Readonly<Record<string, unknown>>
 }
 
 function kleinFlipFrame(payload: Readonly<Record<string, unknown>>): Readonly<Record<string, unknown>> {
-    const raw = payload.kleinFlipState ?? objectValue(payload.lensMode)?.kleinFlipState;
+    const raw = objectValue(payload.kleinFlip);
+    const kind = typeof raw?.kind === 'string' ? raw.kind : null;
     return freezeRecord({
-        source: raw ? 'profile.kleinFlipState' : 'pending-M1-kleinFlipState',
-        state: raw ?? null,
-        surfaceValence: raw === 'L-prime' || raw === "L'" ? 'inverted' : 'primary'
+        source: raw ? 'profile.kleinFlip' : 'pending-kleinFlip',
+        kind,
+        event: raw ?? null,
+        surfaceValence: kind === 'm2CymaticValenceInvert' ? 'inverted' : 'primary'
     });
 }
 

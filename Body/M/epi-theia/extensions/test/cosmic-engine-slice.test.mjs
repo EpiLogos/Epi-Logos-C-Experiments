@@ -24,9 +24,18 @@ const {
     COSMIC_ENGINE_PANE_FIELD_GROUPS,
     COSMIC_ENGINE_LAYOUT
 } = require('../integrated-composition/lib/common/index.js');
+const {
+    buildRoutedM2PacketFromBridge
+} = require('../plugin-integrated-1-2-3/lib/common/index.js');
 
 const PLUGIN_SOURCE_ROOT =
     '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src';
+const baselineProfile = JSON.parse(
+    readFileSync(
+        '/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/portal-core/contract-inventory/baseline-profile.json',
+        'utf8'
+    )
+);
 
 function readyProfile(generation, extra = {}) {
     return {
@@ -40,7 +49,7 @@ function readyProfile(generation, extra = {}) {
             nodal_quartet: [0, 1, 2, 3],
             planetaryChakral: { sun: 'ground' },
             resonance72: { tick: 1 },
-            kleinFlipState: 'L',
+            kleinFlip: null,
             codon_rotation_projection: { codon: 0, rotation: 0 },
             mahamaya: { phase: 'incubation' },
             codec_lut: { v: 1 },
@@ -106,6 +115,66 @@ test('cosmic engine pane field groups match the named layout owner extensions', 
     assert.ok(COSMIC_ENGINE_PANE_FIELD_GROUPS['m3-center-stage'].length >= 2);
     assert.ok(COSMIC_ENGINE_PANE_FIELD_GROUPS['m2-left-stage'].length >= 2);
     assert.ok(COSMIC_ENGINE_PANE_FIELD_GROUPS['m1-right-inspector'].length >= 2);
+});
+
+test('integrated 1-2-3 routes M2 packets through s2.parashaktiCorrespondences', async () => {
+    const calls = [];
+    const packet = await buildRoutedM2PacketFromBridge({
+        bridge: {
+            parashaktiCorrespondences: async address72 => {
+                calls.push(address72);
+                return {
+                    provenanceHandle: {
+                        source: 's2',
+                        handle: `s2://parashakti-deep/address72/${address72}`,
+                        bodyAllowed: false
+                    },
+                    decanFace: {
+                        coordinate: '#2-3-1-0-0',
+                        name: 'Aries Decan 1',
+                        dataset: 'parashakti-deep'
+                    },
+                    sacredSonic: {
+                        coordinate: '#2-4.0-0/1-0-0',
+                        name: 'Al-Malik',
+                        dataset: 'parashakti-deep'
+                    },
+                    planetaryChakral: {
+                        planetaryRuler: 'Mars',
+                        planetaryMode: 'Phrygian',
+                        earthObserverHandle: `s2://parashakti-deep/earth-observer/address72/${address72}`
+                    },
+                    earthObserverHandle: `s2://parashakti-deep/earth-observer/address72/${address72}`
+                };
+            }
+        },
+        profile: {
+            generation: 108,
+            pointerAnchor: 'profile:pointer:baseline',
+            capabilities: ['profile.public-current'],
+            payload: baselineProfile
+        },
+        readiness: {
+            state: 'ready_public_current',
+            updatedAt: '2026-06-01T00:00:00.000Z',
+            sources: [],
+            blockers: []
+        },
+        context: {
+            canonicalMCoordinate: "M2'",
+            pointerAnchor: 'pointer://s0-baseline',
+            profileGeneration: 108
+        },
+        subject: 'routing-event',
+        emittedAt: 1_771_000_000_000
+    });
+
+    assert.deepEqual(calls, [baselineProfile.resonance72.lensAnchorIndex]);
+    assert.equal(packet.readiness.blockers.includes('Track 02 S2 correspondence provenance missing'), false);
+    for (const field of ['s2.decanFace', 's2.sacredSonic', 's2.earthObserverHandle']) {
+        assert.equal(packet.pendingFields.includes(field), false, `${field} should be supplied by S2 route`);
+    }
+    assert.ok(packet.provenance.some(handle => handle.handle.startsWith('s2://parashakti-deep/address72/')));
 });
 
 // ---- No-local-tables discipline -----------------------------------------

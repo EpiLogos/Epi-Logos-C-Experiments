@@ -111,6 +111,16 @@ pub struct AnimaInvokeResponse {
 /// ordinary user/agent messages.
 pub const ANIMA_INVOKE_ROLE: &str = "anima_invoke";
 
+/// M4' Nara lens RPCs consumed by the `m4.nara.lensApplication` widget.
+/// S3 owns the route law via the existing `nara.*` extension route; these
+/// names are declared here so gateway audits can assert the concrete lens
+/// surface without expanding the product-method contract table.
+pub const NARA_LENS_RPC_METHODS: [&str; 3] = [
+    "nara.lens.list",
+    "nara.lens.apply",
+    "nara.lens.synthesize",
+];
+
 /// Patch the target session's VAK address and append the task into its
 /// transcript as an `anima_invoke`-tagged message.
 ///
@@ -170,6 +180,7 @@ pub enum GatewayDispatchClass {
     GraphitiInvocation,
     ReviewInbox,
     EpiiAgentRuntime,
+    GnosticRuntime,
     AutoresearchRuntime,
     TaOntaAgentRuntime,
     NaraExtension,
@@ -179,6 +190,7 @@ pub enum GatewayDispatchClass {
     DeviceSurface,
     NodeSurface,
     SkillSurface,
+    VerifierSurface,
     ProductCompatibility,
     /// 03.T6.5: vault read/write through Hen; semantic suggest via
     /// Hen's smart_env reader.
@@ -198,281 +210,282 @@ pub struct GatewayDispatchRoute {
 }
 
 pub fn classify_method(method: &str) -> Option<GatewayDispatchRoute> {
-    let class =
-        match method {
-            "connect" => route(
-                method,
-                GatewayDispatchOwner::S3Gateway,
-                GatewayDispatchClass::Connection,
-                "S3",
-                "S0/S4/S5",
-                "s3.gateway.connect",
-            ),
-            "sessions.list"
-            | "sessions.resolve"
-            | "sessions.run-state"
-            | "sessions.preview"
-            | "sessions.patch"
-            | "sessions.reset"
-            | "sessions.delete"
-            | "sessions.compact"
-            | "sessions.fork"
-            | "sessions.resume"
-            | "sessions.import"
-            | "sessions.tree"
-            | "chat.history"
-            | "chat.send"
-            | "chat.inject"
-            | "chat.abort"
-            | "channels.status"
-            | "channels.send"
-            | "channels.files.list"
-            | "channels.logout"
-            | "send" => route(
-                method,
-                GatewayDispatchOwner::S3Gateway,
-                GatewayDispatchClass::SessionRuntime,
-                "S3",
-                "S4/S5",
-                "s3.gateway.session-runtime",
-            ),
-            "agent" | "agent.identity.get" | "agent.wait" | "agents.list" => route(
-                method,
-                GatewayDispatchOwner::S3Gateway,
-                GatewayDispatchClass::AgentRuntime,
-                "S3",
-                "S4/S5",
-                "s3.gateway.agent-runtime",
-            ),
-            "s3'.temporal.context" | "s3'.temporal.subscribe" | "s3'.spacetime.subscribe" => route(
-                method,
-                GatewayDispatchOwner::S3TemporalGateway,
-                GatewayDispatchClass::TemporalContext,
-                "S3'",
-                "S4/S5",
-                "s3-prime.temporal-context",
-            ),
-            "s1'.vault.read_file"
-            | "s1'.vault.write_file"
-            | "s1'.vault.rename_file"
-            | "s1'.vault.move_file" => route(
-                method,
-                GatewayDispatchOwner::S1HenGateway,
-                GatewayDispatchClass::VaultGateway,
-                "S1'",
-                "S4/S5",
-                "s1-prime.vault-gateway",
-            ),
-            "s1'.semantic.suggest_links" => route(
-                method,
-                GatewayDispatchOwner::S1HenGateway,
-                GatewayDispatchClass::SemanticSurface,
-                "S1'",
-                "S4/S5",
-                "s1-prime.semantic-surface",
-            ),
-            "s2.graph.query"
-            | "s2.graph.node"
-            | "s2.graph.traverse"
-            | "s2.graph.harmonic_relations.materialize"
-            | "s2.graph.pointer_web.compute"
-            | "s2.graph.pointer_web.refresh"
-            | "s2.graph.kernel_resonance.record"
-            | "s2'.coordinate.cypher"
-            | "s2'.coordinate.ingest"
-            | "s2'.coordinate.analyse_resonance"
-            | "s2'.coordinate.persist_analysis"
-            | "s2'.coordinate.aggregate_resonance"
-            | "s2'.coordinate.resolve"
-            | "s2'.retrieve"
-            | "s2'.rerank"
-            | "s2'.enrich"
-            | "s2'.constraint.list"
-            | "s2'.constraint.register"
-            | "s2'.constraint.test" => route(
-                method,
-                GatewayDispatchOwner::S2GraphService,
-                GatewayDispatchClass::GraphService,
-                "S2/S2'",
-                "S4/S5",
-                "s2.graph-service",
-            ),
-            "s3'.kernel.envelope.publish" => route(
-                method,
-                GatewayDispatchOwner::S3TemporalGateway,
-                GatewayDispatchClass::TemporalContext,
-                "S3'",
-                "S4/S5",
-                "s3-prime.kernel-envelope",
-            ),
-            "s5.episodic.search"
-            | "s5.episodic.deposit"
-            | "s5.episodic.kernel_resonance.deposit"
-            | "s5.episodic.kernel_profile_observation.deposit" => route(
-                method,
-                GatewayDispatchOwner::S3GraphitiRuntime,
-                GatewayDispatchClass::GraphitiInvocation,
-                "S3/S5",
-                "S5",
-                "s3.graphiti-runtime.s5-episodic",
-            ),
-            "s5.trajectory.verify"
-            | "s5.ebm.train"
-            | "s5.ebm.export_state"
-            | "s5'.anuttara.diagnose" => route(
-                method,
-                GatewayDispatchOwner::S5Autoresearch,
-                GatewayDispatchClass::AutoresearchRuntime,
-                "S5/S5'",
-                "S5",
-                "s5.autoresearch-kernel",
-            ),
-            "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve"
-            | "s5'.review.history" => route(
-                method,
-                GatewayDispatchOwner::S5EpiiAgent,
-                GatewayDispatchClass::ReviewInbox,
-                "S5'",
-                "S5",
-                "s5-prime.epii-review-inbox",
-            ),
-            "s5'.epii.status"
-            | "s5'.epii.deposit"
-            | "s5'.epii.runtime.context"
-            | "s5'.gnosis.context.retrieve"
-            | "s5'.epii.user.orientation"
-            | "s5'.epii.pratibimba.status"
-            | "s5'.epii.kairos.context" => route(
-                method,
-                GatewayDispatchOwner::S5EpiiAgent,
-                GatewayDispatchClass::EpiiAgentRuntime,
-                "S5'",
-                "S5",
-                "s5-prime.epii-agent-runtime",
-            ),
-            "s5'.improve.status"
-            | "s5'.improve.propose"
-            | "s5'.improve.evaluate"
-            | "s5'.improve.promote"
-            | "s5'.improve.history" => route(
-                method,
-                GatewayDispatchOwner::S5Autoresearch,
-                GatewayDispatchClass::AutoresearchRuntime,
-                "S5'",
-                "S5",
-                "s5-prime.autoresearch-runtime",
-            ),
-            "s4.agent.query"
-            | "s4.agent.notify"
-            | "s4.agent.status"
-            | "s4'.vak.evaluate"
-            | "s4'.orchestrate"
-            | "s4'.mediation.route"
-            | "s4'.psyche.state"
-            | "s4'.psyche.update"
-            | "s4'.permission.get" => route(
-                method,
-                GatewayDispatchOwner::S4TaOntaAgent,
-                GatewayDispatchClass::TaOntaAgentRuntime,
-                "S4/S4'",
-                "S4",
-                "s4-prime.ta-onta-runtime",
-            ),
-            _ if method.starts_with("nara.") => route(
-                method,
-                GatewayDispatchOwner::S4S5DomainAdapter,
-                GatewayDispatchClass::NaraExtension,
-                "M4'/S4",
-                "S4/S5",
-                "m4-prime.nara-extension",
-            ),
-            "health" | "status" | "status.summary" | "health.snapshot" | "presence.list"
-            | "system-presence" | "system-event" | "last-heartbeat" | "set-heartbeats" | "wake"
-            | "models.list" | "logs.tail" | "usage.status" | "usage.cost" | "update.run"
-            | "tts.status" | "tts.enable" | "tts.disable" | "tts.convert" | "tts.setProvider"
-            | "tts.providers" | "voicewake.get" | "voicewake.set" | "talk.mode" => route(
-                method,
-                GatewayDispatchOwner::S0ProductAdapter,
-                GatewayDispatchClass::SystemSurface,
-                "S0",
-                "S0/S4/S5",
-                "s0.product-system-surface",
-            ),
-            "config.get"
-            | "config.schema"
-            | "config.set"
-            | "config.patch"
-            | "config.apply"
-            | "s0.command.exec"
-            | "s0.command.completion" => route(
-                method,
-                GatewayDispatchOwner::S0ProductAdapter,
-                GatewayDispatchClass::ConfigurationSurface,
-                "S0'",
-                "S0/S4/S5",
-                "s0-prime.command-surface",
-            ),
-            "cron.list" | "cron.status" | "cron.add" | "cron.update" | "cron.remove"
-            | "cron.run" | "cron.runs" | "wizard.start" | "wizard.next" | "wizard.cancel"
-            | "wizard.status" => route(
-                method,
-                GatewayDispatchOwner::S0ProductAdapter,
-                GatewayDispatchClass::AutomationSurface,
-                "S0",
-                "S4/S5",
-                "s0.product-automation",
-            ),
-            "device.pair.list"
-            | "device.pair.approve"
-            | "device.pair.reject"
-            | "device.token.rotate"
-            | "device.token.revoke"
-            | "browser.request"
-            | "web.login.start"
-            | "web.login.wait" => route(
-                method,
-                GatewayDispatchOwner::S0ProductAdapter,
-                GatewayDispatchClass::DeviceSurface,
-                "S0",
-                "S0/S4/S5",
-                "s0.product-device-surface",
-            ),
-            "node.pair.request"
-            | "node.pair.list"
-            | "node.pair.approve"
-            | "node.pair.reject"
-            | "node.pair.verify"
-            | "node.rename"
-            | "node.list"
-            | "node.describe"
-            | "node.invoke"
-            | "node.invoke.result"
-            | "node.event"
-            | "exec.approval.request"
-            | "exec.approval.resolve"
-            | "exec.approvals.get"
-            | "exec.approvals.set"
-            | "exec.approvals.node.get"
-            | "exec.approvals.node.set" => route(
-                method,
-                GatewayDispatchOwner::S0ProductAdapter,
-                GatewayDispatchClass::NodeSurface,
-                "S0",
-                "S0/S4/S5",
-                "s0.product-node-surface",
-            ),
-            "skills.status" | "skills.bins" | "skills.install" | "skills.update" => route(
-                method,
-                GatewayDispatchOwner::S0ProductAdapter,
-                GatewayDispatchClass::SkillSurface,
-                "S0/S5",
-                "S4/S5",
-                "s0.product-skill-surface",
-            ),
-            _ => None,
-        };
+    method_dispatch_plan_entry(method)
+        .and_then(dispatch_route_for_plan_entry)
+        .or_else(|| extension_route(method))
+}
 
-    class
+pub fn dispatch_route_for_plan_entry(
+    entry: &MethodDispatchPlanEntry,
+) -> Option<GatewayDispatchRoute> {
+    route_metadata_for_plan_entry(entry).map(|metadata| GatewayDispatchRoute {
+        method: entry.method,
+        owner: metadata.owner,
+        class: metadata.class,
+        coordinate_owner: metadata.coordinate_owner,
+        agent_access_owner: metadata.agent_access_owner,
+        route_id: metadata.route_id,
+    })
+}
+
+#[derive(Debug, Clone, Copy)]
+struct RouteMetadata {
+    owner: GatewayDispatchOwner,
+    class: GatewayDispatchClass,
+    coordinate_owner: &'static str,
+    agent_access_owner: &'static str,
+    route_id: &'static str,
+}
+
+fn route_metadata_for_plan_entry(entry: &MethodDispatchPlanEntry) -> Option<RouteMetadata> {
+    match entry.kind {
+        MethodDispatchKind::S3NativeHandler => s3_native_route_metadata(entry),
+        MethodDispatchKind::S2GraphServiceAdapter => Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S2GraphService,
+            class: GatewayDispatchClass::GraphService,
+            coordinate_owner: "S2/S2'",
+            agent_access_owner: "S4/S5",
+            route_id: "s2.graph-service",
+        }),
+        MethodDispatchKind::S4OrchestrationAdapter => Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S4TaOntaAgent,
+            class: GatewayDispatchClass::TaOntaAgentRuntime,
+            coordinate_owner: "S4/S4'",
+            agent_access_owner: "S4",
+            route_id: "s4-prime.ta-onta-runtime",
+        }),
+        MethodDispatchKind::S5GovernanceAdapter => s5_governance_route_metadata(entry),
+        MethodDispatchKind::S0ProductAdapter => s0_product_route_metadata(entry),
+        MethodDispatchKind::S1HenAdapter => s1_hen_route_metadata(entry),
+        MethodDispatchKind::Missing => None,
+    }
+}
+
+fn s3_native_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMetadata> {
+    let authority = entry.authority_path;
+    if authority.contains("::protocol") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S3Gateway,
+            class: GatewayDispatchClass::Connection,
+            coordinate_owner: "S3",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s3.gateway.connect",
+        })
+    } else if authority.contains("::dispatch") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S3Gateway,
+            class: GatewayDispatchClass::AgentRuntime,
+            coordinate_owner: "S3",
+            agent_access_owner: "S4/S5",
+            route_id: "s3.gateway.agent-runtime",
+        })
+    } else if authority.contains("temporal") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S3TemporalGateway,
+            class: GatewayDispatchClass::TemporalContext,
+            coordinate_owner: "S3'",
+            agent_access_owner: "S4/S5",
+            route_id: "s3-prime.temporal-context",
+        })
+    } else if authority.contains("KERNEL_ENVELOPE_CONTRACT") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S3TemporalGateway,
+            class: GatewayDispatchClass::TemporalContext,
+            coordinate_owner: "S3'",
+            agent_access_owner: "S4/S5",
+            route_id: "s3-prime.kernel-envelope",
+        })
+    } else if authority.contains("::runtime") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S3Gateway,
+            class: GatewayDispatchClass::SystemSurface,
+            coordinate_owner: "S3",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s3.gateway.runtime-surface",
+        })
+    } else if authority.contains("::sessions")
+        || authority.contains("channel runtime")
+        || authority.contains("chat runtime")
+        || authority.contains("session runtime")
+    {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S3Gateway,
+            class: GatewayDispatchClass::SessionRuntime,
+            coordinate_owner: "S3",
+            agent_access_owner: "S4/S5",
+            route_id: "s3.gateway.session-runtime",
+        })
+    } else {
+        None
+    }
+}
+
+fn s5_governance_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMetadata> {
+    let authority = entry.authority_path;
+    if authority.contains("graphiti-runtime") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S3GraphitiRuntime,
+            class: GatewayDispatchClass::GraphitiInvocation,
+            coordinate_owner: "S3/S5",
+            agent_access_owner: "S5",
+            route_id: "s3.graphiti-runtime.s5-episodic",
+        })
+    } else if authority.contains("epii-review-core") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S5EpiiAgent,
+            class: GatewayDispatchClass::ReviewInbox,
+            coordinate_owner: "S5'",
+            agent_access_owner: "S5",
+            route_id: "s5-prime.epii-review-inbox",
+        })
+    } else if authority.contains("epii-agent-core") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S5EpiiAgent,
+            class: GatewayDispatchClass::EpiiAgentRuntime,
+            coordinate_owner: "S5'",
+            agent_access_owner: "S5",
+            route_id: "s5-prime.epii-agent-runtime",
+        })
+    } else if authority.contains("epi-gnostic") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S5EpiiAgent,
+            class: GatewayDispatchClass::GnosticRuntime,
+            coordinate_owner: "S5'",
+            agent_access_owner: "S5",
+            route_id: "s5-prime.gnostic-runtime",
+        })
+    } else if authority.contains("epii-autoresearch-core") {
+        let route_id = if entry.method.starts_with("s5'.improve.") {
+            "s5-prime.autoresearch-runtime"
+        } else {
+            "s5.autoresearch-kernel"
+        };
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S5Autoresearch,
+            class: GatewayDispatchClass::AutoresearchRuntime,
+            coordinate_owner: if entry.method.starts_with("s5'.") {
+                "S5'"
+            } else {
+                "S5/S5'"
+            },
+            agent_access_owner: "S5",
+            route_id,
+        })
+    } else {
+        None
+    }
+}
+
+fn s1_hen_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMetadata> {
+    let is_semantic = entry.authority_path.contains("semantic");
+    Some(RouteMetadata {
+        owner: GatewayDispatchOwner::S1HenGateway,
+        class: if is_semantic {
+            GatewayDispatchClass::SemanticSurface
+        } else {
+            GatewayDispatchClass::VaultGateway
+        },
+        coordinate_owner: "S1'",
+        agent_access_owner: "S4/S5",
+        route_id: if is_semantic {
+            "s1-prime.semantic-surface"
+        } else {
+            "s1-prime.vault-gateway"
+        },
+    })
+}
+
+fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMetadata> {
+    let authority = entry.authority_path;
+    if authority.contains("config.rs") || authority.contains("portal/command.rs") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::ConfigurationSurface,
+            coordinate_owner: "S0'",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s0-prime.command-surface",
+        })
+    } else if authority.contains("verifier") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::VerifierSurface,
+            coordinate_owner: "S0'",
+            agent_access_owner: "S4/S5",
+            route_id: "s0-prime.anuttara-verifier",
+        })
+    } else if authority.contains("cron.rs") || authority.contains("wizard.rs") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::AutomationSurface,
+            coordinate_owner: "S0",
+            agent_access_owner: "S4/S5",
+            route_id: "s0.product-automation",
+        })
+    } else if authority.contains("devices.rs")
+        || authority.contains("browser.rs")
+        || authority.contains("auth.rs")
+    {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::DeviceSurface,
+            coordinate_owner: "S0",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s0.product-device-surface",
+        })
+    } else if authority.contains("nodes.rs") || authority.contains("approvals.rs") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::NodeSurface,
+            coordinate_owner: "S0",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s0.product-node-surface",
+        })
+    } else if authority.contains("skills.rs") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::SkillSurface,
+            coordinate_owner: "S0/S5",
+            agent_access_owner: "S4/S5",
+            route_id: "s0.product-skill-surface",
+        })
+    } else if authority.contains("gate/") || authority.contains("src/gate ") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::SystemSurface,
+            coordinate_owner: "S0",
+            agent_access_owner: "S0/S4/S5",
+            route_id: "s0.product-system-surface",
+        })
+    } else {
+        None
+    }
+}
+
+fn extension_route(method: &str) -> Option<GatewayDispatchRoute> {
+    if method.starts_with("nara.") {
+        route(
+            method,
+            GatewayDispatchOwner::S4S5DomainAdapter,
+            GatewayDispatchClass::NaraExtension,
+            "M4'/S4",
+            "S4/S5",
+            "m4-prime.nara-extension",
+        )
+    } else if matches!(
+        method,
+        "s5'.epii.user.orientation" | "s5'.epii.pratibimba.status" | "s5'.epii.kairos.context"
+    ) {
+        route(
+            method,
+            GatewayDispatchOwner::S5EpiiAgent,
+            GatewayDispatchClass::EpiiAgentRuntime,
+            "S5'",
+            "S5",
+            "s5-prime.epii-agent-runtime",
+        )
+    } else {
+        None
+    }
 }
 
 fn route(

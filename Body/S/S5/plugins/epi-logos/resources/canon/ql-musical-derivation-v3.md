@@ -49,3 +49,7 @@ The former B/C labels are remapped:
 - The interval signature formerly attached to B crossing belongs to C.
 
 This is why the graph and code should use semantic relation types rather than one generic harmonic-relation edge.
+
+## Correction Pass Note (2026-06-11)
+
+The seed file (`Idea/Bimba/Seeds/M/M5'/ql-musical-derivation-v3.md`) has now been harmonised to this excerpt's corrected grammar: §II-3.5 and Reference Tables 7–9 carried pre-correction B/C labels and have been relabelled (B = Becoming/mirror, C = Knowing-Unknowing/crossing; the midpoint coincidence reads A-sq2 = B-sq3 in both bases). Additionally ratified: position **#5/#5′ is designated Quintessence**, and the sixth element-designation is **Salt** (formerly Mineral) — applied across the cheat sheet, coordinate system document, and Nara context copies.

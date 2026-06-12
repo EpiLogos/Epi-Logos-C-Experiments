@@ -155,15 +155,24 @@ fn promotion_intent_accepts_prime_branch_coordinates_and_derives_cluster_metadat
         intent.node.properties.get("coordinate_namespace").unwrap(),
         "S"
     );
-    assert_eq!(intent.node.properties.get("coordinate_axis").unwrap(), "prime");
+    assert_eq!(
+        intent.node.properties.get("coordinate_axis").unwrap(),
+        "prime"
+    );
 
     let lens = GraphPromotionIntent::from_markdown(
         "Idea/Bimba/World/Types/Coordinates/L/L2/L2'/L2-3'.md",
         "---\ncoordinate: L2-3'\ntitle: Chronological Arc\n---\nNight lens branch.",
     )
     .unwrap();
-    assert_eq!(lens.node.properties.get("coordinate_prefix").unwrap(), "L2'");
-    assert_eq!(lens.node.properties.get("coordinate_parent").unwrap(), "L2'");
+    assert_eq!(
+        lens.node.properties.get("coordinate_prefix").unwrap(),
+        "L2'"
+    );
+    assert_eq!(
+        lens.node.properties.get("coordinate_parent").unwrap(),
+        "L2'"
+    );
 
     let m_prime = GraphPromotionIntent::from_markdown(
         "Idea/Bimba/Seeds/M/M5'/agentic-control-room.md",

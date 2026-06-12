@@ -32,6 +32,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build && node --test tests/topology.test.mjs tests/acceptance-plan.test.mjs"
+    "test": "pnpm build && node --test tests/*.test.mjs ../test/validate-extension-contract-preflight.test.mjs"
   }
 }

@@ -44,6 +44,18 @@ const ORACLE_MARKERS: &[(&str, &str)] = &[
     ("coin cast", "coin-cast"),
     ("decan", "decan"),
 ];
+const HIGHLIGHT_CATEGORIES: &[&str] = &[
+    "daily-note",
+    "oracle",
+    "dream",
+    "expand",
+    "recognition",
+    "prospective-surfacing",
+    "retrospective-surfacing",
+    "kairos-touch",
+    "somatic-mark",
+    "live-spread",
+];
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct NaraJournalParseInput {
@@ -57,6 +69,7 @@ pub struct NaraJournalParseInput {
     pub matheme_handle: String,
     pub raw_body_handle: String,
     pub body: String,
+    pub category: Option<String>,
     pub source_ref: Option<String>,
     pub kairos_snapshot: Option<String>,
 }
@@ -176,6 +189,7 @@ impl NaraJournalParser {
         let body = required_body(input.body)?;
         let source_ref = trim_optional(input.source_ref);
         let kairos_snapshot = trim_optional(input.kairos_snapshot);
+        let category = normalize_highlight_category(input.kind, input.category)?;
         let document = NaraJournalDocument::new(input.kind, body)?;
         let symbolic_observation = derive_symbolic_observation(&document);
         let mut activity_event = NaraActivityEvent::new(
@@ -192,6 +206,7 @@ impl NaraJournalParser {
             symbolic_observation.state_effect.clone(),
         )
         .map_err(NaraJournalParseError::InvalidInvariant)?;
+        activity_event.category = category;
         activity_event.source_ref = source_ref;
         activity_event.kairos_snapshot = kairos_snapshot;
         activity_event.derived_symbolic_observation = Some(symbolic_observation.clone());
@@ -463,4 +478,29 @@ fn trim_optional(value: Option<String>) -> Option<String> {
             Some(trimmed.to_owned())
         }
     })
+}
+
+fn normalize_highlight_category(
+    kind: NaraActivityKind,
+    category: Option<String>,
+) -> Result<Option<String>, NaraJournalParseError> {
+    let category = trim_optional(category);
+    if kind != NaraActivityKind::Highlight {
+        return if category.is_some() {
+            Err(NaraJournalParseError::InvalidInvariant(
+                "category is only valid for highlight activity".to_owned(),
+            ))
+        } else {
+            Ok(None)
+        };
+    }
+
+    let category = category.unwrap_or_else(|| "daily-note".to_owned());
+    if HIGHLIGHT_CATEGORIES.contains(&category.as_str()) {
+        Ok(Some(category))
+    } else {
+        Err(NaraJournalParseError::InvalidInvariant(format!(
+            "unsupported highlight category: {category}"
+        )))
+    }
 }

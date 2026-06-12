@@ -31,6 +31,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build && node --test tests/run-flow.test.mjs tests/human-gate.test.mjs tests/evidence-envelope.test.mjs"
+    "test": "pnpm build && node --test tests/run-flow.test.mjs tests/human-gate.test.mjs tests/evidence-envelope.test.mjs tests/pi-runtime-monitor.test.mjs"
   }
 }

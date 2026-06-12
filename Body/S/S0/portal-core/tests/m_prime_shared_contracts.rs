@@ -77,8 +77,16 @@ fn every_surface_cell_reverse_addresses_a_lens_mode() {
     for cell in &surface {
         let anchor = lens_mode_from_codon_rotation(cell.codon_id, cell.rotation)
             .expect("every materialized surface cell reverse-maps to a lens-mode anchor");
-        assert!(anchor.lens < 12, "reverse lens out of range for cell {}", cell.surface_index);
-        assert!(anchor.mode < 7, "reverse mode out of range for cell {}", cell.surface_index);
+        assert!(
+            anchor.lens < 12,
+            "reverse lens out of range for cell {}",
+            cell.surface_index
+        );
+        assert!(
+            anchor.mode < 7,
+            "reverse mode out of range for cell {}",
+            cell.surface_index
+        );
         assert_eq!(
             cell.rotation_degrees,
             cell.rotation as u16 * 45,

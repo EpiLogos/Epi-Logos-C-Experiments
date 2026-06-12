@@ -5,8 +5,13 @@ import {
     KERNEL_BRIDGE_API,
     type KernelBridgeAPI
 } from '@pratibimba/kernel-bridge';
+import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
+import {
+    enforcePiReviewRoutingGate
+} from '@pratibimba/m-extension-runtime/lib/common/recursive-self-review-gate';
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import { IdeShellBridgeGate } from './bridge-gate';
+import { PrivacyDropFeed } from './services/privacy-drop-feed';
 
 /**
  * Review pane — Track 05 T4.
@@ -24,6 +29,8 @@ export interface ReviewItem {
     readonly title: string;
     readonly status: 'pending' | 'in-review' | 'approved' | 'rejected' | 'revised' | string;
     readonly humanRequired: boolean;
+    readonly recursiveSelfReview?: boolean;
+    readonly actor?: string;
     readonly privacyClass?: string;
     readonly proposer?: string;
     readonly coordinate?: string;
@@ -38,9 +45,12 @@ export class ReviewPaneWidget extends ReactWidget {
     @inject(KERNEL_BRIDGE_API)
     protected readonly bridge!: KernelBridgeAPI;
 
+    @inject(PrivacyDropFeed)
+    protected readonly privacyDropFeed!: PrivacyDropFeed;
+
     protected items: ReviewItem[] = [];
-    protected privacyDropped: number = 0;
     protected lastError: string | null = null;
+    protected highlightedReviewId: string | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -63,7 +73,7 @@ export class ReviewPaneWidget extends ReactWidget {
                 vak: null
             });
             if (!isPrivacySafe(receipt.privacyClass)) {
-                this.privacyDropped += 1;
+                this.recordPrivacyDrop(receipt.privacyClass);
                 this.items = [];
                 this.lastError = `Privacy class "${receipt.privacyClass}" rejected by ide-shell gate`;
             } else {
@@ -71,16 +81,14 @@ export class ReviewPaneWidget extends ReactWidget {
                     ? (receipt.artifact as ReviewItem[])
                     : (receipt.artifact as { items?: ReviewItem[] } | undefined)?.items ?? [];
                 const accepted: ReviewItem[] = [];
-                let dropped = 0;
                 for (const it of list) {
                     if (isPrivacySafe(it.privacyClass)) {
                         accepted.push(it);
                     } else {
-                        dropped += 1;
+                        this.recordPrivacyDrop(it.privacyClass);
                     }
                 }
                 this.items = accepted;
-                this.privacyDropped += dropped;
                 this.lastError = null;
             }
         } catch (err) {
@@ -92,21 +100,39 @@ export class ReviewPaneWidget extends ReactWidget {
     /** Direct setter for tests + intent dispatch. */
     setItems(items: readonly ReviewItem[]): void {
         const accepted: ReviewItem[] = [];
-        let dropped = 0;
         for (const it of items) {
             if (isPrivacySafe(it.privacyClass)) {
                 accepted.push(it);
             } else {
-                dropped += 1;
+                this.recordPrivacyDrop(it.privacyClass);
             }
         }
         this.items = accepted;
-        this.privacyDropped += dropped;
         this.update();
     }
 
     get visibleItemCount(): number {
         return this.items.length;
+    }
+
+    protected get privacyDropped(): number {
+        return this.privacyDropFeed.aggregate.byWidget[this.id] ?? 0;
+    }
+
+    protected recordPrivacyDrop(privacyClass: string | null | undefined): void {
+        this.privacyDropFeed.record(this.id, privacyClass as string);
+    }
+
+    highlightReviewItem(reviewId: string): void {
+        this.highlightedReviewId = reviewId;
+        this.update();
+        window.setTimeout(() => {
+            const selector = `[data-test="review-item-${CSS.escape(reviewId)}"]`;
+            document.querySelector(selector)?.scrollIntoView({
+                block: 'center',
+                behavior: 'smooth'
+            });
+        }, 0);
     }
 
     protected override render(): React.ReactNode {
@@ -122,6 +148,10 @@ export class ReviewPaneWidget extends ReactWidget {
             <div className="ide-shell-widget-root" data-test="review-pane-root">
                 <header className="ide-shell-widget-header">
                     <h3>{ReviewPaneWidget.LABEL}</h3>
+                    <BridgeReadinessBadge
+                        bridge={this.bridge}
+                        bindingKey="s5'.review.inbox"
+                    />
                     <span data-test="review-pane-count">{this.items.length} item(s)</span>
                     <span data-test="review-pane-privacy-dropped">
                         privacy-dropped: {this.privacyDropped}
@@ -138,37 +168,49 @@ export class ReviewPaneWidget extends ReactWidget {
                     </p>
                 ) : (
                     <ul data-test="review-pane-list">
-                        {this.items.map(item => (
-                            <li
-                                key={item.id}
-                                data-test={`review-item-${item.id}`}
-                                data-status={item.status}
-                                data-human-required={item.humanRequired ? 'true' : 'false'}
-                            >
-                                <strong>{item.title}</strong>
-                                <span> — status: {item.status}</span>
-                                {item.humanRequired && (
-                                    <p
-                                        className="ide-shell-human-required"
-                                        data-test={`review-item-human-required-banner-${item.id}`}
-                                    >
-                                        Human-required gate: agent approve/reject/revise BLOCKED.
-                                        Only a human (via the M5 review surface) can transition
-                                        this item; the gateway will reject any agent transition
-                                        attempt with `human-gate enforced`.
-                                    </p>
-                                )}
-                                {item.coordinate && (
-                                    <p>
-                                        coordinate: <code>{item.coordinate}</code>
-                                    </p>
-                                )}
-                                {item.summary && <p>{item.summary}</p>}
-                            </li>
-                        ))}
+                        {this.items.map(item => this.renderReviewItem(item))}
                     </ul>
                 )}
             </div>
+        );
+    }
+
+    protected renderReviewItem(item: ReviewItem): React.ReactNode {
+        const gate = enforcePiReviewRoutingGate({
+            decision: 'applied',
+            humanRequired: item.humanRequired,
+            actorIsHuman: false,
+            recursiveSelfReview: item.recursiveSelfReview,
+            actor: item.actor ?? item.proposer
+        });
+        return (
+            <li
+                key={item.id}
+                data-test={`review-item-${item.id}`}
+                data-status={item.status}
+                data-human-required={item.humanRequired ? 'true' : 'false'}
+                data-recursive-self-review={item.recursiveSelfReview ? 'true' : 'false'}
+                data-applied-verdict-gated={gate.ok ? 'false' : 'true'}
+                data-highlighted={this.highlightedReviewId === item.id ? 'true' : 'false'}
+                className={this.highlightedReviewId === item.id ? 'ide-shell-intent-highlight' : undefined}
+            >
+                <strong>{item.title}</strong>
+                <span> — status: {item.status}</span>
+                {!gate.ok && (
+                    <p
+                        className="ide-shell-human-required"
+                        data-test={`review-item-human-required-banner-${item.id}`}
+                    >
+                        {gate.reason}
+                    </p>
+                )}
+                {item.coordinate && (
+                    <p>
+                        coordinate: <code>{item.coordinate}</code>
+                    </p>
+                )}
+                {item.summary && <p>{item.summary}</p>}
+            </li>
         );
     }
 }

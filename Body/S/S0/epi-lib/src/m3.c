@@ -5,10 +5,48 @@
  * FR Coverage: 2.3.0 – 2.3.21
  */
 
+#define M3_BUILDING_SOURCE 1
 #include "m3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
+static const uint8_t M3_BACKBONE_AMINO_ACID_IDX[24] = {
+    0, 1, 2, 3, 4, 5, 6, 7,
+    8, 9, 10, 11, 12, 13, 14, 15,
+    16, 17, 18, 19, 20, 21, 22, 23,
+};
+
+_Static_assert(sizeof(M3_BACKBONE_AMINO_ACID_IDX) == 24,
+    "M3 backbone amino table must have exactly 24 entries");
+
+Clock_Backbone_Node CLOCK_BACKBONE[24] = {{0}};
+
+void m3_build_backbone(void) {
+    for (uint8_t i = 0; i < 24u; i++) {
+        CLOCK_BACKBONE[i] = (Clock_Backbone_Node){
+            .degree = i,
+            .backbone_index = i,
+            .hour_of_day = i,
+            .zodiac_sign = (uint8_t)(i / 2u),
+            .is_cusp = (uint8_t)((i % 2u) == 0u),
+            .amino_acid_idx = M3_BACKBONE_AMINO_ACID_IDX[i],
+            .is_palindromic = 1u,
+            ._pad = {0, 0, 0, 0},
+        };
+    }
+}
+
+
+/* FFI-exportable wrapper around the inline m3_compute_charges.
+   Rust / foreign callers use this; C callers inside m3.c use the inline. */
+void m3_compute_charges_ffi(
+    uint8_t codon6bit,
+    int8_t *pp_out, int8_t *nn_out, int8_t *np_out, int8_t *pn_out)
+{
+    m3_compute_charges(codon6bit, pp_out, nn_out, np_out, pn_out);
+}
 
 
 /* ===================================================================
@@ -643,6 +681,9 @@ M3_Root* m3_init(Coordinate_Arena* arena, Holographic_Coordinate* hc) {
     /* Initialize codon classification LUT */
     m3_init_codon_class_lut();
 
+    /* Build the 24-node clock backbone during M3 boot. */
+    m3_build_backbone();
+
     return root;
 }
 
@@ -665,6 +706,8 @@ void m3_teardown(M3_Root* root) {
  * =================================================================== */
 
 bool m3_verify(void) {
+    m3_build_backbone();
+
     /* PAIR_MATRIX integrity */
     if (M3_PAIR_MATRIX[5].sum_value != 18) return false;   /* TT = MAX */
     if (M3_PAIR_MATRIX[0].sum_value != 12) return false;   /* AA = MIN */
@@ -698,6 +741,16 @@ bool m3_verify(void) {
     /* Non-dual codons: all 16 must pass is_nondual_codon() */
     for (int i = 0; i < 16; i++) {
         if (!is_nondual_codon(M3_NONDUAL_CODONS[i])) return false;
+    }
+
+    for (uint8_t i = 0; i < 24u; i++) {
+        if (CLOCK_BACKBONE[i].degree != i) return false;
+        if (CLOCK_BACKBONE[i].backbone_index != i) return false;
+        if (CLOCK_BACKBONE[i].hour_of_day != i) return false;
+        if (CLOCK_BACKBONE[i].zodiac_sign != (uint8_t)(i / 2u)) return false;
+        if (CLOCK_BACKBONE[i].is_cusp != (uint8_t)((i % 2u) == 0u)) return false;
+        if (CLOCK_BACKBONE[i].amino_acid_idx != M3_BACKBONE_AMINO_ACID_IDX[i]) return false;
+        if (CLOCK_BACKBONE[i].is_palindromic != 1u) return false;
     }
 
     /* Complementarity matrix: comp[i] ^ 0x3F == i */

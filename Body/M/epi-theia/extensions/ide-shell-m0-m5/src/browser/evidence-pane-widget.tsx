@@ -5,8 +5,10 @@ import {
     KERNEL_BRIDGE_API,
     type KernelBridgeAPI
 } from '@pratibimba/kernel-bridge';
+import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import { IdeShellBridgeGate } from './bridge-gate';
+import { PrivacyDropFeed } from './services/privacy-drop-feed';
 
 /**
  * Evidence pane — Track 05 T4 (T8 wires it to the agentic flow).
@@ -44,8 +46,10 @@ export class EvidencePaneWidget extends ReactWidget {
     @inject(KERNEL_BRIDGE_API)
     protected readonly bridge!: KernelBridgeAPI;
 
+    @inject(PrivacyDropFeed)
+    protected readonly privacyDropFeed!: PrivacyDropFeed;
+
     protected records: EvidenceRecord[] = [];
-    protected privacyDropped: number = 0;
     protected lastError: string | null = null;
 
     @postConstruct()
@@ -64,7 +68,7 @@ export class EvidencePaneWidget extends ReactWidget {
      */
     addRecord(record: EvidenceRecord): boolean {
         if (!isPrivacySafe(record.privacyClass)) {
-            this.privacyDropped += 1;
+            this.recordPrivacyDrop(record.privacyClass);
             this.update();
             return false;
         }
@@ -76,21 +80,27 @@ export class EvidencePaneWidget extends ReactWidget {
     /** Replace the visible record set (used by intent dispatch). */
     setRecords(records: readonly EvidenceRecord[]): void {
         const accepted: EvidenceRecord[] = [];
-        let dropped = 0;
         for (const r of records) {
             if (isPrivacySafe(r.privacyClass)) {
                 accepted.push(r);
             } else {
-                dropped += 1;
+                this.recordPrivacyDrop(r.privacyClass);
             }
         }
         this.records = accepted;
-        this.privacyDropped += dropped;
         this.update();
     }
 
     get visibleRecordCount(): number {
         return this.records.length;
+    }
+
+    protected get privacyDropped(): number {
+        return this.privacyDropFeed.aggregate.byWidget[this.id] ?? 0;
+    }
+
+    protected recordPrivacyDrop(privacyClass: string | null | undefined): void {
+        this.privacyDropFeed.record(this.id, privacyClass as string);
     }
 
     protected override render(): React.ReactNode {
@@ -106,6 +116,10 @@ export class EvidencePaneWidget extends ReactWidget {
             <div className="ide-shell-widget-root" data-test="evidence-pane-root">
                 <header className="ide-shell-widget-header">
                     <h3>{EvidencePaneWidget.LABEL}</h3>
+                    <BridgeReadinessBadge
+                        bridge={this.bridge}
+                        bindingKey="s5'.review.history"
+                    />
                     <span data-test="evidence-pane-count">{this.records.length} record(s)</span>
                     <span data-test="evidence-pane-privacy-dropped">
                         privacy-dropped: {this.privacyDropped}

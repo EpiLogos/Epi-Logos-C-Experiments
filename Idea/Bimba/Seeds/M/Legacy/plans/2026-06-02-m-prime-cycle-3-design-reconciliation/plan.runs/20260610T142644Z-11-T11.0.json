@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T142644Z-11-T11.0",
+  "taskId": "11.T11.0",
+  "startedAt": "2026-06-10T14:26:44.893Z",
+  "owner": "codex-m-dev-11-t11-0",
+  "leaseExpiresAt": "2026-06-10T16:26:44.893Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T11.0",
+    "trackId": "11",
+    "tranche": "T11.0",
+    "title": "Electron target package parity gate",
+    "effort": null,
+    "file": "11-theia-shell-surface-hosting.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+    "dependsOn": [],
+    "writeScopes": [
+      "Body/M/epi-theia/scripts/smoke-build.sh",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -500,7 +500,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
             "gate_epii_agent_access.rs",
         ],
         authority_path: Some("Body/S/S5/epii-agent-core"),
-        adapter_path: Some("Body/S/S0/epi-cli/src/gate/epii.rs"),
+        adapter_path: Some("Body/S/S0/epi-cli/src/gate/gnostic.rs"),
         extraction_task: Some("13.T7"),
         allowed_s0_responsibilities: &[
             "dispatch entrypoint only — S5 DTO construction belongs in epii-agent-core",
@@ -537,6 +537,21 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         extraction_task: None,
         allowed_s0_responsibilities: &[
             "dispatch pass-through; gnosis governance owns law",
+        ],
+    },
+    CoordinateParityRecord {
+        canonical_method: "s5'.gnostic.*",
+        owner: "S5'",
+        status: CoordinateParityStatus::Native,
+        live_gateway_method: Some("s5'.gnostic.ingest / s5'.gnostic.query / s5'.gnostic.notebook / s5'.gnostic.status / s5'.gnostic.models"),
+        cli_mirror: Some("epi techne gnosis ingest-gnostic/query-gnostic + epi-gnostic status"),
+        body_path: "Body/S/S5/epi-gnostic",
+        test_evidence: &["gate_epii_agent_access.rs", "gateway-contract/src/tests.rs"],
+        authority_path: Some("Body/S/S5/epi-gnostic"),
+        adapter_path: Some("Body/S/S0/epi-cli/src/gate/gnostic.rs"),
+        extraction_task: Some("06.T6.1"),
+        allowed_s0_responsibilities: &[
+            "thin gateway adapter over production epi-gnostic CLI and existing gnosis notebook store",
         ],
     },
     CoordinateParityRecord {
@@ -606,14 +621,16 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "wizard.cancel"
         | "wizard.status"
         | "s0.command.exec"
-        | "s0.command.completion" => Some("s0.*"),
+        | "s0.command.completion"
+        | "s0'.verifier.check_state"
+        | "s0'.verifier.emit_question" => Some("s0.*"),
         "s2.graph.query"
         | "s2.graph.node"
         | "s2.graph.traverse"
         | "s2.graph.harmonic_relations.materialize"
         | "s2.graph.pointer_web.compute"
         | "s2.graph.pointer_web.refresh" => Some("s2.graph.*"),
-        "s2.graph.kernel_resonance.record" => Some("s2.graph.*"),
+        "s2.graph.kernel_resonance.record" | "s2.parashaktiCorrespondences" => Some("s2.graph.*"),
         "s2'.coordinate.resolve"
         | "s2'.coordinate.cypher"
         | "s2'.coordinate.ingest"
@@ -715,6 +732,11 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.epii.pratibimba.status"
         | "s5'.epii.kairos.context" => Some("s5'.epii.*"),
         "s5'.gnosis.context.retrieve" => Some("s5'.gnosis.*"),
+        "s5'.gnostic.ingest"
+        | "s5'.gnostic.query"
+        | "s5'.gnostic.notebook"
+        | "s5'.gnostic.status"
+        | "s5'.gnostic.models" => Some("s5'.gnostic.*"),
         "node.pair.request" | "node.pair.list" | "node.pair.approve" | "node.pair.reject"
         | "node.pair.verify" => Some("s4.agent.*"),
         _ => None,

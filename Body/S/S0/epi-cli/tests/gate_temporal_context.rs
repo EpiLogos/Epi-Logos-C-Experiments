@@ -3,6 +3,9 @@ mod support;
 use std::fs;
 
 use epi_logos::gate::sessions::{SessionPatch, SessionStore};
+use epi_s3_gateway_contract::{
+    TerminalBinding, TerminalCaptureMode, TerminalCapturePolicy, TerminalLease, TerminalStatus,
+};
 use redis::AsyncCommands;
 use serde_json::json;
 use support::{spawn_epi, temp_env, TestEnv, TestGatewayClient};
@@ -175,6 +178,82 @@ async fn gateway_rpc_temporal_context_is_available_to_agent_surfaces() {
     assert_eq!(value["kairos"]["available"], true);
     assert_eq!(value["pratibimba"]["stewardshipOwner"], "S5'");
     assert_safe_kernel_projection(&value);
+}
+
+#[test]
+fn temporal_context_exposes_terminal_metadata_and_redis_payload_without_pane_body() {
+    let (env, _, session_id) = env_with_now_file();
+    let _guard = env.apply_to_process();
+    let gate_root = env.home.join(".epi").join("gate");
+    let store = SessionStore::new(&gate_root).unwrap();
+    store
+        .patch(
+            "agent:main:main",
+            SessionPatch {
+                terminal_binding: Some(Some(TerminalBinding {
+                    terminal_identifier: Some("tmux:session-temporal-main:%7".to_owned()),
+                    session_anchor: Some("session-temporal-main".to_owned()),
+                    tmux_pane_id: Some("%7".to_owned()),
+                    attached_session_key: Some("agent:main:main".to_owned()),
+                    terminal_status: Some(TerminalStatus::Attached),
+                    lease: Some(TerminalLease {
+                        lease_owner: Some("pi.anima".to_owned()),
+                        lease_purpose: Some("interactive-session".to_owned()),
+                        lease_expires_at_ms: Some(1_785_000_000_000),
+                    }),
+                    capture_policy: Some(TerminalCapturePolicy {
+                        mode: TerminalCaptureMode::Stream,
+                        max_lines: Some(40),
+                        redaction_policy: Some("test-redactor".to_owned()),
+                    }),
+                })),
+                diagnostics: Some(vec![json!({
+                    "message": "terminal body fixture must stay out of Redis",
+                    "rawPaneBody": "SECRET_PANE_BODY_SHOULD_NOT_BE_CACHED"
+                })]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+
+    let context =
+        epi_logos::gate::temporal::context_value(&gate_root, &store, "agent:main:main", "anima")
+            .unwrap();
+    let metadata_key =
+        format!("cache:hot:s3:gateway:temporal:session:{session_id}:terminal:metadata");
+    let capture_handle =
+        format!("s3:gateway:temporal:session:{session_id}:terminal:capture-handle");
+
+    assert_eq!(context["terminal"]["terminalBacked"], true);
+    assert_eq!(context["terminal"]["provider"], "tmux");
+    assert_eq!(context["terminal"]["status"], "attached");
+    assert_eq!(context["terminal"]["redisMetadataKey"], metadata_key);
+    assert_eq!(context["terminal"]["captureHandleRef"], capture_handle);
+    assert_eq!(context["redis"]["terminalMetadataKey"], metadata_key);
+    assert_eq!(context["redis"]["terminalCaptureHandleRef"], capture_handle);
+    assert_eq!(context["terminal"]["rawPaneBodyIncluded"], false);
+
+    let redis_payload = epi_logos::gate::temporal::terminal_redis_payload_from_context(&context)
+        .expect("terminal metadata should produce a Redis payload");
+    assert_eq!(redis_payload["sessionKey"], "agent:main:main");
+    assert_eq!(redis_payload["provider"], "tmux");
+    assert_eq!(redis_payload["status"], "attached");
+    assert_eq!(
+        redis_payload["leaseExpiresAtMs"].as_u64(),
+        Some(1_785_000_000_000)
+    );
+    assert_eq!(redis_payload["captureHandleRef"], capture_handle);
+    assert_eq!(redis_payload["rawPaneBodyStored"], false);
+    assert!(
+        redis_payload.get("tmuxPaneId").is_none(),
+        "Redis terminal metadata must not store direct pane authority"
+    );
+    assert!(
+        !redis_payload
+            .to_string()
+            .contains("SECRET_PANE_BODY_SHOULD_NOT_BE_CACHED"),
+        "Redis terminal metadata must never contain raw pane bodies"
+    );
 }
 
 #[tokio::test]

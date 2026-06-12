@@ -86,7 +86,75 @@ M0-4' and M0-5' are **bridged routes only**: M0' emits an `epi-logos://ide/{exte
 
 M0' is the graph-facing [[Anuttara]] surface. At the node level, Anuttara is a pre-mathematical language before formal inference: every canonical coordinate node may carry a `symbol`, `formulation_type`, and/or `complete_formulation` projection naming how the node speaks before it becomes a theorem, operation, UI surface, or agent task. These fields are lifted into formal graph semantics by the [[S2]] [[neosemantics]] / [[OWL]] bridge, not by renderer-local interpretation (per [[m4-prime-psychoid-cymatic-field-engine]] §18.5 and §19.1).
 
+**Canonical-vs-alias note (DR-M0-2):** the [[S2]] normalized schema contract treats `c_1_*` Anuttara export-backed properties as canonical. For M0' language fields, `c_1_symbol`, `c_1_formulation_type`, and `c_1_complete_formulation` are the source-of-record graph property names; unprefixed `symbol`, `formulation_type`, and `complete_formulation` are documented aliases/projections only. Renderers may display the unprefixed labels, but provenance, tests, and missing-field states must resolve them back to the `c_1_*` canonical fields rather than treating aliases as independent graph canon.
+
+**Image-asset handles (candidate DR-M0-4):** [[S2]] publishes Anuttara node image handles through `c_1_asset_uri` (`StringList`, public) and classifies the handle set through `c_1_asset_kind` (`String`, public). M0' renders these as asset handles with explicit `review_pending` provenance until user final-validation promotes DR-M0-4; the renderer must not infer, generate, or backfill asset URIs when the S2 payload is absent.
+
 The graph view reads these properties; it does not invent them. Missing `symbol`, `formulation_type`, or `complete_formulation` is a readiness/provenance state, not a reason for the client to synthesize placeholders. Per [[anuttara-language-map]], root [[M0]] and [[M0']] carrying no symbol is canonical absence, not extraction failure.
+
+## The M# / # Relational Grammars and the Tao Binary
+
+M0-4 contains two **6-fold relational grammars** — overlays on one structure, both rooted in the Non-Dual Binary `(0/1)` and reconverging at their apex. They are the M0-level source of the [[PASU]] / BeingPattern `perspective_role` and `nara_family_role` (per Track 10.PASU); the renderer reads them, it does not invent them.
+
+**M# — the Mahāmāya person grammar** (`M0-4.4.0-(4.4/5)`, six persons derived as arithmetic): `M0 = (0/1) = I`, `M1 = (1+1=2) = You`, `M2 = (0-3) = You-and-I`, `M3 = (1+2=3) = They`, `M4 = (4+0) = We`, `M5 = (0/1/4/5) = We-I`. The M-index **equals** the coordinate-position throughout (0..5): `M0 = I` is *both* the `(0/1)` ground and the first person.
+
+**# — the Nara kinship grammar** (`M0-(4.5/0)`): the family by **chiral coordinate** (Law-1 chirality — dominance is read off the mark placement, never additive `#+n`):
+
+| coord-pos | #-index | value | coordinate | role | polarity × dominance |
+|---|---|---|---|---|---|
+| 0 | `##` | — | `0/1` | Primordial Matrix | the Yin-Yang ground (≡ M# "I") |
+| 1 | `#0` | 1 | `1/1-` | Daughter | sub-dominant Yin (child) |
+| 2 | `#1` | 2 | `2-/2` | Father | dominant Yang (parent) |
+| 3 | `#2` | 3 | `3/3-` | Son | sub-dominant Yang (child) |
+| 4 | `#3` | 4 | `4./4` | Mother | integrative-dominant Yin (parent) |
+| 5 | `#4` | 5 | `5-/5` | Tao | dominant synthesis |
+
+**The system is how numbers relate.** Each # node carries three inter-defining numbers — coordinate-position (`0..5`), `#`-index (`##` then `0..4`), and value (`1..5`). The `#`-index is **offset by 1 from the value** because `##` occupies coordinate-position 0 as the *matrix*: the family is `#`-indexed `0..4` while its values run `1..5`. So **Tao = coord-pos 5 = `#`-index 4 = value 5** (`#4` relates to 5 via the `5-/5` position), and the wholeness check `#-index 4 + value 5 = 9` reads across two of the systems. M# has no such offset; the `##`-takes-slot-0 shift is the only structural difference between the two grammars. Dash-on-numerator = dominant, dash-on-denominator = subdominant, dot = integrative; **polarity sets gender, dominance sets generation** (the two dominant poles are the parents, the two subdominant the children). Both grammars reconverge at the apex `We-I ≡ Tao` (coord-pos 5), which the `(4.5/0)` `(5/0)` Möbius returns to the shared `(0/1)` ground.
+
+**The two tao elements and Tao = the codon charge-evaluation.** The binary read both ways gives the two tao elements: `R#` = "Yin-yang `0/1`" and `##` = "Yang-yin `1/0`" (`##` is also the kinship matrix above). Valued by the classic coin method **Yin = 2, Yang = 3**, they *construct* the four nucleotide I-Ching values (yang-count over a 4-slot frame `+ 5`):
+
+```
+A = Old Yin   = 3×R#      (3 R, 1 #)  →  RRR# / RR#R / R#RR / #RRR  =  6   (Red)
+T = Old Yang  = 3×##      (0 R, 4 #)  →  ####                       =  9   (Blue)
+C = Young Yin = 2×R# + ## (2 R, 2 #)  →  R#R# / RR## / #RR# / ##RR / #R#R = 7 (Green)
+G = Young Yang= R# + 2×## (1 R, 3 #)  →  R### / #R## / ##R# / ###R  =  8   (Yellow)
+```
+
+These reproduce the canonical `NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8}` ([[m3]] `m3.h:32-44`). **Tao (`5-/5`) ≡ the codon charge-evaluation** (`m3_compute_charges`): the kinship-grammar apex *is* the act that reads the `0/1 ↔ 1/0` binary into the genetic charges `pp/nn/np/pn`. The binary computation system emerges from the `0/1` and `1/0` of the tao elements; the same `R#`/`##` arithmetic generates the M# person grammar. The four charges are the four [[Parashakti]]-vibrational permutations (X#) and the four elements (Earth/Fire/Water/Air) under one quaternion — see Track 37 §III.6. *(Nucleotide→element binding is **code-canonical** per [[m3]] `m3.h:70-73` — Golden-Dawn suits A=Water/T=Fire/C=Earth/G=Air, yin→Water/yang→Fire; DR-37-5 resolved 2026-06-12. The A=Red/T=Blue/C=Green/G=Yellow colours are rendering-only.)*
+
+## Anuttara Symbolic-Coordinate-String EBNF
+
+Per DR-MP-3, M0' verifier emission is question-forming rather than pass/fail: a symbolic-coordinate string names the violated or unwitnessed coordinate and leaves the next move as an interrogative. The canonical surface grammar is:
+
+```ebnf
+coordinate-string  := "#" namespace ("-" coordinate)+ ("-" archetype)? ("-" state-marker)? "?"
+namespace          := r-namespace  // Archetype-7 R-factor theory in full (Tranche 01.T1.12)
+                    | "L" digit  // L-lens (L0..L5 + L0'..L5')
+                    | "M" digit  // M-branch (M0..M5)
+                    | "C" digit  // C-family (C0..C5)
+r-namespace        := "R" r-digit          // act-factor Rn (operator; R0..R5 = Srishti..Samavesa)
+                    | "n" "R" r-digit       // chiral enantiomer nR (act witnessed as Presence @)
+                    | "#" "#"               // ## Truth   (principle triad)
+                    | "#" "R"               // #R Light   (principle triad)
+                    | "R" "#"               // R# Life    (principle triad)
+r-digit            := "0" | "1" | "2" | "3" | "4" | "5"  // R5 (Samavesa) is positionless = (##) bare
+coordinate         := ql-coordinate | dotted-coordinate | operator-coordinate
+ql-coordinate      := coordinate-atom ("/" coordinate-atom)*  // QL coordinate fragments
+coordinate-atom    := digit+ | letter+
+dotted-coordinate  := digit+ ("." digit+)+  // legacy nested M-coordinate fragments
+operator-coordinate := ("O" | "X" | "N" | "#")+  // operator-cycle fragments
+archetype          := "T" digit+            // Archetype N (T7 = Ananda-Tandava, T9 = Paramesvara, etc.)
+state-marker       := "pending" | "unwitnessed" | "drift" | "incoherent" | "violated"
+```
+
+The examples below are binding corpus members, not illustrative placeholders:
+
+- `#R0-0/1/A-T7-pending?` — "Archetype-7 Divine-Action at TCT position, why does trajectory not witness this?"
+- `#L2-0/1/2-T9-unwitnessed?` — "Archetype-9 Wholeness at Logical-lens triadic position, where did virtue go unwitnessed?"
+- `#M4-4.4.4.4-drift?` — "Mental-pole personal-position-4.4.4.4 drift detected, what shifted?"
+- `#R3-O#X#N#-violated?` — "Tirodhana-veiling violated the operator-cycle integrity, what produced the break?"
+
+The LLM-Nara `anuttara-symbolic-parse` skill from Tranche 5.21 is the canonical parser for these strings. Round-trip through that parser is the training signal per DR-MP-3: emitted strings must preserve namespace, coordinate fragments, optional archetype, optional state marker, and the final question-form marker.
 
 ## The 0-Side [[Mahāmāyā]] Graph View
 
@@ -120,7 +188,7 @@ Per [[m5-prime-system-shape-and-tauri-ide-canon]] §1.2 and §4.2, the M0 graph 
 
 - [[alpha_quaternionic_integration_across_M_stack]] contains the requested §0.1, but no §18 heading in the current file; no alpha §18 delta has been silently applied.
 - [[alpha_quaternionic_integration_across_M_stack]] §7.1 says "No structural change" for M0'-SPEC, while [[m4-prime-psychoid-cymatic-field-engine]] §19.1 requires M0'-SPEC additions. This spec treats the additions as rendering/service-consumption law, not as a change to M0 topology or ownership.
-- Source naming is not yet uniform: [[anuttara-language-map]] exposes `c_1_symbol` / `c_1_complete_formulation`, while graph-view specs speak of `symbol` / `formulation_type`. Until S2 publishes the normalized schema contract, M0' must surface provenance and missing-field states explicitly.
+- Source naming canon is resolved by DR-M0-2: [[S2]] publishes `c_1_*` as canonical (`c_1_symbol`, `c_1_formulation_type`, `c_1_complete_formulation`), while unprefixed `symbol`, `formulation_type`, and `complete_formulation` remain documented aliases/projections only. M0' must surface provenance and missing-field states explicitly.
 - The C kernel and S2 graph relation counts differ by design: the kernel declares the 65 core relations while Neo4j may carry broader Anuttara relation sets. M0' treats mismatches in the core-65 audit as readiness blockers, and treats broader relation deltas as S2/M5 review questions.
 
 ## Required [[MathemeHarmonicProfile]] Fields

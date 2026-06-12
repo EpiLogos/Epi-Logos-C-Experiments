@@ -26,7 +26,9 @@ import {
     validateEvidenceEnvelopeForRange
 } from '@pratibimba/integrated-composition';
 import { CosmicEnginePanes } from './cosmic-engine-panes';
-import { PLUGIN_ID, CONTRIBUTOR_IDS } from '../common';
+import { ThirdSpandaCompositionOverlay } from './third-spanda-overlay';
+import { M2PrimeMeaningPacket } from '@pratibimba/m2-parashakti';
+import { PLUGIN_ID, CONTRIBUTOR_IDS, buildRoutedM2PacketFromBridge } from '../common';
 
 @injectable()
 export class PluginIntegrated123Widget extends ReactWidget {
@@ -41,6 +43,8 @@ export class PluginIntegrated123Widget extends ReactWidget {
     );
     protected contributorRecords: readonly IntegratedContributorRecord[] = [];
     protected currentProfile: MathemeHarmonicProfileBoundary | null = null;
+    protected routedM2Packet: M2PrimeMeaningPacket | null = null;
+    protected routedM2PacketRequest = 0;
     protected subscriptions: Disposable[] = [];
 
     /**
@@ -65,6 +69,7 @@ export class PluginIntegrated123Widget extends ReactWidget {
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
                 this.currentProfile = profile;
+                void this.refreshRoutedM2Packet(profile);
                 this.update();
             })
         );
@@ -84,6 +89,37 @@ export class PluginIntegrated123Widget extends ReactWidget {
 
     setLiveBridge(bridge: KernelBridgeAPI | null): void {
         this.liveBridge = bridge;
+    }
+
+    protected async refreshRoutedM2Packet(
+        profile: MathemeHarmonicProfileBoundary | null
+    ): Promise<void> {
+        const requestId = ++this.routedM2PacketRequest;
+        if (!profile) {
+            this.routedM2Packet = null;
+            this.update();
+            return;
+        }
+        const snapshot = this.bridge.currentSnapshot();
+        try {
+            const packet = await buildRoutedM2PacketFromBridge({
+                bridge: this.bridge,
+                profile,
+                readiness: snapshot.readiness,
+                context: snapshot.context,
+                subject: 'routing-event',
+                emittedAt: Date.now()
+            });
+            if (requestId === this.routedM2PacketRequest) {
+                this.routedM2Packet = packet;
+                this.update();
+            }
+        } catch {
+            if (requestId === this.routedM2PacketRequest) {
+                this.routedM2Packet = null;
+                this.update();
+            }
+        }
     }
 
     protected async handleOpenInReview(
@@ -145,6 +181,7 @@ export class PluginIntegrated123Widget extends ReactWidget {
             <div className="integrated-widget-root">
                 <CosmicEnginePanes
                     profile={this.currentProfile}
+                    routedM2Packet={this.routedM2Packet}
                     m3CenterStage={panes.m3CenterStage}
                     m2LeftStage={panes.m2LeftStage}
                     m1RightInspector={panes.m1RightInspector}
@@ -152,6 +189,7 @@ export class PluginIntegrated123Widget extends ReactWidget {
                         void this.handleOpenInReview(producerId)
                     }
                 />
+                <ThirdSpandaCompositionOverlay />
             </div>
         );
     }

@@ -43,3 +43,49 @@ test('human-required + HUMAN actor: all decisions pass', () => {
         assert.equal(r.ok, true, `${decision} should pass when actor is human`);
     }
 });
+
+test('recursive self-review blocks Sophia approval even when humanRequired is false', () => {
+    const r = enforceHumanGate({
+        decision: 'approve',
+        humanRequired: false,
+        actorIsHuman: false,
+        recursiveSelfReview: true,
+        actor: 'sophia'
+    });
+    assert.equal(r.ok, false);
+});
+
+test('recursive self-review requires human final-validation for Sophia/Anima/Pi/Aletheia', () => {
+    for (const actor of ['sophia', 'anima', 'pi', 'aletheia']) {
+        const blocked = enforceHumanGate({
+            decision: 'approve',
+            humanRequired: false,
+            actorIsHuman: false,
+            recursiveSelfReview: true,
+            actor
+        });
+        assert.equal(blocked.ok, false, `${actor} recursive self-review approval must block`);
+        if (!blocked.ok) {
+            assert.match(blocked.reason, /recursive self-review/);
+            assert.match(blocked.reason, /user final-validation/);
+        }
+
+        const human = enforceHumanGate({
+            decision: 'approve',
+            humanRequired: false,
+            actorIsHuman: true,
+            recursiveSelfReview: true,
+            actor
+        });
+        assert.equal(human.ok, true, `${actor} recursive self-review passes after human validation`);
+
+        const defer = enforceHumanGate({
+            decision: 'defer',
+            humanRequired: false,
+            actorIsHuman: false,
+            recursiveSelfReview: true,
+            actor
+        });
+        assert.equal(defer.ok, true, `${actor} recursive self-review defer remains allowed`);
+    }
+});

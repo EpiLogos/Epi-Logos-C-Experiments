@@ -1,6 +1,11 @@
 import * as React from 'react';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
+import { CommandRegistry } from '@theia/core/lib/common';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
+import {
+    PrivacyDropFeed,
+    type PrivacyDropAggregate
+} from '@pratibimba/ide-shell-m0-m5/lib/browser/services/privacy-drop-feed';
 import { OMNIPANEL_WIDGET_ID, OMNIPANEL_WIDGET_LABEL } from '../common';
 import { OmniPanel } from './components/OmniPanel';
 
@@ -30,7 +35,19 @@ export class OmniPanelWidget extends ReactWidget {
     static readonly ID = OMNIPANEL_WIDGET_ID;
     static readonly LABEL = OMNIPANEL_WIDGET_LABEL;
 
+    @inject(CommandRegistry)
+    protected readonly commands!: CommandRegistry;
+
+    @inject(PrivacyDropFeed)
+    protected readonly privacyDropFeed!: PrivacyDropFeed;
+
     protected omniState: 'hidden' | 'minimal' | 'fullscreen' = 'fullscreen';
+    protected privacyDropAggregate: PrivacyDropAggregate = {
+        byWidget: {},
+        byClass: {},
+        total: 0
+    };
+    protected privacyDropSubscription: { dispose(): void } | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -39,7 +56,18 @@ export class OmniPanelWidget extends ReactWidget {
         this.title.caption = OmniPanelWidget.LABEL;
         this.title.closable = true;
         this.addClass('pratibimba-omnipanel');
+        this.privacyDropAggregate = this.privacyDropFeed.aggregate;
+        this.privacyDropSubscription = this.privacyDropFeed.onDrop(() => {
+            this.privacyDropAggregate = this.privacyDropFeed.aggregate;
+            this.update();
+        });
         this.update();
+    }
+
+    override dispose(): void {
+        this.privacyDropSubscription?.dispose();
+        this.privacyDropSubscription = null;
+        super.dispose();
     }
 
     protected handleClose = (): void => {
@@ -50,9 +78,21 @@ export class OmniPanelWidget extends ReactWidget {
         this.update();
     };
 
+    protected handleOpenSource = (coordinate: string, sourceAnchor: string): Promise<unknown> => {
+        return this.commands.executeCommand('backend-studio.openSource', {
+            coordinate,
+            sourceAnchor
+        });
+    };
+
     protected render(): React.ReactNode {
         return (
-            <OmniPanel state={this.omniState} onClose={this.handleClose} />
+            <OmniPanel
+                state={this.omniState}
+                onClose={this.handleClose}
+                onOpenSource={this.handleOpenSource}
+                privacyDropAggregate={this.privacyDropAggregate}
+            />
         );
     }
 }

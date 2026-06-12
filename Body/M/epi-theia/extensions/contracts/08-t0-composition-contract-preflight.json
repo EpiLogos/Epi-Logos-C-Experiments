@@ -141,6 +141,14 @@
       "explicit_out_of_scope_for_08": ["per-extension UI internals", "single-extension command palette entries", "individual readiness micro-states"]
     },
     "plugin-integrated-4-5-0": {
+      "editorAreaComposition": {
+        "rule": "Per Track 15 §personal-side + CR 15.4: the personal-side editor area is ONE editor-area composition with three composition-member slots, NOT three side-by-side panels. Slot widgets mount inside the shared editor-area surface (compositionMode=editor-area-inline); juxtaposition is forbidden.",
+        "slots": [
+          {"id": "m4.nara.journal", "role": "journal", "position": "left", "contributor": "m4-nara", "added_by": "Track 15"},
+          {"id": "m0.anuttara.cymaticField", "role": "personal-cymatic-field", "position": "center", "contributor": "m0-anuttara", "added_by": "Track 15"},
+          {"id": "m5.epii.recognitionLayer", "role": "mahamaya-recognition-layer", "position": "right", "contributor": "m5-epii", "added_by": "26.11", "sources": "WC-M5-11", "gates": "10.M5", "cr": "15.4", "file": "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/recognition-layer-slot.tsx", "consumes": ["CanonRecognitionAnchor", "Q_composed", "codon_rotation_projection@personal-scale", "KleinV4Square@26.1"], "crossLinks": ["26.13", "19.7"]}
+        ]
+      },
       "needs": [
         {"field": "MathemeHarmonicProfile.{public-current fields only}", "owner_track": "01", "fallback_readiness": "profile_missing_field"},
         {"field": "M0 prior-ground graph (Anuttara graph view, namespace=bimba)", "owner_track": "02 + 07.M0", "fallback_readiness": "s2_graph_blocked"},

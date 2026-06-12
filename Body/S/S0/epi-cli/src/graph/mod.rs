@@ -1,6 +1,8 @@
 use clap::{Subcommand, ValueEnum};
 use neo4rs::query;
 
+use portal_core::{E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs};
+
 pub mod alignment_validator;
 pub mod analyse;
 pub mod anuttara;
@@ -960,8 +962,9 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                     [1.0, 0.0, 0.0, 0.0],
                     [0.5, 0.5, 0.5, 0.5],
                     Some(&analysis.resonance_vector),
-                    None,
-                    0.0,
+                    &E4PersonalInputs::default(),
+                    &E5HarmonicInputs::default(),
+                    &E6VerifierInputs::default(),
                 );
                 let envelope =
                     epi_kernel_contract::KernelTickEnvelope::from_kernel_projection(1, &projection)
@@ -1020,8 +1023,9 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                     [1.0, 0.0, 0.0, 0.0],
                     [0.5, 0.5, 0.5, 0.5],
                     Some(&analysis.resonance_vector),
-                    None,
-                    0.0,
+                    &E4PersonalInputs::default(),
+                    &E5HarmonicInputs::default(),
+                    &E6VerifierInputs::default(),
                 );
                 let envelope =
                     epi_kernel_contract::KernelTickEnvelope::from_kernel_projection(2, &projection)

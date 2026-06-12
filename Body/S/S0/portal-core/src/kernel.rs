@@ -5,6 +5,7 @@ use crate::codon_rotation_projection::{
     codon_charge_quaternion, codon_rotation_from_lens_mode, CodonRotationProjection,
     MathemeLensMode,
 };
+use crate::events::KleinFlipEvent;
 use crate::mahamaya::MahamayaCodecProjection;
 use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
@@ -105,9 +106,31 @@ impl<'de> Deserialize<'de> for ResonanceVector72 {
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 pub struct EnergyDecomposition {
     pub bimba_pratibimba_energy: f32,
-    pub lens_energy: f32,
-    pub r_energy: f32,
+    pub e_4_personal_energy: f32,
+    pub e_5_harmonic_energy: f32,
+    pub e_6_verifier_energy: f32,
     pub total_energy: f32,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct E4PersonalInputs {
+    pub pasu_handle: Option<String>,
+    pub kairos_handle: Option<String>,
+    pub nara_lora_checkpoint_ref: Option<String>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct E5HarmonicInputs {
+    pub channel_set: Vec<String>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct E6VerifierInputs {
+    pub invariant_set: Vec<String>,
+    pub severity_weights_handle: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
@@ -164,15 +187,25 @@ impl KernelProjection {
         q_b: [f32; 4],
         q_p: [f32; 4],
         observed: Option<&ResonanceVector72>,
-        target: Option<&ResonanceVector72>,
-        r_energy: f32,
+        e_4_inputs: &E4PersonalInputs,
+        e_5_inputs: &E5HarmonicInputs,
+        e_6_inputs: &E6VerifierInputs,
     ) -> Self {
+        let tick = kernel_tick_from_epogdoon(cycle, tick12);
         let bioquaternion = BioQuaternionState::new(q_b, q_p);
+        #[cfg(feature = "resonance_ebm_runtime")]
+        let bioquaternion = {
+            let outcome = kernel_resonance_ebm_runtime_step(
+                &bioquaternion,
+                tick,
+                kernel_default_resonance_ebm_runtime(),
+            );
+            outcome.updated_state
+        };
         let resonance_square_emphasis = observed
             .map(kernel_resonance_square_emphasis)
             .unwrap_or([0.0; TRITONE_SQUARES]);
-        let energy = kernel_energy_evaluate(&bioquaternion, observed, target, r_energy);
-        let tick = kernel_tick_from_epogdoon(cycle, tick12);
+        let energy = kernel_energy_evaluate(&bioquaternion, e_4_inputs, e_5_inputs, e_6_inputs);
         Self {
             tick,
             harmonic_pulse: HarmonicPulse::from_tick(tick),
@@ -185,14 +218,18 @@ impl KernelProjection {
 
 impl Default for KernelProjection {
     fn default() -> Self {
+        let e_4_inputs = E4PersonalInputs::default();
+        let e_5_inputs = E5HarmonicInputs::default();
+        let e_6_inputs = E6VerifierInputs::default();
         Self::from_clock_state(
             0,
             0,
             [1.0, 0.0, 0.0, 0.0],
             [1.0, 0.0, 0.0, 0.0],
             None,
-            None,
-            0.0,
+            &e_4_inputs,
+            &e_5_inputs,
+            &e_6_inputs,
         )
     }
 }
@@ -235,14 +272,18 @@ impl KernelTemporalProjection {
         let total_seconds = timestamp_ms / 1_000;
         let cycle = total_seconds / 12;
         let sub_tick = (total_seconds % 12) as u8;
+        let e_4_inputs = E4PersonalInputs::default();
+        let e_5_inputs = E5HarmonicInputs::default();
+        let e_6_inputs = E6VerifierInputs::default();
         let projection = KernelProjection::from_clock_state(
             cycle,
             sub_tick,
             [1.0, 0.0, 0.0, 0.0],
             [1.0, 0.0, 0.0, 0.0],
             None,
-            None,
-            0.0,
+            &e_4_inputs,
+            &e_5_inputs,
+            &e_6_inputs,
         );
         Self::from_kernel_projection(generation, &projection)
     }
@@ -341,6 +382,27 @@ pub struct MathemeFutureAnchor {
     pub provenance: String,
 }
 
+impl MathemeFutureAnchor {
+    fn s2_coordinate_anchor(coordinate: &str) -> Self {
+        Self {
+            coordinate: coordinate.to_owned(),
+            readiness: "cycle-2-s2-coordinate-anchor".to_owned(),
+            provenance: "Body/S/S2/graph-services/src/pointers.rs::kernel_coordinate_anchor_for"
+                .to_owned(),
+        }
+    }
+
+    fn s3_profile_observation_anchor(coordinate: &str) -> Self {
+        Self {
+            coordinate: coordinate.to_owned(),
+            readiness: "cycle-2-s3-profile-observation-anchor".to_owned(),
+            provenance:
+                "Body/S/S0/portal-core/src/events/kernel_events.rs::KernelProfileObservationEvent::from_profile"
+                    .to_owned(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MathemeHarmonicProfile {
@@ -361,6 +423,10 @@ pub struct MathemeHarmonicProfile {
     pub helix: String,
     pub ratio_role: String,
     pub lens_mode: MathemeLensMode,
+    #[serde(default)]
+    pub klein_flip: Option<KleinFlipEvent>,
+    #[serde(default)]
+    pub ananda_vortex: AnandaVortexProjection,
     pub chromatic: MathemeChromaticProfile,
     pub diatonic: Option<MathemeDiatonicContext>,
     pub resonance72: MathemeResonance72Projection,
@@ -411,6 +477,7 @@ impl MathemeHarmonicProfile {
         let q_cosmic = codon_charge_quaternion(codon_rotation_projection.codon_id);
         let vimarsha_reading = vimarsha_read_profile(tick, lens_mode);
         let absolute_tick = tick.cycle * 12 + tick12 as u64;
+        let source_coordinate = anchor_coordinate_for_profile(position, helix);
         let binary = MathemeBinaryProjection::from_clock(
             degree360,
             position,
@@ -437,6 +504,8 @@ impl MathemeHarmonicProfile {
             helix: helix.to_owned(),
             ratio_role: ratio_role_for_sub_tick(tick12).to_owned(),
             lens_mode,
+            klein_flip: vimarsha_reading.klein_flip,
+            ananda_vortex: AnandaVortexProjection::from_tick(tick12, position, degree720),
             chromatic: MathemeChromaticProfile::from_tick(tick12, position, pitch_class),
             diatonic: diatonic.clone(),
             resonance72,
@@ -461,8 +530,12 @@ impl MathemeHarmonicProfile {
             context_frames: MathemeContextFrameWebProjection::from_diatonic(diatonic.as_ref()),
             harmonic_grammar: MathemeHarmonicGrammarProjection::from_tick(tick12, position),
             vak_address: None,
-            s2_anchor: None,
-            s3_anchor: None,
+            s2_anchor: Some(MathemeFutureAnchor::s2_coordinate_anchor(
+                &source_coordinate,
+            )),
+            s3_anchor: Some(MathemeFutureAnchor::s3_profile_observation_anchor(
+                &source_coordinate,
+            )),
         }
     }
 
@@ -490,6 +563,223 @@ impl MathemeHarmonicProfile {
         profile.conjugate_form_character = resonance.conjugate_form_character;
         profile
     }
+}
+
+fn anchor_coordinate_for_profile(position: u8, helix: &str) -> String {
+    let prime = if helix == "pratibimba" { "'" } else { "" };
+    format!("M{position}{prime}")
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AnandaVortexProjection {
+    pub active_matrix_op: AnandaMatrixOp,
+    pub active_cell: (u8, u8),
+    pub active_cell_value: AnandaVortexCell,
+    pub dr_ring_phase: DrRingPhase,
+    pub cl42_signature_at_position: i8,
+    pub ring_quaternion: [f32; 4],
+    pub helix_sheet: u8,
+    pub klein_flip_at_this_tick: bool,
+}
+
+impl Default for AnandaVortexProjection {
+    fn default() -> Self {
+        Self::from_tick(0, 0, 0)
+    }
+}
+
+impl AnandaVortexProjection {
+    pub fn from_tick(tick12: u8, position6: u8, degree720: u16) -> Self {
+        let row = tick12 % 12;
+        let position = position6 % 6;
+        let active_matrix_op = AnandaMatrixOp::from_position(position);
+        Self {
+            active_matrix_op,
+            active_cell: (row, position),
+            active_cell_value: AnandaVortexCell::from_address(active_matrix_op, row, position),
+            dr_ring_phase: DrRingPhase::from_tick12(row),
+            cl42_signature_at_position: cl42_signature(position),
+            ring_quaternion: ring_quaternion(row),
+            helix_sheet: if degree720 >= 360 { 1 } else { 0 },
+            klein_flip_at_this_tick: row == 5,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AnandaVortexCell {
+    pub family: AnandaMatrixOp,
+    pub row_k: u8,
+    pub position_p: u8,
+    pub raw_value: Option<i16>,
+    pub raw_bimba: i16,
+    pub raw_pratibimba: i16,
+    pub raw_sum: i16,
+    pub raw_delta: i8,
+    pub dr_value: Option<u8>,
+    pub dr_bimba: u8,
+    pub dr_pratibimba: u8,
+    pub dr_sum: u8,
+    pub rule_value: Option<String>,
+    pub skeleton_event: Option<AnandaSkeletonEvent>,
+}
+
+impl AnandaVortexCell {
+    pub fn from_address(family: AnandaMatrixOp, row_k: u8, position_p: u8) -> Self {
+        let row = (row_k % 12) as i16;
+        let position = (position_p % 12) as i16;
+        let raw_bimba = row * position;
+        let raw_pratibimba = raw_bimba + 1;
+        let raw_sum = raw_bimba + raw_pratibimba;
+        let raw_delta = 1;
+        let dr_bimba = digit_root(raw_bimba);
+        let dr_pratibimba = digit_root(raw_pratibimba);
+        let dr_sum = digit_root(raw_sum);
+        let (raw_value, dr_value, rule_value) = match family {
+            AnandaMatrixOp::Bimba => (Some(raw_bimba), Some(dr_bimba), None),
+            AnandaMatrixOp::Pratibimba => (Some(raw_pratibimba), Some(dr_pratibimba), None),
+            AnandaMatrixOp::Sum => (Some(raw_sum), Some(dr_sum), None),
+            AnandaMatrixOp::DiffA => (Some(-1), Some(9), None),
+            AnandaMatrixOp::DiffB => (Some(1), Some(1), None),
+            AnandaMatrixOp::Quintessence => (
+                None,
+                None,
+                Some(format!("{raw_bimba}/{raw_pratibimba}/{raw_sum}")),
+            ),
+        };
+
+        Self {
+            family,
+            row_k: row as u8,
+            position_p: position as u8,
+            raw_value,
+            raw_bimba,
+            raw_pratibimba,
+            raw_sum,
+            raw_delta,
+            dr_value,
+            dr_bimba,
+            dr_pratibimba,
+            dr_sum,
+            rule_value,
+            skeleton_event: ananda_skeleton_event(family, row as u8, position as u8),
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(u8)]
+pub enum AnandaSkeletonEvent {
+    Hit36 = 0,
+    Hit64 = 1,
+    Hit72 = 2,
+    Ratio64Over36 = 3,
+    Additive137 = 4,
+    IdentityReturn4Plus2 = 5,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DrRingPhase {
+    pub mahamaya_idx: u8,
+    pub parashakti_idx: u8,
+}
+
+impl DrRingPhase {
+    fn from_tick12(tick12: u8) -> Self {
+        const MAHAMAYA: [u8; 6] = [1, 2, 4, 8, 7, 5];
+        const PARASHAKTI: [u8; 6] = [3, 6, 9, 3, 6, 9];
+        let idx = (tick12 % 6) as usize;
+        Self {
+            mahamaya_idx: MAHAMAYA[idx],
+            parashakti_idx: PARASHAKTI[idx],
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+#[repr(u8)]
+pub enum AnandaMatrixOp {
+    Bimba = 0,
+    Pratibimba = 1,
+    Sum = 2,
+    DiffA = 3,
+    DiffB = 4,
+    Quintessence = 5,
+}
+
+impl AnandaMatrixOp {
+    fn from_position(position6: u8) -> Self {
+        match position6 % 6 {
+            0 => Self::Bimba,
+            1 => Self::Pratibimba,
+            2 => Self::Sum,
+            3 => Self::DiffA,
+            4 => Self::DiffB,
+            _ => Self::Quintessence,
+        }
+    }
+}
+
+fn digit_root(value: i16) -> u8 {
+    if value == 0 {
+        0
+    } else {
+        let reduced = value.abs() % 9;
+        if reduced == 0 {
+            9
+        } else {
+            reduced as u8
+        }
+    }
+}
+
+fn ananda_skeleton_event(
+    family: AnandaMatrixOp,
+    row_k: u8,
+    position_p: u8,
+) -> Option<AnandaSkeletonEvent> {
+    let raw_bimba = (row_k as i16) * (position_p as i16);
+    let raw_pratibimba = raw_bimba + 1;
+    match (family, row_k, position_p, raw_bimba, raw_pratibimba) {
+        (AnandaMatrixOp::Pratibimba, 7, 5, _, 36) => Some(AnandaSkeletonEvent::Hit36),
+        (AnandaMatrixOp::Pratibimba, 7, 9, _, 64) => Some(AnandaSkeletonEvent::Ratio64Over36),
+        (AnandaMatrixOp::Bimba, 8, 8, 64, _) => Some(AnandaSkeletonEvent::Hit64),
+        (AnandaMatrixOp::Bimba, 8, 9, 72, _) => Some(AnandaSkeletonEvent::Hit72),
+        (AnandaMatrixOp::Sum, 8, 9, 72, _) => Some(AnandaSkeletonEvent::Additive137),
+        (AnandaMatrixOp::Quintessence, 4, 2, _, _) => {
+            Some(AnandaSkeletonEvent::IdentityReturn4Plus2)
+        }
+        _ => None,
+    }
+}
+
+fn cl42_signature(position6: u8) -> i8 {
+    match position6 % 6 {
+        0 | 5 => -1,
+        _ => 1,
+    }
+}
+
+fn ring_quaternion(tick12: u8) -> [f32; 4] {
+    const RING_QUATERNION_LUT: [[f32; 4]; 12] = [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.8660254, 0.5, 0.0, 0.0],
+        [0.5, 0.8660254, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [-0.5, 0.8660254, 0.0, 0.0],
+        [-0.8660254, 0.5, 0.0, 0.0],
+        [0.8660254, -0.5, 0.0, 0.0],
+        [0.5, -0.8660254, 0.0, 0.0],
+        [0.0, -1.0, 0.0, 0.0],
+        [-0.5, -0.8660254, 0.0, 0.0],
+        [-0.8660254, -0.5, 0.0, 0.0],
+        [-1.0, 0.0, 0.0, 0.0],
+    ];
+    RING_QUATERNION_LUT[(tick12 % 12) as usize]
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -1082,12 +1372,20 @@ impl KernelTemporalPulse {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct KernelTemporalEnergy {
+    pub bimba_pratibimba_energy: String,
+    pub e_4_personal_energy: String,
+    pub e_5_harmonic_energy: String,
+    pub e_6_verifier_energy: String,
     pub total_energy: String,
 }
 
 impl KernelTemporalEnergy {
     fn from_energy(energy: EnergyDecomposition) -> Self {
         Self {
+            bimba_pratibimba_energy: format!("{:.6}", energy.bimba_pratibimba_energy),
+            e_4_personal_energy: format!("{:.6}", energy.e_4_personal_energy),
+            e_5_harmonic_energy: format!("{:.6}", energy.e_5_harmonic_energy),
+            e_6_verifier_energy: format!("{:.6}", energy.e_6_verifier_energy),
             total_energy: format!("{:.6}", energy.total_energy),
         }
     }
@@ -1208,32 +1506,29 @@ pub fn kernel_resonance_square_emphasis(vector: &ResonanceVector72) -> [f32; 3] 
 
 pub fn kernel_energy_evaluate(
     state: &BioQuaternionState,
-    observed: Option<&ResonanceVector72>,
-    target: Option<&ResonanceVector72>,
-    r_energy: f32,
+    _e_4_inputs: &E4PersonalInputs,
+    _e_5_inputs: &E5HarmonicInputs,
+    _e_6_inputs: &E6VerifierInputs,
 ) -> EnergyDecomposition {
     let bimba_pratibimba_energy = quat_distance_sq(state.q_b, state.q_p);
-    let lens_energy = match (observed, target) {
-        (Some(observed), Some(target)) => {
-            observed
-                .values
-                .iter()
-                .zip(target.values.iter())
-                .map(|(a, b)| {
-                    let delta = a - b;
-                    delta * delta
-                })
-                .sum::<f32>()
-                / RESONANCE_DIM as f32
-        }
-        _ => 0.0,
-    };
+    let e_4_personal_energy = 0.0;
+    let e_5_harmonic_energy = 0.0;
+    let e_6_verifier_energy = 0.0;
     EnergyDecomposition {
         bimba_pratibimba_energy,
-        lens_energy,
-        r_energy,
-        total_energy: bimba_pratibimba_energy + lens_energy + r_energy,
+        e_4_personal_energy,
+        e_5_harmonic_energy,
+        e_6_verifier_energy,
+        total_energy: canonical_total_energy(
+            e_4_personal_energy,
+            e_5_harmonic_energy,
+            e_6_verifier_energy,
+        ),
     }
+}
+
+fn canonical_total_energy(e_4: f32, e_5: f32, e_6: f32) -> f32 {
+    ((4.0 * e_4) + (5.0 * e_5) + (6.0 * e_6)) / 15.0
 }
 
 pub fn harmonic_ratio_fraction_for_sub_tick(sub_tick: u8) -> (u16, u16) {
@@ -1375,6 +1670,407 @@ pub fn kernel_tick_from_epogdoon(cycle: u64, sub_tick: u8) -> KernelTick {
     }
 }
 
+#[cfg(feature = "resonance_ebm_runtime")]
+pub const EBM_RUNTIME_NOT_LOADED: &str = "EBM_RUNTIME_NOT_LOADED";
+#[cfg(feature = "resonance_ebm_runtime")]
+pub const LEGACY_EPI_TAURI_EBM_MODEL_PATH: &str =
+    "vendor/legacy/epi-tauri/resonance-ebm-runtime.json";
+#[cfg(feature = "resonance_ebm_runtime")]
+const EBM_INPUT_DIM: usize = 8;
+#[cfg(feature = "resonance_ebm_runtime")]
+const EBM_EMBEDDING_DIM: usize = 8;
+
+#[cfg(feature = "resonance_ebm_runtime")]
+#[derive(Clone, Debug, PartialEq)]
+pub struct ResonanceEbmRuntimeStep {
+    pub updated_state: BioQuaternionState,
+    pub metric: Option<&'static str>,
+    pub descent_steps: u8,
+    pub element_boundary_index: Option<u8>,
+    pub resonance_vector: Option<ResonanceVector72>,
+    pub e_5_harmonic_energy: f32,
+    pub ground_state_log_probability: Option<f32>,
+    pub checkpoint_ref: Option<String>,
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+#[derive(Clone, Debug, PartialEq)]
+pub struct ResonanceEbmEvaluation {
+    pub resonance_vector: ResonanceVector72,
+    pub e_5_harmonic_energy: f32,
+    pub ambient_qp_gradient: [f64; 4],
+    pub ground_state_log_probability: f32,
+    pub checkpoint_ref: String,
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+#[derive(Clone, Debug, PartialEq)]
+pub struct ResonanceEbmRuntime {
+    checkpoint_ref: String,
+    projection: [[f64; EBM_INPUT_DIM]; EBM_EMBEDDING_DIM],
+    projection_bias: [f64; EBM_EMBEDDING_DIM],
+    resonance_head: [[f64; EBM_EMBEDDING_DIM]; RESONANCE_DIM],
+    resonance_bias: [f64; RESONANCE_DIM],
+    ground_state_log_z: f64,
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ResonanceEbmCheckpointJson {
+    checkpoint_ref: String,
+    bioquaternion_projection: Vec<Vec<f64>>,
+    projection_bias: Vec<f64>,
+    resonance_head: Vec<Vec<f64>>,
+    resonance_bias: Vec<f64>,
+    #[serde(default)]
+    ground_state_log_z: f64,
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+impl ResonanceEbmRuntime {
+    pub fn from_legacy_vendor_path() -> Option<Self> {
+        Self::from_path(LEGACY_EPI_TAURI_EBM_MODEL_PATH).ok()
+    }
+
+    pub fn from_path(path: impl AsRef<std::path::Path>) -> Result<Self, String> {
+        let contents = std::fs::read_to_string(path.as_ref()).map_err(|err| err.to_string())?;
+        Self::from_json_str(&contents)
+    }
+
+    pub fn from_json_str(contents: &str) -> Result<Self, String> {
+        let checkpoint: ResonanceEbmCheckpointJson =
+            serde_json::from_str(contents).map_err(|err| err.to_string())?;
+        if checkpoint.checkpoint_ref.trim().is_empty() {
+            return Err("EBM checkpointRef must be non-empty".to_owned());
+        }
+        Ok(Self {
+            checkpoint_ref: checkpoint.checkpoint_ref,
+            projection: matrix_from_vec::<EBM_EMBEDDING_DIM, EBM_INPUT_DIM>(
+                checkpoint.bioquaternion_projection,
+                "bioquaternionProjection",
+            )?,
+            projection_bias: vector_from_vec::<EBM_EMBEDDING_DIM>(
+                checkpoint.projection_bias,
+                "projectionBias",
+            )?,
+            resonance_head: matrix_from_vec::<RESONANCE_DIM, EBM_EMBEDDING_DIM>(
+                checkpoint.resonance_head,
+                "resonanceHead",
+            )?,
+            resonance_bias: vector_from_vec::<RESONANCE_DIM>(
+                checkpoint.resonance_bias,
+                "resonanceBias",
+            )?,
+            ground_state_log_z: checkpoint.ground_state_log_z,
+        })
+    }
+
+    pub fn checkpoint_ref(&self) -> &str {
+        &self.checkpoint_ref
+    }
+
+    pub fn forward(&self, state: &BioQuaternionState) -> ResonanceEbmEvaluation {
+        let input = [
+            state.q_b[0] as f64,
+            state.q_b[1] as f64,
+            state.q_b[2] as f64,
+            state.q_b[3] as f64,
+            state.q_p[0] as f64,
+            state.q_p[1] as f64,
+            state.q_p[2] as f64,
+            state.q_p[3] as f64,
+        ];
+        let mut embedding = [0.0f64; EBM_EMBEDDING_DIM];
+        let mut embedding_derivative = [0.0f64; EBM_EMBEDDING_DIM];
+        for row in 0..EBM_EMBEDDING_DIM {
+            let activation = self.projection_bias[row]
+                + self.projection[row]
+                    .iter()
+                    .zip(input.iter())
+                    .map(|(weight, value)| weight * value)
+                    .sum::<f64>();
+            embedding[row] = activation.tanh();
+            embedding_derivative[row] = 1.0 - (embedding[row] * embedding[row]);
+        }
+
+        let mut values = [0.0f32; RESONANCE_DIM];
+        let mut energy = 0.0f64;
+        let mut d_energy_d_embedding = [0.0f64; EBM_EMBEDDING_DIM];
+        for channel in 0..RESONANCE_DIM {
+            let activation = self.resonance_bias[channel]
+                + self.resonance_head[channel]
+                    .iter()
+                    .zip(embedding.iter())
+                    .map(|(weight, value)| weight * value)
+                    .sum::<f64>();
+            let value = sigmoid(activation);
+            values[channel] = value as f32;
+            energy += value;
+            let d_energy_d_activation = value * (1.0 - value) / RESONANCE_DIM as f64;
+            for emb in 0..EBM_EMBEDDING_DIM {
+                d_energy_d_embedding[emb] +=
+                    d_energy_d_activation * self.resonance_head[channel][emb];
+            }
+        }
+        energy /= RESONANCE_DIM as f64;
+
+        let mut d_energy_d_input = [0.0f64; EBM_INPUT_DIM];
+        for emb in 0..EBM_EMBEDDING_DIM {
+            let d_embedding = d_energy_d_embedding[emb] * embedding_derivative[emb];
+            for input_idx in 0..EBM_INPUT_DIM {
+                d_energy_d_input[input_idx] += d_embedding * self.projection[emb][input_idx];
+            }
+        }
+
+        ResonanceEbmEvaluation {
+            resonance_vector: ResonanceVector72 { values },
+            e_5_harmonic_energy: energy as f32,
+            ambient_qp_gradient: [
+                d_energy_d_input[4],
+                d_energy_d_input[5],
+                d_energy_d_input[6],
+                d_energy_d_input[7],
+            ],
+            ground_state_log_probability: (-energy - self.ground_state_log_z) as f32,
+            checkpoint_ref: self.checkpoint_ref.clone(),
+        }
+    }
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+pub fn kernel_default_resonance_ebm_runtime() -> Option<&'static ResonanceEbmRuntime> {
+    static RUNTIME: std::sync::OnceLock<Option<ResonanceEbmRuntime>> = std::sync::OnceLock::new();
+    RUNTIME
+        .get_or_init(ResonanceEbmRuntime::from_legacy_vendor_path)
+        .as_ref()
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+pub fn kernel_resonance_ebm_runtime_step(
+    state: &BioQuaternionState,
+    tick: KernelTick,
+    runtime: Option<&ResonanceEbmRuntime>,
+) -> ResonanceEbmRuntimeStep {
+    let Some(element_boundary_index) = kernel_element_boundary_index_for_tick(tick.sub_tick) else {
+        return ResonanceEbmRuntimeStep {
+            updated_state: state.clone(),
+            metric: None,
+            descent_steps: 0,
+            element_boundary_index: None,
+            resonance_vector: None,
+            e_5_harmonic_energy: 0.0,
+            ground_state_log_probability: None,
+            checkpoint_ref: None,
+        };
+    };
+
+    let Some(runtime) = runtime else {
+        return ResonanceEbmRuntimeStep {
+            updated_state: state.clone(),
+            metric: Some(EBM_RUNTIME_NOT_LOADED),
+            descent_steps: 0,
+            element_boundary_index: Some(element_boundary_index),
+            resonance_vector: None,
+            e_5_harmonic_energy: 0.0,
+            ground_state_log_probability: None,
+            checkpoint_ref: None,
+        };
+    };
+
+    let evaluation = runtime.forward(state);
+    let mut updated_state = state.clone();
+    if tick.element == KernelElement::InverseMobius {
+        updated_state.q_b = f64_quat_to_f32(kernel_riemannian_step(
+            f32_quat_to_f64(state.q_b),
+            evaluation.ambient_qp_gradient,
+            epogdoon_log() as f64,
+        ));
+    } else {
+        updated_state.q_p = f64_quat_to_f32(kernel_riemannian_step(
+            f32_quat_to_f64(state.q_p),
+            evaluation.ambient_qp_gradient,
+            -(epogdoon_log() as f64),
+        ));
+    }
+
+    ResonanceEbmRuntimeStep {
+        updated_state,
+        metric: None,
+        descent_steps: 1,
+        element_boundary_index: Some(element_boundary_index),
+        resonance_vector: Some(evaluation.resonance_vector),
+        e_5_harmonic_energy: evaluation.e_5_harmonic_energy,
+        ground_state_log_probability: Some(evaluation.ground_state_log_probability),
+        checkpoint_ref: Some(evaluation.checkpoint_ref),
+    }
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+pub fn kernel_element_boundary_index_for_tick(tick12: u8) -> Option<u8> {
+    match tick12 % 12 {
+        0 => Some(0),
+        1 => Some(1),
+        2 => Some(2),
+        4 => Some(3),
+        5 => Some(4),
+        6 => Some(5),
+        7 => Some(6),
+        9 => Some(7),
+        _ => None,
+    }
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+pub fn kernel_tangent_projection_s3(q: [f64; 4], ambient_gradient: [f64; 4]) -> [f64; 4] {
+    let q = unit_or_identity_f64(q);
+    let radial = dot4(ambient_gradient, q);
+    [
+        ambient_gradient[0] - radial * q[0],
+        ambient_gradient[1] - radial * q[1],
+        ambient_gradient[2] - radial * q[2],
+        ambient_gradient[3] - radial * q[3],
+    ]
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+pub fn kernel_exp_map_s3(q: [f64; 4], tangent_delta: [f64; 4]) -> [f64; 4] {
+    let q = unit_or_identity_f64(q);
+    let theta = dot4(tangent_delta, tangent_delta).sqrt();
+    if theta <= f64::EPSILON {
+        return q;
+    }
+    let sin_over_theta = theta.sin() / theta;
+    unit_or_identity_f64([
+        theta.cos() * q[0] + sin_over_theta * tangent_delta[0],
+        theta.cos() * q[1] + sin_over_theta * tangent_delta[1],
+        theta.cos() * q[2] + sin_over_theta * tangent_delta[2],
+        theta.cos() * q[3] + sin_over_theta * tangent_delta[3],
+    ])
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+pub fn kernel_riemannian_step(
+    q: [f64; 4],
+    ambient_gradient: [f64; 4],
+    signed_learning_rate: f64,
+) -> [f64; 4] {
+    let tangent = kernel_tangent_projection_s3(q, ambient_gradient);
+    kernel_exp_map_s3(
+        q,
+        [
+            signed_learning_rate * tangent[0],
+            signed_learning_rate * tangent[1],
+            signed_learning_rate * tangent[2],
+            signed_learning_rate * tangent[3],
+        ],
+    )
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+pub fn kernel_slerp_quaternion(a: [f64; 4], b: [f64; 4], t: f64) -> [f64; 4] {
+    let a = unit_or_identity_f64(a);
+    let mut b = unit_or_identity_f64(b);
+    let mut cos_theta = dot4(a, b).clamp(-1.0, 1.0);
+    if cos_theta < 0.0 {
+        b = [-b[0], -b[1], -b[2], -b[3]];
+        cos_theta = -cos_theta;
+    }
+    let t = t.clamp(0.0, 1.0);
+    if cos_theta > 0.9995 {
+        return unit_or_identity_f64([
+            a[0] + t * (b[0] - a[0]),
+            a[1] + t * (b[1] - a[1]),
+            a[2] + t * (b[2] - a[2]),
+            a[3] + t * (b[3] - a[3]),
+        ]);
+    }
+    let theta = cos_theta.acos();
+    let sin_theta = theta.sin();
+    let a_scale = ((1.0 - t) * theta).sin() / sin_theta;
+    let b_scale = (t * theta).sin() / sin_theta;
+    [
+        a_scale * a[0] + b_scale * b[0],
+        a_scale * a[1] + b_scale * b[1],
+        a_scale * a[2] + b_scale * b[2],
+        a_scale * a[3] + b_scale * b[3],
+    ]
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+fn matrix_from_vec<const ROWS: usize, const COLS: usize>(
+    values: Vec<Vec<f64>>,
+    field: &str,
+) -> Result<[[f64; COLS]; ROWS], String> {
+    if values.len() != ROWS {
+        return Err(format!("{field} must contain {ROWS} rows"));
+    }
+    let mut matrix = [[0.0f64; COLS]; ROWS];
+    for (row_idx, row) in values.into_iter().enumerate() {
+        if row.len() != COLS {
+            return Err(format!("{field}[{row_idx}] must contain {COLS} columns"));
+        }
+        for (col_idx, value) in row.into_iter().enumerate() {
+            if !value.is_finite() {
+                return Err(format!("{field}[{row_idx}][{col_idx}] must be finite"));
+            }
+            matrix[row_idx][col_idx] = value;
+        }
+    }
+    Ok(matrix)
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+fn vector_from_vec<const LEN: usize>(values: Vec<f64>, field: &str) -> Result<[f64; LEN], String> {
+    if values.len() != LEN {
+        return Err(format!("{field} must contain {LEN} values"));
+    }
+    let mut vector = [0.0f64; LEN];
+    for (idx, value) in values.into_iter().enumerate() {
+        if !value.is_finite() {
+            return Err(format!("{field}[{idx}] must be finite"));
+        }
+        vector[idx] = value;
+    }
+    Ok(vector)
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+fn sigmoid(value: f64) -> f64 {
+    if value >= 0.0 {
+        1.0 / (1.0 + (-value).exp())
+    } else {
+        let exp = value.exp();
+        exp / (1.0 + exp)
+    }
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+fn f32_quat_to_f64(q: [f32; 4]) -> [f64; 4] {
+    [q[0] as f64, q[1] as f64, q[2] as f64, q[3] as f64]
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+fn f64_quat_to_f32(q: [f64; 4]) -> [f32; 4] {
+    [q[0] as f32, q[1] as f32, q[2] as f32, q[3] as f32]
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+fn dot4(a: [f64; 4], b: [f64; 4]) -> f64 {
+    a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3]
+}
+
+#[cfg(feature = "resonance_ebm_runtime")]
+fn unit_or_identity_f64(q: [f64; 4]) -> [f64; 4] {
+    let norm_sq = dot4(q, q);
+    if norm_sq <= 0.0 || !norm_sq.is_finite() {
+        [1.0, 0.0, 0.0, 0.0]
+    } else {
+        let scale = 1.0 / norm_sq.sqrt();
+        [q[0] * scale, q[1] * scale, q[2] * scale, q[3] * scale]
+    }
+}
+
 fn unit_or_identity(q: [f32; 4]) -> [f32; 4] {
     let norm_sq = q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3];
     if norm_sq <= 0.0 {
@@ -1382,5 +2078,200 @@ fn unit_or_identity(q: [f32; 4]) -> [f32; 4] {
     } else {
         let scale = 1.0 / norm_sq.sqrt();
         [q[0] * scale, q[1] * scale, q[2] * scale, q[3] * scale]
+    }
+}
+
+#[cfg(test)]
+fn test_near(a: f32, b: f32) -> bool {
+    (a - b).abs() < 0.0001
+}
+
+#[cfg(test)]
+#[test]
+fn total_energy_4_5_6_weighting() {
+    let e_4 = 0.25;
+    let e_5 = 0.5;
+    let e_6 = 0.75;
+
+    assert!(test_near(
+        canonical_total_energy(e_4, e_5, e_6),
+        ((4.0 * e_4) + (5.0 * e_5) + (6.0 * e_6)) / 15.0
+    ));
+}
+
+#[cfg(test)]
+#[test]
+fn bimba_pratibimba_is_diagnostic_only() {
+    let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0]);
+    let energy = kernel_energy_evaluate(
+        &state,
+        &E4PersonalInputs::default(),
+        &E5HarmonicInputs::default(),
+        &E6VerifierInputs::default(),
+    );
+
+    assert!(energy.bimba_pratibimba_energy > 0.0);
+    assert!(test_near(energy.e_4_personal_energy, 0.0));
+    assert!(test_near(energy.e_5_harmonic_energy, 0.0));
+    assert!(test_near(energy.e_6_verifier_energy, 0.0));
+    assert!(test_near(energy.total_energy, 0.0));
+}
+
+#[cfg(test)]
+mod energy_decomposition_tests {
+    use super::*;
+
+    fn near(a: f32, b: f32) -> bool {
+        (a - b).abs() < 0.0001
+    }
+
+    #[test]
+    fn total_energy_4_5_6_weighting() {
+        let e_4 = 0.25;
+        let e_5 = 0.5;
+        let e_6 = 0.75;
+
+        assert!(near(
+            canonical_total_energy(e_4, e_5, e_6),
+            ((4.0 * e_4) + (5.0 * e_5) + (6.0 * e_6)) / 15.0
+        ));
+    }
+
+    #[test]
+    fn bimba_pratibimba_is_diagnostic_only() {
+        let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0]);
+        let energy = kernel_energy_evaluate(
+            &state,
+            &E4PersonalInputs::default(),
+            &E5HarmonicInputs::default(),
+            &E6VerifierInputs::default(),
+        );
+
+        assert!(energy.bimba_pratibimba_energy > 0.0);
+        assert!(near(energy.e_4_personal_energy, 0.0));
+        assert!(near(energy.e_5_harmonic_energy, 0.0));
+        assert!(near(energy.e_6_verifier_energy, 0.0));
+        assert!(near(energy.total_energy, 0.0));
+    }
+
+    #[test]
+    fn temporal_energy_serializes_canonical_and_diagnostic_fields() {
+        let temporal = KernelTemporalEnergy::from_energy(EnergyDecomposition {
+            bimba_pratibimba_energy: 9.0,
+            e_4_personal_energy: 1.0,
+            e_5_harmonic_energy: 2.0,
+            e_6_verifier_energy: 3.0,
+            total_energy: canonical_total_energy(1.0, 2.0, 3.0),
+        });
+        let json = serde_json::to_value(temporal).expect("temporal energy serializes");
+
+        assert_eq!(json["bimbaPratibimbaEnergy"], "9.000000");
+        assert_eq!(json["e4PersonalEnergy"], "1.000000");
+        assert_eq!(json["e5HarmonicEnergy"], "2.000000");
+        assert_eq!(json["e6VerifierEnergy"], "3.000000");
+        assert_eq!(json["totalEnergy"], "2.133333");
+    }
+
+    #[test]
+    fn kernel_projection_stub_zero_energy_uses_new_input_handles() {
+        let projection = KernelProjection::from_clock_state(
+            0,
+            0,
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            None,
+            &E4PersonalInputs::default(),
+            &E5HarmonicInputs::default(),
+            &E6VerifierInputs::default(),
+        );
+
+        assert!(projection.energy.bimba_pratibimba_energy > 0.0);
+        assert!(near(projection.energy.total_energy, 0.0));
+    }
+}
+
+#[cfg(all(test, feature = "resonance_ebm_runtime"))]
+mod resonance_ebm_runtime_tests {
+    use super::*;
+
+    fn dot(a: [f64; 4], b: [f64; 4]) -> f64 {
+        a.iter().zip(b.iter()).map(|(a, b)| a * b).sum()
+    }
+
+    fn norm(q: [f64; 4]) -> f64 {
+        dot(q, q).sqrt()
+    }
+
+    #[test]
+    fn riemannian_projection_is_tangent_to_s3() {
+        let q = [0.5, 0.5, 0.5, 0.5];
+        let ambient = [0.25, -0.75, 0.5, 0.125];
+        let tangent = kernel_tangent_projection_s3(q, ambient);
+
+        assert!(dot(q, tangent).abs() <= f64::EPSILON * 16.0);
+    }
+
+    #[test]
+    fn mobius_descent_uses_exponential_map_and_preserves_unit_quaternion() {
+        let q = [1.0, 0.0, 0.0, 0.0];
+        let ambient = [0.0, 1.0, 0.0, 0.0];
+        let stepped = kernel_riemannian_step(q, ambient, -epogdoon_log() as f64);
+
+        assert!((norm(stepped) - 1.0).abs() <= f64::EPSILON * 16.0);
+        assert!(stepped[1] < 0.0, "descent must move opposite the gradient");
+    }
+
+    #[test]
+    fn element_boundary_cadence_invokes_ebm_exactly_eight_times_per_cycle() {
+        let boundaries: Vec<_> = (0u8..12)
+            .filter_map(kernel_element_boundary_index_for_tick)
+            .collect();
+
+        assert_eq!(boundaries, vec![0, 1, 2, 3, 4, 5, 6, 7]);
+    }
+
+    #[test]
+    fn unloaded_ebm_runtime_emits_metric_and_keeps_state_stable() {
+        let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0]);
+        let tick = kernel_tick_from_epogdoon(2, 2);
+        let outcome = kernel_resonance_ebm_runtime_step(&state, tick, None);
+
+        assert_eq!(outcome.metric, Some(EBM_RUNTIME_NOT_LOADED));
+        assert_eq!(outcome.updated_state, state);
+        assert_eq!(outcome.descent_steps, 0);
+    }
+
+    #[test]
+    fn loaded_ebm_runtime_forward_injects_gradient_into_mobius_step() {
+        let mut projection = vec![vec![0.0; EBM_INPUT_DIM]; EBM_EMBEDDING_DIM];
+        for idx in 0..EBM_INPUT_DIM {
+            projection[idx][idx] = 1.0;
+        }
+        let mut resonance_head = vec![vec![0.0; EBM_EMBEDDING_DIM]; RESONANCE_DIM];
+        for row in &mut resonance_head {
+            row[5] = 1.0;
+        }
+        let checkpoint = serde_json::json!({
+            "checkpointRef": "test-ebm-v1",
+            "bioquaternionProjection": projection,
+            "projectionBias": vec![0.0; EBM_EMBEDDING_DIM],
+            "resonanceHead": resonance_head,
+            "resonanceBias": vec![0.0; RESONANCE_DIM],
+            "groundStateLogZ": 0.0
+        });
+        let runtime = ResonanceEbmRuntime::from_json_str(&checkpoint.to_string())
+            .expect("synthetic checkpoint should load through the production parser");
+        let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 0.0]);
+        let tick = kernel_tick_from_epogdoon(2, 2);
+        let outcome = kernel_resonance_ebm_runtime_step(&state, tick, Some(&runtime));
+
+        assert_eq!(outcome.metric, None);
+        assert_eq!(outcome.descent_steps, 1);
+        assert_eq!(outcome.checkpoint_ref.as_deref(), Some("test-ebm-v1"));
+        assert!(outcome.resonance_vector.is_some());
+        assert!(outcome.e_5_harmonic_energy.is_finite());
+        assert!(outcome.ground_state_log_probability.unwrap().is_finite());
+        assert!(outcome.updated_state.q_p[1] < 0.0);
+        assert!((norm(f32_quat_to_f64(outcome.updated_state.q_p)) - 1.0).abs() < 0.000001);
     }
 }

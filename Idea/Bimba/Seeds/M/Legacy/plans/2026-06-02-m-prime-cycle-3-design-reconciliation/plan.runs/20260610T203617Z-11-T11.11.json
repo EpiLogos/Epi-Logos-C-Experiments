@@ -1,0 +1,41 @@
+{
+  "runId": "20260610T203617Z-11-T11.11",
+  "taskId": "11.T11.11",
+  "startedAt": "2026-06-10T20:36:17.784Z",
+  "owner": "codex-m-dev-11-t11-11",
+  "leaseExpiresAt": "2026-06-10T22:36:17.784Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T11.11",
+    "trackId": "11",
+    "tranche": "T11.11",
+    "title": "Agent inscription highlight categories + visual register",
+    "effort": null,
+    "file": "11-theia-shell-surface-hosting.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+    "dependsOn": [
+      "11.T11.10"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/editor/extensions/highlight-mark.ts",
+      "Body/M/epi-theia/extensions/m4-nara/style/highlights.css",
+      "Body/S/S0/portal-core/src/events.rs:138",
+      "Body/S/S0/portal-core/tests/nara_journal_parser.rs::dream_oracle_and_highlight_inputs_remain_distinguished",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/M/M4'/2026-06-04-prospective-retrospective-canvas-spec.md",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

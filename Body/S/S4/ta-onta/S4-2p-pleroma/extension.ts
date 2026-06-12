@@ -4,6 +4,13 @@ import { spawnSync } from "node:child_process";
 import { PRIMITIVE_REGISTRY, type PrimitiveDef } from "./S2/pleroma-primitives.ts";
 import registerDamageControl from "./S2/damage-control.ts";
 import registerTilldone from "./S2/tilldone.ts";
+import {
+  TECHNE_TERMINAL_TOOLS,
+  buildTerminalArgv,
+  type TerminalToolDef,
+} from "./S2/terminal-tools.ts";
+
+export { TECHNE_TERMINAL_CAPABILITY_MATRIX } from "./S2/terminal-tools.ts";
 
 export async function pleromaExtension(api: ExtensionAPI) {
   registerDamageControl(api);
@@ -124,6 +131,17 @@ export async function pleromaExtension(api: ExtensionAPI) {
     },
   });
 
+  // ── Techne terminal tools — bounded S0 CLI over `epi agent tmux` ──
+  // These REPLACE the stale, ungoverned direct tmux/cmux execution paths.
+  // Every tool requires `session_key`, routes through `epi agent tmux …`,
+  // and returns gateway-shaped JSON. `techne_terminal_send` additionally
+  // requires an explicit lease and NEVER shells raw tmux keystrokes directly.
+  // Authority law (TECHNE_TERMINAL_CAPABILITY_MATRIX): session_state_authority
+  // = "gateway", raw_terminal_authority = false.
+  for (const tool of TECHNE_TERMINAL_TOOLS) {
+    registerTerminalTool(api, tool);
+  }
+
   api.registerTool({
     name: "techne_cmux_list_workspaces",
     label: "Techne Cmux List Workspaces",
@@ -179,12 +197,12 @@ export async function pleromaExtension(api: ExtensionAPI) {
   api.registerTool({
     name: "techne_cmux_pane_assign",
     label: "Techne Cmux Pane Assign",
-    description: "Assign a pane on a cmux surface by CF identity. Sets CF_IDENTITY env in the pane so spawned agents inherit constitutional type. Writes cmux_pane_id to gateway team record.",
+    description: "Assign a pane on a cmux surface by CF identity. Sets CF_IDENTITY env in the pane so spawned agents inherit constitutional type. When session_key is given, the resulting cmux_pane_id is written through gateway SESSION state (sessions.patch, a real session-level cmux field) and the write is proven before success is reported. The legacy ungoverned team-patch path (a CLI surface that never existed) has been removed.",
     parameters: Type.Object({
       surface: Type.String({ description: "Target surface name" }),
       cf: Type.String({ description: "CF identity code (e.g. '(0/1/2)', '(4.0-4.4/5)')" }),
       agent: Type.Optional(Type.String({ description: "Agent type to launch in the pane (e.g. 'claude-code')" })),
-      team_id: Type.Optional(Type.String({ description: "Gateway team ID to update with cmux_pane_id (optional)" })),
+      session_key: Type.Optional(Type.String({ description: "Gateway session key to write cmux_pane_id through sessions.patch (optional; required to persist placement)" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const args = ["pane-assign", "--surface", params.surface, "--cf", params.cf];
@@ -193,11 +211,19 @@ export async function pleromaExtension(api: ExtensionAPI) {
       if (result.status !== 0) {
         return { content: [{ type: "text", text: result.stderr || result.stdout }], isError: true };
       }
-      // Parse pane_id from output and write to gateway team store
+      // Persist cmux_pane_id through GATEWAY SESSION state (not the stale
+      // team-patch surface). Prove the write succeeded before reporting OK.
       const paneMatch = result.stdout.match(/pane[_-]?id[:\s]+(\S+)/i);
-      if (paneMatch && params.team_id) {
-        spawnSync("epi", ["gate", "teams", "patch", params.team_id,
-          "--cmux-pane-id", paneMatch[1], "--cf-identity", params.cf], { encoding: "utf8" });
+      if (paneMatch && params.session_key) {
+        const patch = spawnSync("epi", ["gate", "sessions", "patch",
+          "--session-id", params.session_key, "--cmux-pane-id", paneMatch[1], "--json"], { encoding: "utf8" });
+        if (patch.status !== 0) {
+          return {
+            content: [{ type: "text", text: `pane assigned on surface '${params.surface}' but gateway sessions.patch FAILED — placement not persisted\n${patch.stderr || patch.stdout}` }],
+            isError: true,
+          };
+        }
+        return { content: [{ type: "text", text: `pane assigned CF=${params.cf} on surface '${params.surface}', cmux_pane_id=${paneMatch[1]} persisted via sessions.patch\n${patch.stdout}` }] };
       }
       return { content: [{ type: "text", text: `pane assigned CF=${params.cf} on surface '${params.surface}'\n${result.stdout}` }] };
     },
@@ -206,21 +232,17 @@ export async function pleromaExtension(api: ExtensionAPI) {
   api.registerTool({
     name: "techne_cmux_layout_set",
     label: "Techne Cmux Layout Set",
-    description: "Set the layout mode for a cmux surface by CFP thread type. Records CFP thread type on the gateway team record.",
+    description: "Set the visual layout mode for a cmux surface by CFP thread type. This is a NON-AUTHORITATIVE cmux projection: CFP thread type is ephemeral pane geometry, not gateway session state, so nothing is persisted. (The stale team-patch write — which targeted a CLI surface that does not exist — has been removed; there is no session-level cmux_cfp field to route through. If durable CFP persistence is needed, land `epi agent team patch` with tests.)",
     parameters: Type.Object({
       surface: Type.String({ description: "Target surface name" }),
       cfp: Type.String({ description: "CFP thread type (CFP0–CFP5, e.g. 'CFP1' for P-Thread tiled)" }),
-      team_id: Type.Optional(Type.String({ description: "Gateway team ID to update with cfp_thread (optional)" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("cmux", ["layout-set", "--surface", params.surface, "--cfp", params.cfp], { encoding: "utf8" });
       if (result.status !== 0) {
         return { content: [{ type: "text", text: result.stderr || result.stdout }], isError: true };
       }
-      if (params.team_id) {
-        spawnSync("epi", ["gate", "teams", "patch", params.team_id, "--cfp-thread", params.cfp], { encoding: "utf8" });
-      }
-      return { content: [{ type: "text", text: `layout set to ${params.cfp} on surface '${params.surface}'\n${result.stdout}` }] };
+      return { content: [{ type: "text", text: `layout set to ${params.cfp} on surface '${params.surface}' (ephemeral cmux projection — not persisted to gateway)\n${result.stdout}` }] };
     },
   });
 
@@ -279,6 +301,41 @@ function shouldRegisterTilldone(): boolean {
   const agentName = (process.env.EPI_AGENT_NAME ?? "").toLowerCase();
   const agentMode = (process.env.EPI_AGENT_MODE ?? "").toLowerCase();
   return agentName === "anima" || agentMode === "anima" || agentMode === "execution";
+}
+
+function registerTerminalTool(api: ExtensionAPI, tool: TerminalToolDef) {
+  // Build the params schema from the tool's declared param metadata.
+  const props: Record<string, any> = {
+    session_key: Type.String({ description: "Gateway session key whose terminal binding this tool operates on (required)." }),
+  };
+  if (tool.subcommand === "capture") {
+    props.lines = Type.Optional(Type.Integer({ default: 200, description: "Maximum lines to capture (default 200)." }));
+  }
+  if (tool.requiresLease) {
+    props.lease_id = Type.String({ description: "Explicit terminal lease id authorising the send (required)." });
+  }
+  if (tool.subcommand === "send") {
+    props.text = Type.String({ description: "Literal text to deliver to the pane." });
+  }
+
+  api.registerTool({
+    name: tool.name,
+    label: tool.label,
+    description: tool.description,
+    parameters: Type.Object(props),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      let argv: string[];
+      try {
+        // buildTerminalArgv enforces session_key + lease invariants and can only
+        // ever emit `agent tmux …` — never a raw tmux/cmux/send-keys command.
+        argv = buildTerminalArgv(tool.name, params);
+      } catch (err: any) {
+        return { content: [{ type: "text", text: String(err?.message ?? err) }], isError: true };
+      }
+      const result = spawnSync("epi", argv, { encoding: "utf8" });
+      return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
+    },
+  });
 }
 
 function registerPrimitiveTool(api: ExtensionAPI, p: PrimitiveDef) {

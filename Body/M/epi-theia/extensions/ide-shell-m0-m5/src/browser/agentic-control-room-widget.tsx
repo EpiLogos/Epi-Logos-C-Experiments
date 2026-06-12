@@ -5,6 +5,7 @@ import {
     KERNEL_BRIDGE_API,
     type KernelBridgeAPI
 } from '@pratibimba/kernel-bridge';
+import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
 import { IDE_SHELL_WIDGET_IDS } from '../common/contract';
 import {
     parseCapabilityMatrix,
@@ -149,7 +150,13 @@ export class AgenticControlRoomWidget extends ReactWidget {
                     className="ide-shell-widget-detail"
                     data-test="agentic-control-room-vak-fields"
                 >
-                    <h4>VAK evaluation fields</h4>
+                    <h4>
+                        VAK evaluation fields
+                        <BridgeReadinessBadge
+                            bridge={this.bridge}
+                            bindingKey="agentic-control-room.route"
+                        />
+                    </h4>
                     <dl>
                         <dt>Route</dt>
                         <dd data-test="acr-route">{this.state.route ?? '(no route selected)'}</dd>
@@ -171,7 +178,13 @@ export class AgenticControlRoomWidget extends ReactWidget {
                     className="ide-shell-widget-detail"
                     data-test="agentic-control-room-capability-tree"
                 >
-                    <h4>Capability tree (IOD-17 governance — capability-matrix.json)</h4>
+                    <h4>
+                        Capability tree (IOD-17 governance — capability-matrix.json)
+                        <BridgeReadinessBadge
+                            bridge={this.bridge}
+                            bindingKey="capability-matrix"
+                        />
+                    </h4>
                     {this.state.matrixError !== null && (
                         <p className="ide-shell-error" data-test="acr-matrix-error">
                             {this.state.matrixError}

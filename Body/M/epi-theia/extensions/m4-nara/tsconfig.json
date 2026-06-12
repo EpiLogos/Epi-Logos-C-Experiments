@@ -8,6 +8,9 @@
   },
   "references": [
     {
+      "path": "../integrated-composition"
+    },
+    {
       "path": "../m-extension-runtime"
     }
   ],

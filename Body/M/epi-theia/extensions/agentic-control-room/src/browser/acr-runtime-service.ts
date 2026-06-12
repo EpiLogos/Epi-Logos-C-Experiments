@@ -37,6 +37,7 @@ export interface SelectedCandidate {
     readonly title: string;
     readonly coordinate: string | null;
     readonly humanRequired: boolean;
+    readonly recursiveSelfReview?: boolean;
     readonly proposer: string | null;
     readonly privacyClass: string;
 }
@@ -249,7 +250,9 @@ export class AgenticControlRoomRuntimeService {
         const gate = enforceHumanGate({
             decision,
             humanRequired: candidate.humanRequired,
-            actorIsHuman
+            actorIsHuman,
+            recursiveSelfReview: candidate.recursiveSelfReview,
+            actor: actor ?? candidate.proposer ?? undefined
         });
         if (!gate.ok) {
             this._state = {

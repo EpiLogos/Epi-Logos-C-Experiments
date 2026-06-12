@@ -37,17 +37,23 @@ static int fail_count = 0;
  * =================================================================== */
 
 static void test_elemental_throughline(void) {
-    /* Nucleotide-to-element identity */
-    TEST("A == Water(0)", M4_ELEM_WATER == M3_NUC_A);
-    TEST("T == Fire(1)",  M4_ELEM_FIRE  == M3_NUC_T);
-    TEST("C == Earth(2)", M4_ELEM_EARTH == M3_NUC_C);
-    TEST("G == Air(3)",   M4_ELEM_AIR   == M3_NUC_G);
+    /* Nucleotide-to-element identity via the canonical throughline mapping.
+     * Nucleotide IDs (A=0..G=3) no longer coincide with element IDs; the
+     * identity is preserved through m4_nuc_to_elem. */
+    TEST("A -> Water", m4_nuc_to_elem(M3_NUC_A) == M4_ELEM_WATER);
+    TEST("T -> Fire",  m4_nuc_to_elem(M3_NUC_T) == M4_ELEM_FIRE);
+    TEST("C -> Earth", m4_nuc_to_elem(M3_NUC_C) == M4_ELEM_EARTH);
+    TEST("G -> Air",   m4_nuc_to_elem(M3_NUC_G) == M4_ELEM_AIR);
 
-    /* Four elements cover 0-3 */
-    TEST("Water=0", M4_ELEM_WATER == 0);
-    TEST("Fire=1",  M4_ELEM_FIRE  == 1);
-    TEST("Earth=2", M4_ELEM_EARTH == 2);
-    TEST("Air=3",   M4_ELEM_AIR   == 3);
+    /* Canonical L2' element IDs */
+    TEST("Water=2", M4_ELEM_WATER == ELEMENT_WATER);
+    TEST("Fire=4",  M4_ELEM_FIRE  == ELEMENT_FIRE);
+    TEST("Earth=1", M4_ELEM_EARTH == ELEMENT_EARTH);
+    TEST("Air=3",   M4_ELEM_AIR   == ELEMENT_AIR);
+    TEST("Water canonical 2", ELEMENT_WATER == 2);
+    TEST("Fire canonical 4",  ELEMENT_FIRE  == 4);
+    TEST("Earth canonical 1", ELEMENT_EARTH == 1);
+    TEST("Air canonical 3",   ELEMENT_AIR   == 3);
 }
 
 
@@ -329,7 +335,8 @@ static void test_protocol_library(void) {
             const M4_Decan_Recipe_Card* card = &M4_PROTOCOL_LIBRARY[s][d];
             TEST("card storey matches", card->storey == (uint8_t)s);
             TEST("card decan matches", card->decan == (uint8_t)d);
-            TEST("card element valid", card->element_focus <= 3);
+            /* Protocol cards focus on the operative quartet (canonical 1-4). */
+            TEST("card element valid", m_canonical_is_operative(card->element_focus));
             TEST("card chakra valid", card->chakra_focus <= 6);
         }
     }

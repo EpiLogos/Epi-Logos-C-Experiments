@@ -12,6 +12,7 @@ use crate::gate::{
     team_store::{TeamMemberRecord, TeamRecord, TeamStore},
 };
 use crate::techne::cmux;
+use epi_s3_gateway_contract::TerminalBinding;
 
 pub fn run(cmd: &TeamCmd, json: bool) -> Result<String, String> {
     match cmd {
@@ -96,6 +97,7 @@ struct TeamDispatchReport {
     cmux_workspace: Option<String>,
     cmux_surface: Option<String>,
     cmux_pane_id: Option<String>,
+    terminal_binding: Option<TerminalBinding>,
 }
 
 fn create_team(
@@ -136,6 +138,7 @@ fn dispatch_team_member(
     let session_store = SessionStore::new(&gate_root)?;
     let team_store = TeamStore::new(&gate_root)?;
     session_store.ensure(parent_session)?;
+    let terminal_backed = subagents::terminal_backed_from_env();
 
     let agents = vec![agent.to_owned()];
     let mut team = build_team(
@@ -169,6 +172,8 @@ fn dispatch_team_member(
             member.worker_index,
         )),
         cmux_pane_id: member.cmux_pane_id.clone(),
+        terminal_backed,
+        terminal_lease: None,
     })?;
 
     if let Some(member_mut) = team.members.first_mut() {
@@ -188,6 +193,7 @@ fn dispatch_team_member(
         cmux_workspace: report.cmux_workspace,
         cmux_surface: report.cmux_surface,
         cmux_pane_id: report.cmux_pane_id,
+        terminal_binding: report.terminal_binding,
         team,
     })
 }

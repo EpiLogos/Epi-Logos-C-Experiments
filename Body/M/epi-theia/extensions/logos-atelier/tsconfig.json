@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "composite": true,
+    "jsx": "react"
+  },
+  "references": [
+    {
+      "path": "../kernel-bridge"
+    },
+    {
+      "path": "../m-extension-runtime"
+    }
+  ],
+  "include": [
+    "src"
+  ]
+}

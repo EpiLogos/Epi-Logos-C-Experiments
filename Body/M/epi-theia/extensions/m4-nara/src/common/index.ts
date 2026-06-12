@@ -5,18 +5,21 @@ import {
     MExtensionMiniMode,
     REQUIRED_OBSERVABILITY_PAYLOAD_FIELDS
 } from '@pratibimba/m-extension-runtime';
+import type { PrimitiveReadinessState } from '@pratibimba/integrated-composition/design-primitives';
+
+export type M4PrimitiveReadinessState = PrimitiveReadinessState;
 
 export const EXTENSION_ID = 'm4-nara';
 export const PRIMARY_VIEW_ID = 'm4.nara.dayContainer';
-export const ALL_VIEW_IDS = ["m4.nara.dayContainer","m4.nara.graphitiBrowser","m4.nara.personalField"] as const;
+export const ALL_VIEW_IDS = ["m4.nara.dayContainer","m4.nara.graphitiBrowser","m4.nara.personalField","m4.nara.lensApplication","m4.nara.logosCycle","m4.nara.kairosWheel"] as const;
 export const OPEN_COMMAND_ID = 'm4.openArtifact';
 export const READ_ONLY_COMMAND_ID = 'm4.openArtifact.readOnly';
 export const DEPOSIT_ONLY_COMMAND_ID = 'm4.openArtifact.depositOnly';
 export const ROUTE_PATH = '/m4-nara/artifact';
-export const PRIVACY_CLASS = 'protected_local_handle_only';
+export const PRIVACY_CLASS = 'protected_local';
 export const OBSERVABILITY_EVENT_TYPES = ["m4.artifact.created","m4.privacy.blocked"] as const;
 export const DECLARED_BLOCKERS = ["Track 03 canonical Nara/Graphiti service path","Track 04 consent and review services","Protected-local M4 data cannot surface outside privacy-filtered bridge payloads"] as const;
-export const TRACK_08_EXPORTS = ["M4ArtifactHandleChip","M4RecognitionMiniView"] as const;
+export const TRACK_08_EXPORTS = ["M4ArtifactHandleChip","M4RecognitionMiniView","M4LensCard","M4LogosStageRing","M4KairosWheel"] as const;
 export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.freeze({
     extensionId: EXTENSION_ID,
     track08Exports: TRACK_08_EXPORTS,
@@ -30,6 +33,24 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
         Object.freeze({
             exportName: 'M4RecognitionMiniView',
             viewId: 'm4.nara.graphitiBrowser',
+            miniModes: Object.freeze(["badge","compact-card","inspector"]) as readonly MExtensionMiniMode[],
+            requiredSelectors: Object.freeze(["currentProfile","readiness","coordinateContext"])
+        }),
+        Object.freeze({
+            exportName: 'M4LensCard',
+            viewId: 'm4.nara.lensApplication',
+            miniModes: Object.freeze(["badge","compact-card","inspector"]) as readonly MExtensionMiniMode[],
+            requiredSelectors: Object.freeze(["currentProfile","readiness","coordinateContext"])
+        }),
+        Object.freeze({
+            exportName: 'M4LogosStageRing',
+            viewId: 'm4.nara.logosCycle',
+            miniModes: Object.freeze(["badge","compact-card","inspector"]) as readonly MExtensionMiniMode[],
+            requiredSelectors: Object.freeze(["currentProfile","readiness","coordinateContext"])
+        }),
+        Object.freeze({
+            exportName: 'M4KairosWheel',
+            viewId: 'm4.nara.kairosWheel',
             miniModes: Object.freeze(["badge","compact-card","inspector"]) as readonly MExtensionMiniMode[],
             requiredSelectors: Object.freeze(["currentProfile","readiness","coordinateContext"])
         })
@@ -98,3 +119,37 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
 });
 
 export * from './nara-surface';
+export {
+    isOracleFrame,
+    isOracleVakAddress
+} from './oracle-frame';
+export type {
+    OracleFrame,
+    OraclePositionSemantics,
+    OracleReadingDirection,
+    OracleSpreadType,
+    OracleVakAddress
+} from './oracle-frame';
+export {
+    isDeckContext,
+    isDeckDrawState
+} from './deck-context';
+export type {
+    DeckContext,
+    DeckContextRole,
+    DeckDrawCardRef,
+    DeckDrawState,
+    DeckDrawStatus,
+    DeckEntropyMode,
+    DeckSpreadBinding
+} from './deck-context';
+export {
+    isSymbolicProtein
+} from './symbolic-protein';
+export type {
+    SymbolicProtein,
+    SymbolicProteinActivationMarker,
+    SymbolicProteinChainNode,
+    SymbolicProteinFoldState,
+    SymbolicProteinSequenceMode
+} from './symbolic-protein';

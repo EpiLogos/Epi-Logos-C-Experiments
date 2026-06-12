@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/integrated-1-2-3",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "note": "PNG bytes are written by the acceptance harness on the first green run; until then `captured` is false and the DOM snapshot is the authoritative structural baseline.",
+  "captureRecipe": {
+    "command": "node scripts/acceptance.mjs --capture-baseline --plugin plugin-integrated-1-2-3",
+    "openVia": "epi.integrated.openCosmicEngine",
+    "settleEvent": "[ACCEPTANCE:boot.kernel-bridge:bridge-subscription-id]"
+  },
+  "screenshots": [
+    {
+      "viewport": "electron-default",
+      "file": "electron-default.png",
+      "width": 1440,
+      "height": 900,
+      "deviceScaleFactor": 2,
+      "captured": false,
+      "tolerance": { "pixelRatio": 0.001, "maxChangedPixels": 64 }
+    },
+    {
+      "viewport": "browser-ci",
+      "file": "browser-ci.png",
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1,
+      "captured": false,
+      "tolerance": { "pixelRatio": 0.001, "maxChangedPixels": 64 }
+    }
+  ]
+}

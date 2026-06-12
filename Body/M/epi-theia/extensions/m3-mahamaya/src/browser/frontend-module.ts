@@ -15,6 +15,8 @@ import {
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M3MahamayaWidget } from './m3-mahamaya-widget';
+import { M3MahamayaRendererService } from './services/m3-renderer-service';
+import { M3_RENDERER_SERVICE } from './services/m3-renderer-protocol';
 import {
     EXTENSION_ID,
     OPEN_COMMAND_ID,
@@ -105,6 +107,12 @@ class M3MahamayaPublisher implements MObservabilityPublisher {
 }
 
 export default new ContainerModule(bind => {
+    // Renderer-service architecture (24.T24.16): the deterministic Mahamaya
+    // visualisation projector, addressed through both its class and the
+    // M3_RENDERER_SERVICE injection Symbol (DI symbol discipline).
+    bind(M3MahamayaRendererService).toSelf().inSingletonScope();
+    bind(M3_RENDERER_SERVICE).toService(M3MahamayaRendererService);
+
     bind(M3MahamayaWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({

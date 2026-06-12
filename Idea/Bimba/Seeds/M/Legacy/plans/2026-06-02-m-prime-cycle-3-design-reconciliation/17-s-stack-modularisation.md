@@ -170,6 +170,28 @@ Every row in this tranche follows the same shape:
 
     Verification: `grep -n 'parent crate\\|parent-role envelope' Idea/Bimba/Seeds/S/S0/S0-ARCHITECTURE.md`; `grep -n 'sibling-to-S0' Idea/Bimba/Seeds/S/S0/S0-ARCHITECTURE.md` returns no live wrong-parent attribution.
 
+28. **17.28 — `bimba-mcp` parity over `epi canon coord` depth ladder** *(spec-ahead-integration; depends on Tranche 9.13; cross-link CCT-14, CCT-15, Track 11)*
+
+    Make the `bimba-mcp` MCP server at `Body/S/S2/external/bimba-mcp/` a byte-identical mirror of the `epi canon` CLI surface family per Tranche 9.13. The principle established by the cycle-3 q_-economy synthesis: **CLI is source of truth; MCP is wire format**. Non-MCP-capable agents (shell-spawned Ralph instances, ta-onta sub-shells, hooks) get canon delivery via `epi canon`; MCP-capable agents (Claude Code skills, the Codex harness, any future MCP client) get the same payload via the MCP surface. Today the two surfaces diverge — `bimba-mcp.spec_retrieve` does its own coord-resolution + content composition; `epi core knowing` does another; the gateway's `s2'.coordinate.resolve` does a third. This tranche collapses all three reads onto the Tranche 9.13 engine.
+
+    **Scope:** *Audit* the current `bimba-mcp` tool surface (`spec_retrieve`, `resolve_coordinate`, `list_coordinates`, `get_context`, `graph_query`, `graph_search`, `graph_traverse`, `semantic_search`); *extend* the coord-content-returning tools to share the Tranche 9.13 renderer; *deprecate* tool-internal coord-content composition in favor of a single named adapter that calls into the canon engine.
+
+    **Implementation targets:**
+
+    - **`spec_retrieve` → canon-engine adapter** at `Body/S/S2/external/bimba-mcp/src/tools/spec-retrieve.ts` (path approximate — audit during execution): change the tool's content-composition path to shell into `epi canon coord <coord> --depth <depth> --json` and return that payload. Depth parameter exposed to MCP clients as a `depth` argument (per MCP tool-schema extension); defaults to `pithy` for backward compatibility with existing callers.
+    - **`resolve_coordinate` → unchanged interface**, but reads the coord-existence-check via the same engine, eliminating the divergent parser. Backward-compatible: existing MCP clients see the same return shape.
+    - **`list_coordinates` → unchanged interface**, reads from the same coord-resolution layer the canon engine uses.
+    - **`get_context` → composite via canon kit + relational**: returns `epi canon coord <coord> --depth relational --json` plus the optional history slice the current implementation provides. Wire format identical to current MCP output where overlap exists; net-new fields documented as additive.
+    - **Byte-identity test harness**: a new test at `Body/S/S2/external/bimba-mcp/tests/canon_parity.test.ts` that runs the same query via CLI (`epi canon coord ... --json`) and via MCP (in-process tool invocation) and asserts byte-identical JSON output for a representative set of coordinates × depth rungs (S0, S3, M4-3, M5, P5', cpf — covering primary, inverted, and reflective coordinates).
+
+    **Anti-greenfield commitment:** the `bimba-mcp` tool set already exists and is in active use by Claude Code skills (per `.claude/skills/gitnexus-*` and other tool references). This tranche does NOT remove tools, change tool names, or break existing wire shapes. It *extends* with the depth parameter and *replaces internal* content-composition with the canon engine call. Existing MCP clients see identical output unless they request a non-default depth. No new tools invented; no new MCP server endpoints.
+
+    **Acceptance gate:** for each of the test coordinate set (S0, S3, M4-3, M5, P5', cpf) and each depth rung (pithy, qv-detail, relational), `epi canon coord <C> --depth <D> --json` and `bimba-mcp.spec_retrieve {coordinate: <C>, depth: <D>}` produce byte-identical JSON output. The byte-identity assertion gates the PR.
+
+    Verification: `pnpm --filter @epi-logos/bimba-mcp test --testNamePattern 'canon parity'` runs the test harness; `pnpm --filter @epi-logos/bimba-mcp test --testNamePattern 'backward compatibility'` asserts existing MCP clients (no `depth` parameter) get pithy-equivalent output matching current production output snapshot; cross-link integration `cargo test -p epi-cli --test canon_matches_bimba_mcp` (gates Tranche 9.13).
+
+    Cross-track hooks: Tranche **9.13** is the CLI source-of-truth this tranche mirrors; CCT-14 (Hen lifecycle) feeds the canon content both surfaces read; CCT-15 (C-layer typology) is the coord-resolution layer both share; Track 11 (Theia shell) consumes the gateway's `s2'.coordinate.resolve` which itself should route through the same canon engine in a follow-up tranche (out of scope here).
+
 ## Execution Discipline
 
 - Each refactor is a single PR landing the file move + re-export façade + downstream compile check

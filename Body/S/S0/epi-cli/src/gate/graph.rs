@@ -1,4 +1,5 @@
 use serde_json::{json, Value};
+use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::graph::client::{Neo4jClient, Neo4jConfig};
@@ -34,6 +35,9 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
                 "replacement": "s2.graph.harmonic_relations.materialize + s2.graph.traverse"
             },
         }));
+    }
+    if method == "s2.parashaktiCorrespondences" {
+        return parashakti_correspondences(params);
     }
 
     let config = Neo4jConfig::from_env();
@@ -202,6 +206,219 @@ fn required_string(params: &Value, key: &str) -> Result<String, String> {
         .and_then(|value| value.as_str())
         .map(str::to_owned)
         .ok_or_else(|| format!("{key} must be a string"))
+}
+
+fn parashakti_correspondences(params: &Value) -> Result<Value, String> {
+    let address72 = (required_u64(params, "address72")? % 72) as usize;
+    let nodes = read_parashakti_deep_nodes()?;
+    let decans = nodes
+        .iter()
+        .filter(|node| {
+            node_string(node, "coordinate")
+                .map(|coord| coord.starts_with("#2-3-"))
+                .unwrap_or(false)
+                && filtered_string(node, "planetaryRuler").is_some()
+                && filtered_string(node, "zodiacSign").is_some()
+                && filtered_string(node, "bodyPart").is_some()
+        })
+        .collect::<Vec<_>>();
+    if decans.len() < 36 {
+        return Err(format!(
+            "parashakti-deep decan fixture incomplete: expected at least 36 decans, found {}",
+            decans.len()
+        ));
+    }
+
+    let asma = nodes
+        .iter()
+        .filter(|node| {
+            node_string(node, "coordinate")
+                .map(|coord| coord.starts_with("#2-4.0-"))
+                .unwrap_or(false)
+                && filtered_string(node, "arabicText").is_some()
+                && filtered_string(node, "englishTranslation").is_some()
+        })
+        .collect::<Vec<_>>();
+    if asma.len() < 72 {
+        return Err(format!(
+            "parashakti-deep sacred-name fixture incomplete: expected at least 72 names, found {}",
+            asma.len()
+        ));
+    }
+
+    let maqams = nodes
+        .iter()
+        .filter(|node| {
+            node_string(node, "coordinate")
+                .map(|coord| coord.starts_with("#2-4.3-"))
+                .unwrap_or(false)
+                && filtered_string(node, "spiritualFunction").is_some()
+        })
+        .collect::<Vec<_>>();
+    if maqams.len() < 72 {
+        return Err(format!(
+            "parashakti-deep maqam fixture incomplete: expected at least 72 maqams, found {}",
+            maqams.len()
+        ));
+    }
+
+    let decan = decans[address72 % 36];
+    let sacred_name = asma[address72];
+    let maqam = maqams[address72];
+    let planetary_ruler = filtered_string(decan, "planetaryRuler")
+        .ok_or_else(|| "selected decan missing planetaryRuler".to_owned())?;
+    let planet = nodes.iter().find(|node| {
+        node_string(node, "coordinate")
+            .map(|coord| coord.starts_with("#2-5"))
+            .unwrap_or(false)
+            && filtered_string(node, "planetaryMode").is_some()
+            && filtered_string(node, "name")
+                .map(|name| name.eq_ignore_ascii_case(&planetary_ruler))
+                .unwrap_or(false)
+    });
+    let chakra = planet.and_then(|planet| {
+        let prefix = format!("{}-", node_string(planet, "coordinate")?);
+        nodes.iter().find(|node| {
+            node_string(node, "coordinate")
+                .map(|coord| coord.starts_with(&prefix))
+                .unwrap_or(false)
+                && filtered_string(node, "mantraSignature").is_some()
+        })
+    });
+
+    let dataset = "Idea/Bimba/Map/datasets/parashakti-deep/nodes-full-detail.json";
+    let earth_observer_handle =
+        format!("s2://parashakti-deep/earth-observer/address72/{address72}");
+    let provenance_handle = format!("s2://parashakti-deep/address72/{address72}");
+
+    Ok(json!({
+        "address72": address72,
+        "provenanceHandle": {
+            "source": "s2",
+            "handle": provenance_handle,
+            "bodyAllowed": false,
+            "note": "parashakti-deep graph correspondence adapter"
+        },
+        "decanFace": {
+            "coordinate": node_string(decan, "coordinate"),
+            "name": filtered_string(decan, "name"),
+            "zodiacSign": filtered_string(decan, "zodiacSign"),
+            "degrees": filtered_string(decan, "degrees"),
+            "degreesRange": filtered_string(decan, "degreesRange"),
+            "planetaryRuler": planetary_ruler,
+            "bodyPart": filtered_string(decan, "bodyPart"),
+            "herbalismHerbs": filtered_array(decan, "herbalism_herbs"),
+            "tarotCard": filtered_string(decan, "tarotCard"),
+            "dataset": dataset
+        },
+        "sacredSonic": {
+            "coordinate": node_string(sacred_name, "coordinate"),
+            "name": filtered_string(sacred_name, "name"),
+            "arabicText": filtered_string(sacred_name, "arabicText"),
+            "englishTranslation": filtered_string(sacred_name, "englishTranslation"),
+            "chakraCorrespondence": filtered_string(sacred_name, "chakraCorrespondence"),
+            "maqam": {
+                "coordinate": node_string(maqam, "coordinate"),
+                "name": filtered_string(maqam, "name"),
+                "spiritualFunction": filtered_string(maqam, "spiritualFunction")
+            },
+            "dataset": dataset
+        },
+        "planetaryChakral": {
+            "planetaryRuler": filtered_string(decan, "planetaryRuler"),
+            "planetCoordinate": planet.and_then(|node| node_string(node, "coordinate")),
+            "planetaryMode": planet.and_then(|node| filtered_string(node, "planetaryMode")),
+            "vedicMantra": planet.and_then(|node| filtered_string(node, "vedicMantra")),
+            "chakraCoordinate": chakra.and_then(|node| node_string(node, "coordinate")),
+            "chakraName": chakra.and_then(|node| filtered_string(node, "name")),
+            "chakraRole": chakra
+                .and_then(|node| filtered_string(node, "spiritualFunction"))
+                .or_else(|| filtered_string(sacred_name, "chakraCorrespondence")),
+            "earthObserverHandle": earth_observer_handle,
+            "dataset": dataset
+        },
+        "earthObserverHandle": earth_observer_handle
+    }))
+}
+
+fn read_parashakti_deep_nodes() -> Result<Vec<Value>, String> {
+    let path = repo_root()
+        .join("Idea")
+        .join("Bimba")
+        .join("Map")
+        .join("datasets")
+        .join("parashakti-deep")
+        .join("nodes-full-detail.json");
+    let raw =
+        std::fs::read_to_string(&path).map_err(|err| format!("read {}: {err}", path.display()))?;
+    let sanitized = sanitize_json_control_chars(strip_json_bom(&raw));
+    serde_json::from_str(&sanitized).map_err(|err| format!("parse {}: {err}", path.display()))
+}
+
+fn repo_root() -> PathBuf {
+    if let Some(root) = std::env::var_os("EPI_REPO_ROOT") {
+        return PathBuf::from(root);
+    }
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .ancestors()
+        .nth(4)
+        .unwrap_or_else(|| Path::new(env!("CARGO_MANIFEST_DIR")))
+        .to_path_buf()
+}
+
+fn strip_json_bom(raw: &str) -> &str {
+    raw.trim_start_matches('\u{feff}')
+}
+
+fn sanitize_json_control_chars(raw: &str) -> String {
+    let mut result = String::with_capacity(raw.len());
+    let mut in_string = false;
+    let mut escaped = false;
+
+    for ch in raw.chars() {
+        if escaped {
+            result.push(ch);
+            escaped = false;
+            continue;
+        }
+        if ch == '\\' {
+            result.push(ch);
+            escaped = true;
+            continue;
+        }
+        if ch == '"' {
+            in_string = !in_string;
+            result.push(ch);
+            continue;
+        }
+        match ch {
+            '\n' if in_string => result.push_str("\\n"),
+            '\r' if in_string => result.push_str("\\r"),
+            '\t' if in_string => result.push_str("\\t"),
+            _ => result.push(ch),
+        }
+    }
+
+    result
+}
+
+fn node_string(node: &Value, key: &str) -> Option<String> {
+    node.get(key).and_then(Value::as_str).map(str::to_owned)
+}
+
+fn filtered_string(node: &Value, key: &str) -> Option<String> {
+    node.get("filteredProps")
+        .and_then(|props| props.get(key))
+        .and_then(Value::as_str)
+        .map(str::to_owned)
+}
+
+fn filtered_array(node: &Value, key: &str) -> Value {
+    node.get("filteredProps")
+        .and_then(|props| props.get(key))
+        .and_then(Value::as_array)
+        .map(|items| Value::Array(items.clone()))
+        .unwrap_or(Value::Null)
 }
 
 fn required_u64(params: &Value, key: &str) -> Result<u64, String> {

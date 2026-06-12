@@ -119,6 +119,20 @@ export class SharedBridgeAdapter implements MObservabilityPublisher {
         }
     }
 
+    async parashaktiCorrespondences(address72: number): Promise<unknown> {
+        if (!this.bridge) {
+            throw new Error('SharedBridgeAdapter has no KernelBridgeAPI attached');
+        }
+        return this.bridge.parashaktiCorrespondences(address72);
+    }
+
+    async invokeGatewayRpc(method: string, params: Record<string, unknown>): Promise<unknown> {
+        if (!this.bridge) {
+            throw new Error('SharedBridgeAdapter has no KernelBridgeAPI attached');
+        }
+        return this.bridge.invokeGatewayRpc(method, params);
+    }
+
     updateCoordinateContext(next: CoordinateContext): void {
         this.cachedContext = next;
         for (const listener of this.contextListeners) {

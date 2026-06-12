@@ -5,6 +5,9 @@ import {
     MExtensionMiniMode,
     REQUIRED_OBSERVABILITY_PAYLOAD_FIELDS
 } from '@pratibimba/m-extension-runtime';
+import type { PrimitiveReadinessState } from '@pratibimba/integrated-composition/design-primitives';
+
+export type M3PrimitiveReadinessState = PrimitiveReadinessState;
 
 export const EXTENSION_ID = 'm3-mahamaya';
 export const PRIMARY_VIEW_ID = 'm3.mahamaya.cosmicWheel';
@@ -16,7 +19,7 @@ export const ROUTE_PATH = '/m3-mahamaya/codon';
 export const PRIVACY_CLASS = 'public_current_with_scalar_oracle_refs_only';
 export const OBSERVABILITY_EVENT_TYPES = ["m3.codon_projection","m3.kernel_trace_view"] as const;
 export const DECLARED_BLOCKERS = ["Track 01 codon-rotation projection fields","Track 02 canonical M3 library graph nodes","Track 03 native subscription and world_clock path","Authoritative M3 projection/library payload readiness for 64/472 surfaces"] as const;
-export const TRACK_08_EXPORTS = ["M3CodonChip","M3WheelMiniView"] as const;
+export const TRACK_08_EXPORTS = ["M3CodonChip","M3WheelMiniView","M3CodonRotationProjectionForLensRing"] as const;
 export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.freeze({
     extensionId: EXTENSION_ID,
     track08Exports: TRACK_08_EXPORTS,
@@ -98,3 +101,4 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
 });
 
 export * from './codon-wheel';
+export * from '../browser/composition/M3CodonRotationProjectionForLensRing';

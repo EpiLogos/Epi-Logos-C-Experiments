@@ -89,7 +89,7 @@ Before normal Track 10 profile-bus work resumes, pass the pre-Cycle-3 Redis resi
 
 9. **10.9 — Correction: `dataset_lut_state` / `m3_codec_provenance` host struct** *(doc-ahead-landing)*
 
-   Wave-A M0 Tranche 01.4 attributed these literals to `MathemeBedrockProjection`; they actually live on `MathemeBinaryProjection` at `kernel.rs:797,805`. Record correction so M0/M3 closure tranches name the right struct.
+   Wave-A M0 Tranche 01.4 attributed these literals to the Bedrock projection; they actually live on `MathemeBinaryProjection` at `kernel.rs:797,805`. Record correction so M0/M3 closure tranches name the right struct.
 
    Verification: decision-register-adjacent correction note references `kernel.rs:797`.
 
@@ -103,9 +103,9 @@ Before normal Track 10 profile-bus work resumes, pass the pre-Cycle-3 Redis resi
 
     Verification: `cargo check -p portal-core && cargo test -p portal-core --test ananda_vortex_projection_round_trip`; add a C-side CSV-fidelity test asserting `7X+1` raw p=5/p=9 yields `36/64`, `8X+0` raw p=8/p=9 yields `64/72`, the matching DR faces are `9/1` and `1/9`, and the `Additive137` skeleton event only appears from `64+72+1`; `grep -n ananda_vortex Body/S/S0/portal-core/src/kernel.rs` returns the field declaration; kernel-bridge JSON emit at `kernel_bridge_runtime.rs` surfaces the projection; Theia mirror in `kernel-bridge/src/common/types.ts` reflects the new handle; Tranche 15.8 renderer reads the typed handle, not raw coordinates.
 
-## Phase-B Domain Sub-Tranches (18 new profile-bus fields)
+## Phase-B Domain Sub-Tranches (19 new profile-bus fields)
 
-The Phase-B cross-boundary verifier surfaced 18 new profile-bus fields from the eight total-shape architecture documents. They are sub-tranched by domain. All are **anti-greenfield surfacings** of already-computed substrate; none invents new computation.
+The Phase-B cross-boundary verifier surfaced 19 new profile-bus fields from the eight total-shape architecture documents plus the PASU live-entity clarification. They are sub-tranched by domain. All are **anti-greenfield surfacings** of already-computed substrate or already-canonical runtime handles; none invents new computation.
 
 ### 10.M0 — M0' Profile Projections *(code-pending-closure; depends on M0-ARCHITECTURE.md §4)*
 
@@ -135,6 +135,26 @@ One optional inspector field: `coupling_flow_alignment: CouplingFlowAlignment` (
 
 Verification: `cargo test -p portal-core --test m3_profile_projections`; `grep -rn 'TranscriptionalClockPacket\|OracleFrame\|SymbolicProtein\|MahamayaLensStack\|CouplingFlowAlignment' Body/S/S0/portal-core/src/`; JSON/TS mirror test asserts the caveat string distinguishing `137` integer skeleton from `137.035999...` measurement-face.
 
+### 10.P5 — Anuttara Pentadic Runtime Trace *(code-pending-closure; depends on Track 36.1-36.2 + M0-3 language-map audit + Tranche 4.10)*
+
+One cross-cutting profile field: `anuttara_pentadic_trace: AnuttaraPentadicRuntimeTrace`.
+
+This field makes the 0/1 -> 5 runtime hinge first-class. It is the bridge from the Anuttara archetypal number language into the Mahamaya physics/computation stack: whole-number addressing reaches position 5 from 0; natural-number addressing reaches 6 from 1; the 5-degree Shem quantum opens `72*5=360`; the Mahamaya paired fifteens open `24*15=360`; the line-change graph closes as `360+24=384`; M4/M5 consume the resulting codon/Q/recognition handles.
+
+Required fields:
+- `tick`, `tick12`, `helix`, `position6`, `source_binary_state`
+- `whole_number_endpoint: 5`, `natural_number_endpoint: 6`, `family_b_complement`
+- `shem_degree_quantum: 5`, `resonance72_index`, `degree360`
+- `m2_to_m3_symbol`, `mahamaya_address64`, `evolutionary_gap`
+- `codon_id`, `codon`, `line_change_operator`
+- `paired_mahamaya_fifteens: [15, 15]`, `backbone_identity: "24x15=360"`, `line_graph_identity: "360+24=384"`
+- `q_cosmic_ref`, optional `q_composed_handle`, optional `learned_predictor_checkpoint_ref`
+- `provenance` handles naming the contributing helpers / profile fields
+
+Anti-greenfield: derive from existing `MathemeHarmonicProfile` fields plus M2/M3/Mahamaya helpers. The bridge does not introduce a second harmonic runtime; renderers do not compute 72->64, 24x15, codon, or line-change values. If the current code does not expose a helper yet, the profile field marks that subfield pending and Track 36 owns the closure.
+
+Verification: `cargo test -p portal-core --test anuttara_pentadic_runtime_trace`; TS mirror test asserts JSON round-trip; exhaustive 12-tick test asserts the 4/5/6 hinge; 72-sample grid test asserts `72*5=360` and 72->64 projection; M3 helper test asserts paired fifteens and `24*15=360`; renderer no-local-table tests cover Track 24 / 29 consumers.
+
 ### 10.M4 — M4' Profile Projections *(code-pending-closure; depends on M4-ARCHITECTURE.md §4 + DR-M4-3)*
 
 One field with protected-handle sub-fields: `personal_pole: PersonalPoleProjection` exposing `bioquaternion: OpaqueProtectedHandle<BioQuaternion>`, `q_personal_resonance: f32 [0,1]`, `q_composed_handle: OpaqueProtectedHandle<QComposed>`, `pattern_packet_handle: OpaqueProtectedHandle<PatternPacket>` (per CCT-7), `oracle_frame_handle: OpaqueProtectedHandle<OracleFrame>`, `symbolic_protein_handle: OpaqueProtectedHandle<SymbolicProtein>`, `deck_context_handle: OpaqueProtectedHandle<NaraDeckContext>`, `torus_knot_phase: f32` (cross-reference DR-IG-4 SSOT — M4 reads, never owns), `vama_recognition: OpaqueProtectedHandle<VamaState>` (per DR-M4-2 clause 4 + DR-M4-3 strict invariant). Privacy contract: **no raw bodies cross the bus**; resonance metric is the only scalar.
@@ -152,3 +172,55 @@ Verification: `cargo test -p portal-core --test m5_profile_projections`; `grep -
 Three fields surfacing composition state: `cosmic_composition_state: CosmicCompositionState` (1-2-3 plugin composition mount-points + composition load status), `personal_pole: PersonalPoleProjection` / `psychoid_field` handle consumed through the DR-M4-3 opaque boundary (dipyramid + Hopf-linked tori at personal scale per DR-IG-6), and `canon_recognition_stream: Vec<CanonRecognitionEvent>` (4-5-0 Möbius write-back stream from Logos Atelier back to M0-5' pedagogy).
 
 Verification: `cargo test -p portal-core --test integrated_plugin_projections`; both integrated plugin extensions consume the projections at composition load.
+
+### 10.PASU — General PASU / BeingPattern live-state projection *(code-pending-closure; depends on PASU.md + S2/S3 live-state substrate + 10.M2/10.M3/10.M4/10.M5)*
+
+One cross-cutting profile field: `pasu_being_pattern: PasuBeingPatternProjection`.
+
+This is the Cycle 3 correction that prevents M4/Nara from treating the clock as "a session reader." The clock reads a being-pattern: a user, thinker, text, school, artifact, place, project, agent, or any other entity that can be projected into the harmonic field. PASU remains the protected user/agent ground at `Idea/Pratibimba/Self/PASU.md`, but the PASU layer generalizes as the runtime grammar for every entity that the system can situate. The field is live state over canon: S2/Neo4j owns canonical identity, coordinate, and ontology anchors; S3/SpaceTimeDB owns current presence rows and stream deltas; Graphiti owns protected lived episodes and provenance; Redis/NOW/DAY own runtime temporal handles; M0/M5 review gates decide whether any observed pattern becomes canon.
+
+Two Anuttara laws bind this field:
+- `M0-3-8` Archetype 5 / Dynamic Harmony supplies the Mono-Poly relationship grammar. The being-pattern must distinguish individual mono-anchor, live poly-field, potential shared pattern, actual many, forced-unification danger, generative differentiation, and true MonoPoly synthesis.
+- `M0-4.4.0-(4.4/5)` Mahamaya relational grammar supplies personhood/perspective. The same six equations generate I, You, You-and-I, They, We, We-I and, under the Nara overlay, Father, Mother, Son, Daughter, Tao, Integral consciousness. The profile must therefore preserve perspective role instead of flattening all participants into generic graph nodes.
+
+Required fields:
+- `entity_ref: BeingEntityRef` with `{ entity_id, entity_kind, coordinate_home, graph_anchor }`
+- `stable_identity: CanonicalIdentityHandle` sourced from S2/Neo4j, never rebuilt by renderers
+- `live_state: LiveStateHandle` with SpaceTimeDB row id, generation, DAY/NOW, Redis/Psyche handles, and optional Graphiti episode refs
+- `observer_anchor: EarthCentredObserverAnchor` documenting Earth-at-centre semantics for planetary projection
+- `clock_address: BeingPatternClockAddress` carrying `degree360`, optional `degree384_line`, codon, hexagram, line-change, tarot, and `AnuttaraPentadicRuntimeTrace` refs
+- `monopoly_operator: MonoPolyOperator` with variants `Mono`, `Poly`, `ActuallyMany`, `PotentiallyOne`, `ActualisingOne`, `PotentiatingMany`, `MonoPoly`; `ActualisingOne` is a review-risk state, not an automatic canon merge
+- `perspective_role: PerspectiveRole` with variants `FirstPerson`, `SecondPerson`, `FirstPersonPlural`, `ThirdPerson`, `CollectiveWe`, `IntegralWeI`
+- `nara_family_role: Option<NaraFamilyRole>` with variants `Father`, `Mother`, `Son`, `Daughter`, `Tao`, `IntegralConsciousness`; present only when the reading intentionally applies the Nara family overlay
+- `m2_m3_relation: LensOrbiterRelationProjection` binding M2 Parashakti planetary/chakral orbiters to M3 Mahamaya 16+1 lenses through backend aspect/aspect-like relation edges; no renderer-local 16/9 table
+- `bioquaternion_handles: BeingBioQuaternionHandles` with optional `q_identity`, `q_transit`, `q_activity`, `q_composed`, and `q_public_resonance` handles; protected bodies remain opaque
+- `elemental_weights: ElementalWeightProjection` as the shared symbolic carrier across Parashakti, Mahamaya, Nara, and Epii
+- `relation_edges: Vec<BeingPatternRelationEdge>` for live aspects, co-presence, school-of-thought comparison, agent dialogue, and resonance/discord edges
+- `verifier_refs` naming M0 virtue witness / M5 review workbench state when the pattern is used for training, canon-recognition, or Epii dialogue
+
+Semantics:
+- Earth is the visual centre/observer for the 3D solar-system projection; it is not duplicated as an orbiting visual point unless the owning M2 projection explicitly asks for the mod-10 wheel.
+- The M2 planetary set is read from `parashakti_meaning`; the visual 9-orbiter relation is derived by treating Earth as centre/observer, not by changing canonical LUT cardinality.
+- The 360-degree ring is the foundational address. The 24-line-change extension closes `360+24=384` and binds M3-5 clock degree, codon, hexagram, tarot, and symbolic-protein handles.
+- `Mono`, `Poly`, and `MonoPoly` are not labels for UI copy; they are runtime relation modes used by SpaceTimeDB collective presence and by Epii review. The system may render a possible unity, but only M0/M5 verification may promote that unity to canon.
+- `perspective_role` controls the read-frame: the same relation edge can be an I-You encounter, a They observation, a We collective field, or a We-I integral field. Graph and ML consumers must retain this role as a feature.
+- `pasu_being_pattern` is the feature family that M5/EBM may learn over. Models consume projected vectors and handles, not Neo4j canon bodies or protected M4 bodies.
+
+Verification: `cargo test -p portal-core --test pasu_being_pattern_projection_privacy`; `cargo test -p portal-core --test pasu_monopoly_perspective_modes`; `cargo test -p epi-cli --test kernel_bridge_runtime_typed_json` fixture includes `pasuBeingPattern`; TS mirror test asserts all protected fields serialize as opaque handles; S3 stream fixture test replays `EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed` without mutating S2 canon; renderer no-local-table test asserts M2/M3 relation edges are sourced from the typed projection; review-risk test asserts `ActualisingOne` cannot write canon without M5 review + M0 witness.
+
+### 10.AW — Anuttara witness projection (the 4/5/0 verification weight on the bus) *(code-pending-closure; depends on Track 01 §1.10/1.12/1.13; cross-link 18, 19.6, 21, 25, 26)*
+
+One profile field carrying M0's verification weight up to every renderer: `anuttara_witness: AnuttaraWitnessProjection`. This is how the Anuttara substrate-language calculus (1.13) and the R-factor theory (1.12) become *verification weight in the 4/5/0 setup* without becoming a gate — the field is **emit-only**; nothing downstream blocks on it, and `ActualisingOne`-style hard gates remain solely with the human gate and M5 review.
+
+Required fields:
+- `virtue_witness_vector: u16` — the 9-bit Parameśvara witness from `M0VerifierReport` (1.10), one bit per `VIRTUE_LUT[9]` virtue scored over threshold
+- `syntax_witness_vector: u8` — the 4-bit odd-archetype witness from the calculus (1.13): bit 0 = Archetype-3 zodiacal utterance formed, bit 1 = Archetype-5 mono-poly state resolved, bit 2 = Archetype-7 R-factor path traced, bit 3 = Archetype-9 palindrome closure reached
+- `rfactor_path: Vec<RFactorPathStep>` — the execution's fretboard record (1.12): `{ r_factor, base_route, band, position }` steps, with the `(@#)` band-turn marked; the read-only source for the 25 fretboard engine
+- `band_balance: BandBalanceProjection` — `{ pravritti_depth, nivritti_depth, reached_turn: bool, returned: bool }` so the session-close can ask "completed into a witnessed virtue, or closed in the Beauty-band unreturned?"
+- `palindrome_state: PalindromeWholenessState` — the structural 9-ness check (`normal_form_symmetric: bool` + the mirror normal-form string for the inspector)
+- `open_questions: Vec<SymbolicCoordinateString>` — the typed `?`-objects (Law-6 query-objects), addressed in the 1.11 EBNF (`#R{n}-…-pending?`), clickable in the 21 surfaces and routed to contemplation (19.6)
+- `coherence_score: f32` — now the average over the four witnesses (virtue + syntax + relation + palindrome)
+
+Discipline: renderers and ML consumers read these as features/lamps/chips only — the field is the EBM feature-family the M5 witness engine (26) learns over (predicting witness vectors from being-pattern features; energy = distance(predicted, verified)), but the verifier stays non-bypassable so coherence cannot be gamed. `open_questions` are the contemplation curriculum the language's own undefinedness generates; their resolutions fork to Hen candidates (canon) + EBM training pairs.
+
+Verification: `cargo test -p portal-core --test anuttara_witness_projection`; `grep -n "syntax_witness_vector\|rfactor_path\|band_balance\|palindrome_state" Body/S/S0/portal-core/src/kernel.rs` returns the new carriers; TS mirror test (Track 18) asserts `anuttараWitness` serializes with the 9-bit + 4-bit vectors and the `?`-object list; non-blocking test asserts no consumer path gates on `anuttara_witness` (only human-gate + M5 review may block, per 08/12).

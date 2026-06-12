@@ -2,10 +2,14 @@
 
 Closure of the shell that hosts the six M' surfaces + two integrated plugins. The substrate is largely **ALIGNED at presence level**: all six M-extensions (`m0-anuttara`..`m5-epii`), both integrated plugins (`plugin-integrated-1-2-3`, `plugin-integrated-4-5-0`), both contract preflights (`07-t0` individual + `08-t0` composition), `kernel-bridge` + `kernel-bridge-readiness`, `omnipanel-shell`, `pratibimba-layouts`, `ide-shell-m0-m5` (with all 8 named widgets + `bridge-gate`), `agentic-control-room`, `body-lite-surface`, `acceptance-harness`, `m-extension-runtime`, and `integrated-composition` are landed packages. `CrossLayoutIntent` envelope is typed; `OMNIPANEL_TABS.availableInLayouts` is typed. `epi-tauri`-as-deprecated standing invariant is honored at substrate level.
 
+## Target Authority Invariant
+
+Cycle 3 work is **Electron-first, browser-derived, gateway-mediated**. `Body/M/epi-theia/electron-app` is the full-fidelity development, smoke-build, and acceptance target; it carries the whole `daily-0-1` + `ide-deep` product surface. `Body/M/epi-theia/theia-app` is the derived browser-mode target for gateway-served, hosted, phone, secondary-machine, CI, Docker, and headless use. Browser mode may step down capability through gateway mediation, permission gates, and readiness labels, but it must not become the only target that carries a Pratibimba surface package or the target where full-surface behavior is first validated.
+
 ## Source Specs and Matrix
 
 - Canonical: `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md` (shell separation invariant §`Shell layer` L91-148), `Idea/Bimba/Seeds/M/M'-PORTAL-SPEC.md`
-- Substrate: `Body/M/epi-theia/extensions/{pratibimba-layouts,omnipanel-shell,ide-shell-m0-m5,kernel-bridge,kernel-bridge-readiness,acceptance-harness,m-extension-runtime,integrated-composition,contracts}`
+- Substrate: `Body/M/epi-theia/{electron-app,theia-app,extensions/{pratibimba-layouts,omnipanel-shell,ide-shell-m0-m5,kernel-bridge,kernel-bridge-readiness,acceptance-harness,m-extension-runtime,integrated-composition,contracts}}`
 - Full row-level evidence: `plan.runs/wave-b-theia-shell-matrix.md`
 
 ## Cycle 2 Substrate Inheritance
@@ -14,11 +18,25 @@ Consume as-is — all six M-extensions + two integrated plugins + both contract 
 
 ## Tranches
 
+0. **11.0 — Electron target package parity gate** *(code-ahead-landing; target-authority closure)*
+
+   `electron-app` must carry every Pratibimba surface package that `theia-app` carries unless the package is named in an explicit browser-only exception ledger. This closes the browser-first drift where `ide-shell-m0-m5`, `agentic-control-room`, `body-lite-surface`, and `acceptance-harness` landed in browser mode while Electron lacked the full-surface set. Root scripts should treat Electron as the default target (`pnpm start`, smoke build, and full-surface acceptance), with browser commands labelled as browser/gateway/remote mode.
+
+   Verification: `node --test Body/M/epi-theia/extensions/test/electron-target-parity.test.mjs`; `Body/M/epi-theia/scripts/smoke-build.sh` builds `@pratibimba/electron-app` and checks Electron frontend chunks for the full surface packages.
+
 1. **11.1 — Shell-0/Shell-1/4+2/`/` separation reading (clarification, not contradiction)** *(doc-ahead-landing; DR-TS-1 VALIDATED)*
 
    Spec is already counting it out cleanly: layout is `0/1` (one shell with a 0-cosmic side and a 1-personal side) + `4+2` (six depth layers) + `/` (OmniPanel operator membrane). Code's two layouts (`daily-0-1` for the 0/1 shell, `ide-deep` for the 4+2 depth) ARE the two surfaces. The 0/1 toggle is the side-switch within `daily-0-1` — `(0/1)` IS `#` applied to user context, same state seen from opposite faces. No third layout, no separate toggle-widget extension (unless wanted as UI polish). Cross-links DR-M4-2 clause 5 (0 cosmic / 1 personal — same polarity all the way down).
 
    Verification: `pnpm --filter @pratibimba/pratibimba-layouts test` passes against current substrate; `daily-0-1` widget contributions partition cleanly into 0-side / 1-side renderings; spec patched to note the structural reading so the next reader doesn't re-litigate.
+
+   **LANDED (2026-06-10) — structural reading, no third layout.** The (0/1) side partition is now build-enforced in `pratibimba-layouts/src/common/layout-types.ts`. `DAILY_0_1_WIDGET_IDS` is the single source of truth for both `DAILY_0_1_DESCRIPTOR.expectedWidgets` and `DAILY_0_1_FACE_OF`, a `Readonly<Record<Daily01WidgetId, DailyShellFace>>` assigning every `daily-0-1` widget to exactly one face — so `tsc -b` (the package `test`) fails if the partition ever drifts:
+
+   - **0-side (cosmic)** = `pratibimba.daily.cymatic-placeholder` — lean preview of the M1'-M3' structural / cymatic-clock outputs.
+   - **1-side (personal)** = `pratibimba.daily.journal`, `pratibimba.daily.agent-checkin` — lean preview of the M4'/M5'/M0' lived-return.
+   - **`/` membrane** = `pratibimba.omnipanel.shell`, `pratibimba.daily.status-display` — S0' operator surface (OmniPanel + bridge-readiness) cross-cutting BOTH faces; it is `#` itself, not a pole.
+
+   `partitionDailyWidgets()` returns `{ cosmic, personal, membrane }` (exhaustive, disjoint); `dailyWidgetsForSide('0-cosmic' | '1-personal')` returns each face's rendering with the membrane folded onto both sides. There is **no third layout and no separate toggle-widget extension** — `ide-deep` is the distinct 4+2 depth surface, `daily-0-1` is the 0/1 shell, and the toggle is `#` applied to user context, the same layout from opposite faces. This is the clarification DR-TS-1 ratifies (cross-links DR-M4-2 clause 5: 0 cosmic / 1 personal — same polarity all the way down). The matter is settled; do not re-litigate it as a contradiction.
 
 2. **11.2 — Cross-layout intent routing T5 promotion** *(spec-ahead-integration)*
 

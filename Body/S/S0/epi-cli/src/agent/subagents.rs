@@ -1,16 +1,21 @@
 use crate::agent::capabilities::CapabilityRegistry;
 use crate::agent::skills::parse_markdown_frontmatter;
 use crate::agent::SubagentCmd;
-use crate::agent::{launch, runtime};
+use crate::agent::{launch, runtime, tmux};
 use crate::gate::{
     config,
     session_store::{slug, SessionPatch, SessionStore},
     subagents as gate_subagents, transcripts,
 };
+use epi_s3_gateway_contract::{
+    TerminalBinding, TerminalLease as GatewayTerminalLease, TerminalStatus,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::Uuid;
 
@@ -51,6 +56,8 @@ pub struct RuntimeSubagentRequest {
     pub cmux_workspace: Option<String>,
     pub cmux_surface: Option<String>,
     pub cmux_pane_id: Option<String>,
+    pub terminal_backed: bool,
+    pub terminal_lease: Option<tmux::TerminalLease>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -66,6 +73,7 @@ pub struct RuntimeSubagentReport {
     pub cmux_workspace: Option<String>,
     pub cmux_surface: Option<String>,
     pub cmux_pane_id: Option<String>,
+    pub terminal_binding: Option<TerminalBinding>,
     pub output: String,
     pub exit_code: i32,
     pub elapsed_ms: u128,
@@ -140,6 +148,8 @@ pub fn run(cmd: &SubagentCmd, json: bool) -> Result<String, String> {
                 cmux_workspace: None,
                 cmux_surface: None,
                 cmux_pane_id: None,
+                terminal_backed: terminal_backed_from_env(),
+                terminal_lease: None,
             })?,
             json,
         ),
@@ -160,6 +170,8 @@ pub fn run(cmd: &SubagentCmd, json: bool) -> Result<String, String> {
                     cmux_workspace: record.cmux_workspace,
                     cmux_surface: record.cmux_surface,
                     cmux_pane_id: record.cmux_pane_id,
+                    terminal_backed: terminal_backed_from_env(),
+                    terminal_lease: None,
                 })?,
                 json,
             )
@@ -204,8 +216,6 @@ pub fn run_runtime(request: RuntimeSubagentRequest) -> Result<RuntimeSubagentRep
         .session_key
         .clone()
         .unwrap_or_else(|| default_subagent_session_key(&request.agent_id));
-    let _record = prepare_runtime_session(&store, &request, &session_key)?;
-
     let session_file = gate_root
         .join("pi-sessions")
         .join(format!("{}.json", slug(&session_key)));
@@ -224,10 +234,45 @@ pub fn run_runtime(request: RuntimeSubagentRequest) -> Result<RuntimeSubagentRep
     }
     args.push(request.prompt.clone());
 
+    let mut plan = runtime::plan_run(Some(&request.agent_id), None, &[], &args)?;
+    plan.gate_state_root = gate_root.clone();
+    let mut request = request;
+    if request.terminal_backed && request.terminal_lease.is_none() {
+        request.terminal_lease = Some(tmux::create_session(&plan, &session_key)?);
+    }
+    let terminal_binding = request
+        .terminal_lease
+        .as_ref()
+        .map(|lease| terminal_binding_from_lease(&request.agent_id, lease));
+    let _record = prepare_runtime_session(&store, &request, &session_key)?;
+
     transcripts::append_message(&gate_root, &session_key, "user", &request.prompt, None)?;
 
-    let plan = runtime::plan_run(Some(&request.agent_id), None, &[], &args)?;
     let start = now_ms()?;
+    if request.terminal_backed {
+        let lease = request.terminal_lease.as_ref().ok_or_else(|| {
+            "terminal-backed subagent dispatch requires a TerminalLease".to_owned()
+        })?;
+        inject_runtime_command(&lease.tmux_pane_id, &launch::pi_command_argv(&plan))?;
+        let elapsed_ms = now_ms()?.saturating_sub(start);
+        return Ok(RuntimeSubagentReport {
+            ok: true,
+            status: "running".to_owned(),
+            session_key,
+            parent_session_key: request.parent_session_key,
+            agent_id: request.agent_id,
+            team_id: request.team_id,
+            orchestration_kind: request.orchestration_kind,
+            cmux_workspace: request.cmux_workspace,
+            cmux_surface: request.cmux_surface,
+            cmux_pane_id: request.cmux_pane_id,
+            terminal_binding,
+            output: String::new(),
+            exit_code: 0,
+            elapsed_ms,
+        });
+    }
+
     let output = launch::configure_std_command(&plan)
         .output()
         .map_err(|err| format!("failed to launch pi: {err}"))?;
@@ -257,6 +302,7 @@ pub fn run_runtime(request: RuntimeSubagentRequest) -> Result<RuntimeSubagentRep
         cmux_workspace: request.cmux_workspace,
         cmux_surface: request.cmux_surface,
         cmux_pane_id: request.cmux_pane_id,
+        terminal_binding,
         output: rendered,
         exit_code: output.status.code().unwrap_or(1),
         elapsed_ms,
@@ -407,6 +453,7 @@ fn list_runtime(parent_session: Option<&str>) -> Result<Vec<serde_json::Value>, 
                 "cmuxWorkspace": record.cmux_workspace,
                 "cmuxSurface": record.cmux_surface,
                 "cmuxPaneId": record.cmux_pane_id,
+                "terminalBinding": record.terminal_binding,
                 "status": "tracked",
                 "updatedAtMs": record.updated_at_ms,
             })
@@ -418,11 +465,40 @@ fn stop_runtime(session_key: &str) -> Result<serde_json::Value, String> {
     let gate_root = config::gate_root_from_env()?;
     let store = SessionStore::new(&gate_root)?;
     let record = store.resolve(session_key)?;
+    if let Some(binding) = record.terminal_binding.clone() {
+        if binding.tmux_pane_id.is_some()
+            || binding.terminal_status == Some(TerminalStatus::Attached)
+        {
+            if let Some(anchor) = binding.session_anchor.as_deref() {
+                run_tmux(["kill-session", "-t", anchor])?;
+            } else {
+                tmux::kill_session(&record.canonical_key, &gate_root)?;
+            }
+            let mut detached = binding;
+            detached.terminal_status = Some(TerminalStatus::Detached);
+            let updated = store.patch(
+                &record.canonical_key,
+                SessionPatch {
+                    terminal_binding: Some(Some(detached.clone())),
+                    ..SessionPatch::default()
+                },
+            )?;
+            return Ok(json!({
+                "ok": true,
+                "stopped": true,
+                "stopMode": "terminal",
+                "sessionKey": updated.canonical_key,
+                "terminalBinding": detached,
+            }));
+        }
+    }
+
     let run_id = format!("cli-stop-{}", now_ms()?);
     transcripts::append_abort(&gate_root, &record.canonical_key, &run_id)?;
     Ok(json!({
         "ok": true,
         "stopped": true,
+        "stopMode": "transcript",
         "sessionKey": record.canonical_key,
         "runId": run_id,
     }))
@@ -440,6 +516,22 @@ fn prepare_runtime_session(
     )?
     .ok_or_else(|| "subagent lineage context should resolve".to_owned())?;
     store.ensure(session_key)?;
+    if request.terminal_backed && request.terminal_lease.is_none() {
+        return Err("terminal-backed subagent dispatch requires a TerminalLease".to_owned());
+    }
+    let terminal_binding = request
+        .terminal_lease
+        .as_ref()
+        .map(|lease| {
+            if lease.session_key != session_key {
+                return Err(format!(
+                    "terminal lease for {} cannot attach to child session {session_key}",
+                    lease.session_key
+                ));
+            }
+            Ok(terminal_binding_from_lease(&request.agent_id, lease))
+        })
+        .transpose()?;
     store.patch(
         session_key,
         SessionPatch {
@@ -464,6 +556,7 @@ fn prepare_runtime_session(
             cmux_workspace: Some(request.cmux_workspace.clone()),
             cmux_surface: Some(request.cmux_surface.clone()),
             cmux_pane_id: Some(request.cmux_pane_id.clone()),
+            terminal_binding: Some(terminal_binding),
             ..SessionPatch::default()
         },
     )?;
@@ -487,4 +580,108 @@ fn now_ms() -> Result<u128, String> {
         .duration_since(UNIX_EPOCH)
         .map_err(|err| err.to_string())?
         .as_millis())
+}
+
+pub(super) fn terminal_backed_from_env() -> bool {
+    std::env::var("EPI_AGENT_TERMINAL_BACKED")
+        .map(|value| matches!(value.as_str(), "1" | "true" | "TRUE" | "yes" | "on"))
+        .unwrap_or(false)
+}
+
+fn terminal_binding_from_lease(agent_id: &str, lease: &tmux::TerminalLease) -> TerminalBinding {
+    TerminalBinding {
+        terminal_identifier: Some(format!(
+            "tmux:{}:{}",
+            lease.tmux_session_name, lease.tmux_pane_id
+        )),
+        session_anchor: Some(lease.tmux_session_name.clone()),
+        tmux_pane_id: Some(lease.tmux_pane_id.clone()),
+        attached_session_key: Some(lease.session_key.clone()),
+        terminal_status: Some(TerminalStatus::Attached),
+        lease: Some(GatewayTerminalLease {
+            lease_owner: Some(format!("pi.{agent_id}")),
+            lease_purpose: Some("subagent-runtime".to_owned()),
+            lease_expires_at_ms: Some(
+                lease.created_at + u128::from(lease.lease_ttl_seconds) * 1000,
+            ),
+        }),
+        capture_policy: None,
+    }
+}
+
+fn inject_runtime_command(pane_id: &str, argv: &[String]) -> Result<(), String> {
+    let Some((program, args)) = argv.split_first() else {
+        return Err("missing PI runtime command".to_owned());
+    };
+    send_literal(pane_id, program)?;
+    for arg in args {
+        run_tmux(["send-keys", "-t", pane_id, "Space"])?;
+        send_literal(pane_id, &shell_single_quote(arg))?;
+    }
+    run_tmux(["send-keys", "-t", pane_id, "Enter"])
+}
+
+fn send_literal(pane_id: &str, text: &str) -> Result<(), String> {
+    let mut command = tmux_command();
+    command
+        .arg("send-keys")
+        .arg("-t")
+        .arg(pane_id)
+        .arg("-l")
+        .arg("--")
+        .arg(text);
+    run_command(command)
+}
+
+fn run_tmux<const N: usize>(args: [&str; N]) -> Result<(), String> {
+    let mut command = tmux_command();
+    command.args(args);
+    run_command(command)
+}
+
+fn run_command(mut command: Command) -> Result<(), String> {
+    let status = command
+        .status()
+        .map_err(|err| format!("failed to run tmux: {err}"))?;
+    if status.success() {
+        Ok(())
+    } else {
+        Err(format!("tmux exited with status {status}"))
+    }
+}
+
+fn tmux_command() -> Command {
+    Command::new(resolve_tmux_binary().unwrap_or_else(|| OsString::from("tmux")))
+}
+
+fn resolve_tmux_binary() -> Option<OsString> {
+    if let Some(path) = std::env::var_os("EPI_AGENT_TMUX_BIN") {
+        return Some(path);
+    }
+    let path = std::env::var_os("PATH")?;
+    std::env::split_paths(&path)
+        .map(|dir| dir.join("tmux"))
+        .find(|candidate| candidate.is_file())
+        .map(|candidate| candidate.into_os_string())
+}
+
+fn shell_single_quote(value: &str) -> String {
+    if value.is_empty() {
+        return "''".to_owned();
+    }
+    if value.chars().all(|ch| {
+        ch.is_ascii_alphanumeric() || matches!(ch, '-' | '_' | '/' | '.' | ':' | '=' | ',')
+    }) {
+        return value.to_owned();
+    }
+    let mut quoted = String::from("'");
+    for ch in value.chars() {
+        if ch == '\'' {
+            quoted.push_str("'\\''");
+        } else {
+            quoted.push(ch);
+        }
+    }
+    quoted.push('\'');
+    quoted
 }

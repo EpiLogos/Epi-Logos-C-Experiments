@@ -1,0 +1,35 @@
+{
+  "runId": "20260611T155009Z-21-T21.16",
+  "taskId": "21.T21.16",
+  "startedAt": "2026-06-11T15:50:09.825Z",
+  "owner": "codex-m-dev-21-t21-16",
+  "leaseExpiresAt": "2026-06-11T17:50:09.825Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.16",
+    "trackId": "21",
+    "tranche": "T21.16",
+    "title": "M0/M2 Parity Bridge Reader",
+    "effort": null,
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.15"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/parity-bridge-reader.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

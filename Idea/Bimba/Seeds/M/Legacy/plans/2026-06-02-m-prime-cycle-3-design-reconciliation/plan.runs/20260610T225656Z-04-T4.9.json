@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T225656Z-04-T4.9",
+  "taskId": "04.T4.9",
+  "startedAt": "2026-06-10T22:56:56.741Z",
+  "owner": "codex-m-dev-04-t4-9",
+  "leaseExpiresAt": "2026-06-11T00:56:56.741Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T4.9",
+    "trackId": "04",
+    "tranche": "T4.9",
+    "title": "Strange-attractor / coupling-flow discipline for M3→Nara",
+    "effort": null,
+    "file": "04-m3-mahamaya-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+    "dependsOn": [
+      "04.T4.8"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

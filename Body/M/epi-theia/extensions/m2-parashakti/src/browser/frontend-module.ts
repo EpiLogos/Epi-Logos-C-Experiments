@@ -14,6 +14,8 @@ import {
     parseExtensionRoute,
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
+import { M2CymaticEngineWidget } from './m2-cymatic-engine-widget';
+import { M2CorrespondenceTreeWidget } from './m2-correspondence-tree-widget';
 import { M2ParashaktiWidget } from './m2-parashakti-widget';
 import {
     EXTENSION_ID,
@@ -112,6 +114,20 @@ export default new ContainerModule(bind => {
             createWidget: () => createWidget(ctx.container)
         }))
         .inSingletonScope();
+    bind(M2CymaticEngineWidget).toSelf();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: M2CymaticEngineWidget.ID,
+            createWidget: () => createCymaticEngineWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(M2CorrespondenceTreeWidget).toSelf();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: M2CorrespondenceTreeWidget.ID,
+            createWidget: () => createCorrespondenceTreeWidget(ctx.container)
+        }))
+        .inSingletonScope();
     bindViewContribution(bind, M2ParashaktiContribution);
     bind(FrontendApplicationContribution).toService(M2ParashaktiContribution);
 
@@ -129,4 +145,16 @@ function createWidget(container: interfaces.Container): M2ParashaktiWidget {
     const child = container.createChild();
     child.bind(M2ParashaktiWidget).toSelf();
     return child.get(M2ParashaktiWidget);
+}
+
+function createCymaticEngineWidget(container: interfaces.Container): M2CymaticEngineWidget {
+    const child = container.createChild();
+    child.bind(M2CymaticEngineWidget).toSelf();
+    return child.get(M2CymaticEngineWidget);
+}
+
+function createCorrespondenceTreeWidget(container: interfaces.Container): M2CorrespondenceTreeWidget {
+    const child = container.createChild();
+    child.bind(M2CorrespondenceTreeWidget).toSelf();
+    return child.get(M2CorrespondenceTreeWidget);
 }

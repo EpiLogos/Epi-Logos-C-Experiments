@@ -1,0 +1,21 @@
+[package]
+name = "m1-paramasiva-played-torus-wgpu"
+version = "0.1.0"
+edition = "2021"
+description = "Bevy/wgpu renderer contract for the M1 K2 played torus, consuming portal-core profile state."
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+portal-core = { path = "../../../../../S/S0/portal-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[package.metadata.epi-logos.renderer]
+bevy = "0.14 native renderer host declaration; enabled by the production shell build lane"
+wgpu = "0.20 GPU backend declaration; this crate's default tests verify the profile-fed render contract offline"
+surface = "single K2 played torus"
+
+[lib]
+path = "src/lib.rs"
+
+[workspace]

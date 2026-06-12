@@ -11,6 +11,7 @@ pub const COORDINATE_PREFIX_PROPERTY: &str = "coordinate_prefix";
 pub const COORDINATE_DEPTH_PROPERTY: &str = "coordinate_depth";
 pub const COORDINATE_PARENT_PROPERTY: &str = "coordinate_parent";
 pub const COORDINATE_AXIS_PROPERTY: &str = "coordinate_axis";
+pub const COORDINATE_NAMESPACE_PROPERTY: &str = "coordinate_namespace";
 pub const CANONICAL_VAULT_PATH_PROPERTY: &str = "vault_path";
 pub const ARTIFACT_KIND_PROPERTY: &str = "artifact_kind";
 pub const CONTENT_HASH_PROPERTY: &str = "content_hash";
@@ -811,6 +812,17 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         compatibility: false,
     },
     GraphPropertySpec {
+        key: COORDINATE_NAMESPACE_PROPERTY,
+        coordinate_home: "S2-0",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "coordinate",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
         key: CANONICAL_VAULT_PATH_PROPERTY,
         coordinate_home: "S1-0",
         owner: GraphPropertyOwner::Node,
@@ -1480,6 +1492,22 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
         "deep-bimba-c",
+    ),
+    node_spec(
+        "c_1_asset_uri",
+        "C1",
+        GraphPropertyType::StringList,
+        GraphPropertyCardinality::Many,
+        GraphPropertyDisclosure::Public,
+        "anuttara-language",
+    ),
+    node_spec(
+        "c_1_asset_kind",
+        "C1",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "anuttara-language",
     ),
     node_spec(
         "c_3_practical_applications",
@@ -3110,6 +3138,23 @@ mod tests {
         assert!(node_property_spec("t_5_next_evolution_phase").is_some());
         assert!(node_property_spec("q_1_theoretical_thesis").is_some());
         assert!(node_property_spec("m_5_lacanian_interface").is_some());
+    }
+
+    #[test]
+    fn anuttara_language_asset_properties_are_public_schema_slots() {
+        let asset_uri = node_property_spec("c_1_asset_uri").expect("c_1_asset_uri missing");
+        assert_eq!(asset_uri.coordinate_home, "C1");
+        assert_eq!(asset_uri.value_type, GraphPropertyType::StringList);
+        assert_eq!(asset_uri.cardinality, GraphPropertyCardinality::Many);
+        assert_eq!(asset_uri.disclosure, GraphPropertyDisclosure::Public);
+        assert_eq!(asset_uri.source_family, "anuttara-language");
+
+        let asset_kind = node_property_spec("c_1_asset_kind").expect("c_1_asset_kind missing");
+        assert_eq!(asset_kind.coordinate_home, "C1");
+        assert_eq!(asset_kind.value_type, GraphPropertyType::String);
+        assert_eq!(asset_kind.cardinality, GraphPropertyCardinality::One);
+        assert_eq!(asset_kind.disclosure, GraphPropertyDisclosure::Public);
+        assert_eq!(asset_kind.source_family, "anuttara-language");
     }
 
     #[test]

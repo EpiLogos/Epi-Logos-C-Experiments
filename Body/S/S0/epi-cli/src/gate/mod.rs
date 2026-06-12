@@ -14,6 +14,7 @@ pub mod cron;
 pub mod devices;
 pub mod epii;
 pub mod events;
+pub mod gnostic;
 pub mod graph;
 pub mod graphiti;
 pub mod improve;

@@ -479,7 +479,7 @@ export async function loadSessions(
     if (limit > 0) {
       params.limit = limit;
     }
-    const res = await state.client.request("sessions.list", params);
+    const res = await requestKhoraSessionList(state.client, params);
     if (res) {
       state.sessionsResult = res;
     }
@@ -487,6 +487,18 @@ export async function loadSessions(
     state.sessionsError = String(err);
   } finally {
     state.sessionsLoading = false;
+  }
+}
+
+async function requestKhoraSessionList(client: GatewayClient, params: Record<string, unknown>): Promise<SessionsListResult | null> {
+  try {
+    return await client.request("s4.khora.session_list", {
+      ...params,
+      compatibility_method: "sessions.list",
+    });
+  } catch (err) {
+    console.warn("[sessions] s4.khora.session_list failed; falling back to sessions.list", err);
+    return await client.request("sessions.list", params);
   }
 }
 

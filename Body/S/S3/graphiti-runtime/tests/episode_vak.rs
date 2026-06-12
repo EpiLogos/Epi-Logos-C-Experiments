@@ -50,7 +50,11 @@ fn episode_attrs_default_is_empty() {
     let serialised = serde_json::to_value(&attrs).unwrap();
     // Default attrs serialise to an empty object (no VAK fields).
     let obj = serialised.as_object().expect("attrs is a json object");
-    assert!(obj.is_empty(), "default EpisodeAttrs has no fields, got: {:?}", obj);
+    assert!(
+        obj.is_empty(),
+        "default EpisodeAttrs has no fields, got: {:?}",
+        obj
+    );
 }
 
 #[test]

@@ -337,6 +337,8 @@ The six subsystem faces inherit the CF sequence as a structural grammar, not as 
 
 This resolves the Nara "and/or" ambiguity: full Nara is the recursive M4 household frame `(4.0/1-4.4/5)`; M4.5 is the `(4.5/0)` bridge where that household exposes reviewable handles to Epii. M4.5 is a seam, not a license for live activity to bypass #4.4.4.4 or mutate M4-0.
 
+The same assignment is the disciplined dynamics bridge. [[M2']] is the `(0/1/2)` running-flow field, not an M3-root; [[M3']] receives that flow as packet chains and renders them as symbolic phase portraits; [[M4']] / [[Nara]] integrates only the lived, body/oracle/journal-supported recurrence through M4-3; [[M5']] / [[Epii]] reviews the return. Any "strange attractor" or coupling-flow language must therefore name its register: symbolic skeleton, physics descent, psychoid bridge, low-energy measurement-face, or Nara recognition context.
+
 The portal should never treat this as decorative labelling. When a coordinate is rendered musically or routed agentically, the current mode/CF should be visible as part of the same harmonic profile that carries helix, position, ratio, square, resonance, and element.
 
 ## The [[K²]] Topology as the Shared Substrate

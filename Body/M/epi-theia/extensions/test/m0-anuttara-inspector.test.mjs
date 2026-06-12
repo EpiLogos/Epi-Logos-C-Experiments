@@ -6,12 +6,73 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { performance } from 'node:perf_hooks';
 import { createRequire } from 'node:module';
+import { readFile } from 'node:fs/promises';
+
+if (!globalThis.Element) {
+    globalThis.Element = class Element {
+        style = {};
+
+        setAttribute() {
+            return undefined;
+        }
+
+        removeAttribute() {
+            return undefined;
+        }
+
+        matches() {
+            return false;
+        }
+    };
+}
+if (!globalThis.document) {
+    globalThis.document = {
+        documentElement: new globalThis.Element(),
+        createElement: () => new globalThis.Element(),
+        querySelectorAll: () => []
+    };
+}
+if (!globalThis.window) {
+    globalThis.window = {
+        WebAssembly: globalThis.WebAssembly,
+        navigator: { userAgent: 'node-test' },
+        document: globalThis.document,
+        localStorage: {
+            getItem: () => null,
+            setItem: () => undefined,
+            removeItem: () => undefined
+        }
+    };
+}
 
 const require = createRequire(import.meta.url);
+require.extensions['.css'] = () => undefined;
 const {
     buildM0InspectorModel,
     normalizeM0CoordinateInput
-} = require('../m0-anuttara/lib/common/index.js');
+} = require('../m0-anuttara/lib/common/m0-inspector.js');
+const COMMUNITY_CLOCK_OVERLAY_VIEW_ID = 'm0.anuttara.communityClockOverlay';
+const ALL_VIEW_IDS = [
+    'm0.anuttara.languageMap',
+    'm0.anuttara.owlShaclInspector',
+    'm0.anuttara.rVirtuePanel',
+    COMMUNITY_CLOCK_OVERLAY_VIEW_ID
+];
+
+const {
+    VIRTUE_WITNESS_LUT,
+    VIRTUE_WITNESS_VECTOR_SIZE,
+    VirtueWitnessPanel,
+    activeWitnessCount,
+    createWitnessVector,
+    toggleWitnessBit
+} = require('../m0-anuttara/lib/browser/panels/virtue-witness-panel.js');
+const {
+    Arch9CompletionPanel
+} = require('../m0-anuttara/lib/browser/panels/syntax-layers/arch9-completion-panel.js');
+
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
 
 const readiness = Object.freeze({
     fetchedAt: 1,
@@ -153,6 +214,36 @@ test('missing Anuttara syntax fields render as canonical absence, not placeholde
     }
 });
 
+test('Anuttara asset handles render with explicit DR-M0-4 provenance state', () => {
+    const assetNode = {
+        ...capturedS2GraphNode,
+        properties: {
+            ...capturedS2GraphNode.properties,
+            c_1_asset_uri: [
+                'vault://Idea/Bimba/Map/assets/decan-seals/aries-01.png',
+                'ipfs://bafybeigdyrztdecanseal'
+            ],
+            c_1_asset_kind: 'decan-seal'
+        }
+    };
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: assetNode,
+        profile,
+        readiness,
+        context
+    });
+    const assetField = model.languageFields.find(field => field.key === 'c_1_asset_uri');
+
+    assert.ok(assetField);
+    assert.equal(assetField.state, 'review_pending');
+    assert.match(assetField.value, /decan-seal/);
+    assert.match(assetField.value, /vault:\/\/Idea\/Bimba\/Map\/assets\/decan-seals\/aries-01\.png/);
+    assert.match(assetField.value, /ipfs:\/\/bafybeigdyrztdecanseal/);
+    assert.match(assetField.provenance, /DR-M0-4/);
+    assert.match(assetField.provenance, /c_1_asset_uri/);
+});
+
 test('OWL SHACL GDS facts preserve inferred/review-pending/blocked status', () => {
     const model = buildM0InspectorModel({
         selectedInput: '#0',
@@ -166,6 +257,73 @@ test('OWL SHACL GDS facts preserve inferred/review-pending/blocked status', () =
     assert.equal(model.readinessFacts.find(fact => fact.id === 'shacl')?.state, 'review_pending');
     assert.equal(model.readinessFacts.find(fact => fact.id === 'gds')?.state, 'blocked');
     assert.equal(model.readinessFacts.find(fact => fact.id === 'kernel-core')?.canonical, true);
+});
+
+test('communityClockOverlay view is declared and remains blocked until S2 GDS payload is wired', () => {
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: capturedS2GraphNode,
+        profile,
+        readiness,
+        context
+    });
+
+    assert.ok(ALL_VIEW_IDS.includes(COMMUNITY_CLOCK_OVERLAY_VIEW_ID));
+    assert.equal(COMMUNITY_CLOCK_OVERLAY_VIEW_ID, 'm0.anuttara.communityClockOverlay');
+    assert.equal(model.communityClockOverlay.viewId, COMMUNITY_CLOCK_OVERLAY_VIEW_ID);
+    assert.equal(model.communityClockOverlay.state, 'blocked');
+    assert.equal(model.communityClockOverlay.gdsCommunity.state, 'blocked');
+    assert.equal(model.communityClockOverlay.readOnly, true);
+    assert.equal(model.communityClockOverlay.mutatesGraphCanon, false);
+    assert.equal(model.communityClockOverlay.usesLocalClock, false);
+    assert.equal(model.communityClockOverlay.canonicalWritePerformed, false);
+    assert.match(model.communityClockOverlay.provenance, /blocked until S2 GDS payload wired/);
+    assert.doesNotMatch(model.communityClockOverlay.provenance, /placeholder/i);
+});
+
+test('communityClockOverlay renders supplied S2 GDS community and S3 active-now projections', () => {
+    const graphNode = {
+        ...capturedS2GraphNode,
+        gdsOverlay: {
+            status: 'ready_public_current',
+            gdsReady: true,
+            projectionName: 's2_public_bimba_option1_v1',
+            projectionVersion: '2026-06-01-option1-public-coordinate-overlay',
+            privacyBoundaryStatus: 'public-coordinate-topology-only-excludes-protected-local-labels',
+            communityId: 'louvain:M0:0',
+            canonicalWritePerformed: false
+        }
+    };
+    const wiredProfile = {
+        ...profile,
+        payload: {
+            ...profile.payload,
+            m0_graph_node: graphNode,
+            s3_active_now: {
+                handle: 's3://day-now/2026-06-01/session'
+            }
+        }
+    };
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode,
+        profile: wiredProfile,
+        readiness,
+        context
+    });
+
+    assert.equal(model.communityClockOverlay.state, 'canonical');
+    assert.equal(model.communityClockOverlay.gdsCommunity.value, 'louvain:M0:0');
+    assert.equal(model.communityClockOverlay.activeNow.value, 's3://day-now/2026-06-01/session');
+    assert.equal(
+        model.communityClockOverlay.projection.value,
+        's2_public_bimba_option1_v1@2026-06-01-option1-public-coordinate-overlay'
+    );
+    assert.equal(
+        model.communityClockOverlay.privacyBoundary.value,
+        'public-coordinate-topology-only-excludes-protected-local-labels'
+    );
+    assert.equal(model.communityClockOverlay.usesLocalClock, false);
 });
 
 test('M5 action hooks are gateway-shaped requests and cannot write graph canon', () => {
@@ -201,4 +359,146 @@ test('M0 pedagogy keeps prior-ground boundary and routes +1 parent away from M0'
     assert.match(model.pedagogy.priorGroundBoundary, /prior 0\/1 ground/);
     assert.match(model.pedagogy.parentAttribution, /M1\/M2\/M3/);
     assert.match(model.pedagogy.contradiction, /DCC-01/);
+});
+
+test('six-layer surface routes share one S2 graph query path', () => {
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: capturedS2GraphNode,
+        profile,
+        readiness,
+        context
+    });
+
+    assert.deepEqual(
+        model.layerRoutes.map(route => route.layer),
+        ['lang', 'ql', 'rel', 'time', 'pers', 'pedag']
+    );
+    assert.deepEqual(
+        [...new Set(model.layerRoutes.map(route => route.query.method))],
+        ['s2.graph.query']
+    );
+    for (const route of model.layerRoutes) {
+        assert.equal(route.query.params.coordinate, 'M0');
+        assert.equal(route.query.params.layer, route.layer);
+        assert.equal(route.mutatesGraphCanon, false);
+        assert.match(route.tabId, /^m0-layer-/);
+    }
+});
+
+test('widget renders the model layer routes as six tab buttons', async () => {
+    const source = await import('node:fs/promises').then(fs =>
+        fs.readFile(new URL('../m0-anuttara/src/browser/m0-anuttara-widget.tsx', import.meta.url), 'utf8')
+    );
+
+    assert.match(source, /role="tablist"/);
+    assert.match(source, /role="tab"/);
+    assert.match(source, /model\.layerRoutes\.map/);
+});
+
+test('widget renders the community clock overlay without a renderer-local clock', async () => {
+    const source = await import('node:fs/promises').then(fs =>
+        fs.readFile(new URL('../m0-anuttara/src/browser/m0-anuttara-widget.tsx', import.meta.url), 'utf8')
+    );
+
+    assert.match(source, /m0-community-clock-overlay/);
+    assert.match(source, /model\.communityClockOverlay\.viewId/);
+    assert.match(source, /data-provenance-state=\{model\.communityClockOverlay\.state\}/);
+    assert.doesNotMatch(source, /new Date|Date\.now|performance\.now/);
+});
+
+test('Virtue Witness LUT mirrors the nine epi-lib VIRTUE_LUT names', async () => {
+    const source = await readFile(
+        new URL('../../../../S/S0/epi-lib/src/m0.c', import.meta.url),
+        'utf8'
+    );
+    const cNames = [...source.matchAll(/\.name = "([^"]+)"/g)]
+        .slice(0, VIRTUE_WITNESS_VECTOR_SIZE)
+        .map(match => match[1]);
+
+    assert.equal(VIRTUE_WITNESS_VECTOR_SIZE, 9);
+    assert.equal(VIRTUE_WITNESS_LUT.length, 9);
+    assert.deepEqual(
+        VIRTUE_WITNESS_LUT.map(entry => entry.name),
+        cNames
+    );
+});
+
+test('Virtue Witness vector helpers toggle real positions and count active bits', () => {
+    const initial = createWitnessVector([0, 3, 8]);
+    assert.equal(activeWitnessCount(initial), 3);
+    assert.equal(initial[0], true);
+    assert.equal(initial[1], false);
+
+    const toggled = toggleWitnessBit(initial, 3);
+    assert.equal(activeWitnessCount(toggled), 2);
+    assert.equal(toggled[3], false);
+    assert.equal(initial[3], true);
+
+    const retoggled = toggleWitnessBit(toggled, 1);
+    assert.equal(activeWitnessCount(retoggled), 3);
+    assert.equal(retoggled[1], true);
+    assert.throws(() => toggleWitnessBit(retoggled, 9), /outside the 9-bit witness vector/);
+});
+
+test('Virtue Witness panel renders nine toggleable positions and the active count', () => {
+    const profileWithWitness = Object.freeze({
+        ...profile,
+        payload: Object.freeze({
+            ...profile.payload,
+            virtueWitnessVector: [true, false, true, false, true, false, true, false, true]
+        })
+    });
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(VirtueWitnessPanel, { profile: profileWithWitness })
+    );
+
+    assert.match(markup, /data-widget-id="pratibimba\.m0-anuttara:virtue-witness-panel"/);
+    assert.match(markup, /data-active-witness-count="5"/);
+    assert.equal((markup.match(/data-virtue-position=/g) ?? []).length, 9);
+    assert.equal((markup.match(/aria-pressed="/g) ?? []).length, 9);
+    for (const entry of VIRTUE_WITNESS_LUT) {
+        assert.match(markup, new RegExp(`data-virtue-position="${entry.position}"`));
+        assert.match(markup, new RegExp(entry.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    }
+});
+
+test('Arch 9 completion syntax panel renders VIRTUE rows in canonical order and cross-links witness', () => {
+    const virtueRows = VIRTUE_WITNESS_LUT.map(entry =>
+        Object.freeze({
+            id: entry.position,
+            label: entry.name.split(' - ')[0],
+            symbol: entry.symbol,
+            provenance: 'VIRTUE_LUT projected through m0_routing_lut_snapshot'
+        })
+    );
+    const virtueWitness = Object.freeze({
+        witnessBits: Object.freeze([true, true, false, true, false, true, false, true, true]),
+        virtueLabels: Object.freeze(
+            VIRTUE_WITNESS_LUT.map(entry => entry.name.split(' - ')[0])
+        ),
+        coherenceScore: 0.72,
+        unsatisfiedConstraints: Object.freeze(['#R0-0/1/A-T9-unwitnessed?']),
+        state: 'canonical'
+    });
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(Arch9CompletionPanel, {
+            subTableRows: virtueRows,
+            contemplationPrompt: 'What completion is asking to be witnessed now?',
+            virtueWitness,
+            onSeekContemplation: () => undefined
+        })
+    );
+
+    assert.match(markup, /data-syntax-layer="completion"/);
+    assert.match(markup, /data-cross-link="21\.10"/);
+    assert.match(markup, /Why this question right now\?/);
+    assert.match(markup, /What completion is asking to be witnessed now\?/);
+    assert.equal((markup.match(/data-syntax-row-id=/g) ?? []).length, 9);
+    assert.equal((markup.match(/data-witness-row=/g) ?? []).length, 9);
+    assert.ok(markup.indexOf('Love/Peace') < markup.indexOf('Reality'));
+    assert.match(markup, /data-syntax-row-id="0"[^>]*>[\s\S]*Love\/Peace/);
+    assert.match(markup, /data-syntax-row-id="8"[^>]*>[\s\S]*Reality/);
+    assert.match(markup, /data-witness-state="witnessed"[\s\S]*Love\/Peace/);
+    assert.match(markup, /data-witness-state="unwitnessed"[\s\S]*Openness\/Creativity/);
 });

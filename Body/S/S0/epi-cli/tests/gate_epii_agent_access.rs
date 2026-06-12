@@ -640,3 +640,90 @@ async fn s5_gnosis_context_retrieval_uses_distinct_anima_and_epii_capability_env
     assert_eq!(epii["access"]["requiresHumanForIdentityMutation"], true);
     assert_eq!(epii["results"][0]["source_type"], "Canonical");
 }
+
+#[tokio::test]
+async fn s5_gnostic_gateway_methods_call_production_epi_gnostic_surface() {
+    let env = TestEnv::with_fake_pi();
+    let manifest_dir = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let epi_gnostic_root = manifest_dir
+        .join("../../S5/epi-gnostic")
+        .canonicalize()
+        .unwrap();
+    let python_bin = epi_gnostic_root.join(".venv/bin/python");
+    assert!(
+        python_bin.exists(),
+        "production epi-gnostic venv python missing at {}",
+        python_bin.display()
+    );
+
+    let harness = env.root.join("bin").join("epi-gnostic-real");
+    std::fs::create_dir_all(harness.parent().unwrap()).unwrap();
+    std::fs::write(
+        &harness,
+        format!(
+            "#!/bin/sh\nPYTHONPATH=\"{root}${{PYTHONPATH:+:$PYTHONPATH}}\" exec \"{python}\" -m epi_gnostic.cli \"$@\"\n",
+            root = epi_gnostic_root.display(),
+            python = python_bin.display()
+        ),
+    )
+    .unwrap();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+
+        let mut permissions = std::fs::metadata(&harness).unwrap().permissions();
+        permissions.set_mode(0o755);
+        std::fs::set_permissions(&harness, permissions).unwrap();
+    }
+
+    let working_dir = env.home.join(".epi-logos/gnostic-production");
+    let env = env
+        .with_env("EPI_GNOSTIC_PYTHON", harness.display().to_string())
+        .with_env("GNOSTIC_WORKING_DIR", working_dir.display().to_string())
+        .with_env("GNOSTIC_WORKSPACE", "gateway-production-test")
+        .with_env("GNOSTIC_EMBEDDING_MODEL", "test-embedding-production")
+        .with_env("GNOSTIC_LLM_MODEL", "test-llm-production")
+        .with_env("GNOSTIC_EMBEDDING_DIM", "3072");
+
+    let mut client = TestGatewayClient::connect(env, 18921).await;
+    client.request("connect", json!({})).await.unwrap();
+
+    let status = client
+        .request("s5'.gnostic.status", json!({}))
+        .await
+        .expect("gnostic status should come from production epi-gnostic");
+    assert_eq!(status["status"], "ok");
+    assert_eq!(status["workspace"], "gateway-production-test");
+
+    let models = client
+        .request("s5'.gnostic.models", json!({}))
+        .await
+        .expect("gnostic models should come from production epi-gnostic");
+    assert_eq!(models["embedding_model"], "test-embedding-production");
+    assert_eq!(models["llm_model"], "test-llm-production");
+    assert_eq!(models["embedding_dim"], 3072);
+
+    let created = client
+        .request(
+            "s5'.gnostic.notebook",
+            json!({"action": "create", "name": "Research"}),
+        )
+        .await
+        .expect("gnostic notebook create should persist through production epi-gnostic");
+    assert_eq!(created["notebook"]["name"], "Research");
+
+    let listed = client
+        .request("s5'.gnostic.notebook", json!({"action": "list"}))
+        .await
+        .expect("gnostic notebook list should read the production registry");
+    assert_eq!(listed["notebooks"][0]["name"], "Research");
+
+    let deleted = client
+        .request(
+            "s5'.gnostic.notebook",
+            json!({"action": "delete", "name": "Research"}),
+        )
+        .await
+        .expect("gnostic notebook delete should update the production registry");
+    assert_eq!(deleted["deleted"], true);
+}

@@ -68,7 +68,12 @@ test('creates real Nara artifact files and renders DayContainer tree from persis
             createdAt: '2026-06-01T09:00:00.000Z',
             scalarRefs: [
                 { refKind: 'chronos', scalarRef: 'chronos://2026-06-01T09:00:00Z', sourceHandle: 's3://chronos/1' }
-            ]
+            ],
+            resonance: {
+                numeric: 0.72,
+                conjugateFormCharacter: 'Major',
+                sourceHandle: 's2://resonance/major/72'
+            }
         });
         const oracle = await createNaraArtifact({
             vaultRoot,
@@ -84,6 +89,11 @@ test('creates real Nara artifact files and renders DayContainer tree from persis
                 { refKind: 'i-ching', scalarRef: 'm3://iching/hexagram/01', sourceHandle: 's2://m3/scalar/iching/1' },
                 { refKind: 'kairos', scalarRef: 'kairos://threshold/2026-06-01', sourceHandle: 's3://kairos/1' }
             ],
+            resonance: {
+                numeric: 0.41,
+                conjugateFormCharacter: 'Shadow',
+                sourceHandle: 's2://resonance/shadow/41'
+            },
             qActivityPolicy: {
                 provenanceHandle: 's3://q-activity/provenance/1',
                 decayWindowOpen: true,
@@ -120,10 +130,101 @@ test('creates real Nara artifact files and renders DayContainer tree from persis
         assert.equal(surface.readiness.surfaceReady, true);
         assert.equal(surface.artifactTree.length, 2);
         assert.equal(surface.artifactTree.every(row => row.bodyRendered === false), true);
+        assert.equal(surface.daySummary.resonance.state, 'resolved');
+        assert.equal(surface.daySummary.resonance.resolvedCount, 2);
+        assert.equal(surface.daySummary.resonance.byConjugateFormCharacter.Major, 1);
+        assert.equal(surface.daySummary.resonance.byConjugateFormCharacter.Shadow, 1);
+        assert.equal(surface.artifactTree[0].resonance.conjugateFormCharacter, 'Major');
+        assert.equal(surface.artifactTree[1].resonance.conjugateFormCharacter, 'Shadow');
 
         const markdown = await readFile(oracle.artifactPath, 'utf8');
         assert.match(markdown, /artifact_handle/);
         assert.match(markdown, /private oracle body/);
+    });
+});
+
+test('renders Nara resonance indicators with pending-resonance fallback', async () => {
+    await withVault(async vaultRoot => {
+        await createNaraArtifact({
+            vaultRoot,
+            dayId: '2026-06-01',
+            kind: 'journal',
+            title: 'Resolved major resonance',
+            body: 'private resolved major body',
+            nowPath: 'Idea/Empty/Present/01-06-2026/now.md',
+            sessionKey: 'session://m4-nara/resonance',
+            createdAt: '2026-06-01T08:00:00.000Z',
+            resonance: {
+                numeric: 0.88,
+                conjugateFormCharacter: 'Major',
+                sourceHandle: 's2://resonance/major/88'
+            }
+        });
+        await createNaraArtifact({
+            vaultRoot,
+            dayId: '2026-06-01',
+            kind: 'dream',
+            title: 'Resolved minor resonance',
+            body: 'private resolved minor body',
+            nowPath: 'Idea/Empty/Present/01-06-2026/now.md',
+            sessionKey: 'session://m4-nara/resonance',
+            createdAt: '2026-06-01T08:01:00.000Z',
+            resonance: {
+                numeric: 0.52,
+                conjugateFormCharacter: 'Minor',
+                sourceHandle: 's2://resonance/minor/52'
+            }
+        });
+        await createNaraArtifact({
+            vaultRoot,
+            dayId: '2026-06-01',
+            kind: 'oracle',
+            title: 'Resolved shadow resonance',
+            body: 'private resolved shadow body',
+            nowPath: 'Idea/Empty/Present/01-06-2026/now.md',
+            sessionKey: 'session://m4-nara/resonance',
+            createdAt: '2026-06-01T08:02:00.000Z',
+            resonance: {
+                numeric: 0.19,
+                conjugateFormCharacter: 'Shadow',
+                sourceHandle: 's2://resonance/shadow/19'
+            }
+        });
+        await createNaraArtifact({
+            vaultRoot,
+            dayId: '2026-06-01',
+            kind: 'contemplative',
+            title: 'Pending resonance',
+            body: 'private pending body',
+            nowPath: 'Idea/Empty/Present/01-06-2026/now.md',
+            sessionKey: 'session://m4-nara/resonance',
+            createdAt: '2026-06-01T08:03:00.000Z'
+        });
+
+        const day = await readNaraDayContainer({ vaultRoot, dayId: '2026-06-01' });
+        const surface = buildM4NaraSurface({
+            profile: profile(day),
+            readiness: readiness(),
+            context: context(),
+            emittedAt: 1_771_000_000_000
+        });
+        const resonanceRows = surface.artifactTree.map(row => row.resonance);
+        const serialized = JSON.stringify(surface);
+
+        assert.deepEqual(
+            resonanceRows.map(row => row.conjugateFormCharacter),
+            ['Major', 'Minor', 'Shadow', null]
+        );
+        assert.equal(resonanceRows[3].state, 'pending-resonance');
+        assert.equal(resonanceRows[3].label, 'pending-resonance');
+        assert.equal(surface.daySummary.resonance.resolvedCount, 3);
+        assert.equal(surface.daySummary.resonance.pendingCount, 1);
+        assert.equal(surface.daySummary.resonance.byConjugateFormCharacter.Major, 1);
+        assert.equal(surface.daySummary.resonance.byConjugateFormCharacter.Minor, 1);
+        assert.equal(surface.daySummary.resonance.byConjugateFormCharacter.Shadow, 1);
+        assert.match(serialized, /pending-resonance/);
+        assert.doesNotMatch(serialized, /private pending body/);
+        assert.doesNotMatch(serialized, /quaternion/i);
     });
 });
 

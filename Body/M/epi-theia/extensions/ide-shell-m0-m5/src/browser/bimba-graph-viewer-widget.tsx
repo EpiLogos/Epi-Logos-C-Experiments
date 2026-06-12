@@ -6,6 +6,7 @@ import {
     type KernelBridgeAPI,
     type KernelBridgeCapabilityReceipt
 } from '@pratibimba/kernel-bridge';
+import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import {
     asSubgraph,
@@ -13,6 +14,7 @@ import {
     type BimbaSubgraphPayload
 } from '../common/graph-types';
 import { IdeShellBridgeGate } from './bridge-gate';
+import { PrivacyDropFeed } from './services/privacy-drop-feed';
 
 /**
  * Bimba graph viewer — Track 05 T4.
@@ -35,9 +37,11 @@ export class BimbaGraphViewerWidget extends ReactWidget {
     @inject(KERNEL_BRIDGE_API)
     protected readonly bridge!: KernelBridgeAPI;
 
+    @inject(PrivacyDropFeed)
+    protected readonly privacyDropFeed!: PrivacyDropFeed;
+
     protected subgraph: BimbaSubgraphPayload = EMPTY_SUBGRAPH;
     protected lastError: string | null = null;
-    protected privacyDropped: number = 0;
     protected selectedCoordinate: string | null = null;
 
     @postConstruct()
@@ -66,7 +70,7 @@ export class BimbaGraphViewerWidget extends ReactWidget {
                 vak: null
             });
             if (!isPrivacySafe(receipt.privacyClass)) {
-                this.privacyDropped += 1;
+                this.recordPrivacyDrop(receipt.privacyClass);
                 this.subgraph = EMPTY_SUBGRAPH;
                 this.lastError = `Privacy class "${receipt.privacyClass}" rejected by ide-shell gate`;
             } else {
@@ -82,6 +86,14 @@ export class BimbaGraphViewerWidget extends ReactWidget {
             this.lastError = err instanceof Error ? err.message : String(err);
         }
         this.update();
+    }
+
+    protected get privacyDropped(): number {
+        return this.privacyDropFeed.aggregate.byWidget[this.id] ?? 0;
+    }
+
+    protected recordPrivacyDrop(privacyClass: string | null | undefined): void {
+        this.privacyDropFeed.record(this.id, privacyClass as string);
     }
 
     protected override render(): React.ReactNode {
@@ -102,6 +114,10 @@ export class BimbaGraphViewerWidget extends ReactWidget {
             <div className="ide-shell-widget-root" data-test="bimba-graph-viewer-root">
                 <header className="ide-shell-widget-header">
                     <h3>{BimbaGraphViewerWidget.LABEL}</h3>
+                    <BridgeReadinessBadge
+                        bridge={this.bridge}
+                        bindingKey="s2.graph.node"
+                    />
                     <span data-test="bimba-graph-source">
                         source: <code>{this.subgraph.source}</code>
                     </span>

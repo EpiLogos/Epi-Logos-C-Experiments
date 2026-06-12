@@ -56,6 +56,7 @@ These appear in the migration map but do not yet have a workspace package becaus
 - `vault-bridge/` — T4.5 (gated on Track 03 T6.5).
 - `smart-connections-sidebar/` — T4.5 (gated on Track 03 T6.5).
 - `canon-studio/` — T4 (gated on Track 02 T7-T8, Track 04 T7).
+- `backend-studio/` — gated-on-Backend-Studio; when scaffolded, consumes `M1_BACKEND_STUDIO_PACK` (`m1-paramasiva.backend-studio-pack`) from `m1-paramasiva/src/common/m1-backend-studio-pack.ts` plus analogous M0/M2/M3/M4/M5 packs for the `ide-deep` activity-bar Backend Studio mode.
 - `epi-claw/` (conditional) — only if Track 09 active thread keeps `epi-claw` in scope.
 
 When these extensions get scaffolded, add a row to the table above and a corresponding migration-source note to their per-extension README.

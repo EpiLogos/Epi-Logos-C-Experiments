@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T194116Z-27-T27.1",
+  "taskId": "27.T27.1",
+  "startedAt": "2026-06-10T19:41:16.273Z",
+  "owner": "codex-m-dev-27-t27-1",
+  "leaseExpiresAt": "2026-06-10T21:41:16.273Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.1",
+    "trackId": "27",
+    "tranche": "T27.1",
+    "title": "Pi Chat tab — agentic conversational membrane with slash-command grammar",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.0"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/chat/ChatPanel.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

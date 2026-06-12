@@ -576,6 +576,248 @@ fn projection_capability_facts(native_ready: bool, plan: &SpacetimeProjectionPla
 }
 
 // =============================================================================
+// 05.T5.17: OracleSpreadPosition — per-position aliveness state
+// =============================================================================
+//
+// The stateless `record_oracle_draw(hash, hexagram_id)` captures a single
+// I-Ching cast as a fire-and-forget event. A *spread* (tarot or I-Ching) is
+// instead a set of positions whose meaning stays *alive* over time: each
+// position generates meaning, then mutes as the moment passes, and can reopen
+// when a tracked planetary aspect comes back into proximity. This is the
+// foundation for Janus's live-vs-mute tracking (Track 12.18) and the live-
+// spreads section of the briefing (Track 05.18).
+//
+// Like `SessionSurface`/`KairosSurface`, the canonical row shape lives in the
+// epi-spacetime-module crate as a `#[table]`; this struct is the S3 host-side
+// projection of that row. Spreads are carried into the module's `temporal_event`
+// table via `publish_temporal_event` (event kinds `nara.oracle_spread` /
+// `nara.oracle_position_state`), exactly as `record_oracle_draw` rides the same
+// reducer — no silent dedicated reducer is assumed.
+
+/// Card-kind discriminant for an `OracleSpreadPosition`. Tarot draws split into
+/// the three Thoth card classes (major arcana, pip, court); I-Ching draws are a
+/// single hexagram kind. The numeric repr is the on-wire value carried to the
+/// `record_oracle_spread` event payload.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum CardKind {
+    TarotMajor,
+    TarotPip,
+    TarotCourt,
+    Hexagram,
+}
+
+impl CardKind {
+    pub fn as_u8(self) -> u8 {
+        match self {
+            CardKind::TarotMajor => 0,
+            CardKind::TarotPip => 1,
+            CardKind::TarotCourt => 2,
+            CardKind::Hexagram => 3,
+        }
+    }
+
+    pub fn from_u8(value: u8) -> Result<Self, String> {
+        Ok(match value {
+            0 => CardKind::TarotMajor,
+            1 => CardKind::TarotPip,
+            2 => CardKind::TarotCourt,
+            3 => CardKind::Hexagram,
+            other => {
+                return Err(format!(
+                    "card_kind must be 0-3 (tarot-major/pip/court | hexagram), got {other}"
+                ))
+            }
+        })
+    }
+}
+
+/// Per-position aliveness phase. A position begins `Generating`, transitions to
+/// `Muting` as the moment settles, then `Mute` once dormant. A `Mute`/`Muting`
+/// position reopens to `Generating` when its target aspect is proximate again.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum LiveState {
+    Generating,
+    Muting,
+    Mute,
+}
+
+impl LiveState {
+    pub fn as_u8(self) -> u8 {
+        match self {
+            LiveState::Generating => 0,
+            LiveState::Muting => 1,
+            LiveState::Mute => 2,
+        }
+    }
+
+    pub fn from_u8(value: u8) -> Result<Self, String> {
+        Ok(match value {
+            0 => LiveState::Generating,
+            1 => LiveState::Muting,
+            2 => LiveState::Mute,
+            other => {
+                return Err(format!(
+                    "live_state must be 0-2 (generating/muting/mute), got {other}"
+                ))
+            }
+        })
+    }
+}
+
+/// Klein-bottle face of a position: `Prospective` while meaning is still being
+/// drawn forward from the draw, `Retrospective` once muted and read back as
+/// already-passed. Mirrors the Klein-bottle non-duality of the coordinate
+/// space (inside/outside one).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum KleinFace {
+    Prospective,
+    Retrospective,
+}
+
+impl KleinFace {
+    pub fn as_u8(self) -> u8 {
+        match self {
+            KleinFace::Prospective => 0,
+            KleinFace::Retrospective => 1,
+        }
+    }
+
+    pub fn from_u8(value: u8) -> Result<Self, String> {
+        Ok(match value {
+            0 => KleinFace::Prospective,
+            1 => KleinFace::Retrospective,
+            other => {
+                return Err(format!(
+                    "klein_face must be 0-1 (prospective/retrospective), got {other}"
+                ))
+            }
+        })
+    }
+}
+
+/// Planetary aspect a position is anchored to. When the live moment comes back
+/// within proximity of `exact_at`, the position reopens (see
+/// [`OracleSpreadPosition::reopen_if_aspect_proximate`]). `planet_b_or_natal` is
+/// the second body of a transit↔transit aspect, or the natal-point index of a
+/// transit↔natal aspect — interpretation is the caller's (M4 planet model).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TargetAspect {
+    pub planet_a: u8,
+    pub aspect_kind: u8,
+    pub planet_b_or_natal: u8,
+    pub exact_at: u64,
+}
+
+/// S3 host-side projection of one `oracle_spread_position` row. Models a single
+/// alive position within a spread, with its own aliveness state machine.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OracleSpreadPosition {
+    pub spread_id: String,
+    pub position_idx: u8,
+    pub card_id: u16,
+    pub card_kind: CardKind,
+    pub drawn_at: u64,
+    pub drawn_in_session: String,
+    pub target_aspect: Option<TargetAspect>,
+    pub live_state: LiveState,
+    pub last_recognition_at: u64,
+    pub recognition_count: u32,
+    pub klein_face: KleinFace,
+}
+
+impl OracleSpreadPosition {
+    /// Construct a freshly-drawn position: `Generating`, `Prospective`, with no
+    /// recognitions yet.
+    pub fn new(
+        spread_id: impl Into<String>,
+        position_idx: u8,
+        card_id: u16,
+        card_kind: CardKind,
+        drawn_at: u64,
+        drawn_in_session: impl Into<String>,
+        target_aspect: Option<TargetAspect>,
+    ) -> Self {
+        Self {
+            spread_id: spread_id.into(),
+            position_idx,
+            card_id,
+            card_kind,
+            drawn_at,
+            drawn_in_session: drawn_in_session.into(),
+            target_aspect,
+            live_state: LiveState::Generating,
+            last_recognition_at: 0,
+            recognition_count: 0,
+            klein_face: KleinFace::Prospective,
+        }
+    }
+
+    /// `Generating` → `Muting`. The moment is settling; the position begins to
+    /// fade. Only valid from `Generating`.
+    pub fn begin_mute(&mut self) -> Result<(), String> {
+        match self.live_state {
+            LiveState::Generating => {
+                self.live_state = LiveState::Muting;
+                Ok(())
+            }
+            other => Err(format!(
+                "begin_mute requires generating; position {} is {:?}",
+                self.position_idx, other
+            )),
+        }
+    }
+
+    /// `Muting` → `Mute`. The position goes dormant and flips to the
+    /// `Retrospective` Klein face. Only valid from `Muting`.
+    pub fn complete_mute(&mut self) -> Result<(), String> {
+        match self.live_state {
+            LiveState::Muting => {
+                self.live_state = LiveState::Mute;
+                self.klein_face = KleinFace::Retrospective;
+                Ok(())
+            }
+            other => Err(format!(
+                "complete_mute requires muting; position {} is {:?}",
+                self.position_idx, other
+            )),
+        }
+    }
+
+    /// Record a recognition event (a re-reading / re-activation of this
+    /// position). Bumps the count and stamps `last_recognition_at`.
+    pub fn record_recognition(&mut self, at_ms: u64) {
+        self.recognition_count = self.recognition_count.saturating_add(1);
+        self.last_recognition_at = at_ms;
+    }
+
+    /// Reopen a `Muting`/`Mute` position when its `target_aspect` is within
+    /// `proximity_window_ms` of `now_ms`. Returns to `Generating` on the
+    /// `Prospective` face and records a recognition. Returns `true` if the
+    /// position reopened. Already-`Generating` positions and positions without
+    /// a target aspect are left untouched (`false`).
+    pub fn reopen_if_aspect_proximate(&mut self, now_ms: u64, proximity_window_ms: u64) -> bool {
+        if matches!(self.live_state, LiveState::Generating) {
+            return false;
+        }
+        let Some(aspect) = self.target_aspect else {
+            return false;
+        };
+        if now_ms.abs_diff(aspect.exact_at) > proximity_window_ms {
+            return false;
+        }
+        self.live_state = LiveState::Generating;
+        self.klein_face = KleinFace::Prospective;
+        self.record_recognition(now_ms);
+        true
+    }
+}
+
+// =============================================================================
 // SpacetimePresence: HTTP reducer client + projection SQL fallback
 // =============================================================================
 
@@ -1002,6 +1244,63 @@ impl SpacetimePresence {
             hash,
             "nara.oracle_draw",
             json!({ "hash": hash, "hexagram_id": hexagram_id }),
+        )
+    }
+
+    /// 05.T5.17: record a full oracle spread — every position with its initial
+    /// aliveness state and (optional) target aspect. Carried into the module's
+    /// `temporal_event` table via `publish_temporal_event`, keyed by
+    /// `spread_id`, exactly as `record_oracle_draw` rides the same reducer. The
+    /// `positions` slice is serialized verbatim; every position must belong to
+    /// `spread_id`. This is the foundation for Janus's live-vs-mute tracking.
+    pub fn record_oracle_spread(
+        &self,
+        spread_id: &str,
+        positions: &[OracleSpreadPosition],
+    ) -> Result<(), String> {
+        require_nonempty(spread_id, "spread_id")?;
+        if positions.is_empty() {
+            return Err("record_oracle_spread requires at least one position".to_string());
+        }
+        for position in positions {
+            if position.spread_id != spread_id {
+                return Err(format!(
+                    "position {} carries spread_id {:?} but spread is {:?}",
+                    position.position_idx, position.spread_id, spread_id
+                ));
+            }
+        }
+        self.publish_temporal_event(
+            "local",
+            "nara",
+            "",
+            spread_id,
+            "nara.oracle_spread",
+            json!({ "spread_id": spread_id, "positions": positions }),
+        )
+    }
+
+    /// 05.T5.17: transition a single position's aliveness state (e.g. as Janus
+    /// mutes a settled position or reopens one on aspect proximity). Carried as
+    /// a `nara.oracle_position_state` event keyed by `spread_id`.
+    pub fn update_position_state(
+        &self,
+        spread_id: &str,
+        position_idx: u8,
+        new_state: LiveState,
+    ) -> Result<(), String> {
+        require_nonempty(spread_id, "spread_id")?;
+        self.publish_temporal_event(
+            "local",
+            "nara",
+            "",
+            spread_id,
+            "nara.oracle_position_state",
+            json!({
+                "spread_id": spread_id,
+                "position_idx": position_idx,
+                "live_state": new_state.as_u8(),
+            }),
         )
     }
 

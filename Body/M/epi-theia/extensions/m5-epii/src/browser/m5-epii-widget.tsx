@@ -17,9 +17,21 @@ import {
     EXTENSION_ID,
     PRIMARY_VIEW_ID,
     DECLARED_BLOCKERS,
-    PRIVACY_CLASS,
-    buildM5EpiiSurface
+    PRIVACY_CLASS
 } from '../common';
+import {
+    ResonanceEbmService,
+    ResonanceProjection,
+    ResonanceGridCell,
+    TritoneSquare,
+    EbmDescentStep,
+    RESONANCE_TICK_COUNT
+} from './services/resonance-ebm-service';
+import {
+    ContemplationObjectService,
+    ContemplationObjectViewer,
+    ContemplationRuntimeContext
+} from './services/contemplation-object-service';
 
 @injectable()
 export class M5EpiiWidget extends ReactWidget {
@@ -28,6 +40,12 @@ export class M5EpiiWidget extends ReactWidget {
 
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
+
+    @inject(ResonanceEbmService)
+    protected readonly ebm!: ResonanceEbmService;
+
+    @inject(ContemplationObjectService)
+    protected readonly contemplationObjects!: ContemplationObjectService;
 
     protected readiness: MExtensionReadinessSnapshot = PENDING_M_READINESS;
     protected profile: MathemeHarmonicProfileBoundary | null = null;
@@ -52,12 +70,14 @@ export class M5EpiiWidget extends ReactWidget {
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
                 this.profile = profile;
+                this.ebm.ingest(profile);
                 this.update();
             })
         );
         this.subscriptions.push(
             this.bridge.onCoordinateContext(context => {
                 this.context = context;
+                this.acceptRuntimeContemplationObject(context);
                 this.update();
             })
         );
@@ -76,14 +96,8 @@ export class M5EpiiWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         const provenance = `privacy=${PRIVACY_CLASS} | generation=${this.context.profileGeneration ?? '—'} | pointer=${this.context.pointerAnchor ?? '—'}`;
-        const epiiSurface = this.profile
-            ? buildM5EpiiSurface({
-                profile: this.profile,
-                readiness: this.readiness,
-                context: this.context,
-                emittedAt: Date.now()
-            })
-            : null;
+        const projection = this.profile ? this.ebm.project(this.profile) : null;
+        const contemplationModel = this.contemplationObjects.currentModel();
         return (
             <div className="mext-widget-root">
                 <ReadinessBanner
@@ -93,48 +107,153 @@ export class M5EpiiWidget extends ReactWidget {
                     declaredBlockers={DECLARED_BLOCKERS}
                     provenance={provenance}
                 />
-                <section className="mext-widget-detail">
-                    <h3>Profile snapshot</h3>
-                    {this.profile ? (
-                        <dl>
-                            <dt>Generation</dt>
-                            <dd>{this.profile.generation}</dd>
-                            <dt>Capabilities</dt>
-                            <dd>{this.profile.capabilities.join(', ') || '—'}</dd>
-                            <dt>Pointer anchor</dt>
-                            <dd>{this.profile.pointerAnchor ?? '—'}</dd>
-                        </dl>
-                    ) : (
-                        <p className="mext-widget-empty">
-                            No MathemeHarmonicProfile available yet. The kernel-bridge is the
-                            sole owner of this payload; this view will populate when the
-                            shared adapter receives a generation update.
-                        </p>
-                    )}
-                </section>
-                <section className="mext-widget-detail">
-                    <h3>S5 Review and Spine</h3>
-                    {epiiSurface?.readiness.surfaceReady ? (
-                        <dl>
-                            <dt>Open reviews</dt>
-                            <dd>{String(epiiSurface.reviewWorkbench.open ?? 0)}</dd>
-                            <dt>Human gates</dt>
-                            <dd>{String(epiiSurface.reviewWorkbench.humanRequired ?? 0)}</dd>
-                            <dt>Dry-run plans</dt>
-                            <dd>{String(epiiSurface.reviewWorkbench.dryRunPlans ?? 0)}</dd>
-                            <dt>Artifact refs</dt>
-                            <dd>{epiiSurface.canonEvolutionBrowser.length}</dd>
-                        </dl>
-                    ) : (
-                        <p className="mext-widget-empty">
-                            Waiting for bridge-provided S5 review/autoresearch state.
-                            This surface renders review handles, dry-run plans, recursive
-                            gates, and artifact namespace refs; agents cannot finalize
-                            human-required or recursive gates.
-                        </p>
-                    )}
-                </section>
+                {projection ? this.renderProjection(projection) : (
+                    <section className="mext-widget-detail">
+                        <p className="mext-widget-empty">Awaiting kernel profile…</p>
+                    </section>
+                )}
+                {contemplationModel ? (
+                    <ContemplationObjectViewer model={contemplationModel} />
+                ) : (
+                    <section className="mext-widget-detail m5-contemplation-object" data-test="m5-contemplation-object-empty">
+                        <h3>ContemplationObjectViewer</h3>
+                        <p className="mext-widget-empty">Awaiting PASU-scoped M5_ContemplationObject.</p>
+                    </section>
+                )}
             </div>
+        );
+    }
+
+    protected acceptRuntimeContemplationObject(context: CoordinateContext): void {
+        const runtimeContext = (context as CoordinateContext & {
+            runtimeContext?: ContemplationRuntimeContext;
+        }).runtimeContext;
+        if (!runtimeContext?.contemplationObject && !runtimeContext?.payload?.contemplationObject) {
+            return;
+        }
+        void this.contemplationObjects.acceptRuntimeContext(runtimeContext).catch(() => {
+            // Privacy failures are intentionally non-committing; the widget keeps the last safe object.
+        });
+    }
+
+    protected renderProjection(projection: ResonanceProjection): React.ReactNode {
+        const final = projection.descent[projection.descent.length - 1];
+        const maxGradient = projection.gradient.reduce((max, g) => Math.max(max, Math.abs(g)), 0);
+        const peakEnergy = projection.descent.reduce((max, s) => Math.max(max, s.energy), 1);
+        return (
+            <React.Fragment>
+                <section className="mext-widget-detail m5-ebm-summary">
+                    <h3>Resonance EBM — generation {projection.generation}</h3>
+                    <dl>
+                        <dt>Grid energy</dt>
+                        <dd>{projection.totalEnergy.toFixed(4)}</dd>
+                        <dt>Max gradient</dt>
+                        <dd>{maxGradient.toFixed(4)}</dd>
+                        <dt>Descent</dt>
+                        <dd>{projection.converged ? 'converged' : 'open'} · {projection.descent.length} steps</dd>
+                    </dl>
+                </section>
+                <section className="mext-widget-detail">
+                    <h3>72-dim resonance grid</h3>
+                    <div
+                        className="m5-ebm-grid"
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: `repeat(${RESONANCE_TICK_COUNT}, 1fr)`,
+                            gap: '2px'
+                        }}
+                    >
+                        {projection.cells.map(cell => this.renderCell(cell))}
+                    </div>
+                </section>
+                <section className="mext-widget-detail">
+                    <h3>Tritone-symmetric squares</h3>
+                    <div className="m5-ebm-squares">
+                        {projection.squares.map(square => this.renderSquare(square))}
+                    </div>
+                </section>
+                <section className="mext-widget-detail">
+                    <h3>Energy gradient (∂E/∂a)</h3>
+                    <div
+                        className="m5-ebm-gradient"
+                        style={{ display: 'flex', alignItems: 'flex-end', gap: '1px', height: '48px' }}
+                    >
+                        {projection.gradient.map((g, index) => (
+                            <div
+                                key={index}
+                                title={`cell ${index}: ${g.toFixed(4)}`}
+                                style={{
+                                    flex: '1 1 0',
+                                    height: `${Math.min(100, Math.abs(g) / (maxGradient || 1) * 100)}%`,
+                                    background: g >= 0
+                                        ? 'var(--theia-charts-orange, #d18616)'
+                                        : 'var(--theia-charts-blue, #4f8cc9)'
+                                }}
+                            />
+                        ))}
+                    </div>
+                </section>
+                <section className="mext-widget-detail">
+                    <h3>Möbius descent</h3>
+                    <div
+                        className="m5-ebm-descent"
+                        style={{ display: 'flex', alignItems: 'flex-end', gap: '1px', height: '48px' }}
+                    >
+                        {projection.descent.map(step => this.renderDescentStep(step, peakEnergy))}
+                    </div>
+                    {final ? (
+                        <p className="mext-widget-empty">
+                            resting energy {final.energy.toFixed(4)} ·{' '}
+                            {projection.descent.filter(s => s.mobiusWrapped).length} #5→#0 returns
+                        </p>
+                    ) : null}
+                </section>
+            </React.Fragment>
+        );
+    }
+
+    protected renderCell(cell: ResonanceGridCell): React.ReactNode {
+        const intensity = Math.round(cell.activation * 255);
+        return (
+            <div
+                key={cell.index}
+                title={`#${cell.index} tick${cell.tick12} QL${cell.ql} sq${cell.square} a=${cell.activation.toFixed(3)} E=${cell.energy.toFixed(3)}`}
+                style={{
+                    aspectRatio: '1 / 1',
+                    borderRadius: '2px',
+                    background: `rgb(${intensity}, ${Math.round(80 + cell.square * 40)}, ${255 - intensity})`,
+                    outline: cell.phase === 1 ? '1px solid rgba(255,255,255,0.35)' : 'none'
+                }}
+            />
+        );
+    }
+
+    protected renderSquare(square: TritoneSquare): React.ReactNode {
+        return (
+            <dl key={square.id} className="m5-ebm-square">
+                <dt>{square.label}</dt>
+                <dd>
+                    energy {square.energy.toFixed(3)} · defect {square.symmetryDefect.toFixed(3)} ·{' '}
+                    {square.tritonePairs.length} tritone pairs
+                </dd>
+            </dl>
+        );
+    }
+
+    protected renderDescentStep(step: EbmDescentStep, peakEnergy: number): React.ReactNode {
+        return (
+            <div
+                key={step.step}
+                title={`step ${step.step}: tick${step.tick12} QL${step.ql} E=${step.energy.toFixed(4)} g=${step.gradient.toFixed(4)}`}
+                style={{
+                    flex: '1 1 0',
+                    height: `${Math.min(100, step.energy / peakEnergy * 100)}%`,
+                    minHeight: '2px',
+                    background: step.mobiusWrapped
+                        ? 'var(--theia-charts-purple, #b180d7)'
+                        : 'var(--theia-charts-green, #89d185)'
+                }}
+            />
         );
     }
 }

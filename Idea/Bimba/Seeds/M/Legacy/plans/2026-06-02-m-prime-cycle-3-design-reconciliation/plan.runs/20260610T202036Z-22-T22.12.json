@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T202036Z-22-T22.12",
+  "taskId": "22.T22.12",
+  "startedAt": "2026-06-10T20:20:36.234Z",
+  "owner": "codex-m-dev-22-t22-12",
+  "leaseExpiresAt": "2026-06-10T22:20:36.234Z",
+  "worktree": null,
+  "task": {
+    "id": "22.T22.12",
+    "trackId": "22",
+    "tranche": "T22.12",
+    "title": "Backend Studio M1 pack manifest",
+    "effort": null,
+    "file": "22-m1-paramasiva-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/22-m1-paramasiva-frontend-deep.md",
+    "dependsOn": [
+      "22.T22.11"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/common/m1-backend-studio-pack.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

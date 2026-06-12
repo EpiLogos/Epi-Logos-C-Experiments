@@ -11,9 +11,9 @@ import type { GatewaySessionRow, CronJob } from '../controllers/epi-claw/types';
 import { ADVANCED_PANELS, isGatewayPanel } from './omni/contracts/panels';
 import { PrimaryTabs } from './omni/layout/PrimaryTabs';
 import { OmniPanelHeader } from './omni/layout/OmniPanelHeader';
-import { ChatPanel } from './omni/chat/ChatPanel';
+import { PiChatPanel } from './omni/chat/PiChatPanel';
 import { OverviewPanel } from './omni/panels/OverviewPanel';
-import { SessionsPanel } from './omni/panels/SessionsPanel';
+import { SessionManagerPanel } from './omni/panels/SessionManagerPanel';
 import { ChannelsPanel } from './omni/panels/ChannelsPanel';
 import { InstancesPanel } from './omni/panels/InstancesPanel';
 import { CronPanel } from './omni/panels/CronPanel';
@@ -24,8 +24,15 @@ import { DebugPanel } from './omni/panels/DebugPanel';
 import { LogsPanel } from './omni/panels/LogsPanel';
 import { SettingsPanel } from './omni/panels/SettingsPanel';
 import { ModelsPanel } from './omni/panels/ModelsPanel';
+import { DispatchTracePanel } from './omni/panels/DispatchTracePanel';
+import { ToolStreamPanel } from './omni/panels/ToolStreamPanel';
+import { EvidencePanel } from './omni/panels/EvidencePanel';
+import { PrivacyDropDiagnosticsPanel } from './omni/panels/PrivacyDropDiagnosticsPanel';
 import { useDomainStore } from '../stores/domainStore';
 import { resolveThemeForDomain } from '../theme/resolveTheme';
+import type { DispatchGenealogySelection } from '../../common/dispatch-genealogy';
+import type { PrivacyDropAggregate } from '@pratibimba/ide-shell-m0-m5/lib/browser/services/privacy-drop-feed';
+import { extractSessionKey, MAIN_EPII_SESSION_KEY } from './omni/sessions/sessionManagerModel';
 
 const OMNI_UI_FONT_STACK =
   '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif';
@@ -33,9 +40,22 @@ const OMNI_UI_FONT_STACK =
 interface OmniPanelProps {
   state: 'hidden' | 'minimal' | 'fullscreen';
   onClose: () => void;
+  onOpenSource?: (coordinate: string, sourceAnchor: string) => Promise<unknown> | unknown;
+  privacyDropAggregate?: PrivacyDropAggregate;
 }
 
-export function OmniPanel({ state, onClose }: OmniPanelProps) {
+const EMPTY_PRIVACY_DROP_AGGREGATE: PrivacyDropAggregate = {
+  byWidget: {},
+  byClass: {},
+  total: 0,
+};
+
+export function OmniPanel({
+  state,
+  onClose,
+  onOpenSource,
+  privacyDropAggregate = EMPTY_PRIVACY_DROP_AGGREGATE,
+}: OmniPanelProps) {
   const isVisible = state !== 'hidden';
   const { currentDomain } = useDomainStore();
 
@@ -59,6 +79,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     logs,
     nodes,
     devices,
+    dispatchGenealogy,
     connect,
     disconnect,
     setGatewayUrl,
@@ -113,6 +134,8 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     loadLogs,
     loadNodes,
     loadDevices,
+    loadDispatchGenealogy,
+    selectDispatchGenealogyNode,
     approveDevicePairing,
     rejectDevicePairing,
     rotateDeviceToken,
@@ -221,6 +244,9 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
       void loadNodes();
       void loadDevices();
     }
+    if (activePanel === 'dispatch-trace' || activePanel === 'tool-stream' || activePanel === 'evidence') {
+      void loadDispatchGenealogy(chat.sessionKey);
+    }
   }, [
     activePanel,
     connectionState,
@@ -234,6 +260,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     loadLogs,
     loadNodes,
     loadDevices,
+    loadDispatchGenealogy,
     loadPresence,
     loadSessions,
     loadSkills,
@@ -241,6 +268,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     chat.chatLoading,
     chat.chatMessages.length,
     logsLimit,
+    chat.sessionKey,
     sessionsActiveMinutes,
     sessionsLimit,
     sessionsIncludeGlobal,
@@ -292,6 +320,61 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     await loadChatHistory();
     setActivePanel('chat');
   };
+
+  const handleStartKhoraSession = async (topic: string, dayId: string | null) => {
+    if (!client || connectionState !== 'connected') {
+      throw new Error('Gateway is not connected.');
+    }
+    const response = await client.request('s4.khora.session_start', {
+      topic: topic.trim() || undefined,
+      day_id: dayId,
+      parent: MAIN_EPII_SESSION_KEY,
+      compatibility_method: 'khora_session_start',
+    });
+    const sessionKey = extractSessionKey(response);
+    if (sessionKey) {
+      setSessionKey(sessionKey);
+    }
+    await loadSessions({
+      activeMinutes: 120,
+      limit: 200,
+      includeGlobal: true,
+      includeUnknown: false,
+    });
+    if (sessionKey) {
+      setActivePanel('chat');
+    }
+  };
+
+  const handleSelectDispatchNode = useCallback((selection: DispatchGenealogySelection) => {
+    selectDispatchGenealogyNode(selection.node.id);
+  }, [selectDispatchGenealogyNode]);
+
+  const handleOpenDispatchEvidence = useCallback((selection: DispatchGenealogySelection) => {
+    selectDispatchGenealogyNode(selection.node.id);
+    setActivePanel('evidence');
+  }, [selectDispatchGenealogyNode, setActivePanel]);
+
+  const handleOpenDispatchSource = useCallback((selection: DispatchGenealogySelection) => {
+    selectDispatchGenealogyNode(selection.node.id);
+    const source = selection.sourceCommand;
+    if (!source) {
+      return;
+    }
+    const detail = {
+      commandId: 'backend-studio.openSource',
+      coordinate: source.coordinate,
+      sourceAnchor: source.sourceAnchor,
+      selectedNodeId: selection.node.id,
+    };
+    if (onOpenSource) {
+      void onOpenSource(source.coordinate, source.sourceAnchor);
+      return;
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('pratibimba.backend-studio.open-source', { detail }));
+    }
+  }, [onOpenSource, selectDispatchGenealogyNode]);
 
   const handlePatchSessionLabel = async (session: GatewaySessionRow) => {
     const nextLabel = window.prompt('Session label', session.label ?? '');
@@ -425,7 +508,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
         );
       case 'chat':
         return (
-          <ChatPanel
+          <PiChatPanel
             panelState={state}
             connectionState={connectionState}
             chat={chat}
@@ -462,9 +545,78 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
             onToggleToolEventsVerbose={() => {
               void handleToggleChatToolEventsVerbose();
             }}
+            onInvokeGatewayRpc={async (method, params) => {
+              if (!client || connectionState !== 'connected') {
+                throw new Error('Gateway is not connected.');
+              }
+              return client.request(method, params);
+            }}
+            onActivateTab={(tabId) => {
+              if (tabId === 'gateway') {
+                setActivePanel('workspace');
+              }
+              if (tabId === 'dispatch-trace') {
+                setActivePanel('dispatch-trace');
+              }
+              if (tabId === 'tool-stream') {
+                setActivePanel('tool-stream');
+              }
+              if (tabId === 'evidence') {
+                setActivePanel('evidence');
+              }
+            }}
             onSend={async (message, options) => {
               await sendMessage(message, options);
             }}
+          />
+        );
+      case 'dispatch-trace':
+        return (
+          <DispatchTracePanel
+            snapshot={dispatchGenealogy.snapshot}
+            selectedNodeId={dispatchGenealogy.selectedNodeId}
+            loading={dispatchGenealogy.loading}
+            error={dispatchGenealogy.error}
+            onRefresh={() => {
+              void loadDispatchGenealogy(chat.sessionKey);
+            }}
+            onSelectNode={(selection) => {
+              handleSelectDispatchNode(selection);
+              setActivePanel('tool-stream');
+            }}
+            onOpenEvidence={handleOpenDispatchEvidence}
+            onOpenSource={handleOpenDispatchSource}
+          />
+        );
+      case 'tool-stream':
+        return (
+          <ToolStreamPanel
+            snapshot={dispatchGenealogy.snapshot}
+            selectedNodeId={dispatchGenealogy.selectedNodeId}
+            loading={dispatchGenealogy.loading}
+            error={dispatchGenealogy.error}
+            onRefresh={() => {
+              void loadDispatchGenealogy(chat.sessionKey);
+            }}
+            onSelectNode={handleSelectDispatchNode}
+            onActivateDispatchTrace={(selection) => {
+              handleSelectDispatchNode(selection);
+              setActivePanel('dispatch-trace');
+            }}
+            onOpenEvidence={handleOpenDispatchEvidence}
+            onOpenSource={handleOpenDispatchSource}
+          />
+        );
+      case 'evidence':
+        return (
+          <EvidencePanel
+            snapshot={dispatchGenealogy.snapshot}
+            selectedNodeId={dispatchGenealogy.selectedNodeId}
+            onActivateDispatchTrace={(selection) => {
+              handleSelectDispatchNode(selection);
+              setActivePanel('dispatch-trace');
+            }}
+            onOpenSource={handleOpenDispatchSource}
           />
         );
       case 'models':
@@ -635,8 +787,9 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
         );
       case 'sessions':
         return (
-          <SessionsPanel
+          <SessionManagerPanel
             connectionState={connectionState}
+            activeSessionKey={chat.sessionKey}
             sessions={sessions}
             sessionsActiveMinutes={sessionsActiveMinutes}
             sessionsLimit={sessionsLimit}
@@ -653,6 +806,9 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
                 includeGlobal: sessionsIncludeGlobal,
                 includeUnknown: sessionsIncludeUnknown,
               });
+            }}
+            onStartSession={(topic, dayId) => {
+              void handleStartKhoraSession(topic, dayId);
             }}
             onSelectSession={(key) => {
               void handleSelectSession(key);
@@ -869,6 +1025,12 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
             onCallMethod={() => {
               void callDebugMethod(debugMethod, debugParams);
             }}
+          />
+        );
+      case 'diagnostics':
+        return (
+          <PrivacyDropDiagnosticsPanel
+            aggregate={privacyDropAggregate}
           />
         );
       case 'logs':

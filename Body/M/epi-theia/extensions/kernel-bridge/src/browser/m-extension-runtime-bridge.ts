@@ -100,6 +100,18 @@ export class T3ToMExtBridgeAdapter implements MExtKernelBridgeAPI {
         return receipt.artifact;
     }
 
+    async parashaktiCorrespondences(address72: number): Promise<unknown> {
+        const receipt = await this.source.invokeCapability({
+            method: 's2.parashaktiCorrespondences',
+            sessionKey: '',
+            params: { address72 },
+            profileGeneration: this.source.cachedProfile?.generation ?? null,
+            provenanceHandles: [],
+            vak: null
+        });
+        return receipt.artifact;
+    }
+
     // ---- Subscriptions (translated from T3 events) ----
 
     onMathemeHarmonicProfile(

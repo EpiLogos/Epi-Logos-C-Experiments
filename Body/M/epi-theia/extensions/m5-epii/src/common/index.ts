@@ -5,6 +5,9 @@ import {
     MExtensionMiniMode,
     REQUIRED_OBSERVABILITY_PAYLOAD_FIELDS
 } from '@pratibimba/m-extension-runtime';
+import type { PrimitiveReadinessState } from '@pratibimba/integrated-composition/design-primitives';
+
+export type M5PrimitiveReadinessState = PrimitiveReadinessState;
 
 export const EXTENSION_ID = 'm5-epii';
 export const PRIMARY_VIEW_ID = 'm5.epii.reviewQueue';

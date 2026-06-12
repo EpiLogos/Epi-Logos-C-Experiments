@@ -41,6 +41,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build"
+    "test": "pnpm build && node --test ../test/jiva-siva-slice.test.mjs src/browser/deposit-handle-reception.test.mjs src/browser/identity-augment-review-routing.test.mjs src/browser/m5-m0-pedagogical-return.test.mjs"
   }
 }

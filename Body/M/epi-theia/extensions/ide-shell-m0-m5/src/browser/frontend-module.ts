@@ -10,6 +10,7 @@ import {
 } from '@theia/core/lib/browser';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import { registerIntentTarget } from '@pratibimba/m-extension-runtime';
+import type { CrossLayoutIntent } from '@pratibimba/pratibimba-layouts';
 import { EXTENSION_ID, IDE_SHELL_INTENT_TARGETS } from '../common/contract';
 import { BimbaGraphViewerWidget } from './bimba-graph-viewer-widget';
 import { CanonStudioWidget } from './canon-studio-widget';
@@ -19,6 +20,11 @@ import { LogosAtelierWidget } from './logos-atelier-widget';
 import { EvidencePaneWidget } from './evidence-pane-widget';
 import { ReviewPaneWidget } from './review-pane-widget';
 import { AutoresearchPaneWidget } from './autoresearch-pane-widget';
+import {
+    SmartConnectionsSidebarStub,
+    SmartConnectionsSidebarStubContribution
+} from './smart-connections/smart-connections-sidebar-stub';
+import { PrivacyDropFeed } from './services/privacy-drop-feed';
 
 /**
  * Frontend module for `@pratibimba/ide-shell-m0-m5` — Track 05 T4.
@@ -239,75 +245,167 @@ export class IdeShellEvidencePaneContribution
 @injectable()
 export class IdeShellCoordinateTreeContribution
     extends AbstractViewContribution<CoordinateTreeWidget>
-    implements FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution
 {
     constructor() {
         super({
             widgetId: CoordinateTreeWidget.ID,
             widgetName: CoordinateTreeWidget.LABEL,
             defaultWidgetOptions: { area: 'left' },
-            toggleCommandId: `pratibimba.${EXTENSION_ID}.coordinate-tree.toggle`
+            toggleCommandId: `pratibimba.${EXTENSION_ID}.${IDE_SHELL_INTENT_TARGETS.COORDINATE_TREE}.toggle`
         });
     }
 
     async onStart(): Promise<void> { /* lazy-open via intent */ }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            IDE_SHELL_INTENT_TARGETS.COORDINATE_TREE,
+            'IDE Shell: Open Coordinate Tree',
+            intent => this.handleOpen(intent)
+        );
+    }
+
+    protected async handleOpen(intent: unknown): Promise<void> {
+        const widget = await this.openView({ activate: true, reveal: true });
+        const i = intent as Partial<CrossLayoutIntent> | undefined;
+        if (widget && i?.coordinate) {
+            await widget.loadTree(i.coordinate);
+            if (i.requestedContributionId === 'highlight-coordinate') {
+                widget.activeCoordinate = i.coordinate;
+                widget.update();
+            }
+        }
+    }
 }
 
 @injectable()
 export class IdeShellLogosAtelierContribution
     extends AbstractViewContribution<LogosAtelierWidget>
-    implements FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution
 {
     constructor() {
         super({
             widgetId: LogosAtelierWidget.ID,
             widgetName: LogosAtelierWidget.LABEL,
             defaultWidgetOptions: { area: 'main' },
-            toggleCommandId: `pratibimba.${EXTENSION_ID}.logos-atelier.toggle`
+            toggleCommandId: `pratibimba.${EXTENSION_ID}.${IDE_SHELL_INTENT_TARGETS.LOGOS_ATELIER}.toggle`
         });
     }
 
     async onStart(): Promise<void> { /* lazy-open via intent */ }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            IDE_SHELL_INTENT_TARGETS.LOGOS_ATELIER,
+            'IDE Shell: Open Logos Atelier',
+            intent => this.handleOpen(intent)
+        );
+    }
+
+    protected async handleOpen(intent: unknown): Promise<void> {
+        const widget = await this.openView({ activate: true, reveal: true });
+        const i = intent as Partial<CrossLayoutIntent> | undefined;
+        const termMatch = i?.requestedContributionId?.match(/^term:(.+)$/);
+        if (widget && termMatch) {
+            widget.setTerm(decodeURIComponent(termMatch[1]));
+        }
+        if (widget && i?.artifactUri) {
+            widget.prepopulateMobiusWriteBack(i.artifactUri, i.privacyClass);
+        }
+    }
 }
 
 @injectable()
 export class IdeShellReviewPaneContribution
     extends AbstractViewContribution<ReviewPaneWidget>
-    implements FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution
 {
     constructor() {
         super({
             widgetId: ReviewPaneWidget.ID,
             widgetName: ReviewPaneWidget.LABEL,
             defaultWidgetOptions: { area: 'right' },
-            toggleCommandId: `pratibimba.${EXTENSION_ID}.review-pane.toggle`
+            toggleCommandId: `pratibimba.${EXTENSION_ID}.${IDE_SHELL_INTENT_TARGETS.REVIEW_PANE}.toggle`
         });
     }
 
     async onStart(): Promise<void> { /* lazy-open via intent */ }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            IDE_SHELL_INTENT_TARGETS.REVIEW_PANE,
+            'IDE Shell: Open Review Pane',
+            intent => this.handleOpen(intent)
+        );
+    }
+
+    protected async handleOpen(intent: unknown): Promise<void> {
+        const widget = await this.openView({ activate: true, reveal: true });
+        const i = intent as Partial<CrossLayoutIntent> | undefined;
+        if (widget) {
+            await widget.refreshInbox();
+            if (i?.reviewId) {
+                widget.highlightReviewItem(i.reviewId);
+            }
+        }
+    }
 }
 
 @injectable()
 export class IdeShellAutoresearchPaneContribution
     extends AbstractViewContribution<AutoresearchPaneWidget>
-    implements FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution
 {
     constructor() {
         super({
             widgetId: AutoresearchPaneWidget.ID,
             widgetName: AutoresearchPaneWidget.LABEL,
             defaultWidgetOptions: { area: 'right' },
-            toggleCommandId: `pratibimba.${EXTENSION_ID}.autoresearch-pane.toggle`
+            toggleCommandId: `pratibimba.${EXTENSION_ID}.${IDE_SHELL_INTENT_TARGETS.AUTORESEARCH_PANE}.toggle`
         });
     }
 
     async onStart(): Promise<void> { /* lazy-open via intent */ }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            IDE_SHELL_INTENT_TARGETS.AUTORESEARCH_PANE,
+            'IDE Shell: Open Autoresearch Pane',
+            intent => this.handleOpen(intent)
+        );
+    }
+
+    protected async handleOpen(intent: unknown): Promise<void> {
+        const widget = await this.openView({ activate: true, reveal: true });
+        const i = intent as Partial<CrossLayoutIntent> | undefined;
+        if (widget) {
+            await widget.refreshHistory();
+            const capacityMatch = i?.requestedContributionId?.match(/^capacity:(.+)$/);
+            if (capacityMatch) {
+                widget.setCapacityFilter(decodeURIComponent(capacityMatch[1]));
+            }
+        }
+    }
 }
 
 export default new ContainerModule(bind => {
     // Config (rebindable by tests).
     bind(DefaultIdeShellM0M5Config).toSelf().inSingletonScope();
     bind<IdeShellM0M5Config>(IDE_SHELL_CONFIG).toService(DefaultIdeShellM0M5Config);
+    bind(PrivacyDropFeed).toSelf().inSingletonScope();
 
     // Bimba Graph Viewer.
     bind(BimbaGraphViewerWidget).toSelf();
@@ -396,6 +494,17 @@ export default new ContainerModule(bind => {
         .inSingletonScope();
     bindViewContribution(bind, IdeShellAutoresearchPaneContribution);
     bind(FrontendApplicationContribution).toService(IdeShellAutoresearchPaneContribution);
+
+    // Smart Connections code-pending sidebar stub.
+    bind(SmartConnectionsSidebarStub).toSelf();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: SmartConnectionsSidebarStub.ID,
+            createWidget: () => createSimpleWidget(ctx.container, SmartConnectionsSidebarStub)
+        }))
+        .inSingletonScope();
+    bindViewContribution(bind, SmartConnectionsSidebarStubContribution);
+    bind(FrontendApplicationContribution).toService(SmartConnectionsSidebarStubContribution);
 });
 
 function createSimpleWidget<T>(

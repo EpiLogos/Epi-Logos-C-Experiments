@@ -15,7 +15,7 @@ depends_on:
 
 > **Companion document to `../epi-logos-kernel-spec.md` (now at M' root) and `physical-pole-stack-architecture.md`.** Where the kernel spec gives the operator and the physical-pole architecture gives the engine, this document gives the **intelligence** — the 4'-5'-0' triplet of the second-pass 3:3 as the LLM (Nara), EBM (Epii), and Verifier (Anuttara), specified as a co-evolutionary protocol bootstrapped through dev praxis with the Pi agent.
 
-> **2026-06-07 refinement:** The energy formula in §5 is now the explicit just-triad weighted form `(4·E_4 + 5·E_5 + 6·E_6)/15` per the kernel-spec refinement. The EBM at position 5' takes **two input channels** — the 72-dim lens-resonance vector AND the UserContextFrame projection from the mandatory-routed `user-context` skill (see [[M'-USER-CONTEXT-SKILL-SPEC]]). The agentic runtime that dispatches this stack is a coordinate-conditional MoE with Elo-gated dispatch through Anima (see [[M'-AGENTIC-RUNTIME-SPEC]]). Model-slot policy per role (local-default Gemma 4 12B Unified for Nara-parser; Pro-class cloud-opt-in for Epii-judge) is specified at [[M'-MODEL-SLOT-SPEC]].
+> **2026-06-07 refinement (superseded 2026-06-08 per [[33-harmonic-energy-channel-handoff]] §1.2):** The energy formula in §5 is the explicit just-triad weighted form `(4·E_4 + 5·E_5 + 6·E_6)/15` per the kernel-spec refinement. The EBM at position 5' takes **N parallel channels from `MathemeHarmonicProfile`** — `lens_resonance_72`, `audio_octet[8]`, `nodal_quartet[4]`, `planetary_chakral`, `mahamaya`, `codon_rotation_projection`, `q_cosmic`. User-context does NOT feed E_5 (it feeds E_4 personal-energy via the M4 Nara skill family per [[M'-ML-SKILL-SURFACE-SPEC]] §7.1; see [[M'-USER-CONTEXT-SKILL-SPEC]] §3.2). The agentic runtime that dispatches this stack is a coordinate-conditional MoE with Elo-gated dispatch through Anima (see [[M'-AGENTIC-RUNTIME-SPEC]]). Model-slot policy per role (local-default Gemma 4 12B Unified for Nara-parser; Pro-class cloud-opt-in for Epii-judge) is specified at [[M'-MODEL-SLOT-SPEC]].
 
 ---
 
@@ -378,54 +378,58 @@ This separation matters: Anuttara as deterministic constraint-checker provides a
 
 ---
 
-## §7 — The EBM Specification: Resonance-Vector Predictor
+## §7 — The EBM Specification: N-Channel Harmonic-Substrate Predictor
 
-The EBM is structurally a learned function from input-embedding to 72-vector. Its specification is much simpler than textbook EBMs because the resonance-training move bypasses the MCMC/contrastive-divergence complexity entirely — this is supervised learning of a regression-to-72-vector task.
+The EBM is structurally a learned function from the N-channel `MathemeHarmonicProfile` substrate to a 72-vector. Its specification is much simpler than textbook EBMs because the resonance-training move bypasses the MCMC/contrastive-divergence complexity entirely — this is supervised learning of a regression-to-72-vector task.
 
 ### Architecture
 
-A small transformer-based model with the following shape:
+Per [[33-harmonic-energy-channel-handoff]] §1.2, the EBM at position 5' takes **N parallel channels from `MathemeHarmonicProfile`** — `lens_resonance_72`, `audio_octet[8]`, `nodal_quartet[4]`, `planetary_chakral`, `mahamaya`, `codon_rotation_projection`, `q_cosmic` — and produces a sigmoid-normalised 72-output vector. The shape is fixed; the specific cross-channel-attention pattern is the system's self-experimentation degree of freedom (not pinned here).
+
+The architecture shape:
 
 - **Input encoder**: **Gemini Embedding 2** as canonical multimodal substrate — 3072-dim native, Matryoshka-truncatable to 1536/768 dims for fast inference paths. Accessed via API per `M'-USER-CONTEXT-SKILL-SPEC` cloud-opt-in scope policy. Handles document-length inputs natively at the canonical embedding scale (no sliding-window required). (Per 2026-06-07 kernel-canon commitment across [[../M'-AGENTIC-RUNTIME-SPEC]], [[../M'-USER-CONTEXT-SKILL-SPEC]], [[../M'-ML-SKILL-SURFACE-SPEC]] — earlier draft naming `bge-small`/`gte-small` at 384-768 dims was example-list text not amended when the 2026-06-07 substrate refinement note at line 18 was added.)
-- **Resonance head**: a small transformer encoder (2-4 layers, modest hidden dimension — 256 or 512) operating on the input embedding plus learned position-embeddings for the 72 output dimensions.
-- **Output projection**: linear layer projecting to 72 scalars, with sigmoid activation to keep each output in [0, 1].
+- **Per-channel encoders**: one small encoder per `MathemeHarmonicProfile` channel (small linear or 1-layer transformer projecting each channel into a shared latent dim D=256 or 512). Bioquaternion→embedding projection is one such learned channel encoder.
+- **Cross-channel attention**: multi-head attention layer over the channel-tokens. **The specific pattern (full attention vs gated fusion vs hierarchical vs other) is deliberately not pinned — this is the system's self-experimentation surface.**
+- **Tritone-symmetric three-sub-head**: three sub-heads each produce 24 outputs (one tritone-square's worth — 4 lenses × 6 positions = 24), with cross-square attention allowing the squares to inform each other. The output projection sigmoid-normalises into [0, 1]. This is matheme-faithful at the structural level.
+
+**Implementation language.** Rust-native is the canonical implementation language for the EBM head (`burn` or `candle`). PyO3+PyTorch is permitted as documented fallback if a specific architecture component is materially worse in Rust at the time of build — record the decision as `DR-EBM-IMPL` when that fallback is invoked, not preemptively.
 
 Total parameter count: ~5-20M parameters. Trainable on consumer hardware (single mid-range GPU) in hours-to-days for the initial training, faster for incremental retraining.
 
-### Tritone-symmetric inductive bias
-
-The output head is structured to honour the X+Y=5 tritone-symmetric grouping. Three sub-heads each produce 24 outputs (one tritone-square's worth — 4 lenses × 6 positions = 24), with cross-square attention allowing the squares to inform each other. This makes the architecture matheme-faithful at the structural level: the model literally has the three-square architecture wired into its forward pass.
-
 ### Training objective
 
-Standard multi-output regression. For each (document, ground-truth-72-vector) pair from the corpus:
+Standard multi-output regression. For each (N-channel-tuple, ground-truth-72-vector) pair from the corpus:
 
 ```
 loss = MSE(predicted_vector, ground_truth_vector)
      + λ_square * sum_of_square_emphasis_loss
      + λ_mirror * mirror_consistency_loss
+     + λ_cross_channel * cross_channel_coherence_loss
 ```
 
 Where the auxiliary losses encourage:
 - **Square emphasis consistency**: the model's output square-aggregates match the developer-annotated square-emphasis values
 - **Mirror consistency**: for known mirror-pair documents (those analysed as activating both halves of an X+Y=5 pair), the model's predictions for the two halves are appropriately correlated
+- **Cross-channel coherence**: per-channel projections should converge on a joint reading consistent with the harmonic-substrate's internal symmetries (e.g. planetary_chakral and codon_rotation_projection should not disagree on the underlying tick).
 
-The mirror-consistency loss is what makes the EBM learn the kernel's harmonic-structural relationships from the data, rather than treating the 72 dimensions as independent.
+All λ values come from config (no hardcoded numbers). The mirror- and cross-channel-coherence losses are what make the EBM learn the kernel's harmonic-structural relationships from the data, rather than treating dimensions as independent.
 
 ### Training pipeline
 
 ```
-Inputs: corpus of (document, resonance-vector) pairs from completed dev sessions
+Inputs: corpus of (N-channel-tuple, resonance-vector) pairs from completed dev sessions
+        Per-document N-channel-tuple = MathemeHarmonicProfile slice taken at the
+        document's ingestion-moment (or its analysed-coordinate's profile snapshot).
 Process:
-  1. Sentence-embed all documents (cache embeddings — they don't change)
-  2. Initialise EBM architecture
-  3. Train with standard supervised loop:
-     - Batch size 16-32
-     - Learning rate 1e-4 with cosine schedule
-     - Train for sufficient epochs (typically 50-200 depending on corpus size)
-     - Validation split: hold out 10-15% of corpus for evaluation
-  4. Track validation MSE, per-square accuracy, mirror-consistency
-  5. Save best checkpoint, version it with timestamp and corpus-snapshot identifier
+  1. Fetch + cache Gemini Embedding 2 embeddings per document (cache by document hash;
+     embeddings don't change per document version)
+  2. Assemble per-channel `MathemeHarmonicProfile` slices
+  3. Initialise EBM architecture (Rust-native via burn or candle)
+  4. Train with standard supervised loop; all hyperparameters from config
+     (batch size, learning rate schedule, epoch count, validation split fraction)
+  5. Track validation MSE, per-square accuracy, mirror-consistency, cross-channel-coherence
+  6. Save best checkpoint, version it with timestamp and corpus-snapshot identifier
 Outputs: trained EBM weights + metadata (corpus-version, training-config, validation-metrics)
 ```
 
@@ -433,20 +437,22 @@ The CLI command `pi train-ebm` orchestrates this pipeline. It is invoked manuall
 
 ### Runtime invocation
 
-At kernel-runtime, the EBM is invoked per element-tick (8 times per cycle) rather than per epogdoon-tick (12 times per cycle), giving a 50% compute reduction without sacrificing matheme-faithfulness — the inter-element transitions can use interpolated energy-gradients between EBM calls. Each invocation:
+At kernel-runtime, the EBM is invoked per element-tick (8 times per cycle) rather than per epogdoon-tick (12 times per cycle), giving a 50% compute reduction without sacrificing matheme-faithfulness — the inter-element transitions use interpolated energy-gradients between EBM calls. Each invocation:
 
 ```
-Input: bioquaternionic state (q_b, q_p) at the current element
+Input: N-channel MathemeHarmonicProfile slice at the current element,
+       plus bioquaternionic state (q_b, q_p) as one of the channels
 Process:
-  1. Project bioquaternion to a representation the EBM can consume
-     (a learned projection from 8-dim bioquaternion to the EBM's input space)
+  1. Assemble per-channel inputs (lens_resonance_72, audio_octet[8], nodal_quartet[4],
+     planetary_chakral, mahamaya, codon_rotation_projection, q_cosmic; bioquaternion
+     enters via its learned channel encoder)
   2. EBM forward pass produces 72-vector
   3. Compute distance from coordinate's target_resonance_vector
-  4. Distance is the lens-energy contribution to E_total
-Output: 72-vector + scalar energy contribution
+  4. Distance is the E_5 harmonic-substrate energy contribution to E_total
+Output: 72-vector + scalar E_5 contribution
 ```
 
-The bioquaternion-to-embedding projection is learned alongside the EBM, but on simpler data — synthetic bioquaternions paired with their associated coordinate's target-resonance-vector. This trains the projection to map quaternionic states sensibly into the resonance-space.
+The bioquaternion-to-embedding projection is learned alongside the EBM as one of the per-channel encoders — on simpler data: synthetic bioquaternions paired with their associated coordinate's target-resonance-vector. This trains the projection to map quaternionic states sensibly into the harmonic-substrate space.
 
 ### Versioning and rollback
 
@@ -457,6 +463,44 @@ Each trained EBM checkpoint is versioned. The CLI command `pi export-ebm-state` 
 - **Rollback** — if a new checkpoint degrades kernel behaviour, revert to a prior version
 
 Versioning is at the level of EBM-checkpoint + corpus-snapshot — both must align for reproducibility, since the EBM's behaviour depends on which corpus it was trained against. The CLI manages this pairing.
+
+---
+
+### §7.5 — Möbius descent step: Riemannian-quaternion gradient pipeline
+
+The kernel's descent equation `q_p^(n+1) = q_p^(n) − log(9/8) · ∇_{q_p} E_total` requires gradient through three energy terms back to `q_p`. The unit-quaternion constraint `|q_p| = 1` means standard Euclidean backprop violates the manifold; the spec is Riemannian-quaternion descent with explicit manifold projection.
+
+**Per-channel gradient sources:**
+- `∇E_4`: autograd through the Rust-native Nara-LoRA forward pass. E_4 is a scalar function of LoRA-adapted output evaluated against PASU substrate; the forward pass is differentiable end-to-end.
+- `∇E_5`: autograd through the Rust-native N-channel EBM head + the learned bioquaternion→embedding projection layer. Both are differentiable by construction.
+- `∇E_6`: discrete (Cypher invariant pass/fail) — NOT naturally differentiable. Use a soft surrogate: scalar count of violated invariants weighted by severity (severity weights from config, no hardcoded numbers) divided by total invariants checked. For high-noise regimes, a REINFORCE-style estimator may be substituted; surrogate choice is recorded in the kernel's per-tick provenance.
+
+**Weighted combination (canonical 4:5:6):**
+```
+∇E_total = (4·∇E_4 + 5·∇E_5 + 6·∇E_6) / 15
+```
+
+**Manifold projection (tangent-space at q_p):**
+```
+∇_M E_total = ∇E_total − ⟨∇E_total, q_p⟩ · q_p
+```
+Subtract the radial component (projection onto q_p) to land in the tangent space of S^3 at q_p.
+
+**Update + renormalize:**
+```
+q_p_raw = q_p − log(9/8) · ∇_M E_total
+q_p^(n+1) = q_p_raw / |q_p_raw|
+```
+Renormalization enforces `|q_p^(n+1)| = 1`. Step-size `log(9/8)` is the epogdoon — non-tunable, structurally inherited.
+
+**Invocation cadence:** per element-tick (8x per cycle), per §7 line 436. The inter-element transitions interpolate energy-gradients between EBM calls.
+
+**Test contract:**
+- Synthetic q_b/q_p pairs with known optimum: descent must reach within tolerance ε after K steps for documented (ε, K).
+- Manifold preservation: |q_p^(n)| must equal 1 ± numerical-precision-floor at every step.
+- Weight invariance: the 4:5:6 sum must match `(4·E_4 + 5·E_5 + 6·E_6) / 15` recomputed independently.
+- Gradient sanity: for E_total = const, `∇E_total = 0` and update is identity.
+- Discrete-surrogate behaviour: zero invariants violated → ∇E_6 = 0; monotone increase in violations → monotone increase in ‖∇E_6‖.
 
 ---
 
@@ -623,7 +667,7 @@ The concrete order of operations from current-state to first-kernel-tick, with m
 ### Phase 5: User-facing readiness
 
 - The system has accumulated enough canonical content, trained-EBM-fidelity, and verifier-constraint-coverage that a non-developer user can engage with it productively
-- User-facing UI built on the physical-pole-architecture stack (Tauri v2 + Bevy + the three substrates)
+- User-facing UI built on the physical-pole-architecture stack (Theia/Electron shell at `Body/M/epi-theia` + the Bevy/wgpu played-torus extension per DR-M1-2 + the three substrates; the original "Tauri v2 + Bevy" wording is superseded — Tauri is deprecated migration-source at `vendor/legacy/epi-tauri`)
 - User sessions follow the same protocol as dev sessions but with the user as #4.4.4.4 boundary instead of the developer
 - The developer continues to engage at the canon-evolution layer in parallel
 

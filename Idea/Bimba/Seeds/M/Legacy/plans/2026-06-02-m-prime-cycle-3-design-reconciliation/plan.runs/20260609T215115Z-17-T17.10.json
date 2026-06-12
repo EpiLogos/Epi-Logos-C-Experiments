@@ -1,0 +1,35 @@
+{
+  "runId": "20260609T215115Z-17-T17.10",
+  "taskId": "17.T17.10",
+  "startedAt": "2026-06-09T21:51:15.332Z",
+  "owner": "codex-m-dev-17-t17-10",
+  "leaseExpiresAt": "2026-06-09T23:51:15.332Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.10",
+    "trackId": "17",
+    "tranche": "T17.10",
+    "title": "Split `Body/S/S4/ta-onta/S4-4p-anima/extension.ts` (761 LOC)",
+    "effort": "761 LOC",
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.1"
+    ],
+    "writeScopes": [
+      "Body/S/S4/ta-onta/S4-4p-anima/extension.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -8,6 +8,7 @@ import {
     Disposable,
     MExtensionId,
     MathemeHarmonicProfileBoundary,
+    MObservabilityEvent,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
@@ -24,10 +25,20 @@ import {
     IntegratedEmptyState,
     buildEmptyState,
     withPanelMode,
-    withReviewInboxCount
+    withReviewInboxCount,
+    type IdentityAugmentReviewProposal,
+    type RoutedIdentityAugmentReviewProposal
 } from '@pratibimba/integrated-composition';
 import { EpiiReviewPanel } from './epii-review-panel';
 import { JivaSivaPanes } from './jiva-siva-panes';
+import {
+    routePluginIdentityAugmentProposalThroughM5Gate
+} from './identity-augment-review-routing';
+import {
+    DepositHandleReceptionResult,
+    NaraJournalDepositReceipt,
+    NaraJournalDepositReception
+} from './deposit-handle-reception';
 import { PLUGIN_ID, CONTRIBUTOR_IDS } from '../common';
 
 @injectable()
@@ -47,6 +58,7 @@ export class PluginIntegrated450Widget extends ReactWidget {
     protected subscriptions: Disposable[] = [];
     /** Epii review pane state — defaults to closed per 08.T6 deliverable 4. */
     protected epiiReviewState: EpiiReviewSurfaceState = CLOSED_EPII_REVIEW_STATE;
+    protected naraJournalDepositReception = new NaraJournalDepositReception();
 
     @postConstruct()
     protected init(): void {
@@ -65,6 +77,9 @@ export class PluginIntegrated450Widget extends ReactWidget {
                 this.currentProfile = profile;
                 this.update();
             })
+        );
+        this.subscriptions.push(
+            this.bridge.onObservabilityEvent(event => this.handleObservabilityEvent(event))
         );
     }
 
@@ -99,6 +114,39 @@ export class PluginIntegrated450Widget extends ReactWidget {
 
     epiiReviewStateRef(): EpiiReviewSurfaceState {
         return this.epiiReviewState;
+    }
+
+    routeIdentityAugmentProposalToM5Review(
+        proposal: IdentityAugmentReviewProposal
+    ): RoutedIdentityAugmentReviewProposal {
+        const routed = routePluginIdentityAugmentProposalThroughM5Gate(
+            this.epiiReviewState,
+            proposal,
+            Date.now()
+        );
+        this.epiiReviewState = routed.state;
+        this.update();
+        return routed;
+    }
+
+    naraJournalDepositsRef(): readonly NaraJournalDepositReceipt[] {
+        return this.naraJournalDepositReception.entries();
+    }
+
+    protected handleObservabilityEvent(event: MObservabilityEvent): void {
+        const result = this.naraJournalDepositReception.receive(event);
+        if (result.status !== 'ignored') {
+            this.publishDepositHandoffResult(result);
+        }
+    }
+
+    protected publishDepositHandoffResult(
+        result: Exclude<DepositHandleReceptionResult, { readonly status: 'ignored' }>
+    ): void {
+        this.bridge.publish(result.event);
+        if (result.status === 'accepted') {
+            this.update();
+        }
     }
 
     protected handleEpiiAction(_action: EpiiActionId): void {

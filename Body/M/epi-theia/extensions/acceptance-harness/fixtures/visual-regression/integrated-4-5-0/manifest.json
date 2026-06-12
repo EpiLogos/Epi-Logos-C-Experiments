@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/integrated-4-5-0",
+  "plan": "track-29-t29.12-visual-regression",
+  "status": "spec-ahead",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "composition": {
+    "pluginId": "plugin-integrated-4-5-0",
+    "namedLayoutId": "jiva-siva.integrated",
+    "rangeId": "4-5-0",
+    "activeLayout": "ide-deep",
+    "primaryCommandId": "epi.integrated.openJivaSiva",
+    "contributorIds": ["m4-nara", "m5-epii", "m0-anuttara"]
+  },
+  "layoutOwners": {
+    "center-stage": "m4-nara",
+    "side-panel": "m5-epii",
+    "evidence-panel": "m5-epii",
+    "audio-bus": null,
+    "selection": "m4-nara",
+    "mini-inspector": ["m0-anuttara", "m5-epii"]
+  },
+  "omniPanel": {
+    "widgetId": "pratibimba.omnipanel.shell",
+    "mounted": true,
+    "activeTab": "review",
+    "tabs": [
+      "pi-chat",
+      "sessions",
+      "dispatch-trace",
+      "tool-stream",
+      "evidence",
+      "review",
+      "gateway",
+      "diagnostics"
+    ]
+  },
+  "artifacts": {
+    "expectedState": "./expected-state.json",
+    "domSnapshot": "./dom-snapshot.html",
+    "screenshotManifest": "./screenshots/baseline.manifest.json"
+  },
+  "viewports": [
+    {
+      "id": "electron-default",
+      "label": "Electron canonical product",
+      "width": 1440,
+      "height": 900,
+      "deviceScaleFactor": 2,
+      "mode": "electron"
+    },
+    {
+      "id": "browser-ci",
+      "label": "Browser-mode CI / Docker headless parity",
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1,
+      "mode": "browser"
+    }
+  ],
+  "baselines": [
+    {
+      "viewport": "electron-default",
+      "screenshot": "screenshots/electron-default.png",
+      "captured": false,
+      "tolerance": { "pixelRatio": 0.001, "maxChangedPixels": 64 }
+    },
+    {
+      "viewport": "browser-ci",
+      "screenshot": "screenshots/browser-ci.png",
+      "captured": false,
+      "tolerance": { "pixelRatio": 0.001, "maxChangedPixels": 64 }
+    }
+  ]
+}

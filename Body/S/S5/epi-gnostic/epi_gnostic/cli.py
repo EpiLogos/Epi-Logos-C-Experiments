@@ -2,9 +2,13 @@
 
 Usage:
     epi-gnostic status
+    epi-gnostic models
     epi-gnostic ingest <file_path> [--coordinate COORD] [--family FAM]
     epi-gnostic ingest-text <text> [--source-id ID]
     epi-gnostic query <question> [--mode MODE]
+    epi-gnostic notebook list
+    epi-gnostic notebook create <name>
+    epi-gnostic notebook delete <name>
     epi-gnostic enrich <entity_id> [--coordinate COORD] [--family FAM]
 
 All output is JSON on stdout for Rust to parse.
@@ -12,6 +16,7 @@ All output is JSON on stdout for Rust to parse.
 import asyncio
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -38,6 +43,21 @@ async def _run(args: list[str]):
             "llm_model": config.llm_model,
             "embedding_dim": config.embedding_dim,
         })
+        return
+
+    if cmd == "models":
+        _json_out({
+            "status": "ok",
+            "workspace": config.workspace,
+            "embedding_model": config.embedding_model,
+            "llm_model": config.llm_model,
+            "embedding_dim": config.embedding_dim,
+            "cosine_threshold": config.cosine_threshold,
+        })
+        return
+
+    if cmd == "notebook":
+        _json_out(_notebook(config, args[1:]))
         return
 
     from epi_gnostic.wrapper import GnosticRAG
@@ -126,6 +146,61 @@ def _flag(args: list[str], flag: str) -> str | None:
         return args[idx + 1] if idx + 1 < len(args) else None
     except ValueError:
         return None
+
+
+def _notebook(config, args: list[str]) -> dict:
+    action = args[0] if args else "list"
+    path = Path(config.working_dir) / "notebooks.json"
+    notebooks = _read_notebooks(path)
+
+    if action == "list":
+        return {"status": "ok", "notebooks": notebooks}
+
+    if action in {"create", "delete"} and len(args) < 2:
+        return {"status": "error", "message": f"notebook {action} requires a name"}
+
+    if action == "create":
+        name = args[1]
+        existing = next((entry for entry in notebooks if entry["name"] == name), None)
+        if existing is None:
+            existing = {
+                "name": name,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "workspace": config.workspace,
+            }
+            notebooks.append(existing)
+            _write_notebooks(path, notebooks)
+        return {"status": "ok", "notebook": existing}
+
+    if action == "delete":
+        name = args[1]
+        remaining = [entry for entry in notebooks if entry["name"] != name]
+        deleted = len(remaining) != len(notebooks)
+        if deleted:
+            _write_notebooks(path, remaining)
+        return {"status": "ok", "deleted": deleted, "name": name}
+
+    return {
+        "status": "error",
+        "message": f"Unknown notebook action: {action}",
+    }
+
+
+def _read_notebooks(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, list):
+        raise ValueError(f"{path} must contain a JSON list")
+    return data
+
+
+def _write_notebooks(path: Path, notebooks: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        json.dump(notebooks, handle, ensure_ascii=False, indent=2)
+        handle.write("\n")
 
 
 def main():

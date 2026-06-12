@@ -32,6 +32,7 @@ pub struct GdsProjectionPlan {
     pub relationship_types: Vec<String>,
     pub excluded_labels: Vec<String>,
     pub privacy_boundary: String,
+    pub profile_handles: Vec<String>,
     pub graph_list_cypher: String,
     pub project_cypher: String,
 }
@@ -55,6 +56,7 @@ pub struct GdsOverlayPayload {
     pub reason: Option<String>,
     pub algorithms: Vec<GdsAlgorithmDescriptor>,
     pub excluded_labels: Vec<String>,
+    pub profile_handles: Vec<String>,
     pub derived_nodes: Vec<GdsOverlayNode>,
     pub canonical_write_performed: bool,
 }
@@ -92,6 +94,7 @@ pub fn option1_projection_plan() -> GdsProjectionPlan {
             .map(|label| (*label).to_owned())
             .collect(),
         privacy_boundary: GDS_PRIVACY_BOUNDARY.to_owned(),
+        profile_handles: ananda_vortex_profile_handles(),
         graph_list_cypher:
             "CALL gds.graph.list($projection_name) YIELD graphName, nodeCount, relationshipCount RETURN graphName, nodeCount, relationshipCount"
                 .to_owned(),
@@ -127,9 +130,17 @@ pub fn blocked_overlay_payload(coordinate: &str, reason: impl Into<String>) -> G
             .iter()
             .map(|label| (*label).to_owned())
             .collect(),
+        profile_handles: ananda_vortex_profile_handles(),
         derived_nodes: Vec::new(),
         canonical_write_performed: false,
     }
+}
+
+fn ananda_vortex_profile_handles() -> Vec<String> {
+    vec![
+        "profile.ananda_vortex".to_owned(),
+        "profile.ananda_vortex.active_cell_value".to_owned(),
+    ]
 }
 
 pub async fn gds_procedure_count(client: &Neo4jClient) -> Result<i64, String> {

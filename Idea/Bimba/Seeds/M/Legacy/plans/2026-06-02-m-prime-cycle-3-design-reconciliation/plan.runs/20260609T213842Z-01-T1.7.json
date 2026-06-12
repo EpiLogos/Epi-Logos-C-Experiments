@@ -1,0 +1,44 @@
+{
+  "runId": "20260609T213842Z-01-T1.7",
+  "taskId": "01.T1.7",
+  "startedAt": "2026-06-09T21:38:42.238Z",
+  "owner": "codex-m-dev-01-t1-7",
+  "leaseExpiresAt": "2026-06-09T23:38:42.238Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T1.7",
+    "trackId": "01",
+    "tranche": "T1.7",
+    "title": "Kernel-S2 core-65 relations sync audit",
+    "effort": null,
+    "file": "01-m0-anuttara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+    "dependsOn": [
+      "01.T1.6"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**"
+    ],
+    "status": "ready",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-09T21:24:25.928Z",
+        "text": "Claim refused by m-dev ledger: computed status waiting on unmet 01.T1.6; substrate spot-check found no c_1_asset schema/inspector projection, while m0.h already declares M0_CORE_RELATIONS_COUNT 65u and S2 graph-services has no core65Audit/core_65_audit/kernelCoreAudit method."
+      },
+      {
+        "at": "2026-06-09T21:38:41.237Z",
+        "text": "Unblocked after 01.T1.6 landed: plan.state.json shows 01.T1.6 done with c_1_asset schema and inspector evidence; proceeding to claim kernel-core audit closure."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -5,6 +5,13 @@ import {
     MExtensionReadinessState,
     MObservabilityEvent
 } from '@pratibimba/m-extension-runtime';
+import type {
+    OracleFrame,
+    OracleSequenceCodon,
+    ReadingPosition,
+    SymbolicProtein,
+    TranscriptionalClockPacket
+} from '@pratibimba/kernel-bridge';
 import { EXTENSION_ID, PRIVACY_CLASS } from './index';
 
 export const M3_CODON_WHEEL_CONTRACT_VERSION = '2026-06-01.07-T6';
@@ -53,6 +60,8 @@ export interface M3ProjectionSurface {
     readonly extensionId: typeof EXTENSION_ID;
     readonly profileGeneration: number;
     readonly privacyClass: typeof PRIVACY_CLASS;
+    readonly transcriptionalClockPacket: TranscriptionalClockPacket | null;
+    readonly oracleFrameSummary: Readonly<Record<string, unknown>> | null;
     readonly activeProjection: Readonly<Record<string, unknown>>;
     readonly wheelSummary: Readonly<Record<string, unknown>>;
     readonly m30ProvenanceStrip: Readonly<Record<string, unknown>>;
@@ -83,6 +92,8 @@ export function buildM3ProjectionSurface(input: M3ProjectionSurfaceInput): M3Pro
     }
 
     const wheelSummary = buildWheelSummary(input.library);
+    const transcriptionalClockPacket = transcriptionalClockPacketFromProfile(payload);
+    const oracleFrameSummary = buildOracleFrameSummary(transcriptionalClockPacket);
     const activeFacts = activeProjectionFacts(payload, mahamaya, projection);
     const worldClockBinding = buildWorldClockBinding(activeFacts, input.worldClock);
     const pendingFields = surfacePendingFields(input, mahamaya, projection);
@@ -96,6 +107,10 @@ export function buildM3ProjectionSurface(input: M3ProjectionSurfaceInput): M3Pro
         evidenceHandle: input.kernelTraceHandle?.handle ?? input.library?.provenanceHandle.handle ?? 'pending:m3.kernel-trace',
         provenanceHandles: provenance.map(handle => handle.handle),
         worldClock: worldClockBinding,
+        vak: transcriptionalClockPacket?.vak ?? null,
+        oracleFrame: oracleFrameSummary,
+        cpPositionRef: transcriptionalClockPacket?.cpPositionRef ?? null,
+        symbolicProtein: symbolicProteinSummary(transcriptionalClockPacket?.symbolicProtein),
         ...activeFacts,
         rewardTrainingAuthority: 'outside-renderer',
         protectedArtifactBodyLoaded: false
@@ -106,6 +121,8 @@ export function buildM3ProjectionSurface(input: M3ProjectionSurfaceInput): M3Pro
         extensionId: EXTENSION_ID,
         profileGeneration: input.profile.generation,
         privacyClass: PRIVACY_CLASS,
+        transcriptionalClockPacket,
+        oracleFrameSummary,
         activeProjection: freezeRecord(activeFacts),
         wheelSummary,
         m30ProvenanceStrip: buildM30Provenance(payload, mahamaya),
@@ -135,6 +152,38 @@ export function buildM3ProjectionSurface(input: M3ProjectionSurfaceInput): M3Pro
                 })
             })
         ])
+    });
+}
+
+export function buildOracleFrameSummary(
+    packet: TranscriptionalClockPacket | null
+): Readonly<Record<string, unknown>> | null {
+    if (!packet) {
+        return null;
+    }
+    const frame = packet.oracleFrame;
+    const declaredPairs = declaredComplementaryPairs(frame);
+    return freezeRecord({
+        source: 'profile.transcriptionalClockPacket.oracleFrame',
+        packetId: packet.packetId,
+        frameId: frame.frameId,
+        spreadScale: frame.spreadScale,
+        traversalDirection: frame.traversalDirection ?? null,
+        positionCount: frame.positions.length,
+        activeCpPositionRef: packet.cpPositionRef,
+        positions: Object.freeze(
+            frame.positions.map(position =>
+                freezeRecord({
+                    key: position.key,
+                    ordinal: position.ordinal,
+                    cpPositionRef: position.cpPositionRef,
+                    label: position.label ?? null
+                })
+            )
+        ),
+        complementaryPairs: Object.freeze(
+            declaredPairs.map(([left, right]) => Object.freeze([left, right] as const))
+        )
     });
 }
 
@@ -194,25 +243,38 @@ function activeProjectionFacts(
     mahamaya: Readonly<Record<string, unknown>>,
     projection: Readonly<Record<string, unknown>>
 ): Readonly<Record<string, unknown>> {
+    const elementalQuintessence = objectValue(
+        projection.elementalQuintessence ??
+        projection.elemental_quintessence ??
+        mahamaya.elementalQuintessence ??
+        mahamaya.elemental_quintessence ??
+        payload.elementalQuintessence ??
+        payload.elemental_quintessence
+    );
     return freezeRecord({
         tick: numberValue(payload.tick),
         degree720: numberValue(payload.degree720),
         lens: numberValue(projection.lens ?? objectValue(payload.lensMode)?.lens),
         mode: numberValue(projection.mode ?? objectValue(payload.lensMode)?.mode),
+        surfaceIndex: numberValue(projection.surfaceIndex ?? projection.surface_index),
         codonId: numberValue(projection.codonId ?? mahamaya.codonId),
         codon: stringValue(projection.codon ?? mahamaya.codon),
         codonClass: stringValue(projection.codonClass ?? mahamaya.codonClass),
         rotation: numberValue(projection.rotation ?? mahamaya.rotationalIndex),
         rotationalStateCount: numberValue(projection.rotationalStateCount ?? mahamaya.rotationalStateCount),
         rotationDegrees: numberValue(projection.rotationDegrees),
+        chargeQuaternion: quaternionValue(payload.qCosmic ?? payload.q_cosmic),
         hexagram: stringValue(mahamaya.hexagram),
         hexagramId: numberValue(mahamaya.hexagramId),
         upperTrigram: numberValue(mahamaya.upperTrigram),
         lowerTrigram: numberValue(mahamaya.lowerTrigram),
         lineChangeOperator: stringValue(mahamaya.lineChangeOperator),
+        lineIndex: numberValue(mahamaya.lineIndex),
+        lineChangeOperatorAddress: numberValue(mahamaya.lineChangeOperatorAddress),
         dnaRnaPhase: stringValue(mahamaya.dnaRnaPhase),
         tarotMinorId: mahamaya.tarotMinorId ?? null,
         tarotShadowCodon: mahamaya.tarotShadowCodon ?? null,
+        elementalQuintessence: elementalQuintessence ? freezeRecord({ ...elementalQuintessence }) : null,
         datasetLutState: stringValue(mahamaya.datasetLutState ?? projection.datasetLutState),
         transcriptionState: stringValue(mahamaya.transcriptionState)
     });
@@ -250,7 +312,25 @@ function buildDepthViews(
         lens: activeFacts.lens,
         mode: activeFacts.mode
     };
+    const su2Layer = stringValue(payload.su2Layer ?? payload.su2_layer);
+    const lensAnnulus = lensAnnulusDepthView(payload);
+    const toroidalWorld = toroidalWorldDepthView(payload, common, worldClock, lensAnnulus);
+    const hopfIdentity = hopfIdentityDepthView(payload, common, su2Layer);
     return freezeRecord({
+        // Canonical M3-5' four depth-view modes (M3-ARCHITECTURE §5.7).
+        flatClockDebug: freezeRecord({
+            viewMode: 'flat-clock-debug',
+            ...common,
+            lineChangeOperator: activeFacts.lineChangeOperator,
+            hexagram: activeFacts.hexagram,
+            hexagramId: activeFacts.hexagramId,
+            rotationalStateCount: activeFacts.rotationalStateCount,
+            su2Layer: su2Layer ?? 'pending-backend-su2-layer'
+        }),
+        lensAnnulus,
+        toroidalWorld,
+        hopfIdentity,
+        // Legacy depth-view aliases retained for existing Track-08 consumers.
         flatClock: freezeRecord({
             viewMode: 'flat-clock-debug',
             ...common
@@ -270,6 +350,90 @@ function buildDepthViews(
             ...common,
             orientation: stringValue(objectValue(payload.m3Trace)?.janusOrientation) ?? 'pending-backend-trace'
         })
+    });
+}
+
+// M3-2' Lens Annulus depth view (M3-ARCHITECTURE §5.4). The 16+1 M3 lens-stack
+// is namespace-pending until DR-M3-3 closes the M2-1' Vimarśa vs M3_LENS_STACK
+// split, so this view never relabels the 12-count M1' chromatic lens as an
+// M3-aperture stack — it reads profile.m3LensStack and renders pending otherwise.
+function lensAnnulusDepthView(
+    payload: Readonly<Record<string, unknown>>
+): Readonly<Record<string, unknown>> {
+    const stack = objectValue(payload.m3LensStack ?? payload.m3_lens_stack);
+    if (!stack) {
+        return freezeRecord({
+            viewMode: 'lens-annulus',
+            namespaceResolved: false,
+            provenanceOverlay: 'pending-m3-lens-stack-namespace',
+            segmentCount: null,
+            activeSegmentIndex: null,
+            note: 'DR-M3-3 namespace pending: M3_LENS_STACK field not yet on the profile bus'
+        });
+    }
+    return freezeRecord({
+        viewMode: 'lens-annulus',
+        namespaceResolved: stack.namespaceResolved === true || stack.namespace_resolved === true,
+        provenanceOverlay:
+            stack.namespaceResolved === true || stack.namespace_resolved === true
+                ? 'profile.m3LensStack'
+                : 'pending-m3-lens-stack-namespace',
+        segmentCount: numberValue(stack.segmentCount ?? stack.segment_count),
+        activeSegmentIndex: numberValue(stack.activeSegmentIndex ?? stack.active_segment_index)
+    });
+}
+
+// M3-5' Toroidal / World Clock depth view (M3-ARCHITECTURE §5.7.3). The K² mesh
+// is M1-5's authority and is referenced by handle only — never forked here.
+// T²_Mahāmāyā parameters (inscription-circle, lens-circle) come from the profile.
+function toroidalWorldDepthView(
+    payload: Readonly<Record<string, unknown>>,
+    common: Readonly<Record<string, unknown>>,
+    worldClock: Readonly<Record<string, unknown>>,
+    lensAnnulus: Readonly<Record<string, unknown>>
+): Readonly<Record<string, unknown>> {
+    const torus = objectValue(payload.toroidalWorld ?? payload.toroidal_world);
+    return freezeRecord({
+        viewMode: 'toroidal-world-clock',
+        ...common,
+        worldClockHandle: worldClock.worldClockHandle,
+        worldClockSource: worldClock.source,
+        subscriptionMode: worldClock.subscriptionMode,
+        // K² is borrowed from M1-5 via a shared geometry handle — not a local mesh.
+        k2GeometryHandle:
+            stringValue(torus?.k2GeometryHandle ?? torus?.k2_geometry_handle) ??
+            'pending-m1-5-k2-geometry-handle',
+        // T²_Mahāmāyā inscription/lens-circle parameters are backend-provided.
+        inscriptionCircleParam: numberValue(torus?.inscriptionCircleParam ?? torus?.inscription_circle_param),
+        lensCircleParam: numberValue(torus?.lensCircleParam ?? torus?.lens_circle_param),
+        lensAnnulusActiveSegmentIndex: lensAnnulus.activeSegmentIndex,
+        coFoliationState: stringValue(torus?.coFoliationState ?? torus?.co_foliation_state) ?? 'pending-backend-co-foliation'
+    });
+}
+
+// M3-5' Hopf Identity depth view (M3-ARCHITECTURE §5.7.4). The SU(2)
+// hopf-fiber trajectory and the 720°→0 identity-return moment are read from the
+// profile; T²_Mahāmāyā collapses to a phase-shadow ring around the trajectory.
+function hopfIdentityDepthView(
+    payload: Readonly<Record<string, unknown>>,
+    common: Readonly<Record<string, unknown>>,
+    su2Layer: string | null
+): Readonly<Record<string, unknown>> {
+    const hopf = objectValue(payload.hopfIdentity ?? payload.hopf_identity);
+    const degree720 = numberValue(common.degree720);
+    return freezeRecord({
+        viewMode: 'hopf-identity',
+        ...common,
+        su2Layer: su2Layer ?? 'pending-backend-su2-layer',
+        hopfFiberHandle:
+            stringValue(hopf?.hopfFiberHandle ?? hopf?.hopf_fiber_handle) ??
+            'pending-m1-2-hopf-fiber-handle',
+        phaseShadowRingState:
+            stringValue(hopf?.phaseShadowRingState ?? hopf?.phase_shadow_ring_state) ??
+            'pending-backend-phase-shadow',
+        // 720° return is the identity-recognition pulse — backend asserts the close.
+        identityReturned: hopf?.identityReturned === true || hopf?.identity_returned === true,
+        atIdentityReturnDegree: degree720 === 0
     });
 }
 
@@ -356,6 +520,191 @@ function provenanceHandles(input: M3ProjectionSurfaceInput): M3ProvenanceHandle[
     return handles;
 }
 
+function transcriptionalClockPacketFromProfile(
+    payload: Readonly<Record<string, unknown>>
+): TranscriptionalClockPacket | null {
+    const raw = objectValue(payload.transcriptionalClockPacket ?? payload.transcriptional_clock_packet);
+    if (!raw) {
+        return null;
+    }
+    const oracleFrame = oracleFrameFromValue(raw.oracleFrame ?? raw.oracle_frame);
+    const cpPositionRef = stringValue(raw.cpPositionRef ?? raw.cp_position_ref);
+    const packetId = stringValue(raw.packetId ?? raw.packet_id);
+    const vak = objectValue(raw.vak);
+    if (!oracleFrame || !cpPositionRef || !packetId || !vak) {
+        return null;
+    }
+    return {
+        packetId,
+        profileGeneration: numberValue(raw.profileGeneration ?? raw.profile_generation),
+        vak: vakAddressFromValue(vak),
+        oracleFrame,
+        cpPositionRef,
+        oracleSequence: oracleSequenceFromValue(raw.oracleSequence ?? raw.oracle_sequence),
+        symbolicProtein: symbolicProteinFromValue(raw.symbolicProtein ?? raw.symbolic_protein),
+        provenanceHandles: stringArray(raw.provenanceHandles ?? raw.provenance_handles)
+    };
+}
+
+function oracleFrameFromValue(value: unknown): OracleFrame | null {
+    const raw = objectValue(value);
+    if (!raw) {
+        return null;
+    }
+    const frameId = stringValue(raw.frameId ?? raw.frame_id);
+    const spreadScale = stringValue(raw.spreadScale ?? raw.spread_scale);
+    const positions = readingPositionsFromValue(raw.positions);
+    if (!frameId || !spreadScale || positions.length === 0) {
+        return null;
+    }
+    return {
+        frameId,
+        spreadScale: spreadScale as OracleFrame['spreadScale'],
+        positions,
+        traversalDirection: stringValue(raw.traversalDirection ?? raw.traversal_direction) as
+            | OracleFrame['traversalDirection']
+            | undefined,
+        complementaryPairs: declaredComplementaryPairs({
+            positions,
+            complementaryPairs: pairArray(raw.complementaryPairs ?? raw.complementary_pairs)
+        })
+    };
+}
+
+function readingPositionsFromValue(value: unknown): ReadingPosition[] {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+    const positions: ReadingPosition[] = [];
+    for (const item of value) {
+        const raw = objectValue(item);
+        const key = stringValue(raw?.key);
+        const ordinal = numberValue(raw?.ordinal);
+        const cpPositionRef = stringValue(raw?.cpPositionRef ?? raw?.cp_position_ref);
+        if (!raw || !key || ordinal === null || !cpPositionRef) {
+            continue;
+        }
+        const vak = objectValue(raw.vak);
+        positions.push({
+            key,
+            ordinal,
+            cpPositionRef,
+            label: stringValue(raw.label) ?? undefined,
+            vak: vak ? vakAddressFromValue(vak) : undefined
+        });
+    }
+    return positions;
+}
+
+function oracleSequenceFromValue(value: unknown): TranscriptionalClockPacket['oracleSequence'] {
+    const raw = objectValue(value);
+    if (!raw) {
+        return undefined;
+    }
+    const sequenceId = stringValue(raw.sequenceId ?? raw.sequence_id);
+    const frameId = stringValue(raw.frameId ?? raw.frame_id);
+    const codons: OracleSequenceCodon[] = [];
+    if (Array.isArray(raw.codons)) {
+        for (const item of raw.codons) {
+            const codon = objectValue(item);
+            const ordinal = numberValue(codon?.ordinal);
+            const symbol = stringValue(codon?.symbol);
+            const cpPositionRef = stringValue(codon?.cpPositionRef ?? codon?.cp_position_ref);
+            if (!codon || ordinal === null || !symbol || !cpPositionRef) {
+                continue;
+            }
+            const vak = objectValue(codon.vak);
+            codons.push({
+                ordinal,
+                symbol,
+                cpPositionRef,
+                vak: vak ? vakAddressFromValue(vak) : undefined
+            });
+        }
+    }
+    if (!sequenceId || !frameId || codons.length === 0) {
+        return undefined;
+    }
+    return { sequenceId, frameId, codons };
+}
+
+function symbolicProteinFromValue(value: unknown): SymbolicProtein | undefined {
+    const raw = objectValue(value);
+    if (!raw) {
+        return undefined;
+    }
+    const proteinId = stringValue(raw.proteinId ?? raw.protein_id);
+    const sequence = oracleSequenceFromValue(raw.sequence);
+    const readingFrame = oracleFrameFromValue(raw.readingFrame ?? raw.reading_frame);
+    if (!proteinId || !sequence || !readingFrame) {
+        return undefined;
+    }
+    return {
+        proteinId,
+        sequence,
+        readingFrame,
+        startPositionRef: stringValue(raw.startPositionRef ?? raw.start_position_ref) ?? undefined,
+        stopPositionRef: stringValue(raw.stopPositionRef ?? raw.stop_position_ref) ?? undefined
+    };
+}
+
+function symbolicProteinSummary(
+    protein: SymbolicProtein | undefined
+): Readonly<Record<string, unknown>> | null {
+    if (!protein) {
+        return null;
+    }
+    return freezeRecord({
+        proteinId: protein.proteinId,
+        sequenceId: protein.sequence.sequenceId,
+        codonCount: protein.sequence.codons.length,
+        frameId: protein.readingFrame.frameId,
+        positionCount: protein.readingFrame.positions.length,
+        startPositionRef: protein.startPositionRef ?? null,
+        stopPositionRef: protein.stopPositionRef ?? null
+    });
+}
+
+function declaredComplementaryPairs(
+    frame: Pick<OracleFrame, 'positions' | 'complementaryPairs'>
+): readonly (readonly [string, string])[] {
+    const keys = new Set(frame.positions.map(position => position.key));
+    return (frame.complementaryPairs ?? []).filter(([left, right]) => keys.has(left) && keys.has(right));
+}
+
+function pairArray(value: unknown): readonly (readonly [string, string])[] {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+    return value
+        .map(item => {
+            if (!Array.isArray(item) || item.length !== 2) {
+                return null;
+            }
+            const left = stringValue(item[0]);
+            const right = stringValue(item[1]);
+            return left && right ? ([left, right] as const) : null;
+        })
+        .filter((pair): pair is readonly [string, string] => pair !== null);
+}
+
+function stringArray(value: unknown): readonly string[] {
+    return Array.isArray(value)
+        ? value.filter((item): item is string => typeof item === 'string' && item.length > 0)
+        : [];
+}
+
+function vakAddressFromValue(value: Readonly<Record<string, unknown>>): TranscriptionalClockPacket['vak'] {
+    return {
+        cpf: stringValue(value.cpf ?? value.CPF) ?? '',
+        ct: stringValue(value.ct ?? value.CT) ?? '',
+        cp: stringValue(value.cp ?? value.CP) ?? '',
+        cf: stringValue(value.cf ?? value.CF) ?? '',
+        cfp: stringValue(value.cfp ?? value.CFP) ?? '',
+        cs: stringValue(value.cs ?? value.CS) ?? ''
+    };
+}
+
 function objectValue(value: unknown): Readonly<Record<string, unknown>> | undefined {
     return value && typeof value === 'object' && !Array.isArray(value)
         ? (value as Readonly<Record<string, unknown>>)
@@ -364,6 +713,17 @@ function objectValue(value: unknown): Readonly<Record<string, unknown>> | undefi
 
 function numberValue(value: unknown): number | null {
     return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function quaternionValue(value: unknown): readonly [number, number, number, number] | null {
+    if (!Array.isArray(value) || value.length !== 4) {
+        return null;
+    }
+    const tuple = value.map(entry => numberValue(entry));
+    if (tuple.some(entry => entry === null)) {
+        return null;
+    }
+    return Object.freeze(tuple) as readonly [number, number, number, number];
 }
 
 function stringValue(value: unknown): string | null {

@@ -1,0 +1,40 @@
+{
+  "runId": "20260611T154043Z-27-T27.12",
+  "taskId": "27.T27.12",
+  "startedAt": "2026-06-11T15:40:43.941Z",
+  "owner": "codex-m-dev-27-t27-12",
+  "leaseExpiresAt": "2026-06-11T17:40:43.941Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.12",
+    "trackId": "27",
+    "tranche": "T27.12",
+    "title": "Forbidden-direct-import lint extension over OmniPanel tab modules",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.11"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/**/*.ts{x,}",
+      "Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs",
+      "Body/S/S0/*",
+      "Body/S/S2/*",
+      "Body/S/S3/*",
+      "Body/S/S5/*"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

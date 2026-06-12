@@ -15,6 +15,7 @@ import * as React from 'react';
 import {
     MathemeHarmonicProfileBoundary
 } from '@pratibimba/m-extension-runtime';
+import { M2PrimeMeaningPacket } from '@pratibimba/m2-parashakti';
 import {
     IntegratedEvidenceProducerId,
     PaneAvailability
@@ -86,6 +87,7 @@ const PaneShell: React.FC<PaneShellProps> = ({
 
 export interface CosmicEnginePanesProps {
     readonly profile: MathemeHarmonicProfileBoundary | null;
+    readonly routedM2Packet?: M2PrimeMeaningPacket | null;
     readonly m3CenterStage: PaneAvailability;
     readonly m2LeftStage: PaneAvailability;
     readonly m1RightInspector: PaneAvailability;
@@ -100,6 +102,7 @@ export interface CosmicEnginePanesProps {
  */
 export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
     profile,
+    routedM2Packet,
     m3CenterStage,
     m2LeftStage,
     m1RightInspector,
@@ -109,7 +112,7 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
     const mahamaya = readPayloadString(profile, 'mahamaya');
     const resonance72 = readPayloadString(profile, 'resonance72');
     const planetaryChakral = readPayloadString(profile, 'planetaryChakral');
-    const kleinFlipState = readPayloadString(profile, 'kleinFlipState');
+    const kleinFlip = readPayloadString(profile, 'kleinFlip');
     const lens = readPayloadString(profile, 'lens');
     const mode = readPayloadString(profile, 'mode');
     const audioOctet = readPayloadString(profile, 'audio_octet');
@@ -144,8 +147,21 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
                     <dd data-test="m2-resonance72">{resonance72}</dd>
                     <dt>planetaryChakral</dt>
                     <dd data-test="m2-planetary">{planetaryChakral}</dd>
-                    <dt>kleinFlipState</dt>
-                    <dd data-test="m2-klein">{kleinFlipState}</dd>
+                    <dt>kleinFlip</dt>
+                    <dd data-test="m2-klein">{kleinFlip}</dd>
+                    <dt>M2 pending</dt>
+                    <dd data-test="m2-pending">
+                        {routedM2Packet ? routedM2Packet.pendingFields.join(', ') || '—' : 's2.parashaktiCorrespondences'}
+                    </dd>
+                    <dt>S2 provenance</dt>
+                    <dd data-test="m2-s2-provenance">
+                        {routedM2Packet
+                            ? routedM2Packet.provenance
+                                .filter(handle => handle.source === 's2')
+                                .map(handle => handle.handle)
+                                .join(' / ') || '—'
+                            : '—'}
+                    </dd>
                 </dl>
             </PaneShell>
             <PaneShell

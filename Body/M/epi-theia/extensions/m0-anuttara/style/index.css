@@ -38,8 +38,71 @@
     word-break: break-word;
 }
 
+.mext-widget-m0-anuttara .m0-layer-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tabs button {
+    border: 1px solid var(--theia-input-border);
+    border-radius: 3px;
+    padding: 4px 8px;
+    color: var(--theia-foreground);
+    background: var(--theia-button-secondaryBackground);
+    font: inherit;
+    cursor: pointer;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tabs button[aria-selected='true'] {
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+}
+
+.mext-widget-m0-anuttara .m0-community-clock-overlay[data-provenance-state='blocked'] {
+    border-left: 2px solid var(--theia-inputValidation-warningBorder);
+    padding-left: 10px;
+}
+
 .mext-widget-m0-anuttara .mext-widget-empty {
     margin: 0;
     color: var(--theia-descriptionForeground);
     font-style: italic;
+}
+
+/* Track 08 compact coordinate summary card (21.T21.17). */
+.mext-widget-m0-anuttara .m0-coordinate-summary-card .m0-coordinate-summary-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0;
+}
+
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill {
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: var(--theia-ui-font-size0);
+    background: var(--theia-badge-background);
+    color: var(--theia-badge-foreground);
+}
+
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='blocked'] {
+    background: var(--theia-inputValidation-warningBackground);
+    color: var(--theia-inputValidation-warningForeground);
+}
+
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-generation {
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-open {
+    padding: 3px 10px;
+    border: none;
+    border-radius: 2px;
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+    font: inherit;
+    cursor: pointer;
 }

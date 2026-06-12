@@ -1,0 +1,186 @@
+//! Core autoresearch value types (improvement runs, candidates, routes, receipts).
+//!
+//! Split out of `lib.rs` per S5-ARCHITECTURE.md §5.1 finding F2 — "split type-defs
+//! out of the façade". These are pure data definitions; the `ImprovementStore` impl
+//! and the free helper/validator functions remain in the crate root, which re-exports
+//! everything here via `pub use types::*` so the public API is unchanged.
+
+use serde::{Deserialize, Serialize};
+
+use crate::inbox;
+use crate::kernel_evidence::KernelEvidence;
+use crate::spine::{ClosureKind, ContentTypeRegister, ImprovementCandidate, TargetSubsystem};
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ArtifactRef {
+    pub path: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub coordinate: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kind: Option<String>,
+}
+
+impl ArtifactRef {
+    pub fn new(path: impl Into<String>) -> Self {
+        Self {
+            path: path.into(),
+            coordinate: None,
+            kind: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum LoopState {
+    Idle,
+    Hypothesis,
+    Evaluating,
+    Deciding,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ImprovementDecision {
+    Keep,
+    Discard,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ProposeRequest {
+    pub target_family: String,
+    pub target_coordinate: String,
+    pub direction: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_review_item_id: Option<String>,
+    pub baseline: ArtifactRef,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct EvidenceSourceRef {
+    pub kind: String,
+    pub uri: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub coordinate: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub summary: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct EvaluationEvidence {
+    pub dimension: String,
+    pub baseline_score: f64,
+    pub challenger_score: f64,
+    pub weight: f64,
+    pub notes: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub source_refs: Vec<EvidenceSourceRef>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kernel_evidence: Option<KernelEvidence>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct EvaluationResult {
+    pub winner: String,
+    pub baseline_score: f64,
+    pub challenger_score: f64,
+    pub evidence: Vec<EvaluationEvidence>,
+    pub rationale: String,
+    pub evaluated_at: u128,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ImprovementRun {
+    pub run_id: String,
+    pub target_family: String,
+    pub target_coordinate: String,
+    pub direction: String,
+    #[serde(default)]
+    pub closure_kind: ClosureKind,
+    #[serde(default)]
+    pub ct_register: ContentTypeRegister,
+    pub source_review_item_id: Option<String>,
+    pub baseline: ArtifactRef,
+    pub challenger: ArtifactRef,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub typed_candidate: Option<ImprovementCandidate>,
+    pub loop_state: LoopState,
+    pub evaluation: Option<EvaluationResult>,
+    pub decision: Option<ImprovementDecision>,
+    pub created_at: u128,
+    pub updated_at: u128,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ImprovementVector {
+    pub run_id: String,
+    pub target_family: String,
+    pub target_coordinate: String,
+    pub direction: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ImproveStatus {
+    pub loop_state: LoopState,
+    pub active_vectors: Vec<ImprovementVector>,
+    pub last_run: Option<u128>,
+    pub total_runs: usize,
+    pub keep_count: usize,
+    pub discard_count: usize,
+    pub kernel_evidence_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ImprovementHistory {
+    pub runs: Vec<ImprovementRun>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct CandidateRecord {
+    pub candidate_id: String,
+    pub run_id: String,
+    pub candidate: ImprovementCandidate,
+    pub surfaced_at: u128,
+    pub updated_at: u128,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RouteStatus {
+    Open,
+    Blocked,
+    Resolved,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct RouteRecord {
+    pub route_id: String,
+    pub candidate_id: String,
+    pub run_id: String,
+    pub target_subsystem: TargetSubsystem,
+    pub queue: String,
+    pub closure_kind: ClosureKind,
+    pub ct_register: ContentTypeRegister,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cross_target_link: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub blocked_by_route_id: Option<String>,
+    pub status: RouteStatus,
+    pub created_at: u128,
+    pub updated_at: u128,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SurfacedCandidateReceipt {
+    pub candidate: CandidateRecord,
+    pub run: ImprovementRun,
+    pub routes: Vec<RouteRecord>,
+    pub suppressed_duplicate: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct AletheiaLineageSurfaceReceipt {
+    pub surfaced: SurfacedCandidateReceipt,
+    pub lineage: inbox::DisclosureLineage,
+    pub safe_source_uri: String,
+}
