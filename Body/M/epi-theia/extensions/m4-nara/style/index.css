@@ -743,3 +743,83 @@
         grid-template-columns: 18px minmax(68px, 1fr) 78px 24px 34px 20px;
     }
 }
+
+/* Task 25.16 — Mercurius kairos-relay indicator. Compact chrome chip (~24px),
+   mounted above the Kairos Wheel (25.15) in ide-deep and as a status-bar chip
+   in daily-0-1. Indicator only: no body content, no privacy chrome. */
+.m4-nara-mercurius-relay .mext-widget-root {
+    padding: 0;
+}
+
+.m4-mercurius-relay {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 24px;
+    max-height: 24px;
+    padding: 2px 10px;
+    border-bottom: 1px solid var(--theia-editorWidget-border);
+    background: var(--theia-editorWidget-background);
+    font-size: var(--theia-ui-font-size0);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Single-shot pulse: the chip re-keys this node on every delta, so the CSS
+   animation replays exactly once per refresh (animation-iteration-count: 1). */
+.m4-mercurius-pulse {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--theia-descriptionForeground);
+    animation: m4-mercurius-pulse-once 600ms ease-out 1;
+}
+
+.m4-mercurius-pulse[data-connected='true'] {
+    background: var(--theia-successBackground, var(--theia-charts-green));
+}
+
+@keyframes m4-mercurius-pulse-once {
+    0% {
+        transform: scale(1);
+        opacity: 0.55;
+    }
+    40% {
+        transform: scale(1.9);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.55;
+    }
+}
+
+.m4-mercurius-glyph {
+    flex: 0 0 auto;
+    color: var(--theia-foreground);
+}
+
+.m4-mercurius-label {
+    color: var(--theia-descriptionForeground);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.m4-mercurius-refresh {
+    color: var(--theia-foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+.m4-mercurius-delta {
+    margin-left: auto;
+    color: var(--theia-descriptionForeground);
+    font-variant-numeric: tabular-nums;
+}
+
+/* FR-3 stub: kairos disabled by default — grey, quiet, no pulse. */
+.m4-mercurius-stub {
+    color: var(--theia-disabledForeground, var(--theia-descriptionForeground));
+    font-style: italic;
+    opacity: 0.75;
+}
