@@ -27,7 +27,9 @@ Per [[alpha_quaternionic_integration_across_M_stack]] §0.1 and §7.1, [[M0]] re
 
 Read [[M0']] with the graph substrate immediately at hand: [[Body/S/S0/epi-lib/include/m0.h]] (568 LOC [[Anuttara]] header), [[Body/S/S0/epi-lib/src/m0.c]] (831 LOC), [[Body/S/S0/epi-lib/include/ontology.h]] (337 LOC ontology declarations), [[Body/S/S0/portal-core/src/kernel.rs]] (where M0 facets sit at the top of the kernel surface), and [[Body/S/S2/graph-schema]] (the M0 anchor in the schema authority). These files are the live substrate; M0' is the playable [[Bimba]] view over them, not their owner.
 
-## §M0'-KERNEL-ROLE — Verifier at Weight 6 of the Just-Triad
+## §M0'-KERNEL-ROLE — Verifier at Weight 6 of the Just-Triad (Position 0' of the 4'-5'-0' Mental Pole)
+
+Per DR-MP-1 (VALIDATED 2026-06-09), M0' is the **Verifier position (0')** in the 4'-5'-0' mental-pole triplet: M4' (LLM, traversal-voice, position 4') → M5' (EBM, resonance evaluation, position 5') → M0' (Verifier, R-virtue constraint-checker, position 0') → returning to M4' for wisdom_delta composition. The triplet operationalises the Just-Triad weighting (4·E_4 + 5·E_5 + 6·E_6)/15 where M0' provides the weight-6 Verifier constraint energy. See [[M4'-SPEC]] §M4'-KERNEL-ROLE and [[M5'-SPEC]] §M5'-KERNEL-ROLE for the companion positions.
 
 Per the kernel-spec refinement at [[../epi-logos-kernel-spec.md]] §3 (rehomed to M' root 2026-06-07, see DR-KERNEL-1), M0' carries the **Anuttara Verifier role at position 0' of the mental pole**, with weight **6** in the just-triad 4:5:6 weighted energy formula:
 

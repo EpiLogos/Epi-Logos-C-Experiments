@@ -711,13 +711,15 @@
       "worktree": null
     },
     "05.T5.2": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "DR-M4-1 VALIDATED in 13-decision-register.md. Doc-ahead \u2014 direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -776,13 +778,15 @@
       "worktree": null
     },
     "05.T5.7": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "DR-M4-2 VALIDATED in 13-decision-register.md. Doc-ahead \u2014 direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -1297,13 +1301,15 @@
       "worktree": null
     },
     "09.T9.4": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "DR-M0-1 VALIDATED in 13-decision-register.md. Doc-ahead \u2014 direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -1336,13 +1342,15 @@
       "worktree": null
     },
     "09.T9.7": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Aligned-only / no-orphan-fill \u2014 no code work required. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -1834,13 +1842,15 @@
       "worktree": null
     },
     "12.T12.11": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Doc-confirmation: Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts, Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts all exist on disk. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -1886,26 +1896,30 @@
       "worktree": null
     },
     "12.T12.16": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:30.168615+00:00",
+      "evidence": [
+        "DR-S4-TECHNE VALIDATED 2026-06-03. S4-SPEC Techne wording patch ratified."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
       "worktree": null
     },
     "12.T12.17": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Doc-confirmation: Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md, Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md all exist on disk. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -1969,13 +1983,15 @@
       "worktree": null
     },
     "15.T15.5": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Aligned-only / no-orphan-fill \u2014 no code work required. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -2368,13 +2384,15 @@
       "worktree": null
     },
     "17.T17.20": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Aligned-only / no-orphan-fill \u2014 no code work required. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -2459,13 +2477,15 @@
       "worktree": null
     },
     "17.T17.27": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:30.168615+00:00",
+      "evidence": [
+        "DR-S0-1 VALIDATED 2026-06-03. epi-kernel-contract parent-role confirmed."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -2569,13 +2589,15 @@
       "worktree": null
     },
     "18.T18.7": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Aligned-only / no-orphan-fill \u2014 no code work required. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -3088,13 +3110,15 @@
       "worktree": null
     },
     "19.T19.9": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:30.168615+00:00",
+      "evidence": [
+        "DR-M3-6 VALIDATED 2026-06-09 batch. Third Spanda Equation as canonical matheme spine."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -3872,13 +3896,15 @@
       "worktree": null
     },
     "26.T26.3": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Aligned-only / no-orphan-fill \u2014 no code work required. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -4043,13 +4069,15 @@
       "worktree": null
     },
     "26.T26.15": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:30.168615+00:00",
+      "evidence": [
+        "DR-MP-1 VALIDATED 2026-06-09 batch. 4'-5'-0' mental pole canonical triplet confirmed."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -4580,13 +4608,15 @@
       "worktree": null
     },
     "28.T28.20": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "DR-WC-IS-1 VALIDATED in 13-decision-register.md. Doc-ahead \u2014 direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -4650,13 +4680,15 @@
       "worktree": null
     },
     "30.T30.5": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "DR-WC-DL-4 VALIDATED in 13-decision-register.md. Doc-ahead \u2014 direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -4773,26 +4805,30 @@
       "worktree": null
     },
     "30.T30.13": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Aligned-only / no-orphan-fill \u2014 no code work required. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
       "worktree": null
     },
     "30.T30.14": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "DR-WC-DL-5 VALIDATED in 13-decision-register.md. Doc-ahead \u2014 direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -4817,13 +4853,15 @@
       "worktree": null
     },
     "31.T31.2": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Aligned-only / no-orphan-fill \u2014 no code work required. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -4921,13 +4959,15 @@
       "worktree": null
     },
     "31.T31.10": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "Aligned-only / no-orphan-fill \u2014 no code work required. Direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -5031,13 +5071,15 @@
       "worktree": null
     },
     "32.T32.5": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "DR-WC-OB-1 VALIDATED in 13-decision-register.md. Doc-ahead \u2014 direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -6157,13 +6199,15 @@
       "worktree": null
     },
     "25.T25.18": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T09:51:00.067710+00:00",
+      "evidence": [
+        "DR-WC-M4-5 VALIDATED in 13-decision-register.md. Doc-ahead \u2014 direct close."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
