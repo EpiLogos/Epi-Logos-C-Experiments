@@ -9,6 +9,7 @@ import { OmniPanelWidget } from './omnipanel-widget';
 import { OmniPanelContribution } from './omnipanel-contribution';
 import { DispatchTracePanelContribution } from './dispatch-trace-contribution';
 import { OMNIPANEL_RUNTIME_SERVICE, OmniPanelRuntimeService } from './services/omnipanel-runtime-service';
+import { REVIEW_LANDING_SERVICE, ReviewLandingService } from './services/review-landing-service';
 import { SlashCommandParser } from './services/slash-command-parser';
 import { SlashCommandRegistry, registerDefaultSlashCommands } from './services/slash-command-registry';
 import { PiChatConversationStore } from './stores/pi-chat-conversation-store';
@@ -16,6 +17,8 @@ import { PiChatConversationStore } from './stores/pi-chat-conversation-store';
 export default new ContainerModule(bind => {
     bind(OmniPanelRuntimeService).toSelf().inSingletonScope();
     bind(OMNIPANEL_RUNTIME_SERVICE).toService(OmniPanelRuntimeService);
+    bind(ReviewLandingService).toSelf().inSingletonScope();
+    bind(REVIEW_LANDING_SERVICE).toService(ReviewLandingService);
     bind(SlashCommandParser).toSelf().inSingletonScope();
     bind(PiChatConversationStore).toSelf().inSingletonScope();
     bind(SlashCommandRegistry)
