@@ -969,13 +969,15 @@
       "worktree": null
     },
     "06.T6.5": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T07:29:53.490203+00:00",
+      "evidence": [
+        "DR-M5-1 VALIDATED 2026-06-02 (13-decision-register.md:207): Pi as single harness, Anima dispatcher, 6 Aletheia subagent techne-guardians. DR-M5-2 VALIDATED 2026-06-02 (13-decision-register.md:225): +1=M1-5 enforced corpus-wide. Register cleanup ratified."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "hermes-nara",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -3027,13 +3029,20 @@
       "worktree": null
     },
     "19.T19.5": {
-      "status": "pending",
+      "status": "review",
       "updatedAt": null,
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        "CODE EXISTS: m3_major_arcana_from_codon() at m3.c:338-355 \u2014 written pre-task.",
+        "ARCHITECTURAL ISSUE: Function collapses codon\u2192aa\u2192card via amino_acid_index, skipping transcription entirely.",
+        "BIMBA MAP: Major Arcana = chromosomes (not amino acids). 22 chr pairs at #3-3-5-0-0 through #3-3-5-0-21.",
+        "TRANSCRIPTIONAL BRIDGE: 37 T-containing codons undergo T\u2192U shift; 27 are T-free shared. Current function treats all codons identically.",
+        "NEEDS: struct return with card_index + transcriptional_class (DNA-source/RNA-transcribed/shared) + T\u2192U substitution count (0-3, determines 7 vs 8 rotational states).",
+        "REDESIGN REQUIRED: kernel invariant change \u2014 not a no-orphan-fill. Awaiting Frank's direction."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "frank",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -4152,13 +4161,15 @@
       "worktree": null
     },
     "27.T27.6": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T07:48:28.949095+00:00",
+      "evidence": [
+        "Claude opus: ReviewPanel.tsx + review-landing-service.ts + 3 sub-components. 15/15 tests pass, no-modal verified, IOD-17 parity, human-gate, defer always allowed, cross-layout sync."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -4992,13 +5003,15 @@
       "worktree": null
     },
     "32.T32.3": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T07:37:40.823540+00:00",
+      "evidence": [
+        "Claude opus: 6-step walkthrough overlay, non-modal, preference persistence, re-trigger via command+settings. All acceptance criteria met."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
@@ -6116,13 +6129,15 @@
       "worktree": null
     },
     "25.T25.16": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-13T07:48:28.949565+00:00",
+      "evidence": [
+        "Claude opus: mercurius-relay-indicator.tsx + CSS + 5 tests. All pass, no regression. Subscribe/pulse/FR-3 stub/mod-10 ordering all verified. Pre-existing tsc-b errors in integrated-composition/kairos-display unrelated."
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "claude-opus",
       "leaseExpiresAt": null,
       "heartbeatAt": null,
       "runId": null,
