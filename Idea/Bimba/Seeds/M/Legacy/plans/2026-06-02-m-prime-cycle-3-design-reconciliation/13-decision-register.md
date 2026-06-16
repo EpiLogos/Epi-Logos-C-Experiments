@@ -33,7 +33,7 @@ All 20 original cycle-3 contradictions are **VALIDATED** as of 2026-06-02; DR-M3
 **Phase-L 2026-06-16 VALIDATED** (one row; user-directed during coordinate-dynamics integration session; gates Tranche 3.10, CCT-20, Tranche 12.36, Track 39 acceptance, and Anuttara §13.6):
 - **DR-FLIP-1** — Kernel `#` phase-flip is the global coordinate-dynamic law: every coordinate-bearing surface must preserve bimba/pratibimba phase; domain mirrors such as Asma 99+1 `mirror_idx` instantiate the law locally but do not replace it (unblocks Tranche 3.10, CCT-20, 12.36)
 
-**Phase-M 2026-06-16 PROPOSED** (three rows; await user final-validation; gate Track 43 End-of-Cycle-3 Audit Protocol + release gate G14 acceptance per per-row Tranche bindings) — [`43-end-of-cycle-3-audit-protocol.md`](43-end-of-cycle-3-audit-protocol.md) is the canonical home; the rows ratify the repo-navigability/deep-module audit direction (loose-file forensics + S0 C-header info-hiding audit + S/S'→M' module-boundary audit + legacy inventory, 2026-06-16 session) grounded in the NotebookLM "Architecting Codebases for AI Navigability and Deep Modules" principles:
+**Phase-M 2026-06-16 VALIDATED** (three rows; user-validated in this planning session 2026-06-16 — the act of directing and authoring Track 43 with these decisions IS the validation; the user explicitly rejected deferring execution behind a separate validation gate; gates Track 43 End-of-Cycle-3 Audit Protocol + release gate G12 acceptance per per-row Tranche bindings) — [`43-end-of-cycle-3-audit-protocol.md`](43-end-of-cycle-3-audit-protocol.md) is the canonical home; the rows ratify the repo-navigability/deep-module audit direction (loose-file forensics + S0 C-header info-hiding audit + S/S'→M' module-boundary audit + legacy inventory, 2026-06-16 session) grounded in the NotebookLM "Architecting Codebases for AI Navigability and Deep Modules" principles:
 - **DR-HYGIENE-1** — unified "Coordinate Header" convention as repo ontology, Hen-owned (gates Tranches 43.2, 43.3)
 - **DR-HYGIENE-2** — Rust S-stack forbidden-imports policy mirroring the M-stack `forbiddenDirectImports` boundary (gates Tranche 43.5)
 - **DR-HYGIENE-3** — disposition policy for undeclared `vendor/legacy/*` nested-`.git` clones (declare-as-submodule vs externalize/delete) (gates Tranche 43.1)
@@ -1733,7 +1733,7 @@ The matheme `0/1 = 4+2 = 5→0 = 0/1` is structurally honoured: `0/1` polarity b
 
 ## DR-HYGIENE-1 — Unified "Coordinate Header" convention (Hen-owned repo ontology)
 
-**Status:** PROPOSED · **Validated:** (pending) · **By:** user · **Source:** Track 43 End-of-Cycle-3 Audit Protocol, Tranche 43.2; S/S'→M' module-boundary audit 2026-06-16.
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user · **Source:** Track 43 End-of-Cycle-3 Audit Protocol, Tranche 43.2; S/S'→M' module-boundary audit 2026-06-16. **Adjudication:** validated-by-planning — convention + Hen-ownership ratified by the act of authoring this track.
 
 **Resolution proposed:** The per-module API-header intent (coordinate + responsibility + narrow surface + explicit non-ownership) is currently expressed in **three unaligned media** — Rust `Cargo.toml description`, S4/S5 `CONTRACT.md`, and the M-stack JSON contract — with the natural Rust `//!` module-doc present in only ~18% of crates. Adopt ONE logical schema, dual-rendered: a mandatory `//!` (Rust) / top-JSDoc (TS) block carrying `Coordinate · Residency (flagged when physical ≠ conceptual) · Position (#n) · Actualises · Public surface · Does NOT own · Contract:` link, plus the proven ta-onta/epi-kbase `CONTRACT.md` body for crates with a real seam. The convention is registered as repo ontology via **Track 40** (bimba-canon-update-ledger) so **Hen (S1')** compiles and validates it — not a one-off habit. Exemplars to codify: `include/ontology.h`, `include/m5.h`; `epi-kernel-contract/src/lib.rs`, `epi-spacetime-module/src/lib.rs`, `epii-autoresearch-core/src/lib.rs`; `S4/ta-onta/*/CONTRACT.md`, `S5/epi-kbase/CONTRACT.md`.
 
@@ -1747,7 +1747,7 @@ The matheme `0/1 = 4+2 = 5→0 = 0/1` is structurally honoured: `0/1` polarity b
 
 ## DR-HYGIENE-2 — Rust S-stack forbidden-imports policy
 
-**Status:** PROPOSED · **Validated:** (pending) · **By:** user · **Source:** Track 43, Tranche 43.5; S/S'→M' module-boundary audit 2026-06-16.
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user · **Source:** Track 43, Tranche 43.5; S/S'→M' module-boundary audit 2026-06-16. **Adjudication:** policy validated (lower S-layers must not depend on higher; mirror the M-stack `forbiddenDirectImports` boundary). **Residual rider:** the precise per-edge lattice is finalized as the first step of 43.5 execution — a spec detail captured in the lint fixture, not a re-validation gate.
 
 **Resolution proposed:** The M-stack already enforces the strongest boundary in the repo via `forbiddenDirectImports` in `Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json` (M-extensions reach the S-stack only through `KernelBridgeAPI`). The Rust S-stack has no equivalent. Define an allowed-import lattice across S0–S5 (e.g. lower layers must not depend on higher: S0 ⊅ S3/S4/S5) honouring the substrate-residency-vs-conceptual-coordinate note (Track 17), and enforce it as a CI lint. Exact lattice to be ratified here before 43.5 implements it.
 
@@ -1761,7 +1761,7 @@ The matheme `0/1 = 4+2 = 5→0 = 0/1` is structurally honoured: `0/1` polarity b
 
 ## DR-HYGIENE-3 — Disposition of undeclared `vendor/legacy/*` and loose nested-`.git` clones
 
-**Status:** PROPOSED · **Validated:** (pending) · **By:** user · **Source:** Track 43, Tranche 43.1; legacy/deprecated inventory 2026-06-16.
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user · **Source:** Track 43, Tranche 43.1; legacy/deprecated inventory 2026-06-16. **Adjudication:** policy validated (any vendored tree with its own `.git` is a declared submodule or is externalized/deleted — no loose clones); per-clone disposition recorded during 43.1 execution.
 
 **Resolution proposed:** `vendor/` and `vendors/` are gitignored, but several large third-party trees are **loose embedded clones with their own `.git`** (e.g. `vendors/{hermes-agent, depwire, omnigent, claude-mem-v10.5.5}`) that are NOT declared in `.gitmodules`. Policy: any vendored third-party tree with its own `.git` must be EITHER a declared `.gitmodules` submodule OR externalized/deleted — no loose clones in the traversal path. (`vendor/legacy/epi-tauri` — a 383 MB retired-app copy — was already deleted from the working tree in the 43.1 immediate sweep.) Per-clone disposition (keep-as-submodule vs externalize vs delete) to be decided here.
 
