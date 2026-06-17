@@ -6,6 +6,8 @@ epi_logos
 test_runner
 /test_*
 epi-lib/test/bin/
+Body/**/test/bin/
+Body/**/*.app/
 *.o
 *.a
 *.dSYM/
@@ -117,3 +119,11 @@ mcp.json
 /tools/
 continuation.md
 .obsidian
+
+# DOX coordinate-tree AGENTS.md — track these despite the global AGENTS.md ignore above.
+# Vendored / node_modules / .codex / vendor* AGENTS.md stay ignored automatically:
+# git cannot re-include a file whose parent directory is excluded.
+!/AGENTS.md
+!/CLAUDE.md
+!/Body/**/AGENTS.md
+!/Idea/**/AGENTS.md

@@ -1,0 +1,32 @@
+# AGENTS.md — S4-2p-pleroma
+
+## Purpose
+The Pleroma carrier (S4-2' in ta-onta): the bounded-execution substrate registry — "the execution substrate registry" owning the bounded primitives, PI tool registration surface, execution-mode enforcement, and Techne terminal/session tooling (per `CONTRACT.md`). TypeScript extension tree (no crate/package manifest); folds onto the S2 entity layer.
+Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-2-SPEC]] (carrier law); layer ground [[S4-SPEC]] / [[S2-SPEC]].
+
+## Ownership
+- `extension.ts` — PI extension entry; registers bounded primitives, damage-control, tilldone, Techne terminal tools.
+- `CONTRACT.md` — binding carrier contract: responsibility, 7 bounded primitives, PI hook seams, invariants.
+- `spine-contribution.ts` — spine compositor contribution (`coordinate: "S2/S3"`: injection slot, ledger, compiler pass, query).
+- `S2/` — primitive + tool source: `pleroma-primitives.ts` (PRIMITIVE_REGISTRY), `terminal-tools.ts` (Techne argv builder + capability matrix), `damage-control.ts`, `tilldone.ts`, `themeMap.ts` (per-extension visual identity), `child-extension-propagation.ts`, `prompt-url-widget.ts`.
+- `S2'/skills/` — atomic skill substrate (tmux, cmux, ralph-tui, worktrunk, context7, pleroma-skill-proxy, techne-* relay/spawn/webmcp bridges).
+- `S2'/evals/` — 6 eval suites (atomic-tools, discharge, klein, manifest, ouroboros, topology-routing).
+- `tests/` — `terminal_tools.test.ts` (node:test contract test).
+- Does NOT own: orchestration skills + constitutional agents (→ Anima), evidence-acquisition + Moirai agents (→ Aletheia), vault content/law (→ Hen). Carrier domain law lives here in `CONTRACT.md` + [[S4-2-SPEC]], not in [[S0-SPEC]]/[[M0'-SPEC]] by convenience.
+
+## Local Contracts
+- `CONTRACT.md` (Pleroma carrier contract — binding interface for primitives, hook seams, invariants).
+- Code coordinate headers: `S2/terminal-tools.ts` `//` doc-block (gateway authority law); `extension.ts` registration surface.
+- Owning specs: [[S4-2-SPEC]]; layer [[S4-SPEC]] / [[S4-ARCHITECTURE]] / [[S2-SPEC]] / [[S2-ARCHITECTURE]]; stack index [[S-SYSTEM-INDEX]].
+
+## Work Guidance
+- Run `gitnexus_impact` on a symbol before editing it; respect HIGH/CRITICAL warnings.
+- `[[wikilink]]` all coordinate/spec/carrier/agent references in agent-authored artifacts.
+- Vault writes use coordinate-prefixed `c_n_*` frontmatter.
+- Honor `CONTRACT.md` invariants: declare execution mode (bounded/interactive/background); no primitive calls another primitive; prefer bounded `epi_cli` discovery (`epi core knowing`, `epi vault read/search`) over raw filesystem grep.
+
+## Verification
+- `node --test "Body/S/S4/ta-onta/S4-2p-pleroma/tests/terminal_tools.test.ts"` (Techne terminal-tools contract test).
+
+## Child DOX Index
+- (leaf)
