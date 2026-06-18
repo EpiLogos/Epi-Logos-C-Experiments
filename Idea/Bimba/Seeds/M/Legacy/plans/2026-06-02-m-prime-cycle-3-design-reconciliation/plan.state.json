@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:13:55.810Z",
+  "updatedAt": "2026-06-18T19:15:44.185Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3728,14 +3728,19 @@
       "worktree": null
     },
     "21.T21.20": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:03:37.689Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:15:39.914Z",
       "claimedAt": "2026-06-18T19:03:37.689Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:15:39.914Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:15:39.914Z",
+          "text": "@pratibimba/m0-anuttara test 43/43; @pratibimba/m-extension-runtime test 32/32; track-08 contribution contract 5/5; @pratibimba/acceptance-harness test 48/48; key paths Body/M/epi-theia/extensions/m0-anuttara/src/browser/state/m0-surface-state.ts, src/browser/m0-anuttara-widget.tsx, src/common/index.ts"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-21-t21-20",
-      "leaseExpiresAt": "2026-06-18T21:03:37.689Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:03:37.689Z",
       "runId": "20260618T190337Z-21-T21.20",
       "worktree": null
@@ -6958,16 +6963,16 @@
       "worktree": null
     },
     "29.T29.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:15:44.107Z",
+      "claimedAt": "2026-06-18T19:15:44.107Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-29-t29-8",
+      "leaseExpiresAt": "2026-06-18T21:15:44.107Z",
+      "heartbeatAt": "2026-06-18T19:15:44.107Z",
+      "runId": "20260618T191544Z-29-T29.8",
       "worktree": null
     },
     "29.T29.9": {
@@ -10660,11 +10665,12 @@
     {
       "runId": "20260618T190337Z-21-T21.20",
       "taskId": "21.T21.20",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:03:37.689Z",
       "owner": "codex-m-dev-21-t21-20",
       "leaseExpiresAt": "2026-06-18T21:03:37.689Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:15:39.914Z"
     },
     {
       "runId": "20260618T190646Z-29-T29.7",
@@ -10703,17 +10709,26 @@
       "owner": "codex-m-dev-12-t12-28",
       "leaseExpiresAt": "2026-06-18T21:13:55.743Z",
       "worktree": null
+    },
+    {
+      "runId": "20260618T191544Z-29-T29.8",
+      "taskId": "29.T29.8",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:15:44.107Z",
+      "owner": "codex-m-dev-29-t29-8",
+      "leaseExpiresAt": "2026-06-18T21:15:44.107Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:13:39.907Z",
-    "updatedAt": "2026-06-18T19:13:39.907Z",
+    "createdAt": "2026-06-18T19:15:26.646Z",
+    "updatedAt": "2026-06-18T19:15:26.646Z",
     "taskIds": [
       "31.T31.13",
       "21.T21.20",
       "41.T41.12",
-      "05.T5.3"
+      "12.T12.28"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -10722,7 +10737,7 @@
       "31.T31.13": "in-session",
       "21.T21.20": "in-session",
       "41.T41.12": "in-session",
-      "05.T5.3": "in-session"
+      "12.T12.28": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
