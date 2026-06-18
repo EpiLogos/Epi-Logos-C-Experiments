@@ -216,7 +216,10 @@ describe("Janus Klein weighting", () => {
     const weighted = janus_weight_session({
       session_id: "session-a",
       M4_Temporal_Now: {
-        planet_degrees: [20, 22, 81, 130, 240, 302, 315, 10, 44, 288],
+        realtime: {
+          planet_degrees: [20, 22, 81, 130, 240, 302, 315, 10, 44, 288],
+        },
+        kairotic_active: false,
       },
       natal_planet_degrees: [110, 0, 0, 0, 0, 0, 314, 0, 0, 0],
       kairos_signals: {
@@ -238,7 +241,10 @@ describe("Janus Klein weighting", () => {
     const weighted = janus_weight_session({
       session_id: "session-a",
       M4_Temporal_Now: {
-        planet_degrees: [20, 22, 81, 130, 240, 302, 315, 10, 44, 288],
+        kairotic: {
+          planet_degrees: [20, 22, 81, 130, 240, 302, 315, 10, 44, 288],
+        },
+        kairotic_active: true,
       },
       user_override: { prospective: 0.73 },
     });

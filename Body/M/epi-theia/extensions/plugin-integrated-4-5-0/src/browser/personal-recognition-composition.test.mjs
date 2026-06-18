@@ -134,7 +134,16 @@ function profile(pasuProjection = projection()) {
                 })
             }),
             M4_Temporal_Now: Object.freeze({
-                planet_degrees: Object.freeze([0, 36, 72, 108, 144, 180, 216, 252, 288, 324])
+                natal: Object.freeze({
+                    kind: 'NATAL',
+                    planet_degrees: Object.freeze([0, 36, 72, 108, 144, 180, 216, 252, 288, 324])
+                }),
+                realtime: Object.freeze({
+                    kind: 'REALTIME',
+                    captured_at_ns: 1_780_000_000_000_000_000,
+                    planet_degrees: Object.freeze([5, 41, 77, 113, 149, 185, 221, 257, 293, 329])
+                }),
+                kairotic_active: false
             }),
             m3CodonRotationProjectionForLensRing: Object.freeze({
                 cells: Object.freeze([]),

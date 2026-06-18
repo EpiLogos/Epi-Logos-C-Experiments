@@ -64,4 +64,31 @@ describe("NOW Fibonacci Ground stamping", () => {
     assert.match(content, /^c_3_tick12: 4$/m);
     assert.match(content, /^c_3_backbone_index: 8$/m);
   });
+
+  it("reads the live M4 realtime KairosFrame from the kairos cache", () => {
+    const nowPath = join(workDir, "now.md");
+    writeFileSync(nowPath, [
+      "---",
+      'coordinate: "M4-session"',
+      "---",
+      "",
+      "# NOW",
+      "",
+    ].join("\n"), "utf8");
+
+    writeFileSync(
+      join(process.env.EPI_NARA_HOME!, "kairos", "current.json"),
+      JSON.stringify({
+        M4_Temporal_Now: {
+          natal: { planet_degrees: [10, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+          realtime: { planet_degrees: [123.456, 25.1, 302.4, 112.7, 88.5, 177.3, 201.6, 44.8, 269.9, 11.1] },
+          kairotic_active: false,
+        },
+      }),
+      "utf8",
+    );
+
+    const stamp = stampNowFibonacciGroundFrontmatter(nowPath);
+    assert.equal(stamp?.fibonacciPosition, 20);
+  });
 });

@@ -236,8 +236,15 @@ test('mod-10 ordering: every counted delta payload carries planet_degrees[10]', 
     assert.equal(readDeltaPlanetDegrees({ planet_degrees: [...MOD10_DEGREES.slice(0, 9), Number.NaN] }), null);
     assert.equal(readDeltaPlanetDegrees(undefined), null);
 
-    // Reads via the M4_Temporal_Now wrapper too.
-    assert.equal(readDeltaPlanetDegrees({ M4_Temporal_Now: { planet_degrees: MOD10_DEGREES.slice() } }).length, 10);
+    // Reads via the realtime KairosFrame wrapper too.
+    assert.equal(readDeltaPlanetDegrees({
+        M4_Temporal_Now: {
+            realtime: {
+                captured_at_ns: 1_780_000_000_000_000_000,
+                planet_degrees: MOD10_DEGREES.slice()
+            }
+        }
+    }).length, 10);
 
     // A delta missing a valid mod-10 vector is not counted (no refresh, no pulse).
     const enabled = setKairosEnabled(initialRelayState(), true);

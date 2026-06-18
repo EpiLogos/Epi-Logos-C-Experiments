@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T09:06:22.704Z",
+  "updatedAt": "2026-06-18T09:14:57.020Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5567,14 +5567,19 @@
       "worktree": null
     },
     "32.T32.7": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T08:47:27.543Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T09:14:56.097Z",
       "claimedAt": "2026-06-18T08:47:27.543Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T09:14:56.097Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T09:14:56.097Z",
+          "text": "27/27 @pratibimba/m-extension-runtime tests pass via pnpm --filter @pratibimba/m-extension-runtime test; key paths Body/M/epi-theia/extensions/m-extension-runtime/src/browser/readiness-banner.tsx and Body/M/epi-theia/extensions/m-extension-runtime/src/browser/inline-error-surface.tsx"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-32-t32-7",
-      "leaseExpiresAt": "2026-06-18T10:47:27.543Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T08:47:27.543Z",
       "runId": "20260618T084727Z-32-T32.7",
       "worktree": null
@@ -10405,11 +10410,12 @@
     {
       "runId": "20260618T084727Z-32-T32.7",
       "taskId": "32.T32.7",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T08:47:27.543Z",
       "owner": "codex-m-dev-32-t32-7",
       "leaseExpiresAt": "2026-06-18T10:47:27.543Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T09:14:56.097Z"
     }
   ],
   "activeRoute": {

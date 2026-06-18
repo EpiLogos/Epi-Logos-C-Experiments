@@ -61,7 +61,10 @@ function profileWithSun(sunDegree) {
     return {
         payload: {
             M4_Temporal_Now: {
-                planet_degrees: [sunDegree]
+                realtime: {
+                    kind: 'REALTIME',
+                    planet_degrees: [sunDegree]
+                }
             }
         }
     };
@@ -92,7 +95,7 @@ function makeSnapshot() {
     };
 }
 
-test('active decan rotates from synthetic M4_Temporal_Now.planet_degrees[Sun]', () => {
+test('active decan rotates from synthetic M4_Temporal_Now.realtime.planet_degrees[Sun]', () => {
     const cases = [
         [0, { signIdx: 0, decanInSign: 0, decanIdx: 0 }],
         [9.999, { signIdx: 0, decanInSign: 0, decanIdx: 0 }],
