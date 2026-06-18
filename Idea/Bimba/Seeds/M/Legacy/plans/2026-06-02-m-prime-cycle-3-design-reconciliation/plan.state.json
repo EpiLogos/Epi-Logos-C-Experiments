@@ -1865,17 +1865,13 @@
       "worktree": null
     },
     "12.T12.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-18T23:38:05.057761+00:00",
+          "text": "PASS: Audit report at plan.runs/12.1-pi-anima-subagents-architecture.md (9672 bytes). AgenticActor collapsed from 8 members to 3: pi|anima|aletheia. M5-SPEC \u00a7M5-4 rewritten with canonical three-tier architecture. grep verification on run-model.ts confirms collapsed union."
+        }
+      ]
     },
     "12.T12.2": {
       "status": "done",

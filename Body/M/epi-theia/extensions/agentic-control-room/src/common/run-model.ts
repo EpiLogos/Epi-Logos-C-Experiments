@@ -24,15 +24,16 @@ import {
  * may defer (record `humanRequired` state + reason) but never commit.
  */
 
+/** Canonical three-tier architecture per plan.runs/12.1-pi-anima-subagents-architecture.md:
+ *  Tier 1 — Pi (Harness): governs tool surface, entitlement, dispatch lifecycle
+ *  Tier 2 — Anima (Main Dispatcher): routes intents to techne-guardians
+ *  Tier 3 — Aletheia (Techne-Guardian): subagent specialist; techne class
+ *           (Anansi/Janus/Moirai/Mercurius/Agora/Zeithoven) discriminated
+ *           at runtime via dispatch payload's techneClass field, not actor type */
 export type AgenticActor =
     | 'pi'
     | 'anima'
-    | 'anansi'
-    | 'moirai'
-    | 'janus'
-    | 'mercurius'
-    | 'agora'
-    | 'zeithoven';
+    | 'aletheia';
 
 export type AgenticRoute =
     | 'dispatch_agent'
