@@ -5,7 +5,7 @@
  *   1. PLANET_SUN == 0  (canonical mod-10 root)
  *   2. PLANET_PLUTO == 9  (canonical mod-10 terminus)
  *   3. PLANET_URANUS == 7  (canonical mod-10 transpersonal slot)
- *   4. planet_degrees array in M4_Temporal_Now == 10 slots
+ *   4. planet_degrees array in each KairosFrame == 10 slots
  *   5. EarthBodyState exists with chakra_id field
  *   6. CHAKRA_EARTH == 0  (geocentric ground anchor)
  *
@@ -46,11 +46,13 @@ int main(void) {
         assert(PLANET_URANUS != PLANET_MARS); /* No aliasing */
     } PASS;
 
-    /* T4: M4_Temporal_Now.planet_degrees holds exactly 10 slots (mod-10 planet array) */
+    /* T4: KairosFrame.planet_degrees holds exactly 10 slots (mod-10 planet array) */
     TEST(temporal_now_planet_degrees_is_ten) {
         M4_Temporal_Now now = m4_snapshot_now(0, 0);
-        assert(sizeof(now.planet_degrees) == 10 * sizeof(now.planet_degrees[0]));
-        assert(sizeof(now.planet_degrees) / sizeof(now.planet_degrees[0]) == 10);
+        assert(sizeof(now.realtime.planet_degrees) == 10 * sizeof(now.realtime.planet_degrees[0]));
+        assert(sizeof(now.realtime.planet_degrees) / sizeof(now.realtime.planet_degrees[0]) == 10);
+        assert(sizeof(now.natal.planet_degrees) == sizeof(now.realtime.planet_degrees));
+        assert(sizeof(now.kairotic.planet_degrees) == sizeof(now.realtime.planet_degrees));
     } PASS;
 
     /* T5: EarthBodyState exists and has a chakra_id field */

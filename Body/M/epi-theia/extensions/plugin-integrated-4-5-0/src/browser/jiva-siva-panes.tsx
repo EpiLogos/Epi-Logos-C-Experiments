@@ -17,10 +17,7 @@ import type {
     ConsentAction,
     JivaSivaPaneAvailability
 } from '@pratibimba/integrated-composition';
-import {
-    PersonalRecognitionComposition,
-    buildPersonalBeingPatternView
-} from './personal-recognition-composition';
+import { buildPersonalBeingPatternView } from './personal-recognition-composition';
 
 export { buildPersonalBeingPatternView };
 
@@ -157,7 +154,6 @@ export const JivaSivaPanes: React.FC<JivaSivaPanesProps> = ({
                     <dt>field_state_summary</dt>
                     <dd data-test="m4-summary">{fieldSummary}</dd>
                 </dl>
-                <PersonalRecognitionComposition profile={profile} />
             </PaneShell>
             <PaneShell
                 title="Canonical Graph / City Backdrop"

@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRequire } from 'node:module';
 
 installBrowserImportShim();
@@ -9,8 +11,11 @@ const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 const {
     PersonalRecognitionComposition,
+    buildPersonalCompositionModel,
     derivePersonalRecognitionModel
 } = require('../../lib/browser/personal-recognition-composition.js');
+
+const PACKAGE_ROOT = '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/plugin-integrated-4-5-0';
 
 function installBrowserImportShim() {
     const requireForShim = createRequire(import.meta.url);
@@ -113,7 +118,30 @@ function profile(pasuProjection = projection()) {
         pointerAnchor: null,
         capabilities: Object.freeze([]),
         payload: Object.freeze({
-            pasuBeingPatternProjection: pasuProjection
+            pasuBeingPatternProjection: pasuProjection,
+            protectedPersonalFieldHandles: Object.freeze({
+                qPersonalHandle: 'm4://protected/q/personal',
+                qIdentityHandle: 'm4://protected/q/identity',
+                qTransitHandle: 'm4://protected/q/transit',
+                qActivityHandle: 'm4://protected/q/activity',
+                qComposedHandle: 'm4://protected/q/composed'
+            }),
+            naraSurface: Object.freeze({
+                daySummary: Object.freeze({
+                    dayId: '02-06-2026',
+                    nowPath: 'Idea/Empty/Present/02-06-2026/session/now.md',
+                    summary: 'public-safe day summary'
+                })
+            }),
+            M4_Temporal_Now: Object.freeze({
+                planet_degrees: Object.freeze([0, 36, 72, 108, 144, 180, 216, 252, 288, 324])
+            }),
+            m3CodonRotationProjectionForLensRing: Object.freeze({
+                cells: Object.freeze([]),
+                activeRingIndex: 0,
+                rotationPhase: 0
+            }),
+            virtueWitnessVector: 0b101010101
         })
     });
 }
@@ -162,4 +190,45 @@ test('personal recognition component renders handles only and rejects raw bodies
             ),
         /episodeBody/
     );
+});
+
+test('personal recognition composition renders one editor surface with four owned geometric slots', () => {
+    const html = renderToStaticMarkup(
+        React.createElement(PersonalRecognitionComposition, { profile: profile() })
+    );
+
+    assert.equal((html.match(/data-editor-surface="personal-recognition-composition"/g) ?? []).length, 1);
+    assert.equal((html.match(/data-test="personal-geometric-slot"/g) ?? []).length, 4);
+    assert.match(html, /data-geometric-slot="left"/);
+    assert.match(html, /data-geometric-slot="center"/);
+    assert.match(html, /data-geometric-slot="right"/);
+    assert.match(html, /data-geometric-slot="under"/);
+    assert.match(html, /data-slot-owner="m4-nara"/);
+    assert.match(html, /data-slot-owner="m5-epii"/);
+    assert.match(html, /data-slot-owner="m0-anuttara"/);
+    assert.doesNotMatch(html, /jiva-siva-layout/);
+});
+
+test('personal composition keeps blocked center and right slots mounted with real blocker ids', () => {
+    const model = buildPersonalCompositionModel(profile());
+    const html = renderToStaticMarkup(
+        React.createElement(PersonalRecognitionComposition, { profile: profile() })
+    );
+
+    assert.ok(model.blockers.includes('pending-psychoid-cymatic-solver'));
+    assert.ok(model.blockers.includes('pending-recognition-surface'));
+    assert.match(html, /pending-psychoid-cymatic-solver/);
+    assert.match(html, /pending-recognition-surface/);
+    assert.doesNotMatch(html, /pending-virtue-witness/);
+});
+
+test('plugin widget mounts PersonalRecognitionComposition as editor area instead of three-pane juxtaposition', () => {
+    const widgetSource = readFileSync(
+        join(PACKAGE_ROOT, 'src/browser/plugin-integrated-4-5-0-widget.tsx'),
+        'utf8'
+    );
+    const renderBody = widgetSource.slice(widgetSource.indexOf('protected override render()'));
+
+    assert.match(renderBody, /<PersonalRecognitionComposition/);
+    assert.doesNotMatch(renderBody, /<JivaSivaPanes/);
 });

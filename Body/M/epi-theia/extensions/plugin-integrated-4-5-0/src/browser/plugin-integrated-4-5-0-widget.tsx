@@ -16,7 +16,6 @@ import {
     CLOSED_EPII_REVIEW_STATE,
     EpiiActionId,
     EpiiReviewSurfaceState,
-    checkJivaSivaPanes,
     CompositionCoordinator,
     ConsentAction,
     ConsentGate,
@@ -30,7 +29,6 @@ import {
     type RoutedIdentityAugmentReviewProposal
 } from '@pratibimba/integrated-composition';
 import { EpiiReviewPanel } from './epii-review-panel';
-import { JivaSivaPanes } from './jiva-siva-panes';
 import { PersonalRecognitionComposition } from './personal-recognition-composition';
 import {
     routePluginIdentityAugmentProposalThroughM5Gate
@@ -60,6 +58,7 @@ export class PluginIntegrated450Widget extends ReactWidget {
     /** Epii review pane state — defaults to closed per 08.T6 deliverable 4. */
     protected epiiReviewState: EpiiReviewSurfaceState = CLOSED_EPII_REVIEW_STATE;
     protected naraJournalDepositReception = new NaraJournalDepositReception();
+    protected sessionCloseEvent: MObservabilityEvent | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -135,6 +134,11 @@ export class PluginIntegrated450Widget extends ReactWidget {
     }
 
     protected handleObservabilityEvent(event: MObservabilityEvent): void {
+        const eventKind = typeof event.payload.kind === 'string' ? event.payload.kind : event.type;
+        if (event.type === 'm5.session.contemplation.complete' || eventKind === 'm5.session.contemplation.complete') {
+            this.sessionCloseEvent = event;
+            this.update();
+        }
         const result = this.naraJournalDepositReception.receive(event);
         if (result.status !== 'ignored') {
             this.publishDepositHandoffResult(result);
@@ -196,18 +200,12 @@ export class PluginIntegrated450Widget extends ReactWidget {
             );
         }
 
-        const panes = checkJivaSivaPanes(this.currentProfile);
         return (
             <div className="integrated-widget-root">
-                <JivaSivaPanes
+                <PersonalRecognitionComposition
                     profile={this.currentProfile}
-                    m4Foreground={panes.m4Foreground}
-                    m0Backdrop={panes.m0Backdrop}
-                    m5Side={panes.m5Side}
-                    onDeepOpen={action => this.handleDeepOpen(action)}
-                    isActionPermitted={action => this.consentGate.isPermitted(action)}
+                    sessionCloseEvent={this.sessionCloseEvent}
                 />
-                <PersonalRecognitionComposition profile={this.currentProfile} />
                 <EpiiReviewPanel
                     state={this.epiiReviewState}
                     onAction={action => this.handleEpiiAction(action)}

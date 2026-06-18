@@ -8,6 +8,21 @@ import {
     readinessSeverity
 } from '../common/readiness';
 
+export const OMNIPANEL_OPEN_TAB_COMMAND = 'omnipanel.openTab';
+export const OMNIPANEL_DIAGNOSTICS_TAB_ID = 'diagnostics';
+
+export interface ReadinessCommandRegistry {
+    executeCommand(command: string, ...args: unknown[]): unknown;
+}
+
+export function openReadinessDiagnostics(commands: ReadinessCommandRegistry): unknown {
+    return commands.executeCommand(OMNIPANEL_OPEN_TAB_COMMAND, OMNIPANEL_DIAGNOSTICS_TAB_ID);
+}
+
+export function invokeReadinessRetry(onRetry: () => void): void {
+    onRetry();
+}
+
 /**
  * Shared visual shell — readiness banner, evidence handles, provenance badges,
  * and "open in M5 review" affordance. Every M-extension renders this at the
@@ -22,6 +37,8 @@ export interface ReadinessBannerProps {
     readonly evidenceHandles?: readonly string[];
     readonly provenance?: string;
     readonly onOpenInM5Review?: () => void;
+    readonly onRetry?: () => void;
+    readonly commands?: ReadinessCommandRegistry;
 }
 
 export const ReadinessBanner: React.FC<ReadinessBannerProps> = ({
@@ -31,7 +48,9 @@ export const ReadinessBanner: React.FC<ReadinessBannerProps> = ({
     declaredBlockers,
     evidenceHandles = [],
     provenance,
-    onOpenInM5Review
+    onOpenInM5Review,
+    onRetry,
+    commands
 }) => {
     const view = snapshot ?? PENDING_M_READINESS;
     const severity = readinessSeverity(view.state);
@@ -141,6 +160,32 @@ export const ReadinessBanner: React.FC<ReadinessBannerProps> = ({
                     Open in M5 review
                 </button>
             ) : null}
+            <div className="mext-banner-actions">
+                {onRetry ? (
+                    <button
+                        type="button"
+                        className="theia-button mext-banner-retry"
+                        onClick={() => invokeReadinessRetry(onRetry)}
+                    >
+                        Retry
+                    </button>
+                ) : null}
+                <button
+                    type="button"
+                    className="theia-button secondary mext-banner-diagnostics"
+                    data-command={OMNIPANEL_OPEN_TAB_COMMAND}
+                    data-target-tab={OMNIPANEL_DIAGNOSTICS_TAB_ID}
+                    aria-disabled={commands ? undefined : true}
+                    title={commands ? 'Open OmniPanel Diagnostics' : 'Diagnostics command registry unavailable in this host'}
+                    onClick={() => {
+                        if (commands) {
+                            void openReadinessDiagnostics(commands);
+                        }
+                    }}
+                >
+                    Open Diagnostics
+                </button>
+            </div>
         </section>
     );
 };

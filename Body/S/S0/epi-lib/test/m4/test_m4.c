@@ -174,10 +174,63 @@ static void test_temporal_now(void) {
     TEST("shadow implicate", shadow.clock.is_implicate_phase);
     TEST("shadow degree=360", shadow.degree == 360);
 
-    /* All 7 planet slots zeroed */
-    for (int i = 0; i < 7; i++) {
-        TEST("planet slot zero", now.planet_degrees[i] == 0);
+    TEST("natal frame kind", now.natal.kind == KAIROS_FRAME_NATAL);
+    TEST("realtime frame kind", now.realtime.kind == KAIROS_FRAME_REALTIME);
+    TEST("kairotic frame kind", now.kairotic.kind == KAIROS_FRAME_KAIROTIC);
+    TEST("kairotic inactive by default", now.kairotic_active == 0);
+
+    /* All 10 live planet slots zeroed */
+    const uint16_t* live = m4_planet_degrees_live(&now);
+    TEST("live frame defaults realtime", live == now.realtime.planet_degrees);
+    for (int i = 0; i < 10; i++) {
+        TEST("planet slot zero", live[i] == 0);
     }
+}
+
+static void test_kairos_frame_natal_persists_across_session(void) {
+    M4_Temporal_Now now = m4_snapshot_now(0, 1000);
+    uint16_t natal[M2_PLANET_COUNT] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    uint16_t realtime[M2_PLANET_COUNT] = {110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
+
+    m4_kairos_frame_set_planets(&now.natal, natal, M4_PLANET_VALID_ALL);
+    m4_temporal_now_set_planets(&now, realtime, M4_PLANET_VALID_ALL);
+
+    TEST("natal persists after realtime write", now.natal.planet_degrees[0] == 10);
+    TEST("natal keeps all slots", now.natal.planet_degrees[9] == 100);
+    TEST("realtime accepts live write", now.realtime.planet_degrees[0] == 110);
+    TEST("realtime valid all", now.planet_valid == M4_PLANET_VALID_ALL);
+}
+
+static void test_kairos_frame_kairotic_decays(void) {
+    M4_Temporal_Now now = m4_snapshot_now(0, 1000);
+    uint16_t realtime[M2_PLANET_COUNT] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    uint16_t kairotic[M2_PLANET_COUNT] = {101, 102, 103, 104, 105, 106, 107, 108, 109, 110};
+
+    m4_temporal_now_set_planets(&now, realtime, M4_PLANET_VALID_ALL);
+    m4_kairos_frame_set_planets(&now.kairotic, kairotic, M4_PLANET_VALID_ALL);
+    now.kairotic_active = 1;
+    now.kairotic.captured_at_ns = 1000u;
+    now.kairotic.decays_at_ns = 2000u;
+
+    TEST("kairotic active before decay", m4_planet_degrees_live_at(&now, 1999u) == now.kairotic.planet_degrees);
+    TEST("kairotic inactive past decay", m4_planet_degrees_live_at(&now, 2001u) == now.realtime.planet_degrees);
+    TEST("decay clears active flag", now.kairotic_active == 0);
+}
+
+static void test_planet_degrees_live_precedence(void) {
+    M4_Temporal_Now now = m4_snapshot_now(0, 1000);
+    uint16_t realtime[M2_PLANET_COUNT] = {11, 22, 33, 44, 55, 66, 77, 88, 99, 111};
+    uint16_t kairotic[M2_PLANET_COUNT] = {211, 222, 233, 244, 255, 266, 277, 288, 299, 311};
+
+    m4_temporal_now_set_planets(&now, realtime, M4_PLANET_VALID_ALL);
+    m4_kairos_frame_set_planets(&now.kairotic, kairotic, M4_PLANET_VALID_ALL);
+
+    TEST("live defaults realtime", m4_planet_degrees_live(&now) == now.realtime.planet_degrees);
+    now.kairotic_active = 1;
+    TEST("live prefers kairotic when active", m4_planet_degrees_live(&now) == now.kairotic.planet_degrees);
+    now.kairotic_active = 0;
+    TEST("live returns realtime after deactivation", m4_planet_degrees_live(&now) == now.realtime.planet_degrees);
+    TEST("live never null", m4_planet_degrees_live(&now) != NULL);
 }
 
 
@@ -589,6 +642,9 @@ int main(void) {
     test_identity_compute();
     test_blake3_determinism();
     test_temporal_now();
+    test_kairos_frame_natal_persists_across_session();
+    test_kairos_frame_kairotic_decays();
+    test_planet_degrees_live_precedence();
     test_sacred_random();
     test_iching_cast();
     test_tarot_draw();

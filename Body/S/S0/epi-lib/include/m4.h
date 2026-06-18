@@ -20,6 +20,7 @@
  *   m4_init(arena, hc)              — allocate and HC-link M4 root
  *   m4_identity_compute(id, input)  — compute-once Symbol DNA + BLAKE3
  *   m4_snapshot_now(degree, epoch)  — create M4_Temporal_Now
+ *   m4_planet_degrees_live(now)     — live kairos planet vector
  *   m4_advance_transformation(eng)  — modulo cascade cycle engine
  *   m4_teardown(root)               — release heap state
  *   m4_cli_dispatch(argc, argv, rt) — CLI entry point
@@ -261,23 +262,80 @@ void m4_identity_augment(M4_Identity_Matrix* id,
  * Works at 0 planets (stub mode) through 10 planets (full mod-10 relay).
  * =================================================================== */
 
+typedef enum {
+    KAIROS_FRAME_NATAL = 0,
+    KAIROS_FRAME_REALTIME = 1,
+    KAIROS_FRAME_KAIROTIC = 2
+} KairosFrameKind;
+
+typedef struct {
+    KairosFrameKind kind;                /* NATAL, REALTIME, or KAIROTIC */
+    uint64_t        captured_at_ns;      /* Monotonic or wall-clock capture time */
+    uint64_t        decays_at_ns;        /* 0 means no decay deadline */
+    uint16_t        planet_degrees[10];  /* All 10 planets (Planet_Id order from m2.h) */
+    float           pp;                  /* Oracle charge: prospective/prospective */
+    float           mm;                  /* Oracle charge: mirror/mirror */
+    float           mp;                  /* Oracle charge: mirror/prospective */
+    float           pn;                  /* Oracle charge: prospective/null */
+    uint32_t        _pad;
+} KairosFrame;
+
+_Static_assert(sizeof(KairosFrame) == 64, "KairosFrame must be one 64-byte L1 line");
+
 typedef struct {
     Unified_Clock_State clock;          /* M1/M2/M3 concentric state */
     uint16_t            degree;         /* 0-719 (SU(2) double cover) */
     uint32_t            chronos_epoch;  /* Unix seconds */
 
-    uint16_t planet_degrees[10];        /* All 10 planets (Planet_Id order from m2.h) */
+    KairosFrame natal;                  /* Birth-session frame; persists across realtime refreshes */
+    KairosFrame realtime;               /* Mercurius live relay frame */
+    KairosFrame kairotic;               /* Oracle consultation frame; may decay */
+    uint8_t     kairotic_active;        /* Live accessor prefers kairotic only while active */
     uint16_t planet_valid;              /* 10-bit mask: which planets have data */
 } M4_Temporal_Now;
 
 #define M4_PLANET_VALID_ALL ((uint16_t)((1u << M2_PLANET_COUNT) - 1u))
 
+static const uint16_t M4_EMPTY_PLANET_DEGREES[M2_PLANET_COUNT] = {0};
+
+static inline uint64_t m4_epoch_to_ns(uint32_t epoch) {
+    return ((uint64_t)epoch) * 1000000000ull;
+}
+
+static inline KairosFrame m4_kairos_frame_init(KairosFrameKind kind, uint64_t captured_at_ns) {
+    KairosFrame frame;
+    frame.kind = kind;
+    frame.captured_at_ns = captured_at_ns;
+    frame.decays_at_ns = 0;
+    for (int i = 0; i < (int)M2_PLANET_COUNT; i++) frame.planet_degrees[i] = 0;
+    frame.pp = 0.0f;
+    frame.mm = 0.0f;
+    frame.mp = 0.0f;
+    frame.pn = 0.0f;
+    frame._pad = 0;
+    return frame;
+}
+
+static inline void m4_kairos_frame_set_planets(KairosFrame* frame,
+                                                const uint16_t planet_degrees[M2_PLANET_COUNT],
+                                                uint16_t planet_valid) {
+    (void)planet_valid;
+    if (frame == NULL || planet_degrees == NULL) return;
+    for (int i = 0; i < (int)M2_PLANET_COUNT; i++) {
+        frame->planet_degrees[i] = planet_degrees[i] % 720u;
+    }
+}
+
 static inline M4_Temporal_Now m4_snapshot_now(uint16_t degree, uint32_t epoch) {
     M4_Temporal_Now now;
+    uint64_t captured_at_ns = m4_epoch_to_ns(epoch);
     now.clock = m0_read_cosmic_clock(degree);
     now.degree = degree;
     now.chronos_epoch = epoch;
-    for (int i = 0; i < 10; i++) now.planet_degrees[i] = 0;
+    now.natal = m4_kairos_frame_init(KAIROS_FRAME_NATAL, captured_at_ns);
+    now.realtime = m4_kairos_frame_init(KAIROS_FRAME_REALTIME, captured_at_ns);
+    now.kairotic = m4_kairos_frame_init(KAIROS_FRAME_KAIROTIC, captured_at_ns);
+    now.kairotic_active = 0;
     now.planet_valid = 0x00;
     return now;
 }
@@ -286,10 +344,22 @@ static inline void m4_temporal_now_set_planets(M4_Temporal_Now* now,
                                                 const uint16_t planet_degrees[M2_PLANET_COUNT],
                                                 uint16_t planet_valid) {
     if (now == NULL || planet_degrees == NULL) return;
-    for (int i = 0; i < (int)M2_PLANET_COUNT; i++) {
-        now->planet_degrees[i] = planet_degrees[i] % 720u;
-    }
+    m4_kairos_frame_set_planets(&now->realtime, planet_degrees, planet_valid);
     now->planet_valid = (uint16_t)(planet_valid & M4_PLANET_VALID_ALL);
+}
+
+static inline const uint16_t* m4_planet_degrees_live(const M4_Temporal_Now* now) {
+    if (now == NULL) return M4_EMPTY_PLANET_DEGREES;
+    if (now->kairotic_active) return now->kairotic.planet_degrees;
+    return now->realtime.planet_degrees;
+}
+
+static inline const uint16_t* m4_planet_degrees_live_at(M4_Temporal_Now* now, uint64_t now_ns) {
+    if (now == NULL) return M4_EMPTY_PLANET_DEGREES;
+    if (now->kairotic_active && now->kairotic.decays_at_ns != 0 && now_ns > now->kairotic.decays_at_ns) {
+        now->kairotic_active = 0;
+    }
+    return m4_planet_degrees_live(now);
 }
 
 static inline M4_Temporal_Now m4_snapshot_now_with_planets(uint16_t degree,

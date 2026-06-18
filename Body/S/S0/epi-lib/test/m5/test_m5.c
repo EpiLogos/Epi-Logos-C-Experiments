@@ -250,8 +250,8 @@ static void test_contemplation_object_contract(void) {
     };
     M5_ContemplationObject object = {0};
     object.session_id = "session-26-12";
-    object.kairos_at_open.planet_degrees[0] = 108;
-    object.kairos_at_close.planet_degrees[0] = 144;
+    object.kairos_at_open.realtime.planet_degrees[0] = 108;
+    object.kairos_at_close.realtime.planet_degrees[0] = 144;
     object.tarot_psyche_anchor.drawn[0] = 3;
     object.tarot_psyche_anchor.draw_count = 1;
     object.q_composed_trajectory = &q_tick;
@@ -269,7 +269,7 @@ static void test_contemplation_object_contract(void) {
     object.four_syntax_compliance_seeds[3].prompt = "completion-9";
 
     TEST("contemplation session id", strcmp(object.session_id, "session-26-12") == 0);
-    TEST("contemplation uses M4 kairos", object.kairos_at_open.planet_degrees[0] == 108);
+    TEST("contemplation uses M4 kairos", object.kairos_at_open.realtime.planet_degrees[0] == 108);
     TEST("contemplation uses M4 tarot draw", object.tarot_psyche_anchor.drawn[0] == 3);
     TEST("contemplation codon count", object.codon_trace_count == 2);
     TEST("contemplation vak generation", object.vak_profile_pairs[0].profile_generation == 26);

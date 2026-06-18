@@ -3,8 +3,8 @@ use epi_logos::epii_autoresearch::resonance_corpus::{
     EbmTrainingConfig, ResonanceCorpusStore, TrainEbmRequest,
 };
 use epi_logos::{
-    agent, app, book, code, core, ffi, gate, graph, nara, notebook, portal, profile, sesh, slot,
-    sync, techne, up, vault, vimarsa,
+    agent, app, book, code, core, ffi, gate, graph, know, nara, notebook, portal, profile, sesh,
+    slot, sync, techne, up, vault, vimarsa,
 };
 
 #[derive(Parser)]
@@ -40,6 +40,8 @@ enum Commands {
         #[command(subcommand)]
         cmd: graph::GraphCmd,
     },
+    /// Coordinate knowing — unified VAK packet across Bimba / World / Gnostic faces
+    Know(know::KnowCmd),
     /// Gateway (S3') — RPC server, plugin host
     Gate {
         #[command(subcommand)]
@@ -182,6 +184,13 @@ async fn main() -> color_eyre::Result<()> {
             Ok(out) => println!("{}", out),
             Err(e) => {
                 eprintln!("graph error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Know(cmd) => match know::dispatch(cmd, cli.json) {
+            Ok(out) => println!("{}", out),
+            Err(e) => {
+                eprintln!("know error: {}", e);
                 std::process::exit(1);
             }
         },

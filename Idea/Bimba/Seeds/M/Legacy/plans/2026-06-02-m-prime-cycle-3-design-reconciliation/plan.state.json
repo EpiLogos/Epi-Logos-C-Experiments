@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T08:47:27.678Z",
+  "updatedAt": "2026-06-18T08:55:57.162Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3211,14 +3211,19 @@
       "worktree": null
     },
     "12.T12.23": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T08:46:38.878Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T08:55:56.932Z",
       "claimedAt": "2026-06-18T08:46:38.878Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T08:55:56.932Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T08:55:56.932Z",
+          "text": "node smoke dispatch-policy bootstrap selected role-fit candidate and emitted DispatchTrace; node --check dispatch-policy.ts passed; node --test Body/S/S4/ta-onta/S4-4p-anima/tests/*.test.ts: 118 passed; node --test Body/S/S4/ta-onta/S4-5p-aletheia/tests/elo_runtime.test.ts: 6 passed; cargo test -p epi-s3-gateway unavailable from root because package is excluded; cargo test --manifest-path Body/S/S3/gateway/Cargo.toml anima_dispatch_policy_bootstrap compiled and ran 0 matching tests; key paths Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts, Body/S/S4/ta-onta/S4-4p-anima/AGENTS.md"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-12-t12-23",
-      "leaseExpiresAt": "2026-06-18T10:46:38.878Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T08:46:38.878Z",
       "runId": "20260618T084638Z-12-T12.23",
       "worktree": null
@@ -10366,11 +10371,12 @@
     {
       "runId": "20260618T084638Z-12-T12.23",
       "taskId": "12.T12.23",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T08:46:38.878Z",
       "owner": "codex-m-dev-12-t12-23",
       "leaseExpiresAt": "2026-06-18T10:46:38.878Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T08:55:56.932Z"
     },
     {
       "runId": "20260618T084703Z-29-T29.3",

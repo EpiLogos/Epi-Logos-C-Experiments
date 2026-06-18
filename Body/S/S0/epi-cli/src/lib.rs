@@ -6,6 +6,7 @@ pub mod core;
 pub mod ffi;
 pub mod gate;
 pub mod graph;
+pub mod know;
 pub mod hen {
     pub use epi_s1_hen_compiler_core::*;
 }

@@ -638,7 +638,7 @@ static void m4_print_now(int argc, char** argv) {
     printf("  M2 Decan Phase:  %u (of 72)\n", now.clock.m2_decan_phase);
     printf("  M3 Hexagram:     %u (of 64)\n", now.clock.m3_hexagram_id);
     printf("  Layer:           %s\n", now.clock.is_implicate_phase ? "Shadow (implicate)" : "Primary (explicate)");
-    printf("  Planets:         %u of 7 valid\n", now.planet_valid);
+    printf("  Planets:         %u of 10 valid\n", now.planet_valid);
 }
 
 static void m4_print_pratibimba(const M4_Root* root) {
