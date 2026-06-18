@@ -6,7 +6,6 @@ import type {
     MathemeHarmonicProfileBoundary,
     SharedBridgeAdapter
 } from '@pratibimba/m-extension-runtime';
-import { PENDING_M_READINESS } from '@pratibimba/m-extension-runtime';
 
 export type ReadinessId = MExtensionReadinessState;
 export type ReadinessSeverity = 'ready' | 'degraded' | 'blocked';
@@ -77,6 +76,15 @@ export const READINESS_SEVERITY: Readonly<Record<ReadinessId, ReadinessSeverity>
     ready_public_current: 'ready'
 });
 
+const PENDING_READINESS_SNAPSHOT: ReadinessSnapshotLike = Object.freeze({
+    fetchedAt: 0,
+    state: 'bridge_unavailable',
+    reason: 'No kernel bridge instance has bound a readiness source yet.',
+    profileGeneration: null,
+    bridgeReachable: false,
+    blockerIds: Object.freeze([] as string[]) as readonly string[]
+});
+
 export interface BlockedOverlayAction {
     readonly label: string;
     readonly deepLink: string;
@@ -98,7 +106,7 @@ export function useReadinessSnapshot(
             return undefined;
         }
         if (!bridge) {
-            setObserved(PENDING_M_READINESS);
+            setObserved(PENDING_READINESS_SNAPSHOT);
             return undefined;
         }
         setObserved(snapshotFromReadinessSource(bridge));
@@ -122,7 +130,7 @@ export function subscribeToReadiness(
 export function snapshotFromReadinessSource(
     bridge: ReadinessSubscriptionSource | null | undefined
 ): ReadinessSnapshotLike {
-    return bridge?.currentSnapshot?.().readiness ?? PENDING_M_READINESS;
+    return bridge?.currentSnapshot?.().readiness ?? PENDING_READINESS_SNAPSHOT;
 }
 
 export function readinessIdOf(readiness: ReadinessSnapshotLike): ReadinessId {

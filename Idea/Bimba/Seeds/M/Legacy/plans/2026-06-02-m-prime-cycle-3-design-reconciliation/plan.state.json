@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:24:50.697Z",
+  "updatedAt": "2026-06-18T19:27:13.310Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5131,14 +5131,19 @@
       "worktree": null
     },
     "30.T30.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:17:55.432Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:27:04.896Z",
       "claimedAt": "2026-06-18T19:17:55.432Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:27:04.896Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:27:04.896Z",
+          "text": "41/41 @pratibimba/integrated-composition tests pass; state grammar covers 9 readiness ids x 5 primitives = 45 render cases; key paths Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/readiness-state-grammar.ts and tests/state-grammar-primitives.test.mjs"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-30-t30-6",
-      "leaseExpiresAt": "2026-06-18T21:17:55.432Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:17:55.432Z",
       "runId": "20260618T191755Z-30-T30.6",
       "worktree": null
@@ -6963,14 +6968,19 @@
       "worktree": null
     },
     "29.T29.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:15:44.107Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:26:53.931Z",
       "claimedAt": "2026-06-18T19:15:44.107Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:26:53.931Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:26:53.931Z",
+          "text": "15/15 @pratibimba/plugin-integrated-1-2-3 tests pass; added Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/matheme-137-overlay.tsx + matheme-137-overlay.test.mjs; grep verified Additive137/KaprekarPedagogyHit/parentAttribution/9_M2 bridge wiring"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-29-t29-8",
-      "leaseExpiresAt": "2026-06-18T21:15:44.107Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:15:44.107Z",
       "runId": "20260618T191544Z-29-T29.8",
       "worktree": null
@@ -7229,16 +7239,16 @@
       "worktree": null
     },
     "25.T25.22": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:26:47.719Z",
+      "claimedAt": "2026-06-18T19:26:47.719Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-25-t25-22",
+      "leaseExpiresAt": "2026-06-18T21:26:47.719Z",
+      "heartbeatAt": "2026-06-18T19:26:47.719Z",
+      "runId": "20260618T192647Z-25-T25.22",
       "worktree": null
     },
     "29.T29.16": {
@@ -8269,9 +8279,9 @@
       "worktree": null
     },
     "42.T42.3": {
-      "status": "pending",
-      "updatedAt": "2026-06-18T18:55:40.207Z",
-      "claimedAt": "2026-06-18T18:53:14.539Z",
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:27:13.075Z",
+      "claimedAt": "2026-06-18T19:27:13.075Z",
       "completedAt": null,
       "evidence": [
         {
@@ -8280,10 +8290,10 @@
         }
       ],
       "notes": null,
-      "owner": "codex-m-dev-42-t42-3",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-06-18T18:53:14.539Z",
-      "runId": "20260618T185314Z-42-T42.3",
+      "owner": "codex-m-dev-42-t42-3-retry",
+      "leaseExpiresAt": "2026-06-18T21:27:13.075Z",
+      "heartbeatAt": "2026-06-18T19:27:13.075Z",
+      "runId": "20260618T192713Z-42-T42.3",
       "worktree": null
     },
     "42.T42.4": {
@@ -10725,40 +10735,60 @@
     {
       "runId": "20260618T191544Z-29-T29.8",
       "taskId": "29.T29.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:15:44.107Z",
       "owner": "codex-m-dev-29-t29-8",
       "leaseExpiresAt": "2026-06-18T21:15:44.107Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:26:53.931Z"
     },
     {
       "runId": "20260618T191755Z-30-T30.6",
       "taskId": "30.T30.6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:17:55.432Z",
       "owner": "codex-m-dev-30-t30-6",
       "leaseExpiresAt": "2026-06-18T21:17:55.432Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T19:27:04.896Z"
+    },
+    {
+      "runId": "20260618T192647Z-25-T25.22",
+      "taskId": "25.T25.22",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:26:47.719Z",
+      "owner": "codex-m-dev-25-t25-22",
+      "leaseExpiresAt": "2026-06-18T21:26:47.719Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260618T192713Z-42-T42.3",
+      "taskId": "42.T42.3",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:27:13.075Z",
+      "owner": "codex-m-dev-42-t42-3-retry",
+      "leaseExpiresAt": "2026-06-18T21:27:13.075Z",
       "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:17:43.435Z",
-    "updatedAt": "2026-06-18T19:17:43.435Z",
+    "createdAt": "2026-06-18T19:26:13.821Z",
+    "updatedAt": "2026-06-18T19:26:13.821Z",
     "taskIds": [
       "31.T31.13",
-      "41.T41.12",
-      "12.T12.28",
-      "29.T29.8"
+      "29.T29.8",
+      "30.T30.6",
+      "05.T5.3"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "41.T41.12": "in-session",
-      "12.T12.28": "in-session",
-      "29.T29.8": "in-session"
+      "29.T29.8": "in-session",
+      "30.T30.6": "in-session",
+      "05.T5.3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

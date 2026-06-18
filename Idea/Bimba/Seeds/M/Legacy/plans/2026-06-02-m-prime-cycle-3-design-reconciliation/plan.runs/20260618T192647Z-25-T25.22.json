@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T192647Z-25-T25.22",
+  "taskId": "25.T25.22",
+  "startedAt": "2026-06-18T19:26:47.719Z",
+  "owner": "codex-m-dev-25-t25-22",
+  "leaseExpiresAt": "2026-06-18T21:26:47.719Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.22",
+    "trackId": "25",
+    "tranche": "T25.22",
+    "title": "PASU BeingPattern perspective and family-field consumer *(spec-ahead-integration; consumes CCT-21 + 10.PASU + 18.10 + PASU.md)*",
+    "effort": null,
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.21"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/being-pattern-perspective.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}
