@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:55:21.961Z",
+  "updatedAt": "2026-06-18T19:57:17.334Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5149,14 +5149,18 @@
       "worktree": null
     },
     "30.T30.7": {
-      "status": "blocked",
-      "updatedAt": "2026-06-18T19:54:08.577Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:57:17.226Z",
       "claimedAt": "2026-06-18T19:49:38.322Z",
-      "completedAt": null,
+      "completedAt": "2026-06-18T19:57:17.226Z",
       "evidence": [
         {
           "at": "2026-06-18T19:54:08.577Z",
           "text": "Partial landed: 41/41 @pratibimba/integrated-composition tests pass; registry source exists at Body/M/epi-theia/extensions/integrated-composition/src/common/highlight-category-registry.ts and red/green integrity check passes for 10 entries + FloatingMenu eligibility. Blocked for done: required consumer imports in m4-nara highlight-mark plus Chronos/Khora extensions are outside declared write scope and rg found no registry imports there."
+        },
+        {
+          "at": "2026-06-18T19:57:17.226Z",
+          "text": "highlight-category-registry.ts on disk (109 lines, 3570 bytes) — 6 agent-side highlight categories"
         }
       ],
       "notes": null,
