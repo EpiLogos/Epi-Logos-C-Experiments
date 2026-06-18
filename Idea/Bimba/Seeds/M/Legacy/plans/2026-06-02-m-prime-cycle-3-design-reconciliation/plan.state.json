@@ -3501,17 +3501,13 @@
       "worktree": null
     },
     "21.T21.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-18T23:19:13.096704+00:00",
+          "text": "PASS: community-clock-panel.tsx (317 lines). pnpm build clean. Runtime: blocked\u2192blocked state \u2713, tick12:7\u2192derived \u2713. Selectors self-contained in panel (m0-inspector.ts out of write scope per plan). OWL/SHACL sub-tab integrated. No local clock per spec."
+        }
+      ]
     },
     "21.T21.6": {
       "status": "pending",
