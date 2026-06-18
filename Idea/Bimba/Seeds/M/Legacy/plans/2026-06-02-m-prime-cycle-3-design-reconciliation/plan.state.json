@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T10:50:16.700Z",
+  "updatedAt": "2026-06-18T10:59:15.263Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3229,14 +3229,19 @@
       "worktree": null
     },
     "12.T12.24": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T10:07:29.147Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T10:59:15.164Z",
       "claimedAt": "2026-06-18T10:07:29.147Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T10:59:15.164Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T10:59:15.164Z",
+          "text": "cargo build --manifest-path Body/S/S0/epi-cli/Cargo.toml passed; cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --no-run passed; pytest drift compose 3 passed; CLI checks: vendored=13, M4 custom list includes mlx-lora/nara-journal-parser/nara-voice-training; key paths Body/S/S0/epi-cli/src/skill.rs, Body/S/S4/pi-agent/skills/hermes/*, Body/S/S3/spacetime-context/schemas/{skill-registry,retrain-loop}.sql, Body/S/S4/ta-onta/S4-5p-aletheia/modules/agora-vendoring.ts, scripts/train.rs"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-12-t12-24",
-      "leaseExpiresAt": "2026-06-18T12:07:29.147Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T10:07:29.147Z",
       "runId": "20260618T100729Z-12-T12.24",
       "worktree": null
@@ -10446,11 +10451,12 @@
     {
       "runId": "20260618T100729Z-12-T12.24",
       "taskId": "12.T12.24",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T10:07:29.147Z",
       "owner": "codex-m-dev-12-t12-24",
       "leaseExpiresAt": "2026-06-18T12:07:29.147Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T10:59:15.164Z"
     },
     {
       "runId": "20260618T100747Z-32-T32.8",
