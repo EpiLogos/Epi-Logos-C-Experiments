@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T23:39:48.488Z",
+  "updatedAt": "2026-06-18T23:44:51.705Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3525,12 +3525,21 @@
     },
     "21.T21.6": {
       "status": "done",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T23:40:21.177222+00:00",
           "text": "PASS: bridged-layer-launcher.tsx. pnpm build clean, 49/49 suite. grep all symbols pass. M0-4\u2192m4-nara dispatch + privacy class routing per spec."
         }
-      ]
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "21.T21.7": {
       "status": "pending",
@@ -7897,17 +7906,13 @@
       "worktree": null
     },
     "12.T12.32": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-18T23:45:31.729276+00:00",
+          "text": "PASS: Pi entitlement contract in 4 files. no-tool-bypass 4/4, entitlement suite 41/41, full ta-onta+pi-agent 347/347. capability-matrix.json with aletheia_mode_internal class, all grep targets confirmed."
+        }
+      ]
     },
     "12.T12.33": {
       "status": "pending",

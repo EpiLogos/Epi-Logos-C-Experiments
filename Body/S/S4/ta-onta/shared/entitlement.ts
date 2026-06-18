@@ -148,6 +148,95 @@ export function parseCommaList(field: string | undefined | null): string[] {
 	return normalizeList(field.split(","));
 }
 
+// ── Uniform entitlement classes (no side-door) ───────────────────────────
+//
+// Tranche 12.32 — VAK-uniform tool entitlement. Closes the GraphRAG/Aletheia
+// side-door whereby tools dispatched through Anima's `s4'.mediation.route` were
+// (intentionally, per wave-2 scout 1) bypassing the formal entitlement-contract
+// check. That standing is rejected: modular gating applies UNIFORMLY. Every
+// tool — including the Aletheia-internal crystallisation/GraphRAG tools — is a
+// first-class entry in the canonical skill/tool universe and routes through the
+// same `isEntitled()` resolver. What varies is the entitlement CLASS, not the
+// routing. See DR-S5-ONE-1 (uniform routing through the gateway).
+
+/** The default entitlement class: user-/agent-facing peer tools. */
+export const STANDARD_ENTITLEMENT_CLASS = "standard";
+
+/**
+ * The entitlement class for tools invoked by Anima during
+ * Aletheia-crystallisation-mode. These are NOT user-facing peer tools (per
+ * DR-M5-1, DR-B-3); they remain dispatched-through-Anima. The class enforces
+ * that boundary at the CONTRACT level rather than via a side-door: a tool in
+ * this class is still enumerated in the universe and still routes through
+ * `isEntitled()`, and additionally requires the caller to hold the
+ * `anima.dispatcher` role AND an `aletheia.mode.active` session state.
+ */
+export const ALETHEIA_MODE_INTERNAL_CLASS = "aletheia-mode-internal";
+
+/**
+ * The canonical set of Aletheia-mode-internal tools — every tool dispatched
+ * through `s4'.mediation.route` (the Gnosis/GraphRAG/crystallisation/episodic
+ * family plus the Moirai night-pass dispatch). Each becomes a first-class
+ * entitlement entry; none is allowed to bypass the contract by side-door.
+ *
+ * Kept in sync with the tools registered in `S4-5p-aletheia/extension.ts` and
+ * the `aletheia_mode_internal` table in `plugins/pleroma/capability-matrix.json`
+ * (the `no_tool_bypasses_entitlement_contract` test asserts that parity).
+ */
+export const ALETHEIA_MODE_INTERNAL_TOOLS: readonly string[] = [
+	"aletheia_crystallise",
+	"aletheia_episodic_arc_open",
+	"aletheia_episodic_arc_close",
+	"aletheia_episodic_arc_status",
+	"aletheia_episodic_ingest_thoughts",
+	"aletheia_episodic_logos_stage",
+	"aletheia_episodic_mobius_arc",
+	"aletheia_episodic_oracle_arc",
+	"aletheia_episodic_record",
+	"aletheia_episodic_search",
+	"aletheia_gnosis_enrich",
+	"aletheia_gnosis_ingest",
+	"aletheia_gnosis_notebook_create",
+	"aletheia_gnosis_query",
+	"aletheia_gnosis_status",
+	"aletheia_ingest",
+	"aletheia_seed_refresh",
+	"aletheia_session_promote",
+	"aletheia_thought_route",
+	"dispatch_moirai_night_pass",
+];
+
+const ALETHEIA_MODE_INTERNAL_SET = new Set<string>(ALETHEIA_MODE_INTERNAL_TOOLS);
+
+/** True iff `name` is an Aletheia-mode-internal tool (routes via mediation). */
+export function isAletheiaModeInternalTool(name: string): boolean {
+	return typeof name === "string" && ALETHEIA_MODE_INTERNAL_SET.has(name.trim());
+}
+
+/**
+ * The entitlement class for a tool name. Aletheia-mode-internal tools resolve
+ * to `aletheia-mode-internal`; everything else is `standard`. Classification is
+ * deterministic and namespace-agnostic.
+ */
+export function entitlementClassOf(name: string): string {
+	return isAletheiaModeInternalTool(name)
+		? ALETHEIA_MODE_INTERNAL_CLASS
+		: STANDARD_ENTITLEMENT_CLASS;
+}
+
+/** Options for {@link enumerateSkillUniverse}. */
+export interface SkillUniverseOptions {
+	/**
+	 * When true, append the canonical Aletheia-mode-internal tool universe
+	 * ({@link ALETHEIA_MODE_INTERNAL_TOOLS}) to the enumerated set so those tools
+	 * enumerate through the same entitlement resolver as every other tool. This
+	 * is the operationalisation of "no side-door": the Gnosis/GraphRAG/Aletheia
+	 * tools become first-class entries in the universe `U`. Off by default so the
+	 * pure skill-directory enumeration (used by skill loaders) is unchanged.
+	 */
+	includeAletheiaModeInternal?: boolean;
+}
+
 /**
  * Enumerate the live SKILL universe across one or more skill directories.
  *
@@ -155,8 +244,17 @@ export function parseCommaList(field: string | undefined | null): string[] {
  * for which `<dir>/<name>/SKILL.md` exists. Results are deduped by name in
  * first-seen order (dirs are scanned in the order given). Missing directories
  * are tolerated (skipped), so callers may pass speculative paths.
+ *
+ * When `opts.includeAletheiaModeInternal` is set, the canonical
+ * Aletheia-mode-internal tool names are appended (deduped) AFTER the enumerated
+ * skills — making every `s4'.mediation.route`-dispatched tool a first-class
+ * entry in the universe so it resolves through the same entitlement contract as
+ * all other tools (Tranche 12.32 — close the GraphRAG side-door).
  */
-export function enumerateSkillUniverse(dirs: string[]): string[] {
+export function enumerateSkillUniverse(
+	dirs: string[],
+	opts?: SkillUniverseOptions,
+): string[] {
 	const out: string[] = [];
 	const seen = new Set<string>();
 	for (const dir of Array.isArray(dirs) ? dirs : []) {
@@ -173,6 +271,15 @@ export function enumerateSkillUniverse(dirs: string[]): string[] {
 			if (!existsSync(join(dir, name, "SKILL.md"))) continue;
 			seen.add(name);
 			out.push(name);
+		}
+	}
+	// Fold the Aletheia/GraphRAG tool universe in as first-class entries so they
+	// enumerate through the same resolver — no side-door (Tranche 12.32).
+	if (opts?.includeAletheiaModeInternal) {
+		for (const tool of ALETHEIA_MODE_INTERNAL_TOOLS) {
+			if (seen.has(tool)) continue;
+			seen.add(tool);
+			out.push(tool);
 		}
 	}
 	return out;
@@ -272,4 +379,123 @@ export function exposeEntitled(
 	return (Array.isArray(candidates) ? candidates : []).filter(
 		(n) => typeof n === "string" && set.has(n.trim()),
 	);
+}
+
+// ── Mediation-route gate (Tranche 12.32 — no side-door) ───────────────────
+//
+// The `s4'.mediation.route` dispatch is no longer entitlement-exempt. EVERY
+// tool routed through it — including the Aletheia-mode-internal family — passes
+// through the SAME `isEntitled()` resolver as any other tool. For the
+// `aletheia-mode-internal` class an ADDITIONAL, explicitly-declared condition
+// applies (it is NOT assumed by side-door): the caller must hold the
+// `anima.dispatcher` role AND an `aletheia.mode.active` session state. The
+// routing is uniform; only the class — and therefore the extra condition —
+// varies.
+
+/** The role a caller must hold to dispatch Aletheia-mode-internal tools. */
+export const ANIMA_DISPATCHER_ROLE = "anima.dispatcher";
+
+/** Session/runtime context consulted by the mediation-route gate. */
+export interface MediationRouteContext {
+	/** The tool/skill universe `U` (should include the mediation tool family). */
+	universe: string[];
+	/** Optional team entitlement layer. */
+	team?: EntitlementLayer;
+	/** Optional agent entitlement layer. */
+	agent?: EntitlementLayer;
+	/** Roles the calling agent holds (e.g. `["anima.dispatcher"]`). */
+	roles?: string[];
+	/** Live session state; `aletheiaModeActive` gates the aletheia class. */
+	session?: { aletheiaModeActive?: boolean };
+}
+
+/** The decision returned by {@link enforceMediationRouteEntitlement}. */
+export interface MediationRouteDecision {
+	allowed: boolean;
+	toolName: string;
+	/** `standard` or `aletheia-mode-internal`. */
+	entitlementClass: string;
+	reason: string;
+}
+
+/**
+ * HARD-GATE for any tool dispatched through `s4'.mediation.route`.
+ *
+ * Step 1 (uniform): the tool MUST be entitled via the same `isEntitled()`
+ * resolver as every other tool. A tool absent from the effective set is
+ * refused — there is no bypass.
+ *
+ * Step 2 (class-specific, explicitly declared): if the tool is in the
+ * `aletheia-mode-internal` class, the caller must additionally hold the
+ * `anima.dispatcher` role AND an `aletheia.mode.active` session state. This is
+ * the contract-level enforcement of "dispatched-through-Anima-during-
+ * crystallisation-mode" — checked at dispatch time, never assumed.
+ *
+ * `standard`-class tools are permitted on the strength of step 1 alone.
+ */
+export function enforceMediationRouteEntitlement(
+	toolName: string,
+	ctx: MediationRouteContext,
+): MediationRouteDecision {
+	const name = typeof toolName === "string" ? toolName.trim() : "";
+	const entitlementClass = entitlementClassOf(name);
+	if (name.length === 0) {
+		return {
+			allowed: false,
+			toolName,
+			entitlementClass,
+			reason: "empty tool name",
+		};
+	}
+
+	// Step 1 — uniform entitlement check: isEntitled() runs for aletheia-mode
+	// -internal tools exactly as for any other tool (no side-door entitlement).
+	if (!isEntitled(name, ctx.universe, ctx.team, ctx.agent)) {
+		return {
+			allowed: false,
+			toolName: name,
+			entitlementClass,
+			reason: "tool not entitled (not in effective set)",
+		};
+	}
+
+	// Step 2 — class-specific condition for aletheia-mode-internal tools.
+	if (entitlementClass === ALETHEIA_MODE_INTERNAL_CLASS) {
+		const roles = Array.isArray(ctx.roles) ? ctx.roles : [];
+		const hasDispatcher = roles.includes(ANIMA_DISPATCHER_ROLE);
+		const modeActive = ctx.session?.aletheiaModeActive === true;
+		if (!hasDispatcher || !modeActive) {
+			const missing: string[] = [];
+			if (!hasDispatcher) missing.push(`role:${ANIMA_DISPATCHER_ROLE}`);
+			if (!modeActive) missing.push("session:aletheia.mode.active");
+			return {
+				allowed: false,
+				toolName: name,
+				entitlementClass,
+				reason: `aletheia-mode-internal requires ${missing.join(" + ")}`,
+			};
+		}
+	}
+
+	return {
+		allowed: true,
+		toolName: name,
+		entitlementClass,
+		reason: "entitled",
+	};
+}
+
+/**
+ * Audit helper (used by the `no_tool_bypasses_entitlement_contract` test):
+ * given the set of tool names declared in the capability-matrix entitlement
+ * table, assert that EVERY canonical mediation-route tool has a declared entry.
+ * Returns the names that are missing (empty array = no bypass).
+ */
+export function auditNoToolBypass(declaredTableTools: string[]): string[] {
+	const declared = new Set(
+		(Array.isArray(declaredTableTools) ? declaredTableTools : [])
+			.filter((n): n is string => typeof n === "string")
+			.map((n) => n.trim()),
+	);
+	return ALETHEIA_MODE_INTERNAL_TOOLS.filter((t) => !declared.has(t));
 }

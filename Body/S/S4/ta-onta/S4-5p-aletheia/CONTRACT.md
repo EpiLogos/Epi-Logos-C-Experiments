@@ -34,7 +34,7 @@ aletheia/S5'/agents/
 
 Aletheia is the **crystallisation and truth-disclosure** layer. It owns Gnosis (the local RAG pipeline: ingestion, retrieval, session notebooks), thought extraction and T-bucket routing (from `{NOW}/thoughts/` to `/Pratibimba/Self/Thought/T{n}/`), the SEED.md evening crystallisation cycle, and the specialist subagents that Psyche and Sophia invoke for deep inquiry.
 
-Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sophia; Aletheia is an effect produced through those invocations. All invocation routes through Anima's dispatch. Day/Night' is a CS runtime phase — when CS = night', the full Möbius crystallisation pass runs, but Aletheia's tooling is available in any context.
+Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sophia; Aletheia is an effect produced through those invocations. All invocation routes through Anima's dispatch. Day/Night' is a CS runtime phase — when CS = night', the full Möbius crystallisation pass runs, but Aletheia's tooling is reachable in any context — always through the uniform entitlement contract at the `aletheia-mode-internal` class (see Entitlement Routing above), never via a separate dispatch path.
 
 **What Aletheia does NOT own:** agent dispatch routing (Anima), vault CRUD (Hen), session identity (Khora), temporal scheduling (Chronos — Chronos TRIGGERS the evening Möbius cycle; Aletheia RUNS it).
 
@@ -61,6 +61,33 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 | `aletheia_thought_route` | Classify thought artifact → route to T{n} bucket in Pratibimba |
 | `aletheia_crystallise` | Distill patterns from T-bucket contents into Bimba canonical form |
 | `aletheia_seed_refresh` | Generate SEED.md morning-context package from evening crystallisation |
+
+---
+
+## Entitlement Routing — uniform contract, no special-casing
+
+Every Aletheia tool — the Gnosis/GraphRAG retrieval family, the episodic-memory
+tools, `aletheia_crystallise`, `aletheia_thought_route`, `aletheia_session_promote`,
+and the `dispatch_moirai_night_pass` dispatch — is a **first-class entry in the
+canonical tool universe** and routes through the **same `isEntitled(tool, team,
+agent)` entitlement contract as every other tool**. Tooling that is "reachable
+in any context" is still **always subject to entitlement resolution**; reachability
+is not a free pass, and there is no separate dispatch path that skips the contract.
+
+These tools carry the **`aletheia-mode-internal` entitlement class** (declared
+per tool in `Body/S/S4/plugins/pleroma/capability-matrix.json`). The class is the
+mechanism that keeps them **NOT user-facing peer tools** (per DR-M5-1, DR-B-3) —
+they remain **dispatched-through-Anima-during-crystallisation-mode** — but it
+enforces that boundary at the **contract level**: a caller may invoke an
+`aletheia-mode-internal` tool only when it holds the **`anima.dispatcher` role**
+AND an **`aletheia.mode.active`** session state. Both conditions are **checked at
+dispatch time**; neither is assumed by the tool's function-specificity.
+
+The routing is uniform; only the entitlement class — and therefore the extra
+dispatch-time condition — varies. This operationalises **DR-S5-ONE-1** (uniform
+routing through the gateway) at the entitlement-contract level. An agent without
+`aletheia.mode.active` attempting, e.g., `aletheia_crystallise` is refused at the
+entitlement gate, not at the function level — the contract is what enforces it.
 
 ---
 
@@ -218,7 +245,7 @@ Located at: `aletheia/S5'/agents/`. Each is a PI-native subagent (system prompt 
 2. All invocation routes through Anima dispatch — Aletheia has no self-dispatch
 3. Aletheia subagents are domain specialists — their identity is their tool domain, NOT a phase assignment
 4. Day/Night' is CS runtime config — shapes when Moirai's sequential pass runs, not what Moirai are
-5. Raw tools are registered at extension level and available in any context; skills gate their use for subagents
+5. Raw tools are registered at extension level and reachable in any context, but ALWAYS route through the uniform entitlement contract at the `aletheia-mode-internal` class (caller must hold `anima.dispatcher` + `aletheia.mode.active`, checked at dispatch time); skills further gate their use for subagents
 6. 3072-dim embeddings only — never mix with 768 or 1536 in production indexes
 7. Gnosis namespace is separate from Bimba — cross-links via `RELATES_TO_COORDINATE`
 8. `coordinate` field in all Gnosis nodes — consistent with Bimba schema, no translation
@@ -226,7 +253,8 @@ Located at: `aletheia/S5'/agents/`. Each is a PI-native subagent (system prompt 
 10. Darshana REPL is a skill owned by Anansi — not a standalone Pleroma primitive
 11. SEED.md is crystallised by Aletheia and consumed by Chronos — one-directional flow
 12. Janus envelope schema must be defined before Möbius engine implementation
-13. **Carrier IS the contract** — Aletheia has no separate `aletheia-agent/agent-contract.json`; the carrier itself is the contract. The six Aletheia subagent techne-guardians (Anansi, Moirai, Janus, Mercurius, Agora, Zeithoven) are profiles under the carrier/mode and are dispatched by Anima. There is no standalone agent contract file external to this CONTRACT.md — the carrier's CONTRACT.md is the single source of truth for Aletheia's identity, invariants, and subagent roster.
+13. **Uniform entitlement routing** — every Aletheia tool routes through the same `isEntitled()` contract as all other tools, carrying the `aletheia-mode-internal` entitlement class; the class (caller holds `anima.dispatcher` + `aletheia.mode.active`, checked at dispatch time) keeps them Anima-dispatched and non-peer, but there is no separate path that skips the contract. The routing is uniform; only the class varies (Tranche 12.32; DR-S5-ONE-1).
+14. **Carrier IS the contract** — Aletheia has no separate `aletheia-agent/agent-contract.json`; the carrier itself is the contract. The six Aletheia subagent techne-guardians (Anansi, Moirai, Janus, Mercurius, Agora, Zeithoven) are profiles under the carrier/mode and are dispatched by Anima. There is no standalone agent contract file external to this CONTRACT.md — the carrier's CONTRACT.md is the single source of truth for Aletheia's identity, invariants, and subagent roster.
 
 ---
 

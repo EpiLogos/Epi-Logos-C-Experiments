@@ -164,6 +164,41 @@
       "refusal_law": ["DR-VAMA-3", "DR-VAMA-5", "DR-VAMA-6"]
     }
   ],
+  "entitlement_classes": {
+    "standard": "User-/agent-facing peer tools; entitlement resolved by the same isEntitled(tool, team, agent) contract as every tool.",
+    "aletheia-mode-internal": "Tools invoked by Anima during Aletheia-crystallisation-mode; the calling agent must hold both `anima.dispatcher` role AND `aletheia.mode.active` session state; entitlement is checked at dispatch time. These are NOT user-facing peer tools (DR-M5-1, DR-B-3) — they remain dispatched-through-Anima — but the boundary is enforced by this entitlement class, not by a side-door."
+  },
+  "aletheia_mode_internal": {
+    "entitlement_class": "aletheia-mode-internal",
+    "no_implicit_allow_list": true,
+    "routes_through": "s4'.mediation.route",
+    "dispatch_requires": ["anima.dispatcher", "aletheia.mode.active"],
+    "checked_at": "dispatch-time",
+    "cross_link": "DR-S5-ONE-1",
+    "description": "Tools invoked by Anima during Aletheia-crystallisation-mode; the calling agent must hold both `anima.dispatcher` role AND `aletheia.mode.active` session state; entitlement is checked at dispatch time. Every tool below is a first-class entry in the canonical tool universe and routes through isEntitled() like any other tool — no implicit allow-lists, no bypass. The class varies; the routing is uniform (Tranche 12.32).",
+    "tools": [
+      { "name": "aletheia_crystallise", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_arc_open", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_arc_close", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_arc_status", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_ingest_thoughts", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_logos_stage", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_mobius_arc", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_oracle_arc", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_record", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_search", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_enrich", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_ingest", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_notebook_create", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_query", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_status", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_ingest", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_seed_refresh", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_session_promote", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_thought_route", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "dispatch_moirai_night_pass", "entitlement_class": "aletheia-mode-internal" }
+    ]
+  },
   "skills": [
     {
       "name": "anima-orchestration",
