@@ -10,6 +10,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M1
 - `07-t2-track08-contribution-contracts.md` — Track 07→08 contribution boundary (`TRACK_08_CONTRIBUTION` shape, route chain, observability event rule).
 - `ui-design-tokens.{ts,json,md}` — canonical W3C-shape design-token bundle (`epilogos.*` namespace) consumed via consume-not-fork lint.
 - `ui-colour-tokens.{json,ts,md}` — canonical coordinate-derived chromatic token bundle (`epilogos.colour.*` namespace) with W3C-shape JSON, typed exports, and per-token derivation citations.
+- `ui-theme-mapping.ts` — per-token light/dark/Nara theme resolver for `epilogos.colour.*`, consuming the [[OmniPanel]] theme-domain remap convention.
 - `ui-motion-tokens.{json,ts,md}` — canonical profile-tick-derived motion grammar (`epilogos.motion.*` namespace) with W3C-shape JSON, typed exports, reduced-motion durations, and single profile-tick subscription law.
 - `ui-typography.{ts,md}` — named typography token → Theia CSS-variable contract.
 - `ui-foundation-principles.md`, `ui-composition-rules.md` — normative M' surface principles + composition-over-juxtaposition rules for integrated plugins.
@@ -21,7 +22,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M1
 ## Local Contracts
 - The preflight contract pairs above (JSON = machine-readable authority, MD = human-readable narrative).
 - `readiness-state-grammar.{json,md}` — machine/human authority for readiness-state UX responses and render-time flavours.
-- The UI token/colour-token/motion-token/typography/composition/foundation rule docs above (binding `epilogos.*` surface).
+- The UI token/colour-token/theme-mapping/motion-token/typography/composition/foundation rule docs above (binding `epilogos.*` surface).
 - Owning specs: [[M'-SYSTEM-SPEC]] and the per-coordinate M' specs; UI lineage [[THEIA-UI-PATTERNS-ARCHITECTURE]].
 
 ## Work Guidance

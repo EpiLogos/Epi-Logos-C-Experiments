@@ -80,6 +80,9 @@ const {
 const {
     Arch9CompletionPanel
 } = require('../m0-anuttara/lib/browser/panels/syntax-layers/arch9-completion-panel.js');
+const {
+    LanguageLayerPanel
+} = require('../m0-anuttara/lib/browser/panels/language-layer-panel.js');
 
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
@@ -237,6 +240,45 @@ test('per-layer readiness distinguishes canonical fields from bridged routes', (
     assert.equal(model.layerReadiness.pedagogy, 'bridged_public');
 });
 
+test('Language-Layer Reader projects seven canonical c_1 fields as canonical', () => {
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: {
+            coordinate: 'M0',
+            properties: {
+                c_1_symbol: '0/1',
+                c_1_formulation_type: 'prior-ground-boundary',
+                c_1_complete_formulation: 'Anuttara as the prior 0/1 ground received by M1.',
+                c_1_form: 'vowel-seed',
+                c_1_formulation_breakdown: 'prior | ground | received',
+                c_1_primary_designation: 'Anuttara',
+                c_1_name: 'M0 Anuttara'
+            }
+        },
+        profile: null,
+        readiness,
+        context
+    });
+
+    assert.deepEqual(
+        model.languageFields.map(field => field.key),
+        [
+            'c_1_symbol',
+            'c_1_formulation_type',
+            'c_1_complete_formulation',
+            'c_1_form',
+            'c_1_formulation_breakdown',
+            'c_1_primary_designation',
+            'c_1_name'
+        ]
+    );
+    assert.equal(model.languageFields.length, 7);
+    for (const field of model.languageFields) {
+        assert.equal(field.state, 'canonical');
+        assert.match(field.provenance, /c_1_/);
+    }
+});
+
 test('layer readiness treats aliases and missing payloads as canonical absence or blockers', () => {
     const aliasOnly = buildM0InspectorModel({
         selectedInput: '#0',
@@ -253,7 +295,15 @@ test('layer readiness treats aliases and missing payloads as canonical absence o
         context
     });
 
-    assert.equal(aliasOnly.languageFields.find(field => field.key === 'symbol')?.state, 'canonical');
+    assert.equal(aliasOnly.languageFields.find(field => field.key === 'c_1_symbol')?.state, 'derived');
+    assert.equal(
+        aliasOnly.languageFields.find(field => field.key === 'c_1_formulation_type')?.state,
+        'derived'
+    );
+    assert.equal(
+        aliasOnly.languageFields.find(field => field.key === 'c_1_complete_formulation')?.state,
+        'derived'
+    );
     assert.equal(aliasOnly.layerReadiness.language, 'canonical_absent');
     assert.equal(aliasOnly.layerReadiness['time-community'], 'blocked');
     assert.equal(noPayload.layerReadiness.language, 'canonical_absent');
@@ -335,13 +385,26 @@ test('cross-layout intent with relations target opens M0 widget and activates re
 test('missing Anuttara syntax fields render as canonical absence, not placeholders', () => {
     const sparse = buildM0InspectorModel({
         selectedInput: '#0',
-        graphNode: { coordinate: 'M0', properties: { c_0_family: 'anuttara' } },
+        graphNode: {
+            coordinate: 'M0',
+            properties: {
+                c_0_family: 'anuttara',
+                c_1_symbol: '0/1',
+                c_1_formulation_type: 'prior-ground-boundary'
+            }
+        },
         profile: null,
         readiness,
         context
     });
 
-    for (const field of sparse.languageFields) {
+    assert.equal(sparse.languageFields.length, 7);
+    assert.equal(sparse.languageFields.filter(field => field.state === 'canonical').length, 2);
+    assert.equal(
+        sparse.languageFields.filter(field => field.state === 'canonical_absent').length,
+        5
+    );
+    for (const field of sparse.languageFields.filter(field => field.state === 'canonical_absent')) {
         assert.equal(field.value, null);
         assert.equal(field.state, 'canonical_absent');
         assert.match(field.provenance, /Canonical absence/);
@@ -388,15 +451,72 @@ test('Anuttara asset handles render with explicit DR-M0-4 provenance state', () 
         readiness,
         context
     });
-    const assetField = model.languageFields.find(field => field.key === 'c_1_asset_uri');
 
-    assert.ok(assetField);
-    assert.equal(assetField.state, 'review_pending');
-    assert.match(assetField.value, /decan-seal/);
-    assert.match(assetField.value, /vault:\/\/Idea\/Bimba\/Map\/assets\/decan-seals\/aries-01\.png/);
-    assert.match(assetField.value, /ipfs:\/\/bafybeigdyrztdecanseal/);
-    assert.match(assetField.provenance, /DR-M0-4/);
-    assert.match(assetField.provenance, /c_1_asset_uri/);
+    assert.equal(model.languageFields.some(field => field.key === 'c_1_asset_uri'), false);
+    assert.equal(model.assetHandles.length, 2);
+    assert.deepEqual(
+        model.assetHandles.map(handle => handle.uri),
+        [
+            'vault://Idea/Bimba/Map/assets/decan-seals/aries-01.png',
+            'ipfs://bafybeigdyrztdecanseal'
+        ]
+    );
+    assert.deepEqual(
+        model.assetHandles.map(handle => handle.kind),
+        ['seal', 'seal']
+    );
+    assert.deepEqual(
+        model.assetHandles.map(handle => handle.state),
+        ['canonical', 'canonical']
+    );
+});
+
+test('Anuttara asset handles expose a canonical-absence placeholder when no URI is present', () => {
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: { coordinate: 'M0', properties: { c_1_asset_kind: 'image' } },
+        profile: null,
+        readiness,
+        context
+    });
+
+    assert.equal(model.assetHandles.length, 1);
+    assert.equal(model.assetHandles[0].uri, '');
+    assert.equal(model.assetHandles[0].kind, 'image');
+    assert.equal(model.assetHandles[0].state, 'canonical_absent');
+});
+
+test('LanguageLayerPanel renders fields and asset handles with provenance states', () => {
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: {
+            coordinate: 'M0',
+            properties: {
+                c_1_symbol: '0/1',
+                c_1_formulation_type: 'prior-ground-boundary',
+                c_1_complete_formulation: 'Anuttara as the prior 0/1 ground received by M1.',
+                c_1_form: 'vowel-seed',
+                c_1_formulation_breakdown: 'prior | ground | received',
+                c_1_primary_designation: 'Anuttara',
+                c_1_name: 'M0 Anuttara',
+                c_1_asset_uri: ['vault://Idea/Bimba/Map/assets/decan-seals/aries-01.png'],
+                c_1_asset_kind: 'seal'
+            }
+        },
+        profile: null,
+        readiness,
+        context
+    });
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(LanguageLayerPanel, { model })
+    );
+
+    assert.match(markup, /<dl class="m0-language-layer-fields">/);
+    assert.match(markup, /data-language-field-key="c_1_form"/);
+    assert.match(markup, /data-provenance-state="canonical"/);
+    assert.match(markup, /class="m0-language-layer-assets"/);
+    assert.match(markup, /data-asset-kind="seal"/);
+    assert.match(markup, /class="m0-language-layer-asset-expanded"/);
 });
 
 test('OWL SHACL GDS facts preserve inferred/review-pending/blocked status', () => {

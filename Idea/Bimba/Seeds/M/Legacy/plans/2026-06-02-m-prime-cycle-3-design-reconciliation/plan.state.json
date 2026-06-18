@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T13:15:03.367Z",
+  "updatedAt": "2026-06-18T18:48:04.483Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3438,11 +3438,16 @@
       "worktree": null
     },
     "21.T21.2": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T18:48:04.416Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T18:48:04.416Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T18:48:04.416Z",
+          "text": "41 m0-anuttara tests pass; build passes; key files: Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts, Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/language-layer-panel.tsx"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,

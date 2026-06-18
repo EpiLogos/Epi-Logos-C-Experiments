@@ -28,6 +28,22 @@ describe("Sophia synthesis opens, not closes", () => {
     assert.match(r.error!, /Sophia's-error|opens|hoard|close/i);
   });
 
+  it("assertOpens refuses zero-opens-questions q_proposal", () => {
+    const s = synthesize({
+      insight: "S3 integration template wants a sharper q facet",
+      opensQuestions: ["Which gateway crossings still need a return path?"],
+    });
+    const r = assertOpens({
+      ...s,
+      q_proposals: [{
+        q_key: "q_5_integration_template",
+        opens_questions: [],
+      }],
+    });
+    assert.equal(r.ok, false);
+    assert.match(r.error!, /q_proposal|opens_questions|hoard/i);
+  });
+
   it("requires a non-empty insight", () => {
     assert.throws(() => synthesize({ insight: "", opensQuestions: ["q"] }), /non-empty/);
   });

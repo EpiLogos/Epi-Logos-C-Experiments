@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T184232Z-21-T21.2",
+  "taskId": "21.T21.2",
+  "startedAt": "2026-06-18T18:42:32.569Z",
+  "owner": "codex-m-dev-21-t21-2",
+  "leaseExpiresAt": "2026-06-18T20:42:32.569Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.2",
+    "trackId": "21",
+    "tranche": "T21.2",
+    "title": "Language-Layer Reader panel (M0-0')",
+    "effort": "M0-0'",
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.19"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/language-layer-panel.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

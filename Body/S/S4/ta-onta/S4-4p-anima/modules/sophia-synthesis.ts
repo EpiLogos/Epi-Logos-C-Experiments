@@ -21,6 +21,7 @@
 // Pure: imports only the roster constant. Importable by carrier tests.
 
 import { AGENT_CF } from "./dispatch-validate.ts";
+import type { QProposal } from "./sophia-hook.ts";
 
 export const SOPHIA_CF = AGENT_CF.sophia; // "(5/0)"
 
@@ -35,6 +36,8 @@ export interface Synthesis {
   round: number;
   /** The prior round's questions that seeded this synthesis, if any. */
   seededBy?: string[];
+  /** Candidate q_ refinements born from this synthesis, never canon writes. */
+  q_proposals?: Array<Pick<QProposal, "q_key" | "opens_questions">>;
 }
 
 export interface GuardResult {
@@ -69,6 +72,39 @@ export function assertOpens(s: Synthesis): GuardResult {
       error:
         "Sophia's-error guard: synthesis closes rather than opens — a P5' insight must generate at least one P0' question.",
     };
+  }
+  for (const proposal of s.q_proposals ?? []) {
+    if (!proposal.opens_questions || proposal.opens_questions.length === 0) {
+      return {
+        ok: false,
+        error:
+          `Sophia's-error guard: q_proposal ${proposal.q_key} carries no opens_questions — proposal synthesis would hoard rather than open.`,
+      };
+    }
+  }
+  return { ok: true };
+}
+
+export function assertPromotionOpens(input: {
+  label?: string;
+  opens_questions?: string[];
+  q_proposals?: Array<Pick<QProposal, "q_key" | "opens_questions">>;
+}): GuardResult {
+  if (!input.opens_questions || input.opens_questions.length === 0) {
+    return {
+      ok: false,
+      error:
+        `${input.label ?? "aletheia_session_promote"} refused: promoted observation must carry at least one opens_questions entry.`,
+    };
+  }
+  for (const proposal of input.q_proposals ?? []) {
+    if (!proposal.opens_questions || proposal.opens_questions.length === 0) {
+      return {
+        ok: false,
+        error:
+          `${input.label ?? "aletheia_session_promote"} refused: q_proposal ${proposal.q_key} carries no opens_questions.`,
+      };
+    }
   }
   return { ok: true };
 }

@@ -73,6 +73,12 @@ export interface M0ProvenancedField {
     readonly provenance: string;
 }
 
+export interface M0AssetHandle {
+    readonly uri: string;
+    readonly kind: 'image' | 'sigil' | 'glyph' | 'seal' | 'tarot' | 'audio' | 'document';
+    readonly state: M0ProvenanceState;
+}
+
 export interface M0GraphReadinessFact {
     readonly id: string;
     readonly label: string;
@@ -163,6 +169,7 @@ export interface M0InspectorModel {
     readonly layerViews: readonly M0LayerView[];
     readonly layerRoutes: readonly M0LayerRoute[];
     readonly languageFields: readonly M0ProvenancedField[];
+    readonly assetHandles: readonly M0AssetHandle[];
     readonly anchors: readonly M0ProvenancedField[];
     readonly pointerSummary: M0ProvenancedField;
     readonly relationFamilies: readonly M0ProvenancedField[];
@@ -273,22 +280,8 @@ export function buildM0InspectorModel(input: {
         layerReadiness: layerReadiness(input.graphNode, properties, input.profile?.payload),
         layerViews: M0_LAYER_VIEWS,
         layerRoutes: Object.freeze(layerRoutes(coordinate, input)),
-        languageFields: Object.freeze([
-            field('symbol', 'Symbol', properties?.symbol, 'canonical_absent'),
-            field(
-                'formulation_type',
-                'Formulation type',
-                properties?.formulation_type,
-                'canonical_absent'
-            ),
-            field(
-                'complete_formulation',
-                'Complete formulation',
-                properties?.complete_formulation,
-                'canonical_absent'
-            ),
-            assetHandleField(properties)
-        ]),
+        languageFields: Object.freeze(languageFields(properties)),
+        assetHandles: Object.freeze(assetHandles(properties)),
         anchors: Object.freeze(anchorFields(input.graphNode?.anchors ?? properties?.anchors)),
         pointerSummary: pointerField(input.graphNode, properties, input.profile ?? null),
         relationFamilies: Object.freeze(relationFamilyFields(input.graphNode, properties)),
@@ -628,21 +621,141 @@ function field(
     });
 }
 
-function assetHandleField(
-    properties: Record<string, unknown> | undefined
+const M0_LANGUAGE_FIELD_SPECS: readonly Readonly<{
+    readonly key: string;
+    readonly label: string;
+    readonly aliases: readonly string[];
+}>[] = Object.freeze([
+    { key: 'c_1_symbol', label: 'Symbol', aliases: Object.freeze(['symbol']) },
+    {
+        key: 'c_1_formulation_type',
+        label: 'Formulation type',
+        aliases: Object.freeze(['formulation_type'])
+    },
+    {
+        key: 'c_1_complete_formulation',
+        label: 'Complete formulation',
+        aliases: Object.freeze(['complete_formulation'])
+    },
+    { key: 'c_1_form', label: 'Form', aliases: Object.freeze(['form']) },
+    {
+        key: 'c_1_formulation_breakdown',
+        label: 'Formulation breakdown',
+        aliases: Object.freeze(['formulation_breakdown'])
+    },
+    {
+        key: 'c_1_primary_designation',
+        label: 'Primary designation',
+        aliases: Object.freeze(['primary_designation'])
+    },
+    { key: 'c_1_name', label: 'Name', aliases: Object.freeze(['name']) }
+]);
+
+function languageFields(properties: Record<string, unknown> | undefined): M0ProvenancedField[] {
+    return M0_LANGUAGE_FIELD_SPECS.map(spec =>
+        canonicalLanguageField(spec.key, spec.label, properties, spec.aliases)
+    );
+}
+
+function canonicalLanguageField(
+    key: string,
+    label: string,
+    properties: Record<string, unknown> | undefined,
+    aliases: readonly string[]
 ): M0ProvenancedField {
-    const uris = stringListValue(properties?.c_1_asset_uri ?? properties?.asset_uri);
-    const kind = stringValue(properties?.c_1_asset_kind ?? properties?.asset_kind);
-    const value = uris.length ? [kind, uris.join(', ')].filter(Boolean).join(': ') : null;
+    const canonical = stringValue(properties?.[key]);
+    if (canonical) {
+        return Object.freeze({
+            key,
+            label,
+            value: canonical,
+            state: 'canonical' as const,
+            provenance: `S2 graph payload property ${key}`
+        });
+    }
+
+    for (const alias of aliases) {
+        const derived = stringValue(properties?.[alias]);
+        if (derived) {
+            return Object.freeze({
+                key,
+                label,
+                value: derived,
+                state: 'derived' as const,
+                provenance: `Derived from legacy alias ${alias}; canonical ${key} absent from S2 graph payload`
+            });
+        }
+    }
+
     return Object.freeze({
-        key: 'c_1_asset_uri',
-        label: 'Asset handles',
-        value,
-        state: value ? 'review_pending' : 'canonical_absent',
-        provenance: value
-            ? 'Candidate DR-M0-4 S2 graph payload property c_1_asset_uri with c_1_asset_kind; user final-validation pending'
-            : 'Canonical absence from S2 graph payload; not a client extraction failure'
+        key,
+        label,
+        value: null,
+        state: 'canonical_absent' as const,
+        provenance: `Canonical absence of ${key} from S2 graph payload; not a client extraction failure`
     });
+}
+
+function assetHandles(properties: Record<string, unknown> | undefined): M0AssetHandle[] {
+    const canonicalUris = stringListValue(properties?.c_1_asset_uri);
+    const aliasUris = canonicalUris.length ? [] : stringListValue(properties?.asset_uri);
+    const uris = canonicalUris.length ? canonicalUris : aliasUris;
+    const kind =
+        assetKindValue(properties?.c_1_asset_kind) ??
+        assetKindValue(properties?.asset_kind) ??
+        'document';
+    const state: M0ProvenanceState = canonicalUris.length
+        ? 'canonical'
+        : aliasUris.length
+          ? 'derived'
+          : 'canonical_absent';
+
+    if (!uris.length) {
+        return [
+            Object.freeze({
+                uri: '',
+                kind,
+                state
+            })
+        ];
+    }
+
+    return uris.map(uri =>
+        Object.freeze({
+            uri,
+            kind,
+            state
+        })
+    );
+}
+
+function assetKindValue(raw: unknown): M0AssetHandle['kind'] | null {
+    const value = stringValue(raw)?.toLowerCase().replace(/_/g, '-');
+    if (!value) {
+        return null;
+    }
+    if (value === 'image') {
+        return 'image';
+    }
+    if (value === 'sigil') {
+        return 'sigil';
+    }
+    if (value === 'glyph') {
+        return 'glyph';
+    }
+    if (value === 'seal' || value.endsWith('-seal')) {
+        return 'seal';
+    }
+    if (value === 'tarot' || value.endsWith('-tarot')) {
+        return 'tarot';
+    }
+    if (value === 'audio') {
+        return 'audio';
+    }
+    if (value === 'document' || value === 'doc') {
+        return 'document';
+    }
+    return 'document';
 }
 
 function anchorFields(raw: unknown): M0ProvenancedField[] {

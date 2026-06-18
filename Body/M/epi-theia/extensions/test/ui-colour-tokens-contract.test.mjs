@@ -13,6 +13,7 @@ const contractsRoot = resolve(repoRoot, 'Body/M/epi-theia/extensions/contracts')
 const tokensJsonPath = resolve(contractsRoot, 'ui-colour-tokens.json');
 const tokensTsPath = resolve(contractsRoot, 'ui-colour-tokens.ts');
 const tokensMdPath = resolve(contractsRoot, 'ui-colour-tokens.md');
+const themeMappingTsPath = resolve(contractsRoot, 'ui-theme-mapping.ts');
 
 const EXPECTED_GROUPS = Object.freeze([
     'family',
@@ -121,6 +122,91 @@ test('canonical UI colour token contract files exist', () => {
     assert.equal(existsSync(tokensJsonPath), true);
     assert.equal(existsSync(tokensTsPath), true);
     assert.equal(existsSync(tokensMdPath), true);
+});
+
+test('theme mapping contract resolves every colour token for all canonical themes', () => {
+    const mapping = loadTypescriptModule(themeMappingTsPath);
+    const flattened = flattenTokens(readJson());
+    for (const tokenId of Object.keys(flattened)) {
+        for (const theme of ['dark', 'light', 'glass', 'discause', 'nara-dark', 'nara-light', 'nara-glass']) {
+            assert.match(
+                mapping.resolveToken(tokenId, theme, 'm4'),
+                /^#[0-9a-fA-F]{6}$/,
+                `${tokenId} resolves for ${theme}`
+            );
+        }
+    }
+});
+
+test('theme mapping preserves Cl(4,2) cool and warm polarity across canonical themes', () => {
+    const mapping = loadTypescriptModule(themeMappingTsPath);
+    const coolTokens = [
+        'epilogos.colour.signature.cool',
+        'epilogos.colour.psyche-facet.nous'
+    ];
+    const warmTokens = [
+        'epilogos.colour.signature.warm',
+        'epilogos.colour.flow.mahamaya_gold',
+        'epilogos.colour.psyche-facet.sophia',
+        'epilogos.colour.psyche-facet.mythos'
+    ];
+
+    for (const theme of ['dark', 'light', 'glass', 'discause', 'nara-dark', 'nara-light', 'nara-glass']) {
+        for (const tokenId of coolTokens) {
+            assert.equal(hueBand(mapping.resolveToken(tokenId, theme, 'm4')), 'cool', `${tokenId} ${theme}`);
+        }
+        for (const tokenId of warmTokens) {
+            assert.equal(hueBand(mapping.resolveToken(tokenId, theme, 'm4')), 'warm', `${tokenId} ${theme}`);
+        }
+    }
+});
+
+test('theme mapping applies nara-domain warmth only to M4 M-tier and privacy tokens', () => {
+    const mapping = loadTypescriptModule(themeMappingTsPath);
+    const flattened = flattenTokens(readJson());
+    const mTierToken = 'epilogos.colour.family.m.4';
+    const privacyToken = 'epilogos.colour.privacy.protected_local';
+    const coolToken = 'epilogos.colour.signature.cool';
+
+    assert.equal(
+        mapping.resolveToken(mTierToken, 'nara-light', 'm4'),
+        flattened[mTierToken].$value['nara-light']
+    );
+    assert.equal(
+        mapping.resolveToken(privacyToken, 'nara-dark', 'm4'),
+        flattened[privacyToken].$value['nara-dark']
+    );
+    assert.equal(
+        mapping.resolveToken(mTierToken, 'nara-light', 'm3'),
+        flattened[mTierToken].$value.light
+    );
+    assert.equal(
+        mapping.resolveToken(coolToken, 'nara-dark', 'm4'),
+        flattened[coolToken].$value.dark
+    );
+});
+
+test('theme mapping honours legacy nara theme aliases through resolveThemeForDomain', () => {
+    const mapping = loadTypescriptModule(themeMappingTsPath);
+    const flattened = flattenTokens(readJson());
+    const tokenId = 'epilogos.colour.family.m.5';
+
+    assert.equal(
+        mapping.resolveToken(tokenId, 'nara-forest', 'm4'),
+        flattened[tokenId].$value['nara-dark']
+    );
+    assert.equal(
+        mapping.resolveToken(tokenId, 'nara-mist', 'm4'),
+        flattened[tokenId].$value['nara-light']
+    );
+    assert.equal(
+        mapping.resolveToken(tokenId, 'nara-grove', 'm4'),
+        flattened[tokenId].$value['nara-glass']
+    );
+    assert.equal(
+        mapping.resolveToken(tokenId, 'nara-forest', 'm3'),
+        flattened[tokenId].$value.dark
+    );
 });
 
 test('JSON colour token bundle has exactly the eleven coordinate-derived namespaces', () => {
@@ -244,7 +330,13 @@ function flattenTokens(node, prefix = '') {
     ));
 }
 
-function loadTypescriptModule(filePath) {
+function loadTypescriptModule(filePath, moduleCache = new Map()) {
+    const normalizedPath = resolve(filePath);
+    const cached = moduleCache.get(normalizedPath);
+    if (cached) {
+        return cached.exports;
+    }
+
     const source = readFileSync(filePath, 'utf8');
     const transpiled = ts.transpileModule(source, {
         compilerOptions: {
@@ -258,10 +350,29 @@ function loadTypescriptModule(filePath) {
     assert.deepEqual(transpiled.diagnostics ?? [], []);
 
     const module = { exports: {} };
+    moduleCache.set(normalizedPath, module);
+    const localRequire = (specifier) => {
+        if (specifier.startsWith('.') || specifier.startsWith('/')) {
+            const basePath = specifier.startsWith('.')
+                ? resolve(dirname(normalizedPath), specifier)
+                : specifier;
+            for (const candidate of [basePath, `${basePath}.ts`, resolve(basePath, 'index.ts')]) {
+                if (existsSync(candidate) && candidate.endsWith('.ts')) {
+                    return loadTypescriptModule(candidate, moduleCache);
+                }
+            }
+            for (const candidate of [basePath, `${basePath}.js`, resolve(basePath, 'index.js')]) {
+                if (existsSync(candidate)) {
+                    return require(candidate);
+                }
+            }
+        }
+        return require(specifier);
+    };
     vm.runInNewContext(transpiled.outputText, {
         exports: module.exports,
         module,
-        require,
+        require: localRequire,
         console
     });
     return module.exports;

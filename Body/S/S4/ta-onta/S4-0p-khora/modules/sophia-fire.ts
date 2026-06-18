@@ -18,6 +18,7 @@ import { join } from "node:path";
 import {
   buildSophiaDisclosure,
   type ClosureKind,
+  type QProposal,
 } from "../../S4-4p-anima/modules/sophia-hook.ts";
 import {
   isValidVakAddress,
@@ -28,6 +29,7 @@ import { rehearPhaseVakAddress } from "./z-phase-vak.ts";
 export interface PendingSophia {
   artifacts: string[];
   improvement_vectors: string[];
+  q_proposals: QProposal[];
 }
 
 /**
@@ -53,8 +55,9 @@ export function recordPendingSophia(
   sessionId: string,
   artifacts: string[],
   improvement_vectors: string[],
+  q_proposals: QProposal[] = [],
 ): void {
-  _pendingSophia.set(sessionId, { artifacts, improvement_vectors });
+  _pendingSophia.set(sessionId, { artifacts, improvement_vectors, q_proposals });
 }
 
 /**
@@ -72,9 +75,10 @@ export function consumePendingSophia(sessionId: string): ConsumedSophia {
       had_pending: true,
       artifacts: pending.artifacts,
       improvement_vectors: pending.improvement_vectors,
+      q_proposals: pending.q_proposals,
     };
   }
-  return { had_pending: false, artifacts: [], improvement_vectors: [] };
+  return { had_pending: false, artifacts: [], improvement_vectors: [], q_proposals: [] };
 }
 
 /** Test-only: peek without consuming. */
@@ -118,6 +122,7 @@ export function fireSophiaDisclosure(input: {
   artifacts: string[];
   improvement_vectors: string[];
   closure_kind: ClosureKind;
+  q_proposals?: QProposal[];
 }): { ok: true; path: string } | { ok: false; reason: string } {
   if (!input.session_id || !input.day_id) {
     return { ok: false, reason: "no session_id or day_id (session not initialised)" };
@@ -136,6 +141,7 @@ export function fireSophiaDisclosure(input: {
     artifacts: input.artifacts,
     improvement_vectors: input.improvement_vectors,
     closure_kind: input.closure_kind,
+    q_proposals: input.q_proposals ?? [],
   });
 
   const vaultRoot = process.env.EPILOGOS_VAULT;

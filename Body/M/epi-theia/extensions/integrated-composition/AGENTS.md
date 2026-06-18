@@ -8,7 +8,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (consumers: [[INTEGRA
 - `src/common/index.ts` — package public surface (re-exports all `common/` modules + browser helpers); compiled to `lib/common/index.js` (`main`).
 - `src/common/layout-claim.ts` — `IntegratedLayoutSlot` types + LayoutClaim contract; `composition-coordinator.ts` — claim arbitration (singleton/multi slots, geometric protection).
 - `src/common/integrated-state.ts` + `state-coordinator.ts` — immutable `IntegratedViewState` snapshot + coordinator both plugins consume.
-- `src/common/integrated-readiness.ts` — typed `IntegratedReadiness` envelope, geometric-slot readiness folding, and composition blocker ledger consumed by the integrated plugins.
+- `src/common/integrated-readiness.ts` — typed `IntegratedReadiness` envelope, geometric-slot readiness folding, and composition blocker ledger consumed by the integrated plugins; `composition-load.ts` — mount-time composition loader that hard-rejects juxtaposition/raw-body violations and returns graceful readiness degradation for runtime blockers.
 - `src/common/empty-state.ts` + `src/browser/integrated-empty-state.tsx` — degraded empty-state contract/component (08.T1 step 3).
 - `src/common/profile-tick-subscription.ts` + `src/browser/composition-profile-context.tsx` — composition-scoped profile tick subscription primitive, React provider, and hook for the single-clock invariant shared by both integrated plugins.
 - `src/common/{evidence-*,release-gate,recursive-self-review-gate,epii-review-*,consent-gate,privacy-scrubber,workspace-persistence}.ts` — evidence envelopes, release gate, S5 self-review, consent/privacy, persistence.

@@ -26,6 +26,7 @@ import type { M0CrossLayoutIntentPayload, M0Phase } from '../common/cross-layout
 import { projectM0CrossLayoutIntentState } from '../common/cross-layout-intent';
 import { M0ModeToggle } from './components/mode-toggle';
 import { LazyNodeBrowserPanel } from './panels/lazy-node-browser-panel';
+import { LanguageLayerPanel } from './panels/language-layer-panel';
 
 type M0LanguageSubtab = 'route' | 'lazy-browser';
 
@@ -217,19 +218,7 @@ export class M0AnuttaraWidget extends ReactWidget {
                         )
                     ) : null}
                 </section>
-                <section className="mext-widget-detail">
-                    <h3>Anuttara syntax fields</h3>
-                    <dl>
-                        {model.languageFields.map(field => (
-                            <React.Fragment key={field.key}>
-                                <dt>{field.label}</dt>
-                                <dd data-provenance-state={field.state}>
-                                    {field.value ?? field.provenance}
-                                </dd>
-                            </React.Fragment>
-                        ))}
-                    </dl>
-                </section>
+                <LanguageLayerPanel model={model} />
                 <section className="mext-widget-detail">
                     <h3>S2 provenance and graph readiness</h3>
                     <dl>

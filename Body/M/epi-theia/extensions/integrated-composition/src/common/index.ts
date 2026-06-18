@@ -1,6 +1,11 @@
 export * from './commands';
 export * from './layout-claim';
-export * from './composition-coordinator';
+export { CompositionCoordinator } from './composition-coordinator';
+export type {
+    CompositionLoadResult as LegacyCompositionLoadResult,
+    CompositionLoadStatus
+} from './composition-coordinator';
+export * from './composition-load';
 export * from './empty-state';
 export * from './integrated-state';
 export * from './state-coordinator';
