@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T20:24:46.304Z",
+  "updatedAt": "2026-06-18T20:27:08.309Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -8111,11 +8111,16 @@
       "worktree": null
     },
     "41.T41.4": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T20:27:08.223Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T20:27:08.223Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T20:27:08.223Z",
+          "text": "Claude Opus: agent-registry.ts (413 loc), vama-shakti-dialogue-only.test.ts (249 loc), capability-matrix.json (39 loc) — DialogueOnlyCapabilityProfile, registerVamaShakti, dispatch-guard"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
