@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T190247Z-12-T12.27",
+  "taskId": "12.T12.27",
+  "startedAt": "2026-06-18T19:02:47.696Z",
+  "owner": "codex-m-dev-12-t12-27",
+  "leaseExpiresAt": "2026-06-18T21:02:47.696Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.27",
+    "trackId": "12",
+    "tranche": "T12.27",
+    "title": "Eros spec rectification: relational operator restoration",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.26"
+    ],
+    "writeScopes": [
+      "Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/eros.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

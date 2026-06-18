@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:00:13.313Z",
+  "updatedAt": "2026-06-18T19:04:40.770Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3728,16 +3728,16 @@
       "worktree": null
     },
     "21.T21.20": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:03:37.689Z",
+      "claimedAt": "2026-06-18T19:03:37.689Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-21-t21-20",
+      "leaseExpiresAt": "2026-06-18T21:03:37.689Z",
+      "heartbeatAt": "2026-06-18T19:03:37.689Z",
+      "runId": "20260618T190337Z-21-T21.20",
       "worktree": null
     },
     "22.T22.1": {
@@ -6809,16 +6809,16 @@
       "worktree": null
     },
     "25.T25.21": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:03:15.742Z",
+      "claimedAt": "2026-06-18T19:03:15.742Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-25-t25-21",
+      "leaseExpiresAt": "2026-06-18T21:03:15.742Z",
+      "heartbeatAt": "2026-06-18T19:03:15.742Z",
+      "runId": "20260618T190315Z-25-T25.21",
       "worktree": null
     },
     "29.T29.1": {
@@ -7715,16 +7715,21 @@
       "worktree": null
     },
     "12.T12.27": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-18T19:04:40.695Z",
+      "claimedAt": "2026-06-18T19:02:47.696Z",
+      "completedAt": "2026-06-18T19:04:40.695Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:04:40.695Z",
+          "text": "3 grep verifications passed and git diff --check passed; updated Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/eros.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-12-t12-27",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T19:02:47.696Z",
+      "runId": "20260618T190247Z-12-T12.27",
       "worktree": null
     },
     "12.T12.28": {
@@ -8110,14 +8115,19 @@
       "worktree": null
     },
     "41.T41.11": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T18:50:32.504Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:04:21.321Z",
       "claimedAt": "2026-06-18T18:50:32.504Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:04:21.321Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:04:21.321Z",
+          "text": "3 pytest arena_promotion tests passed; 2 Rust nara::arena tests passed; greps verified arena-promotion/vama_shakti_class integration in Body/S/S4/ta-onta/S4-1p-hen/extension.ts and Track 40 ledger; key files: Body/S/S5/epi-gnostic/epi_gnostic/arena_promotion.py, Body/S/S0/epi-cli/src/nara/arena.rs"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-41-t41-11",
-      "leaseExpiresAt": "2026-06-18T20:50:32.504Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T18:50:32.504Z",
       "runId": "20260618T185032Z-41-T41.11",
       "worktree": null
@@ -10586,11 +10596,12 @@
     {
       "runId": "20260618T185032Z-41-T41.11",
       "taskId": "41.T41.11",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T18:50:32.504Z",
       "owner": "codex-m-dev-41-t41-11",
       "leaseExpiresAt": "2026-06-18T20:50:32.504Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:04:21.321Z"
     },
     {
       "runId": "20260618T185311Z-25-T25.20",
@@ -10611,16 +10622,44 @@
       "leaseExpiresAt": "2026-06-18T20:53:14.539Z",
       "worktree": null,
       "completedAt": "2026-06-18T18:55:40.207Z"
+    },
+    {
+      "runId": "20260618T190247Z-12-T12.27",
+      "taskId": "12.T12.27",
+      "status": "done",
+      "startedAt": "2026-06-18T19:02:47.696Z",
+      "owner": "codex-m-dev-12-t12-27",
+      "leaseExpiresAt": "2026-06-18T21:02:47.696Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T19:04:40.695Z"
+    },
+    {
+      "runId": "20260618T190315Z-25-T25.21",
+      "taskId": "25.T25.21",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:03:15.742Z",
+      "owner": "codex-m-dev-25-t25-21",
+      "leaseExpiresAt": "2026-06-18T21:03:15.742Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260618T190337Z-21-T21.20",
+      "taskId": "21.T21.20",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:03:37.689Z",
+      "owner": "codex-m-dev-21-t21-20",
+      "leaseExpiresAt": "2026-06-18T21:03:37.689Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T18:52:58.304Z",
-    "updatedAt": "2026-06-18T18:52:58.304Z",
+    "createdAt": "2026-06-18T19:02:55.573Z",
+    "updatedAt": "2026-06-18T19:02:55.573Z",
     "taskIds": [
       "31.T31.13",
       "41.T41.11",
-      "12.T12.26",
+      "12.T12.27",
       "05.T5.3"
     ],
     "totalWeight": 8,
@@ -10629,7 +10668,7 @@
     "modeHints": {
       "31.T31.13": "in-session",
       "41.T41.11": "in-session",
-      "12.T12.26": "in-session",
+      "12.T12.27": "in-session",
       "05.T5.3": "in-session"
     },
     "rationale": [

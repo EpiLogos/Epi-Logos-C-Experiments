@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T190337Z-21-T21.20",
+  "taskId": "21.T21.20",
+  "startedAt": "2026-06-18T19:03:37.689Z",
+  "owner": "codex-m-dev-21-t21-20",
+  "leaseExpiresAt": "2026-06-18T21:03:37.689Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.20",
+    "trackId": "21",
+    "tranche": "T21.20",
+    "title": "Active-layer state persistence across `daily-0-1` ↔ `ide-deep` toggle",
+    "effort": null,
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.2"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

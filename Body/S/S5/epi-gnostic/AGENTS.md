@@ -7,7 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S5-SPEC]] / [[S5-ARCHITECTURE]]
 ## Ownership
 - `pyproject.toml` — package `epi-gnostic`; scripts `epi-gnostic` (`epi_gnostic.cli:main`) + `epi-graphiti` (`epi_gnostic.graphiti_service:main`).
 - `epi_gnostic/cli.py` — CLI entry (status/models/ingest/query/notebook/enrich), JSON stdout for Rust.
-- `epi_gnostic/{config.py, wrapper.py, storage/, enrichment/}` — config, RAG wrapper, Neo4j vector storage, cross-namespace enrichment.
+- `epi_gnostic/{config.py, wrapper.py, arena_promotion.py, storage/, enrichment/}` — config, RAG wrapper, arena-promotion proposal generation, Neo4j vector storage, cross-namespace enrichment.
 - `epi_gnostic/{graphiti_service.py, graphiti_config.py}` — Graphiti episodic-memory service; `Dockerfile.graphiti`.
 - `scripts/` — `enrich.py`, `migrate_bimba_embeddings.py` (768→3072 migration).
 - `cypher/` — bootstrap/relations/pointer Cypher; `tests/` — pytest suite; `schema-context.md` — graph schema notes.

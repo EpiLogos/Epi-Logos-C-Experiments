@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-18T19:00:13.311Z",
+  "generatedAt": "2026-06-18T19:04:40.767Z",
   "planFolder": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation",
   "tracks": [
     {
@@ -302,7 +302,7 @@
       "file": "40-bimba-canon-update-ledger.md",
       "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md",
       "title": "Track 40 — Bimba Canon Update Ledger",
-      "checksum": "8e807e854df62de64dfc79b410b4379d0d4d0e934c5a14e9317c42c3c78550bf"
+      "checksum": "1afdfbe8609bcdc573bdaa1d5b1c6a309e944c83e05681be6ff2dbcd674ce95d"
     },
     {
       "id": "41",
