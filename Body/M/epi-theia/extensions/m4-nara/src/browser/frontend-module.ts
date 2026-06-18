@@ -40,6 +40,10 @@ import { LogosCycleWidget } from './widgets/logos-cycle';
 import { AmbientStateStripWidget } from './widgets/ambient-state-strip';
 import { TuningBarWidget } from './widgets/tuning-bar';
 import { KairosDisplayWidget } from './widgets/kairos-display';
+import {
+    JournalEntriesSidebarWidget,
+    M4JournalEntriesContribution
+} from './widgets/journal-entries-sidebar';
 import { M4NaraWidget } from './m4-nara-widget';
 import {
     EXTENSION_ID,
@@ -400,6 +404,7 @@ export default new ContainerModule(bind => {
     bind(AmbientStateStripWidget).toSelf();
     bind(TuningBarWidget).toSelf();
     bind(KairosDisplayWidget).toSelf();
+    bind(JournalEntriesSidebarWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M4NaraWidget.ID,
@@ -436,6 +441,12 @@ export default new ContainerModule(bind => {
             createWidget: () => createKairosDisplayWidget(ctx.container)
         }))
         .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: JournalEntriesSidebarWidget.ID,
+            createWidget: () => createJournalEntriesSidebarWidget(ctx.container)
+        }))
+        .inSingletonScope();
     bindViewContribution(bind, M4NaraContribution);
     bind(FrontendApplicationContribution).toService(M4NaraContribution);
     bindViewContribution(bind, M4LensApplicationContribution);
@@ -448,6 +459,11 @@ export default new ContainerModule(bind => {
     bind(FrontendApplicationContribution).toService(M4TuningBarContribution);
     bindViewContribution(bind, M4KairosWheelContribution);
     bind(FrontendApplicationContribution).toService(M4KairosWheelContribution);
+
+    // Tranche 25.3 — Journal Entries activity-bar mode (daily-0-1 left slot).
+    bindViewContribution(bind, M4JournalEntriesContribution);
+    bind(FrontendApplicationContribution).toService(M4JournalEntriesContribution);
+    bind(CommandContribution).toService(M4JournalEntriesContribution);
 
     // Task 32.2 — PASU-absence detection orchestration. Registers the
     // m4.openPasuWizard command and the pre-stage-6 identity gate.
@@ -501,4 +517,10 @@ function createKairosDisplayWidget(container: interfaces.Container): KairosDispl
     const child = container.createChild();
     child.bind(KairosDisplayWidget).toSelf();
     return child.get(KairosDisplayWidget);
+}
+
+function createJournalEntriesSidebarWidget(container: interfaces.Container): JournalEntriesSidebarWidget {
+    const child = container.createChild();
+    child.bind(JournalEntriesSidebarWidget).toSelf();
+    return child.get(JournalEntriesSidebarWidget);
 }

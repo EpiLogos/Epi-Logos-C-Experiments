@@ -40,6 +40,19 @@ export const OPEN_COMMAND_ID = 'm4.openArtifact';
 export const READ_ONLY_COMMAND_ID = 'm4.openArtifact.readOnly';
 export const DEPOSIT_ONLY_COMMAND_ID = 'm4.openArtifact.depositOnly';
 export const ROUTE_PATH = '/m4-nara/artifact';
+
+/**
+ * Tranche 25.3 — Journal Entries activity-bar wiring (closes 15.3 ORPHAN).
+ *
+ * The `m4.nara.journalEntries` left-sidebar mode (composed via the
+ * `M4JournalTimelineCard` TRACK_08 export) renders a cross-day NOW.md timeline
+ * backed by the protected-local `nara.journal.timeline` gateway RPC. The mode is
+ * bound to the `daily-0-1` layout slot only; it is hidden under `ide-deep`.
+ */
+export const JOURNAL_ENTRIES_VIEW_ID = 'm4.nara.journalEntries';
+export const JOURNAL_TIMELINE_RPC_METHOD = 'nara.journal.timeline';
+export const JOURNAL_ENTRIES_ACTIVITY_BAR_SLOT = 'widget.application-shell-left';
+export const JOURNAL_ENTRIES_LAYOUT_SCOPE = 'daily-0-1';
 export const PRIVACY_CLASS = 'protected_local';
 export const OBSERVABILITY_EVENT_TYPES = ["m4.artifact.created","m4.privacy.blocked"] as const;
 export const DECLARED_BLOCKERS = ["Track 03 canonical Nara/Graphiti service path","Track 04 consent and review services","Protected-local M4 data cannot surface outside privacy-filtered bridge payloads"] as const;
