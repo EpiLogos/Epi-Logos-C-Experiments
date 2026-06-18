@@ -39,6 +39,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build && node --test ../test/m0-anuttara-inspector.test.mjs ../test/m0-anuttara-mode-toggle.test.mjs ../test/m0-anuttara-lazy-node-browser.test.mjs ../test/m0-anuttara-void-structure-ring.test.mjs ../test/m0-anuttara-parity-bridge-reader.test.mjs"
+    "test": "pnpm build && node --test ../test/m0-anuttara-inspector.test.mjs ../test/m0-anuttara-mode-toggle.test.mjs ../test/m0-anuttara-lazy-node-browser.test.mjs ../test/m0-anuttara-void-structure-ring.test.mjs ../test/m0-anuttara-parity-bridge-reader.test.mjs ../test/m0-anuttara-ql-structure-layer.test.mjs"
   }
 }

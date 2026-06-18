@@ -144,6 +144,15 @@ export interface M0ParityBridgeProjection {
     readonly state: M0ProvenanceState;
 }
 
+export interface QlStructureProjection {
+    readonly position: 0 | 1 | 2 | 3 | 4 | 5 | null;
+    readonly qlVariant: string | null;
+    readonly familyContainsParent: string | null;
+    readonly mirror: { readonly child: string | null; readonly inverse: string | null };
+    readonly anchoredTo: readonly string[];
+    readonly state: M0ProvenanceState;
+}
+
 export interface M0GatewayAction {
     readonly id: string;
     readonly label: string;
@@ -177,6 +186,7 @@ export interface M0InspectorModel {
     readonly communityClockOverlay: M0CommunityClockOverlay;
     readonly projectionLenses: readonly M0ProjectionLens[];
     readonly parityBridges: M0ParityBridgeProjection;
+    readonly qlStructure: QlStructureProjection;
     readonly routeTargets: readonly string[];
     readonly actions: readonly M0GatewayAction[];
     readonly pedagogy: {
@@ -289,6 +299,7 @@ export function buildM0InspectorModel(input: {
         communityClockOverlay: communityClockOverlay(coordinate, properties, input),
         projectionLenses: Object.freeze([atelierClusterLens()]),
         parityBridges: readM0ParityBridgeProjection(input.profile) ?? blockedParityBridgeProjection(),
+        qlStructure: readM0QlStructureProjection(input.graphNode),
         routeTargets: Object.freeze(['M1', 'M2', 'M3', 'M4', 'M5']),
         actions: Object.freeze(actions(coordinate, input)),
         pedagogy: Object.freeze({
@@ -470,6 +481,133 @@ function communityClockOverlay(
                 ? 'S2 GDS community + S3 active-now projections; renderer is read-only and does not compute time'
                 : 'provenance-state blocked until S2 GDS payload wired; renderer has no local clock'
     });
+}
+
+/** The three structural QL relation types the M0-1' reader traverses. */
+const M0_QL_STRUCTURAL_RELATION_TYPES = Object.freeze([
+    'FAMILY_CONTAINS',
+    'MIRROR_CHILDREN',
+    'ANCHORED_TO'
+] as const);
+
+/**
+ * QL-structure (M0-1') projection selector.
+ *
+ * Reads the canonical `c_1_ql_position` / `c_1_ql_variant` properties plus the
+ * structural relation field from the same `s2.graph.node` payload the other M0'
+ * layers consume. Relation traversal is filtered by the Track 01.9
+ * `c_1_relation_family` discriminator so correspondential edges never collapse
+ * into the structural FAMILY_CONTAINS / MIRROR_CHILDREN / ANCHORED_TO reading.
+ */
+export function readM0QlStructureProjection(
+    node: M0GraphNodePayload | null | undefined
+): QlStructureProjection {
+    const properties = objectValue(node?.properties);
+    const position = qlPositionValue(properties?.c_1_ql_position);
+    const qlVariant = stringValue(properties?.c_1_ql_variant);
+
+    const structuralRelations = arrayValue(node?.relations ?? properties?.relations)
+        .map(objectValue)
+        .filter((relation): relation is Record<string, unknown> =>
+            Boolean(relation) && isStructuralQlRelation(relation as Record<string, unknown>)
+        );
+
+    const familyContainsParent =
+        relationTargetCoordinate(
+            structuralRelations.find(relation => relationType(relation) === 'FAMILY_CONTAINS')
+        ) ?? null;
+
+    const mirrorRow = structuralRelations.find(
+        relation => relationType(relation) === 'MIRROR_CHILDREN'
+    );
+    const mirror = Object.freeze({
+        child: mirrorChildCoordinate(mirrorRow),
+        inverse: mirrorInverseCoordinate(mirrorRow)
+    });
+
+    const anchoredTo = Object.freeze(
+        structuralRelations
+            .filter(relation => relationType(relation) === 'ANCHORED_TO')
+            .map(relationTargetCoordinate)
+            .filter((coordinate): coordinate is string => Boolean(coordinate))
+    );
+
+    const state: M0ProvenanceState =
+        position !== null || qlVariant ? 'canonical' : 'canonical_absent';
+
+    return Object.freeze({
+        position,
+        qlVariant,
+        familyContainsParent,
+        mirror,
+        anchoredTo,
+        state
+    });
+}
+
+function qlPositionValue(raw: unknown): 0 | 1 | 2 | 3 | 4 | 5 | null {
+    const value = integerValue(raw);
+    return value !== null && value >= 0 && value <= 5 ? (value as 0 | 1 | 2 | 3 | 4 | 5) : null;
+}
+
+function relationType(relation: Record<string, unknown> | undefined): string | null {
+    return (
+        stringValue(relation?.type) ??
+        stringValue(relation?.relationType) ??
+        stringValue(relation?.rel_type)
+    );
+}
+
+function relationTargetCoordinate(relation: Record<string, unknown> | undefined): string | null {
+    const relationProperties = objectValue(relation?.properties);
+    return (
+        stringValue(relation?.target) ??
+        stringValue(relation?.targetCoordinate) ??
+        stringValue(relation?.target_coordinate) ??
+        stringValue(relation?.coordinate) ??
+        stringValue(relationProperties?.target_coordinate) ??
+        stringValue(relationProperties?.coordinate)
+    );
+}
+
+function relationFamilyDiscriminator(relation: Record<string, unknown> | undefined): string | null {
+    const relationProperties = objectValue(relation?.properties);
+    return (
+        stringValue(relationProperties?.c_1_relation_family) ??
+        stringValue(relation?.c_1_relation_family) ??
+        stringValue(relationProperties?.relation_family) ??
+        stringValue(relation?.relation_family)
+    );
+}
+
+function isStructuralQlRelation(relation: Record<string, unknown>): boolean {
+    const type = relationType(relation);
+    if (!type || !M0_QL_STRUCTURAL_RELATION_TYPES.includes(type as never)) {
+        return false;
+    }
+    const family = relationFamilyDiscriminator(relation);
+    // Track 01.9 discriminator: keep structural-only edges; absent discriminator
+    // is treated as structural since the relation type already names a structural edge.
+    return !family || /structural/i.test(family);
+}
+
+function mirrorChildCoordinate(relation: Record<string, unknown> | undefined): string | null {
+    const relationProperties = objectValue(relation?.properties);
+    return (
+        stringValue(relationProperties?.child) ??
+        stringValue(relationProperties?.mirror_child) ??
+        stringValue(relation?.child) ??
+        relationTargetCoordinate(relation)
+    );
+}
+
+function mirrorInverseCoordinate(relation: Record<string, unknown> | undefined): string | null {
+    const relationProperties = objectValue(relation?.properties);
+    return (
+        stringValue(relationProperties?.inverse) ??
+        stringValue(relationProperties?.mirror_inverse) ??
+        stringValue(relation?.inverse)
+    );
 }
 
 function blockedParityBridgeProjection(): M0ParityBridgeProjection {

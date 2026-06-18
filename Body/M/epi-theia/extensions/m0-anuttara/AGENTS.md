@@ -9,7 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M0'-SPEC]] (arch
 - `src/common/cross-layout-intent.ts`, `src/common/m0-inspector.ts`, `src/common/m0-layers.ts` — cross-layout intent payload, inspector layer model, and `s2.graph.query` route types.
 - `src/browser/frontend-module.ts` — Theia frontend module (widget factory, commands, empty-state registration).
 - `src/browser/m0-anuttara-widget.tsx`, `src/browser/empty-state.tsx` — root widget and first-render empty-state surface.
-- `src/browser/components/`, `src/browser/panels/` (incl. `panels/syntax-layers/`), `src/browser/state/` — React UI (layer-selector, mode-toggle, void-structure-ring, lazy-node-browser, parity-bridge-reader, virtue-witness, syntax-layer panels) and M0' surface-state codecs persisted through the shared bridge.
+- `src/browser/components/`, `src/browser/panels/` (incl. `panels/syntax-layers/`), `src/browser/state/` — React UI (layer-selector, mode-toggle, void-structure-ring, lazy-node-browser, parity-bridge-reader, ql-structure-layer (M0-1' QL reader), virtue-witness, syntax-layer panels) and M0' surface-state codecs persisted through the shared bridge.
 - `style/index.css`, `style/provenance-pills.css` — extension styling. `lib/` — compiled `tsc -b` output.
 - Does NOT own: M0' domain law (lives in [[M0'-SPEC]] / [[M0-ARCHITECTURE]], not here); graph runtime / bridge (delegated via `@pratibimba/m-extension-runtime` + the gateway bridge; `forbiddenImports` bars `Body/S/S0`,`S2`,`S3`,`S5` and `neo4j-driver`); the contract source + shared test suite (parent `extensions/`).
 

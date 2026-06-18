@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T20:00:51.329Z",
+  "updatedAt": "2026-06-18T20:04:25.759Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3456,11 +3456,16 @@
       "worktree": null
     },
     "21.T21.3": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T20:04:25.653Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T20:04:25.653Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T20:04:25.653Z",
+          "text": "Added QlStructureProjection + readM0QlStructureProjection selector to m0-anuttara/src/common/m0-inspector.ts (qlStructure on M0InspectorModel), new panel src/browser/panels/ql-structure-layer-panel.tsx (dl + Open in Coordinate Tree deep-link to ide-shell-m0-m5 coordinateTree via omnipanel.intent.dispatch, never duplicates tree). New test test/m0-anuttara-ql-structure-layer.test.mjs (6 tests, wired into package.json). Full suite 49/49 pass; pnpm --filter @pratibimba/m0-anuttara build green."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
