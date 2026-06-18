@@ -9,6 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `src/dispatch.rs` — RPC method dispatch (largest module, ~19k), including [[M4]]/[[S4]] Nara extension routes such as protected session protein handles.
 - `src/session_store.rs` / `src/sessions.rs` — session authority + lifecycle.
 - `src/runtime.rs` — `GatewayRuntimeState` + event subscriptions.
+- `src/m4_arena.rs` — [[M4]] arena warm [[Vama Shakti]] runtime wrapper over `portal-core` state.
 - `src/spacetime.rs` — SpaceTimeDB subscription / reducer client + fallback (~78k), plus CCT-21 BeingPattern replay and handle-forward payload helpers.
 - `src/temporal_context.rs` — temporal/kairos context plumbing.
 - `src/transcripts.rs`, `src/chat.rs` — transcript append/read + chat surface.

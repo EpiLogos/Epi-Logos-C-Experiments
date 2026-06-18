@@ -1,7 +1,6 @@
 use portal_core::{
-    transit_quaternion_at_millis, ArenaPresence, PrewarmVamaShaktiRequest, QActivityAccumulator,
-    VamaShaktiError, VamaShaktiReleaseReason, WarmVamaShakti, WarmVamaShaktiFilter,
-    WarmVamaShaktiRegistry,
+    transit_quaternion_at_millis, ArenaPresence, PrewarmVamaShaktiRequest, VamaShaktiError,
+    VamaShaktiReleaseReason, WarmVamaShakti, WarmVamaShaktiFilter, WarmVamaShaktiRegistry,
 };
 use serde::{Deserialize, Serialize};
 
@@ -65,15 +64,5 @@ impl M4ArenaRuntime {
     ) -> Result<WarmVamaShakti, VamaShaktiError> {
         self.warm_vama_shaktis
             .release(identity_handle, reason, now_ms)
-    }
-}
-
-pub fn accumulated_activity_for_presence(presence: &ArenaPresence) -> QActivityAccumulator {
-    QActivityAccumulator {
-        vama_shakti_class: presence.vama_shakti_class,
-        q_activity_accumulator: presence.q_activity_accumulator,
-        turn_count: presence.accumulated_turns_observed,
-        perturbation_hash: [0u8; 32],
-        last_turn_kairos_delta: 0.0,
     }
 }
