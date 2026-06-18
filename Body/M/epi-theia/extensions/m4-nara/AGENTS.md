@@ -7,7 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M4'-SPEC]] (and [[M'-SYSTEM-SPEC]]).
 ## Ownership
 - `src/common/index.ts` — public surface + frozen `TRACK_08_CONTRIBUTION` contract (generated from `contracts/07-t0-extension-contract-preflight.json` — do not hand-edit); declares `EXTENSION_ID`, view IDs, `PRIVACY_CLASS = 'protected_local'`.
 - `src/common/{nara-surface,e4-personal-energy,oracle-frame,deck-context,symbolic-protein}.ts` — common types/guards (NaraArtifact surface, E4 personal-energy input/scalar/gradient contract, OracleFrame, DeckContext, SymbolicProtein, [[Mythos]] archetype-reading helpers).
-- `src/browser/` — frontend: `frontend-module.ts`, `empty-state.tsx`, `privacy-chrome.ts`, `m4-nara-widget.tsx`, `canvas-editor.tsx`, `widgets/` (kairos-display, logos-cycle, medicine-view, lens-application, pratibimba-coordinate, transform-containers, mercurius-relay-indicator, day-calendar, ambient-state-strip, tuning-bar, time-axis-switcher, psyche-anchor-coherence), `onboarding/identity-wizard.tsx`, `editor/`, `services/`.
+- `src/browser/` — frontend: `frontend-module.ts`, `empty-state.tsx`, `privacy-chrome.ts`, `m4-nara-widget.tsx`, `canvas-editor.tsx`, `widgets/` (kairos-display, logos-cycle, medicine-view, lens-application, pratibimba-coordinate, transform-containers, mercurius-relay-indicator, day-calendar, ambient-state-strip, tuning-bar, time-axis-switcher, psyche-anchor-coherence, being-pattern-perspective), `onboarding/identity-wizard.tsx`, `editor/`, `services/`.
 - `style/` — `index.css`, `highlights.css`, `privacy-chrome.css`.
 - `tests/` — package-local test contracts such as `privacy-chrome.test.mjs` and `symbolic-protein-reading.test.mjs`.
 - `lib/` — compiled `tsc -b` output (not source).

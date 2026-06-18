@@ -6,6 +6,93 @@
   "plugin_manifest": ".claude-plugin/plugin.json",
   "constitutional_agents": [],
   "_constitutional_agents_status": "DEPRECATED per DR-M5-1 (VALIDATED 2026-06-02, cleanup 2026-06-15): The executable dispatch roster is pi + anima + the six Aletheia subagent techne-guardians (anansi/moirai/janus/mercurius/agora/zeithoven). The former 7-name constitutional tuple is retained only as Anima authorial-register metadata below; it is psyche-aspect rendering material, not separate dispatch authority.",
+  "constitutional_ct_mapping": {
+    "nous": {
+      "ct": "CT0",
+      "domain": "freedom / pre-artifact open source",
+      "primary_artifacts": ["prompt files", "flow files"],
+      "register": "L1 causal"
+    },
+    "logos": {
+      "ct": "CT1",
+      "domain": "material / data / research operative",
+      "primary_action": "retrieves, reads, parses"
+    },
+    "eros": {
+      "ct": "CT2",
+      "domain": "relational data - connections, resonances, oppositions, dissonances",
+      "primary_action": "scours folders, relations, sources"
+    },
+    "mythos": {
+      "ct": "CT3",
+      "domain": "patterns / diagrams / narratives / symbols / form",
+      "primary_action": "generates artifacts, updates canon"
+    },
+    "psyche": {
+      "ct": "CT4a + CT4b",
+      "domain_4a": "daily template / temporal-structural horizon container",
+      "domain_4b": "synthesising horizon into open summation via T thoughts"
+    },
+    "sophia": {
+      "ct": "CT5",
+      "domain": "crystallisations - aphoristic, essayistic, open questions accruable",
+      "primary_action": "review crystallisation on session close"
+    }
+  },
+  "cf_team_composition_gates": {
+    "CF1": {
+      "positions": "(0/1)",
+      "team": ["nous", "logos"],
+      "flow": "Nous plans -> Logos researches via Aletheia/Techne -> back to Nous -> Nous surfaces to user"
+    },
+    "CF2": {
+      "positions": "(0/1/2)",
+      "team": ["nous", "logos", "eros"],
+      "flow": "+ Eros for relational scour"
+    },
+    "CF3": {
+      "positions": "(0/1/2/3)",
+      "team": ["nous", "logos", "eros", "mythos"],
+      "flow": "+ Mythos for artifact generation / canon update; Nous verifies back; auto-Aletheia/Sophia review gate on session close may reengage"
+    },
+    "CF4": {
+      "positions": "(0/1/2/3/4)",
+      "team": ["nous", "logos", "eros", "mythos", "psyche"],
+      "flow": "+ Psyche for horizon container / synthesis"
+    },
+    "CF5": {
+      "positions": "(0/1/2/3/4/5)",
+      "team": ["nous", "logos", "eros", "mythos", "psyche", "sophia"],
+      "flow": "+ Sophia for review crystallisation"
+    }
+  },
+  "cf_aletheia_techne_mapping": {
+    "CF0": {
+      "guardian": "anansi",
+      "techne": "coordinate-mapping / blueprint / Darshana-REPL"
+    },
+    "CF1": {
+      "guardian": "janus",
+      "techne": "temporal-structure / bhedabheda-threshold"
+    },
+    "CF2": {
+      "guardian": "moirai",
+      "techne": "GraphRAG-distillation (Klotho/Lachesis/Atropos)"
+    },
+    "CF3": {
+      "guardian": "mercurius",
+      "techne": "Kairos-signal / qualitative-temporal-pattern / Elo bookkeeping"
+    },
+    "CF4": {
+      "guardian": "agora",
+      "techne": "plugin-absorption / skill-index / multi-channel-aggregation"
+    },
+    "CF5": {
+      "guardian": "zeithoven",
+      "techne": "creative-advance / skill-and-agent-creation"
+    }
+  },
+  "shared_cf_scale_note": "CF is the shared scale: CF1-CF5 names how many constitutional members are activated in the team Anima composes; CF0-CF5 names the Aletheia techne-guardian invoked WITHIN that team during Aletheia-crystallisation-mode. Constitutional team-size and Aletheia mode-invocation are the same gate.",
   "anima_authorial_registers_deprecated": [
     "anima",
     "eros",

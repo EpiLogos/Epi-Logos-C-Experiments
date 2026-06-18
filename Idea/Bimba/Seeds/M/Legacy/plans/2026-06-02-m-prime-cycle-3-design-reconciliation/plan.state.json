@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:27:13.310Z",
+  "updatedAt": "2026-06-18T19:36:59.153Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6986,16 +6986,16 @@
       "worktree": null
     },
     "29.T29.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:30:24.831Z",
+      "claimedAt": "2026-06-18T19:30:24.831Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-29-t29-9",
+      "leaseExpiresAt": "2026-06-18T21:30:24.831Z",
+      "heartbeatAt": "2026-06-18T19:30:24.831Z",
+      "runId": "20260618T193024Z-29-T29.9",
       "worktree": null
     },
     "29.T29.10": {
@@ -7239,14 +7239,19 @@
       "worktree": null
     },
     "25.T25.22": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:26:47.719Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:36:59.051Z",
       "claimedAt": "2026-06-18T19:26:47.719Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:36:59.051Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:36:59.051Z",
+          "text": "pnpm -C Body/M/epi-theia/extensions/m4-nara test: 33/33 pass; focused SSR checks: MonoPolyOperator 7/7, PerspectiveRole 6/6, NaraFamilyRole 6/6, privacy and ActualisingOne review route pass; key files Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/being-pattern-perspective.tsx and Body/M/epi-theia/extensions/m4-nara/AGENTS.md"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-25-t25-22",
-      "leaseExpiresAt": "2026-06-18T21:26:47.719Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:26:47.719Z",
       "runId": "20260618T192647Z-25-T25.22",
       "worktree": null
@@ -7780,16 +7785,21 @@
       "worktree": null
     },
     "12.T12.29": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-18T19:33:46.813Z",
+      "claimedAt": "2026-06-18T19:30:21.432Z",
+      "completedAt": "2026-06-18T19:33:46.813Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:33:46.813Z",
+          "text": "17 Pleroma capability-matrix tests passed; jq/grep assertions prove constitutional_ct_mapping, cf_team_composition_gates, cf_aletheia_techne_mapping, and CF3 team in Body/S/S4/plugins/pleroma/capability-matrix.json; cargo gateway filter compiled via manifest path but matched 0 tests"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-12-t12-29",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T19:30:21.432Z",
+      "runId": "20260618T193021Z-12-T12.29",
       "worktree": null
     },
     "12.T12.30": {
@@ -8280,20 +8290,24 @@
     },
     "42.T42.3": {
       "status": "in_progress",
-      "updatedAt": "2026-06-18T19:27:13.075Z",
-      "claimedAt": "2026-06-18T19:27:13.075Z",
+      "updatedAt": "2026-06-18T19:33:14.285Z",
+      "claimedAt": "2026-06-18T19:33:14.285Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T18:55:40.207Z",
           "text": "Blocked before edits: Body/S/S0/epi-cli/src/agent/harness.rs is absent and unimported; acceptance needs compile-visible routing in agent/mod.rs, agent/{spawn,subagents,tmux,launch}.rs, code/mod.rs plus tests; GitNexus reports CRITICAL impact on PI launch symbols."
+        },
+        {
+          "at": "2026-06-18T19:28:42.212Z",
+          "text": "Blocked before edits: write scope only permits Body/S/S0/epi-cli/src/agent/harness.rs, but acceptance requires compile-visible imports/routing in agent/mod.rs, code/mod.rs, agent/{launch,spawn,subagents,team,chain}.rs and tests; guard still finds direct Command::new(\"claude\") plus pi launch calls; no code files changed."
         }
       ],
       "notes": null,
-      "owner": "codex-m-dev-42-t42-3-retry",
-      "leaseExpiresAt": "2026-06-18T21:27:13.075Z",
-      "heartbeatAt": "2026-06-18T19:27:13.075Z",
-      "runId": "20260618T192713Z-42-T42.3",
+      "owner": "codex-m-dev-42-t42-3-unified-harness",
+      "leaseExpiresAt": "2026-06-18T21:33:14.285Z",
+      "heartbeatAt": "2026-06-18T19:33:14.285Z",
+      "runId": "20260618T193314Z-42-T42.3",
       "worktree": null
     },
     "42.T42.4": {
@@ -10755,40 +10769,70 @@
     {
       "runId": "20260618T192647Z-25-T25.22",
       "taskId": "25.T25.22",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:26:47.719Z",
       "owner": "codex-m-dev-25-t25-22",
       "leaseExpiresAt": "2026-06-18T21:26:47.719Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:36:59.051Z"
     },
     {
       "runId": "20260618T192713Z-42-T42.3",
       "taskId": "42.T42.3",
-      "status": "in_progress",
+      "status": "blocked",
       "startedAt": "2026-06-18T19:27:13.075Z",
       "owner": "codex-m-dev-42-t42-3-retry",
       "leaseExpiresAt": "2026-06-18T21:27:13.075Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T19:28:42.212Z"
+    },
+    {
+      "runId": "20260618T193021Z-12-T12.29",
+      "taskId": "12.T12.29",
+      "status": "done",
+      "startedAt": "2026-06-18T19:30:21.432Z",
+      "owner": "codex-m-dev-12-t12-29",
+      "leaseExpiresAt": "2026-06-18T21:30:21.432Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T19:33:46.813Z"
+    },
+    {
+      "runId": "20260618T193024Z-29-T29.9",
+      "taskId": "29.T29.9",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:30:24.831Z",
+      "owner": "codex-m-dev-29-t29-9",
+      "leaseExpiresAt": "2026-06-18T21:30:24.831Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260618T193314Z-42-T42.3",
+      "taskId": "42.T42.3",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:33:14.285Z",
+      "owner": "codex-m-dev-42-t42-3-unified-harness",
+      "leaseExpiresAt": "2026-06-18T21:33:14.285Z",
       "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:26:13.821Z",
-    "updatedAt": "2026-06-18T19:26:13.821Z",
+    "createdAt": "2026-06-18T19:32:44.106Z",
+    "updatedAt": "2026-06-18T19:32:44.106Z",
     "taskIds": [
       "31.T31.13",
-      "29.T29.8",
-      "30.T30.6",
-      "05.T5.3"
+      "25.T25.22",
+      "12.T12.29",
+      "29.T29.9"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "29.T29.8": "in-session",
-      "30.T30.6": "in-session",
-      "05.T5.3": "in-session"
+      "25.T25.22": "in-session",
+      "12.T12.29": "in-session",
+      "29.T29.9": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
