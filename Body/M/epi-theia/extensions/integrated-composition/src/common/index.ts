@@ -22,12 +22,18 @@ export * from './integrated-deep-links';
 export * from './workspace-persistence';
 export * from './omni-panel';
 export * from './release-gate';
+export * from './profile-tick-subscription';
 
 // Browser-runtime helpers — re-exported here so plugin packages can import
 // everything from the package root, matching the m-extension-runtime pattern.
 export { IntegratedEmptyState } from '../browser/integrated-empty-state';
 export type { IntegratedEmptyStateProps } from '../browser/integrated-empty-state';
 export { IntegratedBridgeGate } from '../browser/bridge-gate';
+export {
+    CompositionProfileContext,
+    CompositionProfileProvider,
+    useCompositionProfile
+} from '../browser/composition-profile-context';
 export {
     CoordinateString,
     MathemeToken,

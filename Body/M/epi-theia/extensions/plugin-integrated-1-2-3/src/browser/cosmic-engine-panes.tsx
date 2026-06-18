@@ -20,6 +20,7 @@ import type {
     IntegratedEvidenceProducerId,
     PaneAvailability
 } from '@pratibimba/integrated-composition';
+import { useCompositionProfile } from '@pratibimba/integrated-composition';
 
 interface PaneShellProps {
     readonly title: string;
@@ -108,22 +109,24 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
     m1RightInspector,
     onOpenInReview
 }) => {
-    const codon = readPayloadString(profile, 'codon_rotation_projection');
-    const mahamaya = readPayloadString(profile, 'mahamaya');
-    const resonance72 = readPayloadString(profile, 'resonance72');
-    const planetaryChakral = readPayloadString(profile, 'planetaryChakral');
-    const kleinFlip = readPayloadString(profile, 'kleinFlip');
-    const lens = readPayloadString(profile, 'lens');
-    const mode = readPayloadString(profile, 'mode');
-    const audioOctet = readPayloadString(profile, 'audio_octet');
-    const nodalQuartet = readPayloadString(profile, 'nodal_quartet');
+    const shared = useCompositionProfile();
+    const paneProfile = profile ?? shared.profile;
+    const codon = readPayloadString(paneProfile, 'codon_rotation_projection');
+    const mahamaya = readPayloadString(paneProfile, 'mahamaya');
+    const resonance72 = readPayloadString(paneProfile, 'resonance72');
+    const planetaryChakral = readPayloadString(paneProfile, 'planetaryChakral');
+    const kleinFlip = readPayloadString(paneProfile, 'kleinFlip');
+    const lens = readPayloadString(paneProfile, 'lens');
+    const mode = readPayloadString(paneProfile, 'mode');
+    const audioOctet = readPayloadString(paneProfile, 'audio_octet');
+    const nodalQuartet = readPayloadString(paneProfile, 'nodal_quartet');
     return (
         <div className="cosmic-engine-layout">
             <PaneShell
                 title="Cosmic Wheel"
                 extensionLabel="M3 Mahamaya"
                 availability={m3CenterStage}
-                profile={profile}
+                profile={paneProfile}
                 evidenceProducerId="route-codon-projection-audit"
                 onOpenInReview={onOpenInReview}
             >
@@ -138,7 +141,7 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
                 title="Lens / Cymatic Backdrop"
                 extensionLabel="M2 Parashakti"
                 availability={m2LeftStage}
-                profile={profile}
+                profile={paneProfile}
                 evidenceProducerId="m2-meaning-packet-trace"
                 onOpenInReview={onOpenInReview}
             >
@@ -168,7 +171,7 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
                 title="Torus / Path / Audio Walk Inspector"
                 extensionLabel="M1 Paramasiva"
                 availability={m1RightInspector}
-                profile={profile}
+                profile={paneProfile}
                 evidenceProducerId="kernel-trace-handle"
                 onOpenInReview={onOpenInReview}
             >

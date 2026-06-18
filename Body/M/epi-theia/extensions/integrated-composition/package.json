@@ -31,6 +31,10 @@
       "types": "./lib/common/integrated-deep-links.d.ts",
       "default": "./lib/common/integrated-deep-links.js"
     },
+    "./composition-profile-context": {
+      "types": "./lib/browser/composition-profile-context.d.ts",
+      "default": "./lib/browser/composition-profile-context.js"
+    },
     "./recognition-claim": {
       "types": "./lib/common/recognition-claim.d.ts",
       "default": "./lib/common/recognition-claim.js"
@@ -48,6 +52,7 @@
       "integrated-readiness": ["lib/common/integrated-readiness.d.ts"],
       "graphiti-source-guard": ["lib/common/graphiti-source-guard.d.ts"],
       "integrated-deep-links": ["lib/common/integrated-deep-links.d.ts"],
+      "composition-profile-context": ["lib/browser/composition-profile-context.d.ts"],
       "recognition-claim": ["lib/common/recognition-claim.d.ts"]
     }
   },

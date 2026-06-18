@@ -45,6 +45,79 @@ static int m4_lens_annotate_stub(uint8_t lens_id, const void* experience,
     return 0;
 }
 
+static uint32_t m4_protein_capacity_or_default(uint32_t requested) {
+    if (requested == 0u) return M4_SYMBOLIC_PROTEIN_DEFAULT_CAPACITY;
+    if (requested > M4_SYMBOLIC_PROTEIN_MAX_STEPS) return M4_SYMBOLIC_PROTEIN_MAX_STEPS;
+    return requested;
+}
+
+static void m4_identity_hash_for_session(const M4_Identity_Matrix* identity, uint8_t out[32]) {
+    if (!identity || !out) return;
+    if (identity->computed) {
+        memcpy(out, identity->quintessence_hash, 32);
+        return;
+    }
+
+    blake3_hasher hasher;
+    blake3_hasher_init(&hasher);
+    blake3_hasher_update(&hasher, &identity->layer_presence, sizeof(identity->layer_presence));
+    blake3_hasher_update(&hasher, &identity->numerological_key, sizeof(identity->numerological_key));
+    blake3_hasher_update(&hasher, &identity->jung_type, sizeof(identity->jung_type));
+    blake3_hasher_finalize(&hasher, out, 32);
+}
+
+static void m4_symbolic_protein_init(M4_Symbolic_Protein* protein,
+                                     const M4_Identity_Matrix* identity,
+                                     uint64_t kairos,
+                                     uint32_t capacity) {
+    memset(protein, 0, sizeof(M4_Symbolic_Protein));
+    snprintf(protein->session_id, sizeof(protein->session_id),
+             "m4-%016llx", (unsigned long long)kairos);
+    protein->start_codon = M3_CODON_ATG_AUG;
+    protein->stop_codon = 0u;
+    protein->kairos_open = kairos;
+    protein->capacity = m4_protein_capacity_or_default(capacity);
+    m4_identity_hash_for_session(identity, protein->identity_hash);
+}
+
+static void m4_transcription_tail_marker(M4_Symbolic_Protein* protein,
+                                         uint16_t degree,
+                                         uint8_t hexagram) {
+    if (!protein || protein->capacity == 0u) return;
+    uint32_t idx = protein->capacity - 1u;
+    protein->steps[idx] = (M4_TranscriptionStep){
+        .degree = degree,
+        .hexagram = hexagram,
+        .codon = M4_TRANSCRIPTION_TAIL_MARKER_CODON,
+        .amino_acid = 0xFFu,
+        .transcript_class = M3_TRANSCRIPT_CLASS_TRANSCRIBABLE,
+        .governance_role = M3_GOVERNANCE_ROLE_NONE,
+        .flags = M4_TRANSCRIPTION_STEP_TAIL,
+    };
+    protein->step_count = protein->capacity;
+    protein->truncated = 1u;
+}
+
+static uint8_t m4_select_stop_codon(M4_Session_Frame* frame) {
+    static uint8_t round_robin_index = 0u;
+    switch (frame->stop_codon_policy) {
+        case M4_STOP_CODON_POLICY_ROUND_ROBIN: {
+            uint8_t codon = M3_STOP_CODONS[round_robin_index % 3u];
+            round_robin_index = (uint8_t)((round_robin_index + 1u) % 3u);
+            return codon;
+        }
+        case M4_STOP_CODON_POLICY_FIXED_TAA:
+            return M3_STOP_CODON_TAA_VALUE;
+        case M4_STOP_CODON_POLICY_FIXED_TAG:
+            return M3_STOP_CODON_TAG_VALUE;
+        case M4_STOP_CODON_POLICY_FIXED_TGA:
+            return M3_STOP_CODON_TGA_VALUE;
+        case M4_STOP_CODON_POLICY_KAIROS_DERIVED:
+        default:
+            return M3_STOP_CODONS[frame->kairos % 3u];
+    }
+}
+
 
 /* ===================================================================
  * .RODATA: M4_LENS_REGISTRY[6] — 6-lens vtable
@@ -486,6 +559,9 @@ int m4_session_open(M4_Identity_Matrix* identity, uint64_t kairos,
     memset(out, 0, sizeof(M4_Session_Frame));
     out->kairos = kairos;
     out->identity = identity;
+    out->stop_codon_policy = M4_STOP_CODON_POLICY_KAIROS_DERIVED;
+    out->protein = &out->protein_storage;
+    m4_symbolic_protein_init(out->protein, identity, kairos, M4_SYMBOLIC_PROTEIN_DEFAULT_CAPACITY);
 
     /* Count derived from identity: one card per populated layer, a standard
      * three-card spread when identity is bare. Clamped to the tarot range. */
@@ -522,7 +598,80 @@ int m4_session_open(M4_Identity_Matrix* identity, uint64_t kairos,
     int rc = m4_draw_tarot(&rng, count, cast_degree, &out->tarot_psyche_anchor);
     if (rc != 0) return rc;
 
+    rc = m4_symbolic_protein_append_step(out->protein,
+                                         (uint16_t)(kairos % 720u),
+                                         M3_CODON_ATG_AUG,
+                                         M3_CODON_ATG_AUG,
+                                         M3_GOVERNANCE_ROLE_START);
+    if (rc != 0) return rc;
+
     out->opened = true;
+    return 0;
+}
+
+int m4_symbolic_protein_append_step(M4_Symbolic_Protein* protein,
+                                    uint16_t degree,
+                                    uint8_t hexagram,
+                                    uint8_t codon,
+                                    M3_GovernanceRole role) {
+    if (!protein || protein->sealed) return -1;
+
+    uint32_t capacity = m4_protein_capacity_or_default(protein->capacity);
+    protein->capacity = capacity;
+    if (capacity == 0u) return -1;
+
+    if (protein->step_count >= capacity) {
+        m4_transcription_tail_marker(protein, degree, hexagram);
+        return 0;
+    }
+
+    M3_GovernanceRole governance_role = role;
+    if (governance_role == M3_GOVERNANCE_ROLE_NONE && codon < 64u) {
+        governance_role = m3_codon_governance_role(codon);
+    }
+
+    uint8_t flags = 0u;
+    if (governance_role == M3_GOVERNANCE_ROLE_START) flags |= M4_TRANSCRIPTION_STEP_START;
+    if (governance_role == M3_GOVERNANCE_ROLE_STOP) flags |= M4_TRANSCRIPTION_STEP_STOP;
+
+    uint8_t amino = codon < 64u ? M3_CODON_TO_AA[codon] : 0xFFu;
+    uint32_t idx = protein->step_count++;
+    protein->steps[idx] = (M4_TranscriptionStep){
+        .degree = degree,
+        .hexagram = hexagram,
+        .codon = codon,
+        .amino_acid = amino,
+        .transcript_class = (uint8_t)(codon < 64u
+            ? m3_codon_transcript_class(codon)
+            : M3_TRANSCRIPT_CLASS_TRANSCRIBABLE),
+        .governance_role = (uint8_t)governance_role,
+        .flags = flags,
+    };
+    return 0;
+}
+
+int m4_session_close(M4_Session_Frame* frame, M4_Symbolic_Protein* out) {
+    if (!frame || !out || !frame->opened || !frame->protein) return -1;
+
+    M4_Symbolic_Protein* protein = frame->protein;
+    if (protein->sealed) {
+        if (out != protein) memcpy(out, protein, sizeof(M4_Symbolic_Protein));
+        return 0;
+    }
+
+    uint64_t kairos_close = frame->kairos;
+    uint8_t stop_codon = m4_select_stop_codon(frame);
+    int rc = m4_symbolic_protein_append_step(protein,
+                                             (uint16_t)(kairos_close % 720u),
+                                             stop_codon,
+                                             stop_codon,
+                                             M3_GOVERNANCE_ROLE_STOP);
+    if (rc != 0) return rc;
+
+    protein->stop_codon = stop_codon;
+    protein->kairos_close = kairos_close;
+    protein->sealed = 1u;
+    if (out != protein) memcpy(out, protein, sizeof(M4_Symbolic_Protein));
     return 0;
 }
 

@@ -20,6 +20,9 @@ import type {
 import {
     readCurrentInhabitedBimbaField
 } from '@pratibimba/integrated-composition/integrated-readiness';
+import {
+    useCompositionProfile
+} from '@pratibimba/integrated-composition';
 
 declare const require: (id: string) => unknown;
 
@@ -54,9 +57,7 @@ export interface CosmicCompositionModel {
     readonly geometricClaims: readonly IntegratedGeometricClaim[];
 }
 
-export interface CosmicEngineCompositionProps {
-    readonly profile: MathemeHarmonicProfileBoundary | null;
-}
+export interface CosmicEngineCompositionProps {}
 
 const K2_SURFACE_CLAIM = Object.freeze({
     geometricSlot: 'surface',
@@ -85,50 +86,39 @@ const CELL_STATE_CLAIM: IntegratedGeometricClaim = Object.freeze({
     reason: 'Track 24.13 M3 codon-rotation export projects cell-state onto K2 lens-ring cells.'
 });
 
-const CompositionProfileContext =
-    React.createContext<MathemeHarmonicProfileBoundary | null>(null);
-
-export function useCompositionProfile(
-    profile: MathemeHarmonicProfileBoundary | null
-): MathemeHarmonicProfileBoundary | null {
-    return React.useMemo(() => profile, [profile]);
-}
-
-export const CosmicEngineComposition: React.FC<CosmicEngineCompositionProps> = ({ profile }) => {
-    const compositionProfile = useCompositionProfile(profile);
+export const CosmicEngineComposition: React.FC<CosmicEngineCompositionProps> = () => {
+    const { profile: compositionProfile } = useCompositionProfile();
     const model = React.useMemo(
         () => buildCosmicCompositionModel(compositionProfile),
         [compositionProfile]
     );
     return (
-        <CompositionProfileContext.Provider value={compositionProfile}>
-            <section
-                className="cosmic-engine-composition"
-                data-test="cosmic-engine-composition"
-                data-blockers={model.blockers.join(',')}
+        <section
+            className="cosmic-engine-composition"
+            data-test="cosmic-engine-composition"
+            data-blockers={model.blockers.join(',')}
+        >
+            <div
+                className="cosmic-engine-editor-surface"
+                data-test="cosmic-engine-editor-surface"
+                data-editor-surface="cosmic-engine-composition"
             >
-                <div
-                    className="cosmic-engine-editor-surface"
-                    data-test="cosmic-engine-editor-surface"
-                    data-editor-surface="cosmic-engine-composition"
-                >
-                    <K2PlayedTorusSurface model={model} />
-                    <CymaticTextureMount surfaceHandle={model.k2SurfaceHandle} frame={model.cymaticFrame} />
-                    <CodonCellStateProjection
-                        surfaceHandle={model.k2SurfaceHandle}
-                        projection={model.codonProjection}
+                <K2PlayedTorusSurface model={model} />
+                <CymaticTextureMount surfaceHandle={model.k2SurfaceHandle} frame={model.cymaticFrame} />
+                <CodonCellStateProjection
+                    surfaceHandle={model.k2SurfaceHandle}
+                    projection={model.codonProjection}
+                />
+                <MathemeOverlay137 />
+                <LegacyBeingPatternOverlay profile={compositionProfile} />
+                {model.blockers.length > 0 ? (
+                    <IntegratedEmptyState
+                        view={buildCompositionBlockerView(model.blockers)}
+                        title="Cosmic Engine Composition"
                     />
-                    <MathemeOverlay137 />
-                    <LegacyBeingPatternOverlay profile={compositionProfile} />
-                    {model.blockers.length > 0 ? (
-                        <IntegratedEmptyState
-                            view={buildCompositionBlockerView(model.blockers)}
-                            title="Cosmic Engine Composition"
-                        />
-                    ) : null}
-                </div>
-            </section>
-        </CompositionProfileContext.Provider>
+                ) : null}
+            </div>
+        </section>
     );
 };
 

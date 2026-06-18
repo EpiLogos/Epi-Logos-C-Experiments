@@ -791,12 +791,59 @@ static inline void m4_mobius_return(M4_Epii_Integration* epii,
 
 
 /* ===================================================================
+ * M4_Symbolic_Protein — Session-as-transcription body
+ * =================================================================== */
+
+#define M4_SYMBOLIC_PROTEIN_MAX_STEPS 256u
+#define M4_SYMBOLIC_PROTEIN_DEFAULT_CAPACITY 256u
+#define M4_TRANSCRIPTION_TAIL_MARKER_CODON 0xFEu
+
+#define M4_TRANSCRIPTION_STEP_START  (1u << 0u)
+#define M4_TRANSCRIPTION_STEP_STOP   (1u << 1u)
+#define M4_TRANSCRIPTION_STEP_TAIL   (1u << 2u)
+
+typedef enum {
+    M4_STOP_CODON_POLICY_KAIROS_DERIVED = 0,
+    M4_STOP_CODON_POLICY_ROUND_ROBIN = 1,
+    M4_STOP_CODON_POLICY_FIXED_TAA = 2,
+    M4_STOP_CODON_POLICY_FIXED_TAG = 3,
+    M4_STOP_CODON_POLICY_FIXED_TGA = 4
+} M4_Stop_Codon_Policy;
+
+typedef struct {
+    uint16_t degree;
+    uint8_t  hexagram;
+    uint8_t  codon;
+    uint8_t  amino_acid;
+    uint8_t  transcript_class;      /* M3_TranscriptClass */
+    uint8_t  governance_role;       /* M3_GovernanceRole */
+    uint8_t  flags;                 /* M4_TRANSCRIPTION_STEP_* */
+} M4_TranscriptionStep;
+
+typedef struct {
+    char     session_id[64];
+    uint8_t  start_codon;
+    uint8_t  stop_codon;
+    uint8_t  sealed;
+    uint8_t  truncated;
+    uint64_t kairos_open;
+    uint64_t kairos_close;
+    uint8_t  identity_hash[32];
+    uint32_t step_count;
+    uint32_t capacity;
+    uint8_t  has_mythos_archetype_reading;
+    char     mythos_archetype_reading[256];
+    M4_TranscriptionStep steps[M4_SYMBOLIC_PROTEIN_MAX_STEPS];
+} M4_Symbolic_Protein;
+
+
+/* ===================================================================
  * M4_Session_Frame — Session-context inheritance at open
  *
  * Opening a session inherits three things together: the lived moment
  * (kairos), who is present (identity), and the cards drawn at that
- * moment (tarot_psyche_anchor). The draw is NOT a lifecycle event and
- * does nothing mechanically — it conditions the contemplation. Seeded
+ * moment (tarot_psyche_anchor). The draw is the contextual envelope
+ * around the START marker, not a parallel lifecycle mechanism. Seeded
  * from kairos so the same moment recalls the same draw; the randomness
  * across moments is the necessary openness.
  * =================================================================== */
@@ -805,6 +852,9 @@ typedef struct {
     uint64_t        kairos;              /* Inherited moment (RNG seed source) */
     M4_Identity_Matrix* identity;       /* Inherited identity (caller-owned) */
     M4_Tarot_Draw   tarot_psyche_anchor;/* Cards drawn at open — context, not event */
+    M4_Symbolic_Protein protein_storage;/* Owned bounded session protein */
+    M4_Symbolic_Protein* protein;       /* Protected handle to protein_storage */
+    M4_Stop_Codon_Policy stop_codon_policy;
     bool            opened;             /* True once m4_session_open succeeds */
 } M4_Session_Frame;
 
@@ -886,6 +936,20 @@ int m4_draw_tarot(M4_Sacred_Random* rng, uint8_t count, uint16_t cast_degree,
  * The drawn cards land in out->tarot_psyche_anchor as session context. */
 int m4_session_open(M4_Identity_Matrix* identity, uint64_t kairos,
                     M4_Session_Frame* out);
+
+/* Append a transcription step to a session protein. If the bounded capacity is
+ * exhausted, the final slot is replaced with a tail marker and no overflow
+ * occurs. Returns 0 on success, <0 on error. */
+int m4_symbolic_protein_append_step(M4_Symbolic_Protein* protein,
+                                    uint16_t degree,
+                                    uint8_t hexagram,
+                                    uint8_t codon,
+                                    M3_GovernanceRole role);
+
+/* Close a session protein by emitting a STOP marker selected by the frame's
+ * stop_codon_policy (default: kairos-derived). The sealed protein is copied to
+ * out as an opaque handle payload for protected write-through. */
+int m4_session_close(M4_Session_Frame* frame, M4_Symbolic_Protein* out);
 
 /* Consent-gated true random */
 bool m4_sacred_random(M4_Sacred_Random* rng, uint8_t* buf, size_t len);

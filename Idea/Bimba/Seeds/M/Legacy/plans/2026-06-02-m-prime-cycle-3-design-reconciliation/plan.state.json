@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T09:45:30.201Z",
+  "updatedAt": "2026-06-18T10:13:59.589Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3229,16 +3229,16 @@
       "worktree": null
     },
     "12.T12.24": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T10:07:29.147Z",
+      "claimedAt": "2026-06-18T10:07:29.147Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-12-t12-24",
+      "leaseExpiresAt": "2026-06-18T12:07:29.147Z",
+      "heartbeatAt": "2026-06-18T10:07:29.147Z",
+      "runId": "20260618T100729Z-12-T12.24",
       "worktree": null
     },
     "19.T19.1": {
@@ -5585,16 +5585,21 @@
       "worktree": null
     },
     "32.T32.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-18T10:13:59.505Z",
+      "claimedAt": "2026-06-18T10:07:47.991Z",
+      "completedAt": "2026-06-18T10:13:59.505Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T10:13:59.505Z",
+          "text": "pnpm --filter @pratibimba/m-extension-runtime test: 32 tests passed; key files Body/M/epi-theia/extensions/m-extension-runtime/src/browser/privacy-opt-in-dialog.tsx, Body/M/epi-theia/extensions/m-extension-runtime/tests/privacy-opt-in-dialog.test.mjs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-32-t32-8",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T10:07:47.991Z",
+      "runId": "20260618T100747Z-32-T32.8",
       "worktree": null
     },
     "32.T32.9": {
@@ -7616,16 +7621,16 @@
       "worktree": null
     },
     "05.T5.26": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T10:08:36.131Z",
+      "claimedAt": "2026-06-18T10:08:36.131Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-05-t5-26",
+      "leaseExpiresAt": "2026-06-18T12:08:36.131Z",
+      "heartbeatAt": "2026-06-18T10:08:36.131Z",
+      "runId": "20260618T100836Z-05-T5.26",
       "worktree": null
     },
     "05.T5.27": {
@@ -8372,16 +8377,16 @@
       "worktree": null
     },
     "12.T12.38": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T10:08:02.879Z",
+      "claimedAt": "2026-06-18T10:08:02.879Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-12-t12-38",
+      "leaseExpiresAt": "2026-06-18T12:08:02.879Z",
+      "heartbeatAt": "2026-06-18T10:08:02.879Z",
+      "runId": "20260618T100802Z-12-T12.38",
       "worktree": null
     },
     "44.T44.1": {
@@ -10422,26 +10427,63 @@
       "leaseExpiresAt": "2026-06-18T10:47:27.543Z",
       "worktree": null,
       "completedAt": "2026-06-18T09:14:56.097Z"
+    },
+    {
+      "runId": "20260618T100729Z-12-T12.24",
+      "taskId": "12.T12.24",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T10:07:29.147Z",
+      "owner": "codex-m-dev-12-t12-24",
+      "leaseExpiresAt": "2026-06-18T12:07:29.147Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260618T100747Z-32-T32.8",
+      "taskId": "32.T32.8",
+      "status": "done",
+      "startedAt": "2026-06-18T10:07:47.991Z",
+      "owner": "codex-m-dev-32-t32-8",
+      "leaseExpiresAt": "2026-06-18T12:07:47.991Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T10:13:59.505Z"
+    },
+    {
+      "runId": "20260618T100802Z-12-T12.38",
+      "taskId": "12.T12.38",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T10:08:02.879Z",
+      "owner": "codex-m-dev-12-t12-38",
+      "leaseExpiresAt": "2026-06-18T12:08:02.879Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260618T100836Z-05-T5.26",
+      "taskId": "05.T5.26",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T10:08:36.131Z",
+      "owner": "codex-m-dev-05-t5-26",
+      "leaseExpiresAt": "2026-06-18T12:08:36.131Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T08:46:45.144Z",
-    "updatedAt": "2026-06-18T08:46:45.144Z",
+    "createdAt": "2026-06-18T10:07:29.681Z",
+    "updatedAt": "2026-06-18T10:07:29.681Z",
     "taskIds": [
       "31.T31.13",
-      "05.T5.25",
-      "12.T12.23",
-      "05.T5.26"
+      "12.T12.24",
+      "05.T5.26",
+      "05.T5.27"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "05.T5.25": "in-session",
-      "12.T12.23": "in-session",
-      "05.T5.26": "in-session"
+      "12.T12.24": "in-session",
+      "05.T5.26": "in-session",
+      "05.T5.27": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

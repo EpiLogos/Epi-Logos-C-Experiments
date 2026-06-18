@@ -14,6 +14,9 @@ import {
     perspectiveRoleDisplayLabelFor,
     readCurrentInhabitedBimbaField
 } from '@pratibimba/integrated-composition/integrated-readiness';
+import {
+    useCompositionProfile
+} from '@pratibimba/integrated-composition';
 import type {
     IntegratedEmptyStateReason,
     IntegratedEmptyStateView
@@ -130,13 +133,9 @@ export interface PersonalCompositionModel {
 }
 
 export interface PersonalRecognitionCompositionProps {
-    readonly profile: MathemeHarmonicProfileBoundary | null;
     readonly selectedEntityId?: string | null;
     readonly sessionCloseEvent?: MObservabilityEvent | null;
 }
-
-const CompositionProfileContext =
-    React.createContext<MathemeHarmonicProfileBoundary | null>(null);
 
 const PERSONAL_CYMATIC_FIELD_AVAILABLE = false;
 const MAHAMAYA_RECOGNITION_SURFACE_AVAILABLE = false;
@@ -150,50 +149,41 @@ const NULL_CANVAS_BRIDGE = Object.freeze({
     publish: () => undefined
 });
 
-export function useCompositionProfile(
-    profile: MathemeHarmonicProfileBoundary | null
-): MathemeHarmonicProfileBoundary | null {
-    return React.useMemo(() => profile, [profile]);
-}
-
 export const PersonalRecognitionComposition: React.FC<PersonalRecognitionCompositionProps> = ({
-    profile,
     selectedEntityId,
     sessionCloseEvent
 }) => {
-    const compositionProfile = useCompositionProfile(profile);
+    const { profile: compositionProfile } = useCompositionProfile();
     const model = React.useMemo(
         () => buildPersonalCompositionModel(compositionProfile, selectedEntityId),
         [compositionProfile, selectedEntityId]
     );
     return (
-        <CompositionProfileContext.Provider value={compositionProfile}>
-            <section
-                className="personal-recognition-composition"
-                data-test="personal-recognition-composition"
-                data-entity-id={model.personalRecognition.perspectiveCard?.entityId ?? ''}
-                data-perspective-role={model.personalRecognition.perspectiveCard?.perspectiveRole ?? ''}
-                data-nara-family-role={model.personalRecognition.perspectiveCard?.naraFamilyRole ?? ''}
-                data-review-risk={model.personalRecognition.reviewLayer?.reviewRisk ?? ''}
-                data-blockers={model.blockers.join(',')}
-                data-profile-generation={model.generation ?? 'pending'}
+        <section
+            className="personal-recognition-composition"
+            data-test="personal-recognition-composition"
+            data-entity-id={model.personalRecognition.perspectiveCard?.entityId ?? ''}
+            data-perspective-role={model.personalRecognition.perspectiveCard?.perspectiveRole ?? ''}
+            data-nara-family-role={model.personalRecognition.perspectiveCard?.naraFamilyRole ?? ''}
+            data-review-risk={model.personalRecognition.reviewLayer?.reviewRisk ?? ''}
+            data-blockers={model.blockers.join(',')}
+            data-profile-generation={model.generation ?? 'pending'}
+        >
+            <CompositionAmbientRow />
+            <div
+                className="personal-recognition-editor-surface"
+                data-test="personal-recognition-editor-surface"
+                data-editor-surface="personal-recognition-composition"
             >
-                <CompositionAmbientRow />
-                <div
-                    className="personal-recognition-editor-surface"
-                    data-test="personal-recognition-editor-surface"
-                    data-editor-surface="personal-recognition-composition"
-                >
-                    <div className="personal-recognition-slot-row">
-                        <NaraJournalLeftSlot model={model} />
-                        <PersonalCymaticCenterSlot model={model} />
-                        <MahamayaRecognitionRightSlot model={model} />
-                    </div>
-                    <AnuttaraGroundingPanel model={model} />
-                    <SessionCloseOverlay event={sessionCloseEvent} />
+                <div className="personal-recognition-slot-row">
+                    <NaraJournalLeftSlot model={model} />
+                    <PersonalCymaticCenterSlot model={model} />
+                    <MahamayaRecognitionRightSlot model={model} />
                 </div>
-            </section>
-        </CompositionProfileContext.Provider>
+                <AnuttaraGroundingPanel model={model} />
+                <SessionCloseOverlay event={sessionCloseEvent} />
+            </div>
+        </section>
     );
 };
 
@@ -287,7 +277,7 @@ export function buildPersonalBeingPatternView(
 }
 
 const CompositionAmbientRow: React.FC = () => {
-    const profile = React.useContext(CompositionProfileContext);
+    const { profile } = useCompositionProfile();
     const relay = initialRelayState(false);
     return (
         <div
@@ -325,7 +315,7 @@ const CompositionAmbientRow: React.FC = () => {
 };
 
 const NaraJournalLeftSlot: React.FC<{ readonly model: PersonalCompositionModel }> = ({ model }) => {
-    const profile = React.useContext(CompositionProfileContext);
+    const { profile } = useCompositionProfile();
     const daySummary = objectValue(
         readNested(profile, ['naraSurface.daySummary', 'nara_surface.day_summary', 'daySummary'])
     );
@@ -416,7 +406,7 @@ const MahamayaRecognitionRightSlot: React.FC<{ readonly model: PersonalCompositi
 };
 
 const AnuttaraGroundingPanel: React.FC<{ readonly model: PersonalCompositionModel }> = ({ model }) => {
-    const profile = React.useContext(CompositionProfileContext);
+    const { profile } = useCompositionProfile();
     const slot = model.slots.find(item => item.slot === 'under')!;
     return (
         <footer

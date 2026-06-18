@@ -4,7 +4,7 @@ use epi_logos::epii_autoresearch::resonance_corpus::{
 };
 use epi_logos::{
     agent, app, book, code, core, ffi, gate, graph, know, nara, notebook, portal, profile, sesh,
-    slot, sync, techne, up, vault, vimarsa,
+    skill, slot, sync, techne, up, vault, vimarsa,
 };
 
 #[derive(Parser)]
@@ -56,6 +56,25 @@ enum Commands {
     Slot {
         #[command(subcommand)]
         cmd: slot::SlotCmd,
+    },
+    /// ML skill surface — vendored/custom skill registry and scaffold workflow
+    Skill {
+        #[command(subcommand)]
+        cmd: skill::SkillCmd,
+    },
+    /// Review a staged retrain artifact before promotion
+    #[command(name = "review-retrain")]
+    ReviewRetrain { retrain_id: String },
+    /// Promote a staged retrain artifact into its deployment slot
+    #[command(name = "promote-retrain")]
+    PromoteRetrain { retrain_id: String },
+    /// Reject a staged retrain artifact and record the calibration signal
+    #[command(name = "reject-retrain")]
+    RejectRetrain {
+        retrain_id: String,
+        /// Human-readable rejection reason recorded as calibration signal
+        #[arg(long)]
+        reason: Option<String>,
     },
     /// Pi bootstrap protocol — resonance corpus and EBM operations
     Pi {
@@ -218,6 +237,44 @@ async fn main() -> color_eyre::Result<()> {
                 std::process::exit(1);
             }
         },
+        Commands::Skill { cmd } => match skill::dispatch(cmd, cli.json) {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("skill error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::ReviewRetrain { retrain_id } => {
+            match skill::review_retrain(retrain_id, cli.json) {
+                Ok(out) if !out.is_empty() => println!("{}", out),
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("retrain review error: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
+        Commands::PromoteRetrain { retrain_id } => {
+            match skill::promote_retrain(retrain_id, cli.json) {
+                Ok(out) if !out.is_empty() => println!("{}", out),
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("retrain promotion error: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
+        Commands::RejectRetrain { retrain_id, reason } => {
+            match skill::reject_retrain(retrain_id, reason.as_deref(), cli.json) {
+                Ok(out) if !out.is_empty() => println!("{}", out),
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("retrain rejection error: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
         Commands::Pi { cmd } => match dispatch_pi(cmd) {
             Ok(out) => println!("{}", out),
             Err(e) => {
