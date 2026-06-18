@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T20:39:12.413Z",
+  "updatedAt": "2026-06-18T20:45:48.589Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -8148,11 +8148,20 @@
       "worktree": null
     },
     "41.T41.5": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T20:45:48.486Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T20:45:48.486Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T20:45:41.859Z",
+          "text": "5 arena tables added to Body/S/S3/epi-spacetime-module/src/lib.rs (arena_scene, arena_presence, arena_turn, arena_dialogue_line, warm_vama_shakti; private/protected-local, String hex identity-handle keying since SpacetimeDB 2.x has no [u8;32] column type). Pure helpers project_arena_scene_global + plan_arena_coincidence_reuse reuse Coincidence/CoincidenceTick machinery; thin reducers open/close_arena_scene, admit/release_arena_presence, record_arena_turn, emit_arena_dialogue_line, upsert_warm_vama_shakti. PROJECTION_SCHEMA_VERSION bumped 2026-06-02.s3-projection-v2 -> 2026-06-16.s3-projection-v3. Tests: 4 behavioural unit tests in lib.rs (arena_tables_round_trip 1 scene+3 presence(3 classifiers)+2 turn+2 line; classifier discrimination; privacy projection; coincidence reuse) + 5 structural tests in tests/arena_tables.rs. cargo test -p epi-spacetime-module = 11 passed; wasm32 build OK. NOTE follow-up: gateway-contract/src/spacetime.rs:15 mirror still v2 (out of write scope)."
+        },
+        {
+          "at": "2026-06-18T20:45:48.486Z",
+          "text": "see prior"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
