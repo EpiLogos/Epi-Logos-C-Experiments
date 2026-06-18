@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T23:27:56.358Z",
+  "updatedAt": "2026-06-18T23:35:54.201Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6585,12 +6585,21 @@
     },
     "25.T25.4": {
       "status": "done",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T23:31:34.906511+00:00",
           "text": "PASS: pasu-wizard.tsx (6-step stepper) + pasu.rs (PasuRecord). 5/5 Rust tests, 9/9 wizard tests, 49/49 m4-nara suite. pnpm build clean, cargo check clean. Cold-start wiring requires frontend-module.ts regen (FR-3 stub fallback per spec)."
         }
-      ]
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "25.T25.5": {
       "status": "pending",
@@ -8171,17 +8180,13 @@
       "worktree": null
     },
     "41.T41.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-18T23:36:43.126085+00:00",
+          "text": "PASS: 8 m4.arena.* routes in lib.rs, 8 CLI subcommands, 6 gate tests. All green: gateway-contract 60 lib tests, gate_m4_arena 6/6, arena_vama_shakti_e2e 4/4. CPF-gate + ONE-substrate authority enforcement per DR-VAMA-3/6."
+        }
+      ]
     },
     "41.T41.7": {
       "status": "pending",
