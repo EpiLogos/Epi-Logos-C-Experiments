@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T20:04:25.759Z",
+  "updatedAt": "2026-06-18T20:09:32.596Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5176,11 +5176,16 @@
       "worktree": null
     },
     "30.T30.8": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T20:09:32.805Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T20:09:32.805Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T20:09:23.578Z",
+          "text": "Authored ui-family-palette-derivation.md (6-tier derivation P/S/T/M/L/C citing M'-SYSTEM-SPEC Layer-2 manifestation; 36-token grid light/dark tables match ui-colour-tokens.json; DR-WC-DL-1 default deep-violet + rejected hueless alternative routed to user; CoordinateString [[M3-2]] worked example). test -f passes."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
