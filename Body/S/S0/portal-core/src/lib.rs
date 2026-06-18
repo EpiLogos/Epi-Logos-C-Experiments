@@ -23,6 +23,7 @@ pub mod transcription;
 pub mod tunable;
 pub mod types;
 pub mod vak_address;
+pub mod vama_shakti;
 
 pub use aspect::compute_aspects;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
@@ -53,3 +54,4 @@ pub use types::*;
 pub use vak_address::{
     canonical_cf_position, CfPosition, CpfState, CsDirection, CsField, VakAddress,
 };
+pub use vama_shakti::*;

@@ -4,6 +4,7 @@
 //! wind, clock, kairos, identity, decan, resonance, project,
 //! oracle, medicine, transform, lens, pratibimba, logos, status.
 
+pub mod arena;
 pub mod clock;
 pub mod identity;
 pub mod kairos;
@@ -106,6 +107,11 @@ pub enum NaraCmd {
     Logos {
         #[command(subcommand)]
         cmd: LogosCmd,
+    },
+    /// Dia-logical arena admin surface
+    Arena {
+        #[command(subcommand)]
+        cmd: arena::ArenaCmd,
     },
     /// Tunable resonance weight system
     Weights {
@@ -599,6 +605,7 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
             LogosCmd::Export { date, yes } => logos::export(date.as_deref(), *yes),
             LogosCmd::Weekly { json: j } => logos::weekly(*j || json),
         },
+        NaraCmd::Arena { cmd: sub } => arena::dispatch(sub, json),
         NaraCmd::Weights { cmd: sub } => match sub {
             WeightsCmd::Show { json: j } => weights::show(*j || json),
             WeightsCmd::Set { key, value } => weights::set_weight(key, *value),

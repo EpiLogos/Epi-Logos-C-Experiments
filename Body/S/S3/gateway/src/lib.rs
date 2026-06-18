@@ -1,6 +1,7 @@
 pub mod bootstrap;
 pub mod chat;
 pub mod dispatch;
+pub mod m4_arena;
 pub mod protocol;
 pub mod runtime;
 pub mod session_store;
