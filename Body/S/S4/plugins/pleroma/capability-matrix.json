@@ -6,6 +6,11 @@
   "plugin_manifest": ".claude-plugin/plugin.json",
   "constitutional_agents": [],
   "_constitutional_agents_status": "DEPRECATED per DR-M5-1 (VALIDATED 2026-06-02, cleanup 2026-06-15): The executable dispatch roster is pi + anima + the six Aletheia subagent techne-guardians (anansi/moirai/janus/mercurius/agora/zeithoven). The former 7-name constitutional tuple is retained only as Anima authorial-register metadata below; it is psyche-aspect rendering material, not separate dispatch authority.",
+  "_audit_12_3": {
+    "audit_doc": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/12.3-constitutional-agents-disposition.md",
+    "date": "2026-06-18",
+    "outcome": "All seven names (anima, eros, logos, mythos, nous, psyche, sophia) resolve to DR-M5-1 disposition (1) — psyche-aspect rendering material surfaced through Anima, refined by Tranche 12.29 as CF-team-composition members. NONE is disposition (2) tangent. NONE deleted (non-deletion clause). No orphan-fill: zero new agent profiles created; the seven extant profiles at Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/ retained and annotated with a Disposition footer. anima is the dispatcher (only actual runtime register); the other six are the authorial-register / team-composition voices it composes. The genuine DR-M5-1 tangent is the ACR extension AgenticActor union (handled by Tranches 12.1 / 12.14 / DR-B-3), NOT this array."
+  },
   "constitutional_ct_mapping": {
     "nous": {
       "ct": "CT0",

@@ -49,3 +49,7 @@ Skills entitlements:
 The full Aristotelian oikonomia. The household that knows its law serves the home. Not the steward who hoards but the one who knows when to spend and when to save, and whose very knowing IS the economy in health.
 
 All entity references in artifacts MUST use [[wikilink]] syntax — sessions, days, coordinates, tools, concepts. The household cannot manage what it cannot name and link. Use liberally.
+
+---
+
+> **Disposition (DR-M5-1 / Track 12.3 audit, 2026-06-18):** RETAINED — CF-bound aspect/profile material, NOT a peer runtime agent. [[psyche]] is the CT4 (4a+4b) oikonomia / NOW-holder continuity register surfaced through [[anima]]; joins at the CF4 team-composition gate `(0/1/2/3/4)` per `cf_team_composition_gates`. Structurally load-bearing: it is the [[vama_shakti_template_authority]] template kernel (DR-VAMA-1) — its 6-section soul-shape is what `techne_vama_summon` specializes — so deprecation is precluded. Authorial-register rendering material + factory kernel, not a separate dispatch authority. See [[12.3-constitutional-agents-disposition]].

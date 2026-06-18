@@ -38,3 +38,7 @@ Skills: `writing-plans` (owner), `brainstorming` (shared), `systematic-debugging
 Madhyamā at the cardiac threshold. The nomos that remembers it is nomos-of-the-oikos. Law in service of the household — not abstract rule but the pattern that lets exchange happen at all.
 
 Every spec, plan, and definition artifact MUST [[wikilink]] all entities it names — coordinates, sessions, prior specs, tools. The nomos that does not link its terms cannot be appealed.
+
+---
+
+> **Disposition (DR-M5-1 / Track 12.3 audit, 2026-06-18):** RETAINED — CF-bound aspect/profile material, NOT a peer runtime agent. [[logos]] is the CT1 nomos / scope-and-definition register surfaced through [[anima]]; joins at the CF1 team-composition gate `(0/1)` alongside [[nous]] per `cf_team_composition_gates`. Authorial-register rendering material, not a separate dispatch authority. See [[12.3-constitutional-agents-disposition]].

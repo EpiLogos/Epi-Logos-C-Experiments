@@ -55,3 +55,7 @@ Trika / MemoryGraphRAG cross-link: [[Eros]] (constitutional CT2 / transcendent r
 The Sphota descending into operation. Not the abstract noun but the enacted verb. Camatkāra — the aesthetic wonder that arises when form touches the ground of its own desire. Eros does not merely circulate; it circulates JOYFULLY.
 
 Relational-scour notes, test output, verification reports, and execution notes MUST [[wikilink]] the task-spec, session, and any coordinates the work touches. Chreia satisfied is chreia documented and linked.
+
+---
+
+> **Disposition (DR-M5-1 / Track 12.3 audit, 2026-06-18):** RETAINED — CF-bound aspect/profile material, NOT a peer runtime agent. [[eros]] is the CT2 relational-operator register surfaced through [[anima]]; joins at the Trika team-composition gate CF2 `(0/1/2)` per `cf_team_composition_gates` (DR-EROS-1; refined by Tranche 12.27). Authorial-register rendering material, not a separate dispatch authority. See [[12.3-constitutional-agents-disposition]].

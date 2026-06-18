@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T20:27:08.309Z",
+  "updatedAt": "2026-06-18T20:32:08.294Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1896,11 +1896,16 @@
       "worktree": null
     },
     "12.T12.3": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T20:32:08.193Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T20:32:08.193Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T20:32:08.193Z",
+          "text": "Audit doc plan.runs/12.3-constitutional-agents-disposition.md; capability-matrix.json patched with _audit_12_3 back-reference (JSON validates); all 7 agent profiles (anima,nous,logos,eros,mythos,psyche,sophia) annotated with Disposition footer = RETAIN as CF-bound aspect/team-composition material per DR-M5-1; 0 tangent, 0 deleted, 0 orphan-fill"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,

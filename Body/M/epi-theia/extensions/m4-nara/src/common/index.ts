@@ -17,6 +17,7 @@ export const ALL_VIEW_IDS = [
     "m4.nara.dayCalendar",
     "m4.nara.sessionBreakdown",
     "m4.nara.journalTimeline",
+    "m4.nara.journalEntries",
     "m4.nara.pasuWizard",
     "m4.nara.quintessence",
     "m4.nara.personalField",
