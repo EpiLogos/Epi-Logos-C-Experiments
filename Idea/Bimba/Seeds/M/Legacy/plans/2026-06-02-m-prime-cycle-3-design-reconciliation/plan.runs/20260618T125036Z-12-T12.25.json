@@ -1,0 +1,39 @@
+{
+  "runId": "20260618T125036Z-12-T12.25",
+  "taskId": "12.T12.25",
+  "startedAt": "2026-06-18T12:50:36.771Z",
+  "owner": "codex-m-dev-12-t12-25",
+  "leaseExpiresAt": "2026-06-18T14:50:36.771Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.25",
+    "trackId": "12",
+    "tranche": "T12.25",
+    "title": "Evolver / DGM integration as typed VAK choreography over existing primitives",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.24"
+    ],
+    "writeScopes": [
+      "Body/S/S4/ta-onta/S4-4p-anima/extension.ts:460",
+      "Body/S/S5/epii-autoresearch-core/src/lib.rs",
+      "Body/S/S5/epii-review-core/src/lib.rs:261-269",
+      "Idea/Empty/Discarded/{round-key}/*",
+      "Idea/Empty/Discarded/{round-key}/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

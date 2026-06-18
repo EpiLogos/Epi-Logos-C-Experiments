@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T10:59:15.263Z",
+  "updatedAt": "2026-06-18T12:57:04.635Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5809,16 +5809,21 @@
       "worktree": null
     },
     "12.T12.25": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-18T12:57:04.416Z",
+      "claimedAt": "2026-06-18T12:50:36.771Z",
+      "completedAt": "2026-06-18T12:57:04.416Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T12:57:04.416Z",
+          "text": "spec deliverable verified: 10/10 typed-VAK blocks in Idea/Bimba/Seeds/M/M5'/m5-prime-evolver-typed-vak-choreography.md; invariants/refinement/dependencies/no-new-primitives grep checks passed; plan.index.json and plan.state.json parse"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-12-t12-25",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T12:50:36.771Z",
+      "runId": "20260618T125036Z-12-T12.25",
       "worktree": null
     },
     "36.T36.1": {
@@ -7649,16 +7654,16 @@
       "worktree": null
     },
     "05.T5.27": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T12:50:14.828Z",
+      "claimedAt": "2026-06-18T12:50:14.828Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-05-t5-27",
+      "leaseExpiresAt": "2026-06-18T14:50:14.828Z",
+      "heartbeatAt": "2026-06-18T12:50:14.828Z",
+      "runId": "20260618T125014Z-05-T5.27",
       "worktree": null
     },
     "09.T9.14": {
@@ -8052,16 +8057,16 @@
       "worktree": null
     },
     "41.T41.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T12:50:46.266Z",
+      "claimedAt": "2026-06-18T12:50:46.266Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-41-t41-10",
+      "leaseExpiresAt": "2026-06-18T14:50:46.266Z",
+      "heartbeatAt": "2026-06-18T12:50:46.266Z",
+      "runId": "20260618T125046Z-41-T41.10",
       "worktree": null
     },
     "41.T41.11": {
@@ -8167,16 +8172,21 @@
       "worktree": null
     },
     "42.T42.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-18T12:56:36.470Z",
+      "claimedAt": "2026-06-18T12:50:06.915Z",
+      "completedAt": "2026-06-18T12:56:36.470Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T12:56:36.470Z",
+          "text": "41 focused pytest checks passed (harness executor, project metadata, provider profiles); key paths: vendors/hermes-agent/ta_onta/harness_executor.py, vendors/hermes-agent/tests/ta_onta/test_harness_executor.py, vendors/hermes-agent/pyproject.toml, vendors/hermes-agent/AGENTS.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-42-t42-2",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T12:50:06.915Z",
+      "runId": "20260618T125006Z-42-T42.2",
       "worktree": null
     },
     "42.T42.3": {
@@ -10487,26 +10497,64 @@
       "leaseExpiresAt": "2026-06-18T12:08:36.131Z",
       "worktree": null,
       "completedAt": "2026-06-18T10:50:16.598Z"
+    },
+    {
+      "runId": "20260618T125006Z-42-T42.2",
+      "taskId": "42.T42.2",
+      "status": "done",
+      "startedAt": "2026-06-18T12:50:06.915Z",
+      "owner": "codex-m-dev-42-t42-2",
+      "leaseExpiresAt": "2026-06-18T14:50:06.915Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T12:56:36.470Z"
+    },
+    {
+      "runId": "20260618T125014Z-05-T5.27",
+      "taskId": "05.T5.27",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T12:50:14.828Z",
+      "owner": "codex-m-dev-05-t5-27",
+      "leaseExpiresAt": "2026-06-18T14:50:14.828Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260618T125036Z-12-T12.25",
+      "taskId": "12.T12.25",
+      "status": "done",
+      "startedAt": "2026-06-18T12:50:36.771Z",
+      "owner": "codex-m-dev-12-t12-25",
+      "leaseExpiresAt": "2026-06-18T14:50:36.771Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T12:57:04.416Z"
+    },
+    {
+      "runId": "20260618T125046Z-41-T41.10",
+      "taskId": "41.T41.10",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T12:50:46.266Z",
+      "owner": "codex-m-dev-41-t41-10",
+      "leaseExpiresAt": "2026-06-18T14:50:46.266Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T10:07:29.681Z",
-    "updatedAt": "2026-06-18T10:07:29.681Z",
+    "createdAt": "2026-06-18T12:49:51.191Z",
+    "updatedAt": "2026-06-18T12:49:51.191Z",
     "taskIds": [
       "31.T31.13",
-      "12.T12.24",
-      "05.T5.26",
-      "05.T5.27"
+      "05.T5.27",
+      "05.T5.3",
+      "05.T5.4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "12.T12.24": "in-session",
-      "05.T5.26": "in-session",
-      "05.T5.27": "in-session"
+      "05.T5.27": "in-session",
+      "05.T5.3": "in-session",
+      "05.T5.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

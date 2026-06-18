@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T125014Z-29-T29.5",
+  "taskId": "29.T29.5",
+  "startedAt": "2026-06-18T12:50:14.248Z",
+  "owner": "codex-m-dev-29-t29-5",
+  "leaseExpiresAt": "2026-06-18T14:50:14.248Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.5",
+    "trackId": "29",
+    "tranche": "T29.5",
+    "title": "Typed `IntegratedReadiness` envelope + kernel-bridge readiness ledger parity *(spec-ahead-integration; closes 11.8; consumes Track 10 readiness ledger)*",
+    "effort": null,
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "29.T29.4"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-readiness.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}
