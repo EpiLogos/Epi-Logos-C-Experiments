@@ -10,5 +10,14 @@ export function routePluginIdentityAugmentProposalThroughM5Gate(
     proposal: IdentityAugmentReviewProposal,
     now: number
 ): RoutedIdentityAugmentReviewProposal {
-    return routeIdentityAugmentProposalThroughM5ReviewGate(state, proposal, now);
+    return routeIdentityAugmentProposalThroughM5ReviewGate(
+        state,
+        {
+            ...proposal,
+            humanRequired:
+                proposal.humanRequired ||
+                (proposal.recursiveSelfReview && !proposal.actorIsHuman)
+        },
+        now
+    );
 }

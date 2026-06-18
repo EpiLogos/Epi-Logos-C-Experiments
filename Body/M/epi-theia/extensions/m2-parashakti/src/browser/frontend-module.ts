@@ -8,12 +8,19 @@ import {
 } from '@theia/core/lib/browser';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
+    Disposable,
+    EMPTY_STATE_REGISTRY,
+    EmptyStateRegistry,
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
     parseExtensionRoute,
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
+import {
+    M2ParashaktiEmptyState,
+    M2ParashaktiEmptyStateWidget
+} from './empty-state';
 import { M2CymaticEngineWidget } from './m2-cymatic-engine-widget';
 import { M2CorrespondenceTreeWidget } from './m2-correspondence-tree-widget';
 import { M2ParashaktiWidget } from './m2-parashakti-widget';
@@ -79,8 +86,22 @@ export class M2ParashaktiContribution
         registerIntentTarget(
             commands,
             EXTENSION_ID,
+            'meaning-packet',
+            'M2 Parashakti: Open Meaning Packet',
+            () => this.openView({ activate: true, reveal: true })
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
             'resonance',
             'M2 Parashakti: Open Resonance Packet',
+            () => this.openView({ activate: true, reveal: true })
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'correspondenceTree',
+            'M2 Parashakti: Open Correspondence Tree',
             () => this.openView({ activate: true, reveal: true })
         );
     }
@@ -106,8 +127,31 @@ class M2ParashaktiPublisher implements MObservabilityPublisher {
     }
 }
 
+@injectable()
+class M2ParashaktiEmptyStateRegistration implements FrontendApplicationContribution {
+    @inject(EMPTY_STATE_REGISTRY)
+    protected readonly emptyStates!: EmptyStateRegistry;
+
+    protected disposable?: Disposable;
+
+    onStart(): void {
+        this.disposable = this.emptyStates.register({
+            extensionId: EXTENSION_ID,
+            viewId: 'm2-parashakti.primary',
+            activationCondition: snapshot => snapshot.state !== 'ready_public_current',
+            component: M2ParashaktiEmptyState
+        });
+    }
+
+    onStop(): void {
+        this.disposable?.dispose();
+        this.disposable = undefined;
+    }
+}
+
 export default new ContainerModule(bind => {
     bind(M2ParashaktiWidget).toSelf();
+    bind(M2ParashaktiEmptyStateWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M2ParashaktiWidget.ID,
@@ -135,6 +179,8 @@ export default new ContainerModule(bind => {
     bind(M2_PARASHAKTI_PUBLISHER).toService(
         M2ParashaktiPublisher
     );
+    bind(M2ParashaktiEmptyStateRegistration).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(M2ParashaktiEmptyStateRegistration);
 
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.

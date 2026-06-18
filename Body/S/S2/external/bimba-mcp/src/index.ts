@@ -11,6 +11,8 @@
  */
 
 import { createRequire } from 'module';
+import { execFileSync } from 'node:child_process';
+import neo4j from 'neo4j-driver';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
@@ -50,17 +52,39 @@ import {
   type GraphChunkResult,
   type GraphRerankOutput,
 } from './schemas.js';
-import type { GraphTraverseOutput, ContextResult, SpecResult, CoordinateFilter, DisclosureResult, GraphTraversePositionsOutput, GraphAdminOutput } from './schemas/graph.js';
+import type { GraphTraverseOutput, ContextResult, CoordinateFilter, DisclosureResult, GraphTraversePositionsOutput, GraphAdminOutput } from './schemas/graph.js';
 import { GraphTraversePositionsInputSchema, GraphAdminInputSchema } from './schemas/graph.js';
 import { isCanonicalCoordinateSyntax } from './coordinates/syntax.js';
 import { parseCoordinate } from './coordinates/parser.js';
 
-import { queryByCoordinate, traverse, traversePositions, context, spec, search, disclosure, embed, embedBatch, validate, chunk, rerank, admin, mapNeo4jNode } from './api/graph.js';
+import { queryByCoordinate, traverse, traversePositions, context, search, disclosure, embed, embedBatch, embedNodes, validate, chunk, rerank, admin, mapNeo4jNode } from './api/graph.js';
+import { GraphEmbedBatchInputSchema } from './schemas/graph.js';
+import {
+  runCypher,
+  upsertNode,
+  setProperty,
+  setLabels,
+  createRelationship,
+  deleteRelationship,
+  deleteNode,
+  graphSchema,
+} from './api/graph-crud.js';
+import {
+  GraphCypherInputSchema,
+  GraphUpsertNodeInputSchema,
+  GraphSetPropertyInputSchema,
+  GraphLabelInputSchema,
+  GraphCreateRelationshipInputSchema,
+  GraphDeleteRelationshipInputSchema,
+  GraphDeleteNodeInputSchema,
+  GraphSchemaInputSchema,
+} from './schemas/graph-crud.js';
 import { sync } from './api/sync.js';
 import { getNeo4jConnectionManager } from './db/neo4j.js';
 import { loadTelegramConfig } from './telegram/config.js';
 import { TelegramService } from './telegram/service.js';
 import type { TelegramCachedMessage } from './telegram/types.js';
+import { specRetrieveContentText } from './tools/spec-retrieve.js';
 
 // =============================================================================
 // Server Configuration
@@ -290,7 +314,8 @@ async function listCoordinates(
   
   let query = 'MATCH (node:Bimba) ';
   const conditions: string[] = [];
-  const params: Record<string, unknown> = { limit: limit ?? 20 };
+  // Neo4j needs an Integer for LIMIT (the JS driver marshals plain numbers as floats).
+  const params: Record<string, unknown> = { limit: neo4j.int(limit ?? 20) };
 
   if (type) {
     conditions.push('node.coordinate STARTS WITH $type');
@@ -358,27 +383,19 @@ async function graphTraverse(
 
 async function graphTraversePositions(
   start_uuid: string,
-  position_sequence: number[],
+  rel_type_sequence: string[],
   max_per_position?: number
 ): Promise<GraphTraversePositionsOutput> {
-  return traversePositions(start_uuid, position_sequence, max_per_position);
+  return traversePositions(start_uuid, rel_type_sequence, max_per_position);
 }
 
 async function graphContext(
   entity_uuid: string,
   depth?: number,
   mode?: 'narrow' | 'balanced' | 'wide',
-  positions?: number[]
+  rel_types?: string[]
 ): Promise<ContextResult> {
-  return context(entity_uuid, depth, mode, positions);
-}
-
-async function specRetrieve(
-  entity_name: string,
-  include_connected?: boolean,
-  max_connected_per_position?: number
-): Promise<SpecResult> {
-  return spec(entity_name, include_connected, max_connected_per_position);
+  return context(entity_uuid, depth, mode, rel_types);
 }
 
 async function graphSearch(
@@ -420,7 +437,52 @@ function validateCoordinate(coordinate: string): void {
 // Server Setup
 // =============================================================================
 
+/**
+ * Best-effort: pull selected vars from the user's LOGIN+INTERACTIVE shell so the
+ * server picks up secrets (e.g. GEMINI_API_KEY) exported in ~/.zshrc / ~/.zprofile.
+ * GUI launchers like Claude Desktop do NOT inherit the interactive shell env, so
+ * without this the key set in your zsh would be invisible to the MCP. Anything
+ * already present in process.env (e.g. passed via the MCP config) always wins.
+ */
+function hydrateEnvFromLoginShell(vars: string[]): void {
+  const missing = vars.filter((v) => !process.env[v]);
+  if (missing.length === 0) return;
+  try {
+    const shell = process.env['SHELL'] || '/bin/zsh';
+    // NUL-delimited KEY=VALUE pairs survive newlines/quotes in values.
+    const script = missing.map((v) => `printf '%s=%s\\0' '${v}' "$${v}"`).join('; ');
+    const out = execFileSync(shell, ['-lic', script], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+      timeout: 4000,
+    });
+    for (const pair of out.split('\0')) {
+      const eq = pair.indexOf('=');
+      if (eq <= 0) continue;
+      const key = pair.slice(0, eq);
+      const val = pair.slice(eq + 1).trim();
+      if (val && !process.env[key]) process.env[key] = val;
+    }
+  } catch {
+    // Best-effort only; embedding tools surface a clear error if the key is absent.
+  }
+}
+
 async function main(): Promise<void> {
+  // Resolve cloud embedding creds from the user's shell if the launcher didn't pass them.
+  hydrateEnvFromLoginShell(['GEMINI_API_KEY', 'GEMINI_EMBEDDING_MODEL', 'GEMINI_EMBEDDING_OPT_IN']);
+  // A present API key is treated as opt-in for this standalone server.
+  if (process.env['GEMINI_API_KEY'] && process.env['GEMINI_EMBEDDING_OPT_IN'] === undefined) {
+    process.env['GEMINI_EMBEDDING_OPT_IN'] = 'true';
+  }
+  if (process.env['GEMINI_API_KEY']) {
+    console.error(
+      `[bimba-mcp] Gemini embedding ready (model: ${process.env['GEMINI_EMBEDDING_MODEL'] ?? 'UNSET — export GEMINI_EMBEDDING_MODEL'})`
+    );
+  } else {
+    console.error('[bimba-mcp] No GEMINI_API_KEY found; embedding tools will error until one is set.');
+  }
+
   const telegramConfig = loadTelegramConfig();
   const telegramService = telegramConfig.enabled
     ? new TelegramService(telegramConfig)
@@ -793,117 +855,44 @@ Progressive layers of operational specificity:
           mimeType: 'text/markdown',
           text: `# Relationship Type Documentation
 
-Relationships in the Bimba knowledge graph encode both structural and semantic meaning. Relationship types follow position-based naming conventions and carry specific traversal semantics.
+Relationships in the Bimba knowledge graph are **named and correspondential** — there is no positional \`POSn_*\` taxonomy. Do NOT request POS0_LINKS_TO / POS1_DEFINES / … : those types do not exist in the graph (the legacy positional scheme is retired per the S2 graph-schema canon).
 
-## Position-Based Relationships
+**Always call \`graph_schema\` to get the live, authoritative list** of relationship types and their counts. The catalogue below is descriptive, not exhaustive (the graph carries ~1,400 distinct types, dominated by domain-specific correspondential edges).
 
-Relationships named with position patterns (e.g., POS0_LINKS_TO, POS1_DEFINES) indicate the semantic level at which the relationship operates.
+## Relationship families (from S2 canon: graph-schema RELATIONSHIP_TYPE_SPECS)
 
-### POS0 Relationships (Ground Level)
-**Raw connections, basic adjacency**
-
-- **POS0_LINKS_TO**: Direct reference without semantic interpretation
-- **POS0_REFERENCES**: Basic connection between entities
-- Semantic level: Bare fact of relatedness
-- Traversal: Broadest possible scope, most connections
-
-### POS1 Relationships (Definition Level)
-**Material composition, constituents**
-
-- **POS1_DEFINES**: X is part of what makes Y
-- **POS1_CONTAINS**: X contains Y as a component
-- **POS1_COMPOSED_OF**: X is composed of Y elements
-- Semantic level: Structural composition
-- Traversal: Finding components and constituents
-
-### POS2 Relationships (Operation Level)
-**Processes, methods, operations**
-
-- **POS2_ENABLES**: X enables/allows Y to happen
-- **POS2_REQUIRES**: X requires Y to operate
-- **POS2_TRANSFORMS**: X transforms into Y
-- **POS2_IMPLEMENTS**: X implements method/process Y
-- Semantic level: Operational causality
-- Traversal: Finding operations and methods
-
-### POS3 Relationships (Pattern Level)
-**Recurring structures, templates**
-
-- **POS3_INSTANTIATES**: X is an instance of pattern Y
-- **POS3_EXEMPLIFIES**: X exemplifies structure Y
-- **POS3_FOLLOWS**: X follows template Y
-- Semantic level: Pattern matching
-- Traversal: Finding archetypal relationships
-
-### POS4 Relationships (Context Level)
-**Temporal, spatial, circumstantial**
-
-- **POS4_PRECEDES**: X temporally precedes Y
-- **POS4_INFLUENCES**: X influences Y in context
-- **POS4_LOCATED_IN**: X is located in context Y
-- **POS4_DURING**: X occurs during period Y
-- Semantic level: Contextual situation
-- Traversal: Finding temporal and spatial relations
-
-### POS5 Relationships (Integration Level)
-**Synthesis, wholeness**
-
-- **POS5_INTEGRATES**: X is integrated with Y
-- **POS5_SYNTHESIZES**: X synthesizes Y elements
-- **POS5_COMPLETES**: X completes/fulfills Y
-- Semantic level: Holistic coherence
-- Traversal: Finding comprehensive connections
-
-## General Relationships
+### Seed-topology (the coordinate engine's own relations)
+- **MANIFESTS** — an archetype manifests as a coordinate/family member
+- **BEDROCK** — grounding to the raw archetype layer
+- **FAMILY_CONTAINS** — a family contains its member coordinates
+- **INVERTS_TO** — the # inversion act (X → X')
+- **MOBIUS_RETURN** — #5 → #0 closure
+- **GENERATES / ENTANGLES / INTERLEAVES / ANCHORED_TO** — seed weave relations
 
 ### Structural
-- **CONTAINS**: Hierarchical containment (parent-child)
-- **REFERENCES**: General reference relationship
-- **RELATED_TO**: Generic relationship
+- **CONTAINS / PART_OF / REFERENCES / SOURCES** — hierarchy and provenance
 
-### Semantic
-- **DESCRIBES**: X describes Y
-- **EXPLAINS**: X explains Y
-- **INTERPRETS**: X provides interpretation of Y
+### LLM-inferred (semantic)
+- **OPERATES_IN / REFLECTS_AS / ELABORATES / CONTRASTS / IMPLEMENTS / SUPPORTS / CRITIQUES / DERIVES_FROM**
 
-### Graph-Specific
-- **CHUNK_OF**: Relationship from chunk to parent document (chunking module)
-- **LENS_VIEW**: Relationship through a particular lens (L-coordinate perspective)
+### Sync
+- **PROMOTES_TO / SYNCED_FROM**
 
-## Relationship Filtering in Queries
+### Correspondential (deep-dataset; the bulk of live edges)
+Domain-specific edges emitted by dataset importers, e.g. **HAS_INTERNAL_COMPONENT**, **LINE_CHANGE**, **GOVERNS_DEGREE_ARC**, **FLOWS_CLOCKWISE**, **POLAR_OPPOSITE**, **CAUSAL_RESONANCE**, **YIELDS_CODON**, **HAS_DECAN**, **TRIKA_PRAKASA_VIMARSA**, **QUATERNAL_POLAR_COMPLEMENT**, and hundreds more. Discover these with \`graph_schema\` then traverse by the exact type.
 
-When traversing the graph, you can filter by relationship types:
+## Filtering and traversal
 
-    
-traverse(start_node, rel_types: ["POS0_LINKS_TO", "POS1_DEFINES"], max_depth: 2)
+- **graph_context** accepts \`rel_types: ["MANIFESTS","OPERATES_IN"]\` to restrict neighbors to those connecting relationship types; its output groups neighbors by actual \`type(rel)\`.
+- **graph_traverse_positions** follows a \`rel_type_sequence\` hop by hop, e.g. \`["FAMILY_CONTAINS","MANIFESTS"]\`.
+- **graph_traverse** accepts a \`rel_types\` filter of real types.
+- **graph_cypher** can match any pattern directly, e.g. \`MATCH (n:Bimba {coordinate:$c})-[r]->(m) RETURN type(r), m.coordinate\`.
 
+## Workflow
 
-This finds only entities connected through the specified relationship types.
-
-## Relationship Interpretation Rules
-
-1. **Position determines semantics**: POS2_ENABLES is about operations, not raw facts
-2. **Day/Night mode affects meaning**: Same relationship in night mode might be receptive vs. active
-3. **Prime aspect matters**: POS2 (canonical operation) vs. POS2' (operational instance)
-4. **Directionality**: Relationships can be traversed in/out or in specific directions
-5. **Combinatoric meaning**: Paths of multiple relationships create richer meaning
-
-## Common Traversal Patterns
-
-### "What is X made of?" (P1 level)
-Use POS1 relationships: DEFINES, CONTAINS, COMPOSED_OF
-
-### "How does X work?" (P2 level)
-Use POS2 relationships: ENABLES, REQUIRES, TRANSFORMS, IMPLEMENTS
-
-### "What pattern does X follow?" (P3 level)
-Use POS3 relationships: INSTANTIATES, EXEMPLIFIES, FOLLOWS
-
-### "What is X's context?" (P4 level)
-Use POS4 relationships: PRECEDES, INFLUENCES, LOCATED_IN, DURING
-
-### "What does X integrate with?" (P5 level)
-Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
+1. \`graph_schema\` → list the real relationship types (+ counts) and property-key prefixes.
+2. Pick the exact type(s) you need.
+3. Traverse with \`graph_context\` / \`graph_traverse\` / \`graph_traverse_positions\` / \`graph_cypher\`.
 `,
         },
       ],
@@ -933,7 +922,7 @@ Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
 
   server.tool(
     'semantic_search',
-    'Search the Bimba knowledge graph using natural language',
+    'Search the Bimba knowledge graph by natural language. NOTE: ranking is currently graph-structure (node degree) + keyword matching on names/content — true vector similarity is pending embedding generation (none stored yet). For precise lookups prefer resolve_coordinate / graph_cypher.',
     SemanticSearchInputSchema.shape,
     async (args) => {
       if (args.coordinate_filter) {
@@ -1020,12 +1009,12 @@ Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
 
   server.tool(
     'graph_traverse_positions',
-    'Traverse the knowledge graph following a specific sequence of QL position levels (P0-P5)',
+    'Traverse the knowledge graph following a sequence of real relationship types hop by hop (e.g. ["FAMILY_CONTAINS","MANIFESTS"]). Call graph_schema for the relationship-type vocabulary. (The legacy positional POSn_* scheme is retired — it exists nowhere in the graph.)',
     GraphTraversePositionsInputSchema.shape,
     async (args) => {
       const result = await graphTraversePositions(
         args.start_uuid,
-        args.position_sequence,
+        args.rel_type_sequence,
         args.max_per_position ?? 10
       );
       return {
@@ -1043,7 +1032,7 @@ Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
         args.entity_uuid,
         args.depth ?? 2,
         args.mode ?? 'balanced',
-        args.positions
+        args.rel_types
       );
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
@@ -1053,23 +1042,19 @@ Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
 
   server.tool(
     'spec_retrieve',
-    'Retrieve entity specification including coordinates, content, and connected entities organized by position',
+    'Retrieve the canon-engine coordinate payload as a byte-identical MCP wire mirror of epi canon coord',
     SpecRetrieveInputSchema.shape,
     async (args) => {
-      const result = await specRetrieve(
-        args.entity_name,
-        args.include_connected ?? true,
-        args.max_connected_per_position ?? 10
-      );
+      const result = await specRetrieveContentText(args);
       return {
-        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+        content: [{ type: 'text', text: result }],
       };
     }
   );
 
   server.tool(
     'graph_search',
-    'Perform hybrid search combining vector similarity and graph structure, with optional chunk-aware search and parent document expansion',
+    'Hybrid search over the graph. NOTE: vector modes currently fall back to graph-structure (degree) + keyword ranking — no embeddings are stored yet, so vector_only/hybrid behave as graph-ranked. Chunk-aware search returns nothing until the chunk pipeline is populated.',
     GraphSearchInputSchema.shape,
     async (args) => {
       const result = await graphSearch(
@@ -1138,7 +1123,7 @@ Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
         const result: BatchEmbeddingResult = await embedBatch(
           input.texts,
           (input.task_type ?? 'SEMANTIC_SIMILARITY') as any,
-          (input.dimensions ?? 768) as any,
+          (input.dimensions ?? 3072) as any,
           Array.isArray(input.store_for) ? input.store_for : undefined
         );
         return {
@@ -1151,7 +1136,7 @@ Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
         const result: EmbeddingResult = await embed(
           input.text,
           (input.task_type ?? 'SEMANTIC_SIMILARITY') as any,
-          (input.dimensions ?? 768) as any,
+          (input.dimensions ?? 3072) as any,
           typeof input.store_for === 'string' ? input.store_for : undefined
         );
         return {
@@ -1161,6 +1146,26 @@ Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
 
       // Should not reach here
       throw new Error('Invalid input: either text or texts must be provided');
+    }
+  );
+
+  server.tool(
+    'graph_embed_batch',
+    'Batch-embed a focused set of :Bimba nodes into c_5_embedding (3072-d) so they become vector-searchable — target by coordinate branch (coordinate_prefix, e.g. "M1"), by label, and/or only_missing nodes. Composes embedding text from each node\'s name/description/rich fields. Requires GEMINI_API_KEY + GEMINI_EMBEDDING_MODEL (auto-detected from your shell at startup). Re-run to continue large branches. Returns per-node status.',
+    GraphEmbedBatchInputSchema.shape,
+    async (args) => {
+      const input = GraphEmbedBatchInputSchema.parse(args);
+      const result = await embedNodes({
+        coordinatePrefix: input.coordinate_prefix,
+        label: input.label,
+        onlyMissing: input.only_missing,
+        limit: input.limit,
+        dimensions: input.dimensions,
+        taskType: input.task_type,
+      });
+      return {
+        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+      };
     }
   );
 
@@ -1312,8 +1317,124 @@ Use POS5 relationships: INTEGRATES, SYNTHESIZES, COMPLETES
   );
 
   // ---------------------------------------------------------------------------
+  // Raw Cypher + CRUD + introspection (open-schema escape hatch)
+  // Use the curated tools (graph_query, graph_context, resolve_coordinate,
+  // spec_retrieve) for shaped, known-coordinate reads. Use these to explore the
+  // REAL schema, reach properties/labels/relationships the curated tools don't
+  // model, or mutate the graph. Run graph_schema first to discover the actual
+  // labels, relationship types, and property-key prefixes before guessing.
+  // ---------------------------------------------------------------------------
+
+  server.tool(
+    'graph_cypher',
+    'Execute an arbitrary parametrized Cypher statement against the Bimba Neo4j graph. Read-only by default (rejects CREATE/MERGE/SET/DELETE/REMOVE and uses a READ session); set write:true for mutations. ALWAYS use $params for values — never interpolate values into the query string. Single statement only. Run graph_schema first to discover real labels/relationship-types/property-keys.',
+    GraphCypherInputSchema.shape,
+    async (args) => {
+      const result = await runCypher(GraphCypherInputSchema.parse(args));
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    'graph_schema',
+    'Introspect the live graph: node labels, relationship types, property keys, property-key prefix inventory ({family}_{n}_), and per-label/type counts. Discover the real schema instead of guessing. Note: relationships are named/correspondential (MANIFESTS, OPERATES_IN, HAS_INTERNAL_COMPONENT…), NOT positional POSn_*.',
+    GraphSchemaInputSchema.shape,
+    async (args) => {
+      const result = await graphSchema(GraphSchemaInputSchema.parse(args));
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    'graph_upsert_node',
+    'MERGE a node on an anchor key (coordinate by default, or uuid/match_key) and SET arbitrary properties + labels. ANY property key is allowed, prefixed or not (e.g. {"coordinate":"M2-5","c_1_name":"X","custom_flag":true}). Idempotent.',
+    GraphUpsertNodeInputSchema.shape,
+    async (args) => {
+      const result = await upsertNode(GraphUpsertNodeInputSchema.parse(args));
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    'graph_set_property',
+    'SET and/or REMOVE individual properties on a located node (located by coordinate, uuid, or match_key/value). Any property key allowed, prefixed or not.',
+    GraphSetPropertyInputSchema.shape,
+    async (args) => {
+      const result = await setProperty(GraphSetPropertyInputSchema.parse(args));
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    'graph_add_label',
+    'Add one or more labels to a located node.',
+    GraphLabelInputSchema.shape,
+    async (args) => {
+      const result = await setLabels(GraphLabelInputSchema.parse(args), 'add');
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    'graph_remove_label',
+    'Remove one or more labels from a located node.',
+    GraphLabelInputSchema.shape,
+    async (args) => {
+      const result = await setLabels(GraphLabelInputSchema.parse(args), 'remove');
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    'graph_create_relationship',
+    'MERGE (idempotent, default) or CREATE a typed relationship between two located nodes. rel_type is any valid type (e.g. MANIFESTS, INVERTS_TO, GENERATES). Both endpoints located by coordinate, uuid, or match_key/value.',
+    GraphCreateRelationshipInputSchema.shape,
+    async (args) => {
+      const result = await createRelationship(GraphCreateRelationshipInputSchema.parse(args));
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    'graph_delete_relationship',
+    'Delete relationship(s) between two located nodes. If rel_type is omitted, deletes relationships of ANY type. direction: out (default) | in | both.',
+    GraphDeleteRelationshipInputSchema.shape,
+    async (args) => {
+      const result = await deleteRelationship(GraphDeleteRelationshipInputSchema.parse(args));
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    'graph_delete_node',
+    'Delete a located node. detach:false (default) fails if relationships exist; detach:true removes the node AND its relationships. Requires confirm:true.',
+    GraphDeleteNodeInputSchema.shape,
+    async (args) => {
+      const result = await deleteNode(GraphDeleteNodeInputSchema.parse(args));
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  // ---------------------------------------------------------------------------
   // Start Server
   // ---------------------------------------------------------------------------
+
+  // Establish the Neo4j connection BEFORE serving requests. Without this the
+  // singleton driver stays null, isConnected() returns false, and every tool
+  // throws "Not connected to Neo4j". We do not let a DB failure abort startup —
+  // the server still registers its tools so Claude Desktop sees them, and the
+  // per-call connection guards surface a clear error instead of a silent hang.
+  const connectionManager = getNeo4jConnectionManager();
+  try {
+    await connectionManager.connect();
+    const { uri } = connectionManager.getConfig();
+    console.error(`[bimba-mcp] Connected to Neo4j at ${uri}`);
+  } catch (error) {
+    console.error(
+      '[bimba-mcp] WARNING: Neo4j connection failed at startup; tool calls will error until the database is reachable:',
+      error instanceof Error ? error.message : String(error)
+    );
+  }
 
   const transport = new StdioServerTransport();
   await server.connect(transport);

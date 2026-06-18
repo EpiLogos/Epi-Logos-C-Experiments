@@ -86,6 +86,30 @@ const Virtue_Entry VIRTUE_LUT[9] = {
       .symbol = "5R = @ = (##)" },
 };
 
+M0_VerifierVerdict m0_check_tune_structural_invariant_compliance(
+    const M0_TuneProposal* proposal
+) {
+    M0_VerifierVerdict verdict;
+    memset(&verdict, 0, sizeof(verdict));
+
+    if (proposal == NULL) {
+        verdict.violation = 1;
+        strncpy(verdict.violation_name, "null-proposal", sizeof(verdict.violation_name) - 1u);
+        return verdict;
+    }
+
+    if (proposal->target_structural_invariant != 0) {
+        verdict.violation = 1;
+        strncpy(
+            verdict.violation_name,
+            "structural-invariant-violation",
+            sizeof(verdict.violation_name) - 1u
+        );
+    }
+
+    return verdict;
+}
+
 /* =============================================================================
  * FR 2.0.3-H: ZODIACAL LUT — 12 entries (sub-table of Archetype 5 = Vak)
  * ============================================================================= */
@@ -424,16 +448,133 @@ const QL_Frame QL_STACK[5] = {
 };
 
 /* =============================================================================
- * FR 2.0.4-H: NARA BRIDGE — 5 entries
+ * FR 2.0.4-H: NARA BRIDGE — 6 entries (Tranche 01.T1.16)
+ *
+ * The 6-fold kinship-grammar as kernel LUT:
+ *   [0] ##       — kinship ground, MATRIX, polarity BOTH  (0/1)
+ *   [1] Daughter — SUBDOMINANT,       polarity YIN   (1/1-)
+ *   [2] Father   — DOMINANT,          polarity YANG  (2-/2)
+ *   [3] Son      — SUBDOMINANT,       polarity YANG  (3/3-)
+ *   [4] Mother   — INTEGRATIVE,       polarity YIN   (4./4)
+ *   [5] Tao      — DOMINANT,          polarity BOTH  (5-/5)  synthesis pole
+ *
+ * Dominant poles = parents (Father, Mother); subdominant = children (Son, Daughter);
+ * Tao = synthesis; ## = kinship ground.
+ * Chirality is read off the coordinate, never additive.
+ * gender = polarity, generation = dominance.
  * ============================================================================= */
 
-const Nara_Entry NARA_MSHARP_LUT[5] = {
-    { .frame_position = 0, .polarity = NARA_POLARITY_BOTH, .dominant_val = 0, .archetype_role = 0 },
-    { .frame_position = 1, .polarity = NARA_POLARITY_YIN,  .dominant_val = 1, .archetype_role = 1 },
-    { .frame_position = 2, .polarity = NARA_POLARITY_YANG, .dominant_val = 2, .archetype_role = 2 },
-    { .frame_position = 3, .polarity = NARA_POLARITY_YANG, .dominant_val = 3, .archetype_role = 3 },
-    { .frame_position = 4, .polarity = NARA_POLARITY_YIN,  .dominant_val = 4, .archetype_role = 4 },
+const Nara_Entry NARA_MSHARP_LUT[6] = {
+    /* [0] ## — kinship ground (0/1), MATRIX */
+    { .frame_position = 0, .polarity = NARA_POLARITY_BOTH,
+      .dominant_val = 0, .archetype_role = 0,
+      .dominance_mode = NARA_DOM_MATRIX },
+    /* [1] Daughter (1/1-), SUBDOMINANT */
+    { .frame_position = 1, .polarity = NARA_POLARITY_YIN,
+      .dominant_val = 1, .archetype_role = 1,
+      .dominance_mode = NARA_DOM_SUBDOMINANT },
+    /* [2] Father (2-/2), DOMINANT */
+    { .frame_position = 2, .polarity = NARA_POLARITY_YANG,
+      .dominant_val = 2, .archetype_role = 2,
+      .dominance_mode = NARA_DOM_DOMINANT },
+    /* [3] Son (3/3-), SUBDOMINANT */
+    { .frame_position = 3, .polarity = NARA_POLARITY_YANG,
+      .dominant_val = 3, .archetype_role = 3,
+      .dominance_mode = NARA_DOM_SUBDOMINANT },
+    /* [4] Mother (4./4), INTEGRATIVE */
+    { .frame_position = 4, .polarity = NARA_POLARITY_YIN,
+      .dominant_val = 4, .archetype_role = 4,
+      .dominance_mode = NARA_DOM_INTEGRATIVE },
+    /* [5] Tao (5-/5), DOMINANT — synthesis pole, polarity BOTH */
+    { .frame_position = 5, .polarity = NARA_POLARITY_BOTH,
+      .dominant_val = 5, .archetype_role = 5,
+      .dominance_mode = NARA_DOM_DOMINANT },
 };
+
+_Static_assert(sizeof(NARA_MSHARP_LUT) / sizeof(NARA_MSHARP_LUT[0]) == 6u,
+    "NARA_MSHARP_LUT must have exactly 6 entries");
+
+
+/* =============================================================================
+ * VII-B. MSHARP_PERSON_LUT — the M# person-grammar (6-fold)
+ *
+ * Person-grammar: I, You, You-and-I, They, We, We-I.
+ * Position 0 (I) shares (0/1) binary with #'s ##.
+ * Position 5 (We-I) ≡ #'s Tao (synthesis pole).
+ * ============================================================================= */
+
+const Msharp_Person_Entry MSHARP_PERSON_LUT[6] = {
+    /* [0] I — first-person singular, ground identity, shares ##'s (0/1) */
+    { .position = 0, .polarity = NARA_POLARITY_BOTH,
+      .dominance_mode = NARA_DOM_MATRIX,
+      .name = "I", .coordinate = "0/1",
+      .description = "First-person singular — ground identity; the (0/1) binary shared with #'s ##" },
+    /* [1] You — second-person singular, one external relation */
+    { .position = 1, .polarity = NARA_POLARITY_YANG,
+      .dominance_mode = NARA_DOM_SUBDOMINANT,
+      .name = "You", .coordinate = "1+1=2",
+      .description = "Second-person singular — one relation across the I/Thou boundary; yields 2" },
+    /* [2] You-and-I — dyadic relational field */
+    { .position = 2, .polarity = NARA_POLARITY_YIN,
+      .dominance_mode = NARA_DOM_DOMINANT,
+      .name = "You-and-I", .coordinate = "0-3",
+      .description = "Dyadic person — the relational field spanning I (0) through You (3)" },
+    /* [3] They — third-person, the external manifold */
+    { .position = 3, .polarity = NARA_POLARITY_YANG,
+      .dominance_mode = NARA_DOM_SUBDOMINANT,
+      .name = "They", .coordinate = "1+2=3",
+      .description = "Third-person plural — the external manifold; I+You yields the third" },
+    /* [4] We — first-person plural, collective ground */
+    { .position = 4, .polarity = NARA_POLARITY_BOTH,
+      .dominance_mode = NARA_DOM_INTEGRATIVE,
+      .name = "We", .coordinate = "4+0",
+      .description = "First-person plural — collective ground; the tetrad (4) unified with zero" },
+    /* [5] We-I — synthesis, ≡ #'s Tao */
+    { .position = 5, .polarity = NARA_POLARITY_BOTH,
+      .dominance_mode = NARA_DOM_DOMINANT,
+      .name = "We-I", .coordinate = "0/1/4/5",
+      .description = "Synthesis pole — the I/We unity, structurally identical to #'s Tao (5-/5)" },
+};
+
+_Static_assert(sizeof(MSHARP_PERSON_LUT) / sizeof(MSHARP_PERSON_LUT[0]) == 6u,
+    "MSHARP_PERSON_LUT must have exactly 6 entries");
+
+
+/* =============================================================================
+ * VII-C. NARA_TO_TRIGRAM — # 6-fold ↔ M3_TRIGRAM_LUT[8] bridge
+ *
+ * Father  ↔ Qian(111)   trigram 0
+ * Mother  ↔ Kun(000)    trigram 1
+ * Sons    → {Zhen(001), Kan(010), Gen(100)}  trigrams 2,4,6
+ * Daughters → {Xun(110), Li(101), Dui(011)}  trigrams 3,5,7
+ * ## and Tao carry 0xFF = no trigram seed.
+ * ============================================================================= */
+
+#include "m3.h"
+
+const Nara_Trigram_Bridge NARA_TO_TRIGRAM[6] = {
+    /* [0] ## — kinship ground, no trigram */
+    { .nara_position = 0, .trigram_seed = 0xFFu, .trigram_count = 0,
+      .trigram_ids = { 0xFFu, 0xFFu, 0xFFu } },
+    /* [1] Daughter → Xun(110), Li(101), Dui(011) — 3 daughters */
+    { .nara_position = 1, .trigram_seed = 3u, .trigram_count = 3,
+      .trigram_ids = { 3u, 5u, 7u } },
+    /* [2] Father → Qian(111) — single trigram */
+    { .nara_position = 2, .trigram_seed = 0u, .trigram_count = 1,
+      .trigram_ids = { 0u, 0xFFu, 0xFFu } },
+    /* [3] Son → Zhen(001), Kan(010), Gen(100) — 3 sons */
+    { .nara_position = 3, .trigram_seed = 2u, .trigram_count = 3,
+      .trigram_ids = { 2u, 4u, 6u } },
+    /* [4] Mother → Kun(000) — single trigram */
+    { .nara_position = 4, .trigram_seed = 1u, .trigram_count = 1,
+      .trigram_ids = { 1u, 0xFFu, 0xFFu } },
+    /* [5] Tao — synthesis pole, no trigram */
+    { .nara_position = 5, .trigram_seed = 0xFFu, .trigram_count = 0,
+      .trigram_ids = { 0xFFu, 0xFFu, 0xFFu } },
+};
+
+_Static_assert(sizeof(NARA_TO_TRIGRAM) / sizeof(NARA_TO_TRIGRAM[0]) == 6u,
+    "NARA_TO_TRIGRAM must have exactly 6 entries");
 
 /* =============================================================================
  * MIRROR CHILDREN — Frame () and Operator - (#0-3-0/1-0, #0-3-0/1-1)

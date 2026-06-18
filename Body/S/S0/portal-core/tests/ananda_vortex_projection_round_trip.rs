@@ -154,10 +154,7 @@ fn typed_json_bridge_preserves_both_csv_faces_and_canonical_event_discriminators
     assert_eq!(json["sevenXPlusOne"][5]["skeletonEvent"], "Hit36");
 
     assert_eq!(json["sevenXPlusOne"][9]["rawValue"], 64);
-    assert_eq!(
-        json["sevenXPlusOne"][9]["skeletonEvent"],
-        "Ratio64Over36"
-    );
+    assert_eq!(json["sevenXPlusOne"][9]["skeletonEvent"], "Ratio64Over36");
     assert_eq!(json["eightXPlusZero"][8]["rawValue"], 64);
     assert_eq!(json["eightXPlusZero"][8]["skeletonEvent"], "Hit64");
     assert_eq!(json["eightXPlusZero"][9]["rawValue"], 72);

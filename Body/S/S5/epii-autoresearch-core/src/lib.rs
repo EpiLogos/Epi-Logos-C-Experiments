@@ -13,9 +13,13 @@ use serde_json::Value;
 use uuid::Uuid;
 
 pub mod adapters;
+pub mod anamnesis_proposer;
 pub mod capacity_workflows;
 pub mod inbox;
 pub mod recompose;
+pub mod resonance_corpus;
+#[cfg(feature = "resonance_ebm")]
+pub mod resonance_ebm;
 pub mod spine;
 // inbox + recompose intentionally not re-exported — callers namespace via
 // `inbox::` / `recompose::` to keep the seam topology visible at import sites.

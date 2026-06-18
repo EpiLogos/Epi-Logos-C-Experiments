@@ -164,6 +164,20 @@ extern const Virtue_Entry VIRTUE_LUT[9];
 
 #define VIRTUE_TO_RFACTOR(v) ((v) >= 3u ? (uint8_t)((v) - 3u) : 0xFFu)
 
+typedef struct {
+    char knob_key[128];
+    int target_structural_invariant;
+} M0_TuneProposal;
+
+typedef struct {
+    int violation;
+    char violation_name[64];
+} M0_VerifierVerdict;
+
+M0_VerifierVerdict m0_check_tune_structural_invariant_compliance(
+    const M0_TuneProposal* proposal
+);
+
 
 /* ===================================================================
  * VI. FR 2.0.3: ARCHETYPAL NUMBER LANGUAGE — 12-FOLD
@@ -296,14 +310,66 @@ extern const QL_Frame QL_STACK[5];
 #define NARA_POLARITY_YANG   1u
 #define NARA_POLARITY_BOTH   2u
 
+/* Nara_Dominance_Mode — structural dominance read off the coordinate string.
+ *   DOMINANT:    dash on numerator   (2-/2 Father, 5-/5 Tao)
+ *   SUBDOMINANT: dash on denominator (1/1- Daughter, 3/3- Son)
+ *   INTEGRATIVE: nesting dot         (4./4 Mother)
+ *   MATRIX:      bare ## binary      (0/1 — position 0, kinship ground) */
+typedef enum {
+    NARA_DOM_MATRIX      = 0,
+    NARA_DOM_DOMINANT    = 1,
+    NARA_DOM_SUBDOMINANT = 2,
+    NARA_DOM_INTEGRATIVE = 3,
+} Nara_Dominance_Mode;
+
 typedef struct {
     uint8_t frame_position;
-    uint8_t polarity;
-    uint8_t dominant_val;
+    uint8_t polarity;          /* NARA_POLARITY_YIN / YANG / BOTH */
+    uint8_t dominant_val;      /* kernel numeric value */
     uint8_t archetype_role;
+    uint8_t dominance_mode;    /* Nara_Dominance_Mode — chirality read off coordinate */
 } Nara_Entry;
 
-extern const Nara_Entry NARA_MSHARP_LUT[5];
+extern const Nara_Entry NARA_MSHARP_LUT[6];
+
+
+/* ===================================================================
+ * VII-B. MSHARP_PERSON_LUT — the M# person-grammar (6-fold)
+ *
+ * Person-grammar coordinate strings encode the M# 6-fold person system:
+ *   I (0/1), You (1+1=2), You-and-I (0-3), They (1+2=3),
+ *   We (4+0), We-I (0/1/4/5).
+ * Position 0 (I) shares the (0/1) binary with #'s ##;
+ * position 5 (We-I) ≡ #'s Tao (synthesis pole).
+ * =================================================================== */
+typedef struct {
+    uint8_t     position;         /* 0-5 */
+    uint8_t     polarity;         /* Yin/Yang/Both */
+    uint8_t     dominance_mode;   /* Nara_Dominance_Mode */
+    const char* name;
+    const char* coordinate;       /* kernel coordinate string e.g. "0/1" */
+    const char* description;
+} Msharp_Person_Entry;
+
+extern const Msharp_Person_Entry MSHARP_PERSON_LUT[6];
+
+
+/* ===================================================================
+ * VII-C. NARA_TO_TRIGRAM — # 6-fold ↔ M3_TRIGRAM_LUT[8] bridge
+ *
+ * Father ↔ Qian(111, trigram 0); Mother ↔ Kun(000, trigram 1).
+ * Sons  → {Zhen(001), Kan(010), Gen(100)}  (trigrams 2,4,6)
+ * Daughters → {Xun(110), Li(101), Dui(011)}  (trigrams 3,5,7)
+ * ## (ground) and Tao (synthesis) carry 0xFF as trigram_seed.
+ * =================================================================== */
+typedef struct {
+    uint8_t nara_position;    /* 0-5 index into NARA_MSHARP_LUT */
+    uint8_t trigram_seed;     /* M3_TRIGRAM_LUT index (0-7), 0xFF = none */
+    uint8_t trigram_count;    /* 1 for Father/Mother, 3 for Sons/Daughters, 0 for ##/Tao */
+    uint8_t trigram_ids[3];   /* up to 3 trigram IDs (pad unused with 0xFF) */
+} Nara_Trigram_Bridge;
+
+extern const Nara_Trigram_Bridge NARA_TO_TRIGRAM[6];
 
 
 /* ===================================================================

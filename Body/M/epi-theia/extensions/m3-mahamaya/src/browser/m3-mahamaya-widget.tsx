@@ -29,7 +29,6 @@ import {
     ThirdSpandaMathemeProofPanel,
     couplingFlowAlignmentFromProfilePayload
 } from './components/ThirdSpandaMathemeProofPanel';
-import { M3PentadicRelationInspector } from './components/M3PentadicRelationInspector';
 import { M3SummonableInspectors } from './components/M3SummonableInspectors';
 import { M3DepthViewModes } from './components/M3DepthViewModes';
 import { M3ClockFieldEdgeOverlay } from './components/M3ClockFieldEdgeOverlay';
@@ -128,14 +127,6 @@ export class M3MahamayaWidget extends ReactWidget {
                                 <ThirdSpandaMathemeProofPanel
                                     surface={surface}
                                     couplingFlowAlignment={couplingFlowAlignment}
-                                />
-                            </section>
-                        )}
-                        {surface && (
-                            <section className="mext-widget-detail">
-                                <M3PentadicRelationInspector
-                                    profilePayload={this.profile?.payload}
-                                    readiness={this.readiness}
                                 />
                             </section>
                         )}

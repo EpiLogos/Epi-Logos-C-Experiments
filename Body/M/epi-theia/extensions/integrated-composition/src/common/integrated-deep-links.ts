@@ -259,7 +259,7 @@ export function resolveCompositionRoute(
         throw new InvalidCompositionRouteError(route);
     }
 
-    const blockedBy = readiness ? [...readiness.blockingContributorIds] : [];
+    const blockedBy: string[] = readiness ? [...readiness.blockingContributorIds] : [];
     if (
         readiness &&
         readiness.overall !== 'ready_public_current' &&

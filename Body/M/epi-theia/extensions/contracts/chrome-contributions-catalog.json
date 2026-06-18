@@ -1,0 +1,2189 @@
+{
+  "version": "2026-06-05.31-T12",
+  "statusBarEntries": [
+    {
+      "id": "pratibimba.state-thread.active-coordinate",
+      "owningExtension": "m-extension-runtime",
+      "type": "status-bar",
+      "scope": "LEFT-state-thread",
+      "priority": 190,
+      "declaringTranche": "31.1"
+    },
+    {
+      "id": "pratibimba.state-thread.profile-tick",
+      "owningExtension": "m-extension-runtime",
+      "type": "status-bar",
+      "scope": "LEFT-state-thread",
+      "priority": 180,
+      "declaringTranche": "31.1"
+    },
+    {
+      "id": "pratibimba.state-thread.profile-generation",
+      "owningExtension": "m-extension-runtime",
+      "type": "status-bar",
+      "scope": "LEFT-state-thread",
+      "priority": 170,
+      "declaringTranche": "31.1"
+    },
+    {
+      "id": "pratibimba.state-thread.day-now",
+      "owningExtension": "m-extension-runtime",
+      "type": "status-bar",
+      "scope": "LEFT-state-thread",
+      "priority": 160,
+      "declaringTranche": "31.1"
+    },
+    {
+      "id": "pratibimba.state-thread.session-id",
+      "owningExtension": "m-extension-runtime",
+      "type": "status-bar",
+      "scope": "LEFT-state-thread",
+      "priority": 150,
+      "declaringTranche": "31.1"
+    },
+    {
+      "id": "pratibimba.state-thread.gateway-readiness",
+      "owningExtension": "m-extension-runtime",
+      "type": "status-bar",
+      "scope": "LEFT-state-thread",
+      "priority": 140,
+      "declaringTranche": "31.1"
+    },
+    {
+      "id": "pratibimba.layout.indicator",
+      "owningExtension": "pratibimba-layouts",
+      "type": "status-bar",
+      "scope": "RIGHT-nav-chip",
+      "priority": 100,
+      "declaringTranche": "11.1-landed"
+    }
+  ],
+  "commands": [
+    {
+      "id": "m0.openCoordinate",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m0.openCoordinate.readOnly",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m0.openCoordinate.depositOnly",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m0-anuttara.handleRoute",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "deep-link-route",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m0-anuttara.openCoordinateSummaryCard",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "layout-contribution",
+      "declaringTranche": "08.T8-landed"
+    },
+    {
+      "id": "m0-anuttara.openCoordinate",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette-alias",
+      "aliasOf": "m0.openCoordinate",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m0-anuttara.layer-selector.activate",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "21.1"
+    },
+    {
+      "id": "m0-anuttara.implicate-explicate.toggle",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "21.7"
+    },
+    {
+      "id": "m0-anuttara.contemplation.submit",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "21.9"
+    },
+    {
+      "id": "m0-anuttara.virtue-witness.refresh",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "21.10"
+    },
+    {
+      "id": "m0-anuttara.symbolic-question.submit",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "21.11"
+    },
+    {
+      "id": "m0-anuttara.mode.toggle",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "21.12"
+    },
+    {
+      "id": "m0-anuttara.cross-layout-intent.dispatch",
+      "owningExtension": "m0-anuttara",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "21.19"
+    },
+    {
+      "id": "m1.startWalk",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m1.startWalk.readOnly",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m1.startWalk.depositOnly",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m1-paramasiva.handleRoute",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "deep-link-route",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m1-paramasiva.mersenne-proof.reveal",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "22.6"
+    },
+    {
+      "id": "m1-paramasiva.vortex.face-mode.toggle",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "22.7"
+    },
+    {
+      "id": "m1-paramasiva.K2-instrument.focus",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "22.8"
+    },
+    {
+      "id": "m1-paramasiva.coordinate-tree.contribute",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "22.9"
+    },
+    {
+      "id": "m1-paramasiva.openCoordinate",
+      "owningExtension": "m1-paramasiva",
+      "type": "command",
+      "scope": "command-palette-alias",
+      "aliasOf": "m1.startWalk",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m2.openMeaningPacket",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m2.openMeaningPacket.readOnly",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m2.openMeaningPacket.depositOnly",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m2-parashakti.handleRoute",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "deep-link-route",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m2-parashakti.cymatic.view-switch",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "23.2"
+    },
+    {
+      "id": "m2-parashakti.proof-identity.toggle",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "23.4"
+    },
+    {
+      "id": "m2-parashakti.breadcrumb.address72",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "widget-internal-breadcrumb",
+      "declaringTranche": "23.7"
+    },
+    {
+      "id": "m2-parashakti.outer-planet.toggle",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "23.8"
+    },
+    {
+      "id": "m2-parashakti.openCoordinate",
+      "owningExtension": "m2-parashakti",
+      "type": "command",
+      "scope": "command-palette-alias",
+      "aliasOf": "m2.openMeaningPacket",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m3.openCodon",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m3.openCodon.readOnly",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m3.openCodon.depositOnly",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m3-mahamaya.handleRoute",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "deep-link-route",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m3-mahamaya.cosmic-clock.open",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "24.1"
+    },
+    {
+      "id": "m3-mahamaya.tarot.draw",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "24.2"
+    },
+    {
+      "id": "m3-mahamaya.iching.cast",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "24.3"
+    },
+    {
+      "id": "m3-mahamaya.decan-chain.lookup",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "24.7"
+    },
+    {
+      "id": "m3-mahamaya.hexagram-body.open",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "24.8"
+    },
+    {
+      "id": "m3-mahamaya.quintessence.display",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "24.9"
+    },
+    {
+      "id": "m3-mahamaya.openCoordinate",
+      "owningExtension": "m3-mahamaya",
+      "type": "command",
+      "scope": "command-palette-alias",
+      "aliasOf": "m3.openCodon",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4.openArtifact",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m4.openArtifact.readOnly",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m4.openArtifact.depositOnly",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m4-nara.handleRoute",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "deep-link-route",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m4-nara.day-calendar.focus",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.1"
+    },
+    {
+      "id": "m4-nara.pasu-identity.open",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.4"
+    },
+    {
+      "id": "m4-nara.quintessence.display",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.5"
+    },
+    {
+      "id": "m4-nara.personal-cymatic.focus",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.6"
+    },
+    {
+      "id": "m4-nara.oracle.cast",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.8"
+    },
+    {
+      "id": "m4-nara.oracle.history.open",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.9"
+    },
+    {
+      "id": "m4-nara.medicine.focus",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.10"
+    },
+    {
+      "id": "m4-nara.transform.open",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.11"
+    },
+    {
+      "id": "m4-nara.lens.apply",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.12"
+    },
+    {
+      "id": "m4-nara.logos.stage-advance",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.13"
+    },
+    {
+      "id": "m4-nara.pratibimba.consent-gate",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.14"
+    },
+    {
+      "id": "m4-nara.kairos.refresh",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.15"
+    },
+    {
+      "id": "m4-nara.time-axis.cycle",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "25.16"
+    },
+    {
+      "id": "m4-nara.openCoordinate",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "command-palette-alias",
+      "aliasOf": "m4.openArtifact",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.canvas-highlight.daily-note",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "canvas-highlight",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.canvas-highlight.oracle",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "canvas-highlight",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.canvas-highlight.expand",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "canvas-highlight",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.canvas-highlight.dream",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "canvas-highlight",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4.nara.timeAxisSwitcher.open",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "widget-open",
+      "declaringTranche": "25.16-landed"
+    },
+    {
+      "id": "m4.nara.timeAxisSwitcher.cycle",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "widget-command",
+      "declaringTranche": "25.16-landed"
+    },
+    {
+      "id": "m4-nara.openLensApplication",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "widget-open",
+      "declaringTranche": "25.12-landed"
+    },
+    {
+      "id": "m4-nara.openLogosCycle",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "widget-open",
+      "declaringTranche": "25.13-landed"
+    },
+    {
+      "id": "m4-nara.openAmbientStateStrip",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "widget-open",
+      "declaringTranche": "11.12-landed"
+    },
+    {
+      "id": "m4-nara.openTuningBar",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "widget-open",
+      "declaringTranche": "25.6-landed"
+    },
+    {
+      "id": "m4-nara.openKairosWheel",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "widget-open",
+      "declaringTranche": "25.15-landed"
+    },
+    {
+      "id": "m4.openPasuWizard",
+      "owningExtension": "m4-nara",
+      "type": "command",
+      "scope": "cold-start-onboarding",
+      "declaringTranche": "32.2-landed"
+    },
+    {
+      "id": "m5.openReview",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m5.openReview.readOnly",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m5.openReview.depositOnly",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m5-epii.handleRoute",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "deep-link-route",
+      "declaringTranche": "07.T0-landed"
+    },
+    {
+      "id": "m5-epii.capacity-tree.focus",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "26.2"
+    },
+    {
+      "id": "m5-epii.mobius-pass-ribbon.open",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "26.5"
+    },
+    {
+      "id": "m5-epii.contemplation-object.open",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "26.7"
+    },
+    {
+      "id": "m5-epii.recognition-layer.focus",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "26.11"
+    },
+    {
+      "id": "m5-epii.iod-17-parity.refresh",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "26.13"
+    },
+    {
+      "id": "m5-epii.pi-axiom-translation.open",
+      "owningExtension": "m5-epii",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "26.14"
+    },
+    {
+      "id": "pratibimba.layout.toggle",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "layout-switch",
+      "declaringTranche": "11.1-landed"
+    },
+    {
+      "id": "pratibimba.layout.switch-to-daily",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "layout-switch",
+      "declaringTranche": "11.1-landed"
+    },
+    {
+      "id": "pratibimba.layout.switch-to-ide-deep",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "layout-switch",
+      "declaringTranche": "11.1-landed"
+    },
+    {
+      "id": "pratibimba.intent.dispatch",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.intent.open-deep-ide",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.intent.return-to-daily-layout",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.intent.open-review-item",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.intent.open-graph-node",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.intent.open-canon-studio-file",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.intent.start-journal-entry",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.intent.deposit-review-evidence",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.cross-layout-intent.dispatch",
+      "owningExtension": "pratibimba-layouts",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-promoted"
+    },
+    {
+      "id": "pratibimba.state-thread.jump-to-coordinate",
+      "owningExtension": "m-extension-runtime",
+      "type": "command",
+      "scope": "status-bar-action",
+      "declaringTranche": "31.1"
+    },
+    {
+      "id": "pratibimba.omnipanel.open",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "command-palette",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.omnipanel.toggle",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "widget-toggle",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "omnipanel.intent.dispatch",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "cross-layout-intent",
+      "declaringTranche": "11.2-existing"
+    },
+    {
+      "id": "omnipanel.tab.activate.0",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.1",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.2",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.3",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.4",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.5",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.6",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.7",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "pratibimba.omnipanel.dispatchTrace.open",
+      "owningExtension": "omnipanel-shell",
+      "type": "command",
+      "scope": "omnipanel-tab",
+      "declaringTranche": "27.3-landed"
+    },
+    {
+      "id": "epi.integrated.openCosmicEngine",
+      "owningExtension": "plugin-integrated-1-2-3",
+      "type": "command",
+      "scope": "integrated-composition",
+      "declaringTranche": "08.T1-landed"
+    },
+    {
+      "id": "epi.integrated.openJivaSiva",
+      "owningExtension": "plugin-integrated-4-5-0",
+      "type": "command",
+      "scope": "integrated-composition",
+      "declaringTranche": "08.T1-landed"
+    },
+    {
+      "id": "epi.integrated.toggleMiniInspectors",
+      "owningExtension": "integrated-composition",
+      "type": "command",
+      "scope": "integrated-composition",
+      "declaringTranche": "08.T1-landed"
+    },
+    {
+      "id": "epi.integrated.openEvidencePanel",
+      "owningExtension": "integrated-composition",
+      "type": "command",
+      "scope": "integrated-composition",
+      "declaringTranche": "08.T1-landed"
+    },
+    {
+      "id": "epi.integrated.copyEvidenceHandle",
+      "owningExtension": "integrated-composition",
+      "type": "command",
+      "scope": "integrated-composition",
+      "declaringTranche": "08.T1-landed"
+    },
+    {
+      "id": "plugin-integrated-1-2-3.handleDeepLink",
+      "owningExtension": "plugin-integrated-1-2-3",
+      "type": "command",
+      "scope": "integrated-deep-link",
+      "declaringTranche": "08.T7-landed"
+    },
+    {
+      "id": "plugin-integrated-1-2-3.openWorkspaceLayout",
+      "owningExtension": "plugin-integrated-1-2-3",
+      "type": "command",
+      "scope": "integrated-layout",
+      "declaringTranche": "08.T7-landed"
+    },
+    {
+      "id": "plugin-integrated-4-5-0.handleDeepLink",
+      "owningExtension": "plugin-integrated-4-5-0",
+      "type": "command",
+      "scope": "integrated-deep-link",
+      "declaringTranche": "08.T7-landed"
+    },
+    {
+      "id": "plugin-integrated-4-5-0.openWorkspaceLayout",
+      "owningExtension": "plugin-integrated-4-5-0",
+      "type": "command",
+      "scope": "integrated-layout",
+      "declaringTranche": "08.T7-landed"
+    },
+    {
+      "id": "plugin-integrated-1-2-3.open",
+      "owningExtension": "plugin-integrated-1-2-3",
+      "type": "command",
+      "scope": "menu-alias",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "plugin-integrated-4-5-0.open",
+      "owningExtension": "plugin-integrated-4-5-0",
+      "type": "command",
+      "scope": "menu-alias",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "pratibimba.body.openControlRoom",
+      "owningExtension": "body-lite-surface",
+      "type": "command",
+      "scope": "body-deep-link",
+      "declaringTranche": "09.T9b-landed"
+    },
+    {
+      "id": "pratibimba.body.openReviewItem",
+      "owningExtension": "body-lite-surface",
+      "type": "command",
+      "scope": "body-deep-link",
+      "declaringTranche": "09.T9b-landed"
+    },
+    {
+      "id": "pratibimba.body.openGraphNode",
+      "owningExtension": "body-lite-surface",
+      "type": "command",
+      "scope": "body-deep-link",
+      "declaringTranche": "09.T9b-landed"
+    },
+    {
+      "id": "pratibimba.body.startProtectedEntry",
+      "owningExtension": "body-lite-surface",
+      "type": "command",
+      "scope": "body-deep-link",
+      "declaringTranche": "09.T9b-landed"
+    },
+    {
+      "id": "pratibimba.kernel-bridge-readiness.open",
+      "owningExtension": "kernel-bridge-readiness",
+      "type": "command",
+      "scope": "diagnostics",
+      "declaringTranche": "03.T-gateway-readiness-landed"
+    }
+  ],
+  "keybindings": [
+    {
+      "id": "pratibimba.layout.toggle.cmd-period",
+      "owningExtension": "pratibimba-layouts",
+      "type": "keybinding",
+      "scope": "global-layout",
+      "commandId": "pratibimba.layout.toggle",
+      "keybinding": "cmd+.",
+      "linuxWindowsKeybinding": "ctrl+.",
+      "when": "epi-logos.keymap.preserveTheiaDefaults === false",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "pratibimba.layout.toggle.cmd-shift-0-fallback",
+      "owningExtension": "pratibimba-layouts",
+      "type": "keybinding",
+      "scope": "global-layout",
+      "commandId": "pratibimba.layout.toggle",
+      "keybinding": "cmd+shift+0",
+      "when": "epi-logos.keymap.preserveTheiaDefaults === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "pratibimba.cross-layout-intent.dispatch.cmd-shift-l",
+      "owningExtension": "pratibimba-layouts",
+      "type": "keybinding",
+      "scope": "global-layout",
+      "commandId": "pratibimba.cross-layout-intent.dispatch",
+      "keybinding": "cmd+shift+l",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m0-anuttara.openCoordinate.cmd-shift-0",
+      "owningExtension": "m0-anuttara",
+      "type": "keybinding",
+      "scope": "mn-coordinate-open",
+      "commandId": "m0.openCoordinate",
+      "keybinding": "cmd+shift+0",
+      "when": "epi-logos.keymap.preserveTheiaDefaults === false",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m0-anuttara.implicate-explicate.toggle.cmd-shift-i",
+      "owningExtension": "m0-anuttara",
+      "type": "keybinding",
+      "scope": "m0-surface",
+      "commandId": "m0-anuttara.implicate-explicate.toggle",
+      "keybinding": "cmd+shift+i",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m0-anuttara.mode.toggle.cmd-shift-m",
+      "owningExtension": "m0-anuttara",
+      "type": "keybinding",
+      "scope": "m0-surface",
+      "commandId": "m0-anuttara.mode.toggle",
+      "keybinding": "cmd+shift+m",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m1-paramasiva.openCoordinate.cmd-shift-1",
+      "owningExtension": "m1-paramasiva",
+      "type": "keybinding",
+      "scope": "mn-coordinate-open",
+      "commandId": "m1-paramasiva.openCoordinate",
+      "keybinding": "cmd+shift+1",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m1-paramasiva.vortex.face-mode.toggle.cmd-alt-f",
+      "owningExtension": "m1-paramasiva",
+      "type": "keybinding",
+      "scope": "m1-surface",
+      "commandId": "m1-paramasiva.vortex.face-mode.toggle",
+      "keybinding": "cmd+alt+f",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m1-paramasiva.mersenne-proof.reveal.cmd-alt-p",
+      "owningExtension": "m1-paramasiva",
+      "type": "keybinding",
+      "scope": "m1-developer",
+      "commandId": "m1-paramasiva.mersenne-proof.reveal",
+      "keybinding": "cmd+alt+p",
+      "when": "epi-logos.ui.developerMode === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m2-parashakti.openCoordinate.cmd-shift-2",
+      "owningExtension": "m2-parashakti",
+      "type": "keybinding",
+      "scope": "mn-coordinate-open",
+      "commandId": "m2-parashakti.openCoordinate",
+      "keybinding": "cmd+shift+2",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m2-parashakti.cymatic.view-switch.cmd-alt-v",
+      "owningExtension": "m2-parashakti",
+      "type": "keybinding",
+      "scope": "m2-surface",
+      "commandId": "m2-parashakti.cymatic.view-switch",
+      "keybinding": "cmd+alt+v",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m2-parashakti.proof-identity.toggle.cmd-alt-t",
+      "owningExtension": "m2-parashakti",
+      "type": "keybinding",
+      "scope": "m2-developer",
+      "commandId": "m2-parashakti.proof-identity.toggle",
+      "keybinding": "cmd+alt+t",
+      "when": "epi-logos.m2.devMode === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m3-mahamaya.openCoordinate.cmd-shift-3",
+      "owningExtension": "m3-mahamaya",
+      "type": "keybinding",
+      "scope": "mn-coordinate-open",
+      "commandId": "m3-mahamaya.openCoordinate",
+      "keybinding": "cmd+shift+3",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m3-mahamaya.iching.cast.cmd-alt-c",
+      "owningExtension": "m3-mahamaya",
+      "type": "keybinding",
+      "scope": "m3-surface",
+      "commandId": "m3-mahamaya.iching.cast",
+      "keybinding": "cmd+alt+c",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m3-mahamaya.tarot.draw.cmd-alt-r",
+      "owningExtension": "m3-mahamaya",
+      "type": "keybinding",
+      "scope": "m3-surface",
+      "commandId": "m3-mahamaya.tarot.draw",
+      "keybinding": "cmd+alt+r",
+      "when": "epiLogosLayoutActive === 'ide-deep'",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.openCoordinate.cmd-shift-4",
+      "owningExtension": "m4-nara",
+      "type": "keybinding",
+      "scope": "mn-coordinate-open",
+      "commandId": "m4-nara.openCoordinate",
+      "keybinding": "cmd+shift+4",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.day-calendar.focus.cmd-shift-d",
+      "owningExtension": "m4-nara",
+      "type": "keybinding",
+      "scope": "m4-surface",
+      "commandId": "m4-nara.day-calendar.focus",
+      "keybinding": "cmd+shift+d",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.time-axis.cycle.cmd-shift-t",
+      "owningExtension": "m4-nara",
+      "type": "keybinding",
+      "scope": "m4-surface",
+      "commandId": "m4.nara.timeAxisSwitcher.cycle",
+      "plannedCommandId": "m4-nara.time-axis.cycle",
+      "keybinding": "cmd+shift+t",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.oracle.cast.cmd-alt-o",
+      "owningExtension": "m4-nara",
+      "type": "keybinding",
+      "scope": "m4-surface",
+      "commandId": "m4-nara.oracle.cast",
+      "keybinding": "cmd+alt+o",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.canvas-highlight.daily-note",
+      "owningExtension": "m4-nara",
+      "type": "keybinding",
+      "scope": "m4-canvas-highlight",
+      "commandId": "m4-nara.canvas-highlight.daily-note",
+      "keybinding": "cmd+h d",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.canvas-highlight.oracle",
+      "owningExtension": "m4-nara",
+      "type": "keybinding",
+      "scope": "m4-canvas-highlight",
+      "commandId": "m4-nara.canvas-highlight.oracle",
+      "keybinding": "cmd+h o",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.canvas-highlight.expand",
+      "owningExtension": "m4-nara",
+      "type": "keybinding",
+      "scope": "m4-canvas-highlight",
+      "commandId": "m4-nara.canvas-highlight.expand",
+      "keybinding": "cmd+h e",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m4-nara.canvas-highlight.dream",
+      "owningExtension": "m4-nara",
+      "type": "keybinding",
+      "scope": "m4-canvas-highlight",
+      "commandId": "m4-nara.canvas-highlight.dream",
+      "keybinding": "cmd+h m",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m5-epii.openReview.cmd-shift-5",
+      "owningExtension": "m5-epii",
+      "type": "keybinding",
+      "scope": "mn-coordinate-open",
+      "commandId": "m5.openReview",
+      "keybinding": "cmd+shift+5",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m5-epii.mobius-pass-ribbon.open.cmd-alt-m",
+      "owningExtension": "m5-epii",
+      "type": "keybinding",
+      "scope": "m5-surface",
+      "commandId": "m5-epii.mobius-pass-ribbon.open",
+      "keybinding": "cmd+alt+m",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "m5-epii.recognition-layer.focus.cmd-alt-r",
+      "owningExtension": "m5-epii",
+      "type": "keybinding",
+      "scope": "m5-surface",
+      "commandId": "m5-epii.recognition-layer.focus",
+      "keybinding": "cmd+alt+r",
+      "when": "epiLogosLayoutActive === 'daily-0-1'",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.0.cmd-1",
+      "owningExtension": "omnipanel-shell",
+      "type": "keybinding",
+      "scope": "omnipanel",
+      "commandId": "omnipanel.tab.activate.0",
+      "keybinding": "cmd+1",
+      "when": "omnipanelTabAvailable === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.1.cmd-2",
+      "owningExtension": "omnipanel-shell",
+      "type": "keybinding",
+      "scope": "omnipanel",
+      "commandId": "omnipanel.tab.activate.1",
+      "keybinding": "cmd+2",
+      "when": "omnipanelTabAvailable === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.2.cmd-3",
+      "owningExtension": "omnipanel-shell",
+      "type": "keybinding",
+      "scope": "omnipanel",
+      "commandId": "omnipanel.tab.activate.2",
+      "keybinding": "cmd+3",
+      "when": "omnipanelTabAvailable === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.3.cmd-4",
+      "owningExtension": "omnipanel-shell",
+      "type": "keybinding",
+      "scope": "omnipanel",
+      "commandId": "omnipanel.tab.activate.3",
+      "keybinding": "cmd+4",
+      "when": "omnipanelTabAvailable === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.4.cmd-5",
+      "owningExtension": "omnipanel-shell",
+      "type": "keybinding",
+      "scope": "omnipanel",
+      "commandId": "omnipanel.tab.activate.4",
+      "keybinding": "cmd+5",
+      "when": "omnipanelTabAvailable === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.5.cmd-6",
+      "owningExtension": "omnipanel-shell",
+      "type": "keybinding",
+      "scope": "omnipanel",
+      "commandId": "omnipanel.tab.activate.5",
+      "keybinding": "cmd+6",
+      "when": "omnipanelTabAvailable === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.6.cmd-7",
+      "owningExtension": "omnipanel-shell",
+      "type": "keybinding",
+      "scope": "omnipanel",
+      "commandId": "omnipanel.tab.activate.6",
+      "keybinding": "cmd+7",
+      "when": "omnipanelTabAvailable === true",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "omnipanel.tab.activate.7.cmd-8",
+      "owningExtension": "omnipanel-shell",
+      "type": "keybinding",
+      "scope": "omnipanel",
+      "commandId": "omnipanel.tab.activate.7",
+      "keybinding": "cmd+8",
+      "when": "omnipanelTabAvailable === true",
+      "declaringTranche": "31.3"
+    }
+  ],
+  "menuItems": [
+    {
+      "id": "epi-logos.menu.cosmic.m0-anuttara.openCoordinate",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_COSMIC_GROUP",
+      "commandId": "m0-anuttara.openCoordinate",
+      "order": "1",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.cosmic.m1-paramasiva.openCoordinate",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_COSMIC_GROUP",
+      "commandId": "m1-paramasiva.openCoordinate",
+      "order": "2",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.cosmic.m2-parashakti.openCoordinate",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_COSMIC_GROUP",
+      "commandId": "m2-parashakti.openCoordinate",
+      "order": "3",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.cosmic.m3-mahamaya.openCoordinate",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_COSMIC_GROUP",
+      "commandId": "m3-mahamaya.openCoordinate",
+      "order": "4",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.personal.m4-nara.openArtifact",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_PERSONAL_GROUP",
+      "commandId": "m4.openArtifact",
+      "order": "1",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.personal.m5-epii.openReview",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_PERSONAL_GROUP",
+      "commandId": "m5.openReview",
+      "order": "2",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.personal.m4-nara.day-calendar.focus",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_PERSONAL_GROUP",
+      "commandId": "m4-nara.day-calendar.focus",
+      "order": "3",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.personal.m4-nara.pasu-identity.open",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_PERSONAL_GROUP",
+      "commandId": "m4-nara.pasu-identity.open",
+      "order": "4",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.compose.plugin-integrated-1-2-3.open",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_COMPOSE_GROUP",
+      "commandId": "plugin-integrated-1-2-3.open",
+      "order": "1",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.compose.plugin-integrated-4-5-0.open",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_COMPOSE_GROUP",
+      "commandId": "plugin-integrated-4-5-0.open",
+      "order": "2",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.diagnostics.omnipanel.tab.activate.6",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_DIAGNOSTICS_GROUP",
+      "commandId": "omnipanel.tab.activate.6",
+      "order": "1",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.diagnostics.omnipanel.tab.activate.7",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_DIAGNOSTICS_GROUP",
+      "commandId": "omnipanel.tab.activate.7",
+      "order": "2",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "epi-logos.menu.diagnostics.pratibimba.state-thread.jump-to-coordinate",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "EPI_LOGOS_DIAGNOSTICS_GROUP",
+      "commandId": "pratibimba.state-thread.jump-to-coordinate",
+      "order": "3",
+      "declaringTranche": "31.5"
+    },
+    {
+      "id": "pratibimba.menu.layouts.switch-to-daily",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "PRATIBIMBA_LAYOUTS_GROUP",
+      "commandId": "pratibimba.layout.switch-to-daily",
+      "order": "1",
+      "declaringTranche": "11.1-landed"
+    },
+    {
+      "id": "pratibimba.menu.layouts.switch-to-ide-deep",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "PRATIBIMBA_LAYOUTS_GROUP",
+      "commandId": "pratibimba.layout.switch-to-ide-deep",
+      "order": "2",
+      "declaringTranche": "11.1-landed"
+    },
+    {
+      "id": "pratibimba.menu.layouts.toggle",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "PRATIBIMBA_LAYOUTS_GROUP",
+      "commandId": "pratibimba.layout.toggle",
+      "order": "3",
+      "declaringTranche": "11.1-landed"
+    },
+    {
+      "id": "pratibimba.menu.intents.open-review-item",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "PRATIBIMBA_INTENTS_GROUP",
+      "commandId": "pratibimba.intent.open-review-item",
+      "order": "1",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.menu.intents.open-graph-node",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "PRATIBIMBA_INTENTS_GROUP",
+      "commandId": "pratibimba.intent.open-graph-node",
+      "order": "2",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.menu.intents.open-canon-studio-file",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "PRATIBIMBA_INTENTS_GROUP",
+      "commandId": "pratibimba.intent.open-canon-studio-file",
+      "order": "3",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.menu.intents.start-journal-entry",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "PRATIBIMBA_INTENTS_GROUP",
+      "commandId": "pratibimba.intent.start-journal-entry",
+      "order": "4",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "pratibimba.menu.intents.deposit-review-evidence",
+      "owningExtension": "pratibimba-layouts",
+      "type": "menu-item",
+      "scope": "PRATIBIMBA_INTENTS_GROUP",
+      "commandId": "pratibimba.intent.deposit-review-evidence",
+      "order": "5",
+      "declaringTranche": "11.2-landed"
+    },
+    {
+      "id": "view.menu.pratibimba.omnipanel.open",
+      "owningExtension": "omnipanel-shell",
+      "type": "menu-item",
+      "scope": "CommonMenus.VIEW",
+      "commandId": "pratibimba.omnipanel.open",
+      "order": "a-omnipanel",
+      "declaringTranche": "11.2-landed"
+    }
+  ],
+  "activityBarModes": [
+    {
+      "id": "pratibimba.activity-bar.coordinate-tree",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "activity-bar-mode",
+      "scope": "daily-0-1",
+      "widgetId": "pratibimba.coordinate-tree",
+      "iconRef": "$(list-tree)",
+      "orderPriority": 10,
+      "declaringTranche": "31.4"
+    },
+    {
+      "id": "pratibimba.activity-bar.bimba-graph-viewer",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "activity-bar-mode",
+      "scope": "daily-0-1",
+      "widgetId": "pratibimba.bimba-graph-viewer",
+      "iconRef": "$(graph)",
+      "orderPriority": 20,
+      "declaringTranche": "31.4"
+    },
+    {
+      "id": "pratibimba.activity-bar.canon-studio",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "activity-bar-mode",
+      "scope": "daily-0-1",
+      "widgetId": "pratibimba.canon-studio",
+      "iconRef": "$(book)",
+      "orderPriority": 30,
+      "declaringTranche": "31.4"
+    },
+    {
+      "id": "pratibimba.activity-bar.day-calendar",
+      "owningExtension": "m4-nara",
+      "type": "activity-bar-mode",
+      "scope": "daily-0-1",
+      "widgetId": "m4.nara.dayCalendar",
+      "iconRef": "$(calendar)",
+      "orderPriority": 40,
+      "declaringTranche": "31.4"
+    },
+    {
+      "id": "pratibimba.activity-bar.journal-entries",
+      "owningExtension": "m4-nara",
+      "type": "activity-bar-mode",
+      "scope": "daily-0-1",
+      "widgetId": "m4.nara.journalEntries",
+      "iconRef": "$(notebook)",
+      "orderPriority": 50,
+      "declaringTranche": "31.4"
+    },
+    {
+      "id": "pratibimba.activity-bar.personal-coordinate",
+      "owningExtension": "m4-nara",
+      "type": "activity-bar-mode",
+      "scope": "daily-0-1",
+      "widgetId": "m4.nara.personalCoordinate",
+      "iconRef": "$(person)",
+      "orderPriority": 60,
+      "declaringTranche": "31.4"
+    },
+    {
+      "id": "pratibimba.activity-bar.backend-studio",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "activity-bar-mode",
+      "scope": "ide-deep",
+      "widgetId": "pratibimba.backend-studio",
+      "iconRef": "$(server)",
+      "orderPriority": 70,
+      "declaringTranche": "31.4"
+    },
+    {
+      "id": "pratibimba.activity-bar.smart-connections",
+      "owningExtension": "smart-connections-sidebar",
+      "type": "activity-bar-mode",
+      "scope": "ide-deep",
+      "widgetId": "pratibimba.smart-connections-sidebar",
+      "iconRef": "$(circuit-board)",
+      "orderPriority": 80,
+      "declaringTranche": "31.4"
+    }
+  ],
+  "preferences": [
+    {
+      "id": "epi-logos.layout.active",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.layout.zero-one-default",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.omnipanel.first-launch-collapsed",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.coordinate.first-launch",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.privacy.default-class",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9"
+    },
+    {
+      "id": "epi-logos.privacy.kairos-enabled",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "19.12-landed"
+    },
+    {
+      "id": "epi-logos.privacy.public-bridge-opt-in",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.motion.reduced",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "30.5-landed"
+    },
+    {
+      "id": "epi-logos.profile.tick.visible",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9"
+    },
+    {
+      "id": "epi-logos.motion.lemniscate-transition-duration-ms",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "30.5-landed"
+    },
+    {
+      "id": "epi-logos.motion.xor-ceremony-duration-ms",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "30.5-landed"
+    },
+    {
+      "id": "epi-logos.identity.kairos.provider",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "19.12-landed"
+    },
+    {
+      "id": "epi-logos.identity.atlas-sync.consents",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.diagnostics.readiness.visible",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "Workspace",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.diagnostics.dispatch.trace.verbosity",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "Workspace",
+      "declaringTranche": "27.3-landed"
+    },
+    {
+      "id": "epi-logos.diagnostics.cold-start-state",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "Workspace",
+      "declaringTranche": "32.1-landed"
+    },
+    {
+      "id": "epi-logos.diagnostics.reset-enabled",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "Workspace",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.theming.mode",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.theming.family-tier.palette",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9-landed"
+    },
+    {
+      "id": "epi-logos.ui.developerMode",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "22.6"
+    },
+    {
+      "id": "epi-logos.keymap.preserveTheiaDefaults",
+      "owningExtension": "m-extension-runtime",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.3"
+    },
+    {
+      "id": "epi-logos.m1.vortex.faceMode",
+      "owningExtension": "m1-paramasiva",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "22.7"
+    },
+    {
+      "id": "epi-logos.m2.devMode",
+      "owningExtension": "m2-parashakti",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "23.4"
+    },
+    {
+      "id": "epi-logos.m0.anuttara.activeLayer",
+      "owningExtension": "m0-anuttara",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "31.9"
+    },
+    {
+      "id": "epi-logos.m4.nara.timeAxisMode",
+      "owningExtension": "m4-nara",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "25.16"
+    },
+    {
+      "id": "epi-logos.onboarding.pasu-skipped",
+      "owningExtension": "m4-nara",
+      "type": "preference",
+      "scope": "User",
+      "declaringTranche": "32.2-landed"
+    }
+  ],
+  "breadcrumbProviders": [
+    {
+      "id": "epi-logos.coordinate",
+      "owningExtension": "m-extension-runtime",
+      "type": "breadcrumb",
+      "scope": "editor-area-top",
+      "declaringTranche": "31.6"
+    }
+  ],
+  "intentTargets": [
+    {
+      "id": "m0-anuttara.graph",
+      "extensionId": "m0-anuttara",
+      "requestedContributionId": "graph",
+      "owningExtension": "m0-anuttara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M0AnuttaraContribution.openIntentTarget",
+      "declaringTranche": "21.19"
+    },
+    {
+      "id": "m0-anuttara.language",
+      "extensionId": "m0-anuttara",
+      "requestedContributionId": "language",
+      "owningExtension": "m0-anuttara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M0AnuttaraContribution.openIntentTarget",
+      "declaringTranche": "21.19"
+    },
+    {
+      "id": "m0-anuttara.ql-structure",
+      "extensionId": "m0-anuttara",
+      "requestedContributionId": "ql-structure",
+      "owningExtension": "m0-anuttara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M0AnuttaraContribution.openIntentTarget",
+      "declaringTranche": "21.19"
+    },
+    {
+      "id": "m0-anuttara.relations",
+      "extensionId": "m0-anuttara",
+      "requestedContributionId": "relations",
+      "owningExtension": "m0-anuttara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M0AnuttaraContribution.openIntentTarget",
+      "declaringTranche": "21.19"
+    },
+    {
+      "id": "m0-anuttara.time-community",
+      "extensionId": "m0-anuttara",
+      "requestedContributionId": "time-community",
+      "owningExtension": "m0-anuttara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M0AnuttaraContribution.openIntentTarget",
+      "declaringTranche": "21.19"
+    },
+    {
+      "id": "m0-anuttara.personal",
+      "extensionId": "m0-anuttara",
+      "requestedContributionId": "personal",
+      "owningExtension": "m0-anuttara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M0AnuttaraContribution.openIntentTarget",
+      "declaringTranche": "21.19"
+    },
+    {
+      "id": "m0-anuttara.pedagogy",
+      "extensionId": "m0-anuttara",
+      "requestedContributionId": "pedagogy",
+      "owningExtension": "m0-anuttara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M0AnuttaraContribution.openIntentTarget",
+      "declaringTranche": "21.19"
+    },
+    {
+      "id": "m0-anuttara.coordinate",
+      "extensionId": "m0-anuttara",
+      "requestedContributionId": "coordinate",
+      "owningExtension": "m0-anuttara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M0AnuttaraContribution.openIntentTarget",
+      "declaringTranche": "21.19-landed"
+    },
+    {
+      "id": "m1-paramasiva.instrument",
+      "extensionId": "m1-paramasiva",
+      "requestedContributionId": "instrument",
+      "owningExtension": "m1-paramasiva",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M1ParamasivaContribution.openView",
+      "declaringTranche": "22"
+    },
+    {
+      "id": "m1-paramasiva.walk",
+      "extensionId": "m1-paramasiva",
+      "requestedContributionId": "walk",
+      "owningExtension": "m1-paramasiva",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M1ParamasivaContribution.openView",
+      "declaringTranche": "22-landed"
+    },
+    {
+      "id": "m1-paramasiva.schema",
+      "extensionId": "m1-paramasiva",
+      "requestedContributionId": "schema",
+      "owningExtension": "m1-paramasiva",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M1ParamasivaContribution.openView",
+      "declaringTranche": "22-landed"
+    },
+    {
+      "id": "m2-parashakti.cymatic",
+      "extensionId": "m2-parashakti",
+      "requestedContributionId": "cymatic",
+      "owningExtension": "m2-parashakti",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M2ParashaktiContribution.openView",
+      "declaringTranche": "23"
+    },
+    {
+      "id": "m2-parashakti.correspondenceTree",
+      "extensionId": "m2-parashakti",
+      "requestedContributionId": "correspondenceTree",
+      "owningExtension": "m2-parashakti",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M2ParashaktiContribution.openView",
+      "declaringTranche": "23-landed"
+    },
+    {
+      "id": "m2-parashakti.meaning-packet",
+      "extensionId": "m2-parashakti",
+      "requestedContributionId": "meaning-packet",
+      "owningExtension": "m2-parashakti",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M2ParashaktiContribution.openView",
+      "declaringTranche": "23-landed"
+    },
+    {
+      "id": "m2-parashakti.resonance",
+      "extensionId": "m2-parashakti",
+      "requestedContributionId": "resonance",
+      "owningExtension": "m2-parashakti",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M2ParashaktiContribution.openView",
+      "declaringTranche": "23-landed"
+    },
+    {
+      "id": "m3-mahamaya.wheel",
+      "extensionId": "m3-mahamaya",
+      "requestedContributionId": "wheel",
+      "owningExtension": "m3-mahamaya",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M3MahamayaContribution.openView",
+      "declaringTranche": "24"
+    },
+    {
+      "id": "m3-mahamaya.cosmicClock",
+      "extensionId": "m3-mahamaya",
+      "requestedContributionId": "cosmicClock",
+      "owningExtension": "m3-mahamaya",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M3MahamayaContribution.openView",
+      "declaringTranche": "24"
+    },
+    {
+      "id": "m3-mahamaya.decanChain",
+      "extensionId": "m3-mahamaya",
+      "requestedContributionId": "decanChain",
+      "owningExtension": "m3-mahamaya",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M3MahamayaContribution.openView",
+      "declaringTranche": "24"
+    },
+    {
+      "id": "m3-mahamaya.codon",
+      "extensionId": "m3-mahamaya",
+      "requestedContributionId": "codon",
+      "owningExtension": "m3-mahamaya",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M3MahamayaContribution.openView",
+      "declaringTranche": "24-landed"
+    },
+    {
+      "id": "m4-nara.artifact",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "artifact",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M4NaraContribution.openView",
+      "declaringTranche": "25-landed"
+    },
+    {
+      "id": "m4-nara.dayCalendar",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "dayCalendar",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4NaraContribution.openView",
+      "declaringTranche": "25.1"
+    },
+    {
+      "id": "m4-nara.journalEntries",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "journalEntries",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4NaraContribution.openView",
+      "declaringTranche": "25.3"
+    },
+    {
+      "id": "m4-nara.personalCoordinate",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "personalCoordinate",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4NaraContribution.openView",
+      "declaringTranche": "25.7"
+    },
+    {
+      "id": "m4-nara.oracle",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "oracle",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4NaraContribution.openView",
+      "declaringTranche": "25.8"
+    },
+    {
+      "id": "m4-nara.medicine",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "medicine",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4NaraContribution.openView",
+      "declaringTranche": "25.10"
+    },
+    {
+      "id": "m4-nara.transform",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "transform",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4NaraContribution.openView",
+      "declaringTranche": "25.11"
+    },
+    {
+      "id": "m4-nara.lens",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "lens",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4LensApplicationContribution.openView",
+      "declaringTranche": "25.12"
+    },
+    {
+      "id": "m4-nara.logos",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "logos",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4LogosCycleContribution.openView",
+      "declaringTranche": "25.13-landed"
+    },
+    {
+      "id": "m4-nara.kairos",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "kairos",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4KairosWheelContribution.openView",
+      "declaringTranche": "25.15"
+    },
+    {
+      "id": "m4-nara.journal",
+      "extensionId": "m4-nara",
+      "requestedContributionId": "journal",
+      "owningExtension": "m4-nara",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M4NaraContribution.openView",
+      "declaringTranche": "09.T9b-landed"
+    },
+    {
+      "id": "m5-epii.review",
+      "extensionId": "m5-epii",
+      "requestedContributionId": "review",
+      "owningExtension": "m5-epii",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M5EpiiContribution.openView",
+      "declaringTranche": "26-landed"
+    },
+    {
+      "id": "m5-epii.evidence-deposit",
+      "extensionId": "m5-epii",
+      "requestedContributionId": "evidence-deposit",
+      "owningExtension": "m5-epii",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M5EpiiContribution.openView",
+      "declaringTranche": "26-landed"
+    },
+    {
+      "id": "m5-epii.recognitionLayer",
+      "extensionId": "m5-epii",
+      "requestedContributionId": "recognitionLayer",
+      "owningExtension": "m5-epii",
+      "type": "intent-target",
+      "scope": "daily-0-1",
+      "handler": "M5EpiiContribution.openView",
+      "declaringTranche": "26.11"
+    },
+    {
+      "id": "m5-epii.mobiusPassRibbon",
+      "extensionId": "m5-epii",
+      "requestedContributionId": "mobiusPassRibbon",
+      "owningExtension": "m5-epii",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M5EpiiContribution.openView",
+      "declaringTranche": "26.5"
+    },
+    {
+      "id": "m5-epii.contemplationObject",
+      "extensionId": "m5-epii",
+      "requestedContributionId": "contemplationObject",
+      "owningExtension": "m5-epii",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M5EpiiContribution.openView",
+      "declaringTranche": "26.7"
+    },
+    {
+      "id": "m5-epii.jointComposition",
+      "extensionId": "m5-epii",
+      "requestedContributionId": "jointComposition",
+      "owningExtension": "m5-epii",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "M5EpiiContribution.openView",
+      "declaringTranche": "26.14"
+    },
+    {
+      "id": "ide-shell-m0-m5.bimba-graph",
+      "extensionId": "ide-shell-m0-m5",
+      "requestedContributionId": "bimba-graph",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "IdeShellGraphContribution.handleOpenGraph",
+      "declaringTranche": "05.T4-landed"
+    },
+    {
+      "id": "ide-shell-m0-m5.canon-studio",
+      "extensionId": "ide-shell-m0-m5",
+      "requestedContributionId": "canon-studio",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "IdeShellCanonStudioContribution.handleOpenCanonStudio",
+      "declaringTranche": "05.T4-landed"
+    },
+    {
+      "id": "ide-shell-m0-m5.agentic-control-room",
+      "extensionId": "ide-shell-m0-m5",
+      "requestedContributionId": "agentic-control-room",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "IdeShellAgenticControlRoomContribution.handleOpen",
+      "declaringTranche": "05.T8-landed"
+    },
+    {
+      "id": "ide-shell-m0-m5.evidence-panel",
+      "extensionId": "ide-shell-m0-m5",
+      "requestedContributionId": "evidence-panel",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "IdeShellEvidencePaneContribution.openView",
+      "declaringTranche": "05.T8-landed"
+    },
+    {
+      "id": "ide-shell-m0-m5.coordinate-tree",
+      "extensionId": "ide-shell-m0-m5",
+      "requestedContributionId": "coordinate-tree",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "IdeShellCoordinateTreeContribution.handleOpen",
+      "declaringTranche": "05.T4-landed"
+    },
+    {
+      "id": "ide-shell-m0-m5.logos-atelier",
+      "extensionId": "ide-shell-m0-m5",
+      "requestedContributionId": "logos-atelier",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "IdeShellLogosAtelierContribution.handleOpen",
+      "declaringTranche": "05.T4-landed"
+    },
+    {
+      "id": "ide-shell-m0-m5.review-pane",
+      "extensionId": "ide-shell-m0-m5",
+      "requestedContributionId": "review-pane",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "IdeShellReviewPaneContribution.handleOpen",
+      "declaringTranche": "05.T8-landed"
+    },
+    {
+      "id": "ide-shell-m0-m5.autoresearch-pane",
+      "extensionId": "ide-shell-m0-m5",
+      "requestedContributionId": "autoresearch-pane",
+      "owningExtension": "ide-shell-m0-m5",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "IdeShellAutoresearchPaneContribution.handleOpen",
+      "declaringTranche": "05.T8-landed"
+    },
+    {
+      "id": "agentic-control-room.run-flow",
+      "extensionId": "agentic-control-room",
+      "requestedContributionId": "run-flow",
+      "owningExtension": "agentic-control-room",
+      "type": "intent-target",
+      "scope": "ide-deep",
+      "handler": "AgenticControlRoomWidget.applyIntent",
+      "declaringTranche": "09.T9b-landed"
+    }
+  ],
+  "slotPolicy": {
+    "id": "shell-slot-policy",
+    "owningExtension": "contracts",
+    "type": "slot-policy",
+    "scope": "application-shell",
+    "ref": "Body/M/epi-theia/extensions/contracts/shell-slot-policy.json",
+    "declaringTranche": "31.7"
+  }
+}

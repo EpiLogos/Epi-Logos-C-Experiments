@@ -542,9 +542,9 @@ export interface IntegratedPentadicTraceOverlay {
 
 Verification: `pnpm --filter @pratibimba/integrated-composition test`; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test`; `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; tests assert a single profile subscription, trace-generation equality across cosmic slots, protected-local rejection on personal raw bodies, `composition.pentadic_trace.advance` emission, and no production local derivation of 72->64 / 24x15 / 360+24.
 
-### Tranche 29.16 — Inhabited Bimba live entity field overlay *(spec-ahead-integration; consumes 10.PASU + 18.10 + 25.22)*
+### Tranche 29.16 — Inhabited Bimba live entity field overlay *(spec-ahead-integration; consumes CCT-21 + 10.PASU + 18.10 + 25.22)*
 
-Extend the integrated composition substrate so the Bimba map can be literally inhabited by live `PasuBeingPatternProjection` entities without making live state canonical.
+Extend the integrated composition substrate so the Bimba map can be literally inhabited by live `PasuBeingPatternProjection` entities without making live state canonical. CCT-21 owns the S3 producer stream; this tranche owns composition subscription, rendering, privacy enforcement, and readiness over that stream.
 
 Common-side substrate:
 
@@ -572,7 +572,7 @@ Files to extend:
 
 Stream law:
 - S2/Neo4j is the canonical identity/ontology graph. Composition reads graph anchors but never writes graph canon.
-- S3/SpaceTimeDB carries live presence and current entity state. Composition subscribes to live-state handles and drops stale generations.
+- S3/SpaceTimeDB carries live presence and current entity state via CCT-21. Composition subscribes through `s3'.being_pattern.subscribe`, consumes the current generation carried by 18.10, and drops stale generations.
 - Graphiti carries protected episodic provenance. Composition can show handles and public-safe summaries only.
 - Redis/Psyche, DAY, and NOW carry runtime temporal state. Composition must serialize handles, not construct temporal keys locally.
 - M5/Epii + M0 verifier are the only promotion path from live pattern candidate to canon.
@@ -583,7 +583,7 @@ Visual law:
 - Personal composition renders perspective explicitly: I, You, You-and-I, They, We, We-I. Optional Nara family overlay is visual context, not identity assignment.
 - Earth remains the observer-centre for the solar/clock projection. The 9-orbiter visual derives from Earth-centred M2 projection while respecting the canonical M2 LUT.
 
-Verification: `pnpm --filter @pratibimba/integrated-composition test`; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test`; `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; replay fixture asserts `EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted`; protected-local test asserts Graphiti bodies and raw quaternions never cross; canon-boundary test asserts no S2 mutation from composition; visual fixture covers `Mono`, `Poly`, `ActualisingOne`, and `MonoPoly` states.
+Verification: `pnpm --filter @pratibimba/integrated-composition test`; `pnpm --filter @pratibimba/plugin-integrated-1-2-3 test`; `pnpm --filter @pratibimba/plugin-integrated-4-5-0 test`; CCT-21 replay fixture asserts `EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted`; protected-local test asserts Graphiti bodies and raw quaternions never cross; canon-boundary test asserts no S2 mutation from composition; visual fixture covers `Mono`, `Poly`, `ActualisingOne`, and `MonoPoly` states.
 
 ## Cross-Track Cross-References (summary)
 
@@ -604,7 +604,7 @@ Verification: `pnpm --filter @pratibimba/integrated-composition test`; `pnpm --f
 | 29.13 | 08.1 (privacy-first composition contract), DR-M4-3 (no raw bodies cross), DR-M4-2 (polarity 0=cosmic / 1=personal), 25.18 (privacy chrome) |
 | 29.14 | 11.2 (cross-layout intent routing), TS-11 (CrossLayoutIntent envelope), 15.2 (OmniPanel Pi Chat), DR-TS-1 (composition in daily-0-1), 22.1 (Spanda walk navigator deep link), 24.X (M3 codon deep link) |
 | 29.15 | 10.P5 (AnuttaraPentadicRuntimeTrace), 21 (M0 grounding), 22 (M1 K2 tick surface), 23 (M2 resonance texture), 24.18 (M3 pentadic inspector), 25 (M4 protected Q handles), 26 (M5 EBM recognition), 36.4-36.6 |
-| 29.16 | 10.PASU (PasuBeingPatternProjection), 18.10 (typed PASU JSON edge), 25.22 (M4 perspective/family consumer), M0-3-8 (MonoPoly), M0-4.4.0-(4.4/5) (personhood grammar), S2 Neo4j graph anchors, S3 SpaceTimeDB live state, Graphiti protected provenance, Redis/NOW/DAY temporal handles, 26 (M5 review/EBM recognition) |
+| 29.16 | CCT-21 (S3 BeingPattern live-state producer stream), 10.PASU (PasuBeingPatternProjection), 18.10 (typed PASU JSON edge), 25.22 (M4 perspective/family consumer), M0-3-8 (MonoPoly), M0-4.4.0-(4.4/5) (personhood grammar), S2 Neo4j graph anchors, S3 SpaceTimeDB live state, Graphiti protected provenance, Redis/NOW/DAY temporal handles, 26 (M5 review/EBM recognition) |
 
 ## Anti-Greenfield Posture
 

@@ -116,6 +116,8 @@
 | `q_dialecticalMovement` | `q_3_dialectical_movement` | string | M5 / cross-node quick-view | review | Pattern/process quick movement. |
 | `q_conjunctiveThreshold` | `q_5_conjunctive_threshold` | string | M5 / cross-node quick-view | review | Threshold/return quick-view field. |
 
+> The `q_` register family is **open**: these rows map the known dataset surface keys, but any well-formed `q_<0-5>['][_<slot>]_<lower_snake_case>` is valid by shape — the slug is a free facet name relative to the position, not a fixed vocabulary. See [[q-vocabulary-canon]].
+
 ## M-Prime Region: Branch-Local Expressive Properties
 
 These keys are serialized as `m_{n}_{i?}_{semantic}` because the graph property grammar does not encode apostrophes. Conceptually they are M-prime properties: reflected, operational, dataset-exposed expressions of an M coordinate. The M coordinate itself remains the node's `coordinate`; the property prefix is derived from that node's M root and immediate sub-coordinate slot.

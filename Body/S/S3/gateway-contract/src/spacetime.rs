@@ -31,6 +31,10 @@ pub const SPACETIME_PROJECTION_TABLES: &[&str] = &[
     "coincidence",
     "coincidence_tick",
     "module_version",
+    "aletheia_veto_log",
+    "being_pattern_presence",
+    "being_pattern_relation_edge",
+    "being_pattern_review_candidate",
 ];
 pub const SPACETIME_LITE_PROJECTION_TABLES: &[&str] = &[
     "session_surface",
@@ -52,6 +56,10 @@ pub const SPACETIME_FULL_PROJECTION_TABLES: &[&str] = &[
     "coincidence",
     "coincidence_tick",
     "module_version",
+    "aletheia_veto_log",
+    "being_pattern_presence",
+    "being_pattern_relation_edge",
+    "being_pattern_review_candidate",
 ];
 
 pub const SPACETIME_SUBSCRIPTION_LIFECYCLE_EVENTS: &[&str] = &[
@@ -441,6 +449,15 @@ pub enum SpacetimeTableDelta {
     ModuleVersion {
         row: Value,
     },
+    BeingPatternPresence {
+        row: Value,
+    },
+    BeingPatternRelationEdge {
+        row: Value,
+    },
+    BeingPatternReviewCandidate {
+        row: Value,
+    },
     #[serde(rename = "other")]
     Other {
         table_name: String,
@@ -469,6 +486,11 @@ impl SpacetimeTableDelta {
             "world_clock_tick" => SpacetimeTableDelta::WorldClockTick { row },
             "coincidence_tick" => SpacetimeTableDelta::CoincidenceTick { row },
             "module_version" => SpacetimeTableDelta::ModuleVersion { row },
+            "being_pattern_presence" => SpacetimeTableDelta::BeingPatternPresence { row },
+            "being_pattern_relation_edge" => SpacetimeTableDelta::BeingPatternRelationEdge { row },
+            "being_pattern_review_candidate" => {
+                SpacetimeTableDelta::BeingPatternReviewCandidate { row }
+            }
             other => SpacetimeTableDelta::Other {
                 table_name: other.to_owned(),
                 row,

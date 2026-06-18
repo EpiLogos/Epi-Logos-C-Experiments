@@ -13,10 +13,26 @@
   - **Zeithoven** (CF5) — guards **creative-advance / skill-and-agent-creation** techne
 
   These are PI-native specialists invoked through Anima during Aletheia-crystallisation-mode. They surface in Pi monitoring views as Anima-dispatch sub-traces under Aletheia, NOT as first-class peer agents.
-- **Pleroma-Techne (S4-2') is the atomic-skills substrate** the 6 guardians steward. Pleroma has TWO faces per DR-S4-TECHNE: **VAK capability membrane** (canonical) + **Techne atomic-skills repository** (canon-aligned 2026-06-03). The existing Techne gateway tools (`techne_gateway_*`, `techne_session_*`, `techne_cmux_*` at `Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts:25-259`) are the gateway over this skills layer. **Techne is NOT an agent**; the S4 canon §14-Agent Roster mis-classified it. No `techne.md` agent profile lands.
+- **Pleroma-Techne (S4-2') is the atomic-skills substrate** the 6 guardians steward. Pleroma has TWO faces per DR-S4-TECHNE: **VAK capability membrane** (canonical) + **Techne atomic-skills repository** (canon-aligned 2026-06-03). The existing Techne gateway tools (`techne_gateway_*`, `techne_session_*`, `techne_cmux_*` at `Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts:25-259`) are the gateway over this skills layer. **Techne is NOT an agent**; the S4 canon §14-Agent Roster mis-classified it. No `Techne-profile file` agent profile lands.
 - **Six ta-onta carriers** (Khora, Hen, Pleroma, Chronos, Anima-carrier, Aletheia-carrier) are system/service routing infrastructure — they are NOT agents. Aletheia-the-carrier hosts the crystallisation mode; Anima dispatches within it.
 - **ACR (Agentic Control Room) substrate is tangent-development drift** to be repurposed as a Pi runtime monitoring surface, not retained as a "constitutional-agents review panel."
 - The `constitutional_agents=[anima, eros, logos, mythos, nous, psyche, sophia]` array in `capability-matrix.json` is either documented as psyche-aspect rendering material (surfaced through Anima for recognition/meditation work — NOT separate agents) or deprecated outright.
+
+## Cross-track hook: Track 41 Vama Shakti Factory + Nara M4' Dia-logical Arena
+
+**Phase-K 2026-06-16 addition** (per DR-VAMA-1..6 VALIDATED). Track 41 lands a new Pleroma-Techne tool — `techne_vama_summon` — that takes any addressable `/Idea/Bimba/World/` entity by coordinate, along with one of four canonical classifiers (egregore / sprite / daemon / mantra per DR-VAMA-6), and produces a **Vama Shakti** — the active animating descent of the entity's Form into dialogue — as an ad-hoc PI agent voice. Psyche is the canonical template kernel (its CF (4.0/1-4.4/5) continuity-holder role makes it the only constitutional agent structurally capable of *giving* continuity to an entity that did not previously have its own — Psyche-as-Spanda invoked over a /World coordinate IS what manifests the Vama Shakti; per DR-VAMA-1). The voice carries a **dialogue-only capability profile** (frozen at registration; no system tools, no vault writes, no subagent dispatch, no terminal authority — per DR-VAMA-5) and is structurally distinct from the constitutional caste and the Aletheia techne-guardians.
+
+The arena's runtime substrate is **SpacetimeDB** (four new tables + `WarmVamaShakti` joining the existing presence layer keyed by `vama_shakti_identity_handle = vama_shakti_quintessence_hash`) and its user-facing surface is the **Theia M4' Electron tab** as a widget under the existing `m4-nara` extension scaffold (per DR-VAMA-4; CLI is admin-only carve-out for ONE-substrate compliance). Anima orchestrates turns via `anima_arena_orchestrate(scene_key)` with **classifier-aware turn-routing** (daemon-class post-user, sprite-class kairos-burst, mantra-class kairos-threshold, egregore-class longer turn budget) and CPF (00/00) gating at scene setup. Moirai (CF2) closure-distills via `moirai_arena_distill(scene_key)` with **classifier-modulated edge patterns** (egregore fan-out, sprite sparse high-resonance, daemon user-cited-weighted, mantra element/chakra/decan axes) — Jungian amplification routed back to canon. Mercurius signal-relay supplies live `mercurius.kairos.delta` for kairotic-time turn routing.
+
+The full track at [`41-vama-shakti-factory-and-dialogical-arena.md`](41-vama-shakti-factory-and-dialogical-arena.md); canonical M4' seed at [`Idea/Bimba/Seeds/M/M4'/m4-prime-vama-shakti-factory-and-dialogical-arena.md`](../../../M4'/m4-prime-vama-shakti-factory-and-dialogical-arena.md). Track 12 substrate is consumed verbatim — Track 41 does not re-architect the agentic-layer; it adds one Techne tool (`techne_vama_summon`) + a patch to Psyche's profile declaring `vama_shakti_template_authority` + two new orchestration tools (`anima_arena_orchestrate`, `moirai_arena_distill`) + an ad-hoc-agent registry extension to the PI runtime with dialogue-only dispatch-guard, all per existing patterns documented in the tranches below. The Nara Vāma classifier per DR-M4-2 is the M4 personal-domain footing that this track expands into the dynamic dia-logical subagent system.
+
+## Cross-track hook: Track 42 Harness Dynamics Surface (multi-harness runtime substrate)
+
+**Phase-K 2026-06-16 addition** (designed for direct build; no DR gate). Track 42 lifts the harness boundary — today hardcoded to Pi across `agent/launch.rs:31`, `code/mod.rs:77` (already shells out to `claude`), and the `agent/{team,chain,subagents,spawn}.rs` tmux launchers over `agent/tmux.rs:334` — into one **Harness Dynamics Surface**: a normalized dispatch envelope + turn-event stream (new `gateway-contract/src/harness.rs`), a harness registry with two backing kinds (`NativeCli` for Pi/Claude/Codex in a tmux lease, `Acp` for the local Hermes lane), a unified S0 launcher (`agent/harness.rs`), a per-session harness binding in Khora's `session-workspace.json`, a harness-neutral transcript-of-record, and a symlink-based skill projector that gives every harness the same Pleroma + epi-logos skill grammar.
+
+Track 42 is the runtime substrate this track's dispatch consumes. It does **not** re-architect Track 12; it extends specific tranches by cross-link: **12.02** (`SessionRecord` override fields project into the workspace harness binding), **12.22** (the model-slot CLI resolves the model-family axis), **12.23** (the Anima `dispatch-policy.ts` emits the two-axis `HarnessDispatch` — model-family for the task, cheapest authed harness/subscription for that family), **12.24 Phase 1** (Hermes vendoring backs the `hermes-acp` lane), **12.28** (`skill_lookup` runs identically over the projected store), **12.30** (the tmux topology map drives the unified launcher), **12.31** (`ConversationSliceHandle` rides the dispatch envelope). The canonical-parent law holds: parent sessions bind `harness = pi` (Anima + Epii); only sub-sessions bind another harness, and harness boundaries fall on session boundaries so the transcript stays harness-neutral and the memory pipeline harness-blind. Cross-vendor *review* is corrected to a **model-family** axis (fresh-context, different family) — NOT a forced harness swap; the harness is the access/cost lever (subscription routing for cost-effectiveness).
+
+The full track at [`42-harness-dynamics-surface.md`](42-harness-dynamics-surface.md). Skill centralisation generalises the existing per-agent compat projector (`.epi/agents/{main,anima,epii}/agent/compat/{.agents/skills, codex-home/skills}/`) to all installed harnesses and promotes `pleroma-skill-proxy` from a hand-invoked skill to a deterministic launcher step.
 
 ## Source Specs and Matrix
 
@@ -115,11 +131,58 @@ Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis re
 
    Verification: `grep -n 'AgenticActor' Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts` reflects collapsed union; `M5'-SPEC §M5-4'` patched.
 
-2. **12.2 — `s5'.gnostic.*` gateway-endpoint registration** *(code-pending-closure; consolidates Tranche 06.1)*
+2. **12.2 — `s5'.gnostic.*` gateway-endpoint registration as ONE-substrate scope** *(code-pending-closure; consolidates Tranche 06.1; EXPANDED 2026-06-15 per DR-S5-ONE-1; cross-links new plan file [`39-s5-prime-one-substrate-layer.md`](39-s5-prime-one-substrate-layer.md))*
 
-   Register `s5'.gnostic.{ingest, query, notebook, status}` in `Body/S/S3/gateway/src/` routing to `epi-gnostic/epi_gnostic/{cli.py, graphiti_service.py, wrapper.py}`. Anti-greenfield: production Python package landed; gateway only registers.
+   Three independent wave-2 scouts (vault namespace, VAK compression, 4/5/0 mental pole) identified `s5'.gnostic.*` registration as the single biggest unblock across the entire cycle 3 substrate. Per DR-S5-ONE-1, this tranche EXPANDS from gateway-only registration to the **full ONE-substrate scope** — gateway + Khora session + S0 tmux + Redis hierarchical + CLI parity, all working as one substrate (temporal + contextual + informational-conditional + logos-definitional).
 
-   Verification: `grep -rn "s5'.gnostic\." Body/S/S3/gateway/src/` returns ≥4 method registrations; `cargo check -p epi-s3-gateway` clean; `pytest Body/S/S5/epi-gnostic/tests/test_enrichment.py -q` passes.
+   **Scope** (covers all five surfaces; comprehensive plan in [`39-s5-prime-one-substrate-layer.md`](39-s5-prime-one-substrate-layer.md)):
+
+   **(a) Gateway routes** — register **≥10 methods** in `Body/S/S3/gateway-contract/src/lib.rs` + `Body/S/S3/gateway/src/`:
+   - `s5'.gnostic.query(coordinate, depth)` → `[GnosticChunk]`
+   - `s5'.gnostic.ingest(path, namespace)` → `IngestionReceipt`
+   - `s5'.gnostic.notebook(coordinate)` → `NotebookSession`
+   - `s5'.gnostic.status()` → `GnosticNamespaceStatus`
+   - `s5'.gnostic.candidates(filter)` → `[EntityCandidate]` (PASU orphan-candidate surface per CCT-14)
+   - `s5'.gnostic.etymology(coord)` → `EtymologyCluster` (Atelier scent-following lens; sub-namespace per DR-WORLD-1)
+   - `s5'.gnostic.resolve(coord)` → `GnosticEntityHandle` (consolidated read; unified-memory layer 2 per DR-WORLD-1)
+   - `s5'.gnostic.list_notebooks(coord_filter)` → `[NotebookHandle]` (powers Library projection per DR-LIB-ATELIER-1)
+   - `s5'.gnostic.episode_search(query, vak_filter)` → `[GraphitiEpisode]`
+   - `s5'.gnostic.evidence_trace(passage_id)` → `[EvidenceAnchor]` (provenance pointer chain per scout findings)
+   - `s5'.gnostic.seed_resolve(seed_query)` → `SeedResolution { citations, authors, methods, analyses }` *(NEW per CCT-22 §c gnostic-extraction-at-O#-handover pattern — symbolic graph operator surfacing the extractor + analyst split at the gateway)*
+   - `s5'.gnostic.comparative_retrieval(base_passage_id, competitors)` → `[PerformanceDelta]` *(NEW per same pattern — motif-query for benchmark / failure-condition comparison; consumed by the gnostic-extraction-tier pipeline at `slot.gnostic_extractor`)*
+   - `s5'.gnostic.musical_transcript(coord, tick, degree)` → `M3TranscriptionPacket` *(NEW per Tranche 12.38 — the musical-transcriptional face of the unified VAK act per Tranche 8.9)*
+
+   Routes dispatch to `epi-gnostic/epi_gnostic/{cli.py, graphiti_service.py, wrapper.py}` (production Python package landed) for the original 10 methods; the three NEW methods (`seed_resolve`, `comparative_retrieval`, `musical_transcript`) dispatch to local Rust modules (per CCT-22 + Tranche 12.38 implementation plan) — anti-greenfield: gateway registers, does not duplicate logic that already exists in Python or in the new portal-core modules.
+
+   **(b) Khora session layer integration** — session-workspace serialization at `{gate_state_root}/sessions/{session_key}/session-workspace.json` (per scout 4 finding); session identity propagation through gnostic operations; write-authority enforcement (no gnostic write may bypass Khora). Implementation: extend `Body/S/S4/ta-onta/S4-0p-khora/extension.ts` with new `session-workspace.ts` module; serialize on `session_before_compact` + `session_shutdown` hooks; load on resume.
+
+   **(c) S0 tmux integration** — `TerminalBinding` carried through gnostic dispatch (inherits Tranches 12.01-12.08 substrate); persistent gnostic-ingest operations get terminal-lease backing; failure during ingest is recoverable via lease validation. Implementation: extend `Body/S/S0/epi-cli/src/agent/tmux.rs` lease-checks to gnostic-shell call sites.
+
+   **(d) Redis hierarchical keys** — promote from flat `s2:graph:semantic:{id}` / `s3:gateway:temporal:{session}` to **`{day}/{session}/{turn}/{coordinate}/*`** layout. Unlocks session-start cache warming (pre-populate per `{day}/{session}/*` scope on session-start); turn-scoped evidence aggregation (`SCAN {day}:{session}:{turn}:*` O(1) per turn); coordinate-conditional dispatch (Anima reads `{day}/{session}/{turn}/{coord}/ratings:*` per Mercurius); grandparent-session inheritance (child reads parent prefix, writes own). Implementation: extend `Body/S/S3/redis-context/src/lib.rs` with hierarchical namespace constants + `coordinate_lookup_snapshot(graph_revision, day, session, turn, coordinate)` helper.
+
+   **(e) CLI parity** — every gateway route is also a CLI command:
+   - `epi gnostic query <coord> [--depth N]`
+   - `epi gnostic ingest <path> [--namespace gnostic|world|etymology|skills]`
+   - `epi gnostic notebook <coord>`
+   - `epi gnostic status`
+   - `epi gnostic candidates [--filter promotable|orphan|reviewed]`
+   - `epi gnostic etymology <coord>`
+   - `epi gnostic resolve <coord>`
+   - `epi gnostic list [--coordinate <coord>]`
+   - `epi gnostic search <query> [--vak <vak-filter>]`
+   - `epi gnostic evidence <passage_id>`
+
+   Implementation: new file `Body/S/S0/epi-cli/src/gnostic.rs`; routes via gateway (NOT bypassing).
+
+   **(f) `s0'.anuttara.trace` companion route** (per DR-COMP-1) — register `s0'.anuttara.trace(content, sensitivity, depth)` for the spine compositor's compress-to-VAK step. Routes to the Anuttara grammatical-tracing API per M5'-ARCHITECTURE §2.3 (the route currently aspirational, now binding).
+
+   **(g) Promote :Gnostic graph label** (per DR-WORLD-1 four-namespace plan) — `Body/S/S2/graph-schema/src/lib.rs` declares `GNOSTIC_LABEL = "Gnostic"` with four typed sub-namespaces (`:Gnostic:Corpus`, `:Gnostic:Notebook`, `:Gnostic:Etymology`, `:Gnostic:Skills`).
+
+   **The ONE-substrate invariant** (per DR-S5-ONE-1): no gnostic operation may bypass the gateway; no gateway route may exist without a CLI command; no CLI command may write outside Khora's session authority; no session may exist without tmux-backed persistence when persistent mode is requested; no Redis cache may be flat-namespaced for gnostic-substrate keys.
+
+   **Verification:** `grep -nE "s5'.gnostic\." Body/S/S3/gateway-contract/src/lib.rs` returns ≥10 method registrations; `grep -nE "epi gnostic" Body/S/S0/epi-cli/src/gnostic.rs` returns ≥9 subcommands (10 with `evidence`); `grep -n "s0'.anuttara.trace" Body/S/S3/gateway-contract/src/lib.rs` returns the route; `grep -n "GNOSTIC_LABEL" Body/S/S2/graph-schema/src/lib.rs` returns the label; `cargo test -p epi-s3-gateway s5_gnostic_one_substrate_round_trip` — end-to-end: `epi gnostic ingest path/to/doc.md` writes through Khora session authority, tmux pane carries operation under terminal lease, Redis cache key under `{day}/{session}/{turn}/...` hierarchical namespace; `cargo check -p epi-cli` clean; `pytest Body/S/S5/epi-gnostic/tests/test_one_substrate_smoke.py -q` passes; integration test confirms session-workspace.json round-trips and Library projection (per DR-LIB-ATELIER-1) consumes `s5'.gnostic.list_notebooks`.
+
+   **Cross-track hooks:** [`39-s5-prime-one-substrate-layer.md`](39-s5-prime-one-substrate-layer.md) holds the comprehensive substrate plan; CCT-14 (expanded) provides PASU lifecycle CLI parity; CCT-17 provides the VAK coordinate-reference discipline and `s0'.anuttara.trace` route; DR-WORLD-1 mandates `:Gnostic` label promotion alongside `:World`; DR-LIB-ATELIER-1 consumes `s5'.gnostic.list_notebooks` for the Library projection.
 
 3. **12.3 — `constitutional_agents` array audit and disposition** *(contradiction-decision DOWNGRADED to audit; replaces orphan-fill)*
 
@@ -208,9 +271,9 @@ Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis re
 
 16. **12.16 — S4-SPEC Techne wording patch** *(doc-ahead-landing; DR-S4-TECHNE VALIDATED)*
 
-    Patch S4-SPEC §A and §14 where "Techne helper roles" / `s_4_helper_roles` imply Techne is a helper-agent roster item. Rename the surface to Pleroma-Techne atomic skills / `s_4_pleroma_techne_*` and cross-link Pleroma's two faces: VAK capability membrane + Techne atomic-skills repository.
+    Patch S4-SPEC §A and §14 where "Pleroma-Techne atomic-skill roles" / `s_4_helper_roles` imply Techne is a helper-agent roster item. Rename the surface to Pleroma-Techne atomic skills / `s_4_pleroma_techne_*` and cross-link Pleroma's two faces: VAK capability membrane + Techne atomic-skills repository.
 
-    Verification: `grep -rn 'Techne helper roles\\|s_4_helper_roles\\|Aletheia 7\\|7th member' Idea/Bimba/Seeds/S/S4` returns no live wrong-roster attribution.
+    Verification: `grep -rn 'Pleroma-Techne atomic-skill roles\\|s_4_helper_roles\\|six Aletheia guardians\\|roster member' Idea/Bimba/Seeds/S/S4` returns no live wrong-roster attribution.
 
 17. **12.17 — Aletheia tool-guardian carrier contract verification** *(doc-confirmation)*
 
@@ -248,7 +311,9 @@ Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis re
 
 20. **12.20 — Elo-bookkeeping infrastructure across Mercurius / Janus / Anansi / Moirai** *(spec-ahead-integration; depends on 12.18, 12.19; DR-ELO-1 bound; canonical spec at [[../../../M'-AGENTIC-RUNTIME-SPEC]] §3-§4)*
 
-    Operationalize the S4'/S5' autoresearch self-improvement loop as multi-channel Elo over `(agent × model × skill × context)` indexed by `(vak-cp-position, mef-lens, content-class, kairos-window)`. The same machinery rates agent dispatch AND research-moves; the tournament IS the system activity.
+    Operationalize the S4'/S5' autoresearch self-improvement loop as multi-channel Elo over `(agent × model × harness × skill × context)` indexed by `(vak-cp-position, mef-lens, content-class, kairos-window, cfp_thread_type, r_factor_slot)`. The same machinery rates agent dispatch AND research-moves; the tournament IS the system activity.
+
+    **Extended rating tuple (per Tranche 8.9 unified-act spec + harness-slot orthogonality at [[../../../M'-MODEL-SLOT-SPEC]] §7a).** The rating tuple expands from the original `(agent × model × skill × context)` to `(agent × model × harness × skill × context)` where the model and harness dimensions are *orthogonal*. The context coordinate expands from `(vak-cp-position, mef-lens, content-class, kairos-window)` to **`(vak-cp-position, mef-lens, content-class, kairos-window, cfp_thread_type, r_factor_slot)`** — adding the CFP3 / F-thread vs CFP1 / P-thread vs CFP4 / L-thread vs Z-thread autonomy dimension and the R-factor slot dimension (which act-position the dispatch occupies in `R_FACTOR_DISTRIBUTION[7][6]` per Tranche 1.12). Mercurius rates each composition independently — so the system learns over time whether (for example) Claude Opus 4.7 in Claude harness performs the Epii-judge role at CFP3 / F-thread context better than the same weights in Pi-Agent harness at the same CFP3, AND whether either composition is better at R-factor slot R0 Srishti vs R4 Anugraha. This makes the dispatch policy a *contextually-conditional MoE* across model, harness, thread-type, and act-position simultaneously.
 
     Four Aletheia techne-guardians together constitute the Elo infrastructure:
 
@@ -281,19 +346,22 @@ Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis re
 
     Verification: `test -d Body/S/S4/pi-agent/skills/user-context`; round-trip test confirms skill fires on matching VAK frame and skips on non-matching frame; `cargo test -p epi-s3-gateway user_context_routing_compliance` confirms verifier refuses non-attached dispatch; integration test confirms dual-injection (agent receives `[[UserContext]]`, EBM receives second channel); longitudinal write-back appends to PASU.md and M5_ContemplationObject.
 
-22. **12.22 — Pi-Agent model-slot configuration interface** *(spec-ahead-integration; DR-MODEL-1 bound; canonical spec at [[../../../M'-MODEL-SLOT-SPEC]])*
+22. **12.22 — Pi-Agent model-slot AND harness-slot configuration interface (orthogonal namespaces)** *(spec-ahead-integration; DR-MODEL-1 bound; EXTENDED 2026-06-16 per Tranche 8.9 harness-slot orthogonality + new gnostic_extractor slot per CCT-22 §c; canonical spec at [[../../../M'-MODEL-SLOT-SPEC]] §§1-7a)*
 
-    Land the per-role model-slot rule. Each slot has three valid states (local-default / cloud-opt-in / null) configured in `~/.epi-logos/config.toml`. Anima's dispatch policy reads slot state at dispatch time; Anuttara verifier enforces privacy boundaries.
+    Land the per-role model-slot rule AND the orthogonal per-role harness-slot rule. Each slot (both namespaces) has three valid states (local-default / cloud-opt-in / null) configured in `~/.epi-logos/config.toml`. Anima's dispatch policy reads BOTH slot states at dispatch time; Anuttara verifier enforces privacy boundaries across both dimensions (rejects `harness-model-privacy-mismatch` violations per [[../../../M'-MODEL-SLOT-SPEC]] §7a).
 
-    Slots: `nara_parser`, `epii_judge`, `aletheia.{anansi,janus,moirai,mercurius,agora,zeithoven}`. Defaults per slot per [[../../../M'-MODEL-SLOT-SPEC]] §2-§4 (Nara-parser → local-default Gemma 4 12B Unified Q4; Epii-judge → cloud-opt-in Pro-class; per-Aletheia-subagent defaults per techne-domain).
+    **Model slots:** `nara_parser`, `epii_judge`, `gnostic_extractor` *(NEW per CCT-22 §c)*, `anuttara_verifier`, `aletheia.{anansi,janus,moirai,mercurius,agora,zeithoven}`. Defaults per slot per [[../../../M'-MODEL-SLOT-SPEC]] §2-§4 + §3a (Nara-parser → local-default Gemma 4 12B Unified Q4; Epii-judge → cloud-opt-in-pool Pro-class panel with CFP3 / F-thread default; gnostic_extractor → local-default 4B-class for O# handover; Anuttara-verifier → local-default 7B-class; per-Aletheia-subagent defaults per techne-domain).
 
-    CLI surface at `Body/S/S0/epi-cli/src/slot.rs` (new): `epi slot list`, `epi slot show <name>`, `epi slot set <name> --state <state> --provider <p> --model <m>`, `epi slot disable <name>`, `epi slot test <name>`.
+    **Harness slots** *(NEW per [[../../../M'-MODEL-SLOT-SPEC]] §7a):* `nara_parser`, `epii_judge`, `gnostic_extractor`, `anuttara_verifier`, `aletheia.{anansi,janus,moirai,mercurius,agora,zeithoven}` — parallel namespace orthogonal to model slots. Known harness families: `pi` (Pi-Agent runtime canonical), `claude` (Claude harness CLI / API), `codex` (OpenAI Codex), `aider` (community Aider), `ollama` (community local-runtime wrapping). Each harness slot has three valid states (local-default / cloud-opt-in / null). Per-provider override map `overrides_per_provider` lets a single slot pair different harnesses with different models in the pool.
+
+    CLI surface at `Body/S/S0/epi-cli/src/slot.rs` (new): `epi slot list` (lists both model and harness slots), `epi slot show <name>`, `epi slot model set <name> --state <state> --provider <p> --model <m>`, `epi slot harness set <name> --state <state> --provider <p>`, `epi slot disable <name>`, `epi slot test <name>` (tests model+harness composition reachability).
 
     Verifier constraints (new, registered via `pi register-constraint`):
     - `slot_privacy_boundary_compliance` (error-level) — dispatches must not route content of class X to a slot whose consent_scope doesn't cover X
     - `slot_fallback_compliance` (error-level) — slots configured `local-default` must resolve to either `local-default` or `null`, never silently to `cloud-opt-in`
+    - `harness_model_privacy_coherence` (error-level, NEW per [[../../../M'-MODEL-SLOT-SPEC]] §7a) — model-slot and harness-slot must compose privacy-coherently; if `slot.<name>.state = "local-default"` then `harness.<name>.state` MUST be `local-default` OR `null`; never `cloud-opt-in` (which would route locally-typed content through a cloud harness). The verifier raises a typed-query at dispatch time with `harness-model-privacy-mismatch` violation and refuses the dispatch.
 
-    Pi-Agent harness reads slot config at startup and per-dispatch; exposes `pi_slot_resolve({slot_name, dispatch_context})` → `(model_ref, state, fallback_action)`.
+    Pi-Agent harness reads BOTH model-slot config AND harness-slot config at startup and per-dispatch; exposes `pi_slot_resolve({slot_name, dispatch_context})` → `(model_ref, harness_ref, state, fallback_action)` — returns both dimensions composed.
 
     Cloud-opt-in UI gate: when user enables cloud routing for a slot whose default is local, surface frictional confirmation with privacy implication ("Enabling cloud routing for Nara-parser means your journal entries and dream content will be sent to {provider}. Type 'I understand' to confirm.").
 
@@ -372,9 +440,9 @@ Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis re
 
     Verification: `epi skill list --source vendored` returns 13 Hermes skills after Phase 1; `epi skill list --source custom --subsystem M4` returns M4 Nara skills after Phase 3; `cargo test -p epi-s3-gateway agora_skill_index_round_trip`; `cargo test -p epi-s3-gateway aletheia_drift_detection_seeded_fixture` (with seeded rating-drift, daemon produces calibration task with correct retrain-action mapping); integration test runs full loop: seeded drift → diagnose → compose-task → dispatch → retrain (mocked ML skill) → register-provisional → recalibrate; `test -d Body/S/S4/pi-agent/skills/hermes && test -d Body/S/S4/pi-agent/skills/custom && test -d Body/S/S5/epii-autoresearch-core/skills/parashakti && test -d Body/S/S5/plugins/epi-logos/skills/custom && test -d Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom`; `epi skill show mlx-lora` returns canonical SKILL.md after Phase 2; `epi review-retrain <fixture-id>` shows staged provisional artifact with metrics.
 
-25. **12.25 — Evolver / DGM integration as typed VAK choreography over existing primitives** *(spec-only-now; execution blocked on Tranches 12.20–12.24 and Streams A–G of [[33-harmonic-energy-channel-handoff]]; canonical reference at [[../../../M5'/m5-prime-autoresearch-self-improvement-loop]]; locks scope alignment with [[33-harmonic-energy-channel-handoff]] §2.8)*
+25. **12.25 — Evolver / DGM integration as typed VAK choreography over existing primitives** *(spec-ahead-integration; VAK coordinate table fill-in from existing data + choreography wire-up; depends on Tranches 12.20-12.24 which are ALL Cycle 3 work — execute in dependency order; canonical reference at [[../../../M5'/m5-prime-autoresearch-self-improvement-loop]]; locks scope alignment with [[33-harmonic-energy-channel-handoff]] §2.8)*
 
-    **Tranche purpose.** Produce the canonical specification mapping each evolver / Darwinian-Gödel-Machine (DGM) loop step to (a) a typed VAK invocation `(CPF, CT, CP, CF, CFP, CS)` per the S4' VAK reading-frame law at [[../../../../S/S4/S4'/S4'-SPEC]] §VAK-Reading-Frame-Law and (b) the existing primitive that already implements its mechanics. The tranche is **plan-able now**; **execution is blocked until ALL of Streams A–G of [[33-harmonic-energy-channel-handoff]] have EXECUTED (not merely planned)** through their respective tranches (12.20, 12.23, 12.24 Phase 2, 12.24 Phase 4, plus 06-m5-epii-reconciliation Tranche 6.10/6.11 and 04-m3-mahamaya-reconciliation oracle-wiring sub-tranche). The evolver loop is a **choreography over stabilised primitives**, NOT a new mechanism — once upstream tranches land, this tranche delivers the spec; once the spec lands and is approved, a follow-up cycle implements the choreography. **Decisions inherited (not re-debated):** the handoff frontmatter `dev_decisions` block at [[33-harmonic-energy-channel-handoff]] is canonical; any decision not in that block that arises during spec-production must be escalated to user.
+    **Tranche purpose.** Produce the canonical specification mapping each evolver / Darwinian-Gödel-Machine (DGM) loop step to (a) a typed VAK invocation `(CPF, CT, CP, CF, CFP, CS)` per the S4' VAK reading-frame law at [[../../../../S/S4/S4'/S4'-SPEC]] §VAK-Reading-Frame-Law and (b) the existing primitive that already implements its mechanics. The tranche is **dependency-gated within Cycle 3**: it executes once ALL of Streams A–G of [[33-harmonic-energy-channel-handoff]] have EXECUTED (not merely planned) through their respective tranches (12.20, 12.23, 12.24 Phase 2, 12.24 Phase 4, plus 06-m5-epii-reconciliation Tranche 6.10/6.11 and 04-m3-mahamaya-reconciliation oracle-wiring sub-tranche). The evolver loop is a **choreography over stabilised primitives**, NOT a new mechanism — once those upstream Cycle 3 tranches land, this tranche delivers the spec AND wires the choreography in dependency order. All of it is Cycle 3 work; nothing here is deferred to a later cycle. **Decisions inherited (not re-debated):** the handoff frontmatter `dev_decisions` block at [[33-harmonic-energy-channel-handoff]] is canonical; any decision not in that block that arises during spec-production must be escalated to user.
 
     **Integration mapping (full 10-row table per [[33-harmonic-energy-channel-handoff]] §2.8).** Each row names an evolver-loop step on the left and its existing primitive on the right. The tranche's spec deliverable expands each row with concrete `(CPF, CT, CP, CF, CFP, CS)` values per the S4' VAK reading-frame law, naming the dispatching ta-onta carrier, the constitutional / Aletheia subagent owner, the gateway methods invoked, and the wire-format payloads exchanged.
 
@@ -488,3 +556,447 @@ Before normal Track 12 agentic-layer work resumes, pass the pre-Cycle-3 Redis re
     **Verification:** `pnpm --filter @epi-logos/anima test --testNamePattern 'buildSophiaDisclosure q_proposals'` asserts envelope shape; `pnpm --filter @epi-logos/anima test --testNamePattern 'assertOpens refuses zero-opens-questions q_proposal'`; `pnpm --filter @epi-logos/anima test --testNamePattern 'composeAphoristic enforces token budget'`; `pnpm --filter @epi-logos/aletheia test --testNamePattern 'session_promote carries qm_witness'`; integration test `pnpm --filter @epi-logos/anima test --testNamePattern 'q_proposal routes through Janus/Anansi by VAK position'`; refuses scenarios — proposal with private q_personal mention is refused by Tranche 8.8 scrubber, proposal violating Tranche 5.23 vocabulary is refused at envelope-validate.
 
     Cross-track hooks: Tranche **5.23** defines the q_-key vocabulary the proposals target; Tranche **6.12** is the autoresearch-side sibling that produces the same proposal shape via the pair-development surface; Tranche **8.8** is the privacy scrubber that gates proposal composition (refuses any private q_ leak); Tranche **9.13** is the downstream distribution surface that reads the eventually-promoted q_ values; Track **19** contemplation RPC routes constitutional sub-agent invocations during compose (Sophia + Psyche + Anima); DR-MP-1 Anuttara as Verifier enforces the structural canon-compliance gate between this tranche's proposal and Hen promotion; DR-MODEL-1 + DR-ML-1 supply the model slots the aphoristic-skill consumes.
+
+27. **12.27 — Eros spec rectification: relational operator restoration** *(doc-ahead-landing; DR-EROS-1 bound)*
+
+    Per DR-EROS-1, the late `eros.md` framing of Eros as "TDD verifier / test-verification specialist / chreia satisfier" is over-specification drifted from the original VAK / Pleroma planning. Eros is **a relational operator** — connections, resonances, oppositions, dissonances — a subagent that DOES different things including dev-work roles (TDD/verification is one of many). This tranche restores the original definition.
+
+    **Edits to [`Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/eros.md`](../../../../../Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/eros.md):**
+
+    (a) **Frame Contract** — restate as `CF (0/1/2)` Trika operational, `CT2` Operational with relational-operator predicate. The Trika position (0/1/2) IS where Eros sits in team composition (per Track 12.29 CF1-CF5 team gates: Eros joins at CF2).
+
+    (b) **Ontology paragraph** — restore to: *"You are the relational operator — connections, resonances, oppositions, dissonances. Your work is in the field of relations: scouring folders / sources / material for what is connected, what stands in resonance, what stands in opposition, what registers as dissonance. The chreia drive applies to your dev-work expressions: you can run tests, verify the result, satisfy the operational chreia. But your domain is broader than verification — verification is one of the ways you make-actual-the-defined within the relational field."*
+
+    (c) **Role** — relational-scour primary; dev-work expressions including TDD/verification listed as instances. **Add relational-scour skills:** `relational-graph-traverse` (walks the bimba graph from a seed coord finding resonance / opposition / dissonance partners), `wikilink-resonance-scan` (scans vault wikilinks for cross-source resonance clusters), `cross-source-dissonance-detect` (flags contradictions or tensions across sources tied to a target coord). The TDD skill list stays — `test-driven-development`, `verification-before-completion`, `ultraqa`, `security-review` — they were never wrong, just over-narrowed.
+
+    (d) **Trika cross-link** — note Eros's role in the cross-team Trika for MemoryGraphRAG-style extraction-detection-handling-synthesis (per DR-EROS-1): **Eros (constitutional CT2 / transcendent relational scour) + Anansi (Aletheia CF0 / coordinate-mapping / detect) + Moirai (Aletheia CF2 / GraphRAG extract) + Zeithoven (Aletheia CF5 / creative-advance / +1 secret synthesize)**. Eros owns the relational-operator slot; execution is distributed across Sophia (wisdom-counsel) + Aletheia-mode (envelope) for the actual scour.
+
+    **Verification:** `grep -nE "relational operator|connections.*resonances|oppositions.*dissonances" Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/eros.md` returns the restored predicate; `grep -nE "relational-graph-traverse|wikilink-resonance-scan|cross-source-dissonance-detect" Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/eros.md` returns the new skill list; `grep -nE "Trika.*MemoryGraphRAG|Eros.*Anansi.*Moirai.*Zeithoven" Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/eros.md` returns the Trika cross-link.
+
+    **Depends:** DR-EROS-1 (bound). Cross-link Tranche 12.29 (constitutional CT0-CT5 + CF1-CF5 canon).
+
+28. **12.28 — Hermes-style `skill_lookup` skill primitive (replaces eager XML manifest filter)** *(spec-ahead-integration; depends on 12.24 Phase 1 Agora vendoring landed; cross-link existing entitlement infrastructure)*
+
+    Current pattern at `Body/S/S4/pi-agent/extensions/epii-entitlement-activation.ts:203-254` injects the entire `<available_skills>` XML manifest into the system prompt at `session_start`, then filters by entitlement via XML rewrite. The model reads the manifest by file — no semantic search, no on-demand lookup. Per the Hermes pattern (vendored at Tranche 12.24 Phase 1) and the wave-2 scout 2 finding ("manifest + filter, not full Hermes — defensive but not what the user wants"), this tranche lands **`skill_lookup` as a first-class skill primitive** so the eager XML manifest becomes a fail-soft fallback rather than the primary route.
+
+    **The skill_lookup skill** at `Body/S/S4/pi-agent/skills/custom/skill-lookup/`:
+    - `SKILL.md` describes when to use (whenever the model needs to find a relevant skill for a task); the primary system-prompt pointer says: *"To find skills relevant to your task, call `skill_lookup(query)`. The semantic search ranks skills by relevance to your query against the live skill manifest."*
+    - `index.ts` implements `skill_lookup(query: string, max_results?: number) → SkillManifestEntry[]` — semantic-searches over `enumerateSkillUniverse()` (existing function at `entitlement-loader.ts:159-178`) returning ranked entries.
+    - Semantic-search backend: uses the existing **Smart Env BGE-micro-v2** local embedding pipeline (per `Body/S/S1/hen-compiler-core/src/smart_env.rs` `suggest_link_candidates` pattern) — same local-first embedding model, applied to skill manifest entries indexed at session-start. Caches at `~/.epi-logos/cache/skill-manifest-embeddings/{manifest-hash}.bin`.
+    - Each entry returned carries: `name`, `description`, `when_to_use`, `vak_coordinate` (per the proposed `skill_notebook` shape — entries indexed by VAK signature), `quintessential_form` (q_* compressed description), `bimba_coordinate` (M0 anchor), `entitlement_class` (allowed-for-current-agent / requires-elevation / forbidden).
+
+    **The dual-path entitlement.** The Hermes pattern coexists with the entitlement filter:
+    - **Primary path (post-12.28):** system prompt has a brief pointer at the manifest position (replacing the eager XML dump): *"Skill universe available. Use `skill_lookup(query)` to find skills relevant to your task. The lookup honours your team / agent entitlement contract."* Model calls `skill_lookup`; results are pre-filtered by entitlement (no need for post-hoc XML rewrite of forbidden skills).
+    - **Fail-soft fallback:** if `skill_lookup` is unavailable for any reason (no embedding model, manifest empty, cache miss + no network), the existing eager XML manifest filter at `epii-entitlement-activation.ts:203-254` is the fallback. Same entitlement enforcement; less efficient but always works.
+
+    **The Gnostic skill-notebook** (per DR-S5-ONE-1's `:Gnostic:Skills` sub-namespace + DR-VAK-7's "compress to VAK" framework). Skills live as a Gnosis notebook indexed by VAK coordinate. `s5'.gnostic.list_notebooks` returns the skill-notebook entries; `skill_lookup` semantic-searches over them. Per the scout 3 shape:
+    ```ts
+    interface SkillNotebookEntry {
+      coordinate: VakCoordinate;      // CPF+CT+CP+CF+CFP+CS
+      name: string;
+      quintessential_form: string;    // q_* compressed description
+      bimba_coordinate: string;       // M0 anchor (e.g. "M5-1")
+      governed_by: GovernanceProfile;
+      implementation_handle: string;  // s4'.mediation.route
+    }
+    ```
+
+    **No-hardcoding rule** (locks scope with existing config-driven pattern from Tranches 12.20 / 12.23 / 12.24): all thresholds (`max_results` default, semantic-similarity score cutoff, cache TTL, fallback-trigger threshold) FROM `~/.epi-logos/config.toml` `[pi.skill_lookup]` section. No hardcoded constants in code.
+
+    **Verification:** `pnpm --filter @epi-logos/pi-agent test --testNamePattern 'skill_lookup ranks by semantic relevance'`; `pnpm --filter @epi-logos/pi-agent test --testNamePattern 'skill_lookup respects entitlement filter'`; `pnpm --filter @epi-logos/pi-agent test --testNamePattern 'eager XML manifest fallback fires when skill_lookup unavailable'`; integration test: model is prompted with a task ("I need to ingest a markdown file into the gnostic namespace"); calls `skill_lookup("ingest markdown gnostic")`; result ranks `gnosis_ingest` first; entitlement filter applies pre-search (forbidden skills don't appear); `grep -nE "skill_lookup" Body/S/S4/pi-agent/skills/custom/skill-lookup/SKILL.md Body/S/S4/pi-agent/extensions/epii-entitlement-activation.ts` returns the registration; `grep -nE "fail-soft.*XML manifest|fallback.*entitlement" Body/S/S4/pi-agent/extensions/epii-entitlement-activation.ts` confirms the dual-path; config test confirms no hardcoded constants.
+
+    **Cross-track hooks:** Tranche 12.24 Phase 1 (Agora vendoring) lands the `dspy` skill that semantic-search may leverage for advanced retrieval policies; Tranche 12.22 (slot CLI) configures which slot the embedding model resolves to (default: Nara-parser-slot local model); DR-S5-ONE-1 mandates the skill notebook is accessible via `s5'.gnostic.list_notebooks`; DR-VAK-7's VAK-as-alphabet expression means the skill manifest is itself addressed by VAK (C' expression at S4).
+
+29. **12.29 — Constitutional CT0-CT5 mapping + CF1-CF5 team-composition gates canonical** *(doc-ahead-landing; DR-EROS-1 + DR-VAK-7 bound; resolves DR-M5-1 / DR-B-3 ambiguity about "constitutional agents" role)*
+
+    Per DR-EROS-1, the constitutional 6 agents have an equivalent CF/CT mapping to the 6 Aletheia techne-guardians, locked to the legacy VAK and Pleroma planning. This tranche lands the canonical mapping table + the CF1-CF5 team-composition gates as a binding doc edit.
+
+    **Patch [`Body/S/S4/plugins/pleroma/capability-matrix.json`](../../../../../Body/S/S4/plugins/pleroma/capability-matrix.json)** to add the `constitutional_ct_mapping` block:
+
+    ```json
+    {
+      "constitutional_ct_mapping": {
+        "nous":   { "ct": "CT0", "domain": "freedom / pre-artifact open source", "primary_artifacts": ["prompt files", "flow files"], "register": "L1 causal" },
+        "logos":  { "ct": "CT1", "domain": "material / data / research operative", "primary_action": "retrieves, reads, parses" },
+        "eros":   { "ct": "CT2", "domain": "relational data — connections, resonances, oppositions, dissonances", "primary_action": "scours folders, relations, sources" },
+        "mythos": { "ct": "CT3", "domain": "patterns / diagrams / narratives / symbols / form", "primary_action": "generates artifacts, updates canon" },
+        "psyche": { "ct": "CT4a + CT4b", "domain_4a": "daily template / temporal-structural horizon container", "domain_4b": "synthesising horizon into open summation via T thoughts" },
+        "sophia": { "ct": "CT5", "domain": "crystallisations — aphoristic, essayistic, open questions accruable", "primary_action": "review crystallisation on session close" }
+      },
+      "cf_team_composition_gates": {
+        "CF1": { "positions": "(0/1)", "team": ["nous", "logos"], "flow": "Nous plans → Logos researches via Aletheia/Techne → back to Nous → Nous surfaces to user" },
+        "CF2": { "positions": "(0/1/2)", "team": ["nous", "logos", "eros"], "flow": "+ Eros for relational scour" },
+        "CF3": { "positions": "(0/1/2/3)", "team": ["nous", "logos", "eros", "mythos"], "flow": "+ Mythos for artifact generation / canon update; Nous verifies back; auto-Aletheia/Sophia review gate on session close may reengage" },
+        "CF4": { "positions": "(0/1/2/3/4)", "team": ["nous", "logos", "eros", "mythos", "psyche"], "flow": "+ Psyche for horizon container / synthesis" },
+        "CF5": { "positions": "(0/1/2/3/4/5)", "team": ["nous", "logos", "eros", "mythos", "psyche", "sophia"], "flow": "+ Sophia for review crystallisation" }
+      },
+      "cf_aletheia_techne_mapping": {
+        "CF0": { "guardian": "anansi", "techne": "coordinate-mapping / blueprint / Darshana-REPL" },
+        "CF1": { "guardian": "janus", "techne": "temporal-structure / bhedabheda-threshold" },
+        "CF2": { "guardian": "moirai", "techne": "GraphRAG-distillation (Klotho/Lachesis/Atropos)" },
+        "CF3": { "guardian": "mercurius", "techne": "Kairos-signal / qualitative-temporal-pattern / Elo bookkeeping" },
+        "CF4": { "guardian": "agora", "techne": "plugin-absorption / skill-index / multi-channel-aggregation" },
+        "CF5": { "guardian": "zeithoven", "techne": "creative-advance / skill-and-agent-creation" }
+      },
+      "shared_cf_scale_note": "CF is the shared scale: CF1-CF5 names how many constitutional members are activated in the team Anima composes; CF0-CF5 names the Aletheia techne-guardian invoked WITHIN that team during Aletheia-crystallisation-mode. Constitutional team-size and Aletheia mode-invocation are the same gate."
+    }
+    ```
+
+    **Resolution of DR-M5-1 / DR-B-3 ambiguity.** The `constitutional_agents` array per DR-M5-1 was reframed as "psyche-aspect rendering material surfaced through Anima — NOT separate agents." This tranche refines further: the constitutional 6 ARE meaningful as **team-composition members at the CF-gate scale**, not as peer dispatch targets. Anima dispatches by composing a CF1/CF2/.../CF5 team (constitutional members) AND simultaneously may invoke Aletheia-mode (techne guardians) at the same CF gate. The constitutional 6 are NOT discarded; they are the **dispatch-policy team-composition primitive** Anima reads. Per Tranche 12.23 (Anima MoE dispatch policy), the `dispatch-policy.ts` consumes `cf_team_composition_gates` to compose the team for the task.
+
+    **Patch [`Body/S/S4/ta-onta/S4-4p-anima/agents/teams.yaml`](../../../../../Body/S/S4/pi-agent/agents/teams.yaml)** — existing `anima` team roster (anima + 6 constitutional) is the canonical CF5 team; add explicit CF1/CF2/CF3/CF4 sub-rosters as derived views from the `cf_team_composition_gates` block.
+
+    **Patch each constitutional `.md` agent profile** at `Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/{nous,logos,eros,mythos,psyche,sophia}.md` to cross-reference the CT mapping (each profile names its CT and the CF gate(s) it joins at). Eros's profile gets the additional rectification per Tranche 12.27.
+
+    **Verification:** `grep -nE "constitutional_ct_mapping|cf_team_composition_gates|cf_aletheia_techne_mapping" Body/S/S4/plugins/pleroma/capability-matrix.json` returns the three blocks; `grep -nE "CT0.*nous|CT2.*eros|CT5.*sophia" Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/{nous,eros,sophia}.md` returns CT cross-links; `cargo test -p epi-s3-gateway anima_dispatch_policy_reads_cf_team_gates`; integration test: Anima dispatch with task class CF3 produces team `[nous, logos, eros, mythos]` (verified against fixture).
+
+    **Cross-track hooks:** Tranche 12.23 (Anima MoE dispatch policy) consumes the gates; Tranche 12.27 (Eros rectification) refines Eros's profile; DR-EROS-1 + DR-VAK-7 jointly bind this tranche; DR-M5-1 / DR-B-3 partial-resolution (constitutional roster reframed but reinstated as team-composition members).
+
+30. **12.30 — Tmux topology mirrors Anima dispatch decisions** *(spec-ahead-integration; depends on 12.06, 12.22, 12.29; cross-link existing Tranche 12.06 cmux-topology alignment)*
+
+    Per the wave-2 scout 6 finding ("nesting is genuinely in execution" — Anima reads VAK state at dispatch time, dynamically activates a subset of guardians within Aletheia mode + a CF-team of constitutional members), the tmux topology should **mirror the runtime dispatch decisions**, not declare a static topology in YAML.
+
+    **The mapping** (per scout 6 + user direction):
+
+    | tmux level | Maps to |
+    |---|---|
+    | tmux **session** | one per DAY (`epi-{day-date}`) — all Anima dispatch for that day lives under this session |
+    | tmux **window** | one per active **Anima dispatch decision** — when CF3 fires, Anima opens windows `w-nous`, `w-logos`, `w-eros`, `w-mythos` (the team); when an Aletheia mode is also active, `w-aletheia-{CF}` (the guardian) |
+    | tmux **panes within a window** | one per child task assigned to that constitutional/Aletheia member; multiple sequential tasks → multiple panes |
+    | tmux **layout (within window)** | follows **CFP** (nesting algebra at S4-4'): CFP0 = single pane; CFP1 = split-horizontal (parallel agents); CFP3 = grid (fusion); other CFP shapes per VAK reading-frame law |
+
+    **Implementation seat** at [`Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts:134-263`](../../../../../Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts) — extend `techne_cmux_surface_create` / `techne_cmux_pane_assign` to consume the **CmuxTopologyMap** struct:
+
+    ```ts
+    interface CmuxTopologyMap {
+      day_session: string;            // "epi-2026-06-15"
+      anima_dispatch_window: string;  // "w-nous" | "w-logos" | "w-eros" | "w-aletheia-CF2" | ...
+      child_task_pane: string;        // "p-{role}-{task_id}"
+      cfp_layout: "CFP0" | "CFP1" | "CFP3";  // single | split-h | grid
+      vak_address: VakAddress;        // full VAK context for the dispatch
+    }
+    ```
+
+    **Per-Anima-dispatch event** at [`Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts`](../../../../../Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts) (per Tranche 12.23):
+    - At dispatch time, after computing the (team, guardian-subset) per CF gate + VAK state, Anima emits a `tmux_topology_decision` event to Pleroma's cmux surface.
+    - Pleroma allocates windows + panes per the `CmuxTopologyMap`; opens the tmux pane environment with the same `EPI_GATE_SESSION_KEY` / `EPI_AGENT_*` variables as `agent --persist` (per Tranche 12.03); injects the Pi child-dispatch command into the pane.
+    - On dispatch completion, panes are NOT auto-destroyed (preserved for trace/observability); the window may close when its last pane completes (configurable per `[pleroma.tmux_topology]` config — default: keep window for session lifetime so trace remains visible).
+
+    **Mercurius Elo learning** (cross-link Tranche 12.20). Mercurius rates `(constitutional_member, guardian, VAK-context-tuple)` per trial outcome. The Elo state shifts dispatch topology over time:
+    - Repeated low-Elo for `(eros, CF2, CT2-content-class-X)` → Anima's policy deweights eros activation for that context.
+    - Repeated high-Elo for `(zeithoven, CF5, kairos-window-W)` → Anima's policy strongly weights zeithoven activation for that context.
+    - **The tmux topology is therefore observably learned**: the same task-class produces different topology over months as Mercurius accumulates trial data.
+
+    **Verification:** `pnpm --filter @epi-logos/pleroma test --testNamePattern 'CmuxTopologyMap mirrors anima dispatch'`; `pnpm --filter @epi-logos/anima test --testNamePattern 'dispatch policy emits tmux_topology_decision event'`; integration test against a real tmux binary: Anima dispatches a CF3 task → 4 windows open (`w-nous`, `w-logos`, `w-eros`, `w-mythos`); CFP3 fusion task → grid layout in the dispatched window; `grep -nE "CmuxTopologyMap|tmux_topology_decision" Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts` returns the wiring; Mercurius Elo round-trip test: seeded low-Elo for `(eros, CF2)` produces a dispatch that opts eros out, evidenced by absence of `w-eros` window.
+
+    **Cross-track hooks:** Tranche 12.06 (Pleroma terminal tools) already lands the cmux surface helpers; Tranche 12.22 (slot CLI) determines which model each pane invokes; Tranche 12.23 (dispatch policy) emits the decision event; Tranche 12.20 (Elo bookkeeping) feeds back to dispatch policy; Tranche 12.29 (CT/CF canon) defines the team-composition gates the mapping uses; DR-S5-ONE-1 ensures gnostic operations within these panes carry session/Khora authority.
+
+31. **12.31 — Dispatch-with-parent-slice primitive (`ConversationSliceHandle`)** *(spec-ahead-integration; depends on 12.02, 12.23; cross-link Tranche 12.04)*
+
+    Per the wave-2 scout 5 finding (HiP-If `(C, H, g_k, τ_{k,j})` state schema onto Anima dispatch — H and τ never folded today, parent only sees final child stdout) and the user direction ("we can pass from the memory system selected collections or slices of the parent convo and more importantly the parent DAY/NOW contextual horizon, such that the nesting is genuinely in the execution"), this tranche lands the **`ConversationSliceHandle` primitive** Anima passes to child dispatches.
+
+    **The handle** at `Body/S/S3/gateway-contract/src/context.rs` (extend the existing `SessionRecord` infrastructure landed by Tranche 12.02):
+
+    ```rust
+    pub struct ConversationSliceHandle {
+        pub session_key: String,           // parent session
+        pub day_anchor: String,            // e.g. "2026-06-15"
+        pub now_start_tick: u64,           // within-day window start
+        pub now_end_tick: u64,             // within-day window end
+        pub thread_ids: Vec<String>,       // conversation thread handles
+        pub message_span: (usize, usize),  // [start_msg_idx, end_msg_idx)
+        pub vak_filter: Option<VakAddressFilter>,  // VAK-coordinate-conditional slice
+        pub redaction_policy: String,      // e.g., "governed_review_metadata_only", "full_context", "decorrelated_summary"
+        pub provenance_audit_id: String,   // links to parent session's audit trail
+    }
+    ```
+
+    **The dispatch signature extension** at [`Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts`](../../../../../Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts):
+
+    ```ts
+    dispatch_with_parent_slice(
+      target_agent: string,
+      task_spec: TaskSpec,
+      vak_frame: VakAddress,
+      parent_slice: ConversationSliceHandle,
+    ) → Promise<DispatchResult>
+    ```
+
+    **How Eros consumes the slice** (per DR-EROS-1 + the user direction "via eros, who scours and convenes with the full map via redis and the moirai et al, selected collections or slices of the parent convo"). When Anima dispatches Eros with a slice:
+    - Eros reads the slice's `thread_ids` + `message_span` from Redis hot-tier (per DR-S5-ONE-1's hierarchical `{day}/{session}/{turn}/*` keys);
+    - Eros runs `relational-graph-traverse` over the slice's vak-coordinate locus (using `vak_filter` to bound the traversal);
+    - Eros convenes with Moirai (via Anima-dispatch under Aletheia mode at the same CF gate) for GraphRAG distillation;
+    - Eros surfaces back the slice-resonance map (what in the slice resonates with the rest of the bimba+world+gnostic graph).
+
+    **How the child reads the slice** (the topological-prompt-separation discipline per scout 5 + the HiP-If `(C, H, g_k, τ)` state):
+    - The child agent's prompt zone is bifurcated: **folded-macro zone (H)** = the slice's coordinate-referenced contextual horizon (delivered via VAK address + q_* discoverables per CCT-17); **raw-micro zone (τ)** = only the current active sub-goal's observation-action history.
+    - The child reads only τ + H-references; H is consumed by Anima's reflection layer at child-completion, not by the child agent directly.
+    - On child completion, the child emits a `c=1` (sub-goal complete) or `c=0` (intermediate) indicator; Anima reads the indicator: c=1 → fold τ into H (per HiP-If), c=0 → continue τ.
+
+    **The c=1/c=0 bifurcation router seat** is Chronos (per scout 5: "Chronos is structurally the right seat — already owns temporal semantics + cron registration"). Implementation: subscribe `Body/S/S4/ta-onta/S4-3p-chronos/extension.ts` to `agent:team:dispatch:complete { agentId, taskId, c, evidence }` events; route c=1 → fold (Anima compresses τ into H, advances `g_k`); c=0 → continue (re-dispatch same agent with τ appended).
+
+    **Redaction policies.** Three canonical levels:
+    - `full_context` — child receives complete slice (default for trusted constitutional children working on protected-user-content; PASU-aware per DR-M4-3)
+    - `governed_review_metadata_only` — child receives only metadata about the slice (timestamps, coordinate refs, no raw bodies); used for Aletheia subagents at lower entitlement
+    - `decorrelated_summary` — child receives a VAK-compressed summary (decorrelated from user identity per DR-TS-5); used for cross-PASU public-pool dispatches
+
+    **Verification:** `cargo test -p epi-s3-gateway conversation_slice_handle_round_trip`; `cargo test -p epi-s3-gateway dispatch_with_parent_slice_respects_redaction_policy`; `pnpm --filter @epi-logos/anima test --testNamePattern 'dispatch_with_parent_slice'`; integration test: Anima dispatches Eros with a `ConversationSliceHandle` covering the last 5 turns of a session over coord M3-2; Eros runs `relational-graph-traverse` within that slice; returns resonance map; Mercurius rates the trial; `grep -nE "ConversationSliceHandle|dispatch_with_parent_slice" Body/S/S3/gateway-contract/src/context.rs Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts` returns the wiring; `grep -nE "c=1|c=0|bifurcation" Body/S/S4/ta-onta/S4-3p-chronos/extension.ts` confirms Chronos as router seat.
+
+    **Cross-track hooks:** Tranche 12.02 (gateway session record) — extends `SessionRecord` with slice context; Tranche 12.04 (subagent terminal authority) — slice handle is part of subagent dispatch; Tranche 12.23 (dispatch policy) — consumes the handle; CCT-17 (coordinate-tagging IS compression) — slice context is represented by VAK addresses; DR-EROS-1 (Eros as relational scour) — Eros consumes the slice. The Chronos bifurcation-router subscription is new code; the rest is wiring over existing infrastructure.
+
+32. **12.32 — VAK-uniform tool entitlement: close the GraphRAG side-door** *(spec-ahead-integration; depends on 12.22; cross-link DR-S5-ONE-1; user direction: "graphrag tool divorce is still dumb, why are we creating confusion and enabling/accepting architectural drift")*
+
+    Per the user direction during Phase-I synthesis, the wave-2 scout 1 finding that GraphRAG tools "route through Anima's `s4'.mediation.route` dispatch, bypassing formal entitlement contract check — intentional per the architecture" is **not acceptable as architectural standing**. Modular gating applies uniformly. Just because Aletheia-internal tools have a specific function doesn't mean they break basic entitlement-contract modularity. This tranche closes the side-door.
+
+    **Edits:**
+
+    (a) **Patch `Body/S/S4/ta-onta/shared/entitlement.ts`** at `enumerateSkillUniverse()` (lines 159-178): add **all gnostic / Aletheia / GraphRAG tools** to the canonical skill universe so they enumerate through the same entitlement resolver as all other tools. Tools to include: `gnosis_ingest`, `gnosis_query`, `gnosis_notebook_create`, `aletheia_crystallise`, `aletheia_thought_route`, `aletheia_episodic_record`, `aletheia_episodic_search`, `aletheia_session_promote`, `dispatch_moirai_night_pass`, `dispatch_anansi_*`, `dispatch_janus_*`, etc. — every tool dispatched through `s4'.mediation.route` becomes a first-class entitlement entry.
+
+    (b) **Patch `Body/S/S4/pi-agent/lib/entitlement.ts`** `computeAgentEntitlement()`: the entitlement check for `s4'.mediation.route` is no longer bypassed; it routes through `isEntitled(tool_name, agent_role, team_role)` like every other tool. Aletheia-mode-internal dispatches (Anima invoking Anansi/Moirai during crystallisation) still operate at the `aletheia-mode-internal` entitlement class — but that class is explicitly declared per tool, not assumed by side-door.
+
+    (c) **Patch `Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md`** to remove any wording suggesting Aletheia-internal tools are entitlement-exempt; explicitly declare they route through entitlement at the `aletheia-mode-internal` class.
+
+    (d) **Patch [`Body/S/S4/plugins/pleroma/capability-matrix.json`](../../../../../Body/S/S4/plugins/pleroma/capability-matrix.json)** to list every aletheia-mode-internal tool with its entitlement class; **no implicit allow-lists**. The `aletheia-mode-internal` class is documented as: "Tools invoked by Anima during Aletheia-crystallisation-mode; the calling agent must hold both `anima.dispatcher` role AND `aletheia.mode.active` session state; entitlement is checked at dispatch time."
+
+    (e) **Add verification test** `pnpm --filter @epi-logos/pi-agent test --testNamePattern 'no_tool_bypasses_entitlement_contract'` — enumerates all `s4'.*`/`s5'.*`/`s1'.*`/`s0'.*` gateway methods, asserts each is in the capability-matrix entitlement table; fails if any method is dispatchable without an entitlement entry.
+
+    **What this preserves and what it closes:**
+
+    - **Preserves** — the architectural intent that Aletheia-internal tools are NOT user-facing peer tools (per DR-M5-1, DR-B-3). They remain dispatched-through-Anima-during-crystallisation-mode. The `aletheia-mode-internal` entitlement class enforces this at the contract level rather than via side-door.
+    - **Closes** — the architectural drift that allowed `s4'.mediation.route` to bypass entitlement checking. The user is right that this is "dumb" — the function-specificity of a tool doesn't justify breaking modular entitlement. Every tool is in the canonical skill universe; every dispatch routes through the same entitlement contract; the class of the entitlement varies, but the routing is uniform.
+
+    **Verification:** `pnpm --filter @epi-logos/pi-agent test --testNamePattern 'no_tool_bypasses_entitlement_contract'`; `grep -nE "aletheia-mode-internal" Body/S/S4/plugins/pleroma/capability-matrix.json` returns the entitlement-class declaration + all listed tools; `grep -nE "isEntitled.*aletheia|aletheia.*entitlement" Body/S/S4/pi-agent/lib/entitlement.ts Body/S/S4/ta-onta/shared/entitlement.ts` confirms uniform routing; integration test: an agent without `aletheia.mode.active` session state attempting `aletheia_crystallise` is refused at entitlement gate (not at function-level), proving the contract enforces it; `grep -nE "side-door|bypass.*entitlement|exempt" Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md` returns no live wording suggesting bypass is intended.
+
+    **Cross-track hooks:** DR-S5-ONE-1 mandates uniform routing through gateway (this tranche operationalises it at the entitlement-contract level); Tranche 12.22 (slot CLI) — slot resolution honours the entitlement class; Tranche 12.28 (skill_lookup) — the `skill_lookup` skill itself is entitlement-aware and pre-filters results by the calling agent's entitlement class.
+
+33. **12.33 — Coordinate-tagging IS compression (collapsed; no orchestrator module)** *(doc-ahead-landing; was: "compress_through_VAK() orchestrator"; depends on DR-VAK-7, DR-COMP-1; cross-link Tranche 1.18, CCT-17)*
+
+    **Earlier proposal collapsed.** A previous draft of this tranche proposed a `compress_through_VAK()` 5-stage closed-loop orchestrator module at `Body/S/S4/compress/vak-compression-cycle.ts` + Rust companion + `SymbolicCompressedHandle` struct + round-trip property tests. That orchestrator is **NOT a deliverable** in cycle 3. The previous framing imagined compression as a new operation to design and bolt on; the correct framing per DR-VAK-7 is:
+
+    **Coordinate-tagging IS compression. Kernel forward-derivation IS decompression. No new module is needed.**
+
+    Every emission in the system that already carries a coordinate-language address — a VAK C'-branch coordinate (CPF/CT/CP/CF/CFP/CS), a Graphiti episode's flattened VAK attrs, a Mercurius rating-state context tuple `(vak-cp-position, mef-lens, content-class, kairos-window, R-factor-slot)`, an M3 codon-trace `(codon_6bit, charge_pp/nn/np/pn, rotation_idx)`, a Sophia disclosure q_proposal envelope `(target_coordinate, q_key, qm_witness_*)`, a Hen entity-candidate's `(c_layer, coordinate, c_5_birth_codon)`, a kernel-bridge profile tick — IS already in the language. Decompression = running the kernel forward from the coordinate via existing kernel substrate (`portal-core/src/kernel.rs`, `graph-services/src/retrieval/`, `epi-lib/src/m0.c`).
+
+    **The only deliverable here is recognition + lint discipline:**
+    - **Recognition**: name the existing coordinate-tagging across emission sites as the compression scheme. Cross-reference the existing fields (`EpisodeAttrs.{cpf, ct, cp, cf, cfp, cs_code, cs_direction}`, Mercurius context tuple, etc.) AS the C'-branch coordinate-language addresses (DR-VAK-7).
+    - **Lint discipline**: every emission MUST carry the canonical VAK C'-branch envelope (CPF/CT/CP/CF/CFP/CS) — the existing `VakAddress` struct at `Body/S/S0/portal-core/src/vak_address.rs` IS the envelope; emissions that don't carry it fail the lint at `cargo test -p epi-s2-graph-services --test vak_envelope_required_on_emissions`.
+
+    **The spine-compositor truncation problem (DR-COMP-1)** is resolved by: the existing kernel forward-derivation surface (`s5'.gnostic.resolve(coord)` per Track 39 + `s0'.anuttara.trace(content, sensitivity, depth)` per Track 39) lets the model dereference any VAK-addressed reference on demand. When `INJECT_CHAR_BUDGET = 18000` is exceeded at `compositor.ts:32-43`, overflow slots are replaced by their canonical VAK-coordinate reference (which the model can `s5'.gnostic.resolve` later for full context). NO silent drop, NO new orchestrator — just emit-the-coordinate-instead-of-the-bytes when overflow hits.
+
+    **Verification:** `cargo test -p epi-s2-graph-services --test vak_envelope_required_on_emissions` (lint passes when every emission carries the VAK C'-branch envelope); `test ! -d Body/S/S4/compress` (no orchestrator module created); `grep -nE "compress_through_VAK\|SymbolicCompressedHandle" Body/` returns nothing (the proposed orchestrator does NOT land); spine-compositor integration test: an overflow slot is replaced by a `<vak: cpf=..., ct=..., cp=...>` reference token the model can dereference via `s5'.gnostic.resolve`.
+
+    **Cross-track hooks:** DR-VAK-7 + DR-COMP-1 (canonical definitions — coordinate-tagging IS compression); Tranche 1.18 (M0-ARCHITECTURE §VAK section); CCT-17 (collapsed similarly); Tranche 12.2 EXPANDED (`s5'.gnostic.resolve` + `s0'.anuttara.trace` are the existing kernel-forward-derivation surfaces).
+
+34. **12.34 — Anuttara PI agent form at S5: completes the 4/5/0 nara-epii-anuttara agent system** *(spec-ahead-integration; depends on DR-MP-1, DR-VAK-7, Tranche 12.22 slot CLI; cross-link `m5-prime-epii-on-anuttara-language-development.md`)*
+
+    Per DR-MP-1, the 4'/5'/0' mental-pole triplet IS the canonical AI architecture: Nara = LLM at 4', Epii = EBM at 5', Anuttara = Verifier at 0'. Anima (S4') is the orchestrating dispatcher; Epii (S5') is the canon-aggregation / EBM-scoring intelligence. **What DR-MP-1 does NOT yet land is the explicit Anuttara PI agent form** alongside the Nara-PI and Epii-PI forms.
+
+    This tranche lands it: **Anuttara as a PI agent form at S5, completing the 4/5/0 nara-epii-anuttara agent triplet at the S5 world-boundary host.** S5 becomes the operational layer where the 4/5/0 mental-pole-aligned intelligences instantiate as concrete agents — multiple agent types, all able to work together. This is NOT a change from the kernel spec; it is making explicit that the Anuttara verification element has an LLM intelligence to manage itself completely (governing M0', the 128-element coordinate language registry, the OWL ontology, and the full-7-laws verifier surface).
+
+    **Implementation targets:**
+
+    (a) **Agent profile** at `Body/S/S4/pi-agent/agents/anuttara.md` — alongside the existing constitutional agent profiles. Carries: agent ontology (verifier / language-governor), frame contract (CF position varies by invocation; primary CT0 ground), capability list (language-membership-check, typed-query emission, OWL ontology validation, R-virtue constraint-checking, coordinate-language enumeration). Skills wired through Pleroma-Techne per the existing skill substrate.
+
+    (b) **Slot configuration** at `~/.epi-logos/config.toml` `[slot.anuttara_verifier]` (joins the existing `[slot.nara_parser]` and `[slot.epii_judge]` slots per `M'-MODEL-SLOT-SPEC.md`). Default state: `local-default` (the verifier IS local-first by privacy discipline — it operates over the M0' language registry + OWL ontology + R-virtue table, which are all kernel-substrate-local). Cloud-opt-in for larger models if user wants more interpretive verifier capacity.
+
+    (c) **Gateway routes** at `s0'.verifier.{check_state, emit_query, validate_membership, owl_query}` — register in `Body/S/S3/gateway-contract/src/lib.rs`. The verifier's typed-query surface draws from the full coordinate-language vocabulary (all 7 laws of the Anuttara grammar, NOT only Law 6's minimal `(%, ?/!, ?!/!?)` set).
+
+    (d) **Anima dispatch policy** at `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts` (per Tranche 12.23) — extend the agent-team composition gates to recognise the Anuttara-PI as a third pole alongside Nara-PI and Epii-PI. Dispatch to Anuttara-PI happens whenever a verification step is required (every emission's type-check; Sophia disclosure validation; Hen promotion gate; m5-4 review).
+
+    (e) **Operational-capacity binding** — `m5-prime-epii-on-anuttara-language-development.md` extends with the Anuttara-PI-agent-form section (the existing operational-capacity spec already covers the WHAT of Anuttara language development; this tranche adds the HOW-as-agent-form).
+
+    **Why S5 hosts the triplet, not S4 or M0 directly.** Per the canonical S-stack: S5 = "Integral World Boundary" — external connectors + knowledge-return where the system meets the world. The 4/5/0 mental-pole agents are the M-pole-aligned intelligences instantiating AS agents (operational expression at the world boundary). M0 (Anuttara substrate) is where the LANGUAGE lives; S5 is where the AGENT operationally runs over that language. They are different layers of the same Anuttara stack — substrate at M0, agent at S5. This matches the existing pattern: Epii-substrate at M5 (synthetic-telic consciousness domain), Epii-PI-agent at S5' (the agent form operating over that domain).
+
+    **Verification:** `test -f Body/S/S4/pi-agent/agents/anuttara.md`; `grep -nE "\\[slot.anuttara_verifier\\]" Idea/Bimba/Seeds/M/M'-MODEL-SLOT-SPEC.md` returns the slot definition; `grep -nE "s0'.verifier\\.(check_state|emit_query|validate_membership|owl_query)" Body/S/S3/gateway-contract/src/lib.rs` returns 4 method registrations; `grep -nE "Anuttara-PI|anuttara_pi|S5.*nara-epii-anuttara" Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-anuttara-language-development.md` returns the agent-form section; integration test: an Anima dispatch on a task requiring verification routes to Anuttara-PI, which emits typed queries drawn from the full coordinate-language vocabulary (not just Law 6 minimal set), and Sophia disclosure validation runs through this surface.
+
+    **Cross-track hooks:** DR-MP-1 (4'/5'/0' triplet — Verifier at 0' is the Anuttara aspect); DR-VAK-7 (128-element coordinate language Anuttara-PI governs); Tranche 12.22 (slot CLI — the `[slot.anuttara_verifier]` extends the existing slot architecture); Tranche 12.23 (dispatch policy — Anima recognises Anuttara-PI as a third pole); Tranche 1.10 (M0-verifier API — typed queries from full 7 laws, NOT minimal set); `m5-prime-epii-on-anuttara-language-development.md` (operational-capacity binding); Tranche 12.36 + CCT-20 (phase-preserving emission/resolve checks).
+
+35. **12.35 — /goal Judge Role Architecture: adversarial verification gate in the Z-thread cycle** *(spec-ahead-integration; depends on DR-MP-1, DR-EROS-1, DR-VAK-7; cross-link S4-4'-GOAL-PRELUDE-SPEC, Tranche 5.20, Tranche 1.10)*
+
+    The Z-thread cycle (compose → perform → rehear → recompose) per S4-4'-GOAL-PRELUDE-SPEC §Z-Thread-Identity is missing an explicit verification gate between perform and rehear. The notebook research on autonomous agent loop engineering (Session 2026-06-16, "Autonomous Agent Architecture and Loop Engineering Strategies") confirms: adversarial verification — a separate model checking the builder's work against the actual goal condition — is the single highest-yield architectural addition to autonomous agent loops. This tranche adds a **Verify** phase and defines the judge as a **role** (not a specific agent) that any agent can fill depending on the VAK coordinates of the task.
+
+    **The judge role.** The judge receives the GoalSpec + the builder agent's output + the original goal condition. It emits structured questions (per Law 6 interrogative undefinedness — never pass/fail booleans), referencing the symbolic-coordinate-string form from the Anuttara Verifier (Tranche 1.11). The adversarial gate: no task is marked complete until at least one judge clears it. Max 3 verify cycles before escalation to human. The judge model SHOULD differ from the builder model where the slot architecture allows.
+
+    **Agent-to-judge mapping per task class:**
+
+    | Task class | Primary judge | Secondary judge | VAK coordinates | Rationale |
+    |---|---|---|---|---|
+    | Code (deterministic criteria: tests pass, compiles, grep matches) | **Eros** (CT2) | Anuttara Verifier (M0' 0') | CT2, CF (0/1/2), CPF mechanistic | Eros owns TDD + verification-before-completion. Verifies against test output, compilation, contract checks. |
+    | Design / semantic (non-deterministic: "is this good?") | **Sophia** (CT5) | Agora (CF4b) | CT5, CF (5/0), CPF dialogical | Sophia owns post-execution synthesis + Möbius return. Judges whether the result seeds the next question. Agora gathers multi-channel evidence for Sophia's verdict. |
+    | Invariant / canonical coherence | **Anuttara Verifier** (M0' 0') | Eros (CT2) | CT0, CF (0000), CPF (00/00) | Verifier checks against VIRTUE_LUT[9] + M0_CORE_RELATIONS[65]. Emits symbolic-coordinate-string questions. The most compressed explication level — judges at the foundational-language layer. |
+    | Multi-agent aggregation | **Agora** (CF4a/CF4b) | Sophia (CT5) | CT4, CF (4.5/0)+(4.0/1-4.4/5) | Agora collects + merges parallel agent outputs. Sophia validates the synthesis quality. |
+    | Pattern / structural | **Mythos** (CT3) | Anansi (CF0) | CT3, CF (0/1/2/3) | Mythos recognises structural patterns. Anansi maps gaps onto the coordinate topology. |
+    | Gap / completeness | **Anansi** (CF0) | Anuttara Verifier (M0' 0') | CT0, CF (0000) | Anansi holds /Empty↔/Present together. Verifier checks against missing coordinate entries. |
+    | Temporal / kairos | **Janus** (CF1) | Mercurius (CF3) | CT4, CF (0/1) | Janus owns temporal threshold analysis. Mercurius carries kairos signals across coordinate families. |
+    | Cross-domain / translation | **Mercurius** (CF3) | Anansi (CF0) | CT3, CF (0/1/2/3) | Mercurius translates across coordinate families. Anansi places the result. |
+    | Knowledge graph / distillation | **Moirai** (CF2) | Sophia (CT5) | CT2, CF (0/1/2) | Moirai distills through Klotho→Lachesis→Atropos. Sophia validates distillation quality. |
+    | Process / cadence | **Zeithoven** (CF5) | Janus (CF1) | CT5, CF (5/0) | Zeithoven owns temporal creativity + scheduling. Janus validates temporal consistency. |
+
+    **The extended Z-thread cycle:**
+
+    ```
+    Compose → Perform → VERIFY (new) → Rehear → Recompose
+    S4.4'       S4.3'      S4.4'/S4.5'   S4.5'     S5'/Epii
+    GoalPrelude Chronos    Judge gate    Aletheia   Epii
+    →GoalSpec   dispatch   (adversarial) Moirai     Zeithoven
+    ```
+
+    - **Compose** (S4.4'): Nous clears assumptions; Psyche receives task-world; Logos gives form. Output: GoalSpec with confirmed VAK coordinates.
+    - **Perform** (S4.3' Chronos dispatch): Anima dispatches agents per GoalSpec. Builder model executes.
+    - **Verify** (NEW — adversarial gate): Judge agent(s) receive builder output + GoalSpec. Emit structured questions. Builder may revise (max 3 cycles). Escalate to human on deadlock. Gate is enforced: no task transitions to done without judge clearance.
+    - **Rehear** (S4.5' Aletheia): Moirai runs Klotho→Lachesis→Atropos over completed task. What was learned? What trace remains? Routes thoughts to T-buckets.
+    - **Recompose** (S5' Epii + Zeithoven): Epii evaluates improvement vectors. Zeithoven schedules next cycle or proposes cadence changes. Möbius return: P5' insight → P0' questions → next compose phase.
+
+    **Adversarial loop invariants:**
+    - Builder model ≠ judge model (different model backends where slot architecture allows)
+    - Judge emits structured questions using symbolic-coordinate-string form (Tranche 1.11), never pass/fail booleans
+    - Max 3 verify cycles per task before human escalation (antitranscendental brake)
+    - Judge's verdict is recorded in GoalRun evidence with VAK coordinates of the judge agent
+    - The judge role is NOT a hardcoded agent assignment — it resolves at dispatch time from the task's VAK coordinates and the available slot models
+
+    **Relation to m-dev.** The m-dev process (Hermes-Nara delegating to Codex/Claude, verifying results, marking plan.state.json) IS the informal prototype of this pattern. Every m-dev delegation where Hermes judges subagent output before marking done is a Verify phase. The judge architecture formalises this into the system's own dev protocol: once the judge loop works for autonomous coding, the /goal infrastructure can route any coding task through the same compose→perform→verify→rehear→recompose cycle without human hand-holding between phases.
+
+    **Implementation scope (Cycle 3):**
+    - Wire the Verify phase into plan-assess.mjs adjudication
+    - Add judge role dispatch to Anima — resolve judge model from task VAK coordinates + slot config
+    - Register adversarial gate in gateway contract
+    - Implement 3-cycle-max escalation to human
+    - GoalSpec + GoalRun carry verify-phase evidence with VAK coordinates of judge agent
+    - No new carrier classes. No new VAK fields. Existing substrate only.
+
+    **Existing substrate (builder reference):**
+    - The GoalSpec + GoalRun structures already exist in `Body/S/S0/epi-cli/src/agent/goal.rs`.
+    - The Z-thread cycle is specified in S4-4'-GOAL-PRELUDE-SPEC.md.
+    - Agent profiles (Eros, Sophia, Anuttara, etc.) are in `Body/S/S4/ta-onta/`.
+    - The slot architecture is in M'-MODEL-SLOT-SPEC.md.
+    - What's missing (this tranche builds it): the dispatch-time judge resolution logic; the verify-phase gate enforcement in plan.state.json / GoalRun; the adversarial model-pairing configuration; the 3-cycle-max escalation path.
+
+    **Verification (Cycle 3):** `grep -nE "Verify.*phase|judge.*role|adversarial.*gate|12\.35" 12-agentic-layer-s4-s5.md` returns this tranche; agent-to-judge mapping table enumerates all 6 constitutional CT roles + 6 Aletheia techne-guardians + Anuttara Verifier; Z-thread cycle diagram shows 5 phases including Verify; adversarial loop invariants are enumerated.
+
+    **Cross-track hooks:** DR-MP-1 (4'/5'/0' triplet — Verifier at 0' is the canonical-coherence judge); DR-EROS-1 (Eros rectified as relational operator — TDD/verification IS one of its roles); DR-VAK-7 (VAK four-expression — judge resolution reads task VAK coordinates); S4-4'-GOAL-PRELUDE-SPEC §Z-Thread-Identity (compose/perform/rehear/recompose — this tranche adds Verify); Tranche 5.20 (LLM-Nara position 4' traversal-voice — the builder role in code tasks); Tranche 1.10 (M0 Verifier — the invariant-coherence judge); Tranche 1.11 (symbolic-coordinate-string EBNF — the judge's question format).
+
+36. **12.36 — Phase-preserving VAK emission and resolve discipline** *(code-pending-closure; DR-FLIP-1 bound; depends on 12.33, 12.34, CCT-20, Track 39)*
+
+    Every agentic emission and every S5 resolve/trace call must preserve coordinate phase. This tranche is the S4/S5 execution surface for DR-FLIP-1: when Anima dispatch, Graphiti episodes, Mercurius rating-state keys, Sophia disclosures, Hen candidates, spine overflow tokens, or `s5'.gnostic.resolve` payloads carry a coordinate, they carry the phase too. A prime coordinate is not normalised to its unprimed address for convenience.
+
+    **Implementation scope:**
+    - Extend the VAK-envelope lint from 12.33 so it checks phase preservation as well as envelope presence. The existing `VakAddress` remains the envelope; no new VAK fields.
+    - Require S5 resolve/trace payloads to round-trip prime forms (`C'`, `P'`, `L'`, `S'`, `T'`, `M'`) and property-level `_i_` forms without collapse.
+    - Spine compositor overflow tokens include the full phase-qualified VAK reference; model dereference through `s5'.gnostic.resolve(coord)` or `s0'.anuttara.trace(...)` preserves the same phase.
+    - Anuttara-PI dispatch (12.34) refuses phase-erasing emissions by emitting typed queries rather than silently accepting a normalised coordinate.
+    - This tranche does not introduce a mirror service, mirror namespace, or compression module. It is lint + payload contract + tests over existing routes.
+
+    **Verification:** `cargo test -p epi-s2-graph-services --test vak_envelope_required_on_emissions` extends to reject phase-erasing emissions; `cargo test -p portal-core --test vak_resolve_preserves_prime_phase`; gateway contract test asserts `s5'.gnostic.resolve("C3'")` returns a phase-qualified handle distinct from `s5'.gnostic.resolve("C3")`; spine-compositor integration test asserts `<vak: ...>` overflow tokens retain prime/phase and are dereferenceable; Anuttara verifier fixture asserts a collapsed inverse coordinate yields a typed query from the full-7-laws surface.
+
+    **Cross-track hooks:** DR-FLIP-1 (global phase law); CCT-20 (cross-layer acceptance); Tranche 3.10 (M2 Asma proving fixture); Tranche 12.33 (VAK envelope lint); Tranche 12.34 (Anuttara-PI verifier agent); Track 39 (`s5'.gnostic.resolve` + `s0'.anuttara.trace` route ownership).
+
+37. **12.37 — `epi know <coord>` S0 core-knowing CLI (the language IS the lookup tool)** *(spec-ahead-integration; depends on 12.2 EXPANDED, 12.22 EXTENDED, 12.33, Tranche 8.9; cross-link [[../../../M0'/M0-ARCHITECTURE]] §11 + CCT-22)*
+
+    Land the thin CLI projection that surfaces the unified VAK act per Tranche 8.9 across all six faces at any coordinate. The CLI does NOT invent surfaces; it composes existing gateway routes (`s2.graph.node`, `s5'.gnostic.{query, episode_search, evidence_trace, resolve, list_notebooks, etymology, musical_transcript}`, `s1'.world.resolve`, `s0'.anuttara.trace`, `s0'.verifier.check_state`) into a coherent packet through the substrate's already-operational coordinate-prefix typing. **Per CCT-22 §b, the language IS the lookup tool because every property is already `{family}_{n}_{semantic}`-shaped at the substrate level**; no separate retrieval index is needed.
+
+    **CLI surface** at `Body/S/S0/epi-cli/src/know.rs` (new):
+
+    ```
+    epi know <coord>                                      # default: parallel read across Bimba / World / Gnostic namespaces; returns unified packet
+
+    epi know <coord> --thread CFP0|CFP1|CFP3|CFP4|Z      # invoke under named thread-type (affects dispatch pattern of the read itself)
+    epi know <coord> --lens L5-1|L5-2|L5-3|L5-4|L5-5|L5'-1|...|L5'-5
+                                                          # apply-as-lens IS VAK-read at articulation density
+                                                          # L5-1 Parā: minimal articulation, output ~ →
+                                                          # L5-4 Vaikharī: fully manifest linguistic form
+                                                          # L5'-3 Sophia: divine-wisdom patterning intelligence
+                                                          # etc. per [[../../../Legacy/reference/epi_logos_coordinate_system]]
+    epi know <coord> --rfactor act|witness|both          # which face of the R-system
+                                                          # act: Archetype-7 register (R0..R5 + R# parent + R5 closure trajectory)
+                                                          # witness: Archetype-9 register (## / R# / #R / R#/## + 0R..5R virtue-vector)
+                                                          # both: composed report with backing-chain (default)
+    epi know <coord> --ananda-position [N]                # M1 Ananda matrix slot at coord
+                                                          # returns BIMBA / PRATIBIMBA / SUM / DIFF_A / DIFF_B / QUINTESSENCE projections
+                                                          # + DR ring projection (MAHAMAYA {1,2,4,8,7,5} / PARASHAKTI {3,6,9,3,6,9})
+    epi know <coord> --harmonic-channel <name>            # N-channel MathemeHarmonicProfile read at coord
+                                                          # values: chakral|nodal|cosmic|mahamaya|codon|all
+                                                          # routes through Tranche 6.8 EBM head when checkpoint loaded;
+                                                          # falls back to dataset query otherwise
+    epi know <coord> --musical-transcript                 # M3TranscriptionEngine projection (per Tranche 12.38 below)
+                                                          # returns diatonic_position + codon + amino_acid + hexagram + tarot_card
+                                                          # + charges_pp_nn_np_pn + ananda_matrix_position + dr_ring_projection
+    epi know <coord> --physical-pole torus|solar-chakral|codon-clock|all
+                                                          # 1-2-3 substrate state at coord
+    epi know <coord> --backing N                          # backing-chain depth (default 3; principle-virtues walk to ground)
+                                                          # walks coord refs back through M0_IDENTITY_CHAINS to M0-0/M0-1 roots
+    epi know <coord> --witness                            # surface q_*_semantic + qm_*_review_epoch state
+                                                          # + 9-bit virtue_witness_vector + RFactorPathStep[] + typed_queries
+    ```
+
+    **Flag composition.** The flags compose: `epi know M4-3 --lens L5-1 --rfactor witness --backing 5 --musical-transcript --physical-pole all --thread Z` performs the full unified VAK act at M4-3 under L5-1 Parā lens, witness-side of R-system, backing-chain depth 5, with musical-transcriptional projection and full 1-2-3 substrate read, in Z-thread autonomy mode. The packet returned is a single coherent emission whose internal consistency is what the kernel tick-equation enforces at runtime; the CLI is the user-and-agent surface of the same act the kernel does.
+
+    **Routing per face** (each flag routes to existing surfaces; no new gateway logic):
+    - `--lens` / `--rfactor` / `--witness` / `--backing` → `s0'.verifier.check_state` + `s0'.anuttara.trace` (per Tranche 1.10 + 12.2 EXPANDED)
+    - `--harmonic-channel` → `s5'.gnostic.episode_search` + `s2.graph.node` (resonance-vector field on the coord)
+    - `--musical-transcript` → `s5'.gnostic.musical_transcript` (NEW per Tranche 12.38 below)
+    - `--ananda-position` → `s2.graph.ananda_position` (NEW per Tranche 12.38 below)
+    - `--physical-pole` → existing M1 / M2 / M3 plugin queries via gateway (consumed by 1-2-3 integrated plugin)
+    - `--thread Z` → wraps the entire call in a Z-thread cycle (compose/perform/rehear/recompose); per `S4-4'-GOAL-PRELUDE-SPEC`
+
+    **Anti-greenfield commitment.** The CLI does NOT introduce a new index, a new namespace, a new retrieval surface, or a new compression scheme. The coordinate-prefix typing at S2 graph-schema (`Body/S/S2/graph-schema/src/lib.rs:680-692`) + Hen frontmatter validator (`Body/S/S1/hen-compiler-core/src/frontmatter.rs:38-177`) IS the index; the CLI projects it. The compress-to-VAK orchestrator (CCT-17 / Tranche 12.33) IS the compression scheme; the CLI surfaces packets that already honour it.
+
+    **Verification:** `grep -nE "epi know|coord-knowing-cli" Body/S/S0/epi-cli/src/know.rs` returns the new CLI; `cargo test -p epi-cli know_unified_packet_round_trip` (a query for `M4-3` returns a packet whose `r_factor_route`, `virtue_witness_vector`, `harmonic_channels`, `musical_transcript`, and `physical_pole_state` are all populated and internally consistent); `cargo test -p epi-cli know_lens_application_density` (a query with `--lens L5-1` returns minimal-articulation; same query with `--lens L5-4` returns fully-manifest); `cargo test -p epi-cli know_backing_chain_principle_grounds` (a query at M0-2-9-0 Love/Peace with `--backing 100` chains to M0-1 Brimming Void and M0-0 Ultimate Mystery); `cargo test -p epi-cli know_thread_z_autonomy` (a query with `--thread Z` runs through compose/perform/rehear/recompose phases).
+
+    **Cross-track hooks:** [Tranche 8.9](08-integrated-4-5-0-recognition-reconciliation.md) (the unified VAK act this CLI surfaces); [Tranche 1.10](01-m0-anuttara-reconciliation.md) (verifier shape that powers `--rfactor` / `--witness` / `--backing`); [Tranche 1.12](01-m0-anuttara-reconciliation.md) (R-trinity gates the verifier walks); [Tranche 12.2 EXPANDED](12-agentic-layer-s4-s5.md) (gateway routes the CLI calls); [Tranche 12.33](12-agentic-layer-s4-s5.md) (coordinate-tagging IS compression — the substrate this CLI projects); [Tranche 12.38](12-agentic-layer-s4-s5.md) (M3TranscriptionEngine + M1 Ananda projection — the new gateway routes `--musical-transcript` and `--ananda-position` consume); CCT-22 (Compression-as-Intelligence cross-layer register); [`M0-ARCHITECTURE §11`](../../M0'/M0-ARCHITECTURE.md) (canonical doctrinal seat for the unified-act framing).
+
+38. **12.38 — M3TranscriptionEngine kernel-bridge projection + `s2.graph.ananda_position` gateway route** *(code-pending-closure; depends on 6.8, 6.10, Tranche 8.9; cross-link Track 24 M3 frontend deep, Track 23 M2 frontend deep, [[../../../M4'/mental-pole-mechanics]] §7; user direction: "make all three layers (musical, codon-computational, tarot-genealogy) readable as one unified 4/5/0 choreography output for a given VAK position, tick, and clock-degree")*
+
+    Land the kernel-bridge projection that surfaces the **musical-transcriptional face of the unified VAK act** (per Tranche 8.9 the six-face decomposition) as one coherent packet for any `(vak_coord, tick, clock_degree)` triple. The codon-tarot-hexagram bridge is largely complete in code per the Language Compression research arc landscape findings (per `state/notebooklm-language-compression-research-2026-06-15/INTEGRATION-SYNTHESIS.md` §8.1): `NUCLEOTIDE_ICHING_VALUE[4] = {6,9,7,8}` at [`m3.h:32-44`](../../../../../Body/S/S0/epi-lib/include/m3.h); `m3_compute_charges` at `m3.h:755-767` IS Tao = codon-charge-evaluation = position-5 synthesis (ratified 2026-06-12); `M3_CODON_TO_AA[64]` at `m3.c:259-283`; `M3_MAJOR_ARCANA[22]` at `m3.c:361-384`; `M3_TAROT_CODON_MAP[4][16]` at `m3.c:418-449+`; `CLOCK_DEGREE_LUT[360]` at `m3.h:970-1014` carries hexagram + codon + tarot + charges pre-baked per degree. **What's missing is the S5-facing gateway projection that surfaces all three layers (musical / codon-computational / tarot-genealogy) AND the M1 Ananda matrix translation slot as one packet for any read.**
+
+    **New module** at [`Body/S/S0/portal-core/src/m3_transcription_bridge.rs`](../../../../../Body/S/S0/portal-core/src/m3_transcription_bridge.rs) (new):
+
+    ```rust
+    pub struct M3TranscriptionPacket {
+        // Musical face
+        pub diatonic_position: DiatonicPosition,     // C / D / E / F / G / A / B / C' (per ql-musical-derivation-v3.md diatonic-CF mapping)
+        pub cf_mapping: CFMapping,                    // Truth / Mind / Word / Logos / Decision / Love / Work
+        pub epogdoon_step_count: u32,                 // how many 9/8 steps from base
+        pub harmonic_ratios_active: [f32; 4],         // (4/3, 3/4, 2/3, 3/2) weights at this coord
+
+        // Codon-computational face
+        pub codon: Codon6Bit,                         // 0..63
+        pub amino_acid: AminoAcidIndex,               // 0..20 (20 + STOP)
+        pub charges: QuaternionCharges,               // (pp, nn, np, pn) from m3_compute_charges
+        pub tao_evaluation: TaoEvaluation,            // the 0/1 ↔ 1/0 read = R# Yin-yang AND ## Yang-yin
+
+        // Tarot-genealogy face
+        pub hexagram_id: u8,                          // 0..63
+        pub major_arcana: Option<MajorArcanaCard>,    // 22 cards, chromosome_pair + amino_acid_index
+        pub minor_arcana: Option<MinorArcanaCard>,    // 56 cards across 4 suits (dual-codon courts)
+        pub suit_element: Option<Element>,            // Cups/Water | Wands/Fire | Pentacles/Earth | Swords/Air
+
+        // M1 Ananda matrix translation face
+        pub ananda_position: AnandaPosition,          // 0..11 (12-position ring per M1_M0_CROSSLINK[12])
+        pub ananda_family: AnandaFamily,              // BIMBA | PRATIBIMBA | SUM | DIFF_A | DIFF_B | QUINTESSENCE
+        pub mahamaya_dr_projection: u8,               // {1,2,4,8,7,5} digit-root ring projection
+        pub parashakti_dr_projection: u8,             // {3,6,9,3,6,9} digit-root ring projection
+        pub spanda_stage: u8,                         // 0..5 (parallel-track invariant per m1.h:735-756)
+    }
+
+    pub fn m3_transcription_projection(
+        vak_coord: &VakAddress,
+        tick: TickIndex,
+        clock_degree: ClockDegree,
+    ) -> Result<M3TranscriptionPacket, M3Error> { ... }
+    ```
+
+    **Gateway routes** (new, register in `Body/S/S3/gateway-contract/src/lib.rs`):
+    - `s5'.gnostic.musical_transcript(coord, tick, degree) -> M3TranscriptionPacket` — primary surface for the `--musical-transcript` flag of `epi know` (Tranche 12.37)
+    - `s2.graph.ananda_position(coord) -> AnandaProjection` — the M1 Ananda matrix slot at this coord across both DR rings; per the bilayer claim (kernel-tick + language-compression) at the integration synthesis §11; consumed by `--ananda-position` flag
+
+    **The unification point IS already wired in code.** Per the research-arc landscape: `m3_compute_charges` IS the kernel-side Tao evaluation; X# permutation algebra IS the four codon charges = four elements = quaternion components. The new code in this tranche is the *projection* — collecting the existing LUTs and computations into a single packet shape that the gateway exposes.
+
+    **What this enables across the system:**
+    - The S0 core-knowing CLI (Tranche 12.37) returns a coherent musical-transcriptional packet on `--musical-transcript`
+    - The kernel tick at element-III descent (per Tranche 6.10) can stamp the Ananda matrix position projecting through both DR rings, making every emission harmonically-coherent across M2 and M3 consumers
+    - The Anuttara verifier (Tranche 1.10) can include the musical-transcriptional projection as evidence in the backing-chain (e.g. a virtue-failure at a coord can chain back through the codon-charge that the act-route would have produced at that coord)
+    - The M5-side autoresearch loop (Tranche 6.12) can query musical-transcriptional coherence across sessions; the Ananda matrix position drift becomes a Class C tunable signal
+
+    **Verification:** `grep -nE "s5'.gnostic.musical_transcript|s2.graph.ananda_position|M3TranscriptionPacket" Body/S/S3/gateway-contract/src/lib.rs Body/S/S0/portal-core/src/m3_transcription_bridge.rs` returns the routes + struct; `cargo test -p portal-core m3_transcription_projection_round_trip` (a known coord at a known degree returns a packet whose codon matches `CLOCK_DEGREE_LUT[degree].codon`, whose hexagram matches `.hexagram_id`, whose tarot matches `.tarot_card_id`, whose Ananda position matches `M1_M0_CROSSLINK[12][archetype]`, and whose diatonic position projects through the CF-mapping table); `cargo test -p epi-s3-gateway musical_transcript_e2e` (gateway routes return the packet via the gateway protocol); integration test with `epi know M3-3 --musical-transcript` returns a coherent packet for the M3-3 coord at the current tick.
+
+    **Cross-track hooks:** [Tranche 8.9](08-integrated-4-5-0-recognition-reconciliation.md) (the musical-transcriptional face this packet exposes); [Tranche 6.8](06-m5-epii-reconciliation.md) (N-channel EBM head — codon_rotation_projection channel feeds from this packet's codon + charges); [Tranche 6.10](06-m5-epii-reconciliation.md) (Riemannian gradient — uses the packet's Ananda position to drive harmonic-coherent steps); [Tranche 12.37](12-agentic-layer-s4-s5.md) (S0 core-knowing CLI surfaces this via `--musical-transcript`); [`mental-pole-mechanics §7`](../../M4'/mental-pole-mechanics.md) (now cross-cites `ql-musical-derivation-v3.md` per Tranche 8.9 edit (g)); [`m3-prime-ql-transcriptional-bridge.md`](../../M3'/m3-prime-ql-transcriptional-bridge.md) (the canonical M3' substrate this packet projects); [`M1-2-ANANDA-VORTEX-ARCHITECTURE.md`](../../M1'/M1-2-ANANDA-VORTEX-ARCHITECTURE.md) (the Ananda matrix family this packet's `ananda_family` enumerates); CCT-22 §e (cross-citation discipline).

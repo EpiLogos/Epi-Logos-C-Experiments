@@ -1,4 +1,5 @@
 import { isValidVakAddress, type VakAddress, type CfLiteral, type CpfPolarity } from "../../shared/vak_address.ts";
+import { phasePreservationQuery, type PhasePreservationQuery } from "../../shared/coordinate_phase.ts";
 import { matchGateTrigger, type GateTrigger, type GateName } from "../../S4-5p-aletheia/modules/gate-trigger.ts";
 import type { MoiraiAgent } from "./moirai-dispatch.ts";
 
@@ -93,11 +94,19 @@ export interface DispatchParams {
   agent_name: string;
   task: string;
   vak_address?: VakAddress;
+  coordinate_emission?: CoordinateEmission;
+}
+
+export interface CoordinateEmission {
+  source_coordinate: string;
+  emitted_coordinate: string;
+  law_surface?: string;
 }
 
 export interface ValidationResult {
   ok: boolean;
   error?: string;
+  typed_query?: PhasePreservationQuery;
 }
 
 /**
@@ -178,6 +187,20 @@ export function validateDispatchParams(params: DispatchParams): ValidationResult
       ok: false,
       error: `cf does not match agent ${params.agent_name} (expected ${expected}, got ${params.vak_address!.cf})`,
     };
+  }
+  if (params.coordinate_emission) {
+    const query = phasePreservationQuery(
+      params.coordinate_emission.source_coordinate,
+      params.coordinate_emission.emitted_coordinate,
+      params.coordinate_emission.law_surface,
+    );
+    if (query) {
+      return {
+        ok: false,
+        error: `phase-erasing coordinate emission (${query.source_coordinate} -> ${query.emitted_coordinate})`,
+        typed_query: query,
+      };
+    }
   }
   return { ok: true };
 }

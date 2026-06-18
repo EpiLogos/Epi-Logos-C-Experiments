@@ -1,5 +1,8 @@
+mod aletheia;
+mod being_pattern;
 mod dispatch_plan;
 mod graphiti;
+mod harness;
 mod kernel_bridge;
 mod portal_events;
 mod privacy;
@@ -11,8 +14,11 @@ mod spacetime;
 mod temporal;
 mod verifier;
 
+pub use aletheia::*;
+pub use being_pattern::*;
 pub use dispatch_plan::*;
 pub use graphiti::*;
+pub use harness::*;
 pub use kernel_bridge::*;
 pub use portal_events::*;
 pub use privacy::*;

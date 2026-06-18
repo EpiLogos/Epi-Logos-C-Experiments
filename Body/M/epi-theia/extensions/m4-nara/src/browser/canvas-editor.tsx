@@ -25,6 +25,7 @@ import {
     type FloatingMenuState
 } from './editor/components/floating-menu';
 import { HighlightService } from './services/highlight-service';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from './privacy-chrome';
 
 export interface CanvasEditorModel {
     readonly dayId: string | null;
@@ -75,11 +76,12 @@ export class M4NaraCanvasEditorWidget extends ReactWidget {
     protected init(): void {
         this.id = M4NaraCanvasEditorWidget.ID;
         this.title.label = M4NaraCanvasEditorWidget.LABEL;
-        this.title.caption = M4NaraCanvasEditorWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
         this.addClass('m4-nara-canvas-widget');
+        this.addClass(privacyChromeClass('protected_local'));
 
         this.subscriptions.push(
             this.bridge.onCoordinateContext(context => {
@@ -165,7 +167,7 @@ export function CanvasEditorSurface({
 
     return (
         <section
-            className="m4-nara-canvas-editor"
+            className={`m4-nara-canvas-editor ${privacyChromeClass(model.privacyClass)}`}
             data-test="m4-nara-canvas-editor"
             data-privacy-class={model.privacyClass}
             data-highlight-count={highlightService.getHighlights().length}

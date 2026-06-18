@@ -3,6 +3,8 @@ title: "M4' Nara Architecture — Total Shape, Substrate Map, Profile-Bus Contra
 coordinate: "M4 / M4'"
 status: "canonical-architecture-spec"
 created: 2026-06-02
+updated: "2026-06-09"
+cycle-3: reconciled
 authority_relation: "Domain authority for the M4' surface. M4'-SPEC cross-references this document for the six sub-coordinates' total shape, the profile-bus deltas required for personal-pole rendering, the psychoid-cymatic field rendering contract, and the personal-side tick choreography. Where they disagree, this document is authoritative for the M4' surface specifically; M4'-SPEC remains authoritative for the broader Nara doctrine (privacy boundary, promotion law, Vāma policy, M4-0 branch law)."
 depends_on:
   - "[[M4'-SPEC]]"
@@ -16,7 +18,7 @@ depends_on:
 companion_research:
   - "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/wave-a-m4-reconciliation-matrix.md"
 decisions_consumed:
-  - "DR-M4-1 (vault path: `Pratibimba/Nara/{day_id}/`) — ratified; code already conforms (nara-surface.ts:415-417)"
+  - "DR-M4-1 (vault path: `Idea/Empty/Present/{day_id}/`) — ratified; code already conforms (nara-surface.ts:415-417)"
   - "DR-M4-2 (q_personal baseline + Cl(4,2) axis order + Vāma classifier policy + 0/1 cymatic polarity) — five clauses; consumed throughout"
 related_tranches:
   - "06.* — M4-Nara extension (cycle-2 inheritance, T0-T3 substrate)"
@@ -683,7 +685,7 @@ The `m4-nara` surface state survives the `daily-0-1 ↔ ide-deep` toggle and the
 
 Per Wave-A row 11 and `Body/S/S3/gateway-contract/src/lib.rs:classify_vault_path_marks_nara_protected_under_any_day`:
 
-- All M4 paths under `Idea/Empty/Present/{day_id}/Pratibimba/Nara/{day_id}/` classify as protected-local
+- All M4 paths under `Idea/Empty/Present/{day_id}/Idea/Empty/Present/{day_id}/` classify as protected-local
 - `buildS2CanonicalProjection` (`nara-surface.ts:287-295`) emits handles only (`protectedBodiesIncluded: false`)
 - `buildPublicProfilePayload` (`nara-surface.ts:297-305`) emits empty `bodyFields: []`
 - `buildSpaceTimeRows` (`nara-surface.ts:307-320`) emits `body_included: false`
@@ -768,7 +770,7 @@ The M4' architecture is acceptance-ready when:
 1. **Substrate-citation audit:** every §2 file:line citation resolves (`grep` returns the symbol at the named line). `pnpm -C Body/M/epi-theia/extensions/m4-nara build` succeeds.
 2. **Profile-bus contract test:** `cargo test -p portal-core personal_pole_projection_present_only_with_identity` — confirms `MathemeHarmonicProfile::from_tick(t).personal_pole.is_none()`; `MathemeHarmonicProfile::from_tick_with_identity(t, identity).personal_pole.is_some()`; `profile.public_current().personal_pole.is_none()`.
 3. **Bioquaternion decomposition test:** `cargo test -p portal-core personal_identity::bioquaternion_decomposition` — confirms `decompose_bioquaternion(compose_personal_quaternion(qi, qt, qa))` is deterministic; `(q_b, q_p)` is a reading of `Q_composed`, NOT independent input; `BioQuaternionState::new(q_b, q_p)` round-trips through the kernel-eval state.
-4. **DR-M4-1 vault-path test:** `grep -n "Pratibimba.*Nara.*dayId\\|join.*Pratibimba.*Nara" Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts` returns line 416. Round-trip `createNaraArtifact` → `readNaraDayContainer` against `${vaultRoot}/Pratibimba/Nara/{day_id}/` passes.
+4. **DR-M4-1 vault-path test:** `grep -n "Pratibimba.*Nara.*dayId\\|join.*Pratibimba.*Nara" Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts` returns line 416. Round-trip `createNaraArtifact` → `readNaraDayContainer` against `${vaultRoot}/Idea/Empty/Present/{day_id}/` passes.
 5. **Graphiti Nara-relations insertion test:** `cargo test -p graphiti-runtime nara_relations` — confirms `:HAS_DAY`, `:CONTAINS_DAILY_NOTE`, `:PART_OF_DAY`, `:NEXT_IN_ARC` write paths at the S3 graph-edge level (not just envelope-side); `grep -rn "HAS_DAY\\|NEXT_IN_ARC" Body/S/S3/graphiti-runtime/src/` returns the new relation symbols.
 6. **M4-0 birthdate encoding test:** `cargo test -p portal-core m4_0_0_birthdate_encoding` — confirms raw totals / mod6 / inverse / mod12 / MEF refraction / lens-square / L2' elemental extraction / caps / evidence paths preserved (no Pythagorean root reduction). Absence-test confirms Jungian / Gene Keys / Human Design layer outputs return `pending` when not supplied (no fabrication).
 7. **Resonance rendering test:** `pnpm -C Body/M/epi-theia/extensions/m4-nara test:render` — renders the resonance indicator (numeric + ConjugateFormCharacter glyph) on `NaraArtifactEnvelope`s when profile carries resonance; falls back to `pending-resonance` badge when `profile.personal_pole.is_none()`. NO silent zero-resonance display.

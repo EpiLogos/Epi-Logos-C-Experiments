@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { M0_LAYER_VIEWS } from '../../common/m0-layers';
-import type { M0LayerView } from '../../common/m0-layers';
+import type { M0LayerKey, M0LayerView } from '../../common/m0-layers';
+import type { M0ProvenanceState } from '../../common/m0-inspector';
 
 export interface LayerSelectorProps {
     readonly initialLayer?: number;
+    readonly layerReadiness?: Partial<Record<M0LayerKey, M0ProvenanceState>>;
     readonly onLayerChange?: (index: number) => void;
     readonly className?: string;
 }
@@ -44,7 +46,7 @@ function layerTabLabel(layer: M0LayerView, index: number): LayerTabGrammar {
 }
 
 export function LayerSelector(props: LayerSelectorProps): React.ReactElement {
-    const { className: classNameProp, initialLayer, onLayerChange } = props;
+    const { className: classNameProp, initialLayer, layerReadiness, onLayerChange } = props;
     const [activeLayer, setActiveLayer] = React.useState(() =>
         normalizeLayerIndex(initialLayer)
     );
@@ -69,6 +71,7 @@ export function LayerSelector(props: LayerSelectorProps): React.ReactElement {
                 {M0_LAYER_VIEWS.map((layer, index) => {
                     const grammar = layerTabLabel(layer, index);
                     const selected = index === activeLayer;
+                    const readiness = layerReadiness?.[layer.key] ?? 'canonical_absent';
 
                     return (
                         <button
@@ -88,6 +91,13 @@ export function LayerSelector(props: LayerSelectorProps): React.ReactElement {
                                 {grammar.glyph}
                             </span>
                             <span className="m0-layer-tab-label">{grammar.label}</span>
+                            <span
+                                aria-label={`${layer.label} provenance ${readiness}`}
+                                className="m0-layer-tab-provenance-pill"
+                                data-provenance-state={readiness}
+                            >
+                                {readiness.replace(/_/g, ' ')}
+                            </span>
                         </button>
                     );
                 })}

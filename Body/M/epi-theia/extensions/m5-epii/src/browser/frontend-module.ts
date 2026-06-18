@@ -8,15 +8,23 @@ import {
 } from '@theia/core/lib/browser';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
+    Disposable,
+    EMPTY_STATE_REGISTRY,
+    EmptyStateRegistry,
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
     parseExtensionRoute,
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
+import {
+    M5EpiiEmptyState,
+    M5EpiiEmptyStateWidget
+} from './empty-state';
 import { M5EpiiWidget } from './m5-epii-widget';
 import { ResonanceEbmService } from './services/resonance-ebm-service';
 import { ContemplationObjectService } from './services/contemplation-object-service';
+import { WisdomDeltaService } from './services/wisdom-delta-service';
 import {
     EXTENSION_ID,
     OPEN_COMMAND_ID,
@@ -113,10 +121,34 @@ class M5EpiiPublisher implements MObservabilityPublisher {
     }
 }
 
+@injectable()
+class M5EpiiEmptyStateRegistration implements FrontendApplicationContribution {
+    @inject(EMPTY_STATE_REGISTRY)
+    protected readonly emptyStates!: EmptyStateRegistry;
+
+    protected disposable?: Disposable;
+
+    onStart(): void {
+        this.disposable = this.emptyStates.register({
+            extensionId: EXTENSION_ID,
+            viewId: 'm5-epii.primary',
+            activationCondition: snapshot => snapshot.state !== 'ready_public_current',
+            component: M5EpiiEmptyState
+        });
+    }
+
+    onStop(): void {
+        this.disposable?.dispose();
+        this.disposable = undefined;
+    }
+}
+
 export default new ContainerModule(bind => {
     bind(ResonanceEbmService).toSelf().inSingletonScope();
     bind(ContemplationObjectService).toSelf().inSingletonScope();
+    bind(WisdomDeltaService).toSelf().inSingletonScope();
     bind(M5EpiiWidget).toSelf();
+    bind(M5EpiiEmptyStateWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M5EpiiWidget.ID,
@@ -130,6 +162,8 @@ export default new ContainerModule(bind => {
     bind(M5_EPII_PUBLISHER).toService(
         M5EpiiPublisher
     );
+    bind(M5EpiiEmptyStateRegistration).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(M5EpiiEmptyStateRegistration);
 
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.

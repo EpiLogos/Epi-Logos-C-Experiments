@@ -55,8 +55,7 @@ fn terminal_session_safety_command_contract_uses_session_scoped_tmux_surfaces() 
     let report: Value = serde_json::from_str(&launched.stdout).expect("persist report json");
     assert_eq!(report["sessionKey"], "agent:anima:psyche");
     assert_eq!(
-        report["terminalBinding"]["tmuxPaneId"],
-        "%terminal-pane",
+        report["terminalBinding"]["tmuxPaneId"], "%terminal-pane",
         "fake tmux is only accepted for command-shape assertions"
     );
 
@@ -70,8 +69,7 @@ fn terminal_session_safety_command_contract_uses_session_scoped_tmux_surfaces() 
         "terminal launch must bind the gateway session key into tmux env, log:\n{log}"
     );
     assert!(
-        log.contains("send-keys <-t> <%terminal-pane> <-l> <-->")
-            && log.contains("/bin/pi>"),
+        log.contains("send-keys <-t> <%terminal-pane> <-l> <-->") && log.contains("/bin/pi>"),
         "runtime command must be injected literally, log:\n{log}"
     );
     assert!(
@@ -84,9 +82,8 @@ fn terminal_session_safety_command_contract_uses_session_scoped_tmux_surfaces() 
     ));
     let extension = read_to_string(repo_file("../../S4/ta-onta/S4-2p-pleroma/extension.ts"));
     assert!(
-        terminal_tools.contains(
-            r#"["agent", "tmux", def.subcommand, "--session-key", sessionKey]"#
-        ),
+        terminal_tools
+            .contains(r#"["agent", "tmux", def.subcommand, "--session-key", sessionKey]"#),
         "Techne terminal tools must route through epi agent tmux with session_key"
     );
     assert!(
@@ -178,13 +175,19 @@ fn redaction_contract_keeps_terminal_body_out_of_global_projection_and_redis_pay
         .expect("terminal metadata should have a Redis payload");
     assert_eq!(redis_payload["rawPaneBodyStored"], false);
     assert!(
-        !redis_payload.to_string().contains(RAW_TERMINAL_BODY_SENTINEL),
+        !redis_payload
+            .to_string()
+            .contains(RAW_TERMINAL_BODY_SENTINEL),
         "Redis metadata payload must not contain raw terminal body"
     );
 
     let bridge = SpacetimeBridge::new(&gate_root).expect("spacetimedb test bridge");
     bridge
-        .publish_session_record(&parent, Some("NOW-07-05-2026-terminal-safety"), Some(&hydrated))
+        .publish_session_record(
+            &parent,
+            Some("NOW-07-05-2026-terminal-safety"),
+            Some(&hydrated),
+        )
         .expect("publish session surface to test bridge");
     let events = bridge.drain_test_events().expect("drain bridge events");
     let session_surface = events
@@ -203,9 +206,14 @@ fn redaction_contract_keeps_terminal_body_out_of_global_projection_and_redis_pay
         session_surface.payload["terminalBinding"]["rawPaneBodyIncluded"],
         false
     );
-    assert_eq!(global_surface.payload["terminal"]["rawPaneBodyIncluded"], false);
+    assert_eq!(
+        global_surface.payload["terminal"]["rawPaneBodyIncluded"],
+        false
+    );
     assert!(
-        global_surface.payload["terminal"].get("tmuxPaneId").is_none(),
+        global_surface.payload["terminal"]
+            .get("tmuxPaneId")
+            .is_none(),
         "global projection must not publish direct pane authority"
     );
     assert!(
@@ -285,7 +293,11 @@ async fn session_valid_after_worker_abort_live_tmux_or_explicit_skip() {
     let now_path = parse_line_value(&init.stdout, "EPI_NOW_PATH=")
         .map(PathBuf::from)
         .expect("session init reports NOW path");
-    assert!(now_path.exists(), "NOW path should exist: {}", now_path.display());
+    assert!(
+        now_path.exists(),
+        "NOW path should exist: {}",
+        now_path.display()
+    );
 
     let parent_launch = run_epi(
         &[
@@ -394,12 +406,18 @@ async fn session_valid_after_worker_abort_live_tmux_or_explicit_skip() {
     assert_terminal_context_is_redacted(&hydrated);
     let bridge = SpacetimeBridge::new(&gate_root).expect("spacetimedb test bridge");
     bridge
-        .publish_session_record(&parent, Some("NOW-07-05-2026-terminal-safety-live"), Some(&hydrated))
+        .publish_session_record(
+            &parent,
+            Some("NOW-07-05-2026-terminal-safety-live"),
+            Some(&hydrated),
+        )
         .expect("publish parent session surface");
     let events = bridge.drain_test_events().expect("bridge events");
     assert!(
-        events.iter().any(|event| event.kind == "global_temporal_surface"
-            && event.payload["terminal"]["rawPaneBodyIncluded"] == false),
+        events
+            .iter()
+            .any(|event| event.kind == "global_temporal_surface"
+                && event.payload["terminal"]["rawPaneBodyIncluded"] == false),
         "global temporal surface must publish redacted terminal metadata"
     );
     let runtime =
@@ -426,8 +444,7 @@ async fn session_valid_after_worker_abort_live_tmux_or_explicit_skip() {
     let stop_report: Value = serde_json::from_str(&stop.stdout).expect("stop report json");
     assert_eq!(stop_report["stopMode"], "terminal");
     assert_eq!(
-        stop_report["terminalBinding"]["terminalStatus"],
-        "detached",
+        stop_report["terminalBinding"]["terminalStatus"], "detached",
         "worker abort should detach the worker terminal binding"
     );
 

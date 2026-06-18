@@ -124,6 +124,55 @@ l_alignments:
 }
 
 #[test]
+fn now_frontmatter_accepts_fibonacci_ground_integer_ranges() {
+    let valid: Value = serde_yaml::from_str(
+        r#"
+coordinate: "M4"
+artifact_role: "now"
+session_id: "20260617-120000-test"
+day_id: "17-06-2026"
+c_3_fibonacci_position: 59
+c_3_fibonacci_digit: 9
+c_3_tick12: 11
+c_3_backbone_index: 23
+"#,
+    )
+    .unwrap();
+    assert!(validate_frontmatter(&valid).errors.is_empty());
+
+    let invalid: Value = serde_yaml::from_str(
+        r#"
+coordinate: "M4"
+artifact_role: "now"
+session_id: "20260617-120000-test"
+day_id: "17-06-2026"
+c_3_fibonacci_position: 60
+c_3_fibonacci_digit: 10
+c_3_tick12: 12
+c_3_backbone_index: 24
+"#,
+    )
+    .unwrap();
+    let result = validate_frontmatter(&invalid);
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_3_fibonacci_position") && error.contains("0-59")));
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_3_fibonacci_digit") && error.contains("0-9")));
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_3_tick12") && error.contains("0-11")));
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_3_backbone_index") && error.contains("0-23")));
+}
+
+#[test]
 fn coordinate_parser_matches_current_s_coordinate_domain() {
     assert!(is_valid_coordinate("S5'"));
     assert!(is_valid_coordinate("CF_MOBIUS"));

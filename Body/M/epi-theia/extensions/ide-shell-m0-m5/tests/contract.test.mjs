@@ -74,7 +74,12 @@ test('parses the real capability-matrix.json from Body/S/S4/plugins/pleroma', ()
     const matrix = parseCapabilityMatrix(raw);
     assert.equal(matrix.coordinate, "S4/S4'");
     assert.equal(matrix.owner_agent, 'anima');
-    assert.ok(matrix.constitutional_agents.length >= 1, 'has constitutional agents');
+    assert.deepEqual(matrix.constitutional_agents, [], 'constitutional_agents is deprecated as a live roster');
+    assert.match(
+        matrix._constitutional_agents_status,
+        /DEPRECATED per DR-M5-1/,
+        'constitutional_agents deprecation is documented'
+    );
     assert.ok(matrix.dispatch_tools.length >= 1, 'has dispatch tools');
     assert.ok(matrix.skills.length >= 1, 'has skills');
 });

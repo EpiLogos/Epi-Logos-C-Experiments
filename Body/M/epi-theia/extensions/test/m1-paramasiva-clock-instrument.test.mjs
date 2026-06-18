@@ -16,8 +16,21 @@ const {
     M1Cl42SignatureInspector
 } = require('../m1-paramasiva/lib/browser/m1-cl42-signature-inspector.js');
 const {
+    MersenneProofOverlay,
+    anandaSkeletonEventFromObservabilityEvent
+} = require('../m1-paramasiva/lib/browser/m1-mersenne-proof-overlay.js');
+const {
     M1KleinFlipEventStrip
 } = require('../m1-paramasiva/lib/browser/m1-klein-flip-event-strip.js');
+const {
+    M1AudioBusInspectorView
+} = require('../m1-paramasiva/lib/browser/m1-audio-bus-inspector-view.js');
+const {
+    KAPREKAR_PEDAGOGY_SEED_PATH,
+    CANON_STUDIO_OPEN_MARKDOWN_COMMAND,
+    M1KaprekarInspector,
+    openKaprekarPedagogySeed
+} = require('../m1-paramasiva/lib/browser/m1-kaprekar-inspector.js');
 
 const baselineProfile = JSON.parse(
     readFileSync(
@@ -114,6 +127,43 @@ test('M1 consumes audioOctet and nodalQuartet exactly from the kernel profile', 
     assert.deepEqual(model.audioBus.nodalQuartet, baselineProfile.nodalQuartet);
     assert.equal(model.audioBus.exactProfileSource, true);
     assert.equal(model.audioBus.authority, 'S0/S2 profile bus');
+});
+
+test('m1.paramasiva.audioBusInspector renders 8 audio rows and 4 nodal rows with Vimarśa badges', () => {
+    const html = renderAudioBusInspector();
+
+    assert.equal(count(html, 'data-test="m1-audio-octet-row"'), 8);
+    assert.equal(count(html, 'data-test="m1-nodal-quartet-row"'), 4);
+    assert.equal(count(html, 'data-test="m1-vimarsha-authority-badge"'), 12);
+    assert.equal(count(html, 'data-authority-citation="vimarsha_reading.rs:17-93"'), 12);
+    assert.equal(count(html, 'Vimarśa M2-1&#x27; authority'), 12);
+    assert.match(html, /data-test="m1-audio-octet-hz"[^>]*>146\.8324 Hz</);
+    assert.match(html, /data-test="m1-nodal-quartet-ratio"[^>]*>1\/1</);
+});
+
+test('m1.paramasiva.audioBusInspector renders the exact reads-only M1/M2 contract banner', () => {
+    const html = renderAudioBusInspector();
+
+    assert.match(
+        html,
+        /M1&#x27; is the consumer; M2-1&#x27; is the writer\. To change a value, route through M2\./
+    );
+});
+
+test('m1.paramasiva.audioBusInspector source does not derive or synthesise substrate values', () => {
+    const source = readFileSync(join(SOURCE_ROOT, 'browser/m1-audio-bus-inspector-view.tsx'), 'utf8');
+
+    assert.doesNotMatch(source, /computeHz|deriveOctet|local_pitch|synthesise/);
+});
+
+test('m1.paramasiva.audioBusInspector route command opens the audio bus body', () => {
+    const widgetSource = readFileSync(join(SOURCE_ROOT, 'browser/m1-paramasiva-widget.tsx'), 'utf8');
+    const frontendSource = readFileSync(join(SOURCE_ROOT, 'browser/frontend-module.ts'), 'utf8');
+
+    assert.match(frontendSource, /OPEN_COMMAND_ID \+ '\?view=audioBusInspector'/);
+    assert.match(frontendSource, /setActiveView\('audioBusInspector'\)/);
+    assert.match(widgetSource, /activeView === 'audioBusInspector'/);
+    assert.match(widgetSource, /M1AudioBusInspectorView/);
 });
 
 test('M1 relation walk stays blocked until S2 typed harmonic descriptors are present', () => {
@@ -314,6 +364,65 @@ test('m1.paramasiva.cl42SignatureInspector renders 9/8 derivation and tick12 hig
     assert.match(html, /data-test="m1-cl42-tick-7"[^>]*m1-cl42-tick-active/);
 });
 
+test('m1.paramasiva.mersenneProofOverlay is gated by ide-deep layout and developer mode', () => {
+    assert.doesNotMatch(
+        renderMersenneOverlay({ layoutMode: 'daily-0-1', developerMode: true }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+    assert.doesNotMatch(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: false }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+    assert.match(
+        renderInspector(profileWithCl42Position(2), { layoutMode: 'ide-deep', developerMode: true }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', preferenceDeveloperMode: true }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+});
+
+test('m1.paramasiva.mersenneProofOverlay maps skeleton events to proof-line highlights', () => {
+    assert.equal(anandaSkeletonEventFromObservabilityEvent(skeletonEvent(4)), 'Additive137');
+    assert.equal(anandaSkeletonEventFromObservabilityEvent(skeletonEvent('IdentityReturn4Plus2')), 'IdentityReturn4Plus2');
+    assert.equal(anandaSkeletonEventFromObservabilityEvent(skeletonEvent('KaprekarPedagogyHit')), 'KaprekarPedagogyHit');
+
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true, lastSkeletonEvent: 'Additive137' }),
+        /data-test="m1-mersenne-proof-line-4"[^>]*data-active="true"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true, lastSkeletonEvent: 'IdentityReturn4Plus2' }),
+        /data-test="m1-mersenne-proof-line-3"[^>]*data-active="true"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true, lastSkeletonEvent: 'KaprekarPedagogyHit' }),
+        /data-test="m1-mersenne-proof-line-2"[^>]*data-active="true"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true, lastSkeletonEvent: 'Hit64' }),
+        /data-test="m1-mersenne-proof-substrate"[^>]*data-active="true"/
+    );
+});
+
+test('m1.paramasiva.mersenneProofOverlay renders the Tranche 02.1 proof text verbatim', () => {
+    const html = renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true });
+
+    assert.match(html, /M_5 = 2\^5 − 1 = 31/);
+    assert.match(html, /prime-index of M_7 is itself a Mersenne prime; actional-Archetype-7 grounding at the Mersenne layer/);
+    assert.match(html, /M_7 = 2\^7 − 1 = 127/);
+    assert.match(html, /the additive substrate `64 \+ 72 = 136` minus 9-gap = 127 exposes the Mersenne prime/);
+    assert.match(html, /\+1 → 128 = 2\^7/);
+    assert.match(html, /the M1-5 \+1 parent — this is the \+1 attribution operationally decisive per Tranche 02.1/);
+    assert.match(html, /\+9 → 137/);
+    assert.match(html, /\+9 restores wholeness — 137 is the atomically-dressed return/);
+});
+
 test('m1.paramasiva.kleinFlipEventStrip renders a horizontal scroll-strip with time axis', () => {
     const html = renderKleinFlipStrip(kleinFlipStripPayload());
 
@@ -338,6 +447,45 @@ test('m1.paramasiva.kleinFlipEventStrip highlights the active event at current p
     assert.match(html, /data-test="m1-klein-flip-event-bar"[^>]*data-active="true"/);
     assert.match(html, /data-test="m1-klein-flip-current-tick"[^>]*>tick12=6 · position6=3/);
     assert.match(html, /title="[^"]*dipyramid-face 3 -&gt; 0[^"]*torus_genus=1[^"]*720-step=720 -&gt; 360[^"]*trigger=m1TritoneCrossing/);
+});
+
+test('m1.paramasiva.kaprekarInspector renders only on the 7-row trigger', () => {
+    assert.match(
+        renderKaprekarInspector({ position6: 4 }),
+        /data-test="m1-kaprekar-inspector"/
+    );
+    assert.doesNotMatch(
+        renderKaprekarInspector({ position6: 0 }),
+        /data-test="m1-kaprekar-inspector"/
+    );
+});
+
+test('m1.paramasiva.kaprekarInspector opens the lean pedagogy seed through Canon Studio in ide-deep', async () => {
+    const calls = [];
+    await openKaprekarPedagogySeed({
+        executeCommand: async (...args) => {
+            calls.push(args);
+        }
+    });
+
+    assert.deepEqual(calls, [[CANON_STUDIO_OPEN_MARKDOWN_COMMAND, KAPREKAR_PEDAGOGY_SEED_PATH]]);
+    assert.match(
+        renderKaprekarInspector({ position6: 4, layoutMode: 'ide-deep' }),
+        /data-test="m1-kaprekar-seed-button"/
+    );
+    assert.match(
+        renderKaprekarInspector({ position6: 4, layoutMode: 'daily-0-1' }),
+        /title="Idea\/Bimba\/Seeds\/M\/M1(?:'|&#x27;)\/m1-prime-kaprekar-pedagogy\.md"/
+    );
+});
+
+test('m1.paramasiva.kaprekarInspector renders the substrate citation and stays lean', () => {
+    const html = renderKaprekarInspector({ position6: 4 });
+    const source = readFileSync(join(SOURCE_ROOT, 'browser/m1-kaprekar-inspector.tsx'), 'utf8');
+
+    assert.match(html, /6174 = 7² × 9 × 14 = 18 × 7³/);
+    assert.match(html, /m1\.h:417-422/);
+    assert.doesNotMatch(source, /four-register law|Möbius twist|parent-as-7th|Cl\(4,2\)\+2/);
 });
 
 test('m1.paramasiva.cl42SignatureInspector is registered in common view ids and contract preflight', () => {
@@ -378,20 +526,94 @@ test('m1-paramasiva source does not define frontend substrate-law numeric consta
     assert.deepEqual(offenses, []);
 });
 
-function renderInspector(payload) {
+function renderInspector(payload, options = {}) {
     return renderToStaticMarkup(
         React.createElement(M1Cl42SignatureInspector, {
             profile: boundary(42, payload),
             readiness: readiness(),
-            context
+            context,
+            layoutMode: options.layoutMode,
+            developerMode: options.developerMode
         })
     );
+}
+
+function renderMersenneOverlay(props) {
+    return renderToStaticMarkup(
+        React.createElement(MersenneProofOverlay, {
+            layoutMode: props.layoutMode,
+            developerMode: props.developerMode,
+            preferences:
+                props.preferenceDeveloperMode === undefined
+                    ? undefined
+                    : preferenceService(props.preferenceDeveloperMode),
+            lastSkeletonEvent: props.lastSkeletonEvent
+        })
+    );
+}
+
+function preferenceService(developerMode) {
+    return {
+        get(name, defaultValue) {
+            return name === 'epi-logos.ui.developerMode' ? developerMode : defaultValue;
+        },
+        onPreferenceChanged() {
+            return { dispose() {} };
+        }
+    };
+}
+
+function skeletonEvent(kind) {
+    return {
+        type: 'profile.ananda_skeleton',
+        extensionId: 'kernel-bridge',
+        emittedAt: 137,
+        payload: {
+            eventKind: kind
+        }
+    };
 }
 
 function renderKleinFlipStrip(payload) {
     return renderToStaticMarkup(
         React.createElement(M1KleinFlipEventStrip, {
             profile: boundary(72, payload)
+        })
+    );
+}
+
+function renderAudioBusInspector(options = {}) {
+    return renderToStaticMarkup(
+        React.createElement(M1AudioBusInspectorView, {
+            profile: boundary(88, options.payload ?? baselineProfile),
+            readiness: readiness(),
+            context,
+            initialAudioSort: options.initialAudioSort
+        })
+    );
+}
+
+function renderKaprekarInspector({
+    position6,
+    layoutMode = 'ide-deep',
+    lastSkeletonEvent = null
+}) {
+    return renderToStaticMarkup(
+        React.createElement(M1KaprekarInspector, {
+            model: {
+                ...buildM1ProfileClockModel({
+                    profile: boundary(6174, { ...baselineProfile, position6 }),
+                    readiness: readiness(),
+                    context,
+                    relationDescriptors: [typedDescriptor()]
+                }),
+                position6
+            },
+            layoutMode,
+            commands: {
+                executeCommand() {}
+            },
+            lastSkeletonEvent
         })
     );
 }
@@ -470,6 +692,10 @@ function typedDescriptor(overrides = {}) {
         kleinFlip: false,
         ...overrides
     };
+}
+
+function count(haystack, needle) {
+    return haystack.split(needle).length - 1;
 }
 
 function walk(dir) {

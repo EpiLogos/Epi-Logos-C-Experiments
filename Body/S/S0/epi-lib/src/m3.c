@@ -282,6 +282,63 @@ const uint8_t M3_CODON_TO_AA[64] = {
     20, 20, 20, 20, /* GGA=Gly GGT=Gly GGC=Gly GGG=Gly */
 };
 
+const uint8_t M3_CODON_ATG_AUG = M3_CODON_ATG_AUG_VALUE;
+const uint8_t M3_STOP_CODONS[3] = {
+    M3_STOP_CODON_TAA_VALUE,
+    M3_STOP_CODON_TAG_VALUE,
+    M3_STOP_CODON_TGA_VALUE,
+};
+
+uint8_t m3_codon_t_count_ffi(uint8_t codon6bit) {
+    return m3_codon_t_count(codon6bit);
+}
+
+M3_TranscriptClass m3_codon_transcript_class_ffi(uint8_t codon6bit) {
+    return m3_codon_transcript_class(codon6bit);
+}
+
+M3_GovernanceRole m3_codon_governance_role_ffi(uint8_t codon6bit) {
+    return m3_codon_governance_role(codon6bit);
+}
+
+int m3_verify_transcript_surface(void) {
+    uint8_t shared = 0u;
+    uint8_t transcribable = 0u;
+    uint8_t starts = 0u;
+    uint8_t stops = 0u;
+
+    for (uint8_t codon = 0u; codon < 64u; codon++) {
+        M3_TranscriptClass cls = m3_codon_transcript_class(codon);
+        M3_GovernanceRole role = m3_codon_governance_role(codon);
+
+        if (cls == M3_TRANSCRIPT_CLASS_SHARED) {
+            shared++;
+        } else if (cls == M3_TRANSCRIPT_CLASS_TRANSCRIBABLE) {
+            transcribable++;
+        } else {
+            return -1;
+        }
+
+        if (role == M3_GOVERNANCE_ROLE_START) {
+            starts++;
+            if (codon != M3_CODON_ATG_AUG) return -2;
+        } else if (role == M3_GOVERNANCE_ROLE_STOP) {
+            stops++;
+            if (M3_CODON_TO_AA[codon] != M3_STOP_CODON_AA) return -3;
+        } else if (role != M3_GOVERNANCE_ROLE_NONE) {
+            return -4;
+        }
+    }
+
+    if ((uint8_t)(shared + transcribable) != 64u) return -5;
+    if (shared != 27u) return -6;
+    if (transcribable != 37u) return -7;
+    if (starts != 1u) return -8;
+    if (stops != 3u) return -9;
+
+    return 0;
+}
+
 
 /* ===================================================================
  * FR 2.3.19: M3_TAROT_CODON_MAP[4][16] — Complete Tarot-Codon LUT
@@ -325,6 +382,34 @@ const M3_Major_Arcana_Entry M3_MAJOR_ARCANA[M3_MAJOR_ARCANA_COUNT] = {
     { 20, "Aeon",              21, 20 },
     { 21, "The Universe",      22, 21 },
 };
+
+/* Transcribe a codon to its Major Arcana card index.
+ *
+ * codon -> amino-acid index (M3_CODON_TO_AA) -> Major Arcana card whose
+ * amino_acid_index matches. STOP codons (amino-acid index 10) and any
+ * amino-acid index with no Major Arcana assignment return 0xFF.
+ *
+ * Inverse of M3_MAJOR_ARCANA[card].amino_acid_index for non-STOP codons.
+ * The M5 Mobius return walks each codon of a session's M3 trace through
+ * this transcription. */
+uint8_t m3_major_arcana_from_codon(uint8_t codon) {
+    if (codon >= 64u) {
+        return 0xFFu;
+    }
+
+    uint8_t aa_index = M3_CODON_TO_AA[codon];
+    if (aa_index == M3_STOP_CODON_AA) {
+        return 0xFFu;  /* STOP codons carry no arcana */
+    }
+
+    for (uint8_t card = 0u; card < M3_MAJOR_ARCANA_COUNT; ++card) {
+        if (M3_MAJOR_ARCANA[card].amino_acid_index == aa_index) {
+            return card;
+        }
+    }
+
+    return 0xFFu;  /* amino acid with no Major Arcana assignment */
+}
 
 /* Helper: encode a 3-letter codon string to 6-bit value */
 #define COD(a,b,c) (uint8_t)((M3_NUC_##a << 4) | (M3_NUC_##b << 2) | M3_NUC_##c)
@@ -773,6 +858,9 @@ bool m3_verify(void) {
 
     /* 360 integral invariant */
     if (m3_verify_integral_invariant() != 0) return false;
+
+    /* Transcript class / governance invariant */
+    if (m3_verify_transcript_surface() != 0) return false;
 
     /* Tarot codon coverage: 56 cards + 8 court duals = 64 unique codons */
     {

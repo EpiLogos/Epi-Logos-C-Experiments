@@ -17,6 +17,7 @@ import {
     createNaraArtifact
 } from '../../common';
 import type { NaraArtifactEnvelope } from '../../common';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 export const LOGOS_CYCLE_VIEW_ID = 'm4.nara.logosCycle';
 export const LOGOS_CYCLE_LABEL = 'M4 Logos Cycle';
@@ -137,7 +138,7 @@ export const M4LogosStageRing: React.FC<M4LogosStageRingProps> = props => {
 
     return (
         <section
-            className="m4-logos-stage-ring"
+            className={`m4-logos-stage-ring ${privacyChromeClass('protected_local')}`}
             data-test="m4-logos-stage-ring"
             data-track="TRACK_08"
             data-export={M4_LOGOS_STAGE_RING_EXPORT}
@@ -247,12 +248,12 @@ export class LogosCycleWidget extends ReactWidget {
     protected init(): void {
         this.id = LogosCycleWidget.ID;
         this.title.label = LogosCycleWidget.LABEL;
-        this.title.caption = LogosCycleWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
         this.addClass('m4-nara-logos-cycle');
-        this.addClass('mext-privacy-protected-local');
+        this.addClass(privacyChromeClass('protected_local'));
 
         this.subscriptions.push(
             this.bridge.onCoordinateContext(context => {
@@ -284,7 +285,10 @@ export class LogosCycleWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         return (
-            <div className="mext-widget-root" data-test="m4-logos-cycle-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local')}`}
+                data-test="m4-logos-cycle-root"
+            >
                 <M4LogosStageRing
                     stages={LOGOS_STAGES}
                     currentStageId={this.currentStageId}

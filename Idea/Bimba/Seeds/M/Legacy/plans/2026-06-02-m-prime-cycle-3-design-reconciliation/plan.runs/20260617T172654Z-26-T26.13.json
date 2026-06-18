@@ -1,0 +1,33 @@
+{
+  "runId": "20260617T172654Z-26-T26.13",
+  "taskId": "26.T26.13",
+  "startedAt": "2026-06-17T17:26:54.900Z",
+  "owner": "codex-m-dev-26-t26-13",
+  "leaseExpiresAt": "2026-06-17T19:26:54.900Z",
+  "worktree": null,
+  "task": {
+    "id": "26.T26.13",
+    "trackId": "26",
+    "tranche": "T26.13",
+    "title": "`WisdomDeltaInspector` — 4'-5'-0' joint-composition + XOR-fold animation + 7-8-9 spine reading",
+    "effort": null,
+    "file": "26-m5-epii-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md",
+    "dependsOn": [
+      "26.T26.12"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

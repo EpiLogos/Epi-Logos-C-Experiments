@@ -13,3 +13,11 @@ pub use crate::kernel::{
     MathemePlanetaryChakralProjection, MathemePointerAnchorProjection,
     MathemeResonance72Projection, ProfilePrivacyClass,
 };
+pub use crate::profile_projections::{
+    AnuttaraWitnessBandBalance, AnuttaraWitnessPalindromeState, AnuttaraWitnessProjection,
+    AnuttaraWitnessRFactorBand, AnuttaraWitnessRFactorPathStep, BeingEntityRef,
+    BeingObserverAnchor, BeingPatternClockAddress, BeingPatternProtectedRef,
+    BeingPatternRelationEdge, BioQuaternionHandle, ElementalWeightProjection,
+    M2M3RelationProjection, MonoPolyOperator, NaraFamilyRole, PasuBeingPatternProjection,
+    PasuLiveStateHandle, PasuReviewRisk, PerspectiveRole, StableIdentityHandle,
+};

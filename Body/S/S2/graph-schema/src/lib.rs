@@ -3,7 +3,7 @@ use serde::Serialize;
 pub const SCHEMA_VERSION: &str = "2026-05-17-s2-bimba-coord-driven-3072";
 pub const GRAPH_ID: &str = "primary";
 pub const EMBEDDING_VERSION: &str = "q-semantic-v2-3072";
-pub const Q_SCHEMA_VERSION: &str = "q-prefix-v2";
+pub const Q_SCHEMA_VERSION: &str = "q-prefix-v3";
 
 pub const BIMBA_LABEL: &str = "Bimba";
 pub const COORDINATE_PROPERTY: &str = "coordinate";
@@ -11,7 +11,6 @@ pub const COORDINATE_PREFIX_PROPERTY: &str = "coordinate_prefix";
 pub const COORDINATE_DEPTH_PROPERTY: &str = "coordinate_depth";
 pub const COORDINATE_PARENT_PROPERTY: &str = "coordinate_parent";
 pub const COORDINATE_AXIS_PROPERTY: &str = "coordinate_axis";
-pub const COORDINATE_NAMESPACE_PROPERTY: &str = "coordinate_namespace";
 pub const CANONICAL_VAULT_PATH_PROPERTY: &str = "vault_path";
 pub const ARTIFACT_KIND_PROPERTY: &str = "artifact_kind";
 pub const CONTENT_HASH_PROPERTY: &str = "content_hash";
@@ -555,7 +554,7 @@ pub const COORDINATE_SEMANTIC_FAMILY_SPECS: &[CoordinateSemanticFamilySpec] = &[
         family_name: "Category / C-family",
         semantic_domain: "Ontological identity, source, form, operation, process, context, and integration.",
         direct_axis: "C0-C5 describe the direct categorical unfolding of a thing.",
-        inverted_axis: "C0'-C5' carry the reflective VAK ladder: CPF, CT, CFP, CF, CP, CS.",
+        inverted_axis: "C0'-C5' carry the reflective VAK ladder: CPF, CT, CP, CF, CFP, CS.",
         property_guidance: "Use c_* for artifact being, identity, source, definition, provenance, structural role, and cross-family grounding. C is the default when the property is about what the artifact is.",
     },
     CoordinateSemanticFamilySpec {
@@ -802,17 +801,6 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: COORDINATE_AXIS_PROPERTY,
-        coordinate_home: "S2-0",
-        owner: GraphPropertyOwner::Node,
-        value_type: GraphPropertyType::String,
-        cardinality: GraphPropertyCardinality::One,
-        disclosure: GraphPropertyDisclosure::Public,
-        source_family: "coordinate",
-        indexed: true,
-        compatibility: false,
-    },
-    GraphPropertySpec {
-        key: COORDINATE_NAMESPACE_PROPERTY,
         coordinate_home: "S2-0",
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
@@ -1383,6 +1371,14 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_4_historical_diagnosis",
+        "Q4",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "deep-bimba-quickview",
+    ),
+    node_spec(
+        "q_4_locality_signature",
         "Q4",
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
@@ -2947,6 +2943,9 @@ pub fn property_spec(key: &str) -> Result<&'static GraphPropertySpec, String> {
 }
 
 pub fn validate_coordinate_prefix_property(key: &str) -> Result<(), String> {
+    if let Some(rest) = key.strip_prefix("q_").or_else(|| key.strip_prefix("qm_")) {
+        return validate_q_register_property(rest, key);
+    }
     let mut parts = key.split('_');
     let prefix = parts
         .next()
@@ -2984,6 +2983,53 @@ pub fn validate_coordinate_prefix_property(key: &str) -> Result<(), String> {
         ));
     }
 
+    Ok(())
+}
+
+/// The q-register family is OPEN: only the key *shape* is fixed — position 0-5, an
+/// optional inverted-phase prime `'`, an optional interior numeric slot, then a
+/// lower_snake_case facet suffix. The facet slug itself is free; there is no closed
+/// vocabulary. The long-standing quickview slots remain registered in
+/// `NODE_PROPERTY_SPECS` for typing/disclosure, but any well-formed q_/qm_ key is valid.
+fn validate_q_register_property(rest: &str, key: &str) -> Result<(), String> {
+    let position = rest
+        .chars()
+        .next()
+        .ok_or_else(|| format!("q-register property missing position: {key}"))?;
+    if !matches!(position, '0'..='5') {
+        return Err(format!("q-register property has invalid position: {key}"));
+    }
+    let mut offset = position.len_utf8();
+    if rest[offset..].starts_with('\'') {
+        offset += 1; // inverted-phase prime marker
+    }
+    let after_position = rest[offset..]
+        .strip_prefix('_')
+        .ok_or_else(|| format!("q-register property missing semantic suffix: {key}"))?;
+
+    // Optional interior numeric slot, then a lower_snake_case semantic suffix.
+    let mut slot_split = after_position.splitn(2, '_');
+    let first = slot_split
+        .next()
+        .ok_or_else(|| format!("q-register property missing semantic suffix: {key}"))?;
+    let suffix = if !first.is_empty() && first.chars().all(|ch| ch.is_ascii_digit()) {
+        slot_split
+            .next()
+            .ok_or_else(|| format!("q-register property missing semantic suffix: {key}"))?
+    } else {
+        after_position
+    };
+
+    if suffix.is_empty()
+        || suffix.split('_').any(|segment| {
+            segment.is_empty()
+                || !segment
+                    .chars()
+                    .all(|ch| ch.is_ascii_lowercase() || ch.is_ascii_digit())
+        })
+    {
+        return Err(format!("q-register property missing semantic suffix: {key}"));
+    }
     Ok(())
 }
 

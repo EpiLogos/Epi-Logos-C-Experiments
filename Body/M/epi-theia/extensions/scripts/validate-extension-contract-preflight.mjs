@@ -23,6 +23,7 @@ const omnipanelSourceRoot = join(
   repoRoot,
   "Body/M/epi-theia/extensions/omnipanel-shell/src"
 );
+const extensionsRoot = join(repoRoot, "Body/M/epi-theia/extensions");
 
 const omnipanelCompatImportExceptions = new Map([
   [
@@ -36,7 +37,10 @@ const omnipanelCompatImportExceptions = new Map([
 ]);
 
 const omnipanelAllowedSharedSiblingImports = new Set([
+  "@pratibimba/integrated-composition",
   "@pratibimba/m-extension-runtime",
+  "@pratibimba/m-extension-runtime/lib/common/recursive-self-review-gate",
+  "@pratibimba/pratibimba-layouts",
   "@pratibimba/kernel-bridge",
   "@pratibimba/kernel-bridge-readiness",
   "@pratibimba/ide-shell-m0-m5/lib/browser/services/privacy-drop-feed",
@@ -50,6 +54,12 @@ const expectedExtensions = [
   "m3-mahamaya",
   "m4-nara",
   "m5-epii"
+];
+
+const forbiddenStandaloneProjectionExtensions = [
+  "library-surface",
+  "logos-atelier",
+  "scent-following-workspace"
 ];
 
 const expectedReadinessStates = [
@@ -126,6 +136,15 @@ function importMatchesForbiddenFragment(specifier, forbiddenFragment) {
     return specifier.startsWith("@theia/") && specifier.endsWith("ws-connection-provider");
   }
   return specifier.includes(forbiddenFragment);
+}
+
+function isAllowedOmniPanelSharedSiblingImport(specifier) {
+  for (const allowed of omnipanelAllowedSharedSiblingImports) {
+    if (specifier === allowed || specifier.startsWith(`${allowed}/`)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function validateManifest(manifest, errors) {
@@ -319,12 +338,23 @@ function validateOmniPanelForbiddenDirectImports(manifest, errors) {
       }
       if (
         specifier.startsWith("@pratibimba/") &&
-        !omnipanelAllowedSharedSiblingImports.has(specifier)
+        !isAllowedOmniPanelSharedSiblingImport(specifier)
       ) {
         errors.push(
           `omnipanel-shell imports non-allowlisted shared sibling ${specifier} in ${relativeRepoPath(file)}:${line}`
         );
       }
+    }
+  }
+}
+
+function validateNoStandaloneProjectionExtensions(errors) {
+  for (const extensionName of forbiddenStandaloneProjectionExtensions) {
+    const extensionPath = join(extensionsRoot, extensionName);
+    if (existsSync(extensionPath)) {
+      errors.push(
+        `${relativeRepoPath(extensionPath)} must not exist; Library/Atelier/scent-following surfaces are projection-lens contributions on existing extensions`
+      );
     }
   }
 }
@@ -337,6 +367,7 @@ function main() {
   if (!existsSync(captureRequirementsPath)) {
     errors.push("missing readiness capture requirements");
   }
+  validateNoStandaloneProjectionExtensions(errors);
   validateChromeContract(errors);
 
   if (errors.length === 0) {

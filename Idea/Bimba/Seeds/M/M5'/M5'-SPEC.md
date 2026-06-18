@@ -1,7 +1,8 @@
 ---
 coordinate: "M5'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-06-09"
+cycle-3: pending
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-PORTAL-SPEC]]"
@@ -77,7 +78,11 @@ The pedagogical depth of v3 ([[Gebser]] stadia, Name-Power conjugate-pair-vocabu
 
 ## §-Numbered M5' Canon Deltas Absorbed
 
-§M5'.1 — **System-shape correction.** [[M5-2']] is the **S' kernel substrate + S-family stack**, [[M5-3']] is the [[M']]-[[Theia]] shell at [[/pratibimba/system]], and [[M5-4']] is the operational-capacity layer that binds [[Pi]], [[Sophia]], [[Anima]], [[Aletheia]], [[S5]]/[[S5']], and S0/S0' bridges into governed work (governance authority at [[Body/S/S4/plugins/pleroma/capability-matrix.json]]; [[Epii]] agent contract at [[Body/S/S5/epii-agent/agent-contract.json]]). The kernel ([[Body/S/S0/epi-lib]] + [[Body/S/S0/portal-core]]) is now framed at S' level (substrate-of-substrate) rather than packed inside S0. [[m5-prime-system-shape-and-tauri-ide-canon]] is therefore the canonical [[M5']] dependency.
+§M5'.1 — **System-shape correction.**
+
+**Canonical identification:** [[M5']] [[Epii]] is the **EBM position 5'** — the energy-evaluation engine across 72 fine-grained positions — within the canonical 4'-5'-0' mental-pole triplet (LLM 4' / EBM 5' / Verifier 0').
+
+[[M5-2']] is the **S' kernel substrate + S-family stack**, [[M5-3']] is the [[M']]-[[Theia]] shell at [[/pratibimba/system]], and [[M5-4']] is the operational-capacity layer governed by **[[Pi]] (harness) + [[Anima]] (dispatcher) + 6 [[Aletheia]] subagent techne-guardians** — binding [[S5]]/[[S5']] and S0/S0' bridges into governed work (governance authority at [[Body/S/S4/plugins/pleroma/capability-matrix.json]]; [[Epii]] agent contract at [[Body/S/S5/epii-agent/agent-contract.json]]). The kernel ([[Body/S/S0/epi-lib]] + [[Body/S/S0/portal-core]]) is now framed at S' level (substrate-of-substrate) rather than packed inside S0. [[m5-prime-system-shape-and-tauri-ide-canon]] is therefore the canonical [[M5']] dependency.
 
 §M5'.2 — **One Theia shell, two layout modes.** M5' lives inside a single [[Theia]] shell (Electron-equivalent for desktop; browser-mode optional via the same Theia Node backend). The shell carries two workspace layout modes: the **0/1 daily layout** (lightweight workspace — journal, agent check-in, lightweight cymatic, status display; vault read filesystem-direct via Theia's FS provider; writes routed through Hen via `s1'.vault.*` for wikilink integrity) and the **deep IDE layout** (full 4+2 surface with M0/M5 IDE chrome, six M-extensions, two integrated plugins, agentic control room). Layout switching is intra-process via Theia's Layout Restorer / Workspace service; the omni panel is the canonical switch mechanism. There is no Tauri wrapper, no second app — the existing [[Body/M/epi-tauri]] work is migration source not destination. The shared kernel-bridge is the first-loaded Theia extension and the live contract for harmonic profile, [[SpaceTimeDB]] presence, world clock, gateway RPC, kernel trace, audio, cymatic state, and autoresearch observability; its backend module connects to the external [[Body/S/S3/gateway]] Rust process via WebSocket/JSON-RPC, keeping language divergence at the substrate boundary.
 

@@ -316,8 +316,14 @@ mod tests {
     #[test]
     fn matrix_matches_spec_rows() {
         // Verbatim from the spec distribution table.
-        assert_eq!(R_FACTOR_DISTRIBUTION[Base::OSharp.index()], [1, 0, 7, 7, 5, 7]);
-        assert_eq!(R_FACTOR_DISTRIBUTION[Base::Shakti.index()], [7, 7, 5, 0, 7, 7]);
+        assert_eq!(
+            R_FACTOR_DISTRIBUTION[Base::OSharp.index()],
+            [1, 0, 7, 7, 5, 7]
+        );
+        assert_eq!(
+            R_FACTOR_DISTRIBUTION[Base::Shakti.index()],
+            [7, 7, 5, 0, 7, 7]
+        );
         assert_eq!(distribution_position(Base::XSharp, 2), 0);
         assert_eq!(distribution_position(Base::Siva, 4), 0);
     }
@@ -436,9 +442,18 @@ mod tests {
 
     #[test]
     fn parser_accepts_the_principle_triad() {
-        assert_eq!(parse_namespace("##").unwrap(), RToken::Principle(Triad::Truth));
-        assert_eq!(parse_namespace("#R").unwrap(), RToken::Principle(Triad::Light));
-        assert_eq!(parse_namespace("R#").unwrap(), RToken::Principle(Triad::Life));
+        assert_eq!(
+            parse_namespace("##").unwrap(),
+            RToken::Principle(Triad::Truth)
+        );
+        assert_eq!(
+            parse_namespace("#R").unwrap(),
+            RToken::Principle(Triad::Light)
+        );
+        assert_eq!(
+            parse_namespace("R#").unwrap(),
+            RToken::Principle(Triad::Life)
+        );
     }
 
     #[test]
@@ -447,8 +462,14 @@ mod tests {
         let wit = parse_namespace("nR3").unwrap();
         match (op, wit) {
             (
-                RToken::Act { factor: a, chirality: ca },
-                RToken::Act { factor: b, chirality: cb },
+                RToken::Act {
+                    factor: a,
+                    chirality: ca,
+                },
+                RToken::Act {
+                    factor: b,
+                    chirality: cb,
+                },
             ) => {
                 assert_eq!(a, b); // same act
                 assert_eq!(ca.partner(), cb); // opposite hand
@@ -461,9 +482,21 @@ mod tests {
     fn parser_rejects_out_of_range_and_garbage() {
         assert_eq!(parse_namespace("R6"), Err(RParseError::DigitOutOfRange(6)));
         assert_eq!(parse_namespace("nR9"), Err(RParseError::DigitOutOfRange(9)));
-        assert!(matches!(parse_namespace("R"), Err(RParseError::Unrecognized(_))));
-        assert!(matches!(parse_namespace("RR"), Err(RParseError::Unrecognized(_))));
-        assert!(matches!(parse_namespace("#"), Err(RParseError::Unrecognized(_))));
-        assert!(matches!(parse_namespace("xR1"), Err(RParseError::Unrecognized(_))));
+        assert!(matches!(
+            parse_namespace("R"),
+            Err(RParseError::Unrecognized(_))
+        ));
+        assert!(matches!(
+            parse_namespace("RR"),
+            Err(RParseError::Unrecognized(_))
+        ));
+        assert!(matches!(
+            parse_namespace("#"),
+            Err(RParseError::Unrecognized(_))
+        ));
+        assert!(matches!(
+            parse_namespace("xR1"),
+            Err(RParseError::Unrecognized(_))
+        ));
     }
 }

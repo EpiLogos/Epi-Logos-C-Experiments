@@ -20,6 +20,14 @@ if (!globalThis.Element) {
             return undefined;
         }
 
+        addEventListener() {
+            return undefined;
+        }
+
+        removeEventListener() {
+            return undefined;
+        }
+
         matches() {
             return false;
         }
@@ -29,6 +37,7 @@ if (!globalThis.document) {
     globalThis.document = {
         documentElement: new globalThis.Element(),
         createElement: () => new globalThis.Element(),
+        queryCommandSupported: () => false,
         querySelectorAll: () => []
     };
 }
@@ -51,6 +60,7 @@ const {
     buildM0InspectorModel,
     normalizeM0CoordinateInput
 } = require('../m0-anuttara/lib/common/m0-inspector.js');
+const { LayerSelector } = require('../m0-anuttara/lib/browser/components/layer-selector.js');
 const COMMUNITY_CLOCK_OVERLAY_VIEW_ID = 'm0.anuttara.communityClockOverlay';
 const ALL_VIEW_IDS = [
     'm0.anuttara.languageMap',
@@ -197,6 +207,131 @@ test('captured S2 payload renders within budget and keeps family identity in pro
     );
 });
 
+test('per-layer readiness distinguishes canonical fields from bridged routes', () => {
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: {
+            ...capturedS2GraphNode,
+            properties: {
+                ...capturedS2GraphNode.properties,
+                c_1_symbol: '0/1',
+                c_1_ql_variant: 'prior-ground'
+            }
+        },
+        profile: {
+            ...profile,
+            payload: {
+                ...profile.payload,
+                gds_community: 'louvain:M0:0'
+            }
+        },
+        readiness,
+        context
+    });
+
+    assert.equal(model.layerReadiness.language, 'canonical');
+    assert.equal(model.layerReadiness['ql-structure'], 'canonical');
+    assert.equal(model.layerReadiness.relations, 'canonical');
+    assert.equal(model.layerReadiness['time-community'], 'derived');
+    assert.equal(model.layerReadiness.personal, 'bridged_local');
+    assert.equal(model.layerReadiness.pedagogy, 'bridged_public');
+});
+
+test('layer readiness treats aliases and missing payloads as canonical absence or blockers', () => {
+    const aliasOnly = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: capturedS2GraphNode,
+        profile,
+        readiness,
+        context
+    });
+    const noPayload = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: null,
+        profile: null,
+        readiness,
+        context
+    });
+
+    assert.equal(aliasOnly.languageFields.find(field => field.key === 'symbol')?.state, 'canonical');
+    assert.equal(aliasOnly.layerReadiness.language, 'canonical_absent');
+    assert.equal(aliasOnly.layerReadiness['time-community'], 'blocked');
+    assert.equal(noPayload.layerReadiness.language, 'canonical_absent');
+    assert.equal(noPayload.layerReadiness.personal, 'bridged_local');
+    assert.equal(noPayload.layerReadiness.pedagogy, 'bridged_public');
+});
+
+test('layer selector renders per-layer provenance pills from layerReadiness', () => {
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: {
+            ...capturedS2GraphNode,
+            properties: {
+                ...capturedS2GraphNode.properties,
+                c_1_symbol: '0/1'
+            }
+        },
+        profile,
+        readiness,
+        context
+    });
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(LayerSelector, { layerReadiness: model.layerReadiness })
+    );
+
+    assert.match(markup, /class="m0-layer-tab-provenance-pill"/);
+    assert.match(markup, /data-layer-key="language"[^>]*>[\s\S]*data-provenance-state="canonical"/);
+    assert.match(markup, /data-layer-key="personal"[^>]*>[\s\S]*data-provenance-state="bridged_local"/);
+    assert.match(markup, /data-layer-key="pedagogy"[^>]*>[\s\S]*data-provenance-state="bridged_public"/);
+});
+
+test('cross-layout intent with relations target opens M0 widget and activates relations layer', async () => {
+    require('@theia/core/lib/browser/frontend-application-config-provider')
+        .FrontendApplicationConfigProvider
+        .set({ applicationName: 'm0-anuttara-intent-node-test' });
+    const { M0AnuttaraContribution } = require('../m0-anuttara/lib/browser/frontend-module.js');
+    const { EMPTY_COORDINATE_CONTEXT } = require('../m-extension-runtime/lib/common/index.js');
+    const commands = recordingCommands();
+    const contexts = [];
+    const widget = {
+        activeLayer: 'language',
+        phase: 'implicate',
+        mode: 'reading',
+        context: EMPTY_COORDINATE_CONTEXT,
+        bridge: {
+            updateCoordinateContext(next) {
+                contexts.push(next);
+                widget.context = next;
+            }
+        },
+        update() {
+            return undefined;
+        }
+    };
+    const contribution = new M0AnuttaraContribution();
+    let opened = 0;
+    contribution.openView = async () => {
+        opened += 1;
+        return widget;
+    };
+
+    contribution.registerCommands(commands);
+    await commands.executeCommand('pratibimba.m0-anuttara.relations.open', {
+        requestedExtensionId: 'm0-anuttara',
+        requestedContributionId: 'relations',
+        coordinate: '#0.2',
+        implicateExplicate: 'explicate',
+        mode: 'authoring',
+        source: 'test'
+    });
+
+    assert.equal(opened, 1);
+    assert.equal(widget.activeLayer, 'relations');
+    assert.equal(widget.phase, 'explicate');
+    assert.equal(widget.mode, 'authoring');
+    assert.equal(contexts[0].selectedCoordinate, '#0.2');
+});
+
 test('missing Anuttara syntax fields render as canonical absence, not placeholders', () => {
     const sparse = buildM0InspectorModel({
         selectedInput: '#0',
@@ -213,6 +348,26 @@ test('missing Anuttara syntax fields render as canonical absence, not placeholde
         assert.doesNotMatch(field.provenance, /placeholder/i);
     }
 });
+
+function recordingCommands() {
+    const entries = new Map();
+    return {
+        registerCommand(command, handler) {
+            entries.set(command.id, { command, handler });
+            return { dispose() {} };
+        },
+        getCommand(id) {
+            return entries.get(id)?.command;
+        },
+        async executeCommand(id, ...args) {
+            const entry = entries.get(id);
+            if (!entry) {
+                throw new Error(`Missing command ${id}`);
+            }
+            return entry.handler.execute(...args);
+        }
+    };
+}
 
 test('Anuttara asset handles render with explicit DR-M0-4 provenance state', () => {
     const assetNode = {
@@ -279,6 +434,27 @@ test('communityClockOverlay view is declared and remains blocked until S2 GDS pa
     assert.equal(model.communityClockOverlay.canonicalWritePerformed, false);
     assert.match(model.communityClockOverlay.provenance, /blocked until S2 GDS payload wired/);
     assert.doesNotMatch(model.communityClockOverlay.provenance, /placeholder/i);
+});
+
+test('Atelier daily claim is an etymological-cluster projection lens on the existing graph viewer', () => {
+    const model = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: capturedS2GraphNode,
+        profile,
+        readiness,
+        context
+    });
+    const lens = model.projectionLenses.find(
+        entry => entry.id === 'pratibimba.daily.atelier-cluster-lens'
+    );
+
+    assert.ok(lens);
+    assert.equal(lens.lensKind, 'etymological-cluster');
+    assert.equal(lens.targetViewId, COMMUNITY_CLOCK_OVERLAY_VIEW_ID);
+    assert.equal(lens.ownerExtension, 'm0-anuttara');
+    assert.equal(lens.standaloneExtension, false);
+    assert.match(lens.provenance, /atelier-projection-lens/);
+    assert.match(lens.provenance, /no logos-atelier extension/);
 });
 
 test('communityClockOverlay renders supplied S2 GDS community and S3 active-now projections', () => {

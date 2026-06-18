@@ -522,10 +522,18 @@ fn canonical_deep_property_key(
         .and_then(|target| canonicalize_prime_surface_property(&target, node))
         .or_else(|| {
             let semantic = deep_property_semantic(source_key)?;
-            source_key
-                .starts_with("q_")
-                .then(|| format!("q_{}_{}", node_position(node, parsed), semantic))
+            source_key.starts_with("q_").then(|| {
+                canonical_q_import_property_key(
+                    &semantic,
+                    u8::try_from(node_position(node, parsed)).unwrap_or(5),
+                )
+            })
         })
+}
+
+pub fn canonical_q_import_property_key(semantic: &str, position: u8) -> String {
+    let _ = position;
+    format!("q_5_{semantic}")
 }
 
 fn canonicalize_prime_surface_property(target_key: &str, node: &Value) -> Option<String> {
@@ -672,6 +680,7 @@ fn explicit_deep_property_key(source_key: &str) -> Option<String> {
         "q_instantiationMode" => "q_2_instantiation_mode",
         "q_dialecticalMovement" => "q_3_dialectical_movement",
         "q_historicalDiagnosis" => "q_4_historical_diagnosis",
+        "q_localitySignature" => "q_4_locality_signature",
         "q_integrationTemplate" => "q_5_integration_template",
         "q_conjunctiveThreshold" => "q_5_conjunctive_threshold",
         "consciousnessOperation" => "m_0_consciousness_operation",

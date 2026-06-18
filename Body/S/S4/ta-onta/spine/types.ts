@@ -9,6 +9,11 @@ export interface InjectionSlot {
   content: string;
   /** Estimated char count (used for budget enforcement) */
   charEstimate: number;
+  /** Phase-qualified coordinate dereference emitted when this slot overflows. */
+  vakReference?: {
+    coord: string;
+    dereference: "s5'.gnostic.resolve" | "s0'.anuttara.trace";
+  };
 }
 
 export interface LedgerChannel {

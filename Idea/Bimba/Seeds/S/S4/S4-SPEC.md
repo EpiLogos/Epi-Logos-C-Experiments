@@ -151,7 +151,7 @@ The live S4 implementation is broad and uneven:
 - `.pi/extensions/ta-onta/composite-entry.ts` registers all six spine contributions and loads [[Khora]], [[Hen]], [[Pleroma]], [[Chronos]], [[Anima]], and [[Aletheia]] extension tools into PI.
 - `.pi/extensions/ta-onta/anima/extension.ts` registers `vak_evaluate`, `anima_orchestrate`, `nous_disclose`, parallel/fusion dispatch tools, and injects the VAK skill stack at `before_agent_start`.
 - `.pi/extensions/ta-onta/anima/S4/` contains `agent-team.ts`, `agent-chain.ts`, `subagent-widget.ts`, and related execution primitives.
-- `.pi/extensions/ta-onta/anima/S4'/agents/` contains constitutional agent prompts for [[Anima]], [[Nous]], [[Logos]], [[Eros]], [[Mythos]], [[Psyche]], [[Sophia]], and a [[Techne]] helper.
+- `.pi/extensions/ta-onta/anima/S4'/agents/` contains constitutional agent prompts for [[Anima]], [[Nous]], [[Logos]], [[Eros]], [[Mythos]], [[Psyche]], [[Sophia]] (the 6 constitutional CT roles: Nous=CT0, Logos=CT1, Eros=CT2, Mythos=CT3, Psyche=CT4a+CT4b, Sophia=CT5; Anima governs dispatch across all). [[Techne]] is NOT a constitutional agent — it is Pleroma's second face (atomic-skills substrate), invoked through the 6 CF-coded Aletheia techne-guardians (Anansi=CF0, Moirai=CF2, Janus=CF1, Mercurius=CF3, Agora=CF4, Zeithoven=CF5) at constitutional team-composition gates.
 - The Rust VAK evaluator is explicitly heuristic. Canonical VAK evaluation is the LLM/skill-mediated path in `anima/S4'/skills/vak-evaluate/`.
 - `Body/S/S4/plugins/registry.jsonl` is the canonical source package registry for S4 plugins. `plugins/registry.jsonl` may be read only as a compatibility registry while older root paths are retired.
 - `Body/S/S4/plugins/pleroma` is Anima's executable capability membrane package. It carries constitutional ANIMA definitions, critical VAK skills, hooks, settings, and a tested capability matrix. It is distinct from the ta-onta `S4-2p-pleroma` module, which is the internal S4' extension/module expression of Pleroma law.
@@ -400,7 +400,7 @@ Within the full [[ta-onta]] body, the six classes are internal S4' carriers. The
 |---|---:|---|
 | [[S4.0']] | [[Khora]] | [[S0]] / [[S0']] | Bootstrap, session identity, write authority, visibility |
 | [[S4.1']] | [[Hen]] | [[S1]] / [[S1']] | Templates and content form for agent artifacts |
-| [[S4.2']] | [[Pleroma]] | [[S2]] / [[S2']] | Bounded primitives, tool seams, Techne helper boundary |
+| [[S4.2']] | [[Pleroma]] | [[S2]] / [[S2']] | Bounded primitives, tool seams, Techne atomic-skills repository (Pleroma's second face — 6 CF-coded Aletheia techne-guardians invoked through CF1-CF5 gates) |
 | [[S4.3']] | [[Chronos]] | [[S3]] / [[S3']] | Day/NOW lifecycle, temporal events consumed by agent |
 | [[S4.4']] | [[Anima]] | [[S4]] / [[S4']] | VAK, CF routing, team composition, Psyche/constitutional dispatch |
 | [[S4.5']] | [[Aletheia]] | [[S5]] / [[S5']] | Crystallisation mode and world-return handoff |

@@ -1,5 +1,4 @@
 import type { ToolStreamEvent } from '../../../../common/omnipanel-runtime';
-import { formatTs } from '../panels/panelUtils';
 import {
   normalizePrivacyClass,
   previewToolStreamValue
@@ -26,7 +25,7 @@ export function ToolStreamRenderer({
   onScrollOffsetChange,
   onSelectEvent
 }: ToolStreamRendererProps) {
-  const overscan = 4;
+  const overscan = 1;
   const startIndex = Math.max(0, Math.floor(scrollOffset / rowHeight) - overscan);
   const visibleCount = Math.ceil(height / rowHeight) + overscan * 2;
   const visibleEvents = events.slice(startIndex, startIndex + visibleCount);
@@ -70,6 +69,9 @@ type ToolStreamRowProps = {
 
 function ToolStreamRow({ event, top, height, selected, onSelectEvent }: ToolStreamRowProps) {
   const privacyClass = normalizePrivacyClass(event.privacyClass);
+  const argsPreview = previewToolStreamValue(event, event.args);
+  const resultPreview = previewToolStreamValue(event, event.result ?? event.error);
+  const emittedAt = formatToolStreamTimestamp(event.emittedAtMs);
   return (
     <button
       type="button"
@@ -87,22 +89,29 @@ function ToolStreamRow({ event, top, height, selected, onSelectEvent }: ToolStre
       <span hidden data-test={`dispatch-genealogy-event-${event.id}`} />
       <div className="grid grid-cols-[86px_76px_96px_minmax(110px,1fr)_minmax(110px,1fr)_minmax(110px,1fr)_70px_92px] gap-2 items-center min-w-0">
         <span className="text-[10px] text-[var(--text-tertiary)] font-mono truncate">
-          {formatTs(event.emittedAtMs)}
+          {emittedAt}
         </span>
         <Badge>{event.actor}</Badge>
         <Badge>{event.kind}</Badge>
         <span className="text-xs font-semibold truncate" title={event.tool}>{event.tool}</span>
-        <span className="text-[10px] text-[var(--text-secondary)] truncate" title={previewToolStreamValue(event, event.args)}>
-          {previewToolStreamValue(event, event.args)}
+        <span className="text-[10px] text-[var(--text-secondary)] truncate" title={argsPreview}>
+          {argsPreview}
         </span>
-        <span className="text-[10px] text-[var(--text-secondary)] truncate" title={previewToolStreamValue(event, event.result ?? event.error)}>
-          {previewToolStreamValue(event, event.result ?? event.error)}
+        <span className="text-[10px] text-[var(--text-secondary)] truncate" title={resultPreview}>
+          {resultPreview}
         </span>
         <Badge>{typeof event.latencyMs === 'number' ? `${event.latencyMs}ms` : 'pending'}</Badge>
         <Badge>{privacyClass}</Badge>
       </div>
     </button>
   );
+}
+
+function formatToolStreamTimestamp(ts: number | null | undefined): string {
+  if (!ts || !Number.isFinite(ts)) {
+    return 'n/a';
+  }
+  return new Date(ts).toISOString().slice(11, 19);
 }
 
 function Badge({ children }: { children: string }) {

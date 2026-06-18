@@ -140,9 +140,9 @@ Tranche 18 also depends on the pre-Cycle-3 Redis residency cleanup at [[../../..
 
    Verification: `cargo test -p portal-core --test graph_handle_projection`; M0' inspector consumes typed graph handle.
 
-10. **18.10 — Land typed PASU / BeingPattern live-state JSON edge** *(code-pending-closure; consolidates Tranche 10.PASU)*
+10. **18.10 — Land typed PASU / BeingPattern live-state JSON edge** *(code-pending-closure; consolidates Tranche 10.PASU; consumes CCT-21)*
 
-   Add `pasu_being_pattern: Option<PasuBeingPatternProjection>` to `MathemeHarmonicProfile` and the 18.1 typed JSON shape. The shape is the cross-stack contract for "every thing is a being" without making live state into canon.
+   Add `pasu_being_pattern: Option<PasuBeingPatternProjection>` to `MathemeHarmonicProfile` and the 18.1 typed JSON shape. The shape is the cross-stack contract for "every thing is a being" without making live state into canon. CCT-21 is the S3 producer stream; 18.10 carries the current stream generation through the profile edge.
 
    Required discriminated unions:
    ```ts
@@ -181,7 +181,7 @@ Tranche 18 also depends on the pre-Cycle-3 Redis residency cleanup at [[../../..
    - `ActualisingOne` is serialized with `reviewRisk: 'forced-unification'`; renderers may display it, but neither bridge nor renderer may canonize it.
    - `PerspectiveRole` is a required feature for ML and rendering; consumers must not collapse I/You/They/We/We-I into a generic entity relation.
 
-   Verification: `cargo test -p portal-core --test pasu_being_pattern_projection_privacy`; `cargo test -p portal-core --test pasu_monopoly_perspective_modes`; `cargo test -p epi-cli --test kernel_bridge_runtime_typed_json`; TS fixture asserts all seven `MonoPolyOperator` variants and all six `PerspectiveRole` variants round-trip; Graphiti/SpaceTimeDB replay fixture asserts `ActualisingOne` emits review-risk and cannot mutate graph canon; renderer no-local-table test asserts M2/M3 relation edges come from `pasuBeingPattern.m2M3Relation`.
+   Verification: `cargo test -p portal-core --test pasu_being_pattern_projection_privacy`; `cargo test -p portal-core --test pasu_monopoly_perspective_modes`; `cargo test -p epi-cli --test kernel_bridge_runtime_typed_json`; TS fixture asserts all seven `MonoPolyOperator` variants and all six `PerspectiveRole` variants round-trip; CCT-21 Graphiti/SpaceTimeDB replay fixture asserts `EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted`, `ActualisingOne` emits review-risk, and no S2 graph canon mutates; renderer no-local-table test asserts M2/M3 relation edges come from `pasuBeingPattern.m2M3Relation`.
 
 11. **18.11 — Land typed Anuttara witness JSON edge** *(code-pending-closure; consolidates Tranche 10.AW; depends on Track 01 §1.10/1.12/1.13)*
 

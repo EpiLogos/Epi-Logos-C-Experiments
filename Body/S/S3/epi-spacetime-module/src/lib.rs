@@ -29,6 +29,9 @@
 //! - `SharedArchetypeEvent` — opt-in shared archetype event publications (03.T4)
 //! - `Coincidence`        — detected same-grid-cell coincidences for the day (03.T4)
 //! - `CoincidenceTick`    — append-only audit log of detect_coincidences passes (03.T4)
+//! - `BeingPatternPresence` — S3 live-state presence/projection carrier for PASU BeingPattern
+//! - `BeingPatternRelationEdge` — live aspect-like relation edge carrier
+//! - `BeingPatternReviewCandidate` — review-only candidate carrier for forced unification risk
 //!
 //! # Module versioning constants (03.T4)
 //!
@@ -192,6 +195,67 @@ pub struct TemporalEvent {
     pub event_kind: String,
     pub payload_json: String,
     pub created_at: u64,
+}
+
+#[table(name = "being_pattern_presence", accessor = being_pattern_presence, public)]
+pub struct BeingPatternPresence {
+    #[primary_key]
+    pub entity_id: String,
+    pub entity_kind: String,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub session_key: String,
+    pub generation: u64,
+    pub live_state_json: String,
+    pub projection_json: String,
+    pub provenance_refs_json: String,
+    pub updated_at: u64,
+}
+
+#[table(name = "being_pattern_relation_edge", accessor = being_pattern_relation_edge, public)]
+pub struct BeingPatternRelationEdge {
+    #[primary_key]
+    pub edge_id: String,
+    pub source_entity_id: String,
+    pub target_entity_id: String,
+    pub generation: u64,
+    pub edge_kind: String,
+    pub aspect_label: String,
+    pub elemental_delta_json: String,
+    pub verifier_refs_json: String,
+    pub updated_at: u64,
+}
+
+#[table(name = "being_pattern_review_candidate", accessor = being_pattern_review_candidate, public)]
+pub struct BeingPatternReviewCandidate {
+    #[primary_key]
+    pub candidate_id: String,
+    pub generation: u64,
+    pub entity_ids: String,
+    pub monopoly_operator: String,
+    pub review_risk: String,
+    pub verifier_refs_json: String,
+    pub status: String,
+    pub emitted_at: u64,
+}
+
+// 12.T12.19: aletheia_veto_log — persists veto patterns so subsequent runs see
+// recurring gaps. A single veto is recorded per entry with the facet, reason,
+// what_is_missed, and the disposition Anima chose.
+#[table(name = "aletheia_veto_log", accessor = aletheia_veto_log, public)]
+pub struct AletheiaVetoLog {
+    #[primary_key]
+    pub veto_id: String,
+    pub installation_id: String,
+    pub gateway_id: String,
+    pub session_key: String,
+    pub dispatch_id: String,
+    pub facet: String,
+    pub reason: String,
+    pub what_is_missed: String,
+    pub klein_weighting_prospective: f32,
+    pub disposition: String,
+    pub recorded_at: u64,
 }
 
 #[reducer]
@@ -412,29 +476,31 @@ pub fn bind_global_temporal_surface(
     assert_nonempty(&gateway_id, "gateway_id");
     assert_nonempty(&session_key, "session_key");
     assert_nonempty(&day_id, "day_id");
-    ctx.db.global_temporal_surface().insert(GlobalTemporalSurface {
-        surface_key,
-        installation_id,
-        gateway_id,
-        agent_instance_id,
-        session_key,
-        day_id,
-        day_wikilink,
-        now_path,
-        now_wikilink,
-        now_lineage_key,
-        history_archive_path,
-        redis_session_now_key,
-        redis_day_context_key,
-        redis_global_context_key,
-        graphiti_namespace_ref,
-        graphiti_session_arc_id,
-        pratibimba_anchor_ref,
-        kairos_snapshot_id,
-        kernel_projection_json,
-        privacy_class: "safe-live-projection".to_owned(),
-        updated_at: now(ctx),
-    });
+    ctx.db
+        .global_temporal_surface()
+        .insert(GlobalTemporalSurface {
+            surface_key,
+            installation_id,
+            gateway_id,
+            agent_instance_id,
+            session_key,
+            day_id,
+            day_wikilink,
+            now_path,
+            now_wikilink,
+            now_lineage_key,
+            history_archive_path,
+            redis_session_now_key,
+            redis_day_context_key,
+            redis_global_context_key,
+            graphiti_namespace_ref,
+            graphiti_session_arc_id,
+            pratibimba_anchor_ref,
+            kairos_snapshot_id,
+            kernel_projection_json,
+            privacy_class: "safe-live-projection".to_owned(),
+            updated_at: now(ctx),
+        });
 }
 
 #[reducer]
@@ -462,12 +528,209 @@ pub fn publish_temporal_event(
     });
 }
 
+#[reducer]
+pub fn observe_being_pattern_entity(
+    ctx: &ReducerContext,
+    entity_id: String,
+    entity_kind: String,
+    installation_id: String,
+    gateway_id: String,
+    session_key: String,
+    generation: u64,
+    live_state_json: String,
+    projection_json: String,
+    provenance_refs_json: String,
+) {
+    assert_nonempty(&entity_id, "entity_id");
+    assert_nonempty(&entity_kind, "entity_kind");
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_public_safe_json(&live_state_json);
+    assert_public_safe_json(&projection_json);
+    assert_public_safe_json(&provenance_refs_json);
+    if ctx
+        .db
+        .being_pattern_presence()
+        .entity_id()
+        .find(&entity_id)
+        .is_some()
+    {
+        ctx.db
+            .being_pattern_presence()
+            .entity_id()
+            .delete(&entity_id);
+    }
+    ctx.db
+        .being_pattern_presence()
+        .insert(BeingPatternPresence {
+            entity_id: entity_id.clone(),
+            entity_kind,
+            installation_id: installation_id.clone(),
+            gateway_id: gateway_id.clone(),
+            session_key: session_key.clone(),
+            generation,
+            live_state_json,
+            projection_json,
+            provenance_refs_json,
+            updated_at: now(ctx),
+        });
+    for event_kind in [
+        "EntityObserved",
+        "BeingPatternProjected",
+        "PerspectiveRoleResolved",
+        "MonoPolyOperatorResolved",
+        "ClockAddressUpdated",
+    ] {
+        emit_being_pattern_stream_event(
+            ctx,
+            &installation_id,
+            &gateway_id,
+            &session_key,
+            event_kind,
+            &entity_id,
+            generation,
+        );
+    }
+}
+
+#[reducer]
+pub fn project_being_pattern_relation(
+    ctx: &ReducerContext,
+    edge_id: String,
+    source_entity_id: String,
+    target_entity_id: String,
+    generation: u64,
+    edge_kind: String,
+    aspect_label: String,
+    elemental_delta_json: String,
+    verifier_refs_json: String,
+) {
+    assert_nonempty(&edge_id, "edge_id");
+    assert_nonempty(&source_entity_id, "source_entity_id");
+    assert_nonempty(&target_entity_id, "target_entity_id");
+    assert_nonempty(&edge_kind, "edge_kind");
+    assert_public_safe_json(&elemental_delta_json);
+    assert_public_safe_json(&verifier_refs_json);
+    if ctx
+        .db
+        .being_pattern_relation_edge()
+        .edge_id()
+        .find(&edge_id)
+        .is_some()
+    {
+        ctx.db
+            .being_pattern_relation_edge()
+            .edge_id()
+            .delete(&edge_id);
+    }
+    ctx.db
+        .being_pattern_relation_edge()
+        .insert(BeingPatternRelationEdge {
+            edge_id: edge_id.clone(),
+            source_entity_id: source_entity_id.clone(),
+            target_entity_id,
+            generation,
+            edge_kind,
+            aspect_label,
+            elemental_delta_json,
+            verifier_refs_json,
+            updated_at: now(ctx),
+        });
+    for event_kind in [
+        "AspectEdgeComputed",
+        "ElementalResonanceChanged",
+        "PatternPacketFormed",
+    ] {
+        emit_being_pattern_stream_event(ctx, "", "", "", event_kind, &source_entity_id, generation);
+    }
+}
+
+#[reducer]
+pub fn emit_being_pattern_review_candidate(
+    ctx: &ReducerContext,
+    candidate_id: String,
+    generation: u64,
+    entity_ids: String,
+    monopoly_operator: String,
+    verifier_refs_json: String,
+) {
+    assert_nonempty(&candidate_id, "candidate_id");
+    assert_nonempty(&entity_ids, "entity_ids");
+    assert_nonempty(&monopoly_operator, "monopoly_operator");
+    assert!(
+        monopoly_operator == "ActualisingOne",
+        "review candidate reducer only accepts ActualisingOne hypotheses"
+    );
+    assert_public_safe_json(&verifier_refs_json);
+    ctx.db
+        .being_pattern_review_candidate()
+        .insert(BeingPatternReviewCandidate {
+            candidate_id: candidate_id.clone(),
+            generation,
+            entity_ids,
+            monopoly_operator,
+            review_risk: "forced-unification".to_owned(),
+            verifier_refs_json,
+            status: "emitted-review-only".to_owned(),
+            emitted_at: now(ctx),
+        });
+    emit_being_pattern_stream_event(
+        ctx,
+        "",
+        "",
+        "",
+        "ReviewCandidateEmitted",
+        &candidate_id,
+        generation,
+    );
+}
+
+fn emit_being_pattern_stream_event(
+    ctx: &ReducerContext,
+    installation_id: &str,
+    gateway_id: &str,
+    session_key: &str,
+    event_kind: &str,
+    entity_id: &str,
+    generation: u64,
+) {
+    ctx.db.temporal_event().insert(TemporalEvent {
+        event_id: 0,
+        installation_id: installation_id.to_owned(),
+        gateway_id: gateway_id.to_owned(),
+        agent_instance_id: String::new(),
+        session_key: session_key.to_owned(),
+        event_kind: event_kind.to_owned(),
+        payload_json: format!(
+            r#"{{"stream":"s3.being_pattern","entityId":"{entity_id}","generation":{generation}}}"#
+        ),
+        created_at: now(ctx),
+    });
+}
+
 fn now(ctx: &ReducerContext) -> u64 {
     ctx.timestamp.to_micros_since_unix_epoch() as u64 / 1_000_000
 }
 
 fn assert_nonempty(value: &str, field: &str) {
     assert!(!value.trim().is_empty(), "{field} must not be empty");
+}
+
+fn assert_public_safe_json(value: &str) {
+    for forbidden in [
+        "episodeBody",
+        "protectedNaraBody",
+        "protectedPayload",
+        "journalText",
+        "rawQuaternion",
+        "qB",
+        "qP",
+    ] {
+        assert!(
+            !value.contains(forbidden),
+            "BeingPattern live-state payload contains protected field"
+        );
+    }
 }
 
 // =================== 03.T4 shared-cosmos tables ===================
@@ -613,7 +876,13 @@ pub fn advance_world_clock(
         created_at: now,
     });
     // Upsert singleton: delete the prior row for this gateway, then insert.
-    if ctx.db.world_clock().gateway_id().find(&gateway_id).is_some() {
+    if ctx
+        .db
+        .world_clock()
+        .gateway_id()
+        .find(&gateway_id)
+        .is_some()
+    {
         ctx.db.world_clock().gateway_id().delete(&gateway_id);
     }
     ctx.db.world_clock().insert(WorldClock {
@@ -702,18 +971,20 @@ pub fn publish_shared_archetype_event(
         opt_in_consent,
         "publish_shared_archetype_event requires opt_in_consent = true"
     );
-    ctx.db.shared_archetype_event().insert(SharedArchetypeEvent {
-        event_id: 0,
-        installation_id,
-        gateway_id,
-        publisher_identity_handle,
-        day_id,
-        aspect_grid_cell,
-        event_kind,
-        payload_json,
-        privacy_class: "public-opt-in-archetype".to_owned(),
-        created_at: now(ctx),
-    });
+    ctx.db
+        .shared_archetype_event()
+        .insert(SharedArchetypeEvent {
+            event_id: 0,
+            installation_id,
+            gateway_id,
+            publisher_identity_handle,
+            day_id,
+            aspect_grid_cell,
+            event_kind,
+            payload_json,
+            privacy_class: "public-opt-in-archetype".to_owned(),
+            created_at: now(ctx),
+        });
 }
 
 /// Run a coincidence-detection pass for the given day. Reads the
@@ -804,10 +1075,7 @@ pub fn publish_module_version(ctx: &ReducerContext, gateway_id: String) {
         .find(&gateway_id)
         .is_some()
     {
-        ctx.db
-            .module_version()
-            .gateway_id()
-            .delete(&gateway_id);
+        ctx.db.module_version().gateway_id().delete(&gateway_id);
     }
     ctx.db.module_version().insert(ModuleVersion {
         gateway_id,
@@ -816,5 +1084,42 @@ pub fn publish_module_version(ctx: &ReducerContext, gateway_id: String) {
         projection_schema_version: PROJECTION_SCHEMA_VERSION.to_owned(),
         reducer_abi_version: REDUCER_ABI_VERSION.to_owned(),
         updated_at: now(ctx),
+    });
+}
+
+/// 12.T12.19: Publish a single aletheia veto log entry. The veto_id is the
+/// primary key; subsequent runs can query per session_key to detect recurring
+/// gaps and veto patterns.
+#[reducer]
+pub fn publish_aletheia_veto(
+    ctx: &ReducerContext,
+    veto_id: String,
+    installation_id: String,
+    gateway_id: String,
+    session_key: String,
+    dispatch_id: String,
+    facet: String,
+    reason: String,
+    what_is_missed: String,
+    klein_weighting_prospective: f32,
+    disposition: String,
+) {
+    assert_nonempty(&veto_id, "veto_id");
+    assert_nonempty(&installation_id, "installation_id");
+    assert_nonempty(&gateway_id, "gateway_id");
+    assert_nonempty(&session_key, "session_key");
+    assert_nonempty(&facet, "facet");
+    ctx.db.aletheia_veto_log().insert(AletheiaVetoLog {
+        veto_id,
+        installation_id,
+        gateway_id,
+        session_key,
+        dispatch_id,
+        facet,
+        reason,
+        what_is_missed,
+        klein_weighting_prospective,
+        disposition,
+        recorded_at: now(ctx),
     });
 }

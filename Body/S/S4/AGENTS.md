@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 
 ## Ownership
 - `pi-agent/` — repo-native PI surface ("the repo-native PI surface for Epi-Logos"); `composite-entry.ts`, `extensions/` shims, `prompts/`, `agents/` topology, `skills/`, `damage-control-rules.yaml`. Control plane is the `epi agent ...` CLI.
-- `ta-onta/` — canonical S4' carrier source home; six carrier classes via symlinks (`khora`->S4-0p, `hen`->S4-1p, `pleroma`->S4-2p, `chronos`->S4-3p, `anima`->S4-4p, `aletheia`->S4-5p), `composite-entry.ts`, `spine/` (compositor + types), `shared/` (VAK address + entitlement), `plugin-runtime-bridge.ts`.
+- `ta-onta/` — canonical S4' carrier source home; six carrier classes via symlinks (`khora`->S4-0p, `hen`->S4-1p, `pleroma`->S4-2p, `chronos`->S4-3p, `anima`->S4-4p, `aletheia`->S4-5p), the `S4-x` custom ML skill carrier, `composite-entry.ts`, `spine/` (compositor + types), `shared/` (VAK address + entitlement), `plugin-runtime-bridge.ts`.
 - `plugins/` — deliverable plugin set: `pleroma/` (capability-matrix, hooks, skills, evals) + `registry.jsonl` (claude-mem, pleroma).
 - Does NOT own coordinate semantics or agent constitution law beyond runtime wiring: per-carrier domain law lives in each carrier's `Sx-Yp-*/CONTRACT.md` (e.g. `ta-onta/S4-2p-pleroma/CONTRACT.md`) and the owning [[S4-SPEC]], not here.
 

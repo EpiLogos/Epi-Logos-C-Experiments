@@ -11,6 +11,7 @@ import {
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
 import { EXTENSION_ID } from '../../common';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 export const KAIROS_WHEEL_VIEW_ID = 'm4.nara.kairosWheel';
 export const KAIROS_WHEEL_LABEL = 'M4 Kairos Wheel';
@@ -120,7 +121,7 @@ const RING_RADII: Readonly<Record<KairosRingKind, number>> = Object.freeze({
 
 export const M4KairosWheel: React.FC<M4KairosWheelProps> = ({ model }) => (
     <section
-        className="m4-kairos-wheel mext-privacy-protected-local-handle-only"
+        className={`m4-kairos-wheel ${privacyChromeClass('protected_local_handle_only')}`}
         data-test="m4-kairos-wheel"
         data-track="TRACK_08"
         data-export={M4_KAIROS_WHEEL_EXPORT}
@@ -247,7 +248,7 @@ export class KairosDisplayWidget extends ReactWidget {
     protected init(): void {
         this.id = KairosDisplayWidget.ID;
         this.title.label = KairosDisplayWidget.LABEL;
-        this.title.caption = KairosDisplayWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
@@ -295,7 +296,10 @@ export class KairosDisplayWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         return (
-            <div className="mext-widget-root" data-test="m4-kairos-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local_handle_only')}`}
+                data-test="m4-kairos-root"
+            >
                 <M4KairosWheel model={buildKairosWheelModel({
                     natalPositions: this.natalPositions,
                     transitPositions: readTransitPositions(this.profile),
@@ -526,7 +530,7 @@ function positionsFromArray(raw: readonly unknown[], parent?: Readonly<Record<st
         const record = objectRecord(entry);
         const planetName = record ? stringValue(record.planet ?? record.name, '') : '';
         const planetIdx = record
-            ? integerValue(record.planetIndex ?? record.planet_index ?? record.index)
+            ? integerValue(record.planetIndex ?? record.planet_index ?? record.index) ?? fallbackIndex
             : fallbackIndex;
         parsed.push(Object.freeze({
             planet: planetName || MOD10_PLANETS[planetIdx]?.name,

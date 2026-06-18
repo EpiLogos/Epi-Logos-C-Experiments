@@ -1,0 +1,35 @@
+{
+  "runId": "20260617T122325Z-21-T21.19",
+  "taskId": "21.T21.19",
+  "startedAt": "2026-06-17T12:23:25.474Z",
+  "owner": "codex-m-dev-21-t21-19",
+  "leaseExpiresAt": "2026-06-17T14:23:25.474Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.19",
+    "trackId": "21",
+    "tranche": "T21.19",
+    "title": "Layer-aware cross-layout intent target",
+    "effort": null,
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.18"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/cross-layout-intent.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

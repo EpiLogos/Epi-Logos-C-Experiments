@@ -9,6 +9,7 @@ use crate::events::KleinFlipEvent;
 use crate::mahamaya::MahamayaCodecProjection;
 use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
+use crate::profile_projections::{AnuttaraWitnessProjection, PasuBeingPatternProjection};
 use crate::vak_address::VakAddress;
 
 pub const EPOGDOON_NUM: u8 = 9;
@@ -112,12 +113,130 @@ pub struct EnergyDecomposition {
     pub total_energy: f32,
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct E4PersonalInputs {
     pub pasu_handle: Option<String>,
     pub kairos_handle: Option<String>,
     pub nara_lora_checkpoint_ref: Option<String>,
+    pub pasu_snapshot: Option<E4PasuSnapshot>,
+    pub kairos: Option<E4KairosState>,
+    pub lora_checkpoint: Option<E4LoraCheckpointRef>,
+    pub corpus: Option<E4CorpusDigest>,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct E4PasuSnapshot {
+    pub q_identity: [f32; 4],
+    pub q_personal: [f32; 4],
+    pub birth_date: String,
+    pub birth_location: String,
+    pub c_0_natal_chart_path: String,
+    pub c_2_jungian: String,
+    pub c_3_gene_keys: String,
+    pub c_4_human_design: String,
+    pub c_5_quintessence_hash: String,
+    pub c_5_quintessence_clock: String,
+    pub c_4_last_wound: String,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct E4OracleCharges {
+    pub pp: f32,
+    pub mm: f32,
+    pub mp: f32,
+    pub pn: f32,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct E4KairosState {
+    pub planet_degrees: [f32; 10],
+    pub oracle_charges: E4OracleCharges,
+    pub tarot_psyche_anchor_signature: String,
+    pub kairos_window_id: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct E4LoraCheckpointRef {
+    pub path: String,
+    pub version: String,
+    pub privacy_class: E4PrivacyClass,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct E4CorpusDigest {
+    pub journal_hashes: Vec<String>,
+    pub dream_hashes: Vec<String>,
+    pub phone_writing_hashes: Vec<String>,
+    pub model_version_key: String,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum E4PrivacyClass {
+    LocalOnly,
+}
+
+impl E4PrivacyClass {
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::LocalOnly => "local-only",
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum NaraLoraRuntime {
+    RustNative,
+    MlxLora,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct E4EnergyProvenance {
+    pub channel: String,
+    pub runtime: NaraLoraRuntime,
+    pub privacy_class: E4PrivacyClass,
+    pub checkpoint_version: String,
+    pub kairos_window_id: String,
+    pub weighting_coefficient: u8,
+    pub decision: String,
+    pub model_slot_spec_ref: String,
+    pub ml_skill_surface_ref: String,
+    pub mental_pole_mechanics_ref: String,
+    pub autograd_path: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct E4EnergyEvaluation {
+    pub scalar: f32,
+    pub lora_forward: [f32; 4],
+    pub provenance: E4EnergyProvenance,
+}
+
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct E4GradientEvaluation {
+    pub channel: String,
+    pub gradient: [f32; 4],
+    pub norm: f32,
+    pub scalar: f32,
+    pub provenance: E4EnergyProvenance,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum E4PersonalEnergyError {
+    MissingTypedInputs(&'static str),
+    PrivacyClassViolation(String),
+    NonLocalCheckpointPath(String),
+    InvalidInput(String),
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -446,6 +565,10 @@ pub struct MathemeHarmonicProfile {
     pub context_frames: MathemeContextFrameWebProjection,
     pub harmonic_grammar: MathemeHarmonicGrammarProjection,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pasu_being_pattern: Option<PasuBeingPatternProjection>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub anuttara_witness: Option<AnuttaraWitnessProjection>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vak_address: Option<VakAddress>,
     #[serde(default)]
     pub s2_anchor: Option<MathemeFutureAnchor>,
@@ -529,6 +652,8 @@ impl MathemeHarmonicProfile {
             ),
             context_frames: MathemeContextFrameWebProjection::from_diatonic(diatonic.as_ref()),
             harmonic_grammar: MathemeHarmonicGrammarProjection::from_tick(tick12, position),
+            pasu_being_pattern: None,
+            anuttara_witness: None,
             vak_address: None,
             s2_anchor: Some(MathemeFutureAnchor::s2_coordinate_anchor(
                 &source_coordinate,
@@ -550,6 +675,24 @@ impl MathemeHarmonicProfile {
     pub fn with_vak(tick: KernelTick, vak: VakAddress) -> Self {
         let mut profile = Self::from_tick(tick);
         profile.vak_address = Some(vak);
+        profile
+    }
+
+    pub fn with_pasu_being_pattern(
+        tick: KernelTick,
+        pasu_being_pattern: PasuBeingPatternProjection,
+    ) -> Self {
+        let mut profile = Self::from_tick(tick);
+        profile.pasu_being_pattern = Some(pasu_being_pattern);
+        profile
+    }
+
+    pub fn with_anuttara_witness(
+        tick: KernelTick,
+        anuttara_witness: AnuttaraWitnessProjection,
+    ) -> Self {
+        let mut profile = Self::from_tick(tick);
+        profile.anuttara_witness = Some(anuttara_witness);
         profile
     }
 
@@ -1506,12 +1649,14 @@ pub fn kernel_resonance_square_emphasis(vector: &ResonanceVector72) -> [f32; 3] 
 
 pub fn kernel_energy_evaluate(
     state: &BioQuaternionState,
-    _e_4_inputs: &E4PersonalInputs,
+    e_4_inputs: &E4PersonalInputs,
     _e_5_inputs: &E5HarmonicInputs,
     _e_6_inputs: &E6VerifierInputs,
 ) -> EnergyDecomposition {
     let bimba_pratibimba_energy = quat_distance_sq(state.q_b, state.q_p);
-    let e_4_personal_energy = 0.0;
+    let e_4_personal_energy = try_compute_e_4_personal_energy(state, e_4_inputs)
+        .map(|evaluation| evaluation.scalar)
+        .unwrap_or(0.0);
     let e_5_harmonic_energy = 0.0;
     let e_6_verifier_energy = 0.0;
     EnergyDecomposition {
@@ -1525,6 +1670,324 @@ pub fn kernel_energy_evaluate(
             e_6_verifier_energy,
         ),
     }
+}
+
+pub fn compute_e_4_personal_energy(state: &BioQuaternionState, inputs: &E4PersonalInputs) -> f32 {
+    try_compute_e_4_personal_energy(state, inputs)
+        .expect("E4PersonalInputs must carry local-only PASU, kairos, checkpoint, and corpus")
+        .scalar
+}
+
+pub fn try_compute_e_4_personal_energy(
+    state: &BioQuaternionState,
+    inputs: &E4PersonalInputs,
+) -> Result<E4EnergyEvaluation, E4PersonalEnergyError> {
+    let full = E4FullInputs::try_from(inputs)?;
+    let (lora_forward, _) = nara_lora_forward_with_jacobian(state.q_p, full);
+    let scalar = finite_e4_scalar(
+        (quat_distance_sq(lora_forward, full.pasu.q_personal)
+            + quat_distance_sq(state.q_b, full.pasu.q_identity)
+            + kairos_coherence_penalty(full.kairos)
+            + corpus_adapter_penalty(full.corpus))
+            / 4.0,
+        "E_4 scalar",
+    )?;
+    Ok(E4EnergyEvaluation {
+        scalar,
+        lora_forward,
+        provenance: e4_provenance(select_nara_lora_runtime(), full),
+    })
+}
+
+pub fn compute_e_4_personal_energy_gradient(
+    state: &BioQuaternionState,
+    inputs: &E4PersonalInputs,
+) -> Result<E4GradientEvaluation, E4PersonalEnergyError> {
+    let full = E4FullInputs::try_from(inputs)?;
+    let evaluation = try_compute_e_4_personal_energy(state, inputs)?;
+    let (_lora_forward, jacobian) = nara_lora_forward_with_jacobian(state.q_p, full);
+    let d_scalar_d_forward = scale4(sub4(evaluation.lora_forward, full.pasu.q_personal), 0.5);
+    let mut ambient = [0.0f32; 4];
+    for qp_index in 0..4 {
+        ambient[qp_index] = (0..4)
+            .map(|out_index| jacobian[out_index][qp_index] * d_scalar_d_forward[out_index])
+            .sum();
+    }
+    let tangent = tangent_projection_s3_f32(state.q_p, ambient);
+    Ok(E4GradientEvaluation {
+        channel: "E_4".to_owned(),
+        gradient: tangent,
+        norm: dot4_f32(tangent, tangent).sqrt(),
+        scalar: evaluation.scalar,
+        provenance: evaluation.provenance,
+    })
+}
+
+pub fn select_nara_lora_runtime() -> NaraLoraRuntime {
+    if cfg!(all(target_os = "macos", target_arch = "aarch64")) {
+        NaraLoraRuntime::MlxLora
+    } else {
+        NaraLoraRuntime::RustNative
+    }
+}
+
+#[derive(Clone, Copy)]
+struct E4FullInputs<'a> {
+    pasu: &'a E4PasuSnapshot,
+    kairos: &'a E4KairosState,
+    checkpoint: &'a E4LoraCheckpointRef,
+    corpus: &'a E4CorpusDigest,
+}
+
+impl<'a> E4FullInputs<'a> {
+    fn try_from(inputs: &'a E4PersonalInputs) -> Result<Self, E4PersonalEnergyError> {
+        let full = Self {
+            pasu: inputs
+                .pasu_snapshot
+                .as_ref()
+                .ok_or(E4PersonalEnergyError::MissingTypedInputs("pasu_snapshot"))?,
+            kairos: inputs
+                .kairos
+                .as_ref()
+                .ok_or(E4PersonalEnergyError::MissingTypedInputs("kairos"))?,
+            checkpoint: inputs
+                .lora_checkpoint
+                .as_ref()
+                .ok_or(E4PersonalEnergyError::MissingTypedInputs("lora_checkpoint"))?,
+            corpus: inputs
+                .corpus
+                .as_ref()
+                .ok_or(E4PersonalEnergyError::MissingTypedInputs("corpus"))?,
+        };
+        validate_e4_full_inputs(full)?;
+        Ok(full)
+    }
+}
+
+fn validate_e4_full_inputs(inputs: E4FullInputs<'_>) -> Result<(), E4PersonalEnergyError> {
+    for (name, value) in [
+        ("birth_date", inputs.pasu.birth_date.as_str()),
+        ("birth_location", inputs.pasu.birth_location.as_str()),
+        (
+            "c_0_natal_chart_path",
+            inputs.pasu.c_0_natal_chart_path.as_str(),
+        ),
+        (
+            "c_5_quintessence_hash",
+            inputs.pasu.c_5_quintessence_hash.as_str(),
+        ),
+        (
+            "c_5_quintessence_clock",
+            inputs.pasu.c_5_quintessence_clock.as_str(),
+        ),
+        (
+            "tarot_psyche_anchor_signature",
+            inputs.kairos.tarot_psyche_anchor_signature.as_str(),
+        ),
+        ("kairos_window_id", inputs.kairos.kairos_window_id.as_str()),
+        ("lora_checkpoint.path", inputs.checkpoint.path.as_str()),
+        (
+            "lora_checkpoint.version",
+            inputs.checkpoint.version.as_str(),
+        ),
+        (
+            "model_version_key",
+            inputs.corpus.model_version_key.as_str(),
+        ),
+    ] {
+        if value.trim().is_empty() {
+            return Err(E4PersonalEnergyError::InvalidInput(format!(
+                "{name} must be non-empty"
+            )));
+        }
+    }
+    if inputs.checkpoint.privacy_class != E4PrivacyClass::LocalOnly {
+        return Err(E4PersonalEnergyError::PrivacyClassViolation(
+            inputs.checkpoint.privacy_class.as_str().to_owned(),
+        ));
+    }
+    if is_non_local_uri(&inputs.checkpoint.path) {
+        return Err(E4PersonalEnergyError::NonLocalCheckpointPath(
+            inputs.checkpoint.path.clone(),
+        ));
+    }
+    for (name, value) in [
+        ("q_identity", inputs.pasu.q_identity),
+        ("q_personal", inputs.pasu.q_personal),
+    ] {
+        if !value.iter().all(|component| component.is_finite()) {
+            return Err(E4PersonalEnergyError::InvalidInput(format!(
+                "{name}[4] must contain finite components"
+            )));
+        }
+    }
+    if !inputs
+        .kairos
+        .planet_degrees
+        .iter()
+        .all(|degree| degree.is_finite())
+    {
+        return Err(E4PersonalEnergyError::InvalidInput(
+            "planet_degrees[10] must contain finite Sun[0]-Pluto[9] degrees".to_owned(),
+        ));
+    }
+    for hash in inputs
+        .corpus
+        .journal_hashes
+        .iter()
+        .chain(inputs.corpus.dream_hashes.iter())
+        .chain(inputs.corpus.phone_writing_hashes.iter())
+    {
+        if hash.trim().is_empty() {
+            return Err(E4PersonalEnergyError::InvalidInput(
+                "corpus hashes must be non-empty local digests".to_owned(),
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn nara_lora_forward_with_jacobian(
+    q_p: [f32; 4],
+    inputs: E4FullInputs<'_>,
+) -> ([f32; 4], [[f32; 4]; 4]) {
+    let oracle = [
+        inputs.kairos.oracle_charges.pp,
+        inputs.kairos.oracle_charges.mm,
+        inputs.kairos.oracle_charges.mp,
+        inputs.kairos.oracle_charges.pn,
+    ];
+    let corpus_phase = stable_unit_interval_for_e4(inputs.corpus, inputs.checkpoint);
+    let mut raw = [0.0f32; 4];
+    for index in 0..4 {
+        let planet = (normalize_degrees(inputs.kairos.planet_degrees[index]).to_radians()).sin();
+        let charge = (oracle[index] / 64.0).tanh();
+        raw[index] = q_p[index] + (0.05 * planet) + (0.05 * charge) + (0.01 * corpus_phase);
+    }
+    let norm = dot4_f32(raw, raw).sqrt();
+    let output = if norm == 0.0 {
+        [1.0, 0.0, 0.0, 0.0]
+    } else {
+        [raw[0] / norm, raw[1] / norm, raw[2] / norm, raw[3] / norm]
+    };
+    let mut jacobian = [[0.0f32; 4]; 4];
+    if norm != 0.0 {
+        for row in 0..4 {
+            for col in 0..4 {
+                let identity = if row == col { 1.0 } else { 0.0 };
+                jacobian[row][col] = (identity - (output[row] * output[col])) / norm;
+            }
+        }
+    }
+    (output, jacobian)
+}
+
+fn kairos_coherence_penalty(kairos: &E4KairosState) -> f32 {
+    let planet_mean = kairos
+        .planet_degrees
+        .iter()
+        .map(|degree| normalize_degrees(*degree).to_radians().sin())
+        .sum::<f32>()
+        / kairos.planet_degrees.len() as f32;
+    let charge_total = kairos.oracle_charges.pp.abs()
+        + kairos.oracle_charges.mm.abs()
+        + kairos.oracle_charges.mp.abs()
+        + kairos.oracle_charges.pn.abs();
+    (planet_mean.abs() / 2.0) + ((charge_total / 64.0).tanh() / 2.0)
+}
+
+fn corpus_adapter_penalty(corpus: &E4CorpusDigest) -> f32 {
+    let count =
+        corpus.journal_hashes.len() + corpus.dream_hashes.len() + corpus.phone_writing_hashes.len();
+    if count == 0 {
+        1.0
+    } else {
+        1.0 / (1.0 + count as f32)
+    }
+}
+
+fn e4_provenance(runtime: NaraLoraRuntime, inputs: E4FullInputs<'_>) -> E4EnergyProvenance {
+    E4EnergyProvenance {
+        channel: "E_4".to_owned(),
+        runtime,
+        privacy_class: E4PrivacyClass::LocalOnly,
+        checkpoint_version: inputs.checkpoint.version.clone(),
+        kairos_window_id: inputs.kairos.kairos_window_id.clone(),
+        weighting_coefficient: 4,
+        decision: "E_4 = personal/Nara substrate (PASU + kairos + q_personal + q_identity + planet_degrees + oracle charges + Nara-LoRA-adapted user content). Final.".to_owned(),
+        model_slot_spec_ref: "[[M'-MODEL-SLOT-SPEC]]".to_owned(),
+        ml_skill_surface_ref: "[[M'-ML-SKILL-SURFACE-SPEC]] §3.1 + §3.2 + §7.1".to_owned(),
+        mental_pole_mechanics_ref: "[[M4'/mental-pole-mechanics]] §7.5 ∇E_4".to_owned(),
+        autograd_path: "rust-native-nara-lora-forward".to_owned(),
+    }
+}
+
+fn stable_unit_interval_for_e4(corpus: &E4CorpusDigest, checkpoint: &E4LoraCheckpointRef) -> f32 {
+    let mut hash = 2166136261u32;
+    for part in corpus
+        .journal_hashes
+        .iter()
+        .chain(corpus.dream_hashes.iter())
+        .chain(corpus.phone_writing_hashes.iter())
+        .chain([&corpus.model_version_key, &checkpoint.version])
+    {
+        for byte in part.as_bytes() {
+            hash ^= *byte as u32;
+            hash = hash.wrapping_mul(16777619);
+        }
+    }
+    hash as f32 / u32::MAX as f32
+}
+
+fn finite_e4_scalar(value: f32, name: &str) -> Result<f32, E4PersonalEnergyError> {
+    if value.is_finite() {
+        Ok(value)
+    } else {
+        Err(E4PersonalEnergyError::InvalidInput(format!(
+            "{name} must be finite"
+        )))
+    }
+}
+
+fn is_non_local_uri(value: &str) -> bool {
+    let lower = value.to_ascii_lowercase();
+    lower.contains("://") && !lower.starts_with("file://")
+}
+
+fn normalize_degrees(degree: f32) -> f32 {
+    degree.rem_euclid(360.0)
+}
+
+fn sub4(left: [f32; 4], right: [f32; 4]) -> [f32; 4] {
+    [
+        left[0] - right[0],
+        left[1] - right[1],
+        left[2] - right[2],
+        left[3] - right[3],
+    ]
+}
+
+fn scale4(value: [f32; 4], scalar: f32) -> [f32; 4] {
+    [
+        value[0] * scalar,
+        value[1] * scalar,
+        value[2] * scalar,
+        value[3] * scalar,
+    ]
+}
+
+fn dot4_f32(a: [f32; 4], b: [f32; 4]) -> f32 {
+    a.iter().zip(b.iter()).map(|(a, b)| a * b).sum()
+}
+
+fn tangent_projection_s3_f32(q: [f32; 4], ambient_gradient: [f32; 4]) -> [f32; 4] {
+    let radial = dot4_f32(q, ambient_gradient);
+    [
+        ambient_gradient[0] - (radial * q[0]),
+        ambient_gradient[1] - (radial * q[1]),
+        ambient_gradient[2] - (radial * q[2]),
+        ambient_gradient[3] - (radial * q[3]),
+    ]
 }
 
 fn canonical_total_energy(e_4: f32, e_5: f32, e_6: f32) -> f32 {
@@ -1921,7 +2384,6 @@ pub fn kernel_element_boundary_index_for_tick(tick12: u8) -> Option<u8> {
     }
 }
 
-#[cfg(feature = "resonance_ebm_runtime")]
 pub fn kernel_tangent_projection_s3(q: [f64; 4], ambient_gradient: [f64; 4]) -> [f64; 4] {
     let q = unit_or_identity_f64(q);
     let radial = dot4(ambient_gradient, q);
@@ -2055,12 +2517,10 @@ fn f64_quat_to_f32(q: [f64; 4]) -> [f32; 4] {
     [q[0] as f32, q[1] as f32, q[2] as f32, q[3] as f32]
 }
 
-#[cfg(feature = "resonance_ebm_runtime")]
 fn dot4(a: [f64; 4], b: [f64; 4]) -> f64 {
     a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3]
 }
 
-#[cfg(feature = "resonance_ebm_runtime")]
 fn unit_or_identity_f64(q: [f64; 4]) -> [f64; 4] {
     let norm_sq = dot4(q, q);
     if norm_sq <= 0.0 || !norm_sq.is_finite() {

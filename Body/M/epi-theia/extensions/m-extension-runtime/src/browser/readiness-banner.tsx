@@ -1,7 +1,10 @@
 import * as React from 'react';
 import {
+    flavourOf,
     MExtensionReadinessSnapshot,
     PENDING_M_READINESS,
+    readinessFlavourGrammarOf,
+    readinessGrammarOf,
     readinessSeverity
 } from '../common/readiness';
 
@@ -32,21 +35,64 @@ export const ReadinessBanner: React.FC<ReadinessBannerProps> = ({
 }) => {
     const view = snapshot ?? PENDING_M_READINESS;
     const severity = readinessSeverity(view.state);
+    const stateGrammar = readinessGrammarOf(view.state);
+    const flavour = flavourOf(view.state, view);
+    const flavourGrammar = flavour ? readinessFlavourGrammarOf(flavour) : undefined;
+    const bannerClassName = [
+        'mext-banner',
+        `mext-banner-${severity}`,
+        `mext-banner-state-${view.state}`,
+        flavour ? `mext-banner-flavour-${flavour}` : undefined
+    ].filter(Boolean).join(' ');
+
     return (
-        <section className={`mext-banner mext-banner-${severity}`} data-extension={extensionId}>
+        <section
+            className={bannerClassName}
+            data-extension={extensionId}
+            data-readiness-state={view.state}
+            data-readiness-flavour={flavour ?? undefined}
+        >
             <header className="mext-banner-header">
                 <h2 className="mext-banner-title">{extensionLabel}</h2>
-                <span className={`mext-banner-state mext-banner-state-${view.state}`}>
-                    {view.state}
+                <span className={`mext-banner-state mext-banner-state-${view.state}`} data-presentation={stateGrammar.uxResponse.presentation}>
+                    {stateGrammar.uxResponse.label}
                 </span>
+                {flavour && flavourGrammar ? (
+                    <span
+                        className={`mext-banner-flavour-chip mext-banner-flavour-${flavour}`}
+                        data-presentation={flavourGrammar.uxResponse.presentation}
+                    >
+                        {flavourGrammar.uxResponse.label}
+                    </span>
+                ) : null}
             </header>
             <dl className="mext-banner-grid">
+                <dt>UX response</dt>
+                <dd>{flavourGrammar?.uxResponse.detail ?? stateGrammar.uxResponse.detail}</dd>
                 <dt>Reason</dt>
                 <dd>{view.reason}</dd>
                 <dt>Bridge reachable</dt>
                 <dd>{view.bridgeReachable ? 'yes' : 'no'}</dd>
                 <dt>Profile generation</dt>
                 <dd>{view.profileGeneration ?? '—'}</dd>
+                {view.missingDataset ? (
+                    <>
+                        <dt>Pending dataset</dt>
+                        <dd className="mext-banner-pending-dataset">{view.missingDataset}</dd>
+                    </>
+                ) : null}
+                {view.payloadOwner ? (
+                    <>
+                        <dt>Payload owner</dt>
+                        <dd className="mext-banner-payload-owner">{view.payloadOwner}</dd>
+                    </>
+                ) : null}
+                {view.privacyClass ? (
+                    <>
+                        <dt>Privacy class</dt>
+                        <dd className="mext-banner-privacy-class">{view.privacyClass}</dd>
+                    </>
+                ) : null}
                 <dt>Last fetched</dt>
                 <dd>{view.fetchedAt === 0 ? 'never' : new Date(view.fetchedAt).toISOString()}</dd>
                 {provenance ? (

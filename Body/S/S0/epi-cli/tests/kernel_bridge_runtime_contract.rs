@@ -968,6 +968,10 @@ fn transcriptional_packet(
         oracle_sequence: None,
         symbolic_protein: None,
         provenance_handles: vec!["profile:generation:23".to_owned()],
+        transcript_class: None,
+        governance_role: None,
+        chain_position: None,
+        parent_packet_hash: None,
     }
 }
 

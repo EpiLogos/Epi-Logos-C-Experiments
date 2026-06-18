@@ -23,4 +23,5 @@ exclude = [
     "Body/S/S5/epii-autoresearch-core",
     "Body/S/S5/epii-review-core",
     "Body/S/epi-kernel-contract",
+    "Body/S/S2/m1-cpt-trainer",
 ]

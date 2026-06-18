@@ -7,8 +7,8 @@ import {
  *
  * The run flow surfaces:
  *   1. A user-driven (or intent-routed) S5 improvement candidate.
- *   2. The actor chooses a route + actor pair (Anima/Aletheia/Pi/Sophia per
- *      Body/S/S4/plugins/pleroma/capability-matrix.json).
+ *   2. The actor chooses a route + actor pair (Pi, Anima, or an Aletheia
+ *      techne-guardian subagent per DR-M5-1).
  *   3. The Agentic Control Room composes a payload and dispatches via
  *      KERNEL_BRIDGE_API.invokeCapability (method='invokeGatewayRpc',
  *      gatewayMethod='s4'.mediation.route'). Tool events stream back through
@@ -25,16 +25,14 @@ import {
  */
 
 export type AgenticActor =
-    | 'anima'
-    | 'eros'
-    | 'logos'
-    | 'mythos'
-    | 'nous'
-    | 'psyche'
-    | 'sophia'
-    | 'aletheia'
     | 'pi'
-    | string;
+    | 'anima'
+    | 'anansi'
+    | 'moirai'
+    | 'janus'
+    | 'mercurius'
+    | 'agora'
+    | 'zeithoven';
 
 export type AgenticRoute =
     | 'dispatch_agent'
@@ -408,13 +406,13 @@ export function isMediationCapabilityAllowed(
     }
     if (
         SEMANTIC_READ_CAPABILITIES.has(capability) &&
-        ['sophia', 'aletheia', 'pi', 'anima', 'epii', 'human'].includes(normalizedActor)
+        ['pi', 'anima', 'anansi', 'moirai', 'janus', 'mercurius', 'agora', 'zeithoven'].includes(normalizedActor)
     ) {
         return { allowed: true, reason: 'read-only S1 semantic capability' };
     }
     if (
         capability === 's1.vault.read_file' &&
-        ['sophia', 'aletheia', 'pi', 'anima', 'epii', 'human'].includes(normalizedActor)
+        ['pi', 'anima', 'anansi', 'moirai', 'janus', 'mercurius', 'agora', 'zeithoven'].includes(normalizedActor)
     ) {
         return { allowed: true, reason: 'read-only S1 vault retrieval' };
     }

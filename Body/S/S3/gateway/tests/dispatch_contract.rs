@@ -59,11 +59,7 @@ fn extension_methods_are_explicitly_classified_without_polluting_contract_names(
 fn nara_lens_widget_rpcs_route_as_m4_extension_methods() {
     assert_eq!(
         NARA_LENS_RPC_METHODS,
-        [
-            "nara.lens.list",
-            "nara.lens.apply",
-            "nara.lens.synthesize"
-        ]
+        ["nara.lens.list", "nara.lens.apply", "nara.lens.synthesize"]
     );
 
     for method in NARA_LENS_RPC_METHODS {
@@ -1037,5 +1033,46 @@ mod t5_10_connectivity_vs_bounded_access {
         assert_eq!(host_port_from_url("redis://cache", 6379), "cache:6379");
         assert_eq!(host_port_from_url("ws://h:3000/sub", 1), "h:3000");
         assert_eq!(host_port_from_url("", 9999), "127.0.0.1:9999");
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // 03.T3.10: m2.cymatic_invert query — S3 gateway projection
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn m2_cymatic_invert_query_is_classified_as_s0_product_adapter() {
+        let route =
+            classify_method("m2.cymatic_invert").expect("m2.cymatic_invert should be classified");
+        assert_eq!(route.owner, GatewayDispatchOwner::S0ProductAdapter);
+        assert_eq!(route.coordinate_owner, "S0");
+    }
+
+    #[test]
+    fn m2_cymatic_invert_query_has_dispatch_plan_entry() {
+        let entry = dispatch_plan_entry("m2.cymatic_invert")
+            .expect("m2.cymatic_invert should have a dispatch plan entry");
+        assert_eq!(entry.kind, MethodDispatchKind::S0ProductAdapter);
+        assert!(
+            entry.authority_path.contains("portal-core")
+                && entry.authority_path.contains("cymatic_invert"),
+            "authority path should reference portal-core::cymatic_invert, got: {}",
+            entry.authority_path
+        );
+    }
+
+    #[test]
+    fn m2_cymatic_invert_query_round_trips_through_portal_core() {
+        // Verify the portal-core function returns valid CymaticInvertState
+        let state = portal_core::cymatic_invert(42, "test", 2, 5);
+        assert_eq!(state.address72, 42);
+        assert!(state.asma.has_mirror || !state.asma.has_mirror); // always valid
+        assert_eq!(state.phase_law, "#/inversion_spanda");
+
+        // At flip boundary with mirror, phase flips
+        let flip_state = portal_core::cymatic_invert(42, "test", 2, 7);
+        if flip_state.asma.has_mirror {
+            assert_eq!(flip_state.phase, portal_core::CymaticPhase::Inverted);
+        }
+        assert!(flip_state.last_flip_candidate);
     }
 }

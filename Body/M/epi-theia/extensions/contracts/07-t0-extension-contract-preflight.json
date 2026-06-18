@@ -137,6 +137,56 @@
           }
         },
         "fallback": "If absent, M2 reports `pending-kleinFlip` and keeps primary surface valence."
+      },
+      {
+        "field": "anuttaraWitness",
+        "consumer": "m0-anuttara",
+        "payloadPath": "payload.anuttaraWitness",
+        "narrowing": "Treat as an emit-only typed witness projection with 9-bit virtue vector, 4-bit syntax vector, read-only R-factor path, band balance, palindrome state, open Law-6 questions, and coherence score. Consumers may render or learn from it but must not gate readiness on its presence.",
+        "examplePayload": {
+          "anuttaraWitness": {
+            "virtueWitnessVector": 453,
+            "syntaxWitnessVector": 9,
+            "rfactorPath": [
+              {
+                "rFactor": 1,
+                "baseRoute": "Nara",
+                "band": "pravritti",
+                "position": 4,
+                "isTurn": false
+              },
+              {
+                "rFactor": 2,
+                "baseRoute": "Shakti",
+                "band": "pravritti",
+                "position": 5,
+                "isTurn": true
+              },
+              {
+                "rFactor": 3,
+                "baseRoute": "Shakti",
+                "band": "nivritti",
+                "position": 0,
+                "isTurn": false
+              }
+            ],
+            "bandBalance": {
+              "pravrittiDepth": 2,
+              "nivrittiDepth": 1,
+              "reachedTurn": true,
+              "returned": false
+            },
+            "palindromeState": {
+              "normalFormSymmetric": false,
+              "mirrorNormalForm": "R1@Nara/4|(@#)|R3@Shakti/0"
+            },
+            "openQuestions": [
+              "Law-6:R3@Shakti:return?"
+            ],
+            "coherenceScore": 0.625
+          }
+        },
+        "fallback": "If absent, M0 reports `pending-anuttaraWitness` as informational/degraded evidence only; only the human gate and M5 review may block."
       }
     ],
     "rule": "The bridge keeps `payload` opaque at the shared boundary; each M-extension narrows only the fields declared by its contract and readiness checks."
@@ -157,6 +207,16 @@
         "depositOnly": "m0.openCoordinate.depositOnly"
       },
       "routePath": "/m0-anuttara/coordinate",
+      "intentTargets": [
+        {
+          "contributionId": "coordinate",
+          "label": "M0 Anuttara: Open Coordinate"
+        },
+        {
+          "contributionId": "graph",
+          "label": "M0 Anuttara: Open Graph Node"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -222,6 +282,16 @@
         "depositOnly": "m1.startWalk.depositOnly"
       },
       "routePath": "/m1-paramasiva/walk",
+      "intentTargets": [
+        {
+          "contributionId": "walk",
+          "label": "M1 Paramasiva: Open Walk"
+        },
+        {
+          "contributionId": "schema",
+          "label": "M1 Paramasiva: Open Schema Walk"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -285,6 +355,20 @@
         "depositOnly": "m2.openMeaningPacket.depositOnly"
       },
       "routePath": "/m2-parashakti/meaning-packet",
+      "intentTargets": [
+        {
+          "contributionId": "meaning-packet",
+          "label": "M2 Parashakti: Open Meaning Packet"
+        },
+        {
+          "contributionId": "resonance",
+          "label": "M2 Parashakti: Open Resonance Packet"
+        },
+        {
+          "contributionId": "correspondenceTree",
+          "label": "M2 Parashakti: Open Correspondence Tree"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -352,6 +436,12 @@
         "depositOnly": "m3.openCodon.depositOnly"
       },
       "routePath": "/m3-mahamaya/codon",
+      "intentTargets": [
+        {
+          "contributionId": "codon",
+          "label": "M3 Mahamaya: Open Codon Rotation"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -418,6 +508,20 @@
         "depositOnly": "m4.openArtifact.depositOnly"
       },
       "routePath": "/m4-nara/artifact",
+      "intentTargets": [
+        {
+          "contributionId": "artifact",
+          "label": "M4 Nara: Open Artifact"
+        },
+        {
+          "contributionId": "journal",
+          "label": "M4 Nara: Start Journal Entry"
+        },
+        {
+          "contributionId": "logos",
+          "label": "M4 Nara: Logos Cycle"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -487,6 +591,16 @@
         "depositOnly": "m5.openReview.depositOnly"
       },
       "routePath": "/m5-epii/review",
+      "intentTargets": [
+        {
+          "contributionId": "review",
+          "label": "M5 Epii: Open Review Item"
+        },
+        {
+          "contributionId": "evidence-deposit",
+          "label": "M5 Epii: Deposit Review Evidence"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",

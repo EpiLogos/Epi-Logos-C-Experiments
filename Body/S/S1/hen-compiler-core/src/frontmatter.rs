@@ -35,6 +35,13 @@ const CANONICAL_METADATA_KEYS: &[&str] = &[
     "l_alignments",
 ];
 const DEPRECATED_PATTERNS: &[&str] = &["bimbaCoordinate", "ql_position"];
+const INTEGER_RANGE_KEYS: &[(&str, i64, i64)] = &[
+    ("c_3_fibonacci_position", 0, 59),
+    ("c_3_fibonacci_digit", 0, 9),
+    ("c_3_tick12", 0, 11),
+    ("c_3_backbone_index", 0, 23),
+];
+
 pub fn validate_frontmatter(yaml: &Value) -> ValidationResult {
     let mut result = ValidationResult::default();
 
@@ -152,9 +159,26 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
             continue;
         }
 
+        if let Some((_, min, max)) = INTEGER_RANGE_KEYS
+            .iter()
+            .find(|(registered_key, _, _)| *registered_key == key_str)
+        {
+            validate_integer_range_key(key_str, value, *min, *max, result);
+            continue;
+        }
+
         if is_coordinate_key(key_str) {
             if let Some(error) = validate_coordinate_key(key_str, value) {
                 result.errors.push(error);
+            }
+            continue;
+        }
+
+        if is_q_vocabulary_family_key(key_str) {
+            if !is_wellformed_q_vocabulary_key(key_str) {
+                result.errors.push(format!(
+                    "Malformed q-family frontmatter key '{key_str}' (expected q_<0-5>['][_<slot>]_<lower_snake_case>)"
+                ));
             }
             continue;
         }
@@ -174,6 +198,70 @@ fn validate_keys(map: &Mapping, result: &mut ValidationResult) {
             .errors
             .push(format!("Unknown frontmatter key '{key_str}'"));
     }
+}
+
+fn validate_integer_range_key(
+    key: &str,
+    value: &Value,
+    min: i64,
+    max: i64,
+    result: &mut ValidationResult,
+) {
+    match value.as_i64() {
+        Some(n) if (min..=max).contains(&n) => {}
+        Some(n) => result.errors.push(format!(
+            "Frontmatter key '{key}' value {n} is out of range (must be {min}-{max})"
+        )),
+        None => result.errors.push(format!(
+            "Frontmatter key '{key}' must be an integer {min}-{max}"
+        )),
+    }
+}
+
+fn is_q_vocabulary_family_key(key: &str) -> bool {
+    key.starts_with("q_") || key.starts_with("qm_")
+}
+
+// The q-register family is OPEN: only the key *shape* is fixed; the facet slug is
+// free. A key is well formed iff it is `q_<0-5>['][_<slot>]_<lower_snake_case>`
+// (or the `qm_` quickview family). There is no closed vocabulary — see
+// Idea/Bimba/Seeds/M/q-vocabulary-canon.md.
+fn is_wellformed_q_vocabulary_key(key: &str) -> bool {
+    let Some(rest) = key.strip_prefix("q_").or_else(|| key.strip_prefix("qm_")) else {
+        return false;
+    };
+    q_vocabulary_suffix(rest).is_some()
+}
+
+fn q_vocabulary_suffix(rest: &str) -> Option<&str> {
+    let position = rest.chars().next()?;
+    if !matches!(position, '0'..='5') {
+        return None;
+    }
+
+    let mut offset = position.len_utf8();
+    if rest[offset..].starts_with('\'') {
+        offset += 1; // inverted-phase prime marker
+    }
+    let after_position = rest[offset..].strip_prefix('_')?;
+
+    // Optional interior numeric slot, then a lower_snake_case semantic suffix.
+    let mut slot_split = after_position.splitn(2, '_');
+    let first = slot_split.next()?;
+    let suffix = if !first.is_empty() && first.chars().all(|ch| ch.is_ascii_digit()) {
+        slot_split.next()?
+    } else {
+        after_position
+    };
+
+    let is_lower_snake_case = !suffix.is_empty()
+        && suffix.split('_').all(|segment| {
+            !segment.is_empty()
+                && segment
+                    .chars()
+                    .all(|ch| ch.is_ascii_lowercase() || ch.is_ascii_digit())
+        });
+    is_lower_snake_case.then_some(suffix)
 }
 
 fn validate_temporal_requirements(map: &Mapping, errors: &mut Vec<String>) {

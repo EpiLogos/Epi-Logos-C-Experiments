@@ -9,7 +9,7 @@ import {
     M2PacketSubject,
     M2ProvenanceHandle,
     M2S2CorrespondencePayload
-} from '@pratibimba/m2-parashakti';
+} from '@pratibimba/m2-parashakti/meaning-packet';
 
 export interface ParashaktiCorrespondenceBridge {
     parashaktiCorrespondences(address72: number): Promise<unknown>;

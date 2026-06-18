@@ -12,6 +12,7 @@ import {
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
 import { EXTENSION_ID } from '../../common';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 export const AMBIENT_STATE_STRIP_VIEW_ID = 'm4.nara.ambientStateStrip';
 export const AMBIENT_STATE_STRIP_LABEL = 'M4 Ambient State';
@@ -43,7 +44,7 @@ export const M4AmbientStateStrip: React.FC<M4AmbientStateStripProps> = props => 
     const { cells, generation, connected, readinessState } = props;
     return (
         <div
-            className="m4-ambient-state-strip"
+            className={`m4-ambient-state-strip ${privacyChromeClass('protected_local')}`}
             data-test="m4-ambient-state-strip"
             data-track="TRACK_08"
             data-export={M4_AMBIENT_STATE_STRIP_EXPORT}
@@ -98,12 +99,12 @@ export class AmbientStateStripWidget extends ReactWidget {
     protected init(): void {
         this.id = AmbientStateStripWidget.ID;
         this.title.label = AmbientStateStripWidget.LABEL;
-        this.title.caption = AmbientStateStripWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
         this.addClass('m4-nara-ambient-state-strip');
-        this.addClass('mext-privacy-protected-local');
+        this.addClass(privacyChromeClass('protected_local'));
 
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
@@ -140,7 +141,10 @@ export class AmbientStateStripWidget extends ReactWidget {
         const cells = ambientStateCells(this.profile);
         const generation = this.profile?.generation ?? this.context.profileGeneration ?? null;
         return (
-            <div className="mext-widget-root" data-test="m4-ambient-state-strip-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local')}`}
+                data-test="m4-ambient-state-strip-root"
+            >
                 <M4AmbientStateStrip
                     cells={cells}
                     generation={generation}

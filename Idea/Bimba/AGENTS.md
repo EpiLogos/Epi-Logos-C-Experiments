@@ -7,7 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[World-Ontology]]
 ## Ownership
 - `Seeds/` — long-form coordinate specs + indexes: the P/S/T/M/L/C family folders, [[ARCHITECTURE-DIAGRAM-PACK]], [[S-SYSTEM-INDEX]], [[M-SYSTEM-INDEX]], M' specs ([[M'-SYSTEM-SPEC]] et al.), plus `Legacy/` + legacy-docs migration index/manifest.
 - `World/` — crystallised Forms (flat `P*.md`, `L*.md`, CT* templates, NOW/FLOW/Daily-Note), [[World-Ontology]], and `Types/` (the ordered ontology mirror / MOC + canvas residency surface, pre-graph-sync incubation; see `Types/README.md`).
-- `Map/` — the M0–M5 Neo4j ontological map: `datasets/` (anuttara/paramasiva/parashakti/mahamaya/nara/epii `*-deep` dataset trees + fetch/build scripts).
+- `Map/` — the M0–M5 ontological map made navigable: a generated pithy, wikilink-open *reflection* of the Neo4j graph (`M0/`–`M5/`) + `datasets/` (the raw `*-deep`/`low-detail` import provenance + scripts). The downward/reflection tree (graph→repo), complementing `Seeds/`+`World/` crystallisation (repo→graph) — see [[45-bimba-map-indexing-and-dox-okf-unification]].
 - Does NOT own implementation/behavior — executable code lives under the `Body/` roots. Domain law stays in its owning coordinate spec under `Seeds/`, not relocated here by convenience.
 
 ## Local Contracts
@@ -24,4 +24,6 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[World-Ontology]]
 - Run the `bimba-vault-validate` skill before committing any write here (frontmatter, residency, wikilinks, hierarchy placement).
 
 ## Child DOX Index
-- (leaf) — `Seeds/`, `World/`, `Map/` are content subtrees with no nested AGENTS.md.
+- `Seeds/AGENTS.md` — long-form coordinate specs, umbrella indexes, M' specs, and the cycle plan sets (the spec/source layer).
+- `World/AGENTS.md` — crystallised Forms + context-type templates + [[World-Ontology]] + the `Types/` MOC/canvas surface.
+- `Map/AGENTS.md` — the M0–M5 ontological map: generated pithy wikilink-open projection (`M0/`–`M5/`) + raw datasets.

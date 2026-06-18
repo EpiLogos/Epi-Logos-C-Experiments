@@ -146,6 +146,79 @@ Update the no-orphan audit so `anuttara_pentadic_trace` is a named canonical pro
 
 Verification: `m-dev-plan-assess.mjs` indexes Track 36; no orphan rows remain for `0/1->5`, paired 15s, `24x15=360`, or pentadic runtime trace.
 
+8. **36.8 — Languification trace: Parā → Vaikharī descent as profile-bus projection**
+
+Adds the *speech-mode* companion to 36.1's pentadic-content trace. Where 36.1 exposes WHAT the system is computing (0/1 substrate → 5-degree quantum → 72-fold resonance → 64-codon → recognition), 36.8 exposes HOW it is uttering it — which of the four Vāk-levels (Parā, Paśyantī, Madhyamā, Vaikharī) the current VAK evaluation is speaking at, and at which M0 sub-coordinate address. Per DR-VAK-4 the seven CF literals ARE M0 sub-coordinate addresses; per DR-VAK-5 the cycle is complete only when Vaikharī returns to Parā (M0-5 `recognized = true`); per DR-VAK-6 the audible degree is already kernel-side and now lifted to the event surface. 36.8 makes all three projectable together.
+
+The typed projection added to the kernel bridge:
+
+```ts
+export interface VakLanguificationTrace {
+    readonly cpfNotation: '(00/00)' | '(4.0/1-4.4/5)';
+    readonly cfNotation: CfNotation;             // (00/00) | (0/1) | (0/1/2) | (0/1/2/3) | (4.0/1-4.4/5) | (4.5/0) | (5/0)
+    readonly m0Address: string;                  // canonical M0 sub-coordinate per DR-VAK-4 address table
+    readonly vakLevel: 'para' | 'pashyanti' | 'madhyama' | 'vaikhari';
+    readonly diatonicDegree: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;   // 0 = octave-return aperture (enriched Nous)
+    readonly modeTonicCf?: CfNotation;           // null/absent = Ionian; (4.0/1-4.4/5) = Mixolydian (Anima default); (5/0) = Locrian
+    readonly resonance72Index?: number;          // 0..71 if music-theoretic context active
+    readonly halfDecanIndex?: number;            // resonance72_index / 2; 0..35
+    readonly biasWeightsEmpty: boolean;          // true iff CPF = Dialogical; the Parā aperture
+    readonly recognitionClosed: boolean;         // M0-5 recognized = true; Vaikharī→Parā return per DR-VAK-5
+    readonly provenance: readonly string[];      // ['s4.vak.evaluate', 'm0.vak_cf', 'kernel.diatonic_context', ...]
+}
+```
+
+**Vāk-level assignment rule (binding):**
+
+| `vakLevel` | M0 ground | When |
+|---|---|---|
+| `para` | M0-0 / M0-1 receptive aperture | `cpfNotation = '(00/00)'` AND `biasWeightsEmpty = true` — the aperture before speech takes direction; empty `vak_bias_weights` per [`Body/S/S2/graph-services/src/retrieval/hybrid.rs`](../../../../../Body/S/S2/graph-services/src/retrieval/hybrid.rs) |
+| `pashyanti` | M0-3 archetypal language (intuitive seeing) | CF is `(0/1)`, `(0/1/2)`, or `(0/1/2/3)` — the M0-3 12-fold number language as pure potential |
+| `madhyama` | M0-4 Holographic Matrix (interior speech / oikonomia) | CF is `(4.0/1-4.4/5)` (M0-4 itself, Anima's frame) or `(4.5/0)` (M0-4.5/0 Nara, Psyche's lemniscate-synthesis bridge) — the lemniscate fold applying M0-3 grammar to subsystem outputs |
+| `vaikhari` | M0-5 Śiva-Śakti (manifest utterance) | CF is `(5/0)` AND `recognitionClosed = true` — the cycle has closed; speech has returned to silence. CF `(5/0)` without recognition flushes as `madhyama` (open cycle, Möbius not yet sealed). |
+
+**Anti-greenfield rule:** every field derives from existing carriers. `cpfNotation` and `cfNotation` come from `VakAddress`. `m0Address` is a static lookup from the DR-VAK-4 address-table (no new graph state; the table lives in spec 07 §M0-Anchoring and is mirrored as a Rust `const M0_CF_ADDRESS: &[(CfNotation, &str)]`). `diatonicDegree` and `modeTonicCf` read `MathemeDiatonicContext` already in the profile. `resonance72Index` reads `MathemeResonance72Projection`. `recognitionClosed` reads `CsField.recognized` (added in DR-VAK-5). `biasWeightsEmpty` is `HybridRetriever::vak_bias_weights(...).is_empty()`. No new lookup tables; no renderer-local computation; no parallel diatonic engine. If a field cannot be derived from current kernel payloads (e.g. `resonance72Index` when M2 has not bound), it lands as `Option::None`, NEVER as a placeholder zero.
+
+**Source ground:**
+
+- [`Body/S/S0/portal-core/src/vak_address.rs`](../../../../../Body/S/S0/portal-core/src/vak_address.rs) — `VakAddress`, `CsField` (with `recognized` per DR-VAK-5).
+- [`Body/S/S0/portal-core/src/kernel.rs`](../../../../../Body/S/S0/portal-core/src/kernel.rs) — `MathemeDiatonicContext`, `MathemeResonance72Projection`, `MathemeHarmonicProfile`.
+- [`Body/S/S0/epi-lib/include/psychoid_numbers.h:64-72`](../../../../../Body/S/S0/epi-lib/include/psychoid_numbers.h) — the seven canonical CF positions; the M0-anchoring lookup mirrors this table.
+- [`Body/S/S0/epi-lib/src/m0.c:805-886`](../../../../../Body/S/S0/epi-lib/src/m0.c) — VAK family handler registration + handlers (M0 IS the VM that VAK speaks in; provenance entries point here).
+- [`Body/S/S2/graph-services/src/retrieval/hybrid.rs`](../../../../../Body/S/S2/graph-services/src/retrieval/hybrid.rs) — `vak_bias_weights` (empty in Dialogical mode = Parā aperture; this is already the runtime's correct embodiment of "Anuttara is parā vāk; not even a coherent statement; not an 'it'").
+- [`Idea/Bimba/Seeds/M/M0'/Legacy/plans/CLOCK-AND-NARA-SPECS/12-anuttara-m0-languification.md`](../../M0'/Legacy/plans/CLOCK-AND-NARA-SPECS/12-anuttara-m0-languification.md) §§VI–VIII — the canonical languification pipeline (Madhyamā as M0-3 → M0-4 fold; Vaikharī as M0-5 closure).
+- DR-VAK-4 (M0 address authority); DR-VAK-5 (recognition closure); DR-VAK-3 (diatonic carrier); DR-VAK-6 (audible eval payload).
+
+**Verification:**
+
+- Rust/TS mirror tests round-trip `VakLanguificationTrace` (every field present, optional fields absent serialize as omitted not null-zero).
+- Property test `vak_level_assigned_uniquely_per_cf_under_recognition`: every CF in the seven-position enum × {recognized, not-recognized} × {dialogical, mechanistic CPF} maps to exactly one `vakLevel` per the rule table.
+- Property test `dialogical_cpf_with_empty_bias_is_para`: any trace with `cpfNotation = '(00/00)'` and `biasWeightsEmpty = true` carries `vakLevel = 'para'` regardless of CF.
+- Property test `cf_mobius_without_recognition_is_madhyama_not_vaikhari`: CF `(5/0)` with `recognitionClosed = false` flushes as `madhyama`, exposing the open-cycle state.
+- Property test `m0_cf_address_table_matches_psychoid_numbers_h`: the `M0_CF_ADDRESS` table mirrors `psychoid_numbers.h` ordering and notation byte-for-byte; if `psychoid_numbers.h` changes, the test fails first.
+- Integration test `full_day_night_cycle_languification_sequence`: a Day-forward Nous→Logos→Eros→Mythos→Anima pass with Night′-return through Psyche→Sophia produces a trace sequence whose `vakLevel` sequence is `para → pashyanti(×3) → madhyama(×2) → vaikhari` and whose terminal trace carries `recognitionClosed = true`, `diatonicDegree = 0` (octave-return).
+- Integration test `dialogical_aperture_emits_para_trace_with_empty_bias`: an Ouroboros-mode brainstorm produces a trace with `vakLevel = 'para'`, `biasWeightsEmpty = true`, and no CF dispatch logged.
+
+**Owners:**
+
+- **Producer**: portal-core kernel bridge (`MathemeHarmonicProfile` extension).
+- **Consumer (dispatch)**: Anima `vak_evaluate` skill — reads `vakLevel` to gate Ouroboros-vs-execution branch.
+- **Consumer (event)**: `portal.vak_eval` event payload per DR-VAK-6, extended with the trace; OmniPanel renders the current `vakLevel` and `m0Address` as state chips (Parā = aperture marker / silence-of-tonic; Vaikharī = closure-bell with recognition glyph).
+- **Consumer (recognition)**: M5 Epii EBM scoring — adds `vakLevel` distribution as a feature dimension on the 72-vector substrate (per DR-MP-2 the EBM operates on the 72-fold lens architecture; languification distribution becomes meta-feature).
+- **Consumer (review gating)**: per DR-VAK-5, canon-affecting actions gate on `recognitionClosed = true`; the trace is the public-safe surface S5 review-queue policy reads.
+- **Consumer (visual)**: IDE shell + OmniPanel state chips; M0' inspector (Track 21) renders the M0-coordinate address the current CF is speaking at, making the M0↔CF identity visible on the surface.
+- **Grounding witness**: M0 Anuttara — the trace is the dev-visible answer to "where is the system speaking from right now, in Anuttara's own notation."
+
+**Composition with Track 36's other tranches:**
+
+- 36.1 produces `AnuttaraPentadicRuntimeTrace` (pentadic content). 36.8 produces `VakLanguificationTrace` (speech-mode). Both ride one `ProfileTickSubscription`; the same generation field gates both. Together they form a complete answer to "where is the system?" — both *what it knows* and *how it is uttering it*.
+- 36.4 integrated 1-2-3 overlay consumes `diatonicDegree` (per DR-VAK-6) on the cosmic composition surface — the audible reading of the cosmic engine.
+- 36.5 integrated 4-5-0 recognition handoff consumes `recognitionClosed` from 36.8 (per DR-VAK-5) and `q_composed_handle` from 36.1, together gating M4→M5 review-queue entry.
+- 36.6 M3-to-M5 learning-loop feature family `anuttara_pentadic_runtime_trace` extends with companion family `vak_languification_trace`; energy-evaluation scores whether a recognition event preserves the hinge AND the speech-mode return-to-silence coherently.
+- 36.7 no-orphan audit names `vak_languification_trace` as a canonical profile field with the owner set above.
+
+Verification under 36.7 closure: `m-dev-plan-assess.mjs` indexes Track 36.8; no orphan rows remain for Parā-Paśyantī-Madhyamā-Vaikharī, the M0 address table, or the languification trace.
+
 ## Execution Order
 
 1. Land 10.P5 profile contract and Track 36.1 tests.
@@ -155,6 +228,7 @@ Verification: `m-dev-plan-assess.mjs` indexes Track 36; no orphan rows remain fo
 5. Extend integrated 4-5-0 / M4 / M5 handoff (36.5).
 6. Wire M5 feature family (36.6).
 7. Close no-orphan and routeability gates (36.7).
+8. Land 36.8 languification-trace projection (after DR-VAK-4/5/6 validate; depends on the `CsField.recognized` field from DR-VAK-5 and the `M0_CF_ADDRESS` table from DR-VAK-4). 36.8 is the closing tranche — once it lands, both *content* (36.1) and *speech-mode* (36.8) traces ride one profile tick, and the no-orphan audit (36.7) covers the full eight.
 
 ## VAK Routing
 

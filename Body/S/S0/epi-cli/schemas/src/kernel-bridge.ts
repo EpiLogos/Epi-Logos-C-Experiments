@@ -178,6 +178,12 @@ export const OracleSequence = z
   .strict();
 export type OracleSequence = z.infer<typeof OracleSequence>;
 
+export const TranscriptClass = z.enum(["shared", "transcribable"]);
+export type TranscriptClass = z.infer<typeof TranscriptClass>;
+
+export const GovernanceRole = z.enum(["none", "start", "stop"]);
+export type GovernanceRole = z.infer<typeof GovernanceRole>;
+
 export const SymbolicProtein = z
   .object({
     proteinId: z.string().min(1),
@@ -185,6 +191,10 @@ export const SymbolicProtein = z
     readingFrame: OracleFrame,
     startPositionRef: z.string().min(1).optional(),
     stopPositionRef: z.string().min(1).optional(),
+    // additive 4.17 fields
+    transcriptClass: TranscriptClass.optional(),
+    governanceRole: GovernanceRole.optional(),
+    isCanonicalDerivation: z.boolean().optional(),
   })
   .strict();
 export type SymbolicProtein = z.infer<typeof SymbolicProtein>;
@@ -199,6 +209,11 @@ export const TranscriptionalClockPacket = z
     oracleSequence: OracleSequence.optional(),
     symbolicProtein: SymbolicProtein.optional(),
     provenanceHandles: z.array(z.string().min(1)).default([]),
+    // additive 4.17 fields
+    transcriptClass: TranscriptClass.optional(),
+    governanceRole: GovernanceRole.optional(),
+    chainPosition: z.number().int().nonnegative().optional(),
+    parentPacketHash: z.string().length(64).optional(),
   })
   .strict()
   .superRefine((value, ctx) => {
@@ -215,6 +230,206 @@ export const TranscriptionalClockPacket = z
   });
 export type TranscriptionalClockPacket = z.infer<
   typeof TranscriptionalClockPacket
+>;
+
+export const MonoPolyOperator = z.enum([
+  "Mono",
+  "Poly",
+  "ActuallyMany",
+  "PotentiallyOne",
+  "ActualisingOne",
+  "PotentiatingMany",
+  "MonoPoly",
+]);
+export type MonoPolyOperator = z.infer<typeof MonoPolyOperator>;
+
+export const PerspectiveRole = z.enum([
+  "FirstPerson",
+  "SecondPerson",
+  "FirstPersonPlural",
+  "ThirdPerson",
+  "CollectiveWe",
+  "IntegralWeI",
+]);
+export type PerspectiveRole = z.infer<typeof PerspectiveRole>;
+
+export const NaraFamilyRole = z.enum([
+  "Father",
+  "Mother",
+  "Son",
+  "Daughter",
+  "Tao",
+  "IntegralConsciousness",
+]);
+export type NaraFamilyRole = z.infer<typeof NaraFamilyRole>;
+
+const BeingPatternProtectedRef = z
+  .object({
+    episodeId: z.string().min(1),
+    sourceRef: z.string().min(1),
+    publicSummary: z.string().min(1),
+  })
+  .strict();
+
+const ElementalWeightProjection = z
+  .object({
+    fire: z.number(),
+    water: z.number(),
+    air: z.number(),
+    earth: z.number(),
+  })
+  .strict();
+
+const M2M3RelationProjection = z
+  .object({
+    relationHandle: z.string().min(1),
+    planetaryLensAspect: z.string().min(1),
+    source: z.string().min(1),
+  })
+  .strict();
+
+const BeingPatternRelationCanonStatus = z.enum([
+  "live-only",
+  "live-only-review-required",
+]);
+
+export const PasuBeingPatternProjection = z
+  .object({
+    entityRef: z
+      .object({
+        entityId: z.string().min(1),
+        entityKind: z.string().min(1),
+        graphAnchor: z.string().min(1),
+        publicLabel: z.string().min(1).optional(),
+      })
+      .strict(),
+    stableIdentity: z
+      .object({
+        graphAnchor: z.string().min(1),
+        identityHandle: z.string().min(1),
+        source: z.string().min(1),
+      })
+      .strict(),
+    liveState: z
+      .object({
+        spacetimeRowId: z.string().min(1),
+        streamGeneration: z.number().int().nonnegative(),
+        redisPsyche: z.record(z.string().min(1)),
+        dayRef: z.string().min(1),
+        nowRef: z.string().min(1),
+        streamDelta: z.string().min(1),
+        graphitiEpisodeRefs: z.array(BeingPatternProtectedRef).default([]),
+      })
+      .strict(),
+    observerAnchor: z
+      .object({
+        observerEntityId: z.string().min(1),
+        observerRole: PerspectiveRole,
+        anchorRef: z.string().min(1),
+      })
+      .strict(),
+    clockAddress: z.record(z.unknown()),
+    monopolyOperator: MonoPolyOperator,
+    perspectiveRole: PerspectiveRole,
+    naraFamilyRole: NaraFamilyRole.optional(),
+    m2M3Relation: M2M3RelationProjection,
+    bioquaternionHandles: z.array(
+      z
+        .object({
+          handle: z.string().min(1),
+          privacy: z.string().min(1),
+          source: z.string().min(1),
+        })
+        .strict(),
+    ),
+    elementalWeights: ElementalWeightProjection,
+    relationEdges: z
+      .array(
+        z
+          .object({
+            edgeId: z.string().min(1),
+            sourceEntityId: z.string().min(1),
+            targetEntityId: z.string().min(1),
+            edgeKind: z.string().min(1),
+            aspectLabel: z.string().min(1),
+            generation: z.number().int().nonnegative(),
+            m2M3Relation: M2M3RelationProjection,
+            elementalDelta: ElementalWeightProjection,
+            verifierRefs: z.array(BeingPatternProtectedRef).default([]),
+            canonStatus: BeingPatternRelationCanonStatus,
+          })
+          .strict(),
+      )
+      .default([]),
+    verifierRefs: z.array(BeingPatternProtectedRef).default([]),
+    reviewRisk: z.enum([
+      "none",
+      "forced-unification",
+      "privacy-boundary",
+      "canon-candidate",
+    ]),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (
+      value.monopolyOperator === "ActualisingOne" &&
+      value.reviewRisk !== "forced-unification"
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "ActualisingOne must serialize reviewRisk forced-unification",
+        path: ["reviewRisk"],
+      });
+    }
+  });
+export type PasuBeingPatternProjection = z.infer<
+  typeof PasuBeingPatternProjection
+>;
+
+export const RFactorBand = z.enum(["pravritti", "nivritti"]);
+export type RFactorBand = z.infer<typeof RFactorBand>;
+
+export const RFactorPathStep = z
+  .object({
+    rFactor: z
+      .number()
+      .int()
+      .refine((value) => (value >= 0 && value <= 5) || value === 0xff, {
+        message: "rFactor must be 0..5 or 0xff for R# Freedom",
+      }),
+    baseRoute: z.enum(["O#", "X#", "N#", "M#", "Nara", "Siva", "Shakti"]),
+    band: RFactorBand,
+    position: z.number().int().min(0).max(5),
+    isTurn: z.boolean(),
+  })
+  .strict();
+export type RFactorPathStep = z.infer<typeof RFactorPathStep>;
+
+export const AnuttaraWitnessProjection = z
+  .object({
+    virtueWitnessVector: z.number().int().min(0).max(0x1ff),
+    syntaxWitnessVector: z.number().int().min(0).max(0x0f),
+    rfactorPath: z.array(RFactorPathStep),
+    bandBalance: z
+      .object({
+        pravrittiDepth: z.number().int().nonnegative(),
+        nivrittiDepth: z.number().int().nonnegative(),
+        reachedTurn: z.boolean(),
+        returned: z.boolean(),
+      })
+      .strict(),
+    palindromeState: z
+      .object({
+        normalFormSymmetric: z.boolean(),
+        mirrorNormalForm: z.string().min(1),
+      })
+      .strict(),
+    openQuestions: z.array(z.string().min(1)),
+    coherenceScore: z.number(),
+  })
+  .strict();
+export type AnuttaraWitnessProjection = z.infer<
+  typeof AnuttaraWitnessProjection
 >;
 
 export const MathemeHarmonicProfile = z
@@ -263,7 +478,10 @@ export const MathemeHarmonicProfile = z
       z.record(z.unknown()),
     ]),
     kleinFlip: z.unknown().nullable().optional(),
+    anandaVortex: z.unknown().optional(),
     harmonicGrammar: z.unknown().optional(),
+    pasuBeingPattern: PasuBeingPatternProjection.optional(),
+    anuttaraWitness: AnuttaraWitnessProjection.optional(),
     s2Anchor: z.unknown().nullable(),
     s3Anchor: z.unknown().nullable(),
     vakAddress: z.unknown().nullable().optional(),

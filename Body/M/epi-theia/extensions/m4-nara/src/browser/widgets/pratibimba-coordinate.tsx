@@ -19,6 +19,7 @@ import type {
     ConsentRecord,
     ProtectedPersonalFieldInput
 } from '../../common';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 export const PRATIBIMBA_COORDINATE_VIEW_ID = 'm4.nara.pratibimbaCoordinate';
 export const PRATIBIMBA_COORDINATE_LABEL = 'M4 Pratibimba Coordinate';
@@ -109,7 +110,7 @@ export const M4PratibimbaCoordinateBadge: React.FC<M4PratibimbaCoordinateBadgePr
 
     return (
         <section
-            className="m4-pratibimba-coordinate mext-privacy-protected-local-handle-only"
+            className={`m4-pratibimba-coordinate ${privacyChromeClass('protected_local_handle_only')}`}
             data-test="m4-pratibimba-coordinate"
             data-track="TRACK_08"
             data-export={M4_PRATIBIMBA_COORDINATE_BADGE_EXPORT}
@@ -304,12 +305,12 @@ export class PratibimbaCoordinateWidget extends ReactWidget {
     protected init(): void {
         this.id = PratibimbaCoordinateWidget.ID;
         this.title.label = PratibimbaCoordinateWidget.LABEL;
-        this.title.caption = PratibimbaCoordinateWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
         this.addClass('m4-nara-pratibimba-coordinate');
-        this.addClass('mext-privacy-protected-local-handle-only');
+        this.addClass(privacyChromeClass('protected_local_handle_only'));
 
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
@@ -343,7 +344,10 @@ export class PratibimbaCoordinateWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         return (
-            <div className="mext-widget-root" data-test="m4-pratibimba-coordinate-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local_handle_only')}`}
+                data-test="m4-pratibimba-coordinate-root"
+            >
                 <M4PratibimbaCoordinateBadge
                     fieldInput={fieldInputFromProfile(this.profile, this.context)}
                     consentDraft={this.consentDraft}

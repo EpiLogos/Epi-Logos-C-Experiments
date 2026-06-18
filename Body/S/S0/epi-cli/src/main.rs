@@ -1,7 +1,10 @@
 use clap::{Parser, Subcommand};
+use epi_logos::epii_autoresearch::resonance_corpus::{
+    EbmTrainingConfig, ResonanceCorpusStore, TrainEbmRequest,
+};
 use epi_logos::{
-    agent, app, book, code, core, ffi, gate, graph, nara, notebook, portal, profile, sesh, sync,
-    techne, up, vault, vimarsa,
+    agent, app, book, code, core, ffi, gate, graph, nara, notebook, portal, profile, sesh, slot,
+    sync, techne, up, vault, vimarsa,
 };
 
 #[derive(Parser)]
@@ -46,6 +49,16 @@ enum Commands {
     Agent {
         #[command(subcommand)]
         cmd: Option<agent::AgentCmd>,
+    },
+    /// Pi-Agent model-slot and harness-slot configuration
+    Slot {
+        #[command(subcommand)]
+        cmd: slot::SlotCmd,
+    },
+    /// Pi bootstrap protocol — resonance corpus and EBM operations
+    Pi {
+        #[command(subcommand)]
+        cmd: PiCmd,
     },
     /// Webhook / n8n integration
     Sync {
@@ -125,6 +138,29 @@ enum Commands {
     },
 }
 
+#[derive(Subcommand)]
+enum PiCmd {
+    /// Trigger deliberate EBM retraining over accumulated corpus pairs
+    #[command(name = "train-ebm")]
+    TrainEbm {
+        /// Produce a training plan without writing a checkpoint
+        #[arg(long)]
+        dry_run: bool,
+        /// Override the resonance corpus store root
+        #[arg(long)]
+        corpus_root: Option<std::path::PathBuf>,
+    },
+    /// Export current EBM weights and metadata as a paired checkpoint snapshot
+    #[command(name = "export-ebm-state")]
+    ExportEbmState {
+        /// Destination directory for checkpoint, metadata, and corpus snapshot
+        destination: std::path::PathBuf,
+        /// Override the resonance corpus store root
+        #[arg(long)]
+        corpus_root: Option<std::path::PathBuf>,
+    },
+}
+
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
@@ -162,6 +198,21 @@ async fn main() -> color_eyre::Result<()> {
             Ok(_) => {}
             Err(e) => {
                 eprintln!("agent error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Slot { cmd } => match slot::dispatch(cmd, cli.json) {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("slot error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Pi { cmd } => match dispatch_pi(cmd) {
+            Ok(out) => println!("{}", out),
+            Err(e) => {
+                eprintln!("pi error: {}", e);
                 std::process::exit(1);
             }
         },
@@ -212,4 +263,45 @@ async fn main() -> color_eyre::Result<()> {
     }
 
     Ok(())
+}
+
+fn dispatch_pi(cmd: &PiCmd) -> Result<String, String> {
+    match cmd {
+        PiCmd::TrainEbm {
+            dry_run,
+            corpus_root,
+        } => {
+            let store = ResonanceCorpusStore::new(resolve_resonance_corpus_root(corpus_root)?);
+            let report = store.train_ebm(TrainEbmRequest {
+                dry_run: *dry_run,
+                config: EbmTrainingConfig::default(),
+            })?;
+            serde_json::to_string_pretty(&report).map_err(|err| err.to_string())
+        }
+        PiCmd::ExportEbmState {
+            destination,
+            corpus_root,
+        } => {
+            let store = ResonanceCorpusStore::new(resolve_resonance_corpus_root(corpus_root)?);
+            let export = store.export_ebm_state(destination, EbmTrainingConfig::default())?;
+            serde_json::to_string_pretty(&export).map_err(|err| err.to_string())
+        }
+    }
+}
+
+fn resolve_resonance_corpus_root(
+    override_root: &Option<std::path::PathBuf>,
+) -> Result<std::path::PathBuf, String> {
+    if let Some(root) = override_root {
+        return Ok(root.clone());
+    }
+    if let Ok(root) = std::env::var("EPI_RESONANCE_CORPUS_ROOT") {
+        return Ok(std::path::PathBuf::from(root));
+    }
+    if let Ok(home) = std::env::var("HOME") {
+        return Ok(std::path::PathBuf::from(home)
+            .join(".epi-logos")
+            .join("resonance-corpus"));
+    }
+    Err("HOME is required to locate ~/.epi-logos/resonance-corpus".to_owned())
 }

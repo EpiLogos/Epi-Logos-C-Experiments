@@ -349,6 +349,16 @@ function frontendModuleTs(entry) {
       .split('-')
       .map(p => p[0].toUpperCase() + p.slice(1))
       .join('') + 'Contribution';
+  const intentTargets = entry.intentTargets ?? [];
+  const intentTargetRegistrations = intentTargets
+    .map(target => `        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            '${target.contributionId}',
+            '${target.label}',
+            () => this.openView({ activate: true, reveal: true })
+        );`)
+    .join('\n');
   return `// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
 import { ContainerModule, injectable, interfaces, inject } from '@theia/core/shared/inversify';
 import { CommandContribution, CommandRegistry } from '@theia/core/lib/common';
@@ -362,7 +372,8 @@ import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
-    parseExtensionRoute
+    parseExtensionRoute,
+    registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { ${className} } from './${entry.id}-widget';
 import {
@@ -424,6 +435,7 @@ export class ${contributionClass}
                 }
             }
         );
+${intentTargetRegistrations}
     }
 }
 

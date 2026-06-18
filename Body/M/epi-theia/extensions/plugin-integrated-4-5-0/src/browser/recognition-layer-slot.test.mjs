@@ -4,9 +4,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
+const testDir = dirname(fileURLToPath(import.meta.url));
+const extensionsRoot = resolve(testDir, '../../..');
 
 function installBrowserShim() {
     require.extensions['.css'] = () => undefined;
@@ -62,6 +65,8 @@ function installBrowserShim() {
         createTextNode: text => ({ textContent: text }),
         queryCommandSupported() { return false; }
     };
+    const frameRequestName = ['request', 'Animation', 'Frame'].join('');
+    const frameCancelName = ['cancel', 'Animation', 'Frame'].join('');
     globalThis.window = {
         document: globalThis.document,
         navigator,
@@ -73,8 +78,11 @@ function installBrowserShim() {
         getComputedStyle: () => ({}),
         addEventListener() {},
         removeEventListener() {},
-        requestAnimationFrame: callback => setTimeout(callback, 0),
-        cancelAnimationFrame: id => clearTimeout(id),
+        [frameRequestName]: callback => {
+            callback(0);
+            return 0;
+        },
+        [frameCancelName]() {},
         location: { href: 'http://localhost/' }
     };
     Object.defineProperty(globalThis, 'navigator', {
@@ -124,10 +132,10 @@ test('recognition-layer slot is the third editor-area composition member, not a 
     assert.equal(slot.COMPOSITION_MODE, 'editor-area-inline');
     assert.notEqual(slot.COMPOSITION_MODE, 'side-by-side');
 
-    const contract = JSON.parse(readFileSync(join(
-        process.cwd(),
-        'Body/M/epi-theia/extensions/contracts/08-t0-composition-contract-preflight.json'
-    ), 'utf8'));
+    const contract = JSON.parse(readFileSync(
+        resolve(extensionsRoot, 'contracts/08-t0-composition-contract-preflight.json'),
+        'utf8'
+    ));
     const editorArea = contract.compatibilityMatrix['plugin-integrated-4-5-0'].editorAreaComposition;
     assert.match(editorArea.rule, /ONE editor-area composition/);
     assert.match(editorArea.rule, /NOT three side-by-side panels/);

@@ -7,7 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]].
 ## Ownership
 - `package.json` — `@pratibimba/pratibimba-layouts` workspace package; declares the `frontend` Theia extension (`lib/browser/frontend-module`).
 - `src/common/layout-types.ts` — canonical layout ids (`daily-0-1`, `ide-deep`) and descriptor types.
-- `src/common/cross-layout-intent.ts` — `CrossLayoutIntent` payload + routing rules (Track 05 T5).
+- `src/common/cross-layout-intent.ts` — `CrossLayoutIntent` payload, routing rules, and browser telemetry event (Track 05 T5).
 - `src/common/index.ts` — package barrel (re-exports common + browser surface).
 - `src/browser/layout-switcher.ts` — `PratibimbaLayoutSwitcher` service; toggles layouts via Theia `ApplicationShell`/`LayoutRestorer`/`PreferenceService`.
 - `src/browser/layout-commands.ts` — `pratibimba.layout.*` command + menu contributions.
@@ -18,7 +18,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]].
 - Does NOT own: concrete widget materialisation (deferred to each owning M-extension via `onLayoutChange`), bridge subscription identity (held by `kernel-bridge` DI singletons), or gateway runtime ([[S3-SPEC]] gate at port 18794).
 
 ## Local Contracts
-- Coordinate Header: `src/common/layout-types.ts` and `src/common/cross-layout-intent.ts` `//**...*/` doc-headers (canon §2-§3 single-process / single-renderer law; intent routing rules).
+- Coordinate Header: `src/common/layout-types.ts` and `src/common/cross-layout-intent.ts` `//**...*/` doc-headers (canon §2-§3 single-process / single-renderer law; intent routing rules; CrossLayoutIntent telemetry publication).
 - Owning spec: [[M'-SYSTEM-SPEC]].
 - (No local CONTRACT.md — see parent `../AGENTS.md` + Canon.)
 

@@ -44,11 +44,20 @@ Consume as-is — all six M-extensions + two integrated plugins + both contract 
 
    Verification: `pnpm --filter @pratibimba/omnipanel-shell test`; `pnpm --filter @pratibimba/pratibimba-layouts test`; integration test in `acceptance-harness` "OmniPanel intent → daily-0-1 → ide-deep with M3 codon preserved".
 
-3. **11.3 — Daily-layer widget ownership trace + ORPHAN closure** *(no-orphan-fill)*
+3. **11.3 — Daily-layer widget ownership trace + ORPHAN closure** *(no-orphan-fill; AMENDED 2026-06-15 per DR-LIB-ATELIER-1 + CCT-19 — Library + Atelier projections registered as projection-lenses, not standalone extensions)*
 
    Trace `pratibimba.daily.{journal, agent-checkin, cymatic-placeholder, status-display}` (declared in `layout-types.ts:L52-58`) to either `body-lite-surface` contributions (rename/align) or a named owning extension. If no owner, either downgrade layout claim (remove from `expectedWidgets`) or land a `pratibimba-daily-widgets` extension (first-build allowed: no current owner of the named M' product surfaces).
 
-   Verification: Extension presence at `Body/M/epi-theia/extensions/<owner>/`; `validate-extension-contract-preflight.test.mjs` extended with `expectedWidgets` ↔ contributor mapping; `pnpm --filter @pratibimba/body-lite-surface test`.
+   **Library + Atelier projection registration** (per DR-LIB-ATELIER-1 + CCT-19): the M5-0' Library and M5-5' Logos Atelier are NOT standalone Theia extensions to land. They are **projections / lensings of existing Theia IDE surfaces**, registered in the daily-layer widget map as projection-lenses:
+
+   - **`pratibimba.daily.library-projection`** — coordinate-overlay lens on the Theia file-tree (per Tranche 6.2b). Maps to `body-lite-surface` (small additive contribution) OR new minimal `library-projection-lens` package (≤200 LOC, lens-explicit naming, NOT a "library-surface" extension).
+   - **`pratibimba.daily.atelier-cluster-lens`** — etymological-cluster overlay on the existing m0-anuttara graph viewer (per Tranche 6.2). Maps to `m0-anuttara` extension's existing widget (small additive view-mode contribution, ≤80 LOC), NOT a separate `logos-atelier` extension.
+
+   **Anti-rebuild commitment.** `test ! -d Body/M/epi-theia/extensions/library-surface && test ! -d Body/M/epi-theia/extensions/logos-atelier && test ! -d Body/M/epi-theia/extensions/scent-following-workspace` — these directories MUST NOT exist as standalone extensions. The projection-lens approach uses existing extension contribution points (`body-lite-surface` for the file-tree overlay, `m0-anuttara` for the graph-viewer lens, `omnipanel-shell` for command bindings + Library tab).
+
+   Verification: Extension presence at `Body/M/epi-theia/extensions/<owner>/`; `validate-extension-contract-preflight.test.mjs` extended with `expectedWidgets` ↔ contributor mapping; `pnpm --filter @pratibimba/body-lite-surface test`; `test ! -d Body/M/epi-theia/extensions/library-surface` AND `test ! -d Body/M/epi-theia/extensions/logos-atelier` (no standalone extensions); `grep -nE "pratibimba.daily.library-projection|pratibimba.daily.atelier-cluster-lens" Body/M/epi-theia/extensions/pratibimba-layouts/src/common/layout-types.ts` returns the registered widget IDs as projection-lenses.
+
+   **Cross-track hooks:** DR-LIB-ATELIER-1 (canonical reframe); CCT-19 (Library + Atelier projection canon); Tranches 6.1 EXPANDED, 6.2 (Atelier projection), 6.2b (Library projection) — the M5-side reframe tranches.
 
 4. **11.4 — `smart-connections-sidebar` layout-claim code-pending marker** *(code-pending-closure)*
 

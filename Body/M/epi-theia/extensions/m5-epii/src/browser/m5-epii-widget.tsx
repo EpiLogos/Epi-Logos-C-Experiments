@@ -32,6 +32,13 @@ import {
     ContemplationObjectViewer,
     ContemplationRuntimeContext
 } from './services/contemplation-object-service';
+import {
+    CONTEMPLATE_FETCH_WISDOM_DELTA_METHOD,
+    WisdomDeltaFetchReceipt,
+    WisdomDeltaInspector,
+    WisdomDeltaRuntimeContext,
+    WisdomDeltaService
+} from './services/wisdom-delta-service';
 
 @injectable()
 export class M5EpiiWidget extends ReactWidget {
@@ -46,6 +53,9 @@ export class M5EpiiWidget extends ReactWidget {
 
     @inject(ContemplationObjectService)
     protected readonly contemplationObjects!: ContemplationObjectService;
+
+    @inject(WisdomDeltaService)
+    protected readonly wisdomDeltas!: WisdomDeltaService;
 
     protected readiness: MExtensionReadinessSnapshot = PENDING_M_READINESS;
     protected profile: MathemeHarmonicProfileBoundary | null = null;
@@ -78,6 +88,8 @@ export class M5EpiiWidget extends ReactWidget {
             this.bridge.onCoordinateContext(context => {
                 this.context = context;
                 this.acceptRuntimeContemplationObject(context);
+                this.acceptRuntimeWisdomDelta(context);
+                this.fetchWisdomDeltaForContext(context);
                 this.update();
             })
         );
@@ -98,6 +110,7 @@ export class M5EpiiWidget extends ReactWidget {
         const provenance = `privacy=${PRIVACY_CLASS} | generation=${this.context.profileGeneration ?? '—'} | pointer=${this.context.pointerAnchor ?? '—'}`;
         const projection = this.profile ? this.ebm.project(this.profile) : null;
         const contemplationModel = this.contemplationObjects.currentModel();
+        const wisdomDeltaModel = this.wisdomDeltas.currentModel();
         return (
             <div className="mext-widget-root">
                 <ReadinessBanner
@@ -120,6 +133,14 @@ export class M5EpiiWidget extends ReactWidget {
                         <p className="mext-widget-empty">Awaiting PASU-scoped M5_ContemplationObject.</p>
                     </section>
                 )}
+                {wisdomDeltaModel ? (
+                    <WisdomDeltaInspector model={wisdomDeltaModel} />
+                ) : (
+                    <section className="mext-widget-detail m5-wisdom-delta" data-test="m5-wisdom-delta-empty">
+                        <h3>WisdomDeltaInspector</h3>
+                        <p className="mext-widget-empty">Awaiting PASU-scoped WisdomDeltaTrace.</p>
+                    </section>
+                )}
             </div>
         );
     }
@@ -133,6 +154,45 @@ export class M5EpiiWidget extends ReactWidget {
         }
         void this.contemplationObjects.acceptRuntimeContext(runtimeContext).catch(() => {
             // Privacy failures are intentionally non-committing; the widget keeps the last safe object.
+        });
+    }
+
+    protected acceptRuntimeWisdomDelta(context: CoordinateContext): void {
+        const runtimeContext = (context as CoordinateContext & {
+            runtimeContext?: WisdomDeltaRuntimeContext;
+        }).runtimeContext;
+        if (
+            !runtimeContext?.wisdomDeltaTrace &&
+            !runtimeContext?.trace &&
+            !runtimeContext?.payload?.wisdomDeltaTrace &&
+            !runtimeContext?.payload?.trace
+        ) {
+            return;
+        }
+        void this.wisdomDeltas.acceptRuntimeContext(runtimeContext).then(() => this.update()).catch(() => {
+            // Privacy or hash-validation failures are intentionally non-committing.
+        });
+    }
+
+    protected fetchWisdomDeltaForContext(context: CoordinateContext): void {
+        const sessionId = context.dayNowSessionHandle;
+        if (!sessionId || this.wisdomDeltas.trace?.sessionId === sessionId) {
+            return;
+        }
+        void this.wisdomDeltas.fetchWisdomDelta(
+            async (method, request) => {
+                if (method !== CONTEMPLATE_FETCH_WISDOM_DELTA_METHOD) {
+                    throw new Error(`Unsupported wisdom-delta method ${method}`);
+                }
+                return this.bridge.invokeGatewayRpc(method, { ...request }) as Promise<WisdomDeltaFetchReceipt>;
+            },
+            {
+                sessionId,
+                contemplationObjectRef: context.pointerAnchor,
+                profileGeneration: context.profileGeneration
+            }
+        ).then(() => this.update()).catch(() => {
+            // The gateway may not have closed a contemplation object yet.
         });
     }
 

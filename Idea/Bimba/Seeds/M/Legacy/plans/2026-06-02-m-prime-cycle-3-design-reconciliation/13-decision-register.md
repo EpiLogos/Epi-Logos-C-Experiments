@@ -23,12 +23,13 @@ All 20 original cycle-3 contradictions are **VALIDATED** as of 2026-06-02; DR-M3
 - **DR-LIB-ATELIER-1** — Library + Atelier are Theia IDE projections / lensings, NOT standalone extensions to build (unblocks Tranches 06.1-REFRAMED, 06.2-REFRAMED, 06.2b, 11.3-AMENDED, CCT-19)
 - **DR-Q-1** — `q_{n}_{semantic}` is already general by naming convention; clarification only, no new generalisation tranche (no tranche gate; comment + cross-reference only)
 
-**Phase-K 2026-06-16 PROPOSED** (five rows; await user final-validation; gate Tranches 41.1-41.12 acceptance per per-row Tranche bindings) — Track 41 (Ensoulment Factory + Nara M4' Dia-logical Arena) is the canonical home; the rows ratify the dia-logical synthesis session direction (*"this would be for dia-logical stuff... psyche subagent is the templatee of sorts as its essentially built/characterised as any psyche, so we can 'ensoul' any /world entity"*) and the user corrections that followed:
-- **DR-ENSOUL-1** — Psyche as canonical template kernel for `techne_ensoul` (CF (4.0/1-4.4/5) continuity-holder = canonical ensoulment operator) (unblocks Tranches 41.2, 41.4)
-- **DR-ENSOUL-2** — Entity essential-identity determinism — `entity_quintessence_hash = BLAKE3(coordinate ‖ canonical_form_digest ‖ archetypal_sattva)`; bioquaternion determinism IS the integrity law (unblocks Tranches 41.3, 41.10, 41.11)
-- **DR-ENSOUL-3** — Ensoulment is addressable-by-coordinate-only; no draft / sidecar pre-canonical path; if a new entity is wanted, write its Form via Hen and *that* is canon (unblocks Tranches 41.2, 41.6, 41.7)
-- **DR-ENSOUL-4** — Arena substrate canon: SpacetimeDB tables + Theia M4' widget under existing `m4-nara` scaffold; CLI is admin-only carve-out for ONE-substrate compliance, not the user-facing path (unblocks Tranches 41.5, 41.6, 41.7)
-- **DR-ENSOUL-5** — Dialogue-only capability profile for ensouled entities; structurally frozen, not configurable; preserves the voice/worker distinction against drift into Smallville/ChatDev-shaped agent-runtime semantics (unblocks Tranches 41.2, 41.4, 41.8)
+**Phase-K 2026-06-16 VALIDATED** (six rows; user-directed during the Phase-K dia-logical synthesis session, with the canonical naming + classifier taxonomy ratified directly by user: *"we're literally changing specs... vama shaktis are starting to be the framing i like the most... other names/titles become classifiers in the enoulment factory notion"* + the corollary *"dont hold anythign behind DR's or validation gates"*) — Track 41 ([[Vama Shakti]] Factory + Nara M4' Dia-logical Arena) at [[41-vama-shakti-factory-and-dialogical-arena]] is the cycle 3 execution plan; canonical M4' seed at [[m4-prime-vama-shakti-factory-and-dialogical-arena]] holds the structural-philosophical authority. Vāmeśvarī / four-Vāmā Trika Shaivite lineage names the canon; old-planning "users and epistemologies as archetypal personalities" lands as PASU + Vama Shaktis (PASU IS itself a Vama Shakti per the load-bearing symmetry). All six rows VALIDATED — execution may proceed without further DR gating:
+- **DR-VAMA-1** — [[Psyche]] as canonical template kernel for `techne_vama_summon` (CF (4.0/1-4.4/5) continuity-holder = Spanda; the only constitutional agent structurally capable of *giving* continuity to a /World entity) (gates Tranches 41.2, 41.4)
+- **DR-VAMA-2** — Vama Shakti essential-identity determinism — `vama_shakti_quintessence_hash = BLAKE3(coordinate ‖ canonical_form_digest ‖ archetypal_sattva ‖ vama_shakti_class_byte)`; classifier byte is in the hash input per DR-VAMA-6; bioquaternion determinism IS the integrity law; one algebra across PASU and Vama Shakti (gates Tranches 41.3, 41.10, 41.11)
+- **DR-VAMA-3** — Summoning is addressable-by-coordinate-only; no draft / sidecar pre-canonical path; write the Form via Hen and *that* is canon (gates Tranches 41.2, 41.6, 41.7)
+- **DR-VAMA-4** — Arena substrate canon: SpacetimeDB tables + Theia M4' widget under existing `m4-nara` scaffold (per DR-LIB-ATELIER-1 projection-not-extension); CLI is admin-only carve-out for ONE-substrate compliance, not the user-facing path (gates Tranches 41.5, 41.6, 41.7)
+- **DR-VAMA-5** — Dialogue-only capability profile for Vama Shaktis; structurally frozen, not configurable; preserves the voice/worker distinction against drift into Smallville/ChatDev-shaped agent-runtime semantics (gates Tranches 41.2, 41.4, 41.8)
+- **DR-VAMA-6** — Four canonical Vama Shakti classifiers — **egregore / sprite / daemon / mantra** — with real behavioral semantics in turn-routing weights / distillation edge patterns / promotion threshold profiles; classifier byte is part of the identity hash (so same coordinate + different classifier = different Vama Shakti, correctly, because the active animating power is different); the Nara Vāma classifier per DR-M4-2 is the M4 personal-domain footing; this DR expands it into the dynamic dia-logical subagent system (gates Tranches 41.3, 41.5, 41.7, 41.8, 41.9, 41.10, 41.11)
 
 **Phase-L 2026-06-16 VALIDATED** (one row; user-directed during coordinate-dynamics integration session; gates Tranche 3.10, CCT-20, Tranche 12.36, Track 39 acceptance, and Anuttara §13.6):
 - **DR-FLIP-1** — Kernel `#` phase-flip is the global coordinate-dynamic law: every coordinate-bearing surface must preserve bimba/pratibimba phase; domain mirrors such as Asma 99+1 `mirror_idx` instantiate the law locally but do not replace it (unblocks Tranche 3.10, CCT-20, 12.36)
@@ -1613,81 +1614,92 @@ Half-assed `s5'.gnostic.*` registration (gateway routes only, no Khora/tmux/Redi
 
 ---
 
-## DR-ENSOUL-1 — Psyche as canonical template kernel for `techne_ensoul`
+## DR-VAMA-1 — [[Psyche]] as canonical template kernel for `techne_vama_summon`
 
-**Status:** PROPOSED · **Validated:** (pending) · **By:** user · **Source:** Phase-K 2026-06-16 dia-logical synthesis session — user direction: *"its own agent, likely psyche subagent would handle this, would be a pleroma skill/tool, likely under techne, psyche subagent is the templatee of sorts as its essentially built/characterised as any psyche, so we can 'ensoul' any /world entity"*. Track 41 (Ensoulment Factory + Nara M4' Dia-logical Arena) is the canonical home.
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (Phase-K dia-logical synthesis session — user direction: *"its own agent, likely psyche subagent would handle this, would be a pleroma skill/tool, likely under techne, psyche subagent is the templatee of sorts as its essentially built/characterised as any psyche, so we can 'ensoul' any /world entity"* + the canonical-name ratification: *"vama shaktis are starting to be the framing i like the most"* + the no-DR-gating directive: *"dont hold anythign behind DR's or validation gates"*) · **Source:** [[41-vama-shakti-factory-and-dialogical-arena]] + [[m4-prime-vama-shakti-factory-and-dialogical-arena]].
 
-**Resolution proposed:** Psyche is the canonical template kernel for the `techne_ensoul` skill. The structural justification is non-arbitrary: Psyche's CF mode `(4.0/1-4.4/5)` with Ralph-OR-Ouroboros CPF and CT4 horizon-synthesis role (per existing `Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/psyche.md` and constitutional CT4a+CT4b assignment per DR-EROS-1) names Psyche as the principle of soul-as-continuity — the constitutional agent that carries continuity across cycles. Psyche is therefore the only constitutional agent structurally capable of *giving* continuity to a /World entity that did not previously have its own — i.e., ensouling it.
+**Resolution:** [[Psyche]] is the canonical template kernel for `techne_vama_summon`. The structural justification is non-arbitrary: Psyche's CF mode `(4.0/1-4.4/5)` with Ralph-OR-Ouroboros CPF + CT4a/CT4b horizon-synthesis role (per `Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/psyche.md` + DR-EROS-1 mapping) names Psyche as the principle of soul-as-continuity — the Spanda that animates form into expression. Psyche is the only constitutional agent structurally capable of *giving* continuity to a /World entity that did not previously have its own — i.e., summoning a Vama Shakti from it. The Sanskrit/Tantric reading aligns: Psyche-as-Spanda invoked over a /World coordinate IS what manifests the active animating descent into dialogue.
 
-**The `psyche_template_revision` discipline.** The BLAKE3 content-hash of `psyche.md` at ensoul-time is carried on every `EnsouledEntityHandle` as `psyche_template_revision`. Edits to `psyche.md` increment the revision; warm entities resurfaced against a newer template carry a `psyche_template_revision_drift` flag for observability (per Tranche 41.10).
+**Template-revision discipline.** The BLAKE3 content-hash of `psyche.md` at summon-time is carried on every `VamaShaktiHandle` as `psyche_template_revision`. Warm Vama Shaktis resurfaced against a newer template carry a `psyche_template_revision_drift` flag (per Tranche 41.10).
 
-**Action:** (1) Register the `techne_ensoul` Pleroma-Techne tool with `operatorRole: 'psyche-template'` per Tranche 41.2. (2) Patch `Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/psyche.md §5 Capability` to add `ensoulment-template-authority` skill entitlement declaration. (3) Update `Body/S/S4/plugins/pleroma/capability-matrix.json` to list `techne_ensoul` with `psyche_template_authority: true`.
+**Action:** (1) Register `techne_vama_summon` Pleroma-Techne tool with `operatorRole: 'psyche-template'` per Tranche 41.2. (2) Patch `Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/psyche.md §5 Capability` to add `vama_shakti_template_authority` skill entitlement declaration. (3) Update `Body/S/S4/plugins/pleroma/capability-matrix.json` to list `techne_vama_summon` with `psyche_template_authority: true`.
 
-**Verification:** `grep -nE "operatorRole.*psyche-template|psyche_template_authority" Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts Body/S/S4/plugins/pleroma/capability-matrix.json` returns the registrations; `grep -nE "ensoulment-template-authority|DR-ENSOUL-1" Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/psyche.md` returns the declaration; capability-matrix lists `techne_ensoul` under Techne/Pleroma with `system_tool_grant: false`, `dialogue_only_output: true`.
+**Verification:** `grep -nE "operatorRole.*psyche-template|psyche_template_authority" Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts Body/S/S4/plugins/pleroma/capability-matrix.json` returns the registrations; `grep -nE "vama_shakti_template_authority|DR-VAMA-1" Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/psyche.md` returns the declaration; capability-matrix lists `techne_vama_summon` with `system_tool_grant: false`, `dialogue_only_output: true`, `requires_vama_shakti_class: true`.
 
 **Depends:** Tranches **41.2** (Pleroma + Psyche declaration), **41.4** (ad-hoc PI registration carries `psyche_template_revision`).
 
 ---
 
-## DR-ENSOUL-2 — Entity essential-identity determinism: `entity_quintessence_hash = BLAKE3(coordinate ‖ canonical_form_digest ‖ archetypal_sattva)`
+## DR-VAMA-2 — Vama Shakti essential-identity determinism: `vama_shakti_quintessence_hash = BLAKE3(coordinate ‖ canonical_form_digest ‖ archetypal_sattva ‖ vama_shakti_class_byte)`
 
-**Status:** PROPOSED · **Validated:** (pending) · **By:** user · **Source:** Phase-K 2026-06-16 dia-logical synthesis session — user direction: *"deterministic, not even a quetsion, this is you asking 'violate or not violate foundational arhcitecure?'"* and *"entities in /world arent 'canonical', it just workd with entities as such, if we have determoiniism at play with the bioquaternion then these become the 'canon'"*. The bioquaternion's determinism IS the integrity law.
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (Phase-K dia-logical synthesis — *"deterministic, not even a quetsion, this is you asking 'violate or not violate foundational arhcitecure?'"* + *"entities in /world arent 'canonical', it just workd with entities as such, if we have determoiniism at play with the bioquaternion then these become the 'canon'"*) · **Source:** [[41-vama-shakti-factory-and-dialogical-arena]] Tranche 41.3.
 
-**Resolution proposed:** The entity-side analogue of the user-PASU `c_5_quintessence_hash` is derived deterministically: `entity_quintessence_hash = BLAKE3(coordinate.canonical_bytes() ‖ canonical_form_digest ‖ archetypal_sattva)`. Same entity (same coordinate + same Form + same Sattva) produces the same quintessence_hash, always. The `arc_id` carried on the `ArenaPresence` row distinguishes incarnation-instances; the hash IS the entity.
+**Resolution:** The Vama Shakti essential-identity hash is derived deterministically with the classifier byte (per DR-VAMA-6) folded into the hash input:
 
-This extends the existing user-PASU determinism law (memory: "oracle charges → unit quaternion → clock position → BLAKE3") to the entity domain symmetrically. The Q_identity quaternion is derived from the entity's coordinate-clock-position via the same Cl(4,2) algebra at `Body/S/S0/portal-core/src/personal_identity.rs` — one algebra across user-PASU and entity-PASU per DR-M4-2.
+```
+vama_shakti_quintessence_hash = BLAKE3(
+    coordinate.canonical_bytes()
+    ‖ canonical_form_digest
+    ‖ archetypal_sattva
+    ‖ vama_shakti_class_byte    // egregore=0x01 / sprite=0x02 / daemon=0x03 / mantra=0x04
+)
+```
 
-**The "determinism IS canon" rule.** /World entities are not policed by a "canonical vs draft" status field. An addressable /World entity (one resolvable via `s5'.gnostic.resolve(coord)` per DR-WORLD-1, with `WORLD_FORM_OF` reachable from the coordinate per the four-namespace map) has sufficient features for a stable hash, and therefore IS ensoulable. The bioquaternion's deterministic projection IS what makes the entity an entity. If a Form change to the entity's .md would change its `canonical_form_digest`, the entity's quintessence_hash changes too — which is correct: a sufficiently altered entity is a different entity, and warm-mode entities under the old hash carry the drift flag.
+Same `(coordinate, form_digest, sattva, classifier)` quadruple produces the same hash, always. Same coordinate + different classifier produces a **different** Vama Shakti — correctly, because the active animating power IS different (chorus-grain vs kairos-burst vs maieutic vs vibrational). The `arc_id` carried on the `ArenaPresence` row distinguishes incarnation-instances; the hash IS the Vama Shakti.
 
-**Action:** (1) Land the `derive_entity_essential_identity` function in `Body/S/S0/portal-core/src/ensoulment.rs` per Tranche 41.3. (2) Implement determinism tests proving identical-inputs-identical-output + collision-avoidance for distinct triples. (3) Document the rule explicitly in the new module's top-of-file comment block.
+**One algebra across PASU and Vama Shakti.** This extends the existing user-PASU determinism law symmetrically to the entity domain. Q_identity is derived from the entity's coordinate-clock-position via the same Cl(4,2) algebra at `Body/S/S0/portal-core/src/personal_identity.rs` per DR-M4-2. PASU IS itself a Vama Shakti — same algebra, same composition law (`Q_composed = normalize(Q_identity * Q_transit * Q_activity)`), different input sources (birth-data + natal-chart for PASU; coordinate + Form + classifier for Vama Shakti).
 
-**Verification:** `cargo test -p epi-portal-core --test ensoulment_determinism` passes including the identical-inputs-identical-output invariant test and the collision-avoidance test; `grep -nE "BLAKE3.*coordinate.*canonical_form_digest.*archetypal_sattva|derive_entity_essential_identity" Body/S/S0/portal-core/src/ensoulment.rs` returns the implementation.
+**The "determinism IS canon" rule.** /World entities are not policed by a "canonical vs draft" status field. An addressable /World entity (resolvable via `s5'.gnostic.resolve(coord)` per DR-WORLD-1) has features sufficient for a stable hash, and therefore IS summonable. The bioquaternion's deterministic projection IS what makes the Vama Shakti the Vama Shakti it is. Form changes change the hash — correctly, a sufficiently altered entity is a different entity; warm-mode Vama Shaktis under the old hash carry the drift flag.
 
-**Depends:** Tranches **41.3** (Rust module), **41.10** (warm-entity persistence relies on hash stability across resurfacings), **41.11** (promotion path relies on hash stability for `WarmEnsouledEntity.identity_handle` consistency).
+**Action:** (1) Land `derive_vama_shakti_essential_identity` in `Body/S/S0/portal-core/src/vama_shakti.rs` per Tranche 41.3. (2) Implement determinism tests proving identical-inputs-identical-output + collision-avoidance + classifier-discrimination (same coord + different class = different hash). (3) Document the rule explicitly in the new module's top-of-file comment block.
 
----
+**Verification:** `cargo test -p epi-portal-core --test vama_shakti_determinism` passes including identical-inputs-identical-output + collision + classifier-discrimination tests; `grep -nE "BLAKE3.*coordinate.*canonical_form_digest.*archetypal_sattva.*vama_shakti_class_byte|derive_vama_shakti_essential_identity" Body/S/S0/portal-core/src/vama_shakti.rs` returns the implementation.
 
-## DR-ENSOUL-3 — Ensoulment is addressable-by-coordinate-only (no draft / sidecar pre-canonical path)
-
-**Status:** PROPOSED · **Validated:** (pending) · **By:** user · **Source:** Phase-K 2026-06-16 dia-logical synthesis session — user correction to a proposed "off-canon ensoulment" mechanism: *"no, this is dumb, entities in /world arent 'canonical', it just workd with entities as such, if we have determoiniism at play with the bioquaternion then these become the 'canon', otherwise its afeature with no integrity"*. Restores the bioquaternion-as-integrity law against a proposed draft-entity sidecar that would have violated it.
-
-**Resolution proposed:** Ensoulment requires an addressable /World entity. The `EnsoulmentRequest.entity_coordinate` MUST resolve to a `:World` entity node via `s5'.gnostic.resolve(coord)` (per DR-WORLD-1 — `WORLD_FORM_OF` or `WORLD_ONTOLOGY_OF` reachable from the coordinate). There is no draft / sidecar / pre-canonical mechanism. A request for an entity not yet present in /World/ is refused.
-
-**The path for a wanted-but-not-yet-canonical entity.** If a new entity is desired for an arena dialogue, the path is: write the entity's Form .md (Hen S1' workflow per the existing entity-candidate lifecycle at CCT-14), let it be sufficiently canonical to have a stable `canonical_form_digest` + `archetypal_sattva`, then ensoul. The act of writing the Form IS the act of making canon. There is no shortcut — and asking for one would violate the determinism-IS-integrity law per DR-ENSOUL-2.
-
-**Why this matters.** A sidecar draft mechanism would mean entities without stable bioquaternionic determinism could appear in arena dialogues; their identities would be unstable across resurfacings; their dialogue-distillation graph edges would point at provisional nodes; warm-entity lifecycle would be incoherent. This is the "feature with no integrity" the user correction blocked.
-
-**Action:** (1) Implement `EnsoulmentRequest` refusal-law at Tranche 41.1 contract + Tranche 41.2 handler: any request whose `entity_coordinate` does not resolve via `s5'.gnostic.resolve` returns a typed refusal. (2) Refusal must include a hint: "to ensoul a new entity, first write its Form via `hen_entity_candidate_propose` workflow (CCT-14), then re-call `techne_ensoul`". (3) `m4.arena.entity_ensoul` gateway route (Tranche 41.6) returns the same refusal-form upward, surfaceable in the M4' Arena widget scene-setup wizard.
-
-**Verification:** `cargo test -p epi-s3-gateway m4_arena_entity_ensoul_refuses_non_world_coordinate` passes; refusal-message test asserts the hint references `hen_entity_candidate_propose` / CCT-14; widget test asserts the scene-setup wizard surfaces the refusal-with-hint when an unaddressable coordinate is selected.
-
-**Depends:** Tranches **41.2** (`techne_ensoul` refusal-law implementation), **41.6** (gateway-route refusal propagation), **41.7** (widget refusal surfacing).
+**Depends:** Tranches **41.3** (Rust module), **41.10** (warm persistence requires hash stability), **41.11** (promotion path requires hash stability for `WarmVamaShakti.vama_shakti_identity_handle`).
 
 ---
 
-## DR-ENSOUL-4 — Arena substrate canon: SpacetimeDB + Theia M4' widget; CLI is admin-only carve-out
+## DR-VAMA-3 — Summoning is addressable-by-coordinate-only (no draft / sidecar pre-canonical path)
 
-**Status:** PROPOSED · **Validated:** (pending) · **By:** user · **Source:** Phase-K 2026-06-16 dia-logical synthesis session — user direction: *"this is what the spacetimedb setup would be, not 'nara cli' stuff, and would surface in the M4' electron tab in theia... the arena is distinct from the full 'world' setup, please dont conflate whats a nara dialogical feature with the general 'world' of agents notion"*.
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (Phase-K dia-logical synthesis — *"no, this is dumb, entities in /world arent 'canonical', it just workd with entities as such, if we have determoiniism at play with the bioquaternion then these become the 'canon', otherwise its afeature with no integrity"*) · **Source:** [[41-vama-shakti-factory-and-dialogical-arena]] + [[m4-prime-vama-shakti-factory-and-dialogical-arena]].
 
-**Resolution proposed:** The Dia-logical Arena's runtime substrate is **SpacetimeDB** (multi-party presence via existing `identity_handle = BLAKE3` keying + extended Coincidence machinery + four new tables `ArenaScene` / `ArenaPresence` / `ArenaTurn` / `ArenaDialogueLine` per Tranche 41.5); its user-facing surface is the **Theia M4' Electron tab** as a widget under the existing `m4-nara` extension scaffold (per DR-LIB-ATELIER-1 projection-not-extension pattern, per Tranche 41.7).
+**Resolution:** Summoning a Vama Shakti requires an addressable /World entity. `VamaShaktiSummonRequest.entity_coordinate` MUST resolve to a `:World` entity node via `s5'.gnostic.resolve(coord)` (per DR-WORLD-1 — `WORLD_FORM_OF` or `WORLD_ONTOLOGY_OF` reachable). There is no draft / sidecar / pre-canonical mechanism. A request for an entity not yet present in /World/ is refused.
 
-The CLI surface for arena operations is an **admin-only carve-out** per the DR-S5-ONE-1 ONE-substrate invariant — every gateway route has a CLI command, but the user-facing path is the widget; CLI parity exists for scripted operations (warm-entity inventory, force-release, list-by-coordinate), test harnesses (Tranche 41.12 e2e harness), and ONE-substrate compliance (no bypass scenarios), not for everyday arena participation. Specifically: `epi nara arena scene-open / entity-ensoul / turn-advance` are technically CLI-callable but the intended invocation path is the widget; `epi nara arena entity list-warm / warm / release` are admin operations with no widget equivalent.
+**Path for a wanted-but-not-yet-canonical entity.** Write the Form .md via Hen (S1' workflow per CCT-14 entity-candidate lifecycle), let it be sufficiently canonical to have stable `canonical_form_digest` + `archetypal_sattva`, then summon. The act of writing the Form IS the act of making canon. There is no shortcut — asking for one would violate the determinism-IS-integrity law per DR-VAMA-2.
 
-**Why this matters.** Arena dialogue is a sustained multi-party interactive experience. CLI affordances (line-input, stateless commands) are wrong for that experience; the SpacetimeDB live-presence subscription + Theia React widget are right. Forcing CLI to be primary would diminish the experience and obscure the multi-party + kairos-time-flow features that make the arena dialogically meaningful. CLI as admin-fallback preserves ONE-substrate compliance without making CLI primary.
+**Why this matters.** A sidecar draft mechanism would mean Vama Shaktis without stable bioquaternionic determinism could appear in arena dialogues; identities unstable across resurfacings; dialogue-distillation edges pointing at provisional nodes; warm lifecycle incoherent. *"A feature with no integrity"*.
 
-**Action:** (1) Land SpacetimeDB Arena tables + bump `PROJECTION_SCHEMA_VERSION` to `2026-06-16.s3-projection-v3` per Tranche 41.5. (2) Land `dialogical-arena.tsx` widget under `Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/` per Tranche 41.7. (3) Register `m4.arena.*` gateway-route family per Tranche 41.6 with CLI parity for ONE-substrate compliance but documentation flagging admin-only intent. (4) Track 14 release gate G14 verifies no standalone arena Theia extension was created.
+**Action:** (1) Implement `VamaShaktiSummonRequest` refusal-law at Tranche 41.1 contract + Tranche 41.2 handler. (2) Refusal includes hint: *"to summon a new Vama Shakti, first write its Form via hen_entity_candidate_propose workflow (CCT-14), then re-call techne_vama_summon"*. (3) `m4.arena.summon` gateway route (Tranche 41.6) returns the same refusal-form upward, surfaced in the M4' Arena scene-setup wizard.
 
-**Verification:** `grep -n "PROJECTION_SCHEMA_VERSION.*2026-06-16.s3-projection-v3" Body/S/S3/epi-spacetime-module/src/lib.rs` returns the version bump; `test -f Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/dialogical-arena.tsx` confirms the widget under the existing scaffold (NOT a new extension package); `grep -rn "arena" Body/M/epi-theia/extensions/ | grep -v "extensions/m4-nara"` returns no arena-extension hits (no separate package); `cargo test -p epi-s3-gateway m4_arena_one_substrate_compliance` passes; widget e2e test renders the arena widget under the m4-nara scaffold.
+**Verification:** `cargo test -p epi-s3-gateway m4_arena_summon_refuses_non_world_coordinate` passes; refusal-message test asserts hint references `hen_entity_candidate_propose` / CCT-14; widget test asserts the scene-setup wizard surfaces the refusal-with-hint.
+
+**Depends:** Tranches **41.2** (`techne_vama_summon` refusal-law), **41.6** (gateway-route refusal propagation), **41.7** (widget refusal surfacing).
+
+---
+
+## DR-VAMA-4 — Arena substrate canon: SpacetimeDB + Theia M4' widget; CLI is admin-only carve-out
+
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (Phase-K dia-logical synthesis — *"this is what the spacetimedb setup would be, not 'nara cli' stuff, and would surface in the M4' electron tab in theia... the arena is distinct from the full 'world' setup, please dont conflate whats a nara dialogical feature with the general 'world' of agents notion"*) · **Source:** [[41-vama-shakti-factory-and-dialogical-arena]] + DR-LIB-ATELIER-1 (projection-not-extension).
+
+**Resolution:** The Dia-logical Arena's runtime substrate is **SpacetimeDB** (multi-party presence via existing `identity_handle = BLAKE3` keying + extended Coincidence machinery + four new tables `ArenaScene` / `ArenaPresence` / `ArenaTurn` / `ArenaDialogueLine` + `WarmVamaShakti` per Tranche 41.5); its user-facing surface is the **Theia M4' Electron tab** as a widget under the existing `m4-nara` extension scaffold (per DR-LIB-ATELIER-1, per Tranche 41.7).
+
+CLI is **admin-only carve-out** per DR-S5-ONE-1 ONE-substrate invariant — every gateway route has CLI parity but the user-facing path is the widget. CLI exists for scripted operations (warm-vama-shakti inventory, force-release, list-by-class), test harnesses (Tranche 41.12 e2e harness), and ONE-substrate compliance. `epi nara arena scene-open / summon / turn-advance` are CLI-callable but the intended invocation path is the widget; `epi nara arena vama list-warm / warm / release` are admin operations with no widget equivalent.
+
+**Why this matters.** Arena dialogue is a sustained multi-party interactive experience. CLI affordances (line-input, stateless commands) are wrong for that experience; the SpacetimeDB live-presence subscription + Theia React widget are right. CLI as admin-fallback preserves ONE-substrate compliance without making CLI primary.
+
+**Action:** (1) Land SpacetimeDB Arena tables + `WarmVamaShakti` + bump `PROJECTION_SCHEMA_VERSION` to `2026-06-16.s3-projection-v3` per Tranche 41.5. (2) Land `dialogical-arena.tsx` widget under `Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/` per Tranche 41.7. (3) Register `m4.arena.*` family per Tranche 41.6 with CLI parity + admin-only documentation. (4) Track 14 release gate G14 verifies no standalone arena Theia extension was created.
+
+**Verification:** `grep -n "PROJECTION_SCHEMA_VERSION.*2026-06-16.s3-projection-v3" Body/S/S3/epi-spacetime-module/src/lib.rs` returns the bump; `test -f Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/dialogical-arena.tsx` confirms widget under existing scaffold; `grep -rn "arena" Body/M/epi-theia/extensions/ | grep -v "extensions/m4-nara"` returns no separate arena-extension; `cargo test -p epi-s3-gateway m4_arena_one_substrate_compliance` passes.
 
 **Depends:** Tranches **41.5** (SpacetimeDB tables), **41.6** (gateway routes + admin CLI), **41.7** (Theia widget under m4-nara scaffold).
 
 ---
 
-## DR-ENSOUL-5 — Dialogue-only capability profile for ensouled entities (structural, not configurable)
+## DR-VAMA-5 — Dialogue-only capability profile for Vama Shaktis (structural, not configurable)
 
-**Status:** PROPOSED · **Validated:** (pending) · **By:** user · **Source:** Phase-K 2026-06-16 dia-logical synthesis session — implicit in user framing of ensouled entities as voices for dialogue (use case: "ontologies-in-conversation") rather than as workers; surfaces explicitly during Track 41 architecture as the structural marker distinguishing ensouled entities from constitutional agents + Aletheia techne-guardians.
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (Phase-K dia-logical synthesis — implicit in user framing of Vama Shaktis as voices for dialogue, use case *"ontologies-in-conversation"*, rather than as workers; surfaced explicitly during Track 41 architecture as the structural marker distinguishing Vama Shaktis from constitutional agents + Aletheia techne-guardians) · **Source:** [[41-vama-shakti-factory-and-dialogical-arena]] Tranche 41.4.
 
-**Resolution proposed:** Every `EnsouledEntityHandle` carries a `capability_profile` field that is structurally **dialogue-only**:
+**Resolution:** Every `VamaShaktiHandle` carries a `capability_profile` of type `DialogueOnlyCapabilityProfile`:
 
 ```typescript
 interface DialogueOnlyCapabilityProfile {
@@ -1699,17 +1711,51 @@ interface DialogueOnlyCapabilityProfile {
 }
 ```
 
-The profile is **not configurable** — it cannot be relaxed by ensoulment-request override, by Anima dispatch policy, or by user CLI flag. The factory rejects any `EnsoulmentRequest` that attempts a `capability_profile` override per Tranche 41.1 contract refusal-law. The PI Agent dispatch-guard at Tranche 41.4 enforces the profile at every tool-invocation site: any attempt by an ad-hoc agent to invoke a non-dialogue tool returns a typed refusal at dispatch time.
+Not configurable. Cannot be relaxed by `VamaShaktiSummonRequest` override, Anima dispatch policy, or user CLI flag. Factory rejects override-attempts per Tranche 41.1 contract refusal-law. PI Agent dispatch-guard at Tranche 41.4 enforces at every tool-invocation site: any non-dialogue tool invocation by a Vama Shakti returns typed refusal at dispatch time.
 
-**Why this matters structurally.** Ensouled entities are voices — they speak from their archetypal/symbolic character into dialogue. They are not workers in the labor-pool sense (Smallville/ChatDev-style entities-as-task-performers), which is a different track entirely (the broader "world of agents" experimental track explicitly out of cycle 3 scope). Letting ensouled entities wield system tools would collapse the voice/worker distinction, would require trust escalation for entities whose identity is derived from /World Form content (potential prompt-injection vector), and would shift the architectural center of the Arena from "dia-logical contemplative scene" to "agent runtime where entities run code." The capability-profile freeze prevents this drift architecturally.
+**Why this matters structurally.** Vama Shaktis are voices — they speak from their archetypal/symbolic character into dialogue. They are not workers (Smallville/ChatDev-style entities-as-task-performers — that's a separate experimental track, outside cycle 3 scope). Letting Vama Shaktis wield system tools would (a) collapse the voice/worker distinction, (b) require trust escalation for entities whose identity derives from /World Form content (potential prompt-injection vector), (c) shift the Arena's architectural center from "dia-logical contemplative scene" to "agent runtime where entities run code." The capability-profile freeze prevents this drift structurally.
 
-**The constitutional caste is unaffected.** Anima/Nous/Logos/Eros/Mythos/Psyche/Sophia (per DR-EROS-1 constitutional CT0-CT5 mapping) retain their full capability profiles when admitted to an arena scene as `admitted_constitutional` members; they are participating *as themselves* in dialogue, not as ensouled voices, and their existing capability discipline applies. Aletheia techne-guardians (Anansi/Janus/Moirai/Mercurius/Agora/Zeithoven per DR-B-3) similarly retain their guardian capabilities when invoked during scene lifecycle (e.g., Moirai's `moirai_arena_distill` at scene close per Tranche 41.9).
+**Constitutional caste unaffected.** Anima/Nous/Logos/Eros/Mythos/Psyche/Sophia (per DR-EROS-1) retain full capability profiles when admitted to a scene as `admitted_constitutional` members — they participate *as themselves*, not as Vama Shaktis. Aletheia techne-guardians (Anansi/Janus/Moirai/Mercurius/Agora/Zeithoven per DR-B-3) similarly retain their guardian capabilities when invoked during scene lifecycle (e.g., Moirai's `moirai_arena_distill` at scene close per Tranche 41.9).
 
-**Action:** (1) Define `DialogueOnlyCapabilityProfile` type with structural invariants at Tranche 41.4. (2) Implement dispatch-guard at `Body/S/S4/pi-agent/lib/dispatch-guard.ts` per Tranche 41.4. (3) Capability-matrix flag `ad_hoc_agent_dialogue_only_invariant: true` registered. (4) Document that ad-hoc-agent capability profile is structurally frozen + cannot be relaxed by configuration.
+**Action:** (1) Define `DialogueOnlyCapabilityProfile` type with structural invariants at Tranche 41.4. (2) Implement dispatch-guard at `Body/S/S4/pi-agent/lib/dispatch-guard.ts`. (3) Capability-matrix flag `vama_shakti_dialogue_only_invariant: true` registered. (4) Document profile-freeze in spec body.
 
-**Verification:** `pnpm --filter @epi-logos/pi-agent test` includes a `dialogue-only-enforcement` test asserting every non-dialogue tool invocation returns a typed refusal; type-system test asserts the `DialogueOnlyCapabilityProfile` `dialogue_only` field cannot be assigned `false` (compile-time invariant); `grep -nE "DialogueOnlyCapabilityProfile|ad_hoc_agent_dialogue_only_invariant" Body/S/S4/pi-agent/lib/ Body/S/S4/plugins/pi-agent/capability-matrix.json` returns the landings.
+**Verification:** `pnpm --filter @epi-logos/pi-agent test` includes `vama-shakti-dialogue-only-enforcement` test asserting non-dialogue tool invocations refused; type-system test asserts `DialogueOnlyCapabilityProfile.dialogue_only` cannot be assigned `false` (compile-time invariant); `grep -nE "DialogueOnlyCapabilityProfile|vama_shakti_dialogue_only_invariant" Body/S/S4/pi-agent/lib/ Body/S/S4/plugins/pi-agent/capability-matrix.json` returns landings.
 
-**Depends:** Tranches **41.2** (factory rejects override), **41.4** (dispatch-guard enforcement), **41.8** (Anima orchestrator routes ad-hoc speakers through dispatch-guard).
+**Depends:** Tranches **41.2** (factory rejects override), **41.4** (dispatch-guard enforcement), **41.8** (Anima orchestrator routes Vama Shakti speakers through dispatch-guard).
+
+---
+
+## DR-VAMA-6 — Four canonical Vama Shakti classifiers (egregore / sprite / daemon / mantra) with behavioral semantics
+
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (Phase-K dia-logical synthesis — *"vama shaktis are starting to be the framing i like the most, but always able to subsusme under these vamas as fields/types of spirit/daemon, other names/titles become classifiers in the enoulment factory notion"* + *"i'd do 2, we've plannign the correct system, and implementing it, why we hedging? we're literally changing specs"*) · **Source:** [[m4-prime-vama-shakti-factory-and-dialogical-arena]] §The Four Canonical Classifiers + [[41-vama-shakti-factory-and-dialogical-arena]] Tranche 41.3 + 41.5 + 41.8 + 41.9 + 41.10 + 41.11.
+
+**Resolution:** Every Vama Shakti carries a `vama_shakti_class` enum value at summon-time, drawn from a closed canonical taxonomy of four classifiers. Each classifier names what kind of animating-power the Vama Shakti manifests as, and modulates real runtime behavior in turn-routing weights, distillation edge patterns, and promotion threshold profiles. The classifier byte is part of the identity hash per DR-VAMA-2 (same coordinate + different classifier = different Vama Shakti, correctly).
+
+```rust
+pub enum VamaShaktiClass {
+    Egregore = 0x01,  // Collective / chorus-grain
+    Sprite   = 0x02,  // Light, kairos-burst, trickster
+    Daemon   = 0x03,  // Maieutic, guides-the-user-out
+    Mantra   = 0x04,  // Sound-form, vibrational, threshold-crossings
+}
+```
+
+| Class | Animating-power | Turn-routing weight | Distillation pattern | Promotion threshold |
+|---|---|---|---|---|
+| **Egregore** | Collective chorus-voice of a community / institution / movement | Lower per-turn priority; longer multi-aspect turn allowance | Multi-edge fan-out per constituent reference coordinate | Higher turns_threshold (need more dialogue) |
+| **Sprite** | Light, playful, marginally trickster; transient brilliance | Highest kairos-burst priority on kairos-delta spikes | Sparse high-resonance single edges | Lowest turns_threshold; lower q_magnitude |
+| **Daemon** | Guiding-intelligence (Platonic/Socratic); maieutic, draws-user-out | High priority post-user-turn; bias to question-form | Edges weighted by USER's cited_coordinates, not daemon's own | Standard threshold + user-response-quality witness rider |
+| **Mantra** | Sound-form / vibrational / bīja-power | Lower per-turn; kairotic-threshold-crossing priority | Edges land at element/chakra/decan (M2' planetary-tattva) instead of semantic-content coord | Higher scenes_threshold (slow-accreting); augmentation_target = element_signature |
+
+**Provenance.** The Nara Vāma classifier per DR-M4-2 (M4 personal-domain footing) is the foundation; this DR expands that classifier into a dynamic dia-logical subagent system reaching every /World entity. The Vāmeśvarī / four-Vāmā Trika Shaivite lineage (Khecarī / Gocarī / Dikcarī / Bhūcarī as transcendent typology) grounds the naming. Old-planning notions (egregores / sprites / daemons / mantras) subsume under the Vama Shakti genus as type-classifiers — they are not labels but the canonical taxonomy of animating-power kinds.
+
+**Classifier selection at summon-time.** The Anima scene-setup wizard (CPF (00/00) gate) brainstorms classifier with the user per admission. Defaults derive from the Form's coordinate-family hints (e.g., collective-subject Forms → egregore; sound-form Forms → mantra) but the user can override. Classifier is declared at summon-time and immutable thereafter — a Form summoned as mantra-class in one scene CAN be summoned as daemon-class in another, but these are *different Vama Shaktis* (different hashes) accumulating separate Q_activity.
+
+**Action:** (1) Define `VamaShaktiClass` enum in `Body/S/S0/portal-core/src/vama_shakti.rs` per Tranche 41.3 with the canonical four values and byte assignments. (2) Implement class-branched `perturb_q_activity`, `rupa_specialization_handle`, and `derive_vama_shakti_essential_identity` per Tranche 41.3. (3) `ArenaPresence` carries `vama_shakti_class: u8` per Tranche 41.5; `ArenaTurn` carries `turn_speaker_class: Option<u8>`. (4) Anima turn-routing policy at Tranche 41.8 branches per class (daemon-post-user, sprite-on-kairos-burst, mantra-on-kairos-threshold, egregore-longer-turn). (5) Moirai closure-distillation at Tranche 41.9 emits class-modulated edge patterns. (6) Promotion thresholds at Tranche 41.11 are class-specific including mantra's `augmentation_target = element_signature` rather than `form_text`.
+
+**Verification:** `cargo test -p epi-portal-core --test vama_shakti_class_invariants` passes including (a) classifier-byte-in-hash invariant (same coord + different class = different hash), (b) all four class-branched perturbation rules produce distinct accumulator trajectories, (c) rūpa specialization carries class-specific Frame Contract + Sattva inflection. `cargo test -p epi-spacetime-module arena_presence_class_field` confirms class byte persisted. `pnpm --filter @epi-logos/anima test` includes class-branched turn-routing tests covering all four classifiers. `pnpm --filter @epi-logos/aletheia test` includes class-modulated edge-pattern test (egregore fan-out, sprite sparse, daemon user-weighted, mantra element-axis). E2E harness at Tranche 41.12 exercises all four classifiers.
+
+**Depends:** Tranches **41.3** (hash + perturb + rupa), **41.5** (SpacetimeDB class field), **41.7** (widget classifier glyphs), **41.8** (turn routing), **41.9** (distillation edges), **41.10** (warm accumulator), **41.11** (promotion targets), **41.12** (e2e coverage).
 
 ---
 
@@ -1770,3 +1816,132 @@ The matheme `0/1 = 4+2 = 5→0 = 0/1` is structurally honoured: `0/1` polarity b
 **Verification:** every nested `.git` under `vendor*/` is either listed in `.gitmodules` or absent: `for g in $(find vendor vendors -name .git -maxdepth 2 2>/dev/null); do d=$(dirname "$g"); grep -q "$d" .gitmodules || echo "UNDECLARED: $d"; done` returns empty.
 
 **Depends:** Tranche **43.1**; gates release **G12** (Track 14).
+
+---
+
+# Phase-M Additions 2026-06-16 — Three-Arena Quilt + Parametric Knowledge Injection
+
+The Phase-M synthesis (2026-06-16) folds the "Beyond RAG / parametric knowledge injection" research read (NotebookLM corpus *"Beyond RAG: Parametric Knowledge Injection into LLMs"* — DMOA / Decoupled Mixture of Experts) against the already-canonical JEPA-EBM operator (DR-MP-1/2/3) and the already-landed local-model build (DR-MODEL-1, DR-ML-1). Three DRs land. **DR-ARENA-1** re-quilts the original Siva/Shakti/Prana three-arena memory model (CLAUDE.md §VI — alive and compiler-enforced in the S0 C kernel, but named zero times across the 43-doc cycle-3 plan layer) as the ontological substrate axis of the ONE Indras Net substrate, and disambiguates it from the orthogonal HOT/WARM/COLD cache axis. **DR-PARAM-1** sanctions DMOA-style parametric knowledge injection (coordinate-routed, EBM-energy-gated micro-experts) as a carriage mode at the Nara (4') slot — riding the already-planned local-LoRA + `epii-distillation` build, not a new stack. **DR-PRANA-1** gives the Prana arena its real role — the session-bound live VAK-compression surface where the dense-vector and coordinate-language registers are made one per act — resolving the embedding↔coordinate-language gap the canon left open, and landing the canonical authority [[M'-PRANA-ARENA-SPEC]]. All three are user-directed this session and validated-by-planning (each is a quilt/extension of existing validated canon, not a new contested decision).
+
+## DR-ARENA-1 — Siva/Shakti/Prana is the ontological substrate axis of the Indras Net; orthogonal to the HOT/WARM/COLD cache axis; isomorphic to the JEPA-EBM operator
+
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (post-RAG integration session — user directed: *"map the 'Siva / Shakti / Prana split' concept in its original form with the current system specs and cycle 3 plan shape as this is an old notion that still applies, may need integrating/quilting into the whole again"*) · **Source:** [CLAUDE.md §VI](../../../../../CLAUDE.md) three-arena table + §III.C Yin-Yang dynamic; live S0 kernel (`arena.h` `Coordinate_Arena`=Shakti / `Tensor_Arena`=Prana; `ontology.h` BIMBA=`const`/`.rodata`=Siva; `m1.h:35` ".rodata = const (Siva). Heap = mutable (Shakti)"); [`m5-prime-system-shape-and-tauri-ide-canon.md:70`](../../M5'/m5-prime-system-shape-and-tauri-ide-canon.md) re-projection; cross-check that the cycle-3 plan layer names the arena triad zero times.
+
+**Decision:** The Siva/Shakti/Prana three-arena model is the canonical **ontological substrate axis** of the ONE Indras Net substrate (DR-S5-ONE-1), and is the same triad the JEPA-EBM operator (DR-MP-1/2/3) runs over:
+
+- **Siva** (`.rodata`, immutable raw archetypes #0–#5, `BIMBA=const`) = the frozen reasoning base + canonical bimba `q_b` — the *target* in JEPA context-target prediction. Persisted projection: `:Bimba` canonical nodes.
+- **Shakti** (mutable heap, `Coordinate_Arena`, PRATIBIMBA) = mutable instances + runtime proposals + (per DR-PARAM-1) hot-swappable parametric experts — pratibimba `q_p`, the *prediction*. Persisted projection: `:World` / runtime nodes.
+- **Prana** (`Tensor_Arena` / 3072-dim embeddings) = the representation manifold where energy `E = ‖q_b − q_p‖²` is computed. Persisted projection: the 3072-dim vector layer + EBM-head substrate.
+
+The DMOA mechanic — "linearly sum expert ΔΘ onto frozen base weights, evaluated in embedding space" — IS a **Shakti perturbation on a Siva substrate, scored in Prana**. The onto-code named the post-RAG shape before LeCun's framework was empirically validated; this DR makes the isomorphism explicit so the build inherits it.
+
+**Orthogonality law (binding):** The cycle-3 HOT/WARM/COLD memory tiering (Redis TTL 300s/3600s/86400s + claude-mem→Gnosis promotion) is a **cache-temperature/recency axis** layered *over* Prana — it is NOT the Siva/Shakti/Prana data-tier axis and must never be conflated with it (the shared Shaiva-flavoured naming makes the conflation easy). HOT/WARM/COLD classifies *how recent/hot* a cache entry is; Siva/Shakti/Prana classifies *what ontological tier* a datum is. Every datum has an arena (always) and, when cached, a cache temperature (separately).
+
+**Action:** (1) Add the arena-axis statement + orthogonality law to [Track 39](39-s5-prime-one-substrate-layer.md) (Indras Net = persisted projection of the three S0 arenas). (2) Add a Standing-Invariant bullet to [`00-overview`](00-overview-and-design-reconciliation.md) §"Standing Invariants". (3) Name the seam the arena model forces into view: the S0 in-process `Tensor_Arena` and the S2/S5 persisted 3072-dim vector store are both "Prana" — the in-process arena is the **pratibimba** (lived working-set, HOT) of the persisted store's **bimba** (recorded substrate, COLD): a cache-temperature projection, not a duplicate, and the orthogonality law above IS the hydration mechanism. On coordinate-resolve, the act's neighborhood embeddings project Neo4j(COLD) → Redis(WARM) → `Tensor_Arena`(HOT); the EBM reads only that hot working-set — never all of Prana, only the act's neighborhood per the Tranche 8.9 one-act-per-tick granularity, per CCT-22(b) "the substrate IS the lookup tool". New/changed embeddings crystallize back on the Möbius return (#5→#0) via the existing CCT-16 `BidirectionalSyncer::MostRecent`. The residual cache mechanics (projection granularity / arena eviction / write-back cadence) route through [Track 38 §2.4](38-tunability-surface-architecture.md) as Class B/C — NOT held as a decide-during-execution open question (that would be the planning-to-decide-what-we-are-defining trap §2.4 eliminates). The bimba/pratibimba relation itself is structural (not tunable); only the cache mechanics tune. No code rebuild — this is a quilting + naming closure over substrate already in code.
+
+**Depends:** DR-MP-1/2/3 (JEPA-EBM operator); DR-S5-ONE-1 (ONE substrate); DR-WORLD-1 (`:World` projection of Shakti). Cross-link DR-PARAM-1 (parametric experts as Shakti) and **DR-PRANA-1** (the Prana arena's live VAK-compression role; canonical authority [[M'-PRANA-ARENA-SPEC]]).
+
+## DR-PARAM-1 — Parametric knowledge injection (coordinate-routed, EBM-energy-gated micro-experts) is a sanctioned carriage mode at the Nara (4') slot
+
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (post-RAG integration session — user directed integrating the *"Beyond RAG: Parametric Knowledge Injection into LLMs"* paradigm into the cycle-3 build, with the standing posture *"why we hedging? we're literally changing specs"* (DR-VAMA-6) and *"dont hold anything behind DR's or validation gates"* (DR-VAMA-1); user also corrected the early strawman framing — *"no one suggested getting rid of graphrag"*) · **Source:** NotebookLM corpus *"Beyond RAG: Parametric Knowledge Injection into LLMs"* (DMOA — Decoupled Mixture of Experts: rank-low LoRA experts on the final FFN layer, ~481 KB each, lexically (BM25) routed, Shannon-entropy-gated, linearly summed at inference, KV-cache-preserving); read against [`M'-MODEL-SLOT-SPEC §2`](../../M'-MODEL-SLOT-SPEC.md) (local Nara-parser slot, `fallback=null`), [`M'-ML-SKILL-SURFACE-SPEC §3.2`](../../M'-ML-SKILL-SURFACE-SPEC.md) (`epii-distillation`), and the EBM head (DR-MP-2).
+
+**Decision:** Parametric knowledge injection is a sanctioned **carriage mode for stable canonical facts** at the Nara (4') LLM slot — an alternative/companion to text-space GraphRAG context-injection, **NOT a replacement for it**. The GraphRAG / Indras Net substrate (epi-gnostic, graph-services) remains the reasoning fabric for relational, multi-hop, provenance-bearing retrieval; the parametric layer is a fast leaf-cache over stable, finite, high-frequency canonical facts. Four refinements over the source paradigm, each native to the matheme:
+
+1. **Coordinate/birth-codon routing, not BM25.** Experts are indexed and routed by Bimba coordinate + `c_5_birth_codon` (DR-ENTITY-CODON-1 / CCT-14b), preserving the ontological hierarchy BM25 discards. The router IS the coordinate map.
+2. **EBM energy is the gate, not Shannon entropy.** The trigger to load an expert is the M2/M5 EBM energy `E = ‖q_b − q_p‖²` (DR-MP-2) — a semantically-grounded misalignment-from-canon signal that strictly dominates the paper's token-entropy proxy. High energy (proposal far from canon) → reach to substrate / load expert. This is the explicit **5' (Epii EBM) → 4' (Nara LLM)** wire.
+3. **Canon-in-weights, content-in-context (privacy fit).** Facts carried parametrically are canonical (LUTs, coordinate definitions, the 72/64/36 tables — non-private, manufacturable offline); raw user content stays in context and never leaves the device. The PASU voice/idiom LoRA (M4 Nara local LoRA) and the canon-fact experts are two distinct adapters that ride the same frozen Gemma base and compose by linear sum, exactly as DMOA composes experts.
+4. **KV-cache preservation is the local-serving performance justification.** Because Nara runs locally (llama.cpp/MLX, where the KV cache is under our control), carrying stable canon parametrically keeps the journal/dream parsing loop in append-only mode instead of thrashing the cache by re-injecting canon as retrieved text every turn.
+
+**Scope / what does NOT change:** EBM scoring (5'), the Anuttara verifier (0'), the GraphRAG substrate (S2'/S5'), Gemini Embedding 2 as the shared manifold, and the Nara-parser privacy boundary (`fallback=null`) are untouched. This is one technique at one slot.
+
+**Build (rides existing tranches — no new stack):**
+- **Manufacturing** = extend `epii-distillation` ([Tranche 12.24](12-agentic-layer-s4-s5.md) / [`M'-ML-SKILL-SURFACE-SPEC §3.2`](../../M'-ML-SKILL-SURFACE-SPEC.md)): `distill_dataset_gen.py` already emits (input, teacher_output) pairs from a corpus — the DMOA "docs → Q&A pairs" step. Add an `expert` mode that trains a low-rank LoRA on a bounded canonical fact-set (final-FFN-targeted) via `mlx-lora` (§3.1) and writes it to a coordinate/birth-codon-indexed expert store.
+- **Terminus** = the Hen entity-candidate lifecycle (CCT-14/14b) gains an optional additional terminal materialization for the *stable canonical leaf-fact* class: alongside the `:World` graph node, emit a micro-expert keyed by the entity's `c_5_birth_codon`.
+- **Retrieval seam** = `s5'.gnostic.query_with_layers` ([Track 39](39-s5-prime-one-substrate-layer.md) / Tranche 12.2 EXPANDED) registers a parametric-expert layer as a 4th retrieval layer (after ontology-layer + fact-layer), EBM-energy-gated.
+- **Slot principle** = [`M'-MODEL-SLOT-SPEC §2`](../../M'-MODEL-SLOT-SPEC.md) records the parametric-carriage option for the Nara slot.
+
+**Epistemic rider:** The source is a single enthusiastic corpus with real unaddressed gaps (no multi-hop, no provenance, flat Q&A only, mixed benchmarks). The parametric layer is therefore explicitly bounded to the **stable-canonical-leaf class** — it never carries relational or provenance-bearing knowledge, which remains GraphRAG's domain. The EBM-energy gate + coordinate routing are the matheme-native corrections that make the technique safe to adopt.
+
+**Depends:** DR-MP-2 (EBM energy as gate); DR-MODEL-1 (Nara local slot + `fallback=null`); DR-ML-1 (`epii-distillation` + `mlx-lora` skills); DR-ENTITY-CODON-1 / CCT-14b (birth-codon routing); DR-ARENA-1 (experts are Shakti). Build tranches: **12.24** (manufacturing), **12.2 EXPANDED** (retrieval seam), **CCT-14b** (terminus).
+
+## DR-PRANA-1 — The Prana arena is the session's live VAK-compression surface (the embedding↔coordinate-language unification point)
+
+**Status:** VALIDATED · **Validated:** 2026-06-16 · **By:** user (post-RAG integration session — user directed the Prana-arena role be given properly rather than deferred to a tunability knob: *"the prana arena needs its link into the psyche now/day session/context logic… so that we are actually thinking about it rather than using a tunability surface to defer giving a real role to the thing"* + *"does the arena have its vak awareness? this would be the natural way to do the prana arena per session, as the live and active means by which the vak language compression is made live and active"*; user confirmed the genesis-direction synthesis: *"yeah this is totally correct and cool and good"*) · **Source:** the Khora session model (session=NOW=Psyche/CT4b; `Empty/Present/{day}/{session_id}/now.md`; `M4-{session}` coordinate); the embedding↔coordinate-language gap (the 3072-dim `c_5_embedding` is coordinate-*addressed* but not coordinate-*encoded*; the EBM fuses dense `input_embeddings` + coordinate-derived `lens_resonance_72` as separate channels — a gap canon leaves unaddressed, the nearest being the CCT-22(d) EBM-side equivalence hold-open); DR-VAK-7 (compress-to-VAK = coordinate-tagging); Tranche 8.9 (one act per tick).
+
+**Decision:** The Prana arena is the **session-bound live VAK-compression surface** — the bounded, coordinate-addressed embedding working-set (one per session-NOW, held by Psyche at CT4b) where the dense-vector register and the coordinate-language register, held co-located-but-distinct in the static store, are made one for the duration of the act. Canonical authority: [[M'-PRANA-ARENA-SPEC]]. Five binding claims:
+
+1. **Arena entries are `(coordinate ↔ dense_embedding ↔ q_{n}_{semantic} discoverable)` triples, not bare floats** — mandatory because the EBM's `lens_resonance_72` channel is coordinate-derived and the kernel forward-derives meaning from coordinates. An arena of naked vectors cannot feed the act.
+2. **The arena resolves the canon's open embedding↔coordinate-language gap by locating the unification in the lived act, not the static store.** Neo4j rightly keeps them co-located-but-distinct; the arena rightly fuses them transiently. Static = co-located; lived = unified. The arena is where compress-to-VAK is made live.
+3. **Recall direction** (read-in): `query_with_layers` projects the session horizon from Neo4j; embeddings arrive pre-addressed.
+4. **Genesis direction** (write-out): novel content with no coordinate is imprinted into the arena and earns its coordinate from its position/resonance relative to the bounded horizon; that coordinate-ancestry feeds Hen's birth-codon (CCT-14b); the new `(coordinate, embedding)` crystallizes to Neo4j on the Möbius / night′ return. The arena is the genesis surface of new coordinates.
+5. **Session binding is structural** — session = NOW = Psyche/CT4b; one arena per session-NOW; horizon sourced from `gnostic_handles.active_notebooks[]`; bounded the way `carryForward` (12-item Schismogenesis guard) bounds the symbolic register.
+
+**Scope / correction:** This **supersedes the earlier over-deferral** that routed the arena's *role* into the Track 38 §2.4 tunability table. Only arena **capacity** + **eviction-within-bounds** remain Class C knobs; the VAK-awareness, session-binding, and recall/genesis cycle are **structural** (per [[M'-PRANA-ARENA-SPEC]] §6). The parametric experts (DR-PARAM-1) remain a distinct register — parameter-space at 4'/Nara, not the representation-space arena at 5'/Epii.
+
+**Action:** (1) Land [[M'-PRANA-ARENA-SPEC]] as the canonical authority (DONE this pass). (2) Reference it from [Track 39](39-s5-prime-one-substrate-layer.md) (arena-projection), DR-ARENA-1 (cross-link), and [`00-overview`](00-overview-and-design-reconciliation.md) §"Standing Invariants". (3) Narrow the [Track 38 §2.4](38-tunability-surface-architecture.md) Prana row to capacity/eviction only, pointing the structural role to the spec. Build mapping per [[M'-PRANA-ARENA-SPEC]] §7.
+
+**Resolved riders (user-directed this session):**
+- **Psyche CF = `(4.5/0)`.** `(4.0/1–4.4/5)` is **Anima** (the orchestration container; any Psyche runs *inside* an Anima session); `(4.5/0)` is **Psyche** — the Möbius `(5/0)` NOW-holder. This is a confirmation, not just a fix: `(4.5/0)` is structurally *why* Psyche owns crystallization (crystallization = the #5→#0 Möbius return = Psyche's frame). Code (`dispatch-validate.ts`, `psyche-continuity.ts`) already carries `(4.5/0)`; **fix is the `psyche.md` card only** (it wrongly carries Anima's `(4.0/1–4.4/5)`).
+- **Present day-folders are flat** `Empty/Present/{DD-MM-YYYY}/` (rolling two-day presence). The `{YYYY}/{MM}/W{WW}/{DD}` weekly nesting belongs **only** to the History archival tree (`Body/S/S0/epi-cli/src/vault/paths.rs:25-28` — already correct). `day.rs::day_folder_for_date` (`Body/S/S0/epi-cli/src/vault/day.rs:19-27`) wrongly nests Present like History — split-braining `daily-note.md` (it would land at `Present/{YYYY}/{MM}/W{WW}/{DD}/`) from the session's `now.md` (at flat `Present/{DD-MM-YYYY}/{session}/`). **Fix:** flatten `day_folder_for_date` + its `vault.day.ensure` RPC + the `day.rs:117` test to match `session.rs`/`paths.rs:6-8`/`templates.rs:114`. (No W{WW} in Present at all; History keeps it.)
+
+**Depends:** DR-ARENA-1 (three-arena axis); DR-MP-2 (EBM energy / dual-channel); DR-VAK-7 (compress-to-VAK); DR-ENTITY-CODON-1 / CCT-14b (genesis → birth-codon); DR-S5-ONE-1 (`query_with_layers` / Redis hierarchy). Build tranches: Track 39 (Access Patterns 2+4), 6.8 (EBM), 12.2 EXPANDED, CCT-14b, CCT-16.
+
+## DR-PSS-1 — Block CTX-framing law: every block is typed and templated by its context-frame coordinate
+
+**Status:** VALIDATED · **Validated:** 2026-06-17 · **By:** user (Pratibimba Surface Standard design session — user directed the standard be built into cycle 3 as dev work, and explicitly corrected the CTX framing: *"CTX is the class of coordinates which detail artifact types and templates at the hen/vault level… CTX is NOT the context system, which is the day/now paradigm"*; per the standing posture *"don't hold anything behind DR's or validation gates"* the act of directing and authoring [[44-pratibimba-surface-standard]] with these decisions IS the validation) · **Source:** M5' seed [[m5-prime-pratibimba-surface-standard]] §II/§VII-A; the `c_1_ct_type` / `c_3_ctx_frame` frontmatter law; DR-VAK-4 (M0 sub-coordinate CF literals).
+
+**Decision:** Every [[Block]] carries the full CTX context-frame coordinate `cf / ct / cp / cpf` (+ `cs` direction) as a mandatory field. That coordinate is not decoration — it both *addresses* the block and *selects its template* (the [[Hen]]/vault artifact-typing law). User interactions **inherit** the parent block's frame unless they **explicitly shift** it; a block stripped of its CTX frame is invalid. CTX (the reflective context-frame coordinate class) is distinct from the day/now context runtime (`temporal.context` + Psyche); the two are never conflated.
+
+**Action:** Land `Block.ctx` as mandatory in the block-contract (Tranche 44.1); enforce inherit-or-shift in the verdict/annotate loop (Tranche 44.4).
+
+**Depends:** DR-VAK-4 (CF value-space). Build tranches: **44.1**, **44.4**.
+
+## DR-PSS-2 — Native re-implementation; Builder.io is inspiration only
+
+**Status:** VALIDATED · **Validated:** 2026-06-17 · **By:** user (chose "Re-implement natively, inspiration only" build strategy for the Surface Standard) · **Source:** the open-source [[Builder.io]] `agent-native` / `skills` repos (MIT) — block-registry, `get-plan-blocks` live catalog, selection→context (Pinpoint), annotation→agent routing.
+
+**Decision:** The Surface Standard is re-implemented natively in [[Theia]] `ReactWidget` + kernel-bridge idioms. None of Builder.io's runtime (React/Nitro/Drizzle/assistant-ui) is vendored; the patterns are adopted as design inspiration only. This preserves sovereignty and fit with the M'/Theia/gateway substrate and avoids the no-root-LICENSE wrinkle in `agent-native`.
+
+**Action:** Build the `block-kit` extension natively (Tranche 44.2); cite Builder.io only as inspiration in the seed and contract.
+
+**Depends:** none. Build tranches: **44.2**.
+
+## DR-PSS-3 — CTX is format-agnostic across markdown and MDX
+
+**Status:** VALIDATED · **Validated:** 2026-06-17 · **By:** user (directed during the CTX-clarification: *"here we would be considering these now as both markdown and mdx format applicable (so the ctx remains format agnostic, but structures said format/file by the context frame alignments)"*) · **Source:** M5' seed [[m5-prime-pratibimba-surface-standard]] §IV/§VII-A; the CTX context-frame coordinate class.
+
+**Decision:** CTX is **format-agnostic**: the same context-frame coordinate supplies an artifact's structure whether it serialises as **markdown or MDX**. Format is orthogonal to CTX. The Surface Standard extends CTX so a template can be served in MDX as well as markdown; **MDX becomes a first-class persisted surface format alongside markdown.** One `Block[]` → md or MDX by CTX template alignment.
+
+**Action:** Block-contract carries no format assumption (Tranche 44.1); `toDoc`/`fromDoc` serialise to md or MDX by CTX (Tranche 44.7).
+
+**Depends:** DR-PSS-1. Build tranches: **44.1**, **44.7**.
+
+## DR-PSS-4 — Block-doc residency + Hen/CTX-template boundary
+
+**Status:** VALIDATED · **Validated:** 2026-06-17 · **By:** user (Surface Standard design session; consistent with the SwarmVault/Canon law that the standard never writes `Idea/Bimba` canon and with DR-HYGIENE-1 Hen-owned coordinate-header convention) · **Source:** M5' seed [[m5-prime-pratibimba-surface-standard]] §IV/§VIII; the Khora day paradigm (`Empty/Present/{day}`); DR-M4-1 + DR-PRANA-1 flat-Present rider.
+
+**Decision:** [[Hen]] owns the CTX *template/type definitions* in the vault. The Surface Standard **consumes** them to render instances and **authors instances only into** `Idea/Empty/Present/{day_id}/` ([[Pratibimba]]/Empty residency) — never canon (`Idea/Bimba`), never a Hen canon-write, never defining or mutating a CTX template. Persisted block-docs (md or MDX) are day-paradigm artifacts; canon promotion stays Hen's, through review.
+
+**Action:** `toDoc` writes only under `Empty/Present` (Tranche 44.7); the MDX-serving extension of Hen's template layer is consumption-side, with template authoring left to Hen (split to Track 19/Hen scope if preferred).
+
+**Depends:** DR-PSS-3; DR-M4-1; DR-PRANA-1 (flat Present). Build tranches: **44.7**.
+
+## DR-PSS-5 — Live transport on the day/now context runtime; no new channel or store
+
+**Status:** VALIDATED · **Validated:** 2026-06-17 · **By:** user (directed the standard "integrate into the CTX system" and confirmed the day/now runtime distinction; the standard rides existing runtime rather than inventing one) · **Source:** M5' seed [[m5-prime-pratibimba-surface-standard]] §VI/§VII-B; `temporal_context.rs` (`context_for_record`), `psyche-continuity.ts` (`SessionState`), `omnipanel-runtime.ts` (`enforceHumanGate` / `IOD17Parity`), `session.rs`.
+
+**Decision:** Live blocks ride the **day/now context runtime** (S3' `temporal.context` Hot tier / `subscribe`) as projections of already-held typed data — **not CTX**. UI→agent intents ride session-ops (`sessions.patch` + a minimal `blocks.annotate` / `blocks.verdict` op) → `s4'.psyche.update`, gated by the existing **Human Gate** (`enforceHumanGate` + `IOD17Parity`, committal verdicts blocked for agent actors and recursive self-review). Interaction continuity lives in `Psyche.SessionState.renderer` and survives handoff via `carryForward`. **No new transport, no new state store.**
+
+**Action:** Add a `blocks` projection to `context_for_record()` (Tranche 44.5); add the `blocks.*` session-ops + the `Psyche.SessionState.renderer` field under the Human Gate (Tranche 44.4).
+
+**Depends:** DR-PSS-1. Build tranches: **44.4**, **44.5**.
+
+## DR-PSS-6 — A2A via agent-card over existing gateway methods
+
+**Status:** VALIDATED · **Validated:** 2026-06-17 · **By:** user (directed Hermes / external-agent interop as part of the full interaction paradigm) · **Source:** M5' seed [[m5-prime-pratibimba-surface-standard]] §VI.4/§VII-B; the Builder.io `a2a-protocol` agent-card pattern (inspiration); existing gateway methods (`temporal.context`, `psyche.state`/`update`, `route_anima_invoke`, `mediation.route`).
+
+**Decision:** Agent-to-agent interop is achieved by **describing the existing gateway methods as an A2A agent-card** (`/.well-known/agent-card.json`-shaped) so [[Hermes]] and external agents (Claude Code, Codex) interoperate with the constitutional agents through one published contract. No new transport; the gateway RPC surface is unchanged, only published.
+
+**Action:** Emit the agent-card from the gateway describing the existing methods (Tranche 44.8).
+
+**Depends:** DR-PSS-5 (the methods being described). Build tranches: **44.8**.

@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T084638Z-12-T12.23",
+  "taskId": "12.T12.23",
+  "startedAt": "2026-06-18T08:46:38.878Z",
+  "owner": "codex-m-dev-12-t12-23",
+  "leaseExpiresAt": "2026-06-18T10:46:38.878Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.23",
+    "trackId": "12",
+    "tranche": "T12.23",
+    "title": "Anima MoE dispatch policy implementation",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.22"
+    ],
+    "writeScopes": [
+      "Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

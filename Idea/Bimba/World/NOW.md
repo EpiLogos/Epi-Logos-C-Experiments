@@ -8,6 +8,16 @@ c_4_invocation_kind: "vak_auto"
 c_2_session_id: "{{session_id}}"
 c_3_day_id: "{{day_id}}"
 c_3_created_at: "{{created_at}}"
+c_3_fibonacci_position: 0
+c_3_fibonacci_digit: 0
+c_3_tick12: 0
+c_3_backbone_index: 0
+c_3_tranche_mode: "quiet:90m"
+c_3_response_orbit: "next-morning"
+c_3_klein_weighting:
+  prospective: 0.5
+  retrospective: 0.5
+c_3_briefing_emitted:
 c_0_source_coordinates: []
 c_4_cf_code: ""
 c_4_cp_position: ""

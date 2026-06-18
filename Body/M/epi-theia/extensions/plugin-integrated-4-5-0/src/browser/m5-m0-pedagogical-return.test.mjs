@@ -16,6 +16,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+installBrowserImportShim();
+
 const require = createRequire(import.meta.url);
 const {
     ATELIER_RETURN_ROUTE,
@@ -28,8 +30,10 @@ const {
 } = require('../../lib/browser/m5-m0-pedagogical-return.js');
 const {
     buildJivaSivaRecognitionClaim,
+} = require('../../../integrated-composition/lib/common/recognition-claim.js');
+const {
     parseIntegratedDeepLink
-} = require('../../../integrated-composition/lib/common/index.js');
+} = require('../../../integrated-composition/lib/common/integrated-deep-links.js');
 
 function recognizedClaim(overrides = {}) {
     return buildJivaSivaRecognitionClaim({
@@ -58,6 +62,53 @@ const CANON = freezeM0CanonView([
     { coordinate: 'M0-4', label: 'archetypal number language' },
     { coordinate: 'M0-5', label: 'pratyabhijna recognition closure' }
 ]);
+
+function installBrowserImportShim() {
+    if (globalThis.document) {
+        return;
+    }
+    class ElementStub {}
+    ElementStub.prototype.matches = () => false;
+    ElementStub.prototype.msMatchesSelector = () => false;
+    ElementStub.prototype.webkitMatchesSelector = () => false;
+    ElementStub.prototype.contains = () => false;
+    const element = () => Object.assign(new ElementStub(), {
+        classList: { add() {}, remove() {}, contains() { return false; }, toggle() {} },
+        dataset: {},
+        style: {},
+        setAttribute() {},
+        getAttribute() { return null; },
+        removeAttribute() {},
+        appendChild() {},
+        removeChild() {},
+        addEventListener() {},
+        removeEventListener() {},
+        queryCommandSupported() { return false; }
+    });
+    globalThis.Element = ElementStub;
+    globalThis.HTMLElement = ElementStub;
+    globalThis.document = {
+        createElement: element,
+        documentElement: { style: {} },
+        body: element(),
+        addEventListener() {},
+        removeEventListener() {}
+    };
+    globalThis.window = {
+        document: globalThis.document,
+        navigator: { userAgent: 'node', platform: 'Linux x86_64' },
+        localStorage: {
+            getItem() { return null; },
+            setItem() {},
+            removeItem() {}
+        },
+        getComputedStyle: () => ({})
+    };
+    Object.defineProperty(globalThis, 'navigator', {
+        configurable: true,
+        value: globalThis.window.navigator
+    });
+}
 
 test("recognized pattern surfaces in an M0-5' deep-link without mutating canon", () => {
     const before = CANON.nodeCount;

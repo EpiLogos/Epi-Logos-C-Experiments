@@ -385,11 +385,11 @@ async def identity_event(req: IdentityEventRequest):
             decan=req.natal_sun_decan or "",
         )
 
-        # BEDROCK edge to Bimba #4 coordinate
+        # BEDROCK edge to Bimba M4 coordinate (graph is M-keyed; '#' is the legacy tag)
         await session.run(
             """
             MATCH (pn:Pratibimba:PersonalNexus {coordinate: '4.4.4.4'})
-            MATCH (bc:Bimba {coordinate: '#4'})
+            MATCH (bc:Bimba {coordinate: 'M4'})
             MERGE (pn)-[:BEDROCK]->(bc)
             """,
         )

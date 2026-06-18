@@ -83,6 +83,24 @@ epi:hasCompleteFormulation a owl:DatatypeProperty ;
   rdfs:label "complete formulation" ;
   epi:neo4jProperty "c_1_complete_formulation" .
 
+epi:inIdentityChainWith a owl:ObjectProperty, owl:TransitiveProperty ;
+  rdfs:subPropertyOf epi:CoordinateRelation ;
+  rdfs:label "in identity chain with" ;
+  rdfs:comment "Transitive Law-3 identity chain relation. Terms connected by `=` in the Anuttara corpus are declared equivalent within this relation. The transitive closure generates owl:sameAs clusters." ;
+  rdfs:domain epi:BimbaNode ;
+  rdfs:range epi:BimbaNode .
+
+epi:reflectiveDistinction a owl:AnnotationProperty ;
+  rdfs:label "reflective distinction" ;
+  rdfs:comment "The =/= (Reflective Distinction) copula of the Brimming Void — everything equal-AND-unequal. Paraconsistent by design: exports as annotation-only, never as owl:differentFrom, and stays OUT of the DL fragment." ;
+  rdfs:domain epi:BimbaNode ;
+  rdfs:range xsd:string .
+
+epi:KernelCoreRelation a owl:Class ;
+  rdfs:label "kernel-core relation" ;
+  rdfs:comment "The c_1_relation_family = 'kernel_core' class: the M0_CORE_RELATIONS[65] curated cross-system relational skeleton projected as OWL typed instances. Carries kernel provenance (tier, relation type, packed M0C coordinate)." ;
+  rdfs:subClassOf epi:RelationFamily .
+
 epi:AnuttaraNodeShape a sh:NodeShape ;
   sh:targetClass epi:AnuttaraNode ;
   sh:property [

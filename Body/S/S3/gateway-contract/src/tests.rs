@@ -43,6 +43,24 @@ fn anuttara_verifier_contract_exposes_s0_prime_methods() {
 }
 
 #[test]
+fn anuttara_verifier_report_contract_carries_slot_privacy_boundary_compliance() {
+    let report = M0VerifierReportContract {
+        virtue_witness_vector: 0x01ff,
+        virtue_scores: [1.0; 9],
+        unsatisfied_constraints: vec![],
+        coherence_score: 1.0,
+        slot_privacy_boundary_compliance: true,
+    };
+
+    let json = serde_json::to_value(&report).expect("report should serialize");
+    assert_eq!(json["slotPrivacyBoundaryCompliance"], true);
+
+    let round_trip: M0VerifierReportContract =
+        serde_json::from_value(json).expect("report should deserialize");
+    assert!(round_trip.slot_privacy_boundary_compliance);
+}
+
+#[test]
 fn gateway_session_operation_contract_covers_omnipanel_runtime_surface() {
     let contracts = gateway_session_operation_contracts();
     let methods: Vec<&str> = contracts

@@ -10,13 +10,19 @@
 // extensions/test/jiva-siva-no-local-tables.test.mjs (added with this slice).
 
 import * as React from 'react';
-import {
+import type {
     MathemeHarmonicProfileBoundary
 } from '@pratibimba/m-extension-runtime';
-import {
+import type {
     ConsentAction,
     JivaSivaPaneAvailability
 } from '@pratibimba/integrated-composition';
+import {
+    PersonalRecognitionComposition,
+    buildPersonalBeingPatternView
+} from './personal-recognition-composition';
+
+export { buildPersonalBeingPatternView };
 
 interface PaneShellProps {
     readonly title: string;
@@ -151,6 +157,7 @@ export const JivaSivaPanes: React.FC<JivaSivaPanesProps> = ({
                     <dt>field_state_summary</dt>
                     <dd data-test="m4-summary">{fieldSummary}</dd>
                 </dl>
+                <PersonalRecognitionComposition profile={profile} />
             </PaneShell>
             <PaneShell
                 title="Canonical Graph / City Backdrop"

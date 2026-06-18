@@ -70,9 +70,9 @@ pub fn balance(json: bool) -> Result<String, String> {
         let p_sign = ((planet.degree / 30.0) as usize).min(11);
         let p_elem = SIGN_ELEMENT[p_sign]; // L2' canonical
         match p_elem {
-            4 => fire_count = fire_count.saturating_add(30),  // Fire
+            4 => fire_count = fire_count.saturating_add(30), // Fire
             1 => earth_count = earth_count.saturating_add(30), // Earth
-            3 => air_count = air_count.saturating_add(30),     // Air
+            3 => air_count = air_count.saturating_add(30),   // Air
             2 => water_count = water_count.saturating_add(30), // Water
             _ => {}
         }

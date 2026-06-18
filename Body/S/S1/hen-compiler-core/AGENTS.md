@@ -15,7 +15,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S1-SPEC]]
 - `src/ledger.rs` — envelope ledger channels.
 - `src/l_alignments.rs`, `src/property_intelligence.rs`, `src/relation_inference.rs`, `src/artifact_evidence.rs` — alignment, property, relation-inference, evidence law.
 - `src/smart_env.rs` (private mod) — link-candidate suggestion (`suggest_link_candidates`).
-- `tests/` — contract tests (module_surface, frontmatter, compile_plan, graph_promotion_intent, wikilink_parser, etc.); `tests/fixtures/` test data.
+- `tests/` — contract tests (module_surface, frontmatter, q_vocabulary_unknown_key_rejection, compile_plan, graph_promotion_intent, wikilink_parser, etc.); `tests/fixtures/` test data.
 - Does NOT own coordinate semantics or canon-write authority beyond Hen's mandate; domain law for other layers lives in those layers' owning modules/specs. Canon (`Idea/Bimba|Pratibimba|Empty`) is written only through Hen with explicit review — never directly.
 
 ## Local Contracts

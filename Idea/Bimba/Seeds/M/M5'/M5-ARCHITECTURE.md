@@ -3,6 +3,8 @@ title: "M5' Epii Architecture — Total Shape of the Agentic-Pedagogical IDE (Li
 coordinate: "M5 / M5'"
 status: "canonical-architecture-spec"
 created: 2026-06-02
+updated: "2026-06-09"
+cycle-3: reconciled
 authority_relation: "Domain authority for the M5' Epii surface. [[M5'-SPEC]] cross-references this document. Where they disagree on M5' sub-coordinate shape, this document is authoritative; M5'-SPEC remains authoritative for review/improve law and §M5'.x canon deltas."
 depends_on:
   - "[[M5'-SPEC]]"

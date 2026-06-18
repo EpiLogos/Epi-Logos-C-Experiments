@@ -9,6 +9,10 @@ import {
     buildM1ProfileClockModel,
     M1ProfileClockModel
 } from '../common/clock-instrument';
+import {
+    MersenneProofOverlay,
+    MersenneProofOverlayProps
+} from './m1-mersenne-proof-overlay';
 
 export interface M1Cl42SignatureInspectorProps {
     readonly profile: MathemeHarmonicProfileBoundary | null;
@@ -16,12 +20,13 @@ export interface M1Cl42SignatureInspectorProps {
     readonly context: CoordinateContext;
     readonly layoutMode?: string;
     readonly developerMode?: boolean;
-    readonly MersenneProofOverlay?: React.ComponentType;
+    readonly observabilityBridge?: Pick<SharedBridgeAdapter, 'onObservabilityEvent'>;
+    readonly MersenneProofOverlay?: React.ComponentType<MersenneProofOverlayProps>;
 }
 
 export interface M1Cl42SignatureInspectorBridgeProps
     extends Omit<M1Cl42SignatureInspectorProps, 'profile'> {
-    readonly bridge: Pick<SharedBridgeAdapter, 'onProfile'>;
+    readonly bridge: Pick<SharedBridgeAdapter, 'onProfile' | 'onObservabilityEvent'>;
 }
 
 interface Cl42TrigRow {
@@ -52,6 +57,7 @@ export function M1Cl42SignatureInspectorFromBridge(
             context={props.context}
             layoutMode={props.layoutMode}
             developerMode={props.developerMode}
+            observabilityBridge={props.bridge}
             MersenneProofOverlay={props.MersenneProofOverlay}
         />
     );
@@ -85,7 +91,7 @@ export function M1Cl42SignatureInspector(
     const activeSignature = numberValue(
         vortex?.cl42_signature_at_position ?? vortex?.cl42SignatureAtPosition
     );
-    const Overlay = props.MersenneProofOverlay;
+    const Overlay = props.MersenneProofOverlay ?? MersenneProofOverlay;
     const showOverlay =
         props.layoutMode === 'ide-deep' && props.developerMode === true && Overlay !== undefined;
 
@@ -116,7 +122,13 @@ export function M1Cl42SignatureInspector(
 
             <EpogdoonDerivationPanel model={model} />
 
-            {showOverlay ? <Overlay /> : null}
+            {showOverlay ? (
+                <Overlay
+                    layoutMode={props.layoutMode}
+                    developerMode={props.developerMode}
+                    bridge={props.observabilityBridge}
+                />
+            ) : null}
         </section>
     );
 }

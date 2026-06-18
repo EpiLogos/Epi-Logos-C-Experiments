@@ -52,7 +52,6 @@ struct LegacyCoordinateEvidence {
 struct CoordinatePromotionMetadata {
     prefix: String,
     parent: Option<String>,
-    namespace: String,
     axis: String,
 }
 
@@ -127,10 +126,6 @@ impl GraphPromotionIntent {
                     serde_json::Value::String(parent),
                 );
             }
-            properties.insert(
-                "coordinate_namespace".to_owned(),
-                serde_json::Value::String(metadata.namespace),
-            );
             properties.insert(
                 "coordinate_axis".to_owned(),
                 serde_json::Value::String(metadata.axis),
@@ -284,8 +279,6 @@ fn coordinate_promotion_metadata(coordinate: &str) -> Option<CoordinatePromotion
         Some(parent) => parent.to_owned(),
         None => first_segment.to_owned(),
     };
-    let namespace = prefix.chars().next()?.to_string();
-
     Some(CoordinatePromotionMetadata {
         parent: parent_base.map(|parent| {
             if prime {
@@ -295,7 +288,6 @@ fn coordinate_promotion_metadata(coordinate: &str) -> Option<CoordinatePromotion
             }
         }),
         prefix,
-        namespace,
         axis: if prime { "prime" } else { "direct" }.to_owned(),
     })
 }

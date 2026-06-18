@@ -21,7 +21,9 @@ import {
     PRIVACY_CLASS,
     buildM0InspectorModel
 } from '../common';
-import type { M0InspectorLayer, M0LayerRoute, M0SurfaceMode } from '../common';
+import type { M0LayerKey, M0LayerRoute, M0SurfaceMode } from '../common';
+import type { M0CrossLayoutIntentPayload, M0Phase } from '../common/cross-layout-intent';
+import { projectM0CrossLayoutIntentState } from '../common/cross-layout-intent';
 import { M0ModeToggle } from './components/mode-toggle';
 import { LazyNodeBrowserPanel } from './panels/lazy-node-browser-panel';
 
@@ -41,9 +43,10 @@ export class M0AnuttaraWidget extends ReactWidget {
     protected readiness: MExtensionReadinessSnapshot = PENDING_M_READINESS;
     protected profile: MathemeHarmonicProfileBoundary | null = null;
     protected context: CoordinateContext = EMPTY_COORDINATE_CONTEXT;
-    protected activeLayer: M0InspectorLayer = 'lang';
+    protected activeLayer: M0LayerKey = 'language';
     protected activeLanguageSubtab: M0LanguageSubtab = 'route';
-    protected surfaceMode: M0SurfaceMode = 'reading';
+    protected phase: M0Phase = 'implicate';
+    protected mode: M0SurfaceMode = 'reading';
     protected subscriptions: Disposable[] = [];
 
     @postConstruct()
@@ -86,7 +89,25 @@ export class M0AnuttaraWidget extends ReactWidget {
         super.dispose();
     }
 
-    protected selectLayer(layer: M0InspectorLayer): void {
+    applyCrossLayoutIntent(payload: M0CrossLayoutIntentPayload): void {
+        const state = projectM0CrossLayoutIntentState(payload, this.context);
+        if (state.activeLayer) {
+            this.activeLayer = state.activeLayer;
+        }
+        if (state.phase) {
+            this.phase = state.phase;
+        }
+        if (state.mode) {
+            this.mode = state.mode;
+        }
+        if (state.coordinateContext) {
+            this.context = state.coordinateContext;
+            this.bridge.updateCoordinateContext(state.coordinateContext);
+        }
+        this.update();
+    }
+
+    protected selectLayer(layer: M0LayerKey): void {
         if (this.activeLayer === layer) {
             return;
         }
@@ -95,10 +116,10 @@ export class M0AnuttaraWidget extends ReactWidget {
     }
 
     protected selectSurfaceMode(mode: M0SurfaceMode): void {
-        if (this.surfaceMode === mode) {
+        if (this.mode === mode) {
             return;
         }
-        this.surfaceMode = mode;
+        this.mode = mode;
         this.update();
     }
 
@@ -118,10 +139,10 @@ export class M0AnuttaraWidget extends ReactWidget {
             profile: this.profile,
             readiness: this.readiness,
             context: this.context,
-            mode: this.surfaceMode
+            mode: this.mode
         });
         const activeRoute =
-            model.layerRoutes.find(route => route.layer === this.activeLayer) ?? model.layerRoutes[0];
+            model.layerRoutes.find(route => route.layerKey === this.activeLayer) ?? model.layerRoutes[0];
         return (
             <div className="mext-widget-root">
                 <ReadinessBanner
@@ -160,12 +181,19 @@ export class M0AnuttaraWidget extends ReactWidget {
                                 id={route.tabId}
                                 type="button"
                                 role="tab"
-                                aria-selected={route.layer === activeRoute.layer}
+                                aria-selected={route.layerKey === activeRoute.layerKey}
                                 aria-controls={`${route.tabId}-panel`}
                                 data-layer={route.layer}
-                                onClick={() => this.selectLayer(route.layer)}
+                                onClick={() => this.selectLayer(route.layerKey)}
                             >
                                 {route.label}
+                                <span
+                                    aria-label={`${route.label} provenance ${model.layerReadiness[route.layerKey]}`}
+                                    className="m0-layer-tab-provenance-pill"
+                                    data-provenance-state={model.layerReadiness[route.layerKey]}
+                                >
+                                    {model.layerReadiness[route.layerKey].replace(/_/g, ' ')}
+                                </span>
                             </button>
                         ))}
                     </div>
@@ -182,7 +210,7 @@ export class M0AnuttaraWidget extends ReactWidget {
                                 }
                                 activeSubtab={this.activeLanguageSubtab}
                                 onSubtabChange={subtab => this.selectLanguageSubtab(subtab)}
-                                onNodeSelected={() => this.selectLayer('lang')}
+                                onNodeSelected={() => this.selectLayer('language')}
                             />
                         ) : (
                             <LayerRoutePanel route={activeRoute} />
@@ -225,6 +253,12 @@ export class M0AnuttaraWidget extends ReactWidget {
                         <dd>
                             {model.readinessFacts
                                 .map(fact => `${fact.label}: ${fact.state}`)
+                                .join(' | ')}
+                        </dd>
+                        <dt>Projection lenses</dt>
+                        <dd>
+                            {model.projectionLenses
+                                .map(lens => `${lens.id}: ${lens.lensKind} on ${lens.targetViewId}`)
                                 .join(' | ')}
                         </dd>
                     </dl>

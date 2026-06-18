@@ -884,6 +884,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "epi-lib"
+version = "0.1.0"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "epi-logos"
 version = "0.1.0"
 dependencies = [
@@ -2569,8 +2576,12 @@ checksum = "c33a9471896f1c69cecef8d20cbe2f7accd12527ce60845ff44c153bb2a21b49"
 name = "portal-core"
 version = "0.1.0"
 dependencies = [
+ "blake3",
+ "chrono",
+ "epi-lib",
  "serde",
  "serde_json",
+ "toml",
 ]
 
 [[package]]

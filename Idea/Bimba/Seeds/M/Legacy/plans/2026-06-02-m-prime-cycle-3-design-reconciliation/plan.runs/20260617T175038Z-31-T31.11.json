@@ -1,0 +1,35 @@
+{
+  "runId": "20260617T175038Z-31-T31.11",
+  "taskId": "31.T31.11",
+  "startedAt": "2026-06-17T17:50:38.717Z",
+  "owner": "codex-m-dev-31-t31-11",
+  "leaseExpiresAt": "2026-06-17T19:50:38.717Z",
+  "worktree": null,
+  "task": {
+    "id": "31.T31.11",
+    "trackId": "31",
+    "tranche": "T31.11",
+    "title": "Toolbar / context-menu / inline-action contribution policy",
+    "effort": null,
+    "file": "31-chrome-contributions-catalog.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/31-chrome-contributions-catalog.md",
+    "dependsOn": [
+      "31.T31.10"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/chrome-action-surface-policy.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

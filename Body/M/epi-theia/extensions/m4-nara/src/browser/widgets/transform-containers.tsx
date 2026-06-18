@@ -13,6 +13,7 @@ import {
     PRIVACY_CLASS,
     createNaraArtifact
 } from '../../common';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 export const TRACK_08 = 'M4TransformContainersCard' as const;
 
@@ -139,7 +140,7 @@ export const M4TransformContainersCard: React.FC<M4TransformContainersCardProps>
 
     return (
         <section
-            className="m4-transform-containers-card"
+            className={`m4-transform-containers-card ${privacyChromeClass('protected_local')}`}
             data-test="m4-transform-containers-card"
             data-track="TRACK_08"
             data-mode={definition.mode}
@@ -255,12 +256,12 @@ export class TransformContainersWidget extends ReactWidget {
     protected init(): void {
         this.id = TransformContainersWidget.ID;
         this.title.label = TransformContainersWidget.LABEL;
-        this.title.caption = TransformContainersWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
         this.addClass('m4-nara-transform-containers');
-        this.addClass('mext-privacy-protected-local');
+        this.addClass(privacyChromeClass('protected_local'));
 
         this.subscriptions.push(
             this.bridge.onCoordinateContext(context => {
@@ -284,7 +285,10 @@ export class TransformContainersWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         return (
-            <div className="mext-widget-root" data-test="m4-transform-containers-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local')}`}
+                data-test="m4-transform-containers-root"
+            >
                 <M4TransformContainersCard
                     state={this.state}
                     status={this.status}

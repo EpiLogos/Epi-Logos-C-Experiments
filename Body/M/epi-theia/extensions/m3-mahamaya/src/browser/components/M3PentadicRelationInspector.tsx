@@ -25,6 +25,11 @@ export interface M3MahamayaFifteenWitness {
 }
 
 export interface M3PentadicTraceView {
+    readonly sourceBinaryState: string | null;
+    readonly wholeNumberEndpoint: number | null;
+    readonly naturalNumberEndpoint: number | null;
+    readonly substrateHinge: string | null;
+    readonly resonance72Index: number | null;
     readonly pairedMahamayaFifteens: readonly [number, number] | null;
     readonly witnesses: readonly M3MahamayaFifteenWitness[];
     readonly backboneIdentity: string | null;
@@ -144,6 +149,42 @@ export const M3PentadicRelationInspector: React.FC<M3PentadicRelationInspectorPr
                 </section>
 
                 <section
+                    data-relation-lane="anuttara-pentadic-hinge"
+                    aria-label="Anuttara pentadic runtime hinge"
+                    style={laneStyle}
+                >
+                    <LaneTitle label="0/1 -> 5 hinge" register="profile.anuttara_pentadic_trace" />
+                    <PentadicFactRow
+                        id="substrate-hinge"
+                        label="substrate / hinge"
+                        value={hingeValue(model.trace)}
+                        field="profile.anuttara_pentadic_trace.sourceBinaryState"
+                        readiness={model.readiness}
+                    />
+                    <PentadicFactRow
+                        id="shem-degree-runtick"
+                        label="Shem-degree / runtick"
+                        value={model.trace?.shemIdentity}
+                        field="profile.anuttara_pentadic_trace.shemIdentity"
+                        readiness={model.readiness}
+                    />
+                    <PentadicFactRow
+                        id="backbone"
+                        label="24-spoke backbone"
+                        value={model.trace?.backboneIdentity}
+                        field="profile.anuttara_pentadic_trace.backboneIdentity"
+                        readiness={model.readiness}
+                    />
+                    <PentadicFactRow
+                        id="line-change"
+                        label="line-change graph"
+                        value={model.trace?.lineGraphIdentity}
+                        field="profile.anuttara_pentadic_trace.lineGraphIdentity"
+                        readiness={model.readiness}
+                    />
+                </section>
+
+                <section
                     data-relation-lane="mahamaya-paired-fifteens"
                     aria-label="Mahamaya paired fifteens"
                     style={laneStyle}
@@ -179,6 +220,7 @@ export const M3PentadicRelationInspector: React.FC<M3PentadicRelationInspectorPr
                 <BackboneValue label="24-spoke relation" value={model.trace?.backboneIdentity} field="profile.anuttara_pentadic_trace.backboneIdentity" readiness={model.readiness} />
                 <BackboneValue label="Shem pentadic relation" value={model.trace?.shemIdentity} field="profile.anuttara_pentadic_trace.shemIdentity" readiness={model.readiness} />
                 <BackboneValue label="line graph" value={model.trace?.lineGraphIdentity} field="profile.anuttara_pentadic_trace.lineGraphIdentity" readiness={model.readiness} />
+                <BackboneValue label="active resonance72" value={resonanceValue(model.trace?.resonance72Index)} field="profile.anuttara_pentadic_trace.resonance72Index" readiness={model.readiness} />
                 <BackboneValue label="active 64-address" value={addressValue(model.trace?.mahamayaAddress64)} field="profile.anuttara_pentadic_trace.mahamayaAddress64" readiness={model.readiness} />
                 <BackboneValue label="codon" value={model.trace?.codon ? `codon ${model.trace.codon}` : null} field="profile.anuttara_pentadic_trace.codon" readiness={model.readiness} />
                 <BackboneValue label="line-change operator" value={operatorValue(model.trace?.lineChangeOperator)} field="profile.anuttara_pentadic_trace.lineChangeOperator" readiness={model.readiness} />
@@ -232,7 +274,19 @@ function pentadicTraceFromPayload(
         pending.push('profile.anuttara_pentadic_trace');
         return null;
     }
+    const sourceBinaryState = stringValue(raw.sourceBinaryState ?? raw.source_binary_state);
+    const wholeNumberEndpoint = numberValue(raw.wholeNumberEndpoint ?? raw.whole_number_endpoint);
+    const naturalNumberEndpoint = numberValue(raw.naturalNumberEndpoint ?? raw.natural_number_endpoint);
     const trace = Object.freeze({
+        sourceBinaryState,
+        wholeNumberEndpoint,
+        naturalNumberEndpoint,
+        substrateHinge: substrateHingeValue(
+            stringValue(raw.substrateHinge ?? raw.substrate_hinge),
+            sourceBinaryState,
+            wholeNumberEndpoint
+        ),
+        resonance72Index: numberValue(raw.resonance72Index ?? raw.resonance72_index),
         pairedMahamayaFifteens: pairedFifteens(raw.pairedMahamayaFifteens ?? raw.paired_mahamaya_fifteens),
         witnesses: fifteenWitnesses(raw.pairedMahamayaFifteenWitnesses ?? raw.paired_mahamaya_fifteen_witnesses),
         backboneIdentity: stringValue(raw.backboneIdentity ?? raw.backbone_identity),
@@ -244,6 +298,10 @@ function pentadicTraceFromPayload(
         qCosmicRef: stringValue(raw.qCosmicRef ?? raw.q_cosmic_ref)
     });
     const required: readonly [keyof M3PentadicTraceView, string][] = [
+        ['sourceBinaryState', 'profile.anuttara_pentadic_trace.sourceBinaryState'],
+        ['wholeNumberEndpoint', 'profile.anuttara_pentadic_trace.wholeNumberEndpoint'],
+        ['naturalNumberEndpoint', 'profile.anuttara_pentadic_trace.naturalNumberEndpoint'],
+        ['resonance72Index', 'profile.anuttara_pentadic_trace.resonance72Index'],
         ['pairedMahamayaFifteens', 'profile.anuttara_pentadic_trace.pairedMahamayaFifteens'],
         ['backboneIdentity', 'profile.anuttara_pentadic_trace.backboneIdentity'],
         ['shemIdentity', 'profile.anuttara_pentadic_trace.shemIdentity'],
@@ -346,6 +404,19 @@ const BackboneValue: React.FC<{
     </div>
 );
 
+const PentadicFactRow: React.FC<{
+    readonly id: string;
+    readonly label: string;
+    readonly value: string | null | undefined;
+    readonly field: string;
+    readonly readiness: MExtensionReadinessSnapshot;
+}> = ({ id, label, value, field, readiness }) => (
+    <div data-relation-row={id} style={backboneItemStyle}>
+        <span style={backboneLabelStyle}>{label}</span>
+        {value ? <strong>{value}</strong> : <PendingFieldChip field={field} readiness={readiness} />}
+    </div>
+);
+
 const PendingFieldChip: React.FC<{
     readonly field: string;
     readonly readiness: MExtensionReadinessSnapshot;
@@ -368,6 +439,37 @@ const PendingFieldChip: React.FC<{
 
 function addressValue(value: number | null | undefined): string | null {
     return typeof value === 'number' ? `address64 ${value}` : null;
+}
+
+function substrateHingeValue(
+    explicit: string | null,
+    sourceBinaryState: string | null,
+    wholeNumberEndpoint: number | null
+): string | null {
+    if (explicit) {
+        return explicit;
+    }
+    if (sourceBinaryState && typeof wholeNumberEndpoint === 'number') {
+        return `${sourceBinaryState} -> ${wholeNumberEndpoint}`;
+    }
+    return null;
+}
+
+function hingeValue(trace: M3PentadicTraceView | null | undefined): string | null {
+    if (!trace) {
+        return null;
+    }
+    if (trace.substrateHinge) {
+        return `${trace.substrateHinge} · whole ${trace.wholeNumberEndpoint ?? '?'} · natural ${trace.naturalNumberEndpoint ?? '?'}`;
+    }
+    if (trace.sourceBinaryState && typeof trace.wholeNumberEndpoint === 'number' && typeof trace.naturalNumberEndpoint === 'number') {
+        return `${trace.sourceBinaryState} -> ${trace.wholeNumberEndpoint} · whole ${trace.wholeNumberEndpoint} · natural ${trace.naturalNumberEndpoint}`;
+    }
+    return null;
+}
+
+function resonanceValue(value: number | null | undefined): string | null {
+    return typeof value === 'number' ? `resonance72 ${value}` : null;
 }
 
 function operatorValue(value: number | null | undefined): string | null {

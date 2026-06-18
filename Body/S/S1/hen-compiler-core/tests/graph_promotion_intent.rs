@@ -152,10 +152,6 @@ fn promotion_intent_accepts_prime_branch_coordinates_and_derives_cluster_metadat
         "S4'"
     );
     assert_eq!(
-        intent.node.properties.get("coordinate_namespace").unwrap(),
-        "S"
-    );
-    assert_eq!(
         intent.node.properties.get("coordinate_axis").unwrap(),
         "prime"
     );
@@ -182,10 +178,6 @@ fn promotion_intent_accepts_prime_branch_coordinates_and_derives_cluster_metadat
     assert_eq!(
         m_prime.node.properties.get("coordinate_parent").unwrap(),
         "M5'"
-    );
-    assert_eq!(
-        m_prime.node.properties.get("coordinate_namespace").unwrap(),
-        "M"
     );
 }
 

@@ -5,7 +5,7 @@ The C library crate (`epi-lib`, per `Cargo.toml`): the m0–m5 C runtime plus th
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0-ARCHITECTURE]]
 
 ## Ownership
-- `include/*.h` — the Coordinate Headers: `ontology.h` (Holographic_Coordinate, 128-byte struct, tagged-pointer macros), `engine.h`, `kernel.h`, `arena.h`, `m_canonical.h` (L2' element-ID harmonisation), `m0`–`m5`, `m0_calculus.h`, `m0_verifier.h`, `pointer_web.h`, `psychoid_numbers.h`, `vak.h`
+- `include/*.h` — the Coordinate Headers: `ontology.h` (Holographic_Coordinate, 128-byte struct, tagged-pointer macros), `engine.h`, `kernel.h`, `arena.h`, `m_canonical.h` (L2' element-ID harmonisation), `m0`–`m5`, `m0_calculus.h`, `m0_verifier.h`, `pointer_web.h`, `psychoid_numbers.h`, `vak.h`; `m0.h` also exposes the tuning proposal/verdict verifier contract
 - `src/*.c` — the m0–m5 implementations + `engine.c`, `families.c`, `kernel.c`, `arena.c`, `pointer_web.c`, `m3_clock_lut.c`, `qv_data.c`, `main.c`
 - `src/lib.rs` — Rust FFI tests (e.g. `m0_verifier` behind the `m0_verifier` feature)
 - `tests/` — Rust integration tests (`clock_backbone_node_test.rs`); `test/` — C test trees (m0–m5, vak, engine, pillar1, fixtures)
@@ -22,7 +22,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - Reference all coordinates/specs as `[[wikilink]]`; vault writes use coordinate-prefixed `c_n_*` frontmatter.
 
 ## Verification
-- C: `make test`. Rust FFI bridge: `make rust-test`. Per-crate: `cargo test -p epi-lib`.
+- C: `make test`. Focused tuning verifier check: `make -C Body/S/S0/epi-lib test_m0_tune_invariant_constraint`. Rust FFI bridge: `make rust-test`. Per-crate: `cargo test -p epi-lib`.
 
 ## Child DOX Index
 - (leaf)

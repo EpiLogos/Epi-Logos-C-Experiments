@@ -31,6 +31,7 @@ import {
 } from '@pratibimba/integrated-composition';
 import { EpiiReviewPanel } from './epii-review-panel';
 import { JivaSivaPanes } from './jiva-siva-panes';
+import { PersonalRecognitionComposition } from './personal-recognition-composition';
 import {
     routePluginIdentityAugmentProposalThroughM5Gate
 } from './identity-augment-review-routing';
@@ -206,6 +207,7 @@ export class PluginIntegrated450Widget extends ReactWidget {
                     onDeepOpen={action => this.handleDeepOpen(action)}
                     isActionPermitted={action => this.consentGate.isPermitted(action)}
                 />
+                <PersonalRecognitionComposition profile={this.currentProfile} />
                 <EpiiReviewPanel
                     state={this.epiiReviewState}
                     onAction={action => this.handleEpiiAction(action)}

@@ -1,8 +1,9 @@
 /**
  * AlignmentValidator - Validates graph alignment and integrity
  *
- * Checks coordinate consistency, relationship types, and embedding presence
- * across the Neo4j knowledge graph.
+ * Checks coordinate consistency and embedding coverage across the canonical
+ * :Bimba subgraph. Relationship types are an OPEN, named/correspondential
+ * vocabulary (~1,400 types) — they are NOT validated against a fixed allowlist.
  */
 
 import { getNeo4jConnectionManager } from '../db/neo4j.js';
@@ -12,17 +13,22 @@ import type { ValidationResult, ValidationDetail, CoordinateFilter } from '../sc
 // Validation Constants
 // =============================================================================
 
-const VALID_COORDINATE_TYPES = ['C', 'P', 'M', 'S', 'T', 'L'];
-const VALID_RELATIONSHIP_TYPES = [
-  // Position relationships
-  'POS0_LINKS_TO', 'POS1_LINKS_TO', 'POS2_LINKS_TO',
-  'POS3_LINKS_TO', 'POS4_LINKS_TO', 'POS5_LINKS_TO',
-  'POS0_DEFINES', 'POS1_DEFINES', 'POS2_DEFINES',
-  'POS3_DEFINES', 'POS4_DEFINES', 'POS5_DEFINES',
-  // Other relationship types
-  'CONTAINS', 'RELATES_TO', 'PARENT', 'CHILD',
-  'USES', 'IMPLEMENTS', 'REFERENCES', 'DEPENDS_ON',
-];
+// Valid leading characters for a coordinate: the six families plus the raw '#'
+// archetype marker (e.g. "#", "#0"). Lowercase reflective coordinates (cpf, ct,
+// …) are also accepted.
+const VALID_COORDINATE_HEADS = ['#', 'C', 'P', 'M', 'S', 'T', 'L', 'c', 'p', 's', 't', 'm', 'l'];
+
+// =============================================================================
+// Helpers
+// =============================================================================
+
+/** Convert a Neo4j Integer (or plain number) to a JS number. */
+function toNum(v: unknown): number {
+  if (v && typeof v === 'object' && typeof (v as { toNumber?: () => number }).toNumber === 'function') {
+    return (v as { toNumber: () => number }).toNumber();
+  }
+  return typeof v === 'number' ? v : Number(v ?? 0);
+}
 
 // =============================================================================
 // AlignmentValidator Class
@@ -33,7 +39,7 @@ const VALID_RELATIONSHIP_TYPES = [
  */
 export class AlignmentValidator {
   /**
-   * Validate the entire graph or a filtered subset
+   * Validate the canonical :Bimba subgraph (or a filtered subset)
    *
    * @param scope Scope of validation: 'full', 'coordinates', 'relationships', 'embeddings'
    * @param coordinateFilter Optional filter for specific coordinates
@@ -47,51 +53,37 @@ export class AlignmentValidator {
     const details: ValidationDetail[] = [];
 
     try {
-      // Build coordinate filter condition if provided
       const filterCondition = this.buildCoordinateFilterCondition(coordinateFilter);
 
-      // Validate based on scope
       if (scope === 'full' || scope === 'coordinates') {
-        const coordIssues = await this.validateCoordinates(filterCondition);
-        details.push(...coordIssues);
+        details.push(...(await this.validateCoordinates(filterCondition)));
       }
 
       if (scope === 'full' || scope === 'relationships') {
-        const relIssues = await this.validateRelationships(filterCondition);
-        details.push(...relIssues);
+        details.push(...(await this.validateRelationships()));
       }
 
       if (scope === 'full' || scope === 'embeddings') {
-        const embedIssues = await this.validateEmbeddings(filterCondition);
-        details.push(...embedIssues);
+        details.push(...(await this.validateEmbeddings(filterCondition)));
       }
 
-      // Get summary statistics
       const stats = await this.getValidationStatistics(scope, filterCondition);
 
-      // Categorize issues
-      const errors = details.filter(d => d.severity === 'error');
-      const warnings = details.filter(d => d.severity === 'warning');
+      const errors = details.filter((d) => d.severity === 'error');
+      const warnings = details.filter((d) => d.severity === 'warning');
 
       const result: ValidationResult = {
         passed: errors.length === 0,
         scope,
         total_nodes_checked: stats.totalNodes,
         total_edges_checked: stats.totalEdges,
-        passed_count: stats.totalNodes - errors.length - warnings.length,
+        passed_count: Math.max(0, stats.totalNodes - errors.length - warnings.length),
         failed_count: errors.length,
         warning_count: warnings.length,
         details,
         execution_time_ms: Date.now() - startTime,
       };
 
-      // Add detailed statistics based on scope
-      if (scope === 'full' || scope === 'coordinates') {
-        result.coordinate_consistency = stats.coordinateStats;
-      }
-      if (scope === 'full' || scope === 'relationships') {
-        result.relationship_integrity = stats.relationshipStats;
-      }
       if (scope === 'full' || scope === 'embeddings') {
         result.embedding_coverage = stats.embeddingStats;
       }
@@ -107,20 +99,22 @@ export class AlignmentValidator {
         passed_count: 0,
         failed_count: 1,
         warning_count: 0,
-        details: [{
-          node_uuid: '00000000-0000-0000-0000-000000000000',
-          node_title: 'Validation Error',
-          issue_type: 'coordinate_invalid',
-          severity: 'error',
-          message: `Validation failed: ${message}`,
-        }],
+        details: [
+          {
+            node_uuid: '00000000-0000-0000-0000-000000000000',
+            node_title: 'Validation Error',
+            issue_type: 'coordinate_invalid',
+            severity: 'error',
+            message: `Validation failed: ${message}`,
+          },
+        ],
         execution_time_ms: Date.now() - startTime,
       };
     }
   }
 
   /**
-   * Validate coordinate consistency across the graph
+   * Validate coordinate consistency across the canonical :Bimba subgraph.
    */
   private async validateCoordinates(filterCondition: string): Promise<ValidationDetail[]> {
     const details: ValidationDetail[] = [];
@@ -128,53 +122,43 @@ export class AlignmentValidator {
 
     try {
       const query = `
-        MATCH (node)
+        MATCH (node:Bimba)
         ${filterCondition ? `WHERE ${filterCondition}` : ''}
-        RETURN node.uuid as uuid, node.title as title, node.coordinate as coordinate, labels(node) as labels
+        RETURN coalesce(node.c_2_uuid, node.uuid) as uuid,
+               coalesce(node.c_1_name, node.c_1_primary_designation, node.title, node.name) as title,
+               node.coordinate as coordinate
         LIMIT 10000
       `;
 
       const records = await connectionManager.executeRead<Record<string, unknown>>(query);
 
       for (const record of records) {
-        const uuid = record['uuid'] as string | null;
-        const title = record['title'] as string | null;
+        const uuid = (record['uuid'] as string | null) || 'unknown';
+        const title = (record['title'] as string | null) || 'Untitled';
         const coordinate = record['coordinate'] as string | null;
 
-        // Check if coordinate exists
         if (!coordinate) {
           details.push({
-            node_uuid: uuid || 'unknown',
-            node_title: title || 'Unknown',
+            node_uuid: uuid,
+            node_title: title,
             issue_type: 'coordinate_missing',
             severity: 'error',
-            message: 'Node has no coordinate property',
+            message: 'Bimba node has no coordinate property',
           });
           continue;
         }
 
-        // Validate coordinate format
-        const coordMatch = coordinate.match(/^([CPMSLT])\d+/);
-        if (!coordMatch || !coordMatch[1]) {
+        // A coordinate must begin with a known family head or the '#' marker, OR
+        // be a canonical structural node (Family_* containers, Weave_* memory arena).
+        const head = coordinate.charAt(0);
+        const isStructural = coordinate.startsWith('Family_') || coordinate.startsWith('Weave_');
+        if (!isStructural && !VALID_COORDINATE_HEADS.includes(head)) {
           details.push({
-            node_uuid: uuid || 'unknown',
-            node_title: title || 'Unknown',
+            node_uuid: uuid,
+            node_title: title,
             issue_type: 'coordinate_invalid',
-            severity: 'error',
-            message: `Invalid coordinate format: ${coordinate}`,
-          });
-          continue;
-        }
-
-        // Validate coordinate type
-        const coordType = coordMatch[1];
-        if (!VALID_COORDINATE_TYPES.includes(coordType)) {
-          details.push({
-            node_uuid: uuid || 'unknown',
-            node_title: title || 'Unknown',
-            issue_type: 'coordinate_invalid',
-            severity: 'error',
-            message: `Invalid coordinate type: ${coordType}`,
+            severity: 'warning',
+            message: `Unrecognized coordinate head "${head}" in "${coordinate}"`,
           });
         }
       }
@@ -182,126 +166,116 @@ export class AlignmentValidator {
       return details;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      return [{
-        node_uuid: '00000000-0000-0000-0000-000000000000',
-        node_title: 'Coordinate Validation',
-        issue_type: 'coordinate_invalid',
-        severity: 'error',
-        message: `Failed to validate coordinates: ${message}`,
-      }];
+      return [
+        {
+          node_uuid: '00000000-0000-0000-0000-000000000000',
+          node_title: 'Coordinate Validation',
+          issue_type: 'coordinate_invalid',
+          severity: 'error',
+          message: `Failed to validate coordinates: ${message}`,
+        },
+      ];
     }
   }
 
   /**
-   * Validate relationship types and integrity
+   * Validate relationship integrity within the canonical :Bimba subgraph.
+   *
+   * Neo4j relationships always connect existing nodes (they cannot dangle), and
+   * the relationship-type vocabulary is intentionally OPEN (named/correspondential
+   * types), so there is nothing to flag as an error here. We surface, at most, an
+   * informational note about :Bimba nodes that participate in no relationships.
    */
-  private async validateRelationships(filterCondition: string): Promise<ValidationDetail[]> {
+  private async validateRelationships(): Promise<ValidationDetail[]> {
     const details: ValidationDetail[] = [];
     const connectionManager = getNeo4jConnectionManager();
 
     try {
       const query = `
-        MATCH (source)-[rel]->(target)
-        ${filterCondition ? `WHERE ${filterCondition}` : ''}
-        RETURN source.uuid as source_uuid, source.title as source_title,
-               type(rel) as rel_type, target.uuid as target_uuid, target.title as target_title
-        LIMIT 50000
+        MATCH (node:Bimba)
+        WHERE NOT (node)--()
+        RETURN coalesce(node.c_2_uuid, node.uuid) as uuid,
+               coalesce(node.c_1_name, node.c_1_primary_designation, node.title, node.name) as title,
+               node.coordinate as coordinate
+        LIMIT 1000
       `;
 
       const records = await connectionManager.executeRead<Record<string, unknown>>(query);
 
       for (const record of records) {
-        const relType = record['rel_type'] as string | null;
-        const sourceTitle = record['source_title'] as string | null;
-        const sourceUuid = record['source_uuid'] as string | null;
-        const targetUuid = record['target_uuid'] as string | null;
-
-        // Check if relationship type is recognized
-        if (relType && !VALID_RELATIONSHIP_TYPES.includes(relType)) {
-          details.push({
-            node_uuid: sourceUuid || 'unknown',
-            node_title: sourceTitle || 'Unknown',
-            issue_type: 'relationship_type_invalid',
-            severity: 'warning',
-            message: `Unrecognized relationship type: ${relType}`,
-          });
-        }
-
-        // Check for dangling relationships (broken references)
-        if (!targetUuid) {
-          details.push({
-            node_uuid: sourceUuid || 'unknown',
-            node_title: sourceTitle || 'Unknown',
-            issue_type: 'relationship_type_invalid',
-            severity: 'error',
-            message: 'Dangling relationship: target node has no UUID',
-          });
-        }
+        details.push({
+          node_uuid: (record['uuid'] as string | null) || 'unknown',
+          node_title: (record['title'] as string | null) || 'Untitled',
+          issue_type: 'relationship_type_invalid',
+          severity: 'info',
+          message: `Orphan node (no relationships): ${(record['coordinate'] as string | null) ?? 'unknown coordinate'}`,
+        });
       }
 
       return details;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      return [{
-        node_uuid: '00000000-0000-0000-0000-000000000000',
-        node_title: 'Relationship Validation',
-        issue_type: 'relationship_type_invalid',
-        severity: 'error',
-        message: `Failed to validate relationships: ${message}`,
-      }];
+      return [
+        {
+          node_uuid: '00000000-0000-0000-0000-000000000000',
+          node_title: 'Relationship Validation',
+          issue_type: 'relationship_type_invalid',
+          severity: 'error',
+          message: `Failed to validate relationships: ${message}`,
+        },
+      ];
     }
   }
 
   /**
-   * Validate embedding presence and coverage
+   * Summarize embedding coverage across the canonical :Bimba subgraph.
+   *
+   * Emits a SINGLE info row (not one per node) to avoid flooding the report when
+   * embeddings are absent. The precise numbers live in `result.embedding_coverage`.
    */
   private async validateEmbeddings(filterCondition: string): Promise<ValidationDetail[]> {
-    const details: ValidationDetail[] = [];
     const connectionManager = getNeo4jConnectionManager();
 
     try {
       const query = `
-        MATCH (node)
+        MATCH (node:Bimba)
         ${filterCondition ? `WHERE ${filterCondition}` : ''}
-        RETURN node.uuid as uuid, node.title as title,
-               EXISTS(node.embedding) as has_embedding
-        LIMIT 10000
+        RETURN count(node) as total, count(node.embedding) as embedded
       `;
-
       const records = await connectionManager.executeRead<Record<string, unknown>>(query);
+      const total = toNum(records[0]?.['total']);
+      const embedded = toNum(records[0]?.['embedded']);
+      const missing = total - embedded;
 
-      for (const record of records) {
-        const hasEmbedding = record['has_embedding'] as boolean | null;
-        const uuid = record['uuid'] as string | null;
-        const title = record['title'] as string | null;
-
-        // Check if embedding is missing (warning, not error)
-        if (!hasEmbedding) {
-          details.push({
-            node_uuid: uuid || 'unknown',
-            node_title: title || 'Unknown',
+      if (missing > 0) {
+        const pct = total > 0 ? ((embedded / total) * 100).toFixed(1) : '0.0';
+        return [
+          {
+            node_uuid: '00000000-0000-0000-0000-000000000000',
+            node_title: 'Embedding coverage',
             issue_type: 'embedding_missing',
             severity: 'info',
-            message: 'Node has no embedding generated',
-          });
-        }
+            message: `${missing} of ${total} :Bimba nodes have no embedding (${pct}% coverage)`,
+          },
+        ];
       }
-
-      return details;
+      return [];
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      return [{
-        node_uuid: '00000000-0000-0000-0000-000000000000',
-        node_title: 'Embedding Validation',
-        issue_type: 'embedding_missing',
-        severity: 'error',
-        message: `Failed to validate embeddings: ${message}`,
-      }];
+      return [
+        {
+          node_uuid: '00000000-0000-0000-0000-000000000000',
+          node_title: 'Embedding Validation',
+          issue_type: 'embedding_missing',
+          severity: 'error',
+          message: `Failed to validate embeddings: ${message}`,
+        },
+      ];
     }
   }
 
   /**
-   * Get validation statistics for the graph
+   * Get validation statistics for the canonical :Bimba subgraph.
    */
   private async getValidationStatistics(
     scope: string,
@@ -309,29 +283,26 @@ export class AlignmentValidator {
   ): Promise<{
     totalNodes: number;
     totalEdges: number;
-    coordinateStats?: { valid_count: number; invalid_count: number; missing_count: number };
-    relationshipStats?: { valid_count: number; invalid_type_count: number; dangling_count: number };
     embeddingStats?: { total_nodes: number; embedded_count: number; missing_count: number; coverage_percent: number };
   }> {
     const connectionManager = getNeo4jConnectionManager();
 
     try {
-      // Count nodes
-      const nodeCountQuery = `MATCH (node) ${filterCondition ? `WHERE ${filterCondition}` : ''} RETURN count(node) as count`;
+      const nodeCountQuery = `MATCH (node:Bimba) ${filterCondition ? `WHERE ${filterCondition}` : ''} RETURN count(node) as count`;
       const nodeCountResult = await connectionManager.executeRead<Record<string, unknown>>(nodeCountQuery);
-      const totalNodes = (nodeCountResult[0]?.['count'] as number) ?? 0;
+      const totalNodes = toNum(nodeCountResult[0]?.['count']);
 
-      // Count edges
-      const edgeCountQuery = `MATCH ()-[rel]->() ${filterCondition ? `WHERE ${filterCondition}` : ''} RETURN count(rel) as count`;
+      const edgeCountQuery = `MATCH (:Bimba)-[rel]->(:Bimba) RETURN count(rel) as count`;
       const edgeCountResult = await connectionManager.executeRead<Record<string, unknown>>(edgeCountQuery);
-      const totalEdges = (edgeCountResult[0]?.['count'] as number) ?? 0;
+      const totalEdges = toNum(edgeCountResult[0]?.['count']);
 
-      // Count embeddings if needed
-      let embeddingStats: { total_nodes: number; embedded_count: number; missing_count: number; coverage_percent: number } | undefined;
+      let embeddingStats:
+        | { total_nodes: number; embedded_count: number; missing_count: number; coverage_percent: number }
+        | undefined;
       if (scope === 'full' || scope === 'embeddings') {
-        const embeddedCountQuery = `MATCH (node) ${filterCondition ? `WHERE ${filterCondition}` : ''} AND EXISTS(node.embedding) RETURN count(node) as count`;
+        const embeddedCountQuery = `MATCH (node:Bimba) WHERE ${filterCondition ? `(${filterCondition}) AND ` : ''}node.embedding IS NOT NULL RETURN count(node) as count`;
         const embeddedCountResult = await connectionManager.executeRead<Record<string, unknown>>(embeddedCountQuery);
-        const embeddedCount = (embeddedCountResult[0]?.['count'] as number) ?? 0;
+        const embeddedCount = toNum(embeddedCountResult[0]?.['count']);
 
         embeddingStats = {
           total_nodes: totalNodes,
@@ -341,21 +312,15 @@ export class AlignmentValidator {
         };
       }
 
-      return {
-        totalNodes,
-        totalEdges,
-        embeddingStats,
-      };
-    } catch (error) {
-      return {
-        totalNodes: 0,
-        totalEdges: 0,
-      };
+      return { totalNodes, totalEdges, embeddingStats };
+    } catch {
+      return { totalNodes: 0, totalEdges: 0 };
     }
   }
 
   /**
-   * Build Cypher WHERE condition from coordinate filter
+   * Build a Cypher WHERE condition from a coordinate filter. Only the six fixed
+   * family letters are interpolated (no user input), so this is injection-safe.
    */
   private buildCoordinateFilterCondition(filter?: CoordinateFilter): string {
     if (!filter) {
@@ -363,26 +328,18 @@ export class AlignmentValidator {
     }
 
     const conditions: string[] = [];
-
-    // Add coordinate type filters
     const coordTypes = ['C', 'P', 'M', 'S', 'T', 'L'] as const;
-    for (const type of coordTypes) {
-      const levelKey = type as keyof CoordinateFilter;
-      const primeKey = `${type}_is_prime` as keyof CoordinateFilter;
 
-      const level = filter[levelKey] as number | undefined;
-      const isPrime = filter[primeKey] as boolean | undefined;
+    for (const type of coordTypes) {
+      const level = filter[type as keyof CoordinateFilter] as number | undefined;
+      const isPrime = filter[`${type}_is_prime` as keyof CoordinateFilter] as boolean | undefined;
 
       if (level !== undefined && level > 0) {
-        conditions.push(`node.coordinate STARTS WITH '${type}'`);
-
+        let cond = `node.coordinate STARTS WITH '${type}'`;
         if (isPrime !== undefined) {
-          if (isPrime) {
-            conditions.push(`node.coordinate ENDS WITH "'"`)
-          } else {
-            conditions.push(`NOT (node.coordinate ENDS WITH "'")`)
-          }
+          cond += isPrime ? ` AND node.coordinate ENDS WITH "'"` : ` AND NOT (node.coordinate ENDS WITH "'")`;
         }
+        conditions.push(`(${cond})`);
       }
     }
 

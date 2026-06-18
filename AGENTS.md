@@ -40,6 +40,8 @@ Default section order (omit a section only if it would be empty; per DOX, leave 
 - **Verification** — the real check for this area (`cargo test -p <crate>`, `make test`, `pnpm --dir Body/M/epi-theia test:contracts`, vault validation). Leave empty if none.
 - **Child DOX Index** — direct children as `` - `path/AGENTS.md` — one line ``, or `- (leaf)`.
 
+**OKF profile.** An `AGENTS.md` **is** its directory's Open Knowledge Format `index.md` — not a second protocol beside DOX. The `c_4_artifact_role` of the artifacts it indexes is the OKF `type`; the Child DOX Index is the OKF concept listing. The Hen frontmatter law already realises an OKF superset (typed roles + residency + typed relations). We author in `[[wikilinks]]` (Obsidian/Hen/sync depend on them); OKF's plain `[text](path)` links are produced only by a bundle-export adapter at the export boundary, never in source. One navigation node per directory serves both agents and OKF consumers. See [[45-bimba-map-indexing-and-dox-okf-unification]].
+
 ## Style
 
 Concise, current, operational. Direct bullets with explicit names. Document stable structure, not history. Delete stale notes. Wikilinks ARE the architecture — link every coordinate, layer, carrier, agent, spec, and decision family when used semantically (not as a literal path/command).
@@ -170,7 +172,7 @@ Spanda — the primordial vibration that is simultaneously the outward surge (ex
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Epi-Logos C Experiments** (32837 symbols, 70538 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **Epi-Logos C Experiments** (32919 symbols, 70659 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

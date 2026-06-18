@@ -40,7 +40,7 @@
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b -w",
-    "clean": "rimraf lib",
-    "test": "pnpm build"
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "test": "pnpm clean && pnpm build && node --test ../test/cosmic-engine-slice.test.mjs src/browser/*.test.mjs"
   }
 }

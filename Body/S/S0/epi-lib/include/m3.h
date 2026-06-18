@@ -404,6 +404,79 @@ extern const uint8_t M3_COMP_MATRIX[64];
 extern const uint8_t M3_MOVE_MATRIX[64];
 extern const uint8_t M3_CODON_TO_AA[64];
 
+/* STOP-codon sentinel as it actually appears in M3_CODON_TO_AA.
+ * The amino-acid index 10 marks the three STOP codons (TAA/TAG/TGA).
+ * (The header comment on M3_CODON_TO_AA historically said "0xFF = STOP";
+ * the live table encodes STOP as amino-acid index 10, so callers must
+ * compare against this constant, not 0xFF.) */
+#define M3_STOP_CODON_AA  10u
+
+typedef enum {
+    M3_TRANSCRIPT_CLASS_SHARED = 0,
+    M3_TRANSCRIPT_CLASS_TRANSCRIBABLE = 1
+} M3_TranscriptClass;
+
+typedef enum {
+    M3_GOVERNANCE_ROLE_NONE = 0,
+    M3_GOVERNANCE_ROLE_START = 1,
+    M3_GOVERNANCE_ROLE_STOP = 2
+} M3_GovernanceRole;
+
+#define M3_CODON_ATG_AUG_VALUE  0x07u
+#define M3_STOP_CODON_TAA_VALUE 0x10u
+#define M3_STOP_CODON_TAG_VALUE 0x13u
+#define M3_STOP_CODON_TGA_VALUE 0x1Cu
+
+_Static_assert(M3_CODON_ATG_AUG_VALUE == 0x07u,
+    "M3_CODON_ATG_AUG must match portal-core transcription.rs START_CODON");
+_Static_assert(M3_STOP_CODON_TAA_VALUE == 0x10u &&
+               M3_STOP_CODON_TAG_VALUE == 0x13u &&
+               M3_STOP_CODON_TGA_VALUE == 0x1Cu,
+    "M3_STOP_CODONS must match portal-core transcription.rs STOP_CODONS");
+_Static_assert(M3_CODON_ATG_AUG_VALUE ==
+               ((M3_NUC_A << 4) | (M3_NUC_T << 2) | M3_NUC_G),
+    "M3_CODON_ATG_AUG must encode ATG/AUG");
+_Static_assert(M3_STOP_CODON_TAA_VALUE ==
+               ((M3_NUC_T << 4) | (M3_NUC_A << 2) | M3_NUC_A),
+    "M3_STOP_CODONS[0] must encode TAA");
+_Static_assert(M3_STOP_CODON_TAG_VALUE ==
+               ((M3_NUC_T << 4) | (M3_NUC_A << 2) | M3_NUC_G),
+    "M3_STOP_CODONS[1] must encode TAG");
+_Static_assert(M3_STOP_CODON_TGA_VALUE ==
+               ((M3_NUC_T << 4) | (M3_NUC_G << 2) | M3_NUC_A),
+    "M3_STOP_CODONS[2] must encode TGA");
+
+extern const uint8_t M3_CODON_ATG_AUG;
+extern const uint8_t M3_STOP_CODONS[3];
+
+static inline uint8_t m3_codon_t_count(uint8_t codon6bit) {
+    uint8_t outer = codon_outer(codon6bit);
+    uint8_t middle = codon_middle(codon6bit);
+    uint8_t inner = codon_inner(codon6bit);
+    return (uint8_t)((outer == M3_NUC_T) + (middle == M3_NUC_T) + (inner == M3_NUC_T));
+}
+
+static inline M3_TranscriptClass m3_codon_transcript_class(uint8_t codon6bit) {
+    return m3_codon_t_count(codon6bit) == 0u
+        ? M3_TRANSCRIPT_CLASS_SHARED
+        : M3_TRANSCRIPT_CLASS_TRANSCRIBABLE;
+}
+
+static inline M3_GovernanceRole m3_codon_governance_role(uint8_t codon6bit) {
+    if (codon6bit == M3_CODON_ATG_AUG) {
+        return M3_GOVERNANCE_ROLE_START;
+    }
+    if (codon6bit < 64u && M3_CODON_TO_AA[codon6bit] == M3_STOP_CODON_AA) {
+        return M3_GOVERNANCE_ROLE_STOP;
+    }
+    return M3_GOVERNANCE_ROLE_NONE;
+}
+
+uint8_t m3_codon_t_count_ffi(uint8_t codon6bit);
+M3_TranscriptClass m3_codon_transcript_class_ffi(uint8_t codon6bit);
+M3_GovernanceRole m3_codon_governance_role_ffi(uint8_t codon6bit);
+int m3_verify_transcript_surface(void);
+
 typedef struct {
     /* Non-dual foundation */
     uint64_t non_dual_mask;             /* 40 always-set bits */
@@ -912,6 +985,16 @@ size_t m3_generate_rotational_states(
     M3_Rotational_Generation out[M3_ROTATIONAL_TABLE_ENTRIES]);
 
 const M3_Rotational_Profile* m3_get_rotational_profile(uint8_t codon6bit);
+
+/* Transcribe a 6-bit codon to its Major Arcana card index.
+ *
+ * Composition: codon -> M3_CODON_TO_AA[codon] (amino-acid index) ->
+ * reverse-lookup against M3_MAJOR_ARCANA[].amino_acid_index. Used by the
+ * M5 Mobius return to transcribe each codon in a session's M3 trace.
+ *
+ * Returns the card index (0-21) on a match, or 0xFF for STOP codons and
+ * any amino-acid index with no Major Arcana assignment. */
+uint8_t  m3_major_arcana_from_codon(uint8_t codon);
 
 /* Boot-time verification of .rodata integrity */
 bool     m3_verify(void);

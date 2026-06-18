@@ -3,6 +3,7 @@ import {
     OMNIPANEL_DEFAULT_TAB,
     OMNIPANEL_TABS,
     type OmniPanelManifest,
+    type OmniPanelLayoutId,
     type OmniPanelState,
     type OmniPanelTab,
     type OmniPanelTabId
@@ -49,10 +50,11 @@ export function sanitizeProtectedHandle(ref: unknown): ProtectedHandleMetadata {
 
 export function collapseOmniPanelManifest(
     declaredTabs: readonly OmniPanelTab[] = OMNIPANEL_TABS,
-    requestedDefaultTab: string = OMNIPANEL_DEFAULT_TAB
+    requestedDefaultTab: string = OMNIPANEL_DEFAULT_TAB,
+    activeLayout?: OmniPanelLayoutId | null
 ): OmniPanelManifest {
     const byId = new Map<string, OmniPanelTab>();
-    for (const tab of declaredTabs) {
+    for (const tab of filterOmniPanelTabsForLayout(declaredTabs, activeLayout)) {
         validateTab(tab);
         byId.set(tab.id, tab);
     }
@@ -70,6 +72,18 @@ export function collapseOmniPanelManifest(
         tabs: Object.freeze(tabs),
         defaultTab: resolveDefaultTab({ tabs, defaultTab: requestedDefaultTab }, requestedDefaultTab)
     });
+}
+
+export function filterOmniPanelTabsForLayout(
+    declaredTabs: readonly OmniPanelTab[] = OMNIPANEL_TABS,
+    activeLayout?: OmniPanelLayoutId | null
+): readonly OmniPanelTab[] {
+    if (activeLayout !== 'daily-0-1' && activeLayout !== 'ide-deep') {
+        return Object.freeze([...declaredTabs]);
+    }
+    return Object.freeze(
+        declaredTabs.filter(tab => tab.availableInLayouts.includes(activeLayout))
+    );
 }
 
 export function resolveDefaultTab(
@@ -153,6 +167,9 @@ function assertKnownTab(manifest: OmniPanelManifest, tabId: string): void {
 function validateTab(tab: OmniPanelTab): void {
     if (!tab.id || !tab.label || !tab.icon || !tab.extensionId) {
         throw new Error('OmniPanel tab declarations require id, label, icon, and extensionId.');
+    }
+    if (!Array.isArray(tab.availableInLayouts) || tab.availableInLayouts.length === 0) {
+        throw new Error(`OmniPanel tab "${tab.id}" must declare availableInLayouts.`);
     }
     if (!Number.isFinite(tab.priority)) {
         throw new Error(`OmniPanel tab "${tab.id}" has an invalid priority.`);

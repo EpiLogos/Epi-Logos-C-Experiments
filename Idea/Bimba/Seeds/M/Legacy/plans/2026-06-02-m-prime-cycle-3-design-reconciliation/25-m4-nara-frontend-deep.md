@@ -44,7 +44,8 @@ The canvas, highlights, ambient strip, and tuning bar (11.10/11.11/11.12) own th
 - **Privacy-class chrome contract** — per-widget border-tint CSS (DR-WC-M4-5); NOT a status-bar entry (15.10 discipline preserved); every Wave-C widget carries it.
 - **Session-close ceremony contract** — invoked on `m5.session.contemplation.complete`; renders wisdom_delta byte trail + XOR animation + 4 contemplation seeds + 9-bit virtue witness vector from 19.6/19.7.
 - **Tarot psyche-anchor coherence contract** — reads session-frame psyche-anchor and M3 codon trace; computes coherence via 19.5 `m3_major_arcana_from_codon` reverse-lookup.
-- **Track-08 mini-mode contributions** — every Wave-C widget extends the existing `TRACK_08_CONTRIBUTION` pattern in `m4-nara/src/common/index.ts:20`, declaring `miniModes: ['badge','compact-card','inspector']` and matching `currentStateSelectors`/`selectionHandlers` so the `4-5-0` plugin composes them per 15.4.
+- **Dia-logical Arena contract (Track 41 ownership)** — owns the `m4.nara.dialogicalArena` view id; SpacetimeDB-backed multi-party presence (`ArenaScene` / `ArenaPresence` / `ArenaTurn` / `ArenaDialogueLine` / `WarmVamaShakti` tables per Tranche 41.5; `vama_shakti_identity_handle = vama_shakti_quintessence_hash` parity with `PratibimbaPresence`); ontologies-in-conversation use case; CPF (00/00) scene-setup wizard with Anima brainstorms classifier per admission (egregore/sprite/daemon/mantra per DR-VAMA-6); **classifier-aware turn-routing** in kairotic time consuming Mercurius signal-relay (`mercurius.kairos.delta` reuses 25.16's subscription pattern); user-as-Trika-0 (the user IS itself a Vama Shakti, the one with the most lived-from-the-inside Q_activity) + admitted Vama Shaktis with classifier glyphs + admitted constitutional caste; Moirai closure-distillation on scene close producing Graphiti episodes + classifier-modulated typed `ARENA_DIALOGUE_OF` + `DIALOGICAL_RESONANCE_AT` graph edges per Tranche 41.9 (Jungian amplification routed to canon). Privacy chrome: `mext-privacy-protected-local-handle-only` (dialogue body stays in DOM, never projects globally; only scene_key + counts + class-distribution-summary cross to global projection). **Implementation, tranches, and verification live in [`41-vama-shakti-factory-and-dialogical-arena.md`](41-vama-shakti-factory-and-dialogical-arena.md)** (DR-VAMA-1..6 VALIDATED Phase-K 2026-06-16; canonical M4' seed at [`Idea/Bimba/Seeds/M/M4'/m4-prime-vama-shakti-factory-and-dialogical-arena.md`](../../../M4'/m4-prime-vama-shakti-factory-and-dialogical-arena.md)). Track 25's role for this widget is the surface-contract reservation only; the widget extends `m4-nara/src/browser/widgets/` per the established Track 25 widget pattern (DR-VAMA-4 + DR-LIB-ATELIER-1 projection-not-extension discipline).
+- **Track-08 mini-mode contributions** — every Wave-C widget extends the existing `TRACK_08_CONTRIBUTION` pattern in `m4-nara/src/common/index.ts:20`, declaring `miniModes: ['badge','compact-card','inspector']` and matching `currentStateSelectors`/`selectionHandlers` so the `4-5-0` plugin composes them per 15.4. (The Dia-logical Arena widget per Track 41 exports `M4DialogicalArenaCard` per the same pattern.)
 
 ## Tranches
 
@@ -275,7 +276,7 @@ Cross-link `plugin-integrated-4-5-0` plugin consumer (per 08-integrated-4-5-0 ra
 
 Verification: `pnpm -C Body/M/epi-theia/extensions/m4-nara build` clean; contract-preflight validator (`scripts/validate-extension-contract-preflight.mjs`) accepts the extended `TRACK_08_EXPORTS`; composition-contract validator (`08-t0`) asserts each export has matching mini-mode contribution; integration test mounts each Wave-C widget under `plugin-integrated-4-5-0` editor area without breaking the composition contract per 15.4; cross-link 11.9 surface-extension-contract-ledger test asserts every Wave-C view id maps to its owner (the `m4-nara` extension) with status `aligned`.
 
-### Tranche 25.22 — PASU BeingPattern perspective and family-field consumer *(spec-ahead-integration; consumes 10.PASU + 18.10 + PASU.md)*
+### Tranche 25.22 — PASU BeingPattern perspective and family-field consumer *(spec-ahead-integration; consumes CCT-21 + 10.PASU + 18.10 + PASU.md)*
 
 Build `Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/being-pattern-perspective.tsx` as the Nara consumer of `PasuBeingPatternProjection`. This widget is not a new identity editor. It is a protected-local read surface showing how the current entity or relation is being read through:
 
@@ -284,7 +285,7 @@ Build `Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/being-pattern-per
 - optional `NaraFamilyRole`: Father, Mother, Son, Daughter, Tao, IntegralConsciousness
 - public-safe `clockAddress`, `elementalWeights`, relation-edge counts, and verifier refs
 
-The widget reads through `SharedBridgeAdapter.onProfile()` and narrows only the typed `pasuBeingPattern` handle from 18.10. It renders:
+The widget reads through `SharedBridgeAdapter.onProfile()` and narrows only the typed `pasuBeingPattern` handle from 18.10, whose `liveState` generation is produced by CCT-21. It renders:
 - a relationship dial showing whether the live field is one, many, potentially one, generatively many, or true many-in-one
 - a perspective strip showing I / You / You-and-I / They / We / We-I
 - optional family overlay chips when the reading intentionally applies the Nara family lens
@@ -298,7 +299,7 @@ Privacy and canon rules:
 
 View id: `m4.nara.beingPatternPerspective` (new). Privacy chrome: `mext-privacy-protected-local-handle-only`. Composes as `M4BeingPatternPerspectiveCard` TRACK_08 export.
 
-Verification: `pnpm -C Body/M/epi-theia/extensions/m4-nara build` clean; widget test renders all seven `MonoPolyOperator` modes and all six `PerspectiveRole` modes from fixture profiles; family overlay test asserts the six `NaraFamilyRole` variants render only when present; privacy test asserts no raw quaternion / Graphiti body / natal chart body is rendered; review-risk test asserts `ActualisingOne` shows the banner and routes only to `m5.review.openBeingPatternCandidate`; composition test asserts `M4BeingPatternPerspectiveCard` mounts under `plugin-integrated-4-5-0` without violating DR-M4-3.
+Verification: `pnpm -C Body/M/epi-theia/extensions/m4-nara build` clean; widget test renders all seven `MonoPolyOperator` modes and all six `PerspectiveRole` modes from fixture profiles; CCT-21 replay fixture drives the same current stream generation through 18.10 into `M4BeingPatternPerspectiveCard`; family overlay test asserts the six `NaraFamilyRole` variants render only when present; privacy test asserts no raw quaternion / Graphiti body / natal chart body is rendered; review-risk test asserts `ActualisingOne` shows the banner and routes only to `m5.review.openBeingPatternCandidate`; composition test asserts `M4BeingPatternPerspectiveCard` mounts under `plugin-integrated-4-5-0` without violating DR-M4-3.
 
 ### Tranche 25.23 — R-factor fretboard engine (`NaraRFactorFretboard`) *(spec-ahead-integration; consumes 10.AW + 18.11 + Track 01 §1.12; cross-link 19.6/19.19)*
 

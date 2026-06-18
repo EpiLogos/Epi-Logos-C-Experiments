@@ -17,6 +17,7 @@ const validatorPath = join(
   repoRoot,
   "Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs"
 );
+const extensionsRoot = join(repoRoot, "Body/M/epi-theia/extensions");
 const layoutTypesPath = join(
   repoRoot,
   "Body/M/epi-theia/extensions/pratibimba-layouts/src/common/layout-types.ts"
@@ -50,13 +51,80 @@ const expectedExtensions = [
   "m5-epii"
 ];
 
+const forbiddenStandaloneProjectionExtensions = [
+  "library-surface",
+  "logos-atelier",
+  "scent-following-workspace"
+];
+
 const widgetFactoryModulePaths = [
   "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/frontend-module.ts",
   "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/frontend-module.ts",
+  "Body/M/epi-theia/extensions/body-lite-surface/src/browser/frontend-module.ts",
+  "Body/M/epi-theia/extensions/kernel-bridge-readiness/src/browser/frontend-module.ts",
   ...expectedExtensions.map((extension) =>
     `Body/M/epi-theia/extensions/${extension}/src/browser/frontend-module.ts`
   )
 ].map((path) => join(repoRoot, path));
+
+const dailyContributorEvidence = new Map([
+  [
+    "pratibimba.body.review-alert-badge",
+    {
+      owner: "body-lite-surface",
+      path: "Body/M/epi-theia/extensions/body-lite-surface/src/browser/frontend-module.ts",
+      pattern: /BODY_LITE_WIDGET_IDS\.REVIEW_ALERT_BADGE/
+    }
+  ],
+  [
+    "pratibimba.body.agent-checkin",
+    {
+      owner: "body-lite-surface",
+      path: "Body/M/epi-theia/extensions/body-lite-surface/src/browser/frontend-module.ts",
+      pattern: /BODY_LITE_WIDGET_IDS\.AGENT_CHECKIN/
+    }
+  ],
+  [
+    "pratibimba.body.safe-source-handle-row",
+    {
+      owner: "body-lite-surface",
+      path: "Body/M/epi-theia/extensions/body-lite-surface/src/browser/frontend-module.ts",
+      pattern: /BODY_LITE_WIDGET_IDS\.SAFE_SOURCE_HANDLE_ROW/
+    }
+  ],
+  [
+    "kernel-bridge-readiness:widget",
+    {
+      owner: "kernel-bridge-readiness",
+      path: "Body/M/epi-theia/extensions/kernel-bridge-readiness/src/browser/readiness-widget.tsx",
+      pattern: /static\s+readonly\s+ID\s*=\s*['"]kernel-bridge-readiness:widget['"]/
+    }
+  ],
+  [
+    "pratibimba.daily.library-projection",
+    {
+      owner: "body-lite-surface",
+      path: "Body/M/epi-theia/extensions/body-lite-surface/src/common/lite-surface-types.ts",
+      pattern: /coordinate-overlay[\s\S]*theia-file-tree/
+    }
+  ],
+  [
+    "pratibimba.daily.atelier-cluster-lens",
+    {
+      owner: "m0-anuttara",
+      path: "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts",
+      pattern: /etymological-cluster[\s\S]*atelier-projection-lens/
+    }
+  ],
+  [
+    "pratibimba.omnipanel.shell",
+    {
+      owner: "omnipanel-shell",
+      path: "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/frontend-module.ts",
+      pattern: /OmniPanelWidget\.ID/
+    }
+  ]
+]);
 
 const expectedReadinessStates = [
   "bridge_unavailable",
@@ -78,6 +146,10 @@ const allowedChromeContractCategories = new Set([
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function readIdeShellWidgetIds() {
@@ -127,12 +199,30 @@ function extractExportedObject(source, exportName) {
   return extractBalancedBlock(source, objectStart, "{", "}");
 }
 
+function extractExportedStringArray(source, exportName) {
+  const declarationStart = source.indexOf(`export const ${exportName}`);
+  assert.notEqual(declarationStart, -1, `missing export const ${exportName}`);
+  const arrayStart = source.indexOf("[", declarationStart);
+  assert.notEqual(arrayStart, -1, `missing array literal for ${exportName}`);
+  const arraySource = extractBalancedBlock(source, arrayStart, "[", "]");
+  return Array.from(arraySource.matchAll(/['"]([^'"]+)['"]/g), (match) => match[1]);
+}
+
 function extractStringArrayProperty(objectSource, propertyName) {
   const propertyStart = objectSource.indexOf(`${propertyName}:`);
   assert.notEqual(propertyStart, -1, `missing ${propertyName} property`);
   const arrayStart = objectSource.indexOf("[", propertyStart);
   assert.notEqual(arrayStart, -1, `missing ${propertyName} array`);
   const arraySource = extractBalancedBlock(objectSource, arrayStart, "[", "]");
+  return Array.from(arraySource.matchAll(/['"]([^'"]+)['"]/g), (match) => match[1]);
+}
+
+function extractConstStringTuple(source, exportName) {
+  const declarationStart = source.indexOf(`export const ${exportName}`);
+  assert.notEqual(declarationStart, -1, `missing export const ${exportName}`);
+  const arrayStart = source.indexOf("[", declarationStart);
+  assert.notEqual(arrayStart, -1, `missing tuple array for ${exportName}`);
+  const arraySource = extractBalancedBlock(source, arrayStart, "[", "]");
   return Array.from(arraySource.matchAll(/['"]([^'"]+)['"]/g), (match) => match[1]);
 }
 
@@ -177,7 +267,7 @@ function resolveSourcePath(fromFile, specifier) {
   const base = resolve(dirname(fromFile), specifier);
   const candidates = extname(base)
     ? [base]
-    : [base, `${base}.ts`, `${base}.tsx`, join(base, "index.ts"), join(base, "index.tsx")];
+    : [`${base}.ts`, `${base}.tsx`, join(base, "index.ts"), join(base, "index.tsx")];
   return candidates.find((path) => existsSync(path)) ?? null;
 }
 
@@ -209,9 +299,17 @@ function readStringConstants(sourceFiles) {
 
 function resolveWidgetClassId(modulePath, className, imports) {
   const widgetSourcePath = imports.get(className);
-  assert.ok(widgetSourcePath, `${className} must be imported by ${modulePath}`);
-  const widgetSource = readFileSync(widgetSourcePath, "utf8");
-  const idMatch = widgetSource.match(/static\s+readonly\s+ID\s*=\s*([^;]+);/);
+  const sourcePath = widgetSourcePath ?? modulePath;
+  let widgetSource = "";
+  if (!widgetSourcePath) {
+    widgetSource = readFileSync(modulePath, "utf8");
+    assert.match(widgetSource, new RegExp(`class\\s+${className}\\b`), `${className} must be imported by or declared in ${modulePath}`);
+  } else {
+    widgetSource = readFileSync(sourcePath, "utf8");
+  }
+  const classStart = widgetSource.search(new RegExp(`class\\s+${className}\\b`));
+  const classSource = classStart === -1 ? widgetSource : widgetSource.slice(classStart);
+  const idMatch = classSource.match(/static\s+readonly\s+ID\s*=\s*([^;]+);/);
   assert.ok(idMatch, `${className} must define static readonly ID`);
 
   const expression = idMatch[1].trim();
@@ -220,10 +318,45 @@ function resolveWidgetClassId(modulePath, className, imports) {
     return literal[1];
   }
 
-  const constants = readStringConstants([widgetSourcePath, ...readCommonSourceFiles(modulePath)]);
+  const expressionSourcePath = imports.get(expression);
+  const constants = readStringConstants([
+    sourcePath,
+    ...(expressionSourcePath ? [expressionSourcePath] : []),
+    ...readCommonSourceFiles(modulePath)
+  ]);
   const resolved = constants.get(expression);
   assert.ok(resolved, `${className}.ID expression ${expression} must resolve to a string constant`);
   return resolved;
+}
+
+function resolveStringExpression(modulePath, expression, imports) {
+  const literal = expression.match(/^['"]([^'"]+)['"]$/);
+  if (literal) {
+    return literal[1];
+  }
+
+  const memberExpression = expression.match(/^([A-Z0-9_]+)\.([A-Z0-9_]+)$/);
+  if (memberExpression) {
+    const [, importedName, memberName] = memberExpression;
+    const constantsPath = imports.get(importedName);
+    const sourceFiles = constantsPath
+      ? [constantsPath, ...readCommonSourceFiles(modulePath)]
+      : readCommonSourceFiles(modulePath);
+    const constants = readStringConstants(sourceFiles);
+    return constants.get(`${importedName}.${memberName}`) ?? null;
+  }
+
+  const directConstant = expression.match(/^([A-Z0-9_]+)$/);
+  if (directConstant) {
+    const constantsPath = imports.get(directConstant[1]);
+    const sourceFiles = constantsPath
+      ? [constantsPath, ...readCommonSourceFiles(modulePath)]
+      : readCommonSourceFiles(modulePath);
+    const constants = readStringConstants(sourceFiles);
+    return constants.get(directConstant[1]) ?? null;
+  }
+
+  return null;
 }
 
 function readRegisteredWidgetFactoryIds() {
@@ -233,6 +366,16 @@ function readRegisteredWidgetFactoryIds() {
     const imports = parseNamedImports(source, modulePath);
     for (const match of source.matchAll(/id:\s*([A-Za-z0-9_]+)\.ID/g)) {
       registered.add(resolveWidgetClassId(modulePath, match[1], imports));
+    }
+    for (const match of source.matchAll(/id:\s*([^,\n}]+)/g)) {
+      const expression = match[1].trim();
+      if (/^[A-Za-z0-9_]+\.ID$/.test(expression)) {
+        continue;
+      }
+      const resolved = resolveStringExpression(modulePath, expression, imports);
+      if (resolved) {
+        registered.add(resolved);
+      }
     }
   }
   return registered;
@@ -310,7 +453,10 @@ test("IDE_DEEP_DESCRIPTOR expected widgets are factory-backed or explicitly layo
 
   const layoutSource = readFileSync(layoutTypesPath, "utf8");
   const descriptorSource = extractExportedObject(layoutSource, "IDE_DEEP_DESCRIPTOR");
-  const expectedWidgets = extractStringArrayProperty(descriptorSource, "expectedWidgets");
+  const descriptorExpectedWidgets = extractStringArrayProperty(descriptorSource, "expectedWidgets");
+  const expectedWidgets = descriptorExpectedWidgets.length > 0
+    ? descriptorExpectedWidgets
+    : extractConstStringTuple(layoutSource, "DAILY_0_1_WIDGET_IDS");
   const layoutOnlyWidgets = extractStringRecordProperty(descriptorSource, "layoutOnlyWidgets");
   const registeredWidgetFactoryIds = readRegisteredWidgetFactoryIds();
 
@@ -332,6 +478,85 @@ test("IDE_DEEP_DESCRIPTOR expected widgets are factory-backed or explicitly layo
     (widgetId) => !registeredWidgetFactoryIds.has(widgetId) && !layoutOnlyWidgets.has(widgetId)
   );
   assert.deepEqual(orphans, [], `unowned IDE_DEEP_DESCRIPTOR.expectedWidgets: ${orphans.join(", ")}`);
+});
+
+test("DAILY_0_1_DESCRIPTOR expected widgets map to contributors or projection-lenses", () => {
+  assert.ok(existsSync(layoutTypesPath), "missing pratibimba layout types");
+
+  const layoutSource = readFileSync(layoutTypesPath, "utf8");
+  const descriptorSource = extractExportedObject(layoutSource, "DAILY_0_1_DESCRIPTOR");
+  const contributorsSource = extractExportedObject(layoutSource, "DAILY_0_1_WIDGET_CONTRIBUTORS");
+  assert.match(
+    descriptorSource,
+    /expectedWidgets:\s*\[\.\.\.DAILY_0_1_WIDGET_IDS\]/,
+    "daily descriptor must source expectedWidgets from DAILY_0_1_WIDGET_IDS"
+  );
+  const expectedWidgets = extractExportedStringArray(layoutSource, "DAILY_0_1_WIDGET_IDS");
+  const layoutOnlyWidgets = extractStringRecordProperty(descriptorSource, "layoutOnlyWidgets");
+  const registeredWidgetFactoryIds = readRegisteredWidgetFactoryIds();
+
+  assert.ok(
+    expectedWidgets.includes("pratibimba.daily.library-projection"),
+    "daily layout must register the Library projection-lens"
+  );
+  assert.ok(
+    expectedWidgets.includes("pratibimba.daily.atelier-cluster-lens"),
+    "daily layout must register the Atelier cluster projection-lens"
+  );
+  assert.equal(
+    expectedWidgets.includes("pratibimba.daily.cymatic-placeholder"),
+    false,
+    "unowned cymatic placeholder must not remain an expected widget"
+  );
+  assert.equal(
+    expectedWidgets.includes("pratibimba.daily.status-display"),
+    false,
+    "daily status-display claim must align to the real kernel-bridge-readiness widget id"
+  );
+
+  for (const widgetId of expectedWidgets) {
+    const evidence = dailyContributorEvidence.get(widgetId);
+    assert.ok(evidence, `${widgetId} missing daily contributor evidence mapping`);
+    assert.match(contributorsSource, new RegExp(`['"]${escapeRegExp(widgetId)}['"]`));
+    assert.match(contributorsSource, new RegExp(`ownerExtension:\\s*['"]${escapeRegExp(evidence.owner)}['"]`));
+    const evidencePath = join(repoRoot, evidence.path);
+    assert.ok(existsSync(evidencePath), `${widgetId} owner path missing: ${evidence.path}`);
+    assert.match(readFileSync(evidencePath, "utf8"), evidence.pattern, `${widgetId} owner evidence missing`);
+  }
+
+  const factoryBackedOrphans = expectedWidgets.filter(
+    (widgetId) =>
+      !registeredWidgetFactoryIds.has(widgetId) &&
+      !layoutOnlyWidgets.has(widgetId)
+  );
+  assert.deepEqual(
+    factoryBackedOrphans,
+    [],
+    `unowned DAILY_0_1_DESCRIPTOR.expectedWidgets: ${factoryBackedOrphans.join(", ")}`
+  );
+
+  for (const widgetId of layoutOnlyWidgets.keys()) {
+    assert.match(
+      layoutOnlyWidgets.get(widgetId),
+      /projection-lens/,
+      `${widgetId} layout-only annotation must explicitly say projection-lens`
+    );
+  }
+});
+
+test("Track 11 T11.3 validator enforces projection-lens anti-rebuild rule", () => {
+  assert.ok(existsSync(validatorPath), "missing contract validator");
+  const validatorSource = readFileSync(validatorPath, "utf8");
+
+  for (const extensionName of forbiddenStandaloneProjectionExtensions) {
+    assert.equal(
+      existsSync(join(extensionsRoot, extensionName)),
+      false,
+      `${extensionName} must not exist as a standalone extension`
+    );
+    assert.match(validatorSource, new RegExp(`['"]${escapeRegExp(extensionName)}['"]`));
+  }
+  assert.match(validatorSource, /projection-lens/);
 });
 
 test("Track 07 T0 validator succeeds on the checked-in contract package", () => {

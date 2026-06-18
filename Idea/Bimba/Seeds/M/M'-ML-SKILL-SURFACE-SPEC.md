@@ -147,13 +147,14 @@ The Hermes catalog does NOT cover five capabilities the autoresearch spine struc
 #### 3.2 `epii-distillation` — Teacher-student pipeline
 
 **Residency:** `Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/`
-**Serves:** M5 Epii (primary) — Pro-class teacher (Claude Opus / Gemini 3.1 Pro / GPT-5.2-class) → local Gemma 4 12B student
-**Why needed:** Hermes covers fine-tuning and serving but doesn't ship a distillation skill. The Pro→local pipeline is structural for the autoresearch loop's long-term shape — eventually the local Gemma should be capable of much of the Pro-class judge work for the user, with the Pro-class slot reserved for genuinely novel research moves.
+**Serves:** M5 Epii (primary) — Pro-class teacher (Claude Opus / Gemini 3.1 Pro / GPT-5.2-class) → local Gemma 4 12B student. Also **M4 Nara** (per DR-PARAM-1) via the `expert` mode below — manufactures coordinate/`c_5_birth_codon`-indexed canon-fact micro-experts for the local Nara slot.
+**Why needed:** Hermes covers fine-tuning and serving but doesn't ship a distillation skill. The Pro→local pipeline is structural for the autoresearch loop's long-term shape — eventually the local Gemma should be capable of much of the Pro-class judge work for the user, with the Pro-class slot reserved for genuinely novel research moves. The same dataset-generation front-half (`distill_dataset_gen.py`: corpus → (input, teacher_output) pairs) IS the DMOA "docs → Q&A pairs" manufacturing step — so canon-fact micro-expert manufacturing (DR-PARAM-1) is a mode of this skill, not a new pipeline.
 **Implementation surface:**
 - `scripts/distill_dataset_gen.py` — given a corpus + teacher endpoint, generates (input, teacher_output) pairs with multi-channel annotations (lens-coherence, verifier-pass, user-articulation simulation)
 - `scripts/distill_train.py` — composes `peft-fine-tuning` + `unsloth` (or `mlx-lora` on Darwin) with distillation-specific loss (KL-divergence on logits where available, MSE on hidden states for response-quality matching, custom multi-channel preservation loss)
 - `scripts/distill_eval.py` — compares student against teacher on held-out judge tasks, reports preservation rate per channel
-- `references/distillation-design-notes.md` — when distillation works vs when it doesn't for our channel structure
+- `scripts/distill_expert.py` *(DR-PARAM-1 `expert` mode)* — given a bounded canonical fact-set (one coordinate's stable leaf-facts: LUTs, coordinate definitions, 72/64/36 tables), trains a **low-rank LoRA targeted at the final FFN layer only** and writes it to a `c_5_birth_codon`-indexed expert store for hot-swap into the local Nara model (linear ΔΘ sum, composes with the PASU voice LoRA). Routing is by coordinate, not BM25; the M2/M5 EBM energy `E = ‖q_b − q_p‖²` (DR-MP-2) is the load gate, not Shannon entropy. **Bounded to the stable-canonical-leaf class — never relational/multi-hop/provenance knowledge, which stays in GraphRAG.** Terminus integrates with the Hen entity-candidate lifecycle (CCT-14b).
+- `references/distillation-design-notes.md` — when distillation works vs when it doesn't for our channel structure; includes the `expert`-mode boundary (canon-leaf only) and the KV-cache-preservation rationale
 **Dependencies:** Hermes `peft-fine-tuning`, `unsloth` OR custom `mlx-lora`, `transformers`, `accelerate`. API access for teacher (governed by [[M'-MODEL-SLOT-SPEC]] cloud-opt-in scope).
 **Build effort:** 2-3 weeks. Multi-channel preservation loss is the novel piece.
 

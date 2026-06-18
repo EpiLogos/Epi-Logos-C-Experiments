@@ -10,6 +10,21 @@
   ],
   "main": "lib/common/index.js",
   "types": "lib/common/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/common/index.d.ts",
+      "default": "./lib/common/index.js"
+    },
+    "./meaning-packet": {
+      "types": "./lib/common/meaning-packet.d.ts",
+      "default": "./lib/common/meaning-packet.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "meaning-packet": ["lib/common/meaning-packet.d.ts"]
+    }
+  },
   "theiaExtensions": [
     {
       "frontend": "lib/browser/frontend-module"
@@ -37,7 +52,8 @@
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b -w",
-    "clean": "rimraf lib",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "test:outer-planet-pending": "node --test test/outer-planet-pending.test.mjs",
     "test": "node --test test/widget-registry.test.mjs && pnpm build"
   }
 }

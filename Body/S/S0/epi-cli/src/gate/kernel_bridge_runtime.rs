@@ -263,6 +263,23 @@ pub struct OracleSequence {
     pub codons: Vec<OracleSequenceCodon>,
 }
 
+/// Mirrors M3_TranscriptClass from m3.h: SHARED=0, TRANSCRIBABLE=1
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum TranscriptClass {
+    Shared = 0,
+    Transcribable = 1,
+}
+
+/// Mirrors M3_GovernanceRole from m3.h: NONE=0, START=1, STOP=2
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum GovernanceRole {
+    None = 0,
+    Start = 1,
+    Stop = 2,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SymbolicProtein {
@@ -271,6 +288,15 @@ pub struct SymbolicProtein {
     pub reading_frame: OracleFrame,
     pub start_position_ref: Option<String>,
     pub stop_position_ref: Option<String>,
+    /// M3 transcript-class distinction (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transcript_class: Option<TranscriptClass>,
+    /// M3 governance role (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub governance_role: Option<GovernanceRole>,
+    /// True if this protein was derived from canonical spec rather than empirical input (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub is_canonical_derivation: Option<bool>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -284,6 +310,18 @@ pub struct TranscriptionalClockPacket {
     pub oracle_sequence: Option<OracleSequence>,
     pub symbolic_protein: Option<SymbolicProtein>,
     pub provenance_handles: Vec<String>,
+    /// M3 transcript-class distinction (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transcript_class: Option<TranscriptClass>,
+    /// M3 governance role (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub governance_role: Option<GovernanceRole>,
+    /// Position in the transcriptional chain, 0-based (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub chain_position: Option<u32>,
+    /// Hash of the parent TranscriptionalClockPacket for chain verification (additive, 4.17)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parent_packet_hash: Option<[u8; 32]>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

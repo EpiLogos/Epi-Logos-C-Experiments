@@ -3,14 +3,16 @@ import {
     MathemeHarmonicProfileBoundary,
     MExtensionReadinessSnapshot
 } from '@pratibimba/m-extension-runtime';
-import { M0_LAYER_VIEWS, M0LayerView } from './m0-layers';
+import { M0_LAYER_VIEWS } from './m0-layers';
+import type { M0LayerKey, M0LayerView } from './m0-layers';
 
 export { M0_LAYER_VIEWS };
-export type { M0LayerView };
+export type { M0LayerKey, M0LayerView };
 
 const M0_PRIVACY_CLASS = 'public_current_with_graph_provenance';
 const M0_S2_LAYER_QUERY_METHOD = 's2.graph.query';
 const M0_COMMUNITY_CLOCK_OVERLAY_VIEW_ID = 'm0.anuttara.communityClockOverlay';
+export const M0_ATELIER_CLUSTER_LENS_ID = 'pratibimba.daily.atelier-cluster-lens' as const;
 
 export type M0InspectorLayer = 'lang' | 'ql' | 'rel' | 'time' | 'pers' | 'pedag';
 export type M0SurfaceMode = 'reading' | 'authoring';
@@ -29,6 +31,7 @@ export interface M0LayerS2Query {
 
 export interface M0LayerRoute {
     readonly layer: M0InspectorLayer;
+    readonly layerKey: M0LayerKey;
     readonly tabId: string;
     readonly label: string;
     readonly summary: string;
@@ -58,7 +61,9 @@ export type M0ProvenanceState =
     | 'derived'
     | 'inferred'
     | 'review_pending'
-    | 'blocked';
+    | 'blocked'
+    | 'bridged_local'
+    | 'bridged_public';
 
 export interface M0ProvenancedField {
     readonly key: string;
@@ -89,6 +94,15 @@ export interface M0CommunityClockOverlay {
     readonly projection: M0ProvenancedField;
     readonly privacyBoundary: M0ProvenancedField;
     readonly canonicalWritePerformed: false;
+    readonly provenance: string;
+}
+
+export interface M0ProjectionLens {
+    readonly id: typeof M0_ATELIER_CLUSTER_LENS_ID;
+    readonly lensKind: 'etymological-cluster';
+    readonly targetViewId: typeof M0_COMMUNITY_CLOCK_OVERLAY_VIEW_ID;
+    readonly ownerExtension: 'm0-anuttara';
+    readonly standaloneExtension: false;
     readonly provenance: string;
 }
 
@@ -145,6 +159,7 @@ export interface M0InspectorModel {
         readonly namespace: string | null;
         readonly badges: readonly string[];
     };
+    readonly layerReadiness: Readonly<Record<M0LayerKey, M0ProvenanceState>>;
     readonly layerViews: readonly M0LayerView[];
     readonly layerRoutes: readonly M0LayerRoute[];
     readonly languageFields: readonly M0ProvenancedField[];
@@ -153,6 +168,7 @@ export interface M0InspectorModel {
     readonly relationFamilies: readonly M0ProvenancedField[];
     readonly readinessFacts: readonly M0GraphReadinessFact[];
     readonly communityClockOverlay: M0CommunityClockOverlay;
+    readonly projectionLenses: readonly M0ProjectionLens[];
     readonly parityBridges: M0ParityBridgeProjection;
     readonly routeTargets: readonly string[];
     readonly actions: readonly M0GatewayAction[];
@@ -254,6 +270,7 @@ export function buildM0InspectorModel(input: {
             namespace,
             badges: Object.freeze(nodeBadges(input.graphNode, namespace))
         }),
+        layerReadiness: layerReadiness(input.graphNode, properties, input.profile?.payload),
         layerViews: M0_LAYER_VIEWS,
         layerRoutes: Object.freeze(layerRoutes(coordinate, input)),
         languageFields: Object.freeze([
@@ -277,6 +294,7 @@ export function buildM0InspectorModel(input: {
         relationFamilies: Object.freeze(relationFamilyFields(input.graphNode, properties)),
         readinessFacts: Object.freeze(readinessFacts(input.graphNode, input.readiness)),
         communityClockOverlay: communityClockOverlay(coordinate, properties, input),
+        projectionLenses: Object.freeze([atelierClusterLens()]),
         parityBridges: readM0ParityBridgeProjection(input.profile) ?? blockedParityBridgeProjection(),
         routeTargets: Object.freeze(['M1', 'M2', 'M3', 'M4', 'M5']),
         actions: Object.freeze(actions(coordinate, input)),
@@ -289,6 +307,36 @@ export function buildM0InspectorModel(input: {
                 'DCC-01: residual alpha wording can read M0 as witness-axis +1; this surface follows M0-SPEC and M1-SPEC while keeping the contradiction visible.'
         }),
         renderBudgetMs: 100 as const
+    });
+}
+
+function atelierClusterLens(): M0ProjectionLens {
+    return Object.freeze({
+        id: M0_ATELIER_CLUSTER_LENS_ID,
+        lensKind: 'etymological-cluster',
+        targetViewId: M0_COMMUNITY_CLOCK_OVERLAY_VIEW_ID,
+        ownerExtension: 'm0-anuttara',
+        standaloneExtension: false,
+        provenance:
+            'atelier-projection-lens: etymological-cluster overlay on the existing m0-anuttara graph viewer; no logos-atelier extension'
+    });
+}
+
+function layerReadiness(
+    node: M0GraphNodePayload | null | undefined,
+    properties: Record<string, unknown> | undefined,
+    payload: unknown
+): Readonly<Record<M0LayerKey, M0ProvenanceState>> {
+    const profilePayload = objectValue(payload);
+    return Object.freeze({
+        language: stringValue(properties?.c_1_symbol) ? 'canonical' : 'canonical_absent',
+        'ql-structure': stringValue(properties?.c_1_ql_variant)
+            ? 'canonical'
+            : 'canonical_absent',
+        relations: arrayValue(node?.relations).length > 0 ? 'canonical' : 'canonical_absent',
+        'time-community': stringValue(profilePayload?.gds_community) ? 'derived' : 'blocked',
+        personal: 'bridged_local',
+        pedagogy: 'bridged_public'
     });
 }
 
@@ -536,6 +584,7 @@ function layerRoutes(
         const pointerAnchor = input.profile?.pointerAnchor ?? input.context.pointerAnchor ?? null;
         return Object.freeze({
             layer: spec.layer,
+            layerKey: spec.viewKey,
             tabId: `m0-layer-${spec.layer}`,
             label: view?.label ?? spec.layer,
             summary: view?.summary ?? '',
@@ -745,6 +794,8 @@ function provenanceState(
         case 'inferred':
         case 'review_pending':
         case 'blocked':
+        case 'bridged_local':
+        case 'bridged_public':
             return raw;
         default:
             return fallback.state === 'ready_public_current' ? 'review_pending' : 'blocked';
@@ -762,6 +813,8 @@ function provenanceStateFromRaw(
         case 'inferred':
         case 'review_pending':
         case 'blocked':
+        case 'bridged_local':
+        case 'bridged_public':
             return stringValue(raw) as M0ProvenanceState;
         default:
             return fallback;

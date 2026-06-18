@@ -19,12 +19,15 @@ export type OmniPanelTabId =
     | 'gateway'
     | 'diagnostics';
 
+export type OmniPanelLayoutId = 'daily-0-1' | 'ide-deep';
+
 export interface OmniPanelTab {
     readonly id: OmniPanelTabId;
     readonly label: string;
     readonly icon: string;
     readonly extensionId: string;
     readonly priority: number;
+    readonly availableInLayouts: readonly OmniPanelLayoutId[];
 }
 
 export interface OmniPanelManifest {
@@ -69,56 +72,64 @@ export const OMNIPANEL_TABS: readonly OmniPanelTab[] = Object.freeze([
         label: 'Pi Chat',
         icon: 'message-square',
         extensionId: '@pratibimba/omnipanel-shell',
-        priority: 10
+        priority: 10,
+        availableInLayouts: ['daily-0-1', 'ide-deep']
     },
     {
         id: 'sessions',
         label: 'Sessions',
         icon: 'history',
         extensionId: '@pratibimba/omnipanel-shell',
-        priority: 20
+        priority: 20,
+        availableInLayouts: ['daily-0-1', 'ide-deep']
     },
     {
         id: 'dispatch-trace',
         label: 'Dispatch Trace',
         icon: 'route',
         extensionId: '@pratibimba/agentic-control-room',
-        priority: 30
+        priority: 30,
+        availableInLayouts: ['daily-0-1', 'ide-deep']
     },
     {
         id: 'tool-stream',
         label: 'Tool Stream',
         icon: 'terminal-square',
         extensionId: '@pratibimba/agentic-control-room',
-        priority: 40
+        priority: 40,
+        availableInLayouts: ['daily-0-1', 'ide-deep']
     },
     {
         id: 'evidence',
         label: 'Evidence',
         icon: 'archive',
         extensionId: '@pratibimba/ide-shell-m0-m5',
-        priority: 50
+        priority: 50,
+        availableInLayouts: ['daily-0-1', 'ide-deep']
     },
     {
         id: 'review',
         label: 'Review',
         icon: 'badge-check',
         extensionId: '@pratibimba/m5-epii',
-        priority: 60
+        priority: 60,
+        availableInLayouts: ['daily-0-1', 'ide-deep']
     },
     {
         id: 'gateway',
         label: 'Gateway',
         icon: 'plug-zap',
         extensionId: '@pratibimba/kernel-bridge',
-        priority: 70
+        priority: 70,
+        availableInLayouts: ['daily-0-1', 'ide-deep']
     },
     {
         id: 'diagnostics',
         label: 'Diagnostics',
         icon: 'activity',
         extensionId: '@pratibimba/kernel-bridge',
-        priority: 80
+        priority: 80,
+        availableInLayouts: ['daily-0-1', 'ide-deep']
     }
 ] as const);
 

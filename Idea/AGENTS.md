@@ -5,7 +5,7 @@
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[World-Ontology]]
 
 ## Ownership
-- `Bimba/` — canonical knowledge: `Seeds/` (long-form coordinate specs), `World/` (crystallised Forms + Types + MOC, incl. [[World-Ontology]]), `Map/` (the M0–M5 Neo4j ontological map).
+- `Bimba/` — canonical knowledge: `Seeds/` (long-form coordinate specs), `World/` (crystallised Forms + Types + MOC, incl. [[World-Ontology]]), `Map/` (the M0–M5 graph made navigable: a generated, wikilink-open *reflection* projection in `M0/`–`M5/` + raw `datasets/` provenance).
 - `Pratibimba/` — instantiated reflections: `Self/` (PASU bootstrap, T'/Action surfaces) and `System/`.
 - `Empty/` — temporal working surface + bridge files: `Present/` (day/session/now), plus [[COORDINATE-MAP]] and [[coordinate-semantics]] harmonisation bridges.
 - `Temp - 02-06-2026.md` — root scratch cleanup note (not canon).
@@ -26,6 +26,6 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[World-Ontology]]
 - Vault validation before committing any vault write: use the `bimba-vault-validate` skill (frontmatter, residency, wikilinks, hierarchy placement).
 
 ## Child DOX Index
-- `Bimba/AGENTS.md` — canonical knowledge tree: Seeds (specs), World (Forms/Types/MOC + [[World-Ontology]]), Map (M0–M5 graph).
+- `Bimba/AGENTS.md` — canonical knowledge tree: Seeds (specs), World (Forms/Types/MOC + [[World-Ontology]]), Map (M0–M5 graph made navigable: generated reflection projection + datasets).
 - `Pratibimba/AGENTS.md` — instantiated reflections: Self (PASU, T'/Action) and System.
 - `Empty/AGENTS.md` — temporal working surface (Present: day/session/now) + coordinate bridge files.

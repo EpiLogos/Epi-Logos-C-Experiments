@@ -1,4 +1,4 @@
-I scanned Epi-Logos C Experiments with SwarmVault: 0 sources -> 5 wiki pages, 1 graph nodes, 0 edges.
-Top hubs: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr....
+I scanned Epi-Logos C Experiments with SwarmVault: 0 sources -> 8 wiki pages, 2 graph nodes, 2 edges.
+Top hubs: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr... and Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali....
 The graph is ready for its first surprising connection.
 Everything stays local. Try: npm install -g @swarmvaultai/cli && swarmvault quickstart ./your-repo

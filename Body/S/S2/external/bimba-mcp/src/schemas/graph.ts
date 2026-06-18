@@ -40,12 +40,17 @@ const CoordinateSchema = z.string()
  */
 export const NodeRefSchema = z.object({
   uuid: z.string()
-    .uuid()
-    .describe('Unique identifier for this node'),
+    .describe('Unique identifier for this node (resolved from c_2_uuid; may be empty if the node has none)'),
   labels: z.array(z.string())
-    .describe('Neo4j labels for this node (e.g., ["Position", "P2"])'),
+    .describe('Neo4j labels for this node (e.g., ["Bimba", "ParamasivaComponent"])'),
   properties: z.record(z.unknown())
-    .describe('Node properties including coordinate, title, description, etc.'),
+    .describe('Raw node properties plus synthesized back-compat keys (title, coordinate, uuid, file_path)'),
+  by_family: z.record(z.unknown())
+    .optional()
+    .describe('All properties grouped by coordinate family (c/p/s/t/m/l/unprefixed), full prefixed keys preserved — surfaces the rich {family}_{n}_ data'),
+  roles: z.record(z.unknown())
+    .optional()
+    .describe('Resolved canonical roles {name,description,uuid,coordinate,content,updated_at}, each as {key,value} so the source prefix is visible'),
   file_path: z.string()
     .optional()
     .describe('Optional file path if this node is backed by a file'),
@@ -330,27 +335,26 @@ export type GraphTraverseOutput = z.infer<typeof GraphTraverseOutputSchema>;
 /**
  * Input schema for graph_traverse_positions tool
  *
- * Traverses the graph following a specific sequence of QL positions,
- * starting from a root entity and following P0->P1->P2->... paths
- * through relationships organized by position level.
+ * Traverses the graph following a sequence of real relationship types,
+ * starting from a root entity and following each type hop by hop.
  *
- * Example: position_sequence [0, 2, 5] traverses:
- *   Ground (P0) -> Operation (P2) -> Integration (P5)
+ * Example: rel_type_sequence ["FAMILY_CONTAINS", "MANIFESTS"] traverses
+ * FAMILY_CONTAINS then MANIFESTS. Call graph_schema for the real type vocabulary.
  */
 export const GraphTraversePositionsInputSchema = z.object({
   start_uuid: z.string()
     .uuid()
     .describe('UUID of the starting node for traversal'),
-  position_sequence: z.array(z.number().int().min(0).max(5))
+  rel_type_sequence: z.array(z.string())
     .min(1)
-    .describe('Sequence of position levels to follow (0-5). Each element represents a position level: 0=ground, 1=definition, 2=operation, 3=pattern, 4=context, 5=integration'),
+    .describe('Sequence of relationship types to follow hop by hop, e.g. ["FAMILY_CONTAINS","MANIFESTS","REFLECTS_AS"]. Each must be a real graph relationship type — call graph_schema to list them. (The legacy positional POSn_* scheme is retired and exists nowhere in the graph.)'),
   max_per_position: z.number()
     .int()
     .min(1)
     .max(100)
     .optional()
     .default(10)
-    .describe('Maximum number of entities to return per position level (default 10)'),
+    .describe('Maximum number of entities to return per traversal step (default 10)'),
 });
 
 export type GraphTraversePositionsInput = z.infer<typeof GraphTraversePositionsInputSchema>;
@@ -360,27 +364,22 @@ export type GraphTraversePositionsInput = z.infer<typeof GraphTraversePositionsI
  *
  * Contains all entities reachable at this position level from the previous level
  */
-export const PositionEntitiesSchema = z.object({
-  position: z.number()
-    .int()
-    .min(0)
-    .max(5)
-    .describe('Position level (0=ground, 1=definition, 2=operation, 3=pattern, 4=context, 5=integration)'),
-  position_name: z.string()
-    .describe('Human-readable position name (e.g., "Ground", "Definition", "Operation")'),
+export const TraversalStepSchema = z.object({
+  rel_type: z.string()
+    .describe('The relationship type followed at this step (e.g. "MANIFESTS")'),
   entities: z.array(NodeRefSchema)
-    .describe('Entities at this position level'),
+    .describe('Entities reached at this step'),
   connection_count: z.number()
     .int()
     .nonnegative()
-    .describe('Total number of connections from previous position'),
+    .describe('Number of source nodes feeding this step'),
   execution_time_ms: z.number()
     .nonnegative()
     .optional()
-    .describe('Query time for this position level in milliseconds'),
+    .describe('Query time for this step in milliseconds'),
 });
 
-export type PositionEntities = z.infer<typeof PositionEntitiesSchema>;
+export type TraversalStep = z.infer<typeof TraversalStepSchema>;
 
 /**
  * Output schema for graph_traverse_positions tool
@@ -395,14 +394,14 @@ export const GraphTraversePositionsOutputSchema = z.object({
   start_node: NodeRefSchema
     .optional()
     .describe('Metadata about the starting node'),
-  position_sequence: z.array(z.number().int().min(0).max(5))
-    .describe('The position sequence that was traversed'),
-  paths_by_position: z.array(PositionEntitiesSchema)
-    .describe('Entities organized by position level in the sequence'),
+  rel_type_sequence: z.array(z.string())
+    .describe('The relationship-type sequence that was traversed'),
+  steps: z.array(TraversalStepSchema)
+    .describe('Entities reached at each step of the sequence'),
   total_paths: z.number()
     .int()
     .nonnegative()
-    .describe('Total number of distinct paths found'),
+    .describe('Total number of steps that returned entities'),
   total_entities: z.number()
     .int()
     .nonnegative()
@@ -442,9 +441,9 @@ export const GraphContextInputSchema = z.object({
     .optional()
     .default('balanced')
     .describe('Context breadth mode: narrow=1-hop, balanced=2-hop, wide=3+-hop'),
-  positions: z.array(z.number().int().min(0).max(5))
+  rel_types: z.array(z.string())
     .optional()
-    .describe('Filter by position levels (0-5): grounds, definitions, operations, patterns, contexts, integrations'),
+    .describe('Filter to neighbors connected by these relationship types (e.g. ["MANIFESTS","OPERATES_IN"]). Omit for all. Call graph_schema to list real types.'),
 });
 
 export type GraphContextInput = z.infer<typeof GraphContextInputSchema>;
@@ -463,20 +462,18 @@ export type GraphContextInput = z.infer<typeof GraphContextInputSchema>;
  * - P4: Contexts (contextual connections)
  * - P5: Integrations (integrative connections)
  */
-export const PositionConnectionsSchema = z.object({
-  position: z.number().int().min(0).max(5)
-    .describe('Position level (0-5)'),
-  label: z.enum(['grounds', 'definitions', 'operations', 'patterns', 'contexts', 'integrations'])
-    .describe('Human-readable position label'),
+export const RelTypeConnectionsSchema = z.object({
+  rel_type: z.string()
+    .describe('The relationship type connecting these neighbors (e.g. "MANIFESTS", "OPERATES_IN")'),
   connections: z.array(z.object({
     node: NodeRefSchema,
     rel_type: z.string(),
     properties: z.record(z.unknown()).optional(),
   }))
-    .describe('Connections at this position level'),
+    .describe('Connections via this relationship type'),
 });
 
-export type PositionConnections = z.infer<typeof PositionConnectionsSchema>;
+export type RelTypeConnections = z.infer<typeof RelTypeConnectionsSchema>;
 
 /**
  * Output schema for graph_context tool
@@ -491,8 +488,8 @@ export const ContextResultSchema = z.object({
     .describe('All unique neighbor nodes found within depth'),
   paths: z.array(PathResultSchema)
     .describe('Paths from entity to neighbors'),
-  position_connections: z.array(PositionConnectionsSchema)
-    .describe('Connections organized by position level'),
+  rel_type_connections: z.array(RelTypeConnectionsSchema)
+    .describe('Connections organized by actual relationship type'),
   depth_used: z.number().int().nonnegative()
     .describe('Actual depth reached in traversal'),
   mode_used: z.enum(['narrow', 'balanced', 'wide'])
@@ -512,30 +509,44 @@ export type ContextResult = z.infer<typeof ContextResultSchema>;
 // Spec Retrieve
 // =============================================================================
 
+export const CanonCoordDepthSchema = z.enum(['pithy', 'qv-detail', 'relational']);
+export type CanonCoordDepth = z.infer<typeof CanonCoordDepthSchema>;
+
 /**
  * Input schema for spec_retrieve tool
  *
- * Retrieves the full specification of an entity including its coordinates,
- * file path, content summary, and connected entities organized by position.
+ * Retrieves the canon-engine coordinate payload for MCP clients. The CLI is the
+ * source of truth; this MCP surface is the wire-format mirror.
  *
- * The entity can be looked up by either its title or canonical_id (UUID).
+ * `entity_name` is retained for existing callers and is interpreted as the
+ * coordinate when `coordinate` is omitted.
  */
 export const SpecRetrieveInputSchema = z.object({
+  coordinate: z.string()
+    .min(1)
+    .max(500)
+    .optional()
+    .describe('Coordinate to retrieve through epi canon coord'),
   entity_name: z.string()
     .min(1)
     .max(500)
-    .describe('Entity title or canonical_id (UUID) to look up specification for'),
+    .optional()
+    .describe('Backward-compatible coordinate field for existing callers'),
+  depth: CanonCoordDepthSchema
+    .optional()
+    .default('pithy')
+    .describe('Canon depth rung to retrieve (default: pithy)'),
   include_connected: z.boolean()
     .optional()
     .default(true)
-    .describe('Whether to traverse wiki-links ([[...]]) and include connected entities (default: true)'),
+    .describe('Deprecated compatibility field; canon depth now determines connected context'),
   max_connected_per_position: z.number()
     .int()
     .min(1)
     .max(100)
     .optional()
     .default(10)
-    .describe('Maximum number of connected entities to return per position (default: 10)'),
+    .describe('Deprecated compatibility field; canon depth now determines connected context'),
 });
 
 export type SpecRetrieveInput = z.infer<typeof SpecRetrieveInputSchema>;
@@ -858,10 +869,10 @@ export const GraphEmbedInputSchema = z.object({
     .optional()
     .default('SEMANTIC_SIMILARITY')
     .describe('Task type for embedding optimization (default: SEMANTIC_SIMILARITY)'),
-  dimensions: z.union([z.literal(768), z.literal(1536), z.literal(3072)])
+  dimensions: z.union([z.literal(3072), z.literal(1536), z.literal(768)])
     .optional()
-    .default(768)
-    .describe('Embedding dimensions: 768, 1536, or 3072 (default: 768)'),
+    .default(3072)
+    .describe('Embedding dimensions: 3072 (default, matches the coord_embedding index), 1536, or 768'),
   store_for: z.union([
     z.string().uuid(),
     z.array(z.string().uuid()),
@@ -871,6 +882,38 @@ export const GraphEmbedInputSchema = z.object({
 });
 
 export type GraphEmbedInput = z.infer<typeof GraphEmbedInputSchema>;
+
+/**
+ * Input schema for graph_embed_batch — embed a focused set of :Bimba nodes
+ * (a coordinate branch, a label, and/or only those missing an embedding) into
+ * the canonical c_5_embedding property.
+ */
+export const GraphEmbedBatchInputSchema = z.object({
+  coordinate_prefix: z.string()
+    .optional()
+    .describe('Embed only nodes whose coordinate STARTS WITH this — a branch. E.g. "M1" (all of Paramasiva), "M1-3", "S2". Omit for the whole graph.'),
+  label: z.string()
+    .optional()
+    .describe('Restrict to nodes carrying this label, e.g. "ParamasivaComponent".'),
+  only_missing: z.boolean()
+    .optional()
+    .default(true)
+    .describe('Skip nodes that already have a c_5_embedding (default true).'),
+  limit: z.number().int().min(1).max(500)
+    .optional()
+    .default(50)
+    .describe('Max nodes to embed in this call (1-500, default 50). Re-run to continue a large branch.'),
+  dimensions: z.union([z.literal(3072), z.literal(1536), z.literal(768)])
+    .optional()
+    .default(3072)
+    .describe('Embedding dimensions (default 3072, matching the coord_embedding index).'),
+  task_type: z.enum(['RETRIEVAL_QUERY', 'RETRIEVAL_DOCUMENT', 'SEMANTIC_SIMILARITY', 'CLASSIFICATION', 'CLUSTERING', 'QUESTION_ANSWERING'])
+    .optional()
+    .default('SEMANTIC_SIMILARITY')
+    .describe('Gemini task type (default SEMANTIC_SIMILARITY to match the query side of vector search).'),
+});
+
+export type GraphEmbedBatchInput = z.infer<typeof GraphEmbedBatchInputSchema>;
 
 /**
  * Embedding result with vector and metadata

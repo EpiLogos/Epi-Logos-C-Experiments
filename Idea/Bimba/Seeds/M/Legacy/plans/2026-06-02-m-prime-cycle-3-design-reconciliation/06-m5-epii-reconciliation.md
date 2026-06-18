@@ -20,17 +20,54 @@ Consume as-is — `Body/S/S5/epi-gnostic` (production Python package + Aletheia 
 
 ## Tranches
 
-1. **6.1 — Register `s5'.gnostic.*` over production epi-gnostic** *(code-pending-closure; gates 6.2)*
+1. **6.1 — Register `s5'.gnostic.*` over production epi-gnostic — EXPANDED to ONE substrate layer** *(code-pending-closure; gates 6.2; EXPANDED 2026-06-15 per DR-S5-ONE-1; canonical execution tranche at [`12-agentic-layer-s4-s5.md`](12-agentic-layer-s4-s5.md) Tranche 12.2 EXPANDED; comprehensive substrate plan at [`39-s5-prime-one-substrate-layer.md`](39-s5-prime-one-substrate-layer.md))*
 
-   Add `s5'.gnostic.{ingest,query,notebook,status}` to `Body/S/S3/gateway-contract/src/lib.rs` + wire dispatch in `Body/S/S3/gateway` over existing `Body/S/S5/epi-gnostic` Python package and Aletheia CLI bridge. **Anti-greenfield: do NOT rebuild epi-gnostic.**
+   Per DR-S5-ONE-1 (Phase-I 2026-06-15), this tranche **EXPANDS from gateway-only registration to the full ONE-substrate scope**: gateway routes + Khora session-workspace + S0 tmux integration + Redis hierarchical keys + CLI parity, all working as one substrate (temporal + contextual + informational-conditional + logos-definitional). The execution detail lives in [`12-agentic-layer-s4-s5.md`](12-agentic-layer-s4-s5.md) Tranche 12.2 EXPANDED; the comprehensive substrate plan lives in [`39-s5-prime-one-substrate-layer.md`](39-s5-prime-one-substrate-layer.md). This tranche from M5'-side cross-references both.
 
-   Verification: `grep -n "s5'.gnostic" Body/S/S3/gateway-contract/src/lib.rs` returns ≥4 methods; `cargo check -p gateway-contract`; `cargo check -p gateway`.
+   **Minimum gateway scope** (≥10 methods + `s0'.anuttara.trace`): `s5'.gnostic.{query, ingest, notebook, status, candidates, etymology, resolve, list_notebooks, episode_search, evidence_trace, query_with_layers}` + `s0'.anuttara.trace`. All routes dispatch to `Body/S/S5/epi-gnostic/epi_gnostic/{cli.py, graphiti_service.py, wrapper.py}` — **anti-greenfield: do NOT rebuild epi-gnostic.**
 
-2. **6.2 — Author `logos-atelier` Theia extension** *(no-orphan-fill; depends on 6.1)*
+   **The ONE-substrate invariant** (per DR-S5-ONE-1): no gnostic operation may bypass the gateway; no gateway route may exist without a CLI command (`epi gnostic *` parity); no CLI command may write outside Khora's session authority; no session may exist without tmux-backed persistence when persistent mode is requested; no Redis cache may be flat-namespaced for gnostic-substrate keys (hierarchical `{day}/{session}/{turn}/{coordinate}/*` mandated). Cycle 3 release-gate G14 verifies these five rules.
 
-   Add `Body/M/epi-theia/extensions/logos-atelier/` `{package.json, src/common/atelier-surface.ts, src/browser/atelier-widget.tsx}` consuming `aletheia_gnosis_query` / `aletheia_crystallise` / `aletheia_thought_route` over the `etymology` graph namespace via Tranche 6.1's `s5'.gnostic.*` routes. Surface contract: scent-following pipeline root → cognate → drift → psychoid → pros-hen → Möbius write-back proposal. Dispatch runs through Anima into the Aletheia-crystallisation-mode; Aletheia subagent techne-guardians appear as evidence lineage, not peer review actors.
+   **Cross-track hooks:** Tranche 12.2 EXPANDED (canonical execution); Track 39 (comprehensive shape); CCT-14 EXPANSION (PASU lifecycle CLI parity); CCT-17 (compress_through_VAK orchestrator + `s0'.anuttara.trace` consumer); DR-S5-ONE-1, DR-WORLD-1, DR-COMP-1 (canonical definitions).
 
-   Verification: `test -d Body/M/epi-theia/extensions/logos-atelier && test -f Body/M/epi-theia/extensions/logos-atelier/package.json`; `grep -n etymology Body/M/epi-theia/extensions/logos-atelier/src/common/atelier-surface.ts`.
+   Verification: `grep -n "s5'.gnostic" Body/S/S3/gateway-contract/src/lib.rs` returns ≥10 methods; `grep -n "s0'.anuttara.trace" Body/S/S3/gateway-contract/src/lib.rs` returns the route; `grep -nE "epi gnostic" Body/S/S0/epi-cli/src/gnostic.rs` returns ≥9 subcommands; `cargo check -p gateway-contract && cargo check -p gateway`; integration test `cargo test -p epi-s3-gateway s5_one_substrate_e2e_acceptance` (per Track 39 acceptance scenario) gates the PR.
+
+2. **6.2 — Activate Atelier as etymological-cluster lens on m0-anuttara graph viewer + OmniPanel commands** *(REFRAMED 2026-06-15 per DR-LIB-ATELIER-1 + CCT-19; was: "Author `logos-atelier` Theia extension"; depends on 6.1 EXPANDED)*
+
+   Per DR-LIB-ATELIER-1 (Phase-I 2026-06-15), the Logos Atelier is NOT a standalone Theia extension to build — it is a **projection / lensing of the inbuilt Anuttara M0-5' graph viewer where etymological clusters are visible, occurring within the filesystem + markdown editor space**. The Atelier "is just" a lens applied to the existing m0-anuttara graph viewer + commands in the OmniPanel that operate on currently-open files. This tranche is REFRAMED accordingly:
+
+   **(a) Etymological-cluster overlay lens on m0-anuttara graph viewer.** Extend the existing `m0.anuttara.communityClockOverlay` pattern (Tranche 1.5) to cluster by `c_1_*` etymological relations. The lens renders inside the existing m0-anuttara extension widget; clusters appear as colored / proximity-grouped node clusters. Implementation: small additive view-mode in `Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts` (estimated ≤80 LOC, NOT a new extension).
+
+   **(b) OmniPanel commands for scent-following.** Add command bindings in `Body/M/epi-theia/extensions/omnipanel-shell/` that operate on currently-open files:
+   - `epi-atelier scent-follow <selection>` — runs the canonical scent-following pipeline (root → cognate → drift → psychoid charge → pros-hen synthesis) over the user's text selection in the active markdown editor; writes provisional results back into the same file via Khora.
+   - `epi-atelier cognate-search <selection>` — surfaces cognate cluster across vault + Bimba + Gnosis.
+   - `epi-atelier psychoid-trace <selection>` — visualises the psychoid-charge surface for the selection in the m0-anuttara graph viewer lens.
+
+   **(c) Möbius write-back as Hen-promotion candidate.** When the Atelier user accepts a scent-following result, the canonical write-back is staged as a Hen-promotion candidate (per CCT-14 entity-candidate lifecycle), NOT a direct canon write. The user reviews the candidate via the standard PASU promotion surface; Hen routes the canon-write through Anuttara verification per DR-MP-1.
+
+   **(d) NO standalone Theia extension.** `test ! -d Body/M/epi-theia/extensions/logos-atelier` is part of the verification — explicitly no separate extension. If a minimal projection-lens package is strictly required, it's named `atelier-projection-lens` (≤200 LOC, lens-explicit naming).
+
+   **(e) Dispatch architecture.** Atelier-mode dispatch runs through Anima into the Aletheia-crystallisation-mode (per DR-M5-1); Aletheia subagent techne-guardians (Moirai for graph-RAG distillation, Anansi for coordinate-mapping) surface as evidence lineage in the Atelier widget, NOT as peer review actors.
+
+   **Cross-track hooks:** DR-LIB-ATELIER-1 (canonical reframe definition); CCT-19 (Library + Atelier projection canon); Tranche 1.5 (m0.anuttara.communityClockOverlay pattern Atelier extends); Tranche 6.1 EXPANDED (gateway routes Atelier consumes: `s5'.gnostic.etymology`, `s5'.gnostic.candidates`); CCT-14 (Möbius write-back routes through entity-candidate lifecycle); DR-MP-1 (Anuttara verification gate before canon promotion).
+
+   Verification: `test ! -d Body/M/epi-theia/extensions/logos-atelier` (no standalone extension created); `grep -nE "etymological-cluster|atelier-projection-lens" Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts` returns the lens additions; `grep -nE "epi-atelier scent-follow|epi-atelier cognate-search|epi-atelier psychoid-trace" Body/M/epi-theia/extensions/omnipanel-shell/` returns the command bindings; integration test: a user selects text in an open markdown file, runs `epi-atelier scent-follow`, sees the etymological-cluster lens render in the m0-anuttara graph viewer, and accepts the Möbius write-back which stages as a Hen-promotion candidate (visible via `epi gnostic candidates`).
+
+2b. **6.2b — Activate Library as Theia IDE projection: coordinate-overlay file-tree + OmniPanel Library tab + breadcrumb header** *(NEW 2026-06-15 per DR-LIB-ATELIER-1 + CCT-19; depends on 6.1 EXPANDED)*
+
+   Per DR-LIB-ATELIER-1, the M5-0' Library is NOT a standalone Theia extension — it is **the vault filesystem itself, organised by the M-coordinate map**. This tranche activates the Library projection across three small surfaces:
+
+   **(a) Coordinate-overlay lens on Theia file-tree.** Files appear organised by their M-coordinate ancestry (resolved from `coordinate:` frontmatter key). Implementation: small extension to existing `body-lite-surface` (or new minimal `library-projection-lens` package, ≤200 LOC, lens-explicit naming). Lens MODE is toggle-able — user can switch between filesystem-tree view and coordinate-organised view.
+
+   **(b) OmniPanel "Library" tab.** Queries `s5'.gnostic.list_notebooks(coord_filter)` (per Tranche 6.1 EXPANDED) and renders the coordinate-organised view inline in the OmniPanel. Each entry resolves to the corresponding vault file on click (jumps to the file in the markdown editor).
+
+   **(c) Markdown-editor coordinate-breadcrumb header.** Every open file shows its coordinate ancestry as a breadcrumb at the top of the editor (e.g., `M > M5 > M5-1 > integration-template.md`). Implementation: small Theia editor decoration via the existing markdown-editor extension contribution point.
+
+   **(d) NO standalone Theia extension.** Like the Atelier (Tranche 6.2), the Library is a projection. `test ! -d Body/M/epi-theia/extensions/library-surface` is part of the verification.
+
+   **Cross-track hooks:** DR-LIB-ATELIER-1 (canonical reframe definition); CCT-19 (Library + Atelier projection canon); Tranche 6.1 EXPANDED (`s5'.gnostic.list_notebooks` powers the Library tab); Track 11 (Theia shell hosting; Library/Atelier projections referenced in widget-ownership trace per Tranche 11.3).
+
+   Verification: `test ! -d Body/M/epi-theia/extensions/library-surface`; `grep -nE "coordinate-overlay|library-projection-lens" Body/M/epi-theia/extensions/body-lite-surface/` returns the lens additions; `grep -nE "pratibimba.daily.library\|OmniPanel Library tab\|library-tab" Body/M/epi-theia/extensions/omnipanel-shell/` returns the tab registration; `grep -nE "coordinate-breadcrumb|coordinate.*ancestry" Body/M/epi-theia/extensions/` returns the editor decoration; integration test: opening a file at `Idea/Bimba/Seeds/M/M5'/integration-template.md` displays the breadcrumb `M > M5' > integration-template.md` in the editor header, and the OmniPanel Library tab lists the file under its coordinate ancestry.
 
 3. **6.3 — Six operational-capacity panes over `capacity_workflows.rs`** *(spec-ahead-integration; cross-link to Tranche 12.5 / DR-TS-4)*
 
@@ -60,9 +97,9 @@ Consume as-is — `Body/S/S5/epi-gnostic` (production Python package + Aletheia 
 
 7. **6.7 — DR-M5-1 implementation landing tranche** *(doc/contract/code-surface landing; DR-M5-1 / DR-S4-TECHNE VALIDATED)*
 
-   Collapse `AgenticActor` to `pi` + `anima` + six Aletheia subagent techne-guardian variants. Patch Pleroma CONTRACT with the Techne atomic-skills second face. Patch S4-SPEC §14 roster to remove Techne as a seventh Aletheia member. Audit or deprecate `capability-matrix.json constitutional_agents[]` per 6.5. No `techne.md` agent profile lands.
+   Collapse `AgenticActor` to `pi` + `anima` + six Aletheia subagent techne-guardian variants. Patch Pleroma CONTRACT with the Techne atomic-skills second face. Patch S4-SPEC §14 roster to remove Techne as a seventh Aletheia member. Audit or deprecate `capability-matrix.json constitutional_agents[]` per 6.5. No `Techne-profile file` agent profile lands.
 
-   Verification: `grep -n 'AgenticActor' Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts` reflects the collapsed union; `grep -rn 'Aletheia 7\|Techne helper\|7th member\|techne.md' Idea/Bimba/Seeds/M/ Idea/Bimba/Seeds/S/S4/` returns no live wrong-roster attribution; Pleroma CONTRACT names VAK + Techne dual-face.
+   Verification: `grep -n 'AgenticActor' Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts` reflects the collapsed union; `grep -rn 'six Aletheia guardians\|Pleroma-Techne substrate\|roster member\|Techne-profile file' Idea/Bimba/Seeds/M/ Idea/Bimba/Seeds/S/S4/` returns no live wrong-roster attribution; Pleroma CONTRACT names VAK + Techne dual-face.
 
 8. **6.8 — EBM-Epii position 5' resonance-vector predictor module (72-dim N-channel head, Rust-native)** *(code-pending-closure; routes to DR-MP-1, DR-MP-2; cross-link Tracks 10.M5, 19.6; Stream C of [[33-harmonic-energy-channel-handoff]] §2.3 — module/runtime surface)*
 

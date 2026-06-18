@@ -83,7 +83,7 @@ This is NOT arbitrary — it is the EXHAUSTIVE set of factor-pairs of 360 that a
 The 16 = 4×4, directly mirroring Anuttara's 16-fold void (#0).
 
 **The 16-lens matrix is complete and exhaustive for its level (Level 2, synchronic partition).
-It does not need a 17th member — the Fibonacci ground operates at Level 0, prior to all lenses.**
+It does not need a seventeenth member — the Fibonacci ground operates at Level 0, prior to all lenses.**
 
 Every degree node carries `lens_segment[16]` — its index within EACH of the 16 lenses simultaneously.
 

@@ -18,15 +18,25 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { createRequire } from 'node:module';
 
+installBrowserImportShim();
+
 const require = createRequire(import.meta.url);
 const {
     checkCosmicEnginePanes,
-    COSMIC_ENGINE_PANE_FIELD_GROUPS,
+    COSMIC_ENGINE_PANE_FIELD_GROUPS
+} = require('../integrated-composition/lib/common/profile-field-checker.js');
+const {
     COSMIC_ENGINE_LAYOUT
-} = require('../integrated-composition/lib/common/index.js');
+} = require('../integrated-composition/lib/common/layout-claim.js');
+const {
+    readCurrentInhabitedBimbaField
+} = require('../integrated-composition/lib/common/integrated-readiness.js');
 const {
     buildRoutedM2PacketFromBridge
-} = require('../plugin-integrated-1-2-3/lib/common/index.js');
+} = require('../plugin-integrated-1-2-3/lib/common/s2-correspondence.js');
+const {
+    deriveCosmicBeingPatternOverlay
+} = require('../plugin-integrated-1-2-3/lib/browser/cosmic-engine-composition.js');
 
 const PLUGIN_SOURCE_ROOT =
     '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src';
@@ -36,6 +46,48 @@ const baselineProfile = JSON.parse(
         'utf8'
     )
 );
+
+function installBrowserImportShim() {
+    if (globalThis.document) {
+        return;
+    }
+    class ElementStub {}
+    ElementStub.prototype.matches = () => false;
+    ElementStub.prototype.msMatchesSelector = () => false;
+    ElementStub.prototype.webkitMatchesSelector = () => false;
+    ElementStub.prototype.contains = () => false;
+    const element = () => Object.assign(new ElementStub(), {
+        classList: { add() {}, remove() {}, contains() { return false; }, toggle() {} },
+        dataset: {},
+        style: {},
+        setAttribute() {},
+        getAttribute() { return null; },
+        removeAttribute() {},
+        appendChild() {},
+        removeChild() {},
+        addEventListener() {},
+        removeEventListener() {},
+        queryCommandSupported() { return false; }
+    });
+    globalThis.Element = ElementStub;
+    globalThis.HTMLElement = ElementStub;
+    globalThis.document = {
+        createElement: element,
+        documentElement: { style: {} },
+        body: element(),
+        addEventListener() {},
+        removeEventListener() {}
+    };
+    globalThis.window = {
+        document: globalThis.document,
+        navigator: { userAgent: 'node', platform: 'Linux x86_64' },
+        getComputedStyle: () => ({})
+    };
+    Object.defineProperty(globalThis, 'navigator', {
+        configurable: true,
+        value: globalThis.window.navigator
+    });
+}
 
 function readyProfile(generation, extra = {}) {
     return {
@@ -49,7 +101,7 @@ function readyProfile(generation, extra = {}) {
             nodal_quartet: [0, 1, 2, 3],
             planetaryChakral: { sun: 'ground' },
             resonance72: { tick: 1 },
-            kleinFlip: null,
+            kleinFlip: { state: 'stable', source: 'backend-fixture' },
             codon_rotation_projection: { codon: 0, rotation: 0 },
             mahamaya: { phase: 'incubation' },
             codec_lut: { v: 1 },
@@ -237,4 +289,95 @@ test('field group exhaustiveness — every M3/M2/M1 field listed has an explicit
             `${f.field} missing blocker owner track`
         );
     }
+});
+
+test('cosmic being-pattern markers keep many entities separate and use backend M2/M3 aspects', () => {
+    const profile = readyProfile(77, {
+        pasuBeingPatternProjections: [
+            {
+                entityId: 'mono-being',
+                entityKind: 'person',
+                monopolyOperator: 'Mono',
+                perspectiveRole: 'FirstPerson',
+                clockAddress: { degree360: 0 },
+                elementalWeights: { fire: 0.1 },
+                liveState: {
+                    generation: 77,
+                    spacetimeRowId: 'being_pattern_presence:mono-being',
+                    streamDelta: 's3://delta/mono'
+                },
+                relationEdges: []
+            },
+            {
+                entityId: 'poly-being',
+                entityKind: 'group',
+                monopolyOperator: 'Poly',
+                perspectiveRole: 'They',
+                clockAddress: { degree360: 120 },
+                elementalWeights: { water: 0.3 },
+                liveState: {
+                    generation: 77,
+                    spacetimeRowId: 'being_pattern_presence:poly-being',
+                    streamDelta: 's3://delta/poly'
+                },
+                relationEdges: [
+                    {
+                        edgeId: 'edge-poly-m3',
+                        sourceEntityId: 'poly-being',
+                        targetEntityId: 'lens-being',
+                        edgeKind: 'aspect-like',
+                        aspectLabel: 'backend-sextile',
+                        generation: 77,
+                        m2M3Relation: { planetaryLensAspect: 'backend-sextile' }
+                    }
+                ]
+            },
+            {
+                entityId: 'actualising-being',
+                entityKind: 'person',
+                monopolyOperator: 'ActualisingOne',
+                perspectiveRole: 'We-I',
+                clockAddress: { degree360: 240 },
+                elementalWeights: { air: 0.4 },
+                liveState: {
+                    generation: 77,
+                    spacetimeRowId: 'being_pattern_presence:actualising-being',
+                    streamDelta: 's3://delta/review'
+                },
+                relationEdges: []
+            },
+            {
+                entityId: 'held-being',
+                entityKind: 'collective',
+                monopolyOperator: 'MonoPoly',
+                perspectiveRole: 'We',
+                clockAddress: { degree360: 300 },
+                elementalWeights: { earth: 0.6 },
+                liveState: {
+                    generation: 77,
+                    spacetimeRowId: 'being_pattern_presence:held-being',
+                    streamDelta: 's3://delta/held'
+                },
+                relationEdges: [],
+                verifierRefs: ['m0://verifier/held']
+            }
+        ]
+    });
+
+    const field = readCurrentInhabitedBimbaField(profile);
+    const overlay = deriveCosmicBeingPatternOverlay(profile);
+    const markers = overlay.markers;
+
+    assert.deepEqual(markers.map(marker => marker.entityId), [
+        'mono-being',
+        'poly-being',
+        'actualising-being',
+        'held-being'
+    ]);
+    assert.equal(field.entities.length, 4);
+    assert.equal(markers[1].monopolyOperator, 'Poly');
+    assert.equal(overlay.relationAspects[0].planetaryLensAspect, 'backend-sextile');
+    assert.equal(markers[2].reviewRisk, 'forced-unification');
+    assert.equal(markers[2].visualState, 'review-warning');
+    assert.equal(markers[3].visualState, 'held-many-in-one');
 });

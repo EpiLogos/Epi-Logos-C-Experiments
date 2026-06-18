@@ -12,6 +12,13 @@ Pleroma is the **execution substrate registry** — it owns the 7 bounded primit
 
 **What Pleroma does NOT own:** orchestration skills (→ Anima), evidence-acquisition skills (→ Aletheia), constitutional agents (→ Anima), Moirai agents (→ Aletheia).
 
+Pleroma has two faces:
+
+- **VAK capability membrane** — the bounded dispatch/tool/skill surface that Anima uses to evaluate CPF/CT/CP/CF/CFP/CS and invoke permitted work.
+- **Techne atomic-skills repository** — the atomic skills substrate stewarded by the six Aletheia techne-guardian subagents (Anansi, Moirai, Janus, Mercurius, Agora, Zeithoven).
+
+Techne is not a separate agent, constitutional authority, or dispatch actor. It is the second face of Pleroma: the skills substrate beneath Aletheia's guardian profiles.
+
 Pleroma must nevertheless make the vault-intelligence primitives available to agents. The `epi_cli` primitive is the bounded route for:
 
 - `epi core knowing <coordinate> --json` coordinate orientation.

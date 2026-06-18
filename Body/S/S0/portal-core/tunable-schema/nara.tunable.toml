@@ -1,0 +1,106 @@
+# Existing [nara.weights] section, migrated to schema-backed.
+
+[[tunable]]
+key = "nara.weights.body_natal"
+type = "f32"
+default = 0.5
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Existing weights.rs (pre-Track 38) + DR-TUNE-1 ratification"
+[tunable.range]
+min = 0.0
+max = 1.0
+
+[[tunable]]
+key = "nara.weights.body_transit"
+type = "f32"
+default = 0.3
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Existing weights.rs (pre-Track 38) + DR-TUNE-1 ratification"
+[tunable.range]
+min = 0.0
+max = 1.0
+
+[[tunable]]
+key = "nara.weights.body_oracle"
+type = "f32"
+default = 0.2
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Existing weights.rs (pre-Track 38) + DR-TUNE-1 ratification"
+[tunable.range]
+min = 0.0
+max = 1.0
+
+[[tunable]]
+key = "nara.weights.oracle_pp"
+type = "f32"
+default = 0.4
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Existing weights.rs (pre-Track 38) + DR-TUNE-1 ratification"
+[tunable.range]
+min = 0.0
+max = 1.0
+
+[[tunable]]
+key = "nara.weights.oracle_nn"
+type = "f32"
+default = 0.15
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Existing weights.rs (pre-Track 38) + DR-TUNE-1 ratification"
+[tunable.range]
+min = 0.0
+max = 1.0
+
+[[tunable]]
+key = "nara.weights.oracle_mp"
+type = "f32"
+default = 0.25
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Existing weights.rs (pre-Track 38) + DR-TUNE-1 ratification"
+[tunable.range]
+min = 0.0
+max = 1.0
+
+[[tunable]]
+key = "nara.weights.oracle_pm"
+type = "f32"
+default = 0.2
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Existing weights.rs (pre-Track 38) + DR-TUNE-1 ratification"
+[tunable.range]
+min = 0.0
+max = 1.0

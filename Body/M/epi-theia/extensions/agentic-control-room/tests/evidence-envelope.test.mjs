@@ -235,10 +235,10 @@ test('mediated evidence packet rejects protected body payloads before dispatch',
 });
 
 test('mediation capability allowlist separates read-only, deposit, and user-final vault writes', () => {
-    assert.equal(isMediationCapabilityAllowed('sophia', 's1.semantic.suggest_links').allowed, true);
-    assert.equal(isMediationCapabilityAllowed('aletheia', 's1.vault.read_file').allowed, true);
+    assert.equal(isMediationCapabilityAllowed('moirai', 's1.semantic.suggest_links').allowed, true);
+    assert.equal(isMediationCapabilityAllowed('anansi', 's1.vault.read_file').allowed, true);
     assert.equal(isMediationCapabilityAllowed('pi', 's1.vault.append_block').allowed, true);
-    assert.equal(isMediationCapabilityAllowed('sophia', 's1.vault.append_block').allowed, false);
+    assert.equal(isMediationCapabilityAllowed('moirai', 's1.vault.append_block').allowed, false);
     assert.equal(isMediationCapabilityAllowed('pi', 's1.vault.write_file').allowed, false);
     assert.equal(
         isMediationCapabilityAllowed('human', 's1.vault.write_file', { userFinalValidated: true }).allowed,

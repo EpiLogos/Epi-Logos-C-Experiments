@@ -1,7 +1,8 @@
 ---
 coordinate: "M3'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-06-09"
+cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-TAURI-PORT-SPEC]]"
@@ -12,6 +13,7 @@ depends_on:
   - "[[M2'-SPEC]]"
   - "[[alpha_rasa_bridge_ql]]"
   - "[[m3-prime-symbolic-transcription-research]]"
+  - "[[m3-prime-ql-transcriptional-bridge]]"
   - "[[full_theoretical_alignments_ql_physics]]"
   - "[[alpha_quaternionic_integration_across_M_stack]]"
   - "[[m4-prime-psychoid-cymatic-field-engine]]"
@@ -890,6 +892,93 @@ dynamical_rigor:
 
 Until measured nonlinear evidence exists, the default is `symbolic_phase_portrait`. This still gives Nara a powerful relational grammar: bounded recurrence, basin of attraction, perturbation, bifurcation candidate, and phase portrait. It prevents the lazy move of turning "strange attractor" into a vibe-label.
 
+## §8.17 — Codon → Major Arcana Transcriptional Bridge and the T→U Classification Layer
+
+### Code-Canonical Bridge: `m3_major_arcana_from_codon()`
+
+The codon → Major Arcana transcriptional bridge exists as operational C code at [[Body/S/S0/epi-lib/src/m3.c]] (lines 329–355) with its declaration at [[Body/S/S0/epi-lib/include/m3.h]] (lines 923–931). The composition path is:
+
+```text
+codon (6-bit, 0–63)
+  → M3_CODON_TO_AA[codon] (amino-acid index, 0–23)
+  → reverse-lookup against M3_MAJOR_ARCANA[].amino_acid_index
+  → Major Arcana card index (0–21), or 0xFF for STOP / unassigned
+```
+
+STOP codons (amino-acid index 10 → TAA/TAG/TGA) return `0xFF`: they carry no arcana and mark the governance boundary where transcription ends. Any amino-acid index without a Major Arcana assignment also returns `0xFF`. The [[M5]] Möbius return walks each codon of a session's M3 trace through this transcription — see `m3_major_arcana_from_codon()`'s header comment in m3.h.
+
+The `M3_MAJOR_ARCANA[22]` table ([[Body/S/S0/epi-lib/src/m3.c]]:304–327, declared in m3.h:644–651) maps the 22 Major Arcana cards to chromosome pairs (1–22) and amino-acid indices (0–21), implementing the autosomal-completion law: 22 Major Arcana = 22 human autosomes. The 2 transcendent Tarot operators (card IDs 22–23, beyond the 22-fold autosomal cycle) correspond to the X/Y sex chromosomes, completing the 80-card Tarot quaternion-point set (56 Minor + 22 Major + 2 Transcendent).
+
+### T→U Transcriptional Classification Layer
+
+Per [[m3-prime-ql-transcriptional-bridge]] (research warrant), the T→U shift is the formal mechanism by which DNA storage form becomes RNA expression form. The code-level supports:
+
+- **DNA/RNA phase toggle** (`get_polarity_phased(nuc, is_rna)` in [[Body/S/S0/epi-lib/include/m3.h|m3.h]]:101–103): XORs polarity bit across the codon, implementing T↔U substitution as a single bit-flip.
+
+- **RNA functional/dark mask partition** ([[Body/S/S0/epi-lib/src/m3.c|m3.c]]:164–170, [[Body/S/S0/epi-lib/include/m3.h|m3.h]]:666–667):
+  ```text
+  M3_RNA_FUNCTIONAL_MASK & M3_RNA_DARK_MASK == 0
+  M3_RNA_FUNCTIONAL_MASK | M3_RNA_DARK_MASK == 0xFFFFFFFFFFFFFFFF
+  ```
+  These two 64-bit masks partition all 64 codons into RNA-functional (codons that participate in transcription) and RNA-dark (codons unchanged by transcription), with no overlap and complete cover.
+
+- **T-containing codon detection** (`m3_codon_is_rna_capable()` in [[Body/S/S0/epi-lib/include/m3.h|m3.h]]:802–806): returns true if any codon position carries T (nucleotide 0x01). These 37 T-containing codons are the ones that transform under T→U, gaining RNA U-variant nodes per the 37/27/101 research.
+
+### The 37/27/101 Research Structure
+
+Per [[m3-prime-ql-transcriptional-bridge]] §2:
+
+| Value | Derivation | Identity |
+|------:|:-----------|:---------|
+| **27** | 3³ = T-free codons | Shared DNA/RNA; unchanged by transcription |
+| **37** | 4³ − 3³ = T-containing codons | Transform under T→U; gain U-variants |
+| **64** | 4³ = total DNA codons | [[Mahāmāyā]] number; 27 shared + 37 DNA-specific |
+| **101** | 64 + 37 = total unique nodes | Full transcriptional graph |
+
+This partition is the formal bridge between [[I-Ching]] (DNA, 64 hexagrams) and [[Tarot]] (RNA, 80-card space). The 37 U-nodes created by T→U transcription are NEW nodes not present in the DNA codon set — they are the expressional vocabulary that [[Nara]] reads as card orientations. The research document §3 gives the full architecture:
+
+```text
+I CHING (64 hexagrams)
+    ↕  Three pairing matrices (exhaustive nucleotide pair partitions)
+DNA (64 codons, alphabet {A,T,G,C})
+    ↕  T → U transcription (+37 U-variant nodes)
+RNA (64 codons, alphabet {A,U,G,C})
+    ↕  Rotational states (codon genealogy → card orientation)
+TAROT (80 cards with 7/8-fold rotational states)
+```
+
+### Third Spanda Equation Manifestation
+
+The Third Spanda Equation `137 = 64 + 72 + 1` manifests in the transcriptional bridge through multiple canonical forms — see [[m3-prime-ql-transcriptional-bridge]] §2.3 and the Phase-J 2026-06-15 canonical identity extension (Track 40 ledger, CU-FORM-1, CU-IDENTITY-1 through CU-IDENTITY-4):
+
+```text
+M3-native transcriptional forms (Phase-J 2026-06-15):
+  64 + 73 = 137    where 73 = 36 + 37 (structural-mātric + transcriptional-transformable)
+  101 + 36 = 137   full transcriptional graph + structural-mātric accounting
+  101 + 27 = 128   full graph + T-free shared → α-rasa doubled Mahāmāyā shell
+
+From the α-rasa bridge (alpha_rasa_bridge_ql.md):
+  137 = 64 + 72 + 1    M3(64) + M2(72) + M1(+1) canonical spine
+  137 = 64 + 2(36) + 1  doubled-bridge form
+  137 = 128 + 8 + 1     doubled Mahāmāyā + octet gap + parent
+  137 = 1 + 2×32 + 2×36  Pauli-Jung World Clock skeleton (Várlaki/Rudas)
+```
+
+The transcriptional bridge provides the M3-native re-expression: `73 = 72 + 1` where the `+1` parent is supplied by the productive asymmetry `37 − 36 = 1`. The 36 structural-mātric (see §8.8: suit integrals 84+96+88+92=360, with 360/10=36 per decan) and the 37 transcriptional-transformable (T-containing codons) together yield `73 = 36 + 37 = 72 + 1`, making the transcriptional bridge an M3-local witness of the full M1(+1)→M2(72)→M3(64) spine.
+
+Governance itself is transcriptional ([[m3-prime-ql-transcriptional-bridge]] §3.4): all four governance codons (AUG Start, UAA/UAG/UGA Stop) are U-containing. Start and stop signals REQUIRE transcription — they exist only in the U-containing RNA form. The 2 start/stop endpoints that complete the Tarot space (78 + 2 = 80) are specific U-containing codons.
+
+### Research Warrant and Unresolved Items
+
+The transcriptional bridge research lives at [[m3-prime-ql-transcriptional-bridge]]. Open items from that document's §8 remain relevant to M3':
+
+- **Explicit U-node → Tarot card mapping**: which of the 37 U-nodes map to which tarot cards' rotational states, cross-referenced with the Mahāmāyā matrix specifications.
+- **The 21 processual intermediates**: the purely transcriptional nodes that don't map to Tarot cards (101 − 80 = 21). Whether these represent the transcriptional *process itself* — transitions rather than states.
+- **Cone geometry**: formalizing the T→U charge distribution on the cone, and whether the charge gradient matches the Vāk descent (Parā Vāk = maximum T/storage → Vaikharī = maximum U/expression).
+- **999 = 10³ − 1**: the multiplicative annihilation of 37 × 27 in mod9 and its operational connection to the Ānanda matrix structure. The two faces of transcription (changed + unchanged) are additive complements within 64 and multiplicative annihilators in mod9.
+
+M3' renders the bridge as a backend-provided fact through `MathemeHarmonicProfile` fields; it does not compute U-node mappings, cone geometry, or mod9 Ānanda relations locally. The Major Arcana chromosome panel (§9), the DNA/RNA phase toggle (§9), and the transcription clock-chain inspector (§9) are the surface affordances that expose this bridge to the user.
+
 ## §9 — How M3' Renders This Multi-Layer Architecture
 
 M3' exposes the full multi-matrix surface as a coherent user-facing wheel + matrix-inspectors. Key panels added beyond the basic clock + codon wheel:
@@ -938,7 +1027,7 @@ M3' is Mahamaya symbolic transcription: clock/cosmos/codon wheel, 64-address law
 | docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` mtime 2026-05-31 20:57:23; `02-s2-bimba-map-population.md` mtime 2026-05-31 20:36:57; `03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `07-m-extension-individual-tracks.md` mtime 2026-06-01 00:23:25 (`07-T6`); `08-integrated-plugin-tracks.md` mtime 2026-06-01 00:25:11; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51 |
 | Body substrate | `Body/S/S0/epi-lib/**`, `Body/S/S2/graph-services/**`, `Body/S/S3/gateway-contract/**`; `Body/M/epi-tauri/**` only as deprecated migration-source evidence |
 | Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m3-mahamaya/**`, `m-extension-runtime/**`, `kernel-bridge/**`, `plugin-integrated-1-2-3/**` |
-| sibling seeds | `M'-SYSTEM-SPEC.md`, `M3'/m3-prime-symbolic-transcription-research.md`, `M3'/alpha_rasa_bridge_ql.md`, `alpha_quaternionic_integration_across_M_stack.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md` |
+| sibling seeds | `M'-SYSTEM-SPEC.md`, `M3'/m3-prime-symbolic-transcription-research.md`, `M3'/m3-prime-ql-transcriptional-bridge.md`, `M3'/alpha_rasa_bridge_ql.md`, `alpha_quaternionic_integration_across_M_stack.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md` |
 | nominal tracks | Track 07.T6 M3' extension; Track 08 integrated plugin; Track 01 codon/profile; Track 02 symbolic library; Track 03 world clock; Track 09 Mahamaya capacity |
 | open decisions | TCT/Nine of Wands mismatch, 17th lens wording, Janus/provenance home, codonRotationProjection ownership; DR-M3-2 ratifies the 72->64 bridge as the 9:8 epogdoon and leaves no extra fold-state profile field open |
 

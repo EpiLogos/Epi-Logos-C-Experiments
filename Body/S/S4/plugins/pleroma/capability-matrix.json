@@ -4,7 +4,9 @@
   "package_role": "anima_executive_capability_membrane",
   "body_residency": "Body/S/S4/plugins/pleroma",
   "plugin_manifest": ".claude-plugin/plugin.json",
-  "constitutional_agents": [
+  "constitutional_agents": [],
+  "_constitutional_agents_status": "DEPRECATED per DR-M5-1 (VALIDATED 2026-06-02, cleanup 2026-06-15): The executable dispatch roster is pi + anima + the six Aletheia subagent techne-guardians (anansi/moirai/janus/mercurius/agora/zeithoven). The former 7-name constitutional tuple is retained only as Anima authorial-register metadata below; it is psyche-aspect rendering material, not separate dispatch authority.",
+  "anima_authorial_registers_deprecated": [
     "anima",
     "eros",
     "logos",

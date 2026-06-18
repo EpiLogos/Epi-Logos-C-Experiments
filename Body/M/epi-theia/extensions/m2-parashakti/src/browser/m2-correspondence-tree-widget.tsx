@@ -20,6 +20,7 @@ import {
     buildM2PrimeMeaningPacket,
     M2PrimeMeaningPacket
 } from '../common';
+import { CorrespondenceTreePlanetaryKeyingPanel } from './components/planetary-correspondence';
 
 @injectable()
 export class M2CorrespondenceTreeWidget extends ReactWidget {
@@ -107,6 +108,7 @@ export class M2CorrespondenceTreeWidget extends ReactWidget {
                             coordinate context before resolving the unified M2 meaning packet.
                         </p>
                     )}
+                    <CorrespondenceTreePlanetaryKeyingPanel />
                 </section>
             </div>
         );

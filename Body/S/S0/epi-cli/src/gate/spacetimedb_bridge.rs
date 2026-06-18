@@ -42,7 +42,8 @@ use super::{
 // =============================================================================
 
 pub use s3_spacetime::{
-    agent_instance_id, agent_kind, assert_no_silent_fallback_in_value, capability_surface_hash,
+    agent_instance_id, agent_kind, assert_no_silent_fallback_in_value,
+    being_pattern_acceptance_replay, being_pattern_bridge_handle_payload, capability_surface_hash,
     day_wikilink, fallback_active_envelope, fallback_policy_for_plan, global_temporal_surface_key,
     identity_handle_blake3, kairos_snapshot_id, lifecycle_envelope_from_update,
     projection_context_from_sql_result, projection_context_from_subscription_message,

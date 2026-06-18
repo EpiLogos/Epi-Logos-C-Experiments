@@ -21,6 +21,8 @@ This repo runs the **DOX** AGENTS.md hierarchy. A self-maintaining tree of `AGEN
 
 **Canonical Reading Protocol** (the canon DOX routes into): `[[World-Ontology]]` → `[[ARCHITECTURE-DIAGRAM-PACK]]` → umbrella `[[S-SYSTEM-INDEX]]`/`[[M'-SYSTEM-SPEC]]` → exact `[[Sn-SPEC]]`/`[[Sn-ARCHITECTURE]]`/`[[Mn'-SPEC]]` → shard specs. Core invariant: **the coordinate system is the modular system** — domain law belongs to its owning coordinate module, never relocated into `[[S0]]`/`[[M0']]` for convenience.
 
+**The Bimba Map** (`Idea/Bimba/Map/`) is the navigable repo-level *reflection* of the M0–M5 graph: a generated, wikilink-open projection (`M0/`–`M5/`, the file tree mirrors the coordinate hierarchy) carrying each coordinate's M-form identity, a pithy essence, and a full relation index — every edge as `[[source]] - [[relation_type]] - [[target]]` with key properties, relation types rendered as wikilinks. This keeps `S/S'`↔`M/M'` relations legible in-repo so work stays modular; full node detail lives in Neo4j (the projection reflects *down* from the graph, it never re-promotes). See [[repo-ontology]] + [[45-bimba-map-indexing-and-dox-okf-unification]].
+
 ---
 
 ## I. The Ur-Process: Human-AI Co-Creation Protocol
@@ -459,7 +461,7 @@ Möbius return (#5 → #0) is the garbage collector.
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Epi-Logos C Experiments** (32837 symbols, 70538 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **Epi-Logos C Experiments** (32919 symbols, 70659 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

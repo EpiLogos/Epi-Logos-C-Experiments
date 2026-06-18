@@ -1,0 +1,71 @@
+.mext-widget-m0-anuttara .m0-layer-tab-provenance-pill[data-provenance-state='canonical'],
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='canonical'] {
+    background: #1f7a4d;
+    color: #ffffff;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tab-provenance-pill[data-provenance-state='canonical_absent'],
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='canonical_absent'] {
+    background: #5f6872;
+    color: #ffffff;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tab-provenance-pill[data-provenance-state='derived'],
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='derived'] {
+    background: #a46700;
+    color: #ffffff;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tab-provenance-pill[data-provenance-state='inferred'],
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='inferred'] {
+    background: #70592a;
+    color: #fff4cf;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tab-provenance-pill[data-provenance-state='review_pending'],
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='review_pending'] {
+    background: #9f6400;
+    color: #ffffff;
+    animation: m0-provenance-review-pulse 1.8s ease-in-out infinite;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tab-provenance-pill[data-provenance-state='blocked'],
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='blocked'] {
+    background: #a23b3b;
+    color: #ffffff;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tab-provenance-pill[data-provenance-state='bridged_local'],
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='bridged_local'] {
+    background: #7151b8;
+    color: #ffffff;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tab-provenance-pill[data-provenance-state='bridged_public'],
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='bridged_public'] {
+    background: #2f6fae;
+    color: #ffffff;
+}
+
+.m0-layer-tab-provenance-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 16px;
+    margin-left: 6px;
+    padding: 0 6px;
+    border-radius: 8px;
+    font-size: var(--theia-ui-font-size0);
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+@keyframes m0-provenance-review-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(159, 100, 0, 0.45);
+    }
+
+    50% {
+        box-shadow: 0 0 0 3px rgba(159, 100, 0, 0);
+    }
+}

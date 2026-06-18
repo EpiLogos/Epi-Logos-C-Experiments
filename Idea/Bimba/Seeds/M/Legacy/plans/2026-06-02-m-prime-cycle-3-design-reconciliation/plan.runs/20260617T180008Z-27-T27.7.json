@@ -1,0 +1,38 @@
+{
+  "runId": "20260617T180008Z-27-T27.7",
+  "taskId": "27.T27.7",
+  "startedAt": "2026-06-17T18:00:08.866Z",
+  "owner": "codex-m-dev-27-t27-7",
+  "leaseExpiresAt": "2026-06-17T20:00:08.866Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.7",
+    "trackId": "27",
+    "tranche": "T27.7",
+    "title": "Gateway tab — capability list + parity + readiness + try-it",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.6"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/GatewayPanel.tsx",
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/domain/configPanelDomain.ts",
+      "Body/S/S4/pi-agent/skills/*",
+      "Body/S/S4/ta-onta/chronos/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

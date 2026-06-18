@@ -3,6 +3,8 @@ title: "M1' Paramaśiva Architecture — Total Shape Across the Six Sub-Coordina
 coordinate: "M1' (parent of M1-0' through M1-5')"
 status: "canonical-architecture-spec"
 created: 2026-06-02
+updated: "2026-06-09"
+cycle-3: reconciled
 authority_relation: |
   Total-shape architectural authority for the M1' instrument across its six sub-strata.
   M1-2' is covered in depth by [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] and only summarised

@@ -3,18 +3,27 @@ import {
     CoordinateContext,
     MathemeHarmonicProfileBoundary,
     MExtensionReadinessSnapshot,
-    MObservabilityEvent
+    MObservabilityEvent,
+    SharedBridgeAdapter
 } from '@pratibimba/m-extension-runtime';
 import { buildM1ProfileClockModel } from '../common/clock-instrument';
 import { M1Cl42SignatureInspector } from './m1-cl42-signature-inspector';
 import { M1KleinFlipEventStrip } from './m1-klein-flip-event-strip';
 import { M1KleinTopologyView } from './m1-klein-topology-view';
+import {
+    KaprekarCommandExecutor
+} from './m1-kaprekar-inspector';
+import { SpandaWalkNavigator } from './m1-spanda-walk-navigator';
 
 export function M1ParamasivaExtensionBody(props: {
     readonly profile: MathemeHarmonicProfileBoundary | null;
     readonly readiness: MExtensionReadinessSnapshot;
     readonly context: CoordinateContext;
+    readonly layoutMode?: string;
+    readonly developerMode?: boolean;
+    readonly observabilityBridge?: Pick<SharedBridgeAdapter, 'onObservabilityEvent'>;
     readonly onObservabilityEvent?: (event: MObservabilityEvent) => void;
+    readonly commands?: KaprekarCommandExecutor;
 }): React.ReactNode {
     if (!props.profile) {
         return (
@@ -72,6 +81,14 @@ export function M1ParamasivaExtensionBody(props: {
                 </dl>
             </section>
 
+            <SpandaWalkNavigator
+                profile={props.profile}
+                kaprekarModel={model}
+                layoutMode={props.layoutMode}
+                commands={props.commands}
+                observabilityBridge={props.observabilityBridge}
+            />
+
             <section className="mext-widget-detail">
                 <h3>84-state landscape</h3>
                 <p>
@@ -116,6 +133,9 @@ export function M1ParamasivaExtensionBody(props: {
                 profile={props.profile}
                 readiness={props.readiness}
                 context={props.context}
+                layoutMode={props.layoutMode}
+                developerMode={props.developerMode}
+                observabilityBridge={props.observabilityBridge}
             />
 
             <section className="mext-widget-detail">

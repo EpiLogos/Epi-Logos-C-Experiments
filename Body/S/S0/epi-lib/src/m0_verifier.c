@@ -69,6 +69,14 @@ static void add_constraint(
     out->unsatisfied_count++;
 }
 
+static void add_literal_constraint(M0VerifierReport* out, const char* coordinate) {
+    if (out->unsatisfied_count >= M0_VERIFIER_MAX_UNSATISFIED) return;
+
+    char* dst = out->unsatisfied_constraints[out->unsatisfied_count];
+    (void)snprintf(dst, M0_VERIFIER_COORDINATE_MAX, "%s", coordinate);
+    out->unsatisfied_count++;
+}
+
 static uint8_t count_syntax_witnesses(uint16_t mask) {
     uint8_t count = 0u;
     if (mask & M0_VERIFIER_SYNTAX_SPEECH) count++;
@@ -136,7 +144,16 @@ int m0_verifier_check_state(const KernelState* state, M0VerifierReport* out) {
     }
 
     const float syntax_score = (float)count_syntax_witnesses(syntax_mask) / 4.0f;
-    out->coherence_score = (virtue_score + relation_score + syntax_score) / 3.0f;
+    out->slot_privacy_boundary_compliance =
+        state->slot_privacy_boundary_compliance != 0u ? 1u : 0u;
+    if (out->slot_privacy_boundary_compliance == 0u) {
+        add_literal_constraint(out, "#R0-0/1/P-T0-slot-privacy-boundary?");
+    }
+
+    const float privacy_score =
+        out->slot_privacy_boundary_compliance == 1u ? 1.0f : 0.0f;
+    out->coherence_score =
+        (virtue_score + relation_score + syntax_score + privacy_score) / 4.0f;
 
     return 0;
 }

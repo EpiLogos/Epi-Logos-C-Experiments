@@ -16,7 +16,12 @@ canonical_forms:
   octave_field_view: "137 = 8(8+9) + 1"
   spanda_bridge_view: "137 = 64 + 2(36) + 1"
   m_stack_view: "137 = M_3(64) + M_2(72) + M_1(1)"
+  transcriptional_internal_view: "137 = 64 + 73 = M_3(64) + (M_2/2 + 37) where 73 = 36 + 37 = 72 + 1 with +1 supplied by the productive asymmetry 37-36 between the T-containing transformable count and the structural-mātric square; M3-native sixth canonical form per CU-FORM-1 (Phase-J 2026-06-15; DR-M3-6 amendment landed inline below)"
 translation_rule: "9_M2 = 8_M3 + 1_M1"
+transcriptional_epogdoon_derivation: "36 - 27 = 9 (same canonical epogdoon-9 as 137 - 128); CU-IDENTITY-3 transcriptional derivation through the T-free shared (27) ↔ structural-mātric square (36) partition"
+canon_updates_landed:
+  - "CU-IDENTITY-3@2026-06-15"
+  - "CU-FORM-1@2026-06-15"
 ---
 
 # QL M0-M3 Integral Quilting: Third Spanda, Mahamaya Binary Valuation, and Physics/Chemistry Bridge
@@ -72,6 +77,27 @@ Expanded:
 128 + 9 = 137
 137 + delta = 137.035999...  (the physical low-energy measurement-face)
 ```
+
+<!-- canon-update: CU-IDENTITY-3 (landed 2026-06-15) -->
+<!-- canon-update: CU-FORM-1 (landed 2026-06-15) -->
+
+**Phase-J 2026-06-15 extension** (per [Track 40 ledger](Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md)): the +9 epogdoon-tick at `128 + 9 = 137` has a sibling **transcriptional derivation** through M3's canonical 27/37/101 partition (per [`M3'/m3-prime-ql-transcriptional-bridge.md` §2](M3'/m3-prime-ql-transcriptional-bridge.md)):
+
+```text
+36 - 27 = 9 = epogdoon (transcriptionally derived; same canonical 9)
+```
+
+Where $36 = 6^2$ is the structural-mātric square (per [`M3'/alpha_rasa_bridge_ql.md` §3](M3'/alpha_rasa_bridge_ql.md)) and $27 = 3^3$ is the T-free shared codon count (the codons that pass through transcription unchanged). The matheme converges on itself: same canonical 9, two derivation paths through different sub-structures of M3 — one external (the 128↔137 gap as $137-128$), one internal (the structural-mātric vs T-free-shared partition as $36-27$). This is the canonical evidence that the epogdoon-9 is not an arbitrary external gap but is *intrinsically derivable* from the same M3 transcriptional structure that supplies the 64 codons. See [CU-IDENTITY-3](Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md).
+
+**Proposed sixth canonical form** (per [CU-FORM-1](Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md); DR-M3-6 amendment landed in [13-decision-register.md](Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md)):
+
+```text
+transcriptional_internal_view:  137 = 64 + 73 = M_3 + (M_2/2 + 37)
+                                where 73 = 36 + 37 = 72 + 1
+                                with +1 supplied by the productive asymmetry 37 - 36
+```
+
+The M3-native re-expression of the canonical $137 = M_3(64) + M_2(72) + M_1(1)$ M-stack view, where the parent $+1$ is NOT a sealed external term but **the productive asymmetry $37 - 36 = 1$ between the T-containing transformable count and the structural-mātric square**. From outside M3 (M1→M2→M3), the +1 is the Möbius parent / 0/1 hinge per DR-M1-1. From inside M3's transcriptional machinery, the same +1 appears as the asymmetry within the 73-as-36+37 partition. **The parent generates 37 new entities** (the U-variants); it doesn't just hold the field together — it produces. See [CU-IDENTITY-4](Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md) for the 73 = 36+37 = 72+1 productive-asymmetry derivation that underwrites this sixth form.
 
 The crucial revision in this document is the treatment of the Mahamaya substrate. The hidden fourth is not simply "6 as the missing 4+2." The deeper structure is the old yin-yang coin arithmetic:
 

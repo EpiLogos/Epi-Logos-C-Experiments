@@ -6,8 +6,17 @@ import {
     PrivacyDropFeed,
     type PrivacyDropAggregate
 } from '@pratibimba/ide-shell-m0-m5/lib/browser/services/privacy-drop-feed';
+import {
+    PENDING_M_READINESS,
+    type MExtensionReadinessSnapshot
+} from '@pratibimba/m-extension-runtime/lib/common/readiness';
 import { OMNIPANEL_WIDGET_ID, OMNIPANEL_WIDGET_LABEL } from '../common';
 import { OmniPanel } from './components/OmniPanel';
+import {
+    OMNIPANEL_RUNTIME_SERVICE,
+    OmniPanelRuntimeService,
+    type OmniPanelProfileTickTelemetry
+} from './services/omnipanel-runtime-service';
 
 /**
  * Theia widget that hosts the wholesale-ported OmniPanel React tree.
@@ -41,13 +50,25 @@ export class OmniPanelWidget extends ReactWidget {
     @inject(PrivacyDropFeed)
     protected readonly privacyDropFeed!: PrivacyDropFeed;
 
+    @inject(OMNIPANEL_RUNTIME_SERVICE)
+    protected readonly runtime!: OmniPanelRuntimeService;
+
     protected omniState: 'hidden' | 'minimal' | 'fullscreen' = 'fullscreen';
+    protected readinessSnapshot: MExtensionReadinessSnapshot = PENDING_M_READINESS;
+    protected profileTickTelemetry: OmniPanelProfileTickTelemetry = {
+        subscriberCount: 0,
+        tickHistory: [],
+        lastTickProcessedAt: null,
+        laggingSubscribers: []
+    };
     protected privacyDropAggregate: PrivacyDropAggregate = {
         byWidget: {},
         byClass: {},
         total: 0
     };
     protected privacyDropSubscription: { dispose(): void } | null = null;
+    protected readinessSubscription: { dispose(): void } | null = null;
+    protected profileTickSubscription: { dispose(): void } | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -57,8 +78,18 @@ export class OmniPanelWidget extends ReactWidget {
         this.title.closable = true;
         this.addClass('pratibimba-omnipanel');
         this.privacyDropAggregate = this.privacyDropFeed.aggregate;
+        this.readinessSnapshot = this.runtime.getCurrentReadiness() ?? PENDING_M_READINESS;
+        this.profileTickTelemetry = this.runtime.getProfileTickTelemetry();
         this.privacyDropSubscription = this.privacyDropFeed.onDrop(() => {
             this.privacyDropAggregate = this.privacyDropFeed.aggregate;
+            this.update();
+        });
+        this.readinessSubscription = this.runtime.useReadiness(snapshot => {
+            this.readinessSnapshot = snapshot;
+            this.update();
+        });
+        this.profileTickSubscription = this.runtime.useProfileTick(() => {
+            this.profileTickTelemetry = this.runtime.getProfileTickTelemetry();
             this.update();
         });
         this.update();
@@ -67,6 +98,10 @@ export class OmniPanelWidget extends ReactWidget {
     override dispose(): void {
         this.privacyDropSubscription?.dispose();
         this.privacyDropSubscription = null;
+        this.readinessSubscription?.dispose();
+        this.readinessSubscription = null;
+        this.profileTickSubscription?.dispose();
+        this.profileTickSubscription = null;
         super.dispose();
     }
 
@@ -91,6 +126,9 @@ export class OmniPanelWidget extends ReactWidget {
                 state={this.omniState}
                 onClose={this.handleClose}
                 onOpenSource={this.handleOpenSource}
+                readinessSnapshot={this.readinessSnapshot}
+                profileTickTelemetry={this.profileTickTelemetry as any}
+                onInvokeGatewayRpc={(method, params) => this.runtime.invokeGatewayRpc(method, params)}
                 privacyDropAggregate={this.privacyDropAggregate}
             />
         );

@@ -1,7 +1,8 @@
 ---
 coordinate: "M1'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-06-09"
+cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-TAURI-PORT-SPEC]]"

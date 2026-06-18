@@ -2,6 +2,9 @@ use neo4rs::query;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
+use crate::equivalence_classes::{
+    equivalence_class_import_plan, in_identity_chain_cypher, m0_identity_chains,
+};
 use crate::Neo4jClient;
 
 pub const EPI_ONTOLOGY_URI: &str = "https://epi-logos.org/ontology#";
@@ -25,6 +28,8 @@ pub struct OntologyImportPlan {
     pub fact_cypher: String,
     pub anuttara_properties: Vec<OntologyPropertyMapping>,
     pub ananda_vortex_properties: Vec<OntologyPropertyMapping>,
+    pub equivalence_class_imports: Vec<(String, String)>,
+    pub identity_chain_cypher: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -83,6 +88,10 @@ pub fn ananda_vortex_property_mappings() -> Vec<OntologyPropertyMapping> {
 }
 
 pub fn ontology_import_plan() -> OntologyImportPlan {
+    let chains = m0_identity_chains();
+    let identity_chain_cypher = in_identity_chain_cypher(&chains).join("\n");
+    let equivalence_class_imports = equivalence_class_import_plan();
+
     OntologyImportPlan {
         ontology_uri: EPI_ONTOLOGY_URI.to_owned(),
         version_iri: EPI_ONTOLOGY_VERSION_IRI.to_owned(),
@@ -94,6 +103,8 @@ pub fn ontology_import_plan() -> OntologyImportPlan {
         fact_cypher: "MERGE (m:GraphMeta {graph_id: $graph_id}) SET m.epi_ontology_uri = $ontology_uri, m.epi_ontology_version_iri = $version_iri, m.epi_ontology_sha256 = $turtle_sha256, m.owl2_rl_profile = $owl2_rl_profile, m.shacl_reporting_mode = $shacl_reporting_mode, m.anuttara_property_contract = $anuttara_property_contract, m.profile_handle_contract = $profile_handle_contract, m.epi_ontology_checked_at = datetime() RETURN m.graph_id AS graph_id, m.epi_ontology_sha256 AS turtle_sha256".to_owned(),
         anuttara_properties: anuttara_property_mappings(),
         ananda_vortex_properties: ananda_vortex_property_mappings(),
+        equivalence_class_imports,
+        identity_chain_cypher,
     }
 }
 

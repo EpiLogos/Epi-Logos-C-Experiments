@@ -55,3 +55,26 @@
 - format=markdown
 - rawSources=0
 
+## [2026-06-12 22:03:22] context | Synthesize VAK–Anuttara interpenetration (para vak / notational reality) as final planning input for m-prime cycle 3
+- session: `state/sessions/2026-06-12T22-03-22-765Z-context-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl.md`
+- Context pack: 2026-06-12T22-03-22-765Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl
+- Budget: 8000 tokens
+- Included: 8
+- Omitted: 0
+
+## [2026-06-13 08:43:27] query | Major Arcana codon chromosome transcription m3
+- session: `state/sessions/2026-06-13T08-43-27-643Z-query-major-arcana-codon-chromosome-transcription-m3.md`
+- citations=none
+- saved=true
+- staged=false
+- format=markdown
+- rawSources=0
+
+## [2026-06-13 08:43:29] query | rotational state protocol minor arcana 37 27 split
+- session: `state/sessions/2026-06-13T08-43-29-607Z-query-rotational-state-protocol-minor-arcana-37-27-split.md`
+- citations=none
+- saved=true
+- staged=false
+- format=markdown
+- rawSources=0
+

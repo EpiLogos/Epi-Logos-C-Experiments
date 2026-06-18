@@ -9,6 +9,7 @@ import {
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 const DAY_CALENDAR_WIDGET_ID = 'm4.nara.dayCalendar';
 const DAY_CALENDAR_LABEL = 'M4 Day Calendar';
@@ -33,12 +34,12 @@ export class DayCalendar extends ReactWidget {
     protected init(): void {
         this.id = DayCalendar.ID;
         this.title.label = DayCalendar.LABEL;
-        this.title.caption = DayCalendar.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-m4-nara');
         this.addClass('m4-nara-day-calendar');
-        this.addClass('mext-privacy-protected-local');
+        this.addClass(privacyChromeClass('protected_local'));
 
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
@@ -74,7 +75,10 @@ export class DayCalendar extends ReactWidget {
         const profileTick = readTick(this.profile);
 
         return (
-            <div className="mext-widget-root" data-test="m4-day-calendar">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local')}`}
+                data-test="m4-day-calendar"
+            >
                 <header className="m4-day-calendar-header">
                     <div>
                         <h3 data-test="m4-day-calendar-title">{formatLongDate(this.selectedDay)}</h3>

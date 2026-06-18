@@ -8,15 +8,26 @@ import {
 } from '@theia/core/lib/browser';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
+    Disposable,
+    EMPTY_STATE_REGISTRY,
+    EmptyStateRegistry,
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
     parseExtensionRoute,
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
+import {
+    M3MahamayaEmptyState,
+    M3MahamayaEmptyStateWidget
+} from './empty-state';
 import { M3MahamayaWidget } from './m3-mahamaya-widget';
 import { M3MahamayaRendererService } from './services/m3-renderer-service';
 import { M3_RENDERER_SERVICE } from './services/m3-renderer-protocol';
+import {
+    M3_PENTADIC_TRACE_SERVICE,
+    M3PentadicTraceService
+} from './services/m3-pentadic-trace-service';
 import {
     EXTENSION_ID,
     OPEN_COMMAND_ID,
@@ -106,14 +117,39 @@ class M3MahamayaPublisher implements MObservabilityPublisher {
     }
 }
 
+@injectable()
+class M3MahamayaEmptyStateRegistration implements FrontendApplicationContribution {
+    @inject(EMPTY_STATE_REGISTRY)
+    protected readonly emptyStates!: EmptyStateRegistry;
+
+    protected disposable?: Disposable;
+
+    onStart(): void {
+        this.disposable = this.emptyStates.register({
+            extensionId: EXTENSION_ID,
+            viewId: 'm3-mahamaya.primary',
+            activationCondition: snapshot => snapshot.state !== 'ready_public_current',
+            component: M3MahamayaEmptyState
+        });
+    }
+
+    onStop(): void {
+        this.disposable?.dispose();
+        this.disposable = undefined;
+    }
+}
+
 export default new ContainerModule(bind => {
     // Renderer-service architecture (24.T24.16): the deterministic Mahamaya
     // visualisation projector, addressed through both its class and the
     // M3_RENDERER_SERVICE injection Symbol (DI symbol discipline).
     bind(M3MahamayaRendererService).toSelf().inSingletonScope();
     bind(M3_RENDERER_SERVICE).toService(M3MahamayaRendererService);
+    bind(M3PentadicTraceService).toSelf().inSingletonScope();
+    bind(M3_PENTADIC_TRACE_SERVICE).toService(M3PentadicTraceService);
 
     bind(M3MahamayaWidget).toSelf();
+    bind(M3MahamayaEmptyStateWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M3MahamayaWidget.ID,
@@ -127,6 +163,8 @@ export default new ContainerModule(bind => {
     bind(M3_MAHAMAYA_PUBLISHER).toService(
         M3MahamayaPublisher
     );
+    bind(M3MahamayaEmptyStateRegistration).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(M3MahamayaEmptyStateRegistration);
 
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.

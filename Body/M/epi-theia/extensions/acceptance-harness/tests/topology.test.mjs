@@ -54,6 +54,9 @@ const {
     normalizeOmniPanelSessionState
 } = require('../../omnipanel-shell/lib/common/omnipanel-session-state.js');
 const {
+    intentTargetCommandId
+} = require('../../pratibimba-layouts/lib/common/cross-layout-intent.js');
+const {
     REQUIRED_MEDIATED_EVIDENCE_FIELDS,
     buildMediatedRunEvidencePacket,
     enforceHumanGate
@@ -435,6 +438,39 @@ test('omnipanel-tab-traversal: end-to-end click-through and state identity contr
     assert.deepEqual(allTabsAfterToggle.omniPanel.perTabState, perTabFixtures);
 });
 
+test('OmniPanel intent promotes daily-0-1 to ide-deep with M3 codon preserved', () => {
+    const harness = createOmniPanelTraversalHarness();
+    const dailyIntent = buildM3CodonCrossLayoutIntent({
+        id: 'intent-m3-daily-anchor',
+        requestedLayout: 'daily-0-1',
+        reason: 'anchor from daily surface before deep promotion'
+    });
+    const deepIntent = buildM3CodonCrossLayoutIntent({
+        id: 'intent-m3-deep-codon',
+        requestedLayout: 'ide-deep',
+        reason: 'promote to M3 codon wheel'
+    });
+
+    const dailyRoute = harness.routeCrossLayoutIntent(dailyIntent);
+    assert.equal(dailyRoute.activeLayout, 'daily-0-1');
+    assert.equal(dailyRoute.session.selectedCoordinate, 'M3-1-0-13');
+    assert.equal(dailyRoute.session.profileGeneration, 472);
+
+    const deepRoute = harness.routeCrossLayoutIntent(deepIntent);
+    assert.equal(deepRoute.activeLayout, 'ide-deep');
+    assert.equal(deepRoute.targetCommandId, 'pratibimba.m3-mahamaya.codon.open');
+    assert.deepEqual(deepRoute.consumedIntent, {
+        requestedExtensionId: 'm3-mahamaya',
+        requestedContributionId: 'codon',
+        coordinate: 'M3-1-0-13',
+        profileGeneration: 472
+    });
+    assert.deepEqual(
+        harness.renderCrossLayoutIntentLog().entries.map(entry => entry.id),
+        ['intent-m3-daily-anchor', 'intent-m3-deep-codon']
+    );
+});
+
 function createOmniPanelTraversalHarness() {
     const manifest = collapseOmniPanelManifest();
     const mountedByLayout = {
@@ -455,6 +491,13 @@ function createOmniPanelTraversalHarness() {
         ]
     };
     const crossLayoutIntentLog = [];
+    const routeSession = {
+        selectedCoordinate: null,
+        sessionKey: null,
+        dayNow: null,
+        profileGeneration: null,
+        privacyClass: null
+    };
 
     let omniPanelState = createOmniPanelState(manifest);
     let sessionState = createOmniPanelDefaultState();
@@ -554,6 +597,36 @@ function createOmniPanelTraversalHarness() {
         },
         fireCrossLayoutIntent(intent) {
             crossLayoutIntentLog.push(intent);
+        },
+        routeCrossLayoutIntent(intent) {
+            crossLayoutIntentLog.push(intent);
+            activeLayout = intent.requestedLayout;
+            if (intent.coordinate !== null) {
+                routeSession.selectedCoordinate = intent.coordinate;
+            }
+            if (intent.sessionKey !== null) {
+                routeSession.sessionKey = intent.sessionKey;
+            }
+            if (intent.dayNow !== null) {
+                routeSession.dayNow = intent.dayNow;
+            }
+            if (intent.profileGeneration !== null) {
+                routeSession.profileGeneration = intent.profileGeneration;
+            }
+            if (intent.privacyClass !== null) {
+                routeSession.privacyClass = intent.privacyClass;
+            }
+            return {
+                activeLayout,
+                targetCommandId: intentTargetCommandId(intent),
+                session: { ...routeSession },
+                consumedIntent: {
+                    requestedExtensionId: intent.requestedExtensionId,
+                    requestedContributionId: intent.requestedContributionId,
+                    coordinate: intent.coordinate,
+                    profileGeneration: intent.profileGeneration
+                }
+            };
         },
         renderCrossLayoutIntentLog() {
             return {
@@ -789,5 +862,22 @@ function buildCrossLayoutIntent(id, requestedLayout, requestedContributionId) {
         requestedLayout,
         requestedExtensionId: '@pratibimba/omnipanel-shell',
         requestedContributionId
+    };
+}
+
+function buildM3CodonCrossLayoutIntent(overrides = {}) {
+    return {
+        id: 'intent-m3-codon',
+        coordinate: 'M3-1-0-13',
+        artifactUri: null,
+        reviewId: null,
+        dayNow: '2026-06-17',
+        sessionKey: 'agent:epii:main',
+        profileGeneration: 472,
+        privacyClass: 'public',
+        requestedLayout: 'ide-deep',
+        requestedExtensionId: 'm3-mahamaya',
+        requestedContributionId: 'codon',
+        ...overrides
     };
 }

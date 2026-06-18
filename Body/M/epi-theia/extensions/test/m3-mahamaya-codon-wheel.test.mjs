@@ -71,6 +71,12 @@ const {
     pentadicRelationModelFromProfilePayload
 } = require('../m3-mahamaya/lib/browser/components/M3PentadicRelationInspector.js');
 const {
+    M3CosmicWheelRenderService
+} = require('../m3-mahamaya/lib/browser/components/M3CosmicWheelRenderService.js');
+const {
+    M3PentadicTraceService
+} = require('../m3-mahamaya/lib/browser/services/m3-pentadic-trace-service.js');
+const {
     buildM3CodonRotationProjectionForLensRing
 } = require('../m3-mahamaya/lib/browser/composition/M3CodonRotationProjectionForLensRing.js');
 
@@ -509,6 +515,10 @@ test('pentadic relation inspector renders Maxwell 15 beside Mahamaya paired fift
     assert.equal(model.maxwell?.total, 15);
     assert.equal(model.maxwell?.decomposition, '10+4+1');
     assert.deepEqual(model.trace?.pairedMahamayaFifteens, [15, 15]);
+    assert.equal(model.trace?.substrateHinge, '0/1 -> 5');
+    assert.equal(model.trace?.wholeNumberEndpoint, 5);
+    assert.equal(model.trace?.naturalNumberEndpoint, 6);
+    assert.equal(model.trace?.resonance72Index, 64);
     assert.equal(model.trace?.backboneIdentity, '24*15=360');
     assert.equal(model.trace?.shemIdentity, '72*5=360');
     assert.equal(model.trace?.lineGraphIdentity, '360+24=384');
@@ -524,6 +534,10 @@ test('pentadic relation inspector renders Maxwell 15 beside Mahamaya paired fift
     assert.match(html, /data-widget-id="pratibimba\.m3-mahamaya:pentadic-relation-inspector"/);
     assert.match(html, /data-relation-lane="maxwell-kaluza-klein"/);
     assert.match(html, /data-relation-lane="mahamaya-paired-fifteens"/);
+    assert.match(html, /data-relation-row="substrate-hinge"/);
+    assert.match(html, /0\/1 -&gt; 5/);
+    assert.match(html, /whole 5/);
+    assert.match(html, /natural 6/);
     assert.match(html, /15 = 10\+4\+1/);
     assert.match(html, /4D metric body/);
     assert.match(html, /4-vector connection field/);
@@ -538,6 +552,7 @@ test('pentadic relation inspector renders Maxwell 15 beside Mahamaya paired fift
     assert.match(html, /24\*15=360/);
     assert.match(html, /72\*5=360/);
     assert.match(html, /360\+24=384/);
+    assert.match(html, /resonance72 64/);
     assert.match(html, /address64 42/);
     assert.match(html, /codon CCC/);
     assert.match(html, /line-change 256/);
@@ -576,6 +591,60 @@ test('pentadic relation inspector routes unavailable trace fields through readin
     assert.match(html, /data-ledger-state="profile_missing_field"/);
     assert.match(html, /profile\.anuttara_pentadic_trace\.qCosmicRef/);
     assert.match(html, /Track-10 readiness ledger/);
+});
+
+test('pentadic trace service consumes only the shared bridge profile and readiness stream', () => {
+    const payload = profilePayloadWithPentadicTrace();
+    const fakeBridge = bridgeFixture();
+    const service = new M3PentadicTraceService(fakeBridge);
+    const snapshots = [];
+    const sub = service.onDidChange(snapshot => snapshots.push(snapshot));
+
+    fakeBridge.emitReadiness(readiness('profile_missing_field'));
+    fakeBridge.emitProfile(boundary(23, payload));
+
+    assert.equal(service.snapshot().profileGeneration, 23);
+    assert.equal(service.snapshot().model.ready, true);
+    assert.equal(service.snapshot().model.trace.resonance72Index, 64);
+    assert.equal(service.snapshot().model.trace.mahamayaAddress64, 42);
+    assert.equal(fakeBridge.invokeCapabilityCalls, 0);
+    assert.equal(fakeBridge.invokeGatewayRpcCalls, 0);
+    assert.equal(fakeBridge.parashaktiCorrespondencesCalls, 0);
+    assert.ok(snapshots.length >= 2);
+
+    sub.dispose();
+    service.dispose();
+    assert.equal(fakeBridge.profileListeners.size, 0);
+    assert.equal(fakeBridge.readinessListeners.size, 0);
+});
+
+test('cosmic wheel full mode embeds the pentadic inspector and mini-view renders a single hinge badge', () => {
+    const payload = profilePayloadWithPentadicTrace();
+    const model = surface({ profile: boundary(23, payload) });
+
+    const fullHtml = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(M3CosmicWheelRenderService, {
+            mode: 'full',
+            surface: model,
+            profilePayload: payload,
+            readiness: readiness()
+        })
+    );
+    assert.match(fullHtml, /data-widget-id="pratibimba\.m3-mahamaya:pentadic-relation-inspector"/);
+    assert.match(fullHtml, /data-relation-row="shem-degree-runtick"/);
+
+    const miniHtml = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(M3CosmicWheelRenderService, {
+            mode: 'mini-view',
+            surface: model,
+            profilePayload: payload,
+            readiness: readiness()
+        })
+    );
+    assert.match(miniHtml, /data-widget-id="pratibimba\.m3-mahamaya:pentadic-hinge-badge"/);
+    assert.match(miniHtml, /data-readiness-state="ready"/);
+    assert.match(miniHtml, /0\/1 -&gt; 5/);
+    assert.doesNotMatch(miniHtml, /data-widget-id="pratibimba\.m3-mahamaya:pentadic-relation-inspector"/);
 });
 
 test('pentadic relation inspector does not reconstruct missing trace or local arithmetic identities', () => {
@@ -695,4 +764,46 @@ function profilePayloadWithPentadicTrace() {
             provenance: Object.freeze(['kernel-bridge:buildPentadicTrace'])
         })
     });
+}
+
+function bridgeFixture() {
+    return {
+        profileListeners: new Set(),
+        readinessListeners: new Set(),
+        invokeCapabilityCalls: 0,
+        invokeGatewayRpcCalls: 0,
+        parashaktiCorrespondencesCalls: 0,
+        onProfile(listener) {
+            this.profileListeners.add(listener);
+            listener(null);
+            return { dispose: () => this.profileListeners.delete(listener) };
+        },
+        onReadiness(listener) {
+            this.readinessListeners.add(listener);
+            listener(readiness('profile_missing_field'));
+            return { dispose: () => this.readinessListeners.delete(listener) };
+        },
+        emitProfile(profile) {
+            for (const listener of this.profileListeners) {
+                listener(profile);
+            }
+        },
+        emitReadiness(snapshot) {
+            for (const listener of this.readinessListeners) {
+                listener(snapshot);
+            }
+        },
+        invokeCapability() {
+            this.invokeCapabilityCalls += 1;
+            return Promise.resolve(null);
+        },
+        invokeGatewayRpc() {
+            this.invokeGatewayRpcCalls += 1;
+            return Promise.resolve(null);
+        },
+        parashaktiCorrespondences() {
+            this.parashaktiCorrespondencesCalls += 1;
+            return Promise.resolve(null);
+        }
+    };
 }

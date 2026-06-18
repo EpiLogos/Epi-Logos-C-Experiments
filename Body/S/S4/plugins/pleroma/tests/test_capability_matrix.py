@@ -31,8 +31,16 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         self.assertEqual(matrix["package_role"], "anima_executive_capability_membrane")
         self.assertEqual(matrix["owner_agent"], "anima")
 
-        for agent in matrix["constitutional_agents"]:
-            self.assertTrue((PLUGIN_ROOT / "agents" / agent / "ANIMA.md").is_file(), agent)
+        self.assertEqual(matrix["constitutional_agents"], [])
+        self.assertIn("DEPRECATED per DR-M5-1", matrix["_constitutional_agents_status"])
+        self.assertEqual(
+            set(matrix["anima_authorial_registers_deprecated"]),
+            {"anima", "eros", "logos", "mythos", "nous", "psyche", "sophia"},
+        )
+
+        anima_agent_root = REPO_ROOT / "Body" / "S" / "S4" / "ta-onta" / "S4-4p-anima" / "S4'" / "agents"
+        for agent in matrix["anima_authorial_registers_deprecated"]:
+            self.assertTrue((anima_agent_root / f"{agent}.md").is_file(), agent)
 
         for skill in matrix["skills"]:
             self.assertTrue((PLUGIN_ROOT / "skills" / skill["name"] / "SKILL.md").is_file(), skill)
@@ -51,7 +59,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
             self.assertIn(required, skill_names)
 
         self.assertTrue((PLUGIN_ROOT / "hooks" / matrix["hooks"]["manifest"]).is_file())
-        self.assertNotIn("epii", matrix["constitutional_agents"])
+        self.assertNotIn("epii", matrix["anima_authorial_registers_deprecated"])
 
     def test_matrix_declares_anima_execution_backbone_and_agent_gates(self):
         matrix = json.loads((PLUGIN_ROOT / "capability-matrix.json").read_text(encoding="utf-8"))
@@ -66,7 +74,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         )
 
         gates = matrix["agent_capability_gates"]
-        self.assertEqual(set(gates), set(matrix["constitutional_agents"]))
+        self.assertEqual(set(gates), set(matrix["anima_authorial_registers_deprecated"]))
 
         anima_tools = set(gates["anima"]["tools"])
         self.assertIn("orchestrator", gates["anima"]["role_restrictions"])

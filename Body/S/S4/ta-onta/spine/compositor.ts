@@ -1,6 +1,7 @@
 // spine/compositor.ts
 
 import type { SpineContribution, SessionContext, InjectionSlot } from "./types.ts";
+import { phaseQualifiedVakToken } from "../shared/coordinate_phase.ts";
 import { mkdirSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -32,15 +33,20 @@ export class SpineCompositor {
     // Budget enforcement
     let used = 0;
     const included: InjectionSlot[] = [];
+    const overflowTokens: string[] = [];
     for (const slot of ordered) {
-      if (used + slot.charEstimate > INJECT_CHAR_BUDGET) break;
+      if (used + slot.charEstimate > INJECT_CHAR_BUDGET) {
+        overflowTokens.push(overflowVakToken(slot));
+        continue;
+      }
       included.push(slot);
       used += slot.charEstimate;
     }
 
-    return included
+    const rendered = included
       .map(s => `### [[${s.coordinate}]]\n\n${s.content}`)
       .join("\n\n---\n\n");
+    return [rendered, ...overflowTokens].filter(Boolean).join("\n\n---\n\n");
   }
 
   /** Seam 2: session_shutdown — extract to ledger */
@@ -85,6 +91,18 @@ export class SpineCompositor {
         return `[${coord}] ${(r as PromiseFulfilledResult<string>).value}`;
       })
       .join("\n\n");
+  }
+}
+
+function overflowVakToken(slot: InjectionSlot): string {
+  const ref = slot.vakReference ?? {
+    coord: slot.coordinate,
+    dereference: "s5'.gnostic.resolve" as const,
+  };
+  try {
+    return phaseQualifiedVakToken(ref.dereference, ref.coord);
+  } catch {
+    return `<vak: method="${ref.dereference}" coord="${ref.coord}" phase="unknown" handle="${ref.dereference}(${ref.coord})">`;
   }
 }
 

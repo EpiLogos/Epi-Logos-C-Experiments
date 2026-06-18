@@ -160,6 +160,42 @@ Consume as-is — `Body/S/S0/portal-core/src/codon_rotation_projection.rs` (mate
 
     Verification: `make -C Body/S/S0/epi-lib test` green including new `backbone_table_contract`; `grep -nE 'Clock_Backbone_Node|CLOCK_BACKBONE\[24\]|60 \* 6 == 360|pisano_digit_lut' Body/S/S0/epi-lib/include/m3.h Body/S/S0/epi-lib/src/m3.c` returns struct, table, assert, and LUT; existing `m3_test_*` unchanged-green.
 
+16. **4.16 — M3 transcript-class + governance kernel surface (C-side mirror of `transcription.rs`)** *(code-pending-closure; depends on T19.5 comment-patch close; enables 4.17, 5.26, 5.27, CCT-14b; routes to DR-M3-TRANSCRIPT-1)*
+
+    [`Body/S/S0/portal-core/src/transcription.rs`](../../../../../Body/S/S0/portal-core/src/transcription.rs) already carries `START_CODON=0x07` (ATG/AUG), `STOP_CODONS=[0x10,0x13,0x1C]` (TAA/TAG/TGA), `is_start_codon`/`is_stop_codon`, `TranscriptionStep` with `is_start`/`is_stop` fields, `walk_transcription_chain`, and `extract_first_orf`. This tranche lands the **C-side kernel mirror** in [m3.h](Body/S/S0/epi-lib/include/m3.h) / [m3.c](Body/S/S0/epi-lib/src/m3.c) so the substrate carries the same primitives — closing the silent C/Rust drift the M3-Nara integration would otherwise inherit. The work is structural: the codon-space cardinalities (27 SHARED / 37 TRANSCRIBABLE / 1 START / 3 STOP) are mathematical invariants verified at boot, not tunable. The tunability lives downstream — at the *application* of these primitives, not their definition.
+
+    Scope to land:
+    - `M3_TranscriptClass` enum (`SHARED=0`, `TRANSCRIBABLE=1`) — two-class only; the 6-bit codon encoding holds one codon identity, "RNA-transcribed" is a *reading context* applied to a transcribable codon, not a separate class.
+    - `M3_GovernanceRole` enum (`NONE=0`, `START=1`, `STOP=2`).
+    - `m3_codon_t_count(codon) → uint8_t` (0..3, pure arithmetic, no LUT).
+    - `m3_codon_transcript_class(codon) → M3_TranscriptClass`.
+    - `m3_codon_governance_role(codon) → M3_GovernanceRole` — uses `M3_STOP_CODON_AA` for Stop detection, codon-equality for Start.
+    - Constants `M3_CODON_ATG_AUG = 0x07` and `M3_STOP_CODONS[3] = {0x10, 0x13, 0x1C}` with `_Static_assert` ties to the transcription.rs constants.
+    - `m3_verify_transcript_surface()` boot-time self-check: walks all 64 codons, asserts exactly 27 SHARED + 37 TRANSCRIBABLE = 64; exactly 1 START; exactly 3 STOP. Same shape as existing `m3_verify_integral_invariant` at [m3.c:586](Body/S/S0/epi-lib/src/m3.c:586).
+    - FFI-exportable non-inline wrappers (`m3_codon_t_count_ffi`, `m3_codon_transcript_class_ffi`, `m3_codon_governance_role_ffi`); transcription.rs migrates to consume them so the constants no longer drift across the C/Rust boundary.
+
+    **Tunability surface (forward-pointing — owned downstream, named here for the future tuning brainstorm):** No tunable knobs land in this tranche; the kernel surface IS structural. Downstream consumers (4.17 schemas, 5.26 session lifecycle, 5.27 Mythos reads, CCT-14b entity birth) expose the actual tunable surfaces (chain capacity, trigger cadence, seed composition, voice templates). This tranche's job is to make those knobs *possible* by providing a stable, FFI-honest substrate — not to choose values.
+
+    **Verification:** `make -C Body/S/S0/epi-lib test` includes new `transcript_surface_contract` and `m3_verify_transcript_surface_boot`; `cargo test -p portal-core transcription_c_rust_parity` (per-codon zero-tolerance equality across all 64 codons); `grep -nE 'M3_TranscriptClass|m3_codon_t_count|m3_codon_governance_role|M3_CODON_ATG_AUG|M3_STOP_CODONS' Body/S/S0/epi-lib/include/m3.h Body/S/S0/epi-lib/src/m3.c` returns the surface; transcription.rs imports and uses the FFI constants (silent drift closed); existing `m3_test_*` unchanged-green.
+
+17. **4.17 — `TranscriptionalClockPacket` + `SymbolicProtein` schema extension (additive to 4.11)** *(code-pending-closure; depends on 4.16, 4.11; enables 5.26, 5.27; routes to DR-M3-TRANSCRIPT-1)*
+
+    Strictly additive extension to the Rust/TS/Zod schemas landed by [4.11](#) — existing consumers default-None on every new field. The extension carries the M3 transcript-class / governance distinctions into the bridge so M4 session lifecycle (5.26) and Mythos reads (5.27) can address them without re-deriving from raw codons.
+
+    Scope to land — `TranscriptionalClockPacket` gains optional fields:
+    - `transcript_class: Option<TranscriptClass>` (mirror of M3_TranscriptClass).
+    - `governance_role: Option<GovernanceRole>` (mirror of M3_GovernanceRole).
+    - `chain_position: Option<u32>` (index within parent `SymbolicProtein` chain).
+    - `is_orf_seed: bool` (default false; true when `governance_role == START`).
+    - `is_orf_seal: bool` (default false; true when `governance_role == STOP`).
+    - `session_id_ref: Option<SessionId>` (back-ref to the M4 session that produced the packet, when applicable).
+
+    `SymbolicProtein` gains: `start_packet_ref`, `stop_packet_ref`, `kairos_open`, `kairos_close`, `mythos_archetype_reading: Option<MajorArcanaCardRef>` (Mythos's named pattern for the protein; nullable because session may close before any Mythos read fires).
+
+    **Tunability surface:** None at the schema level — the new fields are *carriers* of values chosen elsewhere. The `Option`-wrapping IS the tunability decorator: callers that don't care about transcript governance pass `None` and the existing semantics hold; callers that do (5.26, 5.27, CCT-14b) populate and read. Schema versioning follows the existing additive-extension policy of 4.11.
+
+    **Verification:** Rust/TS/Zod schemas extended; `cargo test -p portal-core transcriptional_clock_packet_schema_additive` (round-trip serialization confirms existing pre-4.17 packets deserialize cleanly with `None` on new fields); `cargo test -p portal-core symbolic_protein_chain_invariants` (start/stop refs internally consistent — chain_position monotone; ORF seed precedes ORF seal); m3-mahamaya + m4-nara extension builds clean against extended schemas (`pnpm --filter @pratibimba/m3-mahamaya build && pnpm --filter @pratibimba/m4-nara build`).
+
 ## Track 19 Cross-Reference
 
 Track 19 (Contemplation Surface Integration) consumes M3 substrate at **T19.5**: exposes `m3_major_arcana_from_codon(uint8_t codon) → uint8_t card_id` as the named transcription utility — composes existing `M3_CODON_TO_AA[64]` ([m3.c:221-245](Body/S/S0/epi-lib/src/m3.c:221)) + reverse-lookup on `M3_MAJOR_ARCANA[].amino_acid_index` ([m3.c:266-289](Body/S/S0/epi-lib/src/m3.c:266)). Returns 0xFF on STOP codons. Lets the M5 Möbius return call it on each codon in the session's M3 trace during contemplation. Data is fully there; only the named function is missing. See [`19-contemplation-surface-integration.md`](19-contemplation-surface-integration.md).

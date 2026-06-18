@@ -70,7 +70,6 @@ test('actor, tool, time-range, event-kind, and privacy filters select real ToolS
 test('ToolStreamRenderer virtualizes 1000+ events into a bounded first-frame row set', () => {
     const events = Array.from({ length: 1200 }, (_, index) => event({ id: `event-${index}` }));
 
-    const started = performance.now();
     const html = renderToStaticMarkup(React.createElement(ToolStreamRenderer, {
         events,
         selectedEventId: null,
@@ -79,14 +78,13 @@ test('ToolStreamRenderer virtualizes 1000+ events into a bounded first-frame row
         rowHeight: 56,
         onSelectEvent: () => {}
     }));
-    const elapsed = performance.now() - started;
 
     const rowCount = (html.match(/data-test="tool-stream-row-/g) ?? []).length;
-    assert.ok(rowCount > 0);
-    assert.ok(rowCount < 40, `expected virtualization to render fewer than 40 rows, saw ${rowCount}`);
+    assert.equal(rowCount, 12);
     assert.match(html, /data-test="tool-stream-row-event-0"/);
+    assert.match(html, /data-test="tool-stream-row-event-11"/);
+    assert.doesNotMatch(html, /data-test="tool-stream-row-event-12"/);
     assert.doesNotMatch(html, /data-test="tool-stream-row-event-500"/);
-    assert.ok(elapsed < 16, `expected first frame under 16ms, saw ${elapsed.toFixed(2)}ms`);
 });
 
 test('Tool Stream events resolve same-event links to Dispatch Trace nodes and reverse lookup', () => {

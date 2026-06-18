@@ -20,6 +20,7 @@ mod m0_verifier {
         syntax_layer_mask: u16,
         active_archetype: u8,
         active_tct_position: u8,
+        slot_privacy_boundary_compliance: u8,
     }
 
     #[repr(C)]
@@ -30,6 +31,7 @@ mod m0_verifier {
         unsatisfied_constraints:
             [[c_char; M0_VERIFIER_COORDINATE_MAX]; M0_VERIFIER_MAX_UNSATISFIED],
         coherence_score: f32,
+        slot_privacy_boundary_compliance: u8,
     }
 
     impl Default for M0VerifierReport {
@@ -41,6 +43,7 @@ mod m0_verifier {
                 unsatisfied_constraints: [[0; M0_VERIFIER_COORDINATE_MAX];
                     M0_VERIFIER_MAX_UNSATISFIED],
                 coherence_score: 0.0,
+                slot_privacy_boundary_compliance: 0,
             }
         }
     }
@@ -65,6 +68,7 @@ mod m0_verifier {
                 | M0_VERIFIER_SYNTAX_COMPLETION,
             active_archetype: 7,
             active_tct_position: 0,
+            slot_privacy_boundary_compliance: 1,
         }
     }
 
@@ -78,10 +82,30 @@ mod m0_verifier {
         assert_eq!(status, 0);
         assert_eq!(report.virtue_witness_vector & 0x01ff, 0x01ff);
         assert_eq!(report.unsatisfied_count, 0);
+        assert_eq!(report.slot_privacy_boundary_compliance, 1);
         assert!(report.coherence_score > 0.99);
         for score in report.virtue_scores {
             assert!(score > 0.99);
         }
+    }
+
+    #[test]
+    fn reports_slot_privacy_boundary_violation() {
+        let mut state = fully_witnessed_state();
+        state.slot_privacy_boundary_compliance = 0;
+        let mut report = M0VerifierReport::default();
+
+        let status = unsafe { m0_verifier_check_state(&state, &mut report) };
+
+        assert_eq!(status, 0);
+        assert_eq!(report.slot_privacy_boundary_compliance, 0);
+        assert!(report.unsatisfied_count > 0);
+        let first_constraint =
+            unsafe { CStr::from_ptr(report.unsatisfied_constraints[0].as_ptr()) }
+                .to_str()
+                .expect("constraint must be UTF-8 compatible");
+        assert_eq!(first_constraint, "#R0-0/1/P-T0-slot-privacy-boundary?");
+        assert!(report.coherence_score < 0.99);
     }
 
     #[test]

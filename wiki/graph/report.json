@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-06-12T21:54:58.918Z",
-  "graphHash": "886b24da195cbb98c9f8108f9b5529295cb4eac59fc6c77b6ec9efba12c5192f",
+  "generatedAt": "2026-06-13T08:43:29.713Z",
+  "graphHash": "a08f08fa4a5fdd44e07c615340a1427f4bbe0448cc2c2da01f33164a4286741c",
   "overview": {
-    "nodes": 1,
-    "edges": 0,
-    "pages": 5,
+    "nodes": 2,
+    "edges": 2,
+    "pages": 8,
     "communities": 1
   },
   "firstPartyOverview": {
-    "nodes": 1,
-    "edges": 0,
-    "pages": 5,
+    "nodes": 2,
+    "edges": 2,
+    "pages": 8,
     "communities": 1
   },
   "sourceClassBreakdown": {
@@ -89,13 +89,30 @@
       }
     }
   },
-  "godNodes": [],
+  "godNodes": [
+    {
+      "nodeId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+      "pageId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "degree": 1,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 1"
+    },
+    {
+      "nodeId": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "label": "Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali...",
+      "pageId": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "degree": 1,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 1"
+    }
+  ],
   "bridgeNodes": [],
   "thinCommunities": [
     {
       "id": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
       "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
-      "nodeCount": 1,
+      "nodeCount": 2,
       "pageId": "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
       "path": "graph/communities/memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1.md",
       "title": "Community: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr..."
@@ -105,7 +122,8 @@
   "groupPatterns": [],
   "suggestedQuestions": [
     "What sources would strengthen community Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...?",
-    "What connects Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr... to the rest of the vault?"
+    "What connects Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr... to the rest of the vault?",
+    "What connects Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali... to the rest of the vault?"
   ],
   "communityPages": [
     {
@@ -122,6 +140,11 @@
       {
         "nodeId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
         "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+        "type": "memory_task"
+      },
+      {
+        "nodeId": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "label": "Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali...",
         "type": "memory_task"
       }
     ],

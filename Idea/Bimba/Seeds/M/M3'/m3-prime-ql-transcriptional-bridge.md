@@ -79,8 +79,15 @@ Under transcription (T→U), the 27 T-free codons are **shared** — they appear
 | 101 - 64 | **37** | The U-node addition |
 | 101 - 80 | **21** | Triangular number T(6); also 3 × 7 |
 | 37 - 16 | **21** | The U-excess beyond the phase offset |
+| **36 - 27** | **9** | **The epogdoon, transcriptionally derived** — same canonical 9 as α-rasa's $137-128$; see [CU-IDENTITY-3](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md) <!-- canon-update: CU-IDENTITY-3 (landed 2026-06-15) --> |
+| **36 + 37** | **73 = 72 + 1** | **M3-native parent expression as productive asymmetry** — the canonical M2(72) + M1(1) re-expressed as structural-mātric (36) + transcriptional-transformable (37); +1 supplied by $37-36$; see [CU-IDENTITY-4](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md) <!-- canon-update: CU-IDENTITY-4 (landed 2026-06-15) --> |
+| **64 + 73** | **137** | **M3-native sixth canonical form of Third Spanda Equation** (proposed extension to DR-M3-6's five-form canon); see [CU-FORM-1](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md) — DR escalation pending <!-- canon-update: CU-FORM-1 (landed 2026-06-15) --> |
+| **101 + 27** | **128** | The α-rasa doubled Mahāmāyā shell as full transcriptional graph + T-free shared (unchanged-self-copy); see [CU-IDENTITY-1](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md) <!-- canon-update: CU-IDENTITY-1 (landed 2026-06-15) --> |
+| **101 + 36** | **137** | The Spanda attractor as full transcriptional graph + structural-mātric accounting; see [CU-IDENTITY-2](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md) <!-- canon-update: CU-IDENTITY-2 (landed 2026-06-15) --> |
 
 The chain: **16, 21, 37** where 16 + 21 = 37. The U-node count (37) decomposes into the phase offset (16) plus 21. And 21 = T(6) = 1+2+3+4+5+6 — the triangular number of the QL position count.
+
+**Phase-J 2026-06-15 extension** (per [Track 40 ledger](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md)): the five new rows above (highlighted in **bold**) route the canonical 27/37/101 partition through the α-rasa bridge's $128/137$ shell and the Third Spanda equation's $64 + 72 + 1$ spine — five mutually-derivable identities that connect M3's transcriptional structure to M2 paraśakti's doubled-bridge (72 = 2×36) and M1-5's Hopf-parent (+1) via the productive asymmetry $37 - 36 = 1$. See [`alpha_rasa_bridge_ql.md` §3.3](alpha_rasa_bridge_ql.md) for the companion presentation from the α-rasa side, and [`../ql_m0_m3_third_spanda_integral_quilting_v2.md`](../ql_m0_m3_third_spanda_integral_quilting_v2.md) for the proposed sixth canonical form $137 = 64 + 73$ (DR-M3-6 amendment pending).
 
 ### 2.4 The 999 Product
 
@@ -286,3 +293,14 @@ The genetic medium provides:
 - **The 21 processual intermediates:** What role do the 21 non-Tarot U-nodes play? Are they the transcriptional *process itself* — the transitions rather than states?
 - **The cone geometry:** Can the T→U charge distribution be given a precise geometric form on the cone? Does the charge gradient match the Vak descent (Para Vak = maximum T/storage → Vaikhari = maximum U/expression)?
 - **The 999 = 10³ - 1:** Does the multiplicative annihilation of 37 × 27 in mod9 connect operationally to the Ananda matrix structure? The vortex math digital root of the transcriptional product IS zero — what does this mean for the Ananda-level semantics of the T→U bridge?
+
+### 8.1 Implementation and Spec Status (2026-06-15)
+
+The codon → Major Arcana transcriptional bridge exists as operational C code:
+- `m3_major_arcana_from_codon()` at `Body/S/S0/epi-lib/src/m3.c` (lines 329–355) — maps codon → amino-acid index → Major Arcana card
+- `M3_MAJOR_ARCANA[22]` table at `Body/S/S0/epi-lib/src/m3.c` (lines 304–327) — 22 Major Arcana entries with chromosome-pair and amino-acid-index fields
+- Declared in `Body/S/S0/epi-lib/include/m3.h` (lines 644–651, 923–931)
+- RNA functional/dark masks at `m3.c`:164–170 / `m3.h`:666–667
+- T-containing codon detection at `m3.h`:802–806 (`m3_codon_is_rna_capable()`)
+
+The M3' domain spec (`M3'-SPEC.md`) now documents this bridge at §8.17 — Codon → Major Arcana Transcriptional Bridge and the T→U Classification Layer — including the 37/27/101 structure, Third Spanda Equation manifestation, and governance-as-transcriptional law. See that spec for the canonical surface contract.

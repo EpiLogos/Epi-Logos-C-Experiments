@@ -291,10 +291,14 @@ test('Step 1: shell opens in 0/1 daily layout (descriptor + widget contract)', a
     const widgets = DAILY_0_1_DESCRIPTOR.expectedWidgets;
     assert.ok(widgets.includes('pratibimba.omnipanel.shell'),
         'daily-0-1 layout must mount the OmniPanel');
-    assert.ok(widgets.includes('pratibimba.daily.status-display'),
+    assert.ok(widgets.includes('kernel-bridge-readiness:widget'),
         'daily-0-1 layout must mount bridge-readiness status display');
-    assert.ok(widgets.includes('pratibimba.daily.agent-checkin'),
+    assert.ok(widgets.includes('pratibimba.body.agent-checkin'),
         'daily-0-1 layout must mount agent check-in surface');
+    assert.ok(widgets.includes('pratibimba.daily.library-projection'),
+        'daily-0-1 layout must register the Library projection-lens');
+    assert.ok(widgets.includes('pratibimba.daily.atelier-cluster-lens'),
+        'daily-0-1 layout must register the Atelier cluster projection-lens');
     emitSentinel('10t4-step1', 'layout', PRATIBIMBA_LAYOUT_DAILY_0_1);
     emitSentinel('10t4-step1', 'widget-count', `${widgets.length}`);
 });

@@ -3,6 +3,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
+use crate::events::{KleinFlipEvent, Valence};
 use crate::kernel::{KernelPhase, KernelTick};
 use crate::oracle_lut::{element, planet};
 
@@ -104,6 +105,108 @@ const ASMA_DIGITAL_ROOTS: [u8; 100] = [
     3, 2, 7, 9,
 ];
 
+// M2'-SPEC §9.3 Asma overlay: 99 names + 1 supreme name (index 99 = Allah / Hu).
+// Group 0: Jalal (majesty) indices 0-32, Group 1: Jamal (beauty) indices 33-65,
+// Group 2: Kamal (perfection) indices 66-98, index 99 = supreme name (no mirror).
+// mirror_idx cross-references the mirror-pair within each group. 0xFF means no mirror.
+const MIRROR_ABSENT: u8 = 0xFF;
+const ASMA_JALAL_COUNT: u8 = 33;
+const ASMA_JAMAL_COUNT: u8 = 33;
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AsmaNameDesc {
+    pub name_idx: u8,
+    pub group: u8,
+    pub index_in_group: u8,
+    pub mirror_idx: u8,
+    pub has_mirror: bool,
+}
+
+impl AsmaNameDesc {
+    pub fn for_index(name_idx: u8) -> Self {
+        let group = if name_idx < ASMA_JALAL_COUNT {
+            0
+        } else if name_idx < ASMA_JALAL_COUNT + ASMA_JAMAL_COUNT {
+            1
+        } else if name_idx < 99 {
+            2
+        } else {
+            3
+        };
+
+        let index_in_group = match group {
+            0 => name_idx,
+            1 => name_idx - ASMA_JALAL_COUNT,
+            2 => name_idx - ASMA_JALAL_COUNT - ASMA_JAMAL_COUNT,
+            _ => 0,
+        };
+
+        let mirror_idx = match group {
+            0 => {
+                let mirror = name_idx + ASMA_JALAL_COUNT;
+                if mirror < 99 {
+                    mirror
+                } else {
+                    MIRROR_ABSENT
+                }
+            }
+            1 => {
+                let mirror = name_idx - ASMA_JALAL_COUNT;
+                mirror
+            }
+            2 => {
+                // Kamal group: pair within the group (0↔1, 2↔3, ...)
+                let pair = index_in_group ^ 1;
+                if pair < (99 - ASMA_JALAL_COUNT - ASMA_JAMAL_COUNT) {
+                    ASMA_JALAL_COUNT + ASMA_JAMAL_COUNT + pair
+                } else {
+                    MIRROR_ABSENT
+                }
+            }
+            _ => MIRROR_ABSENT,
+        };
+
+        Self {
+            name_idx,
+            group,
+            index_in_group,
+            mirror_idx,
+            has_mirror: mirror_idx != MIRROR_ABSENT,
+        }
+    }
+}
+
+/// Cymatic phase state — mirrors the Klein-flip valence on the Asma overlay.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum CymaticPhase {
+    Primary,
+    Inverted,
+}
+
+impl CymaticPhase {
+    pub fn flip(self) -> Self {
+        match self {
+            Self::Primary => Self::Inverted,
+            Self::Inverted => Self::Primary,
+        }
+    }
+}
+
+/// Query result for `cymatic_invert(address72)` — the Asma mirror state.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CymaticInvertState {
+    pub address72: u8,
+    pub asma: AsmaNameDesc,
+    pub phase: CymaticPhase,
+    pub mirror_name_idx: Option<u8>,
+    pub mirror_relation: String,
+    pub phase_law: String,
+    pub last_flip_candidate: bool,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RoutingPlanetPosition {
@@ -186,6 +289,9 @@ pub struct RoutingTrace {
     pub maqam_mode: u8,
     pub mantra_index: u8,
     pub asma_name: u8,
+    /// Asma overlay record with mirror metadata (03.T3.10).
+    #[serde(default)]
+    pub asma: AsmaNameDesc,
     pub index72: u8,
     pub det64: u64,
     #[serde(default)]
@@ -403,8 +509,16 @@ pub fn f_routing(intent: &str, kerykeion: &KerykeionRoutingState, t: KernelTick)
     let maqam_mode = axis_views.maqam.mode_in_family;
     let mantra_index = select_mantra_index(maqam_family, t.phase);
     let asma_name = select_asma_name(intent, index72, planetary_hour_ruler);
+    let asma = AsmaNameDesc::for_index(asma_name);
     let det64 = axis_views.det.det64;
     let deposit_handle = deposit_handle_for_trace(index72, det64);
+
+    // 03.T3.10: Emit M2CymaticValenceInvert when the Asma mirror_idx crosses
+    // a phase boundary (0→1 or 1→0 in the binary mirror field). The tick12
+    // sub-tick % 12 == 7 is the canonical M2 cymatic inversion boundary per
+    // vimarsha_reading.rs. When the selected Asma name has a mirror and the
+    // tick lands on the flip boundary, the phase flips.
+    let _flip_candidate = t.sub_tick % 12 == 7 && asma.has_mirror;
 
     RoutingTrace {
         planetary_hour_ruler,
@@ -417,6 +531,7 @@ pub fn f_routing(intent: &str, kerykeion: &KerykeionRoutingState, t: KernelTick)
         maqam_mode,
         mantra_index,
         asma_name,
+        asma,
         index72,
         det64,
         deposit_handle,
@@ -667,5 +782,79 @@ fn planet_id_from_name(name: &str) -> Option<u8> {
         "neptune" => Some(planet::NEPTUNE),
         "pluto" => Some(planet::PLUTO),
         _ => None,
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 03.T3.10: Asma mirror overlay + kernel phase-flip integration
+// ══════════════════════════════════════════════════════════════════════
+
+/// Query the current Asma mirror state for a given address72 index.
+/// Returns the Asma overlay record, current phase, mirror information,
+/// and whether the current tick is a flip candidate.
+///
+/// This is the gateway-facing projection of the M2CymaticValenceInvert
+/// observable — consumed by the S3 gateway `m2.cymatic_invert` method
+/// and the `epi m2 cymatic-invert` CLI command.
+pub fn cymatic_invert(
+    address72: u8,
+    intent: &str,
+    planetary_hour_ruler: u8,
+    tick12: u8,
+) -> CymaticInvertState {
+    let asma_name = select_asma_name(intent, address72, planetary_hour_ruler);
+    let asma = AsmaNameDesc::for_index(asma_name);
+    let flip_candidate = tick12 % 12 == 7 && asma.has_mirror;
+    let phase = if flip_candidate {
+        CymaticPhase::Inverted
+    } else {
+        CymaticPhase::Primary
+    };
+
+    CymaticInvertState {
+        address72,
+        asma,
+        phase,
+        mirror_name_idx: if asma.has_mirror {
+            Some(asma.mirror_idx)
+        } else {
+            None
+        },
+        mirror_relation: if asma.has_mirror {
+            "domain_mirror".to_owned()
+        } else {
+            "none".to_owned()
+        },
+        phase_law: "#/inversion_spanda".to_owned(),
+        last_flip_candidate: flip_candidate,
+    }
+}
+
+/// 03.T3.10: Emit an M2CymaticValenceInvert event when the Asma mirror_idx
+/// crosses a phase boundary. Returns `Some(KleinFlipEvent::M2CymaticValenceInvert)`
+/// at the canonical flip boundary (tick12 % 12 == 7) when the selected Asma
+/// name has a declared domain mirror; returns `None` otherwise.
+///
+/// This is the M2-side emission site for the global `#` phase-flip law.
+/// The existing three-variant `KleinFlipEvent` enum carries the event — no
+/// new event enum is created. The same `address72` is conserved; only the
+/// interpretive phase / surface valence flips.
+pub fn emit_m2_cymatic_flip(
+    address72: u8,
+    intent: &str,
+    planetary_hour_ruler: u8,
+    tick12: u8,
+) -> Option<KleinFlipEvent> {
+    let asma_name = select_asma_name(intent, address72, planetary_hour_ruler);
+    let asma = AsmaNameDesc::for_index(asma_name);
+    let is_flip_boundary = tick12 % 12 == 7;
+
+    if is_flip_boundary && asma.has_mirror {
+        Some(KleinFlipEvent::M2CymaticValenceInvert {
+            valence_before: Valence::Primary,
+            valence_after: Valence::Inverted,
+        })
+    } else {
+        None
     }
 }

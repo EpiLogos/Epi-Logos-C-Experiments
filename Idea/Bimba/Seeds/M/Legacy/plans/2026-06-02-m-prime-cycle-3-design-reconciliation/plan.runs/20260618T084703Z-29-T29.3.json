@@ -1,0 +1,46 @@
+{
+  "runId": "20260618T084703Z-29-T29.3",
+  "taskId": "29.T29.3",
+  "startedAt": "2026-06-18T08:47:03.920Z",
+  "owner": "codex-m-dev-29-t29-3",
+  "leaseExpiresAt": "2026-06-18T10:47:03.920Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.3",
+    "trackId": "29",
+    "tranche": "T29.3",
+    "title": "Personal 4-5-0 composition geometry: Nara journal LEFT + personal cymatic CENTER + Mahamaya recognition RIGHT + Anuttara grounding UNDER *(spec-ahead-integration; DR-WC-IP-3 ratifying; CP-WC-IP-4/5/6 consumers)*",
+    "effort": null,
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "29.T29.2"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/components/**",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/canvas-editor.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/ambient-state-strip.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/kairos-display.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/mercurius-relay-indicator.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/personal-cymatic-field.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/time-axis-switcher.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/tuning-bar.tsx",
+      "Body/M/epi-theia/extensions/m5-epii/src/browser/recognition-layer-widget.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/plugin-integrated-4-5-0-widget.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/tests/personal-recognition-composition.test.mjs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

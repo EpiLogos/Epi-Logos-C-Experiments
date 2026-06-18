@@ -45,6 +45,14 @@ test('default OmniPanel session state allocates one object slot per canonical ta
         scrollOffset: 0,
         depositFormOpen: false
     });
+    assert.deepEqual(state.perTabState.gateway, {
+        activeSubView: 'capabilities',
+        selectedCapabilityName: null
+    });
+    assert.deepEqual(state.perTabState.diagnostics, {
+        activeSubSection: 'overview',
+        intentLogScrollOffset: 0
+    });
 });
 
 test('persistOmniPanelState writes and readOmniPanelState restores ~/.epi-logos/ui-state/omnipanel.json', async () => {
@@ -63,6 +71,17 @@ test('persistOmniPanelState writes and readOmniPanelState restores ~/.epi-logos/
                 evidence: {
                     selectedPacketId: 'pkt-XYZ',
                     scrollOffset: 144
+                },
+                gateway: {
+                    activeSubView: 'skills',
+                    selectedCapabilityName: 'invokeGatewayRpc',
+                    tryItDraft: {
+                        invokeGatewayRpc: { ping: true }
+                    }
+                },
+                diagnostics: {
+                    activeSubSection: 'intent-log',
+                    intentLogScrollOffset: 2048
                 },
                 'pi-chat': {
                     draftMessage: 'carry this through the fold'
@@ -85,6 +104,17 @@ test('persistOmniPanelState writes and readOmniPanelState restores ~/.epi-logos/
             filters: {},
             scrollOffset: 144,
             depositFormOpen: false
+        });
+        assert.deepEqual(restored.perTabState.gateway, {
+            activeSubView: 'skills',
+            selectedCapabilityName: 'invokeGatewayRpc',
+            tryItDraft: {
+                invokeGatewayRpc: { ping: true }
+            }
+        });
+        assert.deepEqual(restored.perTabState.diagnostics, {
+            activeSubSection: 'intent-log',
+            intentLogScrollOffset: 2048
         });
         assert.deepEqual(restored.perTabState['pi-chat'], {
             draftMessage: 'carry this through the fold'
@@ -123,22 +153,71 @@ test('normalization keeps tab-owned schemas and upgrades legacy minimal state', 
         lastPiChatMessageTimestamp: Number.POSITIVE_INFINITY,
         perTabState: {
             gateway: {
-                activeSubView: 'skills'
+                activeSubView: 'not-a-view',
+                selectedCapabilityName: 42,
+                tryItDraft: {
+                    readCurrentProfile: {}
+                }
             },
-            diagnostics: null
+            diagnostics: {
+                activeSubSection: 'not-real',
+                intentLogScrollOffset: -10
+            },
         }
     });
 
     assert.equal(normalized.activeTab, 'gateway');
     assert.equal(normalized.omniState, 'minimized');
     assert.equal(normalized.lastPiChatMessageTimestamp, null);
-        assert.deepEqual(normalized.perTabState.gateway, { activeSubView: 'skills' });
+    assert.deepEqual(normalized.perTabState.gateway, {
+        activeSubView: 'capabilities',
+        selectedCapabilityName: null,
+        tryItDraft: {
+            readCurrentProfile: {}
+        }
+    });
     assert.deepEqual(normalized.perTabState['tool-stream'], {
         filters: {},
         selectedEventId: null,
         scrollOffset: 0,
         live: true
     });
-    assert.deepEqual(normalized.perTabState.diagnostics, {});
+    assert.deepEqual(normalized.perTabState.diagnostics, {
+        activeSubSection: 'overview',
+        intentLogScrollOffset: 0
+    });
     assert.deepEqual(normalized.perTabState.review, {});
+});
+
+test('diagnostics tab state preserves active subsection and non-negative scroll offset', () => {
+    const normalized = normalizeOmniPanelSessionState({
+        perTabState: {
+            diagnostics: {
+                activeSubSection: 's2-graph',
+                intentLogScrollOffset: 377
+            }
+        }
+    });
+
+    assert.deepEqual(normalized.perTabState.diagnostics, {
+        activeSubSection: 's2-graph',
+        intentLogScrollOffset: 377
+    });
+});
+
+test('gateway tab state normalization drops non-object try-it drafts', () => {
+    const normalized = normalizeOmniPanelSessionState({
+        perTabState: {
+            gateway: {
+                activeSubView: 'cron',
+                selectedCapabilityName: "s4'.mediation.capabilities.list",
+                tryItDraft: 'not-an-object'
+            }
+        }
+    });
+
+    assert.deepEqual(normalized.perTabState.gateway, {
+        activeSubView: 'cron',
+        selectedCapabilityName: "s4'.mediation.capabilities.list"
+    });
 });

@@ -47,6 +47,14 @@ export interface PratibimbaLayoutDescriptor {
     readonly preferenceKey: 'epi-logos.layout.active';
 }
 
+export type PratibimbaLayoutContributionKind = 'widget-factory' | 'projection-lens';
+
+export interface PratibimbaLayoutWidgetContributor {
+    readonly ownerExtension: string;
+    readonly contributionKind: PratibimbaLayoutContributionKind;
+    readonly contributionId: string;
+}
+
 /**
  * Canonical daily-0-1 widget ids as a typed tuple. Single source of truth for
  * both `DAILY_0_1_DESCRIPTOR.expectedWidgets` and the (0/1) side partition
@@ -54,23 +62,71 @@ export interface PratibimbaLayoutDescriptor {
  * exhaustiveness check on the face map cannot drift from the descriptor.
  */
 export const DAILY_0_1_WIDGET_IDS = [
-    'pratibimba.daily.journal',
-    'pratibimba.daily.agent-checkin',
-    'pratibimba.daily.cymatic-placeholder',
-    'pratibimba.daily.status-display',
+    'pratibimba.body.review-alert-badge',
+    'pratibimba.body.agent-checkin',
+    'pratibimba.body.safe-source-handle-row',
+    'kernel-bridge-readiness:widget',
+    'pratibimba.daily.library-projection',
+    'pratibimba.daily.atelier-cluster-lens',
     'pratibimba.omnipanel.shell'
 ] as const;
 
 export type Daily01WidgetId = typeof DAILY_0_1_WIDGET_IDS[number];
 
+export const DAILY_0_1_WIDGET_CONTRIBUTORS: Readonly<
+    Record<Daily01WidgetId, PratibimbaLayoutWidgetContributor>
+> = {
+    'pratibimba.body.review-alert-badge': {
+        ownerExtension: 'body-lite-surface',
+        contributionKind: 'widget-factory',
+        contributionId: 'review-alert-badge'
+    },
+    'pratibimba.body.agent-checkin': {
+        ownerExtension: 'body-lite-surface',
+        contributionKind: 'widget-factory',
+        contributionId: 'agent-checkin'
+    },
+    'pratibimba.body.safe-source-handle-row': {
+        ownerExtension: 'body-lite-surface',
+        contributionKind: 'widget-factory',
+        contributionId: 'safe-source-handle-row'
+    },
+    'kernel-bridge-readiness:widget': {
+        ownerExtension: 'kernel-bridge-readiness',
+        contributionKind: 'widget-factory',
+        contributionId: 'bridge-readiness-status'
+    },
+    'pratibimba.daily.library-projection': {
+        ownerExtension: 'body-lite-surface',
+        contributionKind: 'projection-lens',
+        contributionId: 'coordinate-overlay-file-tree'
+    },
+    'pratibimba.daily.atelier-cluster-lens': {
+        ownerExtension: 'm0-anuttara',
+        contributionKind: 'projection-lens',
+        contributionId: 'etymological-cluster-graph-lens'
+    },
+    'pratibimba.omnipanel.shell': {
+        ownerExtension: 'omnipanel-shell',
+        contributionKind: 'widget-factory',
+        contributionId: 'omnipanel'
+    }
+};
+
 export const DAILY_0_1_DESCRIPTOR: PratibimbaLayoutDescriptor = {
     id: PRATIBIMBA_LAYOUT_DAILY_0_1,
     label: '0/1 Daily Layout',
     description:
-        'First-mounted lean free-flow workspace: journal entry, agent check-in, ' +
-        'lightweight cymatic placeholder (Track 12 cymatic substrate consumed at ' +
-        'Track 05 T7), bridge-readiness status display. Compact OmniPanel summon.',
+        'First-mounted lean free-flow workspace: body-lite review/check-in/source handles, ' +
+        'bridge-readiness status, Library coordinate-overlay projection, Atelier cluster lens, ' +
+        'and compact OmniPanel summon.',
     expectedWidgets: [...DAILY_0_1_WIDGET_IDS],
+    layoutOnlyWidgets: {
+        'pratibimba.daily.library-projection':
+            'projection-lens; body-lite-surface contributes the coordinate-overlay file-tree lens',
+        'pratibimba.daily.atelier-cluster-lens':
+            'projection-lens; m0-anuttara contributes the etymological-cluster graph-viewer lens'
+    },
     preferenceKey: 'epi-logos.layout.active'
 };
 
@@ -166,13 +222,15 @@ export type DailyShellFace = '0-cosmic' | '1-personal' | 'operator-membrane';
  */
 export const DAILY_0_1_FACE_OF: Readonly<Record<Daily01WidgetId, DailyShellFace>> = {
     // 0-side: cosmic structural / cymatic-clock preview (M1'-M3').
-    'pratibimba.daily.cymatic-placeholder': '0-cosmic',
+    'pratibimba.daily.atelier-cluster-lens': '0-cosmic',
     // 1-side: personal lived-return preview (M4'/M5'/M0').
-    'pratibimba.daily.journal': '1-personal',
-    'pratibimba.daily.agent-checkin': '1-personal',
+    'pratibimba.body.review-alert-badge': '1-personal',
+    'pratibimba.body.agent-checkin': '1-personal',
+    'pratibimba.body.safe-source-handle-row': '1-personal',
+    'pratibimba.daily.library-projection': '1-personal',
     // / membrane: OmniPanel + bridge-readiness, cross-cutting both faces.
     'pratibimba.omnipanel.shell': 'operator-membrane',
-    'pratibimba.daily.status-display': 'operator-membrane'
+    'kernel-bridge-readiness:widget': 'operator-membrane'
 };
 
 /** The widget ids of the `daily-0-1` shell grouped by face. */

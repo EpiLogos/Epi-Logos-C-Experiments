@@ -1,0 +1,37 @@
+{
+  "runId": "20260617T224442Z-38-T06.9",
+  "taskId": "38.T06.9",
+  "startedAt": "2026-06-17T22:44:42.221Z",
+  "owner": "codex-m-dev-38-t06-9",
+  "leaseExpiresAt": "2026-06-18T00:44:42.221Z",
+  "worktree": null,
+  "task": {
+    "id": "38.T06.9",
+    "trackId": "38",
+    "tranche": "T06.9",
+    "title": "Tier 2 Self-Awareness Lifecycle",
+    "effort": null,
+    "file": "38-tunability-surface-implementation-plan.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-implementation-plan.md",
+    "dependsOn": [
+      "38.T06.8"
+    ],
+    "writeScopes": [
+      "Body/S/S5/epii-autoresearch-core/src/anamnesis_proposer.rs",
+      "Body/S/S5/epii-autoresearch-core/src/lib.rs",
+      "Body/S/S5/epii-autoresearch-core/tests/anamnesis_proposer_scaffold.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

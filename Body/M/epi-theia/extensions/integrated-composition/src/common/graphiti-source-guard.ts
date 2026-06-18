@@ -59,3 +59,66 @@ export function assertNotCanonicalS2Source(envelope: IntegratedEvidenceEnvelope)
         );
     }
 }
+
+const LIVE_STATE_FORBIDDEN_KEYS = Object.freeze([
+    /^episodeBody$/i,
+    /^body$/i,
+    /^rawBody$/i,
+    /^graphitiBody$/i,
+    /^graphiti_body$/i,
+    /^protectedPayload$/i,
+    /^protected_payload$/i,
+    /^protectedNaraBody$/i,
+    /^rawQuaternion$/i,
+    /^raw_quaternion$/i,
+    /^identityQuaternion$/i,
+    /^q_b$/i,
+    /^q_p$/i,
+    /^qB$/i,
+    /^qP$/i,
+    /^q_personal$/i,
+    /^q_nara$/i,
+    /^bioquaternion(raw|Body|Payload)?$/i
+]);
+
+export function assertGraphitiLiveStateProvenanceProtected(
+    projection: Readonly<Record<string, unknown>>
+): void {
+    const violation = findLiveStateForbiddenKey(projection);
+    if (violation) {
+        throw new GraphitiNotCanonicalError(
+            readEnvelopeId(projection),
+            `live-state provenance exposes protected field ${violation}`
+        );
+    }
+}
+
+function findLiveStateForbiddenKey(value: unknown): string | null {
+    if (!value || typeof value !== 'object') {
+        return null;
+    }
+    if (Array.isArray(value)) {
+        for (const item of value) {
+            const violation = findLiveStateForbiddenKey(item);
+            if (violation) {
+                return violation;
+            }
+        }
+        return null;
+    }
+    for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
+        if (LIVE_STATE_FORBIDDEN_KEYS.some(pattern => pattern.test(key))) {
+            return key;
+        }
+        const violation = findLiveStateForbiddenKey(item);
+        if (violation) {
+            return violation;
+        }
+    }
+    return null;
+}
+
+function readEnvelopeId(projection: Readonly<Record<string, unknown>>): string {
+    const entityId = projection['entityId'];
+    return typeof entityId === 'string' ? entityId : 'being-pattern-live-state';
+}

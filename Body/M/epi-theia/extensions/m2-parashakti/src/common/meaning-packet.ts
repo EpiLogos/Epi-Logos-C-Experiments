@@ -1,14 +1,16 @@
-import {
+import type {
     CoordinateContext,
     MathemeHarmonicProfileBoundary,
     MExtensionReadinessSnapshot,
     MExtensionReadinessState,
     MObservabilityEvent
 } from '@pratibimba/m-extension-runtime';
-import { EXTENSION_ID, PRIVACY_CLASS } from './index';
 
 export const M2_MEANING_PACKET_CONTRACT_VERSION = '2026-06-01.07-T5';
 export const PROTECTED_PERSONAL_CYMATIC_SCOPE = 'protected-m4';
+const M2_MEANING_PACKET_EXTENSION_ID = 'm2-parashakti' as const;
+const M2_MEANING_PACKET_PRIVACY_CLASS =
+    'public_current_with_pending_private_projection_blocks' as const;
 
 export type M2PacketSubject = 'tick' | 'note' | 'routing-event' | 'cymatic-frame';
 export type M2CymaticScope = 'cosmic-public' | 'protected-m4' | 'personal-pratibimba';
@@ -106,10 +108,10 @@ export interface M2CymaticFrame {
 
 export interface M2PrimeMeaningPacket {
     readonly contractVersion: typeof M2_MEANING_PACKET_CONTRACT_VERSION;
-    readonly extensionId: typeof EXTENSION_ID;
+    readonly extensionId: typeof M2_MEANING_PACKET_EXTENSION_ID;
     readonly subject: M2PacketSubject;
     readonly profileGeneration: number;
-    readonly privacyClass: typeof PRIVACY_CLASS;
+    readonly privacyClass: typeof M2_MEANING_PACKET_PRIVACY_CLASS;
     readonly address72: number;
     readonly addressViews: readonly M2AddressView[];
     readonly lensModeFrame: Readonly<Record<string, unknown>>;
@@ -149,7 +151,7 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
         profileGeneration: input.profile.generation,
         address72,
         subject: input.subject,
-        privacyClass: PRIVACY_CLASS,
+        privacyClass: M2_MEANING_PACKET_PRIVACY_CLASS,
         provenanceHandles: provenance.map(handle => handle.handle),
         pendingFields,
         detEvidenceOnly: true,
@@ -159,10 +161,10 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
 
     return Object.freeze({
         contractVersion: M2_MEANING_PACKET_CONTRACT_VERSION,
-        extensionId: EXTENSION_ID,
+        extensionId: M2_MEANING_PACKET_EXTENSION_ID,
         subject: input.subject,
         profileGeneration: input.profile.generation,
-        privacyClass: PRIVACY_CLASS,
+        privacyClass: M2_MEANING_PACKET_PRIVACY_CLASS,
         address72,
         addressViews: Object.freeze(buildAddressViews(address72)),
         lensModeFrame: freezeRecord({
@@ -198,13 +200,13 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
         observabilityEvents: Object.freeze([
             Object.freeze({
                 type: 'm2.meaning_packet',
-                extensionId: EXTENSION_ID,
+                extensionId: M2_MEANING_PACKET_EXTENSION_ID,
                 emittedAt: input.emittedAt,
                 payload: packetPayload
             }),
             Object.freeze({
                 type: 'm2.routing_trace',
-                extensionId: EXTENSION_ID,
+                extensionId: M2_MEANING_PACKET_EXTENSION_ID,
                 emittedAt: input.emittedAt,
                 payload: Object.freeze({
                     ...packetPayload,

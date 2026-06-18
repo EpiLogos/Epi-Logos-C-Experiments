@@ -10,6 +10,7 @@ import {
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
 import { EXTENSION_ID } from '../../common';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 export const MERCURIUS_RELAY_VIEW_ID = 'm4.nara.mercuriusRelay';
 export const MERCURIUS_RELAY_LABEL = 'M4 Mercurius Relay';
@@ -190,7 +191,7 @@ export const M4MercuriusRelayChip: React.FC<M4MercuriusRelayChipProps> = props =
     const { kairosEnabled, lastRefreshIso, deltaCount, pulseToken, connected } = props;
     return (
         <div
-            className="m4-mercurius-relay"
+            className={`m4-mercurius-relay ${privacyChromeClass('protected_local_handle_only')}`}
             data-test="m4-mercurius-relay"
             data-track="TRACK_08"
             data-export={M4_MERCURIUS_RELAY_CHIP_EXPORT}
@@ -254,13 +255,13 @@ export class MercuriusRelayIndicatorWidget extends ReactWidget {
     protected init(): void {
         this.id = MercuriusRelayIndicatorWidget.ID;
         this.title.label = MercuriusRelayIndicatorWidget.LABEL;
-        this.title.caption = MercuriusRelayIndicatorWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
         this.addClass('m4-nara-mercurius-relay');
+        this.addClass(privacyChromeClass('protected_local_handle_only'));
 
-        // Indicator-only: no privacy chrome — the chip never carries body content.
         this.subscriptions.push(
             this.bridge.onObservabilityEvent(event => this.handleObservabilityEvent(event))
         );
@@ -307,7 +308,10 @@ export class MercuriusRelayIndicatorWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         return (
-            <div className="mext-widget-root" data-test="m4-mercurius-relay-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local_handle_only')}`}
+                data-test="m4-mercurius-relay-root"
+            >
                 <M4MercuriusRelayChip
                     kairosEnabled={this.relay.kairosEnabled}
                     lastRefreshIso={this.relay.lastRefreshIso}

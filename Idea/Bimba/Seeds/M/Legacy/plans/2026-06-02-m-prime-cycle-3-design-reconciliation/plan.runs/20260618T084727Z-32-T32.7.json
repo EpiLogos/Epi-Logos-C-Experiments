@@ -1,0 +1,36 @@
+{
+  "runId": "20260618T084727Z-32-T32.7",
+  "taskId": "32.T32.7",
+  "startedAt": "2026-06-18T08:47:27.543Z",
+  "owner": "codex-m-dev-32-t32-7",
+  "leaseExpiresAt": "2026-06-18T10:47:27.543Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.7",
+    "trackId": "32",
+    "tranche": "T32.7",
+    "title": "Error UX grammar + Diagnostics deep-link",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.6"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/inline-error-surface.tsx",
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/readiness-banner.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

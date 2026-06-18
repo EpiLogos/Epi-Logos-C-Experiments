@@ -1,5 +1,13 @@
 import * as React from 'react';
-import { MathemeHarmonicProfileBoundary } from '@pratibimba/m-extension-runtime';
+import {
+    MathemeHarmonicProfileBoundary,
+    SharedBridgeAdapter
+} from '@pratibimba/m-extension-runtime';
+import type { M1ProfileClockModel } from '../common/clock-instrument';
+import {
+    KaprekarCommandExecutor,
+    M1KaprekarInspector
+} from './m1-kaprekar-inspector';
 
 /**
  * SpandaWalkNavigator — a 12-position dial for the M1 Paramasiva spanda walk.
@@ -16,6 +24,10 @@ const HALF_RING = RING_POSITIONS / 2;
 
 export interface SpandaWalkNavigatorProps {
     readonly profile: MathemeHarmonicProfileBoundary | null;
+    readonly kaprekarModel?: Pick<M1ProfileClockModel, 'position6'> | null;
+    readonly layoutMode?: string;
+    readonly commands?: KaprekarCommandExecutor;
+    readonly observabilityBridge?: Pick<SharedBridgeAdapter, 'onObservabilityEvent'>;
 }
 
 interface SpandaWalkReadout {
@@ -79,6 +91,13 @@ export function SpandaWalkNavigator(props: SpandaWalkNavigatorProps): React.Reac
             <p data-test="m1-spanda-source-binary" style={sourceLineStyle}>
                 sourceBinaryState: {readout.sourceBinaryState ?? 'blocked: profile field missing'}
             </p>
+
+            <M1KaprekarInspector
+                model={props.kaprekarModel ?? null}
+                layoutMode={props.layoutMode}
+                commands={props.commands}
+                bridge={props.observabilityBridge}
+            />
         </section>
     );
 }

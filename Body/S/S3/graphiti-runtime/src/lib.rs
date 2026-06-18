@@ -135,6 +135,44 @@ pub fn session_memory_envelope(access: Value) -> Value {
     })
 }
 
+pub fn being_pattern_provenance_refs_payload(
+    entity_id: &str,
+    refs: &[(&str, &str, &str)],
+) -> Result<Value, String> {
+    if entity_id.trim().is_empty() {
+        return Err("entityId is required".to_owned());
+    }
+    let episode_refs = refs
+        .iter()
+        .map(|(episode_id, source_ref, public_summary)| {
+            let summary = public_summary.trim();
+            if summary.contains("protected_payload")
+                || summary.contains("protectedPayload")
+                || summary.contains("episodeBody")
+                || summary.contains("journal_text")
+                || summary.contains("rawQuaternion")
+                || summary.contains("qB")
+                || summary.contains("qP")
+            {
+                return Err(format!(
+                    "BeingPattern provenance summary for {episode_id} contains protected_payload marker"
+                ));
+            }
+            Ok(json!({
+                "episodeId": episode_id,
+                "sourceRef": source_ref,
+                "publicSummary": summary,
+            }))
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+
+    Ok(json!({
+        "entityId": entity_id,
+        "privacyBoundary": "public-safe-provenance-refs-only",
+        "episodeRefs": episode_refs,
+    }))
+}
+
 #[allow(clippy::too_many_arguments)]
 pub fn session_memory_deposit_payload(
     source_agent: &str,

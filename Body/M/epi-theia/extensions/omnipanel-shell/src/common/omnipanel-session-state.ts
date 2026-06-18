@@ -28,6 +28,35 @@ export interface EvidenceSessionTabState {
     readonly depositFormDraft?: Record<string, unknown>;
 }
 
+export type GatewaySessionSubView =
+    | 'capabilities'
+    | 'nodes'
+    | 'models'
+    | 'skills'
+    | 'cron'
+    | 'config'
+    | 'settings';
+
+export interface GatewaySessionTabState {
+    readonly activeSubView: GatewaySessionSubView;
+    readonly selectedCapabilityName: string | null;
+    readonly tryItDraft?: Record<string, unknown>;
+}
+
+export type DiagnosticsSessionSubSection =
+    | 'overview'
+    | 'kernel-bridge'
+    | 'profile'
+    | 's2-graph'
+    | 'gateway-ws'
+    | 'intent-log'
+    | null;
+
+export interface DiagnosticsSessionTabState {
+    readonly activeSubSection: DiagnosticsSessionSubSection;
+    readonly intentLogScrollOffset: number;
+}
+
 const OMNIPANEL_TAB_IDS = OMNIPANEL_TABS.map(tab => tab.id);
 const OMNIPANEL_STATE_FILE = 'omnipanel.json';
 
@@ -94,6 +123,8 @@ function createDefaultPerTabState(): Record<OmniPanelTabId, Record<string, unkno
     const perTabState = Object.fromEntries(entries) as Record<OmniPanelTabId, Record<string, unknown>>;
     perTabState['tool-stream'] = createDefaultToolStreamTabState() as unknown as Record<string, unknown>;
     perTabState.evidence = createDefaultEvidenceTabState() as unknown as Record<string, unknown>;
+    perTabState.gateway = createDefaultGatewayTabState() as unknown as Record<string, unknown>;
+    perTabState.diagnostics = createDefaultDiagnosticsTabState() as unknown as Record<string, unknown>;
     return perTabState;
 }
 
@@ -107,6 +138,8 @@ function normalizePerTabState(value: unknown): Record<OmniPanelTabId, Record<str
     }
     perTabState['tool-stream'] = normalizeToolStreamTabState(raw['tool-stream']) as unknown as Record<string, unknown>;
     perTabState.evidence = normalizeEvidenceTabState(raw.evidence) as unknown as Record<string, unknown>;
+    perTabState.gateway = normalizeGatewayTabState(raw.gateway) as unknown as Record<string, unknown>;
+    perTabState.diagnostics = normalizeDiagnosticsTabState(raw.diagnostics) as unknown as Record<string, unknown>;
 
     return perTabState;
 }
@@ -155,6 +188,77 @@ function normalizeEvidenceTabState(value: unknown): EvidenceSessionTabState {
         depositFormOpen: typeof value.depositFormOpen === 'boolean' ? value.depositFormOpen : defaults.depositFormOpen,
         ...(draft ? { depositFormDraft: draft } : {})
     };
+}
+
+function createDefaultGatewayTabState(): GatewaySessionTabState {
+    return {
+        activeSubView: 'capabilities',
+        selectedCapabilityName: null
+    };
+}
+
+function normalizeGatewayTabState(value: unknown): GatewaySessionTabState {
+    const defaults = createDefaultGatewayTabState();
+    if (!isRecord(value)) {
+        return defaults;
+    }
+    const draft = isRecord(value.tryItDraft) ? { ...value.tryItDraft } : undefined;
+    return {
+        activeSubView: normalizeGatewaySubView(value.activeSubView),
+        selectedCapabilityName: typeof value.selectedCapabilityName === 'string' ? value.selectedCapabilityName : null,
+        ...(draft ? { tryItDraft: draft } : {})
+    };
+}
+
+function normalizeGatewaySubView(value: unknown): GatewaySessionSubView {
+    if (
+        value === 'capabilities' ||
+        value === 'nodes' ||
+        value === 'models' ||
+        value === 'skills' ||
+        value === 'cron' ||
+        value === 'config' ||
+        value === 'settings'
+    ) {
+        return value;
+    }
+    return 'capabilities';
+}
+
+function createDefaultDiagnosticsTabState(): DiagnosticsSessionTabState {
+    return {
+        activeSubSection: 'overview',
+        intentLogScrollOffset: 0
+    };
+}
+
+function normalizeDiagnosticsTabState(value: unknown): DiagnosticsSessionTabState {
+    const defaults = createDefaultDiagnosticsTabState();
+    if (!isRecord(value)) {
+        return defaults;
+    }
+    return {
+        activeSubSection: normalizeDiagnosticsSubSection(value.activeSubSection),
+        intentLogScrollOffset: normalizeNonNegativeNumber(
+            value.intentLogScrollOffset,
+            defaults.intentLogScrollOffset
+        )
+    };
+}
+
+function normalizeDiagnosticsSubSection(value: unknown): DiagnosticsSessionSubSection {
+    if (
+        value === 'overview' ||
+        value === 'kernel-bridge' ||
+        value === 'profile' ||
+        value === 's2-graph' ||
+        value === 'gateway-ws' ||
+        value === 'intent-log' ||
+        value === null
+    ) {
+        return value as DiagnosticsSessionSubSection;
+    }
+    return 'overview';
 }
 
 function normalizeOmniState(value: unknown): OmniPanelChromeState {

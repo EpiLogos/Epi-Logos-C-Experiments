@@ -34,6 +34,35 @@ impl SemanticDocument {
         outgoing: Vec<String>,
         incoming: Vec<String>,
     ) -> Result<Self, String> {
+        Self::from_coordinate_parts_with_locality_excerpts(
+            coordinate,
+            name,
+            family,
+            layer,
+            ql_position,
+            essence,
+            description,
+            q_properties,
+            BTreeMap::new(),
+            outgoing,
+            incoming,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn from_coordinate_parts_with_locality_excerpts(
+        coordinate: &str,
+        name: &str,
+        family: &str,
+        layer: &str,
+        ql_position: &str,
+        essence: Option<&str>,
+        description: Option<&str>,
+        q_properties: BTreeMap<String, String>,
+        locality_excerpts: BTreeMap<String, String>,
+        outgoing: Vec<String>,
+        incoming: Vec<String>,
+    ) -> Result<Self, String> {
         let coordinate_anchor = kernel_coordinate_anchor_for(coordinate)?;
         let mut lines = vec![
             format!("coordinate: {coordinate}"),
@@ -50,11 +79,7 @@ impl SemanticDocument {
             lines.push(format!("description: {description}"));
         }
 
-        for (key, value) in &q_properties {
-            if !value.is_empty() {
-                lines.push(format!("{key}: {value}"));
-            }
-        }
+        lines.extend(ordered_q_property_lines(&q_properties, &locality_excerpts));
 
         lines.push("coordinate_anchor:".into());
         lines.push(format!(
@@ -171,12 +196,13 @@ pub async fn build_semantic_document(
         q_properties.insert(key, value);
     }
 
+    let locality_excerpts = locality_signature_excerpts(client, coordinate).await?;
     let outgoing = relation_summaries(client, coordinate, true).await?;
     let incoming = relation_summaries(client, coordinate, false).await?;
 
     let essence: String = row.get("essence").unwrap_or_default();
     let description: String = row.get("description").unwrap_or_default();
-    SemanticDocument::from_coordinate_parts(
+    SemanticDocument::from_coordinate_parts_with_locality_excerpts(
         &row.get::<String>("coordinate").unwrap_or_default(),
         &row.get::<String>("name").unwrap_or_default(),
         &row.get::<String>("family").unwrap_or_default(),
@@ -185,6 +211,7 @@ pub async fn build_semantic_document(
         Some(essence.as_str()),
         Some(description.as_str()),
         q_properties,
+        locality_excerpts,
         outgoing,
         incoming,
     )
@@ -323,6 +350,43 @@ async fn relation_summaries(
     Ok(rels)
 }
 
+async fn locality_signature_excerpts(
+    client: &Neo4jClient,
+    coordinate: &str,
+) -> Result<BTreeMap<String, String>, String> {
+    let rows = client
+        .run_query(
+            query(
+                "MATCH (n:Bimba {coordinate: $coord})-[r]-(neighbor:Bimba)
+                 RETURN DISTINCT neighbor.coordinate AS coordinate,
+                        coalesce(
+                            neighbor.q_1_theoretical_thesis,
+                            neighbor.c_0_essence,
+                            neighbor.c_1_description,
+                            neighbor.c_1_name,
+                            ''
+                        ) AS excerpt
+                 ORDER BY coordinate
+                 LIMIT 12",
+            )
+            .param("coord", coordinate),
+        )
+        .await
+        .map_err(|e| format!("locality signature query failed: {}", e))?;
+
+    Ok(rows
+        .iter()
+        .filter_map(|row| {
+            let coordinate = row.get::<String>("coordinate").ok()?;
+            let excerpt = row.get::<String>("excerpt").ok()?;
+            (!coordinate.is_empty() && !excerpt.is_empty()).then_some((
+                coordinate,
+                truncate_utf8(&flatten_q_value(&excerpt), 160).to_string(),
+            ))
+        })
+        .collect())
+}
+
 async fn adjacent_coordinates(
     client: &Neo4jClient,
     coordinate: &str,
@@ -353,6 +417,78 @@ fn hash_text(text: &str) -> String {
     let mut hasher = Sha256::new();
     hasher.update(text.as_bytes());
     format!("{:x}", hasher.finalize())
+}
+
+fn ordered_q_property_lines(
+    q_properties: &BTreeMap<String, String>,
+    locality_excerpts: &BTreeMap<String, String>,
+) -> Vec<String> {
+    let mut entries: Vec<_> = q_properties
+        .iter()
+        .filter(|(_, value)| !value.is_empty())
+        .collect();
+    entries.sort_by(|(left, _), (right, _)| {
+        q_property_sort_key(left).cmp(&q_property_sort_key(right))
+    });
+
+    entries
+        .into_iter()
+        .map(|(key, value)| {
+            let mut flattened = flatten_q_value(value);
+            if is_locality_signature_key(key) && !locality_excerpts.is_empty() {
+                flattened.push_str(" | adjacent: ");
+                flattened.push_str(
+                    &locality_excerpts
+                        .iter()
+                        .map(|(coordinate, excerpt)| format!("{coordinate}={excerpt}"))
+                        .collect::<Vec<_>>()
+                        .join("; "),
+                );
+            }
+            format!("{key}: {flattened}")
+        })
+        .collect()
+}
+
+fn q_property_sort_key(key: &str) -> (u8, u8, String) {
+    let rest = key.strip_prefix("q_").unwrap_or(key);
+    let mut chars = rest.chars();
+    let position = chars
+        .next()
+        .and_then(|ch| ch.to_digit(10))
+        .filter(|position| (1..=5).contains(position))
+        .map(|position| position as u8)
+        .unwrap_or(9);
+    let phase = if rest.starts_with(&format!("{position}'")) {
+        1
+    } else {
+        0
+    };
+    (position, phase, key.to_string())
+}
+
+fn is_locality_signature_key(key: &str) -> bool {
+    key.ends_with("_locality_signature")
+}
+
+fn flatten_q_value(value: &str) -> String {
+    value
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .collect::<Vec<_>>()
+        .join(" | ")
+}
+
+fn truncate_utf8(value: &str, max_chars: usize) -> &str {
+    if value.chars().count() <= max_chars {
+        return value;
+    }
+    value
+        .char_indices()
+        .nth(max_chars)
+        .map(|(index, _)| &value[..index])
+        .unwrap_or(value)
 }
 
 fn pointer_ref_values(refs: &BTreeMap<String, String>) -> Vec<String> {

@@ -581,6 +581,67 @@ static void test_rna(void) {
 }
 
 /* ===================================================================
+ * Transcript surface contract
+ * =================================================================== */
+
+static uint8_t expected_t_count(uint8_t codon) {
+    uint8_t outer = (uint8_t)((codon >> 4) & 0x03);
+    uint8_t middle = (uint8_t)((codon >> 2) & 0x03);
+    uint8_t inner = (uint8_t)(codon & 0x03);
+    return (uint8_t)((outer == M3_NUC_T) + (middle == M3_NUC_T) + (inner == M3_NUC_T));
+}
+
+static void test_transcript_surface_contract(void) {
+    TEST("transcript class SHARED = 0", M3_TRANSCRIPT_CLASS_SHARED == 0);
+    TEST("transcript class TRANSCRIBABLE = 1", M3_TRANSCRIPT_CLASS_TRANSCRIBABLE == 1);
+    TEST("governance role NONE = 0", M3_GOVERNANCE_ROLE_NONE == 0);
+    TEST("governance role START = 1", M3_GOVERNANCE_ROLE_START == 1);
+    TEST("governance role STOP = 2", M3_GOVERNANCE_ROLE_STOP == 2);
+
+    TEST("ATG/AUG start codon constant", M3_CODON_ATG_AUG == encode_codon(M3_NUC_A, M3_NUC_T, M3_NUC_G));
+    TEST("STOP TAA constant", M3_STOP_CODONS[0] == encode_codon(M3_NUC_T, M3_NUC_A, M3_NUC_A));
+    TEST("STOP TAG constant", M3_STOP_CODONS[1] == encode_codon(M3_NUC_T, M3_NUC_A, M3_NUC_G));
+    TEST("STOP TGA constant", M3_STOP_CODONS[2] == encode_codon(M3_NUC_T, M3_NUC_G, M3_NUC_A));
+
+    TEST("AAA has zero T bases", m3_codon_t_count(encode_codon(M3_NUC_A, M3_NUC_A, M3_NUC_A)) == 0u);
+    TEST("ATG has one T base", m3_codon_t_count(M3_CODON_ATG_AUG) == 1u);
+    TEST("TTA has two T bases", m3_codon_t_count(encode_codon(M3_NUC_T, M3_NUC_T, M3_NUC_A)) == 2u);
+    TEST("TTT has three T bases", m3_codon_t_count(encode_codon(M3_NUC_T, M3_NUC_T, M3_NUC_T)) == 3u);
+
+    uint8_t shared = 0;
+    uint8_t transcribable = 0;
+    uint8_t starts = 0;
+    uint8_t stops = 0;
+
+    for (uint8_t codon = 0; codon < 64u; codon++) {
+        uint8_t t_count = expected_t_count(codon);
+        M3_TranscriptClass expected_class = t_count == 0u
+            ? M3_TRANSCRIPT_CLASS_SHARED
+            : M3_TRANSCRIPT_CLASS_TRANSCRIBABLE;
+
+        TEST("t-count arithmetic contract", m3_codon_t_count(codon) == t_count);
+        TEST("t-count FFI parity", m3_codon_t_count_ffi(codon) == m3_codon_t_count(codon));
+        TEST("transcript class contract", m3_codon_transcript_class(codon) == expected_class);
+        TEST("transcript class FFI parity", m3_codon_transcript_class_ffi(codon) == m3_codon_transcript_class(codon));
+        TEST("governance role FFI parity", m3_codon_governance_role_ffi(codon) == m3_codon_governance_role(codon));
+
+        if (m3_codon_transcript_class(codon) == M3_TRANSCRIPT_CLASS_SHARED) shared++;
+        if (m3_codon_transcript_class(codon) == M3_TRANSCRIPT_CLASS_TRANSCRIBABLE) transcribable++;
+        if (m3_codon_governance_role(codon) == M3_GOVERNANCE_ROLE_START) starts++;
+        if (m3_codon_governance_role(codon) == M3_GOVERNANCE_ROLE_STOP) {
+            stops++;
+            TEST("STOP role comes from AA sentinel", M3_CODON_TO_AA[codon] == M3_STOP_CODON_AA);
+        }
+    }
+
+    TEST("transcript_surface_contract shared count = 27", shared == 27u);
+    TEST("transcript_surface_contract transcribable count = 37", transcribable == 37u);
+    TEST("transcript_surface_contract start count = 1", starts == 1u);
+    TEST("transcript_surface_contract stop count = 3", stops == 3u);
+    TEST("m3_verify_transcript_surface_boot", m3_verify_transcript_surface() == 0);
+}
+
+/* ===================================================================
  * FR 2.3.16: Tarot-Codon LUT
  * =================================================================== */
 
@@ -814,6 +875,7 @@ int main(void) {
     test_codon_quaternions();
     test_prime_attractors_and_eval_mapping();
     test_rna();
+    test_transcript_surface_contract();
     test_tarot();
     test_m3_api();
     test_det_coverage();

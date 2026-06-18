@@ -9,6 +9,7 @@ import {
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 // ---------------------------------------------------------------------------
 // medicine-view identity (Tranche 25.10)
@@ -246,7 +247,12 @@ export const M4MedicineCard: React.FC<M4MedicineCardProps> = props => {
     const activeChakraId = briefing?.activeChakraId ?? null;
 
     return (
-        <div className="m4-medicine-card" data-test="m4-medicine-card" data-status={status}>
+        <div
+            className={`m4-medicine-card ${privacyChromeClass('protected_local')}`}
+            data-test="m4-medicine-card"
+            data-privacy-chrome-class="mext-privacy-protected-local"
+            data-status={status}
+        >
             {/* Panel A — Chakra ladder */}
             <section className="m4-medicine-panel m4-medicine-chakra-ladder" aria-label="Chakra ladder">
                 <h3>Chakra ladder</h3>
@@ -429,13 +435,13 @@ export class MedicineView extends ReactWidget {
     protected init(): void {
         this.id = MedicineView.ID;
         this.title.label = MedicineView.LABEL;
-        this.title.caption = MedicineView.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-m4-nara');
         this.addClass('m4-nara-medicine');
         // Privacy chrome — protected-local handle-only surface.
-        this.addClass('mext-privacy-protected-local');
+        this.addClass(privacyChromeClass('protected_local'));
 
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
@@ -469,7 +475,10 @@ export class MedicineView extends ReactWidget {
         const sunDegree = readSunDegree(this.profile);
         const briefing = buildMedicineBriefing(this.snapshot, sunDegree);
         return (
-            <div className="mext-widget-root" data-test="m4-medicine-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local')}`}
+                data-test="m4-medicine-root"
+            >
                 <M4MedicineCard
                     snapshot={this.snapshot}
                     briefing={briefing}

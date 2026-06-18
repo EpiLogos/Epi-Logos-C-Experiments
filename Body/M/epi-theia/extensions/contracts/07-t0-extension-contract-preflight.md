@@ -52,6 +52,20 @@ Each command family reserves:
 
 Route scheme: `epi-logos://ide/<extension>/<surface>?...`
 
+Each extension also declares `intentTargets[]` in the JSON contract. The
+canonical cross-layout contribution ids are:
+
+- `m0-anuttara` — `coordinate`
+- `m1-paramasiva` — `walk`
+- `m2-parashakti` — `meaning-packet`
+- `m3-mahamaya` — `codon`
+- `m4-nara` — `artifact`
+- `m5-epii` — `review`
+
+Older aliases such as `graph`, `schema`, `resonance`, `journal`, and
+`evidence-deposit` remain registered as compatibility targets where current
+cross-links already emit them.
+
 ## Extension Inventory
 
 The machine-readable authority is [07-t0-extension-contract-preflight.json](</Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json>). Highlights:
@@ -62,6 +76,11 @@ The machine-readable authority is [07-t0-extension-contract-preflight.json](</Us
 - `m3-mahamaya`: codon wheel, projection view, trace overlay; consumes backend codon projection and scalar refs only.
 - `m4-nara`: DayContainer, Graphiti browser, personal field; protected-local handles only, with explicit privacy and consent gating.
 - `m5-epii`: review queue, spine-state inspector, meta-conversation; dry-run/governed review state only until S5 mutation law lands.
+
+The `MathemeHarmonicProfileBoundary` payload-narrowing examples include
+`anuttaraWitness` as an emit-only typed projection. Extensions may render its
+virtue/syntax vectors, R-factor path, Law-6 questions, and coherence score, but
+they must not make bridge readiness depend on the field.
 
 ## First-Slice Blockers
 

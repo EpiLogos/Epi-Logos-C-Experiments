@@ -58,6 +58,18 @@ const {
     createContemplationObjectViewModel
 } = require('../lib/browser/services/contemplation-object-service.js');
 
+const {
+    CONTEMPLATE_FETCH_WISDOM_DELTA_METHOD,
+    JointCompositionPanel,
+    SpineReading789,
+    SymbolicCoordinateQuestionsPanel,
+    WisdomDeltaInspector,
+    WisdomDeltaService,
+    XorFoldAnimation,
+    createWisdomDeltaViewModel,
+    xorFoldWisdomDelta
+} = require('../lib/browser/services/wisdom-delta-service.js');
+
 function sampleObject(overrides = {}) {
     return {
         privacyClass: 'pasu-scoped',
@@ -106,6 +118,47 @@ function sampleObject(overrides = {}) {
             'action-7: test the act',
             'completion-9: seal the invariant'
         ],
+        ...overrides
+    };
+}
+
+function sampleWisdomDeltaTrace(overrides = {}) {
+    return {
+        privacyClass: 'pasu-scoped',
+        sessionId: 'session-26-13',
+        contemplationObjectRef: 'contemplation://session-26-13/object',
+        llmComposition: {
+            actor: 'pi-llm-position-4',
+            reasoningText: 'recognition reasoned through the session-close field',
+            synthesizedRecognition: 'the return is coherent enough to reseed identity'
+        },
+        ebmEvaluation: {
+            actor: 'epii-ebm-position-5',
+            energyScore: 0.8125,
+            gradient: new Float32Array([0.125, -0.25, 0.375]),
+            lensWeightings: { clarity: 0.7, resonance: 0.3 },
+            tritoneSquareCoherences: [0.91, 0.82, 0.73]
+        },
+        verifierReport: {
+            actor: 'anuttara-verifier-position-0',
+            axiomChecks: [
+                { id: 'AX-1', label: 'identity closure', status: 'pass' },
+                { id: 'AX-2', label: 'symbolic coordinate answer', status: 'pending' }
+            ],
+            symbolicCoordinateQuestions: [
+                '#R0-0/1/A-T7-pending?',
+                '#R0-0/1/A-T9-answered?'
+            ]
+        },
+        wisdomDeltaBytes: new Uint8Array([0xff, 0x0f, 0xf0, 0xaa, 0x55, 0x01, 0x10, 0x80]),
+        preXorQuintessenceHash: new Uint8Array([0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88]),
+        postXorQuintessenceHash: new Uint8Array([0xff, 0x1e, 0xd2, 0x99, 0x11, 0x54, 0x76, 0xf7, 0x88]),
+        spineReading789: {
+            action7: { register: 'action-generator', virtueBits: 0b101010101 },
+            octave8: { register: 'octave-return', virtueBits: 0b11110000 },
+            wholeness9: { register: 'wholeness-witness', virtueBits: 0b111111111 },
+            virtueLut9Witness: new Uint8Array([1, 0, 1, 0, 1, 0, 1, 0, 1])
+        },
         ...overrides
     };
 }
@@ -184,4 +237,79 @@ test('individual contemplation sub-components render real payload fields', () =>
     assert.match(markup, /profile:\/\/26\.7\/session-26-12/);
     assert.match(markup, /Additive137/);
     assert.match(markup, /completion-9/);
+});
+
+test('WisdomDeltaService fetches contemplate.fetch_wisdom_delta and verifies deterministic XOR post-hash', async () => {
+    const service = new WisdomDeltaService();
+    const calls = [];
+
+    const model = await service.fetchWisdomDelta(async (method, request) => {
+        calls.push({ method, request });
+        return {
+            method,
+            privacyClass: 'pasu-scoped',
+            wisdomDeltaTrace: sampleWisdomDeltaTrace()
+        };
+    }, {
+        sessionId: 'session-26-13',
+        contemplationObjectRef: 'contemplation://session-26-13/object',
+        profileGeneration: 26
+    });
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].method, CONTEMPLATE_FETCH_WISDOM_DELTA_METHOD);
+    assert.equal(model.sessionId, 'session-26-13');
+    assert.deepEqual(model.postXorHex, ['ff', '1e', 'd2', '99', '11', '54', '76', 'f7', '88']);
+
+    const folded = xorFoldWisdomDelta(
+        sampleWisdomDeltaTrace().preXorQuintessenceHash,
+        sampleWisdomDeltaTrace().wisdomDeltaBytes
+    );
+    assert.deepEqual(Array.from(folded.postHash), [0xff, 0x1e, 0xd2, 0x99, 0x11, 0x54, 0x76, 0xf7, 0x88]);
+    assert.equal(folded.steps.length, 8);
+    assert.equal(folded.steps[0].profileTick, 1);
+    assert.equal(folded.steps[7].hashIndex, 7);
+});
+
+test('WisdomDeltaInspector renders joint composition, XOR fold, 7-8-9 spine, and verifier links', () => {
+    const model = createWisdomDeltaViewModel(sampleWisdomDeltaTrace());
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(WisdomDeltaInspector, { model })
+    );
+
+    assert.match(markup, /data-test="m5-wisdom-delta-inspector"/);
+    assert.match(markup, /WisdomDelta is the 8-byte XOR seed/);
+    assert.match(markup, /data-test="m5-joint-composition-panel"/);
+    assert.match(markup, /data-actor="pi-llm-position-4"/);
+    assert.match(markup, /data-actor="epii-ebm-position-5"/);
+    assert.match(markup, /data-actor="anuttara-verifier-position-0"/);
+    assert.match(markup, /data-test="m5-xor-fold-animation"/);
+    assert.match(markup, /delta\[0\] ff -&gt; hash\[0\]/);
+    assert.match(markup, /data-test="m5-spine-reading-789"/);
+    assert.match(markup, /data-register-label="action-7"/);
+    assert.match(markup, /data-register-label="octave-8"/);
+    assert.match(markup, /data-register-label="wholeness-9"/);
+    assert.match(markup, /data-test="m5-symbolic-coordinate-questions-panel"/);
+    assert.match(markup, /data-question-status="pending"/);
+    assert.match(markup, /data-question-status="answered"/);
+    assert.match(markup, /PiAxiomTranslationInspector/);
+    assert.match(markup, /data-skill-route="anuttara-symbolic-parse"/);
+});
+
+test('WisdomDelta sub-components preserve three-column composition and VIRTUE_LUT[9] witness labels', () => {
+    const model = createWisdomDeltaViewModel(sampleWisdomDeltaTrace());
+    const markup = [
+        React.createElement(JointCompositionPanel, { model }),
+        React.createElement(XorFoldAnimation, { model }),
+        React.createElement(SpineReading789, { model: model.spineReading789 }),
+        React.createElement(SymbolicCoordinateQuestionsPanel, { model })
+    ].map(component => ReactDOMServer.renderToStaticMarkup(component)).join('\n');
+
+    assert.equal((markup.match(/data-actor="/g) ?? []).length, 3);
+    assert.equal((markup.match(/data-hash-column="/g) ?? []).length, 2);
+    assert.equal((markup.match(/data-virtue-index="/g) ?? []).length, 9);
+    assert.match(markup, /data-virtue-label="Love\/Peace"/);
+    assert.match(markup, /data-virtue-label="Reality"/);
+    assert.equal((markup.match(/data-witness-state="lit"/g) ?? []).length, 5);
+    assert.match(markup, /epi-logos:\/\/ide\/m0-anuttara\/pi-axiom-translation\?question=%23R0-0%2F1%2FA-T7-pending%3F/);
 });

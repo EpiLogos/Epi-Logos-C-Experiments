@@ -173,7 +173,7 @@ Three fields surfacing composition state: `cosmic_composition_state: CosmicCompo
 
 Verification: `cargo test -p portal-core --test integrated_plugin_projections`; both integrated plugin extensions consume the projections at composition load.
 
-### 10.PASU — General PASU / BeingPattern live-state projection *(code-pending-closure; depends on PASU.md + S2/S3 live-state substrate + 10.M2/10.M3/10.M4/10.M5)*
+### 10.PASU — General PASU / BeingPattern live-state projection *(executed by Tranche 18; depends on PASU.md + CCT-21 S3 live-state producer stream + 10.M2/10.M3/10.M4/10.M5)*
 
 One cross-cutting profile field: `pasu_being_pattern: PasuBeingPatternProjection`.
 
@@ -186,7 +186,7 @@ Two Anuttara laws bind this field:
 Required fields:
 - `entity_ref: BeingEntityRef` with `{ entity_id, entity_kind, coordinate_home, graph_anchor }`
 - `stable_identity: CanonicalIdentityHandle` sourced from S2/Neo4j, never rebuilt by renderers
-- `live_state: LiveStateHandle` with SpaceTimeDB row id, generation, DAY/NOW, Redis/Psyche handles, and optional Graphiti episode refs
+- `live_state: LiveStateHandle` with SpaceTimeDB row id, generation, DAY/NOW, Redis/Psyche handles, and optional Graphiti episode refs produced by CCT-21
 - `observer_anchor: EarthCentredObserverAnchor` documenting Earth-at-centre semantics for planetary projection
 - `clock_address: BeingPatternClockAddress` carrying `degree360`, optional `degree384_line`, codon, hexagram, line-change, tarot, and `AnuttaraPentadicRuntimeTrace` refs
 - `monopoly_operator: MonoPolyOperator` with variants `Mono`, `Poly`, `ActuallyMany`, `PotentiallyOne`, `ActualisingOne`, `PotentiatingMany`, `MonoPoly`; `ActualisingOne` is a review-risk state, not an automatic canon merge
@@ -206,9 +206,9 @@ Semantics:
 - `perspective_role` controls the read-frame: the same relation edge can be an I-You encounter, a They observation, a We collective field, or a We-I integral field. Graph and ML consumers must retain this role as a feature.
 - `pasu_being_pattern` is the feature family that M5/EBM may learn over. Models consume projected vectors and handles, not Neo4j canon bodies or protected M4 bodies.
 
-Verification: `cargo test -p portal-core --test pasu_being_pattern_projection_privacy`; `cargo test -p portal-core --test pasu_monopoly_perspective_modes`; `cargo test -p epi-cli --test kernel_bridge_runtime_typed_json` fixture includes `pasuBeingPattern`; TS mirror test asserts all protected fields serialize as opaque handles; S3 stream fixture test replays `EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed` without mutating S2 canon; renderer no-local-table test asserts M2/M3 relation edges are sourced from the typed projection; review-risk test asserts `ActualisingOne` cannot write canon without M5 review + M0 witness.
+Verification: `cargo test -p portal-core --test pasu_being_pattern_projection_privacy`; `cargo test -p portal-core --test pasu_monopoly_perspective_modes`; `cargo test -p epi-cli --test kernel_bridge_runtime_typed_json` fixture includes `pasuBeingPattern`; TS mirror test asserts all protected fields serialize as opaque handles; CCT-21 S3 stream fixture test replays `EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted` without mutating S2 canon; renderer no-local-table test asserts M2/M3 relation edges are sourced from the typed projection; review-risk test asserts `ActualisingOne` cannot write canon without M5 review + M0 witness.
 
-### 10.AW — Anuttara witness projection (the 4/5/0 verification weight on the bus) *(code-pending-closure; depends on Track 01 §1.10/1.12/1.13; cross-link 18, 19.6, 21, 25, 26)*
+### 10.AW — Anuttara witness projection (the 4/5/0 verification weight on the bus) *(executed by Tranche 18; depends on Track 01 §1.10/1.12/1.13; cross-link 18, 19.6, 21, 25, 26)*
 
 One profile field carrying M0's verification weight up to every renderer: `anuttara_witness: AnuttaraWitnessProjection`. This is how the Anuttara substrate-language calculus (1.13) and the R-factor theory (1.12) become *verification weight in the 4/5/0 setup* without becoming a gate — the field is **emit-only**; nothing downstream blocks on it, and `ActualisingOne`-style hard gates remain solely with the human gate and M5 review.
 

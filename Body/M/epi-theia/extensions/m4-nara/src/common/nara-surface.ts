@@ -9,6 +9,8 @@ import {
 } from '@pratibimba/m-extension-runtime';
 import { EXTENSION_ID, PRIVACY_CLASS } from './index';
 
+export * from './e4-personal-energy';
+
 export const M4_NARA_CONTRACT_VERSION = '2026-06-01.07-T7';
 
 export type NaraArtifactKind =

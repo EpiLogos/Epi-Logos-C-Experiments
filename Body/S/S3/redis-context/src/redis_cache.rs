@@ -39,6 +39,19 @@ pub struct RedisKey {
 }
 
 impl RedisKey {
+    fn from_full_key(full_key: impl Into<String>) -> Self {
+        let full_key = full_key.into();
+        let logical_key = full_key
+            .strip_prefix("cache:")
+            .unwrap_or(full_key.as_str())
+            .to_owned();
+        Self {
+            tier: CacheTier::Active,
+            logical_key,
+            full_key,
+        }
+    }
+
     pub fn from_logical(tier: CacheTier, logical_key: impl Into<String>) -> Self {
         let logical_key = logical_key.into();
         let full_key = format!("{}:{}", tier.prefix(), logical_key);
@@ -135,6 +148,28 @@ impl RedisKey {
             "s2:graph:semantic",
             &["retrieval", graph_revision, query_hash],
         )
+    }
+
+    pub fn being_pattern_presence(entity_id: &str) -> Self {
+        Self::from_segments(
+            CacheTier::Live,
+            "s3:being_pattern",
+            &[entity_id, "presence"],
+        )
+    }
+
+    pub fn being_pattern_state(entity_id: &str) -> Self {
+        Self::from_segments(CacheTier::Active, "s3:being_pattern", &[entity_id, "state"])
+    }
+
+    pub fn being_pattern_stream_delta(generation: u64) -> Self {
+        Self::from_full_key(format!("cache:stream:s3:being_pattern:{generation}:delta"))
+    }
+
+    pub fn being_pattern_review_candidate(candidate_id: &str) -> Self {
+        Self::from_full_key(format!(
+            "cache:review:s3:being_pattern:{candidate_id}:candidate"
+        ))
     }
 
     pub fn tier(&self) -> CacheTier {

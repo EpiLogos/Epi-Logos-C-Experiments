@@ -11,6 +11,8 @@ import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-con
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
     Disposable,
+    EMPTY_STATE_REGISTRY,
+    EmptyStateRegistry,
     MathemeHarmonicProfileBoundary,
     MObservabilityPublisher,
     SharedBridgeAdapter,
@@ -19,6 +21,10 @@ import {
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { M1ParamasivaWidget } from './m1-paramasiva-widget';
+import {
+    M1ParamasivaEmptyState,
+    M1ParamasivaEmptyStateWidget
+} from './empty-state';
 import {
     kleinFlipEventFromProfile,
     M1KleinFlipEventBar,
@@ -38,6 +44,7 @@ import {
 export const M1_PARAMASIVA_PUBLISHER = Symbol(
     'm1-paramasiva.observabilityPublisher'
 );
+const AUDIO_BUS_INSPECTOR_COMMAND_ID = OPEN_COMMAND_ID + '?view=audioBusInspector';
 
 @injectable()
 export class M1ParamasivaContribution
@@ -62,15 +69,22 @@ export class M1ParamasivaContribution
         super.registerCommands(commands);
         commands.registerCommand(
             { id: OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open primary view` },
-            { execute: () => this.openView({ activate: true, reveal: true }) }
+            { execute: () => this.openClockInstrumentView() }
+        );
+        commands.registerCommand(
+            {
+                id: AUDIO_BUS_INSPECTOR_COMMAND_ID,
+                label: `${EXTENSION_ID}: open audio bus inspector`
+            },
+            { execute: () => this.openAudioBusInspectorView() }
         );
         commands.registerCommand(
             { id: READ_ONLY_COMMAND_ID, label: `${EXTENSION_ID}: open read-only` },
-            { execute: () => this.openView({ activate: true, reveal: true }) }
+            { execute: () => this.openClockInstrumentView() }
         );
         commands.registerCommand(
             { id: DEPOSIT_ONLY_COMMAND_ID, label: `${EXTENSION_ID}: open deposit-only` },
-            { execute: () => this.openView({ activate: true, reveal: true }) }
+            { execute: () => this.openClockInstrumentView() }
         );
         // Route handler: deep links of the form epi-logos://ide/m1-paramasiva/walk?...
         commands.registerCommand(
@@ -81,17 +95,38 @@ export class M1ParamasivaContribution
                     if (!route || route.extensionId !== EXTENSION_ID) {
                         return undefined;
                     }
-                    return this.openView({ activate: true, reveal: true });
+                    return route.query.view === 'audioBusInspector'
+                        ? this.openAudioBusInspectorView()
+                        : this.openClockInstrumentView();
                 }
             }
         );
         registerIntentTarget(
             commands,
             EXTENSION_ID,
+            'walk',
+            'M1 Paramasiva: Open Walk',
+            () => this.openClockInstrumentView()
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
             'schema',
             'M1 Paramasiva: Open Schema Walk',
-            () => this.openView({ activate: true, reveal: true })
+            () => this.openClockInstrumentView()
         );
+    }
+
+    protected async openClockInstrumentView(): Promise<M1ParamasivaWidget> {
+        const widget = await this.openView({ activate: true, reveal: true });
+        widget.setActiveView('clockInstrument');
+        return widget;
+    }
+
+    protected async openAudioBusInspectorView(): Promise<M1ParamasivaWidget> {
+        const widget = await this.openView({ activate: true, reveal: true });
+        widget.setActiveView('audioBusInspector');
+        return widget;
     }
 }
 
@@ -112,6 +147,28 @@ class M1ParamasivaPublisher implements MObservabilityPublisher {
             );
         }
         this.bridge.publish(event);
+    }
+}
+
+@injectable()
+class M1ParamasivaEmptyStateRegistration implements FrontendApplicationContribution {
+    @inject(EMPTY_STATE_REGISTRY)
+    protected readonly emptyStates!: EmptyStateRegistry;
+
+    protected disposable?: Disposable;
+
+    onStart(): void {
+        this.disposable = this.emptyStates.register({
+            extensionId: EXTENSION_ID,
+            viewId: 'm1-paramasiva.primary',
+            activationCondition: snapshot => snapshot.state !== 'ready_public_current',
+            component: M1ParamasivaEmptyState
+        });
+    }
+
+    onStop(): void {
+        this.disposable?.dispose();
+        this.disposable = undefined;
     }
 }
 
@@ -168,6 +225,7 @@ export class M1KleinFlipEventStripWidget extends ReactWidget {
 
 export default new ContainerModule(bind => {
     bind(M1ParamasivaWidget).toSelf();
+    bind(M1ParamasivaEmptyStateWidget).toSelf();
     bind(M1KleinFlipEventStripWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
@@ -188,6 +246,8 @@ export default new ContainerModule(bind => {
     bind(M1_PARAMASIVA_PUBLISHER).toService(
         M1ParamasivaPublisher
     );
+    bind(M1ParamasivaEmptyStateRegistration).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(M1ParamasivaEmptyStateRegistration);
 
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.

@@ -3,6 +3,8 @@ title: "M3' Mahāmāyā Architecture — Total Shape, Substrate Map, Profile-Bus
 coordinate: "M3 / M3'"
 status: "canonical-architecture-spec"
 created: 2026-06-02
+updated: "2026-06-09"
+cycle-3: reconciled
 authority_relation: "Domain authority for the total shape of the M3' surface. M3'-SPEC §§7-9 are pre-existing law that this document organises into a buildable whole. Where they disagree, M3'-SPEC remains authoritative for substrate contracts; this document is authoritative for the surface-build, sub-coordinate layout, and tick choreography. Companion doc to M3'-SPEC, not a replacement."
 depends_on:
   - "[[M3'-SPEC]]"

@@ -16,7 +16,7 @@ import {
     MathemeHarmonicProfileBoundary
 } from '@pratibimba/m-extension-runtime';
 import { M2PrimeMeaningPacket } from '@pratibimba/m2-parashakti';
-import {
+import type {
     IntegratedEvidenceProducerId,
     PaneAvailability
 } from '@pratibimba/integrated-composition';

@@ -15,6 +15,7 @@ import {
 } from '../../common';
 import type { NaraArtifactEnvelope } from '../../common';
 import type { OracleVakAddress } from '../../common/oracle-frame';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 export const LENS_APPLICATION_VIEW_ID = 'm4.nara.lensApplication';
 export const LENS_APPLICATION_LABEL = 'M4 Lens Application';
@@ -194,7 +195,7 @@ export const M4LensCard: React.FC<M4LensCardProps> = props => {
 
     return (
         <section
-            className="m4-lens-card"
+            className={`m4-lens-card ${privacyChromeClass('protected_local_handle_only')}`}
             data-test="m4-lens-card"
             data-track="TRACK_08"
             data-export={M4_LENS_CARD_EXPORT}
@@ -407,12 +408,12 @@ export class LensApplicationWidget extends ReactWidget {
     protected init(): void {
         this.id = LensApplicationWidget.ID;
         this.title.label = LensApplicationWidget.LABEL;
-        this.title.caption = LensApplicationWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
         this.addClass('m4-nara-lens-application');
-        this.addClass('mext-privacy-protected-local-handle-only');
+        this.addClass(privacyChromeClass('protected_local_handle_only'));
 
         this.subscriptions.push(
             this.bridge.onCoordinateContext(context => {
@@ -435,7 +436,10 @@ export class LensApplicationWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         return (
-            <div className="mext-widget-root" data-test="m4-lens-application-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local_handle_only')}`}
+                data-test="m4-lens-application-root"
+            >
                 <M4LensCard
                     descriptors={this.descriptors}
                     activeTab={this.activeTab}

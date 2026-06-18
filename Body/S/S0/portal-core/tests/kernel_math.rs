@@ -1,14 +1,61 @@
 use portal_core::{
-    harmonic_ratio_fraction_for_sub_tick, kernel_energy_evaluate, kernel_resonance_index,
-    kernel_resonance_square_emphasis, kernel_tick_from_epogdoon, slash_flip_bimba_prime,
-    BioQuaternionState, E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs, HarmonicPulse,
-    KernelElement, KernelPhase, KernelProjection, KernelResonanceObservation, ResonanceVector72,
-    EPOGDOON_DEN, EPOGDOON_NUM,
+    compute_e_4_personal_energy_gradient, harmonic_ratio_fraction_for_sub_tick,
+    kernel_energy_evaluate, kernel_resonance_index, kernel_resonance_square_emphasis,
+    kernel_tick_from_epogdoon, slash_flip_bimba_prime, try_compute_e_4_personal_energy,
+    BioQuaternionState, E4CorpusDigest, E4KairosState, E4LoraCheckpointRef, E4OracleCharges,
+    E4PasuSnapshot, E4PersonalEnergyError, E4PersonalInputs, E4PrivacyClass, E5HarmonicInputs,
+    E6VerifierInputs, HarmonicPulse, KernelElement, KernelPhase, KernelProjection,
+    KernelResonanceObservation, NaraLoraRuntime, ResonanceVector72, EPOGDOON_DEN, EPOGDOON_NUM,
 };
 use std::collections::BTreeSet;
 
 fn near(a: f32, b: f32) -> bool {
     (a - b).abs() < 0.0001
+}
+
+fn full_e4_inputs() -> E4PersonalInputs {
+    E4PersonalInputs {
+        pasu_handle: Some("Idea/Pratibimba/Self/PASU.md".to_owned()),
+        kairos_handle: Some("local://kairos/2026-06-17T10".to_owned()),
+        nara_lora_checkpoint_ref: Some("voice-v7".to_owned()),
+        pasu_snapshot: Some(E4PasuSnapshot {
+            q_identity: [1.0, 0.0, 0.0, 0.0],
+            q_personal: [0.0, 1.0, 0.0, 0.0],
+            birth_date: "1990-06-15".to_owned(),
+            birth_location: "Berlin, Germany".to_owned(),
+            c_0_natal_chart_path: "Pratibimba/Self/natal-chart.json".to_owned(),
+            c_2_jungian: "INFJ".to_owned(),
+            c_3_gene_keys: "13.7.1".to_owned(),
+            c_4_human_design: "Projector".to_owned(),
+            c_5_quintessence_hash: "sha256:quintessence".to_owned(),
+            c_5_quintessence_clock: "2026-06-17T10:00:00.000Z".to_owned(),
+            c_4_last_wound: "protected://nara/wounds/latest".to_owned(),
+        }),
+        kairos: Some(E4KairosState {
+            planet_degrees: [
+                14.2, 25.1, 302.4, 112.7, 88.5, 177.3, 201.6, 44.8, 269.9, 11.1,
+            ],
+            oracle_charges: E4OracleCharges {
+                pp: 21.0,
+                mm: 8.0,
+                mp: 5.0,
+                pn: 3.0,
+            },
+            tarot_psyche_anchor_signature: "tarot://anchor/major-9".to_owned(),
+            kairos_window_id: "kairos://window/2026-06-17T10".to_owned(),
+        }),
+        lora_checkpoint: Some(E4LoraCheckpointRef {
+            path: "/Users/admin/.epi-logos/nara/lora/checkpoints/voice-v7".to_owned(),
+            version: "voice-v7".to_owned(),
+            privacy_class: E4PrivacyClass::LocalOnly,
+        }),
+        corpus: Some(E4CorpusDigest {
+            journal_hashes: vec!["sha256:journal-a".to_owned()],
+            dream_hashes: vec!["sha256:dream-a".to_owned()],
+            phone_writing_hashes: vec!["sha256:phone-a".to_owned()],
+            model_version_key: "gemma4-12b-q4".to_owned(),
+        }),
+    }
 }
 
 #[test]
@@ -101,6 +148,103 @@ fn rust_energy_and_tick_contract_are_computable() {
     assert_eq!(tick11.element, KernelElement::EnrichedReturn);
     assert_eq!(kernel_tick_from_epogdoon(3, 12).sub_tick, 0);
     assert_eq!(kernel_tick_from_epogdoon(3, 23).sub_tick, 11);
+}
+
+#[test]
+fn rust_e4_personal_inputs_carry_pasu_kairos_checkpoint_and_corpus() {
+    let inputs = full_e4_inputs();
+    let pasu = inputs
+        .pasu_snapshot
+        .as_ref()
+        .expect("PASU snapshot present");
+    let kairos = inputs.kairos.as_ref().expect("kairos present");
+    let checkpoint = inputs
+        .lora_checkpoint
+        .as_ref()
+        .expect("checkpoint ref present");
+    let corpus = inputs.corpus.as_ref().expect("corpus digest present");
+
+    assert_eq!(pasu.q_identity, [1.0, 0.0, 0.0, 0.0]);
+    assert_eq!(pasu.q_personal, [0.0, 1.0, 0.0, 0.0]);
+    assert_eq!(
+        pasu.c_0_natal_chart_path,
+        "Pratibimba/Self/natal-chart.json"
+    );
+    assert_eq!(pasu.c_2_jungian, "INFJ");
+    assert_eq!(pasu.c_3_gene_keys, "13.7.1");
+    assert_eq!(pasu.c_4_human_design, "Projector");
+    assert_eq!(pasu.c_5_quintessence_hash, "sha256:quintessence");
+    assert_eq!(pasu.c_5_quintessence_clock, "2026-06-17T10:00:00.000Z");
+    assert_eq!(pasu.c_4_last_wound, "protected://nara/wounds/latest");
+    assert_eq!(kairos.planet_degrees.len(), 10);
+    assert_eq!(kairos.oracle_charges.pp, 21.0);
+    assert_eq!(checkpoint.privacy_class, E4PrivacyClass::LocalOnly);
+    assert_eq!(corpus.phone_writing_hashes, vec!["sha256:phone-a"]);
+}
+
+#[test]
+fn rust_e4_refuses_missing_typed_inputs_and_non_local_checkpoint_paths() {
+    let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0]);
+    let missing = try_compute_e_4_personal_energy(&state, &E4PersonalInputs::default())
+        .expect_err("legacy handle-only inputs are not enough for E4 scalar evaluation");
+    assert!(matches!(
+        missing,
+        E4PersonalEnergyError::MissingTypedInputs("pasu_snapshot")
+    ));
+
+    let mut cloud = full_e4_inputs();
+    cloud.lora_checkpoint.as_mut().unwrap().path = "https://example.com/nara.ckpt".to_owned();
+    let refused = try_compute_e_4_personal_energy(&state, &cloud)
+        .expect_err("cloud checkpoint route must be refused");
+    assert!(matches!(
+        refused,
+        E4PersonalEnergyError::NonLocalCheckpointPath(path) if path == "https://example.com/nara.ckpt"
+    ));
+}
+
+#[test]
+fn rust_e4_scalar_feeds_kernel_total_energy_with_4_5_6_weighting() {
+    let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.25, 0.75, 0.25, 0.5]);
+    let inputs = full_e4_inputs();
+    let e4 = try_compute_e_4_personal_energy(&state, &inputs).expect("full E4 inputs evaluate");
+    let energy = kernel_energy_evaluate(
+        &state,
+        &inputs,
+        &E5HarmonicInputs::default(),
+        &E6VerifierInputs::default(),
+    );
+
+    assert!(e4.scalar.is_finite());
+    assert!(energy.e_4_personal_energy > 0.0);
+    assert!(near(energy.e_4_personal_energy, e4.scalar));
+    assert!(near(energy.total_energy, (4.0 * e4.scalar) / 15.0));
+    assert_eq!(e4.provenance.weighting_coefficient, 4);
+    assert_eq!(e4.provenance.privacy_class, E4PrivacyClass::LocalOnly);
+    assert!(matches!(
+        e4.provenance.runtime,
+        NaraLoraRuntime::RustNative | NaraLoraRuntime::MlxLora
+    ));
+}
+
+#[test]
+fn rust_e4_gradient_is_tangent_to_qp_for_stream_d() {
+    let state = BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [0.25, 0.75, 0.25, 0.5]);
+    let gradient = compute_e_4_personal_energy_gradient(&state, &full_e4_inputs())
+        .expect("full E4 inputs produce gradient");
+    let tangent_dot = gradient
+        .gradient
+        .iter()
+        .zip(state.q_p.iter())
+        .map(|(gradient, qp)| gradient * qp)
+        .sum::<f32>();
+
+    assert_eq!(gradient.channel, "E_4");
+    assert_eq!(
+        gradient.provenance.autograd_path,
+        "rust-native-nara-lora-forward"
+    );
+    assert!(gradient.norm.is_finite());
+    assert!(tangent_dot.abs() < 0.000001);
 }
 
 #[test]

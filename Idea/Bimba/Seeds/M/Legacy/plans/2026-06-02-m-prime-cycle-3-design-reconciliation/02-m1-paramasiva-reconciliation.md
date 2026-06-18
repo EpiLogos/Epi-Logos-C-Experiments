@@ -85,3 +85,109 @@ Consume as-is — `epi-lib/include/m1.h` LUTs; `portal-core/src/{kernel.rs,quate
 ## Track 19 Cross-Reference
 
 Track 19 (Contemplation Surface Integration) consumes M1 substrate at **T19.8**: pedagogical Kaprekar 6174 seed landed LEAN at [`m1-prime-kaprekar-pedagogy.md`](../../M1'/m1-prime-kaprekar-pedagogy.md) (digits {1,4,6,7} → kernel primitives, factorization `7² × 9 × 14`, archetype-7 binding via `QL_DIVINE_ACT_RATIO 16/9`), with `AnandaSkeletonEvent::KaprekarPedagogyHit = 6` added to the enum at [M1-2-ANANDA-VORTEX-ARCHITECTURE.md:261-272](../../M1'/M1-2-ANANDA-VORTEX-ARCHITECTURE.md). Full freight (four-register law: Kaprekar 7-step / parent-as-7th / Cl(4,2)+2 / Möbius twist; and `137 = 64 + 72 + 1` reading per `alpha_quaternionic_integration_across_M_stack.md`) stays in the integration plan, NOT the pedagogy seed. See [`19-contemplation-surface-integration.md`](19-contemplation-surface-integration.md).
+
+## Tranche 2.10 — M1' CPT trainer + EKSFT loss + epistemic-blindfolded teacher + held-out canonical-derivation eval corpus *(spec-ahead-integration; the one greenfield build piece from the DiscoverAI research synthesis; depends on Tranche 12.24 Phase 2 epii-distillation skill, Tranche 12.22 slot CLI; cross-link [`m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md`](../../M5'/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md); routes to the Phase-I DiscoverAI research roster at [`state/notebooklm-research-2026-06-15/ROSTER.md`](../../../../../../state/notebooklm-research-2026-06-15/ROSTER.md))*
+
+Per the Phase-I DiscoverAI research synthesis (wave-2 scout 4), the M1' Paramaśiva CPT pipeline is the **one greenfield build piece** in cycle 3: the spec at `m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md` is detailed and complete, but no trainer / teacher-invocation / EKSFT loss / held-out eval corpus exists in code today. This tranche lands the four pieces, leveraging the EKSFT (Entropy-KL Selective Fine-Tuning) and Context-CoT (epistemic-blindfolded teacher + student-aware CoT selection) techniques from the DiscoverAI research.
+
+**Four implementation targets:**
+
+### (a) EKSFT loss design for M1' CPT
+
+**Anchor:** the existing `m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md` §4.1.A specifies "CPT training run (configurable epoch count, learning-rate schedule, gradient clipping)" — generic, no loss formulation. This sub-tranche lands EKSFT as the canonical loss design replacing the generic perplexity-only anti-drift.
+
+**Loss formulation** (from DiscoverAI research deep-dive [04-distillation-finetuning.txt](../../../../../../state/notebooklm-research-2026-06-15/04-distillation-finetuning.txt) §1):
+
+```
+mask M = top_K_entropy(token) ∪ top_K_KL_divergence(token, π_ref)
+loss = CE(safe_tokens=M^C) + λ_kl·KL_regularization(masked_tokens|π_ref) + λ_h·entropy_regularization(masked_tokens)
+```
+
+Where:
+- `π_ref` is the frozen reference model (the prior CPT'd checkpoint).
+- `K` is the top-K cardinality for the mask (config-driven per the no-hardcoding rule from Tranches 12.20+).
+- `λ_kl`, `λ_h` are regularization weights (config-driven).
+
+**Empirical baseline** (from DiscoverAI research): +7% pass@1, +5.1% pass@32 on Qwen 1.5 4B (AIM25). With DPO layering: +5.6% pass@32 vs SFT+DPO.
+
+**The perplexity gate stays as outer halt-trigger** (per the existing spec §4.3 anti-drift verification); EKSFT is the inner loss design that prevents catastrophic drift in the first place. Two-layer defence.
+
+**Implementation surface:** new module at `Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/eksft.py` (extending the `epii-distillation` skill landed in Tranche 12.24 Phase 2). Python; consumes the `peft` + `unsloth` (or `mlx-lora` per Tranche 12.24 Phase 2) backends with custom loss override.
+
+**No-hardcoding rule** (joins existing config-key vocabulary from Tranches 12.20 / 12.23 / 12.24): all thresholds (`K` mask cardinality, `λ_kl`, `λ_h`, perplexity-drift-halt percentage) FROM `~/.epi-logos/config.toml` `[ml.m1_paramasiva_cpt]` section. No hardcoded constants.
+
+### (b) Epistemic-blindfolded teacher pipeline
+
+**Anchor:** the existing `m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md` §4.1.C specifies the GDS-augmented synthetic-proof teacher (Claude Opus or equivalent generates derivational proofs from canonical M1 structural relations). The spec does NOT mention the epistemic-blindfolding discipline. This sub-tranche lands the discipline.
+
+**The discipline** (from DiscoverAI research [04-distillation-finetuning.txt](../../../../../../state/notebooklm-research-2026-06-15/04-distillation-finetuning.txt) §2 — Context-CoT):
+- **Epistemic blindfolding** — the teacher is given the matheme structural relations as input but **NEVER sees the canonical proof** for the path being asked about. Forces derivation-from-substrate rather than retrieval-and-paraphrase.
+- **Minimum-leakage filtering** — on SHACL-validation failure, the failed shape becomes a "single failed rubric" hint fed back to the teacher; the proof itself is NEVER exposed. Smallest possible signal to guide regeneration.
+- **Student-aware CoT selection** — multi-objective optimization balancing step-wise smoothness (alignment) + reasoning gain (perplexity reduction); difficulty defined as negative log-likelihood under the target M1' student model; selected trajectory minimises negative-variance step-difficulty (path of least cognitive friction for the student).
+
+**Empirical baseline:** Qwen 1.5 4B on CLBench, baseline 9.06% → SFT-with-answer-exposed 8.59% (regression!) → Context-CoT 12.85% (+3.79 pp). The discipline lifts a 4B model above naïve SFT specifically because it forbids the teacher from leaking the answer.
+
+**Implementation surface:** new module at `Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/blindfolded_teacher.py`. Teacher invocation routed via the slot CLI (Tranche 12.22) — `[slot.epii_judge]` resolves the teacher model (Claude Opus / Gemini 3.1 Pro / local Qwen-14B per slot config; **no hard-lock**).
+
+**The teacher-model vendor decision is unblocked.** Per scout 4's finding ("spec says Opus, code config has Gemini Flash — mismatch"), the slot CLI per Tranche 12.22 forbids hard-locking; the teacher resolves at training time via slot configuration. The default per `M'-MODEL-SLOT-SPEC §3` is `cloud-opt-in Pro-class` (Opus / Gemini 3.1 Pro / GPT-5.2); user may override to local (Gemma Diffusion is a relevant addition — its past+future reasoning fits the derivational-chain generation surface particularly well).
+
+### (c) Held-out canonical-derivation eval corpus
+
+**Anchor:** the existing `m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md` §4.3 specifies a "held-out canonical derivation set (representative passages from kernel-spec, musical derivation, alpha-rasa bridge, alpha-quaternionic integration, M1'-SPEC)" used for perplexity-eval after every CPT pass. The canonical material exists in repo (`Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`, `m1-prime-paramasiva-instrument.md`, `ql-musical-derivation.md`, `alpha_rasa_bridge_ql.md`, `alpha_quaternionic_integration_across_M_stack.md`) but is NOT packaged as a held-out test corpus. **Until this packaging lands, the >10% perplexity halt-rule cannot fire — this is a blocker for any CPT run to be safe.** This sub-tranche closes the blocker.
+
+**Packaging targets:**
+- New directory `Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/eval-corpus/m1-paramasiva/`
+- Five sub-files: `kernel-spec.passages.jsonl`, `musical-derivation.passages.jsonl`, `alpha-rasa.passages.jsonl`, `alpha-quaternionic.passages.jsonl`, `m1-spec.passages.jsonl`
+- Each `.jsonl` contains representative passages (length: 200-2000 tokens per passage) with metadata: `source_file`, `source_section`, `derivational_register_class` (foundational-derivational / encyclopedic / mixed per spec §3.4), `canonical_register_features` (load-bearing features the model must preserve).
+- Holdout selection: stratified random sample, ensuring coverage across the M1-0 through M1-5 strata + cross-subsystem theoretical material.
+- Manifest at `Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/eval-corpus/m1-paramasiva/manifest.json` declaring the eval corpus version, passage counts per file, registers covered, halt-threshold per file (default `>10% perplexity rise`).
+
+**Eval script** at the same directory `scripts/eval_m1_canonical_derivation.py` runs the perplexity-eval against a candidate CPT'd checkpoint and emits the halt-or-pass signal per the spec.
+
+### (d) Verifier-grounded failure signature for CPT trial outcomes
+
+Per the DiscoverAI research [02-harness-self-optimization.txt](../../../../../../state/notebooklm-research-2026-06-15/02-harness-self-optimization.txt) §2 (YES paper Verifier-Grounded Failure Signature), CPT trial outcomes feed back to the autoresearch spine + Aletheia drift-detection (per Tranche 12.24 Phase 4) as structured failure-signatures, not raw error logs.
+
+**`FailureSignature` struct** at `Body/S/S5/epii-autoresearch-core/src/types.rs`:
+```rust
+pub struct FailureSignature {
+    pub cluster_size: usize,
+    pub shared_trace_symptom: String,   // e.g., "register-drift on alpha-rasa passages"
+    pub verifier_evidence: Vec<String>,  // SHACL violations + perplexity-rise metrics
+    pub terminal_agent_mechanism: enum {
+        EksftMaskOverfit,
+        EpistemicLeakage,
+        EvalCorpusUnderRepresented,
+        RegisterDrift,
+        OtherKnown(String),
+        Unknown(String),
+    },
+    pub estimated_actionability: ActionabilityClass,  // PromptTune | MaskRetune | EvalCorpusExpand | TeacherSwap | UserIntervention
+}
+```
+
+Mercurius (per Tranche 12.20) consumes signatures + ranks by actionability; Aletheia drift-detection (per Tranche 12.24 Phase 4) dispatches retrain calibration when signature clusters exceed thresholds; the proposer step (per the YES paper's local 9B-evolver finding) generates candidate fixes routed through Mercurius's `aletheia-creative-skill-creation` skill (Zeithoven CF5).
+
+### Cross-track hooks
+
+- Tranche **12.24 Phase 2** (Track 12) — `epii-distillation` skill scaffold; this tranche extends with EKSFT loss + epistemic-blindfolded teacher.
+- Tranche **12.22** (Track 12) — slot CLI; resolves the teacher model at training time.
+- Tranche **12.24 Phase 4** (Track 12) — Aletheia drift-detection; consumes the `FailureSignature` rows from this tranche.
+- Tranche **12.20** (Track 12) — Mercurius Elo; rates `(checkpoint, eval-corpus-version, training-config)` per trial.
+- DR-MP-1, DR-MP-2, DR-MP-3 (existing) — the 4'/5'/0' constitutional triplet + EBM operational atom + verifier-raises-questions discipline; CPT trial outcomes flow through this canon.
+- DR-MODEL-1 (existing) — slot-rule pattern forbids hard-locks (so teacher resolves dynamically, NOT pinned to Opus).
+- M5'-on-Paramaśiva spec at `Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md` — the canonical operational-capacity spec; this tranche IS its implementation.
+- Phase-I DiscoverAI research synthesis at `state/notebooklm-research-2026-06-15/ROSTER.md` — research origin of EKSFT / Context-CoT techniques.
+
+### Verification
+
+`test -f Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/eksft.py`; `test -f Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/blindfolded_teacher.py`; `test -d Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/eval-corpus/m1-paramasiva && test -f Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/eval-corpus/m1-paramasiva/manifest.json`; `pytest Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/test_eksft.py -q` validates the loss math against the empirical baseline (Qwen 1.5 4B EKSFT loss converges to spec); `pytest Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/test_blindfolded_teacher.py -q` confirms teacher never sees ground-truth answer + minimum-leakage hint discipline holds; integration test: a CPT trial on a small Qwen-class model with corrupted training-data produces a `FailureSignature` with `EksftMaskOverfit` mechanism + actionability `MaskRetune`; the eval corpus runs `eval_m1_canonical_derivation.py` against a baseline checkpoint and emits perplexity-pass metric; `grep -nE "FailureSignature" Body/S/S5/epii-autoresearch-core/src/types.rs` returns the struct definition.
+
+### What this is NOT
+
+- This is NOT a re-architecture of M1' Paramaśiva (the matheme-engine stays as is).
+- This is NOT a CPT training pipeline (that's Tranche 12.24 Phase 2 `epii-distillation` scaffold).
+- This is NOT a teacher-model vendor lock (per DR-MODEL-1, slot CLI handles this).
+- This IS the **load-bearing greenfield piece** the DiscoverAI research surfaced as the one place cycle 3 must build, not wire. Estimate ~500 LOC Python + the eval corpus packaging.
+
+This tranche is the **single substrate-gap closure** identified by the wave-2 DiscoverAI synthesis. Every other Phase-I cycle 3 addition is wiring + exposure + clarification of substrate already in place; this one is build.

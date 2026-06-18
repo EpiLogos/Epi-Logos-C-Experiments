@@ -288,6 +288,30 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
+        method: "s3'.being_pattern.observe",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::temporal being-pattern producer",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s3'.being_pattern.project",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::temporal being-pattern producer",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s3'.being_pattern.subscribe",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::temporal being-pattern producer",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s3'.being_pattern.review_candidate",
+        kind: MethodDispatchKind::S3NativeHandler,
+        authority_path: "Body/S/S3/gateway::temporal being-pattern producer",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
         method: "s3'.kernel.envelope.publish",
         kind: MethodDispatchKind::S3NativeHandler,
         authority_path: "Body/S/S3/gateway-contract::KERNEL_ENVELOPE_CONTRACT",
@@ -360,6 +384,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         kind: MethodDispatchKind::S2GraphServiceAdapter,
         authority_path:
             "Body/S/S0/epi-cli::gate::graph backed by Idea/Bimba/Map/datasets/parashakti-deep",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "m2.cymatic_invert",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::parashakti::cymatic_invert",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
@@ -581,6 +611,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
+        method: "s5'.gnostic.resolve",
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
         method: "s5'.gnostic.notebook",
         kind: MethodDispatchKind::S5GovernanceAdapter,
         authority_path: "Body/S/S5/epi-gnostic",
@@ -736,6 +772,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "s0.command.completion",
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/epi-cli/src/portal/command.rs",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: "s0'.anuttara.trace",
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/portal-core::coordinate_phase trace",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {

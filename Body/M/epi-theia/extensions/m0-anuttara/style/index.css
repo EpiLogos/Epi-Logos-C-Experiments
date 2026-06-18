@@ -1,3 +1,5 @@
+@import './provenance-pills.css';
+
 .mext-widget-m0-anuttara .mext-widget-root {
     display: flex;
     flex-direction: column;
@@ -46,6 +48,8 @@
 }
 
 .mext-widget-m0-anuttara .m0-layer-tabs button {
+    display: inline-flex;
+    align-items: center;
     border: 1px solid var(--theia-input-border);
     border-radius: 3px;
     padding: 4px 8px;
@@ -85,11 +89,6 @@
     font-size: var(--theia-ui-font-size0);
     background: var(--theia-badge-background);
     color: var(--theia-badge-foreground);
-}
-
-.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill[data-provenance-state='blocked'] {
-    background: var(--theia-inputValidation-warningBackground);
-    color: var(--theia-inputValidation-warningForeground);
 }
 
 .mext-widget-m0-anuttara .m0-coordinate-summary-card-generation {

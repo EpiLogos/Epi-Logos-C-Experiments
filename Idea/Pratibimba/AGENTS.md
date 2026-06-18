@@ -8,7 +8,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]]
 - `System/README.md` — UX/system architecture index for [[M']]; runtime code lives in `Body/M/epi-theia` (not here).
 - `System/Subsystems/` — one documentation home per M' subsystem ([[M0']]..[[M5']]: [[Anuttara]], [[Paramasiva]], [[Parashakti]], [[Mahamaya]], [[Nara]], [[Epii]]).
 - `System/docs/` — operator runbook, publishing/dependency/extension-naming models, and `decisions/` ADRs (adr-05-*).
-- `Self/PASU.md` — PASU bootstrap (non-dual agent-user field; Kairos ground for [[M4-Nara]]).
+- `Self/PASU.md` — PASU bootstrap (non-dual agent-user field; Kairos ground for [[M4-Nara]]) and `c_3_session_history` accumulator for [[user-context]] session-close write-back.
 - `Self/Thought/T/` — T0..T5 + T0'..T5' Thought-coordinate Forms.
 - `Self/Action/` — `History/{YYYY}/...` (day/now archive) and `Work/` (Projects, Bimba Map).
 - Does NOT own implementation/behavior (lives in `Body/M/epi-theia`) nor canonical specs/diagrams (live in `Idea/Bimba/Seeds/M/**`). Domain law stays in its owning M' coordinate spec, not relocated here.

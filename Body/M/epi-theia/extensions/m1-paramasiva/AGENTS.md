@@ -9,7 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M1'-SPEC]] (see also [[M1-ARCHITECTURE
 - `src/common/extension-constants.ts` — node-test-safe mirror of EXTENSION_ID + PRIVACY_CLASS (kept in lock-step with `index.ts`).
 - `src/common/clock-instrument.ts` — pure clock/topology profile model (`M1ProfileClockModel`, lens/mode cells); requireable under plain `node --test`.
 - `src/common/{surface-dispatch,m1-backend-studio-pack,deep-widget-ui-state}.ts` — shared dispatch/state surface.
-- `src/browser/` — Theia frontend: `frontend-module.ts` (entry), `m1-paramasiva-widget.tsx`, clock/Klein-topology/spanda-walk/CL42-signature/Klein-flip views, coordinate-tree contribution.
+- `src/browser/` — Theia frontend: `frontend-module.ts` (entry + empty-state registration), `empty-state.tsx`, `m1-paramasiva-widget.tsx`, clock/Klein-topology/spanda-walk/CL42-signature/Klein-flip/Kaprekar/audio-bus inspector views, coordinate-tree contribution.
 - `style/index.css`, `package.json`, `tsconfig.json`, `lib/` (build output).
 - Does NOT own: shared runtime (delegated to `@pratibimba/m-extension-runtime`), composition arbitration ([[M'-SYSTEM-SPEC]] Track 08 / `@pratibimba/integrated-composition`), gateway runtime (S0/S2/S3 are forbidden imports per `compositionBoundary.forbiddenImports`). M1' domain law lives in [[M1'-SPEC]], not here.
 

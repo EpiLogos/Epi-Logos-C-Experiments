@@ -4,8 +4,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const repoRoot = path.resolve(import.meta.dirname, "../../..");
-const datasetsRoot = path.join(repoRoot, "docs/datasets");
+// this script lives at Idea/Bimba/Map/datasets/scripts/ — datasets is its parent.
+const repoRoot = path.resolve(import.meta.dirname, "../../../../..");
+const datasetsRoot = path.resolve(import.meta.dirname, ".."); // Idea/Bimba/Map/datasets
 const outputDir = path.join(repoRoot, "Body/S/S5/epi-gnostic/cypher/generated");
 
 const branches = [
@@ -220,6 +221,42 @@ export function mCoordinate(coordinate) {
   return coordinate;
 }
 
+const DOUBLING_RAW = "4.4.0-4.4/5";
+const DOUBLING_TOK = "";
+const DOUBLING_CANON = "4.(4.0/1-4.4/5)";
+
+// Normalise context frames to canonical form. MUST stay in parity with the Rust generator
+// `wrap_context_frames` (Body/S/S2/graph-services/src/coordinate.rs), the TS bimba-mcp
+// `wrapContextFrames`, and the projector `canonical()` (../scripts/project-map-index.mjs).
+// Idempotent. position-N frame keeps `N.` outside (`4.0/1` -> `4.(0/1)`); doubling stays atomic.
+export function wrapContextFrames(coordinate) {
+  const protectedCoord = coordinate.split(DOUBLING_RAW).join(DOUBLING_TOK);
+  const segs = [];
+  let depth = 0;
+  let cur = "";
+  for (const ch of protectedCoord) {
+    if (ch === "(") { depth += 1; cur += ch; }
+    else if (ch === ")") { depth -= 1; cur += ch; }
+    else if (ch === "-" && depth === 0) { segs.push(cur); cur = ""; }
+    else cur += ch;
+  }
+  segs.push(cur);
+  return segs
+    .map((seg) => {
+      if (seg === DOUBLING_TOK) return DOUBLING_CANON;
+      if (!seg.includes("/")) return seg;
+      if (seg.startsWith("(") && seg.endsWith(")")) return seg;
+      const dot = seg.indexOf(".");
+      if (dot > 0 && /^\d+$/.test(seg.slice(0, dot))) {
+        const rest = seg.slice(dot + 1);
+        if (rest.startsWith("(") && rest.endsWith(")")) return seg;
+        return `${seg.slice(0, dot)}.(${rest})`;
+      }
+      return `(${seg})`;
+    })
+    .join("-");
+}
+
 export function cypherString(value) {
   return `'${String(value)
     .replace(/\\/g, "\\\\")
@@ -305,7 +342,7 @@ export function buildRegionalOutputs() {
 
     for (const node of nodes) {
       const props = node.filteredProps ?? node.filtered_props ?? {};
-      const coordinate = mCoordinate(node.coordinate ?? props.bimbaCoordinate);
+      const coordinate = wrapContextFrames(mCoordinate(node.coordinate ?? props.bimbaCoordinate));
       if (!coordinate) continue;
 
       for (const [region, regionMappings] of Object.entries(mappings)) {

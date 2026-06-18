@@ -37,6 +37,7 @@ typedef struct KernelState {
     uint16_t syntax_layer_mask;
     uint8_t  active_archetype;
     uint8_t  active_tct_position;
+    uint8_t  slot_privacy_boundary_compliance;
 } KernelState;
 
 typedef struct M0VerifierReport {
@@ -46,6 +47,7 @@ typedef struct M0VerifierReport {
     char     unsatisfied_constraints[M0_VERIFIER_MAX_UNSATISFIED]
                                       [M0_VERIFIER_COORDINATE_MAX];
     float    coherence_score;
+    uint8_t  slot_privacy_boundary_compliance;
 } M0VerifierReport;
 
 int m0_verifier_check_state(const KernelState* state, M0VerifierReport* out);

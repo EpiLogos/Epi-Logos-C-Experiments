@@ -70,6 +70,25 @@ const EMPTY_STATE: RunState = {
     humanGateBlocks: []
 };
 
+const DR_M5_1_AGENTIC_ACTORS: readonly AgenticActor[] = [
+    'pi',
+    'anima',
+    'anansi',
+    'moirai',
+    'janus',
+    'mercurius',
+    'agora',
+    'zeithoven'
+];
+
+function normalizeAgenticActor(value: string | null | undefined): AgenticActor | undefined {
+    if (!value) {
+        return undefined;
+    }
+    const normalized = value.toLowerCase();
+    return DR_M5_1_AGENTIC_ACTORS.find(actor => actor === normalized);
+}
+
 @injectable()
 export class AgenticControlRoomRuntimeService {
     @inject(KERNEL_BRIDGE_API)
@@ -252,7 +271,7 @@ export class AgenticControlRoomRuntimeService {
             humanRequired: candidate.humanRequired,
             actorIsHuman,
             recursiveSelfReview: candidate.recursiveSelfReview,
-            actor: actor ?? candidate.proposer ?? undefined
+            actor: actor ?? normalizeAgenticActor(candidate.proposer)
         });
         if (!gate.ok) {
             this._state = {

@@ -16,6 +16,7 @@ pub struct M0VerifierKernelState {
     pub syntax_layer_mask: u16,
     pub active_archetype: u8,
     pub active_tct_position: u8,
+    pub slot_privacy_boundary_compliance: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -25,6 +26,7 @@ pub struct M0VerifierReportContract {
     pub virtue_scores: [f32; 9],
     pub unsatisfied_constraints: Vec<String>,
     pub coherence_score: f32,
+    pub slot_privacy_boundary_compliance: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

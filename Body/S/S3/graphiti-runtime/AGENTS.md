@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (world-return canon: [[S5-SP
 
 ## Ownership
 - `Cargo.toml` — crate manifest (`epi_s3_graphiti_runtime` lib; depends on `epi-s3-gateway-contract` + `portal-core`).
-- `src/lib.rs` — crate root / public surface: `EpisodeAttrs`/`EpisodeInsert` payloads, `GraphitiRuntimeConfig`/`GraphitiStatus`, deposit-payload builders (`session_memory_*`, `kernel_resonance_*`, `kernel_profile_observation_*`), and async HTTP adapter fns (`status`, `session_memory_search`, `*_deposit`, `fire_provenance`).
+- `src/lib.rs` — crate root / public surface: `EpisodeAttrs`/`EpisodeInsert` payloads, `GraphitiRuntimeConfig`/`GraphitiStatus`, deposit-payload builders (`session_memory_*`, `kernel_resonance_*`, `kernel_profile_observation_*`), CCT-21 public-safe BeingPattern provenance refs, and async HTTP adapter fns (`status`, `session_memory_search`, `*_deposit`, `fire_provenance`).
 - `tests/episode_vak.rs` — contract tests for VAK-field serialisation on episode payloads.
 - Does NOT own gateway protocol/method contract (delegated to sibling `gateway-contract`, [[S3-SPEC]]) or knowledge-graph storage ([[S2-SPEC]]); identity-affecting deposits are rejected here and routed through Epii review.
 
@@ -21,7 +21,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (world-return canon: [[S5-SP
 - Vault writes use coordinate-prefixed `c_n_*` frontmatter.
 
 ## Verification
-- `cargo test -p epi-s3-graphiti-runtime` (or `make rust-test` from repo root).
+- `cargo test --manifest-path Body/S/S3/graphiti-runtime/Cargo.toml --test being_pattern_protected_refs` for CCT-21; `cargo test -p epi-s3-graphiti-runtime` only in a workspace that includes this excluded crate; or `make rust-test` from repo root.
 
 ## Child DOX Index
 - (leaf)

@@ -321,6 +321,34 @@ export interface KernelBridgeRuntimeSnapshot {
     readiness: unknown;
 }
 
+export type RFactorBand = 'pravritti' | 'nivritti';
+
+export interface RFactorPathStep {
+    readonly rFactor: number;
+    readonly baseRoute: 'O#' | 'X#' | 'N#' | 'M#' | 'Nara' | 'Siva' | 'Shakti';
+    readonly band: RFactorBand;
+    readonly position: number;
+    readonly isTurn: boolean;
+}
+
+export interface AnuttaraWitnessProjection {
+    readonly virtueWitnessVector: number;
+    readonly syntaxWitnessVector: number;
+    readonly rfactorPath: readonly RFactorPathStep[];
+    readonly bandBalance: {
+        readonly pravrittiDepth: number;
+        readonly nivrittiDepth: number;
+        readonly reachedTurn: boolean;
+        readonly returned: boolean;
+    };
+    readonly palindromeState: {
+        readonly normalFormSymmetric: boolean;
+        readonly mirrorNormalForm: string;
+    };
+    readonly openQuestions: readonly string[];
+    readonly coherenceScore: number;
+}
+
 // ---- Frontend-safe S3 stream rows (03.T5 consumer contract) ----
 
 export type KernelBridgeStreamTable =

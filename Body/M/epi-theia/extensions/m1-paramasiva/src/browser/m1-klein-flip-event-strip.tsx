@@ -174,7 +174,7 @@ export function mergeKleinFlipEventTrail(
     if (events.some(event => event.eventKey === nextEvent.eventKey)) {
         return [...events];
     }
-    return [...events, nextEvent];
+    return [...events, nextEvent].slice(-MAX_EVENT_COUNT);
 }
 
 function flippedLabels(

@@ -43,3 +43,52 @@
     color: var(--theia-descriptionForeground);
     font-style: italic;
 }
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--theia-widget-border);
+}
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel h4 {
+    margin: 0 0 8px;
+    font-size: var(--theia-ui-font-size1);
+    font-weight: 600;
+}
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel ol {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel li {
+    display: grid;
+    grid-template-columns: minmax(72px, 1fr) 64px 44px minmax(92px, 1fr);
+    gap: 8px;
+    align-items: center;
+    min-height: 28px;
+    padding: 4px 6px;
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 4px;
+}
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel li[data-selected='true'] {
+    border-color: var(--theia-focusBorder);
+    background-color: var(--theia-list-activeSelectionBackground);
+}
+
+.mext-widget-m2-parashakti .m2-pending-badge {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 1px 6px;
+    border: 1px solid var(--theia-editorWarning-foreground);
+    border-radius: 4px;
+    color: var(--theia-editorWarning-foreground);
+    font-size: var(--theia-ui-font-size0);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}

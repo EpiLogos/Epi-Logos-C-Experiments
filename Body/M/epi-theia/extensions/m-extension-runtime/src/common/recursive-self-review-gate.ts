@@ -1,15 +1,23 @@
 export type RecursiveSelfReviewFinalValidationActor =
-    | 'sophia'
-    | 'anima'
     | 'pi'
-    | 'aletheia';
+    | 'anima'
+    | 'anansi'
+    | 'moirai'
+    | 'janus'
+    | 'mercurius'
+    | 'agora'
+    | 'zeithoven';
 
 export const RECURSIVE_SELF_REVIEW_FINAL_VALIDATION_ACTORS:
 readonly RecursiveSelfReviewFinalValidationActor[] = Object.freeze([
-    'sophia',
-    'anima',
     'pi',
-    'aletheia'
+    'anima',
+    'anansi',
+    'moirai',
+    'janus',
+    'mercurius',
+    'agora',
+    'zeithoven'
 ]);
 
 export interface PiReviewRoutingGateInput {

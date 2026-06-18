@@ -22,4 +22,4 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S2-SPEC]]
 - `npm test` (vitest) in `bimba-mcp/`; `npm run typecheck` (`tsc --noEmit`) for type-only checks.
 
 ## Child DOX Index
-- (leaf)
+- [[bimba-mcp/AGENTS.md]] — the Bimba MCP server: tool surface, Neo4j connection lifecycle, and the Open-Schema Doctrine for working with the coordinate graph.

@@ -10,6 +10,7 @@ import {
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
 import { EXTENSION_ID, PRIVACY_CLASS } from '../../common';
+import { privacyChromeClass, SURFACE_PRIVACY_TOOLTIP } from '../privacy-chrome';
 
 export const TUNING_BAR_VIEW_ID = 'm4.nara.tuningBar';
 export const TUNING_BAR_LABEL = 'M4 Tuning Bar';
@@ -86,7 +87,7 @@ export const M4TuningBar: React.FC<M4TuningBarProps> = props => {
 
     return (
         <section
-            className="m4-tuning-bar"
+            className={`m4-tuning-bar ${privacyChromeClass('protected_local')}`}
             data-test="m4-tuning-bar"
             data-track="TRACK_08"
             data-export={M4_TUNING_BAR_EXPORT}
@@ -188,12 +189,12 @@ export class TuningBarWidget extends ReactWidget {
     protected init(): void {
         this.id = TuningBarWidget.ID;
         this.title.label = TuningBarWidget.LABEL;
-        this.title.caption = TuningBarWidget.LABEL;
+        this.title.caption = SURFACE_PRIVACY_TOOLTIP;
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
         this.addClass('m4-nara-tuning-bar');
-        this.addClass('mext-privacy-protected-local');
+        this.addClass(privacyChromeClass('protected_local'));
 
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
@@ -227,7 +228,10 @@ export class TuningBarWidget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         return (
-            <div className="mext-widget-root" data-test="m4-tuning-bar-root">
+            <div
+                className={`mext-widget-root ${privacyChromeClass('protected_local')}`}
+                data-test="m4-tuning-bar-root"
+            >
                 <M4TuningBar
                     parameters={TUNING_PARAMETERS}
                     values={this.values}

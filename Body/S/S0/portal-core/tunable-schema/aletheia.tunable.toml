@@ -1,0 +1,132 @@
+# Existing [aletheia.drift_detection] + [aletheia.elo] no-hardcoding lock,
+# migrated to schema-backed. ALL Class C per DR-TUNE-3.
+
+[[tunable]]
+key = "aletheia.drift_detection.delta_elo"
+type = "f32"
+default = 50.0
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.drift_detection.min_trials"
+type = "u32"
+default = 50
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.drift_detection.coverage_days"
+type = "u32"
+default = 14
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.drift_detection.verifier_violation_multiplier"
+type = "f32"
+default = 2.0
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.drift_detection.veto_count_per_facet"
+type = "u32"
+default = 3
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.drift_detection.veto_consecutive_sessions"
+type = "u32"
+default = 3
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.elo.seed_rating"
+type = "f32"
+default = 1500.0
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.elo.confidence_penalty_alpha"
+type = "f32"
+default = 0.5
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.elo.bootstrap_trials"
+type = "u32"
+default = 10
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"
+
+[[tunable]]
+key = "aletheia.elo.bootstrap_sigma"
+type = "f32"
+default = 350.0
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-ML-SKILL-SURFACE-SPEC §5 + Track 38"

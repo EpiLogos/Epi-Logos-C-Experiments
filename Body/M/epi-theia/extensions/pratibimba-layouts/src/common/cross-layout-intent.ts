@@ -56,6 +56,26 @@ export interface CrossLayoutIntent {
     readonly reason?: string;
 }
 
+export interface CrossLayoutIntentTelemetry {
+    readonly timestamp: number;
+    readonly intent: CrossLayoutIntent;
+    readonly status: 'success' | 'failure';
+    readonly error: string | null;
+}
+
+export const CROSS_LAYOUT_INTENT_TELEMETRY_EVENT = 'pratibimba:cross-layout-intent';
+
+export function publishCrossLayoutIntentTelemetry(detail: CrossLayoutIntentTelemetry): void {
+    const target = globalThis as typeof globalThis & {
+        dispatchEvent?: (event: Event) => boolean;
+        CustomEvent?: typeof CustomEvent;
+    };
+    if (typeof target.dispatchEvent !== 'function' || typeof target.CustomEvent !== 'function') {
+        return;
+    }
+    target.dispatchEvent(new target.CustomEvent(CROSS_LAYOUT_INTENT_TELEMETRY_EVENT, { detail }));
+}
+
 /** Convenience: minimal intent that only switches layout. */
 export function layoutOnlyIntent(layout: PratibimbaLayoutId, reason?: string): CrossLayoutIntent {
     return {
@@ -79,6 +99,18 @@ export function intentTargetCommandId(intent: CrossLayoutIntent): string | null 
         return null;
     }
     return `pratibimba.${intent.requestedExtensionId}.${intent.requestedContributionId}.open`;
+}
+
+/** True only when an intent explicitly names the target extension contribution. */
+export function intentTargetsExtensionContribution(
+    intent: Pick<CrossLayoutIntent, 'requestedExtensionId' | 'requestedContributionId'>,
+    extensionId: string,
+    contributionId: string
+): boolean {
+    return (
+        intent.requestedExtensionId === extensionId &&
+        intent.requestedContributionId === contributionId
+    );
 }
 
 /**

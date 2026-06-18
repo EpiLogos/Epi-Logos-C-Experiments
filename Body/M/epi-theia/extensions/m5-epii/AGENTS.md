@@ -7,9 +7,9 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M5'-SPEC]] (see also [[M5-ARCHITECTURE
 ## Ownership
 - `src/common/index.ts` — generated contract surface (`MExtensionContributionContract`, view IDs, command IDs, Track 08 exports); re-exports `epii-surface`. Generated from `contracts/07-t0-extension-contract-preflight.json` — do not hand-edit.
 - `src/common/epii-surface.ts` — review/improve DTO domain types (`ReviewStatus`, `ReviewDisposition`, `GovernanceCategory`, `ArtifactUri`) and `M5_EPII_CONTRACT_VERSION`.
-- `src/browser/frontend-module.ts`, `m5-epii-widget.tsx` — Theia frontend module + review-queue widget.
-- `src/browser/services/` — `contemplation-object-service.ts`, `contemplation-object-components.tsx`, `resonance-ebm-service.ts`.
-- `tests/contemplation-object-viewer.test.mjs` — node `--test` contract test.
+- `src/browser/frontend-module.ts`, `m5-epii-widget.tsx`, `empty-state.tsx` — Theia frontend module, review-queue widget, and first-render empty-state surface.
+- `src/browser/services/` — `contemplation-object-service.ts`, `contemplation-object-components.tsx`, `wisdom-delta-service.ts`, `wisdom-delta-components.tsx`, `resonance-ebm-service.ts`.
+- `tests/contemplation-object-viewer.test.mjs` — node `--test` contract test for the contemplation object and wisdom-delta inspector surfaces.
 - `style/index.css`, `lib/` (build output), `package.json`, `tsconfig.json`.
 - Does NOT own: gateway runtime data (reached only via `m-extension-runtime`'s `KernelBridgeAPI`); cross-extension composition (Track 08 / `integrated-composition`); domain law lives in [[M5'-SPEC]], not duplicated here.
 

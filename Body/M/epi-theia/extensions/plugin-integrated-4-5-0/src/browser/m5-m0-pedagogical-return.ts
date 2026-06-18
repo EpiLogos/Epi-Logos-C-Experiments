@@ -1,10 +1,12 @@
-import { MObservabilityEvent, PrivacyClass } from '@pratibimba/m-extension-runtime';
-import {
-    formatIntegratedDeepLink,
-    type IntegratedDeepLinkInspector,
-    type JivaSivaRecognitionClaim,
-    type RecognitionSourceClass
-} from '@pratibimba/integrated-composition';
+import type { MObservabilityEvent, PrivacyClass } from '@pratibimba/m-extension-runtime';
+import { formatIntegratedDeepLink } from '@pratibimba/integrated-composition/integrated-deep-links';
+import type {
+    IntegratedDeepLinkInspector
+} from '@pratibimba/integrated-composition/integrated-deep-links';
+import type {
+    JivaSivaRecognitionClaim,
+    RecognitionSourceClass
+} from '@pratibimba/integrated-composition/recognition-claim';
 
 /**
  * 08.T8.4 — M5 → M0 pedagogical return (Möbius write-back).

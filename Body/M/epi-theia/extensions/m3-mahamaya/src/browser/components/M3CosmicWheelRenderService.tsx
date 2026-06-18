@@ -6,6 +6,10 @@ import {
 import { M3ProjectionSurface } from '../../common';
 import { M1ChromaticLensConsumer } from './M1ChromaticLensConsumer';
 import { M3LensApertureSwitcher } from './M3LensApertureSwitcher';
+import {
+    M3PentadicRelationInspector,
+    pentadicRelationModelFromProfilePayload
+} from './M3PentadicRelationInspector';
 import { ReadinessChip } from './ReadinessChip';
 import { useM3ProfileTick } from '../context/M3ProfileTickContext';
 import { useM3Readiness } from '../context/M3ReadinessContext';
@@ -139,6 +143,24 @@ export const M3CosmicWheelRenderService: React.FC<M3CosmicWheelRenderServiceProp
                     readiness={readiness}
                 />
             </div>
+            {mode === 'mini-view' && (
+                <PentadicHingeBadge
+                    profilePayload={profilePayload}
+                    readiness={readiness ?? inheritedReadiness.snapshot}
+                />
+            )}
+            {mode === 'full' && (
+                <div
+                    className="m3-wheel-pentadic-inspector-zone"
+                    data-inspector-zone="m3-pentadic-relation"
+                    style={pentadicInspectorZoneStyle}
+                >
+                    <M3PentadicRelationInspector
+                        profilePayload={profilePayload}
+                        readiness={readiness ?? inheritedReadiness.snapshot}
+                    />
+                </div>
+            )}
         </article>
     );
 };
@@ -163,6 +185,37 @@ const WheelPlaceholderSection: React.FC<{ readonly section: WheelSection }> = ({
         <p style={placeholderDetailStyle}>{section.detail}</p>
     </section>
 );
+
+const PentadicHingeBadge: React.FC<{
+    readonly profilePayload?: Readonly<Record<string, unknown>>;
+    readonly readiness: MExtensionReadinessSnapshot;
+}> = ({ profilePayload, readiness }) => {
+    const model = React.useMemo(
+        () => pentadicRelationModelFromProfilePayload(profilePayload, readiness),
+        [profilePayload, readiness]
+    );
+    const state = model.ready ? 'ready' : 'pending';
+    const trace = model.trace;
+    const hinge =
+        trace?.sourceBinaryState &&
+        typeof trace.wholeNumberEndpoint === 'number' &&
+        typeof trace.naturalNumberEndpoint === 'number'
+            ? `${trace.sourceBinaryState} -> ${trace.wholeNumberEndpoint} · ${trace.naturalNumberEndpoint}`
+            : null;
+    return (
+        <div
+            data-widget-id="pratibimba.m3-mahamaya:pentadic-hinge-badge"
+            data-readiness-state={state}
+            style={pentadicBadgeStyle}
+        >
+            <span style={badgeLabelStyle}>{hinge ?? 'pentadic hinge pending'}</span>
+            <ReadinessChip
+                bindingKey="profile.anuttara_pentadic_trace"
+                state={state}
+            />
+        </div>
+    );
+};
 
 function wheelSections(
     surface: M3ProjectionSurface,
@@ -307,6 +360,22 @@ const namespaceInspectorZoneStyle: React.CSSProperties = {
     alignItems: 'stretch',
     gap: 10,
     marginTop: 12
+};
+
+const pentadicInspectorZoneStyle: React.CSSProperties = {
+    marginTop: 12
+};
+
+const pentadicBadgeStyle: React.CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+    marginTop: 10,
+    border: '1px solid var(--theia-contrastBorder)',
+    borderRadius: 6,
+    padding: '6px 8px',
+    background: 'var(--theia-editor-background)'
 };
 
 const placeholderStyle: React.CSSProperties = {

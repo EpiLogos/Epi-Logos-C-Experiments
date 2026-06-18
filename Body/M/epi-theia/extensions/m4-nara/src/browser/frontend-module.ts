@@ -1,4 +1,5 @@
 // Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+import '../../style/privacy-chrome.css';
 import { ContainerModule, injectable, interfaces, inject } from '@theia/core/shared/inversify';
 import { CommandContribution, CommandRegistry, CommandService } from '@theia/core/lib/common';
 import {
@@ -10,6 +11,9 @@ import { PreferenceService, PreferenceScope } from '@theia/core/lib/browser/pref
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
     MObservabilityPublisher,
+    Disposable,
+    EMPTY_STATE_REGISTRY,
+    EmptyStateRegistry,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
     ColdStartOrchestrator,
@@ -26,6 +30,10 @@ import {
     runPasuWizardSkip
 } from './onboarding/identity-wizard';
 import { M4NaraCanvasEditorWidget } from './canvas-editor';
+import {
+    M4NaraEmptyState,
+    M4NaraEmptyStateWidget
+} from './empty-state';
 import { HighlightService } from './services/highlight-service';
 import { LensApplicationWidget } from './widgets/lens-application';
 import { LogosCycleWidget } from './widgets/logos-cycle';
@@ -91,6 +99,13 @@ export class M4NaraContribution
                     return this.openView({ activate: true, reveal: true });
                 }
             }
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'artifact',
+            'M4 Nara: Open Artifact',
+            () => this.openView({ activate: true, reveal: true })
         );
         registerIntentTarget(
             commands,
@@ -353,9 +368,32 @@ class M4NaraPublisher implements MObservabilityPublisher {
     }
 }
 
+@injectable()
+class M4NaraEmptyStateRegistration implements FrontendApplicationContribution {
+    @inject(EMPTY_STATE_REGISTRY)
+    protected readonly emptyStates!: EmptyStateRegistry;
+
+    protected disposable?: Disposable;
+
+    onStart(): void {
+        this.disposable = this.emptyStates.register({
+            extensionId: EXTENSION_ID,
+            viewId: 'm4-nara.primary',
+            activationCondition: snapshot => snapshot.state !== 'ready_public_current',
+            component: M4NaraEmptyState
+        });
+    }
+
+    onStop(): void {
+        this.disposable?.dispose();
+        this.disposable = undefined;
+    }
+}
+
 export default new ContainerModule(bind => {
     bind(HighlightService).toSelf().inSingletonScope();
     bind(M4NaraWidget).toSelf();
+    bind(M4NaraEmptyStateWidget).toSelf();
     bind(M4NaraCanvasEditorWidget).toSelf();
     bind(LensApplicationWidget).toSelf();
     bind(LogosCycleWidget).toSelf();
@@ -421,6 +459,8 @@ export default new ContainerModule(bind => {
     bind(M4_NARA_PUBLISHER).toService(
         M4NaraPublisher
     );
+    bind(M4NaraEmptyStateRegistration).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(M4NaraEmptyStateRegistration);
 
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.

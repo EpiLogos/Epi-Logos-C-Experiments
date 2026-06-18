@@ -1,0 +1,65 @@
+# Tranche 5.26 — M4 session lifecycle tunable knobs.
+
+[[tunable]]
+key = "nara.session.protein_capacity"
+type = "u32"
+default = 256
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+structural_invariant = false
+owning_subsystem = "M4"
+owning_carrier = "anima"
+authoritative_doc = "Tranche 5.26"
+description = "Max TranscriptionStep entries per session protein."
+[tunable.range]
+min = 16
+max = 4096
+
+[[tunable]]
+key = "nara.session.stop_codon_policy"
+type = "enum"
+default = "kairos-derived"
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+structural_invariant = false
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.26"
+description = "Which STOP codon fires at session close. kairos-derived picks mod-3."
+[tunable.range]
+enum_values = ["round-robin", "kairos-derived", "fixed-taa", "fixed-tag", "fixed-tga"]
+
+[[tunable]]
+key = "nara.session.write_through_mode"
+type = "enum"
+default = "immediate"
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+structural_invariant = false
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.26"
+description = "When sealed protein writes to PatternPacket and Graphiti."
+[tunable.range]
+enum_values = ["immediate", "deferred", "batched"]
+
+[[tunable]]
+key = "nara.session.protected_handle_strict"
+type = "bool"
+default = true
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "local-only"
+structural_invariant = false
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.26"
+description = "When true, protein body never crosses profile bus. Two-flag gate with dev.unsafe.allow_raw_protein_bus."

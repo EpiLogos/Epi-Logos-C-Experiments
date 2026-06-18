@@ -17,6 +17,7 @@ pub mod cypher;
 pub mod dataset_import;
 pub mod doctor;
 pub mod embeddings;
+pub mod equivalence_classes;
 pub mod gds;
 pub mod graph_api;
 pub mod lifecycle;

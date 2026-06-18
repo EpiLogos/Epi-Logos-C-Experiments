@@ -3,6 +3,18 @@
     "target": "ES2022",
     "module": "commonjs",
     "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@pratibimba/integrated-composition": ["extensions/integrated-composition/lib/common/index.d.ts"],
+      "@pratibimba/integrated-composition/design-primitives": ["extensions/integrated-composition/lib/browser/design-primitives/index.d.ts"],
+      "@pratibimba/integrated-composition/integrated-readiness": ["extensions/integrated-composition/lib/common/integrated-readiness.d.ts"],
+      "@pratibimba/integrated-composition/graphiti-source-guard": ["extensions/integrated-composition/lib/common/graphiti-source-guard.d.ts"],
+      "@pratibimba/integrated-composition/integrated-deep-links": ["extensions/integrated-composition/lib/common/integrated-deep-links.d.ts"],
+      "@pratibimba/integrated-composition/recognition-claim": ["extensions/integrated-composition/lib/common/recognition-claim.d.ts"],
+      "@pratibimba/integrated-composition/recursive-self-review-gate": ["extensions/integrated-composition/lib/common/recursive-self-review-gate.d.ts"],
+      "@pratibimba/integrated-composition/epii-review-state": ["extensions/integrated-composition/lib/common/epii-review-state.d.ts"],
+      "@pratibimba/*": ["extensions/*/lib/common/index.d.ts"]
+    },
     "lib": ["ES2022", "DOM"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

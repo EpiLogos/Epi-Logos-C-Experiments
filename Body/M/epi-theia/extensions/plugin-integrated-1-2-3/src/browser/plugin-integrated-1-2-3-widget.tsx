@@ -19,6 +19,7 @@ import {
     findNamedLayout,
     IntegratedContributorRecord,
     IntegratedEmptyState,
+    COSMIC_ENGINE_LAYOUT,
     PENDING_INTEGRATED_VIEW_STATE,
     buildEmptyState,
     openInReview,
@@ -26,6 +27,7 @@ import {
     validateEvidenceEnvelopeForRange
 } from '@pratibimba/integrated-composition';
 import { CosmicEnginePanes } from './cosmic-engine-panes';
+import { CosmicEngineComposition } from './cosmic-engine-composition';
 import { ThirdSpandaCompositionOverlay } from './third-spanda-overlay';
 import { M2PrimeMeaningPacket } from '@pratibimba/m2-parashakti';
 import { PLUGIN_ID, CONTRIBUTOR_IDS, buildRoutedM2PacketFromBridge } from '../common';
@@ -179,16 +181,23 @@ export class PluginIntegrated123Widget extends ReactWidget {
         const panes = checkCosmicEnginePanes(this.currentProfile);
         return (
             <div className="integrated-widget-root">
-                <CosmicEnginePanes
-                    profile={this.currentProfile}
-                    routedM2Packet={this.routedM2Packet}
-                    m3CenterStage={panes.m3CenterStage}
-                    m2LeftStage={panes.m2LeftStage}
-                    m1RightInspector={panes.m1RightInspector}
-                    onOpenInReview={producerId =>
-                        void this.handleOpenInReview(producerId)
-                    }
-                />
+                <CosmicEngineComposition profile={this.currentProfile} />
+                <aside
+                    className="cosmic-engine-mini-inspectors"
+                    data-test="cosmic-engine-mini-inspectors"
+                    data-mini-inspector-owners={COSMIC_ENGINE_LAYOUT.miniInspectorOwners.join(',')}
+                >
+                    <CosmicEnginePanes
+                        profile={this.currentProfile}
+                        routedM2Packet={this.routedM2Packet}
+                        m3CenterStage={panes.m3CenterStage}
+                        m2LeftStage={panes.m2LeftStage}
+                        m1RightInspector={panes.m1RightInspector}
+                        onOpenInReview={producerId =>
+                            void this.handleOpenInReview(producerId)
+                        }
+                    />
+                </aside>
                 <ThirdSpandaCompositionOverlay />
             </div>
         );

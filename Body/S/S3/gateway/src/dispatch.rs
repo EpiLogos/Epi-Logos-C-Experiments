@@ -115,11 +115,8 @@ pub const ANIMA_INVOKE_ROLE: &str = "anima_invoke";
 /// S3 owns the route law via the existing `nara.*` extension route; these
 /// names are declared here so gateway audits can assert the concrete lens
 /// surface without expanding the product-method contract table.
-pub const NARA_LENS_RPC_METHODS: [&str; 3] = [
-    "nara.lens.list",
-    "nara.lens.apply",
-    "nara.lens.synthesize",
-];
+pub const NARA_LENS_RPC_METHODS: [&str; 3] =
+    ["nara.lens.list", "nara.lens.apply", "nara.lens.synthesize"];
 
 /// Patch the target session's VAK address and append the task into its
 /// transcript as an `anima_invoke`-tagged message.
@@ -448,7 +445,10 @@ fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMet
             agent_access_owner: "S4/S5",
             route_id: "s0.product-skill-surface",
         })
-    } else if authority.contains("gate/") || authority.contains("src/gate ") {
+    } else if authority.contains("gate/")
+        || authority.contains("src/gate ")
+        || authority.contains("portal-core::parashakti::cymatic_invert")
+    {
         Some(RouteMetadata {
             owner: GatewayDispatchOwner::S0ProductAdapter,
             class: GatewayDispatchClass::SystemSurface,

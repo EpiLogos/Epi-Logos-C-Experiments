@@ -122,6 +122,17 @@ warning_acknowledged = "user-aware-that-content-leaves-device"
 
 The `warning_acknowledged` field requires explicit user action to set. The UI gate spells out the privacy implication: "Enabling cloud routing for Nara-parser means your journal entries and dream content will be sent to {provider}. This trades local privacy for higher-quality parsing. Type 'I understand' to confirm." The frictional surface is intentional.
 
+### Parametric knowledge carriage — canon-in-weights, content-in-context (per DR-PARAM-1)
+
+Because the Nara-parser slot runs **locally** (llama.cpp/MLX, where the KV cache is under our control), stable canonical facts may be carried as **parameter-space micro-experts** rather than re-injected as retrieved text every turn. This is DMOA-style parametric knowledge injection (Decoupled Mixture of Experts), bounded to the **stable-canonical-leaf class** and made matheme-native:
+
+- **What is carried:** canonical, non-private, offline-manufacturable facts — coordinate definitions, the 72/64/36 LUTs, archetypal tables. NOT raw user content. The privacy boundary is unchanged: canon goes in the weights, the user's journal/dream content stays in context and never leaves the device.
+- **How it composes:** the user's PASU voice/idiom LoRA (the M4 Nara local-LoRA personalization, per [[M'-ML-SKILL-SURFACE-SPEC]] §3.1) and the canon-fact micro-experts are two distinct adapters that ride the same frozen Gemma base and compose by linear ΔΘ sum on the final FFN — exactly as DMOA composes experts. "Who the user is" and "what the canon is" are separate, hot-swappable Shakti perturbations on one Siva base (DR-ARENA-1).
+- **When it fires:** the EBM energy `E = ‖q_b − q_p‖²` (DR-MP-2), not Shannon entropy, is the gate — when a proposal's misalignment-from-canon spikes for a coordinate whose leaf-facts are carried as a `c_5_birth_codon`-indexed expert, that expert loads instead of a text re-injection, preserving the KV cache.
+- **What it does NOT do:** it never carries relational, multi-hop, or provenance-bearing knowledge — that stays in the GraphRAG / Indras Net substrate (`s5'.gnostic.query_with_layers`). The parametric layer is a fast leaf-cache **companion** to GraphRAG, never a replacement.
+
+Manufacturing rides Tranche 12.24 (`epii-distillation` expert mode + `mlx-lora`); routing/retrieval rides `s5'.gnostic.query_with_layers` (Track 39, Tranche 12.2 EXPANDED); the expert terminus rides the Hen entity-candidate lifecycle (CCT-14b). This is an **option** on the local Nara slot, not a new model commitment — it shares the slot's existing `state`/`fallback` semantics.
+
 ---
 
 ## §3 — The Epii-Judge Slot
@@ -161,6 +172,63 @@ selection_policy = "elo-informed"  # or "round-robin", "user-pinned"
 ```
 
 When `selection_policy = "elo-informed"`, the dispatch selects from the pool based on Mercurius's per-model Elo state (per [[M'-AGENTIC-RUNTIME-SPEC]] §3). The model dimension becomes a learned dispatch — which model fits which judge-task at which coordinate context is honed by the system through doing.
+
+### CFP3 / F-thread naming (architectural identity)
+
+The `cloud-opt-in-pool` slot state IS the substrate of **CFP3 / F-thread (fusion_cadence)** at the model-dispatch level per the VAK CFP thread-type taxonomy (verbatim at [`Idea/Bimba/Seeds/M/M4'/2026-05-19-vak-musical-execution-z-thread.md:210, 263-268`](M4'/2026-05-19-vak-musical-execution-z-thread.md): `CFP1 parallel_chord` = P-thread (N tasks → N agents); **`CFP3 fusion_cadence` = F-thread (1 task → N agents → judge aggregate)**; `CFP4 long_drone` = L-thread (high-autonomy long-duration); `Z` = Möbius cycle wrapping all). The `cloud-opt-in-pool` slot configuration above IS CFP3 / F-thread operationalised as a model-slot pattern — N proposer models in parallel on the same prompt, with a judge model (default: `claude-opus-4-7`) reading every response and extracting consensus / contradictions / partial-coverage / unique-insights / blind-spots. The OpenRouter Fusion architecture is the empirical-pattern instance (per the Language Compression research arc at [`state/notebooklm-language-compression-research-2026-06-15/INTEGRATION-SYNTHESIS.md`](../../../state/notebooklm-language-compression-research-2026-06-15/INTEGRATION-SYNTHESIS.md) §3): budget panel `(Gemini 3 Flash + Kimmy 2.6 + Deepseek v3.2/v4 pro)` reaches **64.7% vs Fable 5 at 65.3%** on the deep-research benchmark — within 0.6pp at sum-of-individual-model costs (no bundle discount).
+
+The Law 4 connective soteriology of and/or at M0-1 Brimming Void (per [`epi-logos-coordinate-system.md`](Legacy/reference/epi_logos_coordinate_system.md)) grounds the dispatch doctrine: **conjunctive composition (and-pathway) preserves the infinite — superposition-preserving; this is the Anupāya path** — IS CFP3 / F-thread and CFP1 / P-thread (both are parallel conjunctive). **Disjunctive composition (or-pathway) separates and limits — manifestation-by-exclusion** — IS MoE gating dispatch (per [[M'-AGENTIC-RUNTIME-SPEC]] §5 Anima MoE dispatch policy). Both are valid at their correct seats: conjunctive at the Epii-judge slot (where multiple readings compose into a synthesis); disjunctive at the Pleroma-Techne tool-dispatch seat (where exactly one tool runs). The choreography at Tranche 8.9 (`08-integrated-4-5-0-recognition-reconciliation.md`) names this distinction explicitly. The cycle-3 spec edits surface the CFP3 / F-thread name on `cloud-opt-in-pool` so the architecture vocabulary is consistent across spec layers.
+
+**Optional explicit CFP3 / F-thread annotation** (compatible with the existing `cloud-opt-in-pool` state — additive, not breaking):
+
+```toml
+[slot.epii_judge]
+state = "cloud-opt-in-pool"
+cfp_thread_default = "CFP3"           # NEW (optional) — architectural name
+panel_role = "proposer_panel"          # NEW (optional) — distinguish proposer-panel vs judge-pool
+judge = { provider = "anthropic", model = "claude-opus-4-7" }  # NEW (optional) — explicit judge if heterogeneous
+providers = [ ... ]                    # the N proposer models
+consent_scope = "vector-only-derived-signal"
+selection_policy = "elo-informed"
+cost_model = "sum"                     # NEW (optional) — pricing is sum-of-models, not bundle
+```
+
+The Anuttara verifier wrap that distinguishes the Epi-Logos Fusion-pattern from vanilla OpenRouter Fusion is per Tranche 8.9 — the 0' face of the unified VAK act IS the verifier that emits typed-queries-with-backing-chain alongside the proposer-panel + judge synthesis. Per the 4:5:6 just-triad weighting `E_total = (4·E_4 + 5·E_5 + 6·E_6) / 15`, the heaviest weight sits at the verifier seat OpenRouter Fusion entirely lacks; this is the structural reason the wrap is non-optional.
+
+---
+
+## §3a — The Gnostic-Extractor Slot (O# Handover Register)
+
+The gnostic-extractor slot handles offline structured-schema extraction at the **O# Zero Logic handover register** (per [[../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/16-cross-cutting-closures]] CCT-22 §c). This is the slot a 4B-class extractor model runs in to perform corpus → coordinate-tagged structured-schema extraction before the binary-form output is passed to M1 axiomatic-unfolding. The default configuration:
+
+```toml
+[slot.gnostic_extractor]
+state = "local-default"
+provider = "ollama"
+model = "gemma3:12b-q4_K_M"  # Gemma 4 12B Unified Q4 as current realisation
+context_window = 32768
+fallback = "null"            # no silent degrade to cloud — privacy is structural
+cfp_thread_default = "CFP0"  # single_voice (offline batch extraction)
+extraction_schemas = [
+  "factual_metadata",
+  "authorship",
+  "textually_mentioned_entities",
+  "implicit_abstracted",
+  "relational_citation_graph",
+]
+reward_dimensions = {
+  format    = "-",   # O1 sacred-limitation: constraint on output shape
+  json      = "/",   # O4 indeterminacy-as-proportion (KL-penalty held in ratio)
+  task      = "x",   # O3 self-multiplication (work multiplying through data)
+  kl_step   = "+",   # O2 affirmation deferred to closure (added-at-last-step)
+}
+```
+
+**Why O# handover register.** Per [`Body/S/S0/epi-lib/src/m0.c::O_SHARP_TABLE`](../../../Body/S/S0/epi-lib/src/m0.c), the O# Zero Logic cycle `O0 +/-0` (potential polarity) / `O1 -0` (sacred limitation, `-`) / `O2 +0` (affirmation, `+`) / `O3 0²` (self-multiplication, `x`) / `O4 (0/0) = √0/%` (indeterminacy-as-proportion, `/`) / `O5 quadratic-closing-on-0/1` IS the structural cycle a corpus-extraction operator must traverse to close on binary-form output the M1 matheme can receive as axiom (Spinoza joint per DR-VAK-7). GRPO-trained extractor models with format / JSON / task rewards + KL-penalty-at-last-step match the O# cycle structurally; the specific model is incidental (Gemma 4 12B Unified Q4 is the current realisation; the K1 model from the Language Compression research arc is a notable inspiration; any model exposing the right reward-structure can fill the slot). The slot is **model-agnostic by design** per CCT-22 §c.
+
+**Two-tier extractor + analyst split.** The gnostic-extractor slot is the *offline structured-schema* tier; the Epii-judge slot (§3 above) is the *online query reasoning* tier. The split maps cleanly onto the privacy boundary: raw corpus → gnostic_extractor (local-default by structural commitment, mirrors Nara-parser § 2 policy for raw content) → coordinate-tagged structured-schema substrate → online queries route to Epii-judge (cloud-opt-in for derived-signal reasoning). Per [[M'-AGENTIC-RUNTIME-SPEC]] §5, the MoE dispatch handles routing across the two slots based on the request shape (offline-batch vs online-query).
+
+**Privacy semantics.** Same three-state policy (`local-default` / `cloud-opt-in` / `null`) as Nara-parser slot per §2 with `fallback = "null"` structural commitment. The slot does NOT silently degrade to cloud routing; if the local model is unavailable, the slot returns null and the gnostic-ingest pipeline fail-soft with notice.
 
 ---
 
@@ -313,9 +381,125 @@ This spec is operationalised through cycle-3 tranche **Track 12.22** *(new, see 
 
 ---
 
+## §7a — The Harness-Slot Orthogonal Namespace *(NEW per [[../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation]] Tranche 8.9)*
+
+**The model-slot picks the weights. The harness-slot picks the tool-protocol surface wrapping the weights. They are orthogonal.** A model can run inside any harness; a harness can wrap any model. Composing them gives the dispatch its operational shape: `(model × harness × cfp_thread × r_factor_slot × kairos × content_class)` is the rating tuple Mercurius's Elo bookkeeping covers (per Tranche 12.20 extension).
+
+### The harness dimension
+
+Per the Z-thread autonomy framework at [`Idea/Bimba/Seeds/S/S4/S4'/S4-4'-GOAL-PRELUDE-SPEC.md:25-49`](../Idea/Bimba/Seeds/S/S4/S4'/S4-4'-GOAL-PRELUDE-SPEC.md), the harness wrapping a model determines: tool-availability surface, context-management policy, dispatch-shape (sync / async / streaming), observability hooks, capability-matrix membership, and the protocol the orchestrating agent uses to invoke the model. The known harness families per cycle-3:
+
+| Harness | Provider | Surface | Use-cases |
+|---|---|---|---|
+| **`pi`** | epi-logos | Pi-Agent runtime per [[M'-AGENTIC-RUNTIME-SPEC]] §1 | Default for all Anima-dispatched constitutional voices and Aletheia techne-guardians; canonical surface for any Epi-Logos-native dispatch |
+| **`claude`** | Anthropic | Claude harness (CLI / API native) | High-capability sustained agentic work; Sophia disclosure synthesis; Zeithoven creative-advance; some Epii-judge dispatches |
+| **`codex`** | OpenAI | Codex CLI / API | Specific code-generation surfaces; structural-edit operations; some gnostic-extraction batch operations |
+| **`aider`** | community | Aider harness | Code-edit workflows for specific surfaces (e.g. Body/S/S0/ epi-cli rust edits when invoked); not default for any cycle-3 role |
+| **`ollama`** | community | Ollama local-runtime | Wrapping local-default model slots (Nara-parser default, Anuttara-verifier default, gnostic-extractor default) |
+
+### The three states (same as model-slot per §1)
+
+Each harness-slot has exactly three valid states, configured per-slot in `~/.epi-logos/config.toml` and read by Anima's dispatch policy at dispatch time:
+
+- **`local-default`** — the harness runs on-device (e.g. ollama, pi running locally, claude CLI invoking local model). Privacy-first.
+- **`cloud-opt-in`** — the harness invokes a cloud API (e.g. claude API to Anthropic, codex API to OpenAI). Consent-scoped.
+- **`null`** — no harness assigned; the slot fails-soft.
+
+### Worked example: composing model × harness for the Epii-judge slot
+
+```toml
+[slot.epii_judge]
+state = "cloud-opt-in-pool"
+cfp_thread_default = "CFP3"
+panel_role = "proposer_panel"
+providers = [
+  { provider = "anthropic", model = "claude-opus-4-7", weight = 0.4 },
+  { provider = "google", model = "gemini-3-1-pro", weight = 0.4 },
+  { provider = "openai", model = "gpt-5-2", weight = 0.2 },
+]
+judge = { provider = "anthropic", model = "claude-opus-4-7" }
+consent_scope = "vector-only-derived-signal"
+selection_policy = "elo-informed"
+
+[harness.epii_judge]
+state = "cloud-opt-in"
+provider = "claude"                  # claude harness wraps the chosen model
+fallback = "pi"                      # if claude harness unavailable, use Pi-Agent harness
+consent_scope = "judge-loop-only"
+overrides_per_provider = [
+  { model_provider = "anthropic", harness = "claude" },
+  { model_provider = "google",    harness = "pi" },     # Gemini 3.1 Pro wrapped by Pi-Agent (not Google's native CLI)
+  { model_provider = "openai",    harness = "codex" },  # GPT-5.2 wrapped by Codex CLI
+]
+```
+
+A dispatch under this configuration picks a model from the pool (per Elo-informed selection), then picks the harness wrapping that model from `overrides_per_provider` (or `provider`/`fallback` defaults). The Mercurius Elo state per Tranche 12.20 rates each `(model × harness × ...)` composition independently, so the system learns over time whether (for example) Claude Opus 4.7 in Claude harness performs the Epii-judge role better than the same weights in Pi-Agent harness, at this CFP3 / F-thread context, at this kairos window.
+
+### Privacy boundary enforcement
+
+The Anuttara verifier's `slot_privacy_boundary_compliance` constraint (already landed, per §6) extends to check both dimensions:
+
+- **Model-slot privacy class** (raw-content / vector-only / non-sensitive)
+- **Harness-slot privacy class** (does the harness itself cross-network? cache-locally? log to provider's telemetry?)
+
+A dispatch where `slot.foo.state = "local-default"` (raw content stays local) but `harness.foo.state = "cloud-opt-in"` (harness routes through cloud) is structurally inconsistent and the verifier refuses with `harness-model-privacy-mismatch` violation. The two dimensions must compose privacy-coherently or the verifier raises a typed-query at dispatch time.
+
+### Cycle-3 track binding
+
+The harness-slot dimension is operationalised through **Tranche 12.22 extension** (the slot CLI gains `epi slot harness set <slot-name> --provider <X>` parity with `epi slot model set`) + **Tranche 12.20 extension** (Mercurius Elo rating tuple expands to include `harness_id` as a context coordinate). The composition matrix and the Mercurius rate-table land at the new Tranche 12.37 *(NEW)* — see [`12-agentic-layer-s4-s5.md`](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md).
+
+---
+
+## §4b — The Anuttara-Verifier Slot (Phase-J 2026-06-15)
+
+Per Tranche 12.34 (Track 12) + §13 of [`epii-operational-capacities/m5-prime-epii-on-anuttara-language-development.md`](epii-operational-capacities/m5-prime-epii-on-anuttara-language-development.md), the Anuttara PI agent form at S5 completes the 4/5/0 nara-epii-anuttara agent system. Anuttara needs its own slot alongside `[slot.nara_parser]` and `[slot.epii_judge]`:
+
+```toml
+[slot.anuttara_verifier]
+state = "local-default"  # privacy-first; verifier operates over kernel-substrate-local content
+provider = "ollama"
+model = "qwen2.5-7b-instruct-q5"  # or similar 7B-class with strong constraint-following + JSON
+```
+
+### Why local-default
+
+The Anuttara verifier runs over content that is structurally local: the M0-0' language registry (128 atomic elements per DR-VAK-7), the OWL ontology + n10s Neo4j integration, the R-virtue table (`VIRTUE_LUT[9]`), the 65 core relations (`M0_CORE_RELATIONS[65]`), and the typed-query emission surface drawn from the full-7-laws Anuttara grammar. None of this content needs to cross the privacy boundary — all of it IS the kernel-substrate-local language definition.
+
+The verifier's typed-query output (a `M0VerifierReport` with `typed_queries: Vec<TypedQuery>` drawn from the full 7 laws, per §13.4 of the operational-capacity spec) is consumed by the dispatching agent (Nara-PI, Epii-PI, or Anima); the verifier itself is purely local. Cloud-opt-in only makes sense if user wants larger interpretive verifier capacity; the local default suffices for canonical R-virtue + 7-laws constraint-checking.
+
+### Capability requirement
+
+The Anuttara-verifier slot model needs: strong **constraint-following** (verifier output must match `M0VerifierReport` schema reliably), reliable **JSON output** (the typed-query surface is structured), reasonable **OWL/ontology comprehension** (the model queries the n10s ontology), and **fast enough for synchronous verification** (the verifier runs on every emission's type-check, not in background).
+
+A 7B-class instruct model with strong JSON-mode reliability fits. Examples: Qwen 2.5 7B Instruct Q5, Hermes 7B, Llama 3.1 8B Instruct. The exact default is configurable; the spec names the class, not the model.
+
+### Cloud-opt-in path for Anuttara-verifier
+
+```toml
+[slot.anuttara_verifier]
+state = "cloud-opt-in"
+provider = "anthropic"
+model = "claude-haiku-4-5-20251001"  # or Sonnet for richer interpretive verifier capacity
+consent_scope = "language-substrate-only"  # NOT user-content
+```
+
+When cloud-opt-in, the verifier still operates ONLY over the kernel-substrate-local language definition. User content never enters this slot. The cloud-opt-in unlocks larger interpretive capacity for the typed-query emission, not broader content access.
+
+### Verifier constraints registered
+
+Per Tranche 12.34, four gateway routes register under `s0'.verifier.*`:
+- `s0'.verifier.check_state(state)` → `M0VerifierReport`
+- `s0'.verifier.emit_query(coord, context)` → `TypedQuery` (drawn from full 7-laws vocabulary, not minimal subset)
+- `s0'.verifier.validate_membership(element)` → `bool` (128-registry check)
+- `s0'.verifier.owl_query(query)` → `OwlResultSet`
+
+All four dispatch through the `[slot.anuttara_verifier]` model. Slot privacy-boundary compliance applies: the verifier slot can be local-default OR cloud-opt-in with `consent_scope = "language-substrate-only"`; raw user content never enters this slot regardless of state.
+
+---
+
 ## §∞ — Closing Recognition
 
-Model is a slot, not a system commitment. Three states per slot: local-default (privacy-first structural commitment), cloud-opt-in (explicit-consent-per-dispatch-class with scope), null (graceful refusal). Nara-parser defaults to Gemma 4 12B Unified Q4 because privacy is non-negotiable for raw content. Epii-judge defaults to cloud-opt-in Pro-class because capability threshold matters and the data is already derived to vectors. Per-Aletheia-subagent slots default sensibly per techne-domain and become Elo-rated over time.
+Model is a slot, not a system commitment. Three states per slot: local-default (privacy-first structural commitment), cloud-opt-in (explicit-consent-per-dispatch-class with scope), null (graceful refusal). Nara-parser defaults to Gemma 4 12B Unified Q4 because privacy is non-negotiable for raw content. Epii-judge defaults to cloud-opt-in Pro-class because capability threshold matters and the data is already derived to vectors. Anuttara-verifier defaults to local-default 7B-class because the verifier runs over kernel-substrate-local language content (the 128 registry + OWL ontology + R-virtue table) — privacy boundary is structurally pre-solved. Per-Aletheia-subagent slots default sensibly per techne-domain and become Elo-rated over time.
 
 The structural commitment is that the privacy boundary is enforced at the slot, not at an extra gate. Raw content goes to slots that hold it locally by configuration; derived signal goes to slots that can be cloud-opt-in because the privacy was solved upstream. The verifier refuses dispatches that would cross the boundary; the system fails soft rather than silently degrading. The user knows what they're getting because the slot configuration is explicit, the consent scope is named, and the privacy implication is surfaced through frictional UI gates at opt-in time.
 

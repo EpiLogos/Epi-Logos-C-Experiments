@@ -1,4 +1,16 @@
 use crate::codon::codon_to_amino_acid;
+use std::os::raw::c_uint;
+
+use epi_lib as _;
+
+extern "C" {
+    static M3_CODON_ATG_AUG: u8;
+    static M3_STOP_CODONS: [u8; 3];
+
+    fn m3_codon_t_count_ffi(codon: u8) -> u8;
+    fn m3_codon_transcript_class_ffi(codon: u8) -> c_uint;
+    fn m3_codon_governance_role_ffi(codon: u8) -> c_uint;
+}
 
 pub const AMINO_ACID_NAMES: [&str; 24] = [
     "Phe", "Leu", "Ile", "Met", "Val", "Ser", "Pro", "Thr", "Ala", "Tyr", "STOP", "His", "Gln",
@@ -34,13 +46,38 @@ pub const START_CODON: u8 = 0x07;
 pub const STOP_CODONS: [u8; 3] = [0x10, 0x13, 0x1C];
 
 #[inline]
+pub fn c_start_codon() -> u8 {
+    unsafe { M3_CODON_ATG_AUG }
+}
+
+#[inline]
+pub fn c_stop_codons() -> [u8; 3] {
+    unsafe { M3_STOP_CODONS }
+}
+
+#[inline]
+pub fn codon_t_count(codon: u8) -> u8 {
+    unsafe { m3_codon_t_count_ffi(codon) }
+}
+
+#[inline]
+pub fn codon_transcript_class(codon: u8) -> c_uint {
+    unsafe { m3_codon_transcript_class_ffi(codon) }
+}
+
+#[inline]
+pub fn codon_governance_role(codon: u8) -> c_uint {
+    unsafe { m3_codon_governance_role_ffi(codon) }
+}
+
+#[inline]
 pub fn is_start_codon(codon: u8) -> bool {
-    codon == START_CODON
+    codon == c_start_codon()
 }
 
 #[inline]
 pub fn is_stop_codon(codon: u8) -> bool {
-    STOP_CODONS.contains(&codon)
+    c_stop_codons().contains(&codon)
 }
 
 pub const DEGREE_TO_HEXAGRAM: [u8; 360] = [

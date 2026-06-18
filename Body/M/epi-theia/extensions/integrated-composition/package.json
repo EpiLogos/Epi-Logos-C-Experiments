@@ -19,6 +19,22 @@
       "types": "./lib/common/epii-review-state.d.ts",
       "default": "./lib/common/epii-review-state.js"
     },
+    "./integrated-readiness": {
+      "types": "./lib/common/integrated-readiness.d.ts",
+      "default": "./lib/common/integrated-readiness.js"
+    },
+    "./graphiti-source-guard": {
+      "types": "./lib/common/graphiti-source-guard.d.ts",
+      "default": "./lib/common/graphiti-source-guard.js"
+    },
+    "./integrated-deep-links": {
+      "types": "./lib/common/integrated-deep-links.d.ts",
+      "default": "./lib/common/integrated-deep-links.js"
+    },
+    "./recognition-claim": {
+      "types": "./lib/common/recognition-claim.d.ts",
+      "default": "./lib/common/recognition-claim.js"
+    },
     "./design-primitives": {
       "types": "./lib/browser/design-primitives/index.d.ts",
       "default": "./lib/browser/design-primitives/index.js"
@@ -28,7 +44,11 @@
     "*": {
       "design-primitives": ["lib/browser/design-primitives/index.d.ts"],
       "recursive-self-review-gate": ["lib/common/recursive-self-review-gate.d.ts"],
-      "epii-review-state": ["lib/common/epii-review-state.d.ts"]
+      "epii-review-state": ["lib/common/epii-review-state.d.ts"],
+      "integrated-readiness": ["lib/common/integrated-readiness.d.ts"],
+      "graphiti-source-guard": ["lib/common/graphiti-source-guard.d.ts"],
+      "integrated-deep-links": ["lib/common/integrated-deep-links.d.ts"],
+      "recognition-claim": ["lib/common/recognition-claim.d.ts"]
     }
   },
   "keywords": ["theia-extension", "epi-logos", "integrated-plugin", "composition"],
@@ -48,7 +68,7 @@
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b -w",
-    "clean": "rimraf lib",
-    "test": "pnpm build && node --test tests/*.test.mjs"
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "test": "pnpm clean && pnpm build && node --test tests/*.test.mjs"
   }
 }

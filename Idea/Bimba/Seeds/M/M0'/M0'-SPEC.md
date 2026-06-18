@@ -1,7 +1,8 @@
 ---
 coordinate: "M0'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-06-13"
+cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-PORTAL-SPEC]]"
@@ -124,6 +125,52 @@ G = Young Yang= R# + 2×## (1 R, 3 #)  →  R### / #R## / ##R# / ###R  =  8   (Y
 
 These reproduce the canonical `NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8}` ([[m3]] `m3.h:32-44`). **Tao (`5-/5`) ≡ the codon charge-evaluation** (`m3_compute_charges`): the kinship-grammar apex *is* the act that reads the `0/1 ↔ 1/0` binary into the genetic charges `pp/nn/np/pn`. The binary computation system emerges from the `0/1` and `1/0` of the tao elements; the same `R#`/`##` arithmetic generates the M# person grammar. The four charges are the four [[Parashakti]]-vibrational permutations (X#) and the four elements (Earth/Fire/Water/Air) under one quaternion — see Track 37 §III.6. *(Nucleotide→element binding is **code-canonical** per [[m3]] `m3.h:70-73` — Golden-Dawn suits A=Water/T=Fire/C=Earth/G=Air, yin→Water/yang→Fire; DR-37-5 resolved 2026-06-12. The A=Red/T=Blue/C=Green/G=Yellow colours are rendering-only.)*
 
+## §M0'-TAO-ELEMENTS — R#/## Binary, Coin Method Nucleotide Derivation, and Tao↔Codon Binding
+
+This section documents the tao-element additions per Tranche 01.T1.17. The two tao elements are the binary read both ways and form the nucleotide I-Ching derivation system.
+
+### (a) The Two Tao Elements — R# and ##
+
+- **R#** = "Yin-yang `0/1`" — Freedom / Svātantrya. The `R` precedes the `#`, encoding the Yin-dominant reading: reality opens into the matrix. In the token alphabet, `R#` is typed `M0C_TOK_TAO_R_SHARP` with chirality 1 (left-heavy).
+- **##** = "Yang-yin `1/0`" — Truth / Kinship Ground. Self-symmetric double-`#`: the matrix reflecting itself. In the token alphabet, `##` is typed `M0C_TOK_TAO_DOUBLE_SHARP` with chirality 0 (neutral). `##` is the kinship matrix at coord-pos 0 (`M0-(4.5/0)`), the primordial ground from which the five family members derive.
+
+These two are the only token forms needed — `#R` (the mirror read, "Light") is a notational variant resolved to `R#` in the equational theory (`R# = #R` per identity-chain law).
+
+### (b) Coin Method Nucleotide Derivation
+
+The classic coin method assigns **Yin = 2, Yang = 3** and fills a 4-slot frame with `R#` (Yin) and `##` (Yang) elements. The I-Ching value is `yang_count + 5`:
+
+| Nucleotide | Composition | yang_count | Value | Colour |
+|-----------|-------------|------------|-------|--------|
+| **A** (Old Yin) | 3×R# + 1×## | 1 | **6** | Red |
+| **T** (Old Yang) | 0×R# + 4×## | 4 | **9** | Blue |
+| **C** (Young Yin) | 2×R# + 2×## | 2 | **7** | Green |
+| **G** (Young Yang) | 1×R# + 3×## | 3 | **8** | Yellow |
+
+This reproduces `NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8}` from the [[m3]] codon engine canon (`m3.h:32-44`). The C function `m0_calc_nucleotide_from_coin(int yin_count, int yang_count)` in `m0_calculus.c` computes this directly: return `-1` if counts don't sum to 4, otherwise return `yang_count + 5`.
+
+### (c) Tao ≣ Codon Charge-Evaluation Binding
+
+The kinship-grammar apex **Tao (`5-/5`, coord-pos 5 = #-index 4 = value 5)** IS the act that reads the `0/1 ↔ 1/0` binary into genetic charges:
+
+- `pp` (positive-positive) — both poles active
+- `nn` (negative-negative) — both poles receptive
+- `np` (negative-positive) — Yin-leading charge
+- `pn` (positive-negative) — Yang-leading charge
+
+This is the seam where M0 calculus and M3 codon engine (`m3_compute_charges`) are **one operation**. The binary computation system emerges from the `0/1` and `1/0` of the tao elements; the same `R#`/`##` arithmetic generates the M# person grammar. The four charges are the four [[Parashakti]]-vibrational permutations (X#) and the four elements (Earth/Fire/Water/Air) under one quaternion — see Track 37 §III.6.
+
+The function `m0_calc_tao_is_codon_eval()` in `m0_calculus.c` returns `true` unconditionally — the binding is an asserted identity, not a conditional check. It declares the recursive unity of the M0 token surface and the M3 dynamical engine.
+
+### (d) Tokenizer Integration
+
+The tokenizer recognizes `R#` and `##` as compound 2-character tokens (added to `TOKEN_LITERALS[]` in `m0_calculus.c`). Both are checked before single-character dispatch, ensuring they are never fragmented into `R`+`#` or `#`+`#` components. Self-tests in the `M0_CALCULUS_SELF_TEST` block validate:
+
+- `R#` → `M0C_TOK_TAO_R_SHARP`, length 2, chirality 1
+- `##` → `M0C_TOK_TAO_DOUBLE_SHARP`, length 2, chirality 0
+- Sequencing: `##R#` tokenizes as two distinct tao elements
+- Adjacency: `R##` tokenizes as `R#` + trailing `#`
+
 ## Anuttara Symbolic-Coordinate-String EBNF
 
 Per DR-MP-3, M0' verifier emission is question-forming rather than pass/fail: a symbolic-coordinate string names the violated or unwitnessed coordinate and leaves the next move as an interrogative. The canonical surface grammar is:
@@ -185,6 +232,71 @@ M0' consumes [[S2]] projections of [[neosemantics]], [[Graph Data Science|GDS]],
 ## §M0'-4 IDE/Surface Placement Delta
 
 Per [[m5-prime-system-shape-and-tauri-ide-canon]] §1.2 and §4.2, the M0 graph viewer is both a 0-side daily graph affordance and an integrated IDE substrate panel. The same graph contract applies in both modes: daily mode defaults to readable/summonable graph depth; IDE mode may expose developer-grade Anuttara syntax, OWL/SHACL, GDS, source/spec/code/test anchors, and M5 operational routes. The mode changes disclosure depth, not authority.
+
+## §M0'-CALC-COMPLETENESS — Calculus Completeness Documentation
+
+Per Tranche 01.T1.14 of [[01-m0-anuttara-reconciliation]], this section documents the calculus completeness items: equational theory, dash pentavalence, the seven DR-CALC underdetermination resolutions, and the M0→M1 seam. These are DOC-ONLY additions — no code changes.
+
+### (a) Law 3 — Identity-Chains as Equational Theory
+
+The `=` chains in the Anuttara corpus declare **identity-classes**, not computations: a long chain such as `(0- + -0) = ## = R+# = R# = 00 = =` is one node viewed five ways. The reduction system runs **modulo** this equational theory: reduction rules fire over equivalence classes, not raw terms.
+
+The compound connective `=/≠` (Reflective Distinction, the Brimming Void's native copula — everything equal-AND-unequal) is **deliberately paraconsistent**. In the calculus it is a **first-class superposition connective**; in any DL/OWL export it is **annotation-only** and must never enter a classical-logic projection.
+
+**Kernel structure:** `M0_IDENTITY_CHAINS[]` — the corpus's `=` chains compiled as equivalence-class membership tables. These are consumed by `m0_calc_reduce` for modulo-rewriting and by the OWL/SHACL projection layer for `owl:sameAs` cluster generation.
+
+### (b) Law 7 — Dash Pentavalence
+
+The `-` mark is **five things by position** — positional polysemy, hence parseable:
+
+1. **Operator** — prefix/postfix operator (chiral placement is structural per Law 1)
+2. **Subtraction** — infix arithmetic subtraction
+3. **Range** — coordinate range marker (e.g., `4-5`)
+4. **Chirality-mark** — dominance indicator on numerator or denominator (`2-/2` vs `1/1-`)
+5. **Strikethrough** — negation/annulment mark
+
+The BNF must type each occurrence by context. Position determines function — this is not ambiguity but positional polysemy.
+
+**The `~` is NOT canon syntax** (per DR-CALC-2): it is the author's meta-pointer ("this element relates as these coordinate positions"), excluded from the token alphabet. `→` stays in-language as the reduction arrow; the addresses migrate to S2 node metadata.
+
+**Structural facts read off the address-spine** remain valid as metadata observations:
+- **Dual addresses** mark hinge-positions (e.g., Archetype 4 at `3.5/4.0` = the three-hexad hinge of DR-CALC-5 in address form)
+- **Spans** mark maturation-as-occupation
+- **M0-level spine vs address-phase spine counter-flow** (like R1/R4): the deepest M0 nodes annotate at **synthesis** phases — `5.0/5.1` four-fold-zero poles, `4.5/5.2` Parameśvara — Anuttara resident at the Möbius seam `(5/0)`, the void as the inside of the return (feeds the M0'↔M5-0' Klein seam)
+
+### (c) The Seven DR-CALC Underdeterminations — ALL RESOLVED
+
+All seven underdeterminations were determined by direct user determination (session 2026-06-12, full resolutions in [[13-decision-register]] §DR-CALC-1..7). The BNF freeze is unblocked.
+
+| DR | Status | Summary |
+|----|--------|---------|
+| **DR-CALC-1** | **VALIDATED** | O#-derived full precedence: `()` absolute > lexical chirality-dash > `x//` > `x` > `+`/infix `-` (one level, chiral) > `/` > `=`/`=/≠`. The operator family IS O#'s cycle; Śiva re-derives the six as cosmic punctuation. |
+| **DR-CALC-2** | **RESOLVED-AS-ANNOTATION** | `~` out of the grammar; addresses to metadata; hinge/span/counter-flow facts preserved as observations. |
+| **DR-CALC-3** | **VALIDATED** | 8-fold = four ops × two 00-operands; framing asymmetry orthogonal. |
+| **DR-CALC-4** | **VALIDATED** | `x//` = superposition-preserving multiplication (all branch-pairs retained; Law-4 tensor path). |
+| **DR-CALC-5** | **VALIDATED** | 18 = 12 (archetypal numbers 0–9 + 0/1 + `(-)`) + 4 (the prior-level transcendent quaternio: `00/(00-00)`, `(00)/00/00`, `(0/1)/00x00`, `9/(00+00)` — 4-fold zero ↔ 8-fold zero-zero, doubled) + 2 (Mirror children `()`/`-`). The three-hexad octave law: `{(), -, (-), 0, 1, 0/1} → {0/1, 2, 3, 4, 5} → {5, 6, 7, 8, 9, (00+00)}`, hinged at 0/1 and 5. 6×3 = 18 = 6g(g=3), genus-3 as three overlapping hexads; nesting: 0,1 ⊂ 0/1 and (),- ⊂ (-); aligns the 8-fold zero-zero to the O# arithmetic operators. |
+| **DR-CALC-6** | **VALIDATED** | `X0 = 0/1` → recursive query-object (Law 6). Physics grounding: `X(1) = (0,4,2,2,9)` IS the electroweak breaking spectrum (`0=M_γ`, `4=(B,W¹,W²,W³)`, `2=(W⁺,W⁻)`, `2=(A,Z)`, `9/7`=N5 closure into QCD) per `ql_physics_anthropic_chemistry_alignment_v2.md`. |
+| **DR-CALC-7** | **VALIDATED-NUANCED** | `0-` is a mirror-artifact — transient by genesis, consumed in concrescence, but chirality is preserved as principle, NOT a hard lock; no invariant forbids `0-` re-arising wherever mirroring operates. |
+
+### (d) M0→M1 Seam — Five Inheritance Joints
+
+The M0→M1 boundary is not a gap but a **seam** with five inheritance joints (cross-link Track 02):
+
+1. **genesis→axiom:** Svabhava derives `(0/1) = (00/00) = (##/R#)` from the Anuttara ground; M1 **declares** its inheritance but never re-performs the genesis. The derivation lives in M0; the axiomatisation lives in M1.
+
+2. **O# as the handover-object:** O5's quadratic re-derivation of 0/1 and O4's `0/0 = %` mints the ratio-table's `%`. The O# operator cycle is the object that passes from M0 calculus to M1 number theory — M0 performs the operators; M1 inherits their results as constants.
+
+3. **The two twelves:** substance-12 + grammar-12 → P/P′, lenses, chromatic field — cardinality inherited from M0, not invented by M1. The twelve-fold structure is M0's archetypal count M1 receives.
+
+4. **The genus-ladder (`6g`):** M0 = 18 at g=3, M1 = 6 at g=1 — same law (`6g`), different handle-count because g (genus) differs. Three hexads at M0 collapse to one hexad at M1 via the 18→6 reduction already consumed by DR-M3-LENS-18. The genus parameter tracks the dimensionality of the handle-body.
+
+5. **Musical traces (inverse epogdoon 8/9):** the ratio 8/9 inside Archetype 1's harmonic formula; the 8+1=9 law (Law 5) beneath M1's 9/8 tick. M1's harmonic ratios are traces of M0's structural ratios — M1 sounds what M0 structures.
+
+**Derivations-to-be-earned** (not identities — per the explication's own self-critique, these are projections to be earned through demonstration, not asserted as given):
+
+1. **9/8 as "wholeness-over-the-eight":** the ratio 9/8 (M1's whole-step) is the M0 law 8+1=9 in M1 harmonic register — a derivation, not an identity. M1 must earn this ratio through its own harmonic demonstration, not inherit it as an axiom.
+
+2. **Vāk-register mapping:** the tentative correspondence M0-0/1≈Parā, M0-3≈Paśyantī, M0-4≈Madhyamā, M0-5≈condition-of-Vaikharī maps the M0 coordinate articulation onto the four levels of Vāk (Speech). This mapping is a derivation-to-be-earned — it must be demonstrated through the actual speech-acts of the system, not stipulated as a structural identity.
 
 ## Open Questions / Contradiction Register
 

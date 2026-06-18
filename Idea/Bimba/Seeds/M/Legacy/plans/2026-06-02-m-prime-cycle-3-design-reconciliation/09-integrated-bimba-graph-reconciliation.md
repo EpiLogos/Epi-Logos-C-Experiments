@@ -133,3 +133,65 @@ Consume as-is — `Body/S/S2/graph-schema/src/lib.rs` 65-relation registry + `an
     Verification: `cargo test -p epi-cli --test canon_coord_depth_ladder` asserts each rung's token budget within tolerance and content shape; `cargo test -p epi-cli --test canon_kernel_under_2k_tokens`; `cargo test -p epi-cli --test canon_agent_section_slice` against fixture ANIMA.md; `cargo test -p epi-cli --test canon_residency_literal_output`; `cargo test -p epi-cli --test canon_kit_composite` returns expected kit shape for `hen` and `aletheia` roles; integration test `cargo test -p epi-cli --test canon_matches_bimba_mcp` confirms byte-identity with the MCP surface (gates against Tranche 17.28).
 
     Cross-track hooks: Tranche **5.23** defines the vocabulary this CLI reads; Tranche **17.28** mirrors this CLI as the MCP wire format; CCT-16(v) provides the `graph_revision` invalidation signal for the kernel cache; Tranche **6.12** is the upstream wisdom loop whose accepted proposals appear in this CLI's output; Track **11** (Theia shell) should consume this CLI rather than duplicate the rendering.
+
+14. **9.14 — `/World` as 1st-class S2 namespace + `:Gnostic` label promotion** *(spec-ahead-integration; depends on DR-WORLD-1, DR-S5-ONE-1; CCT-17b cross-link; canonical landing point for the namespace map)*
+
+    Per DR-WORLD-1 (Phase-I 2026-06-15), mint `/World` as a 1st-class S2 namespace with `:World` (+ `:Archetypal` alias) graph label, and explicitly link `:World` entity nodes to the base C-coordinates via `WORLD_FORM_OF` / `WORLD_ONTOLOGY_OF` typed relations. Per DR-S5-ONE-1, promote `:Gnostic` to a graph label alongside `:World` (currently implicit; no label enforced).
+
+    **Schema additions** at [`Body/S/S2/graph-schema/src/lib.rs`](../../../../../Body/S/S2/graph-schema/src/lib.rs):
+
+    ```rust
+    pub const WORLD_LABEL: &str = "World";
+    pub const ARCHETYPAL_LABEL: &str = "Archetypal"; // alias for :World
+
+    pub const GNOSTIC_LABEL: &str = "Gnostic";
+    pub const GNOSTIC_CORPUS_LABEL: &str = "Gnostic:Corpus";
+    pub const GNOSTIC_NOTEBOOK_LABEL: &str = "Gnostic:Notebook";
+    pub const GNOSTIC_ETYMOLOGY_LABEL: &str = "Gnostic:Etymology";
+    pub const GNOSTIC_SKILLS_LABEL: &str = "Gnostic:Skills";
+
+    pub const WORLD_FORM_OF_RELATION: &str = "WORLD_FORM_OF";
+    pub const WORLD_ONTOLOGY_OF_RELATION: &str = "WORLD_ONTOLOGY_OF";
+    ```
+
+    Add to `RELATIONSHIP_TYPE_SPECS`:
+    ```rust
+    GraphRelationshipTypeSpec {
+        rel_type: "WORLD_FORM_OF",
+        coordinate_home: "C0..C5",  // any C-layer
+        source_family: "world-entity",
+        compatibility: false,
+    }
+    GraphRelationshipTypeSpec {
+        rel_type: "WORLD_ONTOLOGY_OF",
+        coordinate_home: "C4",  // Types / MOC authority
+        source_family: "world-entity",
+        compatibility: false,
+    }
+    ```
+
+    **The four-namespace map.** Per DR-S5-ONE-1 + DR-WORLD-1, the S2 namespace map after this tranche lands:
+
+    | Graph label | Vault dir | Sub-namespaces | Role |
+    |---|---|---|---|
+    | `:Bimba` | `/Idea/Bimba/Seeds/M/` | (no sub) | canonical M0-M5 + S0-S5 + 17 relations |
+    | **`:World`** (+ `:Archetypal` alias) | `/Idea/Bimba/World/Types/` | (no sub for now) | entity forms, types, C-layer typology; psychoid root linked to base C-coords via `WORLD_FORM_OF` / `WORLD_ONTOLOGY_OF` |
+    | **`:Gnostic`** | (Python wrapper; no vault dir) | `:Gnostic:Corpus`, `:Gnostic:Notebook`, `:Gnostic:Etymology`, `:Gnostic:Skills` | RAG corpus, per-session notebooks, etymological clusters, skill manifest |
+    | (`:Pratibimba`, S0-protected) | `/Idea/Pratibimba/System/` | (no sub; never on public graph) | personal episodic, protected-local |
+
+    **The psychoid-root link.** Every entity in `:World` carries a typed `WORLD_FORM_OF` relation back to its primary C-coordinate (C0-C5) in `:Bimba`. **`/World` IS NOT parallel-structure; it IS the C-axis psychoid expression of the canonical M/S/L/P/T/C field.** C0-C5 ARE the psychoid root; `:World` makes them queryable as entity-forms.
+
+    **Hen graph-promotion** at [`Body/S/S1/hen-compiler-core/src/graph_promotion.rs`](../../../../../Body/S/S1/hen-compiler-core/src/graph_promotion.rs) — when entities promote from `/Idea/Empty/Present/{day}/entities/` to `/Idea/Bimba/World/Types/Coordinates/C{n}/`, Hen creates the corresponding `:World` node with a `WORLD_FORM_OF` edge to the parent C-coord. When entities graduate to flat `/Idea/Bimba/World/{Name}.md`, the `:World` node updates; psychoid root link is preserved across the promote→graduate lifecycle.
+
+    **Wikilink span-pointer** (per CCT-17b) — wikilinks in `/Idea/Bimba/World/Types/` files populate `c_1_source_artifact_span: StringList` on the `:World` node. This promotes wikilinks from presentation-only to first-class retrieval primitive.
+
+    **Unified memory API layered** (per DR-WORLD-1 + DR-S5-ONE-1):
+    - **`s0'.anuttara.compress_entity(coord)`** → archetypal essence (VAK-distilled `c_1_*`) — M0 alphabet expression of VAK
+    - **`s1'.world.resolve(coord)`** → entity-ontology (forms, types, wikilinks, resonances, birth-codon) — NEW route per Tranche 6.1 EXPANDED
+    - **`s2.graph.node(coord)`** → canonical bimba graph node (all relations + metadata) — already live
+
+    Three optional reads in parallel. The unified memory API is the **namespace boundary itself**, not a single endpoint.
+
+    **Verification:** `grep -nE "WORLD_LABEL|WORLD_FORM_OF|WORLD_ONTOLOGY_OF|ARCHETYPAL_LABEL|GNOSTIC_LABEL|GNOSTIC_CORPUS_LABEL" Body/S/S2/graph-schema/src/lib.rs` returns the schema additions; `cargo check -p epi-s2-graph-schema && cargo test -p epi-s2-graph-schema world_namespace_round_trip`; `cargo test -p epi-s2-graph-schema gnostic_label_promotion`; integration test: promoting an entity to `/Idea/Bimba/World/Types/Coordinates/C2/SomeEntity.md` creates a `:World` node with `WORLD_FORM_OF` edge to the parent C2 `:Bimba` node and populates `c_1_source_artifact_span` from the entity's wikilinks; graduating to flat `/Idea/Bimba/World/SomeEntity.md` preserves the `WORLD_FORM_OF` link.
+
+    **Cross-track hooks:** DR-WORLD-1, DR-S5-ONE-1, DR-IG-1 (relation-family enum the new relations participate in); CCT-14 (entity-candidate lifecycle that feeds `:World` nodes); CCT-15 (C-layer semantic typology hosts the entity files); CCT-17b (wikilink span-pointer); Tranche 6.1 EXPANDED (gateway routes `s1'.world.resolve`); Track 39 (comprehensive substrate plan).

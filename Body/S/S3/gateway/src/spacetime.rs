@@ -20,12 +20,14 @@
 use std::path::{Path, PathBuf};
 
 use epi_s3_gateway_contract::{
-    SpacetimeFallbackPolicy, SpacetimeProjectionPlan, SpacetimeProjectionRows,
-    DEFAULT_GATEWAY_PORT, SPACETIME_FALLBACK_ACTIVE, SPACETIME_FULL_PROJECTION_TABLES,
-    SPACETIME_LITE_PROJECTION_TABLES, SPACETIME_PROJECTION_MODE_FULL,
-    SPACETIME_PROJECTION_MODE_LITE, SPACETIME_PROJECTION_SOURCE_HTTP_SQL,
-    SPACETIME_PROJECTION_SOURCE_NATIVE_WS, SPACETIME_PROJECTION_TABLES,
-    SPACETIME_SILENT_HTTP_FALLBACK_FORBIDDEN,
+    assert_being_pattern_public_safe,
+    being_pattern_acceptance_replay as contract_being_pattern_acceptance_replay,
+    BeingPatternReplay, PasuBeingPatternProjection, SpacetimeFallbackPolicy,
+    SpacetimeProjectionPlan, SpacetimeProjectionRows, DEFAULT_GATEWAY_PORT,
+    SPACETIME_FALLBACK_ACTIVE, SPACETIME_FULL_PROJECTION_TABLES, SPACETIME_LITE_PROJECTION_TABLES,
+    SPACETIME_PROJECTION_MODE_FULL, SPACETIME_PROJECTION_MODE_LITE,
+    SPACETIME_PROJECTION_SOURCE_HTTP_SQL, SPACETIME_PROJECTION_SOURCE_NATIVE_WS,
+    SPACETIME_PROJECTION_TABLES, SPACETIME_SILENT_HTTP_FALLBACK_FORBIDDEN,
 };
 use futures_util::{SinkExt, StreamExt};
 use reqwest::blocking::Client as BlockingClient;
@@ -193,6 +195,32 @@ impl SpacetimeProjectionResyncTracker {
 // =============================================================================
 
 pub type SpacetimeSubscriptionPlan = SpacetimeProjectionPlan;
+
+pub fn being_pattern_acceptance_replay() -> BeingPatternReplay {
+    contract_being_pattern_acceptance_replay()
+}
+
+pub fn being_pattern_bridge_handle_payload(projection: &PasuBeingPatternProjection) -> Value {
+    let payload = json!({
+        "entityRef": projection.entity_ref,
+        "stableIdentity": projection.stable_identity,
+        "liveState": projection.live_state,
+        "observerAnchor": projection.observer_anchor,
+        "clockAddress": projection.clock_address,
+        "monopolyOperator": projection.monopoly_operator,
+        "perspectiveRole": projection.perspective_role,
+        "naraFamilyRole": projection.nara_family_role,
+        "m2M3Relation": projection.m2_m3_relation,
+        "bioquaternionHandles": projection.bioquaternion_handles,
+        "elementalWeights": projection.elemental_weights,
+        "relationEdges": projection.relation_edges,
+        "verifierRefs": projection.verifier_refs,
+        "reviewRisk": projection.review_risk,
+    });
+    assert_being_pattern_public_safe(&payload)
+        .expect("BeingPattern bridge payload must be public-safe handles only");
+    payload
+}
 
 #[derive(Debug, Clone)]
 pub struct SpacetimeRegistration {

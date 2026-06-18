@@ -24,6 +24,8 @@ Raw tools are always available at the extension level. Skills shape and constrai
 
 Anima is the **orchestration centre** — the lemniscate self-fold where the agent system manages itself. It owns VAK evaluation (task → 6-layer coordinate assignment), CF dispatch (CF code → constitutional agent routing), thread-type execution (CFP0-CFP5 via agent-team/chain/subagent primitives), and CS-phase management (Klein mode, Ouroboros, day/night configuration). All agent dispatch in the ta-onta system routes through Anima. No other extension spawns agents directly.
 
+**Canonical mental-pole dispatch (per DR-MP-1):** Anima IS still the `#` operator/dispatch — the orchestrating function that routes to constitutional agents. For the mental-pole triplet (4'-5'-0' = LLM/EBM/Verifier), the dispatch routes through **Pi-as-LLM-Nara at position 4'** — the traversal-voice that synthesizes EBM evaluation (position 5'/Epii) and Verifier report (position 0'/Anuttara) into user-articulable feedback. Pi-as-Nara IS the LLM the dispatch routes through; Anima IS the dispatch function that routes to it.
+
 **What Anima does NOT own:** vault writes (Khora), content structure (Hen), temporal scheduling (Chronos), knowledge crystallisation/retrieval tooling (Aletheia). Anima dispatches TO Aletheia's specialist subagents — it does not define them.
 
 ---
@@ -35,6 +37,16 @@ Anima is the **orchestration centre** — the lemniscate self-fold where the age
 | `before_agent_start` | Evaluate VAK for incoming task; assign CF code |
 | `after_tool_call` | Check if Sophia post-execution review is needed |
 | `session_end` | Trigger Sophia review + thought routing to `thoughts/` |
+
+## Verify Phase Gate
+
+The [[S4-4'-SPEC]] Z-thread cycle is Compose -> Perform -> Verify -> Rehear -> Recompose. Anima owns dispatch-time judge role resolution for the Verify phase; the judge is a role selected from task VAK coordinates and available model slots, not a hardcoded agent identity.
+
+- Judge input: GoalSpec, builder output, and original goal condition.
+- Judge output: structured questions with symbolic-coordinate-string evidence references; no pass/fail boolean verdict surface.
+- Gate invariant: at least one judge clearance is required before transition to Rehear.
+- Escalation invariant: after 3 uncleared verify cycles, Anima escalates to a human instead of continuing autonomous revision.
+- Model-pairing invariant: when slots allow, the judge model differs from the builder model.
 
 ---
 

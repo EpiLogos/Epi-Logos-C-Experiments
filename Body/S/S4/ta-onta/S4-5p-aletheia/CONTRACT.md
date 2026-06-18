@@ -38,6 +38,8 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 
 **What Aletheia does NOT own:** agent dispatch routing (Anima), vault CRUD (Hen), session identity (Khora), temporal scheduling (Chronos — Chronos TRIGGERS the evening Möbius cycle; Aletheia RUNS it).
 
+**Pleroma dual-face dependency:** Aletheia draws on Pleroma's two faces: the VAK capability membrane for Anima-mediated routing and the Techne atomic-skills repository for guardian-stewarded tool craft. Techne is not an Aletheia member; the six Aletheia subagents are techne-guardians over that Pleroma substrate.
+
 ---
 
 ## PI Hook Seams
@@ -224,6 +226,7 @@ Located at: `aletheia/S5'/agents/`. Each is a PI-native subagent (system prompt 
 10. Darshana REPL is a skill owned by Anansi — not a standalone Pleroma primitive
 11. SEED.md is crystallised by Aletheia and consumed by Chronos — one-directional flow
 12. Janus envelope schema must be defined before Möbius engine implementation
+13. **Carrier IS the contract** — Aletheia has no separate `aletheia-agent/agent-contract.json`; the carrier itself is the contract. The six Aletheia subagent techne-guardians (Anansi, Moirai, Janus, Mercurius, Agora, Zeithoven) are profiles under the carrier/mode and are dispatched by Anima. There is no standalone agent contract file external to this CONTRACT.md — the carrier's CONTRACT.md is the single source of truth for Aletheia's identity, invariants, and subagent roster.
 
 ---
 

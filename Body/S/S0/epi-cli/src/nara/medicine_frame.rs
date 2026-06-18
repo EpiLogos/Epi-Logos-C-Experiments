@@ -782,11 +782,11 @@ pub const fn canonical_from_medicine_rs_legacy(legacy: u8) -> u8 {
 /// Mirrors `m_canonical_to_medicine_rs_legacy`. Salt has no legacy counterpart.
 pub const fn canonical_to_medicine_rs_legacy(canonical: u8) -> u8 {
     match canonical {
-        0 => 0, // Aether → AKASHA
-        3 => 1, // Air    → VAYU
-        4 => 2, // Fire   → AGNI
-        2 => 3, // Water  → APAS
-        1 => 4, // Earth  → PRITHVI
+        0 => 0,    // Aether → AKASHA
+        3 => 1,    // Air    → VAYU
+        4 => 2,    // Fire   → AGNI
+        2 => 3,    // Water  → APAS
+        1 => 4,    // Earth  → PRITHVI
         _ => 0xFF, // Salt
     }
 }

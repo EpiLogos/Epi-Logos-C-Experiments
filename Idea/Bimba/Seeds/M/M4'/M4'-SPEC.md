@@ -1,7 +1,8 @@
 ---
 coordinate: "M4'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-06-09"
+cycle-3: pending
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-PORTAL-SPEC]]"
@@ -25,6 +26,17 @@ depends_on:
 # [[M4']] Domain Spec
 
 [[M4']] is [[Nara]]: journal, [[DAY/NOW]] lived context, dream, oracle, highlight, and personal [[Pratibimba]] continuity. It receives the harmonic clock as lived condition without exposing protected identity.
+
+**Canonical identification:** [[M4']] Nara is the **LLM position 4'** — the traversal-voice that speaks recognition — within the canonical 4'-5'-0' mental-pole triplet (LLM 4' / EBM 5' / Verifier 0').
+
+### LLM Operational-Capacity Substrate Context
+
+Per DR-MP-1 (VALIDATED 2026-06-09), the Pi agent at `Body/S/S4/pi-agent/` IS the LLM-Nara at matheme position 4' — the traversal-voice of the mental pole that synthesizes EBM evaluation (position 5'/Epii) and Verifier report (position 0'/Anuttara) into user-articulable feedback. The LLM's operational role in the ascent (1'-2'-3'/4'-5'-0' inverse trinity) is *to read the world through the bimba map and speak recognition*. The LLM does not compute energy (that's EBM/5') or check axioms (that's Verifier/0'); it articulates the recognition-state the other two produce.
+
+The LLM reads two operational-capacity files as substrate context:
+
+- [[Body/S/S5/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md]] — Continued Pre-Training + RAG over the foundational-derivational corpus is the LLM's knowledge-base maintenance pipeline (how the LLM stays current with the theoretical canon).
+- [[Body/S/S5/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md]] — QLoRA fine-tuning + dialogic-voice adaptation is the LLM's voice-refinement pipeline (how Pi's articulation gets refined through dialogue).
 
 ## Canonical Substrate Anchors
 
@@ -78,7 +90,7 @@ The user's experience is a journal that *knows the cosmic context* without lectu
 
 ## §6.6 — Canonical Nara Content Structure And Surface Placement
 
-M4' content is canonically organised as **day-as-episode-container with NOW-stamped artifact-children**. The canonical store is `${VAULT}/Pratibimba/Nara/{day_id}/` ([[Pratibimba]] / [[Nara]]), where each day carries a [[DayContainer]], optional `daily-note.md`, and typed artifact children for oracle casts, journal entries, dreams, agent chats, reminders, LLM tasks, personal notes, and contemplative records. This absorbs [[m4-prime-nara-day-episodes-and-oracle-artifacts]] as the operative file/episode law and narrows older history-directory paths in [[2026-04-04-graphiti-unified-temporal-context-service]] to migration/source-history status unless a later spec explicitly re-promotes them.
+M4' content is canonically organised as **day-as-episode-container with NOW-stamped artifact-children**. The canonical store is `${VAULT}/Idea/Empty/Present/{day_id}/` ([[Pratibimba]] / [[Nara]]), where each day carries a [[DayContainer]], optional `daily-note.md`, and typed artifact children for oracle casts, journal entries, dreams, agent chats, reminders, LLM tasks, personal notes, and contemplative records. This absorbs [[m4-prime-nara-day-episodes-and-oracle-artifacts]] as the operative file/episode law and narrows older history-directory paths in [[2026-04-04-graphiti-unified-temporal-context-service]] to migration/source-history status unless a later spec explicitly re-promotes them.
 
 Each artifact carries a common envelope: `episode_id`, `episode_type`, `day_id`, `now_path`, `session_key`, `privacy_class`, provenance, `vault_path`, scalar `bimba_coordinate_refs`, optional `q_composed_at_now`, and a discriminated payload. [[Quaternal Tarot]] and [[Quaternal I-Ching]] artifacts are first-class M4' artifact kinds, not informal logs; they cross-reference [[M3]] [[Tarot]]/[[I-Ching]] coordinates as scalar refs, preserve protected-local interpretation bodies, and may update [[Q_activity]] only with explicit decay, weight, provenance, and privacy class.
 

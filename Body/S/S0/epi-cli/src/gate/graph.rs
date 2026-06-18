@@ -10,6 +10,35 @@ use crate::graph::{
     PointerWebRefreshRequest, RetrievalResult,
 };
 
+const ASMA_MIRROR_ABSENT: u8 = 0xFF;
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct KernelAsmaNameDesc {
+    name_idx: u8,
+    group: u8,
+    index_in_group: u8,
+    element_id: u8,
+    digital_root: u8,
+    mirror_idx: u8,
+    abjad_value: u16,
+    meaning_id: u16,
+    _pad: [u8; 2],
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct RoutingMask128 {
+    low_64: u64,
+    high_64: u64,
+}
+
+extern "C" {
+    static M2_ASMA_LUT: [KernelAsmaNameDesc; 100];
+    static ASMA_36_INTERNAL_MASK: RoutingMask128;
+    static ASMA_64_PROJECTIVE_MASK: RoutingMask128;
+}
+
 pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value, String> {
     if method == "s2'.coordinate.resolve" {
         let coordinate = required_string(params, "coordinate")?;
@@ -264,6 +293,7 @@ fn parashakti_correspondences(params: &Value) -> Result<Value, String> {
 
     let decan = decans[address72 % 36];
     let sacred_name = asma[address72];
+    let asma_overlay = asma_overlay_record(address72, &asma, params)?;
     let maqam = maqams[address72];
     let planetary_ruler = filtered_string(decan, "planetaryRuler")
         .ok_or_else(|| "selected decan missing planetaryRuler".to_owned())?;
@@ -317,6 +347,7 @@ fn parashakti_correspondences(params: &Value) -> Result<Value, String> {
             "arabicText": filtered_string(sacred_name, "arabicText"),
             "englishTranslation": filtered_string(sacred_name, "englishTranslation"),
             "chakraCorrespondence": filtered_string(sacred_name, "chakraCorrespondence"),
+            "asma": asma_overlay,
             "maqam": {
                 "coordinate": node_string(maqam, "coordinate"),
                 "name": filtered_string(maqam, "name"),
@@ -339,6 +370,77 @@ fn parashakti_correspondences(params: &Value) -> Result<Value, String> {
         },
         "earthObserverHandle": earth_observer_handle
     }))
+}
+
+fn asma_overlay_record(
+    name_idx: usize,
+    asma_nodes: &[&Value],
+    params: &Value,
+) -> Result<Value, String> {
+    let desc = kernel_asma_desc(name_idx)?;
+    let has_mirror = desc.mirror_idx != ASMA_MIRROR_ABSENT;
+    let mirror_name = if has_mirror {
+        asma_nodes
+            .get(desc.mirror_idx as usize)
+            .and_then(|node| filtered_string(node, "name"))
+    } else {
+        None
+    };
+
+    Ok(json!({
+        "name_idx": desc.name_idx,
+        "group": desc.group,
+        "group_name": asma_group_name(desc.group),
+        "index_in_group": desc.index_in_group,
+        "mirror_idx": desc.mirror_idx,
+        "has_mirror": has_mirror,
+        "mirror_name": mirror_name,
+        "mirror_relation": "domain_mirror",
+        "phase": asma_phase(params),
+        "phase_law": "#/inversion_spanda",
+        "mask_routing": {
+            "internal": asma_mask_contains(unsafe { ASMA_36_INTERNAL_MASK }, desc.name_idx),
+            "projective": asma_mask_contains(unsafe { ASMA_64_PROJECTIVE_MASK }, desc.name_idx),
+            "basis": "ASMA_36_INTERNAL_MASK/ASMA_64_PROJECTIVE_MASK"
+        }
+    }))
+}
+
+fn kernel_asma_desc(name_idx: usize) -> Result<KernelAsmaNameDesc, String> {
+    if name_idx >= 100 {
+        return Err(format!("Asma name index must be < 100, got {name_idx}"));
+    }
+    Ok(unsafe { M2_ASMA_LUT[name_idx] })
+}
+
+fn asma_mask_contains(mask: RoutingMask128, name_idx: u8) -> bool {
+    if name_idx < 64 {
+        ((mask.low_64 >> name_idx) & 1) == 1
+    } else {
+        ((mask.high_64 >> (name_idx - 64)) & 1) == 1
+    }
+}
+
+fn asma_group_name(group: u8) -> &'static str {
+    match group {
+        0 => "Jalal",
+        1 => "Kamal",
+        2 => "Jamal",
+        _ => "Hidden",
+    }
+}
+
+fn asma_phase(params: &Value) -> &'static str {
+    let active_kind = params
+        .get("activeKleinFlip")
+        .or_else(|| params.get("kleinFlip"))
+        .and_then(|value| value.get("kind"))
+        .and_then(Value::as_str);
+    match active_kind {
+        Some("M2CymaticValenceInvert") | Some("m2.cymatic.valence.invert") => "inverted",
+        _ if params.get("phase").and_then(Value::as_str) == Some("inverted") => "inverted",
+        _ => "primary",
+    }
 }
 
 fn read_parashakti_deep_nodes() -> Result<Vec<Value>, String> {
@@ -459,5 +561,34 @@ fn parse_results(params: &Value, key: &str) -> Result<Vec<RetrievalResult>, Stri
         Some(value) => serde_json::from_value(value.clone())
             .map_err(|err| format!("{key} must be RetrievalResult[]: {err}")),
         None => Ok(Vec::new()),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parashakti_correspondences_asma_overlay_keeps_explicit_mirror_absence() {
+        let artifact = parashakti_correspondences(&json!({ "address72": 17 }))
+            .expect("parashakti-deep adapter should resolve address 17");
+
+        let asma = &artifact["sacredSonic"]["asma"];
+        assert_eq!(artifact["address72"], 17);
+        assert_eq!(asma["name_idx"], 17);
+        assert_eq!(asma["mirror_idx"], 0xFF);
+        assert_eq!(asma["has_mirror"], false);
+        assert!(asma["mirror_name"].is_null());
+        assert_eq!(asma["mirror_relation"], "domain_mirror");
+        assert_eq!(asma["phase_law"], "#/inversion_spanda");
+        assert_eq!(asma["phase"], "primary");
+
+        let flipped = parashakti_correspondences(&json!({
+            "address72": 17,
+            "activeKleinFlip": { "kind": "M2CymaticValenceInvert" }
+        }))
+        .expect("active Klein flip should only change phase");
+        assert_eq!(flipped["address72"], 17);
+        assert_eq!(flipped["sacredSonic"]["asma"]["phase"], "inverted");
     }
 }

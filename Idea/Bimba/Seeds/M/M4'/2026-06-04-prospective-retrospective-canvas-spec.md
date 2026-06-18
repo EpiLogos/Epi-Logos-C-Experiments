@@ -78,7 +78,7 @@ Both fields take the same enum: `"prospective" | "retrospective"`. Compose phase
 |-----------|------|--------|
 | Extension contract | `Body/M/epi-theia/extensions/m4-nara/src/common/index.ts` | `EXTENSION_ID`, `PRIMARY_VIEW_ID`, `DECLARED_BLOCKERS`, `PRIVACY_CLASS`, `buildM4NaraSurface` |
 | DayContainer + NaraSurface types | `.../src/common/nara-surface.ts` | `NaraArtifactKind` (`journal | dream | oracle | reminder | contemplative | agent-chat`), `NaraPrivacyClass`, `NaraScalarRef`, `NaraArtifactEnvelope`, `NaraDayContainer`, `M4NaraSurface`, `QActivityUpdatePolicy`, `ConsentRecord`, `VoiceCorpusAdmissionInput` |
-| `createNaraArtifact` | `.../src/common/nara-surface.ts:137` | Writes an artifact md + envelope json into `Pratibimba/Nara/<dayId>/artifacts/<kind>/` |
+| `createNaraArtifact` | `.../src/common/nara-surface.ts:137` | Writes an artifact md + envelope json into `Idea/Empty/Present/<dayId>/artifacts/<kind>/` |
 | `readNaraDayContainer` | `.../src/common/nara-surface.ts:210` | Reads the day folder into a `NaraDayContainer` |
 | `buildM4NaraSurface` | `.../src/common/nara-surface.ts:239` | Composes the rendered surface, includes `M4_NARA_CONTRACT_VERSION` and observability event |
 | ReactWidget | `.../src/browser/m4-nara-widget.tsx` | Readiness banner + profile-snapshot dl + DayContainer dl, subscribes to `SharedBridgeAdapter.onReadiness/onProfile/onCoordinateContext` |
@@ -275,6 +275,8 @@ Janus owns the state transition logic. New tools in Janus's TS module (`Body/S/S
 - `janus_spread_resolved({ spread_id })` — when all positions are mute, mark resolved; the next draw lands as fresh ground.
 
 Recognition detection routes through Mercurius for kairos windows: a `target_aspect` near exact extends the activation window.
+
+**Implementation cross-reference (12.T12.18):** [[Janus]] now carries this authority in `Body/S/S4/ta-onta/S4-5p-aletheia/modules/janus-doorway.ts`, with real behavior locked by `Body/S/S4/ta-onta/S4-5p-aletheia/tests/janus_doorway.test.ts`. The implementation remains pure: note scanning, aliveness transitions, spread resolution, and Klein weighting all accept their live substrate as input rather than authoring persistence directly.
 
 ### 4.3 Forward/backward weighting per session
 

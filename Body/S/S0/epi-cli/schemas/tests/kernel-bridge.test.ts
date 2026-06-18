@@ -11,6 +11,11 @@ import {
   KernelBridgeRpcEnvelope,
   KernelBridgeRuntimeSnapshot,
   MathemeHarmonicProfile,
+  MonoPolyOperator,
+  PasuBeingPatternProjection,
+  PerspectiveRole,
+  RFactorBand,
+  AnuttaraWitnessProjection,
   TranscriptionalClockPacket,
   validateKernelBridgeRpcEnvelope,
 } from "../src/kernel-bridge.js";
@@ -45,6 +50,174 @@ describe("Kernel bridge contract package", () => {
         rendererLocalMoodColor: "#cc00ff",
       }),
     ).toThrow(/unrecognized_keys/i);
+  });
+
+  it("round-trips PASU BeingPattern variants and keeps ActualisingOne review-bound", () => {
+    expect(MonoPolyOperator.options).toEqual([
+      "Mono",
+      "Poly",
+      "ActuallyMany",
+      "PotentiallyOne",
+      "ActualisingOne",
+      "PotentiatingMany",
+      "MonoPoly",
+    ]);
+    expect(PerspectiveRole.options).toEqual([
+      "FirstPerson",
+      "SecondPerson",
+      "FirstPersonPlural",
+      "ThirdPerson",
+      "CollectiveWe",
+      "IntegralWeI",
+    ]);
+
+    const pasuBeingPattern = {
+      entityRef: {
+        entityId: "pasu:self",
+        entityKind: "user-being",
+        graphAnchor: "neo4j://s2/nodes/being/pasu-self",
+      },
+      stableIdentity: {
+        graphAnchor: "neo4j://s2/nodes/being/pasu-self",
+        identityHandle: "being:pasu-self",
+        source: "S2 Neo4j canonical graph",
+      },
+      liveState: {
+        spacetimeRowId: "being_pattern_presence:pasu-self",
+        streamGeneration: 44,
+        redisPsyche: { presence: "redis://psyche/presence" },
+        dayRef: "Idea/Empty/Present/17-06-2026",
+        nowRef: "Idea/Empty/Present/17-06-2026/20260617T181955Z/now.md",
+        streamDelta: "redis://psyche/stream/44",
+        graphitiEpisodeRefs: [],
+      },
+      observerAnchor: {
+        observerEntityId: "earth-observer",
+        observerRole: "IntegralWeI",
+        anchorRef: "Earth",
+      },
+      clockAddress: { degree360: 137, tick12: 5 },
+      monopolyOperator: "ActualisingOne",
+      perspectiveRole: "IntegralWeI",
+      m2M3Relation: {
+        relationHandle: "m2m3://relation/pasu-self/trine",
+        planetaryLensAspect: "backend-supplied-trine",
+        source: "S3 CCT-21",
+      },
+      bioquaternionHandles: [
+        {
+          handle: "protected://bio/q_identity",
+          privacy: "protected-local-body",
+          source: "PASU",
+        },
+      ],
+      elementalWeights: { fire: 0, water: 0, air: 0, earth: 0.4 },
+      relationEdges: [
+        {
+          edgeId: "edge:pasu-self:school",
+          sourceEntityId: "pasu:self",
+          targetEntityId: "school-of-thought-being",
+          edgeKind: "aspect-like",
+          aspectLabel: "trine-like-resonance",
+          generation: 44,
+          m2M3Relation: {
+            relationHandle: "m2m3://relation/pasu-self/trine",
+            planetaryLensAspect: "backend-supplied-trine",
+            source: "S3 CCT-21",
+          },
+          elementalDelta: { fire: 0.1, water: 0, air: 0, earth: 0 },
+          verifierRefs: [],
+          canonStatus: "live-only-review-required",
+        },
+      ],
+      verifierRefs: [],
+      reviewRisk: "forced-unification",
+    } as const;
+
+    expect(PasuBeingPatternProjection.parse(pasuBeingPattern).reviewRisk).toBe(
+      "forced-unification",
+    );
+    expect(
+      MathemeHarmonicProfile.parse({
+        ...baselineProfile,
+        pasuBeingPattern,
+      }).pasuBeingPattern?.liveState.streamGeneration,
+    ).toBe(44);
+    expect(() =>
+      PasuBeingPatternProjection.parse({
+        ...pasuBeingPattern,
+        reviewRisk: "none",
+      }),
+    ).toThrow(/ActualisingOne/);
+  });
+
+  it("round-trips Anuttara witness vectors, R-factor bands, and turn flag without gating", () => {
+    expect(RFactorBand.options).toEqual(["pravritti", "nivritti"]);
+
+    const anuttaraWitness = {
+      virtueWitnessVector: 0b111_000_101,
+      syntaxWitnessVector: 0b1001,
+      rfactorPath: [
+        {
+          rFactor: 1,
+          baseRoute: "Nara",
+          band: "pravritti",
+          position: 4,
+          isTurn: false,
+        },
+        {
+          rFactor: 2,
+          baseRoute: "Shakti",
+          band: "pravritti",
+          position: 5,
+          isTurn: true,
+        },
+        {
+          rFactor: 3,
+          baseRoute: "Shakti",
+          band: "nivritti",
+          position: 0,
+          isTurn: false,
+        },
+        {
+          rFactor: 0xff,
+          baseRoute: "Siva",
+          band: "nivritti",
+          position: 5,
+          isTurn: false,
+        },
+      ],
+      bandBalance: {
+        pravrittiDepth: 2,
+        nivrittiDepth: 2,
+        reachedTurn: true,
+        returned: true,
+      },
+      palindromeState: {
+        normalFormSymmetric: true,
+        mirrorNormalForm: "R1@Nara/4|(@#)|R3@Shakti/0",
+      },
+      openQuestions: ["Law-6:R3@Shakti:return?"],
+      coherenceScore: 0.625,
+    } as const;
+
+    const parsedWitness = AnuttaraWitnessProjection.parse(anuttaraWitness);
+    expect(parsedWitness.virtueWitnessVector).toBe(0b111_000_101);
+    expect(parsedWitness.syntaxWitnessVector).toBe(0b1001);
+    expect(parsedWitness.rfactorPath.map((step) => step.band)).toEqual([
+      "pravritti",
+      "pravritti",
+      "nivritti",
+      "nivritti",
+    ]);
+    expect(parsedWitness.rfactorPath[1].isTurn).toBe(true);
+
+    const parsedProfile = MathemeHarmonicProfile.parse({
+      ...baselineProfile,
+      anuttaraWitness,
+    });
+    expect(parsedProfile.anuttaraWitness?.rfactorPath[3].rFactor).toBe(0xff);
+    expect(parsedProfile.anuttaraWitness?.bandBalance.returned).toBe(true);
   });
 
   it("defines connection, readiness, events, and capability names used by bridge consumers", () => {

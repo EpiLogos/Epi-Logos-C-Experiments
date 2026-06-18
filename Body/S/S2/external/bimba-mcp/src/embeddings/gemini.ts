@@ -120,10 +120,15 @@ export class GeminiEmbeddingClient {
 
     const apiKey = config?.apiKey ?? process.env['GEMINI_API_KEY'];
     const cacheRoot = config?.cacheRoot ?? valueAsString(geminiConfig['cache_root']) ?? defaultCacheRoot();
+    // Standalone-friendly default so the MCP can embed without the epi-logos
+    // config.toml; override via env or config when present.
     const canonicalContextLimitBytes =
-      config?.canonicalContextLimitBytes ?? valueAsNumber(geminiConfig['canonical_context_limit_bytes']);
+      config?.canonicalContextLimitBytes ??
+      valueAsNumber(process.env['GEMINI_EMBEDDING_CONTEXT_LIMIT_BYTES']) ??
+      valueAsNumber(geminiConfig['canonical_context_limit_bytes']) ??
+      8192;
     if (!canonicalContextLimitBytes || canonicalContextLimitBytes < 1) {
-      throw new Error('[gemini_embedding].canonical_context_limit_bytes must be configured and positive');
+      throw new Error('canonical_context_limit_bytes must be positive');
     }
 
     const backend =
@@ -140,14 +145,15 @@ export class GeminiEmbeddingClient {
       backend,
       documentHasher,
     };
+    // Retry/rate-limit tuning: explicit override → config file → portable default.
     this.retryConfig = {
-      maxRetries: requiredNumber(retryConfig?.maxRetries, geminiConfig['max_retries'], 'max_retries'),
-      initialDelayMs: requiredNumber(retryConfig?.initialDelayMs, geminiConfig['backoff_initial_ms'], 'backoff_initial_ms'),
-      maxDelayMs: retryConfig?.maxDelayMs ?? valueAsNumber(geminiConfig['backoff_max_ms']) ?? Number.POSITIVE_INFINITY,
-      multiplier: requiredNumber(retryConfig?.multiplier, geminiConfig['backoff_factor'], 'backoff_factor'),
-      jitterRatio: requiredNumber(retryConfig?.jitterRatio, geminiConfig['jitter_ratio'], 'jitter_ratio'),
-      maxRpm: requiredNumber(retryConfig?.maxRpm, geminiConfig['max_rpm'], 'max_rpm'),
-      maxConcurrent: requiredNumber(retryConfig?.maxConcurrent, geminiConfig['max_concurrent'], 'max_concurrent'),
+      maxRetries: retryConfig?.maxRetries ?? valueAsNumber(geminiConfig['max_retries']) ?? 3,
+      initialDelayMs: retryConfig?.initialDelayMs ?? valueAsNumber(geminiConfig['backoff_initial_ms']) ?? 500,
+      maxDelayMs: retryConfig?.maxDelayMs ?? valueAsNumber(geminiConfig['backoff_max_ms']) ?? 30000,
+      multiplier: retryConfig?.multiplier ?? valueAsNumber(geminiConfig['backoff_factor']) ?? 2,
+      jitterRatio: retryConfig?.jitterRatio ?? valueAsNumber(geminiConfig['jitter_ratio']) ?? 0.1,
+      maxRpm: retryConfig?.maxRpm ?? valueAsNumber(geminiConfig['max_rpm']) ?? 60,
+      maxConcurrent: retryConfig?.maxConcurrent ?? valueAsNumber(geminiConfig['max_concurrent']) ?? 4,
     };
   }
 
@@ -267,6 +273,11 @@ export class GeminiEmbeddingClient {
   }
 
   private requireOptIn(taskType: TaskType): void {
+    // Portable/standalone path: an explicit env opt-in lets the MCP embed without
+    // the epi-logos config.toml (the server is meant to be self-contained).
+    if (process.env['GEMINI_EMBEDDING_OPT_IN'] === 'true' || process.env['GEMINI_EMBEDDING_OPTIN'] === 'true') {
+      return;
+    }
     const parsed = readConfigSyncBestEffort(this.config.configPath);
     const optIn = section(parsed, 'cloud_opt_in.gemini_embedding');
     const recorded = valueAsBoolean(optIn['recorded']) || valueAsBoolean(optIn['enabled']);
@@ -434,12 +445,14 @@ export class GeminiEmbeddingClient {
 }
 
 function createBlake3Hasher(): (bytes: Uint8Array) => string {
-  if (!getHashes().includes('blake3')) {
-    throw new Error(
-      'BLAKE3 document hashing is required. Provide EmbeddingConfig.documentHasher or run on a Node/OpenSSL build with blake3 support.'
-    );
+  // Prefer BLAKE3 (matches the canonical pipeline's content hashing) but fall
+  // back to SHA-256 so the standalone MCP works on any Node/OpenSSL build. The
+  // hash is only a deterministic content identity (cache key / mock seed); the
+  // algorithm choice does not affect produced embedding vectors.
+  if (getHashes().includes('blake3')) {
+    return (bytes: Uint8Array): string => createHash('blake3').update(bytes).digest('hex');
   }
-  return (bytes: Uint8Array): string => createHash('blake3').update(bytes).digest('hex');
+  return (bytes: Uint8Array): string => 'sha256:' + createHash('sha256').update(bytes).digest('hex');
 }
 
 function toSupportedDim(value: number): 3072 | 1536 | 768 {
@@ -537,14 +550,6 @@ function defaultConfigPath(): string {
 
 function defaultCacheRoot(): string {
   return join(process.env['EPI_LOGOS_HOME'] ?? join(homedir(), '.epi-logos'), 'cache', 'embeddings');
-}
-
-function requiredNumber(override: number | undefined, value: ConfigValue | undefined, key: string): number {
-  const resolved = override ?? valueAsNumber(value);
-  if (resolved === undefined || Number.isNaN(resolved) || resolved < 0) {
-    throw new Error(`[gemini_embedding].${key} must be configured`);
-  }
-  return resolved;
 }
 
 function valueAsString(value: ConfigValue | string | undefined): string | undefined {

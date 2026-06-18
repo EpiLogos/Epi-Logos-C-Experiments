@@ -21,6 +21,8 @@ import {
     SHARED_BRIDGE_ADAPTER,
     MExtensionReadinessSnapshot,
     PENDING_M_READINESS,
+    EMPTY_STATE_REGISTRY,
+    EmptyStateRegistry,
     MathemeHarmonicProfileBoundary,
     CoordinateContext,
     EMPTY_COORDINATE_CONTEXT,
@@ -34,6 +36,10 @@ import {
 } from '@pratibimba/pratibimba-layouts';
 import type { DailyShellFace } from '@pratibimba/pratibimba-layouts';
 import { M0AnuttaraWidget } from './m0-anuttara-widget';
+import {
+    M0AnuttaraEmptyState,
+    M0AnuttaraEmptyStateWidget
+} from './empty-state';
 import { M0CoordinateSummaryCard } from './components/m0-coordinate-summary-card';
 import {
     EXTENSION_ID,
@@ -43,6 +49,14 @@ import {
     ROUTE_PATH,
     OBSERVABILITY_EVENT_TYPES
 } from '../common';
+import {
+    M0_CROSS_LAYOUT_INTENT_TARGETS,
+    isM0CrossLayoutIntentTarget,
+    parseM0CrossLayoutIntentPayload,
+    projectM0CrossLayoutIntentState
+} from '../common/cross-layout-intent';
+import type { M0CrossLayoutIntentPayload } from '../common/cross-layout-intent';
+import type { M0LayerKey } from '../common/m0-layers';
 
 export const M0_ANUTTARA_PUBLISHER = Symbol(
     'm0-anuttara.observabilityPublisher'
@@ -67,6 +81,71 @@ export class M0AnuttaraContribution
         // triggers the view via OPEN_COMMAND_ID.
     }
 
+    protected async openIntentTarget(intent: unknown): Promise<M0AnuttaraWidget> {
+        const widget = await this.openView({ activate: true, reveal: true });
+        const payload = parseM0CrossLayoutIntentPayload(intent);
+        if (payload) {
+            this.applyIntentPayload(widget, payload);
+        }
+        return widget;
+    }
+
+    protected applyIntentPayload(
+        widget: M0AnuttaraWidget,
+        payload: M0CrossLayoutIntentPayload
+    ): void {
+        if (typeof widget.applyCrossLayoutIntent === 'function') {
+            widget.applyCrossLayoutIntent(payload);
+            return;
+        }
+        const target = widget as unknown as {
+            activeLayer?: M0LayerKey;
+            phase?: M0CrossLayoutIntentPayload['implicateExplicate'];
+            mode?: M0CrossLayoutIntentPayload['mode'];
+            context?: CoordinateContext;
+            bridge?: Pick<SharedBridgeAdapter, 'updateCoordinateContext'>;
+            update?: () => void;
+        };
+        const state = projectM0CrossLayoutIntentState(
+            payload,
+            target.context ?? EMPTY_COORDINATE_CONTEXT
+        );
+        if (state.activeLayer) {
+            target.activeLayer = state.activeLayer;
+        }
+        if (state.phase) {
+            target.phase = state.phase;
+        }
+        if (state.mode) {
+            target.mode = state.mode;
+        }
+        if (state.coordinateContext) {
+            target.context = state.coordinateContext;
+            target.bridge?.updateCoordinateContext(state.coordinateContext);
+        }
+        target.update?.();
+    }
+
+    protected intentPayloadFromRoute(raw: string): M0CrossLayoutIntentPayload | null {
+        const route = parseExtensionRoute(raw);
+        if (!route || route.extensionId !== EXTENSION_ID) {
+            return null;
+        }
+        const requestedContributionId = isM0CrossLayoutIntentTarget(
+            route.query.requestedContributionId
+        )
+            ? route.query.requestedContributionId
+            : 'graph';
+        return parseM0CrossLayoutIntentPayload({
+            requestedExtensionId: EXTENSION_ID,
+            requestedContributionId,
+            coordinate: route.query.coordinate,
+            implicateExplicate: route.query.implicateExplicate,
+            mode: route.query.mode,
+            source: route.query.source
+        });
+    }
+
     override registerCommands(commands: CommandRegistry): void {
         super.registerCommands(commands);
         commands.registerCommand(
@@ -85,23 +164,40 @@ export class M0AnuttaraContribution
         commands.registerCommand(
             { id: `${EXTENSION_ID}.handleRoute`, label: `${EXTENSION_ID}: handle route` },
             {
-                execute: (raw: string) => {
-                    const route = parseExtensionRoute(raw);
-                    if (!route || route.extensionId !== EXTENSION_ID) {
+                execute: (raw: string | unknown) => {
+                    const payload =
+                        typeof raw === 'string'
+                            ? this.intentPayloadFromRoute(raw)
+                            : parseM0CrossLayoutIntentPayload(raw);
+                    if (!payload) {
                         return undefined;
                     }
-                    return this.openView({ activate: true, reveal: true });
+                    return this.openIntentTarget(payload);
                 }
             }
         );
-        // Track 05 T5 intent target — CrossLayoutIntentDispatcher routes
-        // "open-graph-node" here.
+        // Track 05 T5 + 21.19 intent targets — legacy graph fallback plus
+        // layer-aware M0LayerKey targets promoted from Track 11.2.
+        for (const target of M0_CROSS_LAYOUT_INTENT_TARGETS) {
+            registerIntentTarget(
+                commands,
+                EXTENSION_ID,
+                target,
+                `M0 Anuttara: Open ${target}`,
+                intent => this.openIntentTarget(intent)
+            );
+        }
+        // Compatibility target for existing coordinate-opening callers in this
+        // worktree; it opens the primary view without layer activation.
         registerIntentTarget(
             commands,
             EXTENSION_ID,
-            'graph',
-            'M0 Anuttara: Open Graph Node',
-            () => this.openView({ activate: true, reveal: true })
+            'coordinate',
+            'M0 Anuttara: Open Coordinate',
+            () => this.openIntentTarget({
+                requestedExtensionId: EXTENSION_ID,
+                requestedContributionId: 'graph'
+            })
         );
     }
 }
@@ -110,7 +206,7 @@ export class M0AnuttaraContribution
 export const M0_COORDINATE_SUMMARY_CARD_ID = 'm0.anuttara.coordinateSummaryCard';
 
 /** Canonical intent-dispatch command the OmniPanel routes cross-layout deep links through. */
-const OMNIPANEL_INTENT_DISPATCH = 'omnipanel.intent.dispatch';
+const OMNIPANEL_INTENT_DISPATCH = 'pratibimba.intent.dispatch';
 
 /**
  * Layout-conditional placement for the compact card. The integrated composition
@@ -211,6 +307,7 @@ export class M0CoordinateSummaryCardWidget extends ReactWidget {
         void this.commands.executeCommand(OMNIPANEL_INTENT_DISPATCH, {
             requestedLayout: 'ide-deep',
             requestedExtensionId: EXTENSION_ID,
+            requestedContributionId: 'coordinate',
             coordinate: this.selectedCoordinate(),
             source: 'm0-anuttara-compact'
         });
@@ -279,8 +376,31 @@ class M0AnuttaraPublisher implements MObservabilityPublisher {
     }
 }
 
+@injectable()
+class M0AnuttaraEmptyStateRegistration implements FrontendApplicationContribution {
+    @inject(EMPTY_STATE_REGISTRY)
+    protected readonly emptyStates!: EmptyStateRegistry;
+
+    protected disposable?: Disposable;
+
+    onStart(): void {
+        this.disposable = this.emptyStates.register({
+            extensionId: EXTENSION_ID,
+            viewId: 'm0-anuttara.primary',
+            activationCondition: snapshot => snapshot.state !== 'ready_public_current',
+            component: M0AnuttaraEmptyState
+        });
+    }
+
+    onStop(): void {
+        this.disposable?.dispose();
+        this.disposable = undefined;
+    }
+}
+
 export default new ContainerModule(bind => {
     bind(M0AnuttaraWidget).toSelf();
+    bind(M0AnuttaraEmptyStateWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M0AnuttaraWidget.ID,
@@ -305,6 +425,8 @@ export default new ContainerModule(bind => {
     bind(M0_ANUTTARA_PUBLISHER).toService(
         M0AnuttaraPublisher
     );
+    bind(M0AnuttaraEmptyStateRegistration).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(M0AnuttaraEmptyStateRegistration);
 
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.

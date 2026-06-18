@@ -178,7 +178,7 @@ interface NaraArtifact {
   source_path?: string;                        // free-form provenance trail
   
   // Vault storage
-  vault_path: VaultPath;                       // canonical file path in /Pratibimba/Nara/...
+  vault_path: VaultPath;                       // canonical file path in /Idea/Empty/Present/...
   
   // Optional bimba-coordinate references
   bimba_coordinate_refs: BimbaCoordinateRef[]; // scalar refs to canonical M-coordinates
@@ -259,14 +259,14 @@ The activity-type tag is therefore not just metadata for browsing — it's the r
 Per the existing convention at `m5-prime-system-shape-and-tauri-ide-canon.md` §2.2, the `/Pratibimba/` directory carries reflection/mirror-image content — the systematic-reflection-surface of the system. Within `/Pratibimba/`, two known sub-namespaces:
 
 - `/Pratibimba/Epii/` — Epii agent inbox content per Graphiti spec (existing)
-- `/Pratibimba/Nara/` — Nara personal content per this spec (canonical home for all Nara artifacts)
+- `/Idea/Empty/Present/` — Nara personal content per this spec (canonical home for all Nara artifacts)
 
-The `/Self/aham/daily/` placeholder currently used by the Quaternal Tarot and Quaternal I-Ching skills migrates to `/Pratibimba/Nara/`.
+The `/Self/aham/daily/` placeholder currently used by the Quaternal Tarot and Quaternal I-Ching skills migrates to `/Idea/Empty/Present/`.
 
 ### §4.2 The day-directory layout
 
 ```
-${VAULT}/Pratibimba/Nara/
+${VAULT}/Idea/Empty/Present/
 ├── {day_id}/                            # e.g., 2026-05-31/
 │   ├── daily-note.md                    # primary daily-note artifact (if exists)
 │   ├── day-container.json               # the DayContainer episode envelope (machine-readable)
@@ -336,7 +336,7 @@ session_key: sess_abc123
 privacy_class: protected-local-body
 source_skill: quaternal-tarot
 source_agent: user
-vault_path: Pratibimba/Nara/2026-05-31/artifacts/oracle/tarot-cast_uuid.md
+vault_path: Idea/Empty/Present/2026-05-31/artifacts/oracle/tarot-cast_uuid.md
 bimba_coordinate_refs:
   - "#3.5"           # M3-5 cosmic wheel
   - "#3-tarot-fool"  # M3 Tarot library Fool card
@@ -855,10 +855,10 @@ The user can override defaults per-artifact at creation time.
 
 ### §9.2 Privacy enforcement at the substrate
 
-- **`protected-local-body`** artifacts never leave the local Pratibimba namespace. They're stored at `${VAULT}/Pratibimba/Nara/{day_id}/artifacts/...`. The Graphiti episode contains the body in the protected-local store. NO canonical-graph projection; NO API egress (Pi-agent inference for parser-work runs local-model preferentially per cymatic field engine §6.8.4.E).
+- **`protected-local-body`** artifacts never leave the local Pratibimba namespace. They're stored at `${VAULT}/Idea/Empty/Present/{day_id}/artifacts/...`. The Graphiti episode contains the body in the protected-local store. NO canonical-graph projection; NO API egress (Pi-agent inference for parser-work runs local-model preferentially per cymatic field engine §6.8.4.E).
 - **`protected-local-derived`** artifacts (parser outputs, aggregate metrics, handle references) can be published to shared substrates as handles only. No body content. The `bimba_coordinate_ref` properties on the artifact are protected-local-derived (the references themselves, not the content they reference).
 - **`public-current-context`** artifacts may be projected to SpaceTimeDB shared cosmos at S3' (per `alpha_quaternionic_integration_across_M_stack.md` §11 — `pratibimba_presence` RLS-filtered per-user; `shared_archetype_event` opt-in per-artifact).
-- **`reviewed-canonical`** artifacts have been promoted through M5 Epii review (per autoresearch spine spec) and now belong to canonical content; they exit the Pratibimba/Nara namespace and enter `Idea/Bimba/Seeds/` or `Idea/Bimba/World/` per Hen residency law.
+- **`reviewed-canonical`** artifacts have been promoted through M5 Epii review (per autoresearch spine spec) and now belong to canonical content; they exit the Idea/Empty/Present namespace and enter `Idea/Bimba/Seeds/` or `Idea/Bimba/World/` per Hen residency law.
 
 ### §9.3 Opt-in publishing to shared substrates
 
@@ -878,7 +878,7 @@ The opt-in is per-artifact, gated by user-explicit consent. The `daily_identity_
 
 Per `m5-prime-system-shape-and-tauri-ide-canon.md` §3.2, the 0/1 surface carries the lightweight daily-use Nara register:
 
-- **Journal entry creation**: typing in the open flow space + applying highlight tags creates JournalEntry artifacts directly in `/Pratibimba/Nara/{today}/artifacts/journal/`
+- **Journal entry creation**: typing in the open flow space + applying highlight tags creates JournalEntry artifacts directly in `/Idea/Empty/Present/{today}/artifacts/journal/`
 - **Highlight tags route**: tagging text as `dream` creates a DreamEntry artifact (in `dreams/` subdirectory); tagging as `oracle` invokes the relevant Quaternal-Tarot or Quaternal-I-Ching skill; tagging as `reminder` creates a Reminder artifact with cron integration; etc.
 - **Today-view display**: the 0/1 surface shows today's DayContainer aggregate (count of artifacts, recent NOW activity, current Q_composed indicator)
 - **Quick agent chat**: chatting with Nara/Anima creates AgentChat episodes (the 5-episode Psyche arc)
@@ -902,7 +902,7 @@ The m4-nara extension is the **deep-engagement entry-point**; the user enters he
 
 ### §10.3 The shared canonical-store
 
-Both surfaces (0/1 and m4-nara extension) read/write to the same `${VAULT}/Pratibimba/Nara/` canonical store. The kernel-bridge extension (per `m5-prime-system-shape-and-tauri-ide-canon.md` §5) provides unified access:
+Both surfaces (0/1 and m4-nara extension) read/write to the same `${VAULT}/Idea/Empty/Present/` canonical store. The kernel-bridge extension (per `m5-prime-system-shape-and-tauri-ide-canon.md` §5) provides unified access:
 
 - Writes: both surfaces use the same write-API (probably through a `nara-vault-service` Theia/Tauri service backed by Rust)
 - Reads: both surfaces subscribe to the same Graphiti episodic stream via the kernel-bridge
@@ -916,7 +916,7 @@ When the user invokes the Quaternal Tarot skill (via Claude Code, Codex, or othe
 
 1. User invokes `quaternal-tarot` skill
 2. Skill executes per its protocol (questions, cards drawn, reading articulated)
-3. Skill writes the resulting artifact to `/Pratibimba/Nara/{today}/artifacts/oracle/tarot-{cast_uuid}.md` with the canonical QuaternalTarotPayload frontmatter + body content
+3. Skill writes the resulting artifact to `/Idea/Empty/Present/{today}/artifacts/oracle/tarot-{cast_uuid}.md` with the canonical QuaternalTarotPayload frontmatter + body content
 4. Skill triggers Graphiti episode creation (POST to Graphiti sidecar) with the canonical OracleCast episode-type
 5. Graphiti episode links to DayContainer via `:PART_OF_DAY` and to PersonalNexus via `:HAS_EPISODE`
 6. The user's 0/1 surface or m4-nara extension (whichever is open) reflects the new artifact via the kernel-bridge event-bus
@@ -929,7 +929,7 @@ The skill is responsible for writing the artifact in canonical form (per §5.1 s
 
 ### Milestone 1: Vault namespace establishment
 
-- Create `${VAULT}/Pratibimba/Nara/` namespace
+- Create `${VAULT}/Idea/Empty/Present/` namespace
 - Migrate existing `/Self/aham/daily/` content to new namespace if any exists
 - Set up `current/` symlink mechanism
 - Create initial `README.md` documenting the namespace
@@ -953,7 +953,7 @@ The skill is responsible for writing the artifact in canonical form (per §5.1 s
 
 - Update `quaternal-tarot` skill to write artifacts in canonical form (§5.1)
 - Update `quaternal-i-ching` skill to write artifacts in canonical form (§5.2)
-- Migrate skill log-destinations from `/Self/aham/daily/` to `/Pratibimba/Nara/{day}/artifacts/oracle/`
+- Migrate skill log-destinations from `/Self/aham/daily/` to `/Idea/Empty/Present/{day}/artifacts/oracle/`
 - Test full skill→artifact→Graphiti episode chain
 
 ### Milestone 5: Other artifact-type creation paths
@@ -1010,7 +1010,7 @@ The skill is responsible for writing the artifact in canonical form (per §5.1 s
 ### §12.1 To `M4'-SPEC.md`
 
 - New section: "Canonical Nara Content Structure" referencing this spec
-- Annotation that the file-system layout at `/Pratibimba/Nara/` is canonical
+- Annotation that the file-system layout at `/Idea/Empty/Present/` is canonical
 - Annotation that oracle artifacts from the Quaternal Tarot and Quaternal I-Ching skills are first-class artifact-types with canonical payload-schemas
 
 ### §12.2 To `m4-prime-nara-activity-graphiti-instrument.md`
@@ -1032,13 +1032,13 @@ The skill is responsible for writing the artifact in canonical form (per §5.1 s
 
 ### §12.5 To the Quaternal Tarot and Quaternal I-Ching skills
 
-- Migrate log destination from `/Self/aham/daily/` to `/Pratibimba/Nara/{day_id}/artifacts/oracle/`
+- Migrate log destination from `/Self/aham/daily/` to `/Idea/Empty/Present/{day_id}/artifacts/oracle/`
 - Update SKILL.md "After the Reading" section to reference the canonical artifact-payload schema
 - Add provenance fields: source_skill, skill_version, session_id
 
 ### §12.6 To the system-shape canon
 
-- `m5-prime-system-shape-and-tauri-ide-canon.md` annotation: the m4-nara IDE extension and the 0/1 surface both consume from the `/Pratibimba/Nara/` canonical store via the kernel-bridge `nara-vault-service`
+- `m5-prime-system-shape-and-tauri-ide-canon.md` annotation: the m4-nara IDE extension and the 0/1 surface both consume from the `/Idea/Empty/Present/` canonical store via the kernel-bridge `nara-vault-service`
 
 ---
 
@@ -1047,12 +1047,12 @@ The skill is responsible for writing the artifact in canonical form (per §5.1 s
 1. **Day-as-episode-container architecture** — canonical structure where each calendar day has one DayContainer episode at #4.4.4.4 with N artifact-children attached, each carrying NOW timestamp + activity-type + provenance + privacy-class + bimba-coordinate-refs + day-container linkage
 2. **Activity-type taxonomy** — closed `ActivityKind` enum covering oracle artifacts (Quaternal Tarot + Quaternal I-Ching), written artifacts (daily note / journal / dream / personal note / reflection), interactive artifacts (agent chat), task artifacts (reminder / LLM task / scheduled task), contemplative artifacts (Vāma Śaktis / alchemical / phenomenological), and external-source artifacts
 3. **Common artifact envelope + type-specific payloads** — uniform Graphiti-integration envelope + discriminated payload union per ActivityKind, with full canonical schemas for the Quaternal Tarot and Quaternal I-Ching oracle types referencing the M3 Tarot/I-Ching library at canonical coordinates
-4. **Canonical file-system layout** at `${VAULT}/Pratibimba/Nara/{day_id}/artifacts/...` with subdirectories per activity-type, frontmatter-bearing markdown files for human-readable artifacts, JSON envelopes for machine-readable metadata, `current/` symlink for today
+4. **Canonical file-system layout** at `${VAULT}/Idea/Empty/Present/{day_id}/artifacts/...` with subdirectories per activity-type, frontmatter-bearing markdown files for human-readable artifacts, JSON envelopes for machine-readable metadata, `current/` symlink for today
 5. **Quaternal Tarot canonical artifact** specifying full QuaternalTarotPayload with three scales (Sphere/Torus/Klein), positional readings (P0-P5), complementary pairs, P4 lemniscate sub-reading, Night arc, three-level interpretations, lens applications (L2/L3/L3'/L2'), and cross-references to canonical M3 Tarot library
 6. **Quaternal I-Ching canonical artifact** specifying full QuaternalIChingPayload with four scales (Trigram/Hexagram/Transformed/Nuclear), native tetralemma in line-states, dual compass framework (Early Heaven + Later Heaven), Wu Xing interactions, moving lines, lens applications, and cross-references to canonical M3 I-Ching library
 7. **Graphiti episode topology** with new relationship types (`:HAS_DAY`, `:CONTAINS_DAILY_NOTE`, `:PART_OF_DAY`, `:NEXT_IN_ARC`) extending the existing canonical graph
 8. **Privacy-class discipline per artifact-type** with default classifications, enforcement at substrate level, and explicit per-artifact opt-in for shared-archetypal-resonance publishing
-9. **Tauri 0/1 surface and m4-nara IDE extension consumption** — both consume from the same canonical `/Pratibimba/Nara/` store via the kernel-bridge `nara-vault-service`; 0/1 for daily-use; m4-nara for deep engagement
+9. **Tauri 0/1 surface and m4-nara IDE extension consumption** — both consume from the same canonical `/Idea/Empty/Present/` store via the kernel-bridge `nara-vault-service`; 0/1 for daily-use; m4-nara for deep engagement
 10. **Q_composed trajectory through the day** — each DayContainer's artifact-children timeseries enables trajectory-rendering through the psychoid cymatic field per the cymatic field engine
 11. **Spec deltas enumerated** for surgical update of M4'-SPEC, m4-prime-nara-activity-graphiti-instrument, m4-prime-psychoid-cymatic-field-engine, Graphiti spec, Quaternal Tarot/I-Ching skill files, and system-shape canon
 

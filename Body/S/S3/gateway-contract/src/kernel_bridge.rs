@@ -201,7 +201,10 @@ pub enum KernelBridgeApiRequest {
 pub fn surface_privacy_class(surface: &str) -> KernelBridgePrivacyClass {
     match surface {
         // Personal/protected surfaces — only fingerprints/handles cross.
-        "pratibimba_presence" => KernelBridgePrivacyClass::ProtectedReferenceOnly,
+        "pratibimba_presence"
+        | "being_pattern_presence"
+        | "being_pattern_relation_edge"
+        | "being_pattern_review_candidate" => KernelBridgePrivacyClass::ProtectedReferenceOnly,
         // Opt-in surfaces — caller must have asserted consent.
         "shared_archetype_event" | "coincidence" => KernelBridgePrivacyClass::OptInShared,
         // Public-safe operational surfaces.
@@ -245,6 +248,13 @@ pub fn privacy_filter_table_delta(delta: &SpacetimeTableDelta) -> KernelBridgeCa
         SpacetimeTableDelta::WorldClockTick { row } => ("world_clock_tick", row),
         SpacetimeTableDelta::CoincidenceTick { row } => ("coincidence_tick", row),
         SpacetimeTableDelta::ModuleVersion { row } => ("module_version", row),
+        SpacetimeTableDelta::BeingPatternPresence { row } => ("being_pattern_presence", row),
+        SpacetimeTableDelta::BeingPatternRelationEdge { row } => {
+            ("being_pattern_relation_edge", row)
+        }
+        SpacetimeTableDelta::BeingPatternReviewCandidate { row } => {
+            ("being_pattern_review_candidate", row)
+        }
         SpacetimeTableDelta::Other { table_name, row } => (table_name.as_str(), row),
     };
     let privacy_class = surface_privacy_class(surface_name);
@@ -329,6 +339,39 @@ fn normalise_row_to_object(surface: &str, raw: &Value) -> Value {
             "clock_protocol_version",
             "kerykeion_version",
             "updated_at",
+        ],
+        "being_pattern_presence" => &[
+            "entity_id",
+            "entity_kind",
+            "installation_id",
+            "gateway_id",
+            "session_key",
+            "generation",
+            "live_state_json",
+            "projection_json",
+            "provenance_refs_json",
+            "updated_at",
+        ],
+        "being_pattern_relation_edge" => &[
+            "edge_id",
+            "source_entity_id",
+            "target_entity_id",
+            "generation",
+            "edge_kind",
+            "aspect_label",
+            "elemental_delta_json",
+            "verifier_refs_json",
+            "updated_at",
+        ],
+        "being_pattern_review_candidate" => &[
+            "candidate_id",
+            "generation",
+            "entity_ids",
+            "monopoly_operator",
+            "review_risk",
+            "verifier_refs_json",
+            "status",
+            "emitted_at",
         ],
         // For surfaces we don't carry an explicit column map for, return the
         // raw array — consumers know the per-surface schema.

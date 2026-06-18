@@ -3,6 +3,8 @@ title: "M2' Paraśakti Architecture — Total Shape, Substrate Map, Profile-Bus 
 coordinate: "M2 / M2'"
 status: "canonical-architecture-spec"
 created: 2026-06-02
+updated: "2026-06-10"
+cycle-3: reconciled
 authority_relation: "Domain authority for M2'. M2'-SPEC §§0-11 cross-references this document. Where they disagree, this document is authoritative for M2-1' → M2-5' substrate mapping, profile-bus contract, visual rendering, and tick choreography; M2'-SPEC retains authority for §7 Klein-flip semantics, §8 correspondence-tree canon, §9 Ficinian-Kerykeion routing protocol, and §9.8 open questions."
 depends_on:
   - "[[M2'-SPEC]]"

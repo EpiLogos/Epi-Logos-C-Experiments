@@ -17,6 +17,7 @@ import {
   fireSophiaDisclosure,
   recordPendingSophia,
 } from "./modules/sophia-fire.ts";
+import { stampNowFibonacciGroundFrontmatter } from "./modules/now-fibonacci-ground.ts";
 
 // Session state singleton (persists within a PI process)
 let _sessionId: string | null = null;
@@ -114,6 +115,14 @@ function dailyNotePath(dayId: string | null): string | null {
 }
 
 function recordFlowWatcherEvent(api: ExtensionAPI, event: TrancheCompleteEvent) {
+  const nowPath = _nowPath ?? process.env.EPI_NOW_PATH ?? event.path;
+  if (nowPath) {
+    try {
+      stampNowFibonacciGroundFrontmatter(nowPath);
+    } catch (e) {
+      console.warn(`[khora] NOW Fibonacci Ground stamp skipped: ${e}`);
+    }
+  }
   appendFileSync(join(process.env.EPI_REPO_ROOT || ".", ".khora-flow-events.jsonl"), JSON.stringify(event) + "\n", "utf8");
   const emit = (api as unknown as { emit?: (name: string, payload: unknown) => void | Promise<void> }).emit;
   if (emit) {
@@ -371,6 +380,13 @@ export async function khoraExtension(api: ExtensionAPI) {
         if (nowInitOut && nowInitOut.endsWith("now.md")) {
           _nowPath = nowInitOut;
           process.env.EPI_NOW_PATH = _nowPath;
+        }
+        if (_nowPath) {
+          try {
+            stampNowFibonacciGroundFrontmatter(_nowPath);
+          } catch (e) {
+            console.warn(`[khora] NOW Fibonacci Ground stamp skipped: ${e}`);
+          }
         }
 
         _flowWatcher?.stop();

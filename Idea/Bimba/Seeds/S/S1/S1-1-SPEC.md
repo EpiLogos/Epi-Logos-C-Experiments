@@ -23,7 +23,7 @@ Primary seed sources: [[S1-SPEC]], [[S1-SHARD-INDEX]], [[S1-TRACEABILITY-INDEX]]
 
 ## Current Body Reality
 
-The live parser/validator authority is now `Body/S/S1/hen-compiler-core/src/lib.rs`, where `validate_frontmatter`, `validate_compile_artifact_frontmatter`, `is_valid_coordinate`, `CANONICAL_METADATA_KEYS`, and deprecated-key warnings for `bimbaCoordinate`, `ql_position`, and `pos_*` are defined. `Body/S/S0/epi-cli/src/vault/frontmatter.rs` re-exports the Hen core contract, so `epi vault frontmatter-validate` is an [[S0]] executable mirror of [[S1.1]] rather than a separate law. Tests proving the current reality include `Body/S/S1/hen-compiler-core/tests/frontmatter.rs` and `Body/S/S0/epi-cli/tests/vault_frontmatter.rs`, including compiled artifact residency/invocation checks.
+The live parser/validator authority is now `Body/S/S1/hen-compiler-core/src/lib.rs`, where `validate_frontmatter`, `validate_compile_artifact_frontmatter`, `is_valid_coordinate`, `CANONICAL_METADATA_KEYS`, coordinate-key range exceptions (`c_3_fibonacci_position: 0..59`, `c_3_fibonacci_digit: 0..9`, `c_3_tick12: 0..11`, `c_3_backbone_index: 0..23`), and deprecated-key warnings for `bimbaCoordinate`, `ql_position`, and `pos_*` are defined. `Body/S/S0/epi-cli/src/vault/frontmatter.rs` re-exports the Hen core contract, so `epi vault frontmatter-validate` is an [[S0]] executable mirror of [[S1.1]] rather than a separate law. Tests proving the current reality include `Body/S/S1/hen-compiler-core/tests/frontmatter.rs` and `Body/S/S0/epi-cli/tests/vault_frontmatter.rs`, including compiled artifact residency/invocation checks.
 
 ## Build Contract
 
@@ -35,7 +35,7 @@ Current hooks are `epi vault frontmatter-get`, `epi vault frontmatter-set`, `epi
 
 ## Test Obligations
 
-Keep real parser tests in `hen-compiler-core/tests/frontmatter.rs` and S0 mirror tests in `epi-cli/tests/vault_frontmatter.rs`. Required coverage: valid canonical keys, invalid coordinate rejection, deprecated-key warnings, non-mapping frontmatter failure, compiled artifact validation against `CompilerResidencyPlan`, and single-frontmatter preservation when templates/VAK data are later written. Tests must create real YAML values or temp vault files; mock-only frontmatter claims are not sufficient.
+Keep real parser tests in `hen-compiler-core/tests/frontmatter.rs` and S0 mirror tests in `epi-cli/tests/vault_frontmatter.rs`. Required coverage: valid canonical keys, invalid coordinate rejection, coordinate-key integer range exceptions, deprecated-key warnings, non-mapping frontmatter failure, compiled artifact validation against `CompilerResidencyPlan`, and single-frontmatter preservation when templates/VAK data are later written. Tests must create real YAML values or temp vault files; mock-only frontmatter claims are not sufficient.
 
 ## Open Gaps
 

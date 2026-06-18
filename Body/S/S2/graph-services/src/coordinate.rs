@@ -395,33 +395,72 @@ pub fn extract_context_frames(coord: &str) -> Vec<String> {
     frames
 }
 
-/// Wrap every dash-delimited segment of a coordinate that contains `/` in parentheses.
-/// Already-parenthesised segments are left alone. Idempotent.
+/// Normalise context-frame structure into canonical `(...)` form. Idempotent.
 ///
-/// This makes context-frame structure explicit in the coordinate string:
+/// A top-level (outside-parens) dash-delimited segment containing `/` is a context frame:
+///   - a **simple** frame (no leading `N.`) is parenthesised whole: `0/1` → `(0/1)`, `5/0` → `(5/0)`.
+///   - a **position-N** frame keeps its `N.` OUTSIDE via dot-notation: `4.0/1` → `4.(0/1)`,
+///     `4.0/1/2/3` → `4.(0/1/2/3)`, `4.5/0` → `4.(5/0)`.
+///   - the QL **fractal-doubling** frame is dataset-encoded as `4.4.0-4.4/5` (a dash *outside*
+///     parens) and normalises to `4.(4.0/1-4.4/5)`; the resulting dash lives *inside* the parens
+///     and stays atomic (the split below is paren-aware).
+///
 ///   `M2-4.0-0/1-0-10` → `M2-4.0-(0/1)-0-10`
 ///   `M2-5-0/1-6`      → `M2-5-(0/1)-6`
-///   `M0-4.4.0-4.4/5`  → `M0-4.4.0-(4.4/5)`
-///   `M2-(0/1)-6`      → `M2-(0/1)-6`   (already wrapped — no change)
+///   `M0-4.0/1`        → `M0-4.(0/1)`
+///   `M0-4.0/1/2/3-5`  → `M0-4.(0/1/2/3)-5`
+///   `M0-4.4.0-4.4/5`  → `M0-4.(4.0/1-4.4/5)`
+///   `M2-(0/1)-6`      → `M2-(0/1)-6`            (already canonical — no change)
+///   `M0-4.(0/1)`      → `M0-4.(0/1)`            (already canonical — no change)
 ///
-/// Canonical mod-N context frames recognised by the parser (in `(...)` form):
-///   `(00/00)`        — Mod % (Receptive Dynamism, Svatantrya-Spanda)
-///   `(0/1)`          — Mod 2 (Non-dual binary)
-///   `(0/1/2)`        — Mod 3 (Trika)
-///   `(0/1/2/3)`      — Mod 4 (Three Plus One)
-///   `(4.0/1-4.4/5)`  — Mod 4/6 (Fractal doubling — dash *inside* parens stays atomic)
-///   `(4.5/0)`        — Psyche synthesis
-///   `(5/0)`          — Mod 6 (Möbius return)
-///   `(4/5/0)`        — legacy synthesis alias
+/// Canonical mod-N context frames (in `(...)` form): `(00/00)` Mod %, `(0/1)` Mod 2,
+/// `(0/1/2)` Mod 3, `(0/1/2/3)` Mod 4, `(4.0/1-4.4/5)` Mod 4/6 (fractal doubling), `(5/0)` Mod 6.
 pub fn wrap_context_frames(coord: &str) -> String {
-    coord
-        .split('-')
+    const DOUBLING_RAW: &str = "4.4.0-4.4/5";
+    const DOUBLING_TOK: &str = "\u{1}";
+    const DOUBLING_CANON: &str = "4.(4.0/1-4.4/5)";
+    // protect the doubling (a frame with a *bare* dash) before the dash-split.
+    let protected = coord.replace(DOUBLING_RAW, DOUBLING_TOK);
+
+    // paren-aware split on top-level `-` (a `(frame)` may itself contain `-` and stays atomic).
+    let mut segs: Vec<String> = Vec::new();
+    let mut depth: i32 = 0;
+    let mut cur = String::new();
+    for ch in protected.chars() {
+        match ch {
+            '(' => { depth += 1; cur.push(ch); }
+            ')' => { depth -= 1; cur.push(ch); }
+            '-' if depth == 0 => segs.push(std::mem::take(&mut cur)),
+            _ => cur.push(ch),
+        }
+    }
+    segs.push(cur);
+
+    segs.into_iter()
         .map(|seg| {
-            if seg.contains('/') && !(seg.starts_with('(') && seg.ends_with(')')) {
-                format!("({})", seg)
-            } else {
-                seg.to_string()
+            if seg == DOUBLING_TOK {
+                return DOUBLING_CANON.to_string();
             }
+            if !seg.contains('/') {
+                return seg;
+            }
+            // already canonical: a whole simple frame `(…)` is left alone.
+            if seg.starts_with('(') && seg.ends_with(')') {
+                return seg;
+            }
+            // position-N frame: keep the leading `N.` outside the parens.
+            if let Some(dot) = seg.find('.') {
+                let head_is_digits = dot > 0 && seg[..dot].bytes().all(|b| b.is_ascii_digit());
+                let rest_parenthesised = seg[dot + 1..].starts_with('(') && seg.ends_with(')');
+                if head_is_digits {
+                    if rest_parenthesised {
+                        return seg; // already `N.(…)`
+                    }
+                    return format!("{}.({})", &seg[..dot], &seg[dot + 1..]);
+                }
+            }
+            // bare simple frame
+            format!("({})", seg)
         })
         .collect::<Vec<_>>()
         .join("-")
@@ -714,13 +753,21 @@ mod tests {
 
     #[test]
     fn wrap_context_frames_is_correct_and_idempotent() {
+        // simple frames (no leading `N.`) parenthesise whole
         assert_eq!(wrap_context_frames("M2-4.0-0/1-0-10"), "M2-4.0-(0/1)-0-10");
         assert_eq!(wrap_context_frames("M2-5-0/1-6"), "M2-5-(0/1)-6");
-        assert_eq!(wrap_context_frames("M0-4.0/1"), "M0-(4.0/1)");
-        assert_eq!(wrap_context_frames("M0-4.0/1/2/3-5"), "M0-(4.0/1/2/3)-5");
-        assert_eq!(wrap_context_frames("M0-4.4.0-4.4/5"), "M0-4.4.0-(4.4/5)");
-        // Already-wrapped — idempotent
+        assert_eq!(wrap_context_frames("M0-5-5/0"), "M0-5-(5/0)");
+        // position-N frames keep the `N.` OUTSIDE via dot-notation
+        assert_eq!(wrap_context_frames("M0-4.0/1"), "M0-4.(0/1)");
+        assert_eq!(wrap_context_frames("M0-4.0/1/2/3-5"), "M0-4.(0/1/2/3)-5");
+        assert_eq!(wrap_context_frames("M1-3-4.5/0"), "M1-3-4.(5/0)");
+        // the QL fractal-doubling frame (bare dash) -> dot-notation, dash kept inside the parens
+        assert_eq!(wrap_context_frames("M0-4.4.0-4.4/5"), "M0-4.(4.0/1-4.4/5)");
+        assert_eq!(wrap_context_frames("M0-4.4.0-4.4/5-3"), "M0-4.(4.0/1-4.4/5)-3");
+        // already canonical — idempotent (incl. the doubling whose dash is inside parens)
         assert_eq!(wrap_context_frames("M2-(0/1)-6"), "M2-(0/1)-6");
+        assert_eq!(wrap_context_frames("M0-4.(0/1)"), "M0-4.(0/1)");
+        assert_eq!(wrap_context_frames("M0-4.(4.0/1-4.4/5)"), "M0-4.(4.0/1-4.4/5)");
         // No slash → no change
         assert_eq!(wrap_context_frames("M0-2-4"), "M0-2-4");
         assert_eq!(wrap_context_frames("M"), "M");

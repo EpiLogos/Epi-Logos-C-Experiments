@@ -44,19 +44,19 @@ test('human-required + HUMAN actor: all decisions pass', () => {
     }
 });
 
-test('recursive self-review blocks Sophia approval even when humanRequired is false', () => {
+test('recursive self-review blocks Pi approval even when humanRequired is false', () => {
     const r = enforceHumanGate({
         decision: 'approve',
         humanRequired: false,
         actorIsHuman: false,
         recursiveSelfReview: true,
-        actor: 'sophia'
+        actor: 'pi'
     });
     assert.equal(r.ok, false);
 });
 
-test('recursive self-review requires human final-validation for Sophia/Anima/Pi/Aletheia', () => {
-    for (const actor of ['sophia', 'anima', 'pi', 'aletheia']) {
+test('recursive self-review requires human final-validation for Pi/Anima/Aletheia guardians', () => {
+    for (const actor of ['pi', 'anima', 'anansi', 'moirai']) {
         const blocked = enforceHumanGate({
             decision: 'approve',
             humanRequired: false,
