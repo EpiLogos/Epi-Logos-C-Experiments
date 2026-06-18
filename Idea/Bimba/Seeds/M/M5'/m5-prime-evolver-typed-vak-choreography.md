@@ -1,6 +1,6 @@
 ---
 coordinate: "M5'"
-c_4_artifact_role: "canonical-seed-spec"
+c_4_artifact_role: "seed"
 c_1_ct_type: "CT1"
 c_3_crystallised_at: "2026-06-18"
 c_0_source_coordinates:

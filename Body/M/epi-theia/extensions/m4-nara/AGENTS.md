@@ -6,10 +6,10 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M4'-SPEC]] (and [[M'-SYSTEM-SPEC]]).
 
 ## Ownership
 - `src/common/index.ts` — public surface + frozen `TRACK_08_CONTRIBUTION` contract (generated from `contracts/07-t0-extension-contract-preflight.json` — do not hand-edit); declares `EXTENSION_ID`, view IDs, `PRIVACY_CLASS = 'protected_local'`.
-- `src/common/{nara-surface,e4-personal-energy,oracle-frame,deck-context,symbolic-protein}.ts` — common types/guards (NaraArtifact surface, E4 personal-energy input/scalar/gradient contract, OracleFrame, DeckContext, SymbolicProtein).
+- `src/common/{nara-surface,e4-personal-energy,oracle-frame,deck-context,symbolic-protein}.ts` — common types/guards (NaraArtifact surface, E4 personal-energy input/scalar/gradient contract, OracleFrame, DeckContext, SymbolicProtein, [[Mythos]] archetype-reading helpers).
 - `src/browser/` — frontend: `frontend-module.ts`, `empty-state.tsx`, `privacy-chrome.ts`, `m4-nara-widget.tsx`, `canvas-editor.tsx`, `widgets/` (kairos-display, logos-cycle, medicine-view, lens-application, pratibimba-coordinate, transform-containers, mercurius-relay-indicator, day-calendar, ambient-state-strip, tuning-bar, time-axis-switcher), `onboarding/identity-wizard.tsx`, `editor/`, `services/`.
 - `style/` — `index.css`, `highlights.css`, `privacy-chrome.css`.
-- `tests/` — package-local test contracts such as `privacy-chrome.test.mjs`.
+- `tests/` — package-local test contracts such as `privacy-chrome.test.mjs` and `symbolic-protein-reading.test.mjs`.
 - `lib/` — compiled `tsc -b` output (not source).
 - Does NOT own: domain law (lives in [[M4'-SPEC]], not here), gateway runtime / S0–S5 access (forbidden imports per `compositionBoundary.forbiddenImports`: `Body/S/S0`, `S2`, `S3`, `S5`, `neo4j-driver`); all data flows via the shared `@pratibimba/m-extension-runtime` bridge.
 
@@ -26,7 +26,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M4'-SPEC]] (and [[M'-SYSTEM-SPEC]]).
 - [[wikilink]] all coordinate/spec/agent/tool references in authored artifacts.
 
 ## Verification
-`pnpm --dir Body/M/epi-theia/extensions/m4-nara test` (runs `pnpm build` then `node --test` over `tests/privacy-chrome.test.mjs`, `../test/m4-nara-canvas-editor.test.mjs`, `m4-nara-kairos-display.test.mjs`, `m4-nara-mercurius-relay-indicator.test.mjs`, `m4-nara-e4-personal-energy.test.mjs`). Full suite: `pnpm --dir Body/M/epi-theia test:contracts`.
+`pnpm --dir Body/M/epi-theia/extensions/m4-nara test` (runs `pnpm build` then `node --test` over `tests/privacy-chrome.test.mjs`, `tests/symbolic-protein-reading.test.mjs`, `../test/m4-nara-canvas-editor.test.mjs`, `m4-nara-kairos-display.test.mjs`, `m4-nara-mercurius-relay-indicator.test.mjs`, `m4-nara-e4-personal-energy.test.mjs`). Full suite: `pnpm --dir Body/M/epi-theia test:contracts`.
 
 ## Child DOX Index
 - (leaf)
