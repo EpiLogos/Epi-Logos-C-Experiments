@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T20:45:48.589Z",
+  "updatedAt": "2026-06-18T23:21:03.469Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3502,12 +3502,21 @@
     },
     "21.T21.5": {
       "status": "done",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T23:19:13.096704+00:00",
           "text": "PASS: community-clock-panel.tsx (317 lines). pnpm build clean. Runtime: blocked\u2192blocked state \u2713, tick12:7\u2192derived \u2713. Selectors self-contained in panel (m0-inspector.ts out of write scope per plan). OWL/SHACL sub-tab integrated. No local clock per spec."
         }
-      ]
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "21.T21.6": {
       "status": "pending",
@@ -4418,7 +4427,17 @@
       "worktree": null
     },
     "26.T26.14": {
-      "status": "pending"
+      "status": "pending",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
+      "evidence": [],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "26.T26.15": {
       "status": "done",
@@ -5482,12 +5501,21 @@
     },
     "31.T31.13": {
       "status": "done",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T23:15:47.642492+00:00",
           "text": "All 5 acceptance files verified on disk: validate-chrome-contributions-catalog.mjs (7619B), validate-no-modal-discipline.mjs (1806B), validate-status-bar-discipline.mjs (3556B), validate-keybinding-chord-uniqueness.mjs (3312B), validate-chrome-contributions-catalog.test.mjs (5902B). Live validator failures noted in prior evidence are upstream dependency issues (unlanded chrome registrations, missing shell-slot-policy.json, RIGHT-aligned state-thread entries) \u2014 not blockers for this task."
         }
-      ]
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "32.T32.1": {
       "status": "done",
@@ -7845,17 +7873,13 @@
       "worktree": null
     },
     "12.T12.31": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-18T23:21:31.656654+00:00",
+          "text": "PASS: 76 tests pass, 0 fail. context.rs with ConversationSliceHandle, dispatch_with_parent_slice, Chronos bifurcation router. grep acceptance: context.rs has all wired symbols. lib.rs mod registration + AGENTS.md DOX entry done. S4 TS files out of scope (cross-track follow-up)."
+        }
+      ]
     },
     "12.T12.32": {
       "status": "pending",
@@ -8477,12 +8501,21 @@
     },
     "43.T43.2": {
       "status": "done",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T23:14:15.447985+00:00",
           "text": "Convention doc written: plan.runs/43.T43.2-convention.md (8380 bytes). Defines unified Coordinate Header schema with C/Rust/TS/CONTRACT.md renderings, Hen validation rules, migration path, and CCT registration. Exemplars referenced."
         }
-      ]
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "43.T43.3": {
       "status": "pending",

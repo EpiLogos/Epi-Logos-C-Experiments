@@ -8,7 +8,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `src/lib.rs` — crate root; declares + re-exports every contract module and typed [[S0]] bridge packet/projection surfaces (no `//!` header present).
 - `src/protocol.rs` — wire protocol (handshake / RPC envelope) and method-name registry, including phase-preserving `s5'.gnostic.resolve` / `s0'.anuttara.trace`, `s5'.gnostic.musical_transcript`, and `s2.graph.ananda_position`.
 - `src/session.rs` — session authority types/methods.
-- `src/harness.rs` — normalized harness dispatch envelope, turn-event stream, backing-kind, parent-slice handle, and tool-call enforcement hook contract.
+- `src/harness.rs` — normalized harness dispatch envelope, turn-event stream, backing-kind, parent-slice handle (`ConversationSliceHandle`/`VakAddressFilter` defined here so they ride the dispatch envelope), and tool-call enforcement hook contract.
+- `src/context.rs` — canonical contextual-slice surface (12.T12.31): re-exports `ConversationSliceHandle`/`VakAddressFilter`, adds the [[SessionRecord]]-derived builder, the three `SliceRedactionPolicy` levels, the `dispatch_with_parent_slice` contract row, and the [[chronos]] `c=1`/`c=0` bifurcation-router seat.
 - `src/dispatch_plan.rs` — dispatch plan contract (largest module), including resolve/trace ownership rows.
 - `src/spacetime.rs` — SpacetimeDB presence-layer contract.
 - `src/being_pattern.rs` — CCT-21 BeingPattern live-state method names, stream event/projection carriers, replay fixture, and public-safe guard.

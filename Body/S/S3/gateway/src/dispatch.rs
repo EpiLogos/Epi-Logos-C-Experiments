@@ -124,6 +124,16 @@ pub const NARA_LENS_RPC_METHODS: [&str; 3] =
 /// domain adapter; the profile bus receives protected handles only.
 pub const NARA_SESSION_RPC_METHODS: [&str; 2] = ["nara.session_open", "nara.session_close"];
 
+/// M4 PASU identity-setup RPCs consumed by the `m4.nara.pasuWizard` widget
+/// (Tranche 25.4, DR-WC-M4-3). Like the lens + session surfaces these resolve
+/// through the existing `nara.*` extension route → `S4S5DomainAdapter`
+/// (`extension_route`); declared here so gateway audits can assert the concrete
+/// PASU write/read surface without expanding the product-method contract table.
+/// `nara.pasu.set` is the canonical write path (the wizard MUST NOT shell out to
+/// `epi vault pasu set`); `nara.pasu.show` returns a handle-only PASU record —
+/// the natal-chart raw body stays local, only its path string is surfaced.
+pub const NARA_PASU_RPC_METHODS: [&str; 2] = ["nara.pasu.set", "nara.pasu.show"];
+
 static NARA_SESSION_STOP_ROUND_ROBIN: AtomicU8 = AtomicU8::new(0);
 
 fn default_nara_session_protein_capacity() -> u32 {
