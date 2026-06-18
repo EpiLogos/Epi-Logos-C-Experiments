@@ -345,6 +345,17 @@ export async function khoraExtension(api: ExtensionAPI) {
     parameters: Type.Object({
       artifacts: Type.Optional(Type.Array(Type.String(), { description: "Absolute paths of vault notes touched during the session." })),
       improvement_vectors: Type.Optional(Type.Array(Type.String(), { description: "Free-form improvement vectors surfaced during the session — read by Epii recompose." })),
+      q_proposals: Type.Optional(Type.Array(Type.Object({
+        target_coordinate: Type.String(),
+        q_key: Type.String(),
+        q_value_candidate: Type.String(),
+        qm_witness_session: Type.String(),
+        qm_witness_vak: Type.Any(),
+        qm_witness_agent: Type.String(),
+        rationale: Type.String(),
+        opens_questions: Type.Array(Type.String()),
+        source_artifacts: Type.Array(Type.String()),
+      }), { description: "Candidate q_ refinements surfaced during session-close; not canon writes." })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
@@ -356,6 +367,7 @@ export async function khoraExtension(api: ExtensionAPI) {
           session_id,
           params.artifacts ?? [],
           params.improvement_vectors ?? [],
+          params.q_proposals ?? [],
         );
         const closed = closeM4SessionProtein(session_id);
         const suffix = closed
@@ -520,13 +532,14 @@ export async function khoraExtension(api: ExtensionAPI) {
       // killed before deliberate close → closure_kind = "force_closed".
       const consumed = session_id
         ? consumePendingSophia(session_id)
-        : { had_pending: false, artifacts: [], improvement_vectors: [] };
+        : { had_pending: false, artifacts: [], improvement_vectors: [], q_proposals: [] };
       const closure_kind = consumed.had_pending ? "rehear" : "force_closed";
       fireSophiaDisclosure({
         session_id,
         day_id,
         artifacts: consumed.artifacts,
         improvement_vectors: consumed.improvement_vectors,
+        q_proposals: consumed.q_proposals,
         closure_kind,
       });
     } catch (e) {

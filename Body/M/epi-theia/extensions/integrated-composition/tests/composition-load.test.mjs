@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { compositionLoad } = require('../lib/common/index.js');
+const { compositionLoad } = require('../lib/common/composition-load.js');
 
 function readyReadiness(extensionId) {
     return {

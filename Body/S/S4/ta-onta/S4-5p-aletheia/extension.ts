@@ -5,6 +5,7 @@ import { buildTemporalContextEnvelope, adjustKairosThreshold, coordinateMobiusRe
 import { buildTemplateInvocation, refreshTopology, validateHenSync } from "./modules/hen-integration.ts";
 import { maybeUpdateCoordinateMap } from "./modules/coordinate-loop.ts";
 import { aletheiaIngestSophia } from "./modules/sophia-ingest.ts";
+import { buildQProposalGraphitiEpisode } from "./modules/q-proposal-candidate.ts";
 // NB: renderThoughtFrontmatter (modules/thought-vak.ts) is intentionally NOT
 // imported here. VAK merging now happens Rust-side via the
 // --vak-address-json flag on `epi vault thought-route` so the persisted
@@ -14,6 +15,7 @@ import { aletheiaIngestSophia } from "./modules/sophia-ingest.ts";
 // paths.
 import { isValidVakAddress, type VakAddress } from "../shared/vak_address.ts";
 import { buildAnimaInvokePayload } from "../S4-4p-anima/modules/anima-invoke-payload.ts";
+import type { QProposal } from "../S4-4p-anima/modules/sophia-hook.ts";
 
 function resolveNotebookName(name: string, scope?: string, sessionId?: string, family?: string) {
   const parts: string[] = [];
@@ -70,13 +72,67 @@ export async function aletheiaExtension(api: ExtensionAPI) {
         ]),
         { default: ["decision", "bugfix", "feature", "discovery"] }
       )),
+      q_proposals: Type.Optional(Type.Array(Type.Object({
+        target_coordinate: Type.String(),
+        q_key: Type.String(),
+        q_value_candidate: Type.String(),
+        qm_witness_session: Type.String(),
+        qm_witness_vak: Type.Any(),
+        qm_witness_agent: Type.String(),
+        rationale: Type.String(),
+        opens_questions: Type.Array(Type.String()),
+        source_artifacts: Type.Array(Type.String()),
+      }), { description: "Sophia/pair-development q_ proposal candidates to promote as Graphiti candidate episodes." })),
+      group_id: Type.Optional(Type.String({ description: "Graphiti group_id filter for q_proposal candidate episodes." })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const types = params.promote_types ?? ["decision", "bugfix", "feature", "discovery"];
+      const qProposals = (params.q_proposals ?? []) as QProposal[];
       const promoted: string[] = [];
       const failed: string[] = [];
 
       for (const sessionId of params.session_ids) {
+        for (const proposal of qProposals) {
+          let episode;
+          try {
+            episode = buildQProposalGraphitiEpisode({
+              proposal,
+              sessionId,
+              dayId: params.day_id,
+              proposedAt: new Date().toISOString(),
+              groupId: params.group_id,
+            });
+          } catch (e) {
+            failed.push(`${proposal.q_key}: ${e}`);
+            continue;
+          }
+          try {
+            const graphitiBase = process.env.GRAPHITI_URL ?? "http://localhost:37778";
+            const resp = await fetch(`${graphitiBase}/episode`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(episode),
+              signal: AbortSignal.timeout(10_000),
+            });
+            if (!resp.ok) {
+              failed.push(`${proposal.q_key}: graphiti candidate episode rejected (${resp.status})`);
+              continue;
+            }
+            spawnSync("epi", [
+              "core", "cache", "set",
+              `qm-proposal:${sessionId}:${proposal.target_coordinate}:${proposal.q_key}`,
+              JSON.stringify({
+                promoted_ref: `graphiti:candidate:${sessionId}`,
+                qm_proposed_at: episode.qm_proposed_at,
+              }),
+              "--ttl", "2592000",
+            ], { encoding: "utf8" });
+            promoted.push(`q_proposal:${proposal.target_coordinate}:${proposal.q_key}`);
+          } catch (e) {
+            failed.push(`${proposal.q_key}: graphiti sidecar unreachable (${e})`);
+          }
+        }
+
         let observations: Array<{
           id: string; type: string; title: string; narrative: string;
           facts: string; concepts: string; tool_name: string;

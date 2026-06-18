@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T18:48:04.483Z",
+  "updatedAt": "2026-06-18T18:50:32.660Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5086,11 +5086,16 @@
       "worktree": null
     },
     "30.T30.4": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T18:49:57.367Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T18:49:57.367Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T18:49:57.367Z",
+          "text": "12/12 ui-colour-token contract tests pass including 4 theme-mapping tests; key files Body/M/epi-theia/extensions/contracts/ui-theme-mapping.ts and Body/M/epi-theia/extensions/test/ui-colour-tokens-contract.test.mjs"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -6898,11 +6903,16 @@
       "worktree": null
     },
     "29.T29.6": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T18:50:11.136Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T18:50:11.136Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T18:50:11.136Z",
+          "text": "@pratibimba/integrated-composition test: 34/34 node tests pass; key files Body/M/epi-theia/extensions/integrated-composition/src/common/composition-load.ts and tests/composition-load.test.mjs"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -8090,16 +8100,16 @@
       "worktree": null
     },
     "41.T41.11": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T18:50:32.504Z",
+      "claimedAt": "2026-06-18T18:50:32.504Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-41-t41-11",
+      "leaseExpiresAt": "2026-06-18T20:50:32.504Z",
+      "heartbeatAt": "2026-06-18T18:50:32.504Z",
+      "runId": "20260618T185032Z-41-T41.11",
       "worktree": null
     },
     "41.T41.12": {
@@ -10557,26 +10567,35 @@
       "leaseExpiresAt": "2026-06-18T14:50:46.266Z",
       "worktree": null,
       "completedAt": "2026-06-18T13:15:03.285Z"
+    },
+    {
+      "runId": "20260618T185032Z-41-T41.11",
+      "taskId": "41.T41.11",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T18:50:32.504Z",
+      "owner": "codex-m-dev-41-t41-11",
+      "leaseExpiresAt": "2026-06-18T20:50:32.504Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T13:08:54.017Z",
-    "updatedAt": "2026-06-18T13:08:54.017Z",
+    "createdAt": "2026-06-18T18:50:05.921Z",
+    "updatedAt": "2026-06-18T18:50:05.921Z",
     "taskIds": [
       "31.T31.13",
-      "41.T41.10",
       "12.T12.26",
-      "05.T5.3"
+      "05.T5.3",
+      "05.T5.4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "41.T41.10": "in-session",
       "12.T12.26": "in-session",
-      "05.T5.3": "in-session"
+      "05.T5.3": "in-session",
+      "05.T5.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
