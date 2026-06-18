@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:15:44.185Z",
+  "updatedAt": "2026-06-18T19:24:50.697Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5131,16 +5131,16 @@
       "worktree": null
     },
     "30.T30.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:17:55.432Z",
+      "claimedAt": "2026-06-18T19:17:55.432Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-30-t30-6",
+      "leaseExpiresAt": "2026-06-18T21:17:55.432Z",
+      "heartbeatAt": "2026-06-18T19:17:55.432Z",
+      "runId": "20260618T191755Z-30-T30.6",
       "worktree": null
     },
     "30.T30.7": {
@@ -7752,14 +7752,19 @@
       "worktree": null
     },
     "12.T12.28": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:13:55.743Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:24:50.631Z",
       "claimedAt": "2026-06-18T19:13:55.743Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:24:50.631Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:24:50.631Z",
+          "text": "51 node tests pass (entitlement + epii activation + skill_lookup); key paths Body/S/S4/pi-agent/skills/custom/skill-lookup/{SKILL.md,index.ts,skill-lookup.test.ts}, Body/S/S4/pi-agent/extensions/epii-entitlement-activation.ts, Body/S/S4/pi-agent/AGENTS.md; grep registration/fail-soft fallback checks pass; pnpm @epi-logos/pi-agent filter has no matching project"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-12-t12-28",
-      "leaseExpiresAt": "2026-06-18T21:13:55.743Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:13:55.743Z",
       "runId": "20260618T191355Z-12-T12.28",
       "worktree": null
@@ -8152,14 +8157,19 @@
       "worktree": null
     },
     "41.T41.12": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:13:39.471Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:22:11.936Z",
       "claimedAt": "2026-06-18T19:13:39.471Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:22:11.936Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:22:11.936Z",
+          "text": "Rust e2e harness: 4/4 passed via cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test arena_vama_shakti_e2e; S5 pytest: 2 passed, 1 Graphiti-live skipped via python3 -m pytest Body/S/S5/epi-gnostic/tests/test_arena_e2e_distillation.py -q; DR-VAMA-1..6 grep coverage present in Body/S/S0/epi-cli/tests/arena_vama_shakti_e2e.rs and Body/S/S5/epi-gnostic/tests/test_arena_e2e_distillation.py; fixtures under Body/S/S0/epi-cli/tests/fixtures/arena/"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-41-t41-12",
-      "leaseExpiresAt": "2026-06-18T21:13:39.471Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:13:39.471Z",
       "runId": "20260618T191339Z-41-T41.12",
       "worktree": null
@@ -10695,20 +10705,22 @@
     {
       "runId": "20260618T191339Z-41-T41.12",
       "taskId": "41.T41.12",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:13:39.471Z",
       "owner": "codex-m-dev-41-t41-12",
       "leaseExpiresAt": "2026-06-18T21:13:39.471Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:22:11.936Z"
     },
     {
       "runId": "20260618T191355Z-12-T12.28",
       "taskId": "12.T12.28",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:13:55.743Z",
       "owner": "codex-m-dev-12-t12-28",
       "leaseExpiresAt": "2026-06-18T21:13:55.743Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:24:50.631Z"
     },
     {
       "runId": "20260618T191544Z-29-T29.8",
@@ -10718,26 +10730,35 @@
       "owner": "codex-m-dev-29-t29-8",
       "leaseExpiresAt": "2026-06-18T21:15:44.107Z",
       "worktree": null
+    },
+    {
+      "runId": "20260618T191755Z-30-T30.6",
+      "taskId": "30.T30.6",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:17:55.432Z",
+      "owner": "codex-m-dev-30-t30-6",
+      "leaseExpiresAt": "2026-06-18T21:17:55.432Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:15:26.646Z",
-    "updatedAt": "2026-06-18T19:15:26.646Z",
+    "createdAt": "2026-06-18T19:17:43.435Z",
+    "updatedAt": "2026-06-18T19:17:43.435Z",
     "taskIds": [
       "31.T31.13",
-      "21.T21.20",
       "41.T41.12",
-      "12.T12.28"
+      "12.T12.28",
+      "29.T29.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "21.T21.20": "in-session",
       "41.T41.12": "in-session",
-      "12.T12.28": "in-session"
+      "12.T12.28": "in-session",
+      "29.T29.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

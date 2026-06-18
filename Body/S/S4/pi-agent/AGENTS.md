@@ -10,7 +10,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 - `lib/` — entitlement core (`entitlement.ts`, `entitlement-loader.ts`).
 - `agents/` — shared agent topology / team defs (`anima.md`, `agent-chain.yaml`, `teams.yaml`, `pi-pi/`).
 - `prompts/` — system + help prompts (`epi-system.md`, `epi-agent-help.md`).
-- `skills/` — repo-owned skills (`anuttara-symbolic-parse/`, `user-context/`).
+- `skills/` — repo-owned skills: `anuttara-symbolic-parse/`, `user-context/`, `custom/` (`skill-lookup/`, `mlx-lora/`), and vendored [[Hermes]] skills under `hermes/`.
 - `tests/` — entitlement + agent-registration tests.
 - `damage-control-rules.yaml` — runtime damage-control config.
 - Does NOT own ta-onta carrier source (canonical home is sibling `Body/S/S4/ta-onta`, reached via the `extensions/ta-onta` symlink) nor coordinate/agent-constitution law — that lives in [[S4-SPEC]] and per-carrier `CONTRACT.md`, not here.
@@ -27,6 +27,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 
 ## Verification
 - TS suites (node test runner): `node --test Body/S/S4/pi-agent/tests/entitlement.test.ts Body/S/S4/pi-agent/tests/epii-entitlement-activation.test.ts`.
+- Skill lookup: `node --test Body/S/S4/pi-agent/skills/custom/skill-lookup/skill-lookup.test.ts`.
 - Python: `pytest Body/S/S4/pi-agent/tests/test_anima_registration.py`.
 - No crate/package manifest here; `make rust-test` does not cover this dir.
 

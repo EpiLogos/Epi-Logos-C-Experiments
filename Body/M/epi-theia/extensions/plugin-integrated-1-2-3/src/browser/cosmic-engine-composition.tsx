@@ -23,6 +23,7 @@ import {
 import {
     useCompositionProfile
 } from '@pratibimba/integrated-composition/composition-profile-context';
+import { Matheme137Overlay } from './matheme-137-overlay';
 
 declare const require: (id: string) => unknown;
 
@@ -109,7 +110,7 @@ export const CosmicEngineComposition: React.FC<CosmicEngineCompositionProps> = (
                     surfaceHandle={model.k2SurfaceHandle}
                     projection={model.codonProjection}
                 />
-                <MathemeOverlay137 />
+                <Matheme137Overlay surfaceHandle={model.k2SurfaceHandle} profile={compositionProfile} />
                 <LegacyBeingPatternOverlay profile={compositionProfile} />
                 {model.blockers.length > 0 ? (
                     <IntegratedEmptyState
@@ -199,15 +200,6 @@ export const CodonCellStateProjection: React.FC<{
                 </span>
             ))}
         </section>
-    );
-};
-
-export const MathemeOverlay137: React.FC = () => {
-    return (
-        <aside className="cosmic-matheme-overlay-137" data-test="matheme-overlay-137">
-            <span>137</span>
-            <small>64 + 72 + 1</small>
-        </aside>
     );
 };
 
