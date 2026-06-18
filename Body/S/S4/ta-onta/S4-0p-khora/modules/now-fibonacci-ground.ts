@@ -26,7 +26,12 @@ interface PlanetPosition {
 interface KairosCache {
   readonly sun_degree?: unknown;
   readonly planet_degrees?: unknown;
-  readonly M4_Temporal_Now?: { readonly planet_degrees?: unknown };
+  readonly M4_Temporal_Now?: {
+    readonly planet_degrees?: unknown;
+    readonly realtime?: { readonly planet_degrees?: unknown };
+    readonly kairotic?: { readonly planet_degrees?: unknown };
+    readonly kairotic_active?: unknown;
+  };
   readonly planets?: unknown;
 }
 
@@ -56,12 +61,23 @@ export function currentKairosCachePath(): string {
 export function readCurrentKairosSunDegree(path = currentKairosCachePath()): number | null {
   if (!existsSync(path)) return null;
   const parsed = JSON.parse(readFileSync(path, "utf8")) as KairosCache;
+  const framed = liveM4TemporalNowPlanetDegrees(parsed.M4_Temporal_Now);
   const degree =
     finiteNumber(parsed.sun_degree) ??
+    finiteNumberFromArray(framed, 0) ??
     finiteNumberFromArray(parsed.M4_Temporal_Now?.planet_degrees, 0) ??
     finiteNumberFromArray(parsed.planet_degrees, 0) ??
     finiteSunDegreeFromPlanets(parsed.planets);
   return degree ?? null;
+}
+
+function liveM4TemporalNowPlanetDegrees(now: KairosCache["M4_Temporal_Now"]): unknown {
+  if (!now) return undefined;
+  const kairoticActive = now.kairotic_active === true || now.kairotic_active === 1;
+  if (kairoticActive && now.kairotic?.planet_degrees !== undefined) {
+    return now.kairotic.planet_degrees;
+  }
+  return now.realtime?.planet_degrees;
 }
 
 export function stampNowFibonacciGroundFrontmatter(nowPath: string): NowFibonacciGroundStamp | null {

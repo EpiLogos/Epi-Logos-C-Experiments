@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T08:55:57.162Z",
+  "updatedAt": "2026-06-18T09:06:22.704Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6819,14 +6819,19 @@
       "worktree": null
     },
     "29.T29.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T08:47:03.920Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T09:06:19.955Z",
       "claimedAt": "2026-06-18T08:47:03.920Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T09:06:19.955Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T09:06:19.955Z",
+          "text": "pnpm build passed; pnpm test passed 33/33; key files: Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx, Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/plugin-integrated-4-5-0-widget.tsx, Body/M/epi-theia/extensions/plugin-integrated-4-5-0/tests/personal-recognition-composition.test.mjs"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-29-t29-3",
-      "leaseExpiresAt": "2026-06-18T10:47:03.920Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T08:47:03.920Z",
       "runId": "20260618T084703Z-29-T29.3",
       "worktree": null
@@ -10381,11 +10386,12 @@
     {
       "runId": "20260618T084703Z-29-T29.3",
       "taskId": "29.T29.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T08:47:03.920Z",
       "owner": "codex-m-dev-29-t29-3",
       "leaseExpiresAt": "2026-06-18T10:47:03.920Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T09:06:19.955Z"
     },
     {
       "runId": "20260618T084705Z-12-T12.37",

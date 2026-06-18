@@ -41,6 +41,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib tsconfig.tsbuildinfo",
-    "test": "pnpm clean && pnpm build && node --test ../test/jiva-siva-slice.test.mjs src/browser/deposit-handle-reception.test.mjs src/browser/identity-augment-review-routing.test.mjs src/browser/m5-m0-pedagogical-return.test.mjs src/browser/recognition-layer-slot.test.mjs src/browser/personal-recognition-composition.test.mjs"
+    "test": "pnpm clean && pnpm build && node --test ../test/jiva-siva-slice.test.mjs src/browser/deposit-handle-reception.test.mjs src/browser/identity-augment-review-routing.test.mjs src/browser/m5-m0-pedagogical-return.test.mjs src/browser/recognition-layer-slot.test.mjs tests/personal-recognition-composition.test.mjs"
   }
 }

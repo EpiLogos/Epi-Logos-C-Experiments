@@ -146,7 +146,10 @@ export interface SpreadResolution {
 
 export interface M4TemporalNow {
   /** Canonical mod-10 order: Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9. */
-  planet_degrees: number[];
+  planet_degrees?: number[];
+  realtime?: { planet_degrees?: number[] };
+  kairotic?: { planet_degrees?: number[] };
+  kairotic_active?: boolean | number;
 }
 
 export interface KairosMotionSignals {
@@ -344,7 +347,7 @@ export function janus_weight_session(input: JanusWeightSessionInput): JanusWeigh
     };
   }
 
-  const degrees = input.M4_Temporal_Now.planet_degrees;
+  const degrees = livePlanetDegrees(input.M4_Temporal_Now);
   assertPlanetDegrees(degrees);
 
   const basis: string[] = [];
@@ -389,4 +392,14 @@ export function janus_weight_session(input: JanusWeightSessionInput): JanusWeigh
     c_3_klein_weighting: fromProspective(prospective),
     basis,
   };
+}
+
+function livePlanetDegrees(now: M4TemporalNow): number[] {
+  if ((now.kairotic_active === true || now.kairotic_active === 1) && Array.isArray(now.kairotic?.planet_degrees)) {
+    return now.kairotic.planet_degrees;
+  }
+  if (Array.isArray(now.realtime?.planet_degrees)) {
+    return now.realtime.planet_degrees;
+  }
+  return now.planet_degrees ?? [];
 }

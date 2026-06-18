@@ -136,7 +136,16 @@ function transitProfile() {
         capabilities: [],
         payload: {
             M4_Temporal_Now: {
-                planet_degrees: [14.2, 25.1, 302.4, 112.7, 88.5, 177.3, 201.6, 44.8, 269.9, 11.1]
+                natal: {
+                    kind: 'NATAL',
+                    planet_degrees: [10.5, 41.25, 72.75, 103.125, 134.25, 165.5, 196.75, 227.875, 258.125, 289.5]
+                },
+                realtime: {
+                    kind: 'REALTIME',
+                    captured_at_ns: 1_780_000_000_000_000_000,
+                    planet_degrees: [14.2, 25.1, 302.4, 112.7, 88.5, 177.3, 201.6, 44.8, 269.9, 11.1]
+                },
+                kairotic_active: false
             }
         }
     };
@@ -149,7 +158,10 @@ function oracleHistory(castAt) {
                 castHandle: 'oracle://cast/recent',
                 castAt,
                 kairosSnapshot: {
-                    planet_degrees: [15, 35, 75, 115, 155, 195, 235, 275, 315, 355]
+                    kairotic: {
+                        kind: 'KAIROTIC',
+                        planet_degrees: [15, 35, 75, 115, 155, 195, 235, 275, 315, 355]
+                    }
                 }
             }
         ]
@@ -195,7 +207,7 @@ test('natal ring uses PASU natal chart positions resolved by the natal RPC paylo
     assert.equal(model.natal.entries[9].house, 10);
 });
 
-test('transit ring is driven by M4_Temporal_Now.planet_degrees[10] and shows natal-relative motion arrows', () => {
+test('transit ring is driven by M4_Temporal_Now.realtime.planet_degrees[10] and shows natal-relative motion arrows', () => {
     const transitPositions = readTransitPositions(transitProfile());
     const model = buildKairosWheelModel({
         natalPositions: natalPositions(),

@@ -123,7 +123,7 @@ const EMPTY_SNAPSHOT: MedicineSnapshot = Object.freeze({
 // ---------------------------------------------------------------------------
 // Pure decan geometry — index arithmetic only, NOT a medicine computation.
 // Exported so the active-decan rotation test can drive it with a synthetic
-// `M4_Temporal_Now.planet_degrees[Sun]`.
+// `M4_Temporal_Now` live frame Sun degree.
 // ---------------------------------------------------------------------------
 
 export interface ActiveDecan {
@@ -153,7 +153,7 @@ function normaliseDegree(value: number): number {
     return wrapped < 0 ? wrapped + 360 : wrapped;
 }
 
-/** Reads `M4_Temporal_Now.planet_degrees[Sun]` from the bridge profile payload. */
+/** Reads Sun from the live M4 kairos frame in the bridge profile payload. */
 export function readSunDegree(profile: MathemeHarmonicProfileBoundary | null): number | null {
     if (!profile) {
         return null;
@@ -165,12 +165,26 @@ export function readSunDegree(profile: MathemeHarmonicProfileBoundary | null): n
     if (!temporalNow) {
         return null;
     }
-    const degrees = temporalNow.planet_degrees ?? temporalNow.planetDegrees;
+    const degrees = readLiveKairosDegrees(temporalNow);
     if (!Array.isArray(degrees)) {
         return null;
     }
     const sun = degrees[SUN_INDEX];
     return typeof sun === 'number' && Number.isFinite(sun) ? sun : null;
+}
+
+function readLiveKairosDegrees(temporalNow: Readonly<Record<string, unknown>>): unknown {
+    const kairoticActive = temporalNow.kairotic_active === true || temporalNow.kairotic_active === 1 ||
+        temporalNow.kairoticActive === true || temporalNow.kairoticActive === 1;
+    const kairotic = objectRecord(temporalNow.kairotic);
+    if (kairoticActive && kairotic) {
+        return kairotic.planet_degrees ?? kairotic.planetDegrees;
+    }
+    const realtime = objectRecord(temporalNow.realtime) ?? objectRecord(temporalNow.realTime);
+    if (realtime) {
+        return realtime.planet_degrees ?? realtime.planetDegrees;
+    }
+    return temporalNow.planet_degrees ?? temporalNow.planetDegrees;
 }
 
 // ---------------------------------------------------------------------------

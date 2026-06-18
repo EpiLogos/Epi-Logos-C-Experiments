@@ -8,7 +8,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M4
 - `src/common/index.ts` — public surface / contract constants (`PLUGIN_ID`, `RANGE_ID` `4-5-0`, `NAMED_LAYOUT_ID` `jiva-siva.integrated`, `CONTRIBUTOR_IDS` = m4-nara/m5-epii/m0-anuttara); generated from `../contracts/08-t0-composition-contract-preflight.json`.
 - `src/browser/frontend-module.ts` — Theia DI module (command + view-contribution + widget factory); also contract-generated.
 - `src/browser/plugin-integrated-4-5-0-widget.tsx` — primary `ReactWidget` (hand-extended 08.T5 slice; scaffolder no longer overwrites).
-- `src/browser/jiva-siva-panes.tsx`, `recognition-layer-slot.tsx`, `epii-review-panel.tsx` — composition panes / Mahamaya recognition slot / Epii review surface. No local M4 tables or raw protected bodies.
+- `src/browser/personal-recognition-composition.tsx` — four-slot personal 4/5/0 editor composition: M4 journal left, M4 cymatic center blocker surface, M5 recognition right blocker surface, M0 grounding under-layer. No local M4 tables or raw protected bodies.
+- `src/browser/jiva-siva-panes.tsx`, `recognition-layer-slot.tsx`, `epii-review-panel.tsx` — retained mini-inspector panes / Mahamaya recognition slot helpers / Epii review surface. No local M4 tables or raw protected bodies.
 - `src/browser/deposit-handle-reception.ts`, `identity-augment-review-routing.ts`, `m5-m0-pedagogical-return.ts` — deposit/handle, M5-review-gate routing, M5→M0 pedagogical-return logic (each with co-located `*.test.mjs`).
 - `style/index.css` — widget styling; `lib/` — tsc build output.
 - Does NOT own: composition arbitration / shared command + layout constants (delegated to `@pratibimba/integrated-composition`), bridge runtime (delegated to `@pratibimba/m-extension-runtime` → [[S3-SPEC]] gate), or the per-coordinate M4/M5/M0 domain law (lives in `m4-nara`/`m5-epii`/`m0-anuttara`).

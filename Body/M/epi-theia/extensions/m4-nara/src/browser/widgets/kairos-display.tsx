@@ -391,7 +391,7 @@ export function readTransitPositions(profile: MathemeHarmonicProfileBoundary | n
     if (!temporalNow) {
         return Object.freeze([]);
     }
-    return parsePositionPayload(temporalNow.planet_degrees ?? temporalNow.planetDegrees ?? temporalNow);
+    return parsePositionPayload(readLiveKairosPayload(temporalNow));
 }
 
 export function activeOracleMoment(raw: unknown, nowMs = Date.now()): OracleMoment | null {
@@ -406,9 +406,9 @@ export function activeOracleMoment(raw: unknown, nowMs = Date.now()): OracleMome
             continue;
         }
         const positions = parsePositionPayload(
-            entry.kairosSnapshot ??
-            entry.kairos_snapshot ??
-            entry.M4_Temporal_Now ??
+            readKairoticKairosPayload(entry.kairosSnapshot) ??
+            readKairoticKairosPayload(entry.kairos_snapshot) ??
+            readKairoticKairosPayload(entry.M4_Temporal_Now) ??
             entry.temporalNow ??
             entry.planet_degrees ??
             entry.planetDegrees
@@ -459,6 +459,32 @@ export function parsePositionPayload(raw: unknown): readonly KairosRawPosition[]
         }
     }
     return Object.freeze(byPlanet.sort((left, right) => planetIndex(left) - planetIndex(right)));
+}
+
+function readLiveKairosPayload(temporalNow: Readonly<Record<string, unknown>>): unknown {
+    const kairoticActive = temporalNow.kairotic_active === true || temporalNow.kairotic_active === 1 ||
+        temporalNow.kairoticActive === true || temporalNow.kairoticActive === 1;
+    const kairotic = objectRecord(temporalNow.kairotic);
+    if (kairoticActive && kairotic) {
+        return kairotic.planet_degrees ?? kairotic.planetDegrees ?? kairotic;
+    }
+    const realtime = objectRecord(temporalNow.realtime) ?? objectRecord(temporalNow.realTime);
+    if (realtime) {
+        return realtime.planet_degrees ?? realtime.planetDegrees ?? realtime;
+    }
+    return temporalNow.planet_degrees ?? temporalNow.planetDegrees ?? temporalNow;
+}
+
+function readKairoticKairosPayload(raw: unknown): unknown {
+    const record = objectRecord(raw);
+    if (!record) {
+        return raw;
+    }
+    const kairotic = objectRecord(record.kairotic);
+    if (kairotic) {
+        return kairotic.planet_degrees ?? kairotic.planetDegrees ?? kairotic;
+    }
+    return record.planet_degrees ?? record.planetDegrees ?? record;
 }
 
 export function formatDegreeDms(degree: number | null): string {
@@ -589,7 +615,12 @@ function mergeTransitPositions(
             ...profile.payload,
             M4_Temporal_Now: Object.freeze({
                 ...(objectRecord(profile.payload.M4_Temporal_Now) ?? {}),
-                planet_degrees: positions.map(position => position.degree)
+                realtime: Object.freeze({
+                    ...(objectRecord(objectRecord(profile.payload.M4_Temporal_Now)?.realtime) ?? {}),
+                    kind: 'REALTIME',
+                    captured_at_ns: Date.now() * 1_000_000,
+                    planet_degrees: positions.map(position => position.degree)
+                })
             })
         })
     });

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import Module from 'node:module';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import React from 'react';
@@ -220,43 +221,26 @@ test('M4 Nara renders PASU-absent kairos warning against a synthetic readiness s
         `m4-nara build failed\nSTDOUT:\n${build.stdout}\nSTDERR:\n${build.stderr}`
     );
 
-    const previousDocument = globalThis.document;
-    const previousElement = globalThis.Element;
-    const previousHTMLElement = globalThis.HTMLElement;
-    const previousWindow = globalThis.window;
-    const previousNavigatorDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-
-    class BrowserElement {
-        constructor() {
-            this.ownerDocument = globalThis.document;
-            this.style = {};
+    const originalLoad = Module._load;
+    Module._load = function patchedLoad(request, parent, isMain) {
+        if (request === '@theia/core/shared/inversify') {
+            return {
+                inject: () => () => undefined,
+                injectable: () => target => target,
+                postConstruct: () => () => undefined
+            };
         }
-
-        matches() {
-            return false;
+        if (request === '@theia/core/lib/browser/widgets/react-widget') {
+            return { ReactWidget: class ReactWidget {} };
         }
-    }
-
-    globalThis.Element = BrowserElement;
-    globalThis.HTMLElement = BrowserElement;
-    globalThis.document = {
-        documentElement: new BrowserElement(),
-        createElement: () => new BrowserElement(),
-        querySelectorAll: () => []
+        if (request === '@pratibimba/m-extension-runtime') {
+            return {
+                ...require('../lib/common/readiness.js'),
+                SHARED_BRIDGE_ADAPTER: Symbol.for('test.shared-bridge-adapter')
+            };
+        }
+        return originalLoad.call(this, request, parent, isMain);
     };
-    globalThis.window = {
-        document: globalThis.document,
-        navigator: { maxTouchPoints: 0 },
-        localStorage: {
-            getItem: () => null,
-            setItem: () => undefined,
-            removeItem: () => undefined
-        }
-    };
-    Object.defineProperty(globalThis, 'navigator', {
-        configurable: true,
-        value: globalThis.window.navigator
-    });
 
     try {
         const { M4NaraEmptyState } = require(join(m4NaraRoot, 'lib/browser/empty-state.js'));
@@ -276,15 +260,7 @@ test('M4 Nara renders PASU-absent kairos warning against a synthetic readiness s
 
         assert.match(html, /PASU not configured — kairos defaulting to neutral/);
     } finally {
-        globalThis.document = previousDocument;
-        globalThis.Element = previousElement;
-        globalThis.HTMLElement = previousHTMLElement;
-        globalThis.window = previousWindow;
-        if (previousNavigatorDescriptor) {
-            Object.defineProperty(globalThis, 'navigator', previousNavigatorDescriptor);
-        } else {
-            delete globalThis.navigator;
-        }
+        Module._load = originalLoad;
     }
 });
 

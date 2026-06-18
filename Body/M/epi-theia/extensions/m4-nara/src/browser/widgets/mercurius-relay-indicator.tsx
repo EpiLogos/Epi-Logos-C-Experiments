@@ -55,7 +55,10 @@ export interface MercuriusKairosDeltaPayload {
     readonly refreshedAtIso?: string;
     readonly refreshed_at?: string;
     readonly planet_degrees?: readonly number[];
-    readonly M4_Temporal_Now?: { readonly planet_degrees?: readonly number[] };
+    readonly M4_Temporal_Now?: {
+        readonly planet_degrees?: readonly number[];
+        readonly realtime?: { readonly planet_degrees?: readonly number[]; readonly captured_at_ns?: number };
+    };
 }
 
 /**
@@ -99,7 +102,10 @@ export function isMercuriusKairosDelta(event: MObservabilityEvent): boolean {
  * satisfy the mod-10 contract (wrong length, missing, or non-finite entry).
  */
 export function readDeltaPlanetDegrees(payload: MercuriusKairosDeltaPayload | undefined): readonly number[] | null {
-    const raw = payload?.planet_degrees ?? payload?.M4_Temporal_Now?.planet_degrees;
+    const raw =
+        payload?.M4_Temporal_Now?.realtime?.planet_degrees ??
+        payload?.planet_degrees ??
+        payload?.M4_Temporal_Now?.planet_degrees;
     if (!Array.isArray(raw) || raw.length !== MOD10_PLANET_COUNT) {
         return null;
     }

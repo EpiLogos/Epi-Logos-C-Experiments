@@ -41,6 +41,20 @@ export interface KairosResult {
   mode: "natal" | "realtime" | "kairotic";
 }
 
+export type KairosFrameKind = "NATAL" | "REALTIME" | "KAIROTIC";
+
+export interface KairosFrame {
+  kind: KairosFrameKind;
+  captured_at_ns: number;
+  decays_at_ns: number;
+  planet_degrees: PlanetDegreeTuple;
+  pp: number;
+  mm: number;
+  mp: number;
+  pn: number;
+  _pad: number;
+}
+
 export interface KairosNatalRef {
   birth_date: string;        // YYYY-MM-DD (from c_0_birth_date)
   birth_location: string;    // "City, Country" or "lat,lon" (from c_0_birth_location)
@@ -52,7 +66,10 @@ export interface KairosNatalRef {
 export interface M4_Temporal_Now {
   degree: number;
   chronos_epoch: number;
-  planet_degrees: PlanetDegreeTuple;
+  natal: KairosFrame;
+  realtime: KairosFrame;
+  kairotic: KairosFrame;
+  kairotic_active: boolean;
   planet_valid: number;
   chart_path: string;
   mode: "natal" | "realtime" | "kairotic";
@@ -105,14 +122,41 @@ export async function fetchKairosData(params: KairosNatalRef): Promise<KairosRes
 
 export async function mercurius_kairos_now(natal_ref: KairosNatalRef): Promise<M4_Temporal_Now> {
   const kairos = await fetchKairosData(natal_ref);
+  const chronos_epoch = natal_ref.chronos_epoch ?? Math.floor(Date.now() / 1000);
+  const captured_at_ns = chronos_epoch * 1_000_000_000;
   return {
     degree: kairos.sun_degree,
-    chronos_epoch: natal_ref.chronos_epoch ?? Math.floor(Date.now() / 1000),
-    planet_degrees: kairos.planet_degrees,
+    chronos_epoch,
+    natal: kairosFrame("NATAL", captured_at_ns, kairos.planet_degrees),
+    realtime: kairosFrame("REALTIME", captured_at_ns, kairos.planet_degrees),
+    kairotic: kairosFrame("KAIROTIC", captured_at_ns, zeroPlanetDegrees()),
+    kairotic_active: false,
     planet_valid: kairos.planet_valid,
     chart_path: kairos.chart_path,
     mode: kairos.mode,
   };
+}
+
+function kairosFrame(
+  kind: KairosFrameKind,
+  captured_at_ns: number,
+  planet_degrees: PlanetDegreeTuple,
+): KairosFrame {
+  return {
+    kind,
+    captured_at_ns,
+    decays_at_ns: 0,
+    planet_degrees,
+    pp: 0,
+    mm: 0,
+    mp: 0,
+    pn: 0,
+    _pad: 0,
+  };
+}
+
+function zeroPlanetDegrees(): PlanetDegreeTuple {
+  return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 }
 
 export function getKairosStatus(): { mode: string; planet_valid: string } {

@@ -53,7 +53,7 @@ describe("Chronos Kairos — additive feature flag", () => {
     });
   });
 
-  it("mercurius_kairos_now returns M4_Temporal_Now with ten canonical planet slots", async () => {
+  it("mercurius_kairos_now returns M4_Temporal_Now with a realtime KairosFrame", async () => {
     const root = await mkdtemp(join(tmpdir(), "kairos-mercurius-"));
     try {
       const chartOutputPath = "Pratibimba/Self/natal-chart.json";
@@ -87,9 +87,12 @@ describe("Chronos Kairos — additive feature flag", () => {
 
       assert.equal(now.degree, 11);
       assert.equal(now.chronos_epoch, 1780000000);
-      assert.deepEqual(now.planet_degrees, [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]);
+      assert.equal(now.realtime.kind, "REALTIME");
+      assert.equal(now.realtime.captured_at_ns, 1780000000 * 1_000_000_000);
+      assert.deepEqual(now.realtime.planet_degrees, [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]);
+      assert.equal(now.kairotic_active, false);
       assert.equal(now.planet_valid, 0x03ff);
-      assert.equal(now.planet_degrees.length, 10);
+      assert.equal(now.realtime.planet_degrees.length, 10);
     } finally {
       await rm(root, { recursive: true, force: true });
     }

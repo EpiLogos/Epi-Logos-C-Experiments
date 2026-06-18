@@ -171,6 +171,10 @@ export const PersonalRecognitionComposition: React.FC<PersonalRecognitionComposi
             <section
                 className="personal-recognition-composition"
                 data-test="personal-recognition-composition"
+                data-entity-id={model.personalRecognition.perspectiveCard?.entityId ?? ''}
+                data-perspective-role={model.personalRecognition.perspectiveCard?.perspectiveRole ?? ''}
+                data-nara-family-role={model.personalRecognition.perspectiveCard?.naraFamilyRole ?? ''}
+                data-review-risk={model.personalRecognition.reviewLayer?.reviewRisk ?? ''}
                 data-blockers={model.blockers.join(',')}
                 data-profile-generation={model.generation ?? 'pending'}
             >
@@ -613,6 +617,17 @@ function firstString(
 }
 
 function hasKairosPopulator(profile: MathemeHarmonicProfileBoundary | null): boolean {
+    const temporalNow = objectValue(readNested(profile, ['M4_Temporal_Now', 'm4TemporalNow', 'temporalNow']));
+    const natal = objectValue(temporalNow?.natal);
+    const realtime = objectValue(temporalNow?.realtime ?? temporalNow?.realTime);
+    const kairotic = objectValue(temporalNow?.kairotic);
+    const kairoticActive = temporalNow?.kairotic_active === true || temporalNow?.kairotic_active === 1 ||
+        temporalNow?.kairoticActive === true || temporalNow?.kairoticActive === 1;
+    const live = kairoticActive ? kairotic : realtime;
+    if (Array.isArray(natal?.planet_degrees ?? natal?.planetDegrees) &&
+        Array.isArray(live?.planet_degrees ?? live?.planetDegrees)) {
+        return true;
+    }
     return Array.isArray(readNested(profile, ['M4_Temporal_Now.planet_degrees', 'm4TemporalNow.planetDegrees']));
 }
 
