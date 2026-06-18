@@ -1,9 +1,6 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
 import { spawnSync } from "node:child_process";
 import { PRIMITIVE_REGISTRY, type PrimitiveDef } from "./S2/pleroma-primitives.ts";
-import registerDamageControl from "./S2/damage-control.ts";
-import registerTilldone from "./S2/tilldone.ts";
 import {
   TECHNE_TERMINAL_TOOLS,
   buildTerminalArgv,
@@ -12,9 +9,90 @@ import {
 
 export { TECHNE_TERMINAL_CAPABILITY_MATRIX } from "./S2/terminal-tools.ts";
 
+const Type = {
+  String: (options: Record<string, unknown> = {}) => ({ type: "string", ...options }),
+  Integer: (options: Record<string, unknown> = {}) => ({ type: "integer", ...options }),
+  Boolean: (options: Record<string, unknown> = {}) => ({ type: "boolean", ...options }),
+  Literal: (value: string | number | boolean, options: Record<string, unknown> = {}) => ({ const: value, ...options }),
+  Array: (items: Record<string, unknown>, options: Record<string, unknown> = {}) => ({ type: "array", items, ...options }),
+  Object: (properties: Record<string, unknown>, options: Record<string, unknown> = {}) => ({
+    type: "object",
+    properties,
+    required: Object.entries(properties)
+      .filter(([, schema]) => !(schema as any).__optional)
+      .map(([name]) => name),
+    ...options,
+  }),
+  Optional: (schema: Record<string, unknown>) => ({ ...schema, __optional: true }),
+  Union: (schemas: Record<string, unknown>[], options: Record<string, unknown> = {}) => ({ anyOf: schemas, ...options }),
+};
+
+export type VamaShaktiClass = "egregore" | "sprite" | "daemon" | "mantra";
+
+export type VamaShaktiSummonRequest = {
+  entity_coordinate: string;
+  arena_scene_key: string;
+  vama_shakti_class: VamaShaktiClass;
+  lifecycle_mode?: "ephemeral" | "warm" | "promoted";
+  requesting_actor: "anima_scene_setup" | "warm_shakti_admin";
+  capability_profile?: unknown;
+};
+
+export type GatewayContext = {
+  gateway?: {
+    resolve?: (method: string, params: Record<string, unknown>) => Promise<unknown>;
+  };
+};
+
+export const vamaShaktiSummonRequestSchema = Type.Object({
+  entity_coordinate: Type.String({
+    description: "Required :World entity coordinate, resolved through s5'.gnostic.resolve per DR-WORLD-1.",
+  }),
+  arena_scene_key: Type.String({
+    description: "Arena scene key that will receive the Vama Shakti presence.",
+  }),
+  vama_shakti_class: Type.Union([
+    Type.Literal("egregore"),
+    Type.Literal("sprite"),
+    Type.Literal("daemon"),
+    Type.Literal("mantra"),
+  ], { description: "Closed classifier set per DR-VAMA-6." }),
+  lifecycle_mode: Type.Optional(Type.Union([
+    Type.Literal("ephemeral"),
+    Type.Literal("warm"),
+    Type.Literal("promoted"),
+  ], { default: "ephemeral" })),
+  requesting_actor: Type.Union([
+    Type.Literal("anima_scene_setup"),
+    Type.Literal("warm_shakti_admin"),
+  ], { description: "Operator-only: Anima scene setup or user-direct warm-shakti admin path." }),
+  capability_profile: Type.Optional(Type.Object({}, {
+    description: "Forbidden by DR-VAMA-5; included only so the refusal law can reject override attempts explicitly.",
+  })),
+}, { additionalProperties: false });
+
+const VAMA_SHAKTI_CLASSES = new Set<VamaShaktiClass>(["egregore", "sprite", "daemon", "mantra"]);
+
+export function vamaShaktiRefusalLaw(req: Partial<VamaShaktiSummonRequest>) {
+  if (Object.prototype.hasOwnProperty.call(req, "capability_profile")) {
+    return "Refused per DR-VAMA-5: Vama Shaktis carry a frozen dialogue-only capability profile; capability_profile overrides are not accepted.";
+  }
+  if (!VAMA_SHAKTI_CLASSES.has(req.vama_shakti_class as VamaShaktiClass)) {
+    return "Refused per DR-VAMA-6: vama_shakti_class must be one of egregore/sprite/daemon/mantra.";
+  }
+  if (!resolvesAsWorldCoordinate(req.entity_coordinate)) {
+    return "Refused per DR-VAMA-3 + DR-WORLD-1: entity_coordinate must resolve to a :World entity. Promote or propose it through hen_entity_candidate_propose first.";
+  }
+  return null;
+}
+
 export async function pleromaExtension(api: ExtensionAPI) {
-  registerDamageControl(api);
+  if (shouldRegisterDamageControl()) {
+    const { default: registerDamageControl } = await import("./S2/damage-control.ts");
+    registerDamageControl(api);
+  }
   if (shouldRegisterTilldone()) {
+    const { default: registerTilldone } = await import("./S2/tilldone.ts");
     registerTilldone(api);
   }
 
@@ -141,6 +219,41 @@ export async function pleromaExtension(api: ExtensionAPI) {
   for (const tool of TECHNE_TERMINAL_TOOLS) {
     registerTerminalTool(api, tool);
   }
+
+  api.registerTool({
+    name: "techne_vama_summon",
+    label: "Techne Vama Summon",
+    description: "Summon a Vama Shakti — the active animating descent of a /World entity into dialogue — under one of four canonical classifiers (egregore/sprite/daemon/mantra). Operator-only; Anima-dispatched during arena scene-setup OR user-direct via warm-shakti admin path.",
+    parameters: vamaShaktiSummonRequestSchema,
+    schema: vamaShaktiSummonRequestSchema,
+    operatorRole: "psyche-template",
+    refusalLaw: vamaShaktiRefusalLaw,
+    async execute(_id: string, params: VamaShaktiSummonRequest, _signal?: unknown, _onUpdate?: unknown, ctx?: GatewayContext) {
+      const refusal = vamaShaktiRefusalLaw(params);
+      if (refusal) {
+        return { content: [{ type: "text", text: refusal }], isError: true };
+      }
+      if (ctx?.gateway?.resolve) {
+        const resolved = await ctx.gateway.resolve("s5'.gnostic.resolve", { coordinate: params.entity_coordinate });
+        if (!isWorldResolution(resolved)) {
+          return {
+            content: [{
+              type: "text",
+              text: "Refused per DR-VAMA-3 + DR-WORLD-1: s5'.gnostic.resolve did not return a :World entity. Promote or propose it through hen_entity_candidate_propose first.",
+            }],
+            isError: true,
+          };
+        }
+      }
+      return {
+        content: [{
+          type: "text",
+          text: "techne_vama_summon preflight accepted; VamaShaktiHandle construction is gated by Tranche 41.3 identity derivation and Tranche 41.4 ad-hoc PI registration.",
+        }],
+        isError: true,
+      };
+    },
+  });
 
   api.registerTool({
     name: "techne_cmux_list_workspaces",
@@ -303,6 +416,11 @@ function shouldRegisterTilldone(): boolean {
   return agentName === "anima" || agentMode === "anima" || agentMode === "execution";
 }
 
+function shouldRegisterDamageControl(): boolean {
+  const mode = (process.env.EPI_DAMAGE_CONTROL_MODE ?? "").toLowerCase();
+  return !["off", "false", "0", "disabled"].includes(mode);
+}
+
 function registerTerminalTool(api: ExtensionAPI, tool: TerminalToolDef) {
   // Build the params schema from the tool's declared param metadata.
   const props: Record<string, any> = {
@@ -336,6 +454,19 @@ function registerTerminalTool(api: ExtensionAPI, tool: TerminalToolDef) {
       return { content: [{ type: "text", text: result.stdout || result.stderr }], isError: result.status !== 0 };
     },
   });
+}
+
+function resolvesAsWorldCoordinate(coordinate: unknown): boolean {
+  return typeof coordinate === "string" && /^(:World|\/World)(\/|:).+/.test(coordinate);
+}
+
+function isWorldResolution(resolved: unknown): boolean {
+  if (!resolved || typeof resolved !== "object") {
+    return false;
+  }
+  const record = resolved as Record<string, unknown>;
+  const labels = Array.isArray(record.labels) ? record.labels : [];
+  return record.label === "World" || record.kind === "World" || labels.includes("World") || labels.includes(":World");
 }
 
 function registerPrimitiveTool(api: ExtensionAPI, p: PrimitiveDef) {

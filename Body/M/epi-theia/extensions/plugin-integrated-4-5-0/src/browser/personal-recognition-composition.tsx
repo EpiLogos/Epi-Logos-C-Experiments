@@ -3,7 +3,8 @@ import {
     EMPTY_COORDINATE_CONTEXT,
     type MathemeHarmonicProfileBoundary,
     type MExtensionId,
-    type MObservabilityEvent
+    type MObservabilityEvent,
+    type SharedBridgeAdapter
 } from '@pratibimba/m-extension-runtime';
 import type {
     InhabitedBimbaFieldState,
@@ -60,6 +61,7 @@ import { VirtueWitnessPanel } from '../../../m0-anuttara/lib/browser/panels/virt
 import {
     assertGraphitiLiveStateProvenanceProtected
 } from '@pratibimba/integrated-composition/graphiti-source-guard';
+import { ContemplationFlowDirector } from './contemplation-flow-director';
 
 export type PersonalPerspectiveRole = PerspectiveRoleDisplayLabel;
 
@@ -135,6 +137,7 @@ export interface PersonalCompositionModel {
 export interface PersonalRecognitionCompositionProps {
     readonly selectedEntityId?: string | null;
     readonly sessionCloseEvent?: MObservabilityEvent | null;
+    readonly bridge?: Pick<SharedBridgeAdapter, 'onObservabilityEvent' | 'invokeGatewayRpc' | 'publish'> | null;
 }
 
 const PERSONAL_CYMATIC_FIELD_AVAILABLE = false;
@@ -151,7 +154,8 @@ const NULL_CANVAS_BRIDGE = Object.freeze({
 
 export const PersonalRecognitionComposition: React.FC<PersonalRecognitionCompositionProps> = ({
     selectedEntityId,
-    sessionCloseEvent
+    sessionCloseEvent,
+    bridge
 }) => {
     const { profile: compositionProfile } = useCompositionProfile();
     const model = React.useMemo(
@@ -182,6 +186,7 @@ export const PersonalRecognitionComposition: React.FC<PersonalRecognitionComposi
                 </div>
                 <AnuttaraGroundingPanel model={model} />
                 <SessionCloseOverlay event={sessionCloseEvent} />
+                <ContemplationFlowDirector bridge={bridge} event={sessionCloseEvent} />
             </div>
         </section>
     );

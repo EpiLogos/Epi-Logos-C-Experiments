@@ -181,6 +181,7 @@ export class PluginIntegrated450Widget extends ReactWidget {
                     required={required}
                     epiiReviewState={this.epiiReviewState}
                     sessionCloseEvent={this.sessionCloseEvent}
+                    bridge={this.bridge}
                     onEpiiAction={action => this.handleEpiiAction(action)}
                     onDismissReview={() => this.setEpiiReviewMode('closed')}
                 />
@@ -195,6 +196,7 @@ const PersonalRecognitionProfileSurface: React.FC<{
     readonly required: readonly MExtensionId[];
     readonly epiiReviewState: EpiiReviewSurfaceState;
     readonly sessionCloseEvent: MObservabilityEvent | null;
+    readonly bridge: Pick<SharedBridgeAdapter, 'onObservabilityEvent' | 'invokeGatewayRpc' | 'publish'>;
     readonly onEpiiAction: (action: EpiiActionId) => void;
     readonly onDismissReview: () => void;
 }> = ({
@@ -203,6 +205,7 @@ const PersonalRecognitionProfileSurface: React.FC<{
     required,
     epiiReviewState,
     sessionCloseEvent,
+    bridge,
     onEpiiAction,
     onDismissReview
 }) => {
@@ -231,6 +234,7 @@ const PersonalRecognitionProfileSurface: React.FC<{
     return (
         <div className="integrated-widget-root">
             <PersonalRecognitionComposition
+                bridge={bridge}
                 sessionCloseEvent={sessionCloseEvent}
             />
             <EpiiReviewPanel

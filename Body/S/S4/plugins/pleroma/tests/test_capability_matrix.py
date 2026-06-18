@@ -213,6 +213,17 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         missing = expected - names
         self.assertFalse(missing, f"dispatch_tools missing entries: {missing}")
 
+    def test_techne_vama_summon_declares_psyche_template_authority(self):
+        """Track 41.2: techne_vama_summon is Psyche-templated and dialogue-only."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        tools = {tool["name"]: tool for tool in matrix["techne_tools"]}
+        summon = tools["techne_vama_summon"]
+
+        self.assertTrue(summon["psyche_template_authority"])
+        self.assertFalse(summon["system_tool_grant"])
+        self.assertTrue(summon["dialogue_only_output"])
+        self.assertTrue(summon["requires_vama_shakti_class"])
+
     def test_m5_4_governance_separates_deposit_from_review_resolution(self):
         """M5-4 roles may surface review work without collapsing into Epii review authority."""
         matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())

@@ -1,11 +1,11 @@
-use crate::agent::launch;
 use crate::agent::runtime::{self, PiLaunchMode, PiLaunchPlan};
+use crate::agent::{harness, launch};
 use crate::gate::preflight;
 use crate::sesh::session::load_env_file;
 use serde::Serialize;
 use std::fs;
 use std::process::Stdio;
-use tokio::process::{Child, Command as TokioCommand};
+use tokio::process::Child;
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -85,7 +85,7 @@ pub fn spawn_process(
 ) -> Result<SpawnedPiProcess, String> {
     let plan = runtime::plan_prompt(agent, None, plugin_dirs, prompt)?;
     let command = format!("pi {}", plan.args.join(" "));
-    let child = configure_tokio_command(&plan)
+    let child = harness::configure_tokio_command(&plan)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
@@ -195,15 +195,6 @@ fn invoke_pi(plan: &PiLaunchPlan, json: bool) -> Result<String, String> {
     } else {
         Ok(String::from_utf8_lossy(&output.stdout).to_string())
     }
-}
-
-fn configure_tokio_command(plan: &PiLaunchPlan) -> TokioCommand {
-    let mut command = TokioCommand::new("pi");
-    command.args(&plan.args);
-    for (key, value) in launch::plan_env(plan, &[]) {
-        command.env(key, value);
-    }
-    command
 }
 
 async fn ensure_gateway_preflight(plan: &PiLaunchPlan) -> Result<(), String> {

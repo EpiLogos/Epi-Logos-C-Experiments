@@ -15,6 +15,7 @@ pub mod codex_runtime;
 mod doctor;
 mod extensions;
 mod goal;
+pub mod harness;
 mod hooks;
 mod install;
 pub mod launch;
@@ -116,6 +117,8 @@ pub enum AgentCmd {
     Anima(AgentLaunchArgs),
     /// Launch the Aletheia PI embodiment, optionally role-scoped
     Aletheia(AgentLaunchArgs),
+    /// Launch a managed PI session for the selected agent
+    Launch(harness::HarnessLaunchArgs),
     /// Launch a managed PI session for the selected agent
     Spawn {
         /// Resolve layout for a named agent
@@ -305,6 +308,7 @@ pub async fn dispatch(cmd: Option<&AgentCmd>, json: bool) -> Result<String, Stri
         AgentCmd::Epii(args) => launch_direct("epii", args, json).await,
         AgentCmd::Anima(args) => launch_direct("anima", args, json).await,
         AgentCmd::Aletheia(args) => launch_direct("aletheia", args, json).await,
+        AgentCmd::Launch(args) => harness::launch_cli(args, json),
         AgentCmd::Spawn {
             agent,
             role,

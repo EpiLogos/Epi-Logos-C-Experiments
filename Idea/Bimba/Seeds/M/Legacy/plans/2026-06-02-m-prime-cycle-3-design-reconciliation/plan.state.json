@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:36:59.153Z",
+  "updatedAt": "2026-06-18T19:47:57.546Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -7450,16 +7450,21 @@
       "worktree": null
     },
     "25.T25.23": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-18T19:47:57.469Z",
+      "claimedAt": "2026-06-18T19:39:27.406Z",
+      "completedAt": "2026-06-18T19:47:57.469Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:47:57.469Z",
+          "text": "pnpm -C Body/M/epi-theia/extensions/m4-nara build clean; node --test Body/M/epi-theia/extensions/test/m4-nara-rfactor-fretboard.test.mjs 6/6 pass; pnpm -C Body/M/epi-theia/extensions/m4-nara test 33/33 pass; key files Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/rfactor-fretboard.tsx, Body/M/epi-theia/extensions/test/m4-nara-rfactor-fretboard.test.mjs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-25-t25-23-rfactor-fretboard",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T19:39:27.406Z",
+      "runId": "20260618T193927Z-25-T25.23",
       "worktree": null
     },
     "37.T37.1": {
@@ -8037,16 +8042,16 @@
       "worktree": null
     },
     "41.T41.2": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:38:27.931Z",
+      "claimedAt": "2026-06-18T19:38:27.931Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-41-t41-2",
+      "leaseExpiresAt": "2026-06-18T21:38:27.931Z",
+      "heartbeatAt": "2026-06-18T19:38:27.931Z",
+      "runId": "20260618T193827Z-41-T41.2",
       "worktree": null
     },
     "41.T41.3": {
@@ -10813,26 +10818,45 @@
       "owner": "codex-m-dev-42-t42-3-unified-harness",
       "leaseExpiresAt": "2026-06-18T21:33:14.285Z",
       "worktree": null
+    },
+    {
+      "runId": "20260618T193827Z-41-T41.2",
+      "taskId": "41.T41.2",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:38:27.931Z",
+      "owner": "codex-m-dev-41-t41-2",
+      "leaseExpiresAt": "2026-06-18T21:38:27.931Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260618T193927Z-25-T25.23",
+      "taskId": "25.T25.23",
+      "status": "done",
+      "startedAt": "2026-06-18T19:39:27.406Z",
+      "owner": "codex-m-dev-25-t25-23-rfactor-fretboard",
+      "leaseExpiresAt": "2026-06-18T21:39:27.406Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T19:47:57.469Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:32:44.106Z",
-    "updatedAt": "2026-06-18T19:32:44.106Z",
+    "createdAt": "2026-06-18T19:38:17.275Z",
+    "updatedAt": "2026-06-18T19:38:17.275Z",
     "taskIds": [
       "31.T31.13",
-      "25.T25.22",
-      "12.T12.29",
-      "29.T29.9"
+      "29.T29.9",
+      "42.T42.3",
+      "05.T5.3"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "25.T25.22": "in-session",
-      "12.T12.29": "in-session",
-      "29.T29.9": "in-session"
+      "29.T29.9": "in-session",
+      "42.T42.3": "in-session",
+      "05.T5.3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

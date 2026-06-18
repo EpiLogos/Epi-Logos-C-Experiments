@@ -146,6 +146,19 @@
       "upstream_required": ["vak-evaluate"]
     }
   ],
+  "techne_tools": [
+    {
+      "name": "techne_vama_summon",
+      "kind": "vama-shakti-summon",
+      "layer": "S4-2'/Pleroma",
+      "operator_role": "psyche-template",
+      "psyche_template_authority": true,
+      "system_tool_grant": false,
+      "dialogue_only_output": true,
+      "requires_vama_shakti_class": true,
+      "refusal_law": ["DR-VAMA-3", "DR-VAMA-5", "DR-VAMA-6"]
+    }
+  ],
   "skills": [
     {
       "name": "anima-orchestration",

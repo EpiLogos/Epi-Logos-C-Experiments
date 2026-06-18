@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T193927Z-25-T25.23",
+  "taskId": "25.T25.23",
+  "startedAt": "2026-06-18T19:39:27.406Z",
+  "owner": "codex-m-dev-25-t25-23-rfactor-fretboard",
+  "leaseExpiresAt": "2026-06-18T21:39:27.406Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.23",
+    "trackId": "25",
+    "tranche": "T25.23",
+    "title": "R-factor fretboard engine (`NaraRFactorFretboard`) *(spec-ahead-integration; consumes 10.AW + 18.11 + Track 01 §1.12; cross-link 19.6/19.19)*",
+    "effort": null,
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.22"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/rfactor-fretboard.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

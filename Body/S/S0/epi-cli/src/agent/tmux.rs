@@ -113,7 +113,7 @@ pub fn run(cmd: &TmuxCmd, json: bool) -> Result<String, String> {
     }
 }
 
-pub(super) fn run_plan(plan: &PiLaunchPlan, json: bool) -> Result<String, String> {
+pub(crate) fn run_plan(plan: &PiLaunchPlan, json: bool) -> Result<String, String> {
     let session_key = allocate_session_key(plan);
     let lease = create_session(plan, &session_key)?;
     inject_runtime_command(&lease.tmux_pane_id, &launch::pi_command_argv(plan))?;

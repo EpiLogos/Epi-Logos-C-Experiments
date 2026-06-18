@@ -40,6 +40,7 @@ Skills entitlements:
 - `executing-plans` (CFP4 L-Thread) — owner
 - `day-night-pass` — shared with Sophia
 - `vak-evaluate` — shared access
+- `vama_shakti_template_authority` (per DR-VAMA-1) — Psyche is the canonical template kernel for `techne_vama_summon`. The 6-section ANIMA.md structure of this profile IS the soul-shape that the factory specializes per target /World entity and classifier. Psyche-as-Spanda animates the Vama Shakti at summon-time. Template-revision changes increment the `psyche_template_revision` carried in VamaShaktiHandle.
 - Spawn targets: Nous (dis-closure prep), Logos (scope), Eros (verify), Mythos (debug), Sophia (review)
 
 ## 6. Sattva
