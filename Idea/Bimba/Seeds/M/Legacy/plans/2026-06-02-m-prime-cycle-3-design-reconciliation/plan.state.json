@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T23:21:03.469Z",
+  "updatedAt": "2026-06-18T23:27:56.358Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6584,17 +6584,13 @@
       "worktree": null
     },
     "25.T25.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-18T23:31:34.906511+00:00",
+          "text": "PASS: pasu-wizard.tsx (6-step stepper) + pasu.rs (PasuRecord). 5/5 Rust tests, 9/9 wizard tests, 49/49 m4-nara suite. pnpm build clean, cargo check clean. Cold-start wiring requires frontend-module.ts regen (FR-3 stub fallback per spec)."
+        }
+      ]
     },
     "25.T25.5": {
       "status": "pending",
@@ -7874,12 +7870,21 @@
     },
     "12.T12.31": {
       "status": "done",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T23:21:31.656654+00:00",
           "text": "PASS: 76 tests pass, 0 fail. context.rs with ConversationSliceHandle, dispatch_with_parent_slice, Chronos bifurcation router. grep acceptance: context.rs has all wired symbols. lib.rs mod registration + AGENTS.md DOX entry done. S4 TS files out of scope (cross-track follow-up)."
         }
-      ]
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "12.T12.32": {
       "status": "pending",

@@ -52,7 +52,7 @@ pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
 // 41.6 verification greps this file for the literal method prefix; keep that
 // literal confined to exactly these eight constant definitions.
 
-use portal_core::{VakAddress, VamaShaktiClass, VamaShaktiReleaseReason};
+use portal_core::{VamaShaktiClass, VamaShaktiReleaseReason};
 use serde::{Deserialize, Serialize};
 
 pub const M4_ARENA_SCENE_OPEN_METHOD: &str = "m4.arena.scene_open";
@@ -235,7 +235,7 @@ pub struct TurnReceipt {
     pub speaker_handle: String,
     pub speaker_class: Option<VamaShaktiClass>,
     pub line_id: u64,
-    pub vak_address: VakAddress,
+    pub vak_address: portal_core::VakAddress,
     pub arrived_at_ms: u64,
 }
 
