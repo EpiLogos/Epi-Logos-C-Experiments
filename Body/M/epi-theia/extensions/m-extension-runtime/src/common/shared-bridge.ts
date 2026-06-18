@@ -32,6 +32,7 @@ export class SharedBridgeAdapter implements MObservabilityPublisher {
     private cachedStatus: ConnectionStatus = DISCONNECTED_STATUS;
     private cachedReadiness: MExtensionReadinessSnapshot = PENDING_M_READINESS;
     private cachedContext: CoordinateContext = EMPTY_COORDINATE_CONTEXT;
+    private cachedCurrentStateSelectors = new Map<string, Readonly<Record<string, unknown>>>();
 
     private profileListeners = new Set<(profile: MathemeHarmonicProfileBoundary | null) => void>();
     private statusListeners = new Set<(status: ConnectionStatus) => void>();
@@ -140,6 +141,19 @@ export class SharedBridgeAdapter implements MObservabilityPublisher {
         }
     }
 
+    updateCurrentStateSelectorPayload(
+        selectorId: string,
+        payload: Readonly<Record<string, unknown>>
+    ): void {
+        this.cachedCurrentStateSelectors.set(selectorId, Object.freeze({ ...payload }));
+    }
+
+    readCurrentStateSelectorPayload(
+        selectorId: string
+    ): Readonly<Record<string, unknown>> | null {
+        return this.cachedCurrentStateSelectors.get(selectorId) ?? null;
+    }
+
     /** Test hook — number of times an upstream bridge was attached. */
     getUpstreamSubscriptionCount(): number {
         return this.upstreamSubscriptionCount;
@@ -150,12 +164,16 @@ export class SharedBridgeAdapter implements MObservabilityPublisher {
         status: ConnectionStatus;
         readiness: MExtensionReadinessSnapshot;
         context: CoordinateContext;
+        currentStateSelectors: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
     } {
         return {
             profile: this.cachedProfile,
             status: this.cachedStatus,
             readiness: this.cachedReadiness,
-            context: this.cachedContext
+            context: this.cachedContext,
+            currentStateSelectors: Object.freeze(
+                Object.fromEntries(this.cachedCurrentStateSelectors)
+            )
         };
     }
 

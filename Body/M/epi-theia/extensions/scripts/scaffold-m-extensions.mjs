@@ -114,6 +114,17 @@ function commonIndex(entry) {
     : entry.id === 'm5-epii'
       ? ['reviewItemHandle', 'provenanceHandle']
       : ['coordinateContext', 'provenanceHandle'];
+  const stateSelectors = [
+    {
+      id: `${entry.id}.currentProfile`,
+      reads: ['profile', 'readiness', 'coordinateContext']
+    },
+    {
+      id: `${entry.id}.currentEvidenceContext`,
+      reads: ['coordinateContext', 'profileGeneration', 'privacyClass']
+    },
+    ...(entry.currentStateSelectors ?? [])
+  ];
   const compactViewsTs = compactViews
     .map(view => `Object.freeze({
             exportName: '${view.exportName}',
@@ -158,16 +169,11 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
         })
     ]),
     currentStateSelectors: Object.freeze([
-        Object.freeze({
-            id: '${entry.id}.currentProfile',
+        ${stateSelectors.map(selector => `Object.freeze({
+            id: '${selector.id}',
             source: 'shared-bridge',
-            reads: Object.freeze(['profile', 'readiness', 'coordinateContext'])
-        }),
-        Object.freeze({
-            id: '${entry.id}.currentEvidenceContext',
-            source: 'shared-bridge',
-            reads: Object.freeze(['coordinateContext', 'profileGeneration', 'privacyClass'])
-        })
+            reads: Object.freeze(${JSON.stringify(selector.reads)})
+        })`).join(',\n        ')}
     ]),
     evidenceSerializers: Object.freeze([
         Object.freeze({

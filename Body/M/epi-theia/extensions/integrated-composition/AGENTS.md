@@ -11,6 +11,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (consumers: [[INTEGRA
 - `src/common/integrated-readiness.ts` — typed `IntegratedReadiness` envelope, geometric-slot readiness folding, and composition blocker ledger consumed by the integrated plugins; `composition-load.ts` — mount-time composition loader that hard-rejects juxtaposition/raw-body violations and returns graceful readiness degradation for runtime blockers.
 - `src/common/empty-state.ts` + `src/browser/integrated-empty-state.tsx` — degraded empty-state contract/component (08.T1 step 3).
 - `src/common/profile-tick-subscription.ts` + `src/browser/composition-profile-context.tsx` — composition-scoped profile tick subscription primitive, React provider, and hook for the single-clock invariant shared by both integrated plugins.
+- `src/common/klein-flip-choreography.ts` — shared Klein-flip choreography director that fans one profile-bus event into K² fold, cymatic valence invert, and codon-axis flip requests for the cosmic integrated composition.
 - `src/common/{evidence-*,release-gate,recursive-self-review-gate,epii-review-*,consent-gate,privacy-scrubber,workspace-persistence}.ts` — evidence envelopes, release gate, S5 self-review, consent/privacy, persistence.
 - `src/browser/design-primitives/` — shared React primitives (CoordinateString, Matheme, KaTeX, geometry) exported via `./design-primitives`.
 - `tests/` — `node --test` `.mjs` contract tests; `style/index.css` — shared stylesheet.

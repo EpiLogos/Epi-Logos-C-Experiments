@@ -27,6 +27,12 @@ import { projectM0CrossLayoutIntentState } from '../common/cross-layout-intent';
 import { M0ModeToggle } from './components/mode-toggle';
 import { LazyNodeBrowserPanel } from './panels/lazy-node-browser-panel';
 import { LanguageLayerPanel } from './panels/language-layer-panel';
+import {
+    DEFAULT_M0_SURFACE_STATE,
+    M0_SURFACE_STATE_SELECTOR_ID,
+    deserializeM0SurfaceState,
+    serializeM0SurfaceState
+} from './state/m0-surface-state';
 
 type M0LanguageSubtab = 'route' | 'lazy-browser';
 
@@ -44,10 +50,10 @@ export class M0AnuttaraWidget extends ReactWidget {
     protected readiness: MExtensionReadinessSnapshot = PENDING_M_READINESS;
     protected profile: MathemeHarmonicProfileBoundary | null = null;
     protected context: CoordinateContext = EMPTY_COORDINATE_CONTEXT;
-    protected activeLayer: M0LayerKey = 'language';
+    protected activeLayer: M0LayerKey = DEFAULT_M0_SURFACE_STATE.activeLayer;
     protected activeLanguageSubtab: M0LanguageSubtab = 'route';
-    protected phase: M0Phase = 'implicate';
-    protected mode: M0SurfaceMode = 'reading';
+    protected phase: M0Phase = DEFAULT_M0_SURFACE_STATE.implicateExplicate;
+    protected mode: M0SurfaceMode = DEFAULT_M0_SURFACE_STATE.mode;
     protected subscriptions: Disposable[] = [];
 
     @postConstruct()
@@ -58,6 +64,9 @@ export class M0AnuttaraWidget extends ReactWidget {
         this.title.closable = true;
         this.addClass('mext-widget');
         this.addClass('mext-widget-' + EXTENSION_ID);
+
+        this.restoreSurfaceState();
+        this.persistSurfaceState();
 
         this.subscriptions.push(
             this.bridge.onReadiness(snapshot => {
@@ -105,6 +114,7 @@ export class M0AnuttaraWidget extends ReactWidget {
             this.context = state.coordinateContext;
             this.bridge.updateCoordinateContext(state.coordinateContext);
         }
+        this.persistSurfaceState();
         this.update();
     }
 
@@ -113,6 +123,7 @@ export class M0AnuttaraWidget extends ReactWidget {
             return;
         }
         this.activeLayer = layer;
+        this.persistSurfaceState();
         this.update();
     }
 
@@ -121,6 +132,7 @@ export class M0AnuttaraWidget extends ReactWidget {
             return;
         }
         this.mode = mode;
+        this.persistSurfaceState();
         this.update();
     }
 
@@ -130,6 +142,29 @@ export class M0AnuttaraWidget extends ReactWidget {
         }
         this.activeLanguageSubtab = subtab;
         this.update();
+    }
+
+    protected restoreSurfaceState(): void {
+        const snapshot = this.bridge.currentSnapshot();
+        const payload =
+            this.bridge.readCurrentStateSelectorPayload(M0_SURFACE_STATE_SELECTOR_ID) ??
+            snapshot.currentStateSelectors[M0_SURFACE_STATE_SELECTOR_ID] ??
+            snapshot.profile?.payload;
+        const state = deserializeM0SurfaceState(payload);
+        this.activeLayer = state.activeLayer;
+        this.phase = state.implicateExplicate;
+        this.mode = state.mode;
+    }
+
+    protected persistSurfaceState(): void {
+        this.bridge.updateCurrentStateSelectorPayload(
+            M0_SURFACE_STATE_SELECTOR_ID,
+            serializeM0SurfaceState({
+                activeLayer: this.activeLayer,
+                implicateExplicate: this.phase,
+                mode: this.mode
+            })
+        );
     }
 
     protected override render(): React.ReactNode {

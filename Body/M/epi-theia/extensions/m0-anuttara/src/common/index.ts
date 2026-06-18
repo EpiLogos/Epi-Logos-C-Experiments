@@ -50,6 +50,11 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
             id: 'm0-anuttara.currentEvidenceContext',
             source: 'shared-bridge',
             reads: Object.freeze(['coordinateContext', 'profileGeneration', 'privacyClass'])
+        }),
+        Object.freeze({
+            id: 'm0-anuttara.activeLayer',
+            source: 'shared-bridge',
+            reads: Object.freeze(['activeLayer', 'implicateExplicate', 'mode'])
         })
     ]),
     evidenceSerializers: Object.freeze([

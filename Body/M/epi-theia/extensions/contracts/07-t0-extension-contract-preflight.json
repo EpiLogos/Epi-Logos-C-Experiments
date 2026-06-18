@@ -259,6 +259,13 @@
         "M0CoordinateSummaryCard",
         "M0SelectionHandler"
       ],
+      "currentStateSelectors": [
+        {
+          "id": "m0-anuttara.activeLayer",
+          "source": "shared-bridge",
+          "reads": ["activeLayer", "implicateExplicate", "mode"]
+        }
+      ],
       "firstSlicePriority": "Anuttara language-map browser plus OWL/SHACL provenance inspector backed by bridge-mediated S2 graph queries.",
       "blockers": [
         "Track 02 T7/T8 coordinate-native graph API parity",

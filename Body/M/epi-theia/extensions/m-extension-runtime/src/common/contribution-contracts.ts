@@ -82,6 +82,7 @@ export interface ContributionRuntimeSnapshot {
     readonly profile: MathemeHarmonicProfileBoundary | null;
     readonly readiness: MExtensionReadinessSnapshot;
     readonly coordinateContext: CoordinateContext;
+    readonly currentStateSelectors: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
 }
 
 export interface MExtensionContributionRuntime {
@@ -103,7 +104,8 @@ export function createMExtensionContributionRuntime(
                 contribution,
                 profile: current.profile,
                 readiness: current.readiness,
-                coordinateContext: current.context
+                coordinateContext: current.context,
+                currentStateSelectors: current.currentStateSelectors
             });
         }
     });

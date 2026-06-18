@@ -1,7 +1,7 @@
 # AGENTS.md — m-extension-runtime
 
 ## Purpose
-`@pratibimba/m-extension-runtime` — "Shared runtime adapter for the six M-extensions. Owns the single KernelBridgeAPI consumer, late-subscriber cache, CoordinateContext model, readiness banner, and observability publisher base. Track 07 T1." (per `package.json`).
+`@pratibimba/m-extension-runtime` — "Shared runtime adapter for the six M-extensions. Owns the single KernelBridgeAPI consumer, late-subscriber cache, CoordinateContext model, readiness banner, and observability publisher base. Track 07 T1." (per `package.json`); the shared adapter also carries bridge-mediated current-state selector payloads.
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]].
 
 ## Ownership

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:04:40.770Z",
+  "updatedAt": "2026-06-18T19:12:16.327Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5104,9 +5104,9 @@
       "worktree": null
     },
     "30.T30.5": {
-      "status": "pending",
-      "updatedAt": "2026-06-16T12:00:00.000Z",
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:06:55.119Z",
+      "claimedAt": "2026-06-18T19:06:55.119Z",
       "completedAt": null,
       "evidence": [
         {
@@ -5115,10 +5115,10 @@
         }
       ],
       "notes": "Reset from fraudulent 'done' during the 2026-06-16 deferral-lie overturn audit (see evidence).",
-      "owner": "hermes-nara",
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-30-t30-5",
+      "leaseExpiresAt": "2026-06-18T21:06:55.119Z",
+      "heartbeatAt": "2026-06-18T19:06:55.119Z",
+      "runId": "20260618T190655Z-30-T30.5",
       "worktree": null
     },
     "30.T30.6": {
@@ -6809,14 +6809,19 @@
       "worktree": null
     },
     "25.T25.21": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:03:15.742Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:09:15.159Z",
       "claimedAt": "2026-06-18T19:03:15.742Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:09:15.159Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:09:15.159Z",
+          "text": "m4-nara registry source red/green check passed for 22 Wave-C exports; pnpm -C Body/M/epi-theia/extensions/m4-nara build clean; pnpm -C Body/M/epi-theia/extensions/m4-nara test 33/33 pass; extension/composition preflight tests 16/16 pass; key file Body/M/epi-theia/extensions/m4-nara/src/common/index.ts"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-25-t25-21",
-      "leaseExpiresAt": "2026-06-18T21:03:15.742Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:03:15.742Z",
       "runId": "20260618T190315Z-25-T25.21",
       "worktree": null
@@ -6931,16 +6936,21 @@
       "worktree": null
     },
     "29.T29.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-18T19:12:16.270Z",
+      "claimedAt": "2026-06-18T19:06:46.746Z",
+      "completedAt": "2026-06-18T19:12:16.270Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:12:16.270Z",
+          "text": "35/35 @pratibimba/integrated-composition tests passed; test -f Body/M/epi-theia/extensions/integrated-composition/src/common/klein-flip-choreography.ts passed; key paths: Body/M/epi-theia/extensions/integrated-composition/src/common/klein-flip-choreography.ts, Body/M/epi-theia/extensions/integrated-composition/tests/klein-flip-choreography.test.mjs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-29-t29-7",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T19:06:46.746Z",
+      "runId": "20260618T190646Z-29-T29.7",
       "worktree": null
     },
     "29.T29.8": {
@@ -10636,11 +10646,12 @@
     {
       "runId": "20260618T190315Z-25-T25.21",
       "taskId": "25.T25.21",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:03:15.742Z",
       "owner": "codex-m-dev-25-t25-21",
       "leaseExpiresAt": "2026-06-18T21:03:15.742Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:09:15.159Z"
     },
     {
       "runId": "20260618T190337Z-21-T21.20",
@@ -10650,16 +10661,35 @@
       "owner": "codex-m-dev-21-t21-20",
       "leaseExpiresAt": "2026-06-18T21:03:37.689Z",
       "worktree": null
+    },
+    {
+      "runId": "20260618T190646Z-29-T29.7",
+      "taskId": "29.T29.7",
+      "status": "done",
+      "startedAt": "2026-06-18T19:06:46.746Z",
+      "owner": "codex-m-dev-29-t29-7",
+      "leaseExpiresAt": "2026-06-18T21:06:46.746Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T19:12:16.270Z"
+    },
+    {
+      "runId": "20260618T190655Z-30-T30.5",
+      "taskId": "30.T30.5",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:06:55.119Z",
+      "owner": "codex-m-dev-30-t30-5",
+      "leaseExpiresAt": "2026-06-18T21:06:55.119Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:02:55.573Z",
-    "updatedAt": "2026-06-18T19:02:55.573Z",
+    "createdAt": "2026-06-18T19:06:36.730Z",
+    "updatedAt": "2026-06-18T19:06:36.730Z",
     "taskIds": [
       "31.T31.13",
-      "41.T41.11",
-      "12.T12.27",
+      "25.T25.21",
+      "21.T21.20",
       "05.T5.3"
     ],
     "totalWeight": 8,
@@ -10667,8 +10697,8 @@
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "41.T41.11": "in-session",
-      "12.T12.27": "in-session",
+      "25.T25.21": "in-session",
+      "21.T21.20": "in-session",
       "05.T5.3": "in-session"
     },
     "rationale": [

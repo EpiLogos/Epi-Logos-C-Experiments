@@ -2,6 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+if (!globalThis.document) {
+    class HeadlessElement {
+        matches() {
+            return false;
+        }
+    }
+    globalThis.Element = HeadlessElement;
+    globalThis.document = {
+        createElement: () => new HeadlessElement(),
+        querySelectorAll: () => []
+    };
+    globalThis.window = { WebAssembly };
+}
+
 const require = createRequire(import.meta.url);
 
 const runtime = require('../m-extension-runtime/lib/common/index.js');
@@ -126,6 +140,17 @@ test('observability contracts require coordinate, profile, privacy, evidence, an
             );
         }
     }
+});
+
+test('M0 contribution declares active-layer state selector for layout persistence', () => {
+    const m0 = extensionModules.find(mod => mod.EXTENSION_ID === 'm0-anuttara');
+    const selector = m0.TRACK_08_CONTRIBUTION.currentStateSelectors.find(
+        item => item.id === 'm0-anuttara.activeLayer'
+    );
+
+    assert.ok(selector);
+    assert.equal(selector.source, 'shared-bridge');
+    assert.deepEqual(selector.reads, ['activeLayer', 'implicateExplicate', 'mode']);
 });
 
 test('stand-alone and composition runtimes read the same SharedBridgeAdapter instance', async () => {

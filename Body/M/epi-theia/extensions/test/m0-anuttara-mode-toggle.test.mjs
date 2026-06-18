@@ -13,6 +13,18 @@ const {
     buildM0AuthoringIntent
 } = require('../m0-anuttara/lib/browser/components/mode-toggle.js');
 const { buildM0InspectorModel } = require('../m0-anuttara/lib/common/m0-inspector.js');
+const {
+    SharedBridgeAdapter
+} = require('../m-extension-runtime/lib/common/shared-bridge.js');
+const {
+    createMExtensionContributionRuntime
+} = require('../m-extension-runtime/lib/common/contribution-contracts.js');
+const {
+    DEFAULT_M0_SURFACE_STATE,
+    M0_SURFACE_STATE_SELECTOR_ID,
+    deserializeM0SurfaceState,
+    serializeM0SurfaceState
+} = require('../m0-anuttara/lib/browser/state/m0-surface-state.js');
 
 const readiness = Object.freeze({
     fetchedAt: 1,
@@ -61,6 +73,8 @@ const actions = Object.freeze([
         mutatesGraphCanon: false
     })
 ]);
+
+const M0_TEST_CONTRIBUTION = Object.freeze({ extensionId: 'm0-anuttara' });
 
 function renderModeToggle(mode) {
     return ReactDOMServer.renderToStaticMarkup(
@@ -136,6 +150,59 @@ test('authoring deep-link intents route through the ide-shell M0-M5 contribution
         coordinate: 'M0',
         source: 'm0-anuttara'
     });
+});
+
+test('M0 surface state serializes selector and acceptance-harness fields', () => {
+    const serialized = serializeM0SurfaceState({
+        activeLayer: 'relations',
+        mode: 'authoring',
+        implicateExplicate: 'explicate'
+    });
+
+    assert.deepEqual(serialized, {
+        activeLayer: 'relations',
+        implicateExplicate: 'explicate',
+        mode: 'authoring',
+        m0_active_layer: 'relations',
+        m0_implicate_explicate: 'explicate',
+        m0_mode: 'authoring'
+    });
+    assert.deepEqual(deserializeM0SurfaceState(serialized), {
+        activeLayer: 'relations',
+        mode: 'authoring',
+        implicateExplicate: 'explicate'
+    });
+    assert.deepEqual(
+        deserializeM0SurfaceState({ activeLayer: 'unknown', mode: 'bad' }),
+        DEFAULT_M0_SURFACE_STATE
+    );
+});
+
+test('daily-0-1 to ide-deep toggle preserves active M0 layer state through SharedBridgeAdapter', () => {
+    const adapter = new SharedBridgeAdapter();
+    const dailyRuntime = createMExtensionContributionRuntime(M0_TEST_CONTRIBUTION, adapter);
+    const ideDeepRuntime = createMExtensionContributionRuntime(M0_TEST_CONTRIBUTION, adapter);
+
+    adapter.updateCurrentStateSelectorPayload(
+        M0_SURFACE_STATE_SELECTOR_ID,
+        serializeM0SurfaceState({
+            activeLayer: 'relations',
+            mode: 'authoring',
+            implicateExplicate: 'explicate'
+        })
+    );
+
+    assert.equal(
+        dailyRuntime.snapshot().currentStateSelectors[M0_SURFACE_STATE_SELECTOR_ID]
+            .m0_active_layer,
+        'relations'
+    );
+    const afterToggle = deserializeM0SurfaceState(
+        ideDeepRuntime.snapshot().currentStateSelectors[M0_SURFACE_STATE_SELECTOR_ID]
+    );
+    assert.equal(afterToggle.activeLayer, 'relations');
+    assert.equal(afterToggle.mode, 'authoring');
+    assert.equal(afterToggle.implicateExplicate, 'explicate');
 });
 
 test('m0-anuttara source tree has no requestCanonMutation path', async () => {

@@ -28,6 +28,7 @@ export * from './workspace-persistence';
 export * from './omni-panel';
 export * from './release-gate';
 export * from './profile-tick-subscription';
+export * from './klein-flip-choreography';
 
 // Browser-runtime helpers — re-exported here so plugin packages can import
 // everything from the package root, matching the m-extension-runtime pattern.

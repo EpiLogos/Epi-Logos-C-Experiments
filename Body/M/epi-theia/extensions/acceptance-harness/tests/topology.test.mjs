@@ -424,11 +424,21 @@ test('omnipanel-tab-traversal: end-to-end click-through and state identity contr
         'pi-chat': { scrollOffset: 11, draftCommand: '/dispatch nous' },
         sessions: { selectedSessionKey: 'agent:epii:main', dayNowAnchor: '2026-06-11' },
         'dispatch-trace': { selectedNodeId: 'node-nous-001', expandedNodeIds: ['node-nous-001'] },
-        'tool-stream': { activeEventId: 'evt-nous-001', actorFilter: 'nous' },
-        evidence: { selectedPacketId: 'pkt-XYZ', miniGraphNodeId: 'node-nous-001' },
+        'tool-stream': {
+            filters: { actor: 'nous' },
+            selectedEventId: 'evt-nous-001',
+            scrollOffset: 4,
+            live: false
+        },
+        evidence: {
+            filters: { miniGraphNodeId: 'node-nous-001' },
+            selectedPacketId: 'pkt-XYZ',
+            scrollOffset: 8,
+            depositFormOpen: true
+        },
         review: { selectedReviewId: 'rev-human-gate-001', decisionDraft: 'approve' },
-        gateway: { activeCapability: 'anima_self_invoke', facet: 'capabilities' },
-        diagnostics: { selectedIntentId: 'intent-3', readinessPanel: 'kernel-bridge' }
+        gateway: { activeSubView: 'capabilities', selectedCapabilityName: 'anima_self_invoke' },
+        diagnostics: { activeSubSection: 'kernel-bridge', intentLogScrollOffset: 3 }
     };
     for (const [tabId, tabState] of Object.entries(perTabFixtures)) {
         harness.setTabState(tabId, tabState);
@@ -471,6 +481,38 @@ test('OmniPanel intent promotes daily-0-1 to ide-deep with M3 codon preserved', 
     );
 });
 
+test('M0 active-layer state survives daily-0-1 and ide-deep layout toggles', () => {
+    const harness = createOmniPanelTraversalHarness();
+    const dailyIntent = buildM0SurfaceCrossLayoutIntent({
+        id: 'intent-m0-daily-relations',
+        requestedLayout: 'daily-0-1'
+    });
+    const deepIntent = buildM0SurfaceCrossLayoutIntent({
+        id: 'intent-m0-deep-relations',
+        requestedLayout: 'ide-deep'
+    });
+    const returnIntent = buildM0SurfaceCrossLayoutIntent({
+        id: 'intent-m0-return-relations',
+        requestedLayout: 'daily-0-1'
+    });
+
+    for (const route of [
+        harness.routeCrossLayoutIntent(dailyIntent),
+        harness.routeCrossLayoutIntent(deepIntent),
+        harness.routeCrossLayoutIntent(returnIntent)
+    ]) {
+        assert.equal(route.session.selectedCoordinate, 'M0-2-relations');
+        assert.equal(route.session.lens, 'void-structure-ring');
+        assert.equal(route.session.mode, 'authoring');
+        assert.equal(route.session.profileGeneration, 472);
+        assert.equal(route.session.sessionKey, 'agent:epii:m0');
+        assert.equal(route.session.dayNow, '2026-06-17');
+        assert.equal(route.session.m0_active_layer, 'relations');
+        assert.equal(route.session.m0_implicate_explicate, 'explicate');
+        assert.equal(route.session.m0_mode, 'authoring');
+    }
+});
+
 function createOmniPanelTraversalHarness() {
     const manifest = collapseOmniPanelManifest();
     const mountedByLayout = {
@@ -493,10 +535,15 @@ function createOmniPanelTraversalHarness() {
     const crossLayoutIntentLog = [];
     const routeSession = {
         selectedCoordinate: null,
+        lens: null,
+        mode: null,
         sessionKey: null,
         dayNow: null,
         profileGeneration: null,
-        privacyClass: null
+        privacyClass: null,
+        m0_active_layer: null,
+        m0_implicate_explicate: null,
+        m0_mode: null
     };
 
     let omniPanelState = createOmniPanelState(manifest);
@@ -616,16 +663,39 @@ function createOmniPanelTraversalHarness() {
             if (intent.privacyClass !== null) {
                 routeSession.privacyClass = intent.privacyClass;
             }
+            if (intent.lens !== undefined && intent.lens !== null) {
+                routeSession.lens = intent.lens;
+            }
+            if (intent.mode !== undefined && intent.mode !== null) {
+                routeSession.mode = intent.mode;
+            }
+            if (intent.m0_active_layer !== undefined && intent.m0_active_layer !== null) {
+                routeSession.m0_active_layer = intent.m0_active_layer;
+            }
+            if (
+                intent.m0_implicate_explicate !== undefined &&
+                intent.m0_implicate_explicate !== null
+            ) {
+                routeSession.m0_implicate_explicate = intent.m0_implicate_explicate;
+            }
+            if (intent.m0_mode !== undefined && intent.m0_mode !== null) {
+                routeSession.m0_mode = intent.m0_mode;
+            }
             return {
                 activeLayout,
                 targetCommandId: intentTargetCommandId(intent),
                 session: { ...routeSession },
-                consumedIntent: {
+                consumedIntent: withoutUndefinedFields({
                     requestedExtensionId: intent.requestedExtensionId,
                     requestedContributionId: intent.requestedContributionId,
                     coordinate: intent.coordinate,
-                    profileGeneration: intent.profileGeneration
-                }
+                    profileGeneration: intent.profileGeneration,
+                    lens: intent.lens,
+                    mode: intent.mode,
+                    m0_active_layer: intent.m0_active_layer,
+                    m0_implicate_explicate: intent.m0_implicate_explicate,
+                    m0_mode: intent.m0_mode
+                })
             };
         },
         renderCrossLayoutIntentLog() {
@@ -880,4 +950,32 @@ function buildM3CodonCrossLayoutIntent(overrides = {}) {
         requestedContributionId: 'codon',
         ...overrides
     };
+}
+
+function buildM0SurfaceCrossLayoutIntent(overrides = {}) {
+    return {
+        id: 'intent-m0-relations',
+        coordinate: 'M0-2-relations',
+        artifactUri: null,
+        reviewId: null,
+        dayNow: '2026-06-17',
+        sessionKey: 'agent:epii:m0',
+        profileGeneration: 472,
+        privacyClass: 'public',
+        lens: 'void-structure-ring',
+        mode: 'authoring',
+        m0_active_layer: 'relations',
+        m0_implicate_explicate: 'explicate',
+        m0_mode: 'authoring',
+        requestedLayout: 'ide-deep',
+        requestedExtensionId: 'm0-anuttara',
+        requestedContributionId: 'relations',
+        ...overrides
+    };
+}
+
+function withoutUndefinedFields(record) {
+    return Object.fromEntries(
+        Object.entries(record).filter(([, value]) => value !== undefined)
+    );
 }
