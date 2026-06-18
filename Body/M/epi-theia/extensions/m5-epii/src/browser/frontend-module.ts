@@ -43,6 +43,9 @@ export class M5EpiiContribution
     extends AbstractViewContribution<M5EpiiWidget>
     implements CommandContribution, FrontendApplicationContribution
 {
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
     constructor() {
         super({
             widgetId: M5EpiiWidget.ID,
@@ -98,6 +101,27 @@ export class M5EpiiContribution
             'M5 Epii: Deposit Review Evidence',
             () => this.openView({ activate: true, reveal: true })
         );
+        // 31.2 / CC-02 command-palette catalog — stage-1 wave-C commands for
+        // m5-epii (26.x). Dispatch routes through the shared bridge only.
+        commands.registerCommand({ id: 'm5-epii.capacity-tree.focus', label: `${EXTENSION_ID}: focus capacity tree` }, { execute: () => this.dispatchPaletteCommand('m5-epii.capacity-tree.focus') });
+        commands.registerCommand({ id: 'm5-epii.mobius-pass-ribbon.open', label: `${EXTENSION_ID}: open Möbius pass ribbon` }, { execute: () => this.dispatchPaletteCommand('m5-epii.mobius-pass-ribbon.open') });
+        commands.registerCommand({ id: 'm5-epii.contemplation-object.open', label: `${EXTENSION_ID}: open contemplation object` }, { execute: () => this.dispatchPaletteCommand('m5-epii.contemplation-object.open') });
+        commands.registerCommand({ id: 'm5-epii.recognition-layer.focus', label: `${EXTENSION_ID}: focus recognition layer` }, { execute: () => this.dispatchPaletteCommand('m5-epii.recognition-layer.focus') });
+        commands.registerCommand({ id: 'm5-epii.iod-17-parity.refresh', label: `${EXTENSION_ID}: refresh IoD-17 parity` }, { execute: () => this.dispatchPaletteCommand('m5-epii.iod-17-parity.refresh') });
+        commands.registerCommand({ id: 'm5-epii.pi-axiom-translation.open', label: `${EXTENSION_ID}: open PI axiom translation` }, { execute: () => this.dispatchPaletteCommand('m5-epii.pi-axiom-translation.open') });
+    }
+
+    /**
+     * 31.2 / CC-02: command-palette entries route through the shared bridge so
+     * the OmniPanel parity layer can observe and forward the dispatch. Feature
+     * behaviour lands in the owning feature tranche (26.x).
+     */
+    protected dispatchPaletteCommand(commandId: string, params: Record<string, unknown> = {}): void {
+        this.bridge.updateCurrentStateSelectorPayload(commandId, {
+            commandId,
+            extensionId: EXTENSION_ID,
+            ...params
+        });
     }
 }
 

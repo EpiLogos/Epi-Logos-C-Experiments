@@ -339,7 +339,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s4'.*",
         owner: "S4'",
         status: CoordinateParityStatus::Adapter,
-        live_gateway_method: Some("s4'.vak.evaluate / s4'.orchestrate / s4'.psyche.state / s4'.psyche.update / s4'.permission.get / skills.* / exec.approval.*"),
+        live_gateway_method: Some("s4'.vak.evaluate / s4'.orchestrate / s4'.mediation.route / s4'.mediation.capabilities.list / s4'.psyche.state / s4'.psyche.update / s4'.permission.get / skills.* / exec.approval.*"),
         cli_mirror: Some("epi agent vak"),
         body_path: "Body/S/S4/ta-onta/S4-4p-anima",
         test_evidence: &[
@@ -710,6 +710,7 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s4'.vak.evaluate"
         | "s4'.orchestrate"
         | "s4'.mediation.route"
+        | "s4'.mediation.capabilities.list"
         | "s4'.psyche.state"
         | "s4'.psyche.update"
         | "s4'.permission.get" => Some("s4'.*"),

@@ -67,6 +67,9 @@ export class M0AnuttaraContribution
     extends AbstractViewContribution<M0AnuttaraWidget>
     implements CommandContribution, FrontendApplicationContribution
 {
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
     constructor() {
         super({
             widgetId: M0AnuttaraWidget.ID,
@@ -176,6 +179,16 @@ export class M0AnuttaraContribution
                 }
             }
         );
+        // 31.2 / CC-02 command-palette catalog — stage-1 wave-C commands for
+        // m0-anuttara (21.x). Every command dispatches through the shared bridge;
+        // no direct kernel/gateway/graph-driver imports.
+        commands.registerCommand({ id: 'm0-anuttara.layer-selector.activate', label: `${EXTENSION_ID}: activate layer selector` }, { execute: () => this.dispatchPaletteCommand('m0-anuttara.layer-selector.activate') });
+        commands.registerCommand({ id: 'm0-anuttara.implicate-explicate.toggle', label: `${EXTENSION_ID}: toggle implicate/explicate` }, { execute: () => this.dispatchPaletteCommand('m0-anuttara.implicate-explicate.toggle') });
+        commands.registerCommand({ id: 'm0-anuttara.contemplation.submit', label: `${EXTENSION_ID}: submit contemplation` }, { execute: () => this.dispatchPaletteCommand('m0-anuttara.contemplation.submit') });
+        commands.registerCommand({ id: 'm0-anuttara.virtue-witness.refresh', label: `${EXTENSION_ID}: refresh virtue witness` }, { execute: () => this.dispatchPaletteCommand('m0-anuttara.virtue-witness.refresh') });
+        commands.registerCommand({ id: 'm0-anuttara.symbolic-question.submit', label: `${EXTENSION_ID}: submit symbolic question` }, { execute: () => this.dispatchPaletteCommand('m0-anuttara.symbolic-question.submit') });
+        commands.registerCommand({ id: 'm0-anuttara.mode.toggle', label: `${EXTENSION_ID}: toggle mode` }, { execute: () => this.dispatchPaletteCommand('m0-anuttara.mode.toggle') });
+        commands.registerCommand({ id: 'm0-anuttara.cross-layout-intent.dispatch', label: `${EXTENSION_ID}: dispatch cross-layout intent` }, { execute: () => this.dispatchPaletteCommand('m0-anuttara.cross-layout-intent.dispatch') });
         // Track 05 T5 + 21.19 intent targets — legacy graph fallback plus
         // layer-aware M0LayerKey targets promoted from Track 11.2.
         for (const target of M0_CROSS_LAYOUT_INTENT_TARGETS) {
@@ -199,6 +212,20 @@ export class M0AnuttaraContribution
                 requestedContributionId: 'graph'
             })
         );
+    }
+
+    /**
+     * 31.2 / CC-02: command-palette entries route through the shared bridge so
+     * the OmniPanel parity layer can observe and forward the dispatch. Feature
+     * behaviour lands in the owning feature tranche (21.x); the palette entry
+     * never reaches into the kernel/gateway/graph driver directly.
+     */
+    protected dispatchPaletteCommand(commandId: string, params: Record<string, unknown> = {}): void {
+        this.bridge.updateCurrentStateSelectorPayload(commandId, {
+            commandId,
+            extensionId: EXTENSION_ID,
+            ...params
+        });
     }
 }
 

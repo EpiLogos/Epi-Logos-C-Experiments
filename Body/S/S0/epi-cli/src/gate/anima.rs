@@ -20,8 +20,14 @@
 //!
 //! Constants tagged `S4_AUTHORITY` below MUST stay in sync with those
 //! sources. Any drift is a Track-13 follow-up tranche to extract into S4
-//! and consume by FFI; see the IOD-17 follow-up note on
-//! `s4'.mediation.capabilities.list`.
+//! and consume by FFI.
+//!
+//! 12.T12.10 closes the IOD-17 follow-up for the capability set itself: this
+//! adapter now serves `s4'.mediation.capabilities.list`, reading the dispatch
+//! + aletheia-mode-internal capability set verbatim from the S4
+//! `capability-matrix.json` (no second copy). The Pi runtime — owner of the
+//! capability gate — calls it at startup to assert parity. (The `route_outcome`
+//! routing-derivation note below remains a distinct, still-open follow-up.)
 //!
 //! ## Persistence classification
 //!
@@ -49,6 +55,18 @@ const PLEROMA_ROOT: &str = "Body/S/S4/plugins/pleroma";
 const VAK_EVALUATE_SKILL: &str = "vak-evaluate";
 const ANIMA_ORCHESTRATION_SKILL: &str = "anima-orchestration";
 const MEDIATION_ROUTE_METHOD: &str = "s4'.mediation.route";
+const CAPABILITIES_LIST_METHOD: &str = "s4'.mediation.capabilities.list";
+
+/// S4_AUTHORITY: entitlement-class identifiers tagged onto every capability in
+/// the `s4'.mediation.capabilities.list` response. Mirror of
+/// `STANDARD_ENTITLEMENT_CLASS` / `ALETHEIA_MODE_INTERNAL_CLASS` in
+/// `Body/S/S4/ta-onta/shared/entitlement.ts`; the Pi capability-parity check
+/// compares against these exact strings.
+const STANDARD_ENTITLEMENT_CLASS: &str = "standard";
+const ALETHEIA_MODE_INTERNAL_CLASS: &str = "aletheia-mode-internal";
+
+/// File name of the S4 capability matrix under [`PLEROMA_ROOT`].
+const CAPABILITY_MATRIX_FILE: &str = "capability-matrix.json";
 
 /// S4_AUTHORITY: mirror of `MOIRAI_HOST_CF` in
 /// `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts` (klotho →
@@ -216,6 +234,89 @@ pub fn mediation_route(state_root: impl AsRef<Path>, params: &Value) -> Result<V
 
     append_mediation_decision(state_root, &result)?;
     Ok(result)
+}
+
+/// 12.T12.10 — capability-parity surface (`s4'.mediation.capabilities.list`).
+///
+/// Returns the canonical mediation capability set verbatim from the S4 authority
+/// `Body/S/S4/plugins/pleroma/capability-matrix.json`: the dispatch-tool family
+/// plus the aletheia-mode-internal family, each tagged with its entitlement
+/// class. This closes the IOD-17 follow-up noted on [`route_outcome`]: the Pi
+/// runtime (which owns the capability gate, NOT the ACR) calls this at startup
+/// and asserts parity against its local capability-matrix view. The adapter does
+/// NOT invent the list — it reads it from the S4 matrix so there is one source
+/// of truth and no second authority store.
+pub fn mediation_capabilities_list(_params: &Value) -> Result<Value, String> {
+    let matrix = read_capability_matrix()?;
+
+    // dispatch_tools[*].name — the vak-dispatch family.
+    let dispatch_tools = matrix
+        .get("dispatch_tools")
+        .and_then(Value::as_array)
+        .map(|tools| {
+            tools
+                .iter()
+                .filter_map(|tool| tool.get("name").and_then(Value::as_str))
+                .map(str::to_owned)
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+
+    // aletheia_mode_internal.tools[*].name — the GraphRAG/crystallisation family
+    // that routes through s4'.mediation.route. Each carries the
+    // aletheia-mode-internal entitlement class explicitly in the matrix.
+    let aletheia_block = matrix.get("aletheia_mode_internal");
+    let aletheia_tools = aletheia_block
+        .and_then(|block| block.get("tools"))
+        .and_then(Value::as_array)
+        .map(|tools| {
+            tools
+                .iter()
+                .filter_map(|tool| tool.get("name").and_then(Value::as_str))
+                .map(str::to_owned)
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    let aletheia_set: std::collections::HashSet<&str> =
+        aletheia_tools.iter().map(String::as_str).collect();
+
+    // Build the flat capability list, tagging each name with its class. A name
+    // that appears in the aletheia table classifies as aletheia-mode-internal
+    // (this mirrors `entitlementClassOf` in the TS core); everything else is
+    // standard. Dedupe (dispatch_moirai_night_pass appears in both tables).
+    let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut capabilities: Vec<Value> = Vec::new();
+    for name in dispatch_tools.iter().chain(aletheia_tools.iter()) {
+        if !seen.insert(name.clone()) {
+            continue;
+        }
+        let class = if aletheia_set.contains(name.as_str()) {
+            ALETHEIA_MODE_INTERNAL_CLASS
+        } else {
+            STANDARD_ENTITLEMENT_CLASS
+        };
+        capabilities.push(json!({
+            "name": name,
+            "entitlementClass": class,
+        }));
+    }
+
+    let entitlement_classes = matrix
+        .get("entitlement_classes")
+        .cloned()
+        .unwrap_or_else(|| json!({}));
+
+    Ok(json!({
+        "owner": "S4'",
+        "method": CAPABILITIES_LIST_METHOD,
+        "entitlementClasses": entitlement_classes,
+        "dispatchTools": dispatch_tools,
+        "aletheiaModeInternalTools": aletheia_tools,
+        "capabilities": capabilities,
+        "routesThrough": MEDIATION_ROUTE_METHOD,
+        "authority": authority(),
+        "s4AuthorityOrigin": S4_AUTHORITY_ORIGIN,
+    }))
 }
 
 pub fn agent_status(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
@@ -727,6 +828,28 @@ fn merge_psyche_patch(state: &mut Value, patch: &Map<String, Value>) {
             }
         }
     }
+}
+
+/// Read and parse the S4 capability matrix
+/// (`Body/S/S4/plugins/pleroma/capability-matrix.json`). This is the single
+/// source of truth for `mediation_capabilities_list`; the adapter never
+/// maintains a second copy of the capability set.
+fn read_capability_matrix() -> Result<Value, String> {
+    let layout = AgentLayout::resolve(Some("anima"))?;
+    let path = layout
+        .repo_root
+        .join(PLEROMA_ROOT)
+        .join(CAPABILITY_MATRIX_FILE);
+    if !path.exists() {
+        return Err(format!(
+            "S4 capability matrix is not present at expected path: {}",
+            path.display()
+        ));
+    }
+    let body = fs::read_to_string(&path).map_err(|err| err.to_string())?;
+    serde_json::from_str(&body).map_err(|err| {
+        format!("failed to parse capability matrix at {}: {err}", path.display())
+    })
 }
 
 fn pleroma_skill_path(skill: &str) -> Result<PathBuf, String> {

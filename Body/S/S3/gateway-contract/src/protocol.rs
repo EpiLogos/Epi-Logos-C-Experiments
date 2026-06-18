@@ -107,6 +107,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "s4'.vak.evaluate",
     "s4'.orchestrate",
     "s4'.mediation.route",
+    "s4'.mediation.capabilities.list",
     "s4'.psyche.state",
     "s4'.psyche.update",
     "s4'.permission.get",

@@ -46,6 +46,9 @@ export class M3MahamayaContribution
     extends AbstractViewContribution<M3MahamayaWidget>
     implements CommandContribution, FrontendApplicationContribution
 {
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
     constructor() {
         super({
             widgetId: M3MahamayaWidget.ID,
@@ -87,6 +90,14 @@ export class M3MahamayaContribution
                 }
             }
         );
+        // 31.2 / CC-02 command-palette catalog — stage-1 wave-C commands for
+        // m3-mahamaya (24.x). Dispatch routes through the shared bridge only.
+        commands.registerCommand({ id: 'm3-mahamaya.cosmic-clock.open', label: `${EXTENSION_ID}: open cosmic clock` }, { execute: () => this.dispatchPaletteCommand('m3-mahamaya.cosmic-clock.open') });
+        commands.registerCommand({ id: 'm3-mahamaya.tarot.draw', label: `${EXTENSION_ID}: draw tarot` }, { execute: () => this.dispatchPaletteCommand('m3-mahamaya.tarot.draw') });
+        commands.registerCommand({ id: 'm3-mahamaya.iching.cast', label: `${EXTENSION_ID}: cast I-Ching` }, { execute: () => this.dispatchPaletteCommand('m3-mahamaya.iching.cast') });
+        commands.registerCommand({ id: 'm3-mahamaya.decan-chain.lookup', label: `${EXTENSION_ID}: look up decan chain` }, { execute: () => this.dispatchPaletteCommand('m3-mahamaya.decan-chain.lookup') });
+        commands.registerCommand({ id: 'm3-mahamaya.hexagram-body.open', label: `${EXTENSION_ID}: open hexagram body` }, { execute: () => this.dispatchPaletteCommand('m3-mahamaya.hexagram-body.open') });
+        commands.registerCommand({ id: 'm3-mahamaya.quintessence.display', label: `${EXTENSION_ID}: display quintessence` }, { execute: () => this.dispatchPaletteCommand('m3-mahamaya.quintessence.display') });
         registerIntentTarget(
             commands,
             EXTENSION_ID,
@@ -94,6 +105,19 @@ export class M3MahamayaContribution
             'M3 Mahamaya: Open Codon Rotation',
             () => this.openView({ activate: true, reveal: true })
         );
+    }
+
+    /**
+     * 31.2 / CC-02: command-palette entries route through the shared bridge so
+     * the OmniPanel parity layer can observe and forward the dispatch. Feature
+     * behaviour lands in the owning feature tranche (24.x).
+     */
+    protected dispatchPaletteCommand(commandId: string, params: Record<string, unknown> = {}): void {
+        this.bridge.updateCurrentStateSelectorPayload(commandId, {
+            commandId,
+            extensionId: EXTENSION_ID,
+            ...params
+        });
     }
 }
 

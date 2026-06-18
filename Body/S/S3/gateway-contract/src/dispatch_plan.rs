@@ -509,6 +509,16 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         authority_path: "Body/S/S4/ta-onta/S4-4p-anima",
         needs_extraction_to: None,
     },
+    // 12.T12.10 — capability-parity live-assertion surface. The Pi runtime
+    // (NOT the ACR) owns the capability gate; it queries this method at startup
+    // and asserts the gateway-exposed mediation capability set is in parity with
+    // its local capability-matrix view (close the IOD-17 follow-up on anima.rs).
+    MethodDispatchPlanEntry {
+        method: "s4'.mediation.capabilities.list",
+        kind: MethodDispatchKind::S4OrchestrationAdapter,
+        authority_path: "Body/S/S4/plugins/pleroma/capability-matrix.json",
+        needs_extraction_to: None,
+    },
     MethodDispatchPlanEntry {
         method: "s4'.psyche.state",
         kind: MethodDispatchKind::S4OrchestrationAdapter,

@@ -113,6 +113,28 @@ pub struct AnimaInvokeResponse {
 /// ordinary user/agent messages.
 pub const ANIMA_INVOKE_ROLE: &str = "anima_invoke";
 
+/// 12.T12.10 — the S4'-owned **capability-parity** surface. S3 owns the route
+/// law (`S4OrchestrationAdapter` → ta-onta / `capability-matrix.json`); the
+/// executable handler lives in the S0 gateway adapter (`gate/anima.rs`) and the
+/// authoritative data is `Body/S/S4/plugins/pleroma/capability-matrix.json`.
+///
+/// The Pi runtime — NOT the ACR — owns the capability gate. At Pi startup it
+/// calls `s4'.mediation.capabilities.list` and asserts the gateway-exposed
+/// mediation capability set (dispatch tools + the aletheia-mode-internal family,
+/// each tagged with its entitlement class) is in parity with its local
+/// capability-matrix view. Any drift is a hard startup failure: that is how the
+/// "no tool bypasses the entitlement contract" invariant (Tranche 12.32) stays
+/// live across the gateway boundary. Declared here so gateway audits can assert
+/// the concrete method name without reaching into the contract crate.
+pub const S4_MEDIATION_CAPABILITIES_LIST_METHOD: &str = "s4'.mediation.capabilities.list";
+
+/// The two entitlement classes the capabilities-list surface tags each
+/// capability with. Mirror of the TS `STANDARD_ENTITLEMENT_CLASS` /
+/// `ALETHEIA_MODE_INTERNAL_CLASS` in `Body/S/S4/ta-onta/shared/entitlement.ts`;
+/// the Pi parity check compares against these exact strings.
+pub const STANDARD_ENTITLEMENT_CLASS: &str = "standard";
+pub const ALETHEIA_MODE_INTERNAL_CLASS: &str = "aletheia-mode-internal";
+
 /// M4' Nara lens RPCs consumed by the `m4.nara.lensApplication` widget.
 /// S3 owns the route law via the existing `nara.*` extension route; these
 /// names are declared here so gateway audits can assert the concrete lens

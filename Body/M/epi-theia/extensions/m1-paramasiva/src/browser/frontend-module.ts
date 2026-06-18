@@ -51,6 +51,9 @@ export class M1ParamasivaContribution
     extends AbstractViewContribution<M1ParamasivaWidget>
     implements CommandContribution, FrontendApplicationContribution
 {
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
     constructor() {
         super({
             widgetId: M1ParamasivaWidget.ID,
@@ -101,6 +104,12 @@ export class M1ParamasivaContribution
                 }
             }
         );
+        // 31.2 / CC-02 command-palette catalog — stage-1 wave-C commands for
+        // m1-paramasiva (22.x). Dispatch routes through the shared bridge only.
+        commands.registerCommand({ id: 'm1-paramasiva.mersenne-proof.reveal', label: `${EXTENSION_ID}: reveal Mersenne proof` }, { execute: () => this.dispatchPaletteCommand('m1-paramasiva.mersenne-proof.reveal') });
+        commands.registerCommand({ id: 'm1-paramasiva.vortex.face-mode.toggle', label: `${EXTENSION_ID}: toggle vortex face mode` }, { execute: () => this.dispatchPaletteCommand('m1-paramasiva.vortex.face-mode.toggle') });
+        commands.registerCommand({ id: 'm1-paramasiva.K2-instrument.focus', label: `${EXTENSION_ID}: focus K2 instrument` }, { execute: () => this.dispatchPaletteCommand('m1-paramasiva.K2-instrument.focus') });
+        commands.registerCommand({ id: 'm1-paramasiva.coordinate-tree.contribute', label: `${EXTENSION_ID}: contribute coordinate tree` }, { execute: () => this.dispatchPaletteCommand('m1-paramasiva.coordinate-tree.contribute') });
         registerIntentTarget(
             commands,
             EXTENSION_ID,
@@ -115,6 +124,19 @@ export class M1ParamasivaContribution
             'M1 Paramasiva: Open Schema Walk',
             () => this.openClockInstrumentView()
         );
+    }
+
+    /**
+     * 31.2 / CC-02: command-palette entries route through the shared bridge so
+     * the OmniPanel parity layer can observe and forward the dispatch. Feature
+     * behaviour lands in the owning feature tranche (22.x).
+     */
+    protected dispatchPaletteCommand(commandId: string, params: Record<string, unknown> = {}): void {
+        this.bridge.updateCurrentStateSelectorPayload(commandId, {
+            commandId,
+            extensionId: EXTENSION_ID,
+            ...params
+        });
     }
 
     protected async openClockInstrumentView(): Promise<M1ParamasivaWidget> {

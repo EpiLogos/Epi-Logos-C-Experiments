@@ -63,6 +63,9 @@ export class M4NaraContribution
     extends AbstractViewContribution<M4NaraWidget>
     implements CommandContribution, FrontendApplicationContribution
 {
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
     constructor() {
         super({
             widgetId: M4NaraWidget.ID,
@@ -118,6 +121,34 @@ export class M4NaraContribution
             'M4 Nara: Start Journal Entry',
             () => this.openView({ activate: true, reveal: true })
         );
+        // 31.2 / CC-02 command-palette catalog — stage-1 wave-C commands for
+        // m4-nara (25.x). Dispatch routes through the shared bridge only.
+        commands.registerCommand({ id: 'm4-nara.day-calendar.focus', label: `${EXTENSION_ID}: focus day calendar` }, { execute: () => this.dispatchPaletteCommand('m4-nara.day-calendar.focus') });
+        commands.registerCommand({ id: 'm4-nara.pasu-identity.open', label: `${EXTENSION_ID}: open PASU identity` }, { execute: () => this.dispatchPaletteCommand('m4-nara.pasu-identity.open') });
+        commands.registerCommand({ id: 'm4-nara.quintessence.display', label: `${EXTENSION_ID}: display quintessence` }, { execute: () => this.dispatchPaletteCommand('m4-nara.quintessence.display') });
+        commands.registerCommand({ id: 'm4-nara.personal-cymatic.focus', label: `${EXTENSION_ID}: focus personal cymatic` }, { execute: () => this.dispatchPaletteCommand('m4-nara.personal-cymatic.focus') });
+        commands.registerCommand({ id: 'm4-nara.oracle.cast', label: `${EXTENSION_ID}: cast oracle (I-Ching + Tarot)` }, { execute: () => this.dispatchPaletteCommand('m4-nara.oracle.cast') });
+        commands.registerCommand({ id: 'm4-nara.oracle.history.open', label: `${EXTENSION_ID}: open oracle history` }, { execute: () => this.dispatchPaletteCommand('m4-nara.oracle.history.open') });
+        commands.registerCommand({ id: 'm4-nara.medicine.focus', label: `${EXTENSION_ID}: focus medicine` }, { execute: () => this.dispatchPaletteCommand('m4-nara.medicine.focus') });
+        commands.registerCommand({ id: 'm4-nara.transform.open', label: `${EXTENSION_ID}: open transform (Bohm / Talking Circle / Diamond)` }, { execute: () => this.dispatchPaletteCommand('m4-nara.transform.open') });
+        commands.registerCommand({ id: 'm4-nara.lens.apply', label: `${EXTENSION_ID}: apply lens` }, { execute: () => this.dispatchPaletteCommand('m4-nara.lens.apply') });
+        commands.registerCommand({ id: 'm4-nara.logos.stage-advance', label: `${EXTENSION_ID}: advance logos stage` }, { execute: () => this.dispatchPaletteCommand('m4-nara.logos.stage-advance') });
+        commands.registerCommand({ id: 'm4-nara.pratibimba.consent-gate', label: `${EXTENSION_ID}: open pratibimba consent gate` }, { execute: () => this.dispatchPaletteCommand('m4-nara.pratibimba.consent-gate') });
+        commands.registerCommand({ id: 'm4-nara.kairos.refresh', label: `${EXTENSION_ID}: refresh kairos` }, { execute: () => this.dispatchPaletteCommand('m4-nara.kairos.refresh') });
+        commands.registerCommand({ id: 'm4-nara.time-axis.cycle', label: `${EXTENSION_ID}: cycle time axis` }, { execute: () => this.dispatchPaletteCommand('m4-nara.time-axis.cycle') });
+    }
+
+    /**
+     * 31.2 / CC-02: command-palette entries route through the shared bridge so
+     * the OmniPanel parity layer can observe and forward the dispatch. Feature
+     * behaviour lands in the owning feature tranche (25.x).
+     */
+    protected dispatchPaletteCommand(commandId: string, params: Record<string, unknown> = {}): void {
+        this.bridge.updateCurrentStateSelectorPayload(commandId, {
+            commandId,
+            extensionId: EXTENSION_ID,
+            ...params
+        });
     }
 }
 

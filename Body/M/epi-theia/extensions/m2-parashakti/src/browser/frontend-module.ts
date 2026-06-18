@@ -42,6 +42,9 @@ export class M2ParashaktiContribution
     extends AbstractViewContribution<M2ParashaktiWidget>
     implements CommandContribution, FrontendApplicationContribution
 {
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
     constructor() {
         super({
             widgetId: M2ParashaktiWidget.ID,
@@ -83,6 +86,12 @@ export class M2ParashaktiContribution
                 }
             }
         );
+        // 31.2 / CC-02 command-palette catalog — stage-1 wave-C commands for
+        // m2-parashakti (23.x). Dispatch routes through the shared bridge only.
+        commands.registerCommand({ id: 'm2-parashakti.cymatic.view-switch', label: `${EXTENSION_ID}: switch cymatic view` }, { execute: () => this.dispatchPaletteCommand('m2-parashakti.cymatic.view-switch') });
+        commands.registerCommand({ id: 'm2-parashakti.proof-identity.toggle', label: `${EXTENSION_ID}: toggle proof identity` }, { execute: () => this.dispatchPaletteCommand('m2-parashakti.proof-identity.toggle') });
+        commands.registerCommand({ id: 'm2-parashakti.breadcrumb.address72', label: `${EXTENSION_ID}: breadcrumb 72-fold address` }, { execute: () => this.dispatchPaletteCommand('m2-parashakti.breadcrumb.address72') });
+        commands.registerCommand({ id: 'm2-parashakti.outer-planet.toggle', label: `${EXTENSION_ID}: toggle outer planet` }, { execute: () => this.dispatchPaletteCommand('m2-parashakti.outer-planet.toggle') });
         registerIntentTarget(
             commands,
             EXTENSION_ID,
@@ -104,6 +113,19 @@ export class M2ParashaktiContribution
             'M2 Parashakti: Open Correspondence Tree',
             () => this.openView({ activate: true, reveal: true })
         );
+    }
+
+    /**
+     * 31.2 / CC-02: command-palette entries route through the shared bridge so
+     * the OmniPanel parity layer can observe and forward the dispatch. Feature
+     * behaviour lands in the owning feature tranche (23.x).
+     */
+    protected dispatchPaletteCommand(commandId: string, params: Record<string, unknown> = {}): void {
+        this.bridge.updateCurrentStateSelectorPayload(commandId, {
+            commandId,
+            extensionId: EXTENSION_ID,
+            ...params
+        });
     }
 }
 
