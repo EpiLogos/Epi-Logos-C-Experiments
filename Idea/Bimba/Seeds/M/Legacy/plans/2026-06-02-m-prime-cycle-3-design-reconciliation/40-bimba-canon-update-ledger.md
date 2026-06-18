@@ -9,6 +9,7 @@ governed_by: ["DR-M3-6", "DR-Q-1", "DR-S5-ONE-1", "DR-VAK-7", "CCT-14", "CCT-14b
 upstream_intake_flows:
   - "Sophia disclosure q_proposal envelope (Tranche 12.26 — buildSophiaDisclosure)"
   - "Hen entity-candidate lifecycle (CCT-14) — CU-ENTITY rows enter via Empty/Present orphan capture"
+  - "ARENA promotion intake (Tranche 41.11) — warm Vama Shakti threshold crossings enter as CU-ENTITY rows with vama_shakti_class provenance"
   - "Manual edit during sessions (default for working-session surfacing)"
   - "CLI: epi bimba propose <category> <claim> (NEW per Tranche 40.1)"
   - "Sub-agent surfacing via epi-claw-gateway → Sophia envelope as if q_proposals"
@@ -64,6 +65,8 @@ Each ledger row carries the following typed envelope:
 | `c_5_birth_codon_provisional` | u8 (0..63) | optional | When CCT-14b lands, ledger entries themselves become birth-codon carriers (per CCT-14b at `16-cross-cutting-closures.md:124-127`). |
 | `qm_witness` | `{session_id, content_hash, tick, vak_address?}` | optional | Hooks into Sophia disclosure `qm_witness_*` provenance per Tranche 12.26 envelope. |
 | `vak_address` | VakAddress | optional | One VAK address per row, derived from `(coordinate, category, id)`; enables `s5'.gnostic.episode_search` retrieval by coordinate. |
+| `vama_shakti_class` | `egregore \| sprite \| daemon \| mantra` | when `intake_flow: "arena-promotion"` | Provenance classifier for warm [[Vama Shakti]] promotion rows per DR-VAMA-6. |
+| `augmentation_target` | `form_text \| element_signature` | when `intake_flow: "arena-promotion"` | Class-specific patch target: egregore/sprite/daemon append Form text; mantra merges an element-axis signature. |
 | `landed_marker` | `{file, line, date}` | yes when status=landed | Records the inline `<!-- canon-update: CU-* (landed YYYY-MM-DD) -->` location on landing. |
 | `notes` | prose | optional | |
 
@@ -99,6 +102,8 @@ surfaced  →  designed  →  reviewed  →  validated  →  landed
 
 A row in `status: surfaced` for >7 days raises a Janus warning surface (parallels CCT-16(ii) stale-queue warning at `16-cross-cutting-closures.md:176`).
 
+**ARENA promotion intake (`intake_flow: "arena-promotion"`).** Warm [[Vama Shakti]] rows from Tranche 41.11 enter Track 40 as `CU-ENTITY` rows only after classifier-specific thresholds emit `promotion_proposal_emitted`. The row MUST carry `vama_shakti_class`, `augmentation_target`, `distilled_vak_address_signature`, citation-coordinate frequency, pairwise resonance summary, and the append-only augmentation patch provenance comment. Hen's CCT-14 path is still the canon-write authority: accept moves the warm row toward `promotion_status: "accepted"` and routes the Form patch; reject archives the proposal under `Idea/Empty/Pratibimba/arena-promotion-archive/{date}-{coord}-{class}-{hash}.md` and records `promotion_status: "rejected"`.
+
 ## Integration with existing cycle-3 structure
 
 | Surface | Relation |
@@ -116,6 +121,7 @@ A row in `status: surfaced` for >7 days raises a Janus warning surface (parallel
 1. **Manual edit (default).** Append a row to the index table + section to this file. Use for synchronous surfacing during a working session. Matches how DR rows currently land.
 2. **CLI: `epi bimba propose <category> <claim>`** (lands as Tranche 40.1 — see below). Wraps a gateway `s5'.canon_update.propose` route. Generates a draft row with `status: surfaced`, fills `originating_session` + `provenance_audit` from active session context, scaffolds `target_landing_site` from coordinate hint, opens an editor to complete fields.
 3. **Sophia disclosure envelope (Tranche 12.26).** Each `q_proposal` in `buildSophiaDisclosure` carries an optional `canon_update_intent: CanonUpdateDraft?` field. When present, on `aletheia_session_promote` HOT→COLD promotion (Track 12 line ~526), the draft writes to the ledger with `status: designed`. Sub-agent surfacing (Codex / other agents) routes via `epi-claw-gateway` → Sophia envelope as if it were a q_proposal (avoids a second intake path).
+4. **ARENA promotion intake: `epi nara arena vama propose-promotion <identity_handle>` → `hen_arena_promotion_intake`.** The S0 command delegates proposal-payload generation to S5 `epi_gnostic.arena_promotion`; Hen receives `arena-promotion` payloads, emits a Track 40 `CU-ENTITY` candidate with `vama_shakti_class` provenance, and preserves the class-specific `augmentation_target` (`form_text` or `element_signature`) for review.
 
 ## Cross-reference discipline (landing invariant)
 

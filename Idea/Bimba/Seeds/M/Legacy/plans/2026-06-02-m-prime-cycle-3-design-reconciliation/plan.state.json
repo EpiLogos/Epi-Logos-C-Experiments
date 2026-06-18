@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T18:50:32.660Z",
+  "updatedAt": "2026-06-18T19:00:13.313Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6150,11 +6150,16 @@
       "worktree": null
     },
     "12.T12.26": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T19:00:13.259Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:00:13.259Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:00:13.259Z",
+          "text": "216 Node carrier tests pass (Anima 124/124, Khora 15/15, Aletheia 77/77); q_proposal envelope/guard/composition/promotion covered in Body/S/S4/ta-onta/S4-4p-anima/modules/{sophia-hook,sophia-synthesis,aphoristic-skill}.ts, Body/S/S4/ta-onta/S4-0p-khora/modules/sophia-fire.ts, Body/S/S4/ta-onta/S4-5p-aletheia/{extension.ts,modules/q-proposal-candidate.ts}"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -6786,16 +6791,21 @@
       "worktree": null
     },
     "25.T25.20": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-18T19:00:11.344Z",
+      "claimedAt": "2026-06-18T18:53:11.343Z",
+      "completedAt": "2026-06-18T19:00:11.344Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:00:11.344Z",
+          "text": "pnpm -C Body/M/epi-theia/extensions/m4-nara build clean; focused psyche-anchor verification 5/5 assertions; pnpm -C Body/M/epi-theia/extensions/m4-nara test 33/33 pass; key files Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/psyche-anchor-coherence.tsx and Body/M/epi-theia/extensions/m4-nara/AGENTS.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-25-t25-20",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T18:53:11.343Z",
+      "runId": "20260618T185311Z-25-T25.20",
       "worktree": null
     },
     "25.T25.21": {
@@ -8221,15 +8231,20 @@
     },
     "42.T42.3": {
       "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "updatedAt": "2026-06-18T18:55:40.207Z",
+      "claimedAt": "2026-06-18T18:53:14.539Z",
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-06-18T18:55:40.207Z",
+          "text": "Blocked before edits: Body/S/S0/epi-cli/src/agent/harness.rs is absent and unimported; acceptance needs compile-visible routing in agent/mod.rs, agent/{spawn,subagents,tmux,launch}.rs, code/mod.rs plus tests; GitNexus reports CRITICAL impact on PI launch symbols."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-42-t42-3",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-18T18:53:14.539Z",
+      "runId": "20260618T185314Z-42-T42.3",
       "worktree": null
     },
     "42.T42.4": {
@@ -10576,26 +10591,46 @@
       "owner": "codex-m-dev-41-t41-11",
       "leaseExpiresAt": "2026-06-18T20:50:32.504Z",
       "worktree": null
+    },
+    {
+      "runId": "20260618T185311Z-25-T25.20",
+      "taskId": "25.T25.20",
+      "status": "done",
+      "startedAt": "2026-06-18T18:53:11.343Z",
+      "owner": "codex-m-dev-25-t25-20",
+      "leaseExpiresAt": "2026-06-18T20:53:11.343Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T19:00:11.344Z"
+    },
+    {
+      "runId": "20260618T185314Z-42-T42.3",
+      "taskId": "42.T42.3",
+      "status": "blocked",
+      "startedAt": "2026-06-18T18:53:14.539Z",
+      "owner": "codex-m-dev-42-t42-3",
+      "leaseExpiresAt": "2026-06-18T20:53:14.539Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T18:55:40.207Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T18:50:05.921Z",
-    "updatedAt": "2026-06-18T18:50:05.921Z",
+    "createdAt": "2026-06-18T18:52:58.304Z",
+    "updatedAt": "2026-06-18T18:52:58.304Z",
     "taskIds": [
       "31.T31.13",
+      "41.T41.11",
       "12.T12.26",
-      "05.T5.3",
-      "05.T5.4"
+      "05.T5.3"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
+      "41.T41.11": "in-session",
       "12.T12.26": "in-session",
-      "05.T5.3": "in-session",
-      "05.T5.4": "in-session"
+      "05.T5.3": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

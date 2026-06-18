@@ -1,11 +1,14 @@
 use clap::Subcommand;
 use portal_core::{
     hash_revision, hex_digest, CpfState, CsDirection, CsField, PrewarmVamaShaktiRequest,
-    VakAddress, VamaShaktiClass, VamaShaktiReleaseReason, WarmVamaShaktiFilter,
+    VakAddress, VamaShaktiClass, VamaShaktiReleaseReason, WarmVamaShakti, WarmVamaShaktiFilter,
     WarmVamaShaktiRegistry,
 };
+use serde_json::Value;
 use std::fs;
+use std::io::Write;
 use std::path::PathBuf;
+use std::process::{Command, Stdio};
 use std::str::FromStr;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -41,6 +44,17 @@ pub enum VamaCmd {
         identity_handle: String,
         #[arg(long, default_value = "gc")]
         reason: String,
+    },
+    /// Emit an arena-promotion proposal for a threshold-crossed warm identity
+    #[command(name = "propose-promotion")]
+    ProposePromotion {
+        identity_handle: String,
+        #[arg(long)]
+        scenes: u64,
+        #[arg(long)]
+        user_response_quality_witnessed: bool,
+        #[arg(long)]
+        config: Option<PathBuf>,
     },
 }
 
@@ -138,7 +152,138 @@ fn dispatch_vama(cmd: &VamaCmd, json: bool) -> Result<String, String> {
                 Ok(format!("Released {}", row.identity_handle))
             }
         }
+        VamaCmd::ProposePromotion {
+            identity_handle,
+            scenes,
+            user_response_quality_witnessed,
+            config,
+        } => {
+            let row = registry
+                .warm
+                .get(identity_handle)
+                .ok_or_else(|| format!("unknown warm Vama Shakti identity {identity_handle}"))?;
+            if !row.is_active() {
+                return Err(format!(
+                    "warm Vama Shakti identity {identity_handle} is released"
+                ));
+            }
+            let input = promotion_generator_input(row, *scenes, *user_response_quality_witnessed)?;
+            let proposal = invoke_arena_promotion(&input, config.as_ref())?;
+            if json {
+                serde_json::to_string_pretty(&proposal).map_err(|err| err.to_string())
+            } else {
+                Ok(render_promotion_summary(&proposal))
+            }
+        }
     }
+}
+
+fn promotion_generator_input(
+    row: &WarmVamaShakti,
+    scene_count: u64,
+    user_response_quality_witnessed: bool,
+) -> Result<Value, String> {
+    let mut value = serde_json::to_value(row).map_err(|err| err.to_string())?;
+    let object = value
+        .as_object_mut()
+        .ok_or_else(|| "warm Vama Shakti row did not serialize as an object".to_owned())?;
+    object.insert("sceneCount".to_owned(), Value::from(scene_count));
+    object.insert(
+        "userResponseQualityWitnessed".to_owned(),
+        Value::from(user_response_quality_witnessed),
+    );
+    Ok(value)
+}
+
+fn invoke_arena_promotion(input: &Value, config: Option<&PathBuf>) -> Result<Value, String> {
+    let python = std::env::var("EPI_ARENA_PROMOTION_PYTHON")
+        .or_else(|_| std::env::var("EPI_GNOSTIC_PYTHON"))
+        .unwrap_or_else(|_| "python3".to_owned());
+    let mut command = Command::new(&python);
+    command.args(["-m", "epi_gnostic.arena_promotion", "-"]);
+    if let Some(config) = config {
+        command.arg("--config").arg(config);
+    }
+    if let Some(pythonpath) = arena_promotion_pythonpath() {
+        command.env("PYTHONPATH", pythonpath);
+    }
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+    let mut child = command
+        .spawn()
+        .map_err(|err| format!("failed to run arena-promotion generator {python}: {err}"))?;
+    {
+        let stdin = child
+            .stdin
+            .as_mut()
+            .ok_or_else(|| "arena-promotion generator stdin unavailable".to_owned())?;
+        let bytes = serde_json::to_vec(input).map_err(|err| err.to_string())?;
+        stdin
+            .write_all(&bytes)
+            .map_err(|err| format!("write arena-promotion input: {err}"))?;
+    }
+    let output = child
+        .wait_with_output()
+        .map_err(|err| format!("wait for arena-promotion generator: {err}"))?;
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    if !output.status.success() {
+        let diagnostic = if stderr.trim().is_empty() {
+            stdout.trim()
+        } else {
+            stderr.trim()
+        };
+        return Err(format!("arena-promotion generator failed: {diagnostic}"));
+    }
+    serde_json::from_str(stdout.trim()).map_err(|err| {
+        format!(
+            "arena-promotion generator returned non-JSON output: {err}; stdout={}",
+            stdout.trim()
+        )
+    })
+}
+
+fn arena_promotion_pythonpath() -> Option<String> {
+    let source_path = std::env::var("EPI_GNOSTIC_SOURCE_PATH")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../S5/epi-gnostic"));
+    if !source_path.exists() {
+        return std::env::var("PYTHONPATH").ok();
+    }
+    match std::env::var("PYTHONPATH") {
+        Ok(existing) if !existing.trim().is_empty() => {
+            Some(format!("{}:{}", source_path.display(), existing))
+        }
+        _ => Some(source_path.display().to_string()),
+    }
+}
+
+fn render_promotion_summary(proposal: &Value) -> String {
+    if proposal.get("event").and_then(Value::as_str) == Some("promotion_not_ready") {
+        return "Promotion proposal not emitted; warm Vama Shakti has not crossed its class profile.".to_owned();
+    }
+    let proposal_id = proposal
+        .get("proposal_id")
+        .and_then(Value::as_str)
+        .unwrap_or("arena-promotion");
+    let coordinate = proposal
+        .get("vama_shakti_coordinate_label")
+        .and_then(Value::as_str)
+        .unwrap_or("unknown-coordinate");
+    let class = proposal
+        .get("vama_shakti_class")
+        .and_then(Value::as_str)
+        .unwrap_or("unknown-class");
+    let target = proposal
+        .get("augmentation_patch")
+        .and_then(|patch| patch.get("target"))
+        .and_then(Value::as_str)
+        .unwrap_or("unknown-target");
+    format!(
+        "promotion_proposal_emitted {proposal_id}\t{coordinate}\tclass={class}\ttarget={target}"
+    )
 }
 
 fn load_registry() -> Result<WarmVamaShaktiRegistry, String> {
@@ -235,6 +380,32 @@ mod tests {
         assert_eq!(
             rows[0].essential_identity.vama_shakti_class,
             VamaShaktiClass::Sprite
+        );
+    }
+
+    #[test]
+    fn promotion_generator_input_carries_scene_and_user_witness_fields() {
+        let mut registry = WarmVamaShaktiRegistry::default();
+        let psyche = "psyche revision";
+        let row = registry.prewarm(PrewarmVamaShaktiRequest {
+            coordinate_label: "M4.daemon-field".to_owned(),
+            coordinate: vak_address_from_coordinate("M4.daemon-field"),
+            canonical_form_digest: hash_revision("M4.daemon-field"),
+            archetypal_sattva: "M4.daemon-field".to_owned(),
+            vama_shakti_class: VamaShaktiClass::Daemon,
+            psyche_template_md: psyche.to_owned(),
+            entity_form_md: "form:M4.daemon-field".to_owned(),
+            psyche_template_revision: hash_revision(psyche),
+            now_ms: 1_000,
+        });
+
+        let input = promotion_generator_input(&row, 4, true).expect("serializes row");
+
+        assert_eq!(input["sceneCount"], 4);
+        assert_eq!(input["userResponseQualityWitnessed"], true);
+        assert_eq!(
+            input["essentialIdentity"]["vamaShaktiClass"],
+            serde_json::Value::String("daemon".to_owned())
         );
     }
 }

@@ -1,5 +1,8 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
+import { createHash } from "node:crypto";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { renderTemplateWithVak } from "./modules/template-vak.ts";
 import { isValidVakAddress } from "../shared/vak_address.ts";
@@ -209,6 +212,46 @@ export async function henExtension(api: ExtensionAPI) {
     },
   });
 
+  // ── Tool: hen_arena_promotion_intake ─────────────────────────────
+  api.registerTool({
+    name: "hen_arena_promotion_intake",
+    label: "Hen Arena Promotion Intake",
+    description: "Intake arena-promotion proposals from warm Vama Shakti lifecycle into the CCT-14 entity-candidate path. Accept emits a Track 40 CU-ENTITY candidate with vama_shakti_class provenance; reject archives the proposal under Idea/Empty/Pratibimba/arena-promotion-archive.",
+    parameters: Type.Object({
+      proposal: Type.Record(Type.String(), Type.Unknown(), { description: "arena-promotion proposal payload emitted by epi_gnostic.arena_promotion" }),
+      action: Type.Optional(Type.Union([Type.Literal("intake"), Type.Literal("accept"), Type.Literal("reject")], { default: "intake" })),
+      track40_id: Type.Optional(Type.String({ description: "Existing or reserved CU-ENTITY id" })),
+      rejection_reason: Type.Optional(Type.String()),
+      archive_root: Type.Optional(Type.String({ description: "Override archive root for tests or controlled runs" })),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      try {
+        const action = params.action ?? "intake";
+        const receipt = buildArenaPromotionIntakeReceipt(params.proposal, action, params.track40_id);
+
+        if (action === "reject") {
+          const archivePath = archiveArenaPromotionProposal(
+            params.proposal,
+            params.archive_root,
+            params.rejection_reason,
+          );
+          receipt.archive_path = archivePath;
+          receipt.warm_update = { promotion_status: "rejected" };
+        }
+
+        return {
+          content: [{ type: "text", text: JSON.stringify(receipt, null, 2) }],
+          isError: false,
+        };
+      } catch (error) {
+        return {
+          content: [{ type: "text", text: `arena-promotion intake refused: ${error}` }],
+          isError: true,
+        };
+      }
+    },
+  });
+
   // ── Tool: hen_backlinks ─────────────────────────────────────────
   api.registerTool({
     name: "hen_backlinks",
@@ -390,4 +433,123 @@ export async function henExtension(api: ExtensionAPI) {
   api.on("tool_result", async () => {
     // Sync event emission handled by khora_write → khora_sync_queue_push
   });
+}
+
+type ArenaPromotionAction = "intake" | "accept" | "reject";
+
+function buildArenaPromotionIntakeReceipt(
+  proposal: Record<string, unknown>,
+  action: ArenaPromotionAction,
+  track40Id?: string,
+): Record<string, unknown> {
+  if (!proposal || typeof proposal !== "object") {
+    throw new Error("proposal object is required");
+  }
+  if (proposal.event !== "promotion_proposal_emitted") {
+    throw new Error("promotion_proposal_emitted event is required");
+  }
+  const vamaClass = stringField(proposal, "vama_shakti_class");
+  const coordinate = stringField(proposal, "vama_shakti_coordinate_label");
+  const patch = objectField(proposal, "augmentation_patch");
+  const target = stringField(patch, "target");
+  if (target !== "form_text" && target !== "element_signature") {
+    throw new Error(`unsupported augmentation target ${target}`);
+  }
+
+  const cuId = track40Id ?? `CU-ENTITY-${shortHash(`${coordinate}:${vamaClass}`)}`;
+  const row = {
+    id: cuId,
+    category: "ENTITY",
+    status: action === "accept" ? "reviewed" : "designed",
+    title: `Arena promotion intake for ${coordinate} (${vamaClass})`,
+    claim_statement: `Warm Vama Shakti ${coordinate} crossed its classifier-specific arena-promotion threshold and proposes an augmented-rupa candidate.`,
+    ratification_path: "Entity-candidate lifecycle (CCT-14)",
+    intake_flow: "arena-promotion",
+    vama_shakti_class: vamaClass,
+    augmentation_target: target,
+    originating_session: {
+      date: new Date().toISOString().slice(0, 10),
+      agent: "hen_arena_promotion_intake",
+      conversation_id: stringField(proposal, "proposal_id"),
+    },
+    target_landing_site: {
+      kind: "new-entity",
+      path: `Idea/Bimba/World/${coordinate}.md`,
+      anchor: "arena-promotion augmentation",
+    },
+    qm_witness: {
+      vak_address: proposal.distilled_vak_address_signature,
+      content_hash: shortHash(JSON.stringify(proposal)),
+    },
+  };
+
+  return {
+    event: "arena-promotion_intake_registered",
+    action,
+    cu_entity_row: row,
+    form_patch: patch,
+    warm_update: {
+      promotion_status: action === "accept" ? "accepted" : "proposed",
+    },
+  };
+}
+
+function archiveArenaPromotionProposal(
+  proposal: Record<string, unknown>,
+  archiveRoot?: string,
+  rejectionReason?: string,
+): string {
+  const root = archiveRoot ?? join(repoRoot(), "Idea", "Empty", "Pratibimba", "arena-promotion-archive");
+  mkdirSync(root, { recursive: true });
+  const coordinate = sanitizeFilename(String(proposal.vama_shakti_coordinate_label ?? "unknown"));
+  const vamaClass = sanitizeFilename(String(proposal.vama_shakti_class ?? "unknown"));
+  const date = new Date().toISOString().slice(0, 10);
+  const hash = shortHash(JSON.stringify(proposal));
+  const archivePath = join(root, `${date}-${coordinate}-${vamaClass}-${hash}.md`);
+  const body = [
+    "---",
+    'c_4_artifact_role: "arena-promotion-archive"',
+    `c_4_promotion_status: "rejected"`,
+    `c_4_vama_shakti_class: "${String(proposal.vama_shakti_class ?? "unknown")}"`,
+    "---",
+    "",
+    "# Arena Promotion Archive",
+    "",
+    `Rejection reason: ${rejectionReason ?? "not supplied"}`,
+    "",
+    "```json",
+    JSON.stringify(proposal, null, 2),
+    "```",
+    "",
+  ].join("\n");
+  writeFileSync(archivePath, body, "utf8");
+  return archivePath;
+}
+
+function objectField(source: Record<string, unknown>, key: string): Record<string, unknown> {
+  const value = source[key];
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error(`${key} object is required`);
+  }
+  return value as Record<string, unknown>;
+}
+
+function stringField(source: Record<string, unknown>, key: string): string {
+  const value = source[key];
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`${key} string is required`);
+  }
+  return value;
+}
+
+function shortHash(value: string): string {
+  return createHash("sha256").update(value).digest("hex").slice(0, 12);
+}
+
+function repoRoot(): string {
+  return process.env.EPI_REPO_ROOT ?? process.cwd();
+}
+
+function sanitizeFilename(value: string): string {
+  return value.replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_+|_+$/g, "") || "unknown";
 }
