@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T20:09:32.596Z",
+  "updatedAt": "2026-06-18T20:24:46.304Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3474,11 +3474,20 @@
       "worktree": null
     },
     "21.T21.4": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-18T20:24:46.216Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T20:24:46.216Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T20:24:40.863Z",
+          "text": "relations-layer-panel.tsx created (M0-2', WC-M0-04): M0_STRUCTURAL_RELATIONS (10 types), M0RelationRow/M0RelationsProjection types, selectM0RelationsProjection partitions node.relations by c_1_relation_family with M0_STRUCTURAL_RELATIONS.includes(type) legacy fallback, RelationsLayerPanel two-column never-collapsed table + per-row provenance pill. tsc -b clean; pnpm --filter @pratibimba/m0-anuttara test = 49/49 pass; manual selector check confirms CONTAINS->structural + correspondential decan edge->distinct column."
+        },
+        {
+          "at": "2026-06-18T20:24:46.216Z",
+          "text": "x"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
