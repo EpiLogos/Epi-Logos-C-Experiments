@@ -497,10 +497,8 @@ mod tests {
 
     #[test]
     fn nara_session_dispatch_cli_bridge_returns_protected_handle() {
-        let state_root = std::env::temp_dir().join(format!(
-            "epi-gate-nara-session-{}",
-            std::process::id()
-        ));
+        let state_root =
+            std::env::temp_dir().join(format!("epi-gate-nara-session-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&state_root);
         std::fs::create_dir_all(&state_root).unwrap();
         let previous = std::env::var_os("EPI_GATE_STATE_ROOT");

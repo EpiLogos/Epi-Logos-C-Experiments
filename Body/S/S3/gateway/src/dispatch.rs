@@ -126,12 +126,32 @@ pub const NARA_SESSION_RPC_METHODS: [&str; 2] = ["nara.session_open", "nara.sess
 
 static NARA_SESSION_STOP_ROUND_ROBIN: AtomicU8 = AtomicU8::new(0);
 
+fn default_nara_session_protein_capacity() -> u32 {
+    256
+}
+
+fn default_nara_session_stop_codon_policy() -> String {
+    "kairos-derived".to_owned()
+}
+
+fn default_nara_session_write_through_mode() -> String {
+    "immediate".to_owned()
+}
+
+fn default_nara_session_protected_handle_strict() -> bool {
+    true
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct NaraSessionConfig {
+    #[serde(default = "default_nara_session_protein_capacity")]
     pub protein_capacity: u32,
+    #[serde(default = "default_nara_session_stop_codon_policy")]
     pub stop_codon_policy: String,
+    #[serde(default = "default_nara_session_write_through_mode")]
     pub write_through_mode: String,
+    #[serde(default = "default_nara_session_protected_handle_strict")]
     pub protected_handle_strict: bool,
     #[serde(default)]
     pub allow_raw_protein_bus: bool,
@@ -140,10 +160,10 @@ pub struct NaraSessionConfig {
 impl Default for NaraSessionConfig {
     fn default() -> Self {
         Self {
-            protein_capacity: 256,
-            stop_codon_policy: "kairos-derived".to_owned(),
-            write_through_mode: "immediate".to_owned(),
-            protected_handle_strict: true,
+            protein_capacity: default_nara_session_protein_capacity(),
+            stop_codon_policy: default_nara_session_stop_codon_policy(),
+            write_through_mode: default_nara_session_write_through_mode(),
+            protected_handle_strict: default_nara_session_protected_handle_strict(),
             allow_raw_protein_bus: false,
         }
     }
@@ -186,7 +206,9 @@ pub struct NaraSessionProteinHandle {
     pub body: Option<Value>,
 }
 
-pub fn route_nara_session_open(req: NaraSessionOpenRequest) -> Result<NaraSessionProteinHandle, String> {
+pub fn route_nara_session_open(
+    req: NaraSessionOpenRequest,
+) -> Result<NaraSessionProteinHandle, String> {
     if req.session_id.trim().is_empty() {
         return Err("nara.session_open requires session_id".to_owned());
     }
@@ -194,10 +216,7 @@ pub fn route_nara_session_open(req: NaraSessionOpenRequest) -> Result<NaraSessio
     Ok(NaraSessionProteinHandle {
         ok: true,
         session_id: req.session_id.clone(),
-        protein_handle: format!(
-            "m4-protein://session/{}/{}",
-            req.session_id, req.kairos
-        ),
+        protein_handle: format!("m4-protein://session/{}/{}", req.session_id, req.kairos),
         start_codon,
         stop_codon: None,
         protected_handle: req.config.protected_handle_strict,
@@ -207,7 +226,9 @@ pub fn route_nara_session_open(req: NaraSessionOpenRequest) -> Result<NaraSessio
     })
 }
 
-pub fn route_nara_session_close(req: NaraSessionCloseRequest) -> Result<NaraSessionProteinHandle, String> {
+pub fn route_nara_session_close(
+    req: NaraSessionCloseRequest,
+) -> Result<NaraSessionProteinHandle, String> {
     if req.session_id.trim().is_empty() {
         return Err("nara.session_close requires session_id".to_owned());
     }
@@ -215,7 +236,8 @@ pub fn route_nara_session_close(req: NaraSessionCloseRequest) -> Result<NaraSess
         return Err("nara.session_close requires protein_handle".to_owned());
     }
     let start_codon = portal_core::transcription::c_start_codon();
-    let stop_codon = select_nara_session_stop_codon(&req.config.stop_codon_policy, req.kairos_close)?;
+    let stop_codon =
+        select_nara_session_stop_codon(&req.config.stop_codon_policy, req.kairos_close)?;
     let protected = req.config.protected_handle_strict;
     let transcription = json!({
         "protein_handle": req.protein_handle,

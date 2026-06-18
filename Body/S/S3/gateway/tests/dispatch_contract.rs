@@ -74,7 +74,10 @@ fn nara_lens_widget_rpcs_route_as_m4_extension_methods() {
 
 #[test]
 fn nara_session_open_close_round_trip() {
-    assert_eq!(NARA_SESSION_RPC_METHODS, ["nara.session_open", "nara.session_close"]);
+    assert_eq!(
+        NARA_SESSION_RPC_METHODS,
+        ["nara.session_open", "nara.session_close"]
+    );
 
     for method in NARA_SESSION_RPC_METHODS {
         let route = classify_method(method).expect("nara session RPC should route");
@@ -96,7 +99,10 @@ fn nara_session_open_close_round_trip() {
     assert_eq!(opened.start_codon, 0x07);
     assert!(opened.stop_codon.is_none());
     assert!(opened.protected_handle);
-    assert!(opened.body.is_none(), "protein body must not cross profile bus by default");
+    assert!(
+        opened.body.is_none(),
+        "protein body must not cross profile bus by default"
+    );
 
     let closed = epi_s3_gateway::dispatch::route_nara_session_close(NaraSessionCloseRequest {
         session_id: opened.session_id.clone(),
@@ -110,7 +116,10 @@ fn nara_session_open_close_round_trip() {
     assert_eq!(closed.start_codon, 0x07);
     assert_eq!(closed.stop_codon, Some(0x1c));
     assert!(closed.protected_handle);
-    assert!(closed.body.is_none(), "sealed protein body must stay off the bus");
+    assert!(
+        closed.body.is_none(),
+        "sealed protein body must stay off the bus"
+    );
     let pattern = closed.pattern_packet.expect("PatternPacket write-through");
     assert_eq!(
         pattern["mahamaya_transcription"]["protein_handle"].as_str(),
@@ -119,6 +128,53 @@ fn nara_session_open_close_round_trip() {
     assert_eq!(
         closed.graphiti_relation.expect("Graphiti relation")["api"].as_str(),
         Some("nara_insert_relation")
+    );
+}
+
+#[test]
+fn nara_session_config_override_honors_tunable_knobs() {
+    let config = NaraSessionConfig {
+        protein_capacity: 16,
+        stop_codon_policy: "fixed-tag".to_owned(),
+        write_through_mode: "batched".to_owned(),
+        protected_handle_strict: false,
+        allow_raw_protein_bus: true,
+    };
+
+    let opened = epi_s3_gateway::dispatch::route_nara_session_open(NaraSessionOpenRequest {
+        session_id: "20260618-100836-config".to_owned(),
+        kairos: 7300,
+        config: config.clone(),
+    })
+    .expect("session open should honor debug config");
+
+    assert!(!opened.protected_handle);
+    assert_eq!(
+        opened.body.expect("debug body gate should expose raw body")["codons"][0],
+        0x07
+    );
+
+    let closed = epi_s3_gateway::dispatch::route_nara_session_close(NaraSessionCloseRequest {
+        session_id: opened.session_id.clone(),
+        protein_handle: opened.protein_handle.clone(),
+        kairos_close: 7300,
+        config,
+    })
+    .expect("session close should honor configured stop policy");
+
+    assert!(!closed.protected_handle);
+    assert_eq!(closed.stop_codon, Some(0x13));
+    assert_eq!(
+        closed
+            .body
+            .expect("debug body gate should expose sealed body")["codons"],
+        serde_json::json!([0x07, 0x13])
+    );
+    let pattern = closed.pattern_packet.expect("PatternPacket write-through");
+    assert_eq!(pattern["write_through_mode"], "batched");
+    assert_eq!(
+        pattern["mahamaya_transcription"]["capacity"].as_u64(),
+        Some(16)
     );
 }
 

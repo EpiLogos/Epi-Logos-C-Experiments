@@ -42,12 +42,19 @@ pub enum SkillSource {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, ValueEnum)]
 pub enum Subsystem {
+    #[value(alias = "M0")]
     M0,
+    #[value(alias = "M1")]
     M1,
+    #[value(alias = "M2")]
     M2,
+    #[value(alias = "M3")]
     M3,
+    #[value(alias = "M4")]
     M4,
+    #[value(alias = "M5")]
     M5,
+    #[value(alias = "ALETHEIA")]
     Aletheia,
 }
 
@@ -112,7 +119,11 @@ pub fn reject_retrain(
 ) -> Result<String, String> {
     let mut record = load_retrain_record(retrain_id)?;
     record.status = "rejected".to_owned();
-    record.rejection_reason = Some(reason.unwrap_or("developer rejected retrain artifact").to_owned());
+    record.rejection_reason = Some(
+        reason
+            .unwrap_or("developer rejected retrain artifact")
+            .to_owned(),
+    );
     record.updated_at = Utc::now().to_rfc3339();
     save_retrain_record(&record)?;
     render_retrain(&record, json_output)
@@ -132,15 +143,19 @@ fn list_skills(
     }
     Ok(entries
         .iter()
-        .map(|entry| format!("{}\t{:?}\t{:?}\t{}", entry.name, entry.source, entry.subsystem, entry.path))
+        .map(|entry| {
+            format!(
+                "{}\t{:?}\t{:?}\t{}",
+                entry.name, entry.source, entry.subsystem, entry.path
+            )
+        })
         .collect::<Vec<_>>()
         .join("\n"))
 }
 
 fn show_skill(name: &str) -> Result<String, String> {
     let entry = find_skill(name)?;
-    fs::read_to_string(&entry.path)
-        .map_err(|err| format!("failed to read {}: {err}", entry.path))
+    fs::read_to_string(&entry.path).map_err(|err| format!("failed to read {}: {err}", entry.path))
 }
 
 fn vendor_skill(name: &str, json_output: bool) -> Result<String, String> {
@@ -148,8 +163,11 @@ fn vendor_skill(name: &str, json_output: bool) -> Result<String, String> {
     let Some(description) = catalog.get(name) else {
         return Err(format!("unknown priority-13 Hermes skill `{name}`"));
     };
-    let root = repo_root()?.join("Body/S/S4/pi-agent/skills/hermes").join(name);
-    fs::create_dir_all(&root).map_err(|err| format!("failed to create {}: {err}", root.display()))?;
+    let root = repo_root()?
+        .join("Body/S/S4/pi-agent/skills/hermes")
+        .join(name);
+    fs::create_dir_all(&root)
+        .map_err(|err| format!("failed to create {}: {err}", root.display()))?;
     let skill_path = root.join("SKILL.md");
     let provenance_path = root.join("provenance.yaml");
     if !skill_path.exists() {
@@ -188,14 +206,18 @@ fn scaffold_skill(
 ) -> Result<String, String> {
     let subsystem = subsystem.unwrap_or(Subsystem::Aletheia);
     let root = residency_root(subsystem)?.join(name);
-    fs::create_dir_all(&root).map_err(|err| format!("failed to create {}: {err}", root.display()))?;
+    fs::create_dir_all(&root)
+        .map_err(|err| format!("failed to create {}: {err}", root.display()))?;
     let skill_path = root.join("SKILL.md");
     if skill_path.exists() {
         return Err(format!("{} already exists", skill_path.display()));
     }
     fs::write(&skill_path, custom_skill_doc(name, subsystem))
         .map_err(|err| format!("failed to write {}: {err}", skill_path.display()))?;
-    render_value(json!({"scaffolded": name, "subsystem": subsystem, "path": skill_path}), json_output)
+    render_value(
+        json!({"scaffolded": name, "subsystem": subsystem, "path": skill_path}),
+        json_output,
+    )
 }
 
 fn register_skill(name: &str, json_output: bool) -> Result<String, String> {
@@ -209,14 +231,19 @@ fn refresh_skill(name: &str, json_output: bool) -> Result<String, String> {
     if entry.source != SkillSource::Vendored {
         return Err(format!("`{name}` is not a vendored Hermes skill"));
     }
-    let root = Path::new(&entry.path).parent().ok_or("skill path has no parent")?;
+    let root = Path::new(&entry.path)
+        .parent()
+        .ok_or("skill path has no parent")?;
     let provenance = root.join("provenance.yaml");
     let status = if provenance.exists() {
         "registered-local-catalog-current"
     } else {
         "missing-provenance"
     };
-    render_value(json!({"skill": name, "refreshStatus": status, "provenance": provenance}), json_output)
+    render_value(
+        json!({"skill": name, "refreshStatus": status, "provenance": provenance}),
+        json_output,
+    )
 }
 
 fn discover_skills() -> Result<Vec<SkillEntry>, String> {
@@ -247,7 +274,9 @@ fn collect_skill_entries(
     if !root.exists() {
         return Ok(());
     }
-    for entry in fs::read_dir(root).map_err(|err| format!("failed to read {}: {err}", root.display()))? {
+    for entry in
+        fs::read_dir(root).map_err(|err| format!("failed to read {}: {err}", root.display()))?
+    {
         let path = entry.map_err(|err| err.to_string())?.path();
         if path.is_dir() {
             let skill = path.join("SKILL.md");
@@ -284,7 +313,13 @@ fn parse_skill_entry(path: &Path) -> Result<SkillEntry, String> {
         residency: infer_residency(&path_string),
         dependencies: frontmatter
             .get("dependencies")
-            .map(|value| value.split(',').map(|item| item.trim().to_owned()).filter(|item| !item.is_empty()).collect())
+            .map(|value| {
+                value
+                    .split(',')
+                    .map(|item| item.trim().to_owned())
+                    .filter(|item| !item.is_empty())
+                    .collect()
+            })
             .unwrap_or_default(),
         current_rating: None,
         name,
@@ -305,7 +340,10 @@ fn parse_frontmatter(text: &str) -> BTreeMap<String, String> {
         let Some((key, value)) = line.split_once(':') else {
             continue;
         };
-        out.insert(key.trim().to_owned(), value.trim().trim_matches('"').to_owned());
+        out.insert(
+            key.trim().to_owned(),
+            value.trim().trim_matches('"').to_owned(),
+        );
     }
     out
 }
@@ -326,7 +364,8 @@ fn find_skill(name: &str) -> Result<SkillEntry, String> {
 fn write_registry_entry(entry: &SkillEntry) -> Result<(), String> {
     let path = registry_path()?;
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).map_err(|err| format!("failed to create {}: {err}", parent.display()))?;
+        fs::create_dir_all(parent)
+            .map_err(|err| format!("failed to create {}: {err}", parent.display()))?;
     }
     let line = serde_json::to_string(entry).map_err(|err| err.to_string())?;
     fs::OpenOptions::new()
@@ -343,8 +382,10 @@ fn write_registry_entry(entry: &SkillEntry) -> Result<(), String> {
 fn load_retrain_record(retrain_id: &str) -> Result<RetrainRecord, String> {
     let path = retrain_path(retrain_id)?;
     if path.exists() {
-        let text = fs::read_to_string(&path).map_err(|err| format!("failed to read {}: {err}", path.display()))?;
-        return serde_json::from_str(&text).map_err(|err| format!("invalid {}: {err}", path.display()));
+        let text = fs::read_to_string(&path)
+            .map_err(|err| format!("failed to read {}: {err}", path.display()))?;
+        return serde_json::from_str(&text)
+            .map_err(|err| format!("invalid {}: {err}", path.display()));
     }
     Ok(RetrainRecord {
         retrain_id: retrain_id.to_owned(),
@@ -361,7 +402,8 @@ fn load_retrain_record(retrain_id: &str) -> Result<RetrainRecord, String> {
 fn save_retrain_record(record: &RetrainRecord) -> Result<(), String> {
     let path = retrain_path(&record.retrain_id)?;
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).map_err(|err| format!("failed to create {}: {err}", parent.display()))?;
+        fs::create_dir_all(parent)
+            .map_err(|err| format!("failed to create {}: {err}", parent.display()))?;
     }
     let text = serde_json::to_string_pretty(record).map_err(|err| err.to_string())?;
     fs::write(&path, text).map_err(|err| format!("failed to write {}: {err}", path.display()))
@@ -373,7 +415,11 @@ fn render_retrain(record: &RetrainRecord, json_output: bool) -> Result<String, S
     }
     Ok(format!(
         "retrain {}\nstatus: {}\nstaged artifact: {}\ndiff: {}\nmetrics: {}",
-        record.retrain_id, record.status, record.staged_artifact, record.diff_summary, record.metrics
+        record.retrain_id,
+        record.status,
+        record.staged_artifact,
+        record.diff_summary,
+        record.metrics
     ))
 }
 
@@ -418,6 +464,8 @@ fn infer_subsystem(path: &str, name: &str) -> Subsystem {
 fn infer_residency(path: &str) -> String {
     if path.contains("/skills/hermes/") {
         "Body/S/S4/pi-agent/skills/hermes".to_owned()
+    } else if path.contains("S4-x/skills") {
+        "Body/S/S4/ta-onta/S4-x/skills".to_owned()
     } else if path.contains("S4-5p-aletheia") {
         "Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom".to_owned()
     } else if path.contains("epii-autoresearch-core") {
@@ -449,7 +497,9 @@ fn registry_path() -> Result<PathBuf, String> {
 }
 
 fn retrain_path(retrain_id: &str) -> Result<PathBuf, String> {
-    Ok(home_dir()?.join(".epi-logos/retrain").join(format!("{retrain_id}.json")))
+    Ok(home_dir()?
+        .join(".epi-logos/retrain")
+        .join(format!("{retrain_id}.json")))
 }
 
 fn home_dir() -> Result<PathBuf, String> {
@@ -471,19 +521,58 @@ fn repo_root() -> Result<PathBuf, String> {
 
 fn hermes_catalog() -> BTreeMap<&'static str, &'static str> {
     BTreeMap::from([
-        ("huggingface-hub", "Model, dataset, and artifact distribution through the Hugging Face Hub."),
-        ("huggingface-accelerate", "Distributed and mixed-device training launch surface via Accelerate."),
-        ("peft-fine-tuning", "LoRA, QLoRA, and other parameter-efficient fine-tuning methods."),
-        ("unsloth", "Memory-efficient local fine-tuning accelerator for supported transformer models."),
-        ("fine-tuning-with-trl", "SFT, DPO, PPO, GRPO, and reward-model training through TRL."),
-        ("simpo-training", "Reference-free preference optimization for Elo-derived preference pairs."),
-        ("weights-and-biases", "Experiment tracking, metric lineage, and artifact provenance."),
-        ("pytorch-lightning", "Structured training-loop orchestration for Python-hosted models."),
-        ("nemo-curator", "Corpus curation, deduplication, PII redaction, and quality filtering."),
-        ("serving-llms-vllm", "High-throughput LLM serving with adapter-aware inference."),
-        ("llama-cpp", "GGUF quantization and local inference, including Apple-Silicon paths."),
-        ("evaluating-llms-harness", "lm-eval-harness style benchmark and held-out evaluation workflows."),
-        ("dspy", "Declarative LM program and judge-loop optimization workflows."),
+        (
+            "huggingface-hub",
+            "Model, dataset, and artifact distribution through the Hugging Face Hub.",
+        ),
+        (
+            "huggingface-accelerate",
+            "Distributed and mixed-device training launch surface via Accelerate.",
+        ),
+        (
+            "peft-fine-tuning",
+            "LoRA, QLoRA, and other parameter-efficient fine-tuning methods.",
+        ),
+        (
+            "unsloth",
+            "Memory-efficient local fine-tuning accelerator for supported transformer models.",
+        ),
+        (
+            "fine-tuning-with-trl",
+            "SFT, DPO, PPO, GRPO, and reward-model training through TRL.",
+        ),
+        (
+            "simpo-training",
+            "Reference-free preference optimization for Elo-derived preference pairs.",
+        ),
+        (
+            "weights-and-biases",
+            "Experiment tracking, metric lineage, and artifact provenance.",
+        ),
+        (
+            "pytorch-lightning",
+            "Structured training-loop orchestration for Python-hosted models.",
+        ),
+        (
+            "nemo-curator",
+            "Corpus curation, deduplication, PII redaction, and quality filtering.",
+        ),
+        (
+            "serving-llms-vllm",
+            "High-throughput LLM serving with adapter-aware inference.",
+        ),
+        (
+            "llama-cpp",
+            "GGUF quantization and local inference, including Apple-Silicon paths.",
+        ),
+        (
+            "evaluating-llms-harness",
+            "lm-eval-harness style benchmark and held-out evaluation workflows.",
+        ),
+        (
+            "dspy",
+            "Declarative LM program and judge-loop optimization workflows.",
+        ),
     ])
 }
 

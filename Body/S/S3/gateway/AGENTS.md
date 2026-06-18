@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 
 ## Ownership
 - `src/lib.rs` — crate root; declares modules + re-exports `SessionStore`, `GatewayRuntimeState`, transcript + subagent helpers.
-- `src/dispatch.rs` — RPC method dispatch (largest module, ~19k).
+- `src/dispatch.rs` — RPC method dispatch (largest module, ~19k), including [[M4]]/[[S4]] Nara extension routes such as protected session protein handles.
 - `src/session_store.rs` / `src/sessions.rs` — session authority + lifecycle.
 - `src/runtime.rs` — `GatewayRuntimeState` + event subscriptions.
 - `src/spacetime.rs` — SpaceTimeDB subscription / reducer client + fallback (~78k), plus CCT-21 BeingPattern replay and handle-forward payload helpers.
@@ -28,7 +28,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - Vault writes use coordinate-prefixed `c_n_*` frontmatter.
 
 ## Verification
-- `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test being_pattern_live_state` for CCT-21; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml mercurius_elo_round_trip` / `moirai_refuses_uncalibrated_update` for the Aletheia Elo shim; `cargo test -p epi-s3-gateway` only in a workspace that includes this excluded crate; or `make rust-test` from repo root.
+- `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml nara_session` for the Nara protected-handle session routes; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml --test being_pattern_live_state` for CCT-21; `cargo test --manifest-path Body/S/S3/gateway/Cargo.toml mercurius_elo_round_trip` / `moirai_refuses_uncalibrated_update` for the Aletheia Elo shim; `cargo test -p epi-s3-gateway` only in a workspace that includes this excluded crate; or `make rust-test` from repo root.
 
 ## Child DOX Index
 - (leaf)

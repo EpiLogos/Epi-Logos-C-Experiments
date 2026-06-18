@@ -5,8 +5,8 @@
 
 use chrono::Utc;
 use epi_s3_gateway::dispatch::{
-    route_nara_session_close, route_nara_session_open, NaraSessionCloseRequest,
-    NaraSessionConfig, NaraSessionOpenRequest,
+    route_nara_session_close, route_nara_session_open, NaraSessionCloseRequest, NaraSessionConfig,
+    NaraSessionOpenRequest,
 };
 use serde_json::{json, Value};
 
@@ -88,18 +88,18 @@ fn deferred_stub(method: &str) -> Result<Value, (String, String)> {
 fn nara_session_config_from_params(params: &Value) -> NaraSessionConfig {
     let mut config = load_nara_session_config().unwrap_or_default();
     let source = params.get("config").unwrap_or(params);
-    if let Some(capacity) = opt_u32(source, "protein_capacity")
-        .or_else(|| opt_u32(source, "proteinCapacity"))
+    if let Some(capacity) =
+        opt_u32(source, "protein_capacity").or_else(|| opt_u32(source, "proteinCapacity"))
     {
         config.protein_capacity = capacity;
     }
-    if let Some(policy) = opt_str(source, "stop_codon_policy")
-        .or_else(|| opt_str(source, "stopCodonPolicy"))
+    if let Some(policy) =
+        opt_str(source, "stop_codon_policy").or_else(|| opt_str(source, "stopCodonPolicy"))
     {
         config.stop_codon_policy = policy;
     }
-    if let Some(mode) = opt_str(source, "write_through_mode")
-        .or_else(|| opt_str(source, "writeThroughMode"))
+    if let Some(mode) =
+        opt_str(source, "write_through_mode").or_else(|| opt_str(source, "writeThroughMode"))
     {
         config.write_through_mode = mode;
     }
@@ -128,14 +128,12 @@ fn load_nara_session_config() -> Result<NaraSessionConfig, String> {
     if !path.exists() {
         return Ok(NaraSessionConfig::default());
     }
-    let text = std::fs::read_to_string(&path)
-        .map_err(|err| format!("read {}: {err}", path.display()))?;
-    let root: toml::Value = toml::from_str(&text)
-        .map_err(|err| format!("parse {}: {err}", path.display()))?;
+    let text =
+        std::fs::read_to_string(&path).map_err(|err| format!("read {}: {err}", path.display()))?;
+    let root: toml::Value =
+        toml::from_str(&text).map_err(|err| format!("parse {}: {err}", path.display()))?;
     let mut config = NaraSessionConfig::default();
-    let session = root
-        .get("nara")
-        .and_then(|v| v.get("session"));
+    let session = root.get("nara").and_then(|v| v.get("session"));
     if let Some(value) = session
         .and_then(|v| v.get("protein_capacity"))
         .and_then(|v| v.as_integer())
@@ -241,8 +239,7 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
                 config: nara_session_config_from_params(params),
             })
             .map_err(|err| ("nara-error".to_owned(), err))?;
-            serde_json::to_value(response)
-                .map_err(|err| ("nara-error".to_owned(), err.to_string()))
+            serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))
         }
         "nara.session_close" => {
             let session_id = required_param(params, "session_id")
@@ -259,8 +256,7 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
                 config: nara_session_config_from_params(params),
             })
             .map_err(|err| ("nara-error".to_owned(), err))?;
-            serde_json::to_value(response)
-                .map_err(|err| ("nara-error".to_owned(), err.to_string()))
+            serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))
         }
 
         // ── Clock ───────────────────────────────────────────────────────

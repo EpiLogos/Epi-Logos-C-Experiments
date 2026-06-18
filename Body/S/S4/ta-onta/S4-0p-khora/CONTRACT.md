@@ -19,9 +19,10 @@ Khora is the **bootstrap spine** of every agent session. It owns session identit
 | Hook | Purpose |
 |------|---------|
 | `before_agent_start` | Run bootstrap sequence; inject session env |
-| `session_start` | Generate session ID; set EPI_SESSION_ID, EPI_DAY_ID, EPI_NOW_PATH |
+| `session_start` | Generate session ID; set EPI_SESSION_ID, EPI_DAY_ID, EPI_NOW_PATH; open the protected [[M4]] Nara session protein |
 | `before_compaction` | Write CONTINUATION.md pre-compaction state dump |
 | `session_end` | Finalise session; trigger sync queue flush signal |
+| `session_shutdown` | Close the protected [[M4]] Nara session protein before Sophia disclosure consumption |
 
 ---
 
@@ -35,6 +36,7 @@ Khora is the **bootstrap spine** of every agent session. It owns session identit
 | `khora_sync_queue_push` | Enqueue graph write to `.khora-sync-queue.jsonl` |
 | `khora_sync_queue_flush` | Flush sync queue to Neo4j (delegated to Hen/S2' for execution) |
 | `khora_continuation_write` | Write CONTINUATION.md pre-compaction state |
+| `khora_session_close` | Record rehear-phase Sophia disclosure and close the protected [[M4]] Nara session protein |
 
 ---
 

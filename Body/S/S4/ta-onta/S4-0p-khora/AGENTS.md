@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]] (carrier class) -> [[S0-SPEC
 
 ## Ownership
 - `CONTRACT.md` — binding responsibility, tools, hook seams, invariants (read first)
-- `extension.ts` — PI extension entry: tool/hook registration, flow-watcher + sophia-fire wiring
+- `extension.ts` — PI extension entry: tool/hook registration, flow-watcher + sophia-fire wiring, session lifecycle calls into the [[M4]] Nara protein bridge
 - `spine-contribution.ts` — `khoraSpineContribution()` injection slot / ledger contribution (`coordinate: "S0/S0'"`)
 - `modules/` — `flow-watcher.ts`, `sophia-fire.ts`, `z-phase-vak.ts` (phase/VAK address composition)
 - `S0/` — S0-primitive layer: `cli/` (agent CLI capability prefs + wrappers), `tools.json`, session shell hooks
@@ -26,7 +26,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]] (carrier class) -> [[S0-SPEC
 - No secrets in source: `op://` references via varlock only, never raw values.
 
 ## Verification
-- `pnpm --dir Body/S/S4/ta-onta/S4-0p-khora test` (TS tests under `tests/`: `sophia_disclosure_wire.test.ts`, `z_phase_vak.test.ts`)
+- `node --test Body/S/S4/ta-onta/S4-0p-khora/tests/*.test.ts` (TS tests under `tests/`: `sophia_disclosure_wire.test.ts`, `z_phase_vak.test.ts`, `now_fibonacci_ground.test.ts`)
 
 ## Child DOX Index
 - (leaf)
