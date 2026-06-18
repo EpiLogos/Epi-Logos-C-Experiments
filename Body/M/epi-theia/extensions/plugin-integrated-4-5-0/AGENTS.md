@@ -23,6 +23,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M4
 - Run `gitnexus_impact` before editing any exported symbol; honour the d=1 WILL-BREAK rule.
 - [[wikilink]] all coordinate/spec/agent/tool references in any authored artifact.
 - Protected-local boundary is hard law: panes/slots MUST render only backend-supplied handle/summary/visual-state fields — no local M4 personal-field tables, identity-quaternion bodies, Nara journal samples, or Graphiti episode bodies; deep bodies stay behind the `ConsentGate`.
+- Do not open profile subscriptions in plugin browser code; composition and mini-inspector renders consume `CompositionProfileProvider` / `useCompositionProfile()` from `@pratibimba/integrated-composition`.
 - Do not hand-edit `src/common/index.ts` / `src/browser/frontend-module.ts` (contract-generated from `08-t0-composition-contract-preflight.json`).
 
 ## Verification

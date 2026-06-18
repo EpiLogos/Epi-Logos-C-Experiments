@@ -5,8 +5,8 @@
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]], [[S-SYSTEM-INDEX]])
 
 ## Ownership
-- `src/lib.rs` — crate root; declares + re-exports every contract module (no `//!` header present).
-- `src/protocol.rs` — wire protocol (handshake / RPC envelope) and method-name registry, including phase-preserving `s5'.gnostic.resolve` / `s0'.anuttara.trace`.
+- `src/lib.rs` — crate root; declares + re-exports every contract module and typed [[S0]] bridge packet/projection surfaces (no `//!` header present).
+- `src/protocol.rs` — wire protocol (handshake / RPC envelope) and method-name registry, including phase-preserving `s5'.gnostic.resolve` / `s0'.anuttara.trace`, `s5'.gnostic.musical_transcript`, and `s2.graph.ananda_position`.
 - `src/session.rs` — session authority types/methods.
 - `src/harness.rs` — normalized harness dispatch envelope, turn-event stream, backing-kind, parent-slice handle, and tool-call enforcement hook contract.
 - `src/dispatch_plan.rs` — dispatch plan contract (largest module), including resolve/trace ownership rows.

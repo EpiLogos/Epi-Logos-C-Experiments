@@ -21,6 +21,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (contributors: [[M1'-
 - Run `gitnexus_impact` before editing any exported symbol; honour the d=1 WILL-BREAK rule.
 - [[wikilink]] all coordinate/spec/agent/tool references in any authored artifact.
 - No local lookup tables: every concrete codon/correspondence/topology/planetary value flows from the backend `MathemeHarmonicProfile` profile bus, never a table held in this plugin.
+- Do not open profile subscriptions in plugin browser code; composition and mini-inspector renders consume `CompositionProfileProvider` / `useCompositionProfile()` from `@pratibimba/integrated-composition`.
 - Files marked "Generated from contracts/... Do not hand-edit" must be regenerated via the parent `scripts/` scaffolder, not edited by hand.
 
 ## Verification

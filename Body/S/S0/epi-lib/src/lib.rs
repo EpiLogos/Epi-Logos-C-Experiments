@@ -205,6 +205,335 @@ mod m0_m2_parity {
 }
 
 #[cfg(test)]
+mod m4_session_lifecycle {
+    use std::os::raw::{c_char, c_int};
+
+    const M3_GOVERNANCE_ROLE_NONE: u8 = 0;
+    const M3_GOVERNANCE_ROLE_START: u8 = 1;
+    const M3_GOVERNANCE_ROLE_STOP: u8 = 2;
+    const M3_CODON_ATG_AUG_VALUE: u8 = 0x07;
+    const M3_STOP_CODON_TGA_VALUE: u8 = 0x1c;
+    const M4_TRANSCRIPTION_STEP_START: u8 = 1 << 0;
+    const M4_TRANSCRIPTION_STEP_STOP: u8 = 1 << 1;
+    const M4_TRANSCRIPTION_STEP_TAIL: u8 = 1 << 2;
+    const M4_TRANSCRIPTION_TAIL_MARKER_CODON: u8 = 0xfe;
+    const M4_SYMBOLIC_PROTEIN_MAX_STEPS: usize = 256;
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct NucleotideBalance {
+        adenine_water: u8,
+        thymine_fire: u8,
+        cytosine_earth: u8,
+        guanine_air: u8,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct M4SymbolDnaProfile {
+        gene_keys_activation: u64,
+        nucleotide_balance: NucleotideBalance,
+        sun_degree_anchor: u16,
+        moon_degree_anchor: u16,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct M4NumerologicalLayer {
+        numerological_key: u32,
+        sixfold_difference: u8,
+        sixfold_sum: u8,
+        life_path: u8,
+        _pad: u8,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct M4AstrologicalLayer {
+        sun_degree_anchor: u16,
+        moon_degree_anchor: u16,
+        asc_degree_anchor: u16,
+        mc_degree_anchor: u16,
+        planet_degrees: [u16; 10],
+        dominant_sign: u8,
+        dominant_element: u8,
+        dominant_modality: u8,
+        _pad: u8,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct M4JungianLayer {
+        nucleotide_balance: NucleotideBalance,
+        mbti_raw: u8,
+        dominant_function: u8,
+        auxiliary_function: u8,
+        enneagram_type: u8,
+        enneagram_wing: u8,
+        _pad: [u8; 3],
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct M4GeneKeysLayer {
+        gene_keys_activation: u64,
+        shadow_mask: u64,
+        gift_mask: u64,
+        siddhi_mask: u64,
+        life_work_hex: u8,
+        evolution_hex: u8,
+        radiance_hex: u8,
+        purpose_hex: u8,
+        attraction_hex: u8,
+        iq_hex: u8,
+        eq_hex: u8,
+        sq_hex: u8,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct M4HumanDesignLayer {
+        hd_type: u8,
+        hd_authority: u8,
+        hd_profile: [u8; 2],
+        hd_definition: u8,
+        incarnation_cross: u8,
+        defined_channels: u16,
+        defined_gates: [u32; 2],
+        _pad: [u8; 4],
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct M4IdentityMatrix {
+        layer_presence: u8,
+        _pad_lp: [u8; 7],
+        layer_0: M4NumerologicalLayer,
+        layer_1: M4AstrologicalLayer,
+        layer_2: M4JungianLayer,
+        layer_3: M4GeneKeysLayer,
+        layer_4: M4HumanDesignLayer,
+        dna_profile: M4SymbolDnaProfile,
+        quintessence_hash: [u8; 32],
+        quintessence_preview: [c_char; 65],
+        numerological_key: u32,
+        jung_type: u8,
+        computed: bool,
+    }
+
+    impl Default for M4IdentityMatrix {
+        fn default() -> Self {
+            Self {
+                layer_presence: 0,
+                _pad_lp: [0; 7],
+                layer_0: M4NumerologicalLayer::default(),
+                layer_1: M4AstrologicalLayer::default(),
+                layer_2: M4JungianLayer::default(),
+                layer_3: M4GeneKeysLayer::default(),
+                layer_4: M4HumanDesignLayer::default(),
+                dna_profile: M4SymbolDnaProfile::default(),
+                quintessence_hash: [0; 32],
+                quintessence_preview: [0; 65],
+                numerological_key: 0,
+                jung_type: 0,
+                computed: false,
+            }
+        }
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct M4TarotDraw {
+        cards: [u8; 78],
+        drawn: [u8; 12],
+        draw_count: u8,
+        spread_type: u8,
+        cast_degree: u16,
+    }
+
+    impl Default for M4TarotDraw {
+        fn default() -> Self {
+            Self {
+                cards: [0; 78],
+                drawn: [0; 12],
+                draw_count: 0,
+                spread_type: 0,
+                cast_degree: 0,
+            }
+        }
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct M4TranscriptionStep {
+        degree: u16,
+        hexagram: u8,
+        codon: u8,
+        amino_acid: u8,
+        transcript_class: u8,
+        governance_role: u8,
+        flags: u8,
+    }
+
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct M4SymbolicProtein {
+        session_id: [c_char; 64],
+        start_codon: u8,
+        stop_codon: u8,
+        sealed: u8,
+        truncated: u8,
+        kairos_open: u64,
+        kairos_close: u64,
+        identity_hash: [u8; 32],
+        step_count: u32,
+        capacity: u32,
+        has_mythos_archetype_reading: u8,
+        mythos_archetype_reading: [c_char; 256],
+        steps: [M4TranscriptionStep; M4_SYMBOLIC_PROTEIN_MAX_STEPS],
+    }
+
+    impl Default for M4SymbolicProtein {
+        fn default() -> Self {
+            Self {
+                session_id: [0; 64],
+                start_codon: 0,
+                stop_codon: 0,
+                sealed: 0,
+                truncated: 0,
+                kairos_open: 0,
+                kairos_close: 0,
+                identity_hash: [0; 32],
+                step_count: 0,
+                capacity: 0,
+                has_mythos_archetype_reading: 0,
+                mythos_archetype_reading: [0; 256],
+                steps: [M4TranscriptionStep::default(); M4_SYMBOLIC_PROTEIN_MAX_STEPS],
+            }
+        }
+    }
+
+    #[repr(C)]
+    struct M4SessionFrame {
+        kairos: u64,
+        identity: *mut M4IdentityMatrix,
+        tarot_psyche_anchor: M4TarotDraw,
+        protein_storage: M4SymbolicProtein,
+        protein: *mut M4SymbolicProtein,
+        stop_codon_policy: c_int,
+        opened: bool,
+    }
+
+    impl Default for M4SessionFrame {
+        fn default() -> Self {
+            Self {
+                kairos: 0,
+                identity: std::ptr::null_mut(),
+                tarot_psyche_anchor: M4TarotDraw::default(),
+                protein_storage: M4SymbolicProtein::default(),
+                protein: std::ptr::null_mut(),
+                stop_codon_policy: 0,
+                opened: false,
+            }
+        }
+    }
+
+    extern "C" {
+        fn m4_session_open(
+            identity: *mut M4IdentityMatrix,
+            kairos: u64,
+            out: *mut M4SessionFrame,
+        ) -> c_int;
+        fn m4_session_close(frame: *mut M4SessionFrame, out: *mut M4SymbolicProtein) -> c_int;
+        fn m4_symbolic_protein_append_step(
+            protein: *mut M4SymbolicProtein,
+            degree: u16,
+            hexagram: u8,
+            codon: u8,
+            role: c_int,
+        ) -> c_int;
+    }
+
+    #[test]
+    fn m4_session_open_emits_start_codon() {
+        let mut identity = M4IdentityMatrix::default();
+        identity.numerological_key = 42;
+        let mut frame = M4SessionFrame::default();
+
+        let status = unsafe { m4_session_open(&mut identity, 7205, &mut frame) };
+
+        assert_eq!(status, 0);
+        assert!(frame.opened);
+        assert!(!frame.protein.is_null());
+        let protein = unsafe { &*frame.protein };
+        assert_eq!(protein.step_count, 1);
+        assert_eq!(protein.start_codon, M3_CODON_ATG_AUG_VALUE);
+        assert_eq!(protein.steps[0].codon, M3_CODON_ATG_AUG_VALUE);
+        assert_eq!(protein.steps[0].governance_role, M3_GOVERNANCE_ROLE_START);
+        assert_ne!(protein.steps[0].flags & M4_TRANSCRIPTION_STEP_START, 0);
+        assert_eq!(frame.tarot_psyche_anchor.draw_count, 3);
+    }
+
+    #[test]
+    fn m4_session_close_seals_protein_with_kairos_derived_stop() {
+        let mut identity = M4IdentityMatrix::default();
+        identity.numerological_key = 19;
+        let mut frame = M4SessionFrame::default();
+        let mut sealed = M4SymbolicProtein::default();
+
+        let open_status = unsafe { m4_session_open(&mut identity, 7205, &mut frame) };
+        assert_eq!(open_status, 0);
+        let close_status = unsafe { m4_session_close(&mut frame, &mut sealed) };
+
+        assert_eq!(close_status, 0);
+        assert_eq!(sealed.sealed, 1);
+        assert_eq!(sealed.stop_codon, M3_STOP_CODON_TGA_VALUE);
+        assert_eq!(sealed.step_count, 2);
+        assert_eq!(sealed.steps[1].governance_role, M3_GOVERNANCE_ROLE_STOP);
+        assert_ne!(sealed.steps[1].flags & M4_TRANSCRIPTION_STEP_STOP, 0);
+    }
+
+    #[test]
+    fn m4_session_protein_capacity_truncates_with_tail_marker() {
+        let mut identity = M4IdentityMatrix::default();
+        identity.numerological_key = 7;
+        let mut frame = M4SessionFrame::default();
+
+        let status = unsafe { m4_session_open(&mut identity, 8, &mut frame) };
+        assert_eq!(status, 0);
+
+        let protein = unsafe { &mut *frame.protein };
+        protein.capacity = 2;
+        let fill = unsafe {
+            m4_symbolic_protein_append_step(
+                frame.protein,
+                9,
+                0,
+                0,
+                M3_GOVERNANCE_ROLE_NONE as c_int,
+            )
+        };
+        let truncate = unsafe {
+            m4_symbolic_protein_append_step(
+                frame.protein,
+                10,
+                1,
+                1,
+                M3_GOVERNANCE_ROLE_NONE as c_int,
+            )
+        };
+
+        assert_eq!(fill, 0);
+        assert_eq!(truncate, 0);
+        let protein = unsafe { &*frame.protein };
+        assert_eq!(protein.step_count, 2);
+        assert_eq!(protein.truncated, 1);
+        assert_eq!(protein.steps[1].codon, M4_TRANSCRIPTION_TAIL_MARKER_CODON);
+        assert_ne!(protein.steps[1].flags & M4_TRANSCRIPTION_STEP_TAIL, 0);
+    }
+}
+
+#[cfg(test)]
 mod m0_contemplation_prompts {
     use std::ffi::CStr;
     use std::os::raw::c_char;

@@ -17,7 +17,7 @@ import type {
     ConsentAction,
     JivaSivaPaneAvailability
 } from '@pratibimba/integrated-composition';
-import { useCompositionProfile } from '@pratibimba/integrated-composition';
+import { useCompositionProfile } from '@pratibimba/integrated-composition/composition-profile-context';
 import { buildPersonalBeingPatternView } from './personal-recognition-composition';
 
 export { buildPersonalBeingPatternView };
@@ -104,7 +104,7 @@ const PaneShell: React.FC<PaneShellProps> = ({
 };
 
 export interface JivaSivaPanesProps {
-    readonly profile: MathemeHarmonicProfileBoundary | null;
+    readonly profile?: MathemeHarmonicProfileBoundary | null;
     readonly m4Foreground: JivaSivaPaneAvailability;
     readonly m0Backdrop: JivaSivaPaneAvailability;
     readonly m5Side: JivaSivaPaneAvailability;

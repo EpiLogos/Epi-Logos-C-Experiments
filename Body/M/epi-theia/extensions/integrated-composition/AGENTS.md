@@ -9,6 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (consumers: [[INTEGRA
 - `src/common/layout-claim.ts` — `IntegratedLayoutSlot` types + LayoutClaim contract; `composition-coordinator.ts` — claim arbitration (singleton/multi slots, geometric protection).
 - `src/common/integrated-state.ts` + `state-coordinator.ts` — immutable `IntegratedViewState` snapshot + coordinator both plugins consume.
 - `src/common/empty-state.ts` + `src/browser/integrated-empty-state.tsx` — degraded empty-state contract/component (08.T1 step 3).
+- `src/common/profile-tick-subscription.ts` + `src/browser/composition-profile-context.tsx` — composition-scoped profile tick subscription primitive, React provider, and hook for the single-clock invariant shared by both integrated plugins.
 - `src/common/{evidence-*,release-gate,recursive-self-review-gate,epii-review-*,consent-gate,privacy-scrubber,workspace-persistence}.ts` — evidence envelopes, release gate, S5 self-review, consent/privacy, persistence.
 - `src/browser/design-primitives/` — shared React primitives (CoordinateString, Matheme, KaTeX, geometry) exported via `./design-primitives`.
 - `tests/` — `node --test` `.mjs` contract tests; `style/index.css` — shared stylesheet.
@@ -23,6 +24,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (consumers: [[INTEGRA
 - Run `gitnexus_impact` before editing any exported symbol; this package is imported by both integrated plugins (honour d=1 WILL-BREAK).
 - [[wikilink]] all coordinate/spec/agent/tool references in any authored artifact.
 - Add new public types/functions to `src/common/index.ts` so plugins can import from the package root (matches the `m-extension-runtime` pattern).
+- Profile-tick consumers inside integrated compositions must use `CompositionProfileProvider` / `useCompositionProfile()` rather than direct plugin-local `SharedBridgeAdapter.onProfile()` calls.
 
 ## Verification
 `pnpm test` here (runs `pnpm build && node --test tests/*.test.mjs`); or `pnpm test:contracts` from `Body/M/epi-theia` for the full cross-extension suite.

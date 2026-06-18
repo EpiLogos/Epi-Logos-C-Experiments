@@ -359,6 +359,27 @@ function validateNoStandaloneProjectionExtensions(errors) {
   }
 }
 
+function validateIntegratedPluginProfileSubscriptionDiscipline(errors) {
+  for (const pluginName of ["plugin-integrated-1-2-3", "plugin-integrated-4-5-0"]) {
+    const browserRoot = join(extensionsRoot, pluginName, "src/browser");
+    if (!existsSync(browserRoot)) {
+      errors.push(`missing integrated plugin browser root: ${relativeRepoPath(browserRoot)}`);
+      continue;
+    }
+    const scannedFiles = walkFiles(browserRoot).filter((path) =>
+      /\.(?:[cm]?js|tsx?)$/.test(path)
+    );
+    for (const file of scannedFiles) {
+      const content = readFileSync(file, "utf8");
+      if (/\bbridge\.onProfile\b|\bonProfileAdvance\b/.test(content)) {
+        errors.push(
+          `${relativeRepoPath(file)} opens a direct profile subscription; use CompositionProfileProvider/useCompositionProfile`
+        );
+      }
+    }
+  }
+}
+
 function main() {
   const errors = [];
   if (!existsSync(manifestPath)) {
@@ -368,6 +389,7 @@ function main() {
     errors.push("missing readiness capture requirements");
   }
   validateNoStandaloneProjectionExtensions(errors);
+  validateIntegratedPluginProfileSubscriptionDiscipline(errors);
   validateChromeContract(errors);
 
   if (errors.length === 0) {

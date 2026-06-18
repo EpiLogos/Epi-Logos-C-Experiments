@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+use serde_json::{json, Value};
+use std::sync::atomic::{AtomicU8, Ordering};
 
 use epi_s3_gateway_contract::{
     method_dispatch_plan, method_dispatch_plan_entry, MethodDispatchKind, MethodDispatchPlanEntry,
@@ -117,6 +119,159 @@ pub const ANIMA_INVOKE_ROLE: &str = "anima_invoke";
 /// surface without expanding the product-method contract table.
 pub const NARA_LENS_RPC_METHODS: [&str; 3] =
     ["nara.lens.list", "nara.lens.apply", "nara.lens.synthesize"];
+
+/// M4 session lifecycle RPCs. Route ownership stays under the S4/S5 Nara
+/// domain adapter; the profile bus receives protected handles only.
+pub const NARA_SESSION_RPC_METHODS: [&str; 2] = ["nara.session_open", "nara.session_close"];
+
+static NARA_SESSION_STOP_ROUND_ROBIN: AtomicU8 = AtomicU8::new(0);
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct NaraSessionConfig {
+    pub protein_capacity: u32,
+    pub stop_codon_policy: String,
+    pub write_through_mode: String,
+    pub protected_handle_strict: bool,
+    #[serde(default)]
+    pub allow_raw_protein_bus: bool,
+}
+
+impl Default for NaraSessionConfig {
+    fn default() -> Self {
+        Self {
+            protein_capacity: 256,
+            stop_codon_policy: "kairos-derived".to_owned(),
+            write_through_mode: "immediate".to_owned(),
+            protected_handle_strict: true,
+            allow_raw_protein_bus: false,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct NaraSessionOpenRequest {
+    pub session_id: String,
+    pub kairos: u64,
+    #[serde(default)]
+    pub config: NaraSessionConfig,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct NaraSessionCloseRequest {
+    pub session_id: String,
+    pub protein_handle: String,
+    pub kairos_close: u64,
+    #[serde(default)]
+    pub config: NaraSessionConfig,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct NaraSessionProteinHandle {
+    pub ok: bool,
+    pub session_id: String,
+    pub protein_handle: String,
+    pub start_codon: u8,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stop_codon: Option<u8>,
+    pub protected_handle: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pattern_packet: Option<Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub graphiti_relation: Option<Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub body: Option<Value>,
+}
+
+pub fn route_nara_session_open(req: NaraSessionOpenRequest) -> Result<NaraSessionProteinHandle, String> {
+    if req.session_id.trim().is_empty() {
+        return Err("nara.session_open requires session_id".to_owned());
+    }
+    let start_codon = portal_core::transcription::c_start_codon();
+    Ok(NaraSessionProteinHandle {
+        ok: true,
+        session_id: req.session_id.clone(),
+        protein_handle: format!(
+            "m4-protein://session/{}/{}",
+            req.session_id, req.kairos
+        ),
+        start_codon,
+        stop_codon: None,
+        protected_handle: req.config.protected_handle_strict,
+        pattern_packet: None,
+        graphiti_relation: None,
+        body: raw_body_if_allowed(&req.config, json!({"codons":[start_codon]})),
+    })
+}
+
+pub fn route_nara_session_close(req: NaraSessionCloseRequest) -> Result<NaraSessionProteinHandle, String> {
+    if req.session_id.trim().is_empty() {
+        return Err("nara.session_close requires session_id".to_owned());
+    }
+    if req.protein_handle.trim().is_empty() {
+        return Err("nara.session_close requires protein_handle".to_owned());
+    }
+    let start_codon = portal_core::transcription::c_start_codon();
+    let stop_codon = select_nara_session_stop_codon(&req.config.stop_codon_policy, req.kairos_close)?;
+    let protected = req.config.protected_handle_strict;
+    let transcription = json!({
+        "protein_handle": req.protein_handle,
+        "start_codon": start_codon,
+        "stop_codon": stop_codon,
+        "protected_handle": protected,
+        "capacity": req.config.protein_capacity,
+    });
+    let pattern_packet = json!({
+        "type": "PatternPacket",
+        "session_id": req.session_id,
+        "mahamaya_transcription": transcription,
+        "write_through_mode": req.config.write_through_mode,
+    });
+    let graphiti_relation = json!({
+        "api": "nara_insert_relation",
+        "kind": "episodic_packet",
+        "session_id": req.session_id,
+        "protein_handle": req.protein_handle,
+        "stop_codon": stop_codon,
+    });
+    Ok(NaraSessionProteinHandle {
+        ok: true,
+        session_id: req.session_id,
+        protein_handle: req.protein_handle,
+        start_codon,
+        stop_codon: Some(stop_codon),
+        protected_handle: protected,
+        pattern_packet: Some(pattern_packet),
+        graphiti_relation: Some(graphiti_relation),
+        body: raw_body_if_allowed(&req.config, json!({"codons":[start_codon, stop_codon]})),
+    })
+}
+
+fn select_nara_session_stop_codon(policy: &str, kairos_close: u64) -> Result<u8, String> {
+    let stops = portal_core::transcription::c_stop_codons();
+    match policy {
+        "kairos-derived" => Ok(stops[(kairos_close % 3) as usize]),
+        "round-robin" => {
+            let idx = NARA_SESSION_STOP_ROUND_ROBIN.fetch_add(1, Ordering::SeqCst) % 3;
+            Ok(stops[idx as usize])
+        }
+        "fixed-taa" => Ok(stops[0]),
+        "fixed-tag" => Ok(stops[1]),
+        "fixed-tga" => Ok(stops[2]),
+        other => Err(format!("unknown nara.session.stop_codon_policy `{other}`")),
+    }
+}
+
+fn raw_body_if_allowed(config: &NaraSessionConfig, body: Value) -> Option<Value> {
+    if !config.protected_handle_strict && config.allow_raw_protein_bus {
+        Some(body)
+    } else {
+        None
+    }
+}
 
 /// Patch the target session's VAK address and append the task into its
 /// transcript as an `anima_invoke`-tagged message.

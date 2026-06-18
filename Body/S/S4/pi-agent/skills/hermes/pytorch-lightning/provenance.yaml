@@ -1,0 +1,6 @@
+source: hermes-priority-13
+name: pytorch-lightning
+upstream_commit: local-catalog-12.24
+vendored_at: 2026-06-18T10:35:37.527310+00:00
+vendor_agent: codex-m-dev-12-t12-24
+network_fetch: unavailable-in-sandbox

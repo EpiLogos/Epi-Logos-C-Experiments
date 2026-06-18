@@ -1,4 +1,6 @@
-use epi_s2_graph_schema::{node_property_spec, validate_coordinate_prefix_property, Q_SCHEMA_VERSION};
+use epi_s2_graph_schema::{
+    node_property_spec, validate_coordinate_prefix_property, Q_SCHEMA_VERSION,
+};
 
 // The q-register family is OPEN: validated by *shape*, not by a fixed slug list.
 // Only `q_<0-5>['][_<slot>]_<lower_snake_case>` (and the `qm_` quickview family) is
@@ -43,7 +45,10 @@ fn q_register_open_shape_law() {
         "q_5_integration_template",
         "q_5_conjunctive_threshold",
     ] {
-        assert!(node_property_spec(key).is_some(), "{key} missing from schema");
+        assert!(
+            node_property_spec(key).is_some(),
+            "{key} missing from schema"
+        );
     }
 
     assert_eq!(Q_SCHEMA_VERSION, "q-prefix-v3");

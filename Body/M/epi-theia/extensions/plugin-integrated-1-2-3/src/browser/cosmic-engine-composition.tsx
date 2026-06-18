@@ -22,7 +22,7 @@ import {
 } from '@pratibimba/integrated-composition/integrated-readiness';
 import {
     useCompositionProfile
-} from '@pratibimba/integrated-composition';
+} from '@pratibimba/integrated-composition/composition-profile-context';
 
 declare const require: (id: string) => unknown;
 

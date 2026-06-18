@@ -631,6 +631,67 @@ static void test_mef_thresholds(void) {
 
 
 /* ===================================================================
+ * Session-as-transcription lifecycle
+ * =================================================================== */
+
+static void test_m4_session_open_emits_start_codon(void) {
+    M4_Identity_Matrix id = {0};
+    id.numerological_key = 42;
+    M4_Session_Frame frame = {0};
+
+    int rc = m4_session_open(&id, 7205u, &frame);
+
+    TEST("session_open ok", rc == 0);
+    TEST("session_open opened", frame.opened);
+    TEST("session_open protein handle", frame.protein == &frame.protein_storage);
+    TEST("session_open tarot context preserved", frame.tarot_psyche_anchor.draw_count == 3);
+    TEST("session_open protein has one seed step", frame.protein->step_count == 1u);
+    TEST("session_open start codon header", frame.protein->start_codon == M3_CODON_ATG_AUG);
+    TEST("session_open ATG step", frame.protein->steps[0].codon == M3_CODON_ATG_AUG);
+    TEST("session_open START role", frame.protein->steps[0].governance_role == M3_GOVERNANCE_ROLE_START);
+    TEST("session_open START flag", (frame.protein->steps[0].flags & M4_TRANSCRIPTION_STEP_START) != 0u);
+}
+
+static void test_m4_session_close_seals_protein_with_kairos_derived_stop(void) {
+    M4_Identity_Matrix id = {0};
+    id.numerological_key = 19;
+    M4_Session_Frame frame = {0};
+    M4_Symbolic_Protein sealed = {0};
+
+    int rc = m4_session_open(&id, 7205u, &frame);
+    TEST("session_close open ok", rc == 0);
+
+    rc = m4_session_close(&frame, &sealed);
+
+    TEST("session_close ok", rc == 0);
+    TEST("session_close sealed", sealed.sealed == 1u);
+    TEST("session_close copied handle", strcmp(sealed.session_id, frame.protein->session_id) == 0);
+    TEST("session_close stop codon kairos-derived", sealed.stop_codon == M3_STOP_CODON_TGA_VALUE);
+    TEST("session_close two steps", sealed.step_count == 2u);
+    TEST("session_close STOP role", sealed.steps[1].governance_role == M3_GOVERNANCE_ROLE_STOP);
+    TEST("session_close STOP flag", (sealed.steps[1].flags & M4_TRANSCRIPTION_STEP_STOP) != 0u);
+}
+
+static void test_m4_session_protein_capacity_truncates_with_tail_marker(void) {
+    M4_Identity_Matrix id = {0};
+    id.numerological_key = 7;
+    M4_Session_Frame frame = {0};
+
+    int rc = m4_session_open(&id, 8u, &frame);
+    TEST("protein_capacity open ok", rc == 0);
+
+    frame.protein->capacity = 2u;
+    TEST("protein_capacity append fills", m4_symbolic_protein_append_step(frame.protein, 9u, 0u, 0u, M3_GOVERNANCE_ROLE_NONE) == 0);
+    TEST("protein_capacity append truncates", m4_symbolic_protein_append_step(frame.protein, 10u, 1u, 1u, M3_GOVERNANCE_ROLE_NONE) == 0);
+
+    TEST("protein_capacity count bounded", frame.protein->step_count == 2u);
+    TEST("protein_capacity truncated flag", frame.protein->truncated == 1u);
+    TEST("protein_capacity tail codon", frame.protein->steps[1].codon == M4_TRANSCRIPTION_TAIL_MARKER_CODON);
+    TEST("protein_capacity tail flag", (frame.protein->steps[1].flags & M4_TRANSCRIPTION_STEP_TAIL) != 0u);
+}
+
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -659,6 +720,9 @@ int main(void) {
     test_lens_registry();
     test_m4_api();
     test_mef_thresholds();
+    test_m4_session_open_emits_start_codon();
+    test_m4_session_close_seals_protein_with_kairos_derived_stop();
+    test_m4_session_protein_capacity_truncates_with_tail_marker();
 
     printf("\n=== Results: %d passed, %d failed (of %d) ===\n",
            pass_count, fail_count, pass_count + fail_count);

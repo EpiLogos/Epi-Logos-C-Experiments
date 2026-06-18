@@ -9,6 +9,9 @@ const {
     CosmicEngineComposition,
     deriveCosmicBeingPatternOverlay
 } = require('../../lib/browser/cosmic-engine-composition.js');
+const {
+    CompositionProfileProvider
+} = require('../../../integrated-composition/lib/browser/composition-profile-context.js');
 
 function projection(entityId, monopolyOperator, degree360, reviewRisk = null) {
     const m2M3Relation = Object.freeze({
@@ -99,6 +102,15 @@ function profile() {
     });
 }
 
+function bridgeWithProfile(currentProfile) {
+    return {
+        onProfile(listener) {
+            listener(currentProfile);
+            return { dispose() {} };
+        }
+    };
+}
+
 test('cosmic overlay renders many live beings as distinct public-safe markers', () => {
     const overlay = deriveCosmicBeingPatternOverlay(profile());
 
@@ -116,7 +128,11 @@ test('cosmic overlay renders many live beings as distinct public-safe markers', 
 
 test('cosmic overlay markup contains handles and no protected bodies', () => {
     const html = renderToStaticMarkup(
-        React.createElement(CosmicEngineComposition, { profile: profile() })
+        React.createElement(
+            CompositionProfileProvider,
+            { bridge: bridgeWithProfile(profile()) },
+            React.createElement(CosmicEngineComposition)
+        )
     );
 
     assert.match(html, /data-observer="Earth"/);

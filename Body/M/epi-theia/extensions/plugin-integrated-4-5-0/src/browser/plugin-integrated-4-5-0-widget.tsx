@@ -7,7 +7,6 @@ import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
     Disposable,
     MExtensionId,
-    MathemeHarmonicProfileBoundary,
     MObservabilityEvent,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER
@@ -19,10 +18,12 @@ import {
     CompositionCoordinator,
     ConsentAction,
     ConsentGate,
+    CompositionProfileProvider,
     findNamedLayout,
     IntegratedContributorRecord,
     IntegratedEmptyState,
     buildEmptyState,
+    useCompositionProfile,
     withPanelMode,
     withReviewInboxCount,
     type IdentityAugmentReviewProposal,
@@ -53,7 +54,6 @@ export class PluginIntegrated450Widget extends ReactWidget {
     );
     protected consentGate: ConsentGate = new ConsentGate();
     protected contributorRecords: readonly IntegratedContributorRecord[] = [];
-    protected currentProfile: MathemeHarmonicProfileBoundary | null = null;
     protected subscriptions: Disposable[] = [];
     /** Epii review pane state — defaults to closed per 08.T6 deliverable 4. */
     protected epiiReviewState: EpiiReviewSurfaceState = CLOSED_EPII_REVIEW_STATE;
@@ -71,12 +71,6 @@ export class PluginIntegrated450Widget extends ReactWidget {
 
         this.subscriptions.push(
             this.bridge.onReadiness(() => this.update())
-        );
-        this.subscriptions.push(
-            this.bridge.onProfile(profile => {
-                this.currentProfile = profile;
-                this.update();
-            })
         );
         this.subscriptions.push(
             this.bridge.onObservabilityEvent(event => this.handleObservabilityEvent(event))
@@ -179,39 +173,71 @@ export class PluginIntegrated450Widget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         const required = CONTRIBUTOR_IDS as readonly MExtensionId[];
-        const present = this.contributorRecords.map(r => r.extensionId);
-        const allContributorsPresent = required.every(id => present.includes(id));
+        return (
+            <CompositionProfileProvider bridge={this.bridge}>
+                <PersonalRecognitionProfileSurface
+                    contributorRecords={this.contributorRecords}
+                    coordinator={this.coordinator}
+                    required={required}
+                    epiiReviewState={this.epiiReviewState}
+                    sessionCloseEvent={this.sessionCloseEvent}
+                    onEpiiAction={action => this.handleEpiiAction(action)}
+                    onDismissReview={() => this.setEpiiReviewMode('closed')}
+                />
+            </CompositionProfileProvider>
+        );
+    }
+}
 
-        if (!allContributorsPresent || !this.currentProfile) {
-            const aggregate = this.coordinator.aggregateReadiness(this.contributorRecords);
-            const view = buildEmptyState(
-                this.coordinator.layout,
-                aggregate,
-                required,
-                present
-            );
-            return (
-                <div className="integrated-widget-root">
-                    <IntegratedEmptyState
-                        view={view}
-                        title={PluginIntegrated450Widget.LABEL}
-                    />
-                </div>
-            );
-        }
+const PersonalRecognitionProfileSurface: React.FC<{
+    readonly contributorRecords: readonly IntegratedContributorRecord[];
+    readonly coordinator: CompositionCoordinator;
+    readonly required: readonly MExtensionId[];
+    readonly epiiReviewState: EpiiReviewSurfaceState;
+    readonly sessionCloseEvent: MObservabilityEvent | null;
+    readonly onEpiiAction: (action: EpiiActionId) => void;
+    readonly onDismissReview: () => void;
+}> = ({
+    contributorRecords,
+    coordinator,
+    required,
+    epiiReviewState,
+    sessionCloseEvent,
+    onEpiiAction,
+    onDismissReview
+}) => {
+    const { profile } = useCompositionProfile();
+    const present = contributorRecords.map(r => r.extensionId);
+    const allContributorsPresent = required.every(id => present.includes(id));
 
+    if (!allContributorsPresent || !profile) {
+        const aggregate = coordinator.aggregateReadiness(contributorRecords);
+        const view = buildEmptyState(
+            coordinator.layout,
+            aggregate,
+            required,
+            present
+        );
         return (
             <div className="integrated-widget-root">
-                <PersonalRecognitionComposition
-                    profile={this.currentProfile}
-                    sessionCloseEvent={this.sessionCloseEvent}
-                />
-                <EpiiReviewPanel
-                    state={this.epiiReviewState}
-                    onAction={action => this.handleEpiiAction(action)}
-                    onDismiss={() => this.setEpiiReviewMode('closed')}
+                <IntegratedEmptyState
+                    view={view}
+                    title={PluginIntegrated450Widget.LABEL}
                 />
             </div>
         );
     }
-}
+
+    return (
+        <div className="integrated-widget-root">
+            <PersonalRecognitionComposition
+                sessionCloseEvent={sessionCloseEvent}
+            />
+            <EpiiReviewPanel
+                state={epiiReviewState}
+                onAction={onEpiiAction}
+                onDismiss={onDismissReview}
+            />
+        </div>
+    );
+};

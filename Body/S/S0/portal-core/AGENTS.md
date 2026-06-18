@@ -9,7 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 - `src/lib.rs` — crate root / public surface (re-exports the modules below)
 - `src/kernel.rs` — largest module; clock kernel math (tick/epogdoon/projection), `E4PersonalInputs`, and [[E_4]] personal-energy scalar/gradient provenance.
 - `src/state.rs`, `src/quaternion.rs`, `src/hopf.rs`, `src/spanda.rs`, `src/rotational.rs` — clock state + quaternion/Hopf/spanda/rotational math
-- `src/codon.rs`, `src/codon_rotation_projection.rs`, `src/transcription.rs`, `src/mahamaya.rs`, `src/oracle_lut.rs` — codon / transcription / mahamaya / oracle LUT math
+- `src/codon.rs`, `src/codon_rotation_projection.rs`, `src/transcription.rs`, `src/m3_transcription_bridge.rs`, `src/mahamaya.rs`, `src/oracle_lut.rs` — codon / transcription / [[M3]] bridge projection / mahamaya / oracle LUT math
 - `src/personal_identity.rs`, `src/nara_journal.rs`, `src/harmonic_profile.rs`, `src/profile_projections.rs`, `src/aspect.rs`, `src/music_tech.rs` — identity, journal parser, harmonic profile, [[M0]]-[[M5]] typed profile projections, aspects, music-tech
 - `src/rfactor.rs`, `src/vak_address.rs`, `src/coordinate_phase.rs`, `src/types.rs` — R-factor namespace parsing, VAK addressing, phase-qualified coordinate handles, shared types
 - `src/tunable/` — schema-backed tunable metadata, registry loader, scope resolver, and audit writer for `*.tunable.toml` config surfaces

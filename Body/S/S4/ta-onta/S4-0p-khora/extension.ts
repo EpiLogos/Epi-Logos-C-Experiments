@@ -24,6 +24,8 @@ let _sessionId: string | null = null;
 let _dayId: string | null = null;
 let _nowPath: string | null = null;
 let _flowWatcher: KhoraFlowWatcher | null = null;
+let _m4ProteinHandle: string | null = null;
+let _m4ProteinClosed = false;
 
 // Exported getters — other extensions and agent-team.ts read these
 export function getSessionId() { return _sessionId ?? process.env.EPI_SESSION_ID ?? null; }
@@ -112,6 +114,50 @@ function dailyNotePath(dayId: string | null): string | null {
   if (!dayId) return null;
   const vaultRoot = process.env.EPILOGOS_VAULT || join(process.env.EPI_REPO_ROOT || process.cwd(), "Idea");
   return join(vaultRoot, "Empty", "Present", dayId, "daily-note.md");
+}
+
+function invokeNaraSessionDispatch(kind: "open" | "close", payload: Record<string, unknown>): Record<string, unknown> | null {
+  const command = kind === "open" ? "nara-session-open" : "nara-session-close";
+  const result = spawnSync(
+    "epi",
+    ["--json", "gate", "dispatch", command, "--payload-json", JSON.stringify(payload)],
+    { encoding: "utf8" },
+  );
+  if (result.status !== 0) {
+    console.warn(`[khora] nara.session_${kind} failed (non-blocking): ${result.stderr?.trim() || result.stdout?.trim() || "no output"}`);
+    return null;
+  }
+  try {
+    return JSON.parse(result.stdout || "{}");
+  } catch (e) {
+    console.warn(`[khora] nara.session_${kind} returned invalid JSON: ${e}`);
+    return null;
+  }
+}
+
+function openM4SessionProtein(sessionId: string): void {
+  const response = invokeNaraSessionDispatch("open", {
+    session_id: sessionId,
+    kairos: Date.now(),
+  });
+  const handle = response?.protein_handle;
+  if (typeof handle === "string" && handle.length > 0) {
+    _m4ProteinHandle = handle;
+    _m4ProteinClosed = false;
+  }
+}
+
+function closeM4SessionProtein(sessionId: string | null): Record<string, unknown> | null {
+  if (!sessionId || !_m4ProteinHandle || _m4ProteinClosed) return null;
+  const response = invokeNaraSessionDispatch("close", {
+    session_id: sessionId,
+    protein_handle: _m4ProteinHandle,
+    kairos_close: Date.now(),
+  });
+  if (response?.ok === true) {
+    _m4ProteinClosed = true;
+  }
+  return response;
 }
 
 function recordFlowWatcherEvent(api: ExtensionAPI, event: TrancheCompleteEvent) {
@@ -311,7 +357,11 @@ export async function khoraExtension(api: ExtensionAPI) {
           params.artifacts ?? [],
           params.improvement_vectors ?? [],
         );
-        return { content: [{ type: "text", text: `sophia disclosure enriched for ${session_id} (fires at session_shutdown)` }] };
+        const closed = closeM4SessionProtein(session_id);
+        const suffix = closed
+          ? `; m4 protein sealed (${String(closed.protein_handle ?? "protected handle")})`
+          : "";
+        return { content: [{ type: "text", text: `sophia disclosure enriched for ${session_id} (fires at session_shutdown)${suffix}` }] };
       } catch (e) {
         return { content: [{ type: "text", text: `khora_session_close error: ${e}` }], isError: true };
       }
@@ -424,6 +474,11 @@ export async function khoraExtension(api: ExtensionAPI) {
             `[khora] gateway sessions.patch failed (non-blocking): ${patchResult.stderr?.trim() || "no stderr"}`
           );
         }
+
+        // 8. START codon: bind Khora's compose phase to the M4 session
+        //    transcription chain. The protected protein handle is retained
+        //    locally; the body never crosses the profile bus under defaults.
+        openM4SessionProtein(_sessionId);
       }
     } else {
       console.warn(`[khora] session init skipped: ${initResult.stderr?.trim() || "no vault config"}`);
@@ -458,6 +513,7 @@ export async function khoraExtension(api: ExtensionAPI) {
     try {
       const session_id = getSessionId();
       const day_id = getDayId();
+      closeM4SessionProtein(session_id);
       // had_pending true ⇔ `khora_session_close` was called this session →
       // closure_kind = "rehear" (deliberate Möbius return).
       // had_pending false ⇔ lifecycle fired without the tool call → process

@@ -2,7 +2,8 @@ use epi_s3_gateway::dispatch::{
     classify_method, dispatch_kind, dispatch_plan, dispatch_plan_entry,
     dispatch_route_for_plan_entry, methods_in_dispatch_plan_missing_from_route_table,
     methods_in_route_table_missing_from_dispatch_plan, GatewayDispatchClass, GatewayDispatchOwner,
-    NARA_LENS_RPC_METHODS,
+    NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest, NARA_LENS_RPC_METHODS,
+    NARA_SESSION_RPC_METHODS,
 };
 use epi_s3_gateway_contract::{MethodDispatchKind, METHOD_NAMES};
 
@@ -69,6 +70,56 @@ fn nara_lens_widget_rpcs_route_as_m4_extension_methods() {
         assert_eq!(route.coordinate_owner, "M4'/S4");
         assert_eq!(route.agent_access_owner, "S4/S5");
     }
+}
+
+#[test]
+fn nara_session_open_close_round_trip() {
+    assert_eq!(NARA_SESSION_RPC_METHODS, ["nara.session_open", "nara.session_close"]);
+
+    for method in NARA_SESSION_RPC_METHODS {
+        let route = classify_method(method).expect("nara session RPC should route");
+        assert_eq!(route.owner, GatewayDispatchOwner::S4S5DomainAdapter);
+        assert_eq!(route.class, GatewayDispatchClass::NaraExtension);
+        assert_eq!(route.coordinate_owner, "M4'/S4");
+        assert_eq!(route.agent_access_owner, "S4/S5");
+    }
+
+    let config = NaraSessionConfig::default();
+    let opened = epi_s3_gateway::dispatch::route_nara_session_open(NaraSessionOpenRequest {
+        session_id: "20260618-100836-test".to_owned(),
+        kairos: 7205,
+        config: config.clone(),
+    })
+    .expect("session open should return protected protein handle");
+
+    assert!(opened.ok);
+    assert_eq!(opened.start_codon, 0x07);
+    assert!(opened.stop_codon.is_none());
+    assert!(opened.protected_handle);
+    assert!(opened.body.is_none(), "protein body must not cross profile bus by default");
+
+    let closed = epi_s3_gateway::dispatch::route_nara_session_close(NaraSessionCloseRequest {
+        session_id: opened.session_id.clone(),
+        protein_handle: opened.protein_handle.clone(),
+        kairos_close: 7205,
+        config,
+    })
+    .expect("session close should seal protected protein handle");
+
+    assert!(closed.ok);
+    assert_eq!(closed.start_codon, 0x07);
+    assert_eq!(closed.stop_codon, Some(0x1c));
+    assert!(closed.protected_handle);
+    assert!(closed.body.is_none(), "sealed protein body must stay off the bus");
+    let pattern = closed.pattern_packet.expect("PatternPacket write-through");
+    assert_eq!(
+        pattern["mahamaya_transcription"]["protein_handle"].as_str(),
+        Some(opened.protein_handle.as_str())
+    );
+    assert_eq!(
+        closed.graphiti_relation.expect("Graphiti relation")["api"].as_str(),
+        Some("nara_insert_relation")
+    );
 }
 
 #[test]

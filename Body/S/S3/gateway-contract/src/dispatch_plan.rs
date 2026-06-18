@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::{S2_GRAPH_ANANDA_POSITION_METHOD, S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD};
+
 // =================== 13.T2 executable dispatch-plan contract ===================
 //
 // Track 13 Tranche T2 — Plan section 13.3 lines 73–91. The dispatch-plan
@@ -356,6 +358,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
+        method: S2_GRAPH_ANANDA_POSITION_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services + Body/S/S0/portal-core::m3_transcription_bridge",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
         method: "s2.graph.harmonic_relations.materialize",
         kind: MethodDispatchKind::S2GraphServiceAdapter,
         authority_path: "Body/S/S2/graph-services",
@@ -614,6 +622,12 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "s5'.gnostic.resolve",
         kind: MethodDispatchKind::S5GovernanceAdapter,
         authority_path: "Body/S/S5/epi-gnostic",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD,
+        kind: MethodDispatchKind::S5GovernanceAdapter,
+        authority_path: "Body/S/S5/epi-gnostic + Body/S/S0/portal-core::m3_transcription_bridge",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {

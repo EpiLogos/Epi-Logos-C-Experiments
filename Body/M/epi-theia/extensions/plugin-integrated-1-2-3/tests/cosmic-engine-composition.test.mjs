@@ -11,6 +11,9 @@ const {
     CosmicEngineComposition,
     buildCosmicCompositionModel
 } = require('../lib/browser/cosmic-engine-composition.js');
+const {
+    CompositionProfileProvider
+} = require('../../integrated-composition/lib/browser/composition-profile-context.js');
 
 function completeProfile(overrides = {}) {
     return Object.freeze({
@@ -59,10 +62,27 @@ function count(haystack, needle) {
     return (haystack.match(new RegExp(needle, 'g')) ?? []).length;
 }
 
-test('renders one primary editor surface instead of the old three-pane editor juxtaposition', () => {
-    const html = renderToStaticMarkup(
-        React.createElement(CosmicEngineComposition, { profile: completeProfile() })
+function bridgeWithProfile(currentProfile) {
+    return {
+        onProfile(listener) {
+            listener(currentProfile);
+            return { dispose() {} };
+        }
+    };
+}
+
+function renderComposition(currentProfile) {
+    return renderToStaticMarkup(
+        React.createElement(
+            CompositionProfileProvider,
+            { bridge: bridgeWithProfile(currentProfile) },
+            React.createElement(CosmicEngineComposition)
+        )
     );
+}
+
+test('renders one primary editor surface instead of the old three-pane editor juxtaposition', () => {
+    const html = renderComposition(completeProfile());
 
     assert.equal(count(html, 'data-test="cosmic-engine-editor-surface"'), 1);
     assert.doesNotMatch(html, /cosmic-engine-layout/);
@@ -103,11 +123,7 @@ test('occupies surface texture and cell-state slots with the M1 M2 M3 contributo
 });
 
 test('keeps composition mounted and renders IntegratedEmptyState for pending K2 surface', () => {
-    const html = renderToStaticMarkup(
-        React.createElement(CosmicEngineComposition, {
-            profile: completeProfile({ k2SurfaceHandle: undefined })
-        })
-    );
+    const html = renderComposition(completeProfile({ k2SurfaceHandle: undefined }));
 
     assert.equal(count(html, 'data-test="cosmic-engine-editor-surface"'), 1);
     assert.match(html, /integrated-empty-state/);

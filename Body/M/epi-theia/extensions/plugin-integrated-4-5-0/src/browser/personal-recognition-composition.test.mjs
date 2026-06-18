@@ -14,6 +14,9 @@ const {
     buildPersonalCompositionModel,
     derivePersonalRecognitionModel
 } = require('../../lib/browser/personal-recognition-composition.js');
+const {
+    CompositionProfileProvider
+} = require('../../../integrated-composition/lib/browser/composition-profile-context.js');
 
 const PACKAGE_ROOT = '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/plugin-integrated-4-5-0';
 
@@ -155,6 +158,25 @@ function profile(pasuProjection = projection()) {
     });
 }
 
+function bridgeWithProfile(currentProfile) {
+    return {
+        onProfile(listener) {
+            listener(currentProfile);
+            return { dispose() {} };
+        }
+    };
+}
+
+function renderComposition(currentProfile) {
+    return renderToStaticMarkup(
+        React.createElement(
+            CompositionProfileProvider,
+            { bridge: bridgeWithProfile(currentProfile) },
+            React.createElement(PersonalRecognitionComposition)
+        )
+    );
+}
+
 test('personal recognition model passes current PASU projection to M4 and M5 surfaces', () => {
     const model = derivePersonalRecognitionModel(profile());
 
@@ -168,9 +190,7 @@ test('personal recognition model passes current PASU projection to M4 and M5 sur
 });
 
 test('personal recognition component renders handles only and rejects raw bodies', () => {
-    const html = renderToStaticMarkup(
-        React.createElement(PersonalRecognitionComposition, { profile: profile() })
-    );
+    const html = renderComposition(profile());
 
     assert.match(html, /data-entity-id="user-being"/);
     assert.match(html, /data-perspective-role="I"/);
@@ -202,9 +222,7 @@ test('personal recognition component renders handles only and rejects raw bodies
 });
 
 test('personal recognition composition renders one editor surface with four owned geometric slots', () => {
-    const html = renderToStaticMarkup(
-        React.createElement(PersonalRecognitionComposition, { profile: profile() })
-    );
+    const html = renderComposition(profile());
 
     assert.equal((html.match(/data-editor-surface="personal-recognition-composition"/g) ?? []).length, 1);
     assert.equal((html.match(/data-test="personal-geometric-slot"/g) ?? []).length, 4);
@@ -220,9 +238,7 @@ test('personal recognition composition renders one editor surface with four owne
 
 test('personal composition keeps blocked center and right slots mounted with real blocker ids', () => {
     const model = buildPersonalCompositionModel(profile());
-    const html = renderToStaticMarkup(
-        React.createElement(PersonalRecognitionComposition, { profile: profile() })
-    );
+    const html = renderComposition(profile());
 
     assert.ok(model.blockers.includes('pending-psychoid-cymatic-solver'));
     assert.ok(model.blockers.includes('pending-recognition-surface'));

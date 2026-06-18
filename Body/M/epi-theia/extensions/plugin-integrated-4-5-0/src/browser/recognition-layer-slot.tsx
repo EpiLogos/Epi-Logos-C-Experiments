@@ -32,6 +32,10 @@ import {
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
+import {
+    CompositionProfileProvider,
+    useCompositionProfile
+} from '@pratibimba/integrated-composition/composition-profile-context';
 
 /** Composition slot identifier — third slot of the 4-5-0 editor-area composition. */
 export const M5_RECOGNITION_LAYER_SLOT_ID = 'pratibimba.m5-epii.recognitionLayer';
@@ -425,7 +429,6 @@ export class RecognitionLayerSlot extends ReactWidget {
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
 
-    protected currentProfile: MathemeHarmonicProfileBoundary | null = null;
     protected subscriptions: Disposable[] = [];
     protected onClosePath?: (command: string) => void;
 
@@ -437,14 +440,6 @@ export class RecognitionLayerSlot extends ReactWidget {
         this.title.closable = false;
         this.addClass('m5-recognition-layer-slot');
 
-        // Recognition strength updates whenever Q_composed advances — i.e. on
-        // every new profile generation carrying fresh q_Nara/q_cosmic/q_activity.
-        this.subscriptions.push(
-            this.bridge.onProfile(profile => {
-                this.currentProfile = profile;
-                this.update();
-            })
-        );
         this.subscriptions.push(this.bridge.onReadiness(() => this.update()));
     }
 
@@ -462,15 +457,28 @@ export class RecognitionLayerSlot extends ReactWidget {
 
     /** Current derived view-model — exposed for the composer and tests. */
     viewModel(): RecognitionLayerViewModel {
-        return deriveRecognitionViewModel(this.currentProfile);
+        return deriveRecognitionViewModel(this.bridge.currentSnapshot().profile);
     }
 
     protected override render(): React.ReactNode {
         return (
-            <RecognitionLayer
-                viewModel={this.viewModel()}
-                onClosePath={command => this.onClosePath?.(command)}
-            />
+            <CompositionProfileProvider bridge={this.bridge}>
+                <RecognitionLayerSlotContent
+                    onClosePath={command => this.onClosePath?.(command)}
+                />
+            </CompositionProfileProvider>
         );
     }
 }
+
+const RecognitionLayerSlotContent: React.FC<{
+    readonly onClosePath: (command: string) => void;
+}> = ({ onClosePath }) => {
+    const { profile } = useCompositionProfile();
+    return (
+        <RecognitionLayer
+            viewModel={deriveRecognitionViewModel(profile)}
+            onClosePath={onClosePath}
+        />
+    );
+};

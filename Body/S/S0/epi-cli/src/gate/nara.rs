@@ -4,6 +4,10 @@
 //! Every method returns JSON (json=true) since the gateway is a structured transport.
 
 use chrono::Utc;
+use epi_s3_gateway::dispatch::{
+    route_nara_session_close, route_nara_session_open, NaraSessionCloseRequest,
+    NaraSessionConfig, NaraSessionOpenRequest,
+};
 use serde_json::{json, Value};
 
 use crate::nara::{
@@ -69,12 +73,104 @@ fn opt_u32(params: &Value, key: &str) -> Option<u32> {
     params.get(key).and_then(|v| v.as_u64()).map(|n| n as u32)
 }
 
+fn opt_u64(params: &Value, key: &str) -> Option<u64> {
+    params.get(key).and_then(|v| v.as_u64())
+}
+
 fn opt_f32(params: &Value, key: &str) -> Option<f32> {
     params.get(key).and_then(|v| v.as_f64()).map(|n| n as f32)
 }
 
 fn deferred_stub(method: &str) -> Result<Value, (String, String)> {
     Ok(json!({"status": format!("{}: deferred to agent pipeline", method)}))
+}
+
+fn nara_session_config_from_params(params: &Value) -> NaraSessionConfig {
+    let mut config = load_nara_session_config().unwrap_or_default();
+    let source = params.get("config").unwrap_or(params);
+    if let Some(capacity) = opt_u32(source, "protein_capacity")
+        .or_else(|| opt_u32(source, "proteinCapacity"))
+    {
+        config.protein_capacity = capacity;
+    }
+    if let Some(policy) = opt_str(source, "stop_codon_policy")
+        .or_else(|| opt_str(source, "stopCodonPolicy"))
+    {
+        config.stop_codon_policy = policy;
+    }
+    if let Some(mode) = opt_str(source, "write_through_mode")
+        .or_else(|| opt_str(source, "writeThroughMode"))
+    {
+        config.write_through_mode = mode;
+    }
+    if let Some(strict) = source
+        .get("protected_handle_strict")
+        .or_else(|| source.get("protectedHandleStrict"))
+        .and_then(|v| v.as_bool())
+    {
+        config.protected_handle_strict = strict;
+    }
+    if let Some(allow) = source
+        .get("allow_raw_protein_bus")
+        .or_else(|| source.get("allowRawProteinBus"))
+        .and_then(|v| v.as_bool())
+    {
+        config.allow_raw_protein_bus = allow;
+    }
+    config
+}
+
+fn load_nara_session_config() -> Result<NaraSessionConfig, String> {
+    let path = dirs::home_dir()
+        .ok_or_else(|| "HOME not available for ~/.epi-logos/config.toml".to_owned())?
+        .join(".epi-logos")
+        .join("config.toml");
+    if !path.exists() {
+        return Ok(NaraSessionConfig::default());
+    }
+    let text = std::fs::read_to_string(&path)
+        .map_err(|err| format!("read {}: {err}", path.display()))?;
+    let root: toml::Value = toml::from_str(&text)
+        .map_err(|err| format!("parse {}: {err}", path.display()))?;
+    let mut config = NaraSessionConfig::default();
+    let session = root
+        .get("nara")
+        .and_then(|v| v.get("session"));
+    if let Some(value) = session
+        .and_then(|v| v.get("protein_capacity"))
+        .and_then(|v| v.as_integer())
+    {
+        if value >= 0 {
+            config.protein_capacity = value as u32;
+        }
+    }
+    if let Some(value) = session
+        .and_then(|v| v.get("stop_codon_policy"))
+        .and_then(|v| v.as_str())
+    {
+        config.stop_codon_policy = value.to_owned();
+    }
+    if let Some(value) = session
+        .and_then(|v| v.get("write_through_mode"))
+        .and_then(|v| v.as_str())
+    {
+        config.write_through_mode = value.to_owned();
+    }
+    if let Some(value) = session
+        .and_then(|v| v.get("protected_handle_strict"))
+        .and_then(|v| v.as_bool())
+    {
+        config.protected_handle_strict = value;
+    }
+    if let Some(value) = root
+        .get("dev")
+        .and_then(|v| v.get("unsafe"))
+        .and_then(|v| v.get("allow_raw_protein_bus"))
+        .and_then(|v| v.as_bool())
+    {
+        config.allow_raw_protein_bus = value;
+    }
+    Ok(config)
 }
 
 /// Return a SpacetimePresence client pointed at the default local SpacetimeDB URL.
@@ -133,6 +229,38 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
                 });
             }
             Ok(out)
+        }
+        "nara.session_open" => {
+            let session_id = required_param(params, "session_id")
+                .or_else(|_| required_param(params, "sessionId"))?;
+            let kairos = opt_u64(params, "kairos")
+                .unwrap_or_else(|| Utc::now().timestamp_millis().max(0) as u64);
+            let response = route_nara_session_open(NaraSessionOpenRequest {
+                session_id,
+                kairos,
+                config: nara_session_config_from_params(params),
+            })
+            .map_err(|err| ("nara-error".to_owned(), err))?;
+            serde_json::to_value(response)
+                .map_err(|err| ("nara-error".to_owned(), err.to_string()))
+        }
+        "nara.session_close" => {
+            let session_id = required_param(params, "session_id")
+                .or_else(|_| required_param(params, "sessionId"))?;
+            let protein_handle = required_param(params, "protein_handle")
+                .or_else(|_| required_param(params, "proteinHandle"))?;
+            let kairos_close = opt_u64(params, "kairos_close")
+                .or_else(|| opt_u64(params, "kairosClose"))
+                .unwrap_or_else(|| Utc::now().timestamp_millis().max(0) as u64);
+            let response = route_nara_session_close(NaraSessionCloseRequest {
+                session_id,
+                protein_handle,
+                kairos_close,
+                config: nara_session_config_from_params(params),
+            })
+            .map_err(|err| ("nara-error".to_owned(), err))?;
+            serde_json::to_value(response)
+                .map_err(|err| ("nara-error".to_owned(), err.to_string()))
         }
 
         // ── Clock ───────────────────────────────────────────────────────

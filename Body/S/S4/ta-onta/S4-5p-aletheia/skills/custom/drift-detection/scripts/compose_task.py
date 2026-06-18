@@ -71,6 +71,56 @@ def compose_tuning_proposal(drift_event: dict[str, Any]) -> dict[str, Any] | Non
         "slot_refs": slot_refs,
         "target_surface": target_surface,
     }
+
+
+def compose_retrain_task(diagnosis: dict[str, Any]) -> dict[str, Any]:
+    """Compose an Anima-dispatchable retrain task from a drift diagnosis.
+
+    This is the Track 12.24 production path. It does not run training; it emits
+    queue data for `aletheia_retrain_queue` and the Anima dispatch lane.
+    """
+
+    item = _require_mapping(diagnosis, "diagnosis")
+    action = _require_mapping(item.get("action"), "action")
+    target = _require_mapping(item.get("target"), "target")
+    drift_event_id = _require_non_blank(item.get("drift_event_id"), "drift_event_id")
+    skill = _require_non_blank(action.get("skill"), "action.skill")
+    reason = _require_non_blank(action.get("reason"), "action.reason")
+    target_subsystem = _require_non_blank(target.get("subsystem"), "target.subsystem")
+    retrain_basis = {
+        "drift_event_id": drift_event_id,
+        "kind": item.get("kind"),
+        "target": target,
+        "action": action,
+        "calibration_provenance": item.get("calibration_provenance", {}),
+    }
+    retrain_id = "retrain-" + sha256(
+        json.dumps(retrain_basis, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()[:16]
+    return {
+        "kind": "aletheia_retrain_task",
+        "retrain_id": retrain_id,
+        "drift_event_id": drift_event_id,
+        "drift_kind": item.get("kind"),
+        "target_subsystem": target_subsystem,
+        "target_skill": skill,
+        "target_model_slot": target.get("model_slot"),
+        "action": reason,
+        "status": "queued",
+        "dispatch": {
+            "actor": "anima",
+            "skill": skill,
+            "calibration_provenance": deepcopy(item.get("calibration_provenance", {})),
+        },
+        "review": {
+            "required": skill in {"nara-voice-training", "parashakti-ebm-head", "anuttara-constraint-discovery"},
+            "commands": {
+                "review": f"epi review-retrain {retrain_id}",
+                "promote": f"epi promote-retrain {retrain_id}",
+                "reject": f"epi reject-retrain {retrain_id}",
+            },
+        },
+    }
     proposal_id = "aletheia-tuning-" + sha256(
         json.dumps(proposal_basis, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()[:16]

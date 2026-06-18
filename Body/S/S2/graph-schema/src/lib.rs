@@ -3028,7 +3028,9 @@ fn validate_q_register_property(rest: &str, key: &str) -> Result<(), String> {
                     .all(|ch| ch.is_ascii_lowercase() || ch.is_ascii_digit())
         })
     {
-        return Err(format!("q-register property missing semantic suffix: {key}"));
+        return Err(format!(
+            "q-register property missing semantic suffix: {key}"
+        ));
     }
     Ok(())
 }

@@ -20,7 +20,7 @@ import type {
     IntegratedEvidenceProducerId,
     PaneAvailability
 } from '@pratibimba/integrated-composition';
-import { useCompositionProfile } from '@pratibimba/integrated-composition';
+import { useCompositionProfile } from '@pratibimba/integrated-composition/composition-profile-context';
 
 interface PaneShellProps {
     readonly title: string;
@@ -87,7 +87,7 @@ const PaneShell: React.FC<PaneShellProps> = ({
 };
 
 export interface CosmicEnginePanesProps {
-    readonly profile: MathemeHarmonicProfileBoundary | null;
+    readonly profile?: MathemeHarmonicProfileBoundary | null;
     readonly routedM2Packet?: M2PrimeMeaningPacket | null;
     readonly m3CenterStage: PaneAvailability;
     readonly m2LeftStage: PaneAvailability;

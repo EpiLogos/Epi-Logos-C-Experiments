@@ -16,7 +16,7 @@ import {
 } from '@pratibimba/integrated-composition/integrated-readiness';
 import {
     useCompositionProfile
-} from '@pratibimba/integrated-composition';
+} from '@pratibimba/integrated-composition/composition-profile-context';
 import type {
     IntegratedEmptyStateReason,
     IntegratedEmptyStateView

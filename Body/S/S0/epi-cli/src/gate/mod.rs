@@ -130,6 +130,18 @@ pub enum GateDispatchCmd {
         #[arg(long)]
         payload_json: String,
     },
+    /// Open an M4 session protein through the S4/S5 Nara adapter.
+    NaraSessionOpen {
+        /// JSON-encoded `NaraSessionOpenRequest`.
+        #[arg(long)]
+        payload_json: String,
+    },
+    /// Close an M4 session protein through the S4/S5 Nara adapter.
+    NaraSessionClose {
+        /// JSON-encoded `NaraSessionCloseRequest`.
+        #[arg(long)]
+        payload_json: String,
+    },
 }
 
 #[derive(Subcommand)]
@@ -328,6 +340,32 @@ fn dispatch_dispatch(cmd: &GateDispatchCmd, json: bool) -> Result<String, String
                 serde_json::to_string(&value).map_err(|err| err.to_string())
             }
         }
+        GateDispatchCmd::NaraSessionOpen { payload_json } => {
+            let req: epi_s3_gateway::dispatch::NaraSessionOpenRequest =
+                serde_json::from_str(payload_json)
+                    .map_err(|err| format!("invalid --payload-json: {err}"))?;
+            let resp = epi_s3_gateway::dispatch::route_nara_session_open(req)
+                .map_err(|err| format!("route_nara_session_open failed: {err}"))?;
+            let value = serde_json::to_value(&resp).map_err(|err| err.to_string())?;
+            if json {
+                serde_json::to_string_pretty(&value).map_err(|err| err.to_string())
+            } else {
+                serde_json::to_string(&value).map_err(|err| err.to_string())
+            }
+        }
+        GateDispatchCmd::NaraSessionClose { payload_json } => {
+            let req: epi_s3_gateway::dispatch::NaraSessionCloseRequest =
+                serde_json::from_str(payload_json)
+                    .map_err(|err| format!("invalid --payload-json: {err}"))?;
+            let resp = epi_s3_gateway::dispatch::route_nara_session_close(req)
+                .map_err(|err| format!("route_nara_session_close failed: {err}"))?;
+            let value = serde_json::to_value(&resp).map_err(|err| err.to_string())?;
+            if json {
+                serde_json::to_string_pretty(&value).map_err(|err| err.to_string())
+            } else {
+                serde_json::to_string(&value).map_err(|err| err.to_string())
+            }
+        }
     }
 }
 
@@ -449,5 +487,77 @@ fn parse_json_or_string(raw: &str) -> Result<serde_json::Value, String> {
     match serde_json::from_str(raw) {
         Ok(value) => Ok(value),
         Err(_) => Ok(serde_json::Value::String(raw.to_owned())),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn nara_session_dispatch_cli_bridge_returns_protected_handle() {
+        let state_root = std::env::temp_dir().join(format!(
+            "epi-gate-nara-session-{}",
+            std::process::id()
+        ));
+        let _ = std::fs::remove_dir_all(&state_root);
+        std::fs::create_dir_all(&state_root).unwrap();
+        let previous = std::env::var_os("EPI_GATE_STATE_ROOT");
+        std::env::set_var("EPI_GATE_STATE_ROOT", &state_root);
+
+        let open_payload = json!({
+            "session_id": "20260618-100836-cli",
+            "kairos": 7205,
+            "config": {
+                "protected_handle_strict": true,
+                "stop_codon_policy": "kairos-derived"
+            }
+        })
+        .to_string();
+        let opened = dispatch_dispatch(
+            &GateDispatchCmd::NaraSessionOpen {
+                payload_json: open_payload,
+            },
+            true,
+        )
+        .unwrap();
+        let opened: serde_json::Value = serde_json::from_str(&opened).unwrap();
+        assert_eq!(opened["start_codon"], 0x07);
+        assert_eq!(opened["protected_handle"], true);
+        assert!(opened.get("body").is_none());
+
+        let close_payload = json!({
+            "session_id": "20260618-100836-cli",
+            "protein_handle": opened["protein_handle"].as_str().unwrap(),
+            "kairos_close": 7205,
+            "config": {
+                "protected_handle_strict": true,
+                "stop_codon_policy": "kairos-derived"
+            }
+        })
+        .to_string();
+        let closed = dispatch_dispatch(
+            &GateDispatchCmd::NaraSessionClose {
+                payload_json: close_payload,
+            },
+            true,
+        )
+        .unwrap();
+        let closed: serde_json::Value = serde_json::from_str(&closed).unwrap();
+        assert_eq!(closed["stop_codon"], 0x1c);
+        assert_eq!(closed["protected_handle"], true);
+        assert!(closed.get("body").is_none());
+        assert_eq!(
+            closed["pattern_packet"]["mahamaya_transcription"]["protein_handle"],
+            opened["protein_handle"]
+        );
+
+        if let Some(previous) = previous {
+            std::env::set_var("EPI_GATE_STATE_ROOT", previous);
+        } else {
+            std::env::remove_var("EPI_GATE_STATE_ROOT");
+        }
+        let _ = std::fs::remove_dir_all(&state_root);
     }
 }

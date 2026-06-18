@@ -1,5 +1,5 @@
 use chrono::Utc;
-use clap::{Parser, Subcommand, ValueEnum};
+use clap::{Subcommand, ValueEnum};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::{BTreeMap, BTreeSet};
@@ -226,6 +226,7 @@ fn discover_skills() -> Result<Vec<SkillEntry>, String> {
         root.join("Body/S/S4/pi-agent/skills/hermes"),
         root.join("Body/S/S4/pi-agent/skills/custom"),
         root.join("Body/S/S4/pi-agent/skills"),
+        root.join("Body/S/S4/ta-onta/S4-x/skills"),
         root.join("Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom"),
         root.join("Body/S/S5/epii-autoresearch-core/skills"),
         root.join("Body/S/S5/plugins/epi-logos/skills/custom"),

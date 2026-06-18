@@ -30,6 +30,11 @@ pub use spacetime::*;
 pub use temporal::*;
 pub use verifier::*;
 
+pub use portal_core::{AnandaProjection, M3TranscriptionPacket};
+
+pub const S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD: &str = "s5'.gnostic.musical_transcript";
+pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
+
 // grep acceptance for 01.T1.10:
 // s0'.verifier.check_state
 // s0'.verifier.emit_question

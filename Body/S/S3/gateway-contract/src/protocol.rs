@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::PORTAL_EVENT_NAMES;
+use crate::{
+    PORTAL_EVENT_NAMES, S2_GRAPH_ANANDA_POSITION_METHOD, S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD,
+};
 
 pub use epi_kernel_contract::{
     AnuttaraDiagnostic, AnuttaraExpression, BioQuaternionState, EnergyDecomposition, KernelElement,
@@ -46,6 +48,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "s2.graph.query",
     "s2.graph.node",
     "s2.graph.traverse",
+    S2_GRAPH_ANANDA_POSITION_METHOD,
     "s2.graph.harmonic_relations.materialize",
     "s2.graph.pointer_web.compute",
     "s2.graph.pointer_web.refresh",
@@ -132,6 +135,7 @@ pub const METHOD_NAMES: &[&str] = &[
     "s5'.gnostic.ingest",
     "s5'.gnostic.query",
     "s5'.gnostic.resolve",
+    S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD,
     "s5'.gnostic.notebook",
     "s5'.gnostic.status",
     "s5'.gnostic.models",

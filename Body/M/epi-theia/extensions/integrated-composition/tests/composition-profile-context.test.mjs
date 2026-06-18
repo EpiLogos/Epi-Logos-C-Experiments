@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
+const testDir = path.dirname(fileURLToPath(import.meta.url));
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 const {
@@ -109,9 +111,9 @@ test('shared profile subscription fans out one profile object and disposes upstr
 
 test('integrated plugin browser sources do not open direct profile subscriptions', () => {
     const pluginBrowserRoots = [
-        '../plugin-integrated-1-2-3/src/browser',
-        '../plugin-integrated-4-5-0/src/browser'
-    ].map(root => path.resolve(new URL('.', import.meta.url).pathname, root));
+        '../../plugin-integrated-1-2-3/src/browser',
+        '../../plugin-integrated-4-5-0/src/browser'
+    ].map(root => path.resolve(testDir, root));
     const offenders = [];
 
     for (const root of pluginBrowserRoots) {
