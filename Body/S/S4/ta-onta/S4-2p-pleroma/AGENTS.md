@@ -1,11 +1,11 @@
 # AGENTS.md — S4-2p-pleroma
 
 ## Purpose
-The Pleroma carrier (S4-2' in ta-onta): the bounded-execution substrate registry — "the execution substrate registry" owning the bounded primitives, PI tool registration surface, execution-mode enforcement, and Techne terminal/session tooling (per `CONTRACT.md`). TypeScript extension tree (no crate/package manifest); folds onto the S2 entity layer.
+The Pleroma carrier (S4-2' in ta-onta): the bounded-execution substrate registry — "the execution substrate registry" owning the bounded primitives, PI tool registration surface, execution-mode enforcement, Techne terminal/session tooling, and `techne_vama_summon` registration (per `CONTRACT.md`). TypeScript extension tree (no crate/package manifest); folds onto the S2 entity layer.
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-2-SPEC]] (carrier law); layer ground [[S4-SPEC]] / [[S2-SPEC]].
 
 ## Ownership
-- `extension.ts` — PI extension entry; registers bounded primitives, damage-control, tilldone, Techne terminal tools.
+- `extension.ts` — PI extension entry; registers bounded primitives, damage-control, tilldone, Techne terminal tools, and `techne_vama_summon` refusal-law metadata.
 - `CONTRACT.md` — binding carrier contract: responsibility, 7 bounded primitives, PI hook seams, invariants.
 - `spine-contribution.ts` — spine compositor contribution (`coordinate: "S2/S3"`: injection slot, ledger, compiler pass, query).
 - `S2/` — primitive + tool source: `pleroma-primitives.ts` (PRIMITIVE_REGISTRY), `terminal-tools.ts` (Techne argv builder + capability matrix), `damage-control.ts`, `tilldone.ts`, `themeMap.ts` (per-extension visual identity), `child-extension-propagation.ts`, `prompt-url-widget.ts`.

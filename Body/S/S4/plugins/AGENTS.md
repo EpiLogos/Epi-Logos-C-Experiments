@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]]
 
 ## Ownership
 - `registry.jsonl` — plugin registry (two entries: `claude-mem` vendor plugin at `vendors/claude-mem-v10.5.5/plugin`; `pleroma` local plugin at `Body/S/S4/plugins/pleroma`), each declaring `agents: [main, anima, aletheia]`.
-- `pleroma/` — local plugin, "executive S4' layer for ta-onta VAK orchestration, constitutional agents, and Technē substrate" (per `.claude-plugin/plugin.json`); contains `.claude-plugin/plugin.json` (manifest), `capability-matrix.json` (S4/S4' capability membrane), `settings.json` (default agent permissions), `commands/`, `skills/`, `hooks/`, `evals/`, `tests/`.
+- `pleroma/` — local plugin, "executive S4' layer for ta-onta VAK orchestration, constitutional agents, and Technē substrate" (per `.claude-plugin/plugin.json`); contains `.claude-plugin/plugin.json` (manifest), `capability-matrix.json` (S4/S4' capability membrane, including Techne tool declarations such as `techne_vama_summon`), `settings.json` (default agent permissions), `commands/`, `skills/`, `hooks/`, `evals/`, `tests/`.
 - Does NOT own carrier domain law: the pleroma plugin is derived from ta-onta specs — source-of-truth carrier law lives in `Body/S/S4/ta-onta/S4-2p-pleroma/CONTRACT.md` and the owning [[S4-SPEC]], not here.
 
 ## Local Contracts

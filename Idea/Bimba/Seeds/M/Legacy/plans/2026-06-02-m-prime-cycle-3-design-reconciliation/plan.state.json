@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:47:57.546Z",
+  "updatedAt": "2026-06-18T19:50:41.064Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5149,16 +5149,16 @@
       "worktree": null
     },
     "30.T30.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:49:38.322Z",
+      "claimedAt": "2026-06-18T19:49:38.322Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-30-t30-7",
+      "leaseExpiresAt": "2026-06-18T21:49:38.322Z",
+      "heartbeatAt": "2026-06-18T19:49:38.322Z",
+      "runId": "20260618T194938Z-30-T30.7",
       "worktree": null
     },
     "30.T30.8": {
@@ -6986,14 +6986,19 @@
       "worktree": null
     },
     "29.T29.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:30:24.831Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:49:13.603Z",
       "claimedAt": "2026-06-18T19:30:24.831Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:49:13.603Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:49:13.603Z",
+          "text": "35/35 @pratibimba/plugin-integrated-4-5-0 tests pass; test -f contemplation-flow-director.tsx passed; key paths Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/contemplation-flow-director.tsx, src/browser/contemplation-flow-director.test.mjs, src/browser/personal-recognition-composition.tsx"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-29-t29-9",
-      "leaseExpiresAt": "2026-06-18T21:30:24.831Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:30:24.831Z",
       "runId": "20260618T193024Z-29-T29.9",
       "worktree": null
@@ -8042,14 +8047,19 @@
       "worktree": null
     },
     "41.T41.2": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:38:27.931Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:50:40.979Z",
       "claimedAt": "2026-06-18T19:38:27.931Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-18T19:50:40.979Z",
+      "evidence": [
+        {
+          "at": "2026-06-18T19:50:40.979Z",
+          "text": "node --test S4-2p-pleroma terminal+vama tests: 12 passed; python3 -m pytest pleroma capability matrix: 18 passed; greps confirm techne_vama_summon registration, Psyche DR-VAMA-1 authority, and capability-matrix flags; pnpm --filter @epi-logos/pleroma test exited 0 but matched no project"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-41-t41-2",
-      "leaseExpiresAt": "2026-06-18T21:38:27.931Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:38:27.931Z",
       "runId": "20260618T193827Z-41-T41.2",
       "worktree": null
@@ -10804,11 +10814,12 @@
     {
       "runId": "20260618T193024Z-29-T29.9",
       "taskId": "29.T29.9",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:30:24.831Z",
       "owner": "codex-m-dev-29-t29-9",
       "leaseExpiresAt": "2026-06-18T21:30:24.831Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:49:13.603Z"
     },
     {
       "runId": "20260618T193314Z-42-T42.3",
@@ -10822,11 +10833,12 @@
     {
       "runId": "20260618T193827Z-41-T41.2",
       "taskId": "41.T41.2",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:38:27.931Z",
       "owner": "codex-m-dev-41-t41-2",
       "leaseExpiresAt": "2026-06-18T21:38:27.931Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-18T19:50:40.979Z"
     },
     {
       "runId": "20260618T193927Z-25-T25.23",
@@ -10837,16 +10849,25 @@
       "leaseExpiresAt": "2026-06-18T21:39:27.406Z",
       "worktree": null,
       "completedAt": "2026-06-18T19:47:57.469Z"
+    },
+    {
+      "runId": "20260618T194938Z-30-T30.7",
+      "taskId": "30.T30.7",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:49:38.322Z",
+      "owner": "codex-m-dev-30-t30-7",
+      "leaseExpiresAt": "2026-06-18T21:49:38.322Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:38:17.275Z",
-    "updatedAt": "2026-06-18T19:38:17.275Z",
+    "createdAt": "2026-06-18T19:49:21.337Z",
+    "updatedAt": "2026-06-18T19:49:21.337Z",
     "taskIds": [
       "31.T31.13",
-      "29.T29.9",
       "42.T42.3",
+      "41.T41.2",
       "05.T5.3"
     ],
     "totalWeight": 8,
@@ -10854,8 +10875,8 @@
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "29.T29.9": "in-session",
       "42.T42.3": "in-session",
+      "41.T41.2": "in-session",
       "05.T5.3": "in-session"
     },
     "rationale": [
