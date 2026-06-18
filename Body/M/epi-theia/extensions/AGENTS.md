@@ -7,7 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M0
 ## Ownership
 - `test/` — cross-extension contract + acceptance test suite driven by `../package.json`'s `test:contracts` script (`node --test`).
 - `scripts/` — workspace tooling: `scaffold-m-extensions.mjs`, `scaffold-integrated-plugins.mjs`, design-token generation/validation, `eslint-rules/`, contract preflight validators.
-- `contracts/` — implementation-control contract artifacts (extension/composition preflight JSON+MD, `ui-design-tokens.{ts,json,md}`, `ui-colour-tokens.{json,ts,md}`, `ui-theme-mapping.ts`, `ui-motion-tokens.{json,ts,md}`, `ui-typography.{ts,md}`, UI foundation/composition rules). No package — pure contract docs.
+- `contracts/` — implementation-control contract artifacts (extension/composition preflight JSON+MD, `ui-design-tokens.{ts,json,md}`, `ui-colour-tokens.{json,ts,md}`, `ui-theme-mapping.ts`, `ui-motion-tokens.{json,ts,md}`, `ui-accessibility.{ts,md}`, `ui-typography.{ts,md}`, UI foundation/composition rules). No package — pure contract docs.
 - `MIGRATION-SOURCES.md` — operational index mapping each extension to its legacy `epi-tauri`/`epi-app` migration sources.
 - Each subdirectory listed below — its own `@pratibimba/*` workspace package with local `package.json`, `src/`, `tests/`.
 - Does NOT own: domain law (lives in each owning M' coordinate extension, not centralised here), gateway runtime (delegated to [[S3-SPEC]] gate at port 18794 via `kernel-bridge`), or Electron/browser app targets (sibling `../electron-app`, `../theia-app`).
@@ -15,7 +15,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M0
 ## Local Contracts
 - `contracts/07-t0-extension-contract-preflight.{json,md}` — six M-extension boundary contract against `KernelBridgeAPI`.
 - `contracts/08-t0-composition-contract-preflight.{json,md}` — Track 08 integrated-plugin composition contract.
-- `contracts/ui-design-tokens.ts` + `ui-colour-tokens.ts` + `ui-theme-mapping.ts` + `ui-motion-tokens.ts` + `ui-typography.ts` — binding UI token/colour-token/theme-mapping/motion-token/typography surface.
+- `contracts/ui-design-tokens.ts` + `ui-colour-tokens.ts` + `ui-theme-mapping.ts` + `ui-motion-tokens.ts` + `ui-accessibility.ts` + `ui-typography.ts` — binding UI token/colour-token/theme-mapping/motion-token/accessibility/typography surface.
 - Owning spec: [[M'-SYSTEM-SPEC]] and the per-coordinate M' specs above.
 
 ## Work Guidance

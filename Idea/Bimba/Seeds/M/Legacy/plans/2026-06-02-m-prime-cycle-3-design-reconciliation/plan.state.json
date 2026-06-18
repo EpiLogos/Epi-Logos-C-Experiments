@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T19:12:16.327Z",
+  "updatedAt": "2026-06-18T19:13:55.810Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5104,19 +5104,23 @@
       "worktree": null
     },
     "30.T30.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-18T19:06:55.119Z",
+      "status": "done",
+      "updatedAt": "2026-06-18T19:12:30.261Z",
       "claimedAt": "2026-06-18T19:06:55.119Z",
-      "completedAt": null,
+      "completedAt": "2026-06-18T19:12:30.261Z",
       "evidence": [
         {
           "at": "2026-06-16T12:00:00.000Z",
           "text": "RESET from fraudulent done 2026-06-16. Evidence cited 'DR-WC-DL-4 VALIDATED in 13-decision-register.md' — FALSE: DR-WC-DL-4 is NOT an entry in 13-decision-register.md. lemniscate-transition.tsx exists but implements no reduced-motion path — grep for prefers-reduced-motion / 100ms / snap returns nothing. Requires: the prefers-reduced-motion 100ms-snap implementation + a real register entry."
+        },
+        {
+          "at": "2026-06-18T19:12:30.261Z",
+          "text": "test -f ui-accessibility.ts/md; tsc --noEmit --strict ui-accessibility.ts passed; 14 ui-accessibility smoke checks passed; a11y release-gate 3/3 passed with browser shim; ui-colour contrast contract 12/12 passed; key files Body/M/epi-theia/extensions/contracts/ui-accessibility.{ts,md}"
         }
       ],
       "notes": "Reset from fraudulent 'done' during the 2026-06-16 deferral-lie overturn audit (see evidence).",
       "owner": "codex-m-dev-30-t30-5",
-      "leaseExpiresAt": "2026-06-18T21:06:55.119Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-18T19:06:55.119Z",
       "runId": "20260618T190655Z-30-T30.5",
       "worktree": null
@@ -7743,16 +7747,16 @@
       "worktree": null
     },
     "12.T12.28": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:13:55.743Z",
+      "claimedAt": "2026-06-18T19:13:55.743Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-12-t12-28",
+      "leaseExpiresAt": "2026-06-18T21:13:55.743Z",
+      "heartbeatAt": "2026-06-18T19:13:55.743Z",
+      "runId": "20260618T191355Z-12-T12.28",
       "worktree": null
     },
     "12.T12.29": {
@@ -8143,16 +8147,16 @@
       "worktree": null
     },
     "41.T41.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-18T19:13:39.471Z",
+      "claimedAt": "2026-06-18T19:13:39.471Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-41-t41-12",
+      "leaseExpiresAt": "2026-06-18T21:13:39.471Z",
+      "heartbeatAt": "2026-06-18T19:13:39.471Z",
+      "runId": "20260618T191339Z-41-T41.12",
       "worktree": null
     },
     "03.T3.10": {
@@ -10675,21 +10679,40 @@
     {
       "runId": "20260618T190655Z-30-T30.5",
       "taskId": "30.T30.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-18T19:06:55.119Z",
       "owner": "codex-m-dev-30-t30-5",
       "leaseExpiresAt": "2026-06-18T21:06:55.119Z",
+      "worktree": null,
+      "completedAt": "2026-06-18T19:12:30.261Z"
+    },
+    {
+      "runId": "20260618T191339Z-41-T41.12",
+      "taskId": "41.T41.12",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:13:39.471Z",
+      "owner": "codex-m-dev-41-t41-12",
+      "leaseExpiresAt": "2026-06-18T21:13:39.471Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260618T191355Z-12-T12.28",
+      "taskId": "12.T12.28",
+      "status": "in_progress",
+      "startedAt": "2026-06-18T19:13:55.743Z",
+      "owner": "codex-m-dev-12-t12-28",
+      "leaseExpiresAt": "2026-06-18T21:13:55.743Z",
       "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:06:36.730Z",
-    "updatedAt": "2026-06-18T19:06:36.730Z",
+    "createdAt": "2026-06-18T19:13:39.907Z",
+    "updatedAt": "2026-06-18T19:13:39.907Z",
     "taskIds": [
       "31.T31.13",
-      "25.T25.21",
       "21.T21.20",
+      "41.T41.12",
       "05.T5.3"
     ],
     "totalWeight": 8,
@@ -10697,8 +10720,8 @@
     "weightBudget": 8,
     "modeHints": {
       "31.T31.13": "in-session",
-      "25.T25.21": "in-session",
       "21.T21.20": "in-session",
+      "41.T41.12": "in-session",
       "05.T5.3": "in-session"
     },
     "rationale": [

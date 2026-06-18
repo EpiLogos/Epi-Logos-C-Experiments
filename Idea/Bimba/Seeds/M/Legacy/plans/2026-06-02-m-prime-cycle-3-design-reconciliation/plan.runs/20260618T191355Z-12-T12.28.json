@@ -1,0 +1,37 @@
+{
+  "runId": "20260618T191355Z-12-T12.28",
+  "taskId": "12.T12.28",
+  "startedAt": "2026-06-18T19:13:55.743Z",
+  "owner": "codex-m-dev-12-t12-28",
+  "leaseExpiresAt": "2026-06-18T21:13:55.743Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.28",
+    "trackId": "12",
+    "tranche": "T12.28",
+    "title": "Hermes-style `skill_lookup` skill primitive (replaces eager XML manifest filter)",
+    "effort": "replaces eager XML manifest filter",
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.27"
+    ],
+    "writeScopes": [
+      "Body/S/S1/hen-compiler-core/src/smart_env.rs",
+      "Body/S/S4/pi-agent/extensions/epii-entitlement-activation.ts:203-254",
+      "Body/S/S4/pi-agent/skills/custom/skill-lookup/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

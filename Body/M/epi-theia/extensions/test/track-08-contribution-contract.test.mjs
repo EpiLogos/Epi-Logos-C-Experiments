@@ -4,19 +4,38 @@ import { createRequire } from 'node:module';
 
 if (!globalThis.document) {
     class HeadlessElement {
+        constructor() {
+            this.style = {};
+            this.ownerDocument = globalThis.document;
+        }
         matches() {
             return false;
         }
     }
     globalThis.Element = HeadlessElement;
+    const documentElement = new HeadlessElement();
     globalThis.document = {
+        documentElement,
+        body: new HeadlessElement(),
         createElement: () => new HeadlessElement(),
-        querySelectorAll: () => []
+        querySelectorAll: () => [],
+        queryCommandSupported: () => false
     };
-    globalThis.window = { WebAssembly };
+    globalThis.window = {
+        WebAssembly,
+        navigator: { maxTouchPoints: 0 },
+        localStorage: {
+            getItem: () => null,
+            setItem: () => undefined,
+            removeItem: () => undefined
+        }
+    };
 }
 
 const require = createRequire(import.meta.url);
+require.extensions['.css'] = () => undefined;
+require('@theia/core/lib/browser/frontend-application-config-provider').FrontendApplicationConfigProvider
+    .set({ applicationName: 'track-08-contribution-contract-test' });
 
 const runtime = require('../m-extension-runtime/lib/common/index.js');
 
