@@ -1,0 +1,320 @@
+.m4-nara-dialogical-arena .m4-arena-root,
+.m4-arena-inspector,
+.m4-arena-wizard {
+    color: var(--theia-foreground);
+    background: var(--theia-editor-background);
+}
+
+.m4-arena-root {
+    gap: 10px;
+}
+
+.m4-arena-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.m4-arena-toolbar button,
+.m4-arena-input-send,
+.m4-arena-warm-actions button,
+.m4-arena-wizard button,
+.m4-arena-scene-tab {
+    border: 1px solid var(--theia-input-border);
+    border-radius: 4px;
+    color: var(--theia-input-foreground);
+    background: var(--theia-input-background);
+    font: inherit;
+}
+
+.m4-arena-toolbar button,
+.m4-arena-input-send,
+.m4-arena-warm-actions button,
+.m4-arena-wizard button {
+    padding: 5px 8px;
+}
+
+.m4-arena-toolbar button:hover,
+.m4-arena-input-send:hover,
+.m4-arena-warm-actions button:hover,
+.m4-arena-wizard button:not(:disabled):hover,
+.m4-arena-scene-tab:hover {
+    background: var(--theia-list-hoverBackground);
+}
+
+.m4-arena-inspector {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 420px;
+    border: 1px solid var(--theia-editorWidget-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.m4-arena-scene-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--theia-editorWidget-border);
+    padding: 8px;
+}
+
+.m4-arena-scene-tab {
+    display: inline-grid;
+    grid-template-columns: minmax(96px, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    min-width: 150px;
+    padding: 6px 8px;
+}
+
+.m4-arena-scene-tab[data-active="true"] {
+    border-color: var(--theia-focusBorder);
+    background: var(--theia-list-activeSelectionBackground);
+    color: var(--theia-list-activeSelectionForeground);
+}
+
+.m4-arena-scene-tab-title,
+.m4-arena-turn-line,
+.m4-arena-chip-name {
+    overflow-wrap: anywhere;
+}
+
+.m4-arena-body {
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(220px, 280px);
+    min-height: 0;
+}
+
+.m4-arena-detail {
+    display: grid;
+    grid-template-rows: auto auto minmax(160px, 1fr) auto;
+    gap: 10px;
+    min-width: 0;
+    padding: 10px;
+}
+
+.m4-arena-detail-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--theia-descriptionForeground);
+}
+
+.m4-arena-detail-header,
+.m4-arena-roster,
+.m4-arena-compact-header,
+.m4-arena-warm-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.m4-arena-detail-header {
+    justify-content: space-between;
+}
+
+.m4-arena-kairos-ring {
+    display: inline-flex;
+    min-width: 0;
+}
+
+.m4-arena-chip,
+.m4-arena-pinned,
+.m4-arena-turn-speaker,
+.m4-arena-turn-vak,
+.m4-arena-turn-kairos,
+.m4-arena-class-count,
+.m4-arena-compact-turns {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 100%;
+    border: 1px solid var(--theia-editorWidget-border);
+    border-radius: 4px;
+    padding: 3px 6px;
+    background: var(--theia-editorWidget-background);
+    font-size: var(--theia-ui-font-size1);
+}
+
+.m4-arena-chip-glyph {
+    flex: 0 0 auto;
+}
+
+.m4-arena-vama-sprite {
+    border-color: #9f8a3b;
+}
+
+.m4-arena-vama-daemon {
+    border-color: #6f8da8;
+}
+
+.m4-arena-vama-mantra {
+    border-color: #8f78a7;
+}
+
+.m4-arena-vama-egregore {
+    border-color: #78906d;
+}
+
+.m4-arena-scrollback,
+.m4-arena-warm-list,
+.m4-arena-wizard-warm,
+.m4-arena-wizard-agents {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.m4-arena-scrollback {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: auto;
+}
+
+.m4-arena-turn {
+    display: grid;
+    grid-template-columns: minmax(96px, max-content) auto auto minmax(160px, 1fr);
+    gap: 6px;
+    align-items: start;
+    padding: 7px;
+    border-left: 3px solid var(--theia-editorWidget-border);
+    background: var(--theia-sideBar-background);
+}
+
+.m4-arena-turn-line {
+    line-height: 1.4;
+}
+
+.m4-arena-input {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+}
+
+.m4-arena-input-field,
+.m4-arena-warm-filter,
+.m4-arena-wizard input[type="text"],
+.m4-arena-wizard select {
+    border: 1px solid var(--theia-input-border);
+    border-radius: 4px;
+    color: var(--theia-input-foreground);
+    background: var(--theia-input-background);
+    font: inherit;
+}
+
+.m4-arena-input-field {
+    min-height: 54px;
+    resize: vertical;
+    padding: 7px;
+}
+
+.m4-arena-warm-strip {
+    min-width: 0;
+    border-left: 1px solid var(--theia-editorWidget-border);
+    padding: 10px;
+    background: var(--theia-sideBar-background);
+}
+
+.m4-arena-warm-header {
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.m4-arena-warm-header h4,
+.m4-arena-wizard h3,
+.m4-arena-wizard h4 {
+    margin: 0;
+}
+
+.m4-arena-warm-list,
+.m4-arena-wizard-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.m4-arena-warm-item,
+.m4-arena-wizard-step {
+    border: 1px solid var(--theia-editorWidget-border);
+    border-radius: 6px;
+    padding: 8px;
+    background: var(--theia-editorWidget-background);
+}
+
+.m4-arena-warm-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 4px 7px;
+}
+
+.m4-arena-warm-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 6px;
+}
+
+.m4-arena-wizard {
+    border: 1px solid var(--theia-editorWidget-border);
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.m4-arena-wizard-header,
+.m4-arena-wizard-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.m4-arena-wizard-cpf,
+.m4-arena-wizard-hint,
+.m4-arena-scene-strip-empty,
+.m4-arena-warm-empty {
+    color: var(--theia-descriptionForeground);
+}
+
+.m4-arena-wizard-warm-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.m4-arena-compact,
+.m4-arena-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--theia-editorWidget-border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    background: var(--theia-editorWidget-background);
+}
+
+.m4-arena-compact {
+    flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+    .m4-arena-body {
+        grid-template-columns: 1fr;
+    }
+
+    .m4-arena-warm-strip {
+        border-left: 0;
+        border-top: 1px solid var(--theia-editorWidget-border);
+    }
+
+    .m4-arena-turn {
+        grid-template-columns: 1fr;
+    }
+
+    .m4-arena-input {
+        grid-template-columns: 1fr;
+    }
+}

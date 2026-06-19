@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T00:07:34.694Z",
+  "updatedAt": "2026-06-19T00:16:02.374Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1924,16 +1924,21 @@
       "worktree": null
     },
     "12.T12.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T00:16:02.321Z",
+      "claimedAt": "2026-06-19T00:12:24.886Z",
+      "completedAt": "2026-06-19T00:16:02.321Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:16:02.321Z",
+          "text": "node --test Pi TS suite: 75 pass; python3 -m pytest test_anima_registration.py: 3 pass; key paths Body/S/S4/pi-agent/lib/review-gate.ts, Body/S/S4/pi-agent/lib/review-gate.test.ts, Body/S/S4/pi-agent/AGENTS.md"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-12-t12-4",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T00:12:24.886Z",
+      "runId": "20260619T001224Z-12-T12.4",
       "worktree": null
     },
     "12.T12.5": {
@@ -1976,11 +1981,16 @@
       "worktree": null
     },
     "12.T12.8": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-06-19T00:14:38.363755+00:00",
+          "text": "DEPRECATED per body. Resolved by DR-M5-1."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -2788,11 +2798,16 @@
       "worktree": null
     },
     "18.T18.6": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-06-19T00:14:38.364703+00:00",
+          "text": "DEPRECATED — code-pending-closure superseded."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -5385,16 +5400,16 @@
       "worktree": null
     },
     "31.T31.3": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T00:12:18.386Z",
+      "claimedAt": "2026-06-19T00:12:18.386Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-31-t31-3",
+      "leaseExpiresAt": "2026-06-19T02:12:18.386Z",
+      "heartbeatAt": "2026-06-19T00:12:18.386Z",
+      "runId": "20260619T001218Z-31-T31.3",
       "worktree": null
     },
     "31.T31.4": {
@@ -10990,31 +11005,49 @@
       "leaseExpiresAt": "2026-06-18T21:49:38.322Z",
       "worktree": null,
       "completedAt": "2026-06-18T19:54:08.577Z"
+    },
+    {
+      "runId": "20260619T001218Z-31-T31.3",
+      "taskId": "31.T31.3",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T00:12:18.386Z",
+      "owner": "codex-m-dev-31-t31-3",
+      "leaseExpiresAt": "2026-06-19T02:12:18.386Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T001224Z-12-T12.4",
+      "taskId": "12.T12.4",
+      "status": "done",
+      "startedAt": "2026-06-19T00:12:24.886Z",
+      "owner": "codex-m-dev-12-t12-4",
+      "leaseExpiresAt": "2026-06-19T02:12:24.886Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T00:16:02.321Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-18T19:49:21.337Z",
-    "updatedAt": "2026-06-18T19:49:21.337Z",
+    "createdAt": "2026-06-19T00:11:58.083Z",
+    "updatedAt": "2026-06-19T00:11:58.083Z",
     "taskIds": [
-      "31.T31.13",
-      "42.T42.3",
-      "41.T41.2",
-      "05.T5.3"
+      "05.T5.3",
+      "05.T5.4",
+      "05.T5.5",
+      "05.T5.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "31.T31.13": "in-session",
-      "42.T42.3": "in-session",
-      "41.T41.2": "in-session",
-      "05.T5.3": "in-session"
+      "05.T5.3": "in-session",
+      "05.T5.4": "in-session",
+      "05.T5.5": "in-session",
+      "05.T5.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }

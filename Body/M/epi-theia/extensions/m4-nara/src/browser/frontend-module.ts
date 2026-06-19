@@ -1,5 +1,6 @@
 // Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
 import '../../style/privacy-chrome.css';
+import '../../style/dialogical-arena.css';
 import { ContainerModule, injectable, interfaces, inject } from '@theia/core/shared/inversify';
 import { CommandContribution, CommandRegistry, CommandService } from '@theia/core/lib/common';
 import {
@@ -44,6 +45,10 @@ import {
     JournalEntriesSidebarWidget,
     M4JournalEntriesContribution
 } from './widgets/journal-entries-sidebar';
+import {
+    DialogicalArenaWidget,
+    DIALOGICAL_ARENA_VIEW_ID
+} from './widgets/dialogical-arena';
 import { M4NaraWidget } from './m4-nara-widget';
 import {
     EXTENSION_ID,
@@ -304,6 +309,42 @@ export class M4KairosWheelContribution
     }
 }
 
+@injectable()
+export class M4DialogicalArenaContribution
+    extends AbstractViewContribution<DialogicalArenaWidget>
+    implements CommandContribution, FrontendApplicationContribution
+{
+    static readonly OPEN_COMMAND_ID = `${EXTENSION_ID}.openDialogicalArena`;
+
+    constructor() {
+        super({
+            widgetId: DialogicalArenaWidget.ID,
+            widgetName: DialogicalArenaWidget.LABEL,
+            defaultWidgetOptions: { area: 'main' },
+            toggleCommandId: M4DialogicalArenaContribution.OPEN_COMMAND_ID
+        });
+    }
+
+    async onStart(): Promise<void> {
+        // Registered without auto-opening; composition or command routing opens it.
+    }
+
+    override registerCommands(commands: CommandRegistry): void {
+        super.registerCommands(commands);
+        commands.registerCommand(
+            { id: M4DialogicalArenaContribution.OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open dialogical arena` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'dialogical-arena',
+            'M4 Nara: Dialogical Arena',
+            () => this.openView({ activate: true, reveal: true })
+        );
+    }
+}
+
 /**
  * Task 32.2 — PASU-absence detection orchestration.
  *
@@ -436,6 +477,7 @@ export default new ContainerModule(bind => {
     bind(TuningBarWidget).toSelf();
     bind(KairosDisplayWidget).toSelf();
     bind(JournalEntriesSidebarWidget).toSelf();
+    bind(DialogicalArenaWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M4NaraWidget.ID,
@@ -478,6 +520,12 @@ export default new ContainerModule(bind => {
             createWidget: () => createJournalEntriesSidebarWidget(ctx.container)
         }))
         .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: DialogicalArenaWidget.ID,
+            createWidget: () => createDialogicalArenaWidget(ctx.container)
+        }))
+        .inSingletonScope();
     bindViewContribution(bind, M4NaraContribution);
     bind(FrontendApplicationContribution).toService(M4NaraContribution);
     bindViewContribution(bind, M4LensApplicationContribution);
@@ -490,6 +538,8 @@ export default new ContainerModule(bind => {
     bind(FrontendApplicationContribution).toService(M4TuningBarContribution);
     bindViewContribution(bind, M4KairosWheelContribution);
     bind(FrontendApplicationContribution).toService(M4KairosWheelContribution);
+    bindViewContribution(bind, M4DialogicalArenaContribution);
+    bind(FrontendApplicationContribution).toService(M4DialogicalArenaContribution);
 
     // Tranche 25.3 — Journal Entries activity-bar mode (daily-0-1 left slot).
     bindViewContribution(bind, M4JournalEntriesContribution);
@@ -512,6 +562,7 @@ export default new ContainerModule(bind => {
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.
     void ROUTE_PATH;
+    void DIALOGICAL_ARENA_VIEW_ID;
 });
 
 function createWidget(container: interfaces.Container): M4NaraWidget {
@@ -554,4 +605,10 @@ function createJournalEntriesSidebarWidget(container: interfaces.Container): Jou
     const child = container.createChild();
     child.bind(JournalEntriesSidebarWidget).toSelf();
     return child.get(JournalEntriesSidebarWidget);
+}
+
+function createDialogicalArenaWidget(container: interfaces.Container): DialogicalArenaWidget {
+    const child = container.createChild();
+    child.bind(DialogicalArenaWidget).toSelf();
+    return child.get(DialogicalArenaWidget);
 }

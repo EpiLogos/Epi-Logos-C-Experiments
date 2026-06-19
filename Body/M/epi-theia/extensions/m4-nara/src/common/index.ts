@@ -34,7 +34,8 @@ export const ALL_VIEW_IDS = [
     "m4.nara.timeAxisSwitcher",
     "m4.nara.sessionCloseCeremony",
     "m4.nara.psycheAnchorCoherence",
-    "m4.nara.beingPatternPerspective"
+    "m4.nara.beingPatternPerspective",
+    "m4.nara.dialogicalArena"
 ] as const;
 export const OPEN_COMMAND_ID = 'm4.openArtifact';
 export const READ_ONLY_COMMAND_ID = 'm4.openArtifact.readOnly';
@@ -79,7 +80,8 @@ const TRACK_08_VIEW_CONTRIBUTIONS = [
     { exportName: "M4TimeAxisSwitcherChip", viewId: "m4.nara.timeAxisSwitcher" },
     { exportName: "M4SessionCloseCeremonyCard", viewId: "m4.nara.sessionCloseCeremony" },
     { exportName: "M4PsycheAnchorCoherenceCard", viewId: "m4.nara.psycheAnchorCoherence" },
-    { exportName: "M4BeingPatternPerspectiveCard", viewId: "m4.nara.beingPatternPerspective" }
+    { exportName: "M4BeingPatternPerspectiveCard", viewId: "m4.nara.beingPatternPerspective" },
+    { exportName: "M4DialogicalArenaCard", viewId: "m4.nara.dialogicalArena" }
 ] as const;
 export const TRACK_08_EXPORTS = [
     "M4ArtifactHandleChip",
@@ -103,7 +105,8 @@ export const TRACK_08_EXPORTS = [
     "M4TimeAxisSwitcherChip",
     "M4SessionCloseCeremonyCard",
     "M4PsycheAnchorCoherenceCard",
-    "M4BeingPatternPerspectiveCard"
+    "M4BeingPatternPerspectiveCard",
+    "M4DialogicalArenaCard"
 ] as const;
 export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.freeze({
     extensionId: EXTENSION_ID,
