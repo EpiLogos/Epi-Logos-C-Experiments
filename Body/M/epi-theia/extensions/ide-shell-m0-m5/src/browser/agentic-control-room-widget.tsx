@@ -407,7 +407,10 @@ export class AgenticControlRoomWidget extends ReactWidget {
                             </dl>
                             <h5>DR-M5-1 roster collapse</h5>
                             <ul data-test="acr-roster-collapse">
-                                <li data-test="acr-roster-pi">Pi — single harness</li>
+                                <li data-test="acr-roster-pi">
+                                    Pi — single harness
+                                    {' '}(<span data-test="acr-roster-pi-agent-kind">{this.agentKind(matrix)}</span>)
+                                </li>
                                 <li data-test="acr-roster-anima">Anima — main dispatcher</li>
                                 <li data-test="acr-roster-aletheia">
                                     Aletheia — crystallisation-mode techne guardians
@@ -524,6 +527,11 @@ export class AgenticControlRoomWidget extends ReactWidget {
                 </section>
             </div>
         );
+    }
+
+    protected agentKind(matrix: CapabilityMatrix): string {
+        const kind = matrix.agent_kind;
+        return typeof kind === 'string' && kind.trim().length > 0 ? kind : 'single-agent-harness';
     }
 
     protected psycheFacets(matrix: CapabilityMatrix): readonly string[] {

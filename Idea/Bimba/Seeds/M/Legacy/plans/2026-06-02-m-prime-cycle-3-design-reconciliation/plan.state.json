@@ -4472,11 +4472,15 @@
       "worktree": null
     },
     "26.T26.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T21:12:00.000Z",
+      "completedAt": "2026-06-19T21:12:00.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T21:12:00.000Z",
+          "text": "T8 contents: RunTree+ToolStream+AbortRetryContinue+EvidenceDeposit+ReviewDecision all present; DR-M5-1 roster collapse (Pi+Anima+6 Aletheia techne-guardians, psyche-facet badges); PiRuntimeMonitorBanner + label reframe; all grep verifications pass; Claude-built Hermes-marked"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
