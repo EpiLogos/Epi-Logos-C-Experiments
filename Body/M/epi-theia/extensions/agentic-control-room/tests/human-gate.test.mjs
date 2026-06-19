@@ -55,16 +55,22 @@ test('recursive self-review blocks Pi approval even when humanRequired is false'
     assert.equal(r.ok, false);
 });
 
-test('recursive self-review requires human final-validation for Pi/Anima/Aletheia guardians', () => {
-    for (const actor of ['pi', 'anima', 'anansi', 'moirai']) {
+test('recursive self-review requires human final-validation for Pi/Anima and Aletheia techne guardians', () => {
+    for (const { actor, techneClass, label } of [
+        { actor: 'pi', techneClass: null, label: 'pi' },
+        { actor: 'anima', techneClass: null, label: 'anima' },
+        { actor: 'aletheia', techneClass: 'anansi', label: 'aletheia/anansi' },
+        { actor: 'aletheia', techneClass: 'moirai', label: 'aletheia/moirai' }
+    ]) {
         const blocked = enforceHumanGate({
             decision: 'approve',
             humanRequired: false,
             actorIsHuman: false,
             recursiveSelfReview: true,
-            actor
+            actor,
+            techneClass
         });
-        assert.equal(blocked.ok, false, `${actor} recursive self-review approval must block`);
+        assert.equal(blocked.ok, false, `${label} recursive self-review approval must block`);
         if (!blocked.ok) {
             assert.match(blocked.reason, /recursive self-review/);
             assert.match(blocked.reason, /user final-validation/);
@@ -75,17 +81,19 @@ test('recursive self-review requires human final-validation for Pi/Anima/Alethei
             humanRequired: false,
             actorIsHuman: true,
             recursiveSelfReview: true,
-            actor
+            actor,
+            techneClass
         });
-        assert.equal(human.ok, true, `${actor} recursive self-review passes after human validation`);
+        assert.equal(human.ok, true, `${label} recursive self-review passes after human validation`);
 
         const defer = enforceHumanGate({
             decision: 'defer',
             humanRequired: false,
             actorIsHuman: false,
             recursiveSelfReview: true,
-            actor
+            actor,
+            techneClass
         });
-        assert.equal(defer.ok, true, `${actor} recursive self-review defer remains allowed`);
+        assert.equal(defer.ok, true, `${label} recursive self-review defer remains allowed`);
     }
 });

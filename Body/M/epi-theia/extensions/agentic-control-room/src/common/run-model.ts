@@ -3,13 +3,13 @@ import {
 } from '@pratibimba/m-extension-runtime/lib/common/recursive-self-review-gate';
 
 /**
- * Agentic Control Room run model — Track 05 T8.
+ * Pi runtime monitor run model — Track 05 T8 / Track 12.14.
  *
  * The run flow surfaces:
  *   1. A user-driven (or intent-routed) S5 improvement candidate.
  *   2. The actor chooses a route + actor pair (Pi, Anima, or an Aletheia
  *      techne-guardian subagent per DR-M5-1).
- *   3. The Agentic Control Room composes a payload and dispatches via
+ *   3. The Pi runtime monitor composes a payload and dispatches via
  *      KERNEL_BRIDGE_API.invokeCapability (method='invokeGatewayRpc',
  *      gatewayMethod='s4'.mediation.route'). Tool events stream back through
  *      kernel-bridge runtime events.
@@ -34,6 +34,25 @@ export type AgenticActor =
     | 'pi'
     | 'anima'
     | 'aletheia';
+
+export type AletheiaTechneClass =
+    | 'anansi'
+    | 'moirai'
+    | 'janus'
+    | 'mercurius'
+    | 'agora'
+    | 'zeithoven';
+
+export type ReviewGateActor =
+    | AgenticActor
+    | AletheiaTechneClass
+    | 'human';
+
+export interface AgenticRouteSelection {
+    readonly route: AgenticRoute;
+    readonly actor: AgenticActor;
+    readonly techneClass?: AletheiaTechneClass | null;
+}
 
 export type AgenticRoute =
     | 'dispatch_agent'
@@ -81,7 +100,8 @@ export interface ReviewTransition {
     readonly candidateId: string;
     readonly decision: ReviewDecision;
     readonly reason: string;
-    readonly actor: AgenticActor;
+    readonly actor: ReviewGateActor;
+    readonly techneClass?: AletheiaTechneClass | null;
     /** When true, only a human (via M5 review surface) may transition. */
     readonly humanRequired: boolean;
     readonly transitionAtMs: number;
@@ -310,14 +330,15 @@ export function enforceHumanGate(transition: {
     humanRequired: boolean;
     actorIsHuman: boolean;
     recursiveSelfReview?: boolean;
-    actor?: AgenticActor;
+    actor?: ReviewGateActor;
+    techneClass?: AletheiaTechneClass | null;
 }): { ok: true } | { ok: false; reason: string } {
     const gate = enforcePiReviewRoutingGate({
         decision: transition.decision,
         humanRequired: transition.humanRequired,
         actorIsHuman: transition.actorIsHuman,
         recursiveSelfReview: transition.recursiveSelfReview,
-        actor: transition.actor
+        actor: transition.techneClass ?? transition.actor
     });
     if (gate.ok) {
         return { ok: true };
@@ -391,7 +412,7 @@ const HUMAN_FINAL_VAULT_CAPABILITIES = new Set<MediationCapabilityName>([
 ]);
 
 export function isMediationCapabilityAllowed(
-    actor: AgenticActor,
+    actor: ReviewGateActor,
     capability: MediationCapabilityName,
     context: { readonly userFinalValidated?: boolean } = {}
 ): CapabilityAllowResult {

@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M5'-SPEC]] / [[M5-ARCHITECTURE]] (see 
 
 ## Ownership
 - `src/common/index.ts` — common barrel; `EXTENSION_ID`, `ACR_WIDGET_IDS` (run-tree / tool-stream / diagnostics / pi-runtime-monitor).
-- `src/common/run-model.ts` — run model: actor/route types, human-gate (`enforceHumanGate`), evidence envelope (`buildEvidenceEnvelope`, `missingEvidenceFields`), review transitions; routes via `KERNEL_BRIDGE_API.invokeCapability`.
+- `src/common/run-model.ts` — run model: canonical actor/route types (`pi` / `anima` / `aletheia`, with guardian specificity carried by `AletheiaTechneClass` / `techneClass`), human-gate (`enforceHumanGate`), evidence envelope (`buildEvidenceEnvelope`, `missingEvidenceFields`), review transitions; routes via `KERNEL_BRIDGE_API.invokeCapability`.
 - `src/common/parity.ts` — IOD-17 three-way `assertCapabilityParity` (UI vs gateway capability set).
 - `src/browser/frontend-module.ts` — Theia frontend module: widget factory, view contribution, intent-target registration.
 - `src/browser/run-flow-widget.tsx` — run-tree/tool-stream/diagnostics + abort/retry/continue + evidence + review controls.
@@ -14,10 +14,12 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M5'-SPEC]] / [[M5-ARCHITECTURE]] (see 
 - `src/browser/acr-runtime-service.ts` — runtime service consuming kernel-bridge events.
 - `tests/` — `node --test` suites: run-flow, human-gate, evidence-envelope, pi-runtime-monitor.
 - `style/acr.css` — extension styles.
+- `12.13-shared-intelligence-seam-runtime-audit.md` — [[S4]] <-> [[S5]] shared-intelligence seam audit for 3072-dimensional [[Bimba]]/[[Gnosis]], cross-namespace edge naming, `resonance72`, and [[Pi]]-monitor framing.
 - Does NOT own: the agentic shell chrome / VAK + capability tree (delegated to [[ide-shell-m0-m5]]'s T4 shell host); gateway runtime + gateway-side gate enforcement (delegated to [[S3-SPEC]] gate via `@pratibimba/kernel-bridge`); M5 domain law (lives in the M5' coordinate extension, not centralised here).
 
 ## Local Contracts
 - Coordinate Header: `src/common/run-model.ts` and `src/common/parity.ts` `//!`-style header doc-comments.
+- Audit artifact: `12.13-shared-intelligence-seam-runtime-audit.md` (flags [[M5'-SPEC]] / [[M5-ARCHITECTURE]] follow-up for the Pi-runtime-monitor contract surface).
 - Owning spec: [[M5'-SPEC]] / [[M5-ARCHITECTURE]] (IOD-17 parity + S5 review/improve loop).
 - No local CONTRACT.md (see parent `../AGENTS.md` and Canon).
 
