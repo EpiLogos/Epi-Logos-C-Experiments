@@ -7,6 +7,13 @@ import {
     primaryDecanFaces,
     shadowDecanFaces
 } from '../../common/decan-lut';
+import type { MExtensionReadinessSnapshot, MExtensionReadinessState } from '@pratibimba/m-extension-runtime';
+import type { M2PrimeMeaningPacket } from '../../common/meaning-packet';
+import {
+    M2_TREE_LEAF_PROVENANCE_FIELD,
+    ProvenanceBadge,
+    type ProvenanceReadinessVariant
+} from './ProvenanceBadge';
 
 export const PENDING_SHADOW_DECAN_GRAPH = 'pending-shadow-decan-graph';
 export const PENDING_TAROT_REVERSED_MEANING = 'pending-tarot-reversed-meaning';
@@ -57,6 +64,8 @@ export interface ShadowDecanSurfaceProps {
     readonly selectedAddress72?: number | null;
     readonly expanded?: boolean;
     readonly graphPayload?: ShadowDecanGraphPayload | null;
+    readonly packet?: Pick<M2PrimeMeaningPacket, 'meaningPacketProvenanceFor'> | null;
+    readonly readiness?: ProvenanceReadinessVariant | MExtensionReadinessState | MExtensionReadinessSnapshot;
 }
 
 export function ShadowDecanSurface(props: ShadowDecanSurfaceProps): React.ReactElement | null {
@@ -92,9 +101,27 @@ export function ShadowDecanSurface(props: ShadowDecanSurfaceProps): React.ReactE
                 </div>
             )}
             <div className="m2-shadow-decan-surface__columns">
-                <ShadowDecanColumn title="Primary decans" kind="primary" cells={model.primaryCells} />
-                <ShadowDecanColumn title="Light decans" kind="light" cells={model.lightCells} />
-                <ShadowDecanColumn title="Shadow decans" kind="shadow-proper" cells={model.shadowProperCells} />
+                <ShadowDecanColumn
+                    title="Primary decans"
+                    kind="primary"
+                    cells={model.primaryCells}
+                    packet={props.packet}
+                    readiness={props.readiness}
+                />
+                <ShadowDecanColumn
+                    title="Light decans"
+                    kind="light"
+                    cells={model.lightCells}
+                    packet={props.packet}
+                    readiness={props.readiness}
+                />
+                <ShadowDecanColumn
+                    title="Shadow decans"
+                    kind="shadow-proper"
+                    cells={model.shadowProperCells}
+                    packet={props.packet}
+                    readiness={props.readiness}
+                />
             </div>
         </section>
     );
@@ -179,25 +206,37 @@ export function allShadowDecanDecodedFaces(): readonly M2DecanFaceRow[] {
 function ShadowDecanColumn({
     title,
     kind,
-    cells
+    cells,
+    packet,
+    readiness
 }: {
     readonly title: string;
     readonly kind: ShadowDecanCellKind;
     readonly cells: readonly ShadowDecanCell[];
+    readonly packet?: Pick<M2PrimeMeaningPacket, 'meaningPacketProvenanceFor'> | null;
+    readonly readiness?: ProvenanceReadinessVariant | MExtensionReadinessState | MExtensionReadinessSnapshot;
 }): React.ReactElement {
     return (
         <div className="m2-shadow-decan-column" data-shadow-decan-column={kind}>
             <h5>{title}</h5>
             <ol>
                 {cells.map(cell => (
-                    <ShadowDecanCellView key={cell.key} cell={cell} />
+                    <ShadowDecanCellView key={cell.key} cell={cell} packet={packet} readiness={readiness} />
                 ))}
             </ol>
         </div>
     );
 }
 
-function ShadowDecanCellView({ cell }: { readonly cell: ShadowDecanCell }): React.ReactElement {
+function ShadowDecanCellView({
+    cell,
+    packet,
+    readiness
+}: {
+    readonly cell: ShadowDecanCell;
+    readonly packet?: Pick<M2PrimeMeaningPacket, 'meaningPacketProvenanceFor'> | null;
+    readonly readiness?: ProvenanceReadinessVariant | MExtensionReadinessState | MExtensionReadinessSnapshot;
+}): React.ReactElement {
     const descriptor = cell.graphDescriptor;
     const tarot = cell.tarotReversedMeaning;
     return (
@@ -217,6 +256,14 @@ function ShadowDecanCellView({ cell }: { readonly cell: ShadowDecanCell }): Reac
                 <span data-tarot-reversed-meaning data-coordinate={tarot.coordinate}>
                     {tarot.reversedMeaning}
                 </span>
+            )}
+            {packet && (
+                <ProvenanceBadge
+                    compact
+                    field={M2_TREE_LEAF_PROVENANCE_FIELD}
+                    readiness={readiness ?? 'ready_public_current'}
+                    provenance={packet.meaningPacketProvenanceFor(M2_TREE_LEAF_PROVENANCE_FIELD)}
+                />
             )}
         </li>
     );

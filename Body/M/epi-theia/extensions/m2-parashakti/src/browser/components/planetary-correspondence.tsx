@@ -10,18 +10,33 @@ import {
     PlanetaryViewMode,
     planetLUT
 } from '../../common/planetary-lut';
+import type { MExtensionReadinessSnapshot, MExtensionReadinessState } from '@pratibimba/m-extension-runtime';
+import type { M2PrimeMeaningPacket } from '../../common/meaning-packet';
+import {
+    M2_BREADCRUMB_PROVENANCE_FIELDS,
+    M2_CHI_SURFACE_PLANET_HALO_PROVENANCE_FIELD,
+    M2_TREE_LEAF_PROVENANCE_FIELD,
+    ProvenanceBadge,
+    type ProvenanceReadinessVariant
+} from './ProvenanceBadge';
 
 export interface PlanetaryChakralCardProps {
     readonly planetIndex: number;
     readonly viewMode?: PlanetaryViewMode;
+    readonly packet?: Pick<M2PrimeMeaningPacket, 'meaningPacketProvenanceFor'> | null;
+    readonly readiness?: ProvenanceReadinessVariant | MExtensionReadinessState | MExtensionReadinessSnapshot;
 }
 
 export interface CorrespondenceTreePlanetaryKeyingPanelProps {
     readonly selectedPlanetIndex?: number;
+    readonly packet?: Pick<M2PrimeMeaningPacket, 'meaningPacketProvenanceFor'> | null;
+    readonly readiness?: ProvenanceReadinessVariant | MExtensionReadinessState | MExtensionReadinessSnapshot;
 }
 
 export interface SeventyTwoFoldBreadcrumbProps {
     readonly planetIndex: number;
+    readonly packet?: Pick<M2PrimeMeaningPacket, 'meaningPacketProvenanceFor'> | null;
+    readonly readiness?: ProvenanceReadinessVariant | MExtensionReadinessState | MExtensionReadinessSnapshot;
 }
 
 export function PlanetaryChakralCard(props: PlanetaryChakralCardProps): React.ReactElement {
@@ -36,6 +51,14 @@ export function PlanetaryChakralCard(props: PlanetaryChakralCardProps): React.Re
             <header>
                 <h4>{row.name}</h4>
                 <span className="m2-planetary-card__source">{row.source}</span>
+                {props.packet && (
+                    <ProvenanceBadge
+                        compact
+                        field="planetaryChakralFrame"
+                        readiness={props.readiness ?? 'ready_public_current'}
+                        provenance={props.packet.meaningPacketProvenanceFor('planetaryChakralFrame')}
+                    />
+                )}
             </header>
             {viewMode === 'psychoid' ? (
                 <PsychoidPlanetaryPanel row={row} />
@@ -66,6 +89,14 @@ export function CorrespondenceTreePlanetaryKeyingPanel(
                         <span>DR {row.digitalRoot}</span>
                         <span>{row.chakra}</span>
                         <OuterPlanetDatasetBadge row={row} compact />
+                        {props.packet && (
+                            <ProvenanceBadge
+                                compact
+                                field={M2_TREE_LEAF_PROVENANCE_FIELD}
+                                readiness={props.readiness ?? 'ready_public_current'}
+                                provenance={props.packet.meaningPacketProvenanceFor(M2_TREE_LEAF_PROVENANCE_FIELD)}
+                            />
+                        )}
                     </li>
                 ))}
             </ol>
@@ -78,18 +109,34 @@ export function SeventyTwoFoldBreadcrumb(props: SeventyTwoFoldBreadcrumbProps): 
     return (
         <nav className="m2-seventy-two-fold-breadcrumb" aria-label="72-fold path">
             <ol>
-                <BreadcrumbStep step={1} label="hexagram" detail="profile.resonance72" />
-                <BreadcrumbStep step={2} label="half-decan" detail="kernelBridge.m2.decodeAxisAt" />
-                <BreadcrumbStep step={3} label="decan" detail="s2.decanFace" />
+                <BreadcrumbStep step={1} label="hexagram" detail="profile.resonance72" packet={props.packet} readiness={props.readiness} />
+                <BreadcrumbStep step={2} label="half-decan" detail="kernelBridge.m2.decodeAxisAt" packet={props.packet} readiness={props.readiness} />
+                <BreadcrumbStep step={3} label="decan" detail="s2.decanFace" packet={props.packet} readiness={props.readiness} />
                 <li data-breadcrumb-step="4" data-planet-index={row.index}>
                     <span>planet</span>
                     <strong>{row.name}</strong>
                     <span>{row.coustoHz} Hz</span>
                     <span>{row.chakra}</span>
                     <OuterPlanetDatasetBadge row={row} compact />
+                    {props.packet && (
+                        <>
+                            <ProvenanceBadge
+                                compact
+                                field={M2_BREADCRUMB_PROVENANCE_FIELDS[3]}
+                                readiness={props.readiness ?? 'ready_public_current'}
+                                provenance={props.packet.meaningPacketProvenanceFor(M2_BREADCRUMB_PROVENANCE_FIELDS[3])}
+                            />
+                            <ProvenanceBadge
+                                compact
+                                field={M2_CHI_SURFACE_PLANET_HALO_PROVENANCE_FIELD}
+                                readiness={props.readiness ?? 'ready_public_current'}
+                                provenance={props.packet.meaningPacketProvenanceFor(M2_CHI_SURFACE_PLANET_HALO_PROVENANCE_FIELD)}
+                            />
+                        </>
+                    )}
                 </li>
-                <BreadcrumbStep step={5} label="chakra" detail={row.chakra} />
-                <BreadcrumbStep step={6} label="body-zone" detail="Earth observer center" />
+                <BreadcrumbStep step={5} label="chakra" detail={row.chakra} packet={props.packet} readiness={props.readiness} />
+                <BreadcrumbStep step={6} label="body-zone" detail="Earth observer center" packet={props.packet} readiness={props.readiness} />
             </ol>
         </nav>
     );
@@ -170,16 +217,29 @@ function OuterPlanetDatasetBadge({
 function BreadcrumbStep({
     step,
     label,
-    detail
+    detail,
+    packet,
+    readiness
 }: {
     readonly step: number;
     readonly label: string;
     readonly detail: string;
+    readonly packet?: Pick<M2PrimeMeaningPacket, 'meaningPacketProvenanceFor'> | null;
+    readonly readiness?: ProvenanceReadinessVariant | MExtensionReadinessState | MExtensionReadinessSnapshot;
 }): React.ReactElement {
+    const field = M2_BREADCRUMB_PROVENANCE_FIELDS[step - 1] ?? detail;
     return (
         <li data-breadcrumb-step={step}>
             <span>{label}</span>
             <strong>{detail}</strong>
+            {packet && (
+                <ProvenanceBadge
+                    compact
+                    field={field}
+                    readiness={readiness ?? 'ready_public_current'}
+                    provenance={packet.meaningPacketProvenanceFor(field)}
+                />
+            )}
         </li>
     );
 }

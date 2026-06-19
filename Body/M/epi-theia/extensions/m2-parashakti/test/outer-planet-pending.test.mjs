@@ -73,6 +73,7 @@ const {
     PENDING_PSYCHOID_OUTER_PLANET_BADGE,
     planetLUT
 } = loadSourceModule('src/common/planetary-lut.ts');
+loadSourceModule('src/browser/components/ProvenanceBadge.tsx');
 const {
     PlanetaryChakralCard,
     CorrespondenceTreePlanetaryKeyingPanel,

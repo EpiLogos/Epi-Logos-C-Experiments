@@ -64,6 +64,7 @@ const {
     primaryDecanFaces,
     shadowDecanFaces
 } = loadSourceModule('src/common/decan-lut.ts');
+loadSourceModule('src/browser/components/ProvenanceBadge.tsx');
 const {
     PENDING_SHADOW_DECAN_GRAPH,
     PENDING_TAROT_REVERSED_MEANING,

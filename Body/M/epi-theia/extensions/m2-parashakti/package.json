@@ -60,6 +60,8 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo",
     "test:outer-planet-pending": "node --test test/outer-planet-pending.test.mjs",
     "test:shadow-decan": "node --test test/shadow-decan.test.mjs",
-    "test": "node --test test/widget-registry.test.mjs && node --test test/shadow-decan.test.mjs && pnpm build"
+    "test:audio-bus-visual": "node --test test/audio-bus-visual.test.mjs",
+    "test:provenance-inline": "node --test test/provenance-inline.test.mjs",
+    "test": "node --test test/widget-registry.test.mjs && node --test test/shadow-decan.test.mjs && node --test test/audio-bus-visual.test.mjs && node --test test/provenance-inline.test.mjs && pnpm build"
   }
 }
