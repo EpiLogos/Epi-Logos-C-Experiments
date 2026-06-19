@@ -44,6 +44,106 @@
     font-style: italic;
 }
 
+.mext-widget-m5-epii .m5-capacity-affordance {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.mext-widget-m5-epii .m5-capacity-affordance-header,
+.mext-widget-m5-epii .m5-capacity-pane-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mext-widget-m5-epii .m5-capacity-affordance-header span {
+    color: var(--theia-descriptionForeground);
+    font-family: var(--theia-editor-font-family);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m5-epii .m5-capacity-tabbar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+    gap: 6px;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab,
+.mext-widget-m5-epii .m5-capacity-monitor-button {
+    border: 1px solid var(--theia-button-border, var(--theia-widget-border));
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: var(--theia-button-secondaryForeground, var(--theia-foreground));
+    background: var(--theia-button-secondaryBackground, var(--theia-editorWidget-background));
+    cursor: pointer;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    text-align: left;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab span {
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab strong {
+    min-width: 24px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab-active {
+    border-color: var(--theia-focusBorder);
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+}
+
+.mext-widget-m5-epii .m5-capacity-pane {
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 4px;
+    padding: 10px;
+    background: color-mix(in srgb, var(--theia-editor-background) 88%, var(--theia-sideBar-background) 12%);
+}
+
+.mext-widget-m5-epii .m5-capacity-pane-header p {
+    margin: 0;
+    color: var(--theia-descriptionForeground);
+    line-height: 1.35;
+}
+
+.mext-widget-m5-epii .m5-capacity-metrics {
+    margin-top: 10px;
+}
+
+.mext-widget-m5-epii .m5-capacity-records {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.mext-widget-m5-epii .m5-capacity-records h4 {
+    margin: 0 0 6px;
+    font-size: var(--theia-ui-font-size1);
+}
+
+.mext-widget-m5-epii .m5-capacity-records p,
+.mext-widget-m5-epii .m5-capacity-records ol {
+    margin: 0;
+}
+
+.mext-widget-m5-epii .m5-capacity-records ol {
+    padding-left: 18px;
+}
+
 .mext-widget-m5-epii .m5-contemplation-object {
     margin-top: 12px;
 }

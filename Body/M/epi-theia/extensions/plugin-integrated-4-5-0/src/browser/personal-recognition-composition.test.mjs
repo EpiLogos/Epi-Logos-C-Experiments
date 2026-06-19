@@ -236,13 +236,16 @@ test('personal recognition composition renders one editor surface with four owne
     assert.doesNotMatch(html, /jiva-siva-layout/);
 });
 
-test('personal composition keeps blocked center and right slots mounted with real blocker ids', () => {
+test('personal composition mounts the M4 personal cymatic field in the center slot', () => {
     const model = buildPersonalCompositionModel(profile());
     const html = renderComposition(profile());
 
-    assert.ok(model.blockers.includes('pending-psychoid-cymatic-solver'));
+    assert.equal(model.blockers.includes('pending-psychoid-cymatic-solver'), false);
     assert.ok(model.blockers.includes('pending-recognition-surface'));
-    assert.match(html, /pending-psychoid-cymatic-solver/);
+    assert.match(html, /data-test="m4-personal-cymatic-field"/);
+    assert.match(html, /data-view-id="m4\.nara\.personalField"/);
+    assert.match(html, /data-q-composed-handle="m4:\/\/protected\/q\/composed"/);
+    assert.doesNotMatch(html, /pending-psychoid-cymatic-solver/);
     assert.match(html, /pending-recognition-surface/);
     assert.doesNotMatch(html, /pending-virtue-witness/);
 });

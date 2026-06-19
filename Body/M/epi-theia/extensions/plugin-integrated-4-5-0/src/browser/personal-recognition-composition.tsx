@@ -47,6 +47,10 @@ import {
     handlesFromProfile
 } from '../../../m4-nara/lib/browser/widgets/time-axis-switcher';
 import {
+    M4PersonalCymaticField,
+    buildPersonalCymaticScene
+} from '../../../m4-nara/lib/browser/widgets/personal-cymatic-field';
+import {
     M4TuningBar,
     TUNING_PARAMETERS,
     seedTuningValues
@@ -140,7 +144,6 @@ export interface PersonalRecognitionCompositionProps {
     readonly bridge?: Pick<SharedBridgeAdapter, 'onObservabilityEvent' | 'invokeGatewayRpc' | 'publish'> | null;
 }
 
-const PERSONAL_CYMATIC_FIELD_AVAILABLE = false;
 const MAHAMAYA_RECOGNITION_SURFACE_AVAILABLE = false;
 
 const NULL_HIGHLIGHT_SERVICE = Object.freeze({
@@ -201,9 +204,6 @@ export function buildPersonalCompositionModel(
     const blockers = new Set<PersonalCompositionBlockerId>();
     if (!handles.qComposedHandle) {
         blockers.add('pending-q-composed');
-    }
-    if (!PERSONAL_CYMATIC_FIELD_AVAILABLE) {
-        blockers.add('pending-psychoid-cymatic-solver');
     }
     if (!MAHAMAYA_RECOGNITION_SURFACE_AVAILABLE) {
         blockers.add('pending-recognition-surface');
@@ -366,6 +366,12 @@ const NaraJournalLeftSlot: React.FC<{ readonly model: PersonalCompositionModel }
 
 const PersonalCymaticCenterSlot: React.FC<{ readonly model: PersonalCompositionModel }> = ({ model }) => {
     const slot = model.slots.find(item => item.slot === 'center')!;
+    const { profile } = useCompositionProfile();
+    const timeAxisState = buildTimeAxisState({
+        sessionKey: readStringField(profile, ['sessionKey', 'session.key']) ?? 'm4-nara:session:pending',
+        mode: readStringField(profile, ['timeAxisMode', 'session.timeAxisMode']),
+        handles: handlesFromProfile(profile, EMPTY_COORDINATE_CONTEXT)
+    });
     return (
         <section
             className="personal-composition-slot personal-composition-slot-center"
@@ -380,7 +386,17 @@ const PersonalCymaticCenterSlot: React.FC<{ readonly model: PersonalCompositionM
                     view={buildSlotBlockerView(slot.blocker, 'm4-nara')}
                     title="Personal Cymatic Center"
                 />
-            ) : null}
+            ) : (
+                <M4PersonalCymaticField
+                    mode="compact-card"
+                    model={{
+                        sessionKey: timeAxisState.sessionKey,
+                        foregroundedHandle: timeAxisState.foregroundedHandle,
+                        rendererStatus: 'attached',
+                        scene: buildPersonalCymaticScene()
+                    }}
+                />
+            )}
             <SlotStatus slot={slot} />
         </section>
     );

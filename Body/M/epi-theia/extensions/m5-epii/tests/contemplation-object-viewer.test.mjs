@@ -44,6 +44,21 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
 const {
+    ACR_OPEN_COMMAND_ID,
+    ACR_WIDGET_ID,
+    CapacityPaneShell,
+    CapacityTab,
+    OPERATIONAL_CAPACITIES,
+    buildPiMonitorIntent,
+    extractCapacityHistoryRecords,
+    extractCapacityRuntimeRecords,
+    filterCapacityRecords,
+    normalizeCapacityId,
+    readCapacityProfileBoundary,
+    S5_IMPROVE_HISTORY_METHOD
+} = require('../lib/browser/m5-epii-widget.js');
+
+const {
     ArchNineChargeBar,
     CodonTraceList,
     ContemplationObjectService,
@@ -312,4 +327,170 @@ test('WisdomDelta sub-components preserve three-column composition and VIRTUE_LU
     assert.match(markup, /data-virtue-label="Reality"/);
     assert.equal((markup.match(/data-witness-state="lit"/g) ?? []).length, 5);
     assert.match(markup, /epi-logos:\/\/ide\/m0-anuttara\/pi-axiom-translation\?question=%23R0-0%2F1%2FA-T7-pending%3F/);
+});
+
+test('CapacityTab renders six spec-facing operational capacity tabs', () => {
+    assert.equal(OPERATIONAL_CAPACITIES.length, 6);
+    assert.equal(OPERATIONAL_CAPACITIES[0].id, 'anuttara-construction');
+    assert.equal(OPERATIONAL_CAPACITIES[5].id, 'epii-self-referential');
+
+    const markup = OPERATIONAL_CAPACITIES.map((capacity, index) => ReactDOMServer.renderToStaticMarkup(
+        React.createElement(CapacityTab, {
+            capacity,
+            selected: index === 0,
+            dispatchCount: index,
+            onSelect: () => undefined
+        })
+    )).join('\n');
+
+    assert.equal((markup.match(/role="tab"/g) ?? []).length, 6);
+    assert.match(markup, /data-test="CapacityTab-anuttara-construction"/);
+    assert.match(markup, /data-test="CapacityTab-epii-self-referential"/);
+    assert.match(markup, /Anuttara Construction/);
+    assert.match(markup, /Epii Self-Referential/);
+});
+
+test('CapacityTab navigation invokes selection with the clicked capacity', () => {
+    const clicked = [];
+    const element = CapacityTab({
+        capacity: OPERATIONAL_CAPACITIES[5],
+        selected: false,
+        dispatchCount: 2,
+        onSelect: capacity => clicked.push(capacity.id)
+    });
+
+    element.props.onClick();
+
+    assert.deepEqual(clicked, ['epii-self-referential']);
+    assert.equal(element.props.role, 'tab');
+    assert.equal(element.props['aria-selected'], false);
+});
+
+test('CapacityPaneShell filters runtimeContext and improve.history records per capacity', () => {
+    const capacity = OPERATIONAL_CAPACITIES.find(c => c.id === 'nara-anima-dialogic');
+    const profile = {
+        generation: 26,
+        pointerAnchor: 'profile://m5/26',
+        capabilities: [S5_IMPROVE_HISTORY_METHOD],
+        payload: {
+            operational_capacities: {
+                nara: {
+                    capacity_id: 'nara',
+                    last_tick_dispatch_count: 4,
+                    gate_landings: 2,
+                    status: 'governance-gate-landed'
+                }
+            }
+        }
+    };
+    const history = extractCapacityHistoryRecords({
+        candidates: [
+            {
+                id: 'nara-1',
+                title: 'Dialogic voice safety gate',
+                capacity_id: 'nara',
+                status: 'requires_human',
+                profile_generation: 26
+            },
+            {
+                id: 'epii-1',
+                title: 'Recursive spine audit',
+                capacity: 'epii_on_epii',
+                profile_generation: 26
+            }
+        ]
+    });
+    const runtimeRecords = extractCapacityRuntimeRecords({
+        method: "s5'.epii.runtimeContext",
+        payload: {
+            capacity_workflows: [
+                { id: 'nara-runtime', capacity: 'nara-anima-dialogic', status: 'landed' },
+                { id: 'paramasiva-runtime', capacity_id: 'paramasiva' }
+            ]
+        }
+    });
+
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(CapacityPaneShell, {
+            capacity,
+            profile,
+            history,
+            runtimeRecords,
+            onOpenPiMonitor: () => undefined
+        })
+    );
+
+    assert.equal(filterCapacityRecords(history, capacity).length, 1);
+    assert.equal(filterCapacityRecords(runtimeRecords, capacity).length, 1);
+    assert.match(markup, /data-test="CapacityPaneShell-nara-anima-dialogic"/);
+    assert.match(markup, /data-test="m5-capacity-dispatch-count-nara-anima-dialogic">4/);
+    assert.match(markup, /Dialogic voice safety gate/);
+    assert.doesNotMatch(markup, /Recursive spine audit/);
+    assert.match(markup, /open in Pi-monitor/);
+});
+
+test('per-capacity profile-tick reader normalizes legacy capacity ids and reads last tick counts', () => {
+    const anuttara = OPERATIONAL_CAPACITIES[0];
+    const epii = OPERATIONAL_CAPACITIES[5];
+    const profile = {
+        generation: 31,
+        pointerAnchor: 'profile://m5/31',
+        capabilities: [S5_IMPROVE_HISTORY_METHOD],
+        payload: {
+            capacityProfiles: [
+                {
+                    capacityId: 'anuttara',
+                    lastTickDispatchCount: 3,
+                    axiomProposals: 7
+                },
+                {
+                    capacity: 'epii-self-referential',
+                    recursionDepth: 5,
+                    dispatchCount: 2
+                }
+            ]
+        }
+    };
+
+    assert.equal(normalizeCapacityId('epii_on_epii'), 'epii-self-referential');
+    assert.equal(normalizeCapacityId('anuttara-construction'), 'anuttara-construction');
+
+    const anuttaraReading = readCapacityProfileBoundary(profile, anuttara);
+    const epiiReading = readCapacityProfileBoundary(profile, epii);
+
+    assert.equal(anuttaraReading.generation, 31);
+    assert.equal(anuttaraReading.lastTickDispatchCount, 3);
+    assert.equal(anuttaraReading.metricValue, '7');
+    assert.equal(epiiReading.lastTickDispatchCount, 2);
+    assert.equal(epiiReading.metricValue, '5');
+});
+
+test('capacity click-through route targets ACR Pi-monitor widget with VAK address', () => {
+    const capacity = OPERATIONAL_CAPACITIES.find(c => c.id === 'epii-self-referential');
+    const intent = buildPiMonitorIntent(
+        capacity,
+        {
+            generation: 44,
+            pointerAnchor: 'profile://m5/44',
+            capabilities: [],
+            payload: {}
+        },
+        {
+            selectedCoordinate: null,
+            hashInput: null,
+            canonicalMCoordinate: null,
+            profileGeneration: 43,
+            pointerAnchor: null,
+            dayNowSessionHandle: 'now://session-44',
+            privacyClass: 'public_current',
+            provenance: { source: 'test', generation: 44, notes: [] }
+        }
+    );
+
+    assert.equal(ACR_OPEN_COMMAND_ID, 'pratibimba.ide-shell-m0-m5.agentic-control-room.open');
+    assert.equal(intent.targetWidgetId, ACR_WIDGET_ID);
+    assert.equal(intent.vakAddress, 'M5-4/epii-self-referential');
+    assert.equal(intent.coordinate, intent.vakAddress);
+    assert.equal(intent.requestedContributionId, 'agentic-control-room.select-run');
+    assert.equal(intent.profileGeneration, 44);
 });

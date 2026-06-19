@@ -1,6 +1,7 @@
 // Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
 import * as React from 'react';
-import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
+import { CommandService } from '@theia/core';
+import { injectable, inject, optional, postConstruct } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
     SharedBridgeAdapter,
@@ -40,6 +41,349 @@ import {
     WisdomDeltaService
 } from './services/wisdom-delta-service';
 
+export const S5_IMPROVE_HISTORY_METHOD = "s5'.improve.history";
+export const ACR_WIDGET_ID = 'pratibimba.ide-shell.agentic-control-room';
+export const ACR_OPEN_COMMAND_ID = 'pratibimba.ide-shell-m0-m5.agentic-control-room.open';
+
+export type LegacyCapacityWireId =
+    | 'anuttara'
+    | 'paramasiva'
+    | 'parashakti'
+    | 'mahamaya'
+    | 'nara'
+    | 'epii_on_epii';
+
+export type OperationalCapacityId =
+    | 'anuttara-construction'
+    | 'paramasiva-cpt-rag'
+    | 'parashakti-graph-relational-ml'
+    | 'mahamaya-process-reward-rl'
+    | 'nara-anima-dialogic'
+    | 'epii-self-referential';
+
+export interface OperationalCapacity {
+    readonly id: OperationalCapacityId;
+    readonly legacyWireId: LegacyCapacityWireId;
+    readonly label: string;
+    readonly focus: string;
+    readonly binding: string;
+    readonly vakAddress: string;
+    readonly metricLabel: string;
+}
+
+export const OPERATIONAL_CAPACITIES: readonly OperationalCapacity[] = Object.freeze([
+    {
+        id: 'anuttara-construction',
+        legacyWireId: 'anuttara',
+        label: 'Anuttara Construction',
+        focus: 'construction-not-training; axiom proposals and monotonic-with-retraction history',
+        binding: 'CR 1.10 Verifier',
+        vakAddress: 'M5-4/anuttara-construction',
+        metricLabel: 'axiom proposals'
+    },
+    {
+        id: 'paramasiva-cpt-rag',
+        legacyWireId: 'paramasiva',
+        label: 'Paramasiva CPT/RAG',
+        focus: 'CPT/RAG proof support; lens x position coverage and RAG hit rates',
+        binding: 'CR Pi-LLM substrate',
+        vakAddress: 'M5-4/paramasiva-cpt-rag',
+        metricLabel: 'coverage / hit rate'
+    },
+    {
+        id: 'parashakti-graph-relational-ml',
+        legacyWireId: 'parashakti',
+        label: 'Parashakti Graph ML',
+        focus: 'GDS embedding heatmap on the 72-fold harmonic field',
+        binding: 'CR 6.8 training',
+        vakAddress: 'M5-4/parashakti-graph-relational-ml',
+        metricLabel: 'embedding heat'
+    },
+    {
+        id: 'mahamaya-process-reward-rl',
+        legacyWireId: 'mahamaya',
+        label: 'Mahamaya Reward RL',
+        focus: 'trajectory rewards as resonance-vector targets',
+        binding: 'CR 6.8',
+        vakAddress: 'M5-4/mahamaya-process-reward-rl',
+        metricLabel: 'reward trajectory'
+    },
+    {
+        id: 'nara-anima-dialogic',
+        legacyWireId: 'nara',
+        label: 'Nara Anima Dialogic',
+        focus: 'dialogic-voice safety and governance-gate landings',
+        binding: 'CR 5.20 Pi-as-LLM',
+        vakAddress: 'M5-4/nara-anima-dialogic',
+        metricLabel: 'gate landings'
+    },
+    {
+        id: 'epii-self-referential',
+        legacyWireId: 'epii_on_epii',
+        label: 'Epii Self-Referential',
+        focus: 'recursion depth and recursive-improvement audit trail',
+        binding: 'CR 6.10',
+        vakAddress: 'M5-4/epii-self-referential',
+        metricLabel: 'recursion depth'
+    }
+] as const);
+
+export interface CapacityHistoryRecord {
+    readonly id?: string;
+    readonly title?: string;
+    readonly status?: string;
+    readonly capacity?: string;
+    readonly capacity_id?: string;
+    readonly capacityId?: string;
+    readonly target_subsystem?: string;
+    readonly targetSubsystem?: string;
+    readonly profile_generation?: number;
+    readonly profileGeneration?: number;
+    readonly generation?: number;
+    readonly dispatch_count?: number;
+    readonly dispatchCount?: number;
+    readonly score?: number;
+    readonly anchors?: readonly string[];
+    readonly source_spec_anchors?: readonly string[];
+    readonly sourceSpecAnchors?: readonly string[];
+    readonly [key: string]: unknown;
+}
+
+export interface CapacityRuntimeRecord extends CapacityHistoryRecord {
+    readonly method?: string;
+    readonly runtimeContextSource?: string;
+}
+
+export interface CapacityProfileReading {
+    readonly generation: number | null;
+    readonly pointerAnchor: string | null;
+    readonly vakAddress: string;
+    readonly lastTickDispatchCount: number;
+    readonly metricValue: string;
+    readonly sourceKeys: readonly string[];
+}
+
+export interface CapacityPaneShellProps {
+    readonly capacity: OperationalCapacity;
+    readonly profile: MathemeHarmonicProfileBoundary | null;
+    readonly history: readonly CapacityHistoryRecord[];
+    readonly runtimeRecords: readonly CapacityRuntimeRecord[];
+    readonly onOpenPiMonitor?: (capacity: OperationalCapacity) => void;
+}
+
+export interface CapacityTabProps {
+    readonly capacity: OperationalCapacity;
+    readonly selected: boolean;
+    readonly dispatchCount: number;
+    readonly onSelect: (capacity: OperationalCapacity) => void;
+}
+
+export function normalizeCapacityId(value: unknown): OperationalCapacityId | null {
+    if (typeof value !== 'string') {
+        return null;
+    }
+    const normalized = value.trim().toLowerCase().replace(/_/g, '-');
+    for (const capacity of OPERATIONAL_CAPACITIES) {
+        if (normalized === capacity.id || normalized === capacity.legacyWireId.replace(/_/g, '-')) {
+            return capacity.id;
+        }
+    }
+    return null;
+}
+
+export function capacityForId(id: OperationalCapacityId): OperationalCapacity {
+    return OPERATIONAL_CAPACITIES.find(capacity => capacity.id === id) ?? OPERATIONAL_CAPACITIES[0];
+}
+
+export function filterCapacityRecords<T extends CapacityHistoryRecord>(
+    records: readonly T[],
+    capacity: OperationalCapacity
+): T[] {
+    return records.filter(record => recordMatchesCapacity(record, capacity));
+}
+
+export function extractCapacityHistoryRecords(artifact: unknown): CapacityHistoryRecord[] {
+    if (Array.isArray(artifact)) {
+        return artifact.filter(isRecordObject) as CapacityHistoryRecord[];
+    }
+    if (!isRecordObject(artifact)) {
+        return [];
+    }
+    for (const key of ['candidates', 'history', 'items', 'records', 'control_room_panels', 'controlRoomPanels']) {
+        const value = artifact[key];
+        if (Array.isArray(value)) {
+            return value.filter(isRecordObject) as CapacityHistoryRecord[];
+        }
+    }
+    return [artifact as CapacityHistoryRecord];
+}
+
+export function extractCapacityRuntimeRecords(runtimeContext: unknown): CapacityRuntimeRecord[] {
+    if (!isRecordObject(runtimeContext)) {
+        return [];
+    }
+    const roots = [
+        runtimeContext.capacityWorkflows,
+        runtimeContext.capacity_workflows,
+        runtimeContext.capacities,
+        isRecordObject(runtimeContext.payload) ? runtimeContext.payload.capacityWorkflows : undefined,
+        isRecordObject(runtimeContext.payload) ? runtimeContext.payload.capacity_workflows : undefined,
+        isRecordObject(runtimeContext.payload) ? runtimeContext.payload.capacities : undefined
+    ];
+    return roots.flatMap(root => extractCapacityHistoryRecords(root) as CapacityRuntimeRecord[]);
+}
+
+export function readCapacityProfileBoundary(
+    profile: MathemeHarmonicProfileBoundary | null,
+    capacity: OperationalCapacity
+): CapacityProfileReading {
+    const record = findCapacityProfileRecord(profile, capacity);
+    const lastTickDispatchCount = numberField(record, [
+        'last_tick_dispatch_count',
+        'lastTickDispatchCount',
+        'dispatch_count',
+        'dispatchCount',
+        'dispatches'
+    ]) ?? 0;
+    const metricValue =
+        stringField(record, ['metric', 'status', 'readiness', 'summary']) ??
+        numberField(record, [
+            'rag_hit_rate',
+            'ragHitRate',
+            'coverage',
+            'heat',
+            'reward',
+            'recursion_depth',
+            'recursionDepth',
+            'axiom_proposals',
+            'axiomProposals'
+        ])?.toString() ??
+        'pending';
+    return {
+        generation: profile?.generation ?? null,
+        pointerAnchor: profile?.pointerAnchor ?? null,
+        vakAddress: capacity.vakAddress,
+        lastTickDispatchCount,
+        metricValue,
+        sourceKeys: record ? Object.keys(record).sort() : []
+    };
+}
+
+export function buildPiMonitorIntent(
+    capacity: OperationalCapacity,
+    profile: MathemeHarmonicProfileBoundary | null,
+    context: CoordinateContext
+): Readonly<Record<string, unknown>> {
+    return Object.freeze({
+        coordinate: capacity.vakAddress,
+        vakAddress: capacity.vakAddress,
+        capacity: capacity.id,
+        legacyCapacityId: capacity.legacyWireId,
+        requestedLayout: 'ide-deep',
+        requestedExtensionId: 'ide-shell-m0-m5',
+        requestedContributionId: 'agentic-control-room.select-run',
+        targetWidgetId: ACR_WIDGET_ID,
+        dayNow: context.dayNowSessionHandle ?? null,
+        sessionKey: context.dayNowSessionHandle ?? null,
+        profileGeneration: profile?.generation ?? context.profileGeneration ?? null,
+        privacyClass: 'public',
+        reason: `m5-epii capacity ${capacity.id} dispatch trace`
+    });
+}
+
+export const CapacityTab: React.FC<CapacityTabProps> = ({
+    capacity,
+    selected,
+    dispatchCount,
+    onSelect
+}) => (
+    <button
+        type="button"
+        role="tab"
+        aria-selected={selected}
+        className={selected ? 'm5-capacity-tab m5-capacity-tab-active' : 'm5-capacity-tab'}
+        data-test={`CapacityTab-${capacity.id}`}
+        onClick={() => onSelect(capacity)}
+    >
+        <span>{capacity.label}</span>
+        <strong>{dispatchCount}</strong>
+    </button>
+);
+
+export const CapacityPaneShell: React.FC<CapacityPaneShellProps> = ({
+    capacity,
+    profile,
+    history,
+    runtimeRecords,
+    onOpenPiMonitor
+}) => {
+    const profileReading = readCapacityProfileBoundary(profile, capacity);
+    const scopedHistory = filterCapacityRecords(history, capacity);
+    const scopedRuntime = filterCapacityRecords(runtimeRecords, capacity);
+    const lastTickDispatchCount = profileReading.lastTickDispatchCount || countProfileTickRecords(scopedHistory, profile);
+    const recent = scopedHistory.slice(0, 4);
+    return (
+        <section
+            className="mext-widget-detail m5-capacity-pane"
+            data-test={`CapacityPaneShell-${capacity.id}`}
+            data-capacity={capacity.id}
+            data-vak-address={capacity.vakAddress}
+        >
+            <header className="m5-capacity-pane-header">
+                <div>
+                    <h3>{capacity.label}</h3>
+                    <p>{capacity.focus}</p>
+                </div>
+                <button
+                    type="button"
+                    className="m5-capacity-monitor-button"
+                    data-test={`m5-capacity-open-pi-monitor-${capacity.id}`}
+                    onClick={() => onOpenPiMonitor?.(capacity)}
+                >
+                    open in Pi-monitor
+                </button>
+            </header>
+            <dl className="m5-capacity-metrics">
+                <dt>last tick dispatches</dt>
+                <dd data-test={`m5-capacity-dispatch-count-${capacity.id}`}>{lastTickDispatchCount}</dd>
+                <dt>MathemeHarmonicProfileBoundary</dt>
+                <dd>
+                    generation {profileReading.generation ?? 'pending'} · {capacity.metricLabel}:{' '}
+                    {profileReading.metricValue}
+                </dd>
+                <dt>dispatch-trace VAK</dt>
+                <dd><code>{capacity.vakAddress}</code></dd>
+                <dt>binding</dt>
+                <dd>{capacity.binding}</dd>
+            </dl>
+            <div className="m5-capacity-records">
+                <div>
+                    <h4>runtimeContext</h4>
+                    <p data-test={`m5-capacity-runtime-count-${capacity.id}`}>
+                        {scopedRuntime.length} surfaced record(s)
+                    </p>
+                </div>
+                <div>
+                    <h4>improve.history</h4>
+                    {recent.length === 0 ? (
+                        <p className="mext-widget-empty">No capacity-scoped history yet.</p>
+                    ) : (
+                        <ol data-test={`m5-capacity-history-${capacity.id}`}>
+                            {recent.map((record, index) => (
+                                <li key={record.id ?? `${capacity.id}-${index}`}>
+                                    <strong>{record.title ?? record.id ?? 'capacity workflow'}</strong>
+                                    {record.status ? <span> · {record.status}</span> : null}
+                                    {typeof record.score === 'number' ? <span> · {record.score.toFixed(3)}</span> : null}
+                                </li>
+                            ))}
+                        </ol>
+                    )}
+                </div>
+            </div>
+        </section>
+    );
+};
+
 @injectable()
 export class M5EpiiWidget extends ReactWidget {
     static readonly ID = PRIMARY_VIEW_ID;
@@ -57,10 +401,17 @@ export class M5EpiiWidget extends ReactWidget {
     @inject(WisdomDeltaService)
     protected readonly wisdomDeltas!: WisdomDeltaService;
 
+    @inject(CommandService) @optional()
+    protected readonly commandService?: CommandService;
+
     protected readiness: MExtensionReadinessSnapshot = PENDING_M_READINESS;
     protected profile: MathemeHarmonicProfileBoundary | null = null;
     protected context: CoordinateContext = EMPTY_COORDINATE_CONTEXT;
     protected subscriptions: Disposable[] = [];
+    protected selectedCapacity: OperationalCapacityId = OPERATIONAL_CAPACITIES[0].id;
+    protected capacityHistory: CapacityHistoryRecord[] = [];
+    protected capacityRuntimeRecords: CapacityRuntimeRecord[] = [];
+    protected capacityHistoryError: string | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -81,6 +432,7 @@ export class M5EpiiWidget extends ReactWidget {
             this.bridge.onProfile(profile => {
                 this.profile = profile;
                 this.ebm.ingest(profile);
+                void this.refreshCapacityHistory();
                 this.update();
             })
         );
@@ -89,7 +441,9 @@ export class M5EpiiWidget extends ReactWidget {
                 this.context = context;
                 this.acceptRuntimeContemplationObject(context);
                 this.acceptRuntimeWisdomDelta(context);
+                this.acceptCapacityRuntimeContext(context);
                 this.fetchWisdomDeltaForContext(context);
+                void this.refreshCapacityHistory();
                 this.update();
             })
         );
@@ -125,6 +479,7 @@ export class M5EpiiWidget extends ReactWidget {
                         <p className="mext-widget-empty">Awaiting kernel profile…</p>
                     </section>
                 )}
+                {this.renderCapacityAffordance()}
                 {contemplationModel ? (
                     <ContemplationObjectViewer model={contemplationModel} />
                 ) : (
@@ -144,6 +499,92 @@ export class M5EpiiWidget extends ReactWidget {
             </div>
         );
     }
+
+    protected renderCapacityAffordance(): React.ReactNode {
+        const selected = capacityForId(this.selectedCapacity);
+        return (
+            <section className="mext-widget-detail m5-capacity-affordance" data-test="m5-capacity-affordance">
+                <header className="m5-capacity-affordance-header">
+                    <h3>Six operational capacities</h3>
+                    <span data-test="m5-capacity-history-binding">{S5_IMPROVE_HISTORY_METHOD}</span>
+                </header>
+                <div className="m5-capacity-tabbar" role="tablist" aria-label="M5 operational capacities">
+                    {OPERATIONAL_CAPACITIES.map(capacity => (
+                        <CapacityTab
+                            key={capacity.id}
+                            capacity={capacity}
+                            selected={capacity.id === this.selectedCapacity}
+                            dispatchCount={this.dispatchCountForCapacity(capacity)}
+                            onSelect={this.selectCapacity}
+                        />
+                    ))}
+                </div>
+                {this.capacityHistoryError ? (
+                    <p className="mext-widget-empty" data-test="m5-capacity-history-error">
+                        {this.capacityHistoryError}
+                    </p>
+                ) : null}
+                <CapacityPaneShell
+                    capacity={selected}
+                    profile={this.profile}
+                    history={this.capacityHistory}
+                    runtimeRecords={this.capacityRuntimeRecords}
+                    onOpenPiMonitor={this.openCapacityInPiMonitor}
+                />
+            </section>
+        );
+    }
+
+    protected selectCapacity = (capacity: OperationalCapacity): void => {
+        this.selectedCapacity = capacity.id;
+        this.update();
+    };
+
+    protected dispatchCountForCapacity(capacity: OperationalCapacity): number {
+        const reading = readCapacityProfileBoundary(this.profile, capacity);
+        return reading.lastTickDispatchCount || countProfileTickRecords(
+            filterCapacityRecords(this.capacityHistory, capacity),
+            this.profile
+        );
+    }
+
+    protected acceptCapacityRuntimeContext(context: CoordinateContext): void {
+        const runtimeContext = (context as CoordinateContext & {
+            runtimeContext?: unknown;
+        }).runtimeContext;
+        const records = extractCapacityRuntimeRecords(runtimeContext);
+        if (records.length === 0) {
+            return;
+        }
+        this.capacityRuntimeRecords = records;
+    }
+
+    protected async refreshCapacityHistory(): Promise<void> {
+        if (!this.profile && !this.context.dayNowSessionHandle) {
+            return;
+        }
+        try {
+            const receipt = await this.bridge.invokeGatewayRpc(S5_IMPROVE_HISTORY_METHOD, {
+                capacity: this.selectedCapacity,
+                capacity_id: capacityForId(this.selectedCapacity).legacyWireId,
+                profileGeneration: this.profile?.generation ?? this.context.profileGeneration ?? null,
+                sessionId: this.context.dayNowSessionHandle ?? null
+            });
+            const artifact = isRecordObject(receipt) && 'artifact' in receipt ? receipt.artifact : receipt;
+            this.capacityHistory = extractCapacityHistoryRecords(artifact);
+            this.capacityHistoryError = null;
+        } catch (err) {
+            this.capacityHistoryError = err instanceof Error ? err.message : String(err);
+        }
+        this.update();
+    }
+
+    protected openCapacityInPiMonitor = (capacity: OperationalCapacity): void => {
+        void this.commandService?.executeCommand(
+            ACR_OPEN_COMMAND_ID,
+            buildPiMonitorIntent(capacity, this.profile, this.context)
+        );
+    };
 
     protected acceptRuntimeContemplationObject(context: CoordinateContext): void {
         const runtimeContext = (context as CoordinateContext & {
@@ -316,4 +757,117 @@ export class M5EpiiWidget extends ReactWidget {
             />
         );
     }
+}
+
+function recordMatchesCapacity(record: CapacityHistoryRecord, capacity: OperationalCapacity): boolean {
+    const candidates = [
+        record.capacity,
+        record.capacity_id,
+        record.capacityId,
+        record.target_subsystem,
+        record.targetSubsystem,
+        record.promotion_destination_family,
+        record.ide_surface_anchor,
+        record.source_actor_detail
+    ];
+    for (const value of candidates) {
+        if (normalizeCapacityId(value) === capacity.id) {
+            return true;
+        }
+    }
+    const haystack = JSON.stringify(record).toLowerCase();
+    return haystack.includes(capacity.id) || haystack.includes(capacity.legacyWireId.replace(/_/g, '-')) || haystack.includes(capacity.legacyWireId);
+}
+
+function findCapacityProfileRecord(
+    profile: MathemeHarmonicProfileBoundary | null,
+    capacity: OperationalCapacity
+): Readonly<Record<string, unknown>> | null {
+    if (!profile) {
+        return null;
+    }
+    const payload = profile.payload;
+    const roots = [
+        payload.operational_capacities,
+        payload.operationalCapacities,
+        payload.capacity_profiles,
+        payload.capacityProfiles,
+        payload.capacity_workflows,
+        payload.capacityWorkflows,
+        payload[capacity.id],
+        payload[capacity.legacyWireId]
+    ];
+    for (const root of roots) {
+        const record = readCapacityRecord(root, capacity);
+        if (record) {
+            return record;
+        }
+    }
+    return null;
+}
+
+function readCapacityRecord(
+    value: unknown,
+    capacity: OperationalCapacity
+): Readonly<Record<string, unknown>> | null {
+    if (Array.isArray(value)) {
+        const found = value.find(item => (
+            isRecordObject(item) && recordMatchesCapacity(item as CapacityHistoryRecord, capacity)
+        ));
+        return isRecordObject(found) ? found : null;
+    }
+    if (!isRecordObject(value)) {
+        return null;
+    }
+    const direct = value[capacity.id] ?? value[capacity.legacyWireId];
+    if (isRecordObject(direct)) {
+        return direct;
+    }
+    if (recordMatchesCapacity(value as CapacityHistoryRecord, capacity)) {
+        return value;
+    }
+    return null;
+}
+
+function countProfileTickRecords(
+    records: readonly CapacityHistoryRecord[],
+    profile: MathemeHarmonicProfileBoundary | null
+): number {
+    if (!profile) {
+        return records.length;
+    }
+    const count = records.filter(record => (
+        record.profileGeneration ?? record.profile_generation ?? record.generation
+    ) === profile.generation).length;
+    return count || records.length;
+}
+
+function numberField(record: Readonly<Record<string, unknown>> | null, keys: readonly string[]): number | null {
+    if (!record) {
+        return null;
+    }
+    for (const key of keys) {
+        const value = record[key];
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return value;
+        }
+    }
+    return null;
+}
+
+function stringField(record: Readonly<Record<string, unknown>> | null, keys: readonly string[]): string | null {
+    if (!record) {
+        return null;
+    }
+    for (const key of keys) {
+        const value = record[key];
+        if (typeof value === 'string' && value.trim().length > 0) {
+            return value;
+        }
+    }
+    return null;
+}
+
+function isRecordObject(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
