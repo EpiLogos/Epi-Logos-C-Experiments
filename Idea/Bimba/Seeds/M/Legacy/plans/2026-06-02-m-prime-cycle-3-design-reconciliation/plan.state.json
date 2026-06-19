@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T19:14:40.860Z",
+  "updatedAt": "2026-06-19T20:02:16.800Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -4964,16 +4964,21 @@
       "worktree": null
     },
     "28.T28.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T20:02:16.756Z",
+      "claimedAt": "2026-06-19T19:54:18.970Z",
+      "completedAt": "2026-06-19T20:02:16.756Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:02:16.756Z",
+          "text": "MediatedRunEvidencePacket integrated, mediator badge + dispatch-trace mini-graph + tool-stream/axiom-translation/contemplation-object cross-links, DR-WC-IS-2 deep-vs-abbreviated split, grep + pnpm build/test pass"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-28-t28-8",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T19:54:18.970Z",
+      "runId": "20260619T195418Z-28-T28.8",
       "worktree": null
     },
     "28.T28.9": {
@@ -6382,16 +6387,21 @@
       "worktree": null
     },
     "09.T9.13": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T20:02:06.877Z",
+      "claimedAt": "2026-06-19T19:54:27.016Z",
+      "completedAt": "2026-06-19T20:02:06.877Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:02:06.877Z",
+          "text": "epi canon coord depth ladder L0–L5, canon search/diff sub-commands, JSON pipeline default, cargo tests pass"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-09-t9-13-canon-cli",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T19:54:27.016Z",
+      "runId": "20260619T195427Z-09-T9.13",
       "worktree": null
     },
     "12.T12.26": {
@@ -6854,16 +6864,16 @@
       "worktree": null
     },
     "25.T25.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T19:54:16.724Z",
+      "claimedAt": "2026-06-19T19:54:16.724Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-25-t25-8-oracle-cast",
+      "leaseExpiresAt": "2026-06-19T21:54:16.724Z",
+      "heartbeatAt": "2026-06-19T19:54:16.724Z",
+      "runId": "20260619T195416Z-25-T25.8",
       "worktree": null
     },
     "25.T25.9": {
@@ -8744,16 +8754,21 @@
       "worktree": null
     },
     "42.T42.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T20:01:35.697Z",
+      "claimedAt": "2026-06-19T19:54:23.969Z",
+      "completedAt": "2026-06-19T20:01:35.697Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:01:35.697Z",
+          "text": "Harness-blind memory pipeline: Sophia extraction + Aletheia entification + Graphiti episodic graph, s2'.memory.ingest_transcript, pytest pass"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-42-t42-9-memory-pipeline",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T19:54:23.969Z",
+      "runId": "20260619T195423Z-42-T42.9",
       "worktree": null
     },
     "43.T43.1": {
@@ -11586,31 +11601,69 @@
       "leaseExpiresAt": "2026-06-19T21:04:03.425Z",
       "worktree": null,
       "completedAt": "2026-06-19T19:11:12.364Z"
+    },
+    {
+      "runId": "20260619T195416Z-25-T25.8",
+      "taskId": "25.T25.8",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T19:54:16.724Z",
+      "owner": "codex-m-dev-25-t25-8-oracle-cast",
+      "leaseExpiresAt": "2026-06-19T21:54:16.724Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T195418Z-28-T28.8",
+      "taskId": "28.T28.8",
+      "status": "done",
+      "startedAt": "2026-06-19T19:54:18.970Z",
+      "owner": "codex-m-dev-28-t28-8",
+      "leaseExpiresAt": "2026-06-19T21:54:18.970Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T20:02:16.756Z"
+    },
+    {
+      "runId": "20260619T195423Z-42-T42.9",
+      "taskId": "42.T42.9",
+      "status": "done",
+      "startedAt": "2026-06-19T19:54:23.969Z",
+      "owner": "codex-m-dev-42-t42-9-memory-pipeline",
+      "leaseExpiresAt": "2026-06-19T21:54:23.969Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T20:01:35.697Z"
+    },
+    {
+      "runId": "20260619T195427Z-09-T9.13",
+      "taskId": "09.T9.13",
+      "status": "done",
+      "startedAt": "2026-06-19T19:54:27.016Z",
+      "owner": "codex-m-dev-09-t9-13-canon-cli",
+      "leaseExpiresAt": "2026-06-19T21:54:27.016Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T20:02:06.877Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-19T19:03:46.412Z",
-    "updatedAt": "2026-06-19T19:03:46.412Z",
+    "createdAt": "2026-06-19T19:54:12.336Z",
+    "updatedAt": "2026-06-19T19:54:12.336Z",
     "taskIds": [
-      "09.T9.12",
-      "42.T42.8",
-      "28.T28.7",
-      "05.T5.3"
+      "05.T5.3",
+      "05.T5.4",
+      "05.T5.5",
+      "05.T5.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "09.T9.12": "in-session",
-      "42.T42.8": "in-session",
-      "28.T28.7": "in-session",
-      "05.T5.3": "in-session"
+      "05.T5.3": "in-session",
+      "05.T5.4": "in-session",
+      "05.T5.5": "in-session",
+      "05.T5.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }

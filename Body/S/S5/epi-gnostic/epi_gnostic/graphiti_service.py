@@ -10,6 +10,11 @@ from __future__ import annotations
 import os
 import re
 import time
+import hashlib
+import json
+import uuid
+from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from typing import Any, Optional
 
 import redis.asyncio as aioredis
@@ -25,6 +30,7 @@ load_dotenv()
 _graphiti: Any = None
 _redis: Any = None
 _config: Any = None
+_memory_pipeline_graph: Any = None
 
 
 def _graphiti_group_id(group_id: Optional[str]) -> str:
@@ -126,6 +132,620 @@ def _patch_graphiti_group_id():
         pass  # If graphiti internals change, fail gracefully
 
 
+# -- Harness-blind cross-session memory pipeline -----------------------------
+
+@dataclass
+class TranscriptMessage:
+    role: str
+    content: str
+    timestamp: Optional[str] = None
+    index: int = 0
+    provenance_handle: str = ""
+
+
+@dataclass
+class NeutralTranscript:
+    session_id: str
+    harness: str
+    transcript_ref: str
+    messages: list[TranscriptMessage]
+
+    @property
+    def text(self) -> str:
+        return "\n".join(f"{msg.role}: {msg.content}" for msg in self.messages)
+
+
+@dataclass
+class ExtractedEntity:
+    name: str
+    type: str = "Concept"
+    description: str = ""
+    aliases: list[str] = field(default_factory=list)
+    provenance_handles: list[str] = field(default_factory=list)
+
+
+@dataclass
+class ExtractedRelationship:
+    source: str
+    target: str
+    predicate: str
+    description: str = ""
+
+
+@dataclass
+class ExtractedEventAnchor:
+    label: str
+    timestamp: Optional[str] = None
+    provenance_handle: str = ""
+
+
+@dataclass
+class SophiaExtraction:
+    entities: list[ExtractedEntity]
+    relationships: list[ExtractedRelationship]
+    event_anchors: list[ExtractedEventAnchor]
+    summary: str
+
+
+@dataclass
+class EntityNode:
+    uuid: str
+    name: str
+    type: str
+    description: str
+    aliases: list[str]
+    first_seen_episode: str
+    last_seen_episode: str
+    provenance_handles: list[str]
+
+
+@dataclass
+class RelationshipEdge:
+    uuid: str
+    source_uuid: str
+    target_uuid: str
+    predicate: str
+    description: str
+    first_seen_episode: str
+    last_seen_episode: str
+
+
+@dataclass
+class EpisodeNode:
+    uuid: str
+    session_id: str
+    timestamp: str
+    harness: str
+    entity_count: int
+    edge_count: int
+    transcript_ref: str
+    summary: str
+    provenance_handles: list[str] = field(default_factory=list)
+
+
+@dataclass
+class IngestReceipt:
+    session_id: str
+    entities_extracted: int
+    episodic_edges_created: int
+    graphiti_episode_uuid: str
+
+
+def _stable_uuid(namespace: str, *parts: str) -> str:
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, namespace + ":" + "|".join(parts)))
+
+
+def _entity_key(name: str) -> str:
+    return re.sub(r"\s+", " ", name.strip().casefold())
+
+
+def _content_to_text(content: Any) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        blocks: list[str] = []
+        for block in content:
+            if isinstance(block, dict):
+                text = block.get("text") or block.get("content")
+                if text:
+                    blocks.append(str(text))
+            elif block is not None:
+                blocks.append(str(block))
+        return "\n".join(blocks)
+    if content is None:
+        return ""
+    return str(content)
+
+
+def _message_from_mapping(entry: dict[str, Any], index: int, handle: str) -> TranscriptMessage:
+    msg = entry.get("message") if isinstance(entry.get("message"), dict) else entry
+    role = str(msg.get("role") or entry.get("role") or "unknown")
+    timestamp = msg.get("timestamp") or entry.get("timestamp") or entry.get("created_at")
+    return TranscriptMessage(
+        role=role,
+        content=_content_to_text(msg.get("content")),
+        timestamp=str(timestamp) if timestamp else None,
+        index=index,
+        provenance_handle=handle,
+    )
+
+
+def canonicalise_transcript(
+    transcript_blob: Any,
+    *,
+    session_id: Optional[str] = None,
+    harness: Optional[str] = None,
+    transcript_ref: Optional[str] = None,
+) -> NeutralTranscript:
+    """Canonicalise plaintext, neutral JSONL, or Claude-native JSONL transcript."""
+    if isinstance(transcript_blob, bytes):
+        transcript_blob = transcript_blob.decode("utf-8")
+
+    raw_text = transcript_blob if isinstance(transcript_blob, str) else json.dumps(transcript_blob, sort_keys=True)
+    digest = hashlib.sha256(raw_text.encode("utf-8")).hexdigest()[:12]
+    resolved_session_id = session_id or f"session-{digest}"
+    resolved_harness = harness or "neutral"
+    resolved_ref = transcript_ref or f"transcript://{resolved_harness}/{resolved_session_id}"
+
+    entries: list[Any] = []
+    if isinstance(transcript_blob, list):
+        entries = transcript_blob
+    elif isinstance(transcript_blob, dict):
+        resolved_session_id = session_id or str(transcript_blob.get("session_id") or resolved_session_id)
+        resolved_harness = harness or str(transcript_blob.get("harness") or resolved_harness)
+        resolved_ref = transcript_ref or str(transcript_blob.get("transcript_ref") or resolved_ref)
+        entries = list(transcript_blob.get("messages") or transcript_blob.get("transcript") or [])
+    else:
+        stripped = raw_text.strip()
+        if stripped:
+            parsed_json = None
+            try:
+                parsed_json = json.loads(stripped)
+            except json.JSONDecodeError:
+                parsed_json = None
+            if isinstance(parsed_json, dict):
+                return canonicalise_transcript(
+                    parsed_json,
+                    session_id=resolved_session_id,
+                    harness=resolved_harness,
+                    transcript_ref=resolved_ref,
+                )
+            if isinstance(parsed_json, list):
+                entries = parsed_json
+            else:
+                jsonl_entries: list[Any] = []
+                all_jsonl = True
+                for line in stripped.splitlines():
+                    if not line.strip():
+                        continue
+                    try:
+                        jsonl_entries.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        all_jsonl = False
+                        break
+                entries = jsonl_entries if all_jsonl and jsonl_entries else []
+                if not entries:
+                    for index, line in enumerate(stripped.splitlines(), start=1):
+                        if not line.strip():
+                            continue
+                        role = "unknown"
+                        content = line.strip()
+                        match = re.match(r"^(user|assistant|system|tool)\s*:\s*(.+)$", content, re.I)
+                        if match:
+                            role = match.group(1).lower()
+                            content = match.group(2)
+                        entries.append({"role": role, "content": content})
+
+    messages: list[TranscriptMessage] = []
+    for index, entry in enumerate(entries, start=1):
+        handle = f"{resolved_ref}#L{index}"
+        if isinstance(entry, dict):
+            message = _message_from_mapping(entry, index, handle)
+        else:
+            message = TranscriptMessage(
+                role="unknown",
+                content=_content_to_text(entry),
+                index=index,
+                provenance_handle=handle,
+            )
+        if message.content.strip():
+            messages.append(message)
+
+    return NeutralTranscript(
+        session_id=resolved_session_id,
+        harness=resolved_harness,
+        transcript_ref=resolved_ref,
+        messages=messages,
+    )
+
+
+class SophiaExtractionService:
+    """Prompt-contract extraction surface with deterministic local fallback."""
+
+    prompt_contract = (
+        "Extract named entities, relationships, and event anchors from a "
+        "harness-neutral transcript. Return JSON with entities, relationships, "
+        "and event_anchors; do not assume a Claude-only harness."
+    )
+
+    _stop_names = {
+        "User",
+        "Assistant",
+        "System",
+        "Please",
+        "The",
+        "This",
+        "That",
+        "Return",
+        "JSON",
+    }
+
+    _agent_names = {"Sophia", "Aletheia", "Anima", "Eros", "Logos", "Nous", "Mythos", "Psyche"}
+
+    def extract_entities(self, transcript: Any) -> SophiaExtraction:
+        neutral = (
+            transcript
+            if isinstance(transcript, NeutralTranscript)
+            else canonicalise_transcript(transcript)
+        )
+        entities_by_key: dict[str, ExtractedEntity] = {}
+        relationships: dict[tuple[str, str, str], ExtractedRelationship] = {}
+        anchors: list[ExtractedEventAnchor] = []
+
+        for msg in neutral.messages:
+            names = self._extract_names(msg.content)
+            if msg.timestamp:
+                anchors.append(
+                    ExtractedEventAnchor(
+                        label=f"{msg.role}:{msg.index}",
+                        timestamp=msg.timestamp,
+                        provenance_handle=msg.provenance_handle,
+                    )
+                )
+            for name in names:
+                key = _entity_key(name)
+                entity = entities_by_key.get(key)
+                if entity is None:
+                    entity = ExtractedEntity(
+                        name=name,
+                        type=self._infer_type(name),
+                        description=f"Mentioned in {neutral.harness} transcript {neutral.session_id}.",
+                        provenance_handles=[msg.provenance_handle],
+                    )
+                    entities_by_key[key] = entity
+                elif msg.provenance_handle not in entity.provenance_handles:
+                    entity.provenance_handles.append(msg.provenance_handle)
+
+            for left, right in zip(names, names[1:]):
+                if _entity_key(left) == _entity_key(right):
+                    continue
+                predicate = self._predicate_for(msg.content)
+                rel_key = (_entity_key(left), _entity_key(right), predicate)
+                relationships.setdefault(
+                    rel_key,
+                    ExtractedRelationship(
+                        source=left,
+                        target=right,
+                        predicate=predicate,
+                        description=f"{left} {predicate.lower()} {right} in transcript {neutral.session_id}.",
+                    ),
+                )
+
+        summary = neutral.text[:400] if neutral.messages else ""
+        return SophiaExtraction(
+            entities=list(entities_by_key.values()),
+            relationships=list(relationships.values()),
+            event_anchors=anchors,
+            summary=summary,
+        )
+
+    def _extract_names(self, content: str) -> list[str]:
+        method_names = re.findall(r"\bs\d'?\.memory\.[a-z_]+\b", content)
+        capitalised = re.findall(
+            r"\b[A-Z][A-Za-z0-9']+(?:[- ][A-Z][A-Za-z0-9']+)*\b",
+            content,
+        )
+        coordinate_names = re.findall(r"\b[SMCLPT]\d'?\b", content)
+        ordered: list[str] = []
+        for name in [*method_names, *capitalised, *coordinate_names]:
+            cleaned = name.strip(".,:;()[]{}")
+            if cleaned and cleaned not in self._stop_names and cleaned not in ordered:
+                ordered.append(cleaned)
+        return ordered
+
+    def _infer_type(self, name: str) -> str:
+        if name in self._agent_names:
+            return "Agent"
+        if name == "Graphiti":
+            return "EpisodicGraph"
+        if name.startswith("s2'") or name.startswith("s5'"):
+            return "ApiMethod"
+        if re.fullmatch(r"[SMCLPT]\d'?", name):
+            return "Coordinate"
+        return "Concept"
+
+    def _predicate_for(self, content: str) -> str:
+        lowered = content.casefold()
+        if "extract" in lowered:
+            return "EXTRACTS_FOR"
+        if "entif" in lowered or "deduplicat" in lowered:
+            return "ENTIFIES_FOR"
+        if "graphiti" in lowered or "commit" in lowered or "store" in lowered:
+            return "COMMITS_TO"
+        return "CO_OCCURS_WITH"
+
+
+class InMemoryGraphitiStore:
+    """Schema-faithful episodic graph used for local Graphiti pipeline behavior."""
+
+    def __init__(self):
+        self.entities: dict[str, EntityNode] = {}
+        self.entity_key_index: dict[str, str] = {}
+        self.relationships: dict[str, RelationshipEdge] = {}
+        self.episodes: dict[str, EpisodeNode] = {}
+
+    def prepare_episode(
+        self,
+        *,
+        session_id: str,
+        harness: str,
+        transcript_ref: str,
+        summary: str,
+    ) -> EpisodeNode:
+        episode_uuid = _stable_uuid("graphiti:episode", session_id, transcript_ref, summary[:120])
+        return EpisodeNode(
+            uuid=episode_uuid,
+            session_id=session_id,
+            timestamp=datetime.now(timezone.utc).isoformat(),
+            harness=harness,
+            entity_count=0,
+            edge_count=0,
+            transcript_ref=transcript_ref,
+            summary=summary,
+            provenance_handles=[transcript_ref],
+        )
+
+    async def commit_episode(self, extraction: SophiaExtraction, episode: EpisodeNode) -> IngestReceipt:
+        nodes_by_entity_key: dict[str, EntityNode] = {}
+        for extracted in extraction.entities:
+            name = extracted.name.strip()
+            if not name:
+                continue
+            key = _entity_key(name)
+            node_uuid = self.entity_key_index.get(key)
+            if node_uuid is None:
+                node_uuid = _stable_uuid("graphiti:entity", key)
+                node = EntityNode(
+                    uuid=node_uuid,
+                    name=name,
+                    type=extracted.type,
+                    description=extracted.description,
+                    aliases=list(dict.fromkeys(extracted.aliases)),
+                    first_seen_episode=episode.uuid,
+                    last_seen_episode=episode.uuid,
+                    provenance_handles=list(dict.fromkeys(extracted.provenance_handles)),
+                )
+                self.entities[node_uuid] = node
+                self.entity_key_index[key] = node_uuid
+            else:
+                node = self.entities[node_uuid]
+                node.last_seen_episode = episode.uuid
+                if extracted.description and extracted.description not in node.description:
+                    node.description = (node.description + " " + extracted.description).strip()
+                for alias in extracted.aliases:
+                    if alias not in node.aliases and _entity_key(alias) != key:
+                        node.aliases.append(alias)
+                for handle in extracted.provenance_handles:
+                    if handle not in node.provenance_handles:
+                        node.provenance_handles.append(handle)
+            nodes_by_entity_key[key] = node
+
+        created_edges = 0
+        for rel in extraction.relationships:
+            source = nodes_by_entity_key.get(_entity_key(rel.source))
+            target = nodes_by_entity_key.get(_entity_key(rel.target))
+            if source is None or target is None or source.uuid == target.uuid:
+                continue
+            edge_uuid = _stable_uuid(
+                "graphiti:relationship",
+                source.uuid,
+                target.uuid,
+                rel.predicate,
+            )
+            if edge_uuid not in self.relationships:
+                self.relationships[edge_uuid] = RelationshipEdge(
+                    uuid=edge_uuid,
+                    source_uuid=source.uuid,
+                    target_uuid=target.uuid,
+                    predicate=rel.predicate,
+                    description=rel.description,
+                    first_seen_episode=episode.uuid,
+                    last_seen_episode=episode.uuid,
+                )
+                created_edges += 1
+            else:
+                self.relationships[edge_uuid].last_seen_episode = episode.uuid
+
+        episode.entity_count = len(nodes_by_entity_key)
+        episode.edge_count = created_edges
+        self.episodes[episode.uuid] = episode
+        return IngestReceipt(
+            session_id=episode.session_id,
+            entities_extracted=episode.entity_count,
+            episodic_edges_created=episode.edge_count,
+            graphiti_episode_uuid=episode.uuid,
+        )
+
+    async def query(self, query: str, *, num_results: int = 10) -> dict[str, Any]:
+        needle = query.casefold()
+        entities = [
+            asdict(node)
+            for node in self.entities.values()
+            if needle in node.name.casefold()
+            or needle in node.description.casefold()
+            or any(needle in alias.casefold() for alias in node.aliases)
+        ][:num_results]
+        entity_uuids = {entity["uuid"] for entity in entities}
+        relationships = [
+            asdict(edge)
+            for edge in self.relationships.values()
+            if edge.source_uuid in entity_uuids or edge.target_uuid in entity_uuids
+        ][:num_results]
+        episodes = [
+            asdict(episode)
+            for episode in self.episodes.values()
+            if needle in episode.summary.casefold() or needle in episode.session_id.casefold()
+        ][:num_results]
+        return {"entities": entities, "relationships": relationships, "episodes": episodes}
+
+
+class GraphitiServiceStore(InMemoryGraphitiStore):
+    """Graphiti-backed store that also writes the explicit episodic schema."""
+
+    def __init__(self, graphiti: Any):
+        super().__init__()
+        self.graphiti = graphiti
+
+    async def commit_episode(self, extraction: SophiaExtraction, episode: EpisodeNode) -> IngestReceipt:
+        receipt = await super().commit_episode(extraction, episode)
+        await self.graphiti.add_episode(
+            name=f"memory:{episode.session_id}:{episode.uuid}",
+            episode_body=episode.summary,
+            source_description=(
+                f"s2'.memory.ingest_transcript:harness={episode.harness}:"
+                f"transcript_ref={episode.transcript_ref}"
+            ),
+            reference_time=datetime.now(timezone.utc),
+            group_id=_graphiti_group_id(episode.session_id),
+        )
+        await self._write_schema_to_driver(episode)
+        return receipt
+
+    async def _write_schema_to_driver(self, episode: EpisodeNode) -> None:
+        driver = getattr(self.graphiti, "driver", None)
+        if driver is None:
+            return
+        async with driver.session() as session:
+            await session.run(
+                """
+                MERGE (ep:EpisodeNode {uuid: $uuid})
+                SET ep.session_id = $session_id,
+                    ep.timestamp = $timestamp,
+                    ep.harness = $harness,
+                    ep.entity_count = $entity_count,
+                    ep.edge_count = $edge_count,
+                    ep.transcript_ref = $transcript_ref,
+                    ep.summary = $summary,
+                    ep.provenance_handles = $provenance_handles
+                """,
+                **asdict(episode),
+            )
+            for node in self.entities.values():
+                await session.run(
+                    """
+                    MERGE (en:EntityNode {uuid: $uuid})
+                    SET en.name = $name,
+                        en.type = $type,
+                        en.description = $description,
+                        en.aliases = $aliases,
+                        en.first_seen_episode = $first_seen_episode,
+                        en.last_seen_episode = $last_seen_episode,
+                        en.provenance_handles = $provenance_handles
+                    WITH en
+                    MATCH (ep:EpisodeNode {uuid: $episode_uuid})
+                    MERGE (ep)-[:MENTIONS_ENTITY]->(en)
+                    """,
+                    **asdict(node),
+                    episode_uuid=episode.uuid,
+                )
+            for edge in self.relationships.values():
+                await session.run(
+                    """
+                    MATCH (source:EntityNode {uuid: $source_uuid})
+                    MATCH (target:EntityNode {uuid: $target_uuid})
+                    MERGE (source)-[rel:RELATIONSHIP_EDGE {uuid: $uuid}]->(target)
+                    SET rel.predicate = $predicate,
+                        rel.description = $description,
+                        rel.first_seen_episode = $first_seen_episode,
+                        rel.last_seen_episode = $last_seen_episode
+                    """,
+                    **asdict(edge),
+                )
+
+    async def query(self, query: str, *, num_results: int = 10) -> dict[str, Any]:
+        driver = getattr(self.graphiti, "driver", None)
+        if driver is not None:
+            needle = query.casefold()
+            async with driver.session() as session:
+                entity_rows = await session.run(
+                    """
+                    MATCH (en:EntityNode)
+                    WHERE toLower(en.name) CONTAINS $needle
+                       OR toLower(coalesce(en.description, '')) CONTAINS $needle
+                       OR any(alias IN coalesce(en.aliases, []) WHERE toLower(alias) CONTAINS $needle)
+                    RETURN en LIMIT $limit
+                    """,
+                    needle=needle,
+                    limit=num_results,
+                )
+                entities = [dict(row["en"]) async for row in entity_rows]
+                return {"entities": entities, "relationships": [], "episodes": []}
+        return await super().query(query, num_results=num_results)
+
+
+class AletheiaEntificationService:
+    def __init__(self, graph: InMemoryGraphitiStore):
+        self.graph = graph
+
+    async def entify(self, extraction: SophiaExtraction, session_graphiti_episode: EpisodeNode) -> IngestReceipt:
+        return await self.graph.commit_episode(extraction, session_graphiti_episode)
+
+
+def _default_memory_graph() -> InMemoryGraphitiStore:
+    global _memory_pipeline_graph
+    if _memory_pipeline_graph is None:
+        _memory_pipeline_graph = InMemoryGraphitiStore()
+    return _memory_pipeline_graph
+
+
+async def ingest_transcript(
+    transcript_blob: Any,
+    *,
+    session_id: Optional[str] = None,
+    harness: Optional[str] = None,
+    transcript_ref: Optional[str] = None,
+    graph: Optional[InMemoryGraphitiStore] = None,
+) -> IngestReceipt:
+    neutral = canonicalise_transcript(
+        transcript_blob,
+        session_id=session_id,
+        harness=harness,
+        transcript_ref=transcript_ref,
+    )
+    graph = graph or _default_memory_graph()
+    extraction = sophia.extract_entities(neutral)
+    episode = graph.prepare_episode(
+        session_id=neutral.session_id,
+        harness=neutral.harness,
+        transcript_ref=neutral.transcript_ref,
+        summary=extraction.summary,
+    )
+    return await AletheiaEntificationService(graph).entify(extraction, episode)
+
+
+async def query_graphiti(
+    query: str,
+    *,
+    graph: Optional[InMemoryGraphitiStore] = None,
+    num_results: int = 10,
+) -> dict[str, Any]:
+    graph = graph or _default_memory_graph()
+    return await graph.query(query, num_results=num_results)
+
+
+sophia = SophiaExtractionService()
+
+
 # ── App ───────────────────────────────────────────────────────────────────────
 
 app = FastAPI(title="epi-graphiti", version="0.1.0")
@@ -195,6 +815,13 @@ class SearchRequest(BaseModel):
     num_results: int = 10
     group_id: Optional[str] = None
     use_redis_cache: bool = True
+
+
+class TranscriptIngestRequest(BaseModel):
+    transcript: Any
+    session_id: Optional[str] = None
+    harness: Optional[str] = None
+    transcript_ref: Optional[str] = None
 
 
 # ── Redis cache helpers ───────────────────────────────────────────────────────
@@ -298,6 +925,31 @@ async def add_episode(req: EpisodeRequest):
     )
 
     return {"status": "ok", "name": name}
+
+
+@app.post("/memory/ingest_transcript")
+async def memory_ingest_transcript(req: TranscriptIngestRequest):
+    """s2'.memory.ingest_transcript: harness-neutral transcript to Graphiti."""
+    g = await get_graphiti()
+    receipt = await ingest_transcript(
+        req.transcript,
+        session_id=req.session_id,
+        harness=req.harness,
+        transcript_ref=req.transcript_ref,
+        graph=GraphitiServiceStore(g),
+    )
+    return asdict(receipt)
+
+
+@app.get("/memory/query_graphiti")
+async def memory_query_graphiti(query: str, num_results: int = 10):
+    """s2'.memory.query_graphiti: semantic recall over explicit memory schema."""
+    g = await get_graphiti()
+    return await query_graphiti(
+        query,
+        graph=GraphitiServiceStore(g),
+        num_results=num_results,
+    )
 
 
 @app.post("/arc/open")
