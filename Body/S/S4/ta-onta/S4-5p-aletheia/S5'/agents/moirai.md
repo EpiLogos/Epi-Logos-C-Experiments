@@ -9,6 +9,7 @@ tools:
   - aletheia_crystallise
   - aletheia_thought_route
   - aletheia_seed_refresh
+  - moirai_arena_distill
   - graph_query
 skills:
   - aletheia:thought-distil
