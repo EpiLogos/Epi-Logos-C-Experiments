@@ -22,6 +22,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
+require.extensions['.css'] = () => undefined;
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
@@ -62,6 +63,7 @@ const CAPABILITY_MATRIX_PATH = resolve(
 );
 
 const SOURCE_ROOT = resolve(__dirname, '..', 'src', 'browser');
+const STYLE_ROOT = resolve(__dirname, '..', 'style');
 
 const INLINE_READINESS_BINDINGS = Object.freeze({
     'bimba-graph-viewer-widget.tsx': ['s2.graph.node'],
@@ -238,6 +240,59 @@ test('GraphCanvas partitions edges by c_1_relation_family for DR-IG-1 filtering'
     assert.equal(countMatches(structural, /data-relation-family="correspondential"/g), 0);
     assert.equal(countMatches(correspondential, /data-relation-family="correspondential"/g), 3);
     assert.equal(countMatches(correspondential, /data-relation-family="structural"/g), 0);
+});
+
+test('Coordinate Tree ships C-family, namespace, active, authoring, and privacy classes', () => {
+    const source = readFileSync(resolve(SOURCE_ROOT, 'coordinate-tree-widget.tsx'), 'utf8');
+    const css = readFileSync(resolve(STYLE_ROOT, 'coordinate-tree.css'), 'utf8');
+    const combined = `${source}\n${css}`;
+    for (const family of ['P', 'S', 'T', 'M', 'L', 'C']) {
+        assert.match(combined, new RegExp(`coordinate-family-${family}`));
+    }
+    assert.match(combined, /coordinate-namespace-empty/);
+    assert.match(combined, /coordinate-namespace-pratibimba/);
+    assert.match(combined, /coordinate-privacy-public/);
+    assert.match(combined, /coordinate-privacy-safe-public-current-kernel-tick/);
+    assert.match(combined, /active-coordinate/);
+    assert.match(source, /Propose canonical edit/);
+    assert.match(combined, /privacy_blocked/);
+    assert.match(combined, /coordinate-privacy-blocked/);
+});
+
+test('Coordinate Tree source subscribes and publishes active coordinate via SharedBridgeAdapter', () => {
+    const source = readFileSync(resolve(SOURCE_ROOT, 'coordinate-tree-widget.tsx'), 'utf8');
+    assert.match(source, /@inject\(SharedBridgeAdapter\)/);
+    assert.match(source, /protected activeCoordinate:\s*string\s*\|\s*null\s*=\s*null/);
+    assert.match(source, /protected readonly disposers/);
+    assert.match(source, /onCoordinateContext/);
+    assert.match(source, /publishCoordinateContext\(coordinate/);
+    assert.match(source, /updateCoordinateContext\(next\)/);
+    assert.match(source, /selectedCoordinate:\s*coordinate/);
+    assert.match(source, /source:\s*'coordinate-tree'/);
+});
+
+test('Coordinate Tree authoring mode routes to Canon Studio and keeps graph canon immutable', () => {
+    const source = readFileSync(resolve(SOURCE_ROOT, 'coordinate-tree-widget.tsx'), 'utf8');
+    assert.match(source, /protected surfaceMode:\s*'reading'\s*\|\s*'authoring'\s*=\s*'reading'/);
+    assert.match(source, /mutatesGraphCanon\s*=\s*false/);
+    assert.match(source, /CROSS_LAYOUT_INTENT_DISPATCH_COMMAND/);
+    assert.match(source, /requestedExtensionId:\s*EXTENSION_ID/);
+    assert.match(source, /requestedContributionId:\s*IDE_SHELL_INTENT_TARGETS\.CANON_STUDIO/);
+    assert.doesNotMatch(source, /requestCanonMutation|mutateGraphCanon|vaultBridgeWrite\(/);
+});
+
+test('Coordinate Tree expand state is Set-backed and family expand commands are registered', () => {
+    const widgetSource = readFileSync(resolve(SOURCE_ROOT, 'coordinate-tree-widget.tsx'), 'utf8');
+    const moduleSource = readFileSync(resolve(SOURCE_ROOT, 'frontend-module.ts'), 'utf8');
+    assert.match(widgetSource, /protected expanded:\s*Set<string>\s*=\s*new Set<string>\(\)/);
+    assert.match(widgetSource, /data-expanded=\{String\(isExpanded\)\}/);
+    assert.match(widgetSource, /expandFamily\(family/);
+    for (const family of ['P', 'S', 'T', 'M', 'L', 'C']) {
+        assert.match(
+            moduleSource,
+            new RegExp(`pratibimba\\.coordinate-tree\\.expand-family\\.${family}`)
+        );
+    }
 });
 
 test('Bimba graph widget publishes coordinate context through SharedBridgeAdapter on node click', () => {

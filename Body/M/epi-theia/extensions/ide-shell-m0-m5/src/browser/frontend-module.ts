@@ -17,6 +17,7 @@ import { BimbaGraphViewerWidget } from './bimba-graph-viewer-widget';
 import { CanonStudioWidget } from './canon-studio-widget';
 import { AgenticControlRoomWidget } from './agentic-control-room-widget';
 import { CoordinateTreeWidget } from './coordinate-tree-widget';
+import type { CoordinateFamily } from './coordinate-tree-widget';
 import { LogosAtelierWidget } from './logos-atelier-widget';
 import { EvidencePaneWidget } from './evidence-pane-widget';
 import { ReviewPaneWidget } from './review-pane-widget';
@@ -274,6 +275,18 @@ export class IdeShellCoordinateTreeContribution
     extends AbstractViewContribution<CoordinateTreeWidget>
     implements CommandContribution, FrontendApplicationContribution
 {
+    protected static readonly EXPAND_FAMILY_COMMANDS: readonly {
+        readonly family: CoordinateFamily;
+        readonly id: string;
+    }[] = [
+        { family: 'P', id: 'pratibimba.coordinate-tree.expand-family.P' },
+        { family: 'S', id: 'pratibimba.coordinate-tree.expand-family.S' },
+        { family: 'T', id: 'pratibimba.coordinate-tree.expand-family.T' },
+        { family: 'M', id: 'pratibimba.coordinate-tree.expand-family.M' },
+        { family: 'L', id: 'pratibimba.coordinate-tree.expand-family.L' },
+        { family: 'C', id: 'pratibimba.coordinate-tree.expand-family.C' }
+    ];
+
     constructor() {
         super({
             widgetId: CoordinateTreeWidget.ID,
@@ -294,6 +307,20 @@ export class IdeShellCoordinateTreeContribution
             'IDE Shell: Open Coordinate Tree',
             intent => this.handleOpen(intent)
         );
+        for (const command of IdeShellCoordinateTreeContribution.EXPAND_FAMILY_COMMANDS) {
+            commands.registerCommand(
+                {
+                    id: command.id,
+                    label: `Coordinate Tree: Expand ${command.family} Family`
+                },
+                {
+                    execute: async () => {
+                        const widget = await this.openView({ activate: true, reveal: true });
+                        widget?.expandFamily(command.family);
+                    }
+                }
+            );
+        }
     }
 
     protected async handleOpen(intent: unknown): Promise<void> {
@@ -302,8 +329,7 @@ export class IdeShellCoordinateTreeContribution
         if (widget && i?.coordinate) {
             await widget.loadTree(i.coordinate);
             if (i.requestedContributionId === 'highlight-coordinate') {
-                widget.activeCoordinate = i.coordinate;
-                widget.update();
+                widget.focusCoordinate(i.coordinate);
             }
         }
     }
