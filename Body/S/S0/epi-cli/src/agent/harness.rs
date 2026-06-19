@@ -282,6 +282,24 @@ pub fn plan_env(plan: &PiLaunchPlan, extra: &[(&str, String)]) -> Vec<(String, O
     if let Ok(paths) = std::env::join_paths(&plan.skill_roots) {
         env.push(("EPI_GATE_SKILLS_PATHS".to_owned(), paths));
     }
+    if let Some(path) = &plan.result_parent_now_path {
+        env.push((
+            "EPI_PARENT_NOW_PATH".to_owned(),
+            path.clone().into_os_string(),
+        ));
+    }
+    if let Some(path) = &plan.result_drop_dir {
+        env.push((
+            "EPI_RESULT_DROP_DIR".to_owned(),
+            path.clone().into_os_string(),
+        ));
+    }
+    if let Some(path) = &plan.result_day_dir {
+        env.push((
+            "EPI_RESULT_DAY_DIR".to_owned(),
+            path.clone().into_os_string(),
+        ));
+    }
     for (key, value) in extra {
         env.push(((*key).to_owned(), value.clone().into()));
     }

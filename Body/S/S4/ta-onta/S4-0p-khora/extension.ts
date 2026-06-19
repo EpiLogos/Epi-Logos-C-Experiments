@@ -9,8 +9,9 @@ import registerSystemSelect from "./S0'/system-select.ts";
 import { composePhaseVakAddress } from "./modules/z-phase-vak.ts";
 import {
   createKhoraFlowWatcher,
+  RESULT_ARTIFACT_WAKE,
   type KhoraFlowWatcher,
-  type TrancheCompleteEvent,
+  type KhoraFlowEvent,
 } from "./modules/flow-watcher.ts";
 import {
   consumePendingSophia,
@@ -167,7 +168,7 @@ function closeM4SessionProtein(sessionId: string | null): Record<string, unknown
   return response;
 }
 
-function recordFlowWatcherEvent(api: ExtensionAPI, event: TrancheCompleteEvent) {
+function recordFlowWatcherEvent(api: ExtensionAPI, event: KhoraFlowEvent) {
   const nowPath = _nowPath ?? process.env.EPI_NOW_PATH ?? event.path;
   if (nowPath) {
     try {
@@ -180,7 +181,9 @@ function recordFlowWatcherEvent(api: ExtensionAPI, event: TrancheCompleteEvent) 
   const emit = (api as unknown as { emit?: (name: string, payload: unknown) => void | Promise<void> }).emit;
   if (emit) {
     void Promise.resolve(emit(event.kind, event));
-    void Promise.resolve(emit("tranche.complete", event));
+    if (event.kind !== RESULT_ARTIFACT_WAKE) {
+      void Promise.resolve(emit("tranche.complete", event));
+    }
   }
 }
 
@@ -241,6 +244,9 @@ function bindCurrentPiHarness(repoRoot: string): void {
       runtimeCwd: repoRoot,
       providerOverride: process.env.EPI_PROVIDER_OVERRIDE,
       modelOverride: process.env.EPI_MODEL_OVERRIDE || process.env.PI_MODEL,
+      resultDropDir: process.env.EPI_RESULT_DROP_DIR,
+      resultDayDir: process.env.EPI_RESULT_DAY_DIR,
+      resultParentNowPath: process.env.EPI_PARENT_NOW_PATH,
       parentSessionKey: process.env.EPI_PARENT_SESSION_KEY,
       activeAgentId: process.env.EPI_AGENT_ID || process.env.EPI_AGENT_NAME || "anima",
       subagentLineage: Array.isArray(lineage) ? lineage.map(String) : [],
@@ -554,6 +560,8 @@ export async function khoraExtension(api: ExtensionAPI) {
           dayId: _dayId ?? new Date().toLocaleDateString("en-GB").replace(/\//g, "-"),
           nowPath: _nowPath,
           dailyNotePath: dailyNotePath(_dayId),
+          resultDropNowDir: process.env.EPI_RESULT_DROP_DIR ?? (_nowPath ? dirname(_nowPath) : null),
+          resultDropDayDir: process.env.EPI_RESULT_DAY_DIR ?? (_nowPath ? dirname(dirname(_nowPath)) : null),
           onEvent: (event) => recordFlowWatcherEvent(api, event),
         });
         _flowWatcher.start();

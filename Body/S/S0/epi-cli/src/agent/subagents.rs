@@ -237,6 +237,13 @@ pub fn run_runtime(request: RuntimeSubagentRequest) -> Result<RuntimeSubagentRep
     let mut plan = runtime::plan_run(Some(&request.agent_id), None, &[], &args)?;
     plan.gate_state_root = gate_root.clone();
     let mut request = request;
+    let inherited = gate_subagents::resolve_agent_launch_context(
+        &store,
+        &session_key,
+        Some(&request.parent_session_key),
+    )?
+    .ok_or_else(|| "subagent lineage context should resolve".to_owned())?;
+    apply_result_drop_from_parent_now(&mut plan, inherited.vault_now_path.as_deref());
     if request.terminal_backed && request.terminal_lease.is_none() {
         request.terminal_lease = Some(tmux::create_session(&plan, &session_key)?);
     }
@@ -567,6 +574,26 @@ fn default_subagent_session_key(agent_id: &str) -> String {
     format!("agent:{agent_id}:subagent:{}", Uuid::new_v4().simple())
 }
 
+fn apply_result_drop_from_parent_now(
+    plan: &mut runtime::PiLaunchPlan,
+    parent_now_path: Option<&str>,
+) {
+    let Some(parent_now_path) = parent_now_path
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(PathBuf::from)
+    else {
+        return;
+    };
+    let Some(now_dir) = parent_now_path.parent().map(Path::to_path_buf) else {
+        return;
+    };
+    let day_dir = now_dir.parent().map(Path::to_path_buf);
+    plan.result_parent_now_path = Some(parent_now_path);
+    plan.result_drop_dir = Some(now_dir);
+    plan.result_day_dir = day_dir;
+}
+
 fn agent_id_from_session_key(session_key: &str) -> String {
     let mut parts = session_key.split(':');
     match (parts.next(), parts.next()) {
@@ -684,4 +711,65 @@ fn shell_single_quote(value: &str) -> String {
     }
     quoted.push('\'');
     quoted
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::agent::runtime::{PiLaunchMode, PiLaunchPlan};
+
+    #[test]
+    fn inherited_parent_now_path_becomes_child_result_drop_env() {
+        let mut plan = fixture_plan();
+
+        apply_result_drop_from_parent_now(
+            &mut plan,
+            Some("/vault/Empty/Present/19-06-2026/20260619-120000-parent/now.md"),
+        );
+
+        let env = crate::agent::launch::plan_env(&plan, &[])
+            .into_iter()
+            .map(|(key, value)| (key, value.to_string_lossy().to_string()))
+            .collect::<std::collections::BTreeMap<_, _>>();
+
+        assert_eq!(
+            env.get("EPI_PARENT_NOW_PATH").map(String::as_str),
+            Some("/vault/Empty/Present/19-06-2026/20260619-120000-parent/now.md")
+        );
+        assert_eq!(
+            env.get("EPI_RESULT_DROP_DIR").map(String::as_str),
+            Some("/vault/Empty/Present/19-06-2026/20260619-120000-parent")
+        );
+        assert_eq!(
+            env.get("EPI_RESULT_DAY_DIR").map(String::as_str),
+            Some("/vault/Empty/Present/19-06-2026")
+        );
+    }
+
+    fn fixture_plan() -> PiLaunchPlan {
+        let root = PathBuf::from("/repo");
+        PiLaunchPlan {
+            launch_mode: PiLaunchMode::CapturedPrompt,
+            capture_output: true,
+            agent_id: "eros".to_owned(),
+            role: None,
+            args: vec!["-p".to_owned(), "task".to_owned()],
+            repo_root: root.clone(),
+            agent_dir: root.join(".epi/agents/eros/agent"),
+            prompts_dir: root.join(".epi/agents/eros/agent/prompts"),
+            plugin_runtime_path: root.join(".epi/agents/eros/agent/plugin-runtime.json"),
+            epi_home: root.join(".epi"),
+            gate_state_root: root.join(".epi/gate"),
+            gateway_port: 7331,
+            gateway_url: "ws://127.0.0.1:7331".to_owned(),
+            codex_home: root.join(".codex"),
+            skill_roots: Vec::new(),
+            result_parent_now_path: None,
+            result_drop_dir: None,
+            result_day_dir: None,
+            runtime_root: None,
+            working_dir: None,
+            home_override: None,
+        }
+    }
 }

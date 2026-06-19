@@ -30,6 +30,19 @@ export interface HarnessBinding {
   readonly parent_session_key?: string;
 }
 
+export type ResultArtifactPurpose = "implement" | "review" | "explore" | "search" | "converse";
+export type ResultDropDefaultTarget = "now" | "day";
+
+export interface ResultDropBinding {
+  readonly now_dir: string;
+  readonly day_dir?: string;
+  readonly parent_now_path?: string;
+  readonly default_target: ResultDropDefaultTarget;
+  readonly artifact_suffix: ".result.md";
+  readonly purposes: readonly ResultArtifactPurpose[];
+  readonly wake_event: "khora.result.wake";
+}
+
 export interface GatewaySessionProjection {
   readonly canonicalKey?: string;
   readonly canonical_key?: string;
@@ -45,6 +58,12 @@ export interface GatewaySessionProjection {
   readonly provider_override?: string;
   readonly modelOverride?: string;
   readonly model_override?: string;
+  readonly resultDropDir?: string;
+  readonly result_drop_dir?: string;
+  readonly resultDayDir?: string;
+  readonly result_day_dir?: string;
+  readonly resultParentNowPath?: string;
+  readonly result_parent_now_path?: string;
   readonly parentSessionKey?: string;
   readonly parent_session_key?: string;
   readonly activeAgentId?: string;
@@ -71,6 +90,7 @@ export interface SessionWorkspace {
   readonly runtime_cwd?: string;
   readonly subagent_lineage: readonly string[];
   readonly harness: HarnessBinding;
+  readonly result_drop?: ResultDropBinding;
   readonly updated_at: string;
 }
 
@@ -140,6 +160,27 @@ export function projectHarnessBinding(input: ProjectHarnessInput): HarnessBindin
   }
 
   return binding;
+}
+
+export function projectResultDropBinding(session: GatewaySessionProjection): ResultDropBinding | undefined {
+  const explicitNowDir = field(session, "resultDropDir", "result_drop_dir");
+  const parentNowPath = field(session, "resultParentNowPath", "result_parent_now_path")
+    ?? field(session, "vaultNowPath", "vault_now_path");
+  const nowDir = explicitNowDir ?? (parentNowPath ? dirname(parentNowPath) : undefined);
+  if (!nowDir) return undefined;
+
+  const dayDir = field(session, "resultDayDir", "result_day_dir")
+    ?? dayDirForNowPath(parentNowPath ?? join(nowDir, "now.md"));
+
+  return stripUndefined({
+    now_dir: nowDir,
+    day_dir: dayDir,
+    parent_now_path: parentNowPath,
+    default_target: "now",
+    artifact_suffix: ".result.md",
+    purposes: ["implement", "review", "explore", "search", "converse"],
+    wake_event: "khora.result.wake",
+  });
 }
 
 export function bindHarnessToSessionWorkspace(input: BindHarnessInput): SessionWorkspace {
@@ -212,8 +253,16 @@ function composeSessionWorkspace(input: BindHarnessInput): SessionWorkspace {
       ...(input.session.subagentLineage ?? input.session.subagent_lineage ?? []),
     ],
     harness: projectHarnessBinding(input),
+    result_drop: projectResultDropBinding(input.session),
     updated_at: (input.now ?? new Date()).toISOString(),
   });
+}
+
+function dayDirForNowPath(nowPath: string): string | undefined {
+  if (!nowPath.trim()) return undefined;
+  const nowDir = nowPath.endsWith("/now.md") ? dirname(nowPath) : nowPath;
+  const dayDir = dirname(nowDir);
+  return dayDir && dayDir !== "." && dayDir !== nowDir ? dayDir : undefined;
 }
 
 function modelSlot(session: GatewaySessionProjection): string {

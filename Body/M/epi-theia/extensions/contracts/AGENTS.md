@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M1
 
 ## Ownership
 - `07-t0-extension-contract-preflight.{json,md}` — Track 07 six-M-extension boundary contract against the shared `KernelBridgeAPI`; readiness taxonomy + forbidden-import rule + command/route convention.
-- `08-t0-composition-contract-preflight.{json,md}` — Track 08 integrated-plugin composition contract ([[plugin-integrated-1-2-3]] + [[plugin-integrated-4-5-0]]); inherits 07.T0's bridge/taxonomy/imports.
+- `08-t0-composition-contract-preflight.{json,md}` — Track 08 integrated-plugin composition contract ([[plugin-integrated-1-2-3]] + [[plugin-integrated-4-5-0]]); inherits 07.T0's bridge/taxonomy/imports and declares the shared `M2CymaticTextureContribution` data-shape mount.
 - `07-t2-track08-contribution-contracts.md` — Track 07→08 contribution boundary (`TRACK_08_CONTRIBUTION` shape, route chain, observability event rule).
 - `ui-design-tokens.{ts,json,md}` — canonical W3C-shape design-token bundle (`epilogos.*` namespace) consumed via consume-not-fork lint.
 - `ui-colour-tokens.{json,ts,md}` — canonical coordinate-derived chromatic token bundle (`epilogos.colour.*` namespace) with W3C-shape JSON, typed exports, and per-token derivation citations.

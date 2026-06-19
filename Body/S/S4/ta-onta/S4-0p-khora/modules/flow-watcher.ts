@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, statSync, watch, watchFile, unwatchFile, type FSWatcher } from "node:fs";
-import { basename } from "node:path";
+import { basename, join } from "node:path";
 
 export const TRANCHE_COMPLETE_EXPLICIT = "tranche.complete.explicit" as const;
 export const TRANCHE_COMPLETE_QUIET = "tranche.complete.quiet" as const;
 export const TRANCHE_COMPLETE_RHYTHM = "tranche.complete.rhythm" as const;
+export const RESULT_ARTIFACT_WAKE = "khora.result.wake" as const;
 
 export type TrancheCompleteKind =
   | typeof TRANCHE_COMPLETE_EXPLICIT
@@ -22,15 +23,33 @@ export interface TrancheCompleteEvent {
   readonly quiet_duration_ms?: number;
 }
 
+export type ResultArtifactPurpose = "implement" | "review" | "explore" | "search" | "converse";
+export type ResultDropScope = "now" | "day";
+
+export interface ResultArtifactWakeEvent {
+  readonly kind: typeof RESULT_ARTIFACT_WAKE;
+  readonly session_id: string;
+  readonly day_id: string;
+  readonly path: string;
+  readonly source: "artifact-created";
+  readonly detected_at: string;
+  readonly directory_scope: ResultDropScope;
+  readonly purpose: ResultArtifactPurpose;
+}
+
+export type KhoraFlowEvent = TrancheCompleteEvent | ResultArtifactWakeEvent;
+
 export interface KhoraFlowWatcherConfig {
   readonly sessionId: string;
   readonly dayId: string;
   readonly nowPath?: string | null;
   readonly dailyNotePath?: string | null;
+  readonly resultDropNowDir?: string | null;
+  readonly resultDropDayDir?: string | null;
   readonly trancheMarker?: string;
   readonly debounceMs?: number;
   readonly quietDurationMs?: number;
-  readonly onEvent: (event: TrancheCompleteEvent) => void | Promise<void>;
+  readonly onEvent: (event: KhoraFlowEvent) => void | Promise<void>;
 }
 
 export interface KhoraFlowWatcher {
@@ -97,15 +116,26 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
   const watched = [config.nowPath, config.dailyNotePath]
     .filter((path): path is string => Boolean(path))
     .filter((path, index, all) => all.indexOf(path) === index);
+  const resultDropDirs = [
+    { scope: "now" as const, path: config.resultDropNowDir },
+    { scope: "day" as const, path: config.resultDropDayDir },
+  ]
+    .filter((entry): entry is { scope: ResultDropScope; path: string } => Boolean(entry.path))
+    .filter((entry, index, all) => all.findIndex((candidate) => candidate.path === entry.path) === index);
   const fsWatchers = new Map<string, FSWatcher>();
   const pollingPaths = new Set<string>();
   const states = new Map<string, WatchedFileState>();
+  const observedResultArtifacts = new Set<string>();
   const debounceTimers = new Map<string, ReturnType<typeof setTimeout>>();
   let quietTimer: ReturnType<typeof setTimeout> | null = null;
   let lastTouchedPath = watched[0] ?? "";
   let stopped = false;
 
   const emit = (event: TrancheCompleteEvent) => {
+    void Promise.resolve(config.onEvent(event));
+  };
+
+  const emitResultWake = (event: ResultArtifactWakeEvent) => {
     void Promise.resolve(config.onEvent(event));
   };
 
@@ -150,6 +180,23 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
     }, debounceMs));
   };
 
+  const inspectResultArtifact = (dir: string, scope: ResultDropScope, filename: string) => {
+    if (stopped || !filename.endsWith(".result.md")) return;
+    const path = join(dir, filename);
+    if (observedResultArtifacts.has(path) || !existsSync(path)) return;
+    observedResultArtifacts.add(path);
+    emitResultWake({
+      kind: RESULT_ARTIFACT_WAKE,
+      session_id: config.sessionId,
+      day_id: config.dayId,
+      path,
+      source: "artifact-created",
+      detected_at: new Date().toISOString(),
+      directory_scope: scope,
+      purpose: resultArtifactPurpose(path),
+    });
+  };
+
   function resetQuietTimer(path = lastTouchedPath) {
     if (quietTimer) clearTimeout(quietTimer);
     if (!path) return;
@@ -181,6 +228,15 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
             }
           });
         }
+      }
+      for (const entry of resultDropDirs) {
+        if (!existsSync(entry.path)) continue;
+        const watcherKey = `result:${entry.scope}:${entry.path}`;
+        if (fsWatchers.has(watcherKey)) continue;
+        fsWatchers.set(watcherKey, watch(entry.path, { persistent: false }, (_event, filename) => {
+          if (typeof filename !== "string") return;
+          inspectResultArtifact(entry.path, entry.scope, filename);
+        }));
       }
       resetQuietTimer(lastTouchedPath);
     },
@@ -215,7 +271,25 @@ export function createKhoraFlowWatcher(config: KhoraFlowWatcherConfig): KhoraFlo
     },
 
     watchedPaths() {
-      return Object.freeze([...watched]);
+      return Object.freeze([...watched, ...resultDropDirs.map((entry) => entry.path)]);
     },
   };
+}
+
+function resultArtifactPurpose(path: string): ResultArtifactPurpose {
+  const name = basename(path).toLowerCase();
+  for (const purpose of ["implement", "review", "explore", "search", "converse"] as const) {
+    if (name.startsWith(`${purpose}.`) || name.includes(`.${purpose}.`)) return purpose;
+  }
+  try {
+    const content = readFileSync(path, "utf8");
+    const match = /^(?:purpose|c_4_purpose):\s*["']?([a-z-]+)["']?/m.exec(content);
+    const value = match?.[1];
+    if (value === "implement" || value === "review" || value === "explore" || value === "search" || value === "converse") {
+      return value;
+    }
+  } catch {
+    // The artifact may still be settling after the create event; fall back to explore.
+  }
+  return "explore";
 }

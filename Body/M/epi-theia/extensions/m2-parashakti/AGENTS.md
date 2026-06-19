@@ -8,13 +8,14 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M2'-SPEC]] (arch
 - `package.json` — `@pratibimba/m2-parashakti` workspace package manifest; `theiaExtensions.frontend` -> `lib/browser/frontend-module`.
 - `src/common/index.ts` — generated public surface (view ids, command ids, route, privacy class, observability event types, Track 08 contribution/exports). Header: "Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit."
 - `src/common/meaning-packet.ts` — `M2_MEANING_PACKET_CONTRACT_VERSION` packet types and selectors.
-- `src/browser/` — frontend module + three widgets: meaning-packet, cymatic-engine, correspondence-tree; `empty-state.tsx` supplies the first-render empty-state surface; `components/` holds M2-owned React sub-surfaces used by those widgets, including the shadow-decan reveal panel.
+- `src/common/composition.ts` — `M2CymaticTextureContribution` data-shape builder for the Track 23.12 Cosmic Engine texture mount; exported as `@pratibimba/m2-parashakti/common/composition`.
+- `src/browser/` — frontend module + three widgets: meaning-packet, cymatic-engine, correspondence-tree; `empty-state.tsx` supplies the first-render empty-state surface; `components/` holds M2-owned React sub-surfaces used by those widgets, including the shadow-decan reveal panel. Standalone browser widgets do not consume `M2CymaticTextureContribution` directly.
 - `test/widget-registry.test.mjs`, `test/outer-planet-pending.test.mjs`, and `test/shadow-decan.test.mjs` — node:test suites for widget registration, pending-data honesty, and the 108-cell shadow-decan surface.
 - `style/index.css`, `tsconfig.json`, `lib/` — styling, TS project config, compiled output.
 - Does NOT own: shared runtime (`@pratibimba/m-extension-runtime`), composition primitives (`@pratibimba/integrated-composition`), gateway runtime (`kernel-bridge` -> [[S3-SPEC]] gate), or M2 domain law (lives in the owning M2' coordinate, not centralised here).
 
 ## Local Contracts
-- Code Coordinate Header: `src/common/index.ts` (generated from `../contracts/07-t0-extension-contract-preflight.json`) + `src/common/meaning-packet.ts`.
+- Code Coordinate Header: `src/common/index.ts` (generated from `../contracts/07-t0-extension-contract-preflight.json`) + `src/common/meaning-packet.ts` + `src/common/composition.ts`.
 - Owning spec: [[M2'-SPEC]] / [[M2-ARCHITECTURE]]; workspace contract: parent `extensions/contracts/`.
 - No local CONTRACT.md (see parent + Canon).
 

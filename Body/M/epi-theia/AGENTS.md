@@ -9,7 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M5'-SPEC]]
 - `extensions/` — Theia extensions for M' subsystems, layouts, bridge, plugins, and acceptance harness (own AGENTS.md — see Child DOX Index)
 - `electron-app/` — canonical full-fidelity Electron application target
 - `theia-app/` — browser-mode target derived from the same extensions for gateway/remote use
-- `shared/m-extension-runtime/` — shared runtime code consumed by the M' extensions
+- `shared/` — contract-pointer artifacts for shared composition shapes that are not standalone workspace packages; `shared/m-extension-runtime/` remains the shared runtime code consumed by the M' extensions
 - `scripts/` — build/verify tooling (`smoke-build.sh`, `ensure-electron-dist.mjs`, `verify-*.mjs`)
 - `patches/`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `tsconfig.base.json`, `.npmrc` — workspace + build configuration
 - Does NOT own UX/canon docs (live in `Idea/Pratibimba/System` and `Idea/Bimba/Seeds/M/**`); does NOT own the M0-M5 C runtime law (that resides in its owning M-subsystem modules, not here by convenience).

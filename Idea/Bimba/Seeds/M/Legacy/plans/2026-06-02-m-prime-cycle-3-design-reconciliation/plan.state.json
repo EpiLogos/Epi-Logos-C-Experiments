@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T13:03:11.442Z",
+  "updatedAt": "2026-06-19T13:08:01.127Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6776,14 +6776,19 @@
       "worktree": null
     },
     "25.T25.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T12:43:27.443Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T13:07:59.891Z",
       "claimedAt": "2026-06-19T12:43:27.443Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T13:07:59.891Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T13:07:59.891Z",
+          "text": "pnpm --dir Body/M/epi-theia/extensions/m4-nara test passed 62 tests; quintessence-display.tsx renders PASU hash/clock/wisdom_delta with hover-fetched full hash privacy boundary."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-25-t25-5-quintessence-display",
-      "leaseExpiresAt": "2026-06-19T14:43:27.443Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T12:43:27.443Z",
       "runId": "20260619T124327Z-25-T25.5",
       "worktree": null
@@ -11428,11 +11433,12 @@
     {
       "runId": "20260619T124327Z-25-T25.5",
       "taskId": "25.T25.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T12:43:27.443Z",
       "owner": "codex-m-dev-25-t25-5-quintessence-display",
       "leaseExpiresAt": "2026-06-19T14:43:27.443Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T13:07:59.891Z"
     },
     {
       "runId": "20260619T124347Z-42-T42.6",
