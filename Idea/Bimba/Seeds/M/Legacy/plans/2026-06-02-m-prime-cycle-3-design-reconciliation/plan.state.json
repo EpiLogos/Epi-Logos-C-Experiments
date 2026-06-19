@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T12:11:02.792Z",
+  "updatedAt": "2026-06-19T12:14:40.574Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2094,14 +2094,19 @@
       "worktree": null
     },
     "12.T12.15": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T12:00:01.485Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T12:14:40.484Z",
       "claimedAt": "2026-06-19T12:00:01.485Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T12:14:40.484Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T12:14:40.484Z",
+          "text": "Added Anima reading-frame evaluator with Tarot single/triad/sixfold/Night'/4-5 coverage; node --test Body/S/S4/ta-onta/S4-4p-anima/tests/reading_frame_evaluator.test.ts passes 7/7 and node --test Body/S/S4/ta-onta/S4-4p-anima/tests/*.ts passes 144/144."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-12-t12-15",
-      "leaseExpiresAt": "2026-06-19T14:00:01.485Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T12:00:01.485Z",
       "runId": "20260619T120001Z-12-T12.15",
       "worktree": null
@@ -11308,11 +11313,12 @@
     {
       "runId": "20260619T120001Z-12-T12.15",
       "taskId": "12.T12.15",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T12:00:01.485Z",
       "owner": "codex-m-dev-12-t12-15",
       "leaseExpiresAt": "2026-06-19T14:00:01.485Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T12:14:40.484Z"
     },
     {
       "runId": "20260619T120015Z-28-T28.3",
