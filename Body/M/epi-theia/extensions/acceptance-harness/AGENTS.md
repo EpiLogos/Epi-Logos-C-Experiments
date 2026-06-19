@@ -10,7 +10,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]].
 - `src/browser/` — Theia-side contribution: `acceptance-runner.ts`, `frontend-module.ts` (binds runner, `pratibimba.acceptance-harness.run` command), `harness-control-widget.tsx`.
 - `scripts/acceptance.mjs` — the executable acceptance driver (boots/attaches services, parses step handles from stdout, verifies invariants, prints JSON receipt).
 - `tests/` — `node --test` suite (`topology`, `cold-start*`, `onboarding-*`, `visual-regression*`, `acceptance-plan`, `blocked-readiness-per-extension`).
-- `fixtures/` — onboarding + visual-regression fixtures (each with local `README.md`); `lib/` is the `tsc` build output.
+- `fixtures/` — onboarding + visual-regression fixtures (each with local `README.md`; 15.12 PNG baselines live under `fixtures/visual-regression/*/screenshots/`); `lib/` is the `tsc` build output.
 - Does NOT own: the surfaces it drives (kernel-bridge, pratibimba-layouts, m-extension-runtime, ide-shell-m0-m5, agentic-control-room — all `workspace:*` deps), or the gateway runtime (delegated to [[S3-SPEC]] gate at port 18794 via `@pratibimba/kernel-bridge`).
 
 ## Local Contracts
@@ -25,7 +25,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]].
 - Theia-side steps communicate completion ONLY via the `[ACCEPTANCE:<step-id>:<key>=<value>]` stdout handle the script parses.
 
 ## Verification
-`pnpm --filter @pratibimba/acceptance-harness test` (runs `pnpm build` then `node --test tests/*.test.mjs ../test/validate-extension-contract-preflight.test.mjs`). Workspace-wide: `pnpm test:contracts` from `Body/M/epi-theia`.
+`pnpm --filter @pratibimba/acceptance-harness test` (runs `pnpm build` then `node --test tests/*.test.mjs ../test/validate-extension-contract-preflight.test.mjs`). Visual suite: `pnpm --filter @pratibimba/acceptance-harness test:visual`. Workspace-wide: `pnpm test:contracts` from `Body/M/epi-theia`.
 
 ## Child DOX Index
 - (leaf)

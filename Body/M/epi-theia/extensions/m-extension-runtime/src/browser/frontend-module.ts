@@ -1,5 +1,6 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
+import { BreadcrumbsContribution } from '@theia/core/lib/browser/breadcrumbs/breadcrumbs-constants';
 import { PreferenceContribution } from '@theia/core/lib/browser/preferences/preference-contribution';
 import { CommandContribution } from '@theia/core/lib/common';
 import { SharedBridgeAdapter } from '../common/shared-bridge';
@@ -8,6 +9,7 @@ import {
     EmptyStateRegistry,
     EmptyStateRegistryImpl
 } from '../common/empty-state-registry';
+import { EpiLogosCoordinateBreadcrumbsContribution } from './breadcrumbs/coordinate-breadcrumbs-contribution';
 import { ColdStartOrchestrator } from './cold-start-orchestrator';
 import { EpiLogosSettingsPreferenceContribution } from './settings/epi-logos-settings-page';
 import { ActiveCoordinateStatusEntry } from './status-bar/active-coordinate-status-entry';
@@ -65,4 +67,7 @@ export default new ContainerModule((bind, _unbind, isBound) => {
 
     bind(ProfileTickStatusEntry).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toService(ProfileTickStatusEntry);
+
+    bind(EpiLogosCoordinateBreadcrumbsContribution).toSelf().inSingletonScope();
+    bind(BreadcrumbsContribution).toService(EpiLogosCoordinateBreadcrumbsContribution);
 });

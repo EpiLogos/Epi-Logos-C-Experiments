@@ -173,6 +173,13 @@ export interface M0ArchetypeRoutingProjection {
     readonly state: M0ProvenanceState;
 }
 
+export interface M0ContemplationProjection {
+    readonly archetypeIndex: number | null;
+    readonly prompt: string | null;
+    readonly responseDraft: string;
+    readonly state: M0ProvenanceState;
+}
+
 export interface QlStructureProjection {
     readonly position: 0 | 1 | 2 | 3 | 4 | 5 | null;
     readonly qlVariant: string | null;
@@ -217,6 +224,7 @@ export interface M0InspectorModel {
     readonly projectionLenses: readonly M0ProjectionLens[];
     readonly parityBridges: M0ParityBridgeProjection;
     readonly archetypeRouting: M0ArchetypeRoutingProjection;
+    readonly contemplation: M0ContemplationProjection;
     readonly qlStructure: QlStructureProjection;
     readonly routeTargets: readonly string[];
     readonly actions: readonly M0GatewayAction[];
@@ -333,6 +341,7 @@ export function buildM0InspectorModel(input: {
         projectionLenses: Object.freeze([atelierClusterLens()]),
         parityBridges: readM0ParityBridgeProjection(input.profile) ?? blockedParityBridgeProjection(),
         archetypeRouting: readM0ArchetypeRoutingProjection(input.graphNode, input.profile),
+        contemplation: readM0ContemplationProjection(input.graphNode, input.profile),
         qlStructure: readM0QlStructureProjection(input.graphNode),
         routeTargets: Object.freeze(['M1', 'M2', 'M3', 'M4', 'M5']),
         actions: Object.freeze(actions(coordinate, input)),
@@ -484,6 +493,37 @@ export function m0ArchetypeRoutingLutLabel(
     return spec && projection.routedSubTable !== 'NONE'
         ? `${spec.lutLabel}[${projection.archetypeIndex}]`
         : null;
+}
+
+export function readM0ContemplationProjection(
+    node: M0GraphNodePayload | null | undefined,
+    profile: MathemeHarmonicProfileBoundary | null | undefined
+): M0ContemplationProjection {
+    const properties = objectValue(node?.properties);
+    const archetypeIndex = integerishValue(
+        properties?.c_1_archetype_index ??
+            properties?.archetype_index ??
+            profile?.payload?.c_1_archetype_index
+    );
+    const payload = objectValue(profile?.payload);
+    const promptLut = arrayValue(payload?.contemplation_prompt_lut);
+    const promptEntry = archetypeIndex === null ? undefined : promptLut[archetypeIndex];
+    const prompt =
+        stringValue(promptEntry) ??
+        stringValue(objectValue(promptEntry)?.prompt) ??
+        stringValue(objectValue(promptEntry)?.question);
+
+    return Object.freeze({
+        archetypeIndex,
+        prompt,
+        responseDraft: '',
+        state:
+            archetypeIndex === null
+                ? 'canonical_absent'
+                : prompt
+                  ? 'canonical'
+                  : 'blocked'
+    });
 }
 
 function archetypeRoutingSpec(index: number | null | undefined) {

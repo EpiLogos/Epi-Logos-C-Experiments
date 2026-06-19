@@ -53,10 +53,38 @@ fn graph_retrieval_query_contract_classifies_mentions_and_positions() {
 
     assert_eq!(query.query_type, QueryType::HowDoes);
     assert_eq!(query.coordinate_mentions, vec!["#4", "CF_FRACTAL", "C4'"]);
+    assert_eq!(query.c_layer_metadata.len(), 1);
+    assert_eq!(
+        query.c_layer_metadata[0].semantic_authority,
+        "non_authoritative_pending_c_prime_vak_ancestry_audit"
+    );
     assert_eq!(query.query_type.as_str(), "how_does");
 
     let inferred = GraphRetrievalQuery::from_text("How does the foundation context integrate?");
     assert_eq!(inferred.inferred_positions, vec![0, 4, 5]);
+}
+
+#[test]
+fn c_layer_parser_surfaces_authority_metadata_and_prime_audit() {
+    let c2 = CoordinateArrayParser::parse_one("C2").unwrap();
+    let c2_meta = c2.c_layer_metadata.expect("C2 metadata missing");
+    assert_eq!(c2_meta.c_layer_role, "entities_properties_tags");
+    assert_eq!(c2_meta.semantic_authority, "authoritative");
+    assert_eq!(
+        c2_meta.world_type_path,
+        Some("Idea/Bimba/World/Types/Coordinates/C/C2")
+    );
+    assert_eq!(c2_meta.crystallisation_state, "incubating_type_index");
+
+    let c4_prime = CoordinateArrayParser::parse_one("C4'").unwrap();
+    let c4_prime_meta = c4_prime.c_layer_metadata.expect("C-prime metadata missing");
+    assert_eq!(c4_prime_meta.c_layer_role, "cfp_reflective_scaffold");
+    assert_eq!(
+        c4_prime_meta.semantic_authority,
+        "non_authoritative_pending_c_prime_vak_ancestry_audit"
+    );
+    assert_eq!(c4_prime_meta.world_type_path, None);
+    assert_eq!(c4_prime_meta.crystallisation_state, "audit_pending");
 }
 
 #[test]
@@ -79,6 +107,25 @@ fn coordinate_search_scope_bounds_stack_mprime_and_bimba_queries() {
     assert_eq!(bimba.scope_id(), "bimba_map");
     assert!(bimba.matches_coordinate("M5-2"));
     assert!(bimba.matches_coordinate("#4"));
+}
+
+#[test]
+fn c_layer_scope_triggers_type_ontology_terms_and_explicit_c_mentions() {
+    let entity_scope =
+        CoordinateSearchScope::from_query_text("entity property alias relation field");
+    assert_eq!(entity_scope.scope_id(), "c_layer_type_ontology");
+    assert!(entity_scope.matches_coordinate("C2"));
+    assert!(!entity_scope.matches_coordinate("M5-2"));
+
+    let diagram_scope = CoordinateSearchScope::from_query_text("architecture diagram canvas MOC");
+    assert_eq!(diagram_scope.scope_id(), "c_layer_type_ontology");
+    assert!(diagram_scope.matches_coordinate("C3"));
+    assert!(diagram_scope.matches_coordinate("C4"));
+    assert!(!diagram_scope.matches_coordinate("S2"));
+
+    let explicit = CoordinateSearchScope::from_query_text("show C5 World graduation");
+    assert_eq!(explicit.scope_id(), "c_layer_type_ontology");
+    assert!(explicit.matches_coordinate("C5"));
 }
 
 #[test]

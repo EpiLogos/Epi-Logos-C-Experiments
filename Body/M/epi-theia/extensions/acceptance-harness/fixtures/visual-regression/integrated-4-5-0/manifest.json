@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "fixtureId": "visual-regression/integrated-4-5-0",
-  "plan": "track-29-t29.12-visual-regression",
-  "status": "spec-ahead",
+  "plan": "track-15-t15.12-visual-regression",
+  "status": "baseline-committed",
   "privacyClass": "protected-local-synthetic-fixture",
   "composition": {
     "pluginId": "plugin-integrated-4-5-0",
@@ -10,7 +10,11 @@
     "rangeId": "4-5-0",
     "activeLayout": "ide-deep",
     "primaryCommandId": "epi.integrated.openJivaSiva",
-    "contributorIds": ["m4-nara", "m5-epii", "m0-anuttara"]
+    "contributorIds": [
+      "m4-nara",
+      "m5-epii",
+      "m0-anuttara"
+    ]
   },
   "layoutOwners": {
     "center-stage": "m4-nara",
@@ -18,7 +22,10 @@
     "evidence-panel": "m5-epii",
     "audio-bus": null,
     "selection": "m4-nara",
-    "mini-inspector": ["m0-anuttara", "m5-epii"]
+    "mini-inspector": [
+      "m0-anuttara",
+      "m5-epii"
+    ]
   },
   "omniPanel": {
     "widgetId": "pratibimba.omnipanel.shell",
@@ -62,14 +69,28 @@
     {
       "viewport": "electron-default",
       "screenshot": "screenshots/electron-default.png",
-      "captured": false,
-      "tolerance": { "pixelRatio": 0.001, "maxChangedPixels": 64 }
+      "captured": true,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 25920
+      }
     },
     {
       "viewport": "browser-ci",
       "screenshot": "screenshots/browser-ci.png",
-      "captured": false,
-      "tolerance": { "pixelRatio": 0.001, "maxChangedPixels": 64 }
+      "captured": true,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 20480
+      }
     }
-  ]
+  ],
+  "tranche": "15.T15.12",
+  "coverage": [
+    "15.4 editor-area composition pattern",
+    "Track 08 integrated 4-5-0 composition"
+  ],
+  "diffThreshold": {
+    "pixelRatio": 0.02
+  }
 }

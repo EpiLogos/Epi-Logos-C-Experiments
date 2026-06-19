@@ -32,6 +32,8 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
+    "baseline:visual": "node scripts/generate-visual-regression-baselines.mjs",
+    "test:visual": "node --test tests/visual-regression.test.mjs tests/visual-regression-onboarding.test.mjs",
     "test": "pnpm build && node --test tests/*.test.mjs ../test/validate-extension-contract-preflight.test.mjs"
   }
 }

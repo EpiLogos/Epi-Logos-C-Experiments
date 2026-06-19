@@ -11,6 +11,11 @@ pub const COORDINATE_PREFIX_PROPERTY: &str = "coordinate_prefix";
 pub const COORDINATE_DEPTH_PROPERTY: &str = "coordinate_depth";
 pub const COORDINATE_PARENT_PROPERTY: &str = "coordinate_parent";
 pub const COORDINATE_AXIS_PROPERTY: &str = "coordinate_axis";
+pub const C_LAYER_ROLE_PROPERTY: &str = "c_layer_role";
+pub const SEMANTIC_AUTHORITY_PROPERTY: &str = "semantic_authority";
+pub const WORLD_TYPE_PATH_PROPERTY: &str = "world_type_path";
+pub const CRYSTALLISATION_STATE_PROPERTY: &str = "crystallisation_state";
+pub const C_MOC_EVIDENCE_PATHS_PROPERTY: &str = "c_3_moc_evidence_paths";
 pub const CANONICAL_VAULT_PATH_PROPERTY: &str = "vault_path";
 pub const ARTIFACT_KIND_PROPERTY: &str = "artifact_kind";
 pub const CONTENT_HASH_PROPERTY: &str = "content_hash";
@@ -828,6 +833,61 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         disclosure: GraphPropertyDisclosure::Public,
         source_family: "coordinate",
         indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: C_LAYER_ROLE_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "c-layer-typology",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: SEMANTIC_AUTHORITY_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "c-layer-typology",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: WORLD_TYPE_PATH_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "world-types",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: CRYSTALLISATION_STATE_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "world-types",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: C_MOC_EVIDENCE_PATHS_PROPERTY,
+        coordinate_home: "C3",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "world-types",
+        indexed: false,
         compatibility: false,
     },
     GraphPropertySpec {
@@ -2717,6 +2777,10 @@ pub const INDEXES: &[&str] = &[
     "CREATE INDEX coord_family IF NOT EXISTS FOR (n:Bimba) ON (n.c_4_family)",
     "CREATE INDEX coord_position IF NOT EXISTS FOR (n:Bimba) ON (n.c_4_ql_position)",
     "CREATE INDEX coord_layer IF NOT EXISTS FOR (n:Bimba) ON (n.c_4_layer)",
+    "CREATE INDEX coord_c_layer_role IF NOT EXISTS FOR (n:Bimba) ON (n.c_layer_role)",
+    "CREATE INDEX coord_semantic_authority IF NOT EXISTS FOR (n:Bimba) ON (n.semantic_authority)",
+    "CREATE INDEX coord_world_type_path IF NOT EXISTS FOR (n:Bimba) ON (n.world_type_path)",
+    "CREATE INDEX coord_crystallisation_state IF NOT EXISTS FOR (n:Bimba) ON (n.crystallisation_state)",
     "CREATE INDEX coord_topo IF NOT EXISTS FOR (n:Bimba) ON (n.c_4_topo_mode)",
     "CREATE INDEX coord_vault_path IF NOT EXISTS FOR (n:Bimba) ON (n.s_1_vault_path)",
     "CREATE INDEX coord_source_dataset IF NOT EXISTS FOR (n:Bimba) ON (n.c_3_source_dataset)",
@@ -2745,6 +2809,24 @@ pub const RELATIONSHIP_INDEXES: &[&str] = &[
 ];
 
 pub const VECTOR_INDEX: &str = "CREATE VECTOR INDEX coord_embedding IF NOT EXISTS FOR (n:Bimba) ON (n.c_5_embedding) OPTIONS {indexConfig: {`vector.dimensions`: 3072, `vector.similarity_function`: 'cosine'}}";
+
+pub const C_LAYER_AUTHORITY_MIGRATION: &str = r#"UNWIND [
+  {coordinate: 'C0', role: 'source_ground', path: 'Idea/Bimba/World/Types/Coordinates/C/C0', md_path: 'Idea/Bimba/World/Types/Coordinates/C/C0/C0.md', canvas_path: 'Idea/Bimba/World/Types/Coordinates/C/C0/C0.canvas'},
+  {coordinate: 'C1', role: 'forms_templates', path: 'Idea/Bimba/World/Types/Coordinates/C/C1', md_path: 'Idea/Bimba/World/Types/Coordinates/C/C1/C1.md', canvas_path: 'Idea/Bimba/World/Types/Coordinates/C/C1/C1.canvas'},
+  {coordinate: 'C2', role: 'entities_properties_tags', path: 'Idea/Bimba/World/Types/Coordinates/C/C2', md_path: 'Idea/Bimba/World/Types/Coordinates/C/C2/C2.md', canvas_path: 'Idea/Bimba/World/Types/Coordinates/C/C2/C2.canvas'},
+  {coordinate: 'C3', role: 'processes_canvases_diagrams', path: 'Idea/Bimba/World/Types/Coordinates/C/C3', md_path: 'Idea/Bimba/World/Types/Coordinates/C/C3/C3.md', canvas_path: 'Idea/Bimba/World/Types/Coordinates/C/C3/C3.canvas'},
+  {coordinate: 'C4', role: 'types_contexts_mocs', path: 'Idea/Bimba/World/Types/Coordinates/C/C4', md_path: 'Idea/Bimba/World/Types/Coordinates/C/C4/C4.md', canvas_path: 'Idea/Bimba/World/Types/Coordinates/C/C4/C4.canvas'},
+  {coordinate: 'C5', role: 'crystallisations_pratibimba', path: 'Idea/Bimba/World/Types/Coordinates/C/C5', md_path: 'Idea/Bimba/World/Types/Coordinates/C/C5/C5.md', canvas_path: 'Idea/Bimba/World/Types/Coordinates/C/C5/C5.canvas'}
+] AS row
+MERGE (n:Bimba {coordinate: row.coordinate})
+SET n.c_layer_role = row.role,
+    n.semantic_authority = 'authoritative',
+    n.world_type_path = row.path,
+    n.crystallisation_state = 'incubating_type_index',
+    n.c_3_moc_evidence_paths = [row.md_path, row.canvas_path],
+    n.coordinate_prefix = 'C',
+    n.coordinate_axis = 'direct'
+RETURN n.coordinate AS coordinate, n.world_type_path AS world_type_path"#;
 
 pub const OBSOLETE_INDEXES: &[&str] = &[
     "DROP INDEX coord_family_legacy IF EXISTS",

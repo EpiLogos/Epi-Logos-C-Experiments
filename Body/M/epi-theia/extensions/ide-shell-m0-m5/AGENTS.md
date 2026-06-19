@@ -7,7 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (per-coordinate: [[M0
 ## Ownership
 - `CHROME-CONTRACT.md` — single source of truth for the M0'/M5'/shared chrome partition (audit-extend, never rebuild).
 - `package.json` — workspace package + Theia frontend module (`lib/browser/frontend-module`).
-- `src/browser/` — frontend widgets: `bimba-graph-viewer`, `canon-studio`, `coordinate-tree` (M0' chrome); `logos-atelier`, `evidence-pane`, `review-pane`, `autoresearch-pane`, `agentic-control-room` (M5' chrome); `acr/PiAxiomTranslationInspector` as an ACR sub-pane; `bridge-gate` (shared readiness); plus `frontend-module.ts` (DI wiring), first-build stubs `backend-studio/`, `smart-connections/`, and services `privacy-drop-feed.ts` / `pi-axiom-translation-service.ts`.
+- `src/browser/` — frontend widgets: `bimba-graph-viewer`, `canon-studio`, `coordinate-tree` (M0' chrome); `logos-atelier`, `evidence-pane`, `review-pane`, `autoresearch-pane`, `agentic-control-room` (M5' chrome); `acr/PiAxiomTranslationInspector` as an ACR sub-pane; `activity-bar/` left-sidebar mode contribution; `bridge-gate` (shared readiness); plus `frontend-module.ts` (DI wiring), first-build stubs `backend-studio/`, `smart-connections/`, and services `privacy-drop-feed.ts` / `pi-axiom-translation-service.ts`.
 - `src/common/` — Node-safe barrel (`index.ts`) re-exporting `contract.ts`, `capability-matrix-types.ts`, `graph-types.ts`, `decorations.ts`, `vault-bridge-gate.ts`.
 - `tests/` — contract tests (`contract.test.mjs`, `canon-studio-save-routing.test.mjs`, `privacy-drop-feed.test.mjs`).
 - `style/ide-shell.css` — chrome styling.

@@ -5,7 +5,7 @@
 **Diff threshold:** 0.02 (2% pixel-diff tolerance)
 **Update procedure:** Fixture changes require visual review + commit of new baseline
 **Owning extension:** `@pratibimba/acceptance-harness`
-**Baseline root:** `acceptance-harness/fixtures/visual-regression/<fixture-id>/baseline.png`
+**Baseline root:** `acceptance-harness/fixtures/visual-regression/<fixture-id>/screenshots/`
 
 ---
 
@@ -44,19 +44,21 @@ These fixtures cover primitives shared across all M-extensions. They are the can
 - **Update procedure:** Regenerate when overlay styling or blocked-state chrome changes
 - **Diff threshold:** 0.02
 
-### 6. `lemniscate-transition-frames`
-- **Owning extension:** `@pratibimba/design-primitives`
-- **Capture:** Frame-by-frame capture of the cosmic↔personal fold transition — keyframes at 0%, 25%, 50%, 75%, 100% of the lemniscate animation
-- **Update procedure:** Regenerate when lemniscate motion curve or fold geometry changes
+### 6. `lemniscate-transition`
+- **Owning extension:** `@pratibimba/acceptance-harness`
+- **Capture:** Frame-by-frame capture of the cosmic/personal fold transition — keyframes at 0%, 25%, 50%, 75%, 100% of the lemniscate animation
+- **Baseline path:** `acceptance-harness/fixtures/visual-regression/lemniscate-transition/screenshots/phase-*.png`
+- **Update procedure:** Regenerate with `pnpm --filter @pratibimba/acceptance-harness baseline:visual` after approved lemniscate motion-curve or fold-geometry changes
 - **Diff threshold:** 0.02
-- **Note:** Multi-frame fixture; baseline contains the full keyframe strip
+- **Note:** Multi-frame fixture; `baseline.manifest.json` stores each frame hash
 
-### 7. `slerp-choreography-12-ticks`
-- **Owning extension:** `@pratibimba/design-primitives`
-- **Capture:** Frame-by-frame capture of the 12-tick K² orientation cycle including the Klein boundary at tick 5→6; each tick frame captured at the profile-tick clock rate
-- **Update procedure:** Regenerate when profile-tick clock rate or K² orientation geometry changes
+### 7. `six-matrix-tick-choreography`
+- **Owning extension:** `@pratibimba/acceptance-harness`
+- **Capture:** Frame-by-frame capture of the 12-tick six-matrix choreography across `M0`..`M5`; each frame is pinned to the profile-tick clock contract
+- **Baseline path:** `acceptance-harness/fixtures/visual-regression/six-matrix-tick-choreography/screenshots/tick-*.png`
+- **Update procedure:** Regenerate with `pnpm --filter @pratibimba/acceptance-harness baseline:visual` after approved profile-tick clock-rate or matrix-choreography changes
 - **Diff threshold:** 0.02
-- **Note:** Multi-frame fixture; 12 ticks captured as a strip
+- **Note:** Multi-frame fixture; 12 committed tick PNGs cover two cycles over the six matrices
 
 ### 8. `chromatic-signature-binary`
 - **Owning extension:** `@pratibimba/design-primitives`
@@ -207,9 +209,10 @@ Each M-extension contributes at least one flagship fixture. These test extension
 ## Verification
 
 ### Fixture-Presence Test
-Asserts each catalog entry has a baseline image at:
+Asserts each 15.12 catalog entry has committed baseline images and frame hashes at:
 ```
-acceptance-harness/fixtures/visual-regression/<fixture-id>/baseline.png
+acceptance-harness/fixtures/visual-regression/<fixture-id>/screenshots/baseline.manifest.json
+acceptance-harness/fixtures/visual-regression/<fixture-id>/screenshots/*.png
 ```
 
 ### Catalog-Completeness Test
@@ -221,12 +224,12 @@ Asserts:
 ```bash
 pnpm --filter @pratibimba/acceptance-harness test:visual
 ```
-Passes for all catalog entries. Each fixture diff stays within the 0.02 threshold vs baseline.
+Passes for the committed 15.12 visual suite. Each fixture diff stays within the 0.02 threshold vs baseline.
 
 ### Update Procedure (per fixture)
 1. Change to the owning extension's source triggers a visual diff
 2. If diff exceeds 0.02 threshold → visual review required
-3. Approved changes → commit new baseline to `acceptance-harness/fixtures/visual-regression/<fixture-id>/baseline.png`
+3. Approved changes → commit updated `baseline.manifest.json` and PNGs under `acceptance-harness/fixtures/visual-regression/<fixture-id>/screenshots/`
 4. Rejected changes → revert source change or adjust rendering until diff ≤ 0.02
 
 ---

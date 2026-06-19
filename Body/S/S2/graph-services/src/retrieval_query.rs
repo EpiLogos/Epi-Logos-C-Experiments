@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
-use crate::CoordinateArrayParser;
+use crate::{CLayerMetadata, CoordinateArrayParser};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -99,6 +99,7 @@ pub struct GraphRetrievalQuery {
     pub text: String,
     pub query_type: QueryType,
     pub coordinate_mentions: Vec<String>,
+    pub c_layer_metadata: Vec<CLayerMetadata>,
     pub inferred_positions: Vec<u8>,
 }
 
@@ -108,6 +109,7 @@ impl GraphRetrievalQuery {
             text: query_text.to_string(),
             query_type: classify_query(query_text),
             coordinate_mentions: extract_coordinate_mentions(query_text),
+            c_layer_metadata: extract_c_layer_metadata(query_text),
             inferred_positions: infer_positions(query_text),
         }
     }
@@ -118,6 +120,7 @@ pub enum CoordinateSearchScope {
     BimbaMap,
     PratibimbaExpression,
     TechnicalStack,
+    CLayerTypeOntology,
     ExplicitPrefixes(Vec<String>),
 }
 
@@ -125,6 +128,14 @@ impl CoordinateSearchScope {
     pub fn from_query_text(query_text: &str) -> Self {
         let lower = query_text.to_lowercase();
         let mentions = extract_coordinate_mentions(query_text);
+
+        if c_layer_type_terms_present(&lower)
+            || mentions
+                .iter()
+                .any(|coordinate| is_c_family_coordinate_mention(coordinate))
+        {
+            return Self::CLayerTypeOntology;
+        }
 
         if lower.contains("s/s'")
             || lower.contains("technical stack")
@@ -154,6 +165,7 @@ impl CoordinateSearchScope {
             Self::BimbaMap => "bimba_map",
             Self::PratibimbaExpression => "pratibimba_expression",
             Self::TechnicalStack => "technical_stack",
+            Self::CLayerTypeOntology => "c_layer_type_ontology",
             Self::ExplicitPrefixes(_) => "explicit_prefixes",
         }
     }
@@ -172,6 +184,7 @@ impl CoordinateSearchScope {
                 coordinate == "M'" || (coordinate.starts_with('M') && coordinate.contains('\''))
             }
             Self::TechnicalStack => coordinate == "S" || coordinate.starts_with('S'),
+            Self::CLayerTypeOntology => coordinate == "C" || coordinate.starts_with('C'),
             Self::ExplicitPrefixes(prefixes) => prefixes
                 .iter()
                 .any(|prefix| coordinate == prefix || coordinate.starts_with(prefix)),
@@ -224,6 +237,43 @@ pub fn extract_coordinate_mentions(query_text: &str) -> Vec<String> {
     }
 
     results
+}
+
+pub fn extract_c_layer_metadata(query_text: &str) -> Vec<CLayerMetadata> {
+    extract_coordinate_mentions(query_text)
+        .into_iter()
+        .filter_map(|coordinate| {
+            CoordinateArrayParser::parse_one(&coordinate)
+                .ok()
+                .and_then(|parsed| parsed.c_layer_metadata)
+        })
+        .collect()
+}
+
+fn is_c_family_coordinate_mention(coordinate: &str) -> bool {
+    CoordinateArrayParser::parse_one(coordinate)
+        .ok()
+        .is_some_and(|parsed| parsed.family.as_deref() == Some("C"))
+}
+
+fn c_layer_type_terms_present(lower_query: &str) -> bool {
+    const TERMS: &[&str] = &[
+        "type",
+        "kind",
+        "entity",
+        "property",
+        "tag",
+        "alias",
+        "relation field",
+        "template",
+        "form",
+        "canvas",
+        "diagram",
+        "moc",
+        "context",
+        "world graduation",
+    ];
+    TERMS.iter().any(|term| lower_query.contains(term))
 }
 
 pub fn infer_positions(query_text: &str) -> Vec<u8> {

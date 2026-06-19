@@ -6,6 +6,7 @@ pub struct ParsedCoordinate {
     pub family: Option<String>,
     pub ql_position: Option<u8>,
     pub inverted: bool,
+    pub c_layer_metadata: Option<CLayerMetadata>,
     /// Fractal sub-coordinate path as pure integers. Populated when every segment
     /// is a digit (e.g. `M0-2-4` -> [2, 4]). Empty when any segment is a context
     /// frame like `(0/1)` — use `sub_segments` instead.
@@ -39,6 +40,14 @@ pub enum CoordLayer {
     Vak,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CLayerMetadata {
+    pub c_layer_role: &'static str,
+    pub semantic_authority: &'static str,
+    pub world_type_path: Option<&'static str>,
+    pub crystallisation_state: &'static str,
+}
+
 #[derive(Debug, Clone)]
 pub struct WikiLink {
     pub target: String,
@@ -65,6 +74,84 @@ const CF_LITERALS: &[&str] = &[
     "(5/0)",
 ];
 const VAK_NAMES: &[&str] = &["CPF", "CT", "CP", "CF", "CFP", "CS"];
+
+const C_LAYER_METADATA: &[CLayerMetadata] = &[
+    CLayerMetadata {
+        c_layer_role: "source_ground",
+        semantic_authority: "authoritative",
+        world_type_path: Some("Idea/Bimba/World/Types/Coordinates/C/C0"),
+        crystallisation_state: "incubating_type_index",
+    },
+    CLayerMetadata {
+        c_layer_role: "forms_templates",
+        semantic_authority: "authoritative",
+        world_type_path: Some("Idea/Bimba/World/Types/Coordinates/C/C1"),
+        crystallisation_state: "incubating_type_index",
+    },
+    CLayerMetadata {
+        c_layer_role: "entities_properties_tags",
+        semantic_authority: "authoritative",
+        world_type_path: Some("Idea/Bimba/World/Types/Coordinates/C/C2"),
+        crystallisation_state: "incubating_type_index",
+    },
+    CLayerMetadata {
+        c_layer_role: "processes_canvases_diagrams",
+        semantic_authority: "authoritative",
+        world_type_path: Some("Idea/Bimba/World/Types/Coordinates/C/C3"),
+        crystallisation_state: "incubating_type_index",
+    },
+    CLayerMetadata {
+        c_layer_role: "types_contexts_mocs",
+        semantic_authority: "authoritative",
+        world_type_path: Some("Idea/Bimba/World/Types/Coordinates/C/C4"),
+        crystallisation_state: "incubating_type_index",
+    },
+    CLayerMetadata {
+        c_layer_role: "crystallisations_pratibimba",
+        semantic_authority: "authoritative",
+        world_type_path: Some("Idea/Bimba/World/Types/Coordinates/C/C5"),
+        crystallisation_state: "incubating_type_index",
+    },
+];
+
+const C_PRIME_METADATA: &[CLayerMetadata] = &[
+    CLayerMetadata {
+        c_layer_role: "cpf_reflective_scaffold",
+        semantic_authority: "non_authoritative_pending_c_prime_vak_ancestry_audit",
+        world_type_path: None,
+        crystallisation_state: "audit_pending",
+    },
+    CLayerMetadata {
+        c_layer_role: "ct_reflective_scaffold",
+        semantic_authority: "non_authoritative_pending_c_prime_vak_ancestry_audit",
+        world_type_path: None,
+        crystallisation_state: "audit_pending",
+    },
+    CLayerMetadata {
+        c_layer_role: "cp_reflective_scaffold",
+        semantic_authority: "non_authoritative_pending_c_prime_vak_ancestry_audit",
+        world_type_path: None,
+        crystallisation_state: "audit_pending",
+    },
+    CLayerMetadata {
+        c_layer_role: "cf_reflective_scaffold",
+        semantic_authority: "non_authoritative_pending_c_prime_vak_ancestry_audit",
+        world_type_path: None,
+        crystallisation_state: "audit_pending",
+    },
+    CLayerMetadata {
+        c_layer_role: "cfp_reflective_scaffold",
+        semantic_authority: "non_authoritative_pending_c_prime_vak_ancestry_audit",
+        world_type_path: None,
+        crystallisation_state: "audit_pending",
+    },
+    CLayerMetadata {
+        c_layer_role: "cs_reflective_scaffold",
+        semantic_authority: "non_authoritative_pending_c_prime_vak_ancestry_audit",
+        world_type_path: None,
+        crystallisation_state: "audit_pending",
+    },
+];
 
 pub struct CoordinateArrayParser;
 
@@ -93,6 +180,7 @@ impl CoordinateArrayParser {
                         family: None,
                         ql_position: Some(pos),
                         inverted: false,
+                        c_layer_metadata: None,
                         sub_positions: Vec::new(),
                         sub_segments: Vec::new(),
                         depth: 0,
@@ -112,6 +200,7 @@ impl CoordinateArrayParser {
                 family: None,
                 ql_position: None,
                 inverted: false,
+                c_layer_metadata: None,
                 sub_positions: Vec::new(),
                 sub_segments: Vec::new(),
                 depth: 0,
@@ -129,6 +218,7 @@ impl CoordinateArrayParser {
                 family: None,
                 ql_position: Some(idx),
                 inverted: false,
+                c_layer_metadata: None,
                 sub_positions: Vec::new(),
                 sub_segments: Vec::new(),
                 depth: 0,
@@ -145,6 +235,7 @@ impl CoordinateArrayParser {
                 family: None,
                 ql_position: Some(idx as u8),
                 inverted: false,
+                c_layer_metadata: None,
                 sub_positions: Vec::new(),
                 sub_segments: Vec::new(),
                 depth: 0,
@@ -162,6 +253,7 @@ impl CoordinateArrayParser {
                 family: None,
                 ql_position: Some(idx),
                 inverted: false,
+                c_layer_metadata: None,
                 sub_positions: Vec::new(),
                 sub_segments: Vec::new(),
                 depth: 0,
@@ -184,6 +276,7 @@ impl CoordinateArrayParser {
                     family: Some(fam.to_string()),
                     ql_position: None,
                     inverted,
+                    c_layer_metadata: None,
                     sub_positions: Vec::new(),
                     sub_segments: Vec::new(),
                     depth: -1,
@@ -207,6 +300,7 @@ impl CoordinateArrayParser {
                         family: Some(fam.to_string()),
                         ql_position: None,
                         inverted,
+                        c_layer_metadata: None,
                         sub_positions: sub.positions.unwrap_or_default(),
                         sub_segments: sub.segments,
                         depth: 0,
@@ -233,6 +327,7 @@ impl CoordinateArrayParser {
                             family: Some(fam.to_string()),
                             ql_position: Some(pos),
                             inverted,
+                            c_layer_metadata: c_layer_metadata(fam, pos, inverted),
                             sub_positions: Vec::new(),
                             sub_segments: Vec::new(),
                             depth: 0,
@@ -253,6 +348,7 @@ impl CoordinateArrayParser {
                                 family: Some(fam.to_string()),
                                 ql_position: Some(pos),
                                 inverted,
+                                c_layer_metadata: c_layer_metadata(fam, pos, inverted),
                                 sub_positions: sub.positions.unwrap_or_default(),
                                 sub_segments: sub.segments,
                                 depth,
@@ -428,8 +524,14 @@ pub fn wrap_context_frames(coord: &str) -> String {
     let mut cur = String::new();
     for ch in protected.chars() {
         match ch {
-            '(' => { depth += 1; cur.push(ch); }
-            ')' => { depth -= 1; cur.push(ch); }
+            '(' => {
+                depth += 1;
+                cur.push(ch);
+            }
+            ')' => {
+                depth -= 1;
+                cur.push(ch);
+            }
             '-' if depth == 0 => segs.push(std::mem::take(&mut cur)),
             _ => cur.push(ch),
         }
@@ -490,12 +592,25 @@ fn empty_kind(coord: &str, layer: CoordLayer, family: Option<String>) -> ParsedC
         family,
         ql_position: None,
         inverted: false,
+        c_layer_metadata: None,
         sub_positions: Vec::new(),
         sub_segments: Vec::new(),
         depth: -1,
         separator: None,
         is_lens: false,
     }
+}
+
+fn c_layer_metadata(family: &str, position: u8, inverted: bool) -> Option<CLayerMetadata> {
+    if family != "C" || position > 5 {
+        return None;
+    }
+    let specs = if inverted {
+        C_PRIME_METADATA
+    } else {
+        C_LAYER_METADATA
+    };
+    specs.get(position as usize).copied()
 }
 
 struct SubCoordinateTokens {
@@ -763,11 +878,17 @@ mod tests {
         assert_eq!(wrap_context_frames("M1-3-4.5/0"), "M1-3-4.(5/0)");
         // the QL fractal-doubling frame (bare dash) -> dot-notation, dash kept inside the parens
         assert_eq!(wrap_context_frames("M0-4.4.0-4.4/5"), "M0-4.(4.0/1-4.4/5)");
-        assert_eq!(wrap_context_frames("M0-4.4.0-4.4/5-3"), "M0-4.(4.0/1-4.4/5)-3");
+        assert_eq!(
+            wrap_context_frames("M0-4.4.0-4.4/5-3"),
+            "M0-4.(4.0/1-4.4/5)-3"
+        );
         // already canonical — idempotent (incl. the doubling whose dash is inside parens)
         assert_eq!(wrap_context_frames("M2-(0/1)-6"), "M2-(0/1)-6");
         assert_eq!(wrap_context_frames("M0-4.(0/1)"), "M0-4.(0/1)");
-        assert_eq!(wrap_context_frames("M0-4.(4.0/1-4.4/5)"), "M0-4.(4.0/1-4.4/5)");
+        assert_eq!(
+            wrap_context_frames("M0-4.(4.0/1-4.4/5)"),
+            "M0-4.(4.0/1-4.4/5)"
+        );
         // No slash → no change
         assert_eq!(wrap_context_frames("M0-2-4"), "M0-2-4");
         assert_eq!(wrap_context_frames("M"), "M");

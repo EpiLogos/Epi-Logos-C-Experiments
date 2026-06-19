@@ -25,6 +25,7 @@ import type { M0LayerKey, M0LayerRoute, M0SurfaceMode } from '../common';
 import type { M0CrossLayoutIntentPayload, M0Phase } from '../common/cross-layout-intent';
 import { projectM0CrossLayoutIntentState } from '../common/cross-layout-intent';
 import { M0ModeToggle } from './components/mode-toggle';
+import { M0ContemplationPromptFooter } from './components/contemplation-prompt-footer';
 import {
     M0ArchetypeRoutingPanel,
     shouldRenderM0ArchetypeRoutingTopSection
@@ -58,6 +59,7 @@ export class M0AnuttaraWidget extends ReactWidget {
     protected activeLanguageSubtab: M0LanguageSubtab = 'route';
     protected phase: M0Phase = DEFAULT_M0_SURFACE_STATE.implicateExplicate;
     protected mode: M0SurfaceMode = DEFAULT_M0_SURFACE_STATE.mode;
+    protected contemplationResponseDraft = '';
     protected subscriptions: Disposable[] = [];
 
     @postConstruct()
@@ -181,6 +183,10 @@ export class M0AnuttaraWidget extends ReactWidget {
             context: this.context,
             mode: this.mode
         });
+        const contemplation = {
+            ...model.contemplation,
+            responseDraft: this.contemplationResponseDraft
+        };
         const activeRoute =
             model.layerRoutes.find(route => route.layerKey === this.activeLayer) ?? model.layerRoutes[0];
         return (
@@ -360,6 +366,15 @@ export class M0AnuttaraWidget extends ReactWidget {
                         </p>
                     )}
                 </section>
+                <M0ContemplationPromptFooter
+                    contemplation={contemplation}
+                    context={this.context}
+                    profileGeneration={this.profile?.generation ?? null}
+                    publisher={this.bridge}
+                    onResponseDraftChange={draft => {
+                        this.contemplationResponseDraft = draft;
+                    }}
+                />
             </div>
         );
     }

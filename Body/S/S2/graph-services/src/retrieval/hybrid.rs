@@ -164,6 +164,10 @@ impl<'a> HybridRetriever<'a> {
                   size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_1_name, '')) CONTAINS token]) AS name_hits,
                   size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_4_family, '')) CONTAINS token]) AS family_hits,
                   size([token IN $tokens WHERE token <> '' AND toLower(toString(coalesce(n.c_4_layer, ''))) CONTAINS token]) AS layer_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_layer_role, '')) CONTAINS token]) AS c_layer_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.semantic_authority, '')) CONTAINS token]) AS c_authority_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.world_type_path, '')) CONTAINS token]) AS c_world_path_hits,
+                  size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.crystallisation_state, '')) CONTAINS token]) AS c_crystallisation_hits,
                   size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_0_essence, '')) CONTAINS token]) AS essence_hits,
                   size([token IN $tokens WHERE token <> '' AND toLower(coalesce(n.c_1_description, '')) CONTAINS token]) AS desc_hits,
                   CASE
@@ -174,7 +178,13 @@ impl<'a> HybridRetriever<'a> {
                   END AS exact_hits
              WITH n,
                   (coord_hits * 8 + name_hits * 6 + family_hits * 3 + layer_hits * 2 +
+                   c_layer_hits * 7 + c_authority_hits * 5 + c_world_path_hits * 4 + c_crystallisation_hits * 3 +
                    essence_hits * 3 + desc_hits * 2 + exact_hits +
+                   CASE
+                       WHEN $scope_id = 'c_layer_type_ontology' AND n.coordinate STARTS WITH 'C' THEN 16
+                       WHEN $scope_id = 'c_layer_type_ontology' AND n.c_layer_role IS NOT NULL THEN 12
+                       ELSE 0
+                   END +
                    CASE
                        WHEN size($positions) = 0 THEN 0
                        WHEN n.c_4_ql_position IN $positions THEN 2
@@ -187,6 +197,10 @@ impl<'a> HybridRetriever<'a> {
                     n.c_4_family AS family,
                     n.c_4_layer AS layer,
                     n.c_4_ql_position AS ql_position,
+                    n.c_layer_role AS c_layer_role,
+                    n.semantic_authority AS semantic_authority,
+                    n.world_type_path AS world_type_path,
+                    n.crystallisation_state AS crystallisation_state,
                     score AS score
              ORDER BY score DESC, coordinate ASC
              LIMIT $top_k"
@@ -218,6 +232,10 @@ impl<'a> HybridRetriever<'a> {
                     "family": row.get::<String>("family").unwrap_or_default(),
                     "layer": row.get::<String>("layer").unwrap_or_default(),
                     "ql_position": row.get::<i64>("ql_position").unwrap_or(-1),
+                    "c_layer_role": row.get::<String>("c_layer_role").unwrap_or_default(),
+                    "semantic_authority": row.get::<String>("semantic_authority").unwrap_or_default(),
+                    "world_type_path": row.get::<String>("world_type_path").unwrap_or_default(),
+                    "crystallisation_state": row.get::<String>("crystallisation_state").unwrap_or_default(),
                 }),
             })
             .collect())
@@ -397,6 +415,11 @@ fn graph_search_scope_predicate(alias: &str, scope: &CoordinateSearchScope) -> S
         }
         CoordinateSearchScope::TechnicalStack => {
             format!("{alias}.coordinate STARTS WITH 'S'")
+        }
+        CoordinateSearchScope::CLayerTypeOntology => {
+            format!(
+                "({alias}.coordinate = 'C' OR {alias}.coordinate STARTS WITH 'C' OR {alias}.c_layer_role IS NOT NULL OR {alias}.world_type_path STARTS WITH 'Idea/Bimba/World/Types/Coordinates/C')"
+            )
         }
         CoordinateSearchScope::ExplicitPrefixes(_) => {
             format!(

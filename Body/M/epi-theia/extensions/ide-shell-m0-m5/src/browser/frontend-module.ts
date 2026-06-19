@@ -1,7 +1,8 @@
 import { ContainerModule, injectable, interfaces, inject } from '@theia/core/shared/inversify';
 import {
     CommandContribution,
-    CommandRegistry
+    CommandRegistry,
+    MenuContribution
 } from '@theia/core/lib/common';
 import {
     WidgetFactory,
@@ -24,6 +25,7 @@ import {
     SmartConnectionsSidebarStub,
     SmartConnectionsSidebarStubContribution
 } from './smart-connections/smart-connections-sidebar-stub';
+import { LeftSidebarActivityBarContribution } from './activity-bar/left-sidebar-activity-bar-contribution';
 import { PrivacyDropFeed } from './services/privacy-drop-feed';
 import { PiAxiomTranslationService } from './services/pi-axiom-translation-service';
 
@@ -432,6 +434,10 @@ export default new ContainerModule(bind => {
     bind<IdeShellM0M5Config>(IDE_SHELL_CONFIG).toService(DefaultIdeShellM0M5Config);
     bind(PrivacyDropFeed).toSelf().inSingletonScope();
     bind(PiAxiomTranslationService).toSelf().inSingletonScope();
+    bind(LeftSidebarActivityBarContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(LeftSidebarActivityBarContribution);
+    bind(MenuContribution).toService(LeftSidebarActivityBarContribution);
+    bind(FrontendApplicationContribution).toService(LeftSidebarActivityBarContribution);
 
     // Bimba Graph Viewer.
     bind(BimbaGraphViewerWidget).toSelf();

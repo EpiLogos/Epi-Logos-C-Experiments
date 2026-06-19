@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/six-matrix-tick-choreography",
+  "plan": "track-15-t15.12-visual-regression",
+  "tranche": "15.T15.12",
+  "status": "baseline-committed",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "coverage": [
+    "15.9 six-matrix tick choreography",
+    "profile-tick visual grammar"
+  ],
+  "diffThreshold": {
+    "pixelRatio": 0.02
+  },
+  "tickCount": 12,
+  "matrices": [
+    "M0",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "clock": {
+    "source": "kernel-bridge profile tick",
+    "localAnimationTimers": false
+  }
+}

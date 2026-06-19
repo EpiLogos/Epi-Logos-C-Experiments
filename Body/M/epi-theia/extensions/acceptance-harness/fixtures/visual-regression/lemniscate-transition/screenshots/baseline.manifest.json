@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/lemniscate-transition",
+  "plan": "track-15-t15.12-visual-regression",
+  "tranche": "15.T15.12",
+  "status": "baseline-committed",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "diffThreshold": {
+    "pixelRatio": 0.02
+  },
+  "captureRecipe": {
+    "command": "pnpm --filter @pratibimba/acceptance-harness test:visual",
+    "renderer": "scripts/visual-regression-renderer.mjs",
+    "reviewGate": "visual review required when any frame exceeds 0.02 pixelRatio"
+  },
+  "frames": [
+    {
+      "id": "phase-000",
+      "screenshot": "phase-000.png",
+      "width": 640,
+      "height": 360,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "phase": 0,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4608
+      },
+      "sha256": "1cfccf33c01d0696b1e632741f1b0e9d9969926359d8daa82db7b12852065bd3"
+    },
+    {
+      "id": "phase-025",
+      "screenshot": "phase-025.png",
+      "width": 640,
+      "height": 360,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "phase": 0.25,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4608
+      },
+      "sha256": "3582abfae1e79361de26662ff4a2ba443e4511122871b3184b2d606598f5a277"
+    },
+    {
+      "id": "phase-050",
+      "screenshot": "phase-050.png",
+      "width": 640,
+      "height": 360,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "phase": 0.5,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4608
+      },
+      "sha256": "a71844ec346e4edf31dfa3b4ae3907831721a54c5b6037261af02be619e68ad7"
+    },
+    {
+      "id": "phase-075",
+      "screenshot": "phase-075.png",
+      "width": 640,
+      "height": 360,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "phase": 0.75,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4608
+      },
+      "sha256": "c3fd7429d4f94032d2e3e94376302c01e09a1359cb4c8c5fea5db0b6e026852e"
+    },
+    {
+      "id": "phase-100",
+      "screenshot": "phase-100.png",
+      "width": 640,
+      "height": 360,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "phase": 1,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4608
+      },
+      "sha256": "8a26a98ef61a33df8f24729d11d65a3f0be296dc93acc5b51b3cd8da9295ca1f"
+    }
+  ]
+}

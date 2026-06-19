@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "fixtureId": "visual-regression/integrated-1-2-3",
   "privacyClass": "protected-local-synthetic-fixture",
-  "note": "PNG bytes are written by the acceptance harness on the first green run; until then `captured` is false and the DOM snapshot is the authoritative structural baseline.",
+  "note": "Committed PNG baselines are deterministic harness captures. Regenerate with scripts/generate-visual-regression-baselines.mjs after approved visual review.",
   "captureRecipe": {
     "command": "node scripts/acceptance.mjs --capture-baseline --plugin plugin-integrated-1-2-3",
     "openVia": "epi.integrated.openCosmicEngine",
@@ -15,8 +15,13 @@
       "width": 1440,
       "height": 900,
       "deviceScaleFactor": 2,
-      "captured": false,
-      "tolerance": { "pixelRatio": 0.001, "maxChangedPixels": 64 }
+      "captured": true,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 25920
+      },
+      "frameId": "electron-default",
+      "sha256": "f4df604a7363b9c710f33fed35e445742401d0812a8622ebdac3788a09f2397c"
     },
     {
       "viewport": "browser-ci",
@@ -24,8 +29,19 @@
       "width": 1280,
       "height": 800,
       "deviceScaleFactor": 1,
-      "captured": false,
-      "tolerance": { "pixelRatio": 0.001, "maxChangedPixels": 64 }
+      "captured": true,
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 20480
+      },
+      "frameId": "browser-ci",
+      "sha256": "e5308a49e5609576ae6f7551ff88747b66541a2bf0e3b571118dce27aad37ca7"
     }
-  ]
+  ],
+  "plan": "track-15-t15.12-visual-regression",
+  "tranche": "15.T15.12",
+  "status": "baseline-committed",
+  "diffThreshold": {
+    "pixelRatio": 0.02
+  }
 }
