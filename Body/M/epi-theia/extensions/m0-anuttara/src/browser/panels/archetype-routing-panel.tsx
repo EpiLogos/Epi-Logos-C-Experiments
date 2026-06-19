@@ -1,6 +1,6 @@
 import * as React from 'react';
-import type { M0ArchetypeRoutingProjection } from '../../common';
-import { m0ArchetypeRoutingLutLabel } from '../../common';
+import type { M0ArchetypeRoutingProjection } from '../../common/m0-inspector';
+import { m0ArchetypeRoutingLutLabel } from '../../common/m0-inspector';
 
 export interface M0ArchetypeRoutingPanelProps {
     readonly projection: M0ArchetypeRoutingProjection;

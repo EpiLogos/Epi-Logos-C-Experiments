@@ -465,9 +465,10 @@ export function readM0ArchetypeRoutingProjection(
         });
     }
 
-    const rows = m0SubTableRowsForArchetype(profile, archetypeIndex);
+    const routedArchetypeIndex = archetypeIndex as 3 | 5 | 7 | 9;
+    const rows = m0SubTableRowsForArchetype(profile, routedArchetypeIndex);
     return Object.freeze({
-        archetypeIndex,
+        archetypeIndex: routedArchetypeIndex,
         archetypeLabel: spec.label,
         routedSubTable: spec.subTable,
         subTableRows: rows,

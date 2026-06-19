@@ -204,6 +204,7 @@ export const ALETHEIA_MODE_INTERNAL_TOOLS: readonly string[] = [
 	"aletheia_session_promote",
 	"aletheia_thought_route",
 	"dispatch_moirai_night_pass",
+	"moirai_arena_distill",
 ];
 
 const ALETHEIA_MODE_INTERNAL_SET = new Set<string>(ALETHEIA_MODE_INTERNAL_TOOLS);

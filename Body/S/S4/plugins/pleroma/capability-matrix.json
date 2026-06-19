@@ -196,7 +196,8 @@
       { "name": "aletheia_seed_refresh", "entitlement_class": "aletheia-mode-internal" },
       { "name": "aletheia_session_promote", "entitlement_class": "aletheia-mode-internal" },
       { "name": "aletheia_thought_route", "entitlement_class": "aletheia-mode-internal" },
-      { "name": "dispatch_moirai_night_pass", "entitlement_class": "aletheia-mode-internal" }
+      { "name": "dispatch_moirai_night_pass", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "moirai_arena_distill", "entitlement_class": "aletheia-mode-internal" }
     ]
   },
   "skills": [

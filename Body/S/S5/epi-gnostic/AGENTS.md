@@ -9,6 +9,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S5-SPEC]] / [[S5-ARCHITECTURE]]
 - `epi_gnostic/cli.py` — CLI entry (status/models/ingest/query/notebook/enrich), JSON stdout for Rust.
 - `epi_gnostic/{config.py, wrapper.py, arena_promotion.py, storage/, enrichment/}` — config, RAG wrapper, arena-promotion proposal generation, Neo4j vector storage, cross-namespace enrichment.
 - `epi_gnostic/{graphiti_service.py, graphiti_config.py}` — Graphiti episodic-memory service; `Dockerfile.graphiti`.
+- `epi_gnostic/arena_distillation.py` — Moirai arena closure-distillation: Graphiti episode writes plus classifier-modulated `ARENA_DIALOGUE_OF` / `DIALOGICAL_RESONANCE_AT` edge planning/writes.
 - `scripts/` — `enrich.py`, `migrate_bimba_embeddings.py` (768→3072 migration).
 - `cypher/` — bootstrap/relations/pointer Cypher; `tests/` — pytest suite; `schema-context.md` — graph schema notes.
 - Does NOT own coordinate semantics, kbase scoping, or the Epii agent contract — those live in sibling S5 cores (`epi-kbase-core`, `epii-agent-core`) and their specs.

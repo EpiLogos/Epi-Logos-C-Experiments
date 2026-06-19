@@ -569,9 +569,9 @@ Why S5 hosts the triplet, not S4 or M0 directly. Per the canonical S-stack: S5 =
 
 **The Anuttara PI agent's operational shape:**
 
-- **Profile** at `Body/S/S4/pi-agent/agents/anuttara.md` — joins `nara.md` and `epii.md` as the third constitutional pole at S5. Frame contract: CT0 ground (language-governor primary register), CF varies by invocation context (often CF0 when verifying typed-language emissions, CF5 when synthesising new canonical-form derivations).
+- **Profile** at `Body/S/S4/pi-agent/agents/anuttara.md` — names the verifier PI agent form as the third pole in the S5 nara-epii-anuttara triplet. Frame contract: CT0 ground (language-governor primary register), CF varies by invocation context (often CF0 when verifying typed-language emissions, CF5 when synthesising new canonical-form derivations).
 - **Slot configuration** at `~/.epi-logos/config.toml` `[slot.anuttara_verifier]` — defaults to `local-default` (the verifier IS local-first by privacy discipline; it operates over the M0' language registry + OWL ontology + R-virtue table, all kernel-substrate-local). Cloud-opt-in for larger interpretive verifier capacity if user wants. Per `M'-MODEL-SLOT-SPEC.md` Phase-J extension.
-- **Gateway routes** at `s0'.verifier.{check_state, emit_query, validate_membership, owl_query, enumerate_language, classify_element}` — register in `Body/S/S3/gateway-contract/src/lib.rs`. The verifier's typed-query surface draws from the full coordinate-language vocabulary (all 7 laws of the Anuttara grammar; not only Law 6's minimal `(%, ?/!, ?!/!?)` set).
+- **Gateway routes** at `s0'.verifier.{check_state, emit_query, validate_membership, owl_query}` — register in `Body/S/S3/gateway-contract/src/lib.rs`. The verifier's typed-query surface draws from the full coordinate-language vocabulary (all 7 laws of the Anuttara grammar; not only Law 6's minimal `(%, ?/!, ?!/!?)` set).
 - **Anima dispatch policy** at `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts` — recognises Anuttara-PI as the third pole alongside Nara-PI and Epii-PI. Dispatch to Anuttara-PI happens whenever a verification step is required (every emission's type-check; Sophia disclosure validation; Hen promotion gate; M5-4 review).
 
 ### §13.3 — OWL ontology as canonical storage substrate

@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
+    S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
     S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
@@ -853,13 +855,25 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
-        method: "s0'.verifier.check_state",
+        method: S0_PRIME_VERIFIER_CHECK_STATE_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/epi-lib::m0_verifier + Body/S/S3/gateway::verifier",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
-        method: "s0'.verifier.emit_question",
+        method: S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-lib::m0_verifier + Body/S/S3/gateway::verifier",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
+        kind: MethodDispatchKind::S0ProductAdapter,
+        authority_path: "Body/S/S0/epi-lib::m0_verifier + Body/S/S3/gateway::verifier",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S0_PRIME_VERIFIER_OWL_QUERY_METHOD,
         kind: MethodDispatchKind::S0ProductAdapter,
         authority_path: "Body/S/S0/epi-lib::m0_verifier + Body/S/S3/gateway::verifier",
         needs_extraction_to: None,

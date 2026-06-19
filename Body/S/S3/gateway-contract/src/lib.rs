@@ -34,6 +34,17 @@ pub use verifier::*;
 
 pub use portal_core::{AnandaProjection, M3TranscriptionPacket};
 
+pub const S0_PRIME_VERIFIER_CHECK_STATE_METHOD: &str = "s0'.verifier.check_state";
+pub const S0_PRIME_VERIFIER_EMIT_QUERY_METHOD: &str = "s0'.verifier.emit_query";
+pub const S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD: &str = "s0'.verifier.validate_membership";
+pub const S0_PRIME_VERIFIER_OWL_QUERY_METHOD: &str = "s0'.verifier.owl_query";
+pub const S0_PRIME_VERIFIER_METHODS: &[&str] = &[
+    S0_PRIME_VERIFIER_CHECK_STATE_METHOD,
+    S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
+    S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
+    S0_PRIME_VERIFIER_OWL_QUERY_METHOD,
+];
+
 pub const S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD: &str = "s5'.gnostic.musical_transcript";
 pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
 pub const S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD: &str = "s2.graph.gds.tangent_overlay";
@@ -312,10 +323,6 @@ pub struct ArenaSceneFilter {
     pub pinned_coordinate: Option<String>,
     pub max_age_ms: Option<u64>,
 }
-
-// grep acceptance for 01.T1.10:
-// s0'.verifier.check_state
-// s0'.verifier.emit_question
 
 #[cfg(test)]
 mod tests;

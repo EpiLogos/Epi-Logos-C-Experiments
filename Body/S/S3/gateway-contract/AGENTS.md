@@ -16,7 +16,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `src/kernel_bridge.rs` — S0 kernel bridge contract.
 - `src/s1_vault.rs` — S1 vault method contract.
 - `src/graphiti.rs`, `src/temporal.rs`, `src/privacy.rs`, `src/portal_events.rs`, `src/release.rs` — Graphiti, temporal, privacy, portal-event, and release-gate contracts.
-- `src/verifier.rs` — `s0'.verifier.check_state` / `s0'.verifier.emit_question` method contract.
+- `src/verifier.rs` — `s0'.verifier.{check_state,emit_query,validate_membership,owl_query}` method contract plus typed-query / membership / OWL request DTOs.
 - `src/tests.rs` (cfg-test) + `tests/hermes_inspired_contracts.rs` + `tests/harness_envelope_roundtrip.rs` + `tests/vak_phase_resolve_contract.rs` — contract tests.
 - Does NOT own runtime behaviour — that is sibling `gateway/` (`epi-s3-gateway`). Domain law for other layers stays in its owning coordinate ([[S4-SPEC]] dispatch, [[S2-SPEC]] graph, [[S5-SPEC]] world-return), not here by convenience.
 

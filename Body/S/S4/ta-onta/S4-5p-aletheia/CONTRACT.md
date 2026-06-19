@@ -8,7 +8,7 @@
 
 ## Architecture Layer Model (Aletheia's application)
 
-Aletheia's extension registers raw tools (Gnosis ingest/query, thought routing, crystallisation). Its skills gate and contextualise those tools for specific workflows. Its subagents are PI-native specialists — each is defined by their tool domain, not by a phase assignment:
+Aletheia's extension registers raw tools (Gnosis ingest/query, thought routing, crystallisation, Moirai arena closure-distillation). Its skills gate and contextualise those tools for specific workflows. Its subagents are PI-native specialists — each is defined by their tool domain, not by a phase assignment:
 
 ```
 aletheia/extension.ts
@@ -16,6 +16,7 @@ aletheia/extension.ts
   → pi.registerTool(aletheia_gnosis_query)       ← raw tools, always available
   → pi.registerTool(aletheia_thought_route)
   → pi.registerTool(aletheia_crystallise)
+  → pi.registerTool(moirai_arena_distill)
 
 aletheia/S5'/skills/
   → gnosis-retrieve.md         ← gates graph+vector retrieval for workflows
@@ -61,6 +62,7 @@ Aletheia is **emergent, not routed** — subagents are invoked by Psyche and Sop
 | `aletheia_thought_route` | Classify thought artifact → route to T{n} bucket in Pratibimba |
 | `aletheia_crystallise` | Distill patterns from T-bucket contents into Bimba canonical form |
 | `aletheia_seed_refresh` | Generate SEED.md morning-context package from evening crystallisation |
+| `moirai_arena_distill` | Closure-distill an arena scene into a Graphiti episode plus classifier-modulated `ARENA_DIALOGUE_OF` / `DIALOGICAL_RESONANCE_AT` graph edges |
 
 ---
 

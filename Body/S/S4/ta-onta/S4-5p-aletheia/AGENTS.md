@@ -5,7 +5,7 @@ The Aletheia ta-onta carrier extension (S4-5'): a Theia/PI extension that is the
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-5'-SPEC]] (actualises [[S5-SPEC]] / [[S5-ARCHITECTURE]])
 
 ## Ownership
-- `extension.ts` — PI extension entry; registers raw Aletheia tools (gnosis ingest/query/notebook, thought-route, crystallise)
+- `extension.ts` — PI extension entry; registers raw Aletheia tools (gnosis ingest/query/notebook, thought-route, crystallise, Moirai arena distillation)
 - `CONTRACT.md` — binding extension contract (responsibility, hook seams, registered tools)
 - `spine-contribution.ts` — this carrier's spine contribution
 - `modules/` — implementation units (anansi-lineage, anansi-elo-index, moirai-rehear, moirai-fair-comparison, janus-doorway, janus-threshold, mercurius-translation, mercurius-elo, agora-staging, zeithoven-autoresearch, sophia-ingest, q-proposal-candidate, thought-vak, gate-trigger, chronos-integration, hen-integration, coordinate-loop)

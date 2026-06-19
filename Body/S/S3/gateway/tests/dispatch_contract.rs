@@ -191,7 +191,12 @@ fn s0_command_surface_methods_route_through_portal_command_contract() {
 
 #[test]
 fn s0_prime_verifier_methods_route_to_anuttara_constraint_checker() {
-    for method in ["s0'.verifier.check_state", "s0'.verifier.emit_question"] {
+    for method in [
+        "s0'.verifier.check_state",
+        "s0'.verifier.emit_query",
+        "s0'.verifier.validate_membership",
+        "s0'.verifier.owl_query",
+    ] {
         let route = classify_method(method).expect("S0' verifier method should be routed");
         assert_eq!(route.owner, GatewayDispatchOwner::S0ProductAdapter);
         assert_eq!(route.class, GatewayDispatchClass::VerifierSurface);
@@ -552,7 +557,9 @@ mod t9_route_ownership_cross_walk {
             "s0.command.exec",
             // S0' Anuttara verifier — routed by S3 metadata to epi-lib.
             "s0'.verifier.check_state",
-            "s0'.verifier.emit_question",
+            "s0'.verifier.emit_query",
+            "s0'.verifier.validate_membership",
+            "s0'.verifier.owl_query",
             // S0'/S2 projection helpers with contract rows but no S0 host match arm.
             "m2.cymatic_invert",
             "s0'.anuttara.trace",

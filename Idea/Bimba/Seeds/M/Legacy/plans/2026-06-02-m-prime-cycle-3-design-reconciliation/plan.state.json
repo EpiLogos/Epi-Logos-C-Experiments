@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T05:11:24.908Z",
+  "updatedAt": "2026-06-19T05:18:07.939Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5461,14 +5461,19 @@
       "worktree": null
     },
     "31.T31.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T05:07:48.264Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T05:17:46.226Z",
       "claimedAt": "2026-06-19T05:07:48.264Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T05:17:46.226Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T05:17:46.226Z",
+          "text": "pnpm --filter @pratibimba/pratibimba-layouts test: 11/11 passing; files: Body/M/epi-theia/extensions/pratibimba-layouts/src/browser/epi-logos-menu.ts, src/browser/frontend-module.ts, tests/epi-logos-menu.test.mjs, contracts/chrome-contributions-catalog.json"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-31-t31-5",
-      "leaseExpiresAt": "2026-06-19T07:07:48.264Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T05:07:48.264Z",
       "runId": "20260619T050748Z-31-T31.5",
       "worktree": null
@@ -8012,14 +8017,19 @@
       "worktree": null
     },
     "12.T12.34": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T05:07:22.123Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T05:18:07.867Z",
       "claimedAt": "2026-06-19T05:07:22.123Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T05:18:07.867Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T05:18:07.867Z",
+          "text": "cargo test gateway-contract: 77 passed; cargo test gateway dispatch_contract: 26 passed; node --test S4-4p-anima/tests/*.test.ts: 137 passed; key paths Body/S/S4/pi-agent/agents/anuttara.md, Body/S/S3/gateway-contract/src/lib.rs, Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts, Idea/Bimba/Seeds/M/M'-MODEL-SLOT-SPEC.md, Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-anuttara-language-development.md"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-12-t12-34-anuttara-pi",
-      "leaseExpiresAt": "2026-06-19T07:07:22.123Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T05:07:22.123Z",
       "runId": "20260619T050722Z-12-T12.34",
       "worktree": null
@@ -11124,11 +11134,12 @@
     {
       "runId": "20260619T050722Z-12-T12.34",
       "taskId": "12.T12.34",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T05:07:22.123Z",
       "owner": "codex-m-dev-12-t12-34-anuttara-pi",
       "leaseExpiresAt": "2026-06-19T07:07:22.123Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T05:18:07.867Z"
     },
     {
       "runId": "20260619T050732Z-21-T21.8",
@@ -11161,11 +11172,12 @@
     {
       "runId": "20260619T050748Z-31-T31.5",
       "taskId": "31.T31.5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T05:07:48.264Z",
       "owner": "codex-m-dev-31-t31-5",
       "leaseExpiresAt": "2026-06-19T07:07:48.264Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T05:17:46.226Z"
     }
   ],
   "activeRoute": {

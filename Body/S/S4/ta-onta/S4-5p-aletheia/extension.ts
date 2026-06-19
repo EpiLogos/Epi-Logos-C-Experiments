@@ -48,7 +48,62 @@ function defaultVaultRoot() {
   return process.env.EPILOGOS_VAULT ?? `${process.env.HOME ?? "."}/Documents/Epi-Logos/Idea`;
 }
 
+function gnosticPythonPath() {
+  const sourcePath = process.env.EPI_GNOSTIC_SOURCE_PATH ?? `${process.cwd()}/Body/S/S5/epi-gnostic`;
+  const existing = process.env.PYTHONPATH;
+  return existing ? `${sourcePath}:${existing}` : sourcePath;
+}
+
 export async function aletheiaExtension(api: ExtensionAPI) {
+  // ── Tool: moirai_arena_distill ───────────────────────────────────
+  api.registerTool({
+    name: "moirai_arena_distill",
+    label: "Moirai Arena Distill",
+    description: "Closure-distill an arena scene to Graphiti episodes + classifier-modulated graph edges. Jungian amplification routed back to canon. Anima-dispatched at scene_close during Aletheia-crystallisation-mode.",
+    parameters: Type.Object({
+      scene_key: Type.String({ description: "ArenaScene scene_key closed by m4.arena.scene_close" }),
+    }),
+    async execute(_id: string, params: { scene_key: string }, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      const python = process.env.EPI_ARENA_DISTILL_PYTHON
+        ?? process.env.EPI_GNOSTIC_PYTHON
+        ?? "python3";
+      const result = spawnSync(
+        python,
+        ["-m", "epi_gnostic.arena_distillation", params.scene_key],
+        {
+          encoding: "utf8",
+          timeout: 120_000,
+          env: {
+            ...process.env,
+            PYTHONPATH: gnosticPythonPath(),
+          },
+        },
+      );
+      if (result.status !== 0) {
+        return {
+          content: [{
+            type: "text",
+            text: `moirai_arena_distill failed: ${result.stderr || result.stdout || "non-zero exit"}`,
+          }],
+          isError: true,
+        };
+      }
+      let receipt: unknown;
+      try {
+        receipt = JSON.parse(result.stdout);
+      } catch {
+        return {
+          content: [{ type: "text", text: `moirai_arena_distill returned non-JSON: ${result.stdout}` }],
+          isError: true,
+        };
+      }
+      return {
+        content: [{ type: "text", text: JSON.stringify(receipt, null, 2) }],
+        details: receipt,
+      };
+    },
+  });
+
   // ── Tool: aletheia_session_promote ───────────────────────────────
   api.registerTool({
     name: "aletheia_session_promote",

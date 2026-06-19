@@ -19,7 +19,14 @@ import type { AletheiaEloConfig } from "../../S4-5p-aletheia/modules/mercurius-e
 export type DispatchPurpose =
   | "task"
   | "calibration"
-  | "aletheia_crystallisation";
+  | "aletheia_crystallisation"
+  | "verification";
+
+export type VerificationTrigger =
+  | "emission_type_check"
+  | "sophia_disclosure_validation"
+  | "hen_promotion_gate"
+  | "m5_4_review";
 
 export type ExpertKind = "constitutional" | "aletheia_guardian";
 export type SlotResolutionState = "local" | "cloud-opt-in" | "null";
@@ -94,6 +101,7 @@ export interface DispatchPolicyRequest {
   kairos_window: string;
   r_factor_slot: string;
   dispatch_purpose: DispatchPurpose;
+  verification_trigger?: VerificationTrigger;
   candidates: CandidateTriple[];
   ratings: EloRatingRecord[];
   user_context?: UserContextState;
@@ -141,7 +149,34 @@ export interface DispatchTrace {
   scores: CandidateScore[];
   selected_candidate_ids: string[];
   selection_rationale: string;
+  anuttara_verification?: AnuttaraVerificationPlan;
   veto_handling?: VetoHandlingPlan;
+}
+
+export const ANUTTARA_FULL_LANGUAGE_LAWS = [
+  "law-1-void-grammar-root",
+  "law-2-first-non-duality",
+  "law-3-zero-zero-paramesvara",
+  "law-4-archetypal-number-language",
+  "law-5-holographic-matrix",
+  "law-6-siva-shakti-operator-surface",
+  "law-7-coordinate-phase-preservation",
+] as const;
+
+export const ANUTTARA_VERIFIER_GATEWAY_METHODS = [
+  "s0'.verifier.check_state",
+  "s0'.verifier.emit_query",
+  "s0'.verifier.validate_membership",
+  "s0'.verifier.owl_query",
+] as const;
+
+export interface AnuttaraVerificationPlan {
+  agent_id: "anuttara_pi";
+  slot_name: "anuttara_verifier";
+  trigger: VerificationTrigger;
+  typed_query_surface: "full-7-laws";
+  coordinate_language_laws: readonly string[];
+  gateway_methods: readonly string[];
 }
 
 export interface VetoHandlingPlan {
@@ -239,6 +274,9 @@ export function resolveAnimaDispatchPolicy(input: DispatchPolicyRequest): Dispat
   const veto_handling = input.dispatch_purpose === "aletheia_crystallisation"
     ? buildVetoHandling(input, selected)
     : undefined;
+  const anuttara_verification = isVerificationDispatch(input)
+    ? buildAnuttaraVerificationPlan(input)
+    : undefined;
 
   return {
     selected,
@@ -250,6 +288,7 @@ export function resolveAnimaDispatchPolicy(input: DispatchPolicyRequest): Dispat
       selected,
       fallback_applications,
       selection_rationale: selectionRationale(input, selected),
+      anuttara_verification,
       veto_handling,
     }),
   };
@@ -452,6 +491,13 @@ function selectPolicyCandidates(
   input: DispatchPolicyRequest,
 ): CandidateScore[] {
   const sorted = [...eligible].sort((a, b) => b.final_score - a.final_score);
+  if (isVerificationDispatch(input)) {
+    const anuttara = sorted.filter(isAnuttaraPiScore);
+    return anuttara.slice(
+      input.config.anima.dispatch_policy.neutral_score,
+      input.config.anima.dispatch_policy.single_dispatch_count,
+    );
+  }
   if (input.dispatch_purpose !== "aletheia_crystallisation") {
     return sorted.slice(
       input.config.anima.dispatch_policy.neutral_score,
@@ -493,6 +539,7 @@ function buildTrace(input: {
   selected: CandidateScore[];
   fallback_applications: string[];
   selection_rationale: string;
+  anuttara_verification?: AnuttaraVerificationPlan;
   override_applied?: DispatchOverridePolicy;
   veto_handling?: VetoHandlingPlan;
 }): DispatchTrace {
@@ -510,7 +557,32 @@ function buildTrace(input: {
     scores: input.scores,
     selected_candidate_ids: input.selected.map((score) => score.candidate_id),
     selection_rationale: input.selection_rationale,
+    anuttara_verification: input.anuttara_verification,
     veto_handling: input.veto_handling,
+  };
+}
+
+function isVerificationDispatch(input: DispatchPolicyRequest): boolean {
+  return input.dispatch_purpose === "verification" || input.verification_trigger !== undefined;
+}
+
+function isAnuttaraPiScore(score: CandidateScore): boolean {
+  const agent = score.agent.toLowerCase().replace(/[-\s]/g, "_");
+  return score.candidate_id === "anuttara_pi" ||
+    agent === "anuttara_pi" ||
+    agent === "anuttara_verifier" ||
+    score.skill_set.includes("language-membership-check") ||
+    score.skill_set.includes("typed-query-emission");
+}
+
+function buildAnuttaraVerificationPlan(input: DispatchPolicyRequest): AnuttaraVerificationPlan {
+  return {
+    agent_id: "anuttara_pi",
+    slot_name: "anuttara_verifier",
+    trigger: input.verification_trigger ?? "emission_type_check",
+    typed_query_surface: "full-7-laws",
+    coordinate_language_laws: ANUTTARA_FULL_LANGUAGE_LAWS,
+    gateway_methods: ANUTTARA_VERIFIER_GATEWAY_METHODS,
   };
 }
 
@@ -557,6 +629,9 @@ function collectFallbackApplications(
   if (input.dispatch_purpose === "calibration") {
     applications.push("calibration_dispatch_from_drift_detection_queue");
   }
+  if (isVerificationDispatch(input)) {
+    applications.push("anuttara_pi_verification_gate");
+  }
   return applications;
 }
 
@@ -581,6 +656,9 @@ function scoreRationale(
 
 function selectionRationale(input: DispatchPolicyRequest, selected: CandidateScore[]): string {
   if (!selected.length) return "no eligible candidate after slot resolution";
+  if (isVerificationDispatch(input)) {
+    return "selected Anuttara-PI verification pole with full-7-laws typed-query surface";
+  }
   if (input.dispatch_purpose === "aletheia_crystallisation") {
     return "selected Elo-informed Aletheia techne guardian set with veto primitive attached";
   }
