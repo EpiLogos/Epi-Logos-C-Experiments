@@ -3530,6 +3530,29 @@ mod tests {
     }
 
     #[test]
+    fn relation_family_enum_present() {
+        let spec =
+            relationship_property_spec("c_1_relation_family").expect("relation family missing");
+
+        assert_eq!(spec.coordinate_home, "S2-3'");
+        assert_eq!(spec.owner, GraphPropertyOwner::Relationship);
+        assert_eq!(spec.cardinality, GraphPropertyCardinality::One);
+        assert_eq!(spec.disclosure, GraphPropertyDisclosure::Public);
+        assert_eq!(spec.source_family, "relationship");
+        assert_eq!(
+            spec.value_type,
+            GraphPropertyType::Enum(&[
+                "structural",
+                "correspondential",
+                "kernel_core",
+                "inferred",
+                "sync",
+                "compatibility",
+            ])
+        );
+    }
+
+    #[test]
     fn regional_property_specs_cover_deep_bimba_surfaces() {
         assert!(node_property_spec("l_2_therapeutic_properties").is_some());
         assert!(node_property_spec("t_5_next_evolution_phase").is_some());

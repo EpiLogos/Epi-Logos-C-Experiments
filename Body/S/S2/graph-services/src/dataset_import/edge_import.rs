@@ -289,6 +289,19 @@ mod tests {
     }
 
     #[test]
+    fn relation_family_classifies_dataset_relationships() {
+        assert_eq!(relation_family_for_rel_type("CONTAINS"), "structural");
+        assert_eq!(relation_family_for_rel_type("SYNCED_FROM"), "sync");
+        assert_eq!(relation_family_for_rel_type("ELABORATES"), "inferred");
+        assert_eq!(relation_family_for_rel_type("POS0_LINKS_TO"), "compatibility");
+        assert_eq!(relation_family_for_rel_type("HAS_KERNEL_RESONANCE"), "kernel_core");
+        assert_eq!(relation_family_for_rel_type("HAS_DECAN"), "correspondential");
+        assert_eq!(relation_family_for_rel_type("HAS_MAQAM_FAMILY"), "correspondential");
+        assert_eq!(relation_family_for_rel_type("RULED_BY"), "correspondential");
+        assert_eq!(relation_family_for_rel_type("VORTEX_SPIRIT_AXIS"), "correspondential");
+    }
+
+    #[test]
     fn relation_properties_are_promoted_from_reviewed_map_only() {
         let rel = serde_json::json!({
             "relProperties": {

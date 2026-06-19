@@ -22,6 +22,8 @@ pub const ALLOWED_RELATION_TYPES: &[&str] = &[
     "SUPPORTS",
     "CRITIQUES",
     "DERIVES_FROM",
+    "WORLD_FORM_OF",
+    "WORLD_ONTOLOGY_OF",
     "PROMOTES_TO",
     "SYNCED_FROM",
 ];

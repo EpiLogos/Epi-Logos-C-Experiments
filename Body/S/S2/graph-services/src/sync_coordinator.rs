@@ -1447,5 +1447,11 @@ c_3_related_coordinates: "[[C1]]"
         assert!(plans
             .iter()
             .all(|plan| !plan.rel_type.starts_with("POS") && !plan.cypher().contains(":Bimba")));
+        assert!(plans.iter().all(|plan| {
+            plan.properties
+                .get("c_1_relation_family")
+                .and_then(Value::as_str)
+                == Some("sync")
+        }));
     }
 }
