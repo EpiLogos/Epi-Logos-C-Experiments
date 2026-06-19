@@ -1,5 +1,6 @@
 export * from './bridge-api';
 export * from './bridge-readiness';
+export * from './block-contract';
 export * from './contribution-contracts';
 export * from './coordinate-context';
 export * from './empty-state-registry';

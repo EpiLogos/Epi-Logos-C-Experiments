@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://epi-logos.local/pratibimba/block-contract.schema.json",
+  "title": "Pratibimba Block Contract",
+  "description": "Wire shape for CTX-framed M' surface blocks emitted by S-layer cores and consumed through the live blocks.catalog gateway.",
+  "type": "object",
+  "required": ["id", "type", "ctx", "privacyClass", "data"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ctx": {
+      "$ref": "#/$defs/ctx"
+    },
+    "coordinate": {
+      "type": "string",
+      "minLength": 1
+    },
+    "privacyClass": {
+      "$ref": "#/$defs/privacyClass"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "data": true,
+    "affordances": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/affordance"
+      },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "coreBlockType": {
+      "type": "string",
+      "enum": [
+        "rich-text",
+        "callout",
+        "diff",
+        "data-model",
+        "file-tree",
+        "annotated-code",
+        "code",
+        "table",
+        "checklist",
+        "question-form",
+        "review-item",
+        "evidence",
+        "dispatch-genealogy",
+        "tool-stream-event",
+        "pattern-packet",
+        "kairos-strip",
+        "resonance-indicator",
+        "wireframe",
+        "diagram"
+      ]
+    },
+    "ctx": {
+      "type": "object",
+      "required": ["cf", "ct", "cp"],
+      "additionalProperties": false,
+      "properties": {
+        "cf": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ct": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cp": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cpf": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cs": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "privacyClass": {
+      "type": "string",
+      "enum": ["public", "protected", "protected-local"]
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["kind", "handle"],
+      "additionalProperties": true,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["evidence-envelope", "s2-handle"]
+        },
+        "handle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string"
+        },
+        "envelope": {
+          "type": "object"
+        }
+      }
+    },
+    "affordance": {
+      "type": "string",
+      "enum": ["verdict", "annotate", "select", "navigate"]
+    },
+    "blockSpecDescriptor": {
+      "type": "object",
+      "required": ["type", "schema", "editSurface", "privacyGate"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema": {
+          "type": "object"
+        },
+        "editSurface": {
+          "type": "string",
+          "enum": ["inline", "panel", "container"]
+        },
+        "privacyGate": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}
