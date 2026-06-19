@@ -20,6 +20,7 @@ use serde_json::{json, Value};
 use uuid::Uuid;
 
 use crate::transcripts;
+use epi_s3_gateway_contract::{HarnessTurnEvent, VakAddress};
 
 /// S3 handler-owner sentinel used by the live-gateway smoke test to prove
 /// the chat runtime envelopes originate in S3 (and not in S0 server.rs).
@@ -32,6 +33,12 @@ pub struct ChatEntry {
     pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub run_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub harness_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vak_address: Option<VakAddress>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub event: Option<HarnessTurnEvent>,
     pub timestamp_ms: u128,
 }
 
@@ -59,6 +66,26 @@ pub fn inject_message(
     message: &str,
 ) -> Result<(), String> {
     transcripts::append_message(gate_root, session_key, role, message, None)
+}
+
+pub fn append_harness_turn_event(
+    gate_root: impl AsRef<Path>,
+    session_key: &str,
+    harness_id: &str,
+    vak_address: VakAddress,
+    run_id: &str,
+    event: HarnessTurnEvent,
+) -> Result<(), String> {
+    transcripts::append_harness_turn_event(
+        gate_root,
+        session_key,
+        transcripts::HarnessTurnTranscriptRecord {
+            harness_id: harness_id.to_owned(),
+            vak_address,
+            run_id: run_id.to_owned(),
+            event,
+        },
+    )
 }
 
 pub fn abort_run(
@@ -126,6 +153,9 @@ fn read_entries(gate_root: impl AsRef<Path>, session_key: &str) -> Result<Vec<Ch
                 role: entry.role,
                 message: entry.message,
                 run_id: entry.run_id,
+                harness_id: entry.harness_id,
+                vak_address: entry.vak_address,
+                event: entry.event,
                 timestamp_ms: entry.timestamp_ms,
             })
             .collect()

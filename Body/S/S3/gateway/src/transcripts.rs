@@ -4,6 +4,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use serde::{Deserialize, Serialize};
 
+use epi_s3_gateway_contract::{HarnessTurnEvent, VakAddress};
+
 use super::session_store::slug;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -13,7 +15,21 @@ pub struct TranscriptEntry {
     pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub run_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub harness_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vak_address: Option<VakAddress>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub event: Option<HarnessTurnEvent>,
     pub timestamp_ms: u128,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct HarnessTurnTranscriptRecord {
+    pub harness_id: String,
+    pub vak_address: VakAddress,
+    pub run_id: String,
+    pub event: HarnessTurnEvent,
 }
 
 pub fn transcript_path(gate_root: impl AsRef<Path>, session_key: &str) -> PathBuf {
@@ -38,6 +54,30 @@ pub fn append_message(
             role: role.to_owned(),
             message: message.to_owned(),
             run_id: run_id.map(str::to_owned),
+            harness_id: None,
+            vak_address: None,
+            event: None,
+            timestamp_ms: now_ms()?,
+        },
+    )
+}
+
+pub fn append_harness_turn_event(
+    gate_root: impl AsRef<Path>,
+    session_key: &str,
+    record: HarnessTurnTranscriptRecord,
+) -> Result<(), String> {
+    append_entry(
+        gate_root,
+        session_key,
+        TranscriptEntry {
+            kind: "harness_turn_event".to_owned(),
+            role: "harness".to_owned(),
+            message: event_message(&record.event),
+            run_id: Some(record.run_id),
+            harness_id: Some(record.harness_id),
+            vak_address: Some(record.vak_address),
+            event: Some(record.event),
             timestamp_ms: now_ms()?,
         },
     )
@@ -56,6 +96,9 @@ pub fn append_abort(
             role: "system".to_owned(),
             message: format!("aborted {run_id}"),
             run_id: Some(run_id.to_owned()),
+            harness_id: None,
+            vak_address: None,
+            event: None,
             timestamp_ms: now_ms()?,
         },
     )
@@ -121,4 +164,37 @@ fn now_ms() -> Result<u128, String> {
         .duration_since(UNIX_EPOCH)
         .map_err(|err| err.to_string())?
         .as_millis())
+}
+
+fn event_message(event: &HarnessTurnEvent) -> String {
+    match event {
+        HarnessTurnEvent::TextChunk { text } => text.clone(),
+        HarnessTurnEvent::ReasoningChunk { text } => text.clone(),
+        HarnessTurnEvent::ToolCallRequested { call_id, name, .. } => {
+            format!("tool call requested {name} ({call_id})")
+        }
+        HarnessTurnEvent::ToolCallInProgress { call_id, name } => {
+            format!("tool call in progress {name} ({call_id})")
+        }
+        HarnessTurnEvent::ToolCallObserved {
+            call_id,
+            name,
+            status,
+            ..
+        } => format!("tool call observed {name} ({call_id}) {status:?}"),
+        HarnessTurnEvent::TurnComplete { text, .. } => text.clone(),
+        HarnessTurnEvent::TurnCancelled {
+            reason,
+            partial_text,
+        } => format!("turn cancelled {reason}: {partial_text}"),
+        HarnessTurnEvent::ContextWindowExceeded {
+            max_tokens,
+            actual_tokens,
+        } => format!("context window exceeded {actual_tokens}/{max_tokens} tokens"),
+        HarnessTurnEvent::HarnessError {
+            message,
+            code,
+            retryable,
+        } => format!("harness error {code} retryable={retryable}: {message}"),
+    }
 }

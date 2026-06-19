@@ -27,6 +27,9 @@ use epi_s3_gateway::{
     session_store::{CreateSessionContext, SessionStore},
     sessions, transcripts,
 };
+use epi_s3_gateway_contract::{HarnessToolCallStatus, HarnessTurnEvent};
+use portal_core::{CpfState, CsDirection, CsField, VakAddress};
+use serde_json::json;
 use tempfile::tempdir;
 
 #[test]
@@ -158,4 +161,104 @@ fn s3_chat_history_reads_alpha_transcript_files_unchanged() {
     assert_eq!(items[0]["role"], "user");
     assert_eq!(items[0]["message"], "legacy alpha line");
     assert_eq!(history["handlerOwner"], "S3.gateway.chat");
+}
+
+#[test]
+fn harness_turn_events_from_pi_and_codex_use_one_transcript_reader() {
+    let dir = tempdir().unwrap();
+    let gate_root = dir.path().join("gate");
+    let store = SessionStore::new(&gate_root).unwrap();
+    store.create("agent:pi:main").unwrap();
+    store.create("agent:codex:worker").unwrap();
+
+    let pi_event = HarnessTurnEvent::ToolCallObserved {
+        call_id: "call-pi".to_owned(),
+        name: "epi".to_owned(),
+        arguments: json!({"args": ["gate", "transcript"]}),
+        result: json!({"exitCode": 0, "stdout": "pi"}),
+        status: HarnessToolCallStatus::Succeeded,
+        duration_ms: 17,
+    };
+    let codex_event = HarnessTurnEvent::ToolCallObserved {
+        call_id: "call-codex".to_owned(),
+        name: "cargo".to_owned(),
+        arguments: json!({"args": ["test", "--manifest-path", "Body/S/S3/gateway/Cargo.toml"]}),
+        result: json!({"exitCode": 0, "stdout": "codex"}),
+        status: HarnessToolCallStatus::Succeeded,
+        duration_ms: 23,
+    };
+
+    chat::append_harness_turn_event(
+        &gate_root,
+        "agent:pi:main",
+        "pi",
+        phase_vak_address(),
+        "run-pi",
+        pi_event.clone(),
+    )
+    .unwrap();
+    chat::append_harness_turn_event(
+        &gate_root,
+        "agent:codex:worker",
+        "codex",
+        phase_vak_address(),
+        "run-codex",
+        codex_event.clone(),
+    )
+    .unwrap();
+
+    let pi_entries = transcripts::read_entries(&gate_root, "agent:pi:main").unwrap();
+    let codex_entries = transcripts::read_entries(&gate_root, "agent:codex:worker").unwrap();
+    let pi_entry = pi_entries.first().expect("pi event line");
+    let codex_entry = codex_entries.first().expect("codex event line");
+
+    assert_eq!(pi_entry.kind, "harness_turn_event");
+    assert_eq!(codex_entry.kind, "harness_turn_event");
+    assert_eq!(pi_entry.harness_id.as_deref(), Some("pi"));
+    assert_eq!(codex_entry.harness_id.as_deref(), Some("codex"));
+    assert_eq!(pi_entry.run_id.as_deref(), Some("run-pi"));
+    assert_eq!(codex_entry.run_id.as_deref(), Some("run-codex"));
+    assert_eq!(pi_entry.vak_address.as_ref().unwrap().cf, "(0/1/2)");
+    assert_eq!(codex_entry.vak_address.as_ref().unwrap().cf, "(0/1/2)");
+    assert_eq!(pi_entry.event.as_ref(), Some(&pi_event));
+    assert_eq!(codex_entry.event.as_ref(), Some(&codex_event));
+
+    let pi_json = serde_json::to_value(pi_entry).unwrap();
+    let codex_json = serde_json::to_value(codex_entry).unwrap();
+    assert_eq!(
+        sorted_object_keys(&pi_json),
+        sorted_object_keys(&codex_json),
+        "Pi and Codex transcript lines must expose the same outer event schema"
+    );
+
+    let history = chat::history_response(&gate_root, "agent:codex:worker").unwrap();
+    assert_eq!(
+        history["items"][0]["event"]["kind"], "toolCallObserved",
+        "chat history must carry event-granular records without a harness switch"
+    );
+}
+
+fn phase_vak_address() -> VakAddress {
+    VakAddress {
+        cpf: CpfState::Dialogical,
+        ct: vec!["CT2".to_owned(), "phase:tool-observation".to_owned()],
+        cp: "CP4.2".to_owned(),
+        cf: "(0/1/2)".to_owned(),
+        cfp: "s3.gateway.transcript".to_owned(),
+        cs: CsField {
+            code: "CS3".to_owned(),
+            direction: CsDirection::Day,
+        },
+    }
+}
+
+fn sorted_object_keys(value: &serde_json::Value) -> Vec<String> {
+    let mut keys = value
+        .as_object()
+        .expect("transcript entry serializes as an object")
+        .keys()
+        .cloned()
+        .collect::<Vec<_>>();
+    keys.sort();
+    keys
 }

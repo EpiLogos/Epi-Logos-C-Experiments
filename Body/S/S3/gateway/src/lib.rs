@@ -16,4 +16,7 @@ pub mod workspace;
 pub use runtime::{GatewayEventSubscription, GatewayRuntimeState};
 pub use session_store::{CreateSessionContext, SessionStore};
 pub use subagents::{resolve_agent_launch_context, SubagentLaunchContext};
-pub use transcripts::{append_abort, append_message, read_entries, TranscriptEntry};
+pub use transcripts::{
+    append_abort, append_harness_turn_event, append_message, read_entries,
+    HarnessTurnTranscriptRecord, TranscriptEntry,
+};

@@ -12,7 +12,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 - `src/m4_arena.rs` — [[M4]] arena warm [[Vama Shakti]] runtime wrapper over `portal-core` state.
 - `src/spacetime.rs` — SpaceTimeDB subscription / reducer client + fallback (~78k), plus CCT-21 BeingPattern replay and handle-forward payload helpers.
 - `src/temporal_context.rs` — temporal/kairos context plumbing.
-- `src/transcripts.rs`, `src/chat.rs` — transcript append/read + chat surface.
+- `src/transcripts.rs`, `src/chat.rs` — transcript append/read + chat surface, including harness-neutral `HarnessTurnEvent` records for [[S3]] session transcript-of-record writes.
 - `src/protocol.rs`, `src/verifier.rs`, `src/bootstrap.rs`, `src/subagents.rs`, `src/workspace.rs` — protocol, verifier, bootstrap, subagent launch, workspace scope.
 - `tests/` — contract + smoke tests (`dispatch_contract`, `session_store_contract`, `oracle_spread_contract`, `live_gateway_smoke`, `elo_runtime_contract`, etc.).
 - Does NOT own the protocol/method contract (delegated to sibling `gateway-contract` = [[S3-SPEC]]), Redis residency (`redis-context`), nor world-return canon ([[S5-SPEC]]). Domain law lives in its owning coordinate, not duplicated here.
