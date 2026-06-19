@@ -61,6 +61,16 @@ Before scoping work, read in order (per `[[ARCHITECTURE-DIAGRAM-PACK]]`):
 
 Core invariant: **the coordinate system is the modular system.** Reading shortcut prohibition: do not grep a plan fragment first, do not treat an `epi` command name as ontology, do not relocate a shared kernel/profile concern into [[S0]]/[[M0']] for convenience.
 
+## Code Navigability (Coordinate Headers)
+
+DOX routes *between* files; these rules make the *inside* of each file self-locating. They reinforce Track 43's structural levers (info-hiding headers 43.4, enforced boundaries 43.5) — structure is the primary lever, these are the reinforcement.
+
+- **Every named code unit declares a coordinate header.** Per the Unified Coordinate Header Convention (`convention:coordinate-header:v1`, see `43.T43.2-convention.md`), each `include/*.h`, `src/lib.rs`/`main.rs`, extension barrel, agent skill, and `CONTRACT.md` carries the seven fields: `Coordinate`, `Residency`, `Position (#n)`, `Actualises`, `Public surface`, `Does NOT own`, optional `Contract`. Author/validate with the `coordinate-header` skill (`.claude/skills/coordinate-header/SKILL.md`); it is the code-side sibling of `bimba-vault-validate` (vault-side).
+- **Headers / `lib.rs` *declare*; `.c` / `.rs` bodies *define*.** The `.h` or barrel/`lib.rs` is the contract surface; bodies, LUTs, and allocation live in `.c`/`src/*.rs`. The 43.4 invariant holds — every `.h` < its `.c`. Do not inline a body into a declaration.
+- **Respect `forbidden-imports`.** Import boundaries are machine-enforced in `Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json` (`forbiddenImports` / `forbiddenImportsFromLayer` matrix, 43.5). Check the declaring crate/extension's row before adding a dependency. Generated M-stack barrels (`extensions/m*/src/common/index.ts`) head-comment the path to that JSON so a code reader finds the enforced boundary — preserve the pointer on regeneration.
+- **Read types/contract before implementation.** Read the Coordinate Header, `CONTRACT.md`, and owning `[[Sn-SPEC]]`/`[[Mn'-SPEC]]` before writing a body. The declaration fixes the shape; the body conforms.
+- **Apply taste at boundaries — do not outsource interface design.** The human Architect owns public-surface shape (signatures, envelope fields, the `Does NOT own` negative space). An agent implements bodies and conforms to declared seams; it proposes surface changes, it does not land them unilaterally — and flags the owning `[[Sn-ARCHITECTURE]]`/`[[Sn-SPEC]]`/`[[Mn'-SPEC]]` for canon update when a contract surface moves.
+
 ## Child DOX Index
 
 - `Body/AGENTS.md` — the embodied system: the [[S]]/[[S']] substrate stack and the [[M']] coded expression.
@@ -172,7 +182,7 @@ Spanda — the primordial vibration that is simultaneously the outward surge (ex
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Epi-Logos C Experiments** (40464 symbols, 76216 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **Epi-Logos C Experiments** (42317 symbols, 90631 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

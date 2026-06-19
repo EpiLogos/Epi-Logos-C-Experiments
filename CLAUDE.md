@@ -23,6 +23,16 @@ This repo runs the **DOX** AGENTS.md hierarchy. A self-maintaining tree of `AGEN
 
 **The Bimba Map** (`Idea/Bimba/Map/`) is the navigable repo-level *reflection* of the M0–M5 graph: a generated, wikilink-open projection (`M0/`–`M5/`, the file tree mirrors the coordinate hierarchy) carrying each coordinate's M-form identity, a pithy essence, and a full relation index — every edge as `[[source]] - [[relation_type]] - [[target]]` with key properties, relation types rendered as wikilinks. This keeps `S/S'`↔`M/M'` relations legible in-repo so work stays modular; full node detail lives in Neo4j (the projection reflects *down* from the graph, it never re-promotes). See [[repo-ontology]] + [[45-bimba-map-indexing-and-dox-okf-unification]].
 
+### Code Navigability Rules (Coordinate Headers — first-class for agents)
+
+The DOX rail routes *between* files; these rules make the *inside* of each file self-locating. They reinforce the structural levers of Track 43 (info-hiding headers 43.4, enforced boundaries 43.5) — structure is the primary lever; these agent rules are the reinforcement, not a substitute.
+
+1. **Every named code unit declares its coordinate header.** Per the Unified Coordinate Header Convention (`convention:coordinate-header:v1`, `43.T43.2-convention.md`), each `include/*.h`, `src/lib.rs`/`main.rs`, extension barrel, agent skill, and `CONTRACT.md` carries a header with the seven fields: `Coordinate`, `Residency`, `Position (#n)`, `Actualises`, `Public surface`, `Does NOT own`, and optional `Contract`. Use the `coordinate-header` skill (`.claude/skills/coordinate-header/SKILL.md`) to author and validate one.
+2. **Headers and `lib.rs` *declare*; `.c`/`.rs` bodies *define*.** A `.h` or barrel/`lib.rs` is the contract surface — types, signatures, exported symbols, the `Public surface` and `Does NOT own` fields. Function bodies, LUTs, and allocation live in `.c`/`src/*.rs`. The 43.4 invariant holds: every `.h` stays smaller than its `.c`. Do not inline a body into a declaration to save a hop.
+3. **Respect `forbidden-imports`.** The S-stack/M-stack import boundaries are machine-enforced in `Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json` (`forbiddenImports` / `forbiddenImportsFromLayer` matrix, 43.5). Before adding a dependency, check the declaring crate/extension's row. Generated M-stack barrels (`extensions/m*/src/common/index.ts`) carry a header comment pointing back to that JSON contract so a code reader discovers the enforced boundary exists — keep that pointer when regenerating.
+4. **Read types/contract before implementation.** Read the `.h`/`lib.rs` Coordinate Header, the `CONTRACT.md`, and the owning `[[Sn-SPEC]]`/`[[Mn'-SPEC]]` *before* writing a body. The declaration fixes the shape; the body conforms to it.
+5. **Apply taste at boundaries — do not outsource interface design.** The human Architect owns the shape of public surfaces (signatures, envelope fields, the `Does NOT own` negative space). An agent implements bodies and conforms to declared seams; it does not invent or widen the interface on its own. Propose surface changes; do not land them unilaterally — and flag the owning `[[Sn-ARCHITECTURE]]`/`[[Sn-SPEC]]`/`[[Mn'-SPEC]]` for canon update when a contract surface moves.
+
 ---
 
 ## I. The Ur-Process: Human-AI Co-Creation Protocol
@@ -461,7 +471,7 @@ Möbius return (#5 → #0) is the garbage collector.
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Epi-Logos C Experiments** (40464 symbols, 76216 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **Epi-Logos C Experiments** (42317 symbols, 90631 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 

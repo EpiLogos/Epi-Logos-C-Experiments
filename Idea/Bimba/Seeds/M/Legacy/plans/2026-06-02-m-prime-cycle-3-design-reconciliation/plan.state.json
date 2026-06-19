@@ -4324,11 +4324,15 @@
       "worktree": null
     },
     "23.T23.15": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T21:18:00.000Z",
+      "completedAt": "2026-06-19T21:18:00.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T21:18:00.000Z",
+          "text": "M2BimbaPratibimbaSelector.ts created with 15 fields, topology.test.mjs extended with 0/1 toggle + layout switch test (20/20 passing), tsc compiles clean, subagent-built Hermes-marked"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -8958,11 +8962,15 @@
       "worktree": null
     },
     "43.T43.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T21:18:00.000Z",
+      "completedAt": "2026-06-19T21:18:00.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T21:18:00.000Z",
+          "text": "Navigability rule block in CLAUDE.md+AGENTS.md, coordinate-header skill at .claude/skills/coordinate-header/SKILL.md (206 lines), all 7 M-stack barrels cross-linked to preflight JSON, subagent-built Hermes-marked"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
