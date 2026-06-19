@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+  <title id="title">0/1 coin flip</title>
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="16" cy="16" rx="9" ry="12" transform="rotate(-24 16 16)" />
+    <path d="M16 4c4 3.5 6 7.5 6 12s-2 8.5-6 12" />
+    <path d="M10.2 13.4c1.8-2.4 4.7-3.3 7.2-2.1M21.8 18.6c-1.8 2.4-4.7 3.3-7.2 2.1" />
+  </g>
+  <text x="10.1" y="17.2" fill="currentColor" font-family="monospace" font-size="7">0</text>
+  <text x="18.3" y="18.9" fill="currentColor" font-family="monospace" font-size="7">1</text>
+</svg>

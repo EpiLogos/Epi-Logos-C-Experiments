@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T00:30:34.627Z",
+  "updatedAt": "2026-06-19T00:33:26.810Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5423,14 +5423,19 @@
       "worktree": null
     },
     "31.T31.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T00:30:33.966Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T00:33:26.755Z",
       "claimedAt": "2026-06-19T00:30:33.966Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T00:33:26.755Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:33:26.755Z",
+          "text": "pnpm --filter @pratibimba/pratibimba-layouts test passed: 6 tests, including daily-0-1=6, ide-deep=8, owner uniqueness, catalog all 8; files Body/M/epi-theia/extensions/pratibimba-layouts/src/common/activity-bar-modes.ts and tests/activity-bar-modes.test.mjs"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-31-t31-4",
-      "leaseExpiresAt": "2026-06-19T02:30:33.966Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T00:30:33.966Z",
       "runId": "20260619T003033Z-31-T31.4",
       "worktree": null
@@ -11053,11 +11058,12 @@
     {
       "runId": "20260619T003033Z-31-T31.4",
       "taskId": "31.T31.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T00:30:33.966Z",
       "owner": "codex-m-dev-31-t31-4",
       "leaseExpiresAt": "2026-06-19T02:30:33.966Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T00:33:26.755Z"
     },
     {
       "runId": "20260619T003034Z-30-T30.9",

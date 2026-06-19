@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+  <title id="title">Coordinate tree</title>
+  <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 5v7M16 12 8 19M16 12l8 7M8 19v5M24 19v5" />
+    <circle cx="16" cy="5" r="3" />
+    <circle cx="8" cy="24" r="3" />
+    <circle cx="24" cy="24" r="3" />
+  </g>
+  <text x="12.2" y="17.8" fill="currentColor" font-family="monospace" font-size="4">M4-3</text>
+</svg>

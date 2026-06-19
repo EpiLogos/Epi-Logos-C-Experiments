@@ -7,6 +7,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]].
 ## Ownership
 - `package.json` — `@pratibimba/pratibimba-layouts` workspace package; declares the `frontend` Theia extension (`lib/browser/frontend-module`).
 - `src/common/layout-types.ts` — canonical layout ids (`daily-0-1`, `ide-deep`) and descriptor types.
+- `src/common/activity-bar-modes.ts` — canonical activity-bar mode ledger for `daily-0-1` and `ide-deep`.
 - `src/common/cross-layout-intent.ts` — `CrossLayoutIntent` payload, routing rules, and browser telemetry event (Track 05 T5).
 - `src/common/index.ts` — package barrel (re-exports common + browser surface).
 - `src/browser/layout-switcher.ts` — `PratibimbaLayoutSwitcher` service; toggles layouts via Theia `ApplicationShell`/`LayoutRestorer`/`PreferenceService`.
