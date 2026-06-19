@@ -21,7 +21,7 @@
  * Public interface — all consumers need only:
  *   m5_init(arena, hc)                — allocate and HC-link M5 root
  *   m5_advance_logos(root)            — advance Logos FSM, return state
- *   m5_execute_mobius_return(root, m0)— Sacred Violation (tick 11 only)
+ *   m5_execute_mobius_return(root, target)— Sacred Violation (tick 11 only)
  *   m5_lookup(root, coord, gran)      — quintessential view self-API
  *   m5_teardown(root)                 — release heap state
  *   m5_cli_dispatch(argc, argv, root) — CLI entry point
@@ -327,6 +327,35 @@ typedef struct {
     uint32_t                       m1_2_skeleton_event_count;
     M5_Syntax_Compliance_Seed      four_syntax_compliance_seeds[M5_CONTEMPLATION_SYNTAX_SEED_COUNT];
 } M5_ContemplationObject;
+
+typedef uint64_t (*M5_ContemplateSessionCloseFn)(const M5_ContemplationObject* object,
+                                                  void* user_data);
+
+#define M5_MOBIUS_RETURN_TARGET_MAGIC 0x4D354D52u /* "M5MR" */
+
+typedef struct {
+    uint32_t                         magic;
+    uint32_t                         size;
+    M4_Epii_Integration*             epii;
+    M4_Identity_Matrix*              identity;
+    M5_ContemplateSessionCloseFn     contemplate_session_close;
+    void*                            user_data;
+} M5_Mobius_Return_Target;
+
+static inline M5_Mobius_Return_Target m5_mobius_return_target(
+    M4_Epii_Integration* epii,
+    M4_Identity_Matrix* identity,
+    M5_ContemplateSessionCloseFn contemplate_session_close,
+    void* user_data) {
+    M5_Mobius_Return_Target target;
+    target.magic = M5_MOBIUS_RETURN_TARGET_MAGIC;
+    target.size = (uint32_t)sizeof(M5_Mobius_Return_Target);
+    target.epii = epii;
+    target.identity = identity;
+    target.contemplate_session_close = contemplate_session_close;
+    target.user_data = user_data;
+    return target;
+}
 
 
 /* ===================================================================
