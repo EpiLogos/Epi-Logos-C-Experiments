@@ -1998,25 +1998,12 @@
     },
     "12.T12.10": {
       "status": "done",
-      "updatedAt": "2026-06-19T00:00:32.176Z",
-      "claimedAt": null,
-      "completedAt": "2026-06-19T00:00:32.176Z",
       "evidence": [
         {
-          "at": "2026-06-19T00:00:24.690Z",
-          "text": "Pi-runtime parity test added (tests/capability-parity.test.ts, 7/7); full pi-agent suite 70/70 green. Gateway endpoint registered: server.rs:1466 dispatches s4'.mediation.capabilities.list -> anima.rs:249 mediation_capabilities_list (reads capability-matrix.json verbatim). Constant declared dispatch.rs:129. Pi startup gate wired composite-entry.ts (assertGatewayCapabilityParityAtStartup on session_start) via lib/capability-parity.ts. grep 'capabilities.list' Body/S/S3/gateway/src/ -> 3 hits."
-        },
-        {
-          "at": "2026-06-19T00:00:32.176Z",
-          "text": "see prior"
+          "at": "2026-06-19T00:01:00.227686+00:00",
+          "text": "PASS: capability-parity.ts (267 lines), parity test (216 lines). Gateway s4.mediation.capabilities.list endpoint registered in dispatch.rs. Pi-startup parity assertion wired. grep confirmed."
         }
-      ],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      ]
     },
     "12.T12.11": {
       "status": "done",
