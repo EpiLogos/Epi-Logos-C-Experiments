@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T13:33:18.591Z",
+  "updatedAt": "2026-06-19T13:36:19.537Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -4923,14 +4923,19 @@
       "worktree": null
     },
     "28.T28.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T13:17:37.869Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T13:36:19.410Z",
       "claimedAt": "2026-06-19T13:17:37.869Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T13:36:19.410Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T13:36:19.410Z",
+          "text": "@pratibimba/ide-shell-m0-m5 package test passed: 36 node tests after tsc build; coordinate-tree grep acceptance passed; touched coordinate-tree widget/CSS, frontend expand-family commands, contract tests, local DOX."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-28-t28-6-coordinate-tree",
-      "leaseExpiresAt": "2026-06-19T15:17:37.869Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T13:17:37.869Z",
       "runId": "20260619T131737Z-28-T28.6",
       "worktree": null
@@ -11500,11 +11505,12 @@
     {
       "runId": "20260619T131737Z-28-T28.6",
       "taskId": "28.T28.6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T13:17:37.869Z",
       "owner": "codex-m-dev-28-t28-6-coordinate-tree",
       "leaseExpiresAt": "2026-06-19T15:17:37.869Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T13:36:19.410Z"
     },
     {
       "runId": "20260619T131920Z-42-T42.7",

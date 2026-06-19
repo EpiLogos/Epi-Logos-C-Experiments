@@ -22,6 +22,8 @@ export type DispatchPurpose =
   | "aletheia_crystallisation"
   | "verification";
 
+export type HarnessDispatchPurpose = "implement" | "review" | "explore" | "search" | "converse";
+
 export type VerificationTrigger =
   | "emission_type_check"
   | "sophia_disclosure_validation"
@@ -62,6 +64,47 @@ export interface DispatchPolicyConfig {
       composite_weight_r_user: number;
     };
   };
+  harness?: HarnessRouterConfig;
+}
+
+export interface HarnessRouterConfig {
+  subscription: Record<string, string>;
+  cost_class: Record<string, string>;
+}
+
+export interface HarnessRosterEntry {
+  harness_id: string;
+  available: boolean;
+  authenticated: boolean;
+  model_families: string[];
+  subscription?: string;
+}
+
+export interface HarnessRouterRequest {
+  purpose: HarnessDispatchPurpose;
+  roster: HarnessRosterEntry[];
+  model_slot_by_family: Record<string, string>;
+  implementer_model_family?: string;
+  parent_session_key?: string;
+  worktree?: string;
+}
+
+export interface HarnessDispatchRequest extends HarnessRouterRequest {
+  vak_frame: VakAddress;
+  config: HarnessRouterConfig;
+}
+
+export interface HarnessDispatch {
+  harness_id: string;
+  model_family: string;
+  model_slot: string;
+  purpose: HarnessDispatchPurpose;
+  parent_session_key?: string;
+  worktree?: string;
+  vak_address: VakAddress;
+  cost_class: string;
+  subscription: string;
+  selection_rationale: string;
 }
 
 export interface CandidateTriple {
@@ -105,6 +148,7 @@ export interface DispatchPolicyRequest {
   candidates: CandidateTriple[];
   ratings: EloRatingRecord[];
   user_context?: UserContextState;
+  harness_router?: HarnessRouterRequest;
   now_ms: number;
   config: DispatchPolicyConfig;
   override_policy?: DispatchOverridePolicy;
@@ -151,6 +195,7 @@ export interface DispatchTrace {
   selection_rationale: string;
   anuttara_verification?: AnuttaraVerificationPlan;
   veto_handling?: VetoHandlingPlan;
+  harness_dispatch?: HarnessDispatch;
 }
 
 export const ANUTTARA_FULL_LANGUAGE_LAWS = [
@@ -192,6 +237,7 @@ export interface VetoHandlingPlan {
 export interface DispatchPolicyDecision {
   selected: CandidateScore[];
   trace: DispatchTrace;
+  harness_dispatch?: HarnessDispatch;
 }
 
 const CHANNELS: ReadonlyArray<EloChannel> = ["R_verifier", "R_lens", "R_user"];
@@ -252,8 +298,16 @@ export function resolveAnimaDispatchPolicy(input: DispatchPolicyRequest): Dispat
   if (input.override_policy) {
     const scores = input.candidates.map((candidate) => scoreCandidate(input, lookup_key, candidate));
     const selected = selectOverrideCandidates(scores, input.override_policy);
+    const harness_dispatch = input.harness_router
+      ? resolveHarnessDispatch({
+        ...input.harness_router,
+        vak_frame: input.vak_frame,
+        config: input.config.harness ?? { subscription: {}, cost_class: {} },
+      })
+      : undefined;
     return {
       selected,
+      harness_dispatch,
       trace: buildTrace({
         input,
         lookup_key,
@@ -263,6 +317,7 @@ export function resolveAnimaDispatchPolicy(input: DispatchPolicyRequest): Dispat
         fallback_applications: ["override_policy_bypassed_elo"],
         selection_rationale: input.override_policy.rationale,
         override_applied: input.override_policy,
+        harness_dispatch,
       }),
     };
   }
@@ -277,9 +332,17 @@ export function resolveAnimaDispatchPolicy(input: DispatchPolicyRequest): Dispat
   const anuttara_verification = isVerificationDispatch(input)
     ? buildAnuttaraVerificationPlan(input)
     : undefined;
+  const harness_dispatch = input.harness_router
+    ? resolveHarnessDispatch({
+      ...input.harness_router,
+      vak_frame: input.vak_frame,
+      config: input.config.harness ?? { subscription: {}, cost_class: {} },
+    })
+    : undefined;
 
   return {
     selected,
+    harness_dispatch,
     trace: buildTrace({
       input,
       lookup_key,
@@ -290,7 +353,32 @@ export function resolveAnimaDispatchPolicy(input: DispatchPolicyRequest): Dispat
       selection_rationale: selectionRationale(input, selected),
       anuttara_verification,
       veto_handling,
+      harness_dispatch,
     }),
+  };
+}
+
+export function resolveHarnessDispatch(input: HarnessDispatchRequest): HarnessDispatch {
+  const model_family = selectModelFamily(input);
+  const model_slot = input.model_slot_by_family[model_family];
+  if (!model_slot) {
+    throw new Error(`No resolved model slot for selected model family ${model_family}.`);
+  }
+  const harness = selectCheapestHarnessForFamily(input.roster, model_family, input.config);
+  const cost_class = input.config.cost_class[model_family] ?? "standard";
+  const subscription = harness.subscription ?? input.config.subscription[harness.harness_id] ?? "metered-api";
+  return {
+    harness_id: harness.harness_id,
+    model_family,
+    model_slot,
+    purpose: input.purpose,
+    parent_session_key: input.parent_session_key,
+    worktree: input.worktree,
+    vak_address: input.vak_frame,
+    cost_class,
+    subscription,
+    selection_rationale:
+      `selected ${model_family} for ${input.purpose} task, then ${harness.harness_id} as cheapest authenticated available harness for that family`,
   };
 }
 
@@ -329,7 +417,15 @@ export function parseDispatchPolicyConfigToml(text: string): DispatchPolicyConfi
   const dispatch_policy = Object.fromEntries(
     REQUIRED_ANIMA_POLICY_KEYS.map((key) => [key, requiredNumber(parsed, "anima.dispatch_policy", key)]),
   ) as DispatchPolicyConfig["anima"]["dispatch_policy"];
-  return { aletheia: { elo, drift_detection }, anima: { dispatch_policy } };
+  const harness = {
+    subscription: collectStringMap(parsed, "harness.subscription"),
+    cost_class: collectStringMap(parsed, "harness.cost_class"),
+  };
+  return {
+    aletheia: { elo, drift_detection },
+    anima: { dispatch_policy },
+    harness: Object.keys(harness.subscription).length || Object.keys(harness.cost_class).length ? harness : undefined,
+  };
 }
 
 function scoreCandidate(
@@ -542,6 +638,7 @@ function buildTrace(input: {
   anuttara_verification?: AnuttaraVerificationPlan;
   override_applied?: DispatchOverridePolicy;
   veto_handling?: VetoHandlingPlan;
+  harness_dispatch?: HarnessDispatch;
 }): DispatchTrace {
   return {
     event: "DispatchTrace",
@@ -559,7 +656,77 @@ function buildTrace(input: {
     selection_rationale: input.selection_rationale,
     anuttara_verification: input.anuttara_verification,
     veto_handling: input.veto_handling,
+    harness_dispatch: input.harness_dispatch,
   };
+}
+
+function selectModelFamily(input: HarnessDispatchRequest): string {
+  const routable = routableFamilies(input);
+  if (!routable.length) {
+    throw new Error("No authenticated available harness can serve any resolved model family.");
+  }
+  const diverse = input.purpose === "review" && input.implementer_model_family
+    ? routable.filter((family) => family !== input.implementer_model_family)
+    : routable;
+  const candidates = diverse.length ? diverse : routable;
+  return [...candidates].sort((a, b) => compareModelFamilies(a, b, input))[0];
+}
+
+function routableFamilies(input: HarnessDispatchRequest): string[] {
+  const families = new Set<string>();
+  for (const harness of input.roster) {
+    if (!isHarnessRoutable(harness)) continue;
+    for (const family of harness.model_families) {
+      if (input.model_slot_by_family[family]) families.add(family);
+    }
+  }
+  return [...families];
+}
+
+function compareModelFamilies(left: string, right: string, input: HarnessDispatchRequest): number {
+  const left_rank = familyCostRank(input.config.cost_class[left]);
+  const right_rank = familyCostRank(input.config.cost_class[right]);
+  if (input.purpose === "explore" || input.purpose === "search" || input.purpose === "converse") {
+    return left_rank - right_rank || left.localeCompare(right);
+  }
+  return right_rank - left_rank || left.localeCompare(right);
+}
+
+function selectCheapestHarnessForFamily(
+  roster: HarnessRosterEntry[],
+  model_family: string,
+  config: HarnessRouterConfig,
+): HarnessRosterEntry {
+  const candidates = roster.filter((harness) => {
+    return isHarnessRoutable(harness) && harness.model_families.includes(model_family);
+  });
+  if (!candidates.length) {
+    throw new Error(`No authenticated available harness can serve model family ${model_family}.`);
+  }
+  return [...candidates].sort((left, right) => {
+    const left_subscription = left.subscription ?? config.subscription[left.harness_id] ?? "metered-api";
+    const right_subscription = right.subscription ?? config.subscription[right.harness_id] ?? "metered-api";
+    return subscriptionRank(left_subscription) - subscriptionRank(right_subscription) ||
+      left.harness_id.localeCompare(right.harness_id);
+  })[0];
+}
+
+function isHarnessRoutable(harness: HarnessRosterEntry): boolean {
+  return harness.available && harness.authenticated;
+}
+
+function familyCostRank(cost_class = "standard"): number {
+  const normalized = cost_class.toLowerCase();
+  if (normalized.includes("cheap") || normalized.includes("local")) return 0;
+  if (normalized.includes("strong") || normalized.includes("premium") || normalized.includes("hard")) return 2;
+  return 1;
+}
+
+function subscriptionRank(subscription = "metered-api"): number {
+  const normalized = subscription.toLowerCase();
+  if (normalized.includes("none") || normalized.includes("unauth")) return 100;
+  if (normalized.includes("metered") || normalized.includes("api") || normalized.includes("per-token")) return 20;
+  return 0;
 }
 
 function isVerificationDispatch(input: DispatchPolicyRequest): boolean {
@@ -631,6 +798,9 @@ function collectFallbackApplications(
   }
   if (isVerificationDispatch(input)) {
     applications.push("anuttara_pi_verification_gate");
+  }
+  if (input.harness_router) {
+    applications.push("harness_dispatch_two_axis_router");
   }
   return applications;
 }
@@ -753,6 +923,16 @@ function collectNestedNumbers(parsed: Record<string, Record<string, unknown>>, s
     Object.entries(source).filter((entry): entry is [string, number] => {
       const [, value] = entry;
       return typeof value === "number";
+    }),
+  );
+}
+
+function collectStringMap(parsed: Record<string, Record<string, unknown>>, section: string): Record<string, string> {
+  const source = parsed[section] ?? {};
+  return Object.fromEntries(
+    Object.entries(source).filter((entry): entry is [string, string] => {
+      const [, value] = entry;
+      return typeof value === "string" && value.trim().length > 0;
     }),
   );
 }
