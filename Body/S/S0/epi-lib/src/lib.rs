@@ -205,6 +205,61 @@ mod m0_m2_parity {
 }
 
 #[cfg(test)]
+mod m3_major_arcana_transcription {
+    use std::os::raw::c_char;
+
+    const M3_MAJOR_ARCANA_COUNT: usize = 22;
+    const M3_STOP_CODON_AA: u8 = 10;
+    const M3_NO_ARCANA: u8 = 0xFF;
+
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct M3MajorArcanaEntry {
+        card_id: u8,
+        name: *const c_char,
+        chromosome_pair: u8,
+        amino_acid_index: u8,
+    }
+
+    extern "C" {
+        static M3_CODON_TO_AA: [u8; 64];
+        static M3_MAJOR_ARCANA: [M3MajorArcanaEntry; M3_MAJOR_ARCANA_COUNT];
+        fn m3_major_arcana_from_codon(codon: u8) -> u8;
+    }
+
+    #[test]
+    fn m3_major_arcana_from_codon_roundtrip() {
+        let codon_to_aa = unsafe { M3_CODON_TO_AA };
+        let major_arcana = unsafe { M3_MAJOR_ARCANA };
+
+        for codon in 0u8..64u8 {
+            let aa_index = codon_to_aa[codon as usize];
+            let card = unsafe { m3_major_arcana_from_codon(codon) };
+
+            if aa_index == M3_STOP_CODON_AA {
+                assert_eq!(card, M3_NO_ARCANA, "STOP codon {codon:#04x}");
+                continue;
+            }
+
+            let expected = major_arcana
+                .iter()
+                .position(|entry| entry.amino_acid_index == aa_index)
+                .map(|idx| idx as u8)
+                .unwrap_or(M3_NO_ARCANA);
+
+            assert_eq!(
+                card, expected,
+                "codon {codon:#04x} should reverse-map amino acid {aa_index}"
+            );
+            assert_ne!(card, M3_NO_ARCANA, "non-STOP codon {codon:#04x}");
+            assert_eq!(major_arcana[card as usize].amino_acid_index, aa_index);
+        }
+
+        assert_eq!(unsafe { m3_major_arcana_from_codon(64) }, M3_NO_ARCANA);
+    }
+}
+
+#[cfg(test)]
 mod m4_session_lifecycle {
     use std::os::raw::{c_char, c_int};
 

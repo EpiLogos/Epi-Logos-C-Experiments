@@ -47,6 +47,10 @@ import {
     M4JournalEntriesContribution
 } from './widgets/journal-entries-sidebar';
 import {
+    PersonalCoordinateSidebarWidget,
+    M4PersonalCoordinateContribution
+} from './widgets/personal-coordinate-sidebar';
+import {
     DialogicalArenaWidget,
     DIALOGICAL_ARENA_VIEW_ID
 } from './widgets/dialogical-arena';
@@ -518,6 +522,7 @@ export default new ContainerModule(bind => {
     bind(TuningBarWidget).toSelf();
     bind(KairosDisplayWidget).toSelf();
     bind(JournalEntriesSidebarWidget).toSelf();
+    bind(PersonalCoordinateSidebarWidget).toSelf();
     bind(DialogicalArenaWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
@@ -563,6 +568,12 @@ export default new ContainerModule(bind => {
         .inSingletonScope();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
+            id: PersonalCoordinateSidebarWidget.ID,
+            createWidget: () => createPersonalCoordinateSidebarWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
             id: DialogicalArenaWidget.ID,
             createWidget: () => createDialogicalArenaWidget(ctx.container)
         }))
@@ -586,6 +597,11 @@ export default new ContainerModule(bind => {
     bindViewContribution(bind, M4JournalEntriesContribution);
     bind(FrontendApplicationContribution).toService(M4JournalEntriesContribution);
     bind(CommandContribution).toService(M4JournalEntriesContribution);
+
+    // Tranche 25.7 — Personal Coordinate activity-bar mode (daily-0-1 left slot).
+    bindViewContribution(bind, M4PersonalCoordinateContribution);
+    bind(FrontendApplicationContribution).toService(M4PersonalCoordinateContribution);
+    bind(CommandContribution).toService(M4PersonalCoordinateContribution);
 
     // Task 32.2 — PASU-absence detection orchestration. Registers the
     // m4.openPasuWizard command and the pre-stage-6 identity gate.
@@ -646,6 +662,12 @@ function createJournalEntriesSidebarWidget(container: interfaces.Container): Jou
     const child = container.createChild();
     child.bind(JournalEntriesSidebarWidget).toSelf();
     return child.get(JournalEntriesSidebarWidget);
+}
+
+function createPersonalCoordinateSidebarWidget(container: interfaces.Container): PersonalCoordinateSidebarWidget {
+    const child = container.createChild();
+    child.bind(PersonalCoordinateSidebarWidget).toSelf();
+    return child.get(PersonalCoordinateSidebarWidget);
 }
 
 function createDialogicalArenaWidget(container: interfaces.Container): DialogicalArenaWidget {

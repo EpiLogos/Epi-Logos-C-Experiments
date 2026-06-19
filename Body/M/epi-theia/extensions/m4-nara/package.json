@@ -42,6 +42,6 @@
     "build": "pnpm -C ../.. exec tsc -b extensions/m4-nara",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build && node --test tests/privacy-chrome.test.mjs tests/symbolic-protein-reading.test.mjs ../test/m4-nara-canvas-editor.test.mjs ../test/m4-nara-kairos-display.test.mjs ../test/m4-nara-mercurius-relay-indicator.test.mjs ../test/m4-nara-e4-personal-energy.test.mjs ../test/m4-nara-journal-entries-sidebar.test.mjs ../test/m4-nara-pasu-wizard.test.mjs ../test/m4-nara-quintessence-display.test.mjs ../test/m4-nara-personal-cymatic-field.test.mjs ../test/m4-nara-dialogical-arena.test.mjs"
+    "test": "pnpm build && node --test tests/privacy-chrome.test.mjs tests/symbolic-protein-reading.test.mjs tests/oracle-cast.test.mjs ../test/m4-nara-canvas-editor.test.mjs ../test/m4-nara-kairos-display.test.mjs ../test/m4-nara-mercurius-relay-indicator.test.mjs ../test/m4-nara-e4-personal-energy.test.mjs ../test/m4-nara-journal-entries-sidebar.test.mjs ../test/m4-nara-pasu-wizard.test.mjs ../test/m4-nara-quintessence-display.test.mjs ../test/m4-nara-personal-cymatic-field.test.mjs ../test/m4-nara-dialogical-arena.test.mjs"
   }
 }

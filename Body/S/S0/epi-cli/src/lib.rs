@@ -1,6 +1,7 @@
 pub mod agent;
 pub mod app;
 pub mod book;
+pub mod canon;
 pub mod code;
 pub mod core;
 pub mod ffi;
