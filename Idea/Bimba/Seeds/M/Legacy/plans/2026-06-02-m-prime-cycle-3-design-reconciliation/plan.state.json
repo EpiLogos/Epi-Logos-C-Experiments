@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T20:43:05.811Z",
+  "updatedAt": "2026-06-19T20:46:11.306Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -8895,14 +8895,19 @@
       "worktree": null
     },
     "43.T43.4": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T20:31:16.717Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T20:46:11.263Z",
       "claimedAt": "2026-06-19T20:31:16.717Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T20:46:11.263Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:46:11.263Z",
+          "text": "static inline bodies moved to .c files, LUTs relocated with extern prototypes, m1.h< m1.c invariant restored, make test green, gitnexus impact verified"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-43-t43-4-c-header-info-hiding",
-      "leaseExpiresAt": "2026-06-19T22:31:16.717Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T20:31:16.717Z",
       "runId": "20260619T203116Z-43-T43.4",
       "worktree": null
@@ -11792,11 +11797,12 @@
     {
       "runId": "20260619T203116Z-43-T43.4",
       "taskId": "43.T43.4",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T20:31:16.717Z",
       "owner": "codex-m-dev-43-t43-4-c-header-info-hiding",
       "leaseExpiresAt": "2026-06-19T22:31:16.717Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T20:46:11.263Z"
     },
     {
       "runId": "20260619T203135Z-23-T23.13",

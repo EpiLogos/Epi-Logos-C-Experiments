@@ -7,9 +7,217 @@
 
 #include "m1.h"
 #include "psychoid_numbers.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
+/* Header-remediated constants and former inline bodies. */
+
+/* Public lookup tables relocated from the coordinate header. */
+const uint8_t TOPOLOGICAL_ELEMENT_COUNT_LUT[12] = {
+     1,  2,  2,  3,  4,  5,   /* Explicate phase (positions 0-5) */
+     8, 10, 12,  6,  7, 11    /* Implicate phase (positions 6-11) */
+};
+
+const uint8_t SPANDA_CF_FOLD_COUNT[6] = { 4, 6, 8, 10, 12, 0 };
+
+const Quaternion RING_QUATERNION_LUT[12] = {
+    [0]  = { .w = 1.0f,    .x = 0.0f,    .y = 0.0f, .z = 0.0f },
+    [1]  = { .w = 0.8660254f,  .x = 0.5f,    .y = 0.0f, .z = 0.0f },
+    [2]  = { .w = 0.5f,    .x = 0.8660254f,  .y = 0.0f, .z = 0.0f },
+    [3]  = { .w = 0.0f,    .x = 1.0f,    .y = 0.0f, .z = 0.0f },
+    [4]  = { .w = -0.5f,   .x = 0.8660254f,  .y = 0.0f, .z = 0.0f },
+    [5]  = { .w = -0.8660254f, .x = 0.5f,    .y = 0.0f, .z = 0.0f },
+    [6]  = { .w = 0.8660254f,  .x = -0.5f,   .y = 0.0f, .z = 0.0f },
+    [7]  = { .w = 0.5f,    .x = -0.8660254f, .y = 0.0f, .z = 0.0f },
+    [8]  = { .w = 0.0f,    .x = -1.0f,   .y = 0.0f, .z = 0.0f },
+    [9]  = { .w = -0.5f,   .x = -0.8660254f, .y = 0.0f, .z = 0.0f },
+    [10] = { .w = -0.8660254f, .x = -0.5f,   .y = 0.0f, .z = 0.0f },
+    [11] = { .w = -1.0f,   .x = 0.0f,    .y = 0.0f, .z = 0.0f },
+};
+
+const QL_Trig_Entry QL_TRIG_TABLE[6] = {
+    [0] = { "sin", "sinθ",       0,          TRIG_UNITY, -1 }, /* P0 — generator pole 1       */
+    [1] = { "tan", "sinθ/cosθ",  0,          5,          +1 }, /* P1 — ratio of two generators */
+    [2] = { "sec", "1/cosθ",     TRIG_UNITY, 5,          +1 }, /* P2 — cos reciprocal          */
+    [3] = { "cot", "cosθ/sinθ",  5,          0,          +1 }, /* P3 — inverse of tan          */
+    [4] = { "csc", "1/sinθ",     TRIG_UNITY, 0,          +1 }, /* P4 — sin reciprocal          */
+    [5] = { "cos", "cosθ",       5,          TRIG_UNITY, -1 }, /* P5 — generator pole 2       */
+};
+
+const uint8_t VALID_FOLDS[VALID_FOLD_COUNT] = {
+    0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 16, 18, 24
+};
+
+const Cl42_Basis_Entry CL42_BASIS[6] = {
+    [0] = { .position = 0, .signature = -1, .trig_fn = TRIG_SIN }, /* P0 Ground      — sinθ (generator) */
+    [1] = { .position = 1, .signature = +1, .trig_fn = TRIG_TAN }, /* P1 Definition  — tanθ = sin/cos   */
+    [2] = { .position = 2, .signature = +1, .trig_fn = TRIG_SEC }, /* P2 Operation   — secθ = 1/cos     */
+    [3] = { .position = 3, .signature = +1, .trig_fn = TRIG_COT }, /* P3 Pattern     — cotθ = cos/sin   */
+    [4] = { .position = 4, .signature = +1, .trig_fn = TRIG_CSC }, /* P4 Context     — cscθ = 1/sin     */
+    [5] = { .position = 5, .signature = -1, .trig_fn = TRIG_COS }, /* P5 Integration — cosθ (generator) */
+};
+
+const uint8_t QL_INVERT[6] = { 5u, 4u, 3u, 2u, 1u, 0u };
+
+
+/* Public helper bodies relocated from the coordinate header. */
+uint8_t get_ananda_harmonic(
+        const DR_Matrix_12x12* mat,
+        uint8_t row_0_to_11,
+        uint8_t col_0_to_11)
+{
+    uint8_t flat = (uint8_t)((row_0_to_11 * 12u) + col_0_to_11);
+    uint8_t byte_val = mat->packed_cells[flat / 2u];
+    return (flat % 2u == 0u) ? (uint8_t)(byte_val & 0x0Fu) : (uint8_t)(byte_val >> 4u);
+}
+
+uint8_t get_quint_bimba(uint8_t row_0_to_11, uint8_t col_0_to_11) {
+    uint8_t flat = (uint8_t)((row_0_to_11 * 12u) + col_0_to_11);
+    uint8_t byte_val = ANANDA_QUINTESSENCE.bimba[flat / 2u];
+    return (flat % 2u == 0u) ? (uint8_t)(byte_val & 0x0Fu) : (uint8_t)(byte_val >> 4u);
+}
+
+uint8_t get_quint_sum(uint8_t row_0_to_11, uint8_t col_0_to_11) {
+    uint8_t flat = (uint8_t)((row_0_to_11 * 12u) + col_0_to_11);
+    uint8_t byte_val = ANANDA_QUINTESSENCE.sum[flat / 2u];
+    return (flat % 2u == 0u) ? (uint8_t)(byte_val & 0x0Fu) : (uint8_t)(byte_val >> 4u);
+}
+
+int8_t get_quint_diff(uint8_t row, uint8_t col) {
+    (void)row; (void)col;
+    return (int8_t)M1_QUINT_DIFF;
+}
+
+bool is_valid_fold(uint8_t n) {
+    for (int i = 0; i < VALID_FOLD_COUNT; i++)
+        if (VALID_FOLDS[i] == n) return true;
+    return false;
+}
+
+bool ql_is_ascending(QL_Tick tick) {
+    return tick < (QL_Tick)RING_HALF;
+}
+
+uint8_t ql_get_stage(QL_Tick tick) {
+    return ql_is_ascending(tick) ? tick : (uint8_t)(11u - tick);
+}
+
+float quat_norm_sq(Quaternion q) {
+    return q.w*q.w + q.x*q.x + q.y*q.y + q.z*q.z;
+}
+
+Quaternion quat_mul(Quaternion a, Quaternion b) {
+    return (Quaternion){
+        .w = a.w*b.w - a.x*b.x - a.y*b.y - a.z*b.z,
+        .x = a.w*b.x + a.x*b.w + a.y*b.z - a.z*b.y,
+        .y = a.w*b.y - a.x*b.z + a.y*b.w + a.z*b.x,
+        .z = a.w*b.z + a.x*b.y - a.y*b.x + a.z*b.w
+    };
+}
+
+Quaternion quat_conj(Quaternion q) {
+    return (Quaternion){ .w = q.w, .x = -q.x, .y = -q.y, .z = -q.z };
+}
+
+Quaternion quat_neg(Quaternion q) {
+    return (Quaternion){ .w = -q.w, .x = -q.x, .y = -q.y, .z = -q.z };
+}
+
+Quaternion quat_normalize(Quaternion q) {
+    float norm_sq = quat_norm_sq(q);
+    if (norm_sq <= 0.0f) {
+        return q;
+    }
+    float scale = 1.0f / sqrtf(norm_sq);
+    return (Quaternion){
+        .w = q.w * scale,
+        .x = q.x * scale,
+        .y = q.y * scale,
+        .z = q.z * scale
+    };
+}
+
+Quaternion quat_rotate(Quaternion q, Quaternion v) {
+    return quat_mul(quat_mul(q, v), quat_conj(q));
+}
+
+Quaternion quat_slerp(Quaternion a, Quaternion b, float t) {
+    float dot = a.w*b.w + a.x*b.x + a.y*b.y + a.z*b.z;
+    if (dot < 0.0f) {
+        b = quat_neg(b);
+        dot = -dot;
+    }
+    if (dot > 0.9995f) {
+        Quaternion lerp = {
+            .w = a.w + t * (b.w - a.w),
+            .x = a.x + t * (b.x - a.x),
+            .y = a.y + t * (b.y - a.y),
+            .z = a.z + t * (b.z - a.z)
+        };
+        return quat_normalize(lerp);
+    }
+    if (dot < -1.0f) dot = -1.0f;
+    if (dot > 1.0f) dot = 1.0f;
+    float theta = acosf(dot);
+    float sin_theta = sinf(theta);
+    if (fabsf(sin_theta) < 0.0001f) {
+        return quat_normalize(a);
+    }
+    float wa = sinf((1.0f - t) * theta) / sin_theta;
+    float wb = sinf(t * theta) / sin_theta;
+    return (Quaternion){
+        .w = wa*a.w + wb*b.w,
+        .x = wa*a.x + wb*b.x,
+        .y = wa*a.y + wb*b.y,
+        .z = wa*a.z + wb*b.z
+    };
+}
+
+Quaternion quat_from_ring_pos(QL_Tick tick) {
+    return RING_QUATERNION_LUT[tick % RING_SIZE];
+}
+
+uint8_t get_topological_element_count(uint8_t ring_pos) {
+    return TOPOLOGICAL_ELEMENT_COUNT_LUT[RING_WRAP(ring_pos)];
+}
+
+uint16_t hopf_project(uint16_t exact_degree_720) {
+    return exact_degree_720 % FULL_CYCLE_DEG;
+}
+
+uint8_t hopf_fiber(uint16_t exact_degree_720) {
+    return (exact_degree_720 >= FULL_CYCLE_DEG) ? 1u : 0u;
+}
+
+uint8_t hopf_tick12(uint16_t exact_degree_720) {
+    return (uint8_t)(hopf_project(exact_degree_720) / DEGREE_PER_TICK);
+}
+
+bool quat_is_unit(Quaternion q) {
+    float norm_sq = quat_norm_sq(q);
+    return fabsf(1.0f - norm_sq) < 1e-4f;
+}
+
+uint8_t get_ananda_diff_a(uint8_t row, uint8_t col) {
+    (void)row; (void)col;
+    return ANANDA_DIFF_A_CONSTANT;
+}
+
+uint8_t get_ananda_diff_b(uint8_t row, uint8_t col) {
+    (void)row; (void)col;
+    return ANANDA_DIFF_B_CONSTANT;
+}
+
+bool verify_m1_m0_crosslink(void) {
+    for (int i = 0; i < 12; i++) {
+        if (M1_M0_CROSSLINK[i] == NULL) return false;
+    }
+    return true;
+}
+
 
 /* ===================================================================
  * ANANDA_BIMBA — #X+0 Original source matrix

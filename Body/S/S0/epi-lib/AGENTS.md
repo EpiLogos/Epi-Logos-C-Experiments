@@ -19,6 +19,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] -> [[S0-SPEC]] / [[S0
 ## Work Guidance
 - Run `gitnexus_impact({target, direction:"upstream"})` before editing any symbol; warn on HIGH/CRITICAL.
 - C/FFI invariant: `GET_PTR(ptr)` before every dereference; the Holographic_Coordinate struct stays 128 bytes (`_Static_assert`).
+- C Coordinate Headers expose contracts only: keep algorithm bodies and LUT storage in `src/*.c`; reserve header inlines for trivial accessors or `_Static_assert`-required constant forms.
 - Reference all coordinates/specs as `[[wikilink]]`; vault writes use coordinate-prefixed `c_n_*` frontmatter.
 
 ## Verification
