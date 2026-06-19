@@ -58,32 +58,30 @@ export const FORBIDDEN_AUTHORITY = [
 ] as const;
 
 /**
- * Per-capacity workflow filter vocabulary — mirrors `CapacityId` /
- * `capacity_workflow_registry()` in `epii-autoresearch-core`
- * (`capacity_workflows.rs`, serde `snake_case`).
+ * Per-capacity workflow filter vocabulary — mirrors the six 26.2 M5
+ * operational capacities used by the autoresearch UI contract.
  */
 export const CAPACITY_WORKFLOWS = [
-    { id: 'anuttara', label: 'M0 · Anuttara' },
-    { id: 'paramasiva', label: 'M1 · Paramasiva' },
-    { id: 'parashakti', label: 'M2 · Parashakti' },
-    { id: 'mahamaya', label: 'M3 · Mahamaya' },
-    { id: 'nara', label: 'M4 · Nara' },
-    { id: 'epii_on_epii', label: "M5' · Epii-on-Epii" }
+    { id: 'anuttara-construction', label: 'M0 · Anuttara construction' },
+    { id: 'paramasiva-cpt-rag', label: 'M1 · Paramasiva CPT/RAG' },
+    { id: 'parashakti-graph-relational-ml', label: 'M2 · Parashakti graph ML' },
+    { id: 'mahamaya-process-reward-rl', label: 'M3 · Mahamaya process RL' },
+    { id: 'nara-anima-dialogic', label: 'M4 · Nara Anima dialogic' },
+    { id: 'epii-self-referential', label: "M5' · Epii self-referential" }
 ] as const;
 
 export type CapacityId = (typeof CAPACITY_WORKFLOWS)[number]['id'];
 
 /**
  * The Möbius seam stages a recompose pass walks (mirrors the `recompose_pass`
- * substrate in `recompose.rs`: surface → route → review → recompose-pass →
- * möbius seam closure). The active stage is highlighted in the ribbon.
+ * substrate in `recompose.rs`: Surface → Route → Orchestrate → Integrate).
+ * The active stage is highlighted in the ribbon.
  */
 export const MOBIUS_STAGES = [
-    'surface',
-    'route',
-    'review',
-    'recompose-pass',
-    'mobius-seam'
+    'Surface',
+    'Route',
+    'Orchestrate',
+    'Integrate'
 ] as const;
 
 export type MobiusStage = (typeof MOBIUS_STAGES)[number];
@@ -98,14 +96,16 @@ export interface S5ImproveStatus {
     readonly recomposePass: number;
     readonly activeStage: MobiusStage;
     readonly activeVectorCount: number;
+    readonly dryRun: boolean;
     readonly mock: boolean;
 }
 
 const DEFAULT_IMPROVE_STATUS: S5ImproveStatus = {
     status: 's5′.improve.status (mock): awaiting human gate',
     recomposePass: 1,
-    activeStage: 'recompose-pass',
+    activeStage: 'Surface',
     activeVectorCount: 0,
+    dryRun: true,
     mock: true
 };
 
@@ -123,6 +123,8 @@ export interface AutoresearchCandidate {
     readonly recomposePass?: number;
     /** Non-bypassable human-review gate flag (deliverable e). */
     readonly requiresHuman?: boolean;
+    /** Substrate-shaped non-bypassable human-review gate flag. */
+    readonly requires_human?: boolean;
 }
 
 /**
@@ -135,6 +137,7 @@ export interface MobiusPassRibbonProps {
     readonly status: string;
     readonly activeStage: string;
     readonly activeVectorCount?: number;
+    readonly dryRun?: boolean;
     readonly stages?: readonly string[];
 }
 
@@ -143,6 +146,7 @@ export const MobiusPassRibbon: React.FC<MobiusPassRibbonProps> = ({
     status,
     activeStage,
     activeVectorCount,
+    dryRun = true,
     stages = MOBIUS_STAGES
 }) => (
     <div
@@ -165,6 +169,15 @@ export const MobiusPassRibbon: React.FC<MobiusPassRibbonProps> = ({
                     <> &middot; {activeVectorCount} active vector(s)</>
                 )}
             </span>
+            {dryRun && (
+                <span
+                    className="ide-shell-dry-run-badge"
+                    data-test="autoresearch-mobius-dry-run-badge"
+                    title="This pass-state is disclosure only; autoresearch remains dry-run."
+                >
+                    dry-run
+                </span>
+            )}
         </div>
         <ol className="ide-shell-mobius-pass-stages">
             {stages.map(stage => (
@@ -175,7 +188,7 @@ export const MobiusPassRibbon: React.FC<MobiusPassRibbonProps> = ({
                             ? 'ide-shell-mobius-stage ide-shell-mobius-stage-active'
                             : 'ide-shell-mobius-stage'
                     }
-                    data-test={`autoresearch-mobius-stage-${stage}`}
+                    data-test={`autoresearch-mobius-stage-${stage.toLowerCase()}`}
                     aria-current={stage === activeStage ? 'step' : undefined}
                 >
                     {stage}
@@ -290,18 +303,42 @@ export class AutoresearchPaneWidget extends ReactWidget {
             activeStage: string;
             active_count: number;
             activeVectorCount: number;
+            dry_run: boolean;
+            dryRun: boolean;
         }>;
-        const stageValue = (raw.active_stage ?? raw.activeStage) as MobiusStage | undefined;
+        const stageValue = this.coerceMobiusStage(raw.active_stage ?? raw.activeStage);
         const activeStage = stageValue && (MOBIUS_STAGES as readonly string[]).includes(stageValue)
-            ? stageValue
+            ? (stageValue as MobiusStage)
             : DEFAULT_IMPROVE_STATUS.activeStage;
         return {
             status: raw.status ?? DEFAULT_IMPROVE_STATUS.status,
             recomposePass: raw.recompose_pass ?? raw.recomposePass ?? DEFAULT_IMPROVE_STATUS.recomposePass,
             activeStage,
             activeVectorCount: raw.active_count ?? raw.activeVectorCount ?? 0,
+            dryRun: raw.dry_run ?? raw.dryRun ?? DEFAULT_IMPROVE_STATUS.dryRun,
             mock: false
         };
+    }
+
+    protected coerceMobiusStage(stage: string | undefined): MobiusStage | undefined {
+        switch (stage) {
+            case 'Surface':
+            case 'surface':
+                return 'Surface';
+            case 'Route':
+            case 'route':
+                return 'Route';
+            case 'Orchestrate':
+            case 'orchestrate':
+            case 'orchestration':
+                return 'Orchestrate';
+            case 'Integrate':
+            case 'integrate':
+            case 'integration':
+                return 'Integrate';
+            default:
+                return undefined;
+        }
     }
 
     setCandidates(candidates: readonly AutoresearchCandidate[]): void {
@@ -435,6 +472,7 @@ export class AutoresearchPaneWidget extends ReactWidget {
                     status={this.improveStatus.status}
                     activeStage={this.improveStatus.activeStage}
                     activeVectorCount={this.improveStatus.activeVectorCount}
+                    dryRun={this.improveStatus.dryRun}
                 />
 
                 {/* (c) Per-capacity + recompose-pass filters. */}
@@ -498,7 +536,7 @@ export class AutoresearchPaneWidget extends ReactWidget {
                             >
                                 <strong>{c.title}</strong>
                                 {/* (e) requires_human gold badge → Review pane. */}
-                                {c.requiresHuman && (
+                                {(c.requiresHuman || c.requires_human) && (
                                     <button
                                         type="button"
                                         className="ide-shell-gold-badge"
