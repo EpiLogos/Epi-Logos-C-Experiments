@@ -147,6 +147,11 @@ export class AgenticControlRoomWidget extends ReactWidget {
                     <span data-test="agentic-control-room-shell-version">T4 shell</span>
                 </header>
                 <section
+
+            {/* 28.18 status-bar consumption contract: coordinate/sessionKey/dayNow/profileGeneration
+                rendered in VAK fields below MUST consume from SharedBridgeAdapter projection
+                (bridge.cachedProfile?.generation, bridge.cachedCoordinateContext?.coordinate),
+                NOT from own widget state. 15.10 owns status-bar build; 28.18 adds consumption-only contract. */}
                     className="ide-shell-widget-detail"
                     data-test="agentic-control-room-vak-fields"
                 >

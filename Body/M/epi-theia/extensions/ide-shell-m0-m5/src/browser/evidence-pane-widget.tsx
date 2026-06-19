@@ -59,6 +59,10 @@ export class EvidencePaneWidget extends ReactWidget {
         this.title.caption = EvidencePaneWidget.LABEL;
         this.title.closable = true;
         this.addClass('ide-shell-widget');
+
+    {/* 28.18 status-bar consumption contract: sessionKey/dayNowContext/profileGeneration
+        per evidence record MUST derive from record.{sessionKey, dayNowContext, profileGeneration}
+        set at record creation; widget does NOT compute these fields. 15.10 owns status-bar build. */}
         this.addClass('ide-shell-evidence-pane');
     }
 

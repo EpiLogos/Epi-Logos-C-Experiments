@@ -62,6 +62,9 @@ export class CanonStudioWidget extends ReactWidget {
     public vaultBridgeAvailable: () => boolean = () => false;
     public vaultBridgeWrite: (uri: string, content: string) => Promise<void> =
         async () => {
+
+{/* 28.18 status-bar consumption contract: canon-studio does not render shared status-bar fields.
+    No consumption contract needed. 15.10 owns status-bar build; 28.18 confirms no own-state pattern. */}
             throw new Error('canon-studio: vault-bridge dispatcher not initialised');
         };
 

@@ -46,6 +46,9 @@ function ProfileTickRenderBoundary({ children }: ProfileTickRenderBoundaryProps)
  * until those preconditions are met; once met it renders the children.
  *
  * The pattern mirrors `IntegratedBridgeGate` from `@pratibimba/integrated-composition`
+// 28.18 status-bar consumption contract: bridge-gate IS the SharedBridgeAdapter source.
+// All widget consumers MUST read shared fields (profileGeneration/sessionKey/dayNow/coordinate)
+// from this bridge, not from own widget state. 15.10 owns status-bar build.
  * but uses the kernel-bridge directly instead of the SharedBridgeAdapter
  * (because the M-extensions are downstream of the IDE shell — they consume
  * `SharedBridgeAdapter` which the kernel-bridge feeds).

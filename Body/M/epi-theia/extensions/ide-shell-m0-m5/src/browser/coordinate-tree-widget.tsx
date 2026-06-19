@@ -46,6 +46,10 @@ export class CoordinateTreeWidget extends ReactWidget {
         this.title.label = CoordinateTreeWidget.LABEL;
         this.title.caption = CoordinateTreeWidget.LABEL;
         this.title.closable = true;
+
+    {/* 28.18 status-bar consumption contract: sessionKey/profileGeneration
+        rendered in coordinate tree dispatch MUST consume from bridge.cachedProfile?.generation,
+        NOT from own widget state. 15.10 owns status-bar build; 28.18 adds consumption-only contract. */}
         this.addClass('ide-shell-widget');
         this.addClass('ide-shell-coordinate-tree');
     }

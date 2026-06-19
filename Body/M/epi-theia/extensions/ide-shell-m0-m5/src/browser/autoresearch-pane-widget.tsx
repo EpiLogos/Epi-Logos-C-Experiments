@@ -1,3 +1,8 @@
+
+            {/* 28.18 status-bar consumption contract: sessionKey/profileGeneration
+                rendered in dispatch records MUST consume from bridge.cachedProfile?.generation,
+                NOT from own widget state. 15.10 owns status-bar build; 28.18 adds consumption-only contract. */}
+
 import * as React from 'react';
 import {
     injectable,

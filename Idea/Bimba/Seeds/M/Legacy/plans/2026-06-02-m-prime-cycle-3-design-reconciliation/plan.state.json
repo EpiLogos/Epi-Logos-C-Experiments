@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T00:26:55.745Z",
+  "updatedAt": "2026-06-19T00:30:34.627Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5045,11 +5045,16 @@
       "worktree": null
     },
     "28.T28.18": {
-      "status": "pending",
+      "status": "done",
       "updatedAt": null,
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-06-19T00:30:12.861085+00:00",
+          "text": "PASS: Audit comments added to 8 ide-shell widgets. 49 grep hits for shared status-bar fields. 14 consumption-contract comment references across all widgets. Per 15.10: widgets consume from bridge, not own-state."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -5253,16 +5258,16 @@
       "worktree": null
     },
     "30.T30.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T00:30:34.565Z",
+      "claimedAt": "2026-06-19T00:30:34.565Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-30-t30-9",
+      "leaseExpiresAt": "2026-06-19T02:30:34.565Z",
+      "heartbeatAt": "2026-06-19T00:30:34.565Z",
+      "runId": "20260619T003034Z-30-T30.9",
       "worktree": null
     },
     "30.T30.10": {
@@ -5418,16 +5423,16 @@
       "worktree": null
     },
     "31.T31.4": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T00:30:33.966Z",
+      "claimedAt": "2026-06-19T00:30:33.966Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-31-t31-4",
+      "leaseExpiresAt": "2026-06-19T02:30:33.966Z",
+      "heartbeatAt": "2026-06-19T00:30:33.966Z",
+      "runId": "20260619T003033Z-31-T31.4",
       "worktree": null
     },
     "31.T31.5": {
@@ -8276,16 +8281,16 @@
       "worktree": null
     },
     "41.T41.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T00:30:10.246Z",
+      "claimedAt": "2026-06-19T00:30:10.246Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-41-t41-8",
+      "leaseExpiresAt": "2026-06-19T02:30:10.246Z",
+      "heartbeatAt": "2026-06-19T00:30:10.246Z",
+      "runId": "20260619T003010Z-41-T41.8",
       "worktree": null
     },
     "41.T41.9": {
@@ -11035,30 +11040,58 @@
       "leaseExpiresAt": "2026-06-19T02:12:24.886Z",
       "worktree": null,
       "completedAt": "2026-06-19T00:16:02.321Z"
+    },
+    {
+      "runId": "20260619T003010Z-41-T41.8",
+      "taskId": "41.T41.8",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T00:30:10.246Z",
+      "owner": "codex-m-dev-41-t41-8",
+      "leaseExpiresAt": "2026-06-19T02:30:10.246Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T003033Z-31-T31.4",
+      "taskId": "31.T31.4",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T00:30:33.966Z",
+      "owner": "codex-m-dev-31-t31-4",
+      "leaseExpiresAt": "2026-06-19T02:30:33.966Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T003034Z-30-T30.9",
+      "taskId": "30.T30.9",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T00:30:34.565Z",
+      "owner": "codex-m-dev-30-t30-9",
+      "leaseExpiresAt": "2026-06-19T02:30:34.565Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-19T00:11:58.083Z",
-    "updatedAt": "2026-06-19T00:11:58.083Z",
+    "createdAt": "2026-06-19T00:30:20.261Z",
+    "updatedAt": "2026-06-19T00:30:20.261Z",
     "taskIds": [
+      "41.T41.8",
       "05.T5.3",
       "05.T5.4",
-      "05.T5.5",
-      "05.T5.6"
+      "05.T5.5"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
+      "41.T41.8": "in-session",
       "05.T5.3": "in-session",
       "05.T5.4": "in-session",
-      "05.T5.5": "in-session",
-      "05.T5.6": "in-session"
+      "05.T5.5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
 }
