@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T20:19:12.304Z",
+  "updatedAt": "2026-06-19T20:19:54.435Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6887,14 +6887,19 @@
       "worktree": null
     },
     "25.T25.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T20:11:40.252Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T20:19:54.386Z",
       "claimedAt": "2026-06-19T20:11:40.252Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T20:19:54.386Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:19:54.386Z",
+          "text": "Oracle history viewer: reverse-chronological, modality icons, decay-window state, hygiene badge, click-through to 25.8 read-only, pnpm build clean"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-25-t25-9-oracle-history",
-      "leaseExpiresAt": "2026-06-19T22:11:40.252Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T20:11:40.252Z",
       "runId": "20260619T201140Z-25-T25.9",
       "worktree": null
@@ -11689,11 +11694,12 @@
     {
       "runId": "20260619T201140Z-25-T25.9",
       "taskId": "25.T25.9",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T20:11:40.252Z",
       "owner": "codex-m-dev-25-t25-9-oracle-history",
       "leaseExpiresAt": "2026-06-19T22:11:40.252Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T20:19:54.386Z"
     }
   ],
   "activeRoute": {
