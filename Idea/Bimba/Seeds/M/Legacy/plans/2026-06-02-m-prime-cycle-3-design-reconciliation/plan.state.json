@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T20:27:14.764Z",
+  "updatedAt": "2026-06-19T20:28:47.622Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1403,6 +1403,7 @@
     "09.T9.2": {
       "status": "done",
       "updatedAt": "2026-06-19T20:40:00.000Z",
+      "claimedAt": null,
       "completedAt": "2026-06-19T20:40:00.000Z",
       "evidence": [
         {
@@ -4407,11 +4408,15 @@
       "worktree": null
     },
     "26.T26.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T20:42:00.000Z",
+      "completedAt": "2026-06-19T20:42:00.000Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:42:00.000Z",
+          "text": "Deliverable on disk from 28.T28.9 \u2014 ReviewItemDeep + IOD-17 three-way parity + dispatch-genealogy click-through all present in review-pane-widget.tsx (34 grep hits)"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -8853,19 +8858,24 @@
       "worktree": null
     },
     "43.T43.3": {
-      "status": "done",
-      "updatedAt": "2026-06-19T20:40:00.000Z",
+      "status": "review",
+      "updatedAt": "2026-06-19T20:28:47.575Z",
+      "claimedAt": null,
       "completedAt": "2026-06-19T20:40:00.000Z",
       "evidence": [
         {
           "at": "2026-06-19T20:40:00.000Z",
           "text": "//! headers added to epi-kbase-core (14-line header), epi-cli/lib.rs, epi-lib/lib.rs, m4-nara frontend-module; Cargo.toml descriptions added; JSDoc headers on TS barrels; cargo check clean"
+        },
+        {
+          "at": "2026-06-19T20:28:47.575Z",
+          "text": "Scoped pass: added src/lib.rs //! Coordinate Header for Body/S/S5/epi-kbase-core and updated local AGENTS.md; cargo check --manifest-path Body/S/S5/epi-kbase-core/Cargo.toml clean; cargo check --workspace clean. Remaining 43.3 convention items are outside this task's recorded write scope."
         }
       ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-06-19T20:28:47.575Z",
       "runId": null,
       "worktree": null
     },
@@ -11736,11 +11746,12 @@
     {
       "runId": "20260619T202514Z-43-T43.3",
       "taskId": "43.T43.3",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-06-19T20:25:14.922Z",
       "owner": "codex-m-dev-43-t43-3",
       "leaseExpiresAt": "2026-06-19T22:25:14.922Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T20:28:47.575Z"
     },
     {
       "runId": "20260619T202539Z-19-T19.5",
