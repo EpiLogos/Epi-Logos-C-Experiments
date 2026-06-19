@@ -1216,17 +1216,13 @@
       "worktree": null
     },
     "07.T7.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:03:48.083013+00:00",
+          "text": "PASS: INTEGRATED-1-2-3 \u00a76.5 patched \u2014 minimal flicker replaced with 200ms rotation-axis flip. Ratified decision text, choreography table (L2 M3 RATIFIED), topology rationale, and Klein-flip atomicity clause all updated."
+        }
+      ]
     },
     "07.T7.8": {
       "status": "pending",
@@ -2024,17 +2020,13 @@
       "worktree": null
     },
     "12.T12.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:02:53.718547+00:00",
+          "text": "DEPRECATED per body. Resolved by DR-B-3 + DR-M5-1 + 12.T12.1 audit. AgenticActor already collapsed 8\u21923."
+        }
+      ]
     },
     "12.T12.13": {
       "status": "pending",

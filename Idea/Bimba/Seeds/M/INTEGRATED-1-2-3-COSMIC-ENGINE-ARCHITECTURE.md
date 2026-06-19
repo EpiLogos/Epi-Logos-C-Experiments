@@ -537,11 +537,11 @@ The Klein flip fires at `tick12 == 5` (bimba → pratibimba) and at `tick12 == 1
 |---|---|---|
 | **L0 (M1)** | K² folds through itself for ~200ms; helix sheet flips 0→1; Ananda matrix re-reads with `+1` axiom offset; Mahāmāyā streamline retreats; Paraśakti streamline activates | K² completes 720°; helix returns 0; full-surface bloom in lens-anchor colour; diamond emits identity pulse |
 | **L1 (M2)** | Cymatic valence inverts — peaks become troughs, colour-shell hue cycles to its complement; cymatic shimmer momentarily silver | Cymatic valence returns; colour-shell saturates back; the Möbius-return bloom from L0 colours the cymatic momentarily |
-| **L2 (M3) — DECISION** | The 64-codon ring **does not re-orient** spatially (the codons stay at their fixed angular positions); the active codon illumination **stays on its current cell**; the T/U phase indicator at the active codon **briefly flickers** to signal the flip | Same as 5→6 for the ring; the active codon illumination may **arc-sweep one extra cell** if the codon advances on this tick |
+| **L2 (M3) — RATIFIED** | The 64-codon ring executes a **200ms rotation-axis flip** concurrent with the M1 K² fold and M2 cymatic valence invert: the ring's rendering axis reverses direction (clockwise ↔ counter-clockwise) over the 200ms window; the active codon illumination stays on its current cell; the T/U phase indicator at the active codon pulses during the flip transition | The rotation-axis flip reverses back over 200ms; the active codon illumination may **arc-sweep one extra cell** if the codon advances on this tick |
 
-**Recommended decision (DR-IG-3 candidate):** M3 codon ring is **subscribed to klein_flip** but reacts **minimally** — it does not rotate, swap, or re-shuffle. The reasoning: the 64-codon LUT is **not Klein-symmetric** the way the 12-position ring is. A Klein flip is an M1-M2 event (the helix-stripe inversion). M3's codon-ring is a downstream projection of the same lens-mode; the flip's effect on M3 is mediated through `lens_mode.lens` advancing — which it does naturally at every tick. The minimal flicker affordance is the **acknowledgement** that the codon's substrate has flipped; nothing more.
+**Ratified decision (DR-IG-3 VALIDATED):** M3 codon ring is **subscribed to klein_flip** and executes a **200ms rotation-axis flip** (clockwise ↔ counter-clockwise) concurrent with the M1 K² fold and M2 cymatic valence invert. The reasoning: the 64-codon LUT is not Klein-symmetric, so full codon swap/re-shuffle is inappropriate — but a rotation-axis flip is a direct geometric response to the Klein operation on K² (the torus surface the codon annulus rides on). The 200ms animation window matches the M1 fold duration for perceptual synchrony. No rotation, swap, or re-shuffle of codon positions — only the rendering axis flips.
 
-This decision differs from the M2 case (M2 cymatic surface fully inverts valence) because M2 lives **directly on K²'s skin** while M3 lives **as an annular adornment around K²**. Surface texture and annular adornment have different topological relationships to the Klein operation.
+The rotation-axis flip is geometrically direct (the codon annulus rides on K²'s skin and inherits the torus's orientation), but codon-level is downstream — the flip affects rendering orientation, not codon identity. This differs from M2's full cymatic valence inversion because M2 is the surface texture of K² while M3 is an annular projection around it.
 
 ### 6.6 Layer-cadence summary
 
@@ -866,7 +866,7 @@ The integrated 1-2-3 cosmic engine composition is acceptance-ready when:
 ### 10.6 Tick choreography deterministic
 
 11. Profile-tick replay: a 12-tick capture from a deterministic profile stream produces identical visual state across two runs (verified via visual-regression hash).
-12. Klein-flip atomicity: at tick 5→6, M1 fold animation + M2 cymatic valence inversion + M3 minimal flicker all fire within one render frame.
+12. Klein-flip atomicity: at tick 5→6, M1 K² fold animation + M2 cymatic valence inversion + M3 200ms rotation-axis flip all fire within one render frame.
 13. Möbius-return: at tick 11→0, K² helix sheet returns to 0, full-surface bloom fires, diamond emits identity pulse, codon ring continues normally.
 
 ### 10.7 Layer degradation
