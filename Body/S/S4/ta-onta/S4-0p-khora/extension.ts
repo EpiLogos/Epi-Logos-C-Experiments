@@ -18,6 +18,13 @@ import {
   recordPendingSophia,
 } from "./modules/sophia-fire.ts";
 import { stampNowFibonacciGroundFrontmatter } from "./modules/now-fibonacci-ground.ts";
+import {
+  bindHarnessToSessionWorkspace,
+  parseSessionWorkspace,
+  readSessionWorkspaceForBootstrap,
+  writeSessionWorkspaceAtomically,
+  type GatewaySessionProjection,
+} from "./modules/session-workspace.ts";
 
 // Session state singleton (persists within a PI process)
 let _sessionId: string | null = null;
@@ -177,6 +184,82 @@ function recordFlowWatcherEvent(api: ExtensionAPI, event: TrancheCompleteEvent) 
   }
 }
 
+function gateStateRoot(repoRoot: string): string {
+  return process.env.EPI_GATE_STATE_ROOT
+    || process.env.EPI_GATE_ROOT
+    || join(process.env.HOME || repoRoot, ".epi", "gate");
+}
+
+function currentGatewaySessionKey(): string | null {
+  return process.env.EPI_GATE_SESSION_KEY
+    || process.env.EPI_SESSION_KEY
+    || _sessionId
+    || process.env.EPI_SESSION_ID
+    || null;
+}
+
+function currentTmuxLease(sessionId: string): Record<string, unknown> {
+  return {
+    leaseId: process.env.EPI_TMUX_LEASE_ID || `khora-${sessionId}`,
+    leaseOwner: process.env.EPI_AGENT_ID || process.env.EPI_AGENT_NAME || "pi",
+    leasePurpose: "khora-session-workspace",
+    sessionName: process.env.EPI_TMUX_SESSION || process.env.TMUX_SESSION,
+    paneId: process.env.EPI_TMUX_PANE || process.env.TMUX_PANE,
+    live: Boolean(process.env.TMUX || process.env.EPI_TMUX_PANE || process.env.TMUX_PANE),
+  };
+}
+
+function applyBootstrapHarnessBinding(sessionKey: string, repoRoot: string): void {
+  try {
+    const binding = readSessionWorkspaceForBootstrap({
+      gateStateRoot: gateStateRoot(repoRoot),
+      sessionKey,
+    });
+    if (!binding) return;
+    process.env.EPI_HARNESS_BINDING = JSON.stringify(binding.workspace.harness);
+    process.env.EPI_HARNESS_ID = binding.workspace.harness.harness_id;
+    process.env.EPI_HARNESS_MODEL_SLOT = binding.workspace.harness.model_slot;
+    process.env.EPI_HARNESS_LEASE_RESUMED = binding.leaseResumed ? "1" : "0";
+  } catch (e) {
+    console.warn(`[khora] session-workspace bootstrap read skipped: ${e}`);
+  }
+}
+
+function bindCurrentPiHarness(repoRoot: string): void {
+  const sessionId = getSessionId();
+  if (!sessionId) return;
+  try {
+    const sessionKey = currentGatewaySessionKey() || sessionId;
+    const lineage = process.env.EPI_SUBAGENT_LINEAGE
+      ? JSON.parse(process.env.EPI_SUBAGENT_LINEAGE)
+      : [];
+    const session: GatewaySessionProjection = {
+      canonicalKey: sessionKey,
+      sessionId,
+      dayId: getDayId() ?? undefined,
+      vaultNowPath: getNowPath() ?? undefined,
+      runtimeCwd: repoRoot,
+      providerOverride: process.env.EPI_PROVIDER_OVERRIDE,
+      modelOverride: process.env.EPI_MODEL_OVERRIDE || process.env.PI_MODEL,
+      parentSessionKey: process.env.EPI_PARENT_SESSION_KEY,
+      activeAgentId: process.env.EPI_AGENT_ID || process.env.EPI_AGENT_NAME || "anima",
+      subagentLineage: Array.isArray(lineage) ? lineage.map(String) : [],
+      terminalBinding: { lease: currentTmuxLease(sessionId) },
+    };
+    bindHarnessToSessionWorkspace({
+      gateStateRoot: gateStateRoot(repoRoot),
+      session,
+      harnessId: process.env.EPI_HARNESS_ID || "pi",
+      backing: "native-cli",
+      permissionProfile: process.env.EPI_PERMISSION_PROFILE || "khora-write-authority",
+      cfIdentity: process.env.EPI_CF_IDENTITY || "anima",
+      authority: "khora_write",
+    });
+  } catch (e) {
+    console.warn(`[khora] session-workspace harness bind skipped: ${e}`);
+  }
+}
+
 export async function khoraExtension(api: ExtensionAPI) {
   // registerCrossAgent(api);
   registerSystemSelect(api);
@@ -239,6 +322,14 @@ export async function khoraExtension(api: ExtensionAPI) {
         if (params.create_dirs !== false) {
           const dir = params.path.substring(0, params.path.lastIndexOf("/"));
           if (dir) mkdirSync(dir, { recursive: true });
+        }
+        if (basename(params.path) === "session-workspace.json") {
+          const workspace = parseSessionWorkspace(params.content);
+          if (workspace.harness) {
+            writeSessionWorkspaceAtomically(params.path, workspace, "khora_write");
+            await enqueue_sync_event({ path: params.path, coordinate: params.coordinate, action: "write" });
+            return { content: [{ type: "text", text: `wrote ${params.path}` }] };
+          }
         }
         writeFileSync(params.path, params.content, "utf8");
         // Enqueue graph sync event
@@ -382,6 +473,12 @@ export async function khoraExtension(api: ExtensionAPI) {
 
   api.on("session_start", async () => {
     const repoRoot = process.env.EPI_REPO_ROOT || process.cwd();
+    const bootstrapSessionKey = currentGatewaySessionKey();
+    if (bootstrapSessionKey) {
+      // Track 39 AP-2 + Track 42.4: read durable harness binding before
+      // CONTINUATION.md recovery or session re-bootstrap work can run.
+      applyBootstrapHarnessBinding(bootstrapSessionKey, repoRoot);
+    }
 
     // 1. EPI_VAULT_NAME: autodetect from .obsidian/ in repo root (skip if already set by base.env)
     if (!process.env.EPI_VAULT_NAME) {
@@ -491,6 +588,12 @@ export async function khoraExtension(api: ExtensionAPI) {
         //    transcription chain. The protected protein handle is retained
         //    locally; the body never crosses the profile bus under defaults.
         openM4SessionProtein(_sessionId);
+
+        // 9. Track 42.4: persist the canonical parent Pi harness binding.
+        //    Sub-session launchers pass EPI_HARNESS_ID / EPI_PARENT_SESSION_KEY /
+        //    EPI_SUBAGENT_LINEAGE so the same binding path records their lease
+        //    lineage without introducing a separate session store.
+        bindCurrentPiHarness(repoRoot);
       }
     } else {
       console.warn(`[khora] session init skipped: ${initResult.stderr?.trim() || "no vault config"}`);

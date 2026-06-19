@@ -34,6 +34,7 @@ export * from "./extension/dispatch.ts";
 export * from "./extension/tools.ts";
 export * from "./extension/subscriptions.ts";
 export * from "./lib/arena-orchestrator.ts";
+export * from "./modules/reading-frame-evaluator.ts";
 
 export default async function animaExtensionEntry(api: ExtensionAPI) {
   await animaExtension(api);

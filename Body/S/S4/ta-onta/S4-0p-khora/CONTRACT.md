@@ -19,7 +19,7 @@ Khora is the **bootstrap spine** of every agent session. It owns session identit
 | Hook | Purpose |
 |------|---------|
 | `before_agent_start` | Run bootstrap sequence; inject session env |
-| `session_start` | Generate session ID; set EPI_SESSION_ID, EPI_DAY_ID, EPI_NOW_PATH; open the protected [[M4]] Nara session protein |
+| `session_start` | Read `session-workspace.json` harness binding before continuation recovery, generate session ID; set EPI_SESSION_ID, EPI_DAY_ID, EPI_NOW_PATH; bind the current harness lease; open the protected [[M4]] Nara session protein |
 | `before_compaction` | Write CONTINUATION.md pre-compaction state dump |
 | `session_end` | Finalise session; trigger sync queue flush signal |
 | `session_shutdown` | Close the protected [[M4]] Nara session protein before Sophia disclosure consumption |
@@ -32,7 +32,7 @@ Khora is the **bootstrap spine** of every agent session. It owns session identit
 |------|---------|
 | `khora_session_init` | Generate session ID, run bootstrap sequence, set env vars |
 | `khora_session_status` | Return current session identity and bootstrap state |
-| `khora_write` | **The canonical write primitive** — all vault filesystem writes route here |
+| `khora_write` | **The canonical write primitive** — all vault filesystem writes route here; harness-bearing `session-workspace.json` writes are atomic tempfile + rename writes |
 | `khora_sync_queue_push` | Enqueue graph write to `.khora-sync-queue.jsonl` |
 | `khora_sync_queue_flush` | Flush sync queue to Neo4j (delegated to Hen/S2' for execution) |
 | `khora_continuation_write` | Write CONTINUATION.md pre-compaction state |
@@ -78,6 +78,7 @@ epi agent session continuation          — Write CONTINUATION.md pre-compaction
 ## Bootstrap Sequence
 
 Reads in strict order — do NOT skip, do NOT reorder:
+0. `{gate_state_root}/sessions/{session_key}/session-workspace.json` — if exists, recover durable harness binding and live lease state before continuation recovery
 1. `CONTINUATION.md` — if exists, post-compaction recovery (archived after read)
 2. `ANIMA.md` — behavioural rules
 3. `PASU.md` — user identity ground (Pratibimba Self, CP 4.0; seeds kairos + PASU profile)
@@ -112,6 +113,8 @@ Reads in strict order — do NOT skip, do NOT reorder:
 > No extension writes to the filesystem directly. All vault writes route through `khora_write`. This ensures the sync queue is always populated and graph state stays consistent.
 
 The write authority does NOT mean Khora defines what to write — it means Khora is the execution primitive. Hen defines content structure and folder topology; Khora executes the write.
+
+Harness bindings are part of the same authority surface. A per-session `session-workspace.json` harness block (`harness_id`, `model_slot`, `backing`, `tmux_lease` or `acp_endpoint`, `permission_profile`, `cf_identity`, `parent_session_key`) is written only under `khora_write` authority, with tempfile + rename atomicity. Parent [[Anima]]/[[Epii]] sessions bind `harness_id = "pi"` canonically; sub-sessions bind their own harness and carry `parent_session_key` plus `subagent_lineage`.
 
 ---
 
@@ -160,4 +163,5 @@ The write authority does NOT mean Khora defines what to write — it means Khora
 | P1 | Sync queue (`khora_sync_queue_push` / `khora_sync_queue_flush`) |
 | P1 | PI hook seam registration |
 | P2 | Redis session metadata write |
+| P2 | `session-workspace.json` harness binding and restart-time lease recovery |
 | P2 | Sub-session model (subagent-specific session binding) |
