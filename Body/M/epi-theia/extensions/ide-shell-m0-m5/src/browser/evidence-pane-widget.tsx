@@ -1,45 +1,113 @@
 import * as React from 'react';
-import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
+import { CommandService } from '@theia/core';
+import { injectable, inject, optional, postConstruct } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
     KERNEL_BRIDGE_API,
     type KernelBridgeAPI
 } from '@pratibimba/kernel-bridge';
 import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
+import type { CrossLayoutIntent, IntentPrivacyClass } from '@pratibimba/pratibimba-layouts';
+import type {
+    DispatchTraceNode,
+    MediatedRunEvidencePacket
+} from '@pratibimba/integrated-composition';
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import { IdeShellBridgeGate } from './bridge-gate';
 import { PrivacyDropFeed } from './services/privacy-drop-feed';
 import { ANUTTARA_SYMBOLIC_PARSE_SOURCE_SKILL_PATH } from './services/pi-axiom-translation-service';
 
+const CROSS_LAYOUT_INTENT_DISPATCH_COMMAND = 'pratibimba.intent.dispatch' as const;
+
+declare module '@pratibimba/integrated-composition' {
+    export interface ActorMediator {
+        readonly kind: 'Pi' | 'Anima' | 'Aletheia' | string;
+        readonly subagent?: string | null;
+    }
+
+    export interface DispatchTraceNode {
+        readonly id: string;
+        readonly actor: string;
+        readonly label?: string | null;
+        readonly methodOrSkill?: string | null;
+        readonly tickAtInvoke?: number | null;
+        readonly psycheFacet?: string | null;
+        readonly children?: readonly DispatchTraceNode[];
+    }
+
+    export interface ToolInvocationRef {
+        readonly id: string;
+        readonly toolName?: string | null;
+        readonly dispatchNodeId?: string | null;
+        readonly invokedAt?: number | null;
+    }
+
+    export interface AxiomTranslationStep {
+        readonly id?: string | null;
+        readonly label?: string | null;
+        readonly sourceAnchor?: string | null;
+    }
+
+    export interface MediatedRunEvidencePacket {
+        readonly id?: string;
+        readonly title?: string;
+        readonly coordinate?: string | null;
+        readonly privacyClass?: string | null;
+        readonly artifactUri?: string | null;
+        readonly sourceAnchor?: string | null;
+        readonly graphAnchor?: string | null;
+        readonly testAnchor?: string | null;
+        readonly reviewId?: string | null;
+        readonly bridgeReadinessHandle?: string | null;
+        readonly sessionKey?: string | null;
+        readonly dayNowContext?: string | null;
+        readonly profileGeneration?: number | null;
+        readonly mediatedBy?: ActorMediator | null;
+        readonly dispatchTrace?: DispatchTraceNode | null;
+        readonly toolStream?: readonly ToolInvocationRef[];
+        readonly axiomTranslationSteps?: readonly AxiomTranslationStep[];
+        readonly axiomTranslationSessionId?: string | null;
+        readonly contemplationObjectRef?: string | null;
+    }
+}
+
+type EvidenceCrossLayoutIntent = CrossLayoutIntent & {
+    readonly evidenceRecordId?: string;
+    readonly requestedEvidenceRecordId?: string;
+    readonly requestedReviewId?: string;
+    readonly requestedHostContributionId?: string;
+    readonly requestedNestedContributionId?: string;
+    readonly axiomTranslationSessionId?: string | null;
+    readonly contemplationObjectRef?: string | null;
+    readonly requestedObjectId?: string | null;
+};
+
+interface MediatorBadgeModel {
+    readonly label: string;
+    readonly className: string;
+    readonly background: string;
+}
+
+const ALETHEIA_SUBAGENT_COLOURS: Record<string, string> = {
+    anansi: '#2563eb',
+    janus: '#0891b2',
+    moirai: '#7c3aed',
+    mercurius: '#059669',
+    agora: '#dc2626',
+    zeithoven: '#ca8a04'
+};
+
 /**
  * Evidence pane — Track 05 T4 (T8 wires it to the agentic flow).
  *
- * Consumes evidence-envelope DTOs from `@pratibimba/integrated-composition`
- * (already-landed Track 08 deliverable) — but DOES NOT import that extension;
- * instead the contribution injects an evidence-loader callback so test
- * extensions can drive the pane from fixtures.
+ * Consumes `MediatedRunEvidencePacket` DTOs from
+ * `@pratibimba/integrated-composition`. ide-shell owns the full, governance
+ * audit render; OmniPanel owns the abbreviated cross-layout list.
  *
  * The pane refuses to surface any evidence record whose privacy class is in
  * FORBIDDEN_PRIVACY_CLASSES — the privacy gate is identical to the one used
  * by the graph viewer, coordinate tree, and Logos Atelier.
  */
-export interface EvidenceRecord {
-    readonly id: string;
-    readonly title: string;
-    readonly coordinate?: string;
-    readonly privacyClass?: string;
-    readonly artifactUri?: string;
-    readonly sourceAnchor?: string;
-    readonly graphAnchor?: string;
-    readonly testAnchor?: string;
-    readonly reviewId?: string;
-    readonly bridgeReadinessHandle?: string;
-    readonly sessionKey?: string;
-    readonly dayNowContext?: string;
-    readonly profileGeneration?: number;
-    readonly axiomTranslationSessionId?: string;
-}
-
 @injectable()
 export class EvidencePaneWidget extends ReactWidget {
     static readonly ID = IDE_SHELL_WIDGET_IDS.EVIDENCE_PANE;
@@ -51,7 +119,11 @@ export class EvidencePaneWidget extends ReactWidget {
     @inject(PrivacyDropFeed)
     protected readonly privacyDropFeed!: PrivacyDropFeed;
 
-    protected records: EvidenceRecord[] = [];
+    @inject(CommandService) @optional()
+    protected readonly commandService?: CommandService;
+
+    protected records: MediatedRunEvidencePacket[] = [];
+    protected highlightedRecordId: string | null = null;
     protected lastError: string | null = null;
 
     @postConstruct()
@@ -72,8 +144,8 @@ export class EvidencePaneWidget extends ReactWidget {
      * Surface a record. Returns whether the record was accepted; rejected
      * records (forbidden privacy class) increment `privacyDropped`.
      */
-    addRecord(record: EvidenceRecord): boolean {
-        if (!isPrivacySafe(record.privacyClass)) {
+    addRecord(record: MediatedRunEvidencePacket): boolean {
+        if (!isPrivacySafe(record.privacyClass ?? undefined)) {
             this.recordPrivacyDrop(record.privacyClass);
             this.update();
             return false;
@@ -84,10 +156,10 @@ export class EvidencePaneWidget extends ReactWidget {
     }
 
     /** Replace the visible record set (used by intent dispatch). */
-    setRecords(records: readonly EvidenceRecord[]): void {
-        const accepted: EvidenceRecord[] = [];
+    setRecords(records: readonly MediatedRunEvidencePacket[]): void {
+        const accepted: MediatedRunEvidencePacket[] = [];
         for (const r of records) {
-            if (isPrivacySafe(r.privacyClass)) {
+            if (isPrivacySafe(r.privacyClass ?? undefined)) {
                 accepted.push(r);
             } else {
                 this.recordPrivacyDrop(r.privacyClass);
@@ -99,6 +171,11 @@ export class EvidencePaneWidget extends ReactWidget {
 
     get visibleRecordCount(): number {
         return this.records.length;
+    }
+
+    highlightRecord(evidenceRecordId: string | null): void {
+        this.highlightedRecordId = evidenceRecordId;
+        this.update();
     }
 
     protected get privacyDropped(): number {
@@ -146,97 +223,370 @@ export class EvidencePaneWidget extends ReactWidget {
                     </p>
                 ) : (
                     <ul data-test="evidence-pane-list">
-                        {this.records.map(r => (
-                            <li
-                                key={r.id}
-                                data-test={`evidence-record-${r.id}`}
-                                data-coordinate={r.coordinate ?? ''}
-                                data-privacy-class={r.privacyClass ?? ''}
-                            >
-                                <strong>{r.title}</strong>
-                                <dl className="ide-shell-evidence-fields">
-                                    {r.coordinate && (
-                                        <>
-                                            <dt>Coordinate</dt>
-                                            <dd>{r.coordinate}</dd>
-                                        </>
-                                    )}
-                                    {r.artifactUri && (
-                                        <>
-                                            <dt>Artifact</dt>
-                                            <dd>
-                                                <code>{r.artifactUri}</code>
-                                            </dd>
-                                        </>
-                                    )}
-                                    {r.sourceAnchor && (
-                                        <>
-                                            <dt>Source anchor</dt>
-                                            <dd>{r.sourceAnchor}</dd>
-                                        </>
-                                    )}
-                                    {r.graphAnchor && (
-                                        <>
-                                            <dt>Graph anchor</dt>
-                                            <dd>{r.graphAnchor}</dd>
-                                        </>
-                                    )}
-                                    {r.testAnchor && (
-                                        <>
-                                            <dt>Test anchor</dt>
-                                            <dd>{r.testAnchor}</dd>
-                                        </>
-                                    )}
-                                    {r.reviewId && (
-                                        <>
-                                            <dt>Review</dt>
-                                            <dd>{r.reviewId}</dd>
-                                        </>
-                                    )}
-                                    {r.bridgeReadinessHandle && (
-                                        <>
-                                            <dt>Bridge readiness</dt>
-                                            <dd>{r.bridgeReadinessHandle}</dd>
-                                        </>
-                                    )}
-                                    {r.sessionKey && (
-                                        <>
-                                            <dt>Session</dt>
-                                            <dd>{r.sessionKey}</dd>
-                                        </>
-                                    )}
-                                    {r.dayNowContext && (
-                                        <>
-                                            <dt>DAY/NOW</dt>
-                                            <dd>{r.dayNowContext}</dd>
-                                        </>
-                                    )}
-                                    {r.profileGeneration !== undefined && (
-                                        <>
-                                            <dt>Profile generation</dt>
-                                            <dd>{r.profileGeneration}</dd>
-                                        </>
-                                    )}
-                                    {r.axiomTranslationSessionId && (
-                                        <>
-                                            <dt>Axiom translation</dt>
-                                            <dd>
-                                                <a
-                                                    href={`epi-logos://ide/ide-shell-m0-m5/pi-axiom-translation?session=${encodeURIComponent(r.axiomTranslationSessionId)}`}
-                                                    data-intent-target="pi-axiom-translation"
-                                                    data-source-skill={ANUTTARA_SYMBOLIC_PARSE_SOURCE_SKILL_PATH}
-                                                >
-                                                    PiAxiomTranslationInspector
-                                                </a>
-                                            </dd>
-                                        </>
-                                    )}
-                                </dl>
-                            </li>
-                        ))}
+                        {this.records.map(r => {
+                            const recordId = this.recordId(r);
+                            const isHighlighted = this.highlightedRecordId === recordId;
+                            return (
+                                <li
+                                    key={recordId}
+                                    data-test={`evidence-record-${recordId}`}
+                                    data-evidence-id={recordId}
+                                    data-highlighted={isHighlighted ? 'true' : 'false'}
+                                    data-coordinate={r.coordinate ?? ''}
+                                    data-privacy-class={r.privacyClass ?? ''}
+                                    style={{ position: 'relative' }}
+                                >
+                                    {this.renderMediatorBadge(r)}
+                                    <strong>{this.recordTitle(r)}</strong>
+                                    <dl className="ide-shell-evidence-fields">
+                                        <dt>Packet</dt>
+                                        <dd>
+                                            <code>{recordId}</code>
+                                        </dd>
+                                        <dt>Run</dt>
+                                        <dd>{r.runId}</dd>
+                                        <dt>Task</dt>
+                                        <dd>{r.taskId}</dd>
+                                        <dt>Verdict</dt>
+                                        <dd>{r.verdict}</dd>
+                                        {r.coordinate && (
+                                            <>
+                                                <dt>Coordinate</dt>
+                                                <dd>{r.coordinate}</dd>
+                                            </>
+                                        )}
+                                        {r.artifactUri && (
+                                            <>
+                                                <dt>Artifact</dt>
+                                                <dd>
+                                                    <code>{r.artifactUri}</code>
+                                                </dd>
+                                            </>
+                                        )}
+                                        {r.sourceAnchor && (
+                                            <>
+                                                <dt>Source anchor</dt>
+                                                <dd>{r.sourceAnchor}</dd>
+                                            </>
+                                        )}
+                                        {r.graphAnchor && (
+                                            <>
+                                                <dt>Graph anchor</dt>
+                                                <dd>{r.graphAnchor}</dd>
+                                            </>
+                                        )}
+                                        {r.testAnchor && (
+                                            <>
+                                                <dt>Test anchor</dt>
+                                                <dd>{r.testAnchor}</dd>
+                                            </>
+                                        )}
+                                        {r.reviewId && (
+                                            <>
+                                                <dt>Review</dt>
+                                                <dd>{r.reviewId}</dd>
+                                            </>
+                                        )}
+                                        {r.bridgeReadinessHandle && (
+                                            <>
+                                                <dt>Bridge readiness</dt>
+                                                <dd>{r.bridgeReadinessHandle}</dd>
+                                            </>
+                                        )}
+                                        {r.sessionKey && (
+                                            <>
+                                                <dt>Session</dt>
+                                                <dd>{r.sessionKey}</dd>
+                                            </>
+                                        )}
+                                        {r.dayNowContext && (
+                                            <>
+                                                <dt>DAY/NOW</dt>
+                                                <dd>{r.dayNowContext}</dd>
+                                            </>
+                                        )}
+                                        {r.profileGeneration !== undefined && (
+                                            <>
+                                                <dt>Profile generation</dt>
+                                                <dd>{r.profileGeneration}</dd>
+                                            </>
+                                        )}
+                                        {r.axiomTranslationSessionId && (
+                                            <>
+                                                <dt>Axiom translation</dt>
+                                                <dd>
+                                                    <a
+                                                        href={`epi-logos://ide/ide-shell-m0-m5/pi-axiom-translation?session=${encodeURIComponent(r.axiomTranslationSessionId)}`}
+                                                        data-intent-target="pi-axiom-translation"
+                                                        data-source-skill={ANUTTARA_SYMBOLIC_PARSE_SOURCE_SKILL_PATH}
+                                                    >
+                                                        PiAxiomTranslationInspector
+                                                    </a>
+                                                </dd>
+                                            </>
+                                        )}
+                                        {r.provenance && (
+                                            <>
+                                                <dt>Provenance</dt>
+                                                <dd>{r.provenance}</dd>
+                                            </>
+                                        )}
+                                        {r.timestamp !== undefined && (
+                                            <>
+                                                <dt>Timestamp</dt>
+                                                <dd>{new Date(r.timestamp).toISOString()}</dd>
+                                            </>
+                                        )}
+                                    </dl>
+                                    {this.renderStringList('Evidence', r.evidence)}
+                                    {this.renderStringList('Acceptance criteria', r.acceptanceCriteria)}
+                                    {this.renderStringList('Passed criteria', r.passedCriteria)}
+                                    {this.renderDispatchTrace(r.dispatchTrace ?? null)}
+                                    {this.renderDeepLinks(r, recordId)}
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </div>
         );
+    }
+
+    protected renderMediatorBadge(record: MediatedRunEvidencePacket): React.ReactNode {
+        const badge = this.mediatorBadge(record);
+        return (
+            <span
+                className={`ide-shell-mediator-badge ${badge.className}`}
+                data-test="evidence-mediator-badge"
+                data-mediated-by-kind={record.mediatedBy?.kind ?? ''}
+                data-mediated-by-subagent={record.mediatedBy?.subagent ?? ''}
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    padding: '2px 6px',
+                    borderRadius: 4,
+                    background: badge.background,
+                    color: '#fff',
+                    fontSize: 11
+                }}
+            >
+                {badge.label}
+            </span>
+        );
+    }
+
+    protected renderStringList(label: string, values: readonly string[]): React.ReactNode {
+        if (values.length === 0) {
+            return null;
+        }
+        return (
+            <section className="ide-shell-evidence-section">
+                <h4>{label}</h4>
+                <ul>
+                    {values.map(value => (
+                        <li key={value}>{value}</li>
+                    ))}
+                </ul>
+            </section>
+        );
+    }
+
+    protected renderDispatchTrace(dispatchTrace: DispatchTraceNode | null): React.ReactNode {
+        if (!dispatchTrace) {
+            return null;
+        }
+        return (
+            <details
+                className="ide-shell-dispatch-trace-mini-graph"
+                data-test="evidence-dispatch-trace-mini-graph"
+            >
+                <summary>Dispatch trace mini-graph</summary>
+                {this.renderDispatchTraceNode(dispatchTrace)}
+            </details>
+        );
+    }
+
+    protected renderDispatchTraceNode(node: DispatchTraceNode): React.ReactNode {
+        return (
+            <ul className="ide-shell-dispatch-trace-tree">
+                <li
+                    data-test="evidence-dispatch-trace-node"
+                    data-dispatch-node-id={node.id}
+                    data-actor={node.actor}
+                    data-method-or-skill={node.methodOrSkill ?? ''}
+                    data-tick-at-invoke={node.tickAtInvoke ?? ''}
+                    data-psyche-facet={node.psycheFacet ?? ''}
+                >
+                    <span className="ide-shell-dispatch-actor">{node.actor}</span>
+                    {node.methodOrSkill && (
+                        <span className="ide-shell-dispatch-method"> · {node.methodOrSkill}</span>
+                    )}
+                    {node.tickAtInvoke !== null && node.tickAtInvoke !== undefined && (
+                        <span className="ide-shell-dispatch-tick"> · tick {node.tickAtInvoke}</span>
+                    )}
+                    {node.psycheFacet && (
+                        <span
+                            className="ide-shell-psyche-facet-badge"
+                            data-test="evidence-psyche-facet-badge"
+                        >
+                            {node.psycheFacet}
+                        </span>
+                    )}
+                    {node.children && node.children.length > 0 && (
+                        <>{node.children.map(child => this.renderDispatchTraceNode(child))}</>
+                    )}
+                </li>
+            </ul>
+        );
+    }
+
+    protected renderDeepLinks(record: MediatedRunEvidencePacket, recordId: string): React.ReactNode {
+        const hasAxiomTranslation = (record.axiomTranslationSteps?.length ?? 0) > 0;
+        return (
+            <nav className="ide-shell-evidence-cross-links" aria-label="Evidence cross-links">
+                <a
+                    href="#"
+                    data-cross-link="omnipanel.tool-stream"
+                    data-evidence-id={recordId}
+                    onClick={event => {
+                        event.preventDefault();
+                        this.emitCrossLayoutIntent(this.toolStreamIntent(record, recordId));
+                    }}
+                >
+                    View tool stream in OmniPanel -&gt;
+                </a>
+                {hasAxiomTranslation && (
+                    <button
+                        type="button"
+                        data-cross-link="ide-shell.axiom-translation-inspector"
+                        data-evidence-id={recordId}
+                        onClick={() => this.emitCrossLayoutIntent(this.axiomTranslationIntent(record, recordId))}
+                    >
+                        View axiom translation -&gt;
+                    </button>
+                )}
+                {record.contemplationObjectRef && (
+                    <button
+                        type="button"
+                        data-cross-link="m5-epii.contemplation-object-viewer"
+                        data-evidence-id={recordId}
+                        data-contemplation-object-ref={record.contemplationObjectRef}
+                        onClick={() => this.emitCrossLayoutIntent(this.contemplationObjectIntent(record, recordId))}
+                    >
+                        Contemplation: open viewer -&gt;
+                    </button>
+                )}
+            </nav>
+        );
+    }
+
+    protected emitCrossLayoutIntent(intent: EvidenceCrossLayoutIntent): void {
+        void this.commandService?.executeCommand(CROSS_LAYOUT_INTENT_DISPATCH_COMMAND, intent);
+    }
+
+    protected toolStreamIntent(record: MediatedRunEvidencePacket, recordId: string): EvidenceCrossLayoutIntent {
+        return {
+            ...this.baseIntent(record),
+            requestedExtensionId: 'omnipanel-shell',
+            requestedContributionId: 'tool-stream',
+            requestedReviewId: recordId,
+            requestedEvidenceRecordId: recordId,
+            evidenceRecordId: recordId
+        };
+    }
+
+    protected axiomTranslationIntent(record: MediatedRunEvidencePacket, recordId: string): EvidenceCrossLayoutIntent {
+        return {
+            ...this.baseIntent(record),
+            requestedExtensionId: 'ide-shell-m0-m5',
+            requestedContributionId: 'pi-axiom-translation',
+            requestedHostContributionId: 'agentic-control-room',
+            requestedNestedContributionId: 'axiom-translation-inspector',
+            requestedEvidenceRecordId: recordId,
+            evidenceRecordId: recordId,
+            axiomTranslationSessionId: record.axiomTranslationSessionId ?? record.sessionKey ?? null
+        };
+    }
+
+    protected contemplationObjectIntent(record: MediatedRunEvidencePacket, recordId: string): EvidenceCrossLayoutIntent {
+        return {
+            ...this.baseIntent(record),
+            requestedExtensionId: 'm5-epii',
+            requestedContributionId: 'contemplation-object-viewer',
+            requestedEvidenceRecordId: recordId,
+            evidenceRecordId: recordId,
+            contemplationObjectRef: record.contemplationObjectRef ?? null,
+            requestedObjectId: record.contemplationObjectRef ?? null
+        };
+    }
+
+    protected baseIntent(record: MediatedRunEvidencePacket): CrossLayoutIntent {
+        return {
+            coordinate: record.coordinate ?? null,
+            artifactUri: record.artifactUri ?? null,
+            reviewId: record.reviewId ?? null,
+            dayNow: record.dayNowContext ?? null,
+            sessionKey: record.sessionKey ?? null,
+            profileGeneration: record.profileGeneration ?? null,
+            privacyClass: this.intentPrivacyClass(record.privacyClass),
+            requestedLayout: 'ide-deep',
+            requestedExtensionId: null,
+            requestedContributionId: null
+        };
+    }
+
+    protected intentPrivacyClass(privacyClass: string | null | undefined): IntentPrivacyClass | null {
+        if (!privacyClass) {
+            return null;
+        }
+        if (privacyClass.startsWith('private')) {
+            return 'private';
+        }
+        if (privacyClass.startsWith('protected')) {
+            return 'protected';
+        }
+        if (privacyClass.startsWith('public') || privacyClass === 'safe-public') {
+            return 'public';
+        }
+        return null;
+    }
+
+    protected recordId(record: MediatedRunEvidencePacket): string {
+        return record.id ?? record.runId ?? record.taskId;
+    }
+
+    protected recordTitle(record: MediatedRunEvidencePacket): string {
+        return record.title ?? `MediatedRunEvidencePacket ${this.recordId(record)}`;
+    }
+
+    protected mediatorBadge(record: MediatedRunEvidencePacket): MediatorBadgeModel {
+        const kind = record.mediatedBy?.kind ?? this.legacyMediatorKind(record.mediator);
+        if (kind === 'Pi') {
+            return { label: 'Pi', className: 'ide-shell-mediator-pi', background: '#7c3aed' };
+        }
+        if (kind === 'Anima') {
+            return { label: 'Anima', className: 'ide-shell-mediator-anima', background: '#b45309' };
+        }
+        if (kind === 'Aletheia') {
+            const subagent = record.mediatedBy?.subagent ?? 'subagent';
+            const key = subagent.toLowerCase();
+            return {
+                label: `Aletheia · ${subagent}`,
+                className: `ide-shell-mediator-aletheia ide-shell-mediator-${key}`,
+                background: ALETHEIA_SUBAGENT_COLOURS[key] ?? '#64748b'
+            };
+        }
+        return { label: kind, className: 'ide-shell-mediator-generic', background: '#475569' };
+    }
+
+    protected legacyMediatorKind(mediator: MediatedRunEvidencePacket['mediator']): string {
+        if (mediator === 'claude' || mediator === 'fable-5') {
+            return 'Aletheia';
+        }
+        if (mediator === 'hermes') {
+            return 'Anima';
+        }
+        return 'Pi';
     }
 }
