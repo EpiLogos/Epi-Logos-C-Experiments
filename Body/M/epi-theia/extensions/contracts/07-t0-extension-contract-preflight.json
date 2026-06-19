@@ -56,6 +56,275 @@
     ],
     "rule": "Individual extensions consume S0/S2/S3/S5 only through the shared bridge adapter or approved shared runtime package."
   },
+  "rustSStackBoundary": {
+    "dependencySource": "Rust Cargo.toml dependency edges: [dependencies], [dev-dependencies], and [build-dependencies].",
+    "rule": "S-stack Rust crates may depend only on same-layer or lower-layer S crates unless an owning architecture spec declares a narrower exception; lower layers must not depend on higher layers, so S0 Cargo.toml edges to S1/S2/S3/S4/S5 are forbidden.",
+    "ciCheck": {
+      "name": "forbidden-imports",
+      "expectedLintEntry": "make lint",
+      "validator": "Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs",
+      "failureMode": "Fail when a Cargo.toml dependency path or package name matches the declaring crate's forbiddenImports matrix."
+    },
+    "layers": [
+      {
+        "id": "S-root",
+        "crateNames": [
+          "epi-kernel-contract"
+        ],
+        "forbiddenImports": [
+          "Body/S/S1",
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s1-hen-compiler-core",
+          "epi-s2-graph-schema",
+          "epi-s2-graph-services",
+          "epi-s2-m1-cpt-trainer",
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S0",
+        "crateNames": [
+          "epi-logos",
+          "epi-lib",
+          "gemini-embedding",
+          "portal-core",
+          "epi-s0-settings"
+        ],
+        "forbiddenImports": [
+          "Body/S/S1",
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s1-hen-compiler-core",
+          "epi-s2-graph-schema",
+          "epi-s2-graph-services",
+          "epi-s2-m1-cpt-trainer",
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S1",
+        "crateNames": [
+          "epi-s1-hen-compiler-core"
+        ],
+        "forbiddenImports": [
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s2-graph-schema",
+          "epi-s2-graph-services",
+          "epi-s2-m1-cpt-trainer",
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S2",
+        "crateNames": [
+          "epi-s2-graph-schema",
+          "epi-s2-graph-services",
+          "epi-s2-m1-cpt-trainer"
+        ],
+        "forbiddenImports": [
+          "Body/S/S3",
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S3",
+        "crateNames": [
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module"
+        ],
+        "forbiddenImports": [
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S4",
+        "crateNames": [],
+        "forbiddenImports": [
+          "Body/S/S5",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S5",
+        "crateNames": [
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ],
+        "forbiddenImports": []
+      }
+    ],
+    "crates": [
+      {
+        "id": "epi-kernel-contract",
+        "layer": "S-root",
+        "manifestPath": "Body/S/epi-kernel-contract/Cargo.toml",
+        "forbiddenImportsFromLayer": "S-root"
+      },
+      {
+        "id": "epi-logos",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/epi-cli/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "epi-lib",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/epi-lib/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "gemini-embedding",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/gemini-embedding/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "portal-core",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/portal-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "epi-s0-settings",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/settings/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "epi-s1-hen-compiler-core",
+        "layer": "S1",
+        "manifestPath": "Body/S/S1/hen-compiler-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S1"
+      },
+      {
+        "id": "epi-s2-graph-schema",
+        "layer": "S2",
+        "manifestPath": "Body/S/S2/graph-schema/Cargo.toml",
+        "forbiddenImportsFromLayer": "S2"
+      },
+      {
+        "id": "epi-s2-graph-services",
+        "layer": "S2",
+        "manifestPath": "Body/S/S2/graph-services/Cargo.toml",
+        "forbiddenImportsFromLayer": "S2"
+      },
+      {
+        "id": "epi-s2-m1-cpt-trainer",
+        "layer": "S2",
+        "manifestPath": "Body/S/S2/m1-cpt-trainer/Cargo.toml",
+        "forbiddenImportsFromLayer": "S2"
+      },
+      {
+        "id": "epi-s3-gateway-contract",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/gateway-contract/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-s3-gateway",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/gateway/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-s3-graphiti-runtime",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/graphiti-runtime/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-s3-redis-context",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/redis-context/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-spacetime-module",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/epi-spacetime-module/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-s5-kbase-core",
+        "layer": "S5",
+        "manifestPath": "Body/S/S5/epi-kbase-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S5"
+      },
+      {
+        "id": "epi-s5-epii-agent-core",
+        "layer": "S5",
+        "manifestPath": "Body/S/S5/epii-agent-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S5"
+      },
+      {
+        "id": "epi-s5-epii-autoresearch-core",
+        "layer": "S5",
+        "manifestPath": "Body/S/S5/epii-autoresearch-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S5"
+      },
+      {
+        "id": "epi-s5-epii-review-core",
+        "layer": "S5",
+        "manifestPath": "Body/S/S5/epii-review-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S5"
+      }
+    ]
+  },
   "readinessTaxonomy": [
     {
       "id": "bridge_unavailable",
