@@ -17,6 +17,16 @@ export const M0_ATELIER_CLUSTER_LENS_ID = 'pratibimba.daily.atelier-cluster-lens
 export type M0InspectorLayer = 'lang' | 'ql' | 'rel' | 'time' | 'pers' | 'pedag';
 export type M0SurfaceMode = 'reading' | 'authoring';
 
+/**
+ * Implicate / explicate phase (21.7). `implicate` reads the M0-side ground-state
+ * fields (forward projection); `explicate` reads the Pratibimba-return,
+ * articulated formulation (completed atelier route). The two-state toggle that
+ * drives this lives in {@link ImplicateExplicateToggle}; the phase value is
+ * preserved across selections via the `m0-anuttara.activeLayer`
+ * `currentStateSelectors` reader (cross-link 21.20).
+ */
+export type M0Phase = 'implicate' | 'explicate';
+
 export interface M0LayerS2Query {
     readonly method: typeof M0_S2_LAYER_QUERY_METHOD;
     readonly params: Readonly<{
@@ -162,6 +172,7 @@ export interface M0GatewayAction {
 }
 
 export interface M0InspectorModel {
+    readonly phase: M0Phase;
     readonly mode: M0SurfaceMode;
     readonly query: {
         readonly input: string | null;
@@ -258,6 +269,7 @@ export function buildM0InspectorModel(input: {
     readonly readiness: MExtensionReadinessSnapshot;
     readonly context: CoordinateContext;
     readonly mode?: M0SurfaceMode;
+    readonly phase?: M0Phase;
 }): M0InspectorModel {
     const query = normalizeM0CoordinateInput(
         input.selectedInput ??
@@ -279,6 +291,7 @@ export function buildM0InspectorModel(input: {
     const label = stringValue(input.graphNode?.label) ?? stringValue(properties?.label);
 
     return Object.freeze({
+        phase: input.phase === 'explicate' ? 'explicate' : 'implicate',
         mode: input.mode === 'authoring' ? 'authoring' : 'reading',
         query,
         node: Object.freeze({

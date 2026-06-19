@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-18T23:44:51.705Z",
+  "updatedAt": "2026-06-19T00:00:31.939Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1997,11 +1997,20 @@
       "worktree": null
     },
     "12.T12.10": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-19T00:00:32.176Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T00:00:32.176Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:00:24.690Z",
+          "text": "Pi-runtime parity test added (tests/capability-parity.test.ts, 7/7); full pi-agent suite 70/70 green. Gateway endpoint registered: server.rs:1466 dispatches s4'.mediation.capabilities.list -> anima.rs:249 mediation_capabilities_list (reads capability-matrix.json verbatim). Constant declared dispatch.rs:129. Pi startup gate wired composite-entry.ts (assertGatewayCapabilityParityAtStartup on session_start) via lib/capability-parity.ts. grep 'capabilities.list' Body/S/S3/gateway/src/ -> 3 hits."
+        },
+        {
+          "at": "2026-06-19T00:00:32.176Z",
+          "text": "see prior"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
@@ -3542,17 +3551,13 @@
       "worktree": null
     },
     "21.T21.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
-      "worktree": null
+      "status": "done",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:00:37.894524+00:00",
+          "text": "PASS: ImplicateExplicateToggle.tsx with CSS lemniscate glyph. M0Phase/M0InspectorModel extended. 25/25 inspector tests, pnpm build clean. Pure selectors for phase-dependent fields."
+        }
+      ]
     },
     "21.T21.8": {
       "status": "pending",
@@ -5348,12 +5353,21 @@
     },
     "31.T31.2": {
       "status": "done",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T23:51:27.215459+00:00",
           "text": "PASS: 40 registerCommand hits in 31.2 scope (m0:7, m1:4, m2:4, m3:6, m4:13, m5:6). Catalog validator: 0 missing registrations. validate-chrome 4/4, tsc -b clean. \u226560 target cumulative across 31.2+31.3+31.5 per plan."
         }
-      ]
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "31.T31.3": {
       "status": "pending",
@@ -7898,12 +7912,21 @@
     },
     "12.T12.32": {
       "status": "done",
+      "updatedAt": null,
+      "claimedAt": null,
+      "completedAt": null,
       "evidence": [
         {
           "at": "2026-06-18T23:45:31.729276+00:00",
           "text": "PASS: Pi entitlement contract in 4 files. no-tool-bypass 4/4, entitlement suite 41/41, full ta-onta+pi-agent 347/347. capability-matrix.json with aletheia_mode_internal class, all grep targets confirmed."
         }
-      ]
+      ],
+      "notes": null,
+      "owner": null,
+      "leaseExpiresAt": null,
+      "heartbeatAt": null,
+      "runId": null,
+      "worktree": null
     },
     "12.T12.33": {
       "status": "pending",

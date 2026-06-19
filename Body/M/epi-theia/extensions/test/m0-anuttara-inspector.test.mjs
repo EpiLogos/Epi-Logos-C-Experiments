@@ -83,6 +83,11 @@ const {
 const {
     LanguageLayerPanel
 } = require('../m0-anuttara/lib/browser/panels/language-layer-panel.js');
+const {
+    selectLanguageFieldsForPhase,
+    relationEmphasisForPhase,
+    pedagogyFramingForPhase
+} = require('../m0-anuttara/lib/browser/components/implicate-explicate-toggle.js');
 
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
@@ -797,4 +802,81 @@ test('Arch 9 completion syntax panel renders VIRTUE rows in canonical order and 
     assert.match(markup, /data-syntax-row-id="8"[^>]*>[\s\S]*Reality/);
     assert.match(markup, /data-witness-state="witnessed"[\s\S]*Love\/Peace/);
     assert.match(markup, /data-witness-state="unwitnessed"[\s\S]*Openness\/Creativity/);
+});
+
+test('21.7 implicate/explicate phase rotates language field priority for the same payload', () => {
+    const phasePayload = {
+        coordinate: 'M0',
+        canonicalCoordinate: 'M0',
+        properties: {
+            canonical_coordinate: 'M0',
+            c_1_symbol: '0/1',
+            c_1_formulation_type: 'prior-ground-boundary',
+            c_1_complete_formulation: 'Anuttara as the prior 0/1 ground received by M1.',
+            c_1_form: 'vowel-seed',
+            c_1_formulation_breakdown: 'prior | ground | received'
+        }
+    };
+
+    const implicateModel = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: phasePayload,
+        readiness,
+        context,
+        phase: 'implicate'
+    });
+    const explicateModel = buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: phasePayload,
+        readiness,
+        context,
+        phase: 'explicate'
+    });
+
+    // Same payload → same canonical field set; only the model phase differs.
+    assert.equal(implicateModel.phase, 'implicate');
+    assert.equal(explicateModel.phase, 'explicate');
+    assert.deepEqual(
+        implicateModel.languageFields.map(field => field.key),
+        explicateModel.languageFields.map(field => field.key)
+    );
+    // Default model phase is implicate (M0-side ground-state).
+    assert.equal(
+        buildM0InspectorModel({ selectedInput: '#0', graphNode: phasePayload, readiness, context })
+            .phase,
+        'implicate'
+    );
+
+    const implicateOrder = selectLanguageFieldsForPhase(
+        implicateModel.languageFields,
+        'implicate'
+    ).map(field => field.key);
+    const explicateOrder = selectLanguageFieldsForPhase(
+        explicateModel.languageFields,
+        'explicate'
+    ).map(field => field.key);
+
+    // Implicate prioritises c_1_form (ground-state) ahead of the articulated formulation.
+    assert.equal(implicateOrder[0], 'c_1_form');
+    assert.ok(
+        implicateOrder.indexOf('c_1_form') < implicateOrder.indexOf('c_1_complete_formulation')
+    );
+
+    // Explicate prioritises c_1_complete_formulation (Pratibimba-return articulation).
+    assert.equal(explicateOrder[0], 'c_1_complete_formulation');
+    assert.ok(
+        explicateOrder.indexOf('c_1_complete_formulation') < explicateOrder.indexOf('c_1_form')
+    );
+
+    // Rotation is stable: no field is dropped or duplicated.
+    assert.deepEqual(
+        [...implicateOrder].sort(),
+        [...implicateModel.languageFields.map(field => field.key)].sort()
+    );
+
+    // Relations emphasis and pedagogy framing follow the phase.
+    assert.equal(relationEmphasisForPhase('implicate'), 'structural-family');
+    assert.equal(relationEmphasisForPhase('explicate'), 'pratibimba-return');
+    assert.equal(pedagogyFramingForPhase('implicate'), 'forward projection');
+    assert.equal(pedagogyFramingForPhase('explicate'), 'completed atelier route');
 });
