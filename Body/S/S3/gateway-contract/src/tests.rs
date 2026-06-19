@@ -1273,6 +1273,65 @@ fn s1_semantic_response_carries_typed_candidates_with_staleness_and_privacy() {
 }
 
 #[test]
+fn s1_c_first_type_lifecycle_receipts_round_trip_and_methods_are_registered() {
+    for method in [
+        S1_TYPE_CLASSIFY_C_LAYER_METHOD,
+        S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
+        S1_WORLD_GRADUATE_METHOD,
+    ] {
+        assert!(METHOD_NAMES.contains(&method));
+        assert!(method_dispatch_plan_entry(method).is_some());
+    }
+
+    let classify = S1CFirstTypologyReceipt {
+        source_path: "Idea/Bimba/World/Types/Coordinates/C/C4/Types-Contexts-MOCs.md".to_owned(),
+        type_family: "C".to_owned(),
+        type_path: "Idea/Bimba/World/Types/Coordinates/C/C4/Types-Contexts-MOCs".to_owned(),
+        type_coordinate: "C4".to_owned(),
+        semantic_authority: "authoritative".to_owned(),
+        crystallisation_state: "incubating_type_index".to_owned(),
+        c_layer_path: "Idea/Bimba/World/Types/Coordinates/C/C4".to_owned(),
+        evidence_kind: "c4_type_moc_authority".to_owned(),
+    };
+    let entity = S1EntityPromoteToTypeReceipt {
+        entity_path: "Idea/Empty/Present/02-06-2026/entities/Anima.md".to_owned(),
+        type_coordinate: "C2".to_owned(),
+        aliases: vec!["Dispatch Function".to_owned()],
+        candidate_state: "candidate".to_owned(),
+        accepted_wikilinks: vec!["Anima".to_owned(), "S4".to_owned()],
+        target_type_path: "Idea/Bimba/World/Types/Coordinates/C/C2/Entities-Properties-Tags/Anima"
+            .to_owned(),
+        graph_promotion_ready: true,
+    };
+    let graduate = S1WorldGraduateReceipt {
+        source_c_authority_path:
+            "Idea/Bimba/World/Types/Coordinates/C/C5/Crystallisations-Pratibimba/NOW.md".to_owned(),
+        flat_world_target: "Idea/Bimba/World/NOW.md".to_owned(),
+        type_coordinate: "C5".to_owned(),
+        crystallisation_state: "crystallised_world_form".to_owned(),
+        graph_promotion_ready: true,
+    };
+
+    assert_eq!(
+        serde_json::from_value::<S1CFirstTypologyReceipt>(serde_json::to_value(&classify).unwrap())
+            .unwrap(),
+        classify
+    );
+    assert_eq!(
+        serde_json::from_value::<S1EntityPromoteToTypeReceipt>(
+            serde_json::to_value(&entity).unwrap()
+        )
+        .unwrap(),
+        entity
+    );
+    assert_eq!(
+        serde_json::from_value::<S1WorldGraduateReceipt>(serde_json::to_value(&graduate).unwrap())
+            .unwrap(),
+        graduate
+    );
+}
+
+#[test]
 fn scan_for_forbidden_privacy_fields_catches_every_canonical_invariant() {
     for field in PRIVACY_FORBIDDEN_FIELD_NAMES {
         let payload = format!(r#"{{"safe":"ok","{field}":"should-not-be-here"}}"#);
@@ -1478,9 +1537,9 @@ fn dispatch_plan_carries_all_six_canonical_kinds_or_extensions() {
     assert!(s4 > 0, "expected at least one S4 orchestration row");
     assert!(s5 > 0, "expected at least one S5 governance row");
     assert!(s0 > 0, "expected at least one S0 product adapter row");
-    // S1 Hen adapter is a 13.T2 plan extension and 03.T6.5 introduced
-    // five vault/semantic methods; the count should be five.
-    assert_eq!(s1, 5, "expected exactly five s1' Hen vault rows");
+    // S1 Hen adapter is a 13.T2 plan extension: five 03.T6.5
+    // vault/semantic methods plus three C-first type lifecycle receipts.
+    assert_eq!(s1, 8, "expected exactly eight s1' Hen rows");
     // Missing is currently 0 because no Missing-status methods appear
     // in METHOD_NAMES (parity.rs Missing records all live outside the
     // shipped manifest). The variant must still be expressible.

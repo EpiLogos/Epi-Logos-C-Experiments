@@ -151,3 +151,38 @@ pub enum S1SemanticStaleness {
     /// best-effort and refresh before acting.
     NoIndex,
 }
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1CFirstTypologyReceipt {
+    pub source_path: String,
+    pub type_family: String,
+    pub type_path: String,
+    pub type_coordinate: String,
+    pub semantic_authority: String,
+    pub crystallisation_state: String,
+    pub c_layer_path: String,
+    pub evidence_kind: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1EntityPromoteToTypeReceipt {
+    pub entity_path: String,
+    pub type_coordinate: String,
+    pub aliases: Vec<String>,
+    pub candidate_state: String,
+    pub accepted_wikilinks: Vec<String>,
+    pub target_type_path: String,
+    pub graph_promotion_ready: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct S1WorldGraduateReceipt {
+    pub source_c_authority_path: String,
+    pub flat_world_target: String,
+    pub type_coordinate: String,
+    pub crystallisation_state: String,
+    pub graph_promotion_ready: bool,
+}

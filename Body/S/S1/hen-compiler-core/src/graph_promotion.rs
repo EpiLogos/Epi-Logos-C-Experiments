@@ -135,6 +135,46 @@ impl GraphPromotionIntent {
             "artifact_kind".to_owned(),
             serde_json::Value::String(artifact_kind_name(&evidence.artifact_kind).to_owned()),
         );
+        if let Some(c_layer) = &evidence.c_layer_evidence {
+            insert_property(&mut properties, "type_family", &c_layer.type_family);
+            insert_property(&mut properties, "type_path", &c_layer.type_path);
+            insert_property(&mut properties, "world_type_path", &c_layer.type_path);
+            insert_property(&mut properties, "type_coordinate", &c_layer.type_coordinate);
+            insert_property(
+                &mut properties,
+                "semantic_authority",
+                &c_layer.semantic_authority,
+            );
+            insert_property(
+                &mut properties,
+                "crystallisation_state",
+                &c_layer.crystallisation_state,
+            );
+            insert_property(&mut properties, "c_layer_path", &c_layer.c_layer_path);
+            if let Some(role) = c_layer_role(&c_layer.type_coordinate) {
+                insert_property(&mut properties, "c_layer_role", role);
+            }
+            insert_property(
+                &mut properties,
+                "graph_evidence_kind",
+                graph_evidence_kind(&c_layer.type_coordinate, &c_layer.crystallisation_state),
+            );
+        }
+        insert_string_array_property(&mut properties, "aliases", &evidence.aliases);
+        if let Some(candidate_state) = &evidence.candidate_state {
+            insert_property(&mut properties, "candidate_state", candidate_state);
+        }
+        insert_string_array_property(
+            &mut properties,
+            "accepted_wikilinks",
+            &evidence.accepted_wikilinks,
+        );
+        if let Some(path) = &evidence.source_c_authority_path {
+            insert_property(&mut properties, "source_c_authority_path", path);
+        }
+        if let Some(target) = &evidence.flat_world_target {
+            insert_property(&mut properties, "flat_world_target", target);
+        }
 
         let compatibility_source =
             legacy_coordinate_evidence(&evidence).filter(|legacy| legacy.coordinate != coordinate);
@@ -235,6 +275,57 @@ fn frontmatter_evidence(evidence: &ArtifactEvidence) -> Vec<FrontmatterEvidence>
             evidence_kind: "frontmatter".to_owned(),
         });
     }
+    if let Some(c_layer) = &evidence.c_layer_evidence {
+        for (key, value) in [
+            ("type_family", &c_layer.type_family),
+            ("type_path", &c_layer.type_path),
+            ("type_coordinate", &c_layer.type_coordinate),
+            ("semantic_authority", &c_layer.semantic_authority),
+            ("crystallisation_state", &c_layer.crystallisation_state),
+            ("c_layer_path", &c_layer.c_layer_path),
+        ] {
+            entries.push(FrontmatterEvidence {
+                key: key.to_owned(),
+                value: value.clone(),
+                evidence_kind: "c_first_typology".to_owned(),
+            });
+        }
+    }
+    for alias in &evidence.aliases {
+        entries.push(FrontmatterEvidence {
+            key: "aliases".to_owned(),
+            value: alias.clone(),
+            evidence_kind: "c_first_typology".to_owned(),
+        });
+    }
+    if let Some(candidate_state) = &evidence.candidate_state {
+        entries.push(FrontmatterEvidence {
+            key: "candidate_state".to_owned(),
+            value: candidate_state.clone(),
+            evidence_kind: "c_first_typology".to_owned(),
+        });
+    }
+    for wikilink in &evidence.accepted_wikilinks {
+        entries.push(FrontmatterEvidence {
+            key: "accepted_wikilinks".to_owned(),
+            value: wikilink.clone(),
+            evidence_kind: "c_first_typology".to_owned(),
+        });
+    }
+    if let Some(path) = &evidence.source_c_authority_path {
+        entries.push(FrontmatterEvidence {
+            key: "source_c_authority_path".to_owned(),
+            value: path.clone(),
+            evidence_kind: "c_first_typology".to_owned(),
+        });
+    }
+    if let Some(target) = &evidence.flat_world_target {
+        entries.push(FrontmatterEvidence {
+            key: "flat_world_target".to_owned(),
+            value: target.clone(),
+            evidence_kind: "c_first_typology".to_owned(),
+        });
+    }
     for (key, value) in &evidence.unknown_frontmatter {
         entries.push(FrontmatterEvidence {
             key: key.clone(),
@@ -259,6 +350,55 @@ fn artifact_kind_name(kind: &ArtifactKind) -> &str {
         ArtifactKind::VaultMarkdown => "vault_markdown",
         ArtifactKind::Markdown => "markdown",
         ArtifactKind::Unknown(_) => "unknown",
+    }
+}
+
+fn insert_property(properties: &mut BTreeMap<String, serde_json::Value>, key: &str, value: &str) {
+    properties.insert(key.to_owned(), serde_json::Value::String(value.to_owned()));
+}
+
+fn insert_string_array_property(
+    properties: &mut BTreeMap<String, serde_json::Value>,
+    key: &str,
+    values: &[String],
+) {
+    if values.is_empty() {
+        return;
+    }
+    properties.insert(
+        key.to_owned(),
+        serde_json::Value::Array(
+            values
+                .iter()
+                .cloned()
+                .map(serde_json::Value::String)
+                .collect(),
+        ),
+    );
+}
+
+fn c_layer_role(coordinate: &str) -> Option<&'static str> {
+    match coordinate {
+        "C0" => Some("source_ground"),
+        "C1" => Some("forms_templates"),
+        "C2" => Some("entities_properties_tags"),
+        "C3" => Some("processes_canvases_diagrams"),
+        "C4" => Some("types_contexts_mocs"),
+        "C5" => Some("crystallisations_pratibimba"),
+        _ => None,
+    }
+}
+
+fn graph_evidence_kind(type_coordinate: &str, crystallisation_state: &str) -> &'static str {
+    if crystallisation_state == "crystallised_world_form" {
+        return "c5_world_graduation_receipt";
+    }
+    match type_coordinate {
+        "C2" => "c2_entity_candidate",
+        "C3" => "c3_diagram_canvas_form",
+        "C4" => "c4_type_moc_authority",
+        "C5" => "c5_world_graduation_receipt",
+        _ => "c_layer_typology",
     }
 }
 

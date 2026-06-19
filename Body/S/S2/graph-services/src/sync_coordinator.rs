@@ -4,11 +4,13 @@ use epi_s2_graph_schema::{
     coordinate_prefix_families, coordinate_prefix_family_spec, label_spec,
     labels_for_coordinate_node, node_property_spec, property_spec, relationship_spec,
     validate_coordinate_prefix_property, GraphPropertyType, COORDINATE_PROPERTY,
-    M_COMPONENT_PROPERTY, M_REPO_PATH_PROPERTY, M_SYMBOL_REFS_PROPERTY,
-    REL_CREATED_BY_SYNC_VERSION_PROPERTY, REL_EVIDENCE_KIND_PROPERTY, REL_EVIDENCE_TEXT_PROPERTY,
+    CRYSTALLISATION_STATE_PROPERTY, C_LAYER_PATH_PROPERTY, M_COMPONENT_PROPERTY,
+    M_REPO_PATH_PROPERTY, M_SYMBOL_REFS_PROPERTY, REL_CREATED_BY_SYNC_VERSION_PROPERTY,
+    REL_EVIDENCE_KIND_PROPERTY, REL_EVIDENCE_TEXT_PROPERTY, SEMANTIC_AUTHORITY_PROPERTY,
     S_COMPONENT_PROPERTY, S_DEPENDS_ON_PATHS_PROPERTY, S_EXECUTION_FLOW_REFS_PROPERTY,
     S_FILE_KIND_PROPERTY, S_OWNED_BY_COORDINATE_PROPERTY, S_REPO_PATH_PROPERTY,
-    S_REPO_ROOT_PROPERTY, S_SYMBOL_REFS_PROPERTY,
+    S_REPO_ROOT_PROPERTY, S_SYMBOL_REFS_PROPERTY, TYPE_COORDINATE_PROPERTY, TYPE_FAMILY_PROPERTY,
+    TYPE_PATH_PROPERTY,
 };
 use epi_s3_gateway_contract::{
     GraphitiAdapterContract, GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY,
@@ -828,6 +830,7 @@ impl<'a> SyncCoordinator<'a> {
                 ));
             }
         }
+        validate_c_first_properties(&intent.node.properties)?;
 
         let artifact_kind = intent
             .node
@@ -1126,6 +1129,49 @@ impl<'a> SyncCoordinator<'a> {
             .collect::<Vec<_>>();
         RelationshipManager::plans_from_frontmatter(source_coord, &coord_keys)
     }
+}
+
+fn validate_c_first_properties(properties: &BTreeMap<String, Value>) -> Result<(), String> {
+    let Some(type_coordinate) = properties
+        .get(TYPE_COORDINATE_PROPERTY)
+        .and_then(Value::as_str)
+    else {
+        return Ok(());
+    };
+
+    if !matches!(type_coordinate, "C0" | "C1" | "C2" | "C3" | "C4" | "C5") {
+        return Err(format!(
+            "type_coordinate must be a direct C-layer coordinate, got {type_coordinate}"
+        ));
+    }
+    match properties.get(TYPE_FAMILY_PROPERTY).and_then(Value::as_str) {
+        Some("C") => {}
+        Some(other) => {
+            return Err(format!(
+                "type_family must be C for C-first evidence, got {other}"
+            ))
+        }
+        None => return Err("type_family is required when type_coordinate is present".to_owned()),
+    }
+    for required in [
+        TYPE_PATH_PROPERTY,
+        C_LAYER_PATH_PROPERTY,
+        SEMANTIC_AUTHORITY_PROPERTY,
+        CRYSTALLISATION_STATE_PROPERTY,
+    ] {
+        if properties
+            .get(required)
+            .and_then(Value::as_str)
+            .map(str::trim)
+            .unwrap_or_default()
+            .is_empty()
+        {
+            return Err(format!(
+                "{required} is required when type_coordinate is present"
+            ));
+        }
+    }
+    Ok(())
 }
 
 fn validate_promotion_coordinate(coordinate: &str) -> Result<(), String> {

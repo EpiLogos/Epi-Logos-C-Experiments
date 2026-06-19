@@ -14,8 +14,18 @@ pub const COORDINATE_AXIS_PROPERTY: &str = "coordinate_axis";
 pub const C_LAYER_ROLE_PROPERTY: &str = "c_layer_role";
 pub const SEMANTIC_AUTHORITY_PROPERTY: &str = "semantic_authority";
 pub const WORLD_TYPE_PATH_PROPERTY: &str = "world_type_path";
+pub const TYPE_FAMILY_PROPERTY: &str = "type_family";
+pub const TYPE_PATH_PROPERTY: &str = "type_path";
+pub const TYPE_COORDINATE_PROPERTY: &str = "type_coordinate";
+pub const C_LAYER_PATH_PROPERTY: &str = "c_layer_path";
 pub const CRYSTALLISATION_STATE_PROPERTY: &str = "crystallisation_state";
 pub const C_MOC_EVIDENCE_PATHS_PROPERTY: &str = "c_3_moc_evidence_paths";
+pub const GRAPH_EVIDENCE_KIND_PROPERTY: &str = "graph_evidence_kind";
+pub const ALIASES_PROPERTY: &str = "aliases";
+pub const CANDIDATE_STATE_PROPERTY: &str = "candidate_state";
+pub const ACCEPTED_WIKILINKS_PROPERTY: &str = "accepted_wikilinks";
+pub const SOURCE_C_AUTHORITY_PATH_PROPERTY: &str = "source_c_authority_path";
+pub const FLAT_WORLD_TARGET_PROPERTY: &str = "flat_world_target";
 pub const CANONICAL_VAULT_PATH_PROPERTY: &str = "vault_path";
 pub const ARTIFACT_KIND_PROPERTY: &str = "artifact_kind";
 pub const CONTENT_HASH_PROPERTY: &str = "content_hash";
@@ -869,8 +879,118 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         compatibility: false,
     },
     GraphPropertySpec {
+        key: TYPE_FAMILY_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "c-layer-typology",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: TYPE_PATH_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "world-types",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: TYPE_COORDINATE_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "c-layer-typology",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: C_LAYER_PATH_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "world-types",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
         key: CRYSTALLISATION_STATE_PROPERTY,
         coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "world-types",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: GRAPH_EVIDENCE_KIND_PROPERTY,
+        coordinate_home: "C",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "c-layer-typology",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: ALIASES_PROPERTY,
+        coordinate_home: "C2",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "c-layer-typology",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: CANDIDATE_STATE_PROPERTY,
+        coordinate_home: "C2",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "c-layer-typology",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: ACCEPTED_WIKILINKS_PROPERTY,
+        coordinate_home: "C2",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "c-layer-typology",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: SOURCE_C_AUTHORITY_PATH_PROPERTY,
+        coordinate_home: "C5",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::String,
+        cardinality: GraphPropertyCardinality::One,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "world-types",
+        indexed: true,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: FLAT_WORLD_TARGET_PROPERTY,
+        coordinate_home: "C5",
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -3314,6 +3434,10 @@ mod tests {
     #[test]
     fn coordinate_property_specs_cover_nodes_and_relationships() {
         assert!(node_property_spec("coordinate").is_some());
+        assert!(node_property_spec("type_family").is_some());
+        assert!(node_property_spec("type_path").is_some());
+        assert!(node_property_spec("type_coordinate").is_some());
+        assert!(node_property_spec("c_layer_path").is_some());
         assert!(node_property_spec("c_0_source_coordinates").is_some());
         assert!(node_property_spec("c_1_name").is_some());
         assert!(node_property_spec("c_4_family").is_some());
@@ -3376,6 +3500,20 @@ mod tests {
                         LAST_PROMOTED_AT_PROPERTY,
                         PROMOTION_SOURCE_PROPERTY,
                         RELATION_EVIDENCE_COUNT_PROPERTY,
+                        C_LAYER_ROLE_PROPERTY,
+                        SEMANTIC_AUTHORITY_PROPERTY,
+                        WORLD_TYPE_PATH_PROPERTY,
+                        TYPE_FAMILY_PROPERTY,
+                        TYPE_PATH_PROPERTY,
+                        TYPE_COORDINATE_PROPERTY,
+                        C_LAYER_PATH_PROPERTY,
+                        CRYSTALLISATION_STATE_PROPERTY,
+                        GRAPH_EVIDENCE_KIND_PROPERTY,
+                        ALIASES_PROPERTY,
+                        CANDIDATE_STATE_PROPERTY,
+                        ACCEPTED_WIKILINKS_PROPERTY,
+                        SOURCE_C_AUTHORITY_PATH_PROPERTY,
+                        FLAT_WORLD_TARGET_PROPERTY,
                     ]
                     .contains(&key)
                     || key.starts_with("c_")

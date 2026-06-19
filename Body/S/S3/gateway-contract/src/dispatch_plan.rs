@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     S0_PRIME_VERIFIER_CHECK_STATE_METHOD, S0_PRIME_VERIFIER_EMIT_QUERY_METHOD,
     S0_PRIME_VERIFIER_OWL_QUERY_METHOD, S0_PRIME_VERIFIER_VALIDATE_MEMBERSHIP_METHOD,
+    S1_ENTITY_PROMOTE_TO_TYPE_METHOD, S1_TYPE_CLASSIFY_C_LAYER_METHOD, S1_WORLD_GRADUATE_METHOD,
     S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
     S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
@@ -785,6 +786,24 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "s1'.semantic.suggest_links",
         kind: MethodDispatchKind::S1HenAdapter,
         authority_path: "Body/S/S1/hen-compiler-core (smart_env semantic reader)",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S1_TYPE_CLASSIFY_C_LAYER_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::artifact_evidence",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S1_ENTITY_PROMOTE_TO_TYPE_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::graph_promotion",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S1_WORLD_GRADUATE_METHOD,
+        kind: MethodDispatchKind::S1HenAdapter,
+        authority_path: "Body/S/S1/hen-compiler-core::graph_promotion",
         needs_extraction_to: None,
     },
     // ----- S0 product adapters (operator membrane surfaces) -----

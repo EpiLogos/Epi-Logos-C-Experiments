@@ -25,6 +25,12 @@ pub struct ArtifactEvidence {
     pub artifact_kind: ArtifactKind,
     pub title: Option<String>,
     pub coordinate: Option<String>,
+    pub c_layer_evidence: Option<CLayerEvidence>,
+    pub aliases: Vec<String>,
+    pub candidate_state: Option<String>,
+    pub accepted_wikilinks: Vec<String>,
+    pub source_c_authority_path: Option<String>,
+    pub flat_world_target: Option<String>,
     pub frontmatter_source_coordinates: Vec<String>,
     pub body_wikilinks: Vec<Wikilink>,
     pub headings: Vec<MarkdownHeading>,
@@ -32,6 +38,16 @@ pub struct ArtifactEvidence {
     pub markdown_body_hash: String,
     pub frontmatter: Option<Value>,
     pub unknown_frontmatter: BTreeMap<String, Value>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CLayerEvidence {
+    pub type_family: String,
+    pub type_path: String,
+    pub type_coordinate: String,
+    pub semantic_authority: String,
+    pub crystallisation_state: String,
+    pub c_layer_path: String,
 }
 
 pub fn collect_artifact_evidence(
@@ -50,6 +66,12 @@ pub fn collect_artifact_evidence(
         artifact_kind: artifact_kind(&source_path, frontmatter_map),
         title: frontmatter_string(frontmatter_map, "title").or_else(|| first_h1(body)),
         coordinate: frontmatter_string(frontmatter_map, "coordinate"),
+        c_layer_evidence: c_layer_evidence(&source_path, frontmatter_map),
+        aliases: frontmatter_string_sequence(frontmatter_map, "aliases"),
+        candidate_state: frontmatter_string(frontmatter_map, "candidate_state"),
+        accepted_wikilinks: accepted_wikilinks(frontmatter_map, &body_wikilinks),
+        source_c_authority_path: frontmatter_string(frontmatter_map, "source_c_authority_path"),
+        flat_world_target: frontmatter_string(frontmatter_map, "flat_world_target"),
         frontmatter_source_coordinates: source_coordinates(frontmatter_map),
         body_wikilinks,
         headings: parse_headings(body, body_start_line),
@@ -141,13 +163,125 @@ fn source_coordinates(frontmatter: Option<&Mapping>) -> Vec<String> {
     Vec::new()
 }
 
+fn frontmatter_string_sequence(frontmatter: Option<&Mapping>, key: &str) -> Vec<String> {
+    let Some(map) = frontmatter else {
+        return Vec::new();
+    };
+    let Some(value) = map.get(Value::String(key.to_owned())) else {
+        return Vec::new();
+    };
+    if let Some(value) = value.as_str() {
+        return vec![value.to_owned()];
+    }
+    value
+        .as_sequence()
+        .map(|values| {
+            values
+                .iter()
+                .filter_map(Value::as_str)
+                .map(str::to_owned)
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+fn accepted_wikilinks(frontmatter: Option<&Mapping>, _body_wikilinks: &[Wikilink]) -> Vec<String> {
+    frontmatter_string_sequence(frontmatter, "accepted_wikilinks")
+}
+
+fn c_layer_evidence(source_path: &str, frontmatter: Option<&Mapping>) -> Option<CLayerEvidence> {
+    let normalized = source_path.replace('\\', "/");
+    let source_c_authority_path = frontmatter_string(frontmatter, "source_c_authority_path");
+    let flat_world_target = frontmatter_string(frontmatter, "flat_world_target");
+    let type_coordinate = frontmatter_string(frontmatter, "type_coordinate")
+        .or_else(|| c_coordinate_from_world_types_path(&normalized))
+        .or_else(|| {
+            source_c_authority_path
+                .as_deref()
+                .and_then(c_coordinate_from_world_types_path)
+        })?;
+    let type_family = frontmatter_string(frontmatter, "type_family")
+        .or_else(|| {
+            type_coordinate
+                .chars()
+                .next()
+                .map(|family| family.to_string())
+        })
+        .unwrap_or_else(|| "C".to_owned());
+    let c_layer_path = frontmatter_string(frontmatter, "c_layer_path")
+        .or_else(|| c_layer_path_from_world_types_path(&normalized))
+        .or_else(|| {
+            source_c_authority_path
+                .as_deref()
+                .and_then(c_layer_path_from_world_types_path)
+        })
+        .unwrap_or_else(|| format!("Idea/Bimba/World/Types/Coordinates/C/{type_coordinate}"));
+    let type_path = frontmatter_string(frontmatter, "type_path")
+        .or_else(|| world_types_path_without_extension(&normalized))
+        .or_else(|| source_c_authority_path.clone())
+        .unwrap_or_else(|| c_layer_path.clone());
+    let semantic_authority = frontmatter_string(frontmatter, "semantic_authority")
+        .unwrap_or_else(|| "authoritative".to_owned());
+    let crystallisation_state = frontmatter_string(frontmatter, "crystallisation_state")
+        .or_else(|| {
+            flat_world_target
+                .as_ref()
+                .map(|_| "crystallised_world_form".to_owned())
+        })
+        .or_else(|| {
+            normalized
+                .starts_with("Idea/Bimba/World/Types/")
+                .then(|| "incubating_type_index".to_owned())
+        })
+        .unwrap_or_else(|| "candidate".to_owned());
+
+    Some(CLayerEvidence {
+        type_family,
+        type_path,
+        type_coordinate,
+        semantic_authority,
+        crystallisation_state,
+        c_layer_path,
+    })
+}
+
+fn c_coordinate_from_world_types_path(path: &str) -> Option<String> {
+    path.split('/').find_map(|part| {
+        matches!(part, "C0" | "C1" | "C2" | "C3" | "C4" | "C5").then(|| part.to_owned())
+    })
+}
+
+fn c_layer_path_from_world_types_path(path: &str) -> Option<String> {
+    let parts = path.split('/').collect::<Vec<_>>();
+    let index = parts
+        .iter()
+        .position(|part| matches!(*part, "C0" | "C1" | "C2" | "C3" | "C4" | "C5"))?;
+    Some(parts[..=index].join("/"))
+}
+
+fn world_types_path_without_extension(path: &str) -> Option<String> {
+    path.starts_with("Idea/Bimba/World/Types/")
+        .then(|| path.strip_suffix(".md").unwrap_or(path).to_owned())
+}
+
 fn unknown_frontmatter(frontmatter: Option<&Mapping>) -> BTreeMap<String, Value> {
     const KNOWN_KEYS: &[&str] = &[
+        "accepted_wikilinks",
+        "aliases",
         "artifact_kind",
+        "c_layer_path",
+        "candidate_state",
+        "crystallisation_state",
+        "flat_world_target",
         "coordinate",
+        "semantic_authority",
+        "source_c_authority_path",
         "source_coordinate",
         "source_coordinates",
         "title",
+        "type_coordinate",
+        "type_family",
+        "type_path",
     ];
 
     let mut unknown = BTreeMap::new();

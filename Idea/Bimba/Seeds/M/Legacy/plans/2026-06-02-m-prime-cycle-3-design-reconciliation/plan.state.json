@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T19:11:15.275Z",
+  "updatedAt": "2026-06-19T19:14:40.860Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1551,14 +1551,19 @@
       "worktree": null
     },
     "09.T9.12": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T19:03:16.445Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T19:14:40.821Z",
       "claimedAt": "2026-06-19T19:03:16.445Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T19:14:40.821Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T19:14:40.821Z",
+          "text": "Graph promotion C-first classification, type_family/type_path/type_coordinate/semantic_authority/crystallisation_state/c_layer_path fields emitted, C2-C5 lifecycle evidence, cargo tests pass"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-09-t9-12-c-first-evidence",
-      "leaseExpiresAt": "2026-06-19T21:03:16.445Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T19:03:16.445Z",
       "runId": "20260619T190316Z-09-T9.12",
       "worktree": null
@@ -11545,11 +11550,12 @@
     {
       "runId": "20260619T190316Z-09-T9.12",
       "taskId": "09.T9.12",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T19:03:16.445Z",
       "owner": "codex-m-dev-09-t9-12-c-first-evidence",
       "leaseExpiresAt": "2026-06-19T21:03:16.445Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T19:14:40.821Z"
     },
     {
       "runId": "20260619T190318Z-42-T42.8",

@@ -54,6 +54,9 @@ pub const S2_GRAPH_CORE65_AUDIT_METHOD: &str = "s2.graph.core65.audit";
 pub const S2_GRAPH_PROMOTION_DRY_RUN_METHOD: &str = "s2.graph.promotion.dry_run";
 pub const S2_GRAPH_PROMOTION_COMMIT_METHOD: &str = "s2.graph.promotion.commit";
 pub const S2_GRAPH_RELATION_FAMILY_LIST_METHOD: &str = "s2.graph.relation_family.list";
+pub const S1_TYPE_CLASSIFY_C_LAYER_METHOD: &str = "s1'.type.classify_c_layer";
+pub const S1_ENTITY_PROMOTE_TO_TYPE_METHOD: &str = "s1'.entity.promote_to_type";
+pub const S1_WORLD_GRADUATE_METHOD: &str = "s1'.world.graduate";
 
 pub const S2_GRAPH_GATEWAY_EXPOSED_METHODS: &[&str] = &[
     S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,
