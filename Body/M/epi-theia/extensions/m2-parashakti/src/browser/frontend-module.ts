@@ -6,7 +6,7 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
-import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
+import type { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
     Disposable,

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T00:17:34.085Z",
+  "updatedAt": "2026-06-19T00:26:55.745Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5400,14 +5400,19 @@
       "worktree": null
     },
     "31.T31.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T00:12:18.386Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T00:26:55.703Z",
       "claimedAt": "2026-06-19T00:12:18.386Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T00:26:55.703Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:26:55.703Z",
+          "text": "PASS: keybinding grep found 18 lines across target src/browser paths; source assertions 21/21; validate-keybinding-chord-uniqueness script ok; node --test validate-keybinding-chord-uniqueness.test.mjs 2/2; package checks m0 50/50, m1 build, m2 4/4, m3 build, m4 54/54, m5 7/7, pratibimba-layouts 2/2, omnipanel-shell 55/55. Key files: 8 scoped frontend-module.ts files."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-31-t31-3",
-      "leaseExpiresAt": "2026-06-19T02:12:18.386Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T00:12:18.386Z",
       "runId": "20260619T001218Z-31-T31.3",
       "worktree": null
@@ -11014,11 +11019,12 @@
     {
       "runId": "20260619T001218Z-31-T31.3",
       "taskId": "31.T31.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T00:12:18.386Z",
       "owner": "codex-m-dev-31-t31-3",
       "leaseExpiresAt": "2026-06-19T02:12:18.386Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T00:26:55.703Z"
     },
     {
       "runId": "20260619T001224Z-12-T12.4",
