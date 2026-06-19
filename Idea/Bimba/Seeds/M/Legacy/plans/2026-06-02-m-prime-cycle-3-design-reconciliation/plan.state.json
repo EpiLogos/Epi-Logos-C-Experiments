@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T20:19:54.435Z",
+  "updatedAt": "2026-06-19T20:22:21.403Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -8031,14 +8031,19 @@
       "worktree": null
     },
     "09.T9.14": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T20:11:00.714Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T20:22:21.361Z",
       "claimedAt": "2026-06-19T20:11:00.714Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T20:22:21.361Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:22:21.361Z",
+          "text": "World/Gnostic labels in graph-schema, WORLD_FORM_OF/WORLD_ONTOLOGY_OF relations, four-namespace map schema surface, Hen graph-promotion psychoid-root link, wikilink span-pointer, cargo check/test pass"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-09-t9-14-world-gnostic",
-      "leaseExpiresAt": "2026-06-19T22:11:00.714Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T20:11:00.714Z",
       "runId": "20260619T201100Z-09-T9.14",
       "worktree": null
@@ -11665,11 +11670,12 @@
     {
       "runId": "20260619T201100Z-09-T9.14",
       "taskId": "09.T9.14",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T20:11:00.714Z",
       "owner": "codex-m-dev-09-t9-14-world-gnostic",
       "leaseExpiresAt": "2026-06-19T22:11:00.714Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T20:22:21.361Z"
     },
     {
       "runId": "20260619T201105Z-28-T28.9",

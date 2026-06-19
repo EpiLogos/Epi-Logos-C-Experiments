@@ -6,6 +6,13 @@ pub const EMBEDDING_VERSION: &str = "q-semantic-v2-3072";
 pub const Q_SCHEMA_VERSION: &str = "q-prefix-v3";
 
 pub const BIMBA_LABEL: &str = "Bimba";
+pub const WORLD_LABEL: &str = "World";
+pub const ARCHETYPAL_LABEL: &str = "Archetypal";
+pub const GNOSTIC_LABEL: &str = "Gnostic";
+pub const GNOSTIC_CORPUS_LABEL: &str = "Gnostic:Corpus";
+pub const GNOSTIC_NOTEBOOK_LABEL: &str = "Gnostic:Notebook";
+pub const GNOSTIC_ETYMOLOGY_LABEL: &str = "Gnostic:Etymology";
+pub const GNOSTIC_SKILLS_LABEL: &str = "Gnostic:Skills";
 pub const COORDINATE_PROPERTY: &str = "coordinate";
 pub const COORDINATE_PREFIX_PROPERTY: &str = "coordinate_prefix";
 pub const COORDINATE_DEPTH_PROPERTY: &str = "coordinate_depth";
@@ -26,6 +33,7 @@ pub const CANDIDATE_STATE_PROPERTY: &str = "candidate_state";
 pub const ACCEPTED_WIKILINKS_PROPERTY: &str = "accepted_wikilinks";
 pub const SOURCE_C_AUTHORITY_PATH_PROPERTY: &str = "source_c_authority_path";
 pub const FLAT_WORLD_TARGET_PROPERTY: &str = "flat_world_target";
+pub const SOURCE_ARTIFACT_SPAN_PROPERTY: &str = "c_1_source_artifact_span";
 pub const CANONICAL_VAULT_PATH_PROPERTY: &str = "vault_path";
 pub const ARTIFACT_KIND_PROPERTY: &str = "artifact_kind";
 pub const CONTENT_HASH_PROPERTY: &str = "content_hash";
@@ -102,6 +110,8 @@ pub const REL_CREATED_BY_SYNC_VERSION_PROPERTY: &str = "created_by_sync_version"
 pub const REL_LAST_VERIFIED_AT_PROPERTY: &str = "last_verified_at";
 pub const ARENA_DIALOGUE_OF: &str = "ARENA_DIALOGUE_OF";
 pub const DIALOGICAL_RESONANCE_AT: &str = "DIALOGICAL_RESONANCE_AT";
+pub const WORLD_FORM_OF_RELATION: &str = "WORLD_FORM_OF";
+pub const WORLD_ONTOLOGY_OF_RELATION: &str = "WORLD_ONTOLOGY_OF";
 pub const VAMA_SHAKTI_CLASS_PROPERTY: &str = "vama_shakti_class";
 pub const CLASS_PAIR_PROPERTY: &str = "class_pair";
 pub const ARENA_SCENE_KEY_PROPERTY: &str = "scene_key";
@@ -224,9 +234,51 @@ pub const LABEL_SPECS: &[GraphLabelSpec] = &[
         compatibility: false,
     },
     GraphLabelSpec {
-        label: "Bimba",
+        label: BIMBA_LABEL,
         coordinate_home: "C0",
         source_family: "namespace",
+        compatibility: false,
+    },
+    GraphLabelSpec {
+        label: WORLD_LABEL,
+        coordinate_home: "C0..C5",
+        source_family: "world-entity",
+        compatibility: false,
+    },
+    GraphLabelSpec {
+        label: ARCHETYPAL_LABEL,
+        coordinate_home: "C0..C5",
+        source_family: "world-entity",
+        compatibility: false,
+    },
+    GraphLabelSpec {
+        label: GNOSTIC_LABEL,
+        coordinate_home: "S5",
+        source_family: "gnostic",
+        compatibility: false,
+    },
+    GraphLabelSpec {
+        label: GNOSTIC_CORPUS_LABEL,
+        coordinate_home: "S5",
+        source_family: "gnostic",
+        compatibility: false,
+    },
+    GraphLabelSpec {
+        label: GNOSTIC_NOTEBOOK_LABEL,
+        coordinate_home: "S5",
+        source_family: "gnostic",
+        compatibility: false,
+    },
+    GraphLabelSpec {
+        label: GNOSTIC_ETYMOLOGY_LABEL,
+        coordinate_home: "S5",
+        source_family: "gnostic",
+        compatibility: false,
+    },
+    GraphLabelSpec {
+        label: GNOSTIC_SKILLS_LABEL,
+        coordinate_home: "S5",
+        source_family: "gnostic",
         compatibility: false,
     },
     GraphLabelSpec {
@@ -326,6 +378,18 @@ pub const RELATIONSHIP_TYPE_SPECS: &[GraphRelationshipTypeSpec] = &[
         rel_type: "DERIVES_FROM",
         coordinate_home: "C1",
         source_family: "llm-inference",
+        compatibility: false,
+    },
+    GraphRelationshipTypeSpec {
+        rel_type: WORLD_FORM_OF_RELATION,
+        coordinate_home: "C0..C5",
+        source_family: "world-entity",
+        compatibility: false,
+    },
+    GraphRelationshipTypeSpec {
+        rel_type: WORLD_ONTOLOGY_OF_RELATION,
+        coordinate_home: "C4",
+        source_family: "world-entity",
         compatibility: false,
     },
     GraphRelationshipTypeSpec {
@@ -1007,6 +1071,17 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         cardinality: GraphPropertyCardinality::Many,
         disclosure: GraphPropertyDisclosure::Public,
         source_family: "world-types",
+        indexed: false,
+        compatibility: false,
+    },
+    GraphPropertySpec {
+        key: SOURCE_ARTIFACT_SPAN_PROPERTY,
+        coordinate_home: "C1",
+        owner: GraphPropertyOwner::Node,
+        value_type: GraphPropertyType::StringList,
+        cardinality: GraphPropertyCardinality::Many,
+        disclosure: GraphPropertyDisclosure::Public,
+        source_family: "wikilink-span-pointer",
         indexed: false,
         compatibility: false,
     },
@@ -3514,6 +3589,7 @@ mod tests {
                         ACCEPTED_WIKILINKS_PROPERTY,
                         SOURCE_C_AUTHORITY_PATH_PROPERTY,
                         FLAT_WORLD_TARGET_PROPERTY,
+                        SOURCE_ARTIFACT_SPAN_PROPERTY,
                     ]
                     .contains(&key)
                     || key.starts_with("c_")

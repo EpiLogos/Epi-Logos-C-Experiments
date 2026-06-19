@@ -176,6 +176,17 @@ impl GraphPromotionIntent {
             insert_property(&mut properties, "flat_world_target", target);
         }
 
+        if is_world_types_path(&evidence.source_path) {
+            insert_string_array_property(
+                &mut properties,
+                "c_1_source_artifact_span",
+                &wikilink_span_pointers(&evidence),
+            );
+        }
+
+        let mut relation_candidates = relation_candidates;
+        relation_candidates.extend(world_root_relation_candidates(&evidence, &coordinate));
+
         let compatibility_source =
             legacy_coordinate_evidence(&evidence).filter(|legacy| legacy.coordinate != coordinate);
 
@@ -342,7 +353,63 @@ fn label_hints(evidence: &ArtifactEvidence) -> Vec<String> {
     if evidence.source_path.contains("/Empty/Present/") {
         hints.push("NowSession".to_owned());
     }
+    if is_world_path(&evidence.source_path) {
+        hints.push("World".to_owned());
+        hints.push("Archetypal".to_owned());
+    }
     hints
+}
+
+fn is_world_path(path: &str) -> bool {
+    path.replace('\\', "/").starts_with("Idea/Bimba/World/")
+}
+
+fn is_world_types_path(path: &str) -> bool {
+    path.replace('\\', "/")
+        .starts_with("Idea/Bimba/World/Types/")
+}
+
+fn wikilink_span_pointers(evidence: &ArtifactEvidence) -> Vec<String> {
+    evidence
+        .body_wikilinks
+        .iter()
+        .map(|link| format!("{}@{}:{}", link.raw_target, link.line, link.column))
+        .collect()
+}
+
+fn world_root_relation_candidates(
+    evidence: &ArtifactEvidence,
+    source_coordinate: &str,
+) -> Vec<RelationInferenceCandidate> {
+    if !is_world_path(&evidence.source_path) {
+        return Vec::new();
+    }
+    let Some(c_layer) = &evidence.c_layer_evidence else {
+        return Vec::new();
+    };
+
+    let relation_type = if c_layer.type_coordinate == "C4" {
+        "WORLD_ONTOLOGY_OF"
+    } else {
+        "WORLD_FORM_OF"
+    };
+
+    vec![RelationInferenceCandidate {
+        source_coordinate: source_coordinate.to_owned(),
+        target_coordinate: c_layer.type_coordinate.clone(),
+        relation_type: relation_type.to_owned(),
+        confidence: 1.0,
+        evidence_kind: "llm_inference".to_owned(),
+        evidence_text: format!(
+            "DR-WORLD-1 deterministic World namespace root link from {} to {}.",
+            evidence.source_path, c_layer.type_coordinate
+        ),
+        source_path: Some(evidence.source_path.clone()),
+        source_line: None,
+        target_text: Some(c_layer.type_coordinate.clone()),
+        inferred_by: Some("pi:hen-world-namespace".to_owned()),
+        prompt_hash: Some(evidence.content_hash.clone()),
+    }]
 }
 
 fn artifact_kind_name(kind: &ArtifactKind) -> &str {
