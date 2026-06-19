@@ -67,6 +67,13 @@ const {
     buildMediatedRunEvidencePacket,
     enforceHumanGate
 } = require('../../agentic-control-room/lib/common/run-model.js');
+const {
+    M2_BIMBA_PRATIBIMBA_STATE_FIELDS,
+    M2_TOGGLE_CLASSES,
+    M2_EMPTY_STATE,
+    createM2BimbaPratibimbaSelector,
+    createM2StableMockProfile
+} = require('../../m2-parashakti/lib/browser/state/M2BimbaPratibimbaSelector.js');
 
 test('every step targets one of the two canonical layouts (or any)', () => {
     assert.equal(stepLayoutsAreCanonical(TRACK_05_T9_ACCEPTANCE_PLAN), true);
@@ -588,6 +595,129 @@ test('ide-shell state-identity: active-coordinate preserved while toggling daily
         profileGeneration: 42
     });
 });
+
+test('M2 Bimba-Pratibimba state: all fifteen fields survive both 0/1 toggle AND layout switch', () => {
+    // Verify the M2-side state field contract matches the specification.
+    assert.deepEqual(
+        [...M2_BIMBA_PRATIBIMBA_STATE_FIELDS],
+        [
+            'coordinate', 'lens', 'mode', 'profileGeneration',
+            'sessionKey', 'dayNow',
+            'lens_mode', 'tick12', 'position6', 'address72',
+            'kleinFlipSurfaceValence', 'layerAActiveCell', 'layerBCardScroll',
+            'layerCSurfaceVariant', 'layerCZoom', 'lastRoutingTrace',
+            'correspondenceTreeAxisFilter', 'correspondenceTreeSonicOverlay',
+            'planetaryViewMode', 'epogdoonProofMode'
+        ],
+        'M2 BimbaPratibimba state fields must match the typed selector contract'
+    );
+
+    assert.deepEqual(
+        [...M2_TOGGLE_CLASSES],
+        ['layout:daily-0-1<->ide-deep', 'face:cosmic<->personal-0/1'],
+        'M2 state must survive both toggle classes'
+    );
+
+    const harness = createM2StatePersistenceHarness();
+
+    // Fixture state with non-default values for every M2-specific field
+    const m2State = {
+        coordinate: 'M2.5',
+        lens: "M2'",
+        mode: 'parashakti',
+        profileGeneration: 528,
+        sessionKey: 'acceptance:m2-parashakti',
+        dayNow: '2026-06-19',
+        lens_mode: 'M2.5:parashakti',
+        tick12: 7,
+        position6: 4,
+        address72: 42,
+        kleinFlipSurfaceValence: 'inverted',
+        layerAActiveCell: 42,
+        layerBCardScroll: 3,
+        layerCSurfaceVariant: 'plate',
+        layerCZoom: 2.0,
+        lastRoutingTrace: {
+            traceId: 'trace-m2-001',
+            route: 'm2.meaning_packet',
+            hopCount: 3,
+            lastTimestamp: 1718798400000
+        },
+        correspondenceTreeAxisFilter: 'planetary',
+        correspondenceTreeSonicOverlay: 'profile-tick',
+        planetaryViewMode: 'sidereal-lahiri',
+        epogdoonProofMode: 'strict'
+    };
+
+    harness.writeState(m2State);
+
+    for (const toggle of M2_TOGGLE_CLASSES) {
+        const after = harness.toggleAndRead(toggle);
+        for (const field of M2_BIMBA_PRATIBIMBA_STATE_FIELDS) {
+            assert.deepEqual(
+                after[field],
+                m2State[field],
+                `M2 field "${field}" must survive toggle "${toggle}"`
+            );
+        }
+    }
+
+    // Verify round-trip through empty-to-set-to-toggle cycle
+    const emptyProfile = null;
+    const emptyHarness = createM2StatePersistenceHarnessWithProfile(emptyProfile);
+    const emptyState = emptyHarness.readState();
+    assert.deepEqual(emptyState, M2_EMPTY_STATE, 'fresh harness with null profile returns empty state');
+
+    emptyHarness.writeState(m2State);
+    const afterEmptyToggle = emptyHarness.toggleAndRead('face:cosmic<->personal-0/1');
+    for (const field of M2_BIMBA_PRATIBIMBA_STATE_FIELDS) {
+        assert.deepEqual(
+            afterEmptyToggle[field],
+            m2State[field],
+            `M2 field "${field}" survives toggle from empty start`
+        );
+    }
+});
+
+function createM2StatePersistenceHarness() {
+    return createM2StatePersistenceHarnessWithProfile(createM2StableMockProfile());
+}
+
+function createM2StatePersistenceHarnessWithProfile(profile) {
+    const bridge = createM2StableBridgeSource(profile);
+    const selector = createM2BimbaPratibimbaSelector(bridge);
+
+    return {
+        readState() {
+            return selector.readState();
+        },
+        writeState(patch) {
+            return selector.writeState(patch);
+        },
+        toggleAndRead(toggle) {
+            selector.toggleLayout(toggle);
+            return selector.readState();
+        }
+    };
+}
+
+function createM2StableBridgeSource(profile) {
+    const generation = profile?.generation ?? 0;
+    const snapshot = {
+        profile,
+        context: {
+            canonicalMCoordinate: profile ? 'M2.5' : null,
+            profileGeneration: generation,
+            dayNowSessionHandle: profile ? '2026-06-19' : null,
+            sessionKey: profile ? 'acceptance:m2-parashakti' : null
+        }
+    };
+    return {
+        currentSnapshot() {
+            return snapshot;
+        }
+    };
+}
 
 function createOmniPanelTraversalHarness() {
     const manifest = collapseOmniPanelManifest();
