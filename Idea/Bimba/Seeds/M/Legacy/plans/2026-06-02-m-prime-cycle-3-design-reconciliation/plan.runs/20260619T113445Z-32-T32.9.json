@@ -1,0 +1,33 @@
+{
+  "runId": "20260619T113445Z-32-T32.9",
+  "taskId": "32.T32.9",
+  "startedAt": "2026-06-19T11:34:45.581Z",
+  "owner": "codex-m-dev-32-t32-9",
+  "leaseExpiresAt": "2026-06-19T13:34:45.581Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.9",
+    "trackId": "32",
+    "tranche": "T32.9",
+    "title": "Profile-tick visibility for new users",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.8"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

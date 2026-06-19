@@ -1,0 +1,81 @@
+{
+  "version": "2026-06-05.31-T7",
+  "slots": {
+    "widget.application-shell-left": {
+      "policy": "activity-bar-switched",
+      "stacking": "forbidden",
+      "permittedContributors": [
+        "ide-shell-m0-m5",
+        "m4-nara",
+        "smart-connections-sidebar"
+      ],
+      "rationale": "15-foundation principle 7: activity-bar discipline. Modes switch within the slot; widgets are NOT stacked."
+    },
+    "widget.application-shell-right": {
+      "policy": "exclusive",
+      "exclusiveOwner": "omnipanel-shell",
+      "rationale": "15-foundation principle 5: OmniPanel as / operator membrane. Right sidebar IS the OmniPanel."
+    },
+    "widget.application-shell-bottom-area": {
+      "policy": "per-layout",
+      "daily-0-1": [
+        "pratibimba-layouts.cosmic-status",
+        "kernel-bridge-readiness.summary",
+        "body-lite-surface.day-now-anchor"
+      ],
+      "ide-deep": [
+        "ide-shell-m0-m5.evidence",
+        "ide-shell-m0-m5.review",
+        "ide-shell-m0-m5.autoresearch",
+        "kernel-bridge-readiness.full"
+      ],
+      "rationale": "15 Surface Contracts: bottom pane composition differs per layout."
+    },
+    "widget.application-shell-main": {
+      "policy": "composition",
+      "compositionContracts": [
+        "08-t0-composition-contract-preflight"
+      ],
+      "permittedContributors": [
+        "m0-anuttara",
+        "m1-paramasiva",
+        "m2-parashakti",
+        "m3-mahamaya",
+        "m4-nara",
+        "m5-epii",
+        "plugin-integrated-1-2-3",
+        "plugin-integrated-4-5-0"
+      ],
+      "rationale": "15.4 composition-over-juxtaposition: integrated plugins compose into ONE editor surface, not side-by-side panes."
+    },
+    "widget.application-shell-top-area": {
+      "policy": "exclusive",
+      "exclusiveOwner": "m-extension-runtime.coordinate-breadcrumbs",
+      "rationale": "CCT-11 coordinate breadcrumbs at the top of the editor area."
+    },
+    "widget.application-shell-status-bar": {
+      "policy": "discipline",
+      "stateThreadEntries": {
+        "alignment": "LEFT",
+        "idPrefix": "pratibimba.state-thread.",
+        "exactCount": 6,
+        "permittedIds": [
+          "pratibimba.state-thread.active-coordinate",
+          "pratibimba.state-thread.profile-tick",
+          "pratibimba.state-thread.profile-generation",
+          "pratibimba.state-thread.day-now",
+          "pratibimba.state-thread.session-id",
+          "pratibimba.state-thread.gateway-readiness"
+        ]
+      },
+      "navigationChips": {
+        "alignment": "RIGHT",
+        "idPrefix": "pratibimba.nav.",
+        "permittedContributors": [
+          "pratibimba-layouts"
+        ]
+      },
+      "rationale": "15.10 status bar discipline: exactly six state-thread entries; navigation chips permitted only on RIGHT."
+    }
+  }
+}

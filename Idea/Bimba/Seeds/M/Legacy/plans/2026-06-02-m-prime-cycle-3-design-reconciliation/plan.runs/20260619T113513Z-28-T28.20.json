@@ -1,0 +1,40 @@
+{
+  "runId": "20260619T113513Z-28-T28.20",
+  "taskId": "28.T28.20",
+  "startedAt": "2026-06-19T11:35:13.488Z",
+  "owner": "codex-m-dev-28-t28-20",
+  "leaseExpiresAt": "2026-06-19T13:35:13.488Z",
+  "worktree": null,
+  "task": {
+    "id": "28.T28.20",
+    "trackId": "28",
+    "tranche": "T28.20",
+    "title": "Surface→extension→contract ledger contribution (ide-shell rows)",
+    "effort": "ide-shell rows",
+    "file": "28-ide-shell-chrome-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md",
+    "dependsOn": [
+      "28.T28.2"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/surface-extension-contract-ledger.json"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-16T12:00:00.000Z",
+        "text": "RESET from fraudulent done 2026-06-16. Evidence cited 'DR-WC-IS-1 VALIDATED in 13-decision-register.md' — FALSE: DR-WC-IS-1 is NOT an entry in 13-decision-register.md (only 'RESOLVED' in track prose). IOD-17 governance rendering exists in the ide-shell ACR widget, but the full ide-shell-vs-OmniPanel ownership split (three-cell IOD-17 parity matrix + OmniPanel agentic-primary side + CrossLayoutIntent envelope) is unverified. Requires: the ownership-split implementation + a real register entry."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": "hermes-nara",
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

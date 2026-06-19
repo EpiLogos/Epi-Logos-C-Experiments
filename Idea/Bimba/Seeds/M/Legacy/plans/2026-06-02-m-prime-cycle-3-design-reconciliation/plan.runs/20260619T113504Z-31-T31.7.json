@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T113504Z-31-T31.7",
+  "taskId": "31.T31.7",
+  "startedAt": "2026-06-19T11:35:04.240Z",
+  "owner": "codex-m-dev-31-t31-7-shell-slot-policy",
+  "leaseExpiresAt": "2026-06-19T13:35:04.240Z",
+  "worktree": null,
+  "task": {
+    "id": "31.T31.7",
+    "trackId": "31",
+    "tranche": "T31.7",
+    "title": "Application-shell slot policy contract",
+    "effort": null,
+    "file": "31-chrome-contributions-catalog.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/31-chrome-contributions-catalog.md",
+    "dependsOn": [
+      "31.T31.6"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/shell-slot-policy.json"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}
