@@ -1,42 +1,87 @@
 import * as React from 'react';
 import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
+import { CommandRegistry } from '@theia/core/lib/common';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
     KERNEL_BRIDGE_API,
-    type KernelBridgeAPI
+    type KernelBridgeAPI,
+    type KernelBridgeCapabilityReceipt
 } from '@pratibimba/kernel-bridge';
 import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common/bridge-readiness';
-import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
+import {
+    ReadinessBanner,
+    type MExtensionReadinessSnapshot
+} from '@pratibimba/m-extension-runtime/lib/common';
+import type { CrossLayoutIntent } from '@pratibimba/pratibimba-layouts';
+import {
+    EXTENSION_ID,
+    IDE_SHELL_INTENT_TARGETS,
+    IDE_SHELL_WIDGET_IDS,
+    isPrivacySafe
+} from '../common/contract';
 import { IdeShellBridgeGate } from './bridge-gate';
 import { PrivacyDropFeed } from './services/privacy-drop-feed';
+import { AletheiaSubagentTrace } from './acr/aletheia-subagent-trace';
+import type { AletheiaSubagent, DispatchTraceNode } from './acr/types';
+
+const CROSS_LAYOUT_INTENT_DISPATCH_COMMAND = 'pratibimba.intent.dispatch' as const;
 
 /**
  * Logos Atelier — Track 05 T4.
  *
- * Etymology namespace + staged exploration workflow. Per the plan body, the
- * Atelier is "a Theia workspace contribution" — meaning it surfaces a
- * dedicated workspace pane for word-level / sign-level / glyph-level
- * exploration with stage tracking.
- *
- * The exploration stages are derived from the QL ladder: literal-functional-
- * structural-archetypal-paradigmatic-integral (L0..L5). Each stage stores its
- * own notes, references, and provenance handles. Provenance handles are
- * surfaced to the user; nothing carries forward to the gateway except via
- * `KERNEL_BRIDGE_API.invokeCapability`.
+ * Etymology namespace + scent-following exploration workflow. Each stage
+ * stores its own notes and `etymology://` provenance handles. Nothing carries
+ * forward to the gateway except via `KERNEL_BRIDGE_API.invokeCapability`, and
+ * Möbius write-back emits only a governed Canon Studio intent.
  */
-const ATELIER_STAGES = [
-    { id: 'L0', label: 'L0 Literal' },
-    { id: 'L1', label: 'L1 Functional' },
-    { id: 'L2', label: 'L2 Structural' },
-    { id: 'L3', label: 'L3 Archetypal' },
-    { id: 'L4', label: 'L4 Paradigmatic' },
-    { id: 'L5', label: 'L5 Integral' }
+const SCENT_FOLLOWING_STAGES = [
+    { id: 'root',              label: 'Root',                  purpose: 'Etymology root of term' },
+    { id: 'cognate',           label: 'Cognate',               purpose: 'Cross-language cognates' },
+    { id: 'drift',             label: 'Semantic Drift',        purpose: 'Historical sense drift' },
+    { id: 'psychoid',          label: 'Psychoid Charge',       purpose: 'Archetypal-affective charge per Atelier' },
+    { id: 'pros-hen',          label: 'Pros-hen Synthesis',    purpose: 'Toward-the-One; Klein-V4 square pull' },
+    { id: 'mobius-write-back', label: 'Möbius Write-Back',     purpose: 'Candidate articulation flowing to M0/M5-1' }
 ] as const;
+
+type ScentFollowingStageId = (typeof SCENT_FOLLOWING_STAGES)[number]['id'];
 
 interface AtelierStageState {
     notes: string;
     provenanceHandles: string[];
 }
+
+interface AletheiaThreadTrace {
+    root: DispatchTraceNode | null;
+    provenanceChain: string[];
+    mergeMarkers: string[];
+}
+
+type CanonStudioWriteBackIntent = CrossLayoutIntent & {
+    readonly content: string;
+    readonly provenanceHandles: readonly string[];
+    readonly mutatesGraphCanon: false;
+    readonly sourceWidgetId: typeof IDE_SHELL_WIDGET_IDS.LOGOS_ATELIER;
+};
+
+const PENDING_ALETHEIA_GATEWAY_READINESS: MExtensionReadinessSnapshot = Object.freeze({
+    fetchedAt: 0,
+    state: 'authority_payload_missing',
+    reason: "pending-gateway: s5'.gnostic.query unregistered",
+    profileGeneration: null,
+    bridgeReachable: false,
+    blockerIds: Object.freeze(["s5'.gnostic.query unregistered"]),
+    payloadOwner: "s5'.gnostic.*"
+});
+
+const ALETHEIA_GATEWAY_BLOCKERS = ["s5'.gnostic.query unregistered"] as const;
+const ALETHEIA_SUBAGENTS: readonly AletheiaSubagent[] = [
+    'anansi',
+    'janus',
+    'moirai',
+    'mercurius',
+    'agora',
+    'zeithoven'
+];
 
 @injectable()
 export class LogosAtelierWidget extends ReactWidget {
@@ -49,11 +94,18 @@ export class LogosAtelierWidget extends ReactWidget {
     @inject(PrivacyDropFeed)
     protected readonly privacyDropFeed!: PrivacyDropFeed;
 
+    @inject(CommandRegistry)
+    protected readonly commandRegistry!: CommandRegistry;
+
     protected currentTerm: string = '';
     protected stages: Record<string, AtelierStageState> = Object.fromEntries(
-        ATELIER_STAGES.map(s => [s.id, { notes: '', provenanceHandles: [] }])
+        SCENT_FOLLOWING_STAGES.map(s => [s.id, { notes: '', provenanceHandles: [] }])
     );
     protected lastError: string | null = null;
+    protected lastToolStatus: string | null = null;
+    protected latestThreadTrace: AletheiaThreadTrace | null = null;
+    protected lastCrystallisedArticulation: string | null = null;
+    public lastCanonStudioIntent: CanonStudioWriteBackIntent | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -87,13 +139,15 @@ export class LogosAtelierWidget extends ReactWidget {
             this.update();
             return;
         }
-        const stage = this.stages.L5;
-        const writeBackLine = `Mobius write-back artifact: ${artifactUri}`;
+        const stage = this.stages['mobius-write-back'];
+        const writeBackLine = `Möbius write-back artifact: ${artifactUri}`;
         if (stage && !stage.notes.includes(writeBackLine)) {
             const notes = stage.notes ? `${stage.notes}\n${writeBackLine}` : writeBackLine;
-            this.stages.L5 = { ...stage, notes };
+            this.stages['mobius-write-back'] = { ...stage, notes };
         }
-        this.attachProvenance('L5', artifactUri, privacyClass ?? undefined);
+        if (this.isEtymologyHandle(artifactUri)) {
+            this.attachProvenance('mobius-write-back', artifactUri, privacyClass ?? undefined);
+        }
         this.update();
     }
 
@@ -105,6 +159,12 @@ export class LogosAtelierWidget extends ReactWidget {
         if (!isPrivacySafe(privacyClass)) {
             this.recordPrivacyDrop(privacyClass);
             this.lastError = `Privacy class "${privacyClass}" rejected by Logos Atelier`;
+            this.update();
+            return;
+        }
+        if (!this.isEtymologyHandle(handle)) {
+            this.recordPrivacyDrop('invalid-etymology-uri');
+            this.lastError = `Provenance handle "${handle}" rejected: Logos Atelier accepts only etymology:// URIs`;
             this.update();
             return;
         }
@@ -121,6 +181,194 @@ export class LogosAtelierWidget extends ReactWidget {
 
     protected recordPrivacyDrop(privacyClass: string | null | undefined): void {
         this.privacyDropFeed.record(this.id, privacyClass as string);
+    }
+
+    protected isEtymologyHandle(handle: string): boolean {
+        return /^etymology:\/\/[^\s]+$/u.test(handle);
+    }
+
+    protected get accumulatedProvenanceHandles(): string[] {
+        return SCENT_FOLLOWING_STAGES.flatMap(stage => this.stages[stage.id].provenanceHandles);
+    }
+
+    protected get accumulatedStageNotes(): Record<string, string> {
+        return Object.fromEntries(
+            SCENT_FOLLOWING_STAGES.map(stage => [stage.id, this.stages[stage.id].notes])
+        );
+    }
+
+    protected aletheiaGatewayPending(): boolean {
+        return true;
+    }
+
+    protected async runAletheiaGnosisQuery(stageId: Extract<ScentFollowingStageId, 'root' | 'cognate'>): Promise<void> {
+        await this.invokeAletheiaStageTool(stageId, 'aletheia_gnosis_query');
+    }
+
+    protected async runAletheiaThoughtRoute(stageId: Extract<ScentFollowingStageId, 'drift' | 'psychoid'>): Promise<void> {
+        await this.invokeAletheiaStageTool(stageId, 'aletheia_thought_route');
+    }
+
+    protected async invokeAletheiaStageTool(
+        stageId: ScentFollowingStageId,
+        gatewayMethod: 'aletheia_gnosis_query' | 'aletheia_thought_route'
+    ): Promise<void> {
+        this.lastError = null;
+        try {
+            const receipt = await this.bridge.invokeCapability({
+                method: `ide-shell.logos-atelier.${gatewayMethod}`,
+                sessionKey: this.sessionKeyFor(stageId),
+                params: {
+                    gatewayMethod,
+                    term: this.currentTerm,
+                    stageId,
+                    notes: this.stages[stageId].notes,
+                    provenanceHandles: this.accumulatedProvenanceHandles
+                },
+                profileGeneration: this.bridge.cachedProfile?.generation ?? null,
+                provenanceHandles: this.accumulatedProvenanceHandles,
+                vak: null
+            });
+            this.ingestEtymologyHandles(stageId, receipt);
+            this.lastToolStatus = `${gatewayMethod} completed for ${stageId}`;
+        } catch (err) {
+            this.lastError = err instanceof Error ? err.message : String(err);
+        }
+        this.update();
+    }
+
+    protected async refreshAletheiaThreadTrace(): Promise<void> {
+        this.lastError = null;
+        try {
+            const receipt = await this.bridge.invokeCapability({
+                method: 'ide-shell.logos-atelier.thread_trace',
+                sessionKey: this.sessionKeyFor('psychoid'),
+                params: {
+                    gatewayMethod: "s5'.gnostic.thread_trace",
+                    term: this.currentTerm
+                },
+                profileGeneration: this.bridge.cachedProfile?.generation ?? null,
+                provenanceHandles: this.accumulatedProvenanceHandles,
+                vak: null
+            });
+            this.latestThreadTrace = this.asAletheiaThreadTrace(receipt.artifact, receipt.provenanceHandles);
+            this.lastToolStatus = "s5'.gnostic.thread_trace refreshed";
+        } catch (err) {
+            this.lastError = err instanceof Error ? err.message : String(err);
+        }
+        this.update();
+    }
+
+    protected async crystalliseAndSendToCanonStudio(): Promise<void> {
+        this.lastError = null;
+        try {
+            const receipt = await this.bridge.invokeCapability({
+                method: 'ide-shell.logos-atelier.aletheia_crystallise',
+                sessionKey: this.sessionKeyFor('mobius-write-back'),
+                params: {
+                    gatewayMethod: 'aletheia_crystallise',
+                    term: this.currentTerm,
+                    stageNotes: this.accumulatedStageNotes,
+                    provenanceHandles: this.accumulatedProvenanceHandles,
+                    mutatesGraphCanon: false
+                },
+                profileGeneration: this.bridge.cachedProfile?.generation ?? null,
+                provenanceHandles: this.accumulatedProvenanceHandles,
+                vak: null
+            });
+            this.ingestEtymologyHandles('mobius-write-back', receipt);
+            const content = this.extractCandidateArticulation(receipt.artifact);
+            const artifactUri = this.generatedCanonCandidateUri(receipt.artifact);
+            this.lastCrystallisedArticulation = content;
+            this.lastCanonStudioIntent = {
+                coordinate: null,
+                artifactUri,
+                reviewId: null,
+                dayNow: null,
+                sessionKey: this.sessionKeyFor('mobius-write-back'),
+                profileGeneration: receipt.profileGeneration,
+                privacyClass: 'public',
+                requestedLayout: 'ide-deep',
+                requestedExtensionId: EXTENSION_ID,
+                requestedContributionId: IDE_SHELL_INTENT_TARGETS.CANON_STUDIO,
+                reason: 'Logos Atelier Möbius write-back candidate for Canon Studio review',
+                content,
+                provenanceHandles: this.accumulatedProvenanceHandles,
+                mutatesGraphCanon: false,
+                sourceWidgetId: IDE_SHELL_WIDGET_IDS.LOGOS_ATELIER
+            };
+            await this.commandRegistry.executeCommand(
+                CROSS_LAYOUT_INTENT_DISPATCH_COMMAND,
+                this.lastCanonStudioIntent
+            );
+            this.lastToolStatus = 'Crystallised candidate sent to Canon Studio';
+        } catch (err) {
+            this.lastError = err instanceof Error ? err.message : String(err);
+        }
+        this.update();
+    }
+
+    protected sessionKeyFor(stageId: ScentFollowingStageId): string {
+        return `logos-atelier:${stageId}:${this.currentTerm.trim() || 'untitled'}`;
+    }
+
+    protected ingestEtymologyHandles(stageId: ScentFollowingStageId, receipt: KernelBridgeCapabilityReceipt): void {
+        for (const handle of this.extractEtymologyHandles(receipt)) {
+            this.attachProvenance(stageId, handle, receipt.privacyClass);
+        }
+    }
+
+    protected extractEtymologyHandles(receipt: KernelBridgeCapabilityReceipt): string[] {
+        const artifact = asRecord(receipt.artifact);
+        const candidates = [
+            ...receipt.provenanceHandles,
+            ...stringArrayField(artifact, 'provenanceHandles'),
+            ...stringArrayField(artifact, 'handles'),
+            ...stringArrayField(artifact, 'etymologyHandles'),
+            stringField(artifact, 'artifactUri'),
+            stringField(artifact, 'uri')
+        ];
+        return [...new Set(candidates.filter((h): h is string => typeof h === 'string'))]
+            .filter(handle => this.isEtymologyHandle(handle));
+    }
+
+    protected extractCandidateArticulation(artifact: unknown): string {
+        if (typeof artifact === 'string') {
+            return artifact;
+        }
+        const record = asRecord(artifact);
+        return stringField(record, 'crystallisedArticulation')
+            ?? stringField(record, 'crystallizedArticulation')
+            ?? stringField(record, 'candidateCanonicalArticulation')
+            ?? stringField(record, 'canonicalArticulation')
+            ?? stringField(record, 'content')
+            ?? stringField(record, 'text')
+            ?? JSON.stringify(artifact, null, 2);
+    }
+
+    protected generatedCanonCandidateUri(artifact: unknown): string {
+        const uri = stringField(asRecord(artifact), 'artifactUri') ?? stringField(asRecord(artifact), 'uri');
+        if (uri && this.isEtymologyHandle(uri)) {
+            return uri;
+        }
+        const term = encodeURIComponent(this.currentTerm.trim() || 'untitled');
+        return `etymology://canon-studio/${term}/${Date.now()}`;
+    }
+
+    protected asAletheiaThreadTrace(artifact: unknown, fallbackHandles: readonly string[]): AletheiaThreadTrace {
+        const record = asRecord(artifact);
+        const root = asDispatchTraceNode(record?.threadTrace)
+            ?? asDispatchTraceNode(record?.dispatchTrace)
+            ?? asDispatchTraceNode(record?.trace)
+            ?? null;
+        return {
+            root,
+            provenanceChain: [
+                ...fallbackHandles.filter(handle => this.isEtymologyHandle(handle)),
+                ...stringArrayField(record, 'provenanceChain')
+            ],
+            mergeMarkers: stringArrayField(record, 'mergeMarkers')
+        };
     }
 
     protected override render(): React.ReactNode {
@@ -158,25 +406,40 @@ export class LogosAtelierWidget extends ReactWidget {
                     <p data-test="logos-atelier-privacy-dropped">
                         privacy-dropped: {this.privacyDropped}
                     </p>
+                    <ReadinessBanner
+                        extensionId={EXTENSION_ID}
+                        extensionLabel="Logos Atelier Aletheia Tools"
+                        snapshot={PENDING_ALETHEIA_GATEWAY_READINESS}
+                        declaredBlockers={ALETHEIA_GATEWAY_BLOCKERS}
+                        evidenceHandles={this.accumulatedProvenanceHandles}
+                        provenance="pending-gateway"
+                    />
                     {this.lastError !== null && (
                         <p className="ide-shell-error" data-test="logos-atelier-error">
                             {this.lastError}
                         </p>
                     )}
+                    {this.lastToolStatus !== null && (
+                        <p data-test="logos-atelier-tool-status">
+                            {this.lastToolStatus}
+                        </p>
+                    )}
                 </section>
-                {ATELIER_STAGES.map(stage => (
+                {SCENT_FOLLOWING_STAGES.map(stage => (
                     <section
                         key={stage.id}
                         className="ide-shell-widget-detail"
                         data-test={`logos-atelier-stage-${stage.id}`}
                     >
                         <h4>{stage.label}</h4>
+                        <p>{stage.purpose}</p>
                         <textarea
                             value={this.stages[stage.id].notes}
                             onChange={e => this.setStageNotes(stage.id, e.target.value)}
                             rows={3}
                             data-test={`logos-atelier-notes-${stage.id}`}
                         />
+                        {this.renderStageTools(stage.id)}
                         <p data-test={`logos-atelier-provenance-count-${stage.id}`}>
                             provenance handles: {this.stages[stage.id].provenanceHandles.length}
                         </p>
@@ -187,9 +450,157 @@ export class LogosAtelierWidget extends ReactWidget {
                                 </li>
                             ))}
                         </ul>
+                        {stage.id === 'psychoid' && this.renderSubagentTrace()}
                     </section>
                 ))}
             </div>
         );
     }
+
+    protected renderStageTools(stageId: ScentFollowingStageId): React.ReactNode {
+        const disabled = this.aletheiaGatewayPending();
+        if (stageId === 'root' || stageId === 'cognate') {
+            return (
+                <button
+                    type="button"
+                    disabled={disabled}
+                    data-test={`logos-atelier-${stageId}-gnosis-query`}
+                    onClick={() => { void this.runAletheiaGnosisQuery(stageId); }}
+                >
+                    Query Gnosis
+                </button>
+            );
+        }
+        if (stageId === 'drift' || stageId === 'psychoid') {
+            return (
+                <button
+                    type="button"
+                    disabled={disabled}
+                    data-test={`logos-atelier-${stageId}-thought-route`}
+                    onClick={() => { void this.runAletheiaThoughtRoute(stageId); }}
+                >
+                    Route Thought
+                </button>
+            );
+        }
+        if (stageId === 'mobius-write-back') {
+            return (
+                <button
+                    type="button"
+                    disabled={disabled}
+                    data-test="logos-atelier-crystallise-send"
+                    onClick={() => { void this.crystalliseAndSendToCanonStudio(); }}
+                >
+                    Crystallise + Send to Canon Studio
+                </button>
+            );
+        }
+        return null;
+    }
+
+    protected renderSubagentTrace(): React.ReactNode {
+        const trace = this.latestThreadTrace;
+        const subagentNodes = trace?.root ? this.aletheiaTraceNodes(trace.root) : [];
+        return (
+            <details data-test="logos-atelier-aletheia-subagent-trace">
+                <summary>Aletheia subagent trace</summary>
+                <button
+                    type="button"
+                    disabled={this.aletheiaGatewayPending()}
+                    data-test="logos-atelier-thread-trace-refresh"
+                    onClick={() => { void this.refreshAletheiaThreadTrace(); }}
+                >
+                    Refresh trace
+                </button>
+                {trace === null || trace.root === null ? (
+                    <p data-test="logos-atelier-thread-trace-empty">
+                        pending latest s5'.gnostic.thread_trace for {this.currentTerm || 'current term'}
+                    </p>
+                ) : (
+                    <>
+                        <ol data-test="logos-atelier-thread-provenance-chain">
+                            {trace.provenanceChain.map(handle => (
+                                <li key={handle}><code>{handle}</code></li>
+                            ))}
+                        </ol>
+                        <ul data-test="logos-atelier-thread-merge-markers">
+                            {trace.mergeMarkers.map(marker => (
+                                <li key={marker}>{marker}</li>
+                            ))}
+                        </ul>
+                        {subagentNodes.map(node => (
+                            <AletheiaSubagentTrace
+                                key={node.id}
+                                subagent={node.aletheiaSubagent as AletheiaSubagent}
+                                subtrace={node}
+                            />
+                        ))}
+                    </>
+                )}
+            </details>
+        );
+    }
+
+    protected aletheiaTraceNodes(node: DispatchTraceNode): readonly DispatchTraceNode[] {
+        const children = node.children ?? [];
+        return [
+            ...(isAletheiaSubagentNode(node) ? [node] : []),
+            ...children.flatMap(child => [...this.aletheiaTraceNodes(child)])
+        ];
+    }
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+    return typeof value === 'object' && value !== null ? value as Record<string, unknown> : null;
+}
+
+function stringField(record: Record<string, unknown> | null, key: string): string | null {
+    const value = record?.[key];
+    return typeof value === 'string' ? value : null;
+}
+
+function stringArrayField(record: Record<string, unknown> | null, key: string): string[] {
+    const value = record?.[key];
+    return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === 'string') : [];
+}
+
+function asDispatchTraceNode(value: unknown): DispatchTraceNode | null {
+    if (Array.isArray(value)) {
+        return {
+            id: 's5-gnostic-thread-trace',
+            label: "s5'.gnostic.thread_trace",
+            actor: 'aletheia',
+            children: value.map(asDispatchTraceNode).filter((node): node is DispatchTraceNode => node !== null)
+        };
+    }
+    const record = asRecord(value);
+    if (record === null) {
+        return null;
+    }
+    const id = stringField(record, 'id') ?? stringField(record, 'nodeId') ?? `trace-${String(record.label ?? 'node')}`;
+    const label = stringField(record, 'label') ?? stringField(record, 'name') ?? id;
+    const maybeSubagent = stringField(record, 'aletheiaSubagent') ?? stringField(record, 'subagent');
+    return {
+        id,
+        label,
+        actor: stringField(record, 'actor') ?? 'aletheia',
+        coordinate: stringField(record, 'coordinate'),
+        sourceAnchor: stringField(record, 'sourceAnchor'),
+        methodOrSkill: stringField(record, 'methodOrSkill') ?? stringField(record, 'method') ?? stringField(record, 'skill'),
+        tickAtInvoke: typeof record.tickAtInvoke === 'number' ? record.tickAtInvoke : null,
+        psycheFacet: stringField(record, 'psycheFacet'),
+        aletheiaSubagent: isAletheiaSubagent(maybeSubagent) ? maybeSubagent : null,
+        mediatedRunEvidencePacketId: stringField(record, 'mediatedRunEvidencePacketId'),
+        children: Array.isArray(record.children)
+            ? record.children.map(asDispatchTraceNode).filter((node): node is DispatchTraceNode => node !== null)
+            : []
+    };
+}
+
+function isAletheiaSubagent(value: string | null): value is AletheiaSubagent {
+    return value !== null && (ALETHEIA_SUBAGENTS as readonly string[]).includes(value);
+}
+
+function isAletheiaSubagentNode(node: DispatchTraceNode): boolean {
+    return isAletheiaSubagent(node.aletheiaSubagent ?? null);
 }
