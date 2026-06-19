@@ -13,7 +13,7 @@ import { animaExtension } from "./extension/mod.ts";
  *
  * Active-tool contract:
  * const animaDefaultTools = [
- * "vak_evaluate", "anima_orchestrate", "dispatch_agent", "run_chain",
+ * "vak_evaluate", "anima_orchestrate", "anima_arena_orchestrate", "dispatch_agent", "run_chain",
  * "subagent_create", "tilldone", "dispatch_parallel_agents",
  * "dispatch_fusion_agents"
  * ]
@@ -33,6 +33,7 @@ export * from "./extension/capabilities.ts";
 export * from "./extension/dispatch.ts";
 export * from "./extension/tools.ts";
 export * from "./extension/subscriptions.ts";
+export * from "./lib/arena-orchestrator.ts";
 
 export default async function animaExtensionEntry(api: ExtensionAPI) {
   await animaExtension(api);

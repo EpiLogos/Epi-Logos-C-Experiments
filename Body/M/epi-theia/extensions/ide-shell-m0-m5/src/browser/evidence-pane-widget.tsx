@@ -9,6 +9,7 @@ import { BridgeReadinessBadge } from '@pratibimba/m-extension-runtime/lib/common
 import { IDE_SHELL_WIDGET_IDS, isPrivacySafe } from '../common/contract';
 import { IdeShellBridgeGate } from './bridge-gate';
 import { PrivacyDropFeed } from './services/privacy-drop-feed';
+import { ANUTTARA_SYMBOLIC_PARSE_SOURCE_SKILL_PATH } from './services/pi-axiom-translation-service';
 
 /**
  * Evidence pane — Track 05 T4 (T8 wires it to the agentic flow).
@@ -36,6 +37,7 @@ export interface EvidenceRecord {
     readonly sessionKey?: string;
     readonly dayNowContext?: string;
     readonly profileGeneration?: number;
+    readonly axiomTranslationSessionId?: string;
 }
 
 @injectable()
@@ -60,9 +62,9 @@ export class EvidencePaneWidget extends ReactWidget {
         this.title.closable = true;
         this.addClass('ide-shell-widget');
 
-    {/* 28.18 status-bar consumption contract: sessionKey/dayNowContext/profileGeneration
-        per evidence record MUST derive from record.{sessionKey, dayNowContext, profileGeneration}
-        set at record creation; widget does NOT compute these fields. 15.10 owns status-bar build. */}
+        /* 28.18 status-bar consumption contract: sessionKey/dayNowContext/profileGeneration
+           per evidence record MUST derive from record.{sessionKey, dayNowContext, profileGeneration}
+           set at record creation; widget does NOT compute these fields. 15.10 owns status-bar build. */
         this.addClass('ide-shell-evidence-pane');
     }
 
@@ -213,6 +215,20 @@ export class EvidencePaneWidget extends ReactWidget {
                                         <>
                                             <dt>Profile generation</dt>
                                             <dd>{r.profileGeneration}</dd>
+                                        </>
+                                    )}
+                                    {r.axiomTranslationSessionId && (
+                                        <>
+                                            <dt>Axiom translation</dt>
+                                            <dd>
+                                                <a
+                                                    href={`epi-logos://ide/ide-shell-m0-m5/pi-axiom-translation?session=${encodeURIComponent(r.axiomTranslationSessionId)}`}
+                                                    data-intent-target="pi-axiom-translation"
+                                                    data-source-skill={ANUTTARA_SYMBOLIC_PARSE_SOURCE_SKILL_PATH}
+                                                >
+                                                    PiAxiomTranslationInspector
+                                                </a>
+                                            </dd>
                                         </>
                                     )}
                                 </dl>

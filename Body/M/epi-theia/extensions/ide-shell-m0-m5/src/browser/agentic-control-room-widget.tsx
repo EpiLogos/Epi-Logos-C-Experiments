@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
+import { CommandService } from '@theia/core';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
     KERNEL_BRIDGE_API,
@@ -14,6 +15,15 @@ import {
     type CapabilityMatrix
 } from '../common/capability-matrix-types';
 import { IdeShellBridgeGate } from './bridge-gate';
+import {
+    PiAxiomTranslationInspector
+} from './acr/pi-axiom-translation-inspector';
+import {
+    PiAxiomTranslationService,
+    createPiAxiomTranslationViewModel,
+    type PiAxiomTranslationHistoryFilter,
+    type PiAxiomTranslationSession
+} from './services/pi-axiom-translation-service';
 
 /**
  * Agentic Control Room — T4 scope: shell only.
@@ -42,6 +52,10 @@ export interface AgenticControlRoomState {
     readonly profileGeneration: number | null;
     readonly matrix: CapabilityMatrix | null;
     readonly matrixError: string | null;
+    readonly axiomTranslationSessions: readonly PiAxiomTranslationSession[];
+    readonly axiomTranslationError: string | null;
+    readonly selectedAxiomTranslationSessionId: string | null;
+    readonly expandedAxiomTranslationStepId: string | null;
 }
 
 const EMPTY_STATE: AgenticControlRoomState = {
@@ -52,7 +66,11 @@ const EMPTY_STATE: AgenticControlRoomState = {
     dayNow: null,
     profileGeneration: null,
     matrix: null,
-    matrixError: null
+    matrixError: null,
+    axiomTranslationSessions: [],
+    axiomTranslationError: null,
+    selectedAxiomTranslationSessionId: null,
+    expandedAxiomTranslationStepId: null
 };
 
 @injectable()
@@ -62,6 +80,12 @@ export class AgenticControlRoomWidget extends ReactWidget {
 
     @inject(KERNEL_BRIDGE_API)
     protected readonly bridge!: KernelBridgeAPI;
+
+    @inject(CommandService)
+    protected readonly commands!: CommandService;
+
+    @inject(PiAxiomTranslationService)
+    protected readonly axiomTranslations!: PiAxiomTranslationService;
 
     protected state: AgenticControlRoomState = EMPTY_STATE;
     /** Injected at activation time by the host contribution. */
@@ -99,6 +123,30 @@ export class AgenticControlRoomWidget extends ReactWidget {
         this.update();
     }
 
+    async refreshAxiomTranslationHistory(
+        filter: PiAxiomTranslationHistoryFilter = {}
+    ): Promise<void> {
+        try {
+            const sessions = await this.axiomTranslations.fetchHistory(filter);
+            this.state = {
+                ...this.state,
+                axiomTranslationSessions: sessions,
+                axiomTranslationError: null,
+                selectedAxiomTranslationSessionId:
+                    filter.sessionId ?? this.state.selectedAxiomTranslationSessionId ?? sessions[0]?.id ?? null
+            };
+        } catch (err) {
+            this.state = {
+                ...this.state,
+                axiomTranslationSessions: [],
+                axiomTranslationError: err instanceof Error ? err.message : String(err),
+                selectedAxiomTranslationSessionId: null,
+                expandedAxiomTranslationStepId: null
+            };
+        }
+        this.update();
+    }
+
     /** Apply a VAK address arriving from CrossLayoutIntentDispatcher. */
     applyIntent(intent: {
         coordinate?: string | null;
@@ -116,6 +164,19 @@ export class AgenticControlRoomWidget extends ReactWidget {
         this.update();
     }
 
+    applyAxiomTranslationIntent(intent: {
+        axiomTranslationSessionId?: string | null;
+        axiomTranslationQuestion?: string | null;
+    }): void {
+        this.state = {
+            ...this.state,
+            selectedAxiomTranslationSessionId:
+                intent.axiomTranslationSessionId ?? this.state.selectedAxiomTranslationSessionId,
+            expandedAxiomTranslationStepId: this.state.expandedAxiomTranslationStepId
+        };
+        this.update();
+    }
+
     /** Update route + actor selection (T4 UI hook for T8). */
     selectRoute(route: string, actor: string): void {
         this.state = { ...this.state, route, actor };
@@ -126,6 +187,22 @@ export class AgenticControlRoomWidget extends ReactWidget {
     get currentState(): AgenticControlRoomState {
         return this.state;
     }
+
+    protected toggleAxiomTranslationStep = (stepId: string): void => {
+        this.state = {
+            ...this.state,
+            expandedAxiomTranslationStepId:
+                this.state.expandedAxiomTranslationStepId === stepId ? null : stepId
+        };
+        this.update();
+    };
+
+    protected openAxiomTranslationSource = (coordinate: string, sourceAnchor: string): void => {
+        void this.commands.executeCommand('backend-studio.openSource', {
+            coordinate,
+            sourceAnchor
+        });
+    };
 
     protected override render(): React.ReactNode {
         return (
@@ -146,12 +223,11 @@ export class AgenticControlRoomWidget extends ReactWidget {
                     <h3>{AgenticControlRoomWidget.LABEL}</h3>
                     <span data-test="agentic-control-room-shell-version">T4 shell</span>
                 </header>
+                {/* 28.18 status-bar consumption contract: coordinate/sessionKey/dayNow/profileGeneration
+                    rendered in VAK fields below MUST consume from SharedBridgeAdapter projection
+                    (bridge.cachedProfile?.generation, bridge.cachedCoordinateContext?.coordinate),
+                    NOT from own widget state. 15.10 owns status-bar build; 28.18 adds consumption-only contract. */}
                 <section
-
-            {/* 28.18 status-bar consumption contract: coordinate/sessionKey/dayNow/profileGeneration
-                rendered in VAK fields below MUST consume from SharedBridgeAdapter projection
-                (bridge.cachedProfile?.generation, bridge.cachedCoordinateContext?.coordinate),
-                NOT from own widget state. 15.10 owns status-bar build; 28.18 adds consumption-only contract. */}
                     className="ide-shell-widget-detail"
                     data-test="agentic-control-room-vak-fields"
                 >
@@ -244,6 +320,25 @@ export class AgenticControlRoomWidget extends ReactWidget {
                         extension at Track 05 T8. The kernel-bridge readiness gate and the
                         capability tree above are shared by both tranches.
                     </p>
+                </section>
+                <section
+                    className="ide-shell-widget-detail"
+                    data-test="agentic-control-room-pi-axiom-translation-host"
+                >
+                    {this.state.axiomTranslationError !== null && (
+                        <p className="ide-shell-error" data-test="pi-axiom-translation-error">
+                            {this.state.axiomTranslationError}
+                        </p>
+                    )}
+                    <PiAxiomTranslationInspector
+                        model={createPiAxiomTranslationViewModel(
+                            this.state.axiomTranslationSessions,
+                            this.state.selectedAxiomTranslationSessionId
+                        )}
+                        expandedStepId={this.state.expandedAxiomTranslationStepId}
+                        onToggleStep={this.toggleAxiomTranslationStep}
+                        onOpenSource={this.openAxiomTranslationSource}
+                    />
                 </section>
             </div>
         );

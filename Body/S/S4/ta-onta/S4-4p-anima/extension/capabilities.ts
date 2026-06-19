@@ -8,6 +8,7 @@ export const animaDefaultTools = [
   "vak_evaluate",
   "goal_prelude",
   "anima_orchestrate",
+  "anima_arena_orchestrate",
   "nous_disclose",
   "dispatch_agent",
   "dispatch_parallel_agents",

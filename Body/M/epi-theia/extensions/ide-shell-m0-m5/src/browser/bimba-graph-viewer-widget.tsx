@@ -51,9 +51,9 @@ export class BimbaGraphViewerWidget extends ReactWidget {
         this.title.caption = BimbaGraphViewerWidget.LABEL;
         this.title.closable = true;
 
-    {/* 28.18 status-bar consumption contract: sessionKey/profileGeneration
-        rendered in graph viewer dispatch MUST consume from bridge.cachedProfile?.generation,
-        NOT from own widget state. 15.10 owns status-bar build; 28.18 adds consumption-only contract. */}
+        /* 28.18 status-bar consumption contract: sessionKey/profileGeneration
+           rendered in graph viewer dispatch MUST consume from bridge.cachedProfile?.generation,
+           NOT from own widget state. 15.10 owns status-bar build; 28.18 adds consumption-only contract. */
         this.addClass('ide-shell-widget');
         this.addClass('ide-shell-bimba-graph-viewer');
     }

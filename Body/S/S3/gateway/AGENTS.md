@@ -6,7 +6,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]
 
 ## Ownership
 - `src/lib.rs` — crate root; declares modules + re-exports `SessionStore`, `GatewayRuntimeState`, transcript + subagent helpers.
-- `src/dispatch.rs` — RPC method dispatch (largest module, ~19k), including [[M4]]/[[S4]] Nara extension routes such as protected session protein handles.
+- `src/dispatch.rs` — RPC method dispatch (largest module, ~19k), including [[M4]]/[[S4]] Nara extension routes such as protected session protein handles and route metadata for S2 graph-service gateway exposure.
 - `src/session_store.rs` / `src/sessions.rs` — session authority + lifecycle.
 - `src/runtime.rs` — `GatewayRuntimeState` + event subscriptions.
 - `src/m4_arena.rs` — [[M4]] arena warm [[Vama Shakti]] runtime wrapper over `portal-core` state.

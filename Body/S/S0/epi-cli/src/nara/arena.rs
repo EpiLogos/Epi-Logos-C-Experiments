@@ -306,18 +306,16 @@ pub fn dispatch(cmd: &ArenaCmd, json: bool) -> Result<String, String> {
             let release_reason =
                 VamaShaktiReleaseReason::from_str(reason).map_err(|err| err.to_string())?;
             // Capture the warm row before release for the 41.11 promotion intake.
-            let warm_row = runtime
-                .warm_vama_shaktis
-                .warm
-                .get(identity_handle)
-                .cloned();
+            let warm_row = runtime.warm_vama_shaktis.warm.get(identity_handle).cloned();
             let receipt = runtime
                 .vama_release_warm(&authority, identity_handle, release_reason, now_ms)
                 .map_err(|err| err.to_string())?;
 
             let proposal = if *emit_proposal && receipt.routed_to_promotion {
                 let row = warm_row.ok_or_else(|| {
-                    format!("warm Vama Shakti row {identity_handle} unavailable for promotion intake")
+                    format!(
+                        "warm Vama Shakti row {identity_handle} unavailable for promotion intake"
+                    )
                 })?;
                 let input = promotion_generator_input(&row, scenes.unwrap_or(0), true)?;
                 Some(invoke_arena_promotion(&input, config.as_ref())?)
@@ -568,19 +566,17 @@ mod tests {
             ("M4.sprite-field", VamaShaktiClass::Sprite),
             ("M4.daemon-field", VamaShaktiClass::Daemon),
         ] {
-            runtime
-                .warm_vama_shaktis
-                .prewarm(PrewarmVamaShaktiRequest {
-                    coordinate_label: coordinate.to_owned(),
-                    coordinate: vak_address(coordinate),
-                    canonical_form_digest: hash_revision(coordinate),
-                    archetypal_sattva: coordinate.to_owned(),
-                    vama_shakti_class: class,
-                    psyche_template_md: psyche.to_owned(),
-                    entity_form_md: coordinate.to_owned(),
-                    psyche_template_revision: hash_revision(psyche),
-                    now_ms: 1_000,
-                });
+            runtime.warm_vama_shaktis.prewarm(PrewarmVamaShaktiRequest {
+                coordinate_label: coordinate.to_owned(),
+                coordinate: vak_address(coordinate),
+                canonical_form_digest: hash_revision(coordinate),
+                archetypal_sattva: coordinate.to_owned(),
+                vama_shakti_class: class,
+                psyche_template_md: psyche.to_owned(),
+                entity_form_md: coordinate.to_owned(),
+                psyche_template_revision: hash_revision(psyche),
+                now_ms: 1_000,
+            });
         }
 
         let rows = runtime.warm_vama_shaktis.list_warm(&WarmVamaShaktiFilter {

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T00:33:26.810Z",
+  "updatedAt": "2026-06-19T00:47:32.970Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1515,16 +1515,21 @@
       "worktree": null
     },
     "09.T9.10": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T00:47:32.918Z",
+      "claimedAt": "2026-06-19T00:36:31.732Z",
+      "completedAt": "2026-06-19T00:47:32.918Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:47:32.918Z",
+          "text": "26/26 gateway dispatch_contract; 6/6 gateway-contract dispatch_plan; 1/1 S0 gate parity; grep found s2.graph.gds.tangent_overlay and s2.graph.relation_family.list in Body/S/S3/gateway-contract/src/lib.rs; key paths Body/S/S3/gateway-contract/src/{lib.rs,protocol.rs,dispatch_plan.rs}, Body/S/S3/gateway/tests/dispatch_contract.rs, Body/S/S0/epi-cli/src/gate/{server.rs,graph.rs}"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-09-t9-10-s2-graph-gateway",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T00:36:31.732Z",
+      "runId": "20260619T003631Z-09-T9.10",
       "worktree": null
     },
     "09.T9.11": {
@@ -4472,16 +4477,21 @@
       "worktree": null
     },
     "26.T26.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T00:47:05.919Z",
+      "claimedAt": "2026-06-19T00:37:03.195Z",
+      "completedAt": "2026-06-19T00:47:05.919Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:47:05.919Z",
+          "text": "@pratibimba/ide-shell-m0-m5 test passed 28/28; service file Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/services/pi-axiom-translation-service.ts; inspector Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/acr/pi-axiom-translation-inspector.tsx; grep found PiAxiomTranslationInspector/PiAxiomTranslationSession/anuttara-symbolic-parse links."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-26-t26-14",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T00:37:03.195Z",
+      "runId": "20260619T003703Z-26-T26.14",
       "worktree": null
     },
     "26.T26.15": {
@@ -5258,14 +5268,19 @@
       "worktree": null
     },
     "30.T30.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T00:30:34.565Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T00:39:12.072Z",
       "claimedAt": "2026-06-19T00:30:34.565Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T00:39:12.072Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:39:12.072Z",
+          "text": "45 tests passed: @pratibimba/integrated-composition 41/41; iconography contract slice 4/4; key paths Body/M/epi-theia/extensions/contracts/ui-iconography.ts, Body/M/epi-theia/extensions/contracts/icons/*.svg (19), Body/M/epi-theia/extensions/integrated-composition/src/browser/icons-contribution.ts"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-30-t30-9",
-      "leaseExpiresAt": "2026-06-19T02:30:34.565Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T00:30:34.565Z",
       "runId": "20260619T003034Z-30-T30.9",
       "worktree": null
@@ -8286,14 +8301,19 @@
       "worktree": null
     },
     "41.T41.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T00:30:10.246Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T00:44:12.781Z",
       "claimedAt": "2026-06-19T00:30:10.246Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T00:44:12.781Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:44:12.781Z",
+          "text": "node --test Body/S/S4/ta-onta/S4-4p-anima/tests/*.test.ts: 136/136 pass; focused arena suite: 12/12 pass; key files Body/S/S4/ta-onta/S4-4p-anima/lib/arena-orchestrator.ts, extension/tools.ts, extension.ts, tests/arena-orchestrator.test.ts"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-41-t41-8",
-      "leaseExpiresAt": "2026-06-19T02:30:10.246Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T00:30:10.246Z",
       "runId": "20260619T003010Z-41-T41.8",
       "worktree": null
@@ -11049,11 +11069,12 @@
     {
       "runId": "20260619T003010Z-41-T41.8",
       "taskId": "41.T41.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T00:30:10.246Z",
       "owner": "codex-m-dev-41-t41-8",
       "leaseExpiresAt": "2026-06-19T02:30:10.246Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T00:44:12.781Z"
     },
     {
       "runId": "20260619T003033Z-31-T31.4",
@@ -11068,31 +11089,52 @@
     {
       "runId": "20260619T003034Z-30-T30.9",
       "taskId": "30.T30.9",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T00:30:34.565Z",
       "owner": "codex-m-dev-30-t30-9",
       "leaseExpiresAt": "2026-06-19T02:30:34.565Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T00:39:12.072Z"
+    },
+    {
+      "runId": "20260619T003631Z-09-T9.10",
+      "taskId": "09.T9.10",
+      "status": "done",
+      "startedAt": "2026-06-19T00:36:31.732Z",
+      "owner": "codex-m-dev-09-t9-10-s2-graph-gateway",
+      "leaseExpiresAt": "2026-06-19T02:36:31.732Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T00:47:32.918Z"
+    },
+    {
+      "runId": "20260619T003703Z-26-T26.14",
+      "taskId": "26.T26.14",
+      "status": "done",
+      "startedAt": "2026-06-19T00:37:03.195Z",
+      "owner": "codex-m-dev-26-t26-14",
+      "leaseExpiresAt": "2026-06-19T02:37:03.195Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T00:47:05.919Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-19T00:30:20.261Z",
-    "updatedAt": "2026-06-19T00:30:20.261Z",
+    "createdAt": "2026-06-19T00:36:03.829Z",
+    "updatedAt": "2026-06-19T00:36:03.829Z",
     "taskIds": [
       "41.T41.8",
+      "30.T30.9",
       "05.T5.3",
-      "05.T5.4",
-      "05.T5.5"
+      "05.T5.4"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
       "41.T41.8": "in-session",
+      "30.T30.9": "in-session",
       "05.T5.3": "in-session",
-      "05.T5.4": "in-session",
-      "05.T5.5": "in-session"
+      "05.T5.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

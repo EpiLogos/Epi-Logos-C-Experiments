@@ -25,6 +25,7 @@ import {
     SmartConnectionsSidebarStubContribution
 } from './smart-connections/smart-connections-sidebar-stub';
 import { PrivacyDropFeed } from './services/privacy-drop-feed';
+import { PiAxiomTranslationService } from './services/pi-axiom-translation-service';
 
 /**
  * Frontend module for `@pratibimba/ide-shell-m0-m5` — Track 05 T4.
@@ -192,6 +193,16 @@ export class IdeShellAgenticControlRoomContribution
             'IDE Shell: Open Agentic Control Room',
             intent => this.handleOpen(intent)
         );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            IDE_SHELL_INTENT_TARGETS.PI_AXIOM_TRANSLATION,
+            'IDE Shell: Open Pi Axiom Translation Inspector',
+            intent => this.handleOpen({
+                ...(typeof intent === 'object' && intent !== null ? intent as object : {}),
+                requestedContributionId: IDE_SHELL_INTENT_TARGETS.PI_AXIOM_TRANSLATION
+            })
+        );
     }
 
     protected async handleOpen(intent: unknown): Promise<void> {
@@ -205,10 +216,24 @@ export class IdeShellAgenticControlRoomContribution
                       dayNow?: string | null;
                       sessionKey?: string | null;
                       profileGeneration?: number | null;
+                      requestedContributionId?: string | null;
+                      axiomTranslationSessionId?: string | null;
+                      axiomTranslationQuestion?: string | null;
                   }
                 | undefined;
             if (i) {
                 widget.applyIntent(i);
+                if (
+                    i.requestedContributionId === IDE_SHELL_INTENT_TARGETS.PI_AXIOM_TRANSLATION ||
+                    i.axiomTranslationSessionId ||
+                    i.axiomTranslationQuestion
+                ) {
+                    await widget.refreshAxiomTranslationHistory({
+                        sessionId: i.axiomTranslationSessionId ?? null,
+                        question: i.axiomTranslationQuestion ?? null
+                    });
+                    widget.applyAxiomTranslationIntent(i);
+                }
             }
         }
     }
@@ -406,6 +431,7 @@ export default new ContainerModule(bind => {
     bind(DefaultIdeShellM0M5Config).toSelf().inSingletonScope();
     bind<IdeShellM0M5Config>(IDE_SHELL_CONFIG).toService(DefaultIdeShellM0M5Config);
     bind(PrivacyDropFeed).toSelf().inSingletonScope();
+    bind(PiAxiomTranslationService).toSelf().inSingletonScope();
 
     // Bimba Graph Viewer.
     bind(BimbaGraphViewerWidget).toSelf();

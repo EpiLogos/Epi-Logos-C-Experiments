@@ -196,7 +196,8 @@ test('IDE_SHELL_INTENT_TARGETS match the dispatcher contribution ids', () => {
     assert.equal(IDE_SHELL_INTENT_TARGETS.LOGOS_ATELIER, 'logos-atelier');
     assert.equal(IDE_SHELL_INTENT_TARGETS.REVIEW_PANE, 'review-pane');
     assert.equal(IDE_SHELL_INTENT_TARGETS.AUTORESEARCH_PANE, 'autoresearch-pane');
-    assert.equal(Object.keys(IDE_SHELL_INTENT_TARGETS).length, 8);
+    assert.equal(IDE_SHELL_INTENT_TARGETS.PI_AXIOM_TRANSLATION, 'pi-axiom-translation');
+    assert.equal(Object.keys(IDE_SHELL_INTENT_TARGETS).length, 9);
     assert.equal(EXTENSION_ID, 'ide-shell-m0-m5');
 });
 

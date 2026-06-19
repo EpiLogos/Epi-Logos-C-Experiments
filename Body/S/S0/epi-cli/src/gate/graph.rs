@@ -11,6 +11,14 @@ use crate::graph::{
 };
 
 const ASMA_MIRROR_ABSENT: u8 = 0xFF;
+const RELATION_FAMILY_VALUES: &[&str] = &[
+    "structural",
+    "correspondential",
+    "kernel_core",
+    "inferred",
+    "sync",
+    "compatibility",
+];
 
 #[repr(C)]
 #[derive(Clone, Copy)]
@@ -143,6 +151,83 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
                 })
                 .await
         }
+        "s2.graph.gds.tangent_overlay" => {
+            let coordinate = required_string(params, "coordinate")?;
+            let top_k = params
+                .get("topK")
+                .or_else(|| params.get("top_k"))
+                .and_then(|value| value.as_u64())
+                .unwrap_or(8) as usize;
+            service
+                .gds_tangent_overlay(epi_s2_graph_services::GdsOverlayRequest { coordinate, top_k })
+                .await
+        }
+        "s2.graph.ontology.reload" => {
+            crate::graph::import_epi_ontology_with_n10s(&client).await?;
+            let plan = epi_s2_graph_services::ontology_import_plan();
+            Ok(json!({
+                "method": "s2.graph.ontology.reload",
+                "ontologyUri": plan.ontology_uri,
+                "versionIri": plan.version_iri,
+                "sourceFormat": plan.source_format,
+                "turtleSha256": plan.turtle_sha256,
+                "status": "reloaded"
+            }))
+        }
+        "s2.graph.seed.snapshot" => {
+            let queries = crate::graph::seed_baseline_snapshot_queries();
+            let coordinates = crate::graph::seed_baseline_coordinates();
+            let relationship_types = crate::graph::seed_relationship_types();
+            Ok(json!({
+                "method": "s2.graph.seed.snapshot",
+                "coordinateCount": coordinates.len(),
+                "coordinates": coordinates,
+                "relationshipTypes": relationship_types,
+                "queries": queries.iter().map(|query| json!({
+                    "name": query.name,
+                    "cypher": query.cypher
+                })).collect::<Vec<_>>()
+            }))
+        }
+        "s2.graph.core65.audit" => service.core_65_audit().await,
+        "s2.graph.promotion.dry_run" => {
+            let intent = promotion_intent_from_params(params)?;
+            let plan = epi_s2_graph_services::SyncCoordinator::validate_promotion_intent(&intent)?;
+            let report = epi_s2_graph_services::GraphPromotionSyncReport::planned(&plan);
+            Ok(json!({
+                "method": "s2.graph.promotion.dry_run",
+                "report": report,
+                "plan": {
+                    "coordinate": plan.coordinate,
+                    "identityProperty": plan.identity_property,
+                    "labels": plan.labels,
+                    "properties": plan.properties,
+                    "sourcePath": plan.source_path,
+                    "relationCount": plan.relationships.len(),
+                    "compatibilityMigrations": plan.compatibility_migrations,
+                    "syncVersion": plan.sync_version,
+                    "promotionSource": plan.promotion_source
+                },
+                "canonicalWritePerformed": false
+            }))
+        }
+        "s2.graph.promotion.commit" => {
+            let intent = promotion_intent_from_params(params)?;
+            let report = epi_s2_graph_services::SyncCoordinator::new(&client)
+                .promote_intent(&intent)
+                .await?;
+            Ok(json!({
+                "method": "s2.graph.promotion.commit",
+                "report": report,
+                "canonicalWritePerformed": true
+            }))
+        }
+        "s2.graph.relation_family.list" => Ok(json!({
+            "method": "s2.graph.relation_family.list",
+            "property": "c_1_relation_family",
+            "values": RELATION_FAMILY_VALUES,
+            "source": "DR-IG-1 / S2 graph-services relation-family discriminator"
+        })),
         "s2.graph.harmonic_relations.materialize" => {
             let timestamp_ms = params
                 .get("timestampMs")
@@ -227,6 +312,16 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
         }
         _ => Err(format!("unsupported graph method: {method}")),
     }
+}
+
+fn promotion_intent_from_params(
+    params: &Value,
+) -> Result<epi_s2_graph_services::S2GraphPromotionIntent, String> {
+    let value = params
+        .get("intent")
+        .cloned()
+        .unwrap_or_else(|| params.clone());
+    serde_json::from_value(value).map_err(|err| format!("invalid promotion intent: {err}"))
 }
 
 fn required_string(params: &Value, key: &str) -> Result<String, String> {

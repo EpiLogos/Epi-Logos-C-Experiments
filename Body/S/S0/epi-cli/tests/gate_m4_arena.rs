@@ -68,7 +68,11 @@ impl Drop for TestEnv {
 
 #[test]
 fn route_contract_registers_eight_one_substrate_routes() {
-    assert_eq!(M4_ARENA_METHODS.len(), 8, "eight m4 arena methods registered");
+    assert_eq!(
+        M4_ARENA_METHODS.len(),
+        8,
+        "eight m4 arena methods registered"
+    );
     assert_eq!(M4_ARENA_ROUTE_CONTRACTS.len(), 8);
     for (contract, method) in M4_ARENA_ROUTE_CONTRACTS.iter().zip(M4_ARENA_METHODS) {
         assert_eq!(contract.method, *method);

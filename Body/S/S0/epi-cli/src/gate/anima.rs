@@ -848,7 +848,10 @@ fn read_capability_matrix() -> Result<Value, String> {
     }
     let body = fs::read_to_string(&path).map_err(|err| err.to_string())?;
     serde_json::from_str(&body).map_err(|err| {
-        format!("failed to parse capability matrix at {}: {err}", path.display())
+        format!(
+            "failed to parse capability matrix at {}: {err}",
+            path.display()
+        )
     })
 }
 

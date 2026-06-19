@@ -654,6 +654,14 @@ fn s0_product_route_metadata(entry: &MethodDispatchPlanEntry) -> Option<RouteMet
             agent_access_owner: "S4/S5",
             route_id: "s0.product-skill-surface",
         })
+    } else if authority.contains("portal-core::coordinate_phase") {
+        Some(RouteMetadata {
+            owner: GatewayDispatchOwner::S0ProductAdapter,
+            class: GatewayDispatchClass::ProductCompatibility,
+            coordinate_owner: "S0'",
+            agent_access_owner: "S4/S5",
+            route_id: "s0-prime.anuttara-trace",
+        })
     } else if authority.contains("gate/")
         || authority.contains("src/gate ")
         || authority.contains("portal-core::parashakti::cymatic_invert")

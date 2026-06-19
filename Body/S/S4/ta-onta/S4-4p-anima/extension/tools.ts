@@ -21,6 +21,18 @@ import { buildAnimaInvokePayload } from "../modules/anima-invoke-payload.ts";
 import { isValidVakAddress, type VakAddress } from "../../shared/vak_address.ts";
 import { suggestedSkillsForVak, validCfCodes } from "./capabilities.ts";
 import { dispatchTeamMember, runEpi } from "./dispatch.ts";
+import {
+  ArenaOrchestrationRefused,
+  loadArenaClassifierConfigFromHome,
+  orchestrateArenaScene,
+  subscribeMercuriusKairosDelta,
+  type ArenaKairosRoutingState,
+  type ArenaRuntimeAdapter,
+  type MercuriusSubscriptionSource,
+} from "../lib/arena-orchestrator.ts";
+
+const arenaKairosStates = new Map<string, ArenaKairosRoutingState>();
+const arenaMercuriusSubscriptions = new Map<string, () => void>();
 
 export function registerAnimaTools(api: ExtensionAPI) {
   api.registerTool({
@@ -137,6 +149,62 @@ export function registerAnimaTools(api: ExtensionAPI) {
         }],
         details: { agent, suggested_skills: suggestedSkills },
       };
+    },
+  });
+
+  api.registerTool({
+    name: "anima_arena_orchestrate",
+    label: "Anima Arena Orchestrate",
+    description:
+      "Orchestrate classifier-aware turn routing within an active arena scene. CPF (00/00) gated at scene-setup; CPF (0/1/2) Trika operational during turn loop.",
+    parameters: Type.Object({
+      scene_key: Type.String({ description: "ArenaScene scene_key, usually arena:{arc_id}" }),
+      intent: Type.Optional(Type.String({ description: "Optional turn intent passed into the speaker dispatch plan" })),
+      user_input_pending: Type.Optional(Type.Boolean({ default: false })),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, ctx?: unknown) {
+      const adapter = resolveArenaRuntimeAdapter(ctx);
+      if (!adapter) {
+        return {
+          content: [{
+            type: "text",
+            text:
+              "anima_arena_orchestrate refused: no arena runtime adapter was supplied in tool context. " +
+              "Expected ctx.arena or ctx.arena_orchestrator.adapter implementing the ArenaRuntimeAdapter contract.",
+          }],
+          isError: true,
+        };
+      }
+
+      try {
+        const subscribedAdapter = await bindMercuriusKairosState(ctx, params.scene_key, adapter);
+        const config = await loadArenaClassifierConfigFromHome();
+        const receipt = await orchestrateArenaScene(
+          {
+            scene_key: params.scene_key,
+            intent: params.intent,
+            user_input_pending: params.user_input_pending ?? false,
+          },
+          { adapter: subscribedAdapter, config },
+        );
+        return {
+          content: [{
+            type: "text",
+            text:
+              `anima_arena_orchestrate: routed ${receipt.observability_event.speaker_kind}` +
+              `${receipt.observability_event.speaker_handle ? `:${receipt.observability_event.speaker_handle}` : ""}` +
+              ` for ${params.scene_key} via ${receipt.routing.reason}`,
+          }],
+          details: receipt,
+        };
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        return {
+          content: [{ type: "text", text: `anima_arena_orchestrate refused: ${message}` }],
+          isError: true,
+          details: err instanceof ArenaOrchestrationRefused ? { code: err.code, scene_key: err.scene_key } : undefined,
+        };
+      }
     },
   });
 
@@ -585,4 +653,72 @@ export function registerAnimaTools(api: ExtensionAPI) {
       };
     },
   });
+}
+
+function resolveArenaRuntimeAdapter(ctx: unknown): ArenaRuntimeAdapter | null {
+  const candidate = (
+    (ctx as any)?.arena_orchestrator?.adapter ??
+    (ctx as any)?.arena?.adapter ??
+    (ctx as any)?.arena_runtime ??
+    (ctx as any)?.arena
+  );
+  if (!candidate || typeof candidate !== "object") return null;
+  const required: Array<keyof ArenaRuntimeAdapter> = [
+    "getArenaScene",
+    "listAdmittedVamaShaktis",
+    "listArenaTurns",
+    "readKairosState",
+    "appendArenaTurn",
+    "appendArenaDialogueLine",
+    "dispatchArenaPlan",
+    "emitArenaObservabilityEvent",
+  ];
+  return required.every((key) => typeof candidate[key] === "function")
+    ? candidate as ArenaRuntimeAdapter
+    : null;
+}
+
+async function bindMercuriusKairosState(
+  ctx: unknown,
+  scene_key: string,
+  adapter: ArenaRuntimeAdapter,
+): Promise<ArenaRuntimeAdapter> {
+  const mercurius = resolveMercuriusSubscriptionSource(ctx);
+  if (!mercurius) return adapter;
+
+  if (!arenaKairosStates.has(scene_key)) {
+    arenaKairosStates.set(scene_key, await adapter.readKairosState(scene_key));
+  }
+  if (!arenaMercuriusSubscriptions.has(scene_key)) {
+    const state = arenaKairosStates.get(scene_key)!;
+    arenaMercuriusSubscriptions.set(
+      scene_key,
+      subscribeMercuriusKairosDelta({
+        scene_key,
+        state,
+        subscribe: mercurius.subscribe.bind(mercurius),
+      }),
+    );
+  }
+
+  return new Proxy(adapter, {
+    get(target, prop, receiver) {
+      if (prop === "readKairosState") {
+        return async (key: string) => arenaKairosStates.get(key) ?? target.readKairosState(key);
+      }
+      const value = Reflect.get(target, prop, receiver);
+      return typeof value === "function" ? value.bind(target) : value;
+    },
+  });
+}
+
+function resolveMercuriusSubscriptionSource(ctx: unknown): MercuriusSubscriptionSource | null {
+  const candidate = (
+    (ctx as any)?.mercurius ??
+    (ctx as any)?.mercurius_relay ??
+    (ctx as any)?.subscriptions
+  );
+  return candidate && typeof candidate.subscribe === "function"
+    ? candidate as MercuriusSubscriptionSource
+    : null;
 }

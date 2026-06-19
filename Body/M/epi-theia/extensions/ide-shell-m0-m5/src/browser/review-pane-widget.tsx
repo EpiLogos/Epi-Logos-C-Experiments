@@ -35,6 +35,8 @@ export interface ReviewItem {
     readonly proposer?: string;
     readonly coordinate?: string;
     readonly summary?: string;
+    readonly axiomTranslationQuestion?: string;
+    readonly axiomTranslationSessionId?: string;
 }
 
 @injectable()
@@ -210,6 +212,21 @@ export class ReviewPaneWidget extends ReactWidget {
                     </p>
                 )}
                 {item.summary && <p>{item.summary}</p>}
+                {(item.axiomTranslationQuestion || item.axiomTranslationSessionId) && (
+                    <p>
+                        <a
+                            href={`epi-logos://ide/ide-shell-m0-m5/pi-axiom-translation?${
+                                item.axiomTranslationSessionId
+                                    ? `session=${encodeURIComponent(item.axiomTranslationSessionId)}`
+                                    : `question=${encodeURIComponent(item.axiomTranslationQuestion ?? '')}`
+                            }`}
+                            data-intent-target="pi-axiom-translation"
+                            data-test={`review-item-pi-axiom-link-${item.id}`}
+                        >
+                            PiAxiomTranslationInspector
+                        </a>
+                    </p>
+                )}
             </li>
         );
     }

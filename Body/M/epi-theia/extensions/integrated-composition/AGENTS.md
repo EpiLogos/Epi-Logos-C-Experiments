@@ -14,6 +14,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] (consumers: [[INTEGRA
 - `src/common/klein-flip-choreography.ts` — shared Klein-flip choreography director that fans one profile-bus event into K² fold, cymatic valence invert, and codon-axis flip requests for the cosmic integrated composition.
 - `src/common/{evidence-*,release-gate,recursive-self-review-gate,epii-review-*,consent-gate,privacy-scrubber,workspace-persistence}.ts` — evidence envelopes, release gate, S5 self-review, consent/privacy, persistence.
 - `src/browser/design-primitives/` — shared React primitives (CoordinateString, Matheme, KaTeX, geometry) exported via `./design-primitives`.
+- `src/browser/icons-contribution.ts` — [[M']] icon-theme contribution data + activity-bar icon bindings consuming the contracts iconography surface.
 - `tests/` — `node --test` `.mjs` contract tests; `style/index.css` — shared stylesheet.
 - Does NOT own: per-plugin composition (lives in sibling `plugin-integrated-1-2-3` / `plugin-integrated-4-5-0`); the shared `KernelBridgeAPI`/readiness adapter (delegated to `@pratibimba/m-extension-runtime`); gateway runtime ([[S3-SPEC]] gate, port 18794, via `kernel-bridge`).
 

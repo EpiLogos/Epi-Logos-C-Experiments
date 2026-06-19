@@ -47,7 +47,7 @@ Backend Studio and Smart Connections are allowed first-build stubs only. They do
 | `evidence-pane` | Consume bridge-delivered evidence envelopes after privacy gating. |
 | `review-pane` | Consume bridge-delivered review state after privacy gating. |
 | `autoresearch-pane` | Consume bridge-delivered autoresearch receipts and evidence handles; no direct research backend calls. |
-| `agentic-control-room` | Consume kernel-bridge runtime events, readiness state, and capability matrix data through adapter-backed services. |
+| `agentic-control-room` | Consume kernel-bridge runtime events, readiness state, capability matrix data, and Pi axiom-translation history (`s5'.epii.axiom_translation_history`) through adapter-backed services. Axiom translation renders only as the `PiAxiomTranslationInspector` sub-pane inside ACR, never as a standalone widget. |
 | `bridge-gate` | Render readiness state from the adapter/kernel bridge boundary and pass only ready or explicitly degraded bindings through. |
 
 Forbidden direct imports include raw S2 graph clients, raw S3 subscription clients, raw S5 review clients, Graphiti body stores, Nara body stores, profile stores outside kernel-bridge, alternate bridge clients, direct gateway WebSockets, and direct persistence writers.

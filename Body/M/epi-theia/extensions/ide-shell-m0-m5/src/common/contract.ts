@@ -14,6 +14,7 @@
  *   - `logos-atelier`         (pratibimba.ide-shell.logos-atelier)
  *   - `review-pane`           (pratibimba.ide-shell.review-pane)
  *   - `autoresearch-pane`     (pratibimba.ide-shell.autoresearch-pane)
+ *   - `pi-axiom-translation`  (sub-pane inside Agentic Control Room)
  *
  * Widget ids align with the IDE_DEEP_DESCRIPTOR.expectedWidgets entries:
  *   pratibimba.ide-shell.bimba-graph-viewer
@@ -55,7 +56,9 @@ export const IDE_SHELL_INTENT_TARGETS = {
     /** Resolved as `pratibimba.ide-shell-m0-m5.review-pane.open`. */
     REVIEW_PANE: 'review-pane',
     /** Resolved as `pratibimba.ide-shell-m0-m5.autoresearch-pane.open`. */
-    AUTORESEARCH_PANE: 'autoresearch-pane'
+    AUTORESEARCH_PANE: 'autoresearch-pane',
+    /** Resolved as ACR sub-pane `PiAxiomTranslationInspector`. */
+    PI_AXIOM_TRANSLATION: 'pi-axiom-translation'
 } as const;
 
 /**

@@ -8,6 +8,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]] / [[S4-ARCHITECTURE]] (see a
 - `CONTRACT.md` — binding interface (responsibility, registered tools, CF→agent map, CFP thread types, invariants)
 - `extension.ts` — source-contract facade + entrypoint; re-exports the runtime under `./extension/`
 - `extension/` — runtime: `mod.ts`, `tools.ts`, `dispatch.ts`, `capabilities.ts`, `subscriptions.ts`
+- `lib/` — pure reusable Anima orchestration helpers; currently `arena-orchestrator.ts` holds classifier-aware arena turn routing, Mercurius kairos state, CPF-gate, and dispatch-plan policy.
 - `modules/` — per-agent dispatch/route/hook units (nous-clearing, logos-scope, eros-route, mythos-pattern, psyche-continuity, sophia-hook/synthesis, aphoristic-skill, moirai-dispatch, judge-role, dispatch-policy, skill-registry, dispatch-validate, anima-invoke-payload)
 - `S4/` — CFP execution primitives: `agent-team.ts`, `agent-chain.ts`, `subagent-widget.ts`, `pi-pi.ts`, `cross-agent.ts`, `epi-citta.ts` (+ `teams.yaml`, `agent-chain.yaml`)
 - `S4'/agents/` — constitutional agent .md files (anima, nous, logos, eros, mythos, psyche, sophia, techne-helper); `psyche.md` is also the `techne_vama_summon` template-authority profile.
@@ -29,6 +30,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S4-SPEC]] / [[S4-ARCHITECTURE]] (see a
 
 ## Verification
 - `node --test tests/` (TypeScript `*.test.ts` contract tests in this directory).
+- `node --test tests/arena-orchestrator.test.ts` for classifier-aware arena turn-routing policy.
 - Phase-preserving dispatch fixture: `node --test tests/phase_preserving_dispatch.test.ts` from this directory or with the repo-relative path.
 
 ## Child DOX Index

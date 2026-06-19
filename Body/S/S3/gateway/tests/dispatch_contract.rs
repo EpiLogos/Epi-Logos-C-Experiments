@@ -5,7 +5,7 @@ use epi_s3_gateway::dispatch::{
     NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest, NARA_LENS_RPC_METHODS,
     NARA_SESSION_RPC_METHODS,
 };
-use epi_s3_gateway_contract::{MethodDispatchKind, METHOD_NAMES};
+use epi_s3_gateway_contract::{MethodDispatchKind, METHOD_NAMES, S2_GRAPH_GATEWAY_EXPOSED_METHODS};
 
 #[test]
 fn s3_gateway_owns_session_temporal_and_runtime_routing_contract() {
@@ -210,6 +210,13 @@ fn s2_graph_methods_route_to_graph_service_authority() {
         "s2.graph.pointer_web.compute",
         "s2.graph.pointer_web.refresh",
         "s2.graph.kernel_resonance.record",
+        "s2.graph.gds.tangent_overlay",
+        "s2.graph.ontology.reload",
+        "s2.graph.seed.snapshot",
+        "s2.graph.core65.audit",
+        "s2.graph.promotion.dry_run",
+        "s2.graph.promotion.commit",
+        "s2.graph.relation_family.list",
         "s2.parashaktiCorrespondences",
         "s2'.coordinate.resolve",
         "s2'.retrieve",
@@ -221,6 +228,23 @@ fn s2_graph_methods_route_to_graph_service_authority() {
         assert_eq!(route.class, GatewayDispatchClass::GraphService);
         assert_eq!(route.coordinate_owner, "S2/S2'");
         assert_eq!(route.agent_access_owner, "S4/S5");
+    }
+}
+
+#[test]
+fn s2_graph_gateway_exposed_methods_route_to_graph_services() {
+    for method in S2_GRAPH_GATEWAY_EXPOSED_METHODS {
+        assert!(
+            METHOD_NAMES.contains(method),
+            "{method} must be part of the gateway protocol registry"
+        );
+        let route = classify_method(method).expect("S2 graph exposed method should be routed");
+        assert_eq!(route.owner, GatewayDispatchOwner::S2GraphService);
+        assert_eq!(route.class, GatewayDispatchClass::GraphService);
+        assert_eq!(route.coordinate_owner, "S2/S2'");
+        assert_eq!(route.agent_access_owner, "S4/S5");
+        let entry = dispatch_plan_entry(method).expect("S2 graph method should have plan row");
+        assert_eq!(entry.kind, MethodDispatchKind::S2GraphServiceAdapter);
     }
 }
 
@@ -529,6 +553,18 @@ mod t9_route_ownership_cross_walk {
             // S0' Anuttara verifier — routed by S3 metadata to epi-lib.
             "s0'.verifier.check_state",
             "s0'.verifier.emit_question",
+            // S0'/S2 projection helpers with contract rows but no S0 host match arm.
+            "m2.cymatic_invert",
+            "s0'.anuttara.trace",
+            "s2.graph.ananda_position",
+            // S3-native live-state routes handled by gateway runtime surfaces.
+            "s3'.being_pattern.observe",
+            "s3'.being_pattern.project",
+            "s3'.being_pattern.review_candidate",
+            "s3'.being_pattern.subscribe",
+            // S5 governance routes mediated beyond the S0 gate host.
+            "s5'.gnostic.musical_transcript",
+            "s5'.gnostic.resolve",
             // S2 / S2' graph law — S3 dispatches directly to graph-services.
             "s2'.constraint.list",
             "s2'.constraint.register",

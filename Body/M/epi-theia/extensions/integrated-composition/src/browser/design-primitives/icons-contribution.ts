@@ -25,6 +25,16 @@ export const DESIGN_PRIMITIVE_ICON_CONTRIBUTIONS: readonly PrimitiveIconContribu
     icon('transition', 'sync', 'Transition')
 ]);
 
+export {
+    PRATIBIMBA_ACTIVITY_BAR_ICON_BINDINGS,
+    PRATIBIMBA_ICON_THEME_ID,
+    PRATIBIMBA_ICON_THEME_LABEL,
+    PRATIBIMBA_ICON_THEME_REGISTRATIONS,
+    PratibimbaIconTheme,
+    PratibimbaIconThemeContribution,
+    resolvePratibimbaIconRegistration
+} from '../icons-contribution';
+
 function icon(name: PrimitiveIconName, codicon: string, label: string): PrimitiveIconContribution {
     return Object.freeze({ name, codicon, label });
 }

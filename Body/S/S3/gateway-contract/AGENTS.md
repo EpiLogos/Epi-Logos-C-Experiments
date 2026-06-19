@@ -5,8 +5,8 @@
 Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S3-SPEC]] (see also [[S3-ARCHITECTURE]], [[S-SYSTEM-INDEX]])
 
 ## Ownership
-- `src/lib.rs` — crate root; declares + re-exports every contract module and typed [[S0]] bridge packet/projection surfaces (no `//!` header present).
-- `src/protocol.rs` — wire protocol (handshake / RPC envelope) and method-name registry, including phase-preserving `s5'.gnostic.resolve` / `s0'.anuttara.trace`, `s5'.gnostic.musical_transcript`, and `s2.graph.ananda_position`.
+- `src/lib.rs` — crate root; declares + re-exports every contract module, typed [[S0]] bridge packet/projection surfaces, and named S2 graph gateway-exposure constants (no `//!` header present).
+- `src/protocol.rs` — wire protocol (handshake / RPC envelope) and method-name registry, including phase-preserving `s5'.gnostic.resolve` / `s0'.anuttara.trace`, `s5'.gnostic.musical_transcript`, `s2.graph.ananda_position`, and the S2 graph exposure family (`gds.tangent_overlay`, `ontology.reload`, `seed.snapshot`, `core65.audit`, `promotion.*`, `relation_family.list`).
 - `src/session.rs` — session authority types/methods.
 - `src/harness.rs` — normalized harness dispatch envelope, turn-event stream, backing-kind, parent-slice handle (`ConversationSliceHandle`/`VakAddressFilter` defined here so they ride the dispatch envelope), and tool-call enforcement hook contract.
 - `src/context.rs` — canonical contextual-slice surface (12.T12.31): re-exports `ConversationSliceHandle`/`VakAddressFilter`, adds the [[SessionRecord]]-derived builder, the three `SliceRedactionPolicy` levels, the `dispatch_with_parent_slice` contract row, and the [[chronos]] `c=1`/`c=0` bifurcation-router seat.

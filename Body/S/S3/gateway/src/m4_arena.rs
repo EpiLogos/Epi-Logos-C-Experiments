@@ -30,8 +30,8 @@ use epi_s3_gateway_contract::{
 };
 use portal_core::{
     hash_revision, hex_digest, transit_quaternion_at_millis, CpfState, CsDirection, CsField,
-    PrewarmVamaShaktiRequest, VakAddress, VamaShaktiClass, VamaShaktiError, VamaShaktiReleaseReason,
-    WarmVamaShaktiFilter, WarmVamaShaktiRegistry,
+    PrewarmVamaShaktiRequest, VakAddress, VamaShaktiClass, VamaShaktiError,
+    VamaShaktiReleaseReason, WarmVamaShaktiFilter, WarmVamaShaktiRegistry,
 };
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
@@ -96,9 +96,8 @@ impl From<VamaShaktiError> for M4ArenaError {
     fn from(err: VamaShaktiError) -> Self {
         match err {
             VamaShaktiError::InvalidClass(class) => Self::UnknownClassifier(class),
-            VamaShaktiError::UnknownIdentity(handle) | VamaShaktiError::ReleasedIdentity(handle) => {
-                Self::UnknownIdentity(handle)
-            }
+            VamaShaktiError::UnknownIdentity(handle)
+            | VamaShaktiError::ReleasedIdentity(handle) => Self::UnknownIdentity(handle),
             other => Self::VamaShakti(other),
         }
     }
@@ -304,7 +303,9 @@ impl M4ArenaRuntime {
             .get_mut(&request.scene_key)
             .ok_or_else(|| M4ArenaError::UnknownScene(request.scene_key.clone()))?;
         // Upsert presence (at most one live presence per identity).
-        scene.presences.retain(|p| p.identity_handle != identity_handle);
+        scene
+            .presences
+            .retain(|p| p.identity_handle != identity_handle);
         scene.presences.push(PresenceState {
             identity_handle: identity_handle.clone(),
             entity_coordinate: request.entity_coordinate.clone(),
@@ -357,16 +358,13 @@ impl M4ArenaRuntime {
 
         // Resolve speaker class from a live presence (if the speaker is a Vama
         // Shakti rather than "user"/"constitutional:*").
-        let speaker_class = self
-            .scenes
-            .get(&request.scene_key)
-            .and_then(|scene| {
-                scene
-                    .presences
-                    .iter()
-                    .find(|p| !p.released && p.identity_handle == request.speaker_handle)
-                    .map(|p| p.vama_shakti_class)
-            });
+        let speaker_class = self.scenes.get(&request.scene_key).and_then(|scene| {
+            scene
+                .presences
+                .iter()
+                .find(|p| !p.released && p.identity_handle == request.speaker_handle)
+                .map(|p| p.vama_shakti_class)
+        });
 
         let vak_address = arena_turn_vak_address(&pinned, turn_index, speaker_class);
 
@@ -416,7 +414,10 @@ impl M4ArenaRuntime {
         }
         Ok(ArenaEventStream {
             scene_key: scene_key.to_owned(),
-            subscription_id: format!("{}/arena/{scene_key}/stream", authority.arena_redis_prefix()),
+            subscription_id: format!(
+                "{}/arena/{scene_key}/stream",
+                authority.arena_redis_prefix()
+            ),
             privacy_class: PRIVACY_PROTECTED_LOCAL.to_owned(),
             event_kinds: vec![
                 "arena_turn".to_owned(),
@@ -896,15 +897,15 @@ mod tests {
             rt.scene_open(&unauth, "s", "C5", "ephemeral", Vec::new(), "cpf", 1),
             Err(M4ArenaError::Unauthorized)
         );
-        assert_eq!(rt.summon(&unauth, &summon, 1), Err(M4ArenaError::Unauthorized));
+        assert_eq!(
+            rt.summon(&unauth, &summon, 1),
+            Err(M4ArenaError::Unauthorized)
+        );
         assert_eq!(
             rt.turn_advance(&unauth, &turn, 1),
             Err(M4ArenaError::Unauthorized)
         );
-        assert_eq!(
-            rt.subscribe(&unauth, "s"),
-            Err(M4ArenaError::Unauthorized)
-        );
+        assert_eq!(rt.subscribe(&unauth, "s"), Err(M4ArenaError::Unauthorized));
         assert_eq!(
             rt.scene_close(&unauth, "s", None, 1),
             Err(M4ArenaError::Unauthorized)

@@ -119,7 +119,10 @@ impl ConversationSliceHandle {
     /// Whether a child reading this handle (after redaction) could resolve raw
     /// conversation bodies. Only `full_context` exposes them.
     pub fn exposes_raw_bodies(&self) -> bool {
-        matches!(self.redaction_kind(), Some(SliceRedactionPolicy::FullContext))
+        matches!(
+            self.redaction_kind(),
+            Some(SliceRedactionPolicy::FullContext)
+        )
     }
 }
 
@@ -367,10 +370,7 @@ mod tests {
         assert_eq!(handle.thread_ids, vec!["thread-main".to_string()]);
         assert_eq!(handle.message_span, (3, 8));
         assert_eq!(handle.message_count(), 5);
-        assert_eq!(
-            handle.redaction_policy,
-            SliceRedactionPolicy::FULL_CONTEXT
-        );
+        assert_eq!(handle.redaction_policy, SliceRedactionPolicy::FULL_CONTEXT);
         let filter = handle.vak_filter.as_ref().expect("vak filter present");
         assert!(filter.include_descendants);
         assert_eq!(filter.address.cs.code, "M3");
@@ -385,7 +385,10 @@ mod tests {
         let contract = DispatchWithParentSliceContract::canonical();
         assert_eq!(contract.argument_order[3], "parent_slice");
         assert_eq!(contract.eros_traverse_op, EROS_RELATIONAL_GRAPH_TRAVERSE);
-        assert_eq!(contract.bifurcation_router_seat, CHRONOS_BIFURCATION_ROUTER_SEAT);
+        assert_eq!(
+            contract.bifurcation_router_seat,
+            CHRONOS_BIFURCATION_ROUTER_SEAT
+        );
         assert_eq!(
             contract.bifurcation_event_channel,
             "agent:team:dispatch:complete"

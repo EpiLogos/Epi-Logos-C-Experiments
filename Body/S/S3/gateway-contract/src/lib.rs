@@ -36,6 +36,23 @@ pub use portal_core::{AnandaProjection, M3TranscriptionPacket};
 
 pub const S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD: &str = "s5'.gnostic.musical_transcript";
 pub const S2_GRAPH_ANANDA_POSITION_METHOD: &str = "s2.graph.ananda_position";
+pub const S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD: &str = "s2.graph.gds.tangent_overlay";
+pub const S2_GRAPH_ONTOLOGY_RELOAD_METHOD: &str = "s2.graph.ontology.reload";
+pub const S2_GRAPH_SEED_SNAPSHOT_METHOD: &str = "s2.graph.seed.snapshot";
+pub const S2_GRAPH_CORE65_AUDIT_METHOD: &str = "s2.graph.core65.audit";
+pub const S2_GRAPH_PROMOTION_DRY_RUN_METHOD: &str = "s2.graph.promotion.dry_run";
+pub const S2_GRAPH_PROMOTION_COMMIT_METHOD: &str = "s2.graph.promotion.commit";
+pub const S2_GRAPH_RELATION_FAMILY_LIST_METHOD: &str = "s2.graph.relation_family.list";
+
+pub const S2_GRAPH_GATEWAY_EXPOSED_METHODS: &[&str] = &[
+    S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,
+    S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
+    S2_GRAPH_SEED_SNAPSHOT_METHOD,
+    S2_GRAPH_CORE65_AUDIT_METHOD,
+    S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
+    S2_GRAPH_PROMOTION_COMMIT_METHOD,
+    S2_GRAPH_RELATION_FAMILY_LIST_METHOD,
+];
 
 // ===================== 41.T41.6 m4 arena gateway route family =====================
 //

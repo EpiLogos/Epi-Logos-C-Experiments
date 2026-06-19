@@ -63,8 +63,8 @@ export class LogosAtelierWidget extends ReactWidget {
         this.title.closable = true;
         this.addClass('ide-shell-widget');
 
-{/* 28.18 status-bar consumption contract: logos-atelier does not render shared status-bar fields.
-    No consumption contract needed. 15.10 owns status-bar build; 28.18 confirms no own-state pattern. */}
+        /* 28.18 status-bar consumption contract: logos-atelier does not render shared status-bar fields.
+           No consumption contract needed. 15.10 owns status-bar build; 28.18 confirms no own-state pattern. */
         this.addClass('ide-shell-logos-atelier');
     }
 

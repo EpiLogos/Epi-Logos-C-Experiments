@@ -1,6 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{S2_GRAPH_ANANDA_POSITION_METHOD, S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD};
+use crate::{
+    S2_GRAPH_ANANDA_POSITION_METHOD, S2_GRAPH_CORE65_AUDIT_METHOD,
+    S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD, S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
+    S2_GRAPH_PROMOTION_COMMIT_METHOD, S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
+    S2_GRAPH_RELATION_FAMILY_LIST_METHOD, S2_GRAPH_SEED_SNAPSHOT_METHOD,
+    S5_GNOSTIC_MUSICAL_TRANSCRIPT_METHOD,
+};
 
 // =================== 13.T2 executable dispatch-plan contract ===================
 //
@@ -385,6 +391,48 @@ pub const METHOD_DISPATCH_PLAN: &[MethodDispatchPlanEntry] = &[
         method: "s2.graph.kernel_resonance.record",
         kind: MethodDispatchKind::S2GraphServiceAdapter,
         authority_path: "Body/S/S2/graph-services + Body/S/S5/epi-kernel kernel arena",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_GRAPH_GDS_TANGENT_OVERLAY_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::GraphMethodService::gds_tangent_overlay",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_GRAPH_ONTOLOGY_RELOAD_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::ontology::import_epi_ontology_with_n10s",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_GRAPH_SEED_SNAPSHOT_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::seed::seed_baseline_snapshot_queries",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_GRAPH_CORE65_AUDIT_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::GraphMethodService::core_65_audit",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_GRAPH_PROMOTION_DRY_RUN_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::SyncCoordinator::validate_promotion_intent",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_GRAPH_PROMOTION_COMMIT_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services::SyncCoordinator::promote_intent",
+        needs_extraction_to: None,
+    },
+    MethodDispatchPlanEntry {
+        method: S2_GRAPH_RELATION_FAMILY_LIST_METHOD,
+        kind: MethodDispatchKind::S2GraphServiceAdapter,
+        authority_path: "Body/S/S2/graph-services + Body/S/S2/graph-schema::c_1_relation_family",
         needs_extraction_to: None,
     },
     MethodDispatchPlanEntry {
