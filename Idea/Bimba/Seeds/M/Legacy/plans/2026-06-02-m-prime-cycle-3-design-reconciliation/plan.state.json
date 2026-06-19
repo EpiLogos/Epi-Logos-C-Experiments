@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T12:54:54.133Z",
+  "updatedAt": "2026-06-19T13:03:11.442Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -4238,14 +4238,19 @@
       "worktree": null
     },
     "23.T23.12": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T12:43:23.772Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T13:03:11.113Z",
       "claimedAt": "2026-06-19T12:43:23.772Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T13:03:11.113Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T13:03:11.113Z",
+          "text": "M2CymaticTextureContribution shape resolves via @pratibimba/m2-parashakti/common/composition; M2/integrated-composition/plugin tests passed (4+4 M2 tests, 42 integrated-composition tests, 15 plugin tests); composition preflight validator passed 8 tests; M2 bevy/wgpu grep clean; full test:contracts still has unrelated Node-24 headless DOM/design-scan failures."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-23-t23-12-m2-cymatic-mount",
-      "leaseExpiresAt": "2026-06-19T14:43:23.772Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T12:43:23.772Z",
       "runId": "20260619T124323Z-23-T23.12",
       "worktree": null
@@ -11413,11 +11418,12 @@
     {
       "runId": "20260619T124323Z-23-T23.12",
       "taskId": "23.T23.12",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T12:43:23.772Z",
       "owner": "codex-m-dev-23-t23-12-m2-cymatic-mount",
       "leaseExpiresAt": "2026-06-19T14:43:23.772Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T13:03:11.113Z"
     },
     {
       "runId": "20260619T124327Z-25-T25.5",
