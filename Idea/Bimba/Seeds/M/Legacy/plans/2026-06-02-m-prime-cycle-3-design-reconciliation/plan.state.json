@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T20:03:05.276Z",
+  "updatedAt": "2026-06-19T20:19:12.304Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -4982,16 +4982,21 @@
       "worktree": null
     },
     "28.T28.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T20:17:38.905Z",
+      "claimedAt": "2026-06-19T20:11:05.862Z",
+      "completedAt": "2026-06-19T20:17:38.905Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:17:38.905Z",
+          "text": "ReviewItemDeep + IOD-17 three-way parity matrix, dispatch-genealogy + evidence-packet click-through, DR-WC-IS-2 deep-vs-abbreviated split, grep + pnpm build/test pass"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-28-t28-9-review-pane",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T20:11:05.862Z",
+      "runId": "20260619T201105Z-28-T28.9",
       "worktree": null
     },
     "28.T28.10": {
@@ -6882,16 +6887,16 @@
       "worktree": null
     },
     "25.T25.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T20:11:40.252Z",
+      "claimedAt": "2026-06-19T20:11:40.252Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-25-t25-9-oracle-history",
+      "leaseExpiresAt": "2026-06-19T22:11:40.252Z",
+      "heartbeatAt": "2026-06-19T20:11:40.252Z",
+      "runId": "20260619T201140Z-25-T25.9",
       "worktree": null
     },
     "25.T25.10": {
@@ -8021,16 +8026,16 @@
       "worktree": null
     },
     "09.T9.14": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T20:11:00.714Z",
+      "claimedAt": "2026-06-19T20:11:00.714Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-09-t9-14-world-gnostic",
+      "leaseExpiresAt": "2026-06-19T22:11:00.714Z",
+      "heartbeatAt": "2026-06-19T20:11:00.714Z",
+      "runId": "20260619T201100Z-09-T9.14",
       "worktree": null
     },
     "12.T12.27": {
@@ -8921,16 +8926,21 @@
       "worktree": null
     },
     "44.T44.1": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T20:19:12.051Z",
+      "claimedAt": "2026-06-19T20:11:18.775Z",
+      "completedAt": "2026-06-19T20:19:12.051Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:19:12.051Z",
+          "text": "Block/BlockSpec TypeScript types + JSON-schema, core block-type set (19 listed types), blocks.catalog gateway contract, IOD17Parity gating, pnpm build clean, m-extension-runtime test 45/45"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-44-t44-1-block-contract",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T20:11:18.775Z",
+      "runId": "20260619T201118Z-44-T44.1",
       "worktree": null
     },
     "44.T44.2": {
@@ -11646,12 +11656,50 @@
       "leaseExpiresAt": "2026-06-19T21:54:27.016Z",
       "worktree": null,
       "completedAt": "2026-06-19T20:02:06.877Z"
+    },
+    {
+      "runId": "20260619T201100Z-09-T9.14",
+      "taskId": "09.T9.14",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T20:11:00.714Z",
+      "owner": "codex-m-dev-09-t9-14-world-gnostic",
+      "leaseExpiresAt": "2026-06-19T22:11:00.714Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T201105Z-28-T28.9",
+      "taskId": "28.T28.9",
+      "status": "done",
+      "startedAt": "2026-06-19T20:11:05.862Z",
+      "owner": "codex-m-dev-28-t28-9-review-pane",
+      "leaseExpiresAt": "2026-06-19T22:11:05.862Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T20:17:38.905Z"
+    },
+    {
+      "runId": "20260619T201118Z-44-T44.1",
+      "taskId": "44.T44.1",
+      "status": "done",
+      "startedAt": "2026-06-19T20:11:18.775Z",
+      "owner": "codex-m-dev-44-t44-1-block-contract",
+      "leaseExpiresAt": "2026-06-19T22:11:18.775Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T20:19:12.051Z"
+    },
+    {
+      "runId": "20260619T201140Z-25-T25.9",
+      "taskId": "25.T25.9",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T20:11:40.252Z",
+      "owner": "codex-m-dev-25-t25-9-oracle-history",
+      "leaseExpiresAt": "2026-06-19T22:11:40.252Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-19T19:54:12.336Z",
-    "updatedAt": "2026-06-19T19:54:12.336Z",
+    "createdAt": "2026-06-19T20:10:59.870Z",
+    "updatedAt": "2026-06-19T20:10:59.870Z",
     "taskIds": [
       "05.T5.3",
       "05.T5.4",
