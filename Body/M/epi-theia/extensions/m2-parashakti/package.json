@@ -18,11 +18,16 @@
     "./meaning-packet": {
       "types": "./lib/common/meaning-packet.d.ts",
       "default": "./lib/common/meaning-packet.js"
+    },
+    "./common/composition": {
+      "types": "./lib/common/composition.d.ts",
+      "default": "./lib/common/composition.js"
     }
   },
   "typesVersions": {
     "*": {
-      "meaning-packet": ["lib/common/meaning-packet.d.ts"]
+      "meaning-packet": ["lib/common/meaning-packet.d.ts"],
+      "common/composition": ["lib/common/composition.d.ts"]
     }
   },
   "theiaExtensions": [

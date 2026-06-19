@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T12:40:15.013Z",
+  "updatedAt": "2026-06-19T12:54:54.133Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -4238,16 +4238,16 @@
       "worktree": null
     },
     "23.T23.12": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T12:43:23.772Z",
+      "claimedAt": "2026-06-19T12:43:23.772Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-23-t23-12-m2-cymatic-mount",
+      "leaseExpiresAt": "2026-06-19T14:43:23.772Z",
+      "heartbeatAt": "2026-06-19T12:43:23.772Z",
+      "runId": "20260619T124323Z-23-T23.12",
       "worktree": null
     },
     "23.T23.13": {
@@ -4891,16 +4891,21 @@
       "worktree": null
     },
     "28.T28.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T12:54:53.722Z",
+      "claimedAt": "2026-06-19T12:44:39.601Z",
+      "completedAt": "2026-06-19T12:54:53.722Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T12:54:53.722Z",
+          "text": "@pratibimba/ide-shell-m0-m5 test: 32/32 node tests pass; ACR render probe asserted Pi+Anima+6 Aletheia, disabled human-required controls, IOD-17 violation banner, Backend Studio/Evidence click-through attrs, and Aletheia veto non-blocking; key files under src/browser/acr plus agentic-control-room-widget.tsx."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-28-t28-5-acr",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T12:44:39.601Z",
+      "runId": "20260619T124439Z-28-T28.5",
       "worktree": null
     },
     "28.T28.6": {
@@ -6766,16 +6771,16 @@
       "worktree": null
     },
     "25.T25.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T12:43:27.443Z",
+      "claimedAt": "2026-06-19T12:43:27.443Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-25-t25-5-quintessence-display",
+      "leaseExpiresAt": "2026-06-19T14:43:27.443Z",
+      "heartbeatAt": "2026-06-19T12:43:27.443Z",
+      "runId": "20260619T124327Z-25-T25.5",
       "worktree": null
     },
     "25.T25.6": {
@@ -8641,16 +8646,16 @@
       "worktree": null
     },
     "42.T42.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T12:43:47.462Z",
+      "claimedAt": "2026-06-19T12:43:47.462Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-42-t42-6-now-inbox-wake",
+      "leaseExpiresAt": "2026-06-19T14:43:47.462Z",
+      "heartbeatAt": "2026-06-19T12:43:47.462Z",
+      "runId": "20260619T124347Z-42-T42.6",
       "worktree": null
     },
     "42.T42.7": {
@@ -11404,12 +11409,49 @@
       "leaseExpiresAt": "2026-06-19T14:21:02.959Z",
       "worktree": null,
       "completedAt": "2026-06-19T12:39:54.407Z"
+    },
+    {
+      "runId": "20260619T124323Z-23-T23.12",
+      "taskId": "23.T23.12",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T12:43:23.772Z",
+      "owner": "codex-m-dev-23-t23-12-m2-cymatic-mount",
+      "leaseExpiresAt": "2026-06-19T14:43:23.772Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T124327Z-25-T25.5",
+      "taskId": "25.T25.5",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T12:43:27.443Z",
+      "owner": "codex-m-dev-25-t25-5-quintessence-display",
+      "leaseExpiresAt": "2026-06-19T14:43:27.443Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T124347Z-42-T42.6",
+      "taskId": "42.T42.6",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T12:43:47.462Z",
+      "owner": "codex-m-dev-42-t42-6-now-inbox-wake",
+      "leaseExpiresAt": "2026-06-19T14:43:47.462Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T124439Z-28-T28.5",
+      "taskId": "28.T28.5",
+      "status": "done",
+      "startedAt": "2026-06-19T12:44:39.601Z",
+      "owner": "codex-m-dev-28-t28-5-acr",
+      "leaseExpiresAt": "2026-06-19T14:44:39.601Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T12:54:53.722Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-19T12:20:42.871Z",
-    "updatedAt": "2026-06-19T12:20:42.871Z",
+    "createdAt": "2026-06-19T12:43:21.878Z",
+    "updatedAt": "2026-06-19T12:43:21.878Z",
     "taskIds": [
       "09.T9.12",
       "05.T5.3",

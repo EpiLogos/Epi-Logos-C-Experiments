@@ -18,6 +18,23 @@ import { IdeShellBridgeGate } from './bridge-gate';
 import {
     PiAxiomTranslationInspector
 } from './acr/pi-axiom-translation-inspector';
+import { PiRuntimeMonitorBanner } from './acr/pi-runtime-monitor-banner';
+import { RunTree } from './acr/run-tree';
+import { ToolStream } from './acr/tool-stream';
+import { AbortRetryContinueControls } from './acr/abort-retry-continue-controls';
+import { EvidenceDepositForm } from './acr/evidence-deposit-form';
+import { ReviewDecisionControls } from './acr/review-decision-controls';
+import { AletheiaSubagentTrace } from './acr/aletheia-subagent-trace';
+import type {
+    AletheiaSubagent,
+    DispatchTraceNode,
+    IOD17Parity,
+    MediatedRunEvidencePacket,
+    ReviewDecisionAction,
+    Run,
+    RuntimeControlAction,
+    ToolInvocationRef
+} from './acr/types';
 import {
     PiAxiomTranslationService,
     createPiAxiomTranslationViewModel,
@@ -56,6 +73,13 @@ export interface AgenticControlRoomState {
     readonly axiomTranslationError: string | null;
     readonly selectedAxiomTranslationSessionId: string | null;
     readonly expandedAxiomTranslationStepId: string | null;
+    readonly tools: readonly ToolInvocationRef[];
+    readonly activeRun: Run | null;
+    readonly activeReviewId: string | null;
+    readonly evidencePacket: MediatedRunEvidencePacket | null;
+    readonly lastRuntimeControl: string | null;
+    readonly lastReviewDecision: string | null;
+    readonly lastDepositId: string | null;
 }
 
 const EMPTY_STATE: AgenticControlRoomState = {
@@ -70,13 +94,35 @@ const EMPTY_STATE: AgenticControlRoomState = {
     axiomTranslationSessions: [],
     axiomTranslationError: null,
     selectedAxiomTranslationSessionId: null,
-    expandedAxiomTranslationStepId: null
+    expandedAxiomTranslationStepId: null,
+    tools: [],
+    activeRun: {
+        id: 'pi-runtime-governance-audit',
+        status: 'awaiting-review',
+        humanRequired: true,
+        reviewId: 'iod17-governance-review'
+    },
+    activeReviewId: 'iod17-governance-review',
+    evidencePacket: null,
+    lastRuntimeControl: null,
+    lastReviewDecision: null,
+    lastDepositId: null
 };
+
+const DR_M5_1_ROSTER_COLLAPSE = true;
+const ALETHEIA_SUBAGENTS: readonly AletheiaSubagent[] = [
+    'anansi',
+    'janus',
+    'moirai',
+    'mercurius',
+    'agora',
+    'zeithoven'
+];
 
 @injectable()
 export class AgenticControlRoomWidget extends ReactWidget {
     static readonly ID = IDE_SHELL_WIDGET_IDS.AGENTIC_CONTROL_ROOM;
-    static readonly LABEL = 'Agentic Control Room';
+    static readonly LABEL = 'Pi Runtime Monitor (ACR)';
 
     @inject(KERNEL_BRIDGE_API)
     protected readonly bridge!: KernelBridgeAPI;
@@ -204,6 +250,76 @@ export class AgenticControlRoomWidget extends ReactWidget {
         });
     };
 
+    protected openDispatchSource = (node: DispatchTraceNode): void => {
+        if (!node.coordinate || !node.sourceAnchor) {
+            return;
+        }
+        void this.commands.executeCommand('backend-studio.openSource', node.coordinate, node.sourceAnchor);
+    };
+
+    protected openEvidencePacket = (packetId: string): void => {
+        void this.commands.executeCommand('pratibimba.ide-shell-m0-m5.evidence-panel.open', {
+            requestedEvidenceRecordId: packetId,
+            evidenceRecordId: packetId,
+            requestedExtensionId: 'ide-shell-m0-m5',
+            requestedContributionId: 'evidence-panel'
+        });
+    };
+
+    protected invokeRuntimeControl = (action: RuntimeControlAction, run: Run): void => {
+        this.state = { ...this.state, lastRuntimeControl: `${action}:${run.id}` };
+        this.update();
+        void this.bridge.invokeCapability({
+            method: 'invokeGatewayRpc',
+            sessionKey: this.state.sessionKey ?? 'acr-runtime-control',
+            params: {
+                gatewayMethod: "s5'.epii.runtime_control",
+                action,
+                runId: run.id
+            },
+            profileGeneration: this.state.profileGeneration ?? this.bridge.cachedProfile?.generation ?? null,
+            provenanceHandles: [],
+            vak: null
+        });
+    };
+
+    protected depositEvidence = (packet: MediatedRunEvidencePacket): void => {
+        this.state = {
+            ...this.state,
+            evidencePacket: packet,
+            lastDepositId: packet.id
+        };
+        this.update();
+        void this.bridge.invokeCapability({
+            method: 'invokeGatewayRpc',
+            sessionKey: packet.sessionKey ?? this.state.sessionKey ?? 'acr-evidence-deposit',
+            params: {
+                gatewayMethod: "s5'.epii.deposit",
+                packet
+            },
+            profileGeneration: packet.profileGeneration ?? this.state.profileGeneration ?? this.bridge.cachedProfile?.generation ?? null,
+            provenanceHandles: [],
+            vak: null
+        });
+    };
+
+    protected submitReviewDecision = (decision: ReviewDecisionAction, reviewId: string): void => {
+        this.state = { ...this.state, lastReviewDecision: `${decision}:${reviewId}` };
+        this.update();
+        void this.bridge.invokeCapability({
+            method: 'invokeGatewayRpc',
+            sessionKey: this.state.sessionKey ?? 'acr-review-transition',
+            params: {
+                gatewayMethod: "s5'.review.transition",
+                reviewId,
+                decision
+            },
+            profileGeneration: this.state.profileGeneration ?? this.bridge.cachedProfile?.generation ?? null,
+            provenanceHandles: [],
+            vak: null
+        });
+    };
+
     protected override render(): React.ReactNode {
         return (
             <IdeShellBridgeGate
@@ -217,12 +333,20 @@ export class AgenticControlRoomWidget extends ReactWidget {
 
     protected renderControlRoom(): React.ReactNode {
         const matrix = this.state.matrix;
+        const dispatchTrace = this.createDispatchTrace(matrix);
+        const activeRun = this.state.activeRun;
+        const reviewParity = this.createReviewParity(matrix, activeRun);
         return (
-            <div className="ide-shell-widget-root" data-test="agentic-control-room-root">
+            <div
+                className="ide-shell-widget-root"
+                data-test="agentic-control-room-root"
+                data-feature-dr_m5_1_roster_collapse={DR_M5_1_ROSTER_COLLAPSE ? 'true' : 'false'}
+            >
                 <header className="ide-shell-widget-header">
                     <h3>{AgenticControlRoomWidget.LABEL}</h3>
-                    <span data-test="agentic-control-room-shell-version">T4 shell</span>
+                    <span data-test="agentic-control-room-shell-version">T8 governance surface</span>
                 </header>
+                <PiRuntimeMonitorBanner />
                 {/* 28.18 status-bar consumption contract: coordinate/sessionKey/dayNow/profileGeneration
                     rendered in VAK fields below MUST consume from SharedBridgeAdapter projection
                     (bridge.cachedProfile?.generation, bridge.cachedCoordinateContext?.coordinate),
@@ -281,10 +405,25 @@ export class AgenticControlRoomWidget extends ReactWidget {
                                 <dt>Package role</dt>
                                 <dd data-test="acr-matrix-package-role">{matrix.package_role}</dd>
                             </dl>
-                            <h5>Constitutional agents</h5>
-                            <ul data-test="acr-constitutional-agents">
-                                {matrix.constitutional_agents.map(agent => (
-                                    <li key={agent} data-test={`acr-agent-${agent}`}>
+                            <h5>DR-M5-1 roster collapse</h5>
+                            <ul data-test="acr-roster-collapse">
+                                <li data-test="acr-roster-pi">Pi — single harness</li>
+                                <li data-test="acr-roster-anima">Anima — main dispatcher</li>
+                                <li data-test="acr-roster-aletheia">
+                                    Aletheia — crystallisation-mode techne guardians
+                                    <ul data-test="acr-aletheia-subagents">
+                                        {ALETHEIA_SUBAGENTS.map(subagent => (
+                                            <li key={subagent} data-test={`acr-aletheia-subagent-${subagent}`}>
+                                                {subagent}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                            </ul>
+                            <h5>Psyche facets</h5>
+                            <ul data-test="acr-psyche-facet-badges">
+                                {this.psycheFacets(matrix).map(agent => (
+                                    <li key={agent} data-test={`acr-psyche-facet-${agent}`}>
                                         {agent}
                                     </li>
                                 ))}
@@ -312,14 +451,57 @@ export class AgenticControlRoomWidget extends ReactWidget {
                     className="ide-shell-widget-detail"
                     data-test="agentic-control-room-t8-host"
                 >
-                    <h4>Run shell (T8 contents land in agentic-control-room extension)</h4>
-                    <p className="ide-shell-widget-empty">
-                        T4 provides the workbench host shell; the run tree, tool stream,
-                        diagnostics, abort/retry/continue, evidence deposition and review
-                        decision controls are contributed by the agentic-control-room
-                        extension at Track 05 T8. The kernel-bridge readiness gate and the
-                        capability tree above are shared by both tranches.
-                    </p>
+                    <h4>Governance run audit</h4>
+                    <RunTree
+                        dispatchTrace={dispatchTrace}
+                        onNodeClick={this.openDispatchSource}
+                        onEvidenceClick={this.openEvidencePacket}
+                    />
+                    <h4>Tool stream</h4>
+                    <ToolStream tools={this.state.tools} />
+                    <h4>Runtime controls</h4>
+                    <AbortRetryContinueControls
+                        run={activeRun}
+                        disabled={activeRun?.humanRequired !== false}
+                        onControl={this.invokeRuntimeControl}
+                    />
+                    <h4>Evidence deposit</h4>
+                    <EvidenceDepositForm
+                        initialPacket={this.state.evidencePacket}
+                        onDeposit={this.depositEvidence}
+                    />
+                    {this.state.lastDepositId && (
+                        <p data-test="acr-last-deposit-id">last deposit: {this.state.lastDepositId}</p>
+                    )}
+                    <h4>Review decision</h4>
+                    <ReviewDecisionControls
+                        reviewId={this.state.activeReviewId ?? activeRun?.reviewId ?? 'unselected-review'}
+                        iod17Parity={reviewParity}
+                        humanRequired={activeRun?.humanRequired ?? true}
+                        onDecision={this.submitReviewDecision}
+                    />
+                    {this.state.lastRuntimeControl && (
+                        <p data-test="acr-last-runtime-control">{this.state.lastRuntimeControl}</p>
+                    )}
+                    {this.state.lastReviewDecision && (
+                        <p data-test="acr-last-review-decision">{this.state.lastReviewDecision}</p>
+                    )}
+                    <h4>Aletheia subagent trace</h4>
+                    <div data-test="acr-aletheia-subagent-traces">
+                        {this.aletheiaTraceNodes(dispatchTrace).map((node, index) => (
+                            <AletheiaSubagentTrace
+                                key={node.id}
+                                subagent={node.aletheiaSubagent as AletheiaSubagent}
+                                subtrace={node}
+                                vetoRecord={index === 1
+                                    ? {
+                                        reason: 'Boundary review requested; final decision remains with the human gate.',
+                                        raisedAt: node.tickAtInvoke ?? Date.now()
+                                    }
+                                    : undefined}
+                            />
+                        ))}
+                    </div>
                 </section>
                 <section
                     className="ide-shell-widget-detail"
@@ -342,5 +524,73 @@ export class AgenticControlRoomWidget extends ReactWidget {
                 </section>
             </div>
         );
+    }
+
+    protected psycheFacets(matrix: CapabilityMatrix): readonly string[] {
+        const deprecated = matrix.anima_authorial_registers_deprecated;
+        if (Array.isArray(deprecated)) {
+            return deprecated.filter((value): value is string => typeof value === 'string');
+        }
+        return matrix.constitutional_agents;
+    }
+
+    protected createDispatchTrace(matrix: CapabilityMatrix | null): DispatchTraceNode {
+        const coordinate = matrix?.coordinate ?? "S4/S4'";
+        const owner = matrix?.owner_agent ?? 'anima';
+        return {
+            id: 'pi',
+            label: 'Pi harness',
+            actor: 'pi',
+            coordinate,
+            sourceAnchor: 'Body/S/S4/pi-agent/agents/anima.md',
+            methodOrSkill: 'single-agent-harness',
+            tickAtInvoke: this.bridge.cachedProfile?.generation ?? this.state.profileGeneration ?? null,
+            mediatedRunEvidencePacketId: this.state.evidencePacket?.id ?? null,
+            children: [
+                {
+                    id: 'anima',
+                    label: 'Anima dispatcher',
+                    actor: 'anima',
+                    coordinate,
+                    sourceAnchor: 'Body/S/S4/plugins/pleroma/capability-matrix.json',
+                    methodOrSkill: owner,
+                    tickAtInvoke: this.bridge.cachedProfile?.generation ?? this.state.profileGeneration ?? null,
+                    psycheFacet: 'dispatcher',
+                    mediatedRunEvidencePacketId: this.state.evidencePacket?.id ?? null,
+                    children: ALETHEIA_SUBAGENTS.map((subagent, index) => ({
+                        id: `aletheia-${subagent}`,
+                        label: `Aletheia / ${subagent}`,
+                        actor: 'aletheia',
+                        coordinate,
+                        sourceAnchor: 'Body/S/S4/plugins/pleroma/capability-matrix.json',
+                        methodOrSkill: `crystallisation-mode:${subagent}`,
+                        tickAtInvoke: (this.bridge.cachedProfile?.generation ?? this.state.profileGeneration ?? 0) + index,
+                        aletheiaSubagent: subagent,
+                        mediatedRunEvidencePacketId: this.state.evidencePacket?.id ?? null
+                    }))
+                }
+            ]
+        };
+    }
+
+    protected aletheiaTraceNodes(dispatchTrace: DispatchTraceNode): readonly DispatchTraceNode[] {
+        return dispatchTrace.children?.[0]?.children?.filter(
+            (node): node is DispatchTraceNode & { readonly aletheiaSubagent: AletheiaSubagent } =>
+                ALETHEIA_SUBAGENTS.includes(node.aletheiaSubagent as AletheiaSubagent)
+        ) ?? [];
+    }
+
+    protected createReviewParity(matrix: CapabilityMatrix | null, activeRun: Run | null): IOD17Parity {
+        const widgetState = activeRun?.humanRequired ? 'human-required' : 'agent-actionable';
+        const capabilityMatrixState = matrix === null ? 'matrix-unloaded' : 'human-required';
+        const agentContractState = 'human-required';
+        const inParity = capabilityMatrixState === agentContractState && agentContractState === widgetState;
+        return {
+            inParity,
+            capabilityMatrixState,
+            agentContractState,
+            widgetState,
+            drift: inParity ? [] : ['capability-matrix', 'agent-contract', 'widget']
+        };
     }
 }

@@ -105,8 +105,10 @@ function commonIndex(entry) {
   const compactViews = compactExports.map((exportName, index) => ({
     exportName,
     viewId: entry.viewIds[index] ?? primaryView,
-    miniModes,
-    requiredSelectors: ['currentProfile', 'readiness', 'coordinateContext']
+    miniModes: exportName === 'M2CymaticTextureContribution' ? ['mini-view'] : miniModes,
+    requiredSelectors: exportName === 'M2CymaticTextureContribution'
+      ? ['currentProfile', 'coordinateContext', 'compositionMountPoint']
+      : ['currentProfile', 'readiness', 'coordinateContext']
   }));
   const evidenceKind = `${entry.id}.evidence`;
   const evidenceRequiredHandles = entry.id === 'm4-nara'

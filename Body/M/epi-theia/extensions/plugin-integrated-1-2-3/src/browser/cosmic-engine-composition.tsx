@@ -1,10 +1,15 @@
 import * as React from 'react';
+import type { CoordinateContext } from '../../../m-extension-runtime/lib/common/coordinate-context';
+import { EMPTY_COORDINATE_CONTEXT } from '../../../m-extension-runtime/lib/common/coordinate-context';
 import type { MathemeHarmonicProfileBoundary } from '../../../m-extension-runtime/lib/common/profile';
 import type { MExtensionId } from '../../../m-extension-runtime/lib/common/contribution-contracts';
 import type {
     M3CodonRotationProjectionForLensRing
 } from '../../../m3-mahamaya/lib/browser/composition/M3CodonRotationProjectionForLensRing';
-import type { M2CymaticFrame } from '../../../m2-parashakti/lib/common/meaning-packet';
+import {
+    buildM2CymaticTextureContribution,
+    type M2CymaticTextureContribution
+} from '@pratibimba/m2-parashakti/common/composition';
 import type {
     IntegratedEmptyStateReason,
     IntegratedEmptyStateView
@@ -24,8 +29,6 @@ import {
     useCompositionProfile
 } from '@pratibimba/integrated-composition/composition-profile-context';
 import { Matheme137Overlay } from './matheme-137-overlay';
-
-declare const require: (id: string) => unknown;
 
 export type CosmicCompositionBlockerId =
     | 'pending-k2-surface'
@@ -51,7 +54,7 @@ export interface CosmicCompositionSlotOccupant {
 export interface CosmicCompositionModel {
     readonly profile: MathemeHarmonicProfileBoundary | null;
     readonly k2SurfaceHandle: K2SurfaceHandle | null;
-    readonly cymaticFrame: M2CymaticFrame | null;
+    readonly cymaticTextureContribution: M2CymaticTextureContribution | null;
     readonly codonProjection: M3CodonRotationProjectionForLensRing | null;
     readonly blockers: readonly CosmicCompositionBlockerId[];
     readonly slotOccupants: readonly CosmicCompositionSlotOccupant[];
@@ -105,7 +108,10 @@ export const CosmicEngineComposition: React.FC<CosmicEngineCompositionProps> = (
                 data-editor-surface="cosmic-engine-composition"
             >
                 <K2PlayedTorusSurface model={model} />
-                <CymaticTextureMount surfaceHandle={model.k2SurfaceHandle} frame={model.cymaticFrame} />
+                <CymaticTextureMount
+                    surfaceHandle={model.k2SurfaceHandle}
+                    contribution={model.cymaticTextureContribution}
+                />
                 <CodonCellStateProjection
                     surfaceHandle={model.k2SurfaceHandle}
                     projection={model.codonProjection}
@@ -146,8 +152,8 @@ export const K2PlayedTorusSurface: React.FC<{
 
 export const CymaticTextureMount: React.FC<{
     readonly surfaceHandle: K2SurfaceHandle | null;
-    readonly frame: M2CymaticFrame | null;
-}> = ({ surfaceHandle, frame }) => {
+    readonly contribution: M2CymaticTextureContribution | null;
+}> = ({ surfaceHandle, contribution }) => {
     return (
         <section
             className="cosmic-cymatic-texture-mount"
@@ -156,12 +162,15 @@ export const CymaticTextureMount: React.FC<{
             data-slot-occupant="m2-parashakti"
             data-handle-class="cymatic-mount-point"
             data-surface-handle={surfaceHandle?.handle ?? 'pending-k2-surface'}
-            data-address72={frame?.address72 ?? 'pending-cymatic-mount-point'}
-            data-wave-samples={frame?.sampleCount ?? 0}
+            data-address72={contribution?.activeCellIndex ?? 'pending-cymatic-mount-point'}
+            data-wave-samples={contribution?.chladniField.length ?? 0}
+            data-heatmap-cells={contribution?.heatmap72.length ?? 0}
+            data-surface-variant={contribution?.surfaceVariant ?? 'pending-cymatic-mount-point'}
+            data-klein-flip-phase={contribution?.kleinFlipPhase ?? 'pending-cymatic-mount-point'}
         >
-            {frame ? (
+            {contribution ? (
                 <ol className="cosmic-cymatic-wave-points" data-test="m2-cymatic-wave-points">
-                    {frame.wavePoints.slice(0, 12).map((point, index) => (
+                    {contribution.heatmap72.slice(0, 12).map((point, index) => (
                         <li key={index} style={{ transform: `scaleY(${Math.max(0.08, Math.abs(point))})` }}>
                             {point}
                         </li>
@@ -204,7 +213,8 @@ export const CodonCellStateProjection: React.FC<{
 };
 
 export function buildCosmicCompositionModel(
-    profile: MathemeHarmonicProfileBoundary | null
+    profile: MathemeHarmonicProfileBoundary | null,
+    context: CoordinateContext = EMPTY_COORDINATE_CONTEXT
 ): CosmicCompositionModel {
     const blockers = new Set<CosmicCompositionBlockerId>();
     const k2SurfaceHandle = readK2SurfaceHandle(profile);
@@ -215,8 +225,8 @@ export function buildCosmicCompositionModel(
         blockers.add('pending-ananda-vortex');
     }
 
-    const cymaticFrame = readCymaticFrame(profile);
-    if (!cymaticFrame) {
+    const cymaticTextureContribution = readCymaticTextureContribution(profile, context);
+    if (!cymaticTextureContribution) {
         blockers.add('pending-cymatic-mount-point');
     }
 
@@ -228,7 +238,7 @@ export function buildCosmicCompositionModel(
     return Object.freeze({
         profile,
         k2SurfaceHandle,
-        cymaticFrame,
+        cymaticTextureContribution,
         codonProjection,
         blockers: Object.freeze([...blockers]),
         slotOccupants: Object.freeze([
@@ -287,15 +297,15 @@ function readAnandaVortexReady(profile: MathemeHarmonicProfileBoundary | null): 
     );
 }
 
-function readCymaticFrame(profile: MathemeHarmonicProfileBoundary | null): M2CymaticFrame | null {
+function readCymaticTextureContribution(
+    profile: MathemeHarmonicProfileBoundary | null,
+    context: CoordinateContext
+): M2CymaticTextureContribution | null {
     if (!profile || !objectValue(profile.payload['compositionMountPoint'])) {
         return null;
     }
     try {
-        const { renderM2CymaticFrame } = require(
-            '../../../m2-parashakti/lib/common/meaning-packet'
-        ) as typeof import('../../../m2-parashakti/lib/common/meaning-packet');
-        return renderM2CymaticFrame({ profile, scope: 'cosmic-public' });
+        return buildM2CymaticTextureContribution(profile, context, 'torus');
     } catch {
         return null;
     }
@@ -398,8 +408,8 @@ const BLOCKER_DETAILS: Readonly<Record<CosmicCompositionBlockerId, {
     }),
     'pending-cymatic-mount-point': Object.freeze({
         contributorId: 'm2-parashakti',
-        ownerTrack: 'Track 23.10',
-        humanReason: 'M2 compositionMountPoint or deterministic cymatic frame is not ready.'
+        ownerTrack: 'Track 23.12',
+        humanReason: 'M2 compositionMountPoint or M2CymaticTextureContribution is not ready.'
     }),
     'pending-codon-rotation-export': Object.freeze({
         contributorId: 'm3-mahamaya',

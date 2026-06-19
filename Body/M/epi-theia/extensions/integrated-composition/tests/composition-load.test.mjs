@@ -1,9 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 const require = createRequire(import.meta.url);
 const { compositionLoad } = require('../lib/common/composition-load.js');
+const repoRoot = '/Users/admin/Documents/Epi-Logos C Experiments';
 
 function readyReadiness(extensionId) {
     return {
@@ -188,4 +191,29 @@ test('compositionLoad mounts granted slots and leaves profile blockers as runtim
             blocker => blocker.id === 'pending-cymatic-mount-point'
         )
     );
+});
+
+test('M2 cymatic texture contribution shape resolves for the integrated texture layer', () => {
+    const m2Package = JSON.parse(readFileSync(
+        join(repoRoot, 'Body/M/epi-theia/extensions/m2-parashakti/package.json'),
+        'utf8'
+    ));
+    const compositionSource = readFileSync(
+        join(repoRoot, 'Body/M/epi-theia/extensions/m2-parashakti/src/common/composition.ts'),
+        'utf8'
+    );
+    const integratedSource = readFileSync(
+        join(repoRoot, 'Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmic-engine-composition.tsx'),
+        'utf8'
+    );
+
+    assert.equal(
+        existsSync(join(repoRoot, 'Body/M/epi-theia/shared/m2-cymatic-texture-contribution.ts')),
+        true
+    );
+    assert.ok(m2Package.exports['./common/composition']);
+    assert.match(compositionSource, /export interface M2CymaticTextureContribution/);
+    assert.match(compositionSource, /readonly heatmap72: readonly number\[\]/);
+    assert.match(integratedSource, /@pratibimba\/m2-parashakti\/common\/composition/);
+    assert.match(integratedSource, /buildM2CymaticTextureContribution/);
 });

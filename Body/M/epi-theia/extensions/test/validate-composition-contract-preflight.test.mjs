@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const repoRoot = "/Users/admin/Documents/Epi-Logos C Experiments";
@@ -27,6 +27,7 @@ const expectedShapes = [
   "IntegratedEvidenceProducer",
   "IntegratedLayoutClaim",
   "IntegratedReadiness",
+  "M2CymaticTextureContribution",
 ];
 
 test("08.T0 declares both integrated plugins with correct contributors", () => {
@@ -143,3 +144,48 @@ test("08.T0 carries open decisions + blockers including track-08 composition-own
     );
   }
 });
+
+test("08.T0 declares the M2 cymatic texture shape and enforces the integrated-only consumer", () => {
+  const shape = composition.contractShapes.shapes.find((s) => s.name === "M2CymaticTextureContribution");
+  assert.ok(shape, "M2CymaticTextureContribution shape missing");
+  assert.equal(shape.module, "Body/M/epi-theia/shared/m2-cymatic-texture-contribution.ts");
+  assert.equal(shape.runtime_import, "@pratibimba/m2-parashakti/common/composition");
+  assert.deepEqual(shape.required_fields, [
+    "chladniField",
+    "colourBinary",
+    "heatmap72",
+    "surfaceVariant",
+    "activeCellIndex",
+    "kleinFlipPhase",
+    "provenance"
+  ]);
+
+  const sharedShapePath = join(repoRoot, shape.module);
+  const producerPath = join(repoRoot, shape.producer);
+  const consumerPath = join(repoRoot, shape.consumer);
+  assert.equal(existsSync(sharedShapePath), true, "shared M2 shape pointer missing");
+  assert.match(readFileSync(producerPath, "utf8"), /export interface M2CymaticTextureContribution/);
+  assert.match(readFileSync(producerPath, "utf8"), /buildM2CymaticTextureContribution/);
+  assert.match(readFileSync(consumerPath, "utf8"), /@pratibimba\/m2-parashakti\/common\/composition/);
+  assert.match(readFileSync(consumerPath, "utf8"), /M2CymaticTextureContribution/);
+
+  const m2BrowserRoot = join(repoRoot, "Body/M/epi-theia/extensions/m2-parashakti/src/browser");
+  for (const file of walkSourceFiles(m2BrowserRoot)) {
+    const source = readFileSync(file, "utf8");
+    assert.doesNotMatch(source, /M2CymaticTextureContribution/, `${file} consumes the integrated-only M2 texture shape`);
+    assert.doesNotMatch(source, /common\/composition/, `${file} imports the integrated-only M2 composition mount`);
+  }
+});
+
+function walkSourceFiles(dir) {
+  const out = [];
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) {
+      out.push(...walkSourceFiles(full));
+    } else if (/\.(ts|tsx)$/.test(entry)) {
+      out.push(full);
+    }
+  }
+  return out;
+}

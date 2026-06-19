@@ -19,7 +19,7 @@ export const ROUTE_PATH = '/m2-parashakti/meaning-packet';
 export const PRIVACY_CLASS = 'public_current_with_pending_private_projection_blocks';
 export const OBSERVABILITY_EVENT_TYPES = ["m2.meaning_packet","m2.routing_trace","m2.klein_flip"] as const;
 export const DECLARED_BLOCKERS = ["Track 01 resonance72, planetary-chakral, and audio bus fields","Track 02 correspondence provenance and mapping law","Track 03 Kerykeion and world_clock provider path"] as const;
-export const TRACK_08_EXPORTS = ["M2MeaningPacketCard","M2CymaticMiniView"] as const;
+export const TRACK_08_EXPORTS = ["M2MeaningPacketCard","M2CymaticMiniView","M2CymaticTextureContribution"] as const;
 export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.freeze({
     extensionId: EXTENSION_ID,
     track08Exports: TRACK_08_EXPORTS,
@@ -35,6 +35,12 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
             viewId: 'm2.parashakti.cymaticEngine',
             miniModes: Object.freeze(["compact-card","mini-view"]) as readonly MExtensionMiniMode[],
             requiredSelectors: Object.freeze(["currentProfile","readiness","coordinateContext"])
+        }),
+        Object.freeze({
+            exportName: 'M2CymaticTextureContribution',
+            viewId: 'm2.parashakti.cymaticEngine',
+            miniModes: Object.freeze(["mini-view"]) as readonly MExtensionMiniMode[],
+            requiredSelectors: Object.freeze(["currentProfile","coordinateContext","compositionMountPoint"])
         })
     ]),
     selectionHandlers: Object.freeze([
@@ -101,3 +107,4 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
 });
 
 export * from './meaning-packet';
+export * from './composition';

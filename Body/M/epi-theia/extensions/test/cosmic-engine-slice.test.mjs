@@ -81,6 +81,11 @@ function installBrowserImportShim() {
     globalThis.window = {
         document: globalThis.document,
         navigator: { userAgent: 'node', platform: 'Linux x86_64' },
+        localStorage: {
+            getItem() { return null; },
+            setItem() {},
+            removeItem() {}
+        },
         getComputedStyle: () => ({})
     };
     Object.defineProperty(globalThis, 'navigator', {

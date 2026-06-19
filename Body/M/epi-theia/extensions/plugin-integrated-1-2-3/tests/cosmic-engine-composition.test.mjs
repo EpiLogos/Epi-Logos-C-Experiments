@@ -30,6 +30,9 @@ function completeProfile(overrides = {}) {
             compositionMountPoint: Object.freeze({
                 handle: 'm2://composition/cymatic-mount'
             }),
+            kleinFlip: Object.freeze({
+                kind: 'm2CymaticValenceInvert'
+            }),
             resonance72: Object.freeze({
                 lensAnchorIndex: 17
             }),
@@ -88,6 +91,8 @@ test('renders one primary editor surface instead of the old three-pane editor ju
     assert.doesNotMatch(html, /cosmic-engine-layout/);
     assert.match(html, /data-editor-surface="cosmic-engine-composition"/);
     assert.match(html, /data-test="matheme-overlay-137"/);
+    assert.match(html, /data-heatmap-cells="72"/);
+    assert.match(html, /data-klein-flip-phase="inverted"/);
 });
 
 test('occupies surface texture and cell-state slots with the M1 M2 M3 contributors', () => {
@@ -118,7 +123,11 @@ test('occupies surface texture and cell-state slots with the M1 M2 M3 contributo
             ['cell-state', 'm3-mahamaya', 'codon-rotation-export']
         ]
     );
-    assert.equal(model.cymaticFrame?.sampleCount, 72);
+    assert.equal(model.cymaticTextureContribution?.chladniField.length, 72);
+    assert.equal(model.cymaticTextureContribution?.heatmap72.length, 72);
+    assert.equal(model.cymaticTextureContribution?.activeCellIndex, 17);
+    assert.equal(model.cymaticTextureContribution?.surfaceVariant, 'torus');
+    assert.equal(model.cymaticTextureContribution?.kleinFlipPhase, 'inverted');
     assert.equal(model.codonProjection?.cells[0]?.codonTriple, 'ATG');
 });
 
