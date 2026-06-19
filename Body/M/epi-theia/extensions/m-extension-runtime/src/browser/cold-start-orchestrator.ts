@@ -27,6 +27,7 @@ export type ColdStartState =
     | 'pasu-identity'
     | 'kairos-enablement'
     | 'splash-visible'
+    | 'profile-tick-alive'
     | 'dismissed';
 
 /**
@@ -57,6 +58,7 @@ export const COLD_START_STAGE_ORDER: readonly ColdStartState[] = Object.freeze([
     'pasu-identity',
     'kairos-enablement',
     'splash-visible',
+    'profile-tick-alive',
     'dismissed'
 ]);
 
@@ -75,7 +77,7 @@ export const COLD_START_STAGE_ORDER: readonly ColdStartState[] = Object.freeze([
  *   e) PASU-identity gate (task 32.2)     → 'pasu-identity' | proceed
  *   f) optional kairos refresh gate       → 'kairos-enablement' | refresh
  *   g) cold-start splash render decision  → 'splash-visible'
- *   h) first-profile delivery → dismiss   → 'dismissed'
+ *   h) first-profile delivery             → 'profile-tick-alive'
  *
  * The state advance is deterministic: feeding the same synthetic readiness
  * ledger stream through the adapter always yields the same state sequence.
@@ -323,9 +325,9 @@ export class ColdStartOrchestrator {
             this.triggerMercuriusInitialFetch();
         }
 
-        // (h) First-profile delivery dismisses the splash once stage 6 resolves.
+        // (h) First-profile delivery visibly marks the first clock advance.
         if (profile) {
-            return 'dismissed';
+            return 'profile-tick-alive';
         }
 
         // (g) Gate evaluated as renderable — show the splash until a profile lands.

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T11:47:45.123Z",
+  "updatedAt": "2026-06-19T11:54:47.327Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -5794,14 +5794,19 @@
       "worktree": null
     },
     "32.T32.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T11:34:45.581Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T11:54:47.242Z",
       "claimedAt": "2026-06-19T11:34:45.581Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T11:54:47.242Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T11:54:47.242Z",
+          "text": "@pratibimba/m-extension-runtime test passed 41/41; status-bar discipline node tests passed 6/6; profile-tick visibility, diagnostics click, first-tick splash, onboarding text covered in tests/profile-tick-visibility.test.mjs."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-32-t32-9",
-      "leaseExpiresAt": "2026-06-19T13:34:45.581Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T11:34:45.581Z",
       "runId": "20260619T113445Z-32-T32.9",
       "worktree": null
@@ -11243,11 +11248,12 @@
     {
       "runId": "20260619T113445Z-32-T32.9",
       "taskId": "32.T32.9",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T11:34:45.581Z",
       "owner": "codex-m-dev-32-t32-9",
       "leaseExpiresAt": "2026-06-19T13:34:45.581Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T11:54:47.242Z"
     },
     {
       "runId": "20260619T113504Z-31-T31.7",

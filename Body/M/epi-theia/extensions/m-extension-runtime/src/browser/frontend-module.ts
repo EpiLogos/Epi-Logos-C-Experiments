@@ -67,6 +67,7 @@ export default new ContainerModule((bind, _unbind, isBound) => {
 
     bind(ProfileTickStatusEntry).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toService(ProfileTickStatusEntry);
+    bind(CommandContribution).toService(ProfileTickStatusEntry);
 
     bind(EpiLogosCoordinateBreadcrumbsContribution).toSelf().inSingletonScope();
     bind(BreadcrumbsContribution).toService(EpiLogosCoordinateBreadcrumbsContribution);

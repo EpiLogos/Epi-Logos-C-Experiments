@@ -104,6 +104,7 @@ export const WALKTHROUGH_STEPS: readonly WalkthroughStep[] = Object.freeze([
         token: WALKTHROUGH_TOGGLE_STEP,
         title: 'The 0/1 toggle',
         body:
+            'Everything advances on its own — that’s the profile-tick. The system is alive whether you touch it or not. ' +
             'This coin-flip icon in the title bar is the # inversion act made clickable. ' +
             'Press ⌘. (cmd-period) anywhere to flip it. Face 0 is the cosmic (structural) ' +
             'shell; face 1 is the personal shell. The flip never changes where you are — ' +
