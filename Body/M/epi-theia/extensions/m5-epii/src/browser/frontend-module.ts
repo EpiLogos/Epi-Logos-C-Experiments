@@ -6,6 +6,7 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
     Disposable,
@@ -37,11 +38,12 @@ import {
 export const M5_EPII_PUBLISHER = Symbol(
     'm5-epii.observabilityPublisher'
 );
+const M5_RECOGNITION_LAYER_KEYBINDING: string = 'cmd+alt+r';
 
 @injectable()
 export class M5EpiiContribution
     extends AbstractViewContribution<M5EpiiWidget>
-    implements CommandContribution, FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution, KeybindingContribution
 {
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
@@ -109,6 +111,23 @@ export class M5EpiiContribution
         commands.registerCommand({ id: 'm5-epii.recognition-layer.focus', label: `${EXTENSION_ID}: focus recognition layer` }, { execute: () => this.dispatchPaletteCommand('m5-epii.recognition-layer.focus') });
         commands.registerCommand({ id: 'm5-epii.iod-17-parity.refresh', label: `${EXTENSION_ID}: refresh IoD-17 parity` }, { execute: () => this.dispatchPaletteCommand('m5-epii.iod-17-parity.refresh') });
         commands.registerCommand({ id: 'm5-epii.pi-axiom-translation.open', label: `${EXTENSION_ID}: open PI axiom translation` }, { execute: () => this.dispatchPaletteCommand('m5-epii.pi-axiom-translation.open') });
+    }
+
+    override registerKeybindings(keybindings: KeybindingRegistry): void {
+        super.registerKeybindings(keybindings);
+        keybindings.registerKeybinding({
+            command: OPEN_COMMAND_ID,
+            keybinding: 'cmd+shift+5'
+        });
+        keybindings.registerKeybinding({
+            command: 'm5-epii.mobius-pass-ribbon.open',
+            keybinding: 'cmd+alt+m'
+        });
+        keybindings.registerKeybinding({
+            command: 'm5-epii.recognition-layer.focus',
+            keybinding: M5_RECOGNITION_LAYER_KEYBINDING,
+            when: "epiLogosLayoutActive === 'daily-0-1'"
+        });
     }
 
     /**

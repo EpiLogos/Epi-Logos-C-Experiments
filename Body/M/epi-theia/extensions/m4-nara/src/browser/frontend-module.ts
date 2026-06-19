@@ -8,6 +8,7 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { PreferenceService, PreferenceScope } from '@theia/core/lib/browser/preferences';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
@@ -66,7 +67,7 @@ export const M4_NARA_PUBLISHER = Symbol(
 @injectable()
 export class M4NaraContribution
     extends AbstractViewContribution<M4NaraWidget>
-    implements CommandContribution, FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution, KeybindingContribution
 {
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
@@ -89,6 +90,10 @@ export class M4NaraContribution
         super.registerCommands(commands);
         commands.registerCommand(
             { id: OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open primary view` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+        commands.registerCommand(
+            { id: 'm4-nara.openCoordinate', label: `${EXTENSION_ID}: open coordinate` },
             { execute: () => this.openView({ activate: true, reveal: true }) }
         );
         commands.registerCommand(
@@ -141,6 +146,42 @@ export class M4NaraContribution
         commands.registerCommand({ id: 'm4-nara.pratibimba.consent-gate', label: `${EXTENSION_ID}: open pratibimba consent gate` }, { execute: () => this.dispatchPaletteCommand('m4-nara.pratibimba.consent-gate') });
         commands.registerCommand({ id: 'm4-nara.kairos.refresh', label: `${EXTENSION_ID}: refresh kairos` }, { execute: () => this.dispatchPaletteCommand('m4-nara.kairos.refresh') });
         commands.registerCommand({ id: 'm4-nara.time-axis.cycle', label: `${EXTENSION_ID}: cycle time axis` }, { execute: () => this.dispatchPaletteCommand('m4-nara.time-axis.cycle') });
+        commands.registerCommand({ id: 'm4-nara.canvas-highlight.daily-note', label: `${EXTENSION_ID}: highlight daily note` }, { execute: () => this.dispatchPaletteCommand('m4-nara.canvas-highlight.daily-note', { category: 'daily-note' }) });
+        commands.registerCommand({ id: 'm4-nara.canvas-highlight.oracle', label: `${EXTENSION_ID}: highlight oracle` }, { execute: () => this.dispatchPaletteCommand('m4-nara.canvas-highlight.oracle', { category: 'oracle' }) });
+        commands.registerCommand({ id: 'm4-nara.canvas-highlight.expand', label: `${EXTENSION_ID}: expand canvas highlight` }, { execute: () => this.dispatchPaletteCommand('m4-nara.canvas-highlight.expand', { category: 'expand' }) });
+        commands.registerCommand({ id: 'm4-nara.canvas-highlight.dream', label: `${EXTENSION_ID}: highlight dream` }, { execute: () => this.dispatchPaletteCommand('m4-nara.canvas-highlight.dream', { category: 'dream' }) });
+    }
+
+    override registerKeybindings(keybindings: KeybindingRegistry): void {
+        super.registerKeybindings(keybindings);
+        keybindings.registerKeybinding({
+            command: 'm4-nara.openCoordinate',
+            keybinding: 'cmd+shift+4'
+        });
+        keybindings.registerKeybinding({
+            command: 'm4-nara.day-calendar.focus',
+            keybinding: 'cmd+shift+d'
+        });
+        keybindings.registerKeybinding({
+            command: 'm4-nara.oracle.cast',
+            keybinding: 'cmd+alt+o'
+        });
+        keybindings.registerKeybinding({
+            command: 'm4-nara.canvas-highlight.daily-note',
+            keybinding: 'cmd+h d'
+        });
+        keybindings.registerKeybinding({
+            command: 'm4-nara.canvas-highlight.oracle',
+            keybinding: 'cmd+h o'
+        });
+        keybindings.registerKeybinding({
+            command: 'm4-nara.canvas-highlight.expand',
+            keybinding: 'cmd+h e'
+        });
+        keybindings.registerKeybinding({
+            command: 'm4-nara.canvas-highlight.dream',
+            keybinding: 'cmd+h m'
+        });
     }
 
     /**

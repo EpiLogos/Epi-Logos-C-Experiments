@@ -7,6 +7,7 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
@@ -49,7 +50,7 @@ const AUDIO_BUS_INSPECTOR_COMMAND_ID = OPEN_COMMAND_ID + '?view=audioBusInspecto
 @injectable()
 export class M1ParamasivaContribution
     extends AbstractViewContribution<M1ParamasivaWidget>
-    implements CommandContribution, FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution, KeybindingContribution
 {
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
@@ -72,6 +73,10 @@ export class M1ParamasivaContribution
         super.registerCommands(commands);
         commands.registerCommand(
             { id: OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open primary view` },
+            { execute: () => this.openClockInstrumentView() }
+        );
+        commands.registerCommand(
+            { id: 'm1-paramasiva.openCoordinate', label: `${EXTENSION_ID}: open coordinate` },
             { execute: () => this.openClockInstrumentView() }
         );
         commands.registerCommand(
@@ -124,6 +129,23 @@ export class M1ParamasivaContribution
             'M1 Paramasiva: Open Schema Walk',
             () => this.openClockInstrumentView()
         );
+    }
+
+    override registerKeybindings(keybindings: KeybindingRegistry): void {
+        super.registerKeybindings(keybindings);
+        keybindings.registerKeybinding({
+            command: 'm1-paramasiva.openCoordinate',
+            keybinding: 'cmd+shift+1'
+        });
+        keybindings.registerKeybinding({
+            command: 'm1-paramasiva.vortex.face-mode.toggle',
+            keybinding: 'cmd+alt+f'
+        });
+        keybindings.registerKeybinding({
+            command: 'm1-paramasiva.mersenne-proof.reveal',
+            keybinding: 'cmd+alt+p',
+            when: 'epi-logos.ui.developerMode === true'
+        });
     }
 
     /**

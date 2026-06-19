@@ -13,6 +13,7 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
@@ -65,7 +66,7 @@ export const M0_ANUTTARA_PUBLISHER = Symbol(
 @injectable()
 export class M0AnuttaraContribution
     extends AbstractViewContribution<M0AnuttaraWidget>
-    implements CommandContribution, FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution, KeybindingContribution
 {
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
@@ -156,6 +157,10 @@ export class M0AnuttaraContribution
             { execute: () => this.openView({ activate: true, reveal: true }) }
         );
         commands.registerCommand(
+            { id: 'm0-anuttara.openCoordinate', label: `${EXTENSION_ID}: open coordinate` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+        commands.registerCommand(
             { id: READ_ONLY_COMMAND_ID, label: `${EXTENSION_ID}: open read-only` },
             { execute: () => this.openView({ activate: true, reveal: true }) }
         );
@@ -212,6 +217,23 @@ export class M0AnuttaraContribution
                 requestedContributionId: 'graph'
             })
         );
+    }
+
+    override registerKeybindings(keybindings: KeybindingRegistry): void {
+        super.registerKeybindings(keybindings);
+        keybindings.registerKeybinding({
+            command: OPEN_COMMAND_ID,
+            keybinding: 'cmd+shift+0',
+            when: 'epi-logos.keymap.preserveTheiaDefaults === false'
+        });
+        keybindings.registerKeybinding({
+            command: 'm0-anuttara.implicate-explicate.toggle',
+            keybinding: 'cmd+shift+i'
+        });
+        keybindings.registerKeybinding({
+            command: 'm0-anuttara.mode.toggle',
+            keybinding: 'cmd+shift+m'
+        });
     }
 
     /**

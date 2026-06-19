@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T00:16:02.374Z",
+  "updatedAt": "2026-06-19T00:17:34.085Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -8253,11 +8253,16 @@
       "worktree": null
     },
     "41.T41.7": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-06-19T00:17:34.035Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T00:17:34.035Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T00:17:34.035Z",
+          "text": "pnpm -C Body/M/epi-theia/extensions/m4-nara build clean; pnpm -C Body/M/epi-theia/extensions/m4-nara test: 54 tests pass; key paths: Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/dialogical-arena.tsx, src/browser/frontend-module.ts, src/common/index.ts, style/dialogical-arena.css, Body/M/epi-theia/extensions/test/m4-nara-dialogical-arena.test.mjs"
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,

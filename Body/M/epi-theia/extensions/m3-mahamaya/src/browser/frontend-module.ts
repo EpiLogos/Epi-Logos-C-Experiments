@@ -6,6 +6,7 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
     Disposable,
@@ -40,11 +41,12 @@ import {
 export const M3_MAHAMAYA_PUBLISHER = Symbol(
     'm3-mahamaya.observabilityPublisher'
 );
+const M3_TAROT_DRAW_KEYBINDING: string = 'cmd+alt+r';
 
 @injectable()
 export class M3MahamayaContribution
     extends AbstractViewContribution<M3MahamayaWidget>
-    implements CommandContribution, FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution, KeybindingContribution
 {
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
@@ -67,6 +69,10 @@ export class M3MahamayaContribution
         super.registerCommands(commands);
         commands.registerCommand(
             { id: OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open primary view` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+        commands.registerCommand(
+            { id: 'm3-mahamaya.openCoordinate', label: `${EXTENSION_ID}: open coordinate` },
             { execute: () => this.openView({ activate: true, reveal: true }) }
         );
         commands.registerCommand(
@@ -105,6 +111,23 @@ export class M3MahamayaContribution
             'M3 Mahamaya: Open Codon Rotation',
             () => this.openView({ activate: true, reveal: true })
         );
+    }
+
+    override registerKeybindings(keybindings: KeybindingRegistry): void {
+        super.registerKeybindings(keybindings);
+        keybindings.registerKeybinding({
+            command: 'm3-mahamaya.openCoordinate',
+            keybinding: 'cmd+shift+3'
+        });
+        keybindings.registerKeybinding({
+            command: 'm3-mahamaya.iching.cast',
+            keybinding: 'cmd+alt+c'
+        });
+        keybindings.registerKeybinding({
+            command: 'm3-mahamaya.tarot.draw',
+            keybinding: M3_TAROT_DRAW_KEYBINDING,
+            when: "epiLogosLayoutActive === 'ide-deep'"
+        });
     }
 
     /**

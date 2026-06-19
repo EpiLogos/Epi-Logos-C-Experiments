@@ -6,6 +6,7 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
     Disposable,
@@ -40,7 +41,7 @@ export const M2_PARASHAKTI_PUBLISHER = Symbol(
 @injectable()
 export class M2ParashaktiContribution
     extends AbstractViewContribution<M2ParashaktiWidget>
-    implements CommandContribution, FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution, KeybindingContribution
 {
     @inject(SHARED_BRIDGE_ADAPTER)
     protected readonly bridge!: SharedBridgeAdapter;
@@ -63,6 +64,10 @@ export class M2ParashaktiContribution
         super.registerCommands(commands);
         commands.registerCommand(
             { id: OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open primary view` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+        commands.registerCommand(
+            { id: 'm2-parashakti.openCoordinate', label: `${EXTENSION_ID}: open coordinate` },
             { execute: () => this.openView({ activate: true, reveal: true }) }
         );
         commands.registerCommand(
@@ -113,6 +118,23 @@ export class M2ParashaktiContribution
             'M2 Parashakti: Open Correspondence Tree',
             () => this.openView({ activate: true, reveal: true })
         );
+    }
+
+    override registerKeybindings(keybindings: KeybindingRegistry): void {
+        super.registerKeybindings(keybindings);
+        keybindings.registerKeybinding({
+            command: 'm2-parashakti.openCoordinate',
+            keybinding: 'cmd+shift+2'
+        });
+        keybindings.registerKeybinding({
+            command: 'm2-parashakti.cymatic.view-switch',
+            keybinding: 'cmd+alt+v'
+        });
+        keybindings.registerKeybinding({
+            command: 'm2-parashakti.proof-identity.toggle',
+            keybinding: 'cmd+alt+t',
+            when: 'epi-logos.m2.devMode === true'
+        });
     }
 
     /**
