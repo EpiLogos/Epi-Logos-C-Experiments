@@ -54,6 +54,7 @@
     "watch": "tsc -b -w",
     "clean": "rimraf lib tsconfig.tsbuildinfo",
     "test:outer-planet-pending": "node --test test/outer-planet-pending.test.mjs",
-    "test": "node --test test/widget-registry.test.mjs && pnpm build"
+    "test:shadow-decan": "node --test test/shadow-decan.test.mjs",
+    "test": "node --test test/widget-registry.test.mjs && node --test test/shadow-decan.test.mjs && pnpm build"
   }
 }

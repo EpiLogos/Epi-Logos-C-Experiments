@@ -8,8 +8,8 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M2'-SPEC]] (arch
 - `package.json` — `@pratibimba/m2-parashakti` workspace package manifest; `theiaExtensions.frontend` -> `lib/browser/frontend-module`.
 - `src/common/index.ts` — generated public surface (view ids, command ids, route, privacy class, observability event types, Track 08 contribution/exports). Header: "Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit."
 - `src/common/meaning-packet.ts` — `M2_MEANING_PACKET_CONTRACT_VERSION` packet types and selectors.
-- `src/browser/` — frontend module + three widgets: meaning-packet, cymatic-engine, correspondence-tree; `empty-state.tsx` supplies the first-render empty-state surface; `components/` holds M2-owned React sub-surfaces used by those widgets.
-- `test/widget-registry.test.mjs` and `test/outer-planet-pending.test.mjs` — node:test suites for widget registration and outer-planet pending-data honesty.
+- `src/browser/` — frontend module + three widgets: meaning-packet, cymatic-engine, correspondence-tree; `empty-state.tsx` supplies the first-render empty-state surface; `components/` holds M2-owned React sub-surfaces used by those widgets, including the shadow-decan reveal panel.
+- `test/widget-registry.test.mjs`, `test/outer-planet-pending.test.mjs`, and `test/shadow-decan.test.mjs` — node:test suites for widget registration, pending-data honesty, and the 108-cell shadow-decan surface.
 - `style/index.css`, `tsconfig.json`, `lib/` — styling, TS project config, compiled output.
 - Does NOT own: shared runtime (`@pratibimba/m-extension-runtime`), composition primitives (`@pratibimba/integrated-composition`), gateway runtime (`kernel-bridge` -> [[S3-SPEC]] gate), or M2 domain law (lives in the owning M2' coordinate, not centralised here).
 
@@ -25,7 +25,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]] -> [[M2'-SPEC]] (arch
 - Consume gateway data via the shared `KernelBridgeAPI` runtime — no direct `fetch`/WebSocket from the extension.
 
 ## Verification
-`pnpm --filter @pratibimba/m2-parashakti test` (runs `node --test test/widget-registry.test.mjs` then `tsc -b build`); focused outer-planet check: `pnpm --filter @pratibimba/m2-parashakti test:outer-planet-pending`; or `pnpm test:contracts` / `pnpm -r test` from `Body/M/epi-theia`.
+`pnpm --filter @pratibimba/m2-parashakti test` (runs focused node:test suites then `tsc -b build`); focused checks: `pnpm --filter @pratibimba/m2-parashakti test:outer-planet-pending`, `pnpm --filter @pratibimba/m2-parashakti test:shadow-decan`; or `pnpm test:contracts` / `pnpm -r test` from `Body/M/epi-theia`.
 
 ## Child DOX Index
 - (leaf)

@@ -21,6 +21,11 @@ import {
     M2PrimeMeaningPacket
 } from '../common';
 import { CorrespondenceTreePlanetaryKeyingPanel } from './components/planetary-correspondence';
+import {
+    normalizeShadowDecanGraphPayload,
+    ShadowDecanGraphPayload,
+    ShadowDecanSurface
+} from './components/ShadowDecanSurface';
 
 @injectable()
 export class M2CorrespondenceTreeWidget extends ReactWidget {
@@ -34,6 +39,8 @@ export class M2CorrespondenceTreeWidget extends ReactWidget {
     protected profile: MathemeHarmonicProfileBoundary | null = null;
     protected context: CoordinateContext = EMPTY_COORDINATE_CONTEXT;
     protected subscriptions: Disposable[] = [];
+    protected shadowDecanGraphPayload: ShadowDecanGraphPayload | null = null;
+    protected shadowDecanAddress72: number | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -53,6 +60,7 @@ export class M2CorrespondenceTreeWidget extends ReactWidget {
         this.subscriptions.push(
             this.bridge.onProfile(profile => {
                 this.profile = profile;
+                this.refreshShadowDecanGraph();
                 this.update();
             })
         );
@@ -108,6 +116,11 @@ export class M2CorrespondenceTreeWidget extends ReactWidget {
                             coordinate context before resolving the unified M2 meaning packet.
                         </p>
                     )}
+                    <ShadowDecanSurface
+                        selectedAddress72={packet?.address72 ?? null}
+                        expanded={Boolean(packet)}
+                        graphPayload={this.shadowDecanGraphPayload}
+                    />
                     <CorrespondenceTreePlanetaryKeyingPanel />
                 </section>
             </div>
@@ -126,5 +139,35 @@ export class M2CorrespondenceTreeWidget extends ReactWidget {
         } catch {
             return null;
         }
+    }
+
+    protected refreshShadowDecanGraph(): void {
+        const profile = this.profile;
+        if (!profile) {
+            this.shadowDecanAddress72 = null;
+            this.shadowDecanGraphPayload = null;
+            return;
+        }
+        const packet = this.safePacket(profile);
+        if (!packet || packet.address72 === this.shadowDecanAddress72) {
+            return;
+        }
+        this.shadowDecanAddress72 = packet.address72;
+        void this.bridge
+            .parashaktiCorrespondences(packet.address72)
+            .then(payload => {
+                if (this.shadowDecanAddress72 !== packet.address72) {
+                    return;
+                }
+                this.shadowDecanGraphPayload = normalizeShadowDecanGraphPayload(payload);
+                this.update();
+            })
+            .catch(() => {
+                if (this.shadowDecanAddress72 !== packet.address72) {
+                    return;
+                }
+                this.shadowDecanGraphPayload = null;
+                this.update();
+            });
     }
 }

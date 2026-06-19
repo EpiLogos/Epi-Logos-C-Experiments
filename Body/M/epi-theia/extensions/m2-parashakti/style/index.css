@@ -92,3 +92,83 @@
     line-height: 1.5;
     overflow-wrap: anywhere;
 }
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--theia-widget-border);
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface h4,
+.mext-widget-m2-parashakti .m2-shadow-decan-column h5 {
+    margin: 0;
+    font-size: var(--theia-ui-font-size1);
+    font-weight: 600;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface header span {
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface__columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column {
+    min-width: 0;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column ol {
+    display: grid;
+    gap: 4px;
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column li {
+    display: grid;
+    grid-template-columns: minmax(88px, 1fr) 48px minmax(56px, 0.8fr) minmax(64px, 0.9fr) 58px;
+    gap: 6px;
+    align-items: center;
+    min-height: 30px;
+    padding: 4px 6px;
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 4px;
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column li span,
+.mext-widget-m2-parashakti .m2-shadow-decan-column li strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column li strong {
+    color: var(--theia-descriptionForeground);
+    font-weight: 600;
+}
+
+@media (max-width: 920px) {
+    .mext-widget-m2-parashakti .m2-shadow-decan-surface__columns {
+        grid-template-columns: 1fr;
+    }
+}
