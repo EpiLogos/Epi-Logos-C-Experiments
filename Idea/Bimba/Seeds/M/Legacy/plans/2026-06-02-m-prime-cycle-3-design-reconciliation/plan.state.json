@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T00:47:32.970Z",
+  "updatedAt": "2026-06-19T05:11:24.908Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3595,16 +3595,16 @@
       "worktree": null
     },
     "21.T21.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T05:07:32.065Z",
+      "claimedAt": "2026-06-19T05:07:32.065Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-21-t21-8",
+      "leaseExpiresAt": "2026-06-19T07:07:32.065Z",
+      "heartbeatAt": "2026-06-19T05:07:32.065Z",
+      "runId": "20260619T050732Z-21-T21.8",
       "worktree": null
     },
     "21.T21.9": {
@@ -5073,16 +5073,21 @@
       "worktree": null
     },
     "28.T28.19": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-19T05:11:24.850Z",
+      "claimedAt": "2026-06-19T05:07:47.031Z",
+      "completedAt": "2026-06-19T05:11:24.850Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T05:11:24.850Z",
+          "text": "node --test Body/M/epi-theia/extensions/acceptance-harness/tests/topology.test.mjs: 19 tests, 19 pass; grep hits topology.test.mjs lines 522,560,561,566,1182; full pnpm --filter @pratibimba/acceptance-harness test is blocked before harness tests by out-of-scope @pratibimba/agentic-control-room TS2322 actor errors at src/browser/acr-runtime-service.ts:76-81."
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-28-t28-19",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-19T05:07:47.031Z",
+      "runId": "20260619T050747Z-28-T28.19",
       "worktree": null
     },
     "28.T28.20": {
@@ -5456,16 +5461,16 @@
       "worktree": null
     },
     "31.T31.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T05:07:48.264Z",
+      "claimedAt": "2026-06-19T05:07:48.264Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-31-t31-5",
+      "leaseExpiresAt": "2026-06-19T07:07:48.264Z",
+      "heartbeatAt": "2026-06-19T05:07:48.264Z",
+      "runId": "20260619T050748Z-31-T31.5",
       "worktree": null
     },
     "31.T31.6": {
@@ -8007,16 +8012,16 @@
       "worktree": null
     },
     "12.T12.34": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T05:07:22.123Z",
+      "claimedAt": "2026-06-19T05:07:22.123Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-12-t12-34-anuttara-pi",
+      "leaseExpiresAt": "2026-06-19T07:07:22.123Z",
+      "heartbeatAt": "2026-06-19T05:07:22.123Z",
+      "runId": "20260619T050722Z-12-T12.34",
       "worktree": null
     },
     "36.T36.8": {
@@ -8319,16 +8324,16 @@
       "worktree": null
     },
     "41.T41.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-06-19T05:07:42.435Z",
+      "claimedAt": "2026-06-19T05:07:42.435Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "codex-m-dev-41-t41-9",
+      "leaseExpiresAt": "2026-06-19T07:07:42.435Z",
+      "heartbeatAt": "2026-06-19T05:07:42.435Z",
+      "runId": "20260619T050742Z-41-T41.9",
       "worktree": null
     },
     "41.T41.10": {
@@ -11115,31 +11120,76 @@
       "leaseExpiresAt": "2026-06-19T02:37:03.195Z",
       "worktree": null,
       "completedAt": "2026-06-19T00:47:05.919Z"
+    },
+    {
+      "runId": "20260619T050722Z-12-T12.34",
+      "taskId": "12.T12.34",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T05:07:22.123Z",
+      "owner": "codex-m-dev-12-t12-34-anuttara-pi",
+      "leaseExpiresAt": "2026-06-19T07:07:22.123Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T050732Z-21-T21.8",
+      "taskId": "21.T21.8",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T05:07:32.065Z",
+      "owner": "codex-m-dev-21-t21-8",
+      "leaseExpiresAt": "2026-06-19T07:07:32.065Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T050742Z-41-T41.9",
+      "taskId": "41.T41.9",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T05:07:42.435Z",
+      "owner": "codex-m-dev-41-t41-9",
+      "leaseExpiresAt": "2026-06-19T07:07:42.435Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260619T050747Z-28-T28.19",
+      "taskId": "28.T28.19",
+      "status": "done",
+      "startedAt": "2026-06-19T05:07:47.031Z",
+      "owner": "codex-m-dev-28-t28-19",
+      "leaseExpiresAt": "2026-06-19T07:07:47.031Z",
+      "worktree": null,
+      "completedAt": "2026-06-19T05:11:24.850Z"
+    },
+    {
+      "runId": "20260619T050748Z-31-T31.5",
+      "taskId": "31.T31.5",
+      "status": "in_progress",
+      "startedAt": "2026-06-19T05:07:48.264Z",
+      "owner": "codex-m-dev-31-t31-5",
+      "leaseExpiresAt": "2026-06-19T07:07:48.264Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-19T00:36:03.829Z",
-    "updatedAt": "2026-06-19T00:36:03.829Z",
+    "createdAt": "2026-06-19T05:07:14.012Z",
+    "updatedAt": "2026-06-19T05:07:14.012Z",
     "taskIds": [
-      "41.T41.8",
-      "30.T30.9",
       "05.T5.3",
-      "05.T5.4"
+      "05.T5.4",
+      "05.T5.5",
+      "05.T5.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "41.T41.8": "in-session",
-      "30.T30.9": "in-session",
       "05.T5.3": "in-session",
-      "05.T5.4": "in-session"
+      "05.T5.4": "in-session",
+      "05.T5.5": "in-session",
+      "05.T5.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available."
     ]
   }
 }

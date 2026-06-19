@@ -25,6 +25,10 @@ import type { M0LayerKey, M0LayerRoute, M0SurfaceMode } from '../common';
 import type { M0CrossLayoutIntentPayload, M0Phase } from '../common/cross-layout-intent';
 import { projectM0CrossLayoutIntentState } from '../common/cross-layout-intent';
 import { M0ModeToggle } from './components/mode-toggle';
+import {
+    M0ArchetypeRoutingPanel,
+    shouldRenderM0ArchetypeRoutingTopSection
+} from './panels/archetype-routing-panel';
 import { LazyNodeBrowserPanel } from './panels/lazy-node-browser-panel';
 import { LanguageLayerPanel } from './panels/language-layer-panel';
 import {
@@ -34,7 +38,7 @@ import {
     serializeM0SurfaceState
 } from './state/m0-surface-state';
 
-type M0LanguageSubtab = 'route' | 'lazy-browser';
+type M0LanguageSubtab = 'route' | 'routing' | 'lazy-browser';
 
 @injectable()
 export class M0AnuttaraWidget extends ReactWidget {
@@ -244,6 +248,7 @@ export class M0AnuttaraWidget extends ReactWidget {
                                     this.context.selectedCoordinate ??
                                     model.query.canonicalMCoordinate
                                 }
+                                archetypeRouting={model.archetypeRouting}
                                 activeSubtab={this.activeLanguageSubtab}
                                 onSubtabChange={subtab => this.selectLanguageSubtab(subtab)}
                                 onNodeSelected={() => this.selectLayer('language')}
@@ -254,6 +259,12 @@ export class M0AnuttaraWidget extends ReactWidget {
                     ) : null}
                 </section>
                 <LanguageLayerPanel model={model} />
+                {shouldRenderM0ArchetypeRoutingTopSection(model.archetypeRouting) ? (
+                    <M0ArchetypeRoutingPanel
+                        projection={model.archetypeRouting}
+                        placement="top-level"
+                    />
+                ) : null}
                 <section className="mext-widget-detail">
                     <h3>S2 provenance and graph readiness</h3>
                     <dl>
@@ -359,12 +370,14 @@ function LanguageLayerStackedTab(props: {
     readonly bridge: SharedBridgeAdapter;
     readonly context: CoordinateContext;
     readonly coordinatePrefix: string | null;
+    readonly archetypeRouting: ReturnType<typeof buildM0InspectorModel>['archetypeRouting'];
     readonly activeSubtab: M0LanguageSubtab;
     readonly onSubtabChange: (subtab: M0LanguageSubtab) => void;
     readonly onNodeSelected: () => void;
 }): React.ReactElement {
     const { activeSubtab, onSubtabChange } = props;
     const routeTabId = `${props.route.tabId}-route-contract`;
+    const routingTabId = `${props.route.tabId}-routing-reader`;
     const lazyTabId = `${props.route.tabId}-lazy-browser`;
     return (
         <div
@@ -394,6 +407,16 @@ function LanguageLayerStackedTab(props: {
                 >
                     Lazy 96 browser
                 </button>
+                <button
+                    id={routingTabId}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeSubtab === 'routing'}
+                    aria-controls={`${routingTabId}-panel`}
+                    onClick={() => onSubtabChange('routing')}
+                >
+                    Routing
+                </button>
             </div>
             {activeSubtab === 'route' ? (
                 <LayerRoutePanel
@@ -401,6 +424,17 @@ function LanguageLayerStackedTab(props: {
                     panelId={`${routeTabId}-panel`}
                     labelledBy={routeTabId}
                 />
+            ) : activeSubtab === 'routing' ? (
+                <div
+                    id={`${routingTabId}-panel`}
+                    role="tabpanel"
+                    aria-labelledby={routingTabId}
+                >
+                    <M0ArchetypeRoutingPanel
+                        projection={props.archetypeRouting}
+                        placement="language-subtab"
+                    />
+                </div>
             ) : (
                 <div
                     id={`${lazyTabId}-panel`}

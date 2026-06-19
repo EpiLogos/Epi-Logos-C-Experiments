@@ -84,6 +84,10 @@ const {
     LanguageLayerPanel
 } = require('../m0-anuttara/lib/browser/panels/language-layer-panel.js');
 const {
+    M0ArchetypeRoutingPanel,
+    shouldRenderM0ArchetypeRoutingTopSection
+} = require('../m0-anuttara/lib/browser/panels/archetype-routing-panel.js');
+const {
     selectLanguageFieldsForPhase,
     relationEmphasisForPhase,
     pedagogyFramingForPhase
@@ -802,6 +806,110 @@ test('Arch 9 completion syntax panel renders VIRTUE rows in canonical order and 
     assert.match(markup, /data-syntax-row-id="8"[^>]*>[\s\S]*Reality/);
     assert.match(markup, /data-witness-state="witnessed"[\s\S]*Love\/Peace/);
     assert.match(markup, /data-witness-state="unwitnessed"[\s\S]*Openness\/Creativity/);
+});
+
+function routingSnapshot() {
+    const archetypeLut = Array.from({ length: 10 }, () => Object.freeze([]));
+    archetypeLut[7] = Object.freeze([
+        Object.freeze({
+            id: 0,
+            label: 'Creation',
+            symbol: 'srshti',
+            provenance: 'DIVINE_ACT_LUT projected through m0_routing_lut_snapshot'
+        }),
+        Object.freeze({
+            id: 1,
+            label: 'Maintenance',
+            symbol: 'sthiti',
+            provenance: 'DIVINE_ACT_LUT projected through m0_routing_lut_snapshot'
+        }),
+        Object.freeze({
+            id: 2,
+            label: 'Dissolution',
+            symbol: 'samhara',
+            provenance: 'DIVINE_ACT_LUT projected through m0_routing_lut_snapshot'
+        })
+    ]);
+    archetypeLut[9] = Object.freeze(
+        VIRTUE_WITNESS_LUT.map(entry =>
+            Object.freeze({
+                id: entry.position,
+                label: entry.name.split(' - ')[0],
+                symbol: entry.symbol,
+                provenance: 'VIRTUE_LUT projected through m0_routing_lut_snapshot'
+            })
+        )
+    );
+    return Object.freeze({
+        archetype_lut: Object.freeze(archetypeLut)
+    });
+}
+
+function routingModel(archetypeIndex) {
+    return buildM0InspectorModel({
+        selectedInput: '#0',
+        graphNode: {
+            ...capturedS2GraphNode,
+            properties: {
+                ...capturedS2GraphNode.properties,
+                c_1_archetype_index: archetypeIndex
+            }
+        },
+        profile: {
+            ...profile,
+            payload: {
+                ...profile.payload,
+                m0_routing_lut_snapshot: routingSnapshot()
+            }
+        },
+        readiness,
+        context
+    });
+}
+
+test("Archetype Routing Reader renders Arch 7 DIVINE_ACT rows with syntax-layer 'action'", () => {
+    const model = routingModel(7);
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(M0ArchetypeRoutingPanel, {
+            projection: model.archetypeRouting,
+            placement: 'top-level'
+        })
+    );
+
+    assert.equal(model.archetypeRouting.archetypeIndex, 7);
+    assert.equal(model.archetypeRouting.archetypeLabel, 'Acts of Śiva');
+    assert.equal(model.archetypeRouting.routedSubTable, 'DIVINE_ACT');
+    assert.equal(model.archetypeRouting.syntaxLayer, 'action');
+    assert.equal(model.archetypeRouting.subTableRows.length, 3);
+    assert.equal(shouldRenderM0ArchetypeRoutingTopSection(model.archetypeRouting), true);
+    assert.match(markup, /data-active-archetype="7"/);
+    assert.match(markup, /data-routed-sub-table="DIVINE_ACT"/);
+    assert.match(markup, /data-syntax-layer="action"/);
+    assert.match(markup, /DIVINE_ACT_LUT\[7\]/);
+    assert.match(markup, /Creation/);
+    assert.match(markup, /Maintenance/);
+    assert.match(markup, /Dissolution/);
+});
+
+test("Archetype Routing Reader renders Arch 9 VIRTUE rows with syntax-layer 'completion'", () => {
+    const model = routingModel(9);
+    const markup = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(M0ArchetypeRoutingPanel, {
+            projection: model.archetypeRouting,
+            placement: 'language-subtab'
+        })
+    );
+
+    assert.equal(model.archetypeRouting.archetypeIndex, 9);
+    assert.equal(model.archetypeRouting.routedSubTable, 'VIRTUE');
+    assert.equal(model.archetypeRouting.syntaxLayer, 'completion');
+    assert.equal(model.archetypeRouting.subTableRows.length, 9);
+    assert.match(markup, /data-active-archetype="9"/);
+    assert.match(markup, /data-routed-sub-table="VIRTUE"/);
+    assert.match(markup, /data-syntax-layer="completion"/);
+    assert.match(markup, /VIRTUE_LUT\[9\]/);
+    assert.match(markup, /Love\/Peace/);
+    assert.match(markup, /Reality/);
 });
 
 test('21.7 implicate/explicate phase rotates language field priority for the same payload', () => {

@@ -6,6 +6,7 @@ import { PreferenceService } from '@theia/core/lib/browser/preferences';
 import { LAYOUT_SWITCHER } from './tokens';
 import { PratibimbaLayoutSwitcher } from './layout-switcher';
 import { PratibimbaLayoutCommandContribution } from './layout-commands';
+import { EpiLogosMenuContribution } from './epi-logos-menu';
 import { PratibimbaSessionStateService } from './session-state-service';
 import { SESSION_STATE_SERVICE } from './session-state-service';
 import {
@@ -66,6 +67,9 @@ export default new ContainerModule(bind => {
     bind(CommandContribution).toService(PratibimbaLayoutCommandContribution);
     bind(MenuContribution).toService(PratibimbaLayoutCommandContribution);
     bind(FrontendApplicationContribution).toService(PratibimbaLayoutCommandContribution);
+
+    bind(EpiLogosMenuContribution).toSelf().inSingletonScope();
+    bind(MenuContribution).toService(EpiLogosMenuContribution);
 
     // Track 05 T5: session-state service + cross-layout intent dispatcher.
     bind(PratibimbaSessionStateService).toSelf().inSingletonScope();

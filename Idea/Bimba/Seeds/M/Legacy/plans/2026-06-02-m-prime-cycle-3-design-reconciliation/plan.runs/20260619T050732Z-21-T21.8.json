@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T050732Z-21-T21.8",
+  "taskId": "21.T21.8",
+  "startedAt": "2026-06-19T05:07:32.065Z",
+  "owner": "codex-m-dev-21-t21-8",
+  "leaseExpiresAt": "2026-06-19T07:07:32.065Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.8",
+    "trackId": "21",
+    "tranche": "T21.8",
+    "title": "Archetype Routing Reader panel",
+    "effort": null,
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.7"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/archetype-routing-panel.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

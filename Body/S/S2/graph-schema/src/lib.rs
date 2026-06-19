@@ -85,6 +85,14 @@ pub const REL_INFERRED_BY_PROPERTY: &str = "inferred_by";
 pub const REL_PROMPT_HASH_PROPERTY: &str = "prompt_hash";
 pub const REL_CREATED_BY_SYNC_VERSION_PROPERTY: &str = "created_by_sync_version";
 pub const REL_LAST_VERIFIED_AT_PROPERTY: &str = "last_verified_at";
+pub const ARENA_DIALOGUE_OF: &str = "ARENA_DIALOGUE_OF";
+pub const DIALOGICAL_RESONANCE_AT: &str = "DIALOGICAL_RESONANCE_AT";
+pub const VAMA_SHAKTI_CLASS_PROPERTY: &str = "vama_shakti_class";
+pub const CLASS_PAIR_PROPERTY: &str = "class_pair";
+pub const ARENA_SCENE_KEY_PROPERTY: &str = "scene_key";
+pub const ARENA_KAIROS_ANCHOR_PROPERTY: &str = "kairos_anchor";
+pub const ARENA_EDGE_PATTERN_PROPERTY: &str = "edge_pattern";
+pub const ARENA_EDGE_WEIGHT_PROPERTY: &str = "edge_weight";
 
 pub const REQUIRED_RELATIONSHIP_EVIDENCE_PROPERTIES: &[&str] =
     &[REL_EVIDENCE_KIND_PROPERTY, REL_EVIDENCE_TEXT_PROPERTY];
@@ -411,6 +419,18 @@ pub const RELATIONSHIP_TYPE_SPECS: &[GraphRelationshipTypeSpec] = &[
         rel_type: "ANCHORED_TO",
         coordinate_home: "CF",
         source_family: "seed-topology",
+        compatibility: false,
+    },
+    GraphRelationshipTypeSpec {
+        rel_type: ARENA_DIALOGUE_OF,
+        coordinate_home: "M4'",
+        source_family: "arena-dialogue",
+        compatibility: false,
+    },
+    GraphRelationshipTypeSpec {
+        rel_type: DIALOGICAL_RESONANCE_AT,
+        coordinate_home: "M4'",
+        source_family: "arena-dialogue",
         compatibility: false,
     },
 ];
@@ -2454,6 +2474,54 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
         indexed: true,
         compatibility: false,
     },
+    relationship_property_spec_const(
+        VAMA_SHAKTI_CLASS_PROPERTY,
+        "M4'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "arena-dialogue",
+    ),
+    relationship_property_spec_const(
+        CLASS_PAIR_PROPERTY,
+        "M4'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "arena-dialogue",
+    ),
+    relationship_property_spec_const(
+        ARENA_SCENE_KEY_PROPERTY,
+        "M4'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Internal,
+        "arena-dialogue",
+    ),
+    relationship_property_spec_const(
+        ARENA_KAIROS_ANCHOR_PROPERTY,
+        "M4'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Internal,
+        "arena-dialogue",
+    ),
+    relationship_property_spec_const(
+        ARENA_EDGE_PATTERN_PROPERTY,
+        "M4'",
+        GraphPropertyType::String,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Public,
+        "arena-dialogue",
+    ),
+    relationship_property_spec_const(
+        ARENA_EDGE_WEIGHT_PROPERTY,
+        "M4'",
+        GraphPropertyType::Float,
+        GraphPropertyCardinality::One,
+        GraphPropertyDisclosure::Internal,
+        "arena-dialogue",
+    ),
     GraphPropertySpec {
         key: "c_0_source_coordinate",
         coordinate_home: "S2-3",

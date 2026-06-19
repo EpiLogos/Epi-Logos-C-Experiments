@@ -1293,7 +1293,7 @@
       "owningExtension": "pratibimba-layouts",
       "type": "menu-item",
       "scope": "EPI_LOGOS_PERSONAL_GROUP",
-      "commandId": "m4.openArtifact",
+      "commandId": "m4-nara.openArtifact",
       "order": "1",
       "declaringTranche": "31.5"
     },
@@ -1302,7 +1302,7 @@
       "owningExtension": "pratibimba-layouts",
       "type": "menu-item",
       "scope": "EPI_LOGOS_PERSONAL_GROUP",
-      "commandId": "m5.openReview",
+      "commandId": "m5-epii.openReview",
       "order": "2",
       "declaringTranche": "31.5"
     },

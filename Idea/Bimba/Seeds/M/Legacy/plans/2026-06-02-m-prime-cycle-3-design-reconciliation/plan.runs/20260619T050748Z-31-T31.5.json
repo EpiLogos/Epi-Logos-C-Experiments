@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T050748Z-31-T31.5",
+  "taskId": "31.T31.5",
+  "startedAt": "2026-06-19T05:07:48.264Z",
+  "owner": "codex-m-dev-31-t31-5",
+  "leaseExpiresAt": "2026-06-19T07:07:48.264Z",
+  "worktree": null,
+  "task": {
+    "id": "31.T31.5",
+    "trackId": "31",
+    "tranche": "T31.5",
+    "title": "Menu contributions: Epi-Logos top-level menu",
+    "effort": null,
+    "file": "31-chrome-contributions-catalog.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/31-chrome-contributions-catalog.md",
+    "dependsOn": [
+      "31.T31.4"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/pratibimba-layouts/src/browser/epi-logos-menu.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

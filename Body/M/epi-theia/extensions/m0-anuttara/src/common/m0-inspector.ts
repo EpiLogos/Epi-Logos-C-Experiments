@@ -154,6 +154,25 @@ export interface M0ParityBridgeProjection {
     readonly state: M0ProvenanceState;
 }
 
+export type M0SubTableId = 'ZODIACAL' | 'MONOPOLY' | 'DIVINE_ACT' | 'VIRTUE' | 'NONE';
+export type M0SyntaxLayer = 'speech' | 'relationship' | 'action' | 'completion' | null;
+
+export interface M0SubTableRow {
+    readonly id: number;
+    readonly label: string;
+    readonly symbol: string | null;
+    readonly provenance: string;
+}
+
+export interface M0ArchetypeRoutingProjection {
+    readonly archetypeIndex: number | null;
+    readonly archetypeLabel: string | null;
+    readonly routedSubTable: M0SubTableId;
+    readonly subTableRows: readonly M0SubTableRow[];
+    readonly syntaxLayer: M0SyntaxLayer;
+    readonly state: M0ProvenanceState;
+}
+
 export interface QlStructureProjection {
     readonly position: 0 | 1 | 2 | 3 | 4 | 5 | null;
     readonly qlVariant: string | null;
@@ -197,6 +216,7 @@ export interface M0InspectorModel {
     readonly communityClockOverlay: M0CommunityClockOverlay;
     readonly projectionLenses: readonly M0ProjectionLens[];
     readonly parityBridges: M0ParityBridgeProjection;
+    readonly archetypeRouting: M0ArchetypeRoutingProjection;
     readonly qlStructure: QlStructureProjection;
     readonly routeTargets: readonly string[];
     readonly actions: readonly M0GatewayAction[];
@@ -312,6 +332,7 @@ export function buildM0InspectorModel(input: {
         communityClockOverlay: communityClockOverlay(coordinate, properties, input),
         projectionLenses: Object.freeze([atelierClusterLens()]),
         parityBridges: readM0ParityBridgeProjection(input.profile) ?? blockedParityBridgeProjection(),
+        archetypeRouting: readM0ArchetypeRoutingProjection(input.graphNode, input.profile),
         qlStructure: readM0QlStructureProjection(input.graphNode),
         routeTargets: Object.freeze(['M1', 'M2', 'M3', 'M4', 'M5']),
         actions: Object.freeze(actions(coordinate, input)),
@@ -383,6 +404,121 @@ export function readM0ParityBridgeProjection(
                 ? provenanceStateFromRaw(raw.state, 'canonical')
                 : 'blocked'
     });
+}
+
+const M0_ARCHETYPE_ROUTING_SPECS = Object.freeze({
+    3: Object.freeze({
+        label: 'Vak',
+        subTable: 'ZODIACAL',
+        syntaxLayer: 'speech',
+        lutLabel: 'ZODIACAL_LUT'
+    }),
+    5: Object.freeze({
+        label: 'Mono-Poly',
+        subTable: 'MONOPOLY',
+        syntaxLayer: 'relationship',
+        lutLabel: 'MONOPOLY_LUT'
+    }),
+    7: Object.freeze({
+        label: 'Acts of Śiva',
+        subTable: 'DIVINE_ACT',
+        syntaxLayer: 'action',
+        lutLabel: 'DIVINE_ACT_LUT'
+    }),
+    9: Object.freeze({
+        label: 'Virtue',
+        subTable: 'VIRTUE',
+        syntaxLayer: 'completion',
+        lutLabel: 'VIRTUE_LUT'
+    })
+} satisfies Readonly<
+    Record<
+        3 | 5 | 7 | 9,
+        {
+            readonly label: string;
+            readonly subTable: Exclude<M0SubTableId, 'NONE'>;
+            readonly syntaxLayer: Exclude<M0SyntaxLayer, null>;
+            readonly lutLabel: string;
+        }
+    >
+>);
+
+export function readM0ArchetypeRoutingProjection(
+    node: M0GraphNodePayload | null | undefined,
+    profile: MathemeHarmonicProfileBoundary | null | undefined
+): M0ArchetypeRoutingProjection {
+    const properties = objectValue(node?.properties);
+    const archetypeIndex = integerishValue(
+        properties?.c_1_archetype_index ??
+            properties?.archetype_index ??
+            profile?.payload?.c_1_archetype_index
+    );
+    const spec = archetypeRoutingSpec(archetypeIndex);
+    if (!spec) {
+        return Object.freeze({
+            archetypeIndex,
+            archetypeLabel: null,
+            routedSubTable: 'NONE' as const,
+            subTableRows: Object.freeze([]),
+            syntaxLayer: null,
+            state: archetypeIndex === null ? 'canonical_absent' : 'derived'
+        });
+    }
+
+    const rows = m0SubTableRowsForArchetype(profile, archetypeIndex);
+    return Object.freeze({
+        archetypeIndex,
+        archetypeLabel: spec.label,
+        routedSubTable: spec.subTable,
+        subTableRows: rows,
+        syntaxLayer: spec.syntaxLayer,
+        state: rows.length ? 'canonical' : 'blocked'
+    });
+}
+
+export function m0ArchetypeRoutingLutLabel(
+    projection: Pick<M0ArchetypeRoutingProjection, 'archetypeIndex' | 'routedSubTable'>
+): string | null {
+    const spec = archetypeRoutingSpec(projection.archetypeIndex);
+    return spec && projection.routedSubTable !== 'NONE'
+        ? `${spec.lutLabel}[${projection.archetypeIndex}]`
+        : null;
+}
+
+function archetypeRoutingSpec(index: number | null | undefined) {
+    if (index === 3 || index === 5 || index === 7 || index === 9) {
+        return M0_ARCHETYPE_ROUTING_SPECS[index];
+    }
+    return null;
+}
+
+function m0SubTableRowsForArchetype(
+    profile: MathemeHarmonicProfileBoundary | null | undefined,
+    archetypeIndex: number
+): readonly M0SubTableRow[] {
+    const payload = objectValue(profile?.payload);
+    const snapshot = objectValue(payload?.m0_routing_lut_snapshot);
+    const archetypeLut = arrayValue(snapshot?.archetype_lut ?? snapshot?.archetypeLut);
+    return Object.freeze(
+        arrayValue(archetypeLut[archetypeIndex]).flatMap(item => {
+            const row = objectValue(item);
+            const id = integerishValue(row?.id);
+            const label = stringValue(row?.label);
+            const symbol = stringValue(row?.symbol);
+            const provenance = stringValue(row?.provenance);
+            if (id === null || !label || !provenance) {
+                return [];
+            }
+            return [
+                Object.freeze({
+                    id,
+                    label,
+                    symbol,
+                    provenance
+                })
+            ];
+        })
+    );
 }
 
 function communityClockOverlay(
@@ -1101,6 +1237,16 @@ function stringValue(value: unknown): string | null {
 
 function integerValue(value: unknown): number | null {
     return typeof value === 'number' && Number.isInteger(value) ? value : null;
+}
+
+function integerishValue(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isInteger(value)) {
+        return value;
+    }
+    if (typeof value === 'string' && /^-?\d+$/.test(value.trim())) {
+        return Number.parseInt(value, 10);
+    }
+    return null;
 }
 
 function cyclePointValue(value: unknown): M0AlchemicalRow['cyclePoint'] | null {

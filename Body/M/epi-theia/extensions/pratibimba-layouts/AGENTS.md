@@ -12,6 +12,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]].
 - `src/common/index.ts` — package barrel (re-exports common + browser surface).
 - `src/browser/layout-switcher.ts` — `PratibimbaLayoutSwitcher` service; toggles layouts via Theia `ApplicationShell`/`LayoutRestorer`/`PreferenceService`.
 - `src/browser/layout-commands.ts` — `pratibimba.layout.*` command + menu contributions.
+- `src/browser/epi-logos-menu.ts` — `EpiLogosMenuContribution` top-level `Epi-Logos` menu groups for M0-M5, integrated plugins, and diagnostics quick access.
 - `src/browser/cross-layout-intent-dispatcher.ts` — routes intents through Theia `CommandRegistry`.
 - `src/browser/session-state-service.ts` — cross-layout state preservation landing-zone.
 - `src/browser/{frontend-module,tokens,index}.ts` — DI wiring, hoisted tokens, browser barrel.

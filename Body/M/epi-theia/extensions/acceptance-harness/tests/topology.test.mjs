@@ -57,6 +57,12 @@ const {
     intentTargetCommandId
 } = require('../../pratibimba-layouts/lib/common/cross-layout-intent.js');
 const {
+    expectedActivityBarModes
+} = require('../../pratibimba-layouts/lib/common/activity-bar-modes.js');
+const {
+    BRIDGE_READINESS_IDS
+} = require('../../m-extension-runtime/lib/common/bridge-readiness.js');
+const {
     REQUIRED_MEDIATED_EVIDENCE_FIELDS,
     buildMediatedRunEvidencePacket,
     enforceHumanGate
@@ -511,6 +517,76 @@ test('M0 active-layer state survives daily-0-1 and ide-deep layout toggles', () 
         assert.equal(route.session.m0_implicate_explicate, 'explicate');
         assert.equal(route.session.m0_mode, 'authoring');
     }
+});
+
+test('ide-shell state-identity: active-coordinate preserved while toggling daily-0-1 <-> ide-deep', () => {
+    const harness = createIdeShellStateIdentityHarness();
+    const sampleCoordinate = 'M3-1-0-13';
+    const canonUri = 'vault://Idea/Bimba/Seeds/M/M3/mahamaya-codon-13.md';
+    const logosTerm = 'M3 codon 13';
+    const evidenceRecordId = 'evidence://acceptance/M3-1-0-13/proof-001';
+    const reviewItemId = 'review://acceptance/M3-1-0-13/item-001';
+    const vakFields = {
+        cpf: '(00/00)',
+        ct: 'CT2',
+        cp: '4.2',
+        cf: '(0/1/2)',
+        cfp: 'M3-1-0-13',
+        cs: 'acceptance-state-identity'
+    };
+    const autoresearchFilter = {
+        capacity: 's5.review.evidence-distillation',
+        privacyClass: 'protected-local'
+    };
+
+    harness.openLayout('daily-0-1');
+    harness.selectCoordinate(sampleCoordinate);
+    harness.activateSession('acceptance-test-session-001', 42);
+    harness.activateActivityBarMode('coordinate-tree');
+    harness.openBimbaGraphViewerAndSelectCoordinate(sampleCoordinate);
+    harness.openCanonStudioFile(canonUri);
+    harness.setLogosTerm(logosTerm);
+    harness.selectEvidenceRecord(evidenceRecordId);
+    harness.selectReviewItem(reviewItemId);
+    harness.populateAcrVakFields(vakFields);
+    harness.setAutoresearchCapacityFilter(autoresearchFilter);
+
+    const beforeToggle = harness.identitySnapshot();
+    const deepToggle = harness.toggleLayout('ide-deep');
+    const backToDaily = harness.toggleLayout('daily-0-1');
+
+    assert.equal(deepToggle.activeLayout, 'ide-deep');
+    assert.equal(backToDaily.activeLayout, 'daily-0-1');
+    assertIdeShellIdentityPreserved(beforeToggle, deepToggle, 'toggling daily-0-1 to ide-deep');
+    assertIdeShellIdentityPreserved(beforeToggle, backToDaily, 'toggling daily-0-1 back from ide-deep');
+
+    assert.equal(
+        backToDaily.widgets.coordinateTree.highlightedCoordinate,
+        sampleCoordinate,
+        'active-coordinate highlight preserved for Coordinate Tree'
+    );
+    assert.equal(backToDaily.widgets.bimbaGraphViewer.selectedCoordinate, sampleCoordinate);
+    assert.equal(backToDaily.widgets.canonStudio.openUri, canonUri);
+    assert.equal(backToDaily.widgets.logosAtelier.currentTerm, logosTerm);
+    assert.equal(backToDaily.widgets.evidencePane.selectedRecordId, evidenceRecordId);
+    assert.equal(backToDaily.widgets.reviewPane.selectedItemId, reviewItemId);
+    assert.deepEqual(backToDaily.widgets.acr.vakFields, vakFields);
+    assert.deepEqual(backToDaily.widgets.autoresearchPane.capacityFilter, autoresearchFilter);
+    assert.equal(
+        backToDaily.activeActivityBarModeId,
+        'pratibimba.activity-bar.coordinate-tree'
+    );
+    assert.deepEqual(backToDaily.bridgeGate, {
+        bindingKey: 'ide-shell.bridge',
+        readinessId: 'ready_public_current',
+        blockers: [],
+        lastTickObserved: 42,
+        profileGeneration: 42
+    });
+    assert.deepEqual(backToDaily.session, {
+        sessionId: 'acceptance-test-session-001',
+        profileGeneration: 42
+    });
 });
 
 function createOmniPanelTraversalHarness() {
@@ -972,6 +1048,146 @@ function buildM0SurfaceCrossLayoutIntent(overrides = {}) {
         requestedContributionId: 'relations',
         ...overrides
     };
+}
+
+function createIdeShellStateIdentityHarness() {
+    const state = {
+        activeLayout: null,
+        activeActivityBarModeId: null,
+        session: {
+            sessionId: null,
+            profileGeneration: null
+        },
+        bridgeGate: {
+            bindingKey: 'ide-shell.bridge',
+            readinessId: 'bridge_unavailable',
+            blockers: ['s0.kernel-bridge.unavailable'],
+            lastTickObserved: 0,
+            profileGeneration: null
+        },
+        widgets: {
+            coordinateTree: {
+                activeCoordinate: null,
+                highlightedCoordinate: null
+            },
+            bimbaGraphViewer: {
+                selectedCoordinate: null
+            },
+            canonStudio: {
+                openUri: null
+            },
+            logosAtelier: {
+                currentTerm: null
+            },
+            evidencePane: {
+                selectedRecordId: null
+            },
+            reviewPane: {
+                selectedItemId: null
+            },
+            acr: {
+                vakFields: null
+            },
+            autoresearchPane: {
+                capacityFilter: null
+            }
+        }
+    };
+
+    const assertLayoutSupportsMode = (layout, modeId) => {
+        const modes = expectedActivityBarModes[layout] ?? [];
+        assert.ok(
+            modes.some(mode => mode.modeId === modeId),
+            `${layout} must support activity-bar mode ${modeId}`
+        );
+    };
+
+    const snapshot = () => structuredClone(state);
+
+    return {
+        openLayout(layout) {
+            assert.ok(expectedActivityBarModes[layout], `unknown layout ${layout}`);
+            state.activeLayout = layout;
+        },
+        selectCoordinate(coordinate) {
+            state.widgets.coordinateTree.activeCoordinate = coordinate;
+            state.widgets.coordinateTree.highlightedCoordinate = coordinate;
+        },
+        activateSession(sessionId, profileGeneration) {
+            assert.ok(BRIDGE_READINESS_IDS.includes('ready_public_current'));
+            state.session = { sessionId, profileGeneration };
+            state.bridgeGate = {
+                bindingKey: 'ide-shell.bridge',
+                readinessId: 'ready_public_current',
+                blockers: [],
+                lastTickObserved: profileGeneration,
+                profileGeneration
+            };
+        },
+        activateActivityBarMode(shortName) {
+            const modeId = `pratibimba.activity-bar.${shortName}`;
+            assertLayoutSupportsMode(state.activeLayout, modeId);
+            state.activeActivityBarModeId = modeId;
+        },
+        openBimbaGraphViewerAndSelectCoordinate(coordinate) {
+            state.widgets.bimbaGraphViewer.selectedCoordinate = coordinate;
+        },
+        openCanonStudioFile(openUri) {
+            state.widgets.canonStudio.openUri = openUri;
+        },
+        setLogosTerm(currentTerm) {
+            state.widgets.logosAtelier.currentTerm = currentTerm;
+        },
+        selectEvidenceRecord(selectedRecordId) {
+            state.widgets.evidencePane.selectedRecordId = selectedRecordId;
+        },
+        selectReviewItem(selectedItemId) {
+            state.widgets.reviewPane.selectedItemId = selectedItemId;
+        },
+        populateAcrVakFields(vakFields) {
+            state.widgets.acr.vakFields = structuredClone(vakFields);
+        },
+        setAutoresearchCapacityFilter(capacityFilter) {
+            state.widgets.autoresearchPane.capacityFilter = structuredClone(capacityFilter);
+        },
+        toggleLayout(nextLayout) {
+            assert.ok(expectedActivityBarModes[nextLayout], `unknown layout ${nextLayout}`);
+            if (state.activeActivityBarModeId !== null) {
+                assertLayoutSupportsMode(nextLayout, state.activeActivityBarModeId);
+            }
+            state.activeLayout = nextLayout;
+            return snapshot();
+        },
+        identitySnapshot() {
+            return snapshot();
+        }
+    };
+}
+
+function assertIdeShellIdentityPreserved(expected, actual, context) {
+    assert.deepEqual(actual.session, expected.session, `${context}: session identity preserved`);
+    assert.deepEqual(
+        actual.bridgeGate,
+        expected.bridgeGate,
+        `${context}: bridge-gate readiness binding preserved`
+    );
+    assert.equal(
+        actual.activeActivityBarModeId,
+        expected.activeActivityBarModeId,
+        `${context}: active activity-bar mode preserved`
+    );
+    assert.deepEqual(
+        actual.widgets.coordinateTree,
+        expected.widgets.coordinateTree,
+        `${context}: active-coordinate state preserved`
+    );
+    assert.deepEqual(actual.widgets.bimbaGraphViewer, expected.widgets.bimbaGraphViewer);
+    assert.deepEqual(actual.widgets.canonStudio, expected.widgets.canonStudio);
+    assert.deepEqual(actual.widgets.logosAtelier, expected.widgets.logosAtelier);
+    assert.deepEqual(actual.widgets.evidencePane, expected.widgets.evidencePane);
+    assert.deepEqual(actual.widgets.reviewPane, expected.widgets.reviewPane);
+    assert.deepEqual(actual.widgets.acr, expected.widgets.acr);
+    assert.deepEqual(actual.widgets.autoresearchPane, expected.widgets.autoresearchPane);
 }
 
 function withoutUndefinedFields(record) {

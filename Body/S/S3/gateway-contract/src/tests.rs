@@ -34,12 +34,35 @@ fn anuttara_verifier_contract_exposes_s0_prime_methods() {
 
     assert_eq!(
         methods,
-        &["s0'.verifier.check_state", "s0'.verifier.emit_question"]
+        &[
+            "s0'.verifier.check_state",
+            "s0'.verifier.emit_query",
+            "s0'.verifier.validate_membership",
+            "s0'.verifier.owl_query",
+        ]
     );
     for method in methods {
         assert!(METHOD_NAMES.contains(method));
         assert!(method_dispatch_plan_entry(method).is_some());
     }
+}
+
+#[test]
+fn anuttara_verifier_typed_query_contract_uses_full_seven_laws() {
+    let query = M0VerifierTypedQuery {
+        surface: "full-7-laws".to_owned(),
+        law_family: "coordinate-language-law-4".to_owned(),
+        symbolic_coordinate_string: "M0-4.4/5".to_owned(),
+        query: "validate_coordinate_language_membership".to_owned(),
+    };
+
+    let json = serde_json::to_value(&query).expect("typed query should serialize");
+    assert_eq!(json["surface"], "full-7-laws");
+    assert_ne!(json["surface"], "law-6-minimal");
+
+    let round_trip: M0VerifierTypedQuery =
+        serde_json::from_value(json).expect("typed query should deserialize");
+    assert_eq!(round_trip.law_family, "coordinate-language-law-4");
 }
 
 #[test]
