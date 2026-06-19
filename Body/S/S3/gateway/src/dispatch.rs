@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::collections::BTreeSet;
 use std::sync::atomic::{AtomicU8, Ordering};
 
 use epi_s3_gateway_contract::{
@@ -156,6 +157,11 @@ pub const NARA_SESSION_RPC_METHODS: [&str; 2] = ["nara.session_open", "nara.sess
 /// the natal-chart raw body stays local, only its path string is surfaced.
 pub const NARA_PASU_RPC_METHODS: [&str; 2] = ["nara.pasu.set", "nara.pasu.show"];
 
+/// Headless close-of-session contemplation RPC. It remains a Nara extension
+/// route, so the gateway can expose the surface without expanding the product
+/// method table before the upstream S0/S4/S5 executors land their live adapters.
+pub const CONTEMPLATE_SESSION_CLOSE_METHOD: &str = "nara.contemplate_session_close";
+
 static NARA_SESSION_STOP_ROUND_ROBIN: AtomicU8 = AtomicU8::new(0);
 
 fn default_nara_session_protein_capacity() -> u32 {
@@ -236,6 +242,369 @@ pub struct NaraSessionProteinHandle {
     pub graphiti_relation: Option<Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub body: Option<Value>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct PiContemplationInstance {
+    pub id: String,
+    #[serde(default)]
+    pub deterministic_mock: bool,
+    #[serde(default)]
+    pub loaded_agents: Vec<String>,
+    pub recognition_state: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct EngagedCoordinateResonance {
+    pub coordinate: String,
+    pub target_resonance_vector: Vec<f64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct ContemplationTick {
+    pub tick_id: String,
+    pub gauge: String,
+    pub actual_resonance: Vec<f64>,
+    #[serde(default)]
+    pub codon: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct PsycheAnchor {
+    #[serde(default)]
+    pub cards: Vec<String>,
+    #[serde(default)]
+    pub codons: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct M0VerifierReport {
+    pub virtue_witness_vector: Vec<bool>,
+    #[serde(default)]
+    pub unsatisfied_constraints: Vec<String>,
+    pub coherence_score: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct ContemplationObject {
+    pub session_id: String,
+    pub q_nara: String,
+    pub pi_instance: PiContemplationInstance,
+    #[serde(default)]
+    pub engaged_coordinates: Vec<EngagedCoordinateResonance>,
+    pub trajectory: Vec<ContemplationTick>,
+    #[serde(default)]
+    pub psyche_anchor: PsycheAnchor,
+    pub verifier_report: M0VerifierReport,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct TritoneSquareCoherence {
+    pub square_0_5: f64,
+    pub square_1_4: f64,
+    pub square_2_3: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct EbmContemplationReading {
+    pub position: String,
+    pub per_tick_energy: Vec<f64>,
+    pub gradient: Vec<f64>,
+    pub gradient_magnitude: f64,
+    pub gauge_trio_coherent: bool,
+    pub coherence_scores: TritoneSquareCoherence,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct LlmContemplationReading {
+    pub position: String,
+    pub pi_instance_id: String,
+    pub loaded_agents: Vec<String>,
+    pub recognition_state: String,
+    pub psyche_anchor_coherent: bool,
+    pub matched_anchor_codons: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct VerifierContemplationReading {
+    pub position: String,
+    pub virtue_witness_vector: Vec<bool>,
+    pub unsatisfied_constraints: Vec<String>,
+    pub coherence_score: f64,
+    pub arch9_wholeness: bool,
+    pub syntax_layers_witnessed: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct ContemplationTripletOutput {
+    pub llm: LlmContemplationReading,
+    pub ebm: EbmContemplationReading,
+    pub verifier: VerifierContemplationReading,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct ParsedAnuttaraSymbolicQuestion {
+    pub coordinate: String,
+    pub tranche: String,
+    pub status: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct SymbolicRoundTrip {
+    pub raw: String,
+    pub parsed: ParsedAnuttaraSymbolicQuestion,
+    pub parser_skill: String,
+    pub llm_response: String,
+    pub anima_reverification_route: String,
+    pub routed_back_through_anima: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct ContemplateSessionCloseResponse {
+    pub method: String,
+    pub session_id: String,
+    pub wisdom_delta: String,
+    pub triplet: ContemplationTripletOutput,
+    pub symbolic_round_trips: Vec<SymbolicRoundTrip>,
+}
+
+pub fn contemplate_session_close(
+    object: ContemplationObject,
+) -> Result<ContemplateSessionCloseResponse, String> {
+    if object.session_id.trim().is_empty() {
+        return Err("contemplate_session_close requires session_id".to_owned());
+    }
+    if object.trajectory.is_empty() {
+        return Err("contemplate_session_close requires a non-empty trajectory".to_owned());
+    }
+    if object.engaged_coordinates.is_empty() {
+        return Err("contemplate_session_close requires engaged coordinate targets".to_owned());
+    }
+
+    let ebm = evaluate_ebm_position(&object)?;
+    let llm = evaluate_llm_position(&object);
+    let verifier = evaluate_verifier_position(&object.verifier_report);
+    let symbolic_round_trips = route_verifier_questions_back_through_anima(
+        &object.verifier_report.unsatisfied_constraints,
+    );
+
+    let wisdom_delta = compose_wisdom_delta(&object, &llm, &ebm, &verifier, &symbolic_round_trips);
+
+    Ok(ContemplateSessionCloseResponse {
+        method: CONTEMPLATE_SESSION_CLOSE_METHOD.to_owned(),
+        session_id: object.session_id,
+        wisdom_delta,
+        triplet: ContemplationTripletOutput { llm, ebm, verifier },
+        symbolic_round_trips,
+    })
+}
+
+fn evaluate_ebm_position(object: &ContemplationObject) -> Result<EbmContemplationReading, String> {
+    let mut per_tick_energy = Vec::with_capacity(object.trajectory.len());
+    for tick in &object.trajectory {
+        let target = target_for_tick(tick, &object.engaged_coordinates)
+            .ok_or_else(|| format!("no target resonance vector for tick `{}`", tick.tick_id))?;
+        per_tick_energy.push(squared_distance(target, &tick.actual_resonance));
+    }
+
+    let gradient: Vec<f64> = per_tick_energy
+        .windows(2)
+        .map(|pair| pair[1] - pair[0])
+        .collect();
+    let gradient_magnitude = if gradient.is_empty() {
+        0.0
+    } else {
+        gradient.iter().map(|value| value.abs()).sum::<f64>() / gradient.len() as f64
+    };
+    let gauge_trio_coherent = gauge_trio_covered(&object.trajectory);
+    let average_energy = per_tick_energy.iter().sum::<f64>() / per_tick_energy.len().max(1) as f64;
+    let base_score = (1.0 / (1.0 + average_energy)).clamp(0.0, 1.0);
+    let coverage_factor = if gauge_trio_coherent { 1.0 } else { 0.5 };
+
+    Ok(EbmContemplationReading {
+        position: "5'".to_owned(),
+        per_tick_energy,
+        gradient,
+        gradient_magnitude,
+        gauge_trio_coherent,
+        coherence_scores: TritoneSquareCoherence {
+            square_0_5: rounded_score(base_score * coverage_factor),
+            square_1_4: rounded_score(base_score * coverage_factor * 0.97),
+            square_2_3: rounded_score(base_score * coverage_factor * 0.94),
+        },
+    })
+}
+
+fn evaluate_llm_position(object: &ContemplationObject) -> LlmContemplationReading {
+    let trajectory_codons: BTreeSet<&str> = object
+        .trajectory
+        .iter()
+        .filter_map(|tick| tick.codon.as_deref())
+        .collect();
+    let matched_anchor_codons: Vec<String> = object
+        .psyche_anchor
+        .codons
+        .iter()
+        .filter(|codon| trajectory_codons.contains(codon.as_str()))
+        .cloned()
+        .collect();
+    let psyche_anchor_coherent = !object.psyche_anchor.codons.is_empty()
+        && matched_anchor_codons.len() == object.psyche_anchor.codons.len();
+
+    LlmContemplationReading {
+        position: "4'".to_owned(),
+        pi_instance_id: object.pi_instance.id.clone(),
+        loaded_agents: object.pi_instance.loaded_agents.clone(),
+        recognition_state: object.pi_instance.recognition_state.clone(),
+        psyche_anchor_coherent,
+        matched_anchor_codons,
+    }
+}
+
+fn evaluate_verifier_position(report: &M0VerifierReport) -> VerifierContemplationReading {
+    VerifierContemplationReading {
+        position: "0'".to_owned(),
+        virtue_witness_vector: report.virtue_witness_vector.clone(),
+        unsatisfied_constraints: report.unsatisfied_constraints.clone(),
+        coherence_score: report.coherence_score,
+        arch9_wholeness: report
+            .virtue_witness_vector
+            .get(8)
+            .copied()
+            .unwrap_or(false),
+        syntax_layers_witnessed: [2usize, 4, 6, 8].iter().all(|idx| {
+            report
+                .virtue_witness_vector
+                .get(*idx)
+                .copied()
+                .unwrap_or(false)
+        }),
+    }
+}
+
+fn target_for_tick<'a>(
+    tick: &ContemplationTick,
+    targets: &'a [EngagedCoordinateResonance],
+) -> Option<&'a [f64]> {
+    targets
+        .iter()
+        .find(|target| {
+            target
+                .coordinate
+                .rsplit(['.', '/', '-'])
+                .next()
+                .is_some_and(|suffix| suffix.eq_ignore_ascii_case(&tick.gauge))
+        })
+        .or_else(|| targets.first())
+        .map(|target| target.target_resonance_vector.as_slice())
+}
+
+fn squared_distance(target: &[f64], actual: &[f64]) -> f64 {
+    let shared = target
+        .iter()
+        .zip(actual.iter())
+        .map(|(target, actual)| {
+            let delta = target - actual;
+            delta * delta
+        })
+        .sum::<f64>();
+    let target_tail = target
+        .iter()
+        .skip(actual.len())
+        .map(|value| value * value)
+        .sum::<f64>();
+    let actual_tail = actual
+        .iter()
+        .skip(target.len())
+        .map(|value| value * value)
+        .sum::<f64>();
+    shared + target_tail + actual_tail
+}
+
+fn gauge_trio_covered(trajectory: &[ContemplationTick]) -> bool {
+    let gauges: BTreeSet<String> = trajectory
+        .iter()
+        .map(|tick| tick.gauge.to_ascii_uppercase())
+        .collect();
+    ["COMP", "MOVE", "RES"]
+        .iter()
+        .all(|required| gauges.contains(*required))
+}
+
+fn route_verifier_questions_back_through_anima(raw_questions: &[String]) -> Vec<SymbolicRoundTrip> {
+    raw_questions
+        .iter()
+        .filter_map(|raw| {
+            parse_anuttara_symbolic_question(raw).map(|parsed| SymbolicRoundTrip {
+                raw: raw.clone(),
+                parser_skill: "anuttara-symbolic-parse".to_owned(),
+                llm_response: format!(
+                    "anuttara-symbolic-parse resolved {}; Anima re-verifies the pending witness.",
+                    parsed.coordinate
+                ),
+                anima_reverification_route: "anima.reverify".to_owned(),
+                parsed,
+                routed_back_through_anima: true,
+            })
+        })
+        .collect()
+}
+
+fn parse_anuttara_symbolic_question(raw: &str) -> Option<ParsedAnuttaraSymbolicQuestion> {
+    let trimmed = raw.trim().trim_start_matches('#').trim_end_matches('?');
+    let mut parts: Vec<&str> = trimmed.split('-').collect();
+    if parts.len() < 3 {
+        return None;
+    }
+    let status = parts.pop()?.to_owned();
+    let tranche = parts.pop()?.to_owned();
+    let coordinate = parts.join("-");
+    if coordinate.is_empty() || tranche.is_empty() || status.is_empty() {
+        return None;
+    }
+    Some(ParsedAnuttaraSymbolicQuestion {
+        coordinate,
+        tranche,
+        status,
+    })
+}
+
+fn compose_wisdom_delta(
+    object: &ContemplationObject,
+    llm: &LlmContemplationReading,
+    ebm: &EbmContemplationReading,
+    verifier: &VerifierContemplationReading,
+    round_trips: &[SymbolicRoundTrip],
+) -> String {
+    format!(
+        "4'-5'-0' contemplation closed for {}: {}. gauge-trio={}, arch-9={}, Mobius-return-gradient={:.6}, psyche-anchor={}, syntax-layers={}, verifier-round-trips={}.",
+        object.q_nara,
+        llm.recognition_state,
+        ebm.gauge_trio_coherent,
+        verifier.arch9_wholeness,
+        ebm.gradient_magnitude,
+        llm.psyche_anchor_coherent,
+        verifier.syntax_layers_witnessed,
+        round_trips.len()
+    )
+}
+
+fn rounded_score(value: f64) -> f64 {
+    (value * 1_000_000.0).round() / 1_000_000.0
 }
 
 pub fn route_nara_session_open(

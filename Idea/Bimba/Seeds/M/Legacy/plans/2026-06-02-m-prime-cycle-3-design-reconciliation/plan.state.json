@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T20:36:46.149Z",
+  "updatedAt": "2026-06-19T20:43:05.811Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -3427,14 +3427,19 @@
       "worktree": null
     },
     "19.T19.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T20:30:57.044Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T20:43:05.757Z",
       "claimedAt": "2026-06-19T20:30:57.044Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T20:43:05.757Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:43:05.757Z",
+          "text": "contemplate_session_close RPC method, 4'-5'-0' triplet operationalised, LLM/EBM/Verifier joint operation, wisdom_delta composition, cargo test pass"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-19-t19-6-headless-contemplation",
-      "leaseExpiresAt": "2026-06-19T22:30:57.044Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T20:30:57.044Z",
       "runId": "20260619T203057Z-19-T19.6",
       "worktree": null
@@ -11777,11 +11782,12 @@
     {
       "runId": "20260619T203057Z-19-T19.6",
       "taskId": "19.T19.6",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T20:30:57.044Z",
       "owner": "codex-m-dev-19-t19-6-headless-contemplation",
       "leaseExpiresAt": "2026-06-19T22:30:57.044Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T20:43:05.757Z"
     },
     {
       "runId": "20260619T203116Z-43-T43.4",
