@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T12:14:40.574Z",
+  "updatedAt": "2026-06-19T12:17:44.105Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -4850,14 +4850,19 @@
       "worktree": null
     },
     "28.T28.3": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T12:00:15.841Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T12:17:44.025Z",
       "claimedAt": "2026-06-19T12:00:15.841Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T12:17:44.025Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T12:17:44.025Z",
+          "text": "Implemented GraphCanvas solar-anchor/full-lattice rendering, DR-IG-1 relation-family filter, SharedBridgeAdapter coordinate-context publishing, s2.graph.node readiness badge/overlay, and DOX update; test -f + grep checks passed; pnpm --dir Body/M/epi-theia --filter @pratibimba/ide-shell-m0-m5 test passed 32/32; broader pnpm --dir Body/M/epi-theia test:contracts ran 183/195 pass with unrelated document-not-defined/Theia DOM and existing m2 typography failures."
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-28-t28-3",
-      "leaseExpiresAt": "2026-06-19T14:00:15.841Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T12:00:15.841Z",
       "runId": "20260619T120015Z-28-T28.3",
       "worktree": null
@@ -11323,11 +11328,12 @@
     {
       "runId": "20260619T120015Z-28-T28.3",
       "taskId": "28.T28.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T12:00:15.841Z",
       "owner": "codex-m-dev-28-t28-3",
       "leaseExpiresAt": "2026-06-19T14:00:15.841Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T12:17:44.025Z"
     },
     {
       "runId": "20260619T120030Z-42-T42.4",

@@ -22,6 +22,8 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
 
 const {
     parseCapabilityMatrix,
@@ -37,6 +39,9 @@ const {
     EXTENSION_ID,
     decorateCoordinates
 } = require('../lib/common/index.js');
+const {
+    GraphCanvas
+} = require('../lib/browser/bimba-graph-viewer/graph-canvas.js');
 
 // __dirname here is .../Body/M/epi-theia/extensions/ide-shell-m0-m5/tests
 // — six levels up to reach the repo root (where Body/ lives).
@@ -68,6 +73,45 @@ const INLINE_READINESS_BINDINGS = Object.freeze({
     'canon-studio-widget.tsx': ['vault-bridge.s1prime.vault.write_file', "s1'.semantic.suggest"],
     'agentic-control-room-widget.tsx': ['capability-matrix', 'agentic-control-room.route']
 });
+
+const DR_IG_1_SUBGRAPH = Object.freeze({
+    node: Object.freeze({
+        coordinate: 'M0',
+        namespace: 'bimba',
+        label: 'Anuttara'
+    }),
+    neighbors: Object.freeze([
+        { coordinate: 'M0-0', namespace: 'bimba', label: 'Ground', c_1_relation_family: 'structural', type: 'CONTAINS' },
+        { coordinate: 'M0-1', namespace: 'bimba', label: 'Emergence', c_1_relation_family: 'structural', type: 'CONTAINS' },
+        { coordinate: 'M0-2', namespace: 'bimba', label: 'Relations', c_1_relation_family: 'structural', type: 'CONTAINS' },
+        { coordinate: 'M0-3', namespace: 'bimba', label: 'Community', c_1_relation_family: 'structural', type: 'FAMILY_CONTAINS' },
+        { coordinate: 'M0-4', namespace: 'bimba', label: 'Profile', c_1_relation_family: 'correspondential', type: 'ANCHORED_TO' },
+        { coordinate: 'M0-5', namespace: 'bimba', label: 'Recognition', c_1_relation_family: 'correspondential', type: 'REFLECTS_AS' },
+        { coordinate: 'M1', namespace: 'bimba', label: 'Paramasiva', c_1_relation_family: 'correspondential', type: 'HAS_KERNEL_RESONANCE' },
+        { coordinate: 'Empty-Day', namespace: 'Empty', label: 'Day note', c_1_relation_family: 'structural', type: 'DERIVES_FROM' }
+    ]),
+    privacyClass: 'safe-public-current-kernel-tick',
+    profileGeneration: 28,
+    source: 's2.graph.node'
+});
+
+function renderGraphCanvas(overrides = {}) {
+    return ReactDOMServer.renderToStaticMarkup(
+        React.createElement(GraphCanvas, {
+            subgraph: DR_IG_1_SUBGRAPH,
+            renderingMode: 'full-lattice',
+            activeCoordinate: 'M0',
+            relationFamilyFilter: 'all',
+            onNodeClick: () => undefined,
+            onEdgeHover: () => undefined,
+            ...overrides
+        })
+    );
+}
+
+function countMatches(text, pattern) {
+    return (text.match(pattern) ?? []).length;
+}
 
 test('parses the real capability-matrix.json from Body/S/S4/plugins/pleroma', () => {
     const raw = JSON.parse(readFileSync(CAPABILITY_MATRIX_PATH, 'utf8'));
@@ -170,6 +214,38 @@ test('asSubgraph returns EMPTY_SUBGRAPH-equivalent on a non-object artifact', ()
     assert.equal(r2.node, null);
     assert.equal(r1.neighbors.length, 0);
     assert.equal(EMPTY_SUBGRAPH.neighbors.length, 0);
+});
+
+test('GraphCanvas renders solar-anchor as active sun plus at most six Bimba-side neighbors', () => {
+    const html = renderGraphCanvas({ renderingMode: 'solar-anchor' });
+    assert.match(html, /data-rendering-mode="solar-anchor"/);
+    assert.equal(countMatches(html, /data-test="bimba-graph-active-node"/g), 1);
+    assert.equal(countMatches(html, /data-test="bimba-graph-neighbor-node"/g), 6);
+    assert.doesNotMatch(html, /Empty-Day/);
+});
+
+test('GraphCanvas renders full-lattice with every neighbor from the S2 payload', () => {
+    const html = renderGraphCanvas({ renderingMode: 'full-lattice' });
+    assert.match(html, /data-rendering-mode="full-lattice"/);
+    assert.equal(countMatches(html, /data-test="bimba-graph-neighbor-node"/g), DR_IG_1_SUBGRAPH.neighbors.length);
+    assert.match(html, /Empty-Day/);
+});
+
+test('GraphCanvas partitions edges by c_1_relation_family for DR-IG-1 filtering', () => {
+    const structural = renderGraphCanvas({ relationFamilyFilter: 'structural' });
+    const correspondential = renderGraphCanvas({ relationFamilyFilter: 'correspondential' });
+    assert.equal(countMatches(structural, /data-relation-family="structural"/g), 5);
+    assert.equal(countMatches(structural, /data-relation-family="correspondential"/g), 0);
+    assert.equal(countMatches(correspondential, /data-relation-family="correspondential"/g), 3);
+    assert.equal(countMatches(correspondential, /data-relation-family="structural"/g), 0);
+});
+
+test('Bimba graph widget publishes coordinate context through SharedBridgeAdapter on node click', () => {
+    const source = readFileSync(resolve(SOURCE_ROOT, 'bimba-graph-viewer-widget.tsx'), 'utf8');
+    assert.match(source, /publishCoordinateContext\(coordinate\)/);
+    assert.match(source, /this\.sharedBridge\.updateCoordinateContext\(next\)/);
+    assert.match(source, /source:\s*'bimba-graph-viewer'/);
+    assert.match(source, /selectedCoordinate:\s*coordinate/);
 });
 
 test('IDE_SHELL_WIDGET_IDS match the deep-IDE layout descriptor expectations', () => {
