@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-19T20:02:16.800Z",
+  "updatedAt": "2026-06-19T20:03:05.276Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -6864,14 +6864,19 @@
       "worktree": null
     },
     "25.T25.8": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-19T19:54:16.724Z",
+      "status": "done",
+      "updatedAt": "2026-06-19T20:03:05.222Z",
       "claimedAt": "2026-06-19T19:54:16.724Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-19T20:03:05.222Z",
+      "evidence": [
+        {
+          "at": "2026-06-19T20:03:05.222Z",
+          "text": "Oracle cast widget with I-Ching (3-coin) + Tarot sub-modes, composite oracle reading, cast histories capped at 6, pnpm build clean"
+        }
+      ],
       "notes": null,
       "owner": "codex-m-dev-25-t25-8-oracle-cast",
-      "leaseExpiresAt": "2026-06-19T21:54:16.724Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-06-19T19:54:16.724Z",
       "runId": "20260619T195416Z-25-T25.8",
       "worktree": null
@@ -11605,11 +11610,12 @@
     {
       "runId": "20260619T195416Z-25-T25.8",
       "taskId": "25.T25.8",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-19T19:54:16.724Z",
       "owner": "codex-m-dev-25-t25-8-oracle-cast",
       "leaseExpiresAt": "2026-06-19T21:54:16.724Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-19T20:03:05.222Z"
     },
     {
       "runId": "20260619T195418Z-28-T28.8",
