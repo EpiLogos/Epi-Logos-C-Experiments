@@ -26,7 +26,7 @@ Read as a compact QL miniature, the digits `{1, 4, 6, 7}` name already-landed ke
 | `6` | six [[Ananda]] matrix families in the matrix-op enum |
 | `7` | the 7-row of `ANANDA_BIMBA`, read with `QL_DIVINE_ACT_RATIO 16/9` |
 
-The archetype-7 binding is substrate-cited at `Body/S/S0/epi-lib/include/m1.h:417-422`, where `QL_DIVINE_ACT_RATIO` aliases `16/9`, and at `Body/S/S0/epi-lib/src/m1.c:30`, where the 7-row of `ANANDA_BIMBA` is the row the inspector watches through the profile clock.
+The archetype-7 binding is substrate-cited at `Body/S/S0/epi-lib/include/m1.h:322-324`, where `QL_DIVINE_ACT_RATIO_NUM/_DEN/_F` alias `16/9`, and at `Body/S/S0/epi-lib/src/m1.c:238`, where Row 7 of `ANANDA_BIMBA` (DR face `…6,4,2,9,7,5`; raw `7X+0` face `…56,63,70,77`) is the row the inspector watches through the profile clock.
 
 ## Recognition
 

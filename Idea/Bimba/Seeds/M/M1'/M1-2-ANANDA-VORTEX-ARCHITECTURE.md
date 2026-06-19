@@ -269,6 +269,7 @@ pub enum AnandaSkeletonEvent {
     Ratio64Over36 = 3,
     Additive137 = 4,
     IdentityReturn4Plus2 = 5,
+    KaprekarPedagogyHit = 6,
 }
 
 pub struct DrRingPhase {
