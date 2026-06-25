@@ -2099,11 +2099,13 @@
       "worktree": null
     },
     "12.T12.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T16:38:00.000Z",
+      "claimedAt": "2026-06-25T16:38:00.000Z",
+      "completedAt": "2026-06-25T16:38:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T16:38:00.000Z", "text": "Audit: capacity_workflows module exists at epii-autoresearch-core/src/lib.rs:17. Six per-capacity panes valid as Pi-monitor views per DR-TS-4. Not OmniPanel tabs. Substrate kept as canonical."}
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
