@@ -1306,11 +1306,13 @@
       "worktree": null
     },
     "07.T7.9": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T09:44:58.703Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T09:58:00.000Z",
       "claimedAt": "2026-06-25T09:44:58.703Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T09:58:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T09:58:00.000Z", "text": "Accepted. KleinFlipEvent three-variant SSOT consumed, CosmicKleinFlip removed. Committed."}
+      ],
       "notes": null,
       "owner": "codex-m-dev-07-t7-9-kleinflip-event",
       "leaseExpiresAt": "2026-06-25T11:44:58.703Z",
@@ -1403,11 +1405,13 @@
       "worktree": null
     },
     "08.T8.5": {
-      "status": "in_progress",
-      "updatedAt": "2026-06-25T09:46:12.018Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T09:58:00.000Z",
       "claimedAt": "2026-06-25T09:46:12.018Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-06-25T09:58:00.000Z",
+      "evidence": [
+        {"at": "2026-06-25T09:58:00.000Z", "text": "Accepted. Layout claim against shell-1 personal, DR-TS-1 honored. Committed."}
+      ],
       "notes": null,
       "owner": "codex-m-dev-08-t8-5-layout-claim",
       "leaseExpiresAt": "2026-06-25T11:46:12.018Z",
