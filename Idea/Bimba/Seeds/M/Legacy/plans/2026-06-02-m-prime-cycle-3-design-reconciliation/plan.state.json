@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T15:22:11.615Z",
+  "updatedAt": "2026-06-25T15:28:52.850Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -1533,7 +1533,10 @@
       "claimedAt": "2026-06-25T15:20:00.000Z",
       "completedAt": "2026-06-25T15:20:00.000Z",
       "evidence": [
-        {"at": "2026-06-25T15:20:00.000Z", "text": "Doc-ahead acceptance: grep for s2.graph.create/update/delete in gateway-contract/src/lib.rs returns no M0' direct CRUD routes. M0' inspector already has governed-route proposal deep-link to M5' Epii atelier (m0-layers.ts:122). DR-M0-1 VALIDATED posture already in place. This resolves the 2026-06-16 RESET: the governed-write path is via M5 atelier deep-link, not a local anuttara-ux section."}
+        {
+          "at": "2026-06-25T15:20:00.000Z",
+          "text": "Doc-ahead acceptance: grep for s2.graph.create/update/delete in gateway-contract/src/lib.rs returns no M0' direct CRUD routes. M0' inspector already has governed-route proposal deep-link to M5' Epii atelier (m0-layers.ts:122). DR-M0-1 VALIDATED posture already in place. This resolves the 2026-06-16 RESET: the governed-write path is via M5 atelier deep-link, not a local anuttara-ux section."
+        }
       ],
       "notes": null,
       "owner": null,
@@ -1543,16 +1546,21 @@
       "worktree": null
     },
     "09.T9.5": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-06-25T15:28:52.798Z",
+      "claimedAt": "2026-06-25T15:25:35.013Z",
+      "completedAt": "2026-06-25T15:28:52.798Z",
+      "evidence": [
+        {
+          "at": "2026-06-25T15:28:52.798Z",
+          "text": "ls plugin-integrated-1-2-3 ok; yarn build blocked by Corepack pnpm packageManager guard/offline Yarn fetch, pnpm build passed; pnpm test passed 17/17; B-8/B-9/B-12 explicit in Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/common/composition-contract.ts and src/browser/composition-contract.test.mjs"
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "codex-m-dev-09-t9-5-plugin-integrated-123",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-06-25T15:25:35.013Z",
+      "runId": "20260625T152535Z-09-T9.5",
       "worktree": null
     },
     "09.T9.6": {
@@ -12572,26 +12580,36 @@
       "leaseExpiresAt": "2026-06-25T17:11:27.783Z",
       "worktree": null,
       "completedAt": "2026-06-25T15:22:11.547Z"
+    },
+    {
+      "runId": "20260625T152535Z-09-T9.5",
+      "taskId": "09.T9.5",
+      "status": "done",
+      "startedAt": "2026-06-25T15:25:35.013Z",
+      "owner": "codex-m-dev-09-t9-5-plugin-integrated-123",
+      "leaseExpiresAt": "2026-06-25T17:25:35.013Z",
+      "worktree": null,
+      "completedAt": "2026-06-25T15:28:52.798Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-06-25T15:11:00.766Z",
-    "updatedAt": "2026-06-25T15:11:00.766Z",
+    "createdAt": "2026-06-25T15:25:17.833Z",
+    "updatedAt": "2026-06-25T15:25:17.833Z",
     "taskIds": [
-      "09.T9.3",
-      "09.T9.4",
       "09.T9.5",
-      "09.T9.6"
+      "09.T9.6",
+      "09.T9.7",
+      "09.T9.8"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
     "weightBudget": 8,
     "modeHints": {
-      "09.T9.3": "in-session",
-      "09.T9.4": "in-session",
       "09.T9.5": "in-session",
-      "09.T9.6": "in-session"
+      "09.T9.6": "in-session",
+      "09.T9.7": "in-session",
+      "09.T9.8": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

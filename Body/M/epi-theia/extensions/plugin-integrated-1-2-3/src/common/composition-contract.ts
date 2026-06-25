@@ -1,51 +1,60 @@
-// 07.T7.3 — Solar-anchor design principle integration (doc-ahead-landing).
-//
-// PURPOSE
-// =======
-// This module is the cosmic-engine (1-2-3) plugin's authority over the
-// **B-8 / B-9 / B-12 composition seam** carried in from the Wave-B
-// integrated-bimba surface:
-//
-//   - B-8  → the SOLAR ANCHOR design principle (the immovable centre the whole
-//            composition orbits).
-//   - B-9  → PLANETARY PLACEMENT (the orbiting bodies positioned relative to
-//            the solar anchor; their data rides the profile bus, never a local
-//            table).
-//   - B-12 → the cross-surface edit PROPAGATION listener, wired to kernel-bridge
-//            profile-tick events so an edit on one surface (e.g. the
-//            integrated-bimba canvas) rides the next profile tick into the
-//            M1/M2/M3 panes.
-//
-// DOC-AHEAD-LANDING DISCIPLINE
-// ----------------------------
-// The Wave-B integrated-bimba data (the planetary bodies, their chakral
-// correspondences, the solar ephemeris) has NOT landed yet. This file therefore
-// declares the *contract shape* of the seam — the principle, the placement
-// mapping, and the propagation wiring — and never a planetary/solar lookup
-// table of its own. Every concrete value flows from a backend
-// `MathemeHarmonicProfile` field (see `planetaryChakral`, owned by M2
-// Parashakti) exactly as `cosmic-engine-panes.tsx` already enforces via the
-// no-local-tables discipline. When the upstream bodies land this contract is
-// the single seam they bind to.
-//
-// REGISTER DISCIPLINE
-// -------------------
-// Every face of the seam carries exactly one register label:
-//   - 'design_principle'  — a fixed compositional law (the solar anchor itself;
-//      the rule that the Sun is the anchor and never an orbiting placement).
-//   - 'profile_sourced'   — a value that MUST be read from the profile bus and
-//      MUST NOT be computed locally (the planetary placement data).
-//   - 'propagation_seam'  — the cross-surface edit-propagation wiring keyed to
-//      kernel-bridge profile-tick events.
-//
-// CROSS-LINKS
-// -----------
-// - Wave-B integrated-bimba (B-8 / B-9 / B-12) — the originating composition seam.
-// - Tranche 09.5 — the integrated-bimba surface tranche that lands the planetary
-//   bodies + solar ephemeris this contract binds to (see {@link TRANCHE_09_5_CROSS_LINK}).
-// - Planet model is canonical mod-10: Sun(0) is the stable root/anchor and is
-//   EXCLUDED from the orbiting placements; Earth is the geocentric observer and
-//   is likewise never an orbiting placement.
+/**
+ * composition-contract — closing contract for the Cosmic Engine B-8/B-9/B-12 seam.
+ *
+ * @coordinate   M'-1-2-3 | integrated Cosmic Engine composition
+ * @residency    Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/common/composition-contract.ts
+ * @position     #1-2-3 — Integrated M1/M2/M3 composition seam
+ * @actualises   09.T9.5 one-substrate / three-rendering integration plugin ownership; cross-link to 07.T7.3
+ *
+ * Public surface:
+ *   SOLAR_ANCHOR_COMPOSITION_CONTRACT — frozen B-8/B-9/B-12 ownership contract.
+ *   SOLAR_ANCHOR — B-8 solar anchor design-principle face.
+ *   PLANETARY_PLACEMENT — B-9 profile-sourced planetary-placement face.
+ *   CROSS_SURFACE_PROPAGATION — B-12 kernel-bridge profile-tick propagation face.
+ *   attachProfileTickPropagation — Disposable listener binding profile ticks to edit-propagation sinks.
+ *   assertSolarAnchorCompositionContract — runtime/test assertion for the seam invariant.
+ * Does NOT own:
+ *   Planetary, solar, codon, topology, or correspondence lookup tables; per-extension UI internals; bridge runtime.
+ *
+ * PURPOSE
+ * This module is the cosmic-engine (1-2-3) plugin's authority over the
+ * B-8 / B-9 / B-12 composition seam carried in from the Wave-B integrated-bimba
+ * surface:
+ *
+ *   - B-8  -> the SOLAR ANCHOR design principle (the immovable centre the whole
+ *            composition orbits).
+ *   - B-9  -> PLANETARY PLACEMENT (the orbiting bodies positioned relative to
+ *            the solar anchor; their data rides the profile bus, never a local
+ *            table).
+ *   - B-12 -> the cross-surface edit PROPAGATION listener, wired to kernel-bridge
+ *            profile-tick events so an edit on one surface rides the next
+ *            profile tick into the M1/M2/M3 panes.
+ *
+ * DOC-AHEAD-LANDING DISCIPLINE
+ * The Wave-B integrated-bimba data (the planetary bodies, their chakral
+ * correspondences, the solar ephemeris) has NOT landed yet. This file therefore
+ * declares the contract shape of the seam — the principle, the placement
+ * mapping, and the propagation wiring — and never a planetary/solar lookup
+ * table of its own. Every concrete value flows from a backend
+ * MathemeHarmonicProfile field (see planetaryChakral, owned by M2 Parashakti)
+ * exactly as cosmic-engine-panes.tsx already enforces via the no-local-tables
+ * discipline. When the upstream bodies land this contract is the single seam
+ * they bind to.
+ *
+ * REGISTER DISCIPLINE
+ * Every face of the seam carries exactly one register label:
+ *   - design_principle — fixed compositional law (the solar anchor itself).
+ *   - profile_sourced — value read from the profile bus, never computed locally.
+ *   - propagation_seam — cross-surface edit propagation keyed to profile ticks.
+ *
+ * CROSS-LINKS
+ * - Wave-B integrated-bimba (B-8 / B-9 / B-12) — originating composition seam.
+ * - Tranche 09.5 — closing-tranche ownership for plugin-integrated-1-2-3.
+ * - Tranche 07.3 — solar-anchor design-principle integration.
+ * - Planet model is canonical mod-10: Sun(0) is the stable root/anchor and is
+ *   EXCLUDED from the orbiting placements; Earth is the geocentric observer and
+ *   is likewise never an orbiting placement.
+ */
 
 import {
     Disposable,
@@ -261,10 +270,11 @@ export const TRANCHE_09_5_CROSS_LINK = Object.freeze({
     tranche: '09.5',
     surface: 'integrated-bimba',
     note:
-        'Wave-B Tranche 09.5 lands the integrated-bimba planetary bodies and solar ' +
-        'ephemeris this contract binds to; until then PLANETARY_PLACEMENT.sourceField ' +
-        '(planetaryChakral) is the only data path and the solar anchor is a frame-only ' +
-        'design principle.'
+        'Wave-B Tranche 09.5 closes plugin-integrated-1-2-3 ownership for B-8 ' +
+        'solar anchor, B-9 planetary placement, and B-12 cross-surface edit ' +
+        'propagation via kernel-bridge profile-tick events. PLANETARY_PLACEMENT.sourceField ' +
+        '(planetaryChakral) remains the only data path and the solar anchor remains ' +
+        'a frame-only design principle.'
 });
 
 /** The full composition-seam contract the plugin owns. */
