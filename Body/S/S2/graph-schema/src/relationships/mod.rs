@@ -6,12 +6,10 @@ pub use deep_bimba::*;
 pub use node::*;
 pub use rel::*;
 
-use crate::CoordinateHome;
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GraphRelationshipTypeSpec {
     pub rel_type: &'static str,
-    pub coordinate_home: CoordinateHome,
+    pub coordinate_home: &'static str,
     pub source_family: &'static str,
     pub compatibility: bool,
 }

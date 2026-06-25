@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T20:20:52.097Z",
+  "updatedAt": "2026-06-25T20:27:26.484Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2409,20 +2409,24 @@
       "worktree": null
     },
     "15.T15.5": {
-      "status": "done",
-      "updatedAt": "2026-06-25T20:18:00.000Z",
+      "status": "review",
+      "updatedAt": "2026-06-25T20:27:26.321Z",
       "claimedAt": null,
       "completedAt": "2026-06-25T20:18:00.000Z",
       "evidence": [
         {
           "at": "2026-06-25T20:18:00.000Z",
           "text": "Codex (re-dispatch v2). composition-profile-context.tsx grew from 60→277 lines. Exports: Daily01ToggleChrome (React component with LemniscateTransition, coin-flip button, data-test attrs, aria-label), DAILY_0_1_TOGGLE_KEYSTROKE='cmd-period', createDaily01ToggleController, isDaily01ToggleKeyEvent, preserveBimbaPratibimbaUiStateAcrossDaily01Toggle. CompositionProfileProvider now integrates toggle chrome via daily01ToggleChrome prop. Test at toggle-gesture.test.mjs (116 lines, 5 tests) already present. Implementation matches all test requirements."
+        },
+        {
+          "at": "2026-06-25T20:27:26.321Z",
+          "text": "Source wired in Body/M/epi-theia/extensions/integrated-composition/src/browser/composition-profile-context.tsx and design-primitives/lemniscate-transition.tsx; toggle assertions added in tests/toggle-gesture.test.mjs; verification blocked before assertions because pnpm test cannot find rimraf and node --test cannot resolve react."
         }
       ],
       "notes": null,
       "owner": "hermes-nara",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-06-25T20:27:26.321Z",
       "runId": null,
       "worktree": null
     },
@@ -4563,20 +4567,24 @@
       "worktree": null
     },
     "23.T23.17": {
-      "status": "done",
-      "updatedAt": "2026-06-25T20:16:00.000Z",
+      "status": "review",
+      "updatedAt": "2026-06-25T20:25:06.202Z",
       "claimedAt": null,
       "completedAt": "2026-06-25T20:16:00.000Z",
       "evidence": [
         {
           "at": "2026-06-25T20:16:00.000Z",
           "text": "Codex via re-dispatch. cymatic-determinism.test.mjs (149 lines, 5743 bytes): 3 tests asserting byte-identical wavePoints for identical audio_octet/nodal_quartet/address72 inputs, byte-identical CymaticChladniSurface canvas pixels, and same canvas-byte hash across repeated server renders. CymaticChladniSurface.tsx (148 lines, 5609 bytes) with renderCymaticChladniSurfacePixels. m2-cymatic-engine-widget.tsx modified. Package.json and style/index.css updated. All acceptance criteria met."
+        },
+        {
+          "at": "2026-06-25T20:25:06.202Z",
+          "text": "M2 visual suite passes 3/3 via pnpm --filter @pratibimba/acceptance-harness test:visual -- --suite m2-parashakti; syntax checks pass for cymatic-determinism and visual runner/tests; package test blocked before assertions by missing react in Body/M/epi-theia node_modules. Key files: Body/M/epi-theia/extensions/m2-parashakti/test/cymatic-determinism.test.mjs, src/browser/components/CymaticChladniSurface.tsx, acceptance-harness/tests/visual-regression-m2.test.mjs, fixtures/visual-regression/m2-*.png"
         }
       ],
       "notes": null,
       "owner": "hermes-nara",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-06-25T20:25:06.202Z",
       "runId": null,
       "worktree": null
     },
@@ -12935,20 +12943,22 @@
     {
       "runId": "20260625T201101Z-23-T23.17",
       "taskId": "23.T23.17",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-06-25T20:11:01.971Z",
       "owner": "codex-m-dev-23-t23-17-cymatic-determinism",
       "leaseExpiresAt": "2026-06-25T22:11:01.971Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T20:25:06.202Z"
     },
     {
       "runId": "20260625T201244Z-15-T15.5",
       "taskId": "15.T15.5",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-06-25T20:12:44.454Z",
       "owner": "codex-m-dev-15-t15-5-toggle-gesture",
       "leaseExpiresAt": "2026-06-25T22:12:44.454Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T20:27:26.321Z"
     },
     {
       "runId": "20260625T201351Z-17-T17.17",

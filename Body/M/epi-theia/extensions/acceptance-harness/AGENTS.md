@@ -8,9 +8,9 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[M'-SYSTEM-SPEC]].
 - `src/common/acceptance-plan.ts` — the data-not-code acceptance recipe (services + steps) both the script and Theia contribution interpret.
 - `src/common/index.ts` — common barrel; `EXTENSION_ID`, `ACCEPTANCE_WIDGET_IDS`, `ACCEPTANCE_HANDLE_PREFIX` (`[ACCEPTANCE:`).
 - `src/browser/` — Theia-side contribution: `acceptance-runner.ts`, `frontend-module.ts` (binds runner, `pratibimba.acceptance-harness.run` command), `harness-control-widget.tsx`.
-- `scripts/acceptance.mjs` — the executable acceptance driver (boots/attaches services, parses step handles from stdout, verifies invariants, prints JSON receipt).
+- `scripts/acceptance.mjs` — the executable acceptance driver (boots/attaches services, parses step handles from stdout, verifies invariants, prints JSON receipt); `scripts/run-visual-regression-suite.mjs` dispatches focused visual suites such as `--suite m2-parashakti`.
 - `tests/` — `node --test` suite (`topology`, `cold-start*`, `onboarding-*`, `visual-regression*`, `acceptance-plan`, `blocked-readiness-per-extension`).
-- `fixtures/` — onboarding + visual-regression fixtures (each with local `README.md`; 15.12 PNG baselines live under `fixtures/visual-regression/*/screenshots/`); `lib/` is the `tsc` build output.
+- `fixtures/` — onboarding + visual-regression fixtures (each with local `README.md`; 15.12 PNG baselines live under `fixtures/visual-regression/*/screenshots/`, and the 23.17 M2 cymatic baseline family lives as root-level `fixtures/visual-regression/m2-*` PNGs plus `m2-parashakti-manifest.json`); `lib/` is the `tsc` build output.
 - Does NOT own: the surfaces it drives (kernel-bridge, pratibimba-layouts, m-extension-runtime, ide-shell-m0-m5, agentic-control-room — all `workspace:*` deps), or the gateway runtime (delegated to [[S3-SPEC]] gate at port 18794 via `@pratibimba/kernel-bridge`).
 
 ## Local Contracts

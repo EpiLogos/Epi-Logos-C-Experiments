@@ -30,10 +30,15 @@ export const LemniscateTransition: React.FC<LemniscateTransitionProps> = ({
     const prefersReducedMotion = usePrefersReducedMotion();
     const [uncontrolledPhase, setUncontrolledPhase] = React.useState(0);
     const activePhase = clampUnit(phase ?? uncontrolledPhase);
+    const activePhaseRef = React.useRef(activePhase);
     const durationMs = resolveLemniscateTransitionDurationMs(prefersReducedMotion);
     const rootClassName = className
         ? `epilogos-lemniscate-transition ${className}`
         : 'epilogos-lemniscate-transition';
+
+    React.useEffect(() => {
+        activePhaseRef.current = activePhase;
+    }, [activePhase]);
 
     React.useEffect(() => {
         if (typeof window === 'undefined') {
@@ -43,17 +48,17 @@ export const LemniscateTransition: React.FC<LemniscateTransitionProps> = ({
         const onKeyDown = (event: KeyboardEvent) => {
             if ((event.metaKey || event.ctrlKey) && event.key === '.') {
                 event.preventDefault();
-                setUncontrolledPhase(current => {
-                    const next = current >= 1 ? 0 : 1;
-                    onFoldChange?.(next);
-                    return next;
-                });
+                const next = activePhaseRef.current >= 1 ? 0 : 1;
+                if (phase === undefined) {
+                    setUncontrolledPhase(next);
+                }
+                onFoldChange?.(next);
             }
         };
 
         window.addEventListener('keydown', onKeyDown);
         return () => window.removeEventListener('keydown', onKeyDown);
-    }, [onFoldChange]);
+    }, [onFoldChange, phase]);
 
     return (
         <div

@@ -16,6 +16,7 @@ export const DAILY_0_1_TOGGLE_KEYSTROKE = 'cmd-period' as const;
 
 export interface Daily01ToggleKeyEventLike {
     readonly key: string;
+    readonly code?: string;
     readonly metaKey?: boolean;
     readonly ctrlKey?: boolean;
     preventDefault?: () => void;
@@ -31,8 +32,8 @@ export interface Daily01ToggleChromeProps {
     readonly activeFace?: Daily01Face;
     readonly defaultFace?: Daily01Face;
     readonly className?: string;
-    readonly children?: React.ReactNode;
-    readonly onToggle?: (face: Daily01Face) => void;
+    readonly children?: React.ReactNode | ((activeFace: Daily01Face) => React.ReactNode);
+    readonly onToggle?: (face: Daily01Face, previousFace: Daily01Face) => void;
 }
 
 export const CompositionProfileContext: React.Context<CompositionProfileTickSubscription | null> =
@@ -63,7 +64,8 @@ export const CompositionProfileProvider: React.FC<{
 };
 
 export function isDaily01ToggleKeyEvent(event: Daily01ToggleKeyEventLike): boolean {
-    return event.key === '.' && (event.metaKey === true || event.ctrlKey === true);
+    const isPeriod = event.key === '.' || event.code === 'Period';
+    return isPeriod && (event.metaKey === true || event.ctrlKey === true);
 }
 
 export function nextDaily01Face(face: Daily01Face): Daily01Face {
@@ -72,12 +74,13 @@ export function nextDaily01Face(face: Daily01Face): Daily01Face {
 
 export function createDaily01ToggleController(
     initialFace: Daily01Face = 'cosmic',
-    onToggle?: (face: Daily01Face) => void
+    onToggle?: (face: Daily01Face, previousFace: Daily01Face) => void
 ): Daily01ToggleController {
     let face = initialFace;
     const toggle = () => {
+        const previous = face;
         face = nextDaily01Face(face);
-        onToggle?.(face);
+        onToggle?.(face, previous);
         return face;
     };
     return Object.freeze({
@@ -93,19 +96,20 @@ export function createDaily01ToggleController(
     });
 }
 
-export function preserveBimbaPratibimbaUiStateAcrossDaily01Toggle(
-    state: BimbaPratibimbaUiState,
+export function preserveBimbaPratibimbaUiStateAcrossDaily01Toggle<T extends BimbaPratibimbaUiState>(
+    state: T,
     _from: Daily01Face,
     _to: Daily01Face
-): BimbaPratibimbaUiState {
+): T {
     return Object.freeze({
+        ...state,
         coordinate: state.coordinate,
         lens: state.lens,
         mode: state.mode,
         profileGeneration: state.profileGeneration,
         sessionKey: state.sessionKey,
         dayNow: state.dayNow
-    });
+    }) as T;
 }
 
 export const Daily01ToggleChrome: React.FC<Daily01ToggleChromeProps> = ({
@@ -122,12 +126,16 @@ export const Daily01ToggleChrome: React.FC<Daily01ToggleChromeProps> = ({
         ? `daily-0-1-toggle-chrome ${className}`
         : 'daily-0-1-toggle-chrome';
     const requestToggle = React.useCallback(() => {
-        const next = nextDaily01Face(activeFace ?? uncontrolledFace);
+        const previous = activeFace ?? uncontrolledFace;
+        const next = nextDaily01Face(previous);
         if (activeFace === undefined) {
             setUncontrolledFace(next);
         }
-        onToggle?.(next);
+        onToggle?.(next, previous);
     }, [activeFace, uncontrolledFace, onToggle]);
+    const renderedChildren = typeof children === 'function'
+        ? children(face)
+        : children;
 
     return (
         <LemniscateTransition
@@ -141,6 +149,7 @@ export const Daily01ToggleChrome: React.FC<Daily01ToggleChromeProps> = ({
                 className="daily-0-1-titlebar"
                 data-test="daily-0-1-toggle-chrome"
                 data-active-face={face}
+                data-toggle-keystroke={DAILY_0_1_TOGGLE_KEYSTROKE}
                 style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -154,6 +163,7 @@ export const Daily01ToggleChrome: React.FC<Daily01ToggleChromeProps> = ({
                     className="daily-0-1-coin-flip-button"
                     data-test="daily-0-1-coin-flip"
                     data-icon="coin-flip"
+                    data-icon-ref="$(pratibimba.icon.coin-flip)"
                     aria-label={`Toggle daily 0/1 face: ${face} to ${nextFace}`}
                     title={DAILY_0_1_TOGGLE_KEYSTROKE}
                     onClick={requestToggle}
@@ -172,6 +182,15 @@ export const Daily01ToggleChrome: React.FC<Daily01ToggleChromeProps> = ({
                     }}
                 >
                     <span aria-hidden="true" style={{ position: 'relative', display: 'inline-flex', width: 18, height: 18 }}>
+                        <span
+                            className="codicon codicon-symbol-number"
+                            data-icon-ref="$(pratibimba.icon.coin-flip)"
+                            style={{
+                                position: 'absolute',
+                                inset: 0,
+                                opacity: 0
+                            }}
+                        />
                         <span style={{
                             position: 'absolute',
                             inset: '2px 7px 2px 1px',
@@ -208,7 +227,7 @@ export const Daily01ToggleChrome: React.FC<Daily01ToggleChromeProps> = ({
                 data-active-face={face}
                 data-next-face={nextFace}
             >
-                {children}
+                {renderedChildren}
             </div>
         </LemniscateTransition>
     );
@@ -271,7 +290,7 @@ function inferDaily01FaceFromChildren(children: React.ReactNode): Daily01Face {
         if (/cosmic|123|1-2-3/i.test(typeName)) {
             return 'cosmic';
         }
-        stack.push(...React.Children.toArray(props.children));
+        stack.push(...React.Children.toArray(props.children as React.ReactNode));
     }
     return 'cosmic';
 }

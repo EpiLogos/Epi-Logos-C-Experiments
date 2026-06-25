@@ -13,6 +13,7 @@ const {
     BIMBA_PRATIBIMBA_UI_STATE_SPINE_FIELDS
 } = require('../lib/common/workspace-persistence.js');
 const {
+    CompositionProfileProvider,
     Daily01ToggleChrome,
     DAILY_0_1_TOGGLE_KEYSTROKE,
     createDaily01ToggleController,
@@ -65,6 +66,30 @@ test('daily toggle chrome renders a coin-flip title-bar affordance over the lemn
     assert.match(html, /data-transition-from="cosmic"/);
     assert.match(html, /data-transition-to="personal"/);
     assert.match(html, /data-test="daily-face"/);
+});
+
+test('composition profile provider mounts the daily 0/1 toggle chrome by default', () => {
+    let openCount = 0;
+    const bridge = {
+        onProfile(listener) {
+            openCount += 1;
+            listener(null);
+            return { dispose() {} };
+        }
+    };
+
+    const html = renderToStaticMarkup(
+        React.createElement(
+            CompositionProfileProvider,
+            { bridge },
+            React.createElement('section', { 'data-daily-0-1-face': 'personal' }, 'personal composition')
+        )
+    );
+
+    assert.equal(openCount, 1);
+    assert.match(html, /data-test="daily-0-1-toggle-chrome"/);
+    assert.match(html, /data-active-face="personal"/);
+    assert.match(html, /data-toggle-keystroke="cmd-period"/);
 });
 
 test('six Bimba/Pratibimba globals survive the daily 0/1 face toggle', () => {

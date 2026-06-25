@@ -305,7 +305,7 @@ function normalizeAddress72(value: number): number {
     return ((rounded % 72) + 72) % 72;
 }
 
-function buildStandingWavePoints(
+export function buildStandingWavePoints(
     audioOctet: readonly number[],
     nodalQuartet: readonly Readonly<Record<string, unknown>>[],
     address72: number

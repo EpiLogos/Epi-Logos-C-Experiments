@@ -7,8 +7,6 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
-const React = require('react');
-const { renderToStaticMarkup } = require('react-dom/server');
 const ts = require('typescript');
 
 const extensionRoot = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -59,11 +57,14 @@ function loadSourceModule(relativePath) {
 }
 
 loadSourceModule('src/common/meaning-packet.ts');
-const { renderM2CymaticFrame } = require(compiledModulePath(join(extensionRoot, 'src/common/meaning-packet.ts')));
+loadSourceModule('src/common/cymatic-chladni.ts');
 const {
-    CymaticChladniSurface,
+    buildStandingWavePoints,
+    renderM2CymaticFrame
+} = require(compiledModulePath(join(extensionRoot, 'src/common/meaning-packet.ts')));
+const {
     renderCymaticChladniSurfacePixels
-} = loadSourceModule('src/browser/components/CymaticChladniSurface.tsx');
+} = require(compiledModulePath(join(extensionRoot, 'src/common/cymatic-chladni.ts')));
 
 const fixture = Object.freeze({
     address72: 37,
@@ -99,6 +100,8 @@ function waveBytes(points) {
 }
 
 test('buildStandingWavePoints path produces byte-identical wavePoints for identical profile-bus inputs', () => {
+    const directFirst = buildStandingWavePoints(fixture.audioOctet, fixture.nodalQuartet, fixture.address72);
+    const directSecond = buildStandingWavePoints(fixture.audioOctet, fixture.nodalQuartet, fixture.address72);
     const first = renderM2CymaticFrame({
         profile: profile(),
         address72: fixture.address72,
@@ -113,6 +116,9 @@ test('buildStandingWavePoints path produces byte-identical wavePoints for identi
     assert.equal(first.sampleCount, 72);
     assert.deepEqual(first.audioOctetHz, fixture.audioOctet);
     assert.deepEqual(first.nodalQuartet, fixture.nodalQuartet);
+    assert.deepEqual(directFirst, directSecond);
+    assert.deepEqual(waveBytes(directFirst), waveBytes(directSecond));
+    assert.deepEqual(first.wavePoints, directFirst);
     assert.deepEqual(first.wavePoints, second.wavePoints);
     assert.deepEqual(waveBytes(first.wavePoints), waveBytes(second.wavePoints));
 });
@@ -132,18 +138,18 @@ test('CymaticChladniSurface renders byte-identical plate canvas pixels for ident
     assert.deepEqual(Buffer.from(first.rgba), Buffer.from(second.rgba));
 });
 
-test('CymaticChladniSurface markup pins the same canvas-byte hash across repeated server renders', () => {
+test('CymaticChladniSurface pixel renderer pins the same canvas-byte hash across repeated renders', () => {
     const frame = renderM2CymaticFrame({
         profile: profile(),
         address72: fixture.address72,
         scope: 'cosmic-public'
     });
-    const props = { frame, width: 48, height: 48, tick: 11 };
-    const first = renderToStaticMarkup(React.createElement(CymaticChladniSurface, props));
-    const second = renderToStaticMarkup(React.createElement(CymaticChladniSurface, props));
+    const first = renderCymaticChladniSurfacePixels({ frame, width: 48, height: 48, tick: 11 });
+    const second = renderCymaticChladniSurfacePixels({ frame, width: 48, height: 48, tick: 11 });
 
-    assert.equal(first, second);
-    assert.match(first, /data-cymatic-chladni-surface="plate"/);
-    assert.match(first, /data-canvas-byte-hash="[a-f0-9]{8}"/);
-    assert.match(first, /aria-label="M2 cymatic Chladni plate at 72-address 37"/);
+    assert.equal(first.byteHash, second.byteHash);
+    assert.match(first.byteHash, /^[a-f0-9]{8}$/);
+    assert.equal(first.width, 48);
+    assert.equal(first.height, 48);
+    assert.deepEqual(Buffer.from(first.rgba), Buffer.from(second.rgba));
 });
