@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-06-03T20:44:36.754Z",
-  "updatedAt": "2026-06-25T20:32:15.423Z",
+  "updatedAt": "2026-06-25T20:41:58.343Z",
   "tasks": {
     "01.T1.1": {
       "status": "done",
@@ -2573,13 +2573,21 @@
     },
     "17.T17.3": {
       "status": "done",
-      "updatedAt": "2026-06-25T20:22:00.000Z",
+      "updatedAt": "2026-06-25T20:39:16.966Z",
       "claimedAt": null,
-      "completedAt": "2026-06-25T20:22:00.000Z",
+      "completedAt": "2026-06-25T20:39:16.966Z",
       "evidence": [
         {
           "at": "2026-06-25T20:22:00.000Z",
           "text": "Codex combined dispatch. lib.rs split into 9 files: constants.rs, labels.rs, relationships/{mod,node,rel,deep_bimba}.rs, properties.rs, coordinate_law.rs, validation.rs, constraints.rs. lib.rs is 15-line barrel. cargo check -p epi-s2-graph-schema passes with 0 errors."
+        },
+        {
+          "at": "2026-06-25T20:38:55.574Z",
+          "text": "cargo check -p epi-s2-graph-schema passed; cargo test -p epi-s2-graph-schema passed 36 tests (15 unit + 21 integration + 0 doc); cargo check -p epi-s2-graph-services passed from Body/S/S2/graph-services, and the equivalent manifest-path check passed from repo root; root workspace invocation could not resolve the package ID; graph-services emitted only a pre-existing epi-s3-gateway-contract unused-import warning."
+        },
+        {
+          "at": "2026-06-25T20:39:16.966Z",
+          "text": "cargo check -p epi-s2-graph-schema && cargo test -p epi-s2-graph-schema passed; cargo check --manifest-path Body/S/S2/graph-services/Cargo.toml passed with existing epi-s3-gateway-contract unused-import warning"
         }
       ],
       "notes": null,
@@ -2793,13 +2801,25 @@
     },
     "17.T17.17": {
       "status": "done",
-      "updatedAt": "2026-06-25T20:22:00.000Z",
+      "updatedAt": "2026-06-25T20:41:58.278Z",
       "claimedAt": null,
-      "completedAt": "2026-06-25T20:22:00.000Z",
+      "completedAt": "2026-06-25T20:41:58.278Z",
       "evidence": [
         {
           "at": "2026-06-25T20:22:00.000Z",
           "text": "Codex combined dispatch. CoordinateHome enum at coordinate_home.rs (197 lines, 81 variants). Implements as_str(), Serialize, Display, Deref to str, PartialEq with &str. Replaces ~150 &'static str usages. cargo check -p epi-s2-graph-schema passes with 0 errors."
+        },
+        {
+          "at": "2026-06-25T20:39:08.308Z",
+          "text": "cargo check -p epi-s2-graph-schema passed; cargo test -p epi-s2-graph-schema: 36 passed, 0 failed (+0 doctests); files: Body/S/S2/graph-schema/src/coordinate_home.rs, labels.rs, properties.rs, relationships/{mod.rs,rel.rs}, coordinate_law.rs"
+        },
+        {
+          "at": "2026-06-25T20:39:27.803Z",
+          "text": "cargo check -p epi-s2-graph-schema && cargo test -p epi-s2-graph-schema passed; cargo check --manifest-path Body/S/S2/graph-services/Cargo.toml passed with existing epi-s3-gateway-contract unused-import warning"
+        },
+        {
+          "at": "2026-06-25T20:41:58.278Z",
+          "text": "cargo check -p epi-s2-graph-schema passed; cargo test -p epi-s2-graph-schema passed 22 tests (1 unit + 21 integration, 0 doc); touched Body/S/S2/graph-schema/src/lib.rs, coordinate_home.rs, coordinate_law.rs, labels.rs, properties.rs, relationships/mod.rs, relationships/rel.rs, and Body/S/S2/graph-schema/AGENTS.md"
         }
       ],
       "notes": null,
@@ -4581,10 +4601,10 @@
       "worktree": null
     },
     "23.T23.17": {
-      "status": "review",
-      "updatedAt": "2026-06-25T20:25:06.202Z",
+      "status": "done",
+      "updatedAt": "2026-06-25T20:34:12.845Z",
       "claimedAt": null,
-      "completedAt": "2026-06-25T20:16:00.000Z",
+      "completedAt": "2026-06-25T20:34:12.845Z",
       "evidence": [
         {
           "at": "2026-06-25T20:16:00.000Z",
@@ -4593,6 +4613,10 @@
         {
           "at": "2026-06-25T20:25:06.202Z",
           "text": "M2 visual suite passes 3/3 via pnpm --filter @pratibimba/acceptance-harness test:visual -- --suite m2-parashakti; syntax checks pass for cymatic-determinism and visual runner/tests; package test blocked before assertions by missing react in Body/M/epi-theia node_modules. Key files: Body/M/epi-theia/extensions/m2-parashakti/test/cymatic-determinism.test.mjs, src/browser/components/CymaticChladniSurface.tsx, acceptance-harness/tests/visual-regression-m2.test.mjs, fixtures/visual-regression/m2-*.png"
+        },
+        {
+          "at": "2026-06-25T20:34:12.845Z",
+          "text": "3/3 cymatic determinism tests and 3/3 m2 visual-regression tests pass; key paths Body/M/epi-theia/extensions/m2-parashakti/test/cymatic-determinism.test.mjs, Body/M/epi-theia/extensions/acceptance-harness/tests/visual-regression-m2.test.mjs, Body/M/epi-theia/extensions/acceptance-harness/fixtures/visual-regression/m2-*.png"
         }
       ],
       "notes": null,
@@ -12977,20 +13001,22 @@
     {
       "runId": "20260625T201351Z-17-T17.17",
       "taskId": "17.T17.17",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T20:13:51.434Z",
       "owner": "codex-m-dev-17-t17-17-coordinate-home",
       "leaseExpiresAt": "2026-06-25T22:13:51.434Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T20:39:08.308Z"
     },
     {
       "runId": "20260625T201407Z-17-T17.3",
       "taskId": "17.T17.3",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-06-25T20:14:07.410Z",
       "owner": "codex-m-dev-17-t17-3-graph-schema-split",
       "leaseExpiresAt": "2026-06-25T22:14:07.410Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-06-25T20:38:55.574Z"
     }
   ],
   "activeRoute": {

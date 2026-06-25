@@ -1,4 +1,4 @@
-use crate::{RELATION_FAMILY_PROPERTY, RELATION_FAMILY_VALUES};
+use crate::{CoordinateHome, RELATION_FAMILY_PROPERTY, RELATION_FAMILY_VALUES};
 
 pub const COORDINATE_PROPERTY: &str = "coordinate";
 pub const COORDINATE_PREFIX_PROPERTY: &str = "coordinate_prefix";
@@ -163,7 +163,7 @@ pub enum GraphPropertyDisclosure {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GraphPropertySpec {
     pub key: &'static str,
-    pub coordinate_home: &'static str,
+    pub coordinate_home: CoordinateHome,
     pub owner: GraphPropertyOwner,
     pub value_type: GraphPropertyType,
     pub cardinality: GraphPropertyCardinality,
@@ -175,7 +175,7 @@ pub struct GraphPropertySpec {
 
 const fn node_spec(
     key: &'static str,
-    coordinate_home: &'static str,
+    coordinate_home: CoordinateHome,
     value_type: GraphPropertyType,
     cardinality: GraphPropertyCardinality,
     disclosure: GraphPropertyDisclosure,
@@ -196,7 +196,7 @@ const fn node_spec(
 
 const fn indexed_node_spec(
     key: &'static str,
-    coordinate_home: &'static str,
+    coordinate_home: CoordinateHome,
     value_type: GraphPropertyType,
     cardinality: GraphPropertyCardinality,
     disclosure: GraphPropertyDisclosure,
@@ -217,7 +217,7 @@ const fn indexed_node_spec(
 
 const fn relationship_property_spec_const(
     key: &'static str,
-    coordinate_home: &'static str,
+    coordinate_home: CoordinateHome,
     value_type: GraphPropertyType,
     cardinality: GraphPropertyCardinality,
     disclosure: GraphPropertyDisclosure,
@@ -239,7 +239,7 @@ const fn relationship_property_spec_const(
 pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     GraphPropertySpec {
         key: COORDINATE_PROPERTY,
-        coordinate_home: "S2-0",
+        coordinate_home: CoordinateHome::S2_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -250,7 +250,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: COORDINATE_PREFIX_PROPERTY,
-        coordinate_home: "S2-0",
+        coordinate_home: CoordinateHome::S2_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -261,7 +261,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: COORDINATE_DEPTH_PROPERTY,
-        coordinate_home: "S2-0",
+        coordinate_home: CoordinateHome::S2_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -272,7 +272,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: COORDINATE_PARENT_PROPERTY,
-        coordinate_home: "S2-0",
+        coordinate_home: CoordinateHome::S2_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -283,7 +283,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: COORDINATE_AXIS_PROPERTY,
-        coordinate_home: "S2-0",
+        coordinate_home: CoordinateHome::S2_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -294,7 +294,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: C_LAYER_ROLE_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -305,7 +305,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SEMANTIC_AUTHORITY_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -316,7 +316,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: WORLD_TYPE_PATH_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -327,7 +327,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: TYPE_FAMILY_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -338,7 +338,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: TYPE_PATH_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -349,7 +349,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: TYPE_COORDINATE_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -360,7 +360,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: C_LAYER_PATH_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -371,7 +371,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: CRYSTALLISATION_STATE_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -382,7 +382,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: GRAPH_EVIDENCE_KIND_PROPERTY,
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -393,7 +393,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: ALIASES_PROPERTY,
-        coordinate_home: "C2",
+        coordinate_home: CoordinateHome::C2,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -404,7 +404,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: CANDIDATE_STATE_PROPERTY,
-        coordinate_home: "C2",
+        coordinate_home: CoordinateHome::C2,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -415,7 +415,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: ACCEPTED_WIKILINKS_PROPERTY,
-        coordinate_home: "C2",
+        coordinate_home: CoordinateHome::C2,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -426,7 +426,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SOURCE_C_AUTHORITY_PATH_PROPERTY,
-        coordinate_home: "C5",
+        coordinate_home: CoordinateHome::C5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -437,7 +437,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: FLAT_WORLD_TARGET_PROPERTY,
-        coordinate_home: "C5",
+        coordinate_home: CoordinateHome::C5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -448,7 +448,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: C_MOC_EVIDENCE_PATHS_PROPERTY,
-        coordinate_home: "C3",
+        coordinate_home: CoordinateHome::C3,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -459,7 +459,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SOURCE_ARTIFACT_SPAN_PROPERTY,
-        coordinate_home: "C1",
+        coordinate_home: CoordinateHome::C1,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -470,7 +470,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: CANONICAL_VAULT_PATH_PROPERTY,
-        coordinate_home: "S1-0",
+        coordinate_home: CoordinateHome::S1_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -481,7 +481,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: ARTIFACT_KIND_PROPERTY,
-        coordinate_home: "S1-0",
+        coordinate_home: CoordinateHome::S1_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -492,7 +492,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: CONTENT_HASH_PROPERTY,
-        coordinate_home: "S1-0",
+        coordinate_home: CoordinateHome::S1_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -503,7 +503,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: TITLE_PROPERTY,
-        coordinate_home: "S1-1",
+        coordinate_home: CoordinateHome::S1_1,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -514,7 +514,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SUMMARY_PROPERTY,
-        coordinate_home: "S1-1",
+        coordinate_home: CoordinateHome::S1_1,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -525,7 +525,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SOURCE_MTIME_PROPERTY,
-        coordinate_home: "S1-0",
+        coordinate_home: CoordinateHome::S1_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::DateTime,
         cardinality: GraphPropertyCardinality::One,
@@ -536,7 +536,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SYNC_STATUS_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -547,7 +547,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SYNC_VERSION_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -558,7 +558,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: LAST_PROMOTED_AT_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::DateTime,
         cardinality: GraphPropertyCardinality::One,
@@ -569,7 +569,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: PROMOTION_SOURCE_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -580,7 +580,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: RELATION_EVIDENCE_COUNT_PROPERTY,
-        coordinate_home: "S1-2",
+        coordinate_home: CoordinateHome::S1_2,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -591,7 +591,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: UUID_PROPERTY,
-        coordinate_home: "S2-0",
+        coordinate_home: CoordinateHome::S2_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -602,7 +602,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: NAME_PROPERTY,
-        coordinate_home: "S2-1",
+        coordinate_home: CoordinateHome::S2_1,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -613,7 +613,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: DESCRIPTION_PROPERTY,
-        coordinate_home: "S2-1",
+        coordinate_home: CoordinateHome::S2_1,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -624,7 +624,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: FORM_PROPERTY,
-        coordinate_home: "S2-1",
+        coordinate_home: CoordinateHome::S2_1,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -635,7 +635,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: STRUCTURE_PROPERTY,
-        coordinate_home: "S2-1",
+        coordinate_home: CoordinateHome::S2_1,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -646,7 +646,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: FAMILY_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -657,7 +657,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: QL_POSITION_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -668,7 +668,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: LAYER_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -679,7 +679,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: TOPO_MODE_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -690,7 +690,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: WEAVE_STATE_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Float,
         cardinality: GraphPropertyCardinality::One,
@@ -701,7 +701,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: INVERSION_STATE_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -712,7 +712,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: FLAGS_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -723,7 +723,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: VAULT_PATH_PROPERTY,
-        coordinate_home: "S1-0",
+        coordinate_home: CoordinateHome::S1_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -734,7 +734,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: ESSENCE_PROPERTY,
-        coordinate_home: "S2-0",
+        coordinate_home: CoordinateHome::S2_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -745,7 +745,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: CORE_NATURE_PROPERTY,
-        coordinate_home: "S2-0",
+        coordinate_home: CoordinateHome::S2_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -756,7 +756,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SOURCE_DATASET_PROPERTY,
-        coordinate_home: "S2-3",
+        coordinate_home: CoordinateHome::S2_3,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -767,7 +767,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: DATASET_BRANCH_PROPERTY,
-        coordinate_home: "S2-3",
+        coordinate_home: CoordinateHome::S2_3,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -778,7 +778,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: DATASET_BRANCH_LABEL_PROPERTY,
-        coordinate_home: "S2-3",
+        coordinate_home: CoordinateHome::S2_3,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -789,7 +789,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_1_inversion_dynamics",
-        coordinate_home: "C1",
+        coordinate_home: CoordinateHome::C1,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -800,7 +800,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_2_prime_attractor_logic",
-        coordinate_home: "C2'",
+        coordinate_home: CoordinateHome::C2Prime,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -811,7 +811,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_2_prime_harmonic_function",
-        coordinate_home: "C2'",
+        coordinate_home: CoordinateHome::C2Prime,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -822,7 +822,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_3_prime_stabilization",
-        coordinate_home: "C3'",
+        coordinate_home: CoordinateHome::C3Prime,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -833,7 +833,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_5_prime_resonance",
-        coordinate_home: "C5'",
+        coordinate_home: CoordinateHome::C5Prime,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -844,7 +844,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_0_source_coordinates",
-        coordinate_home: "S1-0'",
+        coordinate_home: CoordinateHome::S1_0Prime,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -855,7 +855,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_1_ct_type",
-        coordinate_home: "S1-1'",
+        coordinate_home: CoordinateHome::S1_1Prime,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -866,7 +866,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_4_artifact_role",
-        coordinate_home: "S1-4'",
+        coordinate_home: CoordinateHome::S1_4Prime,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -877,7 +877,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     node_spec(
         "l_2_therapeutic_properties",
-        "L2'",
+        CoordinateHome::L2Prime,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
@@ -885,7 +885,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_2_temperament_balance",
-        "L2'",
+        CoordinateHome::L2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -893,7 +893,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_2_healing_specialty",
-        "L2'",
+        CoordinateHome::L2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -901,7 +901,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_2_chakra_correspondence",
-        "L2'",
+        CoordinateHome::L2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -909,7 +909,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_2_breath_pattern",
-        "L2'",
+        CoordinateHome::L2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -917,7 +917,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_4_mef_condition",
-        "L4",
+        CoordinateHome::L4,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -925,7 +925,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_4_interpretive_role",
-        "L4",
+        CoordinateHome::L4,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -933,7 +933,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_4_function_role",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -941,7 +941,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_4_input_contracts",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::JsonString,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -949,7 +949,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_4_output_contracts",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::JsonString,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -957,7 +957,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_4_queryable_properties",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::JsonString,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -965,7 +965,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_5_agent",
-        "S5'",
+        CoordinateHome::S5Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -973,7 +973,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_5_tool_affinity",
-        "S5'",
+        CoordinateHome::S5Prime,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Internal,
@@ -981,7 +981,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "t_5_next_evolution_phase",
-        "T5",
+        CoordinateHome::T5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -989,7 +989,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "t_1_epistemic_function",
-        "T1",
+        CoordinateHome::T1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -997,7 +997,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_1_theoretical_thesis",
-        "Q1",
+        CoordinateHome::Q1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1005,7 +1005,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_2_sophia_logos_dialectic",
-        "Q2",
+        CoordinateHome::Q2,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1013,7 +1013,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_2_instantiation_mode",
-        "Q2",
+        CoordinateHome::Q2,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1021,7 +1021,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_3_dialectical_movement",
-        "Q3",
+        CoordinateHome::Q3,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1029,7 +1029,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_4_historical_diagnosis",
-        "Q4",
+        CoordinateHome::Q4,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1037,7 +1037,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_4_locality_signature",
-        "Q4",
+        CoordinateHome::Q4,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1045,7 +1045,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_5_integration_template",
-        "Q5",
+        CoordinateHome::Q5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1053,7 +1053,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "q_5_conjunctive_threshold",
-        "Q5",
+        CoordinateHome::Q5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1061,7 +1061,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_1_topological_significance",
-        "M1'",
+        CoordinateHome::M1Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1069,7 +1069,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_abjad_value",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1077,7 +1077,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_degree",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::Integer,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1085,7 +1085,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_4_two_stroke_doctrine",
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1093,7 +1093,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_5_lacanian_interface",
-        "M5'",
+        CoordinateHome::M5Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1101,7 +1101,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_1_primary_designation",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1109,7 +1109,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_1_symbol",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1117,7 +1117,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_1_formulation_type",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1125,7 +1125,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_1_complete_formulation",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1133,7 +1133,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_1_formulation_breakdown",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::JsonString,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1141,7 +1141,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_1_key_principles",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
@@ -1149,7 +1149,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_1_asset_uri",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
@@ -1157,7 +1157,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_1_asset_kind",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1165,7 +1165,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_3_practical_applications",
-        "C3",
+        CoordinateHome::C3,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
@@ -1173,7 +1173,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "c_3_related_coordinates",
-        "C3",
+        CoordinateHome::C3,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
@@ -1181,7 +1181,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "p_1_variant",
-        "P1",
+        CoordinateHome::P1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1189,7 +1189,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "p_1_weave",
-        "P1",
+        CoordinateHome::P1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1197,7 +1197,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "p_1_position_id",
-        "P1",
+        CoordinateHome::P1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1205,7 +1205,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "p_1_stage_id",
-        "P1",
+        CoordinateHome::P1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1213,7 +1213,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "p_3_sequence",
-        "P3",
+        CoordinateHome::P3,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1221,7 +1221,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_2_elemental_nature",
-        "L2'",
+        CoordinateHome::L2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1229,7 +1229,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_3_seasonal_position",
-        "L3'",
+        CoordinateHome::L3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1237,7 +1237,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_4_modality",
-        "L4",
+        CoordinateHome::L4,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1245,7 +1245,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "l_4_reflection_table",
-        "L4",
+        CoordinateHome::L4,
         GraphPropertyType::JsonString,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1253,7 +1253,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_4_function_description",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1261,7 +1261,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_4_translation_schema",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::JsonString,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1269,7 +1269,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_4_safety_class",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1277,7 +1277,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_4_eligible_formats",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Internal,
@@ -1285,7 +1285,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_5_system_prompt",
-        "S5'",
+        CoordinateHome::S5Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Protected,
@@ -1293,7 +1293,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "s_5_capabilities",
-        "S5'",
+        CoordinateHome::S5Prime,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Internal,
@@ -1301,7 +1301,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "t_3_developmental_stage",
-        "T3",
+        CoordinateHome::T3,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1309,7 +1309,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "t_3_process_realization",
-        "T3",
+        CoordinateHome::T3,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1317,7 +1317,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_0_consciousness_operation",
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1325,7 +1325,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_0_consciousness_function",
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1333,7 +1333,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_0_grammatical_function",
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1341,7 +1341,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_0_spanda_relationship",
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1349,7 +1349,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_0_metaphysical_names",
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
@@ -1357,7 +1357,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_0_adam_eve_classification",
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1365,7 +1365,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_1_topological_formula",
-        "M1'",
+        CoordinateHome::M1Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1373,7 +1373,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_1_processual_topology_role",
-        "M1'",
+        CoordinateHome::M1Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1381,7 +1381,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_1_matrix_type",
-        "M1'",
+        CoordinateHome::M1Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1389,7 +1389,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_1_construction_phase",
-        "M1'",
+        CoordinateHome::M1Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1397,7 +1397,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_1_algebraic_correspondence",
-        "M1'",
+        CoordinateHome::M1Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1405,7 +1405,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_arabic_text",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1413,7 +1413,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_trilateral_root",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1421,7 +1421,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_dhikr_application",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1429,7 +1429,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_recitation_count",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1437,7 +1437,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_zodiacal_influence",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1445,7 +1445,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_therapeutic_cluster",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1453,7 +1453,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_digital_root",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1461,7 +1461,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_matrix_constant",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1469,7 +1469,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_2_magic_square_sum",
-        "M2'",
+        CoordinateHome::M2Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1477,7 +1477,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_quadrant",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1485,7 +1485,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_rotational_phase",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1493,7 +1493,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_yin_yang_balance",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1501,7 +1501,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_elemental_affinity",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1509,7 +1509,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_amino_acid_code",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1517,7 +1517,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_positive_codon_binary",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1525,7 +1525,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_negative_codon_binary",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1533,7 +1533,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_upper_pair_binary",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1541,7 +1541,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_lower_pair_binary",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1549,7 +1549,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_tarot_card",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1557,7 +1557,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_3_hebrew_letter",
-        "M3'",
+        CoordinateHome::M3Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1565,7 +1565,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_4_temporal_structure",
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1573,7 +1573,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_4_temporal_intelligence_layer",
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1581,7 +1581,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_4_kashmir_shaivism_alignment",
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1589,7 +1589,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_4_practical_manifestations",
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::JsonString,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1597,7 +1597,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_4_capability_signals",
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
@@ -1605,7 +1605,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_4_preferred_timing",
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1613,7 +1613,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_5_whitehead_lacanian",
-        "M5'",
+        CoordinateHome::M5Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1621,7 +1621,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     node_spec(
         "m_5_archaeology_method",
-        "M5'",
+        CoordinateHome::M5Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1629,7 +1629,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     GraphPropertySpec {
         key: SEMANTIC_EMBEDDING_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Embedding,
         cardinality: GraphPropertyCardinality::Many,
@@ -1640,7 +1640,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: KERNEL_RESONANCE_INDEX_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -1651,7 +1651,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: KERNEL_RESONANCE_SCORE_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Float,
         cardinality: GraphPropertyCardinality::One,
@@ -1662,7 +1662,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: KERNEL_RESONANCE_SQUARE_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -1673,7 +1673,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: KERNEL_RESONANCE_LENS_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -1684,7 +1684,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: KERNEL_RESONANCE_POSITION_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -1695,7 +1695,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: KERNEL_RESONANCE_HELIX_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Boolean,
         cardinality: GraphPropertyCardinality::One,
@@ -1706,7 +1706,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: KERNEL_TICK_PROPERTY,
-        coordinate_home: "S0-5",
+        coordinate_home: CoordinateHome::S0_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -1717,7 +1717,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_WEB_JSON_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::JsonString,
         cardinality: GraphPropertyCardinality::One,
@@ -1728,7 +1728,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_COUNT_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -1739,7 +1739,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_FAMILY_REFS_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -1750,7 +1750,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_REFLECTIVE_REFS_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -1761,7 +1761,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_INVERSION_REFS_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -1772,7 +1772,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_POSITION_REFS_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -1783,7 +1783,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_LENS_REFS_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -1794,7 +1794,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_LENS_INVERSION_REFS_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::StringList,
         cardinality: GraphPropertyCardinality::Many,
@@ -1805,7 +1805,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_HARMONIC_ANCHOR_JSON_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::JsonString,
         cardinality: GraphPropertyCardinality::One,
@@ -1816,7 +1816,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: POINTER_REFRESHED_AT_PROPERTY,
-        coordinate_home: "S2-3",
+        coordinate_home: CoordinateHome::S2_3,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::DateTime,
         cardinality: GraphPropertyCardinality::One,
@@ -1827,7 +1827,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: SESSION_KEY_PROPERTY,
-        coordinate_home: "S3-0",
+        coordinate_home: CoordinateHome::S3_0,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -1838,7 +1838,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: GRAPHITI_ARC_ID_PROPERTY,
-        coordinate_home: "S3-5",
+        coordinate_home: CoordinateHome::S3_5,
         owner: GraphPropertyOwner::Node,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -1849,7 +1849,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     indexed_node_spec(
         S_REPO_PATH_PROPERTY,
-        "S0",
+        CoordinateHome::S0,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1857,7 +1857,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         S_REPO_ROOT_PROPERTY,
-        "S0",
+        CoordinateHome::S0,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1865,7 +1865,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         S_FILE_KIND_PROPERTY,
-        "S0",
+        CoordinateHome::S0,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1873,7 +1873,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         S_COMPONENT_PROPERTY,
-        "S0",
+        CoordinateHome::S0,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1881,7 +1881,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         S_SYMBOL_REFS_PROPERTY,
-        "S0",
+        CoordinateHome::S0,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Internal,
@@ -1889,7 +1889,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         S_EXECUTION_FLOW_REFS_PROPERTY,
-        "S0",
+        CoordinateHome::S0,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Internal,
@@ -1897,7 +1897,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         S_DEPENDS_ON_PATHS_PROPERTY,
-        "S0",
+        CoordinateHome::S0,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Internal,
@@ -1905,7 +1905,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         S_OWNED_BY_COORDINATE_PROPERTY,
-        "S0",
+        CoordinateHome::S0,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1913,7 +1913,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         M_REPO_PATH_PROPERTY,
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1921,7 +1921,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         M_COMPONENT_PROPERTY,
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -1929,7 +1929,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     indexed_node_spec(
         M_SYMBOL_REFS_PROPERTY,
-        "M0'",
+        CoordinateHome::M0Prime,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Internal,
@@ -1940,7 +1940,7 @@ pub const NODE_PROPERTY_SPECS: &[GraphPropertySpec] = &[
 pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     GraphPropertySpec {
         key: REL_EVIDENCE_KIND_PROPERTY,
-        coordinate_home: "S1-2",
+        coordinate_home: CoordinateHome::S1_2,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -1951,7 +1951,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: REL_EVIDENCE_TEXT_PROPERTY,
-        coordinate_home: "S1-2",
+        coordinate_home: CoordinateHome::S1_2,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -1962,7 +1962,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: REL_SOURCE_PATH_PROPERTY,
-        coordinate_home: "S1-0",
+        coordinate_home: CoordinateHome::S1_0,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -1973,7 +1973,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: REL_SOURCE_LINE_PROPERTY,
-        coordinate_home: "S1-2",
+        coordinate_home: CoordinateHome::S1_2,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,
@@ -1984,7 +1984,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     relationship_property_spec_const(
         "c_4_harmonic_family",
-        "C4/L",
+        CoordinateHome::C4SlashL,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -1992,7 +1992,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_4_harmonic_register",
-        "C4/L",
+        CoordinateHome::C4SlashL,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2000,7 +2000,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_4_harmonic_depth",
-        "C4/L",
+        CoordinateHome::C4SlashL,
         GraphPropertyType::Integer,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2008,7 +2008,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_4_harmonic_d_face",
-        "C4/L'",
+        CoordinateHome::C4SlashLPrime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2016,7 +2016,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_4_harmonic_base_pair",
-        "C4/L",
+        CoordinateHome::C4SlashL,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2024,7 +2024,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_4_harmonic_active_lenses",
-        "C4/L",
+        CoordinateHome::C4SlashL,
         GraphPropertyType::StringList,
         GraphPropertyCardinality::Many,
         GraphPropertyDisclosure::Public,
@@ -2032,7 +2032,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_4_harmonic_primary_anchor",
-        "C4/L",
+        CoordinateHome::C4SlashL,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2040,7 +2040,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_5_harmonic_interval_signature",
-        "M5",
+        CoordinateHome::M5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2048,7 +2048,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     GraphPropertySpec {
         key: REL_TARGET_TEXT_PROPERTY,
-        coordinate_home: "S1-2",
+        coordinate_home: CoordinateHome::S1_2,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -2059,7 +2059,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: REL_CONFIDENCE_PROPERTY,
-        coordinate_home: "S4.0",
+        coordinate_home: CoordinateHome::S4_0,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::Float,
         cardinality: GraphPropertyCardinality::One,
@@ -2070,7 +2070,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: REL_INFERRED_BY_PROPERTY,
-        coordinate_home: "S4.0",
+        coordinate_home: CoordinateHome::S4_0,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -2081,7 +2081,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: REL_PROMPT_HASH_PROPERTY,
-        coordinate_home: "S4.0",
+        coordinate_home: CoordinateHome::S4_0,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -2092,7 +2092,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: REL_CREATED_BY_SYNC_VERSION_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -2103,7 +2103,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: REL_LAST_VERIFIED_AT_PROPERTY,
-        coordinate_home: "S2-4",
+        coordinate_home: CoordinateHome::S2_4,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::DateTime,
         cardinality: GraphPropertyCardinality::One,
@@ -2114,7 +2114,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     relationship_property_spec_const(
         VAMA_SHAKTI_CLASS_PROPERTY,
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2122,7 +2122,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         CLASS_PAIR_PROPERTY,
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2130,7 +2130,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         ARENA_SCENE_KEY_PROPERTY,
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -2138,7 +2138,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         ARENA_KAIROS_ANCHOR_PROPERTY,
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -2146,7 +2146,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         ARENA_EDGE_PATTERN_PROPERTY,
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2154,7 +2154,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         ARENA_EDGE_WEIGHT_PROPERTY,
-        "M4'",
+        CoordinateHome::M4Prime,
         GraphPropertyType::Float,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Internal,
@@ -2162,7 +2162,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     GraphPropertySpec {
         key: "c_0_source_coordinate",
-        coordinate_home: "S2-3",
+        coordinate_home: CoordinateHome::S2_3,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -2173,7 +2173,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_0_target_coordinate",
-        coordinate_home: "S2-3",
+        coordinate_home: CoordinateHome::S2_3,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -2184,7 +2184,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: RELATION_FAMILY_PROPERTY,
-        coordinate_home: "S2-3'",
+        coordinate_home: CoordinateHome::S2_3Prime,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::Enum(RELATION_FAMILY_VALUES),
         cardinality: GraphPropertyCardinality::One,
@@ -2195,7 +2195,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_2_relation_type",
-        coordinate_home: "S2-3'",
+        coordinate_home: CoordinateHome::S2_3Prime,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -2206,7 +2206,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_3_created_at",
-        coordinate_home: "S0-4",
+        coordinate_home: CoordinateHome::S0_4,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::DateTime,
         cardinality: GraphPropertyCardinality::One,
@@ -2217,7 +2217,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_3_dataset_branch",
-        coordinate_home: "S2-3",
+        coordinate_home: CoordinateHome::S2_3,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::String,
         cardinality: GraphPropertyCardinality::One,
@@ -2228,7 +2228,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     GraphPropertySpec {
         key: "c_4_provenance",
-        coordinate_home: "S2-4'",
+        coordinate_home: CoordinateHome::S2_4Prime,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::JsonString,
         cardinality: GraphPropertyCardinality::One,
@@ -2239,7 +2239,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     },
     relationship_property_spec_const(
         "c_1_relation_description",
-        "C1",
+        CoordinateHome::C1,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2247,7 +2247,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_2_relation_kind",
-        "C2",
+        CoordinateHome::C2,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2255,7 +2255,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_5_correspondence",
-        "C5",
+        CoordinateHome::C5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2263,7 +2263,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "c_5_correspondence_basis",
-        "C5",
+        CoordinateHome::C5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2271,7 +2271,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "l_5_realization_level",
-        "L5",
+        CoordinateHome::L5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2279,7 +2279,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "l_5_mystical_identity",
-        "L5",
+        CoordinateHome::L5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2287,7 +2287,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "s_4_function_role",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2295,7 +2295,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "s_4_hierarchy_level",
-        "S4'",
+        CoordinateHome::S4Prime,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2303,7 +2303,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "t_5_insight",
-        "T5",
+        CoordinateHome::T5,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2311,7 +2311,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "p_3_pattern_structure",
-        "P3",
+        CoordinateHome::P3,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2319,7 +2319,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "p_3_pattern_name",
-        "P3",
+        CoordinateHome::P3,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2327,7 +2327,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     relationship_property_spec_const(
         "t_3_developmental_function",
-        "T3",
+        CoordinateHome::T3,
         GraphPropertyType::String,
         GraphPropertyCardinality::One,
         GraphPropertyDisclosure::Public,
@@ -2335,7 +2335,7 @@ pub const RELATIONSHIP_PROPERTY_SPECS: &[GraphPropertySpec] = &[
     ),
     GraphPropertySpec {
         key: KERNEL_RESONANCE_INDEX_PROPERTY,
-        coordinate_home: "S2-5",
+        coordinate_home: CoordinateHome::S2_5,
         owner: GraphPropertyOwner::Relationship,
         value_type: GraphPropertyType::Integer,
         cardinality: GraphPropertyCardinality::One,

@@ -1,18 +1,18 @@
 use serde::Serialize;
 
-use crate::COORDINATE_PROPERTY;
+use crate::{CoordinateHome, COORDINATE_PROPERTY};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct CoordinatePrefixFamilySpec {
     pub prefix: &'static str,
-    pub coordinate_home: &'static str,
+    pub coordinate_home: CoordinateHome,
     pub source_family: &'static str,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct CoordinateSemanticFamilySpec {
     pub prefix: &'static str,
-    pub coordinate_home: &'static str,
+    pub coordinate_home: CoordinateHome,
     pub family_name: &'static str,
     pub semantic_domain: &'static str,
     pub direct_axis: &'static str,
@@ -53,37 +53,37 @@ pub struct CoordinateSemanticRegistry {
 pub const COORDINATE_PREFIX_FAMILY_SPECS: &[CoordinatePrefixFamilySpec] = &[
     CoordinatePrefixFamilySpec {
         prefix: "c",
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         source_family: "coordinate",
     },
     CoordinatePrefixFamilySpec {
         prefix: "p",
-        coordinate_home: "P",
+        coordinate_home: CoordinateHome::P,
         source_family: "position",
     },
     CoordinatePrefixFamilySpec {
         prefix: "l",
-        coordinate_home: "L",
+        coordinate_home: CoordinateHome::L,
         source_family: "lens",
     },
     CoordinatePrefixFamilySpec {
         prefix: "s",
-        coordinate_home: "S",
+        coordinate_home: CoordinateHome::S,
         source_family: "system",
     },
     CoordinatePrefixFamilySpec {
         prefix: "t",
-        coordinate_home: "T",
+        coordinate_home: CoordinateHome::T,
         source_family: "thought",
     },
     CoordinatePrefixFamilySpec {
         prefix: "m",
-        coordinate_home: "M",
+        coordinate_home: CoordinateHome::M,
         source_family: "psychoid",
     },
     CoordinatePrefixFamilySpec {
         prefix: "q",
-        coordinate_home: "Q",
+        coordinate_home: CoordinateHome::Q,
         source_family: "quickview",
     },
 ];
@@ -93,7 +93,7 @@ pub const COORDINATE_PREFIX_FAMILIES: &[&str] = &["c", "p", "l", "s", "t", "m", 
 pub const COORDINATE_SEMANTIC_FAMILY_SPECS: &[CoordinateSemanticFamilySpec] = &[
     CoordinateSemanticFamilySpec {
         prefix: "c",
-        coordinate_home: "C",
+        coordinate_home: CoordinateHome::C,
         family_name: "Category / C-family",
         semantic_domain: "Ontological identity, source, form, operation, process, context, and integration.",
         direct_axis: "C0-C5 describe the direct categorical unfolding of a thing.",
@@ -102,7 +102,7 @@ pub const COORDINATE_SEMANTIC_FAMILY_SPECS: &[CoordinateSemanticFamilySpec] = &[
     },
     CoordinateSemanticFamilySpec {
         prefix: "p",
-        coordinate_home: "P",
+        coordinate_home: CoordinateHome::P,
         family_name: "Position / P-family",
         semantic_domain: "Sixfold positional movement where P contains P' as its implicit inversion: why, what, how, who/which, where/when, why-for.",
         direct_axis: "P0-P5 are the explicate/day positional arc.",
@@ -111,7 +111,7 @@ pub const COORDINATE_SEMANTIC_FAMILY_SPECS: &[CoordinateSemanticFamilySpec] = &[
     },
     CoordinateSemanticFamilySpec {
         prefix: "l",
-        coordinate_home: "L",
+        coordinate_home: CoordinateHome::L,
         family_name: "Lens / L-family",
         semantic_domain: "12fold MEF lens manifold: twelve full six-node lens branches attached to M2-1.",
         direct_axis: "L0-L5 are direct lens families: Quaternal, Causal, Logical, Processual, Phenomenological, Para Vak.",
@@ -120,7 +120,7 @@ pub const COORDINATE_SEMANTIC_FAMILY_SPECS: &[CoordinateSemanticFamilySpec] = &[
     },
     CoordinateSemanticFamilySpec {
         prefix: "s",
-        coordinate_home: "S",
+        coordinate_home: CoordinateHome::S,
         family_name: "System / S-family",
         semantic_domain: "Technical-procedural system spine: stack layers, system-law layers, boundaries, runtime contracts, and implementation responsibilities.",
         direct_axis: "S0-S5 are direct system-spine stack layers from executable adapter through world return.",
@@ -129,7 +129,7 @@ pub const COORDINATE_SEMANTIC_FAMILY_SPECS: &[CoordinateSemanticFamilySpec] = &[
     },
     CoordinateSemanticFamilySpec {
         prefix: "t",
-        coordinate_home: "T",
+        coordinate_home: CoordinateHome::T,
         family_name: "Thought / T-family",
         semantic_domain: "Universal thought planes and localized thought crystallizations.",
         direct_axis: "T0-T5 are universal thought planes.",
@@ -138,7 +138,7 @@ pub const COORDINATE_SEMANTIC_FAMILY_SPECS: &[CoordinateSemanticFamilySpec] = &[
     },
     CoordinateSemanticFamilySpec {
         prefix: "m",
-        coordinate_home: "M",
+        coordinate_home: CoordinateHome::M,
         family_name: "Psychoid / M-family",
         semantic_domain: "Bimba psychoid/subsystem coordinates and M' Pratibimba application-expression surfaces.",
         direct_axis: "M0-M5 and children are the full Bimba map coordinates, including M5-2, M5-3, and M5-4 as direct system-spine/expression/protocol branches.",
@@ -147,7 +147,7 @@ pub const COORDINATE_SEMANTIC_FAMILY_SPECS: &[CoordinateSemanticFamilySpec] = &[
     },
     CoordinateSemanticFamilySpec {
         prefix: "q",
-        coordinate_home: "Q",
+        coordinate_home: CoordinateHome::Q,
         family_name: "Quintessential / Q-family",
         semantic_domain: "Quintessential templates, reusable forms, and world-file synthesis properties.",
         direct_axis: "Q0-Q5 describe direct template/quintessence articulation.",
@@ -280,7 +280,9 @@ mod tests {
         assert_eq!(CoordinateHome::S2_3Prime.to_string(), "S2-3'");
 
         assert_eq!(
-            label_spec("Bimba").expect("Bimba label missing").coordinate_home,
+            label_spec("Bimba")
+                .expect("Bimba label missing")
+                .coordinate_home,
             CoordinateHome::C0
         );
         assert_eq!(
